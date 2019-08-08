@@ -2,7 +2,7 @@
 
 [Kontena Lens](https://www.kontena.io/lens/) provides all necessary tools and technology to take control of your Kubernetes clusters. Ensure your cluster is properly setup and configured. Enjoy increased visibility and hands-on troubleshooting capabilities. Use built-in user management and integration APIs with support to most standard external authentication systems.
 
-[![Kontena Lens - The Ultimate Dashboard for Kubernetes](./images/screenshot.png)](https://www.kontena.io/images/lens/screenshot.png)
+[![Kontena Lens - The Ultimate Dashboard for Kubernetes](./images/screenshot.png)](https://www.youtube.com/watch?v=p2u6-eKFSHU)
 
 
 ## What makes Kontena Lens special?
