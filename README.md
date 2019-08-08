@@ -24,8 +24,9 @@ Many people might compare Kontena Lens to [Kubernetes Dashboard](https://github.
 See [documentation](https://www.kontena.io/docs/lens/).
 
 ## Further Information
-- [Slack](https://slack.kontena.io/)
 - [Website](https://www.kontena.io/lens)
+- [Documentation](https://www.kontena.io/docs/lens/)
+- [Slack](https://slack.kontena.io/)
 
 ## Contributing
 Bug reports and pull requests are welcome on GitHub at https://github.com/kontena/lens.
