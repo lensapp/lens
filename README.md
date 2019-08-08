@@ -19,7 +19,6 @@ Many people might compare Kontena Lens to [Kubernetes Dashboard](https://github.
 * In-cluster and external authentication backends supported
 * Easy access to Helm charts, releases and repositories
 * Professional support available
-* And so much more...
 
 ## Usage
 See [documentation](https://www.kontena.io/docs/lens/).
