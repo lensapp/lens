@@ -34,7 +34,7 @@ Your logs go here...
 ```
 
 **Kubeconfig:**
-Quite often the problems are caused by malformed kubeconfig which the application tries to load. Please share your kubeconfig, remember remove any secret and sensitive information of course.
+Quite often the problems are caused by malformed kubeconfig which the application tries to load. Please share your kubeconfig, remember to remove any secret and sensitive information.
 ```
 your kubeconfig here
 ```
