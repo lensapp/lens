@@ -19,14 +19,14 @@ spec:
       serviceAccountName: prometheus
       initContainers:
         - name: chown
-          image: registry.pharos.sh/kontenapharos/alpine:3.9
+          image: docker.io/kontenapharos/alpine:3.9
           command: ["chown", "-R", "65534:65534", "/var/lib/prometheus"]
           volumeMounts:
             - name: data
               mountPath: /var/lib/prometheus
       containers:
         - name: prometheus
-          image: registry.pharos.sh/kontenapharos/prometheus:v2.11.1
+          image: docker.io/kontenapharos/prometheus:v2.11.1
           args:
             - --web.listen-address=0.0.0.0:9090
             - --config.file=/etc/prometheus/prometheus.yaml

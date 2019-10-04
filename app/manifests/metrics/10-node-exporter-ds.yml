@@ -29,7 +29,7 @@ spec:
       hostPID: true
       containers:
       - name: node-exporter
-        image: registry.pharos.sh/kontenapharos/prometheus-node-exporter:v0.18.0
+        image: docker.io/kontenapharos/prometheus-node-exporter:v0.18.0
         args:
           - --path.procfs=/host/proc
           - --path.sysfs=/host/sys
