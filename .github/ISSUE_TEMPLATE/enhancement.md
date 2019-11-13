@@ -1,7 +1,7 @@
 ---
 name: Enhancement Request
 about: Suggest an enhancement to the Lens application
-labels: enhancements
+labels: enhancement
 ---
 <!-- Please only use this template for submitting enhancement requests -->
 <!--
