@@ -17,7 +17,7 @@ When using custom prometheus with Lens app, Lens expects certain things for prom
 
 relabeling to `node-exporter` servicemonitor crd (for example `kubectl edit -n monitoring servicemonitors node-exporter`).
 
-2. To see cluster's pod usage on cluster overview properly, please add `metricsRelabeling` to `kubelet` service monitor (`kubectl edit -n monitoring servicemonitors node-exporter`)
+2. To see cluster's pod usage on cluster overview properly, please add `metricsRelabeling` to `kubelet` service monitor (`kubectl edit -n monitoring servicemonitors kubelet`)
 
 ```
 metricRelabelings:
@@ -32,6 +32,6 @@ metricRelabelings:
 1. To see cpu metrics properly, please set value of `server.global.scrape_timeout` less than 1 minute, for example
 
 ```
-helm upgrade --set server.global.scrape_timeout=30s prometheus stable/prometheus
+helm upgrade --set server.global.scrape_interval=30s prometheus stable/prometheus
 ```
 
