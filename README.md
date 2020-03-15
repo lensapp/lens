@@ -4,6 +4,8 @@
 
 Lens - The free, smart desktop application for managing Kubernetes clusters.
 
+[![Screenshot](./images/screenshot.png)](https://www.youtube.com/watch?v=p2u6-eKFSHU)
+
 ## What makes Lens special?
 
 * Amazing usability and end user experience
