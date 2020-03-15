@@ -87,7 +87,7 @@
       {
         "provider": "github",
         "repo": "lens",
-        "owner": "kontena"
+        "owner": "lensapp"
       }
     ],
     "snap": {
