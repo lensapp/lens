@@ -1,5 +1,7 @@
 # Lens
 
+[![Build Status](https://dev.azure.com/lensapp/lensapp/_apis/build/status/lensapp.lens?branchName=master)](https://dev.azure.com/lensapp/lensapp/_build/latest?definitionId=1&branchName=master)
+
 Lens - The free, smart desktop application for managing Kubernetes clusters.
 
 ## What makes Lens special?
