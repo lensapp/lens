@@ -13,7 +13,7 @@ Lens - The free, smart desktop application for managing Kubernetes clusters.
 
 ## Installation
 
-Download a pre-built package from the [releases](https://github.com/kontena/lens/releases) page. Lens can be also installed via [snapcraft](https://snapcraft.io/kontena-lens) (Linux only).
+Download a pre-built package from the [releases](https://github.com/lensapp/lens/releases) page. Lens can be also installed via [snapcraft](https://snapcraft.io/kontena-lens) (Linux only).
 
 ## Development
 
@@ -24,4 +24,4 @@ Download a pre-built package from the [releases](https://github.com/kontena/lens
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/kontena/lens.
+Bug reports and pull requests are welcome on GitHub at https://github.com/lensapp/lens.
