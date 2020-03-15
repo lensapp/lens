@@ -1,0 +1,53 @@
+.HelmChartDetails {
+  .intro-logo {
+    margin-right: $margin * 2;
+    background: $helmLogoBackground;
+    border-radius: $radius;
+    max-width: 150px;
+    max-height: 100px;
+    padding: $padding;
+    box-sizing: content-box;
+  }
+
+  .intro-contents {
+    .description {
+      font-weight: bold;
+      color: $textColorAccent;
+      padding-bottom: $padding;
+
+      .Button {
+        padding-left: $padding * 3;
+        padding-right: $padding * 3;
+        margin-left: $margin * 2;
+        align-self: flex-start;
+      }
+    }
+
+    .version {
+      .Select {
+        width: 80px;
+        min-width: 80px;
+        white-space: nowrap;
+      }
+
+      .Icon {
+        margin-right: $margin;
+      }
+    }
+
+    .maintainers {
+      a {
+        display: inline-block;
+        margin-right: $margin;
+      }
+    }
+
+    .DrawerItem {
+      align-items: center;
+    }
+  }
+
+  .chart-description {
+    margin-top: $margin * 2;
+  }
+}

@@ -1,0 +1,35 @@
+.OverviewStatuses {
+  position: relative;
+  width: 100%;
+  min-width: $unit * 75;
+  background: $contentColor;
+
+  > .header {
+    position: relative;
+    padding: $padding * 2;
+
+    h5 {
+      color: $textColorPrimary;
+    }
+  }
+
+  .workloads {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 155px);
+    justify-content: space-between;
+    grid-gap: $margin;
+    padding: $padding * 2;
+
+    .workload {
+      margin-bottom: $margin * 2;
+
+      > .title {
+        text-align: center;
+
+        a {
+          color: $colorInfo;
+        }
+      }
+    }
+  }
+}

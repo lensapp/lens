@@ -1,0 +1,90 @@
+
+.Drawer {
+  --size: 50%;
+  --full-size: 75%;
+  --spacing: #{$padding * 3};
+
+  position: absolute;
+  background: $contentColor;
+  box-shadow: 0 0 $unit * 2 $boxShadow;
+  z-index: $zIndex-drawer;
+
+  &.light {
+    .drawer-content {
+      @include custom-scrollbar(dark);
+    }
+  }
+
+  &.left {
+    left: 0;
+  }
+
+  &.right {
+    right: 0;
+  }
+
+  &.top {
+    top: 0;
+  }
+
+  &.bottom {
+    bottom: 0;
+  }
+
+  &.left,
+  &.right {
+    top: 0;
+    width: var(--size);
+    height: 100%;
+  }
+
+  &.top,
+  &.bottom {
+    left: 0;
+    width: 100%;
+    height: var(--size);
+  }
+
+  .drawer-wrapper {
+    height: 100%;
+    min-height: 100%;
+  }
+
+  .drawer-title {
+    background: $kontenaBlue;
+    color: $drawerTitleText;
+    padding: $padding $padding * 2.5;
+    word-break: break-all;
+    position: relative;
+    min-height: 54px;
+
+    .drawer-title-text {
+      font-weight: bold;
+      flex-grow: 2;
+      padding-right: $padding;
+    }
+
+    .MenuActions.toolbar .Icon {
+      color: $drawerTitleText;
+    }
+  }
+
+  .drawer-content {
+    @include custom-scrollbar;
+
+    > *:not(.Spinner) {
+      padding: var(--spacing);
+    }
+
+    .Table .TableHead {
+      background-color: $contentColor;
+      border-bottom: 1px solid $borderFaintColor;
+    }
+  }
+
+  @include media("<=900px") {
+    &.left, &.right {
+      width: var(--full-size)
+    }
+  }
+}

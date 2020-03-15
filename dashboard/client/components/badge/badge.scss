@@ -1,0 +1,15 @@
+.Badge {
+  display: inline-block;
+  background: $colorVague;
+  color: $textColorSecondary;
+  border-radius: $radius;
+  padding: .2em .4em;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.small {
+    font-size: $font-size-small;
+  }
+}

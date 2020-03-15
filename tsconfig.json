@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "noImplicitAny": true,
+      "sourceMap": true,
+      "skipLibCheck": true,
+      "outDir": "dist",
+      "baseUrl": ".",
+      "downlevelIteration": true,
+      "paths": {
+        "*": [
+            "node_modules/*",
+            "types/*"
+        ]
+    }
+    },
+    "include": [
+      "src/**/*",
+      "main.ts"
+    ]
+  }

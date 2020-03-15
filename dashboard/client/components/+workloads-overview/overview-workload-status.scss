@@ -1,0 +1,15 @@
+.OverviewWorkloadStatus {
+  --workload-status-running: #{$pod-status-running-color};
+  --workload-status-pending: #{$pod-status-pending-color};
+  --workload-status-evicted: #{$pod-status-evicted-color};
+  --workload-status-succeeded: #{$pod-status-succeeded-color};
+  --workload-status-failed: #{$pod-status-failed-color};
+  --workload-status-terminated: #{$pod-status-terminated-color};
+  --workload-status-unknown: #{$pod-status-unknown-color};
+
+  .PieChart {
+    .chart-container {
+      width: 110px
+    }
+  }
+}

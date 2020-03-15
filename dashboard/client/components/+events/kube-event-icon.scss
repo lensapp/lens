@@ -1,0 +1,17 @@
+.KubeEventIcon {
+  &.warning {
+    color: $golden;
+  }
+}
+
+.KubeEventTooltip {
+  white-space: normal;
+
+  .age {
+    margin-top: $margin;
+
+    .Icon {
+      margin-right: $margin;
+    }
+  }
+}

@@ -1,0 +1,223 @@
+{
+  "name": "kontena-lens",
+  "productName": "Lens",
+  "author": {
+    "name": "Lakend Labs, Inc.",
+    "email": "info@lakendlabs.com"
+  },
+  "copyright": "© 2020, Lakend Labs, Inc.",
+  "description": "The Smart Kubernetes Dashboard",
+  "version": "3.1.0-beta.0",
+  "main": "main.ts",
+  "config": {
+    "bundledKubectlVersion": "1.17.3"
+  },
+  "build": {
+    "afterSign": "build/notarize.js",
+    "extraResources": [
+      {
+        "from": "src/features/",
+        "to": "features/",
+        "filter": "**/*"
+      },
+      {
+        "from": "static/",
+        "to": "static/",
+        "filter": "**/*"
+      },
+      "LICENSE"
+    ],
+    "linux": {
+      "category": "Network",
+      "target": [
+        "snap",
+        "AppImage"
+      ],
+      "extraResources": [
+        {
+          "from": "binaries/server/linux/lens-server",
+          "to": "./lens-server.txt"
+        },
+        {
+          "from": "binaries/client/linux/x64/kubectl",
+          "to": "./x64/kubectl"
+        }
+      ]
+    },
+    "mac": {
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "extraResources": [
+        {
+          "from": "binaries/server/darwin/lens-server",
+          "to": "./lens-server.txt"
+        },
+        {
+          "from": "binaries/client/darwin/x64/kubectl",
+          "to": "./x64/kubectl"
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "extraResources": [
+        {
+          "from": "binaries/server/win32/lens-server-x64.exe",
+          "to": "./lens-server-x64.exe"
+        },
+        {
+          "from": "binaries/server/win32/lens-server-ia32.exe",
+          "to": "./lens-server-ia32.exe"
+        },
+        {
+          "from": "binaries/client/windows/x64/kubectl.exe",
+          "to": "./x64/kubectl.exe"
+        },
+        {
+          "from": "binaries/client/windows/ia32/kubectl.exe",
+          "to": "./ia32/kubectl.exe"
+        }
+      ]
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "repo": "lens",
+        "owner": "kontena"
+      }
+    ],
+    "snap": {
+      "confinement": "classic"
+    }
+  },
+  "jest": {
+    "collectCoverage": true,
+    "testRegex": "spec/.*_(spec)\\.[jt]sx?$",
+    "verbose": true,
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    }
+  },
+  "scripts": {
+    "dev": "concurrently -n 'app,dash' 'yarn dev-electron' 'yarn dev-dashboard'",
+    "dev-dashboard": "cd dashboard && yarn app-dev",
+    "dev-electron": "electron-webpack dev",
+    "compile": "yarn download:kubectl && electron-webpack",
+    "build:linux": "yarn compile && electron-builder --linux --dir",
+    "build:mac": "yarn compile && electron-builder --mac --dir",
+    "build:win": "yarn compile && electron-builder --win --dir",
+    "dist": "yarn compile && electron-builder -p onTag",
+    "dist:win": "yarn compile && electron-builder -p onTag --x64 --ia32",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "lint": "eslint $@ --ext js,ts,vue --max-warnings=0  src/",
+    "lint-dashboard": "eslint $@ --ext js,ts,tsx --max-warnings=0 dashboard/client dashboard/server",
+    "postinstall": "patch-package",
+    "test": "node_modules/.bin/jest",
+    "download:kubectl": "yarn run ts-node build/download_kubectl.ts"
+  },
+  "dependencies": {
+    "@hapi/call": "^6.0.1",
+    "@hapi/subtext": "^6.1.2",
+    "@kubernetes/client-node": "0.11.0",
+    "@types/cookie": "^0.3.3",
+    "@types/fs-extra": "^8.0.0",
+    "@types/proper-lockfile": "^4.1.1",
+    "@types/tar": "^4.0.3",
+    "camelcase-keys": "^6.1.1",
+    "cookie": "^0.4.0",
+    "electron-promise-ipc": "^1.3.0",
+    "electron-store": "^5.0.0",
+    "electron-updater": "^4.1.2",
+    "electron-window-state": "^5.0.3",
+    "filenamify": "^4.1.0",
+    "handlebars": "4.1.2",
+    "http-proxy": "^1.17.0",
+    "https-proxy-agent": "^3.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "mac-ca": "^1.0.4",
+    "md5-file": "^4.0.0",
+    "node-machine-id": "^1.1.12",
+    "node-pty": "^0.9.0",
+    "on-change": "^1.6.2",
+    "proper-lockfile": "^4.1.1",
+    "request": "^2.88.0",
+    "request-promise-native": "^ 1.0.7",
+    "semver": "^6.3.0",
+    "shell-env": "^3.0.0",
+    "shelljs": "^0.8.3",
+    "source-map-support": "^0.5.13",
+    "ssl-root-cas": "^1.3.1",
+    "tar": "^5.0.5",
+    "tcp-port-used": "^1.0.1",
+    "tempy": "0.3.0",
+    "universal-analytics": "^0.4.20",
+    "uuid": "^3.3.3",
+    "v-clipboard": "^2.2.2",
+    "vuex": "^3.1.1",
+    "win-ca": "^3.1.1",
+    "winston": "^3.2.1",
+    "ws": "^7.1.2"
+  },
+  "devDependencies": {
+    "@types/ejs": "^2.6.3",
+    "@types/electron-window-state": "^2.0.31",
+    "@types/http-proxy": "^1.17.0",
+    "@types/jest": "^24.0.18",
+    "@types/jsonwebtoken": "^8.3.5",
+    "@types/md5-file": "^4.0.0",
+    "@types/mock-fs": "^4.10.0",
+    "@types/node": "^12.7.2",
+    "@types/request": "2.47.0",
+    "@types/request-promise-native": "1.0.16",
+    "@types/semver": "5.5.0",
+    "@types/shelljs": "^0.8.5",
+    "@types/tcp-port-used": "^1.0.0",
+    "@types/tempy": "0.1.0",
+    "@types/universal-analytics": "^0.4.3",
+    "@types/uuid": "^3.4.5",
+    "@typescript-eslint/eslint-plugin": "^2.7.0",
+    "@typescript-eslint/parser": "^2.7.0",
+    "bootstrap": "^4.3.1",
+    "bootstrap-vue": "^2.0.0-rc.28",
+    "concurrently": "^5.1.0",
+    "css-loader": "^3.2.0",
+    "electron": "6.0.12",
+    "electron-builder": "^22.4.0",
+    "electron-notarize": "^0.2.1",
+    "electron-webpack": "^2.7.4",
+    "electron-webpack-ts": "^3.2.0",
+    "eslint": "^6.3.0",
+    "eslint-plugin-vue": "^5.2.3",
+    "hashicon": "^0.3.0",
+    "jest": "^24.9.0",
+    "js-yaml": "^3.13.1",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "marked": "^0.7.0",
+    "material-design-icons": "^3.0.1",
+    "mock-fs": "^4.10.3",
+    "node-loader": "^0.6.0",
+    "node-sass": "^4.12.0",
+    "patch-package": "^6.2.0",
+    "postinstall-postinstall": "^2.0.0",
+    "prismjs": "^1.17.1",
+    "sass-loader": "^8.0.0",
+    "ts-jest": "^24.1.0",
+    "ts-loader": "^6.0.4",
+    "ts-node": "^8.4.1",
+    "typeface-roboto": "^0.0.75",
+    "typescript": "^3.7.0",
+    "vue": "^2.6.10",
+    "vue-electron": "^1.0.6",
+    "vue-loader": "^15.7.1",
+    "vue-prism-editor": "^0.3.0",
+    "vue-router": "^3.1.2",
+    "vue-template-compiler": "^2.6.10",
+    "vuedraggable": "^2.23.2",
+    "webpack": "~4.35.3"
+  }
+}

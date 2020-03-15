@@ -1,0 +1,7 @@
+.CronJobs {
+  .TableCell {
+    &.warning {
+      @include table-cell-warning;
+    }
+  }
+}

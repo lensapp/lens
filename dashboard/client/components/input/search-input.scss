@@ -1,0 +1,30 @@
+.Input.SearchInput {
+  --compact-focus-width: 190px;
+
+  max-width: 900px;
+  min-width: 220px;
+
+  > label {
+    color: inherit;
+    border-radius: $radius;
+    padding: $padding / 1.33 $padding * 1.25;
+  }
+
+  &.compact {
+    min-width: 0;
+
+    .input {
+      transition: width 150ms;
+
+      &:placeholder-shown:not(:focus) {
+        transition-duration: 100ms;
+        width: 0;
+        margin: 0;
+      }
+
+      &:focus, &:not(:placeholder-shown) {
+        width: var(--compact-focus-width);
+      }
+    }
+  }
+}

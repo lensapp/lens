@@ -1,0 +1,41 @@
+@import "../+workloads/workloads-mixins";
+
+.Deployments {
+  .TableCell {
+    &.name {
+      flex-grow: 1.5;
+    }
+
+    &.namespace {
+      flex-grow: 1.5;
+    }
+
+    &.pods {
+      flex-grow: 1;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.conditions {
+      flex-grow: 1.5;
+
+      .condition {
+        margin-right: $margin;
+
+        &.available {
+          color: $deployment-available;
+        }
+
+        &.progressing {
+          color: $deployment-progressing;
+        }
+
+        &.replica-failure {
+          color: $deployment-replicafailure;
+        }
+      }
+    }
+  }
+}

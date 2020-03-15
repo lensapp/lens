@@ -1,0 +1,69 @@
+.TableCell {
+  padding: $padding;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &.checkbox {
+    display: flex;
+    flex: 0 0 32px !important;
+    padding-left: 0;
+    padding-right: 0;
+
+    &:not(.disabled) {
+      cursor: pointer;
+    }
+
+    > .Checkbox {
+      margin: 1px auto;
+    }
+  }
+
+  // fix: don't hide "sortIcon" when used with <TableHead nowrap> and there is not enough space to show all the content
+  &.sorting.nowrap {
+    display: flex;
+    align-items: center;
+
+    > * {
+      flex-shrink: 0;
+    }
+
+    > .content {
+      flex-shrink: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    > .sortIcon {
+      margin: 0;
+    }
+  }
+
+  .Table.sortable > .TableHead & {
+    user-select: none;
+    white-space: nowrap;
+
+    &.sorting {
+      cursor: pointer;
+    }
+
+    .sortIcon {
+      transition: 350ms opacity;
+      opacity: .3;
+
+      &.enabled {
+        opacity: 1;
+      }
+    }
+  }
+
+  a {
+    color: $primary;
+    transition: 150ms color;
+
+    &:hover {
+      color: $textColorAccent;
+    }
+  }
+}

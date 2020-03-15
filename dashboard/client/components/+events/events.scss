@@ -1,0 +1,32 @@
+.Events {
+  .Table {
+    .TableCell {
+      &.message {
+        flex-grow: 3;
+
+        &.warning {
+          color: $colorError;
+        }
+      }
+
+      &.object {
+        flex-grow: 3;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &.source {
+        flex-grow: 1.5;
+      }
+    }
+  }
+
+  .help-icon {
+    margin-left: $margin / 2;
+  }
+
+  .show-all {
+    margin: $padding * 2 auto;
+    min-width: 150px;
+  }
+}

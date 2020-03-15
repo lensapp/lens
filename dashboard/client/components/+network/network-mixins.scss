@@ -1,0 +1,12 @@
+$service-status-color-list: (
+  active: $colorOk,
+  pending: $colorWarning
+);
+
+@mixin service-status-colors {
+  @each $status, $color in $service-status-color-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}

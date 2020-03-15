@@ -1,0 +1,41 @@
+.PageFiltersList {
+  $bgc: $filterAreaBackground;
+  $spacing: $padding * 1.5;
+
+  position: relative;
+  top: 1px;
+  border-top: 1px solid $borderFaintColor;
+  background: $bgc;
+  padding: $spacing $padding * 2;
+  font-size: $font-size-small;
+
+  &:empty {
+    background: none;
+    padding: 0;
+  }
+
+  &:not(:empty) {
+    border-bottom: 1px solid $borderFaintColor;
+  }
+
+  > .header {
+    --flex-gap: #{$padding};
+    margin-bottom: $padding / 2;
+    text-transform: uppercase;
+  }
+
+  > .labels {
+    $gap: $padding / 3;
+    margin-left: -$gap;
+    margin-right: -$gap;
+
+    > .Badge {
+      --flex-gap: .25em;
+      display: inline-flex;
+      margin: $gap;
+      padding: $padding /3;
+      vertical-align: middle;
+      overflow: visible;
+    }
+  }
+}

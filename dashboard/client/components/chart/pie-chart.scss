@@ -1,0 +1,18 @@
+.PieChart {
+  .chart-container {
+    width: 120px;
+  }
+
+  .legend {
+    margin-top: $margin;
+    flex-direction: column;
+
+    > * {
+      &.Badge:hover {
+        background-color: transparent;
+      }
+
+      margin-bottom: $margin;
+    }
+  }
+}

@@ -1,0 +1,183 @@
+// Custom css-styles for react-select
+// Docs: https://react-select.com/styles
+
+html {
+  $menuBackgroundColor: $contentColor;
+  $menuSelectedOptionBgc: $layoutBackground;
+
+  --select-menu-bgc: #{$menuBackgroundColor};
+  --select-menu-border-color: #{$halfGray};
+  --select-option-selected-bgc: #{$menuSelectedOptionBgc};
+  --select-option-selected-color: #{$selectOptionHoveredColor};
+  --select-option-focused-bgc: #{$colorInfo};
+  --select-option-focused-color: #{$textColorAccent};
+
+  .Select {
+    position: relative;
+    min-width: 220px;
+
+    * {
+      color: inherit;
+    }
+
+    &--is-disabled {
+      opacity: .75;
+      cursor: not-allowed;
+      pointer-events: auto;
+    }
+
+    &__control {
+      border: none;
+      border-radius: $radius;
+      background: transparent;
+      min-height: 0;
+      box-shadow: 0 0 0 1px $halfGray;
+
+      &--is-focused {
+        box-shadow: 0 0 0 2px $primary;
+      }
+    }
+
+    &__value-container {
+      margin-bottom: 1px;
+    }
+
+    &__indicator {
+      padding: $padding /2;
+      opacity: .55;
+
+      &:hover {
+        color: inherit;
+        opacity: 1;
+      }
+
+      &-separator {
+        display: none;
+      }
+    }
+
+    &__dropdown {
+      &-indicator {
+        color: inherit !important;
+        padding: $padding / 2;
+      }
+    }
+
+    &__menu {
+      background: var(--select-menu-bgc);
+      box-shadow: inset 0 0 0 1px var(--select-menu-border-color);
+
+      &-list {
+        @include custom-scrollbar;
+        padding-right: 1px;
+        padding-left: 1px;
+      }
+
+      &-notice {
+        padding: $padding / 3;
+      }
+    }
+
+    &__option {
+      &:active {
+        background: $primary;
+      }
+
+      &--is-selected {
+        background: var(--select-option-selected-bgc);
+        color: var(--select-option-selected-color);
+      }
+
+      &--is-focused {
+        color: var(--select-option-focused-color);
+        background: var(--select-option-focused-bgc);
+      }
+
+      &--is-disabled {
+        cursor: not-allowed;
+        background: none !important;
+        color: $contentColor;
+        opacity: .75;
+      }
+
+      .Icon {
+        transition: none;
+      }
+    }
+
+    &__value-container {
+      &--is-multi {
+      }
+
+      &--has-value {
+      }
+    }
+
+    &__multi-value {
+      background: $layoutBackground;
+
+      &__remove {
+        background: inherit;
+
+        &:hover {
+          background: $colorError;
+          color: $textColorAccent;
+        }
+      }
+    }
+  }
+
+  //-- Themes
+
+  .Select__menu {
+    z-index: $zIndex-select-portal; // render at the top when used inside dialog
+  }
+
+  .Select, .Select__menu {
+    &.theme-light {
+      --select-menu-bgc: white;
+      --select-option-selected-color: $textColorSecondary;
+      --select-option-selected-bgc: $textColorSecondary;
+
+      .Select {
+        &__menu-list {
+          @include custom-scrollbar($theme: dark);
+        }
+
+        &__multi-value {
+          background: none;
+          box-shadow: 0 0 0 1px $textColorSecondary;
+        }
+
+        &__option {
+          &:active {
+            color: white;
+          }
+
+          &:hover {
+            color: white;
+          }
+
+          &--is-focused {
+            color: white;
+          }
+        }
+      }
+    }
+
+    &.theme-outlined {
+      .Select__control {
+        box-shadow: 0 0 0 1px $colorVague;
+        color: $primary;
+
+        .Select__value-container {
+          padding: 0 $padding / 2;
+        }
+
+        .Select__dropdown-indicator {
+          padding: 3px;
+        }
+      }
+    }
+  }
+}

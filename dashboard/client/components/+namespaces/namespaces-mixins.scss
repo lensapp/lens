@@ -1,0 +1,9 @@
+
+@mixin namespaceStatus {
+  &.active {
+    color: $colorOk;
+  }
+  &.terminating {
+    color: $colorError;
+  }
+}

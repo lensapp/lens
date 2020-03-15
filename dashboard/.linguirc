@@ -1,0 +1,18 @@
+{
+  "locales": ["en", "ru"],
+  "sourceLocale": "en",
+  "fallbackLocale": "en",
+  "compileNamespace": "cjs",
+  "format": "po",
+  "extractBabelOptions": {
+    "plugins": [
+      "@babel/plugin-syntax-dynamic-import"
+    ]
+  },
+  "catalogs": [
+    {
+      "path": "./locales/{locale}/messages",
+      "include": "./client"
+    }
+  ]
+}

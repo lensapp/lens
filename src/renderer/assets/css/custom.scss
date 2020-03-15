@@ -1,0 +1,72 @@
+// from Kontena Lens UI
+$lens-main-bg: #1e2124 !default; // dark bg
+$lens-pane-bg: #262b2f !default; // all panels main bg
+$lens-dock-bg: #2E3136 !default; // terminal and top menu bar
+$lens-menu-bg: #36393E !default; // sidemenu on left
+$lens-menu-hl: #414448 !default; // sidemenu on left, top left corner
+$lens-text-color: #87909c !default;
+$lens-text-color-light: #a0a0a0 !default;
+$kontena-blue: #3d90ce !default;
+
+// export as css variables
+* {
+  --lens-main-bg: #{$lens-main-bg}; // dark bg
+  --lens-pane-bg: #{$lens-pane-bg}; // all panels main bg
+  --lens-dock-bg: #{$lens-dock-bg}; // terminal and top menu bar
+  --lens-menu-bg: #{$lens-menu-bg}; // sidemenu on left
+  --lens-menu-hl: #{$lens-menu-hl}; // sidemenu on left, top left corner
+  --lens-text-color: #{$lens-text-color};
+  --lens-text-color-light: #{$lens-text-color-light};
+  --kontena-blue: #{$kontena-blue};
+}
+
+// Base grayscale colors definitions
+$white: #fff !default;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #1e2124 !default;
+$black: #000 !default;
+
+// Base colors definitions
+$blue: #3d90ce !default;
+$indigo: #6610f2 !default;
+$purple: #6f42c1 !default;
+$pink: #e83e8c !default;
+$red: #CE3933 !default;
+$orange: #fd7e14 !default;
+$yellow: #ffc107 !default;
+$green: #4caf50 !default;
+$teal: #20c997 !default;
+$cyan: #6ca5b7 !default;
+
+// Theme color default definitions
+$primary: $kontena-blue !default;
+$secondary: $gray-600 !default;
+$success: $green !default;
+$info: $cyan !default;
+$warning: $yellow !default;
+$danger: $red !default;
+$light: $gray-100 !default;
+$dark: $gray-800 !default;
+
+// This table defines the theme colors (variant names)
+$theme-colors: () !default;
+$theme-colors: map-merge(
+  (
+    'primary': $primary,
+    'secondary': $secondary,
+    'success': $success,
+    'info': $info,
+    'warning': $warning,
+    'danger': $danger,
+    'light': $light,
+    'dark': $dark
+  ),
+  $theme-colors
+);

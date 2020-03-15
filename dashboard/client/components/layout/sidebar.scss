@@ -1,0 +1,164 @@
+.Sidebar {
+  $iconSize: 24px;
+  $activeBgc: $kontenaBlue;
+  $activeTextColor: $sidebarActiveColor;
+  $itemSpacing: floor($unit / 2.6) floor($unit / 1.6);
+
+  @mixin activeLinkState {
+    &.active {
+      background: $activeBgc;
+      color: $activeTextColor;
+    }
+    @media (hover: hover) { // only for devices supported "true" hover (with mouse or similar)
+      &:hover {
+        background: $activeBgc;
+        color: $activeTextColor;
+      }
+    }
+  }
+
+  &.pinned {
+    .sidebar-nav {
+      @include custom-scrollbar;
+    }
+  }
+
+  .header {
+    background: $sidebarLogoBackground;
+    padding: $padding / 2;
+    height: var(--main-layout-header);
+
+    .logo-icon {
+      width: 100px;
+      height: 100%;
+      margin-left: $padding / 1.5;
+      margin-top: $padding / 1.5;
+    }
+
+    .pin-icon {
+      margin: auto;
+      margin-right: $padding / 2;
+    }
+  }
+
+  .sidebar-nav {
+    @include hidden-scrollbar;
+
+    padding: $padding / 1.5 0;
+
+    .Icon {
+      --size: #{$iconSize};
+
+      box-sizing: content-box;
+      padding: floor($padding / 2.6);
+      border-radius: 50%;
+
+      &.logout {
+        width: ceil($iconSize * .9);
+        padding: $padding / 2;
+      }
+    }
+
+    .link-text {
+      flex: 1;
+      margin-left: $margin;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    > a {
+      @include activeLinkState;
+
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      border: none;
+      padding: $itemSpacing;
+    }
+
+    > .logout {
+      margin-top: auto;
+    }
+
+    hr {
+      background-color: transparent;
+    }
+  }
+
+  .SidebarNavItem {
+    width: 100%;
+    user-select: none;
+    flex-shrink: 0;
+
+    .nav-item {
+      @include activeLinkState;
+
+      cursor: pointer;
+      width: inherit;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      border: none;
+      padding: $itemSpacing;
+    }
+
+    .expand-icon {
+      --size: 20px;
+    }
+
+    .sub-menu {
+      border-left: 4px solid transparent;
+
+      &.active {
+        border-left-color: $activeBgc;
+      }
+
+      a, .SidebarNavItem {
+        display: block;
+        border: none;
+        text-decoration: none;
+        color: $textColorPrimary;
+        font-weight: normal;
+        padding-left: 40px; // parent icon width
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 0px; // hidden by default
+        max-height: 0px;
+        opacity: 0;
+        transition: 125ms line-height ease-out, 200ms 100ms opacity;
+
+        &.visible {
+          line-height: 28px;
+          max-height: 1000px;
+          opacity: 1;
+        }
+
+        &.active, &:hover {
+          color: $sidebarSubmenuActiveColor;
+        }
+      }
+
+      .sub-menu-parent {
+        padding-left: 27px;
+        font-weight: 500;
+
+        .nav-item {
+          &:hover {
+            background: transparent;
+          }
+        }
+
+        .sub-menu {
+          a {
+            padding-left: $padding * 3;
+          }
+        }
+      }
+    }
+  }
+
+  .loading {
+    padding: $padding;
+    text-align: center;
+  }
+}

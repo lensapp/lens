@@ -1,0 +1,15 @@
+.ConfigMapDetails {
+  .data {
+    margin-bottom: $margin * 2;
+
+    .name {
+      color: $textColorSecondary;
+      font-weight: $font-weight-bold;
+      padding-bottom: $padding / 2;
+    }
+  }
+
+  .save-btn {
+    margin-top: $margin;
+  }
+}
