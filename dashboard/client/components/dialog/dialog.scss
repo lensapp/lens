@@ -1,0 +1,18 @@
+
+.Dialog {
+  @include custom-scrollbar;
+
+  position: fixed;
+  overflow: auto;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  padding: $unit * 5;
+  z-index: $zIndex-dialog;
+  overscroll-behavior: none; // prevent swiping with touch-pad on MacOSX
+
+  &.modal {
+    background: transparentize(#222, .5);
+  }
+}

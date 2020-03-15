@@ -1,0 +1,45 @@
+@import "crd.mixins";
+
+.CRDDetails {
+  .conditions {
+    .Badge {
+      @include crd-condition-bgc;
+    }
+  }
+  
+  .Table {
+    margin-left: -$margin * 2;
+    margin-right: -$margin * 2;
+
+    .TableRow {
+      cursor: default;
+    }
+
+    &.printer-columns {
+      .type {
+        flex: 0.5;
+      }
+
+      .description {
+        flex: 1.5;
+
+        .Badge {
+          background: transparent;
+        }
+      }
+
+      .json-path {
+        flex: 3;
+
+        .Badge {
+          white-space: pre-line;
+          text-overflow: initial;
+        }
+      }
+    }
+  }
+
+  .validation {
+    height: 400px;
+  }
+}

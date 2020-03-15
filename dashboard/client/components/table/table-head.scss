@@ -1,0 +1,37 @@
+.TableHead {
+  $border: 1px solid $layoutBackground;
+
+  background-color: $tableHeaderBackground;
+  border-bottom-width: $tableHeaderBorderWidth;
+  border-bottom-style: solid;
+  border-bottom-color: $tableHeaderBorderColor;
+  color: $tableHeaderColor;
+  display: flex;
+  flex-shrink: 0;
+
+  &.topLine {
+    border-top: $border;
+  }
+
+  &.sticky {
+    position: -webkit-sticky; // safari
+    position: sticky;
+    z-index: 1;
+    top: 0; // turn on sticky behaviour
+  }
+
+  &.nowrap {
+    white-space: nowrap;
+  }
+
+  .TableCell {
+    display: flex;
+    align-items: center;
+
+    &.checkbox {
+      > .Checkbox {
+        margin: auto;
+      }
+    }
+  }
+}

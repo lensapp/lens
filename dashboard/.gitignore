@@ -1,0 +1,14 @@
+.idea
+node_modules
+build/
+dist/
+wireframes/
+backup
+npm-debug.log
+.vscode
+dump.rdb
+*.env
+/tslint.json
+*.DS_Store
+locales/_build/
+locales/**/*.js

@@ -1,0 +1,11 @@
+.NodeDetails {
+  --status-ready-bg: #{$colorOk};
+  --status-default-bg: #{$colorError};
+
+  .conditions {
+    .Badge {
+      cursor: default;
+      @include node-status-bgs;
+    }
+  }
+}

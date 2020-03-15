@@ -1,0 +1,81 @@
+// Pods
+$pod-status-running-color: $colorOk;
+$pod-status-pending-color: $colorWarning;
+$pod-status-evicted-color: $colorError;
+$pod-status-succeeded-color: $colorSuccess;
+$pod-status-failed-color: $colorError;
+$pod-status-terminated-color: $colorTerminated;
+$pod-status-unknown-color: $colorVague;
+$pod-status-complete-color: $colorSuccess;
+$pod-status-crash-loop-color: $colorError;
+$pod-scheduled: $colorOk;
+$pod-ready: $colorOk;
+$pod-initialized: $colorOk;
+$pod-unschedulable: $colorError;
+$pod-containers-ready: $colorInfo;
+$pod-error: $colorError;
+$pod-container-creating: $colorInfo;
+
+// Deployments
+$deployment-available: $colorOk;
+$deployment-progressing: $colorInfo;
+$deployment-replicafailure: $colorError;
+
+// Jobs
+$job-complete: $colorSuccess;
+$job-failed: $colorError;
+
+// Pod Statuses
+$pod-status-color-list: (
+  running: $pod-status-running-color,
+  pending: $pod-status-pending-color,
+  evicted: $pod-status-evicted-color,
+  waiting: $pod-status-pending-color,
+  succeeded: $pod-status-succeeded-color,
+  failed: $pod-status-failed-color,
+  terminated: $pod-status-terminated-color,
+  completed: $pod-status-complete-color,
+  crash-loop-back-off: $pod-status-crash-loop-color,
+  error: $pod-error,
+  container-creating: $pod-container-creating,
+);
+
+// Job Conditions
+$job-condition-color-list: (
+  complete: $job-complete,
+  failed: $job-failed,
+);
+
+@mixin pod-status-bgs {
+  @each $status, $color in $pod-status-color-list {
+    &.#{$status} {
+      color: white;
+      background: $color;
+    }
+  }
+}
+
+@mixin pod-status-colors {
+  @each $status, $color in $pod-status-color-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}
+
+@mixin job-condition-bgs {
+  @each $condition, $color in $job-condition-color-list {
+    &.#{$condition} {
+      color: white;
+      background: $color;
+    }
+  }
+}
+
+@mixin job-condition-colors {
+  @each $condition, $color in $job-condition-color-list {
+    &.#{$condition} {
+      color: $color;
+    }
+  }
+}

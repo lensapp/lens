@@ -1,0 +1,20 @@
+.DeploymentDetails {
+  .conditions {
+    .Badge {
+      &.available {
+        color: white;
+        background-color: $deployment-available;
+      }
+
+      &.progressing {
+        color: white;
+        background-color: $deployment-progressing;
+      }
+
+      &.replica-failure {
+        color: white;
+        background-color: $deployment-replicafailure;
+      }
+    }
+  }
+}

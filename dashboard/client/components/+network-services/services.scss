@@ -1,0 +1,20 @@
+.Services {
+  .TableCell {
+    &.type {
+      flex: 0.6;
+    }
+
+    &.age {
+      flex: 0.4;
+    }
+
+    &.selector {
+      @include table-cell-labels-offsets;
+    }
+
+    &.status {
+      @include service-status-colors;
+      flex: 0.6;
+    }
+  }
+}

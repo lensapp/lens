@@ -1,0 +1,61 @@
+.AceEditor {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  z-index: 10;
+
+  &.hidden {
+    visibility: hidden;
+  }
+
+  &.light {
+    .ace_scrollbar {
+      @include custom-scrollbar($theme: dark);
+    }
+  }
+
+  > .editor {
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    font-size: 90%;
+    border-radius: $radius;
+  }
+
+  // --Theme customization
+
+  .ace_gutter {
+    color: $textColorSecondary;
+    background-color: $mainBackground;
+  }
+
+  .ace_active-line,
+  .ace_gutter-active-line {
+    background: $mainBackground !important;
+  }
+
+  .ace_meta.ace_tag {
+    color: $textColorPrimary;
+  }
+
+  .ace_constant {
+    color: $kontenaBlue !important;
+  }
+
+  .ace_keyword {
+    color: $textColorAccent;
+  }
+
+  .ace_string {
+    color: $colorOk;
+  }
+
+  .ace_comment {
+    color: #808080;
+  }
+
+  .ace_scrollbar {
+    @include custom-scrollbar;
+  }
+}

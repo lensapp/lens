@@ -1,0 +1,141 @@
+variables:
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+  AZURE_CACHE_FOLDER: $(Pipeline.Workspace)/.azure-cache
+pr: none
+trigger:
+  branches:
+    include:
+    - '*'
+  tags:
+    include:
+    - "*"
+jobs:
+  - job: Windows
+    condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
+    pool:
+      vmImage: windows-2019
+    strategy:
+      matrix:
+        node_12.x:
+          node_version: 12.x
+    steps:
+      - powershell: |
+          $CI_BUILD_TAG = git describe --tags
+          Write-Output ("##vso[task.setvariable variable=CI_BUILD_TAG;]$CI_BUILD_TAG")
+        displayName: 'Set the tag name as an environment variable'
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
+      - task: NodeTool@0
+        inputs:
+          versionSpec: $(node_version)
+        displayName: Install Node.js
+      - task: CacheBeta@0
+        inputs:
+          key: yarn | $(Agent.OS) | yarn.lock
+          path: $(YARN_CACHE_FOLDER)
+        displayName: Cache Yarn packages
+      - script: make deps
+        displayName: Install dependencies
+      - script: make lint
+        displayName: Lint
+      - script: make test
+        displayName: Run tests
+      - script: make build
+        displayName: Build
+        env:
+          WIN_CSC_LINK: $(WIN_CSC_LINK)
+          WIN_CSC_KEY_PASSWORD: $(WIN_CSC_KEY_PASSWORD)
+          GH_TOKEN: $(GH_TOKEN)
+  - job: macOS
+    condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
+    pool:
+      vmImage: macOS-10.14
+    strategy:
+      matrix:
+        node_12.x:
+          node_version: 12.x
+    steps:
+      - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
+        displayName: Set the tag name as an environment variable
+      - task: NodeTool@0
+        inputs:
+          versionSpec: $(node_version)
+        displayName: Install Node.js
+      - task: CacheBeta@0
+        inputs:
+          key: cache | $(Agent.OS) | yarn.lock
+          path: $(AZURE_CACHE_FOLDER)
+          cacheHitVar: CACHE_RESTORED
+        displayName: Cache Yarn packages
+      - bash: |
+          mkdir -p "$YARN_CACHE_FOLDER"
+          tar -xzf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" -C /
+        displayName: "Unpack cache"
+        condition: eq(variables.CACHE_RESTORED, 'true')
+      - script: make deps
+        displayName: Install dependencies
+      - script: make lint
+        displayName: Lint
+      - script: make test
+        displayName: Run tests
+      - script: make build
+        displayName: Build
+        env:
+          APPLEID: $(APPLEID)
+          APPLEIDPASS: $(APPLEIDPASS)
+          CSC_LINK: $(CSC_LINK)
+          CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)
+          GH_TOKEN: $(GH_TOKEN)
+      - bash: |
+          mkdir -p "$AZURE_CACHE_FOLDER"
+          tar -czf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" "$YARN_CACHE_FOLDER"
+        displayName: Pack cache
+  - job: Linux
+    pool:
+      vmImage: ubuntu-16.04
+    strategy:
+      matrix:
+        node_12.x:
+          node_version: 12.x
+    steps:
+      - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
+        displayName: Set the tag name as an environment variable
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
+      - task: NodeTool@0
+        inputs:
+          versionSpec: $(node_version)
+        displayName: Install Node.js
+      - task: CacheBeta@0
+        inputs:
+          key: cache | $(Agent.OS) | yarn.lock
+          path: $(AZURE_CACHE_FOLDER)
+          cacheHitVar: CACHE_RESTORED
+        displayName: Cache Yarn packages
+      - bash: |
+          mkdir -p "$YARN_CACHE_FOLDER"
+          tar -xzf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" -C /
+        displayName: "Unpack cache"
+        condition: eq(variables.CACHE_RESTORED, 'true')
+      - script: make deps
+        displayName: Install dependencies
+      - script: make lint
+        displayName: Lint
+      - script: make test
+        displayName: Run tests
+      - bash: |
+          sudo chown root:root /
+          sudo apt-get update && sudo apt-get install -y snapd
+          sudo snap install snapcraft --classic
+          echo -n "${SNAP_LOGIN}" | base64 -d > snap_login
+          snapcraft login --with snap_login
+        displayName: Setup snapcraft
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
+        env:
+          SNAP_LOGIN: $(SNAP_LOGIN)
+      - script: make build
+        displayName: Build
+        env:
+          GH_TOKEN: $(GH_TOKEN)
+      - bash: |
+          mkdir -p "$AZURE_CACHE_FOLDER"
+          tar -czf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" "$YARN_CACHE_FOLDER"
+        displayName: Pack cache

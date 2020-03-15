@@ -1,0 +1,15 @@
+.StatusBrick {
+  $brickSize: 8px;
+
+  display: inline-block;
+  width: $brickSize;
+  height: $brickSize;
+  margin-right: $margin;
+  background: $colorOk;
+  border-radius: 2px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+

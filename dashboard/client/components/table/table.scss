@@ -1,0 +1,53 @@
+.Table {
+  &.scrollable {
+    &.light {
+      @include custom-scrollbar(dark);
+    }
+    
+    @include custom-scrollbar();
+    flex: 1 0 0; // hackfix: flex-basis must be "0" for proper work in firefox
+  }
+
+  &.autoSize {
+    .TableCell {
+      flex: 1 0;
+    }
+  }
+
+  &.selectable {
+    .TableHead, .TableRow {
+      padding: 0 $padding;
+    }
+
+    .TableRow {
+      cursor: pointer;
+
+      &:hover {
+        background-color: $tableBgcSelected !important;
+      }
+
+      &.selected {
+        background-color: $tableBgcSelected;
+        color: $tableSelectedRowColor;
+
+        &:before {
+          content: "";
+          background: $primary;
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 4px;
+          height: 100%;
+        }
+      }
+    }
+  }
+
+  &.striped {
+    .TableRow {
+      &:nth-child(odd) {
+        background-color: $tableBgcStripe;
+      }
+    }
+  }
+}

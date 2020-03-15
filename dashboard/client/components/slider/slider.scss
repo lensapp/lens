@@ -1,0 +1,17 @@
+.Slider {
+  .track {
+    background: $kontenaBlue;
+  }
+
+  .thumb {
+    background: $kontenaBlue;
+
+    &.activated, &.jumped, &.focused {
+      box-shadow: 0 0 0 $unit * 2 rgba($kontenaBlue, 0.16)!important;
+    }
+
+    &:hover{
+      box-shadow: 0 0 0 $unit rgba($kontenaBlue, 0.16);
+    }
+  }
+}

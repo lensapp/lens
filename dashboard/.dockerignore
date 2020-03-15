@@ -1,0 +1,12 @@
+.idea
+node_modules/
+build/
+dist/
+wireframes/
+backup
+npm-debug.log
+.vscode
+.env
+/tslint.json
+*.DS_Store
+docker-compose.yml

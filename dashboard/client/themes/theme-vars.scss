@@ -1,0 +1,122 @@
+// Base colors
+$kontenaBlue: var(--blue);
+$kontenaMagenta: var(--magenta);
+$golden: var(--golden);
+$halfGray: var(--halfGray);
+$primary: var(--primary);
+$textColorPrimary: var(--textColorPrimary);
+$textColorSecondary: var(--textColorSecondary);
+$textColorAccent: var(--textColorAccent);
+$borderColor: var(--borderColor);
+$borderFaintColor: var(--borderFaintColor);
+$colorSuccess: var(--colorSuccess);
+$colorOk: var(--colorOk);
+$colorInfo: var(--colorInfo);
+$colorError: var(--colorError);
+$colorSoftError: var(--colorSoftError);
+$colorWarning: var(--colorWarning);
+$colorVague: var(--colorVague);
+$colorTerminated: var(--colorTerminated);
+
+// Layout
+$mainBackground: var(--mainBackground);
+$contentColor: var(--contentColor);
+$layoutBackground: var(--layoutBackground);
+$layoutTabsBackground: var(--layoutTabsBackground);
+$layoutTabsActiveColor: var(--layoutTabsActiveColor);
+
+// Sidebar
+$sidebarLogoBackground: var(--sidebarLogoBackground);
+$sidebarActiveColor: var(--sidebarActiveColor);
+$sidebarSubmenuActiveColor: var(--sidebarSubmenuActiveColor);
+$sidebarBackground: var(--sidebarBackground);
+
+// Elements
+$buttonPrimaryBackground: var(--buttonPrimaryBackground);
+$buttonDefaultBackground: var(--buttonDefaultBackground);
+$buttonAccentBackground: var(--buttonAccentBackground);
+$buttonDisabledBackground: var(--buttonDisabledBackground);
+
+// Tables
+$tableBgcStripe: var(--tableBgcStripe);
+$tableBgcSelected: var(--tableBgcSelected);
+$tableHeaderBackground: var(--tableHeaderBackground);
+$tableHeaderBorderWidth: var(--tableHeaderBorderWidth);
+$tableHeaderBorderColor: var(--tableHeaderBorderColor);
+$tableHeaderColor: var(--tableHeaderColor);
+$tableSelectedRowColor: var(--tableSelectedRowColor);
+
+// Helm
+$helmLogoBackground: var(--helmLogoBackground);
+$helmImgBackground: var(--helmImgBackground);
+$helmStableRepo: var(--helmStableRepo);
+$helmIncubatorRepo: var(--helmIncubatorRepo);
+$helmDescriptionHr: var(--helmDescriptionHr);
+$helmDescriptionBlockqouteColor: var(--helmDescriptionBlockqouteColor);
+$helmDescriptionBlockqouteBorder: var(--helmDescriptionBlockqouteBorder);
+$helmDescriptionBlockquoteBackground: var(--helmDescriptionBlockquoteBackground);
+$helmDescriptionHeaders: var(--helmDescriptionHeaders);
+$helmDescriptionH6: var(--helmDescriptionH6);
+$helmDescriptionTdBorder: var(--helmDescriptionTdBorder);
+$helmDescriptionTrBackground: var(--helmDescriptionTrBackground);
+$helmDescriptionCodeBackground: var(--helmDescriptionCodeBackground);
+$helmDescriptionPreBackground: var(--helmDescriptionPreBackground);
+$helmDescriptionPreColor: var(--helmDescriptionPreColor);
+
+// Dock
+$dockHeadBackground: var(--dockHeadBackground);
+$dockInfoBackground: var(--dockInfoBackground);
+$dockInfoBorderColor: var(--dockInfoBorderColor);
+
+// Terminal
+$terminalBackground: var(--terminalBackground);
+$terminalForeground: var(--terminalForeground);
+$terminalCursor: var(--terminalCursor);
+$terminalCursorAccent: var(--terminalCursorAccent);
+$terminalSelection: var(--terminalSelection);
+$terminalBlack: var(--terminalBlack);
+$terminalRed: var(--terminalRed);
+$terminalGreen: var(--terminalGreen);
+$terminalYellow: var(--terminalYellow);
+$terminalBlue: var(--terminalBlue);
+$terminalMagenta: var(--terminalMagenta);
+$terminalCyan: var(--terminalCyan);
+$terminalWhite: var(--terminalWhite);
+$terminalBrightBlack: var(--terminalBrightBlack);
+$terminalBrightRed: var(--terminalBrightRed);
+$terminalBrightGreen: var(--terminalBrightGreen);
+$terminalBrightYellow: var(--terminalBrightYellow);
+$terminalBrightBlue: var(--terminalBrightBlue);
+$terminalBrightMagenta: var(--terminalBrightMagenta);
+$terminalBrightCyan: var(--terminalBrightCyan);
+$terminalBrightWhite: var(--terminalBrightWhite);
+
+// Dialogs
+$dialogTextColor: var(--dialogTextColor);
+$dialogBackground: var(--dialogBackground);
+$dialogHeaderBackground: var(--dialogHeaderBackground);
+$dialogFooterBackground: var(--dialogFooterBackground);
+
+// Drawer
+$drawerTogglerBackground: var(--drawerTogglerBackground);
+$drawerTitleText: var(--drawerTitleText);
+$drawerSubtitleBackground: var(--drawerSubtitleBackground);
+$drawerItemNameColor: var(--drawerItemNameColor);
+$drawerItemValueColor: var(--drawerItemValueColor);
+
+// Charts
+$chartLiveBarBackgound: var(--chartLiveBarBackgound);
+$chartStripesColor: var(--chartStripesColor);
+$chartCapacityColor: var(--chartCapacityColor);
+$pieChartDefaultColor: var(--pieChartDefaultColor);
+
+// Misc
+$boxShadow: var(--boxShadow);
+$iconActiveColor: var(--iconActiveColor);
+$iconActiveBackground: var(--iconActiveBackground);
+$filterAreaBackground: var(--filterAreaBackground);
+
+$selectOptionHoveredColor: var(--selectOptionHoveredColor);
+$lineProgressBackground: var(--lineProgressBackground);
+$radioActiveBackground: var(--radioActiveBackground);
+$menuActiveBackground: var(--menuActiveBackground);

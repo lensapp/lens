@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "baseUrl": "../",
+    "rootDir": "../",
+    "outDir": "../build",
+    "jsx": "preserve",
+    "target": "es2016",
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "traceResolution": false,
+    "resolveJsonModule": true,
+    "paths": {
+      "@lingui/macro": [
+        "node_modules/@types/lingui__macro"
+      ]
+    }
+  },
+  "exclude": [
+    "../test",
+    "**/__tests__"
+  ]
+}

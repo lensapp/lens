@@ -1,0 +1,16 @@
+.InstallChart {
+  .Select {
+    &.NamespaceSelect {
+      min-width: 130px;
+    }
+
+    &.chart-version {
+      min-width: 80px;
+    }
+  }
+}
+
+.InstallChartDone {
+  --flex-gap: #{$padding * 1.5};
+  padding: $padding * 2;
+}

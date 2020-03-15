@@ -1,0 +1,14 @@
+{
+  "extends": "../client/tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../build",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "esnext",
+    "sourceMap": false,
+    "esModuleInterop": true
+  },
+  "include": [
+    "./app.ts"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "extends": "../client/tsconfig.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "jsx": "react",
+    "target": "es6",
+  }
+}
