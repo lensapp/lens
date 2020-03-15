@@ -1,0 +1,15 @@
+.AddRemoveButtons {
+  position: absolute;
+  margin: $padding * 2;
+  margin-right: $padding * 4;
+  bottom: 0;
+  right: 0;
+  z-index: 99;
+
+  .Button {
+    &.remove-button {
+      background-color: $borderFaintColor;
+      color: $textColorPrimary;
+    }
+  }
+}

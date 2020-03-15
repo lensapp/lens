@@ -1,0 +1,73 @@
+.Tabs {
+  display: flex;
+  user-select: none;
+  -webkit-user-select: none; /* safari */
+  -moz-user-select: none; /* firefox */
+
+  &.wrap {
+    flex-wrap: wrap;
+  }
+
+  &.center {
+    > :first-child {
+      margin-left: auto;
+    }
+
+    > :last-child {
+      margin-right: auto;
+    }
+  }
+
+  &.scrollable {
+    @include hidden-scrollbar;
+  }
+}
+
+.Tab {
+  --color-active: inherit;
+  --line-color-active: #{$primary};
+  --line-color-focus: currentColor;
+
+  position: relative;
+  padding: $padding $padding * 2;
+  white-space: nowrap;
+
+  &.disabled {
+    pointer-events: none;
+    opacity: .5;
+  }
+
+  &:not(.disabled) {
+    cursor: pointer;
+
+    &:after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 0;
+      height: $unit /2;
+      transition: width 250ms;
+      background: currentColor;
+      color: $halfGray
+    }
+
+    &:focus {
+      &:after {
+        color: var(--line-color-focus);
+      }
+    }
+
+    &:hover,
+    &.active {
+      color: var(--color-active);
+
+      &:after {
+        width: 100%;
+        left: 0;
+        right: auto;
+        color: var(--line-color-active);
+      }
+    }
+  }
+}

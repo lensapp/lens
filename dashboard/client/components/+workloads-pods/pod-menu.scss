@@ -1,0 +1,10 @@
+.PodMenu {
+  .StatusBrick {
+    margin-right: $margin;
+    @include pod-status-bgs;
+
+    &.running:not(.ready) {
+      background-color: $pod-status-pending-color;
+    }
+  }
+}

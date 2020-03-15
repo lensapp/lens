@@ -1,0 +1,9 @@
+.ReleaseRollbackDialog {
+  .WizardStep {
+    text-align: center;
+
+    .step-content {
+      padding: var(--wizard-spacing);
+    }
+  }
+}

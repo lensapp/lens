@@ -1,0 +1,38 @@
+.AddQuotaDialog {
+  .quota-select {
+    flex-basis: 55%;
+  }
+
+  .quota-entries {
+    margin: -$margin / 2;
+
+    &:empty {
+      display: none;
+    }
+
+    .quota {
+      --flex-gap: #{$padding};
+      border: 1px solid $halfGray;
+      border-radius: $radius;
+      margin: $margin / 2;
+      padding: $padding / 2 $padding;
+      transition: all 150ms ease;
+
+      &:hover {
+        box-shadow: inset 0 0 0 1px $borderColor;
+      }
+
+      .name {
+        font-weight: $font-weight-bold;
+      }
+
+      .value {
+        color: $contentColor;
+      }
+
+      .Icon:hover {
+        color: black;
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+.InfoPanel {
+  @include hidden-scrollbar;
+
+  background: $dockInfoBackground;
+  border-top: 1px solid $dockInfoBorderColor;
+  padding: $padding $padding * 2;
+  flex-shrink: 0;
+
+  .Spinner {
+    margin-right: $padding;
+  }
+
+  > .controls {
+    white-space: nowrap;
+
+    &:empty {
+      display: none;
+    }
+
+    &:not(:empty) + .info {
+      border: 1px solid $borderColor;
+      border-top: 0;
+      border-bottom: 0;
+      min-height: 25px;
+      padding-left: $padding;
+      padding-right: $padding;
+    }
+  }
+
+  > .info {
+    @include hidden-scrollbar;
+
+    min-width: 40px; // min-space for icon
+    flex: 1 1;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    > div {
+      padding-right: $padding;
+      flex-shrink: 0;
+    }
+
+    .Icon {
+      margin: 0;
+      margin-right: $padding;
+    }
+  }
+}

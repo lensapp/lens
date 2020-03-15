@@ -1,0 +1,18 @@
+.PodDetailsStatuses {
+  span {
+    padding-right: $margin;
+
+    &.running {
+      color: $pod-status-running-color;
+    }
+    &.pending {
+      color: $pod-status-pending-color;
+    }
+    &.succeeded {
+      color: $pod-status-succeeded-color;
+    }
+    &.failed {
+      color: $pod-status-failed-color;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+.ClusterPieCharts {
+  background: transparent!important;
+  padding: 0!important;
+
+  .empty {
+    background: $contentColor;
+    min-height: 280px;
+    text-align: center;
+    padding: $padding * 2;
+  }
+
+  .NodeCharts {
+    margin-bottom: 0;
+  }
+
+  .chart {
+    --flex-gap: #{$padding * 2};
+    background: $contentColor;
+    padding: $padding * 2 $padding;
+
+    .chart-title {
+      margin-bottom: 0;
+    }
+
+    .legend {
+      --flex-gap: #{$padding};
+    }
+  }
+}

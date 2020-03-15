@@ -1,0 +1,115 @@
+
+.Button {
+  position: relative;
+  overflow: hidden; // required for transition effect on hover
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: $radius;
+  background: $buttonDefaultBackground;
+  padding: round($padding * .9) $padding * 1.5;
+  flex-shrink: 0;
+  line-height: 1;
+  font-size: $font-size;
+
+  &[href] {
+    display: inline-block;
+  }
+
+  &.primary {
+    background: $buttonPrimaryBackground;
+  }
+  &.accent {
+    background: $buttonAccentBackground;
+  }
+
+  &.plain {
+    color: inherit;
+    background: transparent;
+    box-shadow: none;
+
+    &:disabled {
+      background: none;
+      opacity: .5;
+    }
+
+    &.active,
+    &:focus:not(:active) {
+      color: $buttonPrimaryBackground;
+      box-shadow: 0 0 0 1px inset;
+    }
+  }
+
+  &.big {
+    font-size: 2.2 * $unit;
+    border-radius: 50px;
+    padding: .75em 1em;
+  }
+
+  &.round {
+    border-radius: 50%;
+    padding: .7em;
+  }
+
+  form:not([novalidate]):invalid &[type=submit]:not(.active),
+  &:disabled {
+    color: silver;
+    background: $buttonDisabledBackground;
+    pointer-events: none;
+  }
+
+  &.waiting {
+    pointer-events: none;
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 100%;
+      background: transparentize(white, .85);
+      animation: waiting 1.5s infinite linear;
+    }
+  }
+
+  &:focus:not(:active) {
+    transition: box-shadow 350ms;
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .5);
+  }
+
+  &:active:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: transparentize(white, .85);
+    transform-origin: left top;
+    transition: transform 150ms;
+    transform: rotate(0deg);
+    // hackfix: safari prevents clicks on button when click-target is a child element nor button itself
+    pointer-events: none;
+  }
+
+  &:before {
+    content: "";
+    transform: rotate(-90deg);
+  }
+}
+
+@keyframes waiting {
+  0% {
+    left: 0;
+    width: 0;
+  }
+  50% {
+    left: 25%;
+    width: 75%;
+  }
+  75% {
+    left: 100%;
+    width: 0;
+  }
+}

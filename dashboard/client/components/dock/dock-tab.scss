@@ -1,0 +1,34 @@
+.DockTab {
+  padding: $padding;
+  padding-right: 0;
+
+  .Icon {
+    &.material {
+      --size: var(--small-size);
+    }
+
+    &.svg {
+      --size: 15px;
+    }
+  }
+
+  .label {
+    .title {
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &.pinned {
+    padding-right: $padding;
+  }
+
+  &:first-child {
+    padding-left: 0;
+  }
+
+  &:last-child {
+    padding-right: $padding;
+  }
+}

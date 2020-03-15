@@ -1,0 +1,28 @@
+@import "~xterm";
+
+.TerminalWindow {
+  margin: $padding;
+  margin-left: $padding * 2;
+  margin-top: $padding * 2;
+
+  &.light {
+    .xterm-viewport {
+      @include custom-scrollbar(dark);
+    }
+  }
+
+  > .xterm {
+    overflow: hidden;
+  }
+
+  .xterm-viewport {
+    @include custom-scrollbar;
+  }
+
+  // fix: safari won't handle paste event for textarea with zero size block
+  .xterm-helper-textarea {
+    width: 10px !important;
+    height: 10px !important;
+    pointer-events: none;
+  }
+}

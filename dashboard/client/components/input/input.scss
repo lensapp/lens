@@ -1,0 +1,109 @@
+
+.Input {
+  position: relative;
+  text-align: left;
+
+  &.invalid.dirty:not(.validating) {
+    label:after {
+      width: 100%;
+      background: $colorError;
+    }
+  }
+
+  &.focused:not(.validating) {
+    label:after {
+      width: 100%;
+    }
+  }
+
+  &.validatingLine {
+    label:after {
+      width: 100%;
+      @include stripeLinesAnimation;
+    }
+  }
+
+  label {
+    --flex-gap: #{$padding / 1.5};
+
+    position: relative;
+    padding: $padding /4 * 3 0;
+    border-bottom: 1px solid $halfGray;
+
+    &:after {
+      content: "";
+      position: absolute;
+      top: calc(100% - 1px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: $primary;
+      transition: width 250ms;
+    }
+  }
+
+  input, textarea {
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    text-transform: inherit;
+
+    &:invalid {
+      box-shadow: none;
+    }
+
+    &::placeholder {
+      color: inherit;
+      opacity: .75;
+    }
+  }
+
+  textarea {
+    @include hidden-scrollbar;
+    line-height: 1.2;
+    resize: none;
+  }
+
+  fieldset:disabled &,
+  &.disabled {
+    opacity: .5;
+    pointer-events: none;
+  }
+
+  .input-info {
+    .errors {
+      color: var(color-error);
+      font-size: $font-size-small;
+    }
+
+    .maxLengthIndicator {
+      text-align: right;
+      font-size: 80%;
+      padding: $padding / 3;
+    }
+  }
+
+  //- Themes
+
+  &.theme {
+    &.round-black {
+      label {
+        background: $mainBackground;
+        border: 1px solid $borderFaintColor;
+        border-radius: $radius;
+        padding: $padding;
+
+        &:focus-within {
+          border: 2px solid $colorInfo;
+          padding: $padding - 1;
+        }
+
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+}

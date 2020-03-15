@@ -1,0 +1,39 @@
+.ItemListLayout {
+  background: $contentColor;
+  height: 100%;
+
+  > .header {
+    --flex-gap: #{$padding * 2};
+    padding: var(--flex-gap);
+
+    .title {
+      color: $textColorPrimary;
+    }
+
+    .info-panel {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .SearchInput {
+      label {
+        background: none;
+        border: none;
+        border-radius: $radius;
+        box-shadow: 0 0 0 1px $halfGray;
+      }
+    }
+  }
+
+  > .items {
+    position: relative;
+    min-height: 200px;
+  }
+
+  .TableCell {
+    &.menu {
+      @include table-cell-action;
+    }
+  }
+}
+

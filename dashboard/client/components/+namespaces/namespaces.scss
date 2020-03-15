@@ -1,0 +1,16 @@
+.Namespaces {
+  .TableCell {
+    &.name {
+      flex: 2;
+    }
+
+    &.labels {
+      flex: 4;
+      @include table-cell-labels-offsets;
+    }
+
+    &.status {
+      @include namespaceStatus;
+    }
+  }
+}

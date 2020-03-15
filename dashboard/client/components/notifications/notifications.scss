@@ -1,0 +1,45 @@
+.Notifications {
+  @include hidden-scrollbar;
+
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: $padding * 2;
+  max-height: 100vh;
+  z-index: 100000;
+
+  &:empty {
+    display: none;
+  }
+
+  .notification {
+    flex: 0 0;
+    padding: $padding;
+    border-radius: 3px;
+    min-width: 350px;
+    max-width: 35vw;
+    word-break: break-word;
+
+    &:not(:last-child) {
+      margin-bottom: $margin * 2;
+    }
+
+    > .message {
+      white-space: pre-line;
+      padding-left: $padding;
+      padding-right: $padding * 2;
+
+      a {
+        color: inherit;
+      }
+    }
+
+    @each $status, $color in (ok: $colorOk, error: $colorError, info: $colorInfo) {
+      &.#{$status} {
+        background: $color;
+        color: $color-white;
+        box-shadow: 0 0 20px $boxShadow;
+      }
+    }
+  }
+}

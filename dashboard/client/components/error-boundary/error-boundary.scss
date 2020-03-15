@@ -1,0 +1,14 @@
+.ErrorBoundary {
+  --flex-gap: #{$padding * 2};
+
+  padding: var(--flex-gap);
+  word-break: break-all;
+
+  code {
+    max-height: none;
+    border: 5px solid $borderFaintColor;
+    white-space: pre-wrap;
+    background: $contentColor;
+    color: $textColorSecondary;
+  }
+}

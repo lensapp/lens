@@ -1,0 +1,86 @@
+
+.MainLayout {
+  --main-layout-header: 40px;
+  --sidebar-max-size: 200px;
+
+  display: grid;
+  grid-template-areas: "aside header" "aside tabs" "aside main" "aside footer";
+  grid-template-rows: [header] var(--main-layout-header) [tabs] min-content [main] 1fr [footer] auto;
+  grid-template-columns: [sidebar] minmax(var(--main-layout-header), min-content) [main] 1fr;
+  height: 100vh;
+
+  &.light {
+    main {
+      @include custom-scrollbar(dark);
+      overflow-y: scroll;
+    }
+  }
+
+  > .Tabs {
+    grid-area: tabs;
+    background: $layoutTabsBackground;
+
+    .Tab {
+      --color-active: #{$layoutTabsActiveColor};
+    }
+  }
+
+  header {
+    grid-area: header;
+    background: $layoutBackground;
+    padding: $padding $padding * 2;
+
+    span + .lens-version {
+      margin-left: $margin;
+    }
+
+    .lens-version {
+      font-size: x-small;
+      text-transform: uppercase;
+    }
+  }
+
+  aside {
+    grid-area: aside;
+    position: relative;
+    background: $sidebarBackground;
+    white-space: nowrap;
+    transition: width 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+
+    &.pinned {
+      width: var(--sidebar-max-size);
+    }
+
+    &:not(.pinned) {
+      position: absolute;
+      width: var(--main-layout-header);
+      height: 100%;
+      overflow: hidden;
+
+      &.accessible:hover {
+        width: var(--sidebar-max-size);
+        transition-delay: 750ms;
+        box-shadow: 3px 3px 16px rgba(0, 0, 0, .35);
+        z-index: $zIndex-sidebar-hover;
+      }
+    }
+  }
+
+  main {
+    @include custom-scrollbar;
+    $spacing: $margin * 2;
+
+    grid-area: main;
+    overflow-y: scroll; // always reserve space for scrollbar (17px)
+    overflow-x: auto;
+    margin: $spacing;
+    margin-right: 0;
+  }
+
+  footer {
+    position: relative;
+    grid-area: footer;
+    min-width: 0; // restrict size when overflow content (e.g. <Dock> tabs scrolling)
+  }
+}

@@ -1,0 +1,17 @@
+// CRD conditions from here https://github.com/kubernetes/apiextensions-apiserver/blob/master/pkg/apis/apiextensions/types.go
+$crd-condition-colors: (
+  Established: $colorSuccess,
+  NamesAccepted: $colorOk,
+  NonStructuralSchema: $colorError,
+  Terminating: $colorTerminated,
+  KubernetesAPIApprovalPolicyConformant: $colorWarning
+);
+
+@mixin crd-condition-bgc {
+  @each $status, $color in $crd-condition-colors {
+    &.#{$status} {
+      background: $color;
+      color: white;
+    }
+  }
+}

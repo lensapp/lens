@@ -1,0 +1,25 @@
+$release-status-color-list: (
+  deployed: $colorSuccess,
+  failed: $colorError,
+  deleting: $colorWarning,
+  pendingInstall: $colorInfo,
+  pendingUpgrade: $colorInfo,
+  pendingRollback: $colorInfo,
+);
+
+@mixin release-status-bgs {
+  @each $status, $color in $release-status-color-list {
+    &.#{$status} {
+      color: white;
+      background: $color;
+    }
+  }
+}
+
+@mixin release-status-colors {
+  @each $status, $color in $release-status-color-list {
+    &.#{$status} {
+      color: $color;
+    }
+  }
+}

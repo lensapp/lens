@@ -1,0 +1,13 @@
+.PodDetails {
+  .status {
+    @include pod-status-colors;
+  }
+
+  .volume {
+    .title {
+      margin-top: $margin * 2;
+      margin-bottom: $margin;
+      font-weight: bold;
+    }
+  }
+}

@@ -1,0 +1,15 @@
+.VirtualList {
+  overflow: hidden;
+
+  &.light {
+    .list {
+      @include custom-scrollbar(dark);
+    }
+  }
+
+  > .list {
+    @include custom-scrollbar;
+    overflow-y: overlay !important;
+    overflow-x: hidden !important;
+  }
+}

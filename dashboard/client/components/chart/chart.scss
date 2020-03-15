@@ -1,0 +1,27 @@
+.Chart {
+  position: relative;
+
+  &.BarChart {
+    margin-left: -$margin * 2.2;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .legend {
+    .Badge {
+      background: transparent;
+      transition: background-color 250ms;
+      white-space: normal;
+
+      &:hover {
+        background: $colorVague;
+        cursor: default;
+      }
+    }
+  }
+
+  .zebra-cover {
+    position: absolute;
+    pointer-events: none;
+  }
+}
