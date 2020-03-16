@@ -1,5 +1,4 @@
 import * as ElectronStore from "electron-store"
-import * as appUtil from "./app-utils"
 import * as version210Beta4 from "./migrations/user-store/2.1.0-beta.4"
 
 export interface User {
@@ -33,7 +32,6 @@ export class UserStore {
 
   private constructor() {
     this.store = new ElectronStore({
-      projectVersion: appUtil.getAppVersion(),
       migrations: {
         "2.1.0-beta.4": version210Beta4.migration,
       }
