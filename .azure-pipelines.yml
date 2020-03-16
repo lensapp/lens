@@ -1,7 +1,9 @@
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   AZURE_CACHE_FOLDER: $(Pipeline.Workspace)/.azure-cache
-pr: none
+pr:
+  - master
+  - releases/*
 trigger:
   branches:
     include:
