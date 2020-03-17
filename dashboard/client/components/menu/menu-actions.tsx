@@ -40,9 +40,8 @@ export class MenuActions extends React.Component<MenuActionsProps> {
 
   @autobind()
   remove() {
-    const { removeAction} = this.props;
+    const { removeAction } = this.props;
     let { removeConfirmationMessage } = this.props;
-
     if (typeof removeConfirmationMessage === "function") {
       removeConfirmationMessage = removeConfirmationMessage();
     }
@@ -56,8 +55,9 @@ export class MenuActions extends React.Component<MenuActionsProps> {
   renderTriggerIcon() {
     if (this.props.toolbar) return;
     const { triggerIcon = "more_vert" } = this.props;
+    let className: string;
     if (isValidElement<HTMLElement>(triggerIcon)) {
-      const className = cssNames(triggerIcon.props.className, { active: this.isOpen });
+      className = cssNames(triggerIcon.props.className, { active: this.isOpen });
       return React.cloneElement(triggerIcon, { id: this.id, className } as any);
     }
     const iconProps: Partial<IconProps> = {
@@ -77,11 +77,10 @@ export class MenuActions extends React.Component<MenuActionsProps> {
 
   render() {
     const {
-      toolbar, children, updateAction, removeAction, triggerIcon, removeConfirmationMessage,
+      className, toolbar, children, updateAction, removeAction, triggerIcon, removeConfirmationMessage,
       ...menuProps
     } = this.props;
-    let { className } = this.props;
-    className = cssNames("MenuActions flex", className, {
+    const menuClassName = cssNames("MenuActions flex", className, {
       toolbar: toolbar,
       gaps: toolbar, // add spacing for .flex
     });
@@ -92,7 +91,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
         <Menu
           htmlFor={this.id}
           isOpen={this.isOpen} open={this.toggle} close={this.toggle}
-          className={className}
+          className={menuClassName}
           usePortal={autoClose}
           closeOnScroll={autoClose}
           closeOnClickItem={autoClose}
