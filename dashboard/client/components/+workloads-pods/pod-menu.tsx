@@ -3,7 +3,7 @@ import "./pod-menu.scss";
 import * as React from "react";
 import { t, Trans } from "@lingui/macro";
 import { MenuItem, SubMenu } from "../menu";
-import { IPodContainer, Pod } from "../../api/endpoints";
+import { IPodContainer, Pod, nodesApi } from "../../api/endpoints";
 import { Icon } from "../icon";
 import { StatusBrick } from "../status-brick";
 import { PodLogsDialog } from "./pod-logs-dialog";
@@ -17,11 +17,18 @@ interface Props extends KubeObjectMenuProps<Pod> {
 }
 
 export class PodMenu extends React.Component<Props> {
-  execShell(container?: string) {
+  async execShell(container?: string) {
     hideDetails();
     const { object: pod } = this.props
     const containerParam = container ? `-c ${container}` : ""
-    const command = `kubectl exec -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam} "--" sh -c "((clear && bash) || (clear && ash) || (clear && sh))"`
+    const node = await nodesApi.get({name: pod.getNodeName()})
+    let command = `kubectl exec -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam} "--"`
+    if (node.getOperatingSystem() == "windows") {
+      command = `${command} powershell`
+    } else {
+      command = `${command} sh -c "clear; (bash || ash || sh)"`
+    }
+
     terminalStore.sendCommand(command, {
       enter: true,
       newTab: true,

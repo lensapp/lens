@@ -401,6 +401,10 @@ export class Pod extends WorkloadKubeObject {
     );
     return probe;
   }
+
+  getNodeName() {
+    return this.spec?.nodeName
+  }
 }
 
 export const podsApi = new PodsApi({
