@@ -1,19 +1,21 @@
-# Lens
+# Lens | The Kubernetes IDE
 
 [![Build Status](https://dev.azure.com/lensapp/lensapp/_apis/build/status/lensapp.lens?branchName=master)](https://dev.azure.com/lensapp/lensapp/_build/latest?definitionId=1&branchName=master)
 
-Lens - The free, smart desktop application for managing Kubernetes clusters.
+Lens is the only IDE you’ll ever need to take control of your Kubernetes clusters. It is a standalone application for MacOS, Windows and Linux operating systems. It is open source and free.
 
 [![Screenshot](./images/screenshot.png)](https://youtu.be/04v2ODsmtIs))
 
 ## What makes Lens special?
 
 * Amazing usability and end user experience
+* Multi cluster management; Support for hundreds of clusters
+* Standalone application; No need to install anything in-cluster
 * Real-time cluster state visualization
 * Resource utilization charts and trends with history powered by built-in Prometheus
 * Terminal access to nodes and containers
-* Fully featured role based access control management
-* Dashboard access and functionality limited by RBAC
+* Performance optimized to handle massive clusters (tested with a cluster running 25k pods)
+* Full support for Kubernetes RBAC
 
 ## Installation
 
