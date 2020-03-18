@@ -145,6 +145,15 @@ export class Node extends KubeObject {
     return this.status.nodeInfo.kubeletVersion;
   }
 
+  getOperatingSystem(): string {
+    const label = this.getLabels().find(label => label.startsWith("kubernetes.io/os="))
+    if (label) {
+      return label.split("=", 2)[1]
+    }
+
+    return "linux"
+  }
+
   isUnschedulable() {
     return this.spec.unschedulable
   }
