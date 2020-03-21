@@ -2,6 +2,7 @@ import * as http from "http";
 import { Cluster } from "./cluster";
 import { helmApi } from "./helm-api"
 import { resourceApplierApi } from "./resource-applier-api"
+import { kubeconfigRoute } from "./routes/kubeconfig"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Call = require('@hapi/call');
@@ -65,6 +66,8 @@ export class Router {
   }
 
   protected addRoutes() {
+    this.router.add({ method: 'get', path: '/api/kubeconfig/service-account/{namespace}/{account}' }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute))
+
     // Helm API
     this.router.add({ method: 'get', path: '/api-helm/v2/charts' }, helmApi.listCharts.bind(helmApi))
     this.router.add({ method: 'get', path: '/api-helm/v2/charts/{repo}/{chart}' }, helmApi.getChart.bind(helmApi))
