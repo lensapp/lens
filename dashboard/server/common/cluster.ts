@@ -1,9 +1,4 @@
-export interface IClusterConfigMap {
-  clusterName: string;
-  clusterUrl: string;
-}
-
-export interface IClusterInfo extends IClusterConfigMap {
+export interface IClusterInfo {
   kubeVersion?: string;
-  pharosVersion?: string;
+  clusterName?: string;
 }

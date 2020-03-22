@@ -8,7 +8,7 @@ import compression from "compression"
 import helmet from "helmet"
 import morgan from "morgan"
 import { logger } from "../server/utils/logger"
-import { configRoute, kubewatchRoute, metricsRoute, readyStateRoute } from "../server/routes";
+import { kubewatchRoute, metricsRoute, readyStateRoute } from "../server/routes";
 import { useRequestHeaderToken } from "../server/middlewares";
 
 const {
@@ -23,7 +23,6 @@ const outputDir = path.resolve(process.cwd(), BUILD_DIR, CLIENT_DIR);
 app.set('trust proxy', 1); // trust first proxy
 
 localApis.use(
-  configRoute(),
   readyStateRoute(),
   kubewatchRoute(),
   metricsRoute()

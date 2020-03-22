@@ -1,5 +1,6 @@
 import * as http from "http";
 import { Cluster } from "./cluster";
+import { configRoute } from "./routes/config"
 import { helmApi } from "./helm-api"
 import { resourceApplierApi } from "./resource-applier-api"
 import { kubeconfigRoute } from "./routes/kubeconfig"
@@ -66,6 +67,7 @@ export class Router {
   }
 
   protected addRoutes() {
+    this.router.add({ method: 'get', path: '/api/config' }, configRoute.routeConfig.bind(configRoute))
     this.router.add({ method: 'get', path: '/api/kubeconfig/service-account/{namespace}/{account}' }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute))
 
     // Helm API
