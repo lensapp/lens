@@ -86,6 +86,10 @@ export class ContextHandler {
     }
   }
 
+  public getPrometheusPath() {
+    return this.prometheusPath
+  }
+
   public async init() {
     const currentCluster = this.kc.getCurrentCluster()
     if (currentCluster.caFile) {

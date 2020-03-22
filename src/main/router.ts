@@ -4,6 +4,7 @@ import { configRoute } from "./routes/config"
 import { helmApi } from "./helm-api"
 import { resourceApplierApi } from "./resource-applier-api"
 import { kubeconfigRoute } from "./routes/kubeconfig"
+import { metricsRoute } from "./routes/metrics"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Call = require('@hapi/call');
@@ -69,6 +70,9 @@ export class Router {
   protected addRoutes() {
     this.router.add({ method: 'get', path: '/api/config' }, configRoute.routeConfig.bind(configRoute))
     this.router.add({ method: 'get', path: '/api/kubeconfig/service-account/{namespace}/{account}' }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute))
+
+    // Metrics API
+    this.router.add({ method: 'post', path: '/api/metrics' }, metricsRoute.routeMetrics.bind(metricsRoute))
 
     // Helm API
     this.router.add({ method: 'get', path: '/api-helm/v2/charts' }, helmApi.listCharts.bind(helmApi))

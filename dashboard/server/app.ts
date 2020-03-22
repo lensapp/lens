@@ -8,7 +8,7 @@ import compression from "compression"
 import helmet from "helmet"
 import morgan from "morgan"
 import { logger } from "../server/utils/logger"
-import { kubewatchRoute, metricsRoute, readyStateRoute } from "../server/routes";
+import { kubewatchRoute, readyStateRoute } from "../server/routes";
 import { useRequestHeaderToken } from "../server/middlewares";
 
 const {
@@ -25,7 +25,6 @@ app.set('trust proxy', 1); // trust first proxy
 localApis.use(
   readyStateRoute(),
   kubewatchRoute(),
-  metricsRoute()
 );
 
 // https://github.com/expressjs/cookie-session
