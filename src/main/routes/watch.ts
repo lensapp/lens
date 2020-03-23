@@ -10,6 +10,8 @@ class ApiWatcher {
   private response: ServerResponse
   private watchRequest: Request
   private watch: Watch
+  private processor: NodeJS.Timeout
+  private eventBuffer: any[] = []
 
   constructor(apiUrl: string, kubeConfig: KubeConfig, response: ServerResponse) {
     this.apiUrl = apiUrl
@@ -18,17 +20,30 @@ class ApiWatcher {
   }
 
   public start() {
+    if (this.processor) {
+      clearInterval(this.processor)
+    }
+    this.processor = setInterval(() => {
+      console.log(this.eventBuffer.length)
+      const events = this.eventBuffer.splice(0)
+      events.map(event => this.sendEvent(event))
+      this.response.flushHeaders()
+    }, 50)
     this.watchRequest = this.watch.watch(this.apiUrl, {}, this.watchHandler.bind(this), this.doneHandler.bind(this))
   }
 
   public stop() {
     if (!this.watchRequest) { return }
 
+    if (this.processor) {
+      clearInterval(this.processor)
+    }
+    logger.debug("Stopping watcher for api: " + this.apiUrl)
     this.watchRequest.abort()
   }
 
   private watchHandler(phase: string, obj: RuntimeRawExtension) {
-    this.sendEvent({
+    this.eventBuffer.push({
       type: phase,
       object: obj
     })
@@ -47,14 +62,9 @@ class ApiWatcher {
     this.start()
   }
 
-  private sendEvent(evt: any, autoFlush = true) {
+  private sendEvent(evt: any) {
     // convert to "text/event-stream" format
     this.response.write(`data: ${JSON.stringify(evt)}\n\n`);
-    if (autoFlush) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
-      this.response.flush()
-    }
   }
 }
 
@@ -84,10 +94,12 @@ class WatchRoute extends LensApi {
     })
 
     request.raw.req.on("close", () => {
+      logger.debug("Watch request closed")
       watchers.map(watcher => watcher.stop())
     })
 
     request.raw.req.on("end", () => {
+      logger.debug("Watch request ended")
       watchers.map(watcher => watcher.stop())
     })
 
