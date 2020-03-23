@@ -24,7 +24,6 @@ class ApiWatcher {
       clearInterval(this.processor)
     }
     this.processor = setInterval(() => {
-      console.log(this.eventBuffer.length)
       const events = this.eventBuffer.splice(0)
       events.map(event => this.sendEvent(event))
       this.response.flushHeaders()
