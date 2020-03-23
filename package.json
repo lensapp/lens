@@ -12,6 +12,9 @@
   "config": {
     "bundledKubectlVersion": "1.17.3"
   },
+  "engines": {
+    "node": ">=0.12 <0.13"
+  },
   "build": {
     "afterSign": "build/notarize.js",
     "extraResources": [
