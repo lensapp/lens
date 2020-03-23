@@ -6,7 +6,7 @@ endif
 
 .PHONY: dev build test clean
 
-dev: app-deps dashboard-deps build-dashboard-server
+dev: app-deps dashboard-deps
 	yarn dev
 
 test: test-app test-dashboard
@@ -39,25 +39,8 @@ clean-dashboard:
 test-dashboard: dashboard-deps
 	cd dashboard && yarn test
 
-build-dashboard: build-dashboard-server build-dashboard-client
-
-build-dashboard-server: dashboard-deps clean-dashboard
-	cd dashboard && yarn build-server
-ifeq "$(DETECTED_OS)" "Linux"
-	rm binaries/server/linux/lens-server || true
-	cd dashboard && yarn pkg-server-linux
-endif
-ifeq "$(DETECTED_OS)" "Darwin"
-	rm binaries/server/darwin/lens-server || true
-	cd dashboard && yarn pkg-server-macos
-endif
-ifeq "$(DETECTED_OS)" "Windows"
-	rm binaries/server/windows/*.exe || true
-	cd dashboard && yarn pkg-server-win
-endif
-
-build-dashboard-client: dashboard-deps clean-dashboard
-	cd dashboard && yarn build-client
+build-dashboard: dashboard-deps clean-dashboard
+	cd dashboard && yarn build
 
 clean:
 	rm -rf dist/*
