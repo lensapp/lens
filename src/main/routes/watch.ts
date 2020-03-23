@@ -51,6 +51,7 @@ class ApiWatcher {
     // convert to "text/event-stream" format
     this.response.write(`data: ${JSON.stringify(evt)}\n\n`);
     if (autoFlush) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       this.response.flush()
     }
