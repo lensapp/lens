@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "yarn extract && webpack-cli --watch --cache --progress --output-path ../static/build/client/",
-    "build": "yarn extract && NODE_ENV=production webpack -p --cache --progress --output-path ../static/build/client/",
+    "build": "yarn extract && env NODE_ENV=production webpack -p --progress --output-path ../static/build/client/",
     "test": "jest --config './test/jest.config.js'",
     "add-locale": "lingui add-locale",
     "extract": "lingui extract --clean",
