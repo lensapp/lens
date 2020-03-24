@@ -1,12 +1,22 @@
-import * as http from "http";
-import { Cluster } from "./cluster";
+import * as http from "http"
+import * as path from "path"
+import { Cluster } from "./cluster"
+import { configRoute } from "./routes/config"
 import { helmApi } from "./helm-api"
 import { resourceApplierApi } from "./resource-applier-api"
+import { kubeconfigRoute } from "./routes/kubeconfig"
+import { metricsRoute } from "./routes/metrics"
+import { watchRoute } from "./routes/watch"
+import { readFile } from "fs"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Call = require('@hapi/call');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Subtext = require('@hapi/subtext');
+
+declare const __static: string;
+
+const assetsPath = path.join(__static, "build/client")
 
 interface RouteParams {
   [key: string]: string | undefined;
@@ -64,7 +74,35 @@ export class Router {
     return request
   }
 
+  protected handleStaticFile(file: string, response: http.ServerResponse) {
+    const asset = path.join(assetsPath, file)
+    readFile(asset, (err, data) => {
+      if (err) {
+        response.statusCode = 404
+      } else {
+        response.write(data)
+        response.end()
+      }
+    })
+  }
+
   protected addRoutes() {
+    // Static assets
+    this.router.add({ method: 'get', path: '/{path*}' }, (request: LensApiRequest) => {
+      const { response, params } = request
+      const file = params.path || "/index.html"
+      this.handleStaticFile(file, response)
+    })
+
+    this.router.add({ method: 'get', path: '/api/config' }, configRoute.routeConfig.bind(configRoute))
+    this.router.add({ method: 'get', path: '/api/kubeconfig/service-account/{namespace}/{account}' }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute))
+
+    // Watch API
+    this.router.add({ method: 'get', path: '/api/watch' }, watchRoute.routeWatch.bind(watchRoute))
+
+    // Metrics API
+    this.router.add({ method: 'post', path: '/api/metrics' }, metricsRoute.routeMetrics.bind(metricsRoute))
+
     // Helm API
     this.router.add({ method: 'get', path: '/api-helm/v2/charts' }, helmApi.listCharts.bind(helmApi))
     this.router.add({ method: 'get', path: '/api-helm/v2/charts/{repo}/{chart}' }, helmApi.getChart.bind(helmApi))
