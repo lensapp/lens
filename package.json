@@ -38,10 +38,6 @@
       ],
       "extraResources": [
         {
-          "from": "binaries/server/linux/lens-server",
-          "to": "./lens-server.txt"
-        },
-        {
           "from": "binaries/client/linux/x64/kubectl",
           "to": "./x64/kubectl"
         }
@@ -54,10 +50,6 @@
       "entitlementsInherit": "build/entitlements.mac.plist",
       "extraResources": [
         {
-          "from": "binaries/server/darwin/lens-server",
-          "to": "./lens-server.txt"
-        },
-        {
           "from": "binaries/client/darwin/x64/kubectl",
           "to": "./x64/kubectl"
         }
@@ -68,10 +60,6 @@
         "nsis"
       ],
       "extraResources": [
-        {
-          "from": "binaries/server/win32/lens-server-x64.exe",
-          "to": "./lens-server-x64.exe"
-        },
         {
           "from": "binaries/server/win32/lens-server-ia32.exe",
           "to": "./lens-server-ia32.exe"
@@ -107,7 +95,7 @@
   },
   "scripts": {
     "dev": "concurrently -n 'app,dash' 'yarn dev-electron' 'yarn dev-dashboard'",
-    "dev-dashboard": "cd dashboard && yarn app-dev",
+    "dev-dashboard": "cd dashboard && yarn dev",
     "dev-electron": "electron-webpack dev",
     "compile": "yarn download:kubectl && electron-webpack",
     "build:linux": "yarn compile && electron-builder --linux --dir",
@@ -168,6 +156,7 @@
   "devDependencies": {
     "@types/ejs": "^2.6.3",
     "@types/electron-window-state": "^2.0.31",
+    "@types/hapi": "^18.0.3",
     "@types/http-proxy": "^1.17.0",
     "@types/jest": "^24.0.18",
     "@types/jsonwebtoken": "^8.3.5",

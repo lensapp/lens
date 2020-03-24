@@ -14,6 +14,7 @@ import { UserManagement } from "./+user-management/user-management";
 import { ConfirmDialog } from "./confirm-dialog";
 import { usersManagementRoute } from "./+user-management/user-management.routes";
 import { clusterRoute, clusterURL } from "./+cluster";
+import { KubeConfigDialog } from "./kubeconfig-dialog/kubeconfig-dialog";
 import { Nodes, nodesRoute } from "./+nodes";
 import { Workloads, workloadsRoute, workloadsURL } from "./+workloads";
 import { Namespaces, namespacesRoute } from "./+namespaces";
@@ -70,6 +71,7 @@ class App extends React.Component {
             <KubeObjectDetails/>
             <Notifications/>
             <ConfirmDialog/>
+            <KubeConfigDialog/>
             <AddRoleBindingDialog/>
             <PodLogsDialog/>
             <DeploymentScaleDialog/>

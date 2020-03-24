@@ -1,16 +1,12 @@
-import { app } from "electron"
 import { KubeConfig } from "@kubernetes/client-node"
 import { readFileSync } from "fs"
 import * as http from "http"
 import { ServerOptions } from "http-proxy"
 import * as url from "url"
-import { v4 as uuid } from "uuid"
 import logger from "./logger"
 import { getFreePort } from "./port"
-import { LensServer } from "./lens-server"
 import { KubeAuthProxy } from "./kube-auth-proxy"
 import { Cluster, ClusterPreferences } from "./cluster"
-import { userStore } from "../common/user-store"
 
 export class ContextHandler {
   public contextName: string
@@ -24,14 +20,12 @@ export class ContextHandler {
   protected apiTarget: ServerOptions
   protected proxyTarget: ServerOptions
   protected clusterUrl: url.UrlWithStringQuery
-  protected localServer: LensServer
   protected proxyServer: KubeAuthProxy
 
   protected clientCert: string
   protected clientKey: string
   protected secureApiConnection = true
   protected defaultNamespace: string
-  protected port: number
   protected proxyPort: number
   protected kubernetesApi: string
   protected prometheusPath: string
@@ -86,6 +80,10 @@ export class ContextHandler {
     }
   }
 
+  public getPrometheusPath() {
+    return this.prometheusPath
+  }
+
   public async init() {
     const currentCluster = this.kc.getCurrentCluster()
     if (currentCluster.caFile) {
@@ -124,41 +122,6 @@ export class ContextHandler {
     return this.apiTarget
   }
 
-  public async getProxyTarget() {
-    if (this.proxyTarget) {
-      return this.proxyTarget;
-    }
-
-    this.proxyTarget = {
-      changeOrigin: true,
-      secure: false,
-      target: {
-        host: this.clusterUrl.host,
-        hostname: "localhost",
-        path: "/",
-        port: await this.resolvePort(),
-        protocol: "http://",
-      },
-    }
-
-    return this.proxyTarget;
-  }
-
-  protected async resolvePort(): Promise<number> {
-    if (this.port) return this.port
-
-    let serverPort: number = null
-    try {
-      serverPort = await getFreePort(49153, 49900) // the proxy will usually already be on 49152 so skip that
-    } catch(error) {
-      logger.error(error)
-      throw(error)
-    }
-    this.port = serverPort
-
-    return serverPort
-  }
-
   protected async resolveProxyPort(): Promise<number> {
     if (this.proxyPort) return this.proxyPort
 
@@ -186,35 +149,7 @@ export class ContextHandler {
     }
   }
 
-  protected initServer(serverUrl: string, port: number) {
-    const userPrefs = userStore.getPreferences()
-    const envs = {
-      KUBE_CLUSTER_URL: serverUrl,
-      KUBE_CLUSTER_NAME: this.clusterName,
-      KUBERNETES_TLS_SKIP: "true",
-      KUBERNETES_NAMESPACE: this.defaultNamespace,
-      SESSION_SECRET: this.id,
-      LOCAL_SERVER_PORT: port.toString(),
-      KUBE_METRICS_URL: `${serverUrl}/api/v1/namespaces/${this.prometheusPath}/proxy`,
-      STATS_NAMESPACE_DEFAULT: this.prometheusPath.split("/")[0],
-      CHARTS_ENABLED: "true",
-      LENS_VERSION: app.getVersion(),
-      LENS_THEME: `kontena-${userPrefs.colorTheme}`,
-      NODE_ENV: "production",
-    }
-    logger.debug(`spinning up lens-server process with env: ${JSON.stringify(envs)}`)
-    this.localServer = new LensServer(serverUrl, envs)
-  }
-
   public async ensureServer() {
-    if (!this.localServer) {
-      const currentCluster = this.kc.getCurrentCluster()
-      const clusterUrl = url.parse(currentCluster.server)
-      const serverPort = await this.resolvePort()
-      logger.info(`initializing server for ${clusterUrl.host} on port ${serverPort}`)
-      this.initServer(this.kubernetesApi, serverPort)
-      await this.localServer.run()
-    }
     if (!this.proxyServer) {
       const proxyPort = await this.resolveProxyPort()
       const proxyEnv = Object.assign({}, process.env)
@@ -227,10 +162,6 @@ export class ContextHandler {
   }
 
   public stopServer() {
-    if (this.localServer) {
-      this.localServer.exit()
-      this.localServer = null
-    }
     if (this.proxyServer) {
       this.proxyServer.exit()
       this.proxyServer = null
