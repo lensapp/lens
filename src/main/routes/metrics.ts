@@ -37,7 +37,7 @@ class MetricsRoute extends LensApi {
           ...queryParams
         }
       }).catch(async (error) => {
-        if (attempt < maxAttempts) {
+        if (attempt < maxAttempts && (error.statusCode && error.statusCode != 404)) {
           await new Promise(resolve => setTimeout(resolve, attempt * 1000)); // add delay before repeating request
           return loadMetrics(query);
         }
