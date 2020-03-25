@@ -37,10 +37,6 @@ jobs:
         displayName: Cache Yarn packages
       - script: make deps
         displayName: Install dependencies
-      - script: make lint
-        displayName: Lint
-      - script: make test
-        displayName: Run tests
       - script: make build
         displayName: Build
         env:
@@ -127,7 +123,7 @@ jobs:
           sudo chown root:root /
           sudo apt-get update && sudo apt-get install -y snapd
           sudo snap install snapcraft --classic
-          echo -n "${SNAP_LOGIN}" | base64 -d > snap_login
+          echo -n "${SNAP_LOGIN}" | base64 -i -d > snap_login
           snapcraft login --with snap_login
         displayName: Setup snapcraft
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
