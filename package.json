@@ -6,8 +6,8 @@
     "email": "info@lakendlabs.com"
   },
   "copyright": "© 2020, Lakend Labs, Inc.",
-  "description": "The Smart Kubernetes Dashboard",
-  "version": "3.1.0-beta.0",
+  "description": "The Kubernetes IDE",
+  "version": "3.1.0-beta.1",
   "main": "main.ts",
   "config": {
     "bundledKubectlVersion": "1.17.3"
@@ -60,10 +60,6 @@
         "nsis"
       ],
       "extraResources": [
-        {
-          "from": "binaries/server/win32/lens-server-ia32.exe",
-          "to": "./lens-server-ia32.exe"
-        },
         {
           "from": "binaries/client/windows/x64/kubectl.exe",
           "to": "./x64/kubectl.exe"
