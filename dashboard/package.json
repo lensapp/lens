@@ -2,12 +2,12 @@
   "name": "kontena-lens",
   "version": "0.0.0",
   "scripts": {
-    "dev": "yarn extract && webpack-cli --watch --cache --progress --output-path ../static/build/client/",
-    "build": "yarn extract && env NODE_ENV=production webpack -p --progress --output-path ../static/build/client/",
+    "dev": "yarn compile && webpack-cli --watch --cache --progress --output-path ../static/build/client/",
+    "build": "webpack -p --progress --output-path ../static/build/client/",
     "test": "jest --config './test/jest.config.js'",
     "add-locale": "lingui add-locale",
-    "extract": "lingui extract --clean",
-    "compile": "lingui compile"
+    "lingui-extract": "lingui extract --clean",
+    "lingui-compile": "lingui compile"
   },
   "dependencies": {
     "axios": "^0.19.0",

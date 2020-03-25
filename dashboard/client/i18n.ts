@@ -44,7 +44,7 @@ export class LocalizationStore {
   async load(locale: string) {
     const catalog = await import(
       /* webpackMode: "lazy", webpackChunkName: "locale/[request]" */
-      `@lingui/loader!../locales/${locale}/messages.po`
+      `../locales/${locale}/messages.js`
     );
     return _i18n.load(locale, catalog);
   }
