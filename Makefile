@@ -40,6 +40,7 @@ test-dashboard: dashboard-deps
 	cd dashboard && yarn test
 
 build-dashboard: dashboard-deps clean-dashboard
+	export NODE_ENV=production
 	cd dashboard && yarn build
 
 clean:

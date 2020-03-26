@@ -11,4 +11,3 @@ dump.rdb
 /tslint.json
 *.DS_Store
 locales/_build/
-locales/**/*.js

@@ -90,7 +90,7 @@
     }
   },
   "scripts": {
-    "dev": "concurrently -n 'app,dash' 'yarn dev-electron' 'yarn dev-dashboard'",
+    "dev": "concurrently -n app,dash \"yarn dev-electron\" \"yarn dev-dashboard\"",
     "dev-dashboard": "cd dashboard && yarn dev",
     "dev-electron": "electron-webpack dev",
     "compile": "yarn download:kubectl && electron-webpack",
