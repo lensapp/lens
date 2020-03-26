@@ -1080,8 +1080,8 @@ msgstr "IP балансировщика нагрузки"
 msgid "Loading"
 msgstr "Загрузка"
 
-#: client/components/+workloads-pods/pod-menu.tsx:67
-#: client/components/+workloads-pods/pod-menu.tsx:68
+#: client/components/+workloads-pods/pod-menu.tsx:86
+#: client/components/+workloads-pods/pod-menu.tsx:87
 msgid "Logs"
 msgstr "Логи"
 
@@ -1503,7 +1503,7 @@ msgstr "Селектор подов"
 msgid "Pod Status"
 msgstr "Статус подов"
 
-#: client/components/+workloads-pods/pod-menu.tsx:44
+#: client/components/+workloads-pods/pod-menu.tsx:63
 msgid "Pod shell"
 msgstr "Командная строка пода"
 
@@ -1967,7 +1967,7 @@ msgid "Set quota"
 msgstr "Установить квоту"
 
 #: client/components/+nodes/node-menu.tsx:48
-#: client/components/+workloads-pods/pod-menu.tsx:45
+#: client/components/+workloads-pods/pod-menu.tsx:64
 msgid "Shell"
 msgstr "Командная строка"
 

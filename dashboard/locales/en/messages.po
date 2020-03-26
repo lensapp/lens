@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-07-15 10:13+0300\n"
+"POT-Creation-Date: 2020-03-26 08:16+0200\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: @lingui/cli\n"
 "Language: en\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
@@ -12,7 +12,6 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "Plural-Forms: \n"
-"MIME-Version: 1.0\n"
 
 #: client/components/+config-autoscalers/hpa-details.tsx:28
 msgid "(as a percentage of request)"
@@ -20,7 +19,7 @@ msgstr "(as a percentage of request)"
 
 #: client/components/+network-policies/network-policy-details.tsx:88
 msgid "(empty) (Allowing the specific traffic to all pods in this namespace)"
-msgstr ""
+msgstr "(empty) (Allowing the specific traffic to all pods in this namespace)"
 
 #: client/components/item-object-list/item-list-layout.tsx:221
 msgid "<0>Filtered</0>: {itemsCount} / {allItemsCount}"
@@ -45,11 +44,11 @@ msgstr "Access Control"
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:51
 #: client/components/+storage-volumes/volume-details.tsx:37
 msgid "Access Modes"
-msgstr ""
+msgstr "Access Modes"
 
 #: client/components/+user-management-service-accounts/create-service-account-dialog.tsx:77
 msgid "Account Name"
-msgstr ""
+msgstr "Account Name"
 
 #: client/components/+workloads-cronjobs/cronjob-details.tsx:51
 #: client/components/+workloads-cronjobs/cronjobs.tsx:46
@@ -58,19 +57,19 @@ msgstr "Active"
 
 #: client/components/+namespaces/namespaces.tsx:43
 msgid "Add Namespace"
-msgstr ""
+msgstr "Add Namespace"
 
 #: client/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:209
 msgid "Add RoleBinding"
-msgstr ""
+msgstr "Add RoleBinding"
 
 #: client/components/+user-management-roles-bindings/role-binding-details.tsx:111
 msgid "Add bindings to {name}"
-msgstr ""
+msgstr "Add bindings to {name}"
 
 #: client/components/+config-secrets/add-secret-dialog.tsx:125
 msgid "Add field"
-msgstr ""
+msgstr "Add field"
 
 #: client/components/+custom-resources/crd-details.tsx:78
 msgid "Additional Printer Columns"
@@ -78,7 +77,7 @@ msgstr "Additional Printer Columns"
 
 #: client/components/+nodes/node-details.tsx:83
 msgid "Addresses"
-msgstr ""
+msgstr "Addresses"
 
 #: client/components/+workloads-pods/pod-details-affinities.tsx:14
 msgid "Affinities"
@@ -113,7 +112,7 @@ msgstr "Affinities"
 #: client/components/+workloads-replicasets/replicasets.tsx:53
 #: client/components/+workloads-statefulsets/statefulsets.tsx:44
 msgid "Age"
-msgstr ""
+msgstr "Age"
 
 #: client/components/+custom-resources/crd-list.tsx:56
 msgid "All groups"
@@ -166,7 +165,7 @@ msgstr "Allowed Unsafe Sysctls"
 #: client/components/+nodes/node-details.tsx:102
 #: client/components/kube-object/kube-object-meta.tsx:31
 msgid "Annotations"
-msgstr ""
+msgstr "Annotations"
 
 #: client/components/+user-management-roles/role-details.tsx:37
 msgid "Api Groups"
@@ -175,7 +174,7 @@ msgstr "Api Groups"
 #: client/components/+apps-helm-charts/helm-charts.tsx:67
 #: client/components/+apps-releases/releases.tsx:110
 msgid "App Version"
-msgstr ""
+msgstr "App Version"
 
 #: client/components/error-boundary/error-boundary.tsx:36
 msgid "App crash at <0>{pageUrl}</0>"
@@ -212,16 +211,16 @@ msgstr "Backends"
 
 #: client/components/+user-management-roles-bindings/role-binding-details.tsx:93
 msgid "Binding"
-msgstr ""
+msgstr "Binding"
 
 #: client/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:194
 msgid "Binding targets"
-msgstr ""
+msgstr "Binding targets"
 
 #: client/components/+user-management-roles-bindings/role-binding-details.tsx:89
 #: client/components/+user-management-roles-bindings/role-bindings.tsx:45
 msgid "Bindings"
-msgstr ""
+msgstr "Bindings"
 
 #: client/components/error-boundary/error-boundary.tsx:37
 msgid "Build version"
@@ -238,19 +237,19 @@ msgstr "Bytes received by all containers"
 
 #: client/components/+network-ingresses/ingress-charts.tsx:31
 msgid "Bytes sent by Ingress controller with error status"
-msgstr ""
+msgstr "Bytes sent by Ingress controller with error status"
 
 #: client/components/+network-ingresses/ingress-charts.tsx:24
 msgid "Bytes sent by Ingress controller with successful status"
-msgstr ""
+msgstr "Bytes sent by Ingress controller with successful status"
 
 #: client/components/+network-ingresses/ingress-charts.tsx:23
 msgid "Bytes sent, status 2xx"
-msgstr ""
+msgstr "Bytes sent, status 2xx"
 
 #: client/components/+network-ingresses/ingress-charts.tsx:30
 msgid "Bytes sent, status 5xx"
-msgstr ""
+msgstr "Bytes sent, status 5xx"
 
 #: client/components/+workloads-pods/pod-charts.tsx:88
 msgid "Bytes transmitted from all containers"
@@ -273,7 +272,7 @@ msgstr "CA Bundle"
 #: client/components/+workloads-pods/pod-details-list.tsx:95
 #: client/components/resource-metrics/resource-metrics-text.tsx:13
 msgid "CPU"
-msgstr ""
+msgstr "CPU"
 
 #: client/components/+nodes/node-charts.tsx:40
 msgid "CPU capacity"
@@ -296,7 +295,7 @@ msgstr "CPU requests"
 
 #: client/components/+nodes/nodes.tsx:55
 msgid "CPU:"
-msgstr ""
+msgstr "CPU:"
 
 #: client/components/confirm-dialog/confirm-dialog.tsx:44
 #: client/components/dock/info-panel.tsx:97
@@ -315,7 +314,7 @@ msgstr "Cancel"
 #: client/components/+storage-volumes/volume-details.tsx:29
 #: client/components/+storage-volumes/volumes.tsx:42
 msgid "Capacity"
-msgstr ""
+msgstr "Capacity"
 
 #: client/components/+config/config.tsx:47
 #: client/components/+custom-resources/certmanager.k8s.io/certificates.tsx:59
@@ -326,7 +325,7 @@ msgstr "Certificates"
 #: client/components/+apps-releases/releases.tsx:107
 #: client/components/dock/install-chart.tsx:118
 msgid "Chart"
-msgstr ""
+msgstr "Chart"
 
 #: client/components/dock/install-chart.tsx:51
 msgid "Chart Release <0>{0}</0> successfully created."
@@ -338,16 +337,16 @@ msgstr "Chart: {0}"
 
 #: client/components/+apps/apps.tsx:21
 msgid "Charts"
-msgstr ""
+msgstr "Charts"
 
 #: client/components/+apps-releases/releases.tsx:123
 msgid "Checking update"
-msgstr ""
+msgstr "Checking update"
 
 #: client/components/+storage-volumes/volume-details.tsx:68
 #: client/components/+storage-volumes/volumes.tsx:43
 msgid "Claim"
-msgstr ""
+msgstr "Claim"
 
 #: client/components/+workloads-pods/pod-details.tsx:153
 msgid "Claim Name"
@@ -370,12 +369,12 @@ msgstr "Cloud API Token Secret"
 #: client/components/+namespaces/namespace-select.tsx:43
 #: client/components/layout/sidebar.tsx:63
 msgid "Cluster"
-msgstr ""
+msgstr "Cluster"
 
 #: client/components/+network-services/service-details.tsx:41
 #: client/components/+network-services/services.tsx:47
 msgid "Cluster IP"
-msgstr ""
+msgstr "Cluster IP"
 
 #: client/components/+config/config.tsx:59
 #: client/components/+custom-resources/certmanager.k8s.io/issuers.tsx:40
@@ -417,7 +416,7 @@ msgstr "Condition"
 #: client/components/+workloads-jobs/jobs.tsx:42
 #: client/components/+workloads-pods/pod-details.tsx:102
 msgid "Conditions"
-msgstr ""
+msgstr "Conditions"
 
 #: client/components/+config-maps/config-maps.tsx:33
 msgid "Config Maps"
@@ -433,7 +432,7 @@ msgstr "ConfigMap <0>{0}</0> successfully updated."
 
 #: client/components/+config/config.tsx:29
 msgid "ConfigMaps"
-msgstr ""
+msgstr "ConfigMaps"
 
 #: client/components/layout/sidebar.tsx:66
 msgid "Configuration"
@@ -441,7 +440,7 @@ msgstr "Configuration"
 
 #: client/components/+network-services/service-details.tsx:39
 msgid "Connection"
-msgstr ""
+msgstr "Connection"
 
 #: client/components/+workloads-pods/pod-logs-dialog.tsx:243
 msgid "Container"
@@ -453,7 +452,7 @@ msgstr "Container CPU cores usage"
 
 #: client/components/+workloads-pods/pod-charts.tsx:40
 msgid "Container CPU requests"
-msgstr ""
+msgstr "Container CPU requests"
 
 #: client/components/+workloads-pods/pod-charts.tsx:71
 msgid "Container memory limits"
@@ -461,7 +460,7 @@ msgstr "Container memory limits"
 
 #: client/components/+workloads-pods/pod-charts.tsx:64
 msgid "Container memory requests"
-msgstr ""
+msgstr "Container memory requests"
 
 #: client/components/+workloads-pods/pod-charts.tsx:57
 msgid "Container memory usage"
@@ -469,7 +468,7 @@ msgstr "Container memory usage"
 
 #: client/components/+nodes/node-details.tsx:95
 msgid "Container runtime"
-msgstr ""
+msgstr "Container runtime"
 
 #: client/components/+workloads-pods/pod-details.tsx:134
 #: client/components/+workloads-pods/pod-logs-dialog.tsx:183
@@ -479,7 +478,7 @@ msgstr "Containers"
 
 #: client/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:184
 msgid "Context"
-msgstr ""
+msgstr "Context"
 
 #: client/components/+workloads-pods/pod-details.tsx:113
 #: client/components/+workloads-pods/pods.tsx:78
@@ -502,13 +501,13 @@ msgstr "Copy to clipboard"
 #: client/components/+nodes/node-menu.tsx:51
 #: client/components/+nodes/node-menu.tsx:52
 msgid "Cordon"
-msgstr ""
+msgstr "Cordon"
 
 #: client/components/+events/event-details.tsx:45
 #: client/components/+events/events.tsx:67
 #: client/components/+events/kube-event-details.tsx:51
 msgid "Count"
-msgstr ""
+msgstr "Count"
 
 #: client/components/+config-resource-quotas/add-quota-dialog.tsx:124
 #: client/components/+config-secrets/add-secret-dialog.tsx:145
@@ -518,11 +517,11 @@ msgstr ""
 #: client/components/+user-management-service-accounts/create-service-account-dialog.tsx:76
 #: client/components/dock/create-resource.tsx:71
 msgid "Create"
-msgstr ""
+msgstr "Create"
 
 #: client/components/+namespaces/add-namespace-dialog.tsx:69
 msgid "Create Namespace"
-msgstr ""
+msgstr "Create Namespace"
 
 #: client/components/+config-resource-quotas/add-quota-dialog.tsx:121
 msgid "Create ResourceQuota"
@@ -530,15 +529,15 @@ msgstr "Create ResourceQuota"
 
 #: client/components/+user-management-roles/add-role-dialog.tsx:70
 msgid "Create Role"
-msgstr ""
+msgstr "Create Role"
 
 #: client/components/+config-secrets/add-secret-dialog.tsx:142
 msgid "Create Secret"
-msgstr ""
+msgstr "Create Secret"
 
 #: client/components/+user-management-service-accounts/create-service-account-dialog.tsx:73
 msgid "Create Service Account"
-msgstr ""
+msgstr "Create Service Account"
 
 #: client/components/+config-resource-quotas/resource-quotas.tsx:45
 msgid "Create new ResourceQuota"
@@ -558,7 +557,7 @@ msgstr "Create new Secret"
 
 #: client/components/+user-management-service-accounts/service-accounts.tsx:47
 msgid "Create new Service Account"
-msgstr ""
+msgstr "Create new Service Account"
 
 #: client/components/dock/dock.tsx:111
 msgid "Create resource"
@@ -566,11 +565,11 @@ msgstr "Create resource"
 
 #: client/components/kube-object/kube-object-meta.tsx:12
 msgid "Created"
-msgstr ""
+msgstr "Created"
 
 #: client/components/+user-management-service-accounts/service-accounts-secret.tsx:37
 msgid "Created at"
-msgstr ""
+msgstr "Created at"
 
 #: client/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:132
 msgid "Credentials Ref"
@@ -622,11 +621,11 @@ msgstr "DaemonSets"
 #: client/components/+config-maps/config-map-details.tsx:69
 #: client/components/+config-secrets/secret-details.tsx:78
 msgid "Data"
-msgstr ""
+msgstr "Data"
 
 #: client/components/+storage-classes/storage-classes.tsx:37
 msgid "Default"
-msgstr ""
+msgstr "Default"
 
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:83
 msgid "Default Add Capabilities"
@@ -656,7 +655,7 @@ msgstr "Deployments"
 
 #: client/components/+apps-helm-charts/helm-charts.tsx:65
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: client/components/+workloads-deployments/deployment-scale-dialog.tsx:107
 msgid "Desired number of replicas"
@@ -666,11 +665,11 @@ msgstr "Desired number of replicas"
 #: client/components/+nodes/nodes.tsx:115
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:44
 msgid "Disk"
-msgstr ""
+msgstr "Disk"
 
 #: client/components/+nodes/nodes.tsx:71
 msgid "Disk:"
-msgstr ""
+msgstr "Disk:"
 
 #: client/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:89
 msgid "Domains"
@@ -683,15 +682,15 @@ msgstr "Download file"
 #: client/components/+nodes/node-menu.tsx:59
 #: client/components/+nodes/node-menu.tsx:60
 msgid "Drain"
-msgstr ""
+msgstr "Drain"
 
 #: client/components/+nodes/node-menu.tsx:39
 msgid "Drain Node"
-msgstr ""
+msgstr "Drain Node"
 
 #: client/components/+storage-volumes/volume-details.tsx:59
 msgid "Driver"
-msgstr ""
+msgstr "Driver"
 
 #: client/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:59
 #: client/components/+network-ingresses/ingress-details.tsx:67
@@ -718,11 +717,11 @@ msgstr "Effect"
 
 #: client/components/+network-policies/network-policy-details.tsx:105
 msgid "Egress"
-msgstr ""
+msgstr "Egress"
 
 #: client/components/+user-management-service-accounts/create-service-account-dialog.tsx:78
 msgid "Enter a name"
-msgstr ""
+msgstr "Enter a name"
 
 #: client/components/+workloads-pods/pod-container-env.tsx:79
 msgid "Environment"
@@ -736,16 +735,16 @@ msgstr "Error stack"
 #: client/components/+events/kube-event-details.tsx:39
 #: client/components/layout/sidebar.tsx:70
 msgid "Events"
-msgstr ""
+msgstr "Events"
 
 #: client/components/+cluster/cluster-issues.tsx:90
 msgid "Everything is fine in the Cluster"
-msgstr ""
+msgstr "Everything is fine in the Cluster"
 
 #: client/components/+user-management-roles/roles.tsx:39
 #: client/components/+user-management-roles-bindings/role-bindings.tsx:41
 msgid "Excluded items with \"system:\" prefix"
-msgstr ""
+msgstr "Excluded items with \"system:\" prefix"
 
 #: client/components/dock/dock.tsx:116
 msgid "Exit full size mode"
@@ -757,11 +756,11 @@ msgstr "Extended view"
 
 #: client/components/+network-services/services.tsx:49
 msgid "External IP"
-msgstr ""
+msgstr "External IP"
 
 #: client/components/+network-services/service-details.tsx:45
 msgid "External IPs"
-msgstr ""
+msgstr "External IPs"
 
 #: client/components/+workloads-pods/pod-logs-dialog.tsx:103
 msgid "Failed to load logs: {0}"
@@ -782,11 +781,11 @@ msgstr "Filters ({0}/{1})"
 
 #: client/components/kube-object/kube-object-meta.tsx:32
 msgid "Finalizers"
-msgstr ""
+msgstr "Finalizers"
 
 #: client/components/+events/event-details.tsx:39
 msgid "First seen"
-msgstr ""
+msgstr "First seen"
 
 #: client/components/dock/dock.tsx:116
 msgid "Fit to window"
@@ -794,7 +793,7 @@ msgstr "Fit to window"
 
 #: client/components/+storage-volumes/volume-details.tsx:58
 msgid "FlexVolume"
-msgstr ""
+msgstr "FlexVolume"
 
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:67
 msgid "Forbidden Sysctls"
@@ -802,7 +801,7 @@ msgstr "Forbidden Sysctls"
 
 #: client/components/+network-policies/network-policy-details.tsx:26
 msgid "From"
-msgstr ""
+msgstr "From"
 
 #: client/components/+workloads-pods/pod-logs-dialog.tsx:209
 msgid "From <0>{from}</0> to <1>{to}</1>"
@@ -816,11 +815,11 @@ msgstr "Fs Group"
 #: client/components/+custom-resources/crd-list.tsx:58
 #: client/components/+custom-resources/crd-list.tsx:74
 msgid "Group"
-msgstr ""
+msgstr "Group"
 
 #: client/components/+custom-resources/crd-list.tsx:60
 msgid "Groups"
-msgstr ""
+msgstr "Groups"
 
 #: client/components/+config/config.tsx:65
 msgid "HPA"
@@ -842,7 +841,7 @@ msgstr "Helm Upgrade: {0}"
 #: client/components/+workloads-pods/pod-logs-dialog.tsx:212
 #: client/components/drawer/drawer-param-toggler.tsx:19
 msgid "Hide"
-msgstr ""
+msgstr "Hide"
 
 #: client/components/+workloads-deployments/deployment-scale-dialog.tsx:116
 msgid "High number of replicas may cause cluster performance issues"
@@ -850,7 +849,7 @@ msgstr "High number of replicas may cause cluster performance issues"
 
 #: client/components/+apps-helm-charts/helm-chart-details.tsx:81
 msgid "Home"
-msgstr ""
+msgstr "Home"
 
 #: client/components/+config-autoscalers/hpa.tsx:44
 msgid "Horizontal Pod Autoscalers"
@@ -894,7 +893,7 @@ msgstr "ImagePullPolicy"
 
 #: client/components/+user-management-service-accounts/service-accounts-details.tsx:80
 msgid "ImagePullSecrets"
-msgstr ""
+msgstr "ImagePullSecrets"
 
 #: client/components/+workloads-daemonsets/daemonset-details.tsx:65
 #: client/components/+workloads-jobs/job-details.tsx:64
@@ -905,12 +904,12 @@ msgstr "Images"
 
 #: client/components/+network-policies/network-policy-details.tsx:92
 msgid "Ingress"
-msgstr ""
+msgstr "Ingress"
 
 #: client/components/+network/network.tsx:30
 #: client/components/+network-ingresses/ingresses.tsx:31
 msgid "Ingresses"
-msgstr ""
+msgstr "Ingresses"
 
 #: client/components/+workloads-pods/pod-details.tsx:130
 #: client/components/+workloads-pods/pod-logs-dialog.tsx:189
@@ -920,7 +919,7 @@ msgstr "Init Containers"
 #: client/components/+apps-helm-charts/helm-chart-details.tsx:76
 #: client/components/dock/install-chart.tsx:128
 msgid "Install"
-msgstr ""
+msgstr "Install"
 
 #: client/components/dock/install-chart.tsx:108
 msgid "Installation complete!"
@@ -940,11 +939,11 @@ msgstr "Invalid number"
 
 #: client/components/+events/events.tsx:65
 msgid "Involved Object"
-msgstr ""
+msgstr "Involved Object"
 
 #: client/components/+events/event-details.tsx:52
 msgid "Involved object"
-msgstr ""
+msgstr "Involved object"
 
 #: client/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:31
 #: client/components/+custom-resources/certmanager.k8s.io/certificates.tsx:64
@@ -958,7 +957,7 @@ msgstr "Issuers"
 
 #: client/components/no-items/no-items.tsx:9
 msgid "Item list is empty"
-msgstr ""
+msgstr "Item list is empty"
 
 #: client/components/+custom-resources/crd-details.tsx:83
 msgid "JSON Path"
@@ -973,12 +972,12 @@ msgstr "Jobs"
 
 #: client/components/+nodes/node-details.tsx:92
 msgid "Kernel version"
-msgstr ""
+msgstr "Kernel version"
 
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:77
 #: client/components/+workloads-pods/pod-details-tolerations.tsx:16
 msgid "Key"
-msgstr ""
+msgstr "Key"
 
 #: client/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:68
 msgid "Key Algorithm"
@@ -991,11 +990,11 @@ msgstr "Key Size"
 #: client/components/+config-maps/config-maps.tsx:36
 #: client/components/+config-secrets/secrets.tsx:44
 msgid "Keys"
-msgstr ""
+msgstr "Keys"
 
 #: client/components/+apps-helm-charts/helm-chart-details.tsx:87
 msgid "Keywords"
-msgstr ""
+msgstr "Keywords"
 
 #: client/components/+events/event-details.tsx:57
 #: client/components/+user-management-roles-bindings/role-binding-details.tsx:78
@@ -1005,15 +1004,15 @@ msgstr "Kind"
 
 #: client/components/+user-management-service-accounts/service-accounts.tsx:62
 msgid "Kubeconfig"
-msgstr ""
+msgstr "Kubeconfig"
 
 #: client/components/kubeconfig-dialog/kubeconfig-dialog.tsx:85
 msgid "Kubeconfig File"
-msgstr ""
+msgstr "Kubeconfig File"
 
 #: client/components/+nodes/node-details.tsx:98
 msgid "Kubelet version"
-msgstr ""
+msgstr "Kubelet version"
 
 #: client/components/+config-secrets/secrets.tsx:43
 #: client/components/+custom-resources/certmanager.k8s.io/issuers.tsx:65
@@ -1021,7 +1020,7 @@ msgstr ""
 #: client/components/+nodes/node-details.tsx:101
 #: client/components/kube-object/kube-object-meta.tsx:30
 msgid "Labels"
-msgstr ""
+msgstr "Labels"
 
 #: client/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:76
 msgid "Last Failure Time"
@@ -1035,7 +1034,7 @@ msgstr "Last schedule"
 #: client/components/+events/event-details.tsx:42
 #: client/components/+events/kube-event-details.tsx:57
 msgid "Last seen"
-msgstr ""
+msgstr "Last seen"
 
 #: client/components/+custom-resources/crd-details.tsx:57
 #: client/components/+workloads-deployments/deployment-details.tsx:84
@@ -1074,14 +1073,14 @@ msgstr "Liveness"
 
 #: client/components/+network-services/service-details.tsx:53
 msgid "Load Balancer IP"
-msgstr ""
+msgstr "Load Balancer IP"
 
 #: client/components/app-init/app-init.tsx:43
 msgid "Loading"
 msgstr "Loading"
 
-#: client/components/+workloads-pods/pod-menu.tsx:67
-#: client/components/+workloads-pods/pod-menu.tsx:68
+#: client/components/+workloads-pods/pod-menu.tsx:86
+#: client/components/+workloads-pods/pod-menu.tsx:87
 msgid "Logs"
 msgstr "Logs"
 
@@ -1091,19 +1090,19 @@ msgstr "Logs copied to clipboard."
 
 #: client/components/+apps-helm-charts/helm-chart-details.tsx:84
 msgid "Maintainers"
-msgstr ""
+msgstr "Maintainers"
 
 #: client/components/+cluster/cluster-metric-switchers.tsx:18
 msgid "Master"
-msgstr ""
+msgstr "Master"
 
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:75
 msgid "Match Expressions"
-msgstr ""
+msgstr "Match Expressions"
 
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:71
 msgid "Match Labels"
-msgstr ""
+msgstr "Match Labels"
 
 #: client/components/+config-autoscalers/hpa-details.tsx:80
 #: client/components/+config-autoscalers/hpa.tsx:49
@@ -1126,7 +1125,7 @@ msgstr "Maximum length is {maxLength}"
 #: client/components/+workloads-pods/pod-details-list.tsx:96
 #: client/components/resource-metrics/resource-metrics-text.tsx:18
 msgid "Memory"
-msgstr ""
+msgstr "Memory"
 
 #: client/components/+nodes/node-charts.tsx:64
 msgid "Memory capacity"
@@ -1148,13 +1147,13 @@ msgstr "Memory usage"
 
 #: client/components/+nodes/nodes.tsx:63
 msgid "Memory:"
-msgstr ""
+msgstr "Memory:"
 
 #: client/components/+cluster/cluster-issues.tsx:100
 #: client/components/+events/event-details.tsx:30
 #: client/components/+events/events.tsx:62
 msgid "Message"
-msgstr ""
+msgstr "Message"
 
 #: client/components/+config-autoscalers/hpa.tsx:47
 msgid "Metrics"
@@ -1184,11 +1183,11 @@ msgstr "Minimum length is {minLength}"
 #: client/components/+storage-classes/storage-class-details.tsx:38
 #: client/components/+storage-volumes/volume-details.tsx:33
 msgid "Mount Options"
-msgstr ""
+msgstr "Mount Options"
 
 #: client/components/+user-management-service-accounts/service-accounts-details.tsx:84
 msgid "Mountable secrets"
-msgstr ""
+msgstr "Mountable secrets"
 
 #: client/components/+workloads-pods/pod-details-container.tsx:63
 msgid "Mounts"
@@ -1235,7 +1234,7 @@ msgstr "Mounts"
 #: client/components/dock/edit-resource.tsx:90
 #: client/components/kube-object/kube-object-meta.tsx:15
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: client/components/dock/install-chart.tsx:124
 msgid "Name (optional)"
@@ -1282,7 +1281,7 @@ msgstr "Names"
 #: client/components/item-object-list/page-filters-select.tsx:57
 #: client/components/kube-object/kube-object-meta.tsx:18
 msgid "Namespace"
-msgstr ""
+msgstr "Namespace"
 
 #: client/components/+namespaces/namespace-select.tsx:96
 msgid "Namespace: {0}"
@@ -1305,12 +1304,12 @@ msgstr "Network"
 
 #: client/components/+storage-volumes/volume-details.tsx:51
 msgid "Network File System"
-msgstr ""
+msgstr "Network File System"
 
 #: client/components/+network/network.tsx:36
 #: client/components/+network-policies/network-policies.tsx:30
 msgid "Network Policies"
-msgstr ""
+msgstr "Network Policies"
 
 #: client/components/+workloads-pods/pod-logs-dialog.tsx:228
 msgid "New logs since opening the dialog"
@@ -1322,11 +1321,11 @@ msgstr "New tab"
 
 #: client/components/+apps-releases/release-details.tsx:192
 msgid "New version available:"
-msgstr ""
+msgstr "New version available:"
 
 #: client/components/+apps-releases/releases.tsx:124
 msgid "New version: {lastVersion}"
-msgstr ""
+msgstr "New version: {lastVersion}"
 
 #: client/components/wizard/wizard.tsx:131
 msgid "Next"
@@ -1355,7 +1354,7 @@ msgstr "No filters available."
 
 #: client/components/+cluster/cluster-issues.tsx:89
 msgid "No issues found"
-msgstr ""
+msgstr "No issues found"
 
 #: client/components/item-object-list/item-list-layout.tsx:193
 msgid "No items found."
@@ -1363,7 +1362,7 @@ msgstr "No items found."
 
 #: client/components/+apps-releases/release-rollback-dialog.tsx:82
 msgid "No revisions to rollback."
-msgstr ""
+msgstr "No revisions to rollback."
 
 #: client/components/+workloads-pods/pod-details.tsx:87
 msgid "Node"
@@ -1371,7 +1370,7 @@ msgstr "Node"
 
 #: client/components/+nodes/node-charts.tsx:98
 msgid "Node Pods capacity"
-msgstr ""
+msgstr "Node Pods capacity"
 
 #: client/components/+workloads-daemonsets/daemonset-details.tsx:61
 #: client/components/+workloads-daemonsets/daemonsets.tsx:49
@@ -1385,15 +1384,15 @@ msgstr "Node Selector"
 
 #: client/components/+nodes/node-charts.tsx:81
 msgid "Node filesystem size in bytes"
-msgstr ""
+msgstr "Node filesystem size in bytes"
 
 #: client/components/+nodes/node-charts.tsx:74
 msgid "Node filesystem usage in bytes"
-msgstr ""
+msgstr "Node filesystem usage in bytes"
 
 #: client/components/+nodes/node-menu.tsx:47
 msgid "Node shell"
-msgstr ""
+msgstr "Node shell"
 
 #: client/components/+nodes/nodes.tsx:111
 #: client/components/layout/sidebar.tsx:64
@@ -1410,23 +1409,23 @@ msgstr "Note: StatefulSet Volumes won't be deleted automatically"
 
 #: client/components/+apps-releases/release-details.tsx:199
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 #: client/components/+nodes/node-charts.tsx:91
 msgid "Number of running Pods"
-msgstr ""
+msgstr "Number of running Pods"
 
 #: client/components/+nodes/node-details.tsx:86
 msgid "OS"
-msgstr ""
+msgstr "OS"
 
 #: client/components/+nodes/node-details.tsx:89
 msgid "OS Image"
-msgstr ""
+msgstr "OS Image"
 
 #: client/components/+cluster/cluster-issues.tsx:101
 msgid "Object"
-msgstr ""
+msgstr "Object"
 
 #: client/components/confirm-dialog/confirm-dialog.tsx:43
 msgid "Ok"
@@ -1440,7 +1439,7 @@ msgstr "Open"
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:78
 #: client/components/+workloads-pods/pod-details-tolerations.tsx:17
 msgid "Operator"
-msgstr ""
+msgstr "Operator"
 
 #: client/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:56
 msgid "Organization"
@@ -1453,7 +1452,7 @@ msgstr "Overview"
 
 #: client/components/+404/not-found.tsx:8
 msgid "Page not found"
-msgstr ""
+msgstr "Page not found"
 
 #: client/components/+workloads-jobs/job-details.tsx:83
 msgid "Parallelism"
@@ -1461,7 +1460,7 @@ msgstr "Parallelism"
 
 #: client/components/+storage-classes/storage-class-details.tsx:42
 msgid "Parameters"
-msgstr ""
+msgstr "Parameters"
 
 #: client/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:94
 #: client/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:102
@@ -1476,12 +1475,12 @@ msgstr "Path Prefix"
 #: client/components/+storage/storage.tsx:26
 #: client/components/+storage-volume-claims/volume-claims.tsx:45
 msgid "Persistent Volume Claims"
-msgstr ""
+msgstr "Persistent Volume Claims"
 
 #: client/components/+storage/storage.tsx:33
 #: client/components/+storage-volumes/volumes.tsx:39
 msgid "Persistent Volumes"
-msgstr ""
+msgstr "Persistent Volumes"
 
 #: client/components/+workloads-pods/pod-details.tsx:92
 msgid "Pod IP"
@@ -1494,7 +1493,7 @@ msgstr "Pod Security Policies"
 
 #: client/components/+network-policies/network-policy-details.tsx:85
 msgid "Pod Selector"
-msgstr ""
+msgstr "Pod Selector"
 
 #: client/components/+workloads-daemonsets/daemonset-details.tsx:73
 #: client/components/+workloads-jobs/job-details.tsx:88
@@ -1503,7 +1502,7 @@ msgstr ""
 msgid "Pod Status"
 msgstr "Pod Status"
 
-#: client/components/+workloads-pods/pod-menu.tsx:44
+#: client/components/+workloads-pods/pod-menu.tsx:63
 msgid "Pod shell"
 msgstr "Pod shell"
 
@@ -1522,11 +1521,11 @@ msgstr "Pod shell"
 #: client/components/+workloads-replicasets/replicasets.tsx:52
 #: client/components/+workloads-statefulsets/statefulsets.tsx:42
 msgid "Pods"
-msgstr ""
+msgstr "Pods"
 
 #: client/components/+network-policies/network-policies.tsx:33
 msgid "Policy Types"
-msgstr ""
+msgstr "Policy Types"
 
 #: client/components/+network-ingresses/ingress-details.tsx:74
 #: client/components/+network-policies/network-policy-details.tsx:96
@@ -1535,7 +1534,7 @@ msgstr ""
 #: client/components/+network-services/services.tsx:48
 #: client/components/+workloads-pods/pod-details-container.tsx:52
 msgid "Ports"
-msgstr ""
+msgstr "Ports"
 
 #: client/components/+workloads-pods/pod-details.tsx:95
 msgid "Priority Class"
@@ -1553,7 +1552,7 @@ msgstr "Privileged"
 #: client/components/+storage-classes/storage-class-details.tsx:28
 #: client/components/+storage-classes/storage-classes.tsx:35
 msgid "Provisioner"
-msgstr ""
+msgstr "Provisioner"
 
 #: client/components/+workloads-pods/pods.tsx:79
 msgid "QoS"
@@ -1585,7 +1584,7 @@ msgstr "Readiness"
 
 #: client/components/+events/event-details.tsx:33
 msgid "Reason"
-msgstr ""
+msgstr "Reason"
 
 #: client/components/+workloads-pods/pod-logs-dialog.tsx:104
 msgid "Reason: {0} ({1})"
@@ -1599,7 +1598,7 @@ msgstr "Receive"
 #: client/components/+storage-classes/storage-classes.tsx:36
 #: client/components/+storage-volumes/volume-details.tsx:40
 msgid "Reclaim Policy"
-msgstr ""
+msgstr "Reclaim Policy"
 
 #: client/components/+config-autoscalers/hpa-details.tsx:70
 #: client/components/+user-management-roles-bindings/role-binding-details.tsx:75
@@ -1608,7 +1607,7 @@ msgstr "Reference"
 
 #: client/components/dock/upgrade-chart.tsx:97
 msgid "Release"
-msgstr ""
+msgstr "Release"
 
 #: client/components/dock/upgrade-chart.tsx:51
 msgid "Release <0>{releaseName}</0> successfully upgraded to version <1>{version}</1>"
@@ -1625,14 +1624,14 @@ msgstr "Release: {0}"
 #: client/components/+apps/apps.tsx:27
 #: client/components/+apps-releases/releases.tsx:104
 msgid "Releases"
-msgstr ""
+msgstr "Releases"
 
 #: client/components/+user-management-roles-bindings/role-binding-details.tsx:60
 #: client/components/item-object-list/item-list-layout.tsx:176
 #: client/components/menu/menu-actions.tsx:49
 #: client/components/menu/menu-actions.tsx:85
 msgid "Remove"
-msgstr ""
+msgstr "Remove"
 
 #: client/components/+apps-releases/releases.tsx:83
 msgid "Remove <0>{releaseNames}</0>?"
@@ -1640,7 +1639,7 @@ msgstr "Remove <0>{releaseNames}</0>?"
 
 #: client/components/+config-secrets/add-secret-dialog.tsx:133
 msgid "Remove field"
-msgstr ""
+msgstr "Remove field"
 
 #: client/components/menu/menu-actions.tsx:93
 msgid "Remove item?"
@@ -1648,11 +1647,11 @@ msgstr "Remove item?"
 
 #: client/components/+user-management-roles-bindings/role-binding-details.tsx:61
 msgid "Remove selected bindings for <0>{0}</0>?"
-msgstr ""
+msgstr "Remove selected bindings for <0>{0}</0>?"
 
 #: client/components/+user-management-roles-bindings/role-binding-details.tsx:111
 msgid "Remove selected bindings from ${name}"
-msgstr ""
+msgstr "Remove selected bindings from ${name}"
 
 #: client/components/item-object-list/item-list-layout.tsx:272
 msgid "Remove selected items ({0})"
@@ -1680,15 +1679,15 @@ msgstr "Repo/Name"
 
 #: client/components/+apps-helm-charts/helm-charts.tsx:68
 msgid "Repository"
-msgstr ""
+msgstr "Repository"
 
 #: client/components/+network-ingresses/ingress-charts.tsx:40
 msgid "Request"
-msgstr ""
+msgstr "Request"
 
 #: client/components/+network-ingresses/ingress-charts.tsx:41
 msgid "Request duration in seconds"
-msgstr ""
+msgstr "Request duration in seconds"
 
 #: client/components/+cluster/cluster-pie-charts.tsx:71
 #: client/components/+cluster/cluster-pie-charts.tsx:114
@@ -1699,7 +1698,7 @@ msgstr ""
 #: client/components/+workloads-pods/pod-charts.tsx:39
 #: client/components/+workloads-pods/pod-charts.tsx:63
 msgid "Requests"
-msgstr ""
+msgstr "Requests"
 
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:87
 msgid "Required Drop Capabilities"
@@ -1707,7 +1706,7 @@ msgstr "Required Drop Capabilities"
 
 #: client/components/+config-secrets/add-secret-dialog.tsx:133
 msgid "Required field"
-msgstr ""
+msgstr "Required field"
 
 #: client/components/item-object-list/page-filters-list.tsx:31
 msgid "Reset"
@@ -1751,15 +1750,15 @@ msgstr "ResourceQuota name"
 #: client/components/+apps-releases/release-details.tsx:201
 #: client/components/+user-management-roles/role-details.tsx:29
 msgid "Resources"
-msgstr ""
+msgstr "Resources"
 
 #: client/components/+network-ingresses/ingress-charts.tsx:47
 msgid "Response"
-msgstr ""
+msgstr "Response"
 
 #: client/components/+network-ingresses/ingress-charts.tsx:48
 msgid "Response duration in seconds"
-msgstr ""
+msgstr "Response duration in seconds"
 
 #: client/components/dock/terminal-tab.tsx:30
 msgid "Restart session"
@@ -1772,7 +1771,7 @@ msgstr "Restarts"
 #: client/components/+apps-releases/release-rollback-dialog.tsx:85
 #: client/components/+apps-releases/releases.tsx:108
 msgid "Revision"
-msgstr ""
+msgstr "Revision"
 
 #: client/components/+cluster/cluster-no-metrics.tsx:9
 msgid "Right click cluster icon to open cluster settings."
@@ -1781,12 +1780,12 @@ msgstr "Right click cluster icon to open cluster settings."
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:149
 #: client/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:187
 msgid "Role"
-msgstr ""
+msgstr "Role"
 
 #: client/components/+user-management/user-management.tsx:32
 #: client/components/+user-management-roles-bindings/role-bindings.tsx:36
 msgid "Role Bindings"
-msgstr ""
+msgstr "Role Bindings"
 
 #: client/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:105
 msgid "Role ID"
@@ -1800,13 +1799,13 @@ msgstr "Role name"
 #: client/components/+user-management/user-management.tsx:37
 #: client/components/+user-management-roles/roles.tsx:36
 msgid "Roles"
-msgstr ""
+msgstr "Roles"
 
 #: client/components/+apps-releases/release-menu.tsx:48
 #: client/components/+apps-releases/release-menu.tsx:49
 #: client/components/+apps-releases/release-rollback-dialog.tsx:95
 msgid "Rollback"
-msgstr ""
+msgstr "Rollback"
 
 #: client/components/+apps-releases/release-rollback-dialog.tsx:92
 msgid "Rollback <0>{releaseName}</0>"
@@ -1821,7 +1820,7 @@ msgstr "Rule"
 #: client/components/+network-ingresses/ingresses.tsx:34
 #: client/components/+user-management-roles/role-details.tsx:25
 msgid "Rules"
-msgstr ""
+msgstr "Rules"
 
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:126
 msgid "Run As Group"
@@ -1841,7 +1840,7 @@ msgstr "Runtime Class"
 #: client/components/+workloads-pods/pod-logs-dialog.tsx:213
 #: client/components/dock/edit-resource.tsx:88
 msgid "Save"
-msgstr ""
+msgstr "Save"
 
 #: client/components/+workloads-deployments/deployment-scale-dialog.tsx:128
 #: client/components/+workloads-deployments/deployments.tsx:86
@@ -1895,29 +1894,29 @@ msgstr "Secret Name"
 
 #: client/components/+config-secrets/add-secret-dialog.tsx:147
 msgid "Secret name"
-msgstr ""
+msgstr "Secret name"
 
 #: client/components/+config-secrets/secret-details.tsx:44
 msgid "Secret successfully updated."
-msgstr ""
+msgstr "Secret successfully updated."
 
 #: client/components/+config-secrets/add-secret-dialog.tsx:156
 msgid "Secret type"
-msgstr ""
+msgstr "Secret type"
 
 #: client/components/+config/config.tsx:35
 #: client/components/+config-secrets/secrets.tsx:40
 #: client/components/+workloads-pods/pod-details.tsx:125
 msgid "Secrets"
-msgstr ""
+msgstr "Secrets"
 
 #: client/components/+config-resource-quotas/add-quota-dialog.tsx:134
 msgid "Select a quota.."
-msgstr ""
+msgstr "Select a quota.."
 
 #: client/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:188
 msgid "Select role.."
-msgstr ""
+msgstr "Select role.."
 
 #: client/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:195
 msgid "Select service accounts"
@@ -1933,7 +1932,7 @@ msgstr "Select service accounts"
 #: client/components/+workloads-replicasets/replicaset-details.tsx:69
 #: client/components/+workloads-statefulsets/statefulset-details.tsx:56
 msgid "Selector"
-msgstr ""
+msgstr "Selector"
 
 #: client/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:61
 #: client/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:91
@@ -1942,21 +1941,21 @@ msgstr "Server"
 
 #: client/components/+network-ingresses/ingress-details.tsx:82
 msgid "Service"
-msgstr ""
+msgstr "Service"
 
 #: client/components/+user-management/user-management.tsx:27
 #: client/components/+user-management-service-accounts/service-accounts.tsx:35
 msgid "Service Accounts"
-msgstr ""
+msgstr "Service Accounts"
 
 #: client/components/+network/network.tsx:24
 #: client/components/+network-services/services.tsx:43
 msgid "Services"
-msgstr ""
+msgstr "Services"
 
 #: client/components/+network-services/service-details.tsx:35
 msgid "Session Affinity"
-msgstr ""
+msgstr "Session Affinity"
 
 #: client/components/+config-resource-quotas/resource-quota-details.tsx:43
 msgid "Set"
@@ -1964,23 +1963,23 @@ msgstr "Set"
 
 #: client/components/+config-resource-quotas/add-quota-dialog.tsx:137
 msgid "Set quota"
-msgstr ""
+msgstr "Set quota"
 
 #: client/components/+nodes/node-menu.tsx:48
-#: client/components/+workloads-pods/pod-menu.tsx:45
+#: client/components/+workloads-pods/pod-menu.tsx:64
 msgid "Shell"
-msgstr ""
+msgstr "Shell"
 
 #: client/components/+nodes/node-menu.tsx:24
 msgid "Shell: {nodeName}"
-msgstr ""
+msgstr "Shell: {nodeName}"
 
 #: client/components/+config-secrets/secret-details.tsx:93
 #: client/components/+workloads-pods/pod-container-env.tsx:97
 #: client/components/+workloads-pods/pod-logs-dialog.tsx:212
 #: client/components/drawer/drawer-param-toggler.tsx:19
 msgid "Show"
-msgstr ""
+msgstr "Show"
 
 #: client/components/dock/install-chart.tsx:111
 msgid "Show Notes"
@@ -1993,7 +1992,7 @@ msgstr "Show value"
 #: client/components/+nodes/node-charts.tsx:80
 #: client/components/+storage-volume-claims/volume-claims.tsx:49
 msgid "Size"
-msgstr ""
+msgstr "Size"
 
 #: client/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:70
 msgid "Skip TLS Verify"
@@ -2003,11 +2002,11 @@ msgstr "Skip TLS Verify"
 #: client/components/+events/events.tsx:66
 #: client/components/+events/kube-event-details.tsx:48
 msgid "Source"
-msgstr ""
+msgstr "Source"
 
 #: client/components/+cluster/cluster-pie-charts.tsx:20
 msgid "Specified limits are higher than node capacity!"
-msgstr ""
+msgstr "Specified limits are higher than node capacity!"
 
 #: client/components/+workloads-statefulsets/statefulsets.tsx:39
 msgid "Stateful Sets"
@@ -2039,7 +2038,7 @@ msgstr "StatefulSets"
 #: client/components/+workloads-pods/pod-details.tsx:84
 #: client/components/+workloads-pods/pods.tsx:81
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: client/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:64
 msgid "Status URI"
@@ -2048,7 +2047,7 @@ msgstr "Status URI"
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:57
 #: client/components/layout/sidebar.tsx:68
 msgid "Storage"
-msgstr ""
+msgstr "Storage"
 
 #: client/components/+storage-volumes/volumes.tsx:41
 msgid "Storage Class"
@@ -2057,12 +2056,12 @@ msgstr "Storage Class"
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:54
 #: client/components/+storage-volumes/volume-details.tsx:43
 msgid "Storage Class Name"
-msgstr ""
+msgstr "Storage Class Name"
 
 #: client/components/+storage/storage.tsx:41
 #: client/components/+storage-classes/storage-classes.tsx:33
 msgid "Storage Classes"
-msgstr ""
+msgstr "Storage Classes"
 
 #: client/components/+storage-volume-claims/volume-claims.tsx:48
 msgid "Storage class"
@@ -2079,7 +2078,7 @@ msgstr "Strategy Type"
 
 #: client/components/+events/kube-event-details.tsx:54
 msgid "Sub-object"
-msgstr ""
+msgstr "Sub-object"
 
 #: client/components/dock/info-panel.tsx:104
 #: client/components/wizard/wizard.tsx:131
@@ -2101,12 +2100,12 @@ msgstr "Suspend"
 
 #: client/components/+network-ingresses/ingress-details.tsx:78
 msgid "TLS"
-msgstr ""
+msgstr "TLS"
 
 #: client/components/+nodes/node-details.tsx:103
 #: client/components/+nodes/nodes.tsx:116
 msgid "Taints"
-msgstr ""
+msgstr "Taints"
 
 #: client/components/dock/terminal.store.ts:29
 msgid "Terminal"
@@ -2142,7 +2141,7 @@ msgstr "To help us improve the product please report bugs to {slackLink} communi
 
 #: client/components/+user-management-service-accounts/service-accounts-details.tsx:76
 msgid "Tokens"
-msgstr ""
+msgstr "Tokens"
 
 #: client/components/+workloads-pods/pod-details-tolerations.tsx:11
 msgid "Tolerations"
@@ -2169,7 +2168,7 @@ msgstr "Transit"
 #: client/components/+user-management-service-accounts/service-accounts-secret.tsx:43
 #: client/components/+workloads-pods/pod-details.tsx:150
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: client/components/kube-object/kube-object-meta.tsx:21
 msgid "UID"
@@ -2182,16 +2181,16 @@ msgstr "URL"
 #: client/components/+nodes/node-menu.tsx:55
 #: client/components/+nodes/node-menu.tsx:56
 msgid "Uncordon"
-msgstr ""
+msgstr "Uncordon"
 
 #: client/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:212
 msgid "Update"
-msgstr ""
+msgstr "Update"
 
 #: client/components/+apps-releases/release-details.tsx:180
 #: client/components/+apps-releases/releases.tsx:112
 msgid "Updated"
-msgstr ""
+msgstr "Updated"
 
 #: client/components/dock/upgrade-chart.tsx:105
 msgid "Updating.."
@@ -2202,7 +2201,7 @@ msgstr "Updating.."
 #: client/components/+apps-releases/release-menu.tsx:53
 #: client/components/dock/upgrade-chart.tsx:105
 msgid "Upgrade"
-msgstr ""
+msgstr "Upgrade"
 
 #: client/components/dock/upgrade-chart.tsx:100
 msgid "Upgrade version"
@@ -2223,11 +2222,11 @@ msgstr "Upgrade version"
 #: client/components/+workloads-pods/pod-charts.tsx:56
 #: client/components/+workloads-pods/pod-charts.tsx:97
 msgid "Usage"
-msgstr ""
+msgstr "Usage"
 
 #: client/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:190
 msgid "Use same name for RoleBinding"
-msgstr ""
+msgstr "Use same name for RoleBinding"
 
 #: client/components/+config-resource-quotas/resource-quota-details.tsx:43
 msgid "Used"
@@ -2235,7 +2234,7 @@ msgstr "Used"
 
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:155
 msgid "User"
-msgstr ""
+msgstr "User"
 
 #: client/components/+custom-resources/crd-details.tsx:99
 msgid "Validation"
@@ -2245,14 +2244,14 @@ msgstr "Validation"
 #: client/components/+config-secrets/add-secret-dialog.tsx:132
 #: client/components/+user-management-service-accounts/service-accounts-secret.tsx:33
 msgid "Value"
-msgstr ""
+msgstr "Value"
 
 #: client/components/+apps-releases/release-details.tsx:112
 #: client/components/+config-resource-quotas/add-quota-dialog.tsx:132
 #: client/components/+config-resource-quotas/resource-quota-details.tsx:65
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:79
 msgid "Values"
-msgstr ""
+msgstr "Values"
 
 #: client/components/+user-management-roles/role-details.tsx:33
 msgid "Verbs"
@@ -2268,7 +2267,7 @@ msgstr "Verbs"
 #: client/components/dock/install-chart.tsx:120
 #: client/components/dock/upgrade-chart.tsx:99
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 #: client/components/dock/install-chart.tsx:110
 msgid "View Helm Release"
@@ -2276,15 +2275,15 @@ msgstr "View Helm Release"
 
 #: client/components/+storage-classes/storage-class-details.tsx:31
 msgid "Volume Binding Mode"
-msgstr ""
+msgstr "Volume Binding Mode"
 
 #: client/components/+storage-volume-claims/volume-claim-disk-chart.tsx:32
 msgid "Volume disk capacity"
-msgstr ""
+msgstr "Volume disk capacity"
 
 #: client/components/+storage-volume-claims/volume-claim-disk-chart.tsx:25
 msgid "Volume disk usage"
-msgstr ""
+msgstr "Volume disk usage"
 
 #: client/components/+pod-security-policies/pod-security-policies.tsx:37
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:47
@@ -2302,7 +2301,7 @@ msgstr "Warnings: {0}"
 
 #: client/components/+cluster/cluster-metric-switchers.tsx:19
 msgid "Worker"
-msgstr ""
+msgstr "Worker"
 
 #: client/components/layout/sidebar.tsx:65
 msgid "Workloads"
