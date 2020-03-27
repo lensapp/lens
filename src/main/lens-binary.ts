@@ -5,7 +5,6 @@ import * as request from "request"
 import logger from "./logger"
 import { ensureDir, pathExists } from "fs-extra"
 import * as tar from "tar"
-import { userStore } from "../common/user-store"
 import { globalRequestOpts} from "../common/request"
 
 export type LensBinaryOpts = {
@@ -152,7 +151,7 @@ export class LensBinary {
 
     stream.on("error", (error) => {
       logger.error(error)
-      fs.unlink(this.path, () => {})
+      fs.unlink(binaryPath, () => {})
       throw(error)
     })
     return new Promise((resolve, reject) => {
