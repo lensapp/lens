@@ -2,7 +2,7 @@
   "name": "kontena-lens",
   "version": "0.0.0",
   "scripts": {
-    "dev": "yarn compile && webpack-cli --watch --cache --progress --output-path ../static/build/client/",
+    "dev": "webpack-cli --watch --cache --progress --output-path ../static/build/client/",
     "build": "webpack -p --progress --output-path ../static/build/client/",
     "test": "jest --config './test/jest.config.js'",
     "add-locale": "lingui add-locale",
