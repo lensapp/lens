@@ -74,7 +74,7 @@ export class Sidebar extends React.Component<Props> {
         <div className={cssNames("Sidebar flex column", className, { pinned: isPinned })}>
           <div className="header flex align-center">
             <NavLink exact to="/" className="box grow">
-              <Icon svg="logo-full" className="logo-icon"/>
+              <Icon svg="logo-full" className="logo-icon"/> <div className="logo-text">Lens</div>
             </NavLink>
             <Icon
               className="pin-icon"
