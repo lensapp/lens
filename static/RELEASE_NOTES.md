@@ -2,12 +2,14 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.1.0-beta.1 (current version)
+## 3.1.0-rc.1 (current version)
 
-- Support shell to windows pod (powershell)
+- Windows pod shell (powershel)
+- Simplified internal architecture (improves watch & metrics stability)
 - New icon
-- Electron 6.1.9
-- Refactor dashboard server logic to electron main
+- Support `kubernetes.io/role` label for node roles
+- Unlink binary download on error properly
+- Electron v6.1.9
 
 ## 3.0.1
 

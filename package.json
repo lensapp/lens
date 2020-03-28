@@ -8,7 +8,7 @@
   "copyright": "© 2020, Lakend Labs, Inc.",
   "license": "MIT",
   "description": "The Kubernetes IDE",
-  "version": "3.1.0-beta.2",
+  "version": "3.1.0-rc.1",
   "main": "main.ts",
   "config": {
     "bundledKubectlVersion": "1.17.3"
