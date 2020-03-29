@@ -66,7 +66,7 @@ export class TerminalApi extends WebSocketApi {
     const token = await configStore.getToken();
     const apiUrl = await this.getUrl(token);
     const { colorTheme } = this.options;
-    this.emitStatus("Connecting...", {
+    this.emitStatus("Connecting ...", {
       color: colorTheme == "light" ? TerminalColor.GRAY : TerminalColor.LIGHT_GRAY
     });
     this.onData.addListener(this._onReady, { prepend: true });
@@ -109,12 +109,6 @@ export class TerminalApi extends WebSocketApi {
 
   reconnect() {
     const { reconnectDelaySeconds } = this.params;
-    if (reconnectDelaySeconds) {
-      this.emitStatus(`Reconnect in ${reconnectDelaySeconds} seconds`, {
-        color: TerminalColor.YELLOW,
-        showTime: true,
-      });
-    }
     super.reconnect();
   }
 
@@ -143,11 +137,6 @@ export class TerminalApi extends WebSocketApi {
   }
 
   protected _onClose(evt: CloseEvent) {
-    const { code, reason, wasClean } = evt;
-    if (code !== 1000 || !wasClean) {
-      this.emitStatus("\r\n");
-      this.emitError(`Closed by "${reason}" (code: ${code}) at ${new Date()}.`);
-    }
     super._onClose(evt);
     this.isReady = false;
   }
