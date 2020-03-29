@@ -2,9 +2,9 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.1.0-rc.1 (current version)
+## 3.1.0 (current version)
 
-- Windows pod shell (powershel)
+- Windows pod shell (powershell)
 - Simplified internal architecture (improves watch & metrics stability)
 - New icon
 - Support `kubernetes.io/role` label for node roles
