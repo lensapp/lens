@@ -106,8 +106,7 @@ export class UpgradeChart extends React.Component<Props> {
           themeName="outlined"
           value={version}
           options={versions}
-          formatOptionLabel={this.formatVersionLabel}
-          isOptionDisabled={({ value }: SelectOption<IChartVersion>) => value.version === currentVersion}
+          formatOptionLabel={this.formatVersionLabel}          
           onChange={({ value }: SelectOption) => this.version = value}
         />
       </div>

@@ -3,6 +3,7 @@ import { autobind } from "../../utils";
 import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
 import { ItemStore } from "../../item.store";
 import flatten from "lodash/flatten"
+import compareVersions from 'compare-versions';
 
 export interface IChartVersion {
   repo: string;
@@ -23,11 +24,7 @@ export class HelmChartStore extends ItemStore<HelmChart> {
 
   protected sortVersions = (versions: IChartVersion[]) => {
     return versions.sort((first, second) => {
-      const firstVersion = first.version.replace(/[^\d.]/g, "").split(".").map(Number);
-      const secondVersion = second.version.replace(/[^\d.]/g, "").split(".").map(Number);
-      return firstVersion.every((version, index) => {
-        return version > secondVersion[index];
-      }) ? -1 : 0;
+      return compareVersions(second.version, first.version)
     });
   };
 
