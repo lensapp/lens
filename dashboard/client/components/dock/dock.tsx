@@ -133,7 +133,7 @@ export class Dock extends React.Component<Props> {
             {hasTabs() && (
               <>
                 <Icon
-                  material="aspect_ratio"
+                  material={fullSize ? "fullscreen_exit": "fullscreen"}
                   tooltip={fullSize ? <Trans>Exit full size mode</Trans> : <Trans>Fit to window</Trans>}
                   onClick={toggleFillSize}
                 />
