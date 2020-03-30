@@ -86,6 +86,7 @@ export class NamespaceSelectFilter extends React.Component {
     return (
       <NamespaceSelect
         placeholder={placeholder}
+        closeMenuOnSelect={false}
         isOptionSelected={() => false}
         controlShouldRenderValue={false}
         onChange={({ value: namespace }: SelectOption) => toggleContext(namespace)}
