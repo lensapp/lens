@@ -18,7 +18,7 @@ declare const __static: string;
 
 const assetsPath = path.join(__static, "build/client")
 
-const mimeTypes: { [key:string]:string; } = {
+const mimeTypes: {[key: string]: string} = {
   "html": "text/html",
   "txt": "text/plain",
   "css": "text/css",
