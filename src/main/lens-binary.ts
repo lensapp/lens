@@ -95,7 +95,7 @@ export class LensBinary {
     return exists
   }
 
-  protected async ensureBinary() {
+  public async ensureBinary() {
     const isValid = await this.checkBinary()
     if(!isValid) {
       await this.downloadBinary().catch((error) => { logger.error(error) });
@@ -129,7 +129,7 @@ export class LensBinary {
     })
   }
 
-  public async downloadBinary() {
+  protected async downloadBinary() {
     const binaryPath = this.tarPath || this.getBinaryPath()
     await ensureDir(this.getBinaryDir(), 0o755)
 

@@ -4,20 +4,6 @@ import * as version210Beta4 from "./migrations/user-store/2.1.0-beta.4"
 
 export interface User {
   id?: string;
-  bio?: string;
-  company?: string;
-  email?: string;
-  'first-name'?: string;
-  'is-customer'?: boolean;
-  'is-partner'?: boolean;
-  'last-name'?: string;
-  'lens-invitation-used'?: boolean;
-  location?: string;
-  //notifications?: array;
-  url?: string;
-  'user-avatar-src'?: string;
-  username: string;
-  verified?: boolean;
 }
 
 export interface UserPreferences {
@@ -25,6 +11,7 @@ export interface UserPreferences {
   colorTheme?: string;
   allowUntrustedCAs?: boolean;
   allowTelemetry?: boolean;
+  downloadMirror?: string;
 }
 
 export class UserStore {
@@ -69,6 +56,9 @@ export class UserStore {
     const prefs = this.store.get("preferences", {})
     if (!prefs.colorTheme) {
       prefs.colorTheme = "dark"
+    }
+    if (!prefs.downloadMirror) {
+      prefs.downloadMirror = "default"
     }
     if (prefs.allowTelemetry === undefined) {
       prefs.allowTelemetry = true
