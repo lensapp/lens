@@ -32,13 +32,23 @@ metricRelabelings:
 ### Jsonnet
 
 The required label replacements are bundled in [jsonnet/custom-prometheus](../jsonnet/custom-prometheus.jsonnet). To install it copy the file or use
-[Jsonnet Bundler](https://github.com/jsonnet-bundler/jsonnet-bundler):
+[Jsonnet Bundler](https://github.com/jsonnet-bundler/jsonnet-bundler). For jsonnet bundler add the following dependency to your `jsonnetfile.json`:
 
 ```
-jb install github.com/lensapp/lens/jsonnet
+{
+  "name": "lens",
+  "source": {
+    "git": {
+      "remote": "https://github.com/lensapp/lens",
+      "subdir": "jsonnet"
+    }
+  },
+  "version": "master"
+}
 ```
 
-And include it into your definitions. Using the [example](https://github.com/coreos/kube-prometheus#compiling) of kube-prometheus, e.g.:
+and run `jb install`. When the installation was successful include it into your definitions. Using the [example](https://github.com/coreos/kube-prometheus#compiling)
+of kube-prometheus, e.g.:
 
 ```
 local kp =
