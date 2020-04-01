@@ -10,7 +10,6 @@ import { PromiseIpc } from "electron-promise-ipc"
 import * as request from "request-promise-native"
 import { KubeconfigManager } from "./kubeconfig-manager"
 
-
 enum ClusterStatus {
   AccessGranted = 2,
   AccessDenied = 1,
@@ -134,6 +133,7 @@ export class Cluster implements ClusterInfo {
         this.nodes = await this.getNodeCount()
       }
       this.kubeCtl = new Kubectl(this.version)
+      this.kubeCtl.ensureKubectl()
     }
     this.eventCount = await this.getEventCount();
   }

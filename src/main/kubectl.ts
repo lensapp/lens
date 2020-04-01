@@ -9,6 +9,7 @@ import * as md5File from "md5-file"
 import { globalRequestOpts } from "../common/request"
 import * as lockFile from "proper-lockfile"
 import { helmCli } from "./helm-cli"
+import { userStore } from "../common/user-store"
 
 const kubectlMap: Map<string, string> = new Map([
   ["1.7", "1.8.15"],
@@ -19,10 +20,15 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.12", "1.13.12"],
   ["1.13", "1.13.12"],
   ["1.14", "1.14.10"],
-  ["1.15", "1.15.10"],
-  ["1.16", "1.16.7"],
-  ["1.17", "1.17.3"],
-  ["1.18", "1.18.0-beta.1"]
+  ["1.15", "1.15.11"],
+  ["1.16", "1.16.8"],
+  ["1.17", "1.17.4"],
+  ["1.18", "1.18.0"]
+])
+
+const packageMirrors: Map<string, string> = new Map([
+  ["default", "https://storage.googleapis.com/kubernetes-release/release"],
+  ["china", "https://mirror.azure.cn/kubernetes/kubectl"]
 ])
 
 const initScriptVersionString = "# lens-initscript v3\n"
@@ -83,7 +89,7 @@ export class Kubectl {
     const platformName = process.platform === "win32" ? "windows" : process.platform
     const binaryName = process.platform === "win32" ? "kubectl.exe" : "kubectl"
 
-    this.url = `https://storage.googleapis.com/kubernetes-release/release/v${this.kubectlVersion}/bin/${platformName}/${arch}/${binaryName}`
+    this.url = `${this.getDownloadMirror()}/v${this.kubectlVersion}/bin/${platformName}/${arch}/${binaryName}`
 
     this.dirname = path.normalize(path.join(Kubectl.kubectlDir, this.kubectlVersion))
     this.path = path.join(this.dirname, binaryName)
@@ -167,7 +173,7 @@ export class Kubectl {
     }
   }
 
-  protected async ensureKubectl(): Promise<boolean> {
+  public async ensureKubectl(): Promise<boolean> {
     await ensureDir(this.dirname, 0o755)
     return lockFile.lock(this.dirname).then(async (release) => {
       logger.debug(`Acquired a lock for ${this.kubectlVersion}`)
@@ -286,6 +292,16 @@ export class Kubectl {
     return globalRequestOpts({
       url: this.url
     })
+  }
+
+  protected getDownloadMirror() {
+    if (process.platform == "darwin") {
+      return packageMirrors.get("default") // MacOS packages are only available from default
+    }
+    const mirror = packageMirrors.get(userStore.getPreferences().downloadMirror)
+    if (mirror) { return mirror }
+
+    return packageMirrors.get("default")
   }
 }
 

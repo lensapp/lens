@@ -5,34 +5,6 @@
       <div class="header sticky-top">
         <h2>Preferences</h2>
       </div>
-      <!-- <div class="row">
-        <div class="col-3" />
-        <div ref="content" class="global-settings col-6">
-          <h2>Kontena Lens PRO License</h2>
-
-          <b-form-group
-            label="No Kontena Lens PRO license assigned. Assign license by entering license key below:"
-            label-for="input-license-key"
-            v-if="!licenceData || licenceData.status !== 'valid'"
-          >
-            <b-form-input
-              id="input-license-key"
-              v-model="licenseKey"
-              trim
-              @blur="onLicenseKeySave"
-              placeholder="Enter license key"
-              :disabled="!isLoggedIn"
-              :state="errors.licenseKey"
-            />
-          </b-form-group>
-          <div v-if="licenceData">
-            <p v-if="licenceData.status === 'valid'">
-              Valid Kontena Lens PRO license assigned. Valid until {{ licenceData.valid_until }}<span v-if="licenceData.recurring">(renews automatically)</span>.
-            </p>
-          </div>
-        </div>
-        <div class="col-3" />
-      </div> -->
       <div class="row">
         <div class="col-3" />
         <div ref="content" class="global-settings col-6">
@@ -47,6 +19,25 @@
               v-model="preferences.colorTheme"
               @change="onSave"
               :options="colorThemeOptions"
+            />
+          </b-form-group>
+        </div>
+        <div class="col-3" />
+      </div>
+      <div class="row">
+        <div class="col-3" />
+        <div ref="content" class="global-settings col-6">
+          <h2>Download Mirror</h2>
+
+          <b-form-group
+            label="Download mirror for kubectl/helm:"
+            label-for="input-download-mirror"
+          >
+            <b-form-select
+              id="input-download-mirror"
+              v-model="preferences.downloadMirror"
+              @change="onSave"
+              :options="downloadMirrorOptions"
             />
           </b-form-group>
         </div>
@@ -156,16 +147,16 @@ export default {
   },
   data(){
     return {
-      licenseKey: "",
       hubRepositories: [],
       selectedHubRepo: "",
       colorThemeOptions: [
         { value: "dark", text: "Dark" },
         { value: "light", text: "Light" },
       ],
-      errors: {
-        licenseKey: null
-      },
+      downloadMirrorOptions: [
+        { value: "default", text: "Default (Google)" },
+        { value: "china", text: "China (Azure)" },
+      ],
       isHelmProcessing: null,
     }
   },
@@ -176,32 +167,10 @@ export default {
     preferences: function() {
       return this.$store.getters.preferences;
     },
-    licenceData: function() {
-      return this.$store.getters.licenseData;
-    },
-    isLoggedIn: function() {
-      console.log(this.$store.getters.isLoggedIn)
-      return this.$store.getters.isLoggedIn;
-    }
   },
   methods: {
     onSave: function() {
       this.$store.commit("savePreferences", this.preferences);
-    },
-    onLicenseKeySave: async function() {
-      if (this.licenseKey !== "") {
-        try {
-          await this.$store.dispatch("exhangeKey", {
-            key: this.licenseKey,
-            user: this.$store.getters.user
-          })
-          this.errors.licenseKey = true;
-        } catch(error) {
-          this.errors.licenseKey = false;
-        }
-      } else {
-        this.errors.licenseKey = null;
-      }
     },
     request: async function(opts) {
       const o = Object.assign({
