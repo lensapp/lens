@@ -18,6 +18,19 @@ declare const __static: string;
 
 const assetsPath = path.join(__static, "build/client")
 
+const mimeTypes: {[key: string]: string} = {
+  "html": "text/html",
+  "txt": "text/plain",
+  "css": "text/css",
+  "gif": "image/gif",
+  "jpg": "image/jpeg",
+  "png": "image/png",
+  "svg": "image/svg+xml",
+  "js": "application/javascript",
+  "woff2": "font/woff2",
+  "ttf": "font/ttf"
+};
+
 interface RouteParams {
   [key: string]: string | undefined;
 }
@@ -80,6 +93,8 @@ export class Router {
       if (err) {
         response.statusCode = 404
       } else {
+        const type = mimeTypes[path.extname(asset).slice(1)] || "text/plain";
+        response.setHeader("Content-Type", type);
         response.write(data)
         response.end()
       }
