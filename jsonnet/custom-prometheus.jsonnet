@@ -28,12 +28,12 @@
     serviceMonitorKubelet+: {
       spec+: {
         metricRelabelings+: [
-	  {
-	    action: 'replace',
-	    sourceLabels: ['node'],
-	    targetLabel: 'instance',
-	  },
-	],
+          {
+            action: 'replace',
+            sourceLabels: ['node'],
+            targetLabel: 'instance',
+          },
+        ],
       },
     },
   },
