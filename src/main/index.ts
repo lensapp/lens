@@ -15,7 +15,7 @@ import { shellSync } from "./shell-sync"
 import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { findMainWebContents } from "./webcontents"
-import { HelmRepoManager, HelmRepo } from "./helm-repo-manager"
+import { helmCli } from "./helm-cli"
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
@@ -99,7 +99,10 @@ async function main() {
         logger.debug("navigate: cluster-settings-page  IPC sent");
       })
     },
-  }, promiseIpc);
+  }, promiseIpc)
+
+  // download helm cli
+  helmCli.ensureBinary()
 }
 
 app.on("ready", main)
