@@ -1,0 +1,192 @@
+@import "~flex.box";
+@import "fonts";
+
+*, *:before, *:after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: $primary;
+  color: white;
+}
+
+html {
+  font-size: 62.5%; // 1 rem == 10px
+  color: $textColorPrimary;
+  background-color: $mainBackground;
+  --flex-gap: #{$padding};
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+#app {
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  font: $font-size $font-main;
+}
+
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+label {
+  color: $textColorSecondary;
+}
+
+ol, ul {
+  margin: 0;
+  list-style: none;
+}
+
+hr {
+  margin: $margin 0 !important;
+  height: 1px;
+  background: $grey-800;
+}
+
+h1 {
+  font-size: 11.2rem;
+  font-weight: $font-weight-thin;
+  letter-spacing: -.010em;
+  margin: 0;
+}
+
+h2 {
+  @extend h1;
+  font-size: 5.6 * $unit;
+}
+
+h3 {
+  @extend h2;
+  font-size: 4.5 * $unit;
+}
+
+h4 {
+  @extend h2;
+  font-size: 3.4 * $unit;
+}
+
+h5 {
+  @extend h2;
+  font-size: 2.6 * $unit;
+  padding: $padding / 2 0;
+}
+
+h6 {
+  @extend h2;
+  font-size: 2 * $unit;
+  font-weight: $font-weight-bold;
+}
+
+small {
+  font-size: $font-size-small;
+}
+
+code {
+  @include custom-scrollbar;
+  font-family: $font-monospace;
+  font-size: $font-size * .9;
+  display: block;
+  background: #1a1919;
+  color: #b4b5b4;
+  padding: $padding * 2;
+  white-space: pre;
+}
+
+a {
+  color: inherit;
+  cursor: pointer;
+
+  [href] {
+    text-decoration: underline;
+  }
+
+  &:focus {
+    color: white;
+  }
+
+  &:not([href]) {
+    border-bottom: 1px dotted;
+    text-decoration: none;
+  }
+}
+
+// colors
+.success {
+  color: $colorSuccess;
+}
+
+.info {
+  color: $colorInfo;
+}
+
+.error {
+  color: $colorError;
+}
+
+.contrast {
+  color: $textColorAccent;
+}
+
+.text-secondary {
+  color: $textColorSecondary;
+}
+
+.nobr {
+  white-space: nowrap;
+}
+
+.flow {
+  --flow-space: #{$margin * 1.5};
+
+  &:not(.column) {
+    > * + * {
+      margin-left: var(--flow-space);
+    }
+  }
+
+  &.column {
+    > * + * {
+      margin-top: var(--flow-space);
+    }
+  }
+}
+
+// app's common loading indicator, displaying on the route transitions
+#loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -15px;
+  z-index: 1000;
+
+  &.hidden {
+    display: none;
+  }
+}
+
+// hack-fix: remove crappy yellow background from auto-filled inputs in chrome
+@keyframes autofill-remove-bgc {
+  to {
+    color: inherit;
+    background: inherit;
+  }
+}
+
+input:-webkit-autofill {
+  -webkit-animation-name: autofill-remove-bgc;
+  -webkit-animation-fill-mode: both;
+}

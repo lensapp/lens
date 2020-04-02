@@ -1,0 +1,50 @@
+
+.ConfirmDialog {
+  $spacing: $padding * 3;
+
+  &.warning {
+    .Button.ok {
+      background: $colorSoftError;
+    }
+  }
+
+  > .box {
+    max-width: 50vw;
+    min-width: 45 * $unit;
+    background-color: white;
+    outline: $unit solid rgba(255, 255, 255, .15);
+  }
+
+  .confirm-content {
+    padding: $spacing;
+    display: flex;
+    align-items: center;
+    word-break: break-word;
+
+    > .Icon {
+      margin-left: inherit;
+      margin-right: $margin;
+      color: $colorSoftError;
+    }
+
+    > :not(.Icon) {
+      flex: 1;
+    }
+
+    .warning {
+      font-size: small;
+      margin-top: $margin;
+    }
+  }
+
+  .confirm-buttons {
+    background: #f4f4f4;
+    padding: $spacing;
+    display: flex;
+    justify-content: flex-end;
+
+    > * {
+      margin-left: $margin
+    }
+  }
+}

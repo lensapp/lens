@@ -1,0 +1,30 @@
+diff --git a/node_modules/@kubernetes/client-node/dist/oidc_auth.js b/node_modules/@kubernetes/client-node/dist/oidc_auth.js
+index a393b8d..652ce12 100644
+--- a/node_modules/@kubernetes/client-node/dist/oidc_auth.js
++++ b/node_modules/@kubernetes/client-node/dist/oidc_auth.js
+@@ -38,6 +38,7 @@ class OpenIDConnectAuth {
+                 return null;
+             }
+             const client = overrideClient ? overrideClient : yield this.getClient(user);
++            client.CLOCK_TOLERANCE = 10;
+             return this.refresh(user, client);
+         });
+     }
+@@ -46,6 +47,7 @@ class OpenIDConnectAuth {
+             if (Date.now() / 1000 > this.currentTokenExpiration) {
+                 const newToken = yield client.refresh(user.authProvider.config['refresh-token']);
+                 user.authProvider.config['id-token'] = newToken.id_token;
++                user.authProvider.config['refresh-token'] = newToken.refresh_token;
+                 this.currentTokenExpiration = newToken.expires_at || 0;
+             }
+             return user.authProvider.config['id-token'];
+@@ -53,6 +55,9 @@ class OpenIDConnectAuth {
+     }
+     getClient(user) {
+         return tslib_1.__awaiter(this, void 0, void 0, function* () {
++            openid_client_1.Issuer.defaultHttpOptions = {
++              timeout: 10000
++            }
+             const oidcIssuer = yield openid_client_1.Issuer.discover(user.authProvider.config['idp-issuer-url']);
+             return new oidcIssuer.Client({
+                 client_id: user.authProvider.config['client-id'],

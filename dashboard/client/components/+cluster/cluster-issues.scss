@@ -1,0 +1,58 @@
+.ClusterIssues {
+  min-height: 350px;
+  position: relative;
+
+  @include media("<1024px") {
+    grid-column-start: 1!important;
+    grid-column-end: 1!important;
+  }
+
+  &.wide {
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+
+  .SubHeader {
+    .Icon {
+      font-size: 130%;
+      color: $colorError;
+    }
+  }
+
+  .Table {
+    .TableHead {
+      background-color: transparent;
+      border-bottom: 1px solid $borderFaintColor;
+
+      .TableCell {
+        padding-top: 0;
+        padding-bottom: floor($padding / 1.33);
+      }
+    }
+
+    .TableCell {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &.message {
+        flex-grow: 3;
+      }
+
+      &.object {
+        flex-grow: 2;
+      }
+    }
+  }
+
+  .no-issues {
+    .Icon {
+      color: white;
+    }
+
+    .ok-title {
+      font-size: large;
+      color: $textColorAccent;
+      font-weight: bold;
+    }
+  }
+}

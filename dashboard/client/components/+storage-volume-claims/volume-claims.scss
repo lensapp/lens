@@ -1,0 +1,33 @@
+@import "../+storage/storage-mixins";
+
+.PersistentVolumeClaims {
+  .TableCell {
+    &.name {
+      flex-grow: 3;
+    }
+
+    &.storage {
+      flex: 0.6;
+    }
+
+    &.storageClass {
+      flex-grow: 1.5;
+    }
+
+    &.pods {
+      flex-grow: 2;
+
+      a {
+        padding-right: $padding;
+      }
+    }
+
+    &.status {
+      @include pvc-status-colors;
+    }
+
+    &.age {
+      flex: 0.4;
+    }
+  }
+}

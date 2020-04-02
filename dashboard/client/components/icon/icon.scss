@@ -1,0 +1,119 @@
+.Icon {
+  --size: 21px;
+  --small-size: 18px;
+  --big-size: 32px;
+  --color-active: #{$iconActiveColor};
+  --bgc-active: #{$iconActiveBackground};
+
+  display: inline-flex;
+  flex-shrink: 0;
+  font-style: normal;
+  vertical-align: middle;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  user-select: none;
+  box-sizing: content-box; // allow to use padding for outer spacing
+  -webkit-user-select: none; /* safari */
+  -moz-user-select: none; /* firefox */
+
+  font-size: var(--size);
+  width: var(--size);
+  height: var(--size);
+
+  &.small {
+    font-size: var(--small-size);
+    width: var(--small-size);
+    height: var(--small-size);
+  }
+
+  &.big {
+    font-size: var(--big-size);
+    width: var(--big-size);
+    height: var(--big-size);
+  }
+
+  > span {
+    width: 100%;
+    height: 100%;
+  }
+
+  // material-icon
+  &.material {
+    > span {
+      font-family: "Material Icons";
+      font-size: inherit;
+      font-weight: normal;
+      font-style: normal;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+
+      /* Support for all WebKit browsers. */
+      -webkit-font-smoothing: antialiased;
+      /* Support for Safari and Chrome. */
+      text-rendering: optimizeLegibility;
+      /* Support for Firefox. */
+      -moz-osx-font-smoothing: grayscale;
+      /* Support for IE. */
+      font-feature-settings: 'liga';
+    }
+  }
+
+  // inline svg icon
+  &.svg {
+    box-sizing: content-box;
+
+    svg {
+      pointer-events: none;
+      width: 100%;
+      height: 100%;
+
+      * {
+        fill: currentColor;
+      }
+
+      line {
+        stroke: currentColor;
+      }
+    }
+  }
+
+  &.disabled {
+    opacity: .5;
+    color: inherit !important;
+    cursor: not-allowed !important;
+  }
+
+  &.sticker {
+    background: $colorOk;
+    color: $textColorAccent;
+    border-radius: 50%;
+    box-sizing: content-box;
+    padding: $padding / 2;
+  }
+
+  &.active {
+    color: var(--color-active);
+    box-shadow: 0 0 0 3px $iconActiveBackground;
+    background-color: $iconActiveBackground;
+  }
+
+  &.interactive {
+    cursor: pointer;
+    transition: 250ms color, 250ms opacity, 150ms background-color, 150ms box-shadow;
+    border-radius: 50%;
+
+    &.focusable:focus {
+      @extend .active;
+    }
+
+    &:hover {
+      @extend .active;
+    }
+  }
+}

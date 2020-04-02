@@ -1,0 +1,101 @@
+.Menu {
+  --bgc: #{$contentColor};
+
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: var(--bgc);
+  list-style: none;
+  border: 1px solid $borderColor;
+  z-index: 101;
+
+  &.portal {
+    left: -1000px;
+    top: -1000px;
+
+    &.top {
+      margin-top: -$margin;
+    }
+
+    &.bottom {
+      margin-top: $margin;
+    }
+  }
+
+  &:not(.portal) {
+    margin: $margin 0;
+
+    &.left {
+      left: 0;
+    }
+
+    &.right {
+      right: 0;
+    }
+
+    &.top {
+      bottom: 100%;
+    }
+
+    &.bottom {
+      top: 100%;
+    }
+  }
+
+  &:empty {
+    display: none;
+  }
+}
+
+.MenuItem {
+  --color: #{$textColorPrimary};
+  --color-active: #{$textColorAccent};
+  --bgc-active: #{$menuActiveBackground};
+  --spacing: #{$padding};
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: var(--color);
+  padding: var(--spacing);
+  white-space: nowrap;
+  transition: 250ms background;
+  text-decoration: none;
+  text-overflow: ellipsis;
+
+  &:hover:not(.disabled) {
+    color: var(--color-active);
+    background: var(--bgc-active);
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline: 2px solid $colorInfo;
+  }
+
+  &.active {
+    color: var(--color-active);
+    background-color: var(--bgc-active);
+    cursor: default;
+  }
+
+  &.disabled {
+    pointer-events: none;
+    opacity: .5;
+  }
+
+  &.spacer {
+    padding: 0;
+    height: 0;
+    overflow: hidden;
+    border-top: 1px solid $contentColor;
+    pointer-events: none;
+  }
+
+  .Icon {
+    &:first-child {
+      margin-left: 0;
+      margin-right: $padding;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+@import "autoscaler.mixins";
+
+.HpaDetails {
+  .Badge {
+    @include hpa-status-bgc;
+  }
+
+  .metrics .Table {
+    .TableCell {
+      word-break: break-word;
+
+      &.name {
+        flex-grow: 2;
+      }
+    }
+  }
+}

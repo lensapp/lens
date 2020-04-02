@@ -1,0 +1,80 @@
+.Dock {
+  $borderColor: $borderColor;
+
+  position: relative;
+  background: $dockHeadBackground;
+  display: flex;
+  flex-direction: column;
+
+  &.isOpen {
+    &.fullSize {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+
+      > .resizer {
+        display: none;
+      }
+    }
+  }
+
+  &:not(.isOpen) {
+    height: auto !important;
+
+    .Tab:not(:focus):after {
+      display: none;
+    }
+  }
+
+  .tabs-container {
+    padding: 0 $padding * 2;
+    border-top: 1px solid $borderColor;
+    flex-shrink: 0;
+
+    .Tabs:empty + .toolbar {
+      padding-left: 0;
+    }
+
+    .toolbar {
+      min-height: $unit * 4;
+      padding-left: $padding;
+      user-select: none;
+    }
+  }
+
+  .tab-content {
+    position: relative;
+    background: $terminalBackground;
+    flex: 1;
+    overflow: hidden;
+    transition: flex 60ms ease-in-out;
+
+    > *:not(.Spinner) {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  .resizer {
+    $height: 12px;
+
+    position: absolute;
+    top: -$height / 2;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: $height;
+    cursor: row-resize;
+    z-index: 10;
+
+    &.disabled {
+      pointer-events: none;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+
+.LineProgress {
+  border-radius: 2px;
+  background: $lineProgressBackground;
+  height: 3px;
+
+  // line indicator
+  .line {
+    background: currentColor;
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    transition: 250ms width ease-in;
+
+    &:after {
+      $offset: $padding;
+      content: "";
+      position: absolute;
+      top: -$offset;
+      left: 0;
+      bottom: -$offset;
+      right: 0;
+    }
+  }
+}

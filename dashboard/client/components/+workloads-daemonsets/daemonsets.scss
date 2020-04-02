@@ -1,0 +1,20 @@
+.DaemonSets {
+  .TableCell {
+    &.name {
+      flex-grow: 1.6;
+    }
+
+    &.pods {
+      flex-grow: 0.3;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.labels {
+      flex-grow: 1.5;
+      @include table-cell-labels-offsets;
+    }
+  }
+}

@@ -1,0 +1,91 @@
+//-- Mixins
+@import "+workloads/workloads-mixins";
+@import "+storage/storage-mixins";
+@import "+nodes/nodes-mixins";
+@import "+namespaces/namespaces-mixins";
+@import "table/table.mixins";
+@import "+network/network-mixins";
+
+@mixin custom-scrollbar($theme: light, $size: 7px, $borderSpacing: 5px) {
+  $themes: (
+    light: rgba(255, 255, 255, .25),
+    dark: rgba(0, 0, 0, .25),
+  );
+
+  $scrollBarColor: if(map_has_key($themes, $theme), map_get($themes, $theme), none);
+  $scrollBarSize: calc(#{$size} + #{$borderSpacing} * 2);
+
+  overflow: auto; // allow scrolling for container
+
+  // Webkit
+  &::-webkit-scrollbar {
+    width: $scrollBarSize;
+    height: $scrollBarSize;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $scrollBarColor;
+    background-clip: padding-box;
+    border: $borderSpacing solid transparent;
+    border-radius: $scrollBarSize;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+
+  // Firefox
+  scrollbar-color: $scrollBarColor transparent;
+  //scrollbar-width: thin;
+}
+
+// Hide scrollbar but keep the element scrollable
+@mixin hidden-scrollbar {
+  overflow: auto;
+  // Chrome, Safari
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+  scrollbar-width: none; // Firefox 65+
+  -ms-overflow-style: none; // IE (10,11?), Edge(?)
+}
+
+// Cross-browser hacks
+@mixin safariOnly {
+  @media not all and (min-resolution: .001dpcm) {
+    @content;
+  }
+}
+
+@mixin firefoxOnly {
+  @-moz-document url-prefix() {
+    @content;
+  }
+}
+
+@mixin edgeOnly {
+  @supports (-ms-accelerator: true) {
+    @content;
+  }
+}
+
+@mixin stripeLinesAnimation($color1: #ccc, $color2: transparent, $spacing: 1rem) {
+  background: repeating-linear-gradient(-45deg, $color2, $color2, $spacing, $color1 $spacing, $color1 $spacing * 2);
+  background-size: 200% 200%;
+  animation: stripeLines 10s linear infinite;
+
+  @keyframes stripeLines {
+    100% {
+      background-position: 100% 100%;
+    }
+  }
+}
+
+@mixin pseudo-link($color: $primary) {
+  color: $color;
+  text-decoration: underline;
+  cursor: pointer;
+}

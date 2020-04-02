@@ -1,0 +1,12 @@
+$cert-status-colors: (
+  ready: $colorOk,
+);
+
+@mixin cert-status-bgc {
+  @each $status, $color in $cert-status-colors {
+    &.#{$status} {
+      background: $color;
+      color: white;
+    }
+  }
+}

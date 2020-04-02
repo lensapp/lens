@@ -1,0 +1,7 @@
+@import "cert-manager.mixins";
+
+.CertificateDetails {
+  .Badge {
+    @include cert-status-bgc;
+  }
+}

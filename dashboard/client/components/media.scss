@@ -1,0 +1,8 @@
+//-- Mixins for adaptive layout (media queries)
+@import "~include-media/dist/include-media";
+
+@mixin mobile {
+  @include media("<=desktop") {
+    @content;
+  }
+}

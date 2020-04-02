@@ -1,0 +1,19 @@
+
+.CronJobDetails {
+  .job {
+    .title {
+      margin-top: $margin * 2;
+      margin-bottom: $margin;
+
+      a {
+        color: $colorInfo;
+      }
+    }
+  }
+
+  .conditions {
+    .Badge {
+      @include job-condition-bgs;
+    }
+  }
+}

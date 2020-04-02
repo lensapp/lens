@@ -1,0 +1,45 @@
+.ItemsList {
+  &.selectable {
+    .Item:not(.disabled) {
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f7f7f7;
+        border-radius: $radius;
+      }
+    }
+  }
+
+  &.inline {
+    .Item {
+      margin-right: $margin;
+    }
+  }
+}
+
+.Item {
+  padding: $padding / 2;
+  margin: 0 $margin / -2;
+  user-select: none;
+
+  .Icon {
+    &.tick-icon {
+      color: $colorOk;
+    }
+
+    &.action-icon {
+      border-radius: $radius;
+      background: white;
+      color: #36393e;
+    }
+  }
+
+  &.selected {
+  }
+
+  &.disabled {
+    opacity: .5;
+    pointer-events: none;
+  }
+}
+

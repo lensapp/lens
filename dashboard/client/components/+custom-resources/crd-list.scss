@@ -1,0 +1,24 @@
+@import "crd.mixins";
+
+.CrdList {
+  .TableCell {
+    &.kind {
+      flex: 1.5;
+    }
+
+    &.group {
+      flex: 2;
+    }
+  }
+
+  .group-select {
+    .Select {
+      &__placeholder {
+        width: 100%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+  }
+}

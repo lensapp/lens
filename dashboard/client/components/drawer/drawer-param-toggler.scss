@@ -1,0 +1,22 @@
+.DrawerParamToggler {
+  .param-label {
+    flex-grow: 2
+  }
+
+  .param-link {
+    cursor: pointer;
+
+    .param-link-text {
+      color: $kontenaBlue;
+      text-decoration: underline;
+    }
+  }
+
+  .param-content {
+    &.open {
+      display: block;
+    }
+
+    display: none;
+  }
+}

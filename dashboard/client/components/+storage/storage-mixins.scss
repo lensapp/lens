@@ -1,0 +1,40 @@
+// PersistentVolumes
+$pv-bound: $colorOk;
+$pv-available: $colorSuccess;
+$pv-released: $colorWarning;
+$pv-failed: $colorError;
+
+// PersistentVolumeClaims
+$pvc-bound: $colorOk;
+$pvc-pending: $colorWarning;
+$pvc-lost: $colorError;
+
+// PersistentVolume Statuses
+$pv-status-color-list: (
+  bound: $pv-bound,
+  available: $pv-available,
+  released: $pv-released,
+  failed: $pv-failed
+);
+
+$pvc-status-color-list: (
+  bound: $pvc-bound,
+  pending: $pvc-pending,
+  lost: $pvc-lost
+);
+
+@mixin pv-status-colors {
+  @each $condition, $color in $pv-status-color-list {
+    &.#{$condition} {
+      color: $color;
+    }
+  }
+}
+
+@mixin pvc-status-colors {
+  @each $condition, $color in $pvc-status-color-list {
+    &.#{$condition} {
+      color: $color;
+    }
+  }
+}

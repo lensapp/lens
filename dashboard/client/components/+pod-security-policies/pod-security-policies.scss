@@ -1,0 +1,9 @@
+.PodSecurityPolicies {
+  .Table {
+    .TableCell {
+      &.volumes {
+        flex-grow: 2;
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+.PodDetailsContainer {
+  margin: $margin * 2 0;
+
+  .mount-path {
+    &:first-child {
+      margin-top: 0;
+    }
+
+    display: block;
+    font-family: $font-monospace;
+    font-size: 90%;
+    background: $colorVague;
+    color: $textColorSecondary;
+    border-radius: $radius;
+    padding: .2em .4em;
+    margin-top: $margin;
+  }
+
+  .pod-container-title {
+    font-weight: bold;
+    margin-bottom: $margin;
+
+    .StatusBrick {
+      background: $colorTerminated;
+      margin-right: $margin;
+
+      @include pod-status-bgs;
+
+      &.running:not(.ready) {
+        background-color: $pod-status-pending-color;
+      }
+    }
+  }
+
+  .status {
+    color: $colorTerminated;
+
+    @include pod-status-colors;
+  }
+
+  .Badge {
+    white-space: normal;
+  }
+}

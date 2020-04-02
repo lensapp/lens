@@ -1,0 +1,15 @@
+.LogsDialog {
+  .Wizard {
+    --wizard-width: 70vw;
+  }
+
+  .WizardStep {
+    .step-content {
+      padding: var(--wizard-spacing);
+    }
+
+    code {
+      max-height: 50vh;
+    }
+  }
+}

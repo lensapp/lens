@@ -1,0 +1,12 @@
+.CrdResourceDetails {
+  .status {
+    .value {
+      .Badge {
+        &.ready {
+          color: white;
+          background-color: $colorOk;
+        }
+      }
+    }
+  }
+}

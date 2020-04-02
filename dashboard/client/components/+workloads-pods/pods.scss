@@ -1,0 +1,27 @@
+@import "../+workloads/workloads-mixins";
+
+.Pods {
+  .TableCell {
+    &.name {
+      flex-grow: 2;
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.containers {
+      .StatusBrick {
+        @include pod-status-bgs;
+
+        &.running:not(.ready) {
+          background-color: $pod-status-pending-color;
+        }
+      }
+    }
+
+    &.status {
+      @include pod-status-colors;
+    }
+  }
+}

@@ -1,0 +1,84 @@
+
+.Wizard {
+  --wizard-width: #{65 * $unit};
+  --wizard-content-height: auto;
+  --wizard-content-max-height: #{40 * $unit};
+  --wizard-spacing: #{$padding * 3};
+  --wizard-step-bgc: #{$dialogBackground};
+
+  width: var(--wizard-width);
+  color: $dialogTextColor;
+
+  &.small {
+    --wizard-width: #{45 * $unit};
+    --wizard-content-height: auto;
+  }
+
+  @mixin scrollableContent() {
+    @include custom-scrollbar($theme: dark);
+    padding: var(--wizard-spacing);
+    height: var(--wizard-content-height);
+    max-height: var(--wizard-content-max-height);
+  }
+
+  > .header {
+    text-align: center;
+    color: white;
+    background: $dialogHeaderBackground;
+    padding: var(--wizard-spacing);
+
+    b {
+      font-weight: $font-weight-normal;
+    }
+
+    > * {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+
+  .Stepper {
+    color: silver;
+    --stepper-color-point: black;
+    --stepper-color-text: currentColor;
+    margin-top: var(--wizard-spacing);
+  }
+
+  .Checkbox {
+    padding: 0;
+  }
+
+  .Select {
+    width: 100%;
+  }
+
+  .step-loading {
+    padding: var(--wizard-spacing);
+  }
+
+  .WizardStep {
+    background: var(--wizard-step-bgc);
+
+    > .step-content.scrollable {
+      @include scrollableContent();
+
+      > * {
+        flex-shrink: 0;
+      }
+    }
+
+    // buttons
+    > :last-child {
+      padding: var(--wizard-spacing);
+      background: $dialogFooterBackground;
+
+      .back-btn {
+        margin-left: auto;
+      }
+
+      .Button[type="submit"] {
+        min-width: 10 * $unit;
+      }
+    }
+  }
+}

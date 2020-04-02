@@ -1,0 +1,53 @@
+.PodDetailsList {
+  position: relative;
+
+  .Table {
+    margin: 0 (-$margin * 3);
+
+    &.virtual {
+      height: 500px;
+    }
+  }
+
+  .TableCell {
+    &:first-child {
+      margin-left: $margin;
+    }
+
+    &:last-child {
+      margin-right: $margin;
+    }
+
+    &.name {
+      flex-grow: 2;
+    }
+
+    &.namespace {
+      flex-grow: 1.2;
+    }
+
+    &.cpu {
+      align-self: center;
+
+      .LineProgress {
+        color: $kontenaBlue;
+      }
+    }
+
+    &.memory {
+      align-self: center;
+
+      .LineProgress {
+        color: $kontenaMagenta;
+      }
+    }
+
+    &.warning {
+      @include table-cell-warning;
+    }
+
+    &.status {
+      @include pod-status-colors;
+    }
+  }
+}
