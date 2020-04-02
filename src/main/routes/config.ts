@@ -13,7 +13,7 @@ function selfSubjectAccessReview(authApi: AuthorizationV1Api, namespace: string)
     spec: {
       resourceAttributes: {
         namespace: namespace,
-        resource: "pod",
+        resource: "pods",
         verb: "list",
       }
     }
