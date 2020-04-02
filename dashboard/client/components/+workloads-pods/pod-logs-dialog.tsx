@@ -12,6 +12,8 @@ import { Icon } from "../icon";
 import { Select, SelectOption } from "../select";
 import { Spinner } from "../spinner";
 import { cssNames, downloadFile, interval } from "../../utils";
+import { default as AnsiUp } from "ansi_up";
+import DOMPurify from "dompurify"
 
 interface IPodLogsDialogData {
   pod: Pod;
@@ -44,6 +46,7 @@ export class PodLogsDialog extends React.Component<Props> {
   private containers: IPodContainer[] = []
   private initContainers: IPodContainer[] = []
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
+  private colorConverter = new AnsiUp();
 
   @observable logs = ""; // latest downloaded logs for pod
   @observable newLogs = ""; // new logs since dialog is open
@@ -242,11 +245,11 @@ export class PodLogsDialog extends React.Component<Props> {
     }
     return (
       <>
-        {logs}
+        <div dangerouslySetInnerHTML={{ __html:  DOMPurify.sanitize(this.colorConverter.ansi_to_html(logs))}} />
         {newLogs && (
           <>
             <p className="new-logs-sep" title={_i18n._(t`New logs since opening the dialog`)}/>
-            {newLogs}
+            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(newLogs))}} />
           </>
         )}
       </>
