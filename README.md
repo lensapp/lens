@@ -4,7 +4,7 @@
 
 Lens is the only IDE you’ll ever need to take control of your Kubernetes clusters. It is a standalone application for MacOS, Windows and Linux operating systems. It is open source and free.
 
-[![Screenshot](./images/screenshot.png)](https://youtu.be/04v2ODsmtIs))
+[![Screenshot](./images/screenshot.png)](https://youtu.be/04v2ODsmtIs)
 
 ## What makes Lens special?
 
