@@ -96,7 +96,7 @@ export class KubeAuthProxy {
   }
 
   protected async sendIpcLogMessage(data: string, stream: string) {
-      await this.promiseIpc.send(`kube-auth:${this.cluster.id}`, findMainWebContents(), { data: data, stream: stream })
+    await this.promiseIpc.send(`kube-auth:${this.cluster.id}`, findMainWebContents(), { data: data, stream: stream })
   }
 
   public exit() {
