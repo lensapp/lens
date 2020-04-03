@@ -59,7 +59,7 @@ export class KubeAuthProxy {
     })
     this.proxyProcess.on("exit", (code) => {
       logger.error(`proxy ${this.cluster.contextName} exited with code ${code}`)
-      this.sendIpcLogMessage( `proxy exited with code ${code}`, "stderr")
+      this.sendIpcLogMessage( `proxy exited with code ${code}`, "stderr").catch((_) => {})
       this.proxyProcess = null
       configWatcher.close()
     })
@@ -95,15 +95,14 @@ export class KubeAuthProxy {
     return errorMsg
   }
 
-  protected sendIpcLogMessage(data: string, stream: string) {
-    this.promiseIpc.send(`kube-auth:${this.cluster.id}`, findMainWebContents(), { data: data, stream: stream })
+  protected async sendIpcLogMessage(data: string, stream: string) {
+    await this.promiseIpc.send(`kube-auth:${this.cluster.id}`, findMainWebContents(), { data: data, stream: stream })
   }
 
   public exit() {
     if (this.proxyProcess) {
       logger.debug(`Stopping local proxy: ${this.cluster.contextName}`)
       this.proxyProcess.kill()
-      this.proxyProcess = null
     }
   }
 }
