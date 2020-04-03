@@ -2,7 +2,20 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.1.0 (current version)
+## 3.2.0-rc.1 (current version)
+
+- Render colors in logs
+- Add kubectl/helm download mirror select to preferences
+- Catch ipc errors on proxy exit
+- SelfSubjectAccessReview use 'pods' resource
+- Send Content-Type header on response for asset request
+- Fix Helm chart version comparison
+- Don't close namespace menu on select
+- Change terminal fit-to-window icon
+- Silence terminal websocket connection errors
+- Xterm v4.4.0
+
+## 3.1.0
 
 - Windows pod shell (powershell)
 - Simplified internal architecture (improves watch & metrics stability)
