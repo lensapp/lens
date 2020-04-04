@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.2.0-rc.1 (current version)
+## 3.2.0 (current version)
 
 - Render colors in logs
 - Add kubectl/helm download mirror select to preferences
@@ -12,6 +12,7 @@ Here you can find description of changes we've built into each release. While we
 - Fix Helm chart version comparison
 - Don't close namespace menu on select
 - Change terminal fit-to-window icon
+- Always end watch stream if connection to kube-api ends
 - Silence terminal websocket connection errors
 - Xterm v4.4.0
 
