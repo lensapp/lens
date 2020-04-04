@@ -96,8 +96,8 @@ export class Router {
         const type = mimeTypes[path.extname(asset).slice(1)] || "text/plain";
         response.setHeader("Content-Type", type);
         response.write(data)
-        response.end()
       }
+      response.end()
     })
   }
 

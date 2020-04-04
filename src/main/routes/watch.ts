@@ -49,16 +49,13 @@ class ApiWatcher {
   }
 
   private doneHandler(error: Error) {
-    if (error) {
-      logger.error("watch error: " + error.toString())
-      this.sendEvent({
-        type: "STREAM_END",
-        url: this.apiUrl,
-        status: 410,
-      })
-      return
-    }
-    this.start()
+    if (error) logger.warn("watch ended: " + error.toString())
+
+    this.sendEvent({
+      type: "STREAM_END",
+      url: this.apiUrl,
+      status: 410,
+    })
   }
 
   private sendEvent(evt: any) {
