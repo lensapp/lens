@@ -156,7 +156,7 @@ export class LensProxy {
       if (proxyTarget) {
         proxy.web(req, res, proxyTarget)
       } else {
-        await this.router.route(cluster, req, res)
+        this.router.route(cluster, req, res)
       }
     })
   }
