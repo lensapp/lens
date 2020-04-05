@@ -11,7 +11,8 @@
   "version": "3.2.0-rc.1",
   "main": "main.ts",
   "config": {
-    "bundledKubectlVersion": "1.17.3"
+    "bundledKubectlVersion": "1.17.3",
+    "bundledHelmVersion": "3.1.2"
   },
   "engines": {
     "node": ">=12.0 <13.0"
@@ -41,6 +42,10 @@
         {
           "from": "binaries/client/linux/x64/kubectl",
           "to": "./x64/kubectl"
+        },
+        {
+          "from": "binaries/client/helm3/helm3",
+          "to": "./helm3/helm3"
         }
       ]
     },
@@ -53,6 +58,10 @@
         {
           "from": "binaries/client/darwin/x64/kubectl",
           "to": "./x64/kubectl"
+        },
+        {
+          "from": "binaries/client/helm3/helm3",
+          "to": "./helm3/helm3"
         }
       ]
     },
@@ -68,6 +77,10 @@
         {
           "from": "binaries/client/windows/ia32/kubectl.exe",
           "to": "./ia32/kubectl.exe"
+        },
+        {
+          "from": "binaries/client/helm3/helm3.exe",
+          "to": "./helm3/helm3.exe"
         }
       ]
     },
@@ -94,7 +107,7 @@
     "dev": "concurrently -n app,dash \"yarn dev-electron\" \"yarn dev-dashboard\"",
     "dev-dashboard": "cd dashboard && yarn dev",
     "dev-electron": "electron-webpack dev",
-    "compile": "yarn download:kubectl && electron-webpack",
+    "compile": "yarn download:bins && electron-webpack",
     "build:linux": "yarn compile && electron-builder --linux --dir",
     "build:mac": "yarn compile && electron-builder --mac --dir",
     "build:win": "yarn compile && electron-builder --win --dir",
@@ -105,7 +118,9 @@
     "lint-dashboard": "eslint $@ --ext js,ts,tsx --max-warnings=0 dashboard/client dashboard/server",
     "postinstall": "patch-package",
     "test": "node_modules/.bin/jest",
-    "download:kubectl": "yarn run ts-node build/download_kubectl.ts"
+    "download:bins": "concurrently \"yarn download:kubectl\" \"yarn download:helm\"",
+    "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
+    "download:helm": "yarn run ts-node build/download_helm.ts"
   },
   "dependencies": {
     "@hapi/call": "^6.0.1",

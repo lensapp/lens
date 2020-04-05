@@ -27,6 +27,7 @@ module.exports =  {
     },
     {
       files: [
+        "build/*.ts",
         "src/**/*.ts",
         "spec/**/*.ts"
       ],

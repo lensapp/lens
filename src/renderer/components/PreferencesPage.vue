@@ -30,7 +30,7 @@
           <h2>Download Mirror</h2>
 
           <b-form-group
-            label="Download mirror for kubectl/helm:"
+            label="Download mirror for kubectl:"
             label-for="input-download-mirror"
           >
             <b-form-select

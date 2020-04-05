@@ -1,16 +1,16 @@
-import { app, remote } from "electron"
 import * as path from "path"
 import * as fs from "fs"
 import * as request from "request"
 import logger from "./logger"
 import { ensureDir, pathExists } from "fs-extra"
 import * as tar from "tar"
-import { globalRequestOpts} from "../common/request"
 
 export type LensBinaryOpts = {
   version: string;
+  baseDir: string;
   originalBinaryName: string;
   newBinaryName?: string;
+  requestOpts?: request.Options;
 }
 export class LensBinary {
 
@@ -24,12 +24,14 @@ export class LensBinary {
   protected platformName: string
   protected arch: string
   protected originalBinaryName: string
+  protected requestOpts: request.Options
 
   constructor(opts: LensBinaryOpts) {
+    const baseDir = opts.baseDir
     this.originalBinaryName = opts.originalBinaryName
     this.binaryName = opts.newBinaryName || opts.originalBinaryName
-
     this.binaryVersion = opts.version
+    this.requestOpts = opts.requestOpts
 
     let arch = null
 
@@ -41,18 +43,22 @@ export class LensBinary {
       arch = process.arch
     }
     this.arch = arch
-    const binaryDir = path.join((app || remote.app).getPath("userData"), "binaries", this.binaryName)
     this.platformName = process.platform === "win32" ? "windows" : process.platform
     if (process.platform === "win32") {
       this.binaryName = this.binaryName+".exe"
       this.originalBinaryName = this.originalBinaryName+".exe"
     }
 
-    this.dirname = path.normalize(path.join(binaryDir, this.binaryVersion))
+
+    this.dirname = path.normalize(path.join(baseDir, this.binaryName))
     const tarName = this.getTarName()
     if (tarName) {
       this.tarPath = path.join(this.dirname, tarName)
     }
+  }
+
+  protected binaryDir() {
+    throw new Error("binaryDir not implemented")
   }
 
   public async binaryPath() {
@@ -101,6 +107,7 @@ export class LensBinary {
       await this.downloadBinary().catch((error) => { logger.error(error) });
       if (this.tarPath) await this.untarBinary()
       if(this.originalBinaryName != this.binaryName ) await this.renameBinary()
+      logger.info(`${this.originalBinaryName} has been downloaded to ${this.getBinaryPath()}`)
     }
   }
 
@@ -139,13 +146,14 @@ export class LensBinary {
     logger.info(`Downloading ${this.originalBinaryName} ${this.binaryVersion} from ${url} to ${binaryPath}`)
     const requestOpts: request.UriOptions & request.CoreOptions = {
       uri: url,
-      gzip: true
+      gzip: true,
+      ...this.requestOpts
     }
 
-    const stream = request(globalRequestOpts(requestOpts))
+    const stream = request(requestOpts)
 
     stream.on("complete", () => {
-      logger.info(`${this.originalBinaryName} binary download finished`)
+      logger.info(`Download of ${this.originalBinaryName} finished`)
       file.end(() => {})
     })
 
