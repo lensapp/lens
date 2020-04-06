@@ -1,40 +1,28 @@
 import * as path from "path"
 import { LensBinary, LensBinaryOpts } from "./lens-binary"
-import { userStore } from "../common/user-store"
-
-const helmVersion = "3.1.2"
-const packageMirrors: Map<string, string> = new Map([
-  ["default", "https://get.helm.sh"],
-  ["china", "https://mirror.azure.cn/kubernetes/helm"]
-])
 
 export class HelmCli extends LensBinary {
 
-  public constructor(version: string) {
+  public constructor(baseDir: string, version: string) {
     const opts: LensBinaryOpts = {
       version,
+      baseDir: baseDir,
       originalBinaryName: "helm",
       newBinaryName: "helm3"
     }
     super(opts)
   }
+
   protected getTarName(): string|null {
     return `${this.binaryName}-v${this.binaryVersion}-${this.platformName}-${this.arch}.tar.gz`
   }
 
   protected getUrl() {
-    return `${this.getDownloadMirror()}/helm-v${this.binaryVersion}-${this.platformName}-${this.arch}.tar.gz`
-  }
-
-  protected getDownloadMirror() {
-    const mirror = packageMirrors.get(userStore.getPreferences().downloadMirror)
-    if (mirror) { return mirror }
-
-    return packageMirrors.get("default")
+    return `https://get.helm.sh/helm-v${this.binaryVersion}-${this.platformName}-${this.arch}.tar.gz`
   }
 
   protected getBinaryPath() {
-    return path.join(this.dirname, this.platformName+"-"+this.arch, this.binaryName)
+    return path.join(this.dirname, this.binaryName)
   }
 
   protected getOriginalBinaryPath() {
@@ -42,4 +30,15 @@ export class HelmCli extends LensBinary {
   }
 }
 
-export const helmCli = new HelmCli(helmVersion)
+const helmVersion = require("../../package.json").config.bundledHelmVersion
+const isDevelopment = process.env.NODE_ENV !== "production"
+let baseDir: string = null
+
+if(isDevelopment) {
+  baseDir = path.join(process.cwd(), "binaries", "client")
+} else {
+  baseDir = path.join(process.resourcesPath)
+}
+
+export const helmCli = new HelmCli(baseDir, helmVersion)
+

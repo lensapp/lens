@@ -100,9 +100,6 @@ async function main() {
       })
     },
   }, promiseIpc)
-
-  // download helm cli
-  helmCli.ensureBinary()
 }
 
 app.on("ready", main)
