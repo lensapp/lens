@@ -11,6 +11,7 @@ import { Service, serviceApi } from "../../api/endpoints";
 import { _i18n } from "../../i18n";
 import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { ServicePorts } from "./service-ports";
 
 interface Props extends KubeObjectDetailsProps<Service> {
 }
@@ -49,8 +50,8 @@ export class ServiceDetails extends React.Component<Props> {
           </DrawerItem>
         )}
 
-        <DrawerItem name={<Trans>Ports</Trans>} labelsOnly>
-          {service.getPorts().map(port => <Badge key={port} label={port}/>)}
+        <DrawerItem name={<Trans>Ports</Trans>}>
+          <ServicePorts service={service}/>
         </DrawerItem>
 
         {spec.type === "LoadBalancer" && spec.loadBalancerIP && (
