@@ -44,13 +44,11 @@ export class LensBinary {
     }
     this.arch = arch
     this.platformName = process.platform === "win32" ? "windows" : process.platform
+    this.dirname = path.normalize(path.join(baseDir, this.binaryName))
     if (process.platform === "win32") {
       this.binaryName = this.binaryName+".exe"
       this.originalBinaryName = this.originalBinaryName+".exe"
     }
-
-
-    this.dirname = path.normalize(path.join(baseDir, this.binaryName))
     const tarName = this.getTarName()
     if (tarName) {
       this.tarPath = path.join(this.dirname, tarName)
