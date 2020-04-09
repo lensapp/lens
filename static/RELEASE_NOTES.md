@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.2.0-rc.2 (current version)
+## 3.2.0 (current version)
 
 - Render colors in logs
 - Add kubectl download mirror select to preferences
