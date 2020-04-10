@@ -7,6 +7,7 @@ import { resourceApplierApi } from "./resource-applier-api"
 import { kubeconfigRoute } from "./routes/kubeconfig"
 import { metricsRoute } from "./routes/metrics"
 import { watchRoute } from "./routes/watch"
+import { portForwardRoute } from "./routes/port-forward"
 import { readFile } from "fs"
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -117,6 +118,9 @@ export class Router {
 
     // Metrics API
     this.router.add({ method: 'post', path: '/api/metrics' }, metricsRoute.routeMetrics.bind(metricsRoute))
+
+    // Port-forward API
+    this.router.add({ method: 'post', path: '/api/services/{namespace}/{service}/port-forward/{port}' }, portForwardRoute.routeServicePortForward.bind(portForwardRoute))
 
     // Helm API
     this.router.add({ method: 'get', path: '/api-helm/v2/charts' }, helmApi.listCharts.bind(helmApi))
