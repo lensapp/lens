@@ -19,7 +19,7 @@
     <div class="col-12">
       <div class="cluster-settings-section">
         <b>Prometheus</b>
-        <p>Use pre-installed Prometheus service for metrics. Please refer to the <a href="https://github.com/kontena/lens/blob/master/troubleshooting/custom-prometheus.md">guide</a> for possible configuration changes.</p>
+        <p>Use pre-installed Prometheus service for metrics. Please refer to the <a href="https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md">guide</a> for possible configuration changes.</p>
         <b-form-group
           label="Prometheus service address."
           description="A path to an existing Prometheus installation (<namespace>/<service>:<port>)."

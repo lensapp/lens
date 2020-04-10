@@ -11,7 +11,7 @@ export function browserCheck() {
     Notifications.info(
       <p>
         <Trans>
-          <b>Your browser does not support all Kontena Lens features. </b>{" "}
+          <b>Your browser does not support all Lens features. </b>{" "}
           Please consider using another browser.
         </Trans>
       </p>

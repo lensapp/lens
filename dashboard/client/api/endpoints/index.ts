@@ -1,4 +1,4 @@
-// Local express.js & kontena endpoints
+// Local express.js endpoints
 export * from "./config.api"
 export * from "./cluster.api"
 export * from "./kubeconfig.api"

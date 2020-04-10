@@ -2,7 +2,7 @@
 .Checkbox {
   --checkbox-color: #{$textColorPrimary}; // tick color [√]
   --checkbox-color-active: #{$contentColor};
-  --checkbox-bgc-active: #{$kontenaBlue};
+  --checkbox-bgc-active: #{$lensBlue};
 
   flex-shrink: 0;
 
@@ -11,7 +11,7 @@
       // default
     }
     &-light {
-      --checkbox-color-active: #{$kontenaBlue};
+      --checkbox-color-active: #{$lensBlue};
       --checkbox-bgc-active: none;
     }
   }

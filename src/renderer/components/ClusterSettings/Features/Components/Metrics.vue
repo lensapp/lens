@@ -2,7 +2,7 @@
   <div class="settings-section">
     <b>Metrics</b>
     <p class="description">
-      Enable timeseries data visualization (Prometheus stack) for your cluster. Install this only if you don't have existing Prometheus stack installed. You can see preview of manifests <a href="https://github.com/kontena/lens/tree/master/src/features/metrics">here</a>.
+      Enable timeseries data visualization (Prometheus stack) for your cluster. Install this only if you don't have existing Prometheus stack installed. You can see preview of manifests <a href="https://github.com/lensapp/lens/tree/master/src/features/metrics">here</a>.
     </p>
     <div class="actions">
       <b-button @click="install" v-if="!settings.installed" :disabled="!cluster.isAdmin || isProcessing || !canInstall" variant="primary">

@@ -38,7 +38,7 @@ export class AppInit extends React.Component<Props> {
     return (
       <div className="AppInit flex column center">
         <div className="box flex column gaps">
-          <h5>Kontena Lens - {_i18n._(t`Loading`)}..</h5>
+          <h5>Lens - {_i18n._(t`Loading`)}..</h5>
           {serviceWaitingList.length > 0 && (
             <p className="waiting-services">
               {_i18n._(t`Waiting services to be running`)}: <em className="text-secondary">{serviceNames}</em>

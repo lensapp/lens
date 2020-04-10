@@ -116,7 +116,7 @@
           <h2>Telemetry & Usage Tracking</h2>
           <b-form-group
             label-for="checkbox-allow-telemetry"
-            description="Telemetry & usage data is collected to continuously improve the Kontena Lens experience."
+            description="Telemetry & usage data is collected to continuously improve the Lens experience."
           >
             <b-form-checkbox
               id="checkbox-allow-telemetry"

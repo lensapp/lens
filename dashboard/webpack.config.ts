@@ -45,7 +45,7 @@ export default () => {
             extractComments: {
               condition: "some",
               banner: [
-                `Lens. Copyright ${new Date().getFullYear()} by Lakend Labs, Inc. All rights reserved.`
+                `Lens - The Kubernetes IDE. Copyright ${new Date().getFullYear()} by Lakend Labs, Inc. All rights reserved.`
               ].join("\n")
             }
           })
