@@ -27,13 +27,21 @@
   prometheus+:: {
     serviceMonitorKubelet+: {
       spec+: {
-        metricRelabelings+: [
-          {
-            action: 'replace',
-            sourceLabels: ['node'],
-            targetLabel: 'instance',
-          },
-        ],
+        endpoints: std.map(function(endpoint)
+          if endpoint.port == "https-metrics" then
+            endpoint {
+              metricRelabelings+: [
+                {
+                  action: 'replace',
+                  sourceLabels: ['node'],
+                  targetLabel: 'instance',
+                },
+              ],
+            }
+          else
+            endpoint,
+          super.endpoints
+        ),
       },
     },
   },
