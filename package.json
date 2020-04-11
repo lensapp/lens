@@ -11,7 +11,7 @@
   "version": "3.2.0",
   "main": "main.ts",
   "config": {
-    "bundledKubectlVersion": "1.17.3",
+    "bundledKubectlVersion": "1.17.4",
     "bundledHelmVersion": "3.1.2"
   },
   "engines": {
@@ -99,6 +99,7 @@
     "collectCoverage": true,
     "testRegex": "spec/.*_(spec)\\.[jt]sx?$",
     "verbose": true,
+    "testEnvironment": "node",
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     }
