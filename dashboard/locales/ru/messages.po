@@ -27,8 +27,8 @@ msgid "<0>Filtered</0>: {itemsCount} / {allItemsCount}"
 msgstr "<0>Отфильтровано</0>: {itemsCount} / {allItemsCount}"
 
 #: client/browser-check.tsx:11
-msgid "<0>Your browser does not support all Kontena Lens features. </0> Please consider using another browser."
-msgstr "<0>Ваш браузер не поддерживает все возможности Kontena Lens. </0> Пожалуйста рассмотрите использование другого современного браузера."
+msgid "<0>Your browser does not support all Lens features. </0> Please consider using another browser."
+msgstr "<0>Ваш браузер не поддерживает все возможности Lens. </0> Пожалуйста рассмотрите использование другого современного браузера."
 
 #: client/components/dock/create-resource.tsx:56
 msgid "<0>{0}</0> successfully created"

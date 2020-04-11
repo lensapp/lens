@@ -64,7 +64,7 @@ export default {
   left: 0;
   width: 100%;
   height: 20px;
-  background-color: var(--kontena-blue);
+  background-color: var(--lens-primary);
   z-index: 2000;
 }
 #workspace-area {

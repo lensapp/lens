@@ -12,7 +12,7 @@
                     Welcome, {{ greetingName }}!
                   </h1>
                   <p v-if="clusters.length === 0" class="text-center">
-                    Get started by associating one or more clusters to Kontena Lens.
+                    Get started by associating one or more clusters to Lens.
                   </p>
                 </b-col>
               </b-row>

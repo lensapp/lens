@@ -133,7 +133,7 @@ h2 {
     border-bottom: 1px solid var(--lens-pane-bg);
     padding-left: 0;
     h5 {
-      color: var(--kontena-blue)
+      color: var(--lens-primary)
     }
     h5:hover {
       text-decoration: underline;
