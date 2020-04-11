@@ -1,4 +1,4 @@
-// from Kontena Lens UI
+// from Lens Dashboard
 $lens-main-bg: #1e2124 !default; // dark bg
 $lens-pane-bg: #262b2f !default; // all panels main bg
 $lens-dock-bg: #2E3136 !default; // terminal and top menu bar
@@ -6,7 +6,7 @@ $lens-menu-bg: #36393E !default; // sidemenu on left
 $lens-menu-hl: #414448 !default; // sidemenu on left, top left corner
 $lens-text-color: #87909c !default;
 $lens-text-color-light: #a0a0a0 !default;
-$kontena-blue: #3d90ce !default;
+$lens-primary: #3d90ce !default;
 
 // export as css variables
 * {
@@ -17,7 +17,7 @@ $kontena-blue: #3d90ce !default;
   --lens-menu-hl: #{$lens-menu-hl}; // sidemenu on left, top left corner
   --lens-text-color: #{$lens-text-color};
   --lens-text-color-light: #{$lens-text-color-light};
-  --kontena-blue: #{$kontena-blue};
+  --lens-primary: #{$lens-primary};
 }
 
 // Base grayscale colors definitions
@@ -46,7 +46,7 @@ $teal: #20c997 !default;
 $cyan: #6ca5b7 !default;
 
 // Theme color default definitions
-$primary: $kontena-blue !default;
+$primary: $lens-primary !default;
 $secondary: $gray-600 !default;
 $success: $green !default;
 $info: $cyan !default;

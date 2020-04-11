@@ -43,7 +43,7 @@ export const config = {
   USER_MANAGEMENT_ENABLED: JSON.parse(process.env.USER_MANAGEMENT_ENABLED || "false"),
   CHARTS_ENABLED: JSON.parse(process.env.CHARTS_ENABLED || "false"),
 
-  // kontena namespaces
+  // namespaces
   LENS_NAMESPACE: process.env.LENS_NAMESPACE || "kontena-lens",
   STATS_NAMESPACE: process.env.STATS_NAMESPACE || "kontena-stats",
 

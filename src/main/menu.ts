@@ -184,7 +184,7 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       {
         label: 'Report an Issue',
         click: async () => {
-          shell.openExternal('https://github.com/kontena/lens/issues');
+          shell.openExternal('https://github.com/lensapp/lens/issues');
         },
       },
       {

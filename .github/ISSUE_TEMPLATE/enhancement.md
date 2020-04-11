@@ -5,7 +5,7 @@ labels: enhancement
 ---
 <!-- Please only use this template for submitting enhancement requests -->
 <!--
-    Check already existing enhancement request on this list: https://github.com/kontena/lens/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement
+    Check already existing enhancement request on this list: https://github.com/lensapp/lens/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement
     If similar request already exists, please add comments on the existing issue.
 -->
 

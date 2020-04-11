@@ -1,5 +1,5 @@
 {
-  "name": "kontena-lens",
+  "name": "lens-app-dashboard",
   "version": "0.0.0",
   "scripts": {
     "dev": "webpack-cli --watch --cache --progress --output-path ../static/build/client/",
