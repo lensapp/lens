@@ -11,6 +11,7 @@ import * as lockFile from "proper-lockfile"
 import { helmCli } from "./helm-cli"
 import { userStore } from "../common/user-store"
 
+const bundledVersion = require("../../package.json").config.bundledKubectlVersion
 const kubectlMap: Map<string, string> = new Map([
   ["1.7", "1.8.15"],
   ["1.8", "1.9.10"],
@@ -22,7 +23,7 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.14", "1.14.10"],
   ["1.15", "1.15.11"],
   ["1.16", "1.16.8"],
-  ["1.17", "1.17.4"],
+  ["1.17", bundledVersion],
   ["1.18", "1.18.0"]
 ])
 
@@ -54,7 +55,7 @@ export class Kubectl {
 
   public static readonly kubectlDir = path.join((app || remote.app).getPath("userData"), "binaries", "kubectl")
   public static readonly bundledKubectlPath = bundledPath
-  public static readonly bundledKubectlVersion: string = require("../../package.json").config.bundledKubectlVersion
+  public static readonly bundledKubectlVersion: string = bundledVersion
   private static bundledInstance: Kubectl;
 
   // Returns the single bundled Kubectl instance
