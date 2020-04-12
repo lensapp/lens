@@ -11,7 +11,6 @@ import { Link } from "react-router-dom";
 import { Badge } from "../../badge";
 import { apiManager } from "../../../api/api-manager";
 import { Spinner } from "../../spinner";
-import { CertificateDetails } from "./certificate-details"
 
 enum sortBy {
   name = "name",
@@ -102,6 +101,5 @@ export function CertificateMenu(props: KubeObjectMenuProps<Certificate>) {
 
 apiManager.registerViews(certificatesApi, {
   List: Certificates,
-  Menu: CertificateMenu,
-  Details: CertificateDetails
+  Menu: CertificateMenu
 })
