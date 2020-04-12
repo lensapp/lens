@@ -95,7 +95,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   // default user settings (ui show-hide tweaks mostly)
   @observable userSettings: ItemListLayoutUserSettings = {
-    showAppliedFilters: true,
+    showAppliedFilters: false,
   };
 
   constructor(props: ItemListLayoutProps) {
