@@ -137,6 +137,6 @@ export class CertificateDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(certificatesApi, {
-  Details: CertificateDetails
-})
+// apiManager.registerViews(certificatesApi, {
+//   Details: CertificateDetails
+// })

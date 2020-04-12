@@ -42,6 +42,10 @@ interface Props {
 
 @observer
 export class Sidebar extends React.Component<Props> {
+  async componentDidMount() {
+    if (!crdStore.isLoaded) crdStore.loadAll()
+  }
+
   renderCustomResources() {
     return Object.entries(crdStore.groups).map(([group, crds]) => {
       const submenus = crds.map(crd => {
