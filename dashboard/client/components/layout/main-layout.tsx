@@ -4,20 +4,13 @@ import * as React from "react";
 import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { matchPath, RouteProps } from "react-router-dom";
-import { Trans } from "@lingui/macro";
-import { createStorage, cssNames, isElectron } from "../../utils";
+import { createStorage, cssNames } from "../../utils";
 import { Tab, Tabs } from "../tabs";
-import { Icon } from "../icon";
-import { openUserKubeConfig } from "../kubeconfig-dialog";
 import { Sidebar } from "./sidebar";
 import { configStore } from "../../config.store";
 import { ErrorBoundary } from "../error-boundary";
 import { Dock } from "../dock";
-import { MenuItem } from "../menu";
-import { MenuActions } from "../menu/menu-actions";
 import { navigate, navigation } from "../../navigation";
-import { i18nStore } from "../../i18n";
-import { Badge } from "../badge";
 import { themeStore } from "../../theme.store";
 
 export interface TabRoute extends RouteProps {
@@ -54,9 +47,8 @@ export class MainLayout extends React.Component<Props> {
 
   render() {
     const { className, contentClass, headerClass, tabs, footer, footerClass, children } = this.props;
-    const { clusterName, username, lensVersion, kubectlAccess } = configStore.config;
+    const { clusterName } = configStore.config;
     const { pathname } = navigation.location;
-    const { languages, setLocale, activeLang } = i18nStore;
     return (
       <div className={cssNames("MainLayout", className, themeStore.activeTheme.type)}>
         <header className={cssNames("flex gaps align-center", headerClass)}>

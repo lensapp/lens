@@ -69,7 +69,7 @@ export class KubeObjectDetails extends React.Component {
       const { kind, getName, selfLink } = object;
       title = `${kind}: ${getName()}`;
       apiComponents = apiManager.getViews(selfLink);
-      if (isCrdInstance) {
+      if (isCrdInstance && !apiComponents.Details) {
         apiComponents.Details = CrdResourceDetails
         apiComponents.Menu = CrdResourceMenu
       }
