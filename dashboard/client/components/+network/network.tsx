@@ -7,6 +7,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
 import { MainLayout, TabRoute } from "../layout/main-layout";
 import { Services, servicesRoute, servicesURL } from "../+network-services";
+import { Endpoints, endpointRoute, endpointURL } from "../+network-endpoints";
 import { Ingresses, ingressRoute, ingressURL } from "../+network-ingresses";
 import { NetworkPolicies, networkPoliciesRoute, networkPoliciesURL } from "../+network-policies";
 import { namespaceStore } from "../+namespaces/namespace.store";
@@ -25,6 +26,12 @@ export class Network extends React.Component<Props> {
         component: Services,
         url: servicesURL({ query }),
         path: servicesRoute.path,
+      },
+      {
+        title: <Trans>Endpoints</Trans>,
+        component: Endpoints,
+        url: endpointURL({ query }),
+        path: endpointRoute.path,
       },
       {
         title: <Trans>Ingresses</Trans>,
