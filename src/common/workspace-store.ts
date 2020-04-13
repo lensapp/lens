@@ -18,6 +18,7 @@ export class Workspace implements WorkspaceData {
 }
 
 export class WorkspaceStore {
+  public static defaultId = "default"
   private static instance: WorkspaceStore;
   public store: ElectronStore;
 
@@ -39,6 +40,9 @@ export class WorkspaceStore {
   }
 
   public removeWorkspace(workspace: Workspace) {
+    if (workspace.id === WorkspaceStore.defaultId) {
+      throw new Error("Cannot remove default workspace")
+    }
     const workspaces = this.getAllWorkspaces()
     const index = workspaces.findIndex((w) => w.id === workspace.id)
     if (index !== -1) {
@@ -64,9 +68,9 @@ export class WorkspaceStore {
 
 const workspaceStore: WorkspaceStore = WorkspaceStore.getInstance()
 
-if (workspaceStore.getAllWorkspaces().length === 0) {
+if (!workspaceStore.getAllWorkspaces().find( ws => ws.id === WorkspaceStore.defaultId)) {
   workspaceStore.storeWorkspace({
-    id: "default",
+    id: WorkspaceStore.defaultId,
     name: "default"
   })
 }

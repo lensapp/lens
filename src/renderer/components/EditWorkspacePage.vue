@@ -37,7 +37,7 @@
                 <b-button variant="primary" type="submit">
                   Save
                 </b-button>
-                <b-button v-b-modal.bv-modal-confirm>
+                <b-button v-if="workspace.id !== 'default'" v-b-modal.bv-modal-confirm>
                   Delete
                 </b-button>
                 <b-modal id="bv-modal-confirm" @ok="deleteWorkspace" ok-title="Delete" ok-variant="danger" title-class="confirm-header" hide-backdrop title="Confirm workspace delete">
