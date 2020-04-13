@@ -241,21 +241,21 @@ export class ClusterIssuer extends Issuer {
 
 export const certificatesApi = new KubeApi({
   kind: Certificate.kind,
-  apiBase: "/apis/certmanager.k8s.io/v1alpha1/certificates",
+  apiBase: "/apis/cert-manager.io/v1alpha2/certificates",
   isNamespaced: true,
   objectConstructor: Certificate,
 });
 
 export const issuersApi = new KubeApi({
   kind: Issuer.kind,
-  apiBase: "/apis/certmanager.k8s.io/v1alpha1/issuers",
+  apiBase: "/apis/cert-manager.io/v1alpha2/issuers",
   isNamespaced: true,
   objectConstructor: Issuer,
 });
 
 export const clusterIssuersApi = new KubeApi({
   kind: ClusterIssuer.kind,
-  apiBase: "/apis/certmanager.k8s.io/v1alpha1/clusterissuers",
+  apiBase: "/apis/cert-manager.io/v1alpha2/clusterissuers",
   isNamespaced: false,
   objectConstructor: ClusterIssuer,
 });

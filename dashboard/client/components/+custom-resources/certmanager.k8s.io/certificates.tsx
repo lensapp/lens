@@ -101,5 +101,5 @@ export function CertificateMenu(props: KubeObjectMenuProps<Certificate>) {
 
 apiManager.registerViews(certificatesApi, {
   List: Certificates,
-  Menu: CertificateMenu,
+  Menu: CertificateMenu
 })

@@ -14,9 +14,6 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
   constructor() {
     super();
 
-    // auto-load crd-s for building sub-menus
-    this.loadAll();
-
     // auto-init stores for crd-s
     reaction(() => this.items.toJS(), items => {
       items.forEach(this.initStore);
