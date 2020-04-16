@@ -176,6 +176,8 @@ export class PodDetails extends React.Component<Props> {
             <DrawerTitle title={<Trans>Volumes</Trans>}/>
             {volumes.map(volume => {
               const claimName = volume.persistentVolumeClaim ? volume.persistentVolumeClaim.claimName : null;
+              const type = Object.keys(volume)[1]
+
               return (
                 <div key={volume.name} className="volume">
                   <div className="title flex gaps">
@@ -183,8 +185,23 @@ export class PodDetails extends React.Component<Props> {
                     <span>{volume.name}</span>
                   </div>
                   <DrawerItem name={<Trans>Type</Trans>}>
-                    {Object.keys(volume)[1]}
+                    {type}
                   </DrawerItem>
+                  { type === "emptyDir" && (
+                    <div>
+                      { volume.emptyDir.medium && (
+                      <DrawerItem name={<Trans>Medium</Trans>}>
+                        {volume.emptyDir.medium}
+                      </DrawerItem>
+                      )}
+                      { volume.emptyDir.sizeLimit && (
+                        <DrawerItem name={<Trans>Size Limit</Trans>}>
+                        {volume.emptyDir.sizeLimit}
+                        </DrawerItem>
+                      )}
+                    </div>
+                  )}
+
                   {claimName && (
                     <DrawerItem name={<Trans>Claim Name</Trans>}>
                       <Link
