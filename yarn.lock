@@ -4131,10 +4131,10 @@ electron@*:
     electron-download "^4.1.0"
     extract-zip "^1.0.3"
 
-electron@6.1.9:
-  version "6.1.9"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-6.1.9.tgz#4f28c4bdd0cdfd427ea98ce6ad02f303638f7b1f"
-  integrity sha512-Sm6pIR9yr9oBnIzwWnwSyTiZwj3fdp3X0pBDWDmw2wf/RtZlKH4PEkEu622AZLyXyhBKUiD2Jajkr5c4MelRxw==
+electron@6.1.10:
+  version "6.1.10"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-6.1.10.tgz#b2a875f5c8f3c3e7954dfa11c05083e49d2fb8c2"
+  integrity sha512-mOrV4jm0O6HSktLbUYPNAQdOAses1p8XGSad/lR5koBcI0fvBbUWV2EMnZipGwMADFXneTW6LaOpuiuL/67gzQ==
   dependencies:
     "@types/node" "^10.12.18"
     electron-download "^4.1.0"
