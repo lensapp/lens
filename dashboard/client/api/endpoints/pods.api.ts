@@ -175,6 +175,10 @@ export class Pod extends WorkloadKubeObject {
       persistentVolumeClaim: {
         claimName: string;
       };
+      emptyDir: {
+        medium?: string;
+        sizeLimit?: string;
+      };
       secret: {
         secretName: string;
         defaultMode: number;
