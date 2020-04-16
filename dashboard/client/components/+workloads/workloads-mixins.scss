@@ -5,6 +5,7 @@ $pod-status-evicted-color: $colorError;
 $pod-status-succeeded-color: $colorSuccess;
 $pod-status-failed-color: $colorError;
 $pod-status-terminated-color: $colorTerminated;
+$pod-status-terminating-color: $colorTerminated;
 $pod-status-unknown-color: $colorVague;
 $pod-status-complete-color: $colorSuccess;
 $pod-status-crash-loop-color: $colorError;
@@ -33,6 +34,7 @@ $pod-status-color-list: (
   waiting: $pod-status-pending-color,
   succeeded: $pod-status-succeeded-color,
   failed: $pod-status-failed-color,
+  terminating: $pod-status-terminating-color,
   terminated: $pod-status-terminated-color,
   completed: $pod-status-complete-color,
   crash-loop-back-off: $pod-status-crash-loop-color,

@@ -298,6 +298,9 @@ export class Pod extends WorkloadKubeObject {
 
   // Returns pod phase or container error if occured
   getStatusMessage() {
+    if (this.getReason() === PodStatus.EVICTED) return "Evicted";
+    if (this.getStatus() === PodStatus.RUNNING && this.metadata.deletionTimestamp) return "Terminating";
+
     let message = "";
     const statuses = this.getContainerStatuses(false); // not including initContainers
     if (statuses.length) {
@@ -313,7 +316,6 @@ export class Pod extends WorkloadKubeObject {
         }
       })
     }
-    if (this.getReason() === PodStatus.EVICTED) return "Evicted";
     if (message) return message;
     return this.getStatusPhase();
   }
