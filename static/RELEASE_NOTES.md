@@ -2,16 +2,19 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.3.0-rc.1 (current version)
+## 3.3.0 (current version)
 
 - New section: endpoints
 - Initial port-forward implementation for services
 - Hide object-list applied filters by default
+- Display emptyDir medium and size limit
+- Show pod terminating status
 - Fix default workspace remove
 - Fix issues with crd plugins
 - Fix use of bundled kubectl
 - Clean up legacy references to Kontena
 - Fix jobs sorting if condition is empty
+- Electron 6.1.10
 
 ## 3.2.0
 
