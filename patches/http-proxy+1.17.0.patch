@@ -1,0 +1,22 @@
+diff --git a/node_modules/http-proxy/lib/http-proxy/passes/web-incoming.js b/node_modules/http-proxy/lib/http-proxy/passes/web-incoming.js
+index 995a0db..a5c37f5 100644
+--- a/node_modules/http-proxy/lib/http-proxy/passes/web-incoming.js
++++ b/node_modules/http-proxy/lib/http-proxy/passes/web-incoming.js
+@@ -50,7 +50,7 @@ module.exports = {
+    */
+ 
+   timeout: function timeout(req, res, options) {
+-    if(options.timeout) {
++    if(options.timeout || options.timeout === 0) {
+       req.socket.setTimeout(options.timeout);
+     }
+   },
+@@ -134,7 +134,7 @@ module.exports = {
+ 
+     // allow outgoing socket to timeout so that we could
+     // show an error page at the initial request
+-    if(options.proxyTimeout) {
++    if(options.proxyTimeout || options.proxyTimeout === 0) {
+       proxyReq.setTimeout(options.proxyTimeout, function() {
+          proxyReq.abort();
+       });

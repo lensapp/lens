@@ -102,12 +102,15 @@ export class ContextHandler {
     }
   }
 
-  public async getApiTarget() {
-    if (this.apiTarget) { return this.apiTarget }
+  public async getApiTarget(timeout: number) {
+    if (this.apiTarget) {
+      this.apiTarget.timeout = timeout
+      return this.apiTarget
+    }
 
     this.apiTarget = {
       changeOrigin: true,
-      timeout: 30000,
+      timeout: timeout,
       headers: {
         "Host": this.clusterUrl.hostname
       },
