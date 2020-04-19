@@ -30,7 +30,7 @@ export class NodeShellSession extends ShellSession {
     }
     args = ["exec", "-i", "-t", "-n", "kube-system", this.podId, "--", "sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))"]
 
-    const shellEnv = this.getShellEnv()
+    const shellEnv = await this.getCachedShellEnv()
     this.shellProcess = pty.spawn(shell, args, {
       cols: 80,
       cwd: this.cwd() || shellEnv["HOME"],
