@@ -411,6 +411,13 @@ export class Pod extends WorkloadKubeObject {
   getNodeName() {
     return this.spec?.nodeName
   }
+
+  getSelectedNodeOs() {
+    if (!this.spec.nodeSelector) return
+    if (!this.spec.nodeSelector["kubernetes.io/os"]) return
+
+    return this.spec.nodeSelector["kubernetes.io/os"]
+  }
 }
 
 export const podsApi = new PodsApi({

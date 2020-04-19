@@ -21,9 +21,8 @@ export class PodMenu extends React.Component<Props> {
     hideDetails();
     const { object: pod } = this.props
     const containerParam = container ? `-c ${container}` : ""
-    const node = await nodesApi.get({name: pod.getNodeName()})
     let command = `kubectl exec -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam} "--"`
-    if (node.getOperatingSystem() == "windows") {
+    if (pod.getSelectedNodeOs() === "windows") {
       command = `${command} powershell`
     } else {
       command = `${command} sh -c "clear; (bash || ash || sh)"`
