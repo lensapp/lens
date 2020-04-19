@@ -28,7 +28,7 @@ export class PodSecurityPolicies extends React.Component {
           [sortBy.name]: (item: PodSecurityPolicy) => item.getName(),
           [sortBy.volumes]: (item: PodSecurityPolicy) => item.getVolumes(),
           [sortBy.privileged]: (item: PodSecurityPolicy) => +item.isPrivileged(),
-          [sortBy.age]: (item: PodSecurityPolicy) => item.getAge(false),
+          [sortBy.age]: (item: PodSecurityPolicy) => item.metadata.creationTimestamp,
         }}
         searchFilters={[
           (item: PodSecurityPolicy) => item.getSearchFields(),

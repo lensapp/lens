@@ -54,7 +54,7 @@ export class CrdResources extends React.Component<Props> {
     const sortingCallbacks: { [sortBy: string]: SortingCallback } = {
       [sortBy.name]: (item: KubeObject) => item.getName(),
       [sortBy.namespace]: (item: KubeObject) => item.getNs(),
-      [sortBy.age]: (item: KubeObject) => item.getAge(false),
+      [sortBy.age]: (item: KubeObject) => item.metadata.creationTimestamp,
     }
     extraColumns.forEach(column => {
       sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.query(item, column.JSONPath.slice(1))

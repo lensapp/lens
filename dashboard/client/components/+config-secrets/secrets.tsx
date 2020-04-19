@@ -38,7 +38,7 @@ export class Secrets extends React.Component<Props> {
             [sortBy.labels]: (item: Secret) => item.getLabels(),
             [sortBy.keys]: (item: Secret) => item.getKeys(),
             [sortBy.type]: (item: Secret) => item.type,
-            [sortBy.age]: (item: Secret) => item.getAge(false),
+            [sortBy.age]: (item: Secret) => item.metadata.creationTimestamp,
           }}
           searchFilters={[
             (item: Secret) => item.getSearchFields(),

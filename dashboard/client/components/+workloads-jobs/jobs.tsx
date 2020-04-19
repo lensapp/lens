@@ -36,7 +36,7 @@ export class Jobs extends React.Component<Props> {
           [sortBy.name]: (job: Job) => job.getName(),
           [sortBy.namespace]: (job: Job) => job.getNs(),
           [sortBy.conditions]: (job: Job) => job.getCondition() != null ? job.getCondition().type : "",
-          [sortBy.age]: (job: Job) => job.getAge(false),
+          [sortBy.age]: (job: Job) => job.metadata.creationTimestamp,
         }}
         searchFilters={[
           (job: Job) => job.getSearchFields(),

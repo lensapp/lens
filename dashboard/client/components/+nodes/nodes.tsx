@@ -132,7 +132,7 @@ export class Nodes extends React.Component<Props> {
             [sortBy.conditions]: (node: Node) => node.getNodeConditionText(),
             [sortBy.taints]: (node: Node) => node.getTaints().length,
             [sortBy.roles]: (node: Node) => node.getRoleLabels(),
-            [sortBy.age]: (node: Node) => node.getAge(false),
+            [sortBy.age]: (node: Node) => node.metadata.creationTimestamp,
             [sortBy.version]: (node: Node) => node.getKubeletVersion(),
           }}
           searchFilters={[

@@ -37,7 +37,7 @@ export class PersistentVolumes extends React.Component<Props> {
           [sortBy.storageClass]: (item: PersistentVolume) => item.spec.storageClassName,
           [sortBy.capacity]: (item: PersistentVolume) => item.getCapacity(true),
           [sortBy.status]: (item: PersistentVolume) => item.getStatus(),
-          [sortBy.age]: (item: PersistentVolume) => item.getAge(false),
+          [sortBy.age]: (item: PersistentVolume) => item.metadata.creationTimestamp,
         }}
         searchFilters={[
           (item: PersistentVolume) => item.getSearchFields(),

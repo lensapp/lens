@@ -59,7 +59,7 @@ export class Deployments extends React.Component<Props> {
           [sortBy.name]: (deployment: Deployment) => deployment.getName(),
           [sortBy.namespace]: (deployment: Deployment) => deployment.getNs(),
           [sortBy.replicas]: (deployment: Deployment) => deployment.getReplicas(),
-          [sortBy.age]: (deployment: Deployment) => deployment.getAge(false),
+          [sortBy.age]: (deployment: Deployment) => deployment.metadata.creationTimestamp,
           [sortBy.condition]: (deployment: Deployment) => deployment.getConditionsText(),
         }}
         searchFilters={[

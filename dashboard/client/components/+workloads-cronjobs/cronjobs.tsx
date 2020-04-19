@@ -39,7 +39,7 @@ export class CronJobs extends React.Component<Props> {
           [sortBy.suspend]: (cronJob: CronJob) => cronJob.getSuspendFlag(),
           [sortBy.active]: (cronJob: CronJob) => cronJobStore.getActiveJobsNum(cronJob),
           [sortBy.lastSchedule]: (cronJob: CronJob) => cronJob.getLastScheduleTime(),
-          [sortBy.age]: (cronJob: CronJob) => cronJob.getAge(false),
+          [sortBy.age]: (cronJob: CronJob) => cronJob.metadata.creationTimestamp,
         }}
         searchFilters={[
           (cronJob: CronJob) => cronJob.getSearchFields(),

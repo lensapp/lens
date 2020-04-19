@@ -30,7 +30,7 @@ export class StorageClasses extends React.Component<Props> {
         store={storageClassStore} isClusterScoped
         sortingCallbacks={{
           [sortBy.name]: (item: StorageClass) => item.getName(),
-          [sortBy.age]: (item: StorageClass) => item.getAge(false),
+          [sortBy.age]: (item: StorageClass) => item.metadata.creationTimestamp,
           [sortBy.provisioner]: (item: StorageClass) => item.provisioner,
           [sortBy.reclaimPolicy]: (item: StorageClass) => item.reclaimPolicy,
         }}

@@ -29,7 +29,7 @@ export class Endpoints extends React.Component<Props> {
         sortingCallbacks={{
           [sortBy.name]: (endpoint: Endpoint) => endpoint.getName(),
           [sortBy.namespace]: (endpoint: Endpoint) => endpoint.getNs(),
-          [sortBy.age]: (endpoint: Endpoint) => endpoint.getAge(false),
+          [sortBy.age]: (endpoint: Endpoint) => endpoint.metadata.creationTimestamp,
         }}
         searchFilters={[
           (endpoint: Endpoint) => endpoint.getSearchFields()
