@@ -62,7 +62,7 @@ export abstract class Feature {
       const result = await client.deleteNamespace("lens-metrics", 'false', undefined, undefined, undefined, "Foreground");
       const nsVersion = result.body.metadata.resourceVersion;
       const nsWatch = new Watch(kc);
-      const req = nsWatch.watch('/api/v1/namespaces', {resourceVersion: nsVersion, fieldSelector: "metadata.name=lens-metrics"},
+      const req = await nsWatch.watch('/api/v1/namespaces', {resourceVersion: nsVersion, fieldSelector: "metadata.name=lens-metrics"},
         (type, obj) => {
           if(type === 'DELETED') {
             logger.debug(`namespace ${name} finally gone`)

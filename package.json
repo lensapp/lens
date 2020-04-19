@@ -126,7 +126,7 @@
   "dependencies": {
     "@hapi/call": "^6.0.1",
     "@hapi/subtext": "^6.1.2",
-    "@kubernetes/client-node": "0.11.0",
+    "@kubernetes/client-node": "0.11.1",
     "@types/cookie": "^0.3.3",
     "@types/fs-extra": "^8.0.0",
     "@types/proper-lockfile": "^4.1.1",

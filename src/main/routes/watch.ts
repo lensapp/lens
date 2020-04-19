@@ -19,7 +19,7 @@ class ApiWatcher {
     this.response = response
   }
 
-  public start() {
+  public async start() {
     if (this.processor) {
       clearInterval(this.processor)
     }
@@ -28,7 +28,7 @@ class ApiWatcher {
       events.map(event => this.sendEvent(event))
       this.response.flushHeaders()
     }, 50)
-    this.watchRequest = this.watch.watch(this.apiUrl, {}, this.watchHandler.bind(this), this.doneHandler.bind(this))
+    this.watchRequest = await this.watch.watch(this.apiUrl, {}, this.watchHandler.bind(this), this.doneHandler.bind(this))
   }
 
   public stop() {

@@ -101,11 +101,11 @@ export class NodeShellSession extends ShellSession {
   }
 
   protected waitForRunningPod(podId: string) {
-    return new Promise<boolean>((resolve, reject) => {
+    return new Promise<boolean>(async (resolve, reject) => {
       const kc = this.getKubeConfig();
       const watch = new k8s.Watch(kc);
 
-      const req = watch.watch(`/api/v1/namespaces/kube-system/pods`, {},
+      const req = await watch.watch(`/api/v1/namespaces/kube-system/pods`, {},
       // callback is called for each received object.
         (_type, obj) => {
           if (obj.metadata.name == podId && obj.status.phase === "Running") {
