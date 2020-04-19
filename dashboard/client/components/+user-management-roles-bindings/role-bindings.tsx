@@ -35,7 +35,7 @@ export class RoleBindings extends React.Component<Props> {
           [sortBy.name]: (binding: RoleBinding) => binding.getName(),
           [sortBy.namespace]: (binding: RoleBinding) => binding.getNs(),
           [sortBy.bindings]: (binding: RoleBinding) => binding.getSubjectNames(),
-          [sortBy.age]: (binding: RoleBinding) => binding.getAge(false),
+          [sortBy.age]: (binding: RoleBinding) => binding.metadata.creationTimestamp,
         }}
         searchFilters={[
           (binding: RoleBinding) => binding.getSearchFields(),

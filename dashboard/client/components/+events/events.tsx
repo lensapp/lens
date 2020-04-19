@@ -49,7 +49,7 @@ export class Events extends React.Component<Props> {
           [sortBy.type]: (event: KubeEvent) => event.involvedObject.kind,
           [sortBy.object]: (event: KubeEvent) => event.involvedObject.name,
           [sortBy.count]: (event: KubeEvent) => event.count,
-          [sortBy.age]: (event: KubeEvent) => event.getAge(false),
+          [sortBy.age]: (event: KubeEvent) => event.metadata.creationTimestamp,
         }}
         searchFilters={[
           (event: KubeEvent) => event.getSearchFields(),

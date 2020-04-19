@@ -52,7 +52,7 @@ export class Issuers extends React.Component<KubeObjectListLayoutProps> {
           [sortBy.namespace]: (item: Issuer) => item.getNs(),
           [sortBy.type]: (item: Issuer) => item.getType(),
           [sortBy.labels]: (item: Issuer) => item.getLabels(),
-          [sortBy.age]: (item: Issuer) => item.getAge(false),
+          [sortBy.age]: (item: Issuer) => item.metadata.creationTimestamp,
         }}
         searchFilters={[
           (item: Issuer) => item.getSearchFields(),

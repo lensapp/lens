@@ -47,7 +47,7 @@ export class DaemonSets extends React.Component<Props> {
           [sortBy.name]: (daemonSet: DaemonSet) => daemonSet.getName(),
           [sortBy.namespace]: (daemonSet: DaemonSet) => daemonSet.getNs(),
           [sortBy.pods]: (daemonSet: DaemonSet) => this.getPodsLength(daemonSet),
-          [sortBy.age]: (daemonSet: DaemonSet) => daemonSet.getAge(false),
+          [sortBy.age]: (daemonSet: DaemonSet) => daemonSet.metadata.creationTimestamp,
         }}
         searchFilters={[
           (daemonSet: DaemonSet) => daemonSet.getSearchFields(),

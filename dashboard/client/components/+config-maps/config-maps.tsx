@@ -31,7 +31,7 @@ export class ConfigMaps extends React.Component<Props> {
           [sortBy.name]: (item: ConfigMap) => item.getName(),
           [sortBy.namespace]: (item: ConfigMap) => item.getNs(),
           [sortBy.keys]: (item: ConfigMap) => item.getKeys(),
-          [sortBy.age]: (item: ConfigMap) => item.getAge(false),
+          [sortBy.age]: (item: ConfigMap) => item.metadata.creationTimestamp,
         }}
         searchFilters={[
           (item: ConfigMap) => item.getSearchFields(),

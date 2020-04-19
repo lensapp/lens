@@ -44,7 +44,7 @@ export class PersistentVolumeClaims extends React.Component<Props> {
           [sortBy.status]: (pvc: PersistentVolumeClaim) => pvc.getStatus(),
           [sortBy.size]: (pvc: PersistentVolumeClaim) => unitsToBytes(pvc.getStorage()),
           [sortBy.storageClass]: (pvc: PersistentVolumeClaim) => pvc.spec.storageClassName,
-          [sortBy.age]: (pvc: PersistentVolumeClaim) => pvc.getAge(false),
+          [sortBy.age]: (pvc: PersistentVolumeClaim) => pvc.metadata.creationTimestamp,
         }}
         searchFilters={[
           (item: PersistentVolumeClaim) => item.getSearchFields(),

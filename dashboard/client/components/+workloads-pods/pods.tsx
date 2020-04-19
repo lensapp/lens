@@ -79,7 +79,7 @@ export class Pods extends React.Component<Props> {
           [sortBy.restarts]: (pod: Pod) => pod.getRestartsCount(),
           [sortBy.owners]: (pod: Pod) => pod.getOwnerRefs().map(ref => ref.kind),
           [sortBy.qos]: (pod: Pod) => pod.getQosClass(),
-          [sortBy.age]: (pod: Pod) => pod.getAge(false),
+          [sortBy.age]: (pod: Pod) => pod.metadata.creationTimestamp,
           [sortBy.status]: (pod: Pod) => pod.getStatusMessage(),
         }}
         searchFilters={[

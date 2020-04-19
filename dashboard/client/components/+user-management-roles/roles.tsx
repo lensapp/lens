@@ -34,7 +34,7 @@ export class Roles extends React.Component<Props> {
           sortingCallbacks={{
             [sortBy.name]: (role: Role) => role.getName(),
             [sortBy.namespace]: (role: Role) => role.getNs(),
-            [sortBy.age]: (role: Role) => role.getAge(false),
+            [sortBy.age]: (role: Role) => role.metadata.creationTimestamp,
           }}
           searchFilters={[
             (role: Role) => role.getSearchFields(),

@@ -29,7 +29,7 @@ export class ReplicaSets extends React.Component<Props> {
   private sortingCallbacks = {
     [sortBy.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
     [sortBy.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
-    [sortBy.age]: (replicaSet: ReplicaSet) => replicaSet.getAge(false),
+    [sortBy.age]: (replicaSet: ReplicaSet) => replicaSet.metadata.creationTimestamp,
     [sortBy.pods]: (replicaSet: ReplicaSet) => this.getPodsLength(replicaSet),
   }
 

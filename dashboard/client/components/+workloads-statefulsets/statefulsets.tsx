@@ -39,7 +39,7 @@ export class StatefulSets extends React.Component<Props> {
         sortingCallbacks={{
           [sortBy.name]: (statefulSet: StatefulSet) => statefulSet.getName(),
           [sortBy.namespace]: (statefulSet: StatefulSet) => statefulSet.getNs(),
-          [sortBy.age]: (statefulSet: StatefulSet) => statefulSet.getAge(false),
+          [sortBy.age]: (statefulSet: StatefulSet) => statefulSet.metadata.creationTimestamp,
           [sortBy.pods]: (statefulSet: StatefulSet) => this.getPodsLength(statefulSet),
         }}
         searchFilters={[

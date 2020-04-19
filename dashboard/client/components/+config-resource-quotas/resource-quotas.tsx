@@ -31,7 +31,7 @@ export class ResourceQuotas extends React.Component<Props> {
           sortingCallbacks={{
             [sortBy.name]: (item: ResourceQuota) => item.getName(),
             [sortBy.namespace]: (item: ResourceQuota) => item.getNs(),
-            [sortBy.age]: (item: ResourceQuota) => item.getAge(false),
+            [sortBy.age]: (item: ResourceQuota) => item.metadata.creationTimestamp,
           }}
           searchFilters={[
             (item: ResourceQuota) => item.getSearchFields(),
