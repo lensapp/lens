@@ -102,12 +102,22 @@ export class ContextHandler {
     }
   }
 
-  public async getApiTarget() {
-    if (this.apiTarget) { return this.apiTarget }
+  public async getApiTarget(isWatchRequest = false) {
+    if (this.apiTarget && !isWatchRequest) {
+      return this.apiTarget
+    }
+    const timeout = isWatchRequest ? 4 * 60 * 60 * 1000 : 30000 // 4 hours for watch request, 30 seconds for the rest
+    const apiTarget = await this.newApiTarget(timeout)
+    if (!isWatchRequest) {
+      this.apiTarget = apiTarget
+    }
+    return apiTarget
+  }
 
-    this.apiTarget = {
+  protected async newApiTarget(timeout: number) {
+    return {
       changeOrigin: true,
-      timeout: 30000,
+      timeout: timeout,
       headers: {
         "Host": this.clusterUrl.hostname
       },
@@ -118,8 +128,6 @@ export class ContextHandler {
         path: this.clusterUrl.path
       },
     }
-
-    return this.apiTarget
   }
 
   protected async resolveProxyPort(): Promise<number> {

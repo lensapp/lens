@@ -130,7 +130,8 @@ export class LensProxy {
     if (req.url.startsWith("/api-kube/")) {
       delete req.headers.authorization
       req.url = req.url.replace("/api-kube", "")
-      return await contextHandler.getApiTarget()
+      const isWatchRequest = req.url.includes("watch=")
+      return await contextHandler.getApiTarget(isWatchRequest)
     }
   }
 
