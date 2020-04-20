@@ -20,7 +20,6 @@ export class UserStore {
 
   private constructor() {
     this.store = new ElectronStore({
-      projectVersion: appUtil.getAppVersion(),
       migrations: {
         "2.1.0-beta.4": version210Beta4.migration,
       }

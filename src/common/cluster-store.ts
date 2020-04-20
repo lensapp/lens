@@ -15,7 +15,6 @@ export class ClusterStore {
   private constructor() {
     this.store = new ElectronStore({
       name: "lens-cluster-store",
-      projectVersion: getAppVersion(),
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       migrations: {
         "2.0.0-beta.2": version200Beta2.migration,

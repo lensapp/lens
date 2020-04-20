@@ -45,7 +45,7 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
 
   const mt: MenuItemConstructorOptions[] = [];
   const macAppMenu: MenuItemConstructorOptions = {
-    label: app.getName(),
+    label: app.name,
     submenu: [
       {
         label: "About Lens",

@@ -1,8 +1,6 @@
 import * as k8s from "@kubernetes/client-node"
 import * as os from "os"
-import { all } from "q";
 import * as yaml from "js-yaml"
-import { V1beta1ValidatingWebhookConfiguration } from "@kubernetes/client-node";
 import logger from "./logger";
 
 const kc = new k8s.KubeConfig()
