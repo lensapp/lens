@@ -25,6 +25,9 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
 
   getEventsByObject(obj: KubeObject): KubeEvent[] {
     return this.items.filter(evt => {
+      if(obj.kind == "Node") {
+        return obj.getName() == evt.involvedObject.uid && evt.involvedObject.kind == "Node";
+      }
       return obj.getId() == evt.involvedObject.uid;
     });
   }
