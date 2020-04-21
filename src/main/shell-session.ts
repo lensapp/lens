@@ -10,6 +10,8 @@ import { Cluster, ClusterPreferences } from "./cluster"
 import { helmCli } from "./helm-cli"
 
 export class ShellSession extends EventEmitter {
+  static shellEnv: any
+
   protected websocket: WebSocket
   protected shellProcess: pty.IPty
   protected kubeconfigPath: string
@@ -30,8 +32,7 @@ export class ShellSession extends EventEmitter {
   public async open() {
     this.kubectlBinDir = await this.kubectl.binDir()
     this.helmBinDir = helmCli.getBinaryDir()
-    await helmCli.binaryPath()
-    const env = this.getShellEnv()
+    const env = await this.getCachedShellEnv()
     const shell = env.PTYSHELL
     const args = await this.getShellArgs(shell)
     this.shellProcess = pty.spawn(shell, args, {
@@ -75,8 +76,25 @@ export class ShellSession extends EventEmitter {
     }
   }
 
-  protected getShellEnv() {
-    const env = JSON.parse(JSON.stringify(shellEnv.sync()))
+  protected async getCachedShellEnv() {
+    let env: any
+    if (!ShellSession.shellEnv) {
+      env = await this.getShellEnv()
+      ShellSession.shellEnv = env
+    } else {
+      env = ShellSession.shellEnv
+
+      // refresh env in the background
+      this.getShellEnv().then((shellEnv: any) => {
+        ShellSession.shellEnv = shellEnv
+      })
+    }
+
+    return env
+  }
+
+  protected async getShellEnv() {
+    const env = JSON.parse(JSON.stringify(await shellEnv()))
     const pathStr = [this.kubectlBinDir, this.helmBinDir, process.env.PATH].join(path.delimiter)
 
     if(process.platform === "win32") {
