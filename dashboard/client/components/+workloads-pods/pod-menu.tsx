@@ -9,7 +9,7 @@ import { StatusBrick } from "../status-brick";
 import { PodLogsDialog } from "./pod-logs-dialog";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { cssNames, prevDefault } from "../../utils";
-import { terminalStore } from "../dock/terminal.store";
+import { terminalStore, createTerminalTab } from "../dock/terminal.store";
 import { _i18n } from "../../i18n";
 import { hideDetails } from "../../navigation";
 
@@ -22,15 +22,22 @@ export class PodMenu extends React.Component<Props> {
     const { object: pod } = this.props
     const containerParam = container ? `-c ${container}` : ""
     let command = `kubectl exec -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam} "--"`
+    if (process.platform !== "win32") {
+      command = `exec ${command}`
+    }
     if (pod.getSelectedNodeOs() === "windows") {
       command = `${command} powershell`
     } else {
       command = `${command} sh -c "clear; (bash || ash || sh)"`
     }
 
+    const shell = createTerminalTab({
+      title: _i18n._(t`Pod: ${pod.getName()} (namespace: ${pod.getNs()})`)
+    });
+
     terminalStore.sendCommand(command, {
       enter: true,
-      newTab: true,
+      tabId: shell.id
     });
   }
 

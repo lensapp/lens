@@ -24,7 +24,7 @@ export function NodeMenu(props: KubeObjectMenuProps<Node>) {
 
   const shell = () => {
     createTerminalTab({
-      title: _i18n._(t`Shell: ${nodeName}`),
+      title: _i18n._(t`Node: ${nodeName}`),
       node: nodeName,
     });
     hideDetails();
