@@ -18,6 +18,7 @@ import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { KubeEventDetails } from "../+events/kube-event-details";
 
 interface Props extends KubeObjectDetailsProps<Node> {
 }
@@ -148,6 +149,7 @@ export class NodeDetails extends React.Component<Props> {
           maxCpu={node.getCpuCapacity()}
           maxMemory={node.getMemoryCapacity()}
         />
+        <KubeEventDetails object={node}/>
       </div>
     )
   }
