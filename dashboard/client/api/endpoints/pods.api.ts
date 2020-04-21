@@ -414,9 +414,9 @@ export class Pod extends WorkloadKubeObject {
 
   getSelectedNodeOs() {
     if (!this.spec.nodeSelector) return
-    if (!this.spec.nodeSelector["kubernetes.io/os"]) return
+    if (!this.spec.nodeSelector["kubernetes.io/os"] && !this.spec.nodeSelector["beta.kubernetes.io/os"]) return
 
-    return this.spec.nodeSelector["kubernetes.io/os"]
+    return this.spec.nodeSelector["kubernetes.io/os"] || this.spec.nodeSelector["beta.kubernetes.io/os"]
   }
 }
 
