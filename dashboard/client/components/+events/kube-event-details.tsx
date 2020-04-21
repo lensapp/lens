@@ -23,12 +23,15 @@ export class KubeEventDetails extends React.Component<Props> {
     const { object } = this.props;
     const events = eventStore.getEventsByObject(object);
     if (!events.length) {
-      return null;
+      return (
+        <DrawerTitle className="flex gaps align-center">
+          <span><Trans>Events</Trans></span>
+        </DrawerTitle>
+      )
     }
     return (
       <>
         <DrawerTitle className="flex gaps align-center">
-          <Icon material="access_time"/>
           <span><Trans>Events</Trans></span>
         </DrawerTitle>
         <div className="KubeEventDetails">
