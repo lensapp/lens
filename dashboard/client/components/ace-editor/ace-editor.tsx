@@ -28,7 +28,7 @@ const defaultProps: Partial<Props> = {
   mode: "yaml",
   tabSize: 2,
   showGutter: true, // line-numbers
-  foldStyle: "manual",
+  foldStyle: "markbegin",
   printMargin: false,
   useWorker: false,
 };
