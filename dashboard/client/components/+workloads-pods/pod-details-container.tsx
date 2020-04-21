@@ -112,7 +112,7 @@ export class PodDetailsContainer extends React.Component<Props> {
         }
         {command &&
         <DrawerItem name={<Trans>Command</Trans>}>
-          {command}
+          {command.join(' ')}
         </DrawerItem>
         }
 
