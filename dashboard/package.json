@@ -82,7 +82,7 @@
     "chart.js": "^2.9.2",
     "color": "^3.1.2",
     "commander": "^4.0.1",
-    "concurrently": "^5.0.0",
+    "concurrently": "^5.1.0",
     "css-element-queries": "^1.2.1",
     "css-loader": "^3.2.0",
     "dompurify": "^2.0.7",
