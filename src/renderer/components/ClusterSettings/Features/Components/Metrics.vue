@@ -9,12 +9,13 @@
         <b-spinner small v-if="isProcessing" label="Small Spinner" />
         Install
       </b-button>
-      <b-button @click="uninstall" v-if="settings.installed" :disabled="!cluster.isAdmin || isProcessing" variant="danger">
+      <b-button @click="upgrade" v-if="isUpgradeAvailable" :disabled="!cluster.isAdmin || isProcessing || isUpgrading" variant="primary">
+        <b-spinner small v-if="isUpgrading" label="Small Spinner" />
+        Upgrade
+      </b-button>
+      <b-button @click="uninstall" v-if="settings.installed" :disabled="!cluster.isAdmin || isProcessing || isUpgrading" variant="danger">
         <b-spinner small v-if="isProcessing" label="Small Spinner" />
         Uninstall
-      </b-button>
-      <b-button @click="upgrade" v-if="isUpgradeAvailable" :disabled="!cluster.isAdmin" variant="primary">
-        Upgrade
       </b-button>
       <b-alert show variant="danger" v-if="status === 'ERROR'">
         {{ errorMsg }}
@@ -54,15 +55,13 @@ export default {
   },
   computed:{
     isUpgradeAvailable: function() {
-      if(!this.settings.installed) return false;
-      if(!this.settings.currentVersion) return false;
-      if(!this.settings.latestVersion) return false;
-      let currentVersion = (this.settings.currentVersion.charAt(0) === "v") ? this.settings.currentVersion.substr(1) : this.settings.currentVersion;
-      let latestVersion = (this.settings.latestVersion.charAt(0) === "v") ? this.settings.latestVersion.substr(1) : this.settings.latestVersion;
-      return semver.gt(latestVersion, currentVersion)
+      return this.cluster.features.metrics.canUpgrade;
     },
     isProcessing: function() {
       return this.status === "PROCESSING";
+    },
+    isUpgrading: function() {
+      return this.status === "UPGRADING";
     },
     canInstall: function() {
       return !this.cluster.preferences.prometheus
@@ -99,7 +98,7 @@ export default {
       }
     },
     uninstall: async function(){
-      this.status="PROCESSING";
+      this.status = "PROCESSING";
       let error = null;
       try {
         let result = await this.$store.dispatch("uninstallClusterFeature", {
@@ -108,7 +107,7 @@ export default {
         })
         console.log("uninstall result:", result);
         this.$store.dispatch("refineCluster", this.cluster.id);
-        this.status="SUCCESS";
+        this.status = "SUCCESS";
         this.errorMsg = "";
       } catch(error) {
         this.status = "ERROR"
@@ -117,16 +116,24 @@ export default {
       }
 
       return true;
-
     },
     upgrade: async function(){
-      // todo
+      this.status = "UPGRADING";
+      try {
+        let result = await this.$store.dispatch("upgradeClusterFeature", {
+          name: this.feature,
+          clusterId: this.cluster.id,
+          config: null,
+        })
+        this.$store.dispatch("refineCluster", this.cluster.id);
+        this.status = "";
+        this.errorMsg = "";
+      } catch(error) {
+        this.status = "ERROR"
+        this.errorMsg = error.message
+      }
       return true;
-
     },
-  },
-  mounted: function(){
-    console.log(this.settings);
   }
 }
 </script>

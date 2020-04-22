@@ -6,10 +6,13 @@ rules:
 - apiGroups: [""]
   resources:
   - nodes
+  - nodes/proxy
   - nodes/metrics
   - services
   - endpoints
   - pods
+  - ingresses
+  - configmaps
   verbs: ["get", "list", "watch"]
 - nonResourceURLs: ["/metrics"]
   verbs: ["get"]

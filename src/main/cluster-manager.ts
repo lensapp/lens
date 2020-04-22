@@ -150,6 +150,17 @@ export class ClusterManager {
       }
     });
 
+    this.promiseIpc.on("upgradeFeature", async (installReq: FeatureInstallRequest) => {
+      logger.debug(`IPC: upgradeFeature for ${installReq.name}`)
+      const cluster = this.clusters.get(installReq.clusterId)
+      try {
+        await cluster.upgradeFeature(installReq.name, installReq.config)
+        return {success: true, message: ""}
+      } catch(error) {
+        return {success: false, message: error}
+      }
+    });
+
     this.promiseIpc.on("uninstallFeature", async (installReq: FeatureInstallRequest) => {
       logger.debug(`IPC: uninstallFeature for ${installReq.name}`)
       const cluster = this.clusters.get(installReq.clusterId)

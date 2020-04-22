@@ -28,7 +28,7 @@ export interface MetricsConfiguration {
 
 export class MetricsFeature extends Feature {
   name = 'metrics';
-  latestVersion = "v2.11.1"
+  latestVersion = "v2.17.2-lens1"
 
   config: MetricsConfiguration = {
     persistence: {
@@ -40,7 +40,7 @@ export class MetricsFeature extends Feature {
       enabled: true,
     },
     retention: {
-      time: "7d",
+      time: "2d",
       size: "5GB",
     },
     kubeStateMetrics: {
@@ -65,6 +65,10 @@ export class MetricsFeature extends Feature {
     return super.install(cluster)
   }
 
+  async upgrade(cluster: Cluster): Promise<boolean> {
+    return this.install(cluster)
+  }
+
   async featureStatus(kc: KubeConfig): Promise<FeatureStatus> {
     return new Promise<FeatureStatus>( async (resolve, reject) => {
       const client = kc.makeApiClient(AppsV1Api)
@@ -79,7 +83,7 @@ export class MetricsFeature extends Feature {
         const prometheus = (await client.readNamespacedStatefulSet('prometheus', 'lens-metrics')).body;
         status.installed = true;
         status.currentVersion = prometheus.spec.template.spec.containers[0].image.split(":")[1];
-        status.canUpgrade = semver.lt(status.currentVersion, this.latestVersion)
+        status.canUpgrade = semver.lt(status.currentVersion, this.latestVersion, true);
         resolve(status)
       } catch(error) {
         resolve(status)

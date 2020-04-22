@@ -41,7 +41,7 @@ spec:
       hostPID: true
       containers:
       - name: node-exporter
-        image: docker.io/kontenapharos/prometheus-node-exporter:v0.18.0
+        image: docker.io/prom/node-exporter:v1.0.0-rc.0
         args:
           - --path.procfs=/host/proc
           - --path.sysfs=/host/sys
@@ -54,7 +54,7 @@ spec:
         resources:
           requests:
             cpu: 10m
-            memory: 50Mi
+            memory: 24Mi
           limits:
             cpu: 200m
             memory: 100Mi

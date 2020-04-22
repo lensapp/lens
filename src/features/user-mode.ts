@@ -10,6 +10,10 @@ export class UserModeFeature extends Feature {
     return super.install(cluster)
   }
 
+  async upgrade(cluster: Cluster): Promise<boolean> {
+    return true
+  }
+
   async featureStatus(kc: KubeConfig): Promise<FeatureStatus> {
     return new Promise<FeatureStatus>( async (resolve, reject) => {
       const client = kc.makeApiClient(RbacAuthorizationV1Api)

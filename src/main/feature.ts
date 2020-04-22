@@ -48,9 +48,7 @@ export abstract class Feature {
     });
   }
 
-  upgrade(): boolean {
-    return true;
-  }
+  abstract async upgrade(cluster: Cluster): Promise<boolean>;
 
   abstract async uninstall(cluster: Cluster): Promise<boolean>;
 

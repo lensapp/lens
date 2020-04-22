@@ -40,7 +40,11 @@ export async function installFeature(name: string, cluster: Cluster, config: any
   await feature.install(cluster)
 }
 
-
+export async function upgradeFeature(name: string, cluster: Cluster, config: any) {
+  const feature = ALL_FEATURES[name] as Feature
+  // TODO Figure out how to handle config stuff
+  await feature.upgrade(cluster)
+}
 
 export async function uninstallFeature(name: string, cluster: Cluster) {
   const feature = ALL_FEATURES[name] as Feature

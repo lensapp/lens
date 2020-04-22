@@ -105,6 +105,11 @@ export class Cluster implements ClusterInfo {
     return this.refreshCluster()
   }
 
+  public async upgradeFeature(name: string, config: any) {
+    await fm.upgradeFeature(name, this, config)
+    return this.refreshCluster()
+  }
+
   public async uninstallFeature(name: string) {
     await fm.uninstallFeature(name, this)
     return this.refreshCluster()
