@@ -21,7 +21,7 @@ interface Props extends RouteComponentProps<{}> {
 export class UserManagement extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
-    const { isClusterAdmin } = configStore;
+    const { allowedResources } = configStore;
     const query = namespaceStore.getContextParams()
     tabRoutes.push(
       {
@@ -43,7 +43,7 @@ export class UserManagement extends React.Component<Props> {
         path: rolesRoute.path,
       },
     )
-    if (isClusterAdmin) {
+    if (allowedResources.includes("podsecuritypolicies")) {
       tabRoutes.push({
         title: <Trans>Pod Security Policies</Trans>,
         component: PodSecurityPolicies,

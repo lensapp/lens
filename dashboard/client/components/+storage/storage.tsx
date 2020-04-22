@@ -20,7 +20,7 @@ interface Props extends RouteComponentProps<{}> {
 export class Storage extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
-    const { isClusterAdmin } = configStore;
+    const { allowedResources } = configStore;
     const query = namespaceStore.getContextParams()
 
     tabRoutes.push({
@@ -30,7 +30,7 @@ export class Storage extends React.Component<Props> {
       path: volumeClaimsRoute.path,
     })
 
-    if (isClusterAdmin) {
+    if (allowedResources.includes('persistentvolumes')) {
       tabRoutes.push({
         title: <Trans>Persistent Volumes</Trans>,
         component: PersistentVolumes,
@@ -39,7 +39,7 @@ export class Storage extends React.Component<Props> {
       });
     }
 
-    if (isClusterAdmin) {
+    if (allowedResources.includes('storageclasses')) {
       tabRoutes.push({
         title: <Trans>Storage Classes</Trans>,
         component: StorageClasses,
