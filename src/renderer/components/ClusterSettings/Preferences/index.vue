@@ -36,10 +36,10 @@
           description="What query format is used to fetch metrics from Prometheus"
         >
           <b-form-select
-          v-model="prometheusSource"
-          :options="prometheusSources"
-          @change="onPrometheusSourceSave"
-        />
+            v-model="prometheusSource"
+            :options="prometheusSources"
+            @change="onPrometheusSourceSave"
+          />
         </b-form-group>
       </div>
     </div>
@@ -67,7 +67,6 @@
 
 <script>
 import { lstatSync } from "fs"
-import { logger } from 'handlebars';
 export default {
   name: 'ClusterSettingsPreferences',
   props: {
@@ -103,9 +102,7 @@ export default {
       } else {
         this.prometheusPath = ""
       }
-
-      this.prometheusSource = this.cluster.preferences.prometheusSource || "lens"
-      console.log(this.prometheusSource)
+      this.prometheusSource = this.cluster.preferences.prometheusSource || "lens"
     },
     parsePrometheusPath: function(path) {
       let parsed = path.split(/\/|:/)

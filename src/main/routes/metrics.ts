@@ -1,7 +1,6 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import * as requestPromise from "request-promise-native"
-import logger from "../logger"
 import { PrometheusProviderFactory} from "../prometheus/provider"
 
 type MetricsQuery = string | string[] | {
@@ -29,7 +28,6 @@ class MetricsRoute extends LensApi {
     const attempts: { [query: string]: number } = {};
     const maxAttempts = 5;
     const loadMetrics = (orgQuery: string): Promise<any> => {
-      logger.info(orgQuery)
       const query = orgQuery.trim()
       const attempt = attempts[query] = (attempts[query] || 0) + 1;
       return requestPromise(metricsUrl, {
@@ -65,15 +63,13 @@ class MetricsRoute extends LensApi {
     else {
       data = {};
       const result = await Promise.all(
-        Object.entries(query).map((objectArr: any) => {
-          const queryName = objectArr[0]
-          const queryOpts = objectArr[1]
-          logger.info(prometheusInstallationSource)
+        Object.entries(query).map((queryEntry: any) => {
+          const queryName = queryEntry[0]
+          const queryOpts = queryEntry[1]
           const q = PrometheusProviderFactory.createProvider(prometheusInstallationSource).getQueries(queryOpts)[queryName]
           return loadMetrics(q)
         })
       );
-      logger.info(JSON.stringify(result))
       Object.keys(query).forEach((metricName, index) => {
         data[metricName] = result[index];
       });
