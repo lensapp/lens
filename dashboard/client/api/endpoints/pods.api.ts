@@ -11,26 +11,18 @@ export class PodsApi extends KubeApi<Pod> {
 
   getMetrics(pods: Pod[], namespace: string, selector = "pod, namespace"): Promise<IPodMetrics> {
     const podSelector = pods.map(pod => pod.getName()).join("|");
-    const cpuUsage = `sum(rate(container_cpu_usage_seconds_total{container_name!="POD",container_name!="",pod_name=~"${podSelector}",namespace="${namespace}"}[1m])) by (${selector})`;
-    const cpuRequests = `sum(kube_pod_container_resource_requests{pod=~"${podSelector}",resource="cpu",namespace="${namespace}"}) by (${selector})`;
-    const cpuLimits = `sum(kube_pod_container_resource_limits{pod=~"${podSelector}",resource="cpu",namespace="${namespace}"}) by (${selector})`;
-    const memoryUsage = `sum(container_memory_working_set_bytes{container_name!="POD",container_name!="",pod_name=~"${podSelector}",namespace="${namespace}"}) by (${selector})`;
-    const memoryRequests = `sum(kube_pod_container_resource_requests{pod=~"${podSelector}",resource="memory",namespace="${namespace}"}) by (${selector})`;
-    const memoryLimits = `sum(kube_pod_container_resource_limits{pod=~"${podSelector}",resource="memory",namespace="${namespace}"}) by (${selector})`;
-    const fsUsage = `sum(container_fs_usage_bytes{container_name!="POD",container_name!="",pod_name=~"${podSelector}",namespace="${namespace}"}) by (${selector})`;
-    const networkReceive = `sum(rate(container_network_receive_bytes_total{pod_name=~"${podSelector}",namespace="${namespace}"}[1m])) by (${selector})`;
-    const networkTransit = `sum(rate(container_network_transmit_bytes_total{pod_name=~"${podSelector}",namespace="${namespace}"}[1m])) by (${selector})`;
+    const opts = { category: "pods", pods: podSelector, namespace, selector }
 
     return metricsApi.getMetrics({
-      cpuUsage,
-      cpuRequests,
-      cpuLimits,
-      memoryUsage,
-      memoryRequests,
-      memoryLimits,
-      fsUsage,
-      networkReceive,
-      networkTransit,
+      cpuUsage: opts,
+      cpuRequests: opts,
+      cpuLimits: opts,
+      memoryUsage: opts,
+      memoryRequests: opts,
+      memoryLimits: opts,
+      fsUsage: opts,
+      networkReceive: opts,
+      networkTransit: opts,
     }, {
       namespace,
     });

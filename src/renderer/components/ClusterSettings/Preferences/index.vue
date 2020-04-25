@@ -31,6 +31,16 @@
             @blur="onPrometheusSave"
           />
         </b-form-group>
+        <b-form-group
+          label="Prometheus installation method."
+          description="What query format is used to fetch metrics from Prometheus"
+        >
+          <b-form-select
+          v-model="prometheusSource"
+          :options="prometheusSources"
+          @change="onPrometheusSourceSave"
+        />
+        </b-form-group>
       </div>
     </div>
     <div class="col-12">
@@ -57,6 +67,7 @@
 
 <script>
 import { lstatSync } from "fs"
+import { logger } from 'handlebars';
 export default {
   name: 'ClusterSettingsPreferences',
   props: {
@@ -70,18 +81,32 @@ export default {
       errors: {
         terminalcwd: null
       },
-      prometheusPath: ""
+      prometheusPath: "",
+      prometheusSource: "",
+      prometheusSources: [
+        { text: "Lens", value: "lens"},
+        { text: "Helm", value: "helm"},
+        { text: "Prometheus Operator", value: "operator"}
+      ]
     }
   },
   mounted: function() {
-    if (this.cluster.preferences.prometheus) {
-      const prom = this.cluster.preferences.prometheus;
-      this.prometheusPath = `${prom.namespace}/${prom.service}:${prom.port}`
-    }
+    this.updateValues()
   },
   computed: {
   },
   methods: {
+    updateValues: function(){
+      if (this.cluster.preferences.prometheus) {
+        const prom = this.cluster.preferences.prometheus;
+        this.prometheusPath = `${prom.namespace}/${prom.service}:${prom.port}`
+      } else {
+        this.prometheusPath = ""
+      }
+
+      this.prometheusSource = this.cluster.preferences.prometheusSource || "lens"
+      console.log(this.prometheusSource)
+    },
     parsePrometheusPath: function(path) {
       let parsed = path.split(/\/|:/)
       return {
@@ -121,10 +146,21 @@ export default {
       }
       this.$store.dispatch("storeCluster", this.cluster);
     },
+    onPrometheusSourceSave: function() {
+      if (this.prometheusSource === "") {
+        this.cluster.preferences.prometheusSource = null;
+      } else {
+        this.cluster.preferences.prometheusSource = this.prometheusSource
+      }
+      this.$store.dispatch("storeCluster", this.cluster);
+    },
     onTerminalCwdSave: function() {
       if(this.cluster.preferences.terminalCWD === "") this.cluster.preferences.terminalCWD = null
       this.$store.dispatch("storeCluster", this.cluster);
     }
+  },
+  watch: {
+    "cluster": "updateValues",
   }
 }
 </script>

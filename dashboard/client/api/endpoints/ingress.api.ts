@@ -5,17 +5,12 @@ import { KubeApi } from "../kube-api";
 
 export class IngressApi extends KubeApi<Ingress> {
   getMetrics(ingress: string, namespace: string): Promise<IIngressMetrics> {
-    const bytesSent = (statuses: string) =>
-      `sum(rate(nginx_ingress_controller_bytes_sent_sum{ingress="${ingress}", status=~"${statuses}"}[1m])) by (ingress)`;
-    const bytesSentSuccess = bytesSent("^2\\\\d*");  // Requests with status 2**
-    const bytesSentFailure = bytesSent("^5\\\\d*");  // Requests with status 5**
-    const requestDurationSeconds = `sum(rate(nginx_ingress_controller_request_duration_seconds_sum{ingress="${ingress}"}[1m])) by (ingress)`;
-    const responseDurationSeconds = `sum(rate(nginx_ingress_controller_response_duration_seconds_sum{ingress="${ingress}"}[1m])) by (ingress)`;
+    const opts = { category: "ingress", ingress }
     return metricsApi.getMetrics({
-      bytesSentSuccess,
-      bytesSentFailure,
-      requestDurationSeconds,
-      responseDurationSeconds
+      bytesSentSuccess: opts,
+      bytesSentFailure: opts,
+      requestDurationSeconds: opts,
+      responseDurationSeconds: opts
     }, {
       namespace,
     });

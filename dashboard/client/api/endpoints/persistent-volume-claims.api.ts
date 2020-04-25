@@ -6,12 +6,9 @@ import { KubeApi } from "../kube-api";
 
 export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {
   getMetrics(pvcName: string, namespace: string): Promise<IPvcMetrics> {
-    const diskUsage = `sum(kubelet_volume_stats_used_bytes{persistentvolumeclaim="${pvcName}"}) by (persistentvolumeclaim, namespace)`;
-    const diskCapacity = `sum(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="${pvcName}"}) by (persistentvolumeclaim, namespace)`;
-
     return metricsApi.getMetrics({
-      diskUsage,
-      diskCapacity
+      diskUsage: { category: 'pvc', pvc: pvcName },
+      diskCapacity: { category: 'pvc', pvc: pvcName }
     }, {
       namespace
     });

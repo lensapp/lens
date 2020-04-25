@@ -5,37 +5,21 @@ import { KubeApi } from "../kube-api";
 export class ClusterApi extends KubeApi<Cluster> {
   async getMetrics(nodeNames: string[], params?: IMetricsReqParams): Promise<IClusterMetrics> {
     const nodes = nodeNames.join("|");
-    const memoryUsage = `
-        sum(
-          node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)
-        ) by (kubernetes_name)
-      `.replace(/_bytes/g, `_bytes{kubernetes_node=~"${nodes}"}`);
-
-    const memoryRequests = `sum(kube_pod_container_resource_requests{node=~"${nodes}", resource="memory"}) by (component)`;
-    const memoryLimits = `sum(kube_pod_container_resource_limits{node=~"${nodes}", resource="memory"}) by (component)`;
-    const memoryCapacity = `sum(kube_node_status_capacity{node=~"${nodes}", resource="memory"}) by (component)`;
-    const cpuUsage = `sum(rate(node_cpu_seconds_total{kubernetes_node=~"${nodes}", mode=~"user|system"}[1m]))`;
-    const cpuRequests = `sum(kube_pod_container_resource_requests{node=~"${nodes}", resource="cpu"}) by (component)`;
-    const cpuLimits = `sum(kube_pod_container_resource_limits{node=~"${nodes}", resource="cpu"}) by (component)`;
-    const cpuCapacity = `sum(kube_node_status_capacity{node=~"${nodes}", resource="cpu"}) by (component)`;
-    const podUsage = `sum(kubelet_running_pod_count{instance=~"${nodes}"})`;
-    const podCapacity = `sum(kube_node_status_capacity{node=~"${nodes}", resource="pods"}) by (component)`;
-    const fsSize = `sum(node_filesystem_size_bytes{kubernetes_node=~"${nodes}", mountpoint="/"}) by (kubernetes_node)`;
-    const fsUsage = `sum(node_filesystem_size_bytes{kubernetes_node=~"${nodes}", mountpoint="/"} - node_filesystem_avail_bytes{kubernetes_node=~"${nodes}", mountpoint="/"}) by (kubernetes_node)`;
+    const opts = { category: "cluster", nodes: nodes }
 
     return metricsApi.getMetrics({
-      memoryUsage,
-      memoryRequests,
-      memoryLimits,
-      memoryCapacity,
-      cpuUsage,
-      cpuRequests,
-      cpuLimits,
-      cpuCapacity,
-      podUsage,
-      podCapacity,
-      fsSize,
-      fsUsage
+      memoryUsage: opts,
+      memoryRequests: opts,
+      memoryLimits: opts,
+      memoryCapacity: opts,
+      cpuUsage: opts,
+      cpuRequests: opts,
+      cpuLimits: opts,
+      cpuCapacity: opts,
+      podUsage: opts,
+      podCapacity: opts,
+      fsSize: opts,
+      fsUsage: opts
     }, params);
   }
 }
