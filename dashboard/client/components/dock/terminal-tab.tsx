@@ -16,7 +16,7 @@ interface Props extends DockTabProps {
 @observer
 export class TerminalTab extends React.Component<Props> {
   componentDidMount() {
-    reaction(() => this.isDisconnected, () => {
+    reaction(() => this.isDisconnected === true, () => {
       dockStore.closeTab(this.tabId)
     })
   }
