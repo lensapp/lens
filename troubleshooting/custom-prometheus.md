@@ -19,7 +19,7 @@ When using custom prometheus with Lens app, Lens expects certain things for prom
 
 relabeling to `node-exporter` servicemonitor crd (for example `kubectl edit -n monitoring servicemonitors node-exporter`).
 
-2. To see cluster's pod usage on cluster overview properly, please add `metricsRelabeling` to `kubelet` service monitor (`kubectl edit -n monitoring servicemonitors kubelet`)
+2. To see cluster's pod usage on cluster overview properly, please add `metricRelabelings` to `kubelet` service monitor (`kubectl edit -n monitoring servicemonitors kubelet`)
 
 ```
 metricRelabelings:
