@@ -16,12 +16,14 @@ export interface PrometheusProvider {
 
 export class PrometheusProviderFactory {
   static createProvider(type: string): PrometheusProvider {
-    if (type == "helm") {
+    if (type == "lens") {
+      return new PrometheusLens()
+    } else if (type == "helm") {
       return new PrometheusHelm()
     } else if (type == "operator") {
       return new PrometheusOperator()
     } else {
-      return new PrometheusLens()
+      throw "Unknown Prometheus provider";
     }
   }
 }
