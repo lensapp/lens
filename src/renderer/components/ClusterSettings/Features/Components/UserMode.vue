@@ -121,9 +121,6 @@ export default {
       return true;
 
     },
-  },
-  mounted: function(){
-    console.log(this.settings);
   }
 }
 </script>

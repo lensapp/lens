@@ -140,6 +140,19 @@ const actions: ActionTree<ClusterState, any>  = {
     return response
   },
   // For data structure see: cluster-manager.ts / FeatureInstallRequest
+  async upgradeClusterFeature({commit}, data) {
+    // Custom no timeout IPC as install can take very variable time
+    const ipc = new PromiseIpc();
+    const response = await ipc.send('upgradeFeature', data)
+    console.log("upgrade result:", response);
+    const cluster = await ipc.send('refreshCluster', data.clusterId)
+
+
+    tracker.event("cluster", "upgrade-feature")
+    commit("updateCluster", cluster)
+    return response
+  },
+  // For data structure see: cluster-manager.ts / FeatureInstallRequest
   async uninstallClusterFeature({commit}, data) {
     // Custom no timeout IPC as uninstall can take very variable time
     const ipc = new PromiseIpc();
