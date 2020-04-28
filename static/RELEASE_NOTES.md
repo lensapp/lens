@@ -2,7 +2,20 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.3.1 (current version)
+## 3.4.0-beta.1 (current version)
+
+- Show node events in node details
+- Enable code folding in resource editor
+- Terminal dock tab improvements
+- Show always Events title in resource details
+- Fix missing spaces in container command
+- Check also beta.kubernetes.io/os selector for windows pod shell
+- Cache terminall shell env
+- Cleanup cluster webview loading
+- Update metrics feature components
+- Update dashboard npm packages
+
+## 3.3.1
 
 - Do not timeout watch requests
 - Fix pod shell error if no access to nodes
