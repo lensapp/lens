@@ -20,6 +20,7 @@ export class ShellSession extends EventEmitter {
   protected kubectlBinDir: string;
   protected helmBinDir: string;
   protected preferences: ClusterPreferences;
+  protected running = false;
 
   constructor(socket: WebSocket, pathToKubeconfig: string, cluster: Cluster) {
     super()
@@ -42,6 +43,7 @@ export class ShellSession extends EventEmitter {
       name: "xterm-256color",
       rows: 30,
     });
+    this.running = true;
 
     this.pipeStdout()
     this.pipeStdin()
@@ -137,6 +139,8 @@ export class ShellSession extends EventEmitter {
   protected pipeStdin() {
     // write websocket messages to shellProcess
     this.websocket.on("message", function(data: string) {
+      if (!this.running) { return }
+
       const message = Buffer.from(data.slice(1, data.length), "base64").toString()
       switch (data[0]) {
       case "0":
@@ -160,8 +164,16 @@ export class ShellSession extends EventEmitter {
   }
 
   protected closeWebsocketOnProcessExit() {
-    this.shellProcess.on("exit", (_code) => {
-      this.exit()
+    this.shellProcess.on("exit", (code) => {
+      this.running = false
+      let timeout = 0
+      if (code > 0) {
+        this.sendResponse("Terminal will auto-close in 15 seconds ...")
+        timeout = 15*1000
+      }
+      setTimeout(() => {
+        this.exit()
+      }, timeout)
     });
   }
 
