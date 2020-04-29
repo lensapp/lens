@@ -92,13 +92,14 @@ export class Router {
     const asset = path.join(assetsPath, file)
     readFile(asset, (err, data) => {
       if (err) {
-        response.statusCode = 404
+        // default to index.html so that react routes work when page is refreshed
+        this.handleStaticFile("index.html", response)
       } else {
         const type = mimeTypes[path.extname(asset).slice(1)] || "text/plain";
         response.setHeader("Content-Type", type);
         response.write(data)
+        response.end()
       }
-      response.end()
     })
   }
 
