@@ -1,5 +1,3 @@
-import logger from "../logger";
-
 export type PrometheusQuery = {
   [key: string]: string;
 }
