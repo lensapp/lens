@@ -32,7 +32,7 @@ export class PodMenu extends React.Component<Props> {
     }
 
     const shell = createTerminalTab({
-      title: _i18n._(t`Pod: ${pod.getName()} (namespace: ${pod.getNs()})`)
+      title: _i18n._(t`Pod`) + `: ${pod.getName()} (namespace: ${pod.getNs()})`
     });
 
     terminalStore.sendCommand(command, {
