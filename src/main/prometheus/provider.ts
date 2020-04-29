@@ -1,6 +1,4 @@
-import { PrometheusHelm } from "./helm"
-import { PrometheusLens } from "./lens"
-import { PrometheusOperator } from "./operator";
+import logger from "../logger";
 
 export type PrometheusQuery = {
   [key: string]: string;
@@ -14,16 +12,19 @@ export interface PrometheusProvider {
   getQueries(opts: PrometheusQueryOpts): PrometheusQuery;
 }
 
-export class PrometheusProviderFactory {
-  static createProvider(type: string): PrometheusProvider {
-    if (type == "lens") {
-      return new PrometheusLens()
-    } else if (type == "helm") {
-      return new PrometheusHelm()
-    } else if (type == "operator") {
-      return new PrometheusOperator()
-    } else {
+export class PrometheusProviderRegistry {
+  private static prometheusProviders: {
+    [key: string]: PrometheusProvider;
+  } = {}
+
+  static getProvider(type: string): PrometheusProvider {
+    if (!this.prometheusProviders[type]) {
       throw "Unknown Prometheus provider";
     }
+    return this.prometheusProviders[type]
+  }
+
+  static registerProvider(key: string, provider: PrometheusProvider) {
+    this.prometheusProviders[key] = provider
   }
 }

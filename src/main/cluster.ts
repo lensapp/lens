@@ -47,7 +47,9 @@ export type ClusterPreferences = {
     service: string;
     port: number;
   };
-  prometheusSource?: string;
+  prometheusProvider?: {
+    type: string;
+  };
   icon?: string;
   httpsProxy?: string;
 }

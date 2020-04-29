@@ -36,9 +36,9 @@
           description="What query format is used to fetch metrics from Prometheus"
         >
           <b-form-select
-            v-model="prometheusSource"
-            :options="prometheusSources"
-            @change="onPrometheusSourceSave"
+            v-model="prometheusProvider"
+            :options="prometheusProviders"
+            @change="onPrometheusProviderSave"
           />
         </b-form-group>
       </div>
@@ -81,8 +81,8 @@ export default {
         terminalcwd: null
       },
       prometheusPath: "",
-      prometheusSource: "",
-      prometheusSources: [
+      prometheusProvider: "",
+      prometheusProviders: [
         { text: "Lens", value: "lens"},
         { text: "Helm", value: "helm"},
         { text: "Prometheus Operator", value: "operator"}
@@ -102,7 +102,11 @@ export default {
       } else {
         this.prometheusPath = ""
       }
-      this.prometheusSource = this.cluster.preferences.prometheusSource || "lens"
+      if (this.cluster.preferences.prometheusProvider) {
+        this.prometheusProvider = this.cluster.preferences.prometheusProvider.type
+      } else {
+        this.prometheusProvider = "lens"
+      }
     },
     parsePrometheusPath: function(path) {
       let parsed = path.split(/\/|:/)
@@ -143,11 +147,11 @@ export default {
       }
       this.$store.dispatch("storeCluster", this.cluster);
     },
-    onPrometheusSourceSave: function() {
-      if (this.prometheusSource === "") {
-        this.cluster.preferences.prometheusSource = null;
+    onPrometheusProviderSave: function() {
+      if (this.prometheusProvider === "") {
+        this.cluster.preferences.prometheusProvider = null;
       } else {
-        this.cluster.preferences.prometheusSource = this.prometheusSource
+        this.cluster.preferences.prometheusProvider = { type: this.prometheusProvider }
       }
       this.$store.dispatch("storeCluster", this.cluster);
     },

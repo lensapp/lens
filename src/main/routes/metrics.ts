@@ -1,7 +1,7 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import * as requestPromise from "request-promise-native"
-import { PrometheusProviderFactory, PrometheusProvider} from "../prometheus/provider"
+import { PrometheusProviderRegistry, PrometheusProvider} from "../prometheus/provider"
 
 type MetricsQuery = string | string[] | {
   [metricName: string]: string;
@@ -23,12 +23,13 @@ class MetricsRoute extends LensApi {
       queryParams[key] = value
     })
 
-    const prometheusInstallationSource = cluster.preferences.prometheusSource || "lens"
+    const prometheusInstallationSource = cluster.preferences.prometheusProvider?.type || "lens"
     let prometheusProvider: PrometheusProvider
     try {
-      prometheusProvider = PrometheusProviderFactory.createProvider(prometheusInstallationSource)
+      prometheusProvider = PrometheusProviderRegistry.getProvider(prometheusInstallationSource)
     } catch {
       this.respondJson(response, {})
+      return
     }
     // prometheus metrics loader
     const attempts: { [query: string]: number } = {};

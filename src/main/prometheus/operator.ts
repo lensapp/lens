@@ -1,4 +1,5 @@
 import { PrometheusProvider, PrometheusQuery, PrometheusQueryOpts } from "./provider";
+
 export class PrometheusOperator implements PrometheusProvider {
   rateAccuracy = "1m"
 

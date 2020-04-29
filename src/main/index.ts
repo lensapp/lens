@@ -15,7 +15,7 @@ import { shellSync } from "./shell-sync"
 import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { findMainWebContents } from "./webcontents"
-import { helmCli } from "./helm-cli"
+import "./prometheus/index"
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
