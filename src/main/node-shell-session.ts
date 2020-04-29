@@ -38,6 +38,7 @@ export class NodeShellSession extends ShellSession {
       name: "xterm-256color",
       rows: 30,
     });
+    this.running = true;
     this.pipeStdout()
     this.pipeStdin()
     this.closeWebsocketOnProcessExit()
