@@ -1,6 +1,8 @@
-import { PrometheusProvider, PrometheusQuery, PrometheusQueryOpts } from "./provider";
+import { PrometheusProvider, PrometheusQuery, PrometheusQueryOpts } from "./provider-registry";
 
 export class PrometheusLens implements PrometheusProvider {
+  id = "lens"
+  name = "Lens"
   rateAccuracy = "1m"
 
   public getQueries(opts: PrometheusQueryOpts): PrometheusQuery {

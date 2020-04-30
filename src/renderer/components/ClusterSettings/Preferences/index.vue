@@ -67,6 +67,8 @@
 
 <script>
 import { lstatSync } from "fs"
+import { prometheusProviders } from '../../../../common/prometheus-providers';
+
 export default {
   name: 'ClusterSettingsPreferences',
   props: {
@@ -82,17 +84,14 @@ export default {
       },
       prometheusPath: "",
       prometheusProvider: "",
-      prometheusProviders: [
-        { text: "Lens", value: "lens"},
-        { text: "Helm", value: "helm"},
-        { text: "Prometheus Operator", value: "operator"}
-      ]
+      prometheusProviders: [],
     }
   },
-  mounted: function() {
+  mounted: async function() {
+    this.prometheusProviders = prometheusProviders.map((provider) => {
+      return { text: provider.name, value: provider.id }
+    })
     this.updateValues()
-  },
-  computed: {
   },
   methods: {
     updateValues: function(){
@@ -158,7 +157,8 @@ export default {
     onTerminalCwdSave: function() {
       if(this.cluster.preferences.terminalCWD === "") this.cluster.preferences.terminalCWD = null
       this.$store.dispatch("storeCluster", this.cluster);
-    }
+    },
+
   },
   watch: {
     "cluster": "updateValues",

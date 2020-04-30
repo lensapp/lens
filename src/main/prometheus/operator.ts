@@ -1,7 +1,9 @@
-import { PrometheusProvider, PrometheusQuery, PrometheusQueryOpts } from "./provider";
+import { PrometheusProvider, PrometheusQuery, PrometheusQueryOpts } from "./provider-registry";
 
 export class PrometheusOperator implements PrometheusProvider {
   rateAccuracy = "1m"
+  id = "operator"
+  name = "Prometheus Operator"
 
   public getQueries(opts: PrometheusQueryOpts): PrometheusQuery {
     switch(opts.category) {
