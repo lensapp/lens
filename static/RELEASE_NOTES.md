@@ -2,7 +2,13 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.4.0-beta.1 (current version)
+## 3.4.0-beta.2 (current version)
+
+- Improve dashboard reload
+- Fix node shell session regression
+- Rebuild locales & fix translation bugs
+
+## 3.4.0-beta.1
 
 - Show node events in node details
 - Enable code folding in resource editor
