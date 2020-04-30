@@ -22,7 +22,7 @@ msgstr ""
 msgid "(empty) (Allowing the specific traffic to all pods in this namespace)"
 msgstr "(Пусто) (Допускается трафик ко всем подам в данной области имен)"
 
-#: client/components/item-object-list/item-list-layout.tsx:221
+#: client/components/item-object-list/item-list-layout.tsx:219
 msgid "<0>Filtered</0>: {itemsCount} / {allItemsCount}"
 msgstr "<0>Отфильтровано</0>: {itemsCount} / {allItemsCount}"
 
@@ -38,7 +38,7 @@ msgstr ""
 msgid "API Group"
 msgstr ""
 
-#: client/components/layout/sidebar.tsx:72
+#: client/components/layout/sidebar.tsx:87
 msgid "Access Control"
 msgstr "Контроль доступа"
 
@@ -76,7 +76,9 @@ msgstr "Добавить поле"
 msgid "Additional Printer Columns"
 msgstr ""
 
-#: client/components/+nodes/node-details.tsx:83
+#: client/components/+network-endpoints/endpoint-subset-list.tsx:29
+#: client/components/+network-endpoints/endpoint-subset-list.tsx:60
+#: client/components/+nodes/node-details.tsx:84
 msgid "Addresses"
 msgstr "Адреса"
 
@@ -94,6 +96,7 @@ msgstr "Аффинитеты"
 #: client/components/+custom-resources/crd-resources.tsx:73
 #: client/components/+events/events.tsx:68
 #: client/components/+namespaces/namespaces.tsx:33
+#: client/components/+network-endpoints/endpoints.tsx:34
 #: client/components/+network-ingresses/ingresses.tsx:35
 #: client/components/+network-policies/network-policies.tsx:34
 #: client/components/+network-services/services.tsx:51
@@ -119,7 +122,7 @@ msgstr "Возраст"
 msgid "All groups"
 msgstr ""
 
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:54
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:57
 msgid "All logs"
 msgstr "Все логи"
 
@@ -127,7 +130,7 @@ msgstr "Все логи"
 msgid "All namespaces"
 msgstr ""
 
-#: client/components/+nodes/node-details.tsx:77
+#: client/components/+nodes/node-details.tsx:78
 msgid "Allocatable"
 msgstr ""
 
@@ -163,7 +166,7 @@ msgstr ""
 msgid "Allowed Unsafe Sysctls"
 msgstr ""
 
-#: client/components/+nodes/node-details.tsx:102
+#: client/components/+nodes/node-details.tsx:103
 #: client/components/kube-object/kube-object-meta.tsx:31
 msgid "Annotations"
 msgstr "Аннотации"
@@ -185,7 +188,7 @@ msgstr "Сбой работы приложения на <0>{pageUrl}</0>"
 msgid "Applying.."
 msgstr "Применение.."
 
-#: client/components/layout/sidebar.tsx:71
+#: client/components/layout/sidebar.tsx:86
 msgid "Apps"
 msgstr "Приложения"
 
@@ -263,9 +266,9 @@ msgstr "CA Bundle"
 
 #: client/components/+cluster/cluster-metric-switchers.tsx:24
 #: client/components/+cluster/cluster-pie-charts.tsx:140
-#: client/components/+nodes/node-details.tsx:62
-#: client/components/+nodes/node-details.tsx:73
-#: client/components/+nodes/node-details.tsx:78
+#: client/components/+nodes/node-details.tsx:63
+#: client/components/+nodes/node-details.tsx:74
+#: client/components/+nodes/node-details.tsx:79
 #: client/components/+nodes/nodes.tsx:113
 #: client/components/+workloads-pods/pod-charts.tsx:11
 #: client/components/+workloads-pods/pod-details-container.tsx:25
@@ -310,14 +313,13 @@ msgstr "Отмена"
 #: client/components/+nodes/node-charts.tsx:39
 #: client/components/+nodes/node-charts.tsx:63
 #: client/components/+nodes/node-charts.tsx:97
-#: client/components/+nodes/node-details.tsx:72
+#: client/components/+nodes/node-details.tsx:73
 #: client/components/+storage-volume-claims/volume-claim-disk-chart.tsx:31
 #: client/components/+storage-volumes/volume-details.tsx:29
 #: client/components/+storage-volumes/volumes.tsx:42
 msgid "Capacity"
 msgstr "Емкость"
 
-#: client/components/+config/config.tsx:47
 #: client/components/+custom-resources/certmanager.k8s.io/certificates.tsx:59
 msgid "Certificates"
 msgstr "Сертификаты"
@@ -349,11 +351,11 @@ msgstr "Проверка обновлений"
 msgid "Claim"
 msgstr "Запрос"
 
-#: client/components/+workloads-pods/pod-details.tsx:153
+#: client/components/+workloads-pods/pod-details.tsx:163
 msgid "Claim Name"
 msgstr ""
 
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:240
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:243
 #: client/components/dialog/logs-dialog.tsx:39
 #: client/components/kubeconfig-dialog/kubeconfig-dialog.tsx:94
 msgid "Close"
@@ -368,16 +370,15 @@ msgid "Cloud API Token Secret"
 msgstr "Cloud API Token Secret"
 
 #: client/components/+namespaces/namespace-select.tsx:43
-#: client/components/layout/sidebar.tsx:63
+#: client/components/layout/sidebar.tsx:78
 msgid "Cluster"
 msgstr "Кластер"
 
-#: client/components/+network-services/service-details.tsx:41
+#: client/components/+network-services/service-details.tsx:51
 #: client/components/+network-services/services.tsx:47
 msgid "Cluster IP"
 msgstr "IP-адрес кластера"
 
-#: client/components/+config/config.tsx:59
 #: client/components/+custom-resources/certmanager.k8s.io/issuers.tsx:40
 msgid "Cluster Issuers"
 msgstr ""
@@ -391,7 +392,7 @@ msgstr "Команда"
 msgid "Common Name"
 msgstr "Общее имя"
 
-#: client/components/layout/sidebar.tsx:60
+#: client/components/layout/sidebar.tsx:75
 msgid "Compact view"
 msgstr "Компактный вид"
 
@@ -409,7 +410,7 @@ msgid "Condition"
 msgstr "Состояние"
 
 #: client/components/+custom-resources/crd-details.tsx:52
-#: client/components/+nodes/node-details.tsx:107
+#: client/components/+nodes/node-details.tsx:108
 #: client/components/+nodes/nodes.tsx:120
 #: client/components/+workloads-deployments/deployment-details.tsx:79
 #: client/components/+workloads-deployments/deployments.tsx:64
@@ -431,19 +432,19 @@ msgstr "Конфигурация скопирована в буфер"
 msgid "ConfigMap <0>{0}</0> successfully updated."
 msgstr "ConfigMap <0>{0}</0> успешно обновлена."
 
-#: client/components/+config/config.tsx:29
+#: client/components/+config/config.tsx:28
 msgid "ConfigMaps"
 msgstr "ConfigMaps"
 
-#: client/components/layout/sidebar.tsx:66
+#: client/components/layout/sidebar.tsx:81
 msgid "Configuration"
 msgstr "Конфигурация"
 
-#: client/components/+network-services/service-details.tsx:39
+#: client/components/+network-services/service-details.tsx:49
 msgid "Connection"
 msgstr "Соединение"
 
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:243
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:246
 msgid "Container"
 msgstr "Контейнер"
 
@@ -467,12 +468,12 @@ msgstr "Запросы памяти от контейнеров"
 msgid "Container memory usage"
 msgstr "Использование памяти"
 
-#: client/components/+nodes/node-details.tsx:95
+#: client/components/+nodes/node-details.tsx:96
 msgid "Container runtime"
 msgstr "Среда контейнеров"
 
 #: client/components/+workloads-pods/pod-details.tsx:134
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:183
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:186
 #: client/components/+workloads-pods/pods.tsx:76
 msgid "Containers"
 msgstr "Контейнеры"
@@ -598,7 +599,7 @@ msgid "Currently applied filters:"
 msgstr "Текущие фильтры:"
 
 #: client/components/+custom-resources/crd-list.tsx:55
-#: client/components/layout/sidebar.tsx:73
+#: client/components/layout/sidebar.tsx:88
 msgid "Custom Resources"
 msgstr ""
 
@@ -662,7 +663,7 @@ msgstr "Описание"
 msgid "Desired number of replicas"
 msgstr "Нужный уровень реплик"
 
-#: client/components/+nodes/node-details.tsx:64
+#: client/components/+nodes/node-details.tsx:65
 #: client/components/+nodes/nodes.tsx:115
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:44
 msgid "Disk"
@@ -720,6 +721,17 @@ msgstr "Эффект"
 msgid "Egress"
 msgstr "Egress"
 
+#: client/components/+network-services/service-details.tsx:66
+msgid "Endpoint"
+msgstr ""
+
+#: client/components/+network/network.tsx:31
+#: client/components/+network-endpoints/endpoints.tsx:30
+#: client/components/+network-endpoints/endpoints.tsx:33
+#: client/components/+network-services/service-details-endpoint.tsx:27
+msgid "Endpoints"
+msgstr ""
+
 #: client/components/+user-management-service-accounts/create-service-account-dialog.tsx:78
 msgid "Enter a name"
 msgstr "Название"
@@ -733,8 +745,9 @@ msgid "Error stack"
 msgstr "Стэк ошибки"
 
 #: client/components/+events/events.tsx:56
+#: client/components/+events/kube-event-details.tsx:34
 #: client/components/+events/kube-event-details.tsx:39
-#: client/components/layout/sidebar.tsx:70
+#: client/components/layout/sidebar.tsx:85
 msgid "Events"
 msgstr "События"
 
@@ -751,7 +764,7 @@ msgstr "За исключением объектов с префиксом “sy
 msgid "Exit full size mode"
 msgstr "Выйти из полного размера"
 
-#: client/components/layout/sidebar.tsx:60
+#: client/components/layout/sidebar.tsx:75
 msgid "Extended view"
 msgstr "Расширенный вид"
 
@@ -759,11 +772,11 @@ msgstr "Расширенный вид"
 msgid "External IP"
 msgstr "Внешний IP"
 
-#: client/components/+network-services/service-details.tsx:45
+#: client/components/+network-services/service-details.tsx:55
 msgid "External IPs"
 msgstr "Внешние IP"
 
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:103
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:106
 msgid "Failed to load logs: {0}"
 msgstr "Ошибка загрузки логов: {0}"
 
@@ -804,7 +817,7 @@ msgstr ""
 msgid "From"
 msgstr "От"
 
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:209
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:212
 msgid "From <0>{from}</0> to <1>{to}</1>"
 msgstr "От <0>{from}</0> до <1>{to}</1>"
 
@@ -822,7 +835,7 @@ msgstr "Группа"
 msgid "Groups"
 msgstr "Группы"
 
-#: client/components/+config/config.tsx:65
+#: client/components/+config/config.tsx:46
 msgid "HPA"
 msgstr "HPA"
 
@@ -839,7 +852,7 @@ msgid "Helm Upgrade: {0}"
 msgstr "Helm обновление: {0}"
 
 #: client/components/+config-secrets/secret-details.tsx:93
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:212
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:215
 #: client/components/drawer/drawer-param-toggler.tsx:19
 msgid "Hide"
 msgstr "Скрыть"
@@ -876,6 +889,12 @@ msgstr ""
 msgid "Host: {0}"
 msgstr "Хост: {0}"
 
+#: client/components/+network-endpoints/endpoint-subset-list.tsx:33
+#: client/components/+network-endpoints/endpoint-subset-list.tsx:64
+#: client/components/+network-endpoints/endpoint-subset-list.tsx:76
+msgid "Hostname"
+msgstr ""
+
 #: client/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:92
 msgid "Http01"
 msgstr "Http01"
@@ -907,13 +926,13 @@ msgstr "Изображения"
 msgid "Ingress"
 msgstr "Ingress"
 
-#: client/components/+network/network.tsx:30
+#: client/components/+network/network.tsx:37
 #: client/components/+network-ingresses/ingresses.tsx:31
 msgid "Ingresses"
 msgstr "Ingresses"
 
 #: client/components/+workloads-pods/pod-details.tsx:130
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:189
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:192
 msgid "Init Containers"
 msgstr "Контейнеры инициализации"
 
@@ -951,7 +970,6 @@ msgstr "Затронутый объект"
 msgid "Issuer"
 msgstr "Issuer"
 
-#: client/components/+config/config.tsx:53
 #: client/components/+custom-resources/certmanager.k8s.io/issuers.tsx:53
 msgid "Issuers"
 msgstr "Issuers"
@@ -971,7 +989,7 @@ msgstr ""
 msgid "Jobs"
 msgstr "Jobs"
 
-#: client/components/+nodes/node-details.tsx:92
+#: client/components/+nodes/node-details.tsx:93
 msgid "Kernel version"
 msgstr "Версия Kernel"
 
@@ -1011,14 +1029,14 @@ msgstr "Файл конфигурации"
 msgid "Kubeconfig File"
 msgstr "Файл конфигурации"
 
-#: client/components/+nodes/node-details.tsx:98
+#: client/components/+nodes/node-details.tsx:99
 msgid "Kubelet version"
 msgstr "Версия Kubelet"
 
 #: client/components/+config-secrets/secrets.tsx:43
 #: client/components/+custom-resources/certmanager.k8s.io/issuers.tsx:65
 #: client/components/+namespaces/namespaces.tsx:32
-#: client/components/+nodes/node-details.tsx:101
+#: client/components/+nodes/node-details.tsx:102
 #: client/components/kube-object/kube-object-meta.tsx:30
 msgid "Labels"
 msgstr "Метки"
@@ -1060,7 +1078,7 @@ msgstr ""
 msgid "Limits"
 msgstr "Лимиты"
 
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:245
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:248
 msgid "Lines"
 msgstr "Строки"
 
@@ -1072,7 +1090,7 @@ msgstr ""
 msgid "Liveness"
 msgstr "Живучесть"
 
-#: client/components/+network-services/service-details.tsx:53
+#: client/components/+network-services/service-details.tsx:63
 msgid "Load Balancer IP"
 msgstr "IP балансировщика нагрузки"
 
@@ -1080,8 +1098,8 @@ msgstr "IP балансировщика нагрузки"
 msgid "Loading"
 msgstr "Загрузка"
 
-#: client/components/+workloads-pods/pod-menu.tsx:86
-#: client/components/+workloads-pods/pod-menu.tsx:87
+#: client/components/+workloads-pods/pod-menu.tsx:90
+#: client/components/+workloads-pods/pod-menu.tsx:91
 msgid "Logs"
 msgstr "Логи"
 
@@ -1114,11 +1132,15 @@ msgstr "Макс. подов"
 msgid "Maximum length is {maxLength}"
 msgstr "Максимальная длина {maxLength}"
 
+#: client/components/+workloads-pods/pod-details.tsx:155
+msgid "Medium"
+msgstr ""
+
 #: client/components/+cluster/cluster-metric-switchers.tsx:25
 #: client/components/+cluster/cluster-pie-charts.tsx:144
-#: client/components/+nodes/node-details.tsx:63
-#: client/components/+nodes/node-details.tsx:74
-#: client/components/+nodes/node-details.tsx:79
+#: client/components/+nodes/node-details.tsx:64
+#: client/components/+nodes/node-details.tsx:75
+#: client/components/+nodes/node-details.tsx:80
 #: client/components/+nodes/nodes.tsx:114
 #: client/components/+workloads-pods/pod-charts.tsx:12
 #: client/components/+workloads-pods/pod-details-container.tsx:26
@@ -1209,8 +1231,11 @@ msgstr "Установки"
 #: client/components/+custom-resources/crd-resources.tsx:63
 #: client/components/+events/event-details.tsx:55
 #: client/components/+namespaces/namespaces.tsx:31
+#: client/components/+network-endpoints/endpoint-subset-list.tsx:87
+#: client/components/+network-endpoints/endpoints.tsx:31
 #: client/components/+network-ingresses/ingresses.tsx:32
 #: client/components/+network-policies/network-policies.tsx:31
+#: client/components/+network-services/service-details-endpoint.tsx:26
 #: client/components/+network-services/services.tsx:44
 #: client/components/+nodes/nodes.tsx:112
 #: client/components/+pod-security-policies/pod-security-policies.tsx:35
@@ -1260,6 +1285,7 @@ msgstr ""
 #: client/components/+events/event-details.tsx:56
 #: client/components/+events/events.tsx:63
 #: client/components/+namespaces/add-namespace-dialog.tsx:73
+#: client/components/+network-endpoints/endpoints.tsx:32
 #: client/components/+network-ingresses/ingresses.tsx:33
 #: client/components/+network-policies/network-policies.tsx:32
 #: client/components/+network-services/services.tsx:45
@@ -1289,7 +1315,7 @@ msgid "Namespace: {0}"
 msgstr "Namespace: {0}"
 
 #: client/components/+namespaces/namespaces.tsx:30
-#: client/components/layout/sidebar.tsx:69
+#: client/components/layout/sidebar.tsx:84
 msgid "Namespaces"
 msgstr "Namespaces"
 
@@ -1299,7 +1325,7 @@ msgstr "Namespaces: {0}"
 
 #: client/components/+network-ingresses/ingress-details.tsx:66
 #: client/components/+workloads-pods/pod-charts.tsx:13
-#: client/components/layout/sidebar.tsx:67
+#: client/components/layout/sidebar.tsx:82
 msgid "Network"
 msgstr "Сеть"
 
@@ -1307,12 +1333,12 @@ msgstr "Сеть"
 msgid "Network File System"
 msgstr "Сетевая файловая система"
 
-#: client/components/+network/network.tsx:36
+#: client/components/+network/network.tsx:43
 #: client/components/+network-policies/network-policies.tsx:30
 msgid "Network Policies"
 msgstr "Network Policies"
 
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:228
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:231
 msgid "New logs since opening the dialog"
 msgstr "Новые логи с момента открытия диалога"
 
@@ -1357,7 +1383,7 @@ msgstr "Нет доступных фильтров."
 msgid "No issues found"
 msgstr "Проблемы не обнаружены"
 
-#: client/components/item-object-list/item-list-layout.tsx:193
+#: client/components/item-object-list/item-list-layout.tsx:191
 msgid "No items found."
 msgstr "Ничего не найдено."
 
@@ -1365,6 +1391,7 @@ msgstr "Ничего не найдено."
 msgid "No revisions to rollback."
 msgstr "Нет изменений для отката."
 
+#: client/components/+nodes/node-menu.tsx:24
 #: client/components/+workloads-pods/pod-details.tsx:87
 msgid "Node"
 msgstr "Нода"
@@ -1396,13 +1423,17 @@ msgid "Node shell"
 msgstr "Командная строка ноды"
 
 #: client/components/+nodes/nodes.tsx:111
-#: client/components/layout/sidebar.tsx:64
+#: client/components/layout/sidebar.tsx:79
 msgid "Nodes"
 msgstr "Ноды"
 
 #: client/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:72
 msgid "Not After"
 msgstr "Не позже"
+
+#: client/components/+network-endpoints/endpoint-subset-list.tsx:72
+msgid "Not Ready Addresses"
+msgstr ""
 
 #: client/components/+apps-releases/releases.tsx:85
 msgid "Note: StatefulSet Volumes won't be deleted automatically"
@@ -1416,11 +1447,11 @@ msgstr "Заметки"
 msgid "Number of running Pods"
 msgstr "Кол-во работающих подов"
 
-#: client/components/+nodes/node-details.tsx:86
+#: client/components/+nodes/node-details.tsx:87
 msgid "OS"
 msgstr "ОС"
 
-#: client/components/+nodes/node-details.tsx:89
+#: client/components/+nodes/node-details.tsx:90
 msgid "OS Image"
 msgstr "Образ ОС"
 
@@ -1435,6 +1466,10 @@ msgstr "Ок"
 #: client/components/dock/dock.tsx:117
 msgid "Open"
 msgstr "Открыть"
+
+#: client/components/+network-services/service-ports.tsx:49
+msgid "Open in a browser"
+msgstr ""
 
 #: client/components/+config-resource-quotas/resource-quota-details.tsx:63
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:78
@@ -1483,6 +1518,10 @@ msgstr "Persistent Volume Claims"
 msgid "Persistent Volumes"
 msgstr "Persistent Volumes"
 
+#: client/components/+workloads-pods/pod-menu.tsx:50
+msgid "Pod"
+msgstr ""
+
 #: client/components/+workloads-pods/pod-details.tsx:92
 msgid "Pod IP"
 msgstr "IP пода"
@@ -1503,14 +1542,14 @@ msgstr "Селектор подов"
 msgid "Pod Status"
 msgstr "Статус подов"
 
-#: client/components/+workloads-pods/pod-menu.tsx:63
+#: client/components/+workloads-pods/pod-menu.tsx:67
 msgid "Pod shell"
 msgstr "Командная строка пода"
 
 #: client/components/+cluster/cluster-pie-charts.tsx:148
-#: client/components/+nodes/node-details.tsx:65
-#: client/components/+nodes/node-details.tsx:75
-#: client/components/+nodes/node-details.tsx:80
+#: client/components/+nodes/node-details.tsx:66
+#: client/components/+nodes/node-details.tsx:76
+#: client/components/+nodes/node-details.tsx:81
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:60
 #: client/components/+storage-volume-claims/volume-claims.tsx:50
 #: client/components/+workloads/workloads.tsx:34
@@ -1528,10 +1567,15 @@ msgstr ""
 msgid "Policy Types"
 msgstr "Типы политик"
 
+#: client/components/+network-endpoints/endpoint-subset-list.tsx:86
+msgid "Port"
+msgstr ""
+
+#: client/components/+network-endpoints/endpoint-subset-list.tsx:83
 #: client/components/+network-ingresses/ingress-details.tsx:74
 #: client/components/+network-policies/network-policy-details.tsx:96
 #: client/components/+network-policies/network-policy-details.tsx:109
-#: client/components/+network-services/service-details.tsx:49
+#: client/components/+network-services/service-details.tsx:59
 #: client/components/+network-services/services.tsx:48
 #: client/components/+workloads-pods/pod-details-container.tsx:52
 msgid "Ports"
@@ -1587,7 +1631,7 @@ msgstr "Готовность"
 msgid "Reason"
 msgstr "Причина"
 
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:104
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:107
 msgid "Reason: {0} ({1})"
 msgstr "Причина: {0} ({1})"
 
@@ -1628,7 +1672,7 @@ msgid "Releases"
 msgstr "Релизы"
 
 #: client/components/+user-management-roles-bindings/role-binding-details.tsx:60
-#: client/components/item-object-list/item-list-layout.tsx:176
+#: client/components/item-object-list/item-list-layout.tsx:174
 #: client/components/menu/menu-actions.tsx:49
 #: client/components/menu/menu-actions.tsx:85
 msgid "Remove"
@@ -1654,7 +1698,7 @@ msgstr "Удалить выбранные связки <0>{0}</0>?"
 msgid "Remove selected bindings from ${name}"
 msgstr "Удалить выбранные связки из ${name}"
 
-#: client/components/item-object-list/item-list-layout.tsx:272
+#: client/components/item-object-list/item-list-layout.tsx:270
 msgid "Remove selected items ({0})"
 msgstr "Удалить выбранные элементы ({0})"
 
@@ -1713,7 +1757,7 @@ msgstr "Обязательное поле"
 msgid "Reset"
 msgstr "Сбросить"
 
-#: client/components/item-object-list/item-list-layout.tsx:196
+#: client/components/item-object-list/item-list-layout.tsx:194
 msgid "Reset filters?"
 msgstr "Сбросить фильтры?"
 
@@ -1726,7 +1770,7 @@ msgstr ""
 msgid "Resource Names"
 msgstr "Имена ресурсов"
 
-#: client/components/+config/config.tsx:41
+#: client/components/+config/config.tsx:40
 #: client/components/+config-resource-quotas/resource-quotas.tsx:33
 #: client/components/+namespaces/namespace-details.tsx:41
 msgid "Resource Quotas"
@@ -1761,7 +1805,7 @@ msgstr "Ответ"
 msgid "Response duration in seconds"
 msgstr "Продолжительность ответа в секундах"
 
-#: client/components/dock/terminal-tab.tsx:30
+#: client/components/dock/terminal-tab.tsx:37
 msgid "Restart session"
 msgstr "Перезагрузить сессию"
 
@@ -1838,7 +1882,7 @@ msgstr ""
 #: client/components/+apps-releases/release-details.tsx:115
 #: client/components/+config-maps/config-map-details.tsx:78
 #: client/components/+config-secrets/secret-details.tsx:97
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:213
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:216
 #: client/components/dock/edit-resource.tsx:88
 msgid "Save"
 msgstr "Сохранить"
@@ -1905,7 +1949,7 @@ msgstr "Секрет успешно обновлен."
 msgid "Secret type"
 msgstr "Тип секрета"
 
-#: client/components/+config/config.tsx:35
+#: client/components/+config/config.tsx:34
 #: client/components/+config-secrets/secrets.tsx:40
 #: client/components/+workloads-pods/pod-details.tsx:125
 msgid "Secrets"
@@ -1923,7 +1967,7 @@ msgstr "Выбрать роль.."
 msgid "Select service accounts"
 msgstr "Выбрать сервисные аккаунты"
 
-#: client/components/+network-services/service-details.tsx:27
+#: client/components/+network-services/service-details.tsx:37
 #: client/components/+network-services/services.tsx:50
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:69
 #: client/components/+workloads-cronjobs/cronjob-details.tsx:75
@@ -1949,12 +1993,12 @@ msgstr "Service"
 msgid "Service Accounts"
 msgstr "Service Accounts"
 
-#: client/components/+network/network.tsx:24
+#: client/components/+network/network.tsx:25
 #: client/components/+network-services/services.tsx:43
 msgid "Services"
 msgstr "Services"
 
-#: client/components/+network-services/service-details.tsx:35
+#: client/components/+network-services/service-details.tsx:45
 msgid "Session Affinity"
 msgstr "Направление сессии"
 
@@ -1967,17 +2011,13 @@ msgid "Set quota"
 msgstr "Установить квоту"
 
 #: client/components/+nodes/node-menu.tsx:48
-#: client/components/+workloads-pods/pod-menu.tsx:64
+#: client/components/+workloads-pods/pod-menu.tsx:68
 msgid "Shell"
 msgstr "Командная строка"
 
-#: client/components/+nodes/node-menu.tsx:24
-msgid "Shell: {nodeName}"
-msgstr "Командная строка: {nodeName}"
-
 #: client/components/+config-secrets/secret-details.tsx:93
 #: client/components/+workloads-pods/pod-container-env.tsx:97
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:212
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:215
 #: client/components/drawer/drawer-param-toggler.tsx:19
 msgid "Show"
 msgstr "Показать"
@@ -1994,6 +2034,10 @@ msgstr "Показать значение"
 #: client/components/+storage-volume-claims/volume-claims.tsx:49
 msgid "Size"
 msgstr "Размер"
+
+#: client/components/+workloads-pods/pod-details.tsx:158
+msgid "Size Limit"
+msgstr ""
 
 #: client/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:70
 msgid "Skip TLS Verify"
@@ -2046,7 +2090,7 @@ msgid "Status URI"
 msgstr "Адрес статуса"
 
 #: client/components/+storage-volume-claims/volume-claim-details.tsx:57
-#: client/components/layout/sidebar.tsx:68
+#: client/components/layout/sidebar.tsx:83
 msgid "Storage"
 msgstr "Storage"
 
@@ -2090,6 +2134,10 @@ msgstr "Отправить"
 msgid "Submitting.."
 msgstr "Применение.."
 
+#: client/components/+network-endpoints/endpoint-details.tsx:24
+msgid "Subsets"
+msgstr ""
+
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:128
 msgid "Supplemental Groups"
 msgstr ""
@@ -2103,7 +2151,7 @@ msgstr "Заморозка"
 msgid "TLS"
 msgstr "TLS"
 
-#: client/components/+nodes/node-details.tsx:103
+#: client/components/+nodes/node-details.tsx:104
 #: client/components/+nodes/nodes.tsx:116
 msgid "Taints"
 msgstr "Метки блокировки"
@@ -2116,7 +2164,7 @@ msgstr "Терминал"
 msgid "Terminal session"
 msgstr "Сессия терминала"
 
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:223
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:226
 msgid "There are no logs available for container."
 msgstr "Для контейнера нет логов."
 
@@ -2161,13 +2209,13 @@ msgstr "Транзит"
 #: client/components/+custom-resources/crd-details.tsx:82
 #: client/components/+events/event-details.tsx:48
 #: client/components/+events/events.tsx:64
-#: client/components/+network-services/service-details.tsx:31
+#: client/components/+network-services/service-details.tsx:41
 #: client/components/+network-services/services.tsx:46
 #: client/components/+pod-security-policies/pod-security-policy-details.tsx:152
 #: client/components/+storage-volumes/volume-details.tsx:69
 #: client/components/+user-management-roles-bindings/role-binding-details.tsx:94
 #: client/components/+user-management-service-accounts/service-accounts-secret.tsx:43
-#: client/components/+workloads-pods/pod-details.tsx:150
+#: client/components/+workloads-pods/pod-details.tsx:151
 msgid "Type"
 msgstr "Тип"
 
@@ -2304,7 +2352,7 @@ msgstr "Предупреждения: {0}"
 msgid "Worker"
 msgstr "Рабочие"
 
-#: client/components/layout/sidebar.tsx:65
+#: client/components/layout/sidebar.tsx:80
 msgid "Workloads"
 msgstr "Ресурсы"
 
@@ -2341,7 +2389,7 @@ msgstr "Зона"
 msgid "ago"
 msgstr "тому назад"
 
-#: client/components/item-object-list/item-list-layout.tsx:175
+#: client/components/item-object-list/item-list-layout.tsx:173
 msgid "and <0>{tailCount}</0> more"
 msgstr "и <0>{tailCount}</0> ещё"
 
@@ -2382,7 +2430,7 @@ msgstr "сек"
 msgid "singular"
 msgstr ""
 
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:212
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:215
 msgid "timestamps"
 msgstr "временные метки"
 
@@ -2418,7 +2466,7 @@ msgstr "{0} недоступно"
 msgid "{accountName} kubeconfig"
 msgstr "{accountName} конфигурация"
 
-#: client/components/item-object-list/item-list-layout.tsx:225
+#: client/components/item-object-list/item-list-layout.tsx:223
 msgid "{allItemsCount, plural, one {# item} other {# items}}"
 msgstr "{allItemsCount, plural, one {# элемент} few {# элемента} many {# элементов}  other {# элементов}}"
 
@@ -2426,7 +2474,7 @@ msgstr "{allItemsCount, plural, one {# элемент} few {# элемента} 
 msgid "{metricsRemainCount} more..."
 msgstr "{metricsRemainCount} еще…"
 
-#: client/components/+workloads-pods/pod-logs-dialog.tsx:237
+#: client/components/+workloads-pods/pod-logs-dialog.tsx:240
 msgid "{podName} Logs"
 msgstr "{podName} логи"
 
@@ -2434,7 +2482,7 @@ msgstr "{podName} логи"
 msgid "{resourceType} <0>{resourceName}</0> updated."
 msgstr "{resourceType} <0>{resourceName}</0> обновлен."
 
-#: client/components/item-object-list/item-list-layout.tsx:176
+#: client/components/item-object-list/item-list-layout.tsx:174
 msgid "{selectedCount, plural, one {<0>Remove item <1>{selectedNames}</1>?</0>} other {<2>Remove <3>{selectedCount}</3> items <4>{selectedNames}</4> {tail}?</2>}}"
 msgstr ""
 "{\n"
