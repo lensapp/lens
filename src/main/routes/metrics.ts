@@ -1,7 +1,7 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import * as requestPromise from "request-promise-native"
-import { PrometheusProviderRegistry, PrometheusProvider} from "../prometheus/provider"
+import { PrometheusProviderRegistry, PrometheusProvider} from "../prometheus/provider-registry"
 
 type MetricsQuery = string | string[] | {
   [metricName: string]: string;
