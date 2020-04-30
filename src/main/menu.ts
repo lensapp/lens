@@ -145,8 +145,13 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
           webContents.getFocusedWebContents().executeJavaScript('window.history.forward()')
         }
       },
-      { role: 'reload' },
-      { role: 'forceReload' },
+      {
+        label: 'Reload',
+        accelerator: 'CmdOrCtrl+R',
+        click () {
+          webContents.getFocusedWebContents().reload()
+        }
+      },
       ...(isDevelopment ? [
         { role: 'toggleDevTools'} as MenuItemConstructorOptions,
         {
