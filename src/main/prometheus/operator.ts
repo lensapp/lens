@@ -1,11 +1,11 @@
-import { PrometheusProvider, PrometheusQuery, PrometheusQueryOpts } from "./provider-registry";
+import { PrometheusProvider, PrometheusQueryOpts, PrometheusClusterQuery, PrometheusNodeQuery, PrometheusPodQuery, PrometheusPvcQuery, PrometheusIngressQuery } from "./provider-registry";
 
 export class PrometheusOperator implements PrometheusProvider {
   rateAccuracy = "1m"
   id = "operator"
   name = "Prometheus Operator"
 
-  public getQueries(opts: PrometheusQueryOpts): PrometheusQuery {
+  public getQueries(opts: PrometheusQueryOpts): PrometheusNodeQuery | PrometheusClusterQuery | PrometheusPodQuery | PrometheusPvcQuery | PrometheusIngressQuery {
     switch(opts.category) {
     case 'cluster':
       return {

@@ -1,7 +1,7 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import * as requestPromise from "request-promise-native"
-import { PrometheusProviderRegistry, PrometheusProvider} from "../prometheus/provider-registry"
+import { PrometheusProviderRegistry, PrometheusProvider, PrometheusNodeQuery, PrometheusClusterQuery, PrometheusPodQuery, PrometheusPvcQuery, PrometheusIngressQuery, PrometheusQueryOpts} from "../prometheus/provider-registry"
 
 type MetricsQuery = string | string[] | {
   [metricName: string]: string;
@@ -71,9 +71,10 @@ class MetricsRoute extends LensApi {
       data = {};
       const result = await Promise.all(
         Object.entries(query).map((queryEntry: any) => {
-          const queryName = queryEntry[0]
-          const queryOpts = queryEntry[1]
-          const q = prometheusProvider.getQueries(queryOpts)[queryName]
+          const queryName: string = queryEntry[0]
+          const queryOpts: PrometheusQueryOpts = queryEntry[1]
+          const queries = prometheusProvider.getQueries(queryOpts)
+          const q = queries[queryName as keyof (PrometheusNodeQuery | PrometheusClusterQuery | PrometheusPodQuery | PrometheusPvcQuery | PrometheusIngressQuery)]
           return loadMetrics(q)
         })
       );

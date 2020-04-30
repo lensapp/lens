@@ -1,5 +1,47 @@
-export type PrometheusQuery = {
-  [key: string]: string;
+export type PrometheusClusterQuery = {
+  memoryUsage: string;
+  memoryRequests: string;
+  memoryLimits: string;
+  memoryCapacity: string;
+  cpuUsage: string;
+  cpuRequests: string;
+  cpuLimits: string;
+  cpuCapacity: string;
+  podUsage: string;
+  podCapacity: string;
+}
+
+export type PrometheusNodeQuery = {
+  memoryUsage: string;
+  memoryCapacity: string;
+  cpuUsage: string;
+  cpuCapacity: string;
+  fsSize: string;
+  fsUsage: string;
+}
+
+export type PrometheusPodQuery = {
+  memoryUsage: string;
+  memoryRequests: string;
+  memoryLimits: string;
+  cpuUsage: string;
+  cpuRequests: string;
+  cpuLimits: string;
+  fsUsage: string;
+  networkReceive: string;
+  networkTransit: string;
+}
+
+export type PrometheusPvcQuery = {
+  diskUsage: string;
+  diskCapacity: string;
+}
+
+export type PrometheusIngressQuery = {
+  bytesSentSuccess: string;
+  bytesSentFailure: string;
+  requestDurationSeconds: string;
+  responseDurationSeconds: string;
 }
 
 export type PrometheusQueryOpts = {
@@ -7,7 +49,7 @@ export type PrometheusQueryOpts = {
 };
 
 export interface PrometheusProvider {
-  getQueries(opts: PrometheusQueryOpts): PrometheusQuery;
+  getQueries(opts: PrometheusQueryOpts): PrometheusNodeQuery | PrometheusClusterQuery | PrometheusPodQuery | PrometheusPvcQuery | PrometheusIngressQuery;
 }
 
 export type PrometheusProviderList = {

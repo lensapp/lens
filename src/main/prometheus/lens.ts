@@ -1,11 +1,11 @@
-import { PrometheusProvider, PrometheusQuery, PrometheusQueryOpts } from "./provider-registry";
+import { PrometheusProvider, PrometheusQueryOpts, PrometheusClusterQuery, PrometheusNodeQuery, PrometheusPodQuery, PrometheusPvcQuery, PrometheusIngressQuery } from "./provider-registry";
 
 export class PrometheusLens implements PrometheusProvider {
   id = "lens"
   name = "Lens"
   rateAccuracy = "1m"
 
-  public getQueries(opts: PrometheusQueryOpts): PrometheusQuery {
+  public getQueries(opts: PrometheusQueryOpts): PrometheusNodeQuery | PrometheusClusterQuery | PrometheusPodQuery | PrometheusPvcQuery | PrometheusIngressQuery {
     switch(opts.category) {
     case 'cluster':
       return {
