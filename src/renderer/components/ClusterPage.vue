@@ -93,10 +93,6 @@ export default {
       console.log("lens loaded")
       this.lens.loaded = true;
       this.$store.commit("updateLens", this.lens);
-      this.lens.webview.getWebContents().executeJavaScript(
-        // disable dragging of ui links
-        'document.styleSheets[0].insertRule("*, *::after, *::before { -webkit-user-drag: none; -webkit-app-region: no-drag; }", 1);'
-      );
     },
     // Called only when online state changes
     toggleLens: function() {
