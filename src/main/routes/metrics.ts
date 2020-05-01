@@ -1,6 +1,7 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import * as requestPromise from "request-promise-native"
+import { PrometheusProviderRegistry, PrometheusProvider, PrometheusNodeQuery, PrometheusClusterQuery, PrometheusPodQuery, PrometheusPvcQuery, PrometheusIngressQuery, PrometheusQueryOpts} from "../prometheus/provider-registry"
 
 type MetricsQuery = string | string[] | {
   [metricName: string]: string;
@@ -22,6 +23,14 @@ class MetricsRoute extends LensApi {
       queryParams[key] = value
     })
 
+    const prometheusInstallationSource = cluster.preferences.prometheusProvider?.type || "lens"
+    let prometheusProvider: PrometheusProvider
+    try {
+      prometheusProvider = PrometheusProviderRegistry.getProvider(prometheusInstallationSource)
+    } catch {
+      this.respondJson(response, {})
+      return
+    }
     // prometheus metrics loader
     const attempts: { [query: string]: number } = {};
     const maxAttempts = 5;
@@ -61,7 +70,13 @@ class MetricsRoute extends LensApi {
     else {
       data = {};
       const result = await Promise.all(
-        Object.values(query).map(loadMetrics)
+        Object.entries(query).map((queryEntry: any) => {
+          const queryName: string = queryEntry[0]
+          const queryOpts: PrometheusQueryOpts = queryEntry[1]
+          const queries = prometheusProvider.getQueries(queryOpts)
+          const q = queries[queryName as keyof (PrometheusNodeQuery | PrometheusClusterQuery | PrometheusPodQuery | PrometheusPvcQuery | PrometheusIngressQuery)]
+          return loadMetrics(q)
+        })
       );
       Object.keys(query).forEach((metricName, index) => {
         data[metricName] = result[index];

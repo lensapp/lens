@@ -5,24 +5,15 @@ import { KubeApi } from "../kube-api";
 
 export class NodesApi extends KubeApi<Node> {
   getMetrics(): Promise<INodeMetrics> {
-    const memoryUsage = `
-        sum (
-          node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)
-        ) by (kubernetes_node)
-      `;
-    const memoryCapacity = `sum(kube_node_status_capacity{resource="memory"}) by (node)`;
-    const cpuUsage = `sum(rate(node_cpu_seconds_total{mode=~"user|system"}[1m])) by(kubernetes_node)`;
-    const cpuCapacity = `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`;
-    const fsSize = `sum(node_filesystem_size_bytes{mountpoint="/"}) by (kubernetes_node)`;
-    const fsUsage = `sum(node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}) by (kubernetes_node)`;
+    const opts = { category: "nodes"}
 
     return metricsApi.getMetrics({
-      memoryUsage,
-      memoryCapacity,
-      cpuUsage,
-      cpuCapacity,
-      fsSize,
-      fsUsage
+      memoryUsage: opts,
+      memoryCapacity: opts,
+      cpuUsage: opts,
+      cpuCapacity: opts,
+      fsSize: opts,
+      fsUsage: opts
     });
   }
 }

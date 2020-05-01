@@ -31,6 +31,16 @@
             @blur="onPrometheusSave"
           />
         </b-form-group>
+        <b-form-group
+          label="Prometheus installation method."
+          description="What query format is used to fetch metrics from Prometheus"
+        >
+          <b-form-select
+            v-model="prometheusProvider"
+            :options="prometheusProviders"
+            @change="onPrometheusProviderSave"
+          />
+        </b-form-group>
       </div>
     </div>
     <div class="col-12">
@@ -57,6 +67,8 @@
 
 <script>
 import { lstatSync } from "fs"
+import { prometheusProviders } from '../../../../common/prometheus-providers';
+
 export default {
   name: 'ClusterSettingsPreferences',
   props: {
@@ -70,18 +82,31 @@ export default {
       errors: {
         terminalcwd: null
       },
-      prometheusPath: ""
+      prometheusPath: "",
+      prometheusProvider: "",
+      prometheusProviders: [],
     }
   },
-  mounted: function() {
-    if (this.cluster.preferences.prometheus) {
-      const prom = this.cluster.preferences.prometheus;
-      this.prometheusPath = `${prom.namespace}/${prom.service}:${prom.port}`
-    }
-  },
-  computed: {
+  mounted: async function() {
+    this.prometheusProviders = prometheusProviders.map((provider) => {
+      return { text: provider.name, value: provider.id }
+    })
+    this.updateValues()
   },
   methods: {
+    updateValues: function(){
+      if (this.cluster.preferences.prometheus) {
+        const prom = this.cluster.preferences.prometheus;
+        this.prometheusPath = `${prom.namespace}/${prom.service}:${prom.port}`
+      } else {
+        this.prometheusPath = ""
+      }
+      if (this.cluster.preferences.prometheusProvider) {
+        this.prometheusProvider = this.cluster.preferences.prometheusProvider.type
+      } else {
+        this.prometheusProvider = "lens"
+      }
+    },
     parsePrometheusPath: function(path) {
       let parsed = path.split(/\/|:/)
       return {
@@ -121,10 +146,22 @@ export default {
       }
       this.$store.dispatch("storeCluster", this.cluster);
     },
+    onPrometheusProviderSave: function() {
+      if (this.prometheusProvider === "") {
+        this.cluster.preferences.prometheusProvider = null;
+      } else {
+        this.cluster.preferences.prometheusProvider = { type: this.prometheusProvider }
+      }
+      this.$store.dispatch("storeCluster", this.cluster);
+    },
     onTerminalCwdSave: function() {
       if(this.cluster.preferences.terminalCWD === "") this.cluster.preferences.terminalCWD = null
       this.$store.dispatch("storeCluster", this.cluster);
-    }
+    },
+
+  },
+  watch: {
+    "cluster": "updateValues",
   }
 }
 </script>
