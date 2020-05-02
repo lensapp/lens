@@ -9,7 +9,7 @@ function checkPort(port: number) {
     server
       .on('error', error => reject(error))
       .on('listening', () => server.close(() => resolve(port)))
-      .listen({host: "127.0.0.1", port: port}))
+      .listen({host: "0.0.0.0", port: port}))
 }
 
 export async function getFreePort(firstPort: number, lastPort: number): Promise<number> {
