@@ -98,7 +98,7 @@ export default {
     toggleLens: function() {
       if (!this.lens) { return }
       if (this.accessible) {
-        this.activateLens();
+        setTimeout(this.activateLens, 0); // see: https://github.com/electron/electron/issues/10016
       } else {
         this.hideLens();
       }
@@ -112,10 +112,8 @@ export default {
         webview.src = this.cluster.url;
         this.lens.webview = webview;
       }
-      setTimeout(() => { // see: https://github.com/electron/electron/issues/10016
-        this.$store.dispatch("attachWebview", this.lens);
-        this.$tracker.event("cluster", "open");
-      }, 0)
+      this.$store.dispatch("attachWebview", this.lens);
+      this.$tracker.event("cluster", "open");
     },
     hideLens: function() {
       this.$store.dispatch("hideWebviews");
