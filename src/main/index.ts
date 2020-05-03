@@ -48,7 +48,7 @@ async function main() {
   let port: number = null
   // find free port
   try {
-    port = await getFreePort(49152, 65535)
+    port = await getFreePort()
   } catch (error) {
     logger.error(error)
     await dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy")
