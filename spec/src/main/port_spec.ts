@@ -15,14 +15,18 @@ class MockServer extends EventEmitter {
   })
 }
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const net = require("net")
-jest.mock("net")
+const http = require("http")
+jest.mock("http")
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const request = require("request-promise-native")
+jest.mock("request-promise-native")
 
 import * as port from "../../../src/main/port"
 
 describe("getFreePort", () => {
   beforeEach(() => {
-    net.createServer.mockReturnValue(new MockServer)
+    http.createServer.mockReturnValue(new MockServer)
   })
 
   afterEach(() => {
@@ -34,6 +38,20 @@ describe("getFreePort", () => {
   })
 
   it("finds the next free port", async () => {
+    request.mockReturnValue(new Promise((resolve, reject) => {
+      resolve({
+        body: "lens-port-checker"
+      })
+    }))
     return expect(port.getFreePort(9000, 9005)).resolves.toBe(9003)
+  })
+
+  it("fails with invalid response", async () => {
+    request.mockReturnValue(new Promise((resolve, reject) => {
+      resolve({
+        body: "wrong"
+      })
+    }))
+    return expect(port.getFreePort(9000, 9005)).rejects.toMatch('free port')
   })
 })
