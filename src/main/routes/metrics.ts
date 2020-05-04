@@ -2,6 +2,7 @@ import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import * as requestPromise from "request-promise-native"
 import { PrometheusProviderRegistry, PrometheusProvider, PrometheusNodeQuery, PrometheusClusterQuery, PrometheusPodQuery, PrometheusPvcQuery, PrometheusIngressQuery, PrometheusQueryOpts} from "../prometheus/provider-registry"
+import logger from "../logger"
 
 type MetricsQuery = string | string[] | {
   [metricName: string]: string;
@@ -13,7 +14,8 @@ class MetricsRoute extends LensApi {
     const { response, cluster} = request
     const query: MetricsQuery = request.payload;
     const serverUrl = `http://127.0.0.1:${cluster.port}/api-kube`
-    const metricsUrl = `${serverUrl}/api/v1/namespaces/${cluster.contextHandler.getPrometheusPath()}/proxy/api/v1/query_range`
+    const metricsUrl = `${serverUrl}/api/v1/namespaces/${cluster.contextHandler.getPrometheusPath()}/proxy${cluster.getPrometheusApiPrefix()}/api/v1/query_range`
+    logger.info(metricsUrl)
     const headers = {
       "Host": `${cluster.id}.localhost:${cluster.port}`,
       "Content-type": "application/json",
