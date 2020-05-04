@@ -170,7 +170,12 @@ export class HelmRelease implements ItemObject {
   }
 
   getVersion() {
-    return this.chart.match(/(\d+)[^-]*$/)[0];
+    const versions = this.chart.match(/(\d+)[^-]*$/)
+    if (versions) {
+      return versions[0]
+    } else {
+      return ""
+    }
   }
 
   getUpdated(humanize = true, compact = true) {
