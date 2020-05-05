@@ -86,6 +86,9 @@ export class EndpointSubset implements IEndpointSubset {
       return ""
     }
     return this.addresses.map(address => {
+      if (!this.ports) {
+        return address.ip
+      }
       return this.ports.map(port => {
         return `${address.ip}:${port.port}`
       }).join(", ")
