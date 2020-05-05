@@ -2,13 +2,10 @@ import { EventEmitter } from 'events'
 
 class MockServer extends EventEmitter {
   listen = jest.fn((obj) => {
-    if(obj.port < 9003) {
-      this.emit('error', new Error("fail!"))
-    } else {
-      this.emit('listening', {})
-    }
+    this.emit('listening', {})
     return this
   })
+  address = () => { return { port: 12345 }}
   unref = jest.fn()
   close = jest.fn((cb) => {
     cb()
@@ -29,11 +26,7 @@ describe("getFreePort", () => {
     jest.clearAllMocks()
   })
 
-  it("fails for an invalid range", async () => {
-    return expect(port.getFreePort(1, 2)).rejects.toMatch('free port')
-  })
-
   it("finds the next free port", async () => {
-    return expect(port.getFreePort(9000, 9005)).resolves.toBe(9003)
+    return expect(port.getFreePort()).resolves.toEqual(expect.any(Number))
   })
 })

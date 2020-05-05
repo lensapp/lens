@@ -1,27 +1,30 @@
 import logger from "./logger"
 import { createServer } from "net"
+import { AddressInfo } from "net"
 
-// Adapted from https://gist.github.com/mikeal/1840641#gistcomment-2896667
-function checkPort(port: number) {
+const getNextAvailablePort = () => {
+  logger.debug("getNextAvailablePort() start")
   const server = createServer()
   server.unref()
-  return new Promise((resolve, reject) =>
+  return new Promise<number>((resolve, reject) =>
     server
-      .on('error', error => reject(error))
-      .on('listening', () => server.close(() => resolve(port)))
-      .listen({host: "127.0.0.1", port: port}))
+      .on('error', (error: any) => reject(error))
+      .on('listening', () => {
+        logger.debug("*** server listening event ***")
+        const _port = (server.address() as AddressInfo).port
+        server.close(() => resolve(_port))
+      })
+      .listen({host: "127.0.0.1", port: 0}))
 }
 
-export async function getFreePort(firstPort: number, lastPort: number): Promise<number> {
-  let port = firstPort
-
-  while(true) {
-    try {
-      logger.debug("Checking port " + port + " availability ...")
-      await checkPort(port)
-      return(port)
-    } catch(error) {
-      if(++port > lastPort) throw("Could not find a free port")
-    }
+export const getFreePort = async () => {
+  logger.debug("getFreePort() start")
+  let freePort: number = null
+  try {
+    freePort = await getNextAvailablePort()
+    logger.debug("got port : " + freePort)
+  } catch(error) {
+    throw("getNextAvailablePort() threw: '" + error + "'")
   }
+  return freePort
 }

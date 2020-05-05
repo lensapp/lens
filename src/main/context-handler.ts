@@ -135,7 +135,7 @@ export class ContextHandler {
 
     let serverPort: number = null
     try {
-      serverPort = await getFreePort(49901, 65535)
+      serverPort = await getFreePort()
     } catch(error) {
       logger.error(error)
       throw(error)
