@@ -84,7 +84,6 @@ export default {
       },
       prometheusPath: "",
       prometheusProvider: "",
-      prometheusProviders: [],
     }
   },
   mounted: async function() {
@@ -108,12 +107,13 @@ export default {
       }
     },
     parsePrometheusPath: function(path) {
-      let parsed = path.split(/\/|:/)
+      const parsed = path.split(/\/|:/, 3)
+      const apiPrefix = path.substring(parsed.join("/").length)
       return {
         namespace: parsed[0],
         service: parsed[1],
         port: parsed[2],
-        prefix: parsed[3] ? `/${parsed[3]}` : ''
+        prefix: apiPrefix
       }
     },
     expandPath: function(value, event) {
