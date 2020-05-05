@@ -95,7 +95,6 @@ export class Cluster implements ClusterInfo {
     this.contextName = kc.currentContext
     this.url = this.contextHandler.url
     this.apiUrl = kc.getCurrentCluster().server
-    await this.contextHandler.init()
   }
 
   public stopServer() {
@@ -120,7 +119,7 @@ export class Cluster implements ClusterInfo {
 
   public async refreshCluster() {
     clusterStore.reloadCluster(this)
-    this.contextHandler.setClusterPreferences(this.preferences)
+    await this.contextHandler.setClusterPreferences(this.preferences)
 
     const connectionStatus = await this.getConnectionStatus()
     if (connectionStatus == ClusterStatus.AccessGranted) {

@@ -1,11 +1,33 @@
-import { PrometheusProvider, PrometheusQueryOpts, PrometheusClusterQuery, PrometheusNodeQuery, PrometheusPodQuery, PrometheusPvcQuery, PrometheusIngressQuery } from "./provider-registry";
+import { PrometheusProvider, PrometheusQueryOpts, PrometheusQuery, PrometheusService } from "./provider-registry";
+import { CoreV1Api } from "@kubernetes/client-node";
+import logger from "../logger";
 
 export class PrometheusOperator implements PrometheusProvider {
   rateAccuracy = "1m"
   id = "operator"
   name = "Prometheus Operator"
 
-  public getQueries(opts: PrometheusQueryOpts): PrometheusNodeQuery | PrometheusClusterQuery | PrometheusPodQuery | PrometheusPvcQuery | PrometheusIngressQuery {
+  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
+    const labelSelector = "operated-prometheus==true"
+    try {
+      const serviceList = await client.listServiceForAllNamespaces(false, "", null, labelSelector)
+      const service = serviceList.body.items[0]
+      if (!service) return
+
+      return {
+        id: this.id,
+        namespace: service.metadata.namespace,
+        service: service.metadata.name,
+        port: service.spec.ports[0].port
+      }
+    } catch(error) {
+      console.error(error)
+      logger.warn(`failed to list services: ${error.toString()}`)
+      return
+    }
+  }
+
+  public getQueries(opts: PrometheusQueryOpts): PrometheusQuery {
     switch(opts.category) {
     case 'cluster':
       return {
