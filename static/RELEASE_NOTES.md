@@ -2,7 +2,17 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.4.0-beta.2 (current version)
+## 3.4.0-rc.1 (current version)
+
+- Auto-detect Prometheus installation
+- Allow to select Prometheus query style
+- Fix port availability test
+- Fix EndpointSubset.toString() to work without ports
+- Return empty string if Helm release version is not detected
+- Delay webview create on cluster page
+- Fix no-drag css
+
+## 3.4.0-beta.2
 
 - Improve dashboard reload
 - Fix node shell session regression
