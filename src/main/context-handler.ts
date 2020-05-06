@@ -9,6 +9,7 @@ import { KubeAuthProxy } from "./kube-auth-proxy"
 import { Cluster, ClusterPreferences } from "./cluster"
 import { prometheusProviders } from "../common/prometheus-providers"
 import { PrometheusService, PrometheusProvider } from "./prometheus/provider-registry"
+import { PrometheusLens } from "./prometheus/lens"
 
 export class ContextHandler {
   public contextName: string
@@ -30,6 +31,7 @@ export class ContextHandler {
   protected defaultNamespace: string
   protected proxyPort: number
   protected kubernetesApi: string
+  protected prometheusProvider: string
   protected prometheusPath: string
   protected clusterName: string
 
@@ -69,12 +71,13 @@ export class ContextHandler {
   }
 
   public async setClusterPreferences(clusterPreferences?: ClusterPreferences) {
+    this.prometheusProvider = clusterPreferences.prometheusProvider?.type
+
     if (clusterPreferences && clusterPreferences.prometheus) {
       const prom = clusterPreferences.prometheus
       this.prometheusPath = `${prom.namespace}/services/${prom.service}:${prom.port}`
     } else {
-      const path = await this.resolvePrometheusPath(clusterPreferences.prometheusProvider?.type)
-      this.prometheusPath = path ? path : "lens-metrics/services/prometheus:80"
+      this.prometheusPath = null
     }
     if(clusterPreferences && clusterPreferences.clusterName) {
       this.clusterName = clusterPreferences.clusterName;
@@ -84,20 +87,25 @@ export class ContextHandler {
   }
 
   protected async resolvePrometheusPath(providerId: string): Promise<string> {
-    const apiClient = this.kc.makeApiClient(CoreV1Api)
     const providers = providerId ? prometheusProviders.filter((p, _) => p.id == providerId) : prometheusProviders
     const prometheusPromises: Promise<PrometheusService>[] = providers.map(async (provider: PrometheusProvider): Promise<PrometheusService> => {
+      const apiClient = this.kc.makeApiClient(CoreV1Api)
       return await provider.getPrometheusService(apiClient)
     })
     const resolvedPrometheusServices = await Promise.all(prometheusPromises)
     const service = resolvedPrometheusServices.filter(n => n)[0]
-    console.log(service)
     if (service) {
       return `${service.namespace}/services/${service.service}:${service.port}`
+    } else {
+      return "lens-metrics/services/prometheus:80"
     }
   }
 
-  public getPrometheusPath() {
+  public async getPrometheusPath(): Promise<string> {
+    if (this.prometheusPath) return this.prometheusPath
+
+    this.prometheusPath = await this.resolvePrometheusPath(this.prometheusProvider)
+
     return this.prometheusPath
   }
 

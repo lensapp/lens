@@ -8,9 +8,9 @@ export class PrometheusOperator implements PrometheusProvider {
   name = "Prometheus Operator"
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
-    const labelSelector = "operated-prometheus==true"
+    const labelSelector = "operated-prometheus=true"
     try {
-      const serviceList = await client.listServiceForAllNamespaces(false, "", null, labelSelector)
+      const serviceList = await client.listServiceForAllNamespaces(null, null, null, labelSelector)
       const service = serviceList.body.items[0]
       if (!service) return
 

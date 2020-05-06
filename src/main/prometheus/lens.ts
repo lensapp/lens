@@ -1,5 +1,6 @@
 import { PrometheusProvider, PrometheusQueryOpts, PrometheusQuery, PrometheusService } from "./provider-registry";
 import { CoreV1Api } from "@kubernetes/client-node";
+import logger from "../logger"
 
 export class PrometheusLens implements PrometheusProvider {
   id = "lens"
@@ -7,11 +8,17 @@ export class PrometheusLens implements PrometheusProvider {
   rateAccuracy = "1m"
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
-    return {
-      id: this.id,
-      namespace: "lens-metrics",
-      service: "prometheus",
-      port: 80
+    try {
+      const resp = await client.readNamespacedService("prometheus", "lens-metrics")
+      const service = resp.body
+      return {
+        id: this.id,
+        namespace: service.metadata.namespace,
+        service: service.metadata.name,
+        port: service.spec.ports[0].port
+      }
+    } catch(error) {
+      logger.warn(`failed to list services: ${error.toString()}`)
     }
   }
 

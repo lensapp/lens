@@ -119,7 +119,7 @@ export class Cluster implements ClusterInfo {
 
   public async refreshCluster() {
     clusterStore.reloadCluster(this)
-    await this.contextHandler.setClusterPreferences(this.preferences)
+    this.contextHandler.setClusterPreferences(this.preferences)
 
     const connectionStatus = await this.getConnectionStatus()
     if (connectionStatus == ClusterStatus.AccessGranted) {

@@ -13,7 +13,8 @@ class MetricsRoute extends LensApi {
     const { response, cluster} = request
     const query: MetricsQuery = request.payload;
     const serverUrl = `http://127.0.0.1:${cluster.port}/api-kube`
-    const metricsUrl = `${serverUrl}/api/v1/namespaces/${cluster.contextHandler.getPrometheusPath()}/proxy/api/v1/query_range`
+    const prometheusPath = await cluster.contextHandler.getPrometheusPath()
+    const metricsUrl = `${serverUrl}/api/v1/namespaces/${prometheusPath}/proxy/api/v1/query_range`
     const headers = {
       "Host": `${cluster.id}.localhost:${cluster.port}`,
       "Content-type": "application/json",
