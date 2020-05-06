@@ -25,7 +25,6 @@ export class PrometheusOperator implements PrometheusProvider {
         port: service.spec.ports[0].port
       }
     } catch(error) {
-      console.error(error)
       logger.warn(`PrometheusOperator: failed to list services: ${error.toString()}`)
       return
     }
