@@ -5,7 +5,7 @@ import logger from "../logger"
 
 export class PrometheusHelm extends PrometheusLens {
   id = "helm"
-  name = "helm"
+  name = "Helm"
   rateAccuracy = "5m"
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
@@ -22,7 +22,7 @@ export class PrometheusHelm extends PrometheusLens {
         port: service.spec.ports[0].port
       }
     } catch(error) {
-      logger.warn(`failed to list services: ${error.toString()}`)
+      logger.warn(`PrometheusHelm: failed to list services: ${error.toString()}`)
       return
     }
   }

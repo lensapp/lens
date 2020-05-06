@@ -1,5 +1,5 @@
 import { PrometheusProvider, PrometheusQueryOpts, PrometheusQuery, PrometheusService } from "./provider-registry";
-import { CoreV1Api } from "@kubernetes/client-node";
+import { CoreV1Api, V1Service } from "@kubernetes/client-node";
 import logger from "../logger";
 
 export class PrometheusOperator implements PrometheusProvider {
@@ -8,10 +8,14 @@ export class PrometheusOperator implements PrometheusProvider {
   name = "Prometheus Operator"
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
-    const labelSelector = "operated-prometheus=true"
     try {
-      const serviceList = await client.listServiceForAllNamespaces(null, null, null, labelSelector)
-      const service = serviceList.body.items[0]
+      let service: V1Service
+      for (const labelSelector of ["operated-prometheus=true", "self-monitor=true"]) {
+        if (!service) {
+          const serviceList = await client.listServiceForAllNamespaces(null, null, null, labelSelector)
+          service = serviceList.body.items[0]
+        }
+      }
       if (!service) return
 
       return {
@@ -22,7 +26,7 @@ export class PrometheusOperator implements PrometheusProvider {
       }
     } catch(error) {
       console.error(error)
-      logger.warn(`failed to list services: ${error.toString()}`)
+      logger.warn(`PrometheusOperator: failed to list services: ${error.toString()}`)
       return
     }
   }

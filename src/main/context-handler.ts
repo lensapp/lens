@@ -70,7 +70,7 @@ export class ContextHandler {
     this.setClusterPreferences(cluster.preferences)
   }
 
-  public async setClusterPreferences(clusterPreferences?: ClusterPreferences) {
+  public setClusterPreferences(clusterPreferences?: ClusterPreferences) {
     this.prometheusProvider = clusterPreferences.prometheusProvider?.type
 
     if (clusterPreferences && clusterPreferences.prometheus) {
@@ -86,8 +86,22 @@ export class ContextHandler {
     }
   }
 
-  protected async resolvePrometheusPath(providerId: string): Promise<string> {
-    const providers = providerId ? prometheusProviders.filter((p, _) => p.id == providerId) : prometheusProviders
+  protected async resolvePrometheusPath(): Promise<string> {
+    const service = await this.getPrometheusService()
+    return `${service.namespace}/services/${service.service}:${service.port}`
+  }
+
+  public async getPrometheusProvider() {
+    if (!this.prometheusProvider) {
+      const service = await this.getPrometheusService()
+      logger.info(`using ${service.id} as prometheus provider`)
+      this.prometheusProvider = service.id
+    }
+    return prometheusProviders.find(p => p.id === this.prometheusProvider)
+  }
+
+  public async getPrometheusService(): Promise<PrometheusService> {
+    const providers = this.prometheusProvider ? prometheusProviders.filter((p, _) => p.id == this.prometheusProvider) : prometheusProviders
     const prometheusPromises: Promise<PrometheusService>[] = providers.map(async (provider: PrometheusProvider): Promise<PrometheusService> => {
       const apiClient = this.kc.makeApiClient(CoreV1Api)
       return await provider.getPrometheusService(apiClient)
@@ -95,16 +109,21 @@ export class ContextHandler {
     const resolvedPrometheusServices = await Promise.all(prometheusPromises)
     const service = resolvedPrometheusServices.filter(n => n)[0]
     if (service) {
-      return `${service.namespace}/services/${service.service}:${service.port}`
+      return service
     } else {
-      return "lens-metrics/services/prometheus:80"
+      return {
+        id: "lens",
+        namespace: "lens-metrics",
+        service: "prometheus",
+        port: 80
+      }
     }
   }
 
   public async getPrometheusPath(): Promise<string> {
     if (this.prometheusPath) return this.prometheusPath
 
-    this.prometheusPath = await this.resolvePrometheusPath(this.prometheusProvider)
+    this.prometheusPath = await this.resolvePrometheusPath()
 
     return this.prometheusPath
   }

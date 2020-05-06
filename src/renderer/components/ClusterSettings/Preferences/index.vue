@@ -33,12 +33,12 @@
         </b-form-group>
         <b-form-group
           label="Prometheus service address."
-          description="A path to an existing Prometheus installation (<namespace>/<service>:<port>)."
+          description="An address to an existing Prometheus installation (<namespace>/<service>:<port>). Lens tries to auto-detect address if left empty."
           v-if="canEditPrometheusPath"
         >
           <b-form-input
             v-model="prometheusPath"
-            placeholder="lens-metrics/prometheus:80"
+            placeholder="<namespace>/<service>:<port>"
             id="input-prometheuspath"
             @blur="onPrometheusSave"
           />
