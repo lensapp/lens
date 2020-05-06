@@ -111,7 +111,7 @@ export default {
     updateValues: function(){
       if (this.cluster.preferences.prometheus) {
         const prom = this.cluster.preferences.prometheus;
-        this.prometheusPath = `${prom.namespace}/${prom.service}:${prom.port}`
+        this.prometheusPath = `${prom.namespace}/${prom.service}:${prom.port}${prom.prefix}`
       } else {
         this.prometheusPath = ""
       }
@@ -122,11 +122,13 @@ export default {
       }
     },
     parsePrometheusPath: function(path) {
-      let parsed = path.split(/\/|:/)
+      const parsed = path.split(/\/|:/, 3)
+      const apiPrefix = path.substring(parsed.join("/").length)
       return {
         namespace: parsed[0],
         service: parsed[1],
-        port: parsed[2]
+        port: parsed[2],
+        prefix: apiPrefix
       }
     },
     expandPath: function(value, event) {

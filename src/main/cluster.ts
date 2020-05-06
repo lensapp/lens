@@ -46,6 +46,7 @@ export type ClusterPreferences = {
     namespace: string;
     service: string;
     port: number;
+    prefix: string;
   };
   prometheusProvider?: {
     type: string;
@@ -151,6 +152,13 @@ export class Cluster implements ClusterInfo {
 
     this.kubeConfig = kubeconfig
     this.save()
+  }
+
+  public getPrometheusApiPrefix() {
+    if (!this.preferences.prometheus?.prefix) {
+      return ""
+    }
+    return this.preferences.prometheus.prefix
   }
 
   public save() {
