@@ -1,3 +1,5 @@
+import { CoreV1Api } from "@kubernetes/client-node"
+
 export type PrometheusClusterQuery = {
   memoryUsage: string;
   memoryRequests: string;
@@ -48,8 +50,20 @@ export type PrometheusQueryOpts = {
   [key: string]: string | any;
 };
 
+export type PrometheusQuery = PrometheusNodeQuery | PrometheusClusterQuery | PrometheusPodQuery | PrometheusPvcQuery | PrometheusIngressQuery
+
+export type PrometheusService = {
+  id: string;
+  namespace: string;
+  service: string;
+  port: number;
+}
+
 export interface PrometheusProvider {
-  getQueries(opts: PrometheusQueryOpts): PrometheusNodeQuery | PrometheusClusterQuery | PrometheusPodQuery | PrometheusPvcQuery | PrometheusIngressQuery;
+  id: string;
+  name: string;
+  getQueries(opts: PrometheusQueryOpts): PrometheusQuery;
+  getPrometheusService(client: CoreV1Api): Promise<PrometheusService>;
 }
 
 export type PrometheusProviderList = {

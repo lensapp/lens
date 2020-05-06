@@ -1,11 +1,28 @@
-import { PrometheusProvider, PrometheusQueryOpts, PrometheusClusterQuery, PrometheusNodeQuery, PrometheusPodQuery, PrometheusPvcQuery, PrometheusIngressQuery } from "./provider-registry";
+import { PrometheusProvider, PrometheusQueryOpts, PrometheusQuery, PrometheusService } from "./provider-registry";
+import { CoreV1Api } from "@kubernetes/client-node";
+import logger from "../logger"
 
 export class PrometheusLens implements PrometheusProvider {
   id = "lens"
   name = "Lens"
   rateAccuracy = "1m"
 
-  public getQueries(opts: PrometheusQueryOpts): PrometheusNodeQuery | PrometheusClusterQuery | PrometheusPodQuery | PrometheusPvcQuery | PrometheusIngressQuery {
+  public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
+    try {
+      const resp = await client.readNamespacedService("prometheus", "lens-metrics")
+      const service = resp.body
+      return {
+        id: this.id,
+        namespace: service.metadata.namespace,
+        service: service.metadata.name,
+        port: service.spec.ports[0].port
+      }
+    } catch(error) {
+      logger.warn(`PrometheusLens: failed to list services: ${error.toString()}`)
+    }
+  }
+
+  public getQueries(opts: PrometheusQueryOpts): PrometheusQuery {
     switch(opts.category) {
     case 'cluster':
       return {
