@@ -95,7 +95,6 @@ export class Cluster implements ClusterInfo {
     this.contextName = kc.currentContext
     this.url = this.contextHandler.url
     this.apiUrl = kc.getCurrentCluster().server
-    await this.contextHandler.init()
   }
 
   public stopServer() {

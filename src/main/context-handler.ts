@@ -1,4 +1,4 @@
-import { KubeConfig } from "@kubernetes/client-node"
+import { KubeConfig, CoreV1Api } from "@kubernetes/client-node"
 import { readFileSync } from "fs"
 import * as http from "http"
 import { ServerOptions } from "http-proxy"
@@ -7,6 +7,9 @@ import logger from "./logger"
 import { getFreePort } from "./port"
 import { KubeAuthProxy } from "./kube-auth-proxy"
 import { Cluster, ClusterPreferences } from "./cluster"
+import { prometheusProviders } from "../common/prometheus-providers"
+import { PrometheusService, PrometheusProvider } from "./prometheus/provider-registry"
+import { PrometheusLens } from "./prometheus/lens"
 
 export class ContextHandler {
   public contextName: string
@@ -28,6 +31,7 @@ export class ContextHandler {
   protected defaultNamespace: string
   protected proxyPort: number
   protected kubernetesApi: string
+  protected prometheusProvider: string
   protected prometheusPath: string
   protected clusterName: string
 
@@ -56,7 +60,6 @@ export class ContextHandler {
     this.defaultNamespace = kc.getContextObject(kc.currentContext).namespace
     this.url = `http://${this.id}.localhost:${cluster.port}/`
     this.kubernetesApi = `http://127.0.0.1:${cluster.port}/${this.id}`
-    this.setClusterPreferences(cluster.preferences)
     this.kc.clusters = [
       {
         name: kc.getCurrentCluster().name,
@@ -64,14 +67,17 @@ export class ContextHandler {
         skipTLSVerify: true
       }
     ]
+    this.setClusterPreferences(cluster.preferences)
   }
 
   public setClusterPreferences(clusterPreferences?: ClusterPreferences) {
+    this.prometheusProvider = clusterPreferences.prometheusProvider?.type
+
     if (clusterPreferences && clusterPreferences.prometheus) {
       const prom = clusterPreferences.prometheus
       this.prometheusPath = `${prom.namespace}/services/${prom.service}:${prom.port}`
     } else {
-      this.prometheusPath = "lens-metrics/services/prometheus:80"
+      this.prometheusPath = null
     }
     if(clusterPreferences && clusterPreferences.clusterName) {
       this.clusterName = clusterPreferences.clusterName;
@@ -80,26 +86,46 @@ export class ContextHandler {
     }
   }
 
-  public getPrometheusPath() {
-    return this.prometheusPath
+  protected async resolvePrometheusPath(): Promise<string> {
+    const service = await this.getPrometheusService()
+    return `${service.namespace}/services/${service.service}:${service.port}`
   }
 
-  public async init() {
-    const currentCluster = this.kc.getCurrentCluster()
-    if (currentCluster.caFile) {
-      this.certData = readFileSync(currentCluster.caFile).toString()
-    } else if (currentCluster.caData) {
-      this.certData = Buffer.from(currentCluster.caData, "base64").toString("ascii")
+  public async getPrometheusProvider() {
+    if (!this.prometheusProvider) {
+      const service = await this.getPrometheusService()
+      logger.info(`using ${service.id} as prometheus provider`)
+      this.prometheusProvider = service.id
     }
-    const user = this.kc.getCurrentUser()
-    if (user.authProvider && user.authProvider.name === "oidc") {
-      const authConfig = user.authProvider.config
-      if (authConfig["idp-certificate-authority"]) {
-        this.authCertData = readFileSync(authConfig["idp-certificate-authority"]).toString()
-      } else if (authConfig["idp-certificate-authority-data"]) {
-        this.authCertData = Buffer.from(authConfig["idp-certificate-authority-data"], "base64").toString("ascii")
+    return prometheusProviders.find(p => p.id === this.prometheusProvider)
+  }
+
+  public async getPrometheusService(): Promise<PrometheusService> {
+    const providers = this.prometheusProvider ? prometheusProviders.filter((p, _) => p.id == this.prometheusProvider) : prometheusProviders
+    const prometheusPromises: Promise<PrometheusService>[] = providers.map(async (provider: PrometheusProvider): Promise<PrometheusService> => {
+      const apiClient = this.kc.makeApiClient(CoreV1Api)
+      return await provider.getPrometheusService(apiClient)
+    })
+    const resolvedPrometheusServices = await Promise.all(prometheusPromises)
+    const service = resolvedPrometheusServices.filter(n => n)[0]
+    if (service) {
+      return service
+    } else {
+      return {
+        id: "lens",
+        namespace: "lens-metrics",
+        service: "prometheus",
+        port: 80
       }
     }
+  }
+
+  public async getPrometheusPath(): Promise<string> {
+    if (this.prometheusPath) return this.prometheusPath
+
+    this.prometheusPath = await this.resolvePrometheusPath()
+
+    return this.prometheusPath
   }
 
   public async getApiTarget(isWatchRequest = false) {

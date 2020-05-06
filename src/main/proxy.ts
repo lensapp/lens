@@ -83,8 +83,6 @@ export class LensProxy {
             }, (250 * retryCount))
           }
         }
-
-        //return
       }
       res.writeHead(500, {
         'Content-Type': 'text/plain'

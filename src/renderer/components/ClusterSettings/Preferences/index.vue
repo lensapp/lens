@@ -20,17 +20,7 @@
       <div class="cluster-settings-section">
         <b>Prometheus</b>
         <p>Use pre-installed Prometheus service for metrics. Please refer to the <a href="https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md">guide</a> for possible configuration changes.</p>
-        <b-form-group
-          label="Prometheus service address."
-          description="A path to an existing Prometheus installation (<namespace>/<service>:<port>)."
-        >
-          <b-form-input
-            v-model="prometheusPath"
-            placeholder="lens-metrics/prometheus:80"
-            id="input-prometheuspath"
-            @blur="onPrometheusSave"
-          />
-        </b-form-group>
+
         <b-form-group
           label="Prometheus installation method."
           description="What query format is used to fetch metrics from Prometheus"
@@ -39,6 +29,18 @@
             v-model="prometheusProvider"
             :options="prometheusProviders"
             @change="onPrometheusProviderSave"
+          />
+        </b-form-group>
+        <b-form-group
+          label="Prometheus service address."
+          description="An address to an existing Prometheus installation (<namespace>/<service>:<port>). Lens tries to auto-detect address if left empty."
+          v-if="canEditPrometheusPath"
+        >
+          <b-form-input
+            v-model="prometheusPath"
+            placeholder="<namespace>/<service>:<port>"
+            id="input-prometheuspath"
+            @blur="onPrometheusSave"
           />
         </b-form-group>
       </div>
@@ -84,13 +86,25 @@ export default {
       },
       prometheusPath: "",
       prometheusProvider: "",
-      prometheusProviders: [],
+    }
+  },
+  computed: {
+    prometheusProviders: function() {
+      const providers = prometheusProviders.map((provider) => {
+        return { text: provider.name, value: provider.id }
+      })
+      providers.unshift({text: "Auto detect", value: ""})
+
+      return providers;
+    },
+    canEditPrometheusPath: function() {
+      if (this.prometheusProvider === "") return false
+      if (this.prometheusProvider === "lens") return false
+
+      return true
     }
   },
   mounted: async function() {
-    this.prometheusProviders = prometheusProviders.map((provider) => {
-      return { text: provider.name, value: provider.id }
-    })
     this.updateValues()
   },
   methods: {
@@ -104,7 +118,7 @@ export default {
       if (this.cluster.preferences.prometheusProvider) {
         this.prometheusProvider = this.cluster.preferences.prometheusProvider.type
       } else {
-        this.prometheusProvider = "lens"
+        this.prometheusProvider = ""
       }
     },
     parsePrometheusPath: function(path) {
