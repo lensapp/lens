@@ -171,6 +171,9 @@ export class Pod extends WorkloadKubeObject {
         medium?: string;
         sizeLimit?: string;
       };
+      configMap: {
+        name: string;
+      }
       secret: {
         secretName: string;
         defaultMode: number;
