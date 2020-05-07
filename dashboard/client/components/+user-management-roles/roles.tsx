@@ -39,9 +39,6 @@ export class Roles extends React.Component<Props> {
           searchFilters={[
             (role: Role) => role.getSearchFields(),
           ]}
-          filterItems={[
-            (items: Role[]) => items.filter(KubeObject.isNonSystem),
-          ]}
           renderHeaderTitle={<Trans>Roles</Trans>}
           customizeHeader={({ info }) => ({
             info: (
