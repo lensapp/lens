@@ -6,7 +6,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { autorun, observable, reaction, toJS } from "mobx";
 import { Trans } from "@lingui/macro";
-import { IPodMetrics, nodesApi, Pod, podsApi, pvcApi } from "../../api/endpoints";
+import { IPodMetrics, nodesApi, Pod, podsApi, pvcApi, configMapApi } from "../../api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { autobind, cssNames, interval } from "../../utils";
@@ -176,6 +176,7 @@ export class PodDetails extends React.Component<Props> {
             <DrawerTitle title={<Trans>Volumes</Trans>}/>
             {volumes.map(volume => {
               const claimName = volume.persistentVolumeClaim ? volume.persistentVolumeClaim.claimName : null;
+              const configMap = volume.configMap ? volume.configMap.name : null;
               const type = Object.keys(volume)[1]
 
               return (
@@ -187,6 +188,20 @@ export class PodDetails extends React.Component<Props> {
                   <DrawerItem name={<Trans>Type</Trans>}>
                     {type}
                   </DrawerItem>
+                  { type == "configMap" && (
+                    <div>
+                    {configMap && (
+                      <DrawerItem name={<Trans>Name</Trans>}>
+                        <Link
+                          to={getDetailsUrl(configMapApi.getUrl({
+                            name: configMap,
+                            namespace: pod.getNs(),
+                          }))}>{configMap}
+                        </Link>
+                      </DrawerItem>
+                    )}
+                    </div>
+                  )}
                   { type === "emptyDir" && (
                     <div>
                       { volume.emptyDir.medium && (
