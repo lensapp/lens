@@ -41,6 +41,7 @@
             placeholder="<namespace>/<service>:<port>"
             id="input-prometheuspath"
             @blur="onPrometheusSave"
+            :state="errors.prometheusPath"
           />
         </b-form-group>
       </div>
@@ -82,6 +83,7 @@ export default {
   data(){
     return {
       errors: {
+        prometheusPath: null,
         terminalcwd: null
       },
       prometheusPath: "",
@@ -110,7 +112,8 @@ export default {
   methods: {
     updateValues: function(){
       if (this.cluster.preferences.prometheus) {
-        const prom = this.cluster.preferences.prometheus;
+        const prom = this.cluster.preferences.prometheus
+        if (!prom.prefix) prom.prefix = ""
         this.prometheusPath = `${prom.namespace}/${prom.service}:${prom.port}${prom.prefix}`
       } else {
         this.prometheusPath = ""
@@ -124,6 +127,11 @@ export default {
     parsePrometheusPath: function(path) {
       const parsed = path.split(/\/|:/, 3)
       const apiPrefix = path.substring(parsed.join("/").length)
+      if (parsed[0] && parsed[1] && parsed[2]) {
+        this.errors.prometheusPath = true;
+      } else {
+        this.errors.prometheusPath = false;
+      }
       return {
         namespace: parsed[0],
         service: parsed[1],
@@ -165,6 +173,7 @@ export default {
     onPrometheusProviderSave: function() {
       if (this.prometheusProvider === "") {
         this.cluster.preferences.prometheusProvider = null;
+        this.cluster.preferences.prometheus = null;
       } else {
         this.cluster.preferences.prometheusProvider = { type: this.prometheusProvider }
       }
