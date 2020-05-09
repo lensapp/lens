@@ -57,18 +57,15 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
 
-  protected async loadItems(namespaces?: string[]): Promise<T[]> {
-    if (!configStore.isClusterAdmin && !this.api.isNamespaced) {
-      return []
-    }
-    if (!namespaces) {
+  protected async loadItems(allowedNamespaces?: string[]): Promise<T[]> {
+    if (!this.api.isNamespaced || !allowedNamespaces) {
       const { limit } = this;
       const query: IKubeApiQueryParams = limit ? { limit } : {};
       return this.api.list({}, query);
     }
     else {
       return Promise
-        .all(namespaces.map(namespace => this.api.list({ namespace })))
+        .all(allowedNamespaces.map(namespace => this.api.list({ namespace })))
         .then(items => items.flat())
     }
   }
@@ -155,7 +152,6 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   subscribe(apis = [this.api]) {
-    apis = apis.filter(api => !configStore.isClusterAdmin ? api.isNamespaced : true);
     return KubeApi.watchAll(...apis);
   }
 

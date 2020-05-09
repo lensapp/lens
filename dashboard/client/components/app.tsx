@@ -46,7 +46,7 @@ class App extends React.Component {
   };
 
   render() {
-    const homeUrl = configStore.isClusterAdmin ? clusterURL() : workloadsURL();
+    const homeUrl = clusterURL();
     return (
       <I18nProvider i18n={_i18n}>
         <Router history={browserHistory}>

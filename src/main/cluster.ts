@@ -3,7 +3,7 @@ import { FeatureStatusMap } from "./feature"
 import * as k8s from "./k8s"
 import { clusterStore } from "../common/cluster-store"
 import logger from "./logger"
-import { KubeConfig, CoreV1Api } from "@kubernetes/client-node"
+import { KubeConfig, CoreV1Api, AuthorizationV1Api, V1ResourceAttributes } from "@kubernetes/client-node"
 import * as fm from "./feature-manager";
 import { Kubectl } from "./kubectl";
 import { PromiseIpc } from "electron-promise-ipc"
@@ -137,9 +137,7 @@ export class Cluster implements ClusterInfo {
       this.distribution = this.detectKubernetesDistribution(this.version)
       this.features = await fm.getFeatures(this.contextHandler)
       this.isAdmin = await this.isClusterAdmin()
-      if (this.isAdmin) {
-        this.nodes = await this.getNodeCount()
-      }
+      this.nodes = await this.getNodeCount()
       this.kubeCtl = new Kubectl(this.version)
       this.kubeCtl.ensureKubectl()
     }
@@ -227,28 +225,27 @@ export class Cluster implements ClusterInfo {
     }
   }
 
-  protected async isClusterAdmin(): Promise<boolean> {
-    const requestOpts: request.RequestPromiseOptions = {
-      body: {
-        kind: "SelfSubjectAccessReview",
-        apiVersion: "authorization.k8s.io/v1",
-        spec: {
-          resourceAttributes: {
-            namespace: "kube-system",
-            resource: "*",
-            verb: "create",
-          }
-        }
-      },
-      method: "post"
-    }
+  public async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
+    const authApi = this.contextHandler.kc.makeApiClient(AuthorizationV1Api)
     try {
-      const response = await this.k8sRequest("/apis/authorization.k8s.io/v1/selfsubjectaccessreviews", requestOpts)
-      return response.status.allowed === true
+      const accessReview = await authApi.createSelfSubjectAccessReview({
+        apiVersion: "authorization.k8s.io/v1",
+        kind: "SelfSubjectAccessReview",
+        spec: { resourceAttributes }
+      })
+      return accessReview.body.status.allowed === true
     } catch(error) {
       logger.error(`failed to request selfSubjectAccessReview: ${error.message}`)
       return false
     }
+  }
+
+  protected async isClusterAdmin(): Promise<boolean> {
+    return this.canI({
+      namespace: "kube-system",
+      resource: "*",
+      verb: "create",
+    })
   }
 
   protected detectKubernetesDistribution(kubernetesVersion: string): string {

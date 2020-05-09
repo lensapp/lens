@@ -5,33 +5,19 @@ import { getAppVersion } from "../../common/app-utils"
 import { CoreV1Api, AuthorizationV1Api } from "@kubernetes/client-node"
 import { Cluster } from "../cluster"
 
-
-function selfSubjectAccessReview(authApi: AuthorizationV1Api, namespace: string) {
-  return authApi.createSelfSubjectAccessReview({
-    apiVersion: "authorization.k8s.io/v1",
-    kind: "SelfSubjectAccessReview",
-    spec: {
-      resourceAttributes: {
-        namespace: namespace,
-        resource: "pods",
-        verb: "list",
-      }
-    }
-  })
-}
-
 async function getAllowedNamespaces(cluster: Cluster) {
   const api = cluster.contextHandler.kc.makeApiClient(CoreV1Api)
-  const authApi = cluster.contextHandler.kc.makeApiClient(AuthorizationV1Api)
   try {
     const namespaceList = await api.listNamespace()
     const nsAccessStatuses = await Promise.all(
-      namespaceList.body.items.map(ns => {
-        return selfSubjectAccessReview(authApi, ns.metadata.name)
-      })
+      namespaceList.body.items.map(ns => cluster.canI({
+        namespace: ns.metadata.name,
+        resource: "pods",
+        verb: "list",
+      }))
     )
     return namespaceList.body.items
-      .filter((ns, i) => nsAccessStatuses[i].body.status.allowed)
+      .filter((ns, i) => nsAccessStatuses[i])
       .map(ns => ns.metadata.name)
   } catch(error) {
     const kc = cluster.contextHandler.kc
@@ -41,6 +27,26 @@ async function getAllowedNamespaces(cluster: Cluster) {
     } else {
       return []
     }
+  }
+}
+
+async function getAllowedResources(cluster: Cluster) {
+  // TODO: auto-populate all resources dynamically
+  const resources = [
+    "nodes", "persistentvolumes", "storageclasses", "customresourcedefinitions",
+    "podsecuritypolicies"
+  ]
+  try {
+    const resourceAccessStatuses = await Promise.all(
+      resources.map(resource => cluster.canI({
+        resource: resource,
+        verb: "list"
+      }))
+    )
+    return resources
+      .filter((resource, i) => resourceAccessStatuses[i])
+  } catch(error) {
+    return []
   }
 }
 
@@ -56,6 +62,7 @@ class ConfigRoute extends LensApi {
       kubeVersion: cluster.version,
       chartsEnabled: true,
       isClusterAdmin: cluster.isAdmin,
+      allowedResources: await getAllowedResources(cluster),
       allowedNamespaces: await getAllowedNamespaces(cluster)
     };
 

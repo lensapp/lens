@@ -71,7 +71,7 @@ export class Sidebar extends React.Component<Props> {
 
   render() {
     const { toggle, isPinned, className } = this.props;
-    const { isClusterAdmin } = configStore;
+    const { isClusterAdmin, allowedResources } = configStore;
     const query = namespaceStore.getContextParams();
     return (
       <SidebarContext.Provider value={{ pinned: isPinned }}>
@@ -91,14 +91,13 @@ export class Sidebar extends React.Component<Props> {
           <div className="sidebar-nav flex column box grow-fixed">
             <SidebarNavItem
               id="cluster"
-              isHidden={!isClusterAdmin}
               url={clusterURL()}
               text={<Trans>Cluster</Trans>}
               icon={<Icon svg="kube"/>}
             />
             <SidebarNavItem
               id="nodes"
-              isHidden={!isClusterAdmin}
+              isHidden={!allowedResources.includes('nodes')}
               url={nodesURL()}
               text={<Trans>Nodes</Trans>}
               icon={<Icon svg="nodes"/>}
@@ -166,7 +165,7 @@ export class Sidebar extends React.Component<Props> {
             />
             <SidebarNavItem
               id="custom-resources"
-              isHidden={!isClusterAdmin}
+              isHidden={!allowedResources.includes('customresourcedefinitions')}
               url={crdURL()}
               subMenus={CustomResources.tabRoutes}
               routePath={crdRoute.path}
