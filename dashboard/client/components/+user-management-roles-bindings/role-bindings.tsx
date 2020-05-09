@@ -42,22 +42,6 @@ export class RoleBindings extends React.Component<Props> {
           (binding: RoleBinding) => binding.getSubjectNames(),
         ]}
         renderHeaderTitle={<Trans>Role Bindings</Trans>}
-        filterItems={[
-          (items: RoleBinding[]) => items.filter(KubeObject.isNonSystem),
-        ]}
-        customizeHeader={({ info }) => ({
-          info: (
-            <>
-              {info}
-              <Icon
-                small
-                material="help_outline"
-                className="help-icon"
-                tooltip={<Trans>Excluded items with "system:" prefix</Trans>}
-              />
-            </>
-          )
-        })}
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
           { title: <Trans>Bindings</Trans>, className: "bindings", sortBy: sortBy.bindings },

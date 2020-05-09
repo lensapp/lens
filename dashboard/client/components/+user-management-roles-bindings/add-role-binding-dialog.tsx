@@ -9,7 +9,7 @@ import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Select, SelectOption } from "../select";
 import { SubTitle } from "../layout/sub-title";
-import { IRoleBindingSubject, RoleBinding, ServiceAccount } from "../../api/endpoints";
+import { IRoleBindingSubject, RoleBinding, ServiceAccount, Role } from "../../api/endpoints";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
@@ -152,7 +152,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   };
 
   @computed get roleOptions(): BindingSelectOption[] {
-    let roles = rolesStore.items.filter(KubeObject.isNonSystem);
+    let roles = rolesStore.items as Role[]
     if (this.bindContext) {
       // show only cluster-roles or roles for selected context namespace
       roles = roles.filter(role => !role.getNs() || role.getNs() === this.bindContext);

@@ -10,8 +10,6 @@ import { rolesStore } from "./roles.store";
 import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";
 import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleDialog } from "./add-role-dialog";
-import { Icon } from "../icon";
-import { KubeObject } from "../../api/kube-object";
 import { apiManager } from "../../api/api-manager";
 
 enum sortBy {
@@ -39,23 +37,7 @@ export class Roles extends React.Component<Props> {
           searchFilters={[
             (role: Role) => role.getSearchFields(),
           ]}
-          filterItems={[
-            (items: Role[]) => items.filter(KubeObject.isNonSystem),
-          ]}
           renderHeaderTitle={<Trans>Roles</Trans>}
-          customizeHeader={({ info }) => ({
-            info: (
-              <>
-                {info}
-                <Icon
-                  small
-                  material="help_outline"
-                  className="help-icon"
-                  tooltip={<Trans>Excluded items with "system:" prefix</Trans>}
-                />
-              </>
-            )
-          })}
           renderTableHeader={[
             { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
             { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
