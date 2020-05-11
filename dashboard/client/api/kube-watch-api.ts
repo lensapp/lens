@@ -107,8 +107,12 @@ export class KubeWatchApi {
       const { apiBase, namespace } = KubeApi.parseApi(url);
       const api = apiManager.getApi(apiBase);
       if (api) {
-        await api.refreshResourceVersion({ namespace });
-        this.reconnect();
+        try {
+          await api.refreshResourceVersion({ namespace });
+          this.reconnect();
+        } catch(error) {
+          console.debug("failed to refresh resource version", error)
+        }
       }
     }
   }

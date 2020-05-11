@@ -28,6 +28,7 @@ import { crdStore } from "../+custom-resources/crd.store";
 import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resources";
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { navigation } from "../../navigation";
+import { isAllowedResource } from "../../api/rbac"
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
 type SidebarContextValue = {
@@ -43,7 +44,7 @@ interface Props {
 @observer
 export class Sidebar extends React.Component<Props> {
   async componentDidMount() {
-    if (!crdStore.isLoaded) crdStore.loadAll()
+    if (!crdStore.isLoaded && isAllowedResource('customresourcedefinitions')) crdStore.loadAll()
   }
 
   renderCustomResources() {
@@ -71,7 +72,7 @@ export class Sidebar extends React.Component<Props> {
 
   render() {
     const { toggle, isPinned, className } = this.props;
-    const { isClusterAdmin, allowedResources } = configStore;
+    const { allowedResources } = configStore;
     const query = namespaceStore.getContextParams();
     return (
       <SidebarContext.Provider value={{ pinned: isPinned }}>
@@ -91,19 +92,21 @@ export class Sidebar extends React.Component<Props> {
           <div className="sidebar-nav flex column box grow-fixed">
             <SidebarNavItem
               id="cluster"
+              isHidden={!isAllowedResource('nodes')}
               url={clusterURL()}
               text={<Trans>Cluster</Trans>}
               icon={<Icon svg="kube"/>}
             />
             <SidebarNavItem
               id="nodes"
-              isHidden={!allowedResources.includes('nodes')}
+              isHidden={!isAllowedResource('nodes')}
               url={nodesURL()}
               text={<Trans>Nodes</Trans>}
               icon={<Icon svg="nodes"/>}
             />
             <SidebarNavItem
               id="workloads"
+              isHidden={Workloads.tabRoutes.length == 0}
               url={workloadsURL({ query })}
               routePath={workloadsRoute.path}
               subMenus={Workloads.tabRoutes}
@@ -112,6 +115,7 @@ export class Sidebar extends React.Component<Props> {
             />
             <SidebarNavItem
               id="config"
+              isHidden={Config.tabRoutes.length == 0}
               url={configURL({ query })}
               routePath={configRoute.path}
               subMenus={Config.tabRoutes}
@@ -120,6 +124,7 @@ export class Sidebar extends React.Component<Props> {
             />
             <SidebarNavItem
               id="networks"
+              isHidden={Network.tabRoutes.length == 0}
               url={networkURL({ query })}
               routePath={networkRoute.path}
               subMenus={Network.tabRoutes}
@@ -128,6 +133,7 @@ export class Sidebar extends React.Component<Props> {
             />
             <SidebarNavItem
               id="storage"
+              isHidden={Storage.tabRoutes.length == 0}
               url={storageURL({ query })}
               routePath={storageRoute.path}
               subMenus={Storage.tabRoutes}
@@ -136,12 +142,14 @@ export class Sidebar extends React.Component<Props> {
             />
             <SidebarNavItem
               id="namespaces"
+              isHidden={!isAllowedResource('namespaces')}
               url={namespacesURL()}
               icon={<Icon material="layers"/>}
               text={<Trans>Namespaces</Trans>}
             />
             <SidebarNavItem
               id="events"
+              isHidden={!isAllowedResource('events')}
               url={eventsURL({ query })}
               routePath={eventRoute.path}
               icon={<Icon material="access_time"/>}
@@ -165,7 +173,7 @@ export class Sidebar extends React.Component<Props> {
             />
             <SidebarNavItem
               id="custom-resources"
-              isHidden={!allowedResources.includes('customresourcedefinitions')}
+              isHidden={!isAllowedResource('customresourcedefinitions')}
               url={crdURL()}
               subMenus={CustomResources.tabRoutes}
               routePath={crdRoute.path}
