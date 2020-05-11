@@ -1,12 +1,12 @@
 import { spawn, ChildProcess } from "child_process"
 import logger from "./logger"
-import * as tcpPortUsed from "tcp-port-used"
 import { Kubectl, bundledKubectl } from "./kubectl"
 import { Cluster } from "./cluster"
-import { readFileSync, watch } from "fs"
+import { readFileSync, watch, existsSync } from "fs"
 import { PromiseIpc } from "electron-promise-ipc"
 import { findMainWebContents } from "./webcontents"
 import * as url from "url"
+
 
 export class KubeAuthProxy {
   public lastError: string
@@ -14,13 +14,11 @@ export class KubeAuthProxy {
   protected cluster: Cluster
   protected env: NodeJS.ProcessEnv = null
   protected proxyProcess: ChildProcess
-  protected port: number
   protected kubectl: Kubectl
   protected promiseIpc: any
 
-  constructor(cluster: Cluster, port: number, env: NodeJS.ProcessEnv) {
+  constructor(cluster: Cluster, env: NodeJS.ProcessEnv) {
     this.env = env
-    this.port = port
     this.cluster = cluster
     this.kubectl = bundledKubectl
     this.promiseIpc = new PromiseIpc({ timeout: 2000 })
@@ -47,9 +45,9 @@ export class KubeAuthProxy {
     const clusterUrl = url.parse(this.cluster.apiUrl)
     let args = [
       "proxy",
-      "-p", this.port.toString(),
       "--kubeconfig", this.cluster.kubeconfigPath(),
       "--accept-hosts", clusterUrl.hostname,
+      "-u", this.cluster.proxySocketPath(),
     ]
     if (process.env.DEBUG_PROXY === "true") {
       args = args.concat(["-v", "9"])
@@ -77,7 +75,19 @@ export class KubeAuthProxy {
       this.sendIpcLogMessage(data.toString(), "stderr")
     })
 
-    return tcpPortUsed.waitUntilUsed(this.port, 500, 10000)
+    return await this.waitUnixSocket(this.cluster.proxySocketPath())
+  }
+
+  protected waitUnixSocket(socket: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let done = false
+      while(!done) { // TODO: fix busy loop
+        if (existsSync(socket)) {
+          done = true
+          resolve()
+        }
+      }
+    })
   }
 
   protected parseError(data: string) {

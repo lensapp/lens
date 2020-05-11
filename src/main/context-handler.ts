@@ -1,15 +1,12 @@
 import { KubeConfig, CoreV1Api } from "@kubernetes/client-node"
-import { readFileSync } from "fs"
 import * as http from "http"
 import { ServerOptions } from "http-proxy"
 import * as url from "url"
 import logger from "./logger"
-import { getFreePort } from "./port"
 import { KubeAuthProxy } from "./kube-auth-proxy"
 import { Cluster, ClusterPreferences } from "./cluster"
 import { prometheusProviders } from "../common/prometheus-providers"
 import { PrometheusService, PrometheusProvider } from "./prometheus/provider-registry"
-import { PrometheusLens } from "./prometheus/lens"
 
 export class ContextHandler {
   public contextName: string
@@ -148,27 +145,12 @@ export class ContextHandler {
         "Host": this.clusterUrl.hostname
       },
       target: {
-        port: await this.resolveProxyPort(),
+        socketPath: this.cluster.proxySocketPath(),
         protocol: "http://",
         host: "localhost",
         path: this.clusterUrl.path
       },
     }
-  }
-
-  protected async resolveProxyPort(): Promise<number> {
-    if (this.proxyPort) return this.proxyPort
-
-    let serverPort: number = null
-    try {
-      serverPort = await getFreePort()
-    } catch(error) {
-      logger.error(error)
-      throw(error)
-    }
-    this.proxyPort = serverPort
-
-    return serverPort
   }
 
   public applyHeaders(req: http.IncomingMessage) {
@@ -185,12 +167,11 @@ export class ContextHandler {
 
   public async ensureServer() {
     if (!this.proxyServer) {
-      const proxyPort = await this.resolveProxyPort()
       const proxyEnv = Object.assign({}, process.env)
       if (this.cluster.preferences && this.cluster.preferences.httpsProxy) {
         proxyEnv.HTTPS_PROXY = this.cluster.preferences.httpsProxy
       }
-      this.proxyServer = new KubeAuthProxy(this.cluster, proxyPort, proxyEnv)
+      this.proxyServer = new KubeAuthProxy(this.cluster, proxyEnv)
       await this.proxyServer.run()
     }
   }

@@ -91,6 +91,10 @@ export class Cluster implements ClusterInfo {
     return this.kubeconfigManager.getPath()
   }
 
+  public proxySocketPath() {
+    return this.kubeconfigManager.getProxySocketPath()
+  }
+
   public async init(kc: KubeConfig) {
     this.contextHandler = new ContextHandler(kc, this)
     this.contextName = kc.currentContext
