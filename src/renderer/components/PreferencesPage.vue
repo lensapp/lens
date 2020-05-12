@@ -227,7 +227,6 @@ export default {
 <style lang="scss" scoped>
 #app > .main-view > .content {
   left: 70px;
-  right: 70px;
 }
 .lens-preferences {
   height: 100%;

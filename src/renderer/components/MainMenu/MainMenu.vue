@@ -1,5 +1,5 @@
 <template>
-  <div class="main-menu">
+  <div :style="{ paddingTop: computedPaddingTop }" class="main-menu">
     <draggable v-model="clusters">
       <ClusterMenuItem
         v-for="cluster in clusters" :key="cluster.id"
@@ -23,6 +23,7 @@ import ClusterMenuItem from "@/components/MainMenu/ClusterMenuItem";
 import AddClusterMenuItem from "@/components/MainMenu/AddClusterMenuItem";
 import draggable from 'vuedraggable'
 import { clusterStore } from "@/../common/cluster-store";
+import * as os from "os";
 
 const { remote } = require('electron')
 const { Menu, MenuItem } = remote
@@ -36,6 +37,7 @@ export default {
   },
   data(){
     return {
+      computedPaddingTop: "15px"
     }
   },
   computed : {
@@ -64,6 +66,11 @@ export default {
         },
       }).catch(err => {})
     }
+  },
+  mounted: function() {
+    if (os.platform() == "darwin") {
+      this.computedPaddingTop = "25px";
+    }
   }
 }
 </script>
@@ -75,7 +82,7 @@ export default {
   top: 0;
   bottom: 20px;
   width: 70px;
-  padding-top: 25px;
+  padding-top: 15px;
   background: #252729;
   overflow: hidden;
   z-index: 1000;

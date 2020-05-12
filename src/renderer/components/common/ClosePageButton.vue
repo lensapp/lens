@@ -25,7 +25,7 @@ export default {
 div.close-page-button {
   position: absolute;
   top: 20px;
-  right: 10px;
+  right: 25px;
   z-index: 1100;
   a {
     position: relative;
