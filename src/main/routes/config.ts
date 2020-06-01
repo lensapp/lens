@@ -5,6 +5,30 @@ import { getAppVersion } from "../../common/app-utils"
 import { CoreV1Api, AuthorizationV1Api } from "@kubernetes/client-node"
 import { Cluster } from "../cluster"
 
+// TODO: auto-populate all resources dynamically
+const apiResources = [
+  { resource: "configmaps" },
+  { resource: "cronjobs", group: "batch" },
+  { resource: "customresourcedefinitions", group: "apiextensions.k8s.io" },
+  { resource: "daemonsets", group: "apps" },
+  { resource: "deployments", group: "apps" },
+  { resource: "endpoints" },
+  { resource: "horizontalpodautoscalers" },
+  { resource: "ingresses", group: "networking.k8s.io" },
+  { resource: "jobs", group: "batch" },
+  { resource: "namespaces" },
+  { resource: "networkpolicies", group: "networking.k8s.io" },
+  { resource: "nodes" },
+  { resource: "persistentvolumes" },
+  { resource: "pods" },
+  { resource: "podsecuritypolicies" },
+  { resource: "resourcequotas" },
+  { resource: "secrets" },
+  { resource: "services" },
+  { resource: "statefulsets", group: "apps" },
+  { resource: "storageclasses", group: "storage.k8s.io" },
+]
+
 async function getAllowedNamespaces(cluster: Cluster) {
   const api = cluster.contextHandler.kc.makeApiClient(CoreV1Api)
   try {
@@ -31,39 +55,17 @@ async function getAllowedNamespaces(cluster: Cluster) {
 }
 
 async function getAllowedResources(cluster: Cluster, namespaces: string[]) {
-  // TODO: auto-populate all resources dynamically
-  const resources = [
-    "configmaps",
-    "cronjobs",
-    "customresourcedefinitions",
-    "daemonsets",
-    "deployments",
-    "endpoints",
-    "horizontalpodautoscalers",
-    "ingresses",
-    "jobs",
-    "namespaces",
-    "networkpolicies",
-    "nodes",
-    "persistentvolumes",
-    "pods",
-    "podsecuritypolicies",
-    "resourcequotas",
-    "secrets",
-    "services",
-    "statefulsets",
-    "storageclasses",
-  ]
   try {
     const resourceAccessStatuses = await Promise.all(
-      resources.map(resource => cluster.canI({
-        resource: resource,
+      apiResources.map(apiResource => cluster.canI({
+        resource: apiResource.resource,
+        group: apiResource.group,
         verb: "list",
         namespace: namespaces[0]
       }))
     )
-    return resources
-      .filter((resource, i) => resourceAccessStatuses[i])
+    return apiResources
+      .filter((resource, i) => resourceAccessStatuses[i]).map(apiResource => apiResource.resource)
   } catch(error) {
     return []
   }
