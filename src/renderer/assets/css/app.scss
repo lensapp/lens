@@ -65,6 +65,19 @@ pre {
   width: 100%;
 }
 
+::-webkit-scrollbar {
+  width: 12px;
+
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 12px $lens-pane-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 12px $lens-pane-bg;
+}
+
 h1, h2, h3, h4, h5, h6{
   color: #fff;
   font-size: 20.8px;
