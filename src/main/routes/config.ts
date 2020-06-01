@@ -13,6 +13,7 @@ const apiResources = [
   { resource: "daemonsets", group: "apps" },
   { resource: "deployments", group: "apps" },
   { resource: "endpoints" },
+  { resource: "events" },
   { resource: "horizontalpodautoscalers" },
   { resource: "ingresses", group: "networking.k8s.io" },
   { resource: "jobs", group: "batch" },
