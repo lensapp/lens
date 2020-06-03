@@ -64,7 +64,6 @@ export class PodDetails extends React.Component<Props> {
     const { status, spec } = pod;
     const { conditions, podIP } = status;
     const { nodeName } = spec;
-    const ownerRefs = pod.getOwnerRefs();
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
     const labels = pod.getLabels();
@@ -120,21 +119,6 @@ export class PodDetails extends React.Component<Props> {
             nodeSelector.map(label => (
               <Badge key={label} label={label}/>
             ))
-          }
-        </DrawerItem>
-        }
-        {ownerRefs.length > 0 &&
-        <DrawerItem name={<Trans>Controlled By</Trans>}>
-          {
-            ownerRefs.map(ref => {
-              const { name, kind } = ref;
-              const ownerDetailsUrl = getDetailsUrl(lookupApiLink(ref, pod));
-              return (
-                <p key={name}>
-                  {kind} <Link to={ownerDetailsUrl}>{name}</Link>
-                </p>
-              );
-            })
           }
         </DrawerItem>
         }

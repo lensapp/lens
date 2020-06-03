@@ -27,6 +27,14 @@ export interface IKubeObjectMetadata {
   annotations?: {
     [annotation: string]: string;
   };
+  ownerReferences?: {
+    apiVersion: string;
+    kind: string;
+    name: string;
+    uid: string;
+    controller: boolean;
+    blockOwnerDeletion: boolean;
+  }[];
 }
 
 export type IKubeMetaField = keyof KubeObject["metadata"];
@@ -111,6 +119,14 @@ export class KubeObject implements ItemObject {
       const skip = resourceApplierApi.annotations.some(key => label.startsWith(key));
       return !skip;
     })
+  }
+
+  getOwnerRefs() {
+    const refs = this.metadata.ownerReferences || [];
+    return refs.map(ownerRef => ({
+      ...ownerRef,
+      namespace: this.getNs(),
+    }))
   }
 
   getSearchFields() {
