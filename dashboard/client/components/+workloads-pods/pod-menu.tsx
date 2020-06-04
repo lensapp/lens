@@ -22,7 +22,7 @@ export class PodMenu extends React.Component<Props> {
     const { object: pod } = this.props
     const containerParam = container ? `-c ${container}` : ""
     let command = `kubectl exec -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam} "--"`
-    if (process.platform !== "win32") {
+    if (window.navigator.platform !== "Win32") {
       command = `exec ${command}`
     }
     if (pod.getSelectedNodeOs() === "windows") {
