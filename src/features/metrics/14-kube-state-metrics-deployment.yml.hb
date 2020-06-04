@@ -23,17 +23,15 @@ spec:
                   operator: In
                   values:
                   - linux
-              - matchExpressions:
-                - key: beta.kubernetes.io/os
-                  operator: In
-                  values:
-                  - linux
-              - matchExpressions:
                 - key: kubernetes.io/arch
                   operator: In
                   values:
                   - amd64
               - matchExpressions:
+                - key: beta.kubernetes.io/os
+                  operator: In
+                  values:
+                  - linux
                 - key: beta.kubernetes.io/arch
                   operator: In
                   values:
