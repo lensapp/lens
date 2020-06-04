@@ -2,6 +2,10 @@ import React from "react";
 import { Trans } from "@lingui/macro";
 import { IKubeMetaField, KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
+import { WorkloadKubeObject } from "../../api/workload-kube-object";
+import { getDetailsUrl } from "../../navigation";
+import { lookupApiLink } from "../../api/kube-api";
+import { Link } from "react-router-dom";
 
 export interface Props {
   object: KubeObject;
@@ -19,11 +23,14 @@ export class KubeObjectMeta extends React.Component<Props> {
   }
 
   render() {
+    const object = this.props.object
     const {
       getName, getNs, getLabels, getResourceVersion, selfLink,
       getAnnotations, getFinalizers, getId, getAge,
       metadata: { creationTimestamp },
-    } = this.props.object;
+    } = object;
+
+    const ownerRefs = object.getOwnerRefs();
     return (
       <>
         <DrawerItem name={<Trans>Created</Trans>} hidden={this.isHidden("creationTimestamp")}>
@@ -59,6 +66,21 @@ export class KubeObjectMeta extends React.Component<Props> {
           labels={getFinalizers()}
           hidden={this.isHidden("finalizers")}
         />
+        {ownerRefs && ownerRefs.length > 0 &&
+        <DrawerItem name={<Trans>Controlled By</Trans>} hidden={this.isHidden("ownerReferences")}>
+          {
+            ownerRefs.map(ref => {
+              const { name, kind } = ref;
+              const ownerDetailsUrl = getDetailsUrl(lookupApiLink(ref, object));
+              return (
+                <p key={name}>
+                  {kind} <Link to={ownerDetailsUrl}>{name}</Link>
+                </p>
+              );
+            })
+          }
+        </DrawerItem>
+        }
       </>
     )
   }

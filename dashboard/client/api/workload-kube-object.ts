@@ -47,27 +47,9 @@ export interface IAffinity {
 }
 
 export class WorkloadKubeObject extends KubeObject {
-  metadata: IKubeObjectMetadata & {
-    ownerReferences?: {
-      apiVersion: string;
-      kind: string;
-      name: string;
-      uid: string;
-      controller: boolean;
-      blockOwnerDeletion: boolean;
-    }[];
-  }
 
   // fixme: add type
   spec: any;
-
-  getOwnerRefs() {
-    const refs = this.metadata.ownerReferences || [];
-    return refs.map(ownerRef => ({
-      ...ownerRef,
-      namespace: this.getNs(),
-    }))
-  }
 
   getSelectors(): string[] {
     const selector = this.spec.selector;
