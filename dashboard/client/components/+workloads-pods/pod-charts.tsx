@@ -40,7 +40,7 @@ export const PodCharts = observer(() => {
     memoryLimits,
     fsUsage,
     networkReceive,
-    networkTransit
+    networkTransmit
   ] = values;
 
   const datasets = [
@@ -102,11 +102,11 @@ export const PodCharts = observer(() => {
         data: networkReceive.map(([x, y]) => ({ x, y }))
       },
       {
-        id: `${id}-networkTransit`,
-        label: _i18n._(t`Transit`),
+        id: `${id}-networkTransmit`,
+        label: _i18n._(t`Transmit`),
         tooltip: _i18n._(t`Bytes transmitted from all containers`),
         borderColor: "#46cd9e",
-        data: networkTransit.map(([x, y]) => ({ x, y }))
+        data: networkTransmit.map(([x, y]) => ({ x, y }))
       }
     ],
     // Filesystem

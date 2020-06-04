@@ -2196,8 +2196,8 @@ msgid "Tolerations"
 msgstr "Tolerations"
 
 #: client/components/+workloads-pods/pod-charts.tsx:87
-msgid "Transit"
-msgstr "Transit"
+msgid "Transmit"
+msgstr "Transmit"
 
 #: client/components/+cluster/cluster-issues.tsx:102
 #: client/components/+config-secrets/secret-details.tsx:74

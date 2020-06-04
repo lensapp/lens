@@ -31,7 +31,7 @@ export type PrometheusPodQuery = {
   cpuLimits: string;
   fsUsage: string;
   networkReceive: string;
-  networkTransit: string;
+  networkTransmit: string;
 }
 
 export type PrometheusPvcQuery = {

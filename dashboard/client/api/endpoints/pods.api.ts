@@ -22,7 +22,7 @@ export class PodsApi extends KubeApi<Pod> {
       memoryLimits: opts,
       fsUsage: opts,
       networkReceive: opts,
-      networkTransit: opts,
+      networkTransmit: opts,
     }, {
       namespace,
     });
@@ -39,7 +39,7 @@ export interface IPodMetrics<T = IMetrics> {
   memoryLimits: T;
   fsUsage: T;
   networkReceive: T;
-  networkTransit: T;
+  networkTransmit: T;
 }
 
 export interface IPodLogsQuery {
