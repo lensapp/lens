@@ -25,6 +25,7 @@ Download a pre-built package from the [releases](https://github.com/lensapp/lens
 
 > Prerequisities: Nodejs v12, make, yarn
 
+* `make download-bins` - downloads bundled binaries to dev environment
 * `make dev` - builds and starts the app
 * `make test` - run tests
 
