@@ -32,6 +32,7 @@ import { PodLogsDialog } from "./+workloads-pods/pod-logs-dialog";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
+import { isAllowedResource } from "../api/rbac";
 
 @observer
 class App extends React.Component {
@@ -46,7 +47,7 @@ class App extends React.Component {
   };
 
   render() {
-    const homeUrl = clusterURL();
+    const homeUrl = (isAllowedResource(["events", "nodes", "pods"])) ? clusterURL() : workloadsURL();
     return (
       <I18nProvider i18n={_i18n}>
         <Router history={browserHistory}>

@@ -114,10 +114,15 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const { store, dependentStores, isClusterScoped } = this.props;
     const stores = [store, ...dependentStores];
     if (!isClusterScoped) stores.push(namespaceStore);
-    await Promise.all(stores.map(store => store.loadAll()));
-    const subscriptions = stores.map(store => store.subscribe());
+    try {
+      await Promise.all(stores.map(store => store.loadAll()));
+      const subscriptions = stores.map(store => store.subscribe());
+
+      subscriptions.forEach(dispose => dispose()); // unsubscribe all
+    } catch(error) {
+      console.log("catched", error)
+    }
     await when(() => this.isUnmounting);
-    subscriptions.forEach(dispose => dispose()); // unsubscribe all
   }
 
   componentWillUnmount() {

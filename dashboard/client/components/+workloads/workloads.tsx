@@ -15,6 +15,7 @@ import { DaemonSets } from "../+workloads-daemonsets";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
+import { isAllowedResource } from "../../api/rbac"
 
 interface Props extends RouteComponentProps {
 }
@@ -23,50 +24,63 @@ interface Props extends RouteComponentProps {
 export class Workloads extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams();
-    return [
+    const routes: TabRoute[] = [
       {
         title: <Trans>Overview</Trans>,
         component: WorkloadsOverview,
         url: overviewURL({ query }),
         path: overviewRoute.path
-      },
-      {
+      }
+    ]
+    if (isAllowedResource("pods")) {
+      routes.push({
         title: <Trans>Pods</Trans>,
         component: Pods,
         url: podsURL({ query }),
         path: podsRoute.path
-      },
-      {
+      })
+    }
+    if (isAllowedResource("deployments")) {
+      routes.push({
         title: <Trans>Deployments</Trans>,
         component: Deployments,
         url: deploymentsURL({ query }),
         path: deploymentsRoute.path,
-      },
-      {
+      })
+    }
+    if (isAllowedResource("daemonsets")) {
+      routes.push({
         title: <Trans>DaemonSets</Trans>,
         component: DaemonSets,
         url: daemonSetsURL({ query }),
         path: daemonSetsRoute.path,
-      },
-      {
+      })
+    }
+    if (isAllowedResource("statefulsets")) {
+      routes.push({
         title: <Trans>StatefulSets</Trans>,
         component: StatefulSets,
         url: statefulSetsURL({ query }),
         path: statefulSetsRoute.path,
-      },
-      {
+      })
+    }
+    if (isAllowedResource("jobs")) {
+      routes.push({
         title: <Trans>Jobs</Trans>,
         component: Jobs,
         url: jobsURL({ query }),
         path: jobsRoute.path,
-      },
-      {
+      })
+    }
+    if (isAllowedResource("cronjobs")) {
+      routes.push({
         title: <Trans>CronJobs</Trans>,
         component: CronJobs,
         url: cronJobsURL({ query }),
         path: cronJobsRoute.path,
-      },
-    ]
+      })
+    }
+    return routes;
   };
 
   render() {

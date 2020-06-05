@@ -5,6 +5,31 @@ import { getAppVersion } from "../../common/app-utils"
 import { CoreV1Api, AuthorizationV1Api } from "@kubernetes/client-node"
 import { Cluster } from "../cluster"
 
+// TODO: auto-populate all resources dynamically
+const apiResources = [
+  { resource: "configmaps" },
+  { resource: "cronjobs", group: "batch" },
+  { resource: "customresourcedefinitions", group: "apiextensions.k8s.io" },
+  { resource: "daemonsets", group: "apps" },
+  { resource: "deployments", group: "apps" },
+  { resource: "endpoints" },
+  { resource: "events" },
+  { resource: "horizontalpodautoscalers" },
+  { resource: "ingresses", group: "networking.k8s.io" },
+  { resource: "jobs", group: "batch" },
+  { resource: "namespaces" },
+  { resource: "networkpolicies", group: "networking.k8s.io" },
+  { resource: "nodes" },
+  { resource: "persistentvolumes" },
+  { resource: "pods" },
+  { resource: "podsecuritypolicies" },
+  { resource: "resourcequotas" },
+  { resource: "secrets" },
+  { resource: "services" },
+  { resource: "statefulsets", group: "apps" },
+  { resource: "storageclasses", group: "storage.k8s.io" },
+]
+
 async function getAllowedNamespaces(cluster: Cluster) {
   const api = cluster.contextHandler.kc.makeApiClient(CoreV1Api)
   try {
@@ -30,21 +55,18 @@ async function getAllowedNamespaces(cluster: Cluster) {
   }
 }
 
-async function getAllowedResources(cluster: Cluster) {
-  // TODO: auto-populate all resources dynamically
-  const resources = [
-    "nodes", "persistentvolumes", "storageclasses", "customresourcedefinitions",
-    "podsecuritypolicies"
-  ]
+async function getAllowedResources(cluster: Cluster, namespaces: string[]) {
   try {
     const resourceAccessStatuses = await Promise.all(
-      resources.map(resource => cluster.canI({
-        resource: resource,
-        verb: "list"
+      apiResources.map(apiResource => cluster.canI({
+        resource: apiResource.resource,
+        group: apiResource.group,
+        verb: "list",
+        namespace: namespaces[0]
       }))
     )
-    return resources
-      .filter((resource, i) => resourceAccessStatuses[i])
+    return apiResources
+      .filter((resource, i) => resourceAccessStatuses[i]).map(apiResource => apiResource.resource)
   } catch(error) {
     return []
   }
@@ -55,6 +77,7 @@ class ConfigRoute extends LensApi {
   public async routeConfig(request: LensApiRequest) {
     const { params, response, cluster} = request
 
+    const namespaces = await getAllowedNamespaces(cluster)
     const data = {
       clusterName: cluster.contextName,
       lensVersion: getAppVersion(),
@@ -62,8 +85,8 @@ class ConfigRoute extends LensApi {
       kubeVersion: cluster.version,
       chartsEnabled: true,
       isClusterAdmin: cluster.isAdmin,
-      allowedResources: await getAllowedResources(cluster),
-      allowedNamespaces: await getAllowedNamespaces(cluster)
+      allowedResources: await getAllowedResources(cluster, namespaces),
+      allowedNamespaces: namespaces
     };
 
     this.respondJson(response, data)

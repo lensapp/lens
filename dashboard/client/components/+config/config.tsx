@@ -9,8 +9,8 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 import { resourceQuotaRoute, ResourceQuotas, resourceQuotaURL } from "../+config-resource-quotas";
 import { configURL } from "./config.route";
 import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscalers";
-import { Certificates, ClusterIssuers, Issuers } from "../+custom-resources/certmanager.k8s.io";
 import { buildURL } from "../../navigation";
+import { isAllowedResource } from "../../api/rbac"
 
 export const certificatesURL = buildURL("/certificates");
 export const issuersURL = buildURL("/issuers");
@@ -20,32 +20,40 @@ export const clusterIssuersURL = buildURL("/clusterissuers");
 export class Config extends React.Component {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams()
-    return [
-      {
+    const routes: TabRoute[] = []
+    if (isAllowedResource("configmaps")) {
+      routes.push({
         title: <Trans>ConfigMaps</Trans>,
         component: ConfigMaps,
         url: configMapsURL({ query }),
         path: configMapsRoute.path,
-      },
-      {
+      })
+    }
+    if (isAllowedResource("secrets")) {
+      routes.push({
         title: <Trans>Secrets</Trans>,
         component: Secrets,
         url: secretsURL({ query }),
         path: secretsRoute.path,
-      },
-      {
+      })
+    }
+    if (isAllowedResource("resourcequotas")) {
+      routes.push({
         title: <Trans>Resource Quotas</Trans>,
         component: ResourceQuotas,
         url: resourceQuotaURL({ query }),
         path: resourceQuotaRoute.path,
-      },
-      {
+      })
+    }
+    if (isAllowedResource("horizontalpodautoscalers")) {
+      routes.push({
         title: <Trans>HPA</Trans>,
         component: HorizontalPodAutoscalers,
         url: hpaURL({ query }),
         path: hpaRoute.path,
-      },
-    ]
+      })
+    }
+    return routes;
   }
 
   render() {
