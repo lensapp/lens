@@ -6,6 +6,9 @@ endif
 
 .PHONY: dev build test clean
 
+download-bins:
+	yarn download:bins
+
 dev: app-deps dashboard-deps
 	yarn dev
 
