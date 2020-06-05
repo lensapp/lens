@@ -1,6 +1,15 @@
 import { configStore } from "../config.store";
+import { isArray } from "util";
 
-export function isAllowedResource(resource: string) {
+export function isAllowedResource(resources: string|string[]) {
+  if (!isArray(resources)) {
+    resources = [resources];
+  }
   const { allowedResources } = configStore;
-  return allowedResources.includes(resource)
+  for (const resource of resources) {
+    if (!allowedResources.includes(resource)) {
+      return false;
+    }
+  }
+  return true;
 }
