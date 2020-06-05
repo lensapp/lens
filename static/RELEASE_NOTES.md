@@ -2,7 +2,17 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.4.0 (current version)
+## 3.5.0-beta.1 (current version)
+
+- Dynamic dashboard UI based on RBAC rules
+- Show object reference for all objects
+- Unify scrollbars/paddings
+- Fix: add arch node selector for hybrid clusters
+- Fix pod shell command on Windows
+- Translation correction: transit to transmit
+- Remove Kontena reference from Lens logo
+
+## 3.4.0
 
 - Auto-detect Prometheus installation
 - Allow to select Prometheus query style
