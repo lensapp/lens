@@ -38,7 +38,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   render() {
     const { error, errorInfo } = this.state;
     if (error) {
-      const slackLink = <a href="https://join.slack.com/t/kontenacommunity/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI" target="_blank">Slack</a>
+      const slackLink = <a href="https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI" target="_blank">Slack</a>
       const githubLink = <a href="https://github.com/lensapp/lens/issues" target="_blank">Github</a>
       const pageUrl = location.href;
       return (
