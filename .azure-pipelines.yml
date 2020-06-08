@@ -119,6 +119,10 @@ jobs:
         displayName: Lint
       - script: make test
         displayName: Run tests
+      - script: sudo apt-get update && sudo apt-get install libgconf-2-4 -y
+        displayName: Install integration test dependencies
+      - script: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
+        displayName: Run integration tests
       - bash: |
           sudo chown root:root /
           sudo apt-get update && sudo apt-get install -y snapd

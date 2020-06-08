@@ -8,8 +8,8 @@
             <div>
               <b-row align-h="center" class="banner">
                 <b-col sm="8">
-                  <h1 v-if="user && clusters.length === 0" class="display-4 text-center">
-                    Welcome, {{ greetingName }}!
+                  <h1 v-if="clusters.length === 0" class="display-4 text-center">
+                    Welcome!
                   </h1>
                   <p v-if="clusters.length === 0" class="text-center">
                     Get started by associating one or more clusters to Lens.
@@ -35,12 +35,6 @@ export default {
     },
     clusters: function() {
       return this.$store.getters.clusters;
-    },
-    user: function() {
-      return this.$store.getters.user;
-    },
-    greetingName: function() {
-      return (this.user['first-name'] && this.user['first-name'] !== "") ? this.user['first-name'] : this.user.username
     }
   }
 }
