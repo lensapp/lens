@@ -121,7 +121,7 @@ jobs:
         displayName: Lint
       - script: make test
         displayName: Run tests
-      - script: sudo apt-get update && sudo apt-get install libgconf-2-4 -y
+      - script: sudo apt-get update && sudo apt-get install libgconf-2-4 -y && sudo snap install -y minikube && sudo minikube start --vm-driver=none
         displayName: Install integration test dependencies
       - script: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
         displayName: Run integration tests
