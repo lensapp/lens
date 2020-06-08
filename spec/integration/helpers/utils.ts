@@ -3,15 +3,15 @@ import * as path from "path"
 
 let appPath = ""
 switch(process.platform) {
-case "win32": {
+case "win32":
   appPath = path.join("./dist/win-unpacked/Lens.exe")
-}
-case "linux": {
+  break
+case "linux":
   appPath = path.join("./dist/linux-unpacked/kontena-lens")
-}
-case "darwin": {
+  break
+case "darwin":
   appPath = path.join("./dist/mac/LensDev.app/Contents/MacOS/LensDev")
-}
+  break
 }
 
 export function setup() {
