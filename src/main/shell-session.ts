@@ -8,7 +8,6 @@ import { Kubectl } from "./kubectl"
 import { tracker } from "./tracker"
 import { Cluster, ClusterPreferences } from "./cluster"
 import { helmCli } from "./helm-cli"
-import logger from "./logger"
 
 export class ShellSession extends EventEmitter {
   static shellEnv: any
@@ -160,14 +159,12 @@ export class ShellSession extends EventEmitter {
   }
 
   protected exit(code = 1000) {
-    logger.debug("Shell closed")
     if (this.websocket.readyState == this.websocket.OPEN) this.websocket.close(code)
     this.emit('exit')
   }
 
   protected closeWebsocketOnProcessExit() {
     this.shellProcess.on("exit", (code) => {
-      logger.debug("Shell process exited", code)
       this.running = false
       let timeout = 0
       if (code > 0) {
@@ -182,19 +179,18 @@ export class ShellSession extends EventEmitter {
 
   protected exitProcessOnWebsocketClose() {
     this.websocket.on("close", () => {
-      logger.debug("Killing shell process")
       this.killShellProcess()
     })
   }
 
   protected killShellProcess(){
     if(this.running) {
-      // For windows we need to kill the shell process by pid, since Lens won't respond after a while if using `this.shellProcess.kill()`
+      // On Windows we need to kill the shell process by pid, since Lens won't respond after a while if using `this.shellProcess.kill()`
       if (process.platform == "win32") {
         try {
           process.kill(this.shellProcess.pid)
         } catch(e) {
-          logger.debug("Process id not exist")
+          return
         }
       } else {
         this.shellProcess.kill()
