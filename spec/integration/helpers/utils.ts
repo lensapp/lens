@@ -1,16 +1,15 @@
 import { Application } from "spectron";
-import * as path from "path"
 
 let appPath = ""
 switch(process.platform) {
 case "win32":
-  appPath = path.join("./dist/win-unpacked/Lens.exe")
+  appPath = "./dist/win-unpacked/Lens.exe"
   break
 case "linux":
-  appPath = path.join("./dist/linux-unpacked/kontena-lens")
+  appPath = "./dist/linux-unpacked/kontena-lens"
   break
 case "darwin":
-  appPath = path.join("./dist/mac/LensDev.app/Contents/MacOS/LensDev")
+  appPath = "./dist/mac/LensDev.app/Contents/MacOS/LensDev"
   break
 }
 
