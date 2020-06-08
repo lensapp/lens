@@ -44,7 +44,6 @@ jobs:
           WIN_CSC_KEY_PASSWORD: $(WIN_CSC_KEY_PASSWORD)
           GH_TOKEN: $(GH_TOKEN)
   - job: macOS
-    condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
     pool:
       vmImage: macOS-10.14
     strategy:
@@ -75,7 +74,10 @@ jobs:
         displayName: Lint
       - script: make test
         displayName: Run tests
+      - script: make integration-mac
+        displayName: Run integration tests
       - script: make build
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Build
         env:
           APPLEID: $(APPLEID)
