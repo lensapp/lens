@@ -8,6 +8,7 @@ import { Kubectl } from "./kubectl"
 import { tracker } from "./tracker"
 import { Cluster, ClusterPreferences } from "./cluster"
 import { helmCli } from "./helm-cli"
+import logger from "./logger"
 
 export class ShellSession extends EventEmitter {
   static shellEnv: any
@@ -159,12 +160,14 @@ export class ShellSession extends EventEmitter {
   }
 
   protected exit(code = 1000) {
-    this.websocket.close(code)
+    logger.debug("Shell closed")
+    if (this.websocket.readyState == this.websocket.OPEN) this.websocket.close(code)
     this.emit('exit')
   }
 
   protected closeWebsocketOnProcessExit() {
     this.shellProcess.on("exit", (code) => {
+      logger.debug("Shell process exited", code)
       this.running = false
       let timeout = 0
       if (code > 0) {
@@ -180,7 +183,13 @@ export class ShellSession extends EventEmitter {
   protected exitProcessOnWebsocketClose() {
     this.websocket.on("close", () => {
       if (this.shellProcess) {
-        this.shellProcess.kill();
+        logger.debug("Killing shell process")
+        try {
+          process.kill(this.shellProcess.pid)
+        } catch(e) {
+          logger.debug("Process id not exist")
+        }
+        this.emit('exit')
       }
     })
   }
