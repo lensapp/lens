@@ -182,16 +182,24 @@ export class ShellSession extends EventEmitter {
 
   protected exitProcessOnWebsocketClose() {
     this.websocket.on("close", () => {
-      if (this.shellProcess) {
-        logger.debug("Killing shell process")
+      logger.debug("Killing shell process")
+      this.killShellProcess()
+    })
+  }
+
+  protected killShellProcess(){
+    if(this.running) {
+      // For windows we need to kill the shell process by pid, since Lens won't respond after a while if using `this.shellProcess.kill()`
+      if (process.platform == "win32") {
         try {
           process.kill(this.shellProcess.pid)
         } catch(e) {
           logger.debug("Process id not exist")
         }
-        this.emit('exit')
+      } else {
+        this.shellProcess.kill()
       }
-    })
+    }
   }
 
   protected sendResponse(msg: string) {
