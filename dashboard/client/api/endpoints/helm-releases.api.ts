@@ -198,21 +198,4 @@ export class HelmRelease implements ItemObject {
     const chartVersion = versions.find(chartVersion => chartVersion.version === version);
     return chartVersion ? chartVersion.repo : "";
   }
-
-  getLastVersion(): string | null {
-    const chartName = this.getChart();
-    const versions = helmChartStore.versions.get(chartName);
-    if (!versions) {
-      return null; // checking new version state
-    }
-    if (versions.length) {
-      return versions[0].version; // versions already sorted when loaded, the first is latest
-    }
-    return this.getVersion();
-  }
-
-  hasNewVersion() {
-    const lastVersion = this.getLastVersion();
-    return lastVersion && lastVersion !== this.getVersion();
-  }
 }

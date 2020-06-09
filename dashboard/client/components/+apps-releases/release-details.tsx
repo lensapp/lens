@@ -19,7 +19,6 @@ import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { releaseStore } from "./release.store";
 import { Notifications } from "../notifications";
-import { Icon } from "../icon";
 import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
 import { getDetailsUrl } from "../../navigation";
 import { _i18n } from "../../i18n";
@@ -190,14 +189,12 @@ export class ReleaseDetails extends Component<Props> {
         <DrawerItem name={<Trans>Chart</Trans>} className="chart">
           <div className="flex gaps align-center">
             <span>{release.getChart()}</span>
-            {release.hasNewVersion() && (
-              <Button
-                primary
-                label={_i18n._(t`Upgrade`)}
-                className="box right upgrade"
-                onClick={this.upgradeVersion}
-              />
-            )}
+            <Button
+              primary
+              label={_i18n._(t`Upgrade`)}
+              className="box right upgrade"
+              onClick={this.upgradeVersion}
+            />
           </div>
         </DrawerItem>
         <DrawerItem name={<Trans>Updated</Trans>}>
@@ -211,12 +208,6 @@ export class ReleaseDetails extends Component<Props> {
             <span>
               {release.getVersion()}
             </span>
-            {!release.getLastVersion() && (
-              <Icon svg="spinner" small/>
-            )}
-            {release.hasNewVersion() && (
-              <span><Trans>New version available:</Trans> <b>{release.getLastVersion()}</b></span>
-            )}
           </div>
         </DrawerItem>
         <DrawerItem name={<Trans>Status</Trans>} className="status" labelsOnly>
