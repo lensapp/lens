@@ -1,5 +1,5 @@
-import * as mockFs from "mock-fs"
-import * as yaml from "js-yaml"
+import mockFs from "mock-fs"
+import { userStore, UserStore } from "../../../common/user-store"
 
 jest.mock("electron", () => {
   return {
@@ -13,8 +13,6 @@ jest.mock("electron", () => {
 
 // Console.log needs to be called before fs-mocks, see https://github.com/tschaub/mock-fs/issues/234
 console.log("");
-
-import { userStore, User, UserPreferences, UserStore } from "../../../src/common/user-store"
 
 describe("for an empty config", () => {
   beforeEach(() => {

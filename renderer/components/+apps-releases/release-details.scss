@@ -1,0 +1,86 @@
+@import "release.mixins";
+
+.ReleaseDetails {
+  &.light {
+    .AceEditor {
+      border: 1px solid gainsboro;
+      border-radius: $radius;
+    }
+  }
+
+  .DrawerItem {
+    align-items: center;
+  }
+
+  .status {
+    .Badge {
+      @include release-status-bgs;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .chart {
+    .upgrade {
+      min-width: 150px;
+    }
+  }
+
+  .resources {
+    .SubTitle {
+      text-transform: none;
+      padding-left: 0;
+    }
+
+    .Table {
+      margin-bottom: $margin * 4;
+      border: 1px solid var(--drawerSubtitleBackground);
+      border-radius: $radius;
+      overflow: auto;
+      @include custom-scrollbar();
+
+      .TableHead {
+        border-bottom: none;
+
+        .TableCell {
+          background-color: var(--drawerSubtitleBackground);
+          word-break: unset;
+        }
+      }
+
+      .TableCell {
+        text-overflow: unset;
+        word-break: break-word;
+        min-width: 100px;
+
+        &.name {
+          flex-basis: auto;
+          flex-grow: 0;
+          width: 230px;
+        }
+
+        &.volume {
+          flex-basis: 30%;
+        }
+      }
+    }
+  }
+
+  .notes {
+    white-space: pre-line;
+    font-family: "RobotoMono", monospace;
+    font-size: small;
+  }
+
+  .values {
+    .AceEditor {
+      min-height: 300px;
+    }
+
+    .AceEditor + .Button {
+      align-self: flex-start;
+    }
+  }
+}

@@ -15,7 +15,7 @@ class MockServer extends EventEmitter {
 const net = require("net")
 jest.mock("net")
 
-import * as port from "../../../src/main/port"
+import * as port from "../../../main/port"
 
 describe("getFreePort", () => {
   beforeEach(() => {

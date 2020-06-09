@@ -1,7 +1,7 @@
+import { bundledKubectl, Kubectl } from "../../../main/kubectl";
+
 jest.mock("electron")
 jest.mock("../../../src/common/user-store")
-
-import { Kubectl, bundledKubectl } from "../../../src/main/kubectl"
 
 describe("kubectlVersion", () => {
 

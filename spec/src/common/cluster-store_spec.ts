@@ -1,5 +1,5 @@
-import * as mockFs from "mock-fs"
-import * as yaml from "js-yaml"
+import mockFs from "mock-fs"
+import yaml from "js-yaml"
 
 jest.mock("electron", () => {
   return {
@@ -14,8 +14,8 @@ jest.mock("electron", () => {
 // Console.log needs to be called before fs-mocks, see https://github.com/tschaub/mock-fs/issues/234
 console.log("");
 
-import { ClusterStore } from "../../../src/common/cluster-store"
-import { Cluster } from "../../../src/main/cluster"
+import { ClusterStore } from "../../../common/cluster-store"
+import { Cluster } from "../../../main/cluster"
 
 describe("for an empty config", () => {
   beforeEach(() => {

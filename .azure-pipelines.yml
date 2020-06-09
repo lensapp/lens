@@ -71,8 +71,6 @@ jobs:
         condition: eq(variables.CACHE_RESTORED, 'true')
       - script: make deps
         displayName: Install dependencies
-      - script: make lint
-        displayName: Lint
       - script: make test
         displayName: Run tests
       - script: make build
@@ -115,8 +113,6 @@ jobs:
         condition: eq(variables.CACHE_RESTORED, 'true')
       - script: make deps
         displayName: Install dependencies
-      - script: make lint
-        displayName: Lint
       - script: make test
         displayName: Run tests
       - bash: |

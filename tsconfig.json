@@ -1,21 +1,31 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "noImplicitAny": true,
-      "sourceMap": true,
-      "skipLibCheck": true,
-      "outDir": "dist",
-      "baseUrl": ".",
-      "downlevelIteration": true,
-      "paths": {
-        "*": [
-            "node_modules/*",
-            "types/*"
-        ]
+  "extends": "./node_modules/electron-webpack/tsconfig-base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "jsx": "react",
+    "target": "ES2017",
+    "module": "CommonJS",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "moduleResolution": "Node",
+    "sourceMap": true,
+    "strict": false,
+    "noImplicitAny": true,
+    "noUnusedLocals": false,
+    "noImplicitReturns": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "traceResolution": false,
+    "resolveJsonModule": true,
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "types/*"
+      ]
     }
-    },
-    "include": [
-      "src/**/*",
-      "main.ts"
-    ]
   }
+}
