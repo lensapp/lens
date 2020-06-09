@@ -156,9 +156,12 @@ export class HelmRelease implements ItemObject {
   }
 
   getChart(withVersion = false) {
-    return withVersion ?
-      this.chart :
-      this.chart.substr(0, this.chart.lastIndexOf("-"));
+    let chart = this.chart
+    if(!withVersion && this.getVersion() != "" ) {
+      const search = new RegExp(`-${this.getVersion()}`)
+      chart = chart.replace(search, "");
+    }
+    return chart
   }
 
   getRevision() {
@@ -170,7 +173,7 @@ export class HelmRelease implements ItemObject {
   }
 
   getVersion() {
-    const versions = this.chart.match(/(\d+)[^-]*$/)
+    const versions = this.chart.match(/(v?\d+)[^-].*$/)
     if (versions) {
       return versions[0]
     } else {
