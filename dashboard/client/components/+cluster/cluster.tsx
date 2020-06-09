@@ -13,6 +13,7 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { clusterStore } from "./cluster.store";
 import { eventStore } from "../+events/event.store";
+import { isAllowedResource } from "../../api/rbac";
 
 @observer
 export class Cluster extends React.Component {
@@ -25,6 +26,9 @@ export class Cluster extends React.Component {
 
   async componentDidMount() {
     const { dependentStores } = this;
+    if (!isAllowedResource("nodes")) {
+      dependentStores.splice(dependentStores.indexOf(nodesStore), 1)
+    }
     this.watchers.forEach(watcher => watcher.start(true));
 
     await Promise.all([

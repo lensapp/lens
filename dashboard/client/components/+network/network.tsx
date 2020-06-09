@@ -12,6 +12,7 @@ import { Ingresses, ingressRoute, ingressURL } from "../+network-ingresses";
 import { NetworkPolicies, networkPoliciesRoute, networkPoliciesURL } from "../+network-policies";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { networkURL } from "./network.route";
+import { isAllowedResource } from "../../api/rbac";
 
 interface Props extends RouteComponentProps<{}> {
 }
@@ -20,32 +21,40 @@ interface Props extends RouteComponentProps<{}> {
 export class Network extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
     const query = namespaceStore.getContextParams()
-    return [
-      {
+    const routes: TabRoute[] = [];
+    if (isAllowedResource("services")) {
+      routes.push({
         title: <Trans>Services</Trans>,
         component: Services,
         url: servicesURL({ query }),
         path: servicesRoute.path,
-      },
-      {
+      })
+    }
+    if (isAllowedResource("endpoints")) {
+      routes.push({
         title: <Trans>Endpoints</Trans>,
         component: Endpoints,
         url: endpointURL({ query }),
         path: endpointRoute.path,
-      },
-      {
+      })
+    }
+    if (isAllowedResource("ingresses")) {
+      routes.push({
         title: <Trans>Ingresses</Trans>,
         component: Ingresses,
         url: ingressURL({ query }),
         path: ingressRoute.path,
-      },
-      {
+      })
+    }
+    if (isAllowedResource("networkpolicies")) {
+      routes.push({
         title: <Trans>Network Policies</Trans>,
         component: NetworkPolicies,
         url: networkPoliciesURL({ query }),
         path: networkPoliciesRoute.path,
-      },
-    ]
+      })
+    }
+    return routes
   }
 
   render() {

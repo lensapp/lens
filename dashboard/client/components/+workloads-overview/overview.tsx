@@ -16,6 +16,8 @@ import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { Spinner } from "../spinner";
 import { Events } from "../+events";
+import { KubeObjectStore } from "../../kube-object.store";
+import { isAllowedResource } from "../../api/rbac"
 
 interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 }
@@ -26,16 +28,31 @@ export class WorkloadsOverview extends React.Component<Props> {
   @observable isUnmounting = false;
 
   async componentDidMount() {
-    const stores = [
-      podsStore,
-      deploymentStore,
-      daemonSetStore,
-      statefulSetStore,
-      replicaSetStore,
-      jobStore,
-      cronJobStore,
-      eventStore,
-    ];
+    const stores: KubeObjectStore[] = [];
+    if (isAllowedResource("pods")) {
+      stores.push(podsStore);
+    }
+    if (isAllowedResource("deployments")) {
+      stores.push(deploymentStore);
+    }
+    if (isAllowedResource("daemonsets")) {
+      stores.push(daemonSetStore);
+    }
+    if (isAllowedResource("statefulsets")) {
+      stores.push(statefulSetStore);
+    }
+    if (isAllowedResource("replicasets")) {
+      stores.push(replicaSetStore);
+    }
+    if (isAllowedResource("jobs")) {
+      stores.push(jobStore);
+    }
+    if (isAllowedResource("cronjobs")) {
+      stores.push(cronJobStore);
+    }
+    if (isAllowedResource("events")) {
+      stores.push(eventStore);
+    }
     this.isReady = stores.every(store => store.isLoaded);
     await Promise.all(stores.map(store => store.loadAll()));
     this.isReady = true;
@@ -55,11 +72,11 @@ export class WorkloadsOverview extends React.Component<Props> {
     return (
       <>
         <OverviewStatuses/>
-        <Events
+        { isAllowedResource("events") && <Events
           compact
           hideFilters
           className="box grow"
-        />
+        /> }
       </>
     )
   }

@@ -27,7 +27,10 @@ export class WindowManager {
       center: true,
       frame: false,
       resizable: false,
-      show: false
+      show: false,
+      webPreferences: {
+        nodeIntegration: true
+      }
     })
     if (showSplash) {
       this.splashWindow.loadFile(path.join(__static, "/splash.html"))

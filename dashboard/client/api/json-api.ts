@@ -105,8 +105,9 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
         this.onData.emit(data, res);
         this.writeLog({ ...log, data });
         return data;
-      }
-      else {
+      } else if (log.method === "GET" && res.status === 403) {
+        this.writeLog({ ...log, data });
+      } else {
         const error = new JsonApiErrorParsed(data, this.parseError(data, res));
         this.onError.emit(error, res);
         this.writeLog({ ...log, error })

@@ -159,7 +159,7 @@ export class ShellSession extends EventEmitter {
   }
 
   protected exit(code = 1000) {
-    this.websocket.close(code)
+    if (this.websocket.readyState == this.websocket.OPEN) this.websocket.close(code)
     this.emit('exit')
   }
 
@@ -179,10 +179,23 @@ export class ShellSession extends EventEmitter {
 
   protected exitProcessOnWebsocketClose() {
     this.websocket.on("close", () => {
-      if (this.shellProcess) {
-        this.shellProcess.kill();
-      }
+      this.killShellProcess()
     })
+  }
+
+  protected killShellProcess(){
+    if(this.running) {
+      // On Windows we need to kill the shell process by pid, since Lens won't respond after a while if using `this.shellProcess.kill()`
+      if (process.platform == "win32") {
+        try {
+          process.kill(this.shellProcess.pid)
+        } catch(e) {
+          return
+        }
+      } else {
+        this.shellProcess.kill()
+      }
+    }
   }
 
   protected sendResponse(msg: string) {
