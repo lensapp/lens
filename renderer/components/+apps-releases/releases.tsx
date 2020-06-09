@@ -5,9 +5,7 @@ import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
-import { autobind, interval } from "../../utils";
 import { releaseStore } from "./release.store";
-import { helmChartStore } from "../+apps-helm-charts/helm-chart.store";
 import { IReleaseRouteParams, releaseURL } from "./release.route";
 import { HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { ReleaseDetails } from "./release-details";
@@ -15,9 +13,7 @@ import { ReleaseRollbackDialog } from "./release-rollback-dialog";
 import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
 import { HelmReleaseMenu } from "./release-menu";
-import { Icon } from "../icon";
 import { secretsStore } from "../+config-secrets/secrets.store";
-import { when } from "mobx";
 
 enum sortBy {
   name = "name",
@@ -33,30 +29,15 @@ interface Props extends RouteComponentProps<IReleaseRouteParams> {
 
 @observer
 export class HelmReleases extends Component<Props> {
-  private versionsWatcher = interval(3600, this.checkVersions);
 
   componentDidMount() {
     // Watch for secrets associated with releases and react to their changes
     releaseStore.watch();
-    this.versionsWatcher.start();
-    when(() => releaseStore.isLoaded, this.checkVersions);
   }
 
   componentWillUnmount() {
     releaseStore.unwatch();
-    this.versionsWatcher.stop();
   }
-
-  // Check all available versions every 1 hour for installed releases.
-  // This required to show "upgrade" icon in the list and upgrade button in the details view.
-  @autobind()
-  checkVersions() {
-    const charts = releaseStore.items.map(release => release.getChart());
-    return charts.reduce((promise, chartName) => {
-      const loadVersions = () => helmChartStore.getVersions(chartName, true);
-      return promise.then(loadVersions, loadVersions);
-    }, Promise.resolve({}))
-  };
 
   get selectedRelease() {
     const { match: { params: { name, namespace } } } = this.props;
@@ -130,7 +111,6 @@ export class HelmReleases extends Component<Props> {
           ]}
           renderTableContents={(release: HelmRelease) => {
             const version = release.getVersion();
-            const lastVersion = release.getLastVersion();
             return [
               release.getName(),
               release.getNs(),
@@ -138,20 +118,6 @@ export class HelmReleases extends Component<Props> {
               release.getRevision(),
               <>
                 {version}
-                {!lastVersion && (
-                  <Icon
-                    small svg="spinner"
-                    className="checking-update"
-                    tooltip={<Trans>Checking update</Trans>}
-                  />
-                )}
-                {release.hasNewVersion() && (
-                  <Icon
-                    material="new_releases"
-                    className="new-version"
-                    tooltip={<Trans>New version: {lastVersion}</Trans>}
-                  />
-                )}
               </>,
               release.appVersion,
               { title: release.getStatus(), className: kebabCase(release.getStatus()) },

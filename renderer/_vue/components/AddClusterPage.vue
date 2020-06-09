@@ -11,6 +11,7 @@
                   label="Choose config:"
                 >
                   <b-form-select
+                    id="kubecontext-select"
                     v-model="kubecontext"
                     :options="contextNames"
                     @change="onSelect($event)"
