@@ -37,19 +37,12 @@ export class HelmReleaseMenu extends React.Component<Props> {
     const { release, toolbar } = this.props;
     if (!release) return;
     const hasRollback = release && release.getRevision() > 1;
-    const hasNewVersion = release.hasNewVersion();
     return (
       <>
         {hasRollback && (
           <MenuItem onClick={this.rollback}>
             <Icon material="history" interactive={toolbar} title={_i18n._(t`Rollback`)}/>
             <span className="title"><Trans>Rollback</Trans></span>
-          </MenuItem>
-        )}
-        {hasNewVersion && (
-          <MenuItem onClick={this.upgrade}>
-            <Icon material="build" interactive={toolbar} title={_i18n._(t`Upgrade`)}/>
-            <span className="title"><Trans>Upgrade</Trans></span>
           </MenuItem>
         )}
       </>
