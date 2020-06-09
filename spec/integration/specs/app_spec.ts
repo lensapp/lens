@@ -28,7 +28,7 @@ describe("app start", () => {
   it('allows to add a cluster', async () => {
     const status = spawnSync("minikube status", {shell: true})
     if (status.status !== 0) {
-      console.warn("skipping test")
+      console.warn("minikube not running, skipping test")
       return
     }
     await clickWhatsNew(app)
