@@ -44,7 +44,6 @@ jobs:
           WIN_CSC_KEY_PASSWORD: $(WIN_CSC_KEY_PASSWORD)
           GH_TOKEN: $(GH_TOKEN)
   - job: macOS
-    condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
     pool:
       vmImage: macOS-10.14
     strategy:
@@ -75,7 +74,10 @@ jobs:
         displayName: Lint
       - script: make test
         displayName: Run tests
+      - script: make integration-mac
+        displayName: Run integration tests
       - script: make build
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Build
         env:
           APPLEID: $(APPLEID)
@@ -119,6 +121,15 @@ jobs:
         displayName: Lint
       - script: make test
         displayName: Run tests
+      - bash: |
+          sudo apt-get update
+          sudo apt-get install libgconf-2-4 conntrack -y
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          sudo minikube start --driver=none
+        displayName: Install integration test dependencies
+      - script: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
+        displayName: Run integration tests
       - bash: |
           sudo chown root:root /
           sudo apt-get update && sudo apt-get install -y snapd
