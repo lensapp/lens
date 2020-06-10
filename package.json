@@ -139,7 +139,7 @@
     "electron-updater": "^4.1.2",
     "electron-window-state": "^5.0.3",
     "filenamify": "^4.1.0",
-    "handlebars": "4.1.2",
+    "handlebars": "4.3.0",
     "http-proxy": "^1.18.0",
     "http-proxy-middleware": "^0.19.2",
     "https-proxy-agent": "^3.0.1",
