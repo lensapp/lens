@@ -13,7 +13,6 @@ trigger:
     - "*"
 jobs:
   - job: Windows
-    condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
     pool:
       vmImage: windows-2019
     strategy:
