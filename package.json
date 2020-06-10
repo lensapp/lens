@@ -77,7 +77,15 @@
     "afterSign": "build/notarize.js",
     "extraResources": [
       {
-        "from": "src/(features|static|locales)",
+        "from": "src/locales/",
+        "filter": "**/*.js"
+      },
+      {
+        "from": "src/features/",
+        "filter": "**/*"
+      },
+      {
+        "from": "static/",
         "filter": "**/*"
       },
       "LICENSE"

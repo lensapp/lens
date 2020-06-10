@@ -65,13 +65,10 @@ export class ShellSession extends EventEmitter {
     switch(path.basename(shell)) {
     case "powershell.exe":
       return ["-NoExit", "-command", `& {Set-Location $Env:USERPROFILE; $Env:PATH="${this.kubectlBinDir};${this.helmBinDir};$Env:PATH"}`]
-      break
     case "bash":
       return ["--init-file", path.join(this.kubectlBinDir, '.bash_set_path')]
-      break
     case "fish":
       return ["--login", "--init-command", `export PATH="${this.kubectlBinDir}:${this.helmBinDir}:$PATH"; export KUBECONFIG="${this.kubeconfigPath}"`]
-      break
     case "zsh":
       return ["--login"]
     default:
@@ -132,7 +129,7 @@ export class ShellSession extends EventEmitter {
 
   protected pipeStdout() {
     // send shell output to websocket
-    this.shellProcess.on("data", ((data: string) => {
+    this.shellProcess.onData(((data: string) => {
       this.sendResponse(data)
     }).bind(this));
   }
@@ -187,7 +184,7 @@ export class ShellSession extends EventEmitter {
   protected killShellProcess(){
     if(this.running) {
       // On Windows we need to kill the shell process by pid, since Lens won't respond after a while if using `this.shellProcess.kill()`
-      if (process.platform == "win32") {
+      if (isWindows) {
         try {
           process.kill(this.shellProcess.pid)
         } catch(e) {
