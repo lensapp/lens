@@ -47,16 +47,15 @@
     }
   },
   "lingui": {
-    "locales": ["en", "ru"],
+    "locales": [
+      "en",
+      "ru",
+      "fi"
+    ],
     "sourceLocale": "en",
     "fallbackLocale": "en",
-    "compileNamespace": "cjs",
+    "compileNamespace": "es",
     "format": "po",
-    "extractBabelOptions": {
-      "plugins": [
-        "@babel/plugin-syntax-dynamic-import"
-      ]
-    },
     "catalogs": [
       {
         "path": "./src/locales/{locale}/messages",
@@ -170,7 +169,7 @@
     "@types/proper-lockfile": "^4.1.1",
     "@types/tar": "^4.0.3",
     "crypto-js": "^4.0.0",
-    "electron": "^9.0.2",
+    "electron": "^6.1.12",
     "electron-promise-ipc": "^2.1.0",
     "electron-store": "^5.2.0",
     "electron-updater": "^4.3.1",
@@ -205,11 +204,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
-    "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-react": "^7.10.1",
     "@babel/preset-typescript": "^7.10.1",
+    "@lingui/babel-preset-react": "^2.9.1",
     "@lingui/cli": "^3.0.0-13",
     "@lingui/loader": "^3.0.0-13",
     "@lingui/macro": "^3.0.0-13",

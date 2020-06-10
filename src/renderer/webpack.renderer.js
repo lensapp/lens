@@ -4,32 +4,46 @@ const path = require("path");
 module.exports = function (config, env) {
   const {rules} = config.module;
 
-  // patch-fix sass-loader
-  const sassLoaderName = "sass-loader";
-  const sassLoaderRule = rules.find(rule => {
-    if (Array.isArray(rule.use)) return rule.use.includes(sassLoaderName)
-    return rule.use === sassLoaderName;
+  // localization support
+  // https://lingui.js.org/guides/typescript.html
+  rules.push({
+    test: /\.po$/,
+    use: '@lingui/loader'
   });
-  if (sassLoaderRule) {
-    let index = sassLoaderRule.use.findIndex(loader => loader === sassLoaderName);
-    sassLoaderRule.use[index] = {
-      loader: sassLoaderName,
-      options: {
-        prependData: '@import "vars.scss";',
-        sassOptions: {
-          includePaths: [
-            path.resolve(__dirname, "components")
-          ]
-        }
+  patchLoader(".tsx", "ts-loader", loader => {
+    loader.options = Object.assign({}, loader.options, {
+      compilerOptions: {
+        jsx: "preserve",
+        target: "es2016",
       }
+    })
+    return ["babel-loader", loader]
+  });
+
+  // sass common vars file import
+  patchLoader(".scss", "sass-loader", loader => {
+    loader.options = Object.assign({}, loader.options, {
+      prependData: '@import "vars.scss";',
+      sassOptions: {
+        includePaths: [
+          path.resolve(__dirname, "components")
+        ]
+      }
+    })
+    return loader;
+  });
+
+  function patchLoader(fileType, loaderName, updater) {
+    let rule = rules.find(rule => fileType.match(rule.test));
+    if (rule) {
+      let loaders = [rule.use].flat();
+      let index = loaders.findIndex(loader => loader === loaderName || loader.loader === loaderName);
+      let loader = typeof loaders[index] === "string" ? {loader: loaders[index]} : loaders[index];
+      loaders[index] = updater(loader);
+      rule.use = loaders.flat();
+      console.info(`Patched renderer's webpack loader "${loaderName}"`);
     }
   }
-
-  // add inline svg icons support
-  rules.push({
-    test: /\.txt$/,
-    use: 'raw-loader'
-  });
 
   return config;
 }

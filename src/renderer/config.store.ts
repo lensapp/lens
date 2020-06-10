@@ -42,7 +42,7 @@ export class ConfigStore {
   }
 
   get allowedResources() {
-    return this.config.allowedResources;
+    return this.config.allowedResources || [];
   }
 
   get isClusterAdmin() {

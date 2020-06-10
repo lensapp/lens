@@ -22,10 +22,11 @@ export class LocalizationStore {
   readonly defaultLocale = "en"
   @observable activeLang = this.defaultLocale;
 
+  // todo: verify with package.json ling-ui "locales"
   public languages: ILanguage[] = orderBy<ILanguage>([
     { code: "en", title: "English", nativeTitle: "English" },
     { code: "ru", title: "Russian", nativeTitle: "Русский" },
-    // { code: "fi", title: "Finnish", nativeTitle: "Suomi" },
+    { code: "fi", title: "Finnish", nativeTitle: "Suomi" },
   ], "title");
 
   constructor() {
@@ -39,10 +40,7 @@ export class LocalizationStore {
   }
 
   async load(locale: string) {
-    const catalog = await import(
-      /* webpackMode: "lazy", webpackChunkName: "locale/[request]" */
-      `@lingui/loader!../locales/${locale}/messages.po`
-    );
+    const catalog = await import(`../locales/${locale}/messages.po`);
     return _i18n.load(locale, catalog);
   }
 

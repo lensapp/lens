@@ -39,8 +39,8 @@ export class App extends React.Component {
   static rootElem = document.getElementById('app');
 
   static async init() {
-    await i18nStore.init();
-    await configStore.init();
+    // await i18nStore.init();
+    // await configStore.init();
     render(<App/>, App.rootElem);
   };
 
