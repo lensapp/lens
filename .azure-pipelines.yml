@@ -34,10 +34,15 @@ jobs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
+      - powershell: |
+          mkdir -p "$YARN_CACHE_FOLDER"
+          tar -xzf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" -C /
+        displayName: "Unpack cache"
+        condition: eq(variables.CACHE_RESTORED, 'true')
       - script: make deps
         displayName: Install dependencies
       - powershell: |
-          minikube.exe start --driver=docker
+          kind.exe create cluster --name minikube
         displayName: Starting Minikube
       - script: make integration-win
         displayName: Run integration tests
