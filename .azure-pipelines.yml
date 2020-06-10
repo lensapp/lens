@@ -146,6 +146,7 @@ jobs:
           SNAP_LOGIN: $(SNAP_LOGIN)
       - script: make build
         displayName: Build
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
           GH_TOKEN: $(GH_TOKEN)
       - bash: |
