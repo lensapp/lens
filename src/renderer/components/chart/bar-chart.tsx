@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import merge from "lodash/merge";
 import moment from "moment";
 import Color from "color";
-import { ChartData, ChartOptions, ChartPoint, Scriptable } from "src/renderer/components/chart/chart.js";
+import { ChartData, ChartOptions, ChartPoint, Scriptable } from "chart.js";
 import { Chart, ChartKind, ChartProps } from "./chart";
 import { bytesToUnits, cssNames } from "../../utils";
 import { ZebraStripes } from "./zebra-stripes.plugin";

@@ -1,4 +1,4 @@
-import ChartJS from "src/renderer/components/chart/chart.js";
+import ChartJS from "chart.js";
 import get from "lodash/get";
 
 const defaultOptions = {
