@@ -37,7 +37,10 @@ jobs:
         displayName: Cache Yarn packages
       - script: make deps
         displayName: Install dependencies
+      - script: make integration-win
+        displayName: Run integration tests
       - script: make build
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Build
         env:
           WIN_CSC_LINK: $(WIN_CSC_LINK)
@@ -53,6 +56,7 @@ jobs:
     steps:
       - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         displayName: Set the tag name as an environment variable
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
       - task: NodeTool@0
         inputs:
           versionSpec: $(node_version)
