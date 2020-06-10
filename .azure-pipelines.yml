@@ -37,6 +37,9 @@ jobs:
         displayName: Cache Yarn packages
       - script: make deps
         displayName: Install dependencies
+      - powershell: |
+          minikube.exe start
+        displayName: Starting Minikube
       - script: make integration-win
         displayName: Run integration tests
       - script: make build
