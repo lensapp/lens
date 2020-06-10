@@ -25,5 +25,10 @@
         "types/*"
       ]
     }
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
   }
 }
