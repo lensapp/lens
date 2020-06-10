@@ -1,7 +1,7 @@
 // Plugin for drawing stripe bars on top of any timeseries barchart
 // Based on cover DIV element with repeating-linear-gradient style
 
-import { ChartPoint, default as ChartJS } from "chart.js";
+import { ChartPoint, default as ChartJS } from "src/renderer/components/chart/chart.js";
 import moment, { Moment } from "moment";
 import get from "lodash/get";
 

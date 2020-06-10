@@ -1,4 +1,4 @@
-import packageInfo from "../package.json"
+import packageInfo from "../../package.json"
 import { app, remote } from "electron"
 import path from "path"
 import fs from "fs"

@@ -1,4 +1,4 @@
-import packageInfo from "../package.json"
+import packageInfo from "../../package.json"
 import path from "path"
 import { LensBinary, LensBinaryOpts } from "./lens-binary"
 import { isProduction } from "../common/vars";

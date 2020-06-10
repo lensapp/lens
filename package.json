@@ -3,7 +3,7 @@
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
   "version": "3.5.0-beta.1",
-  "main": "main/index.ts",
+  "main": "src/main",
   "scripts": {
     "dev": "electron-webpack dev",
     "compile": "yarn download-bins && yarn i18n:compile  && electron-webpack compile",
@@ -38,13 +38,31 @@
     "commonSourceDirectory": "./common",
     "staticSourceDirectory": "./static",
     "main": {
-      "sourceDirectory": "./main"
+      "sourceDirectory": "./src/main"
     },
     "renderer": {
-      "sourceDirectory": "./renderer",
-      "template": "./renderer/template.html",
-      "webpackConfig": "./renderer/webpack.renderer.js"
+      "sourceDirectory": "./src/renderer",
+      "template": "./src/renderer/template.html",
+      "webpackConfig": "./src/renderer/webpack.renderer.js"
     }
+  },
+  "lingui": {
+    "locales": ["en", "ru"],
+    "sourceLocale": "en",
+    "fallbackLocale": "en",
+    "compileNamespace": "cjs",
+    "format": "po",
+    "extractBabelOptions": {
+      "plugins": [
+        "@babel/plugin-syntax-dynamic-import"
+      ]
+    },
+    "catalogs": [
+      {
+        "path": "./src/locales/{locale}/messages",
+        "include": "./src/renderer"
+      }
+    ]
   },
   "jest": {
     "collectCoverage": true,
@@ -59,7 +77,7 @@
     "afterSign": "build/notarize.js",
     "extraResources": [
       {
-        "from": "(features|static|locales)/",
+        "from": "src/(features|static|locales)",
         "filter": "**/*"
       },
       "LICENSE"

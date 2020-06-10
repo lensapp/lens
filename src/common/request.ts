@@ -1,5 +1,5 @@
 import request from "request"
-import { userStore } from "../common/user-store"
+import { userStore } from "./user-store"
 
 export function globalRequestOpts(requestOpts: request.Options ) {
   const userPrefs = userStore.getPreferences()

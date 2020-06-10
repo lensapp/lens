@@ -1,8 +1,8 @@
 
 @import 'custom';
 @import 'fonts';
-@import '~bootstrap/scss/bootstrap';
-@import '~bootstrap-vue/src/index.scss';
+@import '../../../../../node_modules/bootstrap/scss/bootstrap';
+@import '../../../../../node_modules/bootstrap-vue/src/index';
 
 html, body {
   margin: 0;

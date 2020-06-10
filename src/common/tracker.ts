@@ -1,6 +1,6 @@
 import ua from "universal-analytics"
 import { machineIdSync } from "node-machine-id"
-import { userStore } from "../common/user-store"
+import { userStore } from "./user-store"
 
 const GA_ID = "UA-159377374-1"
 

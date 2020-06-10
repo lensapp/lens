@@ -1,5 +1,5 @@
 // App's common paths/flags/etc. for any process
-import packageInfo from "../package.json"
+import packageInfo from "../../package.json"
 import path from "path";
 
 const { main, renderer } = packageInfo.electronWebpack;
