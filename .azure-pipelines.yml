@@ -37,7 +37,7 @@ jobs:
       - script: make deps
         displayName: Install dependencies
       - powershell: |
-          minikube.exe start
+          minikube.exe start --driver=docker
         displayName: Starting Minikube
       - script: make integration-win
         displayName: Run integration tests
