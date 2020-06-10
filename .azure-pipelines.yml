@@ -33,6 +33,7 @@ jobs:
         inputs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
+          cacheHitVar: CACHE_RESTORED
         displayName: Cache Yarn packages
       - powershell: |
           mkdir -p "$YARN_CACHE_FOLDER"
@@ -41,9 +42,6 @@ jobs:
         condition: eq(variables.CACHE_RESTORED, 'true')
       - script: make deps
         displayName: Install dependencies
-      - powershell: |
-          kind.exe create cluster --name minikube
-        displayName: Starting Minikube
       - script: make integration-win
         displayName: Run integration tests
       - script: make build
