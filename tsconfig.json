@@ -4,6 +4,8 @@
     "baseUrl": ".",
     "outDir": "./dist",
     "jsx": "react",
+    "target": "es2017",
+    "module": "CommonJS",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "moduleResolution": "Node",
     "sourceMap": true,
@@ -26,6 +28,10 @@
       ]
     }
   },
+  "include": [
+    "src/**/*",
+    "types/*"
+  ],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"

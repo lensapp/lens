@@ -2,7 +2,8 @@
 const path = require("path");
 
 module.exports = function (config, env) {
-  const {rules} = config.module;
+  const {module, plugins} = config;
+  const {rules} = module;
 
   // localization support
   // https://lingui.js.org/guides/typescript.html
@@ -13,8 +14,9 @@ module.exports = function (config, env) {
   patchLoader(".tsx", "ts-loader", loader => {
     loader.options = Object.assign({}, loader.options, {
       compilerOptions: {
-        jsx: "preserve",
-        target: "es2016",
+        jsx: "preserve", // @lingui/babel-preset-react
+        target: "es2016", // @lingui/babel-preset-react
+        module: "esnext", // https://webpack.js.org/guides/code-splitting/#dynamic-imports
       }
     })
     return ["babel-loader", loader]
@@ -41,7 +43,7 @@ module.exports = function (config, env) {
       let loader = typeof loaders[index] === "string" ? {loader: loaders[index]} : loaders[index];
       loaders[index] = updater(loader);
       rule.use = loaders.flat();
-      console.info(`Patched renderer's webpack loader "${loaderName}"`);
+      console.info(`Patched renderer's webpack loader "${loaderName}"`, loader);
     }
   }
 
