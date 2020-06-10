@@ -1,3 +1,3 @@
-import { helmCli } from "../main/helm-cli"
+import { helmCli } from "../src/main/helm-cli"
 
 helmCli.ensureBinary()

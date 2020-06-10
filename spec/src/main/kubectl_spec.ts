@@ -1,4 +1,4 @@
-import { bundledKubectl, Kubectl } from "../../../main/kubectl";
+import { bundledKubectl, Kubectl } from "../../../src/main/kubectl";
 
 jest.mock("electron")
 jest.mock("../../../common/user-store")

@@ -1,5 +1,5 @@
 import mockFs from "mock-fs"
-import { userStore, UserStore } from "../../../common/user-store"
+import { userStore, UserStore } from "../../../src/common/user-store"
 
 jest.mock("electron", () => {
   return {
