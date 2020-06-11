@@ -1,8 +1,10 @@
 import moment from "moment";
 import { observable, reaction } from "mobx";
 import { setupI18n } from "@lingui/core";
-import { autobind, createStorage } from "./utils";
 import orderBy from "lodash/orderBy"
+import { autobind, createStorage } from "./utils";
+
+const plurals: Record<string, Function> = require('make-plural/plurals');
 
 export interface ILanguage {
   code: string;
@@ -40,17 +42,22 @@ export class LocalizationStore {
   }
 
   async load(locale: string) {
-    const catalog = await import(`../locales/${locale}/messages.po`);
-    return _i18n.load(locale, catalog);
+    const { messages } = await import(
+      /* webpackChunkName: "i18n-[request]" */
+      `@lingui/loader!../../locales/${locale}/messages.po`
+      );
+    _i18n.loadLocaleData(locale, { plurals: plurals[locale] });
+    _i18n.load(locale, messages);
   }
 
   async setLocale(locale: string) {
     await this.load(locale);
-    await _i18n.activate(locale);
 
     // set moment's locale before activeLang for proper next render() in app
     moment.locale(locale);
     this.activeLang = locale;
+
+    await _i18n.activate(locale);
   }
 }
 

@@ -5,6 +5,8 @@
     "@lingui/babel-preset-react"
   ],
   "plugins": [
+    "@babel/transform-runtime",
+    "@babel/syntax-dynamic-import",
     "macros"
   ]
 }

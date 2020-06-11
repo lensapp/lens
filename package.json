@@ -52,13 +52,18 @@
       "ru",
       "fi"
     ],
+    "format": "po",
     "sourceLocale": "en",
     "fallbackLocale": "en",
-    "compileNamespace": "es",
-    "format": "po",
+    "compileNamespace": "cjs",
+    "extractBabelOptions": {
+      "plugins": [
+        "@babel/plugin-syntax-dynamic-import"
+      ]
+    },
     "catalogs": [
       {
-        "path": "./src/locales/{locale}/messages",
+        "path": "./locales/{locale}/messages",
         "include": "./src/renderer"
       }
     ]
@@ -76,12 +81,12 @@
     "afterSign": "build/notarize.js",
     "extraResources": [
       {
-        "from": "src/locales/",
-        "filter": "**/*.js"
-      },
-      {
         "from": "src/features/",
         "filter": "**/*"
+      },
+      {
+        "from": "locales/",
+        "filter": "**/*.js"
       },
       {
         "from": "static/",
@@ -204,6 +209,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-react": "^7.10.1",
     "@babel/preset-typescript": "^7.10.1",
@@ -259,6 +266,7 @@
     "identity-obj-proxy": "^3.0.0",
     "include-media": "^1.4.9",
     "jest": "^26.0.1",
+    "make-plural": "^6.2.1",
     "material-design-icons": "^3.0.1",
     "mobx": "^5.15.4",
     "mobx-observable-history": "^1.0.3",

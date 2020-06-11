@@ -2,15 +2,11 @@
 const path = require("path");
 
 module.exports = function (config, env) {
-  const {module, plugins} = config;
+  const {module} = config;
   const {rules} = module;
 
   // localization support
   // https://lingui.js.org/guides/typescript.html
-  rules.push({
-    test: /\.po$/,
-    use: '@lingui/loader'
-  });
   patchLoader(".tsx", "ts-loader", loader => {
     loader.options = Object.assign({}, loader.options, {
       compilerOptions: {
@@ -43,7 +39,7 @@ module.exports = function (config, env) {
       let loader = typeof loaders[index] === "string" ? {loader: loaders[index]} : loaders[index];
       loaders[index] = updater(loader);
       rule.use = loaders.flat();
-      console.info(`Patched renderer's webpack loader "${loaderName}"`, loader);
+      console.info(`Patched webpack's renderer config for "${loaderName}" in ${__filename}`, loader);
     }
   }
 

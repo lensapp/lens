@@ -7,4 +7,4 @@ tmp/
 static/build/client/
 binaries/client/
 binaries/server/
-src/locales/**/**.js
+locales/**/**.js
