@@ -36,8 +36,8 @@ jobs:
           cacheHitVar: CACHE_RESTORED
         displayName: Cache Yarn packages
       - powershell: |
-          mkdir -p "$YARN_CACHE_FOLDER"
-          tar -xzf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" -C /
+          mkdir -p "$env:YARN_CACHE_FOLDER"
+          tar -xzf "$env:YARN_CACHE_FOLDER/yarn-cache.tar.gz" -C /
         displayName: "Unpack cache"
         condition: eq(variables.CACHE_RESTORED, 'true')
       - script: make deps
@@ -120,7 +120,7 @@ jobs:
           cacheHitVar: CACHE_RESTORED
         displayName: Cache Yarn packages
       - bash: |
-          mkdir -p "$env:YARN_CACHE_FOLDER"
+          mkdir -p "$YARN_CACHE_FOLDER"
           tar -xzf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" -C /
         displayName: "Unpack cache"
         condition: eq(variables.CACHE_RESTORED, 'true')
