@@ -6,9 +6,9 @@ import logger from "./logger"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import * as fm from "./feature-manager";
 import { Kubectl } from "./kubectl";
+import { KubeconfigManager } from "./kubeconfig-manager"
 import { PromiseIpc } from "electron-promise-ipc"
 import request from "request-promise-native"
-import { KubeconfigManager } from "./kubeconfig-manager"
 import { apiPrefix } from "../common/vars";
 
 enum ClusterStatus {
@@ -19,7 +19,8 @@ enum ClusterStatus {
 
 export interface ClusterBaseInfo {
   id: string;
-  kubeConfig: string;
+  kubeConfigPath: string;
+  contextName: string;
   preferences?: ClusterPreferences;
   port?: number;
   workspace?: string;
@@ -73,7 +74,7 @@ export class Cluster implements ClusterInfo {
   public isAdmin: boolean;
   public features: FeatureStatusMap;
   public kubeCtl: Kubectl
-  public kubeConfig: string;
+  public kubeConfigPath: string;
   public eventCount: number;
   public preferences: ClusterPreferences;
 
@@ -85,16 +86,16 @@ export class Cluster implements ClusterInfo {
   constructor(clusterInfo: ClusterBaseInfo) {
     if (clusterInfo) Object.assign(this, clusterInfo)
     if (!this.preferences) this.preferences = {}
-    this.kubeconfigManager = new KubeconfigManager(this.kubeConfig)
+    this.kubeconfigManager = new KubeconfigManager(this)
   }
 
-  public kubeconfigPath() {
+  public proxyKubeconfigPath() {
     return this.kubeconfigManager.getPath()
   }
 
   public async init(kc: KubeConfig) {
     this.contextHandler = new ContextHandler(kc, this)
-    this.contextName = kc.currentContext
+    //this.contextName = kc.currentContext
     this.url = this.contextHandler.url
     this.apiUrl = kc.getCurrentCluster().server
   }
@@ -138,15 +139,13 @@ export class Cluster implements ClusterInfo {
     this.eventCount = await this.getEventCount();
   }
 
-  public updateKubeconfig(kubeconfig: string) {
-    const storedCluster = clusterStore.getCluster(this.id)
-    if (!storedCluster) {
-      return
-    }
+  // public updateKubeconfig(kubeconfig: string) {
+  //   const storedCluster = clusterStore.getCluster(this.id)
+  //   if (!storedCluster) { return }
 
-    this.kubeConfig = kubeconfig
-    this.save()
-  }
+  //   this.kubeConfig = kubeconfig
+  //   this.save()
+  // }
 
   public getPrometheusApiPrefix() {
     if (!this.preferences.prometheus?.prefix) {
@@ -175,7 +174,7 @@ export class Cluster implements ClusterInfo {
       isAdmin: this.isAdmin,
       features: this.features,
       kubeCtl: this.kubeCtl,
-      kubeConfig: this.kubeConfig,
+      kubeConfigPath:  this.kubeConfigPath,
       preferences: this.preferences
     }
   }

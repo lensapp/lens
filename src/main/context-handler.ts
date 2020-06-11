@@ -7,7 +7,9 @@ import { getFreePort } from "./port"
 import { KubeAuthProxy } from "./kube-auth-proxy"
 import { Cluster, ClusterPreferences } from "./cluster"
 import { prometheusProviders } from "../common/prometheus-providers"
-import { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry"
+import { PrometheusService, PrometheusProvider } from "./prometheus/provider-registry"
+import { PrometheusLens } from "./prometheus/lens"
+import { KubeconfigManager } from "./kubeconfig-manager"
 
 export class ContextHandler {
   public contextName: string
@@ -35,36 +37,37 @@ export class ContextHandler {
 
   constructor(kc: KubeConfig, cluster: Cluster) {
     this.id = cluster.id
-    this.kc = new KubeConfig()
-    this.kc.users = [
-      {
-        name: kc.getCurrentUser().name,
-        token: this.id
-      }
-    ]
-    this.kc.contexts = [
-      {
-        name: kc.currentContext,
-        cluster: kc.getCurrentCluster().name,
-        user: kc.getCurrentUser().name,
-        namespace: kc.getContextObject(kc.currentContext).namespace
-      }
-    ]
-    this.kc.setCurrentContext(kc.currentContext)
+    this.kc = kc
+    logger.info(`**** ctxHandler.kc: ${JSON.stringify(kc, null, 2)}`)
+    // this.kc.users = [
+    //   {
+    //     name: kc.getCurrentUser().name,
+    //     token: this.id
+    //   }
+    // ]
+    // this.kc.contexts = [
+    //   {
+    //     name: kc.currentContext,
+    //     cluster: kc.getCurrentCluster().name,
+    //     user: kc.getCurrentUser().name,
+    //     namespace: kc.getContextObject(kc.currentContext).namespace
+    //   }
+    // ]
+    this.kc.setCurrentContext(cluster.contextName)
 
     this.cluster = cluster
     this.clusterUrl = url.parse(kc.getCurrentCluster().server)
-    this.contextName = kc.currentContext;
+    this.contextName = cluster.contextName;
     this.defaultNamespace = kc.getContextObject(kc.currentContext).namespace
     this.url = `http://${this.id}.localhost:${cluster.port}/`
     this.kubernetesApi = `http://127.0.0.1:${cluster.port}/${this.id}`
-    this.kc.clusters = [
-      {
-        name: kc.getCurrentCluster().name,
-        server: this.kubernetesApi,
-        skipTLSVerify: true
-      }
-    ]
+    // this.kc.clusters = [
+    //   {
+    //     name: kc.getCurrentCluster().name,
+    //     server: this.kubernetesApi,
+    //     skipTLSVerify: true
+    //   }
+    // ]
     this.setClusterPreferences(cluster.preferences)
   }
 
@@ -174,7 +177,7 @@ export class ContextHandler {
 
   public async withTemporaryKubeconfig(callback: (kubeconfig: string) => Promise<any>) {
     try {
-      await callback(this.cluster.kubeconfigPath())
+      await callback(this.cluster.proxyKubeconfigPath())
     } catch (error) {
       throw(error)
     }

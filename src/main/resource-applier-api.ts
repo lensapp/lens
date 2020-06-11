@@ -6,7 +6,7 @@ class ResourceApplierApi extends LensApi {
   public async applyResource(request: LensApiRequest) {
     const { response, cluster, payload } = request
     try {
-      const resource = await resourceApplier.apply(cluster, cluster.kubeconfigPath(), payload)
+      const resource = await resourceApplier.apply(cluster, cluster.proxyKubeconfigPath(), payload)
       this.respondJson(response, [resource], 200)
     } catch(error) {
       this.respondText(response, error, 422)

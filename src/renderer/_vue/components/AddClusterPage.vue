@@ -113,6 +113,7 @@ import * as PrismEditor from 'vue-prism-editor'
 import * as k8s from "@kubernetes/client-node"
 import { dumpConfigYaml } from "../../../main/k8s"
 import ClustersMixin from "@/_vue/mixins/ClustersMixin";
+import * as path from "path"
 
 class ClusterAccessError extends Error {}
 
@@ -196,8 +197,13 @@ export default {
       try {
         const kc = new k8s.KubeConfig();
         kc.loadFromString(this.clusterconfig); // throws TypeError if we cannot parse kubeconfig
+
+        // TODO Remove hardcoded path
+        const configPath = path.join(process.env.HOME, '.kube', 'config');
+
         const clusterInfo = {
-          kubeConfig: dumpConfigYaml(kc),
+          kubeConfigPath: configPath,
+          contextName: kc.currentContext,
           preferences: {
             clusterName: kc.currentContext
           },

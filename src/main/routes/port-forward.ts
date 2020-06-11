@@ -87,7 +87,7 @@ class PortForwardRoute extends LensApi {
         namespace: params.namespace,
         name: params.service,
         port: params.port,
-        kubeConfig: cluster.kubeconfigPath()
+        kubeConfig: cluster.proxyKubeconfigPath()
       })
       const started = await portForward.start()
       if (!started) {
