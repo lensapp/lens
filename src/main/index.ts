@@ -26,6 +26,7 @@ const promiseIpc = new PromiseIpc({ timeout: 2000 })
 
 let windowManager: WindowManager = null;
 let clusterManager: ClusterManager = null;
+let proxyServer: proxy.LensProxy = null;
 const vmURL = (isDevelopment) ? `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}` : formatUrl({
   pathname: path.join(__dirname, "index.html"),
   protocol: "file",
@@ -57,10 +58,9 @@ async function main() {
 
   // create cluster manager
   clusterManager = new ClusterManager(clusterStore.getAllClusterObjects(), port)
-
   // run proxy
   try {
-    proxy.listen(port, clusterManager)
+    proxyServer = proxy.listen(port, clusterManager)
   } catch (error) {
     logger.error(`Could not start proxy (127.0.0:${port}): ${error.message}`)
     await dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${port}): ${error.message || "unknown error"}`)
@@ -123,5 +123,6 @@ app.on("activate", () => {
 app.on("will-quit", async (event) => {
   event.preventDefault(); // To allow mixpanel sending to be executed
   if (clusterManager) clusterManager.stop()
+  if (proxyServer) proxyServer.close()
   app.exit(0);
 })

@@ -17,6 +17,8 @@ export class LensProxy {
   protected clusterManager: ClusterManager
   protected retryCounters: Map<string, number> = new Map()
   protected router: Router
+  protected proxyServer: http.Server
+  protected closed = false
 
   constructor(port: number, clusterManager: ClusterManager) {
     this.port = port
@@ -27,6 +29,13 @@ export class LensProxy {
   public run() {
     const proxyServer = this.buildProxyServer();
     proxyServer.listen(this.port, "127.0.0.1")
+    this.proxyServer = proxyServer
+  }
+
+  public close() {
+    logger.info("Closing proxy server")
+    this.proxyServer.close()
+    this.closed = true
   }
 
   protected buildProxyServer() {
@@ -70,6 +79,9 @@ export class LensProxy {
       }
     })
     proxy.on("error", (error, req, res, target) => {
+      if(this.closed) {
+        return
+      }
       if (target) {
         logger.debug("Failed proxy to target: " + JSON.stringify(target))
         if (req.method === "GET" && (!res.statusCode || res.statusCode >= 500)) {
