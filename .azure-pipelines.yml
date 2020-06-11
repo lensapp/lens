@@ -35,11 +35,6 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
           cacheHitVar: CACHE_RESTORED
         displayName: Cache Yarn packages
-      #- powershell: |
-      #    mkdir -p "$env:YARN_CACHE_FOLDER"
-      #    tar -xzf "$env:YARN_CACHE_FOLDER/yarn-cache.tar.gz" -C /
-      #  displayName: "Unpack cache"
-      #  condition: eq(variables.CACHE_RESTORED, 'true')
       - script: make deps
         displayName: Install dependencies
       - script: make integration-win
