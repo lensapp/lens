@@ -2,15 +2,22 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.5.0-beta.1 (current version)
+## 3.5.0-rc.1 (current version)
 
 - Dynamic dashboard UI based on RBAC rules
 - Show object reference for all objects
 - Unify scrollbars/paddings
+- New logo
+- Remove Helm release update checker
+- Improve Helm release version detection
 - Fix: add arch node selector for hybrid clusters
 - Fix pod shell command on Windows
+- Fix: kill shell process by pid on Windows
+- Fix: close proxy server on app quit
 - Translation correction: transit to transmit
 - Remove Kontena reference from Lens logo
+- Track telemetry pref changed event
+- Integration tests using spectron
 
 ## 3.4.0
 
