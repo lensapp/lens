@@ -117,12 +117,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     try {
       await Promise.all(stores.map(store => store.loadAll()));
       const subscriptions = stores.map(store => store.subscribe());
-
+      await when(() => this.isUnmounting);
       subscriptions.forEach(dispose => dispose()); // unsubscribe all
     } catch(error) {
       console.log("catched", error)
     }
-    await when(() => this.isUnmounting);
   }
 
   componentWillUnmount() {
