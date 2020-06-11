@@ -1303,7 +1303,6 @@ msgstr ""
 #: src/renderer/components/+workloads-jobs/jobs.tsx:38
 #: src/renderer/components/+workloads-pods/pods.tsx:75
 #: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:41
-#: src/renderer/components/app.tsx:37
 #: src/renderer/components/dock/edit-resource.tsx:91
 #: src/renderer/components/dock/install-chart.tsx:122
 #: src/renderer/components/dock/upgrade-chart.tsx:98
@@ -1317,6 +1316,7 @@ msgid "Namespace: {0}"
 msgstr "Namespace: {0}"
 
 #: src/renderer/components/+namespaces/namespaces.tsx:30
+#: src/renderer/components/app.tsx:36
 #: src/renderer/components/layout/sidebar.tsx:85
 msgid "Namespaces"
 msgstr "Namespaces"

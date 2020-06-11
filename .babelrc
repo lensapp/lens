@@ -1,12 +1,14 @@
 {
   "presets": [
-    "@babel/preset-env",
+    [
+      "@babel/preset-env", {"modules": "commonjs"}
+    ],
     "@babel/preset-react",
     "@lingui/babel-preset-react"
   ],
   "plugins": [
-    "@babel/transform-runtime",
-    "@babel/syntax-dynamic-import",
-    "macros"
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-syntax-dynamic-import",
+    "babel-plugin-macros"
   ]
 }

@@ -167,7 +167,7 @@ export class ThemeStore {
       return this.themes.get(themeId);
     }
     try {
-      const theme: ITheme = await import(
+      const theme: ITheme = require(
         /* webpackMode: "lazy", webpackChunkName: "theme/[request]" */
         `./themes/${themeId}.json`
       );

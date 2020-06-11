@@ -41,17 +41,10 @@ export class LocalizationStore {
     await this.setLocale(this.activeLang);
   }
 
-  async load(locale: string) {
-    const { messages } = await import(
-      /* webpackChunkName: "i18n-[request]" */
-      `@lingui/loader!../../locales/${locale}/messages.po`
-      );
-    _i18n.loadLocaleData(locale, { plurals: plurals[locale] });
-    _i18n.load(locale, messages);
-  }
-
   async setLocale(locale: string) {
-    await this.load(locale);
+    const catalog = require(`@lingui/loader!../../locales/${locale}/messages.po`);
+    _i18n.loadLocaleData(locale, { plurals: plurals[locale] });
+    _i18n.load(locale, catalog.messages);
 
     // set moment's locale before activeLang for proper next render() in app
     moment.locale(locale);

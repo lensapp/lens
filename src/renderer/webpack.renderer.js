@@ -12,7 +12,6 @@ module.exports = function (config, env) {
       compilerOptions: {
         jsx: "preserve", // @lingui/babel-preset-react
         target: "es2016", // @lingui/babel-preset-react
-        module: "esnext", // https://webpack.js.org/guides/code-splitting/#dynamic-imports
       }
     })
     return ["babel-loader", loader]

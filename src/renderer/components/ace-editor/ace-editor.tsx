@@ -3,11 +3,9 @@
 import "./ace-editor.scss"
 
 import React from "react"
-import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { Ace } from "ace-builds"
+import AceBuild, { Ace } from "ace-builds"
 import { autobind, cssNames } from "../../utils";
-import { Spinner } from "../spinner";
 import { themeStore } from "../../theme.store";
 
 interface Props extends Partial<Ace.EditorOptions> {
@@ -40,39 +38,21 @@ export class AceEditor extends React.Component<Props, State> {
   private editor: Ace.Editor;
   private elem: HTMLElement;
 
-  @observable ready = false;
-
-  async loadEditor() {
-    return await import(
-      /* webpackChunkName: "ace" */
-      "ace-builds"
-    );
-  }
-
-  loadTheme(theme: string) {
-    return import(
-      /* webpackChunkName: "ace/[request]" */
-      `ace-builds/src-min-noconflict/theme-${theme}`
-    );
-  }
-
-  loadExtension(ext: string) {
-    return import(
-      /* webpackChunkName: "ace/[request]" */
-      `ace-builds/src-min-noconflict/ext-${ext}`
-    );
-  }
-
-  loadMode(mode: string) {
-    return import(
-      /* webpackChunkName: "ace/[request]" */
-      `ace-builds/src-min-noconflict/mode-${mode}`
-    )
+  constructor(props: Props) {
+    super(props);
+    require("ace-builds/src-noconflict/mode-yaml")
+    require("ace-builds/src-noconflict/theme-dreamweaver")
+    require("ace-builds/src-noconflict/theme-terminal")
+    require("ace-builds/src-noconflict/ext-searchbox")
   }
 
   get theme() {
-    return themeStore.activeTheme.type == "light"
-      ? "dreamweaver" : "terminal";
+    switch (themeStore.activeTheme.type) {
+      case "light":
+        return "dreamweaver"
+      case "dark":
+        return "terminal";
+    }
   }
 
   async componentDidMount() {
@@ -82,15 +62,8 @@ export class AceEditor extends React.Component<Props, State> {
       ...options
     } = this.props;
 
-    // load ace-editor, theme and mode
-    const ace = await this.loadEditor();
-    await Promise.all([
-      this.loadTheme(this.theme),
-      this.loadMode(mode)
-    ]);
-
     // setup editor
-    this.editor = ace.edit(this.elem, options);
+    this.editor = AceBuild.edit(this.elem, options);
     this.setTheme(this.theme);
     this.setMode(mode);
     this.setCursorPos(cursorPos);
@@ -99,11 +72,9 @@ export class AceEditor extends React.Component<Props, State> {
     this.editor.on("change", this.onChange);
     this.editor.selection.on("changeCursor", this.onCursorPosChange);
 
-    // load extensions
-    this.loadExtension("searchbox");
-
-    if (autoFocus) this.focus();
-    this.ready = true;
+    if (autoFocus) {
+      this.focus();
+    }
   }
 
   componentDidUpdate() {
@@ -143,12 +114,10 @@ export class AceEditor extends React.Component<Props, State> {
   }
 
   async setMode(mode: string) {
-    await this.loadMode(mode);
     this.editor.session.setMode(`ace/mode/${mode}`);
   }
 
   async setTheme(theme: string) {
-    await this.loadTheme(theme);
     this.editor.setTheme(`ace/theme/${theme}`);
   }
 
@@ -183,7 +152,6 @@ export class AceEditor extends React.Component<Props, State> {
     return (
       <div className={cssNames("AceEditor", className, { hidden }, themeType)}>
         <div className="editor" ref={e => this.elem = e}/>
-        {!this.ready && <Spinner center/>}
       </div>
     )
   }
