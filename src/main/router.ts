@@ -15,8 +15,6 @@ const Call = require('@hapi/call');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Subtext = require('@hapi/subtext');
 
-const assetsPath = path.join(__static, "build/client")
-
 const mimeTypes: {[key: string]: string} = {
   "html": "text/html",
   "txt": "text/plain",
@@ -87,7 +85,7 @@ export class Router {
   }
 
   protected handleStaticFile(file: string, response: http.ServerResponse) {
-    const asset = path.join(assetsPath, file)
+    const asset = path.join(__static, file)
     readFile(asset, (err, data) => {
       if (err) {
         // default to index.html so that react routes work when page is refreshed

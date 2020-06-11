@@ -5,7 +5,7 @@
   "version": "3.5.0-beta.1",
   "main": "src/main",
   "scripts": {
-    "dev": "electron-webpack dev",
+    "dev": "DEBUG=true electron-webpack dev",
     "compile": "yarn download-bins && yarn i18n:compile  && electron-webpack compile",
     "compile:main": "electron-webpack main",
     "compile:renderer": "electron-webpack renderer",
@@ -35,7 +35,7 @@
     "node": ">=12.0 <13.0"
   },
   "electronWebpack": {
-    "commonSourceDirectory": "./common",
+    "commonSourceDirectory": "./src/common",
     "staticSourceDirectory": "./static",
     "main": {
       "sourceDirectory": "./src/main"
