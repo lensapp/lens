@@ -13,7 +13,6 @@ trigger:
     - "*"
 jobs:
   - job: Windows
-    condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
     pool:
       vmImage: windows-2019
     strategy:
@@ -34,10 +33,14 @@ jobs:
         inputs:
           key: yarn | $(Agent.OS) | yarn.lock
           path: $(YARN_CACHE_FOLDER)
+          cacheHitVar: CACHE_RESTORED
         displayName: Cache Yarn packages
       - script: make deps
         displayName: Install dependencies
+      - script: make integration-win
+        displayName: Run integration tests
       - script: make build
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Build
         env:
           WIN_CSC_LINK: $(WIN_CSC_LINK)
@@ -53,6 +56,7 @@ jobs:
     steps:
       - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         displayName: Set the tag name as an environment variable
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
       - task: NodeTool@0
         inputs:
           versionSpec: $(node_version)
@@ -142,6 +146,7 @@ jobs:
           SNAP_LOGIN: $(SNAP_LOGIN)
       - script: make build
         displayName: Build
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
           GH_TOKEN: $(GH_TOKEN)
       - bash: |

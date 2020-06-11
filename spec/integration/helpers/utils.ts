@@ -3,7 +3,7 @@ import { Application } from "spectron";
 let appPath = ""
 switch(process.platform) {
 case "win32":
-  appPath = "./dist/win-unpacked/Lens.exe"
+  appPath = "./dist/win-unpacked/LensDev.exe"
   break
 case "linux":
   appPath = "./dist/linux-unpacked/kontena-lens"
