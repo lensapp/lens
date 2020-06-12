@@ -19,7 +19,10 @@ export interface ChartDataSet extends ChartDataSets {
 }
 
 export interface ChartProps {
-  data: ChartData;
+  data: {
+    labels?: Array<string | string[]>;
+    datasets?: ChartDataSet[];
+  };
   width?: number | string;
   height?: number | string;
   options?: ChartOptions;  // Passed to ChartJS instance

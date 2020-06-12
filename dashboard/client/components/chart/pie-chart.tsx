@@ -7,6 +7,7 @@ import { cssNames } from "../../utils";
 import { themeStore } from "../../theme.store";
 
 interface Props extends ChartProps {
+  data: ChartData;
   title?: string;
 }
 
