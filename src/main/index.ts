@@ -18,6 +18,7 @@ import { shellSync } from "./shell-sync"
 import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { findMainWebContents } from "./webcontents"
+import { registerStaticProtocol } from "../common/register-static";
 import { isDevelopment, isMac } from "../common/vars";
 
 mangleProxyEnv()
@@ -41,12 +42,15 @@ async function main() {
   updater.start();
 
   tracker.event("app", "start");
+
+  registerStaticProtocol();
   protocol.registerFileProtocol('store', (request, callback) => {
     const url = request.url.substr(8)
     callback(path.normalize(`${app.getPath("userData")}/${url}`))
   }, (error) => {
     if (error) console.error('Failed to register protocol')
   })
+
   let port: number = null
   // find free port
   try {

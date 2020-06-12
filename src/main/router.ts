@@ -1,5 +1,6 @@
 import http from "http"
 import path from "path"
+import { readFile } from "fs"
 import { Cluster } from "./cluster"
 import { configRoute } from "./routes/config"
 import { helmApi } from "./helm-api"
@@ -8,7 +9,7 @@ import { kubeconfigRoute } from "./routes/kubeconfig"
 import { metricsRoute } from "./routes/metrics"
 import { watchRoute } from "./routes/watch"
 import { portForwardRoute } from "./routes/port-forward"
-import { readFile } from "fs"
+import { getStaticPath } from "../common/register-static";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Call = require('@hapi/call');
@@ -84,8 +85,8 @@ export class Router {
     return request
   }
 
-  protected handleStaticFile(file: string, response: http.ServerResponse) {
-    const asset = path.join(__static, file)
+  protected handleStaticFile(filePath: string, response: http.ServerResponse) {
+    const asset = getStaticPath(filePath);
     readFile(asset, (err, data) => {
       if (err) {
         // default to index.html so that react routes work when page is refreshed

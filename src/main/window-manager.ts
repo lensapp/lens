@@ -1,9 +1,9 @@
-import path from "path"
 import { BrowserWindow, shell } from "electron"
 import { PromiseIpc } from "electron-promise-ipc"
 import windowStateKeeper from "electron-window-state"
 import { tracker } from "./tracker";
 import { isDevelopment } from "../common/vars";
+import { getStaticUrl } from "../common/register-static";
 
 export class WindowManager {
   public mainWindow: BrowserWindow = null;
@@ -32,7 +32,7 @@ export class WindowManager {
       }
     })
     if (showSplash) {
-      this.splashWindow.loadFile(path.join(__static, "/splash.html"))
+      this.splashWindow.loadFile(getStaticUrl("splash.html"))
       this.splashWindow.show()
     }
 

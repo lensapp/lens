@@ -28,16 +28,17 @@
 
 <script>
 import marked from 'marked'
-import fs from 'fs'
-import path from "path"
+import {readFileSync} from 'fs'
+import { getStaticPath } from "../../../common/register-static"
 
 export default {
   name: 'WhatsNewPage',
   data() {
+    let releaseNotes = getStaticPath("RELEASE_NOTES.md");
+    let content = marked(readFileSync(releaseNotes, 'utf8'));
     return {
       error: "",
-      // eslint-disable-next-line
-      content: marked(fs.readFileSync(path.join(__static, "RELEASE_NOTES.md"), 'utf8')),
+      content: content,
     }
   },
   components: {},
