@@ -20,13 +20,15 @@ describe("app start", () => {
     await app.client.click("button.btn-primary")
   }
 
-  const waitForWebview = async (app: Application) => {
+  const waitForMinikubeDashboard = async (app: Application) => {
+    await app.client.waitUntilTextExists("pre.auth-output", "Authentication proxy started")
     let windowCount = await app.client.getWindowCount()
     // wait for webview to appear on window count
     while (windowCount == 1) {
       windowCount = await app.client.getWindowCount()
     }
     await app.client.windowByIndex(windowCount - 1)
+    await app.client.waitUntilTextExists("span.link-text", "Cluster")
   }
 
   beforeEach(async () => {
@@ -49,9 +51,7 @@ describe("app start", () => {
     }
     await clickWhatsNew(app)
     await addMinikubeCluster(app)
-    await app.client.waitUntilTextExists("pre.auth-output", "Authentication proxy started")
-    await waitForWebview(app)
-    await app.client.waitUntilTextExists("span.link-text", "Cluster")
+    await waitForMinikubeDashboard(app)
     await app.client.click('a[href="/nodes"]')
     await app.client.waitUntilTextExists("div.TableCell", "minikube")
   })
@@ -64,10 +64,7 @@ describe("app start", () => {
     }
     await clickWhatsNew(app)
     await addMinikubeCluster(app)
-    await app.client.waitUntilTextExists("pre.auth-output", "Authentication proxy started")
-    await waitForWebview(app)
-
-    await app.client.waitUntilTextExists("span.link-text", "Cluster")
+    await waitForMinikubeDashboard(app)
     await app.client.click(".sidebar-nav #workloads span.link-text")
     await app.client.waitUntilTextExists('a[href="/pods"]', "Pods")
     await app.client.click('a[href="/pods"]')
