@@ -18,9 +18,9 @@ export const IngressCharts = observer(() => {
   if (!metrics) return null;
   if (isMetricsEmpty(metrics)) return <NoMetrics/>;
 
-  const values = Object.values(metrics).map(metric =>
-    normalizeMetrics(metric).data.result[0].values
-  );
+  const values = Object.values(metrics)
+    .map(normalizeMetrics)
+    .map(({ data }) => data.result[0].values);
   const [
     bytesSentSuccess,
     bytesSentFailure,

@@ -56,7 +56,21 @@ export const metricsApi = {
 };
 
 export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
+  if (!metrics?.data?.result) {
+    return {
+      data: {
+        resultType: "",
+        result: [{
+          metric: {},
+          values: []
+        } as IMetricsResult],
+      },
+      status: "",
+    }
+  }
+
   const { result } = metrics.data;
+
   if (result.length) {
     if (frames > 0) {
       // fill the gaps
