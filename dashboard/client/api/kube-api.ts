@@ -7,6 +7,7 @@ import { IKubeObjectRef, KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } fro
 import { apiKube } from "./index";
 import { kubeWatchApi } from "./kube-watch-api";
 import { apiManager } from "./api-manager";
+import { split } from "../utils/arrays";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   kind: string; // resource type within api-group, e.g. "Namespace"
@@ -39,11 +40,25 @@ export interface IKubeApiLinkBase extends IKubeApiLinkRef {
 }
 
 export class KubeApi<T extends KubeObject = any> {
-  static matcher = /(\/apis?.*?)\/(?:(.*?)\/)?(.*?)(?:\/namespaces\/(.+?))?\/([^\/]+)(?:\/([^\/?]+))?.*$/
-
   static parseApi(apiPath = ""): IKubeApiLinkBase {
     apiPath = new URL(apiPath, location.origin).pathname;
-    const [, apiPrefix, apiGroup = "", apiVersion, namespace, resource, name] = apiPath.match(KubeApi.matcher) || [];
+    const [, prefix, ...parts] = apiPath.split("/");
+    const apiPrefix = `/${prefix}`;
+
+    const [left, right, found] = split(parts, "namespaces");
+    let apiGroup, apiVersion, namespace, resource, name;
+
+    if (found) {
+      if (left.length == 0) {
+        throw new Error(`invalid apiPath: ${apiPath}`)
+      }
+
+      apiVersion = left.pop();
+      apiGroup = left.join("/");
+      [namespace, resource, name] = right;
+    } else {
+      [apiGroup, apiVersion, resource] = left;
+    }
     const apiVersionWithGroup = [apiGroup, apiVersion].filter(v => v).join("/");
     const apiBase = [apiPrefix, apiGroup, apiVersion, resource].filter(v => v).join("/");
 
