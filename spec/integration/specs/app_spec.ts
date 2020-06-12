@@ -76,20 +76,12 @@ describe("app start", () => {
     await app.client.waitUntilTextExists("li.MenuItem.create-resource-tab", "Create resource")
     await app.client.click("li.MenuItem.create-resource-tab")
     await app.client.waitForVisible(".CreateResource div.ace_content")
-    // Write deployment manifest to editor
-    await app.client.keys("apiVersion: apps/v1\n")
-    await app.client.keys("kind: Deployment\n")
+    // Write pod manifest to editor
+    await app.client.keys("apiVersion: v1\n")
+    await app.client.keys("kind: Pod\n")
     await app.client.keys("metadata:\n")
-    await app.client.keys("  name: nginx-deployment\n")
+    await app.client.keys("  name: nginx\n")
     await app.client.keys("\uE003spec:\n")
-    await app.client.keys("  selector:\n")
-    await app.client.keys("  matchLabels:\n")
-    await app.client.keys("  app: nginx\n")
-    await app.client.keys("\uE003\uE003template:\n")
-    await app.client.keys("  metadata:\n")
-    await app.client.keys("  labels:\n")
-    await app.client.keys("  app: nginx\n")
-    await app.client.keys("\uE003\uE003spec:\n")
     await app.client.keys("  containers:\n")
     await app.client.keys("- name: nginx\n")
     await app.client.keys("  image: nginx:alpine\n")
@@ -97,7 +89,10 @@ describe("app start", () => {
     await app.client.waitForEnabled("button.Button=Create & Close")
     await app.client.click("button.Button=Create & Close")
     // Wait until first bits of pod appears on dashboard
-    await app.client.waitForExist(".name*=nginx-deployment-")
+    await app.client.waitForExist(".name=nginx")
+    // Open pod details
+    await app.client.click(".name=nginx")
+    await app.client.waitUntilTextExists("div.drawer-title-text", "Pod: nginx")
   })
 
   afterEach(async () => {
