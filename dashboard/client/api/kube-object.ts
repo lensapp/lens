@@ -5,6 +5,7 @@ import { KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
 import { autobind, formatDuration } from "../utils";
 import { ItemObject } from "../item.store";
 import { apiKube } from "./index";
+import { JsonApiParams } from "./json-api";
 import { resourceApplierApi } from "./endpoints/resource-applier.api";
 
 export type IKubeObjectConstructor<T extends KubeObject = any> = (new (data: KubeJsonApiData | any) => T) & {
@@ -152,7 +153,7 @@ export class KubeObject implements ItemObject {
     });
   }
 
-  delete() {
-    return apiKube.del(this.selfLink);
+  delete(params?: JsonApiParams) {
+    return apiKube.del(this.selfLink, params);
   }
 }
