@@ -7,6 +7,7 @@ import { isDevelopment, isProduction, outDir, rendererDir } from "./src/common/v
 import { libraryTarget, manifestPath } from "./webpack.dll";
 
 export default function (): webpack.Configuration {
+  const VueLoaderPlugin = require("vue-loader/lib/plugin");
   const htmlTemplate = path.resolve(rendererDir, "index.html");
   const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
   const tsConfigFile = path.resolve("tsconfig.json");
@@ -26,9 +27,13 @@ export default function (): webpack.Configuration {
       chunkFilename: 'chunks/[name].js',
     },
     resolve: {
+      alias: {
+        "@": rendererDir,
+      },
       extensions: [
         '.js', '.jsx', '.json',
-        '.ts', '.tsx', '.vue'
+        '.ts', '.tsx',
+        '.vue',
       ]
     },
     optimization: {
@@ -55,14 +60,19 @@ export default function (): webpack.Configuration {
           use: "node-loader"
         },
         {
+          test: /\.jsx?$/,
+          use: "babel-loader"
+        },
+        {
           test: /\.tsx?$/,
+          exclude: /node_modules/,
           use: [
             "babel-loader",
             {
               loader: "ts-loader",
               options: {
                 // transpileOnly: false,
-                // appendTsSuffixTo: [/\.vue$/], // todo: remove after migration vue parts
+                // appendTsSuffixTo: [/\.vue$/],
                 configFile: tsConfigFile,
                 compilerOptions: {
                   // localization support
@@ -73,6 +83,19 @@ export default function (): webpack.Configuration {
               }
             }
           ]
+        },
+        {
+          test: /\.vue$/,
+          use: {
+            loader: "vue-loader",
+            options: {
+              shadowMode: false,
+              loaders: {
+                sass: "vue-style-loader!css-loader!sass-loader?indentedSyntax=1",
+                scss: "vue-style-loader!css-loader!sass-loader",
+              }
+            }
+          }
         },
         {
           test: /\.(jpg|png|svg|map|ico)$/,
@@ -110,6 +133,8 @@ export default function (): webpack.Configuration {
     },
 
     plugins: [
+      new VueLoaderPlugin(), // todo: remove with _"vue/*"
+
       // todo: check if this actually works in mode=production files
       new webpack.DllReferencePlugin({
         context: process.cwd(),
