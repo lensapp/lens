@@ -1,6 +1,14 @@
 {
   "presets": [
-    "@babel/preset-env",
+    [
+      "@babel/preset-env", {
+      "debug": true,
+      "modules": false,
+      "targets": {
+        "esmodules": false
+      }
+    }
+    ],
     "@babel/preset-react",
     "@lingui/babel-preset-react"
   ],

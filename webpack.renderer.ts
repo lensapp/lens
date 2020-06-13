@@ -61,8 +61,8 @@ export default function (): webpack.Configuration {
             {
               loader: "ts-loader",
               options: {
-                transpileOnly: false,
-                appendTsSuffixTo: [/\.vue$/], // todo: remove after migration vue parts
+                // transpileOnly: false,
+                // appendTsSuffixTo: [/\.vue$/], // todo: remove after migration vue parts
                 configFile: tsConfigFile,
                 compilerOptions: {
                   // localization support
@@ -85,17 +85,17 @@ export default function (): webpack.Configuration {
         {
           test: /\.s?css$/,
           use: [
-            isProduction ? MiniCssExtractPlugin.loader : "style-loader",
+            isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
             {
               loader: "css-loader",
               options: {
-                sourceMap: !isProduction
+                sourceMap: isDevelopment
               },
             },
             {
               loader: "sass-loader",
               options: {
-                sourceMap: !isProduction,
+                sourceMap: isDevelopment,
                 prependData: `@import "${path.basename(sassCommonVars)}";`,
                 sassOptions: {
                   includePaths: [
