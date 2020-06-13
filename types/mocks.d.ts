@@ -1,5 +1,3 @@
 declare module "electron-promise-ipc"
-declare module "fix-path"
 declare module "mac-ca"
-declare module "win-ca/*"
-declare module "ssl-root-cas"
+declare module "win-ca"

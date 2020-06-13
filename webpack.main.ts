@@ -1,11 +1,12 @@
 import path from "path";
 import webpack from "webpack";
-import { isProduction, mainDir, outDir } from "./src/common/vars";
+import { isDevelopment, isProduction, mainDir, outDir } from "./src/common/vars";
 
 export default function (): webpack.Configuration {
   return {
     target: "electron-main",
     mode: isProduction ? "production" : "development",
+    cache: isDevelopment,
     entry: {
       main: path.resolve(mainDir, "index.ts"),
     },

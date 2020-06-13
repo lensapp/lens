@@ -7,7 +7,7 @@
     "module": "CommonJS",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "moduleResolution": "Node",
-    "sourceMap": false,
+    "sourceMap": true,
     "strict": false,
     "noImplicitAny": true,
     "noUnusedLocals": false,

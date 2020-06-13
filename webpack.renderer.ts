@@ -4,26 +4,25 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserWebpackPlugin from "terser-webpack-plugin";
 import { isDevelopment, isProduction, outDir, rendererDir } from "./src/common/vars";
-import { manifestPath, externalPackages } from "./webpack.dll";
+import { externalPackages, manifestPath } from "./webpack.dll";
 
 export default function (): webpack.Configuration {
-  const tsConfigFile = path.resolve("./tsconfig.json");
-  const htmlTemplate = path.resolve(rendererDir, "template.html");
+  const htmlTemplate = path.resolve(rendererDir, "index.html");
   const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
+  const tsConfigFile = path.resolve("tsconfig.json");
 
   return {
     target: "electron-renderer",
     mode: isProduction ? "production" : "development",
-    devtool: isProduction ? "source-map" : "cheap-eval-source-map",
-    cache: isDevelopment,
+    devtool: isProduction ? "source-map" : "cheap-module-eval-source-map",
     externals: externalPackages,
+    cache: isDevelopment,
     entry: {
       renderer: path.resolve(rendererDir, "index.tsx"),
       // renderer_vue: path.resolve(rendererDir, "_vue/index.js"),
     },
     output: {
       path: outDir,
-      publicPath: '/',
       filename: '[name].js',
       chunkFilename: 'chunks/[name].js',
     },

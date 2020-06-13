@@ -1,7 +1,8 @@
-import "mac-ca"
-import winca from "win-ca/api"
-import { isWindows } from "./vars";
+import { isMac, isWindows } from "./vars";
 
+if (isMac) {
+  // require("mac-ca"); // fixme: crashes
+}
 if (isWindows) {
-  winca.inject("+") // see: https://github.com/ukoloff/win-ca#caveats
+  require("win-ca").inject("+") // see: https://github.com/ukoloff/win-ca#caveats
 }
