@@ -24,14 +24,4 @@ export default {
   }
 }
 </script>
-<style>
-#lens-container {
-  position: absolute;
-  top: 0;
-  left: 70px;
-  right: 0;
-  height: 100%;
-  z-index: 100;
-  display: none;
-}
-</style>
+

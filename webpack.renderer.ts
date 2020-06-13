@@ -3,14 +3,11 @@ import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserWebpackPlugin from "terser-webpack-plugin";
-import { isDevelopment, isProduction, outDir, rendererDir } from "./src/common/vars";
+import { htmlTemplate, isDevelopment, isProduction, outDir, rendererDir, sassCommonVars, tsConfigFile } from "./src/common/vars";
 import { libraryTarget, manifestPath } from "./webpack.dll";
 
 export default function (): webpack.Configuration {
   const VueLoaderPlugin = require("vue-loader/lib/plugin");
-  const htmlTemplate = path.resolve(rendererDir, "index.html");
-  const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
-  const tsConfigFile = path.resolve("tsconfig.json");
 
   return {
     target: "electron-renderer",
@@ -18,8 +15,8 @@ export default function (): webpack.Configuration {
     devtool: isProduction ? "source-map" : "eval-source-map",
     cache: isDevelopment,
     entry: {
-      renderer: path.resolve(rendererDir, "index.tsx"),
-      // renderer_vue: path.resolve(rendererDir, "_vue/index.js"),
+      // renderer: path.resolve(rendererDir, "component/app.tsx"),
+      renderer_vue: path.resolve(rendererDir, "_vue/index.js"),
     },
     output: {
       path: outDir,
@@ -71,8 +68,6 @@ export default function (): webpack.Configuration {
             {
               loader: "ts-loader",
               options: {
-                // transpileOnly: false,
-                // appendTsSuffixTo: [/\.vue$/],
                 configFile: tsConfigFile,
                 compilerOptions: {
                   // localization support
@@ -91,8 +86,8 @@ export default function (): webpack.Configuration {
             options: {
               shadowMode: false,
               loaders: {
-                sass: "vue-style-loader!css-loader!sass-loader?indentedSyntax=1",
-                scss: "vue-style-loader!css-loader!sass-loader",
+                css: "!!vue-style-loader!css-loader",
+                scss: "!!vue-style-loader!css-loader!sass-loader",
               }
             }
           }

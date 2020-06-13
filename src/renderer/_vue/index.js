@@ -1,3 +1,4 @@
+import "../../common/system-ca"
 import "./assets/css/app.scss"
 import "prismjs";
 import "prismjs/components/prism-yaml"

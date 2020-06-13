@@ -1546,6 +1546,11 @@
     consola "^2.10.1"
     node-fetch "^2.6.0"
 
+"@panva/asn1.js@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@panva/asn1.js/-/asn1.js-1.0.0.tgz#dd55ae7b8129e02049f009408b97c61ccf9032f6"
+  integrity sha512-UdkG3mLEqXgnlKsWanWcgb6dOjUzJ+XC5f+aWw30qrtjxeNUSfKX1cd5FBzOaXQumoe9nIqeZUvrRJS03HCCtw==
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -1743,6 +1748,15 @@
   dependencies:
     "@types/minimatch" "*"
     "@types/node" "*"
+
+"@types/got@^9.6.9":
+  version "9.6.11"
+  resolved "https://registry.yarnpkg.com/@types/got/-/got-9.6.11.tgz#482b402cc5ee459481aeeadb08142ebb1a9afb26"
+  integrity sha512-dr3IiDNg5TDesGyuwTrN77E1Cd7DCdmCFtEfSGqr83jMMtcwhf/SGPbN2goY4JUWQfvxwY56+e5tjfi+oXeSdA==
+  dependencies:
+    "@types/node" "*"
+    "@types/tough-cookie" "*"
+    form-data "^2.5.0"
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.3"
@@ -6961,6 +6975,13 @@ jest@^26.0.1:
     import-local "^3.0.2"
     jest-cli "^26.0.1"
 
+jose@^1.27.1:
+  version "1.27.1"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-1.27.1.tgz#a1de2ecb5b3ae1ae28f0d9d0cc536349ada27ec8"
+  integrity sha512-VyHM6IJPw0TTGqHVNlPWg16/ASDPAmcChcLqSb3WNBvwWFoWPeFqlmAUCm8/oIG1GjZwAlUDuRKFfycowarcVA==
+  dependencies:
+    "@panva/asn1.js" "^1.0.0"
+
 js-base64@^2.1.8:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.5.2.tgz#313b6274dda718f714d00b3330bbae6e38e90209"
@@ -7483,7 +7504,7 @@ make-dir@^3.0.0, make-dir@^3.0.2:
   dependencies:
     semver "^6.0.0"
 
-make-error@1.x, make-error@^1.1.1:
+make-error@1.x, make-error@^1.1.1, make-error@^1.3.6:
   version "1.3.6"
   resolved "https://registry.yarnpkg.com/make-error/-/make-error-1.3.6.tgz#2eb2e37ea9b67c4891f684a1394799af484cf7a2"
   integrity sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==
@@ -8204,6 +8225,11 @@ object-hash@^1.3.1:
   resolved "https://registry.yarnpkg.com/object-hash/-/object-hash-1.3.1.tgz#fde452098a951cb145f039bb7d455449ddc126df"
   integrity sha512-OSuu/pU4ENM9kmREg0BdNrUDIl1heYa4mBZacJc+vVWz4GtAwu7jO8s4AIt2aGRUTqxykpWzI3Oqnsm13tTMDA==
 
+object-hash@^2.0.1:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/object-hash/-/object-hash-2.0.3.tgz#d12db044e03cd2ca3d77c0570d87225b02e1e6ea"
+  integrity sha512-JPKn0GMu+Fa3zt3Bmr66JhokJU5BaNBIh4ZeTlaCBzrBsOeXzwcKKAK1tbLiPKgvwmPXsDvvLHoWh5Bm7ofIYg==
+
 object-inspect@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/object-inspect/-/object-inspect-1.7.0.tgz#f4f6bd181ad77f006b5ece60bd0b6f398ff74a67"
@@ -8265,6 +8291,11 @@ oidc-token-hash@^3.0.1:
   resolved "https://registry.yarnpkg.com/oidc-token-hash/-/oidc-token-hash-3.0.2.tgz#5bd4716cc48ad433f4e4e99276811019b165697e"
   integrity sha512-dTzp80/y/da+um+i+sOucNqiPpwRL7M/xPwj7pH1TFA2/bqQ+OK2sJahSXbemEoLtPkHcFLyhLhLWZa9yW5+RA==
 
+oidc-token-hash@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/oidc-token-hash/-/oidc-token-hash-5.0.0.tgz#acdfb1f4310f58e64d5d74a4e8671a426986e888"
+  integrity sha512-8Yr4CZSv+Tn8ZkN3iN2i2w2G92mUKClp4z7EGUfdsERiYSbj7P4i/NHm72ft+aUdsiFx9UdIPSTwbyzQ6C4URg==
+
 once@^1.3.0, once@^1.3.1, once@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
@@ -8304,6 +8335,22 @@ openid-client@2.5.0:
     object-hash "^1.3.1"
     oidc-token-hash "^3.0.1"
     p-any "^1.1.0"
+
+openid-client@^3.15.2:
+  version "3.15.2"
+  resolved "https://registry.yarnpkg.com/openid-client/-/openid-client-3.15.2.tgz#d48a6d7991d5d6117f4598bb1d19399262164128"
+  integrity sha512-50aBsfiSZds48ec/VvUZ3hwtpEW0L5s7gGxlsJSvo5mAeK4TG3gv0VRWI+SvCAae4MEwRegLJD3YjpkJMLi2GQ==
+  dependencies:
+    "@types/got" "^9.6.9"
+    base64url "^3.0.1"
+    got "^9.6.0"
+    jose "^1.27.1"
+    lodash "^4.17.15"
+    lru-cache "^5.1.1"
+    make-error "^1.3.6"
+    object-hash "^2.0.1"
+    oidc-token-hash "^5.0.0"
+    p-any "^3.0.0"
 
 optimist@~0.6.1:
   version "0.6.1"
@@ -8378,6 +8425,14 @@ p-any@^1.1.0:
   dependencies:
     p-some "^2.0.0"
 
+p-any@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/p-any/-/p-any-3.0.0.tgz#79847aeed70b5d3a10ea625296c0c3d2e90a87b9"
+  integrity sha512-5rqbqfsRWNb0sukt0awwgJMlaep+8jV45S15SKKB34z4UuzjcofIfnriCBhWjZP2jbVtjt9yRl7buB6RlKsu9w==
+  dependencies:
+    p-cancelable "^2.0.0"
+    p-some "^5.0.0"
+
 p-cancelable@^0.4.0:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/p-cancelable/-/p-cancelable-0.4.1.tgz#35f363d67d52081c8d9585e37bcceb7e0bbcb2a0"
@@ -8387,6 +8442,11 @@ p-cancelable@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/p-cancelable/-/p-cancelable-1.1.0.tgz#d078d15a3af409220c886f1d9a0ca2e441ab26cc"
   integrity sha512-s73XxOZ4zpt1edZYZzvhqFa6uvQc1vwUa0K0BdtIZgQMAJj9IbebH+JkgKZc9h+B05PKHLOTl4ajG1BmNrVZlw==
+
+p-cancelable@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/p-cancelable/-/p-cancelable-2.0.0.tgz#4a3740f5bdaf5ed5d7c3e34882c6fb5d6b266a6e"
+  integrity sha512-wvPXDmbMmu2ksjkB4Z3nZWTSkJEb9lqVdMaCKpZUGJG9TMiNp9XcbG3fn9fPKjem04fJMJnXoyFPk2FmgiaiNg==
 
 p-defer@^1.0.0:
   version "1.0.0"
@@ -8461,6 +8521,14 @@ p-some@^2.0.0:
   integrity sha1-Zdh8ixVO289SIdFnd4ttLhUPbwY=
   dependencies:
     aggregate-error "^1.0.0"
+
+p-some@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/p-some/-/p-some-5.0.0.tgz#8b730c74b4fe5169d7264a240ad010b6ebc686a4"
+  integrity sha512-Js5XZxo6vHjB9NOYAzWDYAIyyiPvva0DWESAIWIK7uhSpGsyg5FwUPxipU/SOQx5x9EqhOh545d1jo6cVkitig==
+  dependencies:
+    aggregate-error "^3.0.0"
+    p-cancelable "^2.0.0"
 
 p-timeout@^2.0.1:
   version "2.0.1"

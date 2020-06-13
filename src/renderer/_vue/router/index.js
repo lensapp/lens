@@ -1,11 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from "../store";
+import { whatsNew } from './routeguard'
 
-// Route Guard
-import * as guard from './routeguard'
-
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
   routes: [
@@ -16,7 +14,7 @@ const router = new Router({
       meta: {
         routeguard: [
           // guards in priority order; the first one to catch will trigger something
-          guard.whatsNew,
+          whatsNew,
         ],
       }
     },

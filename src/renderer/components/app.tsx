@@ -1,3 +1,4 @@
+import "../../common/system-ca"
 import "./app.scss";
 
 import React from "react";

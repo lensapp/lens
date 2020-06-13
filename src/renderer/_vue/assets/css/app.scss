@@ -1,8 +1,10 @@
-@import 'custom';
+@import "custom";
 @import "~typeface-roboto/index.css";
 @import "~material-design-icons/iconfont/material-icons.css";
-@import '~bootstrap/scss/bootstrap';
-@import '~bootstrap-vue/src/index';
+@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap-vue/src/index";
+@import "~prismjs/themes/prism-tomorrow.css";
+@import "~vue-prism-editor/dist/VuePrismEditor.css";
 
 html, body {
   margin: 0;
@@ -200,4 +202,14 @@ h1, h2, h3, h4, h5, h6{
     top: 3px;
     font-size: 16px;
   }
+}
+
+#lens-container {
+  position: absolute;
+  top: 0;
+  left: 70px;
+  right: 0;
+  height: 100%;
+  z-index: 100;
+  display: none;
 }
