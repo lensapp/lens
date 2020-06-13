@@ -1,11 +1,12 @@
 import path from "path";
-import webpack from "webpack";
+import webpack, { LibraryTarget } from "webpack";
 import { isDevelopment, outDir } from "./src/common/vars";
 
-export const fileName = "dll"
-export const manifestPath = path.resolve(outDir, `${fileName}.manifest.json`);
+export const library = "dll"
+export const libraryTarget: LibraryTarget = "commonjs2"
+export const manifestPath = path.resolve(outDir, `${library}.manifest.json`);
 
-export const externalPackages = [
+export const packages = [
   "react", "react-dom",
   "ace-builds", "xterm",
   "moment",
@@ -13,18 +14,19 @@ export const externalPackages = [
 
 export default function (): webpack.Configuration {
   return {
+    context: path.dirname(manifestPath),
     mode: isDevelopment ? "development" : "production",
     cache: isDevelopment,
     entry: {
-      [fileName]: externalPackages
+      [library]: packages,
     },
     output: {
-      library: fileName,
-      libraryTarget: "commonjs2"
+      library,
+      libraryTarget,
     },
     plugins: [
       new webpack.DllPlugin({
-        name: fileName,
+        name: library,
         path: manifestPath,
       })
     ],

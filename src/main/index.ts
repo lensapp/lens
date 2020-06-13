@@ -4,19 +4,20 @@ import "../common/system-ca"
 import { app, BrowserWindow } from "electron"
 
 console.log('MAIN', process.resourcesPath)
+console.log('userData', app.getPath("userData"))
 
-app.whenReady().then(function start() {
-  console.log('APP READY')
-
-  var window = new BrowserWindow({
-    width: 600,
-    height: 500,
+app.whenReady().then(async function start() {
+  var mainWindow = new BrowserWindow({
+    width: 1024,
+    height: 768,
+    show: false,
     webPreferences: {
       devTools: true,
       nodeIntegration: true,
     }
   });
 
-  window.loadFile("index.html");
-  window.show();
+  await mainWindow.loadFile("dist/index.html");
+  mainWindow.show();
+  mainWindow.focus();
 });

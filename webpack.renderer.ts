@@ -4,7 +4,7 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserWebpackPlugin from "terser-webpack-plugin";
 import { isDevelopment, isProduction, outDir, rendererDir } from "./src/common/vars";
-import { externalPackages, manifestPath } from "./webpack.dll";
+import { libraryTarget, manifestPath } from "./webpack.dll";
 
 export default function (): webpack.Configuration {
   const htmlTemplate = path.resolve(rendererDir, "index.html");
@@ -14,8 +14,7 @@ export default function (): webpack.Configuration {
   return {
     target: "electron-renderer",
     mode: isProduction ? "production" : "development",
-    devtool: isProduction ? "source-map" : "cheap-module-eval-source-map",
-    externals: externalPackages,
+    devtool: isProduction ? "source-map" : "eval-source-map",
     cache: isDevelopment,
     entry: {
       renderer: path.resolve(rendererDir, "index.tsx"),
@@ -111,14 +110,11 @@ export default function (): webpack.Configuration {
     },
 
     plugins: [
-      ...(isDevelopment ? [
-        new webpack.HotModuleReplacementPlugin()
-      ] : []),
-
-      // provide access to external libraries, e.g. react, moment, etc.
+      // todo: check if this actually works in mode=production files
       new webpack.DllReferencePlugin({
-        context: __dirname,
-        manifest: require(manifestPath),
+        context: process.cwd(),
+        manifest: manifestPath,
+        sourceType: libraryTarget,
       }),
 
       new HtmlWebpackPlugin({
