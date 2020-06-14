@@ -6,17 +6,19 @@ import TerserWebpackPlugin from "terser-webpack-plugin";
 import { htmlTemplate, isDevelopment, isProduction, outDir, rendererDir, sassCommonVars, tsConfigFile } from "./src/common/vars";
 import { libraryTarget, manifestPath } from "./webpack.dll";
 
-export default function (): webpack.Configuration {
-  const VueLoaderPlugin = require("vue-loader/lib/plugin");
+export default [
+  webpackConfigReact,
+  webpackConfigVue,
+];
 
+export function webpackConfigReact(): webpack.Configuration {
   return {
     target: "electron-renderer",
     mode: isProduction ? "production" : "development",
-    devtool: isProduction ? "source-map" : "eval-source-map",
+    devtool: isProduction ? "source-map" : "cheap-module-eval-source-map",
     cache: isDevelopment,
     entry: {
-      // renderer: path.resolve(rendererDir, "component/app.tsx"),
-      renderer_vue: path.resolve(rendererDir, "_vue/index.js"),
+      renderer: path.resolve(rendererDir, "components/app.tsx"),
     },
     output: {
       path: outDir,
@@ -30,7 +32,6 @@ export default function (): webpack.Configuration {
       extensions: [
         '.js', '.jsx', '.json',
         '.ts', '.tsx',
-        '.vue',
       ]
     },
     optimization: {
@@ -57,10 +58,6 @@ export default function (): webpack.Configuration {
           use: "node-loader"
         },
         {
-          test: /\.jsx?$/,
-          use: "babel-loader"
-        },
-        {
           test: /\.tsx?$/,
           exclude: /node_modules/,
           use: [
@@ -80,25 +77,12 @@ export default function (): webpack.Configuration {
           ]
         },
         {
-          test: /\.vue$/,
-          use: {
-            loader: "vue-loader",
-            options: {
-              shadowMode: false,
-              loaders: {
-                css: "!!vue-style-loader!css-loader",
-                scss: "!!vue-style-loader!css-loader!sass-loader",
-              }
-            }
-          }
-        },
-        {
           test: /\.(jpg|png|svg|map|ico)$/,
-          use: 'file-loader?name=assets/[name]-[hash:6].[ext]'
+          use: "file-loader?name=images/[name]-[hash:6].[ext]"
         },
         {
           test: /\.(ttf|eot|woff2?)$/,
-          use: 'file-loader?name=fonts/[name].[ext]'
+          use: "file-loader?name=fonts/[name].[ext]"
         },
         {
           test: /\.s?css$/,
@@ -128,15 +112,12 @@ export default function (): webpack.Configuration {
     },
 
     plugins: [
-      new VueLoaderPlugin(), // todo: remove with _"vue/*"
-
       // todo: check if this actually works in mode=production files
       new webpack.DllReferencePlugin({
         context: process.cwd(),
         manifest: manifestPath,
         sourceType: libraryTarget,
       }),
-
       new HtmlWebpackPlugin({
         template: htmlTemplate,
         inject: true,
@@ -146,4 +127,62 @@ export default function (): webpack.Configuration {
       }),
     ],
   }
+}
+
+export function webpackConfigVue(): webpack.Configuration {
+  const config = webpackConfigReact();
+
+  config.resolve.extensions.push(".vue");
+  config.entry = {
+    renderer_vue: path.resolve(rendererDir, "_vue/index.js")
+  }
+
+  // rules and loaders
+  config.module.rules = config.module.rules
+    .filter(({ test }: { test: RegExp }) => !test.test(".ts"))
+    .filter(({ test }: { test: RegExp }) => !test.test(".css"))
+
+  config.module.rules.push(
+    {
+      test: /\.vue$/,
+      use: {
+        loader: "vue-loader",
+        options: {
+          shadowMode: false,
+          loaders: {
+            css: "vue-style-loader!css-loader",
+            scss: "vue-style-loader!css-loader!sass-loader",
+          }
+        }
+      }
+    },
+    {
+      test: /\.jsx?$/,
+      loader: "babel-loader",
+    },
+    {
+      test: /\.tsx?$/,
+      loader: "ts-loader",
+      options: {
+        transpileOnly: false,
+        appendTsSuffixTo: [/\.vue$/],
+      }
+    },
+    {
+      test: /\.s?css$/,
+      use: [
+        'vue-style-loader',
+        'css-loader',
+        'sass-loader'
+      ]
+    }
+  );
+
+  // plugins
+  const VueLoaderPlugin = require("vue-loader/lib/plugin");
+  config.plugins = [
+    new VueLoaderPlugin(),
+  ];
+
+  return config;
 }

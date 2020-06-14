@@ -2,9 +2,6 @@ import "../../common/system-ca"
 import "./assets/css/app.scss"
 import "prismjs";
 import "prismjs/components/prism-yaml"
-import "prismjs/themes/prism-tomorrow.css";
-import "vue-prism-editor/dist/VuePrismEditor.css";
-
 import { remote } from "electron"
 import Vue from 'vue'
 import VueElectron from 'vue-electron'
@@ -33,18 +30,19 @@ Vue.mixin({
   }
 })
 
-export function appInitVue() {
-  setTimeout(async () => {
-    try {
-      await store.dispatch('init');
-      new Vue({
-        components: {App},
-        store,
-        router,
-        template: '<App/>'
-      }).$mount('#app_vue')
-    } catch (err) {
-      console.error(err)
-    }
-  })
+// run
+setTimeout(main, 250);
+
+export async function main() {
+  try {
+    await store.dispatch('init');
+    new Vue({
+      components: {App},
+      store,
+      router,
+      template: '<App/>'
+    }).$mount('#app_vue')
+  } catch (err) {
+    console.error(err)
+  }
 }
