@@ -1,6 +1,5 @@
 import logger from "./logger"
-import { createServer } from "net"
-import { AddressInfo } from "net"
+import { createServer, AddressInfo } from "net"
 
 const getNextAvailablePort = () => {
   logger.debug("getNextAvailablePort() start")

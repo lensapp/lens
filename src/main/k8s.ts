@@ -29,7 +29,7 @@ export function loadConfig(kubeconfig: string): k8s.KubeConfig {
  *
  * @param config KubeConfig to check
  */
-export function valideConfig(config: k8s.KubeConfig): boolean {
+export function validateConfig(config: k8s.KubeConfig): boolean {
   logger.debug(`validating kube config: ${JSON.stringify(config)}`)
   if(!config.users || config.users.length == 0) {
     throw new Error("No users provided in config")

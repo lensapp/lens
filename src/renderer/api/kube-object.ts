@@ -37,7 +37,7 @@ export interface IKubeObjectMetadata {
   }[];
 }
 
-export type IKubeMetaField = keyof KubeObject["metadata"];
+export type IKubeMetaField = keyof IKubeObjectMetadata;
 
 @autobind()
 export class KubeObject implements ItemObject {
@@ -71,6 +71,7 @@ export class KubeObject implements ItemObject {
   apiVersion: string
   kind: string
   metadata: IKubeObjectMetadata;
+  status?: any; // todo: type-safety support
 
   get selfLink() {
     return this.metadata.selfLink

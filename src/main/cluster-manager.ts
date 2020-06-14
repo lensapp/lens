@@ -90,7 +90,7 @@ export class ClusterManager {
           reject("No cluster contexts defined")
         }
         configs.forEach(c => {
-          k8s.valideConfig(c)
+          k8s.validateConfig(c)
           const cluster = new Cluster({
             id: uuid(),
             port: this.port,
