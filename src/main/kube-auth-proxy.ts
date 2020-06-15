@@ -7,6 +7,7 @@ import { readFileSync, watch } from "fs"
 import { PromiseIpc } from "electron-promise-ipc"
 import { findMainWebContents } from "./webcontents"
 import * as url from "url"
+import { apiPrefix } from "../common/vars";
 
 export class KubeAuthProxy {
   public lastError: string
@@ -45,9 +46,10 @@ export class KubeAuthProxy {
     const clusterUrl = url.parse(this.cluster.apiUrl)
     let args = [
       "proxy",
-      "-p", this.port.toString(),
+      "--port", this.port.toString(),
       "--kubeconfig", this.cluster.kubeconfigPath(),
       "--accept-hosts", clusterUrl.hostname,
+      "--api-prefix", apiPrefix.BASE,
     ]
     if (process.env.DEBUG_PROXY === "true") {
       args = args.concat(["-v", "9"])
@@ -94,7 +96,7 @@ export class KubeAuthProxy {
   }
 
   protected async sendIpcLogMessage(data: string, stream: string) {
-    await this.promiseIpc.send(`kube-auth:${this.cluster.id}`, findMainWebContents(), { data: data, stream: stream })
+    await this.promiseIpc.send(`kube-auth:${this.cluster.id}`, findMainWebContents(), { data, stream })
   }
 
   public exit() {

@@ -31,17 +31,15 @@ export class LensProxy {
 
   protected buildProxyServer() {
     const proxy = this.createProxy();
-    const proxyServer = http.createServer(function(req: http.IncomingMessage, res: http.ServerResponse) {
+    const proxyServer = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
       this.handleRequest(proxy, req, res);
-    }.bind(this));
-    proxyServer.on("upgrade", function(req: http.IncomingMessage, socket: Socket, head: Buffer) {
+    });
+    proxyServer.on("upgrade", (req: http.IncomingMessage, socket: Socket, head: Buffer) => {
       this.handleWsUpgrade(req, socket, head)
-    }.bind(this));
-
+    });
     proxyServer.on("error", (err) => {
       logger.error(err)
     });
-
     return proxyServer;
   }
 
@@ -55,11 +53,10 @@ export class LensProxy {
           res.writeHead(proxyRes.statusCode, {
             "Content-Type": "text/plain"
           })
-          res.end(cluster.contextHandler.proxyServerError().toString())
+          res.end(cluster.contextHandler.proxyServerError())
           return
         }
       }
-
       if (req.method !== "GET") {
         return
       }
@@ -94,11 +91,11 @@ export class LensProxy {
   }
 
   protected createWsListener() {
-    const ws = new WebSocket.Server({ noServer: true})
+    const ws = new WebSocket.Server({ noServer: true })
     ws.on("connection", ((con: WebSocket, req: http.IncomingMessage) => {
       const cluster = this.clusterManager.getClusterForRequest(req)
       const contextHandler = cluster.contextHandler
-      const nodeParam = (url.parse(req.url, true).query["node"] || "").toString();
+      const nodeParam = url.parse(req.url, true).query["node"]?.toString();
 
       contextHandler.withTemporaryKubeconfig((kubeconfigPath) => {
         return new Promise<boolean>(async (resolve, reject) => {
@@ -108,7 +105,7 @@ export class LensProxy {
           })
         })
       })
-    }).bind(this))
+    }))
     return ws
   }
 

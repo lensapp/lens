@@ -11,7 +11,7 @@ import path from "path"
 import { promises } from "fs"
 import  { ensureDir } from "fs-extra"
 import filenamify from "filenamify"
-import uuid from "uuid"
+import { v4 as uuid } from "uuid"
 
 export type FeatureInstallRequest = {
   name: string;
@@ -92,7 +92,7 @@ export class ClusterManager {
         configs.forEach(c => {
           k8s.validateConfig(c)
           const cluster = new Cluster({
-            id: uuid.v4(),
+            id: uuid(),
             port: this.port,
             kubeConfig: k8s.dumpConfigYaml(c),
             preferences: clusterData.preferences,

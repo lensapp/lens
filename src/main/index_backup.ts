@@ -133,7 +133,7 @@ app.on("will-quit", async (event) => {
   app.exit(0);
 })
 
-// auto-restart app in dev-mode
-if (isDevelopment) {
-  require('electron-reloader')(module);
-}
+// todo: check auto-restart app in dev-mode
+// if (isDevelopment) {
+//   require('electron-reloader')(module);
+// }

@@ -87,8 +87,8 @@ export class ContextHandler {
   }
 
   protected async resolvePrometheusPath(): Promise<string> {
-    const service = await this.getPrometheusService()
-    return `${service.namespace}/services/${service.service}:${service.port}`
+    const {service, namespace, port} = await this.getPrometheusService()
+    return `${namespace}/services/${service}:${port}`
   }
 
   public async getPrometheusProvider() {
@@ -129,7 +129,7 @@ export class ContextHandler {
     return this.prometheusPath
   }
 
-  public async getApiTarget(isWatchRequest = false) {
+  public async getApiTarget(isWatchRequest = false): Promise<ServerOptions> {
     if (this.apiTarget && !isWatchRequest) {
       return this.apiTarget
     }
@@ -173,7 +173,7 @@ export class ContextHandler {
   }
 
   public applyHeaders(req: http.IncomingMessage) {
-    req.headers["authorization"] = `Bearer ${this.id}`
+    req.headers["authorization"] = `Bearer ${this.id}` // Q: how it works when id == cluster.id ?
   }
 
   public async withTemporaryKubeconfig(callback: (kubeconfig: string) => Promise<any>) {
@@ -204,10 +204,6 @@ export class ContextHandler {
   }
 
   public proxyServerError() {
-    if (!this.proxyServer) {
-      return null
-    }
-
-    return this.proxyServer.lastError
+    return this.proxyServer?.lastError || ""
   }
 }
