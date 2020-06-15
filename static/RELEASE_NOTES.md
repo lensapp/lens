@@ -2,18 +2,21 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.5.0-rc.1 (current version)
+## 3.5.0 (current version)
 
-- Dynamic dashboard UI based on RBAC rules
+- Dynamic dashboard UI based on RBAC rules (hides non-accessible menus)
 - Show object reference for all objects
 - Unify scrollbars/paddings
 - New logo
 - Remove Helm release update checker
 - Improve Helm release version detection
+- Show owner reference on all resource details
 - Fix: add arch node selector for hybrid clusters
 - Fix pod shell command on Windows
-- Fix: kill shell process by pid on Windows
-- Fix: close proxy server on app quit
+- Fix app freeze after closing terminal on Windows
+- Fix: use correct kubeconfig context on terminal when switching cluster
+- Fix error when closing Lens on Windows
+- Fix: deploy kube-state-metrics component only to amd64 nodes
 - Translation correction: transit to transmit
 - Remove Kontena reference from Lens logo
 - Track telemetry pref changed event
@@ -287,4 +290,3 @@ Here you can find description of changes we've built into each release. While we
 ## 2.0.0
 
 Initial release of the Lens desktop application. Basic functionality with auto-import of users local kubeconfig for cluster access.
-

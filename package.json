@@ -8,7 +8,7 @@
   "copyright": "© 2020, Lakend Labs, Inc.",
   "license": "MIT",
   "description": "Lens - The Kubernetes IDE",
-  "version": "3.5.0-rc.1",
+  "version": "3.5.0",
   "main": "main.ts",
   "config": {
     "bundledKubectlVersion": "1.17.4",
