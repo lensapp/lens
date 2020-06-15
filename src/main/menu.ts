@@ -1,5 +1,5 @@
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
-import { isDevelopment, isMac, isWindows } from "../common/vars";
+import { isDevelopment, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
 
 // todo: refactor + split menu sections to separated files, e.g. menus/file.menu.ts
 
@@ -183,13 +183,13 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       {
         label: 'Community Slack',
         click: async () => {
-          shell.openExternal('https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI');
+          shell.openExternal(slackUrl);
         },
       },
       {
         label: 'Report an Issue',
         click: async () => {
-          shell.openExternal('https://github.com/lensapp/lens/issues');
+          shell.openExternal(issuesTrackerUrl);
         },
       },
       {

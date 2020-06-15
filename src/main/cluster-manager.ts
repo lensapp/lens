@@ -11,7 +11,7 @@ import path from "path"
 import { promises } from "fs"
 import  { ensureDir } from "fs-extra"
 import filenamify from "filenamify"
-import { v4 as uuid } from "uuid"
+import uuid from "uuid"
 
 export type FeatureInstallRequest = {
   name: string;
@@ -92,7 +92,7 @@ export class ClusterManager {
         configs.forEach(c => {
           k8s.validateConfig(c)
           const cluster = new Cluster({
-            id: uuid(),
+            id: uuid.v4(),
             port: this.port,
             kubeConfig: k8s.dumpConfigYaml(c),
             preferences: clusterData.preferences,
@@ -115,15 +115,15 @@ export class ClusterManager {
       logger.debug(`IPC: addCluster`)
       const cluster = await this.addNewCluster(clusterData)
       return {
-        addedCluster: this.clusterResponse(cluster),
-        allClusters: Array.from(this.getClusters()).map((cluster: Cluster) => this.clusterResponse(cluster))
+        addedCluster: cluster.toClusterInfo(),
+        allClusters: Array.from(this.getClusters()).map((cluster: Cluster) => cluster.toClusterInfo())
       }
     });
 
     this.promiseIpc.on("getClusters", async (workspaceId: string) => {
       logger.debug(`IPC: getClusters, workspace ${workspaceId}`)
       const workspaceClusters = Array.from(this.getClusters()).filter((cluster) => cluster.workspace === workspaceId)
-      return workspaceClusters.map((cluster: Cluster) => this.clusterResponse(cluster))
+      return workspaceClusters.map((cluster: Cluster) => cluster.toClusterInfo())
     });
 
     this.promiseIpc.on("getCluster", async (id: string) => {
@@ -131,7 +131,7 @@ export class ClusterManager {
       const cluster = this.getCluster(id)
       if (cluster) {
         await cluster.refreshCluster()
-        return this.clusterResponse(cluster)
+        return cluster.toClusterInfo()
       } else {
         return null
       }
@@ -179,7 +179,7 @@ export class ClusterManager {
         if(!cluster.preferences) cluster.preferences = {};
         cluster.preferences.icon = clusterIcon
         clusterStore.storeCluster(cluster);
-        return {success: true, cluster: this.clusterResponse(cluster), message: ""}
+        return {success: true, cluster: cluster.toClusterInfo(), message: ""}
       } catch(error) {
         return {success: false, message: error}
       }
@@ -191,7 +191,7 @@ export class ClusterManager {
       if (cluster && cluster.preferences) {
         cluster.preferences.icon = null;
         clusterStore.storeCluster(cluster)
-        return {success: true, cluster: this.clusterResponse(cluster), message: ""}
+        return {success: true, cluster: cluster.toClusterInfo(), message: ""}
       } else {
         return {success: false, message: "Cluster not found"}
       }
@@ -200,7 +200,7 @@ export class ClusterManager {
     this.promiseIpc.on("refreshCluster", async (clusterId: string) => {
       const cluster = this.clusters.get(clusterId)
       await cluster.refreshCluster()
-      return this.clusterResponse(cluster)
+      return cluster.toClusterInfo()
     });
 
     this.promiseIpc.on("stopCluster", (clusterId: string) => {
@@ -215,7 +215,7 @@ export class ClusterManager {
 
     this.promiseIpc.on("removeCluster", (ctx: string) => {
       logger.debug(`IPC: removeCluster: ${ctx}`)
-      return this.removeCluster(ctx).map((cluster: Cluster) => this.clusterResponse(cluster))
+      return this.removeCluster(ctx).map((cluster: Cluster) => cluster.toClusterInfo())
     });
 
     this.promiseIpc.on("clusterStored", (clusterId: string) => {
@@ -270,11 +270,6 @@ export class ClusterManager {
     }
 
     return cluster;
-  }
-
-  // TODO: remove this
-  protected clusterResponse(cluster: Cluster) {
-    return cluster.toClusterInfo()
   }
 
   protected async uploadClusterIcon(cluster: Cluster, fileName: string, src: string): Promise<string> {

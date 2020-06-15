@@ -6,6 +6,7 @@
     "target": "ES2017",
     "module": "ESNext",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "importsNotUsedAsValues": "preserve",
     "moduleResolution": "Node",
     "sourceMap": true,
     "strict": false,
@@ -27,6 +28,10 @@
       ]
     }
   },
+  "include": [
+    "src/**/*",
+    "types/*"
+  ],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"

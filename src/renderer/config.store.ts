@@ -1,15 +1,10 @@
 import { observable, when } from "mobx";
 import type { IConfigRoutePayload } from "../main/routes/config";
-import { apiPrefix, buildVersion, isDevelopment } from "../common/vars";
 import { autobind, interval } from "./utils";
 import { configApi } from "./api/endpoints";
 
 @autobind()
 export class ConfigStore {
-  readonly isDevelopment = isDevelopment;
-  readonly buildVersion = buildVersion;
-  readonly apiPrefix = apiPrefix;
-
   protected updater = interval(60, this.load);
 
   @observable config: Partial<IConfigRoutePayload> = {};
@@ -30,11 +25,6 @@ export class ConfigStore {
   async getToken() {
     await when(() => this.isLoaded);
     return this.config.token;
-  }
-
-  get serverPort() {
-    const port = location.port;
-    return port ? `:${port}` : "";
   }
 
   get allowedNamespaces() {

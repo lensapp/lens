@@ -8,6 +8,7 @@ import { KubeObjectStore } from "../kube-object.store";
 import { KubeApi } from "./kube-api";
 import { configStore } from "../config.store";
 import { apiManager } from "./api-manager";
+import { apiPrefix, isDevelopment } from "../../common/vars";
 
 export interface IKubeWatchEvent<T = any> {
   type: "ADDED" | "MODIFIED" | "DELETED";
@@ -28,9 +29,8 @@ export interface IKubeWatchRouteQuery {
 export class KubeWatchApi {
   protected evtSource: EventSource;
   protected onData = new EventEmitter<[IKubeWatchEvent]>();
-  protected apiUrl = configStore.apiPrefix.BASE + "/watch";
+  protected apiUrl = apiPrefix.BASE + "/watch";
   protected subscribers = observable.map<KubeApi, number>();
-  protected reconnectInterval = interval(60 * 5, this.reconnect); // background reconnect every 5min
   protected reconnectTimeoutMs = 5000;
   protected maxReconnectsOnError = 10;
   protected reconnectAttempts = this.maxReconnectsOnError;
@@ -138,7 +138,7 @@ export class KubeWatchApi {
   }
 
   protected writeLog(...data: any[]) {
-    if (configStore.isDevelopment) {
+    if (isDevelopment) {
       console.log('%cKUBE-WATCH-API:', `font-weight: bold`, ...data);
     }
   }

@@ -3,6 +3,7 @@ import { autobind, base64, EventEmitter, interval } from "../utils";
 import { WebSocketApi } from "./websocket-api";
 import { configStore } from "../config.store";
 import isEqual from "lodash/isEqual"
+import { apiPrefix, isDevelopment } from "../../common/vars";
 
 export enum TerminalChannels {
   STDIN = 0,
@@ -40,26 +41,28 @@ export class TerminalApi extends WebSocketApi {
 
   constructor(protected options: ITerminalApiOptions) {
     super({
-      logging: configStore.isDevelopment,
+      logging: isDevelopment,
       flushOnOpen: false,
       pingIntervalSeconds: 30,
     });
   }
 
   async getUrl(token: string) {
-    const { hostname, protocol } = location;
+    var { hostname, protocol, port } = location;
+    const prefix = apiPrefix.TERMINAL;
     const { id, node } = this.options;
-    const apiPrefix = configStore.apiPrefix.TERMINAL;
     const wss = `ws${protocol === "https:" ? "s" : ""}://`;
     const queryParams = { token, id };
+    if (port) {
+      port = `:${port}`
+    }
     if (node) {
       Object.assign(queryParams, {
         node: node,
         type: "node"
       });
     }
-
-    return `${wss}${hostname}${configStore.serverPort}${apiPrefix}/api?${stringify(queryParams)}`;
+    return `${wss}${hostname}${port}${prefix}/api?${stringify(queryParams)}`;
   }
 
   async connect() {

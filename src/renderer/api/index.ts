@@ -13,15 +13,11 @@ export const apiKube = new KubeJsonApi({
   debug: isDevelopment,
   apiPrefix: apiPrefix.KUBE_BASE,
 });
-export const apiKubeUsers = new KubeJsonApi({
-  debug: isDevelopment,
-  apiPrefix: apiPrefix.KUBE_USERS,
-});
-export const apiKubeHelm = new KubeJsonApi({
+export const apiHelm = new KubeJsonApi({
   debug: isDevelopment,
   apiPrefix: apiPrefix.KUBE_HELM,
 });
-export const apiKubeResourceApplier = new KubeJsonApi({
+export const apiResourceApplier = new KubeJsonApi({
   debug: isDevelopment,
   apiPrefix: apiPrefix.KUBE_RESOURCE_APPLIER,
 });
@@ -38,6 +34,5 @@ function onApiError(error: JsonApiErrorParsed, res: Response) {
 
 apiBase.onError.addListener(onApiError);
 apiKube.onError.addListener(onApiError);
-apiKubeUsers.onError.addListener(onApiError);
-apiKubeHelm.onError.addListener(onApiError);
-apiKubeResourceApplier.onError.addListener(onApiError);
+apiHelm.onError.addListener(onApiError);
+apiResourceApplier.onError.addListener(onApiError);

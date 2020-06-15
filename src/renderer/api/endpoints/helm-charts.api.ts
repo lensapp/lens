@@ -1,5 +1,5 @@
 import { compile } from "path-to-regexp";
-import { apiKubeHelm } from "../index";
+import { apiHelm } from "../index";
 import { stringify } from "querystring";
 import { autobind } from "../../utils";
 
@@ -21,7 +21,7 @@ const endpoint = compile(`/v2/charts/:repo?/:name?`) as (params?: {
 
 export const helmChartsApi = {
   list() {
-    return apiKubeHelm
+    return apiHelm
       .get<IHelmChartList>(endpoint())
       .then(data => {
         return Object
@@ -33,7 +33,7 @@ export const helmChartsApi = {
 
   get(repo: string, name: string, readmeVersion?: string) {
     const path = endpoint({ repo, name });
-    return apiKubeHelm
+    return apiHelm
       .get<IHelmChartDetails>(path + "?" + stringify({ version: readmeVersion }))
       .then(data => {
         const versions = data.versions.map(HelmChart.create);
@@ -46,7 +46,7 @@ export const helmChartsApi = {
   },
 
   getValues(repo: string, name: string, version: string) {
-    return apiKubeHelm
+    return apiHelm
       .get<string>(`/v2/charts/${repo}/${name}/values?` + stringify({ version }));
   }
 };

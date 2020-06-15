@@ -2,7 +2,7 @@ import jsYaml from "js-yaml";
 import { compile } from "path-to-regexp";
 import { autobind, formatDuration } from "../../utils";
 import capitalize from "lodash/capitalize";
-import { apiKubeHelm } from "../index";
+import { apiHelm } from "../index";
 import { helmChartStore } from "../../components/+apps-helm-charts/helm-chart.store";
 import { ItemObject } from "../../item.store";
 import { KubeObject } from "../kube-object";
@@ -69,14 +69,14 @@ const endpoint = compile(`/v2/releases/:namespace?/:name?`) as (
 
 export const helmReleasesApi = {
   list(namespace?: string) {
-    return apiKubeHelm
+    return apiHelm
       .get<HelmRelease[]>(endpoint({ namespace }))
       .then(releases => releases.map(HelmRelease.create));
   },
 
   get(name: string, namespace: string) {
     const path = endpoint({ name, namespace });
-    return apiKubeHelm.get<IReleaseRawDetails>(path).then(details => {
+    return apiHelm.get<IReleaseRawDetails>(path).then(details => {
       const items: KubeObject[] = JSON.parse(details.resources).items;
       const resources = items.map(item => KubeObject.create(item));
       return {
@@ -90,34 +90,34 @@ export const helmReleasesApi = {
     const { repo, ...data } = payload;
     data.chart = `${repo}/${data.chart}`;
     data.values = jsYaml.safeLoad(data.values);
-    return apiKubeHelm.post(endpoint(), { data });
+    return apiHelm.post(endpoint(), { data });
   },
 
   update(name: string, namespace: string, payload: IReleaseUpdatePayload): Promise<IReleaseUpdateDetails> {
     const { repo, ...data } = payload;
     data.chart = `${repo}/${data.chart}`;
     data.values = jsYaml.safeLoad(data.values);
-    return apiKubeHelm.put(endpoint({ name, namespace }), { data });
+    return apiHelm.put(endpoint({ name, namespace }), { data });
   },
 
   async delete(name: string, namespace: string) {
     const path = endpoint({ name, namespace });
-    return apiKubeHelm.del(path);
+    return apiHelm.del(path);
   },
 
   getValues(name: string, namespace: string) {
     const path = endpoint({ name, namespace }) + "/values";
-    return apiKubeHelm.get<string>(path);
+    return apiHelm.get<string>(path);
   },
 
   getHistory(name: string, namespace: string): Promise<IReleaseRevision[]> {
     const path = endpoint({ name, namespace }) + "/history";
-    return apiKubeHelm.get(path);
+    return apiHelm.get(path);
   },
 
   rollback(name: string, namespace: string, revision: number) {
     const path = endpoint({ name, namespace }) + "/rollback";
-    return apiKubeHelm.put(path, {
+    return apiHelm.put(path, {
       data: {
         revision: revision
       }

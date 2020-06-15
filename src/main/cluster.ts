@@ -179,16 +179,14 @@ export class Cluster implements ClusterInfo {
     }
   }
 
-  protected async k8sRequest(path: string, opts?: request.RequestPromiseOptions) {
-    const options = Object.assign({
-      json: true, timeout: 10000
-    }, (opts || {}))
-    if (!options.headers) {
-      options.headers = {}
-    }
-    options.headers.host = `${this.id}.localhost:${this.port}`
-
-    return request(`http://127.0.0.1:${this.port}/api-kube${path}`, options)
+  protected async k8sRequest(path: string, opts: request.RequestPromiseOptions = {}) {
+    const url = `http://127.0.0.1:${this.port}/api-kube${path}`; // fixme: remove hardcoded api prefix
+    opts.json = true;
+    opts.timeout = 10000;
+    opts.headers = Object.assign({}, opts.headers, {
+      host: `${this.id}.localhost:${this.port}`,
+    });
+    return request(url, opts);
   }
 
   protected async getConnectionStatus() {
@@ -300,9 +298,7 @@ export class Cluster implements ClusterInfo {
             if (k8s.podHasIssues(pod)) {
               uniqEventSources.add(w.involvedObject.uid);
             }
-            continue; // TODO: refactor
-          } catch (error) {
-            continue;
+          } catch (err) {
           }
         }
         else {

@@ -1,20 +1,10 @@
 {
   "presets": [
-    [
-      "@babel/preset-env", {
-      "debug": true,
-      "modules": false,
-      "targets": {
-        "esmodules": false
-      }
-    }
-    ],
+    "@babel/preset-env",
     "@babel/preset-react",
     "@lingui/babel-preset-react"
   ],
   "plugins": [
-    "@babel/plugin-transform-runtime",
-    "@babel/plugin-syntax-dynamic-import",
-    "babel-plugin-macros"
+    "macros"
   ]
 }

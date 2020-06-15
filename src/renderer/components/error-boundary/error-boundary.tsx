@@ -5,9 +5,9 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { t, Trans } from "@lingui/macro";
 import { Button } from "../button";
-import { configStore } from "../../config.store";
 import { navigation } from "../../navigation";
 import { _i18n } from "../../i18n";
+import { issuesTrackerUrl, slackUrl, buildVersion } from "../../../common/vars";
 
 interface Props {
 }
@@ -38,14 +38,14 @@ export class ErrorBoundary extends React.Component<Props, State> {
   render() {
     const { error, errorInfo } = this.state;
     if (error) {
-      const slackLink = <a href="https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI" target="_blank">Slack</a>
-      const githubLink = <a href="https://github.com/lensapp/lens/issues" target="_blank">Github</a>
+      const slackLink = <a href={slackUrl} target="_blank">Slack</a>
+      const githubLink = <a href={issuesTrackerUrl} target="_blank">Github</a>
       const pageUrl = location.href;
       return (
         <div className="ErrorBoundary flex column gaps">
           <h5>
             <Trans>App crash at <span className="contrast">{pageUrl}</span></Trans>
-            {configStore.buildVersion && <p><Trans>Build version</Trans>: {configStore.buildVersion}</p>}
+            {buildVersion && <p><Trans>Build version</Trans>: {buildVersion}</p>}
           </h5>
           <p>
             <Trans>

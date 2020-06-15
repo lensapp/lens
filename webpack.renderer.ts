@@ -2,8 +2,10 @@ import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import TerserWebpackPlugin from "terser-webpack-plugin";
-import { htmlTemplate, isDevelopment, isProduction, outDir, rendererDir, sassCommonVars, tsConfigFile } from "./src/common/vars";
+import TerserPlugin from "terser-webpack-plugin";
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
+import { VueLoaderPlugin } from "vue-loader"
+import { htmlTemplate, isDevelopment, isProduction, outDir, rendererDir, sassCommonVars } from "./src/common/vars";
 import { libraryTarget, manifestPath } from "./webpack.dll";
 
 export default [
@@ -13,6 +15,7 @@ export default [
 
 export function webpackConfigReact(): webpack.Configuration {
   return {
+    context: __dirname,
     target: "electron-renderer",
     mode: isProduction ? "production" : "development",
     devtool: isProduction ? "source-map" : "cheap-module-eval-source-map",
@@ -37,7 +40,7 @@ export function webpackConfigReact(): webpack.Configuration {
     optimization: {
       minimize: false,
       minimizer: [
-        new TerserWebpackPlugin({
+        new TerserPlugin({
           cache: true,
           parallel: true,
           sourceMap: true,
@@ -65,7 +68,7 @@ export function webpackConfigReact(): webpack.Configuration {
             {
               loader: "ts-loader",
               options: {
-                configFile: tsConfigFile,
+                transpileOnly: false, // fixme: enable types resolution with ts-fork-checker
                 compilerOptions: {
                   // localization support
                   // https://lingui.js.org/guides/typescript.html
@@ -112,12 +115,16 @@ export function webpackConfigReact(): webpack.Configuration {
     },
 
     plugins: [
+      // fixme: enable with transpileOnly=true
+      // new ForkTsCheckerPlugin(),
+
       // todo: check if this actually works in mode=production files
       new webpack.DllReferencePlugin({
         context: process.cwd(),
         manifest: manifestPath,
         sourceType: libraryTarget,
       }),
+
       new HtmlWebpackPlugin({
         template: htmlTemplate,
         inject: true,
@@ -157,16 +164,15 @@ export function webpackConfigVue(): webpack.Configuration {
       }
     },
     {
-      test: /\.jsx?$/,
-      loader: "babel-loader",
-    },
-    {
-      test: /\.tsx?$/,
-      loader: "ts-loader",
-      options: {
-        transpileOnly: false,
-        appendTsSuffixTo: [/\.vue$/],
-      }
+      test: /\.[tj]sx?$/,
+      exclude: /node_modules/,
+      use: {
+        loader: "ts-loader",
+        options: {
+          transpileOnly: true,
+          appendTsSuffixTo: [/\.vue$/],
+        }
+      },
     },
     {
       test: /\.s?css$/,
@@ -179,9 +185,9 @@ export function webpackConfigVue(): webpack.Configuration {
   );
 
   // plugins
-  const VueLoaderPlugin = require("vue-loader/lib/plugin");
   config.plugins = [
     new VueLoaderPlugin(),
+    new ForkTsCheckerPlugin(),
   ];
 
   return config;

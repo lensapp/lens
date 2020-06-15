@@ -7,7 +7,7 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-5.0.3.tgz#bc5b5532ecafd923a61f2fb097e3b108c0106a3f"
   integrity sha512-GLyWIFBbGvpKPGo55JyRZAo4lVbnBiD52cKlw/0Vt+wnmKvWJkpZvsjVoaIolyBXDeAQKSicRtqFNPem9w0WYA==
 
-"@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.1":
+"@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.1", "@babel/code-frame@^7.8.3":
   version "7.10.1"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.10.1.tgz#d5481c5095daa1c57e16e54c6f9198443afb49ff"
   integrity sha512-IGhtTmpjGbYzcEDOw7DcQtbQSXcG9ftmAXtWTu9V936vDye4xjjekktFAtgZsWpzTj/X01jocB46mTywm/4SZw==
@@ -3428,7 +3428,7 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-chalk@2.4.2, chalk@^2.0.0, chalk@^2.3.0, chalk@^2.4.2:
+chalk@2.4.2, chalk@^2.0.0, chalk@^2.3.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
@@ -3521,7 +3521,7 @@ chokidar@^2.1.8:
   optionalDependencies:
     fsevents "^1.2.7"
 
-chokidar@^3.4.0:
+chokidar@^3.3.1, chokidar@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.4.0.tgz#b30611423ce376357c765b9b8f904b9fba3c0be8"
   integrity sha512-aXAaho2VJtisB/1fg1+3nlLJqGOuewTzQpd/Tz0yTg2R0e4IGtshYvtjowyEumcBv2z+y4+kc75Mz7j5xJskcQ==
@@ -4214,6 +4214,13 @@ date-fns@^2.0.1, date-fns@^2.14.0:
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.14.0.tgz#359a87a265bb34ef2e38f93ecf63ac453f9bc7ba"
   integrity sha512-1zD+68jhFgDIM0rF05rcwYO8cExdNqxjq4xP1QKM60Q45mnO6zaMWB4tOzrIr4M4GSLntsKeE4c9Bdl2jhL/yw==
 
+date-time@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/date-time/-/date-time-3.1.0.tgz#0d1e934d170579f481ed8df1e2b8ff70ee845e1e"
+  integrity sha512-uqCUKXE5q1PNBXjPqvwhwJf9SwMoAHBgWJ6DcrnS5o+W2JOiIILl0JEdVD8SGujrNS02GGxgwAg2PN2zONgtjg==
+  dependencies:
+    time-zone "^1.0.0"
+
 de-indent@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
@@ -4621,6 +4628,11 @@ electron-download@^4.1.0, electron-download@^4.1.1:
     semver "^5.4.1"
     sumchecker "^2.0.2"
 
+electron-is-dev@^1.1.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-1.2.0.tgz#2e5cea0a1b3ccf1c86f577cee77363ef55deb05e"
+  integrity sha512-R1oD5gMBPS7PVU8gJwH6CtT0e6VSoD0+SzSnYpNm+dBkcijgA+K7VAMHDfnRq/lkKPZArpzplTW6jfiMYosdzw==
+
 electron-notarize@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/electron-notarize/-/electron-notarize-0.3.0.tgz#b93c606306eac558b250c78ff95273ddb9fedf0a"
@@ -4652,6 +4664,22 @@ electron-publish@22.7.0:
     fs-extra "^9.0.0"
     lazy-val "^1.0.4"
     mime "^2.4.5"
+
+electron-reloader@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/electron-reloader/-/electron-reloader-1.0.1.tgz#15b193219b6583aedd2c95fa143d9bfc244bfdec"
+  integrity sha512-jVLK4SMvLRI8bWMTLtcyoRcmntTWcDrLUFt5QefgdcgQwN8uKi05SMJ8dW+9yD+PM1ESuyE//poBHVmucV4vUg==
+  dependencies:
+    chalk "^3.0.0"
+    chokidar "^3.3.1"
+    date-time "^3.1.0"
+    electron-is-dev "^1.1.0"
+    find-up "^4.1.0"
+
+electron-serve@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/electron-serve/-/electron-serve-1.0.0.tgz#babf2f5022102fa300a841d91e4c2e7048ac4b1f"
+  integrity sha512-Rsm4tjj1eK7NUWKgGw6NjHkjfB+bIXZh0ztybUYzqmwCm1wzb7zv95LERbwricDZfCsKHB0V57NgVvHdi2OOAQ==
 
 electron-store@^5.2.0:
   version "5.2.0"
@@ -5292,6 +5320,22 @@ forever-agent@~0.6.1:
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
   integrity sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=
 
+fork-ts-checker-webpack-plugin@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/fork-ts-checker-webpack-plugin/-/fork-ts-checker-webpack-plugin-5.0.0.tgz#43a8efda935aba382ca88ae169ab11b70041c06a"
+  integrity sha512-XdMGiyz12rl8HFEj1D9NsC0yxevLZqWncMbuhelV1a1h7ciX7ftauTHIBzO0gKGjqoqZG0NqnrnN7xavIHvzDQ==
+  dependencies:
+    "@babel/code-frame" "^7.8.3"
+    chalk "^2.4.1"
+    cosmiconfig "^6.0.0"
+    deepmerge "^4.2.2"
+    fs-extra "^9.0.0"
+    memfs "^3.1.2"
+    minimatch "^3.0.4"
+    schema-utils "1.0.0"
+    semver "^5.6.0"
+    tapable "^1.0.0"
+
 form-data@^2.5.0:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-2.5.1.tgz#f2cbec57b5e59e23716e128fe44d4e5dd23895f4"
@@ -5373,6 +5417,11 @@ fs-minipass@^2.0.0:
   integrity sha512-V/JgOLFCS+R6Vcq0slCuaeWEdNC3ouDlJMNIsacH2VtALiu9mV4LPrHc5cDl8k5aw6J8jwgWWpiTo5RYhmIzvg==
   dependencies:
     minipass "^3.0.0"
+
+fs-monkey@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/fs-monkey/-/fs-monkey-1.0.1.tgz#4a82f36944365e619f4454d9fff106553067b781"
+  integrity sha512-fcSa+wyTqZa46iWweI7/ZiUfegOZl0SG8+dltIwFXo7+zYU9J9kpS3NB6pZcSlJdhvIwp81Adx2XhZorncxiaA==
 
 fs-write-stream-atomic@^1.0.8:
   version "1.0.10"
@@ -7584,6 +7633,13 @@ mem@^4.0.0:
     map-age-cleaner "^0.1.1"
     mimic-fn "^2.0.0"
     p-is-promise "^2.0.0"
+
+memfs@^3.1.2:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/memfs/-/memfs-3.2.0.tgz#f9438e622b5acd1daa8a4ae160c496fdd1325b26"
+  integrity sha512-f/xxz2TpdKv6uDn6GtHee8ivFyxwxmPuXatBb1FBwxYNuVpbM3k/Y1Z+vC0mH/dIXXrukYfe3qe5J32Dfjg93A==
+  dependencies:
+    fs-monkey "1.0.1"
 
 "memoize-one@>=3.1.1 <6", memoize-one@^5.0.0:
   version "5.1.1"
@@ -9838,7 +9894,7 @@ scheduler@^0.19.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-schema-utils@^1.0.0:
+schema-utils@1.0.0, schema-utils@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-1.0.0.tgz#0b79a93204d7b600d4b2850d1f66c2a34951c770"
   integrity sha512-i27Mic4KovM/lnGsy8whRCHhc7VicJajAjTrYg11K9zfZXnYIt4k5F+kZkwjnrhKzLic/HLU4j11mjsz2G/75g==
@@ -10723,6 +10779,11 @@ through@2, through@^2.3.6:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
+
+time-zone@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/time-zone/-/time-zone-1.0.0.tgz#99c5bf55958966af6d06d83bdf3800dc82faec5d"
+  integrity sha1-mcW/VZWJZq9tBtg73zgA3IL67F0=
 
 timed-out@^4.0.1:
   version "4.0.1"

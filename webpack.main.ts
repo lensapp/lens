@@ -1,9 +1,11 @@
 import path from "path";
 import webpack from "webpack";
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 import { isDevelopment, isProduction, mainDir, outDir } from "./src/common/vars";
 
 export default function (): webpack.Configuration {
   return {
+    context: __dirname,
     target: "electron-main",
     mode: isProduction ? "production" : "development",
     cache: isDevelopment,
@@ -30,9 +32,17 @@ export default function (): webpack.Configuration {
         },
         {
           test: /\.ts?$/,
-          use: "ts-loader",
+          use: {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+            }
+          },
         },
       ]
     },
+    plugins: [
+      new ForkTsCheckerPlugin(),
+    ]
   }
 }

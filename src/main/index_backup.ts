@@ -132,3 +132,8 @@ app.on("will-quit", async (event) => {
   if (clusterManager) clusterManager.stop()
   app.exit(0);
 })
+
+// auto-restart app in dev-mode
+if (isDevelopment) {
+  require('electron-reloader')(module);
+}
