@@ -10,7 +10,6 @@ import { Cluster, ClusterPreferences } from "./cluster"
 import { helmCli } from "./helm-cli"
 
 export class ShellSession extends EventEmitter {
-  static shellEnv: any
   static shellEnvs: Map<string, any> = new Map()
 
   protected websocket: WebSocket
@@ -82,8 +81,7 @@ export class ShellSession extends EventEmitter {
   }
 
   protected async getCachedShellEnv() {
-    let env: any
-    env = ShellSession.shellEnvs.get(this.clusterId)
+    let env = ShellSession.shellEnvs.get(this.clusterId)
     if (!env) {
       env = await this.getShellEnv()
       ShellSession.shellEnvs.set(this.clusterId, env)
