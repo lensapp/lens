@@ -86,7 +86,6 @@ export class Cluster implements ClusterInfo {
   constructor(clusterInfo: ClusterBaseInfo) {
     if (clusterInfo) Object.assign(this, clusterInfo)
     if (!this.preferences) this.preferences = {}
-    this.kubeconfigManager = new KubeconfigManager(this)
   }
 
   public proxyKubeconfigPath() {
@@ -95,7 +94,9 @@ export class Cluster implements ClusterInfo {
 
   public async init(kc: KubeConfig) {
     this.contextHandler = new ContextHandler(kc, this)
-    //this.contextName = kc.currentContext
+    await this.contextHandler.init() // So we get the proxy port reserved
+    this.kubeconfigManager = new KubeconfigManager(this)
+
     this.url = this.contextHandler.url
     this.apiUrl = kc.getCurrentCluster().server
   }
@@ -138,14 +139,6 @@ export class Cluster implements ClusterInfo {
     }
     this.eventCount = await this.getEventCount();
   }
-
-  // public updateKubeconfig(kubeconfig: string) {
-  //   const storedCluster = clusterStore.getCluster(this.id)
-  //   if (!storedCluster) { return }
-
-  //   this.kubeConfig = kubeconfig
-  //   this.save()
-  // }
 
   public getPrometheusApiPrefix() {
     if (!this.preferences.prometheus?.prefix) {

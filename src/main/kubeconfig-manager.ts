@@ -20,19 +20,18 @@ export class KubeconfigManager {
     return this.tempFile
   }
 
+  /**
+   * Creates new "temporary" kubeconfig that point to the kubectl-proxy. 
+   * This way any user of the config does not need to know anything about the auth etc. details.
+   */
   protected createTemporaryKubeconfig(): string {
     ensureDir(this.configDir)
     const path = `${this.configDir}/${randomFileName("kubeconfig")}`
-    logger.debug('Creating temporary kubeconfig: ' + path)
-    logger.debug(`cluster url: ${this.cluster.url}`)
-    logger.debug(`cluster api url: ${this.cluster.apiUrl}`)
-
-    // TODO Make the names come from actual cluster.name etc.
     let kc = {
       clusters: [
         {
           name: this.cluster.contextName,
-          server: `http://127.0.0.1:${this.cluster.port}/${this.cluster.id}`
+          server: `http://127.0.0.1:${this.cluster.contextHandler.proxyPort}`
         }
       ],
       users: [
@@ -44,6 +43,7 @@ export class KubeconfigManager {
         {
           name: this.cluster.contextName,
           cluster: this.cluster.contextName,
+          namespace: this.cluster.contextHandler.kc.getContextObject(this.cluster.contextName).namespace,
           user: "proxy"
         }
       ],

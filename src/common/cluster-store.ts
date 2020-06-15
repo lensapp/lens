@@ -1,4 +1,7 @@
+import { app, remote } from "electron"
 import ElectronStore from "electron-store"
+import  { ensureDirSync, writeFileSync } from "fs-extra"
+import * as path from "path"
 import { Cluster, ClusterBaseInfo } from "../main/cluster";
 import * as version200Beta2 from "../migrations/cluster-store/2.0.0-beta.2"
 import * as version241 from "../migrations/cluster-store/2.4.1"
@@ -117,4 +120,17 @@ export class ClusterStore {
   }
 }
 
-export const clusterStore = ClusterStore.getInstance();
+export const clusterStore: ClusterStore = ClusterStore.getInstance();
+
+// Writes kubeconfigs to "embedded" store, i.e. .../Lens/kubeconfigs/
+export function writeEmbeddedKubeConfig(clusterId: string, kubeConfig: string): string {
+  // This can be called from main & renderer
+  const a = (app || remote.app)
+  const kubeConfigBase = path.join(a.getPath("userData"), "kubeconfigs")
+  ensureDirSync(kubeConfigBase)
+
+  const kubeConfigFile = path.join(kubeConfigBase, clusterId)
+  writeFileSync(kubeConfigFile, kubeConfig)
+
+  return kubeConfigFile
+}

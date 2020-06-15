@@ -22,14 +22,14 @@ export class ContextHandler {
 
   protected apiTarget: ServerOptions
   protected proxyTarget: ServerOptions
-  protected clusterUrl: url.UrlWithStringQuery
-  protected proxyServer: KubeAuthProxy
+  public clusterUrl: url.UrlWithStringQuery
+  public proxyServer: KubeAuthProxy
 
   protected clientCert: string
   protected clientKey: string
   protected secureApiConnection = true
   protected defaultNamespace: string
-  protected proxyPort: number
+  public proxyPort: number
   protected kubernetesApi: string
   protected prometheusProvider: string
   protected prometheusPath: string
@@ -38,21 +38,6 @@ export class ContextHandler {
   constructor(kc: KubeConfig, cluster: Cluster) {
     this.id = cluster.id
     this.kc = kc
-    logger.info(`**** ctxHandler.kc: ${JSON.stringify(kc, null, 2)}`)
-    // this.kc.users = [
-    //   {
-    //     name: kc.getCurrentUser().name,
-    //     token: this.id
-    //   }
-    // ]
-    // this.kc.contexts = [
-    //   {
-    //     name: kc.currentContext,
-    //     cluster: kc.getCurrentCluster().name,
-    //     user: kc.getCurrentUser().name,
-    //     namespace: kc.getContextObject(kc.currentContext).namespace
-    //   }
-    // ]
     this.kc.setCurrentContext(cluster.contextName)
 
     this.cluster = cluster
@@ -61,14 +46,12 @@ export class ContextHandler {
     this.defaultNamespace = kc.getContextObject(kc.currentContext).namespace
     this.url = `http://${this.id}.localhost:${cluster.port}/`
     this.kubernetesApi = `http://127.0.0.1:${cluster.port}/${this.id}`
-    // this.kc.clusters = [
-    //   {
-    //     name: kc.getCurrentCluster().name,
-    //     server: this.kubernetesApi,
-    //     skipTLSVerify: true
-    //   }
-    // ]
+
     this.setClusterPreferences(cluster.preferences)
+  }
+
+  public async init() {
+    await this.resolveProxyPort()
   }
 
   public setClusterPreferences(clusterPreferences?: ClusterPreferences) {

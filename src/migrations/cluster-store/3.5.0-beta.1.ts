@@ -2,6 +2,8 @@
 import { app } from "electron"
 import  { ensureDirSync, writeFileSync } from "fs-extra"
 import * as path from "path"
+import { KubeConfig } from "@kubernetes/client-node";
+import * as clusterStore from "../../cluster-store"
 
 export function migration(store: any) {
   console.log("CLUSTER STORE, MIGRATION: 3.5.0-beta.1");
@@ -11,21 +13,23 @@ export function migration(store: any) {
   ensureDirSync(kubeConfigBase)
   let storedClusters = store.get("clusters") as any[]
   if (!storedClusters) return
-  
+
   console.log("num clusters to migrate: ", storedClusters.length)
   for (let cluster of storedClusters ) {
+    // TODO Should probably guard this, not to make the whole migration fail if one cluster fails!?
     // take the embedded kubeconfig and dump it into a file
-    const kubeConfigFile = path.join(kubeConfigBase, cluster.id)
-    writeFileSync(kubeConfigFile, cluster.kubeConfig)
-    delete cluster.kubeConfig
+    const kubeConfigFile = clusterStore.writeEmbeddedKubeConfig(cluster.id, cluster.kubeConfig)
     cluster.kubeConfigPath = kubeConfigFile
-    // TODO Need to parse the context name from the config
-
-
-    // "overwrite" the cluster configs
+    
+    const kc = new KubeConfig()
+    kc.loadFromFile(cluster.kubeConfigPath)
+    cluster.contextName = kc.getCurrentContext()
+    
+    delete cluster.kubeConfig
     clusters.push(cluster)
   }
 
+  // "overwrite" the cluster configs
   if (clusters.length > 0) {
     store.set("clusters", clusters)
   }
