@@ -28,9 +28,7 @@ export class KubeAuthProxy {
 
   public async run(): Promise<void> {
     if (this.proxyProcess) {
-      return new Promise((resolve, reject) => {
-        resolve()
-      })
+      return;
     }
     const proxyBin = await this.kubectl.kubectlPath()
     const configWatcher = watch(this.cluster.kubeconfigPath(), (eventType: string, filename: string) => {

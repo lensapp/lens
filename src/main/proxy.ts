@@ -98,7 +98,7 @@ export class LensProxy {
     ws.on("connection", ((con: WebSocket, req: http.IncomingMessage) => {
       const cluster = this.clusterManager.getClusterForRequest(req)
       const contextHandler = cluster.contextHandler
-      const nodeParam = this.getNodeParam(req.url)
+      const nodeParam = (url.parse(req.url, true).query["node"] || "").toString();
 
       contextHandler.withTemporaryKubeconfig((kubeconfigPath) => {
         return new Promise<boolean>(async (resolve, reject) => {
@@ -110,18 +110,6 @@ export class LensProxy {
       })
     }).bind(this))
     return ws
-  }
-
-  protected getNodeParam(requestUrl: string) {
-    const reqUrl = url.parse(requestUrl, true)
-    const urlParams = reqUrl.query
-    let nodeParam: string = null
-    for (const [key, value] of Object.entries(urlParams)) {
-      if (key === "node") {
-        nodeParam = value.toString()
-      }
-    }
-    return nodeParam
   }
 
   protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions> {

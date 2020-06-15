@@ -141,7 +141,7 @@ export class ContextHandler {
     return apiTarget
   }
 
-  protected async newApiTarget(timeout: number) {
+  protected async newApiTarget(timeout: number): Promise<ServerOptions> {
     return {
       changeOrigin: true,
       timeout: timeout,

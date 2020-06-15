@@ -131,12 +131,12 @@ export class ShellSession extends EventEmitter {
     // send shell output to websocket
     this.shellProcess.onData(((data: string) => {
       this.sendResponse(data)
-    }).bind(this));
+    }));
   }
 
   protected pipeStdin() {
     // write websocket messages to shellProcess
-    this.websocket.on("message", function(data: string) {
+    this.websocket.on("message", (data: string) => {
       if (!this.running) { return }
 
       const message = Buffer.from(data.slice(1, data.length), "base64").toString()
@@ -149,11 +149,10 @@ export class ShellSession extends EventEmitter {
         this.shellProcess.resize(resizeMsgObj["Width"], resizeMsgObj["Height"])
         break;
       case "9":
-        this.token = message
-        this.emit('newToken', this.token)
+        this.emit('newToken', message)
         break;
       }
-    }.bind(this))
+    })
   }
 
   protected exit(code = 1000) {
@@ -162,10 +161,10 @@ export class ShellSession extends EventEmitter {
   }
 
   protected closeWebsocketOnProcessExit() {
-    this.shellProcess.on("exit", (code) => {
+    this.shellProcess.onExit(({ exitCode }) => {
       this.running = false
       let timeout = 0
-      if (code > 0) {
+      if (exitCode > 0) {
         this.sendResponse("Terminal will auto-close in 15 seconds ...")
         timeout = 15*1000
       }
