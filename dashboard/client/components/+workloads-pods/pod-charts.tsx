@@ -28,9 +28,9 @@ export const PodCharts = observer(() => {
   if (isMetricsEmpty(metrics)) return <NoMetrics/>;
 
   const options = tabId == 0 ? cpuOptions : memoryOptions;
-  const values = Object.values(metrics).map(metric =>
-    normalizeMetrics(metric).data.result[0].values
-  );
+  const values = Object.values(metrics)
+    .map(normalizeMetrics)
+    .map(({ data }) => data.result[0].values);
   const [
     cpuUsage,
     cpuRequests,
