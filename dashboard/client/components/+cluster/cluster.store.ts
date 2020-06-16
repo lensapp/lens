@@ -82,15 +82,15 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
     this.liveMetrics = await this.loadMetrics({ start, end, step, range });
   }
 
-  getMetricsValues(source: Partial<IClusterMetrics>) {
-    const metrics =
-      this.metricType === MetricType.CPU ? source.cpuUsage :
-        this.metricType === MetricType.MEMORY ? source.memoryUsage
-          : null;
-    if (!metrics) {
+  getMetricsValues(source: Partial<IClusterMetrics>): [number, string][] {
+    switch (this.metricType) {
+    case MetricType.CPU:
+      return normalizeMetrics(source.cpuUsage).data.result[0].values
+    case MetricType.MEMORY:
+      return normalizeMetrics(source.memoryUsage).data.result[0].values
+    default:
       return [];
     }
-    return normalizeMetrics(metrics).data.result[0].values;
   }
 
   resetMetrics() {
