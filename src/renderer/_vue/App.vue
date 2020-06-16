@@ -1,13 +1,10 @@
 <template>
-  <div id="app_vue">
-    <div class="draggable-top" />
-    <div id="lens-container" />
-    <div class="main-view" :class="{ 'menu-visible': isMenuVisible }">
-      <main-menu v-if="isMenuVisible" />
-      <router-view />
-    </div>
-    <bottom-bar v-if="isMenuVisible" />
+  <div class="draggable-top" />
+  <div class="main-view" :class="{ 'menu-visible': isMenuVisible }">
+    <main-menu v-if="isMenuVisible" />
+    <router-view />
   </div>
+  <bottom-bar v-if="isMenuVisible" />
 </template>
 
 <script>
@@ -25,3 +22,13 @@ export default {
 }
 </script>
 
+<style scoped>
+  .draggable-top{
+    -webkit-app-region: drag;
+    left: 0;
+    top: 0;
+    position: absolute;
+    height: 20px;
+    width: 100%;
+  }
+</style>

@@ -25,6 +25,17 @@ pre {
   color: $lens-text-color-light;
 }
 
+// react-app container (dashboard)
+#app {
+  position: absolute;
+  top: 0;
+  left: 70px;
+  right: 0;
+  height: 100%;
+  z-index: 100;
+  display: none;
+}
+
 #app_vue {
   width: 100%;
   height: 100%;
@@ -55,15 +66,6 @@ pre {
     background-position: right .7em top 50%, 0 0;
     background-size: .65em auto, 100%;
   }
-}
-
-.draggable-top{
-  -webkit-app-region: drag;
-  left: 0;
-  top: 0;
-  position: absolute;
-  height: 20px;
-  width: 100%;
 }
 
 ::-webkit-scrollbar {
@@ -202,14 +204,4 @@ h1, h2, h3, h4, h5, h6{
     top: 3px;
     font-size: 16px;
   }
-}
-
-#lens-container {
-  position: absolute;
-  top: 0;
-  left: 70px;
-  right: 0;
-  height: 100%;
-  z-index: 100;
-  display: none;
 }

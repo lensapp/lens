@@ -88,7 +88,7 @@ const actions: ActionTree<ClusterState, any>  = {
     await promiseIpc.send("removeCluster", cluster.id).catch((error: Error) => {
       return false;
     })
-    tracker.event("cluster", "remove´");
+    tracker.event("cluster", "remove");
     await dispatch("refreshClusters", getters.currentWorkspace)
     return true;
   },
@@ -166,7 +166,7 @@ const actions: ActionTree<ClusterState, any>  = {
   },
 
   attachWebview({commit}, lens: LensWebview) {
-    const container: any = document.getElementById("lens-container");
+    const container: any = document.getElementById("app");
     if (!container || !lens.webview) {
       return
     }
@@ -190,7 +190,7 @@ const actions: ActionTree<ClusterState, any>  = {
     promiseIpc.send("enableClusterSettingsMenuItem", lens.id)
   },
   detachWebview({commit}, lens: LensWebview) {
-    const container: any = document.getElementById("lens-container");
+    const container: any = document.getElementById("app");
     if (!container) { return }
     container.childNodes.forEach((child: any) => {
       if (child === lens.webview) {
@@ -203,7 +203,7 @@ const actions: ActionTree<ClusterState, any>  = {
     promiseIpc.send("disableClusterSettingsMenuItem")
   },
   hideWebviews({commit}) {
-    const container: any = document.getElementById("lens-container");
+    const container: any = document.getElementById("app");
     if (!container) { return }
     container.style = "display: none;"
     container.childNodes.forEach((child: any) => {
