@@ -173,7 +173,7 @@ export class ContextHandler {
   }
 
   public applyHeaders(req: http.IncomingMessage) {
-    req.headers["authorization"] = `Bearer ${this.id}` // Q: how it works when id == cluster.id ?
+    req.headers["authorization"] = `Bearer ${this.id}`
   }
 
   public async withTemporaryKubeconfig(callback: (kubeconfig: string) => Promise<any>) {
@@ -188,7 +188,7 @@ export class ContextHandler {
     if (!this.proxyServer) {
       const proxyPort = await this.resolveProxyPort()
       const proxyEnv = Object.assign({}, process.env)
-      if (this.cluster.preferences && this.cluster.preferences.httpsProxy) {
+      if (this.cluster?.preferences.httpsProxy) {
         proxyEnv.HTTPS_PROXY = this.cluster.preferences.httpsProxy
       }
       this.proxyServer = new KubeAuthProxy(this.cluster, proxyPort, proxyEnv)

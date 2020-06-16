@@ -31,7 +31,8 @@ export default function (): webpack.Configuration {
           use: "node-loader"
         },
         {
-          test: /\.ts?$/,
+          test: /\.ts$/,
+          exclude: /node_modules/,
           use: {
             loader: "ts-loader",
             options: {

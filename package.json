@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "yarn compile:dll && concurrently yarn:dev:*",
     "dev-run": "electron --inspect .",
-    "dev:main": "DEBUG=true webpack --watch --cache --config webpack.main.ts",
-    "dev:renderer": "DEBUG=true webpack --watch --cache --config webpack.renderer.ts",
+    "dev:main": "DEBUG=true webpack --watch --progress --config webpack.main.ts",
+    "dev:renderer": "DEBUG=true webpack --watch --progress --config webpack.renderer.ts",
     "compile": "NODE_ENV=production concurrently 'yarn download-bins' 'yarn i18n:compile' 'yarn compile:dll' && concurrently yarn:compile:*",
     "compile:main": "NODE_ENV=production webpack --progress --config webpack.main.ts $@",
     "compile:renderer": "NODE_ENV=production webpack --progress --config webpack.renderer.ts $@",
