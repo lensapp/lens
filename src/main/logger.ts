@@ -1,11 +1,16 @@
 import winston from "winston"
 import { isDebugging } from "../common/vars";
 
-const options = {
-  colorize: true,
+const consoleOptions: winston.transports.ConsoleTransportOptions = {
   handleExceptions: false,
-  json: false,
   level: isDebugging ? "debug" : "info",
+}
+
+const fileOptions: winston.transports.FileTransportOptions = {
+  handleExceptions: false,
+  level: isDebugging ? "debug" : "info",
+  filename: "lens.log",
+  dirname: __dirname,
 }
 
 const logger = winston.createLogger({
@@ -14,7 +19,8 @@ const logger = winston.createLogger({
     winston.format.simple(),
   ),
   transports: [
-    new winston.transports.Console(options),
+    new winston.transports.Console(consoleOptions),
+    new winston.transports.File(fileOptions),
   ],
 });
 

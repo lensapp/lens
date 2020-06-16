@@ -9,3 +9,4 @@ static/build/**
 binaries/client/
 binaries/server/
 locales/**/**.js
+lens.log
