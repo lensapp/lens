@@ -94,13 +94,16 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
 }
 
 export function isMetricsEmpty(metrics: { [key: string]: IMetrics }) {
-  return Object.values(metrics).every(metric => !metric.data.result.length);
+  return Object.values(metrics).every(metric => !metric?.data?.result?.length);
 }
 
-export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: string) {
+export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: string): { [key: string]: IMetrics } {
   if (!metrics) return;
   const itemMetrics = { ...metrics };
   for (const metric in metrics) {
+    if (!metrics[metric]?.data?.result) {
+      continue
+    }
     const results = metrics[metric].data.result;
     const result = results.find(res => Object.values(res.metric)[0] == itemName);
     itemMetrics[metric].data.result = result ? [result] : [];
