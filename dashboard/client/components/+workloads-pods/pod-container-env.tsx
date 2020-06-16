@@ -120,8 +120,11 @@ const SecretKey = (props: SecretKeyProps) => {
     setSecret(secret)
   }
 
-  if (!secret) {
-    return (
+  if (secret?.data?.[key]) {
+    return <>{base64.decode(secret.data[key])}</>
+  }
+
+  return (
       <>
         secretKeyRef({name}.{key})&nbsp;
         <Icon
@@ -131,7 +134,5 @@ const SecretKey = (props: SecretKeyProps) => {
           onClick={showKey}
         />
       </>
-    )
-  }
-  return <>{base64.decode(secret.data[key])}</>
+  )
 }
