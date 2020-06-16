@@ -16,8 +16,11 @@
                     placeholder="Choose a file or drop it here..."
                     drop-placeholder="Drop file here..."
                     @input="reloadKubeContexts()"
-                  ></b-form-file>
-                  <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
+                  />
+
+                  <div class="mt-3">
+                    Selected file: {{ file ? file.name : '' }}
+                  </div>
 
                   <b-form-select
                     id="kubecontext-select"

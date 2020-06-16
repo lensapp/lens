@@ -27,7 +27,7 @@ export class KubeconfigManager {
   protected createTemporaryKubeconfig(): string {
     ensureDir(this.configDir)
     const path = `${this.configDir}/${randomFileName("kubeconfig")}`
-    let kc = {
+    const kc = {
       clusters: [
         {
           name: this.cluster.contextName,
