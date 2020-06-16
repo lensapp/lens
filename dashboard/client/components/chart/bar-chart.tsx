@@ -150,7 +150,7 @@ export function BarChart(props: Props) {
     }
   };
   const options = merge(barOptions, customOptions);
-  if (!chartData.datasets.length) {
+  if (chartData.datasets.length == 0) {
     return <NoMetrics/>
   }
   return (
@@ -170,9 +170,17 @@ export const memoryOptions: ChartOptions = {
   scales: {
     yAxes: [{
       ticks: {
-        callback: value => {
-          if (!value) return 0;
-          return parseFloat(value) < 1 ? value.toFixed(3) : bytesToUnits(parseInt(value));
+        callback: (value: number | string): string => {
+          if (typeof value == "string") {
+            const float = parseFloat(value);
+            if (float < 1) {
+              return float.toFixed(3);
+            }
+
+            return bytesToUnits(parseInt(value));
+          }
+
+          return `${value}`;
         },
         stepSize: 1
       }
@@ -194,11 +202,12 @@ export const cpuOptions: ChartOptions = {
   scales: {
     yAxes: [{
       ticks: {
-        callback: value => {
-          if (value == 0) return 0;
-          if (value < 10) return value.toFixed(3);
-          if (value < 100) return value.toFixed(2);
-          return value.toFixed(1);
+        callback: (value: number | string): string => {
+          const float = parseFloat(`${value}`);
+          if (float == 0) return "0";
+          if (float < 10) return float.toFixed(3);
+          if (float < 100) return float.toFixed(2);
+          return float.toFixed(1);
         }
       }
     }]
