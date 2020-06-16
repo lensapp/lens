@@ -18,7 +18,7 @@ export class PrometheusLens implements PrometheusProvider {
         port: service.spec.ports[0].port
       }
     } catch(error) {
-      logger.warn(`PrometheusLens: failed to list services: ${error.toString()}`)
+      logger.warn(`PrometheusLens: failed to list services: ${error.response.body.message}`)
     }
   }
 
