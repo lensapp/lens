@@ -4,6 +4,7 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints";
 import { IQueryParams, navigation, setQueryParams } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
+import { isAllowedResource } from "../..//api/rbac";
 
 @autobind()
 export class NamespaceStore extends KubeObjectStore<Namespace> {
@@ -43,12 +44,35 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   protected loadItems(namespaces?: string[]) {
+    if (!isAllowedResource("namespaces")) {
+      if (namespaces) {
+        return Promise.all(namespaces.map(name => this.getDummyNamespace(name)))
+      }
+      else {
+        return new Promise<Namespace[]>(() => {
+          return []
+        })
+      }
+    }
     if (namespaces) {
       return Promise.all(namespaces.map(name => this.api.get({ name })))
     }
     else {
       return super.loadItems();
     }
+  }
+
+  protected getDummyNamespace(name: string) {
+    return new Namespace({
+      kind: "Namespace",
+      apiVersion: "v1",
+      metadata: {
+        name: name,
+        uid: "",
+        resourceVersion: "",
+        selfLink: `/api/v1/namespaces/${name}`
+      }
+    })
   }
 
   setContext(namespaces: string[]) {

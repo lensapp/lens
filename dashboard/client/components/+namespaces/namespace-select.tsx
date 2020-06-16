@@ -34,7 +34,7 @@ export class NamespaceSelect extends React.Component<Props> {
   private unsubscribe = noop;
 
   async componentDidMount() {
-    if (isAllowedResource("namespaces") && !namespaceStore.isLoaded) {
+    if (!namespaceStore.isLoaded) {
       await namespaceStore.loadAll();
     }
     this.unsubscribe = namespaceStore.subscribe();
