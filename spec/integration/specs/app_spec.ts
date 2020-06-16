@@ -5,6 +5,8 @@ import { stat } from "fs"
 
 jest.setTimeout(20000)
 
+const BACKSPACE = "\uE003"
+
 describe("app start", () => {
   let app: Application
   const clickWhatsNew = async (app: Application) => {
@@ -78,7 +80,7 @@ describe("app start", () => {
     await app.client.keys("kind: Pod\n")
     await app.client.keys("metadata:\n")
     await app.client.keys("  name: nginx\n")
-    await app.client.keys("\uE003spec:\n")
+    await app.client.keys(BACKSPACE + "spec:\n")
     await app.client.keys("  containers:\n")
     await app.client.keys("- name: nginx\n")
     await app.client.keys("  image: nginx:alpine\n")
