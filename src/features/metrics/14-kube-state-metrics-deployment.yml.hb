@@ -19,27 +19,22 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
               - matchExpressions:
-                - key: kubernetes.io/os
-                  operator: In
-                  values:
-                  - linux
-                - key: kubernetes.io/arch
-                  operator: In
-                  values:
-                  - amd64
-              - matchExpressions:
-                - key: beta.kubernetes.io/os
-                  operator: In
-                  values:
-                  - linux
-                - key: beta.kubernetes.io/arch
-                  operator: In
-                  values:
-                  - amd64
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+                      - arm64
+                      - arm
+                  - key: beta.kubernetes.io/arch
+                    operator: In
+                    values:
+                      - amd64
+                      - arm64
+                      - arm
       serviceAccountName: kube-state-metrics
       containers:
       - name: kube-state-metrics
-        image: quay.io/coreos/kube-state-metrics:v1.9.5
+        image: carlosedp/kube-state-metrics:v1.9.6
         ports:
         - name: metrics
           containerPort: 8080
