@@ -1,3 +1,4 @@
+import "../../common/system-ca"
 import "./assets/css/app.scss"
 import "prismjs";
 import "prismjs/components/prism-yaml"
@@ -29,19 +30,19 @@ Vue.mixin({
   }
 })
 
-// run
-setTimeout(main, 250);
-
-export async function main() {
-  try {
-    await store.dispatch('init');
+// any initialization we want to do for app state
+setTimeout(() => {
+  store.dispatch('init', ).catch((error) => {
+    console.error(error)
+  }).finally(() => {
+    /* eslint-disable no-new */
+    console.log("start vue")
     new Vue({
-      components: {App},
+      components: { App },
+      persist,
       store,
       router,
       template: '<App/>'
-    }).$mount('#app_vue')
-  } catch (err) {
-    console.error(err)
-  }
-}
+    }).$mount('#app')
+  })
+}, 0)

@@ -1,7 +1,7 @@
 import { isMac, isWindows } from "./vars";
 
 if (isMac) {
-  console.warn("//FIXME: MAC-CA IMPORT ERROR!");
+  // fixme: mac-ca import error
   // require("mac-ca");
 }
 if (isWindows) {

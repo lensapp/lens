@@ -7,6 +7,7 @@ export default function (): webpack.Configuration {
   return {
     context: __dirname,
     target: "electron-main",
+    devtool: "source-map",
     mode: isProduction ? "production" : "development",
     cache: isDevelopment,
     entry: {
@@ -18,12 +19,18 @@ export default function (): webpack.Configuration {
     resolve: {
       extensions: ['.json', '.js', '.ts']
     },
-    externals: [
-      "@kubernetes/client-node",
-      "handlebars",
-      "node-pty",
-      "ws",
-    ],
+    node: {
+      // webpack modifies node internals by default, keep as is for main-process
+      __dirname: false,
+      __filename: false,
+    },
+    // fixme: hiding warnings during compilation, but creates runtime error
+    // externals: [
+    //   "@kubernetes/client-node",
+    //   "handlebars",
+    //   "node-pty",
+    //   "ws",
+    // ],
     module: {
       rules: [
         {
@@ -38,7 +45,7 @@ export default function (): webpack.Configuration {
             options: {
               transpileOnly: true,
             }
-          },
+          }
         },
       ]
     },

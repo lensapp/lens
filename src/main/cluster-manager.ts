@@ -12,6 +12,7 @@ import { promises } from "fs"
 import  { ensureDir } from "fs-extra"
 import filenamify from "filenamify"
 import { v4 as uuid } from "uuid"
+import { apiPrefix } from "../common/vars";
 
 export type FeatureInstallRequest = {
   name: string;
@@ -261,7 +262,7 @@ export class ClusterManager {
         cluster = this.clusters.get(clusterId)
         if (cluster) {
           // we need to swap path prefix so that request is proxied to kube api
-          req.url = req.url.replace(`/${clusterId}`, "/api-kube")
+          req.url = req.url.replace(`/${clusterId}`, apiPrefix.KUBE_BASE)
         }
       }
     } else {

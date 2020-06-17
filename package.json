@@ -5,11 +5,11 @@
   "version": "3.5.0-beta.1",
   "main": "dist/main.js",
   "scripts": {
-    "dev": "yarn compile:dll && concurrently yarn:dev:*",
+    "dev": "concurrently yarn:dev:*",
     "dev-run": "electron --inspect .",
     "dev:main": "DEBUG=true webpack --watch --progress --config webpack.main.ts",
     "dev:renderer": "DEBUG=true webpack --watch --progress --config webpack.renderer.ts",
-    "compile": "NODE_ENV=production concurrently 'yarn download-bins' 'yarn i18n:compile' 'yarn compile:dll' && concurrently yarn:compile:*",
+    "compile": "NODE_ENV=production concurrently 'yarn download-bins' 'yarn i18n:compile' && concurrently yarn:compile:*",
     "compile:main": "NODE_ENV=production webpack --progress --config webpack.main.ts $@",
     "compile:renderer": "NODE_ENV=production webpack --progress --config webpack.renderer.ts $@",
     "compile:dll": "webpack --config webpack.dll.ts $@",
@@ -196,6 +196,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-react": "^7.10.1",
     "@babel/preset-typescript": "^7.10.1",

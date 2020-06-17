@@ -17,7 +17,6 @@ export const mainDir = path.join(contextDir, "src/main");
 export const rendererDir = path.join(contextDir, "src/renderer");
 export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
-export const tsConfigFile = path.resolve(contextDir, "tsconfig.json");
 
 // Apis
 export const staticProto = "static://"

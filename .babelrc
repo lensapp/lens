@@ -1,10 +1,27 @@
 {
   "presets": [
-    "@babel/preset-env",
+    [
+      "@babel/preset-env",
+      {
+        "modules": "commonjs",
+        "targets": {
+          "esmodules": false
+        }
+      }
+    ],
     "@babel/preset-react",
     "@lingui/babel-preset-react"
   ],
   "plugins": [
-    "macros"
+    "macros",
+    "@babel/plugin-syntax-dynamic-import",
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "absoluteRuntime": false,
+        "regenerator": true,
+        "useESModules": true
+      }
+    ]
   ]
 }

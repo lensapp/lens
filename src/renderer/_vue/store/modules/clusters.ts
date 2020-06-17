@@ -166,7 +166,7 @@ const actions: ActionTree<ClusterState, any>  = {
   },
 
   attachWebview({commit}, lens: LensWebview) {
-    const container: any = document.getElementById("app");
+    const container: any = document.getElementById("lens-container");
     if (!container || !lens.webview) {
       return
     }
@@ -190,7 +190,7 @@ const actions: ActionTree<ClusterState, any>  = {
     promiseIpc.send("enableClusterSettingsMenuItem", lens.id)
   },
   detachWebview({commit}, lens: LensWebview) {
-    const container: any = document.getElementById("app");
+    const container: any = document.getElementById("lens-container");
     if (!container) { return }
     container.childNodes.forEach((child: any) => {
       if (child === lens.webview) {
@@ -203,7 +203,7 @@ const actions: ActionTree<ClusterState, any>  = {
     promiseIpc.send("disableClusterSettingsMenuItem")
   },
   hideWebviews({commit}) {
-    const container: any = document.getElementById("app");
+    const container: any = document.getElementById("lens-container");
     if (!container) { return }
     container.style = "display: none;"
     container.childNodes.forEach((child: any) => {

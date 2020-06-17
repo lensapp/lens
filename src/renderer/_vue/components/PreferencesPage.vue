@@ -225,7 +225,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#app_vue > .main-view > .content {
+#app > .main-view > .content {
   left: 70px;
 }
 .lens-preferences {

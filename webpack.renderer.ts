@@ -6,7 +6,6 @@ import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 import { VueLoaderPlugin } from "vue-loader"
 import { htmlTemplate, isDevelopment, isProduction, outDir, rendererDir, sassCommonVars } from "./src/common/vars";
-import { libraryTarget, manifestPath } from "./webpack.dll";
 
 export default [
   webpackConfigReact,
@@ -17,8 +16,8 @@ export function webpackConfigReact(): webpack.Configuration {
   return {
     context: __dirname,
     target: "electron-renderer",
+    devtool: "source-map",
     mode: isProduction ? "production" : "development",
-    devtool: isProduction ? "source-map" : "cheap-module-eval-source-map",
     cache: isDevelopment,
     entry: {
       renderer: path.resolve(rendererDir, "components/app.tsx"),
@@ -119,16 +118,12 @@ export function webpackConfigReact(): webpack.Configuration {
       // new ForkTsCheckerPlugin(),
 
       // todo: check if this actually works in mode=production files
-      new webpack.DllReferencePlugin({
-        context: process.cwd(),
-        manifest: manifestPath,
-        sourceType: libraryTarget,
-      }),
+      // new webpack.DllReferencePlugin({
+      //   context: process.cwd(),
+      //   manifest: manifestPath,
+      //   sourceType: libraryTarget,
+      // }),
 
-      new HtmlWebpackPlugin({
-        template: htmlTemplate,
-        inject: true,
-      }),
       new MiniCssExtractPlugin({
         filename: "[name].css",
       }),
@@ -188,6 +183,11 @@ export function webpackConfigVue(): webpack.Configuration {
   config.plugins = [
     new VueLoaderPlugin(),
     new ForkTsCheckerPlugin(),
+
+    new HtmlWebpackPlugin({
+      template: htmlTemplate,
+      inject: true,
+    }),
   ];
 
   return config;

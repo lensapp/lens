@@ -9,6 +9,7 @@ import { Kubectl } from "./kubectl";
 import { PromiseIpc } from "electron-promise-ipc"
 import request from "request-promise-native"
 import { KubeconfigManager } from "./kubeconfig-manager"
+import { apiPrefix } from "../common/vars";
 
 enum ClusterStatus {
   AccessGranted = 2,
@@ -180,7 +181,8 @@ export class Cluster implements ClusterInfo {
   }
 
   protected async k8sRequest(path: string, opts: request.RequestPromiseOptions = {}) {
-    const url = `http://127.0.0.1:${this.port}/api-kube${path}`; // fixme: remove hardcoded api prefix
+    const prefix = apiPrefix.KUBE_BASE;
+    const url = `http://127.0.0.1:${this.port}${prefix}${path}`;
     opts.json = true;
     opts.timeout = 10000;
     opts.headers = Object.assign({}, opts.headers, {

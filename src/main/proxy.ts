@@ -8,6 +8,7 @@ import logger from "./logger"
 import * as shell from "./node-shell-session"
 import { ClusterManager } from "./cluster-manager"
 import { Router } from "./router"
+import { apiPrefix } from "../common/vars";
 
 export class LensProxy {
   public static readonly localShellSessions = true
@@ -110,9 +111,10 @@ export class LensProxy {
   }
 
   protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions> {
-    if (req.url.startsWith("/api-kube/")) {
+    const prefix = apiPrefix.KUBE_BASE;
+    if (req.url.startsWith(prefix)) {
       delete req.headers.authorization
-      req.url = req.url.replace("/api-kube", "")
+      req.url = req.url.replace(prefix, "")
       const isWatchRequest = req.url.includes("watch=")
       return await contextHandler.getApiTarget(isWatchRequest)
     }
