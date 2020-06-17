@@ -19,6 +19,11 @@
       <img v-if="preferences.icon" :src="preferences.icon">
       <hashicon v-else :name="preferences.clusterName" size="38" />
       <span v-if="isAdmin && eventCount > 0" class="badge badge-danger">{{ eventCount >= 1000 ? "1000+" : eventCount }}</span>
+
+      <b-modal id="bv-modal-confirm" @ok="removeCluster" ok-title="Remove" ok-variant="danger" title-class="confirm-header" hide-backdrop title="Confirm cluster delete">
+        <p>Are you sure you want to delete <strong>{{ preferences.clusterName }}</strong> cluster from Lens?</p>
+      </b-modal>
+
     </div>
   </a>
 </template>
@@ -83,6 +88,18 @@ export default {
           },
         }).catch(err => {})
       } }))
+
+      menu.append(new MenuItem({ label: 'Delete', click() {
+
+        self.$store.dispatch('removeCluster', self.cluster.id);
+        if (self.isActive) {
+          self.$router.push({
+            name: "landing-page"
+          }).catch(err => {})
+        }
+        
+      } }))
+
       if (this.activated) {
         menu.append(new MenuItem({ label: 'Disconnect', click() {
           self.activated = false;
