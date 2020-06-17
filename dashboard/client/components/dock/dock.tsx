@@ -119,12 +119,12 @@ export class Dock extends React.Component<Props> {
           />
           <div className="toolbar flex gaps align-center box grow">
             <div className="dock-menu box grow">
-              <MenuActions usePortal triggerIcon={{ material: "add", tooltip: <Trans>New tab</Trans> }} closeOnScroll={false}>
-                <MenuItem onClick={() => createTerminalTab()}>
+              <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: <Trans>New tab</Trans> }} closeOnScroll={false}>
+                <MenuItem className="create-terminal-tab" onClick={() => createTerminalTab()}>
                   <Icon small svg="terminal" size={15}/>
                   <Trans>Terminal session</Trans>
                 </MenuItem>
-                <MenuItem onClick={() => createResourceTab()}>
+                <MenuItem className="create-resource-tab" onClick={() => createResourceTab()}>
                   <Icon small material="create"/>
                   <Trans>Create resource</Trans>
                 </MenuItem>
