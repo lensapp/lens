@@ -129,6 +129,7 @@ import * as path from "path"
 import fs from 'fs'
 import { v4 as uuidv4 } from 'uuid';
 import * as clusterStore from "../../common/cluster-store"
+import { writeEmbeddedKubeConfig} from "../../common/app-utils"
 
 class ClusterAccessError extends Error {}
 

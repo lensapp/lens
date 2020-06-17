@@ -3,10 +3,8 @@ import logger from "./logger"
 import * as tcpPortUsed from "tcp-port-used"
 import { Kubectl, bundledKubectl } from "./kubectl"
 import { Cluster } from "./cluster"
-import { readFileSync, watch } from "fs"
 import { PromiseIpc } from "electron-promise-ipc"
 import { findMainWebContents } from "./webcontents"
-import * as url from "url"
 
 export class KubeAuthProxy {
   public lastError: string
