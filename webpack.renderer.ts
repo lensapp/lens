@@ -77,7 +77,13 @@ export function webpackConfigReact(): webpack.Configuration {
         },
         {
           test: /\.(jpg|png|svg|map|ico)$/,
-          use: "file-loader?name=images/[name]-[hash:6].[ext]"
+          use: {
+            loader: "file-loader",
+            options: {
+              name: "images/[name]-[hash:6].[ext]",
+              esModule: false, // handle media imports in <template>, e.g <img src="../assets/logo.svg"> (vue/react?)
+            }
+          }
         },
         {
           test: /\.(ttf|eot|woff2?)$/,
