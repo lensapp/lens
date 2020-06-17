@@ -10,7 +10,7 @@ import ReactSelect, { components as ReactSelectComponents } from "react-select"
 import { Props as ReactSelectProps } from "react-select/base"
 import Creatable, { CreatableProps } from "react-select/creatable"
 import { StylesConfig } from "react-select/src/styles"
-import { ActionMeta, OptionTypeBase } from "react-select/src/types"
+import { ActionMeta } from "react-select/src/types"
 import { themeStore } from "../../theme.store";
 
 export { ReactSelectComponents }
@@ -31,7 +31,7 @@ export interface SelectProps<T = any> extends ReactSelectProps<T>, CreatableProp
   menuClass?: string;
   isCreatable?: boolean;
   autoConvertOptions?: boolean; // to internal format (i.e. {value: T, label: string}[]), not working with groups
-  onChange?(option: T, meta?: ActionMeta<OptionTypeBase>): void;
+  onChange?(option: T, meta?: ActionMeta): void;
 }
 
 @observer
@@ -76,7 +76,7 @@ export class Select extends React.Component<SelectProps> {
   }
 
   @autobind()
-  onChange(value: SelectOption, meta: ActionMeta<OptionTypeBase>) {
+  onChange(value: SelectOption, meta: ActionMeta) {
     if (this.props.onChange) {
       this.props.onChange(value, meta);
     }
