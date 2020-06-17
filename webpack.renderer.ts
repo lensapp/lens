@@ -28,9 +28,6 @@ export function webpackConfigReact(): webpack.Configuration {
       chunkFilename: 'chunks/[name].js',
     },
     resolve: {
-      alias: {
-        "@": rendererDir,
-      },
       extensions: [
         '.js', '.jsx', '.json',
         '.ts', '.tsx',
@@ -135,6 +132,13 @@ export function webpackConfigVue(): webpack.Configuration {
   const config = webpackConfigReact();
 
   config.resolve.extensions.push(".vue");
+
+  config.resolve.alias = {
+    "@": rendererDir,
+    "vue$": "vue/dist/vue.esm.js",
+    "vue-router$": "vue-router/dist/vue-router.esm.js",
+  }
+
   config.entry = {
     renderer_vue: path.resolve(rendererDir, "_vue/index.js")
   }

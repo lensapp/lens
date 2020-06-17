@@ -24,7 +24,7 @@ export default function (): webpack.Configuration {
       __dirname: false,
       __filename: false,
     },
-    // fixme: hiding warnings during compilation, but creates runtime error
+    // fixme: this will hide warnings during compilation, but creates runtime error
     // externals: [
     //   "@kubernetes/client-node",
     //   "handlebars",

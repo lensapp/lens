@@ -1,5 +1,5 @@
 <template>
-  <div id="app_vue">
+  <div id="app">
     <div id="lens-container" />
     <div class="draggable-top"/>
     <div class="main-view" :class="{ 'menu-visible': isMenuVisible }">

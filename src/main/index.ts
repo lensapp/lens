@@ -31,7 +31,7 @@ let windowManager: WindowManager = null;
 let clusterManager: ClusterManager = null;
 
 const vmURL = formatUrl({
-  pathname: path.join(__dirname, "dist/index.html"),
+  pathname: path.join(__dirname, "index.html"),
   protocol: "file",
   slashes: true,
 })
@@ -123,7 +123,7 @@ app.on('window-all-closed', function () {
 app.on("activate", () => {
   if (!windowManager) {
     logger.debug("activate main window")
-    windowManager = new WindowManager(false)
+    windowManager = new WindowManager({ showSplash: false })
     windowManager.showMain(vmURL)
   }
 })

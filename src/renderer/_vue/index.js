@@ -39,7 +39,6 @@ setTimeout(() => {
     console.log("start vue")
     new Vue({
       components: { App },
-      persist,
       store,
       router,
       template: '<App/>'

@@ -2,7 +2,7 @@
   <span class="hashicon" ref="hashicon" />
 </template>
 <script>
-import hashicon from '@/_vue/components/hashicon/hashicon'
+import hashicon from 'hashicon'
 
 export default {
   name:'Hashicon',

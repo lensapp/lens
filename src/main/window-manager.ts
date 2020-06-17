@@ -11,7 +11,7 @@ export class WindowManager {
   protected promiseIpc: any
   protected windowState: windowStateKeeper.State;
 
-  constructor(showSplash = true) {
+  constructor({ showSplash = true } = {}) {
     this.promiseIpc = new PromiseIpc({ timeout: 2000 })
     // Manage main window size&position with persistence
     this.windowState = windowStateKeeper({
@@ -32,7 +32,7 @@ export class WindowManager {
       }
     })
     if (showSplash) {
-      this.splashWindow.loadFile(getStaticUrl("splash.html"))
+      this.splashWindow.loadURL(getStaticUrl("splash.html"))
       this.splashWindow.show()
     }
 

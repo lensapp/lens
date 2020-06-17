@@ -239,6 +239,7 @@
     "babel-core": "^7.0.0-beta.3",
     "babel-loader": "^8.1.0",
     "babel-plugin-macros": "^2.8.0",
+    "babel-runtime": "^6.26.0",
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "chart.js": "^2.9.3",
