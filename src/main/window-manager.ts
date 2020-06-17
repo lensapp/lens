@@ -2,7 +2,6 @@ import { BrowserWindow, shell } from "electron"
 import { PromiseIpc } from "electron-promise-ipc"
 import windowStateKeeper from "electron-window-state"
 import { tracker } from "./tracker";
-import { isDevelopment } from "../common/vars";
 import { getStaticUrl } from "../common/register-static";
 
 export class WindowManager {
@@ -45,7 +44,6 @@ export class WindowManager {
       backgroundColor: "#1e2124",
       titleBarStyle: "hidden",
       webPreferences: {
-        devTools: isDevelopment,
         nodeIntegration: true,
         webviewTag: true
       },

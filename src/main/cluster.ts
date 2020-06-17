@@ -180,15 +180,14 @@ export class Cluster implements ClusterInfo {
     }
   }
 
-  protected async k8sRequest(path: string, opts: request.RequestPromiseOptions = {}) {
-    const prefix = apiPrefix.KUBE_BASE;
-    const url = `http://127.0.0.1:${this.port}${prefix}${path}`;
-    opts.json = true;
-    opts.timeout = 10000;
-    opts.headers = Object.assign({}, opts.headers, {
-      host: `${this.id}.localhost:${this.port}`,
-    });
-    return request(url, opts);
+  protected async k8sRequest(path: string, opts?: request.RequestPromiseOptions) {
+    const options = Object.assign({
+      json: true,
+      timeout: 10000
+    }, (opts || {}))
+    if (!options.headers) { options.headers = {} }
+    options.headers.host = `${this.id}.localhost:${this.port}`
+    return request(`http://127.0.0.1:${this.port}${apiPrefix.KUBE_BASE}${path}`, options)
   }
 
   protected async getConnectionStatus() {

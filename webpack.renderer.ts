@@ -5,7 +5,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 import { VueLoaderPlugin } from "vue-loader"
-import { htmlTemplate, isDevelopment, isProduction, outDir, rendererDir, sassCommonVars } from "./src/common/vars";
+import { htmlTemplate, isDevelopment, isProduction, outDir, reactAppName, rendererDir, sassCommonVars, vueAppName } from "./src/common/vars";
 
 export default [
   webpackConfigReact,
@@ -16,11 +16,11 @@ export function webpackConfigReact(): webpack.Configuration {
   return {
     context: __dirname,
     target: "electron-renderer",
-    devtool: "source-map",
+    devtool: isProduction ? "source-map" : "cheap-eval-source-map",
     mode: isProduction ? "production" : "development",
     cache: isDevelopment,
     entry: {
-      renderer: path.resolve(rendererDir, "components/app.tsx"),
+      [reactAppName]: path.resolve(rendererDir, "components/app.tsx"),
     },
     output: {
       path: outDir,
@@ -34,7 +34,7 @@ export function webpackConfigReact(): webpack.Configuration {
       ]
     },
     optimization: {
-      minimize: false,
+      minimize: isProduction,
       minimizer: [
         new TerserPlugin({
           cache: true,
@@ -64,7 +64,7 @@ export function webpackConfigReact(): webpack.Configuration {
             {
               loader: "ts-loader",
               options: {
-                transpileOnly: false, // fixme: enable types resolution with ts-fork-checker
+                transpileOnly: true,
                 compilerOptions: {
                   // localization support
                   // https://lingui.js.org/guides/typescript.html
@@ -111,8 +111,7 @@ export function webpackConfigReact(): webpack.Configuration {
     },
 
     plugins: [
-      // fixme: enable with transpileOnly=true
-      // new ForkTsCheckerPlugin(),
+      new ForkTsCheckerPlugin(),
 
       // todo: check if this actually works in mode=production files
       // new webpack.DllReferencePlugin({
@@ -120,6 +119,12 @@ export function webpackConfigReact(): webpack.Configuration {
       //   manifest: manifestPath,
       //   sourceType: libraryTarget,
       // }),
+
+      new HtmlWebpackPlugin({
+        filename: `${reactAppName}.html`,
+        template: htmlTemplate,
+        inject: true,
+      }),
 
       new MiniCssExtractPlugin({
         filename: "[name].css",
@@ -133,14 +138,13 @@ export function webpackConfigVue(): webpack.Configuration {
 
   config.resolve.extensions.push(".vue");
 
+  config.entry = {
+    [vueAppName]: path.resolve(rendererDir, "_vue/index.js")
+  }
   config.resolve.alias = {
     "@": rendererDir,
     "vue$": "vue/dist/vue.esm.js",
     "vue-router$": "vue-router/dist/vue-router.esm.js",
-  }
-
-  config.entry = {
-    renderer_vue: path.resolve(rendererDir, "_vue/index.js")
   }
 
   // rules and loaders
@@ -189,6 +193,7 @@ export function webpackConfigVue(): webpack.Configuration {
     new ForkTsCheckerPlugin(),
 
     new HtmlWebpackPlugin({
+      filename: `${vueAppName}.html`,
       template: htmlTemplate,
       inject: true,
     }),

@@ -250,7 +250,6 @@
     "dompurify": "^2.0.11",
     "electron-builder": "^22.7.0",
     "electron-notarize": "^0.3.0",
-    "electron-reloader": "^1.0.1",
     "electron-serve": "^1.0.0",
     "file-loader": "^6.0.0",
     "flex.box": "^3.4.4",

@@ -19,7 +19,7 @@ import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { findMainWebContents } from "./webcontents"
 import { registerStaticProtocol } from "../common/register-static";
-import { isMac } from "../common/vars";
+import { isMac, vueAppName } from "../common/vars";
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
@@ -31,7 +31,7 @@ let windowManager: WindowManager = null;
 let clusterManager: ClusterManager = null;
 
 const vmURL = formatUrl({
-  pathname: path.join(__dirname, "index.html"),
+  pathname: path.join(__dirname, `${vueAppName}.html`),
   protocol: "file",
   slashes: true,
 })
@@ -132,8 +132,3 @@ app.on("will-quit", async (event) => {
   if (clusterManager) clusterManager.stop()
   app.exit(0);
 })
-
-// todo: auto-restart app in dev-mode
-// if (isDevelopment) {
-//   require('electron-reloader')(module);
-// }
