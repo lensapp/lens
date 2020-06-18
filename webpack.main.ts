@@ -2,6 +2,7 @@ import path from "path";
 import webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 import { isDevelopment, isProduction, mainDir, outDir } from "./src/common/vars";
+import nodeExternals from "webpack-node-externals";
 
 export default function (): webpack.Configuration {
   return {
@@ -24,13 +25,9 @@ export default function (): webpack.Configuration {
       __dirname: false,
       __filename: false,
     },
-    // fixme: this will hide warnings during compilation, but creates runtime error
-    // externals: [
-    //   "@kubernetes/client-node",
-    //   "handlebars",
-    //   "node-pty",
-    //   "ws",
-    // ],
+    externals: [
+      nodeExternals
+    ],
     module: {
       rules: [
         {

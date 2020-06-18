@@ -234,6 +234,7 @@
     "@types/webdriverio": "^4.13.0",
     "@types/webpack": "^4.41.17",
     "@types/webpack-dev-server": "^3.11.0",
+    "@types/webpack-node-externals": "^1.7.1",
     "ace-builds": "^1.4.11",
     "ansi_up": "^4.0.4",
     "babel-core": "^7.0.0-beta.3",
@@ -300,6 +301,7 @@
     "vuex": "^3.4.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
+    "webpack-node-externals": "^1.7.2",
     "xterm": "^4.6.0",
     "xterm-addon-fit": "^0.4.0"
   }
