@@ -8,6 +8,7 @@ import { apiKube } from "./index";
 import { kubeWatchApi } from "./kube-watch-api";
 import { apiManager } from "./api-manager";
 import { split } from "../utils/arrays";
+import isEqual from "lodash/isEqual";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   kind: string; // resource type within api-group, e.g. "Namespace"
@@ -40,21 +41,67 @@ export interface IKubeApiLinkBase extends IKubeApiLinkRef {
 }
 
 export class KubeApi<T extends KubeObject = any> {
-  static parseApi(apiPath = ""): IKubeApiLinkBase {
+  static parseApi(apiPath = "") {
     apiPath = new URL(apiPath, location.origin).pathname;
+
     const [, prefix, ...parts] = apiPath.split("/");
     const apiPrefix = `/${prefix}`;
 
     const [left, right, found] = split(parts, "namespaces");
     let apiGroup, apiVersion, namespace, resource, name;
 
-    if (found && left.length > 0) {
+    if (!found) {
+      switch (left.length) {
+      case 2:
+        resource = left.pop();
+      case 1:
+        apiVersion = left.pop();
+        apiGroup = "";
+        break;
+      default:
+        /**
+           * Given that 
+           *  - `apiVersion` is `GROUP/VERSION` and
+           *  - `VERSION` is `DNS_LABEL` which is /^[a-z0-9]((-[a-z0-9])|[a-z0-9])*$/i
+           *     where length <= 63
+           *  - `GROUP` is /^D(\.D)*$/ where D is `DNS_LABEL` and length <= 253
+           * 
+           * There is no well defined selection from an array of items that were
+           * seperated by '/'
+           * 
+           * Solution is to create a huristic. Namely:
+           * 1. if '.' in left[0] then apiGroup <- left[0]
+           * 2. if left[1] matches /^v[0-9]/ then apiGroup, apiVersion <- left[0], left[1]
+           * 3. otherwise assume apiVersion <- left[0]
+           * 4. always resource, name <- left[(0 or 1)+1..]
+           */
+        if (left[0].includes('.') || left[1].match(/^v[0-9]/)) {
+          [apiGroup, apiVersion] = left;
+          resource = left.slice(2).join("/")
+        } else {
+          apiGroup = "";
+          apiVersion = left[0];
+          [resource, name] = left.slice(1)
+        }
+        break;
+      }
+    } else {
+      switch (right.length) {
+      case 0:
+        resource = "namespaces"; // special case this due to `split` removing namespaces
+        break;
+      case 1:
+        resource = right[0];
+        break;
+      default:
+        [namespace, resource, name] = right;
+        break;
+      }
+
       apiVersion = left.pop();
       apiGroup = left.join("/");
-      [namespace, resource, name] = right;
-    } else {
-      [apiGroup, apiVersion, resource] = left;
     }
+
     const apiVersionWithGroup = [apiGroup, apiVersion].filter(v => v).join("/");
     const apiBase = [apiPrefix, apiGroup, apiVersion, resource].filter(v => v).join("/");
 
