@@ -17,6 +17,7 @@ export function migration(store: any) {
   console.log("num clusters to migrate: ", storedClusters.length)
   for (const cluster of storedClusters ) {
     // TODO Should probably guard this, not to make the whole migration fail if one cluster fails!?
+    
     // take the embedded kubeconfig and dump it into a file
     const kubeConfigFile = writeEmbeddedKubeConfig(cluster.id, cluster.kubeConfig)
     cluster.kubeConfigPath = kubeConfigFile

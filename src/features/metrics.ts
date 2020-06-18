@@ -53,7 +53,7 @@ export class MetricsFeature extends Feature {
 
   async install(cluster: Cluster): Promise<boolean> {
     // Check if there are storageclasses
-    const storageClient = cluster.contextHandler.kc.makeApiClient(k8s.StorageV1Api)
+    const storageClient = cluster.proxyKubeconfig().makeApiClient(k8s.StorageV1Api)
     const scs = await storageClient.listStorageClass();
     scs.body.items.forEach(sc => {
       if(sc.metadata.annotations &&
@@ -93,9 +93,9 @@ export class MetricsFeature extends Feature {
 
   async uninstall(cluster: Cluster): Promise<boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
-      const rbacClient = cluster.contextHandler.kc.makeApiClient(RbacAuthorizationV1Api)
+      const rbacClient = cluster.proxyKubeconfig().makeApiClient(RbacAuthorizationV1Api)
       try {
-        await this.deleteNamespace(cluster.contextHandler.kc, "lens-metrics")
+        await this.deleteNamespace(cluster.proxyKubeconfig(), "lens-metrics")
         await rbacClient.deleteClusterRole("lens-prometheus");
         await rbacClient.deleteClusterRoleBinding("lens-prometheus");
         resolve(true);

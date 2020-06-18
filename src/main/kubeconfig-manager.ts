@@ -27,6 +27,8 @@ export class KubeconfigManager {
   protected createTemporaryKubeconfig(): string {
     ensureDir(this.configDir)
     const path = `${this.configDir}/${randomFileName("kubeconfig")}`
+    const originalKc = new KubeConfig()
+    originalKc.loadFromFile(this.cluster.kubeConfigPath)
     const kc = {
       clusters: [
         {
@@ -43,7 +45,7 @@ export class KubeconfigManager {
         {
           name: this.cluster.contextName,
           cluster: this.cluster.contextName,
-          namespace: this.cluster.contextHandler.kc.getContextObject(this.cluster.contextName).namespace,
+          namespace: originalKc.getContextObject(this.cluster.contextName).namespace,
           user: "proxy"
         }
       ],

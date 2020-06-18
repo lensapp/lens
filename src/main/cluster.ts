@@ -92,13 +92,19 @@ export class Cluster implements ClusterInfo {
     return this.kubeconfigManager.getPath()
   }
 
+  public proxyKubeconfig() {
+    const kc = new KubeConfig()
+    kc.loadFromFile(this.kubeconfigManager.getPath())
+    return kc
+  }
+
   public async init(kc: KubeConfig) {
+    this.apiUrl = kc.getCurrentCluster().server
     this.contextHandler = new ContextHandler(kc, this)
     await this.contextHandler.init() // So we get the proxy port reserved
     this.kubeconfigManager = new KubeconfigManager(this)
 
     this.url = this.contextHandler.url
-    this.apiUrl = kc.getCurrentCluster().server
   }
 
   public stopServer() {
@@ -131,7 +137,7 @@ export class Cluster implements ClusterInfo {
 
     if (this.accessible) {
       this.distribution = this.detectKubernetesDistribution(this.version)
-      this.features = await fm.getFeatures(this.contextHandler)
+      this.features = await fm.getFeatures(this)
       this.isAdmin = await this.isClusterAdmin()
       this.nodes = await this.getNodeCount()
       this.kubeCtl = new Kubectl(this.version)
@@ -156,7 +162,7 @@ export class Cluster implements ClusterInfo {
       id: this.id,
       workspace: this.workspace,
       url: this.url,
-      contextName: this.contextHandler.kc.currentContext,
+      contextName: this.contextName,
       apiUrl: this.apiUrl,
       online: this.online,
       accessible: this.accessible,
@@ -216,7 +222,7 @@ export class Cluster implements ClusterInfo {
   }
 
   public async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
-    const authApi = this.contextHandler.kc.makeApiClient(AuthorizationV1Api)
+    const authApi = this.proxyKubeconfig().makeApiClient(AuthorizationV1Api)
     try {
       const accessReview = await authApi.createSelfSubjectAccessReview({
         apiVersion: "authorization.k8s.io/v1",
@@ -278,7 +284,7 @@ export class Cluster implements ClusterInfo {
     if (!this.isAdmin) {
       return 0;
     }
-    const client = this.contextHandler.kc.makeApiClient(CoreV1Api);
+    const client = this.proxyKubeconfig().makeApiClient(CoreV1Api);
     try {
       const response = await client.listEventForAllNamespaces(false, null, null, null, 1000);
       const uniqEventSources = new Set();

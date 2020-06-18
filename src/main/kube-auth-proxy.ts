@@ -35,7 +35,7 @@ export class KubeAuthProxy {
       "--kubeconfig", this.cluster.kubeConfigPath,
       "--context", this.cluster.contextName,
       "--accept-hosts", ".*",
-      "--reject-paths", "^[^/]",
+      "--reject-paths", "^[^/]"
     ]
     if (process.env.DEBUG_PROXY === "true") {
       args = args.concat(["-v", "9"])

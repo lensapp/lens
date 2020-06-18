@@ -15,7 +15,7 @@ export class ContextHandler {
   public contextName: string
   public id: string
   public url: string
-  public kc: KubeConfig
+  
   public certData: string
   public authCertData: string
   public cluster: Cluster
@@ -37,13 +37,11 @@ export class ContextHandler {
 
   constructor(kc: KubeConfig, cluster: Cluster) {
     this.id = cluster.id
-    this.kc = kc
-    this.kc.setCurrentContext(cluster.contextName)
 
     this.cluster = cluster
-    this.clusterUrl = url.parse(kc.getCurrentCluster().server)
+    this.clusterUrl = url.parse(cluster.apiUrl) //url.parse(kc.getCurrentCluster().server)
     this.contextName = cluster.contextName;
-    this.defaultNamespace = kc.getContextObject(kc.currentContext).namespace
+    this.defaultNamespace = kc.getContextObject(cluster.contextName).namespace
     this.url = `http://${this.id}.localhost:${cluster.port}/`
     this.kubernetesApi = `http://127.0.0.1:${cluster.port}/${this.id}`
 
@@ -89,7 +87,7 @@ export class ContextHandler {
   public async getPrometheusService(): Promise<PrometheusService> {
     const providers = this.prometheusProvider ? prometheusProviders.filter((p, _) => p.id == this.prometheusProvider) : prometheusProviders
     const prometheusPromises: Promise<PrometheusService>[] = providers.map(async (provider: PrometheusProvider): Promise<PrometheusService> => {
-      const apiClient = this.kc.makeApiClient(CoreV1Api)
+      const apiClient = this.cluster.proxyKubeconfig().makeApiClient(CoreV1Api)
       return await provider.getPrometheusService(apiClient)
     })
     const resolvedPrometheusServices = await Promise.all(prometheusPromises)

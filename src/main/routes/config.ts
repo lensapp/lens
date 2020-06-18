@@ -45,7 +45,7 @@ const apiResources = [
 ]
 
 async function getAllowedNamespaces(cluster: Cluster) {
-  const api = cluster.contextHandler.kc.makeApiClient(CoreV1Api)
+  const api = cluster.proxyKubeconfig().makeApiClient(CoreV1Api)
   try {
     const namespaceList = await api.listNamespace()
     const nsAccessStatuses = await Promise.all(
@@ -58,9 +58,8 @@ async function getAllowedNamespaces(cluster: Cluster) {
     return namespaceList.body.items
       .filter((ns, i) => nsAccessStatuses[i])
       .map(ns => ns.metadata.name)
-  } catch (error) {
-    const kc = cluster.contextHandler.kc
-    const ctx = kc.getContextObject(kc.currentContext)
+  } catch(error) {
+    const ctx = cluster.proxyKubeconfig().getContextObject(cluster.contextName)
     if (ctx.namespace) {
       return [ctx.namespace]
     }
