@@ -9,6 +9,8 @@ class KubectlDownloader {
   public kubectlVersion: string
   protected url: string
   protected path: string;
+  protected pathEtag: string;
+  protected etag: string;
   protected dirname: string
 
   constructor(clusterVersion: string, platform: string, arch: string, target: string) {
@@ -17,33 +19,46 @@ class KubectlDownloader {
     this.url = `https://storage.googleapis.com/kubernetes-release/release/v${this.kubectlVersion}/bin/${platform}/${arch}/${binaryName}`;
     this.dirname = path.dirname(target);
     this.path = target;
+    this.pathEtag = target + ".etag";
+    this.etag = "";
   }
 
   protected async urlEtag() {
-    const response = await requestPromise({
-      method: "HEAD",
-      uri: this.url,
-      resolveWithFullResponse: true
-    }).catch((error) => { console.log(error) })
+    if (this.etag === "") {
+      const response = await requestPromise({
+        method: "HEAD",
+        uri: this.url,
+        resolveWithFullResponse: true
+      }).catch((error) => { console.log(error) })
 
-    if (response.headers["etag"]) {
-      return response.headers["etag"].replace(/"/g, "")
+      if (response.headers["etag"]) {
+        this.etag = response.headers["etag"].replace(/"/g, "")
+      }
     }
-    return ""
+    return this.etag
   }
 
   public async checkBinary() {
     const exists = await pathExists(this.path)
     if (exists) {
-      const hash = md5File.sync(this.path)
+      let oldEtag = ""
+      try {
+        oldEtag = fs.readFileSync(this.pathEtag, "utf8")
+      }
+      catch(err) {
+        // treat any error here as a bad check
+        console.log(`Error reading saved etag for local kubectl (${err.message})`)
+        return false
+      }
       const etag = await this.urlEtag()
-      if(hash == etag) {
-        console.log("Kubectl md5sum matches the remote etag")
+      if(oldEtag == etag) {
+        console.log("Local kubectl etag matches the remote etag")
         return true
       }
 
-      console.log("Kubectl md5sum " + hash + " does not match the remote etag " + etag + ", unlinking and downloading again")
+      console.log(`Local kubectl etag ${oldEtag} does not match the remote etag ${etag}, unlinking`)
       await fs.promises.unlink(this.path)
+      await fs.promises.unlink(this.pathEtag)
     }
 
     return false
@@ -53,10 +68,17 @@ class KubectlDownloader {
     const exists = await this.checkBinary();
     if(exists) {
       console.log("Already exists and is valid")
-      return
+      return new Promise((resolve, reject) => resolve(false))
     }
-    await ensureDir(path.dirname(this.path), 0o755)
+    await ensureDir(this.dirname, 0o755)
 
+    try {
+      const etag = await this.urlEtag()
+      fs.writeFileSync(this.pathEtag, etag, 'utf8')
+    }
+    catch(err) {
+      console.log(`error (${err.message}) saving kubectl etag, this may incur further downloads`)
+    }
     const file = fs.createWriteStream(this.path)
     console.log(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`)
     const requestOpts: request.UriOptions & request.CoreOptions = {
@@ -79,7 +101,7 @@ class KubectlDownloader {
       file.on("close", () => {
         console.log("kubectl binary download closed")
         fs.chmod(this.path, 0o755, () => {})
-        resolve()
+        resolve(true)
       })
       stream.pipe(file)
     })
@@ -99,6 +121,11 @@ downloads.forEach((dlOpts) => {
   console.log(dlOpts)
   const downloader = new KubectlDownloader(downloadVersion, dlOpts.platform, dlOpts.arch, dlOpts.target);
   console.log("Downloading: " + JSON.stringify(dlOpts));
-  downloader.downloadKubectl().then(() => downloader.checkBinary().then(() => console.log("Download complete")))
+  let checkBinary = async (downloaded: boolean) => {
+    if (downloaded) {
+      await downloader.checkBinary()
+    }
+  }
+  downloader.downloadKubectl().then((downloaded: boolean) => checkBinary(downloaded).then(() => console.log("Download complete")))
 })
 
