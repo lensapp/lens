@@ -155,6 +155,7 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       ...(isDevelopment ? [
         { role: 'toggleDevTools' } as MenuItemConstructorOptions,
         {
+          accelerator: "CmdOrCtrl+Shift+I",
           label: 'Open Dashboard Devtools',
           click() {
             webContents.getFocusedWebContents().openDevTools()

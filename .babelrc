@@ -1,14 +1,8 @@
 {
   "presets": [
-    [
-      "@babel/preset-env",
-      {
-        "modules": "commonjs",
-        "targets": {
-          "esmodules": false
-        }
-      }
-    ],
+    ["@babel/preset-env", {
+      "modules": "commonjs"
+    }],
     "@babel/preset-react",
     "@lingui/babel-preset-react"
   ],
@@ -18,7 +12,6 @@
     [
       "@babel/plugin-transform-runtime",
       {
-        "absoluteRuntime": false,
         "regenerator": true,
         "useESModules": true
       }

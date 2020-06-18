@@ -7,7 +7,6 @@ import { readFileSync, watch } from "fs"
 import { PromiseIpc } from "electron-promise-ipc"
 import { findMainWebContents } from "./webcontents"
 import * as url from "url"
-import { apiPrefix } from "../common/vars";
 
 export class KubeAuthProxy {
   public lastError: string

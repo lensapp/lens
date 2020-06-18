@@ -15,8 +15,9 @@ export default [
 export function webpackConfigReact(): webpack.Configuration {
   return {
     context: __dirname,
+    name: "react",
     target: "web",
-    devtool: isProduction ? "source-map" : "cheap-eval-source-map",
+    devtool: "source-map", // todo: optimize in dev-mode with webpack.SourceMapDevToolPlugin
     mode: isProduction ? "production" : "development",
     cache: isDevelopment,
     entry: {
@@ -66,6 +67,7 @@ export function webpackConfigReact(): webpack.Configuration {
                   // https://lingui.js.org/guides/typescript.html
                   jsx: "preserve",
                   target: "es2016",
+                  module: "esnext",
                 },
               }
             }
@@ -138,6 +140,7 @@ export function webpackConfigReact(): webpack.Configuration {
 export function webpackConfigVue(): webpack.Configuration {
   const config = webpackConfigReact();
 
+  config.name = "vue"
   config.target = "electron-renderer";
   config.resolve.extensions.push(".vue");
 

@@ -1,7 +1,8 @@
-import { observable, when } from "mobx";
 import type { IConfigRoutePayload } from "../main/routes/config";
+
+import { observable, when } from "mobx";
 import { autobind, interval } from "./utils";
-import { configApi } from "./api/endpoints";
+import { configApi } from "./api/endpoints/config.api";
 
 @autobind()
 export class ConfigStore {
