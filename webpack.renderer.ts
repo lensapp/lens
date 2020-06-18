@@ -57,7 +57,16 @@ export function webpackConfigReact(): webpack.Configuration {
           test: /\.tsx?$/,
           exclude: /node_modules/,
           use: [
-            "babel-loader",
+            {
+              loader: "babel-loader",
+              options: {
+                presets: [
+                  ["@babel/preset-env", {
+                    modules: "commonjs" // ling-ui
+                  }],
+                ]
+              }
+            },
             {
               loader: "ts-loader",
               options: {
