@@ -48,11 +48,7 @@ export class KubeApi<T extends KubeObject = any> {
     const [left, right, found] = split(parts, "namespaces");
     let apiGroup, apiVersion, namespace, resource, name;
 
-    if (found) {
-      if (left.length == 0) {
-        throw new Error(`invalid apiPath: ${apiPath}`)
-      }
-
+    if (found && left.length > 0) {
       apiVersion = left.pop();
       apiGroup = left.join("/");
       [namespace, resource, name] = right;

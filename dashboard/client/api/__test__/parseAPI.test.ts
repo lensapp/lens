@@ -45,10 +45,23 @@ const tests: ParseAPITest[] = [
       namespace: undefined,
     },
   },
+  {
+    url: "/apis/namespaces/default/es/gke-svc-vodka-1-app-1-w-l-1-9eea2bfe-4jnl",
+    expected: {
+      apiBase: "/apis",
+      apiPrefix: "/apis",
+      apiGroup: undefined,
+      apiVersion: undefined,
+      apiVersionWithGroup: "",
+      resource: undefined,
+      name: undefined,
+      namespace: undefined,
+    },
+  },
 ];
 
 jest.mock('../kube-watch-api.ts', () => 'KubeWatchApi');
-describe("parseAPI unit tests", () => {
+describe("parseApi unit tests", () => {
   for (const i in tests) {
     const { url: tUrl, expected:tExpect} = tests[i];
     test(`test #${parseInt(i)+1}`, () => {
