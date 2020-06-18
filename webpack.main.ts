@@ -26,7 +26,7 @@ export default function (): webpack.Configuration {
       __filename: false,
     },
     externals: [
-      nodeExternals
+      nodeExternals()
     ],
     module: {
       rules: [
