@@ -8,6 +8,9 @@ import { KubeAuthProxy } from "./kube-auth-proxy"
 import { Cluster, ClusterPreferences } from "./cluster"
 import { prometheusProviders } from "../common/prometheus-providers"
 import { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry"
+import { reactAppName } from "../common/vars"
+import path from "path"
+import { format as formatUrl } from "url"
 
 export class ContextHandler {
   public contextName: string
@@ -56,7 +59,12 @@ export class ContextHandler {
     this.clusterUrl = url.parse(kc.getCurrentCluster().server)
     this.contextName = kc.currentContext;
     this.defaultNamespace = kc.getContextObject(kc.currentContext).namespace
-    this.url = `http://${this.id}.localhost:${cluster.port}/`
+    //this.url = `http://${this.id}.localhost:${cluster.port}/`
+    this.url = formatUrl({
+      pathname: path.join(__dirname, `${reactAppName}.html`),
+      protocol: "file",
+      slashes: true,
+    })
     this.kubernetesApi = `http://127.0.0.1:${cluster.port}/${this.id}`
     this.kc.clusters = [
       {
