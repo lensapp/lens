@@ -15,7 +15,7 @@ export default [
 export function webpackConfigReact(): webpack.Configuration {
   return {
     context: __dirname,
-    target: "electron-renderer",
+    target: "web",
     devtool: isProduction ? "source-map" : "cheap-eval-source-map",
     mode: isProduction ? "production" : "development",
     cache: isDevelopment,
@@ -52,10 +52,6 @@ export function webpackConfigReact(): webpack.Configuration {
 
     module: {
       rules: [
-        {
-          test: /\.node$/,
-          use: "node-loader"
-        },
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
@@ -142,6 +138,7 @@ export function webpackConfigReact(): webpack.Configuration {
 export function webpackConfigVue(): webpack.Configuration {
   const config = webpackConfigReact();
 
+  config.target = "electron-renderer";
   config.resolve.extensions.push(".vue");
 
   config.entry = {
@@ -159,6 +156,10 @@ export function webpackConfigVue(): webpack.Configuration {
     .filter(({ test }: { test: RegExp }) => !test.test(".css"))
 
   config.module.rules.push(
+    {
+      test: /\.node$/,
+      use: "node-loader"
+    },
     {
       test: /\.vue$/,
       use: {

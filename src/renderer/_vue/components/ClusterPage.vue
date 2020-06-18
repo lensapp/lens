@@ -108,7 +108,6 @@ export default {
       if (!this.lens.webview) {
         console.log("create webview")
         const webview = document.createElement('webview');
-        webview.setAttribute("nodeintegration", "true");
         webview.addEventListener('did-finish-load', this.lensLoaded);
         webview.src = this.cluster.url;
         this.lens.webview = webview;
