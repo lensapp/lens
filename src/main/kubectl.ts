@@ -5,7 +5,6 @@ import * as request from "request"
 import * as requestPromise from "request-promise-native"
 import logger from "./logger"
 import { ensureDir, pathExists } from "fs-extra"
-import * as md5File from "md5-file"
 import { globalRequestOpts } from "../common/request"
 import * as lockFile from "proper-lockfile"
 import { helmCli } from "./helm-cli"
@@ -51,6 +50,8 @@ export class Kubectl {
   protected directory: string
   protected url: string
   protected path: string
+  protected pathEtag: string;
+  protected etag: string;
   protected dirname: string
 
   public static readonly kubectlDir = path.join((app || remote.app).getPath("userData"), "binaries", "kubectl")
@@ -94,6 +95,8 @@ export class Kubectl {
 
     this.dirname = path.normalize(path.join(Kubectl.kubectlDir, this.kubectlVersion))
     this.path = path.join(this.dirname, binaryName)
+    this.pathEtag = this.path + ".etag";
+    this.etag = "";
   }
 
   public async kubectlPath(): Promise<string> {
@@ -138,19 +141,29 @@ export class Kubectl {
       if (!checkTag) {
         return true
       }
-      const hash = md5File.sync(this.path)
+      let oldEtag = ""
+      try {
+        oldEtag = await fs.promises.readFile(this.pathEtag, "utf8")
+      }
+      catch(err) {
+        // treat any error here as a bad check
+        logger.debug(`Error reading saved etag for local kubectl (${err.message})`)
+        return false
+      }
+
       const etag = await this.urlEtag()
       if (etag === "") {
         logger.debug("Cannot resolve kubectl remote etag")
         return true
       }
-      if (hash == etag) {
-        logger.debug("Kubectl md5sum matches the remote etag")
+      if(oldEtag == etag) {
+        logger.debug("Local kubectl etag matches the remote etag")
         return true
       }
 
-      logger.error("Kubectl md5sum " + hash + " does not match the remote etag " + etag + ", unlinking and downloading again")
+      logger.error(`Local kubectl etag ${oldEtag} does not match the remote etag ${etag}, unlinking`)
       await fs.promises.unlink(this.path)
+      await fs.promises.unlink(this.pathEtag)
     }
 
     return false
@@ -163,6 +176,7 @@ export class Kubectl {
         if (!exist) {
           await fs.promises.copyFile(Kubectl.bundledKubectlPath, this.path)
           await fs.promises.chmod(this.path, 0o755)
+          await fs.promises.copyFile(Kubectl.bundledKubectlPath + ".etag", this.pathEtag)
         }
         return true
       } catch(err) {
@@ -199,6 +213,13 @@ export class Kubectl {
 
     logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`)
     return new Promise((resolve, reject) => {
+      try {
+        const etag = this.urlEtag()
+        fs.writeFileSync(this.pathEtag, etag)
+      }
+      catch(err) {
+        logger.debug(`error (${err.message}) saving kubectl etag, this may incur further downloads`)
+      }
       const stream = request({
         gzip: true,
         ...this.getRequestOpts()

@@ -43,7 +43,7 @@ class KubectlDownloader {
     if (exists) {
       let oldEtag = ""
       try {
-        oldEtag = fs.readFileSync(this.pathEtag, "utf8")
+        oldEtag = await fs.promises.readFile(this.pathEtag, "utf8")
       }
       catch(err) {
         // treat any error here as a bad check
@@ -74,7 +74,7 @@ class KubectlDownloader {
 
     try {
       const etag = await this.urlEtag()
-      fs.writeFileSync(this.pathEtag, etag, 'utf8')
+      await fs.promises.writeFile(this.pathEtag, etag, 'utf8')
     }
     catch(err) {
       console.log(`error (${err.message}) saving kubectl etag, this may incur further downloads`)
