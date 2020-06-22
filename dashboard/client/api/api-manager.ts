@@ -18,23 +18,17 @@ export class ApiManager {
   private views = observable.map<KubeApi, ApiComponents>();
 
   getApi(pathOrCallback: string | ((api: KubeApi) => boolean)) {
-    const apis = this.apis;
     if (typeof pathOrCallback === "string") {
-      let api = apis.get(pathOrCallback);
-      if (!api) {
-        const { apiBase } = KubeApi.parseApi(pathOrCallback);
-        api = apis.get(apiBase);
-      }
-      return api;
+      return this.apis.get(pathOrCallback) || this.apis.get(KubeApi.parseApi(pathOrCallback).apiBase);
     }
-    else {
-      return Array.from(apis.values()).find(pathOrCallback);
-    }
+
+    return Array.from(this.apis.values()).find(pathOrCallback);
   }
 
   registerApi(apiBase: string, api: KubeApi) {
-    if (this.apis.has(apiBase)) return;
-    this.apis.set(apiBase, api);
+    if (!this.apis.has(apiBase)) {
+      this.apis.set(apiBase, api);
+    }
   }
 
   protected resolveApi(api: string | KubeApi): KubeApi {
