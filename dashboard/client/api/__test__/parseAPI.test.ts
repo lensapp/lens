@@ -2,7 +2,7 @@ import { KubeApi, IKubeApiLinkBase } from "../kube-api";
 
 interface ParseAPITest {
     url: string;
-    expected: IKubeApiLinkBase;
+    expected: Required<IKubeApiLinkBase>;
 }
 
 const tests: ParseAPITest[] = [
@@ -94,6 +94,19 @@ const tests: ParseAPITest[] = [
       apiVersionWithGroup: "foo-bar",
       resource: "nodes",
       name: "minikube",
+      namespace: undefined,
+    },
+  },
+  {
+    url: "/api/v1/namespaces/kube-public",
+    expected: {
+      apiBase: "/api/v1/namespaces",
+      apiPrefix: "/api",
+      apiGroup: "",
+      apiVersion: "v1",
+      apiVersionWithGroup: "v1",
+      resource: "namespaces",
+      name: "kube-public",
       namespace: undefined,
     },
   },
