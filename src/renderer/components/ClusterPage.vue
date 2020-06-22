@@ -27,7 +27,7 @@
 
 <script>
 import CubeSpinner from "@/components/CubeSpinner";
-import { remote, shell, webContents } from 'electron';
+import { remote, shell } from 'electron';
 export default {
   name: "ClusterPage",
   components: {
