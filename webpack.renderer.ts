@@ -26,7 +26,6 @@ export function webpackConfigReact(): webpack.Configuration {
     },
     output: {
       path: outDir,
-      publicPath: "/",
       filename: '[name].js',
       chunkFilename: 'chunks/[name].js',
     },
