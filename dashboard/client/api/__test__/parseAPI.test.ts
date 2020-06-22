@@ -45,10 +45,62 @@ const tests: ParseAPITest[] = [
       namespace: undefined,
     },
   },
+  {
+    url: "/api/v1/namespaces",
+    expected: {
+      apiBase: "/api/v1/namespaces",
+      apiPrefix: "/api",
+      apiGroup: "",
+      apiVersion: "v1",
+      apiVersionWithGroup: "v1",
+      resource: "namespaces",
+      name: undefined,
+      namespace: undefined,
+    },
+  },
+  {
+    url: "/api/v1/secrets",
+    expected: {
+      apiBase: "/api/v1/secrets",
+      apiPrefix: "/api",
+      apiGroup: "",
+      apiVersion: "v1",
+      apiVersionWithGroup: "v1",
+      resource: "secrets",
+      name: undefined,
+      namespace: undefined,
+    },
+  },
+  {
+    url: "/api/v1/nodes/minikube",
+    expected: {
+      apiBase: "/api/v1/nodes",
+      apiPrefix: "/api",
+      apiGroup: "",
+      apiVersion: "v1",
+      apiVersionWithGroup: "v1",
+      resource: "nodes",
+      name: "minikube",
+      namespace: undefined,
+    },
+  },
+  {
+    url: "/api/foo-bar/nodes/minikube",
+    expected: {
+      apiBase: "/api/foo-bar/nodes",
+      apiPrefix: "/api",
+      apiGroup: "",
+      apiVersion: "foo-bar",
+      apiVersionWithGroup: "foo-bar",
+      resource: "nodes",
+      name: "minikube",
+      namespace: undefined,
+    },
+  },
 ];
 
 jest.mock('../kube-watch-api.ts', () => 'KubeWatchApi');
-describe("parseAPI unit tests", () => {
+describe("parseApi unit tests", () => {
   for (const i in tests) {
     const { url: tUrl, expected:tExpect} = tests[i];
     test(`test #${parseInt(i)+1}`, () => {
