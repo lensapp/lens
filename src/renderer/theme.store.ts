@@ -143,6 +143,7 @@ export class ThemeStore {
     // auto-apply colors to dom from active theme
     reaction(() => this.activeTheme, this.onChange, {
       fireImmediately: true,
+      delay: 150,
     });
 
     // apply theme from configuration

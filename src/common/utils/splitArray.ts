@@ -1,4 +1,4 @@
-// Restored from dashboard/client/utils/arrays.ts
+// Moved from dashboard/client/utils/arrays.ts
 /**
  * This function splits an array into two sub arrays on the first instance of
  * element (from the left). If the array does not contain the element. The

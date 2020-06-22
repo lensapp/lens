@@ -47,15 +47,13 @@ export class KubeApi<T extends KubeObject = any> {
 
     const [left, right, found] = splitArray(parts, "namespaces");
     let apiGroup, apiVersion, namespace, resource, name;
-
     if (found) {
       if (left.length == 0) {
         throw new Error(`invalid apiPath: ${apiPath}`)
       }
-
       apiVersion = left.pop();
       apiGroup = left.join("/");
-      [namespace, resource, name] = right;
+      [namespace, resource = "namespaces", name] = right; // fix: "resource" is empty when "/api/v1/namespaces"
     } else {
       [apiGroup, apiVersion, resource] = left;
     }

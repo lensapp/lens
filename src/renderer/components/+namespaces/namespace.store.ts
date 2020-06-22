@@ -43,21 +43,14 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     setQueryParams({ namespaces }, { replace: true })
   }
 
-  protected loadItems(namespaces?: string[]) {
+  protected async loadItems(namespaces?: string[]) {
     if (!isAllowedResource("namespaces")) {
-      if (namespaces) {
-        return Promise.all(namespaces.map(name => this.getDummyNamespace(name)))
-      }
-      else {
-        return new Promise<Namespace[]>(() => {
-          return []
-        })
-      }
+      if (namespaces) return namespaces.map(this.getDummyNamespace);
+      return []
     }
     if (namespaces) {
       return Promise.all(namespaces.map(name => this.api.get({ name })))
-    }
-    else {
+    } else {
       return super.loadItems();
     }
   }
