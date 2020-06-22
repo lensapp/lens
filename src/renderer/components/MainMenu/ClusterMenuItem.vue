@@ -20,7 +20,7 @@
       <hashicon v-else :name="preferences.clusterName" size="38" />
       <span v-if="isAdmin && eventCount > 0" class="badge badge-danger">{{ eventCount >= 1000 ? "1000+" : eventCount }}</span>
 
-      <b-modal id="bv-modal-confirm" @ok="removeCluster" ok-title="Remove" ok-variant="danger" title-class="confirm-header" hide-backdrop title="Confirm cluster delete">
+      <b-modal :id="'bv-modal-confirm-'+cluster.id" @ok="removeCluster" ok-title="Remove" ok-variant="danger" title-class="confirm-header" hide-backdrop title="Confirm cluster delete">
         <p>Are you sure you want to delete <strong>{{ preferences.clusterName }}</strong> cluster from Lens?</p>
       </b-modal>
 
@@ -90,14 +90,7 @@ export default {
       } }))
 
       menu.append(new MenuItem({ label: 'Delete', click() {
-
-        self.$store.dispatch('removeCluster', self.cluster.id);
-        if (self.isActive) {
-          self.$router.push({
-            name: "landing-page"
-          }).catch(err => {})
-        }
-        
+        self.$bvModal.show('bv-modal-confirm-'+self.cluster.id)
       } }))
 
       if (this.activated) {
@@ -114,6 +107,18 @@ export default {
       }
 
       menu.popup({ window: remote.getCurrentWindow() })
+    },
+    async removeCluster(event) {
+      event.preventDefault()
+      const res = await this.$store.dispatch('removeCluster', this.cluster.id);
+      if (!res) {
+        return false;
+      }
+      if (this.isActive) {
+        this.$router.push({
+          name: "landing-page"
+        }).catch(err => {})
+      }
     },
     toggleEventPolling: function() {
       if(this.clusterAccessible && !this.eventPoller && this.activated && !this.isActive) {
