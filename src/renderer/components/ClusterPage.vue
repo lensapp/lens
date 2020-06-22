@@ -27,7 +27,7 @@
 
 <script>
 import CubeSpinner from "@/components/CubeSpinner";
-import { webviewTag } from 'electron';
+import { remote, shell } from 'electron';
 export default {
   name: "ClusterPage",
   components: {
@@ -92,6 +92,10 @@ export default {
     lensLoaded: function() {
       console.log("lens loaded")
       this.lens.loaded = true;
+      remote.webContents.fromId(this.lens.webview.getWebContentsId()).on('new-window', (e, url) => {
+        e.preventDefault()
+        shell.openExternal(url)
+      })
       this.$store.commit("updateLens", this.lens);
     },
     // Called only when online state changes
