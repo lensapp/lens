@@ -27,8 +27,9 @@ export function shellSync(locale: string) {
     process.env["PATH"] = env.PATH
   }
 
+  // The spread operator allows joining of objects. The precidence is last to first.
   process.env = {
+    ...env,
     ...process.env,
-    ...env
   };
 }
