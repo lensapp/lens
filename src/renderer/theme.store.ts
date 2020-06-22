@@ -141,7 +141,9 @@ export class ThemeStore {
     });
 
     // auto-apply colors to dom from active theme
-    reaction(() => this.activeTheme, this.onChange);
+    reaction(() => this.activeTheme, this.onChange, {
+      fireImmediately: true,
+    });
 
     // apply theme from configuration
     import("./config.store").then(({ configStore }) => {
@@ -184,6 +186,7 @@ export class ThemeStore {
     try {
       await this.load(themeId);
       this.activeThemeId = themeId;
+      console.log('THEME', themeId, this.themes.get(themeId))
     } catch (err) {
       if (themeId !== this.defaultTheme.name) {
         this.setTheme(); // fallback to default theme

@@ -26,6 +26,7 @@ export function webpackConfigReact(): webpack.Configuration {
     },
     output: {
       path: outDir,
+      publicPath: "/",
       filename: '[name].js',
       chunkFilename: 'chunks/[name].js',
     },
@@ -100,7 +101,14 @@ export function webpackConfigReact(): webpack.Configuration {
         {
           test: /\.s?css$/,
           use: [
-            isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+            {
+              // https://webpack.js.org/plugins/mini-css-extract-plugin/
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                hmr: isDevelopment, // fixme: doesn't work
+                reloadAll: true,
+              }
+            },
             {
               loader: "css-loader",
               options: {
@@ -127,13 +135,13 @@ export function webpackConfigReact(): webpack.Configuration {
     plugins: [
       new ForkTsCheckerPlugin(),
 
-      // detect circular dependencies
-      new CircularDependencyPlugin({
-        cwd: __dirname,
-        exclude: /node_modules/,
-        allowAsyncCycles: true,
-        failOnError: false,
-      }),
+      // todo: fix remain warnings about circular dependencies
+      // new CircularDependencyPlugin({
+      //   cwd: __dirname,
+      //   exclude: /node_modules/,
+      //   allowAsyncCycles: true,
+      //   failOnError: false,
+      // }),
 
       // todo: check if this actually works in mode=production files
       // new webpack.DllReferencePlugin({
