@@ -1650,6 +1650,13 @@
   dependencies:
     moment "^2.10.2"
 
+"@types/circular-dependency-plugin@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@types/circular-dependency-plugin/-/circular-dependency-plugin-5.0.1.tgz#7d9313b78192395b74a05f78778ac91d0a1e8e1f"
+  integrity sha512-FdtMz/DdrqeSTTXwvb7SRUF+Lmh8a8snyGDb7+1+SxxgjHUScyZQDq/1RcL2JCmPAhbNODfqxgRNkB1HWLcZnQ==
+  dependencies:
+    "@types/webpack" "*"
+
 "@types/clean-css@*":
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/@types/clean-css/-/clean-css-4.2.1.tgz#cb0134241ec5e6ede1b5344bc829668fd9871a8d"
@@ -3577,6 +3584,11 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
   dependencies:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
+
+circular-dependency-plugin@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/circular-dependency-plugin/-/circular-dependency-plugin-5.2.0.tgz#e09dbc2dd3e2928442403e2d45b41cea06bc0a93"
+  integrity sha512-7p4Kn/gffhQaavNfyDFg7LS5S/UT1JAjyGd4UqR2+jzoYF02eDkj0Ec3+48TsIa4zghjLY87nQHIh/ecK9qLdw==
 
 class-utils@^0.3.5:
   version "0.3.6"

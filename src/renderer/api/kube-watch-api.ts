@@ -2,9 +2,9 @@
 
 import { computed, observable, reaction } from "mobx";
 import { stringify } from "querystring"
-import { autobind, EventEmitter, interval } from "../utils";
+import { autobind, EventEmitter } from "../utils";
 import { KubeJsonApiData } from "./kube-json-api";
-import { KubeObjectStore } from "../kube-object.store";
+import type { KubeObjectStore } from "../kube-object.store";
 import { KubeApi } from "./kube-api";
 import { configStore } from "../config.store";
 import { apiManager } from "./api-manager";
@@ -105,8 +105,7 @@ export class KubeWatchApi {
     const data = JSON.parse(evt.data);
     if ((data as IKubeWatchEvent).object) {
       this.onData.emit(data);
-    }
-    else {
+    } else {
       this.onRouteEvent(data);
     }
   }

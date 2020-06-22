@@ -1,9 +1,10 @@
-import React from "react";
+import type { KubeObjectStore } from "../kube-object.store";
+import type { KubeObjectDetailsProps, KubeObjectListLayoutProps, KubeObjectMenuProps } from "../components/kube-object";
+import type React from "react";
+
 import { observable } from "mobx";
 import { autobind } from "../utils/autobind";
 import { KubeApi } from "./kube-api";
-import { KubeObjectStore } from "../kube-object.store";
-import { KubeObjectDetailsProps, KubeObjectListLayoutProps, KubeObjectMenuProps } from "../components/kube-object";
 
 export interface ApiComponents {
   List?: React.ComponentType<KubeObjectListLayoutProps>;

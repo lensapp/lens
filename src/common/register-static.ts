@@ -23,7 +23,3 @@ export function getStaticUrl(filePath: string) {
 export function getStaticPath(filePath: string) {
   return path.resolve(staticDir, filePath);
 }
-
-export function getOutPath(filePath: string) {
-  return path.resolve(outDir, filePath);
-}

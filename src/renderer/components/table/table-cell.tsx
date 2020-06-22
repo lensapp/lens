@@ -1,8 +1,8 @@
 import "./table-cell.scss";
+import type { SortBy, SortParams } from "./table";
 
 import React, { ReactNode } from "react";
 import { autobind, cssNames } from "../../utils";
-import { SortBy, SortParams } from "./table";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
 

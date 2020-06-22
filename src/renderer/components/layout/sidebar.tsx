@@ -1,3 +1,4 @@
+import type { TabRoute } from "./main-layout";
 import "./sidebar.scss";
 
 import React from "react";
@@ -19,7 +20,6 @@ import { Config, configRoute, configURL } from "../+config";
 import { eventRoute, eventsURL } from "../+events";
 import { Apps, appsRoute, appsURL } from "../+apps";
 import { namespaceStore } from "../+namespaces/namespace.store";
-import { TabRoute } from "./main-layout";
 import { Workloads } from "../+workloads";
 import { UserManagement } from "../+user-management";
 import { Storage } from "../+storage";

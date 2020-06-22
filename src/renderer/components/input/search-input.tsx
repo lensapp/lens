@@ -7,7 +7,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { t } from "@lingui/macro";
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";
-import { Input, InputProps } from "../input";
+import { Input, InputProps } from "./input";
 import { getSearch, setSearch } from "../../navigation";
 import { _i18n } from '../../i18n';
 

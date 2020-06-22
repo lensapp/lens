@@ -4,6 +4,7 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
+import CircularDependencyPlugin from "circular-dependency-plugin"
 import { VueLoaderPlugin } from "vue-loader"
 import { htmlTemplate, isDevelopment, isProduction, outDir, reactAppName, rendererDir, sassCommonVars, vueAppName } from "./src/common/vars";
 
@@ -125,6 +126,14 @@ export function webpackConfigReact(): webpack.Configuration {
 
     plugins: [
       new ForkTsCheckerPlugin(),
+
+      // detect circular dependencies
+      new CircularDependencyPlugin({
+        cwd: __dirname,
+        exclude: /node_modules/,
+        allowAsyncCycles: true,
+        failOnError: false,
+      }),
 
       // todo: check if this actually works in mode=production files
       // new webpack.DllReferencePlugin({
