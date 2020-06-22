@@ -7,7 +7,7 @@ import { IKubeObjectRef, KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } fro
 import { apiKube } from "./index";
 import { kubeWatchApi } from "./kube-watch-api";
 import { apiManager } from "./api-manager";
-import { split } from "../utils/arrays";
+import { splitArray } from "../../common/utils";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   kind: string; // resource type within api-group, e.g. "Namespace"
@@ -45,7 +45,7 @@ export class KubeApi<T extends KubeObject = any> {
     const [, prefix, ...parts] = apiPath.split("/");
     const apiPrefix = `/${prefix}`;
 
-    const [left, right, found] = split(parts, "namespaces");
+    const [left, right, found] = splitArray(parts, "namespaces");
     let apiGroup, apiVersion, namespace, resource, name;
 
     if (found) {

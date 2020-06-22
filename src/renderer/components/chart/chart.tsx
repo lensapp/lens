@@ -1,6 +1,6 @@
 import "./chart.scss";
 import React from "react";
-import ChartJS, {ChartData, ChartOptions} from "chart.js";
+import ChartJS from "chart.js";
 import { isEqual, remove } from "lodash";
 import { cssNames } from "../../utils";
 import { StatusBrick } from "../status-brick";
@@ -17,7 +17,7 @@ export interface ChartDataSets extends ChartJS.ChartDataSets {
 
 export interface ChartProps {
   data: ChartData;
-  options?: ChartOptions;  // Passed to ChartJS instance
+  options?: ChartJS.ChartOptions;  // Passed to ChartJS instance
   width?: number | string;
   height?: number | string;
   type?: ChartKind;
@@ -126,8 +126,7 @@ export class Chart extends React.Component<ChartProps> {
           ...datasets[index],
           ...props
         }
-      }
-      else {
+      } else {
         datasets[datasetIndex] = next
       }
     })
