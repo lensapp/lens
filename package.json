@@ -13,10 +13,11 @@
   "scripts": {
     "dev": "concurrently 'yarn dev:main' 'yarn dev:renderer'",
     "dev-run": "electron --inspect .",
+    "dev-test": "yarn test --watch",
     "dev:main": "DEBUG=true yarn compile:main --watch $@",
     "dev:renderer": "DEBUG=true yarn compile:renderer --watch $@",
-    "dev:react": "yarn dev:renderer --config-name react",
-    "dev:vue": "yarn dev:renderer --config-name vue",
+    "dev:renderer:react": "yarn dev:renderer --config-name react",
+    "dev:renderer:vue": "yarn dev:renderer --config-name vue",
     "compile": "yarn download-bins && concurrently 'yarn i18n:compile' 'yarn compile:main -p' 'yarn compile:renderer -p'",
     "compile:main": "webpack --progress --config webpack.main.ts $@",
     "compile:renderer": "webpack --progress --config webpack.renderer.ts $@",
