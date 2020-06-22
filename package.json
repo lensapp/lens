@@ -4,6 +4,12 @@
   "description": "Lens - The Kubernetes IDE",
   "version": "3.5.0-beta.1",
   "main": "dist/main.js",
+  "copyright": "© 2020, Lakend Labs, Inc.",
+  "license": "MIT",
+  "author": {
+    "name": "Lakend Labs, Inc.",
+    "email": "info@lakendlabs.com"
+  },
   "scripts": {
     "dev": "concurrently 'yarn dev:main' 'yarn dev:renderer'",
     "dev-run": "electron --inspect .",
@@ -30,9 +36,6 @@
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts"
   },
-  "author": "Lakend Labs, Inc. <info@lakendlabs.com>",
-  "copyright": "© 2020, Lakend Labs, Inc.",
-  "license": "MIT",
   "config": {
     "bundledKubectlVersion": "1.17.4",
     "bundledHelmVersion": "3.1.2"

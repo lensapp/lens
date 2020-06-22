@@ -122,7 +122,6 @@
               id="checkbox-allow-telemetry"
               switch
               v-model="preferences.allowTelemetry"
-              :disabled="licenceData && licenceData.status === 'valid'"
               @input="onSave"
             >
               Allow telemetry & usage tracking

@@ -11,7 +11,7 @@ import { helmCli } from "./helm-cli"
 import { isWindows } from "../common/vars";
 
 export class ShellSession extends EventEmitter {
-  static shellEnv: any
+  static shellEnvs: Map<string, any> = new Map()
 
   protected websocket: WebSocket
   protected shellProcess: pty.IPty
@@ -22,6 +22,7 @@ export class ShellSession extends EventEmitter {
   protected helmBinDir: string;
   protected preferences: ClusterPreferences;
   protected running = false;
+  protected clusterId: string;
 
   constructor(socket: WebSocket, pathToKubeconfig: string, cluster: Cluster) {
     super()
@@ -29,6 +30,7 @@ export class ShellSession extends EventEmitter {
     this.kubeconfigPath =  pathToKubeconfig
     this.kubectl = new Kubectl(cluster.version)
     this.preferences = cluster.preferences || {}
+    this.clusterId = cluster.id
   }
 
   public async open() {
@@ -77,16 +79,14 @@ export class ShellSession extends EventEmitter {
   }
 
   protected async getCachedShellEnv() {
-    let env: any
-    if (!ShellSession.shellEnv) {
+    let env = ShellSession.shellEnvs.get(this.clusterId)
+    if (!env) {
       env = await this.getShellEnv()
-      ShellSession.shellEnv = env
+      ShellSession.shellEnvs.set(this.clusterId, env)
     } else {
-      env = ShellSession.shellEnv
-
       // refresh env in the background
       this.getShellEnv().then((shellEnv: any) => {
-        ShellSession.shellEnv = shellEnv
+        ShellSession.shellEnvs.set(this.clusterId, shellEnv)
       })
     }
 

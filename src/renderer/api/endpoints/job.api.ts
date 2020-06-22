@@ -3,6 +3,7 @@ import { autobind } from "../../utils";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { IPodContainer } from "./pods.api";
 import { KubeApi } from "../kube-api";
+import { JsonApiParams } from "../json-api";
 
 @autobind()
 export class Job extends WorkloadKubeObject {
@@ -87,6 +88,13 @@ export class Job extends WorkloadKubeObject {
   getImages() {
     const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
     return [...containers].map(container => container.image)
+  }
+
+  delete() {
+    const params: JsonApiParams = {
+      query: { propagationPolicy: "Background" }
+    }
+    return super.delete(params)
   }
 }
 

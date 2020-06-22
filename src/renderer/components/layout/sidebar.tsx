@@ -226,7 +226,7 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
   }
 
   render() {
-    const { isHidden, subMenus = [], icon, text, url, children, className } = this.props;
+    const { id, isHidden, subMenus = [], icon, text, url, children, className } = this.props;
     if (isHidden) {
       return null;
     }
@@ -234,7 +234,7 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
     if (extendedView) {
       const isActive = this.isActive();
       return (
-        <div className={cssNames("SidebarNavItem", className)}>
+        <div id={id} className={cssNames("SidebarNavItem", className)}>
           <div className={cssNames("nav-item", { active: isActive })} onClick={this.toggleSubMenu}>
             {icon}
             <span className="link-text">{text}</span>

@@ -47,6 +47,11 @@ export default new Vuex.Store({
       this.commit("savePreferences", userStore.getPreferences());
     },
     savePreferences(state, prefs) {
+      if (prefs.allowTelemetry) {
+        tracker.event("telemetry", "enabled")
+      } else {
+        tracker.event("telemetry", "disabled")
+      }
       state.preferences = prefs;
       userStore.setPreferences(prefs);
       this.dispatch("destroyWebviews")

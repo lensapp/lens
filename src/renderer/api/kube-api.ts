@@ -7,6 +7,7 @@ import { IKubeObjectRef, KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } fro
 import { apiKube } from "./index";
 import { kubeWatchApi } from "./kube-watch-api";
 import { apiManager } from "./api-manager";
+import { split } from "../utils/arrays";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   kind: string; // resource type within api-group, e.g. "Namespace"
@@ -32,20 +33,45 @@ export interface IKubeApiLinkRef {
   namespace?: string;
 }
 
-export class KubeApi<T extends KubeObject = any> {
-  static matcher = /(\/apis?.*?)\/(?:(.*?)\/)?(v.*?)(?:\/namespaces\/(.+?))?\/([^\/]+)(?:\/([^\/?]+))?.*$/
+export interface IKubeApiLinkBase extends IKubeApiLinkRef {
+  apiBase: string;
+  apiGroup: string;
+  apiVersionWithGroup: string;
+}
 
-  static parseApi(apiPath = "") {
+export class KubeApi<T extends KubeObject = any> {
+  static parseApi(apiPath = ""): IKubeApiLinkBase {
     apiPath = new URL(apiPath, location.origin).pathname;
-    const [, apiPrefix, apiGroup = "", apiVersion, namespace, resource, name] = apiPath.match(KubeApi.matcher) || [];
+    const [, prefix, ...parts] = apiPath.split("/");
+    const apiPrefix = `/${prefix}`;
+
+    const [left, right, found] = split(parts, "namespaces");
+    let apiGroup, apiVersion, namespace, resource, name;
+
+    if (found) {
+      if (left.length == 0) {
+        throw new Error(`invalid apiPath: ${apiPath}`)
+      }
+
+      apiVersion = left.pop();
+      apiGroup = left.join("/");
+      [namespace, resource, name] = right;
+    } else {
+      [apiGroup, apiVersion, resource] = left;
+    }
     const apiVersionWithGroup = [apiGroup, apiVersion].filter(v => v).join("/");
     const apiBase = [apiPrefix, apiGroup, apiVersion, resource].filter(v => v).join("/");
+
+    if (!apiBase) {
+      throw new Error(`invalid apiPath: ${apiPath}`)
+    }
+
     return {
       apiBase,
       apiPrefix, apiGroup,
       apiVersion, apiVersionWithGroup,
       namespace, resource, name,
-    }
+    };
   }
 
   static createLink(ref: IKubeApiLinkRef): string {
@@ -55,7 +81,7 @@ export class KubeApi<T extends KubeObject = any> {
       namespace = `namespaces/${namespace}`
     }
     return [apiPrefix, apiVersion, namespace, resource, name]
-      .filter(v => !!v)
+      .filter(v => v)
       .join("/")
   }
 
@@ -130,8 +156,9 @@ export class KubeApi<T extends KubeObject = any> {
     if (KubeObject.isJsonApiData(data)) {
       return new KubeObjectConstructor(data);
     }
+    
     // process items list response
-    else if (KubeObject.isJsonApiDataList(data)) {
+    if (KubeObject.isJsonApiDataList(data)) {
       const { apiVersion, items, metadata } = data;
       this.setResourceVersion(namespace, metadata.resourceVersion);
       this.setResourceVersion("", metadata.resourceVersion);
@@ -141,10 +168,12 @@ export class KubeApi<T extends KubeObject = any> {
         ...item,
       }))
     }
+    
     // custom apis might return array for list response, e.g. users, groups, etc.
-    else if (Array.isArray(data)) {
+    if (Array.isArray(data)) {
       return data.map(data => new KubeObjectConstructor(data));
     }
+    
     return data;
   }
 
@@ -162,16 +191,19 @@ export class KubeApi<T extends KubeObject = any> {
 
   async create({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T> {
     const apiUrl = this.getUrl({ namespace });
-    return this.request.post(apiUrl, {
-      data: merge({
-        kind: this.kind,
-        apiVersion: this.apiVersionWithGroup,
-        metadata: {
-          name,
-          namespace
-        }
-      }, data)
-    }).then(this.parseResponse);
+    
+    return this.request
+      .post(apiUrl, {
+        data: merge({
+          kind: this.kind,
+          apiVersion: this.apiVersionWithGroup,
+          metadata: {
+            name,
+            namespace
+          }
+        }, data)
+      })
+      .then(this.parseResponse);
   }
 
   async update({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T> {

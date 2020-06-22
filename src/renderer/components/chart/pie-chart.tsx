@@ -5,7 +5,10 @@ import { Chart, ChartProps } from "./chart";
 import { cssNames } from "../../utils";
 import { themeStore } from "../../theme.store";
 
-export class PieChart extends React.Component<ChartProps> {
+interface Props extends ChartProps {
+}
+
+export class PieChart extends React.Component<Props> {
   render() {
     const { data, className, options, ...chartProps } = this.props
     const { contentColor } = themeStore.activeTheme.colors;
