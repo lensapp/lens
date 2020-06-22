@@ -3,7 +3,7 @@
 import path from "path";
 import { protocol } from "electron"
 import logger from "../main/logger";
-import { staticDir, staticProto } from "./vars";
+import { staticDir, staticProto, outDir } from "./vars";
 
 export function registerStaticProtocol(rootFolder = staticDir) {
   const scheme = staticProto.replace("://", "");
@@ -22,4 +22,8 @@ export function getStaticUrl(filePath: string) {
 
 export function getStaticPath(filePath: string) {
   return path.resolve(staticDir, filePath);
+}
+
+export function getOutPath(filePath: string) {
+  return path.resolve(outDir, filePath);
 }

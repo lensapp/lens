@@ -9,7 +9,7 @@ import { kubeconfigRoute } from "./routes/kubeconfig"
 import { metricsRoute } from "./routes/metrics"
 import { watchRoute } from "./routes/watch"
 import { portForwardRoute } from "./routes/port-forward"
-import { getStaticPath } from "../common/register-static";
+import { getOutPath } from "../common/register-static";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Call = require('@hapi/call');
@@ -86,11 +86,11 @@ export class Router {
   }
 
   protected handleStaticFile(filePath: string, response: http.ServerResponse) {
-    const asset = getStaticPath(filePath);
+    const asset = getOutPath(filePath);
     readFile(asset, (err, data) => {
       if (err) {
         // default to index.html so that react routes work when page is refreshed
-        this.handleStaticFile("index.html", response)
+        this.handleStaticFile("app_react.html", response)
       } else {
         const type = mimeTypes[path.extname(asset).slice(1)] || "text/plain";
         response.setHeader("Content-Type", type);
