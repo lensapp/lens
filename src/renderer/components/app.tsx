@@ -33,6 +33,7 @@ import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../api/rbac";
+import { Terminal } from "./dock/terminal";
 
 @observer
 export class App extends React.Component {
@@ -41,6 +42,7 @@ export class App extends React.Component {
   static async init() {
     await i18nStore.init();
     await configStore.init();
+    await Terminal.preloadFonts();
     render(<App/>, App.rootElem);
   };
 

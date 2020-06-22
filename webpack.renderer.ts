@@ -95,7 +95,12 @@ export function webpackConfigReact(): webpack.Configuration {
         },
         {
           test: /\.(ttf|eot|woff2?)$/,
-          use: "file-loader?name=fonts/[name].[ext]"
+          use: {
+            loader: "url-loader",
+            options: {
+              name: "fonts/[name].[ext]"
+            }
+          }
         },
         {
           test: /\.s?css$/,

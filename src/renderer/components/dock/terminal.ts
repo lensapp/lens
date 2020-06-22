@@ -5,7 +5,7 @@ import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
 import { TerminalApi } from "../../api/terminal-api";
 import { themeStore } from "../../theme.store";
-import { autobind } from "../../utils";
+import { autobind } from "../../utils/autobind";
 
 export class Terminal {
   static spawningPool: HTMLElement;
@@ -18,6 +18,13 @@ export class Terminal {
     pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden"
     document.body.appendChild(pool);
     Terminal.spawningPool = pool;
+  }
+
+  static async preloadFonts(){
+    var fontPath = require("../fonts/roboto-mono-nerd.ttf").default;
+    var fontFace = new FontFace("RobotoMono", `url(${fontPath})`);
+    await fontFace.load();
+    document.fonts.add(fontFace);
   }
 
   public xterm: XTerm;
@@ -67,7 +74,7 @@ export class Terminal {
     Terminal.spawningPool.appendChild(this.elem);
   }
 
-  init() {
+  async init() {
     if (this.xterm) {
       return;
     }
