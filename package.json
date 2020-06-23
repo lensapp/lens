@@ -31,7 +31,7 @@
     "dist": "yarn compile && electron-builder -p onTag",
     "dist:win": "yarn compile && electron-builder -p onTag --x64 --ia32",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
-    "postinstall": "patch-package && concurrently 'electron-builder install-app-deps'",
+    "postinstall": "patch-package",
     "i18n:extract": "lingui extract",
     "i18n:compile": "lingui compile",
     "download-bins": "concurrently yarn:download:*",
