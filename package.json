@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "concurrently -k 'yarn dev-run' 'yarn dev:main' 'yarn dev:renderer:react' 'yarn dev:renderer:vue'",
     "dev-run": "electron --inspect .",
+    "dev-test": "yarn test --watch",
     "dev:main": "DEBUG=true yarn compile:main --watch $@",
     "dev:renderer": "DEBUG=true yarn compile:renderer --watch $@",
     "dev:renderer:react": "yarn dev:renderer --config-name react $@",
@@ -61,8 +62,8 @@
     ]
   },
   "jest": {
-    "collectCoverage": true,
-    "testRegex": "spec/.*_(spec)\\.[jt]sx?$",
+    "testRegex": ".*_(spec)\\.[jt]sx?$",
+    "collectCoverage": false,
     "verbose": true,
     "testEnvironment": "node",
     "transform": {

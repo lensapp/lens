@@ -59,7 +59,7 @@ export class Kubectl {
 
   public static readonly kubectlDir = path.join((app || remote.app).getPath("userData"), "binaries", "kubectl")
   public static readonly bundledKubectlPath = bundledPath
-  public static readonly bundledKubectlVersion: string = bundledVersion
+  public static readonly bundledKubectlVersion = bundledVersion
   private static bundledInstance: Kubectl;
 
   // Returns the single bundled Kubectl instance

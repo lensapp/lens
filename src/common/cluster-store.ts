@@ -6,6 +6,7 @@ import * as version260Beta2 from "../migrations/cluster-store/2.6.0-beta.2"
 import * as version260Beta3 from "../migrations/cluster-store/2.6.0-beta.3"
 import * as version270Beta0 from "../migrations/cluster-store/2.7.0-beta.0"
 import * as version270Beta1 from "../migrations/cluster-store/2.7.0-beta.1"
+import { getAppVersion } from "./utils/app-version";
 
 export class ClusterStore {
   private static instance: ClusterStore;
@@ -13,6 +14,9 @@ export class ClusterStore {
 
   private constructor() {
     this.store = new ElectronStore({
+      // @ts-ignore
+      // fixme: tests are failed without "projectVersion"
+      projectVersion: getAppVersion(),
       name: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       migrations: {
