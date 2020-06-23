@@ -1,6 +1,6 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
-import { userStore } from "../../common/user-store"
+import { UserStore } from "../../common/user-store"
 import { getAppVersion } from "../../common/app-utils"
 import { CoreV1Api, AuthorizationV1Api } from "@kubernetes/client-node"
 import { Cluster } from "../cluster"
@@ -81,7 +81,7 @@ class ConfigRoute extends LensApi {
     const data = {
       clusterName: cluster.contextName,
       lensVersion: getAppVersion(),
-      lensTheme: `kontena-${userStore.getPreferences().colorTheme}`,
+      lensTheme: `kontena-${UserStore.getInstance().getPreferences().colorTheme}`,
       kubeVersion: cluster.version,
       chartsEnabled: true,
       isClusterAdmin: cluster.isAdmin,

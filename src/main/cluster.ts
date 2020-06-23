@@ -1,7 +1,7 @@
 import { ContextHandler } from "./context-handler"
 import { FeatureStatusMap } from "./feature"
 import * as k8s from "./k8s"
-import { clusterStore } from "../common/cluster-store"
+import { ClusterStore } from "../common/cluster-store"
 import logger from "./logger"
 import { KubeConfig, CoreV1Api, AuthorizationV1Api, V1ResourceAttributes } from "@kubernetes/client-node"
 import * as fm from "./feature-manager";
@@ -119,20 +119,13 @@ export class Cluster implements ClusterInfo {
   }
 
   public async refreshCluster() {
-    clusterStore.reloadCluster(this)
+    ClusterStore.getInstance().reloadCluster(this)
     this.contextHandler.setClusterPreferences(this.preferences)
 
     const connectionStatus = await this.getConnectionStatus()
-    if (connectionStatus == ClusterStatus.AccessGranted) {
-      this.accessible = true
-    } else  {
-      this.accessible = false
-    }
-    if (connectionStatus > ClusterStatus.Offline) {
-      this.online = true
-    } else {
-      this.online = false
-    }
+    this.accessible = connectionStatus == ClusterStatus.AccessGranted;
+    this.online = connectionStatus > ClusterStatus.Offline;
+
     if (this.accessible) {
       this.distribution = this.detectKubernetesDistribution(this.version)
       this.features = await fm.getFeatures(this.contextHandler)
@@ -145,7 +138,7 @@ export class Cluster implements ClusterInfo {
   }
 
   public updateKubeconfig(kubeconfig: string) {
-    const storedCluster = clusterStore.getCluster(this.id)
+    const storedCluster = ClusterStore.getInstance().getCluster(this.id)
     if (!storedCluster) { return }
 
     this.kubeConfig = kubeconfig
@@ -153,18 +146,15 @@ export class Cluster implements ClusterInfo {
   }
 
   public getPrometheusApiPrefix() {
-    if (!this.preferences.prometheus?.prefix) {
-      return ""
-    }
-    return this.preferences.prometheus.prefix
+    return this.preferences.prometheus?.prefix || "";
   }
 
   public save() {
-    clusterStore.storeCluster(this)
+    ClusterStore.getInstance().storeCluster(this)
   }
 
   public toClusterInfo(): ClusterInfo {
-    const clusterInfo: ClusterInfo = {
+    return {
       id: this.id,
       workspace: this.workspace,
       url: this.url,
@@ -181,8 +171,7 @@ export class Cluster implements ClusterInfo {
       kubeCtl: this.kubeCtl,
       kubeConfig:  this.kubeConfig,
       preferences: this.preferences
-    }
-    return clusterInfo;
+    };
   }
 
   protected async k8sRequest(path: string, opts?: request.RequestPromiseOptions) {

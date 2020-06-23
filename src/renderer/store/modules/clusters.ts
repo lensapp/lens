@@ -4,7 +4,7 @@ import { MutationTree, ActionTree, GetterTree } from "vuex"
 import { PromiseIpc } from 'electron-promise-ipc'
 import { Tracker } from "../../../common/tracker"
 import { remote } from "electron"
-import { clusterStore } from "../../../common/cluster-store"
+import { ClusterStore } from "../../../common/cluster-store"
 import { Workspace } from "../../../common/workspace-store"
 
 const promiseIpc = new PromiseIpc( { maxTimeoutMs: 120000 } );
@@ -217,7 +217,7 @@ const actions: ActionTree<ClusterState, any>  = {
     })
   },
   storeCluster({commit}, cluster: ClusterInfo) {
-    clusterStore.storeCluster(cluster);
+    ClusterStore.getInstance().storeCluster(cluster);
     commit("updateCluster", cluster)
     promiseIpc.send("clusterStored", cluster.id)
   }

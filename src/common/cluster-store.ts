@@ -10,7 +10,7 @@ import * as version270Beta1 from "./migrations/cluster-store/2.7.0-beta.1"
 
 export class ClusterStore {
   private static instance: ClusterStore;
-  public store: ElectronStore;
+  private store: ElectronStore;
 
   private constructor() {
     this.store = new ElectronStore({
@@ -107,7 +107,3 @@ export class ClusterStore {
     ClusterStore.instance = null
   }
 }
-
-const clusterStore: ClusterStore = ClusterStore.getInstance();
-
-export { clusterStore };

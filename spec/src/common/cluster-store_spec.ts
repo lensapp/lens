@@ -197,7 +197,7 @@ describe("for a pre 2.0 config with an existing cluster", () => {
 
   it("migrates to modern format with kubeconfig under a key", async () => {
     const clusterStore = ClusterStore.getInstance()
-    const storedCluster = clusterStore.store.get('clusters')[0]
+    const storedCluster = clusterStore.getAllClusters()[0]
     expect(storedCluster.kubeConfig).toBe('kubeconfig content')
   })
 })
@@ -231,7 +231,7 @@ describe("for a pre 2.4.1 config with an existing cluster", () => {
 
   it("migrates to modern format throwing out the state related data", async () => {
     const clusterStore = ClusterStore.getInstance()
-    const storedClusterData = clusterStore.store.get('clusters')[0]
+    const storedClusterData = clusterStore.getAllClusters()[0]
     expect(storedClusterData.hasOwnProperty('online')).toBe(false)
     expect(storedClusterData.hasOwnProperty('accessible')).toBe(false)
     expect(storedClusterData.hasOwnProperty('failureReason')).toBe(false)
@@ -264,7 +264,7 @@ describe("for a pre 2.6.0 config with a cluster that has arrays in auth config",
 
   it("replaces array format access token and expiry into string", async () => {
     const clusterStore = ClusterStore.getInstance()
-    const storedClusterData = clusterStore.store.get('clusters')[0]
+    const storedClusterData = clusterStore.getAllClusters()[0]
     const kc = yaml.safeLoad(storedClusterData.kubeConfig)
     expect(kc.users[0].user['auth-provider'].config['access-token']).toBe("should be string")
     expect(kc.users[0].user['auth-provider'].config['expiry']).toBe("should be string")
@@ -301,7 +301,7 @@ describe("for a pre 2.6.0 config with a cluster icon", () => {
 
   it("moves the icon into preferences", async () => {
     const clusterStore = ClusterStore.getInstance()
-    const storedClusterData = clusterStore.store.get('clusters')[0]
+    const storedClusterData = clusterStore.getAllClusters()[0]
     expect(storedClusterData.hasOwnProperty('icon')).toBe(false)
     expect(storedClusterData.preferences.hasOwnProperty('icon')).toBe(true)
     expect(storedClusterData.preferences.icon).toBe("icon path")
@@ -338,7 +338,7 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
 
   it("adds cluster to default workspace", async () => {
     const clusterStore = ClusterStore.getInstance()
-    const storedClusterData = clusterStore.store.get("clusters")[0]
+    const storedClusterData = clusterStore.getAllClusters()[0]
     expect(storedClusterData.workspace).toBe('default')
   })
 })

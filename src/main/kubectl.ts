@@ -9,7 +9,7 @@ import * as md5File from "md5-file"
 import { globalRequestOpts } from "../common/request"
 import * as lockFile from "proper-lockfile"
 import { helmCli } from "./helm-cli"
-import { userStore } from "../common/user-store"
+import { UserStore } from "../common/user-store"
 
 const bundledVersion = require("../../package.json").config.bundledKubectlVersion
 const kubectlMap: Map<string, string> = new Map([
@@ -138,7 +138,7 @@ export class Kubectl {
         logger.error(`Local kubectl is version ${version}, expected ${this.kubectlVersion}, unlinking`)
       }
       catch(err) {
-          logger.error(`Local kubectl failed to run properly (${err.message}), unlinking`)
+        logger.error(`Local kubectl failed to run properly (${err.message}), unlinking`)
       }
       await fs.promises.unlink(this.path)
     }
@@ -288,7 +288,7 @@ export class Kubectl {
     if (process.platform == "darwin") {
       return packageMirrors.get("default") // MacOS packages are only available from default
     }
-    const mirror = packageMirrors.get(userStore.getPreferences().downloadMirror)
+    const mirror = packageMirrors.get(UserStore.getInstance().getPreferences().downloadMirror)
     if (mirror) { return mirror }
 
     return packageMirrors.get("default")

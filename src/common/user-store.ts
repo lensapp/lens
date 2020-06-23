@@ -16,7 +16,7 @@ export interface UserPreferences {
 
 export class UserStore {
   private static instance: UserStore;
-  public store: ElectronStore;
+  private store: ElectronStore;
 
   private constructor() {
     this.store = new ElectronStore({
@@ -78,7 +78,3 @@ export class UserStore {
     UserStore.instance = null
   }
 }
-
-const userStore: UserStore = UserStore.getInstance();
-
-export { userStore };

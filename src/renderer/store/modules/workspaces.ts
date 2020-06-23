@@ -1,5 +1,5 @@
 import { MutationTree, ActionTree, GetterTree } from "vuex"
-import { workspaceStore, Workspace, WorkspaceData } from "../../../common/workspace-store"
+import { WorkspaceStore, Workspace, WorkspaceData } from "../../../common/workspace-store"
 
 export interface WorkspaceState {
   workspaces: Array<Workspace>;
@@ -7,8 +7,8 @@ export interface WorkspaceState {
 }
 
 const state: WorkspaceState = {
-  workspaces: workspaceStore.getAllWorkspaces(),
-  currentWorkspace: workspaceStore.getAllWorkspaces().find((w) => w.id === "default")
+  workspaces: WorkspaceStore.getInstance().getAllWorkspaces(),
+  currentWorkspace: WorkspaceStore.getInstance().getAllWorkspaces().find((w) => w.id === "default"),
 }
 
 const actions: ActionTree<WorkspaceState, any>  = {
@@ -27,16 +27,16 @@ const mutations: MutationTree<WorkspaceState> = {
     state.currentWorkspace = workspace
   },
   addWorkspace(state, workspace: WorkspaceData) {
-    workspaceStore.storeWorkspace(workspace)
-    state.workspaces = workspaceStore.getAllWorkspaces()
+    WorkspaceStore.getInstance().storeWorkspace(workspace)
+    state.workspaces = WorkspaceStore.getInstance().getAllWorkspaces()
   },
   updateWorkspace(state, workspace: WorkspaceData) {
-    workspaceStore.storeWorkspace(workspace)
-    state.workspaces = workspaceStore.getAllWorkspaces()
+    WorkspaceStore.getInstance().storeWorkspace(workspace)
+    state.workspaces = WorkspaceStore.getInstance().getAllWorkspaces()
   },
   removeWorkspace(state, workspace: Workspace) {
-    workspaceStore.removeWorkspace(workspace)
-    state.workspaces = workspaceStore.getAllWorkspaces()
+    WorkspaceStore.getInstance().removeWorkspace(workspace)
+    state.workspaces = WorkspaceStore.getInstance().getAllWorkspaces()
   }
 }
 

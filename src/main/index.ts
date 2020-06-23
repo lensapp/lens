@@ -7,7 +7,7 @@ import logger from "./logger"
 import initMenu from "./menu"
 import * as proxy from "./proxy"
 import { WindowManager } from "./window-manager";
-import { clusterStore } from "../common/cluster-store"
+import { ClusterStore } from "../common/cluster-store"
 import { tracker } from "./tracker"
 import { ClusterManager } from "./cluster-manager";
 import AppUpdater from "./app-updater"
@@ -57,7 +57,7 @@ async function main() {
   }
 
   // create cluster manager
-  clusterManager = new ClusterManager(clusterStore.getAllClusterObjects(), port)
+  clusterManager = new ClusterManager(ClusterStore.getInstance().getAllClusterObjects(), port)
   // run proxy
   try {
     proxyServer = proxy.listen(port, clusterManager)
