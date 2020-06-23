@@ -2,7 +2,7 @@ import { app, remote } from "electron"
 import * as path from "path"
 import * as fs from "fs"
 import * as request from "request"
-import * as requestPromise from "request-promise-native"
+import { promiseExec} from "./promise-exec"
 import logger from "./logger"
 import { ensureDir, pathExists } from "fs-extra"
 import * as md5File from "md5-file"
@@ -117,42 +117,31 @@ export class Kubectl {
     }
   }
 
-  protected async urlEtag() {
-    const response = await requestPromise({
-      method: "HEAD",
-      uri: this.url,
-      resolveWithFullResponse: true,
-      timeout: 4000,
-      ...this.getRequestOpts()
-    }).catch((error) => { logger.error(error) })
-
-    if (response && response.headers["etag"]) {
-      return response.headers["etag"].replace(/"/g, "")
-    }
-    return ""
-  }
-
-  public async checkBinary(checkTag = true) {
+  public async checkBinary(checkVersion = true) {
     const exists = await pathExists(this.path)
     if (exists) {
-      if (!checkTag) {
-        return true
-      }
-      const hash = md5File.sync(this.path)
-      const etag = await this.urlEtag()
-      if (etag === "") {
-        logger.debug("Cannot resolve kubectl remote etag")
-        return true
-      }
-      if (hash == etag) {
-        logger.debug("Kubectl md5sum matches the remote etag")
+      if (!checkVersion) {
         return true
       }
 
-      logger.error("Kubectl md5sum " + hash + " does not match the remote etag " + etag + ", unlinking and downloading again")
+      try {
+        const { stdout, stderr } = await promiseExec(`"${this.path}" version --client=true -o json`)
+        const output = JSON.parse(stdout)
+        let version: string = output.clientVersion.gitVersion
+        if (version[0] === 'v') {
+          version = version.slice(1)
+        }
+        if (version === this.kubectlVersion) {
+          logger.debug(`Local kubectl is version ${this.kubectlVersion}`)
+          return true
+        }
+        logger.error(`Local kubectl is version ${version}, expected ${this.kubectlVersion}, unlinking`)
+      }
+      catch(err) {
+          logger.error(`Local kubectl failed to run properly (${err.message}), unlinking`)
+      }
       await fs.promises.unlink(this.path)
     }
-
     return false
   }
 
