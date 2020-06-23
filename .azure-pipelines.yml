@@ -35,7 +35,7 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
           cacheHitVar: CACHE_RESTORED
         displayName: Cache Yarn packages
-      - script: make deps
+      - script: make install-deps
         displayName: Install dependencies
       - script: make integration-win
         displayName: Run integration tests
@@ -72,7 +72,7 @@ jobs:
           tar -xzf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" -C /
         displayName: "Unpack cache"
         condition: eq(variables.CACHE_RESTORED, 'true')
-      - script: make deps
+      - script: make install-deps
         displayName: Install dependencies
       - script: make test
         displayName: Run tests
@@ -117,7 +117,7 @@ jobs:
           tar -xzf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" -C /
         displayName: "Unpack cache"
         condition: eq(variables.CACHE_RESTORED, 'true')
-      - script: make deps
+      - script: make install-deps
         displayName: Install dependencies
       - script: make test
         displayName: Run tests
