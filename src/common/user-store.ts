@@ -16,7 +16,7 @@ export interface UserPreferences {
 
 export class UserStore {
   private static instance: UserStore;
-  public store: ElectronStore;
+  private store: ElectronStore;
 
   private constructor() {
     this.store = new ElectronStore({
@@ -56,17 +56,11 @@ export class UserStore {
 
   public getPreferences(): UserPreferences {
     const prefs = this.store.get("preferences", {})
-    if (!prefs.colorTheme) {
-      prefs.colorTheme = "dark"
-    }
-    if (!prefs.downloadMirror) {
-      prefs.downloadMirror = "default"
-    }
-    if (prefs.allowTelemetry === undefined) {
-      prefs.allowTelemetry = true
-    }
+    prefs.colorTheme = prefs.colorTheme || "dark";
+    prefs.downloadMirror = prefs.downloadMirror || "default";
+    prefs.allowTelemetry = prefs.allowTelemetry ?? true;
 
-    return prefs
+    return prefs;
   }
 
   static getInstance(): UserStore {
@@ -80,7 +74,3 @@ export class UserStore {
     UserStore.instance = null
   }
 }
-
-const userStore: UserStore = UserStore.getInstance();
-
-export { userStore };

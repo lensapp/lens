@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import semver from "semver"
-import { userStore } from "../../../common/user-store"
 import { getAppVersion } from "../../../common/utils/app-version"
+import { UserStore } from "../../common/user-store"
 import KubeContexts from './modules/kube-contexts'
 import Clusters from './modules/clusters'
 import HelmRepos from './modules/helm-repos'
@@ -31,29 +31,24 @@ export default new Vuex.Store({
     hud: {
       isMenuVisible: true,
     },
-    seenContexts: userStore.getSeenContexts(),
-    lastSeenAppVersion: userStore.lastSeenAppVersion(),
+    seenContexts: UserStore.getInstance().getSeenContexts(),
+    lastSeenAppVersion: UserStore.getInstance().lastSeenAppVersion(),
   },
   mutations: {
     storeSeenContexts(state, context) {
-      const seenContexts =  userStore.storeSeenContext(context);
-      state.seenContexts = seenContexts
+      state.seenContexts = UserStore.getInstance().storeSeenContext(context)
     },
     updateLastSeenAppVersion(state, appVersion) {
       state.lastSeenAppVersion = appVersion;
-      userStore.setLastSeenAppVersion(appVersion)
+      UserStore.getInstance().setLastSeenAppVersion(appVersion)
     },
     loadPreferences(state) {
-      this.commit("savePreferences", userStore.getPreferences());
+      this.commit("savePreferences", UserStore.getInstance().getPreferences());
     },
     savePreferences(state, prefs) {
-      if (prefs.allowTelemetry) {
-        tracker.event("telemetry", "enabled")
-      } else {
-        tracker.event("telemetry", "disabled")
-      }
+      tracker.event("telemetry", prefs.allowTelemetry ? "enabled" : "disabled")
       state.preferences = prefs;
-      userStore.setPreferences(prefs);
+      UserStore.getInstance().setPreferences(prefs);
       this.dispatch("destroyWebviews")
       promiseIpc.send("preferencesSaved")
     },

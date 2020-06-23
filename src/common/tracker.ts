@@ -1,6 +1,6 @@
 import ua from "universal-analytics"
-import { machineIdSync } from "node-machine-id"
-import { userStore } from "./user-store"
+import { machineIdSync } from 'node-machine-id'
+import { UserStore } from "../common/user-store"
 
 const GA_ID = "UA-159377374-1"
 
@@ -36,7 +36,7 @@ export class Tracker {
   }
 
   protected telemetryAllowed() {
-    const userPrefs = userStore.getPreferences()
+    const userPrefs = UserStore.getInstance().getPreferences()
     return !!userPrefs.allowTelemetry
   }
 }

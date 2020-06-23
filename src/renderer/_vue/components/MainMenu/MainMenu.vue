@@ -22,8 +22,9 @@
 import ClusterMenuItem from "@/_vue/components/MainMenu/ClusterMenuItem";
 import AddClusterMenuItem from "@/_vue/components/MainMenu/AddClusterMenuItem";
 import draggable from 'vuedraggable'
-import { clusterStore } from "../../../../common/cluster-store"
 import { isMac } from "../../../../common/vars"
+import { ClusterStore } from "@/../common/cluster-store";
+import * as os from "os";
 
 const {remote} = require('electron')
 const {Menu, MenuItem} = remote
@@ -47,7 +48,7 @@ export default {
       },
       set: function (clusters) {
         this.$store.commit("updateClusters", clusters);
-        clusterStore.storeClusters(clusters);
+        ClusterStore.getInstance().storeClusters(clusters);
       }
     }
   },

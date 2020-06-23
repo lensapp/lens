@@ -1,9 +1,9 @@
 import { spawn, ChildProcess } from "child_process"
 import logger from "./logger"
 import * as tcpPortUsed from "tcp-port-used"
-import { Kubectl, bundledKubectl } from "./kubectl"
+import { Kubectl } from "./kubectl"
 import { Cluster } from "./cluster"
-import { PromiseIpc } from "electron-promise-ipc"
+import PromiseIpc from "electron-promise-ipc"
 import { findMainWebContents } from "./webcontents"
 
 export class KubeAuthProxy {
@@ -13,22 +13,20 @@ export class KubeAuthProxy {
   protected env: NodeJS.ProcessEnv = null
   protected proxyProcess: ChildProcess
   protected port: number
-  protected kubectl: Kubectl
   protected promiseIpc: any
 
   constructor(cluster: Cluster, port: number, env: NodeJS.ProcessEnv) {
     this.env = env
     this.port = port
     this.cluster = cluster
-    this.kubectl = bundledKubectl
-    this.promiseIpc = new PromiseIpc({ timeout: 2000 })
+    this.promiseIpc = new PromiseIpc.PromiseIpc({ maxTimeoutMs: 2000 })
   }
 
   public async run(): Promise<void> {
     if (this.proxyProcess) {
       return;
     }
-    const proxyBin = await this.kubectl.kubectlPath()
+    const proxyBin = await Kubectl.bundled().kubectlPath()
     let args = [
       "proxy",
       "-p", this.port.toString(),

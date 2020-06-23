@@ -1,8 +1,8 @@
 import { KubeConfig } from "@kubernetes/client-node"
-import { PromiseIpc } from "electron-promise-ipc"
+import PromiseIpc from "electron-promise-ipc"
 import http from "http"
 import { Cluster, ClusterBaseInfo } from "./cluster"
-import { clusterStore } from "../common/cluster-store"
+import { ClusterStore } from "../common/cluster-store"
 import * as k8s from "./k8s"
 import logger from "./logger"
 import { LensProxy } from "./proxy"
@@ -39,7 +39,7 @@ export class ClusterManager {
   protected clusters: Map<string, Cluster>;
 
   constructor(clusters: Cluster[], port: number) {
-    this.promiseIpc = new PromiseIpc({ timeout: 2000 })
+    this.promiseIpc = new PromiseIpc.PromiseIpc({ maxTimeoutMs: 2000 })
     this.port = port
     this.clusters = new Map()
     clusters.forEach((clusterInfo) => {
@@ -174,10 +174,10 @@ export class ClusterManager {
       }
       try {
         const clusterIcon = await this.uploadClusterIcon(cluster, fileUpload.name, fileUpload.path)
-        clusterStore.reloadCluster(cluster);
+        ClusterStore.getInstance().reloadCluster(cluster);
         if(!cluster.preferences) cluster.preferences = {};
         cluster.preferences.icon = clusterIcon
-        clusterStore.storeCluster(cluster);
+        ClusterStore.getInstance().storeCluster(cluster);
         return {success: true, cluster: cluster.toClusterInfo(), message: ""}
       } catch(error) {
         return {success: false, message: error}
@@ -189,7 +189,7 @@ export class ClusterManager {
       const cluster = this.getCluster(id)
       if (cluster && cluster.preferences) {
         cluster.preferences.icon = null;
-        clusterStore.storeCluster(cluster)
+        ClusterStore.getInstance().storeCluster(cluster)
         return {success: true, cluster: cluster.toClusterInfo(), message: ""}
       } else {
         return {success: false, message: "Cluster not found"}
@@ -221,7 +221,7 @@ export class ClusterManager {
       logger.debug(`IPC: clusterStored: ${clusterId}`)
       const cluster = this.clusters.get(clusterId)
       if (cluster) {
-        clusterStore.reloadCluster(cluster);
+        ClusterStore.getInstance().reloadCluster(cluster);
         cluster.stopServer()
       }
     });
@@ -244,7 +244,7 @@ export class ClusterManager {
     const cluster = this.clusters.get(id)
     if (cluster) {
       cluster.stopServer()
-      clusterStore.removeCluster(cluster.id);
+      ClusterStore.getInstance().removeCluster(cluster.id);
       this.clusters.delete(cluster.id)
     }
     return Array.from(this.clusters.values())

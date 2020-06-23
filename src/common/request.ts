@@ -1,8 +1,8 @@
-import request from "request"
-import { userStore } from "./user-store"
+import { Options } from "request"
+import { UserStore } from "../common/user-store"
 
-export function globalRequestOpts(requestOpts: request.Options ) {
-  const userPrefs = userStore.getPreferences()
+export function globalRequestOpts(requestOpts: Options): Options {
+  const userPrefs = UserStore.getInstance().getPreferences()
   if (userPrefs.httpsProxy) {
     requestOpts.proxy = userPrefs.httpsProxy
   }

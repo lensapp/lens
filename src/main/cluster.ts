@@ -1,13 +1,13 @@
 import { ContextHandler } from "./context-handler"
 import { FeatureStatusMap } from "./feature"
 import * as k8s from "./k8s"
-import { clusterStore } from "../common/cluster-store"
+import { ClusterStore } from "../common/cluster-store"
 import logger from "./logger"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import * as fm from "./feature-manager";
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager"
-import { PromiseIpc } from "electron-promise-ipc"
+import PromiseIpc from "electron-promise-ipc"
 import request from "request-promise-native"
 import { apiPrefix } from "../common/vars";
 
@@ -79,7 +79,7 @@ export class Cluster implements ClusterInfo {
   public preferences: ClusterPreferences;
 
   protected eventPoller: NodeJS.Timeout;
-  protected promiseIpc = new PromiseIpc({ timeout: 2000 })
+  protected promiseIpc = new PromiseIpc.PromiseIpc({ maxTimeoutMs: 2000 })
 
   protected kubeconfigManager: KubeconfigManager;
 
@@ -128,7 +128,7 @@ export class Cluster implements ClusterInfo {
   }
 
   public async refreshCluster() {
-    clusterStore.reloadCluster(this)
+    ClusterStore.getInstance().reloadCluster(this)
     this.contextHandler.setClusterPreferences(this.preferences)
 
     const connectionStatus = await this.getConnectionStatus()
@@ -147,14 +147,11 @@ export class Cluster implements ClusterInfo {
   }
 
   public getPrometheusApiPrefix() {
-    if (!this.preferences.prometheus?.prefix) {
-      return ""
-    }
-    return this.preferences.prometheus.prefix
+    return this.preferences.prometheus?.prefix || "";
   }
 
   public save() {
-    clusterStore.storeCluster(this)
+    ClusterStore.getInstance().storeCluster(this)
   }
 
   public toClusterInfo(): ClusterInfo {

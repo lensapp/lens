@@ -11,7 +11,7 @@ import { getAppVersion } from "./utils/app-version";
 
 export class ClusterStore {
   private static instance: ClusterStore;
-  public store: ElectronStore;
+  private store: ElectronStore;
 
   private constructor() {
     this.store = new ElectronStore({
@@ -116,5 +116,3 @@ export class ClusterStore {
     ClusterStore.instance = null
   }
 }
-
-export const clusterStore: ClusterStore = ClusterStore.getInstance();

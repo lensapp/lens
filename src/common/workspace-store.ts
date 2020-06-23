@@ -1,10 +1,14 @@
 import ElectronStore from "electron-store"
-import { clusterStore } from "./cluster-store"
+import { ClusterStore } from "./cluster-store"
 
 export interface WorkspaceData {
   id: string;
   name: string;
   description?: string;
+}
+
+interface WorkspaceStoreData {
+  workspaces: WorkspaceData[];
 }
 
 export class Workspace implements WorkspaceData {
@@ -20,14 +24,21 @@ export class Workspace implements WorkspaceData {
 export class WorkspaceStore {
   public static defaultId = "default"
   private static instance: WorkspaceStore;
-  public store: ElectronStore;
+  private store: ElectronStore<WorkspaceStoreData>;
 
   private constructor() {
     this.store = new ElectronStore({
-      name: "lens-workspace-store"
+      name: "lens-workspace-store",
     })
-  }
 
+    if (this.store.get("workspaces", []).length === 0) {
+      this.store.set("workspaces", [{
+        id: "default",
+        name: "default"
+      }]);
+    }
+  }
+    
   public storeWorkspace(workspace: WorkspaceData) {
     const workspaces = this.getAllWorkspaces()
     const index = workspaces.findIndex((w) => w.id === workspace.id)
@@ -46,10 +57,14 @@ export class WorkspaceStore {
     const workspaces = this.getAllWorkspaces()
     const index = workspaces.findIndex((w) => w.id === workspace.id)
     if (index !== -1) {
-      clusterStore.removeClustersByWorkspace(workspace.id)
+      ClusterStore.getInstance().removeClustersByWorkspace(workspace.id)
       workspaces.splice(index, 1)
       this.store.set("workspaces", workspaces)
     }
+  }
+
+  public getWorkspace(id: string): Workspace | null {
+    return this.store.get("workspaces", []).find(wsd => wsd.id == id) || null;
   }
 
   public getAllWorkspaces(): Array<Workspace> {

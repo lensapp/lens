@@ -1,13 +1,13 @@
 import Vue from "vue"
 import { ClusterInfo } from "../../../../main/cluster"
 import { MutationTree, ActionTree, GetterTree } from "vuex"
-import { PromiseIpc } from 'electron-promise-ipc'
+import PromiseIpc from 'electron-promise-ipc'
 import { Tracker } from "../../../../common/tracker"
 import { remote } from "electron"
-import { clusterStore } from "../../../../common/cluster-store"
+import { ClusterStore } from "../../../../common/cluster-store"
 import { Workspace } from "../../../../common/workspace-store"
 
-const promiseIpc = new PromiseIpc( { maxTimeoutMs: 120000 } );
+const promiseIpc = new PromiseIpc.PromiseIpc( { maxTimeoutMs: 120000 } );
 const tracker = new Tracker(remote.app);
 
 export interface LensWebview {
@@ -130,7 +130,7 @@ const actions: ActionTree<ClusterState, any>  = {
   // For data structure see: cluster-manager.ts / FeatureInstallRequest
   async installClusterFeature({commit}, data) {
     // Custom no timeout IPC as install can take very variable time
-    const ipc = new PromiseIpc();
+    const ipc = new PromiseIpc.PromiseIpc();
     const response = await ipc.send('installFeature', data)
     console.log("installer result:", response);
     const cluster = await ipc.send('refreshCluster', data.clusterId)
@@ -142,7 +142,7 @@ const actions: ActionTree<ClusterState, any>  = {
   // For data structure see: cluster-manager.ts / FeatureInstallRequest
   async upgradeClusterFeature({commit}, data) {
     // Custom no timeout IPC as install can take very variable time
-    const ipc = new PromiseIpc();
+    const ipc = new PromiseIpc.PromiseIpc();
     const response = await ipc.send('upgradeFeature', data)
     console.log("upgrade result:", response);
     const cluster = await ipc.send('refreshCluster', data.clusterId)
@@ -155,7 +155,7 @@ const actions: ActionTree<ClusterState, any>  = {
   // For data structure see: cluster-manager.ts / FeatureInstallRequest
   async uninstallClusterFeature({commit}, data) {
     // Custom no timeout IPC as uninstall can take very variable time
-    const ipc = new PromiseIpc();
+    const ipc = new PromiseIpc.PromiseIpc();
     const response = await ipc.send('uninstallFeature', data)
     console.log("uninstaller result:", response);
     const cluster = await ipc.send('refreshCluster', data.clusterId)
@@ -217,7 +217,7 @@ const actions: ActionTree<ClusterState, any>  = {
     })
   },
   storeCluster({commit}, cluster: ClusterInfo) {
-    clusterStore.storeCluster(cluster);
+    ClusterStore.getInstance().storeCluster(cluster);
     commit("updateCluster", cluster)
     promiseIpc.send("clusterStored", cluster.id)
   }

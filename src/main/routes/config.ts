@@ -1,8 +1,8 @@
 import { app } from "electron"
-import { CoreV1Api } from "@kubernetes/client-node"
+import { CoreV1Api, AuthorizationV1Api } from "@kubernetes/client-node"
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
-import { userStore } from "../../common/user-store"
+import { UserStore } from "../../common/user-store"
 import { Cluster } from "../cluster"
 
 export interface IConfigRoutePayload {
@@ -94,7 +94,7 @@ class ConfigRoute extends LensApi {
     const data: IConfigRoutePayload = {
       clusterName: cluster.contextName,
       lensVersion: app.getVersion(),
-      lensTheme: `kontena-${userStore.getPreferences().colorTheme}`,
+      lensTheme: `kontena-${UserStore.getInstance().getPreferences().colorTheme}`,
       kubeVersion: cluster.version,
       chartsEnabled: true,
       isClusterAdmin: cluster.isAdmin,
