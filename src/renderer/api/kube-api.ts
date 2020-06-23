@@ -42,7 +42,6 @@ export interface IKubeApiLinkBase extends IKubeApiLinkRef {
 export class KubeApi<T extends KubeObject = any> {
   static parseApi(apiPath = ""): IKubeApiLinkBase {
     apiPath = new URL(apiPath, location.origin).pathname;
-
     const [, prefix, ...parts] = apiPath.split("/");
     const apiPrefix = `/${prefix}`;
 
@@ -51,11 +50,11 @@ export class KubeApi<T extends KubeObject = any> {
 
     if (namespaced) {
       switch (right.length) {
-        case 0:
-          resource = "namespaces"; // special case this due to `split` removing namespaces
-          break;
         case 1:
-          resource = right[0];
+        name = right[0];
+        // fallthroughcase 0:
+          resource = "namespaces"; // special case this due to `split` removing namespaces
+
           break;
         default:
           [namespace, resource, name] = right;
@@ -68,7 +67,7 @@ export class KubeApi<T extends KubeObject = any> {
       switch (left.length) {
         case 2:
           resource = left.pop();
-        case 1:
+        // fallthroughcase 1:
           apiVersion = left.pop();
           apiGroup = "";
           break;

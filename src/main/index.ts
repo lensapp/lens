@@ -38,7 +38,7 @@ const vmURL = formatUrl({
 })
 
 async function main() {
-  await shellSync()
+  shellSync(app.getLocale())
 
   const updater = new AppUpdater()
   updater.start();
