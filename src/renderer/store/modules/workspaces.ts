@@ -24,6 +24,7 @@ const getters: GetterTree<WorkspaceState, any> = {
 
 const mutations: MutationTree<WorkspaceState> = {
   setCurrentWorkspace(state, workspace: Workspace) {
+    WorkspaceStore.getInstance().setLastSeenId(workspace.id);
     state.currentWorkspace = workspace
   },
   addWorkspace(state, workspace: WorkspaceData) {

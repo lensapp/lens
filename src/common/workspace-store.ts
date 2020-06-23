@@ -9,6 +9,7 @@ export interface WorkspaceData {
 
 interface WorkspaceStoreData {
   workspaces: WorkspaceData[];
+  lastSeenId: string;
 }
 
 export class Workspace implements WorkspaceData {
@@ -37,8 +38,21 @@ export class WorkspaceStore {
         name: "default"
       }]);
     }
-  }
     
+    const wks = this.store.get("workspaces", []);
+    if (!this.store.get("lastSeenId")) {
+      this.store.set("lastSeenId", wks[0].id);
+    }
+  }
+
+  public setLastSeenId(id: string) {
+    this.store.set("lastSeenId", id);
+  }
+
+  public getLastSeenId(): string {
+    return this.store.get("lastSeenId");
+  }
+
   public storeWorkspace(workspace: WorkspaceData) {
     const workspaces = this.getAllWorkspaces()
     const index = workspaces.findIndex((w) => w.id === workspace.id)
@@ -51,10 +65,12 @@ export class WorkspaceStore {
   }
 
   public removeWorkspace(workspace: Workspace) {
-    if (workspace.id === WorkspaceStore.defaultId) {
-      throw new Error("Cannot remove default workspace")
-    }
     const workspaces = this.getAllWorkspaces()
+
+    if (workspaces.length < 1) {
+      throw new Error("Cannot remove last workspace");
+    }
+
     const index = workspaces.findIndex((w) => w.id === workspace.id)
     if (index !== -1) {
       ClusterStore.getInstance().removeClustersByWorkspace(workspace.id)
@@ -67,10 +83,12 @@ export class WorkspaceStore {
     return this.store.get("workspaces", []).find(wsd => wsd.id == id) || null;
   }
 
-  public getAllWorkspaces(): Array<Workspace> {
-    const workspacesData: WorkspaceData[]  = this.store.get("workspaces", [])
+  public getCurrentWorkspace(): Workspace | null {
+    return this.getWorkspace(this.getLastSeenId());
+  }
 
-    return workspacesData.map((wsd) => new Workspace(wsd))
+  public getAllWorkspaces(): Array<Workspace> {
+    return this.store.get("workspaces", []).map((wsd) => new Workspace(wsd))
   }
 
   static getInstance(): WorkspaceStore {
@@ -80,14 +98,3 @@ export class WorkspaceStore {
     return WorkspaceStore.instance
   }
 }
-
-const workspaceStore: WorkspaceStore = WorkspaceStore.getInstance()
-
-if (!workspaceStore.getAllWorkspaces().find( ws => ws.id === WorkspaceStore.defaultId)) {
-  workspaceStore.storeWorkspace({
-    id: WorkspaceStore.defaultId,
-    name: "default"
-  })
-}
-
-export { workspaceStore }
