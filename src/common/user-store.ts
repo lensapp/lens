@@ -54,17 +54,11 @@ export class UserStore {
 
   public getPreferences(): UserPreferences {
     const prefs = this.store.get("preferences", {})
-    if (!prefs.colorTheme) {
-      prefs.colorTheme = "dark"
-    }
-    if (!prefs.downloadMirror) {
-      prefs.downloadMirror = "default"
-    }
-    if (prefs.allowTelemetry === undefined) {
-      prefs.allowTelemetry = true
-    }
+    prefs.colorTheme = prefs.colorTheme || "dark";
+    prefs.downloadMirror = prefs.downloadMirror || "default";
+    prefs.allowTelemetry = prefs.allowTelemetry ?? true;
 
-    return prefs
+    return prefs;
   }
 
   static getInstance(): UserStore {
