@@ -12,15 +12,12 @@ download-bins:
 install-deps:
 	yarn install --frozen-lockfile
 
-out/app_vue.js:
-	yarn dev:renderer:vue
+compile-dev:
+	yarn compile:main --cache
+	yarn compile:renderer --cache
 
-out/app_react.js:
-	yarn dev:renderer:react
-
-dev: install-deps out/app_vue.js out/app_react.js
-	yarn dev:main
-	yarn dev-run-renderer --watch -k
+dev: install-deps compile-dev
+	yarn dev # run electron and watch files
 
 test:
 	yarn test

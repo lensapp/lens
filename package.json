@@ -11,12 +11,10 @@
     "email": "info@lakendlabs.com"
   },
   "scripts": {
-    "dev": "concurrently -k 'yarn dev:main --watch' 'yarn dev:renderer --watch'",
+    "dev": "concurrently -k 'yarn dev-run' 'yarn dev:main' 'yarn dev:renderer:react' 'yarn dev:renderer:vue'",
     "dev-run": "electron --inspect .",
-    "dev-run-renderer": "concurrently -k 'yarn dev:renderer --watch' 'electron --inspect .'",
-    "dev-test": "yarn test --watch",
-    "dev:main": "DEBUG=true yarn compile:main $@",
-    "dev:renderer": "DEBUG=true yarn compile:renderer $@",
+    "dev:main": "DEBUG=true yarn compile:main --watch $@",
+    "dev:renderer": "DEBUG=true yarn compile:renderer --watch $@",
     "dev:renderer:react": "yarn dev:renderer --config-name react $@",
     "dev:renderer:vue": "yarn dev:renderer --config-name vue $@",
     "compile": "yarn download-bins && concurrently 'yarn i18n:compile' 'yarn compile:main -p' 'yarn compile:renderer -p'",
