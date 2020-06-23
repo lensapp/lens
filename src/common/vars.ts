@@ -16,7 +16,7 @@ export const buildVersion = process.env.BUILD_VERSION;
 // Paths
 export const contextDir = process.cwd();
 export const staticDir = path.join(contextDir, "static");
-export const outDir = path.join(contextDir, "dist");
+export const outDir = path.join(contextDir, "out");
 export const mainDir = path.join(contextDir, "src/main");
 export const rendererDir = path.join(contextDir, "src/renderer");
 export const htmlTemplate = path.resolve(rendererDir, "template.html");

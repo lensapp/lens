@@ -12,8 +12,15 @@ download-bins:
 install-deps:
 	yarn install --frozen-lockfile
 
-dev: install-deps
-	yarn dev
+out/app_vue.js:
+	yarn dev:renderer:vue
+
+out/app_react.js:
+	yarn dev:renderer:react
+
+dev: install-deps out/app_vue.js out/app_react.js
+	yarn dev:main
+	yarn dev-run-renderer --watch -k
 
 test:
 	yarn test
@@ -38,4 +45,6 @@ else
 endif
 
 clean:
+	rm -rf binaries/client/*
 	rm -rf dist/*
+	rm -rf out/*
