@@ -8,6 +8,7 @@ import { cssNames } from "../../utils";
 import { StatusBrick } from "../status-brick";
 import { Badge } from "../badge";
 import { ContainerEnvironment } from "./pod-container-env";
+import { PodContainerPorts } from "./pod-container-ports";
 import { ResourceMetrics } from "../resource-metrics";
 import { IMetrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
@@ -63,17 +64,7 @@ export class PodDetailsContainer extends React.Component<Props> {
         }
         {ports && ports.length > 0 &&
         <DrawerItem name={<Trans>Ports</Trans>}>
-          {
-            ports.map(port => {
-              const { name, containerPort, protocol } = port;
-              const key = `${container.name}-port-${containerPort}-${protocol}`
-              return (
-                <div key={key}>
-                  {name ? name + ': ' : ''}{containerPort}/{protocol}
-                </div>
-              )
-            })
-          }
+          <PodContainerPorts pod={pod} container={container}/>
         </DrawerItem>
         }
         {<ContainerEnvironment container={container} namespace={pod.getNs()}/>}

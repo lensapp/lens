@@ -22,13 +22,13 @@ export class ServicePorts extends React.Component<Props> {
   async portForward(port: ServicePort) {
     const { service } = this.props;
     this.waiting = true;
-    apiBase.post(`/services/${service.getNs()}/${service.getName()}/port-forward/${port.port}`, {})
-      .catch(error => {
-        Notifications.error(error);
-      })
-      .finally(() => {
-        this.waiting = false;
-      });
+    try {
+      await apiBase.post(`/pods/${service.getNs()}/service/${service.getName()}/port-forward/${port.port}`, {})
+    } catch(error) {
+      Notifications.error(error);
+    } finally {
+      this.waiting = false;
+    }
   }
 
   render() {
