@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev": "concurrently -k 'yarn dev:main --watch' 'yarn dev:renderer --watch'",
-    "dev-run": "concurrently -k 'yarn dev --watch' 'electron --inspect .'",
+    "dev-run": "electron --inspect .",
     "dev-run-renderer": "concurrently -k 'yarn dev:renderer --watch' 'electron --inspect .'",
     "dev-test": "yarn test --watch",
     "dev:main": "DEBUG=true yarn compile:main $@",
