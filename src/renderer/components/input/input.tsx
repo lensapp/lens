@@ -243,8 +243,10 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   render() {
-    const { multiLine, showValidationLine, validators, theme, maxRows, children, maxLength, rows, disabled, ...inputProps } = this.props;
-    let { className, iconLeft, iconRight } = this.props;
+    /* eslint-disable */
+    let { multiLine, showValidationLine, validators, theme, maxRows, children, iconLeft, iconRight, ...inputProps } = this.props;
+    let { className, maxLength, rows, disabled, } = this.props;
+    /* eslint-enable */
     const { focused, dirty, valid, validating, errors } = this.state;
 
     className = cssNames("Input", className, {
