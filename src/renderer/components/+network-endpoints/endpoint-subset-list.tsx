@@ -71,9 +71,9 @@ export class EndpointSubsetList extends React.Component<Props> {
         <TableCell className="name">{address.hostname}</TableCell>
         <TableCell className="target">
           { address.targetRef && (
-          <Link to={getDetailsUrl(lookupApiLink(address.getTargetRef(), endpoint))}>
-                {address.targetRef.name}
-          </Link>
+            <Link to={getDetailsUrl(lookupApiLink(address.getTargetRef(), endpoint))}>
+              {address.targetRef.name}
+            </Link>
           )}
         </TableCell>
       </TableRow>
@@ -90,45 +90,45 @@ export class EndpointSubsetList extends React.Component<Props> {
     return(
       <div className="EndpointSubsetList flex column">
         {addresses.length > 0 && (
-        <div>
-          <div className="title flex gaps"><Trans>Addresses</Trans></div>
-          <Table
-            items={addresses}
-            selectable={false}
-            virtual={addressesVirtual}
-            scrollable={false}
-            getTableRow={this.getAddressTableRow}
-            className="box grow"
-          >
-            <TableHead>
-              <TableCell className="ip">IP</TableCell>
-              <TableCell className="host"><Trans>Hostname</Trans></TableCell>
-              <TableCell className="target">Target</TableCell>
-            </TableHead>
-            { !addressesVirtual && addresses.map(address => this.getAddressTableRow(address.getId())) }
-          </Table>
-        </div>
+          <div>
+            <div className="title flex gaps"><Trans>Addresses</Trans></div>
+            <Table
+              items={addresses}
+              selectable={false}
+              virtual={addressesVirtual}
+              scrollable={false}
+              getTableRow={this.getAddressTableRow}
+              className="box grow"
+            >
+              <TableHead>
+                <TableCell className="ip">IP</TableCell>
+                <TableCell className="host"><Trans>Hostname</Trans></TableCell>
+                <TableCell className="target">Target</TableCell>
+              </TableHead>
+              { !addressesVirtual && addresses.map(address => this.getAddressTableRow(address.getId())) }
+            </Table>
+          </div>
         )}
 
         {notReadyAddresses.length > 0 && (
-        <div>
-          <div className="title flex gaps"><Trans>Not Ready Addresses</Trans></div>
-          <Table
-            items={notReadyAddresses}
-            selectable
-            virtual={notReadyAddressesVirtual}
-            scrollable={false}
-            getTableRow={this.getNotReadyAddressTableRow}
-            className="box grow"
-          >
-            <TableHead>
-              <TableCell className="ip">IP</TableCell>
-              <TableCell className="host"><Trans>Hostname</Trans></TableCell>
-              <TableCell className="target">Target</TableCell>
-            </TableHead>
-            { !notReadyAddressesVirtual && notReadyAddresses.map(address => this.getNotReadyAddressTableRow(address.getId())) }
-          </Table>
-        </div>
+          <div>
+            <div className="title flex gaps"><Trans>Not Ready Addresses</Trans></div>
+            <Table
+              items={notReadyAddresses}
+              selectable
+              virtual={notReadyAddressesVirtual}
+              scrollable={false}
+              getTableRow={this.getNotReadyAddressTableRow}
+              className="box grow"
+            >
+              <TableHead>
+                <TableCell className="ip">IP</TableCell>
+                <TableCell className="host"><Trans>Hostname</Trans></TableCell>
+                <TableCell className="target">Target</TableCell>
+              </TableHead>
+              { !notReadyAddressesVirtual && notReadyAddresses.map(address => this.getNotReadyAddressTableRow(address.getId())) }
+            </Table>
+          </div>
         )}
 
         <div className="title flex gaps"><Trans>Ports</Trans></div>

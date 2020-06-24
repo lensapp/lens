@@ -19,6 +19,9 @@ compile-dev:
 dev: install-deps compile-dev
 	yarn dev # run electron and watch files
 
+lint:
+	yarn lint
+
 test:
 	yarn test
 

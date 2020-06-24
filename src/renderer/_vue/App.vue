@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <div id="lens-container" />
-    <div class="draggable-top"/>
+    <div class="draggable-top" />
     <div class="main-view" :class="{ 'menu-visible': isMenuVisible }">
-      <main-menu v-if="isMenuVisible"/>
-      <router-view/>
+      <main-menu v-if="isMenuVisible" />
+      <router-view />
     </div>
-    <bottom-bar v-if="isMenuVisible"/>
+    <bottom-bar v-if="isMenuVisible" />
   </div>
 </template>
 

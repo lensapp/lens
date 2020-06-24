@@ -78,11 +78,11 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
         label: 'Add Cluster...',
         click: opts.addClusterHook,
       },
-        {
-          label: 'Cluster Settings',
-          click: opts.clusterSettingsHook,
-          enabled: false
-        }
+      {
+        label: 'Cluster Settings',
+        click: opts.clusterSettingsHook,
+        enabled: false
+      }
       ]
     }
   }
@@ -215,4 +215,4 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
   promiseIpc.on("disableClusterSettingsMenuItem", () => {
     setClusterSettingsEnabled(false)
   });
-};
+}

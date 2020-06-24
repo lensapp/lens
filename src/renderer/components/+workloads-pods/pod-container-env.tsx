@@ -125,14 +125,14 @@ const SecretKey = (props: SecretKeyProps) => {
   }
 
   return (
-      <>
+    <>
         secretKeyRef({name}.{key})&nbsp;
-        <Icon
-          className={cssNames("secret-button", { loading })}
-          material="visibility"
-          tooltip={<Trans>Show</Trans>}
-          onClick={showKey}
-        />
-      </>
+      <Icon
+        className={cssNames("secret-button", { loading })}
+        material="visibility"
+        tooltip={<Trans>Show</Trans>}
+        onClick={showKey}
+      />
+    </>
   )
 }

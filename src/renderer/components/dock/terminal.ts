@@ -21,8 +21,8 @@ export class Terminal {
   }
 
   static async preloadFonts(){
-    var fontPath = require("../fonts/roboto-mono-nerd.ttf").default;
-    var fontFace = new FontFace("RobotoMono", `url(${fontPath})`);
+    const fontPath = require("../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
+    const fontFace = new FontFace("RobotoMono", `url(${fontPath})`);
     await fontFace.load();
     document.fonts.add(fontFace);
   }

@@ -48,7 +48,8 @@ export class TerminalApi extends WebSocketApi {
   }
 
   async getUrl(token: string) {
-    var { hostname, protocol, port } = location;
+    const { hostname, protocol } = location;
+    let { port } = location;
     const prefix = apiPrefix.TERMINAL;
     const { id, node } = this.options;
     const wss = `ws${protocol === "https:" ? "s" : ""}://`;

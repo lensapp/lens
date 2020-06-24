@@ -48,10 +48,10 @@ export class AceEditor extends React.Component<Props, State> {
 
   get theme() {
     switch (themeStore.activeTheme.type) {
-      case "light":
-        return "dreamweaver"
-      case "dark":
-        return "terminal";
+    case "light":
+      return "dreamweaver"
+    case "dark":
+      return "terminal";
     }
   }
 

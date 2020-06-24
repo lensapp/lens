@@ -4,7 +4,7 @@ import { setupI18n } from "@lingui/core";
 import orderBy from "lodash/orderBy"
 import { autobind, createStorage } from "./utils";
 
-const plurals: Record<string, Function> = require('make-plural/plurals');
+const plurals: Record<string, Function> = require('make-plural/plurals'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 export interface ILanguage {
   code: string;
@@ -42,7 +42,7 @@ export class LocalizationStore {
   }
 
   async setLocale(locale: string) {
-    const catalog = require(`@lingui/loader!../../locales/${locale}/messages.po`);
+    const catalog = require(`@lingui/loader!../../locales/${locale}/messages.po`); // eslint-disable-line @typescript-eslint/no-var-requires
     _i18n.loadLocaleData(locale, { plurals: plurals[locale] });
     _i18n.load(locale, catalog.messages);
 

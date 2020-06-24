@@ -44,7 +44,7 @@ export class App extends React.Component {
     await configStore.init();
     await Terminal.preloadFonts();
     render(<App/>, App.rootElem);
-  };
+  }
 
   render() {
     const homeUrl = isAllowedResource(["events", "nodes", "pods"]) ? clusterURL() : workloadsURL();

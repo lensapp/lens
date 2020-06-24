@@ -170,7 +170,7 @@ export class ThemeStore {
       return this.themes.get(themeId);
     }
     try {
-      const theme: ITheme = require(
+      const theme: ITheme = require( // eslint-disable-line @typescript-eslint/no-var-requires
         /* webpackMode: "lazy", webpackChunkName: "theme/[request]" */
         `./themes/${themeId}.json`
       );

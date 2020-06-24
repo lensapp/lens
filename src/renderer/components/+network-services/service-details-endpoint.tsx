@@ -23,25 +23,25 @@ export class ServiceDetailsEndpoint extends React.Component<Props> {
       return null
     }
     return (
-        <div className="EndpointList flex column">
+      <div className="EndpointList flex column">
         <Table
-        selectable
-        virtual={false}
-        scrollable={false}
-        className="box grow"
+          selectable
+          virtual={false}
+          scrollable={false}
+          className="box grow"
         >
-        <TableHead>
-          <TableCell className="name" ><Trans>Name</Trans></TableCell>
-          <TableCell className="endpoints"><Trans>Endpoints</Trans></TableCell>
-        </TableHead>
-        <TableRow
-        key={endpoint.getId()}
-        nowrap
-        onClick={prevDefault(() => showDetails(endpoint.selfLink, false))}
-        >
-        <TableCell className="name">{endpoint.getName()}</TableCell>
-        <TableCell className="endpoints">{ endpoint.toString()}</TableCell>
-        </TableRow>
+          <TableHead>
+            <TableCell className="name" ><Trans>Name</Trans></TableCell>
+            <TableCell className="endpoints"><Trans>Endpoints</Trans></TableCell>
+          </TableHead>
+          <TableRow
+            key={endpoint.getId()}
+            nowrap
+            onClick={prevDefault(() => showDetails(endpoint.selfLink, false))}
+          >
+            <TableCell className="name">{endpoint.getName()}</TableCell>
+            <TableCell className="endpoints">{ endpoint.toString()}</TableCell>
+          </TableRow>
         </Table>
       </div>
     )

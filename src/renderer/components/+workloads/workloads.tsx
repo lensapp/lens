@@ -81,7 +81,7 @@ export class Workloads extends React.Component<Props> {
       })
     }
     return routes;
-  };
+  }
 
   render() {
     const tabRoutes = Workloads.tabRoutes;

@@ -174,28 +174,28 @@ export class PodDetails extends React.Component<Props> {
                   </DrawerItem>
                   { type == "configMap" && (
                     <div>
-                    {configMap && (
-                      <DrawerItem name={<Trans>Name</Trans>}>
-                        <Link
-                          to={getDetailsUrl(configMapApi.getUrl({
-                            name: configMap,
-                            namespace: pod.getNs(),
-                          }))}>{configMap}
-                        </Link>
-                      </DrawerItem>
-                    )}
+                      {configMap && (
+                        <DrawerItem name={<Trans>Name</Trans>}>
+                          <Link
+                            to={getDetailsUrl(configMapApi.getUrl({
+                              name: configMap,
+                              namespace: pod.getNs(),
+                            }))}>{configMap}
+                          </Link>
+                        </DrawerItem>
+                      )}
                     </div>
                   )}
                   { type === "emptyDir" && (
                     <div>
                       { volume.emptyDir.medium && (
-                      <DrawerItem name={<Trans>Medium</Trans>}>
-                        {volume.emptyDir.medium}
-                      </DrawerItem>
+                        <DrawerItem name={<Trans>Medium</Trans>}>
+                          {volume.emptyDir.medium}
+                        </DrawerItem>
                       )}
                       { volume.emptyDir.sizeLimit && (
                         <DrawerItem name={<Trans>Size Limit</Trans>}>
-                        {volume.emptyDir.sizeLimit}
+                          {volume.emptyDir.sizeLimit}
                         </DrawerItem>
                       )}
                     </div>

@@ -6,7 +6,7 @@
         :cluster="cluster"
       />
     </draggable>
-    <AddClusterMenuItem/>
+    <AddClusterMenuItem />
     <b-tooltip v-if="clusters.length === 0" show target="add-cluster" placement="rightbottom">
       <p class="text-left">
         This is the quick launch menu.
@@ -19,57 +19,57 @@
 </template>
 
 <script>
-  import ClusterMenuItem from "@/_vue/components/MainMenu/ClusterMenuItem";
-  import AddClusterMenuItem from "@/_vue/components/MainMenu/AddClusterMenuItem";
-  import draggable from 'vuedraggable'
-  import { clusterStore } from "../../../../common/cluster-store"
-  import { isMac } from "../../../../common/vars"
+import ClusterMenuItem from "@/_vue/components/MainMenu/ClusterMenuItem";
+import AddClusterMenuItem from "@/_vue/components/MainMenu/AddClusterMenuItem";
+import draggable from 'vuedraggable'
+import { clusterStore } from "../../../../common/cluster-store"
+import { isMac } from "../../../../common/vars"
 
-  const {remote} = require('electron')
-  const {Menu, MenuItem} = remote
+const {remote} = require('electron')
+const {Menu, MenuItem} = remote
 
-  export default {
-    name: "MainMenu",
-    components: {
-      ClusterMenuItem,
-      AddClusterMenuItem,
-      draggable
-    },
-    data() {
-      return {
-        computedPaddingTop: "15px"
-      }
-    },
-    computed: {
-      clusters: {
-        get: function () {
-          return this.$store.getters.clusters;
-        },
-        set: function (clusters) {
-          this.$store.commit("updateClusters", clusters);
-          clusterStore.storeClusters(clusters);
-        }
-      }
-    },
-    methods: {
-      isActive: function (id) {
-        return id === this.$route.params.id;
+export default {
+  name: "MainMenu",
+  components: {
+    ClusterMenuItem,
+    AddClusterMenuItem,
+    draggable
+  },
+  data() {
+    return {
+      computedPaddingTop: "15px"
+    }
+  },
+  computed: {
+    clusters: {
+      get: function () {
+        return this.$store.getters.clusters;
       },
-      addCluster: async function () {
-        this.$router.push({
-          name: "add-cluster-page",
-          params: {
-            id: "new"
-          },
-        }).catch(err => {})
-      }
-    },
-    mounted: function () {
-      if (isMac) {
-        this.computedPaddingTop = "25px";
+      set: function (clusters) {
+        this.$store.commit("updateClusters", clusters);
+        clusterStore.storeClusters(clusters);
       }
     }
+  },
+  methods: {
+    isActive: function (id) {
+      return id === this.$route.params.id;
+    },
+    addCluster: async function () {
+      this.$router.push({
+        name: "add-cluster-page",
+        params: {
+          id: "new"
+        },
+      }).catch(err => {})
+    }
+  },
+  mounted: function () {
+    if (isMac) {
+      this.computedPaddingTop = "25px";
+    }
   }
+}
 </script>
 
 <style scoped lang="scss">

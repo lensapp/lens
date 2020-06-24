@@ -41,7 +41,6 @@ export class KubeAuthProxy {
         }
       }
     })
-    configWatcher.on("error", () => {})
     const clusterUrl = url.parse(this.cluster.apiUrl)
     let args = [
       "proxy",
@@ -57,7 +56,9 @@ export class KubeAuthProxy {
     })
     this.proxyProcess.on("exit", (code) => {
       logger.error(`proxy ${this.cluster.contextName} exited with code ${code}`)
-      this.sendIpcLogMessage( `proxy exited with code ${code}`, "stderr").catch((_) => {})
+      this.sendIpcLogMessage( `proxy exited with code ${code}`, "stderr").catch((err: Error) => {
+        logger.debug("failed to send IPC log message: " + err.message)
+      })
       this.proxyProcess = null
       configWatcher.close()
     })

@@ -9,8 +9,9 @@ import { globalRequestOpts } from "../common/request"
 import * as lockFile from "proper-lockfile"
 import { helmCli } from "./helm-cli"
 import { userStore } from "../common/user-store"
+import { getBundledKubectlVersion} from "../common/utils/app-version"
 
-const bundledVersion = require("../../package.json").config.bundledKubectlVersion
+const bundledVersion = getBundledKubectlVersion()
 const kubectlMap: Map<string, string> = new Map([
   ["1.7", "1.8.15"],
   ["1.8", "1.9.10"],
@@ -194,16 +195,16 @@ export class Kubectl {
       const file = fs.createWriteStream(this.path)
       stream.on("complete", () => {
         logger.debug("kubectl binary download finished")
-        file.end(() => {})
+        file.end()
       })
       stream.on("error", (error) => {
         logger.error(error)
-        fs.unlink(this.path, () => {})
+        fs.unlink(this.path, null)
         reject(error)
       })
       file.on("close", () => {
         logger.debug("kubectl binary download closed")
-        fs.chmod(this.path, 0o755, () => {})
+        fs.chmod(this.path, 0o755, null)
         resolve()
       })
       stream.pipe(file)

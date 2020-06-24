@@ -159,21 +159,18 @@ export class LensBinary {
 
     stream.on("complete", () => {
       logger.info(`Download of ${this.originalBinaryName} finished`)
-      file.end(() => {
-      })
+      file.end()
     })
 
     stream.on("error", (error) => {
       logger.error(error)
-      fs.unlink(binaryPath, () => {
-      })
+      fs.unlink(binaryPath, null)
       throw(error)
     })
     return new Promise((resolve, reject) => {
       file.on("close", () => {
         logger.debug(`${this.originalBinaryName} binary download closed`)
-        if (!this.tarPath) fs.chmod(binaryPath, 0o755, () => {
-        })
+        if (!this.tarPath) fs.chmod(binaryPath, 0o755, null)
         resolve()
       })
       stream.pipe(file)

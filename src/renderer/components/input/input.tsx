@@ -243,9 +243,9 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   render() {
-    var { multiLine, showValidationLine, validators, theme, maxRows, iconLeft, iconRight, children, ...inputProps } = this.props;
-    var { className, maxLength, rows, disabled } = this.props;
-    var { focused, dirty, valid, validating, errors } = this.state;
+    const { multiLine, showValidationLine, validators, theme, maxRows, children, maxLength, rows, disabled, ...inputProps } = this.props;
+    let { className, iconLeft, iconRight } = this.props;
+    const { focused, dirty, valid, validating, errors } = this.state;
 
     className = cssNames("Input", className, {
       [`theme ${theme}`]: theme,
