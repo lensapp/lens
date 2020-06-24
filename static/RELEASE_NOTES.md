@@ -2,8 +2,17 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.5.0 (current version)
+## 3.5.1 (current version)
+- Fix kubernetes api requests to work with non-"namespaces" pathnames
+- Fix: Handle invalid metrics responses properly
+- Fix: Display namespace defined in kubeconfig always in the namespace selector
+- Fix: Make sure that secret is defined before trying to decode
+- Update Helm to 3.2.4
+- Fix pasting unicode into terminal sometimes not working
+- Fix: Open external links in web browser
+- Fix kubectl binary version check
 
+## 3.5.0
 - Dynamic dashboard UI based on RBAC rules (hides non-accessible menus)
 - Show object reference for all objects
 - Unify scrollbars/paddings
