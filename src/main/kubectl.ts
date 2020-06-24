@@ -138,7 +138,7 @@ export class Kubectl {
         logger.error(`Local kubectl is version ${version}, expected ${this.kubectlVersion}, unlinking`)
       }
       catch(err) {
-          logger.error(`Local kubectl failed to run properly (${err.message}), unlinking`)
+        logger.error(`Local kubectl failed to run properly (${err.message}), unlinking`)
       }
       await fs.promises.unlink(this.path)
     }
