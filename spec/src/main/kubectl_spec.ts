@@ -1,5 +1,13 @@
 jest.mock("electron")
-jest.mock("../../../src/common/user-store")
+jest.mock("../../../src/common/user-store", () => ({
+  UserStore: {
+    getInstance: () => ({
+      getPreferences: () => ({
+        downloadMirror: "default",
+      })
+    })
+  }
+}))
 
 import { Kubectl } from "../../../src/main/kubectl"
 
