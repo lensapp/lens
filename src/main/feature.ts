@@ -99,6 +99,10 @@ export abstract class Feature {
   }
 
   protected manifestPath() {
-    return path.join(__dirname, '..', 'features', this.name);
+    const devPath = path.join(__dirname, "..", 'src/features', this.name);
+    if(fs.existsSync(devPath)) {
+      return devPath;
+    }
+    return path.join(__dirname, "..", 'features', this.name);
   }
 }
