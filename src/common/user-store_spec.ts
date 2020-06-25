@@ -1,15 +1,7 @@
 import mockFs from "mock-fs"
-import { userStore, UserStore } from "../../../src/common/user-store"
+import { userStore, UserStore } from "./user-store"
 
-jest.mock("electron", () => {
-  return {
-    app: {
-      getVersion: () => '99.99.99',
-      getPath: () => 'tmp',
-      getLocale: () => 'en'
-    }
-  }
-})
+jest.mock("electron")
 
 // Console.log needs to be called before fs-mocks, see https://github.com/tschaub/mock-fs/issues/234
 console.log("");

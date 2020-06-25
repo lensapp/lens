@@ -1,4 +1,4 @@
-import { splitArray } from "../splitArray";
+import { splitArray } from "./splitArray";
 
 describe("split array on element tests", () => {
   test("empty array", () => {

@@ -1,6 +1,10 @@
 // Add existing clusters to "default" workspace
+import { isTestEnv } from "../../common/vars";
+
 export function migration(store: any) {
-  console.log("CLUSTER STORE, MIGRATION: 2.7.0-beta.0");
+  if(!isTestEnv) {
+    console.log("CLUSTER STORE, MIGRATION: 2.7.0-beta.0");
+  }
   for (const value of store) {
     const clusterKey = value[0];
     if(clusterKey === "__internal__") continue

@@ -25,8 +25,8 @@
     "build:linux": "yarn compile && electron-builder --linux --dir -c.productName=LensDev",
     "build:mac": "yarn compile && electron-builder --mac --dir -c.productName=LensDev",
     "build:win": "yarn compile && electron-builder --win --dir -c.productName=LensDev",
-    "test": "jest spec/src $@",
-    "integration": "jest spec/integration $@",
+    "test": "jest --env=jsdom src $@",
+    "integration": "jest --coverage integration $@",
     "dist": "yarn compile && electron-builder -p onTag",
     "dist:win": "yarn compile && electron-builder -p onTag --x64 --ia32",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
@@ -63,7 +63,7 @@
     ]
   },
   "jest": {
-    "testRegex": ".*_(spec)\\.[jt]sx?$",
+    "testRegex": ".*_(spec|test)\\.[jt]sx?$",
     "collectCoverage": false,
     "verbose": true,
     "testEnvironment": "node",

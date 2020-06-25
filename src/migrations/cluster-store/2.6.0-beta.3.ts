@@ -1,8 +1,11 @@
 import * as yaml from "js-yaml"
+import { isTestEnv } from "../../common/vars";
 
 // Convert access token and expiry from arrays into strings
 export function migration(store: any) {
-  console.log("CLUSTER STORE, MIGRATION: 2.6.0-beta.3");
+  if(!isTestEnv) {
+    console.log("CLUSTER STORE, MIGRATION: 2.6.0-beta.3");
+  }
   for (const value of store) {
     const clusterKey = value[0];
     if(clusterKey === "__internal__") continue

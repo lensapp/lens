@@ -1,17 +1,7 @@
 import mockFs from "mock-fs"
 import yaml from "js-yaml"
-import { ClusterStore } from "../../../src/common/cluster-store";
-import { Cluster } from "../../../src/main/cluster";
-
-jest.mock("electron", () => {
-  return {
-    app: {
-      getVersion: () => '99.99.99',
-      getPath: () => 'tmp',
-      getLocale: () => 'en'
-    }
-  }
-})
+import { ClusterStore } from "./cluster-store";
+import { Cluster } from "../main/cluster";
 
 // Console.log needs to be called before fs-mocks, see https://github.com/tschaub/mock-fs/issues/234
 console.log("");

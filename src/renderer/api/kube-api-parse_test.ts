@@ -1,11 +1,11 @@
-import { IKubeApiLinkBase, KubeApi } from "../kube-api";
+import { IKubeApiLinkBase, parseApi } from "./kube-api-parse";
 
-interface ParseAPITest {
+interface KubeApi_Parse_Test {
   url: string;
   expected: Required<IKubeApiLinkBase>;
 }
 
-const tests: ParseAPITest[] = [
+const tests: KubeApi_Parse_Test[] = [
   {
     url: "/api/v1/namespaces/kube-system/pods/coredns-6955765f44-v8p27",
     expected: {
@@ -112,12 +112,11 @@ const tests: ParseAPITest[] = [
   },
 ];
 
-jest.mock('../kube-watch-api.ts', () => 'KubeWatchApi');
-describe("parseApi unit tests", () => {
+describe.only("parseApi unit tests", () => {
   for (const i in tests) {
     const { url: tUrl, expected:tExpect} = tests[i];
     test(`test #${parseInt(i)+1}`, () => {
-      expect(KubeApi.parseApi(tUrl)).toStrictEqual(tExpect);
+      expect(parseApi(tUrl)).toStrictEqual(tExpect);
     });
   }
 });
