@@ -16,7 +16,7 @@ class MockServer extends EventEmitter {
   close = jest.fn(cb => cb())
 }
 
-describe.only("getFreePort", () => {
+describe("getFreePort", () => {
   beforeEach(() => {
     // @ts-ignore
     // fixme: find a better way to support types for mocked module
