@@ -87,7 +87,7 @@ async function main() {
     },
     showPreferencesHook: async () => {
       // IPC send needs webContents as we're sending it to renderer
-      promiseIpc.send('navigate', findMainWebContents(), {name: 'preferences-page'}).then((data: any) => {
+      promiseIpc.send('navigate', findMainWebContents(), { name: 'preferences-page' }).then((data: any) => {
         logger.debug("navigate: preferences IPC sent");
       })
     },
@@ -110,10 +110,10 @@ async function main() {
 }
 
 app.on("ready", main)
-app.on('window-all-closed', function() {
+app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform != 'darwin') {
+  if (!isMac) {
     app.quit();
   } else {
     windowManager = null

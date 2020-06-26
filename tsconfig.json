@@ -28,10 +28,6 @@
       ]
     }
   },
-  "include": [
-    "src/**/*",
-    "types/*"
-  ],
   "ts-node": {
     "compilerOptions": {
       "module": "CommonJS"

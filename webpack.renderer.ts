@@ -1,3 +1,4 @@
+import { htmlTemplate, isDevelopment, isProduction, outDir, reactAppName, rendererDir, sassCommonVars, vueAppName } from "./src/common/vars";
 import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
@@ -6,7 +7,6 @@ import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 import CircularDependencyPlugin from "circular-dependency-plugin"
 import { VueLoaderPlugin } from "vue-loader"
-import { htmlTemplate, isDevelopment, isProduction, outDir, reactAppName, rendererDir, sassCommonVars, vueAppName } from "./src/common/vars";
 
 export default [
   webpackConfigReact,
@@ -105,14 +105,8 @@ export function webpackConfigReact(): webpack.Configuration {
         {
           test: /\.s?css$/,
           use: [
-            {
-              // https://webpack.js.org/plugins/mini-css-extract-plugin/
-              loader: MiniCssExtractPlugin.loader,
-              options: {
-                hmr: isDevelopment, // fixme: doesn't work
-                reloadAll: true,
-              }
-            },
+            // https://webpack.js.org/plugins/mini-css-extract-plugin/
+            isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
             {
               loader: "css-loader",
               options: {
