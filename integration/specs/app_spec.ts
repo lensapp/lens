@@ -36,6 +36,7 @@ describe("app start", () => {
   beforeEach(async () => {
     app = util.setup()
     await app.start()
+    await app.client.waitUntilWindowLoaded()
     const windowCount = await app.client.getWindowCount()
     await app.client.windowByIndex(windowCount - 1)
     await app.client.waitUntilWindowLoaded()

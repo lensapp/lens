@@ -34,10 +34,6 @@ integration-win:
 	yarn build:win
 	yarn integration
 
-lint:
-	yarn lint
-	yarn lint-dashboard
-
 test-app:
 	yarn test
 

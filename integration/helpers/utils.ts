@@ -13,7 +13,7 @@ case "darwin":
   break
 }
 
-export function setup() {
+export function setup(): Application {
   return new Application({
     // path to electron app
     args: [],
