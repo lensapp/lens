@@ -44,7 +44,7 @@ class App extends React.Component {
 
     // render app
     render(<App/>, App.rootElem);
-  };
+  }
 
   render() {
     const homeUrl = (isAllowedResource(["events", "nodes", "pods"])) ? clusterURL() : workloadsURL();
