@@ -13,7 +13,7 @@ compile-dev:
 	yarn compile:main --cache
 	yarn compile:renderer --cache
 
-dev: app-deps compile-dev
+dev: install-deps compile-dev
 	yarn dev # run electron and watch files
 
 lint:
@@ -41,10 +41,10 @@ lint:
 test-app:
 	yarn test
 
-app-deps:
+install-deps:
 	yarn install --frozen-lockfile
 
-build: app-deps
+build: install-deps
 	yarn install
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn dist:win
