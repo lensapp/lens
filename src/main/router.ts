@@ -1,3 +1,5 @@
+import Call from "@hapi/call"
+import Subtext from "@hapi/subtext"
 import http from "http"
 import path from "path"
 import { readFile } from "fs"
@@ -10,11 +12,6 @@ import { metricsRoute } from "./routes/metrics"
 import { watchRoute } from "./routes/watch"
 import { portForwardRoute } from "./routes/port-forward"
 import { outDir, reactAppName } from "../common/vars";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Call = require('@hapi/call');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Subtext = require('@hapi/subtext');
 
 const mimeTypes: {[key: string]: string} = {
   "html": "text/html",
