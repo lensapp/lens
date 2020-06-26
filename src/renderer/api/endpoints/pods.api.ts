@@ -173,7 +173,7 @@ export class Pod extends WorkloadKubeObject {
       };
       configMap: {
         name: string;
-      }
+      };
       secret: {
         secretName: string;
         defaultMode: number;

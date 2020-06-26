@@ -9,14 +9,11 @@ endif
 download-bins:
 	yarn download-bins
 
-install-deps:
-	yarn install --frozen-lockfile
-
 compile-dev:
 	yarn compile:main --cache
 	yarn compile:renderer --cache
 
-dev: install-deps compile-dev
+dev: app-deps compile-dev
 	yarn dev # run electron and watch files
 
 lint:
@@ -37,7 +34,18 @@ integration-win:
 	yarn build:win
 	yarn integration
 
-build: install-deps
+lint:
+	yarn lint
+	yarn lint-dashboard
+
+test-app:
+	yarn test
+
+app-deps:
+	yarn install --frozen-lockfile
+
+build: app-deps
+	yarn install
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn dist:win
 else
