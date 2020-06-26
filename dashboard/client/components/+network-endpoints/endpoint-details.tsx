@@ -28,7 +28,7 @@ export class EndpointDetails extends React.Component<Props> {
         {
           endpoint.getEndpointSubsets().map((subset) => {
             return(
-            <EndpointSubsetList subset={subset} endpoint={endpoint}/>
+              <EndpointSubsetList subset={subset} endpoint={endpoint}/>
             )
           })
         }

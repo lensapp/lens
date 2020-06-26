@@ -28,6 +28,7 @@ integration-win:
 
 lint:
 	yarn lint
+	yarn lint-dashboard
 
 test-app:
 	yarn test
