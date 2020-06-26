@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where your might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.5.1 (current version)
+## 3.5.1-rc.1 (current version)
 - Fix kubernetes api requests to work with non-"namespaces" pathnames
 - Fix: Handle invalid metrics responses properly
 - Fix: Display namespace defined in kubeconfig always in the namespace selector
