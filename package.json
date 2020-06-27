@@ -11,8 +11,8 @@
     "email": "info@lakendlabs.com"
   },
   "scripts": {
-    "dev": "concurrently -k 'yarn dev-run' 'yarn dev:main' 'yarn dev:renderer:react' 'yarn dev:renderer:vue'",
-    "dev-run": "electron --inspect .",
+    "dev": "concurrently -k 'yarn dev-run -C' 'yarn dev:main' 'yarn dev:renderer'",
+    "dev-run": "nodemon --watch out/main.* --exec 'electron --inspect .' $@",
     "dev-test": "yarn test --watch",
     "dev:main": "DEBUG=true yarn compile:main --watch $@",
     "dev:renderer": "DEBUG=true yarn compile:renderer --watch $@",
@@ -285,6 +285,7 @@
     "moment": "^2.26.0",
     "node-loader": "^0.6.0",
     "node-sass": "^4.14.1",
+    "nodemon": "^2.0.4",
     "patch-package": "^6.2.2",
     "path-to-regexp": "^6.1.0",
     "postinstall-postinstall": "^2.1.0",

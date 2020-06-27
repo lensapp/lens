@@ -25,9 +25,9 @@ Download a pre-built package from the [releases](https://github.com/lensapp/lens
 
 ## Development
 
-> Prerequisities: Nodejs v12, make, yarn
+> Prerequisites: Nodejs v12, make, yarn
 
-* `make download-bins` - downloads bundled binaries to dev environment
+* `make init` - initial compilation, installing deps, etc.
 * `make dev` - builds and starts the app
 * `make test` - run tests
 
@@ -38,7 +38,7 @@ Allows faster separately re-run some of involved processes:
 1. `yarn dev:main` compiles electron's main process and watch files 
 1. `yarn dev:renderer:vue` compiles electron's renderer vue-part  
 1. `yarn dev:renderer:react` compiles electron's renderer react-part
-1. `yarn dev-run` when all files compiled run this command to open the app
+1. `yarn dev-run` runs app in dev-mode and restarts when electron's main process file has changed
 
 Alternatively to compile both render parts in single command use `yarn dev:renderer`  
 

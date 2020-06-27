@@ -4,16 +4,23 @@ else
     DETECTED_OS := $(shell uname)
 endif
 
-.PHONY: dev build test clean
+.PHONY: init dev build test clean
+
+init: download-bins install-deps compile-dev
+	echo "Init done"
 
 download-bins:
 	yarn download-bins
+
+install-deps:
+	yarn install --frozen-lockfile
 
 compile-dev:
 	yarn compile:main --cache
 	yarn compile:renderer --cache
 
-dev: install-deps compile-dev
+dev:
+	test -f out/main.js || make init
 	yarn dev # run electron and watch files
 
 lint:
@@ -36,9 +43,6 @@ integration-win:
 
 test-app:
 	yarn test
-
-install-deps:
-	yarn install --frozen-lockfile
 
 build: install-deps
 	yarn install
