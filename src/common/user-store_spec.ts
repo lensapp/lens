@@ -1,8 +1,6 @@
 import mockFs from "mock-fs"
 import { userStore, UserStore } from "./user-store"
 
-jest.mock("electron")
-
 // Console.log needs to be called before fs-mocks, see https://github.com/tschaub/mock-fs/issues/234
 console.log("");
 

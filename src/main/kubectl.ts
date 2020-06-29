@@ -285,13 +285,11 @@ export class Kubectl {
   }
 
   protected getDownloadMirror() {
-    if (process.platform == "darwin") {
-      return packageMirrors.get("default") // MacOS packages are only available from default
-    }
     const mirror = packageMirrors.get(userStore.getPreferences().downloadMirror)
-    if (mirror) { return mirror }
-
-    return packageMirrors.get("default")
+    if (mirror) {
+      return mirror
+    }
+    return packageMirrors.get("default") // MacOS packages are only available from default
   }
 }
 
