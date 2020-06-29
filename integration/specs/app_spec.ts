@@ -40,7 +40,6 @@ describe("app start", () => {
     let windowCount = await app.client.getWindowCount()
     while (windowCount > 1) {
       windowCount = await app.client.getWindowCount()
-      console.log(windowCount)
     }
     await app.client.windowByIndex(windowCount - 1)
     await app.client.waitUntilWindowLoaded()
@@ -51,7 +50,7 @@ describe("app start", () => {
   })
 
   it('allows to add a cluster', async () => {
-    const status = spawnSync("minikube status || sudo minikube status", {shell: true})
+    const status = spawnSync("minikube status", {shell: true})
     if (status.status !== 0) {
       console.warn("minikube not running, skipping test")
       return
@@ -64,7 +63,7 @@ describe("app start", () => {
   })
 
   it('allows to create a pod', async () => {
-    const status = spawnSync("minikube status || sudo minikube status", {shell: true})
+    const status = spawnSync("minikube status", {shell: true})
     if (status.status !== 0) {
       console.warn("minikube not running, skipping test")
       return
