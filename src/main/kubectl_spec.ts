@@ -2,7 +2,6 @@ import packageInfo from "../../package.json"
 import { bundledKubectl, Kubectl } from "../../src/main/kubectl";
 
 jest.mock("electron")
-jest.mock("../common/user-store")
 
 describe("kubectlVersion", () => {
   it("returns bundled version if exactly same version used", async () => {
