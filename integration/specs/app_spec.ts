@@ -37,7 +37,11 @@ describe("app start", () => {
     app = util.setup()
     await app.start()
     await app.client.waitUntilWindowLoaded()
-    const windowCount = await app.client.getWindowCount()
+    let windowCount = await app.client.getWindowCount()
+    while (windowCount > 1) {
+      windowCount = await app.client.getWindowCount()
+      console.log(windowCount)
+    }
     await app.client.windowByIndex(windowCount - 1)
     await app.client.waitUntilWindowLoaded()
   }, 20000)
