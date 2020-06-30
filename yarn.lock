@@ -11907,9 +11907,9 @@ widest-line@^3.1.0:
     string-width "^4.0.0"
 
 win-ca@^3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/win-ca/-/win-ca-3.2.0.tgz#2db083b48b6b71d82a7a74d5b5da2636d9507552"
-  integrity sha512-8o/MCSkpNTLJ1MoR2cMqxcKSEnkWonN45rEEPy+y4nGpcieL9mJ6g28K+jWDjA5DuTqNoT3/uRWQz3UO2MyeYA==
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/win-ca/-/win-ca-3.2.1.tgz#66a6055bd9687fc438fabe18a9a01e0254ee0f74"
+  integrity sha512-EgxAx4hQMcOZshFDW1hFTv8Anpv+CVmUCKi8svVB/80V21Rbec0cPeSGinRJNZkE5/LvzKtpWZ1PHWMGeHJwBA==
   dependencies:
     is-electron "^2.2.0"
     make-dir "^1.3.0"
