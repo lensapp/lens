@@ -1,4 +1,4 @@
-import * as ElectronStore from "electron-store"
+import ElectronStore from "electron-store"
 import { clusterStore } from "./cluster-store"
 
 export interface WorkspaceData {

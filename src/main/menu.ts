@@ -1,4 +1,7 @@
-import {app, dialog, Menu, MenuItemConstructorOptions, shell, webContents, BrowserWindow, MenuItem} from "electron"
+import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
+import { isDevelopment, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
+
+// todo: refactor + split menu sections to separated files, e.g. menus/file.menu.ts
 
 export interface MenuOptions {
   logoutHook: any;
@@ -10,7 +13,6 @@ export interface MenuOptions {
 }
 
 function setClusterSettingsEnabled(enabled: boolean) {
-  const isMac = process.platform === 'darwin';
   const menuIndex = isMac ? 1 : 0
   Menu.getApplicationMenu().items[menuIndex].submenu.items[1].enabled = enabled
 }
@@ -21,7 +23,7 @@ function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow) {
   ]
   appDetails.push(`Copyright 2020 Lakend Labs, Inc.`)
   let title = "Lens"
-  if (process.platform === "win32") {
+  if (isWindows) {
     title = `  ${title}`
   }
   dialog.showMessageBoxSync(browserWindow, {
@@ -40,9 +42,6 @@ function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow) {
  * @param ipc the main promiceIpc handle. Needed to be able to hook IPC sending into logout click handler.
  */
 export default function initMenu(opts: MenuOptions, promiseIpc: any) {
-  const isMac = process.platform === 'darwin';
-  const isDevelopment = process.env.NODE_ENV === 'development';
-
   const mt: MenuItemConstructorOptions[] = [];
   const macAppMenu: MenuItemConstructorOptions = {
     label: app.getName(),
@@ -67,12 +66,12 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       { role: 'quit' }
     ]
   };
-  if(isMac) {
+  if (isMac) {
     mt.push(macAppMenu);
   }
 
   let fileMenu: MenuItemConstructorOptions;
-  if(isMac) {
+  if (isMac) {
     fileMenu = {
       label: 'File',
       submenu: [{
@@ -86,7 +85,8 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       }
       ]
     }
-  } else {
+  }
+  else {
     fileMenu = {
       label: 'File',
       submenu: [
@@ -134,27 +134,28 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       {
         label: 'Back',
         accelerator: 'CmdOrCtrl+[',
-        click () {
+        click() {
           webContents.getFocusedWebContents().executeJavaScript('window.history.back()')
         }
       },
       {
         label: 'Forward',
         accelerator: 'CmdOrCtrl+]',
-        click () {
+        click() {
           webContents.getFocusedWebContents().executeJavaScript('window.history.forward()')
         }
       },
       {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
-        click () {
+        click() {
           webContents.getFocusedWebContents().reload()
         }
       },
       ...(isDevelopment ? [
-        { role: 'toggleDevTools'} as MenuItemConstructorOptions,
+        { role: 'toggleDevTools' } as MenuItemConstructorOptions,
         {
+          accelerator: "CmdOrCtrl+Shift+I",
           label: 'Open Dashboard Devtools',
           click() {
             webContents.getFocusedWebContents().openDevTools()
@@ -183,20 +184,20 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       {
         label: 'Community Slack',
         click: async () => {
-          shell.openExternal('https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI');
+          shell.openExternal(slackUrl);
         },
       },
       {
         label: 'Report an Issue',
         click: async () => {
-          shell.openExternal('https://github.com/lensapp/lens/issues');
+          shell.openExternal(issuesTrackerUrl);
         },
       },
       {
         label: "What's new?",
         click: opts.showWhatsNewHook,
       },
-      ...(process.platform !== "darwin" ? [{
+      ...(!isMac ? [{
         label: "About Lens",
         click: showAbout
       } as MenuItemConstructorOptions] : [])
@@ -214,4 +215,4 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
   promiseIpc.on("disableClusterSettingsMenuItem", () => {
     setClusterSettingsEnabled(false)
   });
-};
+}

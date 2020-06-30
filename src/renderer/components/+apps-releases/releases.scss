@@ -1,0 +1,19 @@
+@import "release.mixins";
+
+.HelmReleases {
+  .TableCell {
+    &.status {
+      @include release-status-colors;
+    }
+
+    &.version {
+      > .Icon {
+        margin-left: $margin;
+
+        &.new-version {
+          color: $colorInfo;
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,5 @@
-import { KubeConfig, CoreV1Api } from "@kubernetes/client-node"
-import { readFileSync } from "fs"
-import * as http from "http"
+import { CoreV1Api, KubeConfig } from "@kubernetes/client-node"
+import http from "http"
 import { ServerOptions } from "http-proxy"
 import * as url from "url"
 import logger from "./logger"
@@ -8,8 +7,7 @@ import { getFreePort } from "./port"
 import { KubeAuthProxy } from "./kube-auth-proxy"
 import { Cluster, ClusterPreferences } from "./cluster"
 import { prometheusProviders } from "../common/prometheus-providers"
-import { PrometheusService, PrometheusProvider } from "./prometheus/provider-registry"
-import { PrometheusLens } from "./prometheus/lens"
+import { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry"
 
 export class ContextHandler {
   public contextName: string
@@ -76,19 +74,21 @@ export class ContextHandler {
     if (clusterPreferences && clusterPreferences.prometheus) {
       const prom = clusterPreferences.prometheus
       this.prometheusPath = `${prom.namespace}/services/${prom.service}:${prom.port}`
-    } else {
+    }
+    else {
       this.prometheusPath = null
     }
-    if(clusterPreferences && clusterPreferences.clusterName) {
+    if (clusterPreferences && clusterPreferences.clusterName) {
       this.clusterName = clusterPreferences.clusterName;
-    } else {
+    }
+    else {
       this.clusterName = this.contextName;
     }
   }
 
   protected async resolvePrometheusPath(): Promise<string> {
-    const service = await this.getPrometheusService()
-    return `${service.namespace}/services/${service.service}:${service.port}`
+    const {service, namespace, port} = await this.getPrometheusService()
+    return `${namespace}/services/${service}:${port}`
   }
 
   public async getPrometheusProvider() {
@@ -110,7 +110,8 @@ export class ContextHandler {
     const service = resolvedPrometheusServices.filter(n => n)[0]
     if (service) {
       return service
-    } else {
+    }
+    else {
       return {
         id: "lens",
         namespace: "lens-metrics",
@@ -128,7 +129,7 @@ export class ContextHandler {
     return this.prometheusPath
   }
 
-  public async getApiTarget(isWatchRequest = false) {
+  public async getApiTarget(isWatchRequest = false): Promise<ServerOptions> {
     if (this.apiTarget && !isWatchRequest) {
       return this.apiTarget
     }
@@ -140,7 +141,7 @@ export class ContextHandler {
     return apiTarget
   }
 
-  protected async newApiTarget(timeout: number) {
+  protected async newApiTarget(timeout: number): Promise<ServerOptions> {
     return {
       changeOrigin: true,
       timeout: timeout,
@@ -162,7 +163,7 @@ export class ContextHandler {
     let serverPort: number = null
     try {
       serverPort = await getFreePort()
-    } catch(error) {
+    } catch (error) {
       logger.error(error)
       throw(error)
     }
@@ -178,7 +179,7 @@ export class ContextHandler {
   public async withTemporaryKubeconfig(callback: (kubeconfig: string) => Promise<any>) {
     try {
       await callback(this.cluster.kubeconfigPath())
-    } catch(error) {
+    } catch (error) {
       throw(error)
     }
   }
@@ -187,7 +188,7 @@ export class ContextHandler {
     if (!this.proxyServer) {
       const proxyPort = await this.resolveProxyPort()
       const proxyEnv = Object.assign({}, process.env)
-      if (this.cluster.preferences && this.cluster.preferences.httpsProxy) {
+      if (this.cluster?.preferences.httpsProxy) {
         proxyEnv.HTTPS_PROXY = this.cluster.preferences.httpsProxy
       }
       this.proxyServer = new KubeAuthProxy(this.cluster, proxyPort, proxyEnv)
@@ -203,8 +204,6 @@ export class ContextHandler {
   }
 
   public proxyServerError() {
-    if (!this.proxyServer) { return null }
-
-    return this.proxyServer.lastError
+    return this.proxyServer?.lastError || ""
   }
 }

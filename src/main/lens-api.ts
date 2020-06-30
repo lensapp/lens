@@ -1,4 +1,4 @@
-import * as http from "http";
+import http from "http";
 
 export abstract class LensApi {
   protected respondJson(res: http.ServerResponse, content: {}, status = 200) {

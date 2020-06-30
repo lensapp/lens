@@ -1,5 +1,5 @@
 import { app } from "electron"
-import * as fs from "fs"
+import fs from "fs"
 import { ensureDir, randomFileName} from "./file-helpers"
 import logger from "./logger"
 

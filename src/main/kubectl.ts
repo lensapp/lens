@@ -1,17 +1,17 @@
 import { app, remote } from "electron"
-import * as path from "path"
-import * as fs from "fs"
-import * as request from "request"
+import path from "path"
+import fs from "fs"
+import request from "request"
 import { promiseExec} from "./promise-exec"
 import logger from "./logger"
 import { ensureDir, pathExists } from "fs-extra"
-import * as md5File from "md5-file"
 import { globalRequestOpts } from "../common/request"
 import * as lockFile from "proper-lockfile"
 import { helmCli } from "./helm-cli"
 import { userStore } from "../common/user-store"
+import { getBundledKubectlVersion} from "../common/utils/app-version"
 
-const bundledVersion = require("../../package.json").config.bundledKubectlVersion
+const bundledVersion = getBundledKubectlVersion()
 const kubectlMap: Map<string, string> = new Map([
   ["1.7", "1.8.15"],
   ["1.8", "1.9.10"],
@@ -195,16 +195,16 @@ export class Kubectl {
       const file = fs.createWriteStream(this.path)
       stream.on("complete", () => {
         logger.debug("kubectl binary download finished")
-        file.end(() => {})
+        file.end()
       })
       stream.on("error", (error) => {
         logger.error(error)
-        fs.unlink(this.path, () => {})
+        fs.unlink(this.path, null)
         reject(error)
       })
       file.on("close", () => {
         logger.debug("kubectl binary download closed")
-        fs.chmod(this.path, 0o755, () => {})
+        fs.chmod(this.path, 0o755, null)
         resolve()
       })
       stream.pipe(file)
@@ -285,13 +285,11 @@ export class Kubectl {
   }
 
   protected getDownloadMirror() {
-    if (process.platform == "darwin") {
-      return packageMirrors.get("default") // MacOS packages are only available from default
-    }
     const mirror = packageMirrors.get(userStore.getPreferences().downloadMirror)
-    if (mirror) { return mirror }
-
-    return packageMirrors.get("default")
+    if (mirror) {
+      return mirror
+    }
+    return packageMirrors.get("default") // MacOS packages are only available from default
   }
 }
 

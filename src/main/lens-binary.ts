@@ -1,9 +1,10 @@
-import * as path from "path"
-import * as fs from "fs"
-import * as request from "request"
+import path from "path"
+import fs from "fs"
+import request from "request"
 import logger from "./logger"
 import { ensureDir, pathExists } from "fs-extra"
 import * as tar from "tar"
+import { isWindows } from "../common/vars";
 
 export type LensBinaryOpts = {
   version: string;
@@ -12,6 +13,7 @@ export type LensBinaryOpts = {
   newBinaryName?: string;
   requestOpts?: request.Options;
 }
+
 export class LensBinary {
 
   public binaryVersion: string
@@ -35,19 +37,21 @@ export class LensBinary {
 
     let arch = null
 
-    if(process.arch == "x64") {
+    if (process.arch == "x64") {
       arch = "amd64"
-    } else if(process.arch == "x86" || process.arch == "ia32") {
+    }
+    else if (process.arch == "x86" || process.arch == "ia32") {
       arch = "386"
-    } else {
+    }
+    else {
       arch = process.arch
     }
     this.arch = arch
-    this.platformName = process.platform === "win32" ? "windows" : process.platform
+    this.platformName = isWindows ? "windows" : process.platform
     this.dirname = path.normalize(path.join(baseDir, this.binaryName))
-    if (process.platform === "win32") {
-      this.binaryName = this.binaryName+".exe"
-      this.originalBinaryName = this.originalBinaryName+".exe"
+    if (isWindows) {
+      this.binaryName = this.binaryName + ".exe"
+      this.originalBinaryName = this.originalBinaryName + ".exe"
     }
     const tarName = this.getTarName()
     if (tarName) {
@@ -64,7 +68,7 @@ export class LensBinary {
     return this.getBinaryPath()
   }
 
-  protected getTarName(): string|null {
+  protected getTarName(): string | null {
     return null
   }
 
@@ -88,7 +92,7 @@ export class LensBinary {
     try {
       await this.ensureBinary()
       return this.dirname
-    } catch(err) {
+    } catch (err) {
       logger.error(err)
       return ""
     }
@@ -101,10 +105,12 @@ export class LensBinary {
 
   public async ensureBinary() {
     const isValid = await this.checkBinary()
-    if(!isValid) {
-      await this.downloadBinary().catch((error) => { logger.error(error) });
+    if (!isValid) {
+      await this.downloadBinary().catch((error) => {
+        logger.error(error)
+      });
       if (this.tarPath) await this.untarBinary()
-      if(this.originalBinaryName != this.binaryName ) await this.renameBinary()
+      if (this.originalBinaryName != this.binaryName) await this.renameBinary()
       logger.info(`${this.originalBinaryName} has been downloaded to ${this.getBinaryPath()}`)
     }
   }
@@ -127,7 +133,8 @@ export class LensBinary {
       fs.rename(this.getOriginalBinaryPath(), this.getBinaryPath(), (err) => {
         if (err) {
           reject(err)
-        } else {
+        }
+        else {
           resolve()
         }
       })
@@ -135,7 +142,7 @@ export class LensBinary {
   }
 
   protected async downloadBinary() {
-    const binaryPath = this.tarPath || this.getBinaryPath()
+    const binaryPath = this.tarPath || this.getBinaryPath()
     await ensureDir(this.getBinaryDir(), 0o755)
 
     const file = fs.createWriteStream(binaryPath)
@@ -152,18 +159,18 @@ export class LensBinary {
 
     stream.on("complete", () => {
       logger.info(`Download of ${this.originalBinaryName} finished`)
-      file.end(() => {})
+      file.end()
     })
 
     stream.on("error", (error) => {
       logger.error(error)
-      fs.unlink(binaryPath, () => {})
+      fs.unlink(binaryPath, null)
       throw(error)
     })
     return new Promise((resolve, reject) => {
       file.on("close", () => {
         logger.debug(`${this.originalBinaryName} binary download closed`)
-        if(!this.tarPath) fs.chmod(binaryPath, 0o755, () => {})
+        if (!this.tarPath) fs.chmod(binaryPath, 0o755, null)
         resolve()
       })
       stream.pipe(file)

@@ -1,6 +1,5 @@
-import shellEnv = require("shell-env")
-import logger from "./logger"
-import * as os from "os";
+import shellEnv from "shell-env"
+import os from "os";
 
 interface Env {
   [key: string]: string;

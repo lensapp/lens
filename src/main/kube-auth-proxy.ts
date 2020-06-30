@@ -28,9 +28,7 @@ export class KubeAuthProxy {
 
   public async run(): Promise<void> {
     if (this.proxyProcess) {
-      return new Promise((resolve, reject) => {
-        resolve()
-      })
+      return;
     }
     const proxyBin = await this.kubectl.kubectlPath()
     const configWatcher = watch(this.cluster.kubeconfigPath(), (eventType: string, filename: string) => {
@@ -43,11 +41,10 @@ export class KubeAuthProxy {
         }
       }
     })
-    configWatcher.on("error", () => {})
     const clusterUrl = url.parse(this.cluster.apiUrl)
     let args = [
       "proxy",
-      "-p", this.port.toString(),
+      "--port", this.port.toString(),
       "--kubeconfig", this.cluster.kubeconfigPath(),
       "--accept-hosts", clusterUrl.hostname,
     ]
@@ -59,7 +56,9 @@ export class KubeAuthProxy {
     })
     this.proxyProcess.on("exit", (code) => {
       logger.error(`proxy ${this.cluster.contextName} exited with code ${code}`)
-      this.sendIpcLogMessage( `proxy exited with code ${code}`, "stderr").catch((_) => {})
+      this.sendIpcLogMessage( `proxy exited with code ${code}`, "stderr").catch((err: Error) => {
+        logger.debug("failed to send IPC log message: " + err.message)
+      })
       this.proxyProcess = null
       configWatcher.close()
     })
@@ -96,7 +95,7 @@ export class KubeAuthProxy {
   }
 
   protected async sendIpcLogMessage(data: string, stream: string) {
-    await this.promiseIpc.send(`kube-auth:${this.cluster.id}`, findMainWebContents(), { data: data, stream: stream })
+    await this.promiseIpc.send(`kube-auth:${this.cluster.id}`, findMainWebContents(), { data, stream })
   }
 
   public exit() {

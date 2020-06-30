@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import fs from "fs";
 import * as yaml from "js-yaml";
 import { HelmRepo, HelmRepoManager } from "./helm-repo-manager"
 import logger from "./logger";

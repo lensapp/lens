@@ -1,5 +1,5 @@
-import * as http from "http";
-import * as httpProxy from "http-proxy";
+import http from "http";
+import httpProxy from "http-proxy";
 import { Socket } from "net";
 import * as url from "url";
 import * as WebSocket from "ws"
@@ -8,6 +8,7 @@ import logger from "./logger"
 import * as shell from "./node-shell-session"
 import { ClusterManager } from "./cluster-manager"
 import { Router } from "./router"
+import { apiPrefix } from "../common/vars";
 
 export class LensProxy {
   public static readonly localShellSessions = true
@@ -40,17 +41,15 @@ export class LensProxy {
 
   protected buildProxyServer() {
     const proxy = this.createProxy();
-    const proxyServer = http.createServer(function(req: http.IncomingMessage, res: http.ServerResponse) {
+    const proxyServer = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
       this.handleRequest(proxy, req, res);
-    }.bind(this));
-    proxyServer.on("upgrade", function(req: http.IncomingMessage, socket: Socket, head: Buffer) {
+    });
+    proxyServer.on("upgrade", (req: http.IncomingMessage, socket: Socket, head: Buffer) => {
       this.handleWsUpgrade(req, socket, head)
-    }.bind(this));
-
+    });
     proxyServer.on("error", (err) => {
       logger.error(err)
     });
-
     return proxyServer;
   }
 
@@ -64,11 +63,10 @@ export class LensProxy {
           res.writeHead(proxyRes.statusCode, {
             "Content-Type": "text/plain"
           })
-          res.end(cluster.contextHandler.proxyServerError().toString())
+          res.end(cluster.contextHandler.proxyServerError())
           return
         }
       }
-
       if (req.method !== "GET") {
         return
       }
@@ -106,11 +104,11 @@ export class LensProxy {
   }
 
   protected createWsListener() {
-    const ws = new WebSocket.Server({ noServer: true})
+    const ws = new WebSocket.Server({ noServer: true })
     ws.on("connection", ((con: WebSocket, req: http.IncomingMessage) => {
       const cluster = this.clusterManager.getClusterForRequest(req)
       const contextHandler = cluster.contextHandler
-      const nodeParam = this.getNodeParam(req.url)
+      const nodeParam = url.parse(req.url, true).query["node"]?.toString();
 
       contextHandler.withTemporaryKubeconfig((kubeconfigPath) => {
         return new Promise<boolean>(async (resolve, reject) => {
@@ -120,26 +118,15 @@ export class LensProxy {
           })
         })
       })
-    }).bind(this))
+    }))
     return ws
   }
 
-  protected getNodeParam(requestUrl: string) {
-    const reqUrl = url.parse(requestUrl, true)
-    const urlParams = reqUrl.query
-    let nodeParam: string = null
-    for (const [key, value] of Object.entries(urlParams)) {
-      if (key === "node") {
-        nodeParam = value.toString()
-      }
-    }
-    return nodeParam
-  }
-
   protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions> {
-    if (req.url.startsWith("/api-kube/")) {
+    const prefix = apiPrefix.KUBE_BASE;
+    if (req.url.startsWith(prefix)) {
       delete req.headers.authorization
-      req.url = req.url.replace("/api-kube", "")
+      req.url = req.url.replace(prefix, "")
       const isWatchRequest = req.url.includes("watch=")
       return await contextHandler.getApiTarget(isWatchRequest)
     }

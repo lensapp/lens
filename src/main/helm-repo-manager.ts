@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import fs from "fs";
 import logger from "./logger";
 import * as yaml from "js-yaml";
 import { promiseExec } from "./promise-exec";

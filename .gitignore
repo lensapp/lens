@@ -1,4 +1,5 @@
 dist/
+out/
 node_modules/
 .DS_Store
 yarn-error.log
@@ -7,3 +8,4 @@ tmp/
 static/build/client/
 binaries/client/
 binaries/server/
+locales/**/**.js

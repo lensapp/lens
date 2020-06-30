@@ -1,6 +1,6 @@
 import { Feature, FeatureStatus } from "../main/feature"
 import {KubeConfig, AppsV1Api, RbacAuthorizationV1Api} from "@kubernetes/client-node"
-import * as semver from "semver"
+import semver from "semver"
 import { Cluster } from "../main/cluster";
 import * as k8s from "@kubernetes/client-node"
 

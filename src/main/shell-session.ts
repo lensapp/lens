@@ -1,13 +1,14 @@
 import * as pty from "node-pty"
 import * as WebSocket from "ws"
 import { EventEmitter } from "events";
-import * as path from "path"
-import shellEnv = require("shell-env")
+import path from "path"
+import shellEnv from "shell-env"
 import { app } from "electron"
 import { Kubectl } from "./kubectl"
 import { tracker } from "./tracker"
 import { Cluster, ClusterPreferences } from "./cluster"
 import { helmCli } from "./helm-cli"
+import { isWindows } from "../common/vars";
 
 export class ShellSession extends EventEmitter {
   static shellEnvs: Map<string, any> = new Map()
@@ -66,13 +67,10 @@ export class ShellSession extends EventEmitter {
     switch(path.basename(shell)) {
     case "powershell.exe":
       return ["-NoExit", "-command", `& {Set-Location $Env:USERPROFILE; $Env:PATH="${this.kubectlBinDir};${this.helmBinDir};$Env:PATH"}`]
-      break
     case "bash":
       return ["--init-file", path.join(this.kubectlBinDir, '.bash_set_path')]
-      break
     case "fish":
       return ["--login", "--init-command", `export PATH="${this.kubectlBinDir}:${this.helmBinDir}:$PATH"; export KUBECONFIG="${this.kubeconfigPath}"`]
-      break
     case "zsh":
       return ["--login"]
     default:
@@ -99,7 +97,7 @@ export class ShellSession extends EventEmitter {
     const env = JSON.parse(JSON.stringify(await shellEnv()))
     const pathStr = [this.kubectlBinDir, this.helmBinDir, process.env.PATH].join(path.delimiter)
 
-    if(process.platform === "win32") {
+    if(isWindows) {
       env["SystemRoot"] = process.env.SystemRoot
       env["PTYSHELL"] = "powershell.exe"
       env["PATH"] = pathStr
@@ -131,14 +129,14 @@ export class ShellSession extends EventEmitter {
 
   protected pipeStdout() {
     // send shell output to websocket
-    this.shellProcess.on("data", ((data: string) => {
+    this.shellProcess.onData(((data: string) => {
       this.sendResponse(data)
-    }).bind(this));
+    }));
   }
 
   protected pipeStdin() {
     // write websocket messages to shellProcess
-    this.websocket.on("message", function(data: string) {
+    this.websocket.on("message", (data: string) => {
       if (!this.running) { return }
 
       const message = Buffer.from(data.slice(1, data.length), "base64").toString()
@@ -151,11 +149,10 @@ export class ShellSession extends EventEmitter {
         this.shellProcess.resize(resizeMsgObj["Width"], resizeMsgObj["Height"])
         break;
       case "9":
-        this.token = message
-        this.emit('newToken', this.token)
+        this.emit('newToken', message)
         break;
       }
-    }.bind(this))
+    })
   }
 
   protected exit(code = 1000) {
@@ -164,10 +161,10 @@ export class ShellSession extends EventEmitter {
   }
 
   protected closeWebsocketOnProcessExit() {
-    this.shellProcess.on("exit", (code) => {
+    this.shellProcess.onExit(({ exitCode }) => {
       this.running = false
       let timeout = 0
-      if (code > 0) {
+      if (exitCode > 0) {
         this.sendResponse("Terminal will auto-close in 15 seconds ...")
         timeout = 15*1000
       }
@@ -186,7 +183,7 @@ export class ShellSession extends EventEmitter {
   protected killShellProcess(){
     if(this.running) {
       // On Windows we need to kill the shell process by pid, since Lens won't respond after a while if using `this.shellProcess.kill()`
-      if (process.platform == "win32") {
+      if (isWindows) {
         try {
           process.kill(this.shellProcess.pid)
         } catch(e) {

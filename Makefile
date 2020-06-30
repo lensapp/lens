@@ -4,15 +4,30 @@ else
     DETECTED_OS := $(shell uname)
 endif
 
-.PHONY: dev build test clean
+.PHONY: init dev build test clean
+
+init: download-bins install-deps compile-dev
+	echo "Init done"
 
 download-bins:
-	yarn download:bins
+	yarn download-bins
 
-dev: app-deps dashboard-deps
-	yarn dev
+install-deps:
+	yarn install --frozen-lockfile
 
-test: test-app test-dashboard
+compile-dev:
+	yarn compile:main --cache
+	yarn compile:renderer --cache
+
+dev:
+	test -f out/main.js || make init
+	yarn dev # run electron and watch files
+
+lint:
+	yarn lint
+
+test:
+	yarn test
 
 integration-linux:
 	yarn build:linux
@@ -26,19 +41,10 @@ integration-win:
 	yarn build:win
 	yarn integration
 
-lint:
-	yarn lint
-	yarn lint-dashboard
-
 test-app:
 	yarn test
 
-deps: app-deps dashboard-deps
-
-app-deps:
-	yarn install --frozen-lockfile
-
-build: build-dashboard app-deps
+build: install-deps
 	yarn install
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn dist:win
@@ -46,18 +52,7 @@ else
 	yarn dist
 endif
 
-dashboard-deps:
-	cd dashboard && yarn install --frozen-lockfile
-
-clean-dashboard:
-	rm -rf dashboard/build/ && rm -rf static/build/client
-
-test-dashboard: dashboard-deps
-	cd dashboard && yarn test
-
-build-dashboard: dashboard-deps clean-dashboard
-	export NODE_ENV=production
-	cd dashboard && yarn build
-
 clean:
+	rm -rf binaries/client/*
 	rm -rf dist/*
+	rm -rf out/*
