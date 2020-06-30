@@ -1,7 +1,7 @@
 import { exec } from "child_process";
-import * as fs from "fs";
+import fs from "fs";
 import * as yaml from "js-yaml";
-import * as path from "path";
+import path from "path";
 import * as tempy from "tempy";
 import logger from "./logger"
 import { Cluster } from "./cluster";

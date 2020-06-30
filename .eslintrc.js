@@ -29,7 +29,7 @@ module.exports =  {
       files: [
         "build/*.ts",
         "src/**/*.ts",
-        "spec/**/*.ts"
+        "integration/**/*.ts"
       ],
       parser: "@typescript-eslint/parser",
       extends:  [
@@ -43,13 +43,16 @@ module.exports =  {
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-empty-interface": "off",
         "indent": ["error", 2]
       },
     },
     {
       files: [
-        "dashboard/**/*.ts",
-        "dashboard/**/*.tsx",
+        "src/renderer/**/*.tsx",
       ],
       parser: "@typescript-eslint/parser",
       extends:  [

@@ -1,9 +1,10 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
-import * as requestPromise from "request-promise-native"
+import requestPromise from "request-promise-native"
 import { PrometheusProviderRegistry, PrometheusProvider, PrometheusNodeQuery, PrometheusClusterQuery, PrometheusPodQuery, PrometheusPvcQuery, PrometheusIngressQuery, PrometheusQueryOpts} from "../prometheus/provider-registry"
+import { apiPrefix } from "../../common/vars";
 
-type MetricsQuery = string | string[] | {
+export type IMetricsQuery = string | string[] | {
   [metricName: string]: string;
 }
 
@@ -11,13 +12,13 @@ class MetricsRoute extends LensApi {
 
   public async routeMetrics(request: LensApiRequest) {
     const { response, cluster} = request
-    const query: MetricsQuery = request.payload;
-    const serverUrl = `http://127.0.0.1:${cluster.port}/api-kube`
+    const query: IMetricsQuery = request.payload;
+    const serverUrl = `http://127.0.0.1:${cluster.port}${apiPrefix.KUBE_BASE}`
     const headers = {
       "Host": `${cluster.id}.localhost:${cluster.port}`,
       "Content-type": "application/json",
     }
-    const queryParams: MetricsQuery = {}
+    const queryParams: IMetricsQuery = {}
     request.query.forEach((value: string, key: string) => {
       queryParams[key] = value
     })

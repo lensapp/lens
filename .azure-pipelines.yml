@@ -35,7 +35,7 @@ jobs:
           path: $(YARN_CACHE_FOLDER)
           cacheHitVar: CACHE_RESTORED
         displayName: Cache Yarn packages
-      - script: make deps
+      - script: make install-deps
         displayName: Install dependencies
       - script: make integration-win
         displayName: Run integration tests
@@ -72,10 +72,8 @@ jobs:
           tar -xzf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" -C /
         displayName: "Unpack cache"
         condition: eq(variables.CACHE_RESTORED, 'true')
-      - script: make deps
+      - script: make install-deps
         displayName: Install dependencies
-      - script: make lint
-        displayName: Lint
       - script: make test
         displayName: Run tests
       - script: make integration-mac
@@ -119,7 +117,7 @@ jobs:
           tar -xzf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" -C /
         displayName: "Unpack cache"
         condition: eq(variables.CACHE_RESTORED, 'true')
-      - script: make deps
+      - script: make install-deps
         displayName: Install dependencies
       - script: make lint
         displayName: Lint
@@ -130,6 +128,7 @@ jobs:
           sudo apt-get install libgconf-2-4 conntrack -y
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          export CHANGE_MINIKUBE_NONE_USER=true
           sudo minikube start --driver=none
         displayName: Install integration test dependencies
       - script: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux

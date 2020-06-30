@@ -3,12 +3,13 @@ import { FeatureStatusMap } from "./feature"
 import * as k8s from "./k8s"
 import { clusterStore } from "../common/cluster-store"
 import logger from "./logger"
-import { KubeConfig, CoreV1Api, AuthorizationV1Api, V1ResourceAttributes } from "@kubernetes/client-node"
+import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import * as fm from "./feature-manager";
 import { Kubectl } from "./kubectl";
 import { PromiseIpc } from "electron-promise-ipc"
-import * as request from "request-promise-native"
+import request from "request-promise-native"
 import { KubeconfigManager } from "./kubeconfig-manager"
+import { apiPrefix } from "../common/vars";
 
 enum ClusterStatus {
   AccessGranted = 2,
@@ -123,16 +124,9 @@ export class Cluster implements ClusterInfo {
     this.contextHandler.setClusterPreferences(this.preferences)
 
     const connectionStatus = await this.getConnectionStatus()
-    if (connectionStatus == ClusterStatus.AccessGranted) {
-      this.accessible = true
-    } else  {
-      this.accessible = false
-    }
-    if (connectionStatus > ClusterStatus.Offline) {
-      this.online = true
-    } else {
-      this.online = false
-    }
+    this.accessible = connectionStatus == ClusterStatus.AccessGranted;
+    this.online = connectionStatus > ClusterStatus.Offline;
+
     if (this.accessible) {
       this.distribution = this.detectKubernetesDistribution(this.version)
       this.features = await fm.getFeatures(this.contextHandler)
@@ -146,7 +140,9 @@ export class Cluster implements ClusterInfo {
 
   public updateKubeconfig(kubeconfig: string) {
     const storedCluster = clusterStore.getCluster(this.id)
-    if (!storedCluster) { return }
+    if (!storedCluster) {
+      return
+    }
 
     this.kubeConfig = kubeconfig
     this.save()
@@ -164,7 +160,7 @@ export class Cluster implements ClusterInfo {
   }
 
   public toClusterInfo(): ClusterInfo {
-    const clusterInfo: ClusterInfo = {
+    return {
       id: this.id,
       workspace: this.workspace,
       url: this.url,
@@ -179,20 +175,19 @@ export class Cluster implements ClusterInfo {
       isAdmin: this.isAdmin,
       features: this.features,
       kubeCtl: this.kubeCtl,
-      kubeConfig:  this.kubeConfig,
+      kubeConfig: this.kubeConfig,
       preferences: this.preferences
     }
-    return clusterInfo;
   }
 
   protected async k8sRequest(path: string, opts?: request.RequestPromiseOptions) {
     const options = Object.assign({
-      json: true, timeout: 10000
+      json: true,
+      timeout: 10000
     }, (opts || {}))
     if (!options.headers) { options.headers = {} }
     options.headers.host = `${this.id}.localhost:${this.port}`
-
-    return request(`http://127.0.0.1:${this.port}/api-kube${path}`, options)
+    return request(`http://127.0.0.1:${this.port}${apiPrefix.KUBE_BASE}${path}`, options)
   }
 
   protected async getConnectionStatus() {
@@ -201,21 +196,24 @@ export class Cluster implements ClusterInfo {
       this.version = response.gitVersion
       this.failureReason = null
       return ClusterStatus.AccessGranted;
-    } catch(error) {
+    } catch (error) {
       logger.error(`Failed to connect to cluster ${this.contextName}: ${JSON.stringify(error)}`)
       if (error.statusCode) {
         if (error.statusCode >= 400 && error.statusCode < 500) {
           this.failureReason = "Invalid credentials";
           return ClusterStatus.AccessDenied;
-        } else {
+        }
+        else {
           this.failureReason = error.error || error.message;
           return ClusterStatus.Offline;
         }
-      } else if (error.failed === true) {
+      }
+      else if (error.failed === true) {
         if (error.timedOut === true) {
           this.failureReason = "Connection timed out";
           return ClusterStatus.Offline;
-        } else {
+        }
+        else {
           this.failureReason = "Failed to fetch credentials";
           return ClusterStatus.AccessDenied;
         }
@@ -234,7 +232,7 @@ export class Cluster implements ClusterInfo {
         spec: { resourceAttributes }
       })
       return accessReview.body.status.allowed === true
-    } catch(error) {
+    } catch (error) {
       logger.error(`failed to request selfSubjectAccessReview: ${error.message}`)
       return false
     }
@@ -258,10 +256,10 @@ export class Cluster implements ClusterInfo {
     else if (kubernetesVersion.includes("IKS")) {
       return "iks"
     }
-    else if(this.apiUrl.endsWith("azmk8s.io")) {
+    else if (this.apiUrl.endsWith("azmk8s.io")) {
       return "aks"
     }
-    else if(this.apiUrl.endsWith("k8s.ondigitalocean.com")) {
+    else if (this.apiUrl.endsWith("k8s.ondigitalocean.com")) {
       return "digitalocean"
     }
     else if (this.contextHandler.contextName.startsWith("minikube")) {
@@ -274,11 +272,11 @@ export class Cluster implements ClusterInfo {
     return "vanilla"
   }
 
-  protected async getNodeCount() {
+  protected async getNodeCount() {
     try {
       const response = await this.k8sRequest("/api/v1/nodes")
       return response.items.length
-    } catch(error) {
+    } catch (error) {
       logger.debug(`failed to request node list: ${error.message}`)
       return null
     }
@@ -294,18 +292,17 @@ export class Cluster implements ClusterInfo {
       const uniqEventSources = new Set();
       const warnings = response.body.items.filter(e => e.type !== 'Normal');
       for (const w of warnings) {
-        if(w.involvedObject.kind === 'Pod') {
+        if (w.involvedObject.kind === 'Pod') {
           try {
             const pod = (await client.readNamespacedPod(w.involvedObject.name, w.involvedObject.namespace)).body;
             logger.debug(`checking pod ${w.involvedObject.namespace}/${w.involvedObject.name}`)
-            if(k8s.podHasIssues(pod)) {
+            if (k8s.podHasIssues(pod)) {
               uniqEventSources.add(w.involvedObject.uid);
             }
-            continue;
-          } catch (error) {
-            continue;
+          } catch (err) {
           }
-        } else {
+        }
+        else {
           uniqEventSources.add(w.involvedObject.uid);
         }
       }

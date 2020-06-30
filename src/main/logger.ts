@@ -1,10 +1,11 @@
-import * as winston from "winston"
+import winston from "winston"
+import { isDebugging } from "../common/vars";
 
 const options = {
   colorize: true,
   handleExceptions: false,
   json: false,
-  level: process.env.DEBUG === "true" ? "debug" : "info",
+  level: isDebugging ? "debug" : "info",
 }
 
 const logger = winston.createLogger({

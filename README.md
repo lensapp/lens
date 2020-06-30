@@ -6,7 +6,7 @@
 
 Lens is the only IDE you’ll ever need to take control of your Kubernetes clusters. It is a standalone application for MacOS, Windows and Linux operating systems. It is open source and free.
 
-[![Screenshot](./images/screenshot.png)](https://youtu.be/04v2ODsmtIs)
+[![Screenshot](.github/screenshot.png)](https://youtu.be/04v2ODsmtIs)
 
 ## What makes Lens special?
 
@@ -23,18 +23,24 @@ Lens is the only IDE you’ll ever need to take control of your Kubernetes clust
 
 Download a pre-built package from the [releases](https://github.com/lensapp/lens/releases) page. Lens can be also installed via [snapcraft](https://snapcraft.io/kontena-lens) (Linux only).
 
-Alternatively on Mac:
-```
-brew cask install lens
-```
-
 ## Development
 
-> Prerequisities: Nodejs v12, make, yarn
+> Prerequisites: Nodejs v12, make, yarn
 
-* `make download-bins` - downloads bundled binaries to dev environment
+* `make init` - initial compilation, installing deps, etc.
 * `make dev` - builds and starts the app
 * `make test` - run tests
+
+## Development (advanced)
+
+Allows faster separately re-run some of involved processes:
+
+1. `yarn dev:main` compiles electron's main process and watch files 
+1. `yarn dev:renderer:vue` compiles electron's renderer vue-part  
+1. `yarn dev:renderer:react` compiles electron's renderer react-part
+1. `yarn dev-run` runs app in dev-mode and restarts when electron's main process file has changed
+
+Alternatively to compile both render parts in single command use `yarn dev:renderer`  
 
 ## Contributing
 

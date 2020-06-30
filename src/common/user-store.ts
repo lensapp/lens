@@ -1,6 +1,6 @@
-import * as ElectronStore from "electron-store"
-import * as appUtil from "./app-utils"
-import * as version210Beta4 from "./migrations/user-store/2.1.0-beta.4"
+import ElectronStore from "electron-store"
+import * as version210Beta4 from "../migrations/user-store/2.1.0-beta.4"
+import { getAppVersion } from "./utils/app-version";
 
 export interface User {
   id?: string;
@@ -20,7 +20,9 @@ export class UserStore {
 
   private constructor() {
     this.store = new ElectronStore({
-      projectVersion: appUtil.getAppVersion(),
+      // @ts-ignore
+      // fixme: tests are failed without "projectVersion"
+      projectVersion: getAppVersion(),
       migrations: {
         "2.1.0-beta.4": version210Beta4.migration,
       }
@@ -68,7 +70,7 @@ export class UserStore {
   }
 
   static getInstance(): UserStore {
-    if(!UserStore.instance) {
+    if (!UserStore.instance) {
       UserStore.instance = new UserStore();
     }
     return UserStore.instance;

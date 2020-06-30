@@ -1,6 +1,6 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
-import { Watch, KubeConfig, RuntimeRawExtension } from "@kubernetes/client-node"
+import { Watch, KubeConfig } from "@kubernetes/client-node"
 import { ServerResponse } from "http"
 import { Request } from "request"
 import logger from "../logger"
@@ -41,7 +41,7 @@ class ApiWatcher {
     this.watchRequest.abort()
   }
 
-  private watchHandler(phase: string, obj: RuntimeRawExtension) {
+  private watchHandler(phase: string, obj: any) {
     this.eventBuffer.push({
       type: phase,
       object: obj

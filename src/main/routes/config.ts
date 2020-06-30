@@ -1,9 +1,23 @@
+import { app } from "electron"
+import { CoreV1Api } from "@kubernetes/client-node"
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import { userStore } from "../../common/user-store"
-import { getAppVersion } from "../../common/app-utils"
-import { CoreV1Api, AuthorizationV1Api } from "@kubernetes/client-node"
 import { Cluster } from "../cluster"
+
+export interface IConfigRoutePayload {
+  kubeVersion?: string;
+  clusterName?: string;
+  lensVersion?: string;
+  lensTheme?: string;
+  username?: string;
+  token?: string;
+  allowedNamespaces?: string[];
+  allowedResources?: string[];
+  isClusterAdmin?: boolean;
+  chartsEnabled: boolean;
+  kubectlAccess?: boolean;  // User accessed via kubectl-lens plugin
+}
 
 // TODO: auto-populate all resources dynamically
 const apiResources = [
@@ -44,12 +58,13 @@ async function getAllowedNamespaces(cluster: Cluster) {
     return namespaceList.body.items
       .filter((ns, i) => nsAccessStatuses[i])
       .map(ns => ns.metadata.name)
-  } catch(error) {
+  } catch (error) {
     const kc = cluster.contextHandler.kc
     const ctx = kc.getContextObject(kc.currentContext)
     if (ctx.namespace) {
       return [ctx.namespace]
-    } else {
+    }
+    else {
       return []
     }
   }
@@ -67,20 +82,19 @@ async function getAllowedResources(cluster: Cluster, namespaces: string[]) {
     )
     return apiResources
       .filter((resource, i) => resourceAccessStatuses[i]).map(apiResource => apiResource.resource)
-  } catch(error) {
+  } catch (error) {
     return []
   }
 }
 
 class ConfigRoute extends LensApi {
-
   public async routeConfig(request: LensApiRequest) {
-    const { params, response, cluster} = request
+    const { params, response, cluster } = request
 
     const namespaces = await getAllowedNamespaces(cluster)
-    const data = {
+    const data: IConfigRoutePayload = {
       clusterName: cluster.contextName,
-      lensVersion: getAppVersion(),
+      lensVersion: app.getVersion(),
       lensTheme: `kontena-${userStore.getPreferences().colorTheme}`,
       kubeVersion: cluster.version,
       chartsEnabled: true,

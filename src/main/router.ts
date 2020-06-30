@@ -1,5 +1,8 @@
-import * as http from "http"
-import * as path from "path"
+import Call from "@hapi/call"
+import Subtext from "@hapi/subtext"
+import http from "http"
+import path from "path"
+import { readFile } from "fs"
 import { Cluster } from "./cluster"
 import { configRoute } from "./routes/config"
 import { helmApi } from "./helm-api"
@@ -8,16 +11,7 @@ import { kubeconfigRoute } from "./routes/kubeconfig"
 import { metricsRoute } from "./routes/metrics"
 import { watchRoute } from "./routes/watch"
 import { portForwardRoute } from "./routes/port-forward"
-import { readFile } from "fs"
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Call = require('@hapi/call');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Subtext = require('@hapi/subtext');
-
-declare const __static: string;
-
-const assetsPath = path.join(__static, "build/client")
+import { outDir, reactAppName } from "../common/vars";
 
 const mimeTypes: {[key: string]: string} = {
   "html": "text/html",
@@ -88,12 +82,12 @@ export class Router {
     return request
   }
 
-  protected handleStaticFile(file: string, response: http.ServerResponse) {
-    const asset = path.join(assetsPath, file)
+  protected handleStaticFile(filePath: string, response: http.ServerResponse) {
+    const asset = path.resolve(outDir, filePath);
     readFile(asset, (err, data) => {
       if (err) {
         // default to index.html so that react routes work when page is refreshed
-        this.handleStaticFile("index.html", response)
+        this.handleStaticFile(`${reactAppName}.html`, response)
       } else {
         const type = mimeTypes[path.extname(asset).slice(1)] || "text/plain";
         response.setHeader("Content-Type", type);

@@ -1,10 +1,8 @@
-import { BrowserWindow, shell, Menu } from "electron"
+import { BrowserWindow, shell } from "electron"
 import { PromiseIpc } from "electron-promise-ipc"
-import * as windowStateKeeper from "electron-window-state"
-import * as path from "path"
+import windowStateKeeper from "electron-window-state"
 import { tracker } from "./tracker";
-
-declare const __static: string;
+import { getStaticUrl } from "../common/register-static";
 
 export class WindowManager {
   public mainWindow: BrowserWindow = null;
@@ -12,7 +10,7 @@ export class WindowManager {
   protected promiseIpc: any
   protected windowState: windowStateKeeper.State;
 
-  constructor(showSplash = true) {
+  constructor({ showSplash = true } = {}) {
     this.promiseIpc = new PromiseIpc({ timeout: 2000 })
     // Manage main window size&position with persistence
     this.windowState = windowStateKeeper({
@@ -33,11 +31,12 @@ export class WindowManager {
       }
     })
     if (showSplash) {
-      this.splashWindow.loadFile(path.join(__static, "/splash.html"))
+      this.splashWindow.loadURL(getStaticUrl("splash.html"))
       this.splashWindow.show()
     }
 
     this.mainWindow = new BrowserWindow({
+      show: false,
       x: this.windowState.x,
       y: this.windowState.y,
       width: this.windowState.width,
@@ -48,7 +47,6 @@ export class WindowManager {
         nodeIntegration: true,
         webviewTag: true
       },
-      show: false
     });
 
     // Hook window state manager into window lifecycle
@@ -68,22 +66,13 @@ export class WindowManager {
       shell.openExternal(link);
     })
 
-    // handle developer console
-    if (process.env.NODE_ENV !== "production") {
-      this.mainWindow.webContents.on("devtools-opened", () => {
-        if (this.mainWindow.getBrowserView()) {
-          this.mainWindow.getBrowserView().webContents.openDevTools({mode: "detach"})
-        }
-      })
-    }
-
     this.mainWindow.on("focus", () => {
       tracker.event("app", "focus")
     })
   }
 
   public showMain(url: string) {
-    this.mainWindow.loadURL( url ).then(() => {
+    this.mainWindow.loadURL(url).then(() => {
       this.splashWindow.hide()
       this.splashWindow.loadURL("data:text/html;charset=utf-8,").then(() => {
         this.splashWindow.close()

@@ -1,12 +1,12 @@
-import * as ElectronStore from "electron-store"
+import ElectronStore from "electron-store"
 import { Cluster, ClusterBaseInfo } from "../main/cluster";
-import { getAppVersion } from "./app-utils"
-import * as version200Beta2 from "./migrations/cluster-store/2.0.0-beta.2"
-import * as version241 from "./migrations/cluster-store/2.4.1"
-import * as version260Beta2 from "./migrations/cluster-store/2.6.0-beta.2"
-import * as version260Beta3 from "./migrations/cluster-store/2.6.0-beta.3"
-import * as version270Beta0 from "./migrations/cluster-store/2.7.0-beta.0"
-import * as version270Beta1 from "./migrations/cluster-store/2.7.0-beta.1"
+import * as version200Beta2 from "../migrations/cluster-store/2.0.0-beta.2"
+import * as version241 from "../migrations/cluster-store/2.4.1"
+import * as version260Beta2 from "../migrations/cluster-store/2.6.0-beta.2"
+import * as version260Beta3 from "../migrations/cluster-store/2.6.0-beta.3"
+import * as version270Beta0 from "../migrations/cluster-store/2.7.0-beta.0"
+import * as version270Beta1 from "../migrations/cluster-store/2.7.0-beta.1"
+import { getAppVersion } from "./utils/app-version";
 
 export class ClusterStore {
   private static instance: ClusterStore;
@@ -14,8 +14,10 @@ export class ClusterStore {
 
   private constructor() {
     this.store = new ElectronStore({
-      name: "lens-cluster-store",
+      // @ts-ignore
+      // fixme: tests are failed without "projectVersion"
       projectVersion: getAppVersion(),
+      name: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       migrations: {
         "2.0.0-beta.2": version200Beta2.migration,
@@ -58,7 +60,9 @@ export class ClusterStore {
 
   public getCluster(id: string): Cluster {
     const cluster = this.getAllClusterObjects().find((cluster) => cluster.id === id)
-    if (cluster) { return cluster}
+    if (cluster) {
+      return cluster
+    }
 
     return null
   }
@@ -74,7 +78,8 @@ export class ClusterStore {
     }
     if (index === -1) {
       clusters.push(storable)
-    } else {
+    }
+    else {
       clusters[index] = storable
     }
     this.store.set("clusters", clusters)
@@ -97,7 +102,7 @@ export class ClusterStore {
   }
 
   static getInstance(): ClusterStore {
-    if(!ClusterStore.instance) {
+    if (!ClusterStore.instance) {
       ClusterStore.instance = new ClusterStore();
     }
     return ClusterStore.instance;
@@ -108,6 +113,4 @@ export class ClusterStore {
   }
 }
 
-const clusterStore: ClusterStore = ClusterStore.getInstance();
-
-export { clusterStore };
+export const clusterStore = ClusterStore.getInstance();

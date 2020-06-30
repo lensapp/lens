@@ -1,5 +1,7 @@
-import * as path from "path"
+import packageInfo from "../../package.json"
+import path from "path"
 import { LensBinary, LensBinaryOpts } from "./lens-binary"
+import { isProduction } from "../common/vars";
 
 export class HelmCli extends LensBinary {
 
@@ -13,7 +15,7 @@ export class HelmCli extends LensBinary {
     super(opts)
   }
 
-  protected getTarName(): string|null {
+  protected getTarName(): string | null {
     return `${this.binaryName}-v${this.binaryVersion}-${this.platformName}-${this.arch}.tar.gz`
   }
 
@@ -26,19 +28,16 @@ export class HelmCli extends LensBinary {
   }
 
   protected getOriginalBinaryPath() {
-    return path.join(this.dirname, this.platformName+"-"+this.arch, this.originalBinaryName)
+    return path.join(this.dirname, this.platformName + "-" + this.arch, this.originalBinaryName)
   }
 }
 
-const helmVersion = require("../../package.json").config.bundledHelmVersion
-const isDevelopment = process.env.NODE_ENV !== "production"
-let baseDir: string = null
+const helmVersion = packageInfo.config.bundledHelmVersion;
+let baseDir = process.resourcesPath;
 
-if(isDevelopment) {
-  baseDir = path.join(process.cwd(), "binaries", "client")
-} else {
-  baseDir = path.join(process.resourcesPath)
+if (!isProduction) {
+  baseDir = path.join(process.cwd(), "binaries", "client");
 }
 
-export const helmCli = new HelmCli(baseDir, helmVersion)
+export const helmCli = new HelmCli(baseDir, helmVersion);
 

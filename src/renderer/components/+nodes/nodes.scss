@@ -1,0 +1,53 @@
+@import "nodes-mixins";
+
+.Nodes {
+  .TableCell {
+    &.name {
+      flex: 2;
+      text-overflow: ellipsis;
+    }
+
+    &.cpu {
+      flex: 1.0;
+      align-self: center;
+
+      .LineProgress {
+        color: $lensBlue;
+      }
+    }
+
+    &.memory {
+      flex: 1.0;
+      align-self: center;
+
+      .LineProgress {
+        color: $lensMagenta;
+      }
+    }
+
+    &.disk {
+      flex: 1.0;
+      align-self: center;
+
+      .LineProgress {
+        color: $golden;
+      }
+    }
+
+    &.taints {
+      flex: 0.6;
+    }
+
+    &.conditions {
+      flex: 1.7;
+      text-align: right;
+
+      .condition {
+        display: inline-block;
+        margin-right: $margin;
+
+        @include node-status-colors;
+      }
+    }
+  }
+}

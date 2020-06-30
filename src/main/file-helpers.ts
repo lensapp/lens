@@ -1,4 +1,4 @@
-import * as fs from "fs"
+import fs from "fs"
 
 export function ensureDir(dirname: string) {
   if (!fs.existsSync(dirname)) {

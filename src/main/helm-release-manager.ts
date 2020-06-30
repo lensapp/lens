@@ -1,25 +1,24 @@
 import * as tempy from "tempy";
-import * as fs from "fs";
+import fs from "fs";
 import * as yaml from "js-yaml";
-import * as camelcaseKeys from "camelcase-keys";
 import { promiseExec} from "./promise-exec"
 import { helmCli } from "./helm-cli";
 import { Cluster } from "./cluster";
+import { toCamelCase } from "../common/utils/camelCase";
 
 export class HelmReleaseManager {
 
   public async listReleases(pathToKubeconfig: string, namespace?: string) {
     const helm = await helmCli.binaryPath()
     const namespaceFlag = namespace ? `-n ${namespace}` : "--all-namespaces"
-    const { stdout, stderr } = await promiseExec(`"${helm}" ls --output json ${namespaceFlag} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr)})
+    const { stdout } = await promiseExec(`"${helm}" ls --output json ${namespaceFlag} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr)})
 
     const output = JSON.parse(stdout)
     if (output.length == 0) {
       return output
     }
-    const result: any = []
     output.forEach((release: any, index: number) => {
-      output[index] = camelcaseKeys(release)
+      output[index] = toCamelCase(release)
     });
     return output
   }

@@ -1,21 +1,36 @@
 {
-    "compilerOptions": {
-      "module": "commonjs",
-      "noImplicitAny": true,
-      "sourceMap": true,
-      "skipLibCheck": true,
-      "outDir": "dist",
-      "baseUrl": ".",
-      "downlevelIteration": true,
-      "paths": {
-        "*": [
-            "node_modules/*",
-            "types/*"
-        ]
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./out",
+    "jsx": "react",
+    "target": "ES2017",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "importsNotUsedAsValues": "preserve",
+    "moduleResolution": "Node",
+    "sourceMap": true,
+    "strict": false,
+    "noImplicitAny": true,
+    "noUnusedLocals": false,
+    "noImplicitReturns": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "traceResolution": false,
+    "resolveJsonModule": true,
+    "paths": {
+      "*": [
+        "node_modules/*",
+        "types/*"
+      ]
     }
-    },
-    "include": [
-      "src/**/*",
-      "main.ts"
-    ]
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
   }
+}
