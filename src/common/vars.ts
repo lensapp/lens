@@ -28,7 +28,6 @@ export const staticProto = "static://"
 
 export const apiPrefix = {
   BASE: '/api',
-  TERMINAL: '/api-terminal', // terminal api
   KUBE_BASE: '/api-kube', // kubernetes cluster api
   KUBE_HELM: '/api-helm', // helm charts api
   KUBE_RESOURCE_APPLIER: "/api-resource",
