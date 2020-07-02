@@ -9,7 +9,7 @@ $lens-text-color-light: #a0a0a0 !default;
 $lens-primary: #3d90ce !default;
 
 // export as css variables
-* {
+:root {
   --lens-main-bg: #{$lens-main-bg}; // dark bg
   --lens-pane-bg: #{$lens-pane-bg}; // all panels main bg
   --lens-dock-bg: #{$lens-dock-bg}; // terminal and top menu bar
@@ -18,6 +18,7 @@ $lens-primary: #3d90ce !default;
   --lens-text-color: #{$lens-text-color};
   --lens-text-color-light: #{$lens-text-color-light};
   --lens-primary: #{$lens-primary};
+  --lens-bottom-bar-height: 20px;
 }
 
 // Base grayscale colors definitions
