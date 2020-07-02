@@ -3,7 +3,7 @@ import { ClusterInfo } from "../../../../main/cluster"
 import { MutationTree, ActionTree, GetterTree } from "vuex"
 import { PromiseIpc } from 'electron-promise-ipc'
 import { Tracker } from "../../../../common/tracker"
-import { remote, WebviewTag } from "electron"
+import { remote } from "electron"
 import { clusterStore } from "../../../../common/cluster-store"
 import { Workspace } from "../../../../common/workspace-store"
 
@@ -13,7 +13,7 @@ const tracker = new Tracker(remote.app);
 export interface LensWebview {
   id: string;
   loaded: boolean;
-  webview?: WebviewTag | HTMLIFrameElement;
+  webview?: HTMLIFrameElement;
 }
 
 export interface ClusterState {

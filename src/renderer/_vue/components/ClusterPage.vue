@@ -27,7 +27,6 @@
 
 <script>
 import CubeSpinner from "@/_vue/components/CubeSpinner";
-import { remote, shell } from 'electron';
 export default {
   name: "ClusterPage",
   components: {
@@ -106,7 +105,7 @@ export default {
     activateLens: async function() {
       console.log("activate lens")
       if (!this.lens.webview) {
-        console.log("creating webview or iframe")
+        console.log("creating an iframe")
         const webview = document.createElement('iframe');
         webview.addEventListener('load', this.lensLoaded);
         webview.src = this.cluster.url;
