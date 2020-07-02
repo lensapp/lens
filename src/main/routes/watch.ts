@@ -60,12 +60,7 @@ class ApiWatcher {
 
   private doneHandler(error: Error) {
     if (error) logger.warn("watch ended: " + error.toString())
-
-    this.sendEvent({
-      type: "STREAM_END",
-      url: this.apiUrl,
-      status: 410,
-    })
+    this.watchRequest.abort()
   }
 
   private sendEvent(evt: any) {
