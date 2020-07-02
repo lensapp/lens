@@ -1,8 +1,14 @@
 // Main process
 
 import "../common/system-ca"
-import "../common/prometheus-providers"
 import { app, dialog, protocol } from "electron"
+if (process.env.NODE_ENV === "development") {
+  const appName = 'LensDev';
+  app.setName(appName);
+  const appData = app.getPath('appData');
+  app.setPath('userData', path.join(appData, appName));
+}
+import "../common/prometheus-providers"
 import { PromiseIpc } from "electron-promise-ipc"
 import path from "path"
 import { format as formatUrl } from "url"
