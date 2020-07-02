@@ -63,7 +63,7 @@ export default {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 20px;
+  height: var(--lens-bottom-bar-height);
   background-color: var(--lens-primary);
   z-index: 2000;
 }

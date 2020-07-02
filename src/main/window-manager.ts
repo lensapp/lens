@@ -55,7 +55,13 @@ export class WindowManager {
     // handle close event
     this.mainWindow.on("close", () => {
       this.mainWindow = null;
-    })
+    });
+
+    // open external links in default browser (target=_blank, window.open)
+    this.mainWindow.webContents.on("new-window", (event, url) => {
+      event.preventDefault();
+      shell.openExternal(url);
+    });
 
     // handle external links
     this.mainWindow.webContents.on("will-navigate", (event, link) => {

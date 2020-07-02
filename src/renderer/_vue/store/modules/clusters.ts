@@ -13,7 +13,7 @@ const tracker = new Tracker(remote.app);
 export interface LensWebview {
   id: string;
   loaded: boolean;
-  webview?: any;
+  webview?: HTMLIFrameElement;
 }
 
 export interface ClusterState {
