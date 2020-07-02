@@ -87,10 +87,6 @@ export class ClusterManager {
 
   protected async addNewCluster(clusterData: ClusterBaseInfo): Promise<Cluster> {
     return new Promise(async (resolve, reject) => {
-
-      logger.info(`*******addNewCluster: ${JSON.stringify(clusterData)}`)
-
-
       try {
         const kc = this.loadKubeConfig(clusterData.kubeConfigPath)
         k8s.validateConfig(kc)

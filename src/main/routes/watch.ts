@@ -59,7 +59,6 @@ class ApiWatcher {
   }
 
   private doneHandler(error: Error) {
-    logger.debug("********** watch.doneHandler")
     if (error) logger.warn("watch ended: " + error.toString())
 
     this.sendEvent({
@@ -96,7 +95,7 @@ class WatchRoute extends LensApi {
     logger.debug("watch using kubeconfig:" + JSON.stringify(cluster.proxyKubeconfig(), null, 2))
 
     apis.forEach(apiUrl => {
-      const watcher = new ApiWatcher(apiUrl, cluster.proxyKubeconfig() /*cluster.contextHandler.kc*/, response)
+      const watcher = new ApiWatcher(apiUrl, cluster.proxyKubeconfig(), response)
       watcher.start()
       watchers.push(watcher)
     })

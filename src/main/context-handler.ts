@@ -8,28 +8,24 @@ import { KubeAuthProxy } from "./kube-auth-proxy"
 import { Cluster, ClusterPreferences } from "./cluster"
 import { prometheusProviders } from "../common/prometheus-providers"
 import { PrometheusService, PrometheusProvider } from "./prometheus/provider-registry"
-import { PrometheusLens } from "./prometheus/lens"
-import { KubeconfigManager } from "./kubeconfig-manager"
 
 export class ContextHandler {
   public contextName: string
   public id: string
   public url: string
-  
+  public clusterUrl: url.UrlWithStringQuery
+  public proxyServer: KubeAuthProxy
+  public proxyPort: number
   public certData: string
   public authCertData: string
   public cluster: Cluster
 
   protected apiTarget: ServerOptions
   protected proxyTarget: ServerOptions
-  public clusterUrl: url.UrlWithStringQuery
-  public proxyServer: KubeAuthProxy
-
   protected clientCert: string
   protected clientKey: string
   protected secureApiConnection = true
   protected defaultNamespace: string
-  public proxyPort: number
   protected kubernetesApi: string
   protected prometheusProvider: string
   protected prometheusPath: string
