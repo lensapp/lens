@@ -128,8 +128,7 @@ import ClustersMixin from "@/_vue/mixins/ClustersMixin";
 import * as path from "path"
 import fs from 'fs'
 import { v4 as uuidv4 } from 'uuid';
-import * as clusterStore from "../../common/cluster-store"
-import { writeEmbeddedKubeConfig} from "../../common/app-utils"
+import { writeEmbeddedKubeConfig} from "../../../common/utils/kubeconfig"
 
 class ClusterAccessError extends Error {}
 
@@ -225,8 +224,7 @@ export default {
         const clusterId = uuidv4();
         // We need to store the kubeconfig to "app-home"/
         if (this.kubecontext === "custom") {
-          // TODO Call "writeEmbeddedKubeConfig"
-          this.filepath = clusterStore.writeEmbeddedKubeConfig(clusterId, this.clusterconfig)
+          this.filepath = writeEmbeddedKubeConfig(clusterId, this.clusterconfig)
         }
         const clusterInfo = {
           id: clusterId,
