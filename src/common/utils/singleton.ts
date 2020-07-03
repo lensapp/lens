@@ -9,7 +9,7 @@
 export class Singleton {
   private static instances = new WeakMap<object, Singleton>();
 
-  // todo: figure out how to infer child class type + arguments
+  // todo: figure out how to infer child class + arguments types
   static getInstance<T extends Singleton>(...args: any[]): T {
     if (!Singleton.instances.has(this)) {
       Singleton.instances.set(this, Reflect.construct(this, args));
@@ -19,9 +19,5 @@ export class Singleton {
 
   static resetInstance() {
     Singleton.instances.delete(this);
-  }
-
-  protected constructor() {
-    return this;
   }
 }
