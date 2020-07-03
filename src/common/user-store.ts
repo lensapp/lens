@@ -1,10 +1,5 @@
 import ElectronStore from "electron-store"
-import * as version210Beta4 from "../migrations/user-store/2.1.0-beta.4"
-import { getAppVersion } from "./utils/app-version";
-
-export interface User {
-  id?: string;
-}
+import migrations from "../migrations/user-store"
 
 export interface UserPreferences {
   httpsProxy?: string;
@@ -20,12 +15,7 @@ export class UserStore {
 
   private constructor() {
     this.store = new ElectronStore({
-      // @ts-ignore
-      // fixme: tests are failed without "projectVersion"
-      projectVersion: getAppVersion(),
-      migrations: {
-        "2.1.0-beta.4": version210Beta4.migration,
-      }
+      migrations: migrations,
     });
   }
 
@@ -81,6 +71,4 @@ export class UserStore {
   }
 }
 
-const userStore: UserStore = UserStore.getInstance();
-
-export { userStore };
+export const userStore: UserStore = UserStore.getInstance();

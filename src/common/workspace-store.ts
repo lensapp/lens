@@ -20,7 +20,7 @@ export class Workspace implements WorkspaceData {
 export class WorkspaceStore {
   public static defaultId = "default"
   private static instance: WorkspaceStore;
-  public store: ElectronStore;
+  private store: ElectronStore;
 
   private constructor() {
     this.store = new ElectronStore({

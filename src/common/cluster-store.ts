@@ -1,32 +1,16 @@
 import ElectronStore from "electron-store"
+import migrations from "../migrations/cluster-store"
 import { Cluster, ClusterBaseInfo } from "../main/cluster";
-import * as version200Beta2 from "../migrations/cluster-store/2.0.0-beta.2"
-import * as version241 from "../migrations/cluster-store/2.4.1"
-import * as version260Beta2 from "../migrations/cluster-store/2.6.0-beta.2"
-import * as version260Beta3 from "../migrations/cluster-store/2.6.0-beta.3"
-import * as version270Beta0 from "../migrations/cluster-store/2.7.0-beta.0"
-import * as version270Beta1 from "../migrations/cluster-store/2.7.0-beta.1"
-import { getAppVersion } from "./utils/app-version";
 
 export class ClusterStore {
   private static instance: ClusterStore;
-  public store: ElectronStore;
+  private store: ElectronStore;
 
   private constructor() {
     this.store = new ElectronStore({
-      // @ts-ignore
-      // fixme: tests are failed without "projectVersion"
-      projectVersion: getAppVersion(),
       name: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
-      migrations: {
-        "2.0.0-beta.2": version200Beta2.migration,
-        "2.4.1": version241.migration,
-        "2.6.0-beta.2": version260Beta2.migration,
-        "2.6.0-beta.3": version260Beta3.migration,
-        "2.7.0-beta.0": version270Beta0.migration,
-        "2.7.0-beta.1": version270Beta1.migration
-      }
+      migrations: migrations,
     })
   }
 
@@ -78,8 +62,7 @@ export class ClusterStore {
     }
     if (index === -1) {
       clusters.push(storable)
-    }
-    else {
+    } else {
       clusters[index] = storable
     }
     this.store.set("clusters", clusters)
