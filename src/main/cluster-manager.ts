@@ -45,8 +45,6 @@ export class ClusterManager {
     clusters.forEach((clusterInfo) => {
       try {
         const kc = this.loadKubeConfig(clusterInfo.kubeConfigPath)
-        kc.setCurrentContext(clusterInfo.contextName)
-        logger.debug(`Starting to load target definitions for ${ kc.currentContext }`)
         const cluster = new Cluster({
           id: clusterInfo.id,
           port: this.port,
