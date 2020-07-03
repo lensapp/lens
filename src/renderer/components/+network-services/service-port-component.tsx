@@ -1,4 +1,4 @@
-import "./service-ports.scss"
+import "./service-port-component.scss"
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -13,14 +13,15 @@ import { Spinner } from "../spinner"
 
 interface Props {
   service: Service;
+  port: ServicePort;
 }
 
 @observer
-export class ServicePorts extends React.Component<Props> {
+export class ServicePortComponent extends React.Component<Props> {
   @observable waiting = false;
 
-  async portForward(port: ServicePort) {
-    const { service } = this.props;
+  async portForward() {
+    const { service, port } = this.props;
     this.waiting = true;
     try {
       await apiBase.post(`/pods/${service.getNs()}/service/${service.getName()}/port-forward/${port.port}`, {})
@@ -32,23 +33,16 @@ export class ServicePorts extends React.Component<Props> {
   }
 
   render() {
-    const { service } = this.props;
+    const { port } = this.props;
     return (
-      <div className={cssNames("ServicePorts", { waiting: this.waiting })}>
-        {
-          service.getPorts().map((port) => {
-            return(
-              <p key={port.toString()}>
-                <span title={_i18n._(t`Open in a browser`)} onClick={() => this.portForward(port) }>
-                  {port.toString()}
-                  {this.waiting && (
-                    <Spinner />
-                  )}
-                </span>
-              </p>
-            );
-          })}
-      </div>
+      <p className={cssNames("ServicePortComponent", { waiting: this.waiting })} key={port.toString()}>
+        <span title={_i18n._(t`Open in a browser`)} onClick={() => this.portForward() }>
+          {port.toString()}
+          {this.waiting && (
+            <Spinner />
+          )}
+        </span>
+      </p>
     );
   }
 }

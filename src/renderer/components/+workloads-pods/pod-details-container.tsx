@@ -8,7 +8,7 @@ import { cssNames } from "../../utils";
 import { StatusBrick } from "../status-brick";
 import { Badge } from "../badge";
 import { ContainerEnvironment } from "./pod-container-env";
-import { PodContainerPorts } from "./pod-container-ports";
+import { PodContainerPort } from "./pod-container-port";
 import { ResourceMetrics } from "../resource-metrics";
 import { IMetrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
@@ -62,9 +62,18 @@ export class PodDetailsContainer extends React.Component<Props> {
           {imagePullPolicy}
         </DrawerItem>
         }
-        {ports && ports.length > 0 &&
+        {ports && ports.length > 0 &&          
         <DrawerItem name={<Trans>Ports</Trans>}>
-          <PodContainerPorts pod={pod} container={container}/>
+          <div>
+            {
+              ports.map((port) => {
+                return(
+                  <PodContainerPort pod={pod} containerName={container.name} port={port}/>
+                )
+              })
+            }
+          </div>
+
         </DrawerItem>
         }
         {<ContainerEnvironment container={container} namespace={pod.getNs()}/>}
