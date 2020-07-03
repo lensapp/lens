@@ -2,7 +2,8 @@
 
 import "../common/system-ca"
 import { app, dialog, protocol } from "electron"
-if (process.env.NODE_ENV === "development") {
+import { isMac, vueAppName, isDevelopment } from "../common/vars";
+if (isDevelopment) {
   const appName = 'LensDev';
   app.setName(appName);
   const appData = app.getPath('appData');
@@ -25,7 +26,6 @@ import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { findMainWebContents } from "./webcontents"
 import { registerStaticProtocol } from "../common/register-static";
-import { isMac, vueAppName } from "../common/vars";
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
