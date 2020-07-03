@@ -156,7 +156,7 @@ export class Cluster implements ClusterInfo {
   }
 
   public save() {
-    clusterStore.storeCluster(this)
+    clusterStore.saveCluster(this)
   }
 
   public toClusterInfo(): ClusterInfo {

@@ -179,7 +179,7 @@ export class ClusterManager {
         clusterStore.reloadCluster(cluster);
         if(!cluster.preferences) cluster.preferences = {};
         cluster.preferences.icon = clusterIcon
-        clusterStore.storeCluster(cluster);
+        clusterStore.saveCluster(cluster);
         return {success: true, cluster: cluster.toClusterInfo(), message: ""}
       } catch(error) {
         return {success: false, message: error}
@@ -191,7 +191,7 @@ export class ClusterManager {
       const cluster = this.getCluster(id)
       if (cluster && cluster.preferences) {
         cluster.preferences.icon = null;
-        clusterStore.storeCluster(cluster)
+        clusterStore.saveCluster(cluster)
         return {success: true, cluster: cluster.toClusterInfo(), message: ""}
       } else {
         return {success: false, message: "Cluster not found"}

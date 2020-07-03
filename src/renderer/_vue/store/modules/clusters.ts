@@ -217,7 +217,7 @@ const actions: ActionTree<ClusterState, any>  = {
     })
   },
   storeCluster({commit}, cluster: ClusterInfo) {
-    clusterStore.storeCluster(cluster);
+    clusterStore.saveCluster(cluster);
     commit("updateCluster", cluster)
     promiseIpc.send("clusterStored", cluster.id)
   }

@@ -1,3 +1,4 @@
+import path from "path";
 import ElectronStore from "electron-store";
 import { isTestEnv } from "../common/vars";
 
@@ -14,7 +15,8 @@ function infoLog(...args: any[]) {
 export function migration({ version, run }: MigrationOpts) {
   return {
     [version]: (store: ElectronStore) => {
-      infoLog(`CLUSTER STORE, MIGRATION: ${version}`);
+      const storeName = path.dirname(store.path);
+      infoLog(`STORE MIGRATION (${storeName}): ${version}`, );
       run(store, infoLog);
     }
   };

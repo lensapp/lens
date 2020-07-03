@@ -5,8 +5,8 @@ import { app, dialog, protocol } from "electron"
 import { isMac, vueAppName, isDevelopment } from "../common/vars";
 if (isDevelopment) {
   const appName = 'LensDev';
-  app.setName(appName);
   const appData = app.getPath('appData');
+  app.setName(appName);
   app.setPath('userData', path.join(appData, appName));
 }
 import "../common/prometheus-providers"

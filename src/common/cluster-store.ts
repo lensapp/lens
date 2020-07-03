@@ -1,20 +1,16 @@
 import ElectronStore from "electron-store"
+import { Singleton } from "./utils/singleton";
 import migrations from "../migrations/cluster-store"
 import { Cluster, ClusterBaseInfo } from "../main/cluster";
 
-export class ClusterStore {
-  private static instance: ClusterStore;
-  private store: ElectronStore;
+export class ClusterStore extends Singleton {
+  private store = new ElectronStore({
+    name: "lens-cluster-store",
+    accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
+    migrations: migrations,
+  })
 
-  private constructor() {
-    this.store = new ElectronStore({
-      name: "lens-cluster-store",
-      accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
-      migrations: migrations,
-    })
-  }
-
-  public getAllClusterObjects(): Array<Cluster> {
+  public getAllClusterObjects(): Cluster[] {
     return this.store.get("clusters", []).map((clusterInfo: ClusterBaseInfo) => {
       return new Cluster(clusterInfo)
     })
@@ -51,7 +47,7 @@ export class ClusterStore {
     return null
   }
 
-  public storeCluster(cluster: ClusterBaseInfo) {
+  public saveCluster(cluster: ClusterBaseInfo) {
     const clusters = this.getAllClusters();
     const index = clusters.findIndex((cl) => cl.id === cluster.id)
     const storable = {
@@ -71,7 +67,7 @@ export class ClusterStore {
   public storeClusters(clusters: ClusterBaseInfo[]) {
     clusters.forEach((cluster: ClusterBaseInfo) => {
       this.removeCluster(cluster.id)
-      this.storeCluster(cluster)
+      this.saveCluster(cluster)
     })
   }
 
@@ -83,17 +79,6 @@ export class ClusterStore {
       cluster.workspace = storedCluster.workspace
     }
   }
-
-  static getInstance(): ClusterStore {
-    if (!ClusterStore.instance) {
-      ClusterStore.instance = new ClusterStore();
-    }
-    return ClusterStore.instance;
-  }
-
-  static resetInstance() {
-    ClusterStore.instance = null
-  }
 }
 
-export const clusterStore = ClusterStore.getInstance();
+export const clusterStore: ClusterStore = ClusterStore.getInstance();

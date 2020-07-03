@@ -3,9 +3,11 @@ import logger from "./logger";
 import * as yaml from "js-yaml";
 import { promiseExec } from "./promise-exec";
 import { helmCli } from "./helm-cli";
+import { Singleton } from "../common/utils/singleton";
 
-type HelmEnv = {
-  [key: string]: string | undefined;
+export type HelmEnv = Record<string, string> & {
+  HELM_REPOSITORY_CACHE?: string;
+  HELM_REPOSITORY_CONFIG?: string;
 }
 
 export type HelmRepo = {
@@ -14,22 +16,10 @@ export type HelmRepo = {
   cacheFilePath?: string;
 }
 
-export class HelmRepoManager {
-  private static instance: HelmRepoManager;
+export class HelmRepoManager extends Singleton {
   public static cache = {}
   protected helmEnv: HelmEnv
   protected initialized: boolean
-
-  static getInstance(): HelmRepoManager {
-    if(!HelmRepoManager.instance) {
-      HelmRepoManager.instance = new HelmRepoManager()
-    }
-    return HelmRepoManager.instance;
-  }
-
-  private constructor() {
-    // use singleton getInstance()
-  }
 
   public async init() {
     const helm = await helmCli.binaryPath()
@@ -42,7 +32,9 @@ export class HelmRepoManager {
 
   protected async parseHelmEnv() {
     const helm = await helmCli.binaryPath()
-    const { stdout } = await promiseExec(`"${helm}" env`).catch((error) => { throw(error.stderr)})
+    const { stdout } = await promiseExec(`"${helm}" env`).catch((error) => {
+      throw(error.stderr)
+    })
     const lines = stdout.split(/\r?\n/) // split by new line feed
     const env: HelmEnv = {}
     lines.forEach((line: string) => {
@@ -55,14 +47,14 @@ export class HelmRepoManager {
   }
 
   public async repositories(): Promise<Array<HelmRepo>> {
-    if(!this.initialized) {
+    if (!this.initialized) {
       await this.init()
     }
     const repositoryFilePath = this.helmEnv.HELM_REPOSITORY_CONFIG
     const repoFile = await fs.promises.readFile(repositoryFilePath, 'utf8').catch(async (error) => {
       return null
     })
-    if(!repoFile) {
+    if (!repoFile) {
       await this.addRepo({ name: "stable", url: "https://kubernetes-charts.storage.googleapis.com/" })
       return await this.repositories()
     }
@@ -97,22 +89,23 @@ export class HelmRepoManager {
     const helm = await helmCli.binaryPath()
     logger.debug(`${helm} repo update`)
 
-    const {stdout } = await promiseExec(`"${helm}" repo update`).catch((error) => { return { stdout: error.stdout } })
+    const { stdout } = await promiseExec(`"${helm}" repo update`).catch((error) => {
+      return { stdout: error.stdout }
+    })
     return stdout
   }
 
-  protected async addRepositories(repositories: HelmRepo[]){
+  protected async addRepositories(repositories: HelmRepo[]) {
     const currentRepositories = await this.repositories()
     repositories.forEach(async (repo: HelmRepo) => {
       try {
         const repoExists = currentRepositories.find((currentRepo: HelmRepo) => {
           return currentRepo.url == repo.url
         })
-        if(!repoExists) {
+        if (!repoExists) {
           await this.addRepo(repo)
         }
-      }
-      catch(error) {
+      } catch (error) {
         logger.error(JSON.stringify(error))
       }
     });
@@ -128,7 +121,7 @@ export class HelmRepoManager {
       try {
         const output = await this.removeRepo(repo)
         logger.debug(output)
-      } catch(error) {
+      } catch (error) {
         logger.error(error)
       }
     })
@@ -139,7 +132,9 @@ export class HelmRepoManager {
     const helm = await helmCli.binaryPath()
     logger.debug(`${helm} repo add ${repository.name} ${repository.url}`)
 
-    const {stdout } = await promiseExec(`"${helm}" repo add ${repository.name} ${repository.url}`).catch((error) => { throw(error.stderr)})
+    const { stdout } = await promiseExec(`"${helm}" repo add ${repository.name} ${repository.url}`).catch((error) => {
+      throw(error.stderr)
+    })
     return stdout
   }
 
@@ -147,9 +142,11 @@ export class HelmRepoManager {
     const helm = await helmCli.binaryPath()
     logger.debug(`${helm} repo remove ${repository.name} ${repository.url}`)
 
-    const { stdout, stderr } = await promiseExec(`"${helm}" repo remove ${repository.name}`).catch((error) => { throw(error.stderr)})
+    const { stdout, stderr } = await promiseExec(`"${helm}" repo remove ${repository.name}`).catch((error) => {
+      throw(error.stderr)
+    })
     return stdout
   }
 }
 
-export const repoManager = HelmRepoManager.getInstance()
+export const repoManager = HelmRepoManager.getInstance<HelmRepoManager>()

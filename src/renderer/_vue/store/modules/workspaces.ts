@@ -27,11 +27,11 @@ const mutations: MutationTree<WorkspaceState> = {
     state.currentWorkspace = workspace
   },
   addWorkspace(state, workspace: WorkspaceData) {
-    workspaceStore.storeWorkspace(workspace)
+    workspaceStore.saveWorkspace(workspace)
     state.workspaces = workspaceStore.getAllWorkspaces()
   },
   updateWorkspace(state, workspace: WorkspaceData) {
-    workspaceStore.storeWorkspace(workspace)
+    workspaceStore.saveWorkspace(workspace)
     state.workspaces = workspaceStore.getAllWorkspaces()
   },
   removeWorkspace(state, workspace: Workspace) {

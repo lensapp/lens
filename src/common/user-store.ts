@@ -1,5 +1,6 @@
 import ElectronStore from "electron-store"
 import migrations from "../migrations/user-store"
+import { Singleton } from "./utils/singleton";
 
 export interface UserPreferences {
   httpsProxy?: string;
@@ -9,15 +10,11 @@ export interface UserPreferences {
   downloadMirror?: string;
 }
 
-export class UserStore {
-  private static instance: UserStore;
-  public store: ElectronStore;
-
-  private constructor() {
-    this.store = new ElectronStore({
-      migrations: migrations,
-    });
-  }
+export class UserStore extends Singleton {
+  protected store = new ElectronStore({
+    name: "lens-user-store",
+    migrations: migrations,
+  });
 
   public lastSeenAppVersion() {
     return this.store.get('lastSeenAppVersion', "0.0.0")
@@ -57,17 +54,6 @@ export class UserStore {
     }
 
     return prefs
-  }
-
-  static getInstance(): UserStore {
-    if (!UserStore.instance) {
-      UserStore.instance = new UserStore();
-    }
-    return UserStore.instance;
-  }
-
-  static resetInstance() {
-    UserStore.instance = null
   }
 }
 

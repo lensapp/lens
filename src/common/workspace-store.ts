@@ -1,8 +1,11 @@
 import ElectronStore from "electron-store"
+import { Singleton } from "./utils/singleton";
 import { clusterStore } from "./cluster-store"
 
+export type WorkspaceId = string;
+
 export interface WorkspaceData {
-  id: string;
+  id: WorkspaceId;
   name: string;
   description?: string;
 }
@@ -17,18 +20,37 @@ export class Workspace implements WorkspaceData {
   }
 }
 
-export class WorkspaceStore {
-  public static defaultId = "default"
-  private static instance: WorkspaceStore;
-  private store: ElectronStore;
+export class WorkspaceStore extends Singleton {
+  static defaultId = "default"
+
+  private store = new ElectronStore({
+    name: "lens-workspace-store"
+  });
 
   private constructor() {
-    this.store = new ElectronStore({
-      name: "lens-workspace-store"
-    })
+    super();
+    this.init();
   }
 
-  public storeWorkspace(workspace: WorkspaceData) {
+  protected init() {
+    if (!this.getWorkspace(WorkspaceStore.defaultId)) {
+      this.saveWorkspace({
+        id: WorkspaceStore.defaultId,
+        name: "default"
+      })
+    }
+  }
+
+  public getWorkspace(id: WorkspaceId): Workspace {
+    return this.getAllWorkspaces().find(workspace => workspace.id === id)
+  }
+
+  public getAllWorkspaces(): Workspace[] {
+    const workspacesData: WorkspaceData[] = this.store.get("workspaces", [])
+    return workspacesData.map((wsd) => new Workspace(wsd))
+  }
+
+  public saveWorkspace(workspace: WorkspaceData) {
     const workspaces = this.getAllWorkspaces()
     const index = workspaces.findIndex((w) => w.id === workspace.id)
     if (index !== -1) {
@@ -51,28 +73,6 @@ export class WorkspaceStore {
       this.store.set("workspaces", workspaces)
     }
   }
-
-  public getAllWorkspaces(): Array<Workspace> {
-    const workspacesData: WorkspaceData[]  = this.store.get("workspaces", [])
-
-    return workspacesData.map((wsd) => new Workspace(wsd))
-  }
-
-  static getInstance(): WorkspaceStore {
-    if (!WorkspaceStore.instance) {
-      WorkspaceStore.instance = new WorkspaceStore()
-    }
-    return WorkspaceStore.instance
-  }
 }
 
-const workspaceStore: WorkspaceStore = WorkspaceStore.getInstance()
-
-if (!workspaceStore.getAllWorkspaces().find( ws => ws.id === WorkspaceStore.defaultId)) {
-  workspaceStore.storeWorkspace({
-    id: WorkspaceStore.defaultId,
-    name: "default"
-  })
-}
-
-export { workspaceStore }
+export const workspaceStore: WorkspaceStore = WorkspaceStore.getInstance()
