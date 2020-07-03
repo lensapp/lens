@@ -38,7 +38,17 @@ class ApiWatcher {
       clearInterval(this.processor)
     }
     logger.debug("Stopping watcher for api: " + this.apiUrl)
-    this.watchRequest.abort()
+    try {
+      this.watchRequest.abort()
+      this.sendEvent({
+        type: "STREAM_END",
+        url: this.apiUrl,
+        status: 410,
+      })
+      logger.debug("watch aborted")
+    } catch (error) {
+      logger.error("Watch abort errored:" + error)
+    }
   }
 
   private watchHandler(phase: string, obj: any) {
@@ -50,12 +60,7 @@ class ApiWatcher {
 
   private doneHandler(error: Error) {
     if (error) logger.warn("watch ended: " + error.toString())
-
-    this.sendEvent({
-      type: "STREAM_END",
-      url: this.apiUrl,
-      status: 410,
-    })
+    this.watchRequest.abort()
   }
 
   private sendEvent(evt: any) {
@@ -82,9 +87,10 @@ class WatchRoute extends LensApi {
     response.setHeader("Content-Type", "text/event-stream")
     response.setHeader("Cache-Control", "no-cache")
     response.setHeader("Connection", "keep-alive")
+    logger.debug("watch using kubeconfig:" + JSON.stringify(cluster.proxyKubeconfig(), null, 2))
 
     apis.forEach(apiUrl => {
-      const watcher = new ApiWatcher(apiUrl, cluster.contextHandler.kc, response)
+      const watcher = new ApiWatcher(apiUrl, cluster.proxyKubeconfig(), response)
       watcher.start()
       watchers.push(watcher)
     })

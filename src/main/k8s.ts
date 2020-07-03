@@ -70,13 +70,13 @@ export function splitConfig(kubeConfig: k8s.KubeConfig): k8s.KubeConfig[] {
 }
 
 /**
- * Loads KubeConfig from a yaml string and breaks it into several configs. Each context
+ * Loads KubeConfig from a yaml and breaks it into several configs. Each context per KubeConfig object
  *
- * @param configString yaml string of kube config
+ * @param configPath path to kube config yaml file
  */
-export function loadAndSplitConfig(configString: string): k8s.KubeConfig[] {
+export function loadAndSplitConfig(configPath: string): k8s.KubeConfig[] {
   const allConfigs = new k8s.KubeConfig();
-  allConfigs.loadFromString(configString);
+  allConfigs.loadFromFile(configPath);
   return splitConfig(allConfigs);
 }
 

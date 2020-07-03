@@ -6,10 +6,10 @@ const state = {
 }
 
 const actions = {
-  reloadAvailableKubeContexts: ({commit}) => {
+  reloadAvailableKubeContexts({commit}, file) {
     let kc = new k8s.KubeConfig();
     try {
-      kc.loadFromDefault();
+      kc.loadFromFile(file);
     } catch (error) {
       console.error("Failed to read default kubeconfig: " + error.message);
     }

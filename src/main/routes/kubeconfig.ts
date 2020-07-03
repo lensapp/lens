@@ -12,7 +12,7 @@ function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster
       {
         'name': cluster.contextName,
         'cluster': {
-          'server': cluster.contextHandler.kc.getCurrentCluster().server,
+          'server': cluster.apiUrl,
           'certificate-authority-data': secret.data["ca.crt"]
         }
       }
@@ -44,7 +44,7 @@ class KubeconfigRoute extends LensApi {
   public async routeServiceAccountRoute(request: LensApiRequest) {
     const { params, response, cluster} = request
 
-    const client = cluster.contextHandler.kc.makeApiClient(CoreV1Api);
+    const client = cluster.proxyKubeconfig().makeApiClient(CoreV1Api);
     const secretList = await client.listNamespacedSecret(params.namespace)
     const secret = secretList.body.items.find(secret => {
       const { annotations } = secret.metadata;

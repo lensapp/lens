@@ -6,6 +6,7 @@ import * as version260Beta2 from "../migrations/cluster-store/2.6.0-beta.2"
 import * as version260Beta3 from "../migrations/cluster-store/2.6.0-beta.3"
 import * as version270Beta0 from "../migrations/cluster-store/2.7.0-beta.0"
 import * as version270Beta1 from "../migrations/cluster-store/2.7.0-beta.1"
+import * as version360Beta1 from "../migrations/cluster-store/3.6.0-beta.1"
 import { getAppVersion } from "./utils/app-version";
 
 export class ClusterStore {
@@ -25,7 +26,8 @@ export class ClusterStore {
         "2.6.0-beta.2": version260Beta2.migration,
         "2.6.0-beta.3": version260Beta3.migration,
         "2.7.0-beta.0": version270Beta0.migration,
-        "2.7.0-beta.1": version270Beta1.migration
+        "2.7.0-beta.1": version270Beta1.migration,
+        "3.6.0-beta.1": version360Beta1.migration
       }
     })
   }
@@ -72,7 +74,8 @@ export class ClusterStore {
     const index = clusters.findIndex((cl) => cl.id === cluster.id)
     const storable = {
       id: cluster.id,
-      kubeConfig: cluster.kubeConfig,
+      kubeConfigPath: cluster.kubeConfigPath,
+      contextName: cluster.contextName,
       preferences: cluster.preferences,
       workspace: cluster.workspace
     }
@@ -95,7 +98,8 @@ export class ClusterStore {
   public reloadCluster(cluster: ClusterBaseInfo): void {
     const storedCluster = this.getCluster(cluster.id);
     if (storedCluster) {
-      cluster.kubeConfig = storedCluster.kubeConfig
+      cluster.kubeConfigPath = storedCluster.kubeConfigPath
+      cluster.contextName = storedCluster.contextName
       cluster.preferences = storedCluster.preferences
       cluster.workspace = storedCluster.workspace
     }
@@ -113,4 +117,4 @@ export class ClusterStore {
   }
 }
 
-export const clusterStore = ClusterStore.getInstance();
+export const clusterStore: ClusterStore = ClusterStore.getInstance();

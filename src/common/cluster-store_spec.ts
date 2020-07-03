@@ -1,7 +1,18 @@
 import mockFs from "mock-fs"
 import yaml from "js-yaml"
+import * as fs from "fs"
 import { ClusterStore } from "./cluster-store";
 import { Cluster } from "../main/cluster";
+
+jest.mock("electron", () => {
+  return {
+    app: {
+      getVersion: () => '99.99.99',
+      getPath: () => 'tmp',
+      getLocale: () => 'en'
+    }
+  }
+})
 
 // Console.log needs to be called before fs-mocks, see https://github.com/tschaub/mock-fs/issues/234
 console.log("");
@@ -24,7 +35,8 @@ describe("for an empty config", () => {
   it("allows to store and retrieve a cluster", async () => {
     const cluster = new Cluster({
       id: 'foo',
-      kubeConfig: 'kubeconfig string',
+      kubeConfigPath: 'kubeconfig',
+      contextName: "foo",
       preferences: {
         terminalCWD: '/tmp',
         icon: 'path to icon'
@@ -33,7 +45,8 @@ describe("for an empty config", () => {
     const clusterStore = ClusterStore.getInstance()
     clusterStore.storeCluster(cluster);
     const storedCluster = clusterStore.getCluster(cluster.id);
-    expect(storedCluster.kubeConfig).toBe(cluster.kubeConfig)
+    expect(storedCluster.kubeConfigPath).toBe(cluster.kubeConfigPath)
+    expect(storedCluster.contextName).toBe(cluster.contextName)
     expect(storedCluster.preferences.icon).toBe(cluster.preferences.icon)
     expect(storedCluster.preferences.terminalCWD).toBe(cluster.preferences.terminalCWD)
     expect(storedCluster.id).toBe(cluster.id)
@@ -42,7 +55,8 @@ describe("for an empty config", () => {
   it("allows to delete a cluster", async () => {
     const cluster = new Cluster({
       id: 'foofoo',
-      kubeConfig: 'kubeconfig string',
+      kubeConfigPath: 'kubeconfig',
+      contextName: "foo",
       preferences: {
         terminalCWD: '/tmp'
       }
@@ -74,12 +88,12 @@ describe("for a config with existing clusters", () => {
           clusters: [
             {
               id: 'cluster1',
-              kubeConfig: 'foo',
+              kubeConfigPath: 'foo',
               preferences: { terminalCWD: '/foo' }
             },
             {
               id: 'cluster2',
-              kubeConfig: 'foo2',
+              kubeConfigPath: 'foo2',
               preferences: { terminalCWD: '/foo2' }
             }
           ]
@@ -96,12 +110,12 @@ describe("for a config with existing clusters", () => {
   it("allows to retrieve a cluster", async () => {
     const clusterStore = ClusterStore.getInstance()
     const storedCluster = clusterStore.getCluster('cluster1')
-    expect(storedCluster.kubeConfig).toBe('foo')
+    expect(storedCluster.kubeConfigPath).toBe('foo')
     expect(storedCluster.preferences.terminalCWD).toBe('/foo')
     expect(storedCluster.id).toBe('cluster1')
 
     const storedCluster2 = clusterStore.getCluster('cluster2')
-    expect(storedCluster2.kubeConfig).toBe('foo2')
+    expect(storedCluster2.kubeConfigPath).toBe('foo2')
     expect(storedCluster2.preferences.terminalCWD).toBe('/foo2')
     expect(storedCluster2.id).toBe('cluster2')
   })
@@ -122,7 +136,8 @@ describe("for a config with existing clusters", () => {
   it("allows to reload a cluster in-place", async () => {
     const cluster = new Cluster({
       id: 'cluster1',
-      kubeConfig: 'kubeconfig string',
+      kubeConfigPath: 'kubeconfig string',
+      contextName: "foo",
       preferences: {
         terminalCWD: '/tmp'
       }
@@ -131,7 +146,7 @@ describe("for a config with existing clusters", () => {
     const clusterStore = ClusterStore.getInstance()
     clusterStore.reloadCluster(cluster)
 
-    expect(cluster.kubeConfig).toBe('foo')
+    expect(cluster.kubeConfigPath).toBe('foo')
     expect(cluster.preferences.terminalCWD).toBe('/foo')
     expect(cluster.id).toBe('cluster1')
   })
@@ -142,11 +157,11 @@ describe("for a config with existing clusters", () => {
 
     expect(storedClusters[0].id).toBe('cluster1')
     expect(storedClusters[0].preferences.terminalCWD).toBe('/foo')
-    expect(storedClusters[0].kubeConfig).toBe('foo')
+    expect(storedClusters[0].kubeConfigPath).toBe('foo')
 
     expect(storedClusters[1].id).toBe('cluster2')
     expect(storedClusters[1].preferences.terminalCWD).toBe('/foo2')
-    expect(storedClusters[1].kubeConfig).toBe('foo2')
+    expect(storedClusters[1].kubeConfigPath).toBe('foo2')
   })
 
   it("allows storing the clusters in a different order", async () => {
@@ -187,7 +202,7 @@ describe("for a pre 2.0 config with an existing cluster", () => {
   it("migrates to modern format with kubeconfig under a key", async () => {
     const clusterStore = ClusterStore.getInstance()
     const storedCluster = clusterStore.store.get('clusters')[0]
-    expect(storedCluster.kubeConfig).toBe('kubeconfig content')
+    expect(storedCluster.kubeConfigPath).toBe(`tmp/kubeconfigs/${storedCluster.id}`)
   })
 })
 
@@ -254,9 +269,10 @@ describe("for a pre 2.6.0 config with a cluster that has arrays in auth config",
   it("replaces array format access token and expiry into string", async () => {
     const clusterStore = ClusterStore.getInstance()
     const storedClusterData = clusterStore.store.get('clusters')[0]
-    const kc = yaml.safeLoad(storedClusterData.kubeConfig)
+    const kc = yaml.safeLoad(fs.readFileSync(storedClusterData.kubeConfigPath).toString())
     expect(kc.users[0].user['auth-provider'].config['access-token']).toBe("should be string")
     expect(kc.users[0].user['auth-provider'].config['expiry']).toBe("should be string")
+    expect(storedClusterData.contextName).toBe("minikube")
   })
 })
 
