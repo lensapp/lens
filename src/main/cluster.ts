@@ -94,7 +94,7 @@ export class Cluster implements ClusterInfo {
 
   public proxyKubeconfig() {
     const kc = new KubeConfig()
-    kc.loadFromFile(this.kubeconfigManager.getPath())
+    kc.loadFromFile(this.proxyKubeconfigPath())
     return kc
   }
 
