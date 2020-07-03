@@ -35,7 +35,7 @@ export class ContextHandler {
     this.id = cluster.id
 
     this.cluster = cluster
-    this.clusterUrl = url.parse(cluster.apiUrl) //url.parse(kc.getCurrentCluster().server)
+    this.clusterUrl = url.parse(cluster.apiUrl)
     this.contextName = cluster.contextName;
     this.defaultNamespace = kc.getContextObject(cluster.contextName).namespace
     this.url = `http://${this.id}.localhost:${cluster.port}/`

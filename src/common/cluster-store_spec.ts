@@ -46,6 +46,7 @@ describe("for an empty config", () => {
     clusterStore.storeCluster(cluster);
     const storedCluster = clusterStore.getCluster(cluster.id);
     expect(storedCluster.kubeConfigPath).toBe(cluster.kubeConfigPath)
+    expect(storedCluster.contextName).toBe(cluster.contextName)
     expect(storedCluster.preferences.icon).toBe(cluster.preferences.icon)
     expect(storedCluster.preferences.terminalCWD).toBe(cluster.preferences.terminalCWD)
     expect(storedCluster.id).toBe(cluster.id)
