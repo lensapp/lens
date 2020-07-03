@@ -152,16 +152,7 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
           webContents.getFocusedWebContents().reload()
         }
       },
-      ...(isDevelopment ? [
-        { role: 'toggleDevTools' } as MenuItemConstructorOptions,
-        {
-          accelerator: "CmdOrCtrl+Shift+I",
-          label: 'Open Dashboard Devtools',
-          click() {
-            webContents.getFocusedWebContents().openDevTools()
-          }
-        }
-      ] : []),
+      { role: 'toggleDevTools' },
       { type: 'separator' },
       { role: 'resetZoom' },
       { role: 'zoomIn' },
