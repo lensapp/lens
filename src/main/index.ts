@@ -1,8 +1,15 @@
 // Main process
 
 import "../common/system-ca"
-import "../common/prometheus-providers"
 import { app, dialog, protocol } from "electron"
+import { isMac, vueAppName, isDevelopment } from "../common/vars";
+if (isDevelopment) {
+  const appName = 'LensDev';
+  app.setName(appName);
+  const appData = app.getPath('appData');
+  app.setPath('userData', path.join(appData, appName));
+}
+import "../common/prometheus-providers"
 import { PromiseIpc } from "electron-promise-ipc"
 import path from "path"
 import { format as formatUrl } from "url"
@@ -19,7 +26,6 @@ import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { findMainWebContents } from "./webcontents"
 import { registerStaticProtocol } from "../common/register-static";
-import { isMac, vueAppName } from "../common/vars";
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
