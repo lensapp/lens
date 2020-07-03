@@ -142,13 +142,6 @@ export class LensProxy {
       return
     }
     const contextHandler = cluster.contextHandler
-    try {
-      contextHandler.applyHeaders(req)
-    } catch (error) {
-      res.statusCode = 503
-      res.end()
-      return
-    }
     contextHandler.ensureServer().then(async () => {
       const proxyTarget = await this.getProxyTarget(req, contextHandler)
       if (proxyTarget) {
@@ -161,9 +154,6 @@ export class LensProxy {
 
   protected async handleWsUpgrade(req: http.IncomingMessage, socket: Socket, head: Buffer) {
     const wsServer = this.createWsListener();
-    const cluster = this.clusterManager.getClusterForRequest(req)
-    const contextHandler = cluster.contextHandler
-    contextHandler.applyHeaders(req);
     wsServer.handleUpgrade(req, socket, head, (con) => {
       wsServer.emit("connection", con, req);
     });

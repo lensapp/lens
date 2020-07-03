@@ -172,10 +172,6 @@ export class ContextHandler {
     return serverPort
   }
 
-  public applyHeaders(req: http.IncomingMessage) {
-    req.headers["authorization"] = `Bearer ${this.id}`
-  }
-
   public async withTemporaryKubeconfig(callback: (kubeconfig: string) => Promise<any>) {
     try {
       await callback(this.cluster.kubeconfigPath())
