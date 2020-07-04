@@ -7,27 +7,25 @@ import { getFreePort } from "./port"
 import { KubeAuthProxy } from "./kube-auth-proxy"
 import { Cluster, ClusterPreferences } from "./cluster"
 import { prometheusProviders } from "../common/prometheus-providers"
-import { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry"
+import { PrometheusService, PrometheusProvider } from "./prometheus/provider-registry"
 
 export class ContextHandler {
   public contextName: string
   public id: string
   public url: string
-  public kc: KubeConfig
+  public clusterUrl: url.UrlWithStringQuery
+  public proxyServer: KubeAuthProxy
+  public proxyPort: number
   public certData: string
   public authCertData: string
   public cluster: Cluster
 
   protected apiTarget: ServerOptions
   protected proxyTarget: ServerOptions
-  protected clusterUrl: url.UrlWithStringQuery
-  protected proxyServer: KubeAuthProxy
-
   protected clientCert: string
   protected clientKey: string
   protected secureApiConnection = true
   protected defaultNamespace: string
-  protected proxyPort: number
   protected kubernetesApi: string
   protected prometheusProvider: string
   protected prometheusPath: string
@@ -35,37 +33,19 @@ export class ContextHandler {
 
   constructor(kc: KubeConfig, cluster: Cluster) {
     this.id = cluster.id
-    this.kc = new KubeConfig()
-    this.kc.users = [
-      {
-        name: kc.getCurrentUser().name,
-        token: this.id
-      }
-    ]
-    this.kc.contexts = [
-      {
-        name: kc.currentContext,
-        cluster: kc.getCurrentCluster().name,
-        user: kc.getCurrentUser().name,
-        namespace: kc.getContextObject(kc.currentContext).namespace
-      }
-    ]
-    this.kc.setCurrentContext(kc.currentContext)
 
     this.cluster = cluster
-    this.clusterUrl = url.parse(kc.getCurrentCluster().server)
-    this.contextName = kc.currentContext;
-    this.defaultNamespace = kc.getContextObject(kc.currentContext).namespace
+    this.clusterUrl = url.parse(cluster.apiUrl)
+    this.contextName = cluster.contextName;
+    this.defaultNamespace = kc.getContextObject(cluster.contextName).namespace
     this.url = `http://${this.id}.localhost:${cluster.port}/`
     this.kubernetesApi = `http://127.0.0.1:${cluster.port}/${this.id}`
-    this.kc.clusters = [
-      {
-        name: kc.getCurrentCluster().name,
-        server: this.kubernetesApi,
-        skipTLSVerify: true
-      }
-    ]
+
     this.setClusterPreferences(cluster.preferences)
+  }
+
+  public async init() {
+    await this.resolveProxyPort()
   }
 
   public setClusterPreferences(clusterPreferences?: ClusterPreferences) {
@@ -103,7 +83,7 @@ export class ContextHandler {
   public async getPrometheusService(): Promise<PrometheusService> {
     const providers = this.prometheusProvider ? prometheusProviders.filter((p, _) => p.id == this.prometheusProvider) : prometheusProviders
     const prometheusPromises: Promise<PrometheusService>[] = providers.map(async (provider: PrometheusProvider): Promise<PrometheusService> => {
-      const apiClient = this.kc.makeApiClient(CoreV1Api)
+      const apiClient = this.cluster.proxyKubeconfig().makeApiClient(CoreV1Api)
       return await provider.getPrometheusService(apiClient)
     })
     const resolvedPrometheusServices = await Promise.all(prometheusPromises)
@@ -174,7 +154,7 @@ export class ContextHandler {
 
   public async withTemporaryKubeconfig(callback: (kubeconfig: string) => Promise<any>) {
     try {
-      await callback(this.cluster.kubeconfigPath())
+      await callback(this.cluster.proxyKubeconfigPath())
     } catch (error) {
       throw(error)
     }

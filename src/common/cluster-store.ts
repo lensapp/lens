@@ -16,7 +16,7 @@ export class ClusterStore extends Singleton {
     })
   }
 
-  public getAllClusters(): Array<ClusterBaseInfo> {
+  public getAllClusters(): ClusterBaseInfo[] {
     return this.store.get("clusters", [])
   }
 
@@ -52,7 +52,8 @@ export class ClusterStore extends Singleton {
     const index = clusters.findIndex((cl) => cl.id === cluster.id)
     const storable = {
       id: cluster.id,
-      kubeConfig: cluster.kubeConfig,
+      kubeConfigPath: cluster.kubeConfigPath,
+      contextName: cluster.contextName,
       preferences: cluster.preferences,
       workspace: cluster.workspace
     }
@@ -74,7 +75,8 @@ export class ClusterStore extends Singleton {
   public reloadCluster(cluster: ClusterBaseInfo): void {
     const storedCluster = this.getCluster(cluster.id);
     if (storedCluster) {
-      cluster.kubeConfig = storedCluster.kubeConfig
+      cluster.kubeConfigPath = storedCluster.kubeConfigPath
+      cluster.contextName = storedCluster.contextName
       cluster.preferences = storedCluster.preferences
       cluster.workspace = storedCluster.workspace
     }

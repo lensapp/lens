@@ -54,7 +54,7 @@ export class HelmReleaseManager {
     await fs.promises.writeFile(fileName, yaml.safeDump(values))
 
     try {
-      const { stdout, stderr } = await promiseExec(`"${helm}" upgrade ${name} ${chart} --version ${version} -f ${fileName} --namespace ${namespace} --kubeconfig ${cluster.kubeconfigPath()}`).catch((error) => { throw(error.stderr)})
+      const { stdout, stderr } = await promiseExec(`"${helm}" upgrade ${name} ${chart} --version ${version} -f ${fileName} --namespace ${namespace} --kubeconfig ${cluster.proxyKubeconfigPath()}`).catch((error) => { throw(error.stderr)})
       return {
         log: stdout,
         release: this.getRelease(name, namespace, cluster)
@@ -66,7 +66,7 @@ export class HelmReleaseManager {
 
   public async getRelease(name: string, namespace: string, cluster: Cluster) {
     const helm = await helmCli.binaryPath()
-    const {stdout, stderr} = await promiseExec(`"${helm}" status ${name} --output json --namespace ${namespace} --kubeconfig ${cluster.kubeconfigPath()}`).catch((error) => { throw(error.stderr)})
+    const {stdout, stderr} = await promiseExec(`"${helm}" status ${name} --output json --namespace ${namespace} --kubeconfig ${cluster.proxyKubeconfigPath()}`).catch((error) => { throw(error.stderr)})
     const release = JSON.parse(stdout)
     release.resources = await this.getResources(name, namespace, cluster)
     return release
@@ -100,7 +100,7 @@ export class HelmReleaseManager {
   protected async getResources(name: string, namespace: string, cluster: Cluster) {
     const helm = await helmCli.binaryPath()
     const kubectl = await cluster.kubeCtl.kubectlPath()
-    const pathToKubeconfig = cluster.kubeconfigPath()
+    const pathToKubeconfig = cluster.proxyKubeconfigPath()
     const { stdout } = await promiseExec(`"${helm}" get manifest ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} | "${kubectl}" get -n ${namespace} --kubeconfig ${pathToKubeconfig} -f - -o=json`).catch((error) => {
       return { stdout: JSON.stringify({items: []})}
     })

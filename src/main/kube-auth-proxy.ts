@@ -3,10 +3,8 @@ import logger from "./logger"
 import * as tcpPortUsed from "tcp-port-used"
 import { Kubectl, bundledKubectl } from "./kubectl"
 import { Cluster } from "./cluster"
-import { readFileSync, watch } from "fs"
 import { PromiseIpc } from "electron-promise-ipc"
 import { findMainWebContents } from "./webcontents"
-import * as url from "url"
 
 export class KubeAuthProxy {
   public lastError: string
@@ -31,26 +29,18 @@ export class KubeAuthProxy {
       return;
     }
     const proxyBin = await this.kubectl.kubectlPath()
-    const configWatcher = watch(this.cluster.kubeconfigPath(), (eventType: string, filename: string) => {
-      if (eventType === "change") {
-        const kc = readFileSync(this.cluster.kubeconfigPath()).toString()
-        if (kc.trim().length > 0) { // Prevent updating empty configs back to store
-          this.cluster.updateKubeconfig(kc)
-        } else {
-          logger.warn(`kubeconfig watch on ${this.cluster.kubeconfigPath()} resulted into empty config, ignoring...`)
-        }
-      }
-    })
-    const clusterUrl = url.parse(this.cluster.apiUrl)
     let args = [
       "proxy",
-      "--port", this.port.toString(),
-      "--kubeconfig", this.cluster.kubeconfigPath(),
-      "--accept-hosts", clusterUrl.hostname,
+      "-p", this.port.toString(),
+      "--kubeconfig", this.cluster.kubeConfigPath,
+      "--context", this.cluster.contextName,
+      "--accept-hosts", ".*",
+      "--reject-paths", "^[^/]"
     ]
     if (process.env.DEBUG_PROXY === "true") {
       args = args.concat(["-v", "9"])
     }
+    logger.debug(`spawning kubectl proxy with args: ${args}`)
     this.proxyProcess = spawn(proxyBin, args, {
       env: this.env
     })
@@ -60,7 +50,6 @@ export class KubeAuthProxy {
         logger.debug("failed to send IPC log message: " + err.message)
       })
       this.proxyProcess = null
-      configWatcher.close()
     })
     this.proxyProcess.stdout.on('data', (data) => {
       let logItem = data.toString()

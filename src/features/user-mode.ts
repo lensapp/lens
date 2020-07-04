@@ -37,7 +37,7 @@ export class UserModeFeature extends Feature {
 
   async uninstall(cluster: Cluster): Promise<boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
-      const rbacClient = cluster.contextHandler.kc.makeApiClient(RbacAuthorizationV1Api)
+      const rbacClient = cluster.proxyKubeconfig().makeApiClient(RbacAuthorizationV1Api)
       try {
         await rbacClient.deleteClusterRole("lens-user");
         await rbacClient.deleteClusterRoleBinding("lens-user");

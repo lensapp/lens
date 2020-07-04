@@ -17,7 +17,7 @@ export class NodeShellSession extends ShellSession {
     super(socket, pathToKubeconfig, cluster)
     this.nodeName = nodeName
     this.podId = `node-shell-${uuid()}`
-    this.kc = cluster.contextHandler.kc
+    this.kc = cluster.proxyKubeconfig()
   }
 
   public async open() {

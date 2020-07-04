@@ -6,7 +6,7 @@ import { releaseManager } from "./helm-release-manager";
 
 class HelmService {
   public async installChart(cluster: Cluster, data: {chart: string; values: {}; name: string; namespace: string; version: string}) {
-    const installResult = await releaseManager.installChart(data.chart, data.values, data.name, data.namespace, data.version, cluster.kubeconfigPath())
+    const installResult = await releaseManager.installChart(data.chart, data.values, data.name, data.namespace, data.version, cluster.proxyKubeconfigPath())
     return installResult
   }
 
@@ -48,7 +48,7 @@ class HelmService {
 
   public async listReleases(cluster: Cluster, namespace: string = null) {
     await repoManager.init()
-    const releases = await releaseManager.listReleases(cluster.kubeconfigPath(), namespace)
+    const releases = await releaseManager.listReleases(cluster.proxyKubeconfigPath(), namespace)
     return releases
   }
 
@@ -60,19 +60,19 @@ class HelmService {
 
   public async getReleaseValues(cluster: Cluster, releaseName: string, namespace: string) {
     logger.debug("Fetch release values")
-    const values = await releaseManager.getValues(releaseName, namespace, cluster.kubeconfigPath())
+    const values = await releaseManager.getValues(releaseName, namespace, cluster.proxyKubeconfigPath())
     return values
   }
 
   public async getReleaseHistory(cluster: Cluster, releaseName: string, namespace: string) {
     logger.debug("Fetch release history")
-    const history = await releaseManager.getHistory(releaseName, namespace, cluster.kubeconfigPath())
+    const history = await releaseManager.getHistory(releaseName, namespace, cluster.proxyKubeconfigPath())
     return(history)
   }
 
   public async deleteRelease(cluster: Cluster, releaseName: string, namespace: string) {
     logger.debug("Delete release")
-    const release = await releaseManager.deleteRelease(releaseName, namespace, cluster.kubeconfigPath())
+    const release = await releaseManager.deleteRelease(releaseName, namespace, cluster.proxyKubeconfigPath())
     return release
   }
 
@@ -84,7 +84,7 @@ class HelmService {
 
   public async rollback(cluster: Cluster, releaseName: string, namespace: string, revision: number) {
     logger.debug("Rollback release")
-    const output = await releaseManager.rollback(releaseName, namespace, revision, cluster.kubeconfigPath())
+    const output = await releaseManager.rollback(releaseName, namespace, revision, cluster.proxyKubeconfigPath())
     return({ message: output })
   }
 

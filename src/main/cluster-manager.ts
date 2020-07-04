@@ -44,12 +44,12 @@ export class ClusterManager {
     this.clusters = new Map()
     clusters.forEach((clusterInfo) => {
       try {
-        const kc = this.loadKubeConfig(clusterInfo.kubeConfig)
-        logger.debug(`Starting to load target definitions for ${ kc.currentContext }`)
+        const kc = this.loadKubeConfig(clusterInfo.kubeConfigPath)
         const cluster = new Cluster({
           id: clusterInfo.id,
           port: this.port,
-          kubeConfig: clusterInfo.kubeConfig,
+          kubeConfigPath: clusterInfo.kubeConfigPath,
+          contextName: clusterInfo.contextName,
           preferences: clusterInfo.preferences,
           workspace: clusterInfo.workspace
         })
@@ -77,33 +77,31 @@ export class ClusterManager {
     clusters.map(cluster => cluster.stopServer())
   }
 
-  protected loadKubeConfig(config: string): KubeConfig {
+  protected loadKubeConfig(configPath: string): KubeConfig {
     const kc = new KubeConfig();
-    kc.loadFromString(config);
+    kc.loadFromFile(configPath)
     return kc;
   }
 
   protected async addNewCluster(clusterData: ClusterBaseInfo): Promise<Cluster> {
     return new Promise(async (resolve, reject) => {
       try {
-        const configs: KubeConfig[] = k8s.loadAndSplitConfig(clusterData.kubeConfig)
-        if(configs.length == 0) {
-          reject("No cluster contexts defined")
-        }
-        configs.forEach(c => {
-          k8s.validateConfig(c)
-          const cluster = new Cluster({
-            id: uuid(),
-            port: this.port,
-            kubeConfig: k8s.dumpConfigYaml(c),
-            preferences: clusterData.preferences,
-            workspace: clusterData.workspace
-          })
-          cluster.init(c)
-          cluster.save()
-          this.clusters.set(cluster.id, cluster)
-          resolve(cluster)
-        });
+        const kc = this.loadKubeConfig(clusterData.kubeConfigPath)
+        k8s.validateConfig(kc)
+        kc.setCurrentContext(clusterData.contextName)
+        const cluster = new Cluster({
+          id: uuid(),
+          port: this.port,
+          kubeConfigPath: clusterData.kubeConfigPath,
+          contextName: clusterData.contextName,
+          preferences: clusterData.preferences,
+          workspace: clusterData.workspace
+        })
+        cluster.init(kc)
+        cluster.save()
+        this.clusters.set(cluster.id, cluster)
+        resolve(cluster)
+
       } catch(error) {
         logger.error(error)
         reject(error)

@@ -1,4 +1,4 @@
-import { ContextHandler } from "./context-handler"
+import { KubeConfig } from "@kubernetes/client-node"
 import logger from "./logger";
 import { Cluster } from "./cluster";
 import { Feature, FeatureStatusMap } from "./feature"
@@ -10,17 +10,19 @@ const ALL_FEATURES: any = {
   'user-mode': new UserModeFeature(null),
 }
 
-export async function getFeatures(clusterContext: ContextHandler): Promise<FeatureStatusMap> {
+export async function getFeatures(cluster: Cluster): Promise<FeatureStatusMap> {
   return new Promise<FeatureStatusMap>(async (resolve, reject) => {
     const result: FeatureStatusMap = {};
-    logger.debug(`features for ${clusterContext.contextName}`);
+    logger.debug(`features for ${cluster.contextName}`);
     for (const key in ALL_FEATURES) {
       logger.debug(`feature ${key}`);
       if (ALL_FEATURES.hasOwnProperty(key)) {
         logger.debug("getting feature status...");
         const feature = ALL_FEATURES[key] as Feature;
-
-        const status = await feature.featureStatus(clusterContext.kc);
+        const kc = new KubeConfig()
+        kc.loadFromFile(cluster.proxyKubeconfigPath())
+        
+        const status = await feature.featureStatus(kc);
         result[feature.name] = status
 
       } else {
