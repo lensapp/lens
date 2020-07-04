@@ -1,39 +1,43 @@
-// move embedded kubeconfig into separate file and add reference to it to cluster settings
+// Move embedded kubeconfig into separate file and add reference to it to cluster settings
+
+import path from "path"
 import { app } from "electron"
-import  { ensureDirSync } from "fs-extra"
-import * as path from "path"
+import { migration } from "../migration-wrapper";
+import { ensureDirSync } from "fs-extra"
 import { KubeConfig } from "@kubernetes/client-node";
 import { writeEmbeddedKubeConfig } from "../../common/utils/kubeconfig"
+import { ClusterBaseInfo } from "../../main/cluster";
 
-export function migration(store: any) {
-  console.log("CLUSTER STORE, MIGRATION: 3.6.0-beta.1");
-  const clusters: any[] = []
+export default migration({
+  version: "3.6.0-beta.1",
+  run(store, log: (...args: any[]) => void) {
+    const migratingClusters: ClusterBaseInfo[] = []
 
-  const kubeConfigBase = path.join(app.getPath("userData"), "kubeconfigs")
-  ensureDirSync(kubeConfigBase)
-  const storedClusters = store.get("clusters") as any[]
-  if (!storedClusters) return
+    const kubeConfigBase = path.join(app.getPath("userData"), "kubeconfigs")
+    ensureDirSync(kubeConfigBase)
+    const storedClusters: ClusterBaseInfo[] = store.get("clusters")
+    if (!storedClusters) return
 
-  console.log("num clusters to migrate: ", storedClusters.length)
-  for (const cluster of storedClusters ) {
-    try {
-      // take the embedded kubeconfig and dump it into a file
-      const kubeConfigFile = writeEmbeddedKubeConfig(cluster.id, cluster.kubeConfig)
-      cluster.kubeConfigPath = kubeConfigFile
+    log("Number of clusters to migrate: ", storedClusters.length)
+    for (const cluster of storedClusters) {
+      try {
+        // take the embedded kubeconfig and dump it into a file
+        cluster.kubeConfigPath = writeEmbeddedKubeConfig(cluster.id, cluster.kubeConfig)
 
-      const kc = new KubeConfig()
-      kc.loadFromFile(cluster.kubeConfigPath)
-      cluster.contextName = kc.getCurrentContext()
+        const kc = new KubeConfig()
+        kc.loadFromFile(cluster.kubeConfigPath)
+        cluster.contextName = kc.getCurrentContext()
 
-      delete cluster.kubeConfig
-      clusters.push(cluster)
-    } catch(error) {
-      console.error("failed to migrate kubeconfig for cluster:", cluster.id)
+        delete cluster.kubeConfig
+        migratingClusters.push(cluster)
+      } catch (error) {
+        log(`Failed to migrate Kubeconfig for cluster "${cluster.id}"`, error)
+      }
+    }
+
+    // "overwrite" the cluster configs
+    if (migratingClusters.length > 0) {
+      store.set("clusters", migratingClusters)
     }
   }
-
-  // "overwrite" the cluster configs
-  if (clusters.length > 0) {
-    store.set("clusters", clusters)
-  }
-}
+})

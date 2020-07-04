@@ -19,6 +19,7 @@ enum ClusterStatus {
 
 export interface ClusterBaseInfo {
   id: string;
+  kubeConfig?: string;
   kubeConfigPath: string;
   contextName: string;
   preferences?: ClusterPreferences;
