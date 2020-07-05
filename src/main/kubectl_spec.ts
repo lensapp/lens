@@ -1,19 +1,7 @@
 import packageInfo from "../../package.json"
 import { bundledKubectl, Kubectl } from "../../src/main/kubectl";
-import { UserStore } from "../common/user-store";
 
-jest.mock("../common/user-store", () => {
-  const userStoreMock: Partial<UserStore> = {
-    getPreferences() {
-      return {
-        downloadMirror: "default"
-      }
-    }
-  }
-  return {
-    userStore: userStoreMock,
-  }
-})
+jest.mock("../common/user-store");
 
 describe("kubectlVersion", () => {
   it("returns bundled version if exactly same version used", async () => {

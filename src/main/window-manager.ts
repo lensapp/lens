@@ -1,8 +1,8 @@
 import { BrowserWindow, shell } from "electron"
 import { PromiseIpc } from "electron-promise-ipc"
 import windowStateKeeper from "electron-window-state"
-import { tracker } from "./tracker";
 import { getStaticUrl } from "../common/register-static";
+import { tracker } from "../common/tracker";
 
 export class WindowManager {
   public mainWindow: BrowserWindow = null;

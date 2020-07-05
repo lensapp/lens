@@ -1,10 +1,10 @@
 import path from "path";
-import ElectronStore from "electron-store";
+import Config from "conf";
 import { isTestEnv } from "../common/vars";
 
 export interface MigrationOpts {
   version: string;
-  run(store: ElectronStore, log: (...args: any[]) => void): void;
+  run(storeConfig: Config<any>, log: (...args: any[]) => void): void;
 }
 
 function infoLog(...args: any[]) {
@@ -12,12 +12,12 @@ function infoLog(...args: any[]) {
   console.log(...args);
 }
 
-export function migration({ version, run }: MigrationOpts) {
+export function migration<S = any>({ version, run }: MigrationOpts) {
   return {
-    [version]: (store: ElectronStore) => {
-      const storeName = path.dirname(store.path);
-      infoLog(`STORE MIGRATION (${storeName}): ${version}`, );
-      run(store, infoLog);
+    [version]: (storeConfig: Config<S>) => {
+      const storeName = path.dirname(storeConfig.path);
+      infoLog(`STORE MIGRATION (${storeName}): ${version}`,);
+      run(storeConfig, infoLog);
     }
   };
 }

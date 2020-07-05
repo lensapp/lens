@@ -1,12 +1,11 @@
 import request from "request"
 import { userStore } from "./user-store"
 
-export function globalRequestOpts(requestOpts: request.Options ) {
-  const userPrefs = userStore.getPreferences()
-  if (userPrefs.httpsProxy) {
-    requestOpts.proxy = userPrefs.httpsProxy
+export function globalRequestOpts(requestOpts: request.Options) {
+  const { httpsProxy, allowUntrustedCAs } = userStore.preferences
+  if (httpsProxy) {
+    requestOpts.proxy = httpsProxy
   }
-  requestOpts.rejectUnauthorized = !userPrefs.allowUntrustedCAs;
-
+  requestOpts.rejectUnauthorized = !allowUntrustedCAs;
   return requestOpts
 }

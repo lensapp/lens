@@ -1,14 +1,12 @@
 import Vue from "vue"
 import { ClusterInfo } from "../../../../main/cluster"
-import { MutationTree, ActionTree, GetterTree } from "vuex"
+import { ActionTree, GetterTree, MutationTree } from "vuex"
 import { PromiseIpc } from 'electron-promise-ipc'
-import { Tracker } from "../../../../common/tracker"
-import { remote } from "electron"
 import { clusterStore } from "../../../../common/cluster-store"
 import { Workspace } from "../../../../common/workspace-store"
+import { tracker } from "../../../../common/tracker";
 
-const promiseIpc = new PromiseIpc( { maxTimeoutMs: 120000 } );
-const tracker = new Tracker(remote.app);
+const promiseIpc = new PromiseIpc({ maxTimeoutMs: 120000 });
 
 export interface LensWebview {
   id: string;
@@ -26,12 +24,12 @@ const state: ClusterState = {
   clusters: []
 }
 
-const actions: ActionTree<ClusterState, any>  = {
-  async refreshClusters({commit}, currentWorkspace: Workspace) {
+const actions: ActionTree<ClusterState, any> = {
+  async refreshClusters({ commit }, currentWorkspace: Workspace) {
     const clusters: ClusterInfo[] = await promiseIpc.send('getClusters', currentWorkspace.id).catch((error: Error) => {
       return false;
     })
-    if(!clusters) return false;
+    if (!clusters) return false;
     commit('updateClusters', clusters);
     clusters.forEach((cluster: ClusterInfo) => {
       const lens: LensWebview = {
@@ -43,29 +41,29 @@ const actions: ActionTree<ClusterState, any>  = {
     })
     return true;
   },
-  async getCluster({commit, getters}, id: string) {
+  async getCluster({ commit, getters }, id: string) {
     const cluster: ClusterInfo = getters.clusters.find((c: ClusterInfo) => c.id === id)
-    if(!cluster) return null;
+    if (!cluster) return null;
 
     const remoteCluster = await promiseIpc.send("getCluster", cluster.id)
-    if(!remoteCluster) return null;
+    if (!remoteCluster) return null;
 
     Object.assign(cluster, remoteCluster)
     commit('updateCluster', cluster);
 
     return cluster;
   },
-  async refineCluster({commit}, id: string) {
+  async refineCluster({ commit }, id: string) {
     console.log("VUEX: ACTION: REFINE CLUSTER", id);
 
     const remoteCluster = await promiseIpc.send("getCluster", id)
-    if(!remoteCluster) return null;
+    if (!remoteCluster) return null;
 
     commit('updateCluster', remoteCluster);
 
     return remoteCluster;
   },
-  async stopCluster({dispatch, getters}, id: string) {
+  async stopCluster({ dispatch, getters }, id: string) {
     const cluster: ClusterInfo = getters.clusters.find((c: ClusterInfo) => c.id === id)
     if (!cluster) return;
 
@@ -76,7 +74,7 @@ const actions: ActionTree<ClusterState, any>  = {
       tracker.event("cluster", "stop")
     }
   },
-  async removeCluster({getters, dispatch}, id: string) {
+  async removeCluster({ getters, dispatch }, id: string) {
     const cluster: ClusterInfo = getters.clusters.find((c: ClusterInfo) => c.id === id)
     if (!cluster) {
       return
@@ -92,16 +90,16 @@ const actions: ActionTree<ClusterState, any>  = {
     await dispatch("refreshClusters", getters.currentWorkspace)
     return true;
   },
-  async addCluster({commit, getters, dispatch}, data) {
+  async addCluster({ commit, getters, dispatch }, data) {
     const res = await promiseIpc.send("addCluster", data)
-    if(!res) return null;
+    if (!res) return null;
 
     tracker.event("cluster", "add");
     commit('updateClusters', res.allClusters);
     await dispatch("refreshClusters", getters.currentWorkspace);
     return res.addedCluster;
   },
-  async clearClusters({commit, getters, dispatch}){
+  async clearClusters({ commit, getters, dispatch }) {
     // todo: clean from main process as well?
     getters.lenses.forEach((lens: LensWebview) => {
       if (lens.webview) {
@@ -113,14 +111,14 @@ const actions: ActionTree<ClusterState, any>  = {
     return true;
   },
 
-  async uploadClusterIcon({commit}, data) {
+  async uploadClusterIcon({ commit }, data) {
     const res = await promiseIpc.send("saveClusterIcon", data)
     tracker.event("cluster", "upload-icon")
     if (res.cluster) commit("updateCluster", res.cluster)
     return res
   },
 
-  async resetClusterIcon({commit}, data) {
+  async resetClusterIcon({ commit }, data) {
     const res = await promiseIpc.send("resetClusterIcon", data.clusterId)
     tracker.event("cluster", "reset-icon")
     if (res.cluster) commit("updateCluster", res.cluster)
@@ -128,7 +126,7 @@ const actions: ActionTree<ClusterState, any>  = {
   },
 
   // For data structure see: cluster-manager.ts / FeatureInstallRequest
-  async installClusterFeature({commit}, data) {
+  async installClusterFeature({ commit }, data) {
     // Custom no timeout IPC as install can take very variable time
     const ipc = new PromiseIpc();
     const response = await ipc.send('installFeature', data)
@@ -140,20 +138,19 @@ const actions: ActionTree<ClusterState, any>  = {
     return response
   },
   // For data structure see: cluster-manager.ts / FeatureInstallRequest
-  async upgradeClusterFeature({commit}, data) {
+  async upgradeClusterFeature({ commit }, data) {
     // Custom no timeout IPC as install can take very variable time
     const ipc = new PromiseIpc();
     const response = await ipc.send('upgradeFeature', data)
     console.log("upgrade result:", response);
     const cluster = await ipc.send('refreshCluster', data.clusterId)
 
-
     tracker.event("cluster", "upgrade-feature")
     commit("updateCluster", cluster)
     return response
   },
   // For data structure see: cluster-manager.ts / FeatureInstallRequest
-  async uninstallClusterFeature({commit}, data) {
+  async uninstallClusterFeature({ commit }, data) {
     // Custom no timeout IPC as uninstall can take very variable time
     const ipc = new PromiseIpc();
     const response = await ipc.send('uninstallFeature', data)
@@ -165,7 +162,7 @@ const actions: ActionTree<ClusterState, any>  = {
     return response
   },
 
-  attachWebview({commit}, lens: LensWebview) {
+  attachWebview({ commit }, lens: LensWebview) {
     const container: any = document.getElementById("lens-container");
     if (!container || !lens.webview) {
       return
@@ -189,9 +186,11 @@ const actions: ActionTree<ClusterState, any>  = {
     })
     promiseIpc.send("enableClusterSettingsMenuItem", lens.id)
   },
-  detachWebview({commit}, lens: LensWebview) {
+  detachWebview({ commit }, lens: LensWebview) {
     const container: any = document.getElementById("lens-container");
-    if (!container) { return }
+    if (!container) {
+      return
+    }
     container.childNodes.forEach((child: any) => {
       if (child === lens.webview) {
         container.removeChild(lens.webview)
@@ -202,21 +201,23 @@ const actions: ActionTree<ClusterState, any>  = {
     })
     promiseIpc.send("disableClusterSettingsMenuItem")
   },
-  hideWebviews({commit}) {
+  hideWebviews({ commit }) {
     const container: any = document.getElementById("lens-container");
-    if (!container) { return }
+    if (!container) {
+      return
+    }
     container.style = "display: none;"
     container.childNodes.forEach((child: any) => {
       child.style = "display: none;"
     })
     promiseIpc.send("disableClusterSettingsMenuItem")
   },
-  destroyWebviews({commit}) {
+  destroyWebviews({ commit }) {
     state.lenses.forEach((lens) => {
       this.dispatch("detachWebview", lens)
     })
   },
-  storeCluster({commit}, cluster: ClusterInfo) {
+  storeCluster({ commit }, cluster: ClusterInfo) {
     clusterStore.saveCluster(cluster);
     commit("updateCluster", cluster)
     promiseIpc.send("clusterStored", cluster.id)
@@ -250,7 +251,7 @@ const mutations: MutationTree<ClusterState> = {
   },
   updateCluster(state, cluster) {
     state.clusters.forEach((c, index) => {
-      if(c.id === cluster.id) {
+      if (c.id === cluster.id) {
         Vue.set(state.clusters, index, cluster)
       }
     })

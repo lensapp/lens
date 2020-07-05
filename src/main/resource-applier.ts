@@ -5,7 +5,7 @@ import path from "path";
 import * as tempy from "tempy";
 import logger from "./logger"
 import { Cluster } from "./cluster";
-import { tracker } from "./tracker";
+import { tracker } from "../common/tracker";
 
 type KubeObject = {
   status: {};

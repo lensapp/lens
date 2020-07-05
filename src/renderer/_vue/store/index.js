@@ -7,17 +7,12 @@ import KubeContexts from './modules/kube-contexts'
 import Clusters from './modules/clusters'
 import HelmRepos from './modules/helm-repos'
 import Workspaces from './modules/workspaces'
-
-// promise ipc
+import { tracker } from "../../../common/tracker"
 import { PromiseIpc } from 'electron-promise-ipc'
-const promiseIpc = new PromiseIpc( { maxTimeoutMs: 120000 } );
-
-// tracker
-import { Tracker } from "../../../common/tracker"
-import { remote } from "electron"
-const tracker = new Tracker(remote.app);
 
 Vue.use(Vuex);
+
+const promiseIpc = new PromiseIpc( { maxTimeoutMs: 120000 } );
 
 export default new Vuex.Store({
   modules: {
@@ -31,29 +26,24 @@ export default new Vuex.Store({
     hud: {
       isMenuVisible: true,
     },
-    seenContexts: userStore.getSeenContexts(),
-    lastSeenAppVersion: userStore.lastSeenAppVersion(),
+    seenContexts: userStore.seenContexts,
+    lastSeenAppVersion: userStore.lastSeenAppVersion,
   },
   mutations: {
     storeSeenContexts(state, context) {
-      const seenContexts =  userStore.storeSeenContext(context);
-      state.seenContexts = seenContexts
+      userStore.seenContexts.add(context);
+      state.seenContexts = Array.from(userStore.seenContexts);
     },
     updateLastSeenAppVersion(state, appVersion) {
       state.lastSeenAppVersion = appVersion;
-      userStore.setLastSeenAppVersion(appVersion)
+      userStore.lastSeenAppVersion = appVersion
     },
     loadPreferences(state) {
-      this.commit("savePreferences", userStore.getPreferences());
+      this.commit("savePreferences", userStore.preferences);
     },
     savePreferences(state, prefs) {
-      if (prefs.allowTelemetry) {
-        tracker.event("telemetry", "enabled")
-      } else {
-        tracker.event("telemetry", "disabled")
-      }
       state.preferences = prefs;
-      userStore.setPreferences(prefs);
+      userStore.preferences = prefs;
       this.dispatch("destroyWebviews")
       promiseIpc.send("preferencesSaved")
     },
@@ -67,9 +57,7 @@ export default new Vuex.Store({
   actions: {
     async init({commit, getters}) {
       commit("loadPreferences");
-
       await this.dispatch('refreshClusters', getters.currentWorkspace);
-
       return true;
     },
     async addSeenContexts({commit}, data){

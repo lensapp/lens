@@ -2,17 +2,14 @@ import "../../common/system-ca"
 import "./assets/css/app.scss"
 import "prismjs";
 import "prismjs/components/prism-yaml"
-import { remote } from "electron"
+import { PromiseIpc } from 'electron-promise-ipc'
 import Vue from 'vue'
 import VueElectron from 'vue-electron'
 import BootstrapVue from 'bootstrap-vue'
-import { PromiseIpc } from 'electron-promise-ipc'
-import { Tracker } from "../../common/tracker"
 import App from './App'
 import router from './router'
 import store from './store'
 
-const tracker = new Tracker(remote.app);
 const promiseIpc = new PromiseIpc({maxTimeoutMs: 6000});
 
 promiseIpc.on('navigate', async (view) => {
@@ -26,7 +23,6 @@ Vue.use(BootstrapVue)
 Vue.mixin({
   created: function () {
     this.$promiseIpc = promiseIpc;
-    this.$tracker = tracker;
   }
 })
 

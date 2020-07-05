@@ -285,7 +285,7 @@ export class Kubectl {
   }
 
   protected getDownloadMirror() {
-    const mirror = packageMirrors.get(userStore.getPreferences().downloadMirror)
+    const mirror = packageMirrors.get(userStore.preferences.downloadMirror)
     if (mirror) {
       return mirror
     }

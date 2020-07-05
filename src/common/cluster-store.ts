@@ -1,32 +1,32 @@
-import ElectronStore from "electron-store"
-import { Singleton } from "./utils/singleton";
+import Config from "conf"
+import Singleton from "./utils/singleton";
 import migrations from "../migrations/cluster-store"
 import { Cluster, ClusterBaseInfo } from "../main/cluster";
 
 export class ClusterStore extends Singleton {
-  private store = new ElectronStore({
-    name: "lens-cluster-store",
+  private storeConfig = new Config({
+    configName: "lens-cluster-store",
     accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
     migrations: migrations,
   })
 
   public getAllClusterObjects(): Cluster[] {
-    return this.store.get("clusters", []).map((clusterInfo: ClusterBaseInfo) => {
+    return this.storeConfig.get("clusters", []).map((clusterInfo: ClusterBaseInfo) => {
       return new Cluster(clusterInfo)
     })
   }
 
   public getAllClusters(): ClusterBaseInfo[] {
-    return this.store.get("clusters", [])
+    return this.storeConfig.get("clusters", [])
   }
 
   public removeCluster(id: string): void {
-    this.store.delete(id);
+    this.storeConfig.delete(id);
     const clusterBaseInfos = this.getAllClusters()
     const index = clusterBaseInfos.findIndex((cbi) => cbi.id === id)
     if (index !== -1) {
       clusterBaseInfos.splice(index, 1)
-      this.store.set("clusters", clusterBaseInfos)
+      this.storeConfig.set("clusters", clusterBaseInfos)
     }
   }
 
@@ -62,7 +62,7 @@ export class ClusterStore extends Singleton {
     } else {
       clusters[index] = storable
     }
-    this.store.set("clusters", clusters)
+    this.storeConfig.set("clusters", clusters)
   }
 
   public storeClusters(clusters: ClusterBaseInfo[]) {

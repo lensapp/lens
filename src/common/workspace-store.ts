@@ -1,30 +1,26 @@
-import ElectronStore from "electron-store"
-import { Singleton } from "./utils/singleton";
+import Config from "conf"
+import Singleton from "./utils/singleton";
 import { clusterStore } from "./cluster-store"
+import { getAppVersion } from "./utils/app-version";
 
 export type WorkspaceId = string;
 
-export interface WorkspaceData {
+export interface WorkspaceStoreModel {
+  workspaces: Workspace[]
+}
+
+export interface Workspace {
   id: WorkspaceId;
   name: string;
   description?: string;
 }
 
-export class Workspace implements WorkspaceData {
-  public id: string
-  public name: string
-  public description?: string
-
-  public constructor(data: WorkspaceData) {
-    Object.assign(this, data)
-  }
-}
-
 export class WorkspaceStore extends Singleton {
-  static defaultId = "default"
+  static readonly defaultId = "default"
 
-  private store = new ElectronStore({
-    name: "lens-workspace-store"
+  private storeConfig = new Config<WorkspaceStoreModel>({
+    configName: "lens-workspace-store",
+    projectVersion: getAppVersion(),
   });
 
   private constructor() {
@@ -46,11 +42,10 @@ export class WorkspaceStore extends Singleton {
   }
 
   public getAllWorkspaces(): Workspace[] {
-    const workspacesData: WorkspaceData[] = this.store.get("workspaces", [])
-    return workspacesData.map((wsd) => new Workspace(wsd))
+    return this.storeConfig.get("workspaces", [])
   }
 
-  public saveWorkspace(workspace: WorkspaceData) {
+  public saveWorkspace(workspace: Workspace) {
     const workspaces = this.getAllWorkspaces()
     const index = workspaces.findIndex((w) => w.id === workspace.id)
     if (index !== -1) {
@@ -58,7 +53,7 @@ export class WorkspaceStore extends Singleton {
     } else {
       workspaces.push(workspace)
     }
-    this.store.set("workspaces", workspaces)
+    this.storeConfig.set("workspaces", workspaces)
   }
 
   public removeWorkspace(workspace: Workspace) {
@@ -70,7 +65,7 @@ export class WorkspaceStore extends Singleton {
     if (index !== -1) {
       clusterStore.removeClustersByWorkspace(workspace.id)
       workspaces.splice(index, 1)
-      this.store.set("workspaces", workspaces)
+      this.storeConfig.set("workspaces", workspaces)
     }
   }
 }

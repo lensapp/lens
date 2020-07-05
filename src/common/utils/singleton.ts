@@ -6,7 +6,8 @@
  *  const usersStore: UsersStore = UsersStore.getInstance();
  */
 
-export class Singleton {
+// todo: maybe convert to @decorator
+class Singleton {
   private static instances = new WeakMap<object, Singleton>();
 
   // todo: figure out how to infer child class + arguments types
@@ -21,3 +22,6 @@ export class Singleton {
     Singleton.instances.delete(this);
   }
 }
+
+export { Singleton }
+export default Singleton;

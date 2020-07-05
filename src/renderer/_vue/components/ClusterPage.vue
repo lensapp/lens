@@ -27,6 +27,8 @@
 
 <script>
 import CubeSpinner from "@/_vue/components/CubeSpinner";
+import { tracker } from "../../../common/tracker"
+
 export default {
   name: "ClusterPage",
   components: {
@@ -112,7 +114,7 @@ export default {
         this.lens.webview = webview;
       }
       this.$store.dispatch("attachWebview", this.lens);
-      this.$tracker.event("cluster", "open");
+      tracker.event("cluster", "open");
     },
     hideLens: function() {
       this.$store.dispatch("hideWebviews");
@@ -131,7 +133,7 @@ export default {
     "accessible": function(newStatus, oldStatus) {
       console.log("accessible watch, vals:", newStatus, oldStatus);
       if(newStatus === false) { // accessble == false
-        this.$tracker.event("cluster", "open-failed");
+        tracker.event("cluster", "open-failed");
       }
     },
   }

@@ -1,59 +1,105 @@
-import ElectronStore from "electron-store"
+import { app, remote } from "electron"
+import { computed, observable, reaction, toJS } from "mobx";
+import Config from "conf"
+import semver from "semver"
 import migrations from "../migrations/user-store"
-import { Singleton } from "./utils/singleton";
+import Singleton from "./utils/singleton";
+import { getAppVersion } from "./utils/app-version";
+import { tracker } from "./tracker";
+
+export interface UserStoreModel {
+  lastSeenAppVersion: string;
+  seenContexts: string[];
+  preferences: UserPreferences;
+}
 
 export interface UserPreferences {
   httpsProxy?: string;
-  colorTheme?: string;
+  colorTheme?: string | "dark";
   allowUntrustedCAs?: boolean;
   allowTelemetry?: boolean;
-  downloadMirror?: string;
+  downloadMirror?: string | "default";
 }
 
 export class UserStore extends Singleton {
-  protected store = new ElectronStore({
-    name: "lens-user-store",
-    migrations: migrations,
-  });
+  private storeConfig: Config<UserStoreModel>;
 
-  public lastSeenAppVersion() {
-    return this.store.get('lastSeenAppVersion', "0.0.0")
+  @observable isReady = false;
+  @observable lastSeenAppVersion = "0.0.0"
+  @observable seenContexts = observable.set();
+
+  @observable preferences: UserPreferences = {
+    allowTelemetry: true,
+    colorTheme: "dark",
+    downloadMirror: "default",
+  };
+
+  @computed get hasNewAppVersion() {
+    return semver.gt(getAppVersion(), this.lastSeenAppVersion);
   }
 
-  public setLastSeenAppVersion(version: string) {
-    this.store.set('lastSeenAppVersion', version)
+  private constructor() {
+    super();
+    this.init();
   }
 
-  public getSeenContexts(): Array<string> {
-    return this.store.get("seenContexts", [])
+  async init() {
+    /*await*/ this.load();
+    this.bindEvents();
+    this.isReady = true;
   }
 
-  public storeSeenContext(newContexts: string[]) {
-    const seenContexts = this.getSeenContexts().concat(newContexts)
-    // store unique contexts by casting array to set first
-    const newContextSet = new Set(seenContexts)
-    const allContexts = [...newContextSet]
-    this.store.set("seenContexts", allContexts)
-    return allContexts
+  saveLastSeenAppVersion() {
+    this.lastSeenAppVersion = getAppVersion();
   }
 
-  public setPreferences(preferences: UserPreferences) {
-    this.store.set('preferences', preferences)
+  // todo: use "conf" as pseudo-async for more future-proof usages
+  protected async load() {
+    this.storeConfig = new Config<UserStoreModel>({
+      configName: "lens-user-store",
+      migrations: migrations,
+      cwd: (app || remote.app).getPath("userData"),
+    });
+    this.fromStore(this.storeConfig.store);
   }
 
-  public getPreferences(): UserPreferences {
-    const prefs = this.store.get("preferences", {})
-    if (!prefs.colorTheme) {
-      prefs.colorTheme = "dark"
+  protected bindEvents() {
+    // refresh from file-system updates
+    this.storeConfig.onDidAnyChange((data, oldValue) => {
+      this.fromStore(data);
+    });
+
+    // refresh config file from runtime
+    reaction(() => this.toJSON(), model => {
+      this.storeConfig.store = model;
+    });
+
+    // track telemetry availability
+    reaction(() => this.preferences.allowTelemetry, allowed => {
+      tracker.event("telemetry", allowed ? "enabled" : "disabled");
+    });
+  }
+
+  // todo: use "serializr" ?
+  protected fromStore(data: Partial<UserStoreModel> = {}) {
+    const { lastSeenAppVersion, seenContexts, preferences } = data
+    if (lastSeenAppVersion) {
+      this.lastSeenAppVersion = lastSeenAppVersion;
     }
-    if (!prefs.downloadMirror) {
-      prefs.downloadMirror = "default"
+    if (seenContexts) {
+      this.seenContexts = observable.set(seenContexts)
     }
-    if (prefs.allowTelemetry === undefined) {
-      prefs.allowTelemetry = true
+    if (preferences) {
+      Object.assign(this.preferences, preferences);
     }
+  }
 
-    return prefs
+  protected toJSON(): UserStoreModel {
+    return toJS({
+      lastSeenAppVersion: this.lastSeenAppVersion,
+      seenContexts: Array.from(this.seenContexts),
+      preferences: this.preferences,
+    })
   }
 }
 

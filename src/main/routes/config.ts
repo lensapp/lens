@@ -94,7 +94,7 @@ class ConfigRoute extends LensApi {
     const data: IConfigRoutePayload = {
       clusterName: cluster.contextName,
       lensVersion: app.getVersion(),
-      lensTheme: `kontena-${userStore.getPreferences().colorTheme}`,
+      lensTheme: `kontena-${userStore.preferences.colorTheme}`,
       kubeVersion: cluster.version,
       chartsEnabled: true,
       isClusterAdmin: cluster.isAdmin,

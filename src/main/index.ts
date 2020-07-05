@@ -18,7 +18,6 @@ import initMenu from "./menu"
 import * as proxy from "./proxy"
 import { WindowManager } from "./window-manager";
 import { clusterStore } from "../common/cluster-store"
-import { tracker } from "./tracker"
 import { ClusterManager } from "./cluster-manager";
 import AppUpdater from "./app-updater"
 import { shellSync } from "./shell-sync"
@@ -26,6 +25,7 @@ import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { findMainWebContents } from "./webcontents"
 import { registerStaticProtocol } from "../common/register-static";
+import { tracker } from "../common/tracker";
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {

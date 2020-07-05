@@ -5,10 +5,10 @@ import path from "path"
 import shellEnv from "shell-env"
 import { app } from "electron"
 import { Kubectl } from "./kubectl"
-import { tracker } from "./tracker"
 import { Cluster, ClusterPreferences } from "./cluster"
 import { helmCli } from "./helm-cli"
 import { isWindows } from "../common/vars";
+import { tracker } from "../common/tracker";
 
 export class ShellSession extends EventEmitter {
   static shellEnvs: Map<string, any> = new Map()

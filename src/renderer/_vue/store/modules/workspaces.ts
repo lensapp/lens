@@ -1,5 +1,5 @@
 import { MutationTree, ActionTree, GetterTree } from "vuex"
-import { workspaceStore, Workspace, WorkspaceData } from "../../../../common/workspace-store"
+import { workspaceStore, Workspace } from "../../../../common/workspace-store"
 
 export interface WorkspaceState {
   workspaces: Array<Workspace>;
@@ -26,11 +26,11 @@ const mutations: MutationTree<WorkspaceState> = {
   setCurrentWorkspace(state, workspace: Workspace) {
     state.currentWorkspace = workspace
   },
-  addWorkspace(state, workspace: WorkspaceData) {
+  addWorkspace(state, workspace: Workspace) {
     workspaceStore.saveWorkspace(workspace)
     state.workspaces = workspaceStore.getAllWorkspaces()
   },
-  updateWorkspace(state, workspace: WorkspaceData) {
+  updateWorkspace(state, workspace: Workspace) {
     workspaceStore.saveWorkspace(workspace)
     state.workspaces = workspaceStore.getAllWorkspaces()
   },
