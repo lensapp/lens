@@ -67,7 +67,9 @@ export class UserStore extends Singleton {
       cwd: (app || remote.app).getPath("userData"),
       watch: true, // enable onDidChange()-callback
     });
-    this.fromStore(this.storeConfig.store);
+    const data = this.storeConfig.store;
+    logger.debug(`[STORE]: ${this.name} loaded with`, data);
+    this.fromStore(data);
   }
 
   protected bindEvents() {
