@@ -12,7 +12,7 @@ import { PromiseIpc } from 'electron-promise-ipc'
 
 Vue.use(Vuex);
 
-const promiseIpc = new PromiseIpc( { maxTimeoutMs: 120000 } );
+const promiseIpc = new PromiseIpc({maxTimeoutMs: 120000});
 
 export default new Vuex.Store({
   modules: {
@@ -30,9 +30,9 @@ export default new Vuex.Store({
     lastSeenAppVersion: userStore.lastSeenAppVersion,
   },
   mutations: {
-    storeSeenContexts(state, context) {
-      userStore.seenContexts.add(context);
-      state.seenContexts = Array.from(userStore.seenContexts);
+    storeSeenContexts(state, contexts) {
+      contexts.forEach(ctx => userStore.seenContexts.add(ctx));
+      state.seenContexts = contexts;
     },
     updateLastSeenAppVersion(state, appVersion) {
       state.lastSeenAppVersion = appVersion;
@@ -60,7 +60,7 @@ export default new Vuex.Store({
       await this.dispatch('refreshClusters', getters.currentWorkspace);
       return true;
     },
-    async addSeenContexts({commit}, data){
+    async addSeenContexts({commit}, data) {
       commit('storeSeenContexts', data);
     },
     async updateLastSeenAppVersion({commit, state}) {
@@ -68,13 +68,13 @@ export default new Vuex.Store({
       commit("updateLastSeenAppVersion", getAppVersion())
     }
   },
-  getters : {
+  getters: {
     seenContexts: state => state.seenContexts,
     hud: state => state.hud,
-    isMenuVisible: function(state, getters){
+    isMenuVisible: function (state, getters) {
       return state.hud.isMenuVisible && !getters.showWhatsNew;
     },
-    showWhatsNew: function(state) {
+    showWhatsNew: function (state) {
       return semver.gt(getAppVersion(), state.lastSeenAppVersion);
     },
     preferences: state => state.preferences,

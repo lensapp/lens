@@ -31,9 +31,7 @@ Vue.mixin({
 // any initialization we want to do for app state
 setTimeout(async () => {
   await when(() => userStore.isReady);
-
   await store.dispatch('init')
-  console.log("start vue")
   new Vue({
     components: { App },
     store,
