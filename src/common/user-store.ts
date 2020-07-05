@@ -7,7 +7,7 @@ import migrations from "../migrations/user-store"
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import { tracker } from "./tracker";
-import logger from "../main/logger";
+import isEqual from "lodash/isEqual"
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -37,7 +37,7 @@ export class UserStore extends Singleton {
   };
 
   get name() {
-    return path.dirname(this.storeConfig.path);
+    return path.basename(this.storeConfig.path);
   }
 
   @computed get hasNewAppVersion() {
@@ -50,7 +50,7 @@ export class UserStore extends Singleton {
   }
 
   async init() {
-    await this.load();
+    /*await*/ this.load();
     this.bindEvents();
     this.isReady = true;
   }
@@ -68,21 +68,25 @@ export class UserStore extends Singleton {
       watch: true, // enable onDidChange()-callback
     });
     const data = this.storeConfig.store;
-    logger.debug(`[STORE]: ${this.name} loaded with`, data);
+    console.info(`[STORE]: [LOADED] ${this.storeConfig.path}`, data);
     this.fromStore(data);
   }
 
   protected bindEvents() {
     // refresh from file-system updates
     this.storeConfig.onDidAnyChange((data, oldValue) => {
-      logger.debug(`[STORE]: ${this.name} sync from file-system`, { data, oldValue });
-      this.fromStore(data);
+      if (!isEqual(this.toJSON(), data)) {
+        console.info(`[STORE]: [UPDATE] ${this.name} from file-system`, { data, oldValue });
+        this.fromStore(data);
+      }
     });
 
     // refresh config file from runtime
     reaction(() => this.toJSON(), model => {
-      logger.debug(`[STORE]: ${this.name} sync from app-runtime`, model);
-      this.storeConfig.store = model;
+      if (!isEqual(this.storeConfig.store, model)) {
+        console.info(`[STORE]: [UPDATE] ${this.name} to file-system from runtime model`, model);
+        this.storeConfig.store = model; // fixme: actual save to fs won't happen
+      }
     });
 
     // track telemetry availability
