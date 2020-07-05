@@ -7,6 +7,7 @@ const state = {
 
 const actions = {
   reloadAvailableKubeContexts({commit}, file) {
+    if(!file) return;
     let kc = new k8s.KubeConfig();
     try {
       kc.loadFromFile(file);
