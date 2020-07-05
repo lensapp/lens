@@ -9,6 +9,8 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import { userStore } from "../../common/user-store"
+import { when } from "mobx"
 
 const promiseIpc = new PromiseIpc({maxTimeoutMs: 6000});
 
@@ -27,17 +29,15 @@ Vue.mixin({
 })
 
 // any initialization we want to do for app state
-setTimeout(() => {
-  store.dispatch('init', ).catch((error) => {
-    console.error(error)
-  }).finally(() => {
-    /* eslint-disable no-new */
-    console.log("start vue")
-    new Vue({
-      components: { App },
-      store,
-      router,
-      template: '<App/>'
-    }).$mount('#app')
-  })
-}, 0)
+setTimeout(async () => {
+  await when(() => userStore.isReady);
+
+  await store.dispatch('init')
+  console.log("start vue")
+  new Vue({
+    components: { App },
+    store,
+    router,
+    template: '<App/>'
+  }).$mount('#app')
+})

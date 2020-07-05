@@ -1,4 +1,3 @@
-import path from "path";
 import Config from "conf";
 import { isTestEnv } from "../common/vars";
 
@@ -15,8 +14,7 @@ function infoLog(...args: any[]) {
 export function migration<S = any>({ version, run }: MigrationOpts) {
   return {
     [version]: (storeConfig: Config<S>) => {
-      const storeName = path.dirname(storeConfig.path);
-      infoLog(`STORE MIGRATION (${storeName}): ${version}`,);
+      infoLog(`STORE MIGRATION (${storeConfig.path}): ${version}`,);
       run(storeConfig, infoLog);
     }
   };

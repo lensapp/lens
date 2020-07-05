@@ -1,6 +1,6 @@
 import path from "path"
 import { app, remote } from "electron"
-import { computed, observable, reaction, toJS } from "mobx";
+import { observable, reaction, toJS } from "mobx";
 import Config from "conf"
 import semver from "semver"
 import migrations from "../migrations/user-store"
@@ -40,8 +40,18 @@ export class UserStore extends Singleton {
     return path.basename(this.storeConfig.path);
   }
 
-  @computed get hasNewAppVersion() {
+  get hasNewAppVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
+  }
+
+  get storeModel() {
+    const storeModel = { ...this.storeConfig.store };
+    Reflect.deleteProperty(storeModel, "__internal__"); // fixme: avoid "external-internals"
+    return storeModel;
+  }
+
+  saveLastSeenAppVersion() {
+    this.lastSeenAppVersion = getAppVersion();
   }
 
   private constructor() {
@@ -49,22 +59,17 @@ export class UserStore extends Singleton {
     this.init();
   }
 
-  async init() {
-    /*await*/ this.load();
+  protected async init() {
+    await this.load();
     this.bindEvents();
     this.isReady = true;
   }
 
-  saveLastSeenAppVersion() {
-    this.lastSeenAppVersion = getAppVersion();
-  }
-
-  // todo: use "conf" as pseudo-async for more future-proof usages
   protected async load() {
     this.storeConfig = new Config<UserStoreModel>({
       configName: "lens-user-store",
       migrations: migrations,
-      cwd: (app || remote.app).getPath("userData"),
+      cwd: (app || remote.app).getPath("userData"), // todo: move to main process + with ipc.invoke
       watch: true, // enable onDidChange()-callback
     });
     const data = this.storeConfig.store;
@@ -76,16 +81,22 @@ export class UserStore extends Singleton {
     // refresh from file-system updates
     this.storeConfig.onDidAnyChange((data, oldValue) => {
       if (!isEqual(this.toJSON(), data)) {
-        console.info(`[STORE]: [UPDATE] ${this.name} from file-system`, { data, oldValue });
+        console.info(`[STORE]: [UPDATE] from ${this.name}`, { data, oldValue });
         this.fromStore(data);
       }
     });
 
     // refresh config file from runtime
-    reaction(() => this.toJSON(), model => {
-      if (!isEqual(this.storeConfig.store, model)) {
-        console.info(`[STORE]: [UPDATE] ${this.name} to file-system from runtime model`, model);
-        this.storeConfig.store = model; // fixme: actual save to fs won't happen
+    reaction(() => this.toJSON(), (model: UserStoreModel) => {
+      if (!isEqual(this.storeModel, model)) {
+        console.info(`[STORE]: [SAVE] ${this.name} from runtime update`, {
+          data: model,
+          oldValue: this.storeModel
+        });
+        // fixme: https://github.com/sindresorhus/conf/issues/114
+        Object.entries(model).forEach(([key, value]) => {
+          this.storeConfig.set(key, value);
+        });
       }
     });
 
@@ -114,6 +125,8 @@ export class UserStore extends Singleton {
       lastSeenAppVersion: this.lastSeenAppVersion,
       seenContexts: Array.from(this.seenContexts),
       preferences: this.preferences,
+    }, {
+      recurseEverything: true,
     })
   }
 }
