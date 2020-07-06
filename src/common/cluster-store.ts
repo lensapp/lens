@@ -55,6 +55,13 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return toJS(this.data.clusters).map(model => new Cluster(model));
   }
 
+  @computed get clustersMap(): Map<string, Cluster> {
+    return this.clusters.reduce((map, cluster) => {
+      map.set(cluster.id, cluster);
+      return map;
+    }, new Map);
+  }
+
   getById(clusterId: ClusterId): Cluster {
     return this.clusters.find(cluster => cluster.id === clusterId)
   }
@@ -78,6 +85,21 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         this.removeById(cluster.id)
       }
     })
+  }
+
+  toJSON(): ClusterStoreModel {
+    const clusters: ClusterModel[] = this.clusters.map(cluster => {
+      return {
+        id: cluster.id,
+        contextName: cluster.contextName,
+        kubeConfigPath: cluster.kubeConfigPath,
+        preferences: cluster.preferences,
+        workspace: cluster.workspace,
+      }
+    })
+    return {
+      clusters
+    }
   }
 }
 
