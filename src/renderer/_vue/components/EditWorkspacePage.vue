@@ -55,6 +55,7 @@
 
 <script>
 import ClosePageButton from "@/_vue/components/common/ClosePageButton";
+import { workspaceStore } from "../../../common/workspace-store"
 
 export default {
   name: 'EditWorkspacePage',
@@ -71,7 +72,7 @@ export default {
   },
   computed: {
     workspace: function() {
-      return this.$store.getters.workspaceById(this.$route.params.id)
+      return workspaceStore.getById(this.$route.params.id)
     }
   },
   methods: {

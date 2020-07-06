@@ -20,7 +20,7 @@ export class BaseStore<T = any> extends Singleton {
   public whenLoaded = when(() => this.isLoaded);
 
   @observable isLoaded = false;
-  @observable protected data: T;
+  @observable protected data = {} as T;
 
   protected constructor(protected params: BaseStoreParams) {
     super();
@@ -109,7 +109,7 @@ export class BaseStore<T = any> extends Singleton {
 
   // todo: use "serializr" ?
   protected fromStore(data: Partial<T> = {}) {
-    this.data = data as T;
+    Object.assign(this.data, data);
   }
 
   toJSON(): T {

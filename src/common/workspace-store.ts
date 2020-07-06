@@ -1,7 +1,6 @@
-import Config from "conf"
-import Singleton from "./utils/singleton";
+import { computed, toJS } from "mobx";
+import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store"
-import { getAppVersion } from "./utils/app-version";
 
 export type WorkspaceId = string;
 
@@ -15,57 +14,53 @@ export interface Workspace {
   description?: string;
 }
 
-export class WorkspaceStore extends Singleton {
-  static readonly defaultId = "default"
+export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
+  static readonly defaultId: WorkspaceId = "default"
 
-  private storeConfig = new Config<WorkspaceStoreModel>({
-    configName: "lens-workspace-store",
-    projectVersion: getAppVersion(),
-  });
+  protected data: WorkspaceStoreModel = {
+    workspaces: [{
+      id: WorkspaceStore.defaultId,
+      name: "default"
+    }]
+  }
+
+  @computed get workspaces() {
+    return toJS(this.data.workspaces);
+  }
 
   private constructor() {
-    super();
-    this.init();
+    super({
+      configName: "lens-workspace-store",
+    });
   }
 
-  protected init() {
-    if (!this.getWorkspace(WorkspaceStore.defaultId)) {
-      this.saveWorkspace({
-        id: WorkspaceStore.defaultId,
-        name: "default"
-      })
-    }
+  public getById(id: WorkspaceId): Workspace {
+    return this.workspaces.find(workspace => workspace.id === id);
   }
 
-  public getWorkspace(id: WorkspaceId): Workspace {
-    return this.getAllWorkspaces().find(workspace => workspace.id === id)
+  public getIndexById(id: WorkspaceId): number {
+    return this.workspaces.findIndex(workspace => workspace.id === id);
   }
 
-  public getAllWorkspaces(): Workspace[] {
-    return this.storeConfig.get("workspaces", [])
-  }
-
-  public saveWorkspace(workspace: Workspace) {
-    const workspaces = this.getAllWorkspaces()
-    const index = workspaces.findIndex((w) => w.id === workspace.id)
-    if (index !== -1) {
-      workspaces[index] = workspace
+  public saveWorkspace(newWorkspace: Workspace) {
+    const workspace = this.getById(newWorkspace.id);
+    if (workspace) {
+      Object.assign(workspace, newWorkspace);
     } else {
-      workspaces.push(workspace)
+      this.data.workspaces.push(newWorkspace);
     }
-    this.storeConfig.set("workspaces", workspaces)
   }
 
-  public removeWorkspace(workspace: Workspace) {
+  public removeWorkspace(workspaceOrId: Workspace | WorkspaceId) {
+    const workspace = this.getById(typeof workspaceOrId == "string" ? workspaceOrId : workspaceOrId.id);
+    if (!workspace) return;
     if (workspace.id === WorkspaceStore.defaultId) {
-      throw new Error("Cannot remove default workspace")
+      throw new Error("Cannot remove default workspace");
     }
-    const workspaces = this.getAllWorkspaces()
-    const index = workspaces.findIndex((w) => w.id === workspace.id)
-    if (index !== -1) {
+    const index = this.getIndexById(workspace.id);
+    if (index > -1) {
+      this.data.workspaces.splice(index, 1)
       clusterStore.removeClustersByWorkspace(workspace.id)
-      workspaces.splice(index, 1)
-      this.storeConfig.set("workspaces", workspaces)
     }
   }
 }
