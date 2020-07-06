@@ -1,5 +1,5 @@
 import semver from "semver"
-import { observable, reaction, toJS } from "mobx";
+import { action, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store"
 import { getAppVersion } from "./utils/app-version";
@@ -47,17 +47,19 @@ export class UserStore extends BaseStore<UserStoreModel> {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
   }
 
+  @action
   saveLastSeenAppVersion() {
     this.lastSeenAppVersion = getAppVersion();
   }
 
+  @action
   protected fromStore(data: Partial<UserStoreModel> = {}) {
     const { lastSeenAppVersion, seenContexts, preferences } = data
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;
     }
     if (seenContexts) {
-      this.seenContexts = observable.set(seenContexts)
+      this.seenContexts = observable.set(seenContexts);
     }
     if (preferences) {
       Object.assign(this.preferences, preferences);
@@ -75,5 +77,4 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 }
 
-const userStore: UserStore = UserStore.getInstance();
-export { userStore }
+export const userStore: UserStore = UserStore.getInstance();

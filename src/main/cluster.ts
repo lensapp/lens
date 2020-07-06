@@ -1,7 +1,7 @@
 import { ContextHandler } from "./context-handler"
 import { FeatureStatusMap } from "./feature"
 import * as k8s from "./k8s"
-import { clusterStore } from "../common/cluster-store"
+import { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import logger from "./logger"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import * as fm from "./feature-manager";
@@ -10,6 +10,7 @@ import { KubeconfigManager } from "./kubeconfig-manager"
 import { PromiseIpc } from "electron-promise-ipc"
 import request from "request-promise-native"
 import { apiPrefix } from "../common/vars";
+import type { ClusterInfo } from "../renderer/_vue/store/modules/clusters";
 
 enum ClusterStatus {
   AccessGranted = 2,
@@ -17,49 +18,8 @@ enum ClusterStatus {
   Offline = 0
 }
 
-export interface ClusterBaseInfo {
-  id: string;
-  kubeConfig?: string;
-  kubeConfigPath: string;
-  contextName: string;
-  preferences?: ClusterPreferences;
-  port?: number;
-  workspace?: string;
-}
-
-export interface ClusterInfo extends ClusterBaseInfo {
-  url: string;
-  apiUrl: string;
-  online?: boolean;
-  accessible?: boolean;
-  failureReason?: string;
-  nodes?: number;
-  version?: string;
-  distribution?: string;
-  isAdmin?: boolean;
-  features?: FeatureStatusMap;
-  kubeCtl?: Kubectl;
-  contextName: string;
-}
-
-export type ClusterPreferences = {
-  terminalCWD?: string;
-  clusterName?: string;
-  prometheus?: {
-    namespace: string;
-    service: string;
-    port: number;
-    prefix: string;
-  };
-  prometheusProvider?: {
-    type: string;
-  };
-  icon?: string;
-  httpsProxy?: string;
-}
-
-export class Cluster implements ClusterInfo {
-  public id: string;
+export class Cluster implements ClusterModel {
+  public id: ClusterId;
   public workspace: string;
   public contextHandler: ContextHandler;
   public contextName: string;
@@ -84,8 +44,8 @@ export class Cluster implements ClusterInfo {
 
   protected kubeconfigManager: KubeconfigManager;
 
-  constructor(clusterInfo: ClusterBaseInfo) {
-    if (clusterInfo) Object.assign(this, clusterInfo)
+  constructor(jsonModel: ClusterModel) {
+    if (jsonModel) Object.assign(this, jsonModel)
     if (!this.preferences) this.preferences = {}
   }
 
@@ -129,7 +89,7 @@ export class Cluster implements ClusterInfo {
   }
 
   public async refreshCluster() {
-    clusterStore.reloadCluster(this)
+    // clusterStore.reloadCluster(this)
     this.contextHandler.setClusterPreferences(this.preferences)
 
     const connectionStatus = await this.getConnectionStatus()
@@ -155,7 +115,7 @@ export class Cluster implements ClusterInfo {
   }
 
   public save() {
-    clusterStore.saveCluster(this)
+    // clusterStore.saveCluster(this)
   }
 
   public toClusterInfo(): ClusterInfo {

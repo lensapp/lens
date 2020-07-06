@@ -46,14 +46,16 @@ if(isDevelopment) {
 if(process.platform === "win32") bundledPath = `${bundledPath}.exe`
 
 export class Kubectl {
-
   public kubectlVersion: string
   protected directory: string
   protected url: string
   protected path: string
   protected dirname: string
 
-  public static readonly kubectlDir = path.join((app || remote.app).getPath("userData"), "binaries", "kubectl")
+  static get kubectlDir(){
+    return path.join((app || remote.app).getPath("userData"), "binaries", "kubectl")
+  }
+
   public static readonly bundledKubectlPath = bundledPath
   public static readonly bundledKubectlVersion: string = bundledVersion
   private static bundledInstance: Kubectl;

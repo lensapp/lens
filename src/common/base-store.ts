@@ -25,7 +25,7 @@ export class BaseStore<T = any> extends Singleton {
   protected constructor(protected params: BaseStoreParams) {
     super();
     this.params = {
-      autoLoad: true,
+      autoLoad: !app, // disabled in main process due delayed configuration
       syncEnabled: true,
       ...params,
     }
@@ -54,7 +54,7 @@ export class BaseStore<T = any> extends Singleton {
     }
   }
 
-  protected async load() {
+  async load() {
     const { configName, syncEnabled, confOptions = {} } = this.params;
 
     // use "await" to make pseudo-async "load" for more future-proof usages
@@ -63,7 +63,10 @@ export class BaseStore<T = any> extends Singleton {
       projectVersion: getAppVersion(),
       configName: configName,
       watch: syncEnabled, // watch for changes in multi-process app (e.g. main/renderer)
-      cwd: (app || remote.app).getPath("userData"), // todo: remove remote.app in favor ipc.invoke
+      get cwd() {
+        // todo: remove remote.app in favor ipc.invoke
+        return (app || remote.app).getPath("userData");
+      },
       ...confOptions,
     });
     const data = this.storeConfig.store;

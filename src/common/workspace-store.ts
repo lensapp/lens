@@ -1,4 +1,4 @@
-import { computed, toJS } from "mobx";
+import { action, computed, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store"
 
@@ -42,6 +42,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     return this.workspaces.findIndex(workspace => workspace.id === id);
   }
 
+  @action
   public saveWorkspace(newWorkspace: Workspace) {
     const workspace = this.getById(newWorkspace.id);
     if (workspace) {
@@ -51,6 +52,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     }
   }
 
+  @action
   public removeWorkspace(workspaceOrId: Workspace | WorkspaceId) {
     const workspace = this.getById(typeof workspaceOrId == "string" ? workspaceOrId : workspaceOrId.id);
     if (!workspace) return;
@@ -60,7 +62,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     const index = this.getIndexById(workspace.id);
     if (index > -1) {
       this.data.workspaces.splice(index, 1)
-      clusterStore.removeClustersByWorkspace(workspace.id)
+      clusterStore.removeAllByWorkspaceId(workspace.id)
     }
   }
 }

@@ -1,8 +1,8 @@
 import { KubeConfig } from "@kubernetes/client-node"
 import { PromiseIpc } from "electron-promise-ipc"
 import http from "http"
-import { Cluster, ClusterBaseInfo } from "./cluster"
-import { clusterStore } from "../common/cluster-store"
+import { Cluster } from "./cluster"
+import { ClusterModel, clusterStore } from "../common/cluster-store"
 import * as k8s from "./k8s"
 import logger from "./logger"
 import { LensProxy } from "./proxy"
@@ -13,6 +13,8 @@ import  { ensureDir } from "fs-extra"
 import filenamify from "filenamify"
 import { v4 as uuid } from "uuid"
 import { apiPrefix } from "../common/vars";
+
+// todo: refactor + reuse parts of cluster-store more heavily
 
 export type FeatureInstallRequest = {
   name: string;
@@ -32,7 +34,10 @@ export type ClusterIconUpload = {
 }
 
 export class ClusterManager {
-  public static readonly clusterIconDir = path.join(app.getPath("userData"), "icons")
+  static get clusterIconDir(){
+    return path.join(app.getPath("userData"), "icons")
+  }
+
   protected promiseIpc: any
   protected proxyServer: LensProxy
   protected port: number
@@ -83,7 +88,7 @@ export class ClusterManager {
     return kc;
   }
 
-  protected async addNewCluster(clusterData: ClusterBaseInfo): Promise<Cluster> {
+  protected async addNewCluster(clusterData: ClusterModel): Promise<Cluster> {
     return new Promise(async (resolve, reject) => {
       try {
         const kc = this.loadKubeConfig(clusterData.kubeConfigPath)
@@ -110,7 +115,7 @@ export class ClusterManager {
   }
 
   protected listenEvents() {
-    this.promiseIpc.on("addCluster", async (clusterData: ClusterBaseInfo) => {
+    this.promiseIpc.on("addCluster", async (clusterData: ClusterModel) => {
       logger.debug(`IPC: addCluster`)
       const cluster = await this.addNewCluster(clusterData)
       return {
@@ -174,10 +179,10 @@ export class ClusterManager {
       }
       try {
         const clusterIcon = await this.uploadClusterIcon(cluster, fileUpload.name, fileUpload.path)
-        clusterStore.reloadCluster(cluster);
+        // clusterStore.reloadCluster(cluster);
         if(!cluster.preferences) cluster.preferences = {};
         cluster.preferences.icon = clusterIcon
-        clusterStore.saveCluster(cluster);
+        // clusterStore.saveCluster(cluster);
         return {success: true, cluster: cluster.toClusterInfo(), message: ""}
       } catch(error) {
         return {success: false, message: error}
@@ -189,7 +194,7 @@ export class ClusterManager {
       const cluster = this.getCluster(id)
       if (cluster && cluster.preferences) {
         cluster.preferences.icon = null;
-        clusterStore.saveCluster(cluster)
+        // clusterStore.saveCluster(cluster)
         return {success: true, cluster: cluster.toClusterInfo(), message: ""}
       } else {
         return {success: false, message: "Cluster not found"}
@@ -221,7 +226,7 @@ export class ClusterManager {
       logger.debug(`IPC: clusterStored: ${clusterId}`)
       const cluster = this.clusters.get(clusterId)
       if (cluster) {
-        clusterStore.reloadCluster(cluster);
+        // clusterStore.reloadCluster(cluster);
         cluster.stopServer()
       }
     });
@@ -244,7 +249,7 @@ export class ClusterManager {
     const cluster = this.clusters.get(id)
     if (cluster) {
       cluster.stopServer()
-      clusterStore.removeCluster(cluster.id);
+      clusterStore.removeById(cluster.id);
       this.clusters.delete(cluster.id)
     }
     return Array.from(this.clusters.values())

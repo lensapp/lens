@@ -10,6 +10,8 @@ import App from './App'
 import router from './router'
 import store from './store'
 import { userStore } from "../../common/user-store"
+import { workspaceStore } from "../../common/workspace-store"
+import { clusterStore } from "../../common/cluster-store"
 
 const promiseIpc = new PromiseIpc({maxTimeoutMs: 6000});
 
@@ -29,9 +31,13 @@ Vue.mixin({
 
 // any initialization we want to do for app state
 setTimeout(async () => {
-  await userStore.whenLoaded;
-  await store.dispatch('init')
+  await Promise.all([
+    userStore.whenLoaded,
+    workspaceStore.whenLoaded,
+    clusterStore.whenLoaded,
+  ]);
 
+  await store.dispatch('init')
   new Vue({
     components: {App},
     store,

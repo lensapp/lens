@@ -1,15 +1,9 @@
 // Main process
 
 import "../common/system-ca"
-import { app, dialog, protocol } from "electron"
-import { isMac, vueAppName, isDevelopment } from "../common/vars";
-if (isDevelopment) {
-  const appName = 'LensDev';
-  const appData = app.getPath('appData');
-  app.setName(appName);
-  app.setPath('userData', path.join(appData, appName));
-}
 import "../common/prometheus-providers"
+import { app, dialog, protocol } from "electron"
+import { isDevelopment, isMac, vueAppName } from "../common/vars";
 import { PromiseIpc } from "electron-promise-ipc"
 import path from "path"
 import { format as formatUrl } from "url"
@@ -17,7 +11,6 @@ import logger from "./logger"
 import initMenu from "./menu"
 import * as proxy from "./proxy"
 import { WindowManager } from "./window-manager";
-import { clusterStore } from "../common/cluster-store"
 import { ClusterManager } from "./cluster-manager";
 import AppUpdater from "./app-updater"
 import { shellSync } from "./shell-sync"
@@ -25,7 +18,16 @@ import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { findMainWebContents } from "./webcontents"
 import { registerStaticProtocol } from "../common/register-static";
+import { clusterStore } from "../common/cluster-store"
+import { userStore } from "../common/user-store";
 import { tracker } from "../common/tracker";
+
+if (isDevelopment) {
+  const appName = "LensDev";
+  const appData = app.getPath("appData");
+  app.setName(appName);
+  app.setPath("userData", path.join(appData, appName));
+}
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
@@ -69,8 +71,14 @@ async function main() {
     app.quit();
   }
 
+  // preload required stores
+  await Promise.all([
+    userStore.load(),
+    clusterStore.load(),
+  ]);
+
   // create cluster manager
-  clusterManager = new ClusterManager(clusterStore.getAllClusterObjects(), port)
+  clusterManager = new ClusterManager(clusterStore.clusters, port)
   // run proxy
   try {
     proxyServer = proxy.listen(port, clusterManager)

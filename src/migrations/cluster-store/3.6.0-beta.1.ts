@@ -1,21 +1,21 @@
 // Move embedded kubeconfig into separate file and add reference to it to cluster settings
 
 import path from "path"
-import { app } from "electron"
+import { app, remote } from "electron"
 import { migration } from "../migration-wrapper";
 import { ensureDirSync } from "fs-extra"
 import { KubeConfig } from "@kubernetes/client-node";
 import { writeEmbeddedKubeConfig } from "../../common/utils/kubeconfig"
-import { ClusterBaseInfo } from "../../main/cluster";
+import { ClusterModel } from "../../common/cluster-store";
 
 export default migration({
   version: "3.6.0-beta.1",
   run(store, log: (...args: any[]) => void) {
-    const migratingClusters: ClusterBaseInfo[] = []
+    const migratingClusters: ClusterModel[] = []
 
-    const kubeConfigBase = path.join(app.getPath("userData"), "kubeconfigs")
+    const kubeConfigBase = path.join((app || remote.app).getPath("userData"), "kubeconfigs")
     ensureDirSync(kubeConfigBase)
-    const storedClusters: ClusterBaseInfo[] = store.get("clusters")
+    const storedClusters: ClusterModel[] = store.get("clusters")
     if (!storedClusters) return
 
     log("Number of clusters to migrate: ", storedClusters.length)

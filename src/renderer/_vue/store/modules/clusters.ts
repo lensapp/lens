@@ -1,12 +1,29 @@
 import Vue from "vue"
-import { ClusterInfo } from "../../../../main/cluster"
 import { ActionTree, GetterTree, MutationTree } from "vuex"
 import { PromiseIpc } from 'electron-promise-ipc'
-import { clusterStore } from "../../../../common/cluster-store"
+import { ClusterModel } from "../../../../common/cluster-store"
 import { Workspace } from "../../../../common/workspace-store"
 import { tracker } from "../../../../common/tracker";
+import { FeatureStatusMap } from "../../../../main/feature";
+import { Kubectl } from "../../../../main/kubectl";
 
-const promiseIpc = new PromiseIpc({ maxTimeoutMs: 120000 });
+/**
+ * @deprecated
+ */
+export interface ClusterInfo extends ClusterModel {
+  url: string;
+  apiUrl: string;
+  online?: boolean;
+  accessible?: boolean;
+  failureReason?: string;
+  nodes?: number;
+  version?: string;
+  distribution?: string;
+  isAdmin?: boolean;
+  features?: FeatureStatusMap;
+  kubeCtl?: Kubectl;
+  contextName: string;
+}
 
 export interface LensWebview {
   id: string;
@@ -18,6 +35,8 @@ export interface ClusterState {
   lenses: LensWebview[];
   clusters: ClusterInfo[];
 }
+
+const promiseIpc = new PromiseIpc({ maxTimeoutMs: 120000 });
 
 const state: ClusterState = {
   lenses: [],
@@ -218,7 +237,7 @@ const actions: ActionTree<ClusterState, any> = {
     })
   },
   storeCluster({ commit }, cluster: ClusterInfo) {
-    clusterStore.saveCluster(cluster);
+    // clusterStore.saveCluster(cluster);
     commit("updateCluster", cluster)
     promiseIpc.send("clusterStored", cluster.id)
   }

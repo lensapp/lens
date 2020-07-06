@@ -1,85 +1,83 @@
-import Config from "conf"
-import Singleton from "./utils/singleton";
+import { action, computed, toJS } from "mobx";
 import migrations from "../migrations/cluster-store"
-import { Cluster, ClusterBaseInfo } from "../main/cluster";
+import { BaseStore } from "./base-store";
+import { Cluster } from "../main/cluster";
 
-export class ClusterStore extends Singleton {
-  private storeConfig = new Config({
-    configName: "lens-cluster-store",
-    accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
-    migrations: migrations,
-  })
+export interface ClusterStoreModel {
+  clusters: ClusterModel[]
+}
 
-  public getAllClusterObjects(): Cluster[] {
-    return this.storeConfig.get("clusters", []).map((clusterInfo: ClusterBaseInfo) => {
-      return new Cluster(clusterInfo)
-    })
+export type ClusterId = string;
+
+export interface ClusterModel {
+  id: ClusterId;
+  contextName: string;
+  kubeConfigPath: string;
+  kubeConfig?: string;
+  port?: number;
+  workspace?: string;
+  preferences?: ClusterPreferences;
+}
+
+export interface ClusterPreferences {
+  terminalCWD?: string;
+  clusterName?: string;
+  prometheus?: {
+    namespace: string;
+    service: string;
+    port: number;
+    prefix: string;
+  };
+  prometheusProvider?: {
+    type: string;
+  };
+  icon?: string;
+  httpsProxy?: string;
+}
+
+export class ClusterStore extends BaseStore<ClusterStoreModel> {
+  private constructor() {
+    super({
+      configName: "lens-cluster-store",
+      confOptions: {
+        migrations: migrations,
+        accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
+      }
+    });
   }
 
-  public getAllClusters(): ClusterBaseInfo[] {
-    return this.storeConfig.get("clusters", [])
+  // setup initial value
+  protected data: ClusterStoreModel = {
+    clusters: [],
   }
 
-  public removeCluster(id: string): void {
-    this.storeConfig.delete(id);
-    const clusterBaseInfos = this.getAllClusters()
-    const index = clusterBaseInfos.findIndex((cbi) => cbi.id === id)
-    if (index !== -1) {
-      clusterBaseInfos.splice(index, 1)
-      this.storeConfig.set("clusters", clusterBaseInfos)
+  @computed get clusters(): Cluster[] {
+    return toJS(this.data.clusters).map(model => new Cluster(model));
+  }
+
+  getById(clusterId: ClusterId): Cluster {
+    return this.clusters.find(cluster => cluster.id === clusterId)
+  }
+
+  getIndexById(clusterId: ClusterId): number {
+    return this.clusters.findIndex(cluster => cluster.id === clusterId)
+  }
+
+  @action
+  removeById(clusterId: ClusterId): void {
+    const index = this.getIndexById(clusterId);
+    if (index > -1) {
+      this.data.clusters.splice(index, 1);
     }
   }
 
-  public removeClustersByWorkspace(workspace: string) {
-    this.getAllClusters().forEach((cluster) => {
-      if (cluster.workspace === workspace) {
-        this.removeCluster(cluster.id)
+  @action
+  removeAllByWorkspaceId(workspaceId: string) {
+    this.clusters.forEach(cluster => {
+      if (cluster.workspace === workspaceId) {
+        this.removeById(cluster.id)
       }
     })
-  }
-
-  public getCluster(id: string): Cluster {
-    const cluster = this.getAllClusterObjects().find((cluster) => cluster.id === id)
-    if (cluster) {
-      return cluster
-    }
-
-    return null
-  }
-
-  public saveCluster(cluster: ClusterBaseInfo) {
-    const clusters = this.getAllClusters();
-    const index = clusters.findIndex((cl) => cl.id === cluster.id)
-    const storable = {
-      id: cluster.id,
-      kubeConfigPath: cluster.kubeConfigPath,
-      contextName: cluster.contextName,
-      preferences: cluster.preferences,
-      workspace: cluster.workspace
-    }
-    if (index === -1) {
-      clusters.push(storable)
-    } else {
-      clusters[index] = storable
-    }
-    this.storeConfig.set("clusters", clusters)
-  }
-
-  public storeClusters(clusters: ClusterBaseInfo[]) {
-    clusters.forEach((cluster: ClusterBaseInfo) => {
-      this.removeCluster(cluster.id)
-      this.saveCluster(cluster)
-    })
-  }
-
-  public reloadCluster(cluster: ClusterBaseInfo): void {
-    const storedCluster = this.getCluster(cluster.id);
-    if (storedCluster) {
-      cluster.kubeConfigPath = storedCluster.kubeConfigPath
-      cluster.contextName = storedCluster.contextName
-      cluster.preferences = storedCluster.preferences
-      cluster.workspace = storedCluster.workspace
-    }
   }
 }
 

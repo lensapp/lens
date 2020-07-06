@@ -5,9 +5,10 @@ import * as url from "url"
 import logger from "./logger"
 import { getFreePort } from "./port"
 import { KubeAuthProxy } from "./kube-auth-proxy"
-import { Cluster, ClusterPreferences } from "./cluster"
+import { Cluster } from "./cluster"
 import { prometheusProviders } from "../common/prometheus-providers"
-import { PrometheusService, PrometheusProvider } from "./prometheus/provider-registry"
+import type { PrometheusService, PrometheusProvider } from "./prometheus/provider-registry"
+import type { ClusterPreferences } from "../common/cluster-store";
 
 export class ContextHandler {
   public contextName: string

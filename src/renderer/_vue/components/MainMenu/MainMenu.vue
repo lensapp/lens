@@ -22,7 +22,6 @@
 import ClusterMenuItem from "@/_vue/components/MainMenu/ClusterMenuItem";
 import AddClusterMenuItem from "@/_vue/components/MainMenu/AddClusterMenuItem";
 import draggable from 'vuedraggable'
-import { clusterStore } from "../../../../common/cluster-store"
 import { isMac } from "../../../../common/vars"
 
 const {remote} = require('electron')
@@ -47,7 +46,7 @@ export default {
       },
       set: function (clusters) {
         this.$store.commit("updateClusters", clusters);
-        clusterStore.storeClusters(clusters);
+        // clusterStore.storeClusters(clusters);
       }
     }
   },
