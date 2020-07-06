@@ -5,7 +5,8 @@ import path from "path"
 import shellEnv from "shell-env"
 import { app } from "electron"
 import { Kubectl } from "./kubectl"
-import { Cluster, ClusterPreferences } from "./cluster"
+import { Cluster } from "./cluster"
+import { ClusterPreferences } from "../common/cluster-store";
 import { helmCli } from "./helm-cli"
 import { isWindows } from "../common/vars";
 import { tracker } from "../common/tracker";
