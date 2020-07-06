@@ -6,12 +6,12 @@ export class UserModeFeature extends Feature {
   name = 'user-mode';
   latestVersion = "v2.0.0"
 
-  async install(cluster: Cluster): Promise<boolean> {
+  async install(cluster: Cluster): Promise<void> {
     return super.install(cluster)
   }
 
-  async upgrade(cluster: Cluster): Promise<boolean> {
-    return true
+  async upgrade(cluster: Cluster): Promise<void> {
+    return;
   }
 
   async featureStatus(kc: KubeConfig): Promise<FeatureStatus> {

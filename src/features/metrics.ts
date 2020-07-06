@@ -51,21 +51,26 @@ export class MetricsFeature extends Feature {
     storageClass: null,
   };
 
-  async install(cluster: Cluster): Promise<boolean> {
+  async install(cluster: Cluster): Promise<void> {
     // Check if there are storageclasses
-    const storageClient = cluster.proxyKubeconfig().makeApiClient(k8s.StorageV1Api)
-    const scs = await storageClient.listStorageClass();
-    scs.body.items.forEach(sc => {
-      if(sc.metadata.annotations &&
+    (await cluster
+      .proxyKubeconfig()
+      .makeApiClient(k8s.StorageV1Api)
+      .listStorageClass()
+    )
+      .body
+      .items
+      .forEach(sc => {
+        if(sc.metadata.annotations &&
           (sc.metadata.annotations['storageclass.kubernetes.io/is-default-class'] === 'true' || sc.metadata.annotations['storageclass.beta.kubernetes.io/is-default-class'] === 'true')) {
-        this.config.persistence.enabled = true;
-      }
-    });
+          this.config.persistence.enabled = true;
+        }
+      });
 
-    return super.install(cluster)
+    return super.install(cluster);
   }
 
-  async upgrade(cluster: Cluster): Promise<boolean> {
+  async upgrade(cluster: Cluster): Promise<void> {
     return this.install(cluster)
   }
 

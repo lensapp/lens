@@ -104,22 +104,26 @@ export class LensProxy {
   }
 
   protected createWsListener() {
-    const ws = new WebSocket.Server({ noServer: true })
-    ws.on("connection", ((con: WebSocket, req: http.IncomingMessage) => {
+    const ws = new WebSocket.Server({ noServer: true})
+    ws.on("connection", (async (con: WebSocket, req: http.IncomingMessage) => {
       const cluster = this.clusterManager.getClusterForRequest(req)
-      const contextHandler = cluster.contextHandler
-      const nodeParam = url.parse(req.url, true).query["node"]?.toString();
+      const nodeParam = this.getNodeParam(req.url)
 
-      contextHandler.withTemporaryKubeconfig((kubeconfigPath) => {
-        return new Promise<boolean>(async (resolve, reject) => {
-          const shellSession = await shell.open(con, kubeconfigPath, cluster, nodeParam)
-          shellSession.on("exit", () => {
-            resolve(true)
-          })
-        })
-      })
-    }))
+      try {
+        await shell.open(con, cluster.kubeConfigPath, cluster, nodeParam)
+      } catch (err) {
+        console.error(err);
+      }
+    }).bind(this))
     return ws
+  }
+
+  protected getNodeParam(requestUrl: string) {
+    const [lastKey, lastValue] = Object.entries(url.parse(requestUrl, true).query)
+      .reverse()
+      .find(([key]) => key == "node");
+
+    return lastValue.toString();
   }
 
   protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions> {

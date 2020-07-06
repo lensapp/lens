@@ -29,26 +29,16 @@ export abstract class Feature {
     }
   }
 
-  // TODO Return types for these?
-  async install(cluster: Cluster): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      // Read and process yamls through handlebar
-      const resources = this.renderTemplates();
-
-      // Apply processed manifests
-      cluster.contextHandler.withTemporaryKubeconfig(async (kubeconfigPath) => {
-        const resourceApplier = new ResourceApplier(cluster, kubeconfigPath)
-        try {
-          await resourceApplier.kubectlApplyAll(resources)
-          resolve(true)
-        } catch(error) {
-          reject(error)
-        }
-      });
-    });
+  async install(cluster: Cluster): Promise<void> {
+    // Read and process yamls through handlebar
+    const resources = this.renderTemplates();
+    const kubeconfigPath = cluster.kubeconfigPath();
+    const resourceApplier = new ResourceApplier(cluster, kubeconfigPath)
+    
+    await resourceApplier.kubectlApplyAll(resources)
   }
 
-  abstract async upgrade(cluster: Cluster): Promise<boolean>;
+  abstract async upgrade(cluster: Cluster): Promise<void>;
 
   abstract async uninstall(cluster: Cluster): Promise<boolean>;
 
