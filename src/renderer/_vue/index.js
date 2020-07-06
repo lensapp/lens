@@ -10,7 +10,6 @@ import App from './App'
 import router from './router'
 import store from './store'
 import { userStore } from "../../common/user-store"
-import { when } from "mobx"
 
 const promiseIpc = new PromiseIpc({maxTimeoutMs: 6000});
 
@@ -30,10 +29,11 @@ Vue.mixin({
 
 // any initialization we want to do for app state
 setTimeout(async () => {
-  await when(() => userStore.isReady);
+  await userStore.whenLoaded;
   await store.dispatch('init')
+
   new Vue({
-    components: { App },
+    components: {App},
     store,
     router,
     template: '<App/>'

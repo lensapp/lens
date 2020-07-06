@@ -6,7 +6,6 @@
  *  const usersStore: UsersStore = UsersStore.getInstance();
  */
 
-// todo: maybe convert to @decorator
 class Singleton {
   private static instances = new WeakMap<object, Singleton>();
 

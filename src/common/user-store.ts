@@ -1,13 +1,9 @@
-import path from "path"
-import { app, remote } from "electron"
-import { observable, reaction, toJS } from "mobx";
-import Config from "conf"
 import semver from "semver"
+import { observable, reaction, toJS } from "mobx";
+import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store"
-import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import { tracker } from "./tracker";
-import isEqual from "lodash/isEqual"
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -23,10 +19,7 @@ export interface UserPreferences {
   downloadMirror?: string | "default";
 }
 
-export class UserStore extends Singleton {
-  private storeConfig: Config<UserStoreModel>;
-
-  @observable isReady = false;
+export class UserStore extends BaseStore<UserStoreModel> {
   @observable lastSeenAppVersion = "0.0.0"
   @observable seenContexts = observable.set();
 
@@ -36,67 +29,11 @@ export class UserStore extends Singleton {
     downloadMirror: "default",
   };
 
-  get name() {
-    return path.basename(this.storeConfig.path);
-  }
-
-  get hasNewAppVersion() {
-    return semver.gt(getAppVersion(), this.lastSeenAppVersion);
-  }
-
-  get storeModel() {
-    const storeModel = { ...this.storeConfig.store };
-    Reflect.deleteProperty(storeModel, "__internal__"); // fixme: avoid "external-internals"
-    return storeModel;
-  }
-
-  saveLastSeenAppVersion() {
-    this.lastSeenAppVersion = getAppVersion();
-  }
-
-  private constructor() {
-    super();
-    this.init();
-  }
-
-  protected async init() {
-    await this.load();
-    this.bindEvents();
-    this.isReady = true;
-  }
-
-  protected async load() {
-    this.storeConfig = new Config<UserStoreModel>({
+  protected constructor() {
+    super({
       configName: "lens-user-store",
-      migrations: migrations,
-      cwd: (app || remote.app).getPath("userData"), // todo: move to main process + with ipc.invoke
-      watch: true, // enable onDidChange()-callback
-    });
-    const data = this.storeConfig.store;
-    console.info(`[STORE]: [LOADED] ${this.storeConfig.path}`, data);
-    this.fromStore(data);
-  }
-
-  protected bindEvents() {
-    // refresh from file-system updates
-    this.storeConfig.onDidAnyChange((data, oldValue) => {
-      if (!isEqual(this.toJSON(), data)) {
-        console.info(`[STORE]: [UPDATE] from ${this.name}`, { data, oldValue });
-        this.fromStore(data);
-      }
-    });
-
-    // refresh config file from runtime
-    reaction(() => this.toJSON(), (model: UserStoreModel) => {
-      if (!isEqual(this.storeModel, model)) {
-        console.info(`[STORE]: [SAVE] ${this.name} from runtime update`, {
-          data: model,
-          oldValue: this.storeModel
-        });
-        // fixme: https://github.com/sindresorhus/conf/issues/114
-        Object.entries(model).forEach(([key, value]) => {
-          this.storeConfig.set(key, value);
-        });
+      confOptions: {
+        migrations: migrations
       }
     });
 
@@ -106,7 +43,14 @@ export class UserStore extends Singleton {
     });
   }
 
-  // todo: maybe use "serializr"
+  get hasNewAppVersion() {
+    return semver.gt(getAppVersion(), this.lastSeenAppVersion);
+  }
+
+  saveLastSeenAppVersion() {
+    this.lastSeenAppVersion = getAppVersion();
+  }
+
   protected fromStore(data: Partial<UserStoreModel> = {}) {
     const { lastSeenAppVersion, seenContexts, preferences } = data
     if (lastSeenAppVersion) {
@@ -120,7 +64,7 @@ export class UserStore extends Singleton {
     }
   }
 
-  protected toJSON(): UserStoreModel {
+  toJSON() {
     return toJS({
       lastSeenAppVersion: this.lastSeenAppVersion,
       seenContexts: Array.from(this.seenContexts),
@@ -131,4 +75,5 @@ export class UserStore extends Singleton {
   }
 }
 
-export const userStore: UserStore = UserStore.getInstance();
+const userStore: UserStore = UserStore.getInstance();
+export { userStore }

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import semver from "semver"
 import { userStore } from "../../../common/user-store"
 import { getAppVersion } from "../../../common/utils/app-version"
 import KubeContexts from './modules/kube-contexts'
@@ -72,10 +71,11 @@ export default new Vuex.Store({
     seenContexts: state => state.seenContexts,
     hud: state => state.hud,
     isMenuVisible: function (state, getters) {
-      return state.hud.isMenuVisible && !getters.showWhatsNew;
+      if (userStore.hasNewAppVersion) return false;
+      return state.hud.isMenuVisible;
     },
     showWhatsNew: function (state) {
-      return semver.gt(getAppVersion(), state.lastSeenAppVersion);
+      return userStore.hasNewAppVersion;
     },
     preferences: state => state.preferences,
   }

@@ -48,10 +48,9 @@ export default {
   },
   methods: {
     toLanding: async function() {
-      if(userStore.hasNewAppVersion) {
-        userStore.saveLastSeenAppVersion();
-        tracker.event("app", "whats-new-seen")
-      }
+      userStore.saveLastSeenAppVersion();
+      tracker.event("app", "whats-new-seen")
+
       // await this.$store.dispatch("updateLastSeenAppVersion")
       this.$router.push({
         name: "landing-page",
