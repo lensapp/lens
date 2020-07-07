@@ -5,6 +5,7 @@ import { clusterStore } from "./cluster-store"
 export type WorkspaceId = string;
 
 export interface WorkspaceStoreModel {
+  currentWorkspace?: WorkspaceId; // last visited/activated
   workspaces: Workspace[]
 }
 
@@ -18,6 +19,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   static readonly defaultId: WorkspaceId = "default"
 
   protected data: WorkspaceStoreModel = {
+    currentWorkspace: WorkspaceStore.defaultId,
     workspaces: [{
       id: WorkspaceStore.defaultId,
       name: "default"
@@ -40,6 +42,11 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
 
   public getIndexById(id: WorkspaceId): number {
     return this.workspaces.findIndex(workspace => workspace.id === id);
+  }
+
+  @action
+  setCurrent(id: WorkspaceId) {
+    this.data.currentWorkspace = id;
   }
 
   @action

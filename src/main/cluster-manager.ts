@@ -12,6 +12,7 @@ import logger from "./logger"
 import { onMessages } from "../common/ipc-helpers";
 import { ClusterIpcMessage } from "../common/ipc-messages";
 import { FeatureInstallRequest } from "./feature";
+import { tracker } from "../common/tracker";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -107,44 +108,51 @@ export class ClusterManager {
   protected listenIpcEvents() {
     onMessages({
       [ClusterIpcMessage.CLUSTER_ADD]: async (model: ClusterModel): Promise<boolean> => {
+        tracker.event("cluster", "add");
         await this.addCluster(model);
         return true;
       },
       [ClusterIpcMessage.CLUSTER_STOP]: (clusterId: ClusterId) => {
+        tracker.event("cluster", "stop");
         this.getCluster(clusterId)?.stopServer();
       },
-      [ClusterIpcMessage.CLUSTER_REFRESH]: (clusterId: ClusterId) => {
-        this.getCluster(clusterId)?.refreshCluster();
-      },
       [ClusterIpcMessage.CLUSTER_REMOVE]: (clusterId: ClusterId) => {
+        tracker.event("cluster", "remove");
         this.removeCluster(clusterId);
       },
       [ClusterIpcMessage.CLUSTER_REMOVE_WORKSPACE]: (workspaceId: ClusterId) => {
         this.removeAllByWorkspace(workspaceId);
+      },
+      [ClusterIpcMessage.CLUSTER_REFRESH]: (clusterId: ClusterId) => {
+        this.getCluster(clusterId)?.refreshCluster();
       },
       [ClusterIpcMessage.CLUSTER_EVENTS]: async (clusterId: ClusterId): Promise<number> => {
         return await this.getCluster(clusterId)?.getEventCount() || 0;
       },
       // todo: check feature failures
       [ClusterIpcMessage.FEATURE_INSTALL]: ({ clusterId, name, config }: FeatureInstallRequest) => {
+        tracker.event("cluster", "install-feature")
         return this.getCluster(clusterId)?.installFeature(name, config)
       },
       [ClusterIpcMessage.FEATURE_UPGRADE]: ({ clusterId, name, config }: FeatureInstallRequest) => {
+        tracker.event("cluster", "upgrade-feature")
         return this.getCluster(clusterId)?.upgradeFeature(name, config)
       },
       [ClusterIpcMessage.FEATURE_REMOVE]: ({ clusterId, name }: FeatureInstallRequest) => {
+        tracker.event("cluster", "uninstall-feature")
         return this.getCluster(clusterId)?.uninstallFeature(name);
       },
       [ClusterIpcMessage.ICON_SAVE]: async ({ clusterId, name, path }: ClusterIconUpload) => {
+        tracker.event("cluster", "upload-icon");
         const cluster = this.getCluster(clusterId);
         if (!cluster) return false;
         cluster.preferences.icon = await this.uploadClusterIcon(cluster, name, path);
       },
-      // todo: remove current file icon ?
       [ClusterIpcMessage.ICON_RESET]: async (clusterId: ClusterId) => {
+        tracker.event("cluster", "reset-icon")
         const cluster = this.getCluster(clusterId);
         if (!cluster) return false;
-        cluster.preferences.icon = null;
+        cluster.preferences.icon = null; // todo: remove current file-icon ?
       },
     }, {
       timeout: 2000,
