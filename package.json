@@ -262,7 +262,7 @@
     "css-element-queries": "^1.2.3",
     "css-loader": "^3.5.3",
     "dompurify": "^2.0.11",
-    "electron": "^6.1.12",
+    "electron": "^7.2.4",
     "electron-builder": "^22.7.0",
     "electron-notarize": "^0.3.0",
     "eslint": "^7.3.1",
