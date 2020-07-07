@@ -9,16 +9,15 @@ export interface IpcOptions {
   timeout?: number;
 }
 
-export async function sendMessage(channel: string, ...args: any[]) {
-  logger.debug(`[IPC]: invoke "${channel}" with arguments`, args);
+export async function invokeMessage(channel: string, ...args: any[]) {
+  logger.debug(`[IPC]: invoke channel "${channel}"`, { args });
   return ipcRenderer.invoke(channel, ...args);
 }
 
-// todo: maybe spawn callback in separate thread/worker
-export function onMessage<T = any>(channel: string, callback: (...args: any[]) => T, options: IpcOptions = {}) {
+export function onMessage(channel: string, handler: (...args: any[]) => any, options: IpcOptions = {}) {
   const { timeout = 0 } = options;
   ipcMain.handle(channel, async (event, ...args: any[]) => {
-    logger.debug(`[IPC]: handle "${channel}"`, event, args);
+    logger.debug(`[IPC]: handle "${channel}"`, { event, args });
     return new Promise(async (resolve, reject) => {
       let timerId;
       if (timeout) {
@@ -28,12 +27,18 @@ export function onMessage<T = any>(channel: string, callback: (...args: any[]) =
         }, timeout);
       }
       try {
-        const result = await callback(...args);
+        const result = await handler(...args); // todo: maybe exec in separate thread/worker
         clearTimeout(timerId);
         return result;
       } catch (err) {
         logger.debug(`[IPC]: handling "${channel}" error`, err);
       }
     })
+  })
+}
+
+export function onMessages(messages: Record<string, Function>, options?: IpcOptions) {
+  Object.entries(messages).forEach(([channel, handler]) => {
+    this.onMessage(channel, handler, options);
   })
 }

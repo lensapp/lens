@@ -1,7 +1,8 @@
-import { action, computed, toJS } from "mobx";
-import migrations from "../migrations/cluster-store"
+import { action, observable, toJS } from "mobx";
+import { v4 as uuid } from "uuid"
 import { BaseStore } from "./base-store";
 import { Cluster } from "../main/cluster";
+import migrations from "../migrations/cluster-store"
 
 export interface ClusterStoreModel {
   clusters: ClusterModel[]
@@ -13,8 +14,8 @@ export interface ClusterModel {
   id: ClusterId;
   contextName: string;
   kubeConfigPath: string;
-  kubeConfig?: string;
   port?: number;
+  kubeConfig?: string;
   workspace?: string;
   preferences?: ClusterPreferences;
 }
@@ -36,6 +37,8 @@ export interface ClusterPreferences {
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
+  @observable clusters = observable.map<ClusterId, Cluster>();
+
   private constructor() {
     super({
       configName: "lens-cluster-store",
@@ -46,60 +49,51 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
   }
 
-  // setup initial value
-  protected data: ClusterStoreModel = {
-    clusters: [],
+  getById(id: ClusterId): Cluster {
+    return this.clusters.get(id);
   }
 
-  @computed get clusters(): Cluster[] {
-    return toJS(this.data.clusters).map(model => new Cluster(model));
+  getByWorkspaceId(workspaceId: string): Cluster[] {
+    return Array.from(this.clusters.values()).filter(cluster => {
+      return cluster.workspace === workspaceId;
+    })
   }
 
-  @computed get clustersMap(): Map<string, Cluster> {
-    return this.clusters.reduce((map, cluster) => {
-      map.set(cluster.id, cluster);
-      return map;
-    }, new Map);
-  }
-
-  getById(clusterId: ClusterId): Cluster {
-    return this.clusters.find(cluster => cluster.id === clusterId)
-  }
-
-  getIndexById(clusterId: ClusterId): number {
-    return this.clusters.findIndex(cluster => cluster.id === clusterId)
+  @action
+  addCluster(model: ClusterModel): Cluster {
+    const id = model.id || uuid();
+    const cluster = new Cluster({ ...model, id })
+    this.clusters.set(id, cluster);
+    return cluster;
   }
 
   @action
   removeById(clusterId: ClusterId): void {
-    const index = this.getIndexById(clusterId);
-    if (index > -1) {
-      this.data.clusters.splice(index, 1);
-    }
+    this.clusters.delete(clusterId);
   }
 
   @action
-  removeAllByWorkspaceId(workspaceId: string) {
-    this.clusters.forEach(cluster => {
-      if (cluster.workspace === workspaceId) {
-        this.removeById(cluster.id)
+  removeByWorkspaceId(workspaceId: string) {
+    this.getByWorkspaceId(workspaceId).forEach(cluster => {
+      this.removeById(cluster.id)
+    })
+  }
+
+  @action
+  protected fromStore({ clusters = [] }: Partial<ClusterStoreModel> = {}) {
+    // fixme: handle clusters update + delete
+    clusters.forEach(model => {
+      if (!this.clusters.has(model.id)) {
+        this.clusters.set(model.id, new Cluster(model));
       }
     })
   }
 
   toJSON(): ClusterStoreModel {
-    const clusters: ClusterModel[] = this.clusters.map(cluster => {
-      return {
-        id: cluster.id,
-        contextName: cluster.contextName,
-        kubeConfigPath: cluster.kubeConfigPath,
-        preferences: cluster.preferences,
-        workspace: cluster.workspace,
-      }
+    const clusters = Array.from(this.clusters).map(([id, cluster]) => cluster.toJSON());
+    return toJS({ clusters }, {
+      recurseEverything: true
     })
-    return {
-      clusters
-    }
   }
 }
 

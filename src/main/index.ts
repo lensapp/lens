@@ -78,7 +78,8 @@ async function main() {
   ]);
 
   // create cluster manager
-  clusterManager = new ClusterManager(clusterStore.clusters, port)
+  clusterManager = new ClusterManager(port)
+
   // run proxy
   try {
     proxyServer = proxy.listen(port, clusterManager)

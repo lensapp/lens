@@ -62,7 +62,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     const index = this.getIndexById(workspace.id);
     if (index > -1) {
       this.data.workspaces.splice(index, 1)
-      clusterStore.removeAllByWorkspaceId(workspace.id)
+      clusterStore.removeByWorkspaceId(workspace.id)
     }
   }
 }

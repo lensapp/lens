@@ -29,7 +29,6 @@ Vue.mixin({
   }
 })
 
-// any initialization we want to do for app state
 setTimeout(async () => {
   await Promise.all([
     userStore.whenLoaded,

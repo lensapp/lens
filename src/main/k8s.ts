@@ -1,9 +1,7 @@
-import * as k8s from "@kubernetes/client-node"
-import * as os from "os"
-import * as yaml from "js-yaml"
+import k8s from "@kubernetes/client-node"
+import os from "os"
+import yaml from "js-yaml"
 import logger from "./logger";
-
-const kc = new k8s.KubeConfig()
 
 function resolveTilde(filePath: string) {
   if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
@@ -12,9 +10,10 @@ function resolveTilde(filePath: string) {
   return filePath;
 }
 
-export function loadConfig(kubeconfig: string): k8s.KubeConfig {
-  if (kubeconfig) {
-    kc.loadFromFile(resolveTilde(kubeconfig))
+export function loadConfig(kubeConfigPath?: string): k8s.KubeConfig {
+  const kc = new k8s.KubeConfig()
+  if (kubeConfigPath) {
+    kc.loadFromFile(resolveTilde(kubeConfigPath))
   } else {
     kc.loadFromDefault();
   }
@@ -22,28 +21,29 @@ export function loadConfig(kubeconfig: string): k8s.KubeConfig {
 }
 
 /**
- * KubeConfig is valid when there's atleast one of each defined:
+ * KubeConfig is valid when there's at least one of each defined:
  * - User
  * - Cluster
  * - Context
- *
  * @param config KubeConfig to check
  */
-export function validateConfig(config: k8s.KubeConfig): boolean {
+export function validateConfig(config: k8s.KubeConfig | string): k8s.KubeConfig {
+  if(typeof config == "string") {
+    config = loadConfig(config);
+  }
+
   logger.debug(`validating kube config: ${JSON.stringify(config)}`)
   if(!config.users || config.users.length == 0) {
     throw new Error("No users provided in config")
   }
-
   if(!config.clusters || config.clusters.length == 0) {
     throw new Error("No clusters provided in config")
   }
-
   if(!config.contexts || config.contexts.length == 0) {
     throw new Error("No contexts provided in config")
   }
 
-  return true
+  return config
 }
 
 

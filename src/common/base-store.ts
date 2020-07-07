@@ -3,7 +3,7 @@ import Config from "conf"
 import { Options as ConfOptions } from "conf/dist/source/types"
 import produce from "immer";
 import { app, remote } from "electron"
-import { observable, reaction, toJS, when } from "mobx";
+import { action, observable, reaction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
 import isEqual from "lodash/isEqual"
 import { getAppVersion } from "./utils/app-version";
@@ -65,7 +65,6 @@ export class BaseStore<T = any> extends Singleton {
       configName: configName,
       watch: syncEnabled, // watch for changes in multi-process app (e.g. main/renderer)
       get cwd() {
-        // todo: remove remote.app in favor ipc.invoke
         return (app || remote.app).getPath("userData");
       },
       ...confOptions,
@@ -111,11 +110,12 @@ export class BaseStore<T = any> extends Singleton {
     }
   }
 
-  // todo: use "serializr" ?
+  @action
   protected fromStore(data: Partial<T> = {}) {
     Object.assign(this.data, data);
   }
 
+  @action
   merge(updater: (modelDraft: T) => void) {
     this.data = produce(this.data, updater);
   }

@@ -1,10 +1,21 @@
 import fs from "fs";
 import path from "path"
-import * as hb from "handlebars"
+import hb from "handlebars"
 import { ResourceApplier } from "./resource-applier"
 import { KubeConfig, CoreV1Api, Watch } from "@kubernetes/client-node"
 import logger from "./logger";
 import { Cluster } from "./cluster";
+
+export type FeatureInstallRequest = {
+  clusterId: string;
+  name: string;
+  config?: any;
+}
+
+export type FeatureInstallResponse = {
+  success: boolean;
+  message: string;
+}
 
 export type FeatureStatus = {
   currentVersion: string;

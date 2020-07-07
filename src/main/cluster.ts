@@ -1,15 +1,15 @@
+import { observable } from "mobx";
+import { apiPrefix } from "../common/vars";
 import { ContextHandler } from "./context-handler"
 import { FeatureStatusMap } from "./feature"
-import * as k8s from "./k8s"
-import { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
-import logger from "./logger"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
-import * as fm from "./feature-manager";
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager"
+import { getNodeWarningConditions, loadConfig, podHasIssues } from "./k8s"
+import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from "./feature-manager";
+import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import request from "request-promise-native"
-import { apiPrefix } from "../common/vars";
-import type { ClusterInfo } from "../renderer/_vue/store/modules/clusters";
+import logger from "./logger"
 
 enum ClusterStatus {
   AccessGranted = 2,
@@ -18,10 +18,14 @@ enum ClusterStatus {
 }
 
 export class Cluster implements ClusterModel {
-  public id: ClusterId;
-  public workspace: string;
+  @observable initialized = false;
+  @observable id: ClusterId;
+  @observable workspace: string;
+  @observable kubeConfigPath: string;
+  @observable contextName: string;
+  @observable preferences: ClusterPreferences = {};
+
   public contextHandler: ContextHandler;
-  public contextName: string;
   public url: string;
   public port: number;
   public apiUrl: string;
@@ -32,60 +36,35 @@ export class Cluster implements ClusterModel {
   public version: string;
   public distribution: string;
   public isAdmin: boolean;
-  public features: FeatureStatusMap;
-  public kubeCtl: Kubectl
-  public kubeConfigPath: string;
   public eventCount: number;
-  public preferences: ClusterPreferences;
+  public kubeCtl: Kubectl
+  public features: FeatureStatusMap = {};
 
-  protected eventPoller: NodeJS.Timeout;
   protected kubeconfigManager: KubeconfigManager;
 
   constructor(model: ClusterModel) {
-    if (model) Object.assign(this, model)
-    if (!this.preferences) this.preferences = {}
+    Object.assign(this, model)
   }
 
-  public proxyKubeconfigPath() {
-    return this.kubeconfigManager.getPath()
+  async init(port: number) {
+    const { contextName } = this
+    try {
+      const kubeConfig = loadConfig(this.kubeConfigPath)
+      kubeConfig.setCurrentContext(contextName); // fixme: is it needed at all?
+      this.port = port;
+      this.apiUrl = kubeConfig.getCurrentCluster().server
+      this.contextHandler = new ContextHandler(kubeConfig, this)
+      await this.contextHandler.init() // So we get the proxy port reserved
+      this.kubeconfigManager = new KubeconfigManager(this)
+      this.url = this.contextHandler.url
+      this.initialized = true;
+      logger.debug(`[CLUSTER]: init done for "${this.id}", context ${contextName}`);
+    } catch (err) {
+      logger.error(`[CLUSTER]: init "${this.id}" has failed`, { err, contextName });
+    }
   }
 
-  public proxyKubeconfig() {
-    const kc = new KubeConfig()
-    kc.loadFromFile(this.proxyKubeconfigPath())
-    return kc
-  }
-
-  public async init(kc: KubeConfig) {
-    this.apiUrl = kc.getCurrentCluster().server
-    this.contextHandler = new ContextHandler(kc, this)
-    await this.contextHandler.init() // So we get the proxy port reserved
-    this.kubeconfigManager = new KubeconfigManager(this)
-    this.url = this.contextHandler.url
-  }
-
-  public stopServer() {
-    this.contextHandler.stopServer()
-    clearInterval(this.eventPoller);
-  }
-
-  public async installFeature(name: string, config: any) {
-    await fm.installFeature(name, this, config)
-    return this.refreshCluster()
-  }
-
-  public async upgradeFeature(name: string, config: any) {
-    await fm.upgradeFeature(name, this, config)
-    return this.refreshCluster()
-  }
-
-  public async uninstallFeature(name: string) {
-    await fm.uninstallFeature(name, this)
-    return this.refreshCluster()
-  }
-
-  public async refreshCluster() {
-    // clusterStore.reloadCluster(this)
+  async refreshCluster() {
     this.contextHandler.setClusterPreferences(this.preferences)
 
     const connectionStatus = await this.getConnectionStatus()
@@ -94,7 +73,7 @@ export class Cluster implements ClusterModel {
 
     if (this.accessible) {
       this.distribution = this.detectKubernetesDistribution(this.version)
-      this.features = await fm.getFeatures(this)
+      this.features = await getFeatures(this)
       this.isAdmin = await this.isClusterAdmin()
       this.nodes = await this.getNodeCount()
       this.kubeCtl = new Kubectl(this.version)
@@ -103,36 +82,37 @@ export class Cluster implements ClusterModel {
     this.eventCount = await this.getEventCount();
   }
 
-  public getPrometheusApiPrefix() {
-    if (!this.preferences.prometheus?.prefix) {
-      return ""
-    }
-    return this.preferences.prometheus.prefix
+  proxyKubeconfigPath() {
+    return this.kubeconfigManager.getPath()
   }
 
-  public save() {
-    // clusterStore.saveCluster(this)
+  proxyKubeconfig() {
+    const kc = new KubeConfig()
+    kc.loadFromFile(this.proxyKubeconfigPath())
+    return kc
   }
 
-  public toClusterInfo(): ClusterInfo {
-    return {
-      id: this.id,
-      workspace: this.workspace,
-      url: this.url,
-      contextName: this.contextName,
-      apiUrl: this.apiUrl,
-      online: this.online,
-      accessible: this.accessible,
-      failureReason: this.failureReason,
-      nodes: this.nodes,
-      version: this.version,
-      distribution: this.distribution,
-      isAdmin: this.isAdmin,
-      features: this.features,
-      kubeCtl: this.kubeCtl,
-      kubeConfigPath:  this.kubeConfigPath,
-      preferences: this.preferences
-    }
+  stopServer() {
+    this.contextHandler.stopServer()
+  }
+
+  async installFeature(name: string, config: any) {
+    await installFeature(name, this, config)
+    await this.refreshCluster()
+  }
+
+  async upgradeFeature(name: string, config: any) {
+    await upgradeFeature(name, this, config)
+    await this.refreshCluster()
+  }
+
+  async uninstallFeature(name: string) {
+    await uninstallFeature(name, this)
+    await this.refreshCluster()
+  }
+
+  getPrometheusApiPrefix() {
+    return this.preferences.prometheus?.prefix || ""
   }
 
   protected async k8sRequest(path: string, opts?: request.RequestPromiseOptions) {
@@ -140,7 +120,9 @@ export class Cluster implements ClusterModel {
       json: true,
       timeout: 10000
     }, (opts || {}))
-    if (!options.headers) { options.headers = {} }
+    if (!options.headers) {
+      options.headers = {}
+    }
     options.headers.host = `${this.id}.localhost:${this.port}`
     return request(`http://127.0.0.1:${this.port}${apiPrefix.KUBE_BASE}${path}`, options)
   }
@@ -157,18 +139,15 @@ export class Cluster implements ClusterModel {
         if (error.statusCode >= 400 && error.statusCode < 500) {
           this.failureReason = "Invalid credentials";
           return ClusterStatus.AccessDenied;
-        }
-        else {
+        } else {
           this.failureReason = error.error || error.message;
           return ClusterStatus.Offline;
         }
-      }
-      else if (error.failed === true) {
+      } else if (error.failed === true) {
         if (error.timedOut === true) {
           this.failureReason = "Connection timed out";
           return ClusterStatus.Offline;
-        }
-        else {
+        } else {
           this.failureReason = "Failed to fetch credentials";
           return ClusterStatus.AccessDenied;
         }
@@ -178,7 +157,7 @@ export class Cluster implements ClusterModel {
     }
   }
 
-  public async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
+  async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
     const authApi = this.proxyKubeconfig().makeApiClient(AuthorizationV1Api)
     try {
       const accessReview = await authApi.createSelfSubjectAccessReview({
@@ -193,7 +172,7 @@ export class Cluster implements ClusterModel {
     }
   }
 
-  protected async isClusterAdmin(): Promise<boolean> {
+  async isClusterAdmin(): Promise<boolean> {
     return this.canI({
       namespace: "kube-system",
       resource: "*",
@@ -202,28 +181,14 @@ export class Cluster implements ClusterModel {
   }
 
   protected detectKubernetesDistribution(kubernetesVersion: string): string {
-    if (kubernetesVersion.includes("gke")) {
-      return "gke"
-    }
-    else if (kubernetesVersion.includes("eks")) {
-      return "eks"
-    }
-    else if (kubernetesVersion.includes("IKS")) {
-      return "iks"
-    }
-    else if (this.apiUrl.endsWith("azmk8s.io")) {
-      return "aks"
-    }
-    else if (this.apiUrl.endsWith("k8s.ondigitalocean.com")) {
-      return "digitalocean"
-    }
-    else if (this.contextHandler.contextName.startsWith("minikube")) {
-      return "minikube"
-    }
-    else if (kubernetesVersion.includes("+")) {
-      return "custom"
-    }
-
+    const { apiUrl, contextName } = this
+    if (kubernetesVersion.includes("gke")) return "gke"
+    if (kubernetesVersion.includes("eks")) return "eks"
+    if (kubernetesVersion.includes("IKS")) return "iks"
+    if (apiUrl.endsWith("azmk8s.io")) return "aks"
+    if (apiUrl.endsWith("k8s.ondigitalocean.com")) return "digitalocean"
+    if (contextName.startsWith("minikube")) return "minikube"
+    if (kubernetesVersion.includes("+")) return "custom"
     return "vanilla"
   }
 
@@ -237,7 +202,7 @@ export class Cluster implements ClusterModel {
     }
   }
 
-  public async getEventCount(): Promise<number> {
+  async getEventCount(): Promise<number> {
     if (!this.isAdmin) {
       return 0;
     }
@@ -251,25 +216,34 @@ export class Cluster implements ClusterModel {
           try {
             const pod = (await client.readNamespacedPod(w.involvedObject.name, w.involvedObject.namespace)).body;
             logger.debug(`checking pod ${w.involvedObject.namespace}/${w.involvedObject.name}`)
-            if (k8s.podHasIssues(pod)) {
+            if (podHasIssues(pod)) {
               uniqEventSources.add(w.involvedObject.uid);
             }
           } catch (err) {
           }
-        }
-        else {
+        } else {
           uniqEventSources.add(w.involvedObject.uid);
         }
       }
       let nodeNotificationCount = 0;
       const nodes = (await client.listNode()).body.items;
       nodes.map(n => {
-        nodeNotificationCount = nodeNotificationCount + k8s.getNodeWarningConditions(n).length
+        nodeNotificationCount = nodeNotificationCount + getNodeWarningConditions(n).length
       });
       return uniqEventSources.size + nodeNotificationCount;
     } catch (error) {
       logger.error("Failed to fetch event count: " + JSON.stringify(error))
       return 0;
+    }
+  }
+
+  toJSON(): ClusterModel {
+    return {
+      id: this.id,
+      contextName: this.contextName,
+      kubeConfigPath: this.kubeConfigPath,
+      workspace: this.workspace,
+      preferences: this.preferences,
     }
   }
 }
