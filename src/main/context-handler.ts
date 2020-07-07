@@ -1,5 +1,4 @@
 import { CoreV1Api, KubeConfig } from "@kubernetes/client-node"
-import http from "http"
 import { ServerOptions } from "http-proxy"
 import * as url from "url"
 import logger from "./logger"
@@ -7,20 +6,20 @@ import { getFreePort } from "./port"
 import { KubeAuthProxy } from "./kube-auth-proxy"
 import { Cluster } from "./cluster"
 import { prometheusProviders } from "../common/prometheus-providers"
-import type { PrometheusService, PrometheusProvider } from "./prometheus/provider-registry"
+import type { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry"
 import type { ClusterPreferences } from "../common/cluster-store";
 
 export class ContextHandler {
-  public contextName: string
-  public id: string
   public url: string
-  public clusterUrl: url.UrlWithStringQuery
-  public proxyServer: KubeAuthProxy
   public proxyPort: number
-  public certData: string
-  public authCertData: string
-  public cluster: Cluster
+  public contextName: string
 
+  protected id: string
+  protected clusterUrl: url.UrlWithStringQuery
+  protected proxyServer: KubeAuthProxy
+  protected certData: string
+  protected authCertData: string
+  protected cluster: Cluster
   protected apiTarget: ServerOptions
   protected proxyTarget: ServerOptions
   protected clientCert: string
@@ -34,7 +33,6 @@ export class ContextHandler {
 
   constructor(kc: KubeConfig, cluster: Cluster) {
     this.id = cluster.id
-
     this.cluster = cluster
     this.clusterUrl = url.parse(cluster.apiUrl)
     this.contextName = cluster.contextName;
@@ -49,26 +47,19 @@ export class ContextHandler {
     await this.resolveProxyPort()
   }
 
-  public setClusterPreferences(clusterPreferences?: ClusterPreferences) {
-    this.prometheusProvider = clusterPreferences.prometheusProvider?.type
+  public setClusterPreferences(preferences?: ClusterPreferences) {
+    this.clusterName = preferences?.clusterName || this.contextName;
+    this.prometheusProvider = preferences.prometheusProvider?.type;
+    this.prometheusPath = null;
 
-    if (clusterPreferences && clusterPreferences.prometheus) {
-      const prom = clusterPreferences.prometheus
-      this.prometheusPath = `${prom.namespace}/services/${prom.service}:${prom.port}`
-    }
-    else {
-      this.prometheusPath = null
-    }
-    if (clusterPreferences && clusterPreferences.clusterName) {
-      this.clusterName = clusterPreferences.clusterName;
-    }
-    else {
-      this.clusterName = this.contextName;
+    if (preferences?.prometheus) {
+      const { namespace, service, port } = preferences.prometheus
+      this.prometheusPath = `${namespace}/services/${service}:${port}`
     }
   }
 
   protected async resolvePrometheusPath(): Promise<string> {
-    const {service, namespace, port} = await this.getPrometheusService()
+    const { service, namespace, port } = await this.getPrometheusService()
     return `${namespace}/services/${service}:${port}`
   }
 
@@ -91,8 +82,7 @@ export class ContextHandler {
     const service = resolvedPrometheusServices.filter(n => n)[0]
     if (service) {
       return service
-    }
-    else {
+    } else {
       return {
         id: "lens",
         namespace: "lens-metrics",
@@ -103,11 +93,10 @@ export class ContextHandler {
   }
 
   public async getPrometheusPath(): Promise<string> {
-    if (this.prometheusPath) return this.prometheusPath
-
-    this.prometheusPath = await this.resolvePrometheusPath()
-
-    return this.prometheusPath
+    if (!this.prometheusPath) {
+      this.prometheusPath = await this.resolvePrometheusPath()
+    }
+    return this.prometheusPath;
   }
 
   public async getApiTarget(isWatchRequest = false): Promise<ServerOptions> {
@@ -139,18 +128,15 @@ export class ContextHandler {
   }
 
   protected async resolveProxyPort(): Promise<number> {
-    if (this.proxyPort) return this.proxyPort
-
-    let serverPort: number = null
-    try {
-      serverPort = await getFreePort()
-    } catch (error) {
-      logger.error(error)
-      throw(error)
+    if (!this.proxyPort) {
+      try {
+        this.proxyPort = await getFreePort()
+      } catch (error) {
+        logger.error(error)
+        throw(error)
+      }
     }
-    this.proxyPort = serverPort
-
-    return serverPort
+    return this.proxyPort
   }
 
   public async withTemporaryKubeconfig(callback: (kubeconfig: string) => Promise<any>) {

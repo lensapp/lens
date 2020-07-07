@@ -7,7 +7,6 @@ import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from 
 import * as fm from "./feature-manager";
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager"
-import { PromiseIpc } from "electron-promise-ipc"
 import request from "request-promise-native"
 import { apiPrefix } from "../common/vars";
 import type { ClusterInfo } from "../renderer/_vue/store/modules/clusters";
@@ -40,12 +39,10 @@ export class Cluster implements ClusterModel {
   public preferences: ClusterPreferences;
 
   protected eventPoller: NodeJS.Timeout;
-  protected promiseIpc = new PromiseIpc({ timeout: 2000 })
-
   protected kubeconfigManager: KubeconfigManager;
 
-  constructor(jsonModel: ClusterModel) {
-    if (jsonModel) Object.assign(this, jsonModel)
+  constructor(model: ClusterModel) {
+    if (model) Object.assign(this, model)
     if (!this.preferences) this.preferences = {}
   }
 
@@ -64,7 +61,6 @@ export class Cluster implements ClusterModel {
     this.contextHandler = new ContextHandler(kc, this)
     await this.contextHandler.init() // So we get the proxy port reserved
     this.kubeconfigManager = new KubeconfigManager(this)
-
     this.url = this.contextHandler.url
   }
 

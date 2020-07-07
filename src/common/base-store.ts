@@ -1,6 +1,7 @@
 import path from "path"
 import Config from "conf"
 import { Options as ConfOptions } from "conf/dist/source/types"
+import produce from "immer";
 import { app, remote } from "electron"
 import { observable, reaction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
@@ -113,6 +114,10 @@ export class BaseStore<T = any> extends Singleton {
   // todo: use "serializr" ?
   protected fromStore(data: Partial<T> = {}) {
     Object.assign(this.data, data);
+  }
+
+  merge(updater: (modelDraft: T) => void) {
+    this.data = produce(this.data, updater);
   }
 
   toJSON(): T {

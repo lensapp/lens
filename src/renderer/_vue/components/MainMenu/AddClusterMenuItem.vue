@@ -18,7 +18,6 @@
 
 <script>
 import ClustersMixin from "@/_vue/mixins/ClustersMixin";
-import { newContexts } from '@kubernetes/client-node/dist/config_types';
 export default {
   name: "AddClusterMenuItem",
   mixins: [ClustersMixin],
@@ -43,7 +42,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.newContexts.length)
     this.$store.dispatch("reloadAvailableKubeContexts");
   }
 }
