@@ -62,7 +62,7 @@ export class PodDetailsContainer extends React.Component<Props> {
           {imagePullPolicy}
         </DrawerItem>
         }
-        {ports && ports.length > 0 &&          
+        {ports && ports.length > 0 &&
         <DrawerItem name={<Trans>Ports</Trans>}>
           <div>
             {
