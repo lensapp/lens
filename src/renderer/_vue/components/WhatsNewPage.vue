@@ -31,7 +31,6 @@ import marked from 'marked'
 import {readFileSync} from 'fs'
 import { getStaticPath } from "../../../common/register-static"
 import { userStore } from "../../../common/user-store"
-import { tracker } from "../../../common/tracker"
 
 export default {
   name: 'WhatsNewPage',
@@ -49,9 +48,6 @@ export default {
   methods: {
     toLanding: async function() {
       userStore.saveLastSeenAppVersion();
-      tracker.event("app", "whats-new-seen")
-
-      // await this.$store.dispatch("updateLastSeenAppVersion")
       this.$router.push({
         name: "landing-page",
       }).catch(err => {})

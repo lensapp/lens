@@ -82,6 +82,3 @@ export class App extends React.Component {
     )
   }
 }
-
-// run
-App.init();

@@ -49,6 +49,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @action
   saveLastSeenAppVersion() {
+    tracker.event("app", "whats-new-seen")
     this.lastSeenAppVersion = getAppVersion();
   }
 

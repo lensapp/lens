@@ -1,9 +1,7 @@
 // App's common configuration for any process (main, renderer, build pipeline, etc.)
 import path from "path";
 
-// Temp
-export const reactAppName = "app_react"
-export const vueAppName = "app_vue"
+export const appName = "lens"
 
 // Flags
 export const isMac = process.platform === "darwin"

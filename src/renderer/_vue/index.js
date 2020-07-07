@@ -1,10 +1,7 @@
 import "../../common/system-ca"
 import "./assets/css/app.scss"
-import "prismjs";
-import "prismjs/components/prism-yaml"
 import { PromiseIpc } from 'electron-promise-ipc'
 import Vue from 'vue'
-import VueElectron from 'vue-electron'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
@@ -20,7 +17,6 @@ promiseIpc.on('navigate', async (view) => {
 });
 
 Vue.config.productionTip = false
-Vue.use(VueElectron)
 Vue.use(BootstrapVue)
 
 Vue.mixin({

@@ -167,6 +167,14 @@ a {
   }
 }
 
+.drag {
+  -webkit-app-region: drag;
+}
+
+.nodrag {
+  -webkit-app-region: no-drag;
+}
+
 // app's common loading indicator, displaying on the route transitions
 #loading {
   position: absolute;

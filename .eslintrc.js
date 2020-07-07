@@ -4,11 +4,9 @@ module.exports =  {
       files: [
         "src/renderer/**/*.js",
         "build/**/*.js",
-        "src/renderer/**/*.vue"
       ],
       extends: [
         'eslint:recommended',
-        'plugin:vue/recommended'
       ],
       env: {
         node: true
@@ -20,9 +18,6 @@ module.exports =  {
       rules: {
         "indent": ["error", 2],
         "no-unused-vars": "off",
-        "vue/order-in-components": "off",
-        "vue/attributes-order": "off",
-        "vue/max-attributes-per-line": "off"
       }
     },
     {

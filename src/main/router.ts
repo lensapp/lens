@@ -11,7 +11,7 @@ import { kubeconfigRoute } from "./routes/kubeconfig"
 import { metricsRoute } from "./routes/metrics"
 import { watchRoute } from "./routes/watch"
 import { portForwardRoute } from "./routes/port-forward"
-import { apiPrefix, outDir, reactAppName } from "../common/vars";
+import { apiPrefix, outDir, appName } from "../common/vars";
 
 const mimeTypes: Record<string, string> = {
   "html": "text/html",
@@ -94,8 +94,7 @@ export class Router {
       response.write(data)
       response.end()
     } catch (err) {
-      // default to index.html so that react routes work when page is refreshed
-      this.handleStaticFile(`${reactAppName}.html`, response)
+      this.handleStaticFile(`${appName}.html`, response)
     }
   }
 

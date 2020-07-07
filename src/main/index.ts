@@ -3,7 +3,7 @@
 import "../common/system-ca"
 import "../common/prometheus-providers"
 import { app, dialog, protocol } from "electron"
-import { isDevelopment, isMac, vueAppName } from "../common/vars";
+import { appName, isDevelopment, isMac } from "../common/vars";
 import { PromiseIpc } from "electron-promise-ipc"
 import path from "path"
 import { format as formatUrl } from "url"
@@ -40,7 +40,7 @@ let clusterManager: ClusterManager = null;
 let proxyServer: proxy.LensProxy = null;
 
 const vmURL = formatUrl({
-  pathname: path.join(__dirname, `${vueAppName}.html`),
+  pathname: path.join(__dirname, `${appName}.html`),
   protocol: "file",
   slashes: true,
 })

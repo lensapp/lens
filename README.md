@@ -41,11 +41,8 @@ brew cask install lens
 Allows faster separately re-run some of involved processes:
 
 1. `yarn dev:main` compiles electron's main process and watch files 
-1. `yarn dev:renderer:vue` compiles electron's renderer vue-part  
-1. `yarn dev:renderer:react` compiles electron's renderer react-part
+1. `yarn dev:renderer` compiles electron's renderer part  
 1. `yarn dev-run` runs app in dev-mode and restarts when electron's main process file has changed
-
-Alternatively to compile both render parts in single command use `yarn dev:renderer`  
 
 ## Contributing
 
