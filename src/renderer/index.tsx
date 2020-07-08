@@ -1,19 +1,11 @@
+import React from "react";
+import ReactDOM from "react-dom";
 import "../common/system-ca"
-import { userStore } from "../common/user-store";
-import { workspaceStore } from "../common/workspace-store";
-import { clusterStore } from "../common/cluster-store";
-// import { App } from "./components/app";
+import { Clusters } from "./components/+clusters";
 
 async function render() {
-  await Promise.all([
-    userStore.whenLoaded,
-    workspaceStore.whenLoaded,
-    clusterStore.whenLoaded,
-  ]);
-
-  // App.init();
-  document.getElementById("app").innerHTML = "<p>Hello from renderer!</p>"
+  await Clusters.init();
+  ReactDOM.render(<Clusters/>, document.getElementById("app"),)
 }
 
-// run
-render();
+window.addEventListener("load", render);

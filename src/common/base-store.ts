@@ -18,7 +18,6 @@ export interface BaseStoreParams<T = any> {
 export class BaseStore<T = any> extends Singleton {
   protected storeConfig: Config<T>;
   protected syncDisposers: Function[] = [];
-  public whenLoaded = when(() => this.isLoaded);
 
   @observable isLoaded = false;
   @observable protected data: T;
@@ -26,7 +25,7 @@ export class BaseStore<T = any> extends Singleton {
   protected constructor(protected params: BaseStoreParams) {
     super();
     this.params = {
-      autoLoad: !app, // disabled in main process due delayed configuration
+      autoLoad: false,
       syncEnabled: true,
       ...params,
     }
@@ -50,7 +49,7 @@ export class BaseStore<T = any> extends Singleton {
       await this.load();
     }
     if (this.params.syncEnabled) {
-      await this.whenLoaded;
+      await when(() => this.isLoaded);
       this.enableSync();
     }
   }

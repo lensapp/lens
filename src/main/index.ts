@@ -3,7 +3,7 @@
 import "../common/system-ca"
 import "../common/prometheus-providers"
 import { app, dialog } from "electron"
-import { appName, appProto, isDevelopment, isMac, staticDir, staticProto } from "../common/vars";
+import { appName, appProto, isMac, staticDir, staticProto } from "../common/vars";
 import path from "path"
 import { format as formatUrl } from "url"
 import initMenu from "./menu"
