@@ -1,3 +1,4 @@
+import "./cluster-settings.scss"
 import React from "react";
 
 interface Props {
@@ -5,6 +6,10 @@ interface Props {
 
 export class ClusterSettings extends React.Component {
   render() {
-    return "";
+    return (
+      <div className="ClusterSettings">
+        ClusterSettings
+      </div>
+    );
   }
 }

@@ -1,10 +1,15 @@
+import "./clusters-menu.scss"
 import React from "react";
 
 interface Props {
 }
 
-export class ClusterSettings extends React.Component {
+export class ClustersMenu extends React.Component {
   render() {
-    return "";
+    return (
+      <div className="ClustersMenu">
+        ClustersMenu
+      </div>
+    );
   }
 }
