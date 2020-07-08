@@ -12,6 +12,11 @@
   -webkit-font-smoothing: antialiased;
 }
 
+:root {
+  --mainBackground: #1e2124;
+  --textColorPrimary: #87909c;
+}
+
 ::selection {
   background: $primary;
   color: white;

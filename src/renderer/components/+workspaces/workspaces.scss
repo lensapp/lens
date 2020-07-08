@@ -1,3 +1,41 @@
 .Workspaces {
+  height: 100%;
 
+  display: grid;
+  grid-template-areas: "draggable draggable" "menu lens-view" "bottom-bar bottom-bar";
+  grid-template-rows: 20px 1fr min-content;
+  grid-template-columns: min-content 1fr;
+
+  > .draggable-top {
+    @include set-draggable;
+    grid-area: draggable;
+  }
+
+  > .ClusterMenu {
+    grid-area: menu;
+  }
+
+  > .lens-container {
+    grid-area: lens-view;
+  }
+
+  > .bottom-bar {
+    grid-area: bottom-bar;
+    font-size: $font-size-small;
+    background-color: #3d90ce;
+    padding: $padding / 2 $padding;
+    color: white;
+
+    #workspace {
+      cursor: pointer;
+    }
+  }
+}
+
+.WorkspacesMenu {
+  border-radius: $radius;
+
+  .workspaces-title {
+    padding: $padding;
+  }
 }

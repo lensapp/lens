@@ -6,6 +6,10 @@ interface Props {
 
 export class AddCluster extends React.Component {
   render() {
-    return "AddCluster";
+    return (
+      <div className="AddCluster">
+        AddCluster
+      </div>
+    )
   }
 }

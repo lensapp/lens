@@ -90,8 +90,9 @@
   cursor: pointer;
 }
 
-@mixin set-draggable($isDraggable: true) {
-  @if ($isDraggable) {
+@mixin set-draggable($is-draggable: true) {
+  @if ($is-draggable) {
+    cursor: move;
     -webkit-user-drag: auto;
     -webkit-app-region: drag;
   } @else {

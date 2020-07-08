@@ -5,7 +5,8 @@ import { Cluster } from "../main/cluster";
 import migrations from "../migrations/cluster-store"
 
 export interface ClusterStoreModel {
-  clusters: ClusterModel[]
+  activeCluster?: ClusterId; // last opened cluster
+  clusters?: ClusterModel[]
 }
 
 export type ClusterId = string;
@@ -37,6 +38,7 @@ export interface ClusterPreferences {
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
+  @observable activeCluster: ClusterId;
   @observable clusters = observable.map<ClusterId, Cluster>();
 
   private constructor() {
@@ -69,6 +71,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   removeById(clusterId: ClusterId): void {
+    if (this.activeCluster === clusterId) {
+      this.activeCluster = null;
+    }
     this.clusters.delete(clusterId);
   }
 
@@ -80,17 +85,21 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  protected fromStore({ clusters = [] }: Partial<ClusterStoreModel> = {}) {
+  protected fromStore({ activeCluster, clusters = [] }: ClusterStoreModel = {}) {
     const clustersMap = new Map<ClusterId, Cluster>();
     clusters.forEach(clusterModel => {
       clustersMap.set(clusterModel.id, new Cluster(clusterModel));
     });
+    this.activeCluster = clustersMap.has(activeCluster) ? activeCluster : null;
     this.clusters.replace(clustersMap);
   }
 
   toJSON(): ClusterStoreModel {
     const clusters = Array.from(this.clusters).map(([id, cluster]) => cluster.toJSON());
-    return toJS({ clusters }, {
+    return toJS({
+      activeCluster: this.activeCluster,
+      clusters: clusters,
+    }, {
       recurseEverything: true
     })
   }

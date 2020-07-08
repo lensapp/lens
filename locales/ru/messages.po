@@ -14,6 +14,14 @@ msgstr ""
 "Plural-Forms: \n"
 "MIME-Version: 1.0\n"
 
+#: src/renderer/components/+workspaces/clusters-menu.tsx:38
+#~ msgid "'Disconnect'"
+#~ msgstr ""
+
+#: src/renderer/components/+workspaces/clusters-menu.tsx:31
+#~ msgid "'Settings'"
+#~ msgstr ""
+
 #: src/renderer/components/+config-autoscalers/hpa-details.tsx:28
 msgid "(as a percentage of request)"
 msgstr ""
@@ -67,6 +75,10 @@ msgstr "Добавить привязку ролей"
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:111
 msgid "Add bindings to {name}"
 msgstr "Добавить привязки к {name}"
+
+#: src/renderer/components/+workspaces/clusters-menu.tsx:58
+#~ msgid "Add clusters"
+#~ msgstr ""
 
 #: src/renderer/components/+config-secrets/add-secret-dialog.tsx:125
 msgid "Add field"
@@ -126,7 +138,7 @@ msgstr ""
 msgid "All logs"
 msgstr "Все логи"
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:96
+#: src/renderer/components/+namespaces/namespace-select.tsx:95
 msgid "All namespaces"
 msgstr ""
 
@@ -200,6 +212,10 @@ msgstr "Выполнить команду drain для ноды <0>{nodeName}</0
 msgid "Arguments"
 msgstr "Аргументы"
 
+#: src/renderer/components/+workspaces/clusters-menu.tsx:55
+msgid "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
+msgstr ""
+
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:101
 msgid "Auth App Role"
 msgstr "Auth App Role"
@@ -230,32 +246,32 @@ msgstr "Привязки"
 msgid "Build version"
 msgstr "Версия билда"
 
-#: src/renderer/components/+workloads-pods/container-charts.tsx:72
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:98
+#: src/renderer/components/+workloads-pods/container-charts.tsx:74
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:100
 msgid "Bytes consumed on this filesystem"
 msgstr "Байты, потребляемые в файловой системе"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:81
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:83
 msgid "Bytes received by all containers"
 msgstr "Байты, полученные всеми контейнерами"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:31
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:33
 msgid "Bytes sent by Ingress controller with error status"
 msgstr "Байты, отправленные контроллером доступа (Ingress) со статусом ошибки"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:24
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:26
 msgid "Bytes sent by Ingress controller with successful status"
 msgstr "Байты, отправленные контроллером доступа (Ingress) с успешным статусом"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:23
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:25
 msgid "Bytes sent, status 2xx"
 msgstr "Байты отправлены, статус 2xx"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:30
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:32
 msgid "Bytes sent, status 5xx"
 msgstr "Байты отправлены, статус 5xx"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:88
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:90
 msgid "Bytes transmitted from all containers"
 msgstr "Байты, отправленные всеми контейнерами"
 
@@ -283,17 +299,17 @@ msgid "CPU capacity"
 msgstr "Мощность процессора"
 
 #: src/renderer/components/+nodes/node-charts.tsx:26
-#: src/renderer/components/+workloads-pods/container-charts.tsx:24
+#: src/renderer/components/+workloads-pods/container-charts.tsx:26
 msgid "CPU cores usage"
 msgstr "Использование ядер процессора"
 
-#: src/renderer/components/+workloads-pods/container-charts.tsx:38
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:47
+#: src/renderer/components/+workloads-pods/container-charts.tsx:40
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:49
 msgid "CPU limits"
 msgstr "Лимиты процессора"
 
 #: src/renderer/components/+nodes/node-charts.tsx:33
-#: src/renderer/components/+workloads-pods/container-charts.tsx:31
+#: src/renderer/components/+workloads-pods/container-charts.tsx:33
 msgid "CPU requests"
 msgstr "Запросы к процессору"
 
@@ -369,7 +385,7 @@ msgstr "Закрыть (Ctrl+W)"
 msgid "Cloud API Token Secret"
 msgstr "Cloud API Token Secret"
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:44
+#: src/renderer/components/+namespaces/namespace-select.tsx:43
 #: src/renderer/components/layout/sidebar.tsx:79
 msgid "Cluster"
 msgstr "Кластер"
@@ -448,23 +464,23 @@ msgstr "Соединение"
 msgid "Container"
 msgstr "Контейнер"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:33
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:35
 msgid "Container CPU cores usage"
 msgstr "Использование ядер процессора"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:40
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:42
 msgid "Container CPU requests"
 msgstr "Запросы CPU от контейнеров"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:71
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:73
 msgid "Container memory limits"
 msgstr "Лимиты памяти"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:64
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:66
 msgid "Container memory requests"
 msgstr "Запросы памяти от контейнеров"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:57
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:59
 msgid "Container memory usage"
 msgstr "Использование памяти"
 
@@ -662,6 +678,10 @@ msgstr "Описание"
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:107
 msgid "Desired number of replicas"
 msgstr "Нужный уровень реплик"
+
+#: src/renderer/components/+workspaces/clusters-menu.tsx:38
+msgid "Disconnect"
+msgstr ""
 
 #: src/renderer/components/+nodes/node-details.tsx:65
 #: src/renderer/components/+nodes/nodes.tsx:115
@@ -1071,10 +1091,10 @@ msgstr ""
 
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:72
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:115
-#: src/renderer/components/+workloads-pods/container-charts.tsx:37
-#: src/renderer/components/+workloads-pods/container-charts.tsx:61
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:46
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:70
+#: src/renderer/components/+workloads-pods/container-charts.tsx:39
+#: src/renderer/components/+workloads-pods/container-charts.tsx:63
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:48
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:72
 msgid "Limits"
 msgstr "Лимиты"
 
@@ -1154,17 +1174,17 @@ msgstr "Память"
 msgid "Memory capacity"
 msgstr "Объем памяти"
 
-#: src/renderer/components/+workloads-pods/container-charts.tsx:62
+#: src/renderer/components/+workloads-pods/container-charts.tsx:64
 msgid "Memory limits"
 msgstr "Лимиты памяти"
 
 #: src/renderer/components/+nodes/node-charts.tsx:57
-#: src/renderer/components/+workloads-pods/container-charts.tsx:55
+#: src/renderer/components/+workloads-pods/container-charts.tsx:57
 msgid "Memory requests"
 msgstr "Запросы к памяти"
 
 #: src/renderer/components/+nodes/node-charts.tsx:50
-#: src/renderer/components/+workloads-pods/container-charts.tsx:48
+#: src/renderer/components/+workloads-pods/container-charts.tsx:50
 msgid "Memory usage"
 msgstr "Использование памяти"
 
@@ -1311,17 +1331,16 @@ msgstr ""
 msgid "Namespace"
 msgstr "Namespace"
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:98
+#: src/renderer/components/+namespaces/namespace-select.tsx:97
 msgid "Namespace: {0}"
 msgstr "Namespace: {0}"
 
 #: src/renderer/components/+namespaces/namespaces.tsx:30
-#: src/renderer/components/app.tsx:36
 #: src/renderer/components/layout/sidebar.tsx:85
 msgid "Namespaces"
 msgstr "Namespaces"
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:100
+#: src/renderer/components/+namespaces/namespace-select.tsx:99
 msgid "Namespaces: {0}"
 msgstr "Namespaces: {0}"
 
@@ -1637,7 +1656,7 @@ msgstr "Причина"
 msgid "Reason: {0} ({1})"
 msgstr "Причина: {0} ({1})"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:80
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:82
 msgid "Receive"
 msgstr "Получение"
 
@@ -1728,11 +1747,11 @@ msgstr "Репозиторий/Имя"
 msgid "Repository"
 msgstr "Репозиторий"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:40
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:42
 msgid "Request"
 msgstr "Запрос"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:41
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:43
 msgid "Request duration in seconds"
 msgstr "Продолжительность запроса в секундах"
 
@@ -1740,10 +1759,10 @@ msgstr "Продолжительность запроса в секундах"
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:114
 #: src/renderer/components/+nodes/node-charts.tsx:32
 #: src/renderer/components/+nodes/node-charts.tsx:56
-#: src/renderer/components/+workloads-pods/container-charts.tsx:30
-#: src/renderer/components/+workloads-pods/container-charts.tsx:54
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:39
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:63
+#: src/renderer/components/+workloads-pods/container-charts.tsx:32
+#: src/renderer/components/+workloads-pods/container-charts.tsx:56
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:41
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:65
 msgid "Requests"
 msgstr "Запросы"
 
@@ -1799,11 +1818,11 @@ msgstr "Имя квоты ресурса"
 msgid "Resources"
 msgstr "Ресурсы"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:47
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:49
 msgid "Response"
 msgstr "Ответ"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:48
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:50
 msgid "Response duration in seconds"
 msgstr "Продолжительность ответа в секундах"
 
@@ -2012,13 +2031,17 @@ msgstr "Установлено"
 msgid "Set quota"
 msgstr "Установить квоту"
 
+#: src/renderer/components/+workspaces/clusters-menu.tsx:31
+msgid "Settings"
+msgstr ""
+
 #: src/renderer/components/+nodes/node-menu.tsx:48
 #: src/renderer/components/+workloads-pods/pod-menu.tsx:68
 msgid "Shell"
 msgstr "Командная строка"
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
-#: src/renderer/components/+workloads-pods/pod-container-env.tsx:97
+#: src/renderer/components/+workloads-pods/pod-container-env.tsx:100
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Show"
@@ -2182,6 +2205,10 @@ msgstr "Это обязательное поле"
 msgid "This field must contain only lowercase latin characters, numbers and dash."
 msgstr "Это поле может содержать только латинские буквы в нижнем регистре, номера и дефис."
 
+#: src/renderer/components/+workspaces/clusters-menu.tsx:53
+msgid "This is the quick launch menu."
+msgstr ""
+
 #: src/renderer/components/+network-policies/network-policy-details.tsx:59
 msgid "To"
 msgstr "Из"
@@ -2198,7 +2225,7 @@ msgstr "Токены"
 msgid "Tolerations"
 msgstr "Толерантности"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:87
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:89
 msgid "Transmit"
 msgstr "Транзит"
 
@@ -2264,12 +2291,12 @@ msgstr "Обновить версию"
 #: src/renderer/components/+nodes/node-charts.tsx:73
 #: src/renderer/components/+nodes/node-charts.tsx:90
 #: src/renderer/components/+storage-volume-claims/volume-claim-disk-chart.tsx:24
-#: src/renderer/components/+workloads-pods/container-charts.tsx:23
-#: src/renderer/components/+workloads-pods/container-charts.tsx:47
-#: src/renderer/components/+workloads-pods/container-charts.tsx:71
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:32
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:56
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:97
+#: src/renderer/components/+workloads-pods/container-charts.tsx:25
+#: src/renderer/components/+workloads-pods/container-charts.tsx:49
+#: src/renderer/components/+workloads-pods/container-charts.tsx:73
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:34
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:58
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:99
 msgid "Usage"
 msgstr "Использование"
 
@@ -2356,6 +2383,10 @@ msgstr "Рабочие"
 msgid "Workloads"
 msgstr "Ресурсы"
 
+#: src/renderer/components/+workspaces/workspaces.tsx:41
+msgid "Workspaces"
+msgstr ""
+
 #: src/renderer/components/input/input.validators.ts:10
 msgid "Wrong email format"
 msgstr "Неверный формат электронной почты"
@@ -2422,7 +2453,7 @@ msgstr ""
 msgid "ready"
 msgstr "готово"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:67
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:69
 msgid "sec"
 msgstr "сек"
 

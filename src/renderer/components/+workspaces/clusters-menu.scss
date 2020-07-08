@@ -1,0 +1,15 @@
+.ClustersMenu {
+  @include hidden-scrollbar;
+
+  padding: $padding;
+  background: #252729;
+
+  .add-cluster {
+    cursor: pointer;
+    opacity: 0.4;
+
+    &:hover {
+      opacity: .75;
+    }
+  }
+}

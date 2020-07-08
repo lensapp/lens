@@ -7,6 +7,9 @@ import { createPortal } from "react-dom"
 import { autobind, cssNames } from "../../utils";
 import { Animate } from "../animate";
 
+// fixme: better positioning + remove "flying effect"
+// todo: add flag to show visible tooltip by default (until mouse-over the target)
+
 export interface TooltipProps {
   htmlFor: string;
   className?: string;

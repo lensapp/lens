@@ -51,7 +51,7 @@ export class Cluster implements ClusterModel {
   @observable version: string;
   @observable distribution: string;
   @observable isAdmin: boolean;
-  @observable eventCount: number;
+  @observable eventCount: number; // todo: auto-fetch every 3s and push updates to client (?)
   @observable preferences: ClusterPreferences = {};
   @observable features: FeatureStatusMap = {};
 

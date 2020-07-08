@@ -39,7 +39,6 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
 async function main() {
   shellSync(app.getLocale());
 
-  // todo: check other usages .getPath("userData") and enable "lazy-evaluation"
   const workingDir = path.join(app.getPath("appData"), appName);
   app.setName(appName);
   app.setPath("userData", workingDir);
@@ -83,7 +82,7 @@ async function main() {
   }
 
   // manage lens windows
-  windowManager = new WindowManager();
+  windowManager = new WindowManager({showSplash: true});
   windowManager.showMain(vmURL)
 }
 
@@ -98,13 +97,13 @@ app.on('window-all-closed', function () {
     if (clusterManager) clusterManager.stop()
   }
 })
-app.on("activate", () => {
-  if (!windowManager) {
-    logger.debug("activate main window")
-    windowManager = new WindowManager({ showSplash: false })
-    windowManager.showMain(vmURL)
-  }
-})
+// app.on("activate", () => {
+//   if (!windowManager) {
+//     logger.debug("activate main window")
+//     windowManager = new WindowManager({ showSplash: false })
+//     windowManager.showMain(vmURL)
+//   }
+// })
 app.on("will-quit", async (event) => {
   event.preventDefault(); // To allow mixpanel sending to be executed
   if (clusterManager) clusterManager.stop()
