@@ -81,12 +81,11 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   protected fromStore({ clusters = [] }: Partial<ClusterStoreModel> = {}) {
-    // fixme: handle clusters update + delete
-    clusters.forEach(model => {
-      if (!this.clusters.has(model.id)) {
-        this.clusters.set(model.id, new Cluster(model));
-      }
-    })
+    const clustersMap = new Map<ClusterId, Cluster>();
+    clusters.forEach(clusterModel => {
+      clustersMap.set(clusterModel.id, new Cluster(clusterModel));
+    });
+    this.clusters.replace(clustersMap);
   }
 
   toJSON(): ClusterStoreModel {

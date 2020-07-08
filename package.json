@@ -12,8 +12,7 @@
   },
   "scripts": {
     "dev": "concurrently -k \"yarn dev-run -C\" \"yarn dev:main\" \"yarn dev:renderer\"",
-    "dev-run": "nodemon --watch out/main.* --exec \"electron --inspect .\" $@",
-    "dev-test": "yarn test --watch",
+    "dev-run": "env DEBUG=true nodemon --watch out/main.* --exec \"electron --inspect .\" $@",
     "dev:main": "env DEBUG=true yarn compile:main --watch $@",
     "dev:renderer": "env DEBUG=true yarn compile:renderer --watch $@",
     "compile": "concurrently \"yarn i18n:compile\" \"yarn compile:main -p\" \"yarn compile:renderer -p\"",
@@ -34,7 +33,8 @@
     "download-bins": "concurrently yarn:download:*",
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
-    "lint": "eslint $@ --ext js,ts,tsx --max-warnings=0  src/"
+    "lint": "eslint $@ --ext js,ts,tsx --max-warnings=0  src/",
+    "rebuild": "electron-rebuild -f -w node-pty"
   },
   "config": {
     "bundledKubectlVersion": "1.17.4",
@@ -260,9 +260,10 @@
     "css-element-queries": "^1.2.3",
     "css-loader": "^3.5.3",
     "dompurify": "^2.0.11",
-    "electron": "^6.1.12",
+    "electron": "^7.3.2",
     "electron-builder": "^22.7.0",
     "electron-notarize": "^0.3.0",
+    "electron-rebuild": "^1.11.0",
     "eslint": "^7.3.1",
     "file-loader": "^6.0.0",
     "flex.box": "^3.4.4",

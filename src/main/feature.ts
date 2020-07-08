@@ -3,30 +3,22 @@ import path from "path"
 import hb from "handlebars"
 import { ResourceApplier } from "./resource-applier"
 import { KubeConfig, CoreV1Api, Watch } from "@kubernetes/client-node"
-import logger from "./logger";
 import { Cluster } from "./cluster";
+import logger from "./logger";
 
-export type FeatureInstallRequest = {
+export type FeatureStatusMap = Record<string, FeatureStatus>
+
+export interface FeatureInstallRequest {
   clusterId: string;
   name: string;
   config?: any;
 }
 
-export type FeatureInstallResponse = {
-  success: boolean;
-  message: string;
-}
-
-export type FeatureStatus = {
+export interface FeatureStatus {
   currentVersion: string;
   installed: boolean;
   latestVersion: string;
   canUpgrade: boolean;
-  // TODO We need bunch of other stuff too: upgradeable, latestVersion, ...
-};
-
-export type FeatureStatusMap = {
-  [name: string]: FeatureStatus;
 }
 
 export abstract class Feature {
@@ -35,9 +27,7 @@ export abstract class Feature {
   latestVersion: string;
 
   constructor(config: any) {
-    if(config) {
-      this.config = config;
-    }
+    if(config) this.config = config;
   }
 
   // TODO Return types for these?

@@ -21,7 +21,7 @@ export class BaseStore<T = any> extends Singleton {
   public whenLoaded = when(() => this.isLoaded);
 
   @observable isLoaded = false;
-  @observable protected data = {} as T;
+  @observable protected data: T;
 
   protected constructor(protected params: BaseStoreParams) {
     super();
@@ -69,9 +69,9 @@ export class BaseStore<T = any> extends Singleton {
       },
       ...confOptions,
     });
-    const data = this.storeConfig.store;
-    console.info(`[STORE]: [LOADED] ${this.storeConfig.path}`, data);
-    this.fromStore(data);
+    const jsonModel = this.storeConfig.store;
+    console.info(`[STORE]: [LOADED] ${this.storeConfig.path}`, jsonModel);
+    this.fromStore(jsonModel);
     this.isLoaded = true;
   }
 
@@ -111,8 +111,8 @@ export class BaseStore<T = any> extends Singleton {
   }
 
   @action
-  protected fromStore(data: Partial<T> = {}) {
-    Object.assign(this.data, data);
+  protected fromStore(data: T) {
+    this.data = data;
   }
 
   @action
@@ -120,6 +120,7 @@ export class BaseStore<T = any> extends Singleton {
     this.data = produce(this.data, updater);
   }
 
+  // todo: use "serializr" ?
   toJSON(): T {
     return toJS(this.data, {
       recurseEverything: true,

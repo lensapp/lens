@@ -10,7 +10,7 @@ import CircularDependencyPlugin from "circular-dependency-plugin"
 export default function (): webpack.Configuration {
   return {
     context: __dirname,
-    target: "web",
+    target: "electron-renderer",
     devtool: "source-map", // todo: optimize in dev-mode with webpack.SourceMapDevToolPlugin
     mode: isProduction ? "production" : "development",
     cache: isDevelopment,
@@ -47,6 +47,10 @@ export default function (): webpack.Configuration {
 
     module: {
       rules: [
+        {
+          test: /\.node$/,
+          use: "node-loader"
+        },
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,

@@ -1,5 +1,6 @@
+import { PromiseIpc } from "electron-promise-ipc";
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
-import { isDevelopment, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
+import { isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
 
 // todo: refactor + split menu sections to separated files, e.g. menus/file.menu.ts
 
@@ -38,10 +39,8 @@ function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow) {
 /**
  * Constructs the menu based on the example at: https://electronjs.org/docs/api/menu#main-process
  * Menu items are constructed piece-by-piece to have slightly better control on individual sub-menus
- *
- * @param ipc the main promiceIpc handle. Needed to be able to hook IPC sending into logout click handler.
  */
-export default function initMenu(opts: MenuOptions, promiseIpc: any) {
+export default function initMenu(opts: Partial<MenuOptions> = {}) {
   const mt: MenuItemConstructorOptions[] = [];
   const macAppMenu: MenuItemConstructorOptions = {
     label: app.getName(),
@@ -198,6 +197,8 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
 
   const menu = Menu.buildFromTemplate(mt);
   Menu.setApplicationMenu(menu);
+
+  const promiseIpc = new PromiseIpc({ timeout: 2000 })
 
   promiseIpc.on("enableClusterSettingsMenuItem", (clusterId: string) => {
     setClusterSettingsEnabled(true)

@@ -1,5 +1,5 @@
 import { autorun } from "mobx";
-import { apiPrefix } from "../common/vars";
+import { apiPrefix, appProto } from "../common/vars";
 import { app } from "electron"
 import path from "path"
 import http from "http"
@@ -26,8 +26,8 @@ export class ClusterManager {
   }
 
   constructor(protected port: number) {
-    ClusterManager.ipcListen(this);
     autorun(() => {
+      // fixme: detect and stop removed clusters from config file ?
       clusterStore.clusters.forEach((cluster: Cluster) => {
         if (!cluster.initialized) {
           cluster.init(this.port);
@@ -35,6 +35,8 @@ export class ClusterManager {
         }
       })
     });
+
+    ClusterManager.ipcListen(this);
   }
 
   stop() {
@@ -48,6 +50,7 @@ export class ClusterManager {
   }
 
   protected async addCluster(clusterModel: ClusterModel): Promise<Cluster> {
+    tracker.event("cluster", "add");
     try {
       await validateConfig(clusterModel.kubeConfigPath);
       return clusterStore.addCluster({
@@ -60,7 +63,13 @@ export class ClusterManager {
     }
   }
 
+  protected stopCluster(clusterId: ClusterId) {
+    tracker.event("cluster", "stop");
+    this.getCluster(clusterId)?.stopServer();
+  }
+
   protected removeAllByWorkspace(workspaceId: string) {
+    tracker.event("cluster", "remove-workspace");
     const clusters = clusterStore.getByWorkspaceId(workspaceId);
     clusters.forEach(cluster => {
       this.removeCluster(cluster.id);
@@ -68,6 +77,7 @@ export class ClusterManager {
   }
 
   protected removeCluster(clusterId: string): Cluster {
+    tracker.event("cluster", "remove");
     const cluster = this.getCluster(clusterId);
     if (cluster) {
       cluster.stopServer()
@@ -97,64 +107,70 @@ export class ClusterManager {
     return cluster;
   }
 
-  protected async uploadClusterIcon(cluster: Cluster, fileName: string, src: string): Promise<string> {
-    await ensureDir(ClusterManager.clusterIconDir)
-    fileName = filenamify(cluster.contextName + "-" + fileName)
-    const dest = path.join(ClusterManager.clusterIconDir, fileName)
-    await copyFile(src, dest)
-    return "store:///icons/" + fileName
+  protected async uploadClusterIcon({ clusterId, name: fileName, path: src }: ClusterIconUpload): Promise<string> {
+    const cluster = this.getCluster(clusterId);
+    if (cluster) {
+      tracker.event("cluster", "upload-icon");
+      await ensureDir(ClusterManager.clusterIconDir)
+      fileName = filenamify(cluster.contextName + "-" + fileName)
+      const dest = path.join(ClusterManager.clusterIconDir, fileName)
+      await copyFile(src, dest)
+      cluster.preferences.icon = `${appProto}:///icons/${fileName}`
+      return cluster.preferences.icon;
+    }
+  }
+
+  // todo: remove current icon file ?
+  protected resetClusterIcon(clusterId: ClusterId) {
+    const cluster = this.getCluster(clusterId);
+    if (cluster) {
+      tracker.event("cluster", "reset-icon")
+      cluster.preferences.icon = null;
+    }
+  }
+
+  // todo: check feature failures
+  protected async installFeature({ clusterId, name, config }: FeatureInstallRequest) {
+    tracker.event("cluster", "install-feature")
+    return this.getCluster(clusterId)?.installFeature(name, config)
+  }
+
+  protected async upgradeFeature({ clusterId, name, config }: FeatureInstallRequest) {
+    tracker.event("cluster", "upgrade-feature")
+    return this.getCluster(clusterId)?.upgradeFeature(name, config)
+  }
+
+  protected async uninstallFeature({ clusterId, name }: FeatureInstallRequest) {
+    tracker.event("cluster", "uninstall-feature")
+    return this.getCluster(clusterId)?.uninstallFeature(name);
+  }
+
+  protected async refreshCluster(clusterId: ClusterId) {
+    await this.getCluster(clusterId)?.refreshCluster();
+  }
+
+  protected async getEventsCount(clusterId: ClusterId): Promise<number> {
+    return await this.getCluster(clusterId)?.getEventCount() || 0;
   }
 
   static ipcListen(clusterManager: ClusterManager) {
-    onMessages({
-      [ClusterIpcMessage.CLUSTER_ADD]: async (model: ClusterModel): Promise<boolean> => {
-        tracker.event("cluster", "add");
-        await clusterManager.addCluster(model);
-        return true;
-      },
-      [ClusterIpcMessage.CLUSTER_STOP]: (clusterId: ClusterId) => {
-        tracker.event("cluster", "stop");
-        clusterManager.getCluster(clusterId)?.stopServer();
-      },
-      [ClusterIpcMessage.CLUSTER_REMOVE]: (clusterId: ClusterId) => {
-        tracker.event("cluster", "remove");
-        clusterManager.removeCluster(clusterId);
-      },
-      [ClusterIpcMessage.CLUSTER_REMOVE_WORKSPACE]: (workspaceId: ClusterId) => {
-        clusterManager.removeAllByWorkspace(workspaceId);
-      },
-      [ClusterIpcMessage.CLUSTER_REFRESH]: (clusterId: ClusterId) => {
-        clusterManager.getCluster(clusterId)?.refreshCluster();
-      },
-      [ClusterIpcMessage.CLUSTER_EVENTS]: async (clusterId: ClusterId): Promise<number> => {
-        return await clusterManager.getCluster(clusterId)?.getEventCount() || 0;
-      },
-      // todo: check feature failures
-      [ClusterIpcMessage.FEATURE_INSTALL]: ({ clusterId, name, config }: FeatureInstallRequest) => {
-        tracker.event("cluster", "install-feature")
-        return clusterManager.getCluster(clusterId)?.installFeature(name, config)
-      },
-      [ClusterIpcMessage.FEATURE_UPGRADE]: ({ clusterId, name, config }: FeatureInstallRequest) => {
-        tracker.event("cluster", "upgrade-feature")
-        return clusterManager.getCluster(clusterId)?.upgradeFeature(name, config)
-      },
-      [ClusterIpcMessage.FEATURE_REMOVE]: ({ clusterId, name }: FeatureInstallRequest) => {
-        tracker.event("cluster", "uninstall-feature")
-        return clusterManager.getCluster(clusterId)?.uninstallFeature(name);
-      },
-      [ClusterIpcMessage.ICON_SAVE]: async ({ clusterId, name, path }: ClusterIconUpload) => {
-        tracker.event("cluster", "upload-icon");
-        const cluster = clusterManager.getCluster(clusterId);
-        if (!cluster) return false;
-        cluster.preferences.icon = await clusterManager.uploadClusterIcon(cluster, name, path);
-      },
-      [ClusterIpcMessage.ICON_RESET]: async (clusterId: ClusterId) => {
-        tracker.event("cluster", "reset-icon")
-        const cluster = clusterManager.getCluster(clusterId);
-        if (!cluster) return false;
-        cluster.preferences.icon = null; // todo: remove current file-icon ?
-      },
-    }, {
+    const handlers = {
+      [ClusterIpcMessage.CLUSTER_ADD]: clusterManager.addCluster,
+      [ClusterIpcMessage.CLUSTER_STOP]: clusterManager.stopCluster,
+      [ClusterIpcMessage.CLUSTER_REMOVE]: clusterManager.removeCluster,
+      [ClusterIpcMessage.CLUSTER_REMOVE_WORKSPACE]: clusterManager.removeAllByWorkspace,
+      [ClusterIpcMessage.CLUSTER_REFRESH]: clusterManager.refreshCluster,
+      [ClusterIpcMessage.CLUSTER_EVENTS]: clusterManager.getEventsCount,
+      [ClusterIpcMessage.FEATURE_INSTALL]: clusterManager.installFeature,
+      [ClusterIpcMessage.FEATURE_UPGRADE]: clusterManager.upgradeFeature,
+      [ClusterIpcMessage.FEATURE_REMOVE]: clusterManager.uninstallFeature,
+      [ClusterIpcMessage.ICON_SAVE]: clusterManager.uploadClusterIcon,
+      [ClusterIpcMessage.ICON_RESET]: clusterManager.removeCluster,
+    };
+    Object.entries(handlers).forEach(([key, handler]) => {
+      handlers[key as keyof typeof handlers] = handler.bind(clusterManager);
+    })
+    onMessages(handlers, {
       timeout: 2000,
     })
   }

@@ -2,14 +2,14 @@
 @import "fonts";
 
 *, *:before, *:after {
+  @include set-draggable(false);
+
   box-sizing: border-box;
   padding: 0;
   margin: 0;
   border: 0;
   outline: none;
   -webkit-font-smoothing: antialiased;
-  -webkit-user-drag: none;
-  -webkit-app-region: no-drag;
 }
 
 ::selection {
@@ -165,14 +165,6 @@ a {
       margin-top: var(--flow-space);
     }
   }
-}
-
-.drag {
-  -webkit-app-region: drag;
-}
-
-.nodrag {
-  -webkit-app-region: no-drag;
 }
 
 // app's common loading indicator, displaying on the route transitions

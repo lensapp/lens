@@ -1,17 +1,13 @@
 import { BrowserWindow, shell } from "electron"
-import { PromiseIpc } from "electron-promise-ipc"
 import windowStateKeeper from "electron-window-state"
-import { getStaticUrl } from "../common/register-static";
 import { tracker } from "../common/tracker";
 
 export class WindowManager {
   public mainWindow: BrowserWindow = null;
   public splashWindow: BrowserWindow = null;
-  protected promiseIpc: any
   protected windowState: windowStateKeeper.State;
 
   constructor({ showSplash = true } = {}) {
-    this.promiseIpc = new PromiseIpc({ timeout: 2000 })
     // Manage main window size&position with persistence
     this.windowState = windowStateKeeper({
       defaultHeight: 900,
@@ -31,7 +27,7 @@ export class WindowManager {
       }
     })
     if (showSplash) {
-      this.splashWindow.loadURL(getStaticUrl("splash.html"))
+      this.splashWindow.loadURL("static://splash.html")
       this.splashWindow.show()
     }
 

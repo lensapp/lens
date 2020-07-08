@@ -1,11 +1,11 @@
-import { action, computed, toJS } from "mobx";
+import { action, observable } from "mobx";
 import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store"
 
 export type WorkspaceId = string;
 
 export interface WorkspaceStoreModel {
-  currentWorkspace?: WorkspaceId; // last visited/activated
+  currentWorkspace?: WorkspaceId;
   workspaces: Workspace[]
 }
 
@@ -18,17 +18,14 @@ export interface Workspace {
 export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   static readonly defaultId: WorkspaceId = "default"
 
-  protected data: WorkspaceStoreModel = {
-    currentWorkspace: WorkspaceStore.defaultId,
-    workspaces: [{
+  @observable currentWorkspace = WorkspaceStore.defaultId;
+
+  @observable workspaces = observable.map<WorkspaceId, Workspace>({
+    [WorkspaceStore.defaultId]: {
       id: WorkspaceStore.defaultId,
       name: "default"
-    }]
-  }
-
-  @computed get workspaces() {
-    return toJS(this.data.workspaces);
-  }
+    }
+  });
 
   private constructor() {
     super({
@@ -36,40 +33,59 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     });
   }
 
-  public getById(id: WorkspaceId): Workspace {
-    return this.workspaces.find(workspace => workspace.id === id);
-  }
-
-  public getIndexById(id: WorkspaceId): number {
-    return this.workspaces.findIndex(workspace => workspace.id === id);
+  getById(id: WorkspaceId): Workspace {
+    return this.workspaces.get(id);
   }
 
   @action
   setCurrent(id: WorkspaceId) {
-    this.data.currentWorkspace = id;
+    if (!this.getById(id)) return;
+    this.currentWorkspace = id;
   }
 
   @action
-  public saveWorkspace(newWorkspace: Workspace) {
-    const workspace = this.getById(newWorkspace.id);
-    if (workspace) {
-      Object.assign(workspace, newWorkspace);
+  public saveWorkspace(workspace: Workspace) {
+    const id = workspace.id;
+    const existingWorkspace = this.getById(id);
+    if (existingWorkspace) {
+      Object.assign(existingWorkspace, workspace);
     } else {
-      this.data.workspaces.push(newWorkspace);
+      this.workspaces.set(id, workspace);
     }
   }
 
   @action
-  public removeWorkspace(workspaceOrId: Workspace | WorkspaceId) {
-    const workspace = this.getById(typeof workspaceOrId == "string" ? workspaceOrId : workspaceOrId.id);
+  public removeWorkspace(id: WorkspaceId) {
+    const workspace = this.getById(id);
     if (!workspace) return;
-    if (workspace.id === WorkspaceStore.defaultId) {
+    if (id === WorkspaceStore.defaultId) {
       throw new Error("Cannot remove default workspace");
     }
-    const index = this.getIndexById(workspace.id);
-    if (index > -1) {
-      this.data.workspaces.splice(index, 1)
-      clusterStore.removeByWorkspaceId(workspace.id)
+    if (id === this.currentWorkspace) {
+      this.currentWorkspace = WorkspaceStore.defaultId;
+    }
+    this.workspaces.delete(id);
+    clusterStore.removeByWorkspaceId(id)
+  }
+
+  @action
+  protected fromStore({ currentWorkspace, workspaces = [] }: WorkspaceStoreModel) {
+    if (currentWorkspace) {
+      this.currentWorkspace = currentWorkspace
+    }
+    if (workspaces.length) {
+      this.workspaces.clear();
+      workspaces.forEach(workspace => {
+        this.workspaces.set(workspace.id, workspace)
+      })
+    }
+  }
+
+  toJSON(): WorkspaceStoreModel {
+    const { currentWorkspace, workspaces } = this;
+    return {
+      currentWorkspace: currentWorkspace,
+      workspaces: Array.from(workspaces.values()),
     }
   }
 }

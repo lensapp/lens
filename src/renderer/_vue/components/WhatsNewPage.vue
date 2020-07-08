@@ -29,14 +29,14 @@
 <script>
 import marked from 'marked'
 import {readFileSync} from 'fs'
-import { getStaticPath } from "../../../common/register-static"
 import { userStore } from "../../../common/user-store"
 
 export default {
   name: 'WhatsNewPage',
   data() {
-    let releaseNotes = getStaticPath("RELEASE_NOTES.md");
-    let content = marked(readFileSync(releaseNotes, 'utf8'));
+    // todo: check if "fs" can work with custom protocols
+    let fileContents = readFileSync("static://RELEASE_NOTES.md", 'utf8');
+    let content = marked(fileContents);
     return {
       error: "",
       content: content,

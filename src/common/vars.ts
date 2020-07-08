@@ -1,9 +1,7 @@
 // App's common configuration for any process (main, renderer, build pipeline, etc.)
+import packageInfo from "../../package.json"
 import path from "path";
 
-export const appName = "lens"
-
-// Flags
 export const isMac = process.platform === "darwin"
 export const isWindows = process.platform === "win32"
 export const isDebugging = process.env.DEBUG === "true";
@@ -11,6 +9,10 @@ export const isProduction = process.env.NODE_ENV === "production"
 export const isDevelopment = isDebugging || !isProduction;
 export const buildVersion = process.env.BUILD_VERSION;
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
+
+export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`
+export const appProto = "lens"  // app's "userData" folder (e.g. "lens://icons/logo.svg")
+export const staticProto = "static"  // static content folder (e.g. "static://RELEASE_NOTES.md")
 
 // Paths
 export const contextDir = process.cwd();
@@ -22,8 +24,6 @@ export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 
 // Apis
-export const staticProto = "static://"
-
 export const apiPrefix = {
   BASE: '/api',
   KUBE_BASE: '/api-kube', // kubernetes cluster api

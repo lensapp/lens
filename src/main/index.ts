@@ -2,12 +2,10 @@
 
 import "../common/system-ca"
 import "../common/prometheus-providers"
-import { app, dialog, protocol } from "electron"
-import { appName, isDevelopment, isMac } from "../common/vars";
-import { PromiseIpc } from "electron-promise-ipc"
+import { app, dialog } from "electron"
+import { appName, appProto, isDevelopment, isMac, staticDir, staticProto } from "../common/vars";
 import path from "path"
 import { format as formatUrl } from "url"
-import logger from "./logger"
 import initMenu from "./menu"
 import * as proxy from "./proxy"
 import { WindowManager } from "./window-manager";
@@ -16,25 +14,13 @@ import AppUpdater from "./app-updater"
 import { shellSync } from "./shell-sync"
 import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
-import { findMainWebContents } from "./webcontents"
-import { registerStaticProtocol } from "../common/register-static";
+import { registerFileProtocol } from "../common/register-protocol";
 import { clusterStore } from "../common/cluster-store"
 import { userStore } from "../common/user-store";
+import { workspaceStore } from "../common/workspace-store";
 import { tracker } from "../common/tracker";
+import logger from "./logger"
 
-if (isDevelopment) {
-  const appName = "LensDev";
-  const appData = app.getPath("appData");
-  app.setName(appName);
-  app.setPath("userData", path.join(appData, appName));
-}
-
-mangleProxyEnv()
-if (app.commandLine.getSwitchValue("proxy-server") !== "") {
-  process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server")
-}
-
-const promiseIpc = new PromiseIpc({ timeout: 2000 })
 let windowManager: WindowManager = null;
 let clusterManager: ClusterManager = null;
 let proxyServer: proxy.LensProxy = null;
@@ -45,24 +31,30 @@ const vmURL = formatUrl({
   slashes: true,
 })
 
-async function main() {
-  shellSync(app.getLocale())
+mangleProxyEnv()
+if (app.commandLine.getSwitchValue("proxy-server") !== "") {
+  process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server")
+}
 
+async function main() {
+  shellSync(app.getLocale());
+
+  // todo: check other usages .getPath("userData") and enable "lazy-evaluation"
+  const workingDir = path.join(app.getPath("appData"), appName);
+  app.setName(appName);
+  app.setPath("userData", workingDir);
+  logger.info(`Start app from "${workingDir}"`)
+
+  tracker.event("app", "start");
   const updater = new AppUpdater()
   updater.start();
 
-  tracker.event("app", "start");
+  initMenu();
+  registerFileProtocol(appProto, app.getPath("userData"));
+  registerFileProtocol(staticProto, staticDir);
 
-  registerStaticProtocol();
-  protocol.registerFileProtocol('store', (request, callback) => {
-    const url = request.url.substr(8)
-    callback(path.normalize(`${app.getPath("userData")}/${url}`))
-  }, (error) => {
-    if (error) console.error('Failed to register protocol')
-  })
-
-  let port: number = null
   // find free port
+  let port: number
   try {
     port = await getFreePort()
   } catch (error) {
@@ -71,10 +63,11 @@ async function main() {
     app.quit();
   }
 
-  // preload required stores
+  // preload configuration from stores
   await Promise.all([
     userStore.load(),
     clusterStore.load(),
+    workspaceStore.load(),
   ]);
 
   // create cluster manager
@@ -89,39 +82,9 @@ async function main() {
     app.quit();
   }
 
-  // boot windowmanager
+  // manage lens windows
   windowManager = new WindowManager();
   windowManager.showMain(vmURL)
-
-  initMenu({
-    logoutHook: async () => {
-      // IPC send needs webContents as we're sending it to renderer
-      promiseIpc.send('logout', findMainWebContents(), {}).then((data: any) => {
-        logger.debug("logout IPC sent");
-      })
-    },
-    showPreferencesHook: async () => {
-      // IPC send needs webContents as we're sending it to renderer
-      promiseIpc.send('navigate', findMainWebContents(), { name: 'preferences-page' }).then((data: any) => {
-        logger.debug("navigate: preferences IPC sent");
-      })
-    },
-    addClusterHook: async () => {
-      promiseIpc.send('navigate', findMainWebContents(), { name: "add-cluster-page" }).then((data: any) => {
-        logger.debug("navigate: add-cluster-page  IPC sent");
-      })
-    },
-    showWhatsNewHook: async () => {
-      promiseIpc.send('navigate', findMainWebContents(), { name: "whats-new-page" }).then((data: any) => {
-        logger.debug("navigate: whats-new-page  IPC sent");
-      })
-    },
-    clusterSettingsHook: async () => {
-      promiseIpc.send('navigate', findMainWebContents(), { name: "cluster-settings-page" }).then((data: any) => {
-        logger.debug("navigate: cluster-settings-page  IPC sent");
-      })
-    },
-  }, promiseIpc)
 }
 
 app.on("ready", main)

@@ -1,13 +1,13 @@
-import { observable } from "mobx";
+import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
+import type { FeatureStatusMap } from "./feature"
+import { observable, toJS } from "mobx";
 import { apiPrefix } from "../common/vars";
 import { ContextHandler } from "./context-handler"
-import { FeatureStatusMap } from "./feature"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager"
 import { getNodeWarningConditions, loadConfig, podHasIssues } from "./k8s"
 import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from "./feature-manager";
-import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import request from "request-promise-native"
 import logger from "./logger"
 
@@ -17,30 +17,43 @@ enum ClusterStatus {
   Offline = 0
 }
 
+export interface ClusterState extends ClusterModel {
+  url: string;
+  apiUrl: string;
+  online?: boolean;
+  accessible?: boolean;
+  failureReason?: string;
+  nodes?: number;
+  eventCount?: number;
+  version?: string;
+  distribution?: string;
+  isAdmin?: boolean;
+  features?: FeatureStatusMap;
+}
+
 export class Cluster implements ClusterModel {
+  public contextHandler: ContextHandler;
+  public kubeCtl: Kubectl
+  protected kubeconfigManager: KubeconfigManager;
+
   @observable initialized = false;
   @observable id: ClusterId;
   @observable workspace: string;
   @observable kubeConfigPath: string;
   @observable contextName: string;
+  @observable url: string;
+  @observable port: number;
+  @observable apiUrl: string;
+  @observable online: boolean;
+  @observable accessible: boolean;
+  @observable failureReason: string;
+  @observable nodes: number;
+  @observable version: string;
+  @observable distribution: string;
+  @observable isAdmin: boolean;
+  @observable eventCount: number;
   @observable preferences: ClusterPreferences = {};
-
-  public contextHandler: ContextHandler;
-  public url: string;
-  public port: number;
-  public apiUrl: string;
-  public online: boolean;
-  public accessible: boolean;
-  public failureReason: string;
-  public nodes: number;
-  public version: string;
-  public distribution: string;
-  public isAdmin: boolean;
-  public eventCount: number;
-  public kubeCtl: Kubectl
-  public features: FeatureStatusMap = {};
-
-  protected kubeconfigManager: KubeconfigManager;
+  @observable features: FeatureStatusMap = {};
 
   constructor(model: ClusterModel) {
     Object.assign(this, model)
@@ -50,7 +63,7 @@ export class Cluster implements ClusterModel {
     const { contextName } = this
     try {
       const kubeConfig = loadConfig(this.kubeConfigPath)
-      kubeConfig.setCurrentContext(contextName); // fixme: is it needed at all?
+      kubeConfig.setCurrentContext(contextName); // fixme: is it required, when if so?
       this.port = port;
       this.apiUrl = kubeConfig.getCurrentCluster().server
       this.contextHandler = new ContextHandler(kubeConfig, this)
@@ -238,12 +251,34 @@ export class Cluster implements ClusterModel {
   }
 
   toJSON(): ClusterModel {
-    return {
+    return toJS({
       id: this.id,
       contextName: this.contextName,
       kubeConfigPath: this.kubeConfigPath,
       workspace: this.workspace,
       preferences: this.preferences,
-    }
+    }, {
+      recurseEverything: true
+    })
+  }
+
+  getState(): ClusterState {
+    const storeModel = this.toJSON();
+    return toJS({
+      ...storeModel,
+      url: this.url,
+      apiUrl: this.apiUrl,
+      online: this.online,
+      accessible: this.accessible,
+      failureReason: this.failureReason,
+      nodes: this.nodes,
+      version: this.version,
+      distribution: this.distribution,
+      isAdmin: this.isAdmin,
+      features: this.features,
+      eventCount: this.eventCount,
+    }, {
+      recurseEverything: true
+    })
   }
 }

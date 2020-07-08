@@ -9,12 +9,16 @@ export interface IpcOptions {
   timeout?: number;
 }
 
+export interface IpcMessageHandler {
+  (...args: any[]): any;
+}
+
 export async function invokeMessage(channel: string, ...args: any[]) {
   logger.debug(`[IPC]: invoke channel "${channel}"`, { args });
   return ipcRenderer.invoke(channel, ...args);
 }
 
-export function onMessage(channel: string, handler: (...args: any[]) => any, options: IpcOptions = {}) {
+export function onMessage(channel: string, handler: IpcMessageHandler, options: IpcOptions = {}) {
   const { timeout = 0 } = options;
   ipcMain.handle(channel, async (event, ...args: any[]) => {
     logger.debug(`[IPC]: handle "${channel}"`, { event, args });
@@ -37,8 +41,8 @@ export function onMessage(channel: string, handler: (...args: any[]) => any, opt
   })
 }
 
-export function onMessages(messages: Record<string, Function>, options?: IpcOptions) {
+export function onMessages(messages: Record<string, IpcMessageHandler>, options?: IpcOptions) {
   Object.entries(messages).forEach(([channel, handler]) => {
-    this.onMessage(channel, handler, options);
+    onMessage(channel, handler, options);
   })
 }
