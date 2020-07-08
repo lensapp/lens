@@ -1,5 +1,6 @@
 import "./workspaces.scss"
 import React from "react";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { Trans } from "@lingui/macro";
@@ -8,7 +9,6 @@ import { Icon } from "../icon";
 import { ClustersMenu } from "./clusters-menu";
 import { Menu, MenuItem } from "../menu";
 import { prevDefault } from "../../utils";
-import { observable } from "mobx";
 
 // todo: support `workspaceId` in URL
 

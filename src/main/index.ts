@@ -25,12 +25,6 @@ let windowManager: WindowManager = null;
 let clusterManager: ClusterManager = null;
 let proxyServer: proxy.LensProxy = null;
 
-const vmURL = formatUrl({
-  pathname: path.join(__dirname, `${appName}.html`),
-  protocol: "file",
-  slashes: true,
-})
-
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server")
@@ -82,8 +76,13 @@ async function main() {
   }
 
   // manage lens windows
-  windowManager = new WindowManager({showSplash: true});
-  windowManager.showMain(vmURL)
+  const vmURL = formatUrl({
+    pathname: path.join(__dirname, `${appName}.html`),
+    protocol: "file",
+    slashes: true,
+  })
+  windowManager = new WindowManager();
+  windowManager.loadURL(vmURL)
 }
 
 app.on("ready", main)
@@ -96,15 +95,8 @@ app.on('window-all-closed', function () {
     windowManager = null
     if (clusterManager) clusterManager.stop()
   }
-})
-// app.on("activate", () => {
-//   if (!windowManager) {
-//     logger.debug("activate main window")
-//     windowManager = new WindowManager({ showSplash: false })
-//     windowManager.showMain(vmURL)
-//   }
-// })
-app.on("will-quit", async (event) => {
+});
+app.on("will-quit", async event => {
   event.preventDefault(); // To allow mixpanel sending to be executed
   if (clusterManager) clusterManager.stop()
   if (proxyServer) proxyServer.close()

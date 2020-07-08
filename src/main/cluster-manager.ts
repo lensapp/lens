@@ -1,18 +1,18 @@
-import { autorun } from "mobx";
-import { apiPrefix, appProto } from "../common/vars";
 import { app } from "electron"
+import { reaction } from "mobx";
 import path from "path"
 import http from "http"
 import { copyFile, ensureDir } from "fs-extra"
 import filenamify from "filenamify"
-import { validateConfig } from "./k8s";
-import { Cluster } from "./cluster"
+import { apiPrefix, appProto } from "../common/vars";
 import { ClusterId, ClusterModel, clusterStore } from "../common/cluster-store"
-import logger from "./logger"
 import { onMessages } from "../common/ipc-helpers";
 import { ClusterIpcMessage } from "../common/ipc-messages";
-import { FeatureInstallRequest } from "./feature";
 import { tracker } from "../common/tracker";
+import { validateConfig } from "./k8s";
+import { Cluster } from "./cluster"
+import { FeatureInstallRequest } from "./feature";
+import logger from "./logger"
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -26,16 +26,19 @@ export class ClusterManager {
   }
 
   constructor(protected port: number) {
-    autorun(() => {
-      // fixme: detect and stop removed clusters from config file ?
-      clusterStore.clusters.forEach((cluster: Cluster) => {
+    reaction(() => clusterStore.clusters.toJS(), clusters => {
+      clusters.forEach(cluster => {
         if (!cluster.initialized) {
-          cluster.init(this.port);
-          cluster.refreshCluster();
+          cluster.init(this.port).then(() => cluster.refreshCluster());
         }
       })
     });
-
+    reaction(() => clusterStore.removedClusters.toJS(), removedClusters => {
+      if (removedClusters.size > 0) {
+        removedClusters.forEach(cluster => cluster.stopServer());
+        clusterStore.removedClusters.clear();
+      }
+    });
     ClusterManager.ipcListen(this);
   }
 

@@ -40,6 +40,7 @@ export interface ClusterPreferences {
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable activeCluster: ClusterId;
   @observable clusters = observable.map<ClusterId, Cluster>();
+  @observable removedClusters = observable.map<ClusterId, Cluster>();
 
   private constructor() {
     super({
@@ -86,12 +87,32 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   protected fromStore({ activeCluster, clusters = [] }: ClusterStoreModel = {}) {
-    const clustersMap = new Map<ClusterId, Cluster>();
+    const currentClusters = this.clusters.toJS();
+    const newClusters = new Map<ClusterId, Cluster>();
+    const removedClusters = new Map<ClusterId, Cluster>();
+
+    // update new clusters
     clusters.forEach(clusterModel => {
-      clustersMap.set(clusterModel.id, new Cluster(clusterModel));
+      let cluster = currentClusters.get(clusterModel.id);
+      if (cluster) {
+        Object.assign(cluster, clusterModel);
+        cluster.mergeModel(clusterModel);
+      } else {
+        cluster = new Cluster(clusterModel);
+      }
+      newClusters.set(clusterModel.id, cluster);
     });
-    this.activeCluster = clustersMap.has(activeCluster) ? activeCluster : null;
-    this.clusters.replace(clustersMap);
+
+    // update removed clusters
+    currentClusters.forEach(cluster => {
+      if (!newClusters.has(cluster.id)) {
+        removedClusters.set(cluster.id, cluster);
+      }
+    });
+
+    this.activeCluster = newClusters.has(activeCluster) ? activeCluster : null;
+    this.clusters.replace(newClusters);
+    this.removedClusters.replace(removedClusters);
   }
 
   toJSON(): ClusterStoreModel {

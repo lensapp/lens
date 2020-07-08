@@ -56,6 +56,10 @@ export class Cluster implements ClusterModel {
   @observable features: FeatureStatusMap = {};
 
   constructor(model: ClusterModel) {
+    this.mergeModel(model);
+  }
+
+  mergeModel(model: ClusterModel) {
     Object.assign(this, model)
   }
 
