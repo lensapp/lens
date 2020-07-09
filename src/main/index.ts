@@ -80,7 +80,7 @@ async function main() {
 }
 
 // Events
-app.on("ready", main)
+app.on("ready", main);
 
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
@@ -93,8 +93,8 @@ app.on('window-all-closed', function () {
   }
 })
 
-app.on("activate", (event, hasVisibleWindows) => {
-  // todo: something
+app.on("activate", () => {
+  logger.debug("app:activate");
 })
 
 app.on("will-quit", async (event) => {

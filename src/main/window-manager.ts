@@ -5,8 +5,17 @@ import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 
 export class WindowManager {
+  protected activeView: BrowserWindow;
   protected views = new Map<ClusterId, BrowserWindow>();
-  protected disposers = this.bindReactions();
+
+  protected disposers = [
+    // auto-destroy view when cluster removed
+    reaction(() => clusterStore.removedClusters.toJS(), removedClusters => {
+      removedClusters.forEach(cluster => {
+        this.destroyView(cluster.id);
+      });
+    })
+  ];
 
   protected splashWindow = new BrowserWindow({
     width: 500,
@@ -24,17 +33,6 @@ export class WindowManager {
     defaultWidth: 1440,
   });
 
-  protected bindReactions() {
-    return [
-      // auto-destroy cluster-view when it's removed
-      reaction(() => clusterStore.removedClusters.toJS(), removedClusters => {
-        removedClusters.forEach(cluster => {
-          this.destroyView(cluster.id);
-        });
-      })
-    ]
-  }
-
   async showSplash() {
     await this.splashWindow.loadURL("static://splash.html")
     this.splashWindow.show();
@@ -44,20 +42,30 @@ export class WindowManager {
     this.splashWindow.hide();
   }
 
-  protected async showView(clusterId: ClusterId) {
+  // todo: smooth switching between windows/clusters
+  // todo: devtools + manage main-window size btw views
+  async showView(clusterId: ClusterId) {
     const cluster = clusterStore.getById(clusterId);
     if (!cluster) {
-      throw new Error(`Can't load view for non-existing cluster="${clusterId}"`);
+      throw new Error(`Can't load lens for non-existing cluster="${clusterId}"`);
     }
+    const activeView = this.activeView;
     const view = this.getView(clusterId);
-    const url = cluster.apiUrl.href;
-    if (view.webContents.getURL() !== url) {
-      await view.loadURL(url);
+    if (view !== activeView) {
+      this.activeView = view;
+      if (activeView) {
+        view.setBounds(activeView.getBounds()); // update position from previous window
+      }
+      const url = cluster.apiUrl.href;
+      const isLoaded = url === view.webContents.getURL();
+      if (!isLoaded) {
+        await view.loadURL(url);
+      }
+      view.show();
     }
-    view.show();
   }
 
-  getView(clusterId: ClusterId) {
+  protected getView(clusterId: ClusterId) {
     let view = this.views.get(clusterId);
     if (!view) {
       view = new BrowserWindow({
@@ -69,6 +77,7 @@ export class WindowManager {
         backgroundColor: "#1e2124",
         titleBarStyle: "hidden",
         webPreferences: {
+          // partition: "lens-app", // todo: reuse session?
           nodeIntegration: true,
         },
       });
@@ -78,11 +87,12 @@ export class WindowManager {
         shell.openExternal(url);
       });
       this.views.set(clusterId, view);
+      this.windowState.manage(view);
     }
     return view;
   }
 
-  destroyView(clusterId: ClusterId) {
+  protected destroyView(clusterId: ClusterId) {
     const view = this.views.get(clusterId);
     if (view) {
       view.destroy();
@@ -91,11 +101,13 @@ export class WindowManager {
   }
 
   destroy() {
+    this.windowState.unmanage();
     this.disposers.forEach(dispose => dispose());
     this.disposers.length = 0;
     this.views.forEach(view => view.destroy());
     this.views.clear();
     this.splashWindow.destroy();
     this.splashWindow = null;
+    this.activeView = null;
   }
 }
