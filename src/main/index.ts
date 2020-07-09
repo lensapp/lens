@@ -7,7 +7,7 @@ import { appName, appProto, isMac, staticDir, staticProto } from "../common/vars
 import path from "path"
 import { format as formatUrl } from "url"
 import initMenu from "./menu"
-import * as proxy from "./proxy"
+import { LensProxy, listen } from "./proxy"
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
 import AppUpdater from "./app-updater"
@@ -21,9 +21,9 @@ import { workspaceStore } from "../common/workspace-store";
 import { tracker } from "../common/tracker";
 import logger from "./logger"
 
-let windowManager: WindowManager = null;
-let clusterManager: ClusterManager = null;
-let proxyServer: proxy.LensProxy = null;
+let windowManager: WindowManager;
+let clusterManager: ClusterManager;
+let proxyServer: LensProxy;
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
@@ -68,7 +68,7 @@ async function main() {
 
   // run proxy
   try {
-    proxyServer = proxy.listen(port, clusterManager)
+    proxyServer = listen(port, clusterManager)
   } catch (error) {
     logger.error(`Could not start proxy (127.0.0:${port}): ${error.message}`)
     await dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${port}): ${error.message || "unknown error"}`)
@@ -85,7 +85,9 @@ async function main() {
   windowManager.loadURL(vmURL)
 }
 
-app.on("ready", main)
+// Events
+
+app.on("ready", main);
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q

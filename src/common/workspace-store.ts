@@ -1,4 +1,4 @@
-import { action, observable } from "mobx";
+import { action, computed, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store"
 
@@ -18,6 +18,12 @@ export interface Workspace {
 export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   static readonly defaultId: WorkspaceId = "default"
 
+  private constructor() {
+    super({
+      configName: "lens-workspace-store",
+    });
+  }
+
   @observable currentWorkspace = WorkspaceStore.defaultId;
 
   @observable workspaces = observable.map<WorkspaceId, Workspace>({
@@ -27,10 +33,8 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     }
   });
 
-  private constructor() {
-    super({
-      configName: "lens-workspace-store",
-    });
+  @computed get workspacesList() {
+    return Array.from(this.workspaces.values());
   }
 
   getById(id: WorkspaceId): Workspace {
@@ -82,11 +86,12 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   toJSON(): WorkspaceStoreModel {
-    const { currentWorkspace, workspaces } = this;
-    return {
-      currentWorkspace: currentWorkspace,
-      workspaces: Array.from(workspaces.values()),
-    }
+    return toJS({
+      currentWorkspace: this.currentWorkspace,
+      workspaces: this.workspacesList,
+    }, {
+      recurseEverything: true
+    })
   }
 }
 

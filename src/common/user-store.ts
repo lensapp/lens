@@ -20,16 +20,7 @@ export interface UserPreferences {
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
-  @observable lastSeenAppVersion = "0.0.0"
-  @observable seenContexts = observable.set();
-
-  @observable preferences: UserPreferences = {
-    allowTelemetry: true,
-    colorTheme: "dark",
-    downloadMirror: "default",
-  };
-
-  protected constructor() {
+  private constructor() {
     super({
       configName: "lens-user-store",
       confOptions: {
@@ -42,6 +33,14 @@ export class UserStore extends BaseStore<UserStoreModel> {
       tracker.event("telemetry", allowed ? "enabled" : "disabled");
     });
   }
+
+  @observable lastSeenAppVersion = "0.0.0"
+  @observable seenContexts = observable.set();
+  @observable preferences: UserPreferences = {
+    allowTelemetry: true,
+    colorTheme: "dark",
+    downloadMirror: "default",
+  };
 
   get hasNewAppVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);

@@ -5,29 +5,21 @@
   grid-template-columns: min-content 1fr;
   height: 100%;
 
-  > .draggable-top {
+  .draggable-top {
     @include set-draggable;
     grid-area: draggable;
   }
 
-  > .ClusterMenu {
-    grid-area: menu;
-  }
-
-  > .lens-container {
+  #lens-view {
     grid-area: lens-view;
   }
 
-  > .bottom-bar {
-    grid-area: bottom-bar;
-    font-size: $font-size-small;
-    background-color: #3d90ce;
-    padding: $padding / 2 $padding;
-    color: white;
+  .ClusterMenu {
+    grid-area: menu;
+  }
 
-    #workspace {
-      cursor: pointer;
-    }
+  .WorkspacesBottomBar {
+    grid-area: bottom-bar;
   }
 }
 

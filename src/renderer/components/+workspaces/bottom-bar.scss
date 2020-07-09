@@ -1,0 +1,10 @@
+.WorkspacesBottomBar {
+  font-size: $font-size-small;
+  background-color: #3d90ce;
+  padding: $padding / 2 $padding;
+  color: white;
+
+  #workspace {
+    cursor: pointer;
+  }
+}

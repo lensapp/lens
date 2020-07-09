@@ -1,4 +1,4 @@
-import { action, observable, toJS } from "mobx";
+import { action, computed, observable, toJS } from "mobx";
 import { v4 as uuid } from "uuid"
 import { BaseStore } from "./base-store";
 import { Cluster } from "../main/cluster";
@@ -38,10 +38,6 @@ export interface ClusterPreferences {
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
-  @observable activeCluster: ClusterId;
-  @observable clusters = observable.map<ClusterId, Cluster>();
-  @observable removedClusters = observable.map<ClusterId, Cluster>();
-
   private constructor() {
     super({
       configName: "lens-cluster-store",
@@ -52,14 +48,20 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
   }
 
+  @observable activeCluster: ClusterId;
+  @observable removedClusters = observable.map<ClusterId, Cluster>();
+  @observable clusters = observable.map<ClusterId, Cluster>();
+
+  @computed get clustersList() {
+    return Array.from(this.clusters.values());
+  }
+
   getById(id: ClusterId): Cluster {
     return this.clusters.get(id);
   }
 
   getByWorkspaceId(workspaceId: string): Cluster[] {
-    return Array.from(this.clusters.values()).filter(cluster => {
-      return cluster.workspace === workspaceId;
-    })
+    return this.clustersList.filter(cluster => cluster.workspace === workspaceId)
   }
 
   @action
@@ -116,10 +118,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   toJSON(): ClusterStoreModel {
-    const clusters = Array.from(this.clusters).map(([id, cluster]) => cluster.toJSON());
     return toJS({
       activeCluster: this.activeCluster,
-      clusters: clusters,
+      clusters: this.clustersList.map(cluster => cluster.toJSON()),
     }, {
       recurseEverything: true
     })
