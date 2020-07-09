@@ -34,7 +34,7 @@
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "lint": "eslint $@ --ext js,ts,tsx --max-warnings=0  src/",
-    "rebuild": "electron-rebuild -f -w node-pty"
+    "rebuild-pty": "electron-rebuild -f -w node-pty"
   },
   "config": {
     "bundledKubectlVersion": "1.17.4",
@@ -261,7 +261,7 @@
     "css-element-queries": "^1.2.3",
     "css-loader": "^3.5.3",
     "dompurify": "^2.0.11",
-    "electron": "^7.3.2",
+    "electron": "^9.1.0",
     "electron-builder": "^22.7.0",
     "electron-notarize": "^0.3.0",
     "electron-rebuild": "^1.11.0",

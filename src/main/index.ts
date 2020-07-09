@@ -25,6 +25,12 @@ let windowManager: WindowManager;
 let clusterManager: ClusterManager;
 let proxyServer: LensProxy;
 
+const vmURL = formatUrl({
+  pathname: path.join(__dirname, `${appName}.html`),
+  protocol: "file",
+  slashes: true,
+})
+
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server")
@@ -76,18 +82,13 @@ async function main() {
   }
 
   // manage lens windows
-  const vmURL = formatUrl({
-    pathname: path.join(__dirname, `${appName}.html`),
-    protocol: "file",
-    slashes: true,
-  })
-  windowManager = new WindowManager();
+  windowManager = new WindowManager({showSplash: true});
   windowManager.loadURL(vmURL)
 }
 
 // Events
+app.on("ready", main)
 
-app.on("ready", main);
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
@@ -97,8 +98,17 @@ app.on('window-all-closed', function () {
     windowManager = null
     if (clusterManager) clusterManager.stop()
   }
-});
-app.on("will-quit", async event => {
+})
+
+app.on("activate", () => {
+  if (!windowManager) {
+    windowManager = new WindowManager()
+    windowManager.loadURL(vmURL)
+  }
+})
+
+// fixme: app can't quit normally (Cmd+W/Q not working)
+app.on("will-quit", async (event) => {
   event.preventDefault(); // To allow mixpanel sending to be executed
   if (clusterManager) clusterManager.stop()
   if (proxyServer) proxyServer.close()

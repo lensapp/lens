@@ -17,7 +17,7 @@ export class WindowManager {
   protected disposers: Function[] = [];
 
   constructor(protected params: WindowManagerParams = {}) {
-    this.params = { showSplash: true, ...params };
+    this.params = { showSplash: false, ...params };
 
     // Manage main window size and position with state persistence
     this.windowState = windowStateKeeper({
@@ -83,9 +83,28 @@ export class WindowManager {
     );
   }
 
-  setView(clusterId: ClusterId) {
+  async loadURL(url: string) {
+    if (this.params.showSplash) {
+      this.splashWindow.show();
+    }
+    await this.mainWindow.loadURL(url);
+    this.mainWindow.show();
+    this.splashWindow.hide();
+
+    this.setView("cluster-id-blabla");
+  }
+
+  async setView(clusterId: ClusterId) {
     const view = this.getView(clusterId)
-    this.mainWindow.setBrowserView(view);
+    this.mainWindow.addBrowserView(view);
+    // await view.webContents.loadURL("http://ya.ru");
+    // view.setBounds({
+    //   x: 10,
+    //   y: 10,
+    //   width: this.windowState.width - 20,
+    //   height: this.windowState.height - 20,
+    // })
+    // view.setAutoResize({ horizontal: true, vertical: true });
   }
 
   getView(clusterId: ClusterId): BrowserView {
@@ -96,21 +115,9 @@ export class WindowManager {
           nodeIntegration: true
         }
       })
-      // view.setBackgroundColor("#878686");
-      // view.setAutoResize({ horizontal: true, vertical: true });
-      // view.webContents.loadURL("data:text/html;charset=utf-8,<b>TEST</b>")
       this.views.set(clusterId, view);
     }
     return view;
-  }
-
-  async loadURL(url: string) {
-    if (this.params.showSplash) {
-      this.splashWindow.show();
-    }
-    await this.mainWindow.loadURL(url);
-    this.mainWindow.show();
-    this.splashWindow.hide();
   }
 
   destroy() {

@@ -1,6 +1,6 @@
 import { PromiseIpc } from "electron-promise-ipc";
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
-import { isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
+import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
 
 // todo: refactor + split menu sections to separated files, e.g. menus/file.menu.ts
 
@@ -18,21 +18,19 @@ function setClusterSettingsEnabled(enabled: boolean) {
   Menu.getApplicationMenu().items[menuIndex].submenu.items[1].enabled = enabled
 }
 
-function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow) {
-  const appDetails = [
-    `Version: ${app.getVersion()}`,
+export function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow) {
+  const appInfo = [
+    `${appName}: ${app.getVersion()}`,
+    `Electron: ${process.versions.electron}`,
+    `Chrome: ${process.versions.chrome}`,
+    `Copyright 2020 Lakend Labs, Inc.`,
   ]
-  appDetails.push(`Copyright 2020 Lakend Labs, Inc.`)
-  let title = "Lens"
-  if (isWindows) {
-    title = `  ${title}`
-  }
   dialog.showMessageBoxSync(browserWindow, {
-    title,
+    title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
     type: "info",
     buttons: ["Close"],
     message: `Lens`,
-    detail: appDetails.join("\r\n")
+    detail: appInfo.join("\r\n")
   })
 }
 
@@ -84,8 +82,7 @@ export default function initMenu(opts: Partial<MenuOptions> = {}) {
       }
       ]
     }
-  }
-  else {
+  } else {
     fileMenu = {
       label: 'File',
       submenu: [
