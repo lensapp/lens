@@ -9,7 +9,7 @@ import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
-import { dockStore, IDockTab } from "./dock.store";
+import { dockStore, DockTabData } from "./dock.store";
 import { DockTab } from "./dock-tab";
 import { TerminalTab } from "./terminal-tab";
 import { TerminalWindow } from "./terminal-window";
@@ -29,7 +29,7 @@ interface Props {
 
 @observer
 export class Dock extends React.Component<Props> {
-  onResizeStart = () => {
+  onResizeStart = (): void => {
     const { isOpen, open, setHeight, minHeight } = dockStore;
     if (!isOpen) {
       open();
@@ -37,53 +37,59 @@ export class Dock extends React.Component<Props> {
     }
   }
 
-  onResize = ({ offsetY }: DraggableState) => {
+  onResize = ({ offsetY }: DraggableState): void => {
     const { isOpen, close, height, setHeight, minHeight, defaultHeight } = dockStore;
     const newHeight = height + offsetY;
     if (height > newHeight && newHeight < minHeight) {
       setHeight(defaultHeight);
       close();
-    }
-    else if (isOpen) {
+    } else if (isOpen) {
       setHeight(newHeight);
     }
   }
 
-  onKeydown = (evt: React.KeyboardEvent<HTMLElement>) => {
-    const { close, closeTab, selectedTab, fullSize, toggleFillSize } = dockStore;
-    if (!selectedTab) return;
+  onKeydown = (evt: React.KeyboardEvent<HTMLElement>): void => {
+    const { close, closeTab, selectedTab } = dockStore;
+    if (!selectedTab) {
+      return;
+    }
     const { code, ctrlKey, shiftKey } = evt.nativeEvent;
     if (shiftKey && code === "Escape") {
       close();
     }
     if (ctrlKey && code === "KeyW") {
-      if (selectedTab.pinned) close();
-      else closeTab(selectedTab.id);
+      if (selectedTab.pinned) {
+        close();
+      } else {
+        closeTab(selectedTab.id);
+      }
     }
   }
 
-  onChangeTab = (tab: IDockTab) => {
+  onChangeTab = (tab: DockTabData): void => {
     const { open, selectTab } = dockStore;
     open();
     selectTab(tab.id);
   }
 
   @autobind()
-  renderTab(tab: IDockTab) {
+  renderTab(tab: DockTabData): JSX.Element {
     if (isTerminalTab(tab)) {
-      return <TerminalTab value={tab}/>
+      return <TerminalTab value={tab}/>;
     }
     if (isCreateResourceTab(tab) || isEditResourceTab(tab)) {
-      return <DockTab value={tab} icon="edit"/>
+      return <DockTab value={tab} icon="edit"/>;
     }
     if (isInstallChartTab(tab) || isUpgradeChartTab(tab)) {
-      return <DockTab value={tab} icon={<Icon svg="install"/>}/>
+      return <DockTab value={tab} icon={<Icon svg="install"/>}/>;
     }
   }
 
-  renderTabContent() {
+  renderTabContent(): JSX.Element {
     const { isOpen, height, selectedTab: tab } = dockStore;
-    if (!isOpen || !tab) return;
+    if (!isOpen || !tab) {
+      return;
+    }
     return (
       <div className="tab-content" style={{ flexBasis: height }}>
         {isCreateResourceTab(tab) && <CreateResource tab={tab}/>}
@@ -92,10 +98,10 @@ export class Dock extends React.Component<Props> {
         {isUpgradeChartTab(tab) && <UpgradeChart tab={tab}/>}
         {isTerminalTab(tab) && <TerminalWindow tab={tab}/>}
       </div>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     const { className } = this.props;
     const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = dockStore;
     return (
@@ -115,16 +121,21 @@ export class Dock extends React.Component<Props> {
             autoFocus={isOpen}
             className="dock-tabs"
             value={selectedTab} onChange={this.onChangeTab}
-            children={tabs.map(tab => <Fragment key={tab.id}>{this.renderTab(tab)}</Fragment>)}
-          />
+          >
+            {tabs.map(tab => <Fragment key={tab.id}>{this.renderTab(tab)}</Fragment>)}
+          </Tabs>
           <div className="toolbar flex gaps align-center box grow">
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: <Trans>New tab</Trans> }} closeOnScroll={false}>
-                <MenuItem className="create-terminal-tab" onClick={() => createTerminalTab()}>
+                <MenuItem className="create-terminal-tab" onClick={(): void => {
+                  createTerminalTab();
+                }}>
                   <Icon small svg="terminal" size={15}/>
                   <Trans>Terminal session</Trans>
                 </MenuItem>
-                <MenuItem className="create-resource-tab" onClick={() => createResourceTab()}>
+                <MenuItem className="create-resource-tab" onClick={(): void => {
+                  createResourceTab();
+                }}>
                   <Icon small material="create"/>
                   <Trans>Create resource</Trans>
                 </MenuItem>
@@ -148,6 +159,6 @@ export class Dock extends React.Component<Props> {
         </div>
         {this.renderTabContent()}
       </div>
-    )
+    );
   }
 }

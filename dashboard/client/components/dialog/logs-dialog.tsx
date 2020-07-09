@@ -18,15 +18,15 @@ interface Props extends DialogProps {
 export class LogsDialog extends React.Component<Props> {
   public logsElem: HTMLElement;
 
-  copyToClipboard = () => {
+  copyToClipboard = (): void => {
     if (copyToClipboard(this.logsElem)) {
-      Notifications.ok(_i18n._(t`Logs copied to clipboard.`))
+      Notifications.ok(_i18n._(t`Logs copied to clipboard.`));
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { title, logs, ...dialogProps } = this.props;
-    const header = <h5>{title}</h5>
+    const header = <h5>{title}</h5>;
     const customButtons = (
       <div className="buttons flex gaps align-center justify-space-between">
         <Button plain onClick={this.copyToClipboard}>
@@ -36,17 +36,19 @@ export class LogsDialog extends React.Component<Props> {
           <Trans>Close</Trans>
         </Button>
       </div>
-    )
+    );
     return (
       <Dialog {...dialogProps} className="LogsDialog">
         <Wizard header={header} done={dialogProps.close}>
           <WizardStep scrollable={false} customButtons={customButtons}>
-            <code ref={e => this.logsElem = e}>
+            <code ref={(e): void => {
+              this.logsElem = e;
+            }}>
               {logs || <Trans>There are no logs available.</Trans>}
             </code>
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

@@ -1,5 +1,5 @@
-import './items-list.scss'
-import * as React from 'react'
+import './items-list.scss';
+import * as React from 'react';
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
@@ -24,7 +24,7 @@ export class ItemsList extends React.Component<ItemsListProps> {
     showSelectedIcon: false,
   }
 
-  onClickItem(itemValue: any) {
+  onClickItem(itemValue: any): void {
     const { selectedValues, multiSelect, onSelectChange } = this.props;
     if (multiSelect) {
       const itemIndex = selectedValues.findIndex(value => value === itemValue);
@@ -33,19 +33,17 @@ export class ItemsList extends React.Component<ItemsListProps> {
         const newSelectedValues = [...selectedValues];
         newSelectedValues.splice(itemIndex, 1);
         onSelectChange(itemValue, newSelectedValues);
-      }
-      else {
+      } else {
         // add
         const newSelectedValues = [].concat(selectedValues, itemValue);
-        onSelectChange(itemValue, newSelectedValues)
+        onSelectChange(itemValue, newSelectedValues);
       }
-    }
-    else {
+    } else {
       onSelectChange(itemValue, [itemValue]);
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { disabled, inline, selectable, selectedValues, showSelectedItems, showSelectedIcon } = this.props;
     let { className, children } = this.props;
     className = cssNames('ItemsList flex', className, {
@@ -63,8 +61,10 @@ export class ItemsList extends React.Component<ItemsListProps> {
           return null;
         }
 
-        const onClick = (evt: React.MouseEvent<any>) => {
-          if (item.props.onClick) item.props.onClick(evt);
+        const onClick = (evt: React.MouseEvent<any>): void => {
+          if (item.props.onClick) {
+            item.props.onClick(evt);
+          }
           this.onClickItem(itemValue);
         };
 
@@ -73,7 +73,7 @@ export class ItemsList extends React.Component<ItemsListProps> {
           selected: isSelected,
           disabled: isDisabled,
           onClick: onClick,
-        })
+        });
       });
     }
     return (
@@ -94,13 +94,13 @@ interface ItemProps extends React.HTMLProps<any> {
 
 const defaultProps: Partial<ItemProps> = {
   showSelectedIcon: true,
-}
+};
 
 export class Item extends React.Component<ItemProps> {
   static defaultProps = defaultProps as object;
 
-  render() {
-    const { disabled, selected, value, showSelectedIcon, children, ...itemProps } = this.props;
+  render(): JSX.Element {
+    const { disabled, selected, value: _value, showSelectedIcon, children, ...itemProps } = this.props;
     let { className } = this.props;
     className = cssNames('Item flex gaps', className, { disabled, selected });
     const actionIcon = selected ? "remove" : "add";

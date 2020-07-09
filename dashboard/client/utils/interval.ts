@@ -2,31 +2,48 @@
 
 type IntervalCallback = (count: number) => void;
 
-export function interval(timeSec = 1, callback: IntervalCallback, autoRun = false) {
-  let count = 0;
-  let timer = -1;
-  let isRunning = false;
-  const intervalManager = {
-    start: function (runImmediately = false) {
-      if (isRunning) return;
-      const tick = () => callback(++count);
-      isRunning = true;
-      timer = window.setInterval(tick, 1000 * timeSec);
-      if (runImmediately) tick();
-    },
-    stop: function () {
-      count = 0;
-      isRunning = false;
-      clearInterval(timer);
-    },
-    restart: function (runImmediately = false) {
-      this.stop();
-      this.start(runImmediately);
-    },
-    get isRunning() {
-      return isRunning;
+export class IntervalManager {
+  private count: number;
+  private timer: number;
+  private isCurRunning: boolean;
+  private timeSec: number;
+  private callback: IntervalCallback;
+
+  constructor(timeSec = 1, callback: IntervalCallback, autoRun = false) {
+    this.timeSec = timeSec;
+    this.callback = callback;
+
+    if (autoRun) {
+      this.start();
     }
   }
-  if (autoRun) intervalManager.start();
-  return intervalManager;
+  
+  start(runImmediately?: boolean): void {
+    if (this.isRunning) {
+      return;
+    }
+
+    const tick = (): void => this.callback(++this.count);
+    this.isCurRunning = true;
+    this.timer = window.setInterval(tick, 1000 * this.timeSec);
+    
+    if (runImmediately) {
+      tick();
+    }
+  }
+
+  stop(): void {
+    this.count = 0;
+    this.isCurRunning = false;
+    clearInterval(this.timer);
+  }
+
+  restart(runImmediately = false): void {
+    this.stop();
+    this.start(runImmediately);
+  }
+
+  get isRunning(): boolean {
+    return this.isCurRunning;
+  }
 }

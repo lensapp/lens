@@ -14,7 +14,7 @@ export enum SecretType {
   BootstrapToken = "bootstrap.kubernetes.io/token",
 }
 
-export interface ISecretRef {
+export interface SecretRef {
   key?: string;
   name: string;
 }
@@ -36,10 +36,6 @@ export class Secret extends KubeObject {
 
   getKeys(): string[] {
     return Object.keys(this.data);
-  }
-
-  getToken() {
-    return this.data.token;
   }
 }
 

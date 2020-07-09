@@ -1,4 +1,4 @@
-import "./pods.scss"
+import "./pods.scss";
 
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
@@ -7,7 +7,7 @@ import { Trans } from "@lingui/macro";
 import { podsStore } from "./pods.store";
 import { RouteComponentProps } from "react-router";
 import { volumeClaimStore } from "../+storage-volume-claims/volume-claim.store";
-import { IPodsRouteParams } from "../+workloads";
+import { PodsRouteParams } from "../+workloads";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { Pod, podsApi } from "../../api/endpoints";
@@ -34,57 +34,57 @@ enum sortBy {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<IPodsRouteParams> {
+interface Props extends RouteComponentProps<PodsRouteParams> {
 }
 
 @observer
 export class Pods extends React.Component<Props> {
-  renderContainersStatus(pod: Pod) {
-    return pod.getContainerStatuses().map(containerStatus => {
-      const { name, state, ready } = containerStatus;
-      const tooltip = (
-        <TooltipContent tableView>
-          {Object.keys(state).map(status => (
-            <Fragment key={status}>
-              <div className="title">
-                {name} <span className="text-secondary">({status}{ready ? ", ready" : ""})</span>
-              </div>
-              {toPairs(state[status]).map(([name, value]) => (
-                <div key={name} className="flex gaps align-center">
-                  <div className="name">{startCase(name)}</div>
-                  <div className="value">{value}</div>
+  renderContainersStatus(pod: Pod): JSX.Element[] {
+    return pod.getContainerStatuses()
+      .map(({ name, state, ready }) => {
+        const tooltip = (
+          <TooltipContent tableView>
+            {Object.keys(state).map(status => (
+              <Fragment key={status}>
+                <div className="title">
+                  {name} <span className="text-secondary">({status}{ready ? ", ready" : ""})</span>
                 </div>
-              ))}
-            </Fragment>
-          ))}
-        </TooltipContent>
-      );
-      return (
-        <Fragment key={name}>
-          <StatusBrick className={cssNames(state, { ready })} tooltip={tooltip}/>
-        </Fragment>
-      )
-    });
+                {toPairs(state[status]).map(([name, value]) => (
+                  <div key={name} className="flex gaps align-center">
+                    <div className="name">{startCase(name)}</div>
+                    <div className="value">{value}</div>
+                  </div>
+                ))}
+              </Fragment>
+            ))}
+          </TooltipContent>
+        );
+        return (
+          <Fragment key={name}>
+            <StatusBrick className={cssNames(state, { ready })} tooltip={tooltip}/>
+          </Fragment>
+        );
+      });
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="Pods" store={podsStore}
         dependentStores={[volumeClaimStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (pod: Pod) => pod.getName(),
-          [sortBy.namespace]: (pod: Pod) => pod.getNs(),
-          [sortBy.containers]: (pod: Pod) => pod.getContainers().length,
-          [sortBy.restarts]: (pod: Pod) => pod.getRestartsCount(),
-          [sortBy.owners]: (pod: Pod) => pod.getOwnerRefs().map(ref => ref.kind),
-          [sortBy.qos]: (pod: Pod) => pod.getQosClass(),
-          [sortBy.age]: (pod: Pod) => pod.metadata.creationTimestamp,
-          [sortBy.status]: (pod: Pod) => pod.getStatusMessage(),
+          [sortBy.name]: (pod: Pod): string => pod.getName(),
+          [sortBy.namespace]: (pod: Pod): string => pod.getNs(),
+          [sortBy.containers]: (pod: Pod): number => pod.spec.containers.length,
+          [sortBy.restarts]: (pod: Pod): number => pod.getRestartsCount(),
+          [sortBy.owners]: (pod: Pod): string[] => pod.getOwnerRefs().map(ref => ref.kind),
+          [sortBy.qos]: (pod: Pod): string => pod.status.qosClass,
+          [sortBy.age]: (pod: Pod): string => pod.metadata.creationTimestamp,
+          [sortBy.status]: (pod: Pod): string => pod.getStatusMessage(),
         }}
         searchFilters={[
-          (pod: Pod) => pod.getSearchFields(),
-          (pod: Pod) => pod.getStatusMessage(),
+          (pod: Pod): string[] => pod.getSearchFields(),
+          (pod: Pod): string => pod.getStatusMessage(),
         ]}
         renderHeaderTitle={<Trans>Pods</Trans>}
         renderTableHeader={[
@@ -98,7 +98,7 @@ export class Pods extends React.Component<Props> {
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
         ]}
-        renderTableContents={(pod: Pod) => [
+        renderTableContents={(pod: Pod): (string | number | JSX.Element[] | JSX.Element | React.ReactNode)[] => [
           pod.getName(),
           pod.hasIssues() && <KubeEventIcon object={pod}/>,
           pod.getNs(),
@@ -111,20 +111,20 @@ export class Pods extends React.Component<Props> {
               <Link key={name} to={detailsLink} className="owner" onClick={stopPropagation}>
                 {kind}
               </Link>
-            )
+            );
           }),
-          pod.getQosClass(),
+          pod.status.qosClass,
           pod.getAge(),
           { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) }
         ]}
-        renderItemMenu={(item: Pod) => {
-          return <PodMenu object={item}/>
+        renderItemMenu={(item: Pod): JSX.Element => {
+          return <PodMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
 apiManager.registerViews(podsApi, {
   Menu: PodMenu,
-})
+});

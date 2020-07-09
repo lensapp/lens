@@ -13,7 +13,7 @@ import { KubeEventDetails } from "../+events/kube-event-details";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { StatefulSet, statefulSetApi } from "../../api/endpoints";
+import { StatefulSet, statefulSetApi, PodMetricsData } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
@@ -30,29 +30,31 @@ export class StatefulSetDetails extends React.Component<Props> {
     statefulSetStore.reset();
   });
 
-  componentDidMount() {
+  async componentDidMount(): Promise<void> {
     if (!podsStore.isLoaded) {
-      podsStore.loadAll();
+      return podsStore.loadAll();
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     statefulSetStore.reset();
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: statefulSet } = this.props;
-    if (!statefulSet) return null
-    const images = statefulSet.getImages()
-    const selectors = statefulSet.getSelectors()
-    const nodeSelector = statefulSet.getNodeSelectors()
-    const childPods = statefulSetStore.getChildPods(statefulSet)
-    const metrics = statefulSetStore.metrics
+    if (!statefulSet) {
+      return null;
+    }
+    const images = statefulSet.getImages();
+    const selectors = statefulSet.getSelectors();
+    const nodeSelector = statefulSet.getNodeSelectors();
+    const childPods = statefulSetStore.getChildPods(statefulSet);
+    const metrics = statefulSetStore.metrics;
     return (
       <div className="StatefulSetDetails">
         {podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => statefulSetStore.loadMetrics(statefulSet)}
+            loader={(): Promise<PodMetricsData> => statefulSetStore.loadMetrics(statefulSet)}
             tabs={podMetricTabs} object={statefulSet} params={{ metrics }}
           >
             <PodCharts/>
@@ -91,10 +93,10 @@ export class StatefulSetDetails extends React.Component<Props> {
         <PodDetailsList pods={childPods} owner={statefulSet}/>
         <KubeEventDetails object={statefulSet}/>
       </div>
-    )
+    );
   }
 }
 
 apiManager.registerViews(statefulSetApi, {
   Details: StatefulSetDetails
-})
+});

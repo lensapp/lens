@@ -1,4 +1,4 @@
-import './icon.scss'
+import './icon.scss';
 
 import React, { ReactNode } from "react";
 import { findDOMNode } from "react-dom";
@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import { LocationDescriptor } from 'history';
 import { autobind, cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
-import isNumber from "lodash/isNumber"
+import isNumber from "lodash/isNumber";
 
 export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
   material?: string;          // material-icon, see available names at https://material.io/icons/
@@ -29,26 +29,24 @@ export class Icon extends React.PureComponent<IconProps> {
     focusable: true,
   };
 
-  get isInteractive() {
+  get isInteractive(): boolean {
     const { interactive, onClick, href, link } = this.props;
     return interactive || !!(onClick || href || link);
   }
 
   @autobind()
-  onClick(evt: React.MouseEvent) {
-    if (this.props.disabled) {
-      return;
-    }
-    if (this.props.onClick) {
+  onClick(evt: React.MouseEvent): void {
+    if (!this.props.disabled && this.props.onClick) {
       this.props.onClick(evt);
     }
   }
 
   @autobind()
-  onKeyDown(evt: React.KeyboardEvent<any>) {
+  onKeyDown(evt: React.KeyboardEvent<any>): void {
     switch (evt.nativeEvent.code) {
     case "Space":
     case "Enter":
+      // eslint-disable-next-line react/no-find-dom-node
       const icon = findDOMNode(this) as HTMLElement;
       setTimeout(() => icon.click());
       evt.preventDefault();
@@ -59,7 +57,7 @@ export class Icon extends React.PureComponent<IconProps> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { isInteractive } = this;
     const {
       // skip passing props to icon's html element
@@ -80,7 +78,7 @@ export class Icon extends React.PureComponent<IconProps> {
       onClick: isInteractive ? this.onClick : undefined,
       onKeyDown: isInteractive ? this.onKeyDown : undefined,
       tabIndex: isInteractive && focusable && !disabled ? 0 : undefined,
-      style: size ? { "--size": size + (isNumber(size) ? "px" : "") } as React.CSSProperties : undefined,
+      style: size ? { ["--size" as string]: size + (isNumber(size) ? "px" : "") } : undefined,
       ...elemProps
     };
 
@@ -105,11 +103,11 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render icon type
     if (link) {
-      return <NavLink {...iconProps} to={link}/>
+      return <NavLink {...iconProps} to={link}/>;
     }
     if (href) {
-      return <a {...iconProps} href={href}/>
+      return <a {...iconProps} href={href}/>;
     }
-    return <i {...iconProps} />
+    return <i {...iconProps} />;
   }
 }

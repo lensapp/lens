@@ -12,7 +12,7 @@ interface WrappingFunction {
   <T>(result: T): T;
 }
 
-export function cancelableFetch(reqInfo: RequestInfo, reqInit: RequestInit = {}) {
+export function cancelableFetch(reqInfo: RequestInfo, reqInit: RequestInit = {}): CancelablePromise<Response> {
   const abortController = new AbortController();
   const signal = abortController.signal;
   const cancel = abortController.abort.bind(abortController);
@@ -20,14 +20,14 @@ export function cancelableFetch(reqInfo: RequestInfo, reqInit: RequestInit = {})
   const wrapResult: WrappingFunction = function (result: any) {
     if (result instanceof Promise) {
       const promise: CancelablePromise<any> = result as any;
-      promise.then = function (onfulfilled, onrejected) {
+      promise.then = function (onfulfilled, onrejected): any {
         const data = Object.getPrototypeOf(this).then.call(this, onfulfilled, onrejected);
         return wrapResult(data);
-      }
+      };
       promise.cancel = cancel;
     }
     return result;
-  }
+  };
 
   const req = fetch(reqInfo, { ...reqInit, signal });
   return wrapResult(req);

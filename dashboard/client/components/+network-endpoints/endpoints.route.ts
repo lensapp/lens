@@ -1,11 +1,11 @@
-import { RouteProps } from "react-router"
+import { RouteProps } from "react-router";
 import { buildURL } from "../../navigation";
 
 export const endpointRoute: RouteProps = {
   path: "/endpoints"
-}
+};
 
 export interface EndpointRouteParams {
 }
 
-export const endpointURL = buildURL<EndpointRouteParams>(endpointRoute.path)
+export const endpointURL = buildURL<EndpointRouteParams>(endpointRoute.path);

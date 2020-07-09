@@ -1,4 +1,4 @@
-export function downloadFile(filename: string, contents: any, type: string) {
+export function downloadFile(filename: string, contents: any, type: string): void {
   const data = new Blob([contents], { type: type });
   const url = URL.createObjectURL(data);
   const link = document.createElement("a");
@@ -8,5 +8,5 @@ export function downloadFile(filename: string, contents: any, type: string) {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  URL.revokeObjectURL(url)
+  URL.revokeObjectURL(url);
 }

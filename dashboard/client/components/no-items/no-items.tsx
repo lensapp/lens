@@ -1,15 +1,15 @@
-import "./no-items.scss"
+import "./no-items.scss";
 
 import * as React from "react";
 import { Trans } from "@lingui/macro";
-import { cssNames, IClassName } from "../../utils";
+import { cssNames, ClassName } from "../../utils";
 
 interface Props {
-  className?: IClassName;
+  className?: ClassName;
   children?: React.ReactNode;
 }
 
-export function NoItems(props: Props) {
+export function NoItems(props: Props): JSX.Element {
   const { className, children } = props;
   return (
     <div className={cssNames("NoItems flex box grow", className)}>
@@ -17,5 +17,5 @@ export function NoItems(props: Props) {
         {children || <Trans>Item list is empty</Trans>}
       </div>
     </div>
-  )
+  );
 }

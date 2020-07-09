@@ -51,81 +51,80 @@ export class CustomResourceDefinition extends KubeObject {
     storedVersions: string[];
   }
 
-  getResourceUrl() {
+  getResourceUrl(): string {
     return crdResourcesURL({
       params: {
         group: this.getGroup(),
         name: this.getPluralName(),
       }
-    })
+    });
   }
 
-  getResourceApiBase() {
+  getResourceApiBase(): string {
     const { version, group } = this.spec;
-    return `/apis/${group}/${version}/${this.getPluralName()}`
+    return `/apis/${group}/${version}/${this.getPluralName()}`;
   }
 
-  getPluralName() {
-    return this.getNames().plural
+  getPluralName(): string {
+    return this.getNames().plural;
   }
 
-  getResourceKind() {
-    return this.spec.names.kind
+  getResourceKind(): string {
+    return this.spec.names.kind;
   }
 
-  getResourceTitle() {
+  getResourceTitle(): string {
     const name = this.getPluralName();
-    return name[0].toUpperCase() + name.substr(1)
+    return name[0].toUpperCase() + name.substr(1);
   }
 
-  getGroup() {
+  getGroup(): string {
     return this.spec.group;
   }
 
-  getScope() {
+  getScope(): string {
     return this.spec.scope;
   }
 
-  getVersion() {
+  getVersion(): string {
     return this.spec.version;
   }
 
-  isNamespaced() {
+  isNamespaced(): boolean {
     return this.getScope() === "Namespaced";
   }
 
-  getStoredVersions() {
+  getStoredVersions(): string {
     return this.status.storedVersions.join(", ");
   }
 
-  getNames() {
+  getNames(): CustomResourceDefinition["spec"]["names"] {
     return this.spec.names;
   }
 
-  getConversion() {
+  getConversion(): string {
     return JSON.stringify(this.spec.conversion);
   }
 
-  getPrinterColumns(ignorePriority = true) {
+  getPrinterColumns(ignorePriority = true): Required<CustomResourceDefinition["spec"]["additionalPrinterColumns"]> {
     const columns = this.spec.additionalPrinterColumns || [];
     return columns
       .filter(column => column.name != "Age")
       .filter(column => ignorePriority ? true : !column.priority);
   }
 
-  getValidation() {
+  getValidation(): string {
     return JSON.stringify(this.spec.validation, null, 2);
   }
 
-  getConditions() {
-    if (!this.status.conditions) return [];
-    return this.status.conditions.map(condition => {
+  getConditions(): Required<CustomResourceDefinition["status"]["conditions"]> {
+    return (this.status.conditions || []).map(condition => {
       const { message, reason, lastTransitionTime, status } = condition;
       return {
         ...condition,
         isReady: status === "True",
         tooltip: `${message || reason} (${lastTransitionTime})`
-      }
+      };
     });
   }
 }

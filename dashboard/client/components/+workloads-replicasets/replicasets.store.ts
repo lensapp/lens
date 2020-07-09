@@ -1,33 +1,34 @@
 import { observable } from "mobx";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
-import { Deployment, IPodMetrics, podsApi, ReplicaSet, replicaSetApi } from "../../api/endpoints";
+import { Deployment, PodMetricsData, podsApi, ReplicaSet, replicaSetApi, Pod } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { Metrics } from "client/api/endpoints/metrics.api";
 
 @autobind()
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   api = replicaSetApi
-  @observable metrics: IPodMetrics = null;
+  @observable metrics: PodMetricsData = null;
 
-  loadMetrics(replicaSet: ReplicaSet) {
+  loadMetrics(replicaSet: ReplicaSet): Promise<PodMetricsData<Metrics>> {
     const pods = this.getChildPods(replicaSet);
     return podsApi.getMetrics(pods, replicaSet.getNs(), "").then(metrics =>
       this.metrics = metrics
     );
   }
 
-  getChildPods(replicaSet: ReplicaSet) {
+  getChildPods(replicaSet: ReplicaSet): Pod[] {
     return podsStore.getPodsByOwner(replicaSet);
   }
 
-  getReplicaSetsByOwner(deployment: Deployment) {
+  getReplicaSetsByOwner(deployment: Deployment): ReplicaSet[] {
     return this.items.filter(replicaSet =>
       !!replicaSet.getOwnerRefs().find(owner => owner.uid === deployment.getId())
-    )
+    );
   }
 
-  reset() {
+  reset(): void {
     this.metrics = null;
   }
 }

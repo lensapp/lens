@@ -1,21 +1,25 @@
 import React, { useContext } from "react";
 import { t } from "@lingui/macro";
-import { IPodMetrics } from "../../api/endpoints";
+import { PodMetricsData } from "../../api/endpoints";
 import { BarChart, cpuOptions, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
-import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
+import { ResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { _i18n } from "../../i18n";
 import { themeStore } from "../../theme.store";
 
-type IContext = IResourceMetricsValue<any, { metrics: IPodMetrics }>;
+type IContext = ResourceMetricsValue<any, { metrics: PodMetricsData }>;
 
-export const ContainerCharts = () => {
+export const ContainerCharts = (): JSX.Element => {
   const { params: { metrics }, tabId } = useContext<IContext>(ResourceMetricsContext);
   const { chartCapacityColor } = themeStore.activeTheme.colors;
 
-  if (!metrics) return null;
-  if (isMetricsEmpty(metrics)) return <NoMetrics/>;
+  if (!metrics) {
+    return null;
+  }
+  if (isMetricsEmpty(metrics)) {
+    return <NoMetrics/>;
+  }
 
   const values = Object.values(metrics)
     .map(normalizeMetrics)
@@ -100,4 +104,4 @@ export const ContainerCharts = () => {
       data={{ datasets: datasets[tabId] }}
     />
   );
-}
+};

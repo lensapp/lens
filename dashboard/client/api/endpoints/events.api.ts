@@ -31,23 +31,23 @@ export class KubeEvent extends KubeObject {
   reportingComponent: string
   reportingInstance: string
 
-  isWarning() {
+  isWarning(): boolean {
     return this.type === "Warning";
   }
 
-  getSource() {
-    const { component, host } = this.source
-    return `${component} ${host || ""}`
+  getSource(): string {
+    const { component, host } = this.source;
+    return `${component} ${host || ""}`;
   }
 
-  getFirstSeenTime() {
-    const diff = moment().diff(this.firstTimestamp)
-    return formatDuration(diff, true)
+  getFirstSeenTime(): string {
+    const diff = moment().diff(this.firstTimestamp);
+    return formatDuration(diff, true);
   }
 
-  getLastSeenTime() {
-    const diff = moment().diff(this.lastTimestamp)
-    return formatDuration(diff, true)
+  getLastSeenTime(): string {
+    const diff = moment().diff(this.lastTimestamp);
+    return formatDuration(diff, true);
   }
 }
 
@@ -56,4 +56,4 @@ export const eventApi = new KubeApi({
   apiBase: "/api/v1/events",
   isNamespaced: true,
   objectConstructor: KubeEvent,
-})
+});

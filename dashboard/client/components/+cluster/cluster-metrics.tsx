@@ -34,13 +34,13 @@ export const ClusterMetrics = observer(() => {
       yAxes: [{
         ticks: {
           suggestedMax: cpuCapacity,
-          callback: (value) => value
+          callback: (value): any => value
         }
       }]
     },
     tooltips: {
       callbacks: {
-        label: ({ index }, data) => {
+        label: ({ index }, data): string => {
           const value = data.datasets[0].data[index] as ChartPoint;
           return value.y.toString();
         }
@@ -52,13 +52,13 @@ export const ClusterMetrics = observer(() => {
       yAxes: [{
         ticks: {
           suggestedMax: memoryCapacity,
-          callback: (value: string) => !value ? 0 : bytesToUnits(parseInt(value))
+          callback: (value: string): string | number => !value ? 0 : bytesToUnits(parseInt(value))
         }
       }]
     },
     tooltips: {
       callbacks: {
-        label: ({ index }, data) => {
+        label: ({ index }, data): string => {
           const value = data.datasets[0].data[index] as ChartPoint;
           return bytesToUnits(parseInt(value.y as string), 3);
         }
@@ -67,12 +67,12 @@ export const ClusterMetrics = observer(() => {
   };
   const options = metricType === MetricType.CPU ? cpuOptions : memoryOptions;
 
-  const renderMetrics = () => {
+  const renderMetrics = (): JSX.Element => {
     if ((!metricValues.length || !liveMetricValues.length) && !metricsLoaded) {
       return <Spinner center/>;
     }
     if (!memoryCapacity || !cpuCapacity) {
-      return <ClusterNoMetrics className="empty"/>
+      return <ClusterNoMetrics className="empty"/>;
     }
     return (
       <BarChart

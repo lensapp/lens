@@ -24,7 +24,7 @@ interface OptionalProps {
 }
 
 export class MarkdownViewer extends Component<Props> {
-  render() {
+  render(): JSX.Element {
     const { className, markdown } = this.props;
     const html = DOMPurify.sanitize(marked(markdown));
     return (

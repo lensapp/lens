@@ -1,20 +1,20 @@
 import { action, observable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
-import { IPvcMetrics, PersistentVolumeClaim, pvcApi } from "../../api/endpoints";
+import { PvcMetrics, PersistentVolumeClaim, pvcApi } from "../../api/endpoints";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class VolumeClaimStore extends KubeObjectStore<PersistentVolumeClaim> {
   api = pvcApi
-  @observable metrics: IPvcMetrics = null;
+  @observable metrics: PvcMetrics = null;
 
   @action
-  async loadMetrics(pvc: PersistentVolumeClaim) {
+  async loadMetrics(pvc: PersistentVolumeClaim): Promise<void> {
     this.metrics = await pvcApi.getMetrics(pvc.getName(), pvc.getNs());
   }
 
-  reset() {
+  reset(): void {
     this.metrics = null;
   }
 }

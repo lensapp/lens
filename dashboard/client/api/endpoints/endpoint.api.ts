@@ -2,25 +2,25 @@ import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-export interface IEndpointPort {
+export interface EndpointPort {
   name?: string;
   protocol: string;
   port: number;
 }
 
-export interface IEndpointAddress {
+export interface EndpointAddress {
   hostname: string;
   ip: string;
   nodeName: string;
 }
 
-export interface IEndpointSubset {
-  addresses: IEndpointAddress[];
-  notReadyAddresses: IEndpointAddress[];
-  ports: IEndpointPort[];
+export interface EndpointSubset {
+  addresses: EndpointAddress[];
+  notReadyAddresses: EndpointAddress[];
+  ports: EndpointPort[];
 }
 
-interface ITargetRef {
+interface TargetRef {
   kind: string;
   namespace: string;
   name: string;
@@ -29,7 +29,7 @@ interface ITargetRef {
   apiVersion: string;
 }
 
-export class EndpointAddress implements IEndpointAddress {
+export class EndpointAddress implements EndpointAddress {
   hostname: string;
   ip: string;
   nodeName: string;
@@ -41,34 +41,34 @@ export class EndpointAddress implements IEndpointAddress {
     resourceVersion: string;
   };
 
-  constructor(data: IEndpointAddress) {
-    Object.assign(this, data)
+  constructor(data: EndpointAddress) {
+    Object.assign(this, data);
   }
 
-  getId() {
-    return this.ip
+  getId(): string {
+    return this.ip;
   }
 
-  getName() {
-    return this.hostname
+  getName(): string {
+    return this.hostname;
   }
 
-  getTargetRef(): ITargetRef {
+  getTargetRef(): TargetRef {
     if (this.targetRef) {
-      return Object.assign(this.targetRef, {apiVersion: "v1"})
+      return Object.assign(this.targetRef, {apiVersion: "v1"});
     } else {
-      return null
+      return null;
     }
   }
 }
 
-export class EndpointSubset implements IEndpointSubset {
-  addresses: IEndpointAddress[];
-  notReadyAddresses: IEndpointAddress[];
-  ports: IEndpointPort[];
+export class EndpointSubset implements EndpointSubset {
+  addresses: EndpointAddress[];
+  notReadyAddresses: EndpointAddress[];
+  ports: EndpointPort[];
 
-  constructor(data: IEndpointSubset) {
-    Object.assign(this, data)
+  constructor(data: EndpointSubset) {
+    Object.assign(this, data);
   }
 
   getAddresses(): EndpointAddress[] {
@@ -83,16 +83,16 @@ export class EndpointSubset implements IEndpointSubset {
 
   toString(): string {
     if(!this.addresses) {
-      return ""
+      return "";
     }
     return this.addresses.map(address => {
       if (!this.ports) {
-        return address.ip
+        return address.ip;
       }
       return this.ports.map(port => {
-        return `${address.ip}:${port.port}`
-      }).join(", ")
-    }).join(", ")
+        return `${address.ip}:${port.port}`;
+      }).join(", ");
+    }).join(", ");
   }
 }
 
@@ -100,7 +100,7 @@ export class EndpointSubset implements IEndpointSubset {
 export class Endpoint extends KubeObject {
   static kind = "Endpoint"
 
-  subsets: IEndpointSubset[]
+  subsets: EndpointSubset[]
 
   getEndpointSubsets(): EndpointSubset[] {
     const subsets = this.subsets || [];
@@ -109,9 +109,9 @@ export class Endpoint extends KubeObject {
 
   toString(): string {
     if(this.subsets) {
-      return this.getEndpointSubsets().map(es => es.toString()).join(", ")
+      return this.getEndpointSubsets().map(es => es.toString()).join(", ");
     } else {
-      return "<none>"
+      return "<none>";
     }
   }
 

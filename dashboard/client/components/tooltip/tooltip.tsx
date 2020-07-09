@@ -1,9 +1,9 @@
-import './tooltip.scss'
+import './tooltip.scss';
 
-import React from "react"
+import React from "react";
 import { observer } from "mobx-react";
 import { observable } from "mobx";
-import { createPortal } from "react-dom"
+import { createPortal } from "react-dom";
 import { autobind, cssNames } from "../../utils";
 import { Animate } from "../animate";
 
@@ -42,12 +42,12 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @observable isVisible = false;
 
-  componentDidMount() {
+  componentDidMount(): void {
     const { htmlFor } = this.props;
     this.anchor = htmlFor ? document.getElementById(htmlFor) : this.elem.parentElement;
     if (this.anchor) {
       if (window.getComputedStyle(this.anchor).position === "static") {
-        this.anchor.style.position = "relative"
+        this.anchor.style.position = "relative";
       }
       this.anchor.addEventListener("mouseenter", this.onMouseEnter);
       this.anchor.addEventListener("mouseleave", this.onMouseLeave);
@@ -55,7 +55,7 @@ export class Tooltip extends React.Component<TooltipProps> {
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     if (this.anchor) {
       this.anchor.removeEventListener("mouseenter", this.onMouseEnter);
       this.anchor.removeEventListener("mouseleave", this.onMouseLeave);
@@ -64,18 +64,18 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   @autobind()
-  onMouseEnter(evt: MouseEvent) {
+  onMouseEnter(evt: MouseEvent): void {
     this.isVisible = true;
     this.onMouseMove(evt);
   }
 
   @autobind()
-  onMouseLeave(evt: MouseEvent) {
+  onMouseLeave(_evt: MouseEvent): void {
     this.isVisible = false;
   }
 
   @autobind()
-  onMouseMove(evt: MouseEvent) {
+  onMouseMove(evt: MouseEvent): void {
     if (!this.props.following) {
       return;
     }
@@ -90,7 +90,7 @@ export class Tooltip extends React.Component<TooltipProps> {
       left: "auto",
       right: (innerWidth - clientX + offsetX) + "px",
       bottom: (innerHeight - clientY + offsetY) + "px",
-    }
+    };
 
     Object.assign(this.elem.style, initialPos);
 
@@ -98,20 +98,20 @@ export class Tooltip extends React.Component<TooltipProps> {
     const { left, top } = this.elem.getBoundingClientRect();
     if (left < 0) {
       this.elem.style.left = clientX + offsetX + "px";
-      this.elem.style.right = "auto"
+      this.elem.style.right = "auto";
     }
     if (top < 0) {
       this.elem.style.top = clientY + offsetY + "px";
-      this.elem.style.bottom = "auto"
+      this.elem.style.bottom = "auto";
     }
   }
 
   @autobind()
-  bindRef(elem: HTMLElement) {
+  bindRef(elem: HTMLElement): void {
     this.elem = elem;
   }
 
-  render() {
+  render(): JSX.Element {
     const { isVisible } = this;
     const { useAnimation, position, following, style, children } = this.props;
     let { className } = this.props;
@@ -140,12 +140,12 @@ interface TooltipContentProps {
 }
 
 export class TooltipContent extends React.Component<TooltipContentProps> {
-  render() {
+  render(): JSX.Element {
     const { className, children, ...modifiers } = this.props;
     return (
       <div className={cssNames("TooltipContent", className, modifiers)}>
         {children}
       </div>
-    )
+    );
   }
 }

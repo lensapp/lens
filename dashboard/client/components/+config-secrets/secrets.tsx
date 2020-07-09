@@ -1,4 +1,4 @@
-import "./secrets.scss"
+import "./secrets.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -7,7 +7,7 @@ import { RouteComponentProps } from "react-router";
 import { Secret, secretsApi } from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { AddSecretDialog } from "./add-secret-dialog";
-import { ISecretsRouteParams } from "./secrets.route";
+import { SecretsRouteParams } from "./secrets.route";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { secretsStore } from "./secrets.store";
@@ -22,27 +22,27 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<ISecretsRouteParams> {
+interface Props extends RouteComponentProps<SecretsRouteParams> {
 }
 
 @observer
 export class Secrets extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     return (
       <>
         <KubeObjectListLayout
           className="Secrets" store={secretsStore}
           sortingCallbacks={{
-            [sortBy.name]: (item: Secret) => item.getName(),
-            [sortBy.namespace]: (item: Secret) => item.getNs(),
-            [sortBy.labels]: (item: Secret) => item.getLabels(),
-            [sortBy.keys]: (item: Secret) => item.getKeys(),
-            [sortBy.type]: (item: Secret) => item.type,
-            [sortBy.age]: (item: Secret) => item.metadata.creationTimestamp,
+            [sortBy.name]: (item: Secret): string => item.getName(),
+            [sortBy.namespace]: (item: Secret): string => item.getNs(),
+            [sortBy.labels]: (item: Secret): string[] => item.getLabels(),
+            [sortBy.keys]: (item: Secret): string[] => item.getKeys(),
+            [sortBy.type]: (item: Secret): string => item.type,
+            [sortBy.age]: (item: Secret): string => item.metadata.creationTimestamp,
           }}
           searchFilters={[
-            (item: Secret) => item.getSearchFields(),
-            (item: Secret) => item.getKeys(),
+            (item: Secret): string[] => item.getSearchFields(),
+            (item: Secret): string[] => item.getKeys(),
           ]}
           renderHeaderTitle={<Trans>Secrets</Trans>}
           renderTableHeader={[
@@ -53,7 +53,7 @@ export class Secrets extends React.Component<Props> {
             { title: <Trans>Type</Trans>, className: "type", sortBy: sortBy.type },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
-          renderTableContents={(secret: Secret) => [
+          renderTableContents={(secret: Secret): (string | JSX.Element[] | number)[] => [
             secret.getName(),
             secret.getNs(),
             secret.getLabels().map(label => <Badge key={label} label={label}/>),
@@ -61,11 +61,11 @@ export class Secrets extends React.Component<Props> {
             secret.type,
             secret.getAge(),
           ]}
-          renderItemMenu={(item: Secret) => {
-            return <SecretMenu object={item}/>
+          renderItemMenu={(item: Secret): JSX.Element => {
+            return <SecretMenu object={item}/>;
           }}
           addRemoveButtons={{
-            onAdd: () => AddSecretDialog.open(),
+            onAdd: (): void => AddSecretDialog.open(),
             addTooltip: <Trans>Create new Secret</Trans>
           }}
         />
@@ -75,12 +75,12 @@ export class Secrets extends React.Component<Props> {
   }
 }
 
-export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
+export function SecretMenu(props: KubeObjectMenuProps<Secret>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(secretsApi, {
   Menu: SecretMenu,
-})
+});

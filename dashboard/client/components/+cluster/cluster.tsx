@@ -1,4 +1,4 @@
-import "./cluster.scss"
+import "./cluster.scss";
 
 import React from "react";
 import { computed, reaction } from "mobx";
@@ -6,7 +6,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { MainLayout } from "../layout/main-layout";
 import { ClusterIssues } from "./cluster-issues";
 import { Spinner } from "../spinner";
-import { cssNames, interval, isElectron } from "../../utils";
+import { cssNames, IntervalManager, isElectron } from "../../utils";
 import { ClusterPieCharts } from "./cluster-pie-charts";
 import { ClusterMetrics } from "./cluster-metrics";
 import { nodesStore } from "../+nodes/nodes.store";
@@ -18,16 +18,16 @@ import { isAllowedResource } from "../../api/rbac";
 @observer
 export class Cluster extends React.Component {
   private watchers = [
-    interval(60, () => clusterStore.getMetrics()),
-    interval(20, () => eventStore.loadAll())
+    new IntervalManager(60, () => clusterStore.getMetrics()),
+    new IntervalManager(20, () => eventStore.loadAll())
   ];
 
   private dependentStores = [nodesStore, podsStore];
 
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     const { dependentStores } = this;
     if (!isAllowedResource("nodes")) {
-      dependentStores.splice(dependentStores.indexOf(nodesStore), 1)
+      dependentStores.splice(dependentStores.indexOf(nodesStore), 1);
     }
     this.watchers.forEach(watcher => watcher.start(true));
 
@@ -38,22 +38,22 @@ export class Cluster extends React.Component {
 
     disposeOnUnmount(this, [
       ...dependentStores.map(store => store.subscribe()),
-      () => this.watchers.forEach(watcher => watcher.stop()),
+      (): void => this.watchers.forEach(watcher => watcher.stop()),
       reaction(
         () => clusterStore.metricNodeRole,
         () => this.watchers.forEach(watcher => watcher.restart())
       )
-    ])
+    ]);
   }
 
-  @computed get isLoaded() {
+  @computed get isLoaded(): boolean {
     return (
       nodesStore.isLoaded &&
       podsStore.isLoaded
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     const { isLoaded } = this;
     return (
       <MainLayout>
@@ -68,6 +68,6 @@ export class Cluster extends React.Component {
           )}
         </div>
       </MainLayout>
-    )
+    );
   }
 }

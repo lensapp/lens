@@ -11,7 +11,7 @@ export interface ItemObject {
 export abstract class ItemStore<T extends ItemObject = ItemObject> {
   abstract loadAll(): Promise<void>;
 
-  protected defaultSorting = (item: T) => item.getName();
+  protected defaultSorting = (item: T): string => item.getName();
 
   @observable isLoading = false;
   @observable isLoaded = false;
@@ -28,28 +28,32 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   }
 
   @action
-  protected sortItems(items: T[] = this.items, sorting?: ((item: T) => any)[], order?: "asc" | "desc"): T[] {
-    return orderBy(items, sorting || this.defaultSorting, order);
+  protected sortItems<E>(items: any[], sorting?: ((item: any) => E)[], order?: "asc" | "desc"): any[] {
+    if (!sorting) {
+      return orderBy(items, [this.defaultSorting], order);
+    }
+
+    return orderBy(items, sorting, order);
   }
 
-  protected async createItem(...args: any[]): Promise<any>;
+  protected async createItem(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T>;
+  protected async createItem<D>(...args: D[]): Promise<T>;
   @action
-  protected async createItem(request: () => Promise<T>) {
+  protected async createItem(request: () => Promise<T>): Promise<T> {
     const newItem = await request();
     const item = this.items.find(item => item.getId() === newItem.getId());
     if (item) {
       return item;
-    }
-    else {
+    } else {
       const items = this.sortItems([...this.items, newItem]);
       this.items.replace(items);
       return newItem;
     }
   }
 
-  protected async loadItems(...args: any[]): Promise<any>;
+  protected async loadItems(...args: any[]): Promise<T[]>;
   @action
-  protected async loadItems(request: () => Promise<T[] | any>, sortItems = true) {
+  protected async loadItems(request: () => Promise<T[] | any>, sortItems = true): Promise<T[]> {
     if (this.isLoading) {
       await when(() => !this.isLoading);
       return;
@@ -57,7 +61,9 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     this.isLoading = true;
     try {
       let items = await request();
-      if (sortItems) items = this.sortItems(items);
+      if (sortItems) {
+        items = this.sortItems(items);
+      }
       this.items.replace(items);
       this.isLoaded = true;
     } finally {
@@ -65,19 +71,21 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     }
   }
 
-  protected async loadItem(...args: any[]): Promise<T>
+  protected async loadItem(params: { name: string; namespace?: string }): Promise<T>;
+  protected async loadItem<D>(...args: D[]): Promise<T>
   @action
-  protected async loadItem(request: () => Promise<T>, sortItems = true) {
+  protected async loadItem(request: () => Promise<T>, sortItems = true): Promise<T> {
     const item = await request().catch(() => null);
     if (item) {
       const existingItem = this.items.find(el => el.getId() === item.getId());
       if (existingItem) {
         const index = this.items.findIndex(item => item === existingItem);
         this.items.splice(index, 1, item);
-      }
-      else {
+      } else {
         let items = [...this.items, item];
-        if (sortItems) items = this.sortItems(items);
+        if (sortItems) {
+          items = this.sortItems(items);
+        }
         this.items.replace(items);
       }
       return item;
@@ -85,7 +93,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   }
 
   @action
-  protected async updateItem(item: T, request: () => Promise<T>) {
+  protected async updateItem(item: T, request: () => Promise<T>): Promise<T> {
     const updatedItem = await request();
     const index = this.items.findIndex(i => i.getId() === item.getId());
     this.items.splice(index, 1, updatedItem);
@@ -93,59 +101,59 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   }
 
   @action
-  protected async removeItem(item: T, request: () => Promise<any>) {
+  protected async removeItem(item: T, request: () => Promise<any>): Promise<void> {
     await request();
     this.items.remove(item);
     this.selectedItemsIds.delete(item.getId());
   }
 
-  isSelected(item: T) {
+  isSelected(item: T): boolean {
     return !!this.selectedItemsIds.get(item.getId());
   }
 
   @action
-  select(item: T) {
+  select(item: T): void {
     this.selectedItemsIds.set(item.getId(), true);
   }
 
   @action
-  unselect(item: T) {
+  unselect(item: T): void {
     this.selectedItemsIds.delete(item.getId());
   }
 
   @action
-  toggleSelection(item: T) {
+  toggleSelection(item: T): void {
     if (this.isSelected(item)) {
       this.unselect(item);
-    }
-    else {
+    } else {
       this.select(item);
     }
   }
 
   @action
-  toggleSelectionAll(visibleItems: T[] = this.items) {
+  toggleSelectionAll(visibleItems: T[] = this.items): void {
     const allSelected = visibleItems.every(this.isSelected);
     if (allSelected) {
       visibleItems.forEach(this.unselect);
-    }
-    else {
+    } else {
       visibleItems.forEach(this.select);
     }
   }
 
-  isSelectedAll(visibleItems: T[] = this.items) {
-    if (!visibleItems.length) return false;
+  isSelectedAll(visibleItems: T[] = this.items): boolean {
+    if (!visibleItems.length) {
+      return false;
+    }
     return visibleItems.every(this.isSelected);
   }
 
   @action
-  resetSelection() {
+  resetSelection(): void {
     this.selectedItemsIds.clear();
   }
 
   @action
-  reset() {
+  reset(): void {
     this.resetSelection();
     this.items.clear();
     this.selectedItemsIds.clear();
@@ -155,11 +163,11 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
 
   async removeSelectedItems?(): Promise<any>;
 
-  subscribe(...args: any[]) {
+  subscribe(..._args: any[]): () => void {
     return noop;
   }
 
-  * [Symbol.iterator]() {
+  *[Symbol.iterator](): Generator<T, void, undefined> {
     yield* this.items;
   }
 }

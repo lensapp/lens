@@ -21,16 +21,18 @@ interface Props extends KubeObjectDetailsProps<CronJob> {
 
 @observer
 export class CronJobDetails extends React.Component<Props> {
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     if (!jobStore.isLoaded) {
-      jobStore.loadAll();
+      return jobStore.loadAll();
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: cronJob } = this.props;
-    if (!cronJob) return null;
-    const childJobs = jobStore.getJobsByOwner(cronJob)
+    if (!cronJob) {
+      return null;
+    }
+    const childJobs = jobStore.getJobsByOwner(cronJob);
     return (
       <div className="CronJobDetails">
         <KubeObjectMeta object={cronJob}/>
@@ -54,8 +56,8 @@ export class CronJobDetails extends React.Component<Props> {
           <>
             <DrawerTitle title={<Trans>Jobs</Trans>}/>
             {childJobs.map((job: Job) => {
-              const selectors = job.getSelectors()
-              const condition = job.getCondition()
+              const selectors = job.getSelectors();
+              const condition = job.getCondition();
               return (
                 <div className="job" key={job.getId()}>
                   <div className="title">
@@ -77,16 +79,17 @@ export class CronJobDetails extends React.Component<Props> {
                     }
                   </DrawerItem>
                 </div>
-              )})
+              );
+            })
             }
           </>
         }
         <KubeEventDetails object={cronJob}/>
       </div>
-    )
+    );
   }
 }
 
 apiManager.registerViews(cronJobApi, {
   Details: CronJobDetails,
-})
+});

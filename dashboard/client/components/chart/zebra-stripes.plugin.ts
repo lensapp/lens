@@ -9,33 +9,37 @@ const defaultOptions = {
   interval: 61,
   stripeMinutes: 10,
   stripeColor: "#ffffff08",
-}
+};
 
 export const ZebraStripes = {
   updated: null as Moment,  // timestamp which all stripe movements based on
   options: {},
 
-  getOptions(chart: ChartJS) {
+  getOptions(chart: ChartJS): any {
     return get(chart, "options.plugins.ZebraStripes");
   },
 
-  getLastUpdate(chart: ChartJS) {
+  getLastUpdate(chart: ChartJS): moment.Moment {
     const data = chart.data.datasets[0].data[0] as ChartPoint;
     return moment.unix(parseInt(data.x as string));
   },
 
-  getStripesElem(chart: ChartJS) {
+  getStripesElem(chart: ChartJS): Element {
     return chart.canvas.parentElement.querySelector(".zebra-cover");
   },
 
-  removeStripesElem(chart: ChartJS) {
+  removeStripesElem(chart: ChartJS): void {
     const elem = this.getStripesElem(chart);
-    if (!elem) return;
+    if (!elem) {
+      return;
+    }
     chart.canvas.parentElement.removeChild(elem);
   },
 
-  renderStripes(chart: ChartJS) {
-    if (!chart.data.datasets.length) return;
+  renderStripes(chart: ChartJS): void {
+    if (!chart.data.datasets.length) {
+      return;
+    }
     const { interval, stripeMinutes, stripeColor } = this.options;
     const { top, left, bottom, right } = chart.chartArea;
     const step = (right - left) / interval;
@@ -43,7 +47,9 @@ export const ZebraStripes = {
     const cover = document.createElement("div");
     const styles = cover.style;
 
-    if (this.getStripesElem(chart)) return;
+    if (this.getStripesElem(chart)) {
+      return;
+    }
 
     cover.className = "zebra-cover";
     styles.width = right - left + "px";
@@ -57,25 +63,29 @@ export const ZebraStripes = {
     chart.canvas.parentElement.appendChild(cover);
   },
 
-  afterInit(chart: ChartJS) {
-    if (!chart.data.datasets.length) return;
+  afterInit(chart: ChartJS): void {
+    if (!chart.data.datasets.length) {
+      return;
+    }
     this.options = {
       ...defaultOptions,
       ...this.getOptions(chart)
-    }
+    };
     this.updated = this.getLastUpdate(chart);
   },
 
-  afterUpdate(chart: ChartJS) {
+  afterUpdate(chart: ChartJS): void {
     this.renderStripes(chart);
   },
 
-  resize(chart: ChartJS) {
+  resize(chart: ChartJS): void {
     this.removeStripesElem(chart);
   },
 
   afterDatasetUpdate(chart: ChartJS): void {
-    if (!this.updated) this.updated = this.getLastUpdate(chart);
+    if (!this.updated) {
+      this.updated = this.getLastUpdate(chart);
+    }
 
     const { interval } = this.options;
     const { left, right } = chart.chartArea;
@@ -92,4 +102,4 @@ export const ZebraStripes = {
       cover.style.backgroundPositionX = -step * minutes + "px";
     }
   }
-}
+};

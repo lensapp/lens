@@ -1,11 +1,11 @@
-import "./overview.scss"
+import "./overview.scss";
 
 import React from "react";
 import { observable, when } from "mobx";
 import { observer } from "mobx-react";
 import { OverviewStatuses } from "./overview-statuses";
 import { RouteComponentProps } from "react-router";
-import { IWorkloadsOverviewRouteParams } from "../+workloads";
+import { WorkloadsOverviewRouteParams } from "../+workloads";
 import { eventStore } from "../+events/event.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { deploymentStore } from "../+workloads-deployments/deployments.store";
@@ -17,9 +17,9 @@ import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { Spinner } from "../spinner";
 import { Events } from "../+events";
 import { KubeObjectStore } from "../../kube-object.store";
-import { isAllowedResource } from "../../api/rbac"
+import { isAllowedResource } from "../../api/rbac";
 
-interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
+interface Props extends RouteComponentProps<WorkloadsOverviewRouteParams> {
 }
 
 @observer
@@ -27,7 +27,7 @@ export class WorkloadsOverview extends React.Component<Props> {
   @observable isReady = false;
   @observable isUnmounting = false;
 
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     const stores: KubeObjectStore[] = [];
     if (isAllowedResource("pods")) {
       stores.push(podsStore);
@@ -61,13 +61,13 @@ export class WorkloadsOverview extends React.Component<Props> {
     unsubscribeList.forEach(dispose => dispose());
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.isUnmounting = true;
   }
 
-  renderContents() {
+  renderContents(): JSX.Element {
     if (!this.isReady) {
-      return <Spinner center/>
+      return <Spinner center/>;
     }
     return (
       <>
@@ -78,14 +78,14 @@ export class WorkloadsOverview extends React.Component<Props> {
           className="box grow"
         /> }
       </>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <div className="WorkloadsOverview flex column gaps">
         {this.renderContents()}
       </div>
-    )
+    );
   }
 }

@@ -1,12 +1,12 @@
-import * as WebSocket from "ws"
-import * as pty from "node-pty"
+import * as WebSocket from "ws";
+import * as pty from "node-pty";
 import { ShellSession } from "./shell-session";
-import { v4 as uuid } from "uuid"
-import * as k8s from "@kubernetes/client-node"
+import { v4 as uuid } from "uuid";
+import * as k8s from "@kubernetes/client-node";
 import logger from "./logger";
 import { KubeConfig, V1Pod } from "@kubernetes/client-node";
-import { tracker } from "./tracker"
-import { Cluster, ClusterPreferences } from "./cluster"
+import { tracker } from "./tracker";
+import { Cluster } from "./cluster";
 
 export class NodeShellSession extends ShellSession {
   protected nodeName: string;
@@ -14,23 +14,23 @@ export class NodeShellSession extends ShellSession {
   protected kc: KubeConfig
 
   constructor(socket: WebSocket, pathToKubeconfig: string, cluster: Cluster, nodeName: string) {
-    super(socket, pathToKubeconfig, cluster)
-    this.nodeName = nodeName
-    this.podId = `node-shell-${uuid()}`
-    this.kc = cluster.contextHandler.kc
+    super(socket, pathToKubeconfig, cluster);
+    this.nodeName = nodeName;
+    this.podId = `node-shell-${uuid()}`;
+    this.kc = cluster.contextHandler.kc;
   }
 
-  public async open() {
-    const shell = await this.kubectl.kubectlPath()
-    let args = []
+  public async open(): Promise<void> {
+    const shell = await this.kubectl.kubectlPath();
+    let args = [];
     if (this.createNodeShellPod(this.podId, this.nodeName)) {
-      await this.waitForRunningPod(this.podId).catch((error) => {
-        this.exit(1001)
-      })
+      await this.waitForRunningPod(this.podId).catch((_error) => {
+        this.exit(1001);
+      });
     }
-    args = ["exec", "-i", "-t", "-n", "kube-system", this.podId, "--", "sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))"]
+    args = ["exec", "-i", "-t", "-n", "kube-system", this.podId, "--", "sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))"];
 
-    const shellEnv = await this.getCachedShellEnv()
+    const shellEnv = await this.getCachedShellEnv();
     this.shellProcess = pty.spawn(shell, args, {
       cols: 80,
       cwd: this.cwd() || shellEnv["HOME"],
@@ -39,25 +39,25 @@ export class NodeShellSession extends ShellSession {
       rows: 30,
     });
     this.running = true;
-    this.pipeStdout()
-    this.pipeStdin()
-    this.closeWebsocketOnProcessExit()
-    this.exitProcessOnWebsocketClose()
+    this.pipeStdout();
+    this.pipeStdin();
+    this.closeWebsocketOnProcessExit();
+    this.exitProcessOnWebsocketClose();
 
-    tracker.event("node-shell", "open")
+    tracker.event("node-shell", "open");
   }
 
-  protected exit(code = 1000) {
+  protected exit(code = 1000): void {
     if (this.podId) {
-      this.deleteNodeShellPod()
+      this.deleteNodeShellPod();
     }
-    super.exit(code)
+    super.exit(code);
   }
 
-  protected async createNodeShellPod(podId: string, nodeName: string) {
+  protected async createNodeShellPod(podId: string, nodeName: string): Promise<void> {
     const kc = this.getKubeConfig();
     const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
-    const pod = {
+    const pod: k8s.V1Pod = {
       metadata: {
         name: podId,
         namespace: "kube-system"
@@ -84,25 +84,26 @@ export class NodeShellSession extends ShellSession {
           "kubernetes.io/hostname": nodeName
         }
       }
-    } as k8s.V1Pod;
-    await k8sApi.createNamespacedPod("kube-system", pod).catch((error) => {
-      logger.error(error)
-      return false
-    })
-    return true
-  }
+    };
 
-  protected getKubeConfig() {
-    if (this.kc) {
-      return this.kc
+    try {
+      await k8sApi.createNamespacedPod("kube-system", pod);
+    } catch (error) {
+      logger.error(error);
     }
-    this.kc = new k8s.KubeConfig();
-    this.kc.loadFromFile(this.kubeconfigPath)
-    return this.kc
   }
 
-  protected waitForRunningPod(podId: string) {
-    return new Promise<boolean>(async (resolve, reject) => {
+  protected getKubeConfig(): k8s.KubeConfig {
+    if (!this.kc) {
+      this.kc = new k8s.KubeConfig();
+      this.kc.loadFromFile(this.kubeconfigPath);
+    }
+
+    return this.kc;
+  }
+
+  protected waitForRunningPod(podId: string): Promise<void> {
+    return new Promise<void>(async (resolve, reject) => {
       const kc = this.getKubeConfig();
       const watch = new k8s.Watch(kc);
 
@@ -110,35 +111,36 @@ export class NodeShellSession extends ShellSession {
       // callback is called for each received object.
         (_type, obj) => {
           if (obj.metadata.name == podId && obj.status.phase === "Running") {
-            resolve(true)
+            resolve();
           }
         },
         // done callback is called if the watch terminates normally
         (err) => {
-          logger.error(err)
-          reject(false)
+          logger.error(err);
+          reject();
         }
       );
-      setTimeout(() => { req.abort(); reject(false); }, 120 * 1000);
-    })
+      setTimeout(() => {
+        reject(req.abort()); 
+      }, 120 * 1000);
+    });
   }
-  protected deleteNodeShellPod() {
+  protected deleteNodeShellPod(): void {
     const kc = this.getKubeConfig();
     const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
-    k8sApi.deleteNamespacedPod(this.podId, "kube-system")
+    k8sApi.deleteNamespacedPod(this.podId, "kube-system");
   }
 }
 
 export async function open(socket: WebSocket, pathToKubeconfig: string, cluster: Cluster, nodeName?: string): Promise<ShellSession> {
-  return new Promise(async(resolve, reject) => {
-    let shell = null
+  return new Promise(async(resolve, _reject) => {
+    let shell = null;
     if (nodeName) {
-      shell = new NodeShellSession(socket, pathToKubeconfig, cluster, nodeName)
+      shell = new NodeShellSession(socket, pathToKubeconfig, cluster, nodeName);
+    } else {
+      shell = new ShellSession(socket, pathToKubeconfig, cluster);
     }
-    else {
-      shell = new ShellSession(socket, pathToKubeconfig, cluster)
-    }
-    shell.open()
-    resolve(shell)
-  })
+    shell.open();
+    resolve(shell);
+  });
 }

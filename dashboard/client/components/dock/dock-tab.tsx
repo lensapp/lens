@@ -1,30 +1,30 @@
-import "./dock-tab.scss"
+import "./dock-tab.scss";
 
-import React from "react"
+import React from "react";
 import { observer } from "mobx-react";
 import { t } from "@lingui/macro";
 import { autobind, cssNames, prevDefault } from "../../utils";
-import { dockStore, IDockTab } from "./dock.store";
+import { dockStore, DockTabData } from "./dock.store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
 import { _i18n } from "../../i18n";
 
-export interface DockTabProps extends TabProps<IDockTab> {
+export interface DockTabProps extends TabProps<DockTabData> {
   moreActions?: React.ReactNode;
 }
 
 @observer
 export class DockTab extends React.Component<DockTabProps> {
-  get tabId() {
-    return this.props.value.id;
+  get tabId(): string {
+    return this.props.value.id || "";
   }
 
   @autobind()
-  close() {
+  close(): void {
     dockStore.closeTab(this.tabId);
   }
 
-  render() {
+  render(): JSX.Element {
     const { className, moreActions, ...tabProps } = this.props;
     const { title, pinned } = tabProps.value;
     const label = (
@@ -39,13 +39,13 @@ export class DockTab extends React.Component<DockTabProps> {
           />
         )}
       </div>
-    )
+    );
     return (
       <Tab
         {...tabProps}
         className={cssNames("DockTab", className, { pinned })}
         label={label}
       />
-    )
+    );
   }
 }

@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { releaseStore } from "./release.store";
-import { IReleaseRouteParams, releaseURL } from "./release.route";
+import { ReleaseRouteParams, releaseURL } from "./release.route";
 import { HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { ReleaseDetails } from "./release-details";
 import { ReleaseRollbackDialog } from "./release-rollback-dialog";
@@ -24,59 +24,58 @@ enum sortBy {
   updated = "update"
 }
 
-interface Props extends RouteComponentProps<IReleaseRouteParams> {
+interface Props extends RouteComponentProps<ReleaseRouteParams> {
 }
 
 @observer
 export class HelmReleases extends Component<Props> {
 
-  componentDidMount() {
+  componentDidMount(): void {
     // Watch for secrets associated with releases and react to their changes
     releaseStore.watch();
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     releaseStore.unwatch();
   }
 
-  get selectedRelease() {
+  get selectedRelease(): HelmRelease {
     const { match: { params: { name, namespace } } } = this.props;
     return releaseStore.items.find(release => {
-      return release.getName() == name && release.getNs() == namespace;
+      return release.getName() == name && release.namespace == namespace;
     });
   }
 
-  showDetails = (item: HelmRelease) => {
+  showDetails = (item: HelmRelease): void => {
     if (!item) {
-      navigation.merge(releaseURL())
-    }
-    else {
+      navigation.merge(releaseURL());
+    } else {
       navigation.merge(releaseURL({
         params: {
           name: item.getName(),
-          namespace: item.getNs()
+          namespace: item.namespace
         }
-      }))
+      }));
     }
   }
 
-  hideDetails = () => {
+  hideDetails = (): void => {
     this.showDetails(null);
   }
 
-  renderRemoveDialogMessage(selectedItems: HelmRelease[]) {
+  renderRemoveDialogMessage(selectedItems: HelmRelease[]): JSX.Element {
     const releaseNames = selectedItems.map(item => item.getName()).join(", ");
     return (
       <div>
         <Trans>Remove <b>{releaseNames}</b>?</Trans>
         <p className="warning">
-          <Trans>Note: StatefulSet Volumes won't be deleted automatically</Trans>
+          <Trans>Note: StatefulSet Volumes won&apos;t be deleted automatically</Trans>
         </p>
       </div>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <>
         <ItemListLayout
@@ -84,19 +83,19 @@ export class HelmReleases extends Component<Props> {
           store={releaseStore}
           dependentStores={[secretsStore]}
           sortingCallbacks={{
-            [sortBy.name]: (release: HelmRelease) => release.getName(),
-            [sortBy.namespace]: (release: HelmRelease) => release.getNs(),
-            [sortBy.revision]: (release: HelmRelease) => release.getRevision(),
-            [sortBy.chart]: (release: HelmRelease) => release.getChart(),
-            [sortBy.status]: (release: HelmRelease) => release.getStatus(),
-            [sortBy.updated]: (release: HelmRelease) => release.getUpdated(false, false),
+            [sortBy.name]: (release: HelmRelease): string => release.getName(),
+            [sortBy.namespace]: (release: HelmRelease): string => release.namespace,
+            [sortBy.revision]: (release: HelmRelease): number => release.revision,
+            [sortBy.chart]: (release: HelmRelease): string => release.getChart(),
+            [sortBy.status]: (release: HelmRelease): string => release.status,
+            [sortBy.updated]: (release: HelmRelease): string | number => release.getUpdated(false, false),
           }}
           searchFilters={[
-            (release: HelmRelease) => release.getName(),
-            (release: HelmRelease) => release.getNs(),
-            (release: HelmRelease) => release.getChart(),
-            (release: HelmRelease) => release.getStatus(),
-            (release: HelmRelease) => release.getVersion(),
+            (release: HelmRelease): string => release.getName(),
+            (release: HelmRelease): string => release.namespace,
+            (release: HelmRelease): string => release.getChart(),
+            (release: HelmRelease): string => release.getStatus(),
+            (release: HelmRelease): string | number => release.getVersion(),
           ]}
           renderHeaderTitle={<Trans>Releases</Trans>}
           renderTableHeader={[
@@ -109,30 +108,30 @@ export class HelmReleases extends Component<Props> {
             { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
             { title: <Trans>Updated</Trans>, className: "updated", sortBy: sortBy.updated },
           ]}
-          renderTableContents={(release: HelmRelease) => {
+          renderTableContents={(release: HelmRelease): (string | number | React.ReactNode)[] => {
             const version = release.getVersion();
             return [
               release.getName(),
-              release.getNs(),
+              release.namespace,
               release.getChart(),
-              release.getRevision(),
+              release.revision,
               <>
                 {version}
               </>,
               release.appVersion,
               { title: release.getStatus(), className: kebabCase(release.getStatus()) },
               release.getUpdated(),
-            ]
+            ];
           }}
-          renderItemMenu={(release: HelmRelease) => {
+          renderItemMenu={(release: HelmRelease): JSX.Element => {
             return (
               <HelmReleaseMenu
                 release={release}
                 removeConfirmationMessage={this.renderRemoveDialogMessage([release])}
               />
-            )
+            );
           }}
-          customizeRemoveDialog={(selectedItems: HelmRelease[]) => ({
+          customizeRemoveDialog={(selectedItems: HelmRelease[]): {message: JSX.Element} => ({
             message: this.renderRemoveDialogMessage(selectedItems)
           })}
           detailsItem={this.selectedRelease}

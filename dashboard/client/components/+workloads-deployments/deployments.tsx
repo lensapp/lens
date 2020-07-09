@@ -1,4 +1,4 @@
-import "./deployments.scss"
+import "./deployments.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -15,7 +15,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object";
-import { IDeploymentsRouteParams } from "../+workloads";
+import { DeploymentsRouteParams } from "../+workloads";
 import { _i18n } from "../../i18n";
 import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
@@ -31,40 +31,40 @@ enum sortBy {
   condition = "condition",
 }
 
-interface Props extends RouteComponentProps<IDeploymentsRouteParams> {
+interface Props extends RouteComponentProps<DeploymentsRouteParams> {
 }
 
 @observer
 export class Deployments extends React.Component<Props> {
-  renderPods(deployment: Deployment) {
-    const { replicas, availableReplicas } = deployment.status
-    return `${availableReplicas || 0}/${replicas || 0}`
+  renderPods(deployment: Deployment): string {
+    const { replicas, availableReplicas } = deployment.status;
+    return `${availableReplicas || 0}/${replicas || 0}`;
   }
 
-  renderConditions(deployment: Deployment) {
-    const conditions = orderBy(deployment.getConditions(true), "type", "asc")
+  renderConditions(deployment: Deployment): JSX.Element[] {
+    const conditions = orderBy(deployment.getConditions(true), "type", "asc");
     return conditions.map(({ type, message }) => (
       <span key={type} className={cssNames("condition", kebabCase(type))} title={message}>
         {type}
       </span>
-    ))
+    ));
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="Deployments" store={deploymentStore}
         dependentStores={[replicaSetStore, podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (deployment: Deployment) => deployment.getName(),
-          [sortBy.namespace]: (deployment: Deployment) => deployment.getNs(),
-          [sortBy.replicas]: (deployment: Deployment) => deployment.getReplicas(),
-          [sortBy.age]: (deployment: Deployment) => deployment.metadata.creationTimestamp,
-          [sortBy.condition]: (deployment: Deployment) => deployment.getConditionsText(),
+          [sortBy.name]: (deployment: Deployment): string => deployment.getName(),
+          [sortBy.namespace]: (deployment: Deployment): string => deployment.getNs(),
+          [sortBy.replicas]: (deployment: Deployment): number => deployment.getReplicas(),
+          [sortBy.age]: (deployment: Deployment): string => deployment.metadata.creationTimestamp,
+          [sortBy.condition]: (deployment: Deployment): string => deployment.getConditionsText(),
         }}
         searchFilters={[
-          (deployment: Deployment) => deployment.getSearchFields(),
-          (deployment: Deployment) => deployment.getConditionsText(),
+          (deployment: Deployment): string[] => deployment.getSearchFields(),
+          (deployment: Deployment): string => deployment.getConditionsText(),
         ]}
         renderHeaderTitle={<Trans>Deployments</Trans>}
         renderTableHeader={[
@@ -76,33 +76,33 @@ export class Deployments extends React.Component<Props> {
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Conditions</Trans>, className: "conditions", sortBy: sortBy.condition },
         ]}
-        renderTableContents={(deployment: Deployment) => [
+        renderTableContents={(deployment: Deployment): (string | number | JSX.Element | JSX.Element[])[] => [
           deployment.getName(),
           deployment.getNs(),
           this.renderPods(deployment),
           deployment.getReplicas(),
-          <KubeEventIcon object={deployment}/>,
+          <KubeEventIcon key="deployment" object={deployment}/>,
           deployment.getAge(),
           this.renderConditions(deployment),
         ]}
-        renderItemMenu={(item: Deployment) => {
-          return <DeploymentMenu object={item}/>
+        renderItemMenu={(item: Deployment): JSX.Element => {
+          return <DeploymentMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
-export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
+export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>): JSX.Element {
   const { object, toolbar } = props;
   return (
     <KubeObjectMenu {...props}>
-      <MenuItem onClick={() => DeploymentScaleDialog.open(object)}>
+      <MenuItem onClick={(): void => DeploymentScaleDialog.open(object)}>
         <Icon material="control_camera" title={_i18n._(t`Scale`)} interactive={toolbar}/>
         <span className="title"><Trans>Scale</Trans></span>
       </MenuItem>
     </KubeObjectMenu>
-  )
+  );
 }
 
 apiManager.registerViews(deploymentApi, {

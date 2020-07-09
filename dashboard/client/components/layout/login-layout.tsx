@@ -13,7 +13,7 @@ interface Props {
 }
 
 export class LoginLayout extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     const { className, header, title, footer, children } = this.props;
     return (
       <section className={cssNames('LoginLayout flex', className)}>

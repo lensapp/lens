@@ -12,13 +12,14 @@ import { KubeEventDetails } from "../+events/kube-event-details";
 import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { DaemonSet, daemonSetApi } from "../../api/endpoints";
+import { DaemonSet, daemonSetApi, PodMetricsData } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { Metrics } from "client/api/endpoints/metrics.api";
 
 interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -30,30 +31,32 @@ export class DaemonSetDetails extends React.Component<Props> {
     daemonSetStore.reset();
   });
 
-  componentDidMount() {
+  componentDidMount(): Promise<void> {
     if (!podsStore.isLoaded) {
-      podsStore.loadAll();
+      return podsStore.loadAll();
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     daemonSetStore.reset();
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: daemonSet } = this.props;
-    if (!daemonSet) return null;
-    const { spec } = daemonSet
+    if (!daemonSet) {
+      return null;
+    }
+    const { spec } = daemonSet;
     const selectors = daemonSet.getSelectors();
-    const images = daemonSet.getImages()
-    const nodeSelector = daemonSet.getNodeSelectors()
-    const childPods = daemonSetStore.getChildPods(daemonSet)
-    const metrics = daemonSetStore.metrics
+    const images = daemonSet.getImages();
+    const nodeSelector = daemonSet.getNodeSelectors();
+    const childPods = daemonSetStore.getChildPods(daemonSet);
+    const metrics = daemonSetStore.metrics;
     return (
       <div className="DaemonSetDetails">
         {podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => daemonSetStore.loadMetrics(daemonSet)}
+            loader={(): Promise<PodMetricsData<Metrics>> => daemonSetStore.loadMetrics(daemonSet)}
             tabs={podMetricTabs} object={daemonSet} params={{ metrics }}
           >
             <PodCharts/>
@@ -93,10 +96,10 @@ export class DaemonSetDetails extends React.Component<Props> {
         <PodDetailsList pods={childPods} owner={daemonSet}/>
         <KubeEventDetails object={daemonSet}/>
       </div>
-    )
+    );
   }
 }
 
 apiManager.registerViews(daemonSetApi, {
   Details: DaemonSetDetails,
-})
+});

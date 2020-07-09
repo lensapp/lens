@@ -15,7 +15,10 @@
     }
     },
     "include": [
-      "src/**/*",
-      "main.ts"
+      "build/*.ts",
+      "src/**/*.ts",
+      "spec/**/*.ts",
+      "dashboard/**/*.ts",
+      "dashboard/**/*.tsx",
     ]
   }

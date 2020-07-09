@@ -4,12 +4,12 @@ import React, { Component } from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { t, Trans } from "@lingui/macro";
-import { dockStore, IDockTab } from "./dock.store";
+import { dockStore, DockTabData } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { autobind, prevDefault } from "../../utils";
-import { IChartInstallData, installChartStore } from "./install-chart.store";
+import { ChartInstallData, installChartStore } from "./install-chart.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
 import { Button } from "../button";
@@ -21,9 +21,10 @@ import { Input } from "../input";
 import { EditorPanel } from "./editor-panel";
 import { navigate } from "../../navigation";
 import { _i18n } from "../../i18n";
+import { ReleaseUpdateDetails } from "client/api/endpoints/helm-releases.api";
 
 interface Props {
-  tab: IDockTab;
+  tab: DockTabData;
 }
 
 @observer
@@ -31,28 +32,28 @@ export class InstallChart extends Component<Props> {
   @observable error = "";
   @observable showNotes = false;
 
-  get values() {
-    return this.chartData.values;
+  get values(): string {
+    return this.chartData.values || "";
   }
 
-  get chartData() {
+  get chartData(): ChartInstallData {
     return installChartStore.getData(this.tabId);
   }
 
-  get tabId() {
-    return this.props.tab.id;
+  get tabId(): string {
+    return this.props.tab.id || "";
   }
 
-  get versions() {
+  get versions(): string[] {
     return installChartStore.versions.getData(this.tabId);
   }
 
-  get releaseDetails() {
+  get releaseDetails(): ReleaseUpdateDetails {
     return installChartStore.details.getData(this.tabId);
   }
 
   @autobind()
-  viewRelease() {
+  viewRelease(): void {
     const { release } = this.releaseDetails;
     navigate(releaseURL({
       params: {
@@ -64,35 +65,35 @@ export class InstallChart extends Component<Props> {
   }
 
   @autobind()
-  save(data: Partial<IChartInstallData>) {
+  save(data: Partial<ChartInstallData>): void {
     const chart = { ...this.chartData, ...data };
     installChartStore.setData(this.tabId, chart);
   }
 
   @autobind()
-  onVersionChange(option: SelectOption) {
+  onVersionChange(option: SelectOption): void {
     const version = option.value;
     this.save({ version, values: "" });
     installChartStore.loadValues(this.tabId);
   }
 
   @autobind()
-  onValuesChange(values: string, error?: string) {
+  onValuesChange(values: string, error?: string): void {
     this.error = error;
     this.save({ values });
   }
 
   @autobind()
-  onNamespaceChange(opt: SelectOption) {
+  onNamespaceChange(opt: SelectOption): void {
     this.save({ namespace: opt.value });
   }
 
   @autobind()
-  onReleaseNameChange(name: string) {
+  onReleaseNameChange(name: string): void {
     this.save({ releaseName: name });
   }
 
-  install = async () => {
+  install = async (): Promise<JSX.Element> => {
     const { repo, name, version, namespace, values, releaseName } = this.chartData;
     const details = await releaseStore.create({
       name: releaseName || undefined,
@@ -105,7 +106,7 @@ export class InstallChart extends Component<Props> {
     );
   }
 
-  render() {
+  render(): JSX.Element {
     const { tabId, chartData, values, versions, install } = this;
     if (!chartData || chartData.values === undefined || !versions) {
       return <Spinner center/>;
@@ -127,17 +128,21 @@ export class InstallChart extends Component<Props> {
             <Button
               plain active
               label={_i18n._(t`Show Notes`)}
-              onClick={() => this.showNotes = true}
+              onClick={(): void => {
+                this.showNotes = true;
+              }}
             />
           </div>
           <LogsDialog
             title={_i18n._(t`Helm Chart Install`)}
             isOpen={this.showNotes}
-            close={() => this.showNotes = false}
+            close={(): void => {
+              this.showNotes = false;
+            }}
             logs={this.releaseDetails.log}
           />
         </div>
-      )
+      );
     }
 
     const { repo, name, version, namespace, releaseName } = chartData;

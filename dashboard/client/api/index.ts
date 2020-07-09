@@ -27,7 +27,7 @@ export const apiKubeResourceApplier = new KubeJsonApi({
 });
 
 // Common handler for HTTP api errors
-function onApiError(error: JsonApiErrorParsed, res: Response) {
+function onApiError(error: JsonApiErrorParsed, res: Response): void {
   switch (res.status) {
   case 403:
     error.isUsedForNotification = true;

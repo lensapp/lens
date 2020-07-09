@@ -1,5 +1,5 @@
-import * as ElectronStore from "electron-store"
-import { clusterStore } from "./cluster-store"
+import * as ElectronStore from "electron-store";
+import { clusterStore } from "./cluster-store";
 
 export interface WorkspaceData {
   id: string;
@@ -13,7 +13,7 @@ export class Workspace implements WorkspaceData {
   public description?: string
 
   public constructor(data: WorkspaceData) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 }
 
@@ -25,54 +25,54 @@ export class WorkspaceStore {
   private constructor() {
     this.store = new ElectronStore({
       name: "lens-workspace-store"
-    })
+    });
   }
 
-  public storeWorkspace(workspace: WorkspaceData) {
-    const workspaces = this.getAllWorkspaces()
-    const index = workspaces.findIndex((w) => w.id === workspace.id)
+  public storeWorkspace(workspace: WorkspaceData): void {
+    const workspaces = this.getAllWorkspaces();
+    const index = workspaces.findIndex((w) => w.id === workspace.id);
     if (index !== -1) {
-      workspaces[index] = workspace
+      workspaces[index] = workspace;
     } else {
-      workspaces.push(workspace)
+      workspaces.push(workspace);
     }
-    this.store.set("workspaces", workspaces)
+    this.store.set("workspaces", workspaces);
   }
 
-  public removeWorkspace(workspace: Workspace) {
+  public removeWorkspace(workspace: Workspace): void {
     if (workspace.id === WorkspaceStore.defaultId) {
-      throw new Error("Cannot remove default workspace")
+      throw new Error("Cannot remove default workspace");
     }
-    const workspaces = this.getAllWorkspaces()
-    const index = workspaces.findIndex((w) => w.id === workspace.id)
+    const workspaces = this.getAllWorkspaces();
+    const index = workspaces.findIndex((w) => w.id === workspace.id);
     if (index !== -1) {
-      clusterStore.removeClustersByWorkspace(workspace.id)
-      workspaces.splice(index, 1)
-      this.store.set("workspaces", workspaces)
+      clusterStore.removeClustersByWorkspace(workspace.id);
+      workspaces.splice(index, 1);
+      this.store.set("workspaces", workspaces);
     }
   }
 
-  public getAllWorkspaces(): Array<Workspace> {
-    const workspacesData: WorkspaceData[]  = this.store.get("workspaces", [])
+  public getAllWorkspaces(): Workspace[] {
+    const workspacesData: WorkspaceData[]  = this.store.get("workspaces", []);
 
-    return workspacesData.map((wsd) => new Workspace(wsd))
+    return workspacesData.map((wsd) => new Workspace(wsd));
   }
 
   static getInstance(): WorkspaceStore {
     if (!WorkspaceStore.instance) {
-      WorkspaceStore.instance = new WorkspaceStore()
+      WorkspaceStore.instance = new WorkspaceStore();
     }
-    return WorkspaceStore.instance
+    return WorkspaceStore.instance;
   }
 }
 
-const workspaceStore: WorkspaceStore = WorkspaceStore.getInstance()
+const workspaceStore: WorkspaceStore = WorkspaceStore.getInstance();
 
 if (!workspaceStore.getAllWorkspaces().find( ws => ws.id === WorkspaceStore.defaultId)) {
   workspaceStore.storeWorkspace({
     id: WorkspaceStore.defaultId,
     name: "default"
-  })
+  });
 }
 
-export { workspaceStore }
+export { workspaceStore };

@@ -18,7 +18,7 @@ export class PageFiltersStore {
   protected filters = observable.array<Filter>([], { deep: false });
   protected isDisabled = observable.map<FilterType, boolean>();
 
-  @computed get activeFilters() {
+  @computed get activeFilters(): Filter[] {
     return this.filters.filter(filter => !this.isDisabled.get(filter.type));
   }
 
@@ -27,7 +27,7 @@ export class PageFiltersStore {
     this.syncWithContextNamespace();
   }
 
-  protected syncWithContextNamespace() {
+  protected syncWithContextNamespace(): () => void {
     const disposers = [
       reaction(() => this.getValues(FilterType.NAMESPACE), filteredNs => {
         if (filteredNs.length !== namespaceStore.contextNs.length) {
@@ -47,10 +47,10 @@ export class PageFiltersStore {
         fireImmediately: true
       })
     ];
-    return () => disposers.forEach(dispose => dispose());
+    return (): void => disposers.forEach(dispose => dispose());
   }
 
-  protected syncWithGlobalSearch() {
+  protected syncWithGlobalSearch(): () => void  {
     const disposers = [
       reaction(() => this.getValues(FilterType.SEARCH)[0], setSearch),
       reaction(() => getSearch(), search => {
@@ -65,50 +65,53 @@ export class PageFiltersStore {
         fireImmediately: true
       })
     ];
-    return () => disposers.forEach(dispose => dispose());
+    return (): void => disposers.forEach(dispose => dispose());
   }
 
-  addFilter(filter: Filter, begin = false) {
-    if (begin) this.filters.unshift(filter);
-    else {
+  addFilter(filter: Filter, begin = false): void {
+    if (begin) {
+      this.filters.unshift(filter);
+    } else {
       this.filters.push(filter);
     }
   }
 
-  removeFilter(filter: Filter) {
+  removeFilter(filter: Filter): void {
     if (!this.filters.remove(filter)) {
       const filterCopy = this.filters.find(f => f.type === filter.type && f.value === filter.value);
-      if (filterCopy) this.filters.remove(filterCopy);
+      if (filterCopy) {
+        this.filters.remove(filterCopy);
+      }
     }
   }
 
   getByType(type: FilterType, value?: any): Filter {
     return this.filters.find(filter => filter.type === type && (
       arguments.length > 1 ? filter.value === value : true
-    ))
+    ));
   }
 
-  getValues(type: FilterType) {
+  getValues(type: FilterType): string[] {
     return this.filters
       .filter(filter => filter.type === type)
       .map(filter => filter.value);
   }
 
-  isEnabled(type: FilterType) {
+  isEnabled(type: FilterType): boolean {
     return !this.isDisabled.get(type);
   }
 
-  disable(type: FilterType | FilterType[]) {
+  disable(type: FilterType | FilterType[]): () => () => void {
     [type].flat().forEach(type => this.isDisabled.set(type, true));
-    return () => this.enable(type);
+    return (): () => void => this.enable(type);
   }
 
-  enable(type: FilterType | FilterType[]) {
+  enable(type: FilterType | FilterType[]): () => void{
     [type].flat().forEach(type => this.isDisabled.delete(type));
-    return () => this.disable(type);
+    return (): () => void => this.disable(type);
   }
 
-  reset() {
+  reset(): void {
     this.filters.length = 0;
     this.isDisabled.clear();
   }

@@ -1,10 +1,10 @@
-import "./ingresses.scss"
+import "./ingresses.scss";
 
-import * as React from "react"
+import * as React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router-dom"
-import { IngressRouteParams } from "./ingresses.route"
-import { Ingress, ingressApi } from "../../api/endpoints/ingress.api"
+import { RouteComponentProps } from "react-router-dom";
+import { IngressRouteParams } from "./ingresses.route";
+import { Ingress, ingressApi } from "../../api/endpoints/ingress.api";
 import { ingressStore } from "./ingress.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
@@ -22,18 +22,18 @@ interface Props extends RouteComponentProps<IngressRouteParams> {
 
 @observer
 export class Ingresses extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="Ingresses" store={ingressStore}
         sortingCallbacks={{
-          [sortBy.name]: (ingress: Ingress) => ingress.getName(),
-          [sortBy.namespace]: (ingress: Ingress) => ingress.getNs(),
-          [sortBy.age]: (ingress: Ingress) => ingress.metadata.creationTimestamp,
+          [sortBy.name]: (ingress: Ingress): string => ingress.getName(),
+          [sortBy.namespace]: (ingress: Ingress): string => ingress.getNs(),
+          [sortBy.age]: (ingress: Ingress): string => ingress.metadata.creationTimestamp,
         }}
         searchFilters={[
-          (ingress: Ingress) => ingress.getSearchFields(),
-          (ingress: Ingress) => ingress.getPorts(),
+          (ingress: Ingress): string[] => ingress.getSearchFields(),
+          (ingress: Ingress): string => ingress.getPorts(),
         ]}
         renderHeaderTitle={<Trans>Ingresses</Trans>}
         renderTableHeader={[
@@ -42,32 +42,32 @@ export class Ingresses extends React.Component<Props> {
           { title: <Trans>Rules</Trans>, className: "rules" },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
-        renderTableContents={(ingress: Ingress) => [
+        renderTableContents={(ingress: Ingress): (string | number | JSX.Element[])[] => [
           ingress.getName(),
           ingress.getNs(),
           ingress.getRoutes().map(route => <p key={route}>{route}</p>),
           ingress.getAge(),
         ]}
-        renderItemMenu={(item: Ingress) => {
-          return <IngressMenu object={item}/>
+        renderItemMenu={(item: Ingress): JSX.Element => {
+          return <IngressMenu object={item}/>;
         }}
         tableProps={{
-          customRowHeights: (item: Ingress, lineHeight, paddings) => {
+          customRowHeights: (item: Ingress, lineHeight, paddings): number => {
             const lines = item.getRoutes().length || 1;
             return lines * lineHeight + paddings;
           }
         }}
       />
-    )
+    );
   }
 }
 
-export function IngressMenu(props: KubeObjectMenuProps<Ingress>) {
+export function IngressMenu(props: KubeObjectMenuProps<Ingress>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(ingressApi, {
   Menu: IngressMenu
-})
+});

@@ -1,24 +1,28 @@
 import React, { useContext } from "react";
 import { t } from "@lingui/macro";
-import { IClusterMetrics, Node } from "../../api/endpoints";
+import { ClusterMetrics, Node } from "../../api/endpoints";
 import { BarChart, cpuOptions, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
-import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
+import { ResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { observer } from "mobx-react";
 import { ChartOptions, ChartPoint } from "chart.js";
 import { themeStore } from "../../theme.store";
 import { _i18n } from "../../i18n";
 
-type IContext = IResourceMetricsValue<Node, { metrics: IClusterMetrics }>;
+type IContext = ResourceMetricsValue<Node, { metrics: ClusterMetrics }>;
 
 export const NodeCharts = observer(() => {
   const { params: { metrics }, tabId, object } = useContext<IContext>(ResourceMetricsContext);
   const id = object.getId();
   const { chartCapacityColor } = themeStore.activeTheme.colors;
 
-  if (!metrics) return null;
-  if (isMetricsEmpty(metrics)) return <NoMetrics/>;
+  if (!metrics) {
+    return null;
+  }
+  if (isMetricsEmpty(metrics)) {
+    return <NoMetrics/>;
+  }
 
   const values = Object.values(metrics).map(metric =>
     normalizeMetrics(metric).data.result[0].values
@@ -26,11 +30,11 @@ export const NodeCharts = observer(() => {
   const [
     memoryUsage,
     memoryRequests,
-    memoryLimits,
+    _memoryLimits,
     memoryCapacity,
     cpuUsage,
     cpuRequests,
-    cpuLimits,
+    _cpuLimits,
     cpuCapacity,
     podUsage,
     podCapacity,
@@ -127,20 +131,20 @@ export const NodeCharts = observer(() => {
     scales: {
       yAxes: [{
         ticks: {
-          callback: value => value
+          callback: (value): any => value
         }
       }]
     },
     tooltips: {
       callbacks: {
-        label: ({ datasetIndex, index }, { datasets }) => {
+        label: ({ datasetIndex, index }, { datasets }): string => {
           const { label, data } = datasets[datasetIndex];
           const value = data[index] as ChartPoint;
           return `${label}: ${value.y}`;
         }
       }
     }
-  }
+  };
 
   const options = [cpuOptions, memoryOptions, memoryOptions, podOptions];
 
@@ -151,4 +155,4 @@ export const NodeCharts = observer(() => {
       data={{ datasets: datasets[tabId] }}
     />
   );
-})
+});

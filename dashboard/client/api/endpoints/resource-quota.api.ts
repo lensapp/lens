@@ -2,7 +2,7 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 import { KubeJsonApiData } from "../kube-json-api";
 
-export interface IResourceQuotaValues {
+export interface ResourceQuotaValues {
   [quota: string]: string;
 
   // Compute Resource Quota
@@ -30,33 +30,34 @@ export interface IResourceQuotaValues {
   "count/deployments.extensions"?: string;
 }
 
+interface MatchExpression {
+  operator: string;
+  scopeName: string;
+  values: string[];
+}
+
 export class ResourceQuota extends KubeObject {
   static kind = "ResourceQuota"
 
   constructor(data: KubeJsonApiData) {
     super(data);
-    this.spec = this.spec || {} as any
+    this.spec = this.spec || {} as any;
   }
 
   spec: {
-    hard: IResourceQuotaValues;
+    hard: ResourceQuotaValues;
     scopeSelector?: {
-      matchExpressions: {
-        operator: string;
-        scopeName: string;
-        values: string[];
-      }[];
+      matchExpressions: MatchExpression[];
     };
   }
 
   status: {
-    hard: IResourceQuotaValues;
-    used: IResourceQuotaValues;
+    hard: ResourceQuotaValues;
+    used: ResourceQuotaValues;
   }
 
-  getScopeSelector() {
-    const { matchExpressions = [] } = this.spec.scopeSelector || {};
-    return matchExpressions;
+  getScopeSelector(): MatchExpression[] {
+    return this.spec?.scopeSelector?.matchExpressions;
   }
 }
 

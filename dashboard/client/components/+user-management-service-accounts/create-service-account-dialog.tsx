@@ -25,19 +25,19 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
   @observable name = ""
   @observable namespace = "default"
 
-  static open() {
+  static open(): void {
     CreateServiceAccountDialog.isOpen = true;
   }
 
-  static close() {
+  static close(): void {
     CreateServiceAccountDialog.isOpen = false;
   }
 
-  close = () => {
+  close = (): void => {
     CreateServiceAccountDialog.close();
   }
 
-  createAccount = async () => {
+  createAccount = async (): Promise<void> => {
     const { name, namespace } = this;
     try {
       const serviceAccount = await serviceAccountsStore.create({ namespace, name });
@@ -49,10 +49,10 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { ...dialogProps } = this.props;
     const { name, namespace } = this;
-    const header = <h5><Trans>Create Service Account</Trans></h5>
+    const header = <h5><Trans>Create Service Account</Trans></h5>;
     return (
       <Dialog
         {...dialogProps}
@@ -67,17 +67,19 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
               autoFocus required
               placeholder={_i18n._(t`Enter a name`)}
               validators={systemName}
-              value={name} onChange={v => this.name = v.toLowerCase()}
+              value={name} onChange={(v): void => {
+                this.name = v.toLowerCase();
+              }}
             />
             <SubTitle title={<Trans>Namespace</Trans>}/>
             <NamespaceSelect
               themeName="light"
               value={namespace}
-              onChange={({ value }) => this.namespace = value}
+              onChange={({ value }): void => this.namespace = value}
             />
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

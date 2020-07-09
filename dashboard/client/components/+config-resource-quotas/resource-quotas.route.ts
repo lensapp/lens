@@ -3,9 +3,9 @@ import { buildURL } from "../../navigation";
 
 export const resourceQuotaRoute: RouteProps = {
   path: "/resourcequotas"
+};
+
+export interface ResourceQuotaRouteParams {
 }
 
-export interface IResourceQuotaRouteParams {
-}
-
-export const resourceQuotaURL = buildURL<IResourceQuotaRouteParams>(resourceQuotaRoute.path);
+export const resourceQuotaURL = buildURL<ResourceQuotaRouteParams>(resourceQuotaRoute.path);

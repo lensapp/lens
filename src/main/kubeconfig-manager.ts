@@ -1,7 +1,7 @@
-import { app } from "electron"
-import * as fs from "fs"
-import { ensureDir, randomFileName} from "./file-helpers"
-import logger from "./logger"
+import { app } from "electron";
+import * as fs from "fs";
+import { ensureDir, randomFileName} from "./file-helpers";
+import logger from "./logger";
 
 export class KubeconfigManager {
   protected configDir = app.getPath("temp")
@@ -9,24 +9,24 @@ export class KubeconfigManager {
   protected tempFile: string
 
   constructor(kubeconfig: string) {
-    this.kubeconfig = kubeconfig
-    this.tempFile = this.createTemporaryKubeconfig()
+    this.kubeconfig = kubeconfig;
+    this.tempFile = this.createTemporaryKubeconfig();
   }
 
-  public getPath() {
-    return this.tempFile
+  public getPath(): string {
+    return this.tempFile;
   }
 
   protected createTemporaryKubeconfig(): string {
-    ensureDir(this.configDir)
-    const path = `${this.configDir}/${randomFileName("kubeconfig")}`
-    logger.debug('Creating temporary kubeconfig: ' + path)
-    fs.writeFileSync(path, this.kubeconfig)
-    return path
+    ensureDir(this.configDir);
+    const path = `${this.configDir}/${randomFileName("kubeconfig")}`;
+    logger.debug('Creating temporary kubeconfig: ' + path);
+    fs.writeFileSync(path, this.kubeconfig);
+    return path;
   }
 
-  public unlink() {
-    logger.debug('Deleting temporary kubeconfig: ' + this.tempFile)
-    fs.unlinkSync(this.tempFile)
+  public unlink(): void {
+    logger.debug('Deleting temporary kubeconfig: ' + this.tempFile);
+    fs.unlinkSync(this.tempFile);
   }
 }

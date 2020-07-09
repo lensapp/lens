@@ -7,17 +7,17 @@ import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { IPodContainer, Pod, podsApi } from "../../api/endpoints";
+import { PodContainer, Pod, podsApi } from "../../api/endpoints";
 import { Icon } from "../icon";
 import { Select, SelectOption } from "../select";
 import { Spinner } from "../spinner";
-import { cssNames, downloadFile, interval } from "../../utils";
+import { cssNames, downloadFile, IntervalManager } from "../../utils";
 import { default as AnsiUp } from "ansi_up";
-import DOMPurify from "dompurify"
+import DOMPurify from "dompurify";
 
-interface IPodLogsDialogData {
+interface PodLogsDialogData {
   pod: Pod;
-  container?: IPodContainer;
+  container?: PodContainer;
 }
 
 interface Props extends Partial<DialogProps> {
@@ -26,32 +26,32 @@ interface Props extends Partial<DialogProps> {
 @observer
 export class PodLogsDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  @observable static data: IPodLogsDialogData = null;
+  @observable static data: PodLogsDialogData = null;
 
-  static open(pod: Pod, container?: IPodContainer) {
+  static open(pod: Pod, container?: PodContainer): void {
     PodLogsDialog.isOpen = true;
     PodLogsDialog.data = { pod, container };
   }
 
-  static close() {
+  static close(): void {
     PodLogsDialog.isOpen = false;
   }
 
-  get data() {
+  get data(): PodLogsDialogData {
     return PodLogsDialog.data;
   }
 
   private logsArea: HTMLDivElement;
-  private refresher = interval(5, () => this.load());
-  private containers: IPodContainer[] = []
-  private initContainers: IPodContainer[] = []
+  private refresher = new IntervalManager(5, () => this.load());
+  private containers: PodContainer[] = []
+  private initContainers: PodContainer[] = []
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
   private colorConverter = new AnsiUp();
 
   @observable logs = ""; // latest downloaded logs for pod
   @observable newLogs = ""; // new logs since dialog is open
   @observable logsReady = false;
-  @observable selectedContainer: IPodContainer;
+  @observable selectedContainer: PodContainer;
   @observable showTimestamps = true;
   @observable tailLines = 1000;
 
@@ -62,31 +62,33 @@ export class PodLogsDialog extends React.Component<Props> {
     { label: 100000, value: 100000 },
   ]
 
-  onOpen = async () => {
+  onOpen = async (): Promise<void> => {
     const { pod, container } = this.data;
-    this.containers = pod.getContainers();
-    this.initContainers = pod.getInitContainers();
+    this.containers = pod.spec.containers;
+    this.initContainers = pod.spec.initContainers;
     this.selectedContainer = container || this.containers[0];
     await this.load();
     this.refresher.start();
   }
 
-  onClose = () => {
+  onClose = (): void => {
     this.resetLogs();
     this.refresher.stop();
   }
 
-  close = () => {
+  close = (): void => {
     PodLogsDialog.close();
   }
 
-  load = async () => {
-    if (!this.data) return;
+  load = async (): Promise<void> => {
+    if (!this.data) {
+      return;
+    }
     const { pod } = this.data;
     try {
       // if logs already loaded, check the latest timestamp for getting updates only from this point
       const logsTimestamps = this.getTimestamps(this.newLogs || this.logs);
-      let lastLogDate = new Date(0)
+      let lastLogDate = new Date(0);
       if (logsTimestamps) {
         lastLogDate = new Date(logsTimestamps.slice(-1)[0]);
         lastLogDate.setSeconds(lastLogDate.getSeconds() + 1); // avoid duplicates from last second
@@ -101,27 +103,26 @@ export class PodLogsDialog extends React.Component<Props> {
       });
       if (!this.logs) {
         this.logs = logs;
-      }
-      else if (logs) {
+      } else if (logs) {
         this.newLogs = `${this.newLogs}\n${logs}`.trim();
       }
     } catch (error) {
       this.logs = [
         _i18n._(t`Failed to load logs: ${error.message}`),
         _i18n._(t`Reason: ${error.reason} (${error.code})`),
-      ].join("\n")
+      ].join("\n");
     }
     this.logsReady = true;
   }
 
-  reload = async () => {
+  reload = async (): Promise<void> => {
     this.resetLogs();
     this.refresher.stop();
     await this.load();
     this.refresher.start();
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(): void {
     // scroll logs only when it's already in the end,
     // otherwise it can interrupt reading by jumping after loading new logs update
     if (this.logsArea && this.lastLineIsShown) {
@@ -129,83 +130,85 @@ export class PodLogsDialog extends React.Component<Props> {
     }
   }
 
-  onScroll = (evt: React.UIEvent<HTMLDivElement>) => {
+  onScroll = (evt: React.UIEvent<HTMLDivElement>): void => {
     const logsArea = evt.currentTarget;
     const { scrollHeight, clientHeight, scrollTop } = logsArea;
     this.lastLineIsShown = clientHeight + scrollTop === scrollHeight;
   };
 
-  getLogs() {
+  getLogs(): { logs: string; newLogs: string } {
     const { logs, newLogs, showTimestamps } = this;
     return {
       logs: showTimestamps ? logs : this.removeTimestamps(logs),
       newLogs: showTimestamps ? newLogs : this.removeTimestamps(newLogs),
-    }
+    };
   }
 
-  getTimestamps(logs: string) {
+  getTimestamps(logs: string): RegExpMatchArray {
     return logs.match(/^\d+\S+/gm);
   }
 
-  removeTimestamps(logs: string) {
+  removeTimestamps(logs: string): string {
     return logs.replace(/^\d+.*?\s/gm, "");
   }
 
-  resetLogs() {
+  resetLogs(): void {
     this.logs = "";
     this.newLogs = "";
     this.lastLineIsShown = true;
     this.logsReady = false;
   }
 
-  onContainerChange = (option: SelectOption) => {
+  onContainerChange = (option: SelectOption): void => {
     this.selectedContainer = this.containers
       .concat(this.initContainers)
       .find(container => container.name === option.value);
     this.reload();
   }
 
-  onTailLineChange = (option: SelectOption) => {
+  onTailLineChange = (option: SelectOption): void => {
     this.tailLines = option.value;
     this.reload();
   }
 
-  formatOptionLabel = (option: SelectOption) => {
+  formatOptionLabel = (option: SelectOption): JSX.Element | {} => {
     const { value, label } = option;
     return label || <><Icon small material="view_carousel"/> {value}</>;
   }
 
-  toggleTimestamps = () => {
+  toggleTimestamps = (): void => {
     this.showTimestamps = !this.showTimestamps;
   }
 
-  downloadLogs = () => {
+  downloadLogs = (): void => {
     const { logs, newLogs } = this.getLogs();
     const fileName = this.selectedContainer.name + ".log";
     const fileContents = logs + newLogs;
     downloadFile(fileName, fileContents, "text/plain");
   }
 
-  get containerSelectOptions() {
+  get containerSelectOptions(): React.ReactNode[] {
     return [
       {
         label: _i18n._(t`Containers`),
         options: this.containers.map(container => {
-          return { value: container.name }
+          return { value: container.name };
         }),
       },
       {
         label: _i18n._(t`Init Containers`),
         options: this.initContainers.map(container => {
-          return { value: container.name }
+          return { value: container.name };
         }),
       }
     ];
   }
 
-  renderControlsPanel() {
+  renderControlsPanel(): JSX.Element {
     const { logsReady, showTimestamps } = this;
-    if (!logsReady) return;
+    if (!logsReady) {
+      return;
+    }
     const timestamps = this.getTimestamps(this.logs + this.newLogs);
     let from = "";
     let to = "";
@@ -232,16 +235,16 @@ export class PodLogsDialog extends React.Component<Props> {
           />
         </div>
       </div>
-    )
+    );
   }
 
-  renderLogs() {
+  renderLogs(): JSX.Element {
     if (!this.logsReady) {
-      return <Spinner center/>
+      return <Spinner center/>;
     }
     const { logs, newLogs } = this.getLogs();
     if (!logs && !newLogs) {
-      return <p className="no-logs"><Trans>There are no logs available for container.</Trans></p>
+      return <p className="no-logs"><Trans>There are no logs available for container.</Trans></p>;
     }
     return (
       <>
@@ -256,7 +259,7 @@ export class PodLogsDialog extends React.Component<Props> {
     );
   }
 
-  render() {
+  render(): JSX.Element {
     const { ...dialogProps } = this.props;
     const { selectedContainer, tailLines } = this;
     const podName = this.data ? this.data.pod.getName() : "";
@@ -296,12 +299,14 @@ export class PodLogsDialog extends React.Component<Props> {
               </div>
               {this.renderControlsPanel()}
             </div>
-            <div className="logs-area" onScroll={this.onScroll} ref={e => this.logsArea = e}>
+            <div className="logs-area" onScroll={this.onScroll} ref={(e): void => {
+              this.logsArea = e;
+            }}>
               {this.renderLogs()}
             </div>
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

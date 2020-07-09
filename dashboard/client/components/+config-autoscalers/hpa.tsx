@@ -1,4 +1,4 @@
-import "./hpa.scss"
+import "./hpa.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -6,7 +6,7 @@ import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
-import { IHpaRouteParams } from "./hpa.route";
+import { HpaRouteParams } from "./hpa.route";
 import { HorizontalPodAutoscaler, hpaApi } from "../../api/endpoints/hpa.api";
 import { hpaStore } from "./hpa.store";
 import { Badge } from "../badge";
@@ -22,32 +22,32 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IHpaRouteParams> {
+interface Props extends RouteComponentProps<HpaRouteParams> {
 }
 
 @observer
 export class HorizontalPodAutoscalers extends React.Component<Props> {
-  getTargets(hpa: HorizontalPodAutoscaler) {
-    const metrics = hpa.getMetrics();
+  getTargets(hpa: HorizontalPodAutoscaler): JSX.Element {
+    const { metrics } = hpa.spec;
     const metricsRemainCount = metrics.length - 1;
     const metricsRemain = metrics.length > 1 ? <Trans>{metricsRemainCount} more...</Trans> : null;
     const metricValues = hpa.getMetricValues(metrics[0]);
     return <p>{metricValues} {metricsRemain && "+"}{metricsRemain}</p>;
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="HorizontalPodAutoscalers" store={hpaStore}
         sortingCallbacks={{
-          [sortBy.name]: (item: HorizontalPodAutoscaler) => item.getName(),
-          [sortBy.namespace]: (item: HorizontalPodAutoscaler) => item.getNs(),
-          [sortBy.minPods]: (item: HorizontalPodAutoscaler) => item.getMinPods(),
-          [sortBy.maxPods]: (item: HorizontalPodAutoscaler) => item.getMaxPods(),
-          [sortBy.replicas]: (item: HorizontalPodAutoscaler) => item.getReplicas()
+          [sortBy.name]: (item: HorizontalPodAutoscaler): string => item.getName(),
+          [sortBy.namespace]: (item: HorizontalPodAutoscaler): string => item.getNs(),
+          [sortBy.minPods]: (item: HorizontalPodAutoscaler): number => item.spec.minReplicas,
+          [sortBy.maxPods]: (item: HorizontalPodAutoscaler): number => item.spec.maxReplicas,
+          [sortBy.replicas]: (item: HorizontalPodAutoscaler): number => item.status.currentReplicas
         }}
         searchFilters={[
-          (item: HorizontalPodAutoscaler) => item.getSearchFields()
+          (item: HorizontalPodAutoscaler): string[] => item.getSearchFields()
         ]}
         renderHeaderTitle={<Trans>Horizontal Pod Autoscalers</Trans>}
         renderTableHeader={[
@@ -60,16 +60,18 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Status</Trans>, className: "status" },
         ]}
-        renderTableContents={(hpa: HorizontalPodAutoscaler) => [
+        renderTableContents={(hpa: HorizontalPodAutoscaler): (string | number | React.ReactNode)[] => [
           hpa.getName(),
           hpa.getNs(),
           this.getTargets(hpa),
-          hpa.getMinPods(),
-          hpa.getMaxPods(),
-          hpa.getReplicas(),
+          hpa.spec.minReplicas,
+          hpa.spec.maxReplicas,
+          hpa.status.currentReplicas,
           hpa.getAge(),
           hpa.getConditions().map(({ type, tooltip, isReady }) => {
-            if (!isReady) return null;
+            if (!isReady) {
+              return null;
+            }
             return (
               <Badge
                 key={type}
@@ -77,23 +79,23 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
                 tooltip={tooltip}
                 className={cssNames(type.toLowerCase())}
               />
-            )
+            );
           })
         ]}
-        renderItemMenu={(item: HorizontalPodAutoscaler) => {
-          return <HpaMenu object={item}/>
+        renderItemMenu={(item: HorizontalPodAutoscaler): JSX.Element => {
+          return <HpaMenu object={item}/>;
         }}
       />
     );
   }
 }
 
-export function HpaMenu(props: KubeObjectMenuProps<HorizontalPodAutoscaler>) {
+export function HpaMenu(props: KubeObjectMenuProps<HorizontalPodAutoscaler>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(hpaApi, {
   Menu: HpaMenu,
-})
+});

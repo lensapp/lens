@@ -27,7 +27,7 @@ export class SecretDetails extends React.Component<Props> {
   @observable data: { [name: string]: string } = {};
   @observable revealSecret: { [name: string]: boolean } = {};
 
-  async componentDidMount() {
+  componentDidMount(): void {
     disposeOnUnmount(this, [
       autorun(() => {
         const { object: secret } = this.props;
@@ -36,10 +36,10 @@ export class SecretDetails extends React.Component<Props> {
           this.revealSecret = {};
         }
       })
-    ])
+    ]);
   }
 
-  saveSecret = async () => {
+  saveSecret = async (): Promise<void> => {
     const { object: secret } = this.props;
     this.isSaving = true;
     try {
@@ -51,13 +51,15 @@ export class SecretDetails extends React.Component<Props> {
     this.isSaving = false;
   }
 
-  editData = (name: string, value: string, encoded: boolean) => {
+  editData = (name: string, value: string, encoded: boolean): void => {
     this.data[name] = encoded ? value : base64.encode(value);
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: secret } = this.props;
-    if (!secret) return null;
+    if (!secret) {
+      return null;
+    }
     return (
       <div className="SecretDetails">
         <KubeObjectMeta object={secret}/>
@@ -86,18 +88,20 @@ export class SecretDetails extends React.Component<Props> {
                         theme="round-black"
                         className="box grow"
                         value={value || ""}
-                        onChange={value => this.editData(name, value, !revealSecret)}
+                        onChange={(value): void => this.editData(name, value, !revealSecret)}
                       />
                       {decodedVal && (
                         <Icon
                           material={`visibility${revealSecret ? "" : "_off"}`}
                           tooltip={revealSecret ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
-                          onClick={() => this.revealSecret[name] = !revealSecret}
+                          onClick={(): void => {
+                            this.revealSecret[name] = !revealSecret;
+                          }}
                         />)
                       }
                     </div>
                   </div>
-                )
+                );
               })
             }
             <Button
@@ -115,4 +119,4 @@ export class SecretDetails extends React.Component<Props> {
 
 apiManager.registerViews(secretsApi, {
   Details: SecretDetails,
-})
+});

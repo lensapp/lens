@@ -1,4 +1,4 @@
-import "./overview-statuses.scss"
+import "./overview-statuses.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -15,13 +15,11 @@ import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { PageFiltersList } from "../item-object-list/page-filters-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
-import { configStore } from "../../config.store";
 import { isAllowedResource } from "../../api/rbac";
 
 @observer
 export class OverviewStatuses extends React.Component {
-  render() {
-    const { allowedResources } = configStore;
+  render(): JSX.Element {
     const { contextNs } = namespaceStore;
     const pods = isAllowedResource("pods") ? podsStore.getAllByNs(contextNs) : [];
     const deployments = isAllowedResource("deployments") ? deploymentStore.getAllByNs(contextNs) : [];
@@ -75,6 +73,6 @@ export class OverviewStatuses extends React.Component {
           }
         </div>
       </div>
-    )
+    );
   }
 }

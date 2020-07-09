@@ -1,12 +1,12 @@
 import { action, autorun } from "mobx";
-import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
+import { dockStore, DockTabData, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { t } from "@lingui/macro";
 import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
-import { IReleaseUpdateDetails } from "../../api/endpoints/helm-releases.api";
+import { ReleaseUpdateDetails } from "../../api/endpoints/helm-releases.api";
 import { _i18n } from "../../i18n";
 
-export interface IChartInstallData {
+export interface ChartInstallData {
   name: string;
   repo: string;
   version: string;
@@ -17,9 +17,13 @@ export interface IChartInstallData {
   lastVersion?: boolean;
 }
 
-export class InstallChartStore extends DockTabStore<IChartInstallData> {
+export function isInstallChartTab(tab: DockTabData): boolean {
+  return tab?.kind === TabKind.INSTALL_CHART;
+}
+
+export class InstallChartStore extends DockTabStore<ChartInstallData> {
   public versions = new DockTabStore<string[]>();
-  public details = new DockTabStore<IReleaseUpdateDetails>();
+  public details = new DockTabStore<ReleaseUpdateDetails>();
 
   constructor() {
     super({
@@ -27,25 +31,27 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
     });
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
-      if (!isInstallChartTab(selectedTab)) return;
+      if (!isInstallChartTab(selectedTab)) {
+        return;
+      }
       if (isOpen) {
         this.loadData();
       }
-    }, { delay: 250 })
+    }, { delay: 250 });
   }
 
   @action
-  async loadData(tabId = dockStore.selectedTabId) {
+  async loadData(tabId = dockStore.selectedTabId): Promise<void> {
     const { values } = this.getData(tabId);
     const versions = this.versions.getData(tabId);
-    return Promise.all([
+    await Promise.all([
       !versions && this.loadVersions(tabId),
       !values && this.loadValues(tabId),
-    ])
+    ]);
   }
 
   @action
-  async loadVersions(tabId: TabId) {
+  async loadVersions(tabId: TabId): Promise<void> {
     const { repo, name } = this.getData(tabId);
     this.versions.clearData(tabId); // reset
     const charts = await helmChartsApi.get(repo, name);
@@ -54,13 +60,15 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
   }
 
   @action
-  async loadValues(tabId: TabId) {
+  async loadValues(tabId: TabId): Promise<void> {
     const data = this.getData(tabId);
     const { repo, name, version } = data;
     let values = "";
-    const fetchValues = async (retry = 1, maxRetries = 3) => {
+    const fetchValues = async (retry = 1, maxRetries = 3): Promise<void> => {
       values = await helmChartsApi.getValues(repo, name, version);
-      if (values || retry == maxRetries) return;
+      if (values || retry == maxRetries) {
+        return;
+      }
       await fetchValues(retry + 1);
     };
     this.setData(tabId, { ...data, values: undefined }); // reset
@@ -71,7 +79,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
 
 export const installChartStore = new InstallChartStore();
 
-export function createInstallChartTab(chart: HelmChart, tabParams: Partial<IDockTab> = {}) {
+export function createInstallChartTab(chart: HelmChart, tabParams: Partial<DockTabData> = {}): DockTabData {
   const { name, repo, version } = chart;
 
   const tab = dockStore.createTab({
@@ -90,8 +98,4 @@ export function createInstallChartTab(chart: HelmChart, tabParams: Partial<IDock
   });
 
   return tab;
-}
-
-export function isInstallChartTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.INSTALL_CHART;
 }

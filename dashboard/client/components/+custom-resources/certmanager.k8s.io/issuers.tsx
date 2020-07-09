@@ -1,4 +1,4 @@
-import "./issuers.scss"
+import "./issuers.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -21,7 +21,7 @@ enum sortBy {
 
 @observer
 export class ClusterIssuers extends React.Component<KubeObjectListLayoutProps> {
-  render() {
+  render(): JSX.Element {
     const store = apiManager.getStore(clusterIssuersApi);
     return (
       <Issuers
@@ -30,16 +30,16 @@ export class ClusterIssuers extends React.Component<KubeObjectListLayoutProps> {
         store={store}
         renderHeaderTitle={<Trans>Cluster Issuers</Trans>}
       />
-    )
+    );
   }
 }
 
 @observer
 export class Issuers extends React.Component<KubeObjectListLayoutProps> {
-  render() {
+  render(): JSX.Element {
     const { store = apiManager.getStore(issuersApi), ...layoutProps } = this.props;
     if (!store) {
-      return <Spinner center/>
+      return <Spinner center/>;
     }
     return (
       <KubeObjectListLayout
@@ -48,15 +48,15 @@ export class Issuers extends React.Component<KubeObjectListLayoutProps> {
         {...layoutProps}
         className="Issuers"
         sortingCallbacks={{
-          [sortBy.name]: (item: Issuer) => item.getName(),
-          [sortBy.namespace]: (item: Issuer) => item.getNs(),
-          [sortBy.type]: (item: Issuer) => item.getType(),
-          [sortBy.labels]: (item: Issuer) => item.getLabels(),
-          [sortBy.age]: (item: Issuer) => item.metadata.creationTimestamp,
+          [sortBy.name]: (item: Issuer): string => item.getName(),
+          [sortBy.namespace]: (item: Issuer): string => item.getNs(),
+          [sortBy.type]: (item: Issuer): string => item.getType(),
+          [sortBy.labels]: (item: Issuer): string[] => item.getLabels(),
+          [sortBy.age]: (item: Issuer): string=> item.metadata.creationTimestamp,
         }}
         searchFilters={[
-          (item: Issuer) => item.getSearchFields(),
-          (item: Issuer) => item.getType(),
+          (item: Issuer): string[] => item.getSearchFields(),
+          (item: Issuer): string => item.getType(),
         ]}
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
@@ -66,7 +66,7 @@ export class Issuers extends React.Component<KubeObjectListLayoutProps> {
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Status</Trans>, className: "status" },
         ]}
-        renderTableContents={(issuer: Issuer) => [
+        renderTableContents={(issuer: Issuer): (string | JSX.Element[] | number)[] => [
           issuer.getName(),
           issuer.getNs(),
           issuer.getLabels().map(label => <Badge key={label} label={label} title={label}/>),
@@ -80,24 +80,24 @@ export class Issuers extends React.Component<KubeObjectListLayoutProps> {
                 tooltip={tooltip}
                 className={cssNames({ [type.toLowerCase()]: isReady })}
               />
-            )
+            );
           })
         ]}
-        renderItemMenu={(item: Issuer) => {
-          return <IssuerMenu object={item}/>
+        renderItemMenu={(item: Issuer): JSX.Element => {
+          return <IssuerMenu object={item}/>;
         }}
       />
     );
   }
 }
 
-export function IssuerMenu(props: KubeObjectMenuProps<Issuer>) {
+export function IssuerMenu(props: KubeObjectMenuProps<Issuer>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews([issuersApi, clusterIssuersApi], {
   List: Issuers,
   Menu: IssuerMenu,
-})
+});

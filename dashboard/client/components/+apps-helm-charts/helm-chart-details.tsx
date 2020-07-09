@@ -16,6 +16,9 @@ import { createInstallChartTab } from "../dock/install-chart.store";
 import { Badge } from "../badge";
 import { _i18n } from "../../i18n";
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const placeholder = require("./helm-placeholder.svg");
+
 interface Props {
   chart: HelmChart;
   hideDetails(): void;
@@ -31,7 +34,9 @@ export class HelmChartDetails extends Component<Props> {
 
   @disposeOnUnmount
   chartSelector = autorun(async () => {
-    if (!this.props.chart) return;
+    if (!this.props.chart) {
+      return;
+    }
     this.chartVersions = null;
     this.selectedChart = null;
     this.description = null;
@@ -43,42 +48,43 @@ export class HelmChartDetails extends Component<Props> {
     });
   });
 
-  loadChartData(version?: string) {
+  loadChartData(version?: string): void {
     const { chart: { name, repo } } = this.props;
-    if (this.chartPromise) this.chartPromise.cancel();
+    if (this.chartPromise) {
+      this.chartPromise.cancel();
+    }
     this.chartPromise = helmChartsApi.get(repo, name, version);
   }
 
   @autobind()
-  onVersionChange(opt: SelectOption) {
+  onVersionChange(opt: SelectOption): void {
     const version = opt.value;
     this.selectedChart = this.chartVersions.find(chart => chart.version === version);
     this.description = null;
     this.loadChartData(version);
     this.chartPromise.then(data => {
-      this.description = data.readme
+      this.description = data.readme;
     });
   }
 
   @autobind()
-  install() {
+  install(): void {
     createInstallChartTab(this.selectedChart);
-    this.props.hideDetails()
+    this.props.hideDetails();
   }
 
-  renderIntroduction() {
+  renderIntroduction(): JSX.Element {
     const { selectedChart, chartVersions, onVersionChange } = this;
-    const placeholder = require("./helm-placeholder.svg");
     return (
       <div className="introduction flex align-flex-start">
         <img
           className="intro-logo"
-          src={selectedChart.getIcon() || placeholder}
-          onError={(event) => event.currentTarget.src = placeholder}
+          src={selectedChart.icon || placeholder}
+          onError={(event: React.SyntheticEvent<HTMLImageElement, Event>): void => event.currentTarget.src = placeholder}
         />
         <div className="intro-contents box grow">
           <div className="description flex align-center justify-space-between">
-            {selectedChart.getDescription()}
+            {selectedChart.description}
             <Button primary label={_i18n._(t`Install`)} onClick={this.install}/>
           </div>
           <DrawerItem name={_i18n._(t`Version`)} className="version" onClick={stopPropagation}>
@@ -86,16 +92,16 @@ export class HelmChartDetails extends Component<Props> {
               themeName="outlined"
               menuPortalTarget={null}
               options={chartVersions.map(chart => chart.version)}
-              value={selectedChart.getVersion()}
+              value={selectedChart.version}
               onChange={onVersionChange}
             />
           </DrawerItem>
           <DrawerItem name={_i18n._(t`Home`)}>
-            <a href={selectedChart.getHome()} target="_blank">{selectedChart.getHome()}</a>
+            <a href={selectedChart.home} target="_blank" rel="noreferrer">{selectedChart.home}</a>
           </DrawerItem>
           <DrawerItem name={_i18n._(t`Maintainers`)} className="maintainers">
             {selectedChart.getMaintainers().map(({ name, email, url }) =>
-              <a key={name} href={url ? url : `mailto:${email}`} target="_blank">{name}</a>
+              <a key={name} href={url ? url : `mailto:${email}`} target="_blank" rel="noreferrer">{name}</a>
             )}
           </DrawerItem>
           {selectedChart.getKeywords().length > 0 && (
@@ -108,8 +114,10 @@ export class HelmChartDetails extends Component<Props> {
     );
   }
 
-  renderContent() {
-    if (this.selectedChart === null || this.description === null) return <Spinner center/>;
+  renderContent(): JSX.Element {
+    if (this.selectedChart === null || this.description === null) {
+      return <Spinner center/>;
+    }
     return (
       <div className="box grow">
         {this.renderIntroduction()}
@@ -120,7 +128,7 @@ export class HelmChartDetails extends Component<Props> {
     );
   }
 
-  render() {
+  render(): JSX.Element {
     const { chart, hideDetails } = this.props;
     const title = chart ? <Trans>Chart: {chart.getFullName()}</Trans> : "";
     return (

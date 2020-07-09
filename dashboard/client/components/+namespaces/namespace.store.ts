@@ -1,8 +1,8 @@
 import { action, observable, reaction } from "mobx";
-import { autobind, createStorage } from "../../utils";
+import { autobind, StorageHelper } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints";
-import { IQueryParams, navigation, setQueryParams } from "../../navigation";
+import { QueryParams, navigation, setQueryParams } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { isAllowedResource } from "../..//api/rbac";
 
@@ -11,9 +11,9 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
   contextNs = observable.array<string>();
 
-  protected storage = createStorage<string[]>("context_ns", this.contextNs);
+  protected storage = new StorageHelper<string[]>("context_ns", this.contextNs);
 
-  get initNamespaces() {
+  get initNamespaces(): string[] {
     const fromUrl = navigation.searchParams.getAsArray("namespaces");
     return fromUrl.length ? fromUrl : this.storage.get();
   }
@@ -33,36 +33,34 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     });
   }
 
-  getContextParams(): Partial<IQueryParams> {
+  getContextParams(): Partial<QueryParams> {
     return {
       namespaces: this.contextNs
-    }
+    };
   }
 
-  protected updateUrl(namespaces: string[]) {
-    setQueryParams({ namespaces }, { replace: true })
+  protected updateUrl(namespaces: string[]): void {
+    setQueryParams({ namespaces }, { replace: true });
   }
 
-  protected loadItems(namespaces?: string[]) {
+  protected loadItems(namespaces?: string[]): Promise<Namespace[]> {
     if (!isAllowedResource("namespaces")) {
       if (namespaces) {
-        return Promise.all(namespaces.map(name => this.getDummyNamespace(name)))
-      }
-      else {
+        return Promise.all(namespaces.map(name => this.getDummyNamespace(name)));
+      } else {
         return new Promise<Namespace[]>(() => {
-          return []
-        })
+          return [];
+        });
       }
     }
     if (namespaces) {
-      return Promise.all(namespaces.map(name => this.api.get({ name })))
-    }
-    else {
+      return Promise.all(namespaces.map(name => this.api.get({ name })));
+    } else {
       return super.loadItems();
     }
   }
 
-  protected getDummyNamespace(name: string) {
+  protected getDummyNamespace(name: string): Namespace {
     return new Namespace({
       kind: "Namespace",
       apiVersion: "v1",
@@ -72,25 +70,28 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
         resourceVersion: "",
         selfLink: `/api/v1/namespaces/${name}`
       }
-    })
+    });
   }
 
-  setContext(namespaces: string[]) {
+  setContext(namespaces: string[]): void {
     this.contextNs.replace(namespaces);
   }
 
-  hasContext(namespace: string | string[]) {
+  hasContext(namespace: string | string[]): boolean {
     const context = Array.isArray(namespace) ? namespace : [namespace];
     return context.every(namespace => this.contextNs.includes(namespace));
   }
 
-  toggleContext(namespace: string) {
-    if (this.hasContext(namespace)) this.contextNs.remove(namespace);
-    else this.contextNs.push(namespace);
+  toggleContext(namespace: string): void {
+    if (this.hasContext(namespace)) {
+      this.contextNs.remove(namespace);
+    } else {
+      this.contextNs.push(namespace);
+    }
   }
 
   @action
-  reset() {
+  reset(): void {
     super.reset();
     this.contextNs.clear();
   }

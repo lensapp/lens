@@ -1,11 +1,51 @@
+/* eslint-disable @typescript-eslint/camelcase */
+
 import * as path from "path";
 import * as webpack from "webpack";
 import * as HtmlWebpackPlugin from "html-webpack-plugin";
 import * as MiniCssExtractPlugin from "mini-css-extract-plugin";
 import * as TerserWebpackPlugin from "terser-webpack-plugin";
-import { BUILD_DIR, CLIENT_DIR, clientVars, config } from "./server/config"
+import { BUILD_DIR, CLIENT_DIR, clientVars, config } from "./server/config";
 
-export default () => {
+export interface WebpackConfig {
+  entry: {
+    app: string;
+  };
+  output: {
+    path: string;
+    publicPath: string;
+    filename: string;
+    chunkFilename: string;
+  };
+  resolve: {
+    extensions: string[];
+  };
+  mode: "production" | "development";
+  devtool: "" | "cheap-module-eval-source-map";
+  optimization: {
+    minimize: boolean;
+    minimizer: TerserWebpackPlugin[]; 
+    splitChunks: { 
+      cacheGroups: { 
+        commons: { 
+          test: RegExp; 
+          name: string; 
+          chunks: string;
+        };
+      };
+    };
+  };
+  module: {
+    rules: {
+      test: RegExp;
+      exclude?: RegExp;
+      use: string | (string | { loader: string; options: Record<string, any> })[];
+    }[];
+  };
+  plugins: (MiniCssExtractPlugin | webpack.HotModuleReplacementPlugin | webpack.DefinePlugin | webpack.IgnorePlugin | HtmlWebpackPlugin)[];
+}
+
+export default function webpackConfig(): WebpackConfig {
   const { IS_PRODUCTION } = config;
   const srcDir = path.resolve(process.cwd(), CLIENT_DIR);
   const buildDir = path.resolve(process.cwd(), BUILD_DIR, CLIENT_DIR);
@@ -31,8 +71,8 @@ export default () => {
 
     optimization: {
       minimize: IS_PRODUCTION,
-      minimizer: [
-        ...(!IS_PRODUCTION ? [] : [
+      minimizer: (
+        IS_PRODUCTION ? [
           new TerserWebpackPlugin({
             cache: true,
             parallel: true,
@@ -49,8 +89,8 @@ export default () => {
               ].join("\n")
             }
           })
-        ]),
-      ],
+        ]: []
+      ),
       splitChunks: {
         cacheGroups: {
           commons: {
@@ -140,5 +180,5 @@ export default () => {
         filename: "[name].css",
       }),
     ],
-  }
+  };
 };

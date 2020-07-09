@@ -2,7 +2,7 @@ import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-export interface IRoleBindingSubject {
+export interface RoleBindingSubject {
   kind: string;
   name: string;
   namespace?: string;
@@ -13,19 +13,19 @@ export interface IRoleBindingSubject {
 export class RoleBinding extends KubeObject {
   static kind = "RoleBinding"
 
-  subjects?: IRoleBindingSubject[]
+  subjects?: RoleBindingSubject[]
   roleRef: {
     kind: string;
     name: string;
     apiGroup?: string;
   }
 
-  getSubjects() {
+  getSubjects(): RoleBindingSubject[] {
     return this.subjects || [];
   }
 
   getSubjectNames(): string {
-    return this.getSubjects().map(subject => subject.name).join(", ")
+    return this.getSubjects().map(subject => subject.name).join(", ");
   }
 }
 

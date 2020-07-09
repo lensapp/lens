@@ -1,31 +1,35 @@
 import React, { useContext } from "react";
 import { t, Trans } from "@lingui/macro";
 import { observer } from "mobx-react";
-import { IPodMetrics } from "../../api/endpoints";
+import { PodMetricsData } from "../../api/endpoints";
 import { BarChart, cpuOptions, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
-import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
+import { ResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { _i18n } from "../../i18n";
 import { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { themeStore } from "../../theme.store";
 
 export const podMetricTabs = [
-  <Trans>CPU</Trans>,
-  <Trans>Memory</Trans>,
-  <Trans>Network</Trans>,
-  <Trans>Filesystem</Trans>,
+  <Trans key="cpu">CPU</Trans>,
+  <Trans key="memory">Memory</Trans>,
+  <Trans key="netowork">Network</Trans>,
+  <Trans key="filesystem">Filesystem</Trans>,
 ];
 
-type IContext = IResourceMetricsValue<WorkloadKubeObject, { metrics: IPodMetrics }>;
+type IContext = ResourceMetricsValue<WorkloadKubeObject, { metrics: PodMetricsData }>;
 
 export const PodCharts = observer(() => {
   const { params: { metrics }, tabId, object } = useContext<IContext>(ResourceMetricsContext);
   const { chartCapacityColor } = themeStore.activeTheme.colors;
   const id = object.getId();
 
-  if (!metrics) return null;
-  if (isMetricsEmpty(metrics)) return <NoMetrics/>;
+  if (!metrics) {
+    return null;
+  }
+  if (isMetricsEmpty(metrics)) {
+    return <NoMetrics/>;
+  }
 
   const options = tabId == 0 ? cpuOptions : memoryOptions;
   const values = Object.values(metrics)
@@ -128,4 +132,4 @@ export const PodCharts = observer(() => {
       data={{ datasets: datasets[tabId] }}
     />
   );
-})
+});

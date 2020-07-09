@@ -18,9 +18,11 @@ interface Props extends KubeObjectDetailsProps<StorageClass> {
 
 @observer
 export class StorageClassDetails extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     const { object: storageClass } = this.props;
-    if (!storageClass) return null;
+    if (!storageClass) {
+      return null;
+    }
     const { provisioner, parameters, mountOptions } = storageClass;
     return (
       <div className="StorageClassDetails">
@@ -64,4 +66,4 @@ export class StorageClassDetails extends React.Component<Props> {
 
 apiManager.registerViews(storageClassApi, {
   Details: StorageClassDetails
-})
+});

@@ -2,7 +2,7 @@
 
 import moment from "moment";
 
-export function formatDuration(timeValue: number, compact: boolean) {
+export function formatDuration(timeValue: number, compact: boolean): string {
   let result = "";
   const duration = moment.duration(timeValue);
   const suffixes = ["d", "h", "m"];
@@ -12,7 +12,9 @@ export function formatDuration(timeValue: number, compact: boolean) {
     duration.minutes(),
   ];
   durationValues.forEach((value, index) => {
-    if (value) result += value + suffixes[index] + " ";
+    if (value) {
+      result += value + suffixes[index] + " ";
+    }
   });
   if (compact) {
     result = result.split(" ")[0];

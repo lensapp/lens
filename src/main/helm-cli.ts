@@ -1,5 +1,5 @@
-import * as path from "path"
-import { LensBinary, LensBinaryOpts } from "./lens-binary"
+import * as path from "path";
+import { LensBinary, LensBinaryOpts } from "./lens-binary";
 
 export class HelmCli extends LensBinary {
 
@@ -9,36 +9,36 @@ export class HelmCli extends LensBinary {
       baseDir: baseDir,
       originalBinaryName: "helm",
       newBinaryName: "helm3"
-    }
-    super(opts)
+    };
+    super(opts);
   }
 
-  protected getTarName(): string|null {
-    return `${this.binaryName}-v${this.binaryVersion}-${this.platformName}-${this.arch}.tar.gz`
+  protected getTarName(): string {
+    return `${this.binaryName}-v${this.binaryVersion}-${this.platformName}-${this.arch}.tar.gz`;
   }
 
-  protected getUrl() {
-    return `https://get.helm.sh/helm-v${this.binaryVersion}-${this.platformName}-${this.arch}.tar.gz`
+  protected getUrl(): string {
+    return `https://get.helm.sh/helm-v${this.binaryVersion}-${this.platformName}-${this.arch}.tar.gz`;
   }
 
-  protected getBinaryPath() {
-    return path.join(this.dirname, this.binaryName)
+  protected getBinaryPath(): string {
+    return path.join(this.dirname, this.binaryName);
   }
 
-  protected getOriginalBinaryPath() {
-    return path.join(this.dirname, this.platformName+"-"+this.arch, this.originalBinaryName)
+  protected getOriginalBinaryPath(): string {
+    return path.join(this.dirname, this.platformName+"-"+this.arch, this.originalBinaryName);
   }
 }
 
-const helmVersion = require("../../package.json").config.bundledHelmVersion
-const isDevelopment = process.env.NODE_ENV !== "production"
-let baseDir: string = null
+const helmVersion = require("../../package.json").config.bundledHelmVersion;
+const isDevelopment = process.env.NODE_ENV !== "production";
+let baseDir: string = null;
 
 if(isDevelopment) {
-  baseDir = path.join(process.cwd(), "binaries", "client")
+  baseDir = path.join(process.cwd(), "binaries", "client");
 } else {
-  baseDir = path.join(process.resourcesPath)
+  baseDir = path.join(process.resourcesPath);
 }
 
-export const helmCli = new HelmCli(baseDir, helmVersion)
+export const helmCli = new HelmCli(baseDir, helmVersion);
 

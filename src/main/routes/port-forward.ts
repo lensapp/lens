@@ -1,16 +1,16 @@
-import { LensApiRequest } from "../router"
-import { LensApi } from "../lens-api"
-import { spawn, ChildProcessWithoutNullStreams } from "child_process"
-import { bundledKubectl } from "../kubectl"
-import { getFreePort } from "../port"
-import { shell } from "electron"
-import * as tcpPortUsed from "tcp-port-used"
-import logger from "../logger"
+import { LensApiRequest } from "../router";
+import { LensApi } from "../lens-api";
+import { spawn, ChildProcessWithoutNullStreams } from "child_process";
+import { bundledKubectl } from "../kubectl";
+import { getFreePort } from "../port";
+import { shell } from "electron";
+import * as tcpPortUsed from "tcp-port-used";
+import logger from "../logger";
 
 class PortForward {
   public static portForwards: PortForward[] = []
 
-  static getPortforward(forward: {clusterId: string; kind: string; name: string; namespace: string; port: string}) {
+  static getPortforward(forward: { clusterId: string; kind: string; name: string; namespace: string; port: string }): PortForward {
     return PortForward.portForwards.find((pf) => {
       return (
         pf.clusterId == forward.clusterId &&
@@ -18,8 +18,8 @@ class PortForward {
         pf.name == forward.name &&
         pf.namespace == forward.namespace &&
         pf.port == forward.port
-      )
-    })
+      );
+    });
   }
 
   public clusterId: string
@@ -32,55 +32,55 @@ class PortForward {
   public localPort: number
 
   constructor(obj: any) {
-    Object.assign(this, obj)
+    Object.assign(this, obj);
   }
 
-  public async start() {
-    this.localPort = await getFreePort()
-    const kubectlBin = await bundledKubectl.kubectlPath()
+  public async start(): Promise<boolean> {
+    this.localPort = await getFreePort();
+    const kubectlBin = await bundledKubectl.kubectlPath();
     const args = [
       "--kubeconfig", this.kubeConfig,
       "port-forward",
       "-n", this.namespace,
       `service/${this.name}`,
       `${this.localPort}:${this.port}`
-    ]
+    ];
 
     this.process = spawn(kubectlBin, args, {
       env: process.env
-    })
-    PortForward.portForwards.push(this)
+    });
+    PortForward.portForwards.push(this);
     this.process.on("exit", () => {
-      const index = PortForward.portForwards.indexOf(this)
+      const index = PortForward.portForwards.indexOf(this);
       if (index > -1) {
-        PortForward.portForwards.splice(index, 1)
+        PortForward.portForwards.splice(index, 1);
       }
-    })
+    });
     try {
-      await tcpPortUsed.waitUntilUsed(this.localPort, 500, 3000)
-      return true
+      await tcpPortUsed.waitUntilUsed(this.localPort, 500, 3000);
+      return true;
     } catch (error) {
-      this.process.kill()
-      return false
+      this.process.kill();
+      return false;
     }
   }
 
-  public open() {
-    shell.openExternal(`http://localhost:${this.localPort}`)
+  public open(): Promise<void> {
+    return shell.openExternal(`http://localhost:${this.localPort}`);
   }
 }
 
 class PortForwardRoute extends LensApi {
 
-  public async routeServicePortForward(request: LensApiRequest) {
-    const { params, response, cluster} = request
+  public async routeServicePortForward(request: LensApiRequest): Promise<void> {
+    const { params, response, cluster} = request;
 
     let portForward = PortForward.getPortforward({
       clusterId: cluster.id, kind: "service", name: params.service,
       namespace: params.namespace, port: params.port
-    })
+    });
     if (!portForward) {
-      logger.info(`Creating a new port-forward ${params.namespace}/${params.service}:${params.port}`)
+      logger.info(`Creating a new port-forward ${params.namespace}/${params.service}:${params.port}`);
       portForward = new PortForward({
         clusterId: cluster.id,
         kind: "service",
@@ -88,20 +88,20 @@ class PortForwardRoute extends LensApi {
         name: params.service,
         port: params.port,
         kubeConfig: cluster.kubeconfigPath()
-      })
-      const started = await portForward.start()
+      });
+      const started = await portForward.start();
       if (!started) {
         this.respondJson(response, {
           message: "Failed to open port-forward"
-        }, 400)
-        return
+        }, 400);
+        return;
       }
     }
 
-    portForward.open()
+    portForward.open();
 
-    this.respondJson(response, {})
+    this.respondJson(response, {});
   }
 }
 
-export const portForwardRoute = new PortForwardRoute()
+export const portForwardRoute = new PortForwardRoute();

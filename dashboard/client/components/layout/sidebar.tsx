@@ -5,8 +5,7 @@ import { computed, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
 import { matchPath, NavLink } from "react-router-dom";
 import { Trans } from "@lingui/macro";
-import { configStore } from "../../config.store";
-import { createStorage, cssNames } from "../../utils";
+import { StorageHelper, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { workloadsRoute, workloadsURL } from "../+workloads/workloads.route";
 import { namespacesURL } from "../+namespaces/namespaces.route";
@@ -28,12 +27,12 @@ import { crdStore } from "../+custom-resources/crd.store";
 import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resources";
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { navigation } from "../../navigation";
-import { isAllowedResource } from "../../api/rbac"
+import { isAllowedResource } from "../../api/rbac";
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
-type SidebarContextValue = {
+interface SidebarContextValue {
   pinned: boolean;
-};
+}
 
 interface Props {
   className?: string;
@@ -43,11 +42,13 @@ interface Props {
 
 @observer
 export class Sidebar extends React.Component<Props> {
-  async componentDidMount() {
-    if (!crdStore.isLoaded && isAllowedResource('customresourcedefinitions')) crdStore.loadAll()
+  async componentDidMount(): Promise<void> {
+    if (!crdStore.isLoaded && isAllowedResource('customresourcedefinitions')) {
+      return crdStore.loadAll();
+    }
   }
 
-  renderCustomResources() {
+  renderCustomResources(): JSX.Element[] {
     return Object.entries(crdStore.groups).map(([group, crds]) => {
       const submenus = crds.map(crd => {
         return {
@@ -55,8 +56,8 @@ export class Sidebar extends React.Component<Props> {
           component: CrdList,
           url: crd.getResourceUrl(),
           path: crdResourcesRoute.path,
-        }
-      })
+        };
+      });
       return (
         <SidebarNavItem
           key={group}
@@ -66,13 +67,12 @@ export class Sidebar extends React.Component<Props> {
           subMenus={submenus}
           text={group}
         />
-      )
-    })
+      );
+    });
   }
 
-  render() {
+  render(): JSX.Element {
     const { toggle, isPinned, className } = this.props;
-    const { allowedResources } = configStore;
     const query = namespaceStore.getContextParams();
     return (
       <SidebarContext.Provider value={{ pinned: isPinned }}>
@@ -185,7 +185,7 @@ export class Sidebar extends React.Component<Props> {
           </div>
         </div>
       </SidebarContext.Provider>
-    )
+    );
   }
 }
 
@@ -200,7 +200,7 @@ interface SidebarNavItemProps {
   subMenus?: TabRoute[];
 }
 
-const navItemStorage = createStorage<[string, boolean][]>("sidebar_menu_item", []);
+const navItemStorage = new StorageHelper<[string, boolean][]>("sidebar_menu_item", []);
 const navItemState = observable.map<string, boolean>(navItemStorage.get());
 reaction(() => [...navItemState], value => navItemStorage.set(value));
 
@@ -209,15 +209,15 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
   static contextType = SidebarContext;
   public context: SidebarContextValue;
 
-  @computed get isExpanded() {
+  @computed get isExpanded(): boolean {
     return navItemState.get(this.props.id);
   }
 
-  toggleSubMenu = () => {
+  toggleSubMenu = (): void => {
     navItemState.set(this.props.id, !this.isExpanded);
   }
 
-  isActive = () => {
+  isActive = (): boolean => {
     const { routePath, url } = this.props;
     const { pathname } = navigation.location;
     return !!matchPath(pathname, {
@@ -225,7 +225,7 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
     });
   }
 
-  render() {
+  render(): JSX.Element {
     const { id, isHidden, subMenus = [], icon, text, url, children, className } = this.props;
     if (isHidden) {
       return null;
@@ -256,13 +256,13 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
             })}
           </ul>
         </div>
-      )
+      );
     }
     return (
       <NavLink className={cssNames("SidebarNavItem", className)} to={url} isActive={this.isActive}>
         {icon}
         <span className="link-text">{text}</span>
       </NavLink>
-    )
+    );
   }
 }

@@ -4,12 +4,12 @@ import * as React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { t, Trans } from "@lingui/macro";
-import { cssNames, interval } from "../../utils";
+import { cssNames, IntervalManager } from "../../utils";
 import { MainLayout } from "../layout/main-layout";
 import { nodesStore } from "./nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object";
-import { INodesRouteParams } from "./nodes.route";
+import { NodesRouteParams } from "./nodes.route";
 import { Node, nodesApi } from "../../api/endpoints/nodes.api";
 import { NodeMenu } from "./node-menu";
 import { LineProgress } from "../line-progress";
@@ -33,24 +33,26 @@ enum sortBy {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<INodesRouteParams> {
+interface Props extends RouteComponentProps<NodesRouteParams> {
 }
 
 @observer
 export class Nodes extends React.Component<Props> {
-  private metricsWatcher = interval(30, () => nodesStore.loadUsageMetrics());
+  private metricsWatcher = new IntervalManager(30, () => nodesStore.loadUsageMetrics());
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.metricsWatcher.start(true);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.metricsWatcher.stop();
   }
 
-  renderCpuUsage(node: Node) {
+  renderCpuUsage(node: Node): JSX.Element {
     const metrics = nodesStore.getLastMetricValues(node, ["cpuUsage", "cpuCapacity"]);
-    if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
+    if (!metrics || !metrics[1]) {
+      return <LineProgress value={0}/>;
+    }
     const usage = metrics[0];
     const cores = metrics[1];
     return (
@@ -59,12 +61,14 @@ export class Nodes extends React.Component<Props> {
         value={usage}
         tooltip={_i18n._(t`CPU:`) + ` ${Math.ceil(usage * 100) / cores}\%, ` + _i18n._(t`cores:`) + ` ${cores}`}
       />
-    )
+    );
   }
 
-  renderMemoryUsage(node: Node) {
+  renderMemoryUsage(node: Node): JSX.Element {
     const metrics = nodesStore.getLastMetricValues(node, ["memoryUsage", "memoryCapacity"]);
-    if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
+    if (!metrics || !metrics[1]) {
+      return <LineProgress value={0}/>;
+    }
     const usage = metrics[0];
     const capacity = metrics[1];
     return (
@@ -73,12 +77,14 @@ export class Nodes extends React.Component<Props> {
         value={usage}
         tooltip={_i18n._(t`Memory:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`}
       />
-    )
+    );
   }
 
-  renderDiskUsage(node: Node): any {
+  renderDiskUsage(node: Node): JSX.Element {
     const metrics = nodesStore.getLastMetricValues(node, ["fsUsage", "fsSize"]);
-    if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
+    if (!metrics || !metrics[1]) {
+      return <LineProgress value={0}/>;
+    }
     const usage = metrics[0];
     const capacity = metrics[1];
     return (
@@ -87,17 +93,17 @@ export class Nodes extends React.Component<Props> {
         value={usage}
         tooltip={_i18n._(t`Disk:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`}
       />
-    )
+    );
   }
 
-  renderConditions(node: Node) {
+  renderConditions(node: Node): JSX.Element[] {
     if (!node.status.conditions) {
-      return null
+      return null;
     }
     const conditions = node.getActiveConditions();
     return conditions.map(condition => {
-      const { type } = condition
-      const tooltipId = `node-${node.getName()}-condition-${type}`
+      const { type } = condition;
+      const tooltipId = `node-${node.getName()}-condition-${type}`;
       return (
         <div key={type} id={tooltipId} className={cssNames("condition", kebabCase(type))}>
           {type}
@@ -111,11 +117,11 @@ export class Nodes extends React.Component<Props> {
               )}
             </TooltipContent>
           </Tooltip>
-        </div>)
-    })
+        </div>);
+    });
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <MainLayout>
         <KubeObjectListLayout
@@ -125,21 +131,21 @@ export class Nodes extends React.Component<Props> {
           dependentStores={[podsStore]}
           isSelectable={false}
           sortingCallbacks={{
-            [sortBy.name]: (node: Node) => node.getName(),
-            [sortBy.cpu]: (node: Node) => nodesStore.getLastMetricValues(node, ["cpuUsage"]),
-            [sortBy.memory]: (node: Node) => nodesStore.getLastMetricValues(node, ["memoryUsage"]),
-            [sortBy.disk]: (node: Node) => nodesStore.getLastMetricValues(node, ["fsUsage"]),
-            [sortBy.conditions]: (node: Node) => node.getNodeConditionText(),
-            [sortBy.taints]: (node: Node) => node.getTaints().length,
-            [sortBy.roles]: (node: Node) => node.getRoleLabels(),
-            [sortBy.age]: (node: Node) => node.metadata.creationTimestamp,
-            [sortBy.version]: (node: Node) => node.getKubeletVersion(),
+            [sortBy.name]: (node: Node): string => node.getName(),
+            [sortBy.cpu]: (node: Node): number[] => nodesStore.getLastMetricValues(node, ["cpuUsage"]),
+            [sortBy.memory]: (node: Node): number[] => nodesStore.getLastMetricValues(node, ["memoryUsage"]),
+            [sortBy.disk]: (node: Node): number[] => nodesStore.getLastMetricValues(node, ["fsUsage"]),
+            [sortBy.conditions]: (node: Node): string => node.getNodeConditionText(),
+            [sortBy.taints]: (node: Node): number => node.getTaints().length,
+            [sortBy.roles]: (node: Node): string => node.getRoleLabels(),
+            [sortBy.age]: (node: Node): string => node.metadata.creationTimestamp,
+            [sortBy.version]: (node: Node): string => node.getKubeletVersion(),
           }}
           searchFilters={[
-            (node: Node) => node.getSearchFields(),
-            (node: Node) => node.getRoleLabels(),
-            (node: Node) => node.getKubeletVersion(),
-            (node: Node) => node.getNodeConditionText(),
+            (node: Node): string[] => node.getSearchFields(),
+            (node: Node): string => node.getRoleLabels(),
+            (node: Node): string => node.getKubeletVersion(),
+            (node: Node): string => node.getNodeConditionText(),
           ]}
           renderHeaderTitle={<Trans>Nodes</Trans>}
           renderTableHeader={[
@@ -153,7 +159,7 @@ export class Nodes extends React.Component<Props> {
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
             { title: <Trans>Conditions</Trans>, className: "conditions", sortBy: sortBy.conditions },
           ]}
-          renderTableContents={(node: Node) => {
+          renderTableContents={(node: Node): (string | number | JSX.Element | JSX.Element[])[] => {
             const tooltipId = `node-taints-${node.getId()}`;
             return [
               node.getName(),
@@ -170,14 +176,14 @@ export class Nodes extends React.Component<Props> {
               node.status.nodeInfo.kubeletVersion,
               node.getAge(),
               this.renderConditions(node),
-            ]
+            ];
           }}
-          renderItemMenu={(item: Node) => {
-            return <NodeMenu object={item}/>
+          renderItemMenu={(item: Node): JSX.Element => {
+            return <NodeMenu object={item}/>;
           }}
         />
       </MainLayout>
-    )
+    );
   }
 }
 

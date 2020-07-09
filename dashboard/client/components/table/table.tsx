@@ -9,14 +9,14 @@ import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
 import { navigation, setQueryParams } from "../../navigation";
-import orderBy from "lodash/orderBy"
+import orderBy from "lodash/orderBy";
 import { ItemObject } from "../../item.store";
 
 // todo: refactor + decouple search from location
 
 export type SortBy = string;
 export type OrderBy = "asc" | "desc" | string;
-export type SortParams = { sortBy: SortBy; orderBy: OrderBy }
+export interface SortParams { sortBy: SortBy; orderBy: OrderBy }
 export type SortingCallback<D = any> = (data: D) => string | number | (string | number)[];
 
 export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
@@ -57,14 +57,14 @@ export class Table extends React.Component<TableProps> {
 
   @computed get sortParams(): Partial<SortParams> {
     if (this.props.sortSyncWithUrl) {
-      const sortBy = navigation.searchParams.get("sortBy")
-      const orderBy = navigation.searchParams.get("orderBy")
+      const sortBy = navigation.searchParams.get("sortBy");
+      const orderBy = navigation.searchParams.get("orderBy");
       return { sortBy, orderBy };
     }
     return this.sortParamsLocal || {};
   }
 
-  renderHead() {
+  renderHead(): JSX.Element {
     const { sortable, children } = this.props;
     const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
     const headElem: React.ReactElement<TableHeadProps> = content.find(elem => elem.type === TableHead);
@@ -83,10 +83,10 @@ export class Table extends React.Component<TableProps> {
             );
             return React.cloneElement(elem, {
               title: title,
-              _sort: this.sort,
-              _sorting: this.sortParams,
-              _nowrap: headElem.props.nowrap,
-            })
+              sort: this.sort,
+              sorting: this.sortParams,
+              nowrap: headElem.props.nowrap,
+            });
           })
         });
       }
@@ -94,7 +94,7 @@ export class Table extends React.Component<TableProps> {
     }
   }
 
-  getSorted(items: any[]) {
+  getSorted(items: any[]): any[] {
     const { sortParams } = this;
     const sortingCallback = this.props.sortable[sortParams.sortBy] || noop;
     return orderBy(
@@ -105,21 +105,20 @@ export class Table extends React.Component<TableProps> {
   }
 
   @autobind()
-  protected onSort(params: SortParams) {
+  protected onSort(params: SortParams): void {
     const { sortSyncWithUrl, onSort } = this.props;
     if (sortSyncWithUrl) {
-      setQueryParams(params)
-    }
-    else {
+      setQueryParams(params);
+    } else {
       this.sortParamsLocal = params;
     }
     if (onSort) {
-      onSort(params)
+      onSort(params);
     }
   }
 
   @autobind()
-  sort(colName: SortBy) {
+  sort(colName: SortBy): void {
     const { sortBy, orderBy } = this.sortParams;
     const sameColumn = sortBy == colName;
     const newSortBy: SortBy = colName;
@@ -130,7 +129,7 @@ export class Table extends React.Component<TableProps> {
     });
   }
 
-  renderRows() {
+  renderRows(): React.ReactNode {
     const { sortable, noItems, children, virtual, customRowHeights, rowLineHeight, rowPadding, items, getTableRow, selectedItemId, className } = this.props;
     const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
     let rows: React.ReactElement<TableRowProps>[] = content.filter(elem => elem.type === TableRow);
@@ -139,8 +138,8 @@ export class Table extends React.Component<TableProps> {
       sortedItems = this.getSorted(sortedItems);
       if (rows.length) {
         rows = sortedItems.map(item => rows.find(row => {
-          return item == row.props.sortItem
-        }))
+          return item == row.props.sortItem;
+        }));
       }
     }
     if (!rows.length && !items.length && noItems) {
@@ -168,7 +167,7 @@ export class Table extends React.Component<TableProps> {
     return rows;
   }
 
-  render() {
+  render(): JSX.Element {
     const { selectable, scrollable, sortable, autoSize, virtual } = this.props;
     let { className } = this.props;
     className = cssNames("Table flex column", className, {
@@ -179,6 +178,6 @@ export class Table extends React.Component<TableProps> {
         {this.renderHead()}
         {this.renderRows()}
       </div>
-    )
+    );
   }
 }

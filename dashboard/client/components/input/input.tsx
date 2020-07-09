@@ -4,10 +4,10 @@ import React, { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } fro
 import { autobind, cssNames, debouncePromise } from "../../utils";
 import { Icon } from "../icon";
 import { conditionalValidators, Validator } from "./input.validators";
-import isString from "lodash/isString"
-import isFunction from "lodash/isFunction"
-import isBoolean from "lodash/isBoolean"
-import uniqueId from "lodash/uniqueId"
+import isString from "lodash/isString";
+import isFunction from "lodash/isFunction";
+import isBoolean from "lodash/isBoolean";
+import uniqueId from "lodash/uniqueId";
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
@@ -41,7 +41,7 @@ const defaultProps: Partial<InputProps> = {
   maxRows: 10000,
   showValidationLine: true,
   validators: [],
-}
+};
 
 export class Input extends React.Component<InputProps, State> {
   static defaultProps = defaultProps as object;
@@ -55,7 +55,7 @@ export class Input extends React.Component<InputProps, State> {
     errors: [],
   }
 
-  setValue(value: string) {
+  setValue(value: string): void {
     if (value !== this.getValue()) {
       const nativeInputValueSetter = Object.getOwnPropertyDescriptor(this.input.constructor.prototype, "value").set;
       nativeInputValueSetter.call(this.input, value);
@@ -66,24 +66,28 @@ export class Input extends React.Component<InputProps, State> {
 
   getValue(): string {
     const { value, defaultValue = "" } = this.props;
-    if (value !== undefined) return value; // controlled input
-    if (this.input) return this.input.value; // uncontrolled input
+    if (value !== undefined) {
+      return value;
+    } // controlled input
+    if (this.input) {
+      return this.input.value;
+    } // uncontrolled input
     return defaultValue as string;
   }
 
-  focus() {
+  focus(): void {
     this.input.focus();
   }
 
-  blur() {
+  blur(): void {
     this.input.blur();
   }
 
-  select() {
-    this.input.select()
+  select(): void {
+    this.input.select();
   }
 
-  private autoFitHeight() {
+  private autoFitHeight(): void {
     const { multiLine, rows, maxRows } = this.props;
     if (!multiLine) {
       return;
@@ -97,7 +101,7 @@ export class Input extends React.Component<InputProps, State> {
 
   private validationId: string;
 
-  async validate(value = this.getValue()) {
+  async validate(value = this.getValue()): Promise<void> {
     let validationId = (this.validationId = ""); // reset every time for async validators
     const asyncValidators: Promise<any>[] = [];
     let errors: React.ReactNode[] = [];
@@ -111,8 +115,7 @@ export class Input extends React.Component<InputProps, State> {
       const result = validator.validate(value, this.props);
       if (isBoolean(result) && !result) {
         errors.push(this.getValidatorError(value, validator));
-      }
-      else if (result instanceof Promise) {
+      } else if (result instanceof Promise) {
         if (!validationId) {
           this.validationId = validationId = uniqueId("validation_id_");
         }
@@ -142,7 +145,7 @@ export class Input extends React.Component<InputProps, State> {
     this.input.setCustomValidity(errors.length ? errors[0].toString() : "");
   }
 
-  setValidation(errors: React.ReactNode[]) {
+  setValidation(errors: React.ReactNode[]): void {
     this.setState({
       validating: false,
       valid: !errors.length,
@@ -150,12 +153,14 @@ export class Input extends React.Component<InputProps, State> {
     });
   }
 
-  private getValidatorError(value: string, { message }: Validator) {
-    if (isFunction(message)) return message(value, this.props)
+  private getValidatorError(value: string, { message }: Validator): React.ReactNode {
+    if (isFunction(message)) {
+      return message(value, this.props);
+    }
     return message || "";
   }
 
-  private setupValidators() {
+  private setupValidators(): void {
     this.validators = conditionalValidators
     // add conditional validators if matches input props
       .filter(validator => validator.condition(this.props))
@@ -163,35 +168,45 @@ export class Input extends React.Component<InputProps, State> {
       .concat(this.props.validators)
       // debounce async validators
       .map(({ debounce, ...validator }) => {
-        if (debounce) validator.validate = debouncePromise(validator.validate, debounce);
+        if (debounce) {
+          validator.validate = debouncePromise(validator.validate, debounce);
+        }
         return validator;
       });
     // run validation
     this.validate();
   }
 
-  setDirty(dirty = true) {
-    if (this.state.dirty === dirty) return;
+  setDirty(dirty = true): void {
+    if (this.state.dirty === dirty) {
+      return;
+    }
     this.setState({ dirty });
   }
 
   @autobind()
-  onFocus(evt: React.FocusEvent<InputElement>) {
+  onFocus(evt: React.FocusEvent<InputElement>): void {
     const { onFocus } = this.props;
-    if (onFocus) onFocus(evt);
+    if (onFocus) {
+      onFocus(evt);
+    }
     this.setState({ focused: true });
   }
 
   @autobind()
-  onBlur(evt: React.FocusEvent<InputElement>) {
+  onBlur(evt: React.FocusEvent<InputElement>): void {
     const { onBlur } = this.props;
-    if (onBlur) onBlur(evt);
-    if (this.state.dirtyOnBlur) this.setState({ dirty: true, dirtyOnBlur: false });
+    if (onBlur) {
+      onBlur(evt);
+    }
+    if (this.state.dirtyOnBlur) {
+      this.setState({ dirty: true, dirtyOnBlur: false });
+    }
     this.setState({ focused: false });
   }
 
   @autobind()
-  onChange(evt: React.ChangeEvent<any>) {
+  onChange(evt: React.ChangeEvent<any>): void {
     if (this.props.onChange) {
       this.props.onChange(evt.currentTarget.value, evt);
     }
@@ -200,7 +215,9 @@ export class Input extends React.Component<InputProps, State> {
     this.autoFitHeight();
 
     // mark input as dirty for the first time only onBlur() to avoid immediate error-state show when start typing
-    if (!this.state.dirty) this.setState({ dirtyOnBlur: true });
+    if (!this.state.dirty) {
+      this.setState({ dirtyOnBlur: true });
+    }
 
     // re-render component when used as uncontrolled input
     // when used @defaultValue instead of @value changing real input.value doesn't call render()
@@ -209,21 +226,21 @@ export class Input extends React.Component<InputProps, State> {
     }
   }
 
-  get showMaxLenIndicator() {
+  get showMaxLenIndicator(): boolean {
     const { maxLength, multiLine } = this.props;
     return maxLength && multiLine;
   }
 
-  get isUncontrolled() {
+  get isUncontrolled(): boolean {
     return this.props.value === undefined;
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.setupValidators();
     this.autoFitHeight();
   }
 
-  componentDidUpdate(prevProps: InputProps) {
+  componentDidUpdate(prevProps: InputProps): void {
     const { defaultValue, value, dirty, validators } = this.props;
     if (prevProps.value !== value || defaultValue !== prevProps.defaultValue) {
       this.validate();
@@ -238,12 +255,12 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   @autobind()
-  bindRef(elem: InputElement) {
+  bindRef(elem: InputElement): void {
     this.input = elem;
   }
 
-  render() {
-    const { multiLine, showValidationLine, validators, theme, maxRows, children, ...inputProps } = this.props;
+  render(): JSX.Element {
+    const { multiLine, showValidationLine, validators: _validators, theme, maxRows: _maxRows, children: _children, ...inputProps } = this.props;
     let { className, iconLeft, iconRight } = this.props;
     const { maxLength, rows, disabled } = this.props;
     const { focused, dirty, valid, validating, errors } = this.state;
@@ -259,8 +276,12 @@ export class Input extends React.Component<InputProps, State> {
     });
 
     // normalize icons
-    if (isString(iconLeft)) iconLeft = <Icon material={iconLeft}/>
-    if (isString(iconRight)) iconRight = <Icon material={iconRight}/>
+    if (isString(iconLeft)) {
+      iconLeft = <Icon material={iconLeft}/>;
+    }
+    if (isString(iconRight)) {
+      iconRight = <Icon material={iconRight}/>;
+    }
 
     // prepare input props
     Object.assign(inputProps, {

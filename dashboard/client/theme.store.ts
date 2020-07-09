@@ -1,8 +1,8 @@
 import { action, autorun, computed, observable, reaction } from "mobx";
-import { autobind, createStorage } from "./utils";
+import { autobind, StorageHelper } from "./utils";
 import { Notifications } from "./components/notifications";
 
-interface ITheme {
+interface Theme {
   name: string;
   type: "dark" | "light";
   author?: string;
@@ -113,25 +113,25 @@ interface ITheme {
 export class ThemeStore {
   protected style = document.createElement("style");
 
-  readonly defaultTheme: ITheme = {
+  readonly defaultTheme: Theme = {
     name: "kontena-dark",
     type: "dark",
     colors: {} as any,
   };
 
   @observable activeThemeId = this.defaultTheme.name; // theme's filename without extension
-  @observable themes = observable.map<string, ITheme>([], { deep: false });
+  @observable themes = observable.map<string, Theme>([], { deep: false });
 
-  @computed get activeTheme() {
+  @computed get activeTheme(): Theme {
     return this.themes.get(this.activeThemeId) || this.defaultTheme;
   }
 
   constructor() {
-    const storage = createStorage("theme", this.activeThemeId);
+    const storage = new StorageHelper("theme", this.activeThemeId);
     this.activeThemeId = storage.get();
 
     // init
-    this.style.id = "lens-theme"
+    this.style.id = "lens-theme";
     document.head.prepend(this.style);
     this.setTheme(this.activeThemeId);
 
@@ -151,36 +151,38 @@ export class ThemeStore {
           this.setTheme(themeId);
         }
       });
-    })
+    });
   }
 
-  protected onChange = (theme: ITheme) => {
-    let cssText = "\n"
+  protected onChange = (theme: Theme): void => {
+    let cssText = "\n";
     Object.entries(theme.colors).forEach(([propName, color]) => {
-      cssText += `--${propName}: ${color} !important;\n`
+      cssText += `--${propName}: ${color} !important;\n`;
     });
     this.style.textContent = `:root {${cssText}} `;
   }
 
-  async load(themeId: string, { showErrorNotification = true } = {}): Promise<ITheme> {
+  async load(themeId: string, { showErrorNotification = true } = {}): Promise<Theme> {
     if (this.themes.has(themeId)) {
       return this.themes.get(themeId);
     }
     try {
-      const theme: ITheme = await import(
+      const theme: Theme = await import(
         /* webpackMode: "lazy", webpackChunkName: "theme/[request]" */
         `./themes/${themeId}.json`
       );
       this.themes.set(themeId, theme);
       return theme;
     } catch (err) {
-      if (showErrorNotification) Notifications.error(err.toString());
+      if (showErrorNotification) {
+        Notifications.error(err.toString());
+      }
       throw err;
     }
   }
 
   @action
-  async setTheme(themeId = this.defaultTheme.name) {
+  async setTheme(themeId = this.defaultTheme.name): Promise<void> {
     try {
       await this.load(themeId);
       this.activeThemeId = themeId;

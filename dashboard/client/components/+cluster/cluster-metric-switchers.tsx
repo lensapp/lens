@@ -21,7 +21,9 @@ export const ClusterMetricSwitchers = observer(() => {
           asButtons
           className={cssNames("RadioGroup flex gaps", { disabled: disableRoles })}
           value={metricNodeRole}
-          onChange={(metric: MetricNodeRole) => clusterStore.metricNodeRole = metric}
+          onChange={(metric: MetricNodeRole): void => {
+            clusterStore.metricNodeRole = metric;
+          }}
         >
           <Radio label={<Trans>Master</Trans>} value={MetricNodeRole.MASTER}/>
           <Radio label={<Trans>Worker</Trans>} value={MetricNodeRole.WORKER}/>
@@ -32,7 +34,9 @@ export const ClusterMetricSwitchers = observer(() => {
           asButtons
           className={cssNames("RadioGroup flex gaps", { disabled: disableMetrics })}
           value={metricType}
-          onChange={(value: MetricType) => clusterStore.metricType = value}
+          onChange={(value: MetricType): void => {
+            clusterStore.metricType = value;
+          }}
         >
           <Radio label={<Trans>CPU</Trans>} value={MetricType.CPU}/>
           <Radio label={<Trans>Memory</Trans>} value={MetricType.MEMORY}/>

@@ -6,14 +6,14 @@ import React, { ReactNode } from "react";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
-import ReactSelect, { components as ReactSelectComponents } from "react-select"
-import { Props as ReactSelectProps } from "react-select/base"
-import Creatable, { CreatableProps } from "react-select/creatable"
-import { StylesConfig } from "react-select/src/styles"
-import { ActionMeta } from "react-select/src/types"
+import ReactSelect, { components as ReactSelectComponents } from "react-select";
+import { Props as ReactSelectProps } from "react-select/base";
+import Creatable, { CreatableProps } from "react-select/creatable";
+import { StylesConfig } from "react-select/src/styles";
+import { ActionMeta } from "react-select/src/types";
 import { themeStore } from "../../theme.store";
 
-export { ReactSelectComponents }
+export { ReactSelectComponents };
 
 export interface GroupSelectOption<T extends SelectOption = SelectOption> {
   label: ReactNode;
@@ -50,11 +50,11 @@ export class Select extends React.Component<SelectProps> {
     }),
   };
 
-  protected isValidOption(opt: SelectOption | any) {
+  protected isValidOption(opt: SelectOption | any): boolean {
     return typeof opt === "object" && opt.value !== undefined;
   }
 
-  @computed get selectedOption() {
+  @computed get selectedOption(): SelectOption<any> | SelectOption<any>[] {
     const { value, isMulti } = this.props;
     if (isMulti) {
       return this.options.filter(opt => {
@@ -70,28 +70,30 @@ export class Select extends React.Component<SelectProps> {
     if (autoConvertOptions && Array.isArray(options)) {
       return options.map(opt => {
         return this.isValidOption(opt) ? opt : { value: opt, label: String(opt) };
-      })
+      });
     }
     return options as SelectOption[];
   }
 
   @autobind()
-  onChange(value: SelectOption, meta: ActionMeta) {
+  onChange(value: SelectOption, meta: ActionMeta): void {
     if (this.props.onChange) {
       this.props.onChange(value, meta);
     }
   }
 
   @autobind()
-  onKeyDown(evt: React.KeyboardEvent<HTMLElement>) {
+  onKeyDown(evt: React.KeyboardEvent<HTMLElement>): void {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);
     }
     const escapeKey = evt.nativeEvent.code === "Escape";
-    if (escapeKey) evt.stopPropagation(); // don't close the <Dialog/>
+    if (escapeKey) {
+      evt.stopPropagation();
+    } // don't close the <Dialog/>
   }
 
-  render() {
+  render(): JSX.Element {
     const {
       className, menuClass, isCreatable, autoConvertOptions,
       value, options, components = {}, ...props
@@ -109,14 +111,14 @@ export class Select extends React.Component<SelectProps> {
       classNamePrefix: "Select",
       components: {
         ...components,
-        Menu: props => (
+        Menu: (props): JSX.Element => (
           <ReactSelectComponents.Menu
             {...props}
             className={cssNames(menuClass, themeClass)}
           />
         ),
       }
-    }
+    };
     return isCreatable
       ? <Creatable {...selectProps}/>
       : <ReactSelect {...selectProps}/>;

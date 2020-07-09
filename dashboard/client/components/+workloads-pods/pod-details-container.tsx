@@ -1,39 +1,41 @@
-import "./pod-details-container.scss"
+import "./pod-details-container.scss";
 
 import * as React from "react";
 import { t, Trans } from "@lingui/macro";
-import { IPodContainer, Pod } from "../../api/endpoints";
+import { PodContainer, Pod } from "../../api/endpoints";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import { StatusBrick } from "../status-brick";
 import { Badge } from "../badge";
 import { ContainerEnvironment } from "./pod-container-env";
 import { ResourceMetrics } from "../resource-metrics";
-import { IMetrics } from "../../api/endpoints/metrics.api";
+import { Metrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
 import { _i18n } from "../../i18n";
 
 interface Props {
   pod: Pod;
-  container: IPodContainer;
-  metrics?: { [key: string]: IMetrics };
+  container: PodContainer;
+  metrics?: { [key: string]: Metrics };
 }
 
 export class PodDetailsContainer extends React.Component<Props> {
-  render() {
-    const { pod, container, metrics } = this.props
-    if (!pod || !container) return null
-    const { name, image, imagePullPolicy, ports, volumeMounts, command, args } = container
-    const status = pod.getContainerStatuses().find(status => status.name === container.name)
-    const state = status ? Object.keys(status.state)[0] : ""
-    const ready = status ? status.ready : ""
-    const liveness = pod.getLivenessProbe(container)
-    const readiness = pod.getReadinessProbe(container)
-    const isInitContainer = !!pod.getInitContainers().find(c => c.name == name);
+  render(): JSX.Element {
+    const { pod, container, metrics } = this.props;
+    if (!pod || !container) {
+      return null;
+    }
+    const { name, image, imagePullPolicy, ports, volumeMounts, command, args } = container;
+    const status = pod.getContainerStatuses().find(status => status.name === container.name);
+    const state = status ? Object.keys(status.state)[0] : "";
+    const ready = status ? status.ready : "";
+    const liveness = pod.getLivenessProbe(container);
+    const readiness = pod.getReadinessProbe(container);
+    const isInitContainer = !!pod.spec.initContainers.find(c => c.name == name);
     const metricTabs = [
-      <Trans>CPU</Trans>,
-      <Trans>Memory</Trans>,
-      <Trans>Filesystem</Trans>,
+      <Trans key="cpu">CPU</Trans>,
+      <Trans key="memory">Memory</Trans>,
+      <Trans key="filesystem">Filesystem</Trans>,
     ];
     return (
       <div className="PodDetailsContainer">
@@ -66,12 +68,12 @@ export class PodDetailsContainer extends React.Component<Props> {
           {
             ports.map(port => {
               const { name, containerPort, protocol } = port;
-              const key = `${container.name}-port-${containerPort}-${protocol}`
+              const key = `${container.name}-port-${containerPort}-${protocol}`;
               return (
                 <div key={key}>
                   {name ? name + ': ' : ''}{containerPort}/{protocol}
                 </div>
-              )
+              );
             })
           }
         </DrawerItem>
@@ -87,7 +89,7 @@ export class PodDetailsContainer extends React.Component<Props> {
                   <span className="mount-path">{mountPath}</span>
                   <span className="mount-from">from {name} ({readOnly ? 'ro' : 'rw'})</span>
                 </React.Fragment>
-              )
+              );
             })
           }
         </DrawerItem>
@@ -122,6 +124,6 @@ export class PodDetailsContainer extends React.Component<Props> {
         </DrawerItem>
         }
       </div>
-    )
+    );
   }
 }

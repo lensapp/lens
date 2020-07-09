@@ -1,4 +1,4 @@
-import "./certificates.scss"
+import "./certificates.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -24,10 +24,10 @@ enum sortBy {
 
 @observer
 export class Certificates extends React.Component<KubeObjectListLayoutProps> {
-  render() {
+  render(): JSX.Element {
     const { store = apiManager.getStore(certificatesApi), ...layoutProps } = this.props;
     if (!store) {
-      return <Spinner center/>
+      return <Spinner center/>;
     }
     return (
       <KubeObjectListLayout
@@ -35,19 +35,19 @@ export class Certificates extends React.Component<KubeObjectListLayoutProps> {
         store={store}
         className="Certificates"
         sortingCallbacks={{
-          [sortBy.name]: (item: Certificate) => item.getName(),
-          [sortBy.namespace]: (item: Certificate) => item.getNs(),
-          [sortBy.secretName]: (item: Certificate) => item.getSecretName(),
-          [sortBy.commonName]: (item: Certificate) => item.getCommonName(),
-          [sortBy.issuer]: (item: Certificate) => item.getIssuerName(),
-          [sortBy.type]: (item: Certificate) => item.getType(),
+          [sortBy.name]: (item: Certificate): string => item.getName(),
+          [sortBy.namespace]: (item: Certificate): string => item.getNs(),
+          [sortBy.secretName]: (item: Certificate): string => item.getSecretName(),
+          [sortBy.commonName]: (item: Certificate): string => item.getCommonName(),
+          [sortBy.issuer]: (item: Certificate): string => item.getIssuerName(),
+          [sortBy.type]: (item: Certificate): string => item.getType(),
         }}
         searchFilters={[
-          (item: Certificate) => item.getSearchFields(),
-          (item: Certificate) => item.getSecretName(),
-          (item: Certificate) => item.getCommonName(),
-          (item: Certificate) => item.getIssuerName(),
-          (item: Certificate) => item.getType(),
+          (item: Certificate): string[] => item.getSearchFields(),
+          (item: Certificate): string => item.getSecretName(),
+          (item: Certificate): string => item.getCommonName(),
+          (item: Certificate): string => item.getIssuerName(),
+          (item: Certificate): string => item.getType(),
         ]}
         renderHeaderTitle={<Trans>Certificates</Trans>}
         renderTableHeader={[
@@ -60,16 +60,16 @@ export class Certificates extends React.Component<KubeObjectListLayoutProps> {
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Status</Trans>, className: "status" },
         ]}
-        renderTableContents={(cert: Certificate) => {
+        renderTableContents={(cert: Certificate): (string | JSX.Element | number | JSX.Element[])[] => {
           return [
             cert.getName(),
             cert.getNs(),
             cert.getCommonName(),
             cert.getType(),
-            <Link to={cert.getIssuerDetailsUrl()} onClick={stopPropagation}>
+            <Link key="issuer" to={cert.getIssuerDetailsUrl()} onClick={stopPropagation}>
               {cert.getIssuerName()}
             </Link>,
-            <Link to={cert.getSecretDetailsUrl()} onClick={stopPropagation}>
+            <Link key="secret" to={cert.getSecretDetailsUrl()} onClick={stopPropagation}>
               {cert.getSecretName()}
             </Link>,
             cert.getAge(),
@@ -81,25 +81,25 @@ export class Certificates extends React.Component<KubeObjectListLayoutProps> {
                   tooltip={tooltip}
                   className={cssNames({ [type.toLowerCase()]: isReady })}
                 />
-              )
+              );
             })
-          ]
+          ];
         }}
-        renderItemMenu={(item: Certificate) => {
-          return <CertificateMenu object={item}/>
+        renderItemMenu={(item: Certificate): JSX.Element => {
+          return <CertificateMenu object={item}/>;
         }}
       />
     );
   }
 }
 
-export function CertificateMenu(props: KubeObjectMenuProps<Certificate>) {
+export function CertificateMenu(props: KubeObjectMenuProps<Certificate>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(certificatesApi, {
   List: Certificates,
   Menu: CertificateMenu
-})
+});

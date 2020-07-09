@@ -1,4 +1,4 @@
-import "./workloads.scss"
+import "./workloads.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -15,7 +15,7 @@ import { DaemonSets } from "../+workloads-daemonsets";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
-import { isAllowedResource } from "../../api/rbac"
+import { isAllowedResource } from "../../api/rbac";
 
 interface Props extends RouteComponentProps {
 }
@@ -31,14 +31,14 @@ export class Workloads extends React.Component<Props> {
         url: overviewURL({ query }),
         path: overviewRoute.path
       }
-    ]
+    ];
     if (isAllowedResource("pods")) {
       routes.push({
         title: <Trans>Pods</Trans>,
         component: Pods,
         url: podsURL({ query }),
         path: podsRoute.path
-      })
+      });
     }
     if (isAllowedResource("deployments")) {
       routes.push({
@@ -46,7 +46,7 @@ export class Workloads extends React.Component<Props> {
         component: Deployments,
         url: deploymentsURL({ query }),
         path: deploymentsRoute.path,
-      })
+      });
     }
     if (isAllowedResource("daemonsets")) {
       routes.push({
@@ -54,7 +54,7 @@ export class Workloads extends React.Component<Props> {
         component: DaemonSets,
         url: daemonSetsURL({ query }),
         path: daemonSetsRoute.path,
-      })
+      });
     }
     if (isAllowedResource("statefulsets")) {
       routes.push({
@@ -62,7 +62,7 @@ export class Workloads extends React.Component<Props> {
         component: StatefulSets,
         url: statefulSetsURL({ query }),
         path: statefulSetsRoute.path,
-      })
+      });
     }
     if (isAllowedResource("jobs")) {
       routes.push({
@@ -70,7 +70,7 @@ export class Workloads extends React.Component<Props> {
         component: Jobs,
         url: jobsURL({ query }),
         path: jobsRoute.path,
-      })
+      });
     }
     if (isAllowedResource("cronjobs")) {
       routes.push({
@@ -78,12 +78,12 @@ export class Workloads extends React.Component<Props> {
         component: CronJobs,
         url: cronJobsURL({ query }),
         path: cronJobsRoute.path,
-      })
+      });
     }
     return routes;
   };
 
-  render() {
+  render(): JSX.Element {
     const tabRoutes = Workloads.tabRoutes;
     return (
       <MainLayout className="Workloads" tabs={tabRoutes}>
@@ -92,6 +92,6 @@ export class Workloads extends React.Component<Props> {
           <Redirect to={workloadsURL({ query: namespaceStore.getContextParams() })}/>
         </Switch>
       </MainLayout>
-    )
+    );
   }
 }

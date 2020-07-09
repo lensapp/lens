@@ -1,0 +1,96 @@
+{
+  "settings": {
+    "react": {
+      "version": "16.11"
+    }
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/renderer/**/*.js",
+        "build/**/*.js",
+        "src/renderer/**/*.vue"
+      ],
+      "extends": [
+        "eslint:recommended",
+        "plugin:vue/recommended"
+      ],
+      "env": {
+        "node": true
+      },
+      "parserOptions":  {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+      },
+      "rules": {
+        "indent": ["error", 2],
+        "no-unused-vars": "off",
+        "vue/order-in-components": "off",
+        "vue/attributes-order": "off",
+        "vue/max-attributes-per-line": "off"
+      }
+    },
+    {
+      "files": [
+        "build/*.ts",
+        "src/**/*.ts",
+        "spec/**/*.ts",
+        "dashboard/**/*.ts",
+        "dashboard/**/*.tsx"
+      ],
+      "excludedFiles": [
+        "**/node_modules/**/*"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "extends":  [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended"
+      ],
+      "parserOptions":  {
+        "ecmaVersion": 2020,
+        "sourceType": "module",
+        "project": "./tsconfig.json",
+        "jsx": true
+      },
+      "rules": {
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          {
+            "varsIgnorePattern": "^_",
+            "argsIgnorePattern": "^_"
+          }
+        ],
+        "@typescript-eslint/explicit-function-return-type": "error",
+        "@typescript-eslint/array-type": [
+          "error", 
+          {
+            "default": "array", 
+            "readyonly": "array"
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": "off",
+        "indent": ["error", 2],
+        "@typescript-eslint/no-use-before-define": "error",
+        "@typescript-eslint/no-empty-interface": "off",
+        "@typescript-eslint/no-var-requires": "error",
+        "@typescript-eslint/await-thenable": "error",
+        "@typescript-eslint/consistent-type-assertions": [
+          "error",
+          {
+            "assertionStyle": "as",
+            "objectLiteralTypeAssertions": "never"
+          }
+        ],
+        "@typescript-eslint/consistent-type-definitions": [
+          "error",
+          "interface"
+        ],
+        "react/prop-types": [ 0 ],
+        "brace-style": ["error", "1tbs", { "allowSingleLine": false }],
+        "curly": "error",
+        "space-before-blocks": "error",
+        "semi": "error"
+      }
+    }
+  ]
+}

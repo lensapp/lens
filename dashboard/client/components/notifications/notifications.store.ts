@@ -1,14 +1,14 @@
 import * as React from "react";
-import { action, observable } from "mobx"
+import { action, observable } from "mobx";
 import { autobind } from "../../utils";
-import isObject from "lodash/isObject"
+import isObject from "lodash/isObject";
 import uniqueId from "lodash/uniqueId";
 import { JsonApiErrorParsed } from "../../api/json-api";
 
 export type IMessageId = string | number;
 export type IMessage = React.ReactNode | React.ReactNode[] | JsonApiErrorParsed;
 
-export interface INotification {
+export interface Notification {
   id?: IMessageId;
   message: IMessage;
   status?: "ok" | "error" | "info";
@@ -17,11 +17,11 @@ export interface INotification {
 
 @autobind()
 export class NotificationsStore {
-  public notifications = observable<INotification>([], { deep: false });
+  public notifications = observable<Notification>([], { deep: false });
 
   protected autoHideTimers = new Map<IMessageId, number>();
 
-  addAutoHideTimer(notification: INotification) {
+  addAutoHideTimer(notification: Notification): void {
     this.removeAutoHideTimer(notification);
     const { id, timeout } = notification;
     if (timeout) {
@@ -30,7 +30,7 @@ export class NotificationsStore {
     }
   }
 
-  removeAutoHideTimer(notification: INotification) {
+  removeAutoHideTimer(notification: Notification): void {
     const { id } = notification;
     if (this.autoHideTimers.has(id)) {
       clearTimeout(this.autoHideTimers.get(id));
@@ -39,22 +39,25 @@ export class NotificationsStore {
   }
 
   @action
-  add(notification: INotification) {
+  add(notification: Notification): void {
     if (!notification.id) {
       notification.id = uniqueId("notification_");
     }
     const index = this.notifications.findIndex(item => item.id === notification.id);
-    if (index > -1) this.notifications.splice(index, 1, notification)
-    else this.notifications.push(notification);
+    if (index > -1) {
+      this.notifications.splice(index, 1, notification);
+    } else {
+      this.notifications.push(notification);
+    }
     this.addAutoHideTimer(notification);
   }
 
   @action
-  remove(itemOrId: IMessageId | INotification) {
+  remove(itemOrId: IMessageId | Notification): boolean {
     if (!isObject(itemOrId)) {
       itemOrId = this.notifications.find(item => item.id === itemOrId);
     }
-    return this.notifications.remove(itemOrId as INotification);
+    return this.notifications.remove(itemOrId);
   }
 }
 

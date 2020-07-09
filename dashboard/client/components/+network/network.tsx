@@ -1,4 +1,4 @@
-import "./network.scss"
+import "./network.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -20,7 +20,7 @@ interface Props extends RouteComponentProps<{}> {
 @observer
 export class Network extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
-    const query = namespaceStore.getContextParams()
+    const query = namespaceStore.getContextParams();
     const routes: TabRoute[] = [];
     if (isAllowedResource("services")) {
       routes.push({
@@ -28,7 +28,7 @@ export class Network extends React.Component<Props> {
         component: Services,
         url: servicesURL({ query }),
         path: servicesRoute.path,
-      })
+      });
     }
     if (isAllowedResource("endpoints")) {
       routes.push({
@@ -36,7 +36,7 @@ export class Network extends React.Component<Props> {
         component: Endpoints,
         url: endpointURL({ query }),
         path: endpointRoute.path,
-      })
+      });
     }
     if (isAllowedResource("ingresses")) {
       routes.push({
@@ -44,7 +44,7 @@ export class Network extends React.Component<Props> {
         component: Ingresses,
         url: ingressURL({ query }),
         path: ingressRoute.path,
-      })
+      });
     }
     if (isAllowedResource("networkpolicies")) {
       routes.push({
@@ -52,12 +52,12 @@ export class Network extends React.Component<Props> {
         component: NetworkPolicies,
         url: networkPoliciesURL({ query }),
         path: networkPoliciesRoute.path,
-      })
+      });
     }
-    return routes
+    return routes;
   }
 
-  render() {
+  render(): JSX.Element {
     const tabRoutes = Network.tabRoutes;
     return (
       <MainLayout className="Network" tabs={tabRoutes}>
@@ -66,6 +66,6 @@ export class Network extends React.Component<Props> {
           <Redirect to={networkURL({ query: namespaceStore.getContextParams() })}/>
         </Switch>
       </MainLayout>
-    )
+    );
   }
 }

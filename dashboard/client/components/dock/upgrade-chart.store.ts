@@ -1,17 +1,21 @@
 import { action, autorun, IReactionDisposer, reaction } from "mobx";
 import { t } from "@lingui/macro";
-import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
+import { dockStore, DockTabData, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { HelmRelease, helmReleasesApi } from "../../api/endpoints/helm-releases.api";
 import { releaseStore } from "../+apps-releases/release.store";
 import { _i18n } from "../../i18n";
 
-export interface IChartUpgradeData {
+export interface ChartUpgradeData {
   releaseName: string;
   releaseNamespace: string;
 }
 
-export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
+export function isUpgradeChartTab(tab: DockTabData): boolean {
+  return tab?.kind === TabKind.UPGRADE_CHART;
+}
+
+export class UpgradeChartStore extends DockTabStore<ChartUpgradeData> {
   private watchers = new Map<string, IReactionDisposer>();
 
   values = new DockTabStore<string>();
@@ -23,7 +27,9 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
 
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
-      if (!isUpgradeChartTab(selectedTab)) return;
+      if (!isUpgradeChartTab(selectedTab)) {
+        return;
+      }
       if (isOpen) {
         this.loadData(selectedTab.id);
       }
@@ -35,27 +41,28 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     });
   }
 
-  private createReleaseWatcher(releaseName: string) {
+  private createReleaseWatcher(releaseName: string): void {
     if (this.watchers.get(releaseName)) {
       return;
     }
     const dispose = reaction(() => {
       const release = releaseStore.getByName(releaseName);
-      if (release) return release.getRevision(); // watch changes only by revision
+      if (release) {
+        return release.revision;
+      } // watch changes only by revision
     },
     release => {
       const releaseTab = this.getTabByRelease(releaseName);
       if (!releaseStore.isLoaded || !releaseTab) {
         return;
       }
-      // auto-reload values if was loaded before
       if (release) {
+        // auto-reload values if was loaded before
         if (dockStore.selectedTab === releaseTab && this.values.getData(releaseTab.id)) {
           this.loadValues(releaseTab.id);
         }
-      }
-      // clean up watcher, close tab if release not exists / was removed
-      else {
+      } else {
+        // clean up watcher, close tab if release not exists / was removed
         dispose();
         this.watchers.delete(releaseName);
         dockStore.closeTab(releaseTab.id);
@@ -64,13 +71,13 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     this.watchers.set(releaseName, dispose);
   }
 
-  isLoading(tabId = dockStore.selectedTabId) {
+  isLoading(tabId = dockStore.selectedTabId): boolean {
     const values = this.values.getData(tabId);
     return !releaseStore.isLoaded || values === undefined;
   }
 
   @action
-  async loadData(tabId: TabId) {
+  async loadData(tabId: TabId): Promise<void> {
     const values = this.values.getData(tabId);
     await Promise.all([
       !releaseStore.isLoaded && releaseStore.loadAll(),
@@ -79,25 +86,25 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
   }
 
   @action
-  async loadValues(tabId: TabId) {
+  async loadValues(tabId: TabId): Promise<void> {
     this.values.clearData(tabId); // reset
     const { releaseName, releaseNamespace } = this.getData(tabId);
     const values = await helmReleasesApi.getValues(releaseName, releaseNamespace);
     this.values.setData(tabId, values);
   }
 
-  getTabByRelease(releaseName: string): IDockTab {
+  getTabByRelease(releaseName: string): DockTabData {
     const item = [...this.data].find(item => item[1].releaseName === releaseName);
     if (item) {
       const [tabId] = item;
-      return dockStore.getTabById(tabId)
+      return dockStore.getTabById(tabId);
     }
   }
 }
 
 export const upgradeChartStore = new UpgradeChartStore();
 
-export function createUpgradeChartTab(release: HelmRelease, tabParams: Partial<IDockTab> = {}) {
+export function createUpgradeChartTab(release: HelmRelease, tabParams: Partial<DockTabData> = {}): DockTabData {
   let tab = upgradeChartStore.getTabByRelease(release.getName());
   if (tab) {
     dockStore.open();
@@ -112,12 +119,8 @@ export function createUpgradeChartTab(release: HelmRelease, tabParams: Partial<I
 
     upgradeChartStore.setData(tab.id, {
       releaseName: release.getName(),
-      releaseNamespace: release.getNs()
-    })
+      releaseNamespace: release.namespace
+    });
   }
   return tab;
-}
-
-export function isUpgradeChartTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.UPGRADE_CHART;
 }

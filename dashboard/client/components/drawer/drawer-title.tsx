@@ -8,12 +8,12 @@ interface Props {
 }
 
 export class DrawerTitle extends React.Component<Props> {
-  render() {
-    const { title, children, className } = this.props
+  render(): JSX.Element {
+    const { title, children, className } = this.props;
     return (
       <div className={cssNames("DrawerTitle", className)}>
         {title || children}
       </div>
-    )
+    );
   }
 }

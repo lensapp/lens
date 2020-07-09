@@ -17,16 +17,16 @@ import { getMetricLastPoints } from "../../api/endpoints/metrics.api";
 export const ClusterPieCharts = observer(() => {
   const { i18n } = useLingui();
 
-  const renderLimitWarning = () => {
+  const renderLimitWarning = (): JSX.Element => {
     return (
       <div className="node-warning flex gaps align-center">
         <Icon material="info"/>
         <p><Trans>Specified limits are higher than node capacity!</Trans></p>
       </div>
     );
-  }
+  };
 
-  const renderCharts = () => {
+  const renderCharts = (): JSX.Element => {
     const data = getMetricLastPoints(clusterStore.metrics);
     const { memoryUsage, memoryRequests, memoryCapacity, memoryLimits } = data;
     const { cpuUsage, cpuRequests, cpuCapacity, cpuLimits } = data;
@@ -35,7 +35,9 @@ export const ClusterPieCharts = observer(() => {
     const memoryLimitsOverload = memoryLimits > memoryCapacity;
     const defaultColor = themeStore.activeTheme.colors.pieChartDefaultColor;
 
-    if (!memoryCapacity || !cpuCapacity || !podCapacity) return null;
+    if (!memoryCapacity || !cpuCapacity || !podCapacity) {
+      return null;
+    }
     const cpuData: ChartData = {
       datasets: [
         {
@@ -168,9 +170,9 @@ export const ClusterPieCharts = observer(() => {
         </div>
       </div>
     );
-  }
+  };
 
-  const renderContent = () => {
+  const renderContent = (): JSX.Element => {
     const { masterNodes, workerNodes } = nodesStore;
     const { metricNodeRole, metricsLoaded } = clusterStore;
     const nodes = metricNodeRole === MetricNodeRole.MASTER ? masterNodes : workerNodes;
@@ -194,11 +196,11 @@ export const ClusterPieCharts = observer(() => {
       return <ClusterNoMetrics className="empty"/>;
     }
     return renderCharts();
-  }
+  };
 
   return (
     <div className="ClusterPieCharts flex">
       {renderContent()}
     </div>
   );
-})
+});

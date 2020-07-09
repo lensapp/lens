@@ -55,9 +55,9 @@ export const config = {
   KUBERNETES_CLIENT_KEY: process.env.KUBERNETES_CLIENT_KEY || "",
   KUBERNETES_TLS_SKIP: JSON.parse(process.env.KUBERNETES_TLS_SKIP || "false"),
   KUBERNETES_NAMESPACE: process.env.KUBERNETES_NAMESPACE || "", // default allowed namespace
-}
+};
 
-export function isSecure() {
+export function isSecure(): boolean {
   return IS_PRODUCTION ? !config.KUBERNETES_TLS_SKIP : false;
 }
 
@@ -69,6 +69,6 @@ export const clientVars = {
   IS_PRODUCTION: config.IS_PRODUCTION,
   API_PREFIX: config.API_PREFIX,
   LOCAL_SERVER_PORT: config.LOCAL_SERVER_PORT,
-}
+};
 
 export type IClientVars = typeof clientVars;

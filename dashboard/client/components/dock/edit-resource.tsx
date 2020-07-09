@@ -3,11 +3,11 @@ import "./edit-resource.scss";
 import React from "react";
 import { autorun, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import jsYaml from "js-yaml"
+import jsYaml from "js-yaml";
 import { t, Trans } from "@lingui/macro";
-import { IDockTab } from "./dock.store";
+import { DockTabData } from "./dock.store";
 import { cssNames } from "../../utils";
-import { editResourceStore } from "./edit-resource.store";
+import { editResourceStore, KubeEditResource } from "./edit-resource.store";
 import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
@@ -18,7 +18,7 @@ import { KubeObject } from "../../api/kube-object";
 
 interface Props {
   className?: string;
-  tab: IDockTab;
+  tab: DockTabData;
 }
 
 @observer
@@ -27,17 +27,19 @@ export class EditResource extends React.Component<Props> {
 
   @disposeOnUnmount
   autoDumpResourceOnInit = autorun(() => {
-    if (!this.tabData) return;
+    if (!this.tabData) {
+      return;
+    }
     if (this.tabData.draft === undefined && this.resource) {
       this.saveDraft(this.resource);
     }
   });
 
-  get tabId() {
-    return this.props.tab.id;
+  get tabId(): string {
+    return this.props.tab.id || "";
   }
 
-  get tabData() {
+  get tabData(): KubeEditResource {
     return editResourceStore.getData(this.tabId);
   }
 
@@ -49,7 +51,7 @@ export class EditResource extends React.Component<Props> {
     }
   }
 
-  saveDraft(draft: string | object) {
+  saveDraft(draft: string | object): void {
     if (typeof draft === "object") {
       draft = draft ? jsYaml.dump(draft) : undefined;
     }
@@ -59,12 +61,12 @@ export class EditResource extends React.Component<Props> {
     });
   }
 
-  onChange = (draft: string, error?: string) => {
+  onChange = (draft: string, error?: string): void => {
     this.error = error;
     this.saveDraft(draft);
   }
 
-  save = async () => {
+  save = async (): Promise<JSX.Element> => {
     if (this.error) {
       return;
     }
@@ -81,7 +83,7 @@ export class EditResource extends React.Component<Props> {
     );
   }
 
-  render() {
+  render(): JSX.Element {
     const { tabId, resource, tabData, error, onChange, save } = this;
     const { draft } = tabData;
     if (!resource || draft === undefined) {
@@ -110,6 +112,6 @@ export class EditResource extends React.Component<Props> {
           )}
         />
       </div>
-    )
+    );
   }
 }

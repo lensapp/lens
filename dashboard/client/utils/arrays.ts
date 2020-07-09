@@ -9,11 +9,11 @@
  * @returns the left and right sub-arrays which when conjoined with `element`
  *          is the same as `array`, and `true`
  */
-export function split<T>(array: Array<T>, element: T): [Array<T>, Array<T>, boolean] {
+export function split<T>(array: T[], element: T): [T[], T[], boolean] {
   const index = array.indexOf(element);
   if (index < 0) {
     return [array, [], false];
   }
 
-  return [array.slice(0, index), array.slice(index+1, array.length), true]
+  return [array.slice(0, index), array.slice(index+1, array.length), true];
 }

@@ -10,7 +10,7 @@ import { resourceQuotaRoute, ResourceQuotas, resourceQuotaURL } from "../+config
 import { configURL } from "./config.route";
 import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscalers";
 import { buildURL } from "../../navigation";
-import { isAllowedResource } from "../../api/rbac"
+import { isAllowedResource } from "../../api/rbac";
 
 export const certificatesURL = buildURL("/certificates");
 export const issuersURL = buildURL("/issuers");
@@ -19,15 +19,15 @@ export const clusterIssuersURL = buildURL("/clusterissuers");
 @observer
 export class Config extends React.Component {
   static get tabRoutes(): TabRoute[] {
-    const query = namespaceStore.getContextParams()
-    const routes: TabRoute[] = []
+    const query = namespaceStore.getContextParams();
+    const routes: TabRoute[] = [];
     if (isAllowedResource("configmaps")) {
       routes.push({
         title: <Trans>ConfigMaps</Trans>,
         component: ConfigMaps,
         url: configMapsURL({ query }),
         path: configMapsRoute.path,
-      })
+      });
     }
     if (isAllowedResource("secrets")) {
       routes.push({
@@ -35,7 +35,7 @@ export class Config extends React.Component {
         component: Secrets,
         url: secretsURL({ query }),
         path: secretsRoute.path,
-      })
+      });
     }
     if (isAllowedResource("resourcequotas")) {
       routes.push({
@@ -43,7 +43,7 @@ export class Config extends React.Component {
         component: ResourceQuotas,
         url: resourceQuotaURL({ query }),
         path: resourceQuotaRoute.path,
-      })
+      });
     }
     if (isAllowedResource("horizontalpodautoscalers")) {
       routes.push({
@@ -51,12 +51,12 @@ export class Config extends React.Component {
         component: HorizontalPodAutoscalers,
         url: hpaURL({ query }),
         path: hpaRoute.path,
-      })
+      });
     }
     return routes;
   }
 
-  render() {
+  render(): JSX.Element {
     const tabRoutes = Config.tabRoutes;
     return (
       <MainLayout className="Config" tabs={tabRoutes}>
@@ -65,6 +65,6 @@ export class Config extends React.Component {
           <Redirect to={configURL({ query: namespaceStore.getContextParams() })}/>
         </Switch>
       </MainLayout>
-    )
+    );
   }
 }

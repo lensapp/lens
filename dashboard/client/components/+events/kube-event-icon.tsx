@@ -21,11 +21,13 @@ const defaultProps: Partial<Props> = {
 export class KubeEventIcon extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
-  render() {
+  render(): JSX.Element {
     const { object, showWarningsOnly, filterEvents } = this.props;
     const events = eventStore.getEventsByObject(object);
     let warnings = events.filter(evt => evt.isWarning());
-    if (filterEvents) warnings = filterEvents(warnings);
+    if (filterEvents) {
+      warnings = filterEvents(warnings);
+    }
     if (!events.length || (showWarningsOnly && !warnings.length)) {
       return null;
     }
@@ -44,6 +46,6 @@ export class KubeEventIcon extends React.Component<Props> {
           </TooltipContent>
         )}
       />
-    )
+    );
   }
 }

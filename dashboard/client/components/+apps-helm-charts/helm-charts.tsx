@@ -3,7 +3,7 @@ import "./helm-charts.scss";
 import React, { Component } from "react";
 import { RouteComponentProps } from "react-router";
 import { observer } from "mobx-react";
-import { helmChartsURL, IHelmChartsRouteParams } from "./helm-charts.route";
+import { helmChartsURL, HelmChartsRouteParams } from "./helm-charts.route";
 import { helmChartStore } from "./helm-chart.store";
 import { HelmChart } from "../../api/endpoints/helm-charts.api";
 import { HelmChartDetails } from "./helm-chart-details";
@@ -18,39 +18,38 @@ enum sortBy {
   repo = "repo",
 }
 
-interface Props extends RouteComponentProps<IHelmChartsRouteParams> {
+interface Props extends RouteComponentProps<HelmChartsRouteParams> {
 }
 
 @observer
 export class HelmCharts extends Component<Props> {
-  componentDidMount() {
+  componentDidMount(): void {
     helmChartStore.loadAll();
   }
 
-  get selectedChart() {
-    const { match: { params: { chartName, repo } } } = this.props
+  get selectedChart(): HelmChart {
+    const { match: { params: { chartName, repo } } } = this.props;
     return helmChartStore.getByName(chartName, repo);
   }
 
-  showDetails = (chart: HelmChart) => {
+  showDetails = (chart: HelmChart): void => {
     if (!chart) {
-      navigation.merge(helmChartsURL())
-    }
-    else {
+      navigation.merge(helmChartsURL());
+    } else {
       navigation.merge(helmChartsURL({
         params: {
           chartName: chart.getName(),
-          repo: chart.getRepository(),
+          repo: chart.repo,
         }
-      }))
+      }));
     }
   }
 
-  hideDetails = () => {
+  hideDetails = (): void => {
     this.showDetails(null);
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <>
         <ItemListLayout
@@ -59,19 +58,19 @@ export class HelmCharts extends Component<Props> {
           isClusterScoped={true}
           isSelectable={false}
           sortingCallbacks={{
-            [sortBy.name]: (chart: HelmChart) => chart.getName(),
-            [sortBy.repo]: (chart: HelmChart) => chart.getRepository(),
+            [sortBy.name]: (chart: HelmChart): string => chart.getName(),
+            [sortBy.repo]: ({repo}: HelmChart): string => repo,
           }}
           searchFilters={[
-            (chart: HelmChart) => chart.getName(),
-            (chart: HelmChart) => chart.getVersion(),
-            (chart: HelmChart) => chart.getAppVersion(),
-            (chart: HelmChart) => chart.getKeywords(),
+            (chart: HelmChart): string => chart.getName(),
+            ({ version }: HelmChart): string => version,
+            (chart: HelmChart): string => chart.getAppVersion(),
+            ({ keywords }: HelmChart): string[] => keywords,
           ]}
           filterItems={[
-            (items: HelmChart[]) => items.filter(item => !item.deprecated)
+            (items: HelmChart[]): HelmChart[] => items.filter(item => !item.deprecated)
           ]}
-          customizeHeader={() => (
+          customizeHeader={(): JSX.Element => (
             <SearchInput placeholder={_i18n._(t`Search Helm Charts`)}/>
           )}
           renderTableHeader={[
@@ -83,18 +82,18 @@ export class HelmCharts extends Component<Props> {
             { title: <Trans>Repository</Trans>, className: "repository", sortBy: sortBy.repo },
 
           ]}
-          renderTableContents={(chart: HelmChart) => [
-            <figure>
+          renderTableContents={(chart: HelmChart): (HTMLElement | string | React.ReactNode)[] => [
+            <figure key="placeholder-img">
               <img
-                src={chart.getIcon() || require("./helm-placeholder.svg")}
-                onLoad={evt => evt.currentTarget.classList.add("visible")}
+                src={chart.icon || require("./helm-placeholder.svg")}
+                onLoad={(evt): void => evt.currentTarget.classList.add("visible")}
               />
             </figure>,
             chart.getName(),
-            chart.getDescription(),
-            chart.getVersion(),
+            chart.description,
+            chart.version,
             chart.getAppVersion(),
-            { title: chart.getRepository(), className: chart.getRepository().toLowerCase() }
+            { title: chart.repo, className: chart.repo.toLowerCase() }
           ]}
           detailsItem={this.selectedChart}
           onDetails={this.showDetails}

@@ -17,7 +17,7 @@ export class TableHead extends React.Component<TableHeadProps> {
     sticky: true,
   }
 
-  render() {
+  render(): JSX.Element {
     const { className, sticky, nowrap, showTopLine, children, ...headProps } = this.props;
     const classNames = cssNames("TableHead", className, {
       sticky, nowrap,
@@ -27,6 +27,6 @@ export class TableHead extends React.Component<TableHeadProps> {
       <div className={classNames} {...headProps}>
         {children}
       </div>
-    )
+    );
   }
 }

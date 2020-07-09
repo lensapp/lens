@@ -1,4 +1,4 @@
-import "./volume-claim-details.scss"
+import "./volume-claim-details.scss";
 
 import React, { Fragment } from "react";
 import { reaction } from "mobx";
@@ -29,11 +29,11 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
     volumeClaimStore.reset();
   });
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     volumeClaimStore.reset();
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: volumeClaim } = this.props;
     if (!volumeClaim) {
       return null;
@@ -42,12 +42,12 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
     const { metrics } = volumeClaimStore;
     const pods = volumeClaim.getPods(podsStore.items);
     const metricTabs = [
-      <Trans>Disk</Trans>
+      <Trans key="disk">Disk</Trans>
     ];
     return (
       <div className="PersistentVolumeClaimDetails">
         <ResourceMetrics
-          loader={() => volumeClaimStore.loadMetrics(volumeClaim)}
+          loader={(): Promise<void> => volumeClaimStore.loadMetrics(volumeClaim)}
           tabs={metricTabs} object={volumeClaim} params={{ metrics }}
         >
           <VolumeClaimDiskChart/>
@@ -97,4 +97,4 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
 
 apiManager.registerViews(pvcApi, {
   Details: PersistentVolumeClaimDetails,
-})
+});

@@ -12,7 +12,7 @@ interface Step {
 }
 
 export class Stepper extends React.Component<Props, {}> {
-  render() {
+  render(): JSX.Element {
     const { className, steps, ...props } = this.props;
     const stepsCount = steps.length;
     let { step } = this.props;

@@ -1,5 +1,5 @@
-import './cube-spinner.scss'
-import React from 'react'
+import './cube-spinner.scss';
+import React from 'react';
 import { cssNames } from "../../utils";
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
 }
 
 export class CubeSpinner extends React.PureComponent<Props> {
-  render() {
+  render(): JSX.Element {
     const { className } = this.props;
     return (
       <div className={cssNames("CubeSpinner ", className)}>
@@ -23,6 +23,6 @@ export class CubeSpinner extends React.PureComponent<Props> {
           <div className="sk-cube sk-cube9"></div>
         </div>
       </div>
-    )
+    );
   }
 }

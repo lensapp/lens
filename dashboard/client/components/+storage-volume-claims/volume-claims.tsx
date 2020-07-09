@@ -1,4 +1,4 @@
-import "./volume-claims.scss"
+import "./volume-claims.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -9,7 +9,7 @@ import { PersistentVolumeClaim, pvcApi } from "../../api/endpoints/persistent-vo
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object";
-import { IVolumeClaimsRouteParams } from "./volume-claims.route";
+import { VolumeClaimsRouteParams } from "./volume-claims.route";
 import { unitsToBytes } from "../../utils/convertMemory";
 import { stopPropagation } from "../../utils";
 import { getDetailsUrl } from "../../navigation";
@@ -26,29 +26,29 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IVolumeClaimsRouteParams> {
+interface Props extends RouteComponentProps<VolumeClaimsRouteParams> {
 }
 
 @observer
 export class PersistentVolumeClaims extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="PersistentVolumeClaims"
         store={volumeClaimStore}
         dependentStores={[podsStore]}
         sortingCallbacks={{
-          [sortBy.name]: (pvc: PersistentVolumeClaim) => pvc.getName(),
-          [sortBy.namespace]: (pvc: PersistentVolumeClaim) => pvc.getNs(),
-          [sortBy.pods]: (pvc: PersistentVolumeClaim) => pvc.getPods(podsStore.items).map(pod => pod.getName()),
-          [sortBy.status]: (pvc: PersistentVolumeClaim) => pvc.getStatus(),
-          [sortBy.size]: (pvc: PersistentVolumeClaim) => unitsToBytes(pvc.getStorage()),
-          [sortBy.storageClass]: (pvc: PersistentVolumeClaim) => pvc.spec.storageClassName,
-          [sortBy.age]: (pvc: PersistentVolumeClaim) => pvc.metadata.creationTimestamp,
+          [sortBy.name]: (pvc: PersistentVolumeClaim): string => pvc.getName(),
+          [sortBy.namespace]: (pvc: PersistentVolumeClaim): string => pvc.getNs(),
+          [sortBy.pods]: (pvc: PersistentVolumeClaim): string[] => pvc.getPods(podsStore.items).map(pod => pod.getName()),
+          [sortBy.status]: (pvc: PersistentVolumeClaim): string => pvc.getStatus(),
+          [sortBy.size]: (pvc: PersistentVolumeClaim): number => unitsToBytes(pvc.getStorage()),
+          [sortBy.storageClass]: (pvc: PersistentVolumeClaim): string => pvc.spec.storageClassName,
+          [sortBy.age]: (pvc: PersistentVolumeClaim): string => pvc.metadata.creationTimestamp,
         }}
         searchFilters={[
-          (item: PersistentVolumeClaim) => item.getSearchFields(),
-          (item: PersistentVolumeClaim) => item.getPods(podsStore.items).map(pod => pod.getName()),
+          (item: PersistentVolumeClaim): string[] => item.getSearchFields(),
+          (item: PersistentVolumeClaim): string[] => item.getPods(podsStore.items).map(pod => pod.getName()),
         ]}
         renderHeaderTitle={<Trans>Persistent Volume Claims</Trans>}
         renderTableHeader={[
@@ -60,7 +60,7 @@ export class PersistentVolumeClaims extends React.Component<Props> {
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
         ]}
-        renderTableContents={(pvc: PersistentVolumeClaim) => {
+        renderTableContents={(pvc: PersistentVolumeClaim): (string | number | JSX.Element | JSX.Element[] | React.ReactNode)[] => {
           const pods = pvc.getPods(podsStore.items);
           const { storageClassName } = pvc.spec;
           const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
@@ -69,7 +69,7 @@ export class PersistentVolumeClaims extends React.Component<Props> {
           return [
             pvc.getName(),
             pvc.getNs(),
-            <Link to={storageClassDetailsUrl} onClick={stopPropagation}>
+            <Link key="storageClass" to={storageClassDetailsUrl} onClick={stopPropagation}>
               {storageClassName}
             </Link>,
             pvc.getStorage(),
@@ -80,22 +80,22 @@ export class PersistentVolumeClaims extends React.Component<Props> {
             )),
             pvc.getAge(),
             { title: pvc.getStatus(), className: pvc.getStatus().toLowerCase() },
-          ]
+          ];
         }}
-        renderItemMenu={(item: PersistentVolumeClaim) => {
-          return <PersistentVolumeClaimMenu object={item}/>
+        renderItemMenu={(item: PersistentVolumeClaim): JSX.Element => {
+          return <PersistentVolumeClaimMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
-export function PersistentVolumeClaimMenu(props: KubeObjectMenuProps<PersistentVolumeClaim>) {
+export function PersistentVolumeClaimMenu(props: KubeObjectMenuProps<PersistentVolumeClaim>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(pvcApi, {
   Menu: PersistentVolumeClaimMenu,
-})
+});

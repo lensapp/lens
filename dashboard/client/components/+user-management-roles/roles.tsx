@@ -1,10 +1,10 @@
-import "./roles.scss"
+import "./roles.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
-import { IRolesRouteParams } from "../+user-management/user-management.routes";
+import { RolesRouteParams } from "../+user-management/user-management.routes";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { rolesStore } from "./roles.store";
 import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";
@@ -18,24 +18,24 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IRolesRouteParams> {
+interface Props extends RouteComponentProps<RolesRouteParams> {
 }
 
 @observer
 export class Roles extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     return (
       <>
         <KubeObjectListLayout
           className="Roles"
           store={rolesStore}
           sortingCallbacks={{
-            [sortBy.name]: (role: Role) => role.getName(),
-            [sortBy.namespace]: (role: Role) => role.getNs(),
-            [sortBy.age]: (role: Role) => role.metadata.creationTimestamp,
+            [sortBy.name]: (role: Role): string => role.getName(),
+            [sortBy.namespace]: (role: Role): string => role.getNs(),
+            [sortBy.age]: (role: Role): string => role.metadata.creationTimestamp,
           }}
           searchFilters={[
-            (role: Role) => role.getSearchFields(),
+            (role: Role): string[] => role.getSearchFields(),
           ]}
           renderHeaderTitle={<Trans>Roles</Trans>}
           renderTableHeader={[
@@ -43,29 +43,29 @@ export class Roles extends React.Component<Props> {
             { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
-          renderTableContents={(role: Role) => [
+          renderTableContents={(role: Role): (string | number)[] => [
             role.getName(),
             role.getNs() || "-",
             role.getAge(),
           ]}
-          renderItemMenu={(item: Role) => {
-            return <RoleMenu object={item}/>
+          renderItemMenu={(item: Role): JSX.Element => {
+            return <RoleMenu object={item}/>;
           }}
           addRemoveButtons={{
-            onAdd: () => AddRoleDialog.open(),
+            onAdd: (): void => AddRoleDialog.open(),
             addTooltip: <Trans>Create new Role</Trans>,
           }}
         />
         <AddRoleDialog/>
       </>
-    )
+    );
   }
 }
 
-export function RoleMenu(props: KubeObjectMenuProps<Role>) {
+export function RoleMenu(props: KubeObjectMenuProps<Role>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews([roleApi, clusterRoleApi], {

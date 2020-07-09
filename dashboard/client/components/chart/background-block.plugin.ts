@@ -6,24 +6,26 @@ const defaultOptions = {
   coverBars: 3,
   borderColor: "#44474A",
   backgroundColor: "#00000033"
-}
+};
 
 export const BackgroundBlock = {
   options: {},
 
-  getOptions(chart: ChartJS) {
+  getOptions(chart: ChartJS): any {
     return get(chart, "options.plugins.BackgroundBlock");
   },
 
-  afterInit(chart: ChartJS) {
+  afterInit(chart: ChartJS): void {
     this.options = {
       ...defaultOptions,
       ...this.getOptions(chart)
-    }
+    };
   },
 
-  beforeDraw(chart: ChartJS) {
-    if (!chart.chartArea) return;
+  beforeDraw(chart: ChartJS): void {
+    if (!chart.chartArea) {
+      return;
+    }
     const { interval, coverBars, borderColor, backgroundColor } = this.options;
     const { ctx, chartArea } = chart;
     const { left, right, top, bottom } = chartArea;
@@ -39,4 +41,4 @@ export const BackgroundBlock = {
     ctx.stroke();
     ctx.restore();
   }
-}
+};

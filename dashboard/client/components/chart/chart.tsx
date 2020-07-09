@@ -60,88 +60,92 @@ export class Chart extends PureComponent<ChartProps> {
   // We clone new data prop into currentChartData to compare props and prevProps
   private currentChartData: ChartData
 
-  componentDidMount() {
-    const { showChart } = this.props
-    if (!showChart) return
-    this.renderChart()
+  componentDidMount(): void {
+    const { showChart } = this.props;
+    if (!showChart) {
+      return;
+    }
+    this.renderChart();
   }
 
-  componentDidUpdate(prevProps: ChartProps) {
-    const { data, showChart, redraw } = this.props
+  componentDidUpdate(prevProps: ChartProps): void {
+    const { data, showChart, redraw } = this.props;
     if (redraw) {
-      this.chart.destroy()
-      this.renderChart()
-      return
+      this.chart.destroy();
+      this.renderChart();
+      return;
     }
     if (!isEqual(prevProps.data, data) && showChart) {
-      if (!this.chart) this.renderChart()
-      else this.updateChart()
+      if (!this.chart) {
+        this.renderChart();
+      } else {
+        this.updateChart();
+      }
     }
   }
 
-  memoizeDataProps() {
-    const { data } = this.props
+  memoizeDataProps(): void {
+    const { data } = this.props;
     this.currentChartData = {
       ...data,
-      datasets: data.datasets && data.datasets.map(set => {
-        return {
-          ...set
-        }
-      })
-    }
+      datasets: data.datasets && data.datasets.map(set => ({ ...set }))
+    };
   }
 
-  updateChart() {
-    const { options } = this.props
+  updateChart(): void {
+    const { options } = this.props;
 
-    if (!this.chart) return
+    if (!this.chart) {
+      return;
+    }
 
-    this.chart.options = ChartJS.helpers.configMerge(this.chart.options, options)
+    this.chart.options = ChartJS.helpers.configMerge(this.chart.options, options);
 
-    this.memoizeDataProps()
+    this.memoizeDataProps();
 
-    const datasets: ChartDataSet[] = this.chart.config.data.datasets
-    const nextDatasets: ChartDataSet[] = this.currentChartData.datasets || []
+    const datasets: ChartDataSet[] = this.chart.config.data.datasets;
+    const nextDatasets: ChartDataSet[] = this.currentChartData.datasets || [];
 
     // Remove stale datasets if they're not available in nextDatasets
     if (datasets.length > nextDatasets.length) {
       const sets = [...datasets];
       sets.forEach(set => {
         if (!nextDatasets.find(next => next.id === set.id)) {
-          remove(datasets, (item => item.id === set.id))
+          remove(datasets, (item => item.id === set.id));
         }
-      })
+      });
     }
 
     // Mutating inner chart datasets to enable seamless transitions
     nextDatasets.forEach((next, datasetIndex) => {
-      const index = datasets.findIndex(set => set.id === next.id)
+      const index = datasets.findIndex(set => set.id === next.id);
       if (index !== -1) {
-        datasets[index].data = datasets[index].data.slice()  // "Clean" mobx observables data to use in ChartJS
-        datasets[index].data.splice(next.data.length)
+        datasets[index].data = datasets[index].data.slice();  // "Clean" mobx observables data to use in ChartJS
+        datasets[index].data.splice(next.data.length);
         next.data.forEach((point: any, dataIndex: number) => {
-          datasets[index].data[dataIndex] = next.data[dataIndex]
-        })
+          datasets[index].data[dataIndex] = next.data[dataIndex];
+        });
 
         // Merge other fields
-        const { data, ...props } = next
+        const { data: _data, ...props } = next;
         datasets[index] = {
           ...datasets[index],
           ...props
-        }
+        };
+      } else {
+        datasets[datasetIndex] = next;
       }
-      else {
-        datasets[datasetIndex] = next
-      }
-    })
-    this.chart.update()
+    });
+    this.chart.update();
   }
 
-  renderLegend() {
-    if (!this.props.showLegend) return null
-    const { data, legendColors } = this.props
-    const { labels, datasets } = data
-    const labelElem = (title: string, color: string, tooltip?: string) => (
+  renderLegend(): JSX.Element {
+    if (!this.props.showLegend) {
+      return null;
+    }
+    const { data, legendColors } = this.props;
+    const { labels, datasets } = data;
+    const labelElem = (title: string, color: string, tooltip?: string): JSX.Element => (
       <Badge
         key={title}
         className="flex gaps align-center"
@@ -153,24 +157,24 @@ export class Chart extends PureComponent<ChartProps> {
         )}
         tooltip={tooltip}
       />
-    )
+    );
     return (
       <div className="legend flex wrap gaps">
         {labels && labels.map((label: string, index) => {
-          const { backgroundColor } = datasets[0] as any
-          const color = legendColors ? legendColors[index] : backgroundColor[index]
-          return labelElem(label, color)
+          const { backgroundColor } = datasets[0] as any;
+          const color = legendColors ? legendColors[index] : backgroundColor[index];
+          return labelElem(label, color);
         })}
         {!labels && datasets.map(({ borderColor, label, tooltip }) =>
           labelElem(label, borderColor as any, tooltip)
         )}
       </div>
-    )
+    );
   }
 
-  renderChart() {
-    const { type, options, plugins } = this.props
-    this.memoizeDataProps()
+  renderChart(): void {
+    const { type, options, plugins } = this.props;
+    this.memoizeDataProps();
     this.chart = new ChartJS(this.canvas.current, {
       type,
       plugins,
@@ -181,11 +185,11 @@ export class Chart extends PureComponent<ChartProps> {
         },
       },
       data: this.currentChartData,
-    })
+    });
   }
 
-  render() {
-    const { width, height, showChart, title, className } = this.props
+  render(): JSX.Element {
+    const { width, height, showChart, title, className } = this.props;
     return (
       <>
         <div className={cssNames("Chart", className)}>
@@ -203,6 +207,6 @@ export class Chart extends PureComponent<ChartProps> {
           {this.renderLegend()}
         </div>
       </>
-    )
+    );
   }
 }

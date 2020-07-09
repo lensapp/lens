@@ -7,7 +7,7 @@ import { observable, reaction } from "mobx";
 import { Link } from "react-router-dom";
 import { t, Trans } from "@lingui/macro";
 import kebabCase from "lodash/kebabCase";
-import { HelmRelease, helmReleasesApi, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
+import { HelmRelease, helmReleasesApi, ReleaseInfo } from "../../api/endpoints/helm-releases.api";
 import { HelmReleaseMenu } from "./release-menu";
 import { Drawer, DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
@@ -35,14 +35,16 @@ interface Props {
 
 @observer
 export class ReleaseDetails extends Component<Props> {
-  @observable details: IReleaseDetails;
+  @observable details: ReleaseInfo;
   @observable values = "";
   @observable saving = false;
   @observable releaseSecret: Secret;
 
   @disposeOnUnmount
   releaseSelector = reaction(() => this.props.release, release => {
-    if (!release) return;
+    if (!release) {
+      return;
+    }
     this.loadDetails();
     this.loadValues();
     this.releaseSecret = null;
@@ -51,33 +53,36 @@ export class ReleaseDetails extends Component<Props> {
 
   @disposeOnUnmount
   secretWatcher = reaction(() => secretsStore.items.toJS(), () => {
-    if (!this.props.release) return;
+    if (!this.props.release) {
+      return;
+    }
     const { getReleaseSecret } = releaseStore;
     const { release } = this.props;
     const secret = getReleaseSecret(release);
     if (this.releaseSecret) {
-      if (isEqual(this.releaseSecret.getLabels(), secret.getLabels())) return;
+      if (isEqual(this.releaseSecret.getLabels(), secret.getLabels())) {
+        return;
+      }
       this.loadDetails();
     }
     this.releaseSecret = secret;
   });
 
-  async loadDetails() {
+  async loadDetails(): Promise<void> {
     const { release } = this.props;
     this.details = null;
-    this.details = await helmReleasesApi.get(release.getName(), release.getNs());
+    this.details = await helmReleasesApi.get(release.getName(), release.namespace);
   }
 
-  async loadValues() {
+  async loadValues(): Promise<void> {
     const { release } = this.props;
     this.values = "";
-    this.values = await helmReleasesApi.getValues(release.getName(), release.getNs());
+    this.values = await helmReleasesApi.getValues(release.getName(), release.namespace);
   }
 
-  updateValues = async () => {
+  updateValues = async (): Promise<void> => {
     const { release } = this.props;
-    const name = release.getName();
-    const namespace = release.getNs()
+    const { namespace, name} = release;
     const data = {
       chart: release.getChart(),
       repo: await release.getRepo(),
@@ -96,13 +101,13 @@ export class ReleaseDetails extends Component<Props> {
     this.saving = false;
   }
 
-  upgradeVersion = () => {
+  upgradeVersion = (): void => {
     const { release, hideDetails } = this.props;
     createUpgradeChartTab(release);
     hideDetails();
   }
 
-  renderValues() {
+  renderValues(): JSX.Element {
     const { values, saving } = this;
     return (
       <div className="values">
@@ -111,7 +116,7 @@ export class ReleaseDetails extends Component<Props> {
           <AceEditor
             mode="yaml"
             value={values}
-            onChange={values => this.values = values}
+            onChange={(values): string => this.values = values}
           />
           <Button
             primary
@@ -121,11 +126,13 @@ export class ReleaseDetails extends Component<Props> {
           />
         </div>
       </div>
-    )
+    );
   }
 
-  renderNotes() {
-    if (!this.details.info?.notes) return null;
+  renderNotes(): JSX.Element {
+    if (!this.details.info?.notes) {
+      return null;
+    }
     const { notes } = this.details.info;
     return (
       <div className="notes">
@@ -134,9 +141,11 @@ export class ReleaseDetails extends Component<Props> {
     );
   }
 
-  renderResources() {
+  renderResources(): JSX.Element {
     const { resources } = this.details;
-    if (!resources) return null;
+    if (!resources) {
+      return null;
+    }
     const groups = groupBy(resources, item => item.kind);
     const tables = Object.entries(groups).map(([kind, items]) => {
       return (
@@ -177,10 +186,12 @@ export class ReleaseDetails extends Component<Props> {
     );
   }
 
-  renderContent() {
+  renderContent(): JSX.Element {
     const { release } = this.props;
     const { details } = this;
-    if (!release) return null;
+    if (!release) {
+      return null;
+    }
     if (!details) {
       return <Spinner center/>;
     }
@@ -201,7 +212,7 @@ export class ReleaseDetails extends Component<Props> {
           {release.getUpdated()} <Trans>ago</Trans> ({release.updated})
         </DrawerItem>
         <DrawerItem name={<Trans>Namespace</Trans>}>
-          {release.getNs()}
+          {release.namespace}
         </DrawerItem>
         <DrawerItem name={<Trans>Version</Trans>} onClick={stopPropagation}>
           <div className="version flex gaps align-center">
@@ -222,13 +233,13 @@ export class ReleaseDetails extends Component<Props> {
         <DrawerTitle title={_i18n._(t`Resources`)}/>
         {this.renderResources()}
       </div>
-    )
+    );
   }
 
-  render() {
-    const { release, hideDetails } = this.props
-    const title = release ? <Trans>Release: {release.getName()}</Trans> : ""
-    const toolbar = <HelmReleaseMenu release={release} toolbar hideDetails={hideDetails}/>
+  render(): JSX.Element {
+    const { release, hideDetails } = this.props;
+    const title = release ? <Trans>Release: {release.getName()}</Trans> : "";
+    const toolbar = <HelmReleaseMenu release={release} toolbar hideDetails={hideDetails}/>;
     return (
       <Drawer
         className={cssNames("ReleaseDetails", themeStore.activeTheme.type)}
@@ -240,6 +251,6 @@ export class ReleaseDetails extends Component<Props> {
       >
         {this.renderContent()}
       </Drawer>
-    )
+    );
   }
 }

@@ -26,7 +26,7 @@ export class PodDetailsSecrets extends Component<Props> {
     );
   });
 
-  render() {
+  render(): JSX.Element {
     return (
       <div className="PodDetailsSecrets">
         {

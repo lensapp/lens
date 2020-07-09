@@ -1,4 +1,4 @@
-import "./error-boundary.scss"
+import "./error-boundary.scss";
 
 import React, { ErrorInfo } from "react";
 import { reaction } from "mobx";
@@ -27,19 +27,19 @@ export class ErrorBoundary extends React.Component<Props, State> {
     () => this.setState({ error: null, errorInfo: null })
   )
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     this.setState({ error, errorInfo });
   }
 
-  back = () => {
+  back = (): void => {
     navigation.goBack();
   }
 
-  render() {
+  render(): JSX.Element | React.ReactNode {
     const { error, errorInfo } = this.state;
     if (error) {
-      const slackLink = <a href="https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI" target="_blank">Slack</a>
-      const githubLink = <a href="https://github.com/lensapp/lens/issues" target="_blank">Github</a>
+      const slackLink = <a href="https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI" rel="noreferrer" target="_blank">Slack</a>;
+      const githubLink = <a href="https://github.com/lensapp/lens/issues" rel="noreferrer" target="_blank">Github</a>;
       const pageUrl = location.href;
       return (
         <div className="ErrorBoundary flex column gaps">
@@ -68,7 +68,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
             onClick={this.back}
           />
         </div>
-      )
+      );
     }
     return this.props.children;
   }

@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { observer } from "mobx-react";
 import { computed } from "mobx";
 import { t, Trans } from "@lingui/macro";
@@ -28,7 +28,7 @@ export class PageFiltersSelect extends React.Component<Props> {
     disableFilters: {},
   }
 
-  @computed get groupedOptions() {
+  @computed get groupedOptions(): GroupSelectOption<SelectOptionFilter>[] {
     const options: GroupSelectOption<SelectOptionFilter>[] = [];
     const { disableFilters } = this.props;
     if (!disableFilters[FilterType.NAMESPACE]) {
@@ -42,9 +42,9 @@ export class PageFiltersSelect extends React.Component<Props> {
             value: name,
             icon: <Icon small material="layers"/>,
             selected: selectedValues.includes(name),
-          }
+          };
         })
-      })
+      });
     }
     return options;
   }
@@ -53,10 +53,10 @@ export class PageFiltersSelect extends React.Component<Props> {
     return this.groupedOptions.reduce((options, optGroup) => {
       options.push(...optGroup.options);
       return options;
-    }, [])
+    }, []);
   }
 
-  private formatLabel = (option: SelectOptionFilter) => {
+  private formatLabel = (option: SelectOptionFilter): JSX.Element => {
     const { label, value, type, selected } = option;
     return (
       <div className="flex gaps">
@@ -67,30 +67,29 @@ export class PageFiltersSelect extends React.Component<Props> {
     );
   }
 
-  private onSelect = (option: SelectOptionFilter) => {
+  private onSelect = (option: SelectOptionFilter): void => {
     const { type, value, selected } = option;
     const { addFilter, removeFilter } = pageFilters;
     const filter = { type, value };
     if (!selected) {
       addFilter(filter);
-    }
-    else {
+    } else {
       removeFilter(filter);
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { groupedOptions, formatLabel, onSelect, options } = this;
     if (!options.length && this.props.allowEmpty) {
       return null;
     }
-    const { allowEmpty, disableFilters, ...selectProps } = this.props;
+    const { allowEmpty: _allowEmpty, disableFilters: _disableFilters, ...selectProps } = this.props;
     const selectedOptions = options.filter(opt => opt.selected);
     return (
       <Select
         {...selectProps}
         placeholder={_i18n._(t`Filters (${selectedOptions.length}/${options.length})`)}
-        noOptionsMessage={() => _i18n._(t`No filters available.`)}
+        noOptionsMessage={(): string=> _i18n._(t`No filters available.`)}
         autoConvertOptions={false}
         tabSelectsValue={false}
         controlShouldRenderValue={false}
@@ -98,6 +97,6 @@ export class PageFiltersSelect extends React.Component<Props> {
         formatOptionLabel={formatLabel}
         onChange={onSelect}
       />
-    )
+    );
   }
 }

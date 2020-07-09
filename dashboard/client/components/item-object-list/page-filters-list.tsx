@@ -1,5 +1,5 @@
-import "./page-filters-list.scss"
-import React from "react"
+import "./page-filters-list.scss";
+import React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { Badge } from "../badge";
@@ -20,10 +20,10 @@ export class PageFiltersList extends React.Component<Props> {
     }
   }
 
-  reset = () => pageFilters.reset()
-  remove = (filter: Filter) => pageFilters.removeFilter(filter)
+  reset = (): void => pageFilters.reset()
+  remove = (filter: Filter): void => pageFilters.removeFilter(filter)
 
-  renderContent() {
+  renderContent(): JSX.Element {
     const { filters } = this.props;
     if (!filters.length) {
       return null;
@@ -51,23 +51,23 @@ export class PageFiltersList extends React.Component<Props> {
                     <Icon
                       small
                       material="close"
-                      onClick={() => this.remove(filter)}
+                      onClick={(): void => this.remove(filter)}
                     />
                   </>
                 )}
               />
-            )
+            );
           })}
         </div>
       </>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <div className="PageFiltersList">
         {this.renderContent()}
       </div>
-    )
+    );
   }
 }

@@ -4,15 +4,15 @@ import moment from "moment";
 import { apiBase } from "../index";
 import { IMetricsQuery } from "../../../server/common/metrics";
 
-export interface IMetrics {
+export interface Metrics {
   status: string;
   data: {
     resultType: string;
-    result: IMetricsResult[];
+    result: MetricsResult[];
   };
 }
 
-export interface IMetricsResult {
+export interface MetricsResult {
   metric: {
     [name: string]: string;
     instance: string;
@@ -25,7 +25,7 @@ export interface IMetricsResult {
   values: [number, string][];
 }
 
-export interface IMetricsReqParams {
+export interface MetricsReqParams {
   start?: number | string;        // timestamp in seconds or valid date-string
   end?: number | string;
   step?: number;                  // step in seconds (default: 60s = each point 1m)
@@ -34,7 +34,7 @@ export interface IMetricsReqParams {
 }
 
 export const metricsApi = {
-  async getMetrics<T = IMetricsQuery>(query: T, reqParams: IMetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: IMetrics } : IMetrics> {
+  async getMetrics<T = IMetricsQuery>(query: T, reqParams: MetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: Metrics } : Metrics> {
     const { range = 3600, step = 60, namespace } = reqParams;
     let { start, end } = reqParams;
 
@@ -55,18 +55,20 @@ export const metricsApi = {
   },
 };
 
-export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
+export function normalizeMetrics(metrics: Metrics, frames = 60): Metrics {
   if (!metrics?.data?.result) {
     return {
       data: {
         resultType: "",
         result: [{
-          metric: {},
+          metric: {
+            instance: "",
+          },
           values: []
-        } as IMetricsResult],
+        }],
       },
       status: "",
-    }
+    };
   }
 
   const { result } = metrics.data;
@@ -75,34 +77,40 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
     if (frames > 0) {
       // fill the gaps
       result.forEach(res => {
-        if (!res.values || !res.values.length) return;
+        if (!res.values || !res.values.length) {
+          return;
+        }
         while (res.values.length < frames) {
           const timestamp = moment.unix(res.values[0][0]).subtract(1, "minute").unix();
-          res.values.unshift([timestamp, "0"])
+          res.values.unshift([timestamp, "0"]);
         }
       });
     }
   } else {
     // always return at least empty values array
     result.push({
-      metric: {},
+      metric: {
+        instance: "",
+      },
       values: []
-    } as IMetricsResult);
+    });
   }
 
   return metrics;
 }
 
-export function isMetricsEmpty(metrics: { [key: string]: IMetrics }) {
+export function isMetricsEmpty(metrics: { [key: string]: Metrics }): boolean {
   return Object.values(metrics).every(metric => !metric?.data?.result?.length);
 }
 
-export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: string): { [key: string]: IMetrics } {
-  if (!metrics) return;
+export function getItemMetrics(metrics: { [key: string]: Metrics }, itemName: string): { [key: string]: Metrics } {
+  if (!metrics) {
+    return;
+  }
   const itemMetrics = { ...metrics };
   for (const metric in metrics) {
     if (!metrics[metric]?.data?.result) {
-      continue
+      continue;
     }
     const results = metrics[metric].data.result;
     const result = results.find(res => Object.values(res.metric)[0] == itemName);
@@ -111,7 +119,7 @@ export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: s
   return itemMetrics;
 }
 
-export function getMetricLastPoints(metrics: { [key: string]: IMetrics }) {
+export function getMetricLastPoints(metrics: { [key: string]: Metrics }): { [metric: string]: number } {
   const result: Partial<{[metric: string]: number}> = {};
 
   Object.keys(metrics).forEach(metricName => {

@@ -1,13 +1,13 @@
 import { observable, reaction } from "mobx";
 import { setupI18n } from "@lingui/core";
-import { autobind, createStorage } from "./utils";
-import orderBy from "lodash/orderBy"
+import { autobind, StorageHelper } from "./utils";
+import orderBy from "lodash/orderBy";
 
 import moment from "moment";
 import "moment/locale/ru";
 import "moment/locale/fi";
 
-export interface ILanguage {
+export interface Language {
   code: string;
   title: string;
   nativeTitle: string;
@@ -25,23 +25,23 @@ export class LocalizationStore {
   readonly defaultLocale = "en"
   @observable activeLang = this.defaultLocale;
 
-  public languages: ILanguage[] = orderBy<ILanguage>([
+  public languages: Language[] = orderBy<Language>([
     { code: "en", title: "English", nativeTitle: "English" },
     { code: "ru", title: "Russian", nativeTitle: "Русский" },
     // { code: "fi", title: "Finnish", nativeTitle: "Suomi" },
   ], "title");
 
   constructor() {
-    const storage = createStorage("lang_ui", this.defaultLocale);
+    const storage = new StorageHelper("lang_ui", this.defaultLocale);
     this.activeLang = storage.get();
     reaction(() => this.activeLang, lang => storage.set(lang));
   }
 
-  async init() {
+  async init(): Promise<void> {
     await this.setLocale(this.activeLang);
   }
 
-  async load(locale: string) {
+  async load(locale: string): Promise<any> {
     const catalog = await import(
       /* webpackMode: "lazy", webpackChunkName: "locale/[request]" */
       `../locales/${locale}/messages.js`
@@ -49,7 +49,7 @@ export class LocalizationStore {
     return _i18n.load(locale, catalog);
   }
 
-  async setLocale(locale: string) {
+  async setLocale(locale: string): Promise<void> {
     await this.load(locale);
     await _i18n.activate(locale);
 

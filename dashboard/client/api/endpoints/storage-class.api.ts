@@ -14,20 +14,20 @@ export class StorageClass extends KubeObject {
     [param: string]: string; // every provisioner has own set of these parameters
   }
 
-  isDefault() {
+  isDefault(): boolean {
     const annotations = this.metadata.annotations || {};
     return (
       annotations["storageclass.kubernetes.io/is-default-class"] === "true" ||
       annotations["storageclass.beta.kubernetes.io/is-default-class"] === "true"
-    )
+    );
   }
 
-  getVolumeBindingMode() {
-    return this.volumeBindingMode || "-"
+  getVolumeBindingMode(): string {
+    return this.volumeBindingMode || "-";
   }
 
-  getReclaimPolicy() {
-    return this.reclaimPolicy || "-"
+  getReclaimPolicy(): string {
+    return this.reclaimPolicy || "-";
   }
 }
 

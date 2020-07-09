@@ -30,36 +30,38 @@ export class NodeDetails extends React.Component<Props> {
     nodesStore.nodeMetrics = null;
   });
 
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     if (!podsStore.isLoaded) {
-      podsStore.loadAll();
+      await podsStore.loadAll();
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     nodesStore.nodeMetrics = null;
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: node } = this.props;
-    if (!node) return;
-    const { status } = node
-    const { nodeInfo, addresses, capacity, allocatable } = status
+    if (!node) {
+      return;
+    }
+    const { status } = node;
+    const { nodeInfo, addresses, capacity, allocatable } = status;
     const conditions = node.getActiveConditions();
-    const taints = node.getTaints()
-    const childPods = podsStore.getPodsByNode(node.getName())
-    const metrics = nodesStore.nodeMetrics
+    const taints = node.getTaints();
+    const childPods = podsStore.getPodsByNode(node.getName());
+    const metrics = nodesStore.nodeMetrics;
     const metricTabs = [
-      <Trans>CPU</Trans>,
-      <Trans>Memory</Trans>,
-      <Trans>Disk</Trans>,
-      <Trans>Pods</Trans>,
+      <Trans key="cpu">CPU</Trans>,
+      <Trans key="memory">Memory</Trans>,
+      <Trans key="disk">Disk</Trans>,
+      <Trans key="pods">Pods</Trans>,
     ];
     return (
       <div className="NodeDetails">
         {podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => nodesStore.loadMetrics(node.getName())}
+            loader={(): Promise<void> => nodesStore.loadMetrics(node.getName())}
             tabs={metricTabs} object={node} params={{ metrics }}
           >
             <NodeCharts/>
@@ -121,7 +123,7 @@ export class NodeDetails extends React.Component<Props> {
         <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
           {
             conditions.map(condition => {
-              const { type } = condition
+              const { type } = condition;
               return (
                 <Badge
                   key={type}
@@ -138,7 +140,7 @@ export class NodeDetails extends React.Component<Props> {
                     </TooltipContent>
                   }
                 />
-              )
+              );
             })
           }
         </DrawerItem>
@@ -151,7 +153,7 @@ export class NodeDetails extends React.Component<Props> {
         />
         <KubeEventDetails object={node}/>
       </div>
-    )
+    );
   }
 }
 

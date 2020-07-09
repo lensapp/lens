@@ -2,22 +2,26 @@ import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
+export interface ImagePullSecret {
+  name: string;
+}
+
+export interface Secret {
+  name: string;
+}
+
 @autobind()
 export class ServiceAccount extends KubeObject {
   static kind = "ServiceAccount";
 
-  secrets?: {
-    name: string;
-  }[]
-  imagePullSecrets?: {
-    name: string;
-  }[]
+  secrets?: Secret[]
+  imagePullSecrets?: ImagePullSecret[]
 
-  getSecrets() {
+  getSecrets(): Secret[] {
     return this.secrets || [];
   }
 
-  getImagePullSecrets() {
+  getImagePullSecrets(): ImagePullSecret[] {
     return this.imagePullSecrets || [];
   }
 }

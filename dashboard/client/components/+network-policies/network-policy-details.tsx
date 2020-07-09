@@ -1,10 +1,10 @@
-import "./network-policy-details.scss"
+import "./network-policy-details.scss";
 
 import get from "lodash/get";
 import React, { Fragment } from "react";
 import { t, Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { IPolicyEgress, IPolicyIngress, IPolicyIpBlock, IPolicySelector, NetworkPolicy, networkPolicyApi } from "../../api/endpoints/network-policy.api";
+import { PolicyEgress, PolicyIngress, PolicyIpBlock, PolicySelector, NetworkPolicy, networkPolicyApi } from "../../api/endpoints/network-policy.api";
 import { Badge } from "../badge";
 import { SubTitle } from "../layout/sub-title";
 import { KubeEventDetails } from "../+events/kube-event-details";
@@ -19,18 +19,22 @@ interface Props extends KubeObjectDetailsProps<NetworkPolicy> {
 
 @observer
 export class NetworkPolicyDetails extends React.Component<Props> {
-  renderIngressFrom(ingress: IPolicyIngress) {
+  renderIngressFrom(ingress: PolicyIngress): JSX.Element {
     const { from } = ingress;
-    if (!from) return null;
+    if (!from) {
+      return null;
+    }
     return (
       <>
         <SubTitle title={<Trans>From</Trans>}/>
         {from.map(item =>
           Object.keys(item).map(key => {
-            const data = get(item, key)
+            const data = get(item, key);
             if (key === "ipBlock") {
-              const { cidr, except } = data as IPolicyIpBlock;
-              if (!cidr) return
+              const { cidr, except } = data as PolicyIpBlock;
+              if (!cidr) {
+                return;
+              }
               return (
                 <DrawerItem name={key} key={key}>
                   cidr: {cidr}, {" "}
@@ -38,9 +42,9 @@ export class NetworkPolicyDetails extends React.Component<Props> {
                   `except: ${except.join(", ")}`
                   }
                 </DrawerItem>
-              )
+              );
             }
-            const selector: IPolicySelector = data
+            const selector: PolicySelector = data;
             if (selector.matchLabels) {
               return (
                 <DrawerItem name={key} key={key}>
@@ -51,9 +55,8 @@ export class NetworkPolicyDetails extends React.Component<Props> {
                       .join(", ")
                   }
                 </DrawerItem>
-              )
-            }
-            else {
+              );
+            } else {
               return (<DrawerItem name={key} key={key}>(empty)</DrawerItem>);
             }
           })
@@ -62,17 +65,23 @@ export class NetworkPolicyDetails extends React.Component<Props> {
     );
   }
 
-  renderEgressTo(egress: IPolicyEgress) {
+  renderEgressTo(egress: PolicyEgress): JSX.Element | null {
     const { to } = egress;
-    if (!to) return null;
+    if (!to) {
+      return null;
+    }
     return (
       <>
         <SubTitle title={<Trans>To</Trans>}/>
         {to.map(item => {
-          const { ipBlock } = item
-          if (!ipBlock) return
-          const { cidr, except } = ipBlock
-          if (!cidr) return
+          const { ipBlock } = item;
+          if (!ipBlock) {
+            return;
+          }
+          const { cidr, except } = ipBlock;
+          if (!cidr) {
+            return;
+          }
           return (
             <DrawerItem name="ipBlock" key={cidr}>
               cidr: {cidr}, {" "}
@@ -80,13 +89,13 @@ export class NetworkPolicyDetails extends React.Component<Props> {
               `except: ${except.join(", ")}`
               }
             </DrawerItem>
-          )
+          );
         })}
       </>
     );
   }
 
-  render() {
+  render(): JSX.Element | null {
     const { object: policy } = this.props;
     if (!policy) {
       return null;
@@ -116,7 +125,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
                   </DrawerItem>
                   {this.renderIngressFrom(ingress)}
                 </Fragment>
-              )
+              );
             })}
           </>
         )}
@@ -133,7 +142,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
                   </DrawerItem>
                   {this.renderEgressTo(egress)}
                 </Fragment>
-              )
+              );
             })}
           </>
         )}
@@ -146,4 +155,4 @@ export class NetworkPolicyDetails extends React.Component<Props> {
 
 apiManager.registerViews(networkPolicyApi, {
   Details: NetworkPolicyDetails
-})
+});

@@ -20,10 +20,10 @@ export class CustomResources extends React.Component {
         url: crdURL(),
         path: crdRoute.path,
       }
-    ]
+    ];
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <MainLayout>
         <Switch>

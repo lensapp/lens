@@ -1,21 +1,28 @@
 // Get kubernetes services and port-forward them to pods at localhost
 // To be used in development only
 
-import * as yargs from "yargs"
-import * as concurrently from "concurrently"
+import * as yargs from "yargs";
+import * as concurrently from "concurrently";
 import chalk from "chalk";
-import { find } from "lodash"
-import { execSync } from "child_process"
+import { find } from "lodash";
+import { execSync } from "child_process";
 import { Pod } from "../client/api/endpoints/pods.api";
 import { Service } from "../client/api/endpoints/service.api";
 import config from "../server/config";
 
-var { LOCAL_SERVER_PORT, WEBPACK_DEV_SERVER_PORT, KUBE_TERMINAL_URL, KUBE_METRICS_URL } = config;
-var terminalPort = +KUBE_TERMINAL_URL.match(/\d+$/)[0];
-var metricsPort = +KUBE_METRICS_URL.match(/\d+$/)[0];
+const { LOCAL_SERVER_PORT, WEBPACK_DEV_SERVER_PORT, KUBE_TERMINAL_URL, KUBE_METRICS_URL } = config;
+const terminalPort = +KUBE_TERMINAL_URL.match(/\d+$/)[0];
+const metricsPort = +KUBE_METRICS_URL.match(/\d+$/)[0];
+
+interface Options {
+  namespaces: string[];
+  portOverride: Record<string, number>;
+  skipServices: string[];
+  verbose: boolean;
+}
 
 // Configure default options
-var { namespaces, portOverride, skipServices, verbose } = yargs.options({
+const { namespaces, portOverride, skipServices, verbose }: Options = yargs.options({
   namespaces: {
     alias: "n",
     describe: "Namespaces to search Services & Pods. Example: --namespaces name1 name2 etc",
@@ -46,7 +53,7 @@ var { namespaces, portOverride, skipServices, verbose } = yargs.options({
   },
 }).argv;
 
-interface IServiceForward {
+interface ServiceForward {
   namespace: string;
   serviceName: string;
   podName: string;
@@ -54,32 +61,39 @@ interface IServiceForward {
   localPort?: number;
 }
 
-function getServices() {
-  var forwards: IServiceForward[] = [];
+function getServices(): ServiceForward[] {
+  const forwards: ServiceForward[] = [];
 
   // Search Pod by Service.spec.selector for kubectl port-forward commands
   namespaces.forEach(namespace => {
-    var pods = JSON.parse(execSync(`kubectl get pods -n ${namespace} -o json`).toString());
-    var services = JSON.parse(execSync(`kubectl get services -n ${namespace} -o json`).toString());
+    const pods = JSON.parse(execSync(`kubectl get pods -n ${namespace} -o json`).toString());
+    const services = JSON.parse(execSync(`kubectl get services -n ${namespace} -o json`).toString());
 
     services.items.forEach((service: Service) => {
-      var serviceName = service.metadata.name;
-      var port = service.spec.ports && service.spec.ports[0].targetPort;
-      var podSelector = service.spec.selector;
-      var pod: Pod = find(pods.items, {
+      const serviceName = service.metadata.name;
+      const port = service.spec?.ports[0].targetPort;
+      const podSelector = service.spec.selector;
+      const pod: Pod = find(pods.items, {
         metadata: {
           labels: podSelector
         }
       });
-      var podName = pod ? pod.metadata.name : null;
-      var localPort = portOverride[serviceName] || port;
-      var skipByName = skipServices.includes(serviceName);
-      var skipByPort = ["http", WEBPACK_DEV_SERVER_PORT, LOCAL_SERVER_PORT].includes(localPort);
+      const podName = pod?.metadata?.name || null;
+      const localPort = portOverride[serviceName] || port;
+      const skipByName = skipServices.includes(serviceName);
+      const skipByPort = ["http", WEBPACK_DEV_SERVER_PORT, LOCAL_SERVER_PORT].includes(localPort);
       if (skipByName || skipByPort || !podName) {
-        var getReason = () => {
-          if (skipByName) return "service is excluded in configuration"
-          if (skipByPort) return "local port already in use"
-          if (!podName) return `pod not found, selector: ${JSON.stringify(podSelector)}`
+        const getReason = (): string => {
+          if (skipByName) {
+            return "service is excluded in configuration";
+          }
+          if (skipByPort) {
+            return "local port already in use";
+          }
+          if (!podName) {
+            return `pod not found, selector: ${JSON.stringify(podSelector)}`;
+          }
+          return "";
         };
         console.info(
           chalk.yellow(
@@ -87,13 +101,9 @@ function getServices() {
             `Ports (local/remote): ${chalk.bold(`${localPort}/${port}`)}`,
             `Pod: ${chalk.bold(podName)}`
           ),
-        )
-      }
-      else {
-        forwards.push({
-          namespace, serviceName, podName,
-          port, localPort,
-        });
+        );
+      } else {
+        forwards.push({ namespace, serviceName, podName, port, localPort });
       }
     });
   });
@@ -102,11 +112,11 @@ function getServices() {
 }
 
 // Run
-var services = getServices();
-var commands = services.map(({ podName, localPort, port, namespace }: IServiceForward) => {
-  return `kubectl port-forward -n ${namespace} ${podName} ${localPort}:${port}`
+const services = getServices();
+const commands = services.map(({ podName, localPort, port, namespace }: ServiceForward) => {
+  return `kubectl port-forward -n ${namespace} ${podName} ${localPort}:${port}`;
 });
-services.forEach(({ serviceName, namespace, podName, port, localPort }, index) => {
+services.forEach(({ serviceName, namespace, podName, port: _port, localPort }, index) => {
   console.log(
     chalk.blueBright.bold(`[${index + 1}] Port-forward`),
     `http://${serviceName}.${namespace}.svc.cluster.local -> http://localhost:${localPort}`,

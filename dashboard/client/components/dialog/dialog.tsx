@@ -47,63 +47,75 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     isOpen: this.props.isOpen,
   }
 
-  get elem() {
+  get elem(): HTMLElement {
+    // eslint-disable-next-line react/no-find-dom-node
     return findDOMNode(this) as HTMLElement;
   }
 
-  get isOpen() {
+  get isOpen(): boolean {
     return this.state.isOpen;
   }
 
-  componentDidMount() {
-    if (this.isOpen) this.onOpen();
+  componentDidMount(): void {
+    if (this.isOpen) {
+      this.onOpen();
+    }
   }
 
-  componentDidUpdate(prevProps: DialogProps) {
+  componentDidUpdate(prevProps: DialogProps): void {
     const { isOpen } = this.props;
     if (isOpen !== prevProps.isOpen) {
       this.toggle(isOpen);
     }
   }
 
-  componentWillUnmount() {
-    if (this.isOpen) this.onClose();
+  componentWillUnmount(): void {
+    if (this.isOpen) {
+      this.onClose();
+    }
   }
 
-  toggle(isOpen: boolean) {
-    if (isOpen) this.open();
-    else this.close();
+  toggle(isOpen: boolean): void {
+    if (isOpen) {
+      this.open();
+    } else {
+      this.close();
+    }
   }
 
-  open() {
+  open(): void {
     requestAnimationFrame(this.onOpen); // wait for render(), bind close-event to this.elem
     this.setState({ isOpen: true });
     this.props.open();
   }
 
-  close() {
+  close(): void {
     this.onClose(); // must be first to get access to dialog's content from outside
     this.setState({ isOpen: false });
     this.props.close();
   }
 
-  onOpen = () => {
+  onOpen = (): void => {
     this.props.onOpen();
     if (!this.props.pinned) {
-      if (this.elem) this.elem.addEventListener('click', this.onClickOutside);
+      if (this.elem) {
+        this.elem.addEventListener('click', this.onClickOutside);
+      }
       window.addEventListener('keydown', this.onEscapeKey);
     }
   }
 
-  onClose = () => {
+  onClose = (): void => {
     this.props.onClose();
     if (!this.props.pinned) {
-      if (this.elem) this.elem.removeEventListener('click', this.onClickOutside);
+      if (this.elem) {
+        this.elem.removeEventListener('click', this.onClickOutside);
+      }
       window.removeEventListener('keydown', this.onEscapeKey);
     }
   }
 
-  onEscapeKey = (evt: KeyboardEvent) => {
+  onEscapeKey = (evt: KeyboardEvent): void=> {
     const escapeKey = evt.code === "Escape";
     if (escapeKey) {
       this.close();
@@ -111,7 +123,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     }
   }
 
-  onClickOutside = (evt: MouseEvent) => {
+  onClickOutside = (evt: MouseEvent): void => {
     const target = evt.target as HTMLElement;
     if (!this.contentElem.contains(target)) {
       this.close();
@@ -119,13 +131,15 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { modal, animated, pinned } = this.props;
     let { className } = this.props;
     className = cssNames("Dialog flex center", className, { modal, pinned });
     let dialog = (
       <div className={className} onClick={stopPropagation}>
-        <div className="box" ref={e => this.contentElem = e}>
+        <div className="box" ref={(e): void => {
+          this.contentElem = e;
+        }}>
           {this.props.children}
         </div>
       </div>
@@ -136,8 +150,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
           {dialog}
         </Animate>
       );
-    }
-    else if (!this.isOpen) {
+    } else if (!this.isOpen) {
       return null;
     }
     return createPortal(dialog, document.body);

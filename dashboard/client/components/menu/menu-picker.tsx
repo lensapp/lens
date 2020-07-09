@@ -1,4 +1,4 @@
-import './menu-picker.scss'
+import './menu-picker.scss';
 
 import React, { useRef, useState } from "react";
 import { cssNames } from "../../utils";
@@ -12,12 +12,12 @@ interface Props extends Partial<MenuProps> {
   waiting?: boolean;
 }
 
-export function MenuPicker(props: Props) {
+export function MenuPicker(props: Props): JSX.Element {
   const id = useRef(uniqueId("menu_picker_")).current;
   const { className, title, waiting, children, ...menuProps } = props;
   const [isOpen, setOpen] = useState(false);
 
-  const toggle = () => setOpen(!isOpen);
+  const toggle = (): void => setOpen(!isOpen);
 
   return (
     <div className={cssNames("MenuPicker", className, { waiting })}>
@@ -38,5 +38,5 @@ export function MenuPicker(props: Props) {
         {children}
       </Menu>
     </div>
-  )
+  );
 }

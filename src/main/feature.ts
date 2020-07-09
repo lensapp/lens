@@ -1,20 +1,20 @@
 import * as fs from "fs";
-import * as path from "path"
-import * as hb from "handlebars"
-import { ResourceApplier } from "./resource-applier"
-import { KubeConfig, CoreV1Api, Watch } from "@kubernetes/client-node"
+import * as path from "path";
+import * as hb from "handlebars";
+import { ResourceApplier } from "./resource-applier";
+import { KubeConfig, CoreV1Api, Watch } from "@kubernetes/client-node";
 import logger from "./logger";
 import { Cluster } from "./cluster";
 
-export type FeatureStatus = {
+export interface FeatureStatus {
   currentVersion: string;
   installed: boolean;
   latestVersion: string;
   canUpgrade: boolean;
   // TODO We need bunch of other stuff too: upgradeable, latestVersion, ...
-};
+}
 
-export type FeatureStatusMap = {
+export interface FeatureStatusMap {
   [name: string]: FeatureStatus;
 }
 
@@ -37,12 +37,12 @@ export abstract class Feature {
 
       // Apply processed manifests
       cluster.contextHandler.withTemporaryKubeconfig(async (kubeconfigPath) => {
-        const resourceApplier = new ResourceApplier(cluster, kubeconfigPath)
+        const resourceApplier = new ResourceApplier(cluster, kubeconfigPath);
         try {
-          await resourceApplier.kubectlApplyAll(resources)
-          resolve(true)
+          await resourceApplier.kubectlApplyAll(resources);
+          resolve(true);
         } catch(error) {
-          reject(error)
+          reject(error);
         }
       });
     });
@@ -54,23 +54,23 @@ export abstract class Feature {
 
   abstract async featureStatus(kc: KubeConfig): Promise<FeatureStatus>;
 
-  protected async deleteNamespace(kc: KubeConfig, name: string) {
+  protected async deleteNamespace(kc: KubeConfig, name: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
-      const client = kc.makeApiClient(CoreV1Api)
+      const client = kc.makeApiClient(CoreV1Api);
       const result = await client.deleteNamespace("lens-metrics", 'false', undefined, undefined, undefined, "Foreground");
       const nsVersion = result.body.metadata.resourceVersion;
       const nsWatch = new Watch(kc);
       const req = await nsWatch.watch('/api/v1/namespaces', {resourceVersion: nsVersion, fieldSelector: "metadata.name=lens-metrics"},
-        (type, obj) => {
+        (type, _obj) => {
           if(type === 'DELETED') {
-            logger.debug(`namespace ${name} finally gone`)
+            logger.debug(`namespace ${name} finally gone`);
             req.abort();
-            resolve()
+            resolve();
           }
         },
         (err) => {
           if(err) {
-            reject(err)
+            reject(err);
           }
         });
     });
@@ -81,7 +81,7 @@ export abstract class Feature {
     const resources: string[] = [];
     fs.readdirSync(this.manifestPath()).forEach((f) => {
       const file = path.join(this.manifestPath(), f);
-      console.log("processing file:", file)
+      console.log("processing file:", file);
       const raw = fs.readFileSync(file);
       console.log("raw file loaded");
       if(f.endsWith('.hb')) {
@@ -98,7 +98,7 @@ export abstract class Feature {
     return resources;
   }
 
-  protected manifestPath() {
+  protected manifestPath(): string {
     return path.join(__dirname, '..', 'features', this.name);
   }
 }

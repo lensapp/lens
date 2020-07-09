@@ -32,33 +32,44 @@ export class Wizard extends React.Component<WizardProps, State> {
     step: this.getValidStep(this.props.step)
   };
 
-  get steps() {
-    const { className, title, step, header, onChange, children, ...commonProps } = this.props;
+  get steps(): React.ReactElement[] {
+    const { 
+      className: _className,
+      title: _title,
+      step: _step,
+      header: _header,
+      onChange: _onChange,
+      children,
+      ...commonProps } = this.props;
     const steps = React.Children.toArray(children) as WizardStepElem[];
-    return steps.filter(step => !step.props.skip).map((stepElem, i) => {
-      const stepProps = stepElem.props;
-      return React.cloneElement(stepElem, {
-        step: i + 1,
-        wizard: this,
-        next: this.nextStep,
-        prev: this.prevStep,
-        first: this.firstStep,
-        last: this.lastStep,
-        isFirst: this.isFirstStep,
-        isLast: this.isLastStep,
-        ...commonProps,
-        ...stepProps
-      } as WizardStepProps<any>)
-    });
+    return steps
+      .filter(step => !step.props.skip)
+      .map((stepElem, i) => {
+        const stepProps = stepElem.props;
+        return React.cloneElement(stepElem, {
+          step: i + 1,
+          wizard: this,
+          next: this.nextStep,
+          prev: this.prevStep,
+          first: this.firstStep,
+          last: this.lastStep,
+          isFirst: this.isFirstStep,
+          isLast: this.isLastStep,
+          ...commonProps,
+          ...stepProps
+        });
+      });
   }
 
-  get step() {
-    return this.state.step;
+  get step(): number {
+    return this.state.step || 1;
   }
 
   set step(step: number) {
     step = this.getValidStep(step);
-    if (step === this.step) return;
+    if (step === this.step) {
+      return;
+    }
 
     this.setState({ step }, () => {
       if (this.props.onChange) {
@@ -67,20 +78,28 @@ export class Wizard extends React.Component<WizardProps, State> {
     });
   }
 
-  protected getValidStep(step: number) {
+  protected getValidStep(step: number): number {
     return Math.min(Math.max(1, step), this.steps.length) || 1;
   }
 
-  isFirstStep = () => this.step === 1;
-  isLastStep = () => this.step === this.steps.length;
-  firstStep = (): any => this.step = 1;
-  nextStep = (): any => this.step++;
-  prevStep = (): any => this.step--;
-  lastStep = (): any => this.step = this.steps.length;
+  isFirstStep = (): boolean => this.step === 1;
+  isLastStep = (): boolean => this.step === this.steps.length;
+  firstStep = (): void => {
+    this.step = 1;
+  };
+  nextStep = (): void => {
+    this.step++;
+  };
+  prevStep = (): void => {
+    this.step--;
+  };
+  lastStep = (): void => {
+    this.step = this.steps.length;
+  };
 
-  render() {
+  render(): JSX.Element {
     const { className, title, header, hideSteps } = this.props;
-    const steps = this.steps.map(stepElem => ({ title: stepElem.props.title }))
+    const steps = this.steps.map(stepElem => ({ title: stepElem.props.title }));
     const step = React.cloneElement(this.steps[this.step - 1]);
     return (
       <div className={cssNames("Wizard", className)}>
@@ -138,17 +157,20 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
     scrollable: true,
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.unmounting = true;
   }
 
-  prev = () => {
+  prev = (): void => {
     const { isFirst, prev, done } = this.props;
-    if (isFirst() && done) done();
-    else prev();
+    if (isFirst() && done) {
+      done();
+    } else {
+      prev();
+    }
   }
 
-  next = () => {
+  next = (): void => {
     const next = this.props.next;
     const nextStep = this.props.wizard.nextStep;
     if (nextStep !== next) {
@@ -156,36 +178,38 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
       if (result instanceof Promise) {
         this.setState({ waiting: true });
         result.then(nextStep).finally(() => {
-          if (this.unmounting) return;
+          if (this.unmounting) {
+            return;
+          }
           this.setState({ waiting: false });
         });
-      }
-      else if (typeof result === "boolean" && result) {
+      } else if (typeof result === "boolean" && result) {
         nextStep();
       }
-    }
-    else {
+    } else {
       nextStep();
     }
   }
 
-  submit = () => {
+  submit = (): void => {
     if (!this.form.noValidate) {
       const valid = this.form.checkValidity();
-      if (!valid) return;
+      if (!valid) {
+        return;
+      }
     }
     this.next();
   }
 
-  renderLoading() {
+  renderLoading(): JSX.Element {
     return (
       <div className="step-loading flex center">
         <Spinner/>
       </div>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     const {
       step, isFirst, isLast, children,
       loading, customButtons, disabledNext, scrollable,
@@ -203,7 +227,9 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
     return (
       <form className={className}
         onSubmit={prevDefault(this.submit)} noValidate={noValidate}
-        ref={e => this.form = e}>
+        ref={(e): void => {
+          this.form = e;
+        }}>
         {beforeContent}
         <div className={contentClass}>
           {loading ? this.renderLoading() : children}
@@ -225,6 +251,6 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
         )}
         {afterContent}
       </form>
-    )
+    );
   }
 }

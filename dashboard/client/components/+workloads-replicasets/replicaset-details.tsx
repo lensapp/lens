@@ -12,12 +12,13 @@ import { KubeEventDetails } from "../+events/kube-event-details";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { ReplicaSet, replicaSetApi } from "../../api/endpoints";
+import { ReplicaSet, replicaSetApi, PodMetricsData } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { Metrics } from "client/api/endpoints/metrics.api";
 
 interface Props extends KubeObjectDetailsProps<ReplicaSet> {
 }
@@ -29,31 +30,33 @@ export class ReplicaSetDetails extends React.Component<Props> {
     replicaSetStore.reset();
   });
 
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     if (!podsStore.isLoaded) {
-      podsStore.loadAll();
+      return podsStore.loadAll();
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     replicaSetStore.reset();
   }
 
-  render() {
-    const { object: replicaSet } = this.props
-    if (!replicaSet) return null
-    const { metrics } = replicaSetStore
-    const { status } = replicaSet
-    const { availableReplicas, replicas } = status
-    const selectors = replicaSet.getSelectors()
-    const nodeSelector = replicaSet.getNodeSelectors()
-    const images = replicaSet.getImages()
-    const childPods = replicaSetStore.getChildPods(replicaSet)
+  render(): JSX.Element {
+    const { object: replicaSet } = this.props;
+    if (!replicaSet) {
+      return null;
+    }
+    const { metrics } = replicaSetStore;
+    const { status } = replicaSet;
+    const { availableReplicas, replicas } = status;
+    const selectors = replicaSet.getSelectors();
+    const nodeSelector = replicaSet.getNodeSelectors();
+    const images = replicaSet.getImages();
+    const childPods = replicaSetStore.getChildPods(replicaSet);
     return (
       <div className="ReplicaSetDetails">
         {podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => replicaSetStore.loadMetrics(replicaSet)}
+            loader={(): Promise<PodMetricsData<Metrics>> => replicaSetStore.loadMetrics(replicaSet)}
             tabs={podMetricTabs} object={replicaSet} params={{ metrics }}
           >
             <PodCharts/>
@@ -62,23 +65,17 @@ export class ReplicaSetDetails extends React.Component<Props> {
         <KubeObjectMeta object={replicaSet}/>
         {selectors.length > 0 &&
         <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
-          {
-            selectors.map(label => <Badge key={label} label={label}/>)
-          }
+          { selectors.map(label => <Badge key={label} label={label}/>) }
         </DrawerItem>
         }
         {nodeSelector.length > 0 &&
         <DrawerItem name={<Trans>Node Selector</Trans>} labelsOnly>
-          {
-            nodeSelector.map(label => <Badge key={label} label={label}/>)
-          }
+          { nodeSelector.map(label => <Badge key={label} label={label}/>) }
         </DrawerItem>
         }
         {images.length > 0 &&
         <DrawerItem name={<Trans>Images</Trans>}>
-          {
-            images.map(image => <p key={image}>{image}</p>)
-          }
+          { images.map(image => <p key={image}>{image}</p>) }
         </DrawerItem>
         }
         <DrawerItem name={<Trans>Replicas</Trans>}>
@@ -93,10 +90,10 @@ export class ReplicaSetDetails extends React.Component<Props> {
         <PodDetailsList pods={childPods} owner={replicaSet}/>
         <KubeEventDetails object={replicaSet}/>
       </div>
-    )
+    );
   }
 }
 
 apiManager.registerViews(replicaSetApi, {
   Details: ReplicaSetDetails,
-})
+});

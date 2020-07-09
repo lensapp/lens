@@ -1,23 +1,27 @@
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
 import { t } from "@lingui/macro";
-import { IPvcMetrics, PersistentVolumeClaim } from "../../api/endpoints";
+import { PvcMetrics, PersistentVolumeClaim } from "../../api/endpoints";
 import { BarChart, ChartDataSet, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
-import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
+import { ResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
 import { _i18n } from "../../i18n";
 import { themeStore } from "../../theme.store";
 
-type IContext = IResourceMetricsValue<PersistentVolumeClaim, { metrics: IPvcMetrics }>;
+type IContext = ResourceMetricsValue<PersistentVolumeClaim, { metrics: PvcMetrics }>;
 
 export const VolumeClaimDiskChart = observer(() => {
   const { params: { metrics }, object } = useContext<IContext>(ResourceMetricsContext);
   const { chartCapacityColor } = themeStore.activeTheme.colors;
   const id = object.getId();
 
-  if (!metrics) return null;
-  if (isMetricsEmpty(metrics)) return <NoMetrics/>;
+  if (!metrics) {
+    return null;
+  }
+  if (isMetricsEmpty(metrics)) {
+    return <NoMetrics/>;
+  }
 
   const { diskUsage, diskCapacity } = metrics;
   const usage = normalizeMetrics(diskUsage).data.result[0].values;
@@ -38,7 +42,7 @@ export const VolumeClaimDiskChart = observer(() => {
       borderColor: chartCapacityColor,
       data: capacity.map(([x, y]) => ({ x, y }))
     }
-  ]
+  ];
 
   return (
     <BarChart

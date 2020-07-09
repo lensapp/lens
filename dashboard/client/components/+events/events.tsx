@@ -9,10 +9,11 @@ import { Trans } from "@lingui/macro";
 import { KubeEvent } from "../../api/endpoints/events.api";
 import { Tooltip, TooltipContent } from "../tooltip";
 import { Link } from "react-router-dom";
-import { cssNames, IClassName, stopPropagation } from "../../utils";
+import { cssNames, ClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
 import { getDetailsUrl } from "../../navigation";
 import { lookupApiLink } from "../../api/kube-api";
+import { ItemObject } from "client/item.store";
 
 enum sortBy {
   namespace = "namespace",
@@ -23,7 +24,7 @@ enum sortBy {
 }
 
 interface Props extends Partial<KubeObjectListLayoutProps> {
-  className?: IClassName;
+  className?: ClassName;
   compact?: boolean;
   compactLimit?: number;
 }
@@ -36,7 +37,7 @@ const defaultProps: Partial<Props> = {
 export class Events extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
-  render() {
+  render(): JSX.Element {
     const { compact, compactLimit, className, ...layoutProps } = this.props;
     const events = (
       <KubeObjectListLayout
@@ -45,20 +46,20 @@ export class Events extends React.Component<Props> {
         store={eventStore}
         isSelectable={false}
         sortingCallbacks={{
-          [sortBy.namespace]: (event: KubeEvent) => event.getNs(),
-          [sortBy.type]: (event: KubeEvent) => event.involvedObject.kind,
-          [sortBy.object]: (event: KubeEvent) => event.involvedObject.name,
-          [sortBy.count]: (event: KubeEvent) => event.count,
-          [sortBy.age]: (event: KubeEvent) => event.metadata.creationTimestamp,
+          [sortBy.namespace]: (event: KubeEvent): string => event.getNs(),
+          [sortBy.type]: (event: KubeEvent): string => event.involvedObject.kind,
+          [sortBy.object]: (event: KubeEvent): string => event.involvedObject.name,
+          [sortBy.count]: (event: KubeEvent): number => event.count,
+          [sortBy.age]: (event: KubeEvent): string => event.metadata.creationTimestamp,
         }}
         searchFilters={[
-          (event: KubeEvent) => event.getSearchFields(),
-          (event: KubeEvent) => event.message,
-          (event: KubeEvent) => event.getSource(),
-          (event: KubeEvent) => event.involvedObject.name,
+          (event: KubeEvent): string[] => event.getSearchFields(),
+          (event: KubeEvent): string => event.message,
+          (event: KubeEvent): string => event.getSource(),
+          (event: KubeEvent): string => event.involvedObject.name,
         ]}
         renderHeaderTitle={<Trans>Events</Trans>}
-        customizeHeader={({ title, info }) => (
+        customizeHeader={({ title, info }): React.ReactNode => (
           compact ? title : ({
             info: (
               <>
@@ -82,7 +83,7 @@ export class Events extends React.Component<Props> {
           { title: <Trans>Count</Trans>, className: "count", sortBy: sortBy.count },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
-        renderTableContents={(event: KubeEvent) => {
+        renderTableContents={(event: KubeEvent): (string | React.ReactNode | JSX.Element)[] => {
           const { involvedObject, type, message } = event;
           const { kind, name } = involvedObject;
           const tooltipId = `message-${event.getId()}`;
@@ -106,18 +107,18 @@ export class Events extends React.Component<Props> {
             },
             event.getNs(),
             kind,
-            <Link to={detailsUrl} title={name} onClick={stopPropagation}>{name}</Link>,
+            <Link key="name" to={detailsUrl} title={name} onClick={stopPropagation}>{name}</Link>,
             event.getSource(),
             event.count,
             event.getAge(),
-          ]
+          ];
         }}
         virtual={!compact}
         filterItems={[
-          items => compact ? items.slice(0, compactLimit) : items,
+          (items): ItemObject[] => compact ? items.slice(0, compactLimit) : items,
         ]}
       />
-    )
+    );
     if (compact) {
       return events;
     }
@@ -125,6 +126,6 @@ export class Events extends React.Component<Props> {
       <MainLayout>
         {events}
       </MainLayout>
-    )
+    );
   }
 }

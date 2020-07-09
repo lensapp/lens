@@ -18,7 +18,7 @@ const cronJob = new CronJob({
     suspend: false,
   },
   status: {}
-} as any)
+} as any);
 
 describe("Check for CronJob schedule never run", () => {
   test("Should be false with normal schedule", () => {
@@ -31,12 +31,12 @@ describe("Check for CronJob schedule never run", () => {
   });
 
   test("Should be true with date 31 of February", () => {
-    cronJob.spec.schedule = "30 06 31 2 *"
+    cronJob.spec.schedule = "30 06 31 2 *";
     expect(cronJob.isNeverRun()).toBeTruthy();
   });
 
   test("Should be true with date 32 of July", () => {
-    cronJob.spec.schedule = "0 30 06 32 7 *"
+    cronJob.spec.schedule = "0 30 06 32 7 *";
     expect(cronJob.isNeverRun()).toBeTruthy();
   });
 

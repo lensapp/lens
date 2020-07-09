@@ -1,7 +1,7 @@
 import { autobind, noop } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { autorun, IReactionDisposer } from "mobx";
-import { dockStore, IDockTab, TabKind } from "./dock.store";
+import { dockStore, DockTabData, TabKind } from "./dock.store";
 import { KubeObject } from "../../api/kube-object";
 import { apiManager } from "../../api/api-manager";
 
@@ -17,7 +17,7 @@ export class EditResourceStore extends DockTabStore<KubeEditResource> {
   constructor() {
     super({
       storageName: "edit_resource_store",
-      storageSerializer: ({ draft, ...data }) => data, // skip saving draft in local-storage
+      storageSerializer: ({ draft: _draft, ...data }) => data, // skip saving draft in local-storage
     });
 
     autorun(() => {
@@ -33,38 +33,37 @@ export class EditResourceStore extends DockTabStore<KubeEditResource> {
             // preload resource for editing
             if (!obj && !store.isLoaded && !store.isLoading && isActiveTab) {
               store.loadFromPath(resource).catch(noop);
-            }
-            // auto-close tab when resource removed from store
-            else if (!obj && store.isLoaded) {
+            } else if (!obj && store.isLoaded) {
+              // auto-close tab when resource removed from store
               dockStore.closeTab(tabId);
             }
           }
         }, {
           delay: 100 // make sure all stores initialized
         }));
-      })
+      });
     });
   }
 
-  getTabByResource(object: KubeObject): IDockTab {
-    const [tabId] = Array.from(this.data).find(([tabId, { resource }]) => {
+  getTabByResource(object: KubeObject): DockTabData {
+    const [tabId] = Array.from(this.data).find(([_tabId, { resource }]) => {
       return object.selfLink === resource;
     }) || [];
     return dockStore.getTabById(tabId);
   }
 
-  reset() {
+  reset(): void {
     super.reset();
     Array.from(this.watchers).forEach(([tabId, dispose]) => {
       this.watchers.delete(tabId);
       dispose();
-    })
+    });
   }
 }
 
 export const editResourceStore = new EditResourceStore();
 
-export function editResourceTab(object: KubeObject, tabParams: Partial<IDockTab> = {}) {
+export function editResourceTab(object: KubeObject, tabParams: Partial<DockTabData> = {}): DockTabData {
   // use existing tab if already opened
   let tab = editResourceStore.getTabByResource(object);
   if (tab) {
@@ -85,6 +84,6 @@ export function editResourceTab(object: KubeObject, tabParams: Partial<IDockTab>
   return tab;
 }
 
-export function isEditResourceTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.EDIT_RESOURCE;
+export function isEditResourceTab(tab: DockTabData): boolean {
+  return tab?.kind === TabKind.EDIT_RESOURCE;
 }

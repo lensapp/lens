@@ -1,4 +1,4 @@
-import "./volumes.scss"
+import "./volumes.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -7,7 +7,7 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { PersistentVolume, persistentVolumeApi } from "../../api/endpoints/persistent-volume.api";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
-import { IVolumesRouteParams } from "./volumes.route";
+import { VolumesRouteParams } from "./volumes.route";
 import { stopPropagation } from "../../utils";
 import { getDetailsUrl } from "../../navigation";
 import { volumesStore } from "./volumes.store";
@@ -22,26 +22,26 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IVolumesRouteParams> {
+interface Props extends RouteComponentProps<VolumesRouteParams> {
 }
 
 @observer
 export class PersistentVolumes extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="PersistentVolumes"
         store={volumesStore} isClusterScoped
         sortingCallbacks={{
-          [sortBy.name]: (item: PersistentVolume) => item.getName(),
-          [sortBy.storageClass]: (item: PersistentVolume) => item.spec.storageClassName,
-          [sortBy.capacity]: (item: PersistentVolume) => item.getCapacity(true),
-          [sortBy.status]: (item: PersistentVolume) => item.getStatus(),
-          [sortBy.age]: (item: PersistentVolume) => item.metadata.creationTimestamp,
+          [sortBy.name]: (item: PersistentVolume): string => item.getName(),
+          [sortBy.storageClass]: (item: PersistentVolume): string => item.spec.storageClassName,
+          [sortBy.capacity]: (item: PersistentVolume): string | number => item.getCapacity(true),
+          [sortBy.status]: (item: PersistentVolume): string => item.getStatus(),
+          [sortBy.age]: (item: PersistentVolume): string => item.metadata.creationTimestamp,
         }}
         searchFilters={[
-          (item: PersistentVolume) => item.getSearchFields(),
-          (item: PersistentVolume) => item.getClaimRefName(),
+          (item: PersistentVolume): string[] => item.getSearchFields(),
+          (item: PersistentVolume): string => item.getClaimRefName(),
         ]}
         renderHeaderTitle={<Trans>Persistent Volumes</Trans>}
         renderTableHeader={[
@@ -52,14 +52,14 @@ export class PersistentVolumes extends React.Component<Props> {
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
         ]}
-        renderTableContents={(volume: PersistentVolume) => {
+        renderTableContents={(volume: PersistentVolume): (string | number | JSX.Element | React.ReactNode)[] => {
           const { claimRef, storageClassName } = volume.spec;
           const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
             name: storageClassName
           }));
           return [
             volume.getName(),
-            <Link to={storageClassDetailsUrl} onClick={stopPropagation}>
+            <Link key="storageClass" to={storageClassDetailsUrl} onClick={stopPropagation}>
               {storageClassName}
             </Link>,
             volume.getCapacity(),
@@ -70,22 +70,22 @@ export class PersistentVolumes extends React.Component<Props> {
             ),
             volume.getAge(),
             { title: volume.getStatus(), className: volume.getStatus().toLowerCase() }
-          ]
+          ];
         }}
-        renderItemMenu={(item: PersistentVolume) => {
-          return <PersistentVolumeMenu object={item}/>
+        renderItemMenu={(item: PersistentVolume): JSX.Element => {
+          return <PersistentVolumeMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
-export function PersistentVolumeMenu(props: KubeObjectMenuProps<PersistentVolume>) {
+export function PersistentVolumeMenu(props: KubeObjectMenuProps<PersistentVolume>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(persistentVolumeApi, {
   Menu: PersistentVolumeMenu,
-})
+});

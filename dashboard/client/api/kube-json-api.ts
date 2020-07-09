@@ -31,7 +31,7 @@ export interface KubeJsonApiData extends JsonApiData {
   };
 }
 
-export interface IKubeObjectRef {
+export interface KubeObjectRef {
   kind: string;
   apiVersion: string;
   name: string;
@@ -49,7 +49,7 @@ export interface KubeJsonApiError extends JsonApiError {
   };
 }
 
-export interface IKubeJsonApiQuery {
+export interface KubeJsonApiQuery {
   watch?: any;
   resourceVersion?: string;
   timeoutSeconds?: number;

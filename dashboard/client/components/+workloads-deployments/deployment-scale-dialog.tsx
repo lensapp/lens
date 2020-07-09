@@ -24,24 +24,24 @@ export class DeploymentScaleDialog extends Component<Props> {
   @observable currentReplicas = 0;
   @observable desiredReplicas = 0;
 
-  static open(deployment: Deployment) {
+  static open(deployment: Deployment): void {
     DeploymentScaleDialog.isOpen = true;
     DeploymentScaleDialog.data = deployment;
   }
 
-  static close() {
+  static close(): void {
     DeploymentScaleDialog.isOpen = false;
   }
 
-  get deployment() {
+  get deployment(): Deployment {
     return DeploymentScaleDialog.data;
   }
 
-  close = () => {
+  close = (): void => {
     DeploymentScaleDialog.close();
   }
 
-  @computed get scaleMax() {
+  @computed get scaleMax(): number {
     const { currentReplicas } = this;
     const defaultMax = 50;
     return currentReplicas <= defaultMax
@@ -49,7 +49,7 @@ export class DeploymentScaleDialog extends Component<Props> {
       : currentReplicas * 2;
   }
 
-  onOpen = async () => {
+  onOpen = async (): Promise<void> => {
     const { deployment } = this;
     this.currentReplicas = await deploymentApi.getReplicas({
       namespace: deployment.getNs(),
@@ -59,15 +59,15 @@ export class DeploymentScaleDialog extends Component<Props> {
     this.ready = true;
   }
 
-  onClose = () => {
+  onClose = (): void => {
     this.ready = false;
   }
 
-  onChange = (evt: React.ChangeEvent, value: number) => {
+  onChange = (evt: React.ChangeEvent, value: number): void => {
     this.desiredReplicas = value;
   }
 
-  scale = async () => {
+  scale = async (): Promise<void> => {
     const { deployment } = this;
     const { currentReplicas, desiredReplicas, close } = this;
     try {
@@ -83,7 +83,7 @@ export class DeploymentScaleDialog extends Component<Props> {
     }
   }
 
-  renderContents() {
+  renderContents(): JSX.Element {
     const { currentReplicas, desiredReplicas, onChange, scaleMax } = this;
     const warning = currentReplicas < 10 && desiredReplicas > 90;
     return (
@@ -106,10 +106,10 @@ export class DeploymentScaleDialog extends Component<Props> {
         </div>
         }
       </>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     const { className, ...dialogProps } = this.props;
     const deploymentName = this.deployment ? this.deployment.getName() : "";
     const header = (

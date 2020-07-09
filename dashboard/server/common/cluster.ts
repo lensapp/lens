@@ -1,4 +1,4 @@
-export interface IClusterInfo {
+export interface BaseClusterInfo {
   kubeVersion?: string;
   clusterName?: string;
 }

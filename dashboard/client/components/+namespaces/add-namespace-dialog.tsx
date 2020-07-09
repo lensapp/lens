@@ -1,4 +1,4 @@
-import "./add-namespace-dialog.scss"
+import "./add-namespace-dialog.scss";
 
 import React from "react";
 import { observable } from "mobx";
@@ -23,19 +23,19 @@ export class AddNamespaceDialog extends React.Component<Props> {
   @observable static isOpen = false;
   @observable namespace = "";
 
-  static open() {
+  static open(): void {
     AddNamespaceDialog.isOpen = true;
   }
 
-  static close() {
+  static close(): void {
     AddNamespaceDialog.isOpen = false;
   }
 
-  close = () => {
+  close = (): void => {
     AddNamespaceDialog.close();
   }
 
-  addNamespace = async () => {
+  addNamespace = async (): Promise<void> => {
     const { namespace } = this;
     const { onSuccess, onError } = this.props;
     try {
@@ -47,7 +47,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { ...dialogProps } = this.props;
     const { namespace } = this;
     const header = <h5><Trans>Create Namespace</Trans></h5>;
@@ -69,11 +69,14 @@ export class AddNamespaceDialog extends React.Component<Props> {
               iconLeft="layers"
               placeholder={_i18n._(t`Namespace`)}
               validators={systemName}
-              value={namespace} onChange={v => this.namespace = v.toLowerCase()}
+              value={namespace} 
+              onChange={(v): void => {
+                this.namespace = v.toLowerCase();
+              }}
             />
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

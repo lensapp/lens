@@ -24,10 +24,10 @@ export class Apps extends React.Component {
         url: releaseURL({ query }),
         path: releaseRoute.path,
       },
-    ]
+    ];
   }
 
-  render() {
+  render(): JSX.Element {
     const tabRoutes = Apps.tabRoutes;
     return (
       <MainLayout className="Apps" tabs={tabRoutes}>
@@ -36,6 +36,6 @@ export class Apps extends React.Component {
           <Redirect to={tabRoutes[0].url}/>
         </Switch>
       </MainLayout>
-    )
+    );
   }
 }

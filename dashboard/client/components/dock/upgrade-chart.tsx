@@ -1,34 +1,34 @@
-import "./upgrade-chart.scss"
+import "./upgrade-chart.scss";
 
 import React from "react";
 import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { t, Trans } from "@lingui/macro";
 import { cssNames } from "../../utils";
-import { IDockTab } from "./dock.store";
+import { DockTabData } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { upgradeChartStore } from "./upgrade-chart.store";
 import { Spinner } from "../spinner";
 import { releaseStore } from "../+apps-releases/release.store";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
-import { helmChartStore, IChartVersion } from "../+apps-helm-charts/helm-chart.store";
+import { helmChartStore, ChartVersion } from "../+apps-helm-charts/helm-chart.store";
 import { HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../select";
 import { _i18n } from "../../i18n";
 
 interface Props {
   className?: string;
-  tab: IDockTab;
+  tab: DockTabData;
 }
 
 @observer
 export class UpgradeChart extends React.Component<Props> {
   @observable error: string;
-  @observable versions = observable.array<IChartVersion>();
-  @observable version: IChartVersion;
+  @observable versions = observable.array<ChartVersion>();
+  @observable version: ChartVersion;
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.loadVersions();
 
     disposeOnUnmount(this, [
@@ -36,22 +36,26 @@ export class UpgradeChart extends React.Component<Props> {
     ]);
   }
 
-  get tabId() {
-    return this.props.tab.id;
+  get tabId(): string {
+    return this.props.tab.id || "";
   }
 
   get release(): HelmRelease {
     const tabData = upgradeChartStore.getData(this.tabId);
-    if (!tabData) return;
+    if (!tabData) {
+      return;
+    }
     return releaseStore.getByName(tabData.releaseName);
   }
 
-  get value() {
+  get value(): string {
     return upgradeChartStore.values.getData(this.tabId);
   }
 
-  async loadVersions() {
-    if (!this.release) return;
+  async loadVersions(): Promise<void> {
+    if (!this.release) {
+      return;
+    }
     this.version = null;
     this.versions.clear();
     const versions = await helmChartStore.getVersions(this.release.getChart());
@@ -59,16 +63,18 @@ export class UpgradeChart extends React.Component<Props> {
     this.version = this.versions[0];
   }
 
-  onChange = (value: string, error?: string) => {
+  onChange = (value: string, error?: string): void => {
     upgradeChartStore.values.setData(this.tabId, value);
     this.error = error;
   }
 
-  upgrade = async () => {
-    if (this.error) return;
+  upgrade = async (): Promise<JSX.Element> => {
+    if (this.error) {
+      return;
+    }
     const { version, repo } = this.version;
     const releaseName = this.release.getName();
-    const releaseNs = this.release.getNs()
+    const releaseNs = this.release.namespace;
     await releaseStore.update(releaseName, releaseNs, {
       chart: this.release.getChart(),
       values: this.value,
@@ -78,16 +84,16 @@ export class UpgradeChart extends React.Component<Props> {
       <p>
         <Trans>Release <b>{releaseName}</b> successfully upgraded to version <b>{version}</b></Trans>
       </p>
-    )
+    );
   }
 
-  formatVersionLabel = ({ value }: SelectOption<IChartVersion>) => {
+  formatVersionLabel = ({ value }: SelectOption<ChartVersion>): string => {
     const chartName = this.release.getChart();
     const { repo, version } = value;
     return `${repo}/${chartName}-${version}`;
   }
 
-  render() {
+  render(): JSX.Element {
     const { tabId, release, value, error, onChange, upgrade, versions, version } = this;
     const { className } = this.props;
     if (!release || upgradeChartStore.isLoading() || !version) {
@@ -97,7 +103,7 @@ export class UpgradeChart extends React.Component<Props> {
     const controlsAndInfo = (
       <div className="upgrade flex gaps align-center">
         <span><Trans>Release</Trans></span> <Badge label={release.getName()}/>
-        <span><Trans>Namespace</Trans></span> <Badge label={release.getNs()}/>
+        <span><Trans>Namespace</Trans></span> <Badge label={release.namespace}/>
         <span><Trans>Version</Trans></span> <Badge label={currentVersion}/>
         <span><Trans>Upgrade version</Trans></span>
         <Select
@@ -107,10 +113,12 @@ export class UpgradeChart extends React.Component<Props> {
           value={version}
           options={versions}
           formatOptionLabel={this.formatVersionLabel}          
-          onChange={({ value }: SelectOption) => this.version = value}
+          onChange={({ value }: SelectOption): void => {
+            this.version = value;
+          }}
         />
       </div>
-    )
+    );
     return (
       <div className={cssNames("UpgradeChart flex column", className)}>
         <EditorPanel
@@ -127,6 +135,6 @@ export class UpgradeChart extends React.Component<Props> {
           controls={controlsAndInfo}
         />
       </div>
-    )
+    );
   }
 }

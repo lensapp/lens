@@ -1,6 +1,6 @@
-import { CoreV1Api } from "@kubernetes/client-node"
+import { CoreV1Api } from "@kubernetes/client-node";
 
-export type PrometheusClusterQuery = {
+export interface PrometheusClusterQuery {
   memoryUsage: string;
   memoryRequests: string;
   memoryLimits: string;
@@ -13,7 +13,7 @@ export type PrometheusClusterQuery = {
   podCapacity: string;
 }
 
-export type PrometheusNodeQuery = {
+export interface PrometheusNodeQuery {
   memoryUsage: string;
   memoryCapacity: string;
   cpuUsage: string;
@@ -22,7 +22,7 @@ export type PrometheusNodeQuery = {
   fsUsage: string;
 }
 
-export type PrometheusPodQuery = {
+export interface PrometheusPodQuery {
   memoryUsage: string;
   memoryRequests: string;
   memoryLimits: string;
@@ -34,25 +34,25 @@ export type PrometheusPodQuery = {
   networkTransmit: string;
 }
 
-export type PrometheusPvcQuery = {
+export interface PrometheusPvcQuery {
   diskUsage: string;
   diskCapacity: string;
 }
 
-export type PrometheusIngressQuery = {
+export interface PrometheusIngressQuery {
   bytesSentSuccess: string;
   bytesSentFailure: string;
   requestDurationSeconds: string;
   responseDurationSeconds: string;
 }
 
-export type PrometheusQueryOpts = {
+export interface PrometheusQueryOpts {
   [key: string]: string | any;
-};
+}
 
 export type PrometheusQuery = PrometheusNodeQuery | PrometheusClusterQuery | PrometheusPodQuery | PrometheusPvcQuery | PrometheusIngressQuery
 
-export type PrometheusService = {
+export interface PrometheusService {
   id: string;
   namespace: string;
   service: string;
@@ -66,7 +66,7 @@ export interface PrometheusProvider {
   getPrometheusService(client: CoreV1Api): Promise<PrometheusService>;
 }
 
-export type PrometheusProviderList = {
+export interface PrometheusProviderList {
   [key: string]: PrometheusProvider;
 }
 
@@ -77,14 +77,14 @@ export class PrometheusProviderRegistry {
     if (!this.prometheusProviders[type]) {
       throw "Unknown Prometheus provider";
     }
-    return this.prometheusProviders[type]
+    return this.prometheusProviders[type];
   }
 
-  static registerProvider(key: string, provider: PrometheusProvider) {
-    this.prometheusProviders[key] = provider
+  static registerProvider(key: string, provider: PrometheusProvider): void {
+    this.prometheusProviders[key] = provider;
   }
 
   static getProviders(): PrometheusProvider[] {
-    return Object.values(this.prometheusProviders)
+    return Object.values(this.prometheusProviders);
   }
 }

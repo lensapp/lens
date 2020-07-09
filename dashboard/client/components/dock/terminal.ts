@@ -10,12 +10,12 @@ import { autobind } from "../../utils";
 export class Terminal {
   static spawningPool: HTMLElement;
 
-  static init() {
+  static init(): void {
     // terminal element must be in DOM before attaching via xterm.open(elem)
     // https://xtermjs.org/docs/api/terminal/classes/terminal/#open
     const pool = document.createElement("div");
     pool.className = "terminal-init";
-    pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden"
+    pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden";
     document.body.appendChild(pool);
     Terminal.spawningPool = pool;
   }
@@ -26,10 +26,10 @@ export class Terminal {
   public disposers: Function[] = [];
 
   @autobind()
-  protected setTheme(colors = themeStore.activeTheme.colors) {
+  protected setTheme(colors = themeStore.activeTheme.colors): void {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack
-    const colorPrefix = "terminal"
+    const colorPrefix = "terminal";
     const terminalColors = Object.entries(colors)
       .filter(([name]) => name.startsWith(colorPrefix))
       .reduce<any>((colors, [name, color]) => {
@@ -41,11 +41,11 @@ export class Terminal {
     this.xterm.setOption("theme", terminalColors);
   }
 
-  get elem() {
+  get elem(): HTMLElement {
     return this.xterm.element;
   }
 
-  get viewport() {
+  get viewport(): Element {
     return this.xterm.element.querySelector(".xterm-viewport");
   }
 
@@ -53,21 +53,21 @@ export class Terminal {
     this.init();
   }
 
-  get isActive() {
+  get isActive(): boolean {
     const { isOpen, selectedTabId } = dockStore;
     return isOpen && selectedTabId === this.tabId;
   }
 
-  attachTo(parentElem: HTMLElement) {
+  attachTo(parentElem: HTMLElement): void {
     parentElem.appendChild(this.elem);
     this.onActivate();
   }
 
-  detach() {
+  detach(): void {
     Terminal.spawningPool.appendChild(this.elem);
   }
 
-  init() {
+  init(): void {
     if (this.xterm) {
       return;
     }
@@ -106,15 +106,17 @@ export class Terminal {
     );
   }
 
-  destroy() {
-    if (!this.xterm) return;
+  destroy(): void {
+    if (!this.xterm) {
+      return;
+    }
     this.disposers.forEach(dispose => dispose());
     this.disposers = [];
     this.xterm.dispose();
     this.xterm = null;
   }
 
-  fit = () => {
+  fit = (): void => {
     this.fitAddon.fit();
     const { cols, rows } = this.xterm;
     this.api.sendTerminalSize(cols, rows);
@@ -122,39 +124,43 @@ export class Terminal {
 
   fitLazy = debounce(this.fit, 250);
 
-  focus = () => {
+  focus = (): void => {
     this.xterm.focus();
   }
 
-  onApiData = (data: string) => {
+  onApiData = (data: string): void => {
     this.xterm.write(data);
   }
 
-  onData = (data: string) => {
-    if (!this.api.isReady) return;
+  onData = (data: string): void => {
+    if (!this.api.isReady) {
+      return;
+    }
     this.api.sendCommand(data);
   }
 
-  onScroll = () => {
+  onScroll = (): void => {
     this.scrollPos = this.viewport.scrollTop;
   }
 
-  onClear = () => {
+  onClear = (): void => {
     this.xterm.clear();
   }
 
-  onResize = () => {
-    if (!this.isActive) return;
+  onResize = (): void => {
+    if (!this.isActive) {
+      return;
+    }
     this.fitLazy();
   }
 
-  onActivate = () => {
+  onActivate = (): void => {
     this.fit();
     setTimeout(() => this.focus(), 250); // delay used to prevent focus on active tab
     this.viewport.scrollTop = this.scrollPos; // restore last scroll position
   }
 
-  onClickLink = (evt: MouseEvent, link: string) => {
+  onClickLink = (evt: MouseEvent, link: string): void => {
     window.open(link, "_blank");
   }
 
@@ -166,7 +172,9 @@ export class Terminal {
       switch (code) {
       // Ctrl+C: prevent terminal exit on windows / linux (?)
       case "KeyC":
-        if (this.xterm.hasSelection()) return false;
+        if (this.xterm.hasSelection()) {
+          return false;
+        }
         break;
 
         // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim

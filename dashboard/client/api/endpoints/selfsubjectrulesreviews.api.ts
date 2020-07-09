@@ -12,7 +12,7 @@ export class SelfSubjectRulesReviewApi extends KubeApi<SelfSubjectRulesReview> {
   }
 }
 
-export interface ISelfSubjectReviewRule {
+export interface SelfSubjectReviewRule {
   verbs: string[];
   apiGroups?: string[];
   resources?: string[];
@@ -29,22 +29,22 @@ export class SelfSubjectRulesReview extends KubeObject {
   }
 
   status: {
-    resourceRules: ISelfSubjectReviewRule[];
-    nonResourceRules: ISelfSubjectReviewRule[];
+    resourceRules: SelfSubjectReviewRule[];
+    nonResourceRules: SelfSubjectReviewRule[];
     incomplete: boolean;
   }
 
-  getResourceRules() {
+  getResourceRules(): SelfSubjectReviewRule[] {
     const rules = this.status && this.status.resourceRules || [];
     return rules.map(rule => this.normalize(rule));
   }
 
-  getNonResourceRules() {
+  getNonResourceRules(): SelfSubjectReviewRule[] {
     const rules = this.status && this.status.nonResourceRules || [];
     return rules.map(rule => this.normalize(rule));
   }
 
-  protected normalize(rule: ISelfSubjectReviewRule): ISelfSubjectReviewRule {
+  protected normalize(rule: SelfSubjectReviewRule): SelfSubjectReviewRule {
     const { apiGroups = [], resourceNames = [], verbs = [], nonResourceURLs = [], resources = [] } = rule;
     return {
       apiGroups,
@@ -56,7 +56,7 @@ export class SelfSubjectRulesReview extends KubeObject {
         const separator = apiGroup == "" ? "" : ".";
         return resource + separator + apiGroup;
       })
-    }
+    };
   }
 }
 

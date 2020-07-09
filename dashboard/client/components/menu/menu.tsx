@@ -1,14 +1,85 @@
-import './menu.scss'
+import './menu.scss';
 
 import React, { Fragment, ReactElement, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { autobind, cssNames, noop } from "../../utils";
 import { Animate } from "../animate";
 import { Icon, IconProps } from "../icon";
-import debounce from "lodash/debounce"
+import debounce from "lodash/debounce";
 
 export const MenuContext = React.createContext<MenuContextValue>(null);
 export type MenuContextValue = Menu;
+
+export interface MenuItemProps extends React.HTMLProps<any> {
+  icon?: string | Partial<IconProps>;
+  disabled?: boolean;
+  active?: boolean;
+  spacer?: boolean;
+  href?: string;
+}
+
+const defaultPropsMenuItem: Partial<MenuItemProps> = {
+  onClick: noop,
+};
+
+@autobind()
+export class MenuItem extends React.Component<MenuItemProps> {
+  static defaultProps = defaultPropsMenuItem as object;
+  static contextType = MenuContext;
+
+  public context: MenuContextValue;
+  public elem: HTMLElement;
+
+  get isFocusable(): boolean {
+    const { disabled, spacer } = this.props;
+    return !(disabled || spacer);
+  }
+
+  get isLink(): boolean {
+    return !!this.props.href;
+  }
+
+  onClick(evt: React.MouseEvent): void {
+    const menu = this.context;
+    const { spacer, onClick } = this.props;
+    if (spacer) {
+      return;
+    }
+    onClick(evt);
+    if (menu.props.closeOnClickItem && !evt.defaultPrevented) {
+      menu.close();
+    }
+  }
+
+  protected bindRef(elem: HTMLElement): void {
+    this.elem = elem;
+  }
+
+  render(): JSX.Element {
+    const { className, disabled, active, spacer, icon, children, ...props } = this.props;
+    let iconProps: Partial<IconProps>;
+    if (icon) {
+      iconProps = {};
+      if (typeof icon === "string") {
+        iconProps.material = icon;
+      } else {
+        Object.assign(iconProps, icon);
+      }
+    }
+    const elemProps: React.HTMLProps<any> = {
+      tabIndex: this.isFocusable ? 0 : -1,
+      ...props,
+      className: cssNames("MenuItem", className, { disabled, active, spacer }),
+      onClick: this.onClick,
+      children: icon ? <><Icon {...iconProps} /> {children}</> : children,
+      ref: this.bindRef,
+    };
+    if (this.isLink) {
+      return <a {...elemProps} />;
+    }
+    return <li {...elemProps} />;
+  }
+}
 
 interface MenuPosition {
   left?: boolean;
@@ -55,17 +126,18 @@ export class Menu extends React.Component<MenuProps, State> {
 
   public state: State = {};
 
-  get isOpen() {
+  get isOpen(): boolean {
     return !!this.props.isOpen;
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     if (!this.props.usePortal) {
       const parent = this.elem.parentElement;
       const position = window.getComputedStyle(parent).position;
-      if (position === 'static') parent.style.position = 'relative';
-    }
-    else if (this.isOpen) {
+      if (position === 'static') {
+        parent.style.position = 'relative';
+      }
+    } else if (this.isOpen) {
       this.refreshPosition();
     }
     this.opener = document.getElementById(this.props.htmlFor); // might not exist in sub-menus
@@ -79,7 +151,7 @@ export class Menu extends React.Component<MenuProps, State> {
     window.addEventListener('scroll', this.onScrollOutside, true);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     if (this.opener) {
       this.opener.removeEventListener('click', this.toggle);
       this.opener.removeEventListener('keydown', this.onKeyDown);
@@ -90,15 +162,15 @@ export class Menu extends React.Component<MenuProps, State> {
     window.removeEventListener('scroll', this.onScrollOutside, true);
   }
 
-  protected get focusableItems() {
+  protected get focusableItems(): MenuItem[] {
     return Object.values(this.items).filter(item => item.isFocusable);
   }
 
-  protected get focusedItem() {
+  protected get focusedItem(): MenuItem {
     return this.focusableItems.find(item => item.elem === document.activeElement);
   }
 
-  protected focusNextItem(reverse = false) {
+  protected focusNextItem(reverse = false): void {
     const items = this.focusableItems;
     const activeIndex = items.findIndex(item => item === this.focusedItem);
     if (!items.length) {
@@ -106,16 +178,19 @@ export class Menu extends React.Component<MenuProps, State> {
     }
     if (activeIndex > -1) {
       let nextItem = reverse ? items[activeIndex - 1] : items[activeIndex + 1];
-      if (!nextItem) nextItem = items[activeIndex];
+      if (!nextItem) {
+        nextItem = items[activeIndex];
+      }
       nextItem.elem.focus();
-    }
-    else {
+    } else {
       items[0].elem.focus();
     }
   }
 
   refreshPosition = debounce(() => {
-    if (!this.props.usePortal || !this.opener) return;
+    if (!this.props.usePortal || !this.opener) {
+      return;
+    }
     const { width, height } = this.opener.getBoundingClientRect();
     let { left, top, bottom, right } = this.opener.getBoundingClientRect();
     const withScroll = window.getComputedStyle(this.elem).position !== "fixed";
@@ -130,8 +205,8 @@ export class Menu extends React.Component<MenuProps, State> {
 
     // setup initial position
     const position: MenuPosition = { left: true, bottom: true };
-    this.elem.style.left = left + "px"
-    this.elem.style.top = bottom + "px"
+    this.elem.style.left = left + "px";
+    this.elem.style.top = bottom + "px";
 
     // correct position if menu doesn't fit to viewport
     const menuPos = this.elem.getBoundingClientRect();
@@ -148,24 +223,32 @@ export class Menu extends React.Component<MenuProps, State> {
     this.setState({ position });
   }, Animate.VISIBILITY_DELAY_MS);
 
-  open() {
-    if (this.isOpen) return;
+  open(): void {
+    if (this.isOpen) {
+      return;
+    }
     this.props.open();
     this.refreshPosition();
-    if (this.props.autoFocus) this.focusNextItem();
+    if (this.props.autoFocus) {
+      this.focusNextItem();
+    }
   }
 
-  close() {
-    if (!this.isOpen) return;
+  close(): void {
+    if (!this.isOpen) {
+      return;
+    }
     this.props.close();
   }
 
-  toggle() {
+  toggle(): void {
     this.isOpen ? this.close() : this.open();
   }
 
-  onKeyDown(evt: KeyboardEvent) {
-    if (!this.isOpen) return;
+  onKeyDown(evt: KeyboardEvent): void {
+    if (!this.isOpen) {
+      return;
+    }
     switch (evt.code) {
     case "Escape":
       this.close();
@@ -189,13 +272,17 @@ export class Menu extends React.Component<MenuProps, State> {
     }
   }
 
-  onWindowResize(evt: UIEvent) {
-    if (!this.isOpen) return;
+  onWindowResize(_evt: UIEvent): void {
+    if (!this.isOpen) {
+      return;
+    }
     this.refreshPosition();
   }
 
-  onScrollOutside(evt: UIEvent) {
-    if (!this.isOpen) return;
+  onScrollOutside(evt: UIEvent): void {
+    if (!this.isOpen) {
+      return;
+    }
     const target = evt.target as HTMLElement;
     const { usePortal, closeOnScroll } = this.props;
     if (usePortal && closeOnScroll && !target.contains(this.elem)) {
@@ -203,9 +290,13 @@ export class Menu extends React.Component<MenuProps, State> {
     }
   }
 
-  onClickOutside(evt: MouseEvent) {
-    if (!this.props.closeOnClickOutside) return;
-    if (!this.isOpen || evt.target === document.body) return;
+  onClickOutside(evt: MouseEvent): void {
+    if (!this.props.closeOnClickOutside) {
+      return;
+    }
+    if (!this.isOpen || evt.target === document.body) {
+      return;
+    }
     const target = evt.target as HTMLElement;
     const clickInsideMenu = this.elem.contains(target);
     const clickOnOpener = this.opener && this.opener.contains(target);
@@ -214,15 +305,15 @@ export class Menu extends React.Component<MenuProps, State> {
     }
   }
 
-  protected bindRef(elem: HTMLUListElement) {
+  protected bindRef(elem: HTMLUListElement): void {
     this.elem = elem;
   }
 
-  protected bindItemRef(item: MenuItem, index: number) {
+  protected bindItemRef(item: MenuItem, index: number): void {
     this.items[index] = item;
   }
 
-  render() {
+  render(): JSX.Element {
     const { position } = this.props;
     let { className, usePortal } = this.props;
     className = cssNames('Menu', className, this.state.position || position, {
@@ -251,12 +342,14 @@ export class Menu extends React.Component<MenuProps, State> {
         </Animate>
       </MenuContext.Provider>
     );
-    if (usePortal === true) usePortal = document.body;
+    if (usePortal === true) {
+      usePortal = document.body;
+    }
     return usePortal instanceof HTMLElement ? createPortal(menu, usePortal) : menu;
   }
 }
 
-export function SubMenu(props: Partial<MenuProps>) {
+export function SubMenu(props: Partial<MenuProps>): JSX.Element {
   const { className, ...menuProps } = props;
   return (
     <Menu
@@ -267,71 +360,6 @@ export function SubMenu(props: Partial<MenuProps>) {
       closeOnClickItem={false}
       {...menuProps}
     />
-  )
+  );
 }
 
-export interface MenuItemProps extends React.HTMLProps<any> {
-  icon?: string | Partial<IconProps>;
-  disabled?: boolean;
-  active?: boolean;
-  spacer?: boolean;
-  href?: string;
-}
-
-const defaultPropsMenuItem: Partial<MenuItemProps> = {
-  onClick: noop,
-};
-
-@autobind()
-export class MenuItem extends React.Component<MenuItemProps> {
-  static defaultProps = defaultPropsMenuItem as object;
-  static contextType = MenuContext;
-
-  public context: MenuContextValue;
-  public elem: HTMLElement;
-
-  get isFocusable() {
-    const { disabled, spacer } = this.props;
-    return !(disabled || spacer);
-  }
-
-  get isLink() {
-    return !!this.props.href;
-  }
-
-  onClick(evt: React.MouseEvent) {
-    const menu = this.context;
-    const { spacer, onClick } = this.props;
-    if (spacer) return;
-    onClick(evt);
-    if (menu.props.closeOnClickItem && !evt.defaultPrevented) {
-      menu.close();
-    }
-  }
-
-  protected bindRef(elem: HTMLElement) {
-    this.elem = elem;
-  }
-
-  render() {
-    const { className, disabled, active, spacer, icon, children, ...props } = this.props;
-    let iconProps: Partial<IconProps>;
-    if (icon) {
-      iconProps = {};
-      if (typeof icon === "string") iconProps.material = icon;
-      else Object.assign(iconProps, icon);
-    }
-    const elemProps: React.HTMLProps<any> = {
-      tabIndex: this.isFocusable ? 0 : -1,
-      ...props,
-      className: cssNames("MenuItem", className, { disabled, active, spacer }),
-      onClick: this.onClick,
-      children: icon ? <><Icon {...iconProps}/> {children}</> : children,
-      ref: this.bindRef,
-    }
-    if (this.isLink) {
-      return <a {...elemProps}/>
-    }
-    return <li {...elemProps}/>
-  }
-}

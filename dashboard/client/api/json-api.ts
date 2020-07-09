@@ -2,7 +2,7 @@
 
 import { stringify } from "querystring";
 import { EventEmitter } from "../utils/eventEmitter";
-import { cancelableFetch } from "../utils/cancelableFetch";
+import { cancelableFetch, CancelablePromise } from "../utils/cancelableFetch";
 
 export interface JsonApiData {
 }
@@ -31,6 +31,21 @@ export interface JsonApiConfig {
   debug?: boolean;
 }
 
+export class JsonApiErrorParsed {
+  isUsedForNotification = false;
+
+  constructor(private error: JsonApiError | DOMException, private messages: string[]) {
+  }
+
+  get isAborted(): boolean {
+    return this.error.code === DOMException.ABORT_ERR;
+  }
+
+  toString(): string {
+    return this.messages.join("\n");
+  }
+}
+
 export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   static reqInitDefault: RequestInit = {
     headers: {
@@ -51,30 +66,30 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   public onData = new EventEmitter<[D, Response]>();
   public onError = new EventEmitter<[JsonApiErrorParsed, Response]>();
 
-  get<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
+  get<T = D>(path: string, params?: P, reqInit: RequestInit = {}): CancelablePromise<T> {
     return this.request<T>(path, params, { ...reqInit, method: "get" });
   }
 
-  post<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
+  post<T = D>(path: string, params?: P, reqInit: RequestInit = {}): CancelablePromise<T> {
     return this.request<T>(path, params, { ...reqInit, method: "post" });
   }
 
-  put<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
+  put<T = D>(path: string, params?: P, reqInit: RequestInit = {}): CancelablePromise<T> {
     return this.request<T>(path, params, { ...reqInit, method: "put" });
   }
 
-  patch<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
+  patch<T = D>(path: string, params?: P, reqInit: RequestInit = {}): CancelablePromise<T> {
     return this.request<T>(path, params, { ...reqInit, method: "patch" });
   }
 
-  del<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
+  del<T = D>(path: string, params?: P, reqInit: RequestInit = {}): CancelablePromise<T> {
     return this.request<T>(path, params, { ...reqInit, method: "delete" });
   }
 
-  protected request<D>(path: string, params?: P, init: RequestInit = {}) {
+  protected request<D>(path: string, params?: P, init: RequestInit = {}): CancelablePromise<D> {
     let reqUrl = this.config.apiPrefix + path;
     const reqInit: RequestInit = { ...this.reqInit, ...init };
-    const { data, query } = params || {} as P;
+    const { data, query } = params || {};
     if (data && !reqInit.body) {
       reqInit.body = JSON.stringify(data);
     }
@@ -110,46 +125,35 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       } else {
         const error = new JsonApiErrorParsed(data, this.parseError(data, res));
         this.onError.emit(error, res);
-        this.writeLog({ ...log, error })
+        this.writeLog({ ...log, error });
         throw error;
       }
-    })
+    });
   }
 
   protected parseError(error: JsonApiError | string, res: Response): string[] {
     if (typeof error === "string") {
-      return [error]
+      return [error];
+    } else if (Array.isArray(error.errors)) {
+      return error.errors.map(error => error.title);
+    } else if (error.message) {
+      return [error.message];
     }
-    else if (Array.isArray(error.errors)) {
-      return error.errors.map(error => error.title)
-    }
-    else if (error.message) {
-      return [error.message]
-    }
-    return [res.statusText || "Error!"]
+    return [res.statusText || "Error!"];
   }
 
-  protected writeLog(log: JsonApiLog) {
-    if (!this.config.debug) return;
+  protected writeLog(log: JsonApiLog): void {
+    if (!this.config.debug) {
+      return;
+    }
     const { method, reqUrl, ...params } = log;
     let textStyle = 'font-weight: bold;';
-    if (params.data) textStyle += 'background: green; color: white;';
-    if (params.error) textStyle += 'background: red; color: white;';
+    if (params.data) {
+      textStyle += 'background: green; color: white;';
+    }
+    if (params.error) {
+      textStyle += 'background: red; color: white;';
+    }
     console.log(`%c${method} ${reqUrl}`, textStyle, params);
-  }
-}
-
-export class JsonApiErrorParsed {
-  isUsedForNotification = false;
-
-  constructor(private error: JsonApiError | DOMException, private messages: string[]) {
-  }
-
-  get isAborted() {
-    return this.error.code === DOMException.ABORT_ERR;
-  }
-
-  toString() {
-    return this.messages.join("\n");
   }
 }

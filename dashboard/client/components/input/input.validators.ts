@@ -31,7 +31,7 @@ export const isNumber: Validator = {
       isNaN(numVal) ||
       (min != null && numVal < min) ||
       (max != null && numVal > max)
-    )
+    );
   },
 };
 

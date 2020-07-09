@@ -6,7 +6,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { podsStore } from "./pods.store";
 import { Pod } from "../../api/endpoints";
-import { autobind, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
+import { autobind, bytesToUnits, cssNames, IntervalManager, prevDefault } from "../../utils";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { LineProgress } from "../line-progress";
 import { KubeObject } from "../../api/kube-object";
@@ -40,36 +40,38 @@ export class PodDetailsList extends React.Component<Props> {
     showTitle: true
   }
 
-  private metricsWatcher = interval(120, () => {
+  private metricsWatcher = new IntervalManager(120, () => {
     podsStore.loadKubeMetrics(this.props.owner.getNs());
   });
 
   private sortingCallbacks = {
-    [sortBy.name]: (pod: Pod) => pod.getName(),
-    [sortBy.namespace]: (pod: Pod) => pod.getNs(),
-    [sortBy.cpu]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).cpu,
-    [sortBy.memory]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).memory,
+    [sortBy.name]: (pod: Pod): string => pod.getName(),
+    [sortBy.namespace]: (pod: Pod): string => pod.getNs(),
+    [sortBy.cpu]: (pod: Pod): number => podsStore.getPodKubeMetrics(pod).cpu,
+    [sortBy.memory]: (pod: Pod): number => podsStore.getPodKubeMetrics(pod).memory,
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.metricsWatcher.start(true);
     disposeOnUnmount(this, [
       reaction(() => this.props.owner, () => this.metricsWatcher.restart(true))
-    ])
+    ]);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.metricsWatcher.stop();
   }
 
-  renderCpuUsage(id: string, usage: number) {
+  renderCpuUsage(id: string, usage: number): (JSX.Element | string | number) {
     const { maxCpu } = this.props;
     const value = usage.toFixed(3);
     const tooltip = (
       <p><Trans>CPU</Trans>: {Math.ceil(usage * 100) / maxCpu}%<br/>{usage.toFixed(3)}</p>
     );
     if (!maxCpu) {
-      if (parseFloat(value) === 0) return 0;
+      if (parseFloat(value) === 0) {
+        return 0;
+      }
       return value;
     }
     return (
@@ -80,12 +82,14 @@ export class PodDetailsList extends React.Component<Props> {
     );
   }
 
-  renderMemoryUsage(id: string, usage: number) {
+  renderMemoryUsage(id: string, usage: number): (JSX.Element | number | string) {
     const { maxMemory } = this.props;
     const tooltip = (
       <p><Trans>Memory</Trans>: {Math.ceil(usage * 100 / maxMemory)}%<br/>{bytesToUnits(usage, 3)}</p>
     );
-    if (!maxMemory) return usage ? bytesToUnits(usage) : 0;
+    if (!maxMemory) {
+      return usage ? bytesToUnits(usage) : 0;
+    }
     return (
       <LineProgress
         max={maxMemory} value={usage}
@@ -95,7 +99,7 @@ export class PodDetailsList extends React.Component<Props> {
   }
 
   @autobind()
-  getTableRow(uid: string) {
+  getTableRow(uid: string): JSX.Element {
     const { pods } = this.props;
     const pod = pods.find(pod => pod.getId() == uid);
     const metrics = podsStore.getPodKubeMetrics(pod);
@@ -116,13 +120,17 @@ export class PodDetailsList extends React.Component<Props> {
     );
   }
 
-  render() {
+  render(): JSX.Element {
     const { pods, showTitle } = this.props;
     const virtual = pods.length > 100;
-    if (!pods.length && !podsStore.isLoaded) return (
-      <div className="PodDetailsList flex justify-center"><Spinner/></div>
-    );
-    if (!pods.length) return null;
+    if (!pods.length && !podsStore.isLoaded) {
+      return (
+        <div className="PodDetailsList flex justify-center"><Spinner/></div>
+      );
+    }
+    if (!pods.length) {
+      return null;
+    }
     return (
       <div className="PodDetailsList flex column">
         {showTitle && <DrawerTitle title={<Trans>Pods</Trans>}/>}

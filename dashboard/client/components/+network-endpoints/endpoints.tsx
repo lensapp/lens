@@ -1,10 +1,10 @@
-import "./endpoints.scss"
+import "./endpoints.scss";
 
-import * as React from "react"
+import * as React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router-dom"
-import { EndpointRouteParams } from "./endpoints.route"
-import { Endpoint, endpointApi } from "../../api/endpoints/endpoint.api"
+import { RouteComponentProps } from "react-router-dom";
+import { EndpointRouteParams } from "./endpoints.route";
+import { Endpoint, endpointApi } from "../../api/endpoints/endpoint.api";
 import { endpointStore } from "./endpoints.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
@@ -22,17 +22,17 @@ interface Props extends RouteComponentProps<EndpointRouteParams> {
 
 @observer
 export class Endpoints extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="Endpoints" store={endpointStore}
         sortingCallbacks={{
-          [sortBy.name]: (endpoint: Endpoint) => endpoint.getName(),
-          [sortBy.namespace]: (endpoint: Endpoint) => endpoint.getNs(),
-          [sortBy.age]: (endpoint: Endpoint) => endpoint.metadata.creationTimestamp,
+          [sortBy.name]: (endpoint: Endpoint): string => endpoint.getName(),
+          [sortBy.namespace]: (endpoint: Endpoint): string => endpoint.getNs(),
+          [sortBy.age]: (endpoint: Endpoint): string => endpoint.metadata.creationTimestamp,
         }}
         searchFilters={[
-          (endpoint: Endpoint) => endpoint.getSearchFields()
+          (endpoint: Endpoint): string[] => endpoint.getSearchFields()
         ]}
         renderHeaderTitle={<Trans>Endpoints</Trans>}
         renderTableHeader={[
@@ -41,32 +41,32 @@ export class Endpoints extends React.Component<Props> {
           { title: <Trans>Endpoints</Trans>, className: "endpoints" },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
-        renderTableContents={(endpoint: Endpoint) => [
+        renderTableContents={(endpoint: Endpoint): (string | number)[] => [
           endpoint.getName(),
           endpoint.getNs(),
           endpoint.toString(),
           endpoint.getAge(),
         ]}
-        renderItemMenu={(item: Endpoint) => {
-          return <EndpointMenu object={item}/>
+        renderItemMenu={(item: Endpoint): JSX.Element => {
+          return <EndpointMenu object={item}/>;
         }}
         tableProps={{
-          customRowHeights: (item: Endpoint, lineHeight, paddings) => {
+          customRowHeights: (item: Endpoint, lineHeight, paddings): number => {
             const lines = item.getEndpointSubsets().length || 1;
             return lines * lineHeight + paddings;
           }
         }}
       />
-    )
+    );
   }
 }
 
-export function EndpointMenu(props: KubeObjectMenuProps<Endpoint>) {
+export function EndpointMenu(props: KubeObjectMenuProps<Endpoint>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(endpointApi, {
   Menu: EndpointMenu
-})
+});

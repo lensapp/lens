@@ -9,13 +9,13 @@ interface Props extends React.HTMLAttributes<any>, TooltipDecoratorProps {
 
 @withTooltip
 export class StatusBrick extends React.Component<Props> {
-  render() {
-    const { className, ...elemProps } = this.props
+  render(): JSX.Element {
+    const { className, ...elemProps } = this.props;
     return (
       <div
         className={cssNames("StatusBrick", className)}
         {...elemProps}
       />
-    )
+    );
   }
 }

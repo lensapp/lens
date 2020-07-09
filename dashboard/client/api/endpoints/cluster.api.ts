@@ -1,11 +1,11 @@
-import { IMetrics, IMetricsReqParams, metricsApi } from "./metrics.api";
+import { Metrics, MetricsReqParams, metricsApi } from "./metrics.api";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
 export class ClusterApi extends KubeApi<Cluster> {
-  async getMetrics(nodeNames: string[], params?: IMetricsReqParams): Promise<IClusterMetrics> {
+  async getMetrics(nodeNames: string[], params?: MetricsReqParams): Promise<ClusterMetrics> {
     const nodes = nodeNames.join("|");
-    const opts = { category: "cluster", nodes: nodes }
+    const opts = { category: "cluster", nodes: nodes };
 
     return metricsApi.getMetrics({
       memoryUsage: opts,
@@ -31,7 +31,7 @@ export enum ClusterStatus {
   ERROR = "Error"
 }
 
-export interface IClusterMetrics<T = IMetrics> {
+export interface ClusterMetrics<T = Metrics> {
   [metric: string]: T;
   memoryUsage: T;
   memoryRequests: T;
@@ -82,10 +82,16 @@ export class Cluster extends KubeObject {
     errorReason?: string;
   }
 
-  getStatus() {
-    if (this.metadata.deletionTimestamp) return ClusterStatus.REMOVING;
-    if (!this.status || !this.status) return ClusterStatus.CREATING;
-    if (this.status.errorMessage) return ClusterStatus.ERROR;
+  getStatus(): ClusterStatus {
+    if (this.metadata.deletionTimestamp) {
+      return ClusterStatus.REMOVING;
+    }
+    if (!this.status || !this.status) {
+      return ClusterStatus.CREATING;
+    }
+    if (this.status.errorMessage) {
+      return ClusterStatus.ERROR;
+    }
     return ClusterStatus.ACTIVE;
   }
 }

@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { Icon, IconProps } from "../icon";
 import { FilterType } from "./page-filters.store";
 
@@ -6,7 +6,7 @@ interface Props extends Partial<IconProps> {
   type: FilterType;
 }
 
-export function FilterIcon(props: Props) {
+export function FilterIcon(props: Props): JSX.Element {
   const { type, ...iconProps } = props;
   switch (type) {
   case FilterType.NAMESPACE:
@@ -16,6 +16,6 @@ export function FilterIcon(props: Props) {
     return <Icon small material="search" {...iconProps}/>;
 
   default:
-    return <Icon small material="filter_list" {...iconProps}/>
+    return <Icon small material="filter_list" {...iconProps}/>;
   }
 }

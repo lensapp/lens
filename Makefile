@@ -27,7 +27,10 @@ integration-win:
 	yarn integration
 
 lint:
-	yarn lint
+	yarn run eslint --ext tsx,ts,vue --max-warnings=0 src/ dashboard/ build/
+
+lint-fix:
+	yarn run eslint --ext tsx,ts,vue --max-warnings=0 src/ dashboard/ build/ --fix
 
 test-app:
 	yarn test

@@ -1,9 +1,9 @@
-import { LensApiRequest } from "../router"
-import { LensApi } from "../lens-api"
-import { userStore } from "../../common/user-store"
-import { getAppVersion } from "../../common/app-utils"
-import { CoreV1Api, AuthorizationV1Api } from "@kubernetes/client-node"
-import { Cluster } from "../cluster"
+import { LensApiRequest } from "../router";
+import { LensApi } from "../lens-api";
+import { userStore } from "../../common/user-store";
+import { getAppVersion } from "../../common/app-utils";
+import { CoreV1Api } from "@kubernetes/client-node";
+import { Cluster } from "../cluster";
 
 // TODO: auto-populate all resources dynamically
 const apiResources = [
@@ -28,34 +28,34 @@ const apiResources = [
   { resource: "services" },
   { resource: "statefulsets", group: "apps" },
   { resource: "storageclasses", group: "storage.k8s.io" },
-]
+];
 
-async function getAllowedNamespaces(cluster: Cluster) {
-  const api = cluster.contextHandler.kc.makeApiClient(CoreV1Api)
+async function getAllowedNamespaces(cluster: Cluster): Promise<string[]> {
+  const api = cluster.contextHandler.kc.makeApiClient(CoreV1Api);
   try {
-    const namespaceList = await api.listNamespace()
+    const namespaceList = await api.listNamespace();
     const nsAccessStatuses = await Promise.all(
       namespaceList.body.items.map(ns => cluster.canI({
         namespace: ns.metadata.name,
         resource: "pods",
         verb: "list",
       }))
-    )
+    );
     return namespaceList.body.items
       .filter((ns, i) => nsAccessStatuses[i])
-      .map(ns => ns.metadata.name)
+      .map(ns => ns.metadata.name);
   } catch(error) {
-    const kc = cluster.contextHandler.kc
-    const ctx = kc.getContextObject(kc.currentContext)
+    const kc = cluster.contextHandler.kc;
+    const ctx = kc.getContextObject(kc.currentContext);
     if (ctx.namespace) {
-      return [ctx.namespace]
+      return [ctx.namespace];
     } else {
-      return []
+      return [];
     }
   }
 }
 
-async function getAllowedResources(cluster: Cluster, namespaces: string[]) {
+async function getAllowedResources(cluster: Cluster, namespaces: string[]): Promise<string[]> {
   try {
     const resourceAccessStatuses = await Promise.all(
       apiResources.map(apiResource => cluster.canI({
@@ -64,20 +64,20 @@ async function getAllowedResources(cluster: Cluster, namespaces: string[]) {
         verb: "list",
         namespace: namespaces[0]
       }))
-    )
+    );
     return apiResources
-      .filter((resource, i) => resourceAccessStatuses[i]).map(apiResource => apiResource.resource)
+      .filter((resource, i) => resourceAccessStatuses[i]).map(apiResource => apiResource.resource);
   } catch(error) {
-    return []
+    return [];
   }
 }
 
 class ConfigRoute extends LensApi {
 
-  public async routeConfig(request: LensApiRequest) {
-    const { params, response, cluster} = request
+  public async routeConfig(request: LensApiRequest): Promise<void> {
+    const { response, cluster } = request;
 
-    const namespaces = await getAllowedNamespaces(cluster)
+    const namespaces = await getAllowedNamespaces(cluster);
     const data = {
       clusterName: cluster.contextName,
       lensVersion: getAppVersion(),
@@ -89,8 +89,8 @@ class ConfigRoute extends LensApi {
       allowedNamespaces: namespaces
     };
 
-    this.respondJson(response, data)
+    this.respondJson(response, data);
   }
 }
 
-export const configRoute = new ConfigRoute()
+export const configRoute = new ConfigRoute();

@@ -1,64 +1,64 @@
-import { RouteProps } from "react-router"
+import { RouteProps } from "react-router";
 import { Workloads } from "./workloads";
-import { buildURL, IURLParams } from "../../navigation";
+import { buildURL, URLParams } from "../../navigation";
 
 export const workloadsRoute: RouteProps = {
   get path() {
-    return Workloads.tabRoutes.map(({ path }) => path).flat()
+    return Workloads.tabRoutes.map(({ path }) => path).flat();
   }
-}
+};
 
 // Routes
 export const overviewRoute: RouteProps = {
   path: "/workloads"
-}
+};
 export const podsRoute: RouteProps = {
   path: "/pods"
-}
+};
 export const deploymentsRoute: RouteProps = {
   path: "/deployments"
-}
+};
 export const daemonSetsRoute: RouteProps = {
   path: "/daemonsets"
-}
+};
 export const statefulSetsRoute: RouteProps = {
   path: "/statefulsets"
-}
+};
 export const jobsRoute: RouteProps = {
   path: "/jobs"
-}
+};
 export const cronJobsRoute: RouteProps = {
   path: "/cronjobs"
-}
+};
 
 // Route params
-export interface IWorkloadsOverviewRouteParams {
+export interface WorkloadsOverviewRouteParams {
 }
 
-export interface IPodsRouteParams {
+export interface PodsRouteParams {
 }
 
-export interface IDeploymentsRouteParams {
+export interface DeploymentsRouteParams {
 }
 
-export interface IDaemonSetsRouteParams {
+export interface DaemonSetsRouteParams {
 }
 
-export interface IStatefulSetsRouteParams {
+export interface StatefulSetsRouteParams {
 }
 
-export interface IJobsRouteParams {
+export interface JobsRouteParams {
 }
 
-export interface ICronJobsRouteParams {
+export interface CronJobsRouteParams {
 }
 
 // URL-builders
-export const workloadsURL = (params?: IURLParams) => overviewURL(params);
-export const overviewURL = buildURL<IWorkloadsOverviewRouteParams>(overviewRoute.path)
-export const podsURL = buildURL<IPodsRouteParams>(podsRoute.path)
-export const deploymentsURL = buildURL<IDeploymentsRouteParams>(deploymentsRoute.path)
-export const daemonSetsURL = buildURL<IDaemonSetsRouteParams>(daemonSetsRoute.path)
-export const statefulSetsURL = buildURL<IStatefulSetsRouteParams>(statefulSetsRoute.path)
-export const jobsURL = buildURL<IJobsRouteParams>(jobsRoute.path)
-export const cronJobsURL = buildURL<ICronJobsRouteParams>(cronJobsRoute.path)
+export const overviewURL = buildURL<WorkloadsOverviewRouteParams>(overviewRoute.path);
+export const workloadsURL = (params?: URLParams): string => overviewURL(params);
+export const podsURL = buildURL<PodsRouteParams>(podsRoute.path);
+export const deploymentsURL = buildURL<DeploymentsRouteParams>(deploymentsRoute.path);
+export const daemonSetsURL = buildURL<DaemonSetsRouteParams>(daemonSetsRoute.path);
+export const statefulSetsURL = buildURL<StatefulSetsRouteParams>(statefulSetsRoute.path);
+export const jobsURL = buildURL<JobsRouteParams>(jobsRoute.path);
+export const cronJobsURL = buildURL<CronJobsRouteParams>(cronJobsRoute.path);

@@ -4,7 +4,7 @@ import React from "react";
 import { render } from "react-dom";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { observer } from "mobx-react";
-import { I18nProvider } from '@lingui/react'
+import { I18nProvider } from '@lingui/react';
 import { _i18n, i18nStore } from "../i18n";
 import { browserHistory } from "../navigation";
 import { Notifications } from "./notifications";
@@ -38,7 +38,7 @@ import { isAllowedResource } from "../api/rbac";
 class App extends React.Component {
   static rootElem = document.getElementById('app');
 
-  static async init() {
+  static async init(): Promise<void> {
     await i18nStore.init();
     await configStore.load();
 
@@ -46,7 +46,7 @@ class App extends React.Component {
     render(<App/>, App.rootElem);
   };
 
-  render() {
+  render(): JSX.Element {
     const homeUrl = (isAllowedResource(["events", "nodes", "pods"])) ? clusterURL() : workloadsURL();
     return (
       <I18nProvider i18n={_i18n}>
@@ -79,7 +79,7 @@ class App extends React.Component {
           </ErrorBoundary>
         </Router>
       </I18nProvider>
-    )
+    );
   }
 }
 

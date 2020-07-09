@@ -17,17 +17,17 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
     // auto-init stores for crd-s
     reaction(() => this.items.toJS(), items => {
       items.forEach(this.initStore);
-    })
+    });
   }
 
-  protected sortItems(items: CustomResourceDefinition[]) {
+  protected sortItems(items: CustomResourceDefinition[]): CustomResourceDefinition[] {
     return super.sortItems(items, [
-      crd => crd.getGroup(),
-      crd => crd.getName(),
-    ])
+      (crd): string => crd.getGroup(),
+      (crd): string => crd.getName(),
+    ]);
   }
 
-  protected initStore(crd: CustomResourceDefinition) {
+  protected initStore(crd: CustomResourceDefinition): void {
     const apiBase = crd.getResourceApiBase();
     let api = apiManager.getApi(apiBase);
     if (!api) {
@@ -44,28 +44,35 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
     }
   }
 
-  @computed get groups() {
+  @computed get groups(): Record<string, CustomResourceDefinition[]> {
     const groups: Record<string, CustomResourceDefinition[]> = {};
-    return this.items.reduce((groups, crd) => {
-      const group = crd.getGroup();
-      if (!groups[group]) groups[group] = [];
-      groups[group].push(crd);
-      return groups;
-    }, groups)
+    return this.items
+      .reduce((groups, crd) => {
+        const group = crd.getGroup();
+        if (!groups[group]) {
+          groups[group] = [];
+        }
+        groups[group].push(crd);
+        return groups;
+      }, groups);
   }
 
-  getByGroup(group: string, pluralName: string) {
+  getByGroup(group: string, pluralName: string): CustomResourceDefinition {
     const crdInGroup = this.groups[group];
-    if (!crdInGroup) return null;
+    if (!crdInGroup) {
+      return null;
+    }
     return crdInGroup.find(crd => crd.getPluralName() === pluralName);
   }
 
-  getByObject(obj: KubeObject) {
-    if (!obj) return null
+  getByObject(obj: KubeObject): CustomResourceDefinition {
+    if (!obj) {
+      return null;
+    }
     const { kind, apiVersion } = obj;
     return this.items.find(crd => {
-      return kind === crd.getResourceKind() && apiVersion === `${crd.getGroup()}/${crd.getVersion()}`
-    })
+      return kind === crd.getResourceKind() && apiVersion === `${crd.getGroup()}/${crd.getVersion()}`;
+    });
   }
 }
 

@@ -10,7 +10,7 @@ import { eventStore } from "../+events/event.store";
 import { Job, jobApi } from "../../api/endpoints/job.api";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
-import { IJobsRouteParams } from "../+workloads";
+import { JobsRouteParams } from "../+workloads";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import kebabCase from "lodash/kebabCase";
 import { apiManager } from "../../api/api-manager";
@@ -22,24 +22,24 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IJobsRouteParams> {
+interface Props extends RouteComponentProps<JobsRouteParams> {
 }
 
 @observer
 export class Jobs extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="Jobs" store={jobStore}
         dependentStores={[podsStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (job: Job) => job.getName(),
-          [sortBy.namespace]: (job: Job) => job.getNs(),
-          [sortBy.conditions]: (job: Job) => job.getCondition() != null ? job.getCondition().type : "",
-          [sortBy.age]: (job: Job) => job.metadata.creationTimestamp,
+          [sortBy.name]: (job: Job): string => job.getName(),
+          [sortBy.namespace]: (job: Job): string => job.getNs(),
+          [sortBy.conditions]: (job: Job): string => job.getCondition() != null ? job.getCondition().type : "",
+          [sortBy.age]: (job: Job): string => job.metadata.creationTimestamp,
         }}
         searchFilters={[
-          (job: Job) => job.getSearchFields(),
+          (job: Job): string[]=> job.getSearchFields(),
         ]}
         renderHeaderTitle={<Trans>Jobs</Trans>}
         renderTableHeader={[
@@ -50,34 +50,34 @@ export class Jobs extends React.Component<Props> {
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Conditions</Trans>, className: "conditions", sortBy: sortBy.conditions },
         ]}
-        renderTableContents={(job: Job) => {
+        renderTableContents={(job: Job): (string | React.ReactNode | JSX.Element)[] => {
           const condition = job.getCondition();
           return [
             job.getName(),
             job.getNs(),
             `${job.getCompletions()} / ${job.getDesiredCompletions()}`,
-            <KubeEventIcon object={job}/>,
+            <KubeEventIcon key="job" object={job}/>,
             job.getAge(),
             condition && {
               title: condition.type,
               className: kebabCase(condition.type),
             }
-          ]
+          ];
         }}
-        renderItemMenu={(item: Job) => {
-          return <JobMenu object={item}/>
+        renderItemMenu={(item: Job): JSX.Element => {
+          return <JobMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
-export function JobMenu(props: KubeObjectMenuProps<Job>) {
+export function JobMenu(props: KubeObjectMenuProps<Job>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(jobApi, {
   Menu: JobMenu,
-})
+});

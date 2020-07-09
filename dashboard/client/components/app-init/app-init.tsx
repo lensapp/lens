@@ -1,6 +1,6 @@
-import "./app-init.scss"
+import "./app-init.scss";
 
-import React from "react"
+import React from "react";
 import { render } from "react-dom";
 import { t } from "@lingui/macro";
 import { CubeSpinner } from "../spinner";
@@ -12,13 +12,12 @@ interface Props {
 }
 
 export class AppInit extends React.Component<Props> {
-  static async start(rootElem: HTMLElement) {
-
+  static async start(rootElem: HTMLElement): Promise<void> {
     render(<AppInit/>, rootElem); // show loading indicator asap
     await AppInit.readyStateCheck(rootElem); // wait while all good to run
   }
 
-  protected static async readyStateCheck(rootElem: HTMLElement) {
+  protected static async readyStateCheck(rootElem: HTMLElement): Promise<void> {
     const waitingList = await apiBase.get<string[]>("/ready");
     if (waitingList.length > 0) {
       // update waiting state
@@ -32,7 +31,7 @@ export class AppInit extends React.Component<Props> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { serviceWaitingList = [] } = this.props;
     const serviceNames = serviceWaitingList.join(", ");
     return (
@@ -47,6 +46,6 @@ export class AppInit extends React.Component<Props> {
           <CubeSpinner/>
         </div>
       </div>
-    )
+    );
   }
 }

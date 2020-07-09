@@ -12,14 +12,14 @@ import * as React from "react";
 //  <Icon onClick={prevDefault(() => console.log('stay on the page and open dialog'))}/>
 // </a>
 
-export function prevDefault<E extends React.SyntheticEvent | Event>(callback: (evt: E) => any) {
-  return function (evt: E) {
+export function prevDefault<E extends React.SyntheticEvent | Event>(callback: (evt: E) => any): (evt: E) => any {
+  return function (evt: E): any {
     evt.preventDefault();
     evt.stopPropagation();
     return callback(evt);
-  }
+  };
 }
 
-export function stopPropagation(evt: Event | React.SyntheticEvent) {
+export function stopPropagation(evt: Event | React.SyntheticEvent): void {
   evt.stopPropagation();
 }

@@ -1,9 +1,9 @@
-import "./role-binding-details.scss"
+import "./role-binding-details.scss";
 
 import * as React from "react";
 import { t, Trans } from "@lingui/macro";
 import { AddRemoveButtons } from "../add-remove-buttons";
-import { clusterRoleBindingApi, IRoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
+import { clusterRoleBindingApi, RoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
 import { autobind, prevDefault } from "../../utils";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -23,28 +23,28 @@ interface Props extends KubeObjectDetailsProps<RoleBinding> {
 
 @observer
 export class RoleBindingDetails extends React.Component<Props> {
-  @observable selectedSubjects = observable.array<IRoleBindingSubject>([], { deep: false });
+  @observable selectedSubjects = observable.array<RoleBindingSubject>([], { deep: false });
 
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     disposeOnUnmount(this, [
-      reaction(() => this.props.object, (obj) => {
+      reaction(() => this.props.object, (_obj) => {
         this.selectedSubjects.clear();
       })
-    ])
+    ]);
   }
 
-  selectSubject(subject: IRoleBindingSubject) {
+  selectSubject(subject: RoleBindingSubject): void {
     const { selectedSubjects } = this;
     const isSelected = selectedSubjects.includes(subject);
     selectedSubjects.replace(
       isSelected
         ? selectedSubjects.filter(sub => sub !== subject) // unselect
         : selectedSubjects.concat(subject) // select
-    )
+    );
   }
 
   @autobind()
-  removeSelectedSubjects() {
+  removeSelectedSubjects(): void {
     const { object: roleBinding } = this.props;
     const { selectedSubjects } = this;
     ConfirmDialog.open({
@@ -53,10 +53,10 @@ export class RoleBindingDetails extends React.Component<Props> {
       message: (
         <p><Trans>Remove selected bindings for <b>{roleBinding.getName()}</b>?</Trans></p>
       )
-    })
+    });
   }
 
-  render() {
+  render(): JSX.Element {
     const { selectedSubjects } = this;
     const { object: roleBinding } = this.props;
     if (!roleBinding) {
@@ -104,7 +104,7 @@ export class RoleBindingDetails extends React.Component<Props> {
                   <TableCell className="type">{kind}</TableCell>
                   <TableCell className="ns">{namespace || "-"}</TableCell>
                 </TableRow>
-              )
+              );
             })
           }
         </Table>
@@ -112,13 +112,13 @@ export class RoleBindingDetails extends React.Component<Props> {
         <KubeEventDetails object={roleBinding}/>
 
         <AddRemoveButtons
-          onAdd={() => AddRoleBindingDialog.open(roleBinding)}
+          onAdd={(): void => AddRoleBindingDialog.open(roleBinding)}
           onRemove={selectedSubjects.length ? this.removeSelectedSubjects : null}
           addTooltip={<Trans>Add bindings to {name}</Trans>}
           removeTooltip={<Trans>Remove selected bindings from ${name}</Trans>}
         />
       </div>
-    )
+    );
   }
 }
 

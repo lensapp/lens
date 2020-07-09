@@ -1,5 +1,5 @@
 import { autorun, observable, reaction } from "mobx";
-import { autobind, createStorage } from "../../utils";
+import { autobind, StorageHelper } from "../../utils";
 import { dockStore, TabId } from "./dock.store";
 
 interface Options<T = any> {
@@ -16,7 +16,7 @@ export class DockTabStore<T = any> {
 
     // auto-save to local-storage
     if (storageName) {
-      const storage = createStorage<[TabId, T][]>(storageName, []);
+      const storage = new StorageHelper<[TabId, T][]>(storageName, []);
       this.data.replace(storage.get());
       reaction(() => this.serializeData(), (data: T | any) => storage.set(data));
     }
@@ -28,31 +28,34 @@ export class DockTabStore<T = any> {
         if (!currentTabs.includes(tabId)) {
           this.clearData(tabId);
         }
-      })
+      });
     });
   }
 
-  protected serializeData() {
+  protected serializeData(): [string, Partial<T>][] {
     const { storageSerializer } = this.options;
-    return Array.from(this.data).map(([tabId, tabData]) => {
-      if (storageSerializer) return [tabId, storageSerializer(tabData)]
-      return [tabId, tabData];
-    })
+    return Array.from(this.data)
+      .map(([tabId, tabData]) => {
+        if (storageSerializer) {
+          return [tabId, storageSerializer(tabData)];
+        }
+        return [tabId, tabData];
+      });
   }
 
-  getData(tabId: TabId) {
+  getData(tabId: TabId): T {
     return this.data.get(tabId);
   }
 
-  setData(tabId: TabId, data: T) {
+  setData(tabId: TabId, data: T): void {
     this.data.set(tabId, data);
   }
 
-  clearData(tabId: TabId) {
+  clearData(tabId: TabId): void {
     this.data.delete(tabId);
   }
 
-  reset() {
+  reset(): void {
     this.data.clear();
   }
 }

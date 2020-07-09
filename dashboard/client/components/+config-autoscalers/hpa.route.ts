@@ -3,9 +3,9 @@ import { buildURL } from "../../navigation";
 
 export const hpaRoute: RouteProps = {
   path: "/hpa"
+};
+
+export interface HpaRouteParams {
 }
 
-export interface IHpaRouteParams {
-}
-
-export const hpaURL = buildURL<IHpaRouteParams>(hpaRoute.path)
+export const hpaURL = buildURL<HpaRouteParams>(hpaRoute.path);

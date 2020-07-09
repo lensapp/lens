@@ -9,36 +9,38 @@ import { Icon } from "../icon";
 import { _i18n } from "../../i18n";
 import { hideDetails } from "../../navigation";
 
-export function NodeMenu(props: KubeObjectMenuProps<Node>) {
+export function NodeMenu(props: KubeObjectMenuProps<Node>): JSX.Element {
   const { object: node, toolbar } = props;
-  if (!node) return null;
+  if (!node) {
+    return null;
+  }
   const nodeName = node.getName();
 
-  const sendToTerminal = (command: string) => {
+  const sendToTerminal = (command: string): void => {
     terminalStore.sendCommand(command, {
       enter: true,
       newTab: true,
     });
     hideDetails();
-  }
+  };
 
-  const shell = () => {
+  const shell = (): void => {
     createTerminalTab({
       title: _i18n._(t`Node`) + `: ${nodeName}`,
       node: nodeName,
     });
     hideDetails();
-  }
+  };
 
-  const cordon = () => {
+  const cordon = (): void => {
     sendToTerminal(`kubectl cordon ${nodeName}`);
-  }
+  };
 
-  const unCordon = () => {
-    sendToTerminal(`kubectl uncordon ${nodeName}`)
-  }
+  const unCordon = (): void => {
+    sendToTerminal(`kubectl uncordon ${nodeName}`);
+  };
 
-  const drain = () => {
+  const drain = (): void => {
     const command = `kubectl drain ${nodeName} --delete-local-data --ignore-daemonsets --force`;
     ConfirmDialog.open({
       ok: () => sendToTerminal(command),
@@ -48,8 +50,8 @@ export function NodeMenu(props: KubeObjectMenuProps<Node>) {
           <Trans>Are you sure you want to drain <b>{nodeName}</b>?</Trans>
         </p>
       ),
-    })
-  }
+    });
+  };
 
   return (
     <KubeObjectMenu {...props}>

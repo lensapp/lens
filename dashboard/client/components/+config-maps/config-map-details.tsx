@@ -23,7 +23,7 @@ export class ConfigMapDetails extends React.Component<Props> {
   @observable isSaving = false;
   @observable data = observable.map();
 
-  async componentDidMount() {
+  componentDidMount(): void {
     disposeOnUnmount(this, [
       autorun(() => {
         const { object: configMap } = this.props;
@@ -31,10 +31,10 @@ export class ConfigMapDetails extends React.Component<Props> {
           this.data.replace(configMap.data); // refresh
         }
       })
-    ])
+    ]);
   }
 
-  save = async () => {
+  save = async (): Promise<void> => {
     const { object: configMap } = this.props;
     try {
       this.isSaving = true;
@@ -49,9 +49,11 @@ export class ConfigMapDetails extends React.Component<Props> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: configMap } = this.props;
-    if (!configMap) return null;
+    if (!configMap) {
+      return null;
+    }
     const data = Object.entries(this.data.toJSON());
     return (
       <div className="ConfigMapDetails">
@@ -71,11 +73,13 @@ export class ConfigMapDetails extends React.Component<Props> {
                           theme="round-black"
                           className="box grow"
                           value={value}
-                          onChange={v => this.data.set(name, v)}
+                          onChange={(v): void => {
+                            this.data.set(name, v);
+                          }}
                         />
                       </div>
                     </div>
-                  )
+                  );
                 })
               }
               <Button
@@ -96,4 +100,4 @@ export class ConfigMapDetails extends React.Component<Props> {
 
 apiManager.registerViews(configMapApi, {
   Details: ConfigMapDetails
-})
+});

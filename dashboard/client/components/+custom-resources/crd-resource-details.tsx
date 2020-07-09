@@ -13,6 +13,7 @@ import { apiManager } from "../../api/api-manager";
 import { crdStore } from "./crd.store";
 import { KubeObject } from "../../api/kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { CustomResourceDefinition } from "client/api/endpoints/crd.api";
 
 // fixme: provide type-safe check for status
 interface Props extends KubeObjectDetailsProps<KubeObject & { status: any }> {
@@ -20,23 +21,25 @@ interface Props extends KubeObjectDetailsProps<KubeObject & { status: any }> {
 
 @observer
 export class CrdResourceDetails extends React.Component<Props> {
-  @computed get crd() {
+  @computed get crd(): CustomResourceDefinition {
     return crdStore.getByObject(this.props.object);
   }
 
-  @computed get CustomDetailsViews() {
-    return apiManager.getViews(this.props.object.selfLink).Details;
+  @computed get CustomDetailsViews(): React.ComponentType<KubeObjectDetailsProps<KubeObject>> | null {
+    return apiManager.getViews(this.props.object.selfLink).Details || null;
   }
 
-  render() {
+  render(): JSX.Element {
     const { object } = this.props;
     const { crd, CustomDetailsViews } = this;
-    if (!object || !crd) return null;
+    if (!object || !crd) {
+      return null;
+    }
     const className = cssNames("CrdResourceDetails", crd.getResourceKind());
     const extraColumns = crd.getPrinterColumns();
     const showStatus = !extraColumns.find(column => column.name == "Status") && object.status?.conditions;
     if (CustomDetailsViews) {
-      return <CustomDetailsViews className={className} object={object}/>
+      return <CustomDetailsViews className={className} object={object}/>;
     }
     return (
       <div className={className}>
@@ -47,7 +50,7 @@ export class CrdResourceDetails extends React.Component<Props> {
             <DrawerItem key={name} name={name}>
               {jsonPath.query(object, column.JSONPath.slice(1))}
             </DrawerItem>
-          )
+          );
         })}
         {showStatus && (
           <DrawerItem name={<Trans>Status</Trans>} className="status" labelsOnly>
@@ -64,6 +67,6 @@ export class CrdResourceDetails extends React.Component<Props> {
           </DrawerItem>
         )}
       </div>
-    )
+    );
   }
 }

@@ -4,7 +4,7 @@ import * as React from "react";
 import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { matchPath, RouteProps } from "react-router-dom";
-import { createStorage, cssNames } from "../../utils";
+import { StorageHelper, cssNames } from "../../utils";
 import { Tab, Tabs } from "../tabs";
 import { Sidebar } from "./sidebar";
 import { configStore } from "../../config.store";
@@ -29,7 +29,7 @@ interface Props {
 
 @observer
 export class MainLayout extends React.Component<Props> {
-  public storage = createStorage("main_layout", { pinnedSidebar: true });
+  public storage = new StorageHelper("main_layout", { pinnedSidebar: true });
 
   @observable isPinned = this.storage.get().pinnedSidebar;
   @observable isAccessible = true;
@@ -39,13 +39,13 @@ export class MainLayout extends React.Component<Props> {
     isPinned => this.storage.merge({ pinnedSidebar: isPinned })
   );
 
-  toggleSidebar = () => {
+  toggleSidebar = (): void => {
     this.isPinned = !this.isPinned;
     this.isAccessible = false;
     setTimeout(() => this.isAccessible = true, 250);
   }
 
-  render() {
+  render(): JSX.Element {
     const { className, contentClass, headerClass, tabs, footer, footerClass, children } = this.props;
     const { clusterName } = configStore.config;
     const { pathname } = navigation.location;
@@ -66,10 +66,10 @@ export class MainLayout extends React.Component<Props> {
         </aside>
 
         {tabs && (
-          <Tabs center onChange={url => navigate(url)}>
+          <Tabs center onChange={navigate}>
             {tabs.map(({ title, path, url, ...routeProps }) => {
               const isActive = !!matchPath(pathname, { path, ...routeProps });
-              return <Tab key={url} label={title} value={url} active={isActive}/>
+              return <Tab key={url} label={title} value={url} active={isActive}/>;
             })}
           </Tabs>
         )}

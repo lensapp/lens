@@ -1,4 +1,4 @@
-import "./crd-list.scss"
+import "./crd-list.scss";
 
 import React from "react";
 import { Trans } from "@lingui/macro";
@@ -25,25 +25,28 @@ enum sortBy {
 
 @observer
 export class CrdList extends React.Component {
-  @computed get groups() {
-    return navigation.searchParams.getAsArray("groups")
+  @computed get groups(): string[] {
+    return navigation.searchParams.getAsArray("groups");
   }
 
-  onGroupChange(group: string) {
+  onGroupChange(group: string): void {
     const groups = [...this.groups];
     const index = groups.findIndex(item => item == group);
-    if (index !== -1) groups.splice(index, 1);
-    else groups.push(group);
-    setQueryParams({ groups })
+    if (index !== -1) {
+      groups.splice(index, 1);
+    } else {
+      groups.push(group);
+    }
+    setQueryParams({ groups });
   }
 
-  render() {
+  render(): JSX.Element {
     const selectedGroups = this.groups;
     const sortingCallbacks = {
-      [sortBy.kind]: (crd: CustomResourceDefinition) => crd.getResourceKind(),
-      [sortBy.group]: (crd: CustomResourceDefinition) => crd.getGroup(),
-      [sortBy.version]: (crd: CustomResourceDefinition) => crd.getVersion(),
-      [sortBy.scope]: (crd: CustomResourceDefinition) => crd.getScope(),
+      [sortBy.kind]: (crd: CustomResourceDefinition): string => crd.getResourceKind(),
+      [sortBy.group]: (crd: CustomResourceDefinition): string => crd.getGroup(),
+      [sortBy.version]: (crd: CustomResourceDefinition): string => crd.getVersion(),
+      [sortBy.scope]: (crd: CustomResourceDefinition): string => crd.getScope(),
     };
     return (
       <KubeObjectListLayout
@@ -53,15 +56,19 @@ export class CrdList extends React.Component {
         sortingCallbacks={sortingCallbacks}
         searchFilters={Object.values(sortingCallbacks)}
         filterItems={[
-          (items: CustomResourceDefinition[]) => {
-            return selectedGroups.length ? items.filter(item => selectedGroups.includes(item.getGroup())) : items
+          (items: CustomResourceDefinition[]): CustomResourceDefinition[] => {
+            return selectedGroups.length ? items.filter(item => selectedGroups.includes(item.getGroup())) : items;
           }
         ]}
         renderHeaderTitle={<Trans>Custom Resources</Trans>}
-        customizeHeader={() => {
+        customizeHeader={(): (JSX.Element | {filters: JSX.Element}) => {
           let placeholder = <Trans>All groups</Trans>;
-          if (selectedGroups.length == 1) placeholder = <><Trans>Group</Trans>: {selectedGroups[0]}</>
-          if (selectedGroups.length >= 2) placeholder = <><Trans>Groups</Trans>: {selectedGroups.join(", ")}</>
+          if (selectedGroups.length == 1) {
+            placeholder = <><Trans>Group</Trans>: {selectedGroups[0]}</>;
+          }
+          if (selectedGroups.length >= 2) {
+            placeholder = <><Trans>Groups</Trans>: {selectedGroups.join(", ")}</>;
+          }
           return {
             // fixme: move to global filters
             filters: (
@@ -69,9 +76,9 @@ export class CrdList extends React.Component {
                 className="group-select"
                 placeholder={placeholder}
                 options={Object.keys(crdStore.groups)}
-                onChange={({ value: group }: SelectOption) => this.onGroupChange(group)}
+                onChange={({ value: group }: SelectOption): void => this.onGroupChange(group)}
                 controlShouldRenderValue={false}
-                formatOptionLabel={({ value: group }: SelectOption) => {
+                formatOptionLabel={({ value: group }: SelectOption): JSX.Element => {
                   const isSelected = selectedGroups.includes(group);
                   return (
                     <div className="flex gaps align-center">
@@ -79,11 +86,11 @@ export class CrdList extends React.Component {
                       <span>{group}</span>
                       {isSelected && <Icon small material="check" className="box right"/>}
                     </div>
-                  )
+                  );
                 }}
               />
             )
-          }
+          };
         }}
         renderTableHeader={[
           { title: <Trans>Resource</Trans>, className: "kind", sortBy: sortBy.kind },
@@ -92,29 +99,29 @@ export class CrdList extends React.Component {
           { title: <Trans>Scope</Trans>, className: "scope", sortBy: sortBy.scope },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
-        renderTableContents={(crd: CustomResourceDefinition) => {
+        renderTableContents={(crd: CustomResourceDefinition): (JSX.Element | string | number)[] => {
           return [
-            <Link to={crd.getResourceUrl()} onClick={stopPropagation}>
+            <Link key="title" to={crd.getResourceUrl()} onClick={stopPropagation}>
               {crd.getResourceTitle()}
             </Link>,
             crd.getGroup(),
             crd.getVersion(),
             crd.getScope(),
             crd.getAge(),
-          ]
+          ];
         }}
-        renderItemMenu={(item: CustomResourceDefinition) => {
-          return <CRDMenu object={item}/>
+        renderItemMenu={(item: CustomResourceDefinition): JSX.Element => {
+          return <CRDMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
-export function CRDMenu(props: KubeObjectMenuProps<CustomResourceDefinition>) {
+export function CRDMenu(props: KubeObjectMenuProps<CustomResourceDefinition>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(crdApi, {

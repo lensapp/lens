@@ -6,8 +6,10 @@ import { apiKubeHelm } from "../index";
 import { helmChartStore } from "../../components/+apps-helm-charts/helm-chart.store";
 import { ItemObject } from "../../item.store";
 import { KubeObject } from "../kube-object";
+import { CancelablePromise } from "client/utils/cancelableFetch";
+import { KubeJsonApiData } from "../kube-json-api";
 
-interface IReleasePayload {
+interface ReleasePayload {
   name: string;
   namespace: string;
   version: string;
@@ -23,15 +25,15 @@ interface IReleasePayload {
   };
 }
 
-interface IReleaseRawDetails extends IReleasePayload {
+interface ReleaseRawDetails extends ReleasePayload {
   resources: string;
 }
 
-export interface IReleaseDetails extends IReleasePayload {
+export interface ReleaseInfo extends ReleasePayload {
   resources: KubeObject[];
 }
 
-export interface IReleaseCreatePayload {
+export interface ReleaseCreatePayload {
   name?: string;
   repo: string;
   chart: string;
@@ -40,19 +42,19 @@ export interface IReleaseCreatePayload {
   values: string;
 }
 
-export interface IReleaseUpdatePayload {
+export interface ReleaseUpdatePayload {
   repo: string;
   chart: string;
   version: string;
   values: string;
 }
 
-export interface IReleaseUpdateDetails {
+export interface ReleaseUpdateDetails {
   log: string;
-  release: IReleaseDetails;
+  release: ReleaseInfo;
 }
 
-export interface IReleaseRevision {
+export interface ReleaseRevision {
   revision: number;
   updated: string;
   status: string;
@@ -67,72 +69,10 @@ const endpoint = pathToRegExp.compile(`/v2/releases/:namespace?/:name?`) as (
   }
 ) => string;
 
-export const helmReleasesApi = {
-  list(namespace?: string) {
-    return apiKubeHelm
-      .get<HelmRelease[]>(endpoint({ namespace }))
-      .then(releases => releases.map(HelmRelease.create));
-  },
-
-  get(name: string, namespace: string) {
-    const path = endpoint({ name, namespace });
-    return apiKubeHelm.get<IReleaseRawDetails>(path).then(details => {
-      const items: KubeObject[] = JSON.parse(details.resources).items;
-      const resources = items.map(item => KubeObject.create(item));
-      return {
-        ...details,
-        resources
-      }
-    });
-  },
-
-  create(payload: IReleaseCreatePayload): Promise<IReleaseUpdateDetails> {
-    const { repo, ...data } = payload;
-    data.chart = `${repo}/${data.chart}`;
-    data.values = jsYaml.safeLoad(data.values);
-    return apiKubeHelm.post(endpoint(), { data });
-  },
-
-  update(name: string, namespace: string, payload: IReleaseUpdatePayload): Promise<IReleaseUpdateDetails> {
-    const { repo, ...data } = payload;
-    data.chart = `${repo}/${data.chart}`;
-    data.values = jsYaml.safeLoad(data.values);
-    return apiKubeHelm.put(endpoint({ name, namespace }), { data });
-  },
-
-  async delete(name: string, namespace: string) {
-    const path = endpoint({ name, namespace });
-    return apiKubeHelm.del(path);
-  },
-
-  getValues(name: string, namespace: string) {
-    const path = endpoint({ name, namespace }) + "/values";
-    return apiKubeHelm.get<string>(path);
-  },
-
-  getHistory(name: string, namespace: string): Promise<IReleaseRevision[]> {
-    const path = endpoint({ name, namespace }) + "/history";
-    return apiKubeHelm.get(path);
-  },
-
-  rollback(name: string, namespace: string, revision: number) {
-    const path = endpoint({ name, namespace }) + "/rollback";
-    return apiKubeHelm.put(path, {
-      data: {
-        revision: revision
-      }
-    });
-  }
-};
-
 @autobind()
 export class HelmRelease implements ItemObject {
   constructor(data: any) {
     Object.assign(this, data);
-  }
-
-  static create(data: any) {
-    return new HelmRelease(data);
   }
 
   appVersion: string
@@ -143,45 +83,32 @@ export class HelmRelease implements ItemObject {
   updated: string
   revision: number
 
-  getId() {
+  getId(): string {
     return this.namespace + this.name;
   }
 
-  getName() {
+  getName(): string {
     return this.name;
   }
 
-  getNs() {
-    return this.namespace;
-  }
-
-  getChart(withVersion = false) {
-    let chart = this.chart
-    if(!withVersion && this.getVersion() != "" ) {
-      const search = new RegExp(`-${this.getVersion()}`)
+  getChart(withVersion = false): string {
+    let chart = this.chart;
+    if (!withVersion && this.getVersion() != "") {
+      const search = new RegExp(`-${this.getVersion()}`);
       chart = chart.replace(search, "");
     }
-    return chart
+    return chart;
   }
 
-  getRevision() {
-    return this.revision;
-  }
-
-  getStatus() {
+  getStatus(): string {
     return capitalize(this.status);
   }
 
-  getVersion() {
-    const versions = this.chart.match(/(v?\d+)[^-].*$/)
-    if (versions) {
-      return versions[0]
-    } else {
-      return ""
-    }
+  getVersion(): string {
+    return this.chart.match(/(v?\d+)[^-].*$/)?.[0] || "";
   }
 
-  getUpdated(humanize = true, compact = true) {
+  getUpdated(humanize = true, compact = true): number | string {
     const now = new Date().getTime();
     const updated = this.updated.replace(/\s\w*$/, "");  // 2019-11-26 10:58:09 +0300 MSK -> 2019-11-26 10:58:09 +0300 to pass into Date()
     const updatedDate = new Date(updated).getTime();
@@ -194,11 +121,67 @@ export class HelmRelease implements ItemObject {
 
   // Helm does not store from what repository the release is installed,
   // so we have to try to guess it by searching charts
-  async getRepo() {
+  async getRepo(): Promise<string> {
     const chartName = this.getChart();
     const version = this.getVersion();
     const versions = await helmChartStore.getVersions(chartName);
     const chartVersion = versions.find(chartVersion => chartVersion.version === version);
-    return chartVersion ? chartVersion.repo : "";
+    return chartVersion?.repo || "";
   }
 }
+
+export const helmReleasesApi = {
+  async list(namespace?: string): Promise<HelmRelease[]> {
+    const releases = await apiKubeHelm.get<HelmRelease[]>(endpoint({ namespace }));
+    return releases.map(data => new HelmRelease(data));
+  },
+
+  async get(name: string, namespace: string): Promise<ReleaseInfo> {
+    const path = endpoint({ name, namespace });
+    const details = await apiKubeHelm.get<ReleaseRawDetails>(path);
+    const items: KubeObject[] = JSON.parse(details.resources).items;
+    const resources = items.map(item => new KubeObject(item));
+    return {
+      ...details,
+      resources
+    };
+  },
+
+  create(payload: ReleaseCreatePayload): Promise<ReleaseUpdateDetails> {
+    const { repo, ...data } = payload;
+    data.chart = `${repo}/${data.chart}`;
+    data.values = jsYaml.safeLoad(data.values);
+    return apiKubeHelm.post(endpoint(), { data });
+  },
+
+  update(name: string, namespace: string, payload: ReleaseUpdatePayload): Promise<ReleaseUpdateDetails> {
+    const { repo, ...data } = payload;
+    data.chart = `${repo}/${data.chart}`;
+    data.values = jsYaml.safeLoad(data.values);
+    return apiKubeHelm.put(endpoint({ name, namespace }), { data });
+  },
+
+  delete(name: string, namespace: string): CancelablePromise<KubeJsonApiData> {
+    const path = endpoint({ name, namespace });
+    return apiKubeHelm.del(path);
+  },
+
+  getValues(name: string, namespace: string): CancelablePromise<string> {
+    const path = endpoint({ name, namespace }) + "/values";
+    return apiKubeHelm.get<string>(path);
+  },
+
+  getHistory(name: string, namespace: string): Promise<ReleaseRevision[]> {
+    const path = endpoint({ name, namespace }) + "/history";
+    return apiKubeHelm.get(path);
+  },
+
+  rollback(name: string, namespace: string, revision: number): CancelablePromise<KubeJsonApiData> {
+    const path = endpoint({ name, namespace }) + "/rollback";
+    return apiKubeHelm.put(path, {
+      data: {
+        revision: revision
+      }
+    });
+  }
+};

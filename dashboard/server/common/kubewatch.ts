@@ -1,14 +1,14 @@
-export interface IKubeWatchEvent<T = any> {
+export interface KubeWatchEvent<T = any> {
   type: "ADDED" | "MODIFIED" | "DELETED";
   object?: T;
 }
 
-export interface IKubeWatchRouteEvent {
+export interface KubeWatchRouteEvent {
   type: "STREAM_END";
   url: string;
   status: number;
 }
 
-export interface IKubeWatchRouteQuery {
+export interface KubeWatchRouteQuery {
   api: string | string[];
 }

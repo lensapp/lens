@@ -27,22 +27,22 @@ interface Props {
 @observer
 export class ReplicaSets extends React.Component<Props> {
   private sortingCallbacks = {
-    [sortBy.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
-    [sortBy.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
-    [sortBy.age]: (replicaSet: ReplicaSet) => replicaSet.metadata.creationTimestamp,
-    [sortBy.pods]: (replicaSet: ReplicaSet) => this.getPodsLength(replicaSet),
+    [sortBy.name]: (replicaSet: ReplicaSet): string => replicaSet.getName(),
+    [sortBy.namespace]: (replicaSet: ReplicaSet): string => replicaSet.getNs(),
+    [sortBy.age]: (replicaSet: ReplicaSet): string => replicaSet.metadata.creationTimestamp,
+    [sortBy.pods]: (replicaSet: ReplicaSet): number => replicaSetStore.getChildPods(replicaSet).length,
   }
 
-  getPodsLength(replicaSet: ReplicaSet) {
-    return replicaSetStore.getChildPods(replicaSet).length;
-  }
-
-  render() {
+  render(): JSX.Element {
     const { replicaSets } = this.props;
-    if (!replicaSets.length && !replicaSetStore.isLoaded) return (
-      <div className="ReplicaSets"><Spinner center/></div>
-    );
-    if (!replicaSets.length) return null;
+    if (!replicaSets.length && !replicaSetStore.isLoaded) {
+      return (
+        <div className="ReplicaSets"><Spinner center/></div>
+      );
+    }
+    if (!replicaSets.length) {
+      return null;
+    }
     return (
       <div className="ReplicaSets flex column">
         <DrawerTitle title={<Trans>Deploy Revisions</Trans>}/>
@@ -72,13 +72,13 @@ export class ReplicaSets extends React.Component<Props> {
                 >
                   <TableCell className="name">{replica.getName()}</TableCell>
                   <TableCell className="namespace">{replica.getNs()}</TableCell>
-                  <TableCell className="pods">{this.getPodsLength(replica)}</TableCell>
+                  <TableCell className="pods">{replicaSetStore.getChildPods(replica).length}</TableCell>
                   <TableCell className="age">{replica.getAge()}</TableCell>
                   <TableCell className="actions" onClick={stopPropagation}>
                     <ReplicaSetMenu object={replica}/>
                   </TableCell>
                 </TableRow>
-              )
+              );
             })
           }
         </Table>
@@ -87,10 +87,10 @@ export class ReplicaSets extends React.Component<Props> {
   }
 }
 
-export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>) {
+export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(replicaSetApi, {

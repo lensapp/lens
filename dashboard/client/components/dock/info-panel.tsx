@@ -42,21 +42,21 @@ export class InfoPanel extends Component<Props> {
   @observable error = "";
   @observable waiting = false;
 
-  componentDidMount() {
+  componentDidMount(): void {
     disposeOnUnmount(this, [
       reaction(() => this.props.tabId, () => {
-        this.result = ""
-        this.error = ""
-        this.waiting = false
+        this.result = "";
+        this.error = "";
+        this.waiting = false;
       })
-    ])
+    ]);
   }
 
-  @computed get errorInfo() {
+  @computed get errorInfo(): string {
     return this.error || this.props.error;
   }
 
-  submit = async () => {
+  submit = async (): Promise<void> => {
     const { showNotifications } = this.props;
     this.result = "";
     this.error = "";
@@ -65,24 +65,28 @@ export class InfoPanel extends Component<Props> {
       this.result = await this.props.submit().finally(() => {
         this.waiting = false;
       });
-      if (showNotifications) Notifications.ok(this.result);
+      if (showNotifications) {
+        Notifications.ok(this.result);
+      }
     } catch (error) {
       this.error = error.toString();
-      if (showNotifications) Notifications.error(this.error);
+      if (showNotifications) {
+        Notifications.error(this.error);
+      }
       throw error;
     }
   }
 
-  submitAndClose = async () => {
+  submitAndClose = async (): Promise<void> => {
     await this.submit();
     this.close();
   }
 
-  close = () => {
+  close = (): void => {
     dockStore.closeTab(this.props.tabId);
   }
 
-  renderInfo() {
+  renderInfo(): JSX.Element {
     if (!this.props.showInlineInfo) {
       return;
     }
@@ -101,10 +105,10 @@ export class InfoPanel extends Component<Props> {
           </div>
         )}
       </>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     const { className, controls, submitLabel, disableSubmit, error, submittingMessage, showSubmitClose } = this.props;
     const { submit, close, submitAndClose, waiting } = this;
     const isDisabled = !!(disableSubmit || waiting || error);

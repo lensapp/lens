@@ -2,7 +2,6 @@ import React from "react";
 import { Trans } from "@lingui/macro";
 import { IKubeMetaField, KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
-import { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { getDetailsUrl } from "../../navigation";
 import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
@@ -22,15 +21,15 @@ export class KubeObjectMeta extends React.Component<Props> {
     return hideFields.includes(field);
   }
 
-  render() {
-    const object = this.props.object
+  render(): JSX.Element {
+    const object = this.props.object;
     const {
-      getName, getNs, getLabels, getResourceVersion, selfLink,
+      getName, getNs, getLabels, selfLink,
       getAnnotations, getFinalizers, getId, getAge,
       metadata: { creationTimestamp },
     } = object;
-
     const ownerRefs = object.getOwnerRefs();
+
     return (
       <>
         <DrawerItem name={<Trans>Created</Trans>} hidden={this.isHidden("creationTimestamp")}>
@@ -49,7 +48,7 @@ export class KubeObjectMeta extends React.Component<Props> {
           {selfLink}
         </DrawerItem>
         <DrawerItem name={<Trans>Resource Version</Trans>} hidden={this.isHidden("resourceVersion")}>
-          {getResourceVersion()}
+          {object.metadata.resourceVersion}
         </DrawerItem>
         <DrawerItemLabels
           name={<Trans>Labels</Trans>}
@@ -82,6 +81,6 @@ export class KubeObjectMeta extends React.Component<Props> {
         </DrawerItem>
         }
       </>
-    )
+    );
   }
 }

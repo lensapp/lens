@@ -11,16 +11,18 @@ export interface DrawerItemProps extends React.HTMLAttributes<any> {
 }
 
 export class DrawerItem extends React.Component<DrawerItemProps> {
-  render() {
-    const { name, title, labelsOnly, children, hidden, ...elemProps } = this.props
+  render(): JSX.Element {
+    const { name, title, labelsOnly, children, hidden, ...elemProps } = this.props;
     let { className } = this.props;
-    if (hidden) return null
+    if (hidden) {
+      return null;
+    }
     className = cssNames("DrawerItem", className, { labelsOnly });
     return (
       <div {...elemProps} className={className} title={title}>
         <span className="name">{name}</span>
         <span className="value">{children}</span>
       </div>
-    )
+    );
   }
 }

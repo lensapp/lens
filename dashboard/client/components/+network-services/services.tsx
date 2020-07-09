@@ -1,10 +1,10 @@
-import "./services.scss"
+import "./services.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
-import { IServicesRouteParams } from "./services.route";
+import { ServicesRouteParams } from "./services.route";
 import { Service, serviceApi } from "../../api/endpoints/service.api";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
@@ -23,29 +23,29 @@ enum sortBy {
   status = "status",
 }
 
-interface Props extends RouteComponentProps<IServicesRouteParams> {
+interface Props extends RouteComponentProps<ServicesRouteParams> {
 }
 
 @observer
 export class Services extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="Services" store={serviceStore}
         sortingCallbacks={{
-          [sortBy.name]: (service: Service) => service.getName(),
-          [sortBy.namespace]: (service: Service) => service.getNs(),
-          [sortBy.selector]: (service: Service) => service.getSelector(),
-          [sortBy.ports]: (service: Service) => (service.spec.ports || []).map(({ port }) => port)[0],
-          [sortBy.clusterIp]: (service: Service) => service.getClusterIp(),
-          [sortBy.type]: (service: Service) => service.getType(),
-          [sortBy.age]: (service: Service) => service.metadata.creationTimestamp,
-          [sortBy.status]: (service: Service) => service.getStatus(),
+          [sortBy.name]: (service: Service): string => service.getName(),
+          [sortBy.namespace]: (service: Service): string => service.getNs(),
+          [sortBy.selector]: (service: Service): string[] => service.getSelector(),
+          [sortBy.ports]: (service: Service): number => (service.spec.ports || []).map(({ port }) => port)[0],
+          [sortBy.clusterIp]: (service: Service): string => service.getClusterIp(),
+          [sortBy.type]: (service: Service): string => service.getType(),
+          [sortBy.age]: (service: Service): string => service.metadata.creationTimestamp,
+          [sortBy.status]: (service: Service): string => service.getStatus(),
         }}
         searchFilters={[
-          (service: Service) => service.getSearchFields(),
-          (service: Service) => service.getSelector().join(" "),
-          (service: Service) => service.getPorts().join(" "),
+          (service: Service): string[] => service.getSearchFields(),
+          (service: Service): string => service.getSelector().join(" "),
+          (service: Service): string => service.getPorts().join(" "),
         ]}
         renderHeaderTitle={<Trans>Services</Trans>}
         renderTableHeader={[
@@ -59,31 +59,31 @@ export class Services extends React.Component<Props> {
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
         ]}
-        renderTableContents={(service: Service) => [
+        renderTableContents={(service: Service): (string | number | JSX.Element[] | React.ReactNode)[] => [
           service.getName(),
           service.getNs(),
           service.getType(),
-          service.getClusterIp(),
+          service.spec.clusterIP,
           service.getPorts().join(", "),
           service.getExternalIps().join(", ") || "-",
           service.getSelector().map(label => <Badge key={label} label={label}/>),
           service.getAge(),
           { title: service.getStatus(), className: service.getStatus().toLowerCase() },
         ]}
-        renderItemMenu={(item: Service) => {
-          return <ServiceMenu object={item}/>
+        renderItemMenu={(item: Service): JSX.Element => {
+          return <ServiceMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
-export function ServiceMenu(props: KubeObjectMenuProps<Service>) {
+export function ServiceMenu(props: KubeObjectMenuProps<Service>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(serviceApi, {
   Menu: ServiceMenu
-})
+});

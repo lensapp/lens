@@ -2,21 +2,25 @@ import React, { useContext } from "react";
 import { t } from "@lingui/macro";
 import { observer } from "mobx-react";
 import { ChartOptions, ChartPoint } from "chart.js";
-import { IIngressMetrics, Ingress } from "../../api/endpoints";
+import { IngressMetrics, Ingress } from "../../api/endpoints";
 import { BarChart, memoryOptions } from "../chart";
 import { normalizeMetrics, isMetricsEmpty } from "../../api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
-import { ResourceMetricsContext, IResourceMetricsValue } from "../resource-metrics";
+import { ResourceMetricsContext, ResourceMetricsValue } from "../resource-metrics";
 import { _i18n } from "../../i18n";
 
-type IContext = IResourceMetricsValue<Ingress, { metrics: IIngressMetrics }>;
+type IContext = ResourceMetricsValue<Ingress, { metrics: IngressMetrics }>;
 
 export const IngressCharts = observer(() => {
   const { params: { metrics }, tabId, object } = useContext<IContext>(ResourceMetricsContext);
   const id = object.getId();
 
-  if (!metrics) return null;
-  if (isMetricsEmpty(metrics)) return <NoMetrics/>;
+  if (!metrics) {
+    return null;
+  }
+  if (isMetricsEmpty(metrics)) {
+    return <NoMetrics/>;
+  }
 
   const values = Object.values(metrics)
     .map(normalizeMetrics)
@@ -69,13 +73,13 @@ export const IngressCharts = observer(() => {
     scales: {
       yAxes: [{
         ticks: {
-          callback: value => value
+          callback: (value): any => value
         }
       }]
     },
     tooltips: {
       callbacks: {
-        label: ({ datasetIndex, index }, { datasets }) => {
+        label: ({ datasetIndex, index }, { datasets }): string => {
           const { label, data } = datasets[datasetIndex];
           const value = data[index] as ChartPoint;
           const chartTooltipSec = _i18n._(t`sec`);
@@ -94,4 +98,4 @@ export const IngressCharts = observer(() => {
       data={{ datasets: datasets[tabId] }}
     />
   );
-})
+});

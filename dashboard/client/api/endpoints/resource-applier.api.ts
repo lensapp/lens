@@ -1,4 +1,4 @@
-import jsYaml from "js-yaml"
+import jsYaml from "js-yaml";
 import { KubeObject } from "../kube-object";
 import { KubeJsonApiData } from "../kube-json-api";
 import { apiKubeResourceApplier } from "../index";

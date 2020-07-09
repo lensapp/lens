@@ -3,9 +3,9 @@ import { buildURL } from "../../navigation";
 
 export const configMapsRoute: RouteProps = {
   path: "/configmaps"
+};
+
+export interface ConfigMapsRouteParams {
 }
 
-export interface IConfigMapsRouteParams {
-}
-
-export const configMapsURL = buildURL<IConfigMapsRouteParams>(configMapsRoute.path);
+export const configMapsURL = buildURL<ConfigMapsRouteParams>(configMapsRoute.path);

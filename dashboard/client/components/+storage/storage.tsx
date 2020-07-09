@@ -1,4 +1,4 @@
-import "./storage.scss"
+import "./storage.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -18,17 +18,17 @@ interface Props extends RouteComponentProps<{}> {
 
 @observer
 export class Storage extends React.Component<Props> {
-  static get tabRoutes() {
+  static get tabRoutes(): TabRoute[] {
     const tabRoutes: TabRoute[] = [];
     const { allowedResources } = configStore;
-    const query = namespaceStore.getContextParams()
+    const query = namespaceStore.getContextParams();
 
     tabRoutes.push({
       title: <Trans>Persistent Volume Claims</Trans>,
       component: PersistentVolumeClaims,
       url: volumeClaimsURL({ query }),
       path: volumeClaimsRoute.path,
-    })
+    });
 
     if (allowedResources.includes('persistentvolumes')) {
       tabRoutes.push({
@@ -45,12 +45,12 @@ export class Storage extends React.Component<Props> {
         component: StorageClasses,
         url: storageClassesURL(),
         path: storageClassesRoute.path,
-      })
+      });
     }
     return tabRoutes;
   }
 
-  render() {
+  render(): JSX.Element {
     const tabRoutes = Storage.tabRoutes;
     return (
       <MainLayout className="Storage" tabs={tabRoutes}>
@@ -59,6 +59,6 @@ export class Storage extends React.Component<Props> {
           <Redirect to={storageURL({ query: namespaceStore.getContextParams() })}/>
         </Switch>
       </MainLayout>
-    )
+    );
   }
 }

@@ -20,18 +20,21 @@ interface Props {
 export class OverviewWorkloadStatus extends React.Component<Props> {
   @observable elem: HTMLElement
 
-  componentDidMount() {
-    this.elem = findDOMNode(this) as HTMLElement
+  componentDidMount(): void {
+    // eslint-disable-next-line react/no-find-dom-node
+    this.elem = findDOMNode(this) as HTMLElement;
   }
 
-  getStatusColor(status: string) {
+  getStatusColor(status: string): string {
     return cssVar(this.elem).get(`--workload-status-${status.toLowerCase()}`).toString();
   }
 
-  renderChart() {
-    if (!this.elem) return null
-    const { status } = this.props
-    const statuses = Object.entries(status)
+  renderChart(): JSX.Element {
+    if (!this.elem) {
+      return null;
+    }
+    const { status } = this.props;
+    const statuses = Object.entries(status);
     const chartData: Partial<ChartData> = {
       labels: [] as string[],
       datasets: [{
@@ -39,21 +42,21 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
         backgroundColor: [themeStore.activeTheme.colors.pieChartDefaultColor],
         label: "Empty"
       }]
-    }
-    if (statuses.some(([key, val]) => val > 0)) {
+    };
+    if (statuses.some(([_key, val]) => val > 0)) {
       const dataset: any = {
         data: [],
         backgroundColor: [],
         label: "Status",
-      }
+      };
       statuses.forEach(([key, val]) => {
         if (val !== 0) {
-          dataset.data.push(val)
-          dataset.backgroundColor.push(this.getStatusColor(key))
-          chartData.labels.push(capitalize(key) + ": " + val)
+          dataset.data.push(val);
+          dataset.backgroundColor.push(this.getStatusColor(key));
+          chartData.labels.push(capitalize(key) + ": " + val);
         }
-      })
-      chartData.datasets[0] = dataset
+      });
+      chartData.datasets[0] = dataset;
     }
     const options = {
       elements: {
@@ -61,19 +64,19 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
           borderWidth: 0,
         },
       },
-    }
+    };
     return (
       <PieChart data={chartData} options={options}/>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <div className="OverviewWorkloadStatus">
         <div className="flex column align-center box grow">
           {this.renderChart()}
         </div>
       </div>
-    )
+    );
   }
 }

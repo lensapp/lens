@@ -2,7 +2,7 @@ import { stringify } from "querystring";
 import { autobind, base64, EventEmitter, interval } from "../utils";
 import { WebSocketApi } from "./websocket-api";
 import { configStore } from "../config.store";
-import isEqual from "lodash/isEqual"
+import isEqual from "lodash/isEqual";
 
 export enum TerminalChannels {
   STDIN = 0,
@@ -24,7 +24,7 @@ enum TerminalColor {
   NO_COLOR = "\u001b[0m",
 }
 
-export interface ITerminalApiOptions {
+export interface TerminalApiOptions {
   id: string;
   node?: string;
   colorTheme?: "light" | "dark";
@@ -38,7 +38,7 @@ export class TerminalApi extends WebSocketApi {
   public onReady = new EventEmitter<[]>();
   public isReady = false;
 
-  constructor(protected options: ITerminalApiOptions) {
+  constructor(protected options: TerminalApiOptions) {
     super({
       logging: configStore.isDevelopment,
       flushOnOpen: false,
@@ -46,7 +46,7 @@ export class TerminalApi extends WebSocketApi {
     });
   }
 
-  async getUrl(token: string) {
+  getUrl(token: string): string {
     const { hostname, protocol } = location;
     const { id, node } = this.options;
     const apiPrefix = configStore.apiPrefix.TERMINAL;
@@ -62,9 +62,9 @@ export class TerminalApi extends WebSocketApi {
     return `${wss}${hostname}${configStore.serverPort}${apiPrefix}/api?${stringify(queryParams)}`;
   }
 
-  async connect() {
+  async connect(): Promise<void> {
     const token = await configStore.getToken();
-    const apiUrl = await this.getUrl(token);
+    const apiUrl = this.getUrl(token);
     const { colorTheme } = this.options;
     this.emitStatus("Connecting ...", {
       color: colorTheme == "light" ? TerminalColor.GRAY : TerminalColor.LIGHT_GRAY
@@ -76,29 +76,35 @@ export class TerminalApi extends WebSocketApi {
   }
 
   @autobind()
-  async sendNewToken() {
+  async sendNewToken(): Promise<void> {
     const token = await configStore.getToken();
-    if (!this.isReady || token == this.currentToken) return;
+    if (!this.isReady || token == this.currentToken) {
+      return;
+    }
     this.sendCommand(token, TerminalChannels.TOKEN);
     this.currentToken = token;
   }
 
-  destroy() {
-    if (!this.socket) return;
+  destroy(): void {
+    if (!this.socket) {
+      return;
+    }
     const exitCode = String.fromCharCode(4); // ctrl+d
     this.sendCommand(exitCode);
     this.tokenInterval.stop();
     setTimeout(() => super.destroy(), 2000);
   }
 
-  removeAllListeners() {
+  removeAllListeners(): void {
     super.removeAllListeners();
     this.onReady.removeAllListeners();
   }
 
   @autobind()
-  protected _onReady(data: string) {
-    if (!data) return;
+  protected _onReady(data: string): boolean | undefined {
+    if (!data) {
+      return;
+    }
     this.isReady = true;
     this.onReady.emit();
     this.onData.removeListener(this._onReady);
@@ -107,16 +113,15 @@ export class TerminalApi extends WebSocketApi {
     return false; // prevent calling rest of listeners
   }
 
-  reconnect() {
-    const { reconnectDelaySeconds } = this.params;
+  reconnect(): void {
     super.reconnect();
   }
 
-  sendCommand(key: string, channel = TerminalChannels.STDIN) {
+  sendCommand(key: string, channel = TerminalChannels.STDIN): any {
     return this.send(channel + base64.encode(key));
   }
 
-  sendTerminalSize(cols: number, rows: number) {
+  sendTerminalSize(cols: number, rows: number): void {
     const newSize = { Width: cols, Height: rows };
     if (!isEqual(this.size, newSize)) {
       this.sendCommand(JSON.stringify(newSize), TerminalChannels.TERMINAL_SIZE);
@@ -124,24 +129,24 @@ export class TerminalApi extends WebSocketApi {
     }
   }
 
-  protected parseMessage(data: string) {
+  protected parseMessage(data: string): any {
     data = data.substr(1); // skip channel
     return base64.decode(data);
   }
 
-  protected _onOpen(evt: Event) {
+  protected _onOpen(evt: Event): void {
     // Client should send terminal size in special channel 4,
     // But this size will be changed by terminal.fit()
     this.sendTerminalSize(120, 80);
     super._onOpen(evt);
   }
 
-  protected _onClose(evt: CloseEvent) {
+  protected _onClose(evt: CloseEvent): void {
     super._onClose(evt);
     this.isReady = false;
   }
 
-  protected emitStatus(data: string, options: { color?: TerminalColor; showTime?: boolean } = {}) {
+  protected emitStatus(data: string, options: { color?: TerminalColor; showTime?: boolean } = {}): void {
     const { color, showTime } = options;
     if (color) {
       data = `${color}${data}${TerminalColor.NO_COLOR}`;
@@ -153,7 +158,7 @@ export class TerminalApi extends WebSocketApi {
     this.onData.emit(`${showTime ? time : ""}${data}\r\n`);
   }
 
-  protected emitError(error: string) {
+  protected emitError(error: string): void {
     this.emitStatus(error, {
       color: TerminalColor.RED
     });

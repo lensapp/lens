@@ -6,7 +6,7 @@ interface Props extends DrawerItemProps {
   labels: string[];
 }
 
-export function DrawerItemLabels(props: Props) {
+export function DrawerItemLabels(props: Props): JSX.Element {
   const { labels, ...itemProps } = props;
   if (!labels || !labels.length) {
     return null;
@@ -15,5 +15,5 @@ export function DrawerItemLabels(props: Props) {
     <DrawerItem {...itemProps} labelsOnly>
       {labels.map(label => <Badge key={label} label={label} title={label}/>)}
     </DrawerItem>
-  )
+  );
 }

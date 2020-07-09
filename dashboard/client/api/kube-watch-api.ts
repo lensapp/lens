@@ -1,7 +1,7 @@
 // Kubernetes watch-api consumer
 
 import { computed, observable, reaction } from "mobx";
-import { stringify } from "querystring"
+import { stringify } from "querystring";
 import { autobind, EventEmitter, interval } from "../utils";
 import { KubeJsonApiData } from "./kube-json-api";
 import { IKubeWatchEvent, IKubeWatchRouteEvent, IKubeWatchRouteQuery } from "../../server/common/kubewatch";
@@ -12,7 +12,7 @@ import { apiManager } from "./api-manager";
 
 export {
   IKubeWatchEvent
-}
+};
 
 @autobind()
 export class KubeWatchApi {
@@ -32,22 +32,25 @@ export class KubeWatchApi {
     });
   }
 
-  @computed get activeApis() {
+  @computed get activeApis(): KubeApi<any>[] {
     return Array.from(this.subscribers.keys());
   }
 
-  getSubscribersCount(api: KubeApi) {
+  getSubscribersCount(api: KubeApi): number {
     return this.subscribers.get(api) || 0;
   }
 
-  subscribe(...apis: KubeApi[]) {
+  subscribe(...apis: KubeApi[]): () => void {
     apis.forEach(api => {
       this.subscribers.set(api, this.getSubscribersCount(api) + 1);
     });
-    return () => apis.forEach(api => {
+    return (): void => apis.forEach(api => {
       const count = this.getSubscribersCount(api) - 1;
-      if (count <= 0) this.subscribers.delete(api);
-      else this.subscribers.set(api, count);
+      if (count <= 0) {
+        this.subscribers.delete(api);
+      } else {
+        this.subscribers.set(api, count);
+      }
     });
   }
 
@@ -55,16 +58,20 @@ export class KubeWatchApi {
     const { isClusterAdmin, allowedNamespaces } = configStore;
     return {
       api: this.activeApis.map(api => {
-        if (isClusterAdmin) return api.getWatchUrl();
-        return allowedNamespaces.map(namespace => api.getWatchUrl(namespace))
+        if (isClusterAdmin) {
+          return api.getWatchUrl();
+        }
+        return allowedNamespaces.map(namespace => api.getWatchUrl(namespace));
       }).flat()
-    }
+    };
   }
 
   // todo: maybe switch to websocket to avoid often reconnects
   @autobind()
-  protected connect() {
-    if (this.evtSource) this.disconnect(); // close previous connection
+  protected connect(): void {
+    if (this.evtSource) {
+      this.disconnect();
+    } // close previous connection
     if (!this.activeApis.length) {
       return;
     }
@@ -76,32 +83,35 @@ export class KubeWatchApi {
     this.writeLog("CONNECTING", query.api);
   }
 
-  reconnect() {
+  reconnect(): void {
     if (!this.evtSource || this.evtSource.readyState !== EventSource.OPEN) {
       this.reconnectAttempts = this.maxReconnectsOnError;
       this.connect();
     }
   }
 
-  protected disconnect() {
-    if (!this.evtSource) return;
+  protected disconnect(): void {
+    if (!this.evtSource) {
+      return;
+    }
     this.evtSource.close();
     this.evtSource.onmessage = null;
     this.evtSource = null;
   }
 
-  protected onMessage(evt: MessageEvent) {
-    if (!evt.data) return;
+  protected onMessage(evt: MessageEvent): void {
+    if (!evt.data) {
+      return;
+    }
     const data = JSON.parse(evt.data);
     if ((data as IKubeWatchEvent).object) {
       this.onData.emit(data);
-    }
-    else {
+    } else {
       this.onRouteEvent(data);
     }
   }
 
-  protected async onRouteEvent({ type, url }: IKubeWatchRouteEvent) {
+  protected async onRouteEvent({ type, url }: IKubeWatchRouteEvent): Promise<void> {
     if (type === "STREAM_END") {
       this.disconnect();
       const { apiBase, namespace } = KubeApi.parseApi(url);
@@ -111,13 +121,13 @@ export class KubeWatchApi {
           await api.refreshResourceVersion({ namespace });
           this.reconnect();
         } catch(error) {
-          console.debug("failed to refresh resource version", error)
+          console.debug("failed to refresh resource version", error);
         }
       }
     }
   }
 
-  protected onError(evt: MessageEvent) {
+  protected onError(evt: MessageEvent): void {
     const { reconnectAttempts: attemptsRemain, reconnectTimeoutMs } = this;
     if (evt.eventPhase === EventSource.CLOSED) {
       if (attemptsRemain > 0) {
@@ -127,14 +137,14 @@ export class KubeWatchApi {
     }
   }
 
-  protected writeLog(...data: any[]) {
+  protected writeLog(...data: any[]): void {
     if (configStore.isDevelopment) {
       console.log('%cKUBE-WATCH-API:', `font-weight: bold`, ...data);
     }
   }
 
-  addListener(store: KubeObjectStore, callback: (evt: IKubeWatchEvent) => void) {
-    const listener = (evt: IKubeWatchEvent<KubeJsonApiData>) => {
+  addListener(store: KubeObjectStore, callback: (evt: IKubeWatchEvent) => void): () => void {
+    const listener = (evt: IKubeWatchEvent<KubeJsonApiData>): void => {
       const { selfLink, namespace, resourceVersion } = evt.object.metadata;
       const api = apiManager.getApi(selfLink);
       api.setResourceVersion(namespace, resourceVersion);
@@ -144,10 +154,10 @@ export class KubeWatchApi {
       }
     };
     this.onData.addListener(listener);
-    return () => this.onData.removeListener(listener);
+    return (): void => this.onData.removeListener(listener);
   }
 
-  reset() {
+  reset(): void {
     this.subscribers.clear();
   }
 }

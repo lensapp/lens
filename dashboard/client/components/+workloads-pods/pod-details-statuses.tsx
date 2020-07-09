@@ -9,10 +9,12 @@ interface Props {
 }
 
 export class PodDetailsStatuses extends React.Component<Props> {
-  render() {
-    const { pods } = this.props
-    if (!pods.length) return null
-    const statuses = countBy(pods.map(pod => pod.getStatus()))
+  render(): JSX.Element {
+    const { pods } = this.props;
+    if (!pods.length) {
+      return null;
+    }
+    const statuses = countBy(pods.map(pod => pod.getStatus()));
     return (
       <div className="PodDetailsStatuses">
         {
@@ -23,6 +25,6 @@ export class PodDetailsStatuses extends React.Component<Props> {
           ))
         }
       </div>
-    )
+    );
   }
 }

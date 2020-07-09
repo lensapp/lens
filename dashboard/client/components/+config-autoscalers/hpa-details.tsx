@@ -7,7 +7,7 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { cssNames } from "../../utils";
-import { HorizontalPodAutoscaler, hpaApi, HpaMetricType, IHpaMetric } from "../../api/endpoints/hpa.api";
+import { HorizontalPodAutoscaler, hpaApi, HpaMetricType, HpaMetric } from "../../api/endpoints/hpa.api";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { Trans } from "@lingui/macro";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -21,10 +21,10 @@ interface Props extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 
 @observer
 export class HpaDetails extends React.Component<Props> {
-  renderMetrics() {
+  renderMetrics(): JSX.Element {
     const { object: hpa } = this.props;
 
-    const renderName = (metric: IHpaMetric) => {
+    const renderName = (metric: HpaMetric): JSX.Element => {
       switch (metric.type) {
       case HpaMetricType.Resource:
         const addition = metric.resource.targetAverageUtilization ? <Trans>(as a percentage of request)</Trans> : "";
@@ -51,7 +51,7 @@ export class HpaDetails extends React.Component<Props> {
           </Trans>
         );
       }
-    }
+    };
 
     return (
       <Table>
@@ -60,7 +60,7 @@ export class HpaDetails extends React.Component<Props> {
           <TableCell className="metrics"><Trans>Current / Target</Trans></TableCell>
         </TableHead>
         {
-          hpa.getMetrics().map((metric, index) => {
+          hpa.spec.metrics.map((metric, index) => {
             const name = renderName(metric);
             const values = hpa.getMetricValues(metric);
             return (
@@ -68,16 +68,18 @@ export class HpaDetails extends React.Component<Props> {
                 <TableCell className="name">{name}</TableCell>
                 <TableCell className="metrics">{values}</TableCell>
               </TableRow>
-            )
+            );
           })
         }
       </Table>
     );
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: hpa } = this.props;
-    if (!hpa) return;
+    if (!hpa) {
+      return;
+    }
     const { scaleTargetRef } = hpa.spec;
     return (
       <div className="HpaDetails">
@@ -92,20 +94,22 @@ export class HpaDetails extends React.Component<Props> {
         </DrawerItem>
 
         <DrawerItem name={<Trans>Min Pods</Trans>}>
-          {hpa.getMinPods()}
+          {hpa.spec.minReplicas}
         </DrawerItem>
 
         <DrawerItem name={<Trans>Max Pods</Trans>}>
-          {hpa.getMaxPods()}
+          {hpa.spec.maxReplicas}
         </DrawerItem>
 
         <DrawerItem name={<Trans>Replicas</Trans>}>
-          {hpa.getReplicas()}
+          {hpa.status.currentReplicas}
         </DrawerItem>
 
         <DrawerItem name={<Trans>Status</Trans>} labelsOnly>
           {hpa.getConditions().map(({ type, tooltip, isReady }) => {
-            if (!isReady) return null;
+            if (!isReady) {
+              return null;
+            }
             return (
               <Badge
                 key={type}
@@ -113,7 +117,7 @@ export class HpaDetails extends React.Component<Props> {
                 tooltip={tooltip}
                 className={cssNames({ [type.toLowerCase()]: isReady })}
               />
-            )
+            );
           })}
         </DrawerItem>
 

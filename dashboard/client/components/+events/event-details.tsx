@@ -19,9 +19,11 @@ interface Props extends KubeObjectDetailsProps<KubeEvent> {
 
 @observer
 export class EventDetails extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     const { object: event } = this.props;
-    if (!event) return;
+    if (!event) {
+      return;
+    }
     const { message, reason, count, type, involvedObject } = event;
     const { kind, name, namespace, fieldPath } = involvedObject;
     return (
@@ -70,7 +72,7 @@ export class EventDetails extends React.Component<Props> {
           </TableRow>
         </Table>
       </div>
-    )
+    );
   }
 }
 

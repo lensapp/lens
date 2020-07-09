@@ -2,31 +2,38 @@ import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-export interface IServicePort {
+export interface ServicePort {
   name?: string;
   protocol: string;
   port: number;
   targetPort: number;
 }
 
-export class ServicePort implements IServicePort {
+export class ServicePort implements ServicePort {
   name?: string;
   protocol: string;
   port: number;
   targetPort: number;
   nodePort?: number;
 
-  constructor(data: IServicePort) {
-    Object.assign(this, data)
+  constructor(data: ServicePort) {
+    Object.assign(this, data);
   }
 
-  toString() {
+  toString(): string {
     if (this.nodePort) {
       return `${this.port}:${this.nodePort}/${this.protocol}`;
     } else {
       return `${this.port}${this.port === this.targetPort ? "" : ":" + this.targetPort}/${this.protocol}`;
     }
   }
+}
+
+export interface LoadBalancer {
+  ingress?: {
+    ip?: string;
+    hostname?: string;
+  }[];
 }
 
 @autobind()
@@ -45,32 +52,23 @@ export class Service extends KubeObject {
   }
 
   status: {
-    loadBalancer?: {
-      ingress?: {
-        ip?: string;
-        hostname?: string;
-      }[];
-    };
+    loadBalancer?: LoadBalancer;
   }
 
-  getClusterIp() {
-    return this.spec.clusterIP;
+  getExternalIps(): string[] {
+    return this.status.loadBalancer?.ingress?.map((val): string => val.ip || val.hostname || "") 
+    || this.spec.externalIPs 
+    || [];
   }
 
-  getExternalIps() {
-    const lb = this.getLoadBalancer();
-    if (lb && lb.ingress) {
-      return lb.ingress.map(val => val.ip || val.hostname)
-    }
-    return this.spec.externalIPs || [];
-  }
-
-  getType() {
+  getType(): string {
     return this.spec.type || "-";
   }
 
   getSelector(): string[] {
-    if (!this.spec.selector) return [];
+    if (!this.spec.selector) {
+      return [];
+    }
     return Object.entries(this.spec.selector).map(val => val.join("="));
   }
 
@@ -79,15 +77,11 @@ export class Service extends KubeObject {
     return ports.map(p => new ServicePort(p));
   }
 
-  getLoadBalancer() {
-    return this.status.loadBalancer;
-  }
-
-  isActive() {
+  isActive(): boolean {
     return this.getType() !== "LoadBalancer" || this.getExternalIps().length > 0;
   }
 
-  getStatus() {
+  getStatus(): "Active" | "Pending" {
     return this.isActive() ? "Active" : "Pending";
   }
 }

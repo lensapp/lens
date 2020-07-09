@@ -9,10 +9,11 @@ import { cronJobStore } from "./cronjob.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
-import { ICronJobsRouteParams } from "../+workloads";
+import { CronJobsRouteParams } from "../+workloads";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { apiManager } from "../../api/api-manager";
+import { KubeEvent } from "client/api/endpoints/events.api";
 
 enum sortBy {
   name = "name",
@@ -23,27 +24,27 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<ICronJobsRouteParams> {
+interface Props extends RouteComponentProps<CronJobsRouteParams> {
 }
 
 @observer
 export class CronJobs extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="CronJobs" store={cronJobStore}
         dependentStores={[jobStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (cronJob: CronJob) => cronJob.getName(),
-          [sortBy.namespace]: (cronJob: CronJob) => cronJob.getNs(),
-          [sortBy.suspend]: (cronJob: CronJob) => cronJob.getSuspendFlag(),
-          [sortBy.active]: (cronJob: CronJob) => cronJobStore.getActiveJobsNum(cronJob),
-          [sortBy.lastSchedule]: (cronJob: CronJob) => cronJob.getLastScheduleTime(),
-          [sortBy.age]: (cronJob: CronJob) => cronJob.metadata.creationTimestamp,
+          [sortBy.name]: (cronJob: CronJob): string => cronJob.getName(),
+          [sortBy.namespace]: (cronJob: CronJob): string => cronJob.getNs(),
+          [sortBy.suspend]: (cronJob: CronJob): string => cronJob.getSuspendFlag(),
+          [sortBy.active]: (cronJob: CronJob): number => cronJobStore.getActiveJobsNum(cronJob),
+          [sortBy.lastSchedule]: (cronJob: CronJob): string => cronJob.getLastScheduleTime(),
+          [sortBy.age]: (cronJob: CronJob): string => cronJob.metadata.creationTimestamp,
         }}
         searchFilters={[
-          (cronJob: CronJob) => cronJob.getSearchFields(),
-          (cronJob: CronJob) => cronJob.getSchedule(),
+          (cronJob: CronJob): string[] => cronJob.getSearchFields(),
+          (cronJob: CronJob): string => cronJob.getSchedule(),
         ]}
         renderHeaderTitle={<Trans>Cron Jobs</Trans>}
         renderTableHeader={[
@@ -56,10 +57,12 @@ export class CronJobs extends React.Component<Props> {
           { title: <Trans>Last schedule</Trans>, className: "last-schedule", sortBy: sortBy.lastSchedule },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
-        renderTableContents={(cronJob: CronJob) => [
+        renderTableContents={(cronJob: CronJob): (string | number | JSX.Element)[] => [
           cronJob.getName(),
-          <KubeEventIcon object={cronJob} filterEvents={events => {
-            if (!cronJob.isNeverRun()) return events;
+          <KubeEventIcon key="events" object={cronJob} filterEvents={(events): KubeEvent[] => {
+            if (!cronJob.isNeverRun()) {
+              return events;
+            }
             return events.filter(event => event.reason != "FailedNeedsStart");
           }
           }/>,
@@ -70,20 +73,20 @@ export class CronJobs extends React.Component<Props> {
           cronJob.getLastScheduleTime(),
           cronJob.getAge(),
         ]}
-        renderItemMenu={(item: CronJob) => {
-          return <CronJobMenu object={item}/>
+        renderItemMenu={(item: CronJob): JSX.Element => {
+          return <CronJobMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
-export function CronJobMenu(props: KubeObjectMenuProps<CronJob>) {
+export function CronJobMenu(props: KubeObjectMenuProps<CronJob>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(cronJobApi, {
   Menu: CronJobMenu,
-})
+});

@@ -1,4 +1,4 @@
-import "./badge.scss"
+import "./badge.scss";
 
 import * as React from "react";
 import { cssNames } from "../../utils/cssNames";
@@ -11,7 +11,7 @@ interface Props extends React.HTMLAttributes<any>, TooltipDecoratorProps {
 
 @withTooltip
 export class Badge extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     const { className, label, small, children, ...elemProps } = this.props;
     return (
       <span className={cssNames("Badge", { small }, className)} {...elemProps}>

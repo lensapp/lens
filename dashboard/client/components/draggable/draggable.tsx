@@ -1,6 +1,6 @@
 import "./draggable.scss";
 import * as React from "react";
-import { cssNames, IClassName, noop } from "../../utils";
+import { cssNames, ClassName, noop } from "../../utils";
 import throttle from "lodash/throttle";
 
 export interface DraggableEventHandler {
@@ -8,7 +8,7 @@ export interface DraggableEventHandler {
 }
 
 interface Props {
-  className?: IClassName;
+  className?: ClassName;
   vertical?: boolean;
   horizontal?: boolean;
   onStart?: DraggableEventHandler;
@@ -53,12 +53,12 @@ export class Draggable extends React.PureComponent<Props, DraggableState> {
     document.addEventListener("mouseup", this.onDragEnd);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     document.removeEventListener("mousemove", this.onDrag);
     document.removeEventListener("mouseup", this.onDragEnd);
   }
 
-  onDragInit = (evt: React.MouseEvent<any>) => {
+  onDragInit = (evt: React.MouseEvent<any>): void => {
     document.body.classList.add(Draggable.IS_DRAGGING);
     const { pageX, pageY } = evt;
     this.setState({
@@ -67,7 +67,7 @@ export class Draggable extends React.PureComponent<Props, DraggableState> {
       initY: pageY,
       pageX: pageX,
       pageY: pageY,
-    })
+    });
   }
 
   onDrag = throttle((evt: MouseEvent) => {
@@ -76,8 +76,12 @@ export class Draggable extends React.PureComponent<Props, DraggableState> {
     const offsetX = pageX - evt.pageX;
     const offsetY = pageY - evt.pageY;
     let changed = false;
-    if (horizontal && offsetX !== 0) changed = true;
-    if (vertical && offsetY !== 0) changed = true;
+    if (horizontal && offsetX !== 0) {
+      changed = true;
+    }
+    if (vertical && offsetY !== 0) {
+      changed = true;
+    }
     if (inited && changed) {
       const start = !this.state.changed;
       const state = Object.assign({}, this.state, {
@@ -87,18 +91,22 @@ export class Draggable extends React.PureComponent<Props, DraggableState> {
         offsetX: offsetX,
         offsetY: offsetY,
       });
-      if (start) onStart(state);
+      if (start) {
+        onStart(state);
+      }
       this.setState(state, () => onEnter(state));
     }
   }, 100)
 
-  onDragEnd = (evt: MouseEvent) => {
+  onDragEnd = (evt: MouseEvent): void => {
     const { pageX, pageY } = evt;
     const { inited, changed, initX, initY } = this.state;
     if (inited) {
       document.body.classList.remove(Draggable.IS_DRAGGING);
       this.setState(initState, () => {
-        if (!changed) return;
+        if (!changed) {
+          return;
+        }
         const state = Object.assign({}, this.state, {
           offsetX: initX - pageX,
           offsetY: initY - pageY,
@@ -108,7 +116,7 @@ export class Draggable extends React.PureComponent<Props, DraggableState> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { className, children } = this.props;
     return (
       <div className={cssNames("Draggable", className)} onMouseDown={this.onDragInit}>

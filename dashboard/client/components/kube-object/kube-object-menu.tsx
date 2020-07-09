@@ -6,6 +6,7 @@ import { editResourceTab } from "../dock/edit-resource.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { hideDetails } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
+import { KubeObjectStore } from "client/kube-object.store";
 
 export interface KubeObjectMenuProps<T extends KubeObject = any> extends MenuActionsProps {
   object: T;
@@ -14,49 +15,54 @@ export interface KubeObjectMenuProps<T extends KubeObject = any> extends MenuAct
 }
 
 export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
-  get store() {
+  get store(): KubeObjectStore<any> {
     const { object } = this.props;
-    if (!object) return;
+    if (!object) {
+      return;
+    }
     return apiManager.getStore(object.selfLink);
   }
 
-  get isEditable() {
+  get isEditable(): boolean {
     const { editable } = this.props;
     return editable !== undefined ? editable : !!(this.store && this.store.update);
   }
 
-  get isRemovable() {
+  get isRemovable(): boolean  {
     const { removable } = this.props;
     return removable !== undefined ? removable : !!(this.store && this.store.remove);
   }
 
   @autobind()
-  async update() {
+  update(): void {
     hideDetails();
     editResourceTab(this.props.object);
   }
 
   @autobind()
-  async remove() {
+  async remove(): Promise<void> {
     hideDetails();
     const { object, removeAction } = this.props;
-    if (removeAction) await removeAction();
-    else await this.store.remove(object);
+    if (removeAction) {
+      removeAction();
+    } else {
+      await this.store.remove(object);
+    }
   }
 
   @autobind()
-  renderRemoveMessage() {
+  renderRemoveMessage(): JSX.Element {
     const { object } = this.props;
     const resourceKind = object.kind;
     const resourceName = object.getName();
     return (
       <p><Trans>Remove {resourceKind} <b>{resourceName}</b>?</Trans></p>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     const { remove, update, renderRemoveMessage, isEditable, isRemovable } = this;
-    const { className, object, editable, removable, ...menuProps } = this.props;
+    const { className, object: _object, editable: _editable, removable: _removable, ...menuProps } = this.props;
     return (
       <MenuActions
         className={cssNames("KubeObjectMenu", className)}
@@ -65,6 +71,6 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
         removeConfirmationMessage={renderRemoveMessage}
         {...menuProps}
       />
-    )
+    );
   }
 }

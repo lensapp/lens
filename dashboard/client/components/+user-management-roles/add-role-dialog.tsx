@@ -1,4 +1,4 @@
-import "./add-role-dialog.scss"
+import "./add-role-dialog.scss";
 
 import * as React from "react";
 import { observable } from "mobx";
@@ -21,23 +21,23 @@ export class AddRoleDialog extends React.Component<Props> {
 
   @observable roleName = "";
 
-  static open() {
+  static open(): void {
     AddRoleDialog.isOpen = true;
   }
 
-  static close() {
+  static close(): void {
     AddRoleDialog.isOpen = false;
   }
 
-  close = () => {
+  close = (): void => {
     AddRoleDialog.close();
   }
 
-  reset = () => {
-    this.roleName = ""
+  reset = (): void => {
+    this.roleName = "";
   }
 
-  createRole = async () => {
+  createRole = async (): Promise<void> => {
     try {
       const role = await rolesStore.create({ name: this.roleName });
       showDetails(role.selfLink);
@@ -48,7 +48,7 @@ export class AddRoleDialog extends React.Component<Props> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { ...dialogProps } = this.props;
     const header = <h5><Trans>Create Role</Trans></h5>;
     return (
@@ -69,11 +69,13 @@ export class AddRoleDialog extends React.Component<Props> {
               placeholder={_i18n._(t`Role name`)}
               iconLeft="supervisor_account"
               value={this.roleName}
-              onChange={v => this.roleName = v}
+              onChange={(v): void => {
+                this.roleName = v;
+              }}
             />
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

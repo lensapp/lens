@@ -1,4 +1,4 @@
-import "./role-details.scss"
+import "./role-details.scss";
 
 import React from "react";
 import { Trans } from "@lingui/macro";
@@ -15,9 +15,11 @@ interface Props extends KubeObjectDetailsProps<Role> {
 
 @observer
 export class RoleDetails extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     const { object: role } = this.props;
-    if (!role) return;
+    if (!role) {
+      return;
+    }
     const rules = role.getRules();
     return (
       <div className="RoleDetails">
@@ -57,15 +59,15 @@ export class RoleDetails extends React.Component<Props> {
                 </>
               )}
             </div>
-          )
+          );
         })}
 
         <KubeEventDetails object={role}/>
       </div>
-    )
+    );
   }
 }
 
 apiManager.registerViews([roleApi, clusterRoleApi], {
   Details: RoleDetails,
-})
+});

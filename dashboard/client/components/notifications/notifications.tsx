@@ -1,27 +1,27 @@
 import './notifications.scss';
 
-import React from 'react'
+import React from 'react';
 import { reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react"
+import { disposeOnUnmount, observer } from "mobx-react";
 import { JsonApiErrorParsed } from "../../api/json-api";
 import { cssNames, prevDefault } from "../../utils";
-import { IMessage, INotification, notificationsStore } from "./notifications.store";
+import { IMessage, Notification, notificationsStore } from "./notifications.store";
 import { Animate } from "../animate";
-import { Icon } from "../icon"
+import { Icon } from "../icon";
 
 @observer
 export class Notifications extends React.Component {
   public elem: HTMLElement;
 
-  static ok(message: IMessage) {
+  static ok(message: IMessage): void {
     notificationsStore.add({
       message: message,
       timeout: 2500,
       status: "ok"
-    })
+    });
   }
 
-  static error(message: IMessage) {
+  static error(message: IMessage): void {
     notificationsStore.add({
       message: message,
       timeout: 10000,
@@ -29,7 +29,7 @@ export class Notifications extends React.Component {
     });
   }
 
-  static info(message: IMessage) {
+  static info(message: IMessage): void {
     return notificationsStore.add({
       message: message,
       timeout: 0,
@@ -37,7 +37,7 @@ export class Notifications extends React.Component {
     });
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     disposeOnUnmount(this, [
       reaction(() => notificationsStore.notifications.length, () => {
         this.scrollToLastNotification();
@@ -45,17 +45,17 @@ export class Notifications extends React.Component {
     ]);
   }
 
-  scrollToLastNotification() {
+  scrollToLastNotification(): void {
     if (!this.elem) {
       return;
     }
     this.elem.scrollTo({
       top: this.elem.scrollHeight,
       behavior: "smooth"
-    })
+    });
   }
 
-  getMessage(notification: INotification) {
+  getMessage(notification: Notification): React.ReactNode[] {
     let { message } = notification;
     if (message instanceof JsonApiErrorParsed) {
       message = message.toString();
@@ -63,10 +63,12 @@ export class Notifications extends React.Component {
     return React.Children.toArray(message);
   }
 
-  render() {
+  render(): JSX.Element {
     const { notifications, remove, addAutoHideTimer, removeAutoHideTimer } = notificationsStore;
     return (
-      <div className="Notifications flex column align-flex-end" ref={e => this.elem = e}>
+      <div className="Notifications flex column align-flex-end" ref={(e): void => {
+        this.elem = e;
+      }}>
         {notifications.map(notification => {
           const { id, status } = notification;
           const msgText = this.getMessage(notification);
@@ -74,8 +76,8 @@ export class Notifications extends React.Component {
             <Animate key={id}>
               <div
                 className={cssNames("notification flex align-center", status)}
-                onMouseLeave={() => addAutoHideTimer(notification)}
-                onMouseEnter={() => removeAutoHideTimer(notification)}>
+                onMouseLeave={(): void => addAutoHideTimer(notification)}
+                onMouseEnter={(): void => removeAutoHideTimer(notification)}>
                 <div className="box center">
                   <Icon material="info_outline"/>
                 </div>
@@ -88,9 +90,9 @@ export class Notifications extends React.Component {
                 </div>
               </div>
             </Animate>
-          )
+          );
         })}
       </div>
-    )
+    );
   }
 }

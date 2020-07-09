@@ -17,26 +17,28 @@ interface Props extends MenuActionsProps {
 
 export class HelmReleaseMenu extends React.Component<Props> {
   @autobind()
-  remove() {
+  remove(): Promise<void> {
     return releaseStore.remove(this.props.release);
   }
 
   @autobind()
-  upgrade() {
+  upgrade(): void {
     const { release, hideDetails } = this.props;
     createUpgradeChartTab(release);
     hideDetails && hideDetails();
   }
 
   @autobind()
-  rollback() {
+  rollback(): void {
     ReleaseRollbackDialog.open(this.props.release);
   }
 
-  renderContent() {
+  renderContent(): JSX.Element {
     const { release, toolbar } = this.props;
-    if (!release) return;
-    const hasRollback = release && release.getRevision() > 1;
+    if (!release) {
+      return;
+    }
+    const hasRollback = release && release.revision > 1;
     return (
       <>
         {hasRollback && (
@@ -46,18 +48,19 @@ export class HelmReleaseMenu extends React.Component<Props> {
           </MenuItem>
         )}
       </>
-    )
+    );
   }
 
-  render() {
-    const { className, release, ...menuProps } = this.props;
+  render(): JSX.Element {
+    const { className, release: _release, ...menuProps } = this.props;
     return (
       <MenuActions
         {...menuProps}
         className={cssNames("HelmReleaseMenu", className)}
         removeAction={this.remove}
-        children={this.renderContent()}
-      />
+      >
+        {this.renderContent()}
+      </MenuActions>
     );
   }
 }

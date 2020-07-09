@@ -7,12 +7,13 @@ import { ItemObject } from "../item.store";
 import { apiKube } from "./index";
 import { JsonApiParams } from "./json-api";
 import { resourceApplierApi } from "./endpoints/resource-applier.api";
+import { CancelablePromise } from "client/utils/cancelableFetch";
 
 export type IKubeObjectConstructor<T extends KubeObject = any> = (new (data: KubeJsonApiData | any) => T) & {
   kind?: string;
 };
 
-export interface IKubeObjectMetadata {
+export interface KubeObjectMetadata {
   uid: string;
   name: string;
   namespace?: string;
@@ -44,11 +45,7 @@ export type IKubeMetaField = keyof KubeObject["metadata"];
 export class KubeObject implements ItemObject {
   static readonly kind: string;
 
-  static create(data: any) {
-    return new KubeObject(data);
-  }
-
-  static isNonSystem(item: KubeJsonApiData | KubeObject) {
+  static isNonSystem(item: KubeJsonApiData | KubeObject): boolean {
     return !item.metadata.name.startsWith("system:");
   }
 
@@ -61,8 +58,10 @@ export class KubeObject implements ItemObject {
   }
 
   static stringifyLabels(labels: { [name: string]: string }): string[] {
-    if (!labels) return [];
-    return Object.entries(labels).map(([name, value]) => `${name}=${value}`)
+    if (!labels) {
+      return [];
+    }
+    return Object.entries(labels).map(([name, value]) => `${name}=${value}`);
   }
 
   constructor(data: KubeJsonApiData) {
@@ -71,31 +70,27 @@ export class KubeObject implements ItemObject {
 
   apiVersion: string
   kind: string
-  metadata: IKubeObjectMetadata;
+  metadata: KubeObjectMetadata;
 
-  get selfLink() {
-    return this.metadata.selfLink
+  get selfLink(): string {
+    return this.metadata.selfLink;
   }
 
-  getId() {
+  getId(): string {
     return this.metadata.uid;
   }
 
-  getResourceVersion() {
-    return this.metadata.resourceVersion;
-  }
-
-  getName() {
+  getName(): string {
     return this.metadata.name;
   }
 
-  getNs() {
+  getNs(): string | undefined {
     // avoid "null" serialization via JSON.stringify when post data
     return this.metadata.namespace || undefined;
   }
 
   // todo: refactor with named arguments
-  getAge(humanize = true, compact = true, fromNow = false) {
+  getAge(humanize = true, compact = true, fromNow = false): number | string {
     if (fromNow) {
       return moment(this.metadata.creationTimestamp).fromNow();
     }
@@ -119,26 +114,26 @@ export class KubeObject implements ItemObject {
     return labels.filter(label => {
       const skip = resourceApplierApi.annotations.some(key => label.startsWith(key));
       return !skip;
-    })
+    });
   }
 
-  getOwnerRefs() {
+  getOwnerRefs(): Required<KubeObjectMetadata["ownerReferences"]> {
     const refs = this.metadata.ownerReferences || [];
     return refs.map(ownerRef => ({
       ...ownerRef,
       namespace: this.getNs(),
-    }))
+    }));
   }
 
-  getSearchFields() {
-    const { getName, getId, getNs, getAnnotations, getLabels } = this
+  getSearchFields(): string[] {
+    const { getName, getId, getNs, getAnnotations, getLabels } = this;
     return [
       getName(),
       getNs(),
       getId(),
       ...getLabels(),
       ...getAnnotations(),
-    ]
+    ];
   }
 
   toPlainObject(): object {
@@ -146,14 +141,14 @@ export class KubeObject implements ItemObject {
   }
 
   // use unified resource-applier api for updating all k8s objects
-  async update<T extends KubeObject>(data: Partial<T>) {
+  async update<T extends KubeObject>(data: Partial<T>): Promise<T> {
     return resourceApplierApi.update<T>({
       ...this.toPlainObject(),
       ...data,
     });
   }
 
-  delete(params?: JsonApiParams) {
+  delete(params?: JsonApiParams): CancelablePromise<any> {
     return apiKube.del(this.selfLink, params);
   }
 }

@@ -14,7 +14,7 @@ interface RadioGroupProps {
 }
 
 export class RadioGroup extends React.Component<RadioGroupProps, {}> {
-  render() {
+  render(): JSX.Element {
     const name = uniqueId("radioGroup");
     const { value, asButtons, disabled, onChange } = this.props;
     let { className } = this.props;
@@ -28,7 +28,7 @@ export class RadioGroup extends React.Component<RadioGroupProps, {}> {
             disabled: disabled !== undefined ? disabled : radio.props.disabled,
             checked: radio.props.value === value,
             onChange: onChange
-          } as any)
+          } as any);
         })}
       </div>
     );
@@ -47,14 +47,14 @@ type RadioProps = React.HTMLProps<any> & {
 export class Radio extends React.Component<RadioProps> {
   private elem: HTMLElement;
 
-  onChange = () => {
+  onChange = (): void => {
     const { value, onChange, checked } = this.props;
     if (!checked && onChange) {
       onChange(value);
     }
   }
 
-  onKeyDown = (e: React.KeyboardEvent<any>) => {
+  onKeyDown = (e: React.KeyboardEvent<any>): void => {
     const SPACE_KEY = e.keyCode === 32;
     const ENTER_KEY = e.keyCode === 13;
     if (SPACE_KEY || ENTER_KEY) {
@@ -63,7 +63,7 @@ export class Radio extends React.Component<RadioProps> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { className, label, checked, children, ...inputProps } = this.props;
     const componentClass = cssNames('Radio flex align-center', className, {
       checked: checked,
@@ -74,7 +74,9 @@ export class Radio extends React.Component<RadioProps> {
         className={componentClass}
         tabIndex={!checked ? 0 : null}
         onKeyDown={this.onKeyDown}
-        ref={e => this.elem = e}
+        ref={(e): void => {
+          this.elem = e;
+        }}
       >
         <input {...inputProps} type="radio" checked={checked} onChange={this.onChange}/>
         <i className="tick flex center"/>

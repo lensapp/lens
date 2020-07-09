@@ -1,7 +1,7 @@
-import { BrowserWindow, shell, Menu } from "electron"
-import { PromiseIpc } from "electron-promise-ipc"
-import * as windowStateKeeper from "electron-window-state"
-import * as path from "path"
+import { BrowserWindow, shell } from "electron";
+import { PromiseIpc } from "electron-promise-ipc";
+import * as windowStateKeeper from "electron-window-state";
+import * as path from "path";
 import { tracker } from "./tracker";
 
 declare const __static: string;
@@ -13,7 +13,7 @@ export class WindowManager {
   protected windowState: windowStateKeeper.State;
 
   constructor(showSplash = true) {
-    this.promiseIpc = new PromiseIpc({ timeout: 2000 })
+    this.promiseIpc = new PromiseIpc({ timeout: 2000 });
     // Manage main window size&position with persistence
     this.windowState = windowStateKeeper({
       defaultHeight: 900,
@@ -31,10 +31,10 @@ export class WindowManager {
       webPreferences: {
         nodeIntegration: true
       }
-    })
+    });
     if (showSplash) {
-      this.splashWindow.loadFile(path.join(__static, "/splash.html"))
-      this.splashWindow.show()
+      this.splashWindow.loadFile(path.join(__static, "/splash.html"));
+      this.splashWindow.show();
     }
 
     this.mainWindow = new BrowserWindow({
@@ -57,7 +57,7 @@ export class WindowManager {
     // handle close event
     this.mainWindow.on("close", () => {
       this.mainWindow = null;
-    })
+    });
 
     // handle external links
     this.mainWindow.webContents.on("will-navigate", (event, link) => {
@@ -66,29 +66,29 @@ export class WindowManager {
       }
       event.preventDefault();
       shell.openExternal(link);
-    })
+    });
 
     // handle developer console
     if (process.env.NODE_ENV !== "production") {
       this.mainWindow.webContents.on("devtools-opened", () => {
         if (this.mainWindow.getBrowserView()) {
-          this.mainWindow.getBrowserView().webContents.openDevTools({mode: "detach"})
+          this.mainWindow.getBrowserView().webContents.openDevTools({mode: "detach"});
         }
-      })
+      });
     }
 
     this.mainWindow.on("focus", () => {
-      tracker.event("app", "focus")
-    })
+      tracker.event("app", "focus");
+    });
   }
 
-  public showMain(url: string) {
+  public showMain(url: string): void {
     this.mainWindow.loadURL( url ).then(() => {
-      this.splashWindow.hide()
+      this.splashWindow.hide();
       this.splashWindow.loadURL("data:text/html;charset=utf-8,").then(() => {
-        this.splashWindow.close()
-        this.mainWindow.show()
-      })
-    })
+        this.splashWindow.close();
+        this.mainWindow.show();
+      });
+    });
   }
 }

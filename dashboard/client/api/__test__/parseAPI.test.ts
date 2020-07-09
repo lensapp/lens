@@ -1,8 +1,8 @@
-import { KubeApi, IKubeApiLinkBase } from "../kube-api";
+import { KubeApi, KubeApiLinkBase } from "../kube-api";
 
 interface ParseAPITest {
     url: string;
-    expected: Required<IKubeApiLinkBase>;
+    expected: Required<KubeApiLinkBase>;
 }
 
 const tests: ParseAPITest[] = [

@@ -1,17 +1,19 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
-import { IPodMetrics } from "../../api/endpoints";
-import { getMetricLastPoints, IMetrics } from "../../api/endpoints/metrics.api";
+import { PodMetricsData } from "../../api/endpoints";
+import { getMetricLastPoints, Metrics } from "../../api/endpoints/metrics.api";
 import { bytesToUnits } from "../../utils";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 
 interface Props {
-  metrics: IPodMetrics<IMetrics>;
+  metrics: PodMetricsData<Metrics>;
 }
 
-export function ResourceMetricsText(props: Props) {
-  if (!props.metrics) return null
+export function ResourceMetricsText(props: Props): JSX.Element {
+  if (!props.metrics) {
+    return null;
+  }
   const metrics = getMetricLastPoints(props.metrics);
   const { cpuUsage, cpuRequests, cpuLimits, memoryUsage, memoryRequests, memoryLimits } = metrics;
   return (

@@ -1,11 +1,11 @@
-import * as winston from "winston"
+import * as winston from "winston";
 
 const options = {
   colorize: true,
   handleExceptions: false,
   json: false,
   level: process.env.DEBUG === "true" ? "debug" : "info",
-}
+};
 
 const logger = winston.createLogger({
   format: winston.format.combine(
@@ -17,4 +17,4 @@ const logger = winston.createLogger({
   ],
 });
 
-export default logger
+export default logger;

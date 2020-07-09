@@ -2,22 +2,22 @@ import { KubeObject } from "../kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
-export interface IPolicyIpBlock {
+export interface PolicyIpBlock {
   cidr: string;
   except?: string[];
 }
 
-export interface IPolicySelector {
+export interface PolicySelector {
   matchLabels: {
     [label: string]: string;
   };
 }
 
-export interface IPolicyIngress {
+export interface PolicyIngress {
   from: {
-    ipBlock?: IPolicyIpBlock;
-    namespaceSelector?: IPolicySelector;
-    podSelector?: IPolicySelector;
+    ipBlock?: PolicyIpBlock;
+    namespaceSelector?: PolicySelector;
+    podSelector?: PolicySelector;
   }[];
   ports: {
     protocol: string;
@@ -25,9 +25,9 @@ export interface IPolicyIngress {
   }[];
 }
 
-export interface IPolicyEgress {
+export interface PolicyEgress {
   to: {
-    ipBlock: IPolicyIpBlock;
+    ipBlock: PolicyIpBlock;
   }[];
   ports: {
     protocol: string;
@@ -47,19 +47,23 @@ export class NetworkPolicy extends KubeObject {
       };
     };
     policyTypes: string[];
-    ingress: IPolicyIngress[];
-    egress: IPolicyEgress[];
+    ingress: PolicyIngress[];
+    egress: PolicyEgress[];
   }
 
   getMatchLabels(): string[] {
-    if (!this.spec.podSelector || !this.spec.podSelector.matchLabels) return [];
+    if (!this.spec.podSelector || !this.spec.podSelector.matchLabels) {
+      return [];
+    }
     return Object
       .entries(this.spec.podSelector.matchLabels)
-      .map(data => data.join(":"))
+      .map(data => data.join(":"));
   }
 
   getTypes(): string[] {
-    if (!this.spec.policyTypes) return [];
+    if (!this.spec.policyTypes) {
+      return [];
+    }
     return this.spec.policyTypes;
   }
 }

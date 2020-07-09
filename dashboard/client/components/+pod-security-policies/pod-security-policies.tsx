@@ -18,22 +18,22 @@ enum sortBy {
 
 @observer
 export class PodSecurityPolicies extends React.Component {
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="PodSecurityPolicies"
         isClusterScoped={true}
         store={podSecurityPoliciesStore}
         sortingCallbacks={{
-          [sortBy.name]: (item: PodSecurityPolicy) => item.getName(),
-          [sortBy.volumes]: (item: PodSecurityPolicy) => item.getVolumes(),
-          [sortBy.privileged]: (item: PodSecurityPolicy) => +item.isPrivileged(),
-          [sortBy.age]: (item: PodSecurityPolicy) => item.metadata.creationTimestamp,
+          [sortBy.name]: (item: PodSecurityPolicy): string => item.getName(),
+          [sortBy.volumes]: (item: PodSecurityPolicy): string[] => item.getVolumes(),
+          [sortBy.privileged]: (item: PodSecurityPolicy): number => +item.isPrivileged(),
+          [sortBy.age]: (item: PodSecurityPolicy): string => item.metadata.creationTimestamp,
         }}
         searchFilters={[
-          (item: PodSecurityPolicy) => item.getSearchFields(),
-          (item: PodSecurityPolicy) => item.getVolumes(),
-          (item: PodSecurityPolicy) => Object.values(item.getRules()),
+          (item: PodSecurityPolicy): string[] => item.getSearchFields(),
+          (item: PodSecurityPolicy): string[] => item.getVolumes(),
+          (item: PodSecurityPolicy): string[] => Object.values(item.getRules()),
         ]}
         renderHeaderTitle={<Trans>Pod Security Policies</Trans>}
         renderTableHeader={[
@@ -42,28 +42,28 @@ export class PodSecurityPolicies extends React.Component {
           { title: <Trans>Volumes</Trans>, className: "volumes", sortBy: sortBy.volumes },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
-        renderTableContents={(item: PodSecurityPolicy) => {
+        renderTableContents={(item: PodSecurityPolicy): (string | number | JSX.Element)[] => {
           return [
             item.getName(),
             item.isPrivileged() ? <Trans>Yes</Trans> : <Trans>No</Trans>,
             item.getVolumes().join(", "),
             item.getAge(),
-          ]
+          ];
         }}
-        renderItemMenu={(item: PodSecurityPolicy) => {
-          return <PodSecurityPolicyMenu object={item}/>
+        renderItemMenu={(item: PodSecurityPolicy): JSX.Element => {
+          return <PodSecurityPolicyMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
-export function PodSecurityPolicyMenu(props: KubeObjectMenuProps<PodSecurityPolicy>) {
+export function PodSecurityPolicyMenu(props: KubeObjectMenuProps<PodSecurityPolicy>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(pspApi, {
   Menu: PodSecurityPolicyMenu,
-})
+});

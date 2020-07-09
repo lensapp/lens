@@ -13,6 +13,28 @@ import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
+interface RowData {
+  items: ItemObject[];
+  getTableRow?: (uid: string) => React.ReactElement<TableRowProps>;
+}
+
+interface RowProps extends ListChildComponentProps {
+  data: RowData;
+}
+
+const Row = observer((props: RowProps) => {
+  const { index, style, data } = props;
+  const { items, getTableRow } = data;
+  const uid = items[index].getId();
+  const row = getTableRow(uid);
+  if (!row) {
+    return null;
+  }
+  return React.cloneElement(row, {
+    style: Object.assign({}, row.props.style, style)
+  });
+});
+
 interface Props {
   items: ItemObject[];
   rowHeights: number[];
@@ -33,7 +55,7 @@ const defaultProps: Partial<Props> = {
   width: "100%",
   initialOffset: 1,
   readyOffset: 10,
-}
+};
 
 export class VirtualList extends Component<Props, State> {
   static defaultProps = defaultProps as object;
@@ -46,14 +68,14 @@ export class VirtualList extends Component<Props, State> {
     height: 0,
   };
 
-  componentDidMount() {
+  componentDidMount(): void {
     this.setListHeight();
     this.scrollToSelectedItem();
     new ResizeSensor(this.parentRef.current as any as Element, this.setListHeight);
     this.setState({ overscanCount: this.props.readyOffset });
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: Props): void {
     const { items, rowHeights } = this.props;
     if (prevProps.items.length !== items.length || !isEqual(prevProps.rowHeights, rowHeights)) {
       this.listRef.current.resetAfterIndex(0, true);
@@ -62,24 +84,30 @@ export class VirtualList extends Component<Props, State> {
 
   setListHeight = throttle(() => {
     const { parentRef, state: { height } } = this;
-    if (!parentRef.current) return;
+    if (!parentRef.current) {
+      return;
+    }
     const parentHeight = parentRef.current.clientHeight;
-    if (parentHeight === height) return;
+    if (parentHeight === height) {
+      return;
+    }
     this.setState({
       height: parentHeight,
-    })
+    });
   }, 250)
 
-  getItemSize = (index: number) => this.props.rowHeights[index];
+  getItemSize = (index: number): number => this.props.rowHeights[index];
 
   scrollToSelectedItem = debounce(() => {
     const { items, selectedItemId } = this.props;
     const index = items.findIndex(item => item.getId() == selectedItemId);
-    if (index === -1) return;
+    if (index === -1) {
+      return;
+    }
     this.listRef.current.scrollToItem(index, "start");
   })
 
-  render() {
+  render(): JSX.Element {
     const { width, className, items, getTableRow } = this.props;
     const { height, overscanCount } = this.state;
     const rowData: RowData = {
@@ -97,29 +125,10 @@ export class VirtualList extends Component<Props, State> {
           itemData={rowData}
           overscanCount={overscanCount}
           ref={this.listRef}
-          children={Row}
-        />
+        >
+          {Row}
+        </VariableSizeList>
       </div>
     );
   }
 }
-
-interface RowData {
-  items: ItemObject[];
-  getTableRow?: (uid: string) => React.ReactElement<TableRowProps>;
-}
-
-interface RowProps extends ListChildComponentProps {
-  data: RowData;
-}
-
-const Row = observer((props: RowProps) => {
-  const { index, style, data } = props;
-  const { items, getTableRow } = data;
-  const uid = items[index].getId();
-  const row = getTableRow(uid);
-  if (!row) return null;
-  return React.cloneElement(row, {
-    style: Object.assign({}, row.props.style, style)
-  });
-})

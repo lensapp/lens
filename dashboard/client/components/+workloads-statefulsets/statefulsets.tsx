@@ -11,7 +11,7 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
-import { IStatefulSetsRouteParams } from "../+workloads";
+import { StatefulSetsRouteParams } from "../+workloads";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { apiManager } from "../../api/api-manager";
 
@@ -22,28 +22,24 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends RouteComponentProps<IStatefulSetsRouteParams> {
+interface Props extends RouteComponentProps<StatefulSetsRouteParams> {
 }
 
 @observer
 export class StatefulSets extends React.Component<Props> {
-  getPodsLength(statefulSet: StatefulSet) {
-    return statefulSetStore.getChildPods(statefulSet).length;
-  }
-
-  render() {
+  render(): JSX.Element {
     return (
       <KubeObjectListLayout
         className="StatefulSets" store={statefulSetStore}
         dependentStores={[podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (statefulSet: StatefulSet) => statefulSet.getName(),
-          [sortBy.namespace]: (statefulSet: StatefulSet) => statefulSet.getNs(),
-          [sortBy.age]: (statefulSet: StatefulSet) => statefulSet.metadata.creationTimestamp,
-          [sortBy.pods]: (statefulSet: StatefulSet) => this.getPodsLength(statefulSet),
+          [sortBy.name]: (statefulSet: StatefulSet): string => statefulSet.getName(),
+          [sortBy.namespace]: (statefulSet: StatefulSet): string => statefulSet.getNs(),
+          [sortBy.age]: (statefulSet: StatefulSet): string => statefulSet.metadata.creationTimestamp,
+          [sortBy.pods]: (statefulSet: StatefulSet): number => statefulSetStore.getChildPods(statefulSet).length,
         }}
         searchFilters={[
-          (statefulSet: StatefulSet) => statefulSet.getSearchFields(),
+          (statefulSet: StatefulSet): string[] => statefulSet.getSearchFields(),
         ]}
         renderHeaderTitle={<Trans>Stateful Sets</Trans>}
         renderTableHeader={[
@@ -53,27 +49,27 @@ export class StatefulSets extends React.Component<Props> {
           { className: "warning" },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
-        renderTableContents={(statefulSet: StatefulSet) => [
+        renderTableContents={(statefulSet: StatefulSet): (string | number | JSX.Element)[] => [
           statefulSet.getName(),
           statefulSet.getNs(),
-          this.getPodsLength(statefulSet),
-          <KubeEventIcon object={statefulSet}/>,
+          statefulSetStore.getChildPods(statefulSet).length,
+          <KubeEventIcon key="statefulSet" object={statefulSet}/>,
           statefulSet.getAge(),
         ]}
-        renderItemMenu={(item: StatefulSet) => {
-          return <StatefulSetMenu object={item}/>
+        renderItemMenu={(item: StatefulSet): JSX.Element => {
+          return <StatefulSetMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
-export function StatefulSetMenu(props: KubeObjectMenuProps<StatefulSet>) {
+export function StatefulSetMenu(props: KubeObjectMenuProps<StatefulSet>): JSX.Element {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }
 
 apiManager.registerViews(statefulSetApi, {
   Menu: StatefulSetMenu,
-})
+});

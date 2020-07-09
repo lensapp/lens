@@ -22,10 +22,26 @@ export class Button extends React.PureComponent<ButtonProps, {}> {
   private link: HTMLAnchorElement;
   private button: HTMLButtonElement;
 
-  render() {
-    const { className, waiting, label, primary, accent, plain, hidden, active, big, round, tooltip, children, ...props } = this.props;
+  render(): JSX.Element {
+    const { 
+      className, 
+      waiting, 
+      label, 
+      primary, 
+      accent, 
+      plain, 
+      hidden, 
+      active, 
+      big, 
+      round, 
+      tooltip: _tooltip, 
+      children, 
+      ...props 
+    } = this.props;
     const btnProps = props as Partial<ButtonProps>;
-    if (hidden) return null;
+    if (hidden) {
+      return null;
+    }
 
     btnProps.className = cssNames('Button', className, {
       waiting, primary, accent, plain, active, big, round,
@@ -41,17 +57,21 @@ export class Button extends React.PureComponent<ButtonProps, {}> {
     // render as link
     if (this.props.href) {
       return (
-        <a {...btnProps} ref={e => this.link = e}>
+        <a {...btnProps} ref={(e): void => {
+          this.link = e;
+        }}>
           {btnContent}
         </a>
-      )
+      );
     }
 
     // render as button
     return (
-      <button type="button" {...btnProps} ref={e => this.button = e}>
+      <button type="button" {...btnProps} ref={(e): void => {
+        this.button = e;
+      }}>
         {btnContent}
       </button>
-    )
+    );
   }
 }

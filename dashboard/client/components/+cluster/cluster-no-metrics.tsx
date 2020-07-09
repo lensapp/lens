@@ -7,7 +7,7 @@ interface Props {
   className: string;
 }
 
-export function ClusterNoMetrics({ className }: Props) {
+export function ClusterNoMetrics({ className }: Props): JSX.Element {
   return (
     <div className={cssNames("ClusterNoMetrics flex column box grow justify-center align-center", className)}>
       <Icon material="info"/>

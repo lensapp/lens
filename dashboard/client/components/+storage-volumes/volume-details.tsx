@@ -1,5 +1,5 @@
-import startCase from "lodash/startCase"
-import "./volume-details.scss"
+import startCase from "lodash/startCase";
+import "./volume-details.scss";
 
 import React from "react";
 import { Trans } from "@lingui/macro";
@@ -19,7 +19,7 @@ interface Props extends KubeObjectDetailsProps<PersistentVolume> {
 
 @observer
 export class PersistentVolumeDetails extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     const { object: volume } = this.props;
     if (!volume) {
       return null;
@@ -105,4 +105,4 @@ export class PersistentVolumeDetails extends React.Component<Props> {
 
 apiManager.registerViews(persistentVolumeApi, {
   Details: PersistentVolumeDetails
-})
+});

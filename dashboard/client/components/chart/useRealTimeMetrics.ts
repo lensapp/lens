@@ -2,15 +2,18 @@ import moment from "moment";
 import { useState, useEffect } from "react";
 import { useInterval } from "../../hooks";
 
-type IMetricValues = [number, string][];
-type IChartData = { x: number; y: string }[]
+type MetricValue = [number, string];
+interface ChartDatum { 
+  x: number; 
+  y: string;
+}
 
 const defaultParams = {
   fetchInterval: 15,
   updateInterval: 5
-}
+};
 
-export function useRealTimeMetrics(metrics: IMetricValues, chartData: IChartData, params = defaultParams) {
+export function useRealTimeMetrics(metrics: MetricValue[], chartData: ChartDatum[], params = defaultParams): ChartDatum[] {
   const [index, setIndex] = useState(0);
   const { fetchInterval, updateInterval } = params;
   const rangeMetrics = metrics.slice(-updateInterval);

@@ -1,4 +1,4 @@
-import {app, dialog, Menu, MenuItemConstructorOptions, shell, webContents, BrowserWindow, MenuItem} from "electron"
+import {app, dialog, Menu, MenuItemConstructorOptions, shell, webContents, BrowserWindow, MenuItem} from "electron";
 
 export interface MenuOptions {
   logoutHook: any;
@@ -9,20 +9,20 @@ export interface MenuOptions {
   // all the above are really () => void type functions
 }
 
-function setClusterSettingsEnabled(enabled: boolean) {
+function setClusterSettingsEnabled(enabled: boolean): void {
   const isMac = process.platform === 'darwin';
-  const menuIndex = isMac ? 1 : 0
-  Menu.getApplicationMenu().items[menuIndex].submenu.items[1].enabled = enabled
+  const menuIndex = isMac ? 1 : 0;
+  Menu.getApplicationMenu().items[menuIndex].submenu.items[1].enabled = enabled;
 }
 
-function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow) {
+function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow): void {
   const appDetails = [
     `Version: ${app.getVersion()}`,
-  ]
-  appDetails.push(`Copyright 2020 Lakend Labs, Inc.`)
-  let title = "Lens"
+  ];
+  appDetails.push(`Copyright 2020 Lakend Labs, Inc.`);
+  let title = "Lens";
   if (process.platform === "win32") {
-    title = `  ${title}`
+    title = `  ${title}`;
   }
   dialog.showMessageBoxSync(browserWindow, {
     title,
@@ -30,7 +30,7 @@ function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow) {
     buttons: ["Close"],
     message: `Lens`,
     detail: appDetails.join("\r\n")
-  })
+  });
 }
 
 /**
@@ -39,7 +39,7 @@ function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow) {
  *
  * @param ipc the main promiceIpc handle. Needed to be able to hook IPC sending into logout click handler.
  */
-export default function initMenu(opts: MenuOptions, promiseIpc: any) {
+export default function initMenu(opts: MenuOptions, promiseIpc: any): void {
   const isMac = process.platform === 'darwin';
   const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -85,7 +85,7 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
         enabled: false
       }
       ]
-    }
+    };
   } else {
     fileMenu = {
       label: 'File',
@@ -108,7 +108,7 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
         { type: 'separator' },
         { role: 'quit' }
       ]
-    }
+    };
   }
   mt.push(fileMenu);
 
@@ -128,67 +128,71 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
   };
   mt.push(editMenu);
 
-  const viewMenu: MenuItemConstructorOptions = {
+  const viewMenuList: MenuItemConstructorOptions[] = [
+    {
+      label: 'Back',
+      accelerator: 'CmdOrCtrl+[',
+      click(): void {
+        webContents.getFocusedWebContents().executeJavaScript('window.history.back()');
+      }
+    },
+    {
+      label: 'Forward',
+      accelerator: 'CmdOrCtrl+]',
+      click(): void {
+        webContents.getFocusedWebContents().executeJavaScript('window.history.forward()');
+      }
+    },
+    {
+      label: 'Reload',
+      accelerator: 'CmdOrCtrl+R',
+      click(): void {
+        webContents.getFocusedWebContents().reload();
+      }
+    }
+  ];
+  if (isDevelopment) {
+    viewMenuList.push(
+      { role: "toggleDevTools" },
+      {
+        label: 'Open Dashboard Devtools',
+        click(): void {
+          webContents.getFocusedWebContents().openDevTools();
+        }
+      }
+    );
+  }
+  viewMenuList.push(
+    { type: 'separator' },
+    { role: 'resetZoom' },
+    { role: 'zoomIn' },
+    { role: 'zoomOut' },
+    { type: 'separator' },
+    { role: 'togglefullscreen' }
+  );
+  mt.push({
     label: 'View',
-    submenu: [
-      {
-        label: 'Back',
-        accelerator: 'CmdOrCtrl+[',
-        click () {
-          webContents.getFocusedWebContents().executeJavaScript('window.history.back()')
-        }
-      },
-      {
-        label: 'Forward',
-        accelerator: 'CmdOrCtrl+]',
-        click () {
-          webContents.getFocusedWebContents().executeJavaScript('window.history.forward()')
-        }
-      },
-      {
-        label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
-        click () {
-          webContents.getFocusedWebContents().reload()
-        }
-      },
-      ...(isDevelopment ? [
-        { role: 'toggleDevTools'} as MenuItemConstructorOptions,
-        {
-          label: 'Open Dashboard Devtools',
-          click() {
-            webContents.getFocusedWebContents().openDevTools()
-          }
-        }
-      ] : []),
-      { type: 'separator' },
-      { role: 'resetZoom' },
-      { role: 'zoomIn' },
-      { role: 'zoomOut' },
-      { type: 'separator' },
-      { role: 'togglefullscreen' }
-    ]
-  };
-  mt.push(viewMenu);
+    submenu: viewMenuList,
+  });
 
   const helpMenu: MenuItemConstructorOptions = {
     role: 'help',
     submenu: [
       {
         label: 'License',
-        click: async () => {
+        click(): void {
           shell.openExternal('https://lakendlabs.com/licenses/lens-eula.md');
         },
       },
       {
         label: 'Community Slack',
-        click: async () => {
+        click(): void {
           shell.openExternal('https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI');
         },
       },
       {
         label: 'Report an Issue',
-        click: async () => {
+        click(): void {
           shell.openExternal('https://github.com/lensapp/lens/issues');
         },
       },
@@ -199,7 +203,7 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       ...(process.platform !== "darwin" ? [{
         label: "About Lens",
         click: showAbout
-      } as MenuItemConstructorOptions] : [])
+      }] : [])
     ]
   };
   mt.push(helpMenu);
@@ -207,11 +211,11 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
   const menu = Menu.buildFromTemplate(mt);
   Menu.setApplicationMenu(menu);
 
-  promiseIpc.on("enableClusterSettingsMenuItem", (clusterId: string) => {
-    setClusterSettingsEnabled(true)
+  promiseIpc.on("enableClusterSettingsMenuItem", (_clusterId: string) => {
+    setClusterSettingsEnabled(true);
   });
 
   promiseIpc.on("disableClusterSettingsMenuItem", () => {
-    setClusterSettingsEnabled(false)
+    setClusterSettingsEnabled(false);
   });
 };

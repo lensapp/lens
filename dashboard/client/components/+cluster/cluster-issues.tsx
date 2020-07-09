@@ -1,4 +1,4 @@
-import "./cluster-issues.scss"
+import "./cluster-issues.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -20,7 +20,7 @@ interface Props {
   className?: string;
 }
 
-interface IWarning extends ItemObject {
+interface Warning extends ItemObject {
   kind: string;
   message: string;
   selfLink: string;
@@ -34,16 +34,16 @@ enum sortBy {
 @observer
 export class ClusterIssues extends React.Component<Props> {
   private sortCallbacks = {
-    [sortBy.type]: (warning: IWarning) => warning.kind,
-    [sortBy.object]: (warning: IWarning) => warning.getName(),
+    [sortBy.type]: (warning: Warning): string => warning.kind,
+    [sortBy.object]: (warning: Warning): string => warning.getName(),
   };
 
-  @computed get warnings() {
-    const warnings: IWarning[] = [];
+  @computed get warnings(): Warning[] {
+    const warnings: Warning[] = [];
 
     // Node bad conditions
     nodesStore.items.forEach(node => {
-      const { kind, selfLink, getId, getName } = node
+      const { kind, selfLink, getId, getName } = node;
       node.getWarningConditions().forEach(({ message }) => {
         warnings.push({
           kind,
@@ -51,8 +51,8 @@ export class ClusterIssues extends React.Component<Props> {
           getName,
           selfLink,
           message,
-        })
-      })
+        });
+      });
     });
 
     // Warning events for Workloads
@@ -67,13 +67,13 @@ export class ClusterIssues extends React.Component<Props> {
         kind,
         selfLink: lookupApiLink(involvedObject, error),
       });
-    })
+    });
 
     return warnings;
   }
 
   @autobind()
-  getTableRow(uid: string) {
+  getTableRow(uid: string): JSX.Element {
     const { warnings } = this;
     const warning = warnings.find(warn => warn.getId() == uid);
     const { getId, getName, message, kind, selfLink } = warning;
@@ -97,7 +97,7 @@ export class ClusterIssues extends React.Component<Props> {
     );
   }
 
-  renderContent() {
+  renderContent(): JSX.Element {
     const { warnings } = this;
     if (!eventStore.isLoaded) {
       return (
@@ -139,7 +139,7 @@ export class ClusterIssues extends React.Component<Props> {
     );
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <div className={cssNames("ClusterIssues flex column", this.props.className)}>
         {this.renderContent()}

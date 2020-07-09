@@ -9,14 +9,14 @@ describe("k8s CPU units conversion", () => {
       "100m", // 0.1
       "930000n", // 0.00093
       "3028u", // 0.003028
-    ]
-    const cpuCores = units.map(unit => cpuUnitsToNumber(unit))
+    ];
+    const cpuCores = units.map(unit => cpuUnitsToNumber(unit));
     const expected = [
       0.5,
       0.1,
       0.00093,
       0.003028
-    ]
-    expect(cpuCores).toEqual(expected)
+    ];
+    expect(cpuCores).toEqual(expected);
   });
 });

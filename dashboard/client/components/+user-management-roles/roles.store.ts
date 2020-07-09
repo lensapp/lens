@@ -7,41 +7,43 @@ import { apiManager } from "../../api/api-manager";
 export class RolesStore extends KubeObjectStore<Role> {
   api = clusterRoleApi
 
-  subscribe() {
-    return super.subscribe([roleApi, clusterRoleApi])
+  subscribe(): () => void {
+    return super.subscribe([roleApi, clusterRoleApi]);
   }
 
-  protected sortItems(items: Role[]) {
+  protected sortItems(items: Role[]): Role[] {
     return super.sortItems(items, [
-      role => role.kind,
-      role => role.getName(),
-    ])
+      (role): string => role.kind,
+      (role): string => role.getName(),
+    ]);
   }
 
-  protected loadItem(params: { name: string; namespace?: string }) {
-    if (params.namespace) return roleApi.get(params)
-    return clusterRoleApi.get(params)
-  }
-
-  protected loadItems(namespaces?: string[]): Promise<Role[]> {
-    if (namespaces) {
-      return Promise.all(
-        namespaces.map(namespace => roleApi.list({ namespace }))
-      ).then(items => items.flat())
-    }
-    else {
-      return Promise.all([clusterRoleApi.list(), roleApi.list()])
-        .then(items => items.flat())
-    }
-  }
-
-  protected async createItem(params: { name: string; namespace?: string }, data?: Partial<Role>) {
+  protected loadItem(params: { name: string; namespace?: string }): Promise<Role> {
     if (params.namespace) {
-      return roleApi.create(params, data)
+      return roleApi.get(params);
     }
-    else {
-      return clusterRoleApi.create(params, data)
+    
+    return clusterRoleApi.get(params);
+  }
+
+  protected async loadItems(namespaces?: string[]): Promise<Role[]> {
+    if (namespaces) {
+      return (
+        await Promise.all(namespaces.map(namespace => roleApi.list({ namespace })))
+      ).flat();
     }
+
+    return (
+      await Promise.all([clusterRoleApi.list(), roleApi.list()])
+    ).flat();
+  }
+
+  protected async createItem(params: { name: string; namespace?: string }, data?: Partial<Role>): Promise<Role> {
+    if (params.namespace) {
+      return roleApi.create(params, data);
+    }
+
+    return clusterRoleApi.create(params, data);
   }
 }
 

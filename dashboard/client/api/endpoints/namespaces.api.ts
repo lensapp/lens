@@ -15,7 +15,7 @@ export class Namespace extends KubeObject {
     phase: string;
   }
 
-  getStatus() {
+  getStatus(): string {
     return this.status ? this.status.phase : "-";
   }
 }

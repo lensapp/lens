@@ -3,10 +3,9 @@
 import { observable, when } from "mobx";
 import { autobind, interval } from "./utils";
 import { IConfig } from "../server/common/config";
-import { IClientVars } from "../server/config";
 import { configApi } from "./api/endpoints/config.api";
 
-const { IS_PRODUCTION, API_PREFIX, LOCAL_SERVER_PORT, BUILD_VERSION } = process.env as any as IClientVars;
+const { IS_PRODUCTION, API_PREFIX, BUILD_VERSION } = process.env;
 
 @autobind()
 export class ConfigStore {
@@ -24,36 +23,35 @@ export class ConfigStore {
     this.updater.start();
   }
 
-  load() {
-    return configApi.getConfig().then((config: any) => {
-      this.config = config;
-      this.isLoaded = true;
-    });
+  async load(): Promise<void> {
+    const config = await configApi.getConfig();
+    this.config = config;
+    this.isLoaded = true;
   }
 
-  async getToken() {
+  async getToken(): Promise<string> {
     await when(() => this.isLoaded);
-    return this.config.token;
+    return this.config.token || "";
   }
 
-  get serverPort() {
+  get serverPort(): string {
     const port = location.port;
     return port ? `:${port}` : "";
   }
 
-  get allowedNamespaces() {
+  get allowedNamespaces(): string[] {
     return this.config.allowedNamespaces || [];
   }
 
-  get allowedResources() {
-    return this.config.allowedResources;
+  get allowedResources(): string[] {
+    return this.config.allowedResources || [];
   }
 
-  get isClusterAdmin() {
-    return this.config.isClusterAdmin;
+  get isClusterAdmin(): boolean {
+    return this.config.isClusterAdmin || false;
   }
 
-  reset() {
+  reset(): void {
     this.isLoaded = false;
     this.config = {};
   }

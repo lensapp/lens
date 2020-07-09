@@ -17,22 +17,26 @@ interface Props extends KubeObjectDetailsProps<ResourceQuota> {
 
 @observer
 export class ResourceQuotaDetails extends React.Component<Props> {
-  renderQuotas = (quota: ResourceQuota) => {
-    const { hard, used } = quota.status
-    if (!hard || !used) return null
-    const transformUnit = (name: string, value: string) => {
+  renderQuotas = (quota: ResourceQuota): JSX.Element[] => {
+    const { hard, used } = quota.status;
+    if (!hard || !used) {
+      return null;
+    }
+    const transformUnit = (name: string, value: string): number => {
       if (name.includes("memory") || name.includes("storage")) {
-        return unitsToBytes(value)
+        return unitsToBytes(value);
       }
       if (name.includes("cpu")) {
-        return cpuUnitsToNumber(value)
+        return cpuUnitsToNumber(value);
       }
-      return parseInt(value)
-    }
+      return parseInt(value);
+    };
     return Object.entries(hard).map(([name, value]) => {
-      if (!used[name]) return null
-      const current = transformUnit(name, used[name])
-      const max = transformUnit(name, value)
+      if (!used[name]) {
+        return null;
+      }
+      const current = transformUnit(name, used[name]);
+      const max = transformUnit(name, value);
       return (
         <div key={name} className={cssNames("param", kebabCase(name))}>
           <span className="title">{name}</span>
@@ -45,13 +49,15 @@ export class ResourceQuotaDetails extends React.Component<Props> {
             }
           />
         </div>
-      )
-    })
+      );
+    });
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: quota } = this.props;
-    if (!quota) return null;
+    if (!quota) {
+      return null;
+    }
     return (
       <div className="ResourceQuotaDetails">
         <KubeObjectMeta object={quota}/>
@@ -91,4 +97,4 @@ export class ResourceQuotaDetails extends React.Component<Props> {
 
 apiManager.registerViews(resourceQuotaApi, {
   Details: ResourceQuotaDetails
-})
+});

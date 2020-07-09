@@ -3,21 +3,21 @@ import { t } from "@lingui/macro";
 import { autobind } from "../../utils";
 import { Terminal } from "./terminal";
 import { TerminalApi } from "../../api/terminal-api";
-import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
+import { dockStore, DockTabData, TabId, TabKind } from "./dock.store";
 import { WebSocketApiState } from "../../api/websocket-api";
 import { _i18n } from "../../i18n";
 import { themeStore } from "../../theme.store";
 
-export interface ITerminalTab extends IDockTab {
+export interface TerminalTabData extends DockTabData {
   node?: string; // activate node shell mode
 }
 
-export function isTerminalTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.TERMINAL;
+export function isTerminalTab(tab: DockTabData): boolean {
+  return tab?.kind === TabKind.TERMINAL;
 }
 
 
-export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
+export function createTerminalTab(tabParams: Partial<TerminalTabData> = {}): DockTabData {
   return dockStore.createTab({
     kind: TabKind.TERMINAL,
     title: _i18n._(t`Terminal`),
@@ -34,7 +34,9 @@ export class TerminalStore {
     // connect active tab
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
-      if (!isTerminalTab(selectedTab)) return;
+      if (!isTerminalTab(selectedTab)) {
+        return;
+      }
       if (isOpen) {
         this.connect(selectedTab.id);
       }
@@ -43,16 +45,18 @@ export class TerminalStore {
     autorun(() => {
       const currentTabs = dockStore.tabs.map(tab => tab.id);
       for (const [tabId] of this.connections) {
-        if (!currentTabs.includes(tabId)) this.disconnect(tabId);
+        if (!currentTabs.includes(tabId)) {
+          this.disconnect(tabId);
+        }
       }
     });
   }
 
-  async connect(tabId: TabId) {
+  async connect(tabId: TabId): Promise<void> {
     if (this.isConnected(tabId)) {
       return;
     }
-    const tab: ITerminalTab = dockStore.getTabById(tabId);
+    const tab: TerminalTabData = dockStore.getTabById(tabId);
     const api = new TerminalApi({
       id: tabId,
       node: tab.node,
@@ -63,7 +67,7 @@ export class TerminalStore {
     this.terminals.set(tabId, terminal);
   }
 
-  disconnect(tabId: TabId) {
+  disconnect(tabId: TabId): void {
     if (!this.isConnected(tabId)) {
       return;
     }
@@ -75,29 +79,35 @@ export class TerminalStore {
     this.terminals.delete(tabId);
   }
 
-  reconnect(tabId: TabId) {
+  reconnect(tabId: TabId): void {
     const terminalApi = this.connections.get(tabId);
-    if (terminalApi) terminalApi.connect();
+    if (terminalApi) {
+      terminalApi.connect();
+    }
   }
 
-  isConnected(tabId: TabId) {
+  isConnected(tabId: TabId): boolean {
     return !!this.connections.get(tabId);
   }
 
-  isDisconnected(tabId: TabId) {
+  isDisconnected(tabId: TabId): boolean {
     const terminalApi = this.connections.get(tabId);
     if (terminalApi) {
       return terminalApi.readyState === WebSocketApiState.CLOSED;
     }
   }
 
-  sendCommand(command: string, options: { enter?: boolean; newTab?: boolean; tabId?: TabId } = {}) {
+  sendCommand(command: string, options: { enter?: boolean; newTab?: boolean; tabId?: TabId } = {}): void {
     const { enter, newTab, tabId } = options;
     const { selectTab, getTabById } = dockStore;
 
     const tab = tabId && getTabById(tabId);
-    if (tab) selectTab(tabId);
-    if (newTab) createTerminalTab();
+    if (tab) {
+      selectTab(tabId);
+    }
+    if (newTab) {
+      createTerminalTab();
+    }
 
     const terminalApi = this.connections.get(dockStore.selectedTabId);
     if (terminalApi) {
@@ -105,11 +115,11 @@ export class TerminalStore {
     }
   }
 
-  getTerminal(tabId: TabId) {
+  getTerminal(tabId: TabId): Terminal {
     return this.terminals.get(tabId);
   }
 
-  reset() {
+  reset(): void {
     [...this.connections].forEach(([tabId]) => {
       this.disconnect(tabId);
     });

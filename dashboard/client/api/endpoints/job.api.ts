@@ -1,9 +1,19 @@
 import get from "lodash/get";
 import { autobind } from "../../utils";
-import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { IPodContainer } from "./pods.api";
+import { Affinity, WorkloadKubeObject } from "../workload-kube-object";
+import { PodContainer } from "./pods.api";
 import { KubeApi } from "../kube-api";
 import { JsonApiParams } from "../json-api";
+import { CancelablePromise } from "client/utils/cancelableFetch";
+import { KubeJsonApiData } from "../kube-json-api";
+
+export interface JobCondition {
+  type: string;
+  status: string;
+  lastProbeTime: string;
+  lastTransitionTime: string;
+  message?: string;
+}
 
 @autobind()
 export class Job extends WorkloadKubeObject {
@@ -26,12 +36,12 @@ export class Job extends WorkloadKubeObject {
         };
       };
       spec: {
-        containers: IPodContainer[];
+        containers: PodContainer[];
         restartPolicy: string;
         terminationGracePeriodSeconds: number;
         dnsPolicy: string;
         hostPID: boolean;
-        affinity?: IAffinity;
+        affinity?: Affinity;
         nodeSelector?: {
           [selector: string]: string;
         };
@@ -44,7 +54,7 @@ export class Job extends WorkloadKubeObject {
         schedulerName: string;
       };
     };
-    containers?: IPodContainer[];
+    containers?: PodContainer[];
     restartPolicy?: string;
     terminationGracePeriodSeconds?: number;
     dnsPolicy?: string;
@@ -53,48 +63,36 @@ export class Job extends WorkloadKubeObject {
     schedulerName?: string;
   }
   status: {
-    conditions: {
-      type: string;
-      status: string;
-      lastProbeTime: string;
-      lastTransitionTime: string;
-      message?: string;
-    }[];
+    conditions: JobCondition[];
     startTime: string;
     completionTime: string;
     succeeded: number;
   }
 
-  getDesiredCompletions() {
+  getDesiredCompletions(): number {
     return this.spec.completions || 0;
   }
 
-  getCompletions() {
+  getCompletions(): number {
     return this.status.succeeded || 0;
   }
 
-  getParallelism() {
-    return this.spec.parallelism;
-  }
-
-  getCondition() {
+  getCondition(): JobCondition {
     // Type of Job condition could be only Complete or Failed
     // https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.14/#jobcondition-v1-batch
-    const { conditions } = this.status;
-    if (!conditions) return;
-    return conditions.find(({ status }) => status === "True");
+    return this.status.conditions.find(({ status }) => status === "True");
   }
 
-  getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
-    return [...containers].map(container => container.image)
+  getImages(): string[] {
+    const containers: PodContainer[] = get(this, "spec.template.spec.containers", []);
+    return containers.map(container => container.image);
   }
 
-  delete() {
+  delete(): CancelablePromise<KubeJsonApiData> {
     const params: JsonApiParams = {
       query: { propagationPolicy: "Background" }
-    }
-    return super.delete(params)
+    };
+    return super.delete(params);
   }
 }
 

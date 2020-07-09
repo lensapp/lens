@@ -1,7 +1,7 @@
 import "./search-input.scss";
 
 import React from "react";
-import debounce from "lodash/debounce"
+import debounce from "lodash/debounce";
 import { autorun, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { t } from "@lingui/macro";
@@ -18,9 +18,9 @@ interface Props extends InputProps {
 const defaultProps: Partial<Props> = {
   autoFocus: true,
   get placeholder() {
-    return _i18n._(t`Search...`)
+    return _i18n._(t`Search...`);
   },
-}
+};
 
 @observer
 export class SearchInput extends React.Component<Props> {
@@ -32,24 +32,24 @@ export class SearchInput extends React.Component<Props> {
   updateInput = autorun(() => this.inputVal = getSearch())
   updateUrl = debounce((val: string) => setSearch(val), 250)
 
-  setValue = (value: string) => {
+  setValue = (value: string): void => {
     this.inputVal = value;
     this.updateUrl(value);
   }
 
-  clear = () => {
+  clear = (): void => {
     this.setValue("");
     this.updateUrl.flush();
   }
 
-  onChange = (val: string, evt: React.ChangeEvent<any>) => {
+  onChange = (val: string, evt: React.ChangeEvent<any>): void => {
     this.setValue(val);
     if (this.props.onChange) {
       this.props.onChange(val, evt);
     }
   }
 
-  onKeyDown = (evt: React.KeyboardEvent<any>) => {
+  onKeyDown = (evt: React.KeyboardEvent<any>): void => {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);
     }
@@ -61,12 +61,12 @@ export class SearchInput extends React.Component<Props> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { inputVal } = this;
     const { className, compact, ...inputProps } = this.props;
     const icon = inputVal
       ? <Icon small material="close" onClick={this.clear}/>
-      : <Icon small material="search"/>
+      : <Icon small material="search"/>;
     return (
       <Input
         {...inputProps}
@@ -76,6 +76,6 @@ export class SearchInput extends React.Component<Props> {
         onKeyDown={this.onKeyDown}
         iconRight={icon}
       />
-    )
+    );
   }
 }

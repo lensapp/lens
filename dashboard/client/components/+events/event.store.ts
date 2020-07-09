@@ -7,20 +7,21 @@ import { KubeObject } from "../../api/kube-object";
 import { Pod } from "../../api/endpoints/pods.api";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { IReactionDisposer } from "mobx";
 
 @autobind()
 export class EventStore extends KubeObjectStore<KubeEvent> {
   api = eventApi
   limit = 1000
 
-  protected bindWatchEventsUpdater() {
+  protected bindWatchEventsUpdater(): IReactionDisposer {
     return super.bindWatchEventsUpdater(5000);
   }
 
-  protected sortItems(items: KubeEvent[]) {
+  protected sortItems(items: KubeEvent[]): KubeEvent[] {
     return super.sortItems(items, [
-      event => event.metadata.creationTimestamp
-    ], "desc")
+      (event): string => event.metadata.creationTimestamp
+    ], "desc");
   }
 
   getEventsByObject(obj: KubeObject): KubeEvent[] {
@@ -32,7 +33,7 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
     });
   }
 
-  getWarnings() {
+  getWarnings(): KubeEvent[] {
     const warnings = this.items.filter(event => event.type == "Warning");
     const groupsByInvolvedObject = groupBy(warnings, warning => warning.involvedObject.uid);
     const eventsWithError = Object.values(groupsByInvolvedObject).map(events => {
@@ -40,7 +41,9 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
       const { kind, uid } = recent.involvedObject;
       if (kind == Pod.kind) {  // Wipe out running pods
         const pod = podsStore.items.find(pod => pod.getId() == uid);
-        if (!pod || (!pod.hasIssues() && pod.spec.priority < 500000)) return;
+        if (!pod || (!pod.hasIssues() && pod.spec.priority < 500000)) {
+          return;
+        }
       }
       return recent;
     });

@@ -1,5 +1,5 @@
 import React from "react";
-import jsYaml from "js-yaml"
+import jsYaml from "js-yaml";
 import { observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
@@ -23,17 +23,17 @@ export class EditorPanel extends React.Component<Props> {
 
   @observable yamlError = ""
 
-  componentDidMount() {
+  componentDidMount(): void {
     // validate and run callback with optional error
     this.onChange(this.props.value || "");
 
     disposeOnUnmount(this, [
       dockStore.onTabChange(this.onTabChange, { delay: 250 }),
       dockStore.onResize(this.onResize, { delay: 250 }),
-    ])
+    ]);
   }
 
-  validate(value: string) {
+  validate(value: string): void {
     try {
       jsYaml.safeLoadAll(value);
       this.yamlError = "";
@@ -42,26 +42,26 @@ export class EditorPanel extends React.Component<Props> {
     }
   }
 
-  onTabChange = () => {
+  onTabChange = (): void => {
     this.editor.focus();
   }
 
-  onResize = () => {
+  onResize = (): void => {
     this.editor.resize();
   }
 
-  onCursorPosChange = (pos: Ace.Point) => {
+  onCursorPosChange = (pos: Ace.Point): void => {
     EditorPanel.cursorPos.setData(this.props.tabId, pos);
   }
 
-  onChange = (value: string) => {
+  onChange = (value: string): void => {
     this.validate(value);
     if (this.props.onChange) {
       this.props.onChange(value, this.yamlError);
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { value, tabId } = this.props;
     let { className } = this.props;
     className = cssNames("EditorPanel", className);
@@ -74,8 +74,10 @@ export class EditorPanel extends React.Component<Props> {
         cursorPos={cursorPos}
         onChange={this.onChange}
         onCursorPosChange={this.onCursorPosChange}
-        ref={e => this.editor = e}
+        ref={(e): void => {
+          this.editor = e;
+        }}
       />
-    )
+    );
   }
 }

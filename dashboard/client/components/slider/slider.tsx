@@ -26,7 +26,7 @@ export class Slider extends Component<Props> {
     vertical: "vertical",
   };
 
-  render() {
+  render(): JSX.Element {
     const { className, ...sliderProps } = this.props;
     return (
       <MaterialSlider
@@ -36,6 +36,6 @@ export class Slider extends Component<Props> {
           ...this.classNames
         }}
       />
-    )
+    );
   }
 }

@@ -1,5 +1,5 @@
-import { IClusterInfo } from "../common/cluster";
-export interface IConfig extends Partial<IClusterInfo> {
+import { BaseClusterInfo } from "../common/cluster";
+export interface CommonConfig extends Partial<BaseClusterInfo> {
   lensVersion?: string;
   lensTheme?: string;
   username?: string;

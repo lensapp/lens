@@ -1,8 +1,8 @@
-import { Feature, FeatureStatus } from "../main/feature"
-import {KubeConfig, AppsV1Api, RbacAuthorizationV1Api} from "@kubernetes/client-node"
-import * as semver from "semver"
+import { Feature, FeatureStatus } from "../main/feature";
+import {KubeConfig, AppsV1Api, RbacAuthorizationV1Api} from "@kubernetes/client-node";
+import * as semver from "semver";
 import { Cluster } from "../main/cluster";
-import * as k8s from "@kubernetes/client-node"
+import * as k8s from "@kubernetes/client-node";
 
 export interface MetricsConfiguration {
   // Placeholder for Metrics config structure
@@ -53,7 +53,7 @@ export class MetricsFeature extends Feature {
 
   async install(cluster: Cluster): Promise<boolean> {
     // Check if there are storageclasses
-    const storageClient = cluster.contextHandler.kc.makeApiClient(k8s.StorageV1Api)
+    const storageClient = cluster.contextHandler.kc.makeApiClient(k8s.StorageV1Api);
     const scs = await storageClient.listStorageClass();
     scs.body.items.forEach(sc => {
       if(sc.metadata.annotations &&
@@ -62,16 +62,16 @@ export class MetricsFeature extends Feature {
       }
     });
 
-    return super.install(cluster)
+    return super.install(cluster);
   }
 
   async upgrade(cluster: Cluster): Promise<boolean> {
-    return this.install(cluster)
+    return this.install(cluster);
   }
 
   async featureStatus(kc: KubeConfig): Promise<FeatureStatus> {
-    return new Promise<FeatureStatus>( async (resolve, reject) => {
-      const client = kc.makeApiClient(AppsV1Api)
+    return new Promise<FeatureStatus>( async (resolve, _reject) => {
+      const client = kc.makeApiClient(AppsV1Api);
       const status: FeatureStatus = {
         currentVersion: null,
         installed: false,
@@ -84,18 +84,18 @@ export class MetricsFeature extends Feature {
         status.installed = true;
         status.currentVersion = prometheus.spec.template.spec.containers[0].image.split(":")[1];
         status.canUpgrade = semver.lt(status.currentVersion, this.latestVersion, true);
-        resolve(status)
+        resolve(status);
       } catch(error) {
-        resolve(status)
+        resolve(status);
       }
     });
   }
 
   async uninstall(cluster: Cluster): Promise<boolean> {
     return new Promise<boolean>(async (resolve, reject) => {
-      const rbacClient = cluster.contextHandler.kc.makeApiClient(RbacAuthorizationV1Api)
+      const rbacClient = cluster.contextHandler.kc.makeApiClient(RbacAuthorizationV1Api);
       try {
-        await this.deleteNamespace(cluster.contextHandler.kc, "lens-metrics")
+        await this.deleteNamespace(cluster.contextHandler.kc, "lens-metrics");
         await rbacClient.deleteClusterRole("lens-prometheus");
         await rbacClient.deleteClusterRoleBinding("lens-prometheus");
         resolve(true);

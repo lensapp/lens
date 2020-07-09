@@ -1,27 +1,24 @@
-import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
+import { Affinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import { CancelablePromise } from "client/utils/cancelableFetch";
+import { KubeJsonApiData } from "../kube-json-api";
 
 export class DeploymentApi extends KubeApi<Deployment> {
-  protected getScaleApiUrl(params: { namespace: string; name: string }) {
-    return this.getUrl(params) + "/scale"
+  protected getScaleApiUrl(params: { namespace: string; name: string }): string {
+    return this.getUrl(params) + "/scale";
   }
 
-  getReplicas(params: { namespace: string; name: string }): Promise<number> {
-    return this.request
-      .get(this.getScaleApiUrl(params))
-      .then(({ status }: any) => status.replicas)
+  async getReplicas(params: { namespace: string; name: string }): Promise<number> {
+    const { status } = await this.request.get(this.getScaleApiUrl(params));
+    return status.replicas;
   }
 
-  scale(params: { namespace: string; name: string }, replicas: number) {
-    return this.request.put(this.getScaleApiUrl(params), {
-      data: {
-        metadata: params,
-        spec: {
-          replicas: replicas
-        }
-      }
-    })
+  scale(metadata: { namespace: string; name: string }, replicas: number): CancelablePromise<KubeJsonApiData> {
+    return this.request.put(
+      this.getScaleApiUrl(metadata), 
+      { data: { metadata, spec: { replicas } } }
+    );
   }
 }
 
@@ -96,7 +93,7 @@ export class Deployment extends WorkloadKubeObject {
         restartPolicy: string;
         terminationGracePeriodSeconds: number;
         dnsPolicy: string;
-        affinity?: IAffinity;
+        affinity?: Affinity;
         nodeSelector?: {
           [selector: string]: string;
         };
@@ -145,20 +142,15 @@ export class Deployment extends WorkloadKubeObject {
     }[];
   }
 
-  getConditions(activeOnly = false) {
-    const { conditions } = this.status
-    if (!conditions) return []
-    if (activeOnly) {
-      return conditions.filter(c => c.status === "True")
-    }
-    return conditions
+  getConditions(activeOnly = false): Deployment["status"]["conditions"] {
+    return this.status.conditions.filter(({ status }) => !activeOnly || status === "True");
   }
 
-  getConditionsText(activeOnly = true) {
-    return this.getConditions(activeOnly).map(({ type }) => type).join(" ")
+  getConditionsText(activeOnly = true): string {
+    return this.getConditions(activeOnly).map(({ type }) => type).join(" ");
   }
 
-  getReplicas() {
+  getReplicas(): number {
     return this.spec.replicas || 0;
   }
 }

@@ -1,6 +1,6 @@
-import difference from "lodash/difference"
-import uniqBy from "lodash/uniqBy"
-import { clusterRoleBindingApi, IRoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
+import difference from "lodash/difference";
+import uniqBy from "lodash/uniqBy";
+import { clusterRoleBindingApi, RoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { apiManager } from "../../api/api-manager";
@@ -9,57 +9,58 @@ import { apiManager } from "../../api/api-manager";
 export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
   api = clusterRoleBindingApi
 
-  subscribe() {
-    return super.subscribe([clusterRoleBindingApi, roleBindingApi])
+  subscribe(): () => void {
+    return super.subscribe([clusterRoleBindingApi, roleBindingApi]);
   }
 
-  protected sortItems(items: RoleBinding[]) {
+  protected sortItems(items: RoleBinding[]): RoleBinding[] {
     return super.sortItems(items, [
-      roleBinding => roleBinding.kind,
-      roleBinding => roleBinding.getName()
-    ])
+      (roleBinding): string => roleBinding.kind,
+      (roleBinding): string => roleBinding.getName()
+    ]);
   }
 
-  protected loadItem(params: { name: string; namespace?: string }) {
-    if (params.namespace) return roleBindingApi.get(params)
-    return clusterRoleBindingApi.get(params)
-  }
-
-  protected loadItems(namespaces?: string[]) {
-    if (namespaces) {
-      return Promise.all(
-        namespaces.map(namespace => roleBindingApi.list({ namespace }))
-      ).then(items => items.flat())
-    }
-    else {
-      return Promise.all([clusterRoleBindingApi.list(), roleBindingApi.list()])
-        .then(items => items.flat())
-    }
-  }
-
-  protected async createItem(params: { name: string; namespace?: string }, data?: Partial<RoleBinding>) {
+  protected loadItem(params: { name: string; namespace?: string }): Promise<RoleBinding> {
     if (params.namespace) {
-      return roleBindingApi.create(params, data)
+      return roleBindingApi.get(params);
     }
-    else {
-      return clusterRoleBindingApi.create(params, data)
+
+    return clusterRoleBindingApi.get(params);
+  }
+
+  protected async loadItems(namespaces?: string[]): Promise<RoleBinding[]> {
+    if (namespaces) {
+      return (
+        await Promise.all(namespaces.map(namespace => roleBindingApi.list({ namespace })))
+      ).flat();
     }
+    
+    return (
+      await Promise.all([clusterRoleBindingApi.list(), roleBindingApi.list()])
+    ).flat();
+  }
+
+  protected async createItem(params: { name: string; namespace?: string }, data?: Partial<RoleBinding>): Promise<RoleBinding> {
+    if (params.namespace) {
+      return roleBindingApi.create(params, data);
+    }
+
+    return clusterRoleBindingApi.create(params, data);
   }
 
   async updateSubjects(params: {
     roleBinding: RoleBinding;
-    addSubjects?: IRoleBindingSubject[];
-    removeSubjects?: IRoleBindingSubject[];
-  }) {
+    addSubjects?: RoleBindingSubject[];
+    removeSubjects?: RoleBindingSubject[];
+  }): Promise<RoleBinding> {
     const { roleBinding, addSubjects, removeSubjects } = params;
     const currentSubjects = roleBinding.getSubjects();
     let newSubjects = currentSubjects;
     if (addSubjects) {
       newSubjects = uniqBy(currentSubjects.concat(addSubjects), ({ kind, name, namespace }) => {
         return [kind, name, namespace].join("-");
-      })
-    }
-    else if (removeSubjects) {
+      });
+    } else if (removeSubjects) {
       newSubjects = difference(currentSubjects, removeSubjects);
     }
     return this.update(roleBinding, {

@@ -20,9 +20,11 @@ interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 
 @observer
 export class CRDDetails extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     const { object: crd } = this.props;
-    if (!crd) return null;
+    if (!crd) {
+      return null;
+    }
     const { plural, singular, kind, listKind } = crd.getNames();
     const printerColumns = crd.getPrinterColumns();
     const validation = crd.getValidation();
@@ -59,7 +61,7 @@ export class CRDDetails extends React.Component<Props> {
         <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
           {
             crd.getConditions().map(condition => {
-              const { type, message, lastTransitionTime, status } = condition
+              const { type, message, lastTransitionTime, status } = condition;
               return (
                 <Badge
                   key={type}
@@ -111,7 +113,7 @@ export class CRDDetails extends React.Component<Props> {
                       <Badge label={JSONPath}/>
                     </TableCell>
                   </TableRow>
-                )
+                );
               })
             }
           </Table>
@@ -129,10 +131,10 @@ export class CRDDetails extends React.Component<Props> {
         </>
         }
       </div>
-    )
+    );
   }
 }
 
 apiManager.registerViews(crdApi, {
   Details: CRDDetails
-})
+});

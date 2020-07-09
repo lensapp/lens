@@ -21,8 +21,10 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
     group: {
       rule: string;
       ranges?: { max: number; min: number }[];
-    }) {
-    if (!group) return;
+    }): JSX.Element {
+    if (!group) {
+      return;
+    }
     const { rule, ranges } = group;
     return (
       <>
@@ -33,24 +35,24 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
         {ranges && (
           <DrawerItem name={<Trans>Ranges (Min-Max)</Trans>} labelsOnly>
             {ranges.map(({ min, max }, index) => {
-              return <Badge key={index} label={`${min} - ${max}`}/>
+              return <Badge key={index} label={`${min} - ${max}`}/>;
             })}
           </DrawerItem>
         )}
       </>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: psp } = this.props;
     if (!psp) {
       return null;
     }
     const {
       allowedHostPaths, allowedCapabilities, allowedCSIDrivers, allowedFlexVolumes, allowedProcMountTypes,
-      allowedUnsafeSysctls, allowPrivilegeEscalation, defaultAddCapabilities, defaultAllowPrivilegeEscalation,
-      forbiddenSysctls, fsGroup, hostIPC, hostNetwork, hostPID, hostPorts, privileged, readOnlyRootFilesystem,
-      requiredDropCapabilities, runAsGroup, runAsUser, runtimeClass, seLinux, supplementalGroups, volumes
+      allowedUnsafeSysctls, allowPrivilegeEscalation, defaultAddCapabilities, forbiddenSysctls, fsGroup,
+      hostIPC, hostNetwork, hostPID, hostPorts, privileged, readOnlyRootFilesystem, requiredDropCapabilities, 
+      runAsGroup, runAsUser, runtimeClass, seLinux, supplementalGroups, volumes
     } = psp.spec;
     return (
       <div className="PodSecurityPolicyDetails">
@@ -137,7 +139,7 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
         {hostPorts && (
           <DrawerItem name={<Trans>Host Ports (Min-Max)</Trans>} labelsOnly>
             {hostPorts.map(({ min, max }, index) => {
-              return <Badge key={index} label={`${min} - ${max}`}/>
+              return <Badge key={index} label={`${min} - ${max}`}/>;
             })}
           </DrawerItem>
         )}
@@ -156,7 +158,7 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
                     <TableCell>{pathPrefix}</TableCell>
                     <TableCell>{readOnly ? <Trans>Yes</Trans> : <Trans>No</Trans>}</TableCell>
                   </TableRow>
-                )
+                );
               })}
             </Table>
           </>
@@ -205,7 +207,7 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
         )}
 
       </div>
-    )
+    );
   }
 }
 

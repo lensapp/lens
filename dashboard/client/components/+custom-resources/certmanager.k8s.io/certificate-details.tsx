@@ -1,7 +1,7 @@
-import "./certificate-details.scss"
+import "./certificate-details.scss";
 
 import React from "react";
-import moment from "moment"
+import moment from "moment";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { Trans } from "@lingui/macro";
@@ -19,9 +19,11 @@ interface Props extends KubeObjectDetailsProps<Certificate> {
 
 @observer
 export class CertificateDetails extends React.Component<Props> {
-  render() {
+  render(): JSX.Element {
     const { object: cert, className } = this.props;
-    if (!cert) return;
+    if (!cert) {
+      return;
+    }
     const { spec, status } = cert;
     const { acme, isCA, commonName, secretName, dnsNames, duration, ipAddresses, keyAlgorithm, keySize, organization, renewBefore } = spec;
     const { lastFailureTime, notAfter } = status;
@@ -104,7 +106,7 @@ export class CertificateDetails extends React.Component<Props> {
                 tooltip={tooltip}
                 className={cssNames({ [type.toLowerCase()]: isReady })}
               />
-            )
+            );
           })}
         </DrawerItem>
 
@@ -126,7 +128,7 @@ export class CertificateDetails extends React.Component<Props> {
                     </DrawerItem>
                   )}
                 </div>
-              )
+              );
             })}
           </>
         )}
@@ -139,4 +141,4 @@ export class CertificateDetails extends React.Component<Props> {
 
 apiManager.registerViews(certificatesApi, {
   Details: CertificateDetails
-})
+});

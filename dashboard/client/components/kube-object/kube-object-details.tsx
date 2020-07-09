@@ -1,6 +1,6 @@
-import "./kube-object-details.scss"
+import "./kube-object-details.scss";
 
-import React from "react"
+import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { computed, observable, reaction } from "mobx";
 import { Trans } from "@lingui/macro";
@@ -22,18 +22,18 @@ export class KubeObjectDetails extends React.Component {
   @observable isLoading = false;
   @observable.ref loadingError: React.ReactNode;
 
-  @computed get path() {
-    return getDetails()
+  @computed get path(): string {
+    return getDetails();
   }
 
-  @computed get object() {
+  @computed get object(): any {
     const store = apiManager.getStore(this.path);
     if (store) {
       return store.getByPath(this.path);
     }
   }
 
-  @computed get isCrdInstance() {
+  @computed get isCrdInstance(): boolean {
     return !!crdStore.getByObject(this.object);
   }
 
@@ -43,24 +43,24 @@ export class KubeObjectDetails extends React.Component {
     this.object, // resource might be updated via watch-event or from already opened details
     crdStore.items.length, // crd stores initialized after loading
   ], async () => {
-    this.loadingError = ""
+    this.loadingError = "";
     const { path, object } = this;
     if (!object) {
       const store = apiManager.getStore(path);
       if (store) {
-        this.isLoading = true
+        this.isLoading = true;
         try {
-          await store.loadFromPath(path)
+          await store.loadFromPath(path);
         } catch (err) {
-          this.loadingError = <Trans>Resource loading has failed: <b>{err.toString()}</b></Trans>
+          this.loadingError = <Trans>Resource loading has failed: <b>{err.toString()}</b></Trans>;
         } finally {
-          this.isLoading = false
+          this.isLoading = false;
         }
       }
     }
   })
 
-  render() {
+  render(): JSX.Element {
     const { object, isLoading, loadingError, isCrdInstance } = this;
     const isOpen = !!(object || isLoading || loadingError);
     let title = "";
@@ -70,8 +70,8 @@ export class KubeObjectDetails extends React.Component {
       title = `${kind}: ${getName()}`;
       apiComponents = apiManager.getViews(selfLink);
       if (isCrdInstance && !apiComponents.Details) {
-        apiComponents.Details = CrdResourceDetails
-        apiComponents.Menu = CrdResourceMenu
+        apiComponents.Details = CrdResourceDetails;
+        apiComponents.Menu = CrdResourceMenu;
       }
     }
     return (
@@ -86,6 +86,6 @@ export class KubeObjectDetails extends React.Component {
         {loadingError && <div className="box center">{loadingError}</div>}
         {apiComponents && apiComponents.Details && <apiComponents.Details object={object}/>}
       </Drawer>
-    )
+    );
   }
 }

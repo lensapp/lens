@@ -1,7 +1,7 @@
 import { configStore } from "../config.store";
 import { isArray } from "util";
 
-export function isAllowedResource(resources: string|string[]) {
+export function isAllowedResource(resources: string|string[]): boolean {
   if (!isArray(resources)) {
     resources = [resources];
   }

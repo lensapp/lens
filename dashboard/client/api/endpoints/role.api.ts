@@ -1,18 +1,20 @@
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
+export interface Rule {
+  verbs: string[];
+  apiGroups: string[];
+  resources: string[];
+  resourceNames?: string[];
+}
+
 export class Role extends KubeObject {
   static kind = "Role"
 
-  rules: {
-    verbs: string[];
-    apiGroups: string[];
-    resources: string[];
-    resourceNames?: string[];
-  }[]
+  rules: Rule[]
 
-  getRules() {
-    return this.rules || [];
+  getRules(): Rule[] {
+    return this.rules;
   }
 }
 

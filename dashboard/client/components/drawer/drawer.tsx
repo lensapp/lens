@@ -40,32 +40,36 @@ export class Drawer extends React.Component<DrawerProps> {
     this.restoreScrollPos();
   });
 
-  componentDidMount() {
-    window.addEventListener("mousedown", this.onMouseDown)
-    window.addEventListener("click", this.onClickOutside)
-    window.addEventListener("keydown", this.onEscapeKey)
+  componentDidMount(): void {
+    window.addEventListener("mousedown", this.onMouseDown);
+    window.addEventListener("click", this.onClickOutside);
+    window.addEventListener("keydown", this.onEscapeKey);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.stopListenLocation();
-    window.removeEventListener("mousedown", this.onMouseDown)
-    window.removeEventListener("click", this.onClickOutside)
-    window.removeEventListener("keydown", this.onEscapeKey)
+    window.removeEventListener("mousedown", this.onMouseDown);
+    window.removeEventListener("click", this.onClickOutside);
+    window.removeEventListener("keydown", this.onEscapeKey);
   }
 
-  saveScrollPos = () => {
-    if (!this.scrollElem) return;
+  saveScrollPos = (): void => {
+    if (!this.scrollElem) {
+      return;
+    }
     const key = browserHistory.location.key;
     this.scrollPos.set(key, this.scrollElem.scrollTop);
   }
 
-  restoreScrollPos = () => {
-    if (!this.scrollElem) return;
+  restoreScrollPos = (): void => {
+    if (!this.scrollElem) {
+      return;
+    }
     const key = browserHistory.location.key;
     this.scrollElem.scrollTop = this.scrollPos.get(key) || 0;
   }
 
-  onEscapeKey = (evt: KeyboardEvent) => {
+  onEscapeKey = (evt: KeyboardEvent): void=> {
     if (!this.props.open) {
       return;
     }
@@ -74,52 +78,66 @@ export class Drawer extends React.Component<DrawerProps> {
     }
   }
 
-  onClickOutside = (evt: MouseEvent) => {
-    const { contentElem, mouseDownTarget, close, props: { open } } = this
+  onClickOutside = (evt: MouseEvent): void => {
+    const { contentElem, mouseDownTarget, close, props: { open } } = this;
     if (!open || evt.defaultPrevented || contentElem.contains(mouseDownTarget)) {
       return;
     }
     const clickedElem = evt.target as HTMLElement;
     const isOutsideAnyDrawer = !clickedElem.closest('.Drawer');
     if (isOutsideAnyDrawer) {
-      close()
+      close();
     }
-    this.mouseDownTarget = null
+    this.mouseDownTarget = null;
   }
 
-  onMouseDown = (evt: MouseEvent) => {
+  onMouseDown = (evt: MouseEvent): void => {
     if (this.props.open) {
-      this.mouseDownTarget = evt.target as HTMLElement
+      this.mouseDownTarget = evt.target as HTMLElement;
     }
   }
 
-  close = () => {
-    const { open, onClose } = this.props
-    if (open) onClose();
+  close = (): void => {
+    const { open, onClose } = this.props;
+    if (open) {
+      onClose();
+    }
   }
 
-  render() {
-    const { open, position, title, animation, children, toolbar, size, usePortal } = this.props
+  render(): JSX.Element {
+    const { open, position, title, animation, children, toolbar, size, usePortal } = this.props;
     let { className, contentClass } = this.props;
     className = cssNames("Drawer", className, position, themeStore.activeTheme.type);
     contentClass = cssNames("drawer-content flex column box grow", contentClass);
-    const style = size ? { "--size": size } as React.CSSProperties : undefined;
+    const style: React.CSSProperties = size ? { ["--size" as string]: size } : undefined;
     const drawer = (
       <Animate name={animation} enter={open}>
-        <div className={className} style={style} ref={e => this.contentElem = e}>
+        <div 
+          className={className}
+          style={style}
+          ref={(e): void => {
+            this.contentElem = e;
+          }}
+        >
           <div className="drawer-wrapper flex column">
             <div className="drawer-title flex align-center">
               <div className="drawer-title-text">{title}</div>
               {toolbar}
               <Icon material="close" onClick={this.close}/>
             </div>
-            <div className={contentClass} onScroll={this.saveScrollPos} ref={e => this.scrollElem = e}>
+            <div 
+              className={contentClass}
+              onScroll={this.saveScrollPos}
+              ref={(e): void => {
+                this.scrollElem = e;
+              }}
+            >
               {children}
             </div>
           </div>
         </div>
       </Animate>
-    )
+    );
     return usePortal ? createPortal(drawer, document.body) : drawer;
   }
 }

@@ -33,34 +33,33 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     const namespace = serviceAccount.getNs();
     const secrets = serviceAccount.getSecrets().map(({ name }) => {
       const secret = secretsStore.getByName(name, namespace);
-      if (!secret) return secretsStore.load({ name, namespace });
+      if (!secret) {
+        return secretsStore.load({ name, namespace });
+      }
       return secret;
     });
     this.secrets = await Promise.all(secrets);
   })
 
-  renderSecrets() {
+  renderSecrets(): JSX.Element | JSX.Element[] {
     const { secrets } = this;
     if (!secrets) {
-      return <Spinner center/>
+      return <Spinner center/>;
     }
     return secrets.map(secret =>
       <ServiceAccountsSecret key={secret.getId()} secret={secret}/>
-    )
+    );
   }
 
-  renderSecretLinks(secrets: Secret[]) {
-    return secrets.map(secret => {
-      return (
-        <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
-          {secret.getName()}
-        </Link>
-      )
-    }
-    )
+  renderSecretLinks(secrets: Secret[]): JSX.Element[] {
+    return secrets.map(secret => (
+      <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
+        {secret.getName()}
+      </Link>
+    ));
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: serviceAccount } = this.props;
     if (!serviceAccount) {
       return null;
@@ -68,10 +67,10 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     const tokens = secretsStore.items.filter(secret =>
       secret.getNs() == serviceAccount.getNs() &&
       secret.getAnnotations().some(annot => annot == `kubernetes.io/service-account.name: ${serviceAccount.getName()}`)
-    )
+    );
     const imagePullSecrets = serviceAccount.getImagePullSecrets().map(({ name }) =>
       secretsStore.getByName(name, serviceAccount.getNs())
-    )
+    );
     return (
       <div className="ServiceAccountsDetails">
         <KubeObjectMeta object={serviceAccount}/>
@@ -94,10 +93,10 @@ export class ServiceAccountsDetails extends React.Component<Props> {
 
         <KubeEventDetails object={serviceAccount}/>
       </div>
-    )
+    );
   }
 }
 
 apiManager.registerViews(serviceAccountsApi, {
   Details: ServiceAccountsDetails
-})
+});

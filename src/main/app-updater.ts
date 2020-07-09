@@ -1,19 +1,19 @@
-import { autoUpdater } from "electron-updater"
-import logger from "./logger"
+import { autoUpdater, UpdateCheckResult } from "electron-updater";
+import logger from "./logger";
 
 export default class AppUpdater {
 
   protected updateInterval: number = (1000 * 60 * 60 * 24) // once a day
 
   constructor() {
-    autoUpdater.logger = logger
+    autoUpdater.logger = logger;
   }
 
-  public start() {
+  public async start(): Promise<UpdateCheckResult> {
     setInterval(() => {
-      autoUpdater.checkForUpdatesAndNotify()
-    }, this.updateInterval)
+      autoUpdater.checkForUpdatesAndNotify();
+    }, this.updateInterval);
 
-    return autoUpdater.checkForUpdatesAndNotify()
+    return autoUpdater.checkForUpdatesAndNotify();
   }
 }

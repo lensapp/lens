@@ -1,7 +1,7 @@
 import get from "lodash/get";
 import { autobind } from "../../utils";
-import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { IPodContainer } from "./pods.api";
+import { Affinity, WorkloadKubeObject } from "../workload-kube-object";
+import { PodContainer } from "./pods.api";
 import { KubeApi } from "../kube-api";
 
 @autobind()
@@ -15,10 +15,10 @@ export class ReplicaSet extends WorkloadKubeObject {
         [key: string]: string;
       };
     };
-    containers?: IPodContainer[];
+    containers?: PodContainer[];
     template?: {
       spec?: {
-        affinity?: IAffinity;
+        affinity?: Affinity;
         nodeSelector?: {
           [selector: string]: string;
         };
@@ -28,7 +28,7 @@ export class ReplicaSet extends WorkloadKubeObject {
           effect: string;
           tolerationSeconds: number;
         }[];
-        containers: IPodContainer[];
+        containers: PodContainer[];
       };
     };
     restartPolicy?: string;
@@ -44,9 +44,9 @@ export class ReplicaSet extends WorkloadKubeObject {
     observedGeneration: number;
   }
 
-  getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
-    return [...containers].map(container => container.image)
+  getImages(): string[] {
+    const containers: PodContainer[] = get(this, "spec.template.spec.containers", []);
+    return containers.map(container => container.image);
   }
 }
 

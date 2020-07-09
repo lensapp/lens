@@ -1,11 +1,11 @@
 // Ace code editor - https://ace.c9.io
 // Playground - https://ace.c9.io/build/kitchen-sink.html
-import "./ace-editor.scss"
+import "./ace-editor.scss";
 
-import * as React from "react"
+import * as React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { Ace } from "ace-builds"
+import { Ace } from "ace-builds";
 import { autobind, cssNames } from "../../utils";
 import { Spinner } from "../spinner";
 import { themeStore } from "../../theme.store";
@@ -42,43 +42,48 @@ export class AceEditor extends React.Component<Props, State> {
 
   @observable ready = false;
 
-  async loadEditor() {
-    return await import(
+  async loadEditor(): Promise<any> {
+    return import(
       /* webpackChunkName: "ace" */
       "ace-builds"
     );
   }
 
-  loadTheme(theme: string) {
+  loadTheme(theme: string): Promise<any> {
     return import(
       /* webpackChunkName: "ace/[request]" */
       `ace-builds/src-min-noconflict/theme-${theme}`
     );
   }
 
-  loadExtension(ext: string) {
+  loadExtension(ext: string): Promise<any> {
     return import(
       /* webpackChunkName: "ace/[request]" */
       `ace-builds/src-min-noconflict/ext-${ext}`
     );
   }
 
-  loadMode(mode: string) {
+  loadMode(mode: string): Promise<any> {
     return import(
       /* webpackChunkName: "ace/[request]" */
       `ace-builds/src-min-noconflict/mode-${mode}`
-    )
+    );
   }
 
-  get theme() {
-    return themeStore.activeTheme.type == "light"
-      ? "dreamweaver" : "terminal";
+  get theme(): string {
+    return themeStore.activeTheme.type == "light" ? "dreamweaver" : "terminal";
   }
 
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     const {
-      mode, autoFocus, className, hidden, cursorPos,
-      onChange, onCursorPosChange, children,
+      mode, 
+      autoFocus, 
+      cursorPos,
+      className: _className,
+      hidden: _hidden,
+      onChange: _onChange,
+      onCursorPosChange: _onCursorPosChange,
+      children: _children,
       ...options
     } = this.props;
 
@@ -102,12 +107,16 @@ export class AceEditor extends React.Component<Props, State> {
     // load extensions
     this.loadExtension("searchbox");
 
-    if (autoFocus) this.focus();
+    if (autoFocus) {
+      this.focus();
+    }
     this.ready = true;
   }
 
-  componentDidUpdate() {
-    if (!this.editor) return;
+  componentDidUpdate(): void {
+    if (!this.editor) {
+      return;
+    }
     const { value, cursorPos } = this.props;
     if (value !== this.getValue()) {
       this.editor.setValue(value);
@@ -116,44 +125,46 @@ export class AceEditor extends React.Component<Props, State> {
     }
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     if (this.editor) {
       this.editor.destroy();
     }
   }
 
-  resize() {
+  resize(): void {
     if (this.editor) {
       this.editor.resize();
     }
   }
 
-  focus() {
+  focus(): void {
     if (this.editor) {
       this.editor.focus();
     }
   }
 
-  getValue() {
-    return this.editor.getValue()
+  getValue(): string {
+    return this.editor.getValue();
   }
 
-  setValue(value: string, cursorPos?: number) {
+  setValue(value: string, cursorPos?: number): string {
     return this.editor.setValue(value, cursorPos);
   }
 
-  async setMode(mode: string) {
+  async setMode(mode: string): Promise<void> {
     await this.loadMode(mode);
     this.editor.session.setMode(`ace/mode/${mode}`);
   }
 
-  async setTheme(theme: string) {
+  async setTheme(theme: string): Promise<void> {
     await this.loadTheme(theme);
     this.editor.setTheme(`ace/theme/${theme}`);
   }
 
-  setCursorPos(pos: Ace.Point) {
-    if (!pos) return;
+  setCursorPos(pos: Ace.Point): void {
+    if (!pos) {
+      return;
+    }
     const { row, column } = pos;
     this.editor.moveCursorToPosition(pos);
     requestAnimationFrame(() => {
@@ -162,7 +173,7 @@ export class AceEditor extends React.Component<Props, State> {
   }
 
   @autobind()
-  onCursorPosChange() {
+  onCursorPosChange(): void {
     const { onCursorPosChange } = this.props;
     if (onCursorPosChange) {
       onCursorPosChange(this.editor.getCursorPosition());
@@ -170,21 +181,23 @@ export class AceEditor extends React.Component<Props, State> {
   }
 
   @autobind()
-  onChange(delta: Ace.Delta) {
+  onChange(delta: Ace.Delta): void {
     const { onChange } = this.props;
     if (onChange) {
       onChange(this.getValue(), delta);
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { className, hidden } = this.props;
     const themeType = themeStore.activeTheme.type;
     return (
       <div className={cssNames("AceEditor", className, { hidden }, themeType)}>
-        <div className="editor" ref={e => this.elem = e}/>
+        <div className="editor" ref={(e): void => {
+          this.elem = e;
+        }}/>
         {!this.ready && <Spinner center/>}
       </div>
-    )
+    );
   }
 }

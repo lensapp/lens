@@ -6,7 +6,6 @@ import { Trans } from "@lingui/macro";
 import { KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { cssNames } from "../../utils";
-import { Icon } from "../icon";
 import { eventStore } from "./event.store";
 
 interface Props {
@@ -15,11 +14,11 @@ interface Props {
 
 @observer
 export class KubeEventDetails extends React.Component<Props> {
-  async componentDidMount() {
-    eventStore.loadAll();
+  async componentDidMount(): Promise<void> {
+    await eventStore.loadAll();
   }
 
-  render() {
+  render(): JSX.Element {
     const { object } = this.props;
     const events = eventStore.getEventsByObject(object);
     if (!events.length) {
@@ -27,7 +26,7 @@ export class KubeEventDetails extends React.Component<Props> {
         <DrawerTitle className="flex gaps align-center">
           <span><Trans>Events</Trans></span>
         </DrawerTitle>
-      )
+      );
     }
     return (
       <>
@@ -36,7 +35,7 @@ export class KubeEventDetails extends React.Component<Props> {
         </DrawerTitle>
         <div className="KubeEventDetails">
           {events.map(evt => {
-            const { message, count, lastTimestamp, involvedObject } = evt
+            const { message, count, lastTimestamp, involvedObject } = evt;
             return (
               <div className="event" key={evt.getId()}>
                 <div className={cssNames("title", { warning: evt.isWarning() })}>
@@ -55,10 +54,10 @@ export class KubeEventDetails extends React.Component<Props> {
                   {lastTimestamp}
                 </DrawerItem>
               </div>
-            )
+            );
           })}
         </div>
       </>
-    )
+    );
   }
 }

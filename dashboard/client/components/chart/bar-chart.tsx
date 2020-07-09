@@ -18,7 +18,7 @@ interface Props extends ChartProps {
   timeLabelStep?: number;  // Minute labels appearance step
 }
 
-interface IChartContext {
+interface ChartContext {
   chart: ChartJS;
   dataIndex?: number;
   dataset?: ChartDataSet;
@@ -29,23 +29,28 @@ const defaultProps: Partial<Props> = {
   plugins: [ZebraStripes]
 };
 
-BarChart.defaultProps = defaultProps;
-
-export function BarChart(props: Props) {
-  const { name, data, className, timeLabelStep, plugins, options: customOptions, ...settings } = props;
+export function BarChart({
+  name: _name,
+  data,
+  className,
+  timeLabelStep,
+  plugins,
+  options: customOptions,
+  ...settings
+}: Props): JSX.Element {
   const { textColorPrimary, borderFaintColor, chartStripesColor } = themeStore.activeTheme.colors;
 
   const savedName = useRef<string>();
 
   useEffect(() => {
-    savedName.current = props.name;
+    savedName.current = name;
   });
 
-  const getBarColor = (ctx: IChartContext) => {
+  const getBarColor = (ctx: ChartContext): string => {
     const { dataset } = ctx;
     const color = dataset.borderColor;
     return Color(color).alpha(0.2).string();
-  }
+  };
 
   // Remove empty sets and insert default data
   const chartData: ChartData = {
@@ -59,15 +64,19 @@ export function BarChart(props: Props) {
           barPercentage: 1,
           categoryPercentage: 1,
           ...item
-        }
+        };
       })
   };
 
-  const formatTimeLabels = (timestamp: string, index: number) => {
+  const formatTimeLabels = (timestamp: string, index: number): string => {
     const label = moment(parseInt(timestamp)).format("HH:mm");
     const offset = "     ";
-    if (index == 0) return offset + label;
-    if (index == 60) return label + offset;
+    if (index == 0) {
+      return offset + label;
+    }
+    if (index == 60) {
+      return label + offset;
+    }
     return index % timeLabelStep == 0 ? label : "";
   };
 
@@ -98,7 +107,7 @@ export function BarChart(props: Props) {
           displayFormats: {
             minute: "x"
           },
-          parser: timestamp => moment.unix(parseInt(timestamp))
+          parser: (timestamp): moment.Moment => moment.unix(parseInt(timestamp))
         }
       }],
       yAxes: [{
@@ -122,16 +131,18 @@ export function BarChart(props: Props) {
       mode: "index",
       position: "cursor",
       callbacks: {
-        title: tooltipItems => {
-          const now = new Date().getTime()
-          if (new Date(tooltipItems[0].xLabel).getTime() > now) return "";
-          return `${tooltipItems[0].xLabel}`
+        title: (tooltipItems): string => {
+          const now = new Date().getTime();
+          if (new Date(tooltipItems[0].xLabel).getTime() > now) {
+            return "";
+          }
+          return `${tooltipItems[0].xLabel}`;
         },
-        labelColor: ({ datasetIndex }) => {
+        labelColor: ({ datasetIndex }): ChartJS.ChartTooltipLabelColor => {
           return {
             borderColor: "darkgray",
             backgroundColor: chartData.datasets[datasetIndex].borderColor as string
-          }
+          };
         }
       }
     },
@@ -151,7 +162,7 @@ export function BarChart(props: Props) {
   };
   const options = merge(barOptions, customOptions);
   if (chartData.datasets.length == 0) {
-    return <NoMetrics/>
+    return <NoMetrics/>;
   }
   return (
     <Chart
@@ -162,8 +173,10 @@ export function BarChart(props: Props) {
       plugins={plugins}
       {...settings}
     />
-  )
+  );
 }
+
+BarChart.defaultProps = defaultProps;
 
 // Default options for all charts containing memory units (network, disk, memory, etc)
 export const memoryOptions: ChartOptions = {
@@ -188,14 +201,14 @@ export const memoryOptions: ChartOptions = {
   },
   tooltips: {
     callbacks: {
-      label: ({ datasetIndex, index }, { datasets }) => {
+      label: ({ datasetIndex, index }, { datasets }): string => {
         const { label, data } = datasets[datasetIndex];
         const value = data[index] as ChartPoint;
         return `${label}: ${bytesToUnits(parseInt(value.y.toString()), 3)}`;
       }
     }
   }
-}
+};
 
 // Default options for all charts with cpu units or other decimal numbers
 export const cpuOptions: ChartOptions = {
@@ -204,9 +217,15 @@ export const cpuOptions: ChartOptions = {
       ticks: {
         callback: (value: number | string): string => {
           const float = parseFloat(`${value}`);
-          if (float == 0) return "0";
-          if (float < 10) return float.toFixed(3);
-          if (float < 100) return float.toFixed(2);
+          if (float == 0) {
+            return "0";
+          }
+          if (float < 10) {
+            return float.toFixed(3);
+          }
+          if (float < 100) {
+            return float.toFixed(2);
+          }
           return float.toFixed(1);
         }
       }
@@ -214,11 +233,11 @@ export const cpuOptions: ChartOptions = {
   },
   tooltips: {
     callbacks: {
-      label: ({ datasetIndex, index }, { datasets }) => {
+      label: ({ datasetIndex, index }, { datasets }): string => {
         const { label, data } = datasets[datasetIndex];
         const value = data[index] as ChartPoint;
         return `${label}: ${parseFloat(value.y as string).toPrecision(2)}`;
       }
     }
   }
-}
+};

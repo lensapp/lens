@@ -3,7 +3,7 @@ import "./pod-menu.scss";
 import * as React from "react";
 import { t, Trans } from "@lingui/macro";
 import { MenuItem, SubMenu } from "../menu";
-import { IPodContainer, Pod, nodesApi } from "../../api/endpoints";
+import { PodContainer, Pod } from "../../api/endpoints";
 import { Icon } from "../icon";
 import { StatusBrick } from "../status-brick";
 import { PodLogsDialog } from "./pod-logs-dialog";
@@ -17,18 +17,18 @@ interface Props extends KubeObjectMenuProps<Pod> {
 }
 
 export class PodMenu extends React.Component<Props> {
-  async execShell(container?: string) {
+  async execShell(container?: string): Promise<void> {
     hideDetails();
-    const { object: pod } = this.props
-    const containerParam = container ? `-c ${container}` : ""
-    let command = `kubectl exec -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam} "--"`
+    const { object: pod } = this.props;
+    const containerParam = container ? `-c ${container}` : "";
+    let command = `kubectl exec -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam} "--"`;
     if (window.navigator.platform !== "Win32") {
-      command = `exec ${command}`
+      command = `exec ${command}`;
     }
     if (pod.getSelectedNodeOs() === "windows") {
-      command = `${command} powershell`
+      command = `${command} powershell`;
     } else {
-      command = `${command} sh -c "clear; (bash || ash || sh)"`
+      command = `${command} sh -c "clear; (bash || ash || sh)"`;
     }
 
     const shell = createTerminalTab({
@@ -41,14 +41,16 @@ export class PodMenu extends React.Component<Props> {
     });
   }
 
-  showLogs(container: IPodContainer) {
+  showLogs(container: PodContainer): void {
     PodLogsDialog.open(this.props.object, container);
   }
 
-  renderShellMenu() {
-    const { object: pod, toolbar } = this.props
+  renderShellMenu(): JSX.Element {
+    const { object: pod, toolbar } = this.props;
     const containers = pod.getRunningContainers();
-    if (!containers.length) return;
+    if (!containers.length) {
+      return;
+    }
     return (
       <MenuItem onClick={prevDefault(() => this.execShell(containers[0].name))}>
         <Icon svg="ssh" interactive={toolbar} title={_i18n._(t`Pod shell`)}/>
@@ -65,21 +67,23 @@ export class PodMenu extends React.Component<Props> {
                       <StatusBrick/>
                       {name}
                     </MenuItem>
-                  )
+                  );
                 })
               }
             </SubMenu>
           </>
         )}
       </MenuItem>
-    )
+    );
   }
 
-  renderLogsMenu() {
-    const { object: pod, toolbar } = this.props
+  renderLogsMenu(): JSX.Element {
+    const { object: pod, toolbar } = this.props;
     const containers = pod.getAllContainers();
     const statuses = pod.getContainerStatuses();
-    if (!containers.length) return;
+    if (!containers.length) {
+      return;
+    }
     return (
       <MenuItem onClick={prevDefault(() => this.showLogs(containers[0]))}>
         <Icon material="subject" title={_i18n._(t`Logs`)} interactive={toolbar}/>
@@ -90,35 +94,35 @@ export class PodMenu extends React.Component<Props> {
             <SubMenu>
               {
                 containers.map(container => {
-                  const { name } = container
+                  const { name } = container;
                   const status = statuses.find(status => status.name === name);
                   const brick = status ? (
                     <StatusBrick
                       className={cssNames(Object.keys(status.state)[0], { ready: status.ready })}
                     />
-                  ) : null
+                  ) : null;
                   return (
                     <MenuItem key={name} onClick={prevDefault(() => this.showLogs(container))} className="flex align-center">
                       {brick}
                       {name}
                     </MenuItem>
-                  )
+                  );
                 })
               }
             </SubMenu>
           </>
         )}
       </MenuItem>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     const { ...menuProps } = this.props;
     return (
       <KubeObjectMenu {...menuProps} className="PodMenu">
         {this.renderShellMenu()}
         {this.renderLogsMenu()}
       </KubeObjectMenu>
-    )
+    );
   }
 }

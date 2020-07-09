@@ -9,7 +9,7 @@ import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Input } from "../input";
 import { systemName } from "../input/input.validators";
-import { IResourceQuotaValues, resourceQuotaApi } from "../../api/endpoints/resource-quota.api";
+import { ResourceQuotaValues, resourceQuotaApi } from "../../api/endpoints/resource-quota.api";
 import { Select } from "../select";
 import { Icon } from "../icon";
 import { Button } from "../button";
@@ -20,11 +20,16 @@ import { SubTitle } from "../layout/sub-title";
 interface Props extends DialogProps {
 }
 
+export interface QuotaOption { 
+  label: string | JSX.Element;
+  value: string;
+}
+
 @observer
 export class AddQuotaDialog extends React.Component<Props> {
   @observable static isOpen = false;
 
-  static defaultQuotas: IResourceQuotaValues = {
+  static defaultQuotas: ResourceQuotaValues = {
     "limits.cpu": "",
     "limits.memory": "",
     "requests.cpu": "",
@@ -53,43 +58,45 @@ export class AddQuotaDialog extends React.Component<Props> {
   @observable namespace = this.defaultNamespace;
   @observable quotas = AddQuotaDialog.defaultQuotas;
 
-  static open() {
+  static open(): void {
     AddQuotaDialog.isOpen = true;
   }
 
-  static close() {
+  static close(): void {
     AddQuotaDialog.isOpen = false;
   }
 
-  @computed get quotaEntries() {
+  @computed get quotaEntries(): [string, string][] {
     return Object.entries(this.quotas)
-      .filter(([type, value]) => !!value.trim());
+      .filter(([_type, value]) => !!value.trim());
   }
 
-  @computed get quotaOptions() {
-    return Object.keys(this.quotas).map(quota => {
-      const isCompute = quota.endsWith(".cpu") || quota.endsWith(".memory");
-      const isStorage = quota.endsWith(".storage") || quota === "persistentvolumeclaims";
-      const isCount = quota.startsWith("count/");
+  @computed get quotaOptions(): QuotaOption[] {
+    return Object.keys(this.quotas).map(value => {
+      const isCompute = value.endsWith(".cpu") || value.endsWith(".memory");
+      const isStorage = value.endsWith(".storage") || value === "persistentvolumeclaims";
+      const isCount = value.startsWith("count/");
       const icon = isCompute ? "memory" : isStorage ? "storage" : isCount ? "looks_one" : "";
       return {
-        label: icon ? <span className="nobr"><Icon material={icon}/> {quota}</span> : quota,
-        value: quota,
+        label: icon ? <span className="nobr"><Icon material={icon}/> {value}</span> : value,
+        value,
       };
     });
   }
 
-  setQuota = () => {
-    if (!this.quotaSelectValue) return;
+  setQuota = (): void => {
+    if (!this.quotaSelectValue) {
+      return;
+    }
     this.quotas[this.quotaSelectValue] = this.quotaInputValue;
     this.quotaInputValue = "";
   }
 
-  close = () => {
+  close = (): void => {
     AddQuotaDialog.close();
   }
 
-  reset = () => {
+  reset = (): void => {
     this.quotaName = "";
     this.quotaSelectValue = "";
     this.quotaInputValue = "";
@@ -97,10 +104,10 @@ export class AddQuotaDialog extends React.Component<Props> {
     this.quotas = AddQuotaDialog.defaultQuotas;
   }
 
-  addQuota = async () => {
+  addQuota = async (): Promise<void> => {
     try {
       const { quotaName, namespace } = this;
-      const quotas = this.quotaEntries.reduce<IResourceQuotaValues>((quotas, [name, value]) => {
+      const quotas = this.quotaEntries.reduce<ResourceQuotaValues>((quotas, [name, value]) => {
         quotas[name] = value;
         return quotas;
       }, {});
@@ -115,7 +122,7 @@ export class AddQuotaDialog extends React.Component<Props> {
     }
   }
 
-  onInputQuota = (evt: React.KeyboardEvent) => {
+  onInputQuota = (evt: React.KeyboardEvent): void => {
     switch (evt.key) {
     case "Enter":
       this.setQuota();
@@ -124,7 +131,7 @@ export class AddQuotaDialog extends React.Component<Props> {
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { ...dialogProps } = this.props;
     const header = <h5><Trans>Create ResourceQuota</Trans></h5>;
     return (
@@ -146,7 +153,9 @@ export class AddQuotaDialog extends React.Component<Props> {
                 required autoFocus
                 placeholder={_i18n._(t`ResourceQuota name`)}
                 validators={systemName}
-                value={this.quotaName} onChange={v => this.quotaName = v.toLowerCase()}
+                value={this.quotaName} onChange={(v): void => {
+                  this.quotaName = v.toLowerCase();
+                }}
                 className="box grow"
               />
             </div>
@@ -157,7 +166,7 @@ export class AddQuotaDialog extends React.Component<Props> {
               placeholder={_i18n._(t`Namespace`)}
               themeName="light"
               className="box grow"
-              onChange={({ value }) => this.namespace = value}
+              onChange={({ value }): void => this.namespace = value}
             />
 
             <SubTitle title={<Trans>Values</Trans>}/>
@@ -168,13 +177,15 @@ export class AddQuotaDialog extends React.Component<Props> {
                 placeholder={_i18n._(t`Select a quota..`)}
                 options={this.quotaOptions}
                 value={this.quotaSelectValue}
-                onChange={({ value }) => this.quotaSelectValue = value}
+                onChange={({ value }): void => this.quotaSelectValue = value}
               />
               <Input
                 maxLength={10}
                 placeholder={_i18n._(t`Value`)}
                 value={this.quotaInputValue}
-                onChange={v => this.quotaInputValue = v}
+                onChange={(v): void => {
+                  this.quotaInputValue = v;
+                }}
                 onKeyDown={this.onInputQuota}
                 className="box grow"
               />
@@ -191,14 +202,16 @@ export class AddQuotaDialog extends React.Component<Props> {
                   <div key={quota} className="quota flex gaps inline align-center">
                     <div className="name">{quota}</div>
                     <div className="value">{value}</div>
-                    <Icon material="clear" onClick={() => this.quotas[quota] = ""}/>
+                    <Icon material="clear" onClick={(): void => {
+                      this.quotas[quota] = "";
+                    }}/>
                   </div>
-                )
+                );
               })}
             </div>
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

@@ -1,4 +1,4 @@
-import "./user-management.scss"
+import "./user-management.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -19,10 +19,10 @@ interface Props extends RouteComponentProps<{}> {
 
 @observer
 export class UserManagement extends React.Component<Props> {
-  static get tabRoutes() {
+  static get tabRoutes(): TabRoute[] {
     const tabRoutes: TabRoute[] = [];
     const { allowedResources } = configStore;
-    const query = namespaceStore.getContextParams()
+    const query = namespaceStore.getContextParams();
     tabRoutes.push(
       {
         title: <Trans>Service Accounts</Trans>,
@@ -42,19 +42,19 @@ export class UserManagement extends React.Component<Props> {
         url: rolesURL({ query }),
         path: rolesRoute.path,
       },
-    )
+    );
     if (allowedResources.includes("podsecuritypolicies")) {
       tabRoutes.push({
         title: <Trans>Pod Security Policies</Trans>,
         component: PodSecurityPolicies,
         url: podSecurityPoliciesURL(),
         path: podSecurityPoliciesRoute.path,
-      })
+      });
     }
     return tabRoutes;
   }
 
-  render() {
+  render(): JSX.Element {
     const tabRoutes = UserManagement.tabRoutes;
     return (
       <MainLayout className="UserManagement" tabs={tabRoutes}>
@@ -63,6 +63,6 @@ export class UserManagement extends React.Component<Props> {
           <Redirect to={usersManagementURL({ query: namespaceStore.getContextParams() })}/>
         </Switch>
       </MainLayout>
-    )
+    );
   }
 }

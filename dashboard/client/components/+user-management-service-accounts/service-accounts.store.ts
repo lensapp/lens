@@ -7,7 +7,7 @@ import { apiManager } from "../../api/api-manager";
 export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
   api = serviceAccountsApi
 
-  protected async createItem(params: { name: string; namespace?: string }) {
+  protected async createItem(params: { name: string; namespace?: string }): Promise<ServiceAccount> {
     await super.createItem(params);
     return this.api.get(params); // hackfix: load freshly created account, cause it doesn't have "secrets" field yet
   }

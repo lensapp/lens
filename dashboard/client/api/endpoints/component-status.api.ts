@@ -1,7 +1,7 @@
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
-export interface IComponentStatusCondition {
+export interface ComponentStatusCondition {
   type: string;
   status: string;
   message: string;
@@ -10,9 +10,9 @@ export interface IComponentStatusCondition {
 export class ComponentStatus extends KubeObject {
   static kind = "ComponentStatus"
 
-  conditions: IComponentStatusCondition[]
+  conditions: ComponentStatusCondition[]
 
-  getTruthyConditions() {
+  getTruthyConditions(): ComponentStatusCondition[] {
     return this.conditions.filter(c => c.status === "True");
   }
 }

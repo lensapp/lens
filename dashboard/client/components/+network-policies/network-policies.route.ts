@@ -1,11 +1,11 @@
-import { RouteProps } from "react-router"
+import { RouteProps } from "react-router";
 import { buildURL } from "../../navigation";
 
 export const networkPoliciesRoute: RouteProps = {
   path: "/network-policies"
+};
+
+export interface NetworkPoliciesRouteParams {
 }
 
-export interface INetworkPoliciesRouteParams {
-}
-
-export const networkPoliciesURL = buildURL<INetworkPoliciesRouteParams>(networkPoliciesRoute.path);
+export const networkPoliciesURL = buildURL<NetworkPoliciesRouteParams>(networkPoliciesRoute.path);

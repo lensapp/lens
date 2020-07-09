@@ -2,63 +2,12 @@ import pathToRegExp from "path-to-regexp";
 import { apiKubeHelm } from "../index";
 import { stringify } from "querystring";
 import { autobind } from "../../utils";
-
-interface IHelmChartList {
-  [repo: string]: {
-    [name: string]: HelmChart;
-  };
-}
-
-export interface IHelmChartDetails {
-  readme: string;
-  versions: HelmChart[];
-}
-
-const endpoint = pathToRegExp.compile(`/v2/charts/:repo?/:name?`) as (params?: {
-  repo?: string;
-  name?: string;
-}) => string;
-
-export const helmChartsApi = {
-  list() {
-    return apiKubeHelm
-      .get<IHelmChartList>(endpoint())
-      .then(data => {
-        return Object
-          .values(data)
-          .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
-          .map(HelmChart.create);
-      });
-  },
-
-  get(repo: string, name: string, readmeVersion?: string) {
-    const path = endpoint({ repo, name });
-    return apiKubeHelm
-      .get<IHelmChartDetails>(path + "?" + stringify({ version: readmeVersion }))
-      .then(data => {
-        const versions = data.versions.map(HelmChart.create);
-        const readme = data.readme;
-        return {
-          readme,
-          versions,
-        }
-      });
-  },
-
-  getValues(repo: string, name: string, version: string) {
-    return apiKubeHelm
-      .get<string>(`/v2/charts/${repo}/${name}/values?` + stringify({ version }));
-  }
-};
+import { CancelablePromise } from "client/utils/cancelableFetch";
 
 @autobind()
 export class HelmChart {
   constructor(data: any) {
     Object.assign(this, data);
-  }
-
-  static create(data: any) {
-    return new HelmChart(data);
   }
 
   apiVersion: string
@@ -83,47 +32,74 @@ export class HelmChart {
   deprecated?: boolean
   tillerVersion?: string
 
-  getId() {
+  getId(): string {
     return this.digest;
   }
 
-  getName() {
+  getName(): string {
     return this.name;
   }
 
-  getFullName(splitter = "/") {
-    return [this.getRepository(), this.getName()].join(splitter);
+  getFullName(splitter = "/"): string {
+    return [this.repo, this.name].join(splitter);
   }
 
-  getDescription() {
-    return this.description;
-  }
-
-  getIcon() {
-    return this.icon;
-  }
-
-  getHome() {
-    return this.home;
-  }
-
-  getMaintainers() {
+  getMaintainers(): Required<HelmChart["maintainers"]> {
     return this.maintainers || [];
   }
 
-  getVersion() {
-    return this.version;
-  }
-
-  getRepository() {
-    return this.repo;
-  }
-
-  getAppVersion() {
+  getAppVersion(): string {
     return this.appVersion || "";
   }
 
-  getKeywords() {
+  getKeywords(): Required<HelmChart["keywords"]> {
     return this.keywords || [];
   }
 }
+
+interface HelmChartList {
+  [repo: string]: {
+    [name: string]: HelmChart;
+  };
+}
+
+export interface HelmChartDetails {
+  readme: string;
+  versions: HelmChart[];
+}
+
+const endpoint = pathToRegExp.compile(`/v2/charts/:repo?/:name?`) as (params?: {
+  repo?: string;
+  name?: string;
+}) => string;
+
+export interface HelmChartInfo {
+  readme: string;
+  versions: HelmChart[];
+}
+
+export const helmChartsApi = {
+  list(): CancelablePromise<HelmChart[]> {
+    return apiKubeHelm.get<HelmChartList>(endpoint())
+      .then(data => {
+        return Object.values(data)
+          .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
+          .map(data => new HelmChart(data));
+      });
+  },
+
+  get(repo: string, name: string, readmeVersion?: string): CancelablePromise<HelmChartInfo> {
+    const path = endpoint({ repo, name });
+
+    return apiKubeHelm.get<HelmChartDetails>(path + "?" + stringify({ version: readmeVersion }))
+      .then(({ readme, versions }) => ({
+        readme,
+        versions: versions.map(data => new HelmChart(data))
+      }));
+  },
+
+  getValues(repo: string, name: string, version: string): CancelablePromise<string> {
+    return apiKubeHelm
+      .get<string>(`/v2/charts/${repo}/${name}/values?` + stringify({ version }));
+  }
+};

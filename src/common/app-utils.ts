@@ -1,4 +1,4 @@
-import { app, remote } from "electron"
+import { app, remote } from "electron";
 
 /**
  *
@@ -6,9 +6,9 @@ import { app, remote } from "electron"
  */
 export function getAppVersion(): string {
   // app is undefined when running in renderer
-  let version = (app || remote.app).getVersion()
+  let version = (app || remote.app).getVersion();
   if(process.env.NODE_ENV === 'development') {
-    version = require("../../package.json").version
+    version = require("../../package.json").version;
   }
   return version;
 }

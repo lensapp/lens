@@ -2,6 +2,14 @@ import { autobind } from "../../utils";
 import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
+export interface Rules {
+  fsGroup: string;
+  runAsGroup: string;
+  runAsUser: string;
+  supplementalGroups: string;
+  seLinux: string;
+}
+
 @autobind()
 export class PodSecurityPolicy extends KubeObject {
   static kind = "PodSecurityPolicy"
@@ -66,22 +74,22 @@ export class PodSecurityPolicy extends KubeObject {
     volumes?: string[];
   }
 
-  isPrivileged() {
+  isPrivileged(): boolean {
     return !!this.spec.privileged;
   }
 
-  getVolumes() {
+  getVolumes(): string[] {
     return this.spec.volumes || [];
   }
 
-  getRules() {
+  getRules(): Rules {
     const { fsGroup, runAsGroup, runAsUser, supplementalGroups, seLinux } = this.spec;
     return {
-      fsGroup: fsGroup ? fsGroup.rule : "",
-      runAsGroup: runAsGroup ? runAsGroup.rule : "",
-      runAsUser: runAsUser ? runAsUser.rule : "",
-      supplementalGroups: supplementalGroups ? supplementalGroups.rule : "",
-      seLinux: seLinux ? seLinux.rule : "",
+      fsGroup: fsGroup?.rule || "",
+      runAsGroup: runAsGroup?.rule || "",
+      runAsUser: runAsUser?.rule || "",
+      supplementalGroups: supplementalGroups?.rule || "",
+      seLinux: seLinux?.rule || "",
     };
   }
 }

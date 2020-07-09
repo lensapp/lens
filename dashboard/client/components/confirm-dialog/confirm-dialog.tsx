@@ -9,7 +9,7 @@ import { Button } from "../button";
 import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
 
-export interface IConfirmDialogParams {
+export interface ConfirmDialogParams {
   ok?: () => void;
   labelOk?: ReactNode;
   labelCancel?: ReactNode;
@@ -23,31 +23,31 @@ interface Props extends Partial<DialogProps> {
 @observer
 export class ConfirmDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  @observable.ref static params: IConfirmDialogParams;
+  @observable.ref static params: ConfirmDialogParams;
 
   @observable isSaving = false;
 
-  static open(params: IConfirmDialogParams) {
+  static open(params: ConfirmDialogParams): void {
     ConfirmDialog.isOpen = true;
     ConfirmDialog.params = params;
   }
 
-  static close() {
+  static close(): void {
     ConfirmDialog.isOpen = false;
   }
 
-  public defaultParams: IConfirmDialogParams = {
+  public defaultParams: ConfirmDialogParams = {
     ok: noop,
     labelOk: <Trans>Ok</Trans>,
     labelCancel: <Trans>Cancel</Trans>,
     icon: "warning",
   };
 
-  get params(): IConfirmDialogParams {
+  get params(): ConfirmDialogParams {
     return Object.assign({}, this.defaultParams, ConfirmDialog.params);
   }
 
-  ok = async () => {
+  ok = async (): Promise<void> => {
     try {
       this.isSaving = true;
       await Promise.resolve(this.params.ok()).catch(noop);
@@ -57,15 +57,15 @@ export class ConfirmDialog extends React.Component<Props> {
     this.close();
   }
 
-  onClose = () => {
+  onClose = (): void => {
     this.isSaving = false;
   }
 
-  close = () => {
+  close = (): void => {
     ConfirmDialog.close();
   }
 
-  render() {
+  render(): JSX.Element {
     const { className, ...dialogProps } = this.props;
     const { icon, labelOk, labelCancel, message } = this.params;
     return (
@@ -96,6 +96,6 @@ export class ConfirmDialog extends React.Component<Props> {
           />
         </div>
       </Dialog>
-    )
+    );
   }
 }

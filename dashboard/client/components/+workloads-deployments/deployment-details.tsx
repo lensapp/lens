@@ -6,7 +6,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { t, Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { Deployment, deploymentApi } from "../../api/endpoints";
+import { Deployment, deploymentApi, PodMetricsData } from "../../api/endpoints";
 import { cssNames } from "../../utils";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
@@ -23,6 +23,7 @@ import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { ReplicaSets } from "../+workloads-replicasets";
 import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { Metrics } from "client/api/endpoints/metrics.api";
 
 interface Props extends KubeObjectDetailsProps<Deployment> {
 }
@@ -34,33 +35,37 @@ export class DeploymentDetails extends React.Component<Props> {
     deploymentStore.reset();
   });
 
-  componentDidMount() {
+  async componentDidMount(): Promise<void> {
+    const promises = [];
     if (!podsStore.isLoaded) {
-      podsStore.loadAll();
+      promises.push(podsStore.loadAll());
     }
     if (!replicaSetStore.isLoaded) {
-      replicaSetStore.loadAll();
+      promises.push(replicaSetStore.loadAll());
     }
+    await Promise.all(promises);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     deploymentStore.reset();
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: deployment } = this.props;
-    if (!deployment) return null
-    const { status, spec } = deployment
-    const nodeSelector = deployment.getNodeSelectors()
+    if (!deployment) {
+      return null;
+    }
+    const { status, spec } = deployment;
+    const nodeSelector = deployment.getNodeSelectors();
     const selectors = deployment.getSelectors();
-    const childPods = deploymentStore.getChildPods(deployment)
-    const replicaSets = replicaSetStore.getReplicaSetsByOwner(deployment)
-    const metrics = deploymentStore.metrics
+    const childPods = deploymentStore.getChildPods(deployment);
+    const replicaSets = replicaSetStore.getReplicaSetsByOwner(deployment);
+    const metrics = deploymentStore.metrics;
     return (
       <div className="DeploymentDetails">
         {podsStore.isLoaded && (
           <ResourceMetrics
-            loader={() => deploymentStore.loadMetrics(deployment)}
+            loader={(): Promise<PodMetricsData<Metrics>> => deploymentStore.loadMetrics(deployment)}
             tabs={podMetricTabs} object={deployment} params={{ metrics }}
           >
             <PodCharts/>
@@ -94,7 +99,7 @@ export class DeploymentDetails extends React.Component<Props> {
         <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
           {
             deployment.getConditions().map(condition => {
-              const { type, message, lastTransitionTime, status } = condition
+              const { type, message, lastTransitionTime, status } = condition;
               return (
                 <Badge
                   key={type}
@@ -118,10 +123,10 @@ export class DeploymentDetails extends React.Component<Props> {
         <PodDetailsList pods={childPods} owner={deployment}/>
         <KubeEventDetails object={deployment}/>
       </div>
-    )
+    );
   }
 }
 
 apiManager.registerViews(deploymentApi, {
   Details: DeploymentDetails
-})
+});

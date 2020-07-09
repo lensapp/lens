@@ -26,21 +26,23 @@ interface Props extends KubeObjectDetailsProps<Job> {
 
 @observer
 export class JobDetails extends React.Component<Props> {
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     if (!podsStore.isLoaded) {
-      podsStore.loadAll();
+      return podsStore.loadAll();
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: job } = this.props;
-    if (!job) return null;
-    const selectors = job.getSelectors()
-    const nodeSelector = job.getNodeSelectors()
-    const images = job.getImages()
-    const childPods = jobStore.getChildPods(job)
-    const ownerRefs = job.getOwnerRefs()
-    const condition = job.getCondition()
+    if (!job) {
+      return null;
+    }
+    const selectors = job.getSelectors();
+    const nodeSelector = job.getNodeSelectors();
+    const images = job.getImages();
+    const childPods = jobStore.getChildPods(job);
+    const ownerRefs = job.getOwnerRefs();
+    const condition = job.getCondition();
     return (
       <div className="JobDetails">
         <KubeObjectMeta object={job}/>
@@ -70,7 +72,7 @@ export class JobDetails extends React.Component<Props> {
           {
             ownerRefs.map(ref => {
               const { name, kind } = ref;
-              const detailsUrl = getDetailsUrl(lookupApiLink(ref, job))
+              const detailsUrl = getDetailsUrl(lookupApiLink(ref, job));
               return (
                 <p key={name}>
                   {kind} <Link to={detailsUrl}>{name}</Link>
@@ -93,7 +95,7 @@ export class JobDetails extends React.Component<Props> {
           {job.getDesiredCompletions()}
         </DrawerItem>
         <DrawerItem name={<Trans>Parallelism</Trans>}>
-          {job.getParallelism()}
+          {job.spec.parallelism}
         </DrawerItem>
         <PodDetailsTolerations workload={job}/>
         <PodDetailsAffinities workload={job}/>
@@ -103,7 +105,7 @@ export class JobDetails extends React.Component<Props> {
         <PodDetailsList pods={childPods} owner={job}/>
         <KubeEventDetails object={job}/>
       </div>
-    )
+    );
   }
 }
 

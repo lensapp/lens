@@ -25,13 +25,15 @@ export class IngressDetails extends React.Component<Props> {
     ingressStore.reset();
   });
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     ingressStore.reset();
   }
 
-  renderPaths(ingress: Ingress) {
-    const { spec: { rules } } = ingress
-    if (!rules || !rules.length) return null
+  renderPaths(ingress: Ingress): JSX.Element[] {
+    const { spec: { rules } } = ingress;
+    if (!rules || !rules.length) {
+      return null;
+    }
     return rules.map((rule, index) => {
       return (
         <div className="rules" key={index}>
@@ -48,7 +50,7 @@ export class IngressDetails extends React.Component<Props> {
               </TableHead>
               {
                 rule.http.paths.map((path, index) => {
-                  const backend = `${path.backend.serviceName}:${path.backend.servicePort}`
+                  const backend = `${path.backend.serviceName}:${path.backend.servicePort}`;
                   return (
                     <TableRow key={index}>
                       <TableCell className="path">{path.path || ""}</TableCell>
@@ -56,17 +58,17 @@ export class IngressDetails extends React.Component<Props> {
                         <p key={backend}>{backend}</p>
                       </TableCell>
                     </TableRow>
-                  )
+                  );
                 })
               }
             </Table>
           )}
         </div>
-      )
-    })
+      );
+    });
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: ingress } = this.props;
     if (!ingress) {
       return null;
@@ -74,13 +76,13 @@ export class IngressDetails extends React.Component<Props> {
     const { spec } = ingress;
     const { metrics } = ingressStore;
     const metricTabs = [
-      <Trans>Network</Trans>,
-      <Trans>Duration</Trans>,
+      <Trans key="network">Network</Trans>,
+      <Trans key="duration">Duration</Trans>,
     ];
     return (
       <div className="IngressDetails">
         <ResourceMetrics
-          loader={() => ingressStore.loadMetrics(ingress)}
+          loader={(): Promise<void> => ingressStore.loadMetrics(ingress)}
           tabs={metricTabs} object={ingress} params={{ metrics }}
         >
           <IngressCharts/>
@@ -104,10 +106,10 @@ export class IngressDetails extends React.Component<Props> {
 
         <KubeEventDetails object={ingress}/>
       </div>
-    )
+    );
   }
 }
 
 apiManager.registerViews(ingressApi, {
   Details: IngressDetails,
-})
+});

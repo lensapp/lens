@@ -1,4 +1,4 @@
-import "./pod-details.scss"
+import "./pod-details.scss";
 
 import * as React from "react";
 import kebabCase from "lodash/kebabCase";
@@ -6,7 +6,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { autorun, observable, reaction, toJS } from "mobx";
 import { Trans } from "@lingui/macro";
-import { IPodMetrics, nodesApi, Pod, podsApi, pvcApi, configMapApi } from "../../api/endpoints";
+import { PodMetricsData, nodesApi, Pod, podsApi, pvcApi, configMapApi } from "../../api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { autobind, cssNames, interval } from "../../utils";
@@ -22,7 +22,6 @@ import { getDetailsUrl } from "../../navigation";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { getItemMetrics } from "../../api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
-import { lookupApiLink } from "../../api/kube-api";
 import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 
@@ -31,11 +30,11 @@ interface Props extends KubeObjectDetailsProps<Pod> {
 
 @observer
 export class PodDetails extends React.Component<Props> {
-  @observable containerMetrics: IPodMetrics;
+  @observable containerMetrics: PodMetricsData;
 
   private watcher = interval(60, () => this.loadMetrics());
 
-  componentDidMount() {
+  componentDidMount(): void {
     disposeOnUnmount(this, [
       autorun(() => {
         this.containerMetrics = null;
@@ -48,30 +47,31 @@ export class PodDetails extends React.Component<Props> {
     this.watcher.start();
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     podsStore.reset();
   }
 
   @autobind()
-  async loadMetrics() {
+  async loadMetrics(): Promise<void> {
     const { object: pod } = this.props;
     this.containerMetrics = await podsStore.loadContainerMetrics(pod);
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: pod } = this.props;
-    if (!pod) return null;
+    if (!pod) {
+      return null;
+    }
     const { status, spec } = pod;
     const { conditions, podIP } = status;
     const { nodeName } = spec;
     const nodeSelector = pod.getNodeSelectors();
-    const volumes = pod.getVolumes();
-    const labels = pod.getLabels();
+    const volumes = pod.spec.volumes;
     const metrics = podsStore.metrics;
     return (
       <div className="PodDetails">
         <ResourceMetrics
-          loader={() => podsStore.loadMetrics(pod)}
+          loader={(): Promise<void> => podsStore.loadMetrics(pod)}
           tabs={podMetricTabs} object={pod} params={{ metrics }}
         >
           <PodCharts/>
@@ -91,10 +91,10 @@ export class PodDetails extends React.Component<Props> {
           {podIP}
         </DrawerItem>
         <DrawerItem name={<Trans>Priority Class</Trans>}>
-          {pod.getPriorityClassName()}
+          {pod.spec.priorityClassName}
         </DrawerItem>
         <DrawerItem name={<Trans>QoS Class</Trans>}>
-          {pod.getQosClass()}
+          {pod.status.qosClass}
         </DrawerItem>
         {conditions &&
         <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
@@ -108,7 +108,7 @@ export class PodDetails extends React.Component<Props> {
                   className={cssNames({ disabled: status === "False" })}
                   tooltip={<Trans>Last transition time: {lastTransitionTime}</Trans>}
                 />
-              )
+              );
             })
           }
         </DrawerItem>
@@ -131,17 +131,17 @@ export class PodDetails extends React.Component<Props> {
           </DrawerItem>
         )}
 
-        {pod.getInitContainers() && pod.getInitContainers().length > 0 &&
+        {pod.spec.initContainers?.length > 0 &&
         <DrawerTitle title={<Trans>Init Containers</Trans>}/>
         }
         {
-          pod.getInitContainers() && pod.getInitContainers().map(container => {
-            return <PodDetailsContainer key={container.name} pod={pod} container={container}/>
+          pod.spec.initContainers?.map((container): JSX.Element => {
+            return <PodDetailsContainer key={container.name} pod={pod} container={container}/>;
           })
         }
         <DrawerTitle title={<Trans>Containers</Trans>}/>
         {
-          pod.getContainers().map(container => {
+          pod.spec.containers.map((container): JSX.Element => {
             const { name } = container;
             const metrics = getItemMetrics(toJS(this.containerMetrics), name);
             return (
@@ -151,7 +151,7 @@ export class PodDetails extends React.Component<Props> {
                 container={container}
                 metrics={metrics}
               />
-            )
+            );
           })
         }
 
@@ -161,7 +161,7 @@ export class PodDetails extends React.Component<Props> {
             {volumes.map(volume => {
               const claimName = volume.persistentVolumeClaim ? volume.persistentVolumeClaim.claimName : null;
               const configMap = volume.configMap ? volume.configMap.name : null;
-              const type = Object.keys(volume)[1]
+              const type = Object.keys(volume)[1];
 
               return (
                 <div key={volume.name} className="volume">
@@ -174,28 +174,28 @@ export class PodDetails extends React.Component<Props> {
                   </DrawerItem>
                   { type == "configMap" && (
                     <div>
-                    {configMap && (
-                      <DrawerItem name={<Trans>Name</Trans>}>
-                        <Link
-                          to={getDetailsUrl(configMapApi.getUrl({
-                            name: configMap,
-                            namespace: pod.getNs(),
-                          }))}>{configMap}
-                        </Link>
-                      </DrawerItem>
-                    )}
+                      {configMap && (
+                        <DrawerItem name={<Trans>Name</Trans>}>
+                          <Link
+                            to={getDetailsUrl(configMapApi.getUrl({
+                              name: configMap,
+                              namespace: pod.getNs(),
+                            }))}>{configMap}
+                          </Link>
+                        </DrawerItem>
+                      )}
                     </div>
                   )}
                   { type === "emptyDir" && (
                     <div>
                       { volume.emptyDir.medium && (
-                      <DrawerItem name={<Trans>Medium</Trans>}>
-                        {volume.emptyDir.medium}
-                      </DrawerItem>
+                        <DrawerItem name={<Trans>Medium</Trans>}>
+                          {volume.emptyDir.medium}
+                        </DrawerItem>
                       )}
                       { volume.emptyDir.sizeLimit && (
                         <DrawerItem name={<Trans>Size Limit</Trans>}>
-                        {volume.emptyDir.sizeLimit}
+                          {volume.emptyDir.sizeLimit}
                         </DrawerItem>
                       )}
                     </div>
@@ -213,16 +213,16 @@ export class PodDetails extends React.Component<Props> {
                     </DrawerItem>
                   )}
                 </div>
-              )
+              );
             })}
           </>
         )}
         <KubeEventDetails object={pod}/>
       </div>
-    )
+    );
   }
 }
 
 apiManager.registerViews(podsApi, {
   Details: PodDetails
-})
+});

@@ -1,4 +1,4 @@
-import "./namespace-select.scss"
+import "./namespace-select.scss";
 
 import React from "react";
 import { computed } from "mobx";
@@ -11,7 +11,6 @@ import { namespaceStore } from "./namespace.store";
 import { _i18n } from "../../i18n";
 import { FilterIcon } from "../item-object-list/filter-icon";
 import { FilterType } from "../item-object-list/page-filters.store";
-import { isAllowedResource } from "../../api/rbac"
 
 interface Props extends SelectProps {
   showIcons?: boolean;
@@ -33,14 +32,14 @@ export class NamespaceSelect extends React.Component<Props> {
   static defaultProps = defaultProps as object;
   private unsubscribe = noop;
 
-  async componentDidMount() {
+  async componentDidMount(): Promise<void> {
     if (!namespaceStore.isLoaded) {
       await namespaceStore.loadAll();
     }
     this.unsubscribe = namespaceStore.subscribe();
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.unsubscribe();
   }
 
@@ -54,19 +53,28 @@ export class NamespaceSelect extends React.Component<Props> {
     return options;
   }
 
-  formatOptionLabel = (option: SelectOption) => {
+  formatOptionLabel = (option: SelectOption): JSX.Element => {
     const { showIcons } = this.props;
     const { value, label } = option;
-    return label || (
-      <>
-        {showIcons && <Icon small material="layers"/>}
-        {value}
-      </>
-    );
+    if (label) {
+      return (
+        <>
+          {showIcons && <Icon small material="layers" />}
+          {value}
+        </>
+      );
+    }
   }
 
-  render() {
-    const { className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps } = this.props;
+  render(): JSX.Element {
+    const { 
+      className, 
+      showIcons: _showIcons, 
+      showClusterOption: _showClusterOption, 
+      clusterOptionLabel: _clusterOptionLabel, 
+      customizeOptions: _customizeOptions, 
+      ...selectProps
+    } = this.props;
     return (
       <Select
         className={cssNames("NamespaceSelect", className)}
@@ -81,19 +89,23 @@ export class NamespaceSelect extends React.Component<Props> {
 
 @observer
 export class NamespaceSelectFilter extends React.Component {
-  render() {
+  render(): JSX.Element {
     const { contextNs, hasContext, toggleContext } = namespaceStore;
     let placeholder = <Trans>All namespaces</Trans>;
-    if (contextNs.length == 1) placeholder = <Trans>Namespace: {contextNs[0]}</Trans>
-    if (contextNs.length >= 2) placeholder = <Trans>Namespaces: {contextNs.join(", ")}</Trans>
+    if (contextNs.length == 1) {
+      placeholder = <Trans>Namespace: {contextNs[0]}</Trans>;
+    }
+    if (contextNs.length >= 2) {
+      placeholder = <Trans>Namespaces: {contextNs.join(", ")}</Trans>;
+    }
     return (
       <NamespaceSelect
         placeholder={placeholder}
         closeMenuOnSelect={false}
-        isOptionSelected={() => false}
+        isOptionSelected={(): boolean => false}
         controlShouldRenderValue={false}
-        onChange={({ value: namespace }: SelectOption) => toggleContext(namespace)}
-        formatOptionLabel={({ value: namespace }: SelectOption) => {
+        onChange={({ value: namespace }: SelectOption): void => toggleContext(namespace)}
+        formatOptionLabel={({ value: namespace }: SelectOption): JSX.Element => {
           const isSelected = hasContext(namespace);
           return (
             <div className="flex gaps align-center">
@@ -101,9 +113,9 @@ export class NamespaceSelectFilter extends React.Component {
               <span>{namespace}</span>
               {isSelected && <Icon small material="check" className="box right"/>}
             </div>
-          )
+          );
         }}
       />
-    )
+    );
   }
 }

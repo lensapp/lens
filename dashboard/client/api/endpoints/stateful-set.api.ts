@@ -1,6 +1,6 @@
 import get from "lodash/get";
-import { IPodContainer } from "./pods.api";
-import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
+import { PodContainer } from "./pods.api";
+import { Affinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
@@ -35,7 +35,7 @@ export class StatefulSet extends WorkloadKubeObject {
             mountPath: string;
           }[];
         }[];
-        affinity?: IAffinity;
+        affinity?: Affinity;
         nodeSelector?: {
           [selector: string]: string;
         };
@@ -70,9 +70,9 @@ export class StatefulSet extends WorkloadKubeObject {
     collisionCount: number;
   }
 
-  getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
-    return [...containers].map(container => container.image)
+  getImages(): string[] {
+    const containers: PodContainer[] = get(this, "spec.template.spec.containers", []);
+    return containers.map(container => container.image);
   }
 }
 

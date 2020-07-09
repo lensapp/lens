@@ -13,20 +13,19 @@ export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
 
 @observer
 export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutProps> {
-  @computed get selectedItem() {
+  @computed get selectedItem(): any {
     return this.props.store.getByPath(getSelectedDetails());
   }
 
-  onDetails = (item: KubeObject) => {
+  onDetails = (item: KubeObject): void => {
     if (this.props.onDetails) {
       this.props.onDetails(item);
-    }
-    else {
+    } else {
       showDetails(item.selfLink);
     }
   }
 
-  render() {
+  render(): JSX.Element {
     const { className, ...layoutProps } = this.props;
     return (
       <ItemListLayout

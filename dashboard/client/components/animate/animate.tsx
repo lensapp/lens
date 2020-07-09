@@ -32,23 +32,26 @@ export class Animate extends React.Component<AnimateProps> {
     leave: false
   };
 
-  get contentElem() {
+  get contentElem(): React.ReactElement<React.HTMLAttributes<any>> {
     return React.Children.only(this.props.children) as React.ReactElement<React.HTMLAttributes<any>>;
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     disposeOnUnmount(this, [
       reaction(() => this.props.enter, enter => {
-        if (enter) this.enter();
-        else this.leave();
+        if (enter) {
+          this.enter();
+        } else {
+          this.leave();
+        }
       }, {
         delay: Animate.VISIBILITY_DELAY_MS,
         fireImmediately: true,
       })
-    ])
+    ]);
   }
 
-  enter() {
+  enter(): void {
     this.isVisible = true; // triggers render() to apply css-animation in existing dom
     requestAnimationFrame(() => {
       this.statusClassName.enter = true;
@@ -56,30 +59,34 @@ export class Animate extends React.Component<AnimateProps> {
     });
   }
 
-  leave() {
-    if (!this.isVisible) return;
+  leave(): void {
+    if (!this.isVisible) {
+      return;
+    }
     this.statusClassName.leave = true;
     this.props.onLeave();
   }
 
-  reset() {
+  reset(): void{
     this.isVisible = false;
     this.statusClassName.enter = false;
     this.statusClassName.leave = false;
   }
 
   @autobind()
-  onTransitionEnd(evt: React.TransitionEvent) {
+  onTransitionEnd(evt: React.TransitionEvent): void {
     const { enter, leave } = this.statusClassName;
     const { onTransitionEnd } = this.contentElem.props;
-    if (onTransitionEnd) onTransitionEnd(evt);
+    if (onTransitionEnd) {
+      onTransitionEnd(evt);
+    }
     // todo: check evt.propertyName and make sure all animating props has finished their transition
     if (enter && leave) {
       this.reset();
     }
   }
 
-  render() {
+  render(): React.ReactNode {
     const { name, enabled, children } = this.props;
     if (!enabled) {
       return children;

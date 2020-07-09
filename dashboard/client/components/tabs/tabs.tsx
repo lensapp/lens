@@ -24,11 +24,11 @@ export class Tabs extends React.PureComponent<TabsProps> {
   public elem: HTMLElement;
 
   @autobind()
-  protected bindRef(elem: HTMLElement) {
+  protected bindRef(elem: HTMLElement): void {
     this.elem = elem;
   }
 
-  render() {
+  render(): JSX.Element {
     const {
       center, wrap, onChange, value, autoFocus,
       scrollable = true,
@@ -48,7 +48,7 @@ export class Tabs extends React.PureComponent<TabsProps> {
           ref={this.bindRef}
         />
       </TabsContext.Provider>
-    )
+    );
   }
 }
 
@@ -66,16 +66,16 @@ export class Tab extends React.PureComponent<TabProps> {
   public context: TabsContextValue;
   public elem: HTMLElement;
 
-  get isActive() {
+  get isActive(): boolean {
     const { active, value } = this.props;
     return typeof active === "boolean" ? active : this.context.value === value;
   }
 
-  focus() {
+  focus(): void {
     this.elem.focus();
   }
 
-  scrollIntoView() {
+  scrollIntoView(): void {
     this.elem.scrollIntoView({
       behavior: "smooth",
       inline: "center",
@@ -83,43 +83,55 @@ export class Tab extends React.PureComponent<TabProps> {
   }
 
   @autobind()
-  onClick(evt: React.MouseEvent<HTMLElement>) {
+  onClick(evt: React.MouseEvent<HTMLElement>): void {
     const { value, active, disabled, onClick } = this.props;
     const { onChange } = this.context;
-    if (disabled || active) return;
-    if (onClick) onClick(evt);
-    if (onChange) onChange(value);
+    if (disabled || active) {
+      return;
+    }
+    if (onClick) {
+      onClick(evt);
+    }
+    if (onChange) {
+      onChange(value);
+    }
   }
 
   @autobind()
-  onFocus(evt: React.FocusEvent<HTMLElement>) {
+  onFocus(evt: React.FocusEvent<HTMLElement>): void {
     const { onFocus } = this.props;
-    if (onFocus) onFocus(evt);
+    if (onFocus) {
+      onFocus(evt);
+    }
     this.scrollIntoView();
   }
 
   @autobind()
-  onKeyDown(evt: React.KeyboardEvent<HTMLElement>) {
+  onKeyDown(evt: React.KeyboardEvent<HTMLElement>): void {
     const ENTER_KEY = evt.keyCode === 13;
     const SPACE_KEY = evt.keyCode === 32;
-    if (SPACE_KEY || ENTER_KEY) this.elem.click();
+    if (SPACE_KEY || ENTER_KEY) {
+      this.elem.click();
+    }
     const { onKeyDown } = this.props;
-    if (onKeyDown) onKeyDown(evt);
+    if (onKeyDown) {
+      onKeyDown(evt);
+    }
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     if (this.isActive && this.context.autoFocus) {
       this.focus();
     }
   }
 
   @autobind()
-  protected bindRef(elem: HTMLElement) {
+  protected bindRef(elem: HTMLElement): void {
     this.elem = elem;
   }
 
-  render() {
-    const { active, disabled, icon, label, value, ...elemProps } = this.props;
+  render(): JSX.Element {
+    const { active: _active, disabled, icon, label, value: _value, ...elemProps } = this.props;
     let { className } = this.props;
     className = cssNames("Tab flex gaps align-center", className, {
       "active": this.isActive,
@@ -140,6 +152,6 @@ export class Tab extends React.PureComponent<TabProps> {
           {label}
         </div>
       </div>
-    )
+    );
   }
 }

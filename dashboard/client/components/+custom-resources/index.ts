@@ -5,4 +5,4 @@ export * from "./crd-resources";
 export * from "./crd-resource-details";
 
 // customized crd-s
-export * from "./certmanager.k8s.io"
+export * from "./certmanager.k8s.io";

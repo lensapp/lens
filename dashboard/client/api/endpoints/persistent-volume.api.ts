@@ -43,23 +43,23 @@ export class PersistentVolume extends KubeObject {
     reason?: string;
   }
 
-  getCapacity(inBytes = false) {
+  getCapacity(inBytes = false): number | string {
     const capacity = this.spec.capacity;
     if (capacity) {
-      if (inBytes) return unitsToBytes(capacity.storage)
+      if (inBytes) {
+        return unitsToBytes(capacity.storage);
+      }
       return capacity.storage;
     }
     return 0;
   }
 
-  getStatus() {
-    if (!this.status) return;
-    return this.status.phase || "-";
+  getStatus(): string {
+    return this?.status.phase || "-";
   }
 
-  getClaimRefName() {
-    const { claimRef } = this.spec;
-    return claimRef ? claimRef.name : "";
+  getClaimRefName(): string {
+    return this.spec.claimRef.name;
   }
 }
 

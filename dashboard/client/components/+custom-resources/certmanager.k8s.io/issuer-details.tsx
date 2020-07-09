@@ -1,4 +1,4 @@
-import "./issuer-details.scss"
+import "./issuer-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -21,7 +21,7 @@ interface Props extends KubeObjectDetailsProps<Issuer> {
 @observer
 export class IssuerDetails extends React.Component<Props> {
   @autobind()
-  renderSecretLink(secretName: string) {
+  renderSecretLink(secretName: string): JSX.Element | string {
     const namespace = this.props.object.getNs();
     if (!namespace) {
       return secretName;
@@ -34,12 +34,14 @@ export class IssuerDetails extends React.Component<Props> {
       <Link to={secretDetailsUrl}>
         {secretName}
       </Link>
-    )
+    );
   }
 
-  render() {
+  render(): JSX.Element {
     const { object: issuer, className } = this.props;
-    if (!issuer) return;
+    if (!issuer) {
+      return;
+    }
     const { renderSecretLink } = this;
     const { spec: { acme, ca, vault, venafi }, status } = issuer;
     return (
@@ -59,12 +61,12 @@ export class IssuerDetails extends React.Component<Props> {
                 tooltip={tooltip}
                 className={cssNames({ [type.toLowerCase()]: isReady })}
               />
-            )
+            );
           })}
         </DrawerItem>
 
-        {acme && (() => {
-          const { email, server, skipTLSVerify, privateKeySecretRef, solvers } = acme;
+        {acme && ((): JSX.Element => {
+          const { email, server, skipTLSVerify, privateKeySecretRef } = acme;
           return (
             <>
               <DrawerTitle title="ACME"/>
@@ -86,10 +88,10 @@ export class IssuerDetails extends React.Component<Props> {
                 {skipTLSVerify ? <Trans>Yes</Trans> : <Trans>No</Trans>}
               </DrawerItem>
             </>
-          )
+          );
         })()}
 
-        {ca && (() => {
+        {ca && ((): JSX.Element => {
           const { secretName } = ca;
           return (
             <>
@@ -98,10 +100,10 @@ export class IssuerDetails extends React.Component<Props> {
                 {renderSecretLink(secretName)}
               </DrawerItem>
             </>
-          )
+          );
         })()}
 
-        {vault && (() => {
+        {vault && ((): JSX.Element => {
           const { auth, caBundle, path, server } = vault;
           const { path: authPath, roleId, secretRef } = auth.appRole;
           return (
@@ -130,10 +132,10 @@ export class IssuerDetails extends React.Component<Props> {
                 </DrawerItem>
               )}
             </>
-          )
+          );
         })()}
 
-        {venafi && (() => {
+        {venafi && ((): JSX.Element => {
           const { zone, cloud, tpp } = venafi;
           return (
             <>
@@ -161,7 +163,7 @@ export class IssuerDetails extends React.Component<Props> {
                 </>
               )}
             </>
-          )
+          );
         })()}
 
         <KubeEventDetails object={issuer}/>
@@ -172,4 +174,4 @@ export class IssuerDetails extends React.Component<Props> {
 
 apiManager.registerViews([issuersApi, clusterIssuersApi], {
   Details: IssuerDetails
-})
+});

@@ -1,14 +1,14 @@
-import { ContextHandler } from "./context-handler"
-import { FeatureStatusMap } from "./feature"
-import * as k8s from "./k8s"
-import { clusterStore } from "../common/cluster-store"
-import logger from "./logger"
-import { KubeConfig, CoreV1Api, AuthorizationV1Api, V1ResourceAttributes } from "@kubernetes/client-node"
+import { ContextHandler } from "./context-handler";
+import { FeatureStatusMap } from "./feature";
+import * as k8s from "./k8s";
+import { clusterStore } from "../common/cluster-store";
+import logger from "./logger";
+import { KubeConfig, CoreV1Api, AuthorizationV1Api, V1ResourceAttributes } from "@kubernetes/client-node";
 import * as fm from "./feature-manager";
 import { Kubectl } from "./kubectl";
-import { PromiseIpc } from "electron-promise-ipc"
-import * as request from "request-promise-native"
-import { KubeconfigManager } from "./kubeconfig-manager"
+import { PromiseIpc } from "electron-promise-ipc";
+import * as request from "request-promise-native";
+import { KubeconfigManager } from "./kubeconfig-manager";
 
 enum ClusterStatus {
   AccessGranted = 2,
@@ -39,7 +39,7 @@ export interface ClusterInfo extends ClusterBaseInfo {
   contextName: string;
 }
 
-export type ClusterPreferences = {
+export interface ClusterPreferences {
   terminalCWD?: string;
   clusterName?: string;
   prometheus?: {
@@ -82,85 +82,88 @@ export class Cluster implements ClusterInfo {
   protected kubeconfigManager: KubeconfigManager;
 
   constructor(clusterInfo: ClusterBaseInfo) {
-    if (clusterInfo) Object.assign(this, clusterInfo)
-    if (!this.preferences) this.preferences = {}
-    this.kubeconfigManager = new KubeconfigManager(this.kubeConfig)
+    if (clusterInfo) {
+      Object.assign(this, clusterInfo);
+    }
+    if (!this.preferences) {
+      this.preferences = {};
+    }
+    this.kubeconfigManager = new KubeconfigManager(this.kubeConfig);
   }
 
-  public kubeconfigPath() {
-    return this.kubeconfigManager.getPath()
+  public kubeconfigPath(): string {
+    return this.kubeconfigManager.getPath();
   }
 
-  public async init(kc: KubeConfig) {
-    this.contextHandler = new ContextHandler(kc, this)
-    this.contextName = kc.currentContext
-    this.url = this.contextHandler.url
-    this.apiUrl = kc.getCurrentCluster().server
+  public init(kc: KubeConfig): void {
+    this.contextHandler = new ContextHandler(kc, this);
+    this.contextName = kc.currentContext;
+    this.url = this.contextHandler.url;
+    this.apiUrl = kc.getCurrentCluster().server;
   }
 
-  public stopServer() {
-    this.contextHandler.stopServer()
+  public stopServer(): void {
+    this.contextHandler.stopServer();
     clearInterval(this.eventPoller);
   }
 
-  public async installFeature(name: string, config: any) {
-    await fm.installFeature(name, this, config)
-    return this.refreshCluster()
+  public async installFeature(name: string, config: any): Promise<void> {
+    await fm.installFeature(name, this, config);
+    await this.refreshCluster();
   }
 
-  public async upgradeFeature(name: string, config: any) {
-    await fm.upgradeFeature(name, this, config)
-    return this.refreshCluster()
+  public async upgradeFeature(name: string, config: any): Promise<void> {
+    await fm.upgradeFeature(name, this, config);
+    await this.refreshCluster();
   }
 
-  public async uninstallFeature(name: string) {
-    await fm.uninstallFeature(name, this)
-    return this.refreshCluster()
+  public async uninstallFeature(name: string): Promise<void> {
+    await fm.uninstallFeature(name, this);
+    await this.refreshCluster();
   }
 
-  public async refreshCluster() {
-    clusterStore.reloadCluster(this)
-    this.contextHandler.setClusterPreferences(this.preferences)
+  public async refreshCluster(): Promise<void> {
+    clusterStore.reloadCluster(this);
+    this.contextHandler.setClusterPreferences(this.preferences);
 
-    const connectionStatus = await this.getConnectionStatus()
+    const connectionStatus = await this.getConnectionStatus();
     if (connectionStatus == ClusterStatus.AccessGranted) {
-      this.accessible = true
+      this.accessible = true;
     } else  {
-      this.accessible = false
+      this.accessible = false;
     }
     if (connectionStatus > ClusterStatus.Offline) {
-      this.online = true
+      this.online = true;
     } else {
-      this.online = false
+      this.online = false;
     }
     if (this.accessible) {
-      this.distribution = this.detectKubernetesDistribution(this.version)
-      this.features = await fm.getFeatures(this.contextHandler)
-      this.isAdmin = await this.isClusterAdmin()
-      this.nodes = await this.getNodeCount()
-      this.kubeCtl = new Kubectl(this.version)
-      this.kubeCtl.ensureKubectl()
+      this.distribution = this.detectKubernetesDistribution(this.version);
+      this.features = await fm.getFeatures(this.contextHandler);
+      this.isAdmin = await this.isClusterAdmin();
+      this.nodes = await this.getNodeCount();
+      this.kubeCtl = new Kubectl(this.version);
+      this.kubeCtl.ensureKubectl();
     }
     this.eventCount = await this.getEventCount();
   }
 
-  public updateKubeconfig(kubeconfig: string) {
-    const storedCluster = clusterStore.getCluster(this.id)
-    if (!storedCluster) { return }
-
-    this.kubeConfig = kubeconfig
-    this.save()
-  }
-
-  public getPrometheusApiPrefix() {
-    if (!this.preferences.prometheus?.prefix) {
-      return ""
+  public updateKubeconfig(kubeconfig: string): void {
+    const storedCluster = clusterStore.getCluster(this.id);
+    if (!storedCluster) {
+      return; 
     }
-    return this.preferences.prometheus.prefix
+
+    this.kubeConfig = kubeconfig;
+    this.save();
   }
 
-  public save() {
-    clusterStore.storeCluster(this)
+  public getPrometheusApiPrefix(): string {
+    return this.preferences.prometheus?.prefix || "";
+  }
+
+  public save(): void {
+    clusterStore.storeCluster(this);
   }
 
   public toClusterInfo(): ClusterInfo {
@@ -181,28 +184,30 @@ export class Cluster implements ClusterInfo {
       kubeCtl: this.kubeCtl,
       kubeConfig:  this.kubeConfig,
       preferences: this.preferences
-    }
+    };
     return clusterInfo;
   }
 
-  protected async k8sRequest(path: string, opts?: request.RequestPromiseOptions) {
+  protected async k8sRequest(path: string, opts?: request.RequestPromiseOptions): Promise<any> {
     const options = Object.assign({
       json: true, timeout: 10000
-    }, (opts || {}))
-    if (!options.headers) { options.headers = {} }
-    options.headers.host = `${this.id}.localhost:${this.port}`
+    }, (opts || {}));
+    if (!options.headers) {
+      options.headers = {}; 
+    }
+    options.headers.host = `${this.id}.localhost:${this.port}`;
 
-    return request(`http://127.0.0.1:${this.port}/api-kube${path}`, options)
+    return request(`http://127.0.0.1:${this.port}/api-kube${path}`, options);
   }
 
-  protected async getConnectionStatus() {
+  protected async getConnectionStatus(): Promise<ClusterStatus> {
     try {
-      const response = await this.k8sRequest("/version")
-      this.version = response.gitVersion
-      this.failureReason = null
+      const response = await this.k8sRequest("/version");
+      this.version = response.gitVersion;
+      this.failureReason = null;
       return ClusterStatus.AccessGranted;
     } catch(error) {
-      logger.error(`Failed to connect to cluster ${this.contextName}: ${JSON.stringify(error)}`)
+      logger.error(`Failed to connect to cluster ${this.contextName}: ${JSON.stringify(error)}`);
       if (error.statusCode) {
         if (error.statusCode >= 400 && error.statusCode < 500) {
           this.failureReason = "Invalid credentials";
@@ -226,17 +231,17 @@ export class Cluster implements ClusterInfo {
   }
 
   public async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
-    const authApi = this.contextHandler.kc.makeApiClient(AuthorizationV1Api)
+    const authApi = this.contextHandler.kc.makeApiClient(AuthorizationV1Api);
     try {
       const accessReview = await authApi.createSelfSubjectAccessReview({
         apiVersion: "authorization.k8s.io/v1",
         kind: "SelfSubjectAccessReview",
         spec: { resourceAttributes }
-      })
-      return accessReview.body.status.allowed === true
+      });
+      return accessReview.body.status.allowed === true;
     } catch(error) {
-      logger.error(`failed to request selfSubjectAccessReview: ${error.message}`)
-      return false
+      logger.error(`failed to request selfSubjectAccessReview: ${error.message}`);
+      return false;
     }
   }
 
@@ -245,42 +250,36 @@ export class Cluster implements ClusterInfo {
       namespace: "kube-system",
       resource: "*",
       verb: "create",
-    })
+    });
   }
 
   protected detectKubernetesDistribution(kubernetesVersion: string): string {
     if (kubernetesVersion.includes("gke")) {
-      return "gke"
-    }
-    else if (kubernetesVersion.includes("eks")) {
-      return "eks"
-    }
-    else if (kubernetesVersion.includes("IKS")) {
-      return "iks"
-    }
-    else if(this.apiUrl.endsWith("azmk8s.io")) {
-      return "aks"
-    }
-    else if(this.apiUrl.endsWith("k8s.ondigitalocean.com")) {
-      return "digitalocean"
-    }
-    else if (this.contextHandler.contextName.startsWith("minikube")) {
-      return "minikube"
-    }
-    else if (kubernetesVersion.includes("+")) {
-      return "custom"
+      return "gke";
+    } else if (kubernetesVersion.includes("eks")) {
+      return "eks";
+    } else if (kubernetesVersion.includes("IKS")) {
+      return "iks";
+    } else if(this.apiUrl.endsWith("azmk8s.io")) {
+      return "aks";
+    } else if(this.apiUrl.endsWith("k8s.ondigitalocean.com")) {
+      return "digitalocean";
+    } else if (this.contextHandler.contextName.startsWith("minikube")) {
+      return "minikube";
+    } else if (kubernetesVersion.includes("+")) {
+      return "custom";
     }
 
-    return "vanilla"
+    return "vanilla";
   }
 
-  protected async getNodeCount() {
+  protected async getNodeCount(): Promise<number | null> {
     try {
-      const response = await this.k8sRequest("/api/v1/nodes")
-      return response.items.length
+      const response = await this.k8sRequest("/api/v1/nodes");
+      return response.items.length;
     } catch(error) {
-      logger.debug(`failed to request node list: ${error.message}`)
-      return null
+      logger.debug(`failed to request node list: ${error.message}`);
+      return null;
     }
   }
 
@@ -297,7 +296,7 @@ export class Cluster implements ClusterInfo {
         if(w.involvedObject.kind === 'Pod') {
           try {
             const pod = (await client.readNamespacedPod(w.involvedObject.name, w.involvedObject.namespace)).body;
-            logger.debug(`checking pod ${w.involvedObject.namespace}/${w.involvedObject.name}`)
+            logger.debug(`checking pod ${w.involvedObject.namespace}/${w.involvedObject.name}`);
             if(k8s.podHasIssues(pod)) {
               uniqEventSources.add(w.involvedObject.uid);
             }
@@ -312,11 +311,11 @@ export class Cluster implements ClusterInfo {
       let nodeNotificationCount = 0;
       const nodes = (await client.listNode()).body.items;
       nodes.map(n => {
-        nodeNotificationCount = nodeNotificationCount + k8s.getNodeWarningConditions(n).length
+        nodeNotificationCount = nodeNotificationCount + k8s.getNodeWarningConditions(n).length;
       });
       return uniqEventSources.size + nodeNotificationCount;
     } catch (error) {
-      logger.error("Failed to fetch event count: " + JSON.stringify(error))
+      logger.error("Failed to fetch event count: " + JSON.stringify(error));
       return 0;
     }
   }

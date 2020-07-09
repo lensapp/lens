@@ -15,7 +15,7 @@ import { Notifications } from "../notifications";
 import { Wizard, WizardStep } from "../wizard";
 import { themeStore } from "../../theme.store";
 
-interface IKubeconfigDialogData {
+interface KubeconfigDialogData {
   title?: React.ReactNode;
   loader?: () => Promise<any>;
 }
@@ -26,55 +26,55 @@ interface Props extends Partial<DialogProps> {
 @observer
 export class KubeConfigDialog extends React.Component<Props> {
   @observable static isOpen = false;
-  @observable static data: IKubeconfigDialogData = null;
+  @observable static data: KubeconfigDialogData = null;
 
   @observable.ref configTextArea: HTMLTextAreaElement; // required for coping config text
   @observable config = ""; // parsed kubeconfig in yaml format
 
-  static open(data: IKubeconfigDialogData) {
+  static open(data: KubeconfigDialogData): void {
     KubeConfigDialog.isOpen = true;
     KubeConfigDialog.data = data;
   }
 
-  static close() {
+  static close(): void {
     KubeConfigDialog.isOpen = false;
   }
 
-  get data(): IKubeconfigDialogData {
+  get data(): KubeconfigDialogData {
     return KubeConfigDialog.data;
   }
 
-  close = () => {
+  close = (): void => {
     KubeConfigDialog.close();
   }
 
-  onOpen = () => {
+  onOpen = (): void => {
     this.loadConfig();
   }
 
-  async loadConfig() {
+  async loadConfig(): Promise<void> {
     const config = await this.data.loader().catch(err => {
-      Notifications.error(err)
-      this.close()
-    })
-    this.config = config ? jsYaml.dump(config) : ""
+      Notifications.error(err);
+      this.close();
+    });
+    this.config = config ? jsYaml.dump(config) : "";
   }
 
-  copyToClipboard = () => {
+  copyToClipboard = (): void => {
     if (this.config && copyToClipboard(this.configTextArea)) {
-      Notifications.ok(<Trans>Config copied to clipboard</Trans>)
+      Notifications.ok(<Trans>Config copied to clipboard</Trans>);
     }
   }
 
-  download = () => {
-    downloadFile("config", this.config, "text/yaml")
+  download = (): void => {
+    downloadFile("config", this.config, "text/yaml");
   }
 
-  render() {
+  render(): JSX.Element {
     const { isOpen, data = {} } = KubeConfigDialog;
     const { ...dialogProps } = this.props;
     const yamlConfig = this.config;
-    const header = <h5>{data.title || <Trans>Kubeconfig File</Trans>}</h5>
+    const header = <h5>{data.title || <Trans>Kubeconfig File</Trans>}</h5>;
     const buttons = (
       <div className="actions flex gaps">
         <Button plain onClick={this.copyToClipboard}>
@@ -87,7 +87,7 @@ export class KubeConfigDialog extends React.Component<Props> {
           <Trans>Close</Trans>
         </Button>
       </div>
-    )
+    );
     return (
       <Dialog
         {...dialogProps}
@@ -102,28 +102,30 @@ export class KubeConfigDialog extends React.Component<Props> {
             <textarea
               className="config-copy"
               readOnly defaultValue={yamlConfig}
-              ref={e => this.configTextArea = e}
+              ref={(e): void => {
+                this.configTextArea = e;
+              }}
             />
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }
 
-export function openUserKubeConfig() {
+export function openUserKubeConfig(): void {
   KubeConfigDialog.open({
     loader: () => kubeConfigApi.getUserConfig()
-  })
+  });
 }
 
-export function openServiceAccountKubeConfig(account: ServiceAccount) {
-  const accountName = account.getName()
-  const namespace = account.getNs()
+export function openServiceAccountKubeConfig(account: ServiceAccount): void {
+  const accountName = account.getName();
+  const namespace = account.getNs();
   KubeConfigDialog.open({
     title: <Trans>{accountName} kubeconfig</Trans>,
     loader: () => {
-      return kubeConfigApi.getServiceAccountConfig(accountName, namespace)
+      return kubeConfigApi.getServiceAccountConfig(accountName, namespace);
     }
-  })
+  });
 }
