@@ -1,12 +1,12 @@
+import type { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry"
+import type { ClusterPreferences } from "../common/cluster-store";
+import type { ServerOptions } from "http-proxy"
+import type { Cluster } from "./cluster"
 import { CoreV1Api } from "@kubernetes/client-node"
-import { ServerOptions } from "http-proxy"
+import { prometheusProviders } from "../common/prometheus-providers"
 import logger from "./logger"
 import { getFreePort } from "./port"
 import { KubeAuthProxy } from "./kube-auth-proxy"
-import { Cluster } from "./cluster"
-import { prometheusProviders } from "../common/prometheus-providers"
-import type { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry"
-import type { ClusterPreferences } from "../common/cluster-store";
 
 export class ContextHandler {
   public url: string
@@ -32,16 +32,12 @@ export class ContextHandler {
     this.setClusterPreferences(cluster.preferences)
   }
 
-  public async init() {
-    await this.resolveProxyPort()
-  }
-
-  public setClusterPreferences(preferences?: ClusterPreferences) {
-    this.clusterName = preferences?.clusterName || this.contextName;
+  public setClusterPreferences(preferences: ClusterPreferences = {}) {
+    this.clusterName = preferences.clusterName || this.contextName;
     this.prometheusProvider = preferences.prometheusProvider?.type;
     this.prometheusPath = null;
 
-    if (preferences?.prometheus) {
+    if (preferences.prometheus) {
       const { namespace, service, port } = preferences.prometheus
       this.prometheusPath = `${namespace}/services/${service}:${port}`
     }
@@ -113,7 +109,7 @@ export class ContextHandler {
     }
   }
 
-  protected async resolveProxyPort(): Promise<number> {
+  async resolveProxyPort(): Promise<number> {
     if (!this.proxyPort) {
       try {
         this.proxyPort = await getFreePort()

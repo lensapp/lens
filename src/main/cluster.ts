@@ -1,4 +1,4 @@
-import url from "url"
+import url, { UrlWithStringQuery } from "url"
 import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { FeatureStatusMap } from "./feature"
 import { computed, observable, toJS } from "mobx";
@@ -33,8 +33,8 @@ export interface ClusterState extends ClusterModel {
 }
 
 export class Cluster implements ClusterModel {
-  public contextHandler: ContextHandler;
   public kubeCtl: Kubectl
+  public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
 
   @observable initialized = false;
@@ -63,20 +63,21 @@ export class Cluster implements ClusterModel {
     Object.assign(this, model)
   }
 
-  @computed get apiUrl() {
-    return url.parse(`http://${this.id}.localhost:${this.port}`)
+  // todo: use only api proxy url?
+  @computed get apiUrl(): UrlWithStringQuery {
+    return url.parse(`http://${this.id}.localhost:${this.port}`);
   }
 
-  @computed get apiServerUrl() {
-    return url.parse(`http://127.0.0.1:${this.port}${apiPrefix.KUBE_BASE}`)
+  @computed get apiProxyUrl(): string {
+    return `http://127.0.0.1:${this.port}${apiPrefix.KUBE_BASE}`;
   }
 
   async init(port: number) {
     try {
       this.port = port;
       this.contextHandler = new ContextHandler(this);
-      await this.contextHandler.init() // So we get the proxy port reserved
-      this.kubeconfigManager = new KubeconfigManager(this)
+      const proxyPort = await this.contextHandler.resolveProxyPort();
+      this.kubeconfigManager = new KubeconfigManager(this, proxyPort);
       this.url = this.contextHandler.url
       this.initialized = true;
       logger.debug(`[CLUSTER]: init done (id="${this.id}", context="${this.contextName}")`);
@@ -88,6 +89,7 @@ export class Cluster implements ClusterModel {
     }
   }
 
+  // todo: auto-refresh when preferences changed?
   async refreshCluster() {
     this.contextHandler.setClusterPreferences(this.preferences)
 
@@ -140,7 +142,7 @@ export class Cluster implements ClusterModel {
   }
 
   k8sRequest(path: string, options: RequestPromiseOptions = {}) {
-    return request(this.apiServerUrl + path, {
+    return request(this.apiProxyUrl + path, {
       json: true,
       timeout: 10000,
       headers: {
@@ -272,6 +274,7 @@ export class Cluster implements ClusterModel {
     })
   }
 
+  // todo: use for push-updates to lens view
   getState(): ClusterState {
     const storeModel = this.toJSON();
     return toJS({

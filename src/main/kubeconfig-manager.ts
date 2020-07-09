@@ -1,18 +1,16 @@
+import type { Cluster } from "./cluster"
 import { app } from "electron"
 import fs from "fs"
-import { ensureDir, randomFileName } from "./file-helpers"
-import logger from "./logger"
-import { Cluster } from "./cluster"
-import { dumpConfigYaml } from "./k8s"
 import { KubeConfig } from "@kubernetes/client-node"
+import { ensureDir, randomFileName } from "./file-helpers"
+import { dumpConfigYaml } from "./k8s"
+import logger from "./logger"
 
 export class KubeconfigManager {
   protected configDir = app.getPath("temp")
   protected tempFile: string
-  protected cluster: Cluster
 
-  constructor(cluster: Cluster) {
-    this.cluster = cluster
+  constructor(protected cluster: Cluster, protected proxyPort: number) {
     this.tempFile = this.createTemporaryKubeconfig()
   }
 
@@ -27,13 +25,13 @@ export class KubeconfigManager {
   protected createTemporaryKubeconfig(): string {
     ensureDir(this.configDir);
     const path = `${this.configDir}/${randomFileName("kubeconfig")}`
-    const { contextName, contextHandler, kubeConfigPath } = this.cluster;
+    const { contextName, kubeConfigPath } = this.cluster;
     const kubeConfig = new KubeConfig()
     kubeConfig.loadFromFile(kubeConfigPath)
     kubeConfig.clusters = [
       {
         name: contextName,
-        server: `http://127.0.0.1:${contextHandler.proxyPort}`,
+        server: `http://127.0.0.1:${this.proxyPort}`,
         skipTLSVerify: true,
       }
     ];

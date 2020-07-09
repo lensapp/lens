@@ -26,6 +26,7 @@ export class ClusterManager {
   }
 
   constructor(protected port: number) {
+    // init clusters
     reaction(() => clusterStore.clusters.toJS(), clusters => {
       clusters.forEach(cluster => {
         if (!cluster.initialized) {
@@ -33,12 +34,14 @@ export class ClusterManager {
         }
       })
     });
+    // destroy clusters
     reaction(() => clusterStore.removedClusters.toJS(), removedClusters => {
       if (removedClusters.size > 0) {
         removedClusters.forEach(cluster => cluster.stopServer());
         clusterStore.removedClusters.clear();
       }
     });
+    // listen ipc-events
     ClusterManager.ipcListen(this);
   }
 
@@ -148,10 +151,6 @@ export class ClusterManager {
     return this.getCluster(clusterId)?.uninstallFeature(name);
   }
 
-  protected async refreshCluster(clusterId: ClusterId) {
-    await this.getCluster(clusterId)?.refreshCluster();
-  }
-
   protected async getEventsCount(clusterId: ClusterId): Promise<number> {
     return await this.getCluster(clusterId)?.getEventCount() || 0;
   }
@@ -162,7 +161,6 @@ export class ClusterManager {
       [ClusterIpcMessage.CLUSTER_STOP]: clusterManager.stopCluster,
       [ClusterIpcMessage.CLUSTER_REMOVE]: clusterManager.removeCluster,
       [ClusterIpcMessage.CLUSTER_REMOVE_WORKSPACE]: clusterManager.removeAllByWorkspace,
-      [ClusterIpcMessage.CLUSTER_REFRESH]: clusterManager.refreshCluster,
       [ClusterIpcMessage.CLUSTER_EVENTS]: clusterManager.getEventsCount,
       [ClusterIpcMessage.FEATURE_INSTALL]: clusterManager.installFeature,
       [ClusterIpcMessage.FEATURE_UPGRADE]: clusterManager.upgradeFeature,

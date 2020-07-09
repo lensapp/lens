@@ -25,7 +25,7 @@ class MetricsRoute extends LensApi {
     let prometheusProvider: PrometheusProvider
     try {
       const prometheusPath = await cluster.contextHandler.getPrometheusPath()
-      metricsUrl = `${cluster.apiServerUrl}/api/v1/namespaces/${prometheusPath}/proxy${cluster.getPrometheusApiPrefix()}/api/v1/query_range`
+      metricsUrl = `${cluster.apiProxyUrl}/api/v1/namespaces/${prometheusPath}/proxy${cluster.getPrometheusApiPrefix()}/api/v1/query_range`
       prometheusProvider = await cluster.contextHandler.getPrometheusProvider()
     } catch {
       this.respondJson(response, {})
