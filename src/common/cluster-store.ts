@@ -48,7 +48,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
   }
 
-  @observable activeCluster: ClusterId;
+  @observable activeCluster: ClusterId; // todo: use active "context" from kube-config?
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 

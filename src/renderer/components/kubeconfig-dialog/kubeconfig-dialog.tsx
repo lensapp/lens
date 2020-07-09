@@ -6,14 +6,15 @@ import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
 import { Trans } from "@lingui/macro";
 import { AceEditor } from "../ace-editor";
-import { kubeConfigApi, ServiceAccount } from "../../api/endpoints";
-import { copyToClipboard, downloadFile, cssNames } from "../../utils";
+import { ServiceAccount } from "../../api/endpoints";
+import { copyToClipboard, cssNames, downloadFile } from "../../utils";
 import { Button } from "../button";
 import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { Wizard, WizardStep } from "../wizard";
 import { themeStore } from "../../theme.store";
+import { apiBase } from "../../api";
 
 interface IKubeconfigDialogData {
   title?: React.ReactNode;
@@ -111,19 +112,11 @@ export class KubeConfigDialog extends React.Component<Props> {
   }
 }
 
-export function openUserKubeConfig() {
-  KubeConfigDialog.open({
-    loader: () => kubeConfigApi.getUserConfig()
-  })
-}
-
 export function openServiceAccountKubeConfig(account: ServiceAccount) {
   const accountName = account.getName()
   const namespace = account.getNs()
   KubeConfigDialog.open({
     title: <Trans>{accountName} kubeconfig</Trans>,
-    loader: () => {
-      return kubeConfigApi.getServiceAccountConfig(accountName, namespace)
-    }
+    loader: () => apiBase.get(`/kubeconfig/service-account/${namespace}/${account}`)
   })
 }

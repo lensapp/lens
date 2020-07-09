@@ -1,8 +1,7 @@
 import type { IConfigRoutePayload } from "../main/routes/config-route";
-
 import { observable, when } from "mobx";
 import { autobind, interval } from "./utils";
-import { configApi } from "./api/endpoints/config.api";
+import { apiBase } from "./api";
 
 @autobind()
 export class ConfigStore {
@@ -17,7 +16,7 @@ export class ConfigStore {
   }
 
   load() {
-    return configApi.getConfig().then((config: any) => {
+    return apiBase.get("/config").then((config: IConfigRoutePayload) => {
       this.config = config;
       this.isLoaded = true;
     });

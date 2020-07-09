@@ -4,6 +4,9 @@ import windowStateKeeper from "electron-window-state"
 import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 
+// todo: smooth switching btw clusters (e.g. wait ready-state before switching window)
+// todo: devtools + manage main-window size btw views
+
 export class WindowManager {
   protected activeView: BrowserWindow;
   protected views = new Map<ClusterId, BrowserWindow>();
@@ -42,8 +45,6 @@ export class WindowManager {
     this.splashWindow.hide();
   }
 
-  // todo: smooth switching between windows/clusters
-  // todo: devtools + manage main-window size btw views
   async showView(clusterId: ClusterId) {
     const cluster = clusterStore.getById(clusterId);
     if (!cluster) {
