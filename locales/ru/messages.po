@@ -212,7 +212,7 @@ msgstr "Выполнить команду drain для ноды <0>{nodeName}</0
 msgid "Arguments"
 msgstr "Аргументы"
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:55
+#: src/renderer/components/+workspaces/clusters-menu.tsx:64
 msgid "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
 msgstr ""
 
@@ -679,7 +679,7 @@ msgstr "Описание"
 msgid "Desired number of replicas"
 msgstr "Нужный уровень реплик"
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:38
+#: src/renderer/components/+workspaces/clusters-menu.tsx:40
 msgid "Disconnect"
 msgstr ""
 
@@ -2031,7 +2031,7 @@ msgstr "Установлено"
 msgid "Set quota"
 msgstr "Установить квоту"
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:31
+#: src/renderer/components/+workspaces/clusters-menu.tsx:33
 msgid "Settings"
 msgstr ""
 
@@ -2205,7 +2205,7 @@ msgstr "Это обязательное поле"
 msgid "This field must contain only lowercase latin characters, numbers and dash."
 msgstr "Это поле может содержать только латинские буквы в нижнем регистре, номера и дефис."
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:53
+#: src/renderer/components/+workspaces/clusters-menu.tsx:62
 msgid "This is the quick launch menu."
 msgstr ""
 
@@ -2383,7 +2383,7 @@ msgstr "Рабочие"
 msgid "Workloads"
 msgstr "Ресурсы"
 
-#: src/renderer/components/+workspaces/workspaces.tsx:41
+#: src/renderer/components/+workspaces/bottom-bar.tsx:31
 msgid "Workspaces"
 msgstr ""
 

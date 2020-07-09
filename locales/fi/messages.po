@@ -211,7 +211,7 @@ msgstr ""
 msgid "Arguments"
 msgstr ""
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:55
+#: src/renderer/components/+workspaces/clusters-menu.tsx:64
 msgid "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
 msgstr ""
 
@@ -674,7 +674,7 @@ msgstr ""
 msgid "Desired number of replicas"
 msgstr ""
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:38
+#: src/renderer/components/+workspaces/clusters-menu.tsx:40
 msgid "Disconnect"
 msgstr ""
 
@@ -2013,7 +2013,7 @@ msgstr ""
 msgid "Set quota"
 msgstr ""
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:31
+#: src/renderer/components/+workspaces/clusters-menu.tsx:33
 msgid "Settings"
 msgstr ""
 
@@ -2187,7 +2187,7 @@ msgstr ""
 msgid "This field must contain only lowercase latin characters, numbers and dash."
 msgstr ""
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:53
+#: src/renderer/components/+workspaces/clusters-menu.tsx:62
 msgid "This is the quick launch menu."
 msgstr ""
 
@@ -2365,7 +2365,7 @@ msgstr ""
 msgid "Workloads"
 msgstr ""
 
-#: src/renderer/components/+workspaces/workspaces.tsx:41
+#: src/renderer/components/+workspaces/bottom-bar.tsx:31
 msgid "Workspaces"
 msgstr ""
 

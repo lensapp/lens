@@ -1,15 +1,50 @@
 .ClustersMenu {
   @include hidden-scrollbar;
+  $menuBgc: #252729;
 
-  padding: $padding;
-  background: #252729;
+  padding: $padding * 1.5;
+  background: $menuBgc;
 
   .add-cluster {
-    cursor: pointer;
-    opacity: 0.4;
+    position: relative;
 
-    &:hover {
-      opacity: .75;
+    .Icon.add {
+      border-radius: $radius;
+      padding: $padding / 3;
+      color: $menuBgc !important;
+      background: white !important;
+      font-weight: bold;
+      cursor: pointer;
+      opacity: 0.4;
+
+      &.active {
+        opacity: 1;
+      }
+
+      &:hover {
+        box-shadow: none;
+        opacity: .75;
+      }
+    }
+
+    // todo: reuse in cluster-icon.tsx
+    .Badge.new-contexts {
+      $boxSize: 17px;
+      $offset: -7px;
+
+      position: absolute;
+      font-size: $font-size-small;
+      right: $offset;
+      bottom: $offset;
+      line-height: $boxSize;
+      min-width: $boxSize;
+      min-height: $boxSize;
+      text-align: center;
+      color: white;
+      background: $colorSuccess;
+      font-weight: normal;
+      border-radius: 50%;
+      padding: 0;
     }
   }
 }

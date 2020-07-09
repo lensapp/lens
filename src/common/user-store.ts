@@ -35,7 +35,9 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   @observable lastSeenAppVersion = "0.0.0"
-  @observable seenContexts = observable.set();
+  @observable seenContexts: string[] = [];
+  @observable newContexts: string[] = []; // todo: detect new contexts from .kube/config since last open
+
   @observable preferences: UserPreferences = {
     allowTelemetry: true,
     colorTheme: "dark",
@@ -54,16 +56,12 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @action
   protected fromStore(data: Partial<UserStoreModel> = {}) {
-    const { lastSeenAppVersion, seenContexts, preferences } = data
+    const { lastSeenAppVersion, seenContexts = [], preferences } = data
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;
     }
-    if (seenContexts) {
-      this.seenContexts = observable.set(seenContexts);
-    }
-    if (preferences) {
-      Object.assign(this.preferences, preferences);
-    }
+    this.seenContexts = seenContexts;
+    Object.assign(this.preferences, preferences);
   }
 
   toJSON() {
