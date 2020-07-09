@@ -1,14 +1,15 @@
+import url from "url"
 import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { FeatureStatusMap } from "./feature"
-import { observable, toJS } from "mobx";
+import { computed, observable, toJS } from "mobx";
 import { apiPrefix } from "../common/vars";
 import { ContextHandler } from "./context-handler"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager"
-import { getNodeWarningConditions, loadConfig, podHasIssues } from "./k8s"
+import { getNodeWarningConditions, podHasIssues } from "./k8s"
 import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from "./feature-manager";
-import request from "request-promise-native"
+import request, { RequestPromiseOptions } from "request-promise-native"
 import logger from "./logger"
 
 enum ClusterStatus {
@@ -43,7 +44,6 @@ export class Cluster implements ClusterModel {
   @observable contextName: string;
   @observable url: string;
   @observable port: number;
-  @observable apiUrl: string;
   @observable online: boolean;
   @observable accessible: boolean;
   @observable failureReason: string;
@@ -63,21 +63,28 @@ export class Cluster implements ClusterModel {
     Object.assign(this, model)
   }
 
+  @computed get apiUrl() {
+    return url.parse(`http://${this.id}.localhost:${this.port}`)
+  }
+
+  @computed get apiServerUrl() {
+    return url.parse(`http://127.0.0.1:${this.port}${apiPrefix.KUBE_BASE}`)
+  }
+
   async init(port: number) {
-    const { contextName } = this
     try {
-      const kubeConfig = loadConfig(this.kubeConfigPath)
-      kubeConfig.setCurrentContext(contextName); // fixme: is it required, when if so?
       this.port = port;
-      this.apiUrl = kubeConfig.getCurrentCluster().server
-      this.contextHandler = new ContextHandler(kubeConfig, this)
+      this.contextHandler = new ContextHandler(this);
       await this.contextHandler.init() // So we get the proxy port reserved
       this.kubeconfigManager = new KubeconfigManager(this)
       this.url = this.contextHandler.url
       this.initialized = true;
-      logger.debug(`[CLUSTER]: init done for "${this.id}", context ${contextName}`);
+      logger.debug(`[CLUSTER]: init done (id="${this.id}", context="${this.contextName}")`);
     } catch (err) {
-      logger.error(`[CLUSTER]: init "${this.id}" has failed`, { err, contextName });
+      logger.error(`[CLUSTER]: init failed (id="${this.id}")`, {
+        contextName: this.contextName,
+        error: err
+      });
     }
   }
 
@@ -132,16 +139,15 @@ export class Cluster implements ClusterModel {
     return this.preferences.prometheus?.prefix || ""
   }
 
-  protected async k8sRequest(path: string, opts?: request.RequestPromiseOptions) {
-    const options = Object.assign({
+  k8sRequest(path: string, options: RequestPromiseOptions = {}) {
+    return request(this.apiServerUrl + path, {
       json: true,
-      timeout: 10000
-    }, (opts || {}))
-    if (!options.headers) {
-      options.headers = {}
-    }
-    options.headers.host = `${this.id}.localhost:${this.port}`
-    return request(`http://127.0.0.1:${this.port}${apiPrefix.KUBE_BASE}${path}`, options)
+      timeout: 10000,
+      headers: {
+        ...(options.headers || {}),
+        host: this.apiUrl.host,
+      }
+    })
   }
 
   protected async getConnectionStatus() {
@@ -202,8 +208,8 @@ export class Cluster implements ClusterModel {
     if (kubernetesVersion.includes("gke")) return "gke"
     if (kubernetesVersion.includes("eks")) return "eks"
     if (kubernetesVersion.includes("IKS")) return "iks"
-    if (apiUrl.endsWith("azmk8s.io")) return "aks"
-    if (apiUrl.endsWith("k8s.ondigitalocean.com")) return "digitalocean"
+    if (apiUrl.href.endsWith("azmk8s.io")) return "aks"
+    if (apiUrl.href.endsWith("k8s.ondigitalocean.com")) return "digitalocean"
     if (contextName.startsWith("minikube")) return "minikube"
     if (kubernetesVersion.includes("+")) return "custom"
     return "vanilla"
@@ -271,7 +277,7 @@ export class Cluster implements ClusterModel {
     return toJS({
       ...storeModel,
       url: this.url,
-      apiUrl: this.apiUrl,
+      apiUrl: this.apiUrl.href,
       online: this.online,
       accessible: this.accessible,
       failureReason: this.failureReason,

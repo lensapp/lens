@@ -5,7 +5,6 @@ import "../common/prometheus-providers"
 import { app, dialog } from "electron"
 import { appName, appProto, isMac, staticDir, staticProto } from "../common/vars";
 import path from "path"
-import { format as formatUrl } from "url"
 import initMenu from "./menu"
 import { LensProxy, listen } from "./proxy"
 import { WindowManager } from "./window-manager";
@@ -24,12 +23,6 @@ import logger from "./logger"
 let windowManager: WindowManager;
 let clusterManager: ClusterManager;
 let proxyServer: LensProxy;
-
-const vmURL = formatUrl({
-  pathname: path.join(__dirname, `${appName}.html`),
-  protocol: "file",
-  slashes: true,
-})
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
@@ -81,9 +74,9 @@ async function main() {
     app.quit();
   }
 
-  // manage lens windows
-  windowManager = new WindowManager({showSplash: true});
-  windowManager.loadURL(vmURL)
+  // create window manager and open app
+  windowManager = new WindowManager();
+  windowManager.showSplash();
 }
 
 // Events
@@ -95,19 +88,15 @@ app.on('window-all-closed', function () {
   if (!isMac) {
     app.quit();
   } else {
-    windowManager = null
-    if (clusterManager) clusterManager.stop()
+    // windowManager.destroy();
+    // clusterManager.stop()
   }
 })
 
-app.on("activate", () => {
-  if (!windowManager) {
-    windowManager = new WindowManager()
-    windowManager.loadURL(vmURL)
-  }
+app.on("activate", (event, hasVisibleWindows) => {
+  // todo: something
 })
 
-// fixme: app can't quit normally (Cmd+W/Q not working)
 app.on("will-quit", async (event) => {
   event.preventDefault(); // To allow mixpanel sending to be executed
   if (clusterManager) clusterManager.stop()

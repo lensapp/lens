@@ -1,8 +1,7 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import requestPromise from "request-promise-native"
-import { PrometheusProviderRegistry, PrometheusProvider, PrometheusNodeQuery, PrometheusClusterQuery, PrometheusPodQuery, PrometheusPvcQuery, PrometheusIngressQuery, PrometheusQueryOpts} from "../prometheus/provider-registry"
-import { apiPrefix } from "../../common/vars";
+import { PrometheusClusterQuery, PrometheusIngressQuery, PrometheusNodeQuery, PrometheusPodQuery, PrometheusProvider, PrometheusPvcQuery, PrometheusQueryOpts } from "../prometheus/provider-registry"
 
 export type IMetricsQuery = string | string[] | {
   [metricName: string]: string;
@@ -11,11 +10,10 @@ export type IMetricsQuery = string | string[] | {
 class MetricsRoute extends LensApi {
 
   public async routeMetrics(request: LensApiRequest) {
-    const { response, cluster} = request
+    const { response, cluster } = request
     const query: IMetricsQuery = request.payload;
-    const serverUrl = `http://127.0.0.1:${cluster.port}${apiPrefix.KUBE_BASE}`
-    const headers = {
-      "Host": `${cluster.id}.localhost:${cluster.port}`,
+    const headers: Record<string, string> = {
+      "Host": cluster.apiUrl.host,
       "Content-type": "application/json",
     }
     const queryParams: IMetricsQuery = {}
@@ -27,7 +25,7 @@ class MetricsRoute extends LensApi {
     let prometheusProvider: PrometheusProvider
     try {
       const prometheusPath = await cluster.contextHandler.getPrometheusPath()
-      metricsUrl = `${serverUrl}/api/v1/namespaces/${prometheusPath}/proxy${cluster.getPrometheusApiPrefix()}/api/v1/query_range`
+      metricsUrl = `${cluster.apiServerUrl}/api/v1/namespaces/${prometheusPath}/proxy${cluster.getPrometheusApiPrefix()}/api/v1/query_range`
       prometheusProvider = await cluster.contextHandler.getPrometheusProvider()
     } catch {
       this.respondJson(response, {})
@@ -65,11 +63,9 @@ class MetricsRoute extends LensApi {
     let data: any;
     if (typeof query === "string") {
       data = await loadMetrics(query)
-    }
-    else if (Array.isArray(query)) {
+    } else if (Array.isArray(query)) {
       data = await Promise.all(query.map(loadMetrics));
-    }
-    else {
+    } else {
       data = {};
       const result = await Promise.all(
         Object.entries(query).map((queryEntry: any) => {

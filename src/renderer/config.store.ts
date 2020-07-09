@@ -1,4 +1,4 @@
-import type { IConfigRoutePayload } from "../main/routes/config";
+import type { IConfigRoutePayload } from "../main/routes/config-route";
 
 import { observable, when } from "mobx";
 import { autobind, interval } from "./utils";

@@ -1,5 +1,5 @@
 // App configuration api
-import type { IConfigRoutePayload } from "../../../main/routes/config";
+import type { IConfigRoutePayload } from "../../../main/routes/config-route";
 import { apiBase } from "../index";
 
 export const configApi = {

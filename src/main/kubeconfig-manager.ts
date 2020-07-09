@@ -1,9 +1,9 @@
 import { app } from "electron"
 import fs from "fs"
-import { ensureDir, randomFileName} from "./file-helpers"
+import { ensureDir, randomFileName } from "./file-helpers"
 import logger from "./logger"
 import { Cluster } from "./cluster"
-import * as k8s from "./k8s"
+import { dumpConfigYaml } from "./k8s"
 import { KubeConfig } from "@kubernetes/client-node"
 
 export class KubeconfigManager {
@@ -21,37 +21,35 @@ export class KubeconfigManager {
   }
 
   /**
-   * Creates new "temporary" kubeconfig that point to the kubectl-proxy. 
+   * Creates new "temporary" kubeconfig that point to the kubectl-proxy.
    * This way any user of the config does not need to know anything about the auth etc. details.
    */
   protected createTemporaryKubeconfig(): string {
-    ensureDir(this.configDir)
+    ensureDir(this.configDir);
     const path = `${this.configDir}/${randomFileName("kubeconfig")}`
-    const originalKc = new KubeConfig()
-    originalKc.loadFromFile(this.cluster.kubeConfigPath)
-    const kc = {
-      clusters: [
-        {
-          name: this.cluster.contextName,
-          server: `http://127.0.0.1:${this.cluster.contextHandler.proxyPort}`
-        }
-      ],
-      users: [
-        {
-          name: "proxy"
-        }
-      ],
-      contexts: [
-        {
-          name: this.cluster.contextName,
-          cluster: this.cluster.contextName,
-          namespace: originalKc.getContextObject(this.cluster.contextName).namespace,
-          user: "proxy"
-        }
-      ],
-      currentContext: this.cluster.contextName
-    } as KubeConfig
-    fs.writeFileSync(path, k8s.dumpConfigYaml(kc))
+    const { contextName, contextHandler, kubeConfigPath } = this.cluster;
+    const kubeConfig = new KubeConfig()
+    kubeConfig.loadFromFile(kubeConfigPath)
+    kubeConfig.clusters = [
+      {
+        name: contextName,
+        server: `http://127.0.0.1:${contextHandler.proxyPort}`,
+        skipTLSVerify: true,
+      }
+    ];
+    kubeConfig.users = [
+      { name: "proxy" },
+    ];
+    kubeConfig.currentContext = contextName;
+    kubeConfig.contexts = [
+      {
+        name: contextName,
+        cluster: contextName,
+        namespace: kubeConfig.getContextObject(contextName).namespace,
+        user: "proxy"
+      }
+    ];
+    fs.writeFileSync(path, dumpConfigYaml(kubeConfig));
     return path
   }
 

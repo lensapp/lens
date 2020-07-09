@@ -4,14 +4,10 @@ import http from "http"
 import path from "path"
 import { readFile } from "fs-extra"
 import { Cluster } from "./cluster"
-import { configRoute } from "./routes/config"
 import { helmApi } from "./helm-api"
 import { resourceApplierApi } from "./resource-applier-api"
-import { kubeconfigRoute } from "./routes/kubeconfig"
-import { metricsRoute } from "./routes/metrics"
-import { watchRoute } from "./routes/watch"
-import { portForwardRoute } from "./routes/port-forward"
-import { apiPrefix, outDir, appName } from "../common/vars";
+import { apiPrefix, appName, outDir } from "../common/vars";
+import { configRoute, kubeconfigRoute, metricsRoute, portForwardRoute, watchRoute } from "./routes";
 
 const mimeTypes: Record<string, string> = {
   "html": "text/html",
@@ -51,13 +47,13 @@ export class Router {
   }
 
   public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse) {
-    const url = new URL(req.url, "http://localhost")
-    const path = url.pathname
+    const reqUrl = new URL(req.url, "http://localhost")
+    const path = reqUrl.pathname
     const method = req.method.toLowerCase()
     const matchingRoute = this.router.route(method, path)
 
     if (matchingRoute.isBoom !== true) { // route() returns error if route not found -> object.isBoom === true
-      const request = await this.getRequest({ req, res, cluster, url, params: matchingRoute.params })
+      const request = await this.getRequest({ req, res, cluster, url: reqUrl, params: matchingRoute.params })
       await matchingRoute.route(request)
       return true
     } else {

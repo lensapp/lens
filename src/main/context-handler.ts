@@ -1,6 +1,5 @@
-import { CoreV1Api, KubeConfig } from "@kubernetes/client-node"
+import { CoreV1Api } from "@kubernetes/client-node"
 import { ServerOptions } from "http-proxy"
-import * as url from "url"
 import logger from "./logger"
 import { getFreePort } from "./port"
 import { KubeAuthProxy } from "./kube-auth-proxy"
@@ -15,31 +14,21 @@ export class ContextHandler {
   public contextName: string
 
   protected id: string
-  protected clusterUrl: url.UrlWithStringQuery
   protected proxyServer: KubeAuthProxy
+  protected apiTarget: ServerOptions
   protected certData: string
   protected authCertData: string
-  protected cluster: Cluster
-  protected apiTarget: ServerOptions
   protected proxyTarget: ServerOptions
   protected clientCert: string
   protected clientKey: string
-  protected secureApiConnection = true
-  protected defaultNamespace: string
-  protected kubernetesApi: string
   protected prometheusProvider: string
   protected prometheusPath: string
   protected clusterName: string
 
-  constructor(kc: KubeConfig, cluster: Cluster) {
+  constructor(protected cluster: Cluster) {
     this.id = cluster.id
-    this.cluster = cluster
-    this.clusterUrl = url.parse(cluster.apiUrl)
+    this.url = cluster.apiUrl.href;
     this.contextName = cluster.contextName;
-    this.defaultNamespace = kc.getContextObject(cluster.contextName).namespace
-    this.url = `http://${this.id}.localhost:${cluster.port}/`
-    this.kubernetesApi = `http://127.0.0.1:${cluster.port}/${this.id}`
-
     this.setClusterPreferences(cluster.preferences)
   }
 
@@ -79,16 +68,12 @@ export class ContextHandler {
       return await provider.getPrometheusService(apiClient)
     })
     const resolvedPrometheusServices = await Promise.all(prometheusPromises)
-    const service = resolvedPrometheusServices.filter(n => n)[0]
-    if (service) {
-      return service
-    } else {
-      return {
-        id: "lens",
-        namespace: "lens-metrics",
-        service: "prometheus",
-        port: 80
-      }
+    const service = resolvedPrometheusServices.filter(n => n)[0];
+    return service || {
+      id: "lens",
+      namespace: "lens-metrics",
+      service: "prometheus",
+      port: 80
     }
   }
 
@@ -112,17 +97,18 @@ export class ContextHandler {
   }
 
   protected async newApiTarget(timeout: number): Promise<ServerOptions> {
+    const clusterUrl = this.cluster.apiUrl;
     return {
       changeOrigin: true,
       timeout: timeout,
       headers: {
-        "Host": this.clusterUrl.hostname
+        "Host": clusterUrl.hostname
       },
       target: {
         port: await this.resolveProxyPort(),
         protocol: "http://",
         host: "localhost",
-        path: this.clusterUrl.path
+        path: clusterUrl.path,
       },
     }
   }

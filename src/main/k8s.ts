@@ -1,4 +1,4 @@
-import k8s from "@kubernetes/client-node"
+import { KubeConfig, V1Node, V1Pod } from "@kubernetes/client-node"
 import os from "os"
 import yaml from "js-yaml"
 import logger from "./logger";
@@ -10,8 +10,8 @@ function resolveTilde(filePath: string) {
   return filePath;
 }
 
-export function loadConfig(kubeConfigPath?: string): k8s.KubeConfig {
-  const kc = new k8s.KubeConfig()
+export function loadConfig(kubeConfigPath?: string): KubeConfig {
+  const kc = new KubeConfig()
   if (kubeConfigPath) {
     kc.loadFromFile(resolveTilde(kubeConfigPath))
   } else {
@@ -27,38 +27,35 @@ export function loadConfig(kubeConfigPath?: string): k8s.KubeConfig {
  * - Context
  * @param config KubeConfig to check
  */
-export function validateConfig(config: k8s.KubeConfig | string): k8s.KubeConfig {
-  if(typeof config == "string") {
+export function validateConfig(config: KubeConfig | string): KubeConfig {
+  if (typeof config == "string") {
     config = loadConfig(config);
   }
 
   logger.debug(`validating kube config: ${JSON.stringify(config)}`)
-  if(!config.users || config.users.length == 0) {
+  if (!config.users || config.users.length == 0) {
     throw new Error("No users provided in config")
   }
-  if(!config.clusters || config.clusters.length == 0) {
+  if (!config.clusters || config.clusters.length == 0) {
     throw new Error("No clusters provided in config")
   }
-  if(!config.contexts || config.contexts.length == 0) {
+  if (!config.contexts || config.contexts.length == 0) {
     throw new Error("No contexts provided in config")
   }
 
   return config
 }
 
-
 /**
  * Breaks kube config into several configs. Each context as it own KubeConfig object
- *
- * @param configString yaml string of kube config
  */
-export function splitConfig(kubeConfig: k8s.KubeConfig): k8s.KubeConfig[] {
-  const configs: k8s.KubeConfig[] = []
-  if(!kubeConfig.contexts) {
+export function splitConfig(kubeConfig: KubeConfig): KubeConfig[] {
+  const configs: KubeConfig[] = []
+  if (!kubeConfig.contexts) {
     return configs;
   }
   kubeConfig.contexts.forEach(ctx => {
-    const kc = new k8s.KubeConfig();
+    const kc = new KubeConfig();
     kc.clusters = [kubeConfig.getCluster(ctx.cluster)].filter(n => n);
     kc.users = [kubeConfig.getUser(ctx.user)].filter(n => n)
     kc.contexts = [kubeConfig.getContextObject(ctx.name)].filter(n => n)
@@ -74,13 +71,13 @@ export function splitConfig(kubeConfig: k8s.KubeConfig): k8s.KubeConfig[] {
  *
  * @param configPath path to kube config yaml file
  */
-export function loadAndSplitConfig(configPath: string): k8s.KubeConfig[] {
-  const allConfigs = new k8s.KubeConfig();
+export function loadAndSplitConfig(configPath: string): KubeConfig[] {
+  const allConfigs = new KubeConfig();
   allConfigs.loadFromFile(configPath);
   return splitConfig(allConfigs);
 }
 
-export function dumpConfigYaml(kc: k8s.KubeConfig): string {
+export function dumpConfigYaml(kc: KubeConfig): string {
   const config = {
     apiVersion: "v1",
     kind: "Config",
@@ -128,10 +125,10 @@ export function dumpConfigYaml(kc: k8s.KubeConfig): string {
   console.log("dumping kc:", config);
 
   // skipInvalid: true makes dump ignore undefined values
-  return yaml.safeDump(config, {skipInvalid: true});
+  return yaml.safeDump(config, { skipInvalid: true });
 }
 
-export function podHasIssues(pod: k8s.V1Pod) {
+export function podHasIssues(pod: V1Pod) {
   // Logic adapted from dashboard
   const notReady = !!pod.status.conditions.find(condition => {
     return condition.type == "Ready" && condition.status !== "True"
@@ -146,7 +143,7 @@ export function podHasIssues(pod: k8s.V1Pod) {
 
 // Logic adapted from dashboard
 // see: https://github.com/kontena/kontena-k8s-dashboard/blob/7d8f9cb678cc817a22dd1886c5e79415b212b9bf/client/api/endpoints/nodes.api.ts#L147
-export function getNodeWarningConditions(node: k8s.V1Node) {
+export function getNodeWarningConditions(node: V1Node) {
   return node.status.conditions.filter(c =>
     c.status.toLowerCase() === "true" && c.type !== "Ready" && c.type !== "HostUpgrades"
   )
