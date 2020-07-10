@@ -12,7 +12,7 @@ function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster
       {
         'name': cluster.contextName,
         'cluster': {
-          'server': cluster.apiUrl.href,
+          'server': cluster.url,
           'certificate-authority-data': secret.data["ca.crt"]
         }
       }

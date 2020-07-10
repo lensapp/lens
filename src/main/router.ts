@@ -46,19 +46,18 @@ export class Router {
     this.addRoutes()
   }
 
-  public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse) {
-    const reqUrl = new URL(req.url, "http://localhost")
+  public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse): Promise<boolean> {
+    const reqUrl = new URL(req.url, "http://localhost");
     const path = reqUrl.pathname
     const method = req.method.toLowerCase()
-    const matchingRoute = this.router.route(method, path)
-
-    if (matchingRoute.isBoom !== true) { // route() returns error if route not found -> object.isBoom === true
+    const matchingRoute = this.router.route(method, path);
+    const routeExists = !matchingRoute.isBoom;
+    if (routeExists) {
       const request = await this.getRequest({ req, res, cluster, url: reqUrl, params: matchingRoute.params })
       await matchingRoute.route(request)
       return true
-    } else {
-      return false
     }
+    return false;
   }
 
   protected async getRequest(opts: { req: http.IncomingMessage; res: http.ServerResponse; cluster: Cluster; url: URL; params: RouteParams }) {

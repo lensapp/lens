@@ -6,7 +6,7 @@ import { app, dialog } from "electron"
 import { appName, appProto, isMac, staticDir, staticProto } from "../common/vars";
 import path from "path"
 import initMenu from "./menu"
-import { LensProxy, listen } from "./lens-proxy"
+import { LensProxy } from "./lens-proxy"
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
 import AppUpdater from "./app-updater"
@@ -46,9 +46,9 @@ async function main() {
   registerFileProtocol(staticProto, staticDir);
 
   // find free port
-  let port: number
+  let proxyPort: number
   try {
-    port = await getFreePort()
+    proxyPort = await getFreePort()
   } catch (error) {
     logger.error(error)
     await dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy")
@@ -63,20 +63,20 @@ async function main() {
   ]);
 
   // create cluster manager
-  clusterManager = new ClusterManager(port)
+  clusterManager = new ClusterManager(proxyPort);
 
   // run proxy
   try {
-    proxyServer = listen(port, clusterManager)
+    proxyServer = LensProxy.create(clusterManager);
   } catch (error) {
-    logger.error(`Could not start proxy (127.0.0:${port}): ${error.message}`)
-    await dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${port}): ${error.message || "unknown error"}`)
+    logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error.message}`)
+    await dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error.message || "unknown error"}`)
     app.quit();
   }
 
   // create window manager and open app
   windowManager = new WindowManager();
-  windowManager.showSplash();
+  // windowManager.showSplash();
 }
 
 // Events
@@ -88,12 +88,14 @@ app.on('window-all-closed', function () {
   if (!isMac) {
     app.quit();
   } else {
+    // todo: handle
     // windowManager.destroy();
     // clusterManager.stop()
   }
 })
 
 app.on("activate", () => {
+  // todo: handle
   logger.debug("app:activate");
 })
 

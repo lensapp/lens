@@ -15,7 +15,6 @@ export interface ClusterModel {
   id: ClusterId;
   contextName: string;
   kubeConfigPath: string;
-  port?: number;
   kubeConfig?: string;
   workspace?: string;
   preferences?: ClusterPreferences;
@@ -54,6 +53,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @computed get clustersList() {
     return Array.from(this.clusters.values());
+  }
+
+  @computed get inactiveClusters() {
+    return Array.from(this.clusters.values()).filter(cluster => !cluster.initialized);
   }
 
   getById(id: ClusterId): Cluster {
@@ -97,8 +100,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     clusters.forEach(clusterModel => {
       let cluster = currentClusters.get(clusterModel.id);
       if (cluster) {
-        Object.assign(cluster, clusterModel);
-        cluster.mergeModel(clusterModel);
+        cluster.updateModel(clusterModel);
       } else {
         cluster = new Cluster(clusterModel);
       }

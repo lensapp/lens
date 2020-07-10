@@ -2,10 +2,12 @@
 // https://www.electronjs.org/docs/api/ipc-main
 // https://www.electronjs.org/docs/api/ipc-renderer
 
-import { ipcMain, ipcRenderer } from "electron"
+import { ipcMain, ipcRenderer, webContents } from "electron"
 import logger from "../main/logger";
 
-export interface IpcOptions {
+export type IpcChannel = string;
+
+export interface IpcMessageOptions {
   timeout?: number;
 }
 
@@ -13,12 +15,16 @@ export interface IpcMessageHandler {
   (...args: any[]): any;
 }
 
-export async function invokeMessage(channel: string, ...args: any[]) {
+export function sendMessageToRenderer(channel: IpcChannel, ...args: any[]) {
+  webContents.getFocusedWebContents().send(channel, ...args);
+}
+
+export async function invokeMessage(channel: IpcChannel, ...args: any[]) {
   logger.debug(`[IPC]: invoke channel "${channel}"`, { args });
   return ipcRenderer.invoke(channel, ...args);
 }
 
-export function onMessage(channel: string, handler: IpcMessageHandler, options: IpcOptions = {}) {
+export function handleMessage(channel: IpcChannel, handler: IpcMessageHandler, options: IpcMessageOptions = {}) {
   const { timeout = 0 } = options;
   ipcMain.handle(channel, async (event, ...args: any[]) => {
     logger.debug(`[IPC]: handle "${channel}"`, { event, args });
@@ -41,8 +47,8 @@ export function onMessage(channel: string, handler: IpcMessageHandler, options: 
   })
 }
 
-export function onMessages(messages: Record<string, IpcMessageHandler>, options?: IpcOptions) {
+export function handleMessages(messages: Record<string, IpcMessageHandler>, options?: IpcMessageOptions) {
   Object.entries(messages).forEach(([channel, handler]) => {
-    onMessage(channel, handler, options);
+    handleMessage(channel, handler, options);
   })
 }

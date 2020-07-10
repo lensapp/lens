@@ -1,4 +1,5 @@
 import { KubeConfig, V1Node, V1Pod } from "@kubernetes/client-node"
+import path from "path"
 import os from "os"
 import yaml from "js-yaml"
 import logger from "./logger";
@@ -10,12 +11,12 @@ function resolveTilde(filePath: string) {
   return filePath;
 }
 
-export function loadConfig(kubeConfigPath?: string): KubeConfig {
-  const kc = new KubeConfig()
-  if (kubeConfigPath) {
-    kc.loadFromFile(resolveTilde(kubeConfigPath))
+export function loadKubeConfig(pathOrContent?: string): KubeConfig {
+  const kc = new KubeConfig();
+  if (path.isAbsolute(pathOrContent)) {
+    kc.loadFromFile(resolveTilde(pathOrContent));
   } else {
-    kc.loadFromDefault();
+    kc.loadFromString(pathOrContent);
   }
   return kc
 }
@@ -29,9 +30,8 @@ export function loadConfig(kubeConfigPath?: string): KubeConfig {
  */
 export function validateConfig(config: KubeConfig | string): KubeConfig {
   if (typeof config == "string") {
-    config = loadConfig(config);
+    config = loadKubeConfig(config);
   }
-
   logger.debug(`validating kube config: ${JSON.stringify(config)}`)
   if (!config.users || config.users.length == 0) {
     throw new Error("No users provided in config")

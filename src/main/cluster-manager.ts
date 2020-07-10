@@ -1,12 +1,12 @@
 import { app } from "electron"
-import { reaction } from "mobx";
+import { autorun } from "mobx";
 import path from "path"
 import http from "http"
 import { copyFile, ensureDir } from "fs-extra"
 import filenamify from "filenamify"
 import { apiPrefix, appProto } from "../common/vars";
 import { ClusterId, ClusterModel, clusterStore } from "../common/cluster-store"
-import { onMessages } from "../common/ipc-helpers";
+import { handleMessages } from "../common/ipc-helpers";
 import { ClusterIpcMessage } from "../common/ipc-messages";
 import { tracker } from "../common/tracker";
 import { validateConfig } from "./k8s";
@@ -25,20 +25,19 @@ export class ClusterManager {
     return path.join(app.getPath("userData"), "icons");
   }
 
-  constructor(protected port: number) {
-    // init clusters
-    reaction(() => clusterStore.clusters.toJS(), clusters => {
-      clusters.forEach(cluster => {
-        if (!cluster.initialized) {
-          cluster.init(this.port).then(() => cluster.refreshCluster());
-        }
-      })
+  constructor(public readonly proxyPort: number) {
+    // auto-init fresh clusters
+    autorun(() => {
+      clusterStore.inactiveClusters.forEach(cluster => {
+        cluster.init().then(() => cluster.refreshCluster());
+      });
     });
-    // destroy clusters
-    reaction(() => clusterStore.removedClusters.toJS(), removedClusters => {
+    // auto-stop removed clusters
+    autorun(() => {
+      const removedClusters = clusterStore.removedClusters;
       if (removedClusters.size > 0) {
-        removedClusters.forEach(cluster => cluster.stopServer());
-        clusterStore.removedClusters.clear();
+        removedClusters.forEach(cluster => cluster.stop());
+        removedClusters.clear();
       }
     });
     // listen ipc-events
@@ -47,7 +46,7 @@ export class ClusterManager {
 
   stop() {
     clusterStore.clusters.forEach((cluster: Cluster) => {
-      cluster.stopServer();
+      cluster.stop();
     })
   }
 
@@ -59,10 +58,7 @@ export class ClusterManager {
     tracker.event("cluster", "add");
     try {
       await validateConfig(clusterModel.kubeConfigPath);
-      return clusterStore.addCluster({
-        ...clusterModel,
-        port: this.port,
-      });
+      return clusterStore.addCluster(clusterModel);
     } catch (error) {
       logger.error(`[CLUSTER-MANAGER]: add cluster error ${JSON.stringify(error)}`)
       throw error;
@@ -71,7 +67,7 @@ export class ClusterManager {
 
   protected stopCluster(clusterId: ClusterId) {
     tracker.event("cluster", "stop");
-    this.getCluster(clusterId)?.stopServer();
+    this.getCluster(clusterId)?.stop();
   }
 
   protected removeAllByWorkspace(workspaceId: string) {
@@ -86,7 +82,7 @@ export class ClusterManager {
     tracker.event("cluster", "remove");
     const cluster = this.getCluster(clusterId);
     if (cluster) {
-      cluster.stopServer()
+      cluster.stop()
       clusterStore.removeById(cluster.id);
       return cluster;
     }
@@ -155,6 +151,10 @@ export class ClusterManager {
     return await this.getCluster(clusterId)?.getEventCount() || 0;
   }
 
+  protected async refreshCluster(clusterId: ClusterId) {
+    await this.getCluster(clusterId)?.refreshCluster();
+  }
+
   static ipcListen(clusterManager: ClusterManager) {
     const handlers = {
       [ClusterIpcMessage.CLUSTER_ADD]: clusterManager.addCluster,
@@ -162,6 +162,7 @@ export class ClusterManager {
       [ClusterIpcMessage.CLUSTER_REMOVE]: clusterManager.removeCluster,
       [ClusterIpcMessage.CLUSTER_REMOVE_WORKSPACE]: clusterManager.removeAllByWorkspace,
       [ClusterIpcMessage.CLUSTER_EVENTS]: clusterManager.getEventsCount,
+      [ClusterIpcMessage.CLUSTER_REFRESH]: clusterManager.refreshCluster,
       [ClusterIpcMessage.FEATURE_INSTALL]: clusterManager.installFeature,
       [ClusterIpcMessage.FEATURE_UPGRADE]: clusterManager.upgradeFeature,
       [ClusterIpcMessage.FEATURE_REMOVE]: clusterManager.uninstallFeature,
@@ -171,8 +172,8 @@ export class ClusterManager {
     Object.entries(handlers).forEach(([key, handler]) => {
       handlers[key as keyof typeof handlers] = handler.bind(clusterManager);
     })
-    onMessages(handlers, {
-      timeout: 2000,
+    handleMessages(handlers, {
+      timeout: 2000
     })
   }
 }

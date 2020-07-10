@@ -1,8 +1,7 @@
 import url, { UrlWithStringQuery } from "url"
 import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { FeatureStatusMap } from "./feature"
-import { computed, observable, toJS } from "mobx";
-import { apiPrefix } from "../common/vars";
+import { action, observable, toJS } from "mobx";
 import { ContextHandler } from "./context-handler"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import { Kubectl } from "./kubectl";
@@ -20,7 +19,6 @@ enum ClusterStatus {
 
 export interface ClusterState extends ClusterModel {
   url: string;
-  apiUrl: string;
   online?: boolean;
   accessible?: boolean;
   failureReason?: string;
@@ -40,10 +38,14 @@ export class Cluster implements ClusterModel {
   @observable initialized = false;
   @observable id: ClusterId;
   @observable workspace: string;
+  @observable kubeConfig?: string;
   @observable kubeConfigPath: string;
   @observable contextName: string;
-  @observable url: string;
   @observable port: number;
+  @observable url: string;
+  @observable apiUrl: UrlWithStringQuery; // same as url, but parsed
+  @observable kubeAuthProxyUrl: string;
+  @observable webContentUrl: string;
   @observable online: boolean;
   @observable accessible: boolean;
   @observable failureReason: string;
@@ -56,43 +58,50 @@ export class Cluster implements ClusterModel {
   @observable features: FeatureStatusMap = {};
 
   constructor(model: ClusterModel) {
-    this.mergeModel(model);
+    this.updateModel(model);
   }
 
-  mergeModel(model: ClusterModel) {
-    Object.assign(this, model)
+  updateModel(model: ClusterModel) {
+    Object.assign(this, model);
   }
 
-  // todo: use only api proxy url?
-  @computed get apiUrl(): UrlWithStringQuery {
-    return url.parse(`http://${this.id}.localhost:${this.port}`);
-  }
-
-  @computed get apiProxyUrl(): string {
-    return `http://127.0.0.1:${this.port}${apiPrefix.KUBE_BASE}`;
-  }
-
-  async init(port: number) {
+  @action
+  async init() {
     try {
-      this.port = port;
       this.contextHandler = new ContextHandler(this);
-      const proxyPort = await this.contextHandler.resolveProxyPort();
-      this.kubeconfigManager = new KubeconfigManager(this, proxyPort);
-      this.url = this.contextHandler.url;
-      // this.apiUrl = kubeConfig.getCurrentCluster().server;
+      this.contextName = this.contextHandler.contextName;
+      this.port = await this.contextHandler.resolveProxyPort(); // resolve port before KubeconfigManager
+      this.webContentUrl = `http://${this.id}.localhost:${this.port}`;
+      this.kubeAuthProxyUrl = `http://127.0.0.1:${this.port}`;
+      this.kubeconfigManager = new KubeconfigManager(this);
+      this.url = this.kubeconfigManager.getCurrentClusterServer();
+      this.apiUrl = url.parse(this.url);
+      logger.info(`[CLUSTER]: INIT`, {
+        id: this.id,
+        port: this.port,
+        url: this.url,
+        webContentUrl: this.webContentUrl,
+        kubeAuthProxyUrl: this.kubeAuthProxyUrl,
+      });
       this.initialized = true;
-      logger.debug(`[CLUSTER]: init done (id="${this.id}", context="${this.contextName}")`);
     } catch (err) {
-      logger.error(`[CLUSTER]: init failed (id="${this.id}")`, {
-        contextName: this.contextName,
-        error: err
+      logger.error(`[CLUSTER]: INIT FAILED`, {
+        id: this.id,
+        error: err.stack,
       });
     }
   }
 
-  // todo: auto-refresh when preferences changed?
+  stop() {
+    if (!this.initialized) return;
+    this.contextHandler.stopServer();
+    this.kubeconfigManager.unlink();
+  }
+
+  // todo: auto-refresh when preferences changed + by timer?
+  @action
   async refreshCluster() {
-    this.contextHandler.setClusterPreferences(this.preferences)
+    this.contextHandler.setClusterPreferences(this.preferences);
 
     const connectionStatus = await this.getConnectionStatus()
     this.accessible = connectionStatus == ClusterStatus.AccessGranted;
@@ -143,12 +152,12 @@ export class Cluster implements ClusterModel {
   }
 
   k8sRequest(path: string, options: RequestPromiseOptions = {}) {
-    return request(this.apiProxyUrl + path, {
+    return request(this.kubeAuthProxyUrl + path, {
       json: true,
       timeout: 10000,
       headers: {
         ...(options.headers || {}),
-        host: this.apiUrl.host,
+        host: `${this.id}.localhost:${this.port}`,
       }
     })
   }
@@ -160,7 +169,7 @@ export class Cluster implements ClusterModel {
       this.failureReason = null
       return ClusterStatus.AccessGranted;
     } catch (error) {
-      logger.error(`Failed to connect to cluster ${this.contextName}: ${JSON.stringify(error)}`)
+      logger.error(`Failed to connect cluster "${this.contextName}": ${error.stack}`)
       if (error.statusCode) {
         if (error.statusCode >= 400 && error.statusCode < 500) {
           this.failureReason = "Invalid credentials";
@@ -207,13 +216,12 @@ export class Cluster implements ClusterModel {
   }
 
   protected detectKubernetesDistribution(kubernetesVersion: string): string {
-    const { apiUrl, contextName } = this
     if (kubernetesVersion.includes("gke")) return "gke"
     if (kubernetesVersion.includes("eks")) return "eks"
     if (kubernetesVersion.includes("IKS")) return "iks"
-    if (apiUrl.href.endsWith("azmk8s.io")) return "aks"
-    if (apiUrl.href.endsWith("k8s.ondigitalocean.com")) return "digitalocean"
-    if (contextName.startsWith("minikube")) return "minikube"
+    if (this.url.endsWith("azmk8s.io")) return "aks"
+    if (this.url.endsWith("k8s.ondigitalocean.com")) return "digitalocean"
+    if (this.contextName.startsWith("minikube")) return "minikube"
     if (kubernetesVersion.includes("+")) return "custom"
     return "vanilla"
   }
@@ -281,7 +289,6 @@ export class Cluster implements ClusterModel {
     return toJS({
       ...storeModel,
       url: this.url,
-      apiUrl: this.apiUrl.href,
       online: this.online,
       accessible: this.accessible,
       failureReason: this.failureReason,

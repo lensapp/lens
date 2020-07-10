@@ -42,30 +42,33 @@ export class WindowManager {
     this.splashWindow.hide();
   }
 
+  getView(clusterId: ClusterId) {
+    return this.views.get(clusterId);
+  }
+
   async activateView(clusterId: ClusterId) {
     const cluster = clusterStore.getById(clusterId);
     if (!cluster) {
       throw new Error(`Can't load lens for non-existing cluster="${clusterId}"`);
     }
-    const currentView = this.activeView;
-    const view = this.getView(clusterId);
-    if (view !== currentView) {
-      this.activeView = view;
-      const url = cluster.apiUrl.href;
-      const isLoaded = url === view.webContents.getURL();
-      if (!isLoaded) {
-        await view.loadURL(url);
+    const activeView = this.activeView;
+    const isFresh = !this.getView(clusterId);
+    const view = this.initView(clusterId);
+    if (view !== activeView) {
+      if (isFresh) {
+        await view.loadURL(cluster.webContentUrl);
       }
-      if (currentView) {
-        view.setBounds(currentView.getBounds()); // refresh position for "invisible swap"
-        currentView.hide();
+      if (activeView) {
+        view.setBounds(activeView.getBounds()); // refresh position for "invisible swap"
+        activeView.hide();
       }
       view.show();
+      this.activeView = view;
     }
   }
 
-  protected getView(clusterId: ClusterId) {
-    let view = this.views.get(clusterId);
+  protected initView(clusterId: ClusterId) {
+    let view = this.getView(clusterId);
     if (!view) {
       view = new BrowserWindow({
         show: false,

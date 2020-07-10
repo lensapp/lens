@@ -3,19 +3,30 @@ import { app } from "electron"
 import fs from "fs"
 import { KubeConfig } from "@kubernetes/client-node"
 import { ensureDir, randomFileName } from "./file-helpers"
-import { dumpConfigYaml } from "./k8s"
+import { dumpConfigYaml, loadKubeConfig } from "./k8s"
 import logger from "./logger"
 
 export class KubeconfigManager {
+  public config: KubeConfig;
   protected configDir = app.getPath("temp")
   protected tempFile: string
 
-  constructor(protected cluster: Cluster, protected proxyPort: number) {
-    this.tempFile = this.createTemporaryKubeconfig()
+  constructor(protected cluster: Cluster) {
+    this.tempFile = this.createTemporaryKubeconfig();
   }
 
-  public getPath() {
-    return this.tempFile
+  getPath() {
+    return this.tempFile;
+  }
+
+  getCurrentClusterServer() {
+    return this.config.getCurrentCluster().server;
+  }
+
+  protected loadConfig() {
+    const { kubeConfigPath, kubeConfig } = this.cluster;
+    this.config = loadKubeConfig(kubeConfigPath || kubeConfig);
+    return this.config;
   }
 
   /**
@@ -24,14 +35,13 @@ export class KubeconfigManager {
    */
   protected createTemporaryKubeconfig(): string {
     ensureDir(this.configDir);
-    const path = `${this.configDir}/${randomFileName("kubeconfig")}`
-    const { contextName, kubeConfigPath } = this.cluster;
-    const kubeConfig = new KubeConfig()
-    kubeConfig.loadFromFile(kubeConfigPath)
+    const path = `${this.configDir}/${randomFileName("kubeconfig")}`;
+    const { contextName, kubeAuthProxyUrl } = this.cluster;
+    const kubeConfig = this.loadConfig();
     kubeConfig.clusters = [
       {
         name: contextName,
-        server: `http://127.0.0.1:${this.proxyPort}`,
+        server: kubeAuthProxyUrl,
         skipTLSVerify: true,
       }
     ];
@@ -41,17 +51,17 @@ export class KubeconfigManager {
     kubeConfig.currentContext = contextName;
     kubeConfig.contexts = [
       {
+        user: "proxy",
         name: contextName,
         cluster: contextName,
-        namespace: kubeConfig.getContextObject(contextName).namespace,
-        user: "proxy"
       }
     ];
     fs.writeFileSync(path, dumpConfigYaml(kubeConfig));
-    return path
+    logger.info(`Created temp kube-config file at "${path}"`);
+    return path;
   }
 
-  public unlink() {
+  unlink() {
     logger.debug('Deleting temporary kubeconfig: ' + this.tempFile)
     fs.unlinkSync(this.tempFile)
   }

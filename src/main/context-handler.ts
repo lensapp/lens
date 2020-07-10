@@ -23,20 +23,17 @@ export class ContextHandler {
   protected clientKey: string
   protected prometheusProvider: string
   protected prometheusPath: string
-  protected clusterName: string
 
   constructor(protected cluster: Cluster) {
     this.id = cluster.id
-    this.url = cluster.apiUrl.href;
-    this.contextName = cluster.contextName;
+    this.url = cluster.url;
+    this.contextName = cluster.contextName || cluster.preferences.clusterName;
     this.setClusterPreferences(cluster.preferences)
   }
 
   public setClusterPreferences(preferences: ClusterPreferences = {}) {
-    this.clusterName = preferences.clusterName || this.contextName;
     this.prometheusProvider = preferences.prometheusProvider?.type;
     this.prometheusPath = null;
-
     if (preferences.prometheus) {
       const { namespace, service, port } = preferences.prometheus
       this.prometheusPath = `${namespace}/services/${service}:${port}`
@@ -93,18 +90,17 @@ export class ContextHandler {
   }
 
   protected async newApiTarget(timeout: number): Promise<ServerOptions> {
-    const clusterUrl = this.cluster.apiUrl;
     return {
       changeOrigin: true,
       timeout: timeout,
       headers: {
-        "Host": clusterUrl.hostname
+        "Host": this.cluster.apiUrl.hostname
       },
       target: {
         port: await this.resolveProxyPort(),
         protocol: "http://",
         host: "localhost",
-        path: clusterUrl.path,
+        path: this.cluster.apiUrl.path,
       },
     }
   }

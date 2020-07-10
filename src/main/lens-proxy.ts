@@ -11,23 +11,31 @@ import { apiPrefix } from "../common/vars";
 import logger from "./logger"
 
 export class LensProxy {
+  protected clusterManager: ClusterManager
   protected proxyServer: http.Server
   protected router: Router
   protected closed = false
   protected retryCounters = new Map<string, number>()
 
-  constructor(public port: number, protected clusterManager: ClusterManager) {
+  static create(clusterManager: ClusterManager) {
+    return new LensProxy(clusterManager).listen();
+  }
+
+  private constructor(clusterManager: ClusterManager) {
+    this.clusterManager = clusterManager;
     this.router = new Router();
   }
 
-  public run() {
+  listen(): this {
     const proxyServer = this.buildProxyServer();
-    proxyServer.listen(this.port, "127.0.0.1")
-    this.proxyServer = proxyServer
+    const { proxyPort } = this.clusterManager;
+    this.proxyServer = proxyServer.listen(proxyPort, "127.0.0.1");
+    logger.info(`Lens proxy server started at ${proxyPort}`);
+    return this;
   }
 
-  public close() {
-    logger.info(`Closing proxy server at port ${this.port}`);
+  close() {
+    logger.info("Closing proxy server");
     this.proxyServer.close()
     this.closed = true
   }
@@ -41,7 +49,7 @@ export class LensProxy {
       this.handleWsUpgrade(req, socket, head)
     });
     proxyServer.on("error", (err) => {
-      logger.error(err)
+      logger.error("proxy error", err)
     });
     return proxyServer;
   }
@@ -138,7 +146,7 @@ export class LensProxy {
     if (proxyTarget) {
       proxy.web(req, res, proxyTarget)
     } else {
-      this.router.route(cluster, req, res)
+      this.router.route(cluster, req, res); // todo: handle not-found route when isBoom==true?
     }
   }
 
@@ -148,10 +156,4 @@ export class LensProxy {
       wsServer.emit("connection", con, req);
     });
   }
-}
-
-export function listen(port: number, clusterManager: ClusterManager) {
-  const proxyServer = new LensProxy(port, clusterManager)
-  proxyServer.run();
-  return proxyServer;
 }
