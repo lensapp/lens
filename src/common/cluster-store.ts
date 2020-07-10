@@ -55,10 +55,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return Array.from(this.clusters.values());
   }
 
-  @computed get inactiveClusters() {
-    return Array.from(this.clusters.values()).filter(cluster => !cluster.initialized);
-  }
-
   getById(id: ClusterId): Cluster {
     return this.clusters.get(id);
   }

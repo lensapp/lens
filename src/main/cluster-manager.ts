@@ -26,9 +26,10 @@ export class ClusterManager {
   }
 
   constructor(public readonly proxyPort: number) {
-    // auto-init fresh clusters
+    // auto-init clusters
     autorun(() => {
-      clusterStore.inactiveClusters.forEach(cluster => {
+      const freshClusters = clusterStore.clustersList.filter(cluster => !cluster.initialized);
+      freshClusters.forEach(cluster => {
         cluster.init().then(() => cluster.refreshCluster());
       });
     });

@@ -42,7 +42,7 @@ export class Cluster implements ClusterModel {
   @observable kubeConfigPath: string;
   @observable contextName: string;
   @observable port: number;
-  @observable url: string;
+  @observable url: string; // cluster-api url
   @observable apiUrl: UrlWithStringQuery; // same as url, but parsed
   @observable kubeAuthProxyUrl: string;
   @observable webContentUrl: string;
@@ -66,6 +66,7 @@ export class Cluster implements ClusterModel {
   }
 
   @action
+  // fixme: completely broken
   async init() {
     try {
       this.contextHandler = new ContextHandler(this);
@@ -76,7 +77,7 @@ export class Cluster implements ClusterModel {
       this.kubeconfigManager = new KubeconfigManager(this);
       this.url = this.kubeconfigManager.getCurrentClusterServer();
       this.apiUrl = url.parse(this.url);
-      logger.info(`[CLUSTER]: INIT`, {
+      logger.info(`[CLUSTER]: init success`, {
         id: this.id,
         port: this.port,
         url: this.url,
@@ -85,7 +86,7 @@ export class Cluster implements ClusterModel {
       });
       this.initialized = true;
     } catch (err) {
-      logger.error(`[CLUSTER]: INIT FAILED`, {
+      logger.error(`[CLUSTER]: init error`, {
         id: this.id,
         error: err.stack,
       });
@@ -126,10 +127,6 @@ export class Cluster implements ClusterModel {
     const kc = new KubeConfig()
     kc.loadFromFile(this.proxyKubeconfigPath())
     return kc
-  }
-
-  stopServer() {
-    this.contextHandler.stopServer()
   }
 
   async installFeature(name: string, config: any) {

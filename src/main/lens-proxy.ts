@@ -29,8 +29,8 @@ export class LensProxy {
   listen(): this {
     const proxyServer = this.buildProxyServer();
     const { proxyPort } = this.clusterManager;
-    this.proxyServer = proxyServer.listen(proxyPort, "127.0.0.1");
-    logger.info(`Lens proxy server started at ${proxyPort}`);
+    this.proxyServer = proxyServer.listen(proxyPort);
+    logger.info(`LensProxy server has started http://localhost:${proxyPort}`);
     return this;
   }
 

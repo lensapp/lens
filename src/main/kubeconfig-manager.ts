@@ -1,8 +1,8 @@
 import type { Cluster } from "./cluster"
 import { app } from "electron"
-import fs from "fs"
+import fs from "fs-extra"
 import { KubeConfig } from "@kubernetes/client-node"
-import { ensureDir, randomFileName } from "./file-helpers"
+import { randomFileName } from "../common/utils"
 import { dumpConfigYaml, loadKubeConfig } from "./k8s"
 import logger from "./logger"
 
@@ -34,7 +34,7 @@ export class KubeconfigManager {
    * This way any user of the config does not need to know anything about the auth etc. details.
    */
   protected createTemporaryKubeconfig(): string {
-    ensureDir(this.configDir);
+    fs.ensureDir(this.configDir);
     const path = `${this.configDir}/${randomFileName("kubeconfig")}`;
     const { contextName, kubeAuthProxyUrl } = this.cluster;
     const kubeConfig = this.loadConfig();
@@ -57,7 +57,7 @@ export class KubeconfigManager {
       }
     ];
     fs.writeFileSync(path, dumpConfigYaml(kubeConfig));
-    logger.info(`Created temp kube-config file at "${path}"`);
+    logger.info(`Created temp kube-config file for context "${this.cluster.contextName}" at "${path}"`);
     return path;
   }
 
