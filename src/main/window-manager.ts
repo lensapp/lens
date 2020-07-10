@@ -4,15 +4,12 @@ import windowStateKeeper from "electron-window-state"
 import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 
-// todo: smooth switching btw clusters (e.g. wait ready-state before switching window)
-// todo: devtools + manage main-window size btw views
-
 export class WindowManager {
   protected activeView: BrowserWindow;
   protected views = new Map<ClusterId, BrowserWindow>();
 
   protected disposers = [
-    // auto-destroy view when cluster removed
+    // auto-destroy views for removed clusters
     reaction(() => clusterStore.removedClusters.toJS(), removedClusters => {
       removedClusters.forEach(cluster => {
         this.destroyView(cluster.id);
@@ -45,22 +42,23 @@ export class WindowManager {
     this.splashWindow.hide();
   }
 
-  async showView(clusterId: ClusterId) {
+  async activateView(clusterId: ClusterId) {
     const cluster = clusterStore.getById(clusterId);
     if (!cluster) {
       throw new Error(`Can't load lens for non-existing cluster="${clusterId}"`);
     }
-    const activeView = this.activeView;
+    const currentView = this.activeView;
     const view = this.getView(clusterId);
-    if (view !== activeView) {
+    if (view !== currentView) {
       this.activeView = view;
-      if (activeView) {
-        view.setBounds(activeView.getBounds()); // update position from previous window
-      }
       const url = cluster.apiUrl.href;
       const isLoaded = url === view.webContents.getURL();
       if (!isLoaded) {
         await view.loadURL(url);
+      }
+      if (currentView) {
+        view.setBounds(currentView.getBounds()); // refresh position for "invisible swap"
+        currentView.hide();
       }
       view.show();
     }
@@ -75,10 +73,8 @@ export class WindowManager {
         y: this.windowState.y,
         width: this.windowState.width,
         height: this.windowState.height,
-        backgroundColor: "#1e2124",
         titleBarStyle: "hidden",
         webPreferences: {
-          // partition: "lens-app", // todo: reuse session?
           nodeIntegration: true,
         },
       });
