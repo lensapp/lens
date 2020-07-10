@@ -1,14 +1,13 @@
-import type { Cluster } from "../../../main/cluster";
-
 import "./clusters-menu.scss"
 import { remote } from "electron"
 import React from "react";
 import { observer } from "mobx-react";
 import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
+import type { Cluster } from "../../../main/cluster";
 import { userStore } from "../../../common/user-store";
 import { clusterStore } from "../../../common/cluster-store";
-import { WorkspaceId } from "../../../common/workspace-store";
+import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../+cluster-settings/cluster-icon";
 import { Icon } from "../icon";
 import { cssNames, IClassName } from "../../utils";
@@ -19,7 +18,6 @@ import { Badge } from "../badge";
 
 interface Props {
   className?: IClassName;
-  workspaceId?: WorkspaceId;
 }
 
 @observer
@@ -54,9 +52,10 @@ export class ClustersMenu extends React.Component<Props> {
   }
 
   render() {
-    const { workspaceId, className } = this.props;
-    const clusters = clusterStore.getByWorkspaceId(workspaceId);
+    const { className } = this.props;
     const { newContexts } = userStore;
+    const { currentWorkspace } = workspaceStore;
+    const clusters = clusterStore.getByWorkspaceId(currentWorkspace);
     return (
       <div className={cssNames("ClustersMenu flex gaps column", className)}>
         {clusters.map(cluster => {

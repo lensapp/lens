@@ -111,12 +111,7 @@ export class ContextHandler {
 
   async resolveProxyPort(): Promise<number> {
     if (!this.proxyPort) {
-      try {
-        this.proxyPort = await getFreePort()
-      } catch (error) {
-        logger.error(error)
-        throw(error)
-      }
+      this.proxyPort = await getFreePort()
     }
     return this.proxyPort
   }
@@ -133,7 +128,7 @@ export class ContextHandler {
     if (!this.proxyServer) {
       const proxyPort = await this.resolveProxyPort()
       const proxyEnv = Object.assign({}, process.env)
-      if (this.cluster?.preferences.httpsProxy) {
+      if (this.cluster.preferences.httpsProxy) {
         proxyEnv.HTTPS_PROXY = this.cluster.preferences.httpsProxy
       }
       this.proxyServer = new KubeAuthProxy(this.cluster, proxyPort, proxyEnv)

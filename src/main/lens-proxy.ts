@@ -4,27 +4,20 @@ import { Socket } from "net";
 import * as url from "url";
 import * as WebSocket from "ws"
 import { ContextHandler } from "./context-handler";
-import logger from "./logger"
 import * as shell from "./node-shell-session"
 import { ClusterManager } from "./cluster-manager"
 import { Router } from "./router"
 import { apiPrefix } from "../common/vars";
+import logger from "./logger"
 
 export class LensProxy {
-  public static readonly localShellSessions = true
-
-  public port: number;
-  protected clusterUrl: url.UrlWithStringQuery
-  protected clusterManager: ClusterManager
-  protected retryCounters: Map<string, number> = new Map()
-  protected router: Router
   protected proxyServer: http.Server
+  protected router: Router
   protected closed = false
+  protected retryCounters = new Map<string, number>()
 
-  constructor(port: number, clusterManager: ClusterManager) {
-    this.port = port
-    this.clusterManager = clusterManager
-    this.router = new Router()
+  constructor(public port: number, protected clusterManager: ClusterManager) {
+    this.router = new Router();
   }
 
   public run() {
@@ -34,7 +27,7 @@ export class LensProxy {
   }
 
   public close() {
-    logger.info("Closing proxy server")
+    logger.info(`Closing proxy server at port ${this.port}`);
     this.proxyServer.close()
     this.closed = true
   }
@@ -77,9 +70,7 @@ export class LensProxy {
       }
     })
     proxy.on("error", (error, req, res, target) => {
-      if(this.closed) {
-        return
-      }
+      if (this.closed) return;
       if (target) {
         logger.debug("Failed proxy to target: " + JSON.stringify(target))
         if (req.method === "GET" && (!res.statusCode || res.statusCode >= 500)) {
@@ -142,14 +133,13 @@ export class LensProxy {
       return
     }
     const contextHandler = cluster.contextHandler
-    contextHandler.ensureServer().then(async () => {
-      const proxyTarget = await this.getProxyTarget(req, contextHandler)
-      if (proxyTarget) {
-        proxy.web(req, res, proxyTarget)
-      } else {
-        this.router.route(cluster, req, res)
-      }
-    })
+    await contextHandler.ensureServer();
+    const proxyTarget = await this.getProxyTarget(req, contextHandler)
+    if (proxyTarget) {
+      proxy.web(req, res, proxyTarget)
+    } else {
+      this.router.route(cluster, req, res)
+    }
   }
 
   protected async handleWsUpgrade(req: http.IncomingMessage, socket: Socket, head: Buffer) {

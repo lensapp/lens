@@ -21,6 +21,7 @@ export interface MenuProps {
   isOpen?: boolean;
   open(): void;
   close(): void;
+  id?: string;
   className?: string;
   htmlFor?: string;
   autoFocus?: boolean;

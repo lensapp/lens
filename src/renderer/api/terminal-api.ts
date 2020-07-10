@@ -3,7 +3,7 @@ import { autobind, base64, EventEmitter, interval } from "../utils";
 import { WebSocketApi } from "./websocket-api";
 import { configStore } from "../config.store";
 import isEqual from "lodash/isEqual"
-import { apiPrefix, isDevelopment } from "../../common/vars";
+import { isDevelopment } from "../../common/vars";
 
 export enum TerminalChannels {
   STDIN = 0,

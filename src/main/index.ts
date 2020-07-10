@@ -6,7 +6,7 @@ import { app, dialog } from "electron"
 import { appName, appProto, isMac, staticDir, staticProto } from "../common/vars";
 import path from "path"
 import initMenu from "./menu"
-import { LensProxy, listen } from "./proxy"
+import { LensProxy, listen } from "./lens-proxy"
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
 import AppUpdater from "./app-updater"

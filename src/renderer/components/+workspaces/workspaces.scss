@@ -1,33 +1,3 @@
 .Workspaces {
-  display: grid;
-  grid-template-areas: "draggable draggable" "menu lens-view" "bottom-bar bottom-bar";
-  grid-template-rows: auto 1fr min-content;
-  grid-template-columns: min-content 1fr;
-  height: 100%;
 
-  .draggable-top {
-    @include set-draggable;
-    grid-area: draggable;
-    height: 25px;
-  }
-
-  #lens-view {
-    grid-area: lens-view;
-  }
-
-  .ClusterMenu {
-    grid-area: menu;
-  }
-
-  .WorkspacesBottomBar {
-    grid-area: bottom-bar;
-  }
-}
-
-.WorkspacesMenu {
-  border-radius: $radius;
-
-  .workspaces-title {
-    padding: $padding;
-  }
 }

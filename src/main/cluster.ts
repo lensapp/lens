@@ -78,8 +78,7 @@ export class Cluster implements ClusterModel {
       this.contextHandler = new ContextHandler(this);
       const proxyPort = await this.contextHandler.resolveProxyPort();
       this.kubeconfigManager = new KubeconfigManager(this, proxyPort);
-      this.url = this.contextHandler.url
-      // todo: verify api url
+      this.url = this.contextHandler.url;
       // this.apiUrl = kubeConfig.getCurrentCluster().server;
       this.initialized = true;
       logger.debug(`[CLUSTER]: init done (id="${this.id}", context="${this.contextName}")`);

@@ -13,26 +13,26 @@ import { workspaceStore } from "../../../common/workspace-store";
 // todo: remove dummy actions + console.log
 
 @observer
-export class WorkspacesBottomBar extends React.Component {
+export class BottomBar extends React.Component {
   @observable menuVisible = false;
 
   render() {
     const { currentWorkspace, workspacesList } = workspaceStore;
     return (
-      <div className="WorkspacesBottomBar flex gaps">
+      <div className="BottomBar flex gaps">
         <div id="workspace" className="workspace flex align-center box right">
           <Icon small material="layers"/> {currentWorkspace}
         </div>
         <Menu
           usePortal
           htmlFor="workspace"
-          className="WorkspacesMenu"
+          id="workspace-menu"
           isOpen={this.menuVisible}
           open={() => this.menuVisible = true}
           close={() => this.menuVisible = false}
         >
           <Link
-            to="/workspaces"
+            to="#"
             className="workspaces-title"
             onClick={prevDefault(() => console.log('/navigate: workspaces page'))}>
             <Trans>Workspaces</Trans>
