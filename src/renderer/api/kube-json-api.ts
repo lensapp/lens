@@ -31,13 +31,6 @@ export interface KubeJsonApiData extends JsonApiData {
   };
 }
 
-export interface IKubeObjectRef {
-  kind: string;
-  apiVersion: string;
-  name: string;
-  namespace?: string;
-}
-
 export interface KubeJsonApiError extends JsonApiError {
   code: number;
   status: string;
@@ -47,14 +40,6 @@ export interface KubeJsonApiError extends JsonApiError {
     name: string;
     kind: string;
   };
-}
-
-export interface IKubeJsonApiQuery {
-  watch?: any;
-  resourceVersion?: string;
-  timeoutSeconds?: number;
-  limit?: number; // doesn't work with ?watch
-  continue?: string; // might be used with ?limit from second request
 }
 
 export class KubeJsonApi extends JsonApi<KubeJsonApiData> {

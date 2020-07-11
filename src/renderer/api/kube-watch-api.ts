@@ -29,7 +29,6 @@ export interface IKubeWatchRouteQuery {
 export class KubeWatchApi {
   protected evtSource: EventSource;
   protected onData = new EventEmitter<[IKubeWatchEvent]>();
-  protected apiUrl = apiPrefix.BASE + "/watch";
   protected subscribers = observable.map<KubeApi, number>();
   protected reconnectTimeoutMs = 5000;
   protected maxReconnectsOnError = 10;
@@ -79,7 +78,7 @@ export class KubeWatchApi {
       return;
     }
     const query = this.getQuery();
-    const apiUrl = this.apiUrl + "?" + stringify(query);
+    const apiUrl = `${apiPrefix}/watch?` + stringify(query);
     this.evtSource = new EventSource(apiUrl);
     this.evtSource.onmessage = this.onMessage;
     this.evtSource.onerror = this.onError;

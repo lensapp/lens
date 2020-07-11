@@ -1,7 +1,7 @@
 import jsYaml from "js-yaml"
 import { KubeObject } from "../kube-object";
 import { KubeJsonApiData } from "../kube-json-api";
-import { apiResourceApplier } from "../index";
+import { apiBase } from "../index";
 import { apiManager } from "../api-manager";
 
 export const resourceApplierApi = {
@@ -13,7 +13,7 @@ export const resourceApplierApi = {
     if (typeof resource === "string") {
       resource = jsYaml.safeLoad(resource);
     }
-    return apiResourceApplier
+    return apiBase
       .post<KubeJsonApiData[]>("/stack", { data: resource })
       .then(data => {
         const items = data.map(obj => {

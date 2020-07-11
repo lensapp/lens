@@ -18,7 +18,7 @@ export interface ClusterModel {
   kubeConfigPath: string;
 
   /** @deprecated */
-  kubeConfig?: string; // kube-config yaml
+  kubeConfig?: string; // yaml
 }
 
 export interface ClusterPreferences {
@@ -48,7 +48,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
   }
 
-  @observable activeCluster: ClusterId; // todo: use active "context" from kube-config?
+  @observable activeCluster: ClusterId; // todo: current-context from kube-config?
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 

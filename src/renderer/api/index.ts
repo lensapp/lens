@@ -1,25 +1,15 @@
 import { JsonApi, JsonApiErrorParsed } from "./json-api";
 import { KubeJsonApi } from "./kube-json-api";
 import { Notifications } from "../components/notifications";
-import { apiPrefix, isDevelopment } from "../../common/vars";
-
-//-- JSON HTTP APIS
+import { apiKubePrefix, apiPrefix, isDevelopment } from "../../common/vars";
 
 export const apiBase = new JsonApi({
   debug: isDevelopment,
-  apiPrefix: apiPrefix.BASE,
+  apiPrefix: apiPrefix,
 });
 export const apiKube = new KubeJsonApi({
   debug: isDevelopment,
-  apiPrefix: apiPrefix.KUBE_BASE,
-});
-export const apiHelm = new KubeJsonApi({
-  debug: isDevelopment,
-  apiPrefix: apiPrefix.KUBE_HELM,
-});
-export const apiResourceApplier = new KubeJsonApi({
-  debug: isDevelopment,
-  apiPrefix: apiPrefix.KUBE_RESOURCE_APPLIER,
+  apiPrefix: apiKubePrefix,
 });
 
 // Common handler for HTTP api errors
@@ -34,5 +24,3 @@ function onApiError(error: JsonApiErrorParsed, res: Response) {
 
 apiBase.onError.addListener(onApiError);
 apiKube.onError.addListener(onApiError);
-apiHelm.onError.addListener(onApiError);
-apiResourceApplier.onError.addListener(onApiError);

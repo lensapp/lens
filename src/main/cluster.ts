@@ -37,8 +37,8 @@ export class Cluster implements ClusterModel {
   protected kubeconfigManager: KubeconfigManager;
 
   @observable initialized = false;
-  @observable workspace: string;
   @observable contextName: string;
+  @observable workspace: string;
   @observable kubeConfigPath: string;
   @observable port: number;
   @observable url: string; // cluster-api url
@@ -70,14 +70,15 @@ export class Cluster implements ClusterModel {
   @action
   async init() {
     try {
-      // fixme: all broken
+      // fixme
       this.contextHandler = new ContextHandler(this);
-      this.port = await this.contextHandler.resolveProxyPort(); // resolve port before KubeconfigManager
-      this.webContentUrl = `http://${this.id}.localhost:${this.port}`;
+      this.port = await this.contextHandler.ensurePort(); // resolve port before KubeconfigManager
       this.kubeAuthProxyUrl = `http://127.0.0.1:${this.port}`;
       this.kubeconfigManager = new KubeconfigManager(this);
+
       // this.url = this.kubeconfigManager.getCurrentClusterServer();
       // this.apiUrl = url.parse(this.url);
+      this.webContentUrl = `http://${this.id}.localhost:${this.port}`;
 
       logger.info(`[CLUSTER]: init success`, {
         id: this.id,

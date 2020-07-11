@@ -2,55 +2,41 @@ import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import requestPromise from "request-promise-native"
 import { PrometheusClusterQuery, PrometheusIngressQuery, PrometheusNodeQuery, PrometheusPodQuery, PrometheusProvider, PrometheusPvcQuery, PrometheusQueryOpts } from "../prometheus/provider-registry"
-import { apiPrefix } from "../../common/vars";
 
 export type IMetricsQuery = string | string[] | {
   [metricName: string]: string;
 }
 
 class MetricsRoute extends LensApi {
-
-  public async routeMetrics(request: LensApiRequest) {
-    const { response, cluster } = request
-    const serverUrl = `http://127.0.0.1:${cluster.port}${apiPrefix.KUBE_BASE}` // fixme: extract
-    const query: IMetricsQuery = request.payload;
-    const headers: Record<string, string> = {
-      "Host": `${cluster.id}.localhost:${cluster.port}`,
-      "Content-type": "application/json",
-    }
-    const queryParams: IMetricsQuery = {}
-    request.query.forEach((value: string, key: string) => {
-      queryParams[key] = value
-    })
-
+  public async routeMetrics(request: LensApiRequest<IMetricsQuery>) {
+    const { response, cluster, payload } = request
+    const { contextHandler } = cluster;
+    const serverUrl = await contextHandler.getApiTargetUrl();
     let metricsUrl: string
     let prometheusProvider: PrometheusProvider
     try {
-      const prometheusPath = await cluster.contextHandler.getPrometheusPath()
+      const prometheusPath = await contextHandler.getPrometheusPath()
       metricsUrl = `${serverUrl}/api/v1/namespaces/${prometheusPath}/proxy${cluster.getPrometheusApiPrefix()}/api/v1/query_range`
-      prometheusProvider = await cluster.contextHandler.getPrometheusProvider()
+      prometheusProvider = await contextHandler.getPrometheusProvider()
     } catch {
       this.respondJson(response, {})
       return
     }
     // prometheus metrics loader
-    const attempts: { [query: string]: number } = {};
+    const attempts: Record<string, number> = {};
     const maxAttempts = 5;
-    const loadMetrics = (orgQuery: string): Promise<any> => {
-      const query = orgQuery.trim()
-      const attempt = attempts[query] = (attempts[query] || 0) + 1;
+    const loadMetrics = (promQuery: string): Promise<any> => {
+      const queryString = request.query.toString() + `&query=` + promQuery;
+      const attempt = attempts[queryString] = (attempts[queryString] || 0) + 1;
       return requestPromise(metricsUrl, {
-        resolveWithFullResponse: false,
-        headers: headers,
         json: true,
-        qs: {
-          query: query,
-          ...queryParams
-        }
+        qs: queryString,
+        useQuerystring: true,
+        resolveWithFullResponse: false,
       }).catch(async (error) => {
         if (attempt < maxAttempts && (error.statusCode && error.statusCode != 404)) {
           await new Promise(resolve => setTimeout(resolve, attempt * 1000)); // add delay before repeating request
-          return loadMetrics(query);
+          return loadMetrics(queryString);
         }
         return {
           status: error.toString(),
@@ -63,14 +49,14 @@ class MetricsRoute extends LensApi {
 
     // return data in same structure as query
     let data: any;
-    if (typeof query === "string") {
-      data = await loadMetrics(query)
-    } else if (Array.isArray(query)) {
-      data = await Promise.all(query.map(loadMetrics));
+    if (typeof payload === "string") {
+      data = await loadMetrics(payload)
+    } else if (Array.isArray(payload)) {
+      data = await Promise.all(payload.map(loadMetrics));
     } else {
       data = {};
       const result = await Promise.all(
-        Object.entries(query).map((queryEntry: any) => {
+        Object.entries(payload).map((queryEntry: any) => {
           const queryName: string = queryEntry[0]
           const queryOpts: PrometheusQueryOpts = queryEntry[1]
           const queries = prometheusProvider.getQueries(queryOpts)
@@ -78,7 +64,7 @@ class MetricsRoute extends LensApi {
           return loadMetrics(q)
         })
       );
-      Object.keys(query).forEach((metricName, index) => {
+      Object.keys(payload).forEach((metricName, index) => {
         data[metricName] = result[index];
       });
     }

@@ -15,7 +15,7 @@ export interface IpcMessageHandler {
   (...args: any[]): any;
 }
 
-export function sendMessageToRenderer(channel: IpcChannel, ...args: any[]) {
+export function sendMessage(channel: IpcChannel, ...args: any[]) {
   webContents.getFocusedWebContents().send(channel, ...args);
 }
 

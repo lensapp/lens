@@ -4,7 +4,7 @@ import path from "path"
 import http from "http"
 import { copyFile, ensureDir } from "fs-extra"
 import filenamify from "filenamify"
-import { apiPrefix, appProto } from "../common/vars";
+import { apiKubePrefix, appProto } from "../common/vars";
 import { ClusterId, ClusterModel, clusterStore } from "../common/cluster-store"
 import { handleMessages } from "../common/ipc-helpers";
 import { ClusterIpcMessage } from "../common/ipc-messages";
@@ -100,7 +100,7 @@ export class ClusterManager {
         cluster = this.getCluster(clusterId)
         if (cluster) {
           // we need to swap path prefix so that request is proxied to kube api
-          req.url = req.url.replace(`/${clusterId}`, apiPrefix.KUBE_BASE)
+          req.url = req.url.replace(`/${clusterId}`, apiKubePrefix)
         }
       }
     } else {

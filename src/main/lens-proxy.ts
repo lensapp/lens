@@ -1,13 +1,13 @@
+import net from "net";
 import http from "http";
 import httpProxy from "http-proxy";
-import { Socket } from "net";
-import * as url from "url";
+import url from "url";
 import * as WebSocket from "ws"
-import { ContextHandler } from "./context-handler";
 import * as nodeShell from "./node-shell-session"
-import { ClusterManager } from "./cluster-manager"
 import { Router } from "./router"
-import { apiPrefix } from "../common/vars";
+import { ClusterManager } from "./cluster-manager"
+import { ContextHandler } from "./context-handler";
+import { apiKubePrefix } from "../common/vars";
 import logger from "./logger"
 
 export class LensProxy {
@@ -27,7 +27,7 @@ export class LensProxy {
   }
 
   listen(): this {
-    const proxyServer = this.buildProxyServer();
+    const proxyServer = this.buildCustomProxy();
     const { proxyPort } = this.clusterManager;
     this.proxyServer = proxyServer.listen(proxyPort);
     logger.info(`LensProxy server has started http://localhost:${proxyPort}`);
@@ -40,21 +40,21 @@ export class LensProxy {
     this.closed = true
   }
 
-  protected buildProxyServer() {
+  protected buildCustomProxy(): http.Server {
     const proxy = this.createProxy();
-    const proxyServer = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
+    const customProxy = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
       this.handleRequest(proxy, req, res);
     });
-    proxyServer.on("upgrade", (req: http.IncomingMessage, socket: Socket, head: Buffer) => {
+    customProxy.on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
       this.handleWsUpgrade(req, socket, head)
     });
-    proxyServer.on("error", (err) => {
+    customProxy.on("error", (err) => {
       logger.error("proxy error", err)
     });
-    return proxyServer;
+    return customProxy;
   }
 
-  protected createProxy() {
+  protected createProxy(): httpProxy {
     const proxy = httpProxy.createProxyServer();
 
     proxy.on("proxyRes", (proxyRes, req, res) => {
@@ -71,16 +71,18 @@ export class LensProxy {
       if (req.method !== "GET") {
         return
       }
-      const key = `${req.headers.host}${req.url}`
-      if (this.retryCounters.has(key)) {
-        logger.debug("Resetting proxy retry cache for url: " + key)
-        this.retryCounters.delete(key)
+      const reqUrl = `${req.headers.host}${req.url}`
+      if (this.retryCounters.has(reqUrl)) {
+        logger.debug("Resetting proxy retry cache for url: " + reqUrl)
+        this.retryCounters.delete(reqUrl)
       }
     })
     proxy.on("error", (error, req, res, target) => {
-      if (this.closed) return;
+      if (this.closed) {
+        return;
+      }
       if (target) {
-        logger.debug("Failed proxy to target: " + JSON.stringify(target))
+        logger.debug("Failed proxy to target: " + JSON.stringify(target, null, 2));
         if (req.method === "GET" && (!res.statusCode || res.statusCode >= 500)) {
           const retryCounterKey = `${req.headers.host}${req.url}`
           const retryCount = this.retryCounters.get(retryCounterKey) || 0
@@ -112,11 +114,11 @@ export class LensProxy {
     }));
   }
 
+  // fixme: remove api prefix?
   protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions> {
-    const prefix = apiPrefix.KUBE_BASE;
-    if (req.url.startsWith(prefix)) {
+    if (req.url.startsWith(apiKubePrefix)) {
       delete req.headers.authorization
-      req.url = req.url.replace(prefix, "")
+      req.url = req.url.replace(apiKubePrefix, "")
       const isWatchRequest = req.url.includes("watch=")
       return await contextHandler.getApiTarget(isWatchRequest)
     }
@@ -137,11 +139,11 @@ export class LensProxy {
     if (proxyTarget) {
       proxy.web(req, res, proxyTarget)
     } else {
-      this.router.route(cluster, req, res); // todo: handle "not-found" if isBoom==true?
+      this.router.route(cluster, req, res);
     }
   }
 
-  protected async handleWsUpgrade(req: http.IncomingMessage, socket: Socket, head: Buffer) {
+  protected async handleWsUpgrade(req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
     const wsServer = this.createWsListener();
     wsServer.handleUpgrade(req, socket, head, (con) => {
       wsServer.emit("connection", con, req);

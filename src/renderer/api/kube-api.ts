@@ -3,11 +3,18 @@
 import merge from "lodash/merge"
 import { stringify } from "querystring";
 import { IKubeObjectConstructor, KubeObject } from "./kube-object";
-import { IKubeObjectRef, KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
+import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
 import { apiKube } from "./index";
 import { kubeWatchApi } from "./kube-watch-api";
 import { apiManager } from "./api-manager";
 import { createApiLink, parseApi } from "./kube-api-parse";
+
+export interface IKubeObjectRef {
+  kind: string;
+  apiVersion: string;
+  name: string;
+  namespace?: string;
+}
 
 export interface IKubeApiOptions<T extends KubeObject> {
   kind: string; // resource type within api-group, e.g. "Namespace"

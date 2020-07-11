@@ -10,7 +10,11 @@ export class KubeconfigManager {
   protected tempFile: string
 
   constructor(protected cluster: Cluster) {
-    this.tempFile = this.createTemporaryKubeconfig();
+    this.init();
+  }
+
+  protected async init() {
+    this.tempFile = await this.createTemporaryKubeconfig();
   }
 
   getPath() {
@@ -21,7 +25,7 @@ export class KubeconfigManager {
    * Creates new "temporary" kubeconfig that point to the kubectl-proxy.
    * This way any user of the config does not need to know anything about the auth etc. details.
    */
-  protected createTemporaryKubeconfig(): string {
+  protected async createTemporaryKubeconfig(): Promise<string> {
     fs.ensureDir(this.configDir);
     const path = `${this.configDir}/${randomFileName("kubeconfig")}`;
     const { contextName, contextHandler, kubeConfigPath } = this.cluster;
@@ -29,7 +33,7 @@ export class KubeconfigManager {
     kubeConfig.clusters = [
       {
         name: contextName,
-        server: `http://127.0.0.1:${contextHandler.proxyPort}`, // fixme: extract
+        server: await contextHandler.getApiTargetUrl(),
         skipTLSVerify: true,
       }
     ];
@@ -42,7 +46,7 @@ export class KubeconfigManager {
         user: "proxy",
         name: contextName,
         cluster: contextName,
-        // namespace: kubeConfig.getContextObject(contextName).namespace,
+        namespace: kubeConfig.getContextObject(contextName).namespace,
       }
     ];
     logger.info(`Creating temp config for context "${contextName}" at "${path}"`);

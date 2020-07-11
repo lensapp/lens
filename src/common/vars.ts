@@ -10,10 +10,10 @@ export const isDevelopment = isDebugging || !isProduction;
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
 
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`
-export const appProto = "lens"  // app's "userData" folder (e.g. "lens://icons/logo.svg")
-export const staticProto = "static"  // static content folder (e.g. "static://RELEASE_NOTES.md")
+export const appProto = "lens"  // app.getPath("userData") folder
+export const staticProto = "static"  // static folder (e.g. "static://RELEASE_NOTES.md")
 
-// Paths
+// System paths
 export const contextDir = process.cwd();
 export const staticDir = path.join(contextDir, "static");
 export const outDir = path.join(contextDir, "out");
@@ -23,12 +23,8 @@ export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 
 // Apis
-export const apiPrefix = {
-  BASE: '/api',
-  KUBE_BASE: '/api-kube', // kubernetes cluster api
-  KUBE_HELM: '/api-helm', // helm charts api
-  KUBE_RESOURCE_APPLIER: "/api-resource",
-};
+export const apiPrefix = "/api-local" // local router apis
+export const apiKubePrefix = "/api-kube" // k8s cluster apis
 
 // Links
 export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues"
