@@ -98,7 +98,7 @@ export class Kubectl {
     this.path = path.join(this.dirname, binaryName)
   }
 
-  public async kubectlPath(): Promise<string> {
+  public async getPath(): Promise<string> {
     try {
       await this.ensureKubectl()
       return this.path

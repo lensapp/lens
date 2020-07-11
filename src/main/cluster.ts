@@ -1,6 +1,6 @@
-import url, { UrlWithStringQuery } from "url"
 import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { FeatureStatusMap } from "./feature"
+import { UrlWithStringQuery } from "url"
 import { action, observable, toJS } from "mobx";
 import { ContextHandler } from "./context-handler"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
@@ -31,16 +31,15 @@ export interface ClusterState extends ClusterModel {
 }
 
 export class Cluster implements ClusterModel {
+  public id: ClusterId;
   public kubeCtl: Kubectl
   public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
 
   @observable initialized = false;
-  @observable id: ClusterId;
   @observable workspace: string;
-  @observable kubeConfig?: string;
-  @observable kubeConfigPath: string;
   @observable contextName: string;
+  @observable kubeConfigPath: string;
   @observable port: number;
   @observable url: string; // cluster-api url
   @observable apiUrl: UrlWithStringQuery; // same as url, but parsed
@@ -63,20 +62,23 @@ export class Cluster implements ClusterModel {
 
   updateModel(model: ClusterModel) {
     Object.assign(this, model);
+    if (!this.contextName) {
+      this.contextName = this.preferences.clusterName;
+    }
   }
 
   @action
-  // fixme: completely broken
   async init() {
     try {
+      // fixme: all broken
       this.contextHandler = new ContextHandler(this);
-      this.contextName = this.contextHandler.contextName;
       this.port = await this.contextHandler.resolveProxyPort(); // resolve port before KubeconfigManager
       this.webContentUrl = `http://${this.id}.localhost:${this.port}`;
       this.kubeAuthProxyUrl = `http://127.0.0.1:${this.port}`;
       this.kubeconfigManager = new KubeconfigManager(this);
-      this.url = this.kubeconfigManager.getCurrentClusterServer();
-      this.apiUrl = url.parse(this.url);
+      // this.url = this.kubeconfigManager.getCurrentClusterServer();
+      // this.apiUrl = url.parse(this.url);
+
       logger.info(`[CLUSTER]: init success`, {
         id: this.id,
         port: this.port,
@@ -102,7 +104,7 @@ export class Cluster implements ClusterModel {
   // todo: auto-refresh when preferences changed + by timer?
   @action
   async refreshCluster() {
-    this.contextHandler.setClusterPreferences(this.preferences);
+    this.contextHandler.setupPrometheus(this.preferences);
 
     const connectionStatus = await this.getConnectionStatus()
     this.accessible = connectionStatus == ClusterStatus.AccessGranted;

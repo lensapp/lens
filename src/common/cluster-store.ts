@@ -13,11 +13,12 @@ export type ClusterId = string;
 
 export interface ClusterModel {
   id: ClusterId;
-  contextName: string;
-  kubeConfigPath: string;
-  kubeConfig?: string;
   workspace?: string;
   preferences?: ClusterPreferences;
+  kubeConfigPath: string;
+
+  /** @deprecated */
+  kubeConfig?: string; // kube-config yaml
 }
 
 export interface ClusterPreferences {

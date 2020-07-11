@@ -1,13 +1,11 @@
 import type { Cluster } from "./cluster"
 import { app } from "electron"
 import fs from "fs-extra"
-import { KubeConfig } from "@kubernetes/client-node"
 import { randomFileName } from "../common/utils"
-import { dumpConfigYaml, loadKubeConfig } from "./k8s"
+import { dumpConfigYaml, loadConfig } from "./k8s"
 import logger from "./logger"
 
 export class KubeconfigManager {
-  public config: KubeConfig;
   protected configDir = app.getPath("temp")
   protected tempFile: string
 
@@ -19,16 +17,6 @@ export class KubeconfigManager {
     return this.tempFile;
   }
 
-  getCurrentClusterServer() {
-    return this.config.getCurrentCluster().server;
-  }
-
-  protected loadConfig() {
-    const { kubeConfigPath, kubeConfig } = this.cluster;
-    this.config = loadKubeConfig(kubeConfigPath || kubeConfig);
-    return this.config;
-  }
-
   /**
    * Creates new "temporary" kubeconfig that point to the kubectl-proxy.
    * This way any user of the config does not need to know anything about the auth etc. details.
@@ -36,12 +24,12 @@ export class KubeconfigManager {
   protected createTemporaryKubeconfig(): string {
     fs.ensureDir(this.configDir);
     const path = `${this.configDir}/${randomFileName("kubeconfig")}`;
-    const { contextName, kubeAuthProxyUrl } = this.cluster;
-    const kubeConfig = this.loadConfig();
+    const { contextName, contextHandler, kubeConfigPath } = this.cluster;
+    const kubeConfig = loadConfig(kubeConfigPath);
     kubeConfig.clusters = [
       {
         name: contextName,
-        server: kubeAuthProxyUrl,
+        server: `http://127.0.0.1:${contextHandler.proxyPort}`, // fixme: extract
         skipTLSVerify: true,
       }
     ];
@@ -54,10 +42,11 @@ export class KubeconfigManager {
         user: "proxy",
         name: contextName,
         cluster: contextName,
+        // namespace: kubeConfig.getContextObject(contextName).namespace,
       }
     ];
+    logger.info(`Creating temp config for context "${contextName}" at "${path}"`);
     fs.writeFileSync(path, dumpConfigYaml(kubeConfig));
-    logger.info(`Created temp kube-config file for context "${this.cluster.contextName}" at "${path}"`);
     return path;
   }
 

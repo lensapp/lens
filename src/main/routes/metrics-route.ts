@@ -2,6 +2,7 @@ import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import requestPromise from "request-promise-native"
 import { PrometheusClusterQuery, PrometheusIngressQuery, PrometheusNodeQuery, PrometheusPodQuery, PrometheusProvider, PrometheusPvcQuery, PrometheusQueryOpts } from "../prometheus/provider-registry"
+import { apiPrefix } from "../../common/vars";
 
 export type IMetricsQuery = string | string[] | {
   [metricName: string]: string;
@@ -11,6 +12,7 @@ class MetricsRoute extends LensApi {
 
   public async routeMetrics(request: LensApiRequest) {
     const { response, cluster } = request
+    const serverUrl = `http://127.0.0.1:${cluster.port}${apiPrefix.KUBE_BASE}` // fixme: extract
     const query: IMetricsQuery = request.payload;
     const headers: Record<string, string> = {
       "Host": `${cluster.id}.localhost:${cluster.port}`,
@@ -25,7 +27,7 @@ class MetricsRoute extends LensApi {
     let prometheusProvider: PrometheusProvider
     try {
       const prometheusPath = await cluster.contextHandler.getPrometheusPath()
-      metricsUrl = `${cluster.kubeAuthProxyUrl}/api/v1/namespaces/${prometheusPath}/proxy${cluster.getPrometheusApiPrefix()}/api/v1/query_range`
+      metricsUrl = `${serverUrl}/api/v1/namespaces/${prometheusPath}/proxy${cluster.getPrometheusApiPrefix()}/api/v1/query_range`
       prometheusProvider = await cluster.contextHandler.getPrometheusProvider()
     } catch {
       this.respondJson(response, {})

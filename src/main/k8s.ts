@@ -11,7 +11,7 @@ function resolveTilde(filePath: string) {
   return filePath;
 }
 
-export function loadKubeConfig(pathOrContent?: string): KubeConfig {
+export function loadConfig(pathOrContent?: string): KubeConfig {
   const kc = new KubeConfig();
   if (path.isAbsolute(pathOrContent)) {
     kc.loadFromFile(resolveTilde(pathOrContent));
@@ -30,7 +30,7 @@ export function loadKubeConfig(pathOrContent?: string): KubeConfig {
  */
 export function validateConfig(config: KubeConfig | string): KubeConfig {
   if (typeof config == "string") {
-    config = loadKubeConfig(config);
+    config = loadConfig(config);
   }
   logger.debug(`validating kube config: ${JSON.stringify(config)}`)
   if (!config.users || config.users.length == 0) {
@@ -64,17 +64,6 @@ export function splitConfig(kubeConfig: KubeConfig): KubeConfig[] {
     configs.push(kc);
   });
   return configs;
-}
-
-/**
- * Loads KubeConfig from a yaml and breaks it into several configs. Each context per KubeConfig object
- *
- * @param configPath path to kube config yaml file
- */
-export function loadAndSplitConfig(configPath: string): KubeConfig[] {
-  const allConfigs = new KubeConfig();
-  allConfigs.loadFromFile(configPath);
-  return splitConfig(allConfigs);
 }
 
 export function dumpConfigYaml(kc: KubeConfig): string {
@@ -122,8 +111,7 @@ export function dumpConfigYaml(kc: KubeConfig): string {
     })
   }
 
-  console.log("dumping kc:", config);
-
+  // logger.info("Dumping KubeConfig:", config);
   // skipInvalid: true makes dump ignore undefined values
   return yaml.safeDump(config, { skipInvalid: true });
 }

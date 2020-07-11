@@ -25,7 +25,7 @@ export class KubeAuthProxy {
     if (this.proxyProcess) {
       return;
     }
-    const proxyBin = await this.kubectl.kubectlPath()
+    const proxyBin = await this.kubectl.getPath()
     let args = [
       "proxy",
       "-p", this.port.toString(),

@@ -89,6 +89,7 @@ export class ClusterManager {
     }
   }
 
+  // fixme
   getClusterForRequest(req: http.IncomingMessage): Cluster {
     let cluster: Cluster = null
 

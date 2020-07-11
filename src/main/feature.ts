@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path"
 import hb from "handlebars"
 import { ResourceApplier } from "./resource-applier"
-import { KubeConfig, CoreV1Api, Watch } from "@kubernetes/client-node"
+import { CoreV1Api, KubeConfig, Watch } from "@kubernetes/client-node"
 import { Cluster } from "./cluster";
 import logger from "./logger";
 
@@ -23,31 +23,7 @@ export interface FeatureStatus {
 
 export abstract class Feature {
   name: string;
-  config: any;
   latestVersion: string;
-
-  constructor(config: any) {
-    if(config) this.config = config;
-  }
-
-  // TODO Return types for these?
-  async install(cluster: Cluster): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      // Read and process yamls through handlebar
-      const resources = this.renderTemplates();
-
-      // Apply processed manifests
-      cluster.contextHandler.withTemporaryKubeconfig(async (kubeconfigPath) => {
-        const resourceApplier = new ResourceApplier(cluster, kubeconfigPath)
-        try {
-          await resourceApplier.kubectlApplyAll(resources)
-          resolve(true)
-        } catch(error) {
-          reject(error)
-        }
-      });
-    });
-  }
 
   abstract async upgrade(cluster: Cluster): Promise<boolean>;
 
@@ -55,43 +31,53 @@ export abstract class Feature {
 
   abstract async featureStatus(kc: KubeConfig): Promise<FeatureStatus>;
 
+  constructor(public config: any) {
+  }
+
+  async install(cluster: Cluster): Promise<boolean> {
+    const resources = this.renderTemplates();
+    try {
+      await new ResourceApplier(cluster).kubectlApplyAll(resources);
+      return true;
+    } catch (err) {
+      logger.error("Installing feature error", { err, cluster });
+      return false
+    }
+  }
+
   protected async deleteNamespace(kc: KubeConfig, name: string) {
     return new Promise(async (resolve, reject) => {
       const client = kc.makeApiClient(CoreV1Api)
       const result = await client.deleteNamespace("lens-metrics", 'false', undefined, undefined, undefined, "Foreground");
       const nsVersion = result.body.metadata.resourceVersion;
       const nsWatch = new Watch(kc);
-      const req = await nsWatch.watch('/api/v1/namespaces', {resourceVersion: nsVersion, fieldSelector: "metadata.name=lens-metrics"},
-        (type, obj) => {
-          if(type === 'DELETED') {
+      const query: Record<string, string> = {
+        resourceVersion: nsVersion,
+        fieldSelector: "metadata.name=lens-metrics",
+      }
+      const req = await nsWatch.watch('/api/v1/namespaces', query,
+        (phase, obj) => {
+          if (phase === 'DELETED') {
             logger.debug(`namespace ${name} finally gone`)
             req.abort();
             resolve()
           }
         },
-        (err) => {
-          if(err) {
-            reject(err)
-          }
+        (err?: any) => {
+          if (err) reject(err);
         });
     });
   }
 
   protected renderTemplates(): string[] {
-    console.log("starting to render resources...");
     const resources: string[] = [];
-    fs.readdirSync(this.manifestPath()).forEach((f) => {
-      const file = path.join(this.manifestPath(), f);
-      console.log("processing file:", file)
+    fs.readdirSync(this.manifestPath()).forEach(filename => {
+      const file = path.join(this.manifestPath(), filename);
       const raw = fs.readFileSync(file);
-      console.log("raw file loaded");
-      if(f.endsWith('.hb')) {
-        console.log("processing HB template");
+      if (filename.endsWith('.hb')) {
         const template = hb.compile(raw.toString());
         resources.push(template(this.config));
-        console.log("HB template done");
       } else {
-        console.log("using as raw, no HB detected");
         resources.push(raw.toString());
       }
     });
@@ -101,7 +87,7 @@ export abstract class Feature {
 
   protected manifestPath() {
     const devPath = path.join(__dirname, "..", 'src/features', this.name);
-    if(fs.existsSync(devPath)) {
+    if (fs.existsSync(devPath)) {
       return devPath;
     }
     return path.join(__dirname, "..", 'features', this.name);

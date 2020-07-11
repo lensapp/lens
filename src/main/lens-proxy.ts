@@ -4,7 +4,7 @@ import { Socket } from "net";
 import * as url from "url";
 import * as WebSocket from "ws"
 import { ContextHandler } from "./context-handler";
-import * as shell from "./node-shell-session"
+import * as nodeShell from "./node-shell-session"
 import { ClusterManager } from "./cluster-manager"
 import { Router } from "./router"
 import { apiPrefix } from "../common/vars";
@@ -84,12 +84,13 @@ export class LensProxy {
         if (req.method === "GET" && (!res.statusCode || res.statusCode >= 500)) {
           const retryCounterKey = `${req.headers.host}${req.url}`
           const retryCount = this.retryCounters.get(retryCounterKey) || 0
+          const timeoutMs = retryCount * 250
           if (retryCount < 20) {
             logger.debug("Retrying proxy request to url: " + retryCounterKey)
             setTimeout(() => {
               this.retryCounters.set(retryCounterKey, retryCount + 1)
               this.handleRequest(proxy, req, res)
-            }, (250 * retryCount))
+            }, timeoutMs)
           }
         }
       }
@@ -102,23 +103,13 @@ export class LensProxy {
     return proxy;
   }
 
-  protected createWsListener() {
+  protected createWsListener(): WebSocket.Server {
     const ws = new WebSocket.Server({ noServer: true })
-    ws.on("connection", ((con: WebSocket, req: http.IncomingMessage) => {
+    return ws.on("connection", (async (socket: WebSocket, req: http.IncomingMessage) => {
       const cluster = this.clusterManager.getClusterForRequest(req)
-      const contextHandler = cluster.contextHandler
       const nodeParam = url.parse(req.url, true).query["node"]?.toString();
-
-      contextHandler.withTemporaryKubeconfig((kubeconfigPath) => {
-        return new Promise<boolean>(async (resolve, reject) => {
-          const shellSession = await shell.open(con, kubeconfigPath, cluster, nodeParam)
-          shellSession.on("exit", () => {
-            resolve(true)
-          })
-        })
-      })
-    }))
-    return ws
+      await nodeShell.open(socket, cluster, nodeParam);
+    }));
   }
 
   protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions> {
@@ -146,7 +137,7 @@ export class LensProxy {
     if (proxyTarget) {
       proxy.web(req, res, proxyTarget)
     } else {
-      this.router.route(cluster, req, res); // todo: handle not-found route when isBoom==true?
+      this.router.route(cluster, req, res); // todo: handle "not-found" if isBoom==true?
     }
   }
 

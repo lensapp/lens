@@ -1,6 +1,8 @@
 import logger from "./logger"
 import { createServer, AddressInfo } from "net"
 
+// todo: replace with https://github.com/http-party/node-portfinder ?
+
 const getNextAvailablePort = () => {
   logger.debug("getNextAvailablePort() start")
   const server = createServer()

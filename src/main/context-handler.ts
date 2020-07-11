@@ -9,29 +9,18 @@ import { getFreePort } from "./port"
 import { KubeAuthProxy } from "./kube-auth-proxy"
 
 export class ContextHandler {
-  public url: string
   public proxyPort: number
-  public contextName: string
 
-  protected id: string
   protected proxyServer: KubeAuthProxy
   protected apiTarget: ServerOptions
-  protected certData: string
-  protected authCertData: string
-  protected proxyTarget: ServerOptions
-  protected clientCert: string
-  protected clientKey: string
   protected prometheusProvider: string
   protected prometheusPath: string
 
   constructor(protected cluster: Cluster) {
-    this.id = cluster.id
-    this.url = cluster.url;
-    this.contextName = cluster.contextName || cluster.preferences.clusterName;
-    this.setClusterPreferences(cluster.preferences)
+    this.setupPrometheus(cluster.preferences)
   }
 
-  public setClusterPreferences(preferences: ClusterPreferences = {}) {
+  public setupPrometheus(preferences: ClusterPreferences = {}) {
     this.prometheusProvider = preferences.prometheusProvider?.type;
     this.prometheusPath = null;
     if (preferences.prometheus) {
@@ -89,6 +78,7 @@ export class ContextHandler {
     return apiTarget
   }
 
+  // fixme
   protected async newApiTarget(timeout: number): Promise<ServerOptions> {
     return {
       changeOrigin: true,
@@ -107,27 +97,19 @@ export class ContextHandler {
 
   async resolveProxyPort(): Promise<number> {
     if (!this.proxyPort) {
-      this.proxyPort = await getFreePort()
+      this.proxyPort = await getFreePort();
     }
     return this.proxyPort
   }
 
-  public async withTemporaryKubeconfig(callback: (kubeconfig: string) => Promise<any>) {
-    try {
-      await callback(this.cluster.proxyKubeconfigPath())
-    } catch (error) {
-      throw(error)
-    }
-  }
-
   public async ensureServer() {
     if (!this.proxyServer) {
-      const proxyPort = await this.resolveProxyPort()
+      await this.resolveProxyPort();
       const proxyEnv = Object.assign({}, process.env)
       if (this.cluster.preferences.httpsProxy) {
         proxyEnv.HTTPS_PROXY = this.cluster.preferences.httpsProxy
       }
-      this.proxyServer = new KubeAuthProxy(this.cluster, proxyPort, proxyEnv)
+      this.proxyServer = new KubeAuthProxy(this.cluster, this.proxyPort, proxyEnv)
       await this.proxyServer.run()
     }
   }
@@ -139,7 +121,7 @@ export class ContextHandler {
     }
   }
 
-  public proxyServerError() {
+  public proxyServerError(): string {
     return this.proxyServer?.lastError || ""
   }
 }

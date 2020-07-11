@@ -13,15 +13,15 @@ export class NodeShellSession extends ShellSession {
   protected podId: string
   protected kc: KubeConfig
 
-  constructor(socket: WebSocket, pathToKubeconfig: string, cluster: Cluster, nodeName: string) {
-    super(socket, pathToKubeconfig, cluster)
+  constructor(socket: WebSocket, cluster: Cluster, nodeName: string) {
+    super(socket, cluster)
     this.nodeName = nodeName
     this.podId = `node-shell-${uuid()}`
     this.kc = cluster.proxyKubeconfig()
   }
 
   public async open() {
-    const shell = await this.kubectl.kubectlPath()
+    const shell = await this.kubectl.getPath()
     let args = []
     if (this.createNodeShellPod(this.podId, this.nodeName)) {
       await this.waitForRunningPod(this.podId).catch((error) => {
@@ -133,15 +133,9 @@ export class NodeShellSession extends ShellSession {
   }
 }
 
-export async function open(socket: WebSocket, pathToKubeconfig: string, cluster: Cluster, nodeName?: string): Promise<ShellSession> {
-  return new Promise(async (resolve, reject) => {
-    let shell = null
-    if (nodeName) {
-      shell = new NodeShellSession(socket, pathToKubeconfig, cluster, nodeName)
-    } else {
-      shell = new ShellSession(socket, pathToKubeconfig, cluster)
-    }
-    shell.open()
-    resolve(shell)
-  })
+export async function open(socket: WebSocket, cluster: Cluster, nodeName?: string): Promise<ShellSession> {
+  if (nodeName) {
+    return new NodeShellSession(socket, cluster, nodeName)
+  }
+  return new ShellSession(socket, cluster);
 }

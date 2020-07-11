@@ -37,7 +37,7 @@ class PortForward {
 
   public async start() {
     this.localPort = await getFreePort()
-    const kubectlBin = await bundledKubectl.kubectlPath()
+    const kubectlBin = await bundledKubectl.getPath()
     const args = [
       "--kubeconfig", this.kubeConfig,
       "port-forward",
