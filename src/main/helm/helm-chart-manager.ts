@@ -1,8 +1,8 @@
 import fs from "fs";
 import * as yaml from "js-yaml";
 import { HelmRepo, HelmRepoManager } from "./helm-repo-manager"
-import logger from "./logger";
-import { promiseExec } from "./promise-exec"
+import logger from "../logger";
+import { promiseExec } from "../promise-exec"
 import { helmCli } from "./helm-cli"
 
 type CachedYaml = {

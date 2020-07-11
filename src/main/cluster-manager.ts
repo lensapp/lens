@@ -25,13 +25,11 @@ export class ClusterManager {
     return path.join(app.getPath("userData"), "icons");
   }
 
-  constructor(public readonly proxyPort: number) {
+  constructor(public readonly port: number) {
     // auto-init clusters
     autorun(() => {
       const freshClusters = clusterStore.clustersList.filter(cluster => !cluster.initialized);
-      freshClusters.forEach(cluster => {
-        cluster.init().then(() => cluster.refreshCluster());
-      });
+      freshClusters.forEach(cluster => cluster.init(port));
     });
     // auto-stop removed clusters
     autorun(() => {
@@ -89,7 +87,7 @@ export class ClusterManager {
     }
   }
 
-  // fixme
+  // fixme: verify
   getClusterForRequest(req: http.IncomingMessage): Cluster {
     let cluster: Cluster = null
 
@@ -154,7 +152,7 @@ export class ClusterManager {
   }
 
   protected async refreshCluster(clusterId: ClusterId) {
-    await this.getCluster(clusterId)?.refreshCluster();
+    await this.getCluster(clusterId)?.refreshStatus();
   }
 
   static ipcListen(clusterManager: ClusterManager) {

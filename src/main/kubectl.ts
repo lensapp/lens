@@ -7,7 +7,7 @@ import logger from "./logger"
 import { ensureDir, pathExists } from "fs-extra"
 import { globalRequestOpts } from "../common/request"
 import * as lockFile from "proper-lockfile"
-import { helmCli } from "./helm-cli"
+import { helmCli } from "./helm/helm-cli"
 import { userStore } from "../common/user-store"
 import { getBundledKubectlVersion} from "../common/utils/app-version"
 

@@ -2,26 +2,27 @@ import type { PrometheusProvider, PrometheusService } from "./prometheus/provide
 import type { ClusterPreferences } from "../common/cluster-store";
 import type { Cluster } from "./cluster"
 import type httpProxy from "http-proxy"
+import url, { UrlWithStringQuery } from "url";
 import { CoreV1Api } from "@kubernetes/client-node"
-import { observable } from "mobx";
 import { prometheusProviders } from "../common/prometheus-providers"
 import logger from "./logger"
 import { getFreePort } from "./port"
 import { KubeAuthProxy } from "./kube-auth-proxy"
 
 export class ContextHandler {
-  @observable proxyPort: number;
-
+  public proxyPort: number;
+  public clusterUrl: UrlWithStringQuery;
   protected proxyServer: KubeAuthProxy
   protected apiTarget: httpProxy.ServerOptions
   protected prometheusProvider: string
   protected prometheusPath: string
 
   constructor(protected cluster: Cluster) {
-    this.setupPrometheus(cluster.preferences)
+    this.clusterUrl = url.parse(cluster.url);
+    this.setupPrometheus(cluster.preferences);
   }
 
-  public setupPrometheus(preferences: ClusterPreferences = {}) {
+  protected setupPrometheus(preferences: ClusterPreferences = {}) {
     this.prometheusProvider = preferences.prometheusProvider?.type;
     this.prometheusPath = null;
     if (preferences.prometheus) {
@@ -47,7 +48,7 @@ export class ContextHandler {
   public async getPrometheusService(): Promise<PrometheusService> {
     const providers = this.prometheusProvider ? prometheusProviders.filter(provider => provider.id == this.prometheusProvider) : prometheusProviders;
     const prometheusPromises: Promise<PrometheusService>[] = providers.map(async (provider: PrometheusProvider): Promise<PrometheusService> => {
-      const apiClient = this.cluster.proxyKubeconfig().makeApiClient(CoreV1Api)
+      const apiClient = this.cluster.getProxyKubeconfig().makeApiClient(CoreV1Api)
       return await provider.getPrometheusService(apiClient)
     })
     const resolvedPrometheusServices = await Promise.all(prometheusPromises)
@@ -79,10 +80,10 @@ export class ContextHandler {
     return apiTarget
   }
 
+  // fixme: verify
   public async getApiTargetUrl(): Promise<string> {
-    const port = await this.ensurePort();
-    const { path } = this.cluster.apiUrl;
-    return `http://127.0.0.1:${port}${path}`;
+    await this.ensurePort();
+    return `http://127.0.0.1:${this.proxyPort}${this.clusterUrl.path}`;
   }
 
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
@@ -91,7 +92,7 @@ export class ContextHandler {
       target: await this.getApiTargetUrl(),
       timeout: timeout,
       headers: {
-        "Host": this.cluster.apiUrl.hostname,
+        "Host": this.clusterUrl.hostname,
       }
     }
   }

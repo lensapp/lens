@@ -4,10 +4,8 @@ import http from "http"
 import path from "path"
 import { readFile, stat } from "fs-extra"
 import { Cluster } from "./cluster"
-import { helmApi } from "./helm-api"
-import { resourceApplierApi } from "./resource-applier-api"
 import { apiPrefix, appName, outDir } from "../common/vars";
-import { configRoute, kubeconfigRoute, metricsRoute, portForwardRoute, watchRoute } from "./routes";
+import { configRoute, helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute } from "./routes";
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;
@@ -129,20 +127,20 @@ export class Router {
     this.router.add({ method: "post", path: `${apiPrefix}/services/{namespace}/{service}/port-forward/{port}` }, portForwardRoute.routeServicePortForward.bind(portForwardRoute))
 
     // Helm API
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts` }, helmApi.listCharts.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}` }, helmApi.getChart.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}/values` }, helmApi.getChartValues.bind(helmApi))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts` }, helmRoute.listCharts.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}` }, helmRoute.getChart.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}/values` }, helmRoute.getChartValues.bind(helmRoute))
 
-    this.router.add({ method: "post", path: `${apiPrefix}/v2/releases` }, helmApi.installChart.bind(helmApi))
-    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmApi.updateRelease.bind(helmApi))
-    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}/rollback` }, helmApi.rollbackRelease.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace?}` }, helmApi.listReleases.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmApi.getRelease.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/values` }, helmApi.getReleaseValues.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/history` }, helmApi.getReleaseHistory.bind(helmApi))
-    this.router.add({ method: "delete", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmApi.deleteRelease.bind(helmApi))
+    this.router.add({ method: "post", path: `${apiPrefix}/v2/releases` }, helmRoute.installChart.bind(helmRoute))
+    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.updateRelease.bind(helmRoute))
+    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}/rollback` }, helmRoute.rollbackRelease.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace?}` }, helmRoute.listReleases.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.getRelease.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/values` }, helmRoute.getReleaseValues.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/history` }, helmRoute.getReleaseHistory.bind(helmRoute))
+    this.router.add({ method: "delete", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.deleteRelease.bind(helmRoute))
 
     // Resource Applier API
-    this.router.add({ method: "post", path: `${apiPrefix}/stack` }, resourceApplierApi.applyResource.bind(resourceApplierApi))
+    this.router.add({ method: "post", path: `${apiPrefix}/stack` }, resourceApplierRoute.applyResource.bind(resourceApplierRoute))
   }
 }

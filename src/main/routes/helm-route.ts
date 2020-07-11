@@ -1,9 +1,9 @@
-import { LensApiRequest } from "./router"
-import { helmService } from "./helm-service"
-import { LensApi } from "./lens-api"
-import logger from "./logger"
+import { LensApiRequest } from "../router"
+import { helmService } from "../helm/helm-service"
+import { LensApi } from "../lens-api"
+import logger from "../logger"
 
-class HelmApi extends LensApi {
+class HelmApiRoute extends LensApi {
   public async listCharts(request: LensApiRequest) {
     const { response } = request
     const charts = await helmService.listCharts()
@@ -111,4 +111,4 @@ class HelmApi extends LensApi {
   }
 }
 
-export const helmApi = new HelmApi()
+export const helmRoute = new HelmApiRoute()

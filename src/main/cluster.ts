@@ -1,12 +1,12 @@
 import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { FeatureStatusMap } from "./feature"
-import { UrlWithStringQuery } from "url"
 import { action, observable, toJS } from "mobx";
+import { apiKubePrefix } from "../common/vars";
 import { ContextHandler } from "./context-handler"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager"
-import { getNodeWarningConditions, podHasIssues } from "./k8s"
+import { getNodeWarningConditions, loadConfig, podHasIssues } from "./k8s"
 import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from "./feature-manager";
 import request, { RequestPromiseOptions } from "request-promise-native"
 import logger from "./logger"
@@ -40,11 +40,11 @@ export class Cluster implements ClusterModel {
   @observable contextName: string;
   @observable workspace: string;
   @observable kubeConfigPath: string;
-  @observable port: number;
   @observable url: string; // cluster-api url
-  @observable apiUrl: UrlWithStringQuery; // same as url, but parsed
-  @observable kubeAuthProxyUrl: string;
+  @observable proxyUrl: string; // lens-proxy url
+  @observable kubeProxyUrl: string;
   @observable webContentUrl: string;
+  @observable proxyPort: number;
   @observable online: boolean;
   @observable accessible: boolean;
   @observable failureReason: string;
@@ -68,26 +68,27 @@ export class Cluster implements ClusterModel {
   }
 
   @action
-  async init() {
+  async init(proxyPort: number) {
     try {
-      // fixme
+      this.proxyPort = proxyPort;
       this.contextHandler = new ContextHandler(this);
-      this.port = await this.contextHandler.ensurePort(); // resolve port before KubeconfigManager
-      this.kubeAuthProxyUrl = `http://127.0.0.1:${this.port}`;
-      this.kubeconfigManager = new KubeconfigManager(this);
+      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
 
-      // this.url = this.kubeconfigManager.getCurrentClusterServer();
-      // this.apiUrl = url.parse(this.url);
-      this.webContentUrl = `http://${this.id}.localhost:${this.port}`;
+      this.url = this.getKubeconfig().getCurrentCluster().server;
+      this.proxyUrl = `http://localhost:${proxyPort}`;
+      this.kubeProxyUrl = this.proxyUrl + apiKubePrefix;
+      this.webContentUrl = `http://${this.id}.localhost:${proxyPort}`;
+
+      await this.refreshStatus();
+      this.initialized = true;
 
       logger.info(`[CLUSTER]: init success`, {
         id: this.id,
-        port: this.port,
         url: this.url,
+        proxyUrl: this.proxyUrl,
+        kubeProxyUrl: this.kubeProxyUrl,
         webContentUrl: this.webContentUrl,
-        kubeAuthProxyUrl: this.kubeAuthProxyUrl,
       });
-      this.initialized = true;
     } catch (err) {
       logger.error(`[CLUSTER]: init error`, {
         id: this.id,
@@ -102,15 +103,11 @@ export class Cluster implements ClusterModel {
     this.kubeconfigManager.unlink();
   }
 
-  // todo: auto-refresh when preferences changed + by timer?
   @action
-  async refreshCluster() {
-    this.contextHandler.setupPrometheus(this.preferences);
-
-    const connectionStatus = await this.getConnectionStatus()
-    this.accessible = connectionStatus == ClusterStatus.AccessGranted;
+  async refreshStatus() {
+    const connectionStatus = await this.getConnectionStatus();
     this.online = connectionStatus > ClusterStatus.Offline;
-
+    this.accessible = connectionStatus == ClusterStatus.AccessGranted;
     if (this.accessible) {
       this.distribution = this.detectKubernetesDistribution(this.version)
       this.features = await getFeatures(this)
@@ -122,29 +119,31 @@ export class Cluster implements ClusterModel {
     this.eventCount = await this.getEventCount();
   }
 
-  proxyKubeconfigPath() {
-    return this.kubeconfigManager.getPath()
+  protected getKubeconfig(): KubeConfig {
+    return loadConfig(this.kubeConfigPath);
   }
 
-  proxyKubeconfig() {
-    const kc = new KubeConfig()
-    kc.loadFromFile(this.proxyKubeconfigPath())
-    return kc
+  getProxyKubeconfig(): KubeConfig {
+    return loadConfig(this.getProxyKubeconfigPath());
+  }
+
+  getProxyKubeconfigPath(): string {
+    return this.kubeconfigManager.getPath()
   }
 
   async installFeature(name: string, config: any) {
     await installFeature(name, this, config)
-    await this.refreshCluster()
+    await this.refreshStatus()
   }
 
   async upgradeFeature(name: string, config: any) {
     await upgradeFeature(name, this, config)
-    await this.refreshCluster()
+    await this.refreshStatus()
   }
 
   async uninstallFeature(name: string) {
     await uninstallFeature(name, this)
-    await this.refreshCluster()
+    await this.refreshStatus()
   }
 
   getPrometheusApiPrefix() {
@@ -152,12 +151,12 @@ export class Cluster implements ClusterModel {
   }
 
   k8sRequest(path: string, options: RequestPromiseOptions = {}) {
-    return request(this.kubeAuthProxyUrl + path, {
+    return request(this.kubeProxyUrl + path, {
       json: true,
       timeout: 10000,
       headers: {
         ...(options.headers || {}),
-        host: `${this.id}.localhost:${this.port}`,
+        host: `${this.id}.localhost:${this.proxyPort}`,
       }
     })
   }
@@ -193,7 +192,7 @@ export class Cluster implements ClusterModel {
   }
 
   async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
-    const authApi = this.proxyKubeconfig().makeApiClient(AuthorizationV1Api)
+    const authApi = this.getProxyKubeconfig().makeApiClient(AuthorizationV1Api)
     try {
       const accessReview = await authApi.createSelfSubjectAccessReview({
         apiVersion: "authorization.k8s.io/v1",
@@ -240,7 +239,7 @@ export class Cluster implements ClusterModel {
     if (!this.isAdmin) {
       return 0;
     }
-    const client = this.proxyKubeconfig().makeApiClient(CoreV1Api);
+    const client = this.getProxyKubeconfig().makeApiClient(CoreV1Api);
     try {
       const response = await client.listEventForAllNamespaces(false, null, null, null, 1000);
       const uniqEventSources = new Set();

@@ -1,6 +1,6 @@
 import Vue from "vue"
 import { MutationTree, ActionTree, GetterTree } from "vuex"
-import { HelmRepo, repoManager } from "../../../../main/helm-repo-manager"
+import { HelmRepo, repoManager } from "../../../../main/helm/helm-repo-manager"
 
 export interface HelmRepoState {
   repos: HelmRepo[];

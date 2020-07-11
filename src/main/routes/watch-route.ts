@@ -87,10 +87,10 @@ class WatchRoute extends LensApi {
     response.setHeader("Content-Type", "text/event-stream")
     response.setHeader("Cache-Control", "no-cache")
     response.setHeader("Connection", "keep-alive")
-    logger.debug("watch using kubeconfig:" + JSON.stringify(cluster.proxyKubeconfig(), null, 2))
+    logger.debug("watch using kubeconfig:" + JSON.stringify(cluster.getProxyKubeconfig(), null, 2))
 
     apis.forEach(apiUrl => {
-      const watcher = new ApiWatcher(apiUrl, cluster.proxyKubeconfig(), response)
+      const watcher = new ApiWatcher(apiUrl, cluster.getProxyKubeconfig(), response)
       watcher.start()
       watchers.push(watcher)
     })

@@ -17,7 +17,7 @@ export class NodeShellSession extends ShellSession {
     super(socket, cluster)
     this.nodeName = nodeName
     this.podId = `node-shell-${uuid()}`
-    this.kc = cluster.proxyKubeconfig()
+    this.kc = cluster.getProxyKubeconfig()
   }
 
   public async open() {

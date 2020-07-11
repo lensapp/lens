@@ -26,11 +26,9 @@ export class LensProxy {
     this.router = new Router();
   }
 
-  listen(): this {
-    const proxyServer = this.buildCustomProxy();
-    const { proxyPort } = this.clusterManager;
-    this.proxyServer = proxyServer.listen(proxyPort);
-    logger.info(`LensProxy server has started http://localhost:${proxyPort}`);
+  listen(port = this.clusterManager.port): this {
+    this.proxyServer = this.buildCustomProxy().listen(port);
+    logger.info(`LensProxy server has started http://localhost:${port}`);
     return this;
   }
 
@@ -71,10 +69,10 @@ export class LensProxy {
       if (req.method !== "GET") {
         return
       }
-      const reqUrl = `${req.headers.host}${req.url}`
-      if (this.retryCounters.has(reqUrl)) {
-        logger.debug("Resetting proxy retry cache for url: " + reqUrl)
-        this.retryCounters.delete(reqUrl)
+      const reqId = this.getRequestId(req);
+      if (this.retryCounters.has(reqId)) {
+        logger.debug(`Resetting proxy retry cache for url: ${reqId}`);
+        this.retryCounters.delete(reqId)
       }
     })
     proxy.on("error", (error, req, res, target) => {
@@ -84,13 +82,13 @@ export class LensProxy {
       if (target) {
         logger.debug("Failed proxy to target: " + JSON.stringify(target, null, 2));
         if (req.method === "GET" && (!res.statusCode || res.statusCode >= 500)) {
-          const retryCounterKey = `${req.headers.host}${req.url}`
-          const retryCount = this.retryCounters.get(retryCounterKey) || 0
+          const reqId = this.getRequestId(req);
+          const retryCount = this.retryCounters.get(reqId) || 0
           const timeoutMs = retryCount * 250
           if (retryCount < 20) {
-            logger.debug("Retrying proxy request to url: " + retryCounterKey)
+            logger.debug(`Retrying proxy request to url: ${reqId}`)
             setTimeout(() => {
-              this.retryCounters.set(retryCounterKey, retryCount + 1)
+              this.retryCounters.set(reqId, retryCount + 1)
               this.handleRequest(proxy, req, res)
             }, timeoutMs)
           }
@@ -108,13 +106,12 @@ export class LensProxy {
   protected createWsListener(): WebSocket.Server {
     const ws = new WebSocket.Server({ noServer: true })
     return ws.on("connection", (async (socket: WebSocket, req: http.IncomingMessage) => {
-      const cluster = this.clusterManager.getClusterForRequest(req)
+      const cluster = this.clusterManager.getClusterForRequest(req);
       const nodeParam = url.parse(req.url, true).query["node"]?.toString();
       await nodeShell.open(socket, cluster, nodeParam);
     }));
   }
 
-  // fixme: remove api prefix?
   protected async getProxyTarget(req: http.IncomingMessage, contextHandler: ContextHandler): Promise<httpProxy.ServerOptions> {
     if (req.url.startsWith(apiKubePrefix)) {
       delete req.headers.authorization
@@ -124,11 +121,15 @@ export class LensProxy {
     }
   }
 
+  protected getRequestId(req: http.IncomingMessage) {
+    return req.headers.host + req.url;
+  }
+
   protected async handleRequest(proxy: httpProxy, req: http.IncomingMessage, res: http.ServerResponse) {
     const cluster = this.clusterManager.getClusterForRequest(req)
     if (!cluster) {
-      logger.error("Got request to unknown cluster")
-      logger.debug(req.headers.host + req.url)
+      const reqId = this.getRequestId(req);
+      logger.error("Got request to unknown cluster", { reqId })
       res.statusCode = 503
       res.end()
       return

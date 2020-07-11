@@ -20,7 +20,7 @@ export async function getFeatures(cluster: Cluster): Promise<FeatureStatusMap> {
         logger.debug("getting feature status...");
         const feature = ALL_FEATURES[key] as Feature;
         const kc = new KubeConfig()
-        kc.loadFromFile(cluster.proxyKubeconfigPath())
+        kc.loadFromFile(cluster.getProxyKubeconfigPath())
         
         const status = await feature.featureStatus(kc);
         result[feature.name] = status

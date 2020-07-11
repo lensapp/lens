@@ -1,9 +1,9 @@
 import fs from "fs";
-import logger from "./logger";
+import logger from "../logger";
 import * as yaml from "js-yaml";
-import { promiseExec } from "./promise-exec";
+import { promiseExec } from "../promise-exec";
 import { helmCli } from "./helm-cli";
-import { Singleton } from "../common/utils/singleton";
+import { Singleton } from "../../common/utils/singleton";
 
 export type HelmEnv = Record<string, string> & {
   HELM_REPOSITORY_CACHE?: string;
@@ -125,7 +125,6 @@ export class HelmRepoManager extends Singleton {
         logger.error(error)
       }
     })
-
   }
 
   public async addRepo(repository: HelmRepo) {

@@ -1,8 +1,8 @@
-import { LensApiRequest } from "./router"
-import { ResourceApplier } from "./resource-applier"
-import { LensApi } from "./lens-api"
+import { LensApiRequest } from "../router"
+import { LensApi } from "../lens-api"
+import { ResourceApplier } from "../resource-applier"
 
-class ResourceApplierApi extends LensApi {
+class ResourceApplierApiRoute extends LensApi {
   public async applyResource(request: LensApiRequest) {
     const { response, cluster, payload } = request
     try {
@@ -14,4 +14,4 @@ class ResourceApplierApi extends LensApi {
   }
 }
 
-export const resourceApplierApi = new ResourceApplierApi()
+export const resourceApplierRoute = new ResourceApplierApiRoute()

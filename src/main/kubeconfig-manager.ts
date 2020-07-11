@@ -1,3 +1,4 @@
+import type { ContextHandler } from "./context-handler";
 import type { Cluster } from "./cluster"
 import { app } from "electron"
 import fs from "fs-extra"
@@ -9,11 +10,12 @@ export class KubeconfigManager {
   protected configDir = app.getPath("temp")
   protected tempFile: string
 
-  constructor(protected cluster: Cluster) {
+  constructor(protected cluster: Cluster, protected contextHandler: ContextHandler) {
     this.init();
   }
 
   protected async init() {
+    await this.contextHandler.ensurePort();
     this.tempFile = await this.createTemporaryKubeconfig();
   }
 
@@ -28,12 +30,12 @@ export class KubeconfigManager {
   protected async createTemporaryKubeconfig(): Promise<string> {
     fs.ensureDir(this.configDir);
     const path = `${this.configDir}/${randomFileName("kubeconfig")}`;
-    const { contextName, contextHandler, kubeConfigPath } = this.cluster;
+    const { contextName, kubeConfigPath } = this.cluster;
     const kubeConfig = loadConfig(kubeConfigPath);
     kubeConfig.clusters = [
       {
         name: contextName,
-        server: await contextHandler.getApiTargetUrl(),
+        server: await this.contextHandler.getApiTargetUrl(),
         skipTLSVerify: true,
       }
     ];

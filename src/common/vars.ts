@@ -23,7 +23,7 @@ export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 
 // Apis
-export const apiPrefix = "/api-local" // local router apis
+export const apiPrefix = "/api" // local router apis
 export const apiKubePrefix = "/api-kube" // k8s cluster apis
 
 // Links
