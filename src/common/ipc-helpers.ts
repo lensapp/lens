@@ -16,7 +16,10 @@ export interface IpcMessageHandler {
 }
 
 export function sendMessage(channel: IpcChannel, ...args: any[]) {
-  webContents.getFocusedWebContents().send(channel, ...args);
+  const webContent = webContents.getFocusedWebContents();
+  if (webContent) {
+    webContent.send(channel, ...args);
+  }
 }
 
 export async function invokeMessage(channel: IpcChannel, ...args: any[]) {

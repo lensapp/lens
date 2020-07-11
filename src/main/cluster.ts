@@ -71,14 +71,13 @@ export class Cluster implements ClusterModel {
   async init(proxyPort: number) {
     try {
       this.proxyPort = proxyPort;
-      this.contextHandler = new ContextHandler(this);
-      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
-
       this.url = this.getKubeconfig().getCurrentCluster().server;
       this.proxyUrl = `http://localhost:${proxyPort}`;
       this.kubeProxyUrl = this.proxyUrl + apiKubePrefix;
       this.webContentUrl = `http://${this.id}.localhost:${proxyPort}`;
 
+      this.contextHandler = new ContextHandler(this);
+      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
       await this.refreshStatus();
       this.initialized = true;
 
