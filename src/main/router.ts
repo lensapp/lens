@@ -2,25 +2,35 @@ import Call from "@hapi/call"
 import Subtext from "@hapi/subtext"
 import http from "http"
 import path from "path"
-import { readFile } from "fs-extra"
+import { readFile, stat } from "fs-extra"
 import { Cluster } from "./cluster"
 import { helmApi } from "./helm-api"
 import { resourceApplierApi } from "./resource-applier-api"
 import { apiPrefix, appName, outDir } from "../common/vars";
 import { configRoute, kubeconfigRoute, metricsRoute, portForwardRoute, watchRoute } from "./routes";
 
-export interface RouterRequestOpts<P extends Record<string, string> = any> {
+export interface RouterRequestOpts {
   req: http.IncomingMessage;
   res: http.ServerResponse;
   cluster: Cluster;
+  params: RouteParams;
   url: URL;
-  params: P; // https://hapi.dev/module/call/api
 }
 
-export interface LensApiRequest<D = any, P = any> {
+export interface RouteParams extends Record<string, string> {
+  path?: string; // *-route
+  namespace?: string;
+  service?: string;
+  account?: string;
+  release?: string;
+  repo?: string;
+  chart?: string;
+}
+
+export interface LensApiRequest<P = any> {
   path: string;
-  payload: D;
-  params: P;
+  payload: P;
+  params: RouteParams;
   cluster: Cluster;
   response: http.ServerResponse;
   query: URLSearchParams;
@@ -89,22 +99,21 @@ export class Router {
 
   protected async handleStaticFile(filePath: string, response: http.ServerResponse) {
     const asset = path.resolve(outDir, filePath);
-    try {
+    const info = await stat(asset);
+    if (info.isFile()) {
       const data = await readFile(asset);
       response.setHeader("Content-Type", this.getMimeType(asset));
       response.write(data)
       response.end()
-    } catch (err) {
-      this.handleStaticFile(`${appName}.html`, response)
+    } else {
+      this.handleStaticFile(`${appName}.html`, response);
     }
   }
 
   protected addRoutes() {
     // Static assets
-    this.router.add({ method: 'get', path: '/{path*}' }, (request: LensApiRequest) => {
-      const { response, params } = request
-      const file = params.path || "/index.html"
-      this.handleStaticFile(file, response)
+    this.router.add({ method: 'get', path: '/{path*}' }, ({ params, response }: LensApiRequest) => {
+      this.handleStaticFile(params.path, response);
     })
 
     this.router.add({ method: "get", path: `${apiPrefix}/config` }, configRoute.routeConfig.bind(configRoute))
