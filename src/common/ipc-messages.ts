@@ -5,8 +5,7 @@ export enum ClusterIpcMessage {
   CLUSTER_STOP = "cluster-stop",
   CLUSTER_REMOVE = "cluster-remove",
   CLUSTER_REMOVE_WORKSPACE = "cluster-remove-all-from-workspace",
-  CLUSTER_EVENTS = "cluster-events-count",
-  CLUSTER_REFRESH = "cluster-refresh",
+  CLUSTER_REFRESH = "cluster-refresh", // todo: remove, possibly won't needed
   FEATURE_INSTALL = "cluster-feature-install",
   FEATURE_UPGRADE = "cluster-feature-upgrade",
   FEATURE_REMOVE = "cluster-feature-remove",

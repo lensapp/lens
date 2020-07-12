@@ -48,11 +48,11 @@ export class Cluster implements ClusterModel {
   @observable online: boolean;
   @observable accessible: boolean;
   @observable failureReason: string;
-  @observable nodes: number;
+  @observable nodes = 0;
   @observable version: string;
-  @observable distribution: string;
-  @observable isAdmin: boolean;
-  @observable eventCount: number; // todo: auto-fetch every 3s and push updates to client (?)
+  @observable distribution = "unknown";
+  @observable isAdmin = false;
+  @observable eventCount = 0; // todo: auto-fetch every 3s and push updates to client (?)
   @observable preferences: ClusterPreferences = {};
   @observable features: FeatureStatusMap = {};
 
@@ -149,7 +149,7 @@ export class Cluster implements ClusterModel {
     return this.preferences.prometheus?.prefix || ""
   }
 
-  k8sRequest(path: string, options: RequestPromiseOptions = {}) {
+  protected k8sRequest(path: string, options: RequestPromiseOptions = {}) {
     return request(this.kubeProxyUrl + path, {
       json: true,
       timeout: 10000,
@@ -160,7 +160,7 @@ export class Cluster implements ClusterModel {
     })
   }
 
-  protected async getConnectionStatus() {
+  protected async getConnectionStatus(): Promise<ClusterStatus> {
     try {
       const response = await this.k8sRequest("/version")
       this.version = response.gitVersion
@@ -198,7 +198,7 @@ export class Cluster implements ClusterModel {
         kind: "SelfSubjectAccessReview",
         spec: { resourceAttributes }
       })
-      return accessReview.body.status.allowed === true
+      return accessReview.body.status.allowed
     } catch (error) {
       logger.error(`failed to request selfSubjectAccessReview: ${error.message}`)
       return false
@@ -224,7 +224,7 @@ export class Cluster implements ClusterModel {
     return "vanilla"
   }
 
-  protected async getNodeCount() {
+  protected async getNodeCount(): Promise<number> {
     try {
       const response = await this.k8sRequest("/api/v1/nodes")
       return response.items.length
@@ -234,7 +234,7 @@ export class Cluster implements ClusterModel {
     }
   }
 
-  async getEventCount(): Promise<number> {
+  protected async getEventCount(): Promise<number> {
     if (!this.isAdmin) {
       return 0;
     }

@@ -87,7 +87,7 @@ export class ClusterManager {
     }
   }
 
-  // fixme: verify
+  // fixme
   getClusterForRequest(req: http.IncomingMessage): Cluster {
     let cluster: Cluster = null
 
@@ -131,7 +131,6 @@ export class ClusterManager {
     }
   }
 
-  // todo: check feature failures
   protected async installFeature({ clusterId, name, config }: FeatureInstallRequest) {
     tracker.event("cluster", "install-feature")
     return this.getCluster(clusterId)?.installFeature(name, config)
@@ -147,10 +146,6 @@ export class ClusterManager {
     return this.getCluster(clusterId)?.uninstallFeature(name);
   }
 
-  protected async getEventsCount(clusterId: ClusterId): Promise<number> {
-    return await this.getCluster(clusterId)?.getEventCount() || 0;
-  }
-
   protected async refreshCluster(clusterId: ClusterId) {
     await this.getCluster(clusterId)?.refreshStatus();
   }
@@ -161,7 +156,6 @@ export class ClusterManager {
       [ClusterIpcMessage.CLUSTER_STOP]: clusterManager.stopCluster,
       [ClusterIpcMessage.CLUSTER_REMOVE]: clusterManager.removeCluster,
       [ClusterIpcMessage.CLUSTER_REMOVE_WORKSPACE]: clusterManager.removeAllByWorkspace,
-      [ClusterIpcMessage.CLUSTER_EVENTS]: clusterManager.getEventsCount,
       [ClusterIpcMessage.CLUSTER_REFRESH]: clusterManager.refreshCluster,
       [ClusterIpcMessage.FEATURE_INSTALL]: clusterManager.installFeature,
       [ClusterIpcMessage.FEATURE_UPGRADE]: clusterManager.upgradeFeature,

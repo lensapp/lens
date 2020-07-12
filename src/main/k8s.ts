@@ -66,52 +66,52 @@ export function splitConfig(kubeConfig: KubeConfig): KubeConfig[] {
   return configs;
 }
 
-export function dumpConfigYaml(kc: KubeConfig): string {
+export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
   const config = {
     apiVersion: "v1",
     kind: "Config",
     preferences: {},
-    'current-context': kc.currentContext,
-    clusters: kc.clusters.map(c => {
+    'current-context': kubeConfig.currentContext,
+    clusters: kubeConfig.clusters.map(cluster => {
       return {
-        name: c.name,
+        name: cluster.name,
         cluster: {
-          'certificate-authority-data': c.caData,
-          'certificate-authority': c.caFile,
-          server: c.server,
-          'insecure-skip-tls-verify': c.skipTLSVerify
+          'certificate-authority-data': cluster.caData,
+          'certificate-authority': cluster.caFile,
+          server: cluster.server,
+          'insecure-skip-tls-verify': cluster.skipTLSVerify
         }
       }
     }),
-    contexts: kc.contexts.map(c => {
+    contexts: kubeConfig.contexts.map(context => {
       return {
-        name: c.name,
+        name: context.name,
         context: {
-          cluster: c.cluster,
-          user: c.user,
-          namespace: c.namespace
+          cluster: context.cluster,
+          user: context.user,
+          namespace: context.namespace
         }
       }
     }),
-    users: kc.users.map(u => {
+    users: kubeConfig.users.map(user => {
       return {
-        name: u.name,
+        name: user.name,
         user: {
-          'client-certificate-data': u.certData,
-          'client-certificate': u.certFile,
-          'client-key-data': u.keyData,
-          'client-key': u.keyFile,
-          'auth-provider': u.authProvider,
-          exec: u.exec,
-          token: u.token,
-          username: u.username,
-          password: u.password
+          'client-certificate-data': user.certData,
+          'client-certificate': user.certFile,
+          'client-key-data': user.keyData,
+          'client-key': user.keyFile,
+          'auth-provider': user.authProvider,
+          exec: user.exec,
+          token: user.token,
+          username: user.username,
+          password: user.password
         }
       }
     })
   }
 
-  // logger.info("Dumping KubeConfig:", config);
+  logger.debug("Dumping KubeConfig:", config);
   // skipInvalid: true makes dump ignore undefined values
   return yaml.safeDump(config, { skipInvalid: true });
 }

@@ -1,22 +1,27 @@
+import type { KubeConfig } from "@kubernetes/client-node";
 import type { ContextHandler } from "./context-handler";
 import type { Cluster } from "./cluster"
 import { app } from "electron"
+import path from "path"
 import fs from "fs-extra"
-import { randomFileName } from "../common/utils"
 import { dumpConfigYaml, loadConfig } from "./k8s"
 import logger from "./logger"
 
 export class KubeconfigManager {
   protected configDir = app.getPath("temp")
-  protected tempFile: string
+  protected tempFile: string;
 
   constructor(protected cluster: Cluster, protected contextHandler: ContextHandler) {
     this.init();
   }
 
   protected async init() {
-    await this.contextHandler.ensurePort();
-    this.tempFile = await this.createTemporaryKubeconfig();
+    try {
+      await this.contextHandler.ensurePort();
+      await this.createProxyKubeconfig();
+    } catch (err) {
+      logger.error(`Failed to created temp config`, { err })
+    }
   }
 
   getPath() {
@@ -27,33 +32,38 @@ export class KubeconfigManager {
    * Creates new "temporary" kubeconfig that point to the kubectl-proxy.
    * This way any user of the config does not need to know anything about the auth etc. details.
    */
-  protected async createTemporaryKubeconfig(): Promise<string> {
+  protected async createProxyKubeconfig(): Promise<string> {
     fs.ensureDir(this.configDir);
-    const path = `${this.configDir}/${randomFileName("kubeconfig")}`;
-    const { contextName, kubeConfigPath } = this.cluster;
+    const { contextName, kubeConfigPath, id } = this.cluster;
+    const tempFile = path.join(this.configDir, `kubeconfig-${id}`);
     const kubeConfig = loadConfig(kubeConfigPath);
-    kubeConfig.clusters = [
-      {
-        name: contextName,
-        server: await this.contextHandler.getApiTargetUrl(),
-        skipTLSVerify: true,
-      }
-    ];
-    kubeConfig.users = [
-      { name: "proxy" },
-    ];
-    kubeConfig.currentContext = contextName;
-    kubeConfig.contexts = [
-      {
-        user: "proxy",
-        name: contextName,
-        cluster: contextName,
-        namespace: kubeConfig.getContextObject(contextName).namespace,
-      }
-    ];
-    logger.info(`Creating temp config for context "${contextName}" at "${path}"`);
-    fs.writeFileSync(path, dumpConfigYaml(kubeConfig));
-    return path;
+    const proxyUser = "proxy";
+    const proxyConfig: Partial<KubeConfig> = {
+      currentContext: contextName,
+      clusters: [
+        {
+          name: contextName,
+          server: await this.contextHandler.getApiTargetUrl(),
+          skipTLSVerify: undefined,
+        }
+      ],
+      users: [
+        { name: proxyUser },
+      ],
+      contexts: [
+        {
+          user: proxyUser,
+          name: contextName,
+          cluster: contextName,
+          namespace: kubeConfig.getContextObject(contextName).namespace,
+        }
+      ]
+    };
+    const tempConfigYaml = dumpConfigYaml(proxyConfig);
+    fs.writeFileSync(tempFile, tempConfigYaml);
+    logger.info(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${tempConfigYaml}`);
+    this.tempFile = tempFile;
+    return tempFile;
   }
 
   unlink() {
