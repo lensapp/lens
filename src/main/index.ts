@@ -50,7 +50,6 @@ async function main() {
   try {
     proxyPort = await getFreePort()
   } catch (error) {
-    logger.error(error)
     await dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy")
     app.quit();
   }
