@@ -23,7 +23,7 @@ interface Props {
 @observer
 export class ClustersMenu extends React.Component<Props> {
   selectCluster = (cluster: Cluster) => {
-    clusterStore.activeCluster = cluster.id;
+    clusterStore.activeClusterId = cluster.id;
     console.log('load lens for cluster:', cluster)
   }
 
@@ -59,7 +59,7 @@ export class ClustersMenu extends React.Component<Props> {
     return (
       <div className={cssNames("ClustersMenu flex gaps column", className)}>
         {clusters.map(cluster => {
-          const isActive = cluster.id === clusterStore.activeCluster;
+          const isActive = cluster.id === clusterStore.activeClusterId;
           return (
             <ClusterIcon
               key={cluster.id}

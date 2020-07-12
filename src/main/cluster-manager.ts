@@ -39,6 +39,13 @@ export class ClusterManager {
         removedClusters.clear();
       }
     });
+    // auto-refresh status for active cluster
+    autorun(() => {
+      const { activeCluster } = clusterStore;
+      if (activeCluster && activeCluster.initialized) {
+        activeCluster.refreshStatus();
+      }
+    });
     // listen ipc-events
     ClusterManager.ipcListen(this);
   }
@@ -87,7 +94,6 @@ export class ClusterManager {
     }
   }
 
-  // fixme
   getClusterForRequest(req: http.IncomingMessage): Cluster {
     let cluster: Cluster = null
 
@@ -147,7 +153,10 @@ export class ClusterManager {
   }
 
   protected async refreshCluster(clusterId: ClusterId) {
-    await this.getCluster(clusterId)?.refreshStatus();
+    const cluster = this.getCluster(clusterId);
+    if (cluster) {
+      await cluster.refreshStatus();
+    }
   }
 
   static ipcListen(clusterManager: ClusterManager) {

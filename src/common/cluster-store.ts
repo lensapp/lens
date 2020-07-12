@@ -48,11 +48,15 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
   }
 
-  @observable activeCluster: ClusterId; // todo: current-context from kube-config?
+  @observable activeClusterId: ClusterId;
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 
-  @computed get clustersList() {
+  @computed get activeCluster(): Cluster {
+    return this.clusters.get(this.activeClusterId);
+  }
+
+  @computed get clustersList(): Cluster[] {
     return Array.from(this.clusters.values());
   }
 
@@ -74,8 +78,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   removeById(clusterId: ClusterId): void {
-    if (this.activeCluster === clusterId) {
-      this.activeCluster = null;
+    if (this.activeClusterId === clusterId) {
+      this.activeClusterId = null;
     }
     this.clusters.delete(clusterId);
   }
@@ -111,14 +115,19 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       }
     });
 
-    this.activeCluster = newClusters.has(activeCluster) ? activeCluster : null;
+    this.activeClusterId = newClusters.has(activeCluster) ? activeCluster : null;
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
+
+    // "auto-select" first cluster if not available or invalid from config file
+    if (!this.activeClusterId && newClusters.size) {
+      this.activeClusterId = Array.from(newClusters.values())[0].id;
+    }
   }
 
   toJSON(): ClusterStoreModel {
     return toJS({
-      activeCluster: this.activeCluster,
+      activeCluster: this.activeClusterId,
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
     }, {
       recurseEverything: true

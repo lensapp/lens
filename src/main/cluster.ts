@@ -42,7 +42,6 @@ export class Cluster implements ClusterModel {
   @observable kubeConfigPath: string;
   @observable url: string; // cluster-api url
   @observable proxyUrl: string; // lens-proxy url
-  @observable kubeProxyUrl: string;
   @observable webContentUrl: string;
   @observable proxyPort: number;
   @observable online: boolean;
@@ -60,32 +59,26 @@ export class Cluster implements ClusterModel {
     this.updateModel(model);
   }
 
+  @action
   updateModel(model: ClusterModel) {
     Object.assign(this, model);
-    if (!this.contextName) {
-      this.contextName = this.preferences.clusterName;
-    }
+    this.url = this.getKubeconfig().getCurrentCluster().server;
+    this.contextName = this.preferences.clusterName;
   }
 
   @action
   async init(proxyPort: number) {
     try {
       this.proxyPort = proxyPort;
-      this.url = this.getKubeconfig().getCurrentCluster().server;
-      this.proxyUrl = `http://localhost:${proxyPort}`;
-      this.kubeProxyUrl = this.proxyUrl + apiKubePrefix;
-      this.webContentUrl = `http://${this.id}.localhost:${proxyPort}`;
-
       this.contextHandler = new ContextHandler(this);
       this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
-      await this.refreshStatus();
+      this.proxyUrl = `http://localhost:${proxyPort}`;
+      this.webContentUrl = `http://${this.id}.localhost:${proxyPort}`;
       this.initialized = true;
-
       logger.info(`[CLUSTER]: init success`, {
         id: this.id,
         url: this.url,
         proxyUrl: this.proxyUrl,
-        kubeProxyUrl: this.kubeProxyUrl,
         webContentUrl: this.webContentUrl,
       });
     } catch (err) {
@@ -150,7 +143,8 @@ export class Cluster implements ClusterModel {
   }
 
   protected k8sRequest(path: string, options: RequestPromiseOptions = {}) {
-    return request(this.kubeProxyUrl + path, {
+    const apiUrl = this.proxyUrl + apiKubePrefix + path;
+    return request(apiUrl, {
       json: true,
       timeout: 10000,
       headers: {
