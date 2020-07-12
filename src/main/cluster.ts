@@ -17,19 +17,6 @@ enum ClusterStatus {
   Offline = 0
 }
 
-export interface ClusterState extends ClusterModel {
-  url: string;
-  online?: boolean;
-  accessible?: boolean;
-  failureReason?: string;
-  nodes?: number;
-  eventCount?: number;
-  version?: string;
-  distribution?: string;
-  isAdmin?: boolean;
-  features?: FeatureStatusMap;
-}
-
 export class Cluster implements ClusterModel {
   public id: ClusterId;
   public kubeCtl: Kubectl
@@ -270,26 +257,6 @@ export class Cluster implements ClusterModel {
       kubeConfigPath: this.kubeConfigPath,
       workspace: this.workspace,
       preferences: this.preferences,
-    }, {
-      recurseEverything: true
-    })
-  }
-
-  // todo: use for push-updates to lens view
-  getState(): ClusterState {
-    const storeModel = this.toJSON();
-    return toJS({
-      ...storeModel,
-      url: this.url,
-      online: this.online,
-      accessible: this.accessible,
-      failureReason: this.failureReason,
-      nodes: this.nodes,
-      version: this.version,
-      distribution: this.distribution,
-      isAdmin: this.isAdmin,
-      features: this.features,
-      eventCount: this.eventCount,
     }, {
       recurseEverything: true
     })
