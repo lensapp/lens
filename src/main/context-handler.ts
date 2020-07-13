@@ -18,7 +18,7 @@ export class ContextHandler {
   protected prometheusPath: string
 
   constructor(protected cluster: Cluster) {
-    this.clusterUrl = url.parse(cluster.url);
+    this.clusterUrl = url.parse(cluster.apiUrl);
     this.setupPrometheus(cluster.preferences);
   }
 
@@ -80,18 +80,19 @@ export class ContextHandler {
     return apiTarget
   }
 
-  public async getApiTargetUrl(): Promise<string> {
-    await this.ensurePort();
-    return `http://127.0.0.1:${this.proxyPort}${this.clusterUrl.path}`;
-  }
-
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
+    await this.ensurePort();
     return {
       changeOrigin: true,
-      target: await this.getApiTargetUrl(),
       timeout: timeout,
       headers: {
         "Host": this.clusterUrl.hostname,
+      },
+      target: {
+        protocol: "http://",
+        host: "127.0.0.1",
+        port: this.proxyPort,
+        path: this.clusterUrl.path
       }
     }
   }

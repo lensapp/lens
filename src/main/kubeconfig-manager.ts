@@ -1,5 +1,4 @@
 import type { KubeConfig } from "@kubernetes/client-node";
-import type { ContextHandler } from "./context-handler";
 import type { Cluster } from "./cluster"
 import { app } from "electron"
 import path from "path"
@@ -11,16 +10,21 @@ export class KubeconfigManager {
   protected configDir = app.getPath("temp")
   protected tempFile: string;
 
-  constructor(protected cluster: Cluster, protected contextHandler: ContextHandler) {
+  constructor(protected cluster: Cluster) {
+    if(!cluster.kubeAuthProxyUrl) {
+      throw new Error(`Cluster's auth proxy url must be initialized`)
+    }
+    if (!cluster.contextHandler.proxyPort) {
+      throw new Error("Context-handler proxy port must be resolved")
+    }
     this.init();
   }
 
   protected async init() {
     try {
-      await this.contextHandler.ensurePort();
       await this.createProxyKubeconfig();
     } catch (err) {
-      logger.error(`Failed to created temp config`, { err })
+      logger.error(`Failed to created temp config for auth-proxy`, { err })
     }
   }
 
@@ -33,9 +37,9 @@ export class KubeconfigManager {
    * This way any user of the config does not need to know anything about the auth etc. details.
    */
   protected async createProxyKubeconfig(): Promise<string> {
-    fs.ensureDir(this.configDir);
-    const { contextName, kubeConfigPath, id } = this.cluster;
-    const tempFile = path.join(this.configDir, `kubeconfig-${id}`);
+    const { configDir, cluster } = this;
+    const { contextName, kubeConfigPath, id } = cluster;
+    const tempFile = path.join(configDir, `kubeconfig-${id}`);
     const kubeConfig = loadConfig(kubeConfigPath);
     const proxyUser = "proxy";
     const proxyConfig: Partial<KubeConfig> = {
@@ -43,7 +47,7 @@ export class KubeconfigManager {
       clusters: [
         {
           name: contextName,
-          server: await this.contextHandler.getApiTargetUrl(),
+          server: cluster.kubeAuthProxyUrl,
           skipTLSVerify: undefined,
         }
       ],
@@ -59,9 +63,10 @@ export class KubeconfigManager {
         }
       ]
     };
-    const tempConfigYaml = dumpConfigYaml(proxyConfig);
-    fs.writeFileSync(tempFile, tempConfigYaml);
-    logger.info(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${tempConfigYaml}`);
+    const configYaml = dumpConfigYaml(proxyConfig);
+    fs.ensureDir(path.dirname(tempFile));
+    fs.writeFileSync(tempFile, configYaml);
+    logger.debug(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
     this.tempFile = tempFile;
     return tempFile;
   }

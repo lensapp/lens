@@ -10,13 +10,12 @@ export type IMetricsQuery = string | string[] | {
 class MetricsRoute extends LensApi {
   public async routeMetrics(request: LensApiRequest<IMetricsQuery>) {
     const { response, cluster, payload } = request
-    const { contextHandler } = cluster;
-    const serverUrl = await contextHandler.getApiTargetUrl();
+    const { contextHandler, kubeProxyUrl } = cluster;
     let metricsUrl: string
     let prometheusProvider: PrometheusProvider
     try {
       const prometheusPath = await contextHandler.getPrometheusPath()
-      metricsUrl = `${serverUrl}/api/v1/namespaces/${prometheusPath}/proxy${cluster.getPrometheusApiPrefix()}/api/v1/query_range`
+      metricsUrl = `${kubeProxyUrl}/api/v1/namespaces/${prometheusPath}/proxy${cluster.getPrometheusApiPrefix()}/api/v1/query_range`
       prometheusProvider = await contextHandler.getPrometheusProvider()
     } catch {
       this.respondJson(response, {})

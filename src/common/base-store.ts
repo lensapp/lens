@@ -7,6 +7,7 @@ import { action, observable, reaction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
 import isEqual from "lodash/isEqual"
 import { getAppVersion } from "./utils/app-version";
+import logger from "../main/logger";
 
 export interface BaseStoreParams<T = any> {
   configName: string;
@@ -57,7 +58,7 @@ export class BaseStore<T = any> extends Singleton {
   async load() {
     const { configName, syncEnabled, confOptions = {} } = this.params;
 
-    // use "await" to make pseudo-async "load" for more future-proof usages
+    // use "await" to make pseudo-async "load" for more future-proof use-cases
     this.storeConfig = await new Config({
       projectName: "lens",
       projectVersion: getAppVersion(),
@@ -69,7 +70,7 @@ export class BaseStore<T = any> extends Singleton {
       ...confOptions,
     });
     const jsonModel = this.storeConfig.store;
-    console.info(`[STORE]: [LOADED] ${this.storeConfig.path}`, jsonModel);
+    logger.info(`[STORE]: loaded from ${this.storeConfig.path}`);
     this.fromStore(jsonModel);
     this.isLoaded = true;
   }
@@ -91,14 +92,14 @@ export class BaseStore<T = any> extends Singleton {
 
   protected onConfigChange(data: T, oldValue: Partial<T>) {
     if (!isEqual(this.toJSON(), data)) {
-      console.info(`[STORE]: [UPDATE] from ${this.name}`, { data, oldValue });
+      logger.debug(`[STORE]: received update from ${this.name}`, { data, oldValue });
       this.fromStore(data);
     }
   }
 
   protected onModelChange(model: T) {
     if (!isEqual(this.storeModel, model)) {
-      console.info(`[STORE]: [SAVE] ${this.name} from runtime update`, {
+      logger.debug(`[STORE]: saving ${this.name} from runtime`, {
         data: model,
         oldValue: this.storeModel
       });

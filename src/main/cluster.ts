@@ -27,10 +27,10 @@ export class Cluster implements ClusterModel {
   @observable contextName: string;
   @observable workspace: string;
   @observable kubeConfigPath: string;
-  @observable url: string; // cluster-api url
-  @observable proxyUrl: string; // lens-proxy url
-  @observable webContentUrl: string;
-  @observable proxyPort: number;
+  @observable apiUrl: string; // cluster server url
+  @observable kubeProxyUrl: string; // lens-proxy to kube-api url
+  @observable kubeAuthProxyUrl: string; // auth-proxy to temp kube-config
+  @observable webContentUrl: string; // page content url for loading in renderer
   @observable online: boolean;
   @observable accessible: boolean;
   @observable failureReason: string;
@@ -49,30 +49,28 @@ export class Cluster implements ClusterModel {
   @action
   updateModel(model: ClusterModel) {
     Object.assign(this, model);
-    this.url = this.getKubeconfig().getCurrentCluster().server;
+    this.apiUrl = this.getKubeconfig().getCurrentCluster().server;
     this.contextName = this.preferences.clusterName;
   }
 
   @action
-  async init(proxyPort: number) {
+  async init(port: number) {
     try {
-      this.proxyPort = proxyPort;
       this.contextHandler = new ContextHandler(this);
-      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
-      this.proxyUrl = `http://localhost:${proxyPort}`;
-      this.webContentUrl = `http://${this.id}.localhost:${proxyPort}`;
+      const contextPort = await this.contextHandler.ensurePort();
+      this.kubeAuthProxyUrl = `http://127.0.0.1:${contextPort}`;
+      this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
+      this.webContentUrl = `http://${this.id}.localhost:${port}`;
+      this.kubeconfigManager = new KubeconfigManager(this);
       this.initialized = true;
-      logger.info(`[CLUSTER]: init success`, {
-        id: this.id,
-        url: this.url,
-        proxyUrl: this.proxyUrl,
+      logger.info(`[✔] Cluster(${this.id}) init success`, {
+        serverUrl: this.apiUrl,
         webContentUrl: this.webContentUrl,
+        kubeProxyUrl: this.kubeProxyUrl,
+        kubeAuthProxyUrl: this.kubeAuthProxyUrl,
       });
     } catch (err) {
-      logger.error(`[CLUSTER]: init error`, {
-        id: this.id,
-        error: err.stack,
-      });
+      logger.error(`[X] Cluster(${this.id}) init failed: ${err}`);
     }
   }
 
@@ -130,14 +128,15 @@ export class Cluster implements ClusterModel {
   }
 
   protected k8sRequest(path: string, options: RequestPromiseOptions = {}) {
-    const apiUrl = this.proxyUrl + apiKubePrefix + path;
+    const apiUrl = this.kubeProxyUrl + path;
+    logger.debug(`[CLUSTER]: getting request to: ${apiUrl}`);
     return request(apiUrl, {
       json: true,
       timeout: 10000,
       headers: {
         ...(options.headers || {}),
-        host: `${this.id}.localhost:${this.proxyPort}`,
-      }
+        Host: new URL(this.webContentUrl).host,
+      },
     })
   }
 
@@ -181,7 +180,7 @@ export class Cluster implements ClusterModel {
       })
       return accessReview.body.status.allowed
     } catch (error) {
-      logger.error(`failed to request selfSubjectAccessReview: ${error.message}`)
+      logger.error(`failed to request selfSubjectAccessReview: ${error}`)
       return false
     }
   }
@@ -198,8 +197,8 @@ export class Cluster implements ClusterModel {
     if (kubernetesVersion.includes("gke")) return "gke"
     if (kubernetesVersion.includes("eks")) return "eks"
     if (kubernetesVersion.includes("IKS")) return "iks"
-    if (this.url.endsWith("azmk8s.io")) return "aks"
-    if (this.url.endsWith("k8s.ondigitalocean.com")) return "digitalocean"
+    if (this.apiUrl.endsWith("azmk8s.io")) return "aks"
+    if (this.apiUrl.endsWith("k8s.ondigitalocean.com")) return "digitalocean"
     if (this.contextName.startsWith("minikube")) return "minikube"
     if (kubernetesVersion.includes("+")) return "custom"
     return "vanilla"
