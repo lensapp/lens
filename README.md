@@ -40,8 +40,8 @@ brew cask install lens
 
 Allows faster separately re-run some of involved processes:
 
-1. `yarn dev:main` compiles electron's main process and watch files 
-1. `yarn dev:renderer` compiles electron's renderer part  
+1. `yarn dev:main` compiles electron's main process part and start watching files 
+1. `yarn dev:renderer` compiles electron's renderer part and start watching files  
 1. `yarn dev-run` runs app in dev-mode and restarts when electron's main process file has changed
 
 ## Contributing
