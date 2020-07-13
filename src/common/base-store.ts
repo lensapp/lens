@@ -70,7 +70,7 @@ export class BaseStore<T = any> extends Singleton {
       ...confOptions,
     });
     const jsonModel = this.storeConfig.store;
-    logger.info(`[STORE]: loaded from ${this.storeConfig.path}`);
+    logger.info(`💿 Store loaded from ${this.storeConfig.path}`);
     this.fromStore(jsonModel);
     this.isLoaded = true;
   }
@@ -92,14 +92,14 @@ export class BaseStore<T = any> extends Singleton {
 
   protected onConfigChange(data: T, oldValue: Partial<T>) {
     if (!isEqual(this.toJSON(), data)) {
-      logger.debug(`[STORE]: received update from ${this.name}`, { data, oldValue });
+      logger.debug(`💿 Store received update from ${this.name}`, { data, oldValue });
       this.fromStore(data);
     }
   }
 
   protected onModelChange(model: T) {
     if (!isEqual(this.storeModel, model)) {
-      logger.debug(`[STORE]: saving ${this.name} from runtime`, {
+      logger.debug(`💿 Store ${this.name} is saving updates from app runtime`, {
         data: model,
         oldValue: this.storeModel
       });

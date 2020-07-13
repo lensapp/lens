@@ -64,15 +64,16 @@ export class ClustersMenu extends React.Component<Props> {
             <ClusterIcon
               key={cluster.id}
               cluster={cluster}
+              showErrorCount={true}
               className={cssNames({ active: isActive })}
               onClick={() => this.selectCluster(cluster)}
               onContextMenu={() => this.showContextMenu(cluster)}
             />
           )
         })}
-        <div className="add-cluster">
+        <div className="add-cluster" onClick={this.addCluster}>
           <Icon
-            big material="add" className="add" onClick={this.addCluster}
+            big material="add" className="add"
             tooltip={(
               <div className="flex column gaps">
                 <p><Trans>This is the quick launch menu.</Trans></p>
@@ -85,7 +86,7 @@ export class ClustersMenu extends React.Component<Props> {
             )}
           />
           {newContexts.length > 0 && (
-            <Badge className="new-contexts" label={newContexts.length}/>
+            <Badge className="counter" label={newContexts.length}/>
           )}
         </div>
       </div>

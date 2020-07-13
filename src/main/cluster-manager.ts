@@ -41,9 +41,8 @@ export class ClusterManager {
     });
     // auto-refresh status for active cluster
     autorun(() => {
-      const { activeCluster } = clusterStore;
-      if (activeCluster && activeCluster.initialized) {
-        activeCluster.refreshStatus();
+      if (clusterStore.activeCluster) {
+        clusterStore.activeCluster.refreshStatus();
       }
     });
     // listen ipc-events

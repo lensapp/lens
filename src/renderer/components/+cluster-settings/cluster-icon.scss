@@ -1,5 +1,11 @@
 .ClusterIcon {
   position: relative;
+  --size: 40px;
+
+  > img {
+    width: var(--size);
+    height: var(--size);
+  }
 
   .Badge {
     position: absolute;

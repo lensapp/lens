@@ -1,6 +1,6 @@
 import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { FeatureStatusMap } from "./feature"
-import { action, observable, toJS } from "mobx";
+import { action, observable, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { ContextHandler } from "./context-handler"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
@@ -22,6 +22,8 @@ export class Cluster implements ClusterModel {
   public kubeCtl: Kubectl
   public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
+
+  public whenReady = when(() => this.initialized);
 
   @observable initialized = false;
   @observable contextName: string;
@@ -63,14 +65,14 @@ export class Cluster implements ClusterModel {
       this.webContentUrl = `http://${this.id}.localhost:${port}`;
       this.kubeconfigManager = new KubeconfigManager(this);
       this.initialized = true;
-      logger.info(`[✔] Cluster(${this.id}) init success`, {
+      logger.info(`✅ ️Cluster(${this.id}) init success`, {
         serverUrl: this.apiUrl,
         webContentUrl: this.webContentUrl,
         kubeProxyUrl: this.kubeProxyUrl,
         kubeAuthProxyUrl: this.kubeAuthProxyUrl,
       });
     } catch (err) {
-      logger.error(`[X] Cluster(${this.id}) init failed: ${err}`);
+      logger.error(`💣 Cluster(${this.id}) init failed: ${err}`);
     }
   }
 
@@ -82,6 +84,7 @@ export class Cluster implements ClusterModel {
 
   @action
   async refreshStatus() {
+    await this.whenReady;
     const connectionStatus = await this.getConnectionStatus();
     this.online = connectionStatus > ClusterStatus.Offline;
     this.accessible = connectionStatus == ClusterStatus.AccessGranted;

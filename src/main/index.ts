@@ -35,7 +35,7 @@ async function main() {
   const workingDir = path.join(app.getPath("appData"), appName);
   app.setName(appName);
   app.setPath("userData", workingDir);
-  logger.info(`Start app from "${workingDir}"`)
+  logger.info(`🚀 Starting Lens from "${workingDir}"`)
 
   tracker.event("app", "start");
   const updater = new AppUpdater()
@@ -75,12 +75,13 @@ async function main() {
 
   // create window manager and open app
   windowManager = new WindowManager();
-  // windowManager.showSplash();
+  windowManager.showSplash();
 }
 
 // Events
 app.on("ready", main);
 
+// fixme: never happens, Cmd+W doesn't work
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
@@ -98,9 +99,10 @@ app.on("activate", () => {
   logger.debug("app:activate");
 })
 
+
 app.on("will-quit", async (event) => {
   event.preventDefault(); // To allow mixpanel sending to be executed
   if (clusterManager) clusterManager.stop()
   if (proxyServer) proxyServer.close()
-  app.exit(0);
+  app.exit();
 })

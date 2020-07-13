@@ -5,6 +5,10 @@
   padding: $padding * 1.5;
   background: $menuBgc;
 
+  > * {
+    cursor: pointer;
+  }
+
   .add-cluster {
     position: relative;
 
@@ -27,8 +31,7 @@
       }
     }
 
-    // todo: reuse in cluster-icon.tsx
-    .Badge.new-contexts {
+    .Badge.counter {
       $boxSize: 17px;
       $offset: -7px;
 
@@ -45,6 +48,7 @@
       font-weight: normal;
       border-radius: $radius;
       padding: 0;
+      pointer-events: none;
     }
   }
 }
