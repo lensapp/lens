@@ -1,13 +1,11 @@
 .ClustersMenu {
   @include hidden-scrollbar;
-  $menuBgc: #252729;
+
+  --flex-gap: #{$padding * 2};
+  --menu-bgc: #252729;
 
   padding: $padding * 1.5;
-  background: $menuBgc;
-
-  > * {
-    cursor: pointer;
-  }
+  background: var(--menu-bgc);
 
   .add-cluster {
     position: relative;
@@ -15,7 +13,7 @@
     .Icon.add {
       border-radius: $radius;
       padding: $padding / 3;
-      color: $menuBgc !important;
+      color: var(--menu-bgc) !important;
       background: white !important;
       font-weight: bold;
       cursor: pointer;

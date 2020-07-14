@@ -22,6 +22,7 @@ export default migration({
       try {
         // take the embedded kubeconfig and dump it into a file
         cluster.kubeConfigPath = writeEmbeddedKubeConfig(cluster.id, cluster.kubeConfig)
+        delete cluster.kubeConfig;
         migratedClusters.push(cluster)
       } catch (error) {
         log(`Failed to migrate Kubeconfig for cluster "${cluster.id}"`, error)

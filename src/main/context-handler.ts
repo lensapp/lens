@@ -68,6 +68,11 @@ export class ContextHandler {
     return this.prometheusPath;
   }
 
+  public async resolveAuthProxyUrl() {
+    const proxyPort = await this.ensurePort();
+    return `http://127.0.0.1:${proxyPort}`;
+  }
+
   public async getApiTarget(isWatchRequest = false): Promise<httpProxy.ServerOptions> {
     if (this.apiTarget && !isWatchRequest) {
       return this.apiTarget
@@ -81,19 +86,14 @@ export class ContextHandler {
   }
 
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
-    await this.ensurePort();
+    const proxyUrl = await this.resolveAuthProxyUrl();
     return {
+      target: proxyUrl + this.clusterUrl.path,
       changeOrigin: true,
       timeout: timeout,
       headers: {
         "Host": this.clusterUrl.hostname,
       },
-      target: {
-        protocol: "http://",
-        host: "127.0.0.1",
-        port: this.proxyPort,
-        path: this.clusterUrl.path
-      }
     }
   }
 

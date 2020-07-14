@@ -63,8 +63,8 @@ export class ClustersMenu extends React.Component<Props> {
           return (
             <ClusterIcon
               key={cluster.id}
+              showErrors={true}
               cluster={cluster}
-              showErrorCount={true}
               className={cssNames({ active: isActive })}
               onClick={() => this.selectCluster(cluster)}
               onContextMenu={() => this.showContextMenu(cluster)}

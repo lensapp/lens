@@ -168,6 +168,7 @@
     "@types/node": "^12.12.45",
     "@types/proper-lockfile": "^4.1.1",
     "@types/tar": "^4.0.3",
+    "chalk": "^4.1.0",
     "conf": "^7.0.1",
     "crypto-js": "^4.0.0",
     "electron-promise-ipc": "^2.1.0",

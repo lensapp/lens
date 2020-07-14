@@ -42,10 +42,13 @@ export class WindowManager {
         });
       }),
       // auto-show active cluster view
-      reaction(() => clusterStore.activeClusterId, clusterId => {
-        this.activateView(clusterId);
+      reaction(() => clusterStore.activeCluster, activeCluster => {
+        if (activeCluster) {
+          this.activateView(activeCluster.id);
+        }
       }, {
         fireImmediately: true,
+        delay: 250,
       })
     )
   }
@@ -65,10 +68,7 @@ export class WindowManager {
 
   async activateView(clusterId: ClusterId) {
     const cluster = clusterStore.getById(clusterId);
-    if (!cluster) {
-      logger.error(`Can't show a view for non-existing cluster(${clusterId})`);
-      return;
-    }
+    if (!cluster) return;
     try {
       const activeView = this.activeView;
       const isFresh = !this.getView(clusterId);

@@ -2,7 +2,8 @@ import "./cluster-icon.scss"
 
 import React, { DOMAttributes } from "react";
 import { observer } from "mobx-react";
-import { Hashicon, HashiconProps } from "@emeraldpay/hashicon-react";
+import { Params as HashiconParams } from "@emeraldpay/hashicon";
+import { Hashicon } from "@emeraldpay/hashicon-react";
 import { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
@@ -11,12 +12,13 @@ interface Props extends DOMAttributes<HTMLElement> {
   cluster: Cluster;
   className?: IClassName;
   errorClass?: IClassName;
-  showErrorCount?: boolean;
-  options?: HashiconProps["options"]
+  showErrors?: boolean;
+  interactive?: boolean;
+  options?: HashiconParams;
 }
 
 const defaultProps: Partial<Props> = {
-  showErrorCount: true,
+  showErrors: true,
 };
 
 @observer
@@ -24,14 +26,17 @@ export class ClusterIcon extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
   render() {
-    const { className, cluster, showErrorCount, errorClass, options, children, ...elemProps } = this.props;
+    const { className: cName, cluster, showErrors, errorClass, options, interactive, children, ...elemProps } = this.props;
     const { isAdmin, eventCount, preferences } = cluster;
     const { clusterName, icon } = preferences;
+    const className = cssNames("ClusterIcon flex inline", cName, {
+      interactive: interactive || !!this.props.onClick,
+    });
     return (
-      <div className={cssNames("ClusterIcon flex inline", className)} {...elemProps}>
+      <div {...elemProps} className={className}>
         {icon && <img src={icon} alt={clusterName}/>}
         {!icon && <Hashicon value={clusterName} options={options}/>}
-        {showErrorCount && isAdmin && eventCount > 0 && (
+        {showErrors && isAdmin && eventCount > 0 && (
           <Badge
             className={cssNames("events-count", errorClass)}
             label={eventCount >= 1000 ? Math.ceil(eventCount / 1000) * 1000 + "+" : eventCount}

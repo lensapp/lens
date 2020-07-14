@@ -31,7 +31,6 @@ export class Cluster implements ClusterModel {
   @observable kubeConfigPath: string;
   @observable apiUrl: string; // cluster server url
   @observable kubeProxyUrl: string; // lens-proxy to kube-api url
-  @observable kubeAuthProxyUrl: string; // auth-proxy to temp kube-config
   @observable webContentUrl: string; // page content url for loading in renderer
   @observable online: boolean;
   @observable accessible: boolean;
@@ -59,20 +58,21 @@ export class Cluster implements ClusterModel {
   async init(port: number) {
     try {
       this.contextHandler = new ContextHandler(this);
-      const contextPort = await this.contextHandler.ensurePort();
-      this.kubeAuthProxyUrl = `http://127.0.0.1:${contextPort}`;
+      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
       this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
       this.webContentUrl = `http://${this.id}.localhost:${port}`;
-      this.kubeconfigManager = new KubeconfigManager(this);
       this.initialized = true;
-      logger.info(`✅ ️Cluster(${this.id}) init success`, {
+      logger.info(`✅ ️Cluster init success`, {
+        id: this.id,
         serverUrl: this.apiUrl,
         webContentUrl: this.webContentUrl,
         kubeProxyUrl: this.kubeProxyUrl,
-        kubeAuthProxyUrl: this.kubeAuthProxyUrl,
       });
     } catch (err) {
-      logger.error(`💣 Cluster(${this.id}) init failed: ${err}`);
+      logger.error(`💣 Cluster init failed: ${err}`, {
+        id: this.id,
+        error: err,
+      });
     }
   }
 

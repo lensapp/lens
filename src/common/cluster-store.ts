@@ -52,7 +52,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 
-  @computed get activeCluster(): Cluster {
+  @computed get activeCluster(): Cluster | null {
     return this.getById(this.activeClusterId);
   }
 
