@@ -92,14 +92,14 @@ export class BaseStore<T = any> extends Singleton {
 
   protected onConfigChange(data: T, oldValue: Partial<T>) {
     if (!isEqual(this.toJSON(), data)) {
-      logger.debug(`💿 Store received update from ${this.name}`, { data, oldValue });
+      logger.info(`💿 Store received update from ${this.name}`, { data, oldValue });
       this.fromStore(data);
     }
   }
 
   protected onModelChange(model: T) {
     if (!isEqual(this.storeModel, model)) {
-      logger.debug(`💿 Store ${this.name} is saving updates from app runtime`, {
+      logger.info(`💿 Store ${this.name} is saving updates from app runtime`, {
         data: model,
         oldValue: this.storeModel
       });

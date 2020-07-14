@@ -6,12 +6,10 @@
   border-radius: $radius;
   cursor: pointer;
 
-  &.interactive {
-    &:hover {
-      opacity: 1;
-      background-color: #fff;
-      box-shadow: 0 0 0 $radius #fff;
-    }
+  &.active, &.interactive:hover {
+    opacity: 1;
+    background-color: #fff;
+    box-shadow: 0 0 0 $radius #fff;
   }
 
   > img {

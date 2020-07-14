@@ -14,6 +14,7 @@ export type ClusterId = string;
 export interface ClusterModel {
   id: ClusterId;
   workspace?: string;
+  contextName?: string;
   preferences?: ClusterPreferences;
   kubeConfigPath: string;
 

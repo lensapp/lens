@@ -51,7 +51,7 @@ export class Cluster implements ClusterModel {
   updateModel(model: ClusterModel) {
     Object.assign(this, model);
     this.apiUrl = this.getKubeconfig().getCurrentCluster().server;
-    this.contextName = this.preferences.clusterName;
+    this.contextName = this.contextName || this.preferences.clusterName;
   }
 
   @action

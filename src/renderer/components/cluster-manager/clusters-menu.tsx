@@ -22,9 +22,9 @@ interface Props {
 
 @observer
 export class ClustersMenu extends React.Component<Props> {
-  selectCluster = (cluster: Cluster) => {
+  showCluster = (cluster: Cluster) => {
     clusterStore.activeClusterId = cluster.id;
-    console.log('load lens for cluster:', cluster)
+    console.log('load lens for cluster:', cluster.id);
   }
 
   addCluster = () => {
@@ -59,14 +59,13 @@ export class ClustersMenu extends React.Component<Props> {
     return (
       <div className={cssNames("ClustersMenu flex gaps column", className)}>
         {clusters.map(cluster => {
-          const isActive = cluster.id === clusterStore.activeClusterId;
           return (
             <ClusterIcon
               key={cluster.id}
               showErrors={true}
               cluster={cluster}
-              className={cssNames({ active: isActive })}
-              onClick={() => this.selectCluster(cluster)}
+              isActive={cluster.id === clusterStore.activeClusterId}
+              onClick={() => this.showCluster(cluster)}
               onContextMenu={() => this.showContextMenu(cluster)}
             />
           )

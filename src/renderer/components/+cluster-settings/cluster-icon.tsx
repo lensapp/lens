@@ -14,6 +14,7 @@ interface Props extends DOMAttributes<HTMLElement> {
   errorClass?: IClassName;
   showErrors?: boolean;
   interactive?: boolean;
+  isActive?: boolean;
   options?: HashiconParams;
 }
 
@@ -26,11 +27,12 @@ export class ClusterIcon extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
   render() {
-    const { className: cName, cluster, showErrors, errorClass, options, interactive, children, ...elemProps } = this.props;
+    const { className: cName, cluster, showErrors, errorClass, options, interactive, isActive, children, ...elemProps } = this.props;
     const { isAdmin, eventCount, preferences } = cluster;
     const { clusterName, icon } = preferences;
     const className = cssNames("ClusterIcon flex inline", cName, {
       interactive: interactive || !!this.props.onClick,
+      active: isActive,
     });
     return (
       <div {...elemProps} className={className}>
