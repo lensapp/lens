@@ -1,5 +1,4 @@
 import { formatDuration } from "../formatDuration";
-import { min } from "moment";
 
 const second = 1000;
 const minute = 60 * second;
@@ -43,5 +42,12 @@ describe("human format durations", () => {
 
     const significant = formatDuration(31 * second, false);
     expect(significant).toBe("31s");
+  });
+
+  test("zero duration should output something", () => {
+    const zero = formatDuration(0, false);
+    
+    expect(zero).not.toHaveLength(0);
+    expect(zero).toBe("0s");
   });
 });

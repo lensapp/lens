@@ -1,5 +1,4 @@
 import { CoreV1Api, KubeConfig } from "@kubernetes/client-node"
-import http from "http"
 import { ServerOptions } from "http-proxy"
 import * as url from "url"
 import logger from "./logger"

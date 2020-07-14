@@ -24,7 +24,7 @@ export function formatDuration(timeValue: number, compact: boolean) {
     .map(([dur, suf]) => dur + suf);
 
   if (compact) {
-    return meaningfulValues[0];
+    return meaningfulValues[0] || "0s";
   }
 
   return meaningfulValues.join(" ");

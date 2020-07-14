@@ -125,7 +125,7 @@ export class Kubectl {
       }
 
       try {
-        const { stdout, stderr } = await promiseExec(`"${this.path}" version --client=true -o json`)
+        const { stdout } = await promiseExec(`"${this.path}" version --client=true -o json`)
         const output = JSON.parse(stdout)
         let version: string = output.clientVersion.gitVersion
         if (version[0] === 'v') {
