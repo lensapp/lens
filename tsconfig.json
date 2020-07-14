@@ -10,7 +10,7 @@
     "sourceMap": true,
     "strict": false,
     "noImplicitAny": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noImplicitReturns": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
