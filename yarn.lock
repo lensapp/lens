@@ -11785,6 +11785,14 @@ win-ca@^3.2.0:
     node-forge "^0.8.2"
     split "^1.0.1"
 
+winston-transport-browserconsole@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/winston-transport-browserconsole/-/winston-transport-browserconsole-1.0.5.tgz#8ef1bc32da5fb0a66604f2b8b6f127ed725108c9"
+  integrity sha512-BFZDvknATAmsqaRY3WatB2S0eEb0ziwqBYIv+H0Fnu9oe7GnPUVQzEJC1frmLdNsfEkfnyR1PCNDBAFtZE3SuQ==
+  dependencies:
+    winston "^3.2.1"
+    winston-transport "^4.3.0"
+
 winston-transport@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/winston-transport/-/winston-transport-4.3.0.tgz#df68c0c202482c448d9b47313c07304c2d7c2c66"

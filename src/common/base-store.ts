@@ -2,24 +2,24 @@ import path from "path"
 import Config from "conf"
 import { Options as ConfOptions } from "conf/dist/source/types"
 import produce from "immer";
-import { app, remote } from "electron"
+import { app, ipcMain, ipcRenderer, remote } from "electron"
 import { action, observable, reaction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
 import isEqual from "lodash/isEqual"
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
+import { broadcastMessage } from "./ipc-helpers";
 
-export interface BaseStoreParams<T = any> {
-  configName: string;
+export interface BaseStoreParams<T = any> extends ConfOptions<T> {
   autoLoad?: boolean;
   syncEnabled?: boolean;
-  confOptions?: ConfOptions<T>;
 }
 
 export class BaseStore<T = any> extends Singleton {
   protected storeConfig: Config<T>;
   protected syncDisposers: Function[] = [];
 
+  whenLoaded = when(() => this.isLoaded);
   @observable isLoaded = false;
   @observable protected data: T;
 
@@ -30,8 +30,6 @@ export class BaseStore<T = any> extends Singleton {
       syncEnabled: true,
       ...params,
     }
-    this.onConfigChange = this.onConfigChange.bind(this)
-    this.onModelChange = this.onModelChange.bind(this)
     this.init();
   }
 
@@ -39,10 +37,8 @@ export class BaseStore<T = any> extends Singleton {
     return path.basename(this.storeConfig.path);
   }
 
-  get storeModel(): T {
-    const storeModel = { ...(this.storeConfig.store || {}) };
-    Reflect.deleteProperty(storeModel, "__internal__"); // fixme: avoid "external-internals"
-    return storeModel as T;
+  get syncEvent() {
+    return `[STORE]:[SYNC]:${this.name}`
   }
 
   protected async init() {
@@ -50,39 +46,46 @@ export class BaseStore<T = any> extends Singleton {
       await this.load();
     }
     if (this.params.syncEnabled) {
-      await when(() => this.isLoaded);
+      await this.whenLoaded;
       this.enableSync();
     }
   }
 
   async load() {
-    const { configName, syncEnabled, confOptions = {} } = this.params;
-
-    // use "await" to make pseudo-async "load" for more future-proof use-cases
-    this.storeConfig = await new Config({
+    const { autoLoad, syncEnabled, ...confOptions } = this.params;
+    this.storeConfig = new Config({
+      ...confOptions,
       projectName: "lens",
       projectVersion: getAppVersion(),
-      configName: configName,
-      watch: syncEnabled, // watch for changes in multi-process app (e.g. main/renderer)
       get cwd() {
         return (app || remote.app).getPath("userData");
       },
-      ...confOptions,
     });
-    const jsonModel = this.storeConfig.store;
-    logger.info(`💿 Store loaded from ${this.storeConfig.path}`);
-    this.fromStore(jsonModel);
+    const storeModel = Object.assign({}, this.storeConfig.store);
+    Reflect.deleteProperty(storeModel, "__internal__"); // fixme: avoid "external-internals"
+    logger.info(`[STORE]: loaded ${this.storeConfig.path}`);
+    this.fromStore(storeModel);
     this.isLoaded = true;
   }
 
   enableSync() {
-    const onConfigChangeStop = this.storeConfig.onDidAnyChange(this.onConfigChange);
-    const onModelChangeStop = reaction(() => this.toJSON(), this.onModelChange);
-
     this.syncDisposers.push(
-      onConfigChangeStop, // watch for changes from file-system updates
-      onModelChangeStop, // refresh config file from runtime
+      reaction(() => this.toJSON(), this.onModelChange.bind(this)),
     );
+    if (ipcMain) {
+      ipcMain.on(this.syncEvent, (event, model: T) => {
+        logger.info(`[STORE]: ${this.name} sync update from renderer`, model);
+        this.onSync(model);
+      });
+      this.syncDisposers.push(() => ipcMain.removeAllListeners(this.syncEvent));
+    }
+    if (ipcRenderer) {
+      ipcRenderer.on(this.syncEvent, (event, model: T) => {
+        logger.info(`[STORE]: ${this.name} sync update from main`, model);
+        this.onSync(model);
+      });
+      this.syncDisposers.push(() => ipcRenderer.removeAllListeners(this.syncEvent));
+    }
   }
 
   disableSync() {
@@ -90,23 +93,25 @@ export class BaseStore<T = any> extends Singleton {
     this.syncDisposers.length = 0;
   }
 
-  protected onConfigChange(data: T, oldValue: Partial<T>) {
-    if (!isEqual(this.toJSON(), data)) {
-      logger.info(`💿 Store received update from ${this.name}`, { data, oldValue });
-      this.fromStore(data);
+  protected onSync(model: T) {
+    if (!isEqual(this.toJSON(), model)) {
+      logger.info(`[STORE]: ${this.name} received update from main`, model);
+      this.fromStore(model);
     }
   }
 
-  protected onModelChange(model: T) {
-    if (!isEqual(this.storeModel, model)) {
-      logger.info(`💿 Store ${this.name} is saving updates from app runtime`, {
-        data: model,
-        oldValue: this.storeModel
-      });
+  protected async onModelChange(model: T) {
+    // update views and save to config file
+    if (ipcMain) {
+      broadcastMessage(this.syncEvent, model);
       // fixme: https://github.com/sindresorhus/conf/issues/114
       Object.entries(model).forEach(([key, value]) => {
         this.storeConfig.set(key, value);
       });
+    }
+    // sends "update-request" event to main-process
+    if (ipcRenderer) {
+      ipcRenderer.send(this.syncEvent, model);
     }
   }
 

@@ -42,13 +42,8 @@ export class WindowManager {
         });
       }),
       // auto-show active cluster view
-      reaction(() => clusterStore.activeCluster, activeCluster => {
-        if (activeCluster) {
-          this.activateView(activeCluster.id);
-        }
-      }, {
+      reaction(() => clusterStore.activeClusterId, clusterId => this.activateView(clusterId), {
         fireImmediately: true,
-        delay: 250,
       })
     )
   }
@@ -71,10 +66,14 @@ export class WindowManager {
     if (!cluster) return;
     try {
       const activeView = this.activeView;
-      const isFresh = !this.getView(clusterId);
+      const isLoadedBefore = !!this.getView(clusterId);
       const view = this.initView(clusterId);
+      logger.info(`Activating cluster(${cluster.id}) view`, {
+        contextName: cluster.contextName,
+        isLoadedBefore: isLoadedBefore,
+      });
       if (view !== activeView) {
-        if (isFresh) {
+        if (!isLoadedBefore) {
           await cluster.whenReady;
           await view.loadURL(cluster.webContentUrl);
         }

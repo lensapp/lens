@@ -23,9 +23,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
   private constructor() {
     super({
       configName: "lens-user-store",
-      confOptions: {
-        migrations: migrations
-      }
+      migrations: migrations,
     });
 
     // track telemetry availability

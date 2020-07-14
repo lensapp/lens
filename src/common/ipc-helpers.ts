@@ -11,26 +11,26 @@ export interface IpcMessageOptions {
   timeout?: number;
 }
 
-export interface IpcMessageHandler {
-  (...args: any[]): any;
+export interface IpcMessageHandler<T extends any[] = any> {
+  (...args: T): any;
 }
 
-export function sendMessage(channel: IpcChannel, ...args: any[]) {
-  const webContent = webContents.getFocusedWebContents();
-  if (webContent) {
+export function broadcastMessage(channel: IpcChannel, ...args: any[]) {
+  webContents.getAllWebContents().forEach(webContent => {
     webContent.send(channel, ...args);
-  }
+  })
 }
 
-export async function invokeMessage(channel: IpcChannel, ...args: any[]) {
-  logger.debug(`[IPC]: invoke channel "${channel}"`, { args });
+export async function invokeMessage<T = any>(channel: IpcChannel, ...args: any[]): Promise<T> {
+  logger.info(`[IPC]: invoke channel "${channel}"`, { args });
   return ipcRenderer.invoke(channel, ...args);
 }
 
-export function handleMessage(channel: IpcChannel, handler: IpcMessageHandler, options: IpcMessageOptions = {}) {
+// todo: make isomorphic api
+export function handleMessage<T extends any[]>(channel: IpcChannel, handler: IpcMessageHandler<T>, options: IpcMessageOptions = {}) {
   const { timeout = 0 } = options;
-  ipcMain.handle(channel, async (event, ...args: any[]) => {
-    logger.debug(`[IPC]: handle "${channel}"`, { event, args });
+  ipcMain.handle(channel, async (event, ...args: T) => {
+    logger.info(`[IPC]: handle "${channel}"`, { event, args });
     return new Promise(async (resolve, reject) => {
       let timerId;
       if (timeout) {

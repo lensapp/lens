@@ -62,14 +62,14 @@ export class Cluster implements ClusterModel {
       this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
       this.webContentUrl = `http://${this.id}.localhost:${port}`;
       this.initialized = true;
-      logger.info(`✅ ️Cluster init success`, {
+      logger.info(`[CLUSTER]: init success`, {
         id: this.id,
         serverUrl: this.apiUrl,
         webContentUrl: this.webContentUrl,
         kubeProxyUrl: this.kubeProxyUrl,
       });
     } catch (err) {
-      logger.error(`💣 Cluster init failed: ${err}`, {
+      logger.error(`[CLUSTER]: init failed: ${err}`, {
         id: this.id,
         error: err,
       });

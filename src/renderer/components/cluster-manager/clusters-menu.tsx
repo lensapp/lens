@@ -24,7 +24,7 @@ interface Props {
 export class ClustersMenu extends React.Component<Props> {
   showCluster = (cluster: Cluster) => {
     clusterStore.activeClusterId = cluster.id;
-    console.log('load lens for cluster:', cluster.id);
+    console.log('load lens for cluster:', cluster.toJSON());
   }
 
   addCluster = () => {
@@ -42,7 +42,7 @@ export class ClustersMenu extends React.Component<Props> {
     if (cluster.initialized) {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
-        click: () => console.log(`disconnect cluster and navigate to workspaces`, cluster)
+        click: () => console.log(`disconnect cluster and navigate to workspaces`, cluster.contextName)
       }))
     }
 

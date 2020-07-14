@@ -1,11 +1,12 @@
 // IPC messages (all channels)
+// All values must be unique
 
 export enum ClusterIpcMessage {
-  CLUSTER_ADD = "cluster-add",
-  CLUSTER_STOP = "cluster-stop",
-  CLUSTER_REMOVE = "cluster-remove",
-  CLUSTER_REMOVE_WORKSPACE = "cluster-remove-all-from-workspace",
-  CLUSTER_REFRESH = "cluster-refresh",
+  ADD = "cluster-add",
+  STOP = "cluster-stop",
+  REFRESH = "cluster-refresh",
+  REMOVE = "cluster-remove",
+  REMOVE_WORKSPACE = "cluster-remove-all-from-workspace",
   FEATURE_INSTALL = "cluster-feature-install",
   FEATURE_UPGRADE = "cluster-feature-upgrade",
   FEATURE_REMOVE = "cluster-feature-remove",

@@ -160,11 +160,11 @@ export class ClusterManager {
 
   static ipcListen(clusterManager: ClusterManager) {
     const handlers = {
-      [ClusterIpcMessage.CLUSTER_ADD]: clusterManager.addCluster,
-      [ClusterIpcMessage.CLUSTER_STOP]: clusterManager.stopCluster,
-      [ClusterIpcMessage.CLUSTER_REMOVE]: clusterManager.removeCluster,
-      [ClusterIpcMessage.CLUSTER_REMOVE_WORKSPACE]: clusterManager.removeAllByWorkspace,
-      [ClusterIpcMessage.CLUSTER_REFRESH]: clusterManager.refreshCluster,
+      [ClusterIpcMessage.ADD]: clusterManager.addCluster,
+      [ClusterIpcMessage.STOP]: clusterManager.stopCluster,
+      [ClusterIpcMessage.REMOVE]: clusterManager.removeCluster,
+      [ClusterIpcMessage.REMOVE_WORKSPACE]: clusterManager.removeAllByWorkspace,
+      [ClusterIpcMessage.REFRESH]: clusterManager.refreshCluster,
       [ClusterIpcMessage.FEATURE_INSTALL]: clusterManager.installFeature,
       [ClusterIpcMessage.FEATURE_UPGRADE]: clusterManager.upgradeFeature,
       [ClusterIpcMessage.FEATURE_REMOVE]: clusterManager.uninstallFeature,
