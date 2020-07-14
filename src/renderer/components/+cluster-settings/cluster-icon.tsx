@@ -7,6 +7,7 @@ import { Hashicon } from "@emeraldpay/hashicon-react";
 import { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
+import { Tooltip, TooltipContent } from "../tooltip";
 
 interface Props extends DOMAttributes<HTMLElement> {
   cluster: Cluster;
@@ -28,14 +29,18 @@ export class ClusterIcon extends React.Component<Props> {
 
   render() {
     const { className: cName, cluster, showErrors, errorClass, options, interactive, isActive, children, ...elemProps } = this.props;
-    const { isAdmin, eventCount, preferences } = cluster;
+    const { isAdmin, eventCount, preferences, id: clusterId } = cluster;
     const { clusterName, icon } = preferences;
+    const clusterIconId = `cluster-icon-${clusterId}`;
     const className = cssNames("ClusterIcon flex inline", cName, {
       interactive: interactive || !!this.props.onClick,
       active: isActive,
     });
     return (
-      <div {...elemProps} className={className}>
+      <div {...elemProps} className={className} id={clusterIconId}>
+        <Tooltip htmlFor={clusterIconId} following>
+          <TooltipContent nowrap>{clusterName}</TooltipContent>
+        </Tooltip>
         {icon && <img src={icon} alt={clusterName}/>}
         {!icon && <Hashicon value={clusterName} options={options}/>}
         {showErrors && isAdmin && eventCount > 0 && (

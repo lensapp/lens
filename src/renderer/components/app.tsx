@@ -30,6 +30,7 @@ import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../api/rbac";
+import { clusterStore } from "../../common/cluster-store";
 
 @observer
 export class App extends React.Component {
@@ -47,9 +48,13 @@ export class App extends React.Component {
       <Fragment>
         <Switch>
           <Switch>
-            {/* todo: remove */}
-            <Route children={() => <p className="info">App is running!</p>}/>
-
+            <Route children={() => (
+              <div>
+                <p className="info">App is running!</p>
+                <p>Current cluster:</p>
+                <pre>{JSON.stringify(clusterStore.activeCluster.toJSON(), null, 2)}</pre>
+              </div>
+            )}/>
             <Route component={Cluster} {...clusterRoute}/>
             <Route component={Nodes} {...nodesRoute}/>
             <Route component={Workloads} {...workloadsRoute}/>
