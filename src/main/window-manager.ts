@@ -5,6 +5,8 @@ import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 import logger from "./logger";
 
+// fixme: activate landing-page when no-clusters exists
+
 export class WindowManager {
   protected activeView: BrowserWindow;
   protected views = new Map<ClusterId, BrowserWindow>();
@@ -68,11 +70,12 @@ export class WindowManager {
       const activeView = this.activeView;
       const isLoadedBefore = !!this.getView(clusterId);
       const view = this.initView(clusterId);
-      logger.info(`Activating cluster(${cluster.id}) view`, {
+      logger.info(`[WINDOW-MANAGER]: activating cluster view`, {
+        id: cluster.id,
         contextName: cluster.contextName,
         isLoadedBefore: isLoadedBefore,
       });
-      if (view !== activeView) {
+      if (activeView !== view) {
         if (!isLoadedBefore) {
           await cluster.whenReady;
           await view.loadURL(cluster.webContentUrl);
@@ -86,7 +89,10 @@ export class WindowManager {
         this.activeView = view;
       }
     } catch (err) {
-      logger.error(`Activating cluster(${clusterId}) view has failed: ${err.stack}`);
+      logger.error(`[WINDOW-MANAGER]: can't activate cluster view`, {
+        clusterId: cluster.id,
+        err: String(err),
+      });
     }
   }
 

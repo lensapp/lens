@@ -1,14 +1,13 @@
 import path from "path"
 import Config from "conf"
 import { Options as ConfOptions } from "conf/dist/source/types"
-import produce from "immer";
 import { app, ipcMain, ipcRenderer, remote } from "electron"
 import { action, observable, reaction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
-import isEqual from "lodash/isEqual"
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
 import { broadcastMessage } from "./ipc-helpers";
+import isEqual from "lodash/isEqual";
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
   autoLoad?: boolean;
@@ -63,25 +62,33 @@ export class BaseStore<T = any> extends Singleton {
     });
     const storeModel = Object.assign({}, this.storeConfig.store);
     Reflect.deleteProperty(storeModel, "__internal__"); // fixme: avoid "external-internals"
-    logger.info(`[STORE]: loaded ${this.storeConfig.path}`);
+    logger.info(`[STORE]: LOADED from ${this.storeConfig.path}`);
     this.fromStore(storeModel);
     this.isLoaded = true;
   }
 
+  protected async save(model: T) {
+    logger.info(`[STORE]: SAVING ${this.name}`);
+    // fixme: https://github.com/sindresorhus/conf/issues/114
+    Object.entries(model).forEach(([key, value]) => {
+      this.storeConfig.set(key, value); // save update to config file
+    });
+  }
+
   enableSync() {
     this.syncDisposers.push(
-      reaction(() => this.toJSON(), this.onModelChange.bind(this)),
+      reaction(() => this.toJSON(), model => this.onModelChange(model)),
     );
     if (ipcMain) {
       ipcMain.on(this.syncEvent, (event, model: T) => {
-        logger.debug(`[STORE]: ${this.name} sync update from renderer`, model);
+        logger.info(`[STORE]: SYNC ${this.name} from renderer`);
         this.onSync(model);
       });
       this.syncDisposers.push(() => ipcMain.removeAllListeners(this.syncEvent));
     }
     if (ipcRenderer) {
       ipcRenderer.on(this.syncEvent, (event, model: T) => {
-        logger.debug(`[STORE]: ${this.name} sync update from main`, model);
+        logger.info(`[STORE]: SYNC ${this.name} from main`);
         this.onSync(model);
       });
       this.syncDisposers.push(() => ipcRenderer.removeAllListeners(this.syncEvent));
@@ -101,14 +108,10 @@ export class BaseStore<T = any> extends Singleton {
 
   protected async onModelChange(model: T) {
     if (ipcMain) {
-      broadcastMessage(this.syncEvent, model); // send updates to renderer views
-
-      // fixme: https://github.com/sindresorhus/conf/issues/114
-      Object.entries(model).forEach(([key, value]) => {
-        this.storeConfig.set(key, value); // save update to config file
-      });
+      this.save(model); // save to config file
+      broadcastMessage({ channel: this.syncEvent }, model); // broadcast to renderer views
     }
-    // sends "update-request" event to main-process
+    // send "update-request" to main-process
     if (ipcRenderer) {
       ipcRenderer.send(this.syncEvent, model);
     }
@@ -117,11 +120,6 @@ export class BaseStore<T = any> extends Singleton {
   @action
   protected fromStore(data: T) {
     this.data = data;
-  }
-
-  @action
-  merge(updater: (modelDraft: T) => void) {
-    this.data = produce(this.data, updater);
   }
 
   // todo: use "serializr" ?

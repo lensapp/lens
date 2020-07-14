@@ -2,7 +2,7 @@
 // https://www.electronjs.org/docs/api/ipc-main
 // https://www.electronjs.org/docs/api/ipc-renderer
 
-import { ipcMain, ipcRenderer, webContents } from "electron"
+import { ipcMain, ipcRenderer, WebContents, webContents } from "electron"
 import logger from "../main/logger";
 
 export type IpcChannel = string;
@@ -15,8 +15,17 @@ export interface IpcMessageHandler<T extends any[] = any> {
   (...args: T): any;
 }
 
-export function broadcastMessage(channel: IpcChannel, ...args: any[]) {
-  webContents.getAllWebContents().forEach(webContent => {
+export interface IpcBroadcastOpts {
+  channel: IpcChannel
+  filter?: (webContent: WebContents) => boolean
+}
+
+export function broadcastMessage({ channel, filter }: IpcBroadcastOpts, ...args: any[]) {
+  let webContentsList = webContents.getAllWebContents();
+  if (filter) {
+    webContentsList = webContentsList.filter(filter);
+  }
+  webContentsList.forEach(webContent => {
     webContent.send(channel, ...args);
   })
 }

@@ -84,7 +84,7 @@ export class KubeAuthProxy {
     const channel = `kube-auth:${this.cluster.id}`
     const message = { data, stream };
     logger.debug(channel, message);
-    broadcastMessage(channel, message);
+    broadcastMessage({ channel }, message);
   }
 
   public exit() {

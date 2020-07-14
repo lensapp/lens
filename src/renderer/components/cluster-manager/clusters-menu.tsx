@@ -24,7 +24,7 @@ interface Props {
 export class ClustersMenu extends React.Component<Props> {
   showCluster = (cluster: Cluster) => {
     clusterStore.activeClusterId = cluster.id;
-    console.log('load lens for cluster:', cluster.toJSON());
+    console.log('show lens for cluster:', cluster.contextName);
   }
 
   addCluster = () => {
