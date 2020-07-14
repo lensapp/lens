@@ -6,6 +6,7 @@ import { migration } from "../migration-wrapper";
 import { ensureDirSync } from "fs-extra"
 import { writeEmbeddedKubeConfig } from "../../common/utils/kubeconfig"
 import { ClusterModel } from "../../common/cluster-store";
+import { loadConfig } from "../../main/k8s";
 
 export default migration({
   version: "3.6.0-beta.1",
@@ -22,6 +23,7 @@ export default migration({
       try {
         // take the embedded kubeconfig and dump it into a file
         cluster.kubeConfigPath = writeEmbeddedKubeConfig(cluster.id, cluster.kubeConfig)
+        cluster.contextName = loadConfig(cluster.kubeConfigPath).getCurrentContext();
         delete cluster.kubeConfig;
         migratedClusters.push(cluster)
       } catch (error) {

@@ -74,14 +74,14 @@ export class BaseStore<T = any> extends Singleton {
     );
     if (ipcMain) {
       ipcMain.on(this.syncEvent, (event, model: T) => {
-        logger.info(`[STORE]: ${this.name} sync update from renderer`, model);
+        logger.debug(`[STORE]: ${this.name} sync update from renderer`, model);
         this.onSync(model);
       });
       this.syncDisposers.push(() => ipcMain.removeAllListeners(this.syncEvent));
     }
     if (ipcRenderer) {
       ipcRenderer.on(this.syncEvent, (event, model: T) => {
-        logger.info(`[STORE]: ${this.name} sync update from main`, model);
+        logger.debug(`[STORE]: ${this.name} sync update from main`, model);
         this.onSync(model);
       });
       this.syncDisposers.push(() => ipcRenderer.removeAllListeners(this.syncEvent));
@@ -95,18 +95,17 @@ export class BaseStore<T = any> extends Singleton {
 
   protected onSync(model: T) {
     if (!isEqual(this.toJSON(), model)) {
-      logger.info(`[STORE]: ${this.name} received update from main`, model);
       this.fromStore(model);
     }
   }
 
   protected async onModelChange(model: T) {
-    // update views and save to config file
     if (ipcMain) {
-      broadcastMessage(this.syncEvent, model);
+      broadcastMessage(this.syncEvent, model); // send updates to renderer views
+
       // fixme: https://github.com/sindresorhus/conf/issues/114
       Object.entries(model).forEach(([key, value]) => {
-        this.storeConfig.set(key, value);
+        this.storeConfig.set(key, value); // save update to config file
       });
     }
     // sends "update-request" event to main-process
