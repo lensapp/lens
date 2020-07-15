@@ -1,24 +1,35 @@
-// Formatting date duration in shorten format, e.g. "2d", or "25m"
-
 import moment from "moment";
 
+const suffixes = ["w", "d", "h", "m", "s"];
+
+/**
+ * This function formats durations in a more human readable form.
+ * @param timeValue the duration in milliseconds to format
+ * @param compact when true, only the largest non-zero time frame will be returned
+ */
 export function formatDuration(timeValue: number, compact: boolean) {
-  let result = "";
-  const duration = moment.duration(timeValue);
-  const suffixes = ["d", "h", "m"];
+  const duration = moment.duration(timeValue, "milliseconds");
   const durationValues = [
-    Math.round(duration.asDays()),
+    Math.floor(duration.asWeeks()),
+    Math.floor(duration.asDays()) % 7,
     duration.hours(),
     duration.minutes(),
+    duration.seconds(),
   ];
-  durationValues.forEach((value, index) => {
-    if (value) result += value + suffixes[index] + " ";
-  });
+
+  const meaningfulValues = durationValues
+    .map((a, i): [number, string] => [a, suffixes[i]])
+    .filter(([dur, _suf]) => dur > 0)
+    .filter(([_dur, suf], i) => i === 0 || suf !== "s") // remove seconds, unless it is the only one
+    .map(([dur, suf]) => dur + suf);
+
+  if (meaningfulValues.length === 0) {
+    return "0s";
+  }
+
   if (compact) {
-    result = result.split(" ")[0];
+    return meaningfulValues[0];
   }
-  if (!result) {
-    return "<1m";
-  }
-  return result;
+
+  return meaningfulValues.join(" ");
 }
