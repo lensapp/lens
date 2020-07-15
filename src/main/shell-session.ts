@@ -11,6 +11,8 @@ import { helmCli } from "./helm/helm-cli"
 import { isWindows } from "../common/vars";
 import { tracker } from "../common/tracker";
 
+// fixme: terminal doesn't work in ui
+
 export class ShellSession extends EventEmitter {
   static shellEnvs: Map<string, any> = new Map()
 

@@ -11,6 +11,8 @@ import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from ".
 import request, { RequestPromiseOptions } from "request-promise-native"
 import logger from "./logger"
 
+// fixme: push cluster-state/status info to views on change
+
 enum ClusterStatus {
   AccessGranted = 2,
   AccessDenied = 1,

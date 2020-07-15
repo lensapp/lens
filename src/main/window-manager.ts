@@ -1,9 +1,11 @@
+import path from "path";
 import { reaction } from "mobx";
 import { BrowserWindow, shell } from "electron"
 import windowStateKeeper from "electron-window-state"
 import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 import logger from "./logger";
+import { appName } from "../common/vars";
 
 // fixme: remove switching view delay on first load
 
@@ -33,6 +35,20 @@ export class WindowManager {
 
     // init events and show active cluster view
     this.bindEvents();
+
+    // handle initial view load without clusters
+    if (!clusterStore.clusters.size) {
+      this.initNoClustersView();
+    }
+  }
+
+  // fixme: first run without clusters
+  protected async initNoClustersView() {
+    const htmlView = path.join(__dirname, `${appName}.html`);
+    const view = this.initView(undefined);
+    await view.loadFile(htmlView);
+    view.show();
+    this.hideSplash();
   }
 
   protected bindEvents() {
@@ -65,7 +81,9 @@ export class WindowManager {
 
   async activateView(clusterId: ClusterId) {
     const cluster = clusterStore.getById(clusterId);
-    if (!cluster) return;
+    if (!cluster) {
+      return;
+    }
     try {
       const activeView = this.activeView;
       const isLoadedBefore = !!this.getView(clusterId);
@@ -98,7 +116,7 @@ export class WindowManager {
     }
   }
 
-  protected initView(clusterId: ClusterId) {
+  protected initView(clusterId: ClusterId): BrowserWindow {
     let view = this.getView(clusterId);
     if (!view) {
       const { width, height, x, y } = this.windowState;
