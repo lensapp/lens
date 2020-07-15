@@ -13,7 +13,6 @@ describe("for an empty config", () => {
       }
     }
     mockFs(mockOpts)
-    const userStore = UserStore.getInstance()
   })
 
   afterEach(() => {
@@ -57,12 +56,10 @@ describe("migrations", () => {
         'config.json': JSON.stringify({
           user: { username: 'foobar' },
           preferences: { colorTheme: 'light' },
-          lastSeenAppVersion: '1.2.3'
         })
       }
     }
     mockFs(mockOpts)
-    const userStore = UserStore.getInstance()
   })
 
   afterEach(() => {

@@ -6,7 +6,6 @@
     "target": "ES2017",
     "module": "ESNext",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "importsNotUsedAsValues": "preserve",
     "moduleResolution": "Node",
     "sourceMap": true,
     "strict": false,
@@ -32,5 +31,12 @@
     "compilerOptions": {
       "module": "CommonJS"
     }
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
+    "dashboard",
+    "binaries"
+  ]
 }
