@@ -48,4 +48,9 @@ describe("human format durations", () => {
     expect(formatDuration(0, false)).toBe("0s");
     expect(formatDuration(0, true)).toBe("0s");
   });
+
+  test("small duration should output something", () => {
+    expect(formatDuration(1, false)).toBe("0s");
+    expect(formatDuration(3, true)).toBe("0s");
+  });
 });
