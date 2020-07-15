@@ -7,7 +7,7 @@
   grid-template-areas: "aside header" "aside tabs" "aside main" "aside footer";
   grid-template-rows: [header] var(--main-layout-header) [tabs] min-content [main] 1fr [footer] auto;
   grid-template-columns: [sidebar] minmax(var(--main-layout-header), min-content) [main] 1fr;
-  height: 100vh;
+  height: 100%;
 
   &.light {
     main {

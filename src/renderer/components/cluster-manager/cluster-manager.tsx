@@ -8,7 +8,7 @@ export class ClusterManager extends React.Component {
     const { children: lensView } = this.props;
     return (
       <div className="ClusterManager">
-        <div className="draggable-top"/>
+        <div id="draggable-top"></div>
         <div id="lens-view">{lensView}</div>
         <ClustersMenu/>
         <BottomBar/>

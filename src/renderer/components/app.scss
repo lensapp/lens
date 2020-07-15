@@ -39,6 +39,16 @@ html, body {
   min-height: 100%;
 }
 
+// fixme: doesn't work
+#draggable-top {
+  @include set-draggable;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 20px;
+}
+
 body {
   font: $font-size $font-main;
 }

@@ -36,8 +36,8 @@ export class BaseStore<T = any> extends Singleton {
     return path.basename(this.storeConfig.path);
   }
 
-  get syncEvent() {
-    return `[STORE]:[SYNC]:${this.name}`
+  get syncChannel() {
+    return `store-sync:${this.name}`
   }
 
   protected async init() {
@@ -57,21 +57,22 @@ export class BaseStore<T = any> extends Singleton {
       projectName: "lens",
       projectVersion: getAppVersion(),
       get cwd() {
-        return (app || remote.app).getPath("userData");
+        return (app || remote.app).getPath("userData"); // todo: remove usage of remote.app (deprecated)
       },
     });
-    const storeModel = Object.assign({}, this.storeConfig.store);
-    Reflect.deleteProperty(storeModel, "__internal__"); // fixme: avoid "external-internals"
+    const storedModel = Object.assign({}, this.storeConfig.store);
+    Reflect.deleteProperty(storedModel, "__internal__"); // fixme: avoid "external-internals"
     logger.info(`[STORE]: LOADED from ${this.storeConfig.path}`);
-    this.fromStore(storeModel);
+    this.fromStore(storedModel);
     this.isLoaded = true;
   }
 
   protected async save(model: T) {
     logger.info(`[STORE]: SAVING ${this.name}`);
+    // todo: avoid multiple file updates
     // fixme: https://github.com/sindresorhus/conf/issues/114
     Object.entries(model).forEach(([key, value]) => {
-      this.storeConfig.set(key, value); // save update to config file
+      this.storeConfig.set(key, value);
     });
   }
 
@@ -80,18 +81,18 @@ export class BaseStore<T = any> extends Singleton {
       reaction(() => this.toJSON(), model => this.onModelChange(model)),
     );
     if (ipcMain) {
-      ipcMain.on(this.syncEvent, (event, model: T) => {
-        logger.info(`[STORE]: SYNC ${this.name} from renderer`);
+      ipcMain.on(this.syncChannel, (event, model: T) => {
+        logger.debug(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
       });
-      this.syncDisposers.push(() => ipcMain.removeAllListeners(this.syncEvent));
+      this.syncDisposers.push(() => ipcMain.removeAllListeners(this.syncChannel));
     }
     if (ipcRenderer) {
-      ipcRenderer.on(this.syncEvent, (event, model: T) => {
-        logger.info(`[STORE]: SYNC ${this.name} from main`);
+      ipcRenderer.on(this.syncChannel, (event, model: T) => {
+        logger.debug(`[STORE]: SYNC ${this.name} from main`, { model });
         this.onSync(model);
       });
-      this.syncDisposers.push(() => ipcRenderer.removeAllListeners(this.syncEvent));
+      this.syncDisposers.push(() => ipcRenderer.removeAllListeners(this.syncChannel));
     }
   }
 
@@ -108,12 +109,12 @@ export class BaseStore<T = any> extends Singleton {
 
   protected async onModelChange(model: T) {
     if (ipcMain) {
-      this.save(model); // save to config file
-      broadcastMessage({ channel: this.syncEvent }, model); // broadcast to renderer views
+      this.save(model); // save config file
+      broadcastMessage({ channel: this.syncChannel }, model); // broadcast to renderer views
     }
     // send "update-request" to main-process
     if (ipcRenderer) {
-      ipcRenderer.send(this.syncEvent, model);
+      ipcRenderer.send(this.syncChannel, model);
     }
   }
 

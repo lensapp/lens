@@ -1,15 +1,9 @@
 .ClusterManager {
   display: grid;
-  grid-template-areas: "draggable draggable" "menu lens-view" "bottom-bar bottom-bar";
+  grid-template-areas: "menu lens-view" "menu lens-view" "bottom-bar bottom-bar";
   grid-template-rows: auto 1fr min-content;
   grid-template-columns: min-content 1fr;
   height: 100%;
-
-  .draggable-top {
-    @include set-draggable;
-    grid-area: draggable;
-    height: 25px;
-  }
 
   #lens-view {
     position: relative;
@@ -17,6 +11,7 @@
   }
 
   .ClustersMenu {
+    margin-top: 25px;
     grid-area: menu;
   }
 

@@ -21,15 +21,16 @@ export interface IpcBroadcastOpts {
 }
 
 export function broadcastMessage({ channel, filter }: IpcBroadcastOpts, ...args: any[]) {
-  let webContentsList = webContents.getAllWebContents();
-  if (filter) {
-    webContentsList = webContentsList.filter(filter);
+  if (!filter) {
+    filter = webContent => webContent.getType() === "window"
   }
-  webContentsList.forEach(webContent => {
+  webContents.getAllWebContents().filter(filter).forEach(webContent => {
+    logger.info(`[IPC]: broadcasting ${channel} to ${webContent.getType()}=${webContent.id}`);
     webContent.send(channel, ...args);
   })
 }
 
+// fixme: support timeout
 export async function invokeMessage<T = any>(channel: IpcChannel, ...args: any[]): Promise<T> {
   logger.info(`[IPC]: invoke channel "${channel}"`, { args });
   return ipcRenderer.invoke(channel, ...args);

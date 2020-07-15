@@ -71,22 +71,24 @@ export class WindowManager {
       const isLoadedBefore = !!this.getView(clusterId);
       const view = this.initView(clusterId);
       logger.info(`[WINDOW-MANAGER]: activating cluster view`, {
-        id: cluster.id,
+        id: view.id,
+        clusterId: cluster.id,
         contextName: cluster.contextName,
         isLoadedBefore: isLoadedBefore,
       });
       if (activeView !== view) {
+        this.activeView = view;
         if (!isLoadedBefore) {
           await cluster.whenReady;
           await view.loadURL(cluster.webContentUrl);
+          this.hideSplash();
         }
+        // refresh position and hide previous active window
         if (activeView) {
-          view.setBounds(activeView.getBounds()); // refresh position and swap windows
+          view.setBounds(activeView.getBounds());
           activeView.hide();
         }
         view.show();
-        this.hideSplash();
-        this.activeView = view;
       }
     } catch (err) {
       logger.error(`[WINDOW-MANAGER]: can't activate cluster view`, {

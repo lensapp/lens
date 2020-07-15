@@ -84,7 +84,7 @@ export class KubeAuthProxy {
     const channel = `kube-auth:${this.cluster.id}`
     const message = { data, stream };
     logger.debug(channel, message);
-    broadcastMessage({ channel }, message);
+    broadcastMessage({ channel }, message); // todo: send message only to cluster's window
   }
 
   public exit() {

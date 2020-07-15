@@ -1,3 +1,4 @@
+import url from "url"
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import requestPromise from "request-promise-native"
@@ -8,9 +9,19 @@ export type IMetricsQuery = string | string[] | {
 }
 
 class MetricsRoute extends LensApi {
-  public async routeMetrics(request: LensApiRequest<IMetricsQuery>) {
+
+  public async routeMetrics(request: LensApiRequest) {
     const { response, cluster, payload } = request
     const { contextHandler, kubeProxyUrl } = cluster;
+    const headers: Record<string, string> = {
+      "Host": url.parse(cluster.webContentUrl).host,
+      "Content-type": "application/json",
+    }
+    const queryParams: IMetricsQuery = {}
+    request.query.forEach((value: string, key: string) => {
+      queryParams[key] = value
+    })
+
     let metricsUrl: string
     let prometheusProvider: PrometheusProvider
     try {
@@ -22,20 +33,23 @@ class MetricsRoute extends LensApi {
       return
     }
     // prometheus metrics loader
-    const attempts: Record<string, number> = {};
+    const attempts: { [query: string]: number } = {};
     const maxAttempts = 5;
-    const loadMetrics = (promQuery: string): Promise<any> => {
-      const queryString = request.query.toString() + `&query=` + promQuery;
-      const attempt = attempts[queryString] = (attempts[queryString] || 0) + 1;
+    const loadMetrics = (orgQuery: string): Promise<any> => {
+      const query = orgQuery.trim()
+      const attempt = attempts[query] = (attempts[query] || 0) + 1;
       return requestPromise(metricsUrl, {
-        json: true,
-        qs: queryString,
-        useQuerystring: true,
         resolveWithFullResponse: false,
+        headers: headers,
+        json: true,
+        qs: {
+          query: query,
+          ...queryParams
+        }
       }).catch(async (error) => {
         if (attempt < maxAttempts && (error.statusCode && error.statusCode != 404)) {
           await new Promise(resolve => setTimeout(resolve, attempt * 1000)); // add delay before repeating request
-          return loadMetrics(queryString);
+          return loadMetrics(query);
         }
         return {
           status: error.toString(),

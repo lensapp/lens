@@ -2,7 +2,7 @@ import Call from "@hapi/call"
 import Subtext from "@hapi/subtext"
 import http from "http"
 import path from "path"
-import { readFile, stat } from "fs-extra"
+import { readFile } from "fs-extra"
 import { Cluster } from "./cluster"
 import { apiPrefix, appName, outDir } from "../common/vars";
 import { configRoute, helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute } from "./routes";
@@ -97,13 +97,12 @@ export class Router {
 
   protected async handleStaticFile(filePath: string, response: http.ServerResponse) {
     const asset = path.resolve(outDir, filePath);
-    const info = await stat(asset);
-    if (info.isFile()) {
+    try {
       const data = await readFile(asset);
       response.setHeader("Content-Type", this.getMimeType(asset));
       response.write(data)
       response.end()
-    } else {
+    } catch (err) {
       this.handleStaticFile(`${appName}.html`, response);
     }
   }
