@@ -6,7 +6,6 @@ import { computed, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
 import { matchPath, NavLink } from "react-router-dom";
 import { Trans } from "@lingui/macro";
-import { configStore } from "../../config.store";
 import { createStorage, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { workloadsRoute, workloadsURL } from "../+workloads/workloads.route";
@@ -29,6 +28,7 @@ import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resourc
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { navigation } from "../../navigation";
 import { isAllowedResource } from "../../api/rbac"
+import { TooltipContent } from "../tooltip";
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
 type SidebarContextValue = {
@@ -72,20 +72,28 @@ export class Sidebar extends React.Component<Props> {
 
   render() {
     const { toggle, isPinned, className } = this.props;
-    const { allowedResources } = configStore;
     const query = namespaceStore.getContextParams();
     return (
       <SidebarContext.Provider value={{ pinned: isPinned }}>
         <div className={cssNames("Sidebar flex column", className, { pinned: isPinned })}>
           <div className="header flex align-center">
             <NavLink exact to="/" className="box grow">
-              <Icon svg="logo-full" className="logo-icon"/> <div className="logo-text">Lens</div>
+              <Icon svg="logo-full" className="logo-icon"/>
+              <div className="logo-text">Lens</div>
             </NavLink>
             <Icon
               className="pin-icon"
               material={isPinned ? "keyboard_arrow_left" : "keyboard_arrow_right"}
               onClick={toggle}
-              tooltip={isPinned ? <Trans>Compact view</Trans> : <Trans>Extended view</Trans>}
+              tooltip={{
+                following: false,
+                position: { right: true },
+                children: (
+                  <TooltipContent nowrap>
+                    <Trans>Compact view</Trans>
+                  </TooltipContent>
+                )
+              }}
               focusable={false}
             />
           </div>

@@ -22,7 +22,7 @@ export interface UserPreferences {
 export class UserStore extends BaseStore<UserStoreModel> {
   private constructor() {
     super({
-      configName: "lens-user-store",
+      // configName: "lens-user-store", // todo: migrate from default filename
       migrations: migrations,
     });
 
@@ -42,7 +42,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     downloadMirror: "default",
   };
 
-  get hasNewAppVersion() {
+  get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
   }
 

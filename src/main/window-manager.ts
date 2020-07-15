@@ -5,6 +5,8 @@ import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 import logger from "./logger";
 
+// fixme: remove switching view delay on first load
+
 export class WindowManager {
   protected activeView: BrowserWindow;
   protected views = new Map<ClusterId, BrowserWindow>();
