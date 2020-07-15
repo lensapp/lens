@@ -23,8 +23,12 @@ export function formatDuration(timeValue: number, compact: boolean) {
     .filter(([_dur, suf], i) => i === 0 || suf !== "s") // remove seconds, unless it is the only one
     .map(([dur, suf]) => dur + suf);
 
+  if (meaningfulValues.length === 0) {
+    return "0s";
+  }
+
   if (compact) {
-    return meaningfulValues[0] || "0s";
+    return meaningfulValues[0];
   }
 
   return meaningfulValues.join(" ");

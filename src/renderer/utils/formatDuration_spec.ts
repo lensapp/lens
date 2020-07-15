@@ -1,4 +1,4 @@
-import { formatDuration } from "../formatDuration";
+import { formatDuration } from "./formatDuration";
 
 const second = 1000;
 const minute = 60 * second;
@@ -45,9 +45,7 @@ describe("human format durations", () => {
   });
 
   test("zero duration should output something", () => {
-    const zero = formatDuration(0, false);
-    
-    expect(zero).not.toHaveLength(0);
-    expect(zero).toBe("0s");
+    expect(formatDuration(0, false)).toBe("0s");
+    expect(formatDuration(0, true)).toBe("0s");
   });
 });
