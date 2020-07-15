@@ -5,8 +5,6 @@ import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 import logger from "./logger";
 
-// fixme: activate landing-page when no-clusters exists
-
 export class WindowManager {
   protected activeView: BrowserWindow;
   protected views = new Map<ClusterId, BrowserWindow>();

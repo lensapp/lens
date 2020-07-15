@@ -16,6 +16,7 @@ import { navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
+import { Tooltip, TooltipContent } from "../tooltip";
 
 // fixme: allow to rearrange clusters with drag&drop
 // fixme: make add-icon's tooltip visible on init
@@ -80,20 +81,17 @@ export class ClustersMenu extends React.Component<Props> {
             />
           )
         })}
-        <div className="add-cluster" onClick={this.addCluster}>
-          <Icon
-            big material="add" className="add"
-            tooltip={(
-              <div className="flex column gaps">
-                <p><Trans>This is the quick launch menu.</Trans></p>
-                <p>
-                  <Trans>
-                    Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button.
-                  </Trans>
-                </p>
-              </div>
-            )}
-          />
+        <div id="add-cluster" onClick={this.addCluster}>
+          <Tooltip htmlFor="add-cluster" position={{ right: true }}>
+            <TooltipContent>
+              <Trans>This is the quick launch menu.</Trans>
+              <br/><br/>
+              <Trans>
+                Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button.
+              </Trans>
+            </TooltipContent>
+          </Tooltip>
+          <Icon big material="add"/>
           {newContexts.length > 0 && (
             <Badge className="counter" label={newContexts.length}/>
           )}

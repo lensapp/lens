@@ -14,6 +14,7 @@ interface Props extends DOMAttributes<HTMLElement> {
   className?: IClassName;
   errorClass?: IClassName;
   showErrors?: boolean;
+  showTooltip?: boolean;
   interactive?: boolean;
   isActive?: boolean;
   options?: HashiconParams;
@@ -21,6 +22,7 @@ interface Props extends DOMAttributes<HTMLElement> {
 
 const defaultProps: Partial<Props> = {
   showErrors: true,
+  showTooltip: true,
 };
 
 @observer
@@ -28,19 +30,24 @@ export class ClusterIcon extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
   render() {
-    const { className: cName, cluster, showErrors, errorClass, options, interactive, isActive, children, ...elemProps } = this.props;
+    const {
+      cluster, showErrors, showTooltip, errorClass, options, interactive, isActive,
+      children, ...elemProps
+    } = this.props;
     const { isAdmin, eventCount, preferences, id: clusterId } = cluster;
     const { clusterName, icon } = preferences;
     const clusterIconId = `cluster-icon-${clusterId}`;
-    const className = cssNames("ClusterIcon flex inline", cName, {
+    const className = cssNames("ClusterIcon flex inline", this.props.className, {
       interactive: interactive || !!this.props.onClick,
       active: isActive,
     });
     return (
       <div {...elemProps} className={className} id={clusterIconId}>
-        <Tooltip htmlFor={clusterIconId} following>
-          <TooltipContent nowrap>{clusterName}</TooltipContent>
-        </Tooltip>
+        {showTooltip && (
+          <Tooltip htmlFor={clusterIconId} position={{ right: true }}>
+            <TooltipContent nowrap>{clusterName}</TooltipContent>
+          </Tooltip>
+        )}
         {icon && <img src={icon} alt={clusterName}/>}
         {!icon && <Hashicon value={clusterName} options={options}/>}
         {showErrors && isAdmin && eventCount > 0 && (

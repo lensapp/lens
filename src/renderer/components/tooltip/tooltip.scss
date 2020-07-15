@@ -32,12 +32,14 @@
   }
 
   &:not(.following) {
+    margin: #{$margin};
+
     &.left {
-      left: 0;
+      right: 100%;
     }
 
     &.right {
-      right: 0;
+      left: 100%;
     }
 
     &.top {
@@ -47,24 +49,19 @@
     &.bottom {
       top: 100%;
     }
-
-    &.center {
-      left: 50%;
-      transform: translateX(-50%);
-    }
   }
 }
 
 .TooltipContent {
   &.nowrap {
-    white-space: nowrap;
+    &, * {
+      white-space: nowrap;
+    }
   }
 
   &.narrow {
     max-width: 300px;
-    overflow: hidden;
     text-overflow: ellipsis;
-    white-space: normal;
     word-wrap: break-word;
     text-align: left;
   }

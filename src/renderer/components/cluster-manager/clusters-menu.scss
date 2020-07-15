@@ -1,5 +1,6 @@
 .ClustersMenu {
-  @include hidden-scrollbar;
+  // fixme: uncomment when tooltips handled correctly (rendered outside of parent)
+  //@include hidden-scrollbar;
 
   --flex-gap: #{$padding * 2};
   --menu-bgc: #252729;
@@ -7,10 +8,15 @@
   padding: $padding * 2;
   background: var(--menu-bgc);
 
-  .add-cluster {
+  #add-cluster {
     position: relative;
 
-    .Icon.add {
+    .TooltipContent {
+      min-width: 300px;
+      text-align: left;
+    }
+
+    .Icon {
       border-radius: $radius;
       padding: $padding / 3;
       color: var(--menu-bgc) !important;
@@ -29,7 +35,7 @@
       }
     }
 
-    .Badge.counter {
+    .Badge {
       $boxSize: 17px;
       $offset: -7px;
 

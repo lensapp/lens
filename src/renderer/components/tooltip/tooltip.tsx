@@ -7,7 +7,7 @@ import { createPortal } from "react-dom"
 import { autobind, cssNames } from "../../utils";
 import { Animate } from "../animate";
 
-// todo: refactoring
+// todo: refactor
 // todo: add flag to show visible tooltip by default (until mouse-over the target)
 // fixme: better positioning + remove "flying effect"
 
@@ -26,13 +26,11 @@ interface Position {
   right?: boolean;
   top?: boolean;
   bottom?: boolean;
-  center?: boolean;
 }
 
 const defaultProps: Partial<TooltipProps> = {
   useAnimation: true,
   position: {
-    center: true,
     bottom: true,
   }
 };
