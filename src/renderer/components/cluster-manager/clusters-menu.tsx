@@ -15,6 +15,7 @@ import { Badge } from "../badge";
 import { navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
+import { landingURL } from "../+landing-page";
 
 // fixme: allow to rearrange clusters with drag&drop
 // fixme: make add-icon's tooltip visible on init
@@ -45,12 +46,13 @@ export class ClustersMenu extends React.Component<Props> {
       label: _i18n._(t`Settings`),
       click: () => navigate(clusterSettingsURL())
     }));
+
+    // fixme: disconnect cluster
     if (cluster.initialized) {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
         click: () => {
-          console.log(`//fixme: disconnect cluster`, cluster);
-          navigate("/");
+          navigate(landingURL());
         }
       }))
     }

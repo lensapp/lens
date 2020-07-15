@@ -47,7 +47,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #282b2f url(../assets/img/crane.svg) no-repeat;
+  background: #282b2f url(../../components/icon/crane.svg) no-repeat;
   background-position: 0px 35%;
   background-size: 85%;
   background-clip: content-box;

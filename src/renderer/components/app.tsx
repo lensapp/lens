@@ -31,7 +31,7 @@ import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../api/rbac";
 import { AddCluster, addClusterRoute } from "./+add-cluster";
-import { LandingPage } from "./+landing-page";
+import { LandingPage, landingRoute } from "./+landing-page";
 import { clusterStore } from "../../common/cluster-store";
 import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";
 
@@ -46,13 +46,14 @@ export class App extends React.Component {
   }
 
   render() {
-    const showLanding = clusterStore.clusters.size === 0;
+    const noClusters = clusterStore.clusters.size === 0;
     const homeUrl = isAllowedResource(["events", "nodes", "pods"]) ? clusterURL() : workloadsURL();
     return (
       <Fragment>
         <Switch>
           <Switch>
-            {showLanding && <Route component={LandingPage}/>}
+            {noClusters && <Route component={LandingPage}/>}
+            <Route component={LandingPage} {...landingRoute}/>
             <Route component={AddCluster} {...addClusterRoute}/>
             <Route component={ClusterSettings} {...clusterSettingsRoute}/>
             <Route component={Cluster} {...clusterRoute}/>

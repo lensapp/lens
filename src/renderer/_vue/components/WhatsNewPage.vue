@@ -4,7 +4,7 @@
       <div class="row">
         <div class="col-md whats-new-text-wrapper">
           <div class="logo">
-            <img src="../assets/img/lens-logo.svg">
+            <img src="../../components/icon/lens-logo.svg">
           </div>
           <!-- Safe to use v-html as we self generate the html locally only -->
           <!-- eslint-disable-next-line vue/no-v-html -->
@@ -59,7 +59,7 @@ export default {
 <style lang="scss" scoped>
 
 .content {
-  background: #282b2f url(../assets/img/crane.svg) no-repeat;
+  background: #282b2f url(../../components/icon/crane.svg) no-repeat;
   background-position: 0px 35%;
   background-size: 85%;
   background-clip: content-box;
