@@ -171,7 +171,6 @@
     "chalk": "^4.1.0",
     "conf": "^7.0.1",
     "crypto-js": "^4.0.0",
-    "electron-promise-ipc": "^2.1.0",
     "electron-updater": "^4.3.1",
     "electron-window-state": "^5.0.3",
     "filenamify": "^4.1.0",

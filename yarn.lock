@@ -4583,16 +4583,6 @@ electron-notarize@^0.3.0:
     debug "^4.1.1"
     fs-extra "^8.1.0"
 
-electron-promise-ipc@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/electron-promise-ipc/-/electron-promise-ipc-2.1.0.tgz#23503c397f067b228246be4f5418e38186a686d7"
-  integrity sha512-5i6N9KZp4XauJl97/Il+E8sxi8EoXe6mi8lJduPJAveu4fss2Mk6+x3lU1Lu7J4OH+mf4f8uKKaVFIlwigNgmg==
-  dependencies:
-    is-electron-renderer "^2.0.1"
-    object.entries "^1.1.1"
-    serialize-error "^5.0.0"
-    uuid "^3.0.1"
-
 electron-publish@22.7.0:
   version "22.7.0"
   resolved "https://registry.yarnpkg.com/electron-publish/-/electron-publish-22.7.0.tgz#d92ba7c4007c9ac1dd070593e48028184fb2dc19"
@@ -6391,11 +6381,6 @@ is-docker@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/is-docker/-/is-docker-2.0.0.tgz#2cb0df0e75e2d064fe1864c37cdeacb7b2dcf25b"
   integrity sha512-pJEdRugimx4fBMra5z2/5iRdZ63OhYV0vr0Dwm5+xtW4D1FvRkB8hamMIhnWfyJeDdyr/aa7BDyNbtG38VxgoQ==
-
-is-electron-renderer@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/is-electron-renderer/-/is-electron-renderer-2.0.1.tgz#a469d056f975697c58c98c6023eb0aa79af895a2"
-  integrity sha1-pGnQVvl1aXxYyYxgI+sKp5r4laI=
 
 is-electron@^2.2.0:
   version "2.2.0"
@@ -8460,15 +8445,6 @@ object.assign@^4.1.0:
     has-symbols "^1.0.0"
     object-keys "^1.0.11"
 
-object.entries@^1.1.1:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/object.entries/-/object.entries-1.1.2.tgz#bc73f00acb6b6bb16c203434b10f9a7e797d3add"
-  integrity sha512-BQdB9qKmb/HyNdMNWVr7O3+z5MUIx3aiegEIJqjMBbBf0YT9RRxTJSim4mzFqtyr7PDAHigq0N9dO0m0tRakQA==
-  dependencies:
-    define-properties "^1.1.3"
-    es-abstract "^1.17.5"
-    has "^1.0.3"
-
 object.getownpropertydescriptors@^2.0.3:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/object.getownpropertydescriptors/-/object.getownpropertydescriptors-2.1.0.tgz#369bf1f9592d8ab89d712dced5cb81c7c5352649"
@@ -10130,13 +10106,6 @@ semver@~5.3.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
   integrity sha1-myzl094C0XxgEq0yaqa00M9U+U8=
 
-serialize-error@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/serialize-error/-/serialize-error-5.0.0.tgz#a7ebbcdb03a5d71a6ed8461ffe0fc1a1afed62ac"
-  integrity sha512-/VtpuyzYf82mHYTtI4QKtwHa79vAdU5OQpNPAmE/0UDdlGT0ZxHwC+J6gXkw29wwoVI8fMPsfcVHOwXtUQYYQA==
-  dependencies:
-    type-fest "^0.8.0"
-
 serialize-error@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/serialize-error/-/serialize-error-7.0.1.tgz#f1360b0447f61ffb483ec4157c737fab7d778e18"
@@ -11263,7 +11232,7 @@ type-fest@^0.6.0:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.6.0.tgz#8d2a2370d3df886eb5c90ada1c5bf6188acf838b"
   integrity sha512-q+MB8nYR1KDLrgr4G5yemftpMC7/QLqVndBmEEdqzmNj5dcFOO4Oo8qlwZE3ULT3+Zim1F8Kq4cBnikNhlCMlg==
 
-type-fest@^0.8.0, type-fest@^0.8.1:
+type-fest@^0.8.1:
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.8.1.tgz#09e249ebde851d3b1e48d27c105444667f17b83d"
   integrity sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
@@ -11507,7 +11476,7 @@ utila@^0.4.0, utila@~0.4:
   resolved "https://registry.yarnpkg.com/utila/-/utila-0.4.0.tgz#8a16a05d445657a3aea5eecc5b12a4fa5379772c"
   integrity sha1-ihagXURWV6Oupe7MWxKk+lN5dyw=
 
-uuid@^3.0.0, uuid@^3.0.1, uuid@^3.3.2, uuid@^3.3.3:
+uuid@^3.0.0, uuid@^3.3.2, uuid@^3.3.3:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==

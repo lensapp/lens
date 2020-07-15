@@ -1,5 +1,4 @@
 // Black-boxed modules without type safety
-declare module "electron-promise-ipc"
 declare module "mac-ca"
 declare module "win-ca"
 declare module "@hapi/call"

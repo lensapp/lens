@@ -1,4 +1,3 @@
-import { PromiseIpc } from "electron-promise-ipc";
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
 import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
 
@@ -75,11 +74,11 @@ export default function initMenu(opts: Partial<MenuOptions> = {}) {
         label: 'Add Cluster...',
         click: opts.addClusterHook,
       },
-      {
-        label: 'Cluster Settings',
-        click: opts.clusterSettingsHook,
-        enabled: false
-      }
+        {
+          label: 'Cluster Settings',
+          click: opts.clusterSettingsHook,
+          enabled: false
+        }
       ]
     }
   } else {
@@ -195,13 +194,13 @@ export default function initMenu(opts: Partial<MenuOptions> = {}) {
   const menu = Menu.buildFromTemplate(mt);
   Menu.setApplicationMenu(menu);
 
-  const promiseIpc = new PromiseIpc({ timeout: 2000 })
-
-  promiseIpc.on("enableClusterSettingsMenuItem", (clusterId: string) => {
-    setClusterSettingsEnabled(true)
-  });
-
-  promiseIpc.on("disableClusterSettingsMenuItem", () => {
-    setClusterSettingsEnabled(false)
-  });
+  // const promiseIpc = new PromiseIpc({ timeout: 2000 })
+  //
+  // promiseIpc.on("enableClusterSettingsMenuItem", (clusterId: string) => {
+  //   setClusterSettingsEnabled(true)
+  // });
+  //
+  // promiseIpc.on("disableClusterSettingsMenuItem", () => {
+  //   setClusterSettingsEnabled(false)
+  // });
 }
