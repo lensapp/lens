@@ -24,7 +24,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     });
   }
 
-  @observable currentWorkspace = WorkspaceStore.defaultId;
+  @observable currentWorkspaceId = WorkspaceStore.defaultId;
 
   @observable workspaces = observable.map<WorkspaceId, Workspace>({
     [WorkspaceStore.defaultId]: {
@@ -33,18 +33,16 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     }
   });
 
+  @computed get currentWorkspace(): Workspace {
+    return this.getById(this.currentWorkspaceId);
+  }
+
   @computed get workspacesList() {
     return Array.from(this.workspaces.values());
   }
 
   getById(id: WorkspaceId): Workspace {
     return this.workspaces.get(id);
-  }
-
-  @action
-  setCurrent(id: WorkspaceId) {
-    if (!this.getById(id)) return;
-    this.currentWorkspace = id;
   }
 
   @action
@@ -65,8 +63,8 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     if (id === WorkspaceStore.defaultId) {
       throw new Error("Cannot remove default workspace");
     }
-    if (id === this.currentWorkspace) {
-      this.currentWorkspace = WorkspaceStore.defaultId;
+    if (id === this.currentWorkspaceId) {
+      this.currentWorkspaceId = WorkspaceStore.defaultId;
     }
     this.workspaces.delete(id);
     clusterStore.removeByWorkspaceId(id)
@@ -75,7 +73,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   @action
   protected fromStore({ currentWorkspace, workspaces = [] }: WorkspaceStoreModel) {
     if (currentWorkspace) {
-      this.currentWorkspace = currentWorkspace
+      this.currentWorkspaceId = currentWorkspace
     }
     if (workspaces.length) {
       this.workspaces.clear();
@@ -87,7 +85,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
 
   toJSON(): WorkspaceStoreModel {
     return toJS({
-      currentWorkspace: this.currentWorkspace,
+      currentWorkspace: this.currentWorkspaceId,
       workspaces: this.workspacesList,
     }, {
       recurseEverything: true

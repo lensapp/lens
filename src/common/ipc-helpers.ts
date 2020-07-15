@@ -25,14 +25,14 @@ export function broadcastMessage({ channel, filter }: IpcBroadcastOpts, ...args:
     filter = webContent => webContent.getType() === "window"
   }
   webContents.getAllWebContents().filter(filter).forEach(webContent => {
-    logger.info(`[IPC]: broadcasting ${channel} to ${webContent.getType()}=${webContent.id}`);
+    logger.debug(`[IPC]: broadcasting ${channel} to ${webContent.getType()}=${webContent.id}`);
     webContent.send(channel, ...args);
   })
 }
 
-// fixme: support timeout
+// todo: support timeout
 export async function invokeMessage<T = any>(channel: IpcChannel, ...args: any[]): Promise<T> {
-  logger.info(`[IPC]: invoke channel "${channel}"`, { args });
+  logger.debug(`[IPC]: invoke channel "${channel}"`, { args });
   return ipcRenderer.invoke(channel, ...args);
 }
 

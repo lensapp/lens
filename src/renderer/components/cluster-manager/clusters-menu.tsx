@@ -6,12 +6,15 @@ import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
 import type { Cluster } from "../../../main/cluster";
 import { userStore } from "../../../common/user-store";
-import { clusterStore } from "../../../common/cluster-store";
+import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../+cluster-settings/cluster-icon";
 import { Icon } from "../icon";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
+import { navigate } from "../../navigation";
+import { addClusterURL } from "../+add-cluster";
+import { clusterSettingsURL } from "../+cluster-settings";
 
 // fixme: allow to rearrange clusters with drag&drop
 // fixme: make add-icon's tooltip visible on init
@@ -22,13 +25,16 @@ interface Props {
 
 @observer
 export class ClustersMenu extends React.Component<Props> {
-  showCluster = (cluster: Cluster) => {
-    clusterStore.activeClusterId = cluster.id;
-    console.log('show lens for cluster:', cluster.contextName);
+  showCluster = (clusterId: ClusterId) => {
+    if (clusterStore.activeClusterId === clusterId) {
+      navigate("/"); // redirect to index
+    } else {
+      clusterStore.activeClusterId = clusterId;
+    }
   }
 
   addCluster = () => {
-    console.log('navigate: /add-cluster')
+    navigate(addClusterURL());
   }
 
   showContextMenu = (cluster: Cluster) => {
@@ -37,15 +43,17 @@ export class ClustersMenu extends React.Component<Props> {
 
     menu.append(new MenuItem({
       label: _i18n._(t`Settings`),
-      click: () => console.log(`navigate to cluster settings`, cluster)
+      click: () => navigate(clusterSettingsURL())
     }));
     if (cluster.initialized) {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
-        click: () => console.log(`disconnect cluster and navigate to workspaces`, cluster.contextName)
+        click: () => {
+          console.log(`//fixme: disconnect cluster`, cluster);
+          navigate("/");
+        }
       }))
     }
-
     menu.popup({
       window: remote.getCurrentWindow()
     })
@@ -54,8 +62,8 @@ export class ClustersMenu extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const { newContexts } = userStore;
-    const { currentWorkspace } = workspaceStore;
-    const clusters = clusterStore.getByWorkspaceId(currentWorkspace);
+    const { currentWorkspaceId } = workspaceStore;
+    const clusters = clusterStore.getByWorkspaceId(currentWorkspaceId);
     return (
       <div className={cssNames("ClustersMenu flex gaps column", className)}>
         {clusters.map(cluster => {
@@ -65,7 +73,7 @@ export class ClustersMenu extends React.Component<Props> {
               showErrors={true}
               cluster={cluster}
               isActive={cluster.id === clusterStore.activeClusterId}
-              onClick={() => this.showCluster(cluster)}
+              onClick={() => this.showCluster(cluster.id)}
               onContextMenu={() => this.showContextMenu(cluster)}
             />
           )

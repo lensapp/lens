@@ -1,6 +1,7 @@
 import "./app.scss";
 
 import React, { Fragment } from "react";
+import { observer } from "mobx-react";
 import { i18nStore } from "../i18n";
 import { configStore } from "../config.store";
 import { Terminal } from "./dock/terminal";
@@ -29,7 +30,12 @@ import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../api/rbac";
+import { AddCluster, addClusterRoute } from "./+add-cluster";
+import { LandingPage } from "./+landing-page";
+import { clusterStore } from "../../common/cluster-store";
+import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";
 
+@observer
 export class App extends React.Component {
   static rootElem = document.getElementById('app');
 
@@ -40,11 +46,15 @@ export class App extends React.Component {
   }
 
   render() {
+    const showLanding = clusterStore.clusters.size === 0;
     const homeUrl = isAllowedResource(["events", "nodes", "pods"]) ? clusterURL() : workloadsURL();
     return (
       <Fragment>
         <Switch>
           <Switch>
+            {showLanding && <Route component={LandingPage}/>}
+            <Route component={AddCluster} {...addClusterRoute}/>
+            <Route component={ClusterSettings} {...clusterSettingsRoute}/>
             <Route component={Cluster} {...clusterRoute}/>
             <Route component={Nodes} {...nodesRoute}/>
             <Route component={Workloads} {...workloadsRoute}/>

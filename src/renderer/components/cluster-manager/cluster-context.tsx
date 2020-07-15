@@ -13,7 +13,7 @@ export interface ClusterContextValue {
 export function getClusterContext(): ClusterContextValue {
   return {
     clusterId: clusterStore.activeClusterId,
-    workspaceId: workspaceStore.currentWorkspace,
+    workspaceId: workspaceStore.currentWorkspaceId,
   }
 }
 

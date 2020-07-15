@@ -1,11 +1,11 @@
 import "./add-cluster.scss"
 import React from "react";
-import { observable } from "mobx";
+import { observer } from "mobx-react";
 
 interface Props {
 }
 
-@observable
+@observer
 export class AddCluster extends React.Component<Props> {
   render() {
     return (

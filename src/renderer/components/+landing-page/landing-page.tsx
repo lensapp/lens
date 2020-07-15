@@ -1,9 +1,8 @@
 import "./landing-page.scss"
 import React from "react";
+import { observer } from "mobx-react";
 
-interface Props {
-}
-
+@observer
 export class LandingPage extends React.Component {
   render() {
     return (
