@@ -31,7 +31,7 @@ export function sendMessage({ channel, webContentId, filter, args = [] }: IpcMes
   }
   views.forEach(webContent => {
     const type = webContent.getType();
-    logger.info(`[IPC]: sending message "${channel}" to webContentId(${type})=${webContent.id}`);
+    logger.info(`[IPC]: sending message "${channel}" to ${type}=${webContent.id}`);
     webContent.send(channel, ...[args].flat());
   })
 }

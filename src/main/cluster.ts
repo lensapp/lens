@@ -312,7 +312,7 @@ export class Cluster implements ClusterModel {
 
   // serializable full-featured state of the cluster
   getState(): ClusterState {
-    return {
+    const state: ClusterState = {
       ...this.toJSON(),
       apiUrl: this.apiUrl,
       online: this.online,
@@ -324,6 +324,9 @@ export class Cluster implements ClusterModel {
       isAdmin: this.isAdmin,
       features: this.features,
       eventCount: this.eventCount,
-    }
+    };
+    return toJS(state, {
+      recurseEverything: true
+    })
   }
 }
