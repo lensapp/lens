@@ -10,7 +10,7 @@
   > .content {
     padding: var(--flex-gap);
     margin-right: var(--flex-gap);
-    background-color: $contentColor;
+    background-color: var(--clusters-menu-bgc);
     border-radius: $radius;
   }
 

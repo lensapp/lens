@@ -1,26 +1,50 @@
 .ClustersMenu {
-  // fixme: uncomment when tooltips handled correctly (rendered outside of parent)
-  //@include hidden-scrollbar;
-
   --flex-gap: #{$padding * 2};
-  --menu-bgc: #252729;
 
+  position: relative;
   padding: var(--flex-gap);
-  padding-top: calc(var(--flex-gap) + 20px); // add extra-space for "traffic-light" buttons (mac)
-  background: var(--menu-bgc);
+  background: var(--clusters-menu-bgc);
 
-  #add-cluster {
-    position: relative;
+  > .startup-tooltip {
+    $bgc: $mainBackground;
+    $arrowSize: 10px;
 
-    .TooltipContent {
-      min-width: 300px;
-      text-align: left;
+    position: absolute;
+    top: 20px;
+    left: 100%;
+    margin: $padding;
+    padding: $padding * 2;
+    width: 320px;
+    background: $bgc;
+    z-index: 100;
+    color: white;
+    filter: drop-shadow(0 0px 2px #ffffff33);
+    pointer-events: none;
+
+    &:before {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-top: $arrowSize solid transparent;
+      border-bottom: $arrowSize solid transparent;
+      border-right: $arrowSize solid $bgc;
+      right: 100%;
     }
+  }
+
+  > .clusters {
+    //@include hidden-scrollbar;
+    //flex: 1;
+  }
+
+  > .add-cluster {
+    position: relative;
 
     .Icon {
       border-radius: $radius;
       padding: $padding / 3;
-      color: var(--menu-bgc) !important;
+      color: var(--clusters-menu-bgc) !important;
       background: white !important;
       font-weight: bold;
       cursor: pointer;

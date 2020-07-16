@@ -2,6 +2,7 @@ import "./clusters-menu.scss"
 import { remote } from "electron"
 import React from "react";
 import { observer } from "mobx-react";
+import { observable } from "mobx";
 import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
 import type { Cluster } from "../../../main/cluster";
@@ -12,14 +13,13 @@ import { ClusterIcon } from "../+cluster-settings/cluster-icon";
 import { Icon } from "../icon";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
-import { navigate } from "../../navigation";
+import { navigate, navigation } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
 import { Tooltip, TooltipContent } from "../tooltip";
 
 // fixme: allow to rearrange clusters with drag&drop
-// fixme: make add-icon's tooltip visible on init
 
 interface Props {
   className?: IClassName;
@@ -27,6 +27,8 @@ interface Props {
 
 @observer
 export class ClustersMenu extends React.Component<Props> {
+  @observable showHint = true;
+
   showCluster = (clusterId: ClusterId) => {
     if (clusterStore.activeClusterId === clusterId) {
       navigate("/"); // redirect to index
@@ -67,31 +69,45 @@ export class ClustersMenu extends React.Component<Props> {
     const { newContexts } = userStore;
     const { currentWorkspaceId } = workspaceStore;
     const clusters = clusterStore.getByWorkspaceId(currentWorkspaceId);
+    const noClusters = !clusterStore.clusters.size;
+    const isLanding = navigation.getPath() === landingURL();
+    const showStartupHint = this.showHint && isLanding && noClusters;
     return (
-      <div className={cssNames("ClustersMenu flex gaps column", className)}>
-        {clusters.map(cluster => {
-          return (
-            <ClusterIcon
-              key={cluster.id}
-              showErrors={true}
-              cluster={cluster}
-              isActive={cluster.id === clusterStore.activeClusterId}
-              onClick={() => this.showCluster(cluster.id)}
-              onContextMenu={() => this.showContextMenu(cluster)}
-            />
-          )
-        })}
-        <div id="add-cluster" onClick={this.addCluster}>
-          <Tooltip htmlFor="add-cluster" position={{ right: true }}>
-            <TooltipContent>
-              <Trans>This is the quick launch menu.</Trans>
-              <br/><br/>
+      <div
+        className={cssNames("ClustersMenu flex gaps column", className)}
+        onMouseEnter={() => this.showHint = false}
+      >
+        {showStartupHint && (
+          <div className="startup-tooltip flex column gaps">
+            <p><Trans>This is the quick launch menu.</Trans></p>
+            <p>
               <Trans>
                 Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button.
               </Trans>
+            </p>
+          </div>
+        )}
+        <div className="clusters">
+          {clusters.map(cluster => {
+            return (
+              <ClusterIcon
+                key={cluster.id}
+                showErrors={true}
+                cluster={cluster}
+                isActive={cluster.id === clusterStore.activeClusterId}
+                onClick={() => this.showCluster(cluster.id)}
+                onContextMenu={() => this.showContextMenu(cluster)}
+              />
+            )
+          })}
+        </div>
+        <div className="add-cluster" onClick={this.addCluster}>
+          <Tooltip htmlFor="add-cluster-icon" position={{ right: true }}>
+            <TooltipContent nowrap>
+              <Trans>Add Cluster</Trans>
             </TooltipContent>
           </Tooltip>
-          <Icon big material="add"/>
+          <Icon big material="add" id="add-cluster-icon"/>
           {newContexts.length > 0 && (
             <Badge className="counter" label={newContexts.length}/>
           )}

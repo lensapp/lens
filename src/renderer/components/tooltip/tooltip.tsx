@@ -7,9 +7,8 @@ import { createPortal } from "react-dom"
 import { autobind, cssNames } from "../../utils";
 import { Animate } from "../animate";
 
-// todo: refactor
-// todo: add flag to show visible tooltip by default (until mouse-over the target)
-// fixme: better positioning + remove "flying effect"
+// todo: refactor -- better positioning + remove "flying effect"
+// fixme: always render outside of parent element ("overflow: auto" should not affect tooltip)
 
 export interface TooltipProps {
   htmlFor: string;
