@@ -5,7 +5,8 @@
   --flex-gap: #{$padding * 2};
   --menu-bgc: #252729;
 
-  padding: $padding * 2;
+  padding: var(--flex-gap);
+  padding-top: calc(var(--flex-gap) + 20px); // add extra-space for "traffic-light" buttons (mac)
   background: var(--menu-bgc);
 
   #add-cluster {
