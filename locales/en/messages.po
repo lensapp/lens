@@ -41,6 +41,10 @@ msgstr "<0>Your browser does not support all Lens features. </0> Please consider
 msgid "<0>{0}</0> successfully created"
 msgstr "<0>{0}</0> successfully created"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:52
+msgid "A HTTP proxy server URL (format: http://<address>:<port>)"
+msgstr "A HTTP proxy server URL (format: http://<address>:<port>)"
+
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:80
 msgid "API Group"
 msgstr "API Group"
@@ -63,6 +67,10 @@ msgstr "Account Name"
 msgid "Active"
 msgstr "Active"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:44
+msgid "Add Cluster"
+msgstr "Add Cluster"
+
 #: src/renderer/components/+namespaces/namespaces.tsx:43
 msgid "Add Namespace"
 msgstr "Add Namespace"
@@ -74,6 +82,10 @@ msgstr "Add RoleBinding"
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:111
 msgid "Add bindings to {name}"
 msgstr "Add bindings to {name}"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:62
+msgid "Add cluster"
+msgstr "Add cluster"
 
 #: src/renderer/components/+workspaces/clusters-menu.tsx:58
 #~ msgid "Add clusters"
@@ -613,10 +625,18 @@ msgstr "Current replica scale: {currentReplicas}"
 msgid "Currently applied filters:"
 msgstr "Currently applied filters:"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:36
+#~ msgid "Custom"
+#~ msgstr "Custom"
+
 #: src/renderer/components/+custom-resources/crd-list.tsx:55
 #: src/renderer/components/layout/sidebar.tsx:95
 msgid "Custom Resources"
 msgstr "Custom Resources"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:36
+msgid "Custom.."
+msgstr "Custom.."
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:95
 msgid "DNS Provider"
@@ -861,6 +881,10 @@ msgstr "Groups"
 #: src/renderer/components/+config/config.tsx:54
 msgid "HPA"
 msgstr "HPA"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:54
+msgid "HTTP Proxy server. Used for communicating with Kubernetes API."
+msgstr "HTTP Proxy server. Used for communicating with Kubernetes API."
 
 #: src/renderer/components/dock/install-chart.tsx:113
 msgid "Helm Chart Install"
@@ -1627,6 +1651,10 @@ msgstr "Privileged"
 msgid "Provisioner"
 msgstr "Provisioner"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:48
+msgid "Proxy settings"
+msgstr "Proxy settings"
+
 #: src/renderer/components/+workloads-pods/pods.tsx:79
 msgid "QoS"
 msgstr "QoS"
@@ -1986,6 +2014,10 @@ msgstr "Secrets"
 #: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:134
 msgid "Select a quota.."
 msgstr "Select a quota.."
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:45
+msgid "Select kubeconfig"
+msgstr "Select kubeconfig"
 
 #: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:188
 msgid "Select role.."

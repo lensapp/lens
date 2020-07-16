@@ -1,3 +1,26 @@
 .AddCluster {
-  
+  --flex-gap: #{$padding * 2};
+
+  position: relative;
+  padding: $padding * 3;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 40%;
+
+  > .content {
+    padding: var(--flex-gap);
+    margin-right: var(--flex-gap);
+    background-color: $contentColor;
+    border-radius: $radius;
+  }
+
+  > .info-panel {
+    @include hidden-scrollbar;
+    padding: var(--flex-gap);
+    border-left: 1px solid #353a3e;
+
+    a {
+      color: $colorInfo;
+    }
+  }
 }

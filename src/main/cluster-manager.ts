@@ -9,7 +9,7 @@ import { ClusterId, ClusterModel, clusterStore } from "../common/cluster-store"
 import { handleMessages } from "../common/ipc";
 import { ClusterIpcMessage } from "../common/ipc-messages";
 import { tracker } from "../common/tracker";
-import { validateConfig } from "./k8s";
+import { validateConfig } from "../common/kube-helpers";
 import { Cluster } from "./cluster"
 import { FeatureInstallRequest } from "./feature";
 import logger from "./logger"

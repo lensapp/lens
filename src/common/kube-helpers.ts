@@ -1,8 +1,10 @@
+import { app, remote } from "electron";
 import { KubeConfig, V1Node, V1Pod } from "@kubernetes/client-node"
+import { ensureDirSync, writeFileSync } from "fs-extra";
 import path from "path"
 import os from "os"
 import yaml from "js-yaml"
-import logger from "./logger";
+import logger from "../main/logger";
 
 function resolveTilde(filePath: string) {
   if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
@@ -112,6 +114,7 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
   }
 
   logger.debug("Dumping KubeConfig:", config);
+
   // skipInvalid: true makes dump ignore undefined values
   return yaml.safeDump(config, { skipInvalid: true });
 }
@@ -135,4 +138,14 @@ export function getNodeWarningConditions(node: V1Node) {
   return node.status.conditions.filter(c =>
     c.status.toLowerCase() === "true" && c.type !== "Ready" && c.type !== "HostUpgrades"
   )
+}
+
+// Write kubeconfigs to "embedded" store, i.e. "/Users/ixrock/Library/Application Support/Lens/kubeconfigs"
+export function saveConfigToAppFiles(clusterId: string, kubeConfig: string): string {
+  const userData = (app || remote.app).getPath("userData");
+  const kubeConfigFile = path.join(userData, `kubeconfigs/${clusterId}`)
+
+  ensureDirSync(path.dirname(kubeConfigFile));
+  writeFileSync(kubeConfigFile, kubeConfig);
+  return kubeConfigFile;
 }

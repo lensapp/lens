@@ -8,7 +8,7 @@ import { ContextHandler } from "./context-handler"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager"
-import { getNodeWarningConditions, loadConfig, podHasIssues } from "./k8s"
+import { getNodeWarningConditions, loadConfig, podHasIssues } from "../common/kube-helpers"
 import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from "./feature-manager";
 import request, { RequestPromiseOptions } from "request-promise-native"
 import logger from "./logger"

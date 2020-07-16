@@ -75,46 +75,7 @@
             </div>
           </div>
         </b-col>
-        <b-col lg="5" class="help d-none d-lg-block">
-          <h3>Clusters associated with Lens</h3>
-          <p>
-            Add clusters by clicking the <span class="text-primary">Add Cluster</span> button.
-            You'll need to obtain a working kubeconfig for the cluster you want to add.
-          </p>
-          <p>
-            Each <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/#context">cluster context</a> is added as a separate item in the left-side cluster menu to allow you to operate easily on multiple clusters and/or contexts.
-          </p>
-          <p>
-            For more information on kubeconfig see <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Kubernetes docs</a>
-          </p>
-          <p>
-            NOTE: Any manually added cluster is not merged into your kubeconfig file.
-          </p>
-          <p>
-            To see your currently enabled config with <code>kubectl</code>, use <code>kubectl config view --minify --raw</code> command in your terminal.
-          </p>
-          <p>
-            When connecting to a cluster, make sure you have a valid and working kubeconfig for the cluster. Following lists known "gotchas" in some authentication types used in kubeconfig with Lens app.
-          </p>
-          <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#option-1-oidc-authenticator">
-            <h4>OIDC (OpenID Connect)</h4>
-          </a>
-          <div>
-            <p>
-              When connecting Lens to OIDC enabled cluster, there's few things you as a user need to take into account.
-            </p>
-            <b>Dedicated refresh token</b>
-            <p>
-              As Lens app utilized kubeconfig is "disconnected" from your main kubeconfig Lens needs to have it's own refresh token it utilizes.
-              If you share the refresh token with e.g. <code>kubectl</code> who ever uses the token first will invalidate it for the next user.
-              One way to achieve this is with <a href="https://github.com/int128/kubelogin">kubelogin</a> tool by removing the tokens (both <code>id_token</code> and <code>refresh_token</code>) from the config and issuing <code>kubelogin</code> command. That'll take you through the login process and will result you having "dedicated" refresh token.
-            </p>
-          </div>
-          <h4>Exec auth plugins</h4>
-          <p>
-            When using <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#configuration">exec auth</a> plugins make sure the paths that are used to call any binaries are full paths as Lens app might not be able to call binaries with relative paths. Make also sure that you pass all needed information either as arguments or env variables in the config, Lens app might not have all login shell env variables set automatically.
-          </p>
-        </b-col>
+        <!--info-panel-->
       </b-row>
     </b-container>
   </div>
@@ -123,12 +84,11 @@
 <script>
 import * as PrismEditor from 'vue-prism-editor'
 import * as k8s from "@kubernetes/client-node"
-import { dumpConfigYaml } from "../../../main/k8s"
+import { dumpConfigYaml } from "../../../common/kube-helpers"
 import ClustersMixin from "@/_vue/mixins/ClustersMixin";
 import * as path from "path"
 import fs from 'fs'
 import { v4 as uuidv4 } from 'uuid';
-import { writeEmbeddedKubeConfig} from "../../../common/utils/kubeconfig"
 
 class ClusterAccessError extends Error {}
 
@@ -154,8 +114,7 @@ export default {
     }
   },
   mounted: function() {
-    const kubeConfigPath = path.join(process.env.HOME, '.kube', 'config')
-    this.filepath = kubeConfigPath
+    this.filepath = path.join(process.env.HOME, '.kube', 'config')
     this.file = new File(fs.readFileSync(this.filepath), this.filepath)
     this.$store.dispatch("reloadAvailableKubeContexts", this.filepath);
     this.seenContexts = JSON.parse(JSON.stringify(this.$store.getters.seenContexts)) // clone seenContexts from store
@@ -206,12 +165,6 @@ export default {
         this.clusterconfig = this.kubecontext;
       }
     },
-    isOidcAuth: function(authProvider) {
-      if (!authProvider) { return false }
-      if (authProvider.name === "oidc") { return true }
-
-      return false;
-    },
     doAddCluster: async function() {
       // Clear previous error details
       this.errorMsg = ""
@@ -224,7 +177,7 @@ export default {
         const clusterId = uuidv4();
         // We need to store the kubeconfig to "app-home"/
         if (this.kubecontext === "custom") {
-          this.filepath = writeEmbeddedKubeConfig(clusterId, this.clusterconfig)
+          this.filepath = saveConfigToAppFiles(clusterId, this.clusterconfig)
         }
         const clusterInfo = {
           id: clusterId,

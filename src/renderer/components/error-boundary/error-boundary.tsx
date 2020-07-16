@@ -52,7 +52,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
             </Trans>
           </p>
           <div className="flex gaps">
-            <code>
+            <code className="block">
               <p className="contrast"><Trans>Component stack</Trans>:</p>
               {errorInfo.componentStack}
             </code>

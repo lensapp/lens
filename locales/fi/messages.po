@@ -41,6 +41,10 @@ msgstr ""
 msgid "<0>{0}</0> successfully created"
 msgstr ""
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:52
+msgid "A HTTP proxy server URL (format: http://<address>:<port>)"
+msgstr ""
+
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:80
 msgid "API Group"
 msgstr ""
@@ -63,6 +67,10 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:44
+msgid "Add Cluster"
+msgstr ""
+
 #: src/renderer/components/+namespaces/namespaces.tsx:43
 msgid "Add Namespace"
 msgstr ""
@@ -73,6 +81,10 @@ msgstr ""
 
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:111
 msgid "Add bindings to {name}"
+msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:62
+msgid "Add cluster"
 msgstr ""
 
 #: src/renderer/components/+workspaces/clusters-menu.tsx:58
@@ -609,9 +621,17 @@ msgstr ""
 msgid "Currently applied filters:"
 msgstr ""
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:36
+#~ msgid "Custom"
+#~ msgstr ""
+
 #: src/renderer/components/+custom-resources/crd-list.tsx:55
 #: src/renderer/components/layout/sidebar.tsx:95
 msgid "Custom Resources"
+msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:36
+msgid "Custom.."
 msgstr ""
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:95
@@ -851,6 +871,10 @@ msgstr ""
 
 #: src/renderer/components/+config/config.tsx:54
 msgid "HPA"
+msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:54
+msgid "HTTP Proxy server. Used for communicating with Kubernetes API."
 msgstr ""
 
 #: src/renderer/components/dock/install-chart.tsx:113
@@ -1610,6 +1634,10 @@ msgstr ""
 msgid "Provisioner"
 msgstr ""
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:48
+msgid "Proxy settings"
+msgstr ""
+
 #: src/renderer/components/+workloads-pods/pods.tsx:79
 msgid "QoS"
 msgstr ""
@@ -1968,6 +1996,10 @@ msgstr ""
 
 #: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:134
 msgid "Select a quota.."
+msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:45
+msgid "Select kubeconfig"
 msgstr ""
 
 #: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:188

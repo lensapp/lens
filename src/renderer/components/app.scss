@@ -114,14 +114,21 @@ small {
 }
 
 code {
-  @include custom-scrollbar;
+  display: inline-block;
+  padding: 0.2em;
+  vertical-align: middle;
+  border-radius: $radius;
   font-family: $font-monospace;
   font-size: $font-size * .9;
-  display: block;
-  background: #1a1919;
   color: #b4b5b4;
-  padding: $padding * 2;
-  white-space: pre;
+
+  &.block {
+    @include hidden-scrollbar;
+    background: #1a1919;
+    display: block;
+    white-space: pre;
+    padding: $padding * 2;
+  }
 }
 
 a {

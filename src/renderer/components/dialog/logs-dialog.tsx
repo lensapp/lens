@@ -41,7 +41,7 @@ export class LogsDialog extends React.Component<Props> {
       <Dialog {...dialogProps} className="LogsDialog">
         <Wizard header={header} done={dialogProps.close}>
           <WizardStep scrollable={false} customButtons={customButtons}>
-            <code ref={e => this.logsElem = e}>
+            <code className="block" ref={e => this.logsElem = e}>
               {logs || <Trans>There are no logs available.</Trans>}
             </code>
           </WizardStep>
