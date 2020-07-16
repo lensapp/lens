@@ -15,7 +15,7 @@ export class AddCluster extends React.Component {
   readonly customContext = "custom"
   readonly kubeConfigFile = path.join(process.env.HOME, '.kube', 'config');
 
-  @observable useProxySettings = false
+  @observable showSettings = false
   @observable clusterContext = ""
   @observable error = ""
   @observable proxyServerUrl = ""
@@ -47,12 +47,12 @@ export class AddCluster extends React.Component {
             options={this.clusterOptions}
             onChange={({ value }: SelectOption) => this.clusterContext = value}
           />
-          <div className="use-proxy">
-            <a onClick={() => this.useProxySettings = !this.useProxySettings}>
+          <div className="cluster-settings">
+            <a href="#" onClick={() => this.showSettings = !this.showSettings}>
               <Trans>Proxy settings</Trans>
             </a>
           </div>
-          {this.useProxySettings && (
+          {this.showSettings && (
             <div className="proxy-settings">
               <Input
                 autoFocus

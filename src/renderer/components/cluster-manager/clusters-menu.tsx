@@ -20,6 +20,7 @@ import { landingURL } from "../+landing-page";
 import { Tooltip, TooltipContent } from "../tooltip";
 
 // fixme: allow to rearrange clusters with drag&drop
+// fixme: disconnect cluster from context-menu
 
 interface Props {
   className?: IClassName;
@@ -50,7 +51,6 @@ export class ClustersMenu extends React.Component<Props> {
       click: () => navigate(clusterSettingsURL())
     }));
 
-    // fixme: disconnect cluster
     if (cluster.initialized) {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),

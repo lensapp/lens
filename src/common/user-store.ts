@@ -5,6 +5,8 @@ import migrations from "../migrations/user-store"
 import { getAppVersion } from "./utils/app-version";
 import { tracker } from "./tracker";
 
+// fixme: detect new contexts from .kube/config since last open
+
 export interface UserStoreModel {
   lastSeenAppVersion: string;
   seenContexts: string[];
@@ -34,7 +36,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @observable lastSeenAppVersion = "0.0.0"
   @observable seenContexts: string[] = [];
-  @observable newContexts: string[] = []; // todo: detect new contexts from .kube/config since last open
+  @observable newContexts: string[] = [];
 
   @observable preferences: UserPreferences = {
     allowTelemetry: true,

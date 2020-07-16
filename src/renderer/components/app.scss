@@ -2,8 +2,6 @@
 @import "fonts";
 
 *, *:before, *:after {
-  @include set-draggable(false);
-
   box-sizing: border-box;
   padding: 0;
   margin: 0;
@@ -31,8 +29,8 @@ html {
 }
 
 html, body {
+  @include set-draggable(false);
   height: 100%;
-  overflow: hidden;
 }
 
 #app {
