@@ -46,7 +46,7 @@ msgstr ""
 msgid "API Group"
 msgstr ""
 
-#: src/renderer/components/layout/sidebar.tsx:88
+#: src/renderer/components/layout/sidebar.tsx:94
 msgid "Access Control"
 msgstr "Контроль доступа"
 
@@ -200,7 +200,7 @@ msgstr "Сбой работы приложения на <0>{pageUrl}</0>"
 msgid "Applying.."
 msgstr "Применение.."
 
-#: src/renderer/components/layout/sidebar.tsx:87
+#: src/renderer/components/layout/sidebar.tsx:93
 msgid "Apps"
 msgstr "Приложения"
 
@@ -212,7 +212,7 @@ msgstr "Выполнить команду drain для ноды <0>{nodeName}</0
 msgid "Arguments"
 msgstr "Аргументы"
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:64
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:74
 msgid "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
 msgstr ""
 
@@ -220,7 +220,7 @@ msgstr ""
 msgid "Auth App Role"
 msgstr "Auth App Role"
 
-#: src/renderer/components/error-boundary/error-boundary.tsx:54
+#: src/renderer/components/error-boundary/error-boundary.tsx:53
 #: src/renderer/components/wizard/wizard.tsx:130
 msgid "Back"
 msgstr "Назад"
@@ -243,8 +243,8 @@ msgid "Bindings"
 msgstr "Привязки"
 
 #: src/renderer/components/error-boundary/error-boundary.tsx:37
-msgid "Build version"
-msgstr "Версия билда"
+#~ msgid "Build version"
+#~ msgstr "Версия билда"
 
 #: src/renderer/components/+workloads-pods/container-charts.tsx:74
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:100
@@ -386,7 +386,7 @@ msgid "Cloud API Token Secret"
 msgstr "Cloud API Token Secret"
 
 #: src/renderer/components/+namespaces/namespace-select.tsx:43
-#: src/renderer/components/layout/sidebar.tsx:79
+#: src/renderer/components/layout/sidebar.tsx:85
 msgid "Cluster"
 msgstr "Кластер"
 
@@ -408,7 +408,7 @@ msgstr "Команда"
 msgid "Common Name"
 msgstr "Общее имя"
 
-#: src/renderer/components/layout/sidebar.tsx:76
+#: src/renderer/components/layout/sidebar.tsx:80
 msgid "Compact view"
 msgstr "Компактный вид"
 
@@ -417,7 +417,7 @@ msgstr "Компактный вид"
 msgid "Completions"
 msgstr "Завершения"
 
-#: src/renderer/components/error-boundary/error-boundary.tsx:46
+#: src/renderer/components/error-boundary/error-boundary.tsx:45
 msgid "Component stack"
 msgstr "Стэк компонентов"
 
@@ -452,7 +452,7 @@ msgstr "ConfigMap <0>{0}</0> успешно обновлена."
 msgid "ConfigMaps"
 msgstr "ConfigMaps"
 
-#: src/renderer/components/layout/sidebar.tsx:82
+#: src/renderer/components/layout/sidebar.tsx:88
 msgid "Configuration"
 msgstr "Конфигурация"
 
@@ -615,7 +615,7 @@ msgid "Currently applied filters:"
 msgstr "Текущие фильтры:"
 
 #: src/renderer/components/+custom-resources/crd-list.tsx:55
-#: src/renderer/components/layout/sidebar.tsx:89
+#: src/renderer/components/layout/sidebar.tsx:95
 msgid "Custom Resources"
 msgstr ""
 
@@ -679,7 +679,7 @@ msgstr "Описание"
 msgid "Desired number of replicas"
 msgstr "Нужный уровень реплик"
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:40
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:49
 msgid "Disconnect"
 msgstr ""
 
@@ -760,14 +760,14 @@ msgstr "Название"
 msgid "Environment"
 msgstr "Среда"
 
-#: src/renderer/components/error-boundary/error-boundary.tsx:50
+#: src/renderer/components/error-boundary/error-boundary.tsx:49
 msgid "Error stack"
 msgstr "Стэк ошибки"
 
 #: src/renderer/components/+events/events.tsx:56
 #: src/renderer/components/+events/kube-event-details.tsx:34
 #: src/renderer/components/+events/kube-event-details.tsx:39
-#: src/renderer/components/layout/sidebar.tsx:86
+#: src/renderer/components/layout/sidebar.tsx:92
 msgid "Events"
 msgstr "События"
 
@@ -785,8 +785,8 @@ msgid "Exit full size mode"
 msgstr "Выйти из полного размера"
 
 #: src/renderer/components/layout/sidebar.tsx:76
-msgid "Extended view"
-msgstr "Расширенный вид"
+#~ msgid "Extended view"
+#~ msgstr "Расширенный вид"
 
 #: src/renderer/components/+network-services/services.tsx:49
 msgid "External IP"
@@ -843,6 +843,10 @@ msgstr "От <0>{from}</0> до <1>{to}</1>"
 
 #: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:125
 msgid "Fs Group"
+msgstr ""
+
+#: src/renderer/components/+landing-page/landing-page.tsx:21
+msgid "Get started by associating one or more clusters to Lens."
 msgstr ""
 
 #: src/renderer/components/+custom-resources/crd-details.tsx:32
@@ -1336,7 +1340,7 @@ msgid "Namespace: {0}"
 msgstr "Namespace: {0}"
 
 #: src/renderer/components/+namespaces/namespaces.tsx:30
-#: src/renderer/components/layout/sidebar.tsx:85
+#: src/renderer/components/layout/sidebar.tsx:91
 msgid "Namespaces"
 msgstr "Namespaces"
 
@@ -1346,7 +1350,7 @@ msgstr "Namespaces: {0}"
 
 #: src/renderer/components/+network-ingresses/ingress-details.tsx:66
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:13
-#: src/renderer/components/layout/sidebar.tsx:83
+#: src/renderer/components/layout/sidebar.tsx:89
 msgid "Network"
 msgstr "Сеть"
 
@@ -1444,7 +1448,7 @@ msgid "Node shell"
 msgstr "Командная строка ноды"
 
 #: src/renderer/components/+nodes/nodes.tsx:111
-#: src/renderer/components/layout/sidebar.tsx:80
+#: src/renderer/components/layout/sidebar.tsx:86
 msgid "Nodes"
 msgstr "Ноды"
 
@@ -1483,6 +1487,10 @@ msgstr "Объект"
 #: src/renderer/components/confirm-dialog/confirm-dialog.tsx:43
 msgid "Ok"
 msgstr "Ок"
+
+#: src/renderer/components/+whats-new/whats-new.tsx:36
+msgid "Ok, got it!"
+msgstr ""
 
 #: src/renderer/components/dock/dock.tsx:117
 msgid "Open"
@@ -2031,7 +2039,7 @@ msgstr "Установлено"
 msgid "Set quota"
 msgstr "Установить квоту"
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:33
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:43
 msgid "Settings"
 msgstr ""
 
@@ -2115,7 +2123,7 @@ msgid "Status URI"
 msgstr "Адрес статуса"
 
 #: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:57
-#: src/renderer/components/layout/sidebar.tsx:84
+#: src/renderer/components/layout/sidebar.tsx:90
 msgid "Storage"
 msgstr "Storage"
 
@@ -2205,7 +2213,7 @@ msgstr "Это обязательное поле"
 msgid "This field must contain only lowercase latin characters, numbers and dash."
 msgstr "Это поле может содержать только латинские буквы в нижнем регистре, номера и дефис."
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:62
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:72
 msgid "This is the quick launch menu."
 msgstr ""
 
@@ -2213,7 +2221,7 @@ msgstr ""
 msgid "To"
 msgstr "Из"
 
-#: src/renderer/components/error-boundary/error-boundary.tsx:40
+#: src/renderer/components/error-boundary/error-boundary.tsx:39
 msgid "To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker."
 msgstr "Чтобы помочь нам улучшить продукт пожалуйста отправляйте ошибки на {slackLink} сообщество или {githubLink} трекер ошибок."
 
@@ -2375,15 +2383,19 @@ msgstr "Ожидание запуска сервисов"
 msgid "Warnings: {0}"
 msgstr "Предупреждения: {0}"
 
+#: src/renderer/components/+landing-page/landing-page.tsx:18
+msgid "Welcome!"
+msgstr ""
+
 #: src/renderer/components/+cluster/cluster-metric-switchers.tsx:19
 msgid "Worker"
 msgstr "Рабочие"
 
-#: src/renderer/components/layout/sidebar.tsx:81
+#: src/renderer/components/layout/sidebar.tsx:87
 msgid "Workloads"
 msgstr "Ресурсы"
 
-#: src/renderer/components/+workspaces/bottom-bar.tsx:31
+#: src/renderer/components/cluster-manager/bottom-bar.tsx:35
 msgid "Workspaces"
 msgstr ""
 
@@ -2493,7 +2505,7 @@ msgstr "{0} всего, {1} доступно"
 msgid "{0} unavailable"
 msgstr "{0} недоступно"
 
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:134
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:129
 msgid "{accountName} kubeconfig"
 msgstr "{accountName} конфигурация"
 

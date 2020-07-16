@@ -16,6 +16,9 @@ export class ConfigStore {
   }
 
   load() {
+    if (location.hostname === "no-clusters.localhost") {
+      return;
+    }
     return apiBase.get("/config").then((config: IConfigRoutePayload) => {
       this.config = config;
       this.isLoaded = true;

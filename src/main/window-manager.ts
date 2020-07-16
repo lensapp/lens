@@ -1,4 +1,4 @@
-import { reaction } from "mobx";
+import { autorun, reaction } from "mobx";
 import { BrowserWindow, shell } from "electron"
 import windowStateKeeper from "electron-window-state"
 import type { ClusterId } from "../common/cluster-store";
@@ -15,7 +15,7 @@ export class WindowManager {
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
 
-  constructor() {
+  constructor(protected proxyPort: number) {
     this.splashWindow = new BrowserWindow({
       width: 500,
       height: 300,
@@ -60,22 +60,22 @@ export class WindowManager {
           this.destroyView(cluster.id);
         });
       }),
-    );
 
-    // handle initial view load without clusters
-    // if (!clusterStore.clusters.size) {
-    //   this.initNoClustersView();
-    // }
+      // handle no-clusters view
+      autorun(() => {
+        if (!clusterStore.clusters.size) {
+          this.initNoClustersView();
+        }
+      })
+    );
   }
 
-  // fixme: first run without clusters
-  // protected async initNoClustersView() {
-  //   const htmlView = path.join(__dirname, `${appName}.html`);
-  //   const view = this.initView(undefined);
-  //   await view.loadFile(htmlView);
-  //   view.show();
-  //   this.hideSplash();
-  // }
+  protected async initNoClustersView() {
+    this.activeView = this.initView(undefined);
+    await this.activeView.loadURL(`http://no-clusters.localhost:${this.proxyPort}`);
+    this.activeView.show();
+    this.hideSplash();
+  }
 
   async showSplash() {
     await this.splashWindow.loadURL("static://splash.html")

@@ -1,5 +1,4 @@
 import "./app.scss";
-
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { i18nStore } from "../i18n";
@@ -31,9 +30,10 @@ import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../api/rbac";
 import { AddCluster, addClusterRoute } from "./+add-cluster";
-import { LandingPage, landingRoute } from "./+landing-page";
+import { LandingPage, landingRoute, landingURL } from "./+landing-page";
 import { clusterStore } from "../../common/cluster-store";
 import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";
+import { Workspaces, workspacesRoute } from "./+workspaces";
 
 @observer
 export class App extends React.Component {
@@ -45,16 +45,24 @@ export class App extends React.Component {
     await Terminal.preloadFonts();
   }
 
+  get startURL() {
+    if (!clusterStore.clusters.size) {
+      return landingURL();
+    }
+    if (isAllowedResource(["events", "nodes", "pods"])) {
+      return clusterURL();
+    }
+    return workloadsURL();
+  }
+
   render() {
-    const noClusters = clusterStore.clusters.size === 0;
-    const homeUrl = isAllowedResource(["events", "nodes", "pods"]) ? clusterURL() : workloadsURL();
     return (
       <Fragment>
         <Switch>
           <Switch>
-            {noClusters && <Route component={LandingPage}/>}
             <Route component={LandingPage} {...landingRoute}/>
             <Route component={AddCluster} {...addClusterRoute}/>
+            <Route component={Workspaces} {...workspacesRoute}/>
             <Route component={ClusterSettings} {...clusterSettingsRoute}/>
             <Route component={Cluster} {...clusterRoute}/>
             <Route component={Nodes} {...nodesRoute}/>
@@ -67,8 +75,8 @@ export class App extends React.Component {
             <Route component={CustomResources} {...crdRoute}/>
             <Route component={UserManagement} {...usersManagementRoute}/>
             <Route component={Apps} {...appsRoute}/>
-            <Redirect exact from="/" to={homeUrl}/>
-            <Route path="*" component={NotFound}/>
+            <Redirect exact from="/" to={this.startURL}/>
+            <Route component={NotFound}/>
           </Switch>
         </Switch>
         <KubeObjectDetails/>

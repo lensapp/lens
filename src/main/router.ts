@@ -52,20 +52,20 @@ export class Router {
     const matchingRoute = this.router.route(method, path);
     const routeFound = !matchingRoute.isBoom;
     if (routeFound) {
-      const request = await this.getRequest({
-        req, res, cluster, url,
-        params: matchingRoute.params
-      });
+      const request = await this.getRequest({ req, res, cluster, url, params: matchingRoute.params });
       await matchingRoute.route(request)
       return true
     }
     return false;
   }
 
-  protected async getRequest(opts: RouterRequestOpts) {
+  protected async getRequest(opts: RouterRequestOpts): Promise<LensApiRequest> {
     const { req, res, url, cluster, params } = opts
-    const { payload } = await Subtext.parse(req, null, { parse: true, output: 'data' });
-    const request: LensApiRequest = {
+    const { payload } = await Subtext.parse(req, null, {
+      parse: true,
+      output: "data",
+    });
+    return {
       cluster: cluster,
       path: url.pathname,
       raw: {
@@ -76,7 +76,6 @@ export class Router {
       payload: payload,
       params: params
     }
-    return request
   }
 
   protected getMimeType(filename: string) {
@@ -95,15 +94,15 @@ export class Router {
     return mimeTypes[path.extname(filename).slice(1)] || "text/plain"
   }
 
-  protected async handleStaticFile(filePath: string, response: http.ServerResponse) {
-    const asset = path.resolve(outDir, filePath);
+  async handleStaticFile(filePath: string, res: http.ServerResponse) {
+    const asset = path.join(outDir, filePath);
     try {
       const data = await readFile(asset);
-      response.setHeader("Content-Type", this.getMimeType(asset));
-      response.write(data)
-      response.end()
+      res.setHeader("Content-Type", this.getMimeType(asset));
+      res.write(data)
+      res.end()
     } catch (err) {
-      this.handleStaticFile(`${appName}.html`, response);
+      this.handleStaticFile(`${appName}.html`, res);
     }
   }
 
@@ -111,7 +110,7 @@ export class Router {
     // Static assets
     this.router.add({ method: 'get', path: '/{path*}' }, ({ params, response }: LensApiRequest) => {
       this.handleStaticFile(params.path, response);
-    })
+    });
 
     this.router.add({ method: "get", path: `${apiPrefix}/config` }, configRoute.routeConfig.bind(configRoute))
     this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute))

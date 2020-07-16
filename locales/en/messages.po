@@ -45,7 +45,7 @@ msgstr "<0>{0}</0> successfully created"
 msgid "API Group"
 msgstr "API Group"
 
-#: src/renderer/components/layout/sidebar.tsx:88
+#: src/renderer/components/layout/sidebar.tsx:94
 msgid "Access Control"
 msgstr "Access Control"
 
@@ -199,7 +199,7 @@ msgstr "App crash at <0>{pageUrl}</0>"
 msgid "Applying.."
 msgstr "Applying.."
 
-#: src/renderer/components/layout/sidebar.tsx:87
+#: src/renderer/components/layout/sidebar.tsx:93
 msgid "Apps"
 msgstr "Apps"
 
@@ -211,7 +211,7 @@ msgstr "Are you sure you want to drain <0>{nodeName}</0>?"
 msgid "Arguments"
 msgstr "Arguments"
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:64
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:74
 msgid "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
 msgstr "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
 
@@ -219,7 +219,7 @@ msgstr "Associate clusters and choose the ones you want to access via quick laun
 msgid "Auth App Role"
 msgstr "Auth App Role"
 
-#: src/renderer/components/error-boundary/error-boundary.tsx:54
+#: src/renderer/components/error-boundary/error-boundary.tsx:53
 #: src/renderer/components/wizard/wizard.tsx:130
 msgid "Back"
 msgstr "Back"
@@ -242,8 +242,8 @@ msgid "Bindings"
 msgstr "Bindings"
 
 #: src/renderer/components/error-boundary/error-boundary.tsx:37
-msgid "Build version"
-msgstr "Build version"
+#~ msgid "Build version"
+#~ msgstr "Build version"
 
 #: src/renderer/components/+workloads-pods/container-charts.tsx:74
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:100
@@ -385,7 +385,7 @@ msgid "Cloud API Token Secret"
 msgstr "Cloud API Token Secret"
 
 #: src/renderer/components/+namespaces/namespace-select.tsx:43
-#: src/renderer/components/layout/sidebar.tsx:79
+#: src/renderer/components/layout/sidebar.tsx:85
 msgid "Cluster"
 msgstr "Cluster"
 
@@ -407,7 +407,7 @@ msgstr "Command"
 msgid "Common Name"
 msgstr "Common Name"
 
-#: src/renderer/components/layout/sidebar.tsx:76
+#: src/renderer/components/layout/sidebar.tsx:80
 msgid "Compact view"
 msgstr "Compact view"
 
@@ -416,7 +416,7 @@ msgstr "Compact view"
 msgid "Completions"
 msgstr "Completions"
 
-#: src/renderer/components/error-boundary/error-boundary.tsx:46
+#: src/renderer/components/error-boundary/error-boundary.tsx:45
 msgid "Component stack"
 msgstr "Component stack"
 
@@ -451,7 +451,7 @@ msgstr "ConfigMap <0>{0}</0> successfully updated."
 msgid "ConfigMaps"
 msgstr "ConfigMaps"
 
-#: src/renderer/components/layout/sidebar.tsx:82
+#: src/renderer/components/layout/sidebar.tsx:88
 msgid "Configuration"
 msgstr "Configuration"
 
@@ -614,7 +614,7 @@ msgid "Currently applied filters:"
 msgstr "Currently applied filters:"
 
 #: src/renderer/components/+custom-resources/crd-list.tsx:55
-#: src/renderer/components/layout/sidebar.tsx:89
+#: src/renderer/components/layout/sidebar.tsx:95
 msgid "Custom Resources"
 msgstr "Custom Resources"
 
@@ -678,7 +678,7 @@ msgstr "Description"
 msgid "Desired number of replicas"
 msgstr "Desired number of replicas"
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:40
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:49
 msgid "Disconnect"
 msgstr "Disconnect"
 
@@ -759,14 +759,14 @@ msgstr "Enter a name"
 msgid "Environment"
 msgstr "Environment"
 
-#: src/renderer/components/error-boundary/error-boundary.tsx:50
+#: src/renderer/components/error-boundary/error-boundary.tsx:49
 msgid "Error stack"
 msgstr "Error stack"
 
 #: src/renderer/components/+events/events.tsx:56
 #: src/renderer/components/+events/kube-event-details.tsx:34
 #: src/renderer/components/+events/kube-event-details.tsx:39
-#: src/renderer/components/layout/sidebar.tsx:86
+#: src/renderer/components/layout/sidebar.tsx:92
 msgid "Events"
 msgstr "Events"
 
@@ -784,8 +784,8 @@ msgid "Exit full size mode"
 msgstr "Exit full size mode"
 
 #: src/renderer/components/layout/sidebar.tsx:76
-msgid "Extended view"
-msgstr "Extended view"
+#~ msgid "Extended view"
+#~ msgstr "Extended view"
 
 #: src/renderer/components/+network-services/services.tsx:49
 msgid "External IP"
@@ -843,6 +843,10 @@ msgstr "From <0>{from}</0> to <1>{to}</1>"
 #: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:125
 msgid "Fs Group"
 msgstr "Fs Group"
+
+#: src/renderer/components/+landing-page/landing-page.tsx:21
+msgid "Get started by associating one or more clusters to Lens."
+msgstr "Get started by associating one or more clusters to Lens."
 
 #: src/renderer/components/+custom-resources/crd-details.tsx:32
 #: src/renderer/components/+custom-resources/crd-list.tsx:58
@@ -1335,7 +1339,7 @@ msgid "Namespace: {0}"
 msgstr "Namespace: {0}"
 
 #: src/renderer/components/+namespaces/namespaces.tsx:30
-#: src/renderer/components/layout/sidebar.tsx:85
+#: src/renderer/components/layout/sidebar.tsx:91
 msgid "Namespaces"
 msgstr "Namespaces"
 
@@ -1345,7 +1349,7 @@ msgstr "Namespaces: {0}"
 
 #: src/renderer/components/+network-ingresses/ingress-details.tsx:66
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:13
-#: src/renderer/components/layout/sidebar.tsx:83
+#: src/renderer/components/layout/sidebar.tsx:89
 msgid "Network"
 msgstr "Network"
 
@@ -1443,7 +1447,7 @@ msgid "Node shell"
 msgstr "Node shell"
 
 #: src/renderer/components/+nodes/nodes.tsx:111
-#: src/renderer/components/layout/sidebar.tsx:80
+#: src/renderer/components/layout/sidebar.tsx:86
 msgid "Nodes"
 msgstr "Nodes"
 
@@ -1482,6 +1486,10 @@ msgstr "Object"
 #: src/renderer/components/confirm-dialog/confirm-dialog.tsx:43
 msgid "Ok"
 msgstr "Ok"
+
+#: src/renderer/components/+whats-new/whats-new.tsx:36
+msgid "Ok, got it!"
+msgstr "Ok, got it!"
 
 #: src/renderer/components/dock/dock.tsx:117
 msgid "Open"
@@ -2030,7 +2038,7 @@ msgstr "Set"
 msgid "Set quota"
 msgstr "Set quota"
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:33
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:43
 msgid "Settings"
 msgstr "Settings"
 
@@ -2114,7 +2122,7 @@ msgid "Status URI"
 msgstr "Status URI"
 
 #: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:57
-#: src/renderer/components/layout/sidebar.tsx:84
+#: src/renderer/components/layout/sidebar.tsx:90
 msgid "Storage"
 msgstr "Storage"
 
@@ -2204,7 +2212,7 @@ msgstr "This field is required"
 msgid "This field must contain only lowercase latin characters, numbers and dash."
 msgstr "This field must contain only lowercase latin characters, numbers and dash."
 
-#: src/renderer/components/+workspaces/clusters-menu.tsx:62
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:72
 msgid "This is the quick launch menu."
 msgstr "This is the quick launch menu."
 
@@ -2212,7 +2220,7 @@ msgstr "This is the quick launch menu."
 msgid "To"
 msgstr "To"
 
-#: src/renderer/components/error-boundary/error-boundary.tsx:40
+#: src/renderer/components/error-boundary/error-boundary.tsx:39
 msgid "To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker."
 msgstr "To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker."
 
@@ -2374,15 +2382,19 @@ msgstr "Waiting services to be running"
 msgid "Warnings: {0}"
 msgstr "Warnings: {0}"
 
+#: src/renderer/components/+landing-page/landing-page.tsx:18
+msgid "Welcome!"
+msgstr "Welcome!"
+
 #: src/renderer/components/+cluster/cluster-metric-switchers.tsx:19
 msgid "Worker"
 msgstr "Worker"
 
-#: src/renderer/components/layout/sidebar.tsx:81
+#: src/renderer/components/layout/sidebar.tsx:87
 msgid "Workloads"
 msgstr "Workloads"
 
-#: src/renderer/components/+workspaces/bottom-bar.tsx:31
+#: src/renderer/components/cluster-manager/bottom-bar.tsx:35
 msgid "Workspaces"
 msgstr "Workspaces"
 
@@ -2492,7 +2504,7 @@ msgstr "{0} total, {1} available"
 msgid "{0} unavailable"
 msgstr "{0} unavailable"
 
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:134
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:129
 msgid "{accountName} kubeconfig"
 msgstr "{accountName} kubeconfig"
 

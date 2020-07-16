@@ -126,6 +126,10 @@ export class LensProxy {
   }
 
   protected async handleRequest(proxy: httpProxy, req: http.IncomingMessage, res: http.ServerResponse) {
+    if (req.headers.host.split(":")[0] === "no-clusters.localhost") {
+      this.router.handleStaticFile(req.url, res);
+      return;
+    }
     const cluster = this.clusterManager.getClusterForRequest(req)
     if (!cluster) {
       const reqId = this.getRequestId(req);

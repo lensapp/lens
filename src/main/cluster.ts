@@ -39,7 +39,7 @@ export class Cluster implements ClusterModel {
   protected kubeconfigManager: KubeconfigManager;
 
   public whenReady = when(() => this.initialized);
-  protected disposers: CallableFunction[] = [];
+  protected disposers: Function[] = [];
 
   @observable initialized = false;
   @observable contextName: string;
