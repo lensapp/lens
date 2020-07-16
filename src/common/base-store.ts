@@ -6,7 +6,7 @@ import { action, observable, reaction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
-import { broadcastMessage } from "./ipc-helpers";
+import { sendMessage } from "./ipc";
 import isEqual from "lodash/isEqual";
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
@@ -110,7 +110,7 @@ export class BaseStore<T = any> extends Singleton {
   protected async onModelChange(model: T) {
     if (ipcMain) {
       this.save(model); // save config file
-      broadcastMessage({ channel: this.syncChannel }, model); // broadcast to renderer views
+      sendMessage({ channel: this.syncChannel, args: model }); // broadcast to renderer views
     }
     // send "update-request" to main-process
     if (ipcRenderer) {

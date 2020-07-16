@@ -1,6 +1,6 @@
 import { ChildProcess, spawn } from "child_process"
 import { waitUntilUsed } from "tcp-port-used";
-import { broadcastMessage } from "../common/ipc-helpers";
+import { sendMessage } from "../common/ipc";
 import type { Cluster } from "./cluster"
 import { bundledKubectl, Kubectl } from "./kubectl"
 import logger from "./logger"
@@ -84,7 +84,7 @@ export class KubeAuthProxy {
     const channel = `kube-auth:${this.cluster.id}`
     const message = { data, stream };
     logger.debug(channel, message);
-    broadcastMessage({ channel }, message); // todo: send message only to cluster's window
+    sendMessage({ channel, args: message }); // todo: send message only to cluster's window
   }
 
   public exit() {

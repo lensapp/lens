@@ -1,7 +1,9 @@
 import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { FeatureStatusMap } from "./feature"
-import { action, observable, toJS, when } from "mobx";
+import type { WorkspaceId } from "../common/workspace-store";
+import { action, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
+import { sendMessage } from "../common/ipc";
 import { ContextHandler } from "./context-handler"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import { Kubectl } from "./kubectl";
@@ -11,12 +13,23 @@ import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from ".
 import request, { RequestPromiseOptions } from "request-promise-native"
 import logger from "./logger"
 
-// fixme: push cluster-state/status info to views on change
-
 enum ClusterStatus {
   AccessGranted = 2,
   AccessDenied = 1,
   Offline = 0
+}
+
+export interface ClusterState extends ClusterModel {
+  apiUrl: string;
+  online?: boolean;
+  accessible?: boolean;
+  failureReason?: string;
+  nodes?: number;
+  eventCount?: number;
+  version?: string;
+  distribution?: string;
+  isAdmin?: boolean;
+  features?: FeatureStatusMap;
 }
 
 export class Cluster implements ClusterModel {
@@ -26,10 +39,11 @@ export class Cluster implements ClusterModel {
   protected kubeconfigManager: KubeconfigManager;
 
   public whenReady = when(() => this.initialized);
+  protected disposers: CallableFunction[] = [];
 
   @observable initialized = false;
   @observable contextName: string;
-  @observable workspace: string;
+  @observable workspace: WorkspaceId;
   @observable kubeConfigPath: string;
   @observable apiUrl: string; // cluster server url
   @observable kubeProxyUrl: string; // lens-proxy to kube-api url
@@ -41,7 +55,7 @@ export class Cluster implements ClusterModel {
   @observable version: string;
   @observable distribution = "unknown";
   @observable isAdmin = false;
-  @observable eventCount = 0; // todo: auto-fetch every 3s and push updates to client (?)
+  @observable eventCount = 0;
   @observable preferences: ClusterPreferences = {};
   @observable features: FeatureStatusMap = {};
 
@@ -78,10 +92,37 @@ export class Cluster implements ClusterModel {
     }
   }
 
+  bindEvents(viewId: number) {
+    if (!this.initialized) return;
+    const refreshStatusTimer = setInterval(() => this.refreshStatus(), 30000); // every 30s
+    const refreshEventsTimer = setInterval(() => this.refreshEvents(), 3000); // every 3s
+
+    this.disposers.push(
+      () => clearTimeout(refreshStatusTimer),
+      () => clearTimeout(refreshEventsTimer),
+
+      reaction(() => this.getState(), clusterState => {
+        sendMessage({
+          channel: "cluster:state",
+          webContentId: viewId,
+          args: clusterState,
+        })
+      }, {
+        fireImmediately: true
+      })
+    );
+  }
+
+  unbindEvents() {
+    this.disposers.forEach(dispose => dispose());
+    this.disposers.length = 0;
+  }
+
   stop() {
     if (!this.initialized) return;
     this.contextHandler.stopServer();
     this.kubeconfigManager.unlink();
+    this.unbindEvents();
   }
 
   @action
@@ -98,6 +139,11 @@ export class Cluster implements ClusterModel {
       this.kubeCtl = new Kubectl(this.version)
       this.kubeCtl.ensureKubectl()
     }
+    await this.refreshEvents();
+  }
+
+  @action
+  async refreshEvents() {
     this.eventCount = await this.getEventCount();
   }
 
@@ -255,14 +301,32 @@ export class Cluster implements ClusterModel {
   }
 
   toJSON(): ClusterModel {
-    return toJS({
+    const model: ClusterModel = {
       id: this.id,
       contextName: this.contextName,
       kubeConfigPath: this.kubeConfigPath,
       workspace: this.workspace,
       preferences: this.preferences,
-    }, {
+    };
+    return toJS(model, {
       recurseEverything: true
     })
+  }
+
+  // serializable full-featured state of the cluster
+  getState(): ClusterState {
+    return {
+      ...this.toJSON(),
+      apiUrl: this.apiUrl,
+      online: this.online,
+      accessible: this.accessible,
+      failureReason: this.failureReason,
+      nodes: this.nodes,
+      version: this.version,
+      distribution: this.distribution,
+      isAdmin: this.isAdmin,
+      features: this.features,
+      eventCount: this.eventCount,
+    }
   }
 }

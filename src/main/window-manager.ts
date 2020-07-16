@@ -1,15 +1,14 @@
-import path from "path";
 import { reaction } from "mobx";
 import { BrowserWindow, shell } from "electron"
 import windowStateKeeper from "electron-window-state"
 import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 import logger from "./logger";
-import { appName } from "../common/vars";
 
 // fixme: remove switching view delay on first load
 
 export class WindowManager {
+  protected activeClusterId: ClusterId;
   protected activeView: BrowserWindow;
   protected views = new Map<ClusterId, BrowserWindow>();
   protected disposers: CallableFunction[] = [];
@@ -33,38 +32,50 @@ export class WindowManager {
       defaultWidth: 1440,
     });
 
-    // init events and show active cluster view
-    this.bindEvents();
-
-    // handle initial view load without clusters
-    if (!clusterStore.clusters.size) {
-      this.initNoClustersView();
-    }
-  }
-
-  // fixme: first run without clusters
-  protected async initNoClustersView() {
-    const htmlView = path.join(__dirname, `${appName}.html`);
-    const view = this.initView(undefined);
-    await view.loadFile(htmlView);
-    view.show();
-    this.hideSplash();
-  }
-
-  protected bindEvents() {
+    // Manage reactive state
     this.disposers.push(
+      // auto-show active cluster window and subscribe for push-events
+      reaction(() => clusterStore.activeCluster, async activeCluster => {
+        if (this.activeClusterId) {
+          const prevCluster = clusterStore.getById(this.activeClusterId);
+          if (prevCluster) prevCluster.unbindEvents();
+          this.activeClusterId = null;
+        }
+        if (activeCluster) {
+          this.activeClusterId = activeCluster.id;
+          const viewId = await this.activateView(activeCluster.id);
+          if (viewId) {
+            await activeCluster.refreshStatus();
+            activeCluster.bindEvents(viewId);
+          }
+        }
+      }, {
+        fireImmediately: true,
+        delay: 250,
+      }),
+
       // auto-destroy views for removed clusters
       reaction(() => clusterStore.removedClusters.toJS(), removedClusters => {
         removedClusters.forEach(cluster => {
           this.destroyView(cluster.id);
         });
       }),
-      // auto-show active cluster view
-      reaction(() => clusterStore.activeClusterId, clusterId => this.activateView(clusterId), {
-        fireImmediately: true,
-      })
-    )
+    );
+
+    // handle initial view load without clusters
+    // if (!clusterStore.clusters.size) {
+    //   this.initNoClustersView();
+    // }
   }
+
+  // fixme: first run without clusters
+  // protected async initNoClustersView() {
+  //   const htmlView = path.join(__dirname, `${appName}.html`);
+  //   const view = this.initView(undefined);
+  //   await view.loadFile(htmlView);
+  //   view.show();
+  //   this.hideSplash();
+  // }
 
   async showSplash() {
     await this.splashWindow.loadURL("static://splash.html")
@@ -79,7 +90,7 @@ export class WindowManager {
     return this.views.get(clusterId);
   }
 
-  async activateView(clusterId: ClusterId) {
+  async activateView(clusterId: ClusterId): Promise<number> {
     const cluster = clusterStore.getById(clusterId);
     if (!cluster) {
       return;
@@ -107,6 +118,7 @@ export class WindowManager {
           activeView.hide();
         }
         view.show();
+        return view.id;
       }
     } catch (err) {
       logger.error(`[WINDOW-MANAGER]: can't activate cluster view`, {

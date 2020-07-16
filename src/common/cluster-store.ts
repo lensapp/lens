@@ -1,3 +1,4 @@
+import type { WorkspaceId } from "./workspace-store";
 import { action, computed, observable, toJS } from "mobx";
 import { v4 as uuid } from "uuid"
 import { BaseStore } from "./base-store";
@@ -13,7 +14,7 @@ export type ClusterId = string;
 
 export interface ClusterModel {
   id: ClusterId;
-  workspace?: string;
+  workspace?: WorkspaceId;
   contextName?: string;
   preferences?: ClusterPreferences;
   kubeConfigPath: string;

@@ -6,7 +6,7 @@ import { copyFile, ensureDir } from "fs-extra"
 import filenamify from "filenamify"
 import { apiKubePrefix, appProto } from "../common/vars";
 import { ClusterId, ClusterModel, clusterStore } from "../common/cluster-store"
-import { handleMessages } from "../common/ipc-helpers";
+import { handleMessages } from "../common/ipc";
 import { ClusterIpcMessage } from "../common/ipc-messages";
 import { tracker } from "../common/tracker";
 import { validateConfig } from "./k8s";
@@ -28,22 +28,14 @@ export class ClusterManager {
   constructor(public readonly port: number) {
     // auto-init clusters
     autorun(() => {
-      const freshClusters = clusterStore.clustersList.filter(cluster => !cluster.initialized);
-      freshClusters.forEach(cluster => cluster.init(port));
+      clusterStore.clustersList
+        .filter(cluster => !cluster.initialized)
+        .forEach(cluster => cluster.init(port));
     });
     // auto-stop removed clusters
     autorun(() => {
-      const removedClusters = clusterStore.removedClusters;
-      if (removedClusters.size > 0) {
-        removedClusters.forEach(cluster => cluster.stop());
-        removedClusters.clear();
-      }
-    });
-    // auto-refresh status for active cluster
-    autorun(() => {
-      if (clusterStore.activeCluster) {
-        clusterStore.activeCluster.refreshStatus();
-      }
+      clusterStore.removedClusters.forEach(cluster => cluster.stop());
+      clusterStore.removedClusters.clear();
     });
     // listen ipc-events
     ClusterManager.ipcListen(this);
