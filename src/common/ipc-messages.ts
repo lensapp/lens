@@ -4,7 +4,6 @@
 export enum ClusterIpcMessage {
   ADD = "cluster-add",
   STOP = "cluster-stop",
-  REFRESH = "cluster-refresh",
   REMOVE = "cluster-remove",
   REMOVE_WORKSPACE = "cluster-remove-all-from-workspace",
   FEATURE_INSTALL = "cluster-feature-install",

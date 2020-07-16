@@ -160,18 +160,15 @@ export class Cluster implements ClusterModel {
   }
 
   async installFeature(name: string, config: any) {
-    await installFeature(name, this, config)
-    await this.refreshStatus()
+    return await installFeature(name, this, config)
   }
 
   async upgradeFeature(name: string, config: any) {
-    await upgradeFeature(name, this, config)
-    await this.refreshStatus()
+    return await upgradeFeature(name, this, config)
   }
 
   async uninstallFeature(name: string) {
-    await uninstallFeature(name, this)
-    await this.refreshStatus()
+    return await uninstallFeature(name, this)
   }
 
   getPrometheusApiPrefix() {

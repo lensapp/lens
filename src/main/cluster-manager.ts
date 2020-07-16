@@ -143,20 +143,12 @@ export class ClusterManager {
     return this.getCluster(clusterId)?.uninstallFeature(name);
   }
 
-  protected async refreshCluster(clusterId: ClusterId) {
-    const cluster = this.getCluster(clusterId);
-    if (cluster) {
-      await cluster.refreshStatus();
-    }
-  }
-
   static ipcListen(clusterManager: ClusterManager) {
     const handlers = {
       [ClusterIpcMessage.ADD]: clusterManager.addCluster,
       [ClusterIpcMessage.STOP]: clusterManager.stopCluster,
       [ClusterIpcMessage.REMOVE]: clusterManager.removeCluster,
       [ClusterIpcMessage.REMOVE_WORKSPACE]: clusterManager.removeAllByWorkspace,
-      [ClusterIpcMessage.REFRESH]: clusterManager.refreshCluster,
       [ClusterIpcMessage.FEATURE_INSTALL]: clusterManager.installFeature,
       [ClusterIpcMessage.FEATURE_UPGRADE]: clusterManager.upgradeFeature,
       [ClusterIpcMessage.FEATURE_REMOVE]: clusterManager.uninstallFeature,
