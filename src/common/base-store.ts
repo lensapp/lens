@@ -2,7 +2,7 @@ import path from "path"
 import Config from "conf"
 import { Options as ConfOptions } from "conf/dist/source/types"
 import { app, ipcMain, ipcRenderer, remote } from "electron"
-import { action, observable, reaction, toJS, when } from "mobx";
+import { action, observable, reaction, runInAction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
@@ -99,6 +99,14 @@ export class BaseStore<T = any> extends Singleton {
   disableSync() {
     this.syncDisposers.forEach(dispose => dispose());
     this.syncDisposers.length = 0;
+  }
+
+  protected applyWithoutSync(callback: () => void) {
+    this.disableSync();
+    runInAction(callback);
+    if (this.params.syncEnabled) {
+      this.enableSync();
+    }
   }
 
   protected onSync(model: T) {

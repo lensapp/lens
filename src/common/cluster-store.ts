@@ -1,9 +1,11 @@
+import { ipcRenderer } from "electron";
 import type { WorkspaceId } from "./workspace-store";
 import { action, computed, observable, toJS } from "mobx";
 import { v4 as uuid } from "uuid"
 import { BaseStore } from "./base-store";
-import { Cluster } from "../main/cluster";
+import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store"
+import logger from "../main/logger";
 
 export interface ClusterStoreModel {
   activeCluster?: ClusterId; // last opened cluster
@@ -46,6 +48,15 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       migrations: migrations,
     });
+    if (ipcRenderer) {
+      ipcRenderer.on("cluster:state", (event, clusterState: ClusterState) => {
+        this.applyWithoutSync(() => {
+          logger.info(`[CLUSTER-STORE]: received cluster(${clusterState.id}) update`, clusterState);
+          const cluster = this.getById(clusterState.id);
+          if (cluster) cluster.updateModel(clusterState)
+        })
+      })
+    }
   }
 
   @observable activeClusterId: ClusterId;
