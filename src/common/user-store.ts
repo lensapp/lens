@@ -75,4 +75,4 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 }
 
-export const userStore: UserStore = UserStore.getInstance();
+export const userStore = UserStore.getInstance<UserStore>();

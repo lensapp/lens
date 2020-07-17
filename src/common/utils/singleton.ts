@@ -6,11 +6,13 @@
  *  const usersStore: UsersStore = UsersStore.getInstance();
  */
 
+type Constructor<T = {}> = new (...args: any[]) => T;
+
 class Singleton {
   private static instances = new WeakMap<object, Singleton>();
 
-  // todo: figure out how to infer child class + arguments types
-  static getInstance<T extends Singleton>(...args: any[]): T {
+  // todo: improve types inferring
+  static getInstance<T>(...args: ConstructorParameters<Constructor<T>>): T {
     if (!Singleton.instances.has(this)) {
       Singleton.instances.set(this, Reflect.construct(this, args));
     }

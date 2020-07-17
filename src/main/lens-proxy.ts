@@ -11,22 +11,20 @@ import { apiKubePrefix } from "../common/vars";
 import logger from "./logger"
 
 export class LensProxy {
-  protected clusterManager: ClusterManager
   protected proxyServer: http.Server
   protected router: Router
   protected closed = false
   protected retryCounters = new Map<string, number>()
 
-  static create(clusterManager: ClusterManager) {
-    return new LensProxy(clusterManager).listen();
+  static create(port: number, clusterManager: ClusterManager) {
+    return new LensProxy(port, clusterManager).listen();
   }
 
-  private constructor(clusterManager: ClusterManager) {
-    this.clusterManager = clusterManager;
+  private constructor(protected port: number, protected clusterManager: ClusterManager) {
     this.router = new Router();
   }
 
-  listen(port = this.clusterManager.port): this {
+  listen(port = this.port): this {
     this.proxyServer = this.buildCustomProxy().listen(port);
     logger.info(`LensProxy server has started http://localhost:${port}`);
     return this;
