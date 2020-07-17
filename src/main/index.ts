@@ -66,7 +66,7 @@ async function main() {
 
   // run proxy
   try {
-    proxyServer = LensProxy.create(clusterManager);
+    proxyServer = LensProxy.create(proxyPort, clusterManager);
   } catch (error) {
     logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error.message}`)
     await dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error.message || "unknown error"}`)

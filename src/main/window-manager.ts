@@ -5,6 +5,7 @@ import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 import logger from "./logger";
 
+// fixme: error when removing active cluster (can't activate next view => empty window)
 // fixme: remove switching view delay on first load
 
 export class WindowManager {

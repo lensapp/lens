@@ -45,4 +45,4 @@ export class Tracker extends Singleton {
   }
 }
 
-export const tracker: Tracker = Tracker.getInstance(app || remote.app);
+export const tracker = Tracker.getInstance<Tracker>(app || remote.app);

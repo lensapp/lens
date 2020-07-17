@@ -93,4 +93,4 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 }
 
-export const workspaceStore: WorkspaceStore = WorkspaceStore.getInstance()
+export const workspaceStore = WorkspaceStore.getInstance<WorkspaceStore>()

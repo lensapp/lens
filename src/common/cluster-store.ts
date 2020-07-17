@@ -192,4 +192,4 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 }
 
-export const clusterStore: ClusterStore = ClusterStore.getInstance();
+export const clusterStore = ClusterStore.getInstance<ClusterStore>();
