@@ -3,7 +3,7 @@
 import "../common/system-ca"
 import "../common/prometheus-providers"
 import { app, dialog } from "electron"
-import { appName, appProto, isMac, staticDir, staticProto } from "../common/vars";
+import { appName, appProto, staticDir, staticProto } from "../common/vars";
 import path from "path"
 import initMenu from "./menu"
 import { LensProxy } from "./lens-proxy"
@@ -78,27 +78,7 @@ async function main() {
   windowManager.showSplash();
 }
 
-// Events
 app.on("ready", main);
-
-// fixme: never happens, Cmd+W doesn't work
-app.on('window-all-closed', function () {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (!isMac) {
-    app.quit();
-  } else {
-    // todo: handle
-    // windowManager.destroy();
-    // clusterManager.stop()
-  }
-})
-
-app.on("activate", () => {
-  // todo: handle
-  logger.debug("app:activate");
-})
-
 
 app.on("will-quit", async (event) => {
   event.preventDefault(); // To allow mixpanel sending to be executed

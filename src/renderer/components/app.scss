@@ -14,6 +14,7 @@
   --mainBackground: #1e2124;
   --textColorPrimary: #87909c;
   --clusters-menu-bgc: #252729;
+  --main-layout-header: 40px;
 }
 
 ::selection {
@@ -42,14 +43,15 @@ html, body {
   }
 }
 
-// fixme: doesn't work
 #draggable-top {
   @include set-draggable;
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
-  height: 20px;
+  height: var(--main-layout-header);
+  z-index: 1000;
+  pointer-events: none;
 }
 
 body {
