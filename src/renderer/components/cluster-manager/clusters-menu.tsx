@@ -18,6 +18,7 @@ import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
 import { Tooltip, TooltipContent } from "../tooltip";
+import { ConfirmDialog } from "../confirm-dialog";
 
 // fixme: allow to rearrange clusters with drag&drop
 // fixme: disconnect cluster from context-menu
@@ -50,7 +51,6 @@ export class ClustersMenu extends React.Component<Props> {
       label: _i18n._(t`Settings`),
       click: () => navigate(clusterSettingsURL())
     }));
-
     if (cluster.initialized) {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
@@ -59,6 +59,16 @@ export class ClustersMenu extends React.Component<Props> {
         }
       }))
     }
+    menu.append(new MenuItem({
+      label: _i18n._(t`Remove`),
+      click: () => {
+        ConfirmDialog.open({
+          ok: () => clusterStore.removeById(cluster.id),
+          labelOk: _i18n._(t`Remove`),
+          message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
+        })
+      }
+    }));
     menu.popup({
       window: remote.getCurrentWindow()
     })

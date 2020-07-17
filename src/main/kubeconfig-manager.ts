@@ -69,7 +69,7 @@ export class KubeconfigManager {
   }
 
   unlink() {
-    logger.debug('Deleting temporary kubeconfig: ' + this.tempFile)
+    logger.info('Deleting temporary kubeconfig: ' + this.tempFile)
     fs.unlinkSync(this.tempFile)
   }
 }

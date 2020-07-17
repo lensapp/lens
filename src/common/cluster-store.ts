@@ -65,7 +65,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     if (ipcRenderer) {
       ipcRenderer.on("cluster:state", (event, clusterState: ClusterState) => {
         this.applyWithoutSync(() => {
-          logger.info(`[CLUSTER-STORE]: received cluster(${clusterState.id}) update`, clusterState);
+          logger.debug(`[CLUSTER-STORE]: received state update for cluster=${clusterState.id}`, clusterState);
           const cluster = this.getById(clusterState.id);
           if (cluster) cluster.updateModel(clusterState)
         })
@@ -85,6 +85,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return Array.from(this.clusters.values());
   }
 
+  hasContext(name: string) {
+    return this.clustersList.some(cluster => cluster.contextName === name);
+  }
+
   getById(id: ClusterId): Cluster {
     return this.clusters.get(id);
   }
@@ -94,18 +98,23 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  addCluster(model: ClusterModel): Cluster {
+  async addCluster(model: ClusterModel, activate = true): Promise<Cluster> {
     const cluster = new Cluster(model);
     this.clusters.set(model.id, cluster);
+    if (activate) this.activeClusterId = model.id;
     return cluster;
   }
 
   @action
-  removeById(clusterId: ClusterId): void {
-    if (this.activeClusterId === clusterId) {
-      this.activeClusterId = null;
+  async removeById(clusterId: ClusterId) {
+    const cluster = this.getById(clusterId);
+    if (cluster) {
+      this.clusters.delete(clusterId);
+      if (this.activeClusterId === clusterId) {
+        this.activeClusterId = null;
+      }
+      unlink(cluster.kubeConfigPath).catch(() => null);
     }
-    this.clusters.delete(clusterId);
   }
 
   @action
@@ -116,7 +125,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  protected async uploadClusterIcon({ clusterId, ...upload }: ClusterIconUpload): Promise<string> {
+  protected async uploadIcon({ clusterId, ...upload }: ClusterIconUpload): Promise<string> {
     const cluster = this.getById(clusterId);
     if (cluster) {
       tracker.event("cluster", "upload-icon");
@@ -129,7 +138,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  protected resetClusterIcon(clusterId: ClusterId) {
+  protected resetIcon(clusterId: ClusterId) {
     const cluster = this.getById(clusterId);
     if (cluster) {
       tracker.event("cluster", "reset-icon")
@@ -167,7 +176,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
 
-    // "auto-select" first cluster if not available or invalid from config file
+    // "auto-select" first cluster if available
     if (!this.activeClusterId && newClusters.size) {
       this.activeClusterId = Array.from(newClusters.values())[0].id;
     }

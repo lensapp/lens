@@ -51,7 +51,6 @@ export class WindowManager {
         }
       }, {
         fireImmediately: true,
-        delay: 250,
       }),
 
       // auto-destroy views for removed clusters

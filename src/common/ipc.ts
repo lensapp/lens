@@ -31,14 +31,14 @@ export function sendMessage({ channel, webContentId, filter, args = [] }: IpcMes
   }
   views.forEach(webContent => {
     const type = webContent.getType();
-    logger.info(`[IPC]: sending message "${channel}" to ${type}=${webContent.id}`);
+    logger.debug(`[IPC]: sending message "${channel}" to ${type}=${webContent.id}`, { args });
     webContent.send(channel, ...[args].flat());
   })
 }
 
 // todo: support timeout + merge with sendMessage?
 export async function invokeMessage<T extends any[], R = any>(channel: IpcChannel, ...args: T): Promise<R> {
-  logger.debug(`[IPC]: invoke channel "${channel}"`, args);
+  logger.debug(`[IPC]: invoke channel "${channel}"`, { args });
   return ipcRenderer.invoke(channel, ...args);
 }
 
@@ -46,7 +46,7 @@ export async function invokeMessage<T extends any[], R = any>(channel: IpcChanne
 export function handleMessage<T extends any[]>(channel: IpcChannel, handler: IpcMessageHandler<T>, options: IpcHandleOpts = {}) {
   const { timeout = 0 } = options;
   ipcMain.handle(channel, async (event, ...args: T) => {
-    logger.info(`[IPC]: handle "${channel}"`, { event, args });
+    logger.debug(`[IPC]: handle "${channel}"`, { args });
     return new Promise(async (resolve, reject) => {
       let timerId;
       if (timeout) {
@@ -60,7 +60,7 @@ export function handleMessage<T extends any[]>(channel: IpcChannel, handler: Ipc
         clearTimeout(timerId);
         return result;
       } catch (err) {
-        logger.debug(`[IPC]: handling "${channel}" error`, err);
+        logger.debug(`[IPC]: handling "${channel}" error`, { err });
       }
     })
   })

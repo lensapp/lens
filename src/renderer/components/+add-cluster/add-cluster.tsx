@@ -16,16 +16,17 @@ import { tracker } from "../../../common/tracker";
 import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid"
+import { navigate } from "../../navigation";
 
 @observer
 export class AddCluster extends React.Component {
   readonly custom: any = "custom"
   @observable.ref clusterConfig: KubeConfig;
   @observable.ref kubeConfig: KubeConfig; // local ~/.kube/config (if available)
+  @observable.ref error: React.ReactNode;
 
   @observable isWaiting = false
   @observable showSettings = false
-  @observable error = ""
   @observable proxyServer = ""
   @observable customConfig = ""
 
@@ -49,13 +50,15 @@ export class AddCluster extends React.Component {
   @computed get clusterOptions() {
     const options: SelectOption<KubeConfig>[] = [];
     if (this.kubeConfig) {
-      splitConfig(this.kubeConfig).forEach(kubeConfig => {
-        const contextName = kubeConfig.getCurrentContext();
+      const contexts = splitConfig(this.kubeConfig)
+        .filter(kc => !clusterStore.hasContext(kc.currentContext));
+
+      contexts.forEach(kubeConfig => {
         const isNew = false; // fixme: detect new context since last visit
         options.push({
           value: kubeConfig,
           label: <>
-            {contextName}
+            {kubeConfig.currentContext}
             {isNew && <span className="new"> <Trans>(new)</Trans></span>}
           </>,
         })
@@ -72,16 +75,16 @@ export class AddCluster extends React.Component {
     tracker.event("cluster", "add");
     const { clusterConfig, customConfig, proxyServer } = this;
     const clusterId = uuid();
+    this.isWaiting = true
+    this.error = ""
     try {
       const config = this.isCustom ? loadConfig(customConfig) : clusterConfig;
       if (!config) {
-        this.error = "Please select kubeconfig"
+        this.error = <Trans>Please select kubeconfig</Trans>
         return;
       }
-      this.error = ""
-      this.isWaiting = true
       validateConfig(config);
-      clusterStore.addCluster({
+      await clusterStore.addCluster({
         id: clusterId,
         kubeConfigPath: saveConfigToAppFiles(clusterId, config),
         workspace: workspaceStore.currentWorkspaceId,
@@ -90,7 +93,8 @@ export class AddCluster extends React.Component {
           clusterName: config.currentContext,
           httpsProxy: proxyServer || undefined,
         },
-      })
+      });
+      navigate("/");
     } catch (err) {
       this.error = String(err);
     } finally {

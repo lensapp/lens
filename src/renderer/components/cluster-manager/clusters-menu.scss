@@ -33,7 +33,7 @@
   }
 
   > .clusters {
-    @include hidden-scrollbar;
+    //@include hidden-scrollbar; // fixme: uncomment after refactoring tooltip.tsx
     --flex-gap: #{$padding * 2};
     padding: $padding;
 

@@ -5,23 +5,31 @@ import { ClusterId, clusterStore } from "../common/cluster-store"
 import { handleMessage } from "../common/ipc";
 import { tracker } from "../common/tracker";
 import { Cluster, ClusterIpcEvent } from "./cluster"
+import logger from "./logger";
 
 export class ClusterManager {
   constructor(public readonly port: number) {
     // auto-init clusters
     autorun(() => {
-      clusterStore.clustersList
-        .filter(cluster => !cluster.initialized)
-        .forEach(cluster => cluster.init(port));
+      clusterStore.clusters.forEach(cluster => {
+        if (cluster.initialized) return;
+        cluster.init(port);
+        logger.info(`[CLUSTER-MANAGER]: initializing cluster`, cluster.getMeta());
+      });
     });
 
     // auto-stop removed clusters
     autorun(() => {
-      clusterStore.removedClusters.forEach(cluster => cluster.stop());
-      clusterStore.removedClusters.clear();
+      const { removedClusters } = clusterStore;
+      const meta = Array.from(removedClusters.values()).map(cluster => cluster.getMeta());
+      logger.info(`[CLUSTER-MANAGER]: removing clusters`, meta);
+      removedClusters.forEach(cluster => cluster.destroy());
+      removedClusters.clear();
+    }, {
+      delay: 250
     });
 
-    // listen ipc-events which could be handled *only* in main-process (nodeIntegration=true)
+    // listen for ipc-events that must be handled *only* in main-process (nodeIntegration=true)
     handleMessage(ClusterIpcEvent.STOP, this.stopCluster.bind(this));
   }
 
@@ -37,7 +45,7 @@ export class ClusterManager {
 
   protected stopCluster(clusterId: ClusterId) {
     tracker.event("cluster", "stop");
-    this.getCluster(clusterId)?.stop();
+    this.getCluster(clusterId)?.destroy();
   }
 
   getClusterForRequest(req: http.IncomingMessage): Cluster {

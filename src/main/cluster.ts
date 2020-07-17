@@ -24,6 +24,7 @@ export enum ClusterStatus {
 }
 
 export interface ClusterState extends ClusterModel {
+  initialized?: boolean;
   apiUrl: string;
   online?: boolean;
   accessible?: boolean;
@@ -98,12 +99,13 @@ export class Cluster implements ClusterModel {
 
   bindEvents(viewId: number) {
     if (!this.initialized) return;
+    logger.info(`[CLUSTER]: bind events`, this.getMeta());
     const refreshStatusTimer = setInterval(() => this.refreshStatus(), 30000); // every 30s
     const refreshEventsTimer = setInterval(() => this.refreshEvents(), 3000); // every 3s
 
     this.disposers.push(
-      () => clearTimeout(refreshStatusTimer),
-      () => clearTimeout(refreshEventsTimer),
+      () => clearInterval(refreshStatusTimer),
+      () => clearInterval(refreshEventsTimer),
 
       reaction(() => this.getState(), clusterState => {
         sendMessage({
@@ -118,15 +120,24 @@ export class Cluster implements ClusterModel {
   }
 
   unbindEvents() {
+    if (!this.initialized) return;
+    logger.info(`[CLUSTER]: unbind events`, this.getMeta());
     this.disposers.forEach(dispose => dispose());
     this.disposers.length = 0;
   }
 
   stop() {
-    if (!this.initialized) return;
     this.contextHandler.stopServer();
-    this.kubeconfigManager.unlink();
-    this.unbindEvents();
+  }
+
+  destroy() {
+    try {
+      this.stop();
+      this.unbindEvents();
+      this.kubeconfigManager.unlink();
+    } catch (err) {
+      logger.error(`[CLUSTER]: destroy() throws: ${err}`, this.getMeta());
+    }
   }
 
   @action
@@ -318,6 +329,7 @@ export class Cluster implements ClusterModel {
   getState(): ClusterState {
     const state: ClusterState = {
       ...this.toJSON(),
+      initialized: this.initialized,
       apiUrl: this.apiUrl,
       online: this.online,
       accessible: this.accessible,
@@ -332,5 +344,13 @@ export class Cluster implements ClusterModel {
     return toJS(state, {
       recurseEverything: true
     })
+  }
+
+  // get cluster system meta, e.g. use in "logger"
+  getMeta() {
+    return {
+      id: this.id,
+      name: this.contextName,
+    }
   }
 }
