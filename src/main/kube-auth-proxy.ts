@@ -5,6 +5,11 @@ import type { Cluster } from "./cluster"
 import { bundledKubectl, Kubectl } from "./kubectl"
 import logger from "./logger"
 
+export interface KubeAuthProxyResponse {
+  data: string;
+  stream: "stderr" | "stdout";
+}
+
 export class KubeAuthProxy {
   public lastError: string
 
@@ -43,13 +48,9 @@ export class KubeAuthProxy {
     })
     this.proxyProcess.on("exit", (code) => {
       if (code) {
-        logger.error(`proxy ${this.cluster.contextName} exited with code ${code}`)
-      } else {
-        logger.info(`proxy ${this.cluster.contextName} exited successfully`)
+        logger.error(`[KUBE-AUTH]: proxying ${this.cluster.contextName} exited with code ${code}`, this.cluster.getMeta());
       }
-      this.sendIpcLogMessage(`proxy exited with code ${code}`, "stderr").catch((err: Error) => {
-        logger.debug("failed to send IPC log message: " + err.message)
-      })
+      this.sendIpcLogMessage({ data: `proxy exited with code ${code}`, stream: "stderr" })
       this.proxyProcess = null
     })
     this.proxyProcess.stdout.on('data', (data) => {
@@ -57,13 +58,11 @@ export class KubeAuthProxy {
       if (logItem.startsWith("Starting to serve on")) {
         logItem = "Authentication proxy started\n"
       }
-      logger.debug(`proxy ${this.cluster.contextName} stdout: ${logItem}`)
-      this.sendIpcLogMessage(logItem, "stdout")
+      this.sendIpcLogMessage({ data: logItem, stream: "stdout" })
     })
     this.proxyProcess.stderr.on('data', (data) => {
       this.lastError = this.parseError(data.toString())
-      logger.debug(`proxy ${this.cluster.contextName} stderr: ${data}`)
-      this.sendIpcLogMessage(data.toString(), "stderr")
+      this.sendIpcLogMessage({ data: data.toString(), stream: "stderr" })
     })
 
     return waitUntilUsed(this.port, 500, 10000)
@@ -84,11 +83,14 @@ export class KubeAuthProxy {
     return errorMsg
   }
 
-  protected async sendIpcLogMessage(data: string, stream: string) {
+  protected async sendIpcLogMessage(res: KubeAuthProxyResponse) {
     const channel = `kube-auth:${this.cluster.id}`
-    const message = { data, stream };
-    logger.debug(channel, message);
-    sendMessage({ channel, args: message }); // todo: send message only to cluster's window
+    logger.debug(`[KUBE-AUTH]: output for ${channel}`, { ...res, meta: this.cluster.getMeta() });
+    sendMessage({
+      // webContentId: null, // todo: send a message only to single cluster's window
+      channel: channel,
+      args: [res],
+    });
   }
 
   public exit() {

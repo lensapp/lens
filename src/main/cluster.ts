@@ -15,6 +15,7 @@ import logger from "./logger"
 
 export enum ClusterIpcEvent {
   STOP = "cluster:stop",
+  RECONNECT = "cluster:reconnect",
 }
 
 export enum ClusterStatus {
@@ -111,7 +112,7 @@ export class Cluster implements ClusterModel {
         sendMessage({
           channel: "cluster:state",
           webContentId: viewId,
-          args: clusterState,
+          args: [clusterState],
         })
       }, {
         fireImmediately: true
