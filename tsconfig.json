@@ -32,5 +32,13 @@
     "compilerOptions": {
       "module": "CommonJS"
     }
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "out",
+    "dist",
+    "coverage",
+    "binaries",
+    "static"
+  ]
 }
