@@ -13,7 +13,11 @@ import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from ".
 import request, { RequestPromiseOptions } from "request-promise-native"
 import logger from "./logger"
 
-enum ClusterStatus {
+export enum ClusterIpcEvent {
+  STOP = "cluster:stop",
+}
+
+export enum ClusterStatus {
   AccessGranted = 2,
   AccessDenied = 1,
   Offline = 0
@@ -310,7 +314,7 @@ export class Cluster implements ClusterModel {
     })
   }
 
-  // serializable full-featured state of the cluster
+  // serializable cluster-info for push-notifications
   getState(): ClusterState {
     const state: ClusterState = {
       ...this.toJSON(),

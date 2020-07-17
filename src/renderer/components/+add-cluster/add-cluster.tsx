@@ -1,39 +1,101 @@
 import "./add-cluster.scss"
+import path from "path";
+import fs from "fs-extra";
 import React from "react";
 import { observer } from "mobx-react";
 import { computed, observable } from "mobx";
-import path from "path";
 import { Select, SelectOption } from "../select";
 import { t, Trans } from "@lingui/macro";
 import { Input } from "../input";
 import { _i18n } from "../../i18n";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
+import { KubeConfig } from "@kubernetes/client-node";
+import { loadConfig, saveConfigToAppFiles, splitConfig, validateConfig } from "../../../common/kube-helpers";
+import { tracker } from "../../../common/tracker";
+import { clusterStore } from "../../../common/cluster-store";
+import { workspaceStore } from "../../../common/workspace-store";
+import { v4 as uuid } from "uuid"
 
 @observer
 export class AddCluster extends React.Component {
-  readonly customContext = "custom"
-  readonly kubeConfigFile = path.join(process.env.HOME, '.kube', 'config');
+  readonly custom: any = "custom"
+  @observable.ref clusterConfig: KubeConfig;
+  @observable.ref kubeConfig: KubeConfig; // local ~/.kube/config (if available)
 
+  @observable isWaiting = false
   @observable showSettings = false
-  @observable clusterContext = ""
   @observable error = ""
-  @observable proxyServerUrl = ""
+  @observable proxyServer = ""
   @observable customConfig = ""
 
-  // todo: mark new contexts with badge
-  @computed get clusterOptions(): SelectOption[] {
-    return [
-      {
-        label: <Trans>Custom..</Trans>,
-        value: this.customContext,
-      }
-    ]
+  async componentDidMount() {
+    const kubeConfig = await this.readLocalKubeConfig();
+    if (kubeConfig) {
+      this.kubeConfig = loadConfig(kubeConfig)
+      this.customConfig = kubeConfig
+    }
   }
 
-  // todo
-  addCluster = () => {
-    console.log('add new cluster')
+  async readLocalKubeConfig(): Promise<string> {
+    const localPath = path.join(process.env.HOME, '.kube', 'config');
+    return fs.readFile(localPath, "utf8").catch(() => null)
+  }
+
+  @computed get isCustom() {
+    return this.clusterConfig === this.custom;
+  }
+
+  @computed get clusterOptions() {
+    const options: SelectOption<KubeConfig>[] = [];
+    if (this.kubeConfig) {
+      splitConfig(this.kubeConfig).forEach(kubeConfig => {
+        const contextName = kubeConfig.getCurrentContext();
+        const isNew = false; // fixme: detect new context since last visit
+        options.push({
+          value: kubeConfig,
+          label: <>
+            {contextName}
+            {isNew && <span className="new"> <Trans>(new)</Trans></span>}
+          </>,
+        })
+      })
+    }
+    options.push({
+      label: <Trans>Custom..</Trans>,
+      value: this.custom,
+    });
+    return options;
+  }
+
+  addCluster = async () => {
+    tracker.event("cluster", "add");
+    const { clusterConfig, customConfig, proxyServer } = this;
+    const clusterId = uuid();
+    try {
+      const config = this.isCustom ? loadConfig(customConfig) : clusterConfig;
+      if (!config) {
+        this.error = "Please select kubeconfig"
+        return;
+      }
+      this.error = ""
+      this.isWaiting = true
+      validateConfig(config);
+      clusterStore.addCluster({
+        id: clusterId,
+        kubeConfigPath: saveConfigToAppFiles(clusterId, config),
+        workspace: workspaceStore.currentWorkspaceId,
+        contextName: config.currentContext,
+        preferences: {
+          clusterName: config.currentContext,
+          httpsProxy: proxyServer || undefined,
+        },
+      })
+    } catch (err) {
+      this.error = String(err);
+    } finally {
+      this.isWaiting = false;
+    }
   }
 
   render() {
@@ -43,9 +105,9 @@ export class AddCluster extends React.Component {
           <h2><Trans>Add Cluster</Trans></h2>
           <Select
             placeholder={<Trans>Select kubeconfig</Trans>}
-            value={this.clusterContext}
+            value={this.clusterConfig}
             options={this.clusterOptions}
-            onChange={({ value }: SelectOption) => this.clusterContext = value}
+            onChange={({ value }: SelectOption) => this.clusterConfig = value}
           />
           <div className="cluster-settings">
             <a href="#" onClick={() => this.showSettings = !this.showSettings}>
@@ -57,15 +119,15 @@ export class AddCluster extends React.Component {
               <Input
                 autoFocus
                 placeholder={_i18n._(t`A HTTP proxy server URL (format: http://<address>:<port>)`)}
-                value={this.proxyServerUrl}
-                onChange={value => this.proxyServerUrl = value}
+                value={this.proxyServer}
+                onChange={value => this.proxyServer = value}
               />
               <small className="hint">
                 <Trans>HTTP Proxy server. Used for communicating with Kubernetes API.</Trans>
               </small>
             </div>
           )}
-          {this.clusterContext === this.customContext && (
+          {this.isCustom && (
             <div className="custom-kubeconfig flex column gaps box grow">
               <p>Kubeconfig:</p>
               <AceEditor
@@ -76,11 +138,15 @@ export class AddCluster extends React.Component {
               />
             </div>
           )}
+          {this.error && (
+            <div className="error">{this.error}</div>
+          )}
           <div className="actions-panel">
             <Button
               primary
               label={<Trans>Add cluster</Trans>}
               onClick={this.addCluster}
+              waiting={this.isWaiting}
             />
           </div>
         </div>

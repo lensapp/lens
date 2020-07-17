@@ -20,6 +20,12 @@
     border-left: 1px solid #353a3e;
   }
 
+  .error {
+    border-radius: $radius;
+    padding: $padding;
+    background-color: pink;
+  }
+
   a {
     color: $colorInfo;
   }

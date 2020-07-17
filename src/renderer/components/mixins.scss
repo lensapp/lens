@@ -92,11 +92,9 @@
 
 @mixin set-draggable($is-draggable: true) {
   @if ($is-draggable) {
-    cursor: move;
-    -webkit-user-drag: auto;
+    -webkit-user-select: none;
     -webkit-app-region: drag;
   } @else {
-    -webkit-user-drag: none;
     -webkit-app-region: no-drag;
   }
 }

@@ -1,11 +1,21 @@
-import { ipcRenderer } from "electron";
 import type { WorkspaceId } from "./workspace-store";
+import path from "path";
+import filenamify from "filenamify";
+import { app, ipcRenderer } from "electron";
+import { copyFile, ensureDir, unlink } from "fs-extra";
 import { action, computed, observable, toJS } from "mobx";
-import { v4 as uuid } from "uuid"
+import { appProto } from "./vars";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store"
 import logger from "../main/logger";
+import { tracker } from "./tracker";
+
+export interface ClusterIconUpload {
+  clusterId: string;
+  name: string;
+  path: string;
+}
 
 export interface ClusterStoreModel {
   activeCluster?: ClusterId; // last opened cluster
@@ -42,6 +52,10 @@ export interface ClusterPreferences {
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
+  static get iconsDir() {
+    return path.join(app.getPath("userData"), "icons");
+  }
+
   private constructor() {
     super({
       configName: "lens-cluster-store",
@@ -81,9 +95,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   addCluster(model: ClusterModel): Cluster {
-    const id = model.id || uuid();
-    const cluster = new Cluster({ ...model, id })
-    this.clusters.set(id, cluster);
+    const cluster = new Cluster(model);
+    this.clusters.set(model.id, cluster);
     return cluster;
   }
 
@@ -100,6 +113,30 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     this.getByWorkspaceId(workspaceId).forEach(cluster => {
       this.removeById(cluster.id)
     })
+  }
+
+  @action
+  protected async uploadClusterIcon({ clusterId, ...upload }: ClusterIconUpload): Promise<string> {
+    const cluster = this.getById(clusterId);
+    if (cluster) {
+      tracker.event("cluster", "upload-icon");
+      const fileDest = path.join(ClusterStore.iconsDir, filenamify(cluster.contextName + "-" + upload.name))
+      await ensureDir(path.dirname(fileDest));
+      await copyFile(upload.path, fileDest)
+      cluster.preferences.icon = `${appProto}:///icons/${fileDest}`
+      return cluster.preferences.icon;
+    }
+  }
+
+  @action
+  protected resetClusterIcon(clusterId: ClusterId) {
+    const cluster = this.getById(clusterId);
+    if (cluster) {
+      tracker.event("cluster", "reset-icon")
+      const iconPath = path.join(ClusterStore.iconsDir, path.basename(cluster.preferences.icon));
+      unlink(iconPath).catch(() => null); // remove file
+      delete cluster.preferences.icon;
+    }
   }
 
   @action

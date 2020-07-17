@@ -1,8 +1,7 @@
 .ClustersMenu {
-  --flex-gap: #{$padding * 2};
-
   position: relative;
-  padding: var(--flex-gap);
+  text-align: center;
+  padding: $padding * 2 $padding;
   background: var(--clusters-menu-bgc);
 
   > .startup-tooltip {
@@ -35,14 +34,17 @@
 
   > .clusters {
     @include hidden-scrollbar;
+    --flex-gap: #{$padding * 2};
+    padding: $padding;
 
     .is-mac & {
-      margin-top: $padding;
+      margin-top: $padding * 2;
     }
   }
 
   > .add-cluster {
     position: relative;
+    margin-top: $padding;
 
     .Icon {
       border-radius: $radius;

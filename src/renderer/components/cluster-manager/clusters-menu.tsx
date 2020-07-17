@@ -74,7 +74,7 @@ export class ClustersMenu extends React.Component<Props> {
     const showStartupHint = this.showHint && isLanding && noClusters;
     return (
       <div
-        className={cssNames("ClustersMenu flex gaps column", className)}
+        className={cssNames("ClustersMenu flex column", className)}
         onMouseEnter={() => this.showHint = false}
       >
         {showStartupHint && (
@@ -87,7 +87,7 @@ export class ClustersMenu extends React.Component<Props> {
             </p>
           </div>
         )}
-        <div className="clusters">
+        <div className="clusters flex column gaps">
           {clusters.map(cluster => {
             return (
               <ClusterIcon

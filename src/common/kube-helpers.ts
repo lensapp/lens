@@ -141,11 +141,12 @@ export function getNodeWarningConditions(node: V1Node) {
 }
 
 // Write kubeconfigs to "embedded" store, i.e. "/Users/ixrock/Library/Application Support/Lens/kubeconfigs"
-export function saveConfigToAppFiles(clusterId: string, kubeConfig: string): string {
+export function saveConfigToAppFiles(clusterId: string, kubeConfig: KubeConfig | string): string {
   const userData = (app || remote.app).getPath("userData");
   const kubeConfigFile = path.join(userData, `kubeconfigs/${clusterId}`)
+  const kubeConfigContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
 
   ensureDirSync(path.dirname(kubeConfigFile));
-  writeFileSync(kubeConfigFile, kubeConfig);
+  writeFileSync(kubeConfigFile, kubeConfigContents);
   return kubeConfigFile;
 }
