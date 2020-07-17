@@ -48,6 +48,14 @@ export class ClusterManager {
     this.getCluster(clusterId)?.destroy();
   }
 
+  // todo
+  protected reconnectCluster(clusterId: ClusterId) {
+    tracker.event("cluster", "reconnect");
+    logger.info(`[CLUSTER-MANAGER]: reconnect cluster`, {
+      meta: this.getCluster(clusterId)?.getMeta()
+    });
+  }
+
   getClusterForRequest(req: http.IncomingMessage): Cluster {
     let cluster: Cluster = null
 

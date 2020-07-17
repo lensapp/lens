@@ -118,7 +118,7 @@ export class BaseStore<T = any> extends Singleton {
   protected async onModelChange(model: T) {
     if (ipcMain) {
       this.save(model); // save config file
-      sendMessage({ channel: this.syncChannel, args: model }); // broadcast to renderer views
+      sendMessage({ channel: this.syncChannel, args: [model] }); // broadcast to renderer views
     }
     // send "update-request" to main-process
     if (ipcRenderer) {

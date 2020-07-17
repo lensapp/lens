@@ -10,6 +10,8 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { _i18n } from "../../i18n";
 
+// todo: make as external BrowserWindow (?)
+
 interface Props extends DialogProps {
   title: string;
   logs: string;
