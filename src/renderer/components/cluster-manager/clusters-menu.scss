@@ -34,8 +34,11 @@
   }
 
   > .clusters {
-    //@include hidden-scrollbar;
-    //flex: 1;
+    @include hidden-scrollbar;
+
+    .is-mac & {
+      margin-top: $padding;
+    }
   }
 
   > .add-cluster {

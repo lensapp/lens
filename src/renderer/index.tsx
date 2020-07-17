@@ -8,6 +8,7 @@ import { workspaceStore } from "../common/workspace-store";
 import { clusterStore } from "../common/cluster-store";
 import { I18nProvider } from "@lingui/react";
 import { browserHistory } from "./navigation";
+import { isMac } from "../common/vars";
 import { _i18n } from "./i18n";
 import { App } from "./components/app";
 import { ClusterManager } from "./components/cluster-manager";
@@ -18,6 +19,7 @@ import { Preferences, preferencesRoute } from "./components/+preferences";
 @observer
 class LensApp extends React.Component {
   static async init() {
+    App.rootElem.classList.toggle("is-mac", isMac);
     await Promise.all([
       userStore.load(),
       workspaceStore.load(),
