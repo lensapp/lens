@@ -42,7 +42,11 @@ export class KubeAuthProxy {
       env: this.env
     })
     this.proxyProcess.on("exit", (code) => {
-      logger.error(`proxy ${this.cluster.contextName} exited with code ${code}`)
+      if (code) {
+        logger.error(`proxy ${this.cluster.contextName} exited with code ${code}`)
+      } else {
+        logger.info(`proxy ${this.cluster.contextName} exited successfully`)
+      }
       this.sendIpcLogMessage(`proxy exited with code ${code}`, "stderr").catch((err: Error) => {
         logger.debug("failed to send IPC log message: " + err.message)
       })
@@ -73,7 +77,7 @@ export class KubeAuthProxy {
       try {
         const parsedError = JSON.parse(jsonError)
         errorMsg = parsedError.error_description || parsedError.error || jsonError
-      } catch(_) {
+      } catch (_) {
         errorMsg = jsonError.trim()
       }
     }
