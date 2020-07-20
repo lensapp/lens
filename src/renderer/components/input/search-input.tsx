@@ -26,7 +26,7 @@ const defaultProps: Partial<Props> = {
 export class SearchInput extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
-  @observable inputVal: string;
+  @observable inputVal = ""; // fix: use empty string to avoid react warnings
 
   @disposeOnUnmount
   updateInput = autorun(() => this.inputVal = getSearch())
