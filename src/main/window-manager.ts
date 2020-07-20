@@ -1,4 +1,4 @@
-import { autorun, reaction } from "mobx";
+import { autorun, reaction, when } from "mobx";
 import { BrowserWindow, shell } from "electron"
 import windowStateKeeper from "electron-window-state"
 import type { ClusterId } from "../common/cluster-store";
@@ -9,7 +9,6 @@ import logger from "./logger";
 // fixme: remove switching view delay on first load
 
 export class WindowManager {
-  protected activeClusterId: ClusterId;
   protected activeView: BrowserWindow;
   protected views = new Map<ClusterId, BrowserWindow>();
   protected disposers: CallableFunction[] = [];
@@ -36,21 +35,7 @@ export class WindowManager {
     // Manage reactive state
     this.disposers.push(
       // auto-show active cluster window and subscribe for push-events
-      reaction(() => clusterStore.activeCluster, async activeCluster => {
-        if (this.activeClusterId) {
-          const prevCluster = clusterStore.getById(this.activeClusterId);
-          if (prevCluster) prevCluster.unbindEvents();
-          this.activeClusterId = null;
-        }
-        if (activeCluster) {
-          this.activeClusterId = activeCluster.id;
-          const viewId = await this.activateView(activeCluster.id);
-          if (viewId) {
-            await activeCluster.refreshStatus();
-            activeCluster.bindEvents(viewId);
-          }
-        }
-      }, {
+      reaction(() => clusterStore.activeClusterId, clusterId => this.activateView(clusterId), {
         fireImmediately: true,
       }),
 
@@ -108,7 +93,7 @@ export class WindowManager {
       if (activeView !== view) {
         this.activeView = view;
         if (!isLoadedBefore) {
-          await cluster.whenReady;
+          await when(() => cluster.initialized);
           await view.loadURL(cluster.webContentUrl);
           this.hideSplash();
         }

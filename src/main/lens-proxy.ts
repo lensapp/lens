@@ -52,20 +52,16 @@ export class LensProxy {
 
   protected createProxy(): httpProxy {
     const proxy = httpProxy.createProxyServer();
-
     proxy.on("proxyRes", (proxyRes, req, res) => {
+      if (req.method !== "GET") {
+        return;
+      }
       if (proxyRes.statusCode === 502) {
         const cluster = this.clusterManager.getClusterForRequest(req)
-        if (cluster && cluster.contextHandler.proxyServerError()) {
-          res.writeHead(proxyRes.statusCode, {
-            "Content-Type": "text/plain"
-          })
-          res.end(cluster.contextHandler.proxyServerError())
-          return
+        const proxyError = cluster?.contextHandler.proxyLastError;
+        if (proxyError) {
+          return res.writeHead(502).end(proxyError);
         }
-      }
-      if (req.method !== "GET") {
-        return
       }
       const reqId = this.getRequestId(req);
       if (this.retryCounters.has(reqId)) {
@@ -92,10 +88,7 @@ export class LensProxy {
           }
         }
       }
-      res.writeHead(500, {
-        'Content-Type': 'text/plain'
-      })
-      res.end('Oops, something went wrong.')
+      res.writeHead(500).end("Oops, something went wrong.")
     })
 
     return proxy;

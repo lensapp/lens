@@ -1,6 +1,6 @@
 import { ChildProcess, spawn } from "child_process"
 import { waitUntilUsed } from "tcp-port-used";
-import { sendMessage } from "../common/ipc";
+import { broadcastIpc } from "../common/ipc";
 import type { Cluster } from "./cluster"
 import { bundledKubectl, Kubectl } from "./kubectl"
 import logger from "./logger"
@@ -85,8 +85,8 @@ export class KubeAuthProxy {
 
   protected async sendIpcLogMessage(res: KubeAuthProxyResponse) {
     const channel = `kube-auth:${this.cluster.id}`
-    logger.debug(`[KUBE-AUTH]: output for ${channel}`, { ...res, meta: this.cluster.getMeta() });
-    sendMessage({
+    logger.info(`[KUBE-AUTH]: out-channel "${channel}"`, { ...res, meta: this.cluster.getMeta() });
+    broadcastIpc({
       // webContentId: null, // todo: send a message only to single cluster's window
       channel: channel,
       args: [res],
@@ -95,7 +95,7 @@ export class KubeAuthProxy {
 
   public exit() {
     if (this.proxyProcess) {
-      logger.debug(`Stopping local proxy: ${this.cluster.contextName}`)
+      logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta())
       this.proxyProcess.kill()
     }
   }

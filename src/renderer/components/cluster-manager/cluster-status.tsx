@@ -1,29 +1,32 @@
-import "./cluster-manager.scss"
-import type { KubeAuthProxyResponse } from "../../../main/kube-auth-proxy";
-import { Cluster, ClusterIpcEvent } from "../../../main/cluster";
+import "./cluster-status.scss"
 import React from "react";
+import type { KubeAuthProxyResponse } from "../../../main/kube-auth-proxy";
+import { ClusterIpcChannel } from "../../../main/cluster";
+import { invokeIpc } from "../../../common/ipc";
+import { clusterStore } from "../../../common/cluster-store";
 import { ipcRenderer } from "electron";
-import { computed, observable } from "mobx";
+import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Icon } from "../icon";
 import { Button } from "../button";
-import { Trans } from "@lingui/macro";
-
-interface Props {
-  cluster: Cluster;
-}
+import { cssNames } from "../../utils";
 
 @observer
-export class ClusterStatus extends React.Component<Props> {
-  @observable authProxyOutput = "Connecting ...\n"
+export class ClusterStatus extends React.Component {
+  @observable authOutput: string[] = [];
 
-  @computed get clusterId() {
-    return this.props.cluster.id;
+  get cluster() {
+    return clusterStore.activeCluster;
+  }
+
+  get clusterId() {
+    return clusterStore.activeClusterId;
   }
 
   componentDidMount() {
-    ipcRenderer.on(`kube-auth:${this.clusterId}`, (evt, authResponse: KubeAuthProxyResponse) => {
-      this.authProxyOutput += authResponse.data;
+    this.authOutput = ["Connecting ...\n"];
+    ipcRenderer.on(`kube-auth:${this.clusterId}`, (evt, { data, stream }: KubeAuthProxyResponse) => {
+      this.authOutput.push(`[${stream}]: ${data}`);
     })
   }
 
@@ -31,22 +34,32 @@ export class ClusterStatus extends React.Component<Props> {
     ipcRenderer.removeAllListeners(`kube-auth:${this.clusterId}`);
   }
 
-  reconnectCluster = () => {
-    ipcRenderer.send(ClusterIpcEvent.RECONNECT, this.clusterId);
+  reconnect = () => {
+    this.authOutput = ["Reconnecting ...\n"];
+    invokeIpc(ClusterIpcChannel.RECONNECT, this.clusterId);
   }
 
   render() {
-    const { authProxyOutput } = this;
-    const { contextName, online } = this.props.cluster;
+    const { authOutput, cluster } = this;
+    const isError = cluster?.accessible === false;
     return (
-      <div className="ClusterStatus flex column">
-        <Icon sticker className="status-icon" material={online ? "https" : "cloud_off"}/>
-        <h2>{contextName}</h2>
-        <pre className="kube-auth-stdout">{authProxyOutput}</pre>
-        <Button
-          primary label={<Trans>Reconnect</Trans>}
-          onClick={this.reconnectCluster}
-        />
+      <div className="ClusterStatus flex column gaps">
+        {!isError && <Icon material="cloud_queue"/>}
+        {isError && <Icon material="cloud_off" className="error"/>}
+        <h2>{cluster?.contextName}</h2>
+        <pre className="kube-auth-out">
+          {authOutput.map((data, index) => {
+            const error = data.startsWith("[stderr]");
+            return <p key={index} className={cssNames({ error })}>{data}</p>
+          })}
+        </pre>
+        {isError && (
+          <Button
+            primary className="box center"
+            label="Reconnect"
+            onClick={this.reconnect}
+          />
+        )}
       </div>
     )
   }

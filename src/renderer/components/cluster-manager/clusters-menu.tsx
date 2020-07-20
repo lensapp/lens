@@ -51,7 +51,7 @@ export class ClustersMenu extends React.Component<Props> {
       label: _i18n._(t`Settings`),
       click: () => navigate(clusterSettingsURL())
     }));
-    if (cluster.initialized) {
+    if (cluster.online) {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
         click: () => {

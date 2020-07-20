@@ -10,7 +10,6 @@ import { I18nProvider } from "@lingui/react";
 import { browserHistory } from "./navigation";
 import { isMac } from "../common/vars";
 import { _i18n } from "./i18n";
-import { App } from "./components/app";
 import { ClusterManager } from "./components/cluster-manager";
 import { ErrorBoundary } from "./components/error-boundary";
 import { WhatsNew, whatsNewRoute } from "./components/+whats-new";
@@ -19,14 +18,14 @@ import { Preferences, preferencesRoute } from "./components/+preferences";
 @observer
 class LensApp extends React.Component {
   static async init() {
-    App.rootElem.classList.toggle("is-mac", isMac);
     await Promise.all([
       userStore.load(),
       workspaceStore.load(),
       clusterStore.load(),
     ]);
-    await App.init();
-    render(<LensApp/>, App.rootElem);
+    const elem = document.getElementById("app");
+    elem.classList.toggle("is-mac", isMac);
+    render(<LensApp/>, elem);
   }
 
   render() {

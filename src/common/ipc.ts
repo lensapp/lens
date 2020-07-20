@@ -19,11 +19,11 @@ export interface IpcMessageOpts<A extends any[] = any> {
   channel: IpcChannel
   webContentId?: number; // sends to single webContents view
   filter?: (webContent: WebContents) => boolean
-  timeout?: number; // fixme: support
+  timeout?: number; // fixme: add support
   args?: A;
 }
 
-export function sendMessage({ channel, webContentId, filter, args = [] }: IpcMessageOpts) {
+export function broadcastIpc({ channel, webContentId, filter, args = [] }: IpcMessageOpts) {
   const singleView = webContentId ? webContents.fromId(webContentId) : null;
   let views = singleView ? [singleView] : webContents.getAllWebContents();
   if (filter) {
@@ -37,16 +37,16 @@ export function sendMessage({ channel, webContentId, filter, args = [] }: IpcMes
 }
 
 // todo: support timeout + merge with sendMessage?
-export async function invokeMessage<T extends any[], R = any>(channel: IpcChannel, ...args: T): Promise<R> {
-  logger.debug(`[IPC]: invoke channel "${channel}"`, { args });
+export async function invokeIpc<R = any>(channel: IpcChannel, ...args: any[]): Promise<R> {
+  logger.info(`[IPC]: invoke channel "${channel}"`, { args });
   return ipcRenderer.invoke(channel, ...args);
 }
 
 // todo: make isomorphic api
-export function handleMessage<T extends any[]>(channel: IpcChannel, handler: IpcMessageHandler<T>, options: IpcHandleOpts = {}) {
+export function handleIpc<T extends any[]>(channel: IpcChannel, handler: IpcMessageHandler<T>, options: IpcHandleOpts = {}) {
   const { timeout = 0 } = options;
   ipcMain.handle(channel, async (event, ...args: T) => {
-    logger.debug(`[IPC]: handle "${channel}"`, { args });
+    logger.info(`[IPC]: handle "${channel}"`, { args });
     return new Promise(async (resolve, reject) => {
       let timerId;
       if (timeout) {
@@ -57,17 +57,11 @@ export function handleMessage<T extends any[]>(channel: IpcChannel, handler: Ipc
       }
       try {
         const result = await handler(...args); // todo: maybe exec in separate thread/worker
+        resolve(result);
         clearTimeout(timerId);
-        return result;
       } catch (err) {
-        logger.debug(`[IPC]: handling "${channel}" error`, { err });
+        reject(err);
       }
     })
-  })
-}
-
-export function handleMessages(messages: Record<string, IpcMessageHandler>, options?: IpcHandleOpts) {
-  Object.entries(messages).forEach(([channel, handler]) => {
-    handleMessage(channel, handler, options);
   })
 }
