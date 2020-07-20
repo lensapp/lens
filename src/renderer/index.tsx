@@ -18,14 +18,14 @@ import { Preferences, preferencesRoute } from "./components/+preferences";
 @observer
 class LensApp extends React.Component {
   static async init() {
+    const rootElem = document.getElementById("app");
+    rootElem.classList.toggle("is-mac", isMac);
     await Promise.all([
       userStore.load(),
       workspaceStore.load(),
       clusterStore.load(),
     ]);
-    const elem = document.getElementById("app");
-    elem.classList.toggle("is-mac", isMac);
-    render(<LensApp/>, elem);
+    render(<LensApp/>, rootElem);
   }
 
   render() {
