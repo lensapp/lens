@@ -1,3 +1,19 @@
 .ClusterStatus {
+  --flex-gap: #{$padding * 2};
 
+  min-width: 350px;
+  margin: auto;
+  text-align: center;
+
+  pre {
+    @include custom-scrollbar;
+    max-width: 70vw;
+    max-height: 40vh;
+    //text-align: left;
+  }
+
+  .Icon {
+    --size: 70px;
+    margin: auto;
+  }
 }

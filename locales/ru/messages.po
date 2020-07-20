@@ -30,6 +30,10 @@ msgstr ""
 msgid "(empty) (Allowing the specific traffic to all pods in this namespace)"
 msgstr "(Пусто) (Допускается трафик ко всем подам в данной области имен)"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:104
+msgid "(new)"
+msgstr ""
+
 #: src/renderer/components/item-object-list/item-list-layout.tsx:224
 msgid "<0>Filtered</0>: {itemsCount} / {allItemsCount}"
 msgstr "<0>Отфильтровано</0>: {itemsCount} / {allItemsCount}"
@@ -42,7 +46,7 @@ msgstr "<0>Ваш браузер не поддерживает все возмо
 msgid "<0>{0}</0> successfully created"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:52
+#: src/renderer/components/+add-cluster/add-cluster.tsx:126
 msgid "A HTTP proxy server URL (format: http://<address>:<port>)"
 msgstr ""
 
@@ -68,7 +72,8 @@ msgstr "Название аккаунта"
 msgid "Active"
 msgstr "Активный"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:44
+#: src/renderer/components/+add-cluster/add-cluster.tsx:118
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:97
 msgid "Add Cluster"
 msgstr ""
 
@@ -84,7 +89,7 @@ msgstr "Добавить привязку ролей"
 msgid "Add bindings to {name}"
 msgstr "Добавить привязки к {name}"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:62
+#: src/renderer/components/+add-cluster/add-cluster.tsx:137
 msgid "Add cluster"
 msgstr ""
 
@@ -224,7 +229,7 @@ msgstr "Выполнить команду drain для ноды <0>{nodeName}</0
 msgid "Arguments"
 msgstr "Аргументы"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:74
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:84
 msgid "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
 msgstr ""
 
@@ -635,7 +640,7 @@ msgstr "Текущие фильтры:"
 msgid "Custom Resources"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:36
+#: src/renderer/components/+add-cluster/add-cluster.tsx:110
 msgid "Custom.."
 msgstr ""
 
@@ -699,7 +704,7 @@ msgstr "Описание"
 msgid "Desired number of replicas"
 msgstr "Нужный уровень реплик"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:49
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:51
 msgid "Disconnect"
 msgstr ""
 
@@ -883,7 +888,7 @@ msgstr "Группы"
 msgid "HPA"
 msgstr "HPA"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:54
+#: src/renderer/components/+add-cluster/add-cluster.tsx:128
 msgid "HTTP Proxy server. Used for communicating with Kubernetes API."
 msgstr ""
 
@@ -1571,6 +1576,10 @@ msgstr "Persistent Volume Claims"
 msgid "Persistent Volumes"
 msgstr "Persistent Volumes"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:51
+msgid "Please select kubeconfig"
+msgstr ""
+
 #: src/renderer/components/+workloads-pods/pod-menu.tsx:50
 msgid "Pod"
 msgstr ""
@@ -1652,7 +1661,7 @@ msgstr ""
 msgid "Provisioner"
 msgstr "Комиссия"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:48
+#: src/renderer/components/+add-cluster/add-cluster.tsx:122
 msgid "Proxy settings"
 msgstr ""
 
@@ -1702,6 +1711,10 @@ msgstr "Получение"
 msgid "Reclaim Policy"
 msgstr "Политика отката"
 
+#: src/renderer/components/cluster-manager/cluster-status.tsx:52
+msgid "Reconnect"
+msgstr ""
+
 #: src/renderer/components/+config-autoscalers/hpa-details.tsx:70
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:75
 msgid "Reference"
@@ -1729,6 +1742,8 @@ msgid "Releases"
 msgstr "Релизы"
 
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:60
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:58
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:62
 #: src/renderer/components/item-object-list/item-list-layout.tsx:179
 #: src/renderer/components/menu/menu-actions.tsx:49
 #: src/renderer/components/menu/menu-actions.tsx:85
@@ -2016,7 +2031,7 @@ msgstr "Secrets"
 msgid "Select a quota.."
 msgstr "Выберите квоту..."
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:45
+#: src/renderer/components/+add-cluster/add-cluster.tsx:119
 msgid "Select kubeconfig"
 msgstr ""
 
@@ -2071,7 +2086,7 @@ msgstr "Установлено"
 msgid "Set quota"
 msgstr "Установить квоту"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:43
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:46
 msgid "Settings"
 msgstr ""
 
@@ -2245,7 +2260,7 @@ msgstr "Это обязательное поле"
 msgid "This field must contain only lowercase latin characters, numbers and dash."
 msgstr "Это поле может содержать только латинские буквы в нижнем регистре, номера и дефис."
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:72
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:82
 msgid "This is the quick launch menu."
 msgstr ""
 

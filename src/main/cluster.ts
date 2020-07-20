@@ -1,9 +1,9 @@
 import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { FeatureStatusMap } from "./feature"
 import type { WorkspaceId } from "../common/workspace-store";
-import { action, observable, reaction, toJS, when } from "mobx";
+import { action, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
-import { sendMessage } from "../common/ipc";
+import { broadcastIpc } from "../common/ipc";
 import { ContextHandler } from "./context-handler"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import { Kubectl } from "./kubectl";
@@ -13,8 +13,9 @@ import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from ".
 import request, { RequestPromiseOptions } from "request-promise-native"
 import logger from "./logger"
 
-export enum ClusterIpcEvent {
-  STOP = "cluster:stop",
+export enum ClusterIpcChannel {
+  INIT = "cluster:init",
+  DISCONNECT = "cluster:disconnect",
   RECONNECT = "cluster:reconnect",
 }
 
@@ -43,8 +44,6 @@ export class Cluster implements ClusterModel {
   public kubeCtl: Kubectl
   public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
-
-  public whenReady = when(() => this.initialized);
   protected disposers: Function[] = [];
 
   @observable initialized = false;
@@ -67,6 +66,10 @@ export class Cluster implements ClusterModel {
 
   constructor(model: ClusterModel) {
     this.updateModel(model);
+  }
+
+  @computed get isReady() {
+    return this.initialized && this.accessible === true;
   }
 
   @action
@@ -98,8 +101,7 @@ export class Cluster implements ClusterModel {
     }
   }
 
-  bindEvents(viewId: number) {
-    if (!this.initialized) return;
+  bindEvents() {
     logger.info(`[CLUSTER]: bind events`, this.getMeta());
     const refreshStatusTimer = setInterval(() => this.refreshStatus(), 30000); // every 30s
     const refreshEventsTimer = setInterval(() => this.refreshEvents(), 3000); // every 3s
@@ -107,43 +109,35 @@ export class Cluster implements ClusterModel {
     this.disposers.push(
       () => clearInterval(refreshStatusTimer),
       () => clearInterval(refreshEventsTimer),
-
-      reaction(() => this.getState(), clusterState => {
-        sendMessage({
-          channel: "cluster:state",
-          webContentId: viewId,
-          args: [clusterState],
-        })
-      }, {
+      reaction(() => this.getState(), this.pushState, {
         fireImmediately: true
       })
     );
   }
 
   unbindEvents() {
-    if (!this.initialized) return;
     logger.info(`[CLUSTER]: unbind events`, this.getMeta());
     this.disposers.forEach(dispose => dispose());
     this.disposers.length = 0;
   }
 
-  stop() {
-    this.contextHandler.stopServer();
+  // fixme: possibly doesn't work as expected
+  async reconnect() {
+    logger.info(`[CLUSTER]: reconnect`, this.getMeta());
+    await this.contextHandler.stopServer();
+    await this.contextHandler.ensureServer();
   }
 
-  destroy() {
-    try {
-      this.stop();
-      this.unbindEvents();
-      this.kubeconfigManager.unlink();
-    } catch (err) {
-      logger.error(`[CLUSTER]: destroy() throws: ${err}`, this.getMeta());
-    }
+  disconnect() {
+    logger.info(`[CLUSTER]: disconnect`, this.getMeta());
+    this.contextHandler.stopServer();
+    this.unbindEvents();
   }
 
   @action
   async refreshStatus() {
-    await this.whenReady;
+    await when(() => this.initialized);
+    logger.info(`[CLUSTER]: refreshing status`, this.getMeta());
     const connectionStatus = await this.getConnectionStatus();
     this.online = connectionStatus > ClusterStatus.Offline;
     this.accessible = connectionStatus == ClusterStatus.AccessGranted;
@@ -191,9 +185,8 @@ export class Cluster implements ClusterModel {
     return this.preferences.prometheus?.prefix || ""
   }
 
-  protected k8sRequest(path: string, options: RequestPromiseOptions = {}) {
+  protected async k8sRequest(path: string, options: RequestPromiseOptions = {}) {
     const apiUrl = this.kubeProxyUrl + path;
-    logger.debug(`[CLUSTER]: getting request to: ${apiUrl}`);
     return request(apiUrl, {
       json: true,
       timeout: 10000,
@@ -211,7 +204,7 @@ export class Cluster implements ClusterModel {
       this.failureReason = null
       return ClusterStatus.AccessGranted;
     } catch (error) {
-      logger.error(`Failed to connect cluster "${this.contextName}": ${error.stack}`)
+      logger.error(`Failed to connect cluster "${this.contextName}": ${error}`)
       if (error.statusCode) {
         if (error.statusCode >= 400 && error.statusCode < 500) {
           this.failureReason = "Invalid credentials";
@@ -344,6 +337,15 @@ export class Cluster implements ClusterModel {
     };
     return toJS(state, {
       recurseEverything: true
+    })
+  }
+
+  pushState = (clusterState = this.getState()) => {
+    logger.info(`[CLUSTER]: push-state`, clusterState);
+    broadcastIpc({
+      // webContentId: viewId, // todo: send to cluster-view only
+      channel: "cluster:state",
+      args: [clusterState],
     })
   }
 
