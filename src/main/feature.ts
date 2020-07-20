@@ -7,6 +7,7 @@ import { Cluster } from "./cluster";
 import logger from "./logger";
 
 export type FeatureStatusMap = Record<string, FeatureStatus>
+export type FeatureMap = Record<string, Feature>
 
 export interface FeatureInstallRequest {
   clusterId: string;
@@ -25,23 +26,22 @@ export abstract class Feature {
   name: string;
   latestVersion: string;
 
-  abstract async upgrade(cluster: Cluster): Promise<boolean>;
+  abstract async upgrade(cluster: Cluster): Promise<void>;
 
-  abstract async uninstall(cluster: Cluster): Promise<boolean>;
+  abstract async uninstall(cluster: Cluster): Promise<void>;
 
   abstract async featureStatus(kc: KubeConfig): Promise<FeatureStatus>;
 
   constructor(public config: any) {
   }
 
-  async install(cluster: Cluster): Promise<boolean> {
+  async install(cluster: Cluster): Promise<void> {
     const resources = this.renderTemplates();
     try {
       await new ResourceApplier(cluster).kubectlApplyAll(resources);
-      return true;
     } catch (err) {
       logger.error("Installing feature error", { err, cluster });
-      return false
+      throw err;
     }
   }
 

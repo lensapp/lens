@@ -31,25 +31,30 @@ export class KubeAuthProxy {
       return;
     }
     const proxyBin = await this.kubectl.getPath()
-    let args = [
+    const args = [
       "proxy",
-      "-p", this.port.toString(),
-      "--kubeconfig", this.cluster.kubeConfigPath,
-      "--context", this.cluster.contextName,
+      "-p", `${this.port}`,
+      // "--kubeconfig", `"${this.cluster.kubeConfigPath}"`,
+      // "--context", `"${this.cluster.contextName}"`,
+      "--kubeconfig", `${this.cluster.kubeConfigPath}`,
+      "--context", `${this.cluster.contextName}`,
       "--accept-hosts", ".*",
       "--reject-paths", "^[^/]"
     ]
     if (process.env.DEBUG_PROXY === "true") {
-      args = args.concat(["-v", "9"])
+      args.push("-v", "9")
     }
     logger.debug(`spawning kubectl proxy with args: ${args}`)
-    this.proxyProcess = spawn(proxyBin, args, {
-      env: this.env
-    })
+    this.proxyProcess = spawn(proxyBin, args, { env: this.env, })
+
     this.proxyProcess.on("exit", (code) => {
       this.sendIpcLogMessage({ data: `proxy exited with code: ${code}`, error: code > 0 })
-      this.proxyProcess = null
+      this.proxyProcess.removeAllListeners();
+      this.proxyProcess.stderr.removeAllListeners();
+      this.proxyProcess.stdout.removeAllListeners();
+      this.proxyProcess = null;
     })
+    
     this.proxyProcess.stdout.on('data', (data) => {
       let logItem = data.toString()
       if (logItem.startsWith("Starting to serve on")) {
@@ -57,6 +62,7 @@ export class KubeAuthProxy {
       }
       this.sendIpcLogMessage({ data: logItem })
     })
+    
     this.proxyProcess.stderr.on('data', (data) => {
       this.lastError = this.parseError(data.toString())
       this.sendIpcLogMessage({ data: data.toString(), error: true })

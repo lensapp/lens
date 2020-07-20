@@ -136,7 +136,7 @@ export class Cluster implements ClusterModel {
 
   async reconnect() {
     logger.info(`[CLUSTER]: reconnect`, this.getMeta());
-    await this.contextHandler.stopServer();
+    this.contextHandler.stopServer();
     await this.contextHandler.ensureServer();
     this.disconnected = false;
   }
@@ -206,15 +206,15 @@ export class Cluster implements ClusterModel {
   }
 
   async installFeature(name: string, config: any) {
-    return await installFeature(name, this, config)
+    return installFeature(name, this, config)
   }
 
   async upgradeFeature(name: string, config: any) {
-    return await upgradeFeature(name, this, config)
+    return upgradeFeature(name, this, config)
   }
 
   async uninstallFeature(name: string) {
-    return await uninstallFeature(name, this)
+    return uninstallFeature(name, this)
   }
 
   getPrometheusApiPrefix() {

@@ -34,6 +34,9 @@ export class ClusterManager {
     // listen for ipc-events that must/can be handled *only* in main-process (nodeIntegration=true)
     clusterIpc.activate.handleInMain();
     clusterIpc.disconnect.handleInMain();
+    clusterIpc.installFeature.handleInMain();
+    clusterIpc.uninstallFeature.handleInMain();
+    clusterIpc.upgradeFeature.handleInMain();
   }
 
   stop() {

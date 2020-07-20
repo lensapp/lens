@@ -9,7 +9,7 @@ import type { Cluster } from "../../../main/cluster";
 import { userStore } from "../../../common/user-store";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
-import { ClusterIcon } from "../+cluster-settings/cluster-icon";
+import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";

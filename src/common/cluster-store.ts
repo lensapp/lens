@@ -1,7 +1,7 @@
 import type { WorkspaceId } from "./workspace-store";
 import path from "path";
 import filenamify from "filenamify";
-import { app, ipcRenderer } from "electron";
+import { app, ipcRenderer, remote } from "electron";
 import { copyFile, ensureDir, unlink } from "fs-extra";
 import { action, computed, observable, toJS } from "mobx";
 import { appProto, noClustersHost } from "./vars";
@@ -53,7 +53,8 @@ export interface ClusterPreferences {
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
   static get iconsDir() {
-    return path.join(app.getPath("userData"), "icons");
+    // TODO: remove remote cheat
+    return path.join((app || remote.app).getPath("userData"), "icons");
   }
 
   private constructor() {
@@ -128,30 +129,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     this.getByWorkspaceId(workspaceId).forEach(cluster => {
       this.removeById(cluster.id)
     })
-  }
-
-  @action
-  protected async uploadIcon({ clusterId, ...upload }: ClusterIconUpload): Promise<string> {
-    const cluster = this.getById(clusterId);
-    if (cluster) {
-      tracker.event("cluster", "upload-icon");
-      const fileDest = path.join(ClusterStore.iconsDir, filenamify(cluster.contextName + "-" + upload.name))
-      await ensureDir(path.dirname(fileDest));
-      await copyFile(upload.path, fileDest)
-      cluster.preferences.icon = `${appProto}:///icons/${fileDest}`
-      return cluster.preferences.icon;
-    }
-  }
-
-  @action
-  protected resetIcon(clusterId: ClusterId) {
-    const cluster = this.getById(clusterId);
-    if (cluster) {
-      tracker.event("cluster", "reset-icon")
-      const iconPath = path.join(ClusterStore.iconsDir, path.basename(cluster.preferences.icon));
-      unlink(iconPath).catch(() => null); // remove file
-      delete cluster.preferences.icon;
-    }
   }
 
   @action

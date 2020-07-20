@@ -76,18 +76,14 @@ export class Tooltip extends React.Component<TooltipProps> {
     const { position } = this.props;
     const { elem, targetElem } = this;
 
-    let allPositions: TooltipPosition[] = [
-      TooltipPosition.RIGHT,
-      TooltipPosition.BOTTOM,
-      TooltipPosition.LEFT,
-      TooltipPosition.RIGHT,
-    ];
-    if (allPositions.includes(position)) {
-      allPositions = [
-        position, // put first as priority side for positioning
-        ...allPositions.filter(pos => pos !== position),
-      ];
+    const positionPreference = new Set<TooltipPosition>();
+    if (typeof position !== "undefined") {
+      positionPreference.add(position);
     }
+    positionPreference.add(TooltipPosition.RIGHT)
+      .add(TooltipPosition.BOTTOM)
+      .add(TooltipPosition.TOP)
+      .add(TooltipPosition.LEFT)
 
     // reset position first and get all possible client-rect area for tooltip element
     this.setPosition({ left: 0, top: 0 });
@@ -97,21 +93,21 @@ export class Tooltip extends React.Component<TooltipProps> {
     const { innerWidth: viewportWidth, innerHeight: viewportHeight } = window;
 
     // find proper position
-    this.activePosition = null;
-    for (const pos of allPositions) {
+    for (const pos of positionPreference) {
       const { left, top, right, bottom } = this.getPosition(pos, selfBounds, targetBounds)
       const fitsToWindow = left >= 0 && top >= 0 && right <= viewportWidth && bottom <= viewportHeight;
       if (fitsToWindow) {
         this.activePosition = pos;
         this.setPosition({ top, left });
-        break;
+        
+        return;
       }
     }
-    if (!this.activePosition) {
-      const { left, top } = this.getPosition(allPositions[0], selfBounds, targetBounds)
-      this.activePosition = allPositions[0];
-      this.setPosition({ left, top });
-    }
+
+    const preferedPosition = Array.from(positionPreference)[0];
+    const { left, top } = this.getPosition(preferedPosition, selfBounds, targetBounds)
+    this.activePosition = preferedPosition;
+    this.setPosition({ left, top });
   }
 
   protected setPosition(pos: { left: number, top: number }) {

@@ -1,0 +1,14 @@
+.FilePicker {
+    input[type="file"] {
+        display: none;
+    }
+
+    label {
+        display: inline-block;
+        border: medium solid;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+    }
+}

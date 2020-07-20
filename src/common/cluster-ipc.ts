@@ -17,4 +17,34 @@ export const clusterIpc = {
       return clusterStore.getById(clusterId)?.disconnect();
     },
   }),
+
+  installFeature: createIpcChannel({
+    channel: "cluster:install-feature",
+    handle: async (clusterId: ClusterId, feature: string, config?: any) => {
+      tracker.event("cluster", "install", feature);
+      const cluster = clusterStore.getById(clusterId);
+
+      if (cluster) {
+        await cluster.installFeature(feature, config)
+      } else {
+        throw `${clusterId} is not a valid cluster id`;
+      }
+    }
+  }),
+
+  uninstallFeature: createIpcChannel({
+    channel: "cluster:uninstall-feature",
+    handle: (clusterId: ClusterId, feature: string) => {
+      tracker.event("cluster", "uninstall", feature);
+      return clusterStore.getById(clusterId)?.uninstallFeature(feature)
+    }
+  }),
+
+  upgradeFeature: createIpcChannel({
+    channel: "cluster:upgrade-feature",
+    handle: (clusterId: ClusterId, feature: string, config?: any) => {
+      tracker.event("cluster", "upgrade", feature);
+      return clusterStore.getById(clusterId)?.upgradeFeature(feature, config)
+    }
+  }),
 }

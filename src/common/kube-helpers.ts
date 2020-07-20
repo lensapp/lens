@@ -5,6 +5,7 @@ import path from "path"
 import os from "os"
 import yaml from "js-yaml"
 import logger from "../main/logger";
+import fse from "fs-extra"
 
 function resolveTilde(filePath: string) {
   if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
@@ -15,11 +16,13 @@ function resolveTilde(filePath: string) {
 
 export function loadConfig(pathOrContent?: string): KubeConfig {
   const kc = new KubeConfig();
-  if (path.isAbsolute(pathOrContent)) {
-    kc.loadFromFile(resolveTilde(pathOrContent));
+  
+  if (fse.pathExistsSync(pathOrContent)) {
+    kc.loadFromFile(path.resolve(resolveTilde(pathOrContent)));
   } else {
     kc.loadFromString(pathOrContent);
   }
+
   return kc
 }
 
@@ -154,7 +157,12 @@ export function saveConfigToAppFiles(clusterId: string, kubeConfig: KubeConfig |
 export async function getKubeConfigLocal(): Promise<string> {
   try {
     const configFile = path.join(process.env.HOME, '.kube', 'config');
-    return readFile(configFile, "utf8");
+    const file = await readFile(configFile, "utf8");
+    const obj = yaml.safeLoad(file);
+    if (obj.contexts) {
+      obj.contexts = obj.context.filter((ctx: any) => ctx?.context?.cluster && ctx?.name)
+    }
+    return yaml.safeDump(obj);
   } catch (err) {
     logger.debug(`Cannot read local kube-config: ${err}`)
     return "";
