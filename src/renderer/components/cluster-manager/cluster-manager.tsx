@@ -1,7 +1,7 @@
 import "./cluster-manager.scss"
 import React from "react";
 import { observer } from "mobx-react";
-import { computed } from "mobx";
+import { computed, observable } from "mobx";
 import { App } from "../app";
 import { ClusterStatus } from "./cluster-status";
 import { ClustersMenu } from "./clusters-menu";
@@ -18,23 +18,27 @@ interface Props {
 
 @observer
 export class ClusterManager extends React.Component<Props> {
-  @computed get isReady() {
+  @observable appReady = false;
+
+  @computed get clusterReady() {
     return clusterStore.activeCluster?.isReady
   }
 
   async componentDidMount() {
-    await invokeIpc(ClusterIpcChannel.INIT)
+    invokeIpc(ClusterIpcChannel.INIT);
     await App.init();
+    this.appReady = true;
   }
 
   render() {
     const { className, contentClass } = this.props;
+    const isReady = this.appReady && this.clusterReady;
     return (
       <div className={cssNames("ClusterManager", className)}>
         <div id="draggable-top"/>
-        <div id="lens-view" className={cssNames("flex", contentClass)}>
-          {this.isReady && <App/>}
-          {!this.isReady && <ClusterStatus/>}
+        <div id="lens-view" className={cssNames("flex column", contentClass)}>
+          {isReady && <App/>}
+          {!isReady && <ClusterStatus/>}
         </div>
         <ClustersMenu/>
         <BottomBar/>

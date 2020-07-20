@@ -33,6 +33,7 @@ export class ClusterManager {
         this.activeClusterId = activeCluster.id;
         activeCluster.bindEvents();
         activeCluster.refreshStatus();
+        activeCluster.pushState();
       }
     }, {
       fireImmediately: true
