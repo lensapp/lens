@@ -20,6 +20,7 @@ import { landingURL } from "../+landing-page";
 import { Tooltip, TooltipContent } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 
+// fixme: refresh all cluster-icon badges in background (events-count per cluster)
 // fixme: allow to rearrange clusters with drag&drop
 // fixme: disconnect cluster from context-menu
 
