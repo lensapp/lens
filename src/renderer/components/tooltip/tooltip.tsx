@@ -8,7 +8,7 @@ import { autobind, cssNames } from "../../utils";
 import { Animate } from "../animate";
 
 // todo: refactor -- better positioning + remove "flying effect"
-// fixme: always render outside of parent element ("overflow: auto" should not affect tooltip)
+// todo: always render outside of parent element ("overflow: auto" should not affect tooltip)
 
 export interface TooltipProps {
   htmlFor: string;

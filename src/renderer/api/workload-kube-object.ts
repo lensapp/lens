@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import { IKubeObjectMetadata, KubeObject } from "./kube-object";
+import { KubeObject } from "./kube-object";
 
 interface IToleration {
   key?: string;
@@ -47,9 +47,7 @@ export interface IAffinity {
 }
 
 export class WorkloadKubeObject extends KubeObject {
-
-  // fixme: add type
-  spec: any;
+  spec: any; // todo: add proper types
 
   getSelectors(): string[] {
     const selector = this.spec.selector;

@@ -61,7 +61,7 @@ export class BaseStore<T = any> extends Singleton {
       },
     });
     const storedModel = Object.assign({}, this.storeConfig.store);
-    Reflect.deleteProperty(storedModel, "__internal__"); // fixme: avoid "external-internals"
+    Reflect.deleteProperty(storedModel, "__internal__"); // todo: avoid "external-internals"
     logger.info(`[STORE]: LOADED from ${this.storeConfig.path}`);
     this.fromStore(storedModel);
     this.isLoaded = true;
@@ -69,8 +69,7 @@ export class BaseStore<T = any> extends Singleton {
 
   protected async save(model: T) {
     logger.info(`[STORE]: SAVING ${this.name}`);
-    // todo: avoid multiple file updates
-    // fixme: https://github.com/sindresorhus/conf/issues/114
+    // todo: update when fixed https://github.com/sindresorhus/conf/issues/114
     Object.entries(model).forEach(([key, value]) => {
       this.storeConfig.set(key, value);
     });
