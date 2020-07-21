@@ -19,10 +19,10 @@ import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
 import { Tooltip, TooltipContent } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
+import { clusterIpc } from "../../../common/cluster-ipc";
 
 // fixme: refresh all cluster-icon badges in background (events-count per cluster)
 // fixme: allow to rearrange clusters with drag&drop
-// fixme: disconnect cluster from context-menu
 
 interface Props {
   className?: IClassName;
@@ -57,6 +57,7 @@ export class ClustersMenu extends React.Component<Props> {
         label: _i18n._(t`Disconnect`),
         click: () => {
           navigate(landingURL());
+          clusterIpc.disconnect.invokeFromRenderer();
         }
       }))
     }
@@ -100,12 +101,13 @@ export class ClustersMenu extends React.Component<Props> {
         )}
         <div className="clusters flex column gaps">
           {clusters.map(cluster => {
+            const isActive = cluster.isReady && cluster.id === clusterStore.activeClusterId;
             return (
               <ClusterIcon
                 key={cluster.id}
                 showErrors={true}
                 cluster={cluster}
-                isActive={cluster.id === clusterStore.activeClusterId}
+                isActive={isActive}
                 onClick={() => this.showCluster(cluster.id)}
                 onContextMenu={() => this.showContextMenu(cluster)}
               />

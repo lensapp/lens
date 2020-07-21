@@ -9,24 +9,24 @@ export const clusterIpc = {
       const cluster = clusterStore.getById(clusterId);
       if (cluster) {
         await cluster.refreshStatus();
-        cluster.pushState();
+        return cluster.pushState();
       }
     },
   }),
 
   disconnect: createIpcChannel({
     channel: "cluster:disconnect",
-    handle: (clusterId: ClusterId) => {
+    handle: (clusterId: ClusterId = clusterStore.activeClusterId) => {
       tracker.event("cluster", "stop");
-      clusterStore.getById(clusterId)?.disconnect();
+      return clusterStore.getById(clusterId)?.disconnect();
     },
   }),
 
   reconnect: createIpcChannel({
     channel: "cluster:reconnect",
-    handle: (clusterId: ClusterId) => {
+    handle: (clusterId: ClusterId = clusterStore.activeClusterId) => {
       tracker.event("cluster", "reconnect");
-      clusterStore.getById(clusterId)?.reconnect();
+      return clusterStore.getById(clusterId)?.reconnect();
     },
   }),
 }
