@@ -7,7 +7,7 @@ import { Trans } from "@lingui/macro";
 @observer
 export class LandingPage extends React.Component {
   render() {
-    const noClusters = !clusterStore.clusters.size;
+    const noClusters = !clusterStore.hasClusters();
     return (
       <div className="LandingPage flex">
         {noClusters && (

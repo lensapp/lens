@@ -73,7 +73,7 @@ msgid "Active"
 msgstr "Активный"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:118
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:97
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:99
 msgid "Add Cluster"
 msgstr ""
 
@@ -229,7 +229,7 @@ msgstr "Выполнить команду drain для ноды <0>{nodeName}</0
 msgid "Arguments"
 msgstr "Аргументы"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:84
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:86
 msgid "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
 msgstr ""
 
@@ -704,7 +704,7 @@ msgstr "Описание"
 msgid "Desired number of replicas"
 msgstr "Нужный уровень реплик"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:51
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:52
 msgid "Disconnect"
 msgstr ""
 
@@ -1712,8 +1712,8 @@ msgid "Reclaim Policy"
 msgstr "Политика отката"
 
 #: src/renderer/components/cluster-manager/cluster-status.tsx:52
-msgid "Reconnect"
-msgstr ""
+#~ msgid "Reconnect"
+#~ msgstr ""
 
 #: src/renderer/components/+config-autoscalers/hpa-details.tsx:70
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:75
@@ -1742,8 +1742,8 @@ msgid "Releases"
 msgstr "Релизы"
 
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:60
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:58
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:62
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:60
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:64
 #: src/renderer/components/item-object-list/item-list-layout.tsx:179
 #: src/renderer/components/menu/menu-actions.tsx:49
 #: src/renderer/components/menu/menu-actions.tsx:85
@@ -2086,7 +2086,7 @@ msgstr "Установлено"
 msgid "Set quota"
 msgstr "Установить квоту"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:46
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:47
 msgid "Settings"
 msgstr ""
 
@@ -2260,7 +2260,7 @@ msgstr "Это обязательное поле"
 msgid "This field must contain only lowercase latin characters, numbers and dash."
 msgstr "Это поле может содержать только латинские буквы в нижнем регистре, номера и дефис."
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:82
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:84
 msgid "This is the quick launch menu."
 msgstr ""
 

@@ -1,8 +1,6 @@
 import "./app.scss";
 import React from "react";
-import { observer } from "mobx-react";
-import { i18nStore } from "../i18n";
-import { Terminal } from "./dock/terminal";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { Notifications } from "./notifications";
 import { NotFound } from "./+404";
@@ -30,23 +28,49 @@ import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../api/rbac";
 import { AddCluster, addClusterRoute } from "./+add-cluster";
 import { LandingPage, landingRoute, landingURL } from "./+landing-page";
-import { clusterStore } from "../../common/cluster-store";
 import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";
 import { Workspaces, workspacesRoute } from "./+workspaces";
 import { ErrorBoundary } from "./error-boundary";
+import { computed, observable, reaction } from "mobx";
 import { configStore } from "../config.store";
+import { clusterIpc } from "../../common/cluster-ipc";
+import { clusterStore } from "../../common/cluster-store";
+import { ClusterStatus } from "./cluster-manager/cluster-status";
+import { clusterStatusRoute, clusterStatusURL } from "./cluster-manager/cluster-status.route";
+import { navigation } from "../navigation";
+import { CubeSpinner } from "./spinner";
 
 @observer
 export class App extends React.Component {
-  static async init() {
-    await i18nStore.init();
+  @observable appReady = false;
+
+  @computed get clusterReady() {
+    const clusterId = location.hostname.split(".")[0];
+    return !!clusterStore.getById(clusterId)?.isReady;
+  }
+
+  async componentDidMount() {
+    await clusterIpc.activate.invokeFromRenderer();
     await configStore.init();
-    await Terminal.preloadFonts();
+    this.appReady = true;
+
+    disposeOnUnmount(this, [
+      reaction(() => this.startURL, url => {
+        if (!this.clusterReady) {
+          navigation.replace(url);
+        }
+      }, {
+        fireImmediately: true
+      })
+    ])
   }
 
   get startURL() {
-    if (!clusterStore.clusters.size) {
+    if (!clusterStore.hasClusters()) {
       return landingURL();
+    }
+    if (!this.clusterReady) {
+      return clusterStatusURL();
     }
     if (isAllowedResource(["events", "nodes", "pods"])) {
       return clusterURL();
@@ -55,14 +79,18 @@ export class App extends React.Component {
   }
 
   render() {
+    if (!this.appReady) {
+      return <CubeSpinner className="box center"/>
+    }
     return (
       <ErrorBoundary>
         <Switch>
           <Route component={LandingPage} {...landingRoute}/>
-          <Route component={AddCluster} {...addClusterRoute}/>
           <Route component={Workspaces} {...workspacesRoute}/>
-          <Route component={ClusterSettings} {...clusterSettingsRoute}/>
+          <Route component={AddCluster} {...addClusterRoute}/>
           <Route component={Cluster} {...clusterRoute}/>
+          <Route component={ClusterStatus} {...clusterStatusRoute}/>
+          <Route component={ClusterSettings} {...clusterSettingsRoute}/>
           <Route component={Nodes} {...nodesRoute}/>
           <Route component={Workloads} {...workloadsRoute}/>
           <Route component={Config} {...configRoute}/>

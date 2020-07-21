@@ -48,9 +48,7 @@ export class ClusterStatus extends React.Component {
       <div className="ClusterStatus flex column gaps">
         {!hasErrors && <Icon material="cloud_queue"/>}
         {hasErrors && <Icon material="cloud_off" className="error"/>}
-        <h2>
-          {cluster?.contextName}
-        </h2>
+        {cluster && <h2>{cluster.contextName}</h2>}
         <pre className="kube-auth-out">
           {authOutput.map((data, index) => {
             const error = data.startsWith("[stderr]");

@@ -24,7 +24,8 @@ class LensApp extends React.Component {
       userStore.load(),
       workspaceStore.load(),
       clusterStore.load(),
-    ])
+    ]);
+    await ClusterManager.init();
     render(<LensApp/>, rootElem);
   }
 

@@ -72,7 +72,7 @@ msgid "Active"
 msgstr "Active"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:118
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:97
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:99
 msgid "Add Cluster"
 msgstr "Add Cluster"
 
@@ -228,7 +228,7 @@ msgstr "Are you sure you want to drain <0>{nodeName}</0>?"
 msgid "Arguments"
 msgstr "Arguments"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:84
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:86
 msgid "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
 msgstr "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
 
@@ -703,7 +703,7 @@ msgstr "Description"
 msgid "Desired number of replicas"
 msgstr "Desired number of replicas"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:51
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:52
 msgid "Disconnect"
 msgstr "Disconnect"
 
@@ -1711,8 +1711,8 @@ msgid "Reclaim Policy"
 msgstr "Reclaim Policy"
 
 #: src/renderer/components/cluster-manager/cluster-status.tsx:52
-msgid "Reconnect"
-msgstr "Reconnect"
+#~ msgid "Reconnect"
+#~ msgstr "Reconnect"
 
 #: src/renderer/components/+config-autoscalers/hpa-details.tsx:70
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:75
@@ -1741,8 +1741,8 @@ msgid "Releases"
 msgstr "Releases"
 
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:60
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:58
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:62
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:60
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:64
 #: src/renderer/components/item-object-list/item-list-layout.tsx:179
 #: src/renderer/components/menu/menu-actions.tsx:49
 #: src/renderer/components/menu/menu-actions.tsx:85
@@ -2085,7 +2085,7 @@ msgstr "Set"
 msgid "Set quota"
 msgstr "Set quota"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:46
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:47
 msgid "Settings"
 msgstr "Settings"
 
@@ -2259,7 +2259,7 @@ msgstr "This field is required"
 msgid "This field must contain only lowercase latin characters, numbers and dash."
 msgstr "This field must contain only lowercase latin characters, numbers and dash."
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:82
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:84
 msgid "This is the quick launch menu."
 msgstr "This is the quick launch menu."
 
