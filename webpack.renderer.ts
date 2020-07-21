@@ -18,6 +18,7 @@ export default function (): webpack.Configuration {
       [appName]: path.resolve(rendererDir, "index.tsx"),
     },
     output: {
+      publicPath: "/",
       path: outDir,
       filename: '[name].js',
       chunkFilename: 'chunks/[name].js',
