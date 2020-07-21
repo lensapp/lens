@@ -19,7 +19,7 @@ export interface IpcMessageOpts<A extends any[] = any> {
   channel: IpcChannel
   webContentId?: number; // sends to single webContents view
   filter?: (webContent: WebContents) => boolean
-  timeout?: number; // fixme: add support
+  timeout?: number; // todo: add support
   args?: A;
 }
 

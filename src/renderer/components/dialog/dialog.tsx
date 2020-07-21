@@ -8,6 +8,8 @@ import { Animate } from "../animate";
 import { cssNames, noop, stopPropagation } from "../../utils";
 import { navigation } from "../../navigation";
 
+// todo: refactor + handle animation-end in props.onClose()?
+
 export interface DialogProps {
   className?: string;
   isOpen?: boolean;
@@ -24,7 +26,6 @@ interface DialogState {
   isOpen: boolean;
 }
 
-// fixme: handle animation end props.onClose() (await props.close()?)
 @observer
 export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   private contentElem: HTMLElement;

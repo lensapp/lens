@@ -63,7 +63,7 @@ export class CrdList extends React.Component {
           if (selectedGroups.length == 1) placeholder = <><Trans>Group</Trans>: {selectedGroups[0]}</>
           if (selectedGroups.length >= 2) placeholder = <><Trans>Groups</Trans>: {selectedGroups.join(", ")}</>
           return {
-            // fixme: move to global filters
+            // todo: move to global filters
             filters: (
               <Select
                 className="group-select"
