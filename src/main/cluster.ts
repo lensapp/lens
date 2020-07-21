@@ -49,6 +49,7 @@ export class Cluster implements ClusterModel {
   @observable webContentUrl: string; // page content url for loading in renderer
   @observable online: boolean;
   @observable accessible: boolean;
+  @observable disconnected: boolean;
   @observable failureReason: string;
   @observable nodes = 0;
   @observable version: string;
@@ -75,6 +76,9 @@ export class Cluster implements ClusterModel {
 
   @action
   async init(port: number) {
+    if (this.initialized) {
+      return;
+    }
     try {
       this.contextHandler = new ContextHandler(this);
       this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
@@ -97,11 +101,11 @@ export class Cluster implements ClusterModel {
 
   bindEvents() {
     logger.info(`[CLUSTER]: bind events`, this.getMeta());
-    const refreshStatusTimer = setInterval(() => this.refreshStatus(), 30000); // every 30s
-    const refreshEventsTimer = setInterval(() => this.refreshEvents(), 3000); // every 3s
+    const refreshTimer = setInterval(() => this.online && this.refresh(), 30000); // every 30s
+    const refreshEventsTimer = setInterval(() => this.online && this.refreshEvents(), 3000); // every 3s
 
     this.disposers.push(
-      () => clearInterval(refreshStatusTimer),
+      () => clearInterval(refreshTimer),
       () => clearInterval(refreshEventsTimer),
       reaction(this.getState, this.pushState, {
         fireImmediately: true
@@ -115,22 +119,32 @@ export class Cluster implements ClusterModel {
     this.disposers.length = 0;
   }
 
-  // fixme: possibly doesn't work as expected
+  async activate() {
+    await when(() => this.initialized);
+    if (this.disconnected) await this.reconnect();
+    await this.refresh();
+    return this.pushState();
+  }
+
+  // todo: check, possibly doesn't work as expected
   async reconnect() {
     logger.info(`[CLUSTER]: reconnect`, this.getMeta());
+    this.disconnected = false;
     await this.contextHandler.stopServer();
     await this.contextHandler.ensureServer();
   }
 
+  @action
   disconnect() {
     logger.info(`[CLUSTER]: disconnect`, this.getMeta());
+    this.disconnected = true;
+    this.online = false;
+    this.accessible = false;
     this.contextHandler.stopServer();
-    this.unbindEvents();
   }
 
   @action
-  async refreshStatus() {
-    await when(() => this.initialized);
+  async refresh() {
     logger.info(`[CLUSTER]: refreshing status`, this.getMeta());
     const connectionStatus = await this.getConnectionStatus();
     this.online = connectionStatus > ClusterStatus.Offline;
@@ -351,6 +365,7 @@ export class Cluster implements ClusterModel {
       name: this.contextName,
       initialized: this.initialized,
       accessible: this.accessible,
+      online: this.online,
     }
   }
 }

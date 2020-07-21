@@ -3,14 +3,10 @@ import { ClusterId, clusterStore } from "./cluster-store";
 import { tracker } from "./tracker";
 
 export const clusterIpc = {
-  refresh: createIpcChannel({
-    channel: "cluster:refresh",
+  activate: createIpcChannel({
+    channel: "cluster:activate",
     handle: async (clusterId: ClusterId = clusterStore.activeClusterId) => {
-      const cluster = clusterStore.getById(clusterId);
-      if (cluster) {
-        await cluster.refreshStatus();
-        return cluster.pushState();
-      }
+      return clusterStore.getById(clusterId)?.activate();
     },
   }),
 

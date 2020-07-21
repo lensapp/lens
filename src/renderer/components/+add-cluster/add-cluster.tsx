@@ -16,7 +16,7 @@ import { tracker } from "../../../common/tracker";
 import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid"
-import { navigate } from "../../navigation";
+import { navigation } from "../../navigation";
 
 @observer
 export class AddCluster extends React.Component {
@@ -94,7 +94,7 @@ export class AddCluster extends React.Component {
           httpsProxy: proxyServer || undefined,
         },
       });
-      navigate("/");
+      navigation.goBack(); // return to previous opened page for the cluster view
     } catch (err) {
       this.error = String(err);
     } finally {
