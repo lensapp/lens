@@ -85,6 +85,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return Array.from(this.clusters.values());
   }
 
+  hasClusters() {
+    return this.clusters.size > 0;
+  }
+
   hasContext(name: string) {
     return this.clustersList.some(cluster => cluster.contextName === name);
   }

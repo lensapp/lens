@@ -1,8 +1,12 @@
 .ClustersMenu {
   position: relative;
   text-align: center;
-  padding: $padding * 2 $padding;
+  padding: $padding * 2;
   background: var(--clusters-menu-bgc);
+
+  .is-mac & {
+    padding-top: $padding * 3;
+  }
 
   > .startup-tooltip {
     $bgc: $mainBackground;
@@ -35,16 +39,15 @@
   > .clusters {
     //@include hidden-scrollbar; // fixme: uncomment after refactoring tooltip.tsx
     --flex-gap: #{$padding * 2};
-    padding: $padding;
+    margin: var(--flex-gap) 0;
 
-    .is-mac & {
-      margin-top: $padding * 2;
+    &:empty {
+      display: none;
     }
   }
 
   > .add-cluster {
     position: relative;
-    margin-top: $padding;
 
     .Icon {
       border-radius: $radius;
