@@ -56,9 +56,8 @@ export class App extends React.Component {
 
     disposeOnUnmount(this, [
       reaction(() => this.startURL, url => {
-        if (!this.clusterReady) {
-          navigation.replace(url);
-        }
+        const redirect = !this.clusterReady || !clusterStore.hasClusters();
+        if (redirect) navigation.replace(url);
       }, {
         fireImmediately: true
       })
