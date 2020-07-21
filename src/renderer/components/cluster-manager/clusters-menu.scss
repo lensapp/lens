@@ -42,7 +42,7 @@
     margin: var(--flex-gap) 0;
 
     &:empty {
-      display: none;
+      margin-bottom: 0;
     }
   }
 

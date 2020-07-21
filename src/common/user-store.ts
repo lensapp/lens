@@ -5,6 +5,7 @@ import migrations from "../migrations/user-store"
 import { getAppVersion } from "./utils/app-version";
 import { tracker } from "./tracker";
 
+// todo: merge with common/user-store.ts
 // fixme: detect new contexts from .kube/config since last open
 
 export interface UserStoreModel {
