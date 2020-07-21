@@ -3,8 +3,6 @@ import { observable, when } from "mobx";
 import { autobind, interval } from "./utils";
 import { apiBase } from "./api";
 
-// todo: remove, merge with common/user-store.ts
-
 @autobind()
 export class ConfigStore {
   protected updater = interval(60, this.load);

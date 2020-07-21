@@ -9,9 +9,10 @@ import logger from "./logger";
 
 export class WindowManager {
   protected activeView: BrowserWindow;
+  protected splashWindow: BrowserWindow;
+  protected noClustersWindow: BrowserWindow;
   protected views = new Map<ClusterId, BrowserWindow>();
   protected disposers: CallableFunction[] = [];
-  protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
 
   constructor(protected proxyPort: number) {
@@ -34,7 +35,7 @@ export class WindowManager {
     // Manage reactive state
     this.disposers.push(
       // auto-show active cluster window and subscribe for push-events
-      reaction(() => clusterStore.activeClusterId, clusterId => this.activateView(clusterId), {
+      reaction(() => clusterStore.activeClusterId, this.activateView, {
         fireImmediately: true,
       }),
 
@@ -43,26 +44,31 @@ export class WindowManager {
         removedClusters.forEach(cluster => {
           this.destroyView(cluster.id);
         });
+      }, {
+        delay: 25, // fix: destroy later and allow to use view's state in next activateView()
       }),
 
       // handle no-clusters view
       autorun(() => {
-        if (!clusterStore.clusters.size) {
-          this.initNoClustersView();
+        if (!clusterStore.hasClusters()) {
+          this.handleNoClustersView();
         }
       })
     );
   }
 
-  protected async initNoClustersView() {
-    this.activeView = this.initView(undefined);
-    await this.activeView.loadURL(`http://no-clusters.localhost:${this.proxyPort}`);
-    this.activeView.show();
+  protected async handleNoClustersView() {
+    if (!this.noClustersWindow) {
+      this.noClustersWindow = this.initView(undefined);
+      await this.noClustersWindow.loadURL(`http://no-clusters.localhost:${this.proxyPort}`);
+    }
+    this.activeView = this.noClustersWindow;
+    this.noClustersWindow.show();
     this.hideSplash();
   }
 
   async showSplash() {
-    await this.splashWindow.loadURL("static://splash.html")
+    await this.splashWindow.loadURL("static://splash.html").catch(() => null)
     this.splashWindow.show();
   }
 
@@ -74,7 +80,7 @@ export class WindowManager {
     return this.views.get(clusterId);
   }
 
-  async activateView(clusterId: ClusterId): Promise<number> {
+  activateView = async (clusterId: ClusterId): Promise<number> => {
     const cluster = clusterStore.getById(clusterId);
     if (!cluster) {
       return;
@@ -90,8 +96,8 @@ export class WindowManager {
         isLoadedBefore: isLoadedBefore,
       });
       if (prevActiveView !== view) {
-        cluster.activate(); // refresh + reconnect when required
         this.activeView = view;
+        cluster.activate(); // refresh + reconnect when required
         if (!isLoadedBefore) {
           await when(() => cluster.initialized);
           await view.loadURL(cluster.webContentUrl);
