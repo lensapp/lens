@@ -334,13 +334,14 @@ export class Cluster implements ClusterModel {
     })
   }
 
-  pushState = (clusterState = this.getState()) => {
-    logger.debug(`[CLUSTER]: push-state`, clusterState);
+  pushState = (state = this.getState()): ClusterState => {
+    logger.debug(`[CLUSTER]: push-state`, state);
     broadcastIpc({
       // webContentId: viewId, // todo: send to cluster-view only
       channel: "cluster:state",
-      args: [clusterState],
-    })
+      args: [state],
+    });
+    return state;
   }
 
   // get cluster system meta, e.g. use in "logger"
