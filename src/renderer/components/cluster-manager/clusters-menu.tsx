@@ -21,7 +21,6 @@ import { Tooltip, TooltipContent } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 
-// fixme: refresh all cluster-icon badges in background (events-count per cluster)
 // fixme: allow to rearrange clusters with drag&drop
 
 interface Props {
@@ -101,13 +100,12 @@ export class ClustersMenu extends React.Component<Props> {
         )}
         <div className="clusters flex column gaps">
           {clusters.map(cluster => {
-            const isActive = cluster.isReady && cluster.id === clusterStore.activeClusterId;
             return (
               <ClusterIcon
                 key={cluster.id}
                 showErrors={true}
                 cluster={cluster}
-                isActive={isActive}
+                isActive={cluster.id === clusterStore.activeClusterId}
                 onClick={() => this.showCluster(cluster.id)}
                 onContextMenu={() => this.showContextMenu(cluster)}
               />

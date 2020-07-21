@@ -5,7 +5,6 @@ import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 import logger from "./logger";
 
-// fixme: error when removing active cluster (can't activate next view => empty window)
 // fixme: remove switching view delay on first load
 
 export class WindowManager {
@@ -81,7 +80,7 @@ export class WindowManager {
       return;
     }
     try {
-      const activeView = this.activeView;
+      const prevActiveView = this.activeView;
       const isLoadedBefore = !!this.getView(clusterId);
       const view = this.initView(clusterId);
       logger.info(`[WINDOW-MANAGER]: activating cluster view`, {
@@ -90,7 +89,8 @@ export class WindowManager {
         contextName: cluster.contextName,
         isLoadedBefore: isLoadedBefore,
       });
-      if (activeView !== view) {
+      if (prevActiveView !== view) {
+        cluster.activate(); // refresh + reconnect when required
         this.activeView = view;
         if (!isLoadedBefore) {
           await when(() => cluster.initialized);
@@ -98,9 +98,9 @@ export class WindowManager {
           this.hideSplash();
         }
         // refresh position and hide previous active window
-        if (activeView) {
-          view.setBounds(activeView.getBounds());
-          activeView.hide();
+        if (prevActiveView) {
+          view.setBounds(prevActiveView.getBounds());
+          prevActiveView.hide();
         }
         view.show();
         return view.id;

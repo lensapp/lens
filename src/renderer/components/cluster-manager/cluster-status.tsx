@@ -13,6 +13,7 @@ import { clusterIpc } from "../../../common/cluster-ipc";
 @observer
 export class ClusterStatus extends React.Component {
   @observable authOutput: string[] = [];
+  @observable hasErrors = false;
 
   get cluster() {
     return clusterStore.activeCluster;
@@ -26,6 +27,9 @@ export class ClusterStatus extends React.Component {
     this.authOutput = ["Connecting ...\n"];
     ipcRenderer.on(`kube-auth:${this.clusterId}`, (evt, { data, stream }: KubeAuthProxyResponse) => {
       this.authOutput.push(`[${stream}]: ${data}`);
+      if (stream === "stderr") {
+        this.hasErrors = true;
+      }
     })
   }
 
@@ -39,20 +43,21 @@ export class ClusterStatus extends React.Component {
   }
 
   render() {
-    const { authOutput, cluster } = this;
-    const isError = cluster?.accessible === false;
+    const { authOutput, cluster, hasErrors } = this;
     return (
       <div className="ClusterStatus flex column gaps">
-        {!isError && <Icon material="cloud_queue"/>}
-        {isError && <Icon material="cloud_off" className="error"/>}
-        <h2>{cluster?.contextName}</h2>
+        {!hasErrors && <Icon material="cloud_queue"/>}
+        {hasErrors && <Icon material="cloud_off" className="error"/>}
+        <h2>
+          {cluster?.contextName}
+        </h2>
         <pre className="kube-auth-out">
           {authOutput.map((data, index) => {
             const error = data.startsWith("[stderr]");
             return <p key={index} className={cssNames({ error })}>{data}</p>
           })}
         </pre>
-        {isError && (
+        {hasErrors && (
           <Button
             primary className="box center"
             label="Reconnect"

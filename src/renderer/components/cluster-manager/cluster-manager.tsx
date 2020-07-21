@@ -20,7 +20,7 @@ export class ClusterManager extends React.Component<Props> {
   @observable isReady = false;
 
   async componentDidMount() {
-    clusterIpc.refresh.invokeFromRenderer();
+    await clusterIpc.activate.invokeFromRenderer();
     await App.init();
     this.isReady = true;
   }

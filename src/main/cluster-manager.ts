@@ -1,5 +1,5 @@
 import type http from "http"
-import { autorun, reaction } from "mobx";
+import { autorun } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { ClusterId, clusterStore } from "../common/cluster-store"
 import { Cluster } from "./cluster"
@@ -7,52 +7,36 @@ import { clusterIpc } from "../common/cluster-ipc";
 import logger from "./logger";
 
 export class ClusterManager {
-  protected activeClusterId: ClusterId;
-
   constructor(public readonly port: number) {
-    this.activeClusterId = clusterStore.activeClusterId;
-
     // auto-init clusters
     autorun(() => {
       clusterStore.clusters.forEach(cluster => {
         if (!cluster.initialized) {
           logger.info(`[CLUSTER-MANAGER]: initializing cluster`, cluster.getMeta());
-          cluster.init(port);
+          cluster.init(port); // connect to kube-auth-proxy, context handling
+          cluster.bindEvents(); // send push-updates to renderer
         }
       });
     });
 
-    // auto-bind events for active cluster
-    reaction(() => clusterStore.activeCluster, activeCluster => {
-      const prevCluster = clusterStore.getById(this.activeClusterId);
-      if (prevCluster) {
-        prevCluster.unbindEvents();
-      }
-      if (activeCluster) {
-        this.activeClusterId = activeCluster.id;
-        activeCluster.bindEvents();
-        activeCluster.refreshStatus();
-        activeCluster.pushState();
-      }
-    }, {
-      fireImmediately: true
-    });
-
     // auto-stop removed clusters
     autorun(() => {
-      const { removedClusters } = clusterStore;
-      if (removedClusters.size > 0) {
-        const meta = Array.from(removedClusters.values()).map(cluster => cluster.getMeta());
+      const removedClusters = Array.from(clusterStore.removedClusters.values());
+      if (removedClusters.length > 0) {
+        const meta = removedClusters.map(cluster => cluster.getMeta());
         logger.info(`[CLUSTER-MANAGER]: removing clusters`, meta);
-        removedClusters.forEach(cluster => cluster.disconnect());
-        removedClusters.clear();
+        removedClusters.forEach(cluster => {
+          cluster.disconnect();
+          cluster.unbindEvents();
+        });
+        clusterStore.removedClusters.clear();
       }
     }, {
       delay: 250
     });
 
     // listen for ipc-events that must/can be handled *only* in main-process (nodeIntegration=true)
-    clusterIpc.refresh.handleInMain();
+    clusterIpc.activate.handleInMain();
     clusterIpc.disconnect.handleInMain();
     clusterIpc.reconnect.handleInMain();
   }
