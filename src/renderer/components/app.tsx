@@ -2,7 +2,6 @@ import "./app.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { i18nStore } from "../i18n";
-import { configStore } from "../config.store";
 import { Terminal } from "./dock/terminal";
 import { Redirect, Route, Switch } from "react-router";
 import { Notifications } from "./notifications";
@@ -35,6 +34,7 @@ import { clusterStore } from "../../common/cluster-store";
 import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";
 import { Workspaces, workspacesRoute } from "./+workspaces";
 import { ErrorBoundary } from "./error-boundary";
+import { configStore } from "../config.store";
 
 @observer
 export class App extends React.Component {

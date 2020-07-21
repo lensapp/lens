@@ -3,7 +3,7 @@ import { observable, when } from "mobx";
 import { autobind, interval } from "./utils";
 import { apiBase } from "./api";
 
-// todo: use user-store.ts as isomorphic-store with config/settings for ui
+// todo: remove, merge with common/user-store.ts
 
 @autobind()
 export class ConfigStore {

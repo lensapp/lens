@@ -1,8 +1,6 @@
 import "./cluster-status.scss"
 import React from "react";
 import type { KubeAuthProxyResponse } from "../../../main/kube-auth-proxy";
-import { ClusterIpcChannel } from "../../../main/cluster";
-import { invokeIpc } from "../../../common/ipc";
 import { clusterStore } from "../../../common/cluster-store";
 import { ipcRenderer } from "electron";
 import { observable } from "mobx";
@@ -10,6 +8,7 @@ import { observer } from "mobx-react";
 import { Icon } from "../icon";
 import { Button } from "../button";
 import { cssNames } from "../../utils";
+import { clusterIpc } from "../../../common/cluster-ipc";
 
 @observer
 export class ClusterStatus extends React.Component {
@@ -36,7 +35,7 @@ export class ClusterStatus extends React.Component {
 
   reconnect = () => {
     this.authOutput = ["Reconnecting ...\n"];
-    invokeIpc(ClusterIpcChannel.RECONNECT, this.clusterId);
+    clusterIpc.reconnect.invokeFromRenderer(this.clusterId);
   }
 
   render() {
