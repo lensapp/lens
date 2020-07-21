@@ -109,7 +109,7 @@ export class Cluster implements ClusterModel {
     this.disposers.push(
       () => clearInterval(refreshStatusTimer),
       () => clearInterval(refreshEventsTimer),
-      reaction(() => this.getState(), this.pushState, {
+      reaction(this.getState, this.pushState, {
         fireImmediately: true
       })
     );
@@ -319,8 +319,8 @@ export class Cluster implements ClusterModel {
     })
   }
 
-  // serializable cluster-info for push-notifications
-  getState(): ClusterState {
+  // serializable cluster-state (mostly used for push-notifications)
+  getState = (): ClusterState => {
     const state: ClusterState = {
       ...this.toJSON(),
       initialized: this.initialized,

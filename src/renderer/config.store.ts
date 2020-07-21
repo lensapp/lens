@@ -3,6 +3,8 @@ import { observable, when } from "mobx";
 import { autobind, interval } from "./utils";
 import { apiBase } from "./api";
 
+// todo: use user-store.ts as isomorphic-store with config/settings for ui
+
 @autobind()
 export class ConfigStore {
   protected updater = interval(60, this.load);
