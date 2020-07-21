@@ -43,9 +43,9 @@ export async function invokeIpc<R = any>(channel: IpcChannel, ...args: any[]): P
 }
 
 // todo: make isomorphic api
-export function handleIpc<T extends any[]>(channel: IpcChannel, handler: IpcMessageHandler<T>, options: IpcHandleOpts = {}) {
+export function handleIpc(channel: IpcChannel, handler: IpcMessageHandler, options: IpcHandleOpts = {}) {
   const { timeout = 0 } = options;
-  ipcMain.handle(channel, async (event, ...args: T) => {
+  ipcMain.handle(channel, async (event, ...args) => {
     logger.info(`[IPC]: handle "${channel}"`, { args });
     return new Promise(async (resolve, reject) => {
       let timerId;
@@ -64,4 +64,22 @@ export function handleIpc<T extends any[]>(channel: IpcChannel, handler: IpcMess
       }
     })
   })
+}
+
+export interface IpcPairOptions {
+  channel: IpcChannel
+  handle?: IpcMessageHandler
+  options?: IpcHandleOpts
+}
+
+export function createIpcChannel({ channel, ...initOpts }: IpcPairOptions) {
+  return {
+    handleInMain: (opts: Partial<Omit<IpcPairOptions, "channel">> = {}) => {
+      const { handle = initOpts.handle, options = initOpts.options } = opts;
+      return handleIpc(channel, handle, options);
+    },
+    invokeFromRenderer: (...args: any[]) => {
+      return invokeIpc(channel, ...args);
+    },
+  }
 }

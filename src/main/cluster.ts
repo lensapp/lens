@@ -13,12 +13,6 @@ import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from ".
 import request, { RequestPromiseOptions } from "request-promise-native"
 import logger from "./logger"
 
-export enum ClusterIpcChannel {
-  INIT = "cluster:init",
-  DISCONNECT = "cluster:disconnect",
-  RECONNECT = "cluster:reconnect",
-}
-
 export enum ClusterStatus {
   AccessGranted = 2,
   AccessDenied = 1,
@@ -341,7 +335,7 @@ export class Cluster implements ClusterModel {
   }
 
   pushState = (clusterState = this.getState()) => {
-    logger.info(`[CLUSTER]: push-state`, clusterState);
+    logger.debug(`[CLUSTER]: push-state`, clusterState);
     broadcastIpc({
       // webContentId: viewId, // todo: send to cluster-view only
       channel: "cluster:state",
@@ -354,6 +348,8 @@ export class Cluster implements ClusterModel {
     return {
       id: this.id,
       name: this.contextName,
+      initialized: this.initialized,
+      accessible: this.accessible,
     }
   }
 }

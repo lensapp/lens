@@ -2,10 +2,9 @@ import type http from "http"
 import { autorun, reaction } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { ClusterId, clusterStore } from "../common/cluster-store"
-import { handleIpc } from "../common/ipc";
-import { Cluster, ClusterIpcChannel } from "./cluster"
+import { Cluster } from "./cluster"
+import { clusterIpc } from "../common/cluster-ipc";
 import logger from "./logger";
-import { tracker } from "../common/tracker";
 
 export class ClusterManager {
   protected activeClusterId: ClusterId;
@@ -53,35 +52,15 @@ export class ClusterManager {
     });
 
     // listen for ipc-events that must/can be handled *only* in main-process (nodeIntegration=true)
-    handleIpc(ClusterIpcChannel.INIT, this.onClusterInit);
-    handleIpc(ClusterIpcChannel.DISCONNECT, this.onClusterDisconnect);
-    handleIpc(ClusterIpcChannel.RECONNECT, this.onClusterReconnect);
+    clusterIpc.refresh.handleInMain();
+    clusterIpc.disconnect.handleInMain();
+    clusterIpc.reconnect.handleInMain();
   }
 
   stop() {
     clusterStore.clusters.forEach((cluster: Cluster) => {
       cluster.disconnect();
     })
-  }
-
-  protected onClusterInit = async (id = clusterStore.activeClusterId) => {
-    const cluster = this.getCluster(id);
-    if (cluster) {
-      logger.info(`[CLUSTER-MANAGER]: init cluster`, cluster.getMeta());
-      tracker.event("cluster", "activate");
-      await cluster.refreshStatus();
-      cluster.pushState();
-    }
-  }
-
-  protected onClusterDisconnect = (id: ClusterId) => {
-    tracker.event("cluster", "stop");
-    this.getCluster(id)?.disconnect();
-  }
-
-  protected onClusterReconnect = (id: ClusterId) => {
-    tracker.event("cluster", "reconnect");
-    this.getCluster(id)?.reconnect();
   }
 
   protected getCluster(id: ClusterId) {
