@@ -133,9 +133,13 @@ export class NodeShellSession extends ShellSession {
   }
 }
 
-export async function open(socket: WebSocket, cluster: Cluster, nodeName?: string): Promise<ShellSession> {
+export async function openShell(socket: WebSocket, cluster: Cluster, nodeName?: string): Promise<ShellSession> {
+  let shell: ShellSession;
   if (nodeName) {
-    return new NodeShellSession(socket, cluster, nodeName)
+    shell = new NodeShellSession(socket, cluster, nodeName)
+  } else {
+    shell = new ShellSession(socket, cluster);
   }
-  return new ShellSession(socket, cluster);
+  shell.open()
+  return shell;
 }

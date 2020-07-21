@@ -3,7 +3,7 @@ import http from "http";
 import httpProxy from "http-proxy";
 import url from "url";
 import * as WebSocket from "ws"
-import * as nodeShell from "./node-shell-session"
+import { openShell } from "./node-shell-session";
 import { Router } from "./router"
 import { ClusterManager } from "./cluster-manager"
 import { ContextHandler } from "./context-handler";
@@ -96,10 +96,10 @@ export class LensProxy {
 
   protected createWsListener(): WebSocket.Server {
     const ws = new WebSocket.Server({ noServer: true })
-    return ws.on("connection", (async (socket: WebSocket, req: http.IncomingMessage) => {
+    return ws.on("connection", ((socket: WebSocket, req: http.IncomingMessage) => {
       const cluster = this.clusterManager.getClusterForRequest(req);
       const nodeParam = url.parse(req.url, true).query["node"]?.toString();
-      await nodeShell.open(socket, cluster, nodeParam);
+      openShell(socket, cluster, nodeParam);
     }));
   }
 
