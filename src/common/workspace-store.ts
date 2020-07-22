@@ -55,7 +55,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @action
-  public saveWorkspace(workspace: Workspace) {
+  saveWorkspace(workspace: Workspace) {
     const id = workspace.id;
     const existingWorkspace = this.getById(id);
     if (existingWorkspace) {
@@ -66,7 +66,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @action
-  public removeWorkspace(id: WorkspaceId) {
+  removeWorkspace(id: WorkspaceId) {
     const workspace = this.getById(id);
     if (!workspace) return;
     if (this.isDefault(id)) {
