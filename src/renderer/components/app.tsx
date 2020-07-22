@@ -37,6 +37,7 @@ import { clusterIpc } from "../../common/cluster-ipc";
 import { clusterStore } from "../../common/cluster-store";
 import { ClusterStatus } from "./cluster-manager/cluster-status";
 import { clusterStatusRoute, clusterStatusURL } from "./cluster-manager/cluster-status.route";
+import { Preferences, preferencesRoute } from "./+preferences";
 import { navigation } from "../navigation";
 import { CubeSpinner } from "./spinner";
 
@@ -85,6 +86,7 @@ export class App extends React.Component {
       <ErrorBoundary>
         <Switch>
           <Route component={LandingPage} {...landingRoute}/>
+          <Route component={Preferences} {...preferencesRoute}/>
           <Route component={Workspaces} {...workspacesRoute}/>
           <Route component={AddCluster} {...addClusterRoute}/>
           <Route component={Cluster} {...clusterRoute}/>

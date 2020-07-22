@@ -5,8 +5,13 @@ import migrations from "../migrations/user-store"
 import { getAppVersion } from "./utils/app-version";
 import { tracker } from "./tracker";
 
-// todo: merge with common/user-store.ts
+// todo: merge with config.store.ts + theme.store.ts
 // fixme: detect new contexts from .kube/config since last open
+
+export enum ThemeType {
+  LIGHT = "light",
+  DARK = "dark",
+}
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -16,7 +21,7 @@ export interface UserStoreModel {
 
 export interface UserPreferences {
   httpsProxy?: string;
-  colorTheme?: string | "dark";
+  colorTheme?: string | "dark" | "light";
   allowUntrustedCAs?: boolean;
   allowTelemetry?: boolean;
   downloadMirror?: string | "default";
@@ -41,8 +46,10 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @observable preferences: UserPreferences = {
     allowTelemetry: true,
+    allowUntrustedCAs: false,
     colorTheme: "dark",
     downloadMirror: "default",
+    httpsProxy: "",
   };
 
   get isNewVersion() {

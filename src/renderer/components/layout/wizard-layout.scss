@@ -1,5 +1,5 @@
 .WizardLayout {
-  --flex-gap: #{$padding * 2};
+  $spacing: $padding * 2;
 
   position: relative;
   padding: $padding * 3;
@@ -8,8 +8,9 @@
   grid-template-columns: 1fr 40%;
 
   > .content-col {
-    padding: var(--flex-gap);
-    margin-right: var(--flex-gap);
+    --flex-gap: #{$spacing};
+    padding: $spacing;
+    margin-right: $spacing;
     background-color: var(--clusters-menu-bgc);
     border-radius: $radius;
 
@@ -22,7 +23,8 @@
 
   > .info-col {
     @include hidden-scrollbar;
-    padding: var(--flex-gap);
+    --flex-gap: #{$spacing};
+    padding: $spacing;
     border-left: 1px solid #353a3e;
   }
 

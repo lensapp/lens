@@ -206,7 +206,10 @@ export default {
     loadHubRepositories: async function() {
       const res = await this.request({ uri: "https://hub.helm.sh/assets/js/repos.json"}).catch((error) => { this.hubRepositories = [] })
       this.hubRepositories = res.body.data.sort(this.repoCompare).map((repo) => {
-        return { text: repo.name, value: repo.name+"|"+repo.url}
+        return {
+          text: repo.name,
+          value: repo.name+"|"+repo.url
+        }
       })
     }
   },
