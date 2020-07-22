@@ -1,113 +1,71 @@
+import type { WindowManager } from "./window-manager";
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
+import { broadcastIpc } from "../common/ipc";
 import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
+import { clusterStore } from "../common/cluster-store";
+import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
+import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
+import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
+import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
 
-// todo: refactor + split menu sections to separated files, e.g. menus/file.menu.ts
+export function initMenu(windowManager: WindowManager) {
+  const menuItems: MenuItemConstructorOptions[] = [];
 
-export interface MenuOptions {
-  logoutHook: any;
-  addClusterHook: any;
-  clusterSettingsHook: any;
-  showWhatsNewHook: any;
-  showPreferencesHook: any;
-  // all the above are really () => void type functions
-}
+  function navigate(url: string) {
+    const activeClusterId = clusterStore.activeClusterId;
+    const view = windowManager.getView(activeClusterId);
+    if (view) {
+      broadcastIpc({
+        channel: "menu:navigate",
+        webContentId: view.id,
+        args: [url],
+      });
+    }
+  }
 
-function setClusterSettingsEnabled(enabled: boolean) {
-  const menuIndex = isMac ? 1 : 0
-  Menu.getApplicationMenu().items[menuIndex].submenu.items[1].enabled = enabled
-}
+  function macOnly(menuItems: MenuItemConstructorOptions[]): MenuItemConstructorOptions[] {
+    if (!isMac) return [];
+    return menuItems;
+  }
 
-export function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow) {
-  const appInfo = [
-    `${appName}: ${app.getVersion()}`,
-    `Electron: ${process.versions.electron}`,
-    `Chrome: ${process.versions.chrome}`,
-    `Copyright 2020 Lakend Labs, Inc.`,
-  ]
-  dialog.showMessageBoxSync(browserWindow, {
-    title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
-    type: "info",
-    buttons: ["Close"],
-    message: `Lens`,
-    detail: appInfo.join("\r\n")
-  })
-}
-
-/**
- * Constructs the menu based on the example at: https://electronjs.org/docs/api/menu#main-process
- * Menu items are constructed piece-by-piece to have slightly better control on individual sub-menus
- */
-export default function initMenu(opts: Partial<MenuOptions> = {}) {
-  const mt: MenuItemConstructorOptions[] = [];
-  const macAppMenu: MenuItemConstructorOptions = {
-    label: app.getName(),
+  // "File" submenu
+  menuItems.push({
+    label: isMac ? app.getName() : "File",
     submenu: [
       {
-        label: "About Lens",
-        click: showAbout
+        label: 'Add Cluster',
+        click() {
+          navigate(addClusterURL())
+        }
+      },
+      {
+        label: 'Cluster Settings',
+        click() {
+          navigate(clusterSettingsURL())
+        }
       },
       { type: 'separator' },
       {
         label: 'Preferences',
-        click: opts.showPreferencesHook,
-        enabled: true
+        click() {
+          navigate(preferencesURL())
+        }
       },
-      { type: 'separator' },
-      { role: 'services' },
-      { type: 'separator' },
-      { role: 'hide' },
-      { role: 'hideOthers' },
-      { role: 'unhide' },
+      ...macOnly([
+        { type: 'separator' },
+        { role: 'services' },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideOthers' },
+        { role: 'unhide' },
+      ]),
       { type: 'separator' },
       { role: 'quit' }
     ]
-  };
-  if (isMac) {
-    mt.push(macAppMenu);
-  }
+  });
 
-  let fileMenu: MenuItemConstructorOptions;
-  if (isMac) {
-    fileMenu = {
-      label: 'File',
-      submenu: [{
-        label: 'Add Cluster...',
-        click: opts.addClusterHook,
-      },
-        {
-          label: 'Cluster Settings',
-          click: opts.clusterSettingsHook,
-          enabled: false
-        }
-      ]
-    }
-  } else {
-    fileMenu = {
-      label: 'File',
-      submenu: [
-        {
-          label: 'Add Cluster...',
-          click: opts.addClusterHook,
-        },
-        {
-          label: 'Cluster Settings',
-          click: opts.clusterSettingsHook,
-          enabled: false
-        },
-        { type: 'separator' },
-        {
-          label: 'Preferences',
-          click: opts.showPreferencesHook,
-          enabled: true
-        },
-        { type: 'separator' },
-        { role: 'quit' }
-      ]
-    }
-  }
-  mt.push(fileMenu);
-
-  const editMenu: MenuItemConstructorOptions = {
+  // "Edit" submenu
+  menuItems.push({
     label: 'Edit',
     submenu: [
       { role: 'undo' },
@@ -120,10 +78,10 @@ export default function initMenu(opts: Partial<MenuOptions> = {}) {
       { type: 'separator' },
       { role: 'selectAll' },
     ]
-  };
-  mt.push(editMenu);
+  });
 
-  const viewMenu: MenuItemConstructorOptions = {
+  // "View" submenu
+  menuItems.push({
     label: 'View',
     submenu: [
       {
@@ -155,20 +113,26 @@ export default function initMenu(opts: Partial<MenuOptions> = {}) {
       { type: 'separator' },
       { role: 'togglefullscreen' }
     ]
-  };
-  mt.push(viewMenu);
+  })
 
-  const helpMenu: MenuItemConstructorOptions = {
+  // "Help" submenu
+  menuItems.push({
     role: 'help',
     submenu: [
       {
-        label: 'License',
+        label: "What's new?",
+        click() {
+          navigate(whatsNewURL())
+        },
+      },
+      {
+        label: "License",
         click: async () => {
           shell.openExternal('https://lakendlabs.com/licenses/lens-eula.md');
         },
       },
       {
-        label: 'Community Slack',
+        label: "Community Slack",
         click: async () => {
           shell.openExternal(slackUrl);
         },
@@ -180,27 +144,26 @@ export default function initMenu(opts: Partial<MenuOptions> = {}) {
         },
       },
       {
-        label: "What's new?",
-        click: opts.showWhatsNewHook,
-      },
-      ...(!isMac ? [{
         label: "About Lens",
-        click: showAbout
-      } as MenuItemConstructorOptions] : [])
+        click(menuItem: MenuItem, browserWindow: BrowserWindow) {
+          const appInfo = [
+            `${appName}: ${app.getVersion()}`,
+            `Electron: ${process.versions.electron}`,
+            `Chrome: ${process.versions.chrome}`,
+            `Copyright 2020 Lakend Labs, Inc.`,
+          ]
+          dialog.showMessageBoxSync(browserWindow, {
+            title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
+            type: "info",
+            buttons: ["Close"],
+            message: `Lens`,
+            detail: appInfo.join("\r\n")
+          })
+        }
+      }
     ]
-  };
-  mt.push(helpMenu);
+  });
 
-  const menu = Menu.buildFromTemplate(mt);
+  const menu = Menu.buildFromTemplate(menuItems);
   Menu.setApplicationMenu(menu);
-
-  // const promiseIpc = new PromiseIpc({ timeout: 2000 })
-  //
-  // promiseIpc.on("enableClusterSettingsMenuItem", (clusterId: string) => {
-  //   setClusterSettingsEnabled(true)
-  // });
-  //
-  // promiseIpc.on("disableClusterSettingsMenuItem", () => {
-  //   setClusterSettingsEnabled(false)
-  // });
 }

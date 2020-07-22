@@ -33,7 +33,7 @@ export class WhatsNew extends React.Component {
         </div>
         <div className="bottom">
           <Button
-            primary
+            primary autoFocus
             label={<Trans>Ok, got it!</Trans>}
             onClick={this.ok}
           />

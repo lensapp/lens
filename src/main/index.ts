@@ -5,7 +5,7 @@ import "../common/prometheus-providers"
 import { app, dialog } from "electron"
 import { appName, appProto, staticDir, staticProto } from "../common/vars";
 import path from "path"
-import initMenu from "./menu"
+import { initMenu } from "./menu"
 import { LensProxy } from "./lens-proxy"
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
@@ -41,7 +41,6 @@ async function main() {
   const updater = new AppUpdater()
   updater.start();
 
-  initMenu();
   registerFileProtocol(appProto, app.getPath("userData"));
   registerFileProtocol(staticProto, staticDir);
 
@@ -76,6 +75,7 @@ async function main() {
   // create window manager and open app
   windowManager = new WindowManager(proxyPort);
   windowManager.showSplash();
+  initMenu(windowManager);
 }
 
 app.on("ready", main);
