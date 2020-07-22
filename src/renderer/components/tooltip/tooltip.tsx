@@ -7,7 +7,7 @@ import { createPortal } from "react-dom"
 import { autobind, cssNames } from "../../utils";
 import { Animate } from "../animate";
 
-// todo: refactor -- better positioning + remove "flying effect"
+// fixme: refactor -- better positioning + remove "flying effect"
 // todo: always render outside of parent element ("overflow: auto" should not affect tooltip)
 
 export interface TooltipProps {

@@ -187,6 +187,14 @@ msgstr ""
 msgid "Allow Privilege Escalation"
 msgstr ""
 
+#: src/renderer/components/+preferences/preferences.tsx:76
+msgid "Allow telemetry & usage tracking"
+msgstr ""
+
+#: src/renderer/components/+preferences/preferences.tsx:68
+msgid "Allow untrusted Certificate Authorities"
+msgstr ""
+
 #: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:51
 msgid "Allowed CSI Drivers"
 msgstr ""
@@ -378,6 +386,10 @@ msgstr "Отмена"
 msgid "Capacity"
 msgstr "Емкость"
 
+#: src/renderer/components/+preferences/preferences.tsx:67
+msgid "Certificate Trust"
+msgstr ""
+
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:59
 msgid "Certificates"
 msgstr "Сертификаты"
@@ -439,6 +451,10 @@ msgstr "IP-адрес кластера"
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/issuers.tsx:40
 msgid "Cluster Issuers"
+msgstr ""
+
+#: src/renderer/components/+preferences/preferences.tsx:50
+msgid "Color Theme"
 msgstr ""
 
 #: src/renderer/components/+workloads-pods/pod-details-container.tsx:81
@@ -686,6 +702,10 @@ msgstr ""
 msgid "DaemonSets"
 msgstr "DaemonSets"
 
+#: src/renderer/components/+preferences/preferences.tsx:22
+msgid "Dark"
+msgstr ""
+
 #: src/renderer/components/+config-maps/config-map-details.tsx:69
 #: src/renderer/components/+config-secrets/secret-details.tsx:78
 msgid "Data"
@@ -745,13 +765,25 @@ msgstr "Диск"
 msgid "Disk:"
 msgstr "Диск:"
 
+#: src/renderer/components/+preferences/preferences.tsx:72
+msgid "Does not affect cluster communications!"
+msgstr ""
+
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:89
 msgid "Domains"
 msgstr "Домены"
 
+#: src/renderer/components/+preferences/preferences.tsx:53
+msgid "Download Mirror"
+msgstr ""
+
 #: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:91
 msgid "Download file"
 msgstr "Скачать файл"
+
+#: src/renderer/components/+preferences/preferences.tsx:54
+msgid "Download mirror for kubectl"
+msgstr ""
 
 #: src/renderer/components/+nodes/node-menu.tsx:59
 #: src/renderer/components/+nodes/node-menu.tsx:60
@@ -902,6 +934,10 @@ msgstr ""
 msgid "Get started by associating one or more clusters to Lens."
 msgstr ""
 
+#: src/renderer/components/+preferences/preferences.tsx:39
+#~ msgid "Global Lens Settings page"
+#~ msgstr ""
+
 #: src/renderer/components/+custom-resources/crd-details.tsx:32
 #: src/renderer/components/+custom-resources/crd-list.tsx:58
 #: src/renderer/components/+custom-resources/crd-list.tsx:74
@@ -916,8 +952,16 @@ msgstr "Группы"
 msgid "HPA"
 msgstr "HPA"
 
+#: src/renderer/components/+preferences/preferences.tsx:61
+msgid "HTTP Proxy"
+msgstr ""
+
 #: src/renderer/components/+add-cluster/add-cluster.tsx:178
 msgid "HTTP Proxy server. Used for communicating with Kubernetes API."
+msgstr ""
+
+#: src/renderer/components/+preferences/preferences.tsx:56
+msgid "Helm"
 msgstr ""
 
 #: src/renderer/components/dock/install-chart.tsx:113
@@ -1142,8 +1186,16 @@ msgstr "Увиденно в последний раз"
 msgid "Last transition time: {lastTransitionTime}"
 msgstr "Последнее изменение: {lastTransitionTime}"
 
+#: src/renderer/components/+preferences/preferences.tsx:42
+msgid "Lens Global Settings"
+msgstr ""
+
 #: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:146
 msgid "Level"
+msgstr ""
+
+#: src/renderer/components/+preferences/preferences.tsx:23
+msgid "Light"
 msgstr ""
 
 #: src/renderer/components/+events/events.tsx:59
@@ -1409,6 +1461,10 @@ msgstr "Namespaces"
 #: src/renderer/components/+namespaces/namespace-select.tsx:99
 msgid "Namespaces: {0}"
 msgstr "Namespaces: {0}"
+
+#: src/renderer/components/+preferences/preferences.tsx:71
+msgid "Needed with some corporate proxies that do certificate re-writing."
+msgstr ""
 
 #: src/renderer/components/+network-ingresses/ingress-details.tsx:66
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:13
@@ -1676,6 +1732,10 @@ msgstr ""
 msgid "Ports"
 msgstr "Порты"
 
+#: src/renderer/components/+preferences/preferences.tsx:37
+msgid "Preferences"
+msgstr ""
+
 #: src/renderer/components/+workloads-pods/pod-details.tsx:93
 msgid "Priority Class"
 msgstr "Класс приоритета"
@@ -1693,6 +1753,10 @@ msgstr ""
 #: src/renderer/components/+storage-classes/storage-classes.tsx:35
 msgid "Provisioner"
 msgstr "Комиссия"
+
+#: src/renderer/components/+preferences/preferences.tsx:64
+msgid "Proxy is used only for non-cluster communication."
+msgstr ""
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:172
 msgid "Proxy settings"
@@ -2274,6 +2338,14 @@ msgstr "TLS"
 msgid "Taints"
 msgstr "Метки блокировки"
 
+#: src/renderer/components/+preferences/preferences.tsx:75
+msgid "Telemetry & Usage Tracking"
+msgstr ""
+
+#: src/renderer/components/+preferences/preferences.tsx:78
+msgid "Telemetry & usage data is collected to continuously improve the Lens experience."
+msgstr ""
+
 #: src/renderer/components/dock/terminal.store.ts:29
 msgid "Terminal"
 msgstr "Терминал"
@@ -2300,6 +2372,10 @@ msgstr "Это поле может содержать только латинс�
 
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:84
 msgid "This is the quick launch menu."
+msgstr ""
+
+#: src/renderer/components/+preferences/preferences.tsx:70
+msgid "This will make Lens to trust ANY certificate authority without any validations."
 msgstr ""
 
 #: src/renderer/components/+network-policies/network-policy-details.tsx:59
@@ -2340,6 +2416,10 @@ msgstr "Транзит"
 #: src/renderer/components/+workloads-pods/pod-details.tsx:140
 msgid "Type"
 msgstr "Тип"
+
+#: src/renderer/components/+preferences/preferences.tsx:62
+msgid "Type HTTP proxy url (example: http://proxy.acme.org:8080)"
+msgstr ""
 
 #: src/renderer/components/kube-object/kube-object-meta.tsx:26
 msgid "UID"
@@ -2529,6 +2609,10 @@ msgstr "тому назад"
 #: src/renderer/components/item-object-list/item-list-layout.tsx:180
 msgid "and <0>{tailCount}</0> more"
 msgstr "и <0>{tailCount}</0> ещё"
+
+#: src/renderer/components/+preferences/preferences.tsx:42
+msgid "applicable to all clusters"
+msgstr ""
 
 #: src/renderer/components/+nodes/nodes.tsx:55
 msgid "cores:"

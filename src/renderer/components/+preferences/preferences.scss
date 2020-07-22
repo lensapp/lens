@@ -1,3 +1,9 @@
 .Preferences {
+  --flex-gap: #{$padding};
 
+  h2 {
+    &:not(:first-child) {
+      margin-top: $padding * 3;
+    }
+  }
 }

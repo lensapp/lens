@@ -17,12 +17,13 @@ export type HelmRepo = {
 }
 
 export class HelmRepoManager extends Singleton {
-  public static cache = {}
+  static cache = {}
+
   protected helmEnv: HelmEnv
   protected initialized: boolean
 
   public async init() {
-    const helm = await helmCli.binaryPath()
+    await helmCli.ensureBinary();
     if (!this.initialized) {
       this.helmEnv = await this.parseHelmEnv()
       await this.update()
@@ -95,53 +96,11 @@ export class HelmRepoManager extends Singleton {
     return stdout
   }
 
-  protected async addRepositories(repositories: HelmRepo[]) {
-    const currentRepositories = await this.repositories()
-    repositories.forEach(async (repo: HelmRepo) => {
-      try {
-        const repoExists = currentRepositories.find((currentRepo: HelmRepo) => {
-          return currentRepo.url == repo.url
-        })
-        if (!repoExists) {
-          await this.addRepo(repo)
-        }
-      } catch (error) {
-        logger.error(JSON.stringify(error))
-      }
-    });
-  }
-
-  protected async pruneRepositories(repositoriesToKeep: HelmRepo[]) {
-    const repositories = await this.repositories()
-    repositories.filter((repo: HelmRepo) => {
-      return repositoriesToKeep.find((repoToKeep: HelmRepo) => {
-        return repo.name == repoToKeep.name
-      }) === undefined
-    }).forEach(async (repo: HelmRepo) => {
-      try {
-        const output = await this.removeRepo(repo)
-        logger.debug(output)
-      } catch (error) {
-        logger.error(error)
-      }
-    })
-  }
-
   public async addRepo(repository: HelmRepo) {
     const helm = await helmCli.binaryPath()
     logger.debug(`${helm} repo add ${repository.name} ${repository.url}`)
 
     const { stdout } = await promiseExec(`"${helm}" repo add ${repository.name} ${repository.url}`).catch((error) => {
-      throw(error.stderr)
-    })
-    return stdout
-  }
-
-  public async removeRepo(repository: HelmRepo): Promise<string> {
-    const helm = await helmCli.binaryPath()
-    logger.debug(`${helm} repo remove ${repository.name} ${repository.url}`)
-
-    const { stdout, stderr } = await promiseExec(`"${helm}" repo remove ${repository.name}`).catch((error) => {
       throw(error.stderr)
     })
     return stdout
