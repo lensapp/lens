@@ -41,8 +41,17 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     return Array.from(this.workspaces.values());
   }
 
+  isDefault(id: WorkspaceId) {
+    return id === WorkspaceStore.defaultId;
+  }
+
   getById(id: WorkspaceId): Workspace {
     return this.workspaces.get(id);
+  }
+
+  @action
+  setActive(id = WorkspaceStore.defaultId) {
+    this.currentWorkspaceId = id;
   }
 
   @action
@@ -60,11 +69,11 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   public removeWorkspace(id: WorkspaceId) {
     const workspace = this.getById(id);
     if (!workspace) return;
-    if (id === WorkspaceStore.defaultId) {
+    if (this.isDefault(id)) {
       throw new Error("Cannot remove default workspace");
     }
-    if (id === this.currentWorkspaceId) {
-      this.currentWorkspaceId = WorkspaceStore.defaultId;
+    if (this.currentWorkspaceId === id) {
+      this.currentWorkspaceId = WorkspaceStore.defaultId; // reset to default
     }
     this.workspaces.delete(id);
     clusterStore.removeByWorkspaceId(id)
