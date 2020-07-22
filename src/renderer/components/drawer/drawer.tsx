@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import { cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import { Animate, AnimateName } from "../animate";
-import { browserHistory } from "../../navigation";
+import { history } from "../../navigation";
 import { themeStore } from "../../theme.store";
 
 export interface DrawerProps {
@@ -36,7 +36,7 @@ export class Drawer extends React.Component<DrawerProps> {
   private scrollElem: HTMLElement
   private scrollPos = new Map<string, number>();
 
-  private stopListenLocation = browserHistory.listen(() => {
+  private stopListenLocation = history.listen(() => {
     this.restoreScrollPos();
   });
 
@@ -55,13 +55,13 @@ export class Drawer extends React.Component<DrawerProps> {
 
   saveScrollPos = () => {
     if (!this.scrollElem) return;
-    const key = browserHistory.location.key;
+    const key = history.location.key;
     this.scrollPos.set(key, this.scrollElem.scrollTop);
   }
 
   restoreScrollPos = () => {
     if (!this.scrollElem) return;
-    const key = browserHistory.location.key;
+    const key = history.location.key;
     this.scrollElem.scrollTop = this.scrollPos.get(key) || 0;
   }
 

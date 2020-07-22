@@ -1,11 +1,19 @@
 // Navigation helpers
 
+import { ipcRenderer } from "electron";
 import { compile } from "path-to-regexp"
-import { createBrowserHistory, Location, LocationDescriptor } from "history";
+import { createBrowserHistory, createMemoryHistory, Location, LocationDescriptor } from "history";
 import { createObservableHistory } from "mobx-observable-history";
 
-export const browserHistory = createBrowserHistory();
-export const navigation = createObservableHistory(browserHistory);
+export const history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
+export const navigation = createObservableHistory(history);
+
+if (ipcRenderer) {
+  // subscribe for navigation via menu.ts
+  ipcRenderer.on("menu:navigate", (event, path: string) => {
+    navigate(path);
+  });
+}
 
 export function navigate(location: LocationDescriptor) {
   navigation.location = location as Location;

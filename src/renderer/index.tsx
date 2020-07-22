@@ -7,7 +7,7 @@ import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
 import { clusterStore } from "../common/cluster-store";
 import { I18nProvider } from "@lingui/react";
-import { browserHistory } from "./navigation";
+import { history } from "./navigation";
 import { isMac } from "../common/vars";
 import { _i18n } from "./i18n";
 import { ClusterManager } from "./components/cluster-manager";
@@ -32,7 +32,7 @@ class LensApp extends React.Component {
   render() {
     return (
       <I18nProvider i18n={_i18n}>
-        <Router history={browserHistory}>
+        <Router history={history}>
           <ErrorBoundary>
             <Switch>
               {userStore.isNewVersion && <Route component={WhatsNew}/>}

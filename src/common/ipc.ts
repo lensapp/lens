@@ -69,16 +69,24 @@ export function handleIpc(channel: IpcChannel, handler: IpcMessageHandler, optio
 export interface IpcPairOptions {
   channel: IpcChannel
   handle?: IpcMessageHandler
-  options?: IpcHandleOpts
+  autoBind?: boolean;
+  timeout?: number;
 }
 
-export function createIpcChannel({ channel, ...initOpts }: IpcPairOptions) {
+// todo: improve api
+export function createIpcChannel({ channel, autoBind, ...initOpts }: IpcPairOptions) {
+  const bindHandler = (opts: { handler?: IpcMessageHandler, options?: IpcHandleOpts } = {}) => {
+    const handler = opts.handler || initOpts.handle || Function;
+    const options = opts.options || { timeout: initOpts.timeout };
+    handleIpc(channel, handler, options);
+  };
+  if (autoBind) {
+    bindHandler();
+  }
   return {
-    handleInMain: (opts: Partial<Omit<IpcPairOptions, "channel">> = {}) => {
-      const { handle = initOpts.handle, options = initOpts.options } = opts;
-      return handleIpc(channel, handle, options);
-    },
-    invokeFromRenderer: (...args: any[]) => {
+    channel: channel,
+    handleInMain: bindHandler,
+    invokeFromRenderer(...args: any[]) {
       return invokeIpc(channel, ...args);
     },
   }
