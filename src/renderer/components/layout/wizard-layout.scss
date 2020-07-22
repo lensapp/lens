@@ -1,0 +1,32 @@
+.WizardLayout {
+  --flex-gap: #{$padding * 2};
+
+  position: relative;
+  padding: $padding * 3;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 40%;
+
+  > .content-col {
+    padding: var(--flex-gap);
+    margin-right: var(--flex-gap);
+    background-color: var(--clusters-menu-bgc);
+    border-radius: $radius;
+
+    > .error {
+      border-radius: $radius;
+      padding: $padding;
+      background-color: pink;
+    }
+  }
+
+  > .info-col {
+    @include hidden-scrollbar;
+    padding: var(--flex-gap);
+    border-left: 1px solid #353a3e;
+  }
+
+  a {
+    color: $colorInfo;
+  }
+}
