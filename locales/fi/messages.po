@@ -25,15 +25,19 @@ msgstr ""
 msgid "(as a percentage of request)"
 msgstr ""
 
+#: src/renderer/components/+workspaces/workspaces.tsx:108
+msgid "(current)"
+msgstr ""
+
 #: src/renderer/components/+network-policies/network-policy-details.tsx:88
 msgid "(empty) (Allowing the specific traffic to all pods in this namespace)"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:104
+#: src/renderer/components/+add-cluster/add-cluster.tsx:105
 msgid "(new)"
 msgstr ""
 
-#: src/renderer/components/item-object-list/item-list-layout.tsx:224
+#: src/renderer/components/item-object-list/item-list-layout.tsx:226
 msgid "<0>Filtered</0>: {itemsCount} / {allItemsCount}"
 msgstr ""
 
@@ -45,8 +49,12 @@ msgstr ""
 msgid "<0>{0}</0> successfully created"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:126
+#: src/renderer/components/+add-cluster/add-cluster.tsx:176
 msgid "A HTTP proxy server URL (format: http://<address>:<port>)"
+msgstr ""
+
+#: src/renderer/components/+workspaces/workspaces.tsx:84
+msgid "A single workspaces contains a list of clusters and their full configuration."
 msgstr ""
 
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:80
@@ -71,7 +79,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:118
+#: src/renderer/components/+add-cluster/add-cluster.tsx:168
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:99
 msgid "Add Cluster"
 msgstr ""
@@ -84,11 +92,15 @@ msgstr ""
 msgid "Add RoleBinding"
 msgstr ""
 
+#: src/renderer/components/+workspaces/workspaces.tsx:125
+msgid "Add Workspace"
+msgstr ""
+
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:111
 msgid "Add bindings to {name}"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:137
+#: src/renderer/components/+add-cluster/add-cluster.tsx:187
 msgid "Add cluster"
 msgstr ""
 
@@ -145,6 +157,14 @@ msgstr ""
 #: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:44
 msgid "Age"
 msgstr ""
+
+#: src/renderer/components/+workspaces/workspaces.tsx:64
+msgid "All clusters within workspace will be cleared as well"
+msgstr ""
+
+#: src/renderer/components/+workspaces/workspaces.tsx:64
+#~ msgid "All clusters within workspace will be cleared as well."
+#~ msgstr ""
 
 #: src/renderer/components/+custom-resources/crd-list.tsx:56
 msgid "All groups"
@@ -218,6 +238,10 @@ msgstr ""
 
 #: src/renderer/components/layout/sidebar.tsx:93
 msgid "Apps"
+msgstr ""
+
+#: src/renderer/components/+workspaces/workspaces.tsx:61
+msgid "Are you sure you want remove workspace <0>{0}</0>?"
 msgstr ""
 
 #: src/renderer/components/+nodes/node-menu.tsx:41
@@ -333,6 +357,7 @@ msgstr ""
 msgid "CPU:"
 msgstr ""
 
+#: src/renderer/components/+workspaces/workspaces.tsx:119
 #: src/renderer/components/confirm-dialog/confirm-dialog.tsx:44
 #: src/renderer/components/dock/info-panel.tsx:97
 #: src/renderer/components/wizard/wizard.tsx:130
@@ -635,7 +660,7 @@ msgstr ""
 msgid "Custom Resources"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:110
+#: src/renderer/components/+add-cluster/add-cluster.tsx:111
 msgid "Custom.."
 msgstr ""
 
@@ -677,6 +702,7 @@ msgstr ""
 msgid "Definitions"
 msgstr ""
 
+#: src/renderer/components/+workspaces/workspaces.tsx:113
 #: src/renderer/components/menu/menu-actions.tsx:84
 msgid "Delete"
 msgstr ""
@@ -692,6 +718,7 @@ msgid "Deployments"
 msgstr ""
 
 #: src/renderer/components/+apps-helm-charts/helm-charts.tsx:65
+#: src/renderer/components/+workspaces/workspaces.tsx:118
 msgid "Description"
 msgstr ""
 
@@ -743,6 +770,7 @@ msgstr ""
 msgid "E-mail"
 msgstr ""
 
+#: src/renderer/components/+workspaces/workspaces.tsx:112
 #: src/renderer/components/menu/menu-actions.tsx:80
 #: src/renderer/components/menu/menu-actions.tsx:81
 msgid "Edit"
@@ -878,7 +906,7 @@ msgstr ""
 msgid "HPA"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:128
+#: src/renderer/components/+add-cluster/add-cluster.tsx:178
 msgid "HTTP Proxy server. Used for communicating with Kubernetes API."
 msgstr ""
 
@@ -1259,6 +1287,10 @@ msgstr ""
 msgid "Mounts"
 msgstr ""
 
+#: src/renderer/components/+workspaces/workspaces.tsx:36
+msgid "My Workspace"
+msgstr ""
+
 #: src/renderer/components/+apps-helm-charts/helm-charts.tsx:64
 #: src/renderer/components/+apps-releases/releases.tsx:87
 #: src/renderer/components/+config-autoscalers/hpa-details.tsx:49
@@ -1301,6 +1333,7 @@ msgstr ""
 #: src/renderer/components/+workloads-pods/pods.tsx:73
 #: src/renderer/components/+workloads-replicasets/replicasets.tsx:50
 #: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:40
+#: src/renderer/components/+workspaces/workspaces.tsx:117
 #: src/renderer/components/dock/edit-resource.tsx:90
 #: src/renderer/components/kube-object/kube-object-meta.tsx:20
 msgid "Name"
@@ -1419,7 +1452,7 @@ msgstr ""
 msgid "No issues found"
 msgstr ""
 
-#: src/renderer/components/item-object-list/item-list-layout.tsx:196
+#: src/renderer/components/item-object-list/item-list-layout.tsx:198
 msgid "No items found."
 msgstr ""
 
@@ -1558,7 +1591,7 @@ msgstr ""
 msgid "Persistent Volumes"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:51
+#: src/renderer/components/+add-cluster/add-cluster.tsx:52
 msgid "Please select kubeconfig"
 msgstr ""
 
@@ -1643,7 +1676,7 @@ msgstr ""
 msgid "Provisioner"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:122
+#: src/renderer/components/+add-cluster/add-cluster.tsx:172
 msgid "Proxy settings"
 msgstr ""
 
@@ -1726,7 +1759,7 @@ msgstr ""
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:60
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:60
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:64
-#: src/renderer/components/item-object-list/item-list-layout.tsx:179
+#: src/renderer/components/item-object-list/item-list-layout.tsx:181
 #: src/renderer/components/menu/menu-actions.tsx:49
 #: src/renderer/components/menu/menu-actions.tsx:85
 msgid "Remove"
@@ -1734,6 +1767,10 @@ msgstr ""
 
 #: src/renderer/components/+apps-releases/releases.tsx:65
 msgid "Remove <0>{releaseNames}</0>?"
+msgstr ""
+
+#: src/renderer/components/+workspaces/workspaces.tsx:51
+msgid "Remove Workspace"
 msgstr ""
 
 #: src/renderer/components/+config-secrets/add-secret-dialog.tsx:133
@@ -1752,7 +1789,7 @@ msgstr ""
 msgid "Remove selected bindings from ${name}"
 msgstr ""
 
-#: src/renderer/components/item-object-list/item-list-layout.tsx:275
+#: src/renderer/components/item-object-list/item-list-layout.tsx:277
 msgid "Remove selected items ({0})"
 msgstr ""
 
@@ -1811,7 +1848,7 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: src/renderer/components/item-object-list/item-list-layout.tsx:199
+#: src/renderer/components/item-object-list/item-list-layout.tsx:201
 msgid "Reset filters?"
 msgstr ""
 
@@ -1937,6 +1974,7 @@ msgstr ""
 #: src/renderer/components/+config-maps/config-map-details.tsx:78
 #: src/renderer/components/+config-secrets/secret-details.tsx:97
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:216
+#: src/renderer/components/+workspaces/workspaces.tsx:120
 #: src/renderer/components/dock/edit-resource.tsx:88
 msgid "Save"
 msgstr ""
@@ -2013,7 +2051,7 @@ msgstr ""
 msgid "Select a quota.."
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:119
+#: src/renderer/components/+add-cluster/add-cluster.tsx:169
 msgid "Select kubeconfig"
 msgstr ""
 
@@ -2416,6 +2454,10 @@ msgstr ""
 msgid "Welcome!"
 msgstr ""
 
+#: src/renderer/components/+workspaces/workspaces.tsx:79
+msgid "What is a Workspace?"
+msgstr ""
+
 #: src/renderer/components/+cluster/cluster-metric-switchers.tsx:19
 msgid "Worker"
 msgstr ""
@@ -2424,8 +2466,13 @@ msgstr ""
 msgid "Workloads"
 msgstr ""
 
-#: src/renderer/components/cluster-manager/bottom-bar.tsx:35
+#: src/renderer/components/+workspaces/workspace-menu.tsx:39
+#: src/renderer/components/+workspaces/workspaces.tsx:91
 msgid "Workspaces"
+msgstr ""
+
+#: src/renderer/components/+workspaces/workspaces.tsx:81
+msgid "Workspaces are used to organize number of clusters into logical groups."
 msgstr ""
 
 #: src/renderer/components/input/input.validators.ts:10
@@ -2461,7 +2508,7 @@ msgstr ""
 msgid "ago"
 msgstr ""
 
-#: src/renderer/components/item-object-list/item-list-layout.tsx:178
+#: src/renderer/components/item-object-list/item-list-layout.tsx:180
 msgid "and <0>{tailCount}</0> more"
 msgstr ""
 
@@ -2538,7 +2585,7 @@ msgstr ""
 msgid "{accountName} kubeconfig"
 msgstr ""
 
-#: src/renderer/components/item-object-list/item-list-layout.tsx:228
+#: src/renderer/components/item-object-list/item-list-layout.tsx:230
 msgid "{allItemsCount, plural, one {# item} other {# items}}"
 msgstr ""
 
@@ -2554,7 +2601,7 @@ msgstr ""
 msgid "{resourceType} <0>{resourceName}</0> updated."
 msgstr ""
 
-#: src/renderer/components/item-object-list/item-list-layout.tsx:179
+#: src/renderer/components/item-object-list/item-list-layout.tsx:181
 msgid "{selectedCount, plural, one {<0>Remove item <1>{selectedNames}</1>?</0>} other {<2>Remove <3>{selectedCount}</3> items <4>{selectedNames}</4> {tail}?</2>}}"
 msgstr ""
 
