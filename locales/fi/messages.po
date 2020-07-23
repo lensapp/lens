@@ -116,11 +116,11 @@ msgstr ""
 #~ msgid "Added repos"
 #~ msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:149
+#: src/renderer/components/+preferences/preferences.tsx:147
 msgid "Added repos:"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:108
+#: src/renderer/components/+preferences/preferences.tsx:106
 msgid "Adding helm branch <0>{0}</0> has failed: {1}"
 msgstr ""
 
@@ -202,11 +202,11 @@ msgstr ""
 msgid "Allow Privilege Escalation"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:177
+#: src/renderer/components/+preferences/preferences.tsx:175
 msgid "Allow telemetry & usage tracking"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:169
+#: src/renderer/components/+preferences/preferences.tsx:167
 msgid "Allow untrusted Certificate Authorities"
 msgstr ""
 
@@ -401,7 +401,7 @@ msgstr ""
 msgid "Capacity"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:168
+#: src/renderer/components/+preferences/preferences.tsx:166
 msgid "Certificate Trust"
 msgstr ""
 
@@ -464,7 +464,7 @@ msgstr ""
 msgid "Cluster Issuers"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:139
+#: src/renderer/components/+preferences/preferences.tsx:137
 msgid "Color Theme"
 msgstr ""
 
@@ -713,7 +713,7 @@ msgstr ""
 msgid "DaemonSets"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:40
+#: src/renderer/theme.store.ts:32
 msgid "Dark"
 msgstr ""
 
@@ -776,7 +776,7 @@ msgstr ""
 msgid "Disk:"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:173
+#: src/renderer/components/+preferences/preferences.tsx:171
 msgid "Does not affect cluster communications!"
 msgstr ""
 
@@ -784,7 +784,7 @@ msgstr ""
 msgid "Domains"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:142
+#: src/renderer/components/+preferences/preferences.tsx:140
 msgid "Download Mirror"
 msgstr ""
 
@@ -792,7 +792,7 @@ msgstr ""
 msgid "Download file"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:143
+#: src/renderer/components/+preferences/preferences.tsx:141
 msgid "Download mirror for kubectl"
 msgstr ""
 
@@ -958,7 +958,7 @@ msgstr ""
 msgid "HPA"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:162
+#: src/renderer/components/+preferences/preferences.tsx:160
 msgid "HTTP Proxy"
 msgstr ""
 
@@ -966,7 +966,7 @@ msgstr ""
 msgid "HTTP Proxy server. Used for communicating with Kubernetes API."
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:145
+#: src/renderer/components/+preferences/preferences.tsx:143
 msgid "Helm"
 msgstr ""
 
@@ -986,7 +986,7 @@ msgstr ""
 msgid "Helm Upgrade: {0}"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:61
+#: src/renderer/components/+preferences/preferences.tsx:50
 msgid "Helm branch <0>{0}</0> already in use"
 msgstr ""
 
@@ -1200,7 +1200,7 @@ msgstr ""
 msgid "Last transition time: {lastTransitionTime}"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:131
+#: src/renderer/components/+preferences/preferences.tsx:129
 msgid "Lens Global Settings"
 msgstr ""
 
@@ -1208,7 +1208,7 @@ msgstr ""
 msgid "Level"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:41
+#: src/renderer/theme.store.ts:33
 msgid "Light"
 msgstr ""
 
@@ -1476,7 +1476,7 @@ msgstr ""
 msgid "Namespaces: {0}"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:172
+#: src/renderer/components/+preferences/preferences.tsx:170
 msgid "Needed with some corporate proxies that do certificate re-writing."
 msgstr ""
 
@@ -1738,7 +1738,7 @@ msgstr ""
 msgid "Ports"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:126
+#: src/renderer/components/+preferences/preferences.tsx:124
 msgid "Preferences"
 msgstr ""
 
@@ -1760,7 +1760,7 @@ msgstr ""
 msgid "Provisioner"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:165
+#: src/renderer/components/+preferences/preferences.tsx:163
 msgid "Proxy is used only for non-cluster communication."
 msgstr ""
 
@@ -1844,7 +1844,7 @@ msgstr ""
 msgid "Releases"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:156
+#: src/renderer/components/+preferences/preferences.tsx:154
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:60
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:60
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:64
@@ -1886,7 +1886,7 @@ msgstr ""
 msgid "Remove {resourceKind} <0>{resourceName}</0>?"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:119
+#: src/renderer/components/+preferences/preferences.tsx:117
 msgid "Removing helm branch <0>{0}</0> has failed: {1}"
 msgstr ""
 
@@ -1910,7 +1910,7 @@ msgstr ""
 msgid "Repo/Name"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:146
+#: src/renderer/components/+preferences/preferences.tsx:144
 msgid "Repositories"
 msgstr ""
 
@@ -2361,11 +2361,11 @@ msgstr ""
 msgid "Taints"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:176
+#: src/renderer/components/+preferences/preferences.tsx:174
 msgid "Telemetry & Usage Tracking"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:179
+#: src/renderer/components/+preferences/preferences.tsx:177
 msgid "Telemetry & usage data is collected to continuously improve the Lens experience."
 msgstr ""
 
@@ -2397,7 +2397,7 @@ msgstr ""
 msgid "This is the quick launch menu."
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:171
+#: src/renderer/components/+preferences/preferences.tsx:169
 msgid "This will make Lens to trust ANY certificate authority without any validations."
 msgstr ""
 
@@ -2440,7 +2440,7 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:163
+#: src/renderer/components/+preferences/preferences.tsx:161
 msgid "Type HTTP proxy url (example: http://proxy.acme.org:8080)"
 msgstr ""
 
@@ -2633,7 +2633,7 @@ msgstr ""
 msgid "and <0>{tailCount}</0> more"
 msgstr ""
 
-#: src/renderer/components/+preferences/preferences.tsx:131
+#: src/renderer/components/+preferences/preferences.tsx:129
 msgid "applicable to all clusters"
 msgstr ""
 

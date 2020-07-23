@@ -14,6 +14,7 @@ import { Checkbox } from "../checkbox";
 import { Notifications } from "../notifications";
 import { Badge } from "../badge";
 import { Spinner } from "../spinner";
+import { themeStore } from "../../theme.store";
 
 @observer
 export class Preferences extends React.Component {
@@ -22,20 +23,22 @@ export class Preferences extends React.Component {
   @observable helmRepos: HelmRepo[] = [];
   @observable helmAddedRepos = observable.map<string, HelmRepo>();
 
-  @observable themeOptions: SelectOption<string>[] = [
-    { value: "kontena-dark", label: <Trans>Dark</Trans> },
-    { value: "kontena-light", label: <Trans>Light</Trans> },
-  ]
-
   @observable downloadMirrorOptions: SelectOption<string>[] = [
     { value: "default", label: "Default (Google)" },
     { value: "china", label: "China (Azure)" },
   ]
 
+  @computed get themeOptions(): SelectOption<string>[] {
+    return themeStore.themes.map(theme => ({
+      label: theme.name,
+      value: theme.id,
+    }))
+  }
+
   @computed get helmOptions(): SelectOption<HelmRepo>[] {
     return this.helmRepos.map(repo => ({
-      value: repo,
       label: repo.name,
+      value: repo,
     }))
   }
 
@@ -80,7 +83,6 @@ export class Preferences extends React.Component {
   }
 
   onThemeChange = ({ value }: SelectOption<string>) => {
-    // themeStore.setTheme(value); // fixme: apply theme on the fly for current view
     userStore.preferences.colorTheme = value;
   }
 
@@ -129,7 +131,7 @@ export class Preferences extends React.Component {
         <Select
           options={this.themeOptions}
           value={preferences.colorTheme}
-          onChange={this.onThemeChange}
+          onChange={({ value }: SelectOption) => preferences.colorTheme = value}
         />
 
         <h2><Trans>Download Mirror</Trans></h2>
@@ -158,7 +160,7 @@ export class Preferences extends React.Component {
             {this.helmLoading && <Spinner/>}
             {Array.from(this.helmAddedRepos).map(([name, repo]) => {
               return (
-                <Badge key={name} className="added-repo flex gaps align-center">
+                <Badge key={name} className="added-repo flex gaps align-center" title={repo.url}>
                   <span className="repo">{name}</span>
                   <Icon
                     material="remove_circle_outline"

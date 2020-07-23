@@ -6,6 +6,7 @@ import { BottomBar } from "./bottom-bar";
 import { cssNames, IClassName } from "../../utils";
 import { Terminal } from "../dock/terminal";
 import { i18nStore } from "../../i18n";
+import { themeStore } from "../../theme.store";
 
 interface Props {
   className?: IClassName;
@@ -14,8 +15,11 @@ interface Props {
 
 export class ClusterManager extends React.Component<Props> {
   static async init() {
-    await i18nStore.init()
-    await Terminal.preloadFonts()
+    await Promise.all([
+      i18nStore.init(),
+      themeStore.init(),
+      Terminal.preloadFonts(),
+    ])
   }
 
   render() {
