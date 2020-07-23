@@ -7,9 +7,13 @@
   display: grid;
   grid-template-columns: 1fr 40%;
 
-  > .content-col {
+  > * {
+    @include hidden-scrollbar;
     --flex-gap: #{$spacing};
     padding: $spacing;
+  }
+
+  > .content-col {
     margin-right: $spacing;
     background-color: var(--clusters-menu-bgc);
     border-radius: $radius;
@@ -22,9 +26,6 @@
   }
 
   > .info-col {
-    @include hidden-scrollbar;
-    --flex-gap: #{$spacing};
-    padding: $spacing;
     border-left: 1px solid #353a3e;
   }
 
