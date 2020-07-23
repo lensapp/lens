@@ -64,8 +64,12 @@ export class ClustersMenu extends React.Component<Props> {
       label: _i18n._(t`Remove`),
       click: () => {
         ConfirmDialog.open({
+          okButtonProps: {
+            primary: false,
+            accent: true,
+            label: _i18n._(t`Remove`),
+          },
           ok: () => clusterStore.removeById(cluster.id),
-          labelOk: _i18n._(t`Remove`),
           message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
         })
       }

@@ -42,7 +42,7 @@ import { CubeSpinner } from "./spinner";
 
 @observer
 export class App extends React.Component {
-  @observable appReady = false;
+  @observable isReady = false;
 
   @computed get clusterReady() {
     const clusterId = location.hostname.split(".")[0];
@@ -51,7 +51,7 @@ export class App extends React.Component {
 
   async componentDidMount() {
     await clusterIpc.activate.invokeFromRenderer();
-    this.appReady = true;
+    this.isReady = true;
 
     disposeOnUnmount(this, [
       reaction(() => this.startURL, url => {
@@ -77,7 +77,7 @@ export class App extends React.Component {
   }
 
   render() {
-    if (!this.appReady) {
+    if (!this.isReady) {
       return <CubeSpinner className="box center"/>
     }
     return (
