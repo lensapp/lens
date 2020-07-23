@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { t } from "@lingui/macro";
+import { observer } from "mobx-react";
 import { IPodMetrics } from "../../api/endpoints";
 import { BarChart, cpuOptions, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
@@ -10,7 +11,7 @@ import { themeStore } from "../../theme.store";
 
 type IContext = IResourceMetricsValue<any, { metrics: IPodMetrics }>;
 
-export const ContainerCharts = () => {
+export const ContainerCharts = observer(() => {
   const { params: { metrics }, tabId } = useContext<IContext>(ResourceMetricsContext);
   const { chartCapacityColor } = themeStore.activeTheme.colors;
 
@@ -100,4 +101,4 @@ export const ContainerCharts = () => {
       data={{ datasets: datasets[tabId] }}
     />
   );
-}
+})

@@ -2,14 +2,12 @@ import { app } from "electron"
 import { CoreV1Api } from "@kubernetes/client-node"
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
-import { userStore } from "../../common/user-store"
 import { Cluster } from "../cluster"
 
 export interface IConfigRoutePayload {
   kubeVersion?: string;
   clusterName?: string;
   lensVersion?: string;
-  lensTheme?: string;
   username?: string;
   token?: string;
   allowedNamespaces?: string[];
@@ -58,12 +56,11 @@ async function getAllowedNamespaces(cluster: Cluster) {
     return namespaceList.body.items
       .filter((ns, i) => nsAccessStatuses[i])
       .map(ns => ns.metadata.name)
-  } catch(error) {
+  } catch (error) {
     const ctx = cluster.getProxyKubeconfig().getContextObject(cluster.contextName)
     if (ctx.namespace) {
       return [ctx.namespace]
-    }
-    else {
+    } else {
       return []
     }
   }
@@ -94,7 +91,6 @@ class ConfigRoute extends LensApi {
     const data: IConfigRoutePayload = {
       clusterName: cluster.contextName,
       lensVersion: app.getVersion(),
-      lensTheme: userStore.preferences.colorTheme,
       kubeVersion: cluster.version,
       chartsEnabled: true,
       isClusterAdmin: cluster.isAdmin,

@@ -1,3 +1,4 @@
+import type { ThemeId } from "../renderer/theme.store";
 import semver from "semver"
 import { action, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
@@ -5,19 +6,7 @@ import migrations from "../migrations/user-store"
 import { getAppVersion } from "./utils/app-version";
 import { tracker } from "./tracker";
 
-// todo: merge with config.store.ts + theme.store.ts
 // fixme: detect new contexts from .kube/config since last open
-
-export enum ThemeType {
-  LIGHT = "light",
-  DARK = "dark",
-}
-
-export interface Theme {
-  name: string;
-  type: ThemeType;
-  colors?: Record<string, string>;
-}
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -27,13 +16,15 @@ export interface UserStoreModel {
 
 export interface UserPreferences {
   httpsProxy?: string;
-  colorTheme?: string | "dark" | "light";
+  colorTheme?: string;
   allowUntrustedCAs?: boolean;
   allowTelemetry?: boolean;
   downloadMirror?: string | "default";
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
+  static readonly defaultTheme: ThemeId = "kontena-dark"
+
   private constructor() {
     super({
       // configName: "lens-user-store", // todo: migrate from default filename
@@ -53,13 +44,18 @@ export class UserStore extends BaseStore<UserStoreModel> {
   @observable preferences: UserPreferences = {
     allowTelemetry: true,
     allowUntrustedCAs: false,
-    colorTheme: "dark",
+    colorTheme: UserStore.defaultTheme,
     downloadMirror: "default",
     httpsProxy: "",
   };
 
   get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
+  }
+
+  @action
+  resetTheme() {
+    this.preferences.colorTheme = UserStore.defaultTheme;
   }
 
   @action
