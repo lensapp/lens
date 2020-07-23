@@ -1,7 +1,7 @@
 import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { FeatureStatusMap } from "./feature"
 import type { WorkspaceId } from "../common/workspace-store";
-import { action, computed, observable, reaction, toJS, when } from "mobx";
+import { action, computed, observable, reaction, toJS } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { broadcastIpc } from "../common/ipc";
 import { ContextHandler } from "./context-handler"
@@ -20,17 +20,19 @@ export enum ClusterStatus {
 }
 
 export interface ClusterState extends ClusterModel {
-  initialized?: boolean;
+  initialized: boolean;
   apiUrl: string;
-  online?: boolean;
-  accessible?: boolean;
-  failureReason?: string;
-  nodes?: number;
-  eventCount?: number;
-  version?: string;
-  distribution?: string;
-  isAdmin?: boolean;
-  features?: FeatureStatusMap;
+  online: boolean;
+  accessible: boolean;
+  failureReason: string;
+  nodes: number;
+  eventCount: number;
+  version: string;
+  distribution: string;
+  isAdmin: boolean;
+  allowedNamespaces: string[]
+  allowedResources: string[]
+  features: FeatureStatusMap;
 }
 
 export class Cluster implements ClusterModel {
@@ -58,6 +60,8 @@ export class Cluster implements ClusterModel {
   @observable eventCount = 0;
   @observable preferences: ClusterPreferences = {};
   @observable features: FeatureStatusMap = {};
+  @observable allowedNamespaces: string[] = [];
+  @observable allowedResources: string[] = [];
 
   constructor(model: ClusterModel) {
     this.updateModel(model);
@@ -120,7 +124,6 @@ export class Cluster implements ClusterModel {
   }
 
   async activate() {
-    await when(() => this.initialized);
     if (this.disconnected) await this.reconnect();
     await this.refresh();
     return this.pushState();
@@ -150,14 +153,28 @@ export class Cluster implements ClusterModel {
     this.online = connectionStatus > ClusterStatus.Offline;
     this.accessible = connectionStatus == ClusterStatus.AccessGranted;
     if (this.accessible) {
-      this.distribution = this.detectKubernetesDistribution(this.version)
-      this.features = await getFeatures(this)
-      this.isAdmin = await this.isClusterAdmin()
-      this.nodes = await this.getNodeCount()
       this.kubeCtl = new Kubectl(this.version)
-      this.kubeCtl.ensureKubectl()
+      this.distribution = this.detectKubernetesDistribution(this.version)
+      const [features, isAdmin, nodesCount] = await Promise.all([
+        getFeatures(this),
+        this.isClusterAdmin(),
+        this.getNodeCount(),
+        this.kubeCtl.ensureKubectl()
+      ]);
+      this.features = features;
+      this.isAdmin = isAdmin;
+      this.nodes = nodesCount;
     }
-    await this.refreshEvents();
+    await Promise.all([
+      this.refreshEvents(),
+      this.refreshAllowedResources(),
+    ]);
+  }
+
+  @action
+  async refreshAllowedResources() {
+    this.allowedNamespaces = await this.getAllowedNamespaces();
+    this.allowedResources = await this.getAllowedResources();
   }
 
   @action
@@ -342,6 +359,8 @@ export class Cluster implements ClusterModel {
       isAdmin: this.isAdmin,
       features: this.features,
       eventCount: this.eventCount,
+      allowedNamespaces: this.allowedNamespaces,
+      allowedResources: this.allowedResources,
     };
     return toJS(state, {
       recurseEverything: true
@@ -366,6 +385,69 @@ export class Cluster implements ClusterModel {
       initialized: this.initialized,
       accessible: this.accessible,
       online: this.online,
+    }
+  }
+
+  protected async getAllowedNamespaces() {
+    const api = this.getProxyKubeconfig().makeApiClient(CoreV1Api)
+    try {
+      const namespaceList = await api.listNamespace()
+      const nsAccessStatuses = await Promise.all(
+        namespaceList.body.items.map(ns => this.canI({
+          namespace: ns.metadata.name,
+          resource: "pods",
+          verb: "list",
+        }))
+      )
+      return namespaceList.body.items
+        .filter((ns, i) => nsAccessStatuses[i])
+        .map(ns => ns.metadata.name)
+    } catch (error) {
+      const ctx = this.getProxyKubeconfig().getContextObject(this.contextName)
+      if (ctx.namespace) return [ctx.namespace]
+      return []
+    }
+  }
+
+  protected async getAllowedResources() {
+    // TODO: auto-populate all resources dynamically
+    const apiResources = [
+      { resource: "configmaps" },
+      { resource: "cronjobs", group: "batch" },
+      { resource: "customresourcedefinitions", group: "apiextensions.k8s.io" },
+      { resource: "daemonsets", group: "apps" },
+      { resource: "deployments", group: "apps" },
+      { resource: "endpoints" },
+      { resource: "events" },
+      { resource: "horizontalpodautoscalers" },
+      { resource: "ingresses", group: "networking.k8s.io" },
+      { resource: "jobs", group: "batch" },
+      { resource: "namespaces" },
+      { resource: "networkpolicies", group: "networking.k8s.io" },
+      { resource: "nodes" },
+      { resource: "persistentvolumes" },
+      { resource: "pods" },
+      { resource: "podsecuritypolicies" },
+      { resource: "resourcequotas" },
+      { resource: "secrets" },
+      { resource: "services" },
+      { resource: "statefulsets", group: "apps" },
+      { resource: "storageclasses", group: "storage.k8s.io" },
+    ]
+    try {
+      const resourceAccessStatuses = await Promise.all(
+        apiResources.map(apiResource => this.canI({
+          resource: apiResource.resource,
+          group: apiResource.group,
+          verb: "list",
+          namespace: this.allowedNamespaces[0]
+        }))
+      )
+      return apiResources
+        .filter((resource, i) => resourceAccessStatuses[i])
+        .map(apiResource => apiResource.resource)
+    } catch (error) {
+      return []
     }
   }
 }

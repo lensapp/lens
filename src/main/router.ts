@@ -5,7 +5,7 @@ import path from "path"
 import { readFile } from "fs-extra"
 import { Cluster } from "./cluster"
 import { apiPrefix, appName, outDir } from "../common/vars";
-import { configRoute, helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute } from "./routes";
+import { helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute } from "./routes";
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;
@@ -112,7 +112,6 @@ export class Router {
       this.handleStaticFile(params.path, response);
     });
 
-    this.router.add({ method: "get", path: `${apiPrefix}/config` }, configRoute.routeConfig.bind(configRoute))
     this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute))
 
     // Watch API

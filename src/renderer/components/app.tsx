@@ -1,6 +1,7 @@
 import "./app.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
+import { computed, observable, reaction } from "mobx";
 import { Redirect, Route, Switch } from "react-router";
 import { Notifications } from "./notifications";
 import { NotFound } from "./+404";
@@ -31,14 +32,12 @@ import { LandingPage, landingRoute, landingURL } from "./+landing-page";
 import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";
 import { Workspaces, workspacesRoute } from "./+workspaces";
 import { ErrorBoundary } from "./error-boundary";
-import { computed, observable, reaction } from "mobx";
-import { configStore } from "../config.store";
+import { navigation } from "../navigation";
 import { clusterIpc } from "../../common/cluster-ipc";
 import { clusterStore } from "../../common/cluster-store";
-import { ClusterStatus } from "./cluster-manager/cluster-status";
 import { clusterStatusRoute, clusterStatusURL } from "./cluster-manager/cluster-status.route";
 import { Preferences, preferencesRoute } from "./+preferences";
-import { navigation } from "../navigation";
+import { ClusterStatus } from "./cluster-manager/cluster-status";
 import { CubeSpinner } from "./spinner";
 
 @observer
@@ -52,7 +51,6 @@ export class App extends React.Component {
 
   async componentDidMount() {
     await clusterIpc.activate.invokeFromRenderer();
-    await configStore.init();
     this.appReady = true;
 
     disposeOnUnmount(this, [

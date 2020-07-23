@@ -6,7 +6,6 @@ import { TerminalApi } from "../../api/terminal-api";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { WebSocketApiState } from "../../api/websocket-api";
 import { _i18n } from "../../i18n";
-import { themeStore } from "../../theme.store";
 
 export interface ITerminalTab extends IDockTab {
   node?: string; // activate node shell mode
@@ -15,7 +14,6 @@ export interface ITerminalTab extends IDockTab {
 export function isTerminalTab(tab: IDockTab) {
   return tab && tab.kind === TabKind.TERMINAL;
 }
-
 
 export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
   return dockStore.createTab({
@@ -56,7 +54,6 @@ export class TerminalStore {
     const api = new TerminalApi({
       id: tabId,
       node: tab.node,
-      colorTheme: themeStore.activeTheme.type
     });
     const terminal = new Terminal(tabId, api);
     this.connections.set(tabId, api);

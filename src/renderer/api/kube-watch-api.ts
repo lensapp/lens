@@ -6,9 +6,9 @@ import { autobind, EventEmitter } from "../utils";
 import { KubeJsonApiData } from "./kube-json-api";
 import type { KubeObjectStore } from "../kube-object.store";
 import { KubeApi } from "./kube-api";
-import { configStore } from "../config.store";
 import { apiManager } from "./api-manager";
 import { apiPrefix, isDevelopment } from "../../common/vars";
+import { clusterStore } from "../../common/cluster-store";
 
 export interface IKubeWatchEvent<T = any> {
   type: "ADDED" | "MODIFIED" | "DELETED";
@@ -61,10 +61,10 @@ export class KubeWatchApi {
   }
 
   protected getQuery(): Partial<IKubeWatchRouteQuery> {
-    const { isClusterAdmin, allowedNamespaces } = configStore;
+    const { isAdmin, allowedNamespaces } = clusterStore.activeCluster;
     return {
       api: this.activeApis.map(api => {
-        if (isClusterAdmin) return api.getWatchUrl();
+        if (isAdmin) return api.getWatchUrl();
         return allowedNamespaces.map(namespace => api.getWatchUrl(namespace))
       }).flat()
     }

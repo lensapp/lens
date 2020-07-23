@@ -82,10 +82,6 @@ export class Preferences extends React.Component {
     }
   }
 
-  onThemeChange = ({ value }: SelectOption<string>) => {
-    userStore.preferences.colorTheme = value;
-  }
-
   onRepoSelect = async ({ value: repo }: SelectOption<HelmRepo>) => {
     const isAdded = this.helmAddedRepos.has(repo.name);
     if (isAdded) {
