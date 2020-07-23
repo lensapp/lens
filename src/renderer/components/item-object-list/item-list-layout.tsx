@@ -19,7 +19,6 @@ import { PageFiltersList } from "./page-filters-list";
 import { PageFiltersSelect } from "./page-filters-select";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
 import { themeStore } from "../../theme.store";
-import { configStore } from "../../config.store";
 
 // todo: refactor, split to small re-usable components
 
@@ -116,7 +115,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const stores = [store, ...dependentStores];
     if (!isClusterScoped) stores.push(namespaceStore);
     try {
-      await when(() => configStore.isLoaded); // todo: remove
       await Promise.all(stores.map(store => store.loadAll()));
       const subscriptions = stores.map(store => store.subscribe());
       await when(() => this.isUnmounting);

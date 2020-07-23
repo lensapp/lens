@@ -1,7 +1,7 @@
 import "./cluster.scss"
 
 import React from "react";
-import { computed, reaction, when } from "mobx";
+import { computed, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { MainLayout } from "../layout/main-layout";
 import { ClusterIssues } from "./cluster-issues";
@@ -13,22 +13,23 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { clusterStore } from "./cluster.store";
 import { eventStore } from "../+events/event.store";
-import { configStore } from "../../config.store";
 import { isAllowedResource } from "../../api/rbac";
 
 @observer
 export class Cluster extends React.Component {
+  private dependentStores = [nodesStore, podsStore];
+
   private watchers = [
     interval(60, () => clusterStore.getMetrics()),
     interval(20, () => eventStore.loadAll())
   ];
 
-  private dependentStores = [nodesStore, podsStore];
+  @computed get isLoaded() {
+    return nodesStore.isLoaded && podsStore.isLoaded
+  }
 
   // todo: refactor
   async componentDidMount() {
-    await when(() => configStore.isLoaded);
-
     const { dependentStores } = this;
     if (!isAllowedResource("nodes")) {
       dependentStores.splice(dependentStores.indexOf(nodesStore), 1)
@@ -48,13 +49,6 @@ export class Cluster extends React.Component {
         () => this.watchers.forEach(watcher => watcher.restart())
       )
     ])
-  }
-
-  @computed get isLoaded() {
-    return (
-      nodesStore.isLoaded &&
-      podsStore.isLoaded
-    )
   }
 
   render() {
