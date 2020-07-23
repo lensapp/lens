@@ -1,9 +1,23 @@
 .Preferences {
-  --flex-gap: #{$padding};
-
   h2 {
     &:not(:first-child) {
       margin-top: $padding * 3;
+    }
+  }
+
+  .info-block {
+    --flex-gap: #{$padding};
+  }
+
+  .repos {
+    --flex-gap: #{$padding};
+
+    > .title {
+      font-style: italic;
+    }
+
+    .Badge {
+      margin: $padding / 2;
     }
   }
 }

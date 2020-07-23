@@ -1,28 +1,51 @@
-import fs from "fs";
-import logger from "../logger";
-import * as yaml from "js-yaml";
+import yaml from "js-yaml";
+import { readFile } from "fs-extra";
 import { promiseExec } from "../promise-exec";
 import { helmCli } from "./helm-cli";
 import { Singleton } from "../../common/utils/singleton";
+import { customRequestPromise } from "../../common/request";
+import orderBy from "lodash/orderBy";
+import logger from "../logger";
 
 export type HelmEnv = Record<string, string> & {
   HELM_REPOSITORY_CACHE?: string;
   HELM_REPOSITORY_CONFIG?: string;
 }
 
-export type HelmRepo = {
+export interface HelmRepoConfig {
+  repositories: HelmRepo[]
+}
+
+export interface HelmRepo {
   name: string;
   url: string;
-  cacheFilePath?: string;
+  cacheFilePath?: string
+  caFile?: string,
+  certFile?: string,
+  insecure_skip_tls_verify?: boolean,
+  keyFile?: string,
+  username?: string,
+  password?: string,
 }
 
 export class HelmRepoManager extends Singleton {
-  static cache = {}
+  static cache = {} // todo: remove implicit updates in helm-chart-manager.ts
 
+  protected repos: HelmRepo[];
   protected helmEnv: HelmEnv
   protected initialized: boolean
 
-  public async init() {
+  async loadAvailableRepos(): Promise<HelmRepo[]> {
+    const res = await customRequestPromise({
+      uri: "https://hub.helm.sh/assets/js/repos.json",
+      json: true,
+      resolveWithFullResponse: true,
+      timeout: 10000,
+    });
+    return orderBy<HelmRepo>(res.body.data, repo => repo.name);
+  }
+
+  async init() {
     await helmCli.ensureBinary();
     if (!this.initialized) {
       this.helmEnv = await this.parseHelmEnv()
@@ -47,60 +70,57 @@ export class HelmRepoManager extends Singleton {
     return env
   }
 
-  public async repositories(): Promise<Array<HelmRepo>> {
+  public async repositories(): Promise<HelmRepo[]> {
     if (!this.initialized) {
       await this.init()
     }
-    const repositoryFilePath = this.helmEnv.HELM_REPOSITORY_CONFIG
-    const repoFile = await fs.promises.readFile(repositoryFilePath, 'utf8').catch(async (error) => {
-      return null
-    })
-    if (!repoFile) {
-      await this.addRepo({ name: "stable", url: "https://kubernetes-charts.storage.googleapis.com/" })
-      return await this.repositories()
-    }
     try {
-      const repositories = yaml.safeLoad(repoFile)
-      const result = repositories['repositories'].map((repository: HelmRepo) => {
-        return {
-          name: repository.name,
-          url: repository.url,
-          cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repository['name']}-index.yaml`
-        }
-      });
-      if (result.length == 0) {
-        await this.addRepo({ name: "stable", url: "https://kubernetes-charts.storage.googleapis.com/" })
-        return await this.repositories()
+      const repoConfigFile = this.helmEnv.HELM_REPOSITORY_CONFIG;
+      const { repositories }: HelmRepoConfig = await readFile(repoConfigFile, 'utf8')
+        .then((yamlContent: string) => yaml.safeLoad(yamlContent))
+        .catch(() => ({
+          repositories: []
+        }));
+      if (!repositories.length) {
+        await this.addRepo({ name: "stable", url: "https://kubernetes-charts.storage.googleapis.com/" });
+        return await this.repositories();
       }
-      return result
+      return repositories.map(repo => ({
+        ...repo,
+        cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`
+      }));
     } catch (error) {
-      logger.debug(error)
+      logger.error(`[HELM]: repositories listing error "${error}"`)
       return []
     }
   }
 
   public async repository(name: string) {
     const repositories = await this.repositories()
-    return repositories.find((repo: HelmRepo) => {
-      return repo.name == name
-    })
+    return repositories.find(repo => repo.name == name);
   }
 
   public async update() {
     const helm = await helmCli.binaryPath()
-    logger.debug(`${helm} repo update`)
-
     const { stdout } = await promiseExec(`"${helm}" repo update`).catch((error) => {
       return { stdout: error.stdout }
     })
     return stdout
   }
 
-  public async addRepo(repository: HelmRepo) {
+  public async addRepo({ name, url }: HelmRepo) {
+    logger.info(`[HELM]: adding repo "${name}" from ${url}`);
     const helm = await helmCli.binaryPath()
-    logger.debug(`${helm} repo add ${repository.name} ${repository.url}`)
+    const { stdout } = await promiseExec(`"${helm}" repo add ${name} ${url}`).catch((error) => {
+      throw(error.stderr)
+    })
+    return stdout
+  }
 
-    const { stdout } = await promiseExec(`"${helm}" repo add ${repository.name} ${repository.url}`).catch((error) => {
+  public async removeRepo({ name, url }: HelmRepo): Promise<string> {
+    logger.info(`[HELM]: removing repo "${name}" from ${url}`);
+    const helm = await helmCli.binaryPath()
+    const { stdout, stderr } = await promiseExec(`"${helm}" repo remove ${name}`).catch((error) => {
       throw(error.stderr)
     })
     return stdout

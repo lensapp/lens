@@ -6,12 +6,13 @@ import { promiseExec } from "../promise-exec"
 import { helmCli } from "./helm-cli"
 
 type CachedYaml = {
-  entries: any;
+  entries: any; // todo: types
 }
 
 export class HelmChartManager {
-  protected cache: any
+  protected cache: any = {}
   protected repo: HelmRepo
+
   constructor(repo: HelmRepo){
     this.cache = HelmRepoManager.cache
     this.repo = repo
