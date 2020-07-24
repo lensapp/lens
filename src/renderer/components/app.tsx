@@ -1,7 +1,7 @@
 import "./app.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { autorun, computed, observable } from "mobx";
+import { observable, reaction } from "mobx";
 import { Redirect, Route, Switch } from "react-router";
 import { Notifications } from "./notifications";
 import { NotFound } from "./+404";
@@ -28,7 +28,7 @@ import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../api/rbac";
 import { AddCluster, addClusterRoute } from "./+add-cluster";
-import { LandingPage, landingRoute } from "./+landing-page";
+import { LandingPage, landingRoute, landingURL } from "./+landing-page";
 import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";
 import { Workspaces, workspacesRoute } from "./+workspaces";
 import { ErrorBoundary } from "./error-boundary";
@@ -44,36 +44,41 @@ import { navigate, navigation } from "../navigation";
 export class App extends React.Component {
   @observable isReady = false;
 
-  @computed get clusterReady(): boolean {
-    const cluster = getHostedCluster();
-    if (cluster) {
-      return cluster.initialized && cluster.accessible;
-    }
+  get cluster() {
+    return getHostedCluster()
   }
 
   async componentDidMount() {
-    await clusterIpc.activate.invokeFromRenderer(); // refresh state, reconnect, etc.
-    this.isReady = true;
-
+    if (this.cluster) {
+      await clusterIpc.activate.invokeFromRenderer(); // refresh state, reconnect, etc.
+    }
     disposeOnUnmount(this, [
-      autorun(() => {
-        if (!this.clusterReady) {
-          navigate(clusterStatusURL());
-        } else if (clusterStatusURL() == navigation.getPath()) {
-          navigate("/"); // redirect when cluster accessible
-        }
+      reaction(() => this.startURL, this.onStartUrlChange, {
+        fireImmediately: true
       })
     ])
+    this.isReady = true;
+  }
+
+  protected onStartUrlChange = (startURL: string) => {
+    const path = navigation.getPath();
+    const redirectRequired = ["/", clusterStatusURL()].includes(path);
+    if (redirectRequired || !this.cluster?.accessible) {
+      navigate(startURL);
+    }
   }
 
   get startURL() {
-    if (!this.clusterReady) {
-      return clusterStatusURL();
+    if (this.cluster) {
+      if (!this.cluster.accessible) {
+        return clusterStatusURL();
+      }
+      if (isAllowedResource(["events", "nodes", "pods"])) {
+        return clusterURL();
+      }
+      return workloadsURL();
     }
-    if (isAllowedResource(["events", "nodes", "pods"])) {
-      return clusterURL();
-    }
-    return workloadsURL();
+    return landingURL();
   }
 
   render() {
@@ -87,19 +92,23 @@ export class App extends React.Component {
           <Route component={Preferences} {...preferencesRoute}/>
           <Route component={Workspaces} {...workspacesRoute}/>
           <Route component={AddCluster} {...addClusterRoute}/>
-          <Route component={Cluster} {...clusterRoute}/>
-          <Route component={ClusterStatus} {...clusterStatusRoute}/>
-          <Route component={ClusterSettings} {...clusterSettingsRoute}/>
-          <Route component={Nodes} {...nodesRoute}/>
-          <Route component={Workloads} {...workloadsRoute}/>
-          <Route component={Config} {...configRoute}/>
-          <Route component={Network} {...networkRoute}/>
-          <Route component={Storage} {...storageRoute}/>
-          <Route component={Namespaces} {...namespacesRoute}/>
-          <Route component={Events} {...eventRoute}/>
-          <Route component={CustomResources} {...crdRoute}/>
-          <Route component={UserManagement} {...usersManagementRoute}/>
-          <Route component={Apps} {...appsRoute}/>
+          {this.cluster && (
+            <>
+              <Route component={Cluster} {...clusterRoute}/>
+              <Route component={ClusterStatus} {...clusterStatusRoute}/>
+              <Route component={ClusterSettings} {...clusterSettingsRoute}/>
+              <Route component={Nodes} {...nodesRoute}/>
+              <Route component={Workloads} {...workloadsRoute}/>
+              <Route component={Config} {...configRoute}/>
+              <Route component={Network} {...networkRoute}/>
+              <Route component={Storage} {...storageRoute}/>
+              <Route component={Namespaces} {...namespacesRoute}/>
+              <Route component={Events} {...eventRoute}/>
+              <Route component={CustomResources} {...crdRoute}/>
+              <Route component={UserManagement} {...usersManagementRoute}/>
+              <Route component={Apps} {...appsRoute}/>
+            </>
+          )}
           <Redirect exact from="/" to={this.startURL}/>
           <Route component={NotFound}/>
         </Switch>

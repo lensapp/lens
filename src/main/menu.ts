@@ -1,5 +1,6 @@
 import type { WindowManager } from "./window-manager";
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
+import { autorun } from "mobx";
 import { broadcastIpc } from "../common/ipc";
 import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
 import { clusterStore } from "../common/cluster-store";
@@ -7,20 +8,26 @@ import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.r
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
+import logger from "./logger";
 
 export function initMenu(windowManager: WindowManager) {
-  const menuItems: MenuItemConstructorOptions[] = [];
+  autorun(() => {
+    logger.debug(`[MENU]: refreshing menu, cluster=${clusterStore.activeClusterId}`);
+    buildMenu(windowManager);
+  });
+}
+
+function buildMenu(windowManager: WindowManager) {
+  const hasClusters = clusterStore.hasClusters();
+  const activeClusterId = clusterStore.activeClusterId;
+  const clusterView = windowManager.getClusterView(activeClusterId);
 
   function navigate(url: string) {
-    const activeClusterId = clusterStore.activeClusterId;
-    const view = windowManager.getClusterView(activeClusterId);
-    if (view) {
-      broadcastIpc({
-        channel: "menu:navigate",
-        webContentId: view.id,
-        args: [url],
-      });
-    }
+    broadcastIpc({
+      channel: "menu:navigate",
+      webContentId: clusterView ? clusterView.id : undefined /*no-clusters*/,
+      args: [url],
+    });
   }
 
   function macOnly(menuItems: MenuItemConstructorOptions[]): MenuItemConstructorOptions[] {
@@ -28,8 +35,7 @@ export function initMenu(windowManager: WindowManager) {
     return menuItems;
   }
 
-  // "File" submenu
-  menuItems.push({
+  const fileMenu: MenuItemConstructorOptions = {
     label: isMac ? app.getName() : "File",
     submenu: [
       {
@@ -38,12 +44,12 @@ export function initMenu(windowManager: WindowManager) {
           navigate(addClusterURL())
         }
       },
-      {
+      ...(hasClusters ? [{
         label: 'Cluster Settings',
         click() {
           navigate(clusterSettingsURL())
         }
-      },
+      }] : []),
       { type: 'separator' },
       {
         label: 'Preferences',
@@ -62,10 +68,9 @@ export function initMenu(windowManager: WindowManager) {
       { type: 'separator' },
       { role: 'quit' }
     ]
-  });
+  };
 
-  // "Edit" submenu
-  menuItems.push({
+  const editMenu: MenuItemConstructorOptions = {
     label: 'Edit',
     submenu: [
       { role: 'undo' },
@@ -78,10 +83,9 @@ export function initMenu(windowManager: WindowManager) {
       { type: 'separator' },
       { role: 'selectAll' },
     ]
-  });
+  };
 
-  // "View" submenu
-  menuItems.push({
+  const viewMenu: MenuItemConstructorOptions = {
     label: 'View',
     submenu: [
       {
@@ -113,10 +117,9 @@ export function initMenu(windowManager: WindowManager) {
       { type: 'separator' },
       { role: 'togglefullscreen' }
     ]
-  })
+  };
 
-  // "Help" submenu
-  menuItems.push({
+  const helpMenu: MenuItemConstructorOptions = {
     role: 'help',
     submenu: [
       {
@@ -162,8 +165,9 @@ export function initMenu(windowManager: WindowManager) {
         }
       }
     ]
-  });
+  };
 
-  const menu = Menu.buildFromTemplate(menuItems);
-  Menu.setApplicationMenu(menu);
+  Menu.setApplicationMenu(Menu.buildFromTemplate([
+    fileMenu, editMenu, viewMenu, helpMenu
+  ]));
 }

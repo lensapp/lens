@@ -4,6 +4,7 @@
   position: relative;
   opacity: .75;
   border-radius: $radius;
+  user-select: none;
   cursor: pointer;
 
   &.active, &.interactive:hover {

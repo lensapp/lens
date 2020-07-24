@@ -11,7 +11,7 @@ import { ErrorBoundary } from "../error-boundary";
 import { Dock } from "../dock";
 import { navigate, navigation } from "../../navigation";
 import { themeStore } from "../../theme.store";
-import { clusterStore } from "../../../common/cluster-store";
+import { getHostedCluster } from "../../../common/cluster-store";
 
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
@@ -47,7 +47,7 @@ export class MainLayout extends React.Component<Props> {
 
   render() {
     const { className, contentClass, headerClass, tabs, footer, footerClass, children } = this.props;
-    const clusterName = clusterStore.activeCluster?.contextName;
+    const { contextName: clusterName } = getHostedCluster();
     const routePath = navigation.location.pathname;
     return (
       <div className={cssNames("MainLayout", className, themeStore.activeTheme.type)}>

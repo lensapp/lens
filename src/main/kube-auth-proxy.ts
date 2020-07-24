@@ -6,7 +6,7 @@ import { bundledKubectl, Kubectl } from "./kubectl"
 import logger from "./logger"
 
 export interface KubeAuthProxyResponse {
-  data: string; // stream=stdout
+  data: string;
   error?: boolean; // stream=stderr
 }
 
