@@ -5,7 +5,7 @@ import { HelmRelease, helmReleasesApi, IReleaseCreatePayload, IReleaseUpdatePayl
 import { ItemStore } from "../../item.store";
 import { Secret } from "../../api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
-import { clusterStore } from "../../../common/cluster-store";
+import { getHostedCluster } from "../../../common/cluster-store";
 
 @autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {
@@ -58,7 +58,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     this.isLoading = true;
     let items;
     try {
-      const { isAdmin, allowedNamespaces } = clusterStore.activeCluster;
+      const { isAdmin, allowedNamespaces } = getHostedCluster();
       items = await this.loadItems(!isAdmin ? allowedNamespaces : null);
     } finally {
       if (items) {

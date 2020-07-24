@@ -21,13 +21,16 @@ export class ClusterStatus extends React.Component {
   }
 
   @computed get cluster() {
-    return getHostedCluster()
+    return getHostedCluster();
   }
 
   async componentDidMount() {
-    this.authOutput = [{ data: "Connecting ...\n" }];
-    ipcRenderer.on(`kube-auth:${this.cluster.id}`, (evt, res) => {
-      this.authOutput.push(res);
+    this.authOutput = [{ data: "Connecting..." }];
+    ipcRenderer.on(`kube-auth:${this.cluster.id}`, (evt, res: KubeAuthProxyResponse) => {
+      this.authOutput.push({
+        data: res.data.trimRight(),
+        error: res.error,
+      });
     })
   }
 
@@ -36,7 +39,7 @@ export class ClusterStatus extends React.Component {
   }
 
   reconnect = async () => {
-    this.authOutput = [{ data: "Reconnecting ...\n" }];
+    this.authOutput = [{ data: "Reconnecting..." }];
     this.isReconnecting = true;
     await clusterIpc.activate.invokeFromRenderer();
     this.isReconnecting = false;

@@ -1,4 +1,4 @@
-import { autorun, reaction } from "mobx";
+import { reaction } from "mobx";
 import { BrowserWindow, shell } from "electron"
 import windowStateKeeper from "electron-window-state"
 import type { ClusterId } from "../common/cluster-store";
@@ -29,8 +29,12 @@ export class WindowManager {
 
     // Manage reactive state
     this.disposers.push(
-      // show and hide "no-clusters" window when necessary
-      autorun(this.handleNoClustersView),
+      // auto-show/hide "no-clusters" window when necessary
+      reaction(() => clusterStore.hasClusters(), hasClusters => {
+        this.handleNoClustersView({ activate: !hasClusters });
+      }, {
+        fireImmediately: true
+      }),
 
       // auto-show active cluster window and subscribe for push-events
       reaction(() => clusterStore.activeClusterId, this.activateView, {
@@ -48,10 +52,12 @@ export class WindowManager {
     );
   }
 
-  protected handleNoClustersView = async () => {
-    this.noClustersWindow = this.initClusterView(null);
-    await this.noClustersWindow.loadURL(`http://no-clusters.localhost:${this.proxyPort}`).catch(Function);
-    if (!clusterStore.hasClusters()) {
+  protected handleNoClustersView = async ({ activate = false } = {}) => {
+    if (!this.noClustersWindow) {
+      this.noClustersWindow = this.initClusterView(null);
+      await this.noClustersWindow.loadURL(`http://no-clusters.localhost:${this.proxyPort}`);
+    }
+    if (activate) {
       this.activeView = this.noClustersWindow;
       this.noClustersWindow.show();
       this.hideSplash();
@@ -69,8 +75,8 @@ export class WindowManager {
         resizable: false,
         show: false,
       });
+      await this.splashWindow.loadURL("static://splash.html");
     }
-    await this.splashWindow.loadURL("static://splash.html").catch(Function)
     this.splashWindow.show();
   }
 
