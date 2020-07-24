@@ -8,6 +8,13 @@
   #lens-view {
     position: relative;
     grid-area: lens-view;
+
+    &.inactive {
+      opacity: .85;
+      filter: grayscale(1);
+      user-select: none;
+      pointer-events: none;
+    }
   }
 
   .ClustersMenu {
