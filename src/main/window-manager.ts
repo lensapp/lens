@@ -36,7 +36,7 @@ export class WindowManager {
         fireImmediately: true
       }),
 
-      // auto-show active cluster window and subscribe for push-events
+      // auto-show active cluster window
       reaction(() => clusterStore.activeClusterId, this.activateView, {
         fireImmediately: true,
       }),

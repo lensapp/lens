@@ -6,7 +6,7 @@ export function isAllowedResource(resources: string | string[]) {
   if (!Array.isArray(resources)) {
     resources = [resources];
   }
-  const { allowedResources } = getHostedCluster();
+  const { allowedResources = [] } = getHostedCluster() || {};
   for (const resource of resources) {
     if (!allowedResources.includes(resource)) {
       return false;

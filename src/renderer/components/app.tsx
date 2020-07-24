@@ -92,23 +92,19 @@ export class App extends React.Component {
           <Route component={Preferences} {...preferencesRoute}/>
           <Route component={Workspaces} {...workspacesRoute}/>
           <Route component={AddCluster} {...addClusterRoute}/>
-          {this.cluster && (
-            <>
-              <Route component={Cluster} {...clusterRoute}/>
-              <Route component={ClusterStatus} {...clusterStatusRoute}/>
-              <Route component={ClusterSettings} {...clusterSettingsRoute}/>
-              <Route component={Nodes} {...nodesRoute}/>
-              <Route component={Workloads} {...workloadsRoute}/>
-              <Route component={Config} {...configRoute}/>
-              <Route component={Network} {...networkRoute}/>
-              <Route component={Storage} {...storageRoute}/>
-              <Route component={Namespaces} {...namespacesRoute}/>
-              <Route component={Events} {...eventRoute}/>
-              <Route component={CustomResources} {...crdRoute}/>
-              <Route component={UserManagement} {...usersManagementRoute}/>
-              <Route component={Apps} {...appsRoute}/>
-            </>
-          )}
+          <Route component={Cluster} {...clusterRoute}/>
+          <Route component={ClusterStatus} {...clusterStatusRoute}/>
+          <Route component={ClusterSettings} {...clusterSettingsRoute}/>
+          <Route component={Nodes} {...nodesRoute}/>
+          <Route component={Workloads} {...workloadsRoute}/>
+          <Route component={Config} {...configRoute}/>
+          <Route component={Network} {...networkRoute}/>
+          <Route component={Storage} {...storageRoute}/>
+          <Route component={Namespaces} {...namespacesRoute}/>
+          <Route component={Events} {...eventRoute}/>
+          <Route component={CustomResources} {...crdRoute}/>
+          <Route component={UserManagement} {...usersManagementRoute}/>
+          <Route component={Apps} {...appsRoute}/>
           <Redirect exact from="/" to={this.startURL}/>
           <Route component={NotFound}/>
         </Switch>
