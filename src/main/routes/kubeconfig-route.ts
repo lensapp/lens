@@ -4,7 +4,7 @@ import { Cluster } from "../cluster"
 import { CoreV1Api, V1Secret } from "@kubernetes/client-node"
 
 function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster) {
-  const tokenData = new Buffer(secret.data["token"], "base64")
+  const tokenData = Buffer.from(secret.data["token"], "base64")
   return {
     'apiVersion': 'v1',
     'kind': 'Config',

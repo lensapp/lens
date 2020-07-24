@@ -1,7 +1,7 @@
 import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { FeatureStatusMap } from "./feature"
 import type { WorkspaceId } from "../common/workspace-store";
-import { action, computed, observable, reaction, toJS } from "mobx";
+import { action, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { broadcastIpc } from "../common/ipc";
 import { ContextHandler } from "./context-handler"
@@ -23,6 +23,7 @@ export interface ClusterState extends ClusterModel {
   initialized: boolean;
   apiUrl: string;
   online: boolean;
+  disconnected: boolean;
   accessible: boolean;
   failureReason: string;
   nodes: number;
@@ -40,7 +41,9 @@ export class Cluster implements ClusterModel {
   public kubeCtl: Kubectl
   public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
-  protected disposers: Function[] = [];
+  protected eventDisposers: Function[] = [];
+
+  whenInitialized = when(() => this.initialized);
 
   @observable initialized = false;
   @observable contextName: string;
@@ -65,10 +68,6 @@ export class Cluster implements ClusterModel {
 
   constructor(model: ClusterModel) {
     this.updateModel(model);
-  }
-
-  @computed get isReady() {
-    return this.initialized && this.accessible === true;
   }
 
   @action
@@ -103,47 +102,53 @@ export class Cluster implements ClusterModel {
     }
   }
 
-  bindEvents() {
+  protected bindEvents() {
     logger.info(`[CLUSTER]: bind events`, this.getMeta());
     const refreshTimer = setInterval(() => this.online && this.refresh(), 30000); // every 30s
     const refreshEventsTimer = setInterval(() => this.online && this.refreshEvents(), 3000); // every 3s
 
-    this.disposers.push(
+    this.eventDisposers.push(
+      reaction(this.getState, this.pushState),
       () => clearInterval(refreshTimer),
       () => clearInterval(refreshEventsTimer),
-      reaction(this.getState, this.pushState, {
-        fireImmediately: true
-      })
     );
   }
 
-  unbindEvents() {
+  protected unbindEvents() {
     logger.info(`[CLUSTER]: unbind events`, this.getMeta());
-    this.disposers.forEach(dispose => dispose());
-    this.disposers.length = 0;
+    this.eventDisposers.forEach(dispose => dispose());
+    this.eventDisposers.length = 0;
   }
 
   async activate() {
-    if (this.disconnected) await this.reconnect();
+    logger.info(`[CLUSTER]: activate`, this.getMeta());
+    await this.whenInitialized;
+    if (!this.eventDisposers.length) {
+      this.bindEvents();
+    }
+    if (this.disconnected) {
+      await this.reconnect();
+    }
     await this.refresh();
     return this.pushState();
   }
 
-  // todo: check, possibly doesn't work as expected
   async reconnect() {
     logger.info(`[CLUSTER]: reconnect`, this.getMeta());
-    this.disconnected = false;
     await this.contextHandler.stopServer();
     await this.contextHandler.ensureServer();
+    this.disconnected = false;
   }
 
   @action
   disconnect() {
     logger.info(`[CLUSTER]: disconnect`, this.getMeta());
+    this.unbindEvents();
+    this.contextHandler.stopServer();
     this.disconnected = true;
     this.online = false;
     this.accessible = false;
-    this.contextHandler.stopServer();
+    this.pushState();
   }
 
   @action
@@ -344,13 +349,14 @@ export class Cluster implements ClusterModel {
     })
   }
 
-  // serializable cluster-state (mostly used for push-notifications)
+  // serializable cluster-state used for sync btw main <-> renderer
   getState = (): ClusterState => {
     const state: ClusterState = {
       ...this.toJSON(),
       initialized: this.initialized,
       apiUrl: this.apiUrl,
       online: this.online,
+      disconnected: this.disconnected,
       accessible: this.accessible,
       failureReason: this.failureReason,
       nodes: this.nodes,
@@ -383,8 +389,9 @@ export class Cluster implements ClusterModel {
       id: this.id,
       name: this.contextName,
       initialized: this.initialized,
-      accessible: this.accessible,
       online: this.online,
+      accessible: this.accessible,
+      disconnected: this.disconnected,
     }
   }
 

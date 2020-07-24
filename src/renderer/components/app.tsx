@@ -1,7 +1,7 @@
 import "./app.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { computed, observable, reaction } from "mobx";
+import { autorun, computed, observable } from "mobx";
 import { Redirect, Route, Switch } from "react-router";
 import { Notifications } from "./notifications";
 import { NotFound } from "./+404";
@@ -28,45 +28,45 @@ import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../api/rbac";
 import { AddCluster, addClusterRoute } from "./+add-cluster";
-import { LandingPage, landingRoute, landingURL } from "./+landing-page";
+import { LandingPage, landingRoute } from "./+landing-page";
 import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";
 import { Workspaces, workspacesRoute } from "./+workspaces";
 import { ErrorBoundary } from "./error-boundary";
-import { navigation } from "../navigation";
 import { clusterIpc } from "../../common/cluster-ipc";
-import { clusterStore } from "../../common/cluster-store";
+import { getHostedCluster } from "../../common/cluster-store";
 import { clusterStatusRoute, clusterStatusURL } from "./cluster-manager/cluster-status.route";
 import { Preferences, preferencesRoute } from "./+preferences";
 import { ClusterStatus } from "./cluster-manager/cluster-status";
 import { CubeSpinner } from "./spinner";
+import { navigate, navigation } from "../navigation";
 
 @observer
 export class App extends React.Component {
   @observable isReady = false;
 
-  @computed get clusterReady() {
-    const clusterId = location.hostname.split(".")[0];
-    return !!clusterStore.getById(clusterId)?.isReady;
+  @computed get clusterReady(): boolean {
+    const cluster = getHostedCluster();
+    if (cluster) {
+      return cluster.initialized && cluster.accessible;
+    }
   }
 
   async componentDidMount() {
-    await clusterIpc.activate.invokeFromRenderer();
+    await clusterIpc.activate.invokeFromRenderer(); // refresh state, reconnect, etc.
     this.isReady = true;
 
     disposeOnUnmount(this, [
-      reaction(() => this.startURL, url => {
-        const redirect = !this.clusterReady || !clusterStore.hasClusters();
-        if (redirect) navigation.replace(url);
-      }, {
-        fireImmediately: true
+      autorun(() => {
+        if (!this.clusterReady) {
+          navigate(clusterStatusURL());
+        } else if (clusterStatusURL() == navigation.getPath()) {
+          navigate("/"); // redirect when cluster accessible
+        }
       })
     ])
   }
 
   get startURL() {
-    if (!clusterStore.hasClusters()) {
-      return landingURL();
-    }
     if (!this.clusterReady) {
       return clusterStatusURL();
     }

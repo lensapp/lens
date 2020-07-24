@@ -20,6 +20,7 @@ import { landingURL } from "../+landing-page";
 import { Tooltip, TooltipContent } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
+import { clusterStatusURL } from "./cluster-status.route";
 
 // fixme: allow to rearrange clusters with drag&drop
 
@@ -54,9 +55,9 @@ export class ClustersMenu extends React.Component<Props> {
     if (cluster.online) {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
-        click: () => {
-          navigate(landingURL());
-          clusterIpc.disconnect.invokeFromRenderer();
+        click: async () => {
+          await clusterIpc.disconnect.invokeFromRenderer();
+          navigate(clusterStatusURL());
         }
       }))
     }

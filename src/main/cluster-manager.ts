@@ -12,9 +12,8 @@ export class ClusterManager {
     autorun(() => {
       clusterStore.clusters.forEach(cluster => {
         if (!cluster.initialized) {
-          logger.info(`[CLUSTER-MANAGER]: initializing cluster`, cluster.getMeta());
-          cluster.init(port); // connect to kube-auth-proxy, context handling
-          cluster.bindEvents(); // send push-updates to renderer
+          logger.info(`[CLUSTER-MANAGER]: init cluster`, cluster.getMeta());
+          cluster.init(port);
         }
       });
     });
@@ -25,10 +24,7 @@ export class ClusterManager {
       if (removedClusters.length > 0) {
         const meta = removedClusters.map(cluster => cluster.getMeta());
         logger.info(`[CLUSTER-MANAGER]: removing clusters`, meta);
-        removedClusters.forEach(cluster => {
-          cluster.disconnect();
-          cluster.unbindEvents();
-        });
+        removedClusters.forEach(cluster => cluster.disconnect());
         clusterStore.removedClusters.clear();
       }
     }, {
@@ -38,7 +34,6 @@ export class ClusterManager {
     // listen for ipc-events that must/can be handled *only* in main-process (nodeIntegration=true)
     clusterIpc.activate.handleInMain();
     clusterIpc.disconnect.handleInMain();
-    clusterIpc.reconnect.handleInMain();
   }
 
   stop() {
