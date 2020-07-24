@@ -1,7 +1,7 @@
 import path from "path"
 import Config from "conf"
 import { Options as ConfOptions } from "conf/dist/source/types"
-import { app, ipcMain, ipcRenderer, remote } from "electron"
+import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron"
 import { action, observable, reaction, runInAction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
@@ -80,18 +80,20 @@ export class BaseStore<T = any> extends Singleton {
       reaction(() => this.toJSON(), model => this.onModelChange(model)),
     );
     if (ipcMain) {
-      ipcMain.on(this.syncChannel, (event, model: T) => {
+      const callback = (event: IpcMainEvent, model: T) => {
         logger.debug(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
-      });
-      this.syncDisposers.push(() => ipcMain.removeAllListeners(this.syncChannel));
+      };
+      ipcMain.on(this.syncChannel, callback);
+      this.syncDisposers.push(() => ipcMain.off(this.syncChannel, callback));
     }
     if (ipcRenderer) {
-      ipcRenderer.on(this.syncChannel, (event, model: T) => {
+      const callback = (event: IpcRendererEvent, model: T) => {
         logger.debug(`[STORE]: SYNC ${this.name} from main`, { model });
         this.onSync(model);
-      });
-      this.syncDisposers.push(() => ipcRenderer.removeAllListeners(this.syncChannel));
+      };
+      ipcRenderer.on(this.syncChannel, callback);
+      this.syncDisposers.push(() => ipcRenderer.off(this.syncChannel, callback));
     }
   }
 
@@ -109,6 +111,7 @@ export class BaseStore<T = any> extends Singleton {
   }
 
   protected onSync(model: T) {
+    // todo: use "resourceVersion" if merge required (to avoid equality checks => better performance)
     if (!isEqual(this.toJSON(), model)) {
       this.fromStore(model);
     }
