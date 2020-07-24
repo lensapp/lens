@@ -12,7 +12,7 @@ import logger from "./logger";
 
 export function initMenu(windowManager: WindowManager) {
   autorun(() => {
-    logger.debug(`[MENU]: refreshing menu, cluster=${clusterStore.activeClusterId}`);
+    logger.debug(`[MENU]: building menu, cluster=${clusterStore.activeClusterId}`);
     buildMenu(windowManager);
   });
 }
@@ -20,9 +20,9 @@ export function initMenu(windowManager: WindowManager) {
 function buildMenu(windowManager: WindowManager) {
   const hasClusters = clusterStore.hasClusters();
   const activeClusterId = clusterStore.activeClusterId;
-  const clusterView = windowManager.getClusterView(activeClusterId);
 
   function navigate(url: string) {
+    const clusterView = windowManager.getClusterView(activeClusterId);
     broadcastIpc({
       channel: "menu:navigate",
       webContentId: clusterView ? clusterView.id : undefined /*no-clusters*/,
