@@ -77,6 +77,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 
+  @computed get activeCluster(): Cluster | null {
+    return this.getById(this.activeClusterId);
+  }
+
   @computed get clustersList(): Cluster[] {
     return Array.from(this.clusters.values());
   }
@@ -194,7 +198,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
 export const clusterStore = ClusterStore.getInstance<ClusterStore>();
 
+export function getHostedClusterId() {
+  return location.hostname.split(".")[0];
+}
+
 export function getHostedCluster(): Cluster {
-  const clusterId = location.hostname.split(".")[0];
-  return clusterStore.getById(clusterId);
+  return clusterStore.getById(getHostedClusterId());
 }

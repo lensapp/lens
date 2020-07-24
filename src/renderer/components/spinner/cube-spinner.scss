@@ -3,6 +3,13 @@
 .CubeSpinner {
   --size: 70px;
 
+  &.center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
   .sk-cube-grid {
     $size: 70px;
     width: $size;
