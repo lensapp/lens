@@ -6,8 +6,8 @@ import { bundledKubectl, Kubectl } from "./kubectl"
 import logger from "./logger"
 
 export interface KubeAuthProxyResponse {
-  data: string;
-  stream: "stderr" | "stdout";
+  data: string; // stream=stdout
+  error?: boolean; // stream=stderr
 }
 
 export class KubeAuthProxy {
@@ -47,10 +47,7 @@ export class KubeAuthProxy {
       env: this.env
     })
     this.proxyProcess.on("exit", (code) => {
-      if (code) {
-        logger.error(`[KUBE-AUTH]: proxying ${this.cluster.contextName} exited with code ${code}`, this.cluster.getMeta());
-      }
-      this.sendIpcLogMessage({ data: `proxy exited with code ${code}`, stream: "stderr" })
+      this.sendIpcLogMessage({ data: `proxy exited with code: ${code}`, error: code > 0 })
       this.proxyProcess = null
     })
     this.proxyProcess.stdout.on('data', (data) => {
@@ -58,11 +55,11 @@ export class KubeAuthProxy {
       if (logItem.startsWith("Starting to serve on")) {
         logItem = "Authentication proxy started\n"
       }
-      this.sendIpcLogMessage({ data: logItem, stream: "stdout" })
+      this.sendIpcLogMessage({ data: logItem })
     })
     this.proxyProcess.stderr.on('data', (data) => {
       this.lastError = this.parseError(data.toString())
-      this.sendIpcLogMessage({ data: data.toString(), stream: "stderr" })
+      this.sendIpcLogMessage({ data: data.toString(), error: true })
     })
 
     return waitUntilUsed(this.port, 500, 10000)
@@ -97,6 +94,7 @@ export class KubeAuthProxy {
     if (this.proxyProcess) {
       logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta())
       this.proxyProcess.kill()
+      this.proxyProcess = null;
     }
   }
 }

@@ -74,7 +74,6 @@ async function main() {
 
   // create window manager and open app
   windowManager = new WindowManager(proxyPort);
-  windowManager.showSplash();
   initMenu(windowManager);
 }
 

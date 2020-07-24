@@ -17,12 +17,4 @@ export const clusterIpc = {
       return clusterStore.getById(clusterId)?.disconnect();
     },
   }),
-
-  reconnect: createIpcChannel({
-    channel: "cluster:reconnect",
-    handle: (clusterId: ClusterId = clusterStore.activeClusterId) => {
-      tracker.event("cluster", "reconnect");
-      return clusterStore.getById(clusterId)?.reconnect();
-    },
-  }),
 }

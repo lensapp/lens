@@ -1,65 +1,76 @@
+import type { KubeAuthProxyResponse } from "../../../main/kube-auth-proxy";
+
 import "./cluster-status.scss"
 import React from "react";
-import type { KubeAuthProxyResponse } from "../../../main/kube-auth-proxy";
-import { clusterStore } from "../../../common/cluster-store";
-import { ipcRenderer } from "electron";
-import { observable } from "mobx";
 import { observer } from "mobx-react";
+import { ipcRenderer } from "electron";
+import { computed, observable } from "mobx";
+import { clusterIpc } from "../../../common/cluster-ipc";
+import { getHostedCluster } from "../../../common/cluster-store";
 import { Icon } from "../icon";
 import { Button } from "../button";
 import { cssNames } from "../../utils";
-import { clusterIpc } from "../../../common/cluster-ipc";
 
 @observer
 export class ClusterStatus extends React.Component {
-  @observable authOutput: string[] = [];
-  @observable hasErrors = false;
+  @observable authOutput: KubeAuthProxyResponse[] = [];
+  @observable isReconnecting = false;
 
-  get cluster() {
-    return clusterStore.activeCluster;
+  @computed get hasErrors() {
+    return this.authOutput.some(({ error }) => error)
   }
 
-  get clusterId() {
-    return clusterStore.activeClusterId;
+  @computed get cluster() {
+    return getHostedCluster()
   }
 
-  componentDidMount() {
-    this.authOutput = ["Connecting ...\n"];
-    ipcRenderer.on(`kube-auth:${this.clusterId}`, (evt, { data, stream }: KubeAuthProxyResponse) => {
-      this.authOutput.push(`[${stream}]: ${data}`);
-      if (stream === "stderr") {
-        this.hasErrors = true;
-      }
+  async componentDidMount() {
+    this.authOutput = [{ data: "Connecting ...\n" }];
+    ipcRenderer.on(`kube-auth:${this.cluster.id}`, (evt, res) => {
+      this.authOutput.push(res);
     })
   }
 
   componentWillUnmount() {
-    ipcRenderer.removeAllListeners(`kube-auth:${this.clusterId}`);
+    ipcRenderer.removeAllListeners(`kube-auth:${this.cluster.id}`);
   }
 
-  reconnect = () => {
-    this.authOutput = ["Reconnecting ...\n"];
-    clusterIpc.reconnect.invokeFromRenderer(this.clusterId);
+  reconnect = async () => {
+    this.authOutput = [{ data: "Reconnecting ...\n" }];
+    this.isReconnecting = true;
+    await clusterIpc.activate.invokeFromRenderer();
+    this.isReconnecting = false;
   }
 
   render() {
     const { authOutput, cluster, hasErrors } = this;
+    const isDisconnected = !!cluster.disconnected;
+    const isInactive = hasErrors || isDisconnected;
     return (
       <div className="ClusterStatus flex column gaps">
-        {!hasErrors && <Icon material="cloud_queue"/>}
-        {hasErrors && <Icon material="cloud_off" className="error"/>}
-        {cluster && <h2>{cluster.contextName}</h2>}
-        <pre className="kube-auth-out">
-          {authOutput.map((data, index) => {
-            const error = data.startsWith("[stderr]");
-            return <p key={index} className={cssNames({ error })}>{data}</p>
-          })}
-        </pre>
-        {hasErrors && (
+        {isInactive && (
+          <Icon
+            material="cloud_off"
+            className={cssNames({ error: hasErrors })}
+          />
+        )}
+        <h2>
+          {cluster.contextName}
+        </h2>
+        {!isDisconnected && (
+          <pre className="kube-auth-out">
+            {authOutput.map(({ data, error }, index) => {
+              return <p key={index} className={cssNames({ error })}>{data}</p>
+            })}
+          </pre>
+        )}
+        {isInactive && (
           <Button
-            primary className="box center"
+            primary
             label="Reconnect"
+            className="box center"
             onClick={this.reconnect}
+            waiting={this.isReconnecting}
           />
         )}
       </div>

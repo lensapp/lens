@@ -197,3 +197,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 }
 
 export const clusterStore = ClusterStore.getInstance<ClusterStore>();
+
+export function getHostedCluster(): Cluster {
+  const clusterId = location.hostname.split(".")[0];
+  return clusterStore.getById(clusterId);
+}

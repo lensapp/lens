@@ -13,7 +13,7 @@ export function initMenu(windowManager: WindowManager) {
 
   function navigate(url: string) {
     const activeClusterId = clusterStore.activeClusterId;
-    const view = windowManager.getView(activeClusterId);
+    const view = windowManager.getClusterView(activeClusterId);
     if (view) {
       broadcastIpc({
         channel: "menu:navigate",
