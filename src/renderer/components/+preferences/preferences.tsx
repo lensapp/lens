@@ -172,7 +172,7 @@ export class Preferences extends React.Component {
         <h2><Trans>HTTP Proxy</Trans></h2>
         <Input
           placeholder={_i18n._(t`Type HTTP proxy url (example: http://proxy.acme.org:8080)`)}
-          value={preferences.httpsProxy}
+          value={preferences.httpsProxy || ""}
           onChange={v => preferences.httpsProxy = v}
         />
         <small className="hint">

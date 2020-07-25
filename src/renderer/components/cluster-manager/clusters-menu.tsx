@@ -124,8 +124,8 @@ export class ClustersMenu extends React.Component<Props> {
             </TooltipContent>
           </Tooltip>
           <Icon big material="add" id="add-cluster-icon"/>
-          {newContexts.length > 0 && (
-            <Badge className="counter" label={newContexts.length}/>
+          {newContexts.size > 0 && (
+            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>}/>
           )}
         </div>
       </div>

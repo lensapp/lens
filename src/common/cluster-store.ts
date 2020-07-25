@@ -103,6 +103,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   async addCluster(model: ClusterModel, activate = true): Promise<Cluster> {
+    tracker.event("cluster", "add");
     const cluster = new Cluster(model);
     this.clusters.set(model.id, cluster);
     if (activate) this.activeClusterId = model.id;
@@ -111,6 +112,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   async removeById(clusterId: ClusterId) {
+    tracker.event("cluster", "remove");
     const cluster = this.getById(clusterId);
     if (cluster) {
       this.clusters.delete(clusterId);
