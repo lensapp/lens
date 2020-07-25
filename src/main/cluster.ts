@@ -417,7 +417,7 @@ export class Cluster implements ClusterModel {
   }
 
   protected async getAllowedResources() {
-    // TODO: auto-populate all resources dynamically
+    // todo: auto-populate all resources dynamically (e.g. kubectl api-resources -o=wide -v=7)
     const apiResources = [
       { resource: "configmaps" },
       { resource: "cronjobs", group: "batch" },
