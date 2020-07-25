@@ -4,9 +4,8 @@ import { action, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store"
 import { getAppVersion } from "./utils/app-version";
+import { getKubeConfigLocal, loadConfig } from "./kube-helpers";
 import { tracker } from "./tracker";
-
-// fixme: detect new contexts from .kube/config since last open
 
 export interface UserStoreModel {
   lastSeenAppVersion: string;
@@ -27,7 +26,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   private constructor() {
     super({
-      // configName: "lens-user-store", // todo: migrate from default filename
+      // configName: "lens-user-store", // todo: migrate from default "config.json"
       migrations: migrations,
     });
 
@@ -35,18 +34,21 @@ export class UserStore extends BaseStore<UserStoreModel> {
     reaction(() => this.preferences.allowTelemetry, allowed => {
       tracker.event("telemetry", allowed ? "enabled" : "disabled");
     });
+
+    // refresh new contexts
+    this.whenLoaded.then(this.refreshNewContexts);
+    reaction(() => this.seenContexts.size, this.refreshNewContexts);
   }
 
   @observable lastSeenAppVersion = "0.0.0"
-  @observable seenContexts: string[] = [];
-  @observable newContexts: string[] = [];
+  @observable seenContexts = observable.set<string>();
+  @observable newContexts = observable.set<string>();
 
   @observable preferences: UserPreferences = {
     allowTelemetry: true,
     allowUntrustedCAs: false,
     colorTheme: UserStore.defaultTheme,
     downloadMirror: "default",
-    httpsProxy: "",
   };
 
   get isNewVersion() {
@@ -64,22 +66,43 @@ export class UserStore extends BaseStore<UserStoreModel> {
     this.lastSeenAppVersion = getAppVersion();
   }
 
+  protected refreshNewContexts = async () => {
+    const kubeConfig = await getKubeConfigLocal();
+    if (kubeConfig) {
+      this.newContexts.clear();
+      const localContexts = loadConfig(kubeConfig).getContexts();
+      localContexts.forEach(({ name }) => {
+        if (!this.seenContexts.has(name)) {
+          this.newContexts.add(name);
+        }
+      })
+    }
+  }
+
+  @action
+  markNewContextsAsSeen() {
+    const { seenContexts, newContexts } = this;
+    this.seenContexts.replace([...seenContexts, ...newContexts]);
+    this.newContexts.clear();
+  }
+
   @action
   protected fromStore(data: Partial<UserStoreModel> = {}) {
     const { lastSeenAppVersion, seenContexts = [], preferences } = data
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;
     }
-    this.seenContexts = seenContexts;
+    this.seenContexts.replace(seenContexts);
     Object.assign(this.preferences, preferences);
   }
 
-  toJSON() {
-    return toJS({
+  toJSON(): UserStoreModel {
+    const model: UserStoreModel = {
       lastSeenAppVersion: this.lastSeenAppVersion,
       seenContexts: Array.from(this.seenContexts),
       preferences: this.preferences,
-    }, {
+    }
+    return toJS(model, {
       recurseEverything: true,
     })
   }

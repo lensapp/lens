@@ -1,6 +1,6 @@
 import { app, remote } from "electron";
 import { KubeConfig, V1Node, V1Pod } from "@kubernetes/client-node"
-import { ensureDirSync, writeFileSync } from "fs-extra";
+import { ensureDirSync, readFile, writeFileSync } from "fs-extra";
 import path from "path"
 import os from "os"
 import yaml from "js-yaml"
@@ -149,4 +149,14 @@ export function saveConfigToAppFiles(clusterId: string, kubeConfig: KubeConfig |
   ensureDirSync(path.dirname(kubeConfigFile));
   writeFileSync(kubeConfigFile, kubeConfigContents);
   return kubeConfigFile;
+}
+
+export async function getKubeConfigLocal(): Promise<string> {
+  try {
+    const configFile = path.join(process.env.HOME, '.kube', 'config');
+    return readFile(configFile, "utf8");
+  } catch (err) {
+    logger.debug(`Cannot read local kube-config: ${err}`)
+    return "";
+  }
 }

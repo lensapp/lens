@@ -1,23 +1,22 @@
 import "./add-cluster.scss"
-import path from "path";
-import fs from "fs-extra";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { computed, observable } from "mobx";
-import { Select, SelectOption } from "../select";
+import { KubeConfig } from "@kubernetes/client-node";
 import { t, Trans } from "@lingui/macro";
-import { Input } from "../input";
 import { _i18n } from "../../i18n";
+import { Select, SelectOption } from "../select";
+import { Input } from "../input";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
-import { KubeConfig } from "@kubernetes/client-node";
-import { loadConfig, saveConfigToAppFiles, splitConfig, validateConfig } from "../../../common/kube-helpers";
-import { tracker } from "../../../common/tracker";
+import { Icon } from "../icon";
+import { WizardLayout } from "../layout/wizard-layout";
+import { getKubeConfigLocal, loadConfig, saveConfigToAppFiles, splitConfig, validateConfig } from "../../../common/kube-helpers";
 import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid"
 import { navigation } from "../../navigation";
-import { WizardLayout } from "../layout/wizard-layout";
+import { userStore } from "../../../common/user-store";
 
 @observer
 export class AddCluster extends React.Component {
@@ -32,16 +31,15 @@ export class AddCluster extends React.Component {
   @observable customConfig = ""
 
   async componentDidMount() {
-    const kubeConfig = await this.readLocalKubeConfig();
+    const kubeConfig: string = await getKubeConfigLocal()
     if (kubeConfig) {
       this.kubeConfig = loadConfig(kubeConfig)
       this.customConfig = kubeConfig
     }
   }
 
-  async readLocalKubeConfig(): Promise<string> {
-    const localPath = path.join(process.env.HOME, '.kube', 'config');
-    return fs.readFile(localPath, "utf8").catch(() => null)
+  componentWillUnmount() {
+    userStore.markNewContextsAsSeen();
   }
 
   @computed get isCustom() {
@@ -51,18 +49,15 @@ export class AddCluster extends React.Component {
   @computed get clusterOptions() {
     const options: SelectOption<KubeConfig>[] = [];
     if (this.kubeConfig) {
-      const contexts = splitConfig(this.kubeConfig)
-        .filter(kc => !clusterStore.hasContext(kc.currentContext));
-
-      contexts.forEach(kubeConfig => {
-        const isNew = false; // fixme: detect new context since last visit
-        options.push({
-          value: kubeConfig,
-          label: <>
-            {kubeConfig.currentContext}
-            {isNew && <span className="new"> <Trans>(new)</Trans></span>}
-          </>,
-        })
+      splitConfig(this.kubeConfig).forEach(kubeConfig => {
+        const context = kubeConfig.currentContext;
+        const hasContext = clusterStore.hasContext(context);
+        if (!hasContext) {
+          options.push({
+            value: kubeConfig,
+            label: context,
+          });
+        }
       })
     }
     options.push({
@@ -72,8 +67,21 @@ export class AddCluster extends React.Component {
     return options;
   }
 
+  protected formatClusterContextLabel = ({ value, label }: SelectOption<KubeConfig>) => {
+    if (value instanceof KubeConfig) {
+      const context = value.currentContext;
+      const isNew = userStore.newContexts.has(context);
+      return (
+        <div className="kube-context flex gaps align-center">
+          <span>{context}</span>
+          {isNew && <Icon material="fiber_new"/>}
+        </div>
+      )
+    }
+    return label;
+  };
+
   addCluster = async () => {
-    tracker.event("cluster", "add");
     const { clusterConfig, customConfig, proxyServer } = this;
     const clusterId = uuid();
     this.isWaiting = true
@@ -165,6 +173,7 @@ export class AddCluster extends React.Component {
           value={this.clusterConfig}
           options={this.clusterOptions}
           onChange={({ value }: SelectOption) => this.clusterConfig = value}
+          formatOptionLabel={this.formatClusterContextLabel}
         />
         <div className="cluster-settings">
           <a href="#" onClick={() => this.showSettings = !this.showSettings}>
