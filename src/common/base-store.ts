@@ -56,14 +56,10 @@ export class BaseStore<T = any> extends Singleton {
       ...confOptions,
       projectName: "lens",
       projectVersion: getAppVersion(),
-      get cwd() {
-        return (app || remote.app).getPath("userData"); // todo: remove usage of remote.app (deprecated)
-      },
+      cwd: (app || remote.app).getPath("userData"),
     });
-    const storedModel = Object.assign({}, this.storeConfig.store);
-    Reflect.deleteProperty(storedModel, "__internal__"); // todo: avoid "external-internals"
     logger.info(`[STORE]: LOADED from ${this.storeConfig.path}`);
-    this.fromStore(storedModel);
+    this.fromStore(this.storeConfig.store);
     this.isLoaded = true;
   }
 
