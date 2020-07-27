@@ -38,7 +38,7 @@ export class ClusterIcon extends React.Component<Props> {
     const { clusterName, icon } = preferences;
     const clusterIconId = `cluster-icon-${clusterId}`;
     const className = cssNames("ClusterIcon flex inline", this.props.className, {
-      interactive: interactive || !!this.props.onClick,
+      interactive: interactive !== undefined ? interactive : !!this.props.onClick,
       active: isActive,
     });
     return (

@@ -2,15 +2,15 @@
   --size: 37px;
 
   position: relative;
-  opacity: .75;
+  opacity: .55;
   border-radius: $radius;
+  padding: $radius;
   user-select: none;
   cursor: pointer;
 
   &.active, &.interactive:hover {
     opacity: 1;
     background-color: #fff;
-    box-shadow: 0 0 0 $radius #fff;
   }
 
   > img {
