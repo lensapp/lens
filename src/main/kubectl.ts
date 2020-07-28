@@ -210,7 +210,9 @@ export class Kubectl {
       })
       file.on("close", () => {
         logger.debug("kubectl binary download closed")
-        fs.chmod(this.path, 0o755, null)
+        fs.chmod(this.path, 0o755, (err) => {
+          if (err) reject(err);
+        })
         resolve()
       })
       stream.pipe(file)

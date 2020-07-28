@@ -79,7 +79,9 @@ class KubectlDownloader {
     return new Promise((resolve, reject) => {
       file.on("close", () => {
         console.log("kubectl binary download closed")
-        fs.chmod(this.path, 0o755, () => {})
+        fs.chmod(this.path, 0o755, (err) => {
+          if (err) reject(err);
+        })
         resolve()
       })
       stream.pipe(file)
