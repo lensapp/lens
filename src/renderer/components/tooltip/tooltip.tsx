@@ -1,6 +1,7 @@
 import './tooltip.scss'
 
 import React from "react"
+import { createPortal } from "react-dom"
 import { observer } from "mobx-react";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { observable } from "mobx";
@@ -11,6 +12,7 @@ export interface TooltipProps {
   targetId: string; // "id" of target html-element to bind
   visible?: boolean;
   offset?: number; // px
+  usePortal?: boolean;
   position?: TooltipPosition;
   className?: IClassName;
   formatters?: TooltipContentFormatters;
@@ -27,6 +29,7 @@ export interface TooltipContentFormatters {
 }
 
 const defaultProps: Partial<TooltipProps> = {
+  usePortal: true,
   offset: 10,
 }
 
@@ -132,8 +135,8 @@ export class Tooltip extends React.Component<TooltipProps> {
       break;
     }
     return {
-      left,
-      top,
+      left: left,
+      top: top,
       right: left + selfBounds.width,
       bottom: top + selfBounds.height,
     };
@@ -145,15 +148,19 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   render() {
-    const { style, formatters, position, children } = this.props;
+    const { style, formatters, usePortal, children } = this.props;
     const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
       hidden: !this.isVisible,
       formatter: !!formatters,
     });
-    return (
+    const tooltip = (
       <div className={className} style={style} ref={this.bindRef}>
         {children}
       </div>
-    );
+    )
+    if (usePortal) {
+      return createPortal(tooltip, document.body,);
+    }
+    return tooltip;
   }
 }

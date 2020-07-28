@@ -4,7 +4,7 @@
   // https://developer.mozilla.org/en-US/docs/Web/CSS/position
   position: fixed;
   margin: 0 !important;
-  background: $contentColor;
+  background: $mainBackground;
   font-size: small;
   font-weight: normal;
   border: 1px solid $borderColor;
@@ -14,10 +14,12 @@
   padding: .5em;
   text-align: center;
   pointer-events: none;
-  z-index: 1000;
   transition: opacity 150ms 25ms ease-in-out;
+  z-index: 100000;
 
   &.hidden {
+    left: 0;
+    top: 0;
     opacity: 0;
     visibility: hidden;
   }
