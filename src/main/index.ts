@@ -83,6 +83,5 @@ app.on("will-quit", async (event) => {
   event.preventDefault(); // To allow mixpanel sending to be executed
   if (proxyServer) proxyServer.close()
   if (clusterManager) clusterManager.stop()
-  if (windowManager) windowManager.destroy()
   app.exit();
 })
