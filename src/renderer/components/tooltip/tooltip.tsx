@@ -2,109 +2,141 @@ import './tooltip.scss'
 
 import React from "react"
 import { observer } from "mobx-react";
+import { autobind, cssNames, IClassName } from "../../utils";
 import { observable } from "mobx";
-import { createPortal } from "react-dom"
-import { autobind, cssNames } from "../../utils";
-import { Animate } from "../animate";
 
-// fixme: refactor -- better positioning + remove "flying effect"
-// todo: always render outside of parent element ("overflow: auto" should not affect tooltip)
+export type TooltipPosition = "top" | "left" | "right" | "bottom";
 
 export interface TooltipProps {
-  htmlFor: string;
-  className?: string;
-  position?: Position;
-  useAnimation?: boolean;
-  following?: boolean; // tooltip is following mouse position
+  targetId: string; // "id" of target html-element to bind
+  visible?: boolean;
+  offset?: number; // px
+  position?: TooltipPosition;
+  className?: IClassName;
+  formatters?: TooltipContentFormatters;
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }
 
-interface Position {
-  left?: boolean;
-  right?: boolean;
-  top?: boolean;
-  bottom?: boolean;
+export interface TooltipContentFormatters {
+  narrow?: boolean; // max-width
+  warning?: boolean; // color
+  small?: boolean; // font-size
+  nowrap?: boolean; // white-space
+  tableView?: boolean;
 }
 
 const defaultProps: Partial<TooltipProps> = {
-  useAnimation: true,
-  position: {
-    bottom: true,
-  }
-};
+  offset: 10,
+}
 
 @observer
 export class Tooltip extends React.Component<TooltipProps> {
   static defaultProps = defaultProps as object;
 
-  public anchor: HTMLElement;
-  public elem: HTMLElement;
+  @observable.ref elem: HTMLElement;
+  @observable activePosition: TooltipPosition;
+  @observable isVisible = !!this.props.visible;
 
-  @observable isVisible = false;
+  get targetElem(): HTMLElement {
+    return document.getElementById(this.props.targetId)
+  }
 
   componentDidMount() {
-    const { htmlFor } = this.props;
-    this.anchor = htmlFor ? document.getElementById(htmlFor) : this.elem.parentElement;
-    if (this.anchor) {
-      if (window.getComputedStyle(this.anchor).position === "static") {
-        this.anchor.style.position = "relative"
-      }
-      this.anchor.addEventListener("mouseenter", this.onMouseEnter);
-      this.anchor.addEventListener("mouseleave", this.onMouseLeave);
-      this.anchor.addEventListener("mousemove", this.onMouseMove);
-    }
+    this.targetElem.addEventListener("mouseenter", this.onEnterTarget)
+    this.targetElem.addEventListener("mouseleave", this.onLeaveTarget)
   }
 
   componentWillUnmount() {
-    if (this.anchor) {
-      this.anchor.removeEventListener("mouseenter", this.onMouseEnter);
-      this.anchor.removeEventListener("mouseleave", this.onMouseLeave);
-      this.anchor.removeEventListener("mousemove", this.onMouseMove);
-    }
+    this.targetElem.removeEventListener("mouseenter", this.onEnterTarget)
+    this.targetElem.removeEventListener("mouseleave", this.onLeaveTarget)
   }
 
   @autobind()
-  onMouseEnter(evt: MouseEvent) {
+  protected onEnterTarget(evt: MouseEvent) {
     this.isVisible = true;
-    this.onMouseMove(evt);
+    this.refreshPosition();
   }
 
   @autobind()
-  onMouseLeave(evt: MouseEvent) {
+  protected onLeaveTarget(evt: MouseEvent) {
     this.isVisible = false;
   }
 
   @autobind()
-  onMouseMove(evt: MouseEvent) {
-    if (!this.props.following) {
-      return;
+  refreshPosition() {
+    const { position } = this.props;
+    const { elem, targetElem } = this;
+
+    let allPositions: TooltipPosition[] = ["right", "bottom", "top", "left"];
+    if (allPositions.includes(position)) {
+      allPositions = [
+        position, // put first as priority side for positioning
+        ...allPositions.filter(pos => pos !== position),
+      ];
     }
 
-    const offsetX = -10;
-    const offsetY = 10;
-    const { clientX, clientY } = evt;
-    const { innerWidth, innerHeight } = window;
+    // reset position first and get all possible client-rect area for tooltip element
+    this.setPosition({ left: 0, top: 0 });
 
-    const initialPos: Partial<CSSStyleDeclaration> = {
-      top: "auto",
-      left: "auto",
-      right: (innerWidth - clientX + offsetX) + "px",
-      bottom: (innerHeight - clientY + offsetY) + "px",
-    }
+    const selfBounds = elem.getBoundingClientRect();
+    const targetBounds = targetElem.getBoundingClientRect();
+    const { innerWidth: viewportWidth, innerHeight: viewportHeight } = window;
 
-    Object.assign(this.elem.style, initialPos);
+    // find proper position
+    this.activePosition = null;
+    for (const pos of allPositions) {
+      const { left, top, right, bottom } = this.getPosition(pos, selfBounds, targetBounds)
+      const fitsToWindow = left >= 0 && top >= 0 && right <= viewportWidth && bottom <= viewportHeight;
+      if (fitsToWindow) {
+        this.activePosition = pos;
+        this.setPosition({ top, left });
+        break;
+      }
+    }
+    if (!this.activePosition) {
+      const { left, top } = this.getPosition(allPositions[0], selfBounds, targetBounds)
+      this.activePosition = allPositions[0];
+      this.setPosition({ left, top });
+    }
+  }
 
-    // correct position if not fits to viewport
-    const { left, top } = this.elem.getBoundingClientRect();
-    if (left < 0) {
-      this.elem.style.left = clientX + offsetX + "px";
-      this.elem.style.right = "auto"
+  protected setPosition(pos: { left: number, top: number }) {
+    const elemStyle = this.elem.style;
+    elemStyle.left = pos.left + "px"
+    elemStyle.top = pos.top + "px"
+  }
+
+  protected getPosition(position: TooltipPosition, selfBounds: DOMRect, targetBounds: DOMRect) {
+    let left: number
+    let top: number
+    const offset = this.props.offset;
+    const horizontalCenter = targetBounds.left + (targetBounds.width - selfBounds.width) / 2;
+    const verticalCenter = targetBounds.top + (targetBounds.height - selfBounds.height) / 2;
+    switch (position) {
+    case "top":
+      left = horizontalCenter;
+      top = targetBounds.top - selfBounds.height - offset;
+      break;
+    case "bottom":
+      left = horizontalCenter;
+      top = targetBounds.bottom + offset;
+      break;
+    case "left":
+      top = verticalCenter;
+      left = targetBounds.left - selfBounds.width - offset;
+      break;
+    case "right":
+      top = verticalCenter;
+      left = targetBounds.right + offset;
+      break;
     }
-    if (top < 0) {
-      this.elem.style.top = clientY + offsetY + "px";
-      this.elem.style.bottom = "auto"
-    }
+    return {
+      left,
+      top,
+      right: left + selfBounds.width,
+      bottom: top + selfBounds.height,
+    };
   }
 
   @autobind()
@@ -113,40 +145,15 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   render() {
-    const { isVisible } = this;
-    const { useAnimation, position, following, style, children } = this.props;
-    let { className } = this.props;
-    className = cssNames('Tooltip', position, { following }, className);
-    const tooltip = (
-      <Animate enter={isVisible} enabled={useAnimation}>
-        <div className={className} ref={this.bindRef} style={style}>
-          {children}
-        </div>
-      </Animate>
-    );
-    if (following) {
-      return createPortal(tooltip, document.body);
-    }
-    return tooltip;
-  }
-}
-
-interface TooltipContentProps {
-  className?: string;
-  narrow?: boolean; // max-width
-  warning?: boolean; // color
-  small?: boolean; // font-size
-  nowrap?: boolean; // white-space
-  tableView?: boolean;
-}
-
-export class TooltipContent extends React.Component<TooltipContentProps> {
-  render() {
-    const { className, children, ...modifiers } = this.props;
+    const { style, formatters, position, children } = this.props;
+    const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
+      hidden: !this.isVisible,
+      formatter: !!formatters,
+    });
     return (
-      <div className={cssNames("TooltipContent", className, modifiers)}>
+      <div className={className} style={style} ref={this.bindRef}>
         {children}
       </div>
-    )
+    );
   }
 }

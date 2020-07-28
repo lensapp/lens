@@ -17,7 +17,7 @@ import { navigate, navigation } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
-import { Tooltip, TooltipContent } from "../tooltip";
+import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterStatusURL } from "./cluster-status.route";
@@ -118,10 +118,8 @@ export class ClustersMenu extends React.Component<Props> {
           })}
         </div>
         <div className="add-cluster" onClick={this.addCluster}>
-          <Tooltip htmlFor="add-cluster-icon" position={{ right: true }}>
-            <TooltipContent nowrap>
-              <Trans>Add Cluster</Trans>
-            </TooltipContent>
+          <Tooltip targetId="add-cluster-icon">
+            <Trans>Add Cluster</Trans>
           </Tooltip>
           <Icon big material="add" id="add-cluster-icon"/>
           {newContexts.size > 0 && (

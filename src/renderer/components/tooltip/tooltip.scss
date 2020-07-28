@@ -1,101 +1,76 @@
 
 .Tooltip {
-  --tooltip-bgc: #{$contentColor};
-  --tooltip-color: #{$textColorSecondary};
-  --tooltip-margin: #{$padding / 2 $padding / 3};
-
-  position: absolute;
-  background: var(--tooltip-bgc);
+  // use positioning relative to viewport (window)
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/position
+  position: fixed;
+  margin: 0 !important;
+  background: $contentColor;
   font-size: small;
   font-weight: normal;
   border: 1px solid $borderColor;
   border-radius: $radius;
-  color: var(--tooltip-color);
-  margin: var(--tooltip-margin);
+  color: $textColorSecondary;
   white-space: normal;
   padding: .5em;
   text-align: center;
-  transition-delay: 100ms; // delay for .Animate
   pointer-events: none;
   z-index: 1000;
+  transition: opacity 150ms 25ms ease-in-out;
 
-  * {
-    white-space: normal;
+  &.hidden {
+    opacity: 0;
+    visibility: hidden;
   }
 
   &:empty {
     display: none;
   }
 
-  &.following {
-    position: fixed;
-  }
-
-  &:not(.following) {
-    margin: #{$margin};
-
-    &.left {
-      right: 100%;
+  &.formatter {
+    &.nowrap {
+      &, * {
+        white-space: nowrap;
+      }
     }
 
-    &.right {
-      left: 100%;
-    }
-
-    &.top {
-      bottom: 100%;
-    }
-
-    &.bottom {
-      top: 100%;
-    }
-  }
-}
-
-.TooltipContent {
-  &.nowrap {
-    &, * {
-      white-space: nowrap;
-    }
-  }
-
-  &.narrow {
-    max-width: 300px;
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-    text-align: left;
-  }
-
-  &.small {
-    font-size: $font-size-small;
-  }
-
-  &.warning {
-    color: $colorError;
-  }
-
-  &.tableView {
-    min-width: 200px;
-
-    > :not(:last-child) {
-      margin-bottom: var(--flex-gap);
-    }
-
-    .title {
-      color: $textColorAccent;
-      text-align: center;
-    }
-
-    .name {
-      color: $textColorAccent;
-      text-align: right;
-      flex: 0 0 35%;
-    }
-
-    .value {
-      text-align: left;
+    &.narrow {
       max-width: 300px;
-      word-break: break-word;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      text-align: left;
+    }
+
+    &.small {
+      font-size: $font-size-small;
+    }
+
+    &.warning {
+      color: $colorError;
+    }
+
+    &.tableView {
+      min-width: 200px;
+
+      > :not(:last-child) {
+        margin-bottom: var(--flex-gap);
+      }
+
+      .title {
+        color: $textColorAccent;
+        text-align: center;
+      }
+
+      .name {
+        color: $textColorAccent;
+        text-align: right;
+        flex: 0 0 35%;
+      }
+
+      .value {
+        text-align: left;
+        max-width: 300px;
+        word-break: break-word;
+      }
     }
   }
 }

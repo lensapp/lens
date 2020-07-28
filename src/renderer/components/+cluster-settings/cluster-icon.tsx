@@ -7,7 +7,7 @@ import { Hashicon } from "@emeraldpay/hashicon-react";
 import { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
-import { Tooltip, TooltipContent } from "../tooltip";
+import { Tooltip } from "../tooltip";
 
 interface Props extends DOMAttributes<HTMLElement> {
   cluster: Cluster;
@@ -44,9 +44,7 @@ export class ClusterIcon extends React.Component<Props> {
     return (
       <div {...elemProps} className={className} id={clusterIconId}>
         {showTooltip && (
-          <Tooltip htmlFor={clusterIconId} position={{ right: true }}>
-            <TooltipContent nowrap>{clusterName}</TooltipContent>
-          </Tooltip>
+          <Tooltip targetId={clusterIconId}>{clusterName}</Tooltip>
         )}
         {icon && <img src={icon} alt={clusterName}/>}
         {!icon && <Hashicon value={clusterName} options={options}/>}

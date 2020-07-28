@@ -28,7 +28,6 @@ import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resourc
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { navigation } from "../../navigation";
 import { isAllowedResource } from "../../api/rbac"
-import { TooltipContent } from "../tooltip";
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
 type SidebarContextValue = {
@@ -83,17 +82,9 @@ export class Sidebar extends React.Component<Props> {
             </NavLink>
             <Icon
               className="pin-icon"
+              tooltip={<Trans>Compact view</Trans>}
               material={isPinned ? "keyboard_arrow_left" : "keyboard_arrow_right"}
               onClick={toggle}
-              tooltip={{
-                following: false,
-                position: { right: true },
-                children: (
-                  <TooltipContent nowrap>
-                    <Trans>Compact view</Trans>
-                  </TooltipContent>
-                )
-              }}
               focusable={false}
             />
           </div>

@@ -2,7 +2,6 @@ import "./kube-event-icon.scss";
 
 import React from "react";
 import { Icon } from "../icon";
-import { TooltipContent } from "../tooltip";
 import { KubeObject } from "../../api/kube-object";
 import { eventStore } from "./event.store";
 import { cssNames } from "../../utils";
@@ -34,15 +33,17 @@ export class KubeEventIcon extends React.Component<Props> {
       <Icon
         material="warning"
         className={cssNames("KubeEventIcon", { warning: event.isWarning() })}
-        tooltip={(
-          <TooltipContent className="KubeEventTooltip">
-            {event.message}
-            <div className="age">
-              <Icon material="access_time"/>
-              {event.getAge(undefined, undefined, true)}
+        tooltip={{
+          children: (
+            <div className="KubeEventTooltip">
+              <div className="msg">{event.message}</div>
+              <div className="age">
+                <Icon material="access_time"/>
+                {event.getAge(undefined, undefined, true)}
+              </div>
             </div>
-          </TooltipContent>
-        )}
+          )
+        }}
       />
     )
   }

@@ -15,7 +15,7 @@ import { NodeMenu } from "./node-menu";
 import { LineProgress } from "../line-progress";
 import { _i18n } from "../../i18n";
 import { bytesToUnits } from "../../utils/convertMemory";
-import { Tooltip, TooltipContent } from "../tooltip";
+import { Tooltip } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { apiManager } from "../../api/api-manager";
@@ -101,15 +101,13 @@ export class Nodes extends React.Component<Props> {
       return (
         <div key={type} id={tooltipId} className={cssNames("condition", kebabCase(type))}>
           {type}
-          <Tooltip htmlFor={tooltipId} following>
-            <TooltipContent tableView>
-              {Object.entries(condition).map(([key, value]) =>
-                <div key={key} className="flex gaps align-center">
-                  <div className="name">{upperFirst(key)}</div>
-                  <div className="value">{value}</div>
-                </div>
-              )}
-            </TooltipContent>
+          <Tooltip targetId={tooltipId} formatters={{ tableView: true }}>
+            {Object.entries(condition).map(([key, value]) =>
+              <div key={key} className="flex gaps align-center">
+                <div className="name">{upperFirst(key)}</div>
+                <div className="value">{value}</div>
+              </div>
+            )}
           </Tooltip>
         </div>)
     })
@@ -162,7 +160,7 @@ export class Nodes extends React.Component<Props> {
               this.renderDiskUsage(node),
               <>
                 <span id={tooltipId}>{node.getTaints().length}</span>
-                <Tooltip htmlFor={tooltipId} style={{ whiteSpace: "pre-line" }}>
+                <Tooltip targetId={tooltipId} style={{ whiteSpace: "pre-line" }}>
                   {node.getTaints().map(({ key, effect }) => `${key}: ${effect}`).join("\n")}
                 </Tooltip>
               </>,
