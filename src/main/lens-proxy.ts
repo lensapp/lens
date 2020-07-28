@@ -7,7 +7,7 @@ import { openShell } from "./node-shell-session";
 import { Router } from "./router"
 import { ClusterManager } from "./cluster-manager"
 import { ContextHandler } from "./context-handler";
-import { apiKubePrefix } from "../common/vars";
+import { apiKubePrefix, noClustersHost } from "../common/vars";
 import logger from "./logger"
 
 export class LensProxy {
@@ -117,7 +117,7 @@ export class LensProxy {
   }
 
   protected async handleRequest(proxy: httpProxy, req: http.IncomingMessage, res: http.ServerResponse) {
-    if (req.headers.host.split(":")[0] === "no-clusters.localhost") {
+    if (req.headers.host.split(":")[0] === noClustersHost) {
       this.router.handleStaticFile(req.url, res);
       return;
     }

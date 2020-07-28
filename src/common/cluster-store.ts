@@ -4,7 +4,7 @@ import filenamify from "filenamify";
 import { app, ipcRenderer } from "electron";
 import { copyFile, ensureDir, unlink } from "fs-extra";
 import { action, computed, observable, toJS } from "mobx";
-import { appProto } from "./vars";
+import { appProto, noClustersHost } from "./vars";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store"
@@ -199,6 +199,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 }
 
 export const clusterStore = ClusterStore.getInstance<ClusterStore>();
+
+export function isNoClustersView() {
+  return location.hostname === noClustersHost
+}
 
 export function getHostedClusterId() {
   return location.hostname.split(".")[0];

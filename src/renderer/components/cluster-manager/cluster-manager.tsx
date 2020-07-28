@@ -9,7 +9,7 @@ import { cssNames, IClassName } from "../../utils";
 import { Terminal } from "../dock/terminal";
 import { i18nStore } from "../../i18n";
 import { themeStore } from "../../theme.store";
-import { clusterStore, getHostedClusterId } from "../../../common/cluster-store";
+import { clusterStore, getHostedClusterId, isNoClustersView } from "../../../common/cluster-store";
 import { CubeSpinner } from "../spinner";
 
 interface Props {
@@ -30,7 +30,8 @@ export class ClusterManager extends React.Component<Props> {
   @computed get isInactive() {
     const { activeCluster, activeClusterId } = clusterStore;
     const isActivatedBefore = activeCluster?.initialized;
-    return !isActivatedBefore && activeClusterId !== getHostedClusterId();
+    if (isNoClustersView() || isActivatedBefore) return;
+    return activeClusterId !== getHostedClusterId();
   }
 
   render() {

@@ -22,6 +22,9 @@ export const rendererDir = path.join(contextDir, "src/renderer");
 export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 
+// System pages
+export const noClustersHost = "no-clusters.localhost"
+
 // Apis
 export const apiPrefix = "/api" // local router apis
 export const apiKubePrefix = "/api-kube" // k8s cluster apis

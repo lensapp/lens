@@ -3,6 +3,7 @@ import { BrowserWindow, shell } from "electron"
 import windowStateKeeper from "electron-window-state"
 import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
+import { noClustersHost } from "../common/vars";
 import logger from "./logger";
 
 export class WindowManager {
@@ -53,7 +54,7 @@ export class WindowManager {
   protected handleNoClustersView = async ({ activate = false } = {}) => {
     if (!this.noClustersWindow) {
       this.noClustersWindow = this.initClusterView(null);
-      await this.noClustersWindow.loadURL(`http://no-clusters.localhost:${this.proxyPort}`);
+      await this.noClustersWindow.loadURL(`http://${noClustersHost}:${this.proxyPort}`);
     }
     if (activate) {
       this.activeView = this.noClustersWindow;
