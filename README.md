@@ -44,6 +44,14 @@ Allows faster separately re-run some of involved processes:
 1. `yarn dev:renderer` compiles electron's renderer part and start watching files  
 1. `yarn dev-run` runs app in dev-mode and restarts when electron's main process file has changed
 
+## Developer's RTFM recommended list:
+
+- [TypeScript](https://www.typescriptlang.org/docs/home.html) (front-end/back-end) 
+- [ReactJS](https://reactjs.org/docs/getting-started.html) (front-end, ui)
+- [MobX](https://mobx.js.org/) (app-state-management, back-end/front-end)
+- [ElectronJS](https://www.electronjs.org/docs) (chrome/node)
+- [NodeJS](https://nodejs.org/dist/latest-v12.x/docs/api/) (api docs)
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/lensapp/lens.
