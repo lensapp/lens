@@ -11,7 +11,7 @@ import { ServiceAccounts } from "../+user-management-service-accounts";
 import { roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL, usersManagementURL } from "./user-management.routes";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { PodSecurityPolicies, podSecurityPoliciesRoute, podSecurityPoliciesURL } from "../+pod-security-policies";
-import { isAllowedResource } from "../../api/rbac";
+import { isAllowedResource } from "../../../common/rbac";
 
 interface Props extends RouteComponentProps<{}> {
 }

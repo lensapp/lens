@@ -27,7 +27,7 @@ import { crdStore } from "../+custom-resources/crd.store";
 import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resources";
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { navigation } from "../../navigation";
-import { isAllowedResource } from "../../api/rbac"
+import { isAllowedResource } from "../../../common/rbac"
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
 type SidebarContextValue = {

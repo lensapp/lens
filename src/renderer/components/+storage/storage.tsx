@@ -11,7 +11,7 @@ import { StorageClasses, storageClassesRoute, storageClassesURL } from "../+stor
 import { PersistentVolumeClaims, volumeClaimsRoute, volumeClaimsURL } from "../+storage-volume-claims";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { storageURL } from "./storage.route";
-import { isAllowedResource } from "../../api/rbac";
+import { isAllowedResource } from "../../../common/rbac";
 
 interface Props extends RouteComponentProps<{}> {
 }

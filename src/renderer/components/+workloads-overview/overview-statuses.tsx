@@ -15,7 +15,7 @@ import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { PageFiltersList } from "../item-object-list/page-filters-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
-import { isAllowedResource } from "../../api/rbac";
+import { isAllowedResource } from "../../../common/rbac";
 
 @observer
 export class OverviewStatuses extends React.Component {

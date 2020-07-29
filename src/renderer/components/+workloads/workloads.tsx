@@ -15,7 +15,7 @@ import { DaemonSets } from "../+workloads-daemonsets";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
-import { isAllowedResource } from "../../api/rbac"
+import { isAllowedResource } from "../../../common/rbac"
 
 interface Props extends RouteComponentProps {
 }

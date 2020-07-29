@@ -11,6 +11,7 @@ import { KubeconfigManager } from "./kubeconfig-manager"
 import { getNodeWarningConditions, loadConfig, podHasIssues } from "../common/kube-helpers"
 import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from "./feature-manager";
 import request, { RequestPromiseOptions } from "request-promise-native"
+import { apiResources } from "../common/rbac";
 import logger from "./logger"
 
 export enum ClusterStatus {
@@ -422,30 +423,6 @@ export class Cluster implements ClusterModel {
   }
 
   protected async getAllowedResources() {
-    // todo: auto-populate all resources dynamically (e.g. kubectl api-resources -o=wide -v=7)
-    const apiResources = [
-      { resource: "configmaps" },
-      { resource: "cronjobs", group: "batch" },
-      { resource: "customresourcedefinitions", group: "apiextensions.k8s.io" },
-      { resource: "daemonsets", group: "apps" },
-      { resource: "deployments", group: "apps" },
-      { resource: "endpoints" },
-      { resource: "events" },
-      { resource: "horizontalpodautoscalers" },
-      { resource: "ingresses", group: "networking.k8s.io" },
-      { resource: "jobs", group: "batch" },
-      { resource: "namespaces" },
-      { resource: "networkpolicies", group: "networking.k8s.io" },
-      { resource: "nodes" },
-      { resource: "persistentvolumes" },
-      { resource: "pods" },
-      { resource: "podsecuritypolicies" },
-      { resource: "resourcequotas" },
-      { resource: "secrets" },
-      { resource: "services" },
-      { resource: "statefulsets", group: "apps" },
-      { resource: "storageclasses", group: "storage.k8s.io" },
-    ]
     try {
       if (!this.allowedNamespaces.length) {
         return [];

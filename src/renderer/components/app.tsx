@@ -26,7 +26,7 @@ import { PodLogsDialog } from "./+workloads-pods/pod-logs-dialog";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
-import { isAllowedResource } from "../api/rbac";
+import { isAllowedResource } from "../../common/rbac";
 import { AddCluster, addClusterRoute } from "./+add-cluster";
 import { LandingPage, landingRoute, landingURL } from "./+landing-page";
 import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";

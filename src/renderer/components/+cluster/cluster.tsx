@@ -13,7 +13,7 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { clusterStore } from "./cluster.store";
 import { eventStore } from "../+events/event.store";
-import { isAllowedResource } from "../../api/rbac";
+import { isAllowedResource } from "../../../common/rbac";
 
 @observer
 export class Cluster extends React.Component {
