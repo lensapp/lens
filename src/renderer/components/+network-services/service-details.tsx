@@ -63,11 +63,10 @@ export class ServiceDetails extends React.Component<Props> {
         <DrawerItem name={<Trans>Ports</Trans>}>
           <div>
             {
-              service.getPorts().map((port) => {
-                return(
-                  <ServicePortComponent service={service} port={port}/>
-                );
-              })
+              service.getPorts().map((port) => (
+                  <ServicePortComponent service={service} port={port} key={port.toString()}/>
+                )
+              )
             }
           </div>
         </DrawerItem>

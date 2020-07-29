@@ -35,14 +35,14 @@ export class ServicePortComponent extends React.Component<Props> {
   render() {
     const { port } = this.props;
     return (
-      <p className={cssNames("ServicePortComponent", { waiting: this.waiting })} key={port.toString()}>
+      <div className={cssNames("ServicePortComponent", { waiting: this.waiting })}>
         <span title={_i18n._(t`Open in a browser`)} onClick={() => this.portForward() }>
           {port.toString()}
           {this.waiting && (
             <Spinner />
           )}
         </span>
-      </p>
+      </div>
     );
   }
 }

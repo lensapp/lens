@@ -13,7 +13,6 @@ import { Spinner } from "../spinner"
 
 interface Props {
   pod: Pod;
-  containerName: string;
   port: {
     name?: string;
     containerPort: number;
@@ -38,19 +37,18 @@ export class PodContainerPort extends React.Component<Props> {
   }
 
   render() {
-    const { containerName, port } = this.props;
+    const { port } = this.props;
     const { name, containerPort, protocol } = port;
-    const key = `${containerName}-port-${containerPort}-${protocol}`
     const text = (name ? name + ': ' : '')+`${containerPort}/${protocol}`
     return (
-      <p className={cssNames("PodContainerPort", { waiting: this.waiting })} key={key}>
+      <div className={cssNames("PodContainerPort", { waiting: this.waiting })}>
         <span title={_i18n._(t`Open in a browser`)} onClick={() => this.portForward() }>
           {text}
           {this.waiting && (
             <Spinner />
           )}
         </span>
-      </p>
+      </div>
     )
   }
 }

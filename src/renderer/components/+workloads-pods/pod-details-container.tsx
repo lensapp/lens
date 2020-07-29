@@ -67,8 +67,9 @@ export class PodDetailsContainer extends React.Component<Props> {
           <div>
             {
               ports.map((port) => {
+                const key = `${container.name}-port-${port.containerPort}-${port.protocol}`
                 return(
-                  <PodContainerPort pod={pod} containerName={container.name} port={port}/>
+                  <PodContainerPort pod={pod} port={port} key={key}/>
                 )
               })
             }
