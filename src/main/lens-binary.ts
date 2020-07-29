@@ -164,7 +164,7 @@ export class LensBinary {
 
     stream.on("error", (error) => {
       logger.error(error)
-      fs.unlink(binaryPath, null)
+      fs.unlink(binaryPath, () => {})
       throw(error)
     })
     return new Promise((resolve, reject) => {
