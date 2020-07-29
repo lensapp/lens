@@ -153,10 +153,8 @@ export class Cluster implements ClusterModel {
 
   @action
   async refresh() {
-    logger.info(`[CLUSTER]: refreshing status`, this.getMeta());
-    const connectionStatus = await this.getConnectionStatus();
-    this.online = connectionStatus > ClusterStatus.Offline;
-    this.accessible = connectionStatus == ClusterStatus.AccessGranted;
+    logger.info(`[CLUSTER]: refresh`, this.getMeta());
+    await this.refreshConnectionStatus();
     if (this.accessible) {
       this.kubeCtl = new Kubectl(this.version)
       this.distribution = this.detectKubernetesDistribution(this.version)
@@ -169,11 +167,18 @@ export class Cluster implements ClusterModel {
       this.features = features;
       this.isAdmin = isAdmin;
       this.nodes = nodesCount;
+      await Promise.all([
+        this.refreshEvents(),
+        this.refreshAllowedResources(),
+      ]);
     }
-    await Promise.all([
-      this.refreshEvents(),
-      this.refreshAllowedResources(),
-    ]);
+  }
+
+  @action
+  async refreshConnectionStatus() {
+    const connectionStatus = await this.getConnectionStatus();
+    this.online = connectionStatus > ClusterStatus.Offline;
+    this.accessible = connectionStatus == ClusterStatus.AccessGranted;
   }
 
   @action
@@ -219,7 +224,7 @@ export class Cluster implements ClusterModel {
     const apiUrl = this.kubeProxyUrl + path;
     return request(apiUrl, {
       json: true,
-      timeout: 10000,
+      timeout: 5000,
       headers: {
         ...(options.headers || {}),
         Host: new URL(this.webContentUrl).host,
@@ -442,6 +447,9 @@ export class Cluster implements ClusterModel {
       { resource: "storageclasses", group: "storage.k8s.io" },
     ]
     try {
+      if (!this.allowedNamespaces.length) {
+        return [];
+      }
       const resourceAccessStatuses = await Promise.all(
         apiResources.map(apiResource => this.canI({
           resource: apiResource.resource,

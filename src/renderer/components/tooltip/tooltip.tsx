@@ -6,13 +6,18 @@ import { observer } from "mobx-react";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { observable } from "mobx";
 
-export type TooltipPosition = "top" | "left" | "right" | "bottom";
+export enum TooltipPosition {
+  TOP = "top",
+  BOTTOM = "bottom",
+  LEFT = "left",
+  RIGHT = "right",
+}
 
 export interface TooltipProps {
-  targetId: string; // "id" of target html-element to bind
-  visible?: boolean;
-  offset?: number; // px
-  usePortal?: boolean;
+  targetId: string; // html-id of target element to bind for
+  visible?: boolean; // initial visibility
+  offset?: number; // offset from target element in pixels (all sides)
+  usePortal?: boolean; // renders element outside of parent (in body), disable for "easy-styling", default: true
   position?: TooltipPosition;
   className?: IClassName;
   formatters?: TooltipContentFormatters;
@@ -71,7 +76,12 @@ export class Tooltip extends React.Component<TooltipProps> {
     const { position } = this.props;
     const { elem, targetElem } = this;
 
-    let allPositions: TooltipPosition[] = ["right", "bottom", "top", "left"];
+    let allPositions: TooltipPosition[] = [
+      TooltipPosition.RIGHT,
+      TooltipPosition.BOTTOM,
+      TooltipPosition.LEFT,
+      TooltipPosition.RIGHT,
+    ];
     if (allPositions.includes(position)) {
       allPositions = [
         position, // put first as priority side for positioning

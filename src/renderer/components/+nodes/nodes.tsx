@@ -1,5 +1,4 @@
 import "./nodes.scss";
-
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
@@ -15,7 +14,7 @@ import { NodeMenu } from "./node-menu";
 import { LineProgress } from "../line-progress";
 import { _i18n } from "../../i18n";
 import { bytesToUnits } from "../../utils/convertMemory";
-import { Tooltip } from "../tooltip";
+import { Tooltip, TooltipPosition } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { apiManager } from "../../api/api-manager";
@@ -57,7 +56,10 @@ export class Nodes extends React.Component<Props> {
       <LineProgress
         max={cores}
         value={usage}
-        tooltip={_i18n._(t`CPU:`) + ` ${Math.ceil(usage * 100) / cores}\%, ` + _i18n._(t`cores:`) + ` ${cores}`}
+        tooltip={{
+          position: TooltipPosition.BOTTOM,
+          children: _i18n._(t`CPU:`) + ` ${Math.ceil(usage * 100) / cores}\%, ` + _i18n._(t`cores:`) + ` ${cores}`
+        }}
       />
     )
   }
@@ -71,7 +73,10 @@ export class Nodes extends React.Component<Props> {
       <LineProgress
         max={capacity}
         value={usage}
-        tooltip={_i18n._(t`Memory:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`}
+        tooltip={{
+          position: TooltipPosition.BOTTOM,
+          children: _i18n._(t`Memory:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
+        }}
       />
     )
   }
@@ -85,7 +90,10 @@ export class Nodes extends React.Component<Props> {
       <LineProgress
         max={capacity}
         value={usage}
-        tooltip={_i18n._(t`Disk:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`}
+        tooltip={{
+          position: TooltipPosition.BOTTOM,
+          children: _i18n._(t`Disk:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
+        }}
       />
     )
   }

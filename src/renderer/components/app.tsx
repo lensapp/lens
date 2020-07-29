@@ -51,20 +51,19 @@ export class App extends React.Component {
   async componentDidMount() {
     if (this.cluster) {
       await clusterIpc.activate.invokeFromRenderer(); // refresh state, reconnect, etc.
+      disposeOnUnmount(this, [
+        reaction(() => this.cluster.accessible, this.onClusterAccessChange, {
+          fireImmediately: true
+        })
+      ])
     }
-    disposeOnUnmount(this, [
-      reaction(() => this.startURL, this.onStartUrlChange, {
-        fireImmediately: true
-      })
-    ])
     this.isReady = true;
   }
 
-  protected onStartUrlChange = (startURL: string) => {
+  protected onClusterAccessChange = (accessible: boolean) => {
     const path = navigation.getPath();
-    const redirectRequired = ["/", clusterStatusURL()].includes(path);
-    if (redirectRequired || !this.cluster?.accessible) {
-      navigate(startURL);
+    if (!accessible || path === "/") {
+      navigate(this.startURL);
     }
   }
 

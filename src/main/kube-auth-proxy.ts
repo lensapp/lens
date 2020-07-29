@@ -5,7 +5,7 @@ import type { Cluster } from "./cluster"
 import { bundledKubectl, Kubectl } from "./kubectl"
 import logger from "./logger"
 
-export interface KubeAuthProxyResponse {
+export interface KubeAuthProxyLog {
   data: string;
   error?: boolean; // stream=stderr
 }
@@ -80,7 +80,7 @@ export class KubeAuthProxy {
     return errorMsg
   }
 
-  protected async sendIpcLogMessage(res: KubeAuthProxyResponse) {
+  protected async sendIpcLogMessage(res: KubeAuthProxyLog) {
     const channel = `kube-auth:${this.cluster.id}`
     logger.info(`[KUBE-AUTH]: out-channel "${channel}"`, { ...res, meta: this.cluster.getMeta() });
     broadcastIpc({

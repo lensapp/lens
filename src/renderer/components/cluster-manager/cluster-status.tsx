@@ -1,32 +1,40 @@
-import type { KubeAuthProxyResponse } from "../../../main/kube-auth-proxy";
+import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
 
 import "./cluster-status.scss"
 import React from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { ipcRenderer } from "electron";
-import { computed, observable } from "mobx";
+import { autorun, computed, observable } from "mobx";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { getHostedCluster } from "../../../common/cluster-store";
 import { Icon } from "../icon";
 import { Button } from "../button";
 import { cssNames } from "../../utils";
+import { navigate } from "../../navigation";
 
 @observer
 export class ClusterStatus extends React.Component {
-  @observable authOutput: KubeAuthProxyResponse[] = [];
+  @observable authOutput: KubeAuthProxyLog[] = [];
   @observable isReconnecting = false;
-
-  @computed get hasErrors() {
-    return this.authOutput.some(({ error }) => error)
-  }
 
   @computed get cluster() {
     return getHostedCluster();
   }
 
+  @computed get hasErrors(): boolean {
+    return this.authOutput.some(({ error }) => error) || !!this.cluster.failureReason;
+  }
+
+  @disposeOnUnmount
+  autoRedirectToMain = autorun(() => {
+    if (this.cluster.accessible && !this.hasErrors) {
+      navigate("/");
+    }
+  })
+
   async componentDidMount() {
     this.authOutput = [{ data: "Connecting..." }];
-    ipcRenderer.on(`kube-auth:${this.cluster.id}`, (evt, res: KubeAuthProxyResponse) => {
+    ipcRenderer.on(`kube-auth:${this.cluster.id}`, (evt, res: KubeAuthProxyLog) => {
       this.authOutput.push({
         data: res.data.trimRight(),
         error: res.error,
@@ -48,10 +56,11 @@ export class ClusterStatus extends React.Component {
   render() {
     const { authOutput, cluster, hasErrors } = this;
     const isDisconnected = !!cluster.disconnected;
-    const isInactive = hasErrors || isDisconnected;
+    const failureReason = cluster.failureReason;
+    const isError = hasErrors || isDisconnected;
     return (
       <div className="ClusterStatus flex column gaps">
-        {isInactive && (
+        {isError && (
           <Icon
             material="cloud_off"
             className={cssNames({ error: hasErrors })}
@@ -67,7 +76,10 @@ export class ClusterStatus extends React.Component {
             })}
           </pre>
         )}
-        {isInactive && (
+        {failureReason && (
+          <div className="failure-reason error">{failureReason}</div>
+        )}
+        {isError && (
           <Button
             primary
             label="Reconnect"
