@@ -1,4 +1,5 @@
 .ClustersMenu {
+  @include hidden-scrollbar;
   $spacing: $padding * 2;
 
   position: relative;
@@ -38,17 +39,9 @@
     }
   }
 
-  > .clusters {
-    @include hidden-scrollbar;
-    margin-bottom: $spacing !important;
-
-    &:empty {
-      display: none;
-    }
-  }
-
   > .add-cluster {
     position: relative;
+    margin-top: $padding;
 
     .Icon {
       border-radius: $radius;

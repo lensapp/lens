@@ -103,20 +103,18 @@ export class ClustersMenu extends React.Component<Props> {
             </p>
           </div>
         )}
-        <div className="clusters flex column gaps">
-          {clusters.map(cluster => {
-            return (
-              <ClusterIcon
-                key={cluster.id}
-                showErrors={true}
-                cluster={cluster}
-                isActive={cluster.id === clusterStore.activeClusterId}
-                onClick={() => this.showCluster(cluster.id)}
-                onContextMenu={() => this.showContextMenu(cluster)}
-              />
-            )
-          })}
-        </div>
+        {clusters.map(cluster => {
+          return (
+            <ClusterIcon
+              key={cluster.id}
+              showErrors={true}
+              cluster={cluster}
+              isActive={cluster.id === clusterStore.activeClusterId}
+              onClick={() => this.showCluster(cluster.id)}
+              onContextMenu={() => this.showContextMenu(cluster)}
+            />
+          )
+        })}
         <div className="add-cluster" onClick={this.addCluster}>
           <Tooltip targetId="add-cluster-icon">
             <Trans>Add Cluster</Trans>
