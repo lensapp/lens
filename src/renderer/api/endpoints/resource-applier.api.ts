@@ -18,7 +18,11 @@ export const resourceApplierApi = {
       .then(data => {
         const items = data.map(obj => {
           const api = apiManager.getApi(obj.metadata.selfLink);
-          return new api.objectConstructor(obj);
+          if (api) {
+            return new api.objectConstructor(obj);
+          } else {
+            return new KubeObject(obj)
+          }
         });
         return items.length === 1 ? items[0] : items;
       });
