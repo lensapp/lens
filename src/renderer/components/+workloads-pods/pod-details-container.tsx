@@ -64,17 +64,14 @@ export class PodDetailsContainer extends React.Component<Props> {
         }
         {ports && ports.length > 0 &&
         <DrawerItem name={<Trans>Ports</Trans>}>
-          <div>
-            {
-              ports.map((port) => {
-                const key = `${container.name}-port-${port.containerPort}-${port.protocol}`
-                return(
-                  <PodContainerPort pod={pod} port={port} key={key}/>
-                )
-              })
-            }
-          </div>
-
+          {
+            ports.map((port) => {
+              const key = `${container.name}-port-${port.containerPort}-${port.protocol}`
+              return(
+                <PodContainerPort pod={pod} port={port} key={key}/>
+              )
+            })
+          }
         </DrawerItem>
         }
         {<ContainerEnvironment container={container} namespace={pod.getNs()}/>}
