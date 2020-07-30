@@ -10,7 +10,7 @@ import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
-import { cssNames, IClassName } from "../../utils";
+import { cssNames, IClassName, autobind } from "../../utils";
 import { Badge } from "../badge";
 import { navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
@@ -20,6 +20,8 @@ import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
+import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+import move from "array-move";
 
 // fixme: allow to rearrange clusters with drag&drop
 
@@ -87,33 +89,77 @@ export class ClustersMenu extends React.Component<Props> {
     })
   }
 
+  @autobind()
+  swapClusterIconOrder(result: DropResult) {
+    if (result.reason === "DROP") {
+      const { currentWorkspaceId } = workspaceStore;
+      const clusters = clusterStore.getByWorkspaceId(currentWorkspaceId);
+
+      move.mutate(clusters, result.source.index, result.destination.index);
+      clusterStore.clusterOrders[currentWorkspaceId] = clusters.map(c => c.id);
+    }
+  }
+
   render() {
     const { className } = this.props;
     const { newContexts } = userStore;
     const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
     return (
-      <div className={cssNames("ClustersMenu flex column", className)}>
+      <div
+        className={cssNames("ClustersMenu flex column", className)}
+        onMouseEnter={() => this.showHint = false}
+      >
+        {showStartupHint && (
+          <div className="startup-tooltip flex column gaps">
+            <p><Trans>This is the quick launch menu.</Trans></p>
+            <p>
+              <Trans>
+                Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button.
+              </Trans>
+            </p>
+          </div>
+        )}
         <div className="clusters flex column gaps">
-          {clusters.map(cluster => {
-            return (
-              <ClusterIcon
-                key={cluster.id}
-                showErrors={true}
-                cluster={cluster}
-                isActive={cluster.id === getMatchedClusterId()}
-                onClick={() => this.showCluster(cluster.id)}
-                onContextMenu={() => this.showContextMenu(cluster)}
-              />
-            )
-          })}
+          <DragDropContext onDragEnd={this.swapClusterIconOrder}>
+            <Droppable droppableId="cluster-menu" type="CLUSTER">
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {clusters.map((cluster, index) => (
+                    <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <ClusterIcon
+                            key={cluster.id}
+                            showErrors={true}
+                            cluster={cluster}
+                            isActive={cluster.id === getMatchedClusterId()}
+                            onClick={() => this.showCluster(cluster.id)}
+                            onContextMenu={() => this.showContextMenu(cluster)}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
         <div className="add-cluster" onClick={this.addCluster}>
           <Tooltip targetId="add-cluster-icon">
             <Trans>Add Cluster</Trans>
           </Tooltip>
-          <Icon big material="add" id="add-cluster-icon"/>
+          <Icon big material="add" id="add-cluster-icon" />
           {newContexts.size > 0 && (
-            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>}/>
+            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>} />
           )}
         </div>
       </div>

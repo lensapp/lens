@@ -18,9 +18,18 @@ export interface ClusterIconUpload {
   path: string;
 }
 
+interface ClusterIconOrdering {
+  [workspaceId: string]: ClusterId[]
+}
+
+interface ClusterIconOrderingMap {
+  [id: string]: number
+}
+
 export interface ClusterStoreModel {
   activeCluster?: ClusterId; // last opened cluster
   clusters?: ClusterModel[]
+  iconOrder?: ClusterIconOrdering,
 }
 
 export type ClusterId = string;
@@ -83,6 +92,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable activeClusterId: ClusterId;
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
+  @observable clusterOrders: ClusterIconOrdering = {};
 
   @computed get activeCluster(): Cluster | null {
     return this.getById(this.activeClusterId);
@@ -113,8 +123,26 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.clusters.get(id);
   }
 
-  getByWorkspaceId(workspaceId: string): Cluster[] {
-    return this.clustersList.filter(cluster => cluster.workspace === workspaceId)
+  getByWorkspaceId(workspaceId: string, sorted = true): Cluster[] {
+    const ordering = this.clusterOrders[workspaceId]?.reduce((acc: ClusterIconOrderingMap, cur, i) => { acc[cur] = i; return acc; }, {});
+    const clusters = this.clustersList.filter(cluster => cluster.workspace === workspaceId);
+    if (!ordering || !sorted) {
+      return clusters;
+    }
+
+    const sortedClusters = [];
+    const unsortedClusters = [];
+
+    for (const cluster of clusters) {
+      const index = ordering[cluster.id];
+      if (typeof index === "number" && index >= 0) {
+        sortedClusters[index] = cluster;
+      } else {
+        unsortedClusters.push(cluster);
+      }
+    }
+
+    return [...sortedClusters.filter(c => c), ...unsortedClusters];
   }
 
   @action
@@ -144,16 +172,18 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   removeByWorkspaceId(workspaceId: string) {
-    this.getByWorkspaceId(workspaceId).forEach(cluster => {
+    this.getByWorkspaceId(workspaceId, false).forEach(cluster => {
       this.removeById(cluster.id)
     })
   }
 
   @action
-  protected fromStore({ activeCluster, clusters = [] }: ClusterStoreModel = {}) {
+  protected fromStore({ activeCluster, clusters = [], iconOrder = {} }: ClusterStoreModel = {}) {
     const currentClusters = this.clusters.toJS();
     const newClusters = new Map<ClusterId, Cluster>();
     const removedClusters = new Map<ClusterId, Cluster>();
+
+    this.clusterOrders = iconOrder;
 
     // update new clusters
     clusters.forEach(clusterModel => {
@@ -182,6 +212,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return toJS({
       activeCluster: this.activeClusterId,
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
+      iconOrder: this.clusterOrders,
     }, {
       recurseEverything: true
     })
