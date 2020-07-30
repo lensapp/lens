@@ -11,9 +11,6 @@
 }
 
 :root {
-  --mainBackground: #1e2124;
-  --textColorPrimary: #87909c;
-  --clusters-menu-bgc: #252729;
   --main-layout-header: 40px;
 }
 
@@ -80,7 +77,7 @@ hr {
 }
 
 h1 {
-  color: white;
+  color: $textColorAccent;
   font-size: 28px;
   font-weight: 300;
   letter-spacing: -.010em;
