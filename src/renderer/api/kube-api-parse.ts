@@ -40,6 +40,9 @@ export function parseApi(path: string): IKubeApiLinkBase {
     apiGroup = left.join("/");
   } else {
     switch (left.length) {
+    case 4:
+      [apiGroup, apiVersion, resource, name] = left
+      break;
     case 2:
       resource = left.pop();
       // fallthrough
