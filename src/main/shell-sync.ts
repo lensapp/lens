@@ -11,9 +11,10 @@ interface Env {
  * useful on macos where this always needs to be done.
  * @param locale Should be electron's `app.getLocale()`
  */
-export function shellSync(locale: string) {
+export async function shellSync(locale: string) {
   const { shell } = os.userInfo();
-  const env: Env = JSON.parse(JSON.stringify(shellEnv.sync(shell)))
+  
+  const env: Env = JSON.parse(JSON.stringify(await shellEnv(shell)))
   if (!env.LANG) {
     // the LANG env var expects an underscore instead of electron's dash
     env.LANG = `${locale.replace('-', '_')}.UTF-8`;
