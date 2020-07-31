@@ -170,7 +170,7 @@ export class Terminal {
     // Handle custom hotkey bindings
     if (ctrlKey) {
       switch (code) {
-        // Ctrl+C: prevent terminal exit on windows / linux (?)
+      // Ctrl+C: prevent terminal exit on windows / linux (?)
       case "KeyC":
         if (this.xterm.hasSelection()) return false;
         break;

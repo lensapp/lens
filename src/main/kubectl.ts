@@ -205,7 +205,9 @@ export class Kubectl {
       })
       stream.on("error", (error) => {
         logger.error(error)
-        fs.unlink(this.path, () => {})
+        fs.unlink(this.path, () => {
+          // do nothing
+        })
         reject(error)
       })
       file.on("close", () => {
