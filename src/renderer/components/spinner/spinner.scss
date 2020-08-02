@@ -8,9 +8,7 @@
   $colorAnimation: colors $duration*4 ease-in-out infinite;
 
   @mixin spinner-color($color) {
-    border-color: $color;
-    border-left-color: transparent;
-    border-right-color: transparent;
+    border-color: transparent $color;
   }
 
   width: var(--spinner-size);

@@ -25,7 +25,7 @@ export class ResourceApplier {
     return new Promise<string>((resolve, reject) => {
       const fileName = tempy.file({ name: "resource.yaml" })
       fs.writeFileSync(fileName, content)
-      const cmd = `"${kubectlPath}" apply --kubeconfig "${kubeConfigPath}" -o json -f ${fileName}`
+      const cmd = `"${kubectlPath}" apply --kubeconfig "${kubeConfigPath}" -o json -f "${fileName}"`
       logger.debug("shooting manifests with: " + cmd);
       const execEnv: NodeJS.ProcessEnv = Object.assign({}, process.env)
       const httpsProxy = this.cluster.preferences?.httpsProxy
@@ -54,7 +54,7 @@ export class ResourceApplier {
       resources.forEach((resource, index) => {
         fs.writeFileSync(path.join(tmpDir, `${index}.yaml`), resource);
       })
-      const cmd = `"${kubectlPath}" apply --kubeconfig "${kubeConfigPath}" -o json -f ${tmpDir}`
+      const cmd = `"${kubectlPath}" apply --kubeconfig "${kubeConfigPath}" -o json -f "${tmpDir}"`
       console.log("shooting manifests with:", cmd);
       exec(cmd, (error, stdout, stderr) => {
         if (error) {

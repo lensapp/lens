@@ -45,6 +45,8 @@ export async function invokeIpc<R = any>(channel: IpcChannel, ...args: any[]): P
 // todo: make isomorphic api
 export function handleIpc(channel: IpcChannel, handler: IpcMessageHandler, options: IpcHandleOpts = {}) {
   const { timeout = 0 } = options;
+  logger.info(`[IPC]: setup to handle "${channel}"`);
+
   ipcMain.handle(channel, async (event, ...args) => {
     logger.info(`[IPC]: handle "${channel}"`, { args });
     return new Promise(async (resolve, reject) => {

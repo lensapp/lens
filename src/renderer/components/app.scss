@@ -89,25 +89,28 @@ h1 {
 
 h2 {
   @extend h1;
-  font-size: 20px;
+  font-size: 24px;
 }
 
 h3 {
   @extend h2;
-  font-size: 17px;
+  font-size: 20px;
 }
 
 h4 {
-  @extend h2;
+  @extend h3;
+  font-size: 16px;
 }
 
 h5 {
-  @extend h2;
+  @extend h4;
   padding: $padding / 2 0;
+  font-size: 14px;
 }
 
 h6 {
-  @extend h2;
+  @extend h5;
+  font-size: 12px;
 }
 
 small {

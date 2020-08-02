@@ -28,10 +28,9 @@ export class ClusterManager extends React.Component<Props> {
   }
 
   @computed get isInactive() {
-    const { activeCluster, activeClusterId } = clusterStore;
+    const { activeCluster, activeClusterId, clusters } = clusterStore;
     const isActivatedBefore = activeCluster?.initialized;
-    if (isNoClustersView() || isActivatedBefore) return;
-    return activeClusterId !== getHostedClusterId();
+    return clusters.size > 0 && !isActivatedBefore && activeClusterId !== getHostedClusterId();
   }
 
   render() {
