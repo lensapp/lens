@@ -132,6 +132,8 @@ export class WindowManager {
         x: x, y: y,
         width: width,
         height: height,
+        minWidth: 900,
+        minHeight: 760,
         titleBarStyle: "hidden",
         backgroundColor: "#1e2124",
         webPreferences: {
