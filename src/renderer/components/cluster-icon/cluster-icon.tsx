@@ -46,8 +46,8 @@ export class ClusterIcon extends React.Component<Props> {
         {showTooltip && (
           <Tooltip targetId={clusterIconId}>{clusterName}</Tooltip>
         )}
-        {icon && <img src={icon} alt={clusterName} />}
-        {!icon && <Hashicon value={clusterName} options={options} />}
+        {icon && <img src={icon} alt={clusterName}/>}
+        {!icon && <Hashicon value={clusterName} options={options}/>}
         {showErrors && isAdmin && eventCount > 0 && (
           <Badge
             className={cssNames("events-count", errorClass)}

@@ -27,5 +27,7 @@
     bottom: 0;
     margin: -$padding * 1.5;
     font-size: $font-size-small;
+    background: $colorError;
+    color: white;
   }
 }
