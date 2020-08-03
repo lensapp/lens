@@ -34,8 +34,6 @@ export class KubeAuthProxy {
     const args = [
       "proxy",
       "-p", `${this.port}`,
-      // "--kubeconfig", `"${this.cluster.kubeConfigPath}"`,
-      // "--context", `"${this.cluster.contextName}"`,
       "--kubeconfig", `${this.cluster.kubeConfigPath}`,
       "--context", `${this.cluster.contextName}`,
       "--accept-hosts", ".*",
@@ -49,12 +47,9 @@ export class KubeAuthProxy {
 
     this.proxyProcess.on("exit", (code) => {
       this.sendIpcLogMessage({ data: `proxy exited with code: ${code}`, error: code > 0 })
-      this.proxyProcess.removeAllListeners();
-      this.proxyProcess.stderr.removeAllListeners();
-      this.proxyProcess.stdout.removeAllListeners();
-      this.proxyProcess = null;
+      this.exit();
     })
-    
+
     this.proxyProcess.stdout.on('data', (data) => {
       let logItem = data.toString()
       if (logItem.startsWith("Starting to serve on")) {
@@ -62,7 +57,7 @@ export class KubeAuthProxy {
       }
       this.sendIpcLogMessage({ data: logItem })
     })
-    
+
     this.proxyProcess.stderr.on('data', (data) => {
       this.lastError = this.parseError(data.toString())
       this.sendIpcLogMessage({ data: data.toString(), error: true })
@@ -97,10 +92,12 @@ export class KubeAuthProxy {
   }
 
   public exit() {
-    if (this.proxyProcess) {
-      logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta())
-      this.proxyProcess.kill()
-      this.proxyProcess = null;
-    }
+    if (!this.proxyProcess) return;
+    logger.debug("[KUBE-AUTH]: stopping local proxy", this.cluster.getMeta())
+    this.proxyProcess.kill()
+    this.proxyProcess.removeAllListeners();
+    this.proxyProcess.stderr.removeAllListeners();
+    this.proxyProcess.stdout.removeAllListeners();
+    this.proxyProcess = null;
   }
 }
