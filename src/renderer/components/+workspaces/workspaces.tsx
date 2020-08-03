@@ -51,7 +51,7 @@ export class Workspaces extends React.Component {
     const workspaceId = uuid();
     this.editingWorkspaces.set(workspaceId, {
       id: workspaceId,
-      name: _i18n._(t`My Workspace`),
+      name: "",
       description: "",
     })
   }
