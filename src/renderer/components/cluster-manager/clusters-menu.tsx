@@ -56,8 +56,10 @@ export class ClustersMenu extends React.Component<Props> {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
         click: async () => {
-          navigate(clusterStatusURL());
-          await clusterIpc.disconnect.invokeFromRenderer();
+          await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
+          if (cluster.id === clusterStore.activeClusterId) {
+            navigate(clusterStatusURL());
+          }
         }
       }))
     }
