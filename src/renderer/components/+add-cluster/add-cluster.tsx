@@ -34,7 +34,6 @@ export class AddCluster extends React.Component {
     const kubeConfig: string = await getKubeConfigLocal()
     if (kubeConfig) {
       this.kubeConfig = loadConfig(kubeConfig)
-      this.customConfig = kubeConfig
     }
   }
 
