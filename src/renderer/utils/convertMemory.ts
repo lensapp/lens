@@ -7,9 +7,9 @@ export function unitsToBytes(value: string) {
   if (!suffixes.some(suffix => value.includes(suffix))) {
     return parseFloat(value)
   }
-  const index = suffixes.findIndex(suffix =>
-    suffix == value.replace(/[0-9]|i|\./g, '')
-  )
+ 
+  const suffix = value.replace(/[0-9]|i|\./g, '');
+  const index = suffixes.indexOf(suffix);
   return parseInt(
     (parseFloat(value) * Math.pow(base, index + 1)).toFixed(1)
   )
@@ -21,8 +21,10 @@ export function bytesToUnits(bytes: number, precision = 1) {
   if (!bytes) {
     return "N/A"
   }
+
   if (index === 0) {
     return `${bytes}${sizes[index]}`
   }
+
   return `${(bytes / (1024 ** index)).toFixed(precision)}${sizes[index]}i`
 }
