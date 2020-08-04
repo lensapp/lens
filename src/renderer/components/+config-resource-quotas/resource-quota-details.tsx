@@ -4,7 +4,7 @@ import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { cpuUnitsToNumber, cssNames, unitsToBytes, compactedUnitsToNumber } from "../../utils";
+import { cpuUnitsToNumber, cssNames, unitsToBytes, metricUnitsToNumber } from "../../utils";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { ResourceQuota, resourceQuotaApi } from "../../api/endpoints/resource-quota.api";
 import { LineProgress } from "../line-progress";
@@ -21,21 +21,17 @@ function transformUnit(name: string, value: string): number {
   if (name.includes("memory") || name.includes("storage")) {
     return unitsToBytes(value)
   }
- 
+
   if (name.includes("cpu")) {
     return cpuUnitsToNumber(value)
   }
 
-  if (onlyNumbers.test(value)) {
-    return parseInt(value);
-  }
-  
-  return compactedUnitsToNumber(value);
+  return metricUnitsToNumber(value);
 }
 
 function renderQuotas(quota: ResourceQuota): JSX.Element[] {
   const { hard = {}, used = {} } = quota.status
-  
+
   return Object.entries(hard)
     .filter(([name]) => used[name])
     .map(([name, value]) => {
