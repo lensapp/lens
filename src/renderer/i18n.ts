@@ -29,6 +29,7 @@ export class LocalizationStore {
     { code: "en", title: "English", nativeTitle: "English" },
     { code: "ru", title: "Russian", nativeTitle: "Русский" },
     { code: "fi", title: "Finnish", nativeTitle: "Suomi" },
+    { code: "zh", title: "Chinese", nativeTitle: "中文" },
   ], "title");
 
   constructor() {

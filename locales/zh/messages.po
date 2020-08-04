@@ -1,0 +1,2489 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2020-08-04 014:16+0800\n"
+"Mime-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: zh\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Incubator4th\n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:28
+msgid "(as a percentage of request)"
+msgstr "(as a percentage of request)"
+
+#: src/renderer/components/+network-policies/network-policy-details.tsx:88
+msgid "(empty) (Allowing the specific traffic to all pods in this namespace)"
+msgstr "(empty) (Allowing the specific traffic to all pods in this namespace)"
+
+#: src/renderer/components/item-object-list/item-list-layout.tsx:224
+msgid "<0>Filtered</0>: {itemsCount} / {allItemsCount}"
+msgstr "<0>Filtered</0>: {itemsCount} / {allItemsCount}"
+
+#: src/renderer/browser-check.tsx:11
+msgid "<0>Your browser does not support all Lens features. </0> Please consider using another browser."
+msgstr "<0>Your browser does not support all Lens features. </0> Please consider using another browser."
+
+#: src/renderer/components/dock/create-resource.tsx:56
+msgid "<0>{0}</0> successfully created"
+msgstr "<0>{0}</0> 已成功创建"
+
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:80
+msgid "API Group"
+msgstr "API组"
+
+#: src/renderer/components/layout/sidebar.tsx:88
+msgid "Access Control"
+msgstr "权限控制"
+
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:51
+#: src/renderer/components/+storage-volumes/volume-details.tsx:37
+msgid "Access Modes"
+msgstr "权限模式"
+
+#: src/renderer/components/+user-management-service-accounts/create-service-account-dialog.tsx:77
+msgid "Account Name"
+msgstr "账户名称"
+
+#: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:51
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:46
+msgid "Active"
+msgstr "存活"
+
+#: src/renderer/components/+namespaces/namespaces.tsx:43
+msgid "Add Namespace"
+msgstr "添加命名空间"
+
+#: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:209
+msgid "Add RoleBinding"
+msgstr "添加角色绑定"
+
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:111
+msgid "Add bindings to {name}"
+msgstr "添加绑定到 {name}"
+
+#: src/renderer/components/+config-secrets/add-secret-dialog.tsx:125
+msgid "Add field"
+msgstr "Add field"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:78
+msgid "Additional Printer Columns"
+msgstr "Additional Printer Columns"
+
+#: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:29
+#: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:60
+#: src/renderer/components/+nodes/node-details.tsx:84
+msgid "Addresses"
+msgstr "Addresses"
+
+#: src/renderer/components/+workloads-pods/pod-details-affinities.tsx:14
+msgid "Affinities"
+msgstr "Affinities"
+
+#: src/renderer/components/+config-autoscalers/hpa.tsx:51
+#: src/renderer/components/+config-maps/config-maps.tsx:37
+#: src/renderer/components/+config-resource-quotas/resource-quotas.tsx:36
+#: src/renderer/components/+config-secrets/secrets.tsx:46
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:66
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuers.tsx:67
+#: src/renderer/components/+custom-resources/crd-list.tsx:77
+#: src/renderer/components/+custom-resources/crd-resources.tsx:73
+#: src/renderer/components/+events/events.tsx:68
+#: src/renderer/components/+namespaces/namespaces.tsx:33
+#: src/renderer/components/+network-endpoints/endpoints.tsx:34
+#: src/renderer/components/+network-ingresses/ingresses.tsx:35
+#: src/renderer/components/+network-policies/network-policies.tsx:34
+#: src/renderer/components/+network-services/services.tsx:51
+#: src/renderer/components/+nodes/nodes.tsx:119
+#: src/renderer/components/+pod-security-policies/pod-security-policies.tsx:38
+#: src/renderer/components/+storage-classes/storage-classes.tsx:38
+#: src/renderer/components/+storage-volume-claims/volume-claims.tsx:51
+#: src/renderer/components/+storage-volumes/volumes.tsx:44
+#: src/renderer/components/+user-management-roles/roles.tsx:35
+#: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:38
+#: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:38
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:48
+#: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:50
+#: src/renderer/components/+workloads-deployments/deployments.tsx:63
+#: src/renderer/components/+workloads-jobs/jobs.tsx:41
+#: src/renderer/components/+workloads-pods/pods.tsx:80
+#: src/renderer/components/+workloads-replicasets/replicasets.tsx:53
+#: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:44
+msgid "Age"
+msgstr "存活时间"
+
+#: src/renderer/components/+custom-resources/crd-list.tsx:56
+msgid "All groups"
+msgstr "所有组"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:57
+msgid "All logs"
+msgstr "所有日志"
+
+#: src/renderer/components/+namespaces/namespace-select.tsx:95
+msgid "All namespaces"
+msgstr "所有命名空间"
+
+#: src/renderer/components/+nodes/node-details.tsx:78
+msgid "Allocatable"
+msgstr "Allocatable"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:71
+msgid "Allow Privilege Escalation"
+msgstr "Allow Privilege Escalation"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:51
+msgid "Allowed CSI Drivers"
+msgstr "Allowed CSI Drivers"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:43
+msgid "Allowed Capabilities"
+msgstr "Allowed Capabilities"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:55
+msgid "Allowed Flex Volumes"
+msgstr "Allowed Flex Volumes"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:110
+msgid "Allowed Host Paths"
+msgstr "Allowed Host Paths"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:59
+msgid "Allowed Proc Mount Types"
+msgstr "Allowed Proc Mount Types"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:132
+msgid "Allowed Runtime Class Names"
+msgstr "Allowed Runtime Class Names"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:63
+msgid "Allowed Unsafe Sysctls"
+msgstr "Allowed Unsafe Sysctls"
+
+#: src/renderer/components/+nodes/node-details.tsx:103
+#: src/renderer/components/kube-object/kube-object-meta.tsx:36
+msgid "Annotations"
+msgstr "注解"
+
+#: src/renderer/components/+user-management-roles/role-details.tsx:37
+msgid "Api Groups"
+msgstr "Api组"
+
+#: src/renderer/components/+apps-helm-charts/helm-charts.tsx:67
+#: src/renderer/components/+apps-releases/releases.tsx:92
+msgid "App Version"
+msgstr "应用版本"
+
+#: src/renderer/components/error-boundary/error-boundary.tsx:36
+msgid "App crash at <0>{pageUrl}</0>"
+msgstr "App crash at <0>{pageUrl}</0>"
+
+#: src/renderer/components/dock/edit-resource.tsx:88
+msgid "Applying.."
+msgstr "应用中.."
+
+#: src/renderer/components/layout/sidebar.tsx:87
+msgid "Apps"
+msgstr "应用"
+
+#: src/renderer/components/+nodes/node-menu.tsx:41
+msgid "Are you sure you want to drain <0>{nodeName}</0>?"
+msgstr "确定要驱逐 <0>{nodeName}</0>?"
+
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:86
+msgid "Arguments"
+msgstr "Arguments"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:101
+msgid "Auth App Role"
+msgstr "Auth App Role"
+
+#: src/renderer/components/error-boundary/error-boundary.tsx:54
+#: src/renderer/components/wizard/wizard.tsx:130
+msgid "Back"
+msgstr "返回"
+
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:43
+msgid "Backends"
+msgstr "后端地址"
+
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:93
+msgid "Binding"
+msgstr "绑定"
+
+#: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:194
+msgid "Binding targets"
+msgstr "绑定目标"
+
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:89
+#: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:36
+msgid "Bindings"
+msgstr "绑定"
+
+#: src/renderer/components/error-boundary/error-boundary.tsx:37
+msgid "Build version"
+msgstr "构建版本"
+
+#: src/renderer/components/+workloads-pods/container-charts.tsx:74
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:100
+msgid "Bytes consumed on this filesystem"
+msgstr "Bytes consumed on this filesystem"
+
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:83
+msgid "Bytes received by all containers"
+msgstr "Bytes received by all containers"
+
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:33
+msgid "Bytes sent by Ingress controller with error status"
+msgstr "Bytes sent by Ingress controller with error status"
+
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:26
+msgid "Bytes sent by Ingress controller with successful status"
+msgstr "Bytes sent by Ingress controller with successful status"
+
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:25
+msgid "Bytes sent, status 2xx"
+msgstr "Bytes sent, status 2xx"
+
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:32
+msgid "Bytes sent, status 5xx"
+msgstr "Bytes sent, status 5xx"
+
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:90
+msgid "Bytes transmitted from all containers"
+msgstr "Bytes transmitted from all containers"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:97
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:129
+msgid "CA Bundle"
+msgstr "CA Bundle"
+
+#: src/renderer/components/+cluster/cluster-metric-switchers.tsx:24
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:140
+#: src/renderer/components/+nodes/node-details.tsx:63
+#: src/renderer/components/+nodes/node-details.tsx:74
+#: src/renderer/components/+nodes/node-details.tsx:79
+#: src/renderer/components/+nodes/nodes.tsx:113
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:11
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:25
+#: src/renderer/components/+workloads-pods/pod-details-list.tsx:53
+#: src/renderer/components/+workloads-pods/pod-details-list.tsx:95
+#: src/renderer/components/resource-metrics/resource-metrics-text.tsx:13
+msgid "CPU"
+msgstr "CPU"
+
+#: src/renderer/components/+nodes/node-charts.tsx:40
+msgid "CPU capacity"
+msgstr "CPU容量"
+
+#: src/renderer/components/+nodes/node-charts.tsx:26
+#: src/renderer/components/+workloads-pods/container-charts.tsx:26
+msgid "CPU cores usage"
+msgstr "CPU核心占用"
+
+#: src/renderer/components/+workloads-pods/container-charts.tsx:40
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:49
+msgid "CPU limits"
+msgstr "CPU 约束"
+
+#: src/renderer/components/+nodes/node-charts.tsx:33
+#: src/renderer/components/+workloads-pods/container-charts.tsx:33
+msgid "CPU requests"
+msgstr "CPU requests"
+
+#: src/renderer/components/+nodes/nodes.tsx:55
+msgid "CPU:"
+msgstr "CPU:"
+
+#: src/renderer/components/confirm-dialog/confirm-dialog.tsx:44
+#: src/renderer/components/dock/info-panel.tsx:97
+#: src/renderer/components/wizard/wizard.tsx:130
+msgid "Cancel"
+msgstr "取消"
+
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:73
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:116
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:135
+#: src/renderer/components/+nodes/node-charts.tsx:39
+#: src/renderer/components/+nodes/node-charts.tsx:63
+#: src/renderer/components/+nodes/node-charts.tsx:97
+#: src/renderer/components/+nodes/node-details.tsx:73
+#: src/renderer/components/+storage-volume-claims/volume-claim-disk-chart.tsx:31
+#: src/renderer/components/+storage-volumes/volume-details.tsx:29
+#: src/renderer/components/+storage-volumes/volumes.tsx:42
+msgid "Capacity"
+msgstr "容量"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:59
+msgid "Certificates"
+msgstr "证书"
+
+#: src/renderer/components/+apps-releases/release-details.tsx:173
+#: src/renderer/components/+apps-releases/releases.tsx:89
+#: src/renderer/components/dock/install-chart.tsx:118
+msgid "Chart"
+msgstr "图表"
+
+#: src/renderer/components/dock/install-chart.tsx:51
+msgid "Chart Release <0>{0}</0> successfully created."
+msgstr "图表实例 <0>{0}</0> 已成功创建"
+
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:105
+msgid "Chart: {0}"
+msgstr "图表: {0}"
+
+#: src/renderer/components/+apps/apps.tsx:21
+msgid "Charts"
+msgstr "Helm图表"
+
+#: renderer/components/+apps-releases/releases.tsx:123
+#~ msgid "Checking update"
+#~ msgstr "Checking update"
+
+#: src/renderer/components/+storage-volumes/volume-details.tsx:68
+#: src/renderer/components/+storage-volumes/volumes.tsx:43
+msgid "Claim"
+msgstr "Claim"
+
+#: src/renderer/components/+workloads-pods/pod-details.tsx:161
+msgid "Claim Name"
+msgstr "PVC名称"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:243
+#: src/renderer/components/dialog/logs-dialog.tsx:39
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:94
+msgid "Close"
+msgstr "Close"
+
+#: src/renderer/components/dock/dock-tab.tsx:40
+msgid "Close (Ctrl+W)"
+msgstr "Close (Ctrl+W)"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:121
+msgid "Cloud API Token Secret"
+msgstr "Cloud API Token Secret"
+
+#: src/renderer/components/+namespaces/namespace-select.tsx:43
+#: src/renderer/components/layout/sidebar.tsx:79
+msgid "Cluster"
+msgstr "集群"
+
+#: src/renderer/components/+network-services/service-details.tsx:51
+#: src/renderer/components/+network-services/services.tsx:47
+msgid "Cluster IP"
+msgstr "Cluster IP"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuers.tsx:40
+msgid "Cluster Issuers"
+msgstr "Cluster Issuers"
+
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:81
+msgid "Command"
+msgstr "命令"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:47
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:62
+msgid "Common Name"
+msgstr "Common Name"
+
+#: src/renderer/components/layout/sidebar.tsx:76
+msgid "Compact view"
+msgstr "Compact view"
+
+#: src/renderer/components/+workloads-jobs/job-details.tsx:80
+#: src/renderer/components/+workloads-jobs/jobs.tsx:39
+msgid "Completions"
+msgstr "成功数额"
+
+#: src/renderer/components/error-boundary/error-boundary.tsx:46
+msgid "Component stack"
+msgstr "成功stack"
+
+#: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:72
+msgid "Condition"
+msgstr "状态"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:52
+#: src/renderer/components/+nodes/node-details.tsx:108
+#: src/renderer/components/+nodes/nodes.tsx:120
+#: src/renderer/components/+workloads-deployments/deployment-details.tsx:79
+#: src/renderer/components/+workloads-deployments/deployments.tsx:64
+#: src/renderer/components/+workloads-jobs/job-details.tsx:77
+#: src/renderer/components/+workloads-jobs/jobs.tsx:42
+#: src/renderer/components/+workloads-pods/pod-details.tsx:100
+msgid "Conditions"
+msgstr "状态"
+
+#: src/renderer/components/+config-maps/config-maps.tsx:33
+msgid "Config Maps"
+msgstr "配置文件"
+
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:55
+msgid "Config copied to clipboard"
+msgstr "Config copied to clipboard"
+
+#: src/renderer/components/+config-maps/config-map-details.tsx:41
+msgid "ConfigMap <0>{0}</0> successfully updated."
+msgstr "配置文件 <0>{0}</0> successfully updated."
+
+#: src/renderer/components/+config/config.tsx:30
+msgid "ConfigMaps"
+msgstr "配置文件"
+
+#: src/renderer/components/layout/sidebar.tsx:82
+msgid "Configuration"
+msgstr "配置资源集"
+
+#: src/renderer/components/+network-services/service-details.tsx:49
+msgid "Connection"
+msgstr "Connection"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:246
+msgid "Container"
+msgstr "Container"
+
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:35
+msgid "Container CPU cores usage"
+msgstr "Container CPU cores usage"
+
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:42
+msgid "Container CPU requests"
+msgstr "Container CPU requests"
+
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:73
+msgid "Container memory limits"
+msgstr "容器内存限制"
+
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:66
+msgid "Container memory requests"
+msgstr "Container memory requests"
+
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:59
+msgid "Container memory usage"
+msgstr "容器内存使用"
+
+#: src/renderer/components/+nodes/node-details.tsx:96
+msgid "Container runtime"
+msgstr "容器运行时"
+
+#: src/renderer/components/+workloads-pods/pod-details.tsx:122
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:186
+#: src/renderer/components/+workloads-pods/pods.tsx:76
+msgid "Containers"
+msgstr "容器"
+
+#: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:184
+msgid "Context"
+msgstr "Context"
+
+#: src/renderer/components/+workloads-pods/pods.tsx:78
+#: src/renderer/components/kube-object/kube-object-meta.tsx:39
+msgid "Controlled By"
+msgstr "上级控制器"
+
+#: src/renderer/components/+workloads-jobs/job-details.tsx:68
+msgid "Controlled by"
+msgstr "上级控制器"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:49
+msgid "Conversion"
+msgstr "Conversion"
+
+#: src/renderer/components/dialog/logs-dialog.tsx:36
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:88
+msgid "Copy to clipboard"
+msgstr "Copy to clipboard"
+
+#: src/renderer/components/+nodes/node-menu.tsx:51
+#: src/renderer/components/+nodes/node-menu.tsx:52
+msgid "Cordon"
+msgstr "屏蔽(Cordon)"
+
+#: src/renderer/components/+events/event-details.tsx:45
+#: src/renderer/components/+events/events.tsx:67
+#: src/renderer/components/+events/kube-event-details.tsx:51
+msgid "Count"
+msgstr "C数量"
+
+#: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:124
+#: src/renderer/components/+config-secrets/add-secret-dialog.tsx:145
+#: src/renderer/components/+namespaces/add-namespace-dialog.tsx:72
+#: src/renderer/components/+user-management-roles/add-role-dialog.tsx:73
+#: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:212
+#: src/renderer/components/+user-management-service-accounts/create-service-account-dialog.tsx:76
+#: src/renderer/components/dock/create-resource.tsx:71
+msgid "Create"
+msgstr "创建"
+
+#: src/renderer/components/+namespaces/add-namespace-dialog.tsx:69
+msgid "Create Namespace"
+msgstr "创建命名空间"
+
+#: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:121
+msgid "Create ResourceQuota"
+msgstr "创建资源配额"
+
+#: src/renderer/components/+user-management-roles/add-role-dialog.tsx:70
+msgid "Create Role"
+msgstr "创建角色"
+
+#: src/renderer/components/+config-secrets/add-secret-dialog.tsx:142
+msgid "Create Secret"
+msgstr "创建机密"
+
+#: src/renderer/components/+user-management-service-accounts/create-service-account-dialog.tsx:73
+msgid "Create Service Account"
+msgstr "创建服务账号"
+
+#: src/renderer/components/+config-resource-quotas/resource-quotas.tsx:45
+msgid "Create new ResourceQuota"
+msgstr "创建资源配额"
+
+#: src/renderer/components/+user-management-roles/roles.tsx:44
+msgid "Create new Role"
+msgstr "创建角色"
+
+#: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:48
+msgid "Create new RoleBinding"
+msgstr "创建角色绑定"
+
+#: src/renderer/components/+config-secrets/secrets.tsx:58
+msgid "Create new Secret"
+msgstr "创建新的机密"
+
+#: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:47
+msgid "Create new Service Account"
+msgstr "创建服务账号"
+
+#: src/renderer/components/dock/dock.tsx:111
+msgid "Create resource"
+msgstr "创建资源"
+
+#: src/renderer/components/kube-object/kube-object-meta.tsx:17
+msgid "Created"
+msgstr "已创建"
+
+#: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:37
+msgid "Created at"
+msgstr "创建于"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:132
+msgid "Credentials Ref"
+msgstr "Credentials Ref"
+
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:40
+msgid "Cron Jobs"
+msgstr "定时任务"
+
+#: src/renderer/components/+workloads/workloads.tsx:77
+#: src/renderer/components/+workloads-overview/overview-statuses.tsx:69
+msgid "CronJobs"
+msgstr "定时任务"
+
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:50
+msgid "Current / Target"
+msgstr "Current / Target"
+
+#: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:103
+msgid "Current replica scale: {currentReplicas}"
+msgstr "Current replica scale: {currentReplicas}"
+
+#: src/renderer/components/item-object-list/page-filters-list.tsx:29
+msgid "Currently applied filters:"
+msgstr "Currently applied filters:"
+
+#: src/renderer/components/+custom-resources/crd-list.tsx:55
+#: src/renderer/components/layout/sidebar.tsx:89
+msgid "Custom Resources"
+msgstr "自定义资源"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:95
+msgid "DNS Provider"
+msgstr "DNS供应商"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:50
+msgid "DNS names"
+msgstr "DNS名称"
+
+#: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:44
+msgid "Daemon Sets"
+msgstr "守护进程集"
+
+#: src/renderer/components/+workloads/workloads.tsx:53
+#: src/renderer/components/+workloads-overview/overview-statuses.tsx:59
+msgid "DaemonSets"
+msgstr "守护进程集"
+
+#: src/renderer/components/+config-maps/config-map-details.tsx:69
+#: src/renderer/components/+config-secrets/secret-details.tsx:78
+msgid "Data"
+msgstr "数据"
+
+#: src/renderer/components/+storage-classes/storage-classes.tsx:37
+msgid "Default"
+msgstr "Default"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:83
+msgid "Default Add Capabilities"
+msgstr "Default Add Capabilities"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:135
+msgid "Default Runtime Class Name"
+msgstr "默认运行时名称"
+
+#: src/renderer/components/+custom-resources/custom-resources.tsx:22
+msgid "Definitions"
+msgstr "Definitions"
+
+#: src/renderer/components/menu/menu-actions.tsx:84
+msgid "Delete"
+msgstr "删除"
+
+#: src/renderer/components/+workloads-replicasets/replicasets.tsx:47
+msgid "Deploy Revisions"
+msgstr "Deploy Revisions"
+
+#: src/renderer/components/+workloads/workloads.tsx:45
+#: src/renderer/components/+workloads-deployments/deployments.tsx:57
+#: src/renderer/components/+workloads-overview/overview-statuses.tsx:49
+msgid "Deployments"
+msgstr "部署"
+
+#: src/renderer/components/+apps-helm-charts/helm-charts.tsx:65
+msgid "Description"
+msgstr "描述"
+
+#: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:107
+msgid "Desired number of replicas"
+msgstr "Desired number of replicas"
+
+#: src/renderer/components/+nodes/node-details.tsx:65
+#: src/renderer/components/+nodes/nodes.tsx:115
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:44
+msgid "Disk"
+msgstr "磁盘"
+
+#: src/renderer/components/+nodes/nodes.tsx:71
+msgid "Disk:"
+msgstr "磁盘:"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:89
+msgid "Domains"
+msgstr "域名"
+
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:91
+msgid "Download file"
+msgstr "Download file"
+
+#: src/renderer/components/+nodes/node-menu.tsx:59
+#: src/renderer/components/+nodes/node-menu.tsx:60
+msgid "Drain"
+msgstr "屏蔽并驱逐(Drain)"
+
+#: src/renderer/components/+nodes/node-menu.tsx:39
+msgid "Drain Node"
+msgstr "屏蔽并驱逐节点"
+
+#: src/renderer/components/+storage-volumes/volume-details.tsx:59
+msgid "Driver"
+msgstr "驱动"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:59
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:67
+msgid "Duration"
+msgstr "持续时间"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:58
+msgid "E-mail"
+msgstr "邮箱"
+
+#: src/renderer/components/menu/menu-actions.tsx:80
+#: src/renderer/components/menu/menu-actions.tsx:81
+msgid "Edit"
+msgstr "编辑"
+
+#: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:208
+msgid "Edit RoleBinding <0>{roleBindingName}</0>"
+msgstr "Edit RoleBinding <0>{roleBindingName}</0>"
+
+#: src/renderer/components/+workloads-pods/pod-details-tolerations.tsx:18
+#: src/renderer/components/+workloads-pods/pod-details-tolerations.tsx:19
+msgid "Effect"
+msgstr "Effect"
+
+#: src/renderer/components/+network-policies/network-policy-details.tsx:105
+msgid "Egress"
+msgstr "Egress"
+
+#: src/renderer/components/+network-services/service-details.tsx:66
+msgid "Endpoint"
+msgstr "终端地址"
+
+#: src/renderer/components/+network/network.tsx:35
+#: src/renderer/components/+network-endpoints/endpoints.tsx:30
+#: src/renderer/components/+network-endpoints/endpoints.tsx:33
+#: src/renderer/components/+network-services/service-details-endpoint.tsx:27
+msgid "Endpoints"
+msgstr "终端地址"
+
+#: src/renderer/components/+user-management-service-accounts/create-service-account-dialog.tsx:78
+msgid "Enter a name"
+msgstr "请输入名字"
+
+#: src/renderer/components/+workloads-pods/pod-container-env.tsx:79
+msgid "Environment"
+msgstr "环境变量"
+
+#: src/renderer/components/error-boundary/error-boundary.tsx:50
+msgid "Error stack"
+msgstr "错误的stack"
+
+#: src/renderer/components/+events/events.tsx:56
+#: src/renderer/components/+events/kube-event-details.tsx:34
+#: src/renderer/components/+events/kube-event-details.tsx:39
+#: src/renderer/components/layout/sidebar.tsx:86
+msgid "Events"
+msgstr "事件"
+
+#: src/renderer/components/+cluster/cluster-issues.tsx:90
+msgid "Everything is fine in the Cluster"
+msgstr "集群一切正常"
+
+#: client/components/+user-management-roles/roles.tsx:39
+#: client/components/+user-management-roles-bindings/role-bindings.tsx:41
+#~ msgid "Excluded items with \"system:\" prefix"
+#~ msgstr "Excluded items with \"system:\" prefix"
+
+#: src/renderer/components/dock/dock.tsx:116
+msgid "Exit full size mode"
+msgstr "Exit full size mode"
+
+#: src/renderer/components/layout/sidebar.tsx:76
+msgid "Extended view"
+msgstr "Extended view"
+
+#: src/renderer/components/+network-services/services.tsx:49
+msgid "External IP"
+msgstr "外部IP"
+
+#: src/renderer/components/+network-services/service-details.tsx:55
+msgid "External IPs"
+msgstr "外部IP"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:106
+msgid "Failed to load logs: {0}"
+msgstr "读取日志失败: {0}"
+
+#: src/renderer/components/+events/event-details.tsx:58
+msgid "Field Path"
+msgstr "Field Path"
+
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:14
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:27
+msgid "Filesystem"
+msgstr "文件系统"
+
+#: src/renderer/components/item-object-list/page-filters-select.tsx:84
+msgid "Filters ({0}/{1})"
+msgstr "过滤器 ({0}/{1})"
+
+#: src/renderer/components/kube-object/kube-object-meta.tsx:37
+msgid "Finalizers"
+msgstr "Finalizers"
+
+#: src/renderer/components/+events/event-details.tsx:39
+msgid "First seen"
+msgstr "First seen"
+
+#: src/renderer/components/dock/dock.tsx:116
+msgid "Fit to window"
+msgstr "Fit to window"
+
+#: src/renderer/components/+storage-volumes/volume-details.tsx:58
+msgid "FlexVolume"
+msgstr "FlexVolume"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:67
+msgid "Forbidden Sysctls"
+msgstr "Forbidden Sysctls"
+
+#: src/renderer/components/+network-policies/network-policy-details.tsx:26
+msgid "From"
+msgstr "From"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:212
+msgid "From <0>{from}</0> to <1>{to}</1>"
+msgstr "From <0>{from}</0> to <1>{to}</1>"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:125
+msgid "Fs Group"
+msgstr "Fs Group"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:32
+#: src/renderer/components/+custom-resources/crd-list.tsx:58
+#: src/renderer/components/+custom-resources/crd-list.tsx:74
+msgid "Group"
+msgstr "API组"
+
+#: src/renderer/components/+custom-resources/crd-list.tsx:60
+msgid "Groups"
+msgstr "API组"
+
+#: src/renderer/components/+config/config.tsx:54
+msgid "HPA"
+msgstr "平面资源伸缩"
+
+#: src/renderer/components/dock/install-chart.tsx:113
+msgid "Helm Chart Install"
+msgstr "Helm仓库安装"
+
+#: src/renderer/components/dock/install-chart.store.ts:86
+msgid "Helm Install: {repo}/{name}"
+msgstr "Helm安装: {repo}/{name}"
+
+#: src/renderer/components/dock/upgrade-chart.store.ts:114
+msgid "Helm Upgrade: {0}"
+msgstr "Helm更新: {0}"
+
+#: src/renderer/components/+config-secrets/secret-details.tsx:93
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+#: src/renderer/components/drawer/drawer-param-toggler.tsx:19
+msgid "Hide"
+msgstr "隐藏"
+
+#: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:116
+msgid "High number of replicas may cause cluster performance issues"
+msgstr "High number of replicas may cause cluster performance issues"
+
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:81
+msgid "Home"
+msgstr "Home"
+
+#: src/renderer/components/+config-autoscalers/hpa.tsx:44
+msgid "Horizontal Pod Autoscalers"
+msgstr "Horizontal Pod Autoscalers"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:91
+msgid "Host IPC"
+msgstr "Host IPC"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:95
+msgid "Host Network"
+msgstr "Host Network"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:99
+msgid "Host PID"
+msgstr "Host PID"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:103
+msgid "Host Ports (Min-Max)"
+msgstr "Host Ports (Min-Max)"
+
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:38
+msgid "Host: {0}"
+msgstr "Host: {0}"
+
+#: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:33
+#: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:64
+#: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:76
+msgid "Hostname"
+msgstr "主机名"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:92
+msgid "Http01"
+msgstr "Http01"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:53
+msgid "IP addresses"
+msgstr "IP地址"
+
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:44
+msgid "Image"
+msgstr "镜像"
+
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:48
+msgid "ImagePullPolicy"
+msgstr "镜像拉取策略"
+
+#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:80
+msgid "ImagePullSecrets"
+msgstr "镜像拉取秘钥"
+
+#: src/renderer/components/+workloads-daemonsets/daemonset-details.tsx:65
+#: src/renderer/components/+workloads-jobs/job-details.tsx:64
+#: src/renderer/components/+workloads-replicasets/replicaset-details.tsx:77
+#: src/renderer/components/+workloads-statefulsets/statefulset-details.tsx:64
+msgid "Images"
+msgstr "镜像"
+
+#: src/renderer/components/+network-policies/network-policy-details.tsx:92
+msgid "Ingress"
+msgstr "应用路由"
+
+#: src/renderer/components/+network/network.tsx:43
+#: src/renderer/components/+network-ingresses/ingresses.tsx:31
+msgid "Ingresses"
+msgstr "应用路由"
+
+#: src/renderer/components/+workloads-pods/pod-details.tsx:118
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:192
+msgid "Init Containers"
+msgstr "初始化容器"
+
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:76
+#: src/renderer/components/dock/install-chart.tsx:128
+msgid "Install"
+msgstr "Install"
+
+#: src/renderer/components/dock/install-chart.tsx:108
+msgid "Installation complete!"
+msgstr "Installation complete!"
+
+#: src/renderer/components/dock/install-chart.tsx:128
+msgid "Installing..."
+msgstr "Installing..."
+
+#: src/renderer/components/input/input.validators.ts:43
+msgid "Invalid account ID"
+msgstr "Invalid account ID"
+
+#: src/renderer/components/input/input.validators.ts:15
+msgid "Invalid number"
+msgstr "Invalid number"
+
+#: src/renderer/components/+events/events.tsx:65
+msgid "Involved Object"
+msgstr "Involved Object"
+
+#: src/renderer/components/+events/event-details.tsx:52
+msgid "Involved object"
+msgstr "Involved object"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:31
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:64
+msgid "Issuer"
+msgstr "Issuer"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuers.tsx:53
+msgid "Issuers"
+msgstr "Issuers"
+
+#: src/renderer/components/no-items/no-items.tsx:9
+msgid "Item list is empty"
+msgstr "Item list is empty"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:83
+msgid "JSON Path"
+msgstr "JSON Path"
+
+#: src/renderer/components/+workloads/workloads.tsx:69
+#: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:62
+#: src/renderer/components/+workloads-jobs/jobs.tsx:36
+#: src/renderer/components/+workloads-overview/overview-statuses.tsx:64
+msgid "Jobs"
+msgstr "任务"
+
+#: src/renderer/components/+nodes/node-details.tsx:93
+msgid "Kernel version"
+msgstr "内核版本"
+
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:77
+#: src/renderer/components/+workloads-pods/pod-details-tolerations.tsx:16
+msgid "Key"
+msgstr "键值"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:68
+msgid "Key Algorithm"
+msgstr "键值算法"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:65
+msgid "Key Size"
+msgstr "Key Size"
+
+#: src/renderer/components/+config-maps/config-maps.tsx:36
+#: src/renderer/components/+config-secrets/secrets.tsx:44
+msgid "Keys"
+msgstr "键值"
+
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:87
+msgid "Keywords"
+msgstr "关键词"
+
+#: src/renderer/components/+events/event-details.tsx:57
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:78
+#: src/renderer/components/dock/edit-resource.tsx:89
+msgid "Kind"
+msgstr "Kind"
+
+#: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:62
+msgid "Kubeconfig"
+msgstr "Kubeconfig"
+
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:85
+msgid "Kubeconfig File"
+msgstr "Kubeconfig File"
+
+#: src/renderer/components/+nodes/node-details.tsx:99
+msgid "Kubelet version"
+msgstr "Kubelet版本"
+
+#: src/renderer/components/+config-secrets/secrets.tsx:43
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuers.tsx:65
+#: src/renderer/components/+namespaces/namespaces.tsx:32
+#: src/renderer/components/+nodes/node-details.tsx:102
+#: src/renderer/components/kube-object/kube-object-meta.tsx:35
+msgid "Labels"
+msgstr "标签"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:76
+msgid "Last Failure Time"
+msgstr "上一次失败时间"
+
+#: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:57
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:47
+msgid "Last schedule"
+msgstr "Last schedule"
+
+#: src/renderer/components/+events/event-details.tsx:42
+#: src/renderer/components/+events/kube-event-details.tsx:57
+msgid "Last seen"
+msgstr "Last seen"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:57
+#: src/renderer/components/+workloads-deployments/deployment-details.tsx:84
+#: src/renderer/components/+workloads-pods/pod-details.tsx:103
+msgid "Last transition time: {lastTransitionTime}"
+msgstr "Last transition time: {lastTransitionTime}"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:146
+msgid "Level"
+msgstr "Level"
+
+#: src/renderer/components/+events/events.tsx:59
+msgid "Limited to {0}"
+msgstr "Limited to {0}"
+
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:72
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:115
+#: src/renderer/components/+workloads-pods/container-charts.tsx:39
+#: src/renderer/components/+workloads-pods/container-charts.tsx:63
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:48
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:72
+msgid "Limits"
+msgstr "限度"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:248
+msgid "Lines"
+msgstr "Lines"
+
+#: src/renderer/components/kube-object/kube-object-meta.tsx:29
+msgid "Link"
+msgstr "Link"
+
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:73
+msgid "Liveness"
+msgstr "Liveness"
+
+#: src/renderer/components/+network-services/service-details.tsx:63
+msgid "Load Balancer IP"
+msgstr "Load Balancer IP"
+
+#: src/renderer/components/app-init/app-init.tsx:43
+msgid "Loading"
+msgstr "Loading"
+
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:90
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:91
+msgid "Logs"
+msgstr "日志"
+
+#: src/renderer/components/dialog/logs-dialog.tsx:27
+msgid "Logs copied to clipboard."
+msgstr "Logs copied to clipboard."
+
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:84
+msgid "Maintainers"
+msgstr "Maintainers"
+
+#: src/renderer/components/+cluster/cluster-metric-switchers.tsx:18
+msgid "Master"
+msgstr "主节点"
+
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:75
+msgid "Match Expressions"
+msgstr "Match Expressions"
+
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:71
+msgid "Match Labels"
+msgstr "匹配标签"
+
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:80
+#: src/renderer/components/+config-autoscalers/hpa.tsx:49
+msgid "Max Pods"
+msgstr "容器单元上限"
+
+#: src/renderer/components/input/input.validators.ts:35
+msgid "Maximum length is {maxLength}"
+msgstr "Maximum length is {maxLength}"
+
+#: src/renderer/components/+workloads-pods/pod-details.tsx:153
+msgid "Medium"
+msgstr "Medium"
+
+#: src/renderer/components/+cluster/cluster-metric-switchers.tsx:25
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:144
+#: src/renderer/components/+nodes/node-details.tsx:64
+#: src/renderer/components/+nodes/node-details.tsx:75
+#: src/renderer/components/+nodes/node-details.tsx:80
+#: src/renderer/components/+nodes/nodes.tsx:114
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:12
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:26
+#: src/renderer/components/+workloads-pods/pod-details-list.tsx:63
+#: src/renderer/components/+workloads-pods/pod-details-list.tsx:96
+#: src/renderer/components/resource-metrics/resource-metrics-text.tsx:18
+msgid "Memory"
+msgstr "内存"
+
+#: src/renderer/components/+nodes/node-charts.tsx:64
+msgid "Memory capacity"
+msgstr "内存容量"
+
+#: src/renderer/components/+workloads-pods/container-charts.tsx:64
+msgid "Memory limits"
+msgstr "内存限制"
+
+#: src/renderer/components/+nodes/node-charts.tsx:57
+#: src/renderer/components/+workloads-pods/container-charts.tsx:57
+msgid "Memory requests"
+msgstr "内存请求"
+
+#: src/renderer/components/+nodes/node-charts.tsx:50
+#: src/renderer/components/+workloads-pods/container-charts.tsx:50
+msgid "Memory usage"
+msgstr "内存使用"
+
+#: src/renderer/components/+nodes/nodes.tsx:63
+msgid "Memory:"
+msgstr "内存:"
+
+#: src/renderer/components/+cluster/cluster-issues.tsx:100
+#: src/renderer/components/+events/event-details.tsx:30
+#: src/renderer/components/+events/events.tsx:62
+msgid "Message"
+msgstr "信息"
+
+#: src/renderer/components/+config-autoscalers/hpa.tsx:47
+msgid "Metrics"
+msgstr "指标"
+
+#: src/renderer/components/+cluster/cluster-no-metrics.tsx:8
+msgid "Metrics are not available due to missing or invalid Prometheus configuration."
+msgstr "Prometheus配置异常导致指标不可用."
+
+#: src/renderer/components/resource-metrics/no-metrics.tsx:6
+msgid "Metrics not available at the moment"
+msgstr "指标目前不可用"
+
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:76
+#: src/renderer/components/+config-autoscalers/hpa.tsx:48
+msgid "Min Pods"
+msgstr "容器单元下限"
+
+#: src/renderer/components/dock/dock.tsx:117
+msgid "Minimize"
+msgstr "Minimize"
+
+#: src/renderer/components/input/input.validators.ts:30
+msgid "Minimum length is {minLength}"
+msgstr "Minimum length is {minLength}"
+
+#: src/renderer/components/+storage-classes/storage-class-details.tsx:38
+#: src/renderer/components/+storage-volumes/volume-details.tsx:33
+msgid "Mount Options"
+msgstr "挂载选项"
+
+#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:84
+msgid "Mountable secrets"
+msgstr "可挂载机密"
+
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:63
+msgid "Mounts"
+msgstr "挂载"
+
+#: src/renderer/components/+apps-helm-charts/helm-charts.tsx:64
+#: src/renderer/components/+apps-releases/releases.tsx:87
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:49
+#: src/renderer/components/+config-autoscalers/hpa.tsx:45
+#: src/renderer/components/+config-maps/config-maps.tsx:34
+#: src/renderer/components/+config-resource-quotas/resource-quotas.tsx:34
+#: src/renderer/components/+config-secrets/add-secret-dialog.tsx:131
+#: src/renderer/components/+config-secrets/add-secret-dialog.tsx:148
+#: src/renderer/components/+config-secrets/secrets.tsx:41
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:60
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuers.tsx:63
+#: src/renderer/components/+custom-resources/crd-details.tsx:81
+#: src/renderer/components/+custom-resources/crd-resources.tsx:63
+#: src/renderer/components/+events/event-details.tsx:55
+#: src/renderer/components/+namespaces/namespaces.tsx:31
+#: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:87
+#: src/renderer/components/+network-endpoints/endpoints.tsx:31
+#: src/renderer/components/+network-ingresses/ingresses.tsx:32
+#: src/renderer/components/+network-policies/network-policies.tsx:31
+#: src/renderer/components/+network-services/service-details-endpoint.tsx:26
+#: src/renderer/components/+network-services/services.tsx:44
+#: src/renderer/components/+nodes/nodes.tsx:112
+#: src/renderer/components/+pod-security-policies/pod-security-policies.tsx:35
+#: src/renderer/components/+storage-classes/storage-classes.tsx:34
+#: src/renderer/components/+storage-volume-claims/volume-claims.tsx:46
+#: src/renderer/components/+storage-volumes/volume-details.tsx:72
+#: src/renderer/components/+storage-volumes/volumes.tsx:40
+#: src/renderer/components/+user-management-roles/roles.tsx:33
+#: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:191
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:79
+#: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:35
+#: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:29
+#: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:36
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:41
+#: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:45
+#: src/renderer/components/+workloads-deployments/deployments.tsx:58
+#: src/renderer/components/+workloads-jobs/jobs.tsx:37
+#: src/renderer/components/+workloads-pods/pod-details-list.tsx:92
+#: src/renderer/components/+workloads-pods/pod-details.tsx:144
+#: src/renderer/components/+workloads-pods/pods.tsx:73
+#: src/renderer/components/+workloads-replicasets/replicasets.tsx:50
+#: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:40
+#: src/renderer/components/dock/edit-resource.tsx:90
+#: src/renderer/components/kube-object/kube-object-meta.tsx:20
+msgid "Name"
+msgstr "名称"
+
+#: src/renderer/components/dock/install-chart.tsx:124
+msgid "Name (optional)"
+msgstr "名称 (可选的)"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:61
+msgid "Names"
+msgstr "名称"
+
+#: src/renderer/components/+apps-releases/release-details.tsx:182
+#: src/renderer/components/+apps-releases/releases.tsx:88
+#: src/renderer/components/+config-autoscalers/hpa.tsx:46
+#: src/renderer/components/+config-maps/config-maps.tsx:35
+#: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:129
+#: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:130
+#: src/renderer/components/+config-resource-quotas/resource-quotas.tsx:35
+#: src/renderer/components/+config-secrets/add-secret-dialog.tsx:152
+#: src/renderer/components/+config-secrets/secrets.tsx:42
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:61
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuers.tsx:64
+#: src/renderer/components/+custom-resources/crd-resources.tsx:64
+#: src/renderer/components/+events/event-details.tsx:56
+#: src/renderer/components/+events/events.tsx:63
+#: src/renderer/components/+namespaces/add-namespace-dialog.tsx:73
+#: src/renderer/components/+network-endpoints/endpoints.tsx:32
+#: src/renderer/components/+network-ingresses/ingresses.tsx:33
+#: src/renderer/components/+network-policies/network-policies.tsx:32
+#: src/renderer/components/+network-services/services.tsx:45
+#: src/renderer/components/+storage-volume-claims/volume-claims.tsx:47
+#: src/renderer/components/+storage-volumes/volume-details.tsx:77
+#: src/renderer/components/+user-management-roles/roles.tsx:34
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:95
+#: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:37
+#: src/renderer/components/+user-management-service-accounts/create-service-account-dialog.tsx:79
+#: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:37
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:43
+#: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:46
+#: src/renderer/components/+workloads-deployments/deployments.tsx:59
+#: src/renderer/components/+workloads-jobs/jobs.tsx:38
+#: src/renderer/components/+workloads-pods/pods.tsx:75
+#: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:41
+#: src/renderer/components/dock/edit-resource.tsx:91
+#: src/renderer/components/dock/install-chart.tsx:122
+#: src/renderer/components/dock/upgrade-chart.tsx:98
+#: src/renderer/components/item-object-list/page-filters-select.tsx:57
+#: src/renderer/components/kube-object/kube-object-meta.tsx:23
+msgid "Namespace"
+msgstr "命名空间"
+
+#: src/renderer/components/+namespaces/namespace-select.tsx:97
+msgid "Namespace: {0}"
+msgstr "命名空间: {0}"
+
+#: src/renderer/components/+namespaces/namespaces.tsx:30
+#: src/renderer/components/layout/sidebar.tsx:85
+msgid "Namespaces"
+msgstr "命名空间"
+
+#: src/renderer/components/+namespaces/namespace-select.tsx:99
+msgid "Namespaces: {0}"
+msgstr "命名空间: {0}"
+
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:66
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:13
+#: src/renderer/components/layout/sidebar.tsx:83
+msgid "Network"
+msgstr "网络"
+
+#: src/renderer/components/+storage-volumes/volume-details.tsx:51
+msgid "Network File System"
+msgstr "网络文件系统"
+
+#: src/renderer/components/+network/network.tsx:51
+#: src/renderer/components/+network-policies/network-policies.tsx:30
+msgid "Network Policies"
+msgstr "网络策略"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:231
+msgid "New logs since opening the dialog"
+msgstr "自打开对话框以来的新日志"
+
+#: src/renderer/components/dock/dock.tsx:104
+msgid "New tab"
+msgstr "新建标签"
+
+#: renderer/components/+apps-releases/release-details.tsx:192
+#~ msgid "New version available:"
+#~ msgstr "New version available:"
+
+#: renderer/components/+apps-releases/releases.tsx:124
+#~ msgid "New version: {lastVersion}"
+#~ msgstr "New version: {lastVersion}"
+
+#: src/renderer/components/wizard/wizard.tsx:131
+msgid "Next"
+msgstr "继续"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:44
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:71
+#: src/renderer/components/+pod-security-policies/pod-security-policies.tsx:42
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:72
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:76
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:80
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:92
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:96
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:100
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:119
+msgid "No"
+msgstr "否"
+
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:159
+msgid "No Nodes Available."
+msgstr "没有可用节点."
+
+#: src/renderer/components/item-object-list/page-filters-select.tsx:84
+msgid "No filters available."
+msgstr "没有找到匹配."
+
+#: src/renderer/components/+cluster/cluster-issues.tsx:89
+msgid "No issues found"
+msgstr "没有发现问题"
+
+#: src/renderer/components/item-object-list/item-list-layout.tsx:196
+msgid "No items found."
+msgstr "没有找到资源."
+
+#: src/renderer/components/+apps-releases/release-rollback-dialog.tsx:82
+msgid "No revisions to rollback."
+msgstr "没有版本可供回退"
+
+#: src/renderer/components/+nodes/node-menu.tsx:24
+#: src/renderer/components/+workloads-pods/pod-details.tsx:85
+msgid "Node"
+msgstr "节点"
+
+#: src/renderer/components/+nodes/node-charts.tsx:98
+msgid "Node Pods capacity"
+msgstr "节点容器单元容量"
+
+#: src/renderer/components/+workloads-daemonsets/daemonset-details.tsx:61
+#: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:49
+#: src/renderer/components/+workloads-deployments/deployment-details.tsx:73
+#: src/renderer/components/+workloads-jobs/job-details.tsx:60
+#: src/renderer/components/+workloads-pods/pod-details.tsx:107
+#: src/renderer/components/+workloads-replicasets/replicaset-details.tsx:73
+#: src/renderer/components/+workloads-statefulsets/statefulset-details.tsx:60
+msgid "Node Selector"
+msgstr "节点选择器"
+
+#: src/renderer/components/+nodes/node-charts.tsx:81
+msgid "Node filesystem size in bytes"
+msgstr "节点文件系统大小（以字节为单位）"
+
+#: src/renderer/components/+nodes/node-charts.tsx:74
+msgid "Node filesystem usage in bytes"
+msgstr "节点文件系统用量（以字节为单位）"
+
+#: src/renderer/components/+nodes/node-menu.tsx:47
+msgid "Node shell"
+msgstr "节点控制台"
+
+#: src/renderer/components/+nodes/nodes.tsx:111
+#: src/renderer/components/layout/sidebar.tsx:80
+msgid "Nodes"
+msgstr "节点"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:72
+msgid "Not After"
+msgstr "Not After"
+
+#: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:72
+msgid "Not Ready Addresses"
+msgstr "地址未就绪"
+
+#: src/renderer/components/+apps-releases/releases.tsx:67
+msgid "Note: StatefulSet Volumes won't be deleted automatically"
+msgstr "Note: StatefulSet Volumes won't be deleted automatically"
+
+#: src/renderer/components/+apps-releases/release-details.tsx:196
+msgid "Notes"
+msgstr "Notes"
+
+#: src/renderer/components/+nodes/node-charts.tsx:91
+msgid "Number of running Pods"
+msgstr "正在运行的Pods数量"
+
+#: src/renderer/components/+nodes/node-details.tsx:87
+msgid "OS"
+msgstr "操作系统"
+
+#: src/renderer/components/+nodes/node-details.tsx:90
+msgid "OS Image"
+msgstr "操作系统镜像"
+
+#: src/renderer/components/+cluster/cluster-issues.tsx:101
+msgid "Object"
+msgstr "Object"
+
+#: src/renderer/components/confirm-dialog/confirm-dialog.tsx:43
+msgid "Ok"
+msgstr "Ok"
+
+#: src/renderer/components/dock/dock.tsx:117
+msgid "Open"
+msgstr "Open"
+
+#: src/renderer/components/+network-services/service-ports.tsx:49
+msgid "Open in a browser"
+msgstr "在浏览器中打开"
+
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:63
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:78
+#: src/renderer/components/+workloads-pods/pod-details-tolerations.tsx:17
+msgid "Operator"
+msgstr "Operator"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:56
+msgid "Organization"
+msgstr "组织"
+
+#: src/renderer/components/+workloads/workloads.tsx:29
+#: src/renderer/components/+workloads-overview/overview-statuses.tsx:37
+msgid "Overview"
+msgstr "总览"
+
+#: src/renderer/components/+404/not-found.tsx:8
+msgid "Page not found"
+msgstr "无法找到页面"
+
+#: src/renderer/components/+workloads-jobs/job-details.tsx:83
+msgid "Parallelism"
+msgstr "Parallelism"
+
+#: src/renderer/components/+storage-classes/storage-class-details.tsx:42
+msgid "Parameters"
+msgstr "参数"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:94
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:102
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:42
+msgid "Path"
+msgstr "路径"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:113
+msgid "Path Prefix"
+msgstr "路径前缀"
+
+#: src/renderer/components/+storage/storage.tsx:26
+#: src/renderer/components/+storage-volume-claims/volume-claims.tsx:45
+msgid "Persistent Volume Claims"
+msgstr "存储卷声明(PVC)"
+
+#: src/renderer/components/+storage/storage.tsx:33
+#: src/renderer/components/+storage-volumes/volumes.tsx:39
+msgid "Persistent Volumes"
+msgstr "存储卷(PV)"
+
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:50
+msgid "Pod"
+msgstr "容器单元"
+
+#: src/renderer/components/+workloads-pods/pod-details.tsx:90
+msgid "Pod IP"
+msgstr "容器单元IP"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policies.tsx:34
+#: src/renderer/components/+user-management/user-management.tsx:44
+msgid "Pod Security Policies"
+msgstr "容器单元安全策略"
+
+#: src/renderer/components/+network-policies/network-policy-details.tsx:85
+msgid "Pod Selector"
+msgstr "容器单元选择器"
+
+#: src/renderer/components/+workloads-daemonsets/daemonset-details.tsx:73
+#: src/renderer/components/+workloads-jobs/job-details.tsx:88
+#: src/renderer/components/+workloads-replicasets/replicaset-details.tsx:85
+#: src/renderer/components/+workloads-statefulsets/statefulset-details.tsx:69
+msgid "Pod Status"
+msgstr "容器单元状态"
+
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:67
+msgid "Pod shell"
+msgstr "容器单元控制台"
+
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:148
+#: src/renderer/components/+nodes/node-details.tsx:66
+#: src/renderer/components/+nodes/node-details.tsx:76
+#: src/renderer/components/+nodes/node-details.tsx:81
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:60
+#: src/renderer/components/+storage-volume-claims/volume-claims.tsx:50
+#: src/renderer/components/+workloads/workloads.tsx:37
+#: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:47
+#: src/renderer/components/+workloads-deployments/deployments.tsx:60
+#: src/renderer/components/+workloads-overview/overview-statuses.tsx:44
+#: src/renderer/components/+workloads-pods/pod-details-list.tsx:89
+#: src/renderer/components/+workloads-pods/pods.tsx:72
+#: src/renderer/components/+workloads-replicasets/replicasets.tsx:52
+#: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:42
+msgid "Pods"
+msgstr "容器单元"
+
+#: src/renderer/components/+network-policies/network-policies.tsx:33
+msgid "Policy Types"
+msgstr "策略类型"
+
+#: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:86
+msgid "Port"
+msgstr "端口"
+
+#: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:83
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:74
+#: src/renderer/components/+network-policies/network-policy-details.tsx:96
+#: src/renderer/components/+network-policies/network-policy-details.tsx:109
+#: src/renderer/components/+network-services/service-details.tsx:59
+#: src/renderer/components/+network-services/services.tsx:48
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:52
+msgid "Ports"
+msgstr "端口集"
+
+#: src/renderer/components/+workloads-pods/pod-details.tsx:93
+msgid "Priority Class"
+msgstr "优先级"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:67
+msgid "Private Key Secret"
+msgstr "私钥"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policies.tsx:36
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:75
+msgid "Privileged"
+msgstr "特权模式"
+
+#: src/renderer/components/+storage-classes/storage-class-details.tsx:28
+#: src/renderer/components/+storage-classes/storage-classes.tsx:35
+msgid "Provisioner"
+msgstr "配置器"
+
+#: src/renderer/components/+workloads-pods/pods.tsx:79
+msgid "QoS"
+msgstr "QoS"
+
+#: src/renderer/components/+workloads-pods/pod-details.tsx:96
+msgid "QoS Class"
+msgstr "QoS Class"
+
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:55
+msgid "Quotas"
+msgstr "配额"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:27
+msgid "Ranges (Min-Max)"
+msgstr "区间 (Min-Max)"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:114
+msgid "Read-only"
+msgstr "只读"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:79
+msgid "Read-only Root Filesystem"
+msgstr "只读根文件系统"
+
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:77
+msgid "Readiness"
+msgstr "Readiness"
+
+#: src/renderer/components/+events/event-details.tsx:33
+msgid "Reason"
+msgstr "原因"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:107
+msgid "Reason: {0} ({1})"
+msgstr "原因: {0} ({1})"
+
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:82
+msgid "Receive"
+msgstr "Receive"
+
+#: src/renderer/components/+storage-classes/storage-class-details.tsx:34
+#: src/renderer/components/+storage-classes/storage-classes.tsx:36
+#: src/renderer/components/+storage-volumes/volume-details.tsx:40
+msgid "Reclaim Policy"
+msgstr "回收策略"
+
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:70
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:75
+msgid "Reference"
+msgstr "Reference"
+
+#: src/renderer/components/dock/upgrade-chart.tsx:97
+msgid "Release"
+msgstr "实例"
+
+#: src/renderer/components/dock/upgrade-chart.tsx:51
+msgid "Release <0>{releaseName}</0> successfully upgraded to version <1>{version}</1>"
+msgstr "实例 <0>{releaseName}</0> 成功地升级到 <1>{version}</1> 版本"
+
+#: src/renderer/components/dock/install-chart.tsx:124
+msgid "Release name"
+msgstr "实例名称"
+
+#: src/renderer/components/+apps-releases/release-details.tsx:204
+msgid "Release: {0}"
+msgstr "实例: {0}"
+
+#: src/renderer/components/+apps/apps.tsx:27
+#: src/renderer/components/+apps-releases/releases.tsx:86
+msgid "Releases"
+msgstr "实例"
+
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:60
+#: src/renderer/components/item-object-list/item-list-layout.tsx:179
+#: src/renderer/components/menu/menu-actions.tsx:49
+#: src/renderer/components/menu/menu-actions.tsx:85
+msgid "Remove"
+msgstr "移除"
+
+#: src/renderer/components/+apps-releases/releases.tsx:65
+msgid "Remove <0>{releaseNames}</0>?"
+msgstr "移除 <0>{releaseNames}</0>?"
+
+#: src/renderer/components/+config-secrets/add-secret-dialog.tsx:133
+msgid "Remove field"
+msgstr "移除 field"
+
+#: src/renderer/components/menu/menu-actions.tsx:93
+msgid "Remove item?"
+msgstr "移除资源对象?"
+
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:61
+msgid "Remove selected bindings for <0>{0}</0>?"
+msgstr "从 for <0>{0}</0>? 中删除选定的绑定"
+
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:111
+msgid "Remove selected bindings from ${name}"
+msgstr "从 ${name} 中删除选定的绑定"
+
+#: src/renderer/components/item-object-list/item-list-layout.tsx:275
+msgid "Remove selected items ({0})"
+msgstr "删除选择的资源对象 ({0})"
+
+#: src/renderer/components/kube-object/kube-object-menu.tsx:69
+msgid "Remove {resourceKind} <0>{resourceName}</0>?"
+msgstr "删除 {resourceKind} <0>{resourceName}</0>?"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:62
+msgid "Renew Before"
+msgstr "续约"
+
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:84
+#: src/renderer/components/+config-autoscalers/hpa.tsx:50
+#: src/renderer/components/+workloads-deployments/deployment-details.tsx:63
+#: src/renderer/components/+workloads-deployments/deployments.tsx:61
+#: src/renderer/components/+workloads-replicasets/replicaset-details.tsx:80
+msgid "Replicas"
+msgstr "副本"
+
+#: src/renderer/components/dock/install-chart.tsx:119
+msgid "Repo/Name"
+msgstr "仓库/名称"
+
+#: src/renderer/components/+apps-helm-charts/helm-charts.tsx:68
+msgid "Repository"
+msgstr "仓库"
+
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:42
+msgid "Request"
+msgstr "请求"
+
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:43
+msgid "Request duration in seconds"
+msgstr "请求持续时间（以秒为单位）"
+
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:71
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:114
+#: src/renderer/components/+nodes/node-charts.tsx:32
+#: src/renderer/components/+nodes/node-charts.tsx:56
+#: src/renderer/components/+workloads-pods/container-charts.tsx:32
+#: src/renderer/components/+workloads-pods/container-charts.tsx:56
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:41
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:65
+msgid "Requests"
+msgstr "请求"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:87
+msgid "Required Drop Capabilities"
+msgstr "Required Drop Capabilities"
+
+#: src/renderer/components/+config-secrets/add-secret-dialog.tsx:133
+msgid "Required field"
+msgstr "Required field"
+
+#: src/renderer/components/item-object-list/page-filters-list.tsx:31
+msgid "Reset"
+msgstr "重置"
+
+#: src/renderer/components/item-object-list/item-list-layout.tsx:199
+msgid "Reset filters?"
+msgstr "Reset filters?"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:44
+#: src/renderer/components/+custom-resources/crd-list.tsx:73
+msgid "Resource"
+msgstr "资源"
+
+#: src/renderer/components/+user-management-roles/role-details.tsx:45
+msgid "Resource Names"
+msgstr "资源名称"
+
+#: src/renderer/components/+config/config.tsx:46
+#: src/renderer/components/+config-resource-quotas/resource-quotas.tsx:33
+#: src/renderer/components/+namespaces/namespace-details.tsx:41
+msgid "Resource Quotas"
+msgstr "资源配额"
+
+#: src/renderer/components/kube-object/kube-object-meta.tsx:32
+msgid "Resource Version"
+msgstr "资源版本"
+
+#: src/renderer/components/kube-object/kube-object-details.tsx:46
+msgid "Resource loading has failed: <0>{0}</0>"
+msgstr "资源加载失败: <0>{0}</0>"
+
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:29
+msgid "Resource {0} on Pods {addition}"
+msgstr "资源 {0} on Pods {addition}"
+
+#: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:126
+msgid "ResourceQuota name"
+msgstr "ResourceQuota name"
+
+#: src/renderer/components/+apps-releases/release-details.tsx:198
+#: src/renderer/components/+user-management-roles/role-details.tsx:29
+msgid "Resources"
+msgstr "资源集"
+
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:49
+msgid "Response"
+msgstr "响应"
+
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:50
+msgid "Response duration in seconds"
+msgstr "响应持续时间（以秒为单位）"
+
+#: src/renderer/components/dock/terminal-tab.tsx:37
+msgid "Restart session"
+msgstr "重启会话"
+
+#: src/renderer/components/+workloads-pods/pods.tsx:77
+msgid "Restarts"
+msgstr "重启"
+
+#: src/renderer/components/+apps-releases/release-rollback-dialog.tsx:85
+#: src/renderer/components/+apps-releases/releases.tsx:90
+msgid "Revision"
+msgstr "Revision"
+
+#: src/renderer/components/+cluster/cluster-no-metrics.tsx:9
+msgid "Right click cluster icon to open cluster settings."
+msgstr "右键单击集群图标以打开设置"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:149
+#: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:187
+msgid "Role"
+msgstr "角色"
+
+#: src/renderer/components/+user-management/user-management.tsx:32
+#: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:34
+msgid "Role Bindings"
+msgstr "角色绑定"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:105
+msgid "Role ID"
+msgstr "角色 ID"
+
+#: src/renderer/components/+user-management-roles/add-role-dialog.tsx:74
+msgid "Role name"
+msgstr "角色名字"
+
+#: src/renderer/components/+nodes/nodes.tsx:117
+#: src/renderer/components/+user-management/user-management.tsx:37
+#: src/renderer/components/+user-management-roles/roles.tsx:32
+msgid "Roles"
+msgstr "角色"
+
+#: src/renderer/components/+apps-releases/release-menu.tsx:47
+#: src/renderer/components/+apps-releases/release-menu.tsx:48
+#: src/renderer/components/+apps-releases/release-rollback-dialog.tsx:95
+msgid "Rollback"
+msgstr "回滚"
+
+#: src/renderer/components/+apps-releases/release-rollback-dialog.tsx:92
+msgid "Rollback <0>{releaseName}</0>"
+msgstr "回滚 <0>{releaseName}</0>"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:24
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:142
+msgid "Rule"
+msgstr "规则"
+
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:85
+#: src/renderer/components/+network-ingresses/ingresses.tsx:34
+#: src/renderer/components/+user-management-roles/role-details.tsx:25
+msgid "Rules"
+msgstr "规则"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:126
+msgid "Run As Group"
+msgstr "Run As Group"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:127
+msgid "Run As User"
+msgstr "Run As User"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:131
+msgid "Runtime Class"
+msgstr "Runtime Class"
+
+#: src/renderer/components/+apps-releases/release-details.tsx:114
+#: src/renderer/components/+config-maps/config-map-details.tsx:78
+#: src/renderer/components/+config-secrets/secret-details.tsx:97
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:216
+#: src/renderer/components/dock/edit-resource.tsx:88
+msgid "Save"
+msgstr "保存"
+
+#: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:128
+#: src/renderer/components/+workloads-deployments/deployments.tsx:86
+#: src/renderer/components/+workloads-deployments/deployments.tsx:87
+msgid "Scale"
+msgstr "伸缩"
+
+#: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:124
+msgid "Scale Deployment <0>{deploymentName}</0>"
+msgstr "Scale Deployment <0>{deploymentName}</0>"
+
+#: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:46
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:44
+msgid "Schedule"
+msgstr "计划"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:41
+#: src/renderer/components/+custom-resources/crd-list.tsx:76
+msgid "Scope"
+msgstr "作用域"
+
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:60
+msgid "Scope Selector"
+msgstr "作用域选择器"
+
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:64
+msgid "Scope name"
+msgstr "作用域名称"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:141
+msgid "Se Linux"
+msgstr "Se Linux"
+
+#: src/renderer/components/+apps-helm-charts/helm-charts.tsx:62
+msgid "Search Helm Charts"
+msgstr "搜索Helm图标"
+
+#: src/renderer/components/input/search-input.tsx:32
+msgid "Search..."
+msgstr "搜索..."
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:65
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:108
+msgid "Secret"
+msgstr "机密"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:37
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:80
+msgid "Secret Name"
+msgstr "机密名称"
+
+#: src/renderer/components/+config-secrets/add-secret-dialog.tsx:147
+msgid "Secret name"
+msgstr "机密名称"
+
+#: src/renderer/components/+config-secrets/secret-details.tsx:44
+msgid "Secret successfully updated."
+msgstr "机密已成功更新."
+
+#: src/renderer/components/+config-secrets/add-secret-dialog.tsx:156
+msgid "Secret type"
+msgstr "机密类型"
+
+#: src/renderer/components/+config/config.tsx:38
+#: src/renderer/components/+config-secrets/secrets.tsx:40
+#: src/renderer/components/+workloads-pods/pod-details.tsx:113
+msgid "Secrets"
+msgstr "机密"
+
+#: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:134
+msgid "Select a quota.."
+msgstr "选择配额.."
+
+#: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:188
+msgid "Select role.."
+msgstr "选择角色.."
+
+#: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:195
+msgid "Select service accounts"
+msgstr "选择服务账号"
+
+#: src/renderer/components/+network-services/service-details.tsx:37
+#: src/renderer/components/+network-services/services.tsx:50
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:69
+#: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:75
+#: src/renderer/components/+workloads-daemonsets/daemonset-details.tsx:57
+#: src/renderer/components/+workloads-deployments/deployment-details.tsx:69
+#: src/renderer/components/+workloads-jobs/job-details.tsx:56
+#: src/renderer/components/+workloads-replicasets/replicaset-details.tsx:69
+#: src/renderer/components/+workloads-statefulsets/statefulset-details.tsx:56
+msgid "Selector"
+msgstr "选择器"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:61
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:91
+msgid "Server"
+msgstr "Server"
+
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:82
+msgid "Service"
+msgstr "服务"
+
+#: src/renderer/components/+user-management/user-management.tsx:27
+#: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:35
+msgid "Service Accounts"
+msgstr "服务账号"
+
+#: src/renderer/components/+network/network.tsx:27
+#: src/renderer/components/+network-services/services.tsx:43
+msgid "Services"
+msgstr "服务"
+
+#: src/renderer/components/+network-services/service-details.tsx:45
+msgid "Session Affinity"
+msgstr "Session Affinity"
+
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:43
+msgid "Set"
+msgstr "Set"
+
+#: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:137
+msgid "Set quota"
+msgstr "Set quota"
+
+#: src/renderer/components/+nodes/node-menu.tsx:48
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:68
+msgid "Shell"
+msgstr "控制台"
+
+#: src/renderer/components/+config-secrets/secret-details.tsx:93
+#: src/renderer/components/+workloads-pods/pod-container-env.tsx:100
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+#: src/renderer/components/drawer/drawer-param-toggler.tsx:19
+msgid "Show"
+msgstr "Show"
+
+#: src/renderer/components/dock/install-chart.tsx:111
+msgid "Show Notes"
+msgstr "Show Notes"
+
+#: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:20
+msgid "Show value"
+msgstr "Show value"
+
+#: src/renderer/components/+nodes/node-charts.tsx:80
+#: src/renderer/components/+storage-volume-claims/volume-claims.tsx:49
+msgid "Size"
+msgstr "Size"
+
+#: src/renderer/components/+workloads-pods/pod-details.tsx:156
+msgid "Size Limit"
+msgstr "Size Limit"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:70
+msgid "Skip TLS Verify"
+msgstr "跳过TLS验证"
+
+#: src/renderer/components/+events/event-details.tsx:36
+#: src/renderer/components/+events/events.tsx:66
+#: src/renderer/components/+events/kube-event-details.tsx:48
+msgid "Source"
+msgstr "源"
+
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:20
+msgid "Specified limits are higher than node capacity!"
+msgstr "Specified limits are higher than node capacity!"
+
+#: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:39
+msgid "Stateful Sets"
+msgstr "有状态副本集"
+
+#: src/renderer/components/+workloads/workloads.tsx:61
+#: src/renderer/components/+workloads-overview/overview-statuses.tsx:54
+msgid "StatefulSets"
+msgstr "有状态副本集"
+
+#: src/renderer/components/+apps-releases/release-details.tsx:192
+#: src/renderer/components/+apps-releases/releases.tsx:93
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:88
+#: src/renderer/components/+config-autoscalers/hpa.tsx:52
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:79
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:67
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:48
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuers.tsx:68
+#: src/renderer/components/+custom-resources/crd-resource-details.tsx:46
+#: src/renderer/components/+namespaces/namespace-details.tsx:37
+#: src/renderer/components/+namespaces/namespaces.tsx:34
+#: src/renderer/components/+network-services/services.tsx:52
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:65
+#: src/renderer/components/+storage-volume-claims/volume-claims.tsx:52
+#: src/renderer/components/+storage-volumes/volume-details.tsx:46
+#: src/renderer/components/+storage-volumes/volumes.tsx:45
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:38
+#: src/renderer/components/+workloads-pods/pod-details-list.tsx:97
+#: src/renderer/components/+workloads-pods/pod-details.tsx:82
+#: src/renderer/components/+workloads-pods/pods.tsx:81
+msgid "Status"
+msgstr "状态"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:64
+msgid "Status URI"
+msgstr "Status URI"
+
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:57
+#: src/renderer/components/layout/sidebar.tsx:84
+msgid "Storage"
+msgstr "存储卷"
+
+#: src/renderer/components/+storage-volumes/volumes.tsx:41
+msgid "Storage Class"
+msgstr "存储类型"
+
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:54
+#: src/renderer/components/+storage-volumes/volume-details.tsx:43
+msgid "Storage Class Name"
+msgstr "存储类型名称"
+
+#: src/renderer/components/+storage/storage.tsx:41
+#: src/renderer/components/+storage-classes/storage-classes.tsx:33
+msgid "Storage Classes"
+msgstr "存储类型"
+
+#: src/renderer/components/+storage-volume-claims/volume-claims.tsx:48
+msgid "Storage class"
+msgstr "存储类型"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:38
+msgid "Stored versions"
+msgstr "Stored versions"
+
+#: src/renderer/components/+workloads-daemonsets/daemonset-details.tsx:68
+#: src/renderer/components/+workloads-deployments/deployment-details.tsx:76
+msgid "Strategy Type"
+msgstr "Strategy Type"
+
+#: src/renderer/components/+events/kube-event-details.tsx:54
+msgid "Sub-object"
+msgstr "Sub-object"
+
+#: src/renderer/components/dock/info-panel.tsx:104
+#: src/renderer/components/wizard/wizard.tsx:131
+msgid "Submit"
+msgstr "提交"
+
+#: src/renderer/components/dock/info-panel.tsx:105
+msgid "Submitting.."
+msgstr "提交中.."
+
+#: src/renderer/components/+network-endpoints/endpoint-details.tsx:24
+msgid "Subsets"
+msgstr "Subsets"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:128
+msgid "Supplemental Groups"
+msgstr "Supplemental Groups"
+
+#: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:54
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:45
+msgid "Suspend"
+msgstr "Suspend"
+
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:78
+msgid "TLS"
+msgstr "TLS"
+
+#: src/renderer/components/+nodes/node-details.tsx:104
+#: src/renderer/components/+nodes/nodes.tsx:116
+msgid "Taints"
+msgstr "污点"
+
+#: src/renderer/components/dock/terminal.store.ts:29
+msgid "Terminal"
+msgstr "终端"
+
+#: src/renderer/components/dock/dock.tsx:107
+msgid "Terminal session"
+msgstr "终端会话"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:226
+msgid "There are no logs available for container."
+msgstr "There are no logs available for container."
+
+#: src/renderer/components/dialog/logs-dialog.tsx:46
+msgid "There are no logs available."
+msgstr "There are no logs available."
+
+#: src/renderer/components/input/input.validators.ts:5
+msgid "This field is required"
+msgstr "This field is required"
+
+#: src/renderer/components/input/input.validators.ts:39
+msgid "This field must contain only lowercase latin characters, numbers and dash."
+msgstr "This field must contain only lowercase latin characters, numbers and dash."
+
+#: src/renderer/components/+network-policies/network-policy-details.tsx:59
+msgid "To"
+msgstr "To"
+
+#: src/renderer/components/error-boundary/error-boundary.tsx:40
+msgid "To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker."
+msgstr "To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker."
+
+#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:76
+msgid "Tokens"
+msgstr "Tokens"
+
+#: src/renderer/components/+workloads-pods/pod-details-tolerations.tsx:11
+msgid "Tolerations"
+msgstr "污点"
+
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:89
+msgid "Transmit"
+msgstr "Transmit"
+
+#: src/renderer/components/+cluster/cluster-issues.tsx:102
+#: src/renderer/components/+config-secrets/secret-details.tsx:74
+#: src/renderer/components/+config-secrets/secrets.tsx:45
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:63
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:44
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuers.tsx:66
+#: src/renderer/components/+custom-resources/crd-details.tsx:82
+#: src/renderer/components/+events/event-details.tsx:48
+#: src/renderer/components/+events/events.tsx:64
+#: src/renderer/components/+network-services/service-details.tsx:41
+#: src/renderer/components/+network-services/services.tsx:46
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:152
+#: src/renderer/components/+storage-volumes/volume-details.tsx:69
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:94
+#: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:43
+#: src/renderer/components/+workloads-pods/pod-details.tsx:140
+msgid "Type"
+msgstr "类型"
+
+#: src/renderer/components/kube-object/kube-object-meta.tsx:26
+msgid "UID"
+msgstr "UID"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:126
+msgid "URL"
+msgstr "URL"
+
+#: src/renderer/components/+nodes/node-menu.tsx:55
+#: src/renderer/components/+nodes/node-menu.tsx:56
+msgid "Uncordon"
+msgstr "Uncordon"
+
+#: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:212
+msgid "Update"
+msgstr "更新"
+
+#: src/renderer/components/+apps-releases/release-details.tsx:179
+#: src/renderer/components/+apps-releases/releases.tsx:94
+msgid "Updated"
+msgstr "已更新"
+
+#: src/renderer/components/dock/upgrade-chart.tsx:105
+msgid "Updating.."
+msgstr "更新中.."
+
+#: src/renderer/components/+apps-releases/release-details.tsx:176
+#: src/renderer/components/dock/upgrade-chart.tsx:105
+msgid "Upgrade"
+msgstr "升级"
+
+#: src/renderer/components/dock/upgrade-chart.tsx:100
+msgid "Upgrade version"
+msgstr "升级版本"
+
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:70
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:113
+#: src/renderer/components/+cluster/cluster-pie-charts.tsx:134
+#: src/renderer/components/+nodes/node-charts.tsx:25
+#: src/renderer/components/+nodes/node-charts.tsx:49
+#: src/renderer/components/+nodes/node-charts.tsx:73
+#: src/renderer/components/+nodes/node-charts.tsx:90
+#: src/renderer/components/+storage-volume-claims/volume-claim-disk-chart.tsx:24
+#: src/renderer/components/+workloads-pods/container-charts.tsx:25
+#: src/renderer/components/+workloads-pods/container-charts.tsx:49
+#: src/renderer/components/+workloads-pods/container-charts.tsx:73
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:34
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:58
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:99
+msgid "Usage"
+msgstr "用量"
+
+#: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:190
+msgid "Use same name for RoleBinding"
+msgstr "Use same name for RoleBinding"
+
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:43
+msgid "Used"
+msgstr "Used"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:155
+msgid "User"
+msgstr "用户"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:99
+msgid "Validation"
+msgstr "Validation"
+
+#: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:135
+#: src/renderer/components/+config-secrets/add-secret-dialog.tsx:132
+#: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:33
+msgid "Value"
+msgstr "数值"
+
+#: src/renderer/components/+apps-releases/release-details.tsx:111
+#: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:132
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:65
+#: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:79
+msgid "Values"
+msgstr "数值"
+
+#: src/renderer/components/+user-management-roles/role-details.tsx:33
+msgid "Verbs"
+msgstr "Verbs"
+
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:78
+#: src/renderer/components/+apps-helm-charts/helm-charts.tsx:66
+#: src/renderer/components/+apps-releases/release-details.tsx:185
+#: src/renderer/components/+apps-releases/releases.tsx:91
+#: src/renderer/components/+custom-resources/crd-details.tsx:35
+#: src/renderer/components/+custom-resources/crd-list.tsx:75
+#: src/renderer/components/+nodes/nodes.tsx:118
+#: src/renderer/components/dock/install-chart.tsx:120
+#: src/renderer/components/dock/upgrade-chart.tsx:99
+msgid "Version"
+msgstr "API版本"
+
+#: src/renderer/components/dock/install-chart.tsx:110
+msgid "View Helm Release"
+msgstr "查看Helm实例"
+
+#: src/renderer/components/+storage-classes/storage-class-details.tsx:31
+msgid "Volume Binding Mode"
+msgstr "卷组绑定类型"
+
+#: src/renderer/components/+storage-volume-claims/volume-claim-disk-chart.tsx:32
+msgid "Volume disk capacity"
+msgstr "卷组磁盘容量"
+
+#: src/renderer/components/+storage-volume-claims/volume-claim-disk-chart.tsx:25
+msgid "Volume disk usage"
+msgstr "卷组磁盘用量"
+
+#: src/renderer/components/+pod-security-policies/pod-security-policies.tsx:37
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:47
+#: src/renderer/components/+workloads-pods/pod-details.tsx:130
+msgid "Volumes"
+msgstr "卷组"
+
+#: src/renderer/components/app-init/app-init.tsx:45
+msgid "Waiting services to be running"
+msgstr "等待服务启动"
+
+#: src/renderer/components/+cluster/cluster-issues.tsx:96
+msgid "Warnings: {0}"
+msgstr "警告: {0}"
+
+#: src/renderer/components/+cluster/cluster-metric-switchers.tsx:19
+msgid "Worker"
+msgstr "工作节点"
+
+#: src/renderer/components/layout/sidebar.tsx:81
+msgid "Workloads"
+msgstr "工作负载"
+
+#: src/renderer/components/input/input.validators.ts:10
+msgid "Wrong email format"
+msgstr "错误的邮件格式"
+
+#: src/renderer/components/input/input.validators.ts:25
+msgid "Wrong url format"
+msgstr "错误的URL格式"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:44
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:71
+#: src/renderer/components/+pod-security-policies/pod-security-policies.tsx:42
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:72
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:76
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:80
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:92
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:96
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:100
+#: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:119
+#: src/renderer/components/+storage-classes/storage-classes.tsx:43
+msgid "Yes"
+msgstr "是"
+
+#: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:118
+msgid "Zone"
+msgstr "空间"
+
+#: src/renderer/components/+apps-releases/release-details.tsx:180
+#: src/renderer/components/+events/event-details.tsx:40
+#: src/renderer/components/+events/event-details.tsx:43
+#: src/renderer/components/kube-object/kube-object-meta.tsx:18
+msgid "ago"
+msgstr "ago"
+
+#: src/renderer/components/item-object-list/item-list-layout.tsx:178
+msgid "and <0>{tailCount}</0> more"
+msgstr "and <0>{tailCount}</0> more"
+
+#: src/renderer/components/+nodes/nodes.tsx:55
+msgid "cores:"
+msgstr "核心:"
+
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:41
+msgid "exit code"
+msgstr "退出状态"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:66
+msgid "kind"
+msgstr "kind"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:67
+msgid "listKind"
+msgstr "listKind"
+
+#: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:48
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:57
+msgid "never"
+msgstr "never"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:64
+msgid "plural"
+msgstr "plural"
+
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:40
+msgid "ready"
+msgstr "ready"
+
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:69
+msgid "sec"
+msgstr "sec"
+
+#: src/renderer/components/+custom-resources/crd-details.tsx:65
+msgid "singular"
+msgstr "singular"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+msgid "timestamps"
+msgstr "时间戳"
+
+#: src/renderer/components/dock/create-resource.tsx:55
+msgid "{0, plural, one {Resource} other {Resources}}"
+msgstr "{0, plural, one {Resource} other {Resources}}"
+
+#: src/renderer/components/+workloads-deployments/deployment-details.tsx:64
+msgid "{0} desired, {1} updated"
+msgstr "{0} desired, {1} updated"
+
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:36
+msgid "{0} on <0>{kind}/{name}</0>"
+msgstr "{0} on <0>{kind}/{name}</0>"
+
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:31
+msgid "{0} on Pods"
+msgstr "{0} 在容器单元上"
+
+#: src/renderer/components/+config-autoscalers/hpa-details.tsx:41
+msgid "{0} on {1}"
+msgstr "{0} on {1}"
+
+#: src/renderer/components/+workloads-deployments/deployment-details.tsx:65
+msgid "{0} total, {1} available"
+msgstr "{0} total, {1} available"
+
+#: src/renderer/components/+workloads-deployments/deployment-details.tsx:66
+msgid "{0} unavailable"
+msgstr "{0} 不可用"
+
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:134
+msgid "{accountName} kubeconfig"
+msgstr "{accountName} kubeconfig"
+
+#: src/renderer/components/item-object-list/item-list-layout.tsx:228
+msgid "{allItemsCount, plural, one {# item} other {# items}}"
+msgstr "{allItemsCount, plural, one {# item} other {# items}}"
+
+#: src/renderer/components/+config-autoscalers/hpa.tsx:31
+msgid "{metricsRemainCount} more..."
+msgstr "{metricsRemainCount} more..."
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:240
+msgid "{podName} Logs"
+msgstr "{podName} Logs"
+
+#: src/renderer/components/dock/edit-resource.tsx:56
+msgid "{resourceType} <0>{resourceName}</0> updated."
+msgstr "{resourceType} <0>{resourceName}</0> updated."
+
+#: src/renderer/components/item-object-list/item-list-layout.tsx:179
+msgid "{selectedCount, plural, one {<0>Remove item <1>{selectedNames}</1>?</0>} other {<2>Remove <3>{selectedCount}</3> items <4>{selectedNames}</4> {tail}?</2>}}"
+msgstr "{selectedCount, plural, one {<0>Remove item <1>{selectedNames}</1>?</0>} other {<2>Remove <3>{selectedCount}</3> items <4>{selectedNames}</4> {tail}?</2>}}"
+
+#: src/renderer/components/dock/info-panel.tsx:99
+msgid "{submitLabel} & Close"
+msgstr "{submitLabel}并关闭"
