@@ -22,10 +22,6 @@ interface ClusterIconOrdering {
   [workspaceId: string]: ClusterId[]
 }
 
-interface ClusterIconOrderingMap {
-  [id: string]: number
-}
-
 export interface ClusterStoreModel {
   activeCluster?: ClusterId; // last opened cluster
   clusters?: ClusterModel[]
@@ -123,26 +119,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.clusters.get(id);
   }
 
-  getByWorkspaceId(workspaceId: string, sorted = true): Cluster[] {
-    const ordering = this.clusterOrders[workspaceId]?.reduce((acc: ClusterIconOrderingMap, cur, i) => { acc[cur] = i; return acc; }, {});
-    const clusters = this.clustersList.filter(cluster => cluster.workspace === workspaceId);
-    if (!ordering || !sorted) {
-      return clusters;
-    }
-
-    const sortedClusters = [];
-    const unsortedClusters = [];
-
-    for (const cluster of clusters) {
-      const index = ordering[cluster.id];
-      if (typeof index === "number" && index >= 0) {
-        sortedClusters[index] = cluster;
-      } else {
-        unsortedClusters.push(cluster);
-      }
-    }
-
-    return [...sortedClusters.filter(c => c), ...unsortedClusters];
+  getByWorkspaceId(workspaceId: string): Cluster[] {
+    return this.clusterOrders[workspaceId].map(clusterId => this.clusters.get(clusterId));
   }
 
   @action
@@ -172,7 +150,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   removeByWorkspaceId(workspaceId: string) {
-    this.getByWorkspaceId(workspaceId, false).forEach(cluster => {
+    this.getByWorkspaceId(workspaceId).forEach(cluster => {
       this.removeById(cluster.id)
     })
   }
@@ -186,7 +164,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     this.clusterOrders = iconOrder;
 
     // update new clusters
-    clusters.forEach(clusterModel => {
+    for (const clusterModel of clusters) {
       let cluster = currentClusters.get(clusterModel.id);
       if (cluster) {
         cluster.updateModel(clusterModel);
@@ -194,7 +172,14 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         cluster = new Cluster(clusterModel);
       }
       newClusters.set(clusterModel.id, cluster);
-    });
+
+      if (!this.clusterOrders[cluster.workspace]) {
+        this.clusterOrders[cluster.workspace] = [];
+      }
+      if (!this.clusterOrders[cluster.workspace].includes(cluster.id)) {
+        this.clusterOrders[cluster.workspace].push(cluster.id);
+      }
+    }
 
     // update removed clusters
     currentClusters.forEach(cluster => {
