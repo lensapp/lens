@@ -5,6 +5,8 @@ import { cssNames, IClassName } from "../../utils";
 
 interface Props {
   className?: IClassName;
+  header?: React.ReactNode;
+  headerClass?: IClassName;
   contentClass?: IClassName;
   infoPanelClass?: IClassName;
   infoPanel?: React.ReactNode;
@@ -13,9 +15,12 @@ interface Props {
 @observer
 export class WizardLayout extends React.Component<Props> {
   render() {
-    const { className, contentClass, infoPanelClass, infoPanel, children: content } = this.props;
+    const { className, contentClass, infoPanelClass, infoPanel, header, headerClass, children: content } = this.props;
     return (
       <div className={cssNames("WizardLayout", className)}>
+        <div className={cssNames("head-col flex gaps align-center", headerClass)}>
+          {header}
+        </div>
         <div className={cssNames("content-col flex column gaps", contentClass)}>
           {content}
         </div>

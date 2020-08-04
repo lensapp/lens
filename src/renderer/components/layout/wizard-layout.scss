@@ -13,6 +13,12 @@
     padding: $spacing;
   }
 
+  > .head-col {
+    position: sticky;
+    background-color: var(--clusters-menu-bgc);
+    border-bottom: 1px solid $grey-800;
+  }
+
   > .content-col {
     margin-right: $spacing;
     background-color: var(--clusters-menu-bgc);
@@ -27,6 +33,10 @@
 
   > .info-col {
     border-left: 1px solid #353a3e;
+  }
+
+  p {
+    line-height: 140%;
   }
 
   a {
