@@ -124,7 +124,7 @@ export class AddCluster extends React.Component {
           to allow you to operate easily on multiple clusters and/or contexts.
         </p>
         <p>
-          For more information on kubeconfig see <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/" target="_blank">Kubernetes docs</a>
+          For more information on kubeconfig see <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/" target="_blank">Kubernetes docs</a>.
         </p>
         <p>
           NOTE: Any manually added cluster is not merged into your kubeconfig file.
@@ -137,22 +137,20 @@ export class AddCluster extends React.Component {
           app.
         </p>
         <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#option-1-oidc-authenticator" target="_blank">
-          <h4>OIDC (OpenID Connect)</h4>
+          <h3>OIDC (OpenID Connect)</h3>
         </a>
-        <div>
-          <p>
-            When connecting Lens to OIDC enabled cluster, there's few things you as a user need to take into account.
-          </p>
-          <b>Dedicated refresh token</b>
-          <p>
-            As Lens app utilized kubeconfig is "disconnected" from your main kubeconfig Lens needs to have it's own refresh token it utilizes.
-            If you share the refresh token with e.g. <code>kubectl</code> who ever uses the token first will invalidate it for the next user.
-            One way to achieve this is with <a href="https://github.com/int128/kubelogin" target="_blank">kubelogin</a> tool by removing the tokens
-            (both <code>id_token</code> and <code>refresh_token</code>) from
-            the config and issuing <code>kubelogin</code> command. That'll take you through the login process and will result you having "dedicated" refresh token.
-          </p>
-        </div>
-        <h4>Exec auth plugins</h4>
+        <p>
+          When connecting Lens to OIDC enabled cluster, there's few things you as a user need to take into account.
+        </p>
+        <p><b>Dedicated refresh token</b></p>
+        <p>
+          As Lens app utilized kubeconfig is "disconnected" from your main kubeconfig Lens needs to have it's own refresh token it utilizes.
+          If you share the refresh token with e.g. <code>kubectl</code> who ever uses the token first will invalidate it for the next user.
+          One way to achieve this is with <a href="https://github.com/int128/kubelogin" target="_blank">kubelogin</a> tool by removing the tokens
+          (both <code>id_token</code> and <code>refresh_token</code>) from
+          the config and issuing <code>kubelogin</code> command. That'll take you through the login process and will result you having "dedicated" refresh token.
+        </p>
+        <h3>Exec auth plugins</h3>
         <p>
           When using <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#configuration" target="_blank">exec auth</a> plugins make sure the paths that are used to call
           any binaries
