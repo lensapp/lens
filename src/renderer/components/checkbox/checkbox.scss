@@ -64,6 +64,7 @@
     color: var(--checkbox-color);
     border: 2px solid currentColor;
     flex-shrink: 0;
+    margin-right: 10px;
 
     &:after {
       content: "";

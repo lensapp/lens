@@ -99,7 +99,7 @@ export class Preferences extends React.Component {
     return (
       <div className="flex gaps">
         <span>{repo.name}</span>
-        {isAdded && <Icon small material="check" className="box right"/>}
+        {isAdded && <Icon small material="check" className="box right" />}
       </div>
     )
   }
@@ -109,7 +109,7 @@ export class Preferences extends React.Component {
     const header = (
       <>
         <h2>Preferences</h2>
-        <Icon material="close" big onClick={history.goBack}/>
+        <Icon material="close" big onClick={history.goBack} />
       </>
     );
     return (
@@ -121,6 +121,14 @@ export class Preferences extends React.Component {
             value={preferences.colorTheme}
             onChange={({ value }: SelectOption) => preferences.colorTheme = value}
           />
+
+          <h2><Trans>Kubectl Binary</Trans></h2>
+          <Checkbox
+            value={preferences.alwaysUseBundledKubectl}
+            onChange={(value) => preferences.alwaysUseBundledKubectl = value}
+          >
+            Always use the bundled kubectl binary. Never try and download a newer version.
+          </Checkbox>
 
           <h2><Trans>Download Mirror</Trans></h2>
           <Select

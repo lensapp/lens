@@ -19,6 +19,7 @@ export interface UserPreferences {
   allowUntrustedCAs?: boolean;
   allowTelemetry?: boolean;
   downloadMirror?: string | "default";
+  alwaysUseBundledKubectl?: boolean;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
