@@ -5,7 +5,7 @@
   position: relative;
   text-align: center;
   padding: $spacing;
-  background: $clusters-menu-bgc;
+  background: $clustersMenuBgc;
 
   .is-mac & {
     padding-top: $spacing * 2;
@@ -46,7 +46,7 @@
     .Icon {
       border-radius: $radius;
       padding: $padding / 3;
-      color: $clusters-menu-bgc;
+      color: $clustersMenuBgc;
       background: white !important;
       font-weight: bold;
       cursor: pointer;
