@@ -29,12 +29,12 @@ export async function shellSync() {
   } else if (!env.LANG.endsWith(".UTF-8")) {
     env.LANG += ".UTF-8"
   }
-  
+
   // Overwrite PATH on darwin
   if (process.env.NODE_ENV === "production" && process.platform === "darwin") {
     process.env["PATH"] = env.PATH
   }
-  
+
   // The spread operator allows joining of objects. The precedence is last to first.
   process.env = {
     ...env,
