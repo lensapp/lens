@@ -30,7 +30,7 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
 }
 
 async function main() {
-  shellSync(app.getLocale());
+  await shellSync();
 
   const workingDir = path.join(app.getPath("appData"), appName);
   app.setName(appName);

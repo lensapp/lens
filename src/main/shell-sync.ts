@@ -1,5 +1,7 @@
 import shellEnv from "shell-env"
 import os from "os";
+import { app } from "electron";
+import logger from "./logger";
 
 interface Env {
   [key: string]: string;
@@ -9,14 +11,21 @@ interface Env {
  * shellSync loads what would have been the environment if this application was
  * run from the command line, into the process.env object. This is especially
  * useful on macos where this always needs to be done.
- * @param locale Should be electron's `app.getLocale()`
  */
-export function shellSync(locale: string) {
+export async function shellSync() {
   const { shell } = os.userInfo();
-  const env: Env = JSON.parse(JSON.stringify(shellEnv.sync(shell)))
+
+  let envVars = {};
+  try {
+    envVars = await shellEnv(shell);
+  } catch (error) {
+    logger.error(`shellEnv: ${error}`)
+  }
+
+  const env: Env = JSON.parse(JSON.stringify(envVars));
   if (!env.LANG) {
     // the LANG env var expects an underscore instead of electron's dash
-    env.LANG = `${locale.replace('-', '_')}.UTF-8`;
+    env.LANG = `${app.getLocale().replace('-', '_')}.UTF-8`;
   } else if (!env.LANG.endsWith(".UTF-8")) {
     env.LANG += ".UTF-8"
   }
