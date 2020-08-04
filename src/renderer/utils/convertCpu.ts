@@ -1,10 +1,13 @@
 // Helper to convert CPU K8S units to numbers
 
+const thousand = 1000;
+const million = thousand * thousand;
+const shortBillion = thousand * million;
+
 export function cpuUnitsToNumber(cpu: string) {
   const cpuNum = parseInt(cpu)
-  const billion = 1000000 * 1000
-  if (cpu.includes("m")) return cpuNum / 1000
-  if (cpu.includes("u")) return cpuNum / 1000000
-  if (cpu.includes("n")) return cpuNum / billion
+  if (cpu.includes("m")) return cpuNum / thousand
+  if (cpu.includes("u")) return cpuNum / million
+  if (cpu.includes("n")) return cpuNum / shortBillion
   return parseFloat(cpu)
 }
