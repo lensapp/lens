@@ -1,5 +1,5 @@
 import { computed, observable, reaction } from "mobx";
-import { autobind } from "./utils";
+import { autobind } from "./utils/autobind";
 import { userStore } from "../common/user-store";
 import logger from "../main/logger";
 

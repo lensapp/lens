@@ -1,6 +1,5 @@
 import type http from "http"
 import { autorun } from "mobx";
-import { apiKubePrefix } from "../common/vars";
 import { ClusterId, clusterStore } from "../common/cluster-store"
 import { Cluster } from "./cluster"
 import { clusterIpc } from "../common/cluster-ipc";
@@ -50,23 +49,8 @@ export class ClusterManager {
   }
 
   getClusterForRequest(req: http.IncomingMessage): Cluster {
-    let cluster: Cluster = null
-
-    // lens-server is connecting to 127.0.0.1:<port>/<uid>
-    if (req.headers.host.startsWith("127.0.0.1")) {
-      const clusterId = req.url.split("/")[1]
-      if (clusterId) {
-        cluster = this.getCluster(clusterId)
-        if (cluster) {
-          // we need to swap path prefix so that request is proxied to kube api
-          req.url = req.url.replace(`/${clusterId}`, apiKubePrefix)
-        }
-      }
-    } else {
-      const id = req.headers.host.split(".")[0]
-      cluster = this.getCluster(id)
-    }
-
-    return cluster;
+    logger.info(`getClusterForRequest(): ${req.headers.host}${req.url}`)
+    const clusterId = req.headers.host.split(".")[0]
+    return this.getCluster(clusterId)
   }
 }

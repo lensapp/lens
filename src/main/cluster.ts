@@ -1,7 +1,8 @@
 import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
-import type { FeatureStatusMap } from "./feature"
+import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
-import { action, observable, reaction, toJS, when } from "mobx";
+import type { FeatureStatusMap } from "./feature"
+import { action, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { broadcastIpc } from "../common/ipc";
 import { ContextHandler } from "./context-handler"
@@ -52,7 +53,6 @@ export class Cluster implements ClusterModel {
   @observable kubeConfigPath: string;
   @observable apiUrl: string; // cluster server url
   @observable kubeProxyUrl: string; // lens-proxy to kube-api url
-  @observable webContentUrl: string; // page content url for loading in renderer
   @observable online: boolean;
   @observable accessible: boolean;
   @observable disconnected: boolean;
@@ -67,6 +67,11 @@ export class Cluster implements ClusterModel {
   @observable allowedNamespaces: string[] = [];
   @observable allowedResources: string[] = [];
 
+  @computed get host() {
+    const proxyHost = new URL(this.kubeProxyUrl).host;
+    return `${this.id}.${proxyHost}`
+  }
+
   constructor(model: ClusterModel) {
     this.updateModel(model);
   }
@@ -80,20 +85,15 @@ export class Cluster implements ClusterModel {
 
   @action
   async init(port: number) {
-    if (this.initialized) {
-      return;
-    }
     try {
       this.contextHandler = new ContextHandler(this);
       this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
       this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
-      this.webContentUrl = `http://${this.id}.localhost:${port}`;
       this.initialized = true;
-      logger.info(`[CLUSTER]: init success`, {
+      logger.info(`[CLUSTER]: "${this.contextName}" init success`, {
         id: this.id,
-        serverUrl: this.apiUrl,
-        webContentUrl: this.webContentUrl,
-        kubeProxyUrl: this.kubeProxyUrl,
+        context: this.contextName,
+        apiUrl: this.apiUrl
       });
     } catch (err) {
       logger.error(`[CLUSTER]: init failed: ${err}`, {
@@ -155,7 +155,7 @@ export class Cluster implements ClusterModel {
   @action
   async refresh() {
     logger.info(`[CLUSTER]: refresh`, this.getMeta());
-    await this.refreshConnectionStatus();
+    await this.refreshConnectionStatus(); // refresh "version", "online", etc.
     if (this.accessible) {
       this.kubeCtl = new Kubectl(this.version)
       this.distribution = this.detectKubernetesDistribution(this.version)
@@ -217,19 +217,25 @@ export class Cluster implements ClusterModel {
     return uninstallFeature(name, this)
   }
 
-  getPrometheusApiPrefix() {
-    return this.preferences.prometheus?.prefix || ""
-  }
-
-  protected async k8sRequest(path: string, options: RequestPromiseOptions = {}) {
+  protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
     const apiUrl = this.kubeProxyUrl + path;
     return request(apiUrl, {
       json: true,
       timeout: 5000,
       headers: {
+        Host: this.host, // provide cluster-id for ClusterManager.getClusterForRequest()
         ...(options.headers || {}),
-        Host: new URL(this.webContentUrl).host,
       },
+    })
+  }
+
+  getMetrics(prometheusPath: string, queryParams: IMetricsReqParams & { query: string }) {
+    const prometheusPrefix = this.preferences.prometheus?.prefix || "";
+    const metricsPath = `/api/v1/namespaces/${prometheusPath}/proxy${prometheusPrefix}/api/v1/query_range`;
+    return this.k8sRequest(metricsPath, {
+      resolveWithFullResponse: false,
+      json: true,
+      qs: queryParams,
     })
   }
 

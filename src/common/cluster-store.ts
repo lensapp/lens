@@ -1,10 +1,8 @@
 import type { WorkspaceId } from "./workspace-store";
 import path from "path";
-import filenamify from "filenamify";
 import { app, ipcRenderer, remote } from "electron";
-import { copyFile, ensureDir, unlink } from "fs-extra";
+import { unlink } from "fs-extra";
 import { action, computed, observable, toJS } from "mobx";
-import { appProto, noClustersHost } from "./vars";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store"
@@ -177,12 +175,11 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
 export const clusterStore = ClusterStore.getInstance<ClusterStore>();
 
-export function isNoClustersView() {
-  return location.hostname === noClustersHost
-}
-
-export function getHostedClusterId() {
-  return location.hostname.split(".")[0];
+export function getHostedClusterId(): ClusterId {
+  const clusterHost = location.hostname.match(/^(.*?)\.localhost/);
+  if (clusterHost) {
+    return clusterHost[1]
+  }
 }
 
 export function getHostedCluster(): Cluster {

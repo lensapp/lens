@@ -3,9 +3,8 @@
 import "../common/system-ca"
 import "../common/prometheus-providers"
 import { app, dialog } from "electron"
-import { appName, appProto, staticDir, staticProto } from "../common/vars";
+import { appName, staticDir } from "../common/vars";
 import path from "path"
-import { initMenu } from "./menu"
 import { LensProxy } from "./lens-proxy"
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
@@ -41,8 +40,7 @@ async function main() {
   const updater = new AppUpdater()
   updater.start();
 
-  registerFileProtocol(appProto, app.getPath("userData"));
-  registerFileProtocol(staticProto, staticDir);
+  registerFileProtocol("static", staticDir);
 
   // find free port
   let proxyPort: number
@@ -74,7 +72,6 @@ async function main() {
 
   // create window manager and open app
   windowManager = new WindowManager(proxyPort);
-  initMenu(windowManager);
 }
 
 app.on("ready", main);

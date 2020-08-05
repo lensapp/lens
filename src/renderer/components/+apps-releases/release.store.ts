@@ -58,7 +58,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     this.isLoading = true;
     let items;
     try {
-      const { isAdmin, allowedNamespaces } = getHostedCluster();
+      const { isAdmin, allowedNamespaces } = getHostedCluster()
       items = await this.loadItems(!isAdmin ? allowedNamespaces : null);
     } finally {
       if (items) {

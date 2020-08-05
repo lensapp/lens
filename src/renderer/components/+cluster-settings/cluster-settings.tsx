@@ -1,7 +1,7 @@
 import "./cluster-settings.scss"
 import React from "react";
 import { observer } from "mobx-react";
-import { Features } from "./features" 
+import { Features } from "./features"
 import { Removal } from "./removal"
 import { Status } from "./status"
 import { General } from "./general"
@@ -12,7 +12,6 @@ import { WizardLayout } from "../layout/wizard-layout";
 export class ClusterSettings extends React.Component {
   render() {
     const cluster = getHostedCluster();
-    
     return (
       <WizardLayout className="ClusterSettings">
         <Status cluster={cluster}></Status>

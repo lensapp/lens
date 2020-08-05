@@ -71,11 +71,12 @@ export class UserStore extends BaseStore<UserStoreModel> {
     if (kubeConfig) {
       this.newContexts.clear();
       const localContexts = loadConfig(kubeConfig).getContexts();
-      console.log(localContexts)
-      localContexts
-        .filter(ctx => ctx.cluster)
-        .filter(ctx => !this.seenContexts.has(ctx.name))
-        .forEach(ctx => this.newContexts.add(ctx.name));
+      localContexts.forEach(({ cluster, name }) => {
+        if (!cluster) return;
+        if (!this.seenContexts.has(name)) {
+          this.newContexts.add(name)
+        }
+      })
     }
   }
 
