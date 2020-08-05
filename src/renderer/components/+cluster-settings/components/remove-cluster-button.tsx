@@ -30,11 +30,9 @@ export class RemoveClusterButton extends React.Component<Props> {
 
   render() {
     return (
-      <div className="flex gaps align-center">
-        <Button accent onClick={this.confirmRemoveCluster}>
-          Remove Cluster
-        </Button>
-      </div>
+      <Button accent onClick={this.confirmRemoveCluster}>
+        Remove Cluster
+      </Button>
     );
   }
 }
