@@ -1,5 +1,5 @@
-import shellEnv from "shell-env"
-import os from "os";
+import shellEnv = require("shell-env")
+import * as os from "os";
 import { app } from "electron";
 import logger from "./logger";
 
