@@ -1,7 +1,5 @@
-import url from "url"
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
-import requestPromise from "request-promise-native"
 import { PrometheusClusterQuery, PrometheusIngressQuery, PrometheusNodeQuery, PrometheusPodQuery, PrometheusProvider, PrometheusPvcQuery, PrometheusQueryOpts } from "../prometheus/provider-registry"
 
 export type IMetricsQuery = string | string[] | {
@@ -9,25 +7,17 @@ export type IMetricsQuery = string | string[] | {
 }
 
 class MetricsRoute extends LensApi {
-
-  public async routeMetrics(request: LensApiRequest) {
+  async routeMetrics(request: LensApiRequest) {
     const { response, cluster, payload } = request
-    const { contextHandler, kubeProxyUrl } = cluster;
-    const headers: Record<string, string> = {
-      "Host": url.parse(cluster.webContentUrl).host,
-      "Content-type": "application/json",
-    }
     const queryParams: IMetricsQuery = {}
     request.query.forEach((value: string, key: string) => {
       queryParams[key] = value
     })
-
-    let metricsUrl: string
+    let prometheusPath: string
     let prometheusProvider: PrometheusProvider
     try {
-      const prometheusPath = await contextHandler.getPrometheusPath()
-      metricsUrl = `${kubeProxyUrl}/api/v1/namespaces/${prometheusPath}/proxy${cluster.getPrometheusApiPrefix()}/api/v1/query_range`
-      prometheusProvider = await contextHandler.getPrometheusProvider()
+      prometheusPath = await cluster.contextHandler.getPrometheusPath()
+      prometheusProvider = await cluster.contextHandler.getPrometheusProvider()
     } catch {
       this.respondJson(response, {})
       return
@@ -35,18 +25,10 @@ class MetricsRoute extends LensApi {
     // prometheus metrics loader
     const attempts: { [query: string]: number } = {};
     const maxAttempts = 5;
-    const loadMetrics = (orgQuery: string): Promise<any> => {
-      const query = orgQuery.trim()
+    const loadMetrics = (promQuery: string): Promise<any> => {
+      const query = promQuery.trim()
       const attempt = attempts[query] = (attempts[query] || 0) + 1;
-      return requestPromise(metricsUrl, {
-        resolveWithFullResponse: false,
-        headers: headers,
-        json: true,
-        qs: {
-          query: query,
-          ...queryParams
-        }
-      }).catch(async (error) => {
+      return cluster.getMetrics(prometheusPath, { query, ...queryParams }).catch(async error => {
         if (attempt < maxAttempts && (error.statusCode && error.statusCode != 404)) {
           await new Promise(resolve => setTimeout(resolve, attempt * 1000)); // add delay before repeating request
           return loadMetrics(query);

@@ -85,11 +85,10 @@ export class ClustersMenu extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const { newContexts } = userStore;
-    const { currentWorkspaceId } = workspaceStore;
-    const clusters = clusterStore.getByWorkspaceId(currentWorkspaceId);
-    const noClusters = !clusterStore.clusters.size;
+    const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
+    const noClustersInScope = clusters.length === 0;
     const isLanding = navigation.getPath() === landingURL();
-    const showStartupHint = this.showHint && isLanding && noClusters;
+    const showStartupHint = this.showHint && isLanding && noClustersInScope;
     return (
       <div
         className={cssNames("ClustersMenu flex column gaps", className)}

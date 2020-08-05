@@ -10,8 +10,6 @@ export const isDevelopment = isDebugging || !isProduction;
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
 
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`
-export const appProto = "lens"  // app.getPath("userData") folder
-export const staticProto = "static"  // static folder (e.g. "static://RELEASE_NOTES.md")
 
 // System paths
 export const contextDir = process.cwd();
@@ -21,9 +19,6 @@ export const mainDir = path.join(contextDir, "src/main");
 export const rendererDir = path.join(contextDir, "src/renderer");
 export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
-
-// System pages
-export const noClustersHost = "no-clusters.localhost"
 
 // Apis
 export const apiPrefix = "/api" // local router apis

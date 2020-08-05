@@ -1,7 +1,6 @@
 import type { WindowManager } from "./window-manager";
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
 import { autorun } from "mobx";
-import { broadcastIpc } from "../common/ipc";
 import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
 import { clusterStore } from "../common/cluster-store";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
@@ -17,19 +16,7 @@ export function initMenu(windowManager: WindowManager) {
   });
 }
 
-function buildMenu(windowManager: WindowManager) {
-  const hasClusters = clusterStore.hasClusters();
-  const activeClusterId = clusterStore.activeClusterId;
-
-  function navigate(url: string) {
-    const clusterView = windowManager.getClusterView(activeClusterId);
-    broadcastIpc({
-      channel: "menu:navigate",
-      webContentId: clusterView ? clusterView.id : undefined /*no-clusters*/,
-      args: [url],
-    });
-  }
-
+export function buildMenu(windowManager: WindowManager) {
   function macOnly(menuItems: MenuItemConstructorOptions[]): MenuItemConstructorOptions[] {
     if (!isMac) return [];
     return menuItems;
@@ -41,20 +28,20 @@ function buildMenu(windowManager: WindowManager) {
       {
         label: 'Add Cluster',
         click() {
-          navigate(addClusterURL())
+          windowManager.navigateMain(addClusterURL())
         }
       },
-      ...(hasClusters ? [{
+      ...(clusterStore.activeCluster ? [{
         label: 'Cluster Settings',
         click() {
-          navigate(clusterSettingsURL())
+          windowManager.navigateMain(clusterSettingsURL())
         }
       }] : []),
       { type: 'separator' },
       {
         label: 'Preferences',
         click() {
-          navigate(preferencesURL())
+          windowManager.navigateMain(preferencesURL())
         }
       },
       ...macOnly([
@@ -125,7 +112,7 @@ function buildMenu(windowManager: WindowManager) {
       {
         label: "What's new?",
         click() {
-          navigate(whatsNewURL())
+          windowManager.navigateMain(whatsNewURL())
         },
       },
       {

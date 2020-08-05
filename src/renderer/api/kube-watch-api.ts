@@ -61,7 +61,7 @@ export class KubeWatchApi {
   }
 
   protected getQuery(): Partial<IKubeWatchRouteQuery> {
-    const { isAdmin, allowedNamespaces } = getHostedCluster();
+    const { isAdmin, allowedNamespaces } = getHostedCluster()
     return {
       api: this.activeApis.map(api => {
         if (isAdmin) return api.getWatchUrl();

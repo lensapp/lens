@@ -4,16 +4,16 @@ import { Notifications } from "../components/notifications";
 import { apiKubePrefix, apiPrefix, isDevelopment } from "../../common/vars";
 
 export const apiBase = new JsonApi({
+  apiBase: apiPrefix,
   debug: isDevelopment,
-  apiPrefix: apiPrefix,
 });
 export const apiKube = new KubeJsonApi({
+  apiBase: apiKubePrefix,
   debug: isDevelopment,
-  apiPrefix: apiKubePrefix,
 });
 
 // Common handler for HTTP api errors
-function onApiError(error: JsonApiErrorParsed, res: Response) {
+export function onApiError(error: JsonApiErrorParsed, res: Response) {
   switch (res.status) {
   case 403:
     error.isUsedForNotification = true;

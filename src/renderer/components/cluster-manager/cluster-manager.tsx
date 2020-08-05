@@ -1,16 +1,17 @@
 import "./cluster-manager.scss"
 import React from "react";
-import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { App } from "../app";
 import { ClustersMenu } from "./clusters-menu";
 import { BottomBar } from "./bottom-bar";
 import { cssNames, IClassName } from "../../utils";
-import { Terminal } from "../dock/terminal";
-import { i18nStore } from "../../i18n";
-import { themeStore } from "../../theme.store";
-import { clusterStore, getHostedClusterId, isNoClustersView } from "../../../common/cluster-store";
-import { CubeSpinner } from "../spinner";
+import { ClusterId } from "../../../common/cluster-store";
+import { Route, Switch } from "react-router";
+import { LandingPage, landingRoute } from "../+landing-page";
+import { Preferences, preferencesRoute } from "../+preferences";
+import { Workspaces, workspacesRoute } from "../+workspaces";
+import { AddCluster, addClusterRoute } from "../+add-cluster";
+import { ClusterStatus } from "./cluster-status";
+import { clusterStatusRoute } from "./cluster-status.route";
 
 interface Props {
   className?: IClassName;
@@ -19,34 +20,26 @@ interface Props {
 
 @observer
 export class ClusterManager extends React.Component<Props> {
-  static async init() {
-    await Promise.all([
-      i18nStore.init(),
-      themeStore.init(),
-      Terminal.preloadFonts(),
-    ])
-  }
-
-  @computed get isInactive() {
-    const { activeCluster, activeClusterId, clusters } = clusterStore;
-    const isActivatedBefore = activeCluster?.initialized;
-    return clusters.size > 0 && !isActivatedBefore && activeClusterId !== getHostedClusterId();
+  activateView(clusterId: ClusterId) {
   }
 
   render() {
-    const { className, contentClass } = this.props;
-    const lensViewClass = cssNames("flex column", contentClass, {
-      inactive: this.isInactive,
-    });
+    const { className } = this.props;
     return (
       <div className={cssNames("ClusterManager", className)}>
         <div id="draggable-top"/>
-        <div id="lens-view" className={lensViewClass}>
-          <App/>
+        <div id="lens-view">
+          <Switch>
+            <Route component={LandingPage} {...landingRoute}/>
+            <Route component={Preferences} {...preferencesRoute}/>
+            <Route component={Workspaces} {...workspacesRoute}/>
+            <Route component={AddCluster} {...addClusterRoute}/>
+            <Route component={ClusterStatus} {...clusterStatusRoute}/>
+            <Route render={() => <p>Lens</p>}/>
+          </Switch>
         </div>
         <ClustersMenu/>
         <BottomBar/>
-        {this.isInactive && <CubeSpinner center/>}
       </div>
     )
   }
