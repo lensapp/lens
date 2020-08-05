@@ -16,9 +16,3 @@ export enum ActionStatus {
     PROCESSING = "processing",
     ERROR = "error"
 }
-
-export enum RemovalStatus {
-    PRESENT = "present",
-    PROCESSING = "processing",
-    ERROR = "error",
-}

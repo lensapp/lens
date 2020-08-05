@@ -3,7 +3,7 @@ import { Cluster } from "../../../main/cluster";
 import { RemoveClusterButton } from "./components/remove-cluster-button";
 
 interface Props {
-    cluster: Cluster;
+  cluster: Cluster;
 }
 
 export class Removal extends React.Component<Props> {

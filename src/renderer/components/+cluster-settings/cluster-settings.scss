@@ -16,7 +16,7 @@
     .settings-wrapper {
       margin: 0 auto;
       width: 70%;
-      min-width: 800px;
+      min-width: 690px;
 
       > div {
         margin-top: $margin * 3;
@@ -37,8 +37,10 @@
       border: 1px solid var(--drawerSubtitleBackground);
       border-radius: $radius;
 
-      .TableCell {
-        border-bottom: 1px solid var(--drawerSubtitleBackground);
+      .TableRow {
+        &:not(:last-of-type) {
+          border-bottom: 1px solid var(--drawerSubtitleBackground);
+        }
 
         &.value {
           color: var(--textColorSecondary);
