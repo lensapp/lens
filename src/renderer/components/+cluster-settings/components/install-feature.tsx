@@ -1,29 +1,26 @@
 import React from "react";
+import { observable } from "mobx";
+import { observer } from "mobx-react";
+import { clusterIpc } from "../../../../common/cluster-ipc";
 import { Cluster } from "../../../../main/cluster";
 import { Button } from "../../button";
-import { MetricsFeature } from "../../../../features/metrics";
-import { Spinner } from "../../spinner";
-import { clusterIpc } from "../../../../common/cluster-ipc";
-import { observable } from "mobx";
-import { ActionStatus } from "./statuses"
-import { observer } from "mobx-react";
-import { SubTitle } from "../../layout/sub-title";
 import { Notifications } from "../../notifications";
+import { Spinner } from "../../spinner";
 
 interface Props {
-  cluster: Cluster;
+  cluster: Cluster
+  feature: string
 }
 
 @observer
-export class InstallMetrics extends React.Component<Props> {
-  @observable status = ActionStatus.IDLE;
-  @observable errorText?: string;
+export class InstallFeature extends React.Component<Props> {
+  @observable loading = false;
 
   getActionButtons() {
-    const { cluster } = this.props;
-    const features = cluster.features[MetricsFeature.id];
-    const disabled = !cluster.isAdmin || this.status === ActionStatus.PROCESSING;
-    const loadingIcon = this.status === ActionStatus.PROCESSING ? <Spinner/> : null;
+    const { cluster, feature } = this.props;
+    const features = cluster.features[feature];
+    const disabled = !cluster.isAdmin || this.loading;
+    const loadingIcon = this.loading ? <Spinner/> : null;
     if (!features) return null;
     return (
       <div className="flex gaps align-center">
@@ -62,27 +59,21 @@ export class InstallMetrics extends React.Component<Props> {
 
   runAction(action: keyof typeof clusterIpc): () => Promise<void> {
     return async () => {
-      const { cluster } = this.props;
+      const { cluster, feature } = this.props;
       try {
-        this.status = ActionStatus.PROCESSING
-        await clusterIpc[action].invokeFromRenderer(cluster.id, MetricsFeature.id);
+        this.loading = true;
+        await clusterIpc[action].invokeFromRenderer(cluster.id, feature);
       } catch (err) {
         Notifications.error(err.toString());
       }
-      this.status = ActionStatus.IDLE;
+      this.loading = false;
     };
   }
 
   render() {
     return (
       <>
-        <SubTitle title="Metrics"/>
-        <p>
-          Enable timeseries data visualization (Prometheus stack) for your cluster.
-          Install this only if you don't have existing Prometheus stack installed.
-          You can see preview of manifests{" "}
-          <a href="https://github.com/lensapp/lens/tree/master/src/features/metrics" target="_blank">here</a>.
-        </p>
+        {this.props.children}
         {this.getActionButtons()}
       </>
     );
