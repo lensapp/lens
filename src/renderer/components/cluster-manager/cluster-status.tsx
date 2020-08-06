@@ -52,7 +52,7 @@ export class ClusterStatus extends React.Component<Props> {
   }
 
   async refreshClusterState() {
-    return clusterIpc.activate.invokeFromRenderer(this.clusterId);
+    await clusterIpc.activate.invokeFromRenderer(this.clusterId);
   }
 
   reconnect = async () => {

@@ -38,7 +38,7 @@ export class ClusterView extends React.Component {
     view.setAttribute("enableremotemodule", "true")
     view.addEventListener("did-finish-load", () => {
       console.log('CLUSTER VIEW READY!', cluster)
-      view.openDevTools()
+      // view.openDevTools()
     });
     view.addEventListener("did-fail-load", event => {
       // todo: handle
