@@ -32,9 +32,8 @@ const vmURL = (isDevelopment) ? `http://localhost:${process.env.ELECTRON_WEBPACK
   protocol: "file",
   slashes: true,
 })
-
 async function main() {
-  shellSync(app.getLocale())
+  await shellSync();
 
   const updater = new AppUpdater()
   updater.start();
