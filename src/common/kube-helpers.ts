@@ -16,7 +16,7 @@ function resolveTilde(filePath: string) {
 
 export function loadConfig(pathOrContent?: string): KubeConfig {
   const kc = new KubeConfig();
-  
+
   if (fse.pathExistsSync(pathOrContent)) {
     kc.loadFromFile(path.resolve(resolveTilde(pathOrContent)));
   } else {
@@ -160,7 +160,7 @@ export async function getKubeConfigLocal(): Promise<string> {
     const file = await readFile(configFile, "utf8");
     const obj = yaml.safeLoad(file);
     if (obj.contexts) {
-      obj.contexts = obj.context.filter((ctx: any) => ctx?.context?.cluster && ctx?.name)
+      obj.contexts = obj.contexts.filter((ctx: any) => ctx?.context?.cluster && ctx?.name)
     }
     return yaml.safeDump(obj);
   } catch (err) {
