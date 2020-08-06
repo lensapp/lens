@@ -43,7 +43,7 @@ export enum OverTotalSizeLimitStyle {
 
 export interface BaseProps {
     accept?: string;
-    label: React.ReactElement;
+    label: React.ReactNode;
     multiple?: boolean;
 
     // limit is the optional maximum number of files to upload

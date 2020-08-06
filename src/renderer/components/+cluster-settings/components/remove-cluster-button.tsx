@@ -22,8 +22,7 @@ export class RemoveClusterButton extends React.Component<Props> {
       labelOk: <Trans>Yes</Trans>,
       labelCancel: <Trans>No</Trans>,
       ok: async () => {
-        await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
-        await clusterStore.removeById(cluster.id);
+        await clusterStore.removeById(cluster.id); 
       }
     })
   }

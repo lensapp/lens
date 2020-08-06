@@ -28,7 +28,9 @@ export class InstallFeature extends React.Component<Props> {
           <Button
             primary
             disabled={disabled}
-            onClick={this.runAction("upgradeFeature")}
+            onClick={this.runAction(() =>
+              clusterIpc.upgradeFeature.invokeFromRenderer(cluster.id, feature))
+            }
           >
             Upgrade
           </Button>
@@ -37,7 +39,9 @@ export class InstallFeature extends React.Component<Props> {
           <Button
             accent
             disabled={disabled}
-            onClick={this.runAction("uninstallFeature")}
+            onClick={this.runAction(() =>
+              clusterIpc.uninstallFeature.invokeFromRenderer(cluster.id, feature))
+            }
           >
             Uninstall
           </Button>
@@ -46,7 +50,9 @@ export class InstallFeature extends React.Component<Props> {
           <Button
             primary
             disabled={disabled}
-            onClick={this.runAction("installFeature")}
+            onClick={this.runAction(() =>
+              clusterIpc.installFeature.invokeFromRenderer(cluster.id, feature))
+            }
           >
             Install
           </Button>
@@ -57,12 +63,12 @@ export class InstallFeature extends React.Component<Props> {
     );
   }
 
-  runAction(action: keyof typeof clusterIpc): () => Promise<void> {
+  runAction(action: () => Promise<any>): () => Promise<void> {
     return async () => {
       const { cluster, feature } = this.props;
       try {
         this.loading = true;
-        await clusterIpc[action].invokeFromRenderer(cluster.id, feature);
+        await action();
       } catch (err) {
         Notifications.error(err.toString());
       }
