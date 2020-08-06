@@ -43,7 +43,7 @@ export enum OverTotalSizeLimitStyle {
 
 export interface BaseProps {
     accept?: string;
-    labelText: string;
+    label: React.ReactElement;
     multiple?: boolean;
 
     // limit is the optional maximum number of files to upload
@@ -175,10 +175,10 @@ export class FilePicker extends React.Component<Props> {
   }
 
   render() {
-    const { accept, labelText, multiple } = this.props;
+    const { accept, label, multiple } = this.props;
 
     return <div className="FilePicker">
-      <label htmlFor="file-upload">{labelText} {this.getIconRight()}</label>
+      <label className="flex gaps align-center" htmlFor="file-upload">{label} {this.getIconRight()}</label>
       <input 
         id="file-upload" 
         name="FilePicker" 
