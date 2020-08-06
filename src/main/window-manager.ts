@@ -27,6 +27,7 @@ export class WindowManager {
       webPreferences: {
         nodeIntegration: true,
         enableRemoteModule: true,
+        webviewTag: true,
       },
     });
     this.windowState.manage(this.mainView);
