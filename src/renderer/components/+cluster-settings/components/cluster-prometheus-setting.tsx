@@ -26,8 +26,10 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
           for possible configuration changes.
         </p>
         <Select
-          value={this.props.cluster.preferences.prometheusProvider?.type}
-          onChange={({type}) => this.props.cluster.preferences.prometheusProvider = { type }}
+          value={this.props.cluster.preferences.prometheusProvider?.type || ""}
+          onChange={({value}) => {
+            this.props.cluster.preferences.prometheusProvider.type = value
+          }}
           options={options}
         />
       </>
