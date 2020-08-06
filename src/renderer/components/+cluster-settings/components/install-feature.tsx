@@ -35,7 +35,7 @@ export class InstallFeature extends React.Component<Props> {
         }
         {features.installed &&
           <Button
-            primary
+            accent
             disabled={disabled}
             onClick={this.runAction("uninstallFeature")}
           >
@@ -74,7 +74,7 @@ export class InstallFeature extends React.Component<Props> {
     return (
       <>
         {this.props.children}
-        {this.getActionButtons()}
+        <div className="button-area">{this.getActionButtons()}</div>
       </>
     );
   }

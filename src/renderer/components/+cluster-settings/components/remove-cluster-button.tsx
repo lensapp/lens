@@ -30,7 +30,7 @@ export class RemoveClusterButton extends React.Component<Props> {
 
   render() {
     return (
-      <Button accent onClick={this.confirmRemoveCluster}>
+      <Button accent onClick={this.confirmRemoveCluster} className="button-area">
         Remove Cluster
       </Button>
     );
