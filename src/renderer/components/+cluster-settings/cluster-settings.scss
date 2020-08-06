@@ -15,17 +15,22 @@
 
     .settings-wrapper {
       margin: 0 auto;
-      width: 70%;
-      min-width: 690px;
+      width: 60%;
+      min-width: 570px;
+      max-width: 1000px;
 
       > div {
-        margin-top: $margin * 3;
+        margin-top: $margin * 5;
       }
 
       .admin-note {
         font-size: small;
         opacity: 0.5;
         margin-left: $margin;
+      }
+
+      button {
+        margin-top: $margin * 2;
       }
     }
   }
@@ -42,62 +47,15 @@
           border-bottom: 1px solid var(--drawerSubtitleBackground);
         }
 
-        &.value {
+        .value {
+          flex-grow: 2;
           color: var(--textColorSecondary);
         }
       }
     }
   }
 
-  .loading {
-    margin-top: 20px;
-    text-align: center;
-
-    .Spinner {
-        display: inline-block;
-    }
-  }
-
   .Input,.Select {
     margin-top: 10px;
-  }
-
-  .Icon:not(.updated):not(.clean) {
-    color: #ad0000;
-  }
-
-  .Icon.updated {
-    color: #00dd1d;
-  }
-
-  .updated {
-    animation: updated-name 1s 1;
-    animation-fill-mode: forwards;
-    animation-delay: 3s;
-  }
-
-  @keyframes updated-name {
-    from {opacity :1;}
-    to {opacity :0;}
-  }
-
-
-  input[type="text"]::placeholder {
-    font-size: small;
-    color: #707070;
-  }
-
-  input[type="text"] {
-    color: white;
-  }
-
-  button {
-    margin-top: 5px;
-
-    .Spinner {
-        width: 10px;
-        height: 10px;
-        border-color: transparent black;
-    }
   }
 }
