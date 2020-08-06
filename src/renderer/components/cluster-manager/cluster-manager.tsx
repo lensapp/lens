@@ -1,32 +1,34 @@
 import "./cluster-manager.scss"
 import React from "react";
+import { Redirect, Route, Switch } from "react-router";
 import { observer } from "mobx-react";
 import { ClustersMenu } from "./clusters-menu";
 import { BottomBar } from "./bottom-bar";
-import { cssNames, IClassName } from "../../utils";
-import { ClusterId } from "../../../common/cluster-store";
-import { Route, Switch } from "react-router";
-import { LandingPage, landingRoute } from "../+landing-page";
+import { LandingPage, landingRoute, landingURL } from "../+landing-page";
 import { Preferences, preferencesRoute } from "../+preferences";
 import { Workspaces, workspacesRoute } from "../+workspaces";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
-import { ClusterStatus } from "./cluster-status";
-import { clusterStatusRoute } from "./cluster-status.route";
-
-interface Props {
-  className?: IClassName;
-  contentClass?: IClassName;
-}
+import { ClusterView } from "./cluster-view";
+import { clusterViewRoute, clusterViewURL } from "./cluster-view.route";
+import { clusterStore } from "../../../common/cluster-store";
 
 @observer
-export class ClusterManager extends React.Component<Props> {
-  activateView(clusterId: ClusterId) {
+export class ClusterManager extends React.Component {
+  get startUrl() {
+    const { activeClusterId } = clusterStore;
+    if (activeClusterId) {
+      return clusterViewURL({
+        params: {
+          clusterId: activeClusterId
+        }
+      })
+    }
+    return landingURL()
   }
 
   render() {
-    const { className } = this.props;
     return (
-      <div className={cssNames("ClusterManager", className)}>
+      <div className="ClusterManager">
         <div id="draggable-top"/>
         <div id="lens-view">
           <Switch>
@@ -34,8 +36,8 @@ export class ClusterManager extends React.Component<Props> {
             <Route component={Preferences} {...preferencesRoute}/>
             <Route component={Workspaces} {...workspacesRoute}/>
             <Route component={AddCluster} {...addClusterRoute}/>
-            <Route component={ClusterStatus} {...clusterStatusRoute}/>
-            <Route render={() => <p>Lens</p>}/>
+            <Route component={ClusterView} {...clusterViewRoute}/>
+            <Redirect exact from="/" to={this.startUrl}/>
           </Switch>
         </div>
         <ClustersMenu/>

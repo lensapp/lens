@@ -20,7 +20,7 @@ import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
-import { clusterStatusURL } from "./cluster-status.route";
+import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
 
 // fixme: allow to rearrange clusters with drag&drop
 
@@ -32,12 +32,9 @@ interface Props {
 export class ClustersMenu extends React.Component<Props> {
   @observable showHint = true;
 
-  showCluster = (clusterId: ClusterId) => {
-    if (clusterStore.activeClusterId === clusterId) {
-      navigate("/"); // redirect to index
-    } else {
-      clusterStore.activeClusterId = clusterId;
-    }
+  activateCluster = (clusterId: ClusterId) => {
+    clusterStore.activeClusterId = clusterId;
+    navigate(clusterViewURL({ params: { clusterId } }))
   }
 
   addCluster = () => {
@@ -57,9 +54,6 @@ export class ClustersMenu extends React.Component<Props> {
         label: _i18n._(t`Disconnect`),
         click: async () => {
           await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
-          if (cluster.id === clusterStore.activeClusterId) {
-            navigate(clusterStatusURL());
-          }
         }
       }))
     }
@@ -110,8 +104,8 @@ export class ClustersMenu extends React.Component<Props> {
               key={cluster.id}
               showErrors={true}
               cluster={cluster}
-              isActive={cluster.id === clusterStore.activeClusterId}
-              onClick={() => this.showCluster(cluster.id)}
+              isActive={cluster.id === getMatchedClusterId()}
+              onClick={() => this.activateCluster(cluster.id)}
               onContextMenu={() => this.showContextMenu(cluster)}
             />
           )

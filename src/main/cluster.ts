@@ -67,11 +67,6 @@ export class Cluster implements ClusterModel {
   @observable allowedNamespaces: string[] = [];
   @observable allowedResources: string[] = [];
 
-  @computed get host() {
-    const proxyHost = new URL(this.kubeProxyUrl).host;
-    return `${this.id}.${proxyHost}`
-  }
-
   constructor(model: ClusterModel) {
     this.updateModel(model);
   }
@@ -223,7 +218,7 @@ export class Cluster implements ClusterModel {
       json: true,
       timeout: 5000,
       headers: {
-        Host: this.host, // provide cluster-id for ClusterManager.getClusterForRequest()
+        Host: `${this.id}.${new URL(this.kubeProxyUrl).host}`, // required in ClusterManager.getClusterForRequest()
         ...(options.headers || {}),
       },
     })

@@ -2,36 +2,36 @@ import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
 
 import "./cluster-status.scss"
 import React from "react";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { ipcRenderer } from "electron";
-import { autorun, computed, observable } from "mobx";
+import { computed, observable } from "mobx";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { Icon } from "../icon";
 import { Button } from "../button";
 import { cssNames } from "../../utils";
-import { navigate } from "../../navigation";
 import { Cluster } from "../../../main/cluster";
+import { ClusterId, clusterStore } from "../../../common/cluster-store";
+
+interface Props {
+  clusterId: ClusterId;
+}
 
 @observer
-export class ClusterStatus extends React.Component {
+export class ClusterStatus extends React.Component<Props> {
   @observable authOutput: KubeAuthProxyLog[] = [];
   @observable isReconnecting = false;
 
-  // fixme
+  @computed get clusterId() {
+    return this.props.clusterId;
+  }
+
   @computed get cluster(): Cluster {
-    return null;
+    return clusterStore.getById(this.clusterId);
   }
 
   @computed get hasErrors(): boolean {
     return this.authOutput.some(({ error }) => error) || !!this.cluster.failureReason;
   }
-
-  @disposeOnUnmount
-  autoRedirectToMain = autorun(() => {
-    if (this.cluster.accessible && !this.hasErrors) {
-      navigate("/");
-    }
-  })
 
   async componentDidMount() {
     if (this.cluster.disconnected) {
@@ -48,11 +48,11 @@ export class ClusterStatus extends React.Component {
   }
 
   componentWillUnmount() {
-    ipcRenderer.removeAllListeners(`kube-auth:${this.cluster.id}`);
+    ipcRenderer.removeAllListeners(`kube-auth:${this.clusterId}`);
   }
 
   async refreshClusterState() {
-    return clusterIpc.activate.invokeFromRenderer();
+    return clusterIpc.activate.invokeFromRenderer(this.clusterId);
   }
 
   reconnect = async () => {

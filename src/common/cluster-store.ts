@@ -156,11 +156,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     this.activeClusterId = newClusters.has(activeCluster) ? activeCluster : null;
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
-
-    // "auto-select" first cluster if available
-    if (!this.activeClusterId && newClusters.size) {
-      this.activeClusterId = Array.from(newClusters.values())[0].id;
-    }
   }
 
   toJSON(): ClusterStoreModel {
