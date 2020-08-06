@@ -42,12 +42,12 @@ export class ClusterIcon extends React.Component<Props> {
       active: isActive,
     });
     return (
-      <div {...elemProps} className={className} id={clusterIconId}>
+      <div {...elemProps} className={className} id={showTooltip ? clusterIconId : null}>
         {showTooltip && (
           <Tooltip targetId={clusterIconId}>{clusterName}</Tooltip>
         )}
         {icon && <img src={icon} alt={clusterName}/>}
-        {!icon && <Hashicon value={clusterName} options={options}/>}
+        {!icon && <Hashicon value={clusterId} options={options}/>}
         {showErrors && isAdmin && eventCount > 0 && (
           <Badge
             className={cssNames("events-count", errorClass)}
