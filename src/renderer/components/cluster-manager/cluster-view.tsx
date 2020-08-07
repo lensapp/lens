@@ -7,6 +7,7 @@ import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { getMatchedClusterId } from "./cluster-view.route";
 import { ClusterStatus } from "./cluster-status";
 import logger from "../../../main/logger";
+import { clusterIpc } from "../../../common/cluster-ipc";
 
 @observer
 export class ClusterView extends React.Component {
@@ -24,7 +25,7 @@ export class ClusterView extends React.Component {
       autorun(() => {
         if (this.cluster) {
           this.initView(this.cluster.id)
-          this.activateView(this.cluster.id)
+          this.attachView(this.cluster.id)
         }
       })
     ])
@@ -39,12 +40,11 @@ export class ClusterView extends React.Component {
     webview.setAttribute("src", `//${clusterId}.${location.host}`)
     webview.setAttribute("nodeintegration", "true")
     webview.setAttribute("enableremotemodule", "true")
-    // webview.addEventListener("did-start-loading", () => {
-    //   webview.openDevTools();
-    // });
     webview.addEventListener("did-finish-load", () => {
+      // webview.openDevTools()
       webview.classList.add("loaded");
-      ClusterView.isLoaded.set(clusterId, true)
+      clusterIpc.init.invokeFromRenderer(clusterId); // push-state to webview
+      ClusterView.isLoaded.set(clusterId, true);
     });
     webview.addEventListener("did-fail-load", (event) => {
       logger.error("failed to load lens-webview", event)
@@ -53,12 +53,10 @@ export class ClusterView extends React.Component {
     ClusterView.views.set(clusterId, webview);
   }
 
-  activateView = async (clusterId: ClusterId) => {
-    const cluster = clusterStore.getById(clusterId);
+  attachView = async (clusterId: ClusterId) => {
     const view = ClusterView.views.get(clusterId);
-    const isLoaded = ClusterView.isLoaded.has(clusterId);
+    const isLoaded = ClusterView.views.has(clusterId);
     if (view && isLoaded && this.placeholder) {
-      cluster.pushState(); // fixme
       this.placeholder.replaceWith(view);
     }
   }
