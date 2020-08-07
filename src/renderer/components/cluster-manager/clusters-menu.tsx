@@ -33,11 +33,8 @@ export class ClustersMenu extends React.Component<Props> {
   @observable showHint = true;
 
   showCluster = (clusterId: ClusterId) => {
-    if (clusterStore.activeClusterId === clusterId) {
-      navigate("/"); // redirect to index
-    } else {
-      clusterStore.activeClusterId = clusterId;
-    }
+    clusterStore.setActive(clusterId);
+    navigate("/"); // redirect to index
   }
 
   addCluster = () => {
@@ -50,7 +47,10 @@ export class ClustersMenu extends React.Component<Props> {
 
     menu.append(new MenuItem({
       label: _i18n._(t`Settings`),
-      click: () => navigate(clusterSettingsURL())
+      click: () => {
+        clusterStore.setActive(cluster.id);
+        navigate(clusterSettingsURL())
+      }
     }));
     if (cluster.online) {
       menu.append(new MenuItem({

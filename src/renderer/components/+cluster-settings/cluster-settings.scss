@@ -1,86 +1,85 @@
 .ClusterSettings {
-    overflow-y: scroll;
-    grid-template-columns: unset;
+  grid-template-columns: unset;
+  padding: 0;
 
-    .info-col {
-        display: none;
+  .head-col {
+    justify-content: space-between;
+
+    :nth-child(2) {
+      flex: 1 0 0;
     }
 
-    .content-col {
-        margin-right: unset;
+    a {
+      text-decoration: none;
+      color: $grey-600;
+    }
+  }
+
+  .info-col {
+    display: none;
+  }
+
+  .content-col {
+    margin: 0;
+    padding-top: $padding * 3;
+    background-color: transparent;
+
+    .SubTitle {
+      text-transform: none;
     }
 
-    * {
-        margin-top: 40px;
+    .settings-wrapper {
+      margin: 0 auto;
+      width: 60%;
+      min-width: 570px;
+      max-width: 1000px;
 
-        &:first-child {
-            margin-top: 0px;
-        }
-    }
+      > div {
+        margin-top: $margin * 5;
+      }
 
-    h4 {
-        margin-top: 20px;
-    }
-
-    .status-table {
-        margin-top: 20px;
-        display: grid;
-        grid-template-columns: 1fr 3fr;
-        grid-gap: 10px;
-    }
-
-    .loading {
-        margin-top: 20px;
-        text-align: center;
-
-        .Spinner {
-            display: inline-block;
-        }
-    }
-
-    .Input,.Select {
-        margin-top: 10px;
-    }
-
-    .Icon:not(.updated):not(.clean) {
-        color: #ad0000;
-    }
-
-    .Icon.updated {
-        color: #00dd1d;
-    }
-
-    .updated {
-        animation: updated-name 1s 1;
-        animation-fill-mode: forwards;
-        animation-delay: 3s;
-    }
-
-    @keyframes updated-name {
-        from {opacity :1;}
-        to {opacity :0;}
-    }
-
-    .center {
-        text-align: center;
-    }
-
-    input[type="text"]::placeholder {
+      .admin-note {
         font-size: small;
-        color: #707070;
+        opacity: 0.5;
+        margin-left: $margin;
+      }
+
+      .button-area {
+        margin-top: $margin * 2;
+      }
     }
 
-    input[type="text"] {
-        color: white;
+    .file-loader {
+      margin-top: $margin * 2;
     }
 
-    button {
-        margin-top: 5px;
+    .hint {
+      font-size: smaller;
+      opacity: 0.8;
+    }
+  }
 
-        .Spinner {
-            width: 10px;
-            height: 10px;
-            border-color: transparent black;
+  .status-table {
+    margin: $margin * 3 0;
+
+    .Table {
+      border: 1px solid var(--drawerSubtitleBackground);
+      border-radius: $radius;
+
+      .TableRow {
+        &:not(:last-of-type) {
+          border-bottom: 1px solid var(--drawerSubtitleBackground);
         }
+
+        .value {
+          flex-grow: 2;
+          color: var(--textColorSecondary);
+        }
+      }
     }
+  }
+
+  .Input,.Select {
+    margin-top: 10px;
+  }
 }
