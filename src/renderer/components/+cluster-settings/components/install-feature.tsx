@@ -1,6 +1,6 @@
 import React from "react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
+import { observable, reaction } from "mobx";
+import { observer, disposeOnUnmount } from "mobx-react";
 import { clusterIpc } from "../../../../common/cluster-ipc";
 import { Cluster } from "../../../../main/cluster";
 import { Button } from "../../button";
@@ -15,6 +15,14 @@ interface Props {
 @observer
 export class InstallFeature extends React.Component<Props> {
   @observable loading = false;
+
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(() => this.props.cluster.features[this.props.feature], () => {
+        this.loading = false;
+      })
+    ]);
+  }
 
   getActionButtons() {
     const { cluster, feature } = this.props;
@@ -65,14 +73,12 @@ export class InstallFeature extends React.Component<Props> {
 
   runAction(action: () => Promise<any>): () => Promise<void> {
     return async () => {
-      const { cluster, feature } = this.props;
       try {
         this.loading = true;
         await action();
       } catch (err) {
         Notifications.error(err.toString());
       }
-      this.loading = false;
     };
   }
 
