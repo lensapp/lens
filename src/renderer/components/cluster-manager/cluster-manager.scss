@@ -1,13 +1,13 @@
 .ClusterManager {
   display: grid;
-  grid-template-areas: "menu lens-view" "menu lens-view" "bottom-bar bottom-bar";
+  grid-template-areas: "menu main" "menu main" "bottom-bar bottom-bar";
   grid-template-rows: auto 1fr min-content;
   grid-template-columns: min-content 1fr;
   height: 100%;
 
-  #lens-view {
+  main {
     position: relative;
-    grid-area: lens-view;
+    grid-area: main;
     display: flex;
   }
 

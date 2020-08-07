@@ -49,7 +49,7 @@ export function createIpcChannel({ autoBind = true, mode = IpcMode.ASYNC, timeou
           if (resolved) return;
           res.msgId = req.msgId; // return back to sender to be able to handle response
           resolved = true
-          logger.info(`[IPC]: sending response to "${channel}"`, res);
+          logger.debug(`[IPC]: sending response to "${channel}"`, res);
           if (mode === IpcMode.ASYNC) {
             event.reply(channel, res);
           }
@@ -82,7 +82,6 @@ export function createIpcChannel({ autoBind = true, mode = IpcMode.ASYNC, timeou
         msgId: getRandId({ prefix: "ipc-msg-id" }),
         args: args,
       }
-      logger.info(`[IPC]: "${channel}" sending message to main`, req);
       if (mode === IpcMode.ASYNC) {
         ipcRenderer.send(channel, req)
       }
@@ -94,7 +93,7 @@ export function createIpcChannel({ autoBind = true, mode = IpcMode.ASYNC, timeou
           if (req.msgId === res.msgId) {
             const meta = { ...req, ...res };
             if (res.data) {
-              logger.info(`[IPC]: "${channel}" resolve`, meta);
+              logger.debug(`[IPC]: "${channel}" resolve`, meta);
               resolve(res.data);
             }
             if (res.error) {
