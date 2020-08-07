@@ -129,7 +129,7 @@ export function broadcastIpc({ channel, webContentId, filter, args = [] }: IpcBr
   }
   views.forEach(webContent => {
     const type = webContent.getType();
-    logger.debug(`[IPC]: sending message "${channel}" to ${type}=${webContent.id}`, { args });
+    logger.debug(`[IPC]: broadcasting "${channel}" to ${type}=${webContent.id}`, { args });
     webContent.send(channel, ...[args].flat());
   })
 }

@@ -5,53 +5,67 @@ import { autorun, computed, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { getMatchedClusterId } from "./cluster-view.route";
-import { Cluster } from "../../../main/cluster";
 import { ClusterStatus } from "./cluster-status";
+import logger from "../../../main/logger";
 
 @observer
 export class ClusterView extends React.Component {
   static views = observable.map<ClusterId, WebviewTag>()
   static isLoaded = observable.map<ClusterId, boolean>()
 
+  @observable.ref placeholder: HTMLElement;
+
   @computed get cluster() {
     return clusterStore.getById(getMatchedClusterId())
   }
 
-  @computed get clusterView() {
-    return ClusterView.views.get(this.cluster?.id)
-  }
-
   componentDidMount() {
     disposeOnUnmount(this, [
-      autorun(() => this.activateView(this.cluster))
+      autorun(() => {
+        if (this.cluster) {
+          this.initView(this.cluster.id)
+          this.activateView(this.cluster.id)
+        }
+      })
     ])
   }
 
-  // fixme
-  activateView = (cluster: Cluster) => {
-    if (!cluster || ClusterView.views.has(cluster.id)) {
+  initView = (clusterId: ClusterId) => {
+    if (ClusterView.views.has(clusterId)) {
       return;
     }
-    const view = document.createElement("webview");
-    view.className = "ClusterView"
-    view.setAttribute("nodeintegration", "true")
-    view.setAttribute("enableremotemodule", "true")
-    view.addEventListener("did-finish-load", () => {
-      console.log('CLUSTER VIEW READY!', cluster)
-      // view.openDevTools()
+    const webview = document.createElement("webview");
+    webview.className = "ClusterView"
+    webview.setAttribute("src", `//${clusterId}.${location.host}`)
+    webview.setAttribute("nodeintegration", "true")
+    webview.setAttribute("enableremotemodule", "true")
+    webview.addEventListener("did-finish-load", () => {
+      webview.openDevTools();
+      webview.classList.add("loaded");
+      ClusterView.isLoaded.set(clusterId, true)
     });
-    view.addEventListener("did-fail-load", event => {
-      // todo: handle
+    webview.addEventListener("did-fail-load", (event) => {
+      logger.error("failed to load lens-webview", event)
     });
-    view.src = `${location.protocol}//${cluster.id}.${location.host}`
-    document.body.appendChild(view);
-    ClusterView.views.set(cluster.id, view);
+    document.body.appendChild(webview);
+    ClusterView.views.set(clusterId, webview);
+  }
+
+  activateView = async (clusterId: ClusterId) => {
+    const view = ClusterView.views.get(clusterId);
+    const isLoaded = ClusterView.isLoaded.has(clusterId);
+    if (view && isLoaded && this.placeholder) {
+      this.placeholder.replaceWith(view);
+    }
   }
 
   render() {
     const { cluster } = this;
     if (cluster) {
-      return <ClusterStatus clusterId={cluster.id}/>
+      if (!cluster.accessible) {
+        return <ClusterStatus clusterId={cluster.id}/>
+      }
+      return <div ref={e => this.placeholder = e}/>
     }
   }
 }
