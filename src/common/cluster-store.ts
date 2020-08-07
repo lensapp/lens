@@ -64,7 +64,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     if (ipcRenderer) {
       ipcRenderer.on("cluster:state", (event, clusterState: ClusterState) => {
         this.applyWithoutSync(() => {
-          logger.debug(`[CLUSTER-STORE]: received state update for cluster=${clusterState.id}`, clusterState);
+          logger.info(`[CLUSTER-STORE]: received state update for cluster=${clusterState.id}`, clusterState);
           const cluster = this.getById(clusterState.id);
           if (cluster) cluster.updateModel(clusterState)
         })

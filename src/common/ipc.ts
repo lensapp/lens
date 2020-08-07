@@ -33,7 +33,7 @@ export interface IpcChannelInit {
   once?: boolean; // todo: add support
 }
 
-export function createIpcChannel({ autoBind = false, mode = IpcMode.ASYNC, timeout = 0, handle, channel }: IpcChannelInit) {
+export function createIpcChannel({ autoBind = true, mode = IpcMode.ASYNC, timeout = 0, handle, channel }: IpcChannelInit) {
   channel = `${mode}:${channel}`
 
   const ipcChannel = {

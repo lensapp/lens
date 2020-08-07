@@ -1,8 +1,8 @@
+import "../common/cluster-ipc";
 import type http from "http"
 import { autorun } from "mobx";
 import { ClusterId, clusterStore } from "../common/cluster-store"
 import { Cluster } from "./cluster"
-import { clusterIpc } from "../common/cluster-ipc";
 import logger from "./logger";
 
 export class ClusterManager {
@@ -29,13 +29,6 @@ export class ClusterManager {
     }, {
       delay: 250
     });
-
-    // listen for ipc-events that must/can be handled *only* in main-process (nodeIntegration=true)
-    clusterIpc.activate.handleInMain();
-    clusterIpc.disconnect.handleInMain();
-    clusterIpc.installFeature.handleInMain();
-    clusterIpc.uninstallFeature.handleInMain();
-    clusterIpc.upgradeFeature.handleInMain();
   }
 
   stop() {

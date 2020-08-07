@@ -44,7 +44,7 @@ export class ClusterStatus extends React.Component<Props> {
         error: res.error,
       });
     })
-    await this.refreshClusterState();
+    // await this.refreshClusterState();
   }
 
   componentWillUnmount() {
