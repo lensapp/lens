@@ -42,7 +42,7 @@ export class ClusterManager {
   }
 
   getClusterForRequest(req: http.IncomingMessage): Cluster {
-    logger.info(`getClusterForRequest(): ${req.headers.host}${req.url}`)
+    logger.debug(`getClusterForRequest(): ${req.headers.host}${req.url}`)
     const clusterId = req.headers.host.split(".")[0]
     return this.getCluster(clusterId)
   }
