@@ -39,8 +39,10 @@ export class ClusterView extends React.Component {
     webview.setAttribute("src", `//${clusterId}.${location.host}`)
     webview.setAttribute("nodeintegration", "true")
     webview.setAttribute("enableremotemodule", "true")
+    // webview.addEventListener("did-start-loading", () => {
+    //   webview.openDevTools();
+    // });
     webview.addEventListener("did-finish-load", () => {
-      webview.openDevTools();
       webview.classList.add("loaded");
       ClusterView.isLoaded.set(clusterId, true)
     });
@@ -52,9 +54,11 @@ export class ClusterView extends React.Component {
   }
 
   activateView = async (clusterId: ClusterId) => {
+    const cluster = clusterStore.getById(clusterId);
     const view = ClusterView.views.get(clusterId);
     const isLoaded = ClusterView.isLoaded.has(clusterId);
     if (view && isLoaded && this.placeholder) {
+      cluster.pushState(); // fixme
       this.placeholder.replaceWith(view);
     }
   }
