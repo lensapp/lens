@@ -108,7 +108,7 @@ export class ClustersMenu extends React.Component<Props> {
               showErrors={true}
               cluster={cluster}
               isActive={cluster.id === getMatchedClusterId()}
-              onClick={() => this.activateCluster(cluster.id)}
+              onClick={() => this.showCluster(cluster.id)}
               onContextMenu={() => this.showContextMenu(cluster)}
             />
           )
