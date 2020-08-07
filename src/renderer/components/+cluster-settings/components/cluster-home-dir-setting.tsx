@@ -1,5 +1,4 @@
 import React from "react";
-import throttle from "lodash/throttle";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";
@@ -14,13 +13,12 @@ interface Props {
 export class ClusterHomeDirSetting extends React.Component<Props> {
   @observable directory = this.props.cluster.preferences.terminalCWD || "";
 
-  save = throttle((value: string) => {
-    this.props.cluster.preferences.terminalCWD = value;
-  }, 500);
+  save = () => {
+    this.props.cluster.preferences.terminalCWD = this.directory;
+  };
 
   onChange = (value: string) => {
     this.directory = value;
-    this.save(value);
   }
 
   render() {
@@ -32,6 +30,7 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
           theme="round-black"
           value={this.directory}
           onChange={this.onChange}
+          onBlur={this.save}
           placeholder="$HOME"
         />
         <span className="hint">

@@ -5,7 +5,6 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
 import { isRequired } from "../../input/input.validators";
-import throttle from "lodash/throttle";
 
 interface Props {
   cluster: Cluster;
@@ -15,14 +14,12 @@ interface Props {
 export class ClusterNameSetting extends React.Component<Props> {
   @observable name = this.props.cluster.preferences.clusterName || "";
 
-  save = throttle((value: string) => {
-    if (!value) return;
-    this.props.cluster.preferences.clusterName = value;
-  }, 500);
+  save = () => {
+    this.props.cluster.preferences.clusterName = this.name;
+  };
 
   onChange = (value: string) => {
     this.name = value;
-    this.save(value);
   }
 
   render() {
@@ -35,6 +32,7 @@ export class ClusterNameSetting extends React.Component<Props> {
           validators={isRequired}
           value={this.name}
           onChange={this.onChange}
+          onBlur={this.save}
         />
       </>
     );

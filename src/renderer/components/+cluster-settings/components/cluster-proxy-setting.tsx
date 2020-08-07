@@ -1,5 +1,4 @@
 import React from "react";
-import throttle from "lodash/throttle";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";
@@ -15,13 +14,12 @@ interface Props {
 export class ClusterProxySetting extends React.Component<Props> {
   @observable proxy = this.props.cluster.preferences.httpsProxy || "";
 
-  save = throttle((value: string) => {
-    this.props.cluster.preferences.httpsProxy = value;
-  }, 500);
+  save = () => {
+    this.props.cluster.preferences.httpsProxy = this.proxy;
+  };
 
   onChange = (value: string) => {
     this.proxy = value;
-    this.save(value);
   }
 
   render() {
@@ -33,6 +31,7 @@ export class ClusterProxySetting extends React.Component<Props> {
           theme="round-black"
           value={this.proxy}
           onChange={this.onChange}
+          onBlur={this.save}
           placeholder="http://<address>:<port>"
           validators={isUrl}
         />

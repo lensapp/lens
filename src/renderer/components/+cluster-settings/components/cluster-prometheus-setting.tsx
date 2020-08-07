@@ -1,4 +1,5 @@
 import React from "react";
+import merge from "lodash/merge";
 import { observer } from "mobx-react";
 import { prometheusProviders } from "../../../../common/prometheus-providers";
 import { Cluster } from "../../../../main/cluster";
@@ -28,7 +29,12 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
         <Select
           value={this.props.cluster.preferences.prometheusProvider?.type || ""}
           onChange={({value}) => {
-            this.props.cluster.preferences.prometheusProvider.type = value
+            const provider = {
+              prometheusProvider: {
+                type: value
+              }
+            }
+            merge(this.props.cluster.preferences, provider);
           }}
           options={options}
         />
