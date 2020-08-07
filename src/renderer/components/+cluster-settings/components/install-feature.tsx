@@ -17,11 +17,11 @@ export class InstallFeature extends React.Component<Props> {
   @observable loading = false;
 
   componentDidMount() {
-    disposeOnUnmount(this, [
+    disposeOnUnmount(this,
       reaction(() => this.props.cluster.features[this.props.feature], () => {
         this.loading = false;
       })
-    ]);
+    );
   }
 
   getActionButtons() {
