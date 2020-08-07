@@ -1,5 +1,5 @@
 import React from "react";
-import { observable, reaction } from "mobx";
+import { observable, reaction, comparer } from "mobx";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { clusterIpc } from "../../../../common/cluster-ipc";
 import { Cluster } from "../../../../main/cluster";
@@ -20,7 +20,7 @@ export class InstallFeature extends React.Component<Props> {
     disposeOnUnmount(this,
       reaction(() => this.props.cluster.features[this.props.feature], () => {
         this.loading = false;
-      })
+      }, { equals: comparer.structural })
     );
   }
 
