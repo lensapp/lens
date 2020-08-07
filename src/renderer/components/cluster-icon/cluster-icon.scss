@@ -7,6 +7,12 @@
   user-select: none;
   cursor: pointer;
 
+  &.interactive {
+    img {
+      opacity: .55;
+    }
+  }
+
   &.active, &.interactive:hover {
     background-color: #fff;
 
@@ -16,7 +22,6 @@
   }
 
   img {
-    opacity: .55;
     width: var(--size);
     height: var(--size);
   }

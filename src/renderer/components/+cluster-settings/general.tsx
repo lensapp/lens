@@ -15,8 +15,6 @@ export class General extends React.Component<Props> {
   render() {
     return <div>
       <h2>General</h2>
-      <hr/>
-      
       <ClusterNameSetting cluster={this.props.cluster} />
       <ClusterWorkspaceSetting cluster={this.props.cluster} />
       <ClusterIconSetting cluster={this.props.cluster} />

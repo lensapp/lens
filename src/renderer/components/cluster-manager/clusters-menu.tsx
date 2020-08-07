@@ -32,8 +32,8 @@ interface Props {
 export class ClustersMenu extends React.Component<Props> {
   @observable showHint = true;
 
-  activateCluster = (clusterId: ClusterId) => {
-    clusterStore.activeClusterId = clusterId;
+  showCluster = (clusterId: ClusterId) => {
+    clusterStore.setActive(clusterId);
     navigate(clusterViewURL({ params: { clusterId } }))
   }
 
@@ -47,7 +47,10 @@ export class ClustersMenu extends React.Component<Props> {
 
     menu.append(new MenuItem({
       label: _i18n._(t`Settings`),
-      click: () => navigate(clusterSettingsURL())
+      click: () => {
+        clusterStore.setActive(cluster.id);
+        navigate(clusterSettingsURL())
+      }
     }));
     if (cluster.online) {
       menu.append(new MenuItem({
