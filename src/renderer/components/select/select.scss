@@ -42,6 +42,10 @@ html {
       margin-bottom: 1px;
     }
 
+    &__single-value {
+      color: var(--textColorSecondary);
+    }
+
     &__indicator {
       padding: $padding /2;
       opacity: .55;
