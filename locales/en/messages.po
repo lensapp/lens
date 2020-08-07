@@ -2178,8 +2178,8 @@ msgid "This field is required"
 msgstr "This field is required"
 
 #: src/renderer/components/input/input.validators.ts:39
-msgid "This field must contain only lowercase latin characters, numbers and dash."
-msgstr "This field must contain only lowercase latin characters, numbers and dash."
+msgid "A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics."
+msgstr "A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics."
 
 #: src/renderer/components/+network-policies/network-policy-details.tsx:59
 msgid "To"
