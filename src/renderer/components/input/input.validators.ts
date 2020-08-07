@@ -55,7 +55,7 @@ export const maxLength: Validator = {
 
 const systemNameMatcher = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
 export const systemName: Validator = {
-  message: () => _i18n._(t`A System Name must be lowercase DNS labels seperated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics.`),
+  message: () => _i18n._(t`A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics.`),
   validate: value => !!value.match(systemNameMatcher),
 };
 
