@@ -14,7 +14,7 @@ class PortForward {
     return PortForward.portForwards.find((pf) => {
       return (
         pf.clusterId == forward.clusterId &&
-        pf.kind == "service" &&
+        pf.kind == forward.kind &&
         pf.name == forward.name &&
         pf.namespace == forward.namespace &&
         pf.port == forward.port
@@ -42,7 +42,7 @@ class PortForward {
       "--kubeconfig", this.kubeConfig,
       "port-forward",
       "-n", this.namespace,
-      `service/${this.name}`,
+      `${this.kind}/${this.name}`,
       `${this.localPort}:${this.port}`
     ]
 
@@ -72,21 +72,22 @@ class PortForward {
 
 class PortForwardRoute extends LensApi {
 
-  public async routeServicePortForward(request: LensApiRequest) {
+  public async routePortForward(request: LensApiRequest) {
     const { params, response, cluster} = request
+    const { namespace, port, resourceType, resourceName } = params
 
     let portForward = PortForward.getPortforward({
-      clusterId: cluster.id, kind: "service", name: params.service,
-      namespace: params.namespace, port: params.port
+      clusterId: cluster.id, kind: resourceType, name: resourceName,
+      namespace: namespace, port: port
     })
     if (!portForward) {
-      logger.info(`Creating a new port-forward ${params.namespace}/${params.service}:${params.port}`)
+      logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`)
       portForward = new PortForward({
         clusterId: cluster.id,
-        kind: "service",
-        namespace: params.namespace,
-        name: params.service,
-        port: params.port,
+        kind: resourceType,
+        namespace: namespace,
+        name: resourceName,
+        port: port,
         kubeConfig: cluster.proxyKubeconfigPath()
       })
       const started = await portForward.start()
