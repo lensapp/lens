@@ -8,11 +8,12 @@ import { computed, observable } from "mobx";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { Icon } from "../icon";
 import { Button } from "../button";
-import { cssNames } from "../../utils";
+import { cssNames, IClassName } from "../../utils";
 import { Cluster } from "../../../main/cluster";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
 
 interface Props {
+  className?: IClassName;
   clusterId: ClusterId;
 }
 
@@ -68,7 +69,7 @@ export class ClusterStatus extends React.Component<Props> {
     const failureReason = cluster.failureReason;
     const isError = hasErrors || isDisconnected;
     return (
-      <div className="ClusterStatus flex column gaps">
+      <div className={cssNames("ClusterStatus flex column gaps", this.props.className)}>
         {isError && (
           <Icon
             material="cloud_off"

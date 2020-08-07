@@ -30,7 +30,7 @@ export class ClusterManager extends React.Component {
     return (
       <div className="ClusterManager">
         <div id="draggable-top"/>
-        <div id="lens-view">
+        <main>
           <Switch>
             <Route component={LandingPage} {...landingRoute}/>
             <Route component={Preferences} {...preferencesRoute}/>
@@ -39,7 +39,7 @@ export class ClusterManager extends React.Component {
             <Route component={ClusterView} {...clusterViewRoute}/>
             <Redirect exact from="/" to={this.startUrl}/>
           </Switch>
-        </div>
+        </main>
         <ClustersMenu/>
         <BottomBar/>
       </div>
