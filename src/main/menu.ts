@@ -79,21 +79,21 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Back',
         accelerator: 'CmdOrCtrl+[',
         click() {
-          webContents.getFocusedWebContents().executeJavaScript('window.history.back()')
+          webContents.getFocusedWebContents()?.goBack();
         }
       },
       {
         label: 'Forward',
         accelerator: 'CmdOrCtrl+]',
         click() {
-          webContents.getFocusedWebContents().executeJavaScript('window.history.forward()')
+          webContents.getFocusedWebContents()?.goForward();
         }
       },
       {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click() {
-          webContents.getFocusedWebContents().reload()
+          webContents.getFocusedWebContents()?.reload();
         }
       },
       { role: 'toggleDevTools' },
