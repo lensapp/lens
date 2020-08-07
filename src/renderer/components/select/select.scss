@@ -31,7 +31,7 @@ html {
       border-radius: $radius;
       background: transparent;
       min-height: 0;
-      box-shadow: 0 0 0 1px $halfGray;
+      box-shadow: 0 0 0 1px $borderFaintColor;
 
       &--is-focused {
         box-shadow: 0 0 0 2px $primary;
@@ -40,6 +40,10 @@ html {
 
     &__value-container {
       margin-bottom: 1px;
+    }
+
+    &__single-value {
+      color: var(--textColorSecondary);
     }
 
     &__indicator {

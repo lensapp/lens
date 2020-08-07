@@ -1,41 +1,40 @@
 import React from "react";
-import { Spinner } from "../spinner";
 import { Cluster } from "../../../main/cluster";
+import { SubTitle } from "../layout/sub-title";
+import { Table, TableCell, TableRow } from "../table";
 
 interface Props {
   cluster: Cluster;
 }
 
 export class Status extends React.Component<Props> {
-  renderStatusRows(): JSX.Element[] {
+  renderStatusRows() {
     const { cluster } = this.props;
-
-    const rows: [string, React.ReactNode][] = [
+    const rows = [
       ["Online Status", cluster.online ? "online" : `offline (${cluster.failureReason || "unknown reason"}`],
       ["Distribution", cluster.distribution],
       ["Kerbel Version", cluster.version],
       ["API Address", cluster.apiUrl],
+      ["Nodes Count", cluster.nodes || "0"]
     ];
-
-    if (cluster.nodes > 0) {
-      rows.push(["Nodes Count", cluster.nodes]);
-    }
-
-    return rows
-      .map(([header, value]) => [
-        <h5 key={header+"-header"}>{header}</h5>,
-        <span key={header + "-value"}>{value}</span>
-      ])
-      .flat();
+    return (
+      <Table scrollable={false}>
+        {rows.map(([name, value]) => {
+          return (
+            <TableRow key={name}>
+              <TableCell>{name}</TableCell>
+              <TableCell className="value">{value}</TableCell>
+            </TableRow>
+          );
+        })}
+      </Table>
+    );
   }
 
   render() {
-    const { cluster } = this.props;
-
     return <div>
       <h2>Status</h2>
-      <hr/>
-      <h4>Cluster status</h4>
+      <SubTitle title="Cluster Status"/>
       <p>
         Cluster status information including: detected distribution, kernel version, and online status.
       </p>
