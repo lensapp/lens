@@ -20,16 +20,31 @@ export class ApiManager {
 
   getApi(pathOrCallback: string | ((api: KubeApi) => boolean)) {
     if (typeof pathOrCallback === "string") {
-      return this.apis.get(pathOrCallback) || this.apis.get(KubeApi.parseApi(pathOrCallback).apiBase);
+      const { apiBase } = KubeApi.parseApi(pathOrCallback);
+      const api = this.apis.get(pathOrCallback) || this.apis.get(apiBase);
+      if (!api) {
+        throw `"${apiBase}" is an unsupported kubernetes API`;
+      }
+
+      return api;
     }
 
     return Array.from(this.apis.values()).find(pathOrCallback);
   }
 
-  registerApi(apiBase: string, api: KubeApi) {
-    if (!this.apis.has(apiBase)) {
-      this.apis.set(apiBase, api);
+  /**
+   * registerApi registers the provided api under its `apiBase` URL.
+   * @param api the KubeApi object to register
+   * @returns true if the KubeApi is a new entry, false if already
+   *          present (and not updated)
+   */
+  registerApi(api: KubeApi): boolean {
+    if (this.apis.has(api.apiBase)) {
+      return false
     }
+
+    this.apis.set(api.apiBase, api);
+    return true;
   }
 
   protected resolveApi(api: string | KubeApi): KubeApi {
@@ -37,13 +52,17 @@ export class ApiManager {
     return api;
   }
 
-  unregisterApi(api: string | KubeApi) {
-    if (typeof api === "string") this.apis.delete(api);
-    else {
-      const apis = Array.from(this.apis.entries());
-      const entry = apis.find(entry => entry[1] === api);
-      if (entry) this.unregisterApi(entry[0]);
+  /**
+   * unregisterApi removes the 
+   * @param api the apiBase or KubeApi object to remove from the map
+   * @returns true if the item was removed, false if not present
+   */
+  unregisterApi(api: string | KubeApi): boolean {
+    if (typeof api === "string") {
+      return this.apis.delete(api)
     }
+
+    return this.apis.delete(api.apiBase);
   }
 
   registerStore(api: KubeApi, store: KubeObjectStore) {
@@ -54,16 +73,20 @@ export class ApiManager {
     return this.stores.get(this.resolveApi(api));
   }
 
-  registerViews(api: KubeApi | KubeApi[], views: ApiComponents) {
-    if (Array.isArray(api)) {
-      api.forEach(api => this.registerViews(api, views));
-      return;
-    }
+  private registerViewsForApi(api: KubeApi, views: ApiComponents) {
     const currentViews = this.views.get(api) || {};
     this.views.set(api, {
       ...currentViews,
       ...views,
     });
+  }
+
+  registerViews(api: KubeApi | KubeApi[], views: ApiComponents) {
+    if (Array.isArray(api)) {
+      api.forEach(api => this.registerViewsForApi(api, views));
+    } else {
+      this.registerViewsForApi(api, views);
+    }
   }
 
   getViews(api: string | KubeApi): ApiComponents {

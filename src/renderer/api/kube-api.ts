@@ -68,7 +68,7 @@ export class KubeApi<T extends KubeObject = any> {
     this.objectConstructor = objectConstructor;
 
     this.parseResponse = this.parseResponse.bind(this);
-    apiManager.registerApi(apiBase, this);
+    apiManager.registerApi(this);
   }
 
   setResourceVersion(namespace = "", newVersion: string) {

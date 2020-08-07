@@ -274,6 +274,7 @@ msgstr "CA Bundle"
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:53
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:95
 #: src/renderer/components/resource-metrics/resource-metrics-text.tsx:13
+#: src/renderer/components/+nodes/nodes.tsx:55
 msgid "CPU"
 msgstr "CPU"
 
@@ -296,10 +297,7 @@ msgstr "CPU limits"
 msgid "CPU requests"
 msgstr "CPU requests"
 
-#: src/renderer/components/+nodes/nodes.tsx:55
-msgid "CPU:"
-msgstr "CPU:"
-
+#: src/renderer/components/+workspaces/workspaces.tsx:119
 #: src/renderer/components/confirm-dialog/confirm-dialog.tsx:44
 #: src/renderer/components/dock/info-panel.tsx:97
 #: src/renderer/components/wizard/wizard.tsx:130
@@ -665,12 +663,13 @@ msgstr "Desired number of replicas"
 #: src/renderer/components/+nodes/node-details.tsx:65
 #: src/renderer/components/+nodes/nodes.tsx:115
 #: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:44
+#: src/renderer/components/+nodes/nodes.tsx:71
 msgid "Disk"
 msgstr "Disk"
 
-#: src/renderer/components/+nodes/nodes.tsx:71
-msgid "Disk:"
-msgstr "Disk:"
+#: src/renderer/components/+preferences/preferences.tsx:171
+msgid "Does not affect cluster communications!"
+msgstr "Does not affect cluster communications!"
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:89
 msgid "Domains"
@@ -1146,6 +1145,7 @@ msgstr "Medium"
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:63
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:96
 #: src/renderer/components/resource-metrics/resource-metrics-text.tsx:18
+#: src/renderer/components/+nodes/nodes.tsx:63
 msgid "Memory"
 msgstr "Memory"
 
@@ -1166,10 +1166,6 @@ msgstr "Memory requests"
 #: src/renderer/components/+workloads-pods/container-charts.tsx:48
 msgid "Memory usage"
 msgstr "Memory usage"
-
-#: src/renderer/components/+nodes/nodes.tsx:63
-msgid "Memory:"
-msgstr "Memory:"
 
 #: src/renderer/components/+cluster/cluster-issues.tsx:100
 #: src/renderer/components/+events/event-details.tsx:30
@@ -2393,8 +2389,8 @@ msgid "and <0>{tailCount}</0> more"
 msgstr "and <0>{tailCount}</0> more"
 
 #: src/renderer/components/+nodes/nodes.tsx:55
-msgid "cores:"
-msgstr "cores:"
+msgid "cores"
+msgstr "cores"
 
 #: src/renderer/components/+workloads-pods/pod-details-container.tsx:41
 msgid "exit code"

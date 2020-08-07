@@ -36,66 +36,66 @@ enum sortBy {
 interface Props extends RouteComponentProps<INodesRouteParams> {
 }
 
-@observer
-export class Nodes extends React.Component<Props> {
-  private metricsWatcher = interval(30, () => nodesStore.loadUsageMetrics());
-
-  componentDidMount() {
-    this.metricsWatcher.start(true);
+function renderCpuUsage(node: Node) {
+  const metrics = nodesStore.getLastMetricValues(node, ["cpuUsage", "cpuCapacity"]);
+  if (!metrics?.[1]) {
+    return <LineProgress value={0} />;
   }
 
-  componentWillUnmount() {
-    this.metricsWatcher.stop();
+  const [usage, cores] = metrics;
+  const percentage = Math.ceil(usage * 100) / cores;
+  const CPUTrans = _i18n._(t`CPU`);
+  const CoreTrans = _i18n._(t`cores`);
+
+  return <LineProgress
+    max={cores}
+    value={usage}
+    tooltip={`${CPUTrans}: ${percentage.toPrecision(4)}%, ${CoreTrans}: ${cores}`}
+  />;
+}
+
+function renderMemoryUsage(node: Node) {
+  const metrics = nodesStore.getLastMetricValues(node, ["memoryUsage", "memoryCapacity"]);
+  if (!metrics?.[1]) {
+    return <LineProgress value={0} />;
   }
 
-  renderCpuUsage(node: Node) {
-    const metrics = nodesStore.getLastMetricValues(node, ["cpuUsage", "cpuCapacity"]);
-    if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
-    const usage = metrics[0];
-    const cores = metrics[1];
-    return (
-      <LineProgress
-        max={cores}
-        value={usage}
-        tooltip={_i18n._(t`CPU:`) + ` ${Math.ceil(usage * 100) / cores}\%, ` + _i18n._(t`cores:`) + ` ${cores}`}
-      />
-    )
+  const [usage, capacity] = metrics;
+  const percentage = Math.ceil(usage * 100 / capacity);
+  const MemoryTrans = _i18n._(t`Memory`);
+
+  return <LineProgress
+    max={capacity}
+    value={usage}
+    tooltip={`${MemoryTrans}: ${percentage.toPrecision(4)}%, ${bytesToUnits(usage, 3)}`}
+  />;
+}
+
+function renderDiskUsage(node: Node): any {
+  const metrics = nodesStore.getLastMetricValues(node, ["fsUsage", "fsSize"]);
+  if (!metrics?.[1]) {
+    return <LineProgress value={0} />;
   }
 
-  renderMemoryUsage(node: Node) {
-    const metrics = nodesStore.getLastMetricValues(node, ["memoryUsage", "memoryCapacity"]);
-    if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
-    const usage = metrics[0];
-    const capacity = metrics[1];
-    return (
-      <LineProgress
-        max={capacity}
-        value={usage}
-        tooltip={_i18n._(t`Memory:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`}
-      />
-    )
+  const [usage, capacity] = metrics;
+  const percentage = Math.ceil(usage * 100 / capacity);
+  const DiskTrans = _i18n._(t`Disk`);
+
+  return <LineProgress
+    max={capacity}
+    value={usage}
+    tooltip={`${DiskTrans}: ${percentage.toPrecision(4)}%, ${bytesToUnits(usage, 3)}`}
+  />;
+}
+
+function renderConditions(node: Node) {
+  if (!node.status.conditions) {
+    return null
   }
 
-  renderDiskUsage(node: Node): any {
-    const metrics = nodesStore.getLastMetricValues(node, ["fsUsage", "fsSize"]);
-    if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
-    const usage = metrics[0];
-    const capacity = metrics[1];
-    return (
-      <LineProgress
-        max={capacity}
-        value={usage}
-        tooltip={_i18n._(t`Disk:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`}
-      />
-    )
-  }
-
-  renderConditions(node: Node) {
-    if (!node.status.conditions) {
-      return null
-    }
-    const conditions = node.getActiveConditions();
-    return conditions.map(condition => {
+  return node
+    .getActiveConditions()
+    .map(condition => {
       const { type } = condition
       const tooltipId = `node-${node.getName()}-condition-${type}`
       return (
@@ -113,6 +113,18 @@ export class Nodes extends React.Component<Props> {
           </Tooltip>
         </div>)
     })
+}
+
+@observer
+export class Nodes extends React.Component<Props> {
+  private metricsWatcher = interval(30, () => nodesStore.loadUsageMetrics());
+
+  componentDidMount() {
+    this.metricsWatcher.start(true);
+  }
+
+  componentWillUnmount() {
+    this.metricsWatcher.stop();
   }
 
   render() {
@@ -120,7 +132,8 @@ export class Nodes extends React.Component<Props> {
       <MainLayout>
         <KubeObjectListLayout
           className="Nodes"
-          store={nodesStore} isClusterScoped
+          store={nodesStore} 
+          isClusterScoped
           isReady={nodesStore.isLoaded && nodesStore.metricsLoaded}
           dependentStores={[podsStore]}
           isSelectable={false}
@@ -157,9 +170,9 @@ export class Nodes extends React.Component<Props> {
             const tooltipId = `node-taints-${node.getId()}`;
             return [
               node.getName(),
-              this.renderCpuUsage(node),
-              this.renderMemoryUsage(node),
-              this.renderDiskUsage(node),
+              renderCpuUsage(node),
+              renderMemoryUsage(node),
+              renderDiskUsage(node),
               <>
                 <span id={tooltipId}>{node.getTaints().length}</span>
                 <Tooltip htmlFor={tooltipId} style={{ whiteSpace: "pre-line" }}>
@@ -169,12 +182,10 @@ export class Nodes extends React.Component<Props> {
               node.getRoleLabels(),
               node.status.nodeInfo.kubeletVersion,
               node.getAge(),
-              this.renderConditions(node),
+              renderConditions(node),
             ]
           }}
-          renderItemMenu={(item: Node) => {
-            return <NodeMenu object={item}/>
-          }}
+          renderItemMenu={(item: Node) => <NodeMenu object={item} />}
         />
       </MainLayout>
     )

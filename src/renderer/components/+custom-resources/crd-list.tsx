@@ -9,7 +9,7 @@ import { stopPropagation } from "../../utils";
 import { KubeObjectListLayout } from "../kube-object";
 import { crdStore } from "./crd.store";
 import { apiManager } from "../../api/api-manager";
-import { crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
+import { crdBetaApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { Select, SelectOption } from "../select";
 import { navigation, setQueryParams } from "../../navigation";
@@ -117,6 +117,6 @@ export function CRDMenu(props: KubeObjectMenuProps<CustomResourceDefinition>) {
   )
 }
 
-apiManager.registerViews(crdApi, {
+apiManager.registerViews(crdBetaApi, {
   Menu: CRDMenu,
 });
