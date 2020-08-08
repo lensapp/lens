@@ -9,7 +9,7 @@ import { ClusterStatus } from "./cluster-status";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import logger from "../../../main/logger";
 
-// todo: figure out how to replace webview-tag to iframe
+// fixme: hide active view on disconnect
 // fixme: webview reloading/blinking when switching common <-> cluster views
 
 interface LensView {
@@ -47,6 +47,7 @@ export class ClusterView extends React.Component {
     this.detachViews();
   }
 
+  // fixme: figure out how to replace webview-tag to iframe
   initView = (clusterId: ClusterId) => {
     if (!clusterId || lensViews.has(clusterId)) {
       return;
