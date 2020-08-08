@@ -1,9 +1,11 @@
 .ClusterStatus {
   --flex-gap: #{$padding * 2};
 
+  position: relative;
   min-width: 350px;
   margin: auto;
   text-align: center;
+  z-index: 1;
 
   pre {
     @include hidden-scrollbar;
