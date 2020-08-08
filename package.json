@@ -289,7 +289,7 @@
     "patch-package": "^6.2.2",
     "path-to-regexp": "^6.1.0",
     "postinstall-postinstall": "^2.1.0",
-    "prismjs": "^1.20.0",
+    "prismjs": "^1.21.0",
     "raw-loader": "^4.0.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
