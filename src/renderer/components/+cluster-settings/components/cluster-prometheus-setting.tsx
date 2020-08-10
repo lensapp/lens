@@ -95,7 +95,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
             />
             <span className="hint">
               An address to an existing Prometheus installation{" "}
-              (&lt;namespace&gt;/&lt;service&gt;:&lt;port&gt;). Lens tries to auto-detect address if left empty.
+              ({'<namespace>/<service>:<port>'}). Lens tries to auto-detect address if left empty.
             </span>
           </>
         )}
