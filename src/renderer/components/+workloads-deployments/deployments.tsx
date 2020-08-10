@@ -98,7 +98,7 @@ export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
   return (
     <KubeObjectMenu {...props}>
       <MenuItem onClick={() => DeploymentScaleDialog.open(object)}>
-        <Icon material="control_camera" title={_i18n._(t`Scale`)} interactive={toolbar}/>
+        <Icon material="open_with" title={_i18n._(t`Scale`)} interactive={toolbar}/>
         <span className="title"><Trans>Scale</Trans></span>
       </MenuItem>
     </KubeObjectMenu>

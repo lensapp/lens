@@ -82,7 +82,7 @@ hr {
 h1 {
   color: white;
   font-size: 28px;
-  font-weight: 300;
+  font-weight: normal;
   letter-spacing: -.010em;
   margin: 0;
 }
@@ -99,13 +99,13 @@ h3 {
 
 h4 {
   @extend h3;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 h5 {
   @extend h4;
   padding: $padding / 2 0;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 h6 {

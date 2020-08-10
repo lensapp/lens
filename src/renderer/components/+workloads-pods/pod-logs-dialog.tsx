@@ -226,7 +226,7 @@ export class PodLogsDialog extends React.Component<Props> {
             tooltip={(showTimestamps ? _i18n._(t`Hide`) : _i18n._(t`Show`)) + " " + _i18n._(t`timestamps`)}
           />
           <Icon
-            material="save_alt"
+            material="get_app"
             onClick={this.downloadLogs}
             tooltip={_i18n._(t`Save`)}
           />
