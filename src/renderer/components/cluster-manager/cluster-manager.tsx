@@ -35,7 +35,7 @@ function initView(clusterId: ClusterId) {
     return;
   }
   logger.info(`[CLUSTER-VIEW]: init dashboard, clusterId=${clusterId}`)
-  const lensViewsHolder = document.getElementById("lens-views"); // defined in cluster-manager's css-grid
+  const parentElem = document.getElementById("lens-views"); // defined in cluster-manager's css-grid
   const webview = document.createElement("webview");
   webview.setAttribute("src", `//${clusterId}.${location.host}`)
   webview.setAttribute("nodeintegration", "true")
@@ -50,7 +50,7 @@ function initView(clusterId: ClusterId) {
     logger.error(`[CLUSTER-VIEW]: failed to load, clusterId=${clusterId}`, event)
   });
   lensViews.set(clusterId, { clusterId, view: webview });
-  lensViewsHolder.appendChild(webview); // add to dom and init cluster-page loading
+  parentElem.appendChild(webview); // add to dom and init cluster-page loading
 }
 
 function refreshViews() {

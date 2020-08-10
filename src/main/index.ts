@@ -18,6 +18,7 @@ import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
 import { tracker } from "../common/tracker";
 import logger from "./logger"
+import { initMenu } from "./menu";
 
 let windowManager: WindowManager;
 let clusterManager: ClusterManager;
@@ -30,6 +31,7 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
 
 async function main() {
   await shellSync();
+  initMenu();
 
   const workingDir = path.join(app.getPath("appData"), appName);
   app.setName(appName);

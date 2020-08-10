@@ -1,6 +1,5 @@
 import { BrowserWindow, shell } from "electron"
 import windowStateKeeper from "electron-window-state"
-import { initMenu } from "./menu";
 
 export class WindowManager {
   protected mainView: BrowserWindow;
@@ -8,8 +7,6 @@ export class WindowManager {
   protected windowState: windowStateKeeper.State;
 
   constructor(protected proxyPort: number) {
-    initMenu(this);
-
     // Manage main window size and position with state persistence
     this.windowState = windowStateKeeper({
       defaultHeight: 900,
@@ -40,11 +37,6 @@ export class WindowManager {
 
     // load & show app
     this.showMain();
-  }
-
-  // fixme
-  navigateMain(url: string) {
-    this.mainView.webContents.executeJavaScript("console.log('implement me!')")
   }
 
   async showMain() {

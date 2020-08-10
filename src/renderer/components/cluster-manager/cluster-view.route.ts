@@ -1,6 +1,8 @@
+import { reaction } from "mobx";
+import { ipcRenderer } from "electron";
 import { matchPath, RouteProps } from "react-router";
 import { buildURL, navigation } from "../../navigation";
-import { clusterStore } from "../../../common/cluster-store";
+import { clusterStore, getHostedClusterId } from "../../../common/cluster-store";
 
 export interface IClusterViewRouteParams {
   clusterId: string;
@@ -24,4 +26,16 @@ export function getMatchedClusterId(): string {
 
 export function getMatchedCluster() {
   return clusterStore.getById(getMatchedClusterId())
+}
+
+// Refresh global menu depending on active route's type (common/cluster view)
+if (ipcRenderer) {
+  const isMainView = !getHostedClusterId();
+  if (isMainView) {
+    reaction(() => getMatchedClusterId(), clusterId => {
+      ipcRenderer.send("menu:refresh", clusterId);
+    }, {
+      fireImmediately: true
+    })
+  }
 }
