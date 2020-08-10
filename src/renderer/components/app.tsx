@@ -31,13 +31,15 @@ import { isAllowedResource } from "../../common/rbac";
 import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";
 import { ErrorBoundary } from "./error-boundary";
 import { Terminal } from "./dock/terminal";
-import { getHostedCluster } from "../../common/cluster-store";
+import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
+import logger from "../../main/logger";
 
 @observer
 export class App extends React.Component {
   static async init() {
+    logger.info(`[APP]: Init dashboard, clusterId=${getHostedClusterId()}`)
     await Terminal.preloadFonts()
-    await getHostedCluster().whenInitialized;
+    await getHostedCluster().whenInitialized; // wait for cluster-state before initial render
   }
 
   get startURL() {
