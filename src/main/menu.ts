@@ -1,25 +1,36 @@
-import type { WindowManager } from "./window-manager";
-import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
-import { autorun } from "mobx";
+import { app, BrowserWindow, dialog, ipcMain, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
+import { autorun, observable } from "mobx";
+import { broadcastIpc } from "../common/ipc";
 import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
-import { clusterStore } from "../common/cluster-store";
+import { ClusterId, clusterStore } from "../common/cluster-store";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
 import logger from "./logger";
 
-export function initMenu(windowManager: WindowManager) {
-  autorun(() => {
-    logger.debug(`[MENU]: building menu, cluster=${clusterStore.activeClusterId}`);
-    buildMenu(windowManager);
+const activeClusterView = observable.box<ClusterId>();
+
+export function initMenu() {
+  autorun(buildMenu);
+  ipcMain.on("menu:refresh", (evt, activeClusterId: ClusterId) => {
+    activeClusterView.set(activeClusterId);
   });
 }
 
-export function buildMenu(windowManager: WindowManager) {
+export function buildMenu() {
   function macOnly(menuItems: MenuItemConstructorOptions[]): MenuItemConstructorOptions[] {
     if (!isMac) return [];
     return menuItems;
+  }
+
+  function navigate(url: string, toClusterView = false) {
+    logger.info(`[MENU]: navigating to ${url}`);
+    const clusterId = activeClusterView.get();
+    broadcastIpc({
+      channel: "menu:navigate" + (toClusterView ? `:${clusterId}` : ""),
+      args: [url],
+    })
   }
 
   const fileMenu: MenuItemConstructorOptions = {
@@ -28,20 +39,20 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: 'Add Cluster',
         click() {
-          windowManager.navigateMain(addClusterURL())
+          navigate(addClusterURL())
         }
       },
-      ...(clusterStore.activeCluster ? [{
+      ...(activeClusterView.get() ? [{
         label: 'Cluster Settings',
         click() {
-          windowManager.navigateMain(clusterSettingsURL())
+          navigate(clusterSettingsURL(), true)
         }
       }] : []),
       { type: 'separator' },
       {
         label: 'Preferences',
         click() {
-          windowManager.navigateMain(preferencesURL())
+          navigate(preferencesURL())
         }
       },
       ...macOnly([
@@ -112,7 +123,7 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "What's new?",
         click() {
-          windowManager.navigateMain(whatsNewURL())
+          navigate(whatsNewURL())
         },
       },
       {

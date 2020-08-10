@@ -1,11 +1,22 @@
 // Navigation helpers
 
+import { ipcRenderer } from "electron";
 import { compile } from "path-to-regexp"
 import { createBrowserHistory, createMemoryHistory, Location, LocationDescriptor } from "history";
 import { createObservableHistory } from "mobx-observable-history";
+import { getHostedClusterId } from "../common/cluster-store";
 
 export const history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
 export const navigation = createObservableHistory(history);
+
+// handle navigation from global menu
+if (ipcRenderer) {
+  const clusterId = getHostedClusterId();
+  const channel = "menu:navigate" + (clusterId ? `:${clusterId}` : "");
+  ipcRenderer.on(channel, (event, path: string) => {
+    navigate(path);
+  })
+}
 
 export function navigate(location: LocationDescriptor) {
   navigation.location = location as Location;
