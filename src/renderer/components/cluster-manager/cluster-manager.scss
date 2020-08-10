@@ -8,6 +8,7 @@
   #lens-view {
     position: relative;
     grid-area: lens-view;
+    overflow: hidden;
 
     &.inactive {
       opacity: .85;
