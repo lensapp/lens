@@ -1,7 +1,7 @@
 import { computed, reaction } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
-import { crdBetaApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
+import { CustomResourceDefinition, crdApi } from "../../api/endpoints/crd.api";
 import { apiManager } from "../../api/api-manager";
 import { KubeApi } from "../../api/kube-api";
 import { CRDResourceStore } from "./crd-resource.store";
@@ -9,15 +9,18 @@ import { KubeObject } from "../../api/kube-object";
 
 function initStore(crd: CustomResourceDefinition) {
   const apiBase = crd.getResourceApiBase();
-  const [kind, isNamespaced] = [crd.getResourceKind(), crd.isNamespaced()];
+  const kind = crd.getResourceKind();
+  const isNamespaced = crd.isNamespaced();
   const api = apiManager.getApi(apiBase) || new KubeApi({ apiBase, kind, isNamespaced });
-  const store = apiManager.getStore(api) || new CRDResourceStore(api);
-  apiManager.registerStore(api, store);
+  
+  if (!apiManager.getStore(api)) {
+    apiManager.registerStore(api, new CRDResourceStore(api));
+  }
 }
 
 @autobind()
 export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
-  api = crdBetaApi
+  api = crdApi
 
   constructor() {
     super();
@@ -61,4 +64,4 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
 
 export const crdStore = new CRDStore();
 
-apiManager.registerStore(crdBetaApi, crdStore);
+apiManager.registerStore(crdApi, crdStore);
