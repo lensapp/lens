@@ -16,8 +16,10 @@ class MetricsRoute extends LensApi {
     let prometheusPath: string
     let prometheusProvider: PrometheusProvider
     try {
-      prometheusPath = await cluster.contextHandler.getPrometheusPath()
-      prometheusProvider = await cluster.contextHandler.getPrometheusProvider()
+      [prometheusPath, prometheusProvider] = await Promise.all([
+        cluster.contextHandler.getPrometheusPath(),
+        cluster.contextHandler.getPrometheusProvider()
+      ])
     } catch {
       this.respondJson(response, {})
       return

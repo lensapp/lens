@@ -24,7 +24,7 @@ export interface IpcChannelResponse<T extends any[] = any, E = any> {
   error?: E;
 }
 
-export interface IpcChannelInit {
+export interface IpcChannelOptions {
   channel: IpcChannel; // main <-> renderer communication channel name
   mode?: IpcMode; // default: "async", use "sync" as last resort: https://www.electronjs.org/docs/api/ipc-renderer#ipcrenderersendsyncchannel-args
   handle?: (...args: any[]) => any; // main-process message handler
@@ -33,7 +33,7 @@ export interface IpcChannelInit {
   once?: boolean; // todo: add support
 }
 
-export function createIpcChannel({ autoBind = true, mode = IpcMode.ASYNC, timeout = 0, handle, channel }: IpcChannelInit) {
+export function createIpcChannel({ autoBind = true, mode = IpcMode.ASYNC, timeout = 0, handle, channel }: IpcChannelOptions) {
   channel = `${mode}:${channel}`
 
   const ipcChannel = {
