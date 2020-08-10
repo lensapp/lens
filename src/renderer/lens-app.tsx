@@ -9,6 +9,8 @@ import { _i18n } from "./i18n";
 import { ClusterManager } from "./components/cluster-manager";
 import { ErrorBoundary } from "./components/error-boundary";
 import { WhatsNew, whatsNewRoute } from "./components/+whats-new";
+import { Notifications } from "./components/notifications";
+import { ConfirmDialog } from "./components/confirm-dialog";
 
 @observer
 export class LensApp extends React.Component {
@@ -23,6 +25,8 @@ export class LensApp extends React.Component {
               <Route component={ClusterManager}/>
             </Switch>
           </ErrorBoundary>
+          <Notifications/>
+          <ConfirmDialog/>
         </Router>
       </I18nProvider>
     )

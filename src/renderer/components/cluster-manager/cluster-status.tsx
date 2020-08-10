@@ -22,12 +22,8 @@ export class ClusterStatus extends React.Component<Props> {
   @observable authOutput: KubeAuthProxyLog[] = [];
   @observable isReconnecting = false;
 
-  @computed get clusterId() {
-    return this.props.clusterId;
-  }
-
-  @computed get cluster(): Cluster {
-    return clusterStore.getById(this.clusterId);
+  get cluster(): Cluster {
+    return clusterStore.getById(this.props.clusterId);
   }
 
   @computed get hasErrors(): boolean {
@@ -45,15 +41,17 @@ export class ClusterStatus extends React.Component<Props> {
         error: res.error,
       });
     })
-    await this.refreshCluster();
+    if (!this.cluster.initialized) {
+      await this.refreshCluster();
+    }
   }
 
   componentWillUnmount() {
-    ipcRenderer.removeAllListeners(`kube-auth:${this.clusterId}`);
+    ipcRenderer.removeAllListeners(`kube-auth:${this.cluster.id}`);
   }
 
   refreshCluster = async () => {
-    await clusterIpc.activate.invokeFromRenderer(this.clusterId);
+    await clusterIpc.activate.invokeFromRenderer(this.cluster.id);
   }
 
   reconnect = async () => {

@@ -13,7 +13,7 @@ export class ClusterView extends React.Component {
     return (
       <div className="ClusterView flex column">
         {showStatus && (
-          <ClusterStatus clusterId={cluster.id} className="box center"/>
+          <ClusterStatus key={cluster.id} clusterId={cluster.id} className="box center"/>
         )}
       </div>
     )

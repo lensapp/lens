@@ -9,6 +9,10 @@
     position: relative;
     grid-area: main;
     display: flex;
+
+    > * {
+      flex: 1;
+    }
   }
 
   #lens-views {

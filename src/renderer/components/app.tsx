@@ -70,9 +70,9 @@ export class App extends React.Component {
               <Redirect exact from="/" to={this.startURL}/>
               <Route component={NotFound}/>
             </Switch>
-            <KubeObjectDetails/>
             <Notifications/>
             <ConfirmDialog/>
+            <KubeObjectDetails/>
             <KubeConfigDialog/>
             <AddRoleBindingDialog/>
             <PodLogsDialog/>

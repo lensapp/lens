@@ -69,7 +69,10 @@ export class ClustersMenu extends React.Component<Props> {
             accent: true,
             label: _i18n._(t`Remove`),
           },
-          ok: () => clusterStore.removeById(cluster.id),
+          ok: () => {
+            clusterStore.removeById(cluster.id);
+            navigate(landingURL());
+          },
           message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
         })
       }
