@@ -57,6 +57,10 @@
       font-size: smaller;
       opacity: 0.8;
     }
+
+    p + p, .hint + p {
+      padding-top: $padding;
+    }
   }
 
   .status-table {
@@ -79,7 +83,13 @@
     }
   }
 
-  .Input,.Select {
+  .Input, .Select {
     margin-top: 10px;
+  }
+
+  .Select {
+    &__control {
+      box-shadow: 0 0 0 1px $borderFaintColor;
+    }
   }
 }
