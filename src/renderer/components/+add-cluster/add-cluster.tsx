@@ -15,8 +15,9 @@ import { getKubeConfigLocal, loadConfig, saveConfigToAppFiles, splitConfig, vali
 import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid"
-import { navigation } from "../../navigation";
+import { navigate } from "../../navigation";
 import { userStore } from "../../../common/user-store";
+import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 
 @observer
 export class AddCluster extends React.Component {
@@ -102,7 +103,7 @@ export class AddCluster extends React.Component {
           httpsProxy: proxyServer || undefined,
         },
       });
-      navigation.goBack(); // return to previous opened page for the cluster view
+      navigate(clusterViewURL({ params: { clusterId } }))
     } catch (err) {
       this.error = String(err);
     } finally {
