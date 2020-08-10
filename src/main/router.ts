@@ -121,7 +121,7 @@ export class Router {
     this.router.add({ method: "post", path: `${apiPrefix}/metrics` }, metricsRoute.routeMetrics.bind(metricsRoute))
 
     // Port-forward API
-    this.router.add({ method: "post", path: `${apiPrefix}/services/{namespace}/{service}/port-forward/{port}` }, portForwardRoute.routeServicePortForward.bind(portForwardRoute))
+    this.router.add({ method: "post", path: `${apiPrefix}/pods/{namespace}/{resourceType}/{resourceName}/port-forward/{port}` }, portForwardRoute.routePortForward.bind(portForwardRoute))
 
     // Helm API
     this.router.add({ method: "get", path: `${apiPrefix}/v2/charts` }, helmRoute.listCharts.bind(helmRoute))

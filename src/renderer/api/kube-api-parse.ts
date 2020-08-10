@@ -50,6 +50,9 @@ export function parseKubeApi(path: string): IKubeApiParsed {
     apiGroup = left.join("/");
   } else {
     switch (left.length) {
+    case 4:
+      [apiGroup, apiVersion, resource, name] = left
+      break;
     case 2:
       resource = left.pop();
       // fallthrough
@@ -66,7 +69,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
        *  - `GROUP` is /^D(\.D)*$/ where D is `DNS_LABEL` and length <= 253
        *
        * There is no well defined selection from an array of items that were
-       * seperated by '/'
+       * separated by '/'
        *
        * Solution is to create a huristic. Namely:
        * 1. if '.' in left[0] then apiGroup <- left[0]
