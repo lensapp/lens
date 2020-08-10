@@ -2,7 +2,7 @@ import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/clus
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
 import type { FeatureStatusMap } from "./feature"
-import { action, observable, reaction, toJS, when } from "mobx";
+import { action, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { broadcastIpc } from "../common/ipc";
 import { ContextHandler } from "./context-handler"
@@ -66,6 +66,10 @@ export class Cluster implements ClusterModel {
   @observable features: FeatureStatusMap = {};
   @observable allowedNamespaces: string[] = [];
   @observable allowedResources: string[] = [];
+
+  @computed get available() {
+    return this.accessible && !this.disconnected;
+  }
 
   constructor(model: ClusterModel) {
     this.updateModel(model);

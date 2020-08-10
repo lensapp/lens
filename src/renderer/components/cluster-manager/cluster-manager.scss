@@ -11,6 +11,19 @@
     display: flex;
   }
 
+  #lens-views {
+    grid-area: main;
+    display: flex;
+
+    &.active {
+      z-index: 1;
+    }
+
+    > * {
+      flex: 1;
+    }
+  }
+
   .ClustersMenu {
     grid-area: menu;
   }

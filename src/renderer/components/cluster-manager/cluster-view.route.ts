@@ -1,5 +1,6 @@
 import { matchPath, RouteProps } from "react-router";
 import { buildURL, navigation } from "../../navigation";
+import { clusterStore } from "../../../common/cluster-store";
 
 export interface IClusterViewRouteParams {
   clusterId: string;
@@ -19,4 +20,8 @@ export function getMatchedClusterId(): string {
   if (matched) {
     return matched.params.clusterId;
   }
+}
+
+export function getMatchedCluster() {
+  return clusterStore.getById(getMatchedClusterId())
 }
