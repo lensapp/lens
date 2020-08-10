@@ -123,25 +123,13 @@ const tests: KubeApi_Parse_Test[] = [
       namespace: undefined,
     },
   },
-  {
-    url: "/apis/apiextensions.k8s.io/v1/customresourcedefinitions/workspaceroles.iam.kubesphere.io",
-    expected: {
-      apiBase: "/apis/apiextensions.k8s.io/v1/customresourcedefinitions",
-      apiPrefix: "/apis",
-      apiGroup: "apiextensions.k8s.io",
-      apiVersion: "v1",
-      apiVersionWithGroup: "apiextensions.k8s.io/v1",
-      resource: "customresourcedefinitions",
-      name: "workspaceroles.iam.kubesphere.io",
-      namespace: undefined,
-    },
-  },
 ];
 
 describe.only("parseApi unit tests", () => {
-  for (const { url, expected } of tests) {
-    test(`testing "${url}"`, () => {
-      expect(parseApi(url)).toStrictEqual(expected);
+  for (const i in tests) {
+    const { url: tUrl, expected:tExpect} = tests[i];
+    test(`test #${parseInt(i)+1}`, () => {
+      expect(parseApi(tUrl)).toStrictEqual(tExpect);
     });
   }
 });

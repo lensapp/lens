@@ -275,7 +275,6 @@ msgstr "CA Bundle"
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:53
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:95
 #: src/renderer/components/resource-metrics/resource-metrics-text.tsx:13
-#: src/renderer/components/+nodes/nodes.tsx:55
 msgid "CPU"
 msgstr "Процессор"
 
@@ -298,7 +297,10 @@ msgstr "Лимиты процессора"
 msgid "CPU requests"
 msgstr "Запросы к процессору"
 
-#: src/renderer/components/+workspaces/workspaces.tsx:119
+#: src/renderer/components/+nodes/nodes.tsx:55
+msgid "CPU:"
+msgstr "CPU:"
+
 #: src/renderer/components/confirm-dialog/confirm-dialog.tsx:44
 #: src/renderer/components/dock/info-panel.tsx:97
 #: src/renderer/components/wizard/wizard.tsx:130
@@ -664,13 +666,12 @@ msgstr "Нужный уровень реплик"
 #: src/renderer/components/+nodes/node-details.tsx:65
 #: src/renderer/components/+nodes/nodes.tsx:115
 #: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:44
-#: src/renderer/components/+nodes/nodes.tsx:71
 msgid "Disk"
 msgstr "Диск"
 
-#: src/renderer/components/+preferences/preferences.tsx:171
-msgid "Does not affect cluster communications!"
-msgstr ""
+#: src/renderer/components/+nodes/nodes.tsx:71
+msgid "Disk:"
+msgstr "Диск:"
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:89
 msgid "Domains"
@@ -1146,7 +1147,6 @@ msgstr ""
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:63
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:96
 #: src/renderer/components/resource-metrics/resource-metrics-text.tsx:18
-#: src/renderer/components/+nodes/nodes.tsx:63
 msgid "Memory"
 msgstr "Память"
 
@@ -1167,6 +1167,10 @@ msgstr "Запросы к памяти"
 #: src/renderer/components/+workloads-pods/container-charts.tsx:48
 msgid "Memory usage"
 msgstr "Использование памяти"
+
+#: src/renderer/components/+nodes/nodes.tsx:63
+msgid "Memory:"
+msgstr "Память:"
 
 #: src/renderer/components/+cluster/cluster-issues.tsx:100
 #: src/renderer/components/+events/event-details.tsx:30
@@ -2390,8 +2394,8 @@ msgid "and <0>{tailCount}</0> more"
 msgstr "и <0>{tailCount}</0> ещё"
 
 #: src/renderer/components/+nodes/nodes.tsx:55
-msgid "cores"
-msgstr "ядер"
+msgid "cores:"
+msgstr "ядер:"
 
 #: src/renderer/components/+workloads-pods/pod-details-container.tsx:41
 msgid "exit code"
