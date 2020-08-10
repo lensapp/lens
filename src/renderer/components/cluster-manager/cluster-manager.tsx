@@ -29,7 +29,7 @@ export function hasLoadedView(clusterId: ClusterId): boolean {
   return !!lensViews.get(clusterId)?.isLoaded;
 }
 
-// todo: figure out how to replace webview-tag to iframe
+// todo: figure out how to replace <webview>-tag to <iframe> with nodeIntegration=true
 function initView(clusterId: ClusterId) {
   if (!clusterId || lensViews.has(clusterId)) {
     return;
@@ -102,7 +102,7 @@ export class ClusterManager extends React.Component {
             <Route component={Workspaces} {...workspacesRoute}/>
             <Route component={AddCluster} {...addClusterRoute}/>
             <Route component={ClusterView} {...clusterViewRoute}/>
-            <Redirect exact from="/" to={this.startUrl}/>
+            <Redirect exact to={this.startUrl}/>
           </Switch>
         </main>
         <ClustersMenu/>
