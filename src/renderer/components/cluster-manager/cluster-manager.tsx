@@ -1,7 +1,11 @@
 import "./cluster-manager.scss"
 import React from "react";
+import { WebviewTag } from "electron";
 import { Redirect, Route, Switch } from "react-router";
+import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
+import { clusterIpc } from "../../../common/cluster-ipc";
+import { cssNames } from "../../utils";
 import { ClustersMenu } from "./clusters-menu";
 import { BottomBar } from "./bottom-bar";
 import { LandingPage, landingRoute, landingURL } from "../+landing-page";
@@ -9,16 +13,9 @@ import { Preferences, preferencesRoute } from "../+preferences";
 import { Workspaces, workspacesRoute } from "../+workspaces";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
-import { clusterViewRoute, clusterViewURL, getMatchedCluster } from "./cluster-view.route";
+import { clusterViewRoute, clusterViewURL, getMatchedCluster, getMatchedClusterId } from "./cluster-view.route";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
-import { WebviewTag } from "electron";
-import { observable, reaction } from "mobx";
 import logger from "../../../main/logger";
-import { clusterIpc } from "../../../common/cluster-ipc";
-import { cssNames } from "../../utils";
-
-// fixme: hide active view on disconnect
-// fixme: webview reloading/blinking when switching common <-> cluster views
 
 interface LensView {
   isLoaded?: boolean
@@ -28,9 +25,13 @@ interface LensView {
 
 const lensViews = observable.map<ClusterId, LensView>();
 
-// fixme: figure out how to replace webview-tag to iframe
+export function hasLoadedView(clusterId: ClusterId): boolean {
+  return !!lensViews.get(clusterId)?.isLoaded;
+}
+
+// todo: figure out how to replace webview-tag to iframe
 function initView(clusterId: ClusterId) {
-  if (lensViews.has(clusterId)) {
+  if (!clusterId || lensViews.has(clusterId)) {
     return;
   }
   logger.info(`[CLUSTER-VIEW]: init dashboard, clusterId=${clusterId}`)
@@ -39,9 +40,9 @@ function initView(clusterId: ClusterId) {
   webview.setAttribute("src", `//${clusterId}.${location.host}`)
   webview.setAttribute("nodeintegration", "true")
   webview.setAttribute("enableremotemodule", "true")
-  webview.addEventListener("did-finish-load", async () => {
+  webview.addEventListener("did-finish-load", () => {
     logger.info(`[CLUSTER-VIEW]: loaded, clusterId=${clusterId}`)
-    await clusterIpc.init.invokeFromRenderer(clusterId); // push cluster-state to webview and render dashboard
+    clusterIpc.init.invokeFromRenderer(clusterId); // push cluster-state to webview and init render
     lensViews.get(clusterId).isLoaded = true;
     refreshViews();
   });
@@ -53,9 +54,9 @@ function initView(clusterId: ClusterId) {
 }
 
 function refreshViews() {
-  const activeCluster = getMatchedCluster()
+  const cluster = getMatchedCluster()
   lensViews.forEach(({ clusterId, view, isLoaded }) => {
-    const isVisible = clusterId === activeCluster?.id && activeCluster?.available;
+    const isVisible = cluster && cluster.available && cluster.id === clusterId;
     view.style.display = isLoaded && isVisible ? "flex" : "none"
   })
 }
@@ -64,11 +65,13 @@ function refreshViews() {
 export class ClusterManager extends React.Component {
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(getMatchedCluster, cluster => {
-        // auto-refresh visibility for active cluster
-        if (cluster) initView(cluster.id);
-        refreshViews();
-      }, {
+      reaction(getMatchedClusterId, initView, {
+        fireImmediately: true
+      }),
+      reaction(() => [
+        getMatchedClusterId(),
+        getMatchedCluster()?.available,
+      ], refreshViews, {
         fireImmediately: true
       })
     ])

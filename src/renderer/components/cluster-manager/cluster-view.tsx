@@ -3,24 +3,18 @@ import React from "react";
 import { observer } from "mobx-react";
 import { getMatchedCluster } from "./cluster-view.route";
 import { ClusterStatus } from "./cluster-status";
+import { hasLoadedView } from "./cluster-manager";
 
 @observer
 export class ClusterView extends React.Component {
-  renderContent() {
-    const cluster = getMatchedCluster();
-    if (!cluster) {
-      return;
-    }
-    if (!cluster.available) {
-      return <ClusterStatus clusterId={cluster.id} className="box center"/>
-    }
-  }
-
   render() {
     const cluster = getMatchedCluster();
+    const showStatus = cluster && (!cluster.available || !hasLoadedView(cluster.id))
     return (
       <div className="ClusterView flex column">
-        {this.renderContent()}
+        {showStatus && (
+          <ClusterStatus clusterId={cluster.id} className="box center"/>
+        )}
       </div>
     )
   }
