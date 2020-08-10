@@ -1,10 +1,15 @@
-import { BrowserWindow, shell } from "electron"
+import type { ClusterId } from "../common/cluster-store";
+import { BrowserWindow, ipcMain, shell, WebContents, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
+import { observable } from "mobx";
+import { initMenu } from "./menu";
 
 export class WindowManager {
   protected mainView: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
+
+  @observable activeClusterId: ClusterId;
 
   constructor(protected proxyPort: number) {
     // Manage main window size and position with state persistence
@@ -35,8 +40,32 @@ export class WindowManager {
       shell.openExternal(url);
     });
 
+    // track visible cluster from ui
+    ipcMain.on("cluster-view:change", (event, clusterId: ClusterId) => {
+      this.activeClusterId = clusterId;
+    });
+
     // load & show app
     this.showMain();
+    initMenu(this);
+  }
+
+  navigate({ url, channel, clusterId }: { url: string, channel: string, clusterId?: ClusterId }) {
+    if (clusterId) {
+      this.getClusterView(clusterId)?.send(channel, url);
+    } else {
+      this.mainView.webContents.send(channel, url);
+    }
+  }
+
+  getActiveClusterView() {
+    return this.getClusterView(this.activeClusterId)
+  }
+
+  getClusterView(clusterId: ClusterId): WebContents {
+    return webContents.getAllWebContents().find(view => {
+      return new URL(view.getURL()).host.split(".")[0] === clusterId;
+    })
   }
 
   async showMain() {

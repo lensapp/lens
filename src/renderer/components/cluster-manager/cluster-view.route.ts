@@ -33,7 +33,7 @@ if (ipcRenderer) {
   const isMainView = !getHostedClusterId();
   if (isMainView) {
     reaction(() => getMatchedClusterId(), clusterId => {
-      ipcRenderer.send("menu:refresh", clusterId);
+      ipcRenderer.send("cluster-view:change", clusterId);
     }, {
       fireImmediately: true
     })

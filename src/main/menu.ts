@@ -1,35 +1,36 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
-import { autorun, observable } from "mobx";
-import { broadcastIpc } from "../common/ipc";
+import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell } from "electron"
+import { autorun } from "mobx";
+import { WindowManager } from "./window-manager";
 import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
-import { ClusterId, clusterStore } from "../common/cluster-store";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
 import logger from "./logger";
 
-const activeClusterView = observable.box<ClusterId>();
-
-export function initMenu() {
-  autorun(buildMenu);
-  ipcMain.on("menu:refresh", (evt, activeClusterId: ClusterId) => {
-    activeClusterView.set(activeClusterId);
+export function initMenu(windowManager: WindowManager) {
+  autorun(() => buildMenu(windowManager), {
+    delay: 100
   });
 }
 
-export function buildMenu() {
-  function macOnly(menuItems: MenuItemConstructorOptions[]): MenuItemConstructorOptions[] {
+export function buildMenu(windowManager: WindowManager) {
+  function macOnly(menuItems: MenuItemConstructorOptions[]) {
     if (!isMac) return [];
+    return menuItems;
+  }
+
+  function activeClusterOnly(menuItems: MenuItemConstructorOptions[]) {
+    if (!windowManager.activeClusterId) return [];
     return menuItems;
   }
 
   function navigate(url: string, toClusterView = false) {
     logger.info(`[MENU]: navigating to ${url}`);
-    const clusterId = activeClusterView.get();
-    broadcastIpc({
-      channel: "menu:navigate" + (toClusterView ? `:${clusterId}` : ""),
-      args: [url],
+    windowManager.navigate({
+      channel: "menu:navigate",
+      url: url,
+      clusterId: toClusterView ? windowManager.activeClusterId : null,
     })
   }
 
@@ -42,12 +43,14 @@ export function buildMenu() {
           navigate(addClusterURL())
         }
       },
-      ...(activeClusterView.get() ? [{
-        label: 'Cluster Settings',
-        click() {
-          navigate(clusterSettingsURL(), true)
+      ...activeClusterOnly([
+        {
+          label: 'Cluster Settings',
+          click() {
+            navigate(clusterSettingsURL(), true)
+          }
         }
-      }] : []),
+      ]),
       { type: 'separator' },
       {
         label: 'Preferences',
@@ -90,24 +93,33 @@ export function buildMenu() {
         label: 'Back',
         accelerator: 'CmdOrCtrl+[',
         click() {
-          webContents.getFocusedWebContents()?.goBack(); // fixme: works until second cluster selected
+          windowManager.getActiveClusterView()?.goBack();
         }
       },
       {
         label: 'Forward',
         accelerator: 'CmdOrCtrl+]',
         click() {
-          webContents.getFocusedWebContents()?.goForward();
+          windowManager.getActiveClusterView()?.goForward();
         }
       },
       {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click() {
-          webContents.getFocusedWebContents()?.reload();
+          windowManager.getActiveClusterView()?.reload();
         }
       },
       { role: 'toggleDevTools' },
+      ...activeClusterOnly([
+        {
+          accelerator: "CmdOrCtrl+Shift+I",
+          label: "Toggle Dashboard DevTools",
+          click() {
+            windowManager.getActiveClusterView()?.toggleDevTools();
+          }
+        }
+      ]),
       { type: 'separator' },
       { role: 'resetZoom' },
       { role: 'zoomIn' },
