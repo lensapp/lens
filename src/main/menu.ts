@@ -90,7 +90,7 @@ export function buildMenu() {
         label: 'Back',
         accelerator: 'CmdOrCtrl+[',
         click() {
-          webContents.getFocusedWebContents()?.goBack();
+          webContents.getFocusedWebContents()?.goBack(); // fixme: works until second cluster selected
         }
       },
       {

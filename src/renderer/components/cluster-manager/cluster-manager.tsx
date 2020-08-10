@@ -70,11 +70,15 @@ export class ClusterManager extends React.Component {
       }),
       reaction(() => [
         getMatchedClusterId(),
-        getMatchedCluster()?.available,
+        getMatchedCluster()?.available, // refresh on disconnect active-cluster
       ], refreshViews, {
         fireImmediately: true
       })
     ])
+  }
+
+  componentWillUnmount() {
+    lensViews.clear();
   }
 
   get startUrl() {
