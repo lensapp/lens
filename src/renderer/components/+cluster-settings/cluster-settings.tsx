@@ -30,14 +30,16 @@ export class ClusterSettings extends React.Component {
       </>
     );
     return (
-      <WizardLayout header={header} className="ClusterSettings">
-        <div className="settings-wrapper">
-          <Status cluster={cluster}></Status>
-          <General cluster={cluster}></General>
-          <Features cluster={cluster}></Features>
-          <Removal cluster={cluster}></Removal>
-        </div>
-      </WizardLayout>
+      <div className="ClusterSettings">
+        <WizardLayout header={header}>
+          <div className="settings-wrapper">
+            <Status cluster={cluster}></Status>
+            <General cluster={cluster}></General>
+            <Features cluster={cluster}></Features>
+            <Removal cluster={cluster}></Removal>
+          </div>
+        </WizardLayout>
+      </div>
     );
   }
 }
