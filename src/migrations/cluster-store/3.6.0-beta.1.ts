@@ -5,21 +5,22 @@ import path from "path"
 import { app, remote } from "electron"
 import { migration } from "../migration-wrapper";
 import fse from "fs-extra"
+import fileType from "file-type";
 import { ClusterModel } from "../../common/cluster-store";
 import { loadConfig, saveConfigToAppFiles } from "../../common/kube-helpers";
 
 export default migration({
   version: "3.6.0-beta.1",
-  run(store, printLog) {
+  async run(store, printLog) {
     const kubeConfigBase = path.join((app || remote.app).getPath("userData"), "kubeconfigs")
     const storedClusters: ClusterModel[] = store.get("clusters") || [];
 
-    if (!storedClusters?.length) return;
+    if (!storedClusters.length) return;
     fse.ensureDirSync(kubeConfigBase);
 
     printLog("Number of clusters to migrate: ", storedClusters.length)
     const migratedClusters = storedClusters
-      .map(cluster => {
+      .map(async cluster => {
         /**
          * migrate kubeconfig
          */
@@ -30,7 +31,7 @@ export default migration({
           delete cluster.kubeConfig;
 
         } catch (error) {
-          printLog(`Failed to migrate Kubeconfig for cluster "${cluster.id}"`, error)
+          printLog(`Failed to migrate Kubeconfig for cluster "${cluster.id}", removing cluster...`, error)
           return undefined;
         }
 
@@ -39,14 +40,20 @@ export default migration({
          */
         try {
           if (cluster.preferences.icon) {
-            const fileData = fse.readFileSync(cluster.preferences.icon);
-            cluster.preferences.icon = `data:image;base64, ${fileData.toString('base64')}`;
+            const fileData = await fse.readFile(cluster.preferences.icon);
+            const { mime } = await fileType.fromBuffer(fileData);
+
+            if (!mime) {
+              throw "unknown icon file type, deleting...";
+            }
+
+            cluster.preferences.icon = `data:${mime};base64, ${fileData.toString('base64')}`;
           } else {
             delete cluster.preferences.icon;
           }
         } catch (error) {
           printLog(`Failed to migrate cluster icon for cluster "${cluster.id}"`, error)
-          return undefined;
+          delete cluster.preferences.icon;
         }
 
         return cluster;

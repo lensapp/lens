@@ -3,7 +3,7 @@ import { isTestEnv } from "../common/vars";
 
 export interface MigrationOpts {
   version: string;
-  run(storeConfig: Config<any>, log: (...args: any[]) => void): void;
+  run(storeConfig: Config<any>, log: (...args: any[]) => void): Promise<void>;
 }
 
 function infoLog(...args: any[]) {
@@ -13,9 +13,9 @@ function infoLog(...args: any[]) {
 
 export function migration<S = any>({ version, run }: MigrationOpts) {
   return {
-    [version]: (storeConfig: Config<S>) => {
+    [version]: async (storeConfig: Config<S>) => {
       infoLog(`STORE MIGRATION (${storeConfig.path}): ${version}`,);
-      run(storeConfig, infoLog);
+      await run(storeConfig, infoLog);
     }
   };
 }
