@@ -5,7 +5,7 @@ import { Trans } from "@lingui/macro";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { apiManager } from "../../api/api-manager";
-import { crdBetaApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
+import { crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { cssNames } from "../../utils";
 import { AceEditor } from "../ace-editor";
 import { Badge } from "../badge";
@@ -133,6 +133,6 @@ export class CRDDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(crdBetaApi, {
+apiManager.registerViews(crdApi, {
   Details: CRDDetails
 })

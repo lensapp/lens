@@ -1,7 +1,7 @@
 import { computed, reaction } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
-import { CustomResourceDefinition, crdApi } from "../../api/endpoints/crd.api";
+import { crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { apiManager } from "../../api/api-manager";
 import { KubeApi } from "../../api/kube-api";
 import { CRDResourceStore } from "./crd-resource.store";
