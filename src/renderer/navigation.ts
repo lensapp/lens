@@ -2,21 +2,23 @@
 
 import { ipcRenderer } from "electron";
 import { compile } from "path-to-regexp"
-import { createBrowserHistory, createMemoryHistory, Location, LocationDescriptor } from "history";
+import { createBrowserHistory, createMemoryHistory, LocationDescriptor } from "history";
 import { createObservableHistory } from "mobx-observable-history";
+import logger from "../main/logger";
 
 export const history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
 export const navigation = createObservableHistory(history);
 
-// handle navigation from global menu
+// handle navigation from other process (e.g. system menus in main, common->cluster view interactions)
 if (ipcRenderer) {
-  ipcRenderer.on("menu:navigate", (event, path: string) => {
-    navigate(path);
+  ipcRenderer.on("menu:navigate", (event, location: LocationDescriptor) => {
+    logger.info(`Navigation via IPC to location: ${JSON.stringify(location)}`, event);
+    navigate(location);
   })
 }
 
 export function navigate(location: LocationDescriptor) {
-  navigation.location = location as Location;
+  navigation.push(location);
 }
 
 export interface IURLParams<P = {}, Q = {}> {

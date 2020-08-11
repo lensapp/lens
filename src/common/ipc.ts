@@ -28,7 +28,7 @@ export interface IpcChannelOptions {
   channel: IpcChannel; // main <-> renderer communication channel name
   mode?: IpcMode; // default: "async", use "sync" as last resort: https://www.electronjs.org/docs/api/ipc-renderer#ipcrenderersendsyncchannel-args
   handle?: (...args: any[]) => any; // main-process message handler
-  autoBind?: boolean; // auto-bind message handler in main-process, default: false
+  autoBind?: boolean; // auto-bind message handler in main-process, default: true
   timeout?: number; // timeout for waiting response from the sender
   once?: boolean; // todo: add support
 }
@@ -50,11 +50,10 @@ export function createIpcChannel({ autoBind = true, mode = IpcMode.ASYNC, timeou
           res.msgId = req.msgId; // return back to sender to be able to handle response
           resolved = true
           logger.debug(`[IPC]: sending response to "${channel}"`, res);
-          if (mode === IpcMode.ASYNC) {
-            event.reply(channel, res);
-          }
           if (mode === IpcMode.SYNC) {
             event.returnValue = res;
+          } else {
+            event.reply(channel, res);
           }
         }
 
@@ -82,11 +81,10 @@ export function createIpcChannel({ autoBind = true, mode = IpcMode.ASYNC, timeou
         msgId: getRandId({ prefix: "ipc-msg-id" }),
         args: args,
       }
-      if (mode === IpcMode.ASYNC) {
-        ipcRenderer.send(channel, req)
-      }
       if (mode === IpcMode.SYNC) {
         ipcRenderer.sendSync(channel, req)
+      } else {
+        ipcRenderer.send(channel, req)
       }
       return new Promise(async (resolve, reject) => {
         ipcRenderer.on(channel, function waitResponseHandler(event: IpcRendererEvent, res: IpcChannelResponse) {

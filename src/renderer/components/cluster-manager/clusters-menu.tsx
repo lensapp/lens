@@ -21,6 +21,7 @@ import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
+import { navigateInClusterView } from "./lens-views";
 
 // fixme: allow to rearrange clusters with drag&drop
 
@@ -49,7 +50,7 @@ export class ClustersMenu extends React.Component<Props> {
       label: _i18n._(t`Settings`),
       click: () => {
         clusterStore.setActive(cluster.id);
-        navigate(clusterSettingsURL())
+        navigateInClusterView(clusterSettingsURL())
       }
     }));
     if (cluster.online) {
