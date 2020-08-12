@@ -3,21 +3,26 @@ import { ipcRenderer } from "electron";
 import { matchPath, RouteProps } from "react-router";
 import { buildURL, navigation } from "../../navigation";
 import { clusterStore, getHostedClusterId } from "../../../common/cluster-store";
+import { clusterSettingsRoute } from "../+cluster-settings/cluster-settings.route";
 
 export interface IClusterViewRouteParams {
   clusterId: string;
 }
 
 export const clusterViewRoute: RouteProps = {
-  path: "/cluster/:clusterId"
+  exact: true,
+  path: "/cluster/:clusterId",
 }
 
 export const clusterViewURL = buildURL<IClusterViewRouteParams>(clusterViewRoute.path)
 
 export function getMatchedClusterId(): string {
   const matched = matchPath<IClusterViewRouteParams>(navigation.location.pathname, {
-    ...clusterViewRoute,
     exact: true,
+    path: [
+      clusterViewRoute.path,
+      clusterSettingsRoute.path,
+    ].flat(),
   })
   if (matched) {
     return matched.params.clusterId;

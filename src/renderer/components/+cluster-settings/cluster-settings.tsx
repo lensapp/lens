@@ -7,15 +7,15 @@ import { Features } from "./features";
 import { Removal } from "./removal";
 import { Status } from "./status";
 import { General } from "./general";
-import { getHostedCluster } from "../../../common/cluster-store";
 import { WizardLayout } from "../layout/wizard-layout";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
+import { getMatchedCluster } from "../cluster-manager/cluster-view.route";
 
 @observer
 export class ClusterSettings extends React.Component {
   render() {
-    const cluster = getHostedCluster();
+    const cluster = getMatchedCluster();
     const header = (
       <>
         <ClusterIcon
@@ -25,7 +25,7 @@ export class ClusterSettings extends React.Component {
         />
         <h2>{cluster.preferences.clusterName}</h2>
         <Link to="/">
-          <Icon material="close" big />
+          <Icon material="close" big/>
         </Link>
       </>
     );

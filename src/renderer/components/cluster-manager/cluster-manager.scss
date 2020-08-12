@@ -6,26 +6,22 @@
   height: 100%;
 
   main {
+    grid-area: main;
     position: relative;
-    grid-area: main;
     display: flex;
 
     > * {
-      flex: 1;
-    }
-  }
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      background-color: $mainBackground;
 
-  #lens-views {
-    grid-area: main;
-    display: flex;
-    overflow: hidden;
-
-    &.active {
-      z-index: 1;
-    }
-
-    > * {
-      flex: 1;
+      > * {
+        flex: 1;
+      }
     }
   }
 

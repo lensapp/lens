@@ -3,7 +3,6 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { cssNames } from "../../utils";
 import { ClustersMenu } from "./clusters-menu";
 import { BottomBar } from "./bottom-bar";
 import { LandingPage, landingRoute, landingURL } from "../+landing-page";
@@ -11,6 +10,7 @@ import { Preferences, preferencesRoute } from "../+preferences";
 import { Workspaces, workspacesRoute } from "../+workspaces";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
+import { ClusterSettings, clusterSettingsRoute } from "../+cluster-settings";
 import { clusterViewRoute, clusterViewURL, getMatchedCluster, getMatchedClusterId } from "./cluster-view.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
@@ -48,18 +48,18 @@ export class ClusterManager extends React.Component {
   }
 
   render() {
-    const cluster = getMatchedCluster();
     return (
       <div className="ClusterManager">
         <div id="draggable-top"/>
-        <div id="lens-views" className={cssNames({ active: !!cluster })}/>
         <main>
+          <div id="lens-views"/>
           <Switch>
             <Route component={LandingPage} {...landingRoute}/>
             <Route component={Preferences} {...preferencesRoute}/>
             <Route component={Workspaces} {...workspacesRoute}/>
             <Route component={AddCluster} {...addClusterRoute}/>
             <Route component={ClusterView} {...clusterViewRoute}/>
+            <Route component={ClusterSettings} {...clusterSettingsRoute}/>
             <Redirect exact to={this.startUrl}/>
           </Switch>
         </main>

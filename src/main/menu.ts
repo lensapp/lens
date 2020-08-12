@@ -1,3 +1,4 @@
+import type { ClusterId } from "../common/cluster-store";
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell } from "electron"
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
@@ -29,12 +30,12 @@ export function buildMenu(windowManager: WindowManager) {
     return menuItems;
   }
 
-  function navigate(url: string, toClusterView = false) {
+  function navigate(url: string, clusterId?: ClusterId) {
     logger.info(`[MENU]: navigating to ${url}`);
     windowManager.navigate({
       channel: "menu:navigate",
       url: url,
-      clusterId: toClusterView ? windowManager.activeClusterId : null,
+      clusterId: clusterId,
     })
   }
 
@@ -100,7 +101,11 @@ export function buildMenu(windowManager: WindowManager) {
         {
           label: 'Cluster Settings',
           click() {
-            navigate(clusterSettingsURL(), true)
+            navigate(clusterSettingsURL({
+              params: {
+                clusterId: windowManager.activeClusterId
+              }
+            }))
           }
         }
       ]),

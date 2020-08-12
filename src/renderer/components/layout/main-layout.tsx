@@ -48,11 +48,12 @@ export class MainLayout extends React.Component<Props> {
   render() {
     const { className, contentClass, headerClass, tabs, footer, footerClass, children } = this.props;
     const routePath = navigation.location.pathname;
+    const cluster = getHostedCluster();
     return (
       <div className={cssNames("MainLayout", className, themeStore.activeTheme.type)}>
         <header className={cssNames("flex gaps align-center", headerClass)}>
           <span className="cluster">
-            {getHostedCluster().contextName}
+            {cluster.preferences?.clusterName || cluster.contextName}
           </span>
         </header>
 

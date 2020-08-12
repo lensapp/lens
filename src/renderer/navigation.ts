@@ -12,7 +12,7 @@ export const navigation = createObservableHistory(history);
 // handle navigation from other process (e.g. system menus in main, common->cluster view interactions)
 if (ipcRenderer) {
   ipcRenderer.on("menu:navigate", (event, location: LocationDescriptor) => {
-    logger.info(`Navigation via IPC to location: ${JSON.stringify(location)}`, event);
+    logger.info(`[IPC]: ${event.type} ${JSON.stringify(location)}`, event);
     navigate(location);
   })
 }
@@ -26,6 +26,8 @@ export interface IURLParams<P = {}, Q = {}> {
   query?: IQueryParams & Q;
 }
 
+// todo: extract building urls to commons (also used in menu.ts)
+// fixme: missing types validation for params & query
 export function buildURL<P extends object, Q = object>(path: string | string[]) {
   const pathBuilder = compile(path.toString());
   return function ({ params, query }: IURLParams<P, Q> = {}) {

@@ -28,7 +28,6 @@ import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../../common/rbac";
-import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";
 import { ErrorBoundary } from "./error-boundary";
 import { Terminal } from "./dock/terminal";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
@@ -56,7 +55,6 @@ export class App extends React.Component {
           <ErrorBoundary>
             <Switch>
               <Route component={Cluster} {...clusterRoute}/>
-              <Route component={ClusterSettings} {...clusterSettingsRoute}/>
               <Route component={Nodes} {...nodesRoute}/>
               <Route component={Workloads} {...workloadsRoute}/>
               <Route component={Config} {...configRoute}/>

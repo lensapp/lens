@@ -67,7 +67,7 @@ export class ClusterStatus extends React.Component<Props> {
     const failureReason = cluster.failureReason;
     const isError = hasErrors || isDisconnected;
     return (
-      <div className={cssNames("ClusterStatus flex column gaps", this.props.className)}>
+      <div className={cssNames("ClusterStatus flex column gaps box center", this.props.className)}>
         {isError && (
           <Icon
             material="cloud_off"
@@ -75,7 +75,7 @@ export class ClusterStatus extends React.Component<Props> {
           />
         )}
         <h2>
-          {cluster.contextName}
+          {cluster.preferences.clusterName}
         </h2>
         {!isDisconnected && (
           <pre className="kube-auth-out">
