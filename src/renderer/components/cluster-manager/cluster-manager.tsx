@@ -13,7 +13,7 @@ import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
 import { clusterViewRoute, clusterViewURL, getMatchedCluster, getMatchedClusterId } from "./cluster-view.route";
 import { clusterStore } from "../../../common/cluster-store";
-import { initView, lensViews, refreshViews } from "./lens-views";
+import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -23,7 +23,7 @@ export class ClusterManager extends React.Component {
         fireImmediately: true
       }),
       reaction(() => [
-        getMatchedClusterId(),
+        hasLoadedView(getMatchedClusterId()), // refresh when cluster's webview loaded
         getMatchedCluster()?.available, // refresh on disconnect active-cluster
       ], refreshViews, {
         fireImmediately: true

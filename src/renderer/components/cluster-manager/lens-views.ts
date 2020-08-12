@@ -1,9 +1,10 @@
 import { ipcRenderer, WebviewTag } from "electron";
-import { observable } from "mobx";
-import { ClusterId } from "../../../common/cluster-store";
+import { observable, when } from "mobx";
+import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { clusterIpc } from "../../../common/cluster-ipc";
+import { clusterViewURL, getMatchedCluster, getMatchedClusterId } from "./cluster-view.route"
+import { navigate } from "../../navigation";
 import logger from "../../../main/logger";
-import { getMatchedCluster, getMatchedClusterId } from "./cluster-view.route";
 
 export interface LensView {
   isLoaded?: boolean
@@ -13,11 +14,15 @@ export interface LensView {
 
 export const lensViews = observable.map<ClusterId, LensView>();
 
-export function navigateInClusterView(path: string, clusterId: ClusterId = getMatchedClusterId()) {
-  const viewId = getViewId(clusterId);
-  if (viewId) {
-    ipcRenderer.sendTo(viewId, "menu:navigate", path)
+export async function navigateInClusterView(path: string, clusterId: ClusterId) {
+  // select active cluster in common view
+  if (clusterId !== getMatchedClusterId()) {
+    clusterStore.setActive(clusterId);
+    navigate(clusterViewURL({ params: { clusterId } }));
   }
+  // navigate in cluster-view when ready
+  await when(() => hasLoadedView(clusterId))
+  ipcRenderer.sendTo(getViewId(clusterId), "menu:navigate", path);
 }
 
 export function hasLoadedView(clusterId: ClusterId): boolean {
@@ -46,7 +51,6 @@ export function initView(clusterId: ClusterId) {
     logger.info(`[CLUSTER-VIEW]: loaded, clusterId=${clusterId}`)
     clusterIpc.init.invokeFromRenderer(clusterId); // push cluster-state to webview and init render
     lensViews.get(clusterId).isLoaded = true;
-    refreshViews();
   });
   webview.addEventListener("did-fail-load", (event) => {
     logger.error(`[CLUSTER-VIEW]: failed to load, clusterId=${clusterId}`, event)
@@ -56,9 +60,9 @@ export function initView(clusterId: ClusterId) {
 }
 
 export function refreshViews() {
-  const visibleCluster = getMatchedCluster();
+  const cluster = getMatchedCluster();
   lensViews.forEach(({ clusterId, view, isLoaded }) => {
-    const isVisible = visibleCluster && visibleCluster.available && visibleCluster.id === clusterId;
+    const isVisible = cluster && cluster.available && cluster.id === clusterId;
     view.style.display = isLoaded && isVisible ? "flex" : "none"
   })
 }
