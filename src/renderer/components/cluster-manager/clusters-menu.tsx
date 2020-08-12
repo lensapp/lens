@@ -49,8 +49,7 @@ export class ClustersMenu extends React.Component<Props> {
     menu.append(new MenuItem({
       label: _i18n._(t`Settings`),
       click: () => {
-        clusterStore.setActive(cluster.id);
-        navigateInClusterView(clusterSettingsURL())
+        navigateInClusterView(clusterSettingsURL(), cluster.id)
       }
     }));
     if (cluster.online) {
