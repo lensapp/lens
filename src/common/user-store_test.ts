@@ -11,8 +11,8 @@ jest.mock("electron", () => {
 })
 
 import { UserStore } from "./user-store"
-import { SemVer } from "semver";
-import electron from "electron";
+import { SemVer } from "semver"
+import electron from "electron"
 
 describe("user store tests", () => {
   describe("for an empty config", () => {
@@ -65,14 +65,6 @@ describe("user store tests", () => {
       expect(us.preferences.colorTheme).toBe(UserStore.defaultTheme);
     })
 
-    it("correctly resets theme to default value", () => {
-      const us = UserStore.getInstance<UserStore>();
-
-      us.preferences.colorTheme = "some other theme";
-      us.resetTheme();
-      expect(us.preferences.colorTheme).toBe(UserStore.defaultTheme);
-    });
-
     it("correctly calculates if the last seen version is an old release", () => {
       const us = UserStore.getInstance<UserStore>();
 
@@ -80,7 +72,7 @@ describe("user store tests", () => {
 
       us.lastSeenAppVersion = (new SemVer(electron.app.getVersion())).inc("major").format();
       expect(us.isNewVersion).toBe(false);
-    });
+    })
   })
 
   describe("migrations", () => {
@@ -106,5 +98,5 @@ describe("user store tests", () => {
 
       expect(us.lastSeenAppVersion).toBe('0.0.0')
     })
-  });
-});
+  })
+})
