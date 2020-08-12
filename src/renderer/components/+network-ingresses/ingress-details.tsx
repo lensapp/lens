@@ -71,18 +71,18 @@ export class IngressDetails extends React.Component<Props> {
     return (
       <div>
         <Table className="ingress-points">
-            <TableHead>
-              <TableCell className="name" ><Trans>Hostname</Trans></TableCell>
-              <TableCell className="ingresspoints"><Trans>IP</Trans></TableCell>
-            </TableHead>
-            {ingressPoints.map(({hostname, ip}, index) => {
-              return (
-                <TableRow key={index}>
-                  <TableCell className="name">{hostname ? hostname : "-"}</TableCell>
-                  <TableCell className="ingresspoints">{ip ? ip : "-"}</TableCell>
-                </TableRow>
-              )})
-            })
+          <TableHead>
+            <TableCell className="name" ><Trans>Hostname</Trans></TableCell>
+            <TableCell className="ingresspoints"><Trans>IP</Trans></TableCell>
+          </TableHead>
+          {ingressPoints.map(({hostname, ip}, index) => {
+            return (
+              <TableRow key={index}>
+                <TableCell className="name">{hostname ? hostname : "-"}</TableCell>
+                <TableCell className="ingresspoints">{ip ? ip : "-"}</TableCell>
+              </TableRow>
+            )})
+          })
         </Table>
       </div>
     )
