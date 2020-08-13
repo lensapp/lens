@@ -1,5 +1,5 @@
 import type { ClusterId } from "../common/cluster-store";
-import { BrowserWindow, ipcMain, shell, WebContents, webContents } from "electron"
+import { BrowserWindow, dialog, ipcMain, shell, WebContents, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { observable } from "mobx";
 import { initMenu } from "./menu";
@@ -69,10 +69,14 @@ export class WindowManager {
   }
 
   async showMain() {
-    await this.showSplash();
-    await this.mainView.loadURL(`http://localhost:${this.proxyPort}`)
-    this.mainView.show();
-    this.splashWindow.hide();
+    try {
+      await this.showSplash();
+      await this.mainView.loadURL(`http://localhost:${this.proxyPort}`)
+      this.mainView.show();
+      this.splashWindow.hide();
+    } catch (err) {
+      dialog.showErrorBox("ERROR!", err.toString())
+    }
   }
 
   async showSplash() {

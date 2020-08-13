@@ -10,15 +10,26 @@ export const isDevelopment = isDebugging || !isProduction;
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
 
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`
+export const publicPath = "/build/"
 
-// System paths
+// Webpack build paths
 export const contextDir = process.cwd();
-export const staticDir = path.join(contextDir, "static");
-export const outDir = path.join(contextDir, "out");
+export const buildDir = path.join(contextDir, "static", publicPath);
 export const mainDir = path.join(contextDir, "src/main");
 export const rendererDir = path.join(contextDir, "src/renderer");
 export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
+
+// Special runtime paths
+const globScope = typeof global !== "undefined" ? global : window;
+Object.defineProperty(globScope, "__static", {
+  get() {
+    if (isDevelopment) {
+      return path.resolve(contextDir, "static");
+    }
+    return path.resolve(process.resourcesPath, "static")
+  }
+})
 
 // Apis
 export const apiPrefix = "/api" // local router apis

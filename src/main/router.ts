@@ -4,7 +4,7 @@ import http from "http"
 import path from "path"
 import { readFile } from "fs-extra"
 import { Cluster } from "./cluster"
-import { apiPrefix, appName, outDir } from "../common/vars";
+import { apiPrefix, appName, publicPath } from "../common/vars";
 import { helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute } from "./routes";
 
 export interface RouterRequestOpts {
@@ -95,14 +95,14 @@ export class Router {
   }
 
   async handleStaticFile(filePath: string, res: http.ServerResponse) {
-    const asset = path.join(outDir, filePath);
+    const asset = path.join(__static, filePath);
     try {
       const data = await readFile(asset);
       res.setHeader("Content-Type", this.getMimeType(asset));
       res.write(data)
       res.end()
     } catch (err) {
-      this.handleStaticFile(`${appName}.html`, res);
+      this.handleStaticFile(`${publicPath}/${appName}.html`, res);
     }
   }
 
