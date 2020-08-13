@@ -78,6 +78,7 @@
 
           .value {
             flex-grow: 2;
+            word-break: break-word;
             color: var(--textColorSecondary);
           }
         }
