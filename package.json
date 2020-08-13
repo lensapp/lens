@@ -3,7 +3,7 @@
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
   "version": "3.6.0-dev",
-  "main": "out/main.js",
+  "main": "static/build/main.js",
   "copyright": "© 2020, Lakend Labs, Inc.",
   "license": "MIT",
   "author": {
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev": "concurrently -k \"yarn dev-run -C\" \"yarn dev:main\" \"yarn dev:renderer\"",
-    "dev-run": "nodemon --watch out/main.* --exec \"electron --inspect .\" $@",
+    "dev-run": "nodemon --watch static/build/main.js --exec \"electron --inspect .\" $@",
     "dev:main": "env DEBUG=true yarn compile:main --watch $@",
     "dev:renderer": "env DEBUG=true yarn compile:renderer --watch $@",
     "compile": "env NODE_ENV=production concurrently yarn:compile:*",
@@ -87,7 +87,7 @@
       {
         "from": "static/",
         "to": "static/",
-        "filter": "**/*"
+        "filter": "!**/main.js"
       },
       "LICENSE"
     ],

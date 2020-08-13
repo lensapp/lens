@@ -7,12 +7,11 @@ import { userStore } from "../../../common/user-store"
 import { navigate } from "../../navigation";
 import { Button } from "../button";
 import { Trans } from "@lingui/macro";
-import { staticDir } from "../../../common/vars";
 import marked from "marked"
 
 @observer
 export class WhatsNew extends React.Component {
-  releaseNotes = fs.readFileSync(path.join(staticDir, "RELEASE_NOTES.md")).toString();
+  releaseNotes = fs.readFileSync(path.join(__static, "RELEASE_NOTES.md")).toString();
 
   ok = () => {
     navigate("/");

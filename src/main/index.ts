@@ -3,7 +3,7 @@
 import "../common/system-ca"
 import "../common/prometheus-providers"
 import { app, dialog } from "electron"
-import { appName, staticDir } from "../common/vars";
+import { appName } from "../common/vars";
 import path from "path"
 import { LensProxy } from "./lens-proxy"
 import { WindowManager } from "./window-manager";
@@ -19,6 +19,10 @@ import { workspaceStore } from "../common/workspace-store";
 import { tracker } from "../common/tracker";
 import logger from "./logger"
 
+const workingDir = path.join(app.getPath("appData"), appName);
+app.setName(appName);
+app.setPath("userData", workingDir);
+
 let windowManager: WindowManager;
 let clusterManager: ClusterManager;
 let proxyServer: LensProxy;
@@ -30,17 +34,13 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
 
 async function main() {
   await shellSync();
-
-  const workingDir = path.join(app.getPath("appData"), appName);
-  app.setName(appName);
-  app.setPath("userData", workingDir);
   logger.info(`🚀 Starting Lens from "${workingDir}"`)
 
   tracker.event("app", "start");
   const updater = new AppUpdater()
   updater.start();
 
-  registerFileProtocol("static", staticDir);
+  registerFileProtocol("static", __static);
 
   // find free port
   let proxyPort: number
