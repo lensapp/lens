@@ -7,6 +7,7 @@ import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 
 export default function (): webpack.Configuration {
+  console.info('WEBPACK:renderer', require("./src/common/vars"), process.env)
   return {
     context: __dirname,
     target: "electron-renderer",

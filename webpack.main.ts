@@ -5,6 +5,7 @@ import { isDevelopment, isProduction, mainDir, outDir } from "./src/common/vars"
 import nodeExternals from "webpack-node-externals";
 
 export default function (): webpack.Configuration {
+  console.info('WEBPACK:main', require("./src/common/vars"), process.env)
   return {
     context: __dirname,
     target: "electron-main",
