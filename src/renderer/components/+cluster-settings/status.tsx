@@ -11,7 +11,7 @@ export class Status extends React.Component<Props> {
   renderStatusRows() {
     const { cluster } = this.props;
     const rows = [
-      ["Online Status", cluster.online ? "online" : `offline (${cluster.failureReason || "unknown reason"}`],
+      ["Online Status", cluster.online ? "online" : `offline (${cluster.failureReason || "unknown reason"})`],
       ["Distribution", cluster.distribution],
       ["Kerbel Version", cluster.version],
       ["API Address", cluster.apiUrl],
