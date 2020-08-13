@@ -2,10 +2,10 @@
   "name": "kontena-lens",
   "productName": "Lens",
   "author": {
-    "name": "Lakend Labs, Inc.",
-    "email": "info@lakendlabs.com"
+    "name": "Mirantis, Inc.",
+    "email": "info@k8slens.dev"
   },
-  "copyright": "© 2020, Lakend Labs, Inc.",
+  "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
   "description": "Lens - The Kubernetes IDE",
   "version": "3.5.2",

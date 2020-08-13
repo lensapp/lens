@@ -18,7 +18,7 @@ export class Tracker {
     } catch (error) {
       this.visitor = ua(GA_ID)
     }
-    this.visitor.set("dl", "https://lensapptelemetry.lakendlabs.com")
+    this.visitor.set("dl", "https://telemetry.k8slens.dev")
   }
 
   public async event(eventCategory: string, eventAction: string) {
