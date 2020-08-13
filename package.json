@@ -4,11 +4,11 @@
   "description": "Lens - The Kubernetes IDE",
   "version": "3.6.0-dev",
   "main": "out/main.js",
-  "copyright": "© 2020, Lakend Labs, Inc.",
+  "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
   "author": {
-    "name": "Lakend Labs, Inc.",
-    "email": "info@lakendlabs.com"
+    "name": "Mirantis, Inc.",
+    "email": "info@k8slens.dev"
   },
   "scripts": {
     "dev": "concurrently -k \"yarn dev-run -C\" \"yarn dev:main\" \"yarn dev:renderer\"",

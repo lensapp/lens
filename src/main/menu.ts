@@ -21,7 +21,7 @@ function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow) {
   const appDetails = [
     `Version: ${app.getVersion()}`,
   ]
-  appDetails.push(`Copyright 2020 Lakend Labs, Inc.`)
+  appDetails.push(`Copyright 2020 Mirantis, Inc.`)
   let title = "Lens"
   if (isWindows) {
     title = `  ${title}`
@@ -169,7 +169,7 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       {
         label: 'License',
         click: async () => {
-          shell.openExternal('https://lakendlabs.com/licenses/lens-eula.md');
+          shell.openExternal('https://k8slens.dev/licenses/eula.md');
         },
       },
       {
