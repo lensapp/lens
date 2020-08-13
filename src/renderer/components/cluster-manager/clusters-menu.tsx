@@ -34,7 +34,7 @@ export class ClustersMenu extends React.Component<Props> {
 
   showCluster = (clusterId: ClusterId) => {
     clusterStore.setActive(clusterId);
-    navigate(clusterViewURL({ params: { clusterId } }))
+    navigate(clusterViewURL({ params: { clusterId } }));
   }
 
   addCluster = () => {
