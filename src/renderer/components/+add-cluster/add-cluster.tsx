@@ -166,6 +166,7 @@ export class AddCluster extends React.Component {
     return (
       <WizardLayout className="AddCluster" infoPanel={this.renderInfo()}>
         <h2><Trans>Add Cluster</Trans></h2>
+        <p>Choose config:</p>
         <Select
           placeholder={<Trans>Select kubeconfig</Trans>}
           value={this.clusterConfig}
@@ -180,14 +181,15 @@ export class AddCluster extends React.Component {
         </div>
         {this.showSettings && (
           <div className="proxy-settings">
+            <p>HTTP Proxy server. Used for communicating with Kubernetes API.</p>
             <Input
               autoFocus
-              placeholder={_i18n._(t`A HTTP proxy server URL (format: http://<address>:<port>)`)}
               value={this.proxyServer}
               onChange={value => this.proxyServer = value}
+              theme="round-black"
             />
             <small className="hint">
-              <Trans>HTTP Proxy server. Used for communicating with Kubernetes API.</Trans>
+              {'A HTTP proxy server URL (format: http://<address>:<port>).'}
             </small>
           </div>
         )}
@@ -196,6 +198,7 @@ export class AddCluster extends React.Component {
             <p>Kubeconfig:</p>
             <AceEditor
               autoFocus
+              showGutter={false}
               mode="yaml"
               value={this.customConfig}
               onChange={value => this.customConfig = value}
@@ -208,7 +211,7 @@ export class AddCluster extends React.Component {
         <div className="actions-panel">
           <Button
             primary
-            label={<Trans>Add cluster</Trans>}
+            label={<Trans>Add cluster(s)</Trans>}
             onClick={this.addCluster}
             waiting={this.isWaiting}
           />
