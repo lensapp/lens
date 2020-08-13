@@ -83,6 +83,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return Array.from(this.clusters.values());
   }
 
+  isActive(id: ClusterId) {
+    return this.activeCluster.id === id;
+  }
+
   setActive(id: ClusterId) {
     this.activeClusterId = id;
   }
