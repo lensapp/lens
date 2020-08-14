@@ -1,6 +1,7 @@
 // App's common configuration for any process (main, renderer, build pipeline, etc.)
-import packageInfo from "../../package.json"
 import path from "path";
+import packageInfo from "../../package.json"
+import { defineGlobal } from "./utils/defineGlobal";
 
 export const isMac = process.platform === "darwin"
 export const isWindows = process.platform === "win32"
@@ -21,8 +22,7 @@ export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 
 // Special runtime paths
-const globScope = typeof global !== "undefined" ? global : window;
-Object.defineProperty(globScope, "__static", {
+defineGlobal("__static", {
   get() {
     if (isDevelopment) {
       return path.resolve(contextDir, "static");
