@@ -84,7 +84,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   isActive(id: ClusterId) {
-    return this.activeCluster.id === id;
+    return this.activeClusterId === id;
   }
 
   setActive(id: ClusterId) {

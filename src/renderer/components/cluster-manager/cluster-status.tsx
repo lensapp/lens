@@ -11,6 +11,7 @@ import { Button } from "../button";
 import { cssNames, IClassName } from "../../utils";
 import { Cluster } from "../../../main/cluster";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
+import { CubeSpinner } from "../spinner";
 
 interface Props {
   className?: IClassName;
@@ -31,17 +32,13 @@ export class ClusterStatus extends React.Component<Props> {
   }
 
   async componentDidMount() {
-    if (this.cluster.disconnected) {
-      return;
-    }
-    this.authOutput = [{ data: "Connecting..." }];
     ipcRenderer.on(`kube-auth:${this.cluster.id}`, (evt, res: KubeAuthProxyLog) => {
       this.authOutput.push({
         data: res.data.trimRight(),
         error: res.error,
       });
     })
-    if (!this.cluster.initialized) {
+    if (!this.cluster.initialized || this.cluster.disconnected) {
       await this.refreshCluster();
     }
   }
@@ -55,48 +52,57 @@ export class ClusterStatus extends React.Component<Props> {
   }
 
   reconnect = async () => {
-    this.authOutput = [{ data: "Reconnecting..." }];
     this.isReconnecting = true;
     await this.refreshCluster();
     this.isReconnecting = false;
   }
 
-  render() {
+  renderContent() {
     const { authOutput, cluster, hasErrors } = this;
-    const isDisconnected = !!cluster.disconnected;
     const failureReason = cluster.failureReason;
-    const isError = hasErrors || isDisconnected;
-    return (
-      <div className={cssNames("ClusterStatus flex column gaps box center", this.props.className)}>
-        {isError && (
-          <Icon
-            material="cloud_off"
-            className={cssNames({ error: hasErrors })}
-          />
-        )}
-        <h2>
-          {cluster.preferences.clusterName}
-        </h2>
-        {!isDisconnected && (
+    if (!hasErrors || this.isReconnecting) {
+      return (
+        <>
+          <CubeSpinner />
           <pre className="kube-auth-out">
+            <p>{this.isReconnecting ? "Reconnecting..." : "Connecting..."}</p>
             {authOutput.map(({ data, error }, index) => {
               return <p key={index} className={cssNames({ error })}>{data}</p>
             })}
           </pre>
-        )}
+        </>
+      );
+    }
+    return (
+      <>
+        <Icon material="cloud_off" className="error" />
+        <h2>
+          {cluster.preferences.clusterName}
+        </h2>
+        <pre className="kube-auth-out">
+          {authOutput.map(({ data, error }, index) => {
+            return <p key={index} className={cssNames({ error })}>{data}</p>
+          })}
+        </pre>
         {failureReason && (
           <div className="failure-reason error">{failureReason}</div>
         )}
-        {isError && (
-          <Button
-            primary
-            label="Reconnect"
-            className="box center"
-            onClick={this.reconnect}
-            waiting={this.isReconnecting}
-          />
-        )}
+        <Button
+          primary
+          label="Reconnect"
+          className="box center"
+          onClick={this.reconnect}
+          waiting={this.isReconnecting}
+        />
+      </>
+    );
+  }
+
+  render() {
+    return (
+      <div className={cssNames("ClusterStatus flex column gaps box center align-center justify-center", this.props.className)}>
+        {this.renderContent()}
       </div>
-    )
+    );
   }
 }
