@@ -16,6 +16,7 @@ import { getMatchedCluster } from "../cluster-manager/cluster-view.route";
 export class ClusterSettings extends React.Component {
   render() {
     const cluster = getMatchedCluster();
+    if (!cluster) return null;
     const header = (
       <>
         <ClusterIcon

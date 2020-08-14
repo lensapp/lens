@@ -13,7 +13,6 @@ interface Props {
 
 export class AppInit extends React.Component<Props> {
   static async start(rootElem: HTMLElement) {
-
     render(<AppInit/>, rootElem); // show loading indicator asap
     await AppInit.readyStateCheck(rootElem); // wait while all good to run
   }
