@@ -122,14 +122,14 @@ export class ClustersMenu extends React.Component<Props> {
         <div className="clusters flex column gaps">
           <DragDropContext onDragEnd={this.swapClusterIconOrder}>
             <Droppable droppableId="cluster-menu" type="CLUSTER">
-              {(provided) => (
+              {(provided: DroppableProvided) => (
                 <div
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
                   {clusters.map((cluster, index) => (
                     <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
-                      {(provided) => (
+                      {(provided: DraggableProvided) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
