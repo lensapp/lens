@@ -33,6 +33,10 @@ msgstr ""
 msgid "<0>{0}</0> successfully created"
 msgstr ""
 
+#: src/renderer/components/input/input.validators.ts:40
+msgid "A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics."
+msgstr ""
+
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:80
 msgid "API Group"
 msgstr ""
@@ -125,7 +129,7 @@ msgstr ""
 msgid "All logs"
 msgstr ""
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:96
+#: src/renderer/components/+namespaces/namespace-select.tsx:95
 msgid "All namespaces"
 msgstr ""
 
@@ -195,7 +199,7 @@ msgstr ""
 msgid "Are you sure you want to drain <0>{nodeName}</0>?"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:86
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:84
 msgid "Arguments"
 msgstr ""
 
@@ -229,32 +233,32 @@ msgstr ""
 msgid "Build version"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/container-charts.tsx:72
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:98
+#: src/renderer/components/+workloads-pods/container-charts.tsx:74
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:100
 msgid "Bytes consumed on this filesystem"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:81
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:83
 msgid "Bytes received by all containers"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:31
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:33
 msgid "Bytes sent by Ingress controller with error status"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:24
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:26
 msgid "Bytes sent by Ingress controller with successful status"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:23
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:25
 msgid "Bytes sent, status 2xx"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:30
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:32
 msgid "Bytes sent, status 5xx"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:88
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:90
 msgid "Bytes transmitted from all containers"
 msgstr ""
 
@@ -270,7 +274,7 @@ msgstr ""
 #: src/renderer/components/+nodes/node-details.tsx:79
 #: src/renderer/components/+nodes/nodes.tsx:113
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:11
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:25
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:26
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:53
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:95
 #: src/renderer/components/resource-metrics/resource-metrics-text.tsx:13
@@ -282,17 +286,17 @@ msgid "CPU capacity"
 msgstr ""
 
 #: src/renderer/components/+nodes/node-charts.tsx:26
-#: src/renderer/components/+workloads-pods/container-charts.tsx:24
+#: src/renderer/components/+workloads-pods/container-charts.tsx:26
 msgid "CPU cores usage"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/container-charts.tsx:38
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:47
+#: src/renderer/components/+workloads-pods/container-charts.tsx:40
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:49
 msgid "CPU limits"
 msgstr ""
 
 #: src/renderer/components/+nodes/node-charts.tsx:33
-#: src/renderer/components/+workloads-pods/container-charts.tsx:31
+#: src/renderer/components/+workloads-pods/container-charts.tsx:33
 msgid "CPU requests"
 msgstr ""
 
@@ -364,7 +368,7 @@ msgstr ""
 msgid "Cloud API Token Secret"
 msgstr ""
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:44
+#: src/renderer/components/+namespaces/namespace-select.tsx:43
 #: src/renderer/components/layout/sidebar.tsx:79
 msgid "Cluster"
 msgstr ""
@@ -378,7 +382,7 @@ msgstr ""
 msgid "Cluster Issuers"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:81
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:79
 msgid "Command"
 msgstr ""
 
@@ -443,23 +447,23 @@ msgstr ""
 msgid "Container"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:33
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:35
 msgid "Container CPU cores usage"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:40
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:42
 msgid "Container CPU requests"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:71
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:73
 msgid "Container memory limits"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:64
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:66
 msgid "Container memory requests"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:57
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:59
 msgid "Container memory usage"
 msgstr ""
 
@@ -690,7 +694,7 @@ msgid "Driver"
 msgstr ""
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:59
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:67
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:87
 msgid "Duration"
 msgstr ""
 
@@ -716,7 +720,7 @@ msgstr ""
 msgid "Egress"
 msgstr ""
 
-#: src/renderer/components/+network-services/service-details.tsx:66
+#: src/renderer/components/+network-services/service-details.tsx:68
 msgid "Endpoint"
 msgstr ""
 
@@ -775,7 +779,7 @@ msgid "Field Path"
 msgstr ""
 
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:14
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:27
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:28
 msgid "Filesystem"
 msgstr ""
 
@@ -882,6 +886,7 @@ msgstr ""
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:33
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:64
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:76
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:64
 msgid "Hostname"
 msgstr ""
 
@@ -889,15 +894,19 @@ msgstr ""
 msgid "Http01"
 msgstr ""
 
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:65
+msgid "IP"
+msgstr ""
+
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:53
 msgid "IP addresses"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:44
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:45
 msgid "Image"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:48
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:49
 msgid "ImagePullPolicy"
 msgstr ""
 
@@ -939,7 +948,7 @@ msgstr ""
 msgid "Installing..."
 msgstr ""
 
-#: src/renderer/components/input/input.validators.ts:43
+#: src/renderer/components/input/input.validators.ts:44
 msgid "Invalid account ID"
 msgstr ""
 
@@ -1061,10 +1070,10 @@ msgstr ""
 
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:72
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:115
-#: src/renderer/components/+workloads-pods/container-charts.tsx:37
-#: src/renderer/components/+workloads-pods/container-charts.tsx:61
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:46
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:70
+#: src/renderer/components/+workloads-pods/container-charts.tsx:39
+#: src/renderer/components/+workloads-pods/container-charts.tsx:63
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:48
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:72
 msgid "Limits"
 msgstr ""
 
@@ -1076,12 +1085,16 @@ msgstr ""
 msgid "Link"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:73
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:71
 msgid "Liveness"
 msgstr ""
 
-#: src/renderer/components/+network-services/service-details.tsx:63
+#: src/renderer/components/+network-services/service-details.tsx:65
 msgid "Load Balancer IP"
+msgstr ""
+
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:108
+msgid "Load-Balancer Ingress Points"
 msgstr ""
 
 #: src/renderer/components/app-init/app-init.tsx:43
@@ -1133,7 +1146,7 @@ msgstr ""
 #: src/renderer/components/+nodes/node-details.tsx:80
 #: src/renderer/components/+nodes/nodes.tsx:114
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:12
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:26
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:27
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:63
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:96
 #: src/renderer/components/resource-metrics/resource-metrics-text.tsx:18
@@ -1144,17 +1157,17 @@ msgstr ""
 msgid "Memory capacity"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/container-charts.tsx:62
+#: src/renderer/components/+workloads-pods/container-charts.tsx:64
 msgid "Memory limits"
 msgstr ""
 
 #: src/renderer/components/+nodes/node-charts.tsx:57
-#: src/renderer/components/+workloads-pods/container-charts.tsx:55
+#: src/renderer/components/+workloads-pods/container-charts.tsx:57
 msgid "Memory requests"
 msgstr ""
 
 #: src/renderer/components/+nodes/node-charts.tsx:50
-#: src/renderer/components/+workloads-pods/container-charts.tsx:48
+#: src/renderer/components/+workloads-pods/container-charts.tsx:50
 msgid "Memory usage"
 msgstr ""
 
@@ -1202,7 +1215,7 @@ msgstr ""
 msgid "Mountable secrets"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:63
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:61
 msgid "Mounts"
 msgstr ""
 
@@ -1301,21 +1314,20 @@ msgstr ""
 msgid "Namespace"
 msgstr ""
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:98
+#: src/renderer/components/+namespaces/namespace-select.tsx:97
 msgid "Namespace: {0}"
 msgstr ""
 
 #: src/renderer/components/+namespaces/namespaces.tsx:30
-#: src/renderer/components/app.tsx:36
 #: src/renderer/components/layout/sidebar.tsx:85
 msgid "Namespaces"
 msgstr ""
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:100
+#: src/renderer/components/+namespaces/namespace-select.tsx:99
 msgid "Namespaces: {0}"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:66
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:86
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:13
 #: src/renderer/components/layout/sidebar.tsx:83
 msgid "Network"
@@ -1451,11 +1463,12 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: src/renderer/components/+network-services/service-ports.tsx:49
+#: src/renderer/components/+network-services/service-port-component.tsx:49
+#: src/renderer/components/+workloads-pods/pod-container-port.tsx:51
 msgid "Open in a browser"
 msgstr ""
 
-#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:63
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:60
 #: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:78
 #: src/renderer/components/+workloads-pods/pod-details-tolerations.tsx:17
 msgid "Operator"
@@ -1556,12 +1569,12 @@ msgid "Port"
 msgstr ""
 
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:83
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:74
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:94
 #: src/renderer/components/+network-policies/network-policy-details.tsx:96
 #: src/renderer/components/+network-policies/network-policy-details.tsx:109
 #: src/renderer/components/+network-services/service-details.tsx:59
 #: src/renderer/components/+network-services/services.tsx:48
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:52
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:53
 msgid "Ports"
 msgstr ""
 
@@ -1591,7 +1604,7 @@ msgstr ""
 msgid "QoS Class"
 msgstr ""
 
-#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:55
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:52
 msgid "Quotas"
 msgstr ""
 
@@ -1607,7 +1620,7 @@ msgstr ""
 msgid "Read-only Root Filesystem"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:77
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:75
 msgid "Readiness"
 msgstr ""
 
@@ -1619,7 +1632,7 @@ msgstr ""
 msgid "Reason: {0} ({1})"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:80
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:82
 msgid "Receive"
 msgstr ""
 
@@ -1710,11 +1723,11 @@ msgstr ""
 msgid "Repository"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:40
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:42
 msgid "Request"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:41
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:43
 msgid "Request duration in seconds"
 msgstr ""
 
@@ -1722,10 +1735,10 @@ msgstr ""
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:114
 #: src/renderer/components/+nodes/node-charts.tsx:32
 #: src/renderer/components/+nodes/node-charts.tsx:56
-#: src/renderer/components/+workloads-pods/container-charts.tsx:30
-#: src/renderer/components/+workloads-pods/container-charts.tsx:54
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:39
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:63
+#: src/renderer/components/+workloads-pods/container-charts.tsx:32
+#: src/renderer/components/+workloads-pods/container-charts.tsx:56
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:41
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:65
 msgid "Requests"
 msgstr ""
 
@@ -1781,11 +1794,11 @@ msgstr ""
 msgid "Resources"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:47
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:49
 msgid "Response"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:48
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:50
 msgid "Response duration in seconds"
 msgstr ""
 
@@ -1845,7 +1858,7 @@ msgstr ""
 msgid "Rule"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:85
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:105
 #: src/renderer/components/+network-ingresses/ingresses.tsx:34
 #: src/renderer/components/+user-management-roles/role-details.tsx:25
 msgid "Rules"
@@ -1891,11 +1904,11 @@ msgstr ""
 msgid "Scope"
 msgstr ""
 
-#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:60
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:57
 msgid "Scope Selector"
 msgstr ""
 
-#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:64
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:61
 msgid "Scope name"
 msgstr ""
 
@@ -1968,7 +1981,7 @@ msgstr ""
 msgid "Server"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:82
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:102
 msgid "Service"
 msgstr ""
 
@@ -1986,7 +1999,7 @@ msgstr ""
 msgid "Session Affinity"
 msgstr ""
 
-#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:43
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:40
 msgid "Set"
 msgstr ""
 
@@ -2000,7 +2013,7 @@ msgid "Shell"
 msgstr ""
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
-#: src/renderer/components/+workloads-pods/pod-container-env.tsx:97
+#: src/renderer/components/+workloads-pods/pod-container-env.tsx:100
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Show"
@@ -2062,7 +2075,7 @@ msgstr ""
 #: src/renderer/components/+storage-volume-claims/volume-claims.tsx:52
 #: src/renderer/components/+storage-volumes/volume-details.tsx:46
 #: src/renderer/components/+storage-volumes/volumes.tsx:45
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:38
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:39
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:97
 #: src/renderer/components/+workloads-pods/pod-details.tsx:82
 #: src/renderer/components/+workloads-pods/pods.tsx:81
@@ -2131,7 +2144,7 @@ msgstr ""
 msgid "Suspend"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:78
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:98
 msgid "TLS"
 msgstr ""
 
@@ -2160,10 +2173,6 @@ msgstr ""
 msgid "This field is required"
 msgstr ""
 
-#: src/renderer/components/input/input.validators.ts:39
-msgid "A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics."
-msgstr ""
-
 #: src/renderer/components/+network-policies/network-policy-details.tsx:59
 msgid "To"
 msgstr ""
@@ -2180,7 +2189,7 @@ msgstr ""
 msgid "Tolerations"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:87
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:89
 msgid "Transmit"
 msgstr ""
 
@@ -2241,17 +2250,18 @@ msgstr ""
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:70
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:113
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:134
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:40
 #: src/renderer/components/+nodes/node-charts.tsx:25
 #: src/renderer/components/+nodes/node-charts.tsx:49
 #: src/renderer/components/+nodes/node-charts.tsx:73
 #: src/renderer/components/+nodes/node-charts.tsx:90
 #: src/renderer/components/+storage-volume-claims/volume-claim-disk-chart.tsx:24
-#: src/renderer/components/+workloads-pods/container-charts.tsx:23
-#: src/renderer/components/+workloads-pods/container-charts.tsx:47
-#: src/renderer/components/+workloads-pods/container-charts.tsx:71
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:32
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:56
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:97
+#: src/renderer/components/+workloads-pods/container-charts.tsx:25
+#: src/renderer/components/+workloads-pods/container-charts.tsx:49
+#: src/renderer/components/+workloads-pods/container-charts.tsx:73
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:34
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:58
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:99
 msgid "Usage"
 msgstr ""
 
@@ -2260,8 +2270,8 @@ msgid "Use same name for RoleBinding"
 msgstr ""
 
 #: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:43
-msgid "Used"
-msgstr ""
+#~ msgid "Used"
+#~ msgstr ""
 
 #: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:155
 msgid "User"
@@ -2279,7 +2289,7 @@ msgstr ""
 
 #: src/renderer/components/+apps-releases/release-details.tsx:111
 #: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:132
-#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:65
+#: src/renderer/components/+config-resource-quotas/resource-quota-details.tsx:62
 #: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:79
 msgid "Values"
 msgstr ""
@@ -2379,7 +2389,7 @@ msgstr ""
 msgid "cores:"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:41
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:42
 msgid "exit code"
 msgstr ""
 
@@ -2400,11 +2410,11 @@ msgstr ""
 msgid "plural"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-details-container.tsx:40
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:41
 msgid "ready"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:67
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:69
 msgid "sec"
 msgstr ""
 
