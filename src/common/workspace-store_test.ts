@@ -26,67 +26,71 @@ describe("workspace store tests", () => {
     })
 
     it("default workspace should always exist", () => {
-      const us = WorkspaceStore.getInstance<WorkspaceStore>();
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
 
-      expect(us.workspaces.size).toBe(1);
-      expect(us.getById(WorkspaceStore.defaultId)).not.toBe(null);
+      expect(ws.workspaces.size).toBe(1);
+      expect(ws.getById(WorkspaceStore.defaultId)).not.toBe(null);
     })
 
     it("cannot remove the default workspace", () => {
-      const us = WorkspaceStore.getInstance<WorkspaceStore>();
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
 
-      expect(() => us.removeWorkspace(WorkspaceStore.defaultId)).toThrowError("Cannot remove");
+      expect(() => ws.removeWorkspace(WorkspaceStore.defaultId)).toThrowError("Cannot remove");
     })
 
     it("can update default workspace name", () => {
-      const us = WorkspaceStore.getInstance<WorkspaceStore>();
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
 
-      us.saveWorkspace({
+      ws.saveWorkspace({
         id: WorkspaceStore.defaultId,
         name: "foobar",
       });
-      expect(us.currentWorkspace.name).toBe("foobar");
+
+      expect(ws.currentWorkspace.name).toBe("foobar");
     })
 
     it("can add workspaces", () => {
-      const us = WorkspaceStore.getInstance<WorkspaceStore>();
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
 
-      us.saveWorkspace({
+      ws.saveWorkspace({
         id: "123",
         name: "foobar",
       });
-      expect(us.getById("123").name).toBe("foobar");
+
+      expect(ws.getById("123").name).toBe("foobar");
     })
 
-    it("cannot set a non-existant workspace to be active", () => {
-      const us = WorkspaceStore.getInstance<WorkspaceStore>();
+    it("cannot set a non-existent workspace to be active", () => {
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
 
-      expect(() => us.setActive("abc")).toThrow("doesn't exist");
+      expect(() => ws.setActive("abc")).toThrow("doesn't exist");
     })
 
-    it("can set a existant workspace to be active", () => {
-      const us = WorkspaceStore.getInstance<WorkspaceStore>();
+    it("can set a existent workspace to be active", () => {
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
 
-      us.saveWorkspace({
+      ws.saveWorkspace({
         id: "abc",
         name: "foobar",
       });
-      expect(() => us.setActive("abc")).not.toThrowError();
+
+      expect(() => ws.setActive("abc")).not.toThrowError();
     })
 
     it("can remove a workspace", () => {
-      const us = WorkspaceStore.getInstance<WorkspaceStore>();
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
 
-      us.saveWorkspace({
+      ws.saveWorkspace({
         id: "123",
         name: "foobar",
       });
-      us.saveWorkspace({
+      ws.saveWorkspace({
         id: "1234",
         name: "foobar 1",
       });
-      us.removeWorkspace("123");
-      expect(us.workspaces.size).toBe(2);
+      ws.removeWorkspace("123");
+
+      expect(ws.workspaces.size).toBe(2);
     })
   })
 
@@ -107,6 +111,7 @@ describe("workspace store tests", () => {
           })
         }
       })
+
       await WorkspaceStore.getInstance<WorkspaceStore>().load();
     })
 
@@ -115,9 +120,9 @@ describe("workspace store tests", () => {
     })
 
     it("doesn't revert to default workspace", async () => {
-      const us = WorkspaceStore.getInstance<WorkspaceStore>();
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
 
-      expect(us.currentWorkspaceId).toBe("abc");
+      expect(ws.currentWorkspaceId).toBe("abc");
     })
   })
 })
