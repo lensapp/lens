@@ -57,12 +57,12 @@ export class ClusterStatus extends React.Component<Props> {
     this.isReconnecting = false;
   }
 
-  render() {
+  renderContent() {
     const { authOutput, cluster, hasErrors } = this;
     const failureReason = cluster.failureReason;
     if (!hasErrors || this.isReconnecting) {
       return (
-        <div className="ClusterStatus flex column align-center justify-center">
+        <>
           <CubeSpinner />
           <pre className="kube-auth-out">
             <p>{this.isReconnecting ? "Reconnecting..." : "Connecting..."}</p>
@@ -70,11 +70,11 @@ export class ClusterStatus extends React.Component<Props> {
               return <p key={index} className={cssNames({ error })}>{data}</p>
             })}
           </pre>
-        </div>
+        </>
       );
     }
     return (
-      <div className={cssNames("ClusterStatus flex column gaps box center", this.props.className)}>
+      <>
         <Icon material="cloud_off" className="error" />
         <h2>
           {cluster.preferences.clusterName}
@@ -94,7 +94,15 @@ export class ClusterStatus extends React.Component<Props> {
           onClick={this.reconnect}
           waiting={this.isReconnecting}
         />
+      </>
+    );
+  }
+
+  render() {
+    return (
+      <div className={cssNames("ClusterStatus flex column gaps box center align-center justify-center", this.props.className)}>
+        {this.renderContent()}
       </div>
-    )
+    );
   }
 }
