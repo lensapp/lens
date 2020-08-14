@@ -3,6 +3,7 @@ import ua from "universal-analytics"
 import { machineIdSync } from "node-machine-id"
 import Singleton from "./utils/singleton";
 import { userStore } from "./user-store"
+import logger from "../main/logger";
 
 export class Tracker extends Singleton {
   static readonly GA_ID = "UA-159377374-1"
@@ -40,7 +41,7 @@ export class Tracker extends Singleton {
         ...otherParams,
       }).send()
     } catch (err) {
-      console.error(`Failed to track "${eventCategory}:${eventAction}"`, err)
+      logger.error(`Failed to track "${eventCategory}:${eventAction}"`, err)
     }
   }
 }
