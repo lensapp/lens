@@ -13,11 +13,27 @@ import { apiManager } from "../../api/api-manager";
 import { crdStore } from "./crd.store";
 import { KubeObject } from "../../api/kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { Input } from "../input";
 
 // fixme: provide type-safe check for status
 interface Props extends KubeObjectDetailsProps<KubeObject & { status: any }> {
 }
 
+function CrdColumnValue({ value }: { value: any[] | {} | string }) {
+  if (Array.isArray(value)) {
+    return <>{value.map((item, index) => <CrdColumnValue key={index} value={item} />)}</>
+  }
+  if (typeof(value) === 'object') return (
+    <Input
+      readOnly
+      multiLine
+      theme="round-black"
+      className="box grow"
+      value={JSON.stringify(value, null, 2)}
+    />
+  );
+  return <span>{value}</span>;
+}
 @observer
 export class CrdResourceDetails extends React.Component<Props> {
   @computed get crd() {
@@ -43,9 +59,10 @@ export class CrdResourceDetails extends React.Component<Props> {
         <KubeObjectMeta object={object}/>
         {extraColumns.map(column => {
           const { name } = column;
+          const value = jsonPath.query(object, column.JSONPath.slice(1));
           return (
             <DrawerItem key={name} name={name}>
-              {jsonPath.query(object, column.JSONPath.slice(1))}
+              <CrdColumnValue value={value} />
             </DrawerItem>
           )
         })}
