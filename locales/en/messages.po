@@ -51,7 +51,7 @@ msgid "Account Name"
 msgstr "Account Name"
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:51
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:46
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:50
 msgid "Active"
 msgstr "Active"
 
@@ -107,7 +107,7 @@ msgstr "Affinities"
 #: src/renderer/components/+user-management-roles/roles.tsx:35
 #: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:38
 #: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:38
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:48
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:52
 #: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:50
 #: src/renderer/components/+workloads-deployments/deployments.tsx:63
 #: src/renderer/components/+workloads-jobs/jobs.tsx:41
@@ -125,7 +125,7 @@ msgstr "All groups"
 msgid "All logs"
 msgstr "All logs"
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:96
+#: src/renderer/components/+namespaces/namespace-select.tsx:95
 msgid "All namespaces"
 msgstr "All namespaces"
 
@@ -229,32 +229,32 @@ msgstr "Bindings"
 msgid "Build version"
 msgstr "Build version"
 
-#: src/renderer/components/+workloads-pods/container-charts.tsx:72
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:98
+#: src/renderer/components/+workloads-pods/container-charts.tsx:74
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:100
 msgid "Bytes consumed on this filesystem"
 msgstr "Bytes consumed on this filesystem"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:81
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:83
 msgid "Bytes received by all containers"
 msgstr "Bytes received by all containers"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:31
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:33
 msgid "Bytes sent by Ingress controller with error status"
 msgstr "Bytes sent by Ingress controller with error status"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:24
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:26
 msgid "Bytes sent by Ingress controller with successful status"
 msgstr "Bytes sent by Ingress controller with successful status"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:23
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:25
 msgid "Bytes sent, status 2xx"
 msgstr "Bytes sent, status 2xx"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:30
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:32
 msgid "Bytes sent, status 5xx"
 msgstr "Bytes sent, status 5xx"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:88
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:90
 msgid "Bytes transmitted from all containers"
 msgstr "Bytes transmitted from all containers"
 
@@ -282,17 +282,17 @@ msgid "CPU capacity"
 msgstr "CPU capacity"
 
 #: src/renderer/components/+nodes/node-charts.tsx:26
-#: src/renderer/components/+workloads-pods/container-charts.tsx:24
+#: src/renderer/components/+workloads-pods/container-charts.tsx:26
 msgid "CPU cores usage"
 msgstr "CPU cores usage"
 
-#: src/renderer/components/+workloads-pods/container-charts.tsx:38
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:47
+#: src/renderer/components/+workloads-pods/container-charts.tsx:40
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:49
 msgid "CPU limits"
 msgstr "CPU limits"
 
 #: src/renderer/components/+nodes/node-charts.tsx:33
-#: src/renderer/components/+workloads-pods/container-charts.tsx:31
+#: src/renderer/components/+workloads-pods/container-charts.tsx:33
 msgid "CPU requests"
 msgstr "CPU requests"
 
@@ -368,7 +368,7 @@ msgstr "Close (Ctrl+W)"
 msgid "Cloud API Token Secret"
 msgstr "Cloud API Token Secret"
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:44
+#: src/renderer/components/+namespaces/namespace-select.tsx:43
 #: src/renderer/components/layout/sidebar.tsx:79
 msgid "Cluster"
 msgstr "Cluster"
@@ -447,23 +447,23 @@ msgstr "Connection"
 msgid "Container"
 msgstr "Container"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:33
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:35
 msgid "Container CPU cores usage"
 msgstr "Container CPU cores usage"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:40
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:42
 msgid "Container CPU requests"
 msgstr "Container CPU requests"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:71
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:73
 msgid "Container memory limits"
 msgstr "Container memory limits"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:64
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:66
 msgid "Container memory requests"
 msgstr "Container memory requests"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:57
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:59
 msgid "Container memory usage"
 msgstr "Container memory usage"
 
@@ -576,7 +576,7 @@ msgstr "Created at"
 msgid "Credentials Ref"
 msgstr "Credentials Ref"
 
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:40
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:44
 msgid "Cron Jobs"
 msgstr "Cron Jobs"
 
@@ -981,6 +981,10 @@ msgstr "Item list is empty"
 msgid "JSON Path"
 msgstr "JSON Path"
 
+#: src/renderer/components/+workloads-cronjobs/cronjob-trigger-dialog.tsx:91
+msgid "Job name"
+msgstr "Job name"
+
 #: src/renderer/components/+workloads/workloads.tsx:69
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:62
 #: src/renderer/components/+workloads-jobs/jobs.tsx:36
@@ -1045,7 +1049,7 @@ msgid "Last Failure Time"
 msgstr "Last Failure Time"
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:57
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:47
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:51
 msgid "Last schedule"
 msgstr "Last schedule"
 
@@ -1070,10 +1074,10 @@ msgstr "Limited to {0}"
 
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:72
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:115
-#: src/renderer/components/+workloads-pods/container-charts.tsx:37
-#: src/renderer/components/+workloads-pods/container-charts.tsx:61
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:46
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:70
+#: src/renderer/components/+workloads-pods/container-charts.tsx:39
+#: src/renderer/components/+workloads-pods/container-charts.tsx:63
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:48
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:72
 msgid "Limits"
 msgstr "Limits"
 
@@ -1153,17 +1157,17 @@ msgstr "Memory"
 msgid "Memory capacity"
 msgstr "Memory capacity"
 
-#: src/renderer/components/+workloads-pods/container-charts.tsx:62
+#: src/renderer/components/+workloads-pods/container-charts.tsx:64
 msgid "Memory limits"
 msgstr "Memory limits"
 
 #: src/renderer/components/+nodes/node-charts.tsx:57
-#: src/renderer/components/+workloads-pods/container-charts.tsx:55
+#: src/renderer/components/+workloads-pods/container-charts.tsx:57
 msgid "Memory requests"
 msgstr "Memory requests"
 
 #: src/renderer/components/+nodes/node-charts.tsx:50
-#: src/renderer/components/+workloads-pods/container-charts.tsx:48
+#: src/renderer/components/+workloads-pods/container-charts.tsx:50
 msgid "Memory usage"
 msgstr "Memory usage"
 
@@ -1248,7 +1252,7 @@ msgstr "Mounts"
 #: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:35
 #: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:29
 #: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:36
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:41
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:45
 #: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:45
 #: src/renderer/components/+workloads-deployments/deployments.tsx:58
 #: src/renderer/components/+workloads-jobs/jobs.tsx:37
@@ -1296,7 +1300,7 @@ msgstr "Names"
 #: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:37
 #: src/renderer/components/+user-management-service-accounts/create-service-account-dialog.tsx:79
 #: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:37
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:43
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:47
 #: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:46
 #: src/renderer/components/+workloads-deployments/deployments.tsx:59
 #: src/renderer/components/+workloads-jobs/jobs.tsx:38
@@ -1310,17 +1314,16 @@ msgstr "Names"
 msgid "Namespace"
 msgstr "Namespace"
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:98
+#: src/renderer/components/+namespaces/namespace-select.tsx:97
 msgid "Namespace: {0}"
 msgstr "Namespace: {0}"
 
 #: src/renderer/components/+namespaces/namespaces.tsx:30
-#: src/renderer/components/app.tsx:36
 #: src/renderer/components/layout/sidebar.tsx:85
 msgid "Namespaces"
 msgstr "Namespaces"
 
-#: src/renderer/components/+namespaces/namespace-select.tsx:100
+#: src/renderer/components/+namespaces/namespace-select.tsx:99
 msgid "Namespaces: {0}"
 msgstr "Namespaces: {0}"
 
@@ -1636,7 +1639,7 @@ msgstr "Reason"
 msgid "Reason: {0} ({1})"
 msgstr "Reason: {0} ({1})"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:80
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:82
 msgid "Receive"
 msgstr "Receive"
 
@@ -1727,11 +1730,11 @@ msgstr "Repo/Name"
 msgid "Repository"
 msgstr "Repository"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:40
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:42
 msgid "Request"
 msgstr "Request"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:41
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:43
 msgid "Request duration in seconds"
 msgstr "Request duration in seconds"
 
@@ -1739,10 +1742,10 @@ msgstr "Request duration in seconds"
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:114
 #: src/renderer/components/+nodes/node-charts.tsx:32
 #: src/renderer/components/+nodes/node-charts.tsx:56
-#: src/renderer/components/+workloads-pods/container-charts.tsx:30
-#: src/renderer/components/+workloads-pods/container-charts.tsx:54
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:39
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:63
+#: src/renderer/components/+workloads-pods/container-charts.tsx:32
+#: src/renderer/components/+workloads-pods/container-charts.tsx:56
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:41
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:65
 msgid "Requests"
 msgstr "Requests"
 
@@ -1798,11 +1801,11 @@ msgstr "ResourceQuota name"
 msgid "Resources"
 msgstr "Resources"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:47
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:49
 msgid "Response"
 msgstr "Response"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:48
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:50
 msgid "Response duration in seconds"
 msgstr "Response duration in seconds"
 
@@ -1899,7 +1902,7 @@ msgid "Scale Deployment <0>{deploymentName}</0>"
 msgstr "Scale Deployment <0>{deploymentName}</0>"
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:46
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:44
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:48
 msgid "Schedule"
 msgstr "Schedule"
 
@@ -2017,7 +2020,7 @@ msgid "Shell"
 msgstr "Shell"
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
-#: src/renderer/components/+workloads-pods/pod-container-env.tsx:97
+#: src/renderer/components/+workloads-pods/pod-container-env.tsx:100
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Show"
@@ -2144,7 +2147,7 @@ msgid "Supplemental Groups"
 msgstr "Supplemental Groups"
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:54
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:45
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:49
 msgid "Suspend"
 msgstr "Suspend"
 
@@ -2197,9 +2200,19 @@ msgstr "Tokens"
 msgid "Tolerations"
 msgstr "Tolerations"
 
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:87
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:89
 msgid "Transmit"
 msgstr "Transmit"
+
+#: src/renderer/components/+workloads-cronjobs/cronjob-trigger-dialog.tsx:107
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:79
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:80
+msgid "Trigger"
+msgstr "Trigger"
+
+#: src/renderer/components/+workloads-cronjobs/cronjob-trigger-dialog.tsx:103
+msgid "Trigger CronJob <0>{cronjobName}</0>"
+msgstr "Trigger CronJob <0>{cronjobName}</0>"
 
 #: src/renderer/components/+cluster/cluster-issues.tsx:102
 #: src/renderer/components/+config-secrets/secret-details.tsx:74
@@ -2263,12 +2276,12 @@ msgstr "Upgrade version"
 #: src/renderer/components/+nodes/node-charts.tsx:73
 #: src/renderer/components/+nodes/node-charts.tsx:90
 #: src/renderer/components/+storage-volume-claims/volume-claim-disk-chart.tsx:24
-#: src/renderer/components/+workloads-pods/container-charts.tsx:23
-#: src/renderer/components/+workloads-pods/container-charts.tsx:47
-#: src/renderer/components/+workloads-pods/container-charts.tsx:71
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:32
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:56
-#: src/renderer/components/+workloads-pods/pod-charts.tsx:97
+#: src/renderer/components/+workloads-pods/container-charts.tsx:25
+#: src/renderer/components/+workloads-pods/container-charts.tsx:49
+#: src/renderer/components/+workloads-pods/container-charts.tsx:73
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:34
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:58
+#: src/renderer/components/+workloads-pods/pod-charts.tsx:99
 msgid "Usage"
 msgstr "Usage"
 
@@ -2409,7 +2422,7 @@ msgid "listKind"
 msgstr "listKind"
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:48
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:57
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:61
 msgid "never"
 msgstr "never"
 
@@ -2421,7 +2434,7 @@ msgstr "plural"
 msgid "ready"
 msgstr "ready"
 
-#: src/renderer/components/+network-ingresses/ingress-charts.tsx:67
+#: src/renderer/components/+network-ingresses/ingress-charts.tsx:69
 msgid "sec"
 msgstr "sec"
 
