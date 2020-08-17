@@ -1,6 +1,7 @@
 .ClusterSettings {
   .WizardLayout {
     grid-template-columns: unset;
+    grid-template-rows: 76px 1fr;
     padding: 0;
 
     .head-col {
@@ -9,15 +10,6 @@
       :nth-child(2) {
         flex: 1 0 0;
       }
-
-      a {
-        text-decoration: none;
-        color: $grey-600;
-      }
-    }
-
-    .info-col {
-      display: none;
     }
 
     .content-col {
@@ -29,25 +21,18 @@
         text-transform: none;
       }
 
-      .settings-wrapper {
-        margin: 0 auto;
-        width: 60%;
-        min-width: 570px;
-        max-width: 1000px;
+      > div {
+        margin-top: $margin * 5;
+      }
 
-        > div {
-          margin-top: $margin * 5;
-        }
+      .admin-note {
+        font-size: small;
+        opacity: 0.5;
+        margin-left: $margin;
+      }
 
-        .admin-note {
-          font-size: small;
-          opacity: 0.5;
-          margin-left: $margin;
-        }
-
-        .button-area {
-          margin-top: $margin * 2;
-        }
+      .button-area {
+        margin-top: $margin * 2;
       }
 
       .file-loader {
