@@ -30,7 +30,6 @@ export class WindowManager {
         nodeIntegration: true,
         enableRemoteModule: true,
         webviewTag: true,
-        nodeIntegrationInSubFrames: true
       },
     });
     this.windowState.manage(this.mainView);
