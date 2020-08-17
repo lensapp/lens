@@ -65,7 +65,6 @@ describe("app start", () => {
     await app.client.click('a[href="/nodes"]')
     await app.client.waitUntilTextExists("div.TableCell", "minikube")
   })
-  /*
 
   it('allows to create a pod', async () => {
     const status = spawnSync("minikube status", {shell: true})
@@ -102,7 +101,6 @@ describe("app start", () => {
     await app.client.click(".name=nginx")
     await app.client.waitUntilTextExists("div.drawer-title-text", "Pod: nginx")
   })
-  */
 
   afterEach(async () => {
     if (app && app.isRunning()) {
