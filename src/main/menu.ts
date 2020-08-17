@@ -1,5 +1,4 @@
-import type { ClusterId } from "../common/cluster-store";
-import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell } from "electron"
+import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
 import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
@@ -30,12 +29,11 @@ export function buildMenu(windowManager: WindowManager) {
     return menuItems;
   }
 
-  function navigate(url: string, clusterId?: ClusterId) {
+  function navigate(url: string) {
     logger.info(`[MENU]: navigating to ${url}`);
     windowManager.navigate({
       channel: "menu:navigate",
       url: url,
-      clusterId: clusterId,
     })
   }
 
@@ -146,33 +144,24 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Back',
         accelerator: 'CmdOrCtrl+[',
         click() {
-          windowManager.getActiveClusterView()?.goBack();
+          webContents.getFocusedWebContents()?.goBack();
         }
       },
       {
         label: 'Forward',
         accelerator: 'CmdOrCtrl+]',
         click() {
-          windowManager.getActiveClusterView()?.goForward();
+          webContents.getFocusedWebContents()?.goForward();
         }
       },
       {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click() {
-          windowManager.getActiveClusterView()?.reload();
+          webContents.getFocusedWebContents()?.reload();
         }
       },
       { role: 'toggleDevTools' },
-      ...activeClusterOnly([
-        {
-          accelerator: "CmdOrCtrl+Shift+I",
-          label: "Toggle Dashboard DevTools",
-          click() {
-            windowManager.getActiveClusterView()?.toggleDevTools();
-          }
-        }
-      ]),
       { type: 'separator' },
       { role: 'resetZoom' },
       { role: 'zoomIn' },

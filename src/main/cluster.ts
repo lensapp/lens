@@ -40,6 +40,7 @@ export interface ClusterState extends ClusterModel {
 
 export class Cluster implements ClusterModel {
   public id: ClusterId;
+  public frameId: number;
   public kubeCtl: Kubectl
   public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
@@ -389,8 +390,8 @@ export class Cluster implements ClusterModel {
   pushState = (state = this.getState()): ClusterState => {
     logger.debug(`[CLUSTER]: push-state`, state);
     broadcastIpc({
-      // webContentId: viewId, // todo: send to cluster-view only
       channel: "cluster:state",
+      frameId: this.frameId,
       args: [state],
     });
     return state;
