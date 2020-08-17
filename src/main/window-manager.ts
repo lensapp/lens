@@ -28,8 +28,8 @@ export class WindowManager {
       backgroundColor: "#1e2124",
       webPreferences: {
         nodeIntegration: true,
+        nodeIntegrationInSubFrames: true,
         enableRemoteModule: true,
-        webviewTag: true,
       },
     });
     this.windowState.manage(this.mainView);
@@ -50,22 +50,12 @@ export class WindowManager {
     initMenu(this);
   }
 
-  navigate({ url, channel, clusterId }: { url: string, channel: string, clusterId?: ClusterId }) {
-    if (clusterId) {
-      this.getClusterView(clusterId)?.send(channel, url);
+  navigate({ url, channel, frameId }: { url: string, channel: string, frameId?: number }) {
+    if (frameId) {
+      this.mainView.webContents.sendToFrame(frameId, channel, url);
     } else {
       this.mainView.webContents.send(channel, url);
     }
-  }
-
-  getActiveClusterView() {
-    return this.getClusterView(this.activeClusterId)
-  }
-
-  getClusterView(clusterId: ClusterId): WebContents {
-    return webContents.getAllWebContents().find(view => {
-      return new URL(view.getURL()).host.split(".")[0] === clusterId;
-    })
   }
 
   async showMain() {

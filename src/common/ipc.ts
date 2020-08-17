@@ -2,106 +2,46 @@
 // https://www.electronjs.org/docs/api/ipc-main
 // https://www.electronjs.org/docs/api/ipc-renderer
 
-import { ipcMain, ipcRenderer, IpcRendererEvent, WebContents, webContents } from "electron"
+import { ipcMain, ipcRenderer, WebContents, webContents } from "electron"
 import logger from "../main/logger";
-import { getRandId } from "./utils";
 
 export type IpcChannel = string;
 
-export enum IpcMode {
-  SYNC = "sync",
-  ASYNC = "async",
-}
-
-export interface IpcChannelRequest<A extends any[] = any> {
-  msgId: string;
-  args: A;
-}
-
-export interface IpcChannelResponse<T extends any[] = any, E = any> {
-  msgId: string;
-  data?: T;
-  error?: E;
-}
-
 export interface IpcChannelOptions {
   channel: IpcChannel; // main <-> renderer communication channel name
-  mode?: IpcMode; // default: "async", use "sync" as last resort: https://www.electronjs.org/docs/api/ipc-renderer#ipcrenderersendsyncchannel-args
-  handle?: (...args: any[]) => any; // main-process message handler
+  handle?: (...args: any[]) => Promise<any> | any; // message handler
   autoBind?: boolean; // auto-bind message handler in main-process, default: true
   timeout?: number; // timeout for waiting response from the sender
-  once?: boolean; // todo: add support
+  once?: boolean; // one-time event
 }
 
-export function createIpcChannel({ autoBind = true, mode = IpcMode.ASYNC, timeout = 0, handle, channel }: IpcChannelOptions) {
-  channel = `${mode}:${channel}`
-
+export function createIpcChannel({ autoBind = true, once, timeout = 0, handle, channel }: IpcChannelOptions) {
   const ipcChannel = {
     channel: channel,
     handleInMain: () => {
       logger.info(`[IPC]: setup channel "${channel}"`);
-
-      ipcMain.on(channel, async (event, req: IpcChannelRequest) => {
-        let resolved = false;
+      const ipcHandler = once ? ipcMain.handleOnce : ipcMain.handle;
+      ipcHandler(channel, async (event, ...args) => {
         let timerId: any;
-
-        function resolve(res: Partial<IpcChannelResponse>) {
-          if (resolved) return;
-          res.msgId = req.msgId; // return back to sender to be able to handle response
-          resolved = true
-          logger.debug(`[IPC]: sending response to "${channel}"`, res);
-          if (mode === IpcMode.SYNC) {
-            event.returnValue = res;
-          } else {
-            event.reply(channel, res);
-          }
-        }
-
-        if (timeout > 0) {
-          timerId = setTimeout(() => {
-            const timeoutError = new Error(`[IPC]: response timeout in ${timeout}ms`);
-            resolve({ error: timeoutError })
-          }, timeout);
-        }
-
         try {
-          const data = await handle(...req.args); // todo: maybe exec in separate thread/worker
-          resolve({ data })
+          if (timeout > 0) {
+            timerId = setTimeout(() => {
+              throw new Error(`[IPC]: response timeout in ${timeout}ms`)
+            }, timeout);
+          }
+          return await handle(...args); // todo: maybe exec in separate thread/worker
         } catch (error) {
-          resolve({
-            error: String(error)
-          })
+          throw error
         } finally {
           clearTimeout(timerId);
         }
       })
     },
-    invokeFromRenderer: async (...args: any[]) => {
-      const req: IpcChannelRequest = {
-        msgId: getRandId({ prefix: "ipc-msg-id" }),
-        args: args,
-      }
-      if (mode === IpcMode.SYNC) {
-        ipcRenderer.sendSync(channel, req)
-      } else {
-        ipcRenderer.send(channel, req)
-      }
-      return new Promise(async (resolve, reject) => {
-        ipcRenderer.on(channel, function waitResponseHandler(event: IpcRendererEvent, res: IpcChannelResponse) {
-          if (req.msgId === res.msgId) {
-            const meta = { ...req, ...res };
-            if (res.data) {
-              logger.debug(`[IPC]: "${channel}" resolve`, meta);
-              resolve(res.data);
-            }
-            if (res.error) {
-              logger.error(`[IPC]: "${channel}" reject`, meta);
-              reject(res.error);
-            }
-            ipcRenderer.off(channel, waitResponseHandler); // unsubscribe since handled
-          }
-        });
-      })
+    removeHandler() {
+      ipcMain.removeHandler(channel);
+    },
+    invokeFromRenderer: async <T>(...args: any[]): Promise<T> => {
+      return ipcRenderer.invoke(channel, ...args);
     },
   }
   if (autoBind && ipcMain) {
@@ -112,13 +52,14 @@ export function createIpcChannel({ autoBind = true, mode = IpcMode.ASYNC, timeou
 
 export interface IpcBroadcastParams<A extends any[] = any> {
   channel: IpcChannel
-  webContentId?: number; // sends to single webContents view
+  webContentId?: number; // send to single webContents view
+  frameId?: number; // send to inner frame of webContents
   filter?: (webContent: WebContents) => boolean
   timeout?: number; // todo: add support
   args?: A;
 }
 
-export function broadcastIpc({ channel, webContentId, filter, args = [] }: IpcBroadcastParams) {
+export function broadcastIpc({ channel, frameId, webContentId, filter, args = [] }: IpcBroadcastParams) {
   const singleView = webContentId ? webContents.fromId(webContentId) : null;
   let views = singleView ? [singleView] : webContents.getAllWebContents();
   if (filter) {
@@ -127,6 +68,9 @@ export function broadcastIpc({ channel, webContentId, filter, args = [] }: IpcBr
   views.forEach(webContent => {
     const type = webContent.getType();
     logger.debug(`[IPC]: broadcasting "${channel}" to ${type}=${webContent.id}`, { args });
-    webContent.send(channel, ...[args].flat());
+    webContent.send(channel, ...args);
+    if (frameId) {
+      webContent.sendToFrame(frameId, channel, ...args)
+    }
   })
 }

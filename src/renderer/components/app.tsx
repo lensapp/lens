@@ -32,13 +32,17 @@ import { ErrorBoundary } from "./error-boundary";
 import { Terminal } from "./dock/terminal";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
+import { clusterIpc } from "../../common/cluster-ipc";
+import { webFrame } from "electron";
 
 @observer
 export class App extends React.Component {
   static async init() {
-    logger.info(`[APP]: Init dashboard, clusterId=${getHostedClusterId()}`)
+    const clusterId = getHostedClusterId();
+    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}`)
     await Terminal.preloadFonts()
-    await getHostedCluster().whenInitialized; // wait for cluster-state before initial render
+    await clusterIpc.init.invokeFromRenderer(clusterId, webFrame.routingId);
+    await getHostedCluster().whenInitialized;
   }
 
   get startURL() {

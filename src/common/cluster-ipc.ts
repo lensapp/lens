@@ -5,20 +5,24 @@ import { tracker } from "./tracker";
 export const clusterIpc = {
   init: createIpcChannel({
     channel: "cluster:init",
-    handle: async (clusterId: ClusterId) => {
-      return clusterStore.getById(clusterId)?.pushState();
+    handle: async (clusterId: ClusterId, frameId: number) => {
+      const cluster = clusterStore.getById(clusterId);
+      if (cluster) {
+        cluster.frameId = frameId; // save cluster's webFrame.routingId to be able to send push-updates
+        return cluster.pushState();
+      }
     },
   }),
   activate: createIpcChannel({
     channel: "cluster:activate",
-    handle: async (clusterId: ClusterId = clusterStore.activeClusterId) => {
+    handle: (clusterId: ClusterId) => {
       return clusterStore.getById(clusterId)?.activate();
     },
   }),
 
   disconnect: createIpcChannel({
     channel: "cluster:disconnect",
-    handle: (clusterId: ClusterId = clusterStore.activeClusterId) => {
+    handle: (clusterId: ClusterId) => {
       tracker.event("cluster", "stop");
       return clusterStore.getById(clusterId)?.disconnect();
     },
@@ -29,7 +33,6 @@ export const clusterIpc = {
     handle: async (clusterId: ClusterId, feature: string, config?: any) => {
       tracker.event("cluster", "install", feature);
       const cluster = clusterStore.getById(clusterId);
-
       if (cluster) {
         await cluster.installFeature(feature, config)
       } else {
