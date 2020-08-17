@@ -30,6 +30,7 @@ export class WindowManager {
         nodeIntegration: true,
         enableRemoteModule: true,
         webviewTag: true,
+        nodeIntegrationInSubFrames: true
       },
     });
     this.windowState.manage(this.mainView);
@@ -73,7 +74,7 @@ export class WindowManager {
       await this.showSplash();
       await this.mainView.loadURL(`http://localhost:${this.proxyPort}`)
       this.mainView.show();
-      this.splashWindow.hide();
+      this.splashWindow.close();
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString())
     }
@@ -89,6 +90,9 @@ export class WindowManager {
         frame: false,
         resizable: false,
         show: false,
+        webPreferences: {
+          nodeIntegration: true
+        }
       });
       await this.splashWindow.loadURL("static://splash.html");
     }

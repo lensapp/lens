@@ -71,8 +71,9 @@ export class AddCluster extends React.Component {
     if (value instanceof KubeConfig) {
       const context = value.currentContext;
       const isNew = userStore.newContexts.has(context);
+      const className = `${context} kube-context flex gaps align-center`
       return (
-        <div className="kube-context flex gaps align-center">
+        <div className={className}>
           <span>{context}</span>
           {isNew && <Icon material="fiber_new"/>}
         </div>
@@ -173,6 +174,7 @@ export class AddCluster extends React.Component {
           options={this.clusterOptions}
           onChange={({ value }: SelectOption) => this.clusterConfig = value}
           formatOptionLabel={this.formatClusterContextLabel}
+          id="kubecontext-select"
         />
         <div className="cluster-settings">
           <a href="#" onClick={() => this.showSettings = !this.showSettings}>
