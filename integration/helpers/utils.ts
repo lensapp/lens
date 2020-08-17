@@ -14,7 +14,6 @@ case "darwin":
 }
 
 export function setup(): Application {
-  const userData = process.cwd() + "/.spectron"
   return new Application({
     // path to electron app
     args: [],
@@ -29,9 +28,10 @@ export function setup(): Application {
 }
 
 export async function tearDown(app: Application) {
+  const pid = app.mainProcess.pid
   await app.stop()
   try {
-    process.kill(app.mainProcess.pid, 0);
+    process.kill(pid, 0);
   } catch(e) {
     return
   }

@@ -1,9 +1,6 @@
 import { Application } from "spectron"
 import * as util from "../helpers/utils"
 import { spawnSync } from "child_process"
-import { stat } from "fs"
-import logger from "../../src/main/logger"
-import AppCanvas from "material-ui/internal/AppCanvas"
 
 jest.setTimeout(20000)
 
