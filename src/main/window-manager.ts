@@ -58,12 +58,6 @@ export class WindowManager {
     }
   }
 
-  getClusterView(clusterId: ClusterId): WebContents {
-    return webContents.getAllWebContents().find(view => {
-      return new URL(view.getURL()).host.split(".")[0] === clusterId;
-    })
-  }
-
   async showMain() {
     try {
       await this.showSplash();
