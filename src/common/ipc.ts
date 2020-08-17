@@ -9,7 +9,7 @@ export type IpcChannel = string;
 
 export interface IpcChannelOptions {
   channel: IpcChannel; // main <-> renderer communication channel name
-  handle?: (...args: any[]) => void; // message handler
+  handle?: (...args: any[]) => Promise<any> | any; // message handler
   autoBind?: boolean; // auto-bind message handler in main-process, default: true
   timeout?: number; // timeout for waiting response from the sender
   once?: boolean; // one-time event
