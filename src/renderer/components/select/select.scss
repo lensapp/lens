@@ -23,7 +23,7 @@ html {
     &--is-disabled {
       opacity: .75;
       cursor: not-allowed;
-      pointer-events: auto;
+      pointer-events: none;
     }
 
     &__control {

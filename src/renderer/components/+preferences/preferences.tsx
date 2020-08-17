@@ -21,7 +21,6 @@ import { Tooltip } from "../tooltip";
 @observer
 export class Preferences extends React.Component {
   @observable helmLoading = false;
-  @observable helmUpdating = false;
   @observable helmRepos: HelmRepo[] = [];
   @observable helmAddedRepos = observable.map<string, HelmRepo>();
 
@@ -90,9 +89,9 @@ export class Preferences extends React.Component {
       Notifications.ok(<Trans>Helm branch <b>{repo.name}</b> already in use</Trans>)
       return;
     }
-    this.helmUpdating = false;
+    this.helmLoading = true;
     await this.addRepo(repo);
-    this.helmUpdating = false;
+    this.helmLoading = false;
   }
 
   formatHelmOptionLabel = ({ value: repo }: SelectOption<HelmRepo>) => {
@@ -135,14 +134,14 @@ export class Preferences extends React.Component {
           <Select
             placeholder={<Trans>Repositories</Trans>}
             isLoading={this.helmLoading}
-            isDisabled={this.helmUpdating}
+            isDisabled={this.helmLoading}
             options={this.helmOptions}
             onChange={this.onRepoSelect}
             formatOptionLabel={this.formatHelmOptionLabel}
             controlShouldRenderValue={false}
           />
           <div className="repos flex gaps column">
-            {this.helmLoading && <Spinner center />}
+            
             {Array.from(this.helmAddedRepos).map(([name, repo]) => {
               const tooltipId = `message-${name}`;
               return (
