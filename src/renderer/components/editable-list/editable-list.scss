@@ -1,0 +1,12 @@
+.EditableList {
+  .EditableListContents {
+    display: grid;
+    grid-template-columns: 1fr auto;
+
+    .ValueRemove {
+      .Icon {
+        justify-content: unset;
+      }
+    }
+  }
+}
