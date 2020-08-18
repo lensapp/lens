@@ -13,7 +13,7 @@ function infoLog(...args: any[]) {
 
 export function migration<S = any>({ version, run }: MigrationOpts) {
   return {
-    [version]: async (storeConfig: Config<S>) => {
+    [version]: (storeConfig: Config<S>) => {
       infoLog(`STORE MIGRATION (${storeConfig.path}): ${version}`,);
       run(storeConfig, infoLog);
     }
