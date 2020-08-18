@@ -50,11 +50,6 @@ export interface ClusterPreferences {
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
-  static get iconsDir() {
-    // TODO: remove remote cheat
-    return path.join((app || remote.app).getPath("userData"), "icons");
-  }
-
   private constructor() {
     super({
       configName: "lens-cluster-store",
