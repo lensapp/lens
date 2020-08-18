@@ -24,6 +24,10 @@
     background-color: var(--clusters-menu-bgc);
     border-radius: $radius;
 
+    > div {
+      flex: 1;
+    }
+
     > .error {
       border-radius: $radius;
       padding: $padding;

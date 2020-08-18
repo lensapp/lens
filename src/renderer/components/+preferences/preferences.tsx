@@ -141,7 +141,6 @@ export class Preferences extends React.Component {
             controlShouldRenderValue={false}
           />
           <div className="repos flex gaps column">
-            
             {Array.from(this.helmAddedRepos).map(([name, repo]) => {
               const tooltipId = `message-${name}`;
               return (
