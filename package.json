@@ -19,9 +19,9 @@
     "compile:main": "webpack --config webpack.main.ts",
     "compile:renderer": "webpack --config webpack.renderer.ts",
     "compile:i18n": "lingui compile",
-    "build:linux": "yarn compile && electron-builder --linux --dir -c.productName=LensDev",
-    "build:mac": "yarn compile && electron-builder --mac --dir -c.productName=LensDev",
-    "build:win": "yarn compile && electron-builder --win --dir -c.productName=LensDev",
+    "build:linux": "yarn compile && electron-builder --linux --dir -c.productName=Lens",
+    "build:mac": "yarn compile && electron-builder --mac --dir -c.productName=Lens",
+    "build:win": "yarn compile && electron-builder --win --dir -c.productName=Lens",
     "test": "jest --env=jsdom src $@",
     "integration": "jest --coverage integration $@",
     "dist": "yarn compile && electron-builder --publish onTag",
@@ -33,7 +33,7 @@
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "lint": "eslint $@ --ext js,ts,tsx --max-warnings=0  src/",
-    "rebuild-pty": "electron-rebuild -f -w node-pty"
+    "rebuild-pty": "yarn run electron-rebuild -f -w node-pty"
   },
   "config": {
     "bundledKubectlVersion": "1.17.4",
@@ -297,7 +297,7 @@
     "react-select": "^3.1.0",
     "react-window": "^1.8.5",
     "sass-loader": "^8.0.2",
-    "spectron": "^8.0.0",
+    "spectron": "11.0.0",
     "style-loader": "^1.2.1",
     "terser-webpack-plugin": "^3.0.3",
     "ts-jest": "^26.1.0",

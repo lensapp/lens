@@ -3,13 +3,13 @@ import { Application } from "spectron";
 let appPath = ""
 switch(process.platform) {
 case "win32":
-  appPath = "./dist/win-unpacked/LensDev.exe"
+  appPath = "./dist/win-unpacked/Lens.exe"
   break
 case "linux":
   appPath = "./dist/linux-unpacked/kontena-lens"
   break
 case "darwin":
-  appPath = "./dist/mac/LensDev.app/Contents/MacOS/LensDev"
+  appPath = "./dist/mac/Lens.app/Contents/MacOS/Lens"
   break
 }
 
@@ -20,6 +20,10 @@ export function setup(): Application {
     path: appPath,
     startTimeout: 30000,
     waitTimeout: 30000,
+    chromeDriverArgs: ['remote-debugging-port=9222'],
+    env: {
+      CICD: "true"
+    }
   })
 }
 
