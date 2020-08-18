@@ -8,10 +8,11 @@ import fse from "fs-extra"
 import fileType from "file-type";
 import { ClusterModel } from "../../common/cluster-store";
 import { loadConfig, saveConfigToAppFiles } from "../../common/kube-helpers";
+import makeSynchronous from "make-synchronous"
 
 export default migration({
   version: "3.6.0-beta.1",
-  async run(store, printLog) {
+  run(store, printLog) {
     const kubeConfigBase = path.join((app || remote.app).getPath("userData"), "kubeconfigs")
     const storedClusters: ClusterModel[] = store.get("clusters") || [];
 
@@ -20,7 +21,7 @@ export default migration({
 
     printLog("Number of clusters to migrate: ", storedClusters.length)
     const migratedClusters = storedClusters
-      .map(async cluster => {
+      .map(cluster => {
         /**
          * migrate kubeconfig
          */
@@ -40,8 +41,8 @@ export default migration({
          */
         try {
           if (cluster.preferences.icon) {
-            const fileData = await fse.readFile(cluster.preferences.icon);
-            const { mime } = await fileType.fromBuffer(fileData);
+            const fileData = fse.readFileSync(cluster.preferences.icon);
+            const { mime } = makeSynchronous(() => fileType.fromBuffer(fileData))();
 
             if (!mime) {
               throw "unknown icon file type, deleting...";

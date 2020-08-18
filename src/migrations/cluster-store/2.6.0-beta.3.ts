@@ -3,7 +3,7 @@ import yaml from "js-yaml"
 
 export default migration({
   version: "2.6.0-beta.3",
-  async run(store, log) {
+  run(store, log) {
     for (const value of store) {
       const clusterKey = value[0];
       if (clusterKey === "__internal__") continue

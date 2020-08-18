@@ -3,7 +3,7 @@ import { migration } from "../migration-wrapper";
 
 export default migration({
   version: "2.7.0-beta.0",
-  async run(store, log) {
+  run(store, log) {
     for (const value of store) {
       const clusterKey = value[0];
       if (clusterKey === "__internal__") continue

@@ -5,7 +5,7 @@ import { migration } from "../migration-wrapper";
 
 export default migration({
   version: "2.0.0-beta.2",
-  async run(store, log) {
+  run(store, log) {
     for (const value of store) {
       const contextName = value[0];
       // Looping all the keys gives out the store internal stuff too...
