@@ -51,6 +51,10 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
 
   @action
   setActive(id = WorkspaceStore.defaultId) {
+    if (!this.getById(id)) {
+      throw new Error(`workspace ${id} doesn't exist`);
+    }
+
     this.currentWorkspaceId = id;
   }
 

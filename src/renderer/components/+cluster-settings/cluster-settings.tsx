@@ -1,6 +1,7 @@
 import "./cluster-settings.scss";
 
 import React from "react";
+import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { Features } from "./features";
 import { Removal } from "./removal";

@@ -1,11 +1,10 @@
 import { app, remote } from "electron";
 import { KubeConfig, V1Node, V1Pod } from "@kubernetes/client-node"
-import { ensureDirSync, readFile, writeFileSync } from "fs-extra";
+import fse, { ensureDirSync, readFile, writeFileSync } from "fs-extra";
 import path from "path"
 import os from "os"
 import yaml from "js-yaml"
 import logger from "../main/logger";
-import fse from "fs-extra"
 
 function resolveTilde(filePath: string) {
   if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
@@ -135,8 +134,6 @@ export function podHasIssues(pod: V1Pod) {
   )
 }
 
-// Logic adapted from dashboard
-// see: https://github.com/kontena/kontena-k8s-dashboard/blob/7d8f9cb678cc817a22dd1886c5e79415b212b9bf/client/api/endpoints/nodes.api.ts#L147
 export function getNodeWarningConditions(node: V1Node) {
   return node.status.conditions.filter(c =>
     c.status.toLowerCase() === "true" && c.type !== "Ready" && c.type !== "HostUpgrades"

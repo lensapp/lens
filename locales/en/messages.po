@@ -2416,6 +2416,10 @@ msgstr "There are no logs available."
 msgid "This field is required"
 msgstr "This field is required"
 
+#: src/renderer/components/input/input.validators.ts:39
+msgid "A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics."
+msgstr "A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics."
+
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:104
 msgid "This is the quick launch menu."
 msgstr "This is the quick launch menu."
