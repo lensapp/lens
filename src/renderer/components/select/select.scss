@@ -23,7 +23,7 @@ html {
     &--is-disabled {
       opacity: .75;
       cursor: not-allowed;
-      pointer-events: auto;
+      pointer-events: none;
     }
 
     &__control {
@@ -40,6 +40,10 @@ html {
 
     &__value-container {
       margin-bottom: 1px;
+    }
+
+    &__single-value {
+      color: var(--textColorSecondary);
     }
 
     &__indicator {

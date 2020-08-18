@@ -28,14 +28,21 @@ import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../../common/rbac";
-import { ClusterSettings, clusterSettingsRoute } from "./+cluster-settings";
 import { ErrorBoundary } from "./error-boundary";
 import { Terminal } from "./dock/terminal";
+import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
+import logger from "../../main/logger";
+import { clusterIpc } from "../../common/cluster-ipc";
+import { webFrame } from "electron";
 
 @observer
 export class App extends React.Component {
   static async init() {
+    const clusterId = getHostedClusterId();
+    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}`)
     await Terminal.preloadFonts()
+    await clusterIpc.init.invokeFromRenderer(clusterId, webFrame.routingId);
+    await getHostedCluster().whenInitialized;
   }
 
   get startURL() {
@@ -52,7 +59,6 @@ export class App extends React.Component {
           <ErrorBoundary>
             <Switch>
               <Route component={Cluster} {...clusterRoute}/>
-              <Route component={ClusterSettings} {...clusterSettingsRoute}/>
               <Route component={Nodes} {...nodesRoute}/>
               <Route component={Workloads} {...workloadsRoute}/>
               <Route component={Config} {...configRoute}/>
@@ -66,9 +72,9 @@ export class App extends React.Component {
               <Redirect exact from="/" to={this.startURL}/>
               <Route component={NotFound}/>
             </Switch>
-            <KubeObjectDetails/>
             <Notifications/>
             <ConfirmDialog/>
+            <KubeObjectDetails/>
             <KubeConfigDialog/>
             <AddRoleBindingDialog/>
             <PodLogsDialog/>

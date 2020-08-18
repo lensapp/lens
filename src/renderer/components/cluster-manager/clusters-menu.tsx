@@ -20,7 +20,7 @@ import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
-import { clusterStatusURL } from "./cluster-status.route";
+import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
 
 // fixme: allow to rearrange clusters with drag&drop
 
@@ -33,11 +33,8 @@ export class ClustersMenu extends React.Component<Props> {
   @observable showHint = true;
 
   showCluster = (clusterId: ClusterId) => {
-    if (clusterStore.activeClusterId === clusterId) {
-      navigate("/"); // redirect to index
-    } else {
-      clusterStore.activeClusterId = clusterId;
-    }
+    clusterStore.setActive(clusterId);
+    navigate(clusterViewURL({ params: { clusterId } }));
   }
 
   addCluster = () => {
@@ -50,16 +47,22 @@ export class ClustersMenu extends React.Component<Props> {
 
     menu.append(new MenuItem({
       label: _i18n._(t`Settings`),
-      click: () => navigate(clusterSettingsURL())
+      click: () => {
+        navigate(clusterSettingsURL({
+          params: {
+            clusterId: cluster.id
+          }
+        }))
+      }
     }));
     if (cluster.online) {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
         click: async () => {
-          await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
-          if (cluster.id === clusterStore.activeClusterId) {
-            navigate(clusterStatusURL());
+          if (clusterStore.isActive(cluster.id)) {
+            navigate(landingURL());
           }
+          await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
         }
       }))
     }
@@ -72,7 +75,10 @@ export class ClustersMenu extends React.Component<Props> {
             accent: true,
             label: _i18n._(t`Remove`),
           },
-          ok: () => clusterStore.removeById(cluster.id),
+          ok: () => {
+            clusterStore.removeById(cluster.id);
+            navigate(landingURL());
+          },
           message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
         })
       }
@@ -110,7 +116,7 @@ export class ClustersMenu extends React.Component<Props> {
               key={cluster.id}
               showErrors={true}
               cluster={cluster}
-              isActive={cluster.id === clusterStore.activeClusterId}
+              isActive={cluster.id === getMatchedClusterId()}
               onClick={() => this.showCluster(cluster.id)}
               onContextMenu={() => this.showContextMenu(cluster)}
             />

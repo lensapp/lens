@@ -135,8 +135,4 @@ export class BaseStore<T = any> extends Singleton {
       recurseEverything: true,
     })
   }
-
-  * [Symbol.iterator]() {
-    yield* Object.entries(this.toJSON());
-  }
 }

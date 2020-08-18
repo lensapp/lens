@@ -1,9 +1,10 @@
+import "../common/cluster-ipc";
 import type http from "http"
 import { autorun } from "mobx";
 import { ClusterId, clusterStore } from "../common/cluster-store"
 import { Cluster } from "./cluster"
-import { clusterIpc } from "../common/cluster-ipc";
 import logger from "./logger";
+import { apiKubePrefix } from "../common/vars";
 
 export class ClusterManager {
   constructor(public readonly port: number) {
@@ -29,13 +30,6 @@ export class ClusterManager {
     }, {
       delay: 250
     });
-
-    // listen for ipc-events that must/can be handled *only* in main-process (nodeIntegration=true)
-    clusterIpc.activate.handleInMain();
-    clusterIpc.disconnect.handleInMain();
-    clusterIpc.installFeature.handleInMain();
-    clusterIpc.uninstallFeature.handleInMain();
-    clusterIpc.upgradeFeature.handleInMain();
   }
 
   stop() {
@@ -49,8 +43,23 @@ export class ClusterManager {
   }
 
   getClusterForRequest(req: http.IncomingMessage): Cluster {
-    logger.info(`getClusterForRequest(): ${req.headers.host}${req.url}`)
-    const clusterId = req.headers.host.split(".")[0]
-    return this.getCluster(clusterId)
+    let cluster: Cluster = null
+
+    // lens-server is connecting to 127.0.0.1:<port>/<uid>
+    if (req.headers.host.startsWith("127.0.0.1")) {
+      const clusterId = req.url.split("/")[1]
+      if (clusterId) {
+        cluster = this.getCluster(clusterId)
+        if (cluster) {
+          // we need to swap path prefix so that request is proxied to kube api
+          req.url = req.url.replace(`/${clusterId}`, apiKubePrefix)
+        }
+      }
+    } else {
+      const id = req.headers.host.split(".")[0]
+      cluster = this.getCluster(id)
+    }
+
+    return cluster;
   }
 }

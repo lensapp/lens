@@ -15,8 +15,9 @@ import { getKubeConfigLocal, loadConfig, saveConfigToAppFiles, splitConfig, vali
 import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid"
-import { navigation } from "../../navigation";
+import { navigate } from "../../navigation";
 import { userStore } from "../../../common/user-store";
+import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 
 @observer
 export class AddCluster extends React.Component {
@@ -70,8 +71,9 @@ export class AddCluster extends React.Component {
     if (value instanceof KubeConfig) {
       const context = value.currentContext;
       const isNew = userStore.newContexts.has(context);
+      const className = `${context} kube-context flex gaps align-center`
       return (
-        <div className="kube-context flex gaps align-center">
+        <div className={className}>
           <span>{context}</span>
           {isNew && <Icon material="fiber_new"/>}
         </div>
@@ -102,7 +104,7 @@ export class AddCluster extends React.Component {
           httpsProxy: proxyServer || undefined,
         },
       });
-      navigation.goBack(); // return to previous opened page for the cluster view
+      navigate(clusterViewURL({ params: { clusterId } }))
     } catch (err) {
       this.error = String(err);
     } finally {
@@ -124,7 +126,7 @@ export class AddCluster extends React.Component {
           to allow you to operate easily on multiple clusters and/or contexts.
         </p>
         <p>
-          For more information on kubeconfig see <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/" target="_blank">Kubernetes docs</a>
+          For more information on kubeconfig see <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/" target="_blank">Kubernetes docs</a>.
         </p>
         <p>
           NOTE: Any manually added cluster is not merged into your kubeconfig file.
@@ -137,22 +139,20 @@ export class AddCluster extends React.Component {
           app.
         </p>
         <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#option-1-oidc-authenticator" target="_blank">
-          <h4>OIDC (OpenID Connect)</h4>
+          <h3>OIDC (OpenID Connect)</h3>
         </a>
-        <div>
-          <p>
-            When connecting Lens to OIDC enabled cluster, there's few things you as a user need to take into account.
-          </p>
-          <b>Dedicated refresh token</b>
-          <p>
-            As Lens app utilized kubeconfig is "disconnected" from your main kubeconfig Lens needs to have it's own refresh token it utilizes.
-            If you share the refresh token with e.g. <code>kubectl</code> who ever uses the token first will invalidate it for the next user.
-            One way to achieve this is with <a href="https://github.com/int128/kubelogin" target="_blank">kubelogin</a> tool by removing the tokens
-            (both <code>id_token</code> and <code>refresh_token</code>) from
-            the config and issuing <code>kubelogin</code> command. That'll take you through the login process and will result you having "dedicated" refresh token.
-          </p>
-        </div>
-        <h4>Exec auth plugins</h4>
+        <p>
+          When connecting Lens to OIDC enabled cluster, there's few things you as a user need to take into account.
+        </p>
+        <p><b>Dedicated refresh token</b></p>
+        <p>
+          As Lens app utilized kubeconfig is "disconnected" from your main kubeconfig Lens needs to have it's own refresh token it utilizes.
+          If you share the refresh token with e.g. <code>kubectl</code> who ever uses the token first will invalidate it for the next user.
+          One way to achieve this is with <a href="https://github.com/int128/kubelogin" target="_blank">kubelogin</a> tool by removing the tokens
+          (both <code>id_token</code> and <code>refresh_token</code>) from
+          the config and issuing <code>kubelogin</code> command. That'll take you through the login process and will result you having "dedicated" refresh token.
+        </p>
+        <h3>Exec auth plugins</h3>
         <p>
           When using <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#configuration" target="_blank">exec auth</a> plugins make sure the paths that are used to call
           any binaries
@@ -167,12 +167,14 @@ export class AddCluster extends React.Component {
     return (
       <WizardLayout className="AddCluster" infoPanel={this.renderInfo()}>
         <h2><Trans>Add Cluster</Trans></h2>
+        <p>Choose config:</p>
         <Select
           placeholder={<Trans>Select kubeconfig</Trans>}
           value={this.clusterConfig}
           options={this.clusterOptions}
           onChange={({ value }: SelectOption) => this.clusterConfig = value}
           formatOptionLabel={this.formatClusterContextLabel}
+          id="kubecontext-select"
         />
         <div className="cluster-settings">
           <a href="#" onClick={() => this.showSettings = !this.showSettings}>
@@ -181,14 +183,15 @@ export class AddCluster extends React.Component {
         </div>
         {this.showSettings && (
           <div className="proxy-settings">
+            <p>HTTP Proxy server. Used for communicating with Kubernetes API.</p>
             <Input
               autoFocus
-              placeholder={_i18n._(t`A HTTP proxy server URL (format: http://<address>:<port>)`)}
               value={this.proxyServer}
               onChange={value => this.proxyServer = value}
+              theme="round-black"
             />
             <small className="hint">
-              <Trans>HTTP Proxy server. Used for communicating with Kubernetes API.</Trans>
+              {'A HTTP proxy server URL (format: http://<address>:<port>).'}
             </small>
           </div>
         )}
@@ -197,6 +200,7 @@ export class AddCluster extends React.Component {
             <p>Kubeconfig:</p>
             <AceEditor
               autoFocus
+              showGutter={false}
               mode="yaml"
               value={this.customConfig}
               onChange={value => this.customConfig = value}
@@ -209,7 +213,7 @@ export class AddCluster extends React.Component {
         <div className="actions-panel">
           <Button
             primary
-            label={<Trans>Add cluster</Trans>}
+            label={<Trans>Add cluster(s)</Trans>}
             onClick={this.addCluster}
             waiting={this.isWaiting}
           />

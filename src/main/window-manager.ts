@@ -1,5 +1,7 @@
-import { BrowserWindow, shell } from "electron"
+import type { ClusterId } from "../common/cluster-store";
+import { BrowserWindow, dialog, ipcMain, shell, WebContents, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
+import { observable } from "mobx";
 import { initMenu } from "./menu";
 
 export class WindowManager {
@@ -7,9 +9,9 @@ export class WindowManager {
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
 
-  constructor(protected proxyPort: number) {
-    initMenu(this);
+  @observable activeClusterId: ClusterId;
 
+  constructor(protected proxyPort: number) {
     // Manage main window size and position with state persistence
     this.windowState = windowStateKeeper({
       defaultHeight: 900,
@@ -26,6 +28,7 @@ export class WindowManager {
       backgroundColor: "#1e2124",
       webPreferences: {
         nodeIntegration: true,
+        nodeIntegrationInSubFrames: true,
         enableRemoteModule: true,
       },
     });
@@ -37,20 +40,33 @@ export class WindowManager {
       shell.openExternal(url);
     });
 
+    // track visible cluster from ui
+    ipcMain.on("cluster-view:change", (event, clusterId: ClusterId) => {
+      this.activeClusterId = clusterId;
+    });
+
     // load & show app
     this.showMain();
+    initMenu(this);
   }
 
-  // fixme
-  navigateMain(url: string) {
-    this.mainView.webContents.executeJavaScript("console.log('implement me!')")
+  navigate({ url, channel, frameId }: { url: string, channel: string, frameId?: number }) {
+    if (frameId) {
+      this.mainView.webContents.sendToFrame(frameId, channel, url);
+    } else {
+      this.mainView.webContents.send(channel, url);
+    }
   }
 
   async showMain() {
-    await this.showSplash();
-    await this.mainView.loadURL(`http://localhost:${this.proxyPort}`)
-    this.mainView.show();
-    this.splashWindow.hide();
+    try {
+      await this.showSplash();
+      await this.mainView.loadURL(`http://localhost:${this.proxyPort}`)
+      this.mainView.show();
+      this.splashWindow.close();
+    } catch (err) {
+      dialog.showErrorBox("ERROR!", err.toString())
+    }
   }
 
   async showSplash() {
@@ -63,6 +79,9 @@ export class WindowManager {
         frame: false,
         resizable: false,
         show: false,
+        webPreferences: {
+          nodeIntegration: true
+        }
       });
       await this.splashWindow.loadURL("static://splash.html");
     }

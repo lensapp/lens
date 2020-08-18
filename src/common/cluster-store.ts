@@ -62,11 +62,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       migrations: migrations,
     });
     if (ipcRenderer) {
-      ipcRenderer.on("cluster:state", (event, clusterState: ClusterState) => {
+      ipcRenderer.on("cluster:state", (event, model: ClusterState) => {
         this.applyWithoutSync(() => {
-          logger.debug(`[CLUSTER-STORE]: received state update for cluster=${clusterState.id}`, clusterState);
-          const cluster = this.getById(clusterState.id);
-          if (cluster) cluster.updateModel(clusterState)
+          logger.debug(`[CLUSTER-STORE]: received push-state at ${location.host}`, model);
+          this.getById(model.id)?.updateModel(model);
         })
       })
     }
@@ -82,6 +81,14 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @computed get clustersList(): Cluster[] {
     return Array.from(this.clusters.values());
+  }
+
+  isActive(id: ClusterId) {
+    return this.activeClusterId === id;
+  }
+
+  setActive(id: ClusterId) {
+    this.activeClusterId = id;
   }
 
   hasClusters() {
@@ -156,11 +163,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     this.activeClusterId = newClusters.has(activeCluster) ? activeCluster : null;
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
-
-    // "auto-select" first cluster if available
-    if (!this.activeClusterId && newClusters.size) {
-      this.activeClusterId = Array.from(newClusters.values())[0].id;
-    }
   }
 
   toJSON(): ClusterStoreModel {

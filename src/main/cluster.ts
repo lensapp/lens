@@ -40,6 +40,7 @@ export interface ClusterState extends ClusterModel {
 
 export class Cluster implements ClusterModel {
   public id: ClusterId;
+  public frameId: number;
   public kubeCtl: Kubectl
   public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
@@ -67,9 +68,8 @@ export class Cluster implements ClusterModel {
   @observable allowedNamespaces: string[] = [];
   @observable allowedResources: string[] = [];
 
-  @computed get host() {
-    const proxyHost = new URL(this.kubeProxyUrl).host;
-    return `${this.id}.${proxyHost}`
+  @computed get available() {
+    return this.accessible && !this.disconnected;
   }
 
   constructor(model: ClusterModel) {
@@ -79,7 +79,7 @@ export class Cluster implements ClusterModel {
   @action
   updateModel(model: ClusterModel) {
     Object.assign(this, model);
-    this.apiUrl = this.getKubeconfig().getCurrentCluster().server;
+    this.apiUrl = this.getKubeconfig().getCurrentCluster()?.server;
     this.contextName = this.contextName || this.preferences.clusterName;
   }
 
@@ -222,8 +222,9 @@ export class Cluster implements ClusterModel {
     return request(apiUrl, {
       json: true,
       timeout: 5000,
+      ...options,
       headers: {
-        Host: this.host, // provide cluster-id for ClusterManager.getClusterForRequest()
+        Host: `${this.id}.${new URL(this.kubeProxyUrl).host}`, // required in ClusterManager.getClusterForRequest()
         ...(options.headers || {}),
       },
     })
@@ -233,6 +234,7 @@ export class Cluster implements ClusterModel {
     const prometheusPrefix = this.preferences.prometheus?.prefix || "";
     const metricsPath = `/api/v1/namespaces/${prometheusPath}/proxy${prometheusPrefix}/api/v1/query_range`;
     return this.k8sRequest(metricsPath, {
+      timeout: 0,
       resolveWithFullResponse: false,
       json: true,
       qs: queryParams,
@@ -388,8 +390,8 @@ export class Cluster implements ClusterModel {
   pushState = (state = this.getState()): ClusterState => {
     logger.debug(`[CLUSTER]: push-state`, state);
     broadcastIpc({
-      // webContentId: viewId, // todo: send to cluster-view only
       channel: "cluster:state",
+      frameId: this.frameId,
       args: [state],
     });
     return state;

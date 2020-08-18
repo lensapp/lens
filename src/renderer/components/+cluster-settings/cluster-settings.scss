@@ -1,86 +1,83 @@
 .ClusterSettings {
-    overflow-y: scroll;
+  .WizardLayout {
     grid-template-columns: unset;
+    grid-template-rows: 76px 1fr;
+    padding: 0;
 
-    .info-col {
-        display: none;
+    .head-col {
+      justify-content: space-between;
+
+      :nth-child(2) {
+        flex: 1 0 0;
+      }
     }
 
     .content-col {
-        margin-right: unset;
-    }
+      margin: 0;
+      padding-top: $padding * 3;
+      background-color: transparent;
 
-    * {
-        margin-top: 40px;
+      .SubTitle {
+        text-transform: none;
+      }
 
-        &:first-child {
-            margin-top: 0px;
-        }
-    }
+      > div {
+        margin-top: $margin * 5;
+      }
 
-    h4 {
-        margin-top: 20px;
+      .admin-note {
+        font-size: small;
+        opacity: 0.5;
+        margin-left: $margin;
+      }
+
+      .button-area {
+        margin-top: $margin * 2;
+      }
+
+      .file-loader {
+        margin-top: $margin * 2;
+      }
+
+      .hint {
+        font-size: smaller;
+        opacity: 0.8;
+      }
+
+      p + p, .hint + p {
+        padding-top: $padding;
+      }
     }
 
     .status-table {
-        margin-top: 20px;
-        display: grid;
-        grid-template-columns: 1fr 3fr;
-        grid-gap: 10px;
-    }
+      margin: $margin * 3 0;
 
-    .loading {
-        margin-top: 20px;
-        text-align: center;
+      .Table {
+        border: 1px solid var(--drawerSubtitleBackground);
+        border-radius: $radius;
 
-        .Spinner {
-            display: inline-block;
+        .TableRow {
+          &:not(:last-of-type) {
+            border-bottom: 1px solid var(--drawerSubtitleBackground);
+          }
+
+          .value {
+            flex-grow: 2;
+            word-break: break-word;
+            color: var(--textColorSecondary);
+          }
         }
+      }
     }
 
-    .Input,.Select {
-        margin-top: 10px;
+    .Input, .Select {
+      margin-top: 10px;
     }
 
-    .Icon:not(.updated):not(.clean) {
-        color: #ad0000;
+    .Select {
+      &__control {
+        box-shadow: 0 0 0 1px $borderFaintColor;
+      }
     }
-
-    .Icon.updated {
-        color: #00dd1d;
-    }
-
-    .updated {
-        animation: updated-name 1s 1;
-        animation-fill-mode: forwards;
-        animation-delay: 3s;
-    }
-
-    @keyframes updated-name {
-        from {opacity :1;}
-        to {opacity :0;}
-    }
-
-    .center {
-        text-align: center;
-    }
-
-    input[type="text"]::placeholder {
-        font-size: small;
-        color: #707070;
-    }
-
-    input[type="text"] {
-        color: white;
-    }
-
-    button {
-        margin-top: 5px;
-
-        .Spinner {
-            width: 10px;
-            height: 10px;
-            border-color: transparent black;
-        }
-    }
+  }
 }

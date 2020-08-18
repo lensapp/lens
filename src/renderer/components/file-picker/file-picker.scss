@@ -1,14 +1,11 @@
 .FilePicker {
-    input[type="file"] {
-        display: none;
-    }
+  input[type="file"] {
+    display: none;
+  }
 
-    label {
-        display: inline-block;
-        border: medium solid;
-        padding: 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        margin: 5px;
-    }
+  label {
+    display: inline-flex;
+    cursor: pointer;
+    color: var(--blue);
+  }
 }

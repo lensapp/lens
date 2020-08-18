@@ -1,4 +1,4 @@
-import { action, computed, observable, reaction, toJS } from "mobx";
+import { action, computed, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store"
 
@@ -22,15 +22,6 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     super({
       configName: "lens-workspace-store",
     });
-
-    // switch to first available cluster in current workspace
-    reaction(() => this.currentWorkspaceId, workspaceId => {
-      const clusters = clusterStore.getByWorkspaceId(workspaceId);
-      const activeClusterInWorkspace = clusters.some(cluster => cluster.id === clusterStore.activeClusterId);
-      if (!activeClusterInWorkspace) {
-        clusterStore.activeClusterId = clusters.length ? clusters[0].id : null;
-      }
-    })
   }
 
   @observable currentWorkspaceId = WorkspaceStore.defaultId;
@@ -60,6 +51,10 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
 
   @action
   setActive(id = WorkspaceStore.defaultId) {
+    if (!this.getById(id)) {
+      throw new Error(`workspace ${id} doesn't exist`);
+    }
+
     this.currentWorkspaceId = id;
   }
 
