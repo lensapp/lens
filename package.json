@@ -4,7 +4,6 @@
   "description": "Lens - The Kubernetes IDE",
   "version": "3.6.0-dev",
   "main": "static/build/main.js",
-  "copyright": "© 2020, Lakend Labs, Inc.",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
   "author": {
