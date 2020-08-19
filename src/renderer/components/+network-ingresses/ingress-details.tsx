@@ -5,7 +5,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
 import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { Ingress, ingressApi } from "../../api/endpoints";
+import { Ingress, ILoadBalancerIngress, ingressApi } from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { ingressStore } from "./ingress.store";
@@ -66,12 +66,35 @@ export class IngressDetails extends React.Component<Props> {
     })
   }
 
+  renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
+    if (ingressPoints.length === 0) return null
+    return (
+      <div>
+        <Table className="ingress-points">
+          <TableHead>
+            <TableCell className="name" ><Trans>Hostname</Trans></TableCell>
+            <TableCell className="ingresspoints"><Trans>IP</Trans></TableCell>
+          </TableHead>
+          {ingressPoints.map(({hostname, ip}, index) => {
+            return (
+              <TableRow key={index}>
+                <TableCell className="name">{hostname ? hostname : "-"}</TableCell>
+                <TableCell className="ingresspoints">{ip ? ip : "-"}</TableCell>
+              </TableRow>
+            )})
+          })
+        </Table>
+      </div>
+    )
+  }
+
   render() {
     const { object: ingress } = this.props;
     if (!ingress) {
       return null;
     }
-    const { spec } = ingress;
+    const { spec, status } = ingress;
+    const ingressPoints = status?.loadBalancer?.ingress
     const { metrics } = ingressStore;
     const metricTabs = [
       <Trans>Network</Trans>,
@@ -101,6 +124,9 @@ export class IngressDetails extends React.Component<Props> {
         }
         <DrawerTitle title={<Trans>Rules</Trans>}/>
         {this.renderPaths(ingress)}
+
+        <DrawerTitle title={<Trans>Load-Balancer Ingress Points</Trans>}/>
+        {this.renderIngressPoints(ingressPoints)}
 
         <KubeEventDetails object={ingress}/>
       </div>

@@ -25,6 +25,10 @@ export interface IIngressMetrics<T = IMetrics> {
   responseDurationSeconds: T;
 }
 
+export interface ILoadBalancerIngress {
+  hostname?: string;
+  ip?: string;
+}
 @autobind()
 export class Ingress extends KubeObject {
   static kind = "Ingress"
@@ -52,7 +56,7 @@ export class Ingress extends KubeObject {
   }
   status: {
     loadBalancer: {
-      ingress: any[];
+      ingress: ILoadBalancerIngress[];
     };
   }
 

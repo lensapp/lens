@@ -822,7 +822,7 @@ msgid "Driver"
 msgstr "Driver"
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:59
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:67
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:87
 msgid "Duration"
 msgstr "Duration"
 
@@ -1048,12 +1048,17 @@ msgstr "Host: {0}"
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:33
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:64
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:76
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:64
 msgid "Hostname"
 msgstr "Hostname"
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:92
 msgid "Http01"
 msgstr "Http01"
+
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:65
+msgid "IP"
+msgstr "IP"
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:53
 msgid "IP addresses"
@@ -1235,8 +1240,10 @@ msgstr "Limited to {0}"
 
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:72
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:115
+
 #: src/renderer/components/+workloads-pods/container-charts.tsx:40
 #: src/renderer/components/+workloads-pods/container-charts.tsx:64
+
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:48
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:72
 msgid "Limits"
@@ -1257,6 +1264,10 @@ msgstr "Liveness"
 #: src/renderer/components/+network-services/service-details.tsx:65
 msgid "Load Balancer IP"
 msgstr "Load Balancer IP"
+
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:108
+msgid "Load-Balancer Ingress Points"
+msgstr "Load-Balancer Ingress Points"
 
 #: src/renderer/components/app-init/app-init.tsx:43
 msgid "Loading"
@@ -1756,7 +1767,7 @@ msgid "Port"
 msgstr "Port"
 
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:83
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:74
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:94
 #: src/renderer/components/+network-policies/network-policy-details.tsx:96
 #: src/renderer/components/+network-policies/network-policy-details.tsx:109
 #: src/renderer/components/+network-services/service-details.tsx:59
@@ -2080,7 +2091,7 @@ msgstr "Rollback <0>{releaseName}</0>"
 msgid "Rule"
 msgstr "Rule"
 
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:85
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:105
 #: src/renderer/components/+network-ingresses/ingresses.tsx:34
 #: src/renderer/components/+user-management-roles/role-details.tsx:25
 msgid "Rules"
@@ -2212,7 +2223,7 @@ msgstr "Selector"
 msgid "Server"
 msgstr "Server"
 
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:82
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:102
 msgid "Service"
 msgstr "Service"
 
@@ -2379,7 +2390,7 @@ msgstr "Supplemental Groups"
 msgid "Suspend"
 msgstr "Suspend"
 
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:78
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:98
 msgid "TLS"
 msgstr "TLS"
 

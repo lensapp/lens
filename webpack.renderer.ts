@@ -39,7 +39,7 @@ export default function (): webpack.Configuration {
           extractComments: {
             condition: "some",
             banner: [
-              `Lens - The Kubernetes IDE. Copyright ${new Date().getFullYear()} by Lakend Labs, Inc. All rights reserved.`
+              `Lens - The Kubernetes IDE. Copyright ${new Date().getFullYear()} by Mirantis, Inc. All rights reserved.`
             ].join("\n")
           }
         })

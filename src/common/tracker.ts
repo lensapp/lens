@@ -22,7 +22,7 @@ export class Tracker extends Singleton {
     } catch (error) {
       this.visitor = ua(Tracker.GA_ID)
     }
-    this.visitor.set("dl", "https://lensapptelemetry.lakendlabs.com")
+    this.visitor.set("dl", "https://telemetry.k8slens.dev")
   }
 
   protected async isTelemetryAllowed(): Promise<boolean> {

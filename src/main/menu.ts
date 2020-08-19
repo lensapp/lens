@@ -42,7 +42,7 @@ export function buildMenu(windowManager: WindowManager) {
       `${appName}: ${app.getVersion()}`,
       `Electron: ${process.versions.electron}`,
       `Chrome: ${process.versions.chrome}`,
-      `Copyright 2020 Lakend Labs, Inc.`,
+      `Copyright 2020 Copyright 2020 Mirantis, Inc.`,
     ]
     dialog.showMessageBoxSync(browserWindow, {
       title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
@@ -178,7 +178,7 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "License",
         click: async () => {
-          shell.openExternal('https://lakendlabs.com/licenses/lens-eula.md');
+          shell.openExternal('https://k8slens.dev/licenses/eula.md');
         },
       },
       {

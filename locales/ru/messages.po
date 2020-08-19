@@ -823,7 +823,7 @@ msgid "Driver"
 msgstr "Драйвер"
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:59
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:67
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:87
 msgid "Duration"
 msgstr "Продолжительность"
 
@@ -1049,12 +1049,17 @@ msgstr "Хост: {0}"
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:33
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:64
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:76
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:64
 msgid "Hostname"
 msgstr ""
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:92
 msgid "Http01"
 msgstr "Http01"
+
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:65
+msgid "IP"
+msgstr ""
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:53
 msgid "IP addresses"
@@ -1258,6 +1263,10 @@ msgstr "Живучесть"
 #: src/renderer/components/+network-services/service-details.tsx:65
 msgid "Load Balancer IP"
 msgstr "IP балансировщика нагрузки"
+
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:108
+msgid "Load-Balancer Ingress Points"
+msgstr ""
 
 #: src/renderer/components/app-init/app-init.tsx:43
 msgid "Loading"
@@ -1757,7 +1766,7 @@ msgid "Port"
 msgstr ""
 
 #: src/renderer/components/+network-endpoints/endpoint-subset-list.tsx:83
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:74
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:94
 #: src/renderer/components/+network-policies/network-policy-details.tsx:96
 #: src/renderer/components/+network-policies/network-policy-details.tsx:109
 #: src/renderer/components/+network-services/service-details.tsx:59
@@ -2081,7 +2090,7 @@ msgstr "Откатить <0>{releaseName}</0>"
 msgid "Rule"
 msgstr ""
 
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:85
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:105
 #: src/renderer/components/+network-ingresses/ingresses.tsx:34
 #: src/renderer/components/+user-management-roles/role-details.tsx:25
 msgid "Rules"
@@ -2213,7 +2222,7 @@ msgstr "Селектор"
 msgid "Server"
 msgstr "Сервер"
 
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:82
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:102
 msgid "Service"
 msgstr "Service"
 
@@ -2380,7 +2389,7 @@ msgstr ""
 msgid "Suspend"
 msgstr "Заморозка"
 
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:78
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:98
 msgid "TLS"
 msgstr "TLS"
 
