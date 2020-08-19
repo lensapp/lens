@@ -1,2 +1,2 @@
-export * from "./cluster.routes"
+export * from "./cluster.route"
 

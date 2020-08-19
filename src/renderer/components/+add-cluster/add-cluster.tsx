@@ -15,8 +15,9 @@ import { getKubeConfigLocal, loadConfig, saveConfigToAppFiles, splitConfig, vali
 import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid"
-import { navigation } from "../../navigation";
+import { navigate } from "../../navigation";
 import { userStore } from "../../../common/user-store";
+import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 
 @observer
 export class AddCluster extends React.Component {
@@ -70,8 +71,9 @@ export class AddCluster extends React.Component {
     if (value instanceof KubeConfig) {
       const context = value.currentContext;
       const isNew = userStore.newContexts.has(context);
+      const className = `${context} kube-context flex gaps align-center`
       return (
-        <div className="kube-context flex gaps align-center">
+        <div className={className}>
           <span>{context}</span>
           {isNew && <Icon material="fiber_new"/>}
         </div>
@@ -102,7 +104,7 @@ export class AddCluster extends React.Component {
           httpsProxy: proxyServer || undefined,
         },
       });
-      navigation.goBack(); // return to previous opened page for the cluster view
+      navigate(clusterViewURL({ params: { clusterId } }))
     } catch (err) {
       this.error = String(err);
     } finally {
@@ -165,12 +167,14 @@ export class AddCluster extends React.Component {
     return (
       <WizardLayout className="AddCluster" infoPanel={this.renderInfo()}>
         <h2><Trans>Add Cluster</Trans></h2>
+        <p>Choose config:</p>
         <Select
           placeholder={<Trans>Select kubeconfig</Trans>}
           value={this.clusterConfig}
           options={this.clusterOptions}
           onChange={({ value }: SelectOption) => this.clusterConfig = value}
           formatOptionLabel={this.formatClusterContextLabel}
+          id="kubecontext-select"
         />
         <div className="cluster-settings">
           <a href="#" onClick={() => this.showSettings = !this.showSettings}>
@@ -179,14 +183,15 @@ export class AddCluster extends React.Component {
         </div>
         {this.showSettings && (
           <div className="proxy-settings">
+            <p>HTTP Proxy server. Used for communicating with Kubernetes API.</p>
             <Input
               autoFocus
-              placeholder={_i18n._(t`A HTTP proxy server URL (format: http://<address>:<port>)`)}
               value={this.proxyServer}
               onChange={value => this.proxyServer = value}
+              theme="round-black"
             />
             <small className="hint">
-              <Trans>HTTP Proxy server. Used for communicating with Kubernetes API.</Trans>
+              {'A HTTP proxy server URL (format: http://<address>:<port>).'}
             </small>
           </div>
         )}
@@ -195,6 +200,7 @@ export class AddCluster extends React.Component {
             <p>Kubeconfig:</p>
             <AceEditor
               autoFocus
+              showGutter={false}
               mode="yaml"
               value={this.customConfig}
               onChange={value => this.customConfig = value}
@@ -207,7 +213,7 @@ export class AddCluster extends React.Component {
         <div className="actions-panel">
           <Button
             primary
-            label={<Trans>Add cluster</Trans>}
+            label={<Trans>Add cluster(s)</Trans>}
             onClick={this.addCluster}
             waiting={this.isWaiting}
           />

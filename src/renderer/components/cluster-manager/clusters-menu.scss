@@ -42,6 +42,7 @@
   > .add-cluster {
     position: relative;
     margin-top: $padding;
+    min-width: 43px;
 
     .Icon {
       border-radius: $radius;

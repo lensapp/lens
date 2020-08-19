@@ -1,38 +1,25 @@
 .ClusterSettings {
-  grid-template-columns: unset;
-  padding: 0;
+  .WizardLayout {
+    grid-template-columns: unset;
+    grid-template-rows: 76px 1fr;
+    padding: 0;
 
-  .head-col {
-    justify-content: space-between;
+    .head-col {
+      justify-content: space-between;
 
-    :nth-child(2) {
-      flex: 1 0 0;
+      :nth-child(2) {
+        flex: 1 0 0;
+      }
     }
 
-    a {
-      text-decoration: none;
-      color: $grey-600;
-    }
-  }
+    .content-col {
+      margin: 0;
+      padding-top: $padding * 3;
+      background-color: transparent;
 
-  .info-col {
-    display: none;
-  }
-
-  .content-col {
-    margin: 0;
-    padding-top: $padding * 3;
-    background-color: transparent;
-
-    .SubTitle {
-      text-transform: none;
-    }
-
-    .settings-wrapper {
-      margin: 0 auto;
-      width: 60%;
-      min-width: 570px;
-      max-width: 1000px;
+      .SubTitle {
+        text-transform: none;
+      }
 
       > div {
         margin-top: $margin * 5;
@@ -47,49 +34,50 @@
       .button-area {
         margin-top: $margin * 2;
       }
+
+      .file-loader {
+        margin-top: $margin * 2;
+      }
+
+      .hint {
+        font-size: smaller;
+        opacity: 0.8;
+      }
+
+      p + p, .hint + p {
+        padding-top: $padding;
+      }
     }
 
-    .file-loader {
-      margin-top: $margin * 2;
-    }
+    .status-table {
+      margin: $margin * 3 0;
 
-    .hint {
-      font-size: smaller;
-      opacity: 0.8;
-    }
+      .Table {
+        border: 1px solid var(--drawerSubtitleBackground);
+        border-radius: $radius;
 
-    p + p, .hint + p {
-      padding-top: $padding;
-    }
-  }
+        .TableRow {
+          &:not(:last-of-type) {
+            border-bottom: 1px solid var(--drawerSubtitleBackground);
+          }
 
-  .status-table {
-    margin: $margin * 3 0;
-
-    .Table {
-      border: 1px solid var(--drawerSubtitleBackground);
-      border-radius: $radius;
-
-      .TableRow {
-        &:not(:last-of-type) {
-          border-bottom: 1px solid var(--drawerSubtitleBackground);
-        }
-
-        .value {
-          flex-grow: 2;
-          color: var(--textColorSecondary);
+          .value {
+            flex-grow: 2;
+            word-break: break-word;
+            color: var(--textColorSecondary);
+          }
         }
       }
     }
-  }
 
-  .Input, .Select {
-    margin-top: 10px;
-  }
+    .Input, .Select {
+      margin-top: 10px;
+    }
 
-  .Select {
-    &__control {
-      box-shadow: 0 0 0 1px $borderFaintColor;
+    .Select {
+      &__control {
+        box-shadow: 0 0 0 1px $borderFaintColor;
+      }
     }
   }
 }

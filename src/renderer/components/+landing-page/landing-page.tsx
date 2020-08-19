@@ -1,16 +1,18 @@
 import "./landing-page.scss"
 import React from "react";
 import { observer } from "mobx-react";
-import { clusterStore } from "../../../common/cluster-store";
 import { Trans } from "@lingui/macro";
+import { clusterStore } from "../../../common/cluster-store";
+import { workspaceStore } from "../../../common/workspace-store";
 
 @observer
 export class LandingPage extends React.Component {
   render() {
-    const noClusters = !clusterStore.hasClusters();
+    const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
+    const noClustersInScope = !clusters.length;
     return (
       <div className="LandingPage flex">
-        {noClusters && (
+        {noClustersInScope && (
           <div className="no-clusters flex column gaps box center">
             <h1>
               <Trans>Welcome!</Trans>

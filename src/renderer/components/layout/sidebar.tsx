@@ -11,7 +11,7 @@ import { Icon } from "../icon";
 import { workloadsRoute, workloadsURL } from "../+workloads/workloads.route";
 import { namespacesURL } from "../+namespaces/namespaces.route";
 import { nodesURL } from "../+nodes/nodes.route";
-import { usersManagementRoute, usersManagementURL } from "../+user-management/user-management.routes";
+import { usersManagementRoute, usersManagementURL } from "../+user-management/user-management.route";
 import { networkRoute, networkURL } from "../+network/network.route";
 import { storageRoute, storageURL } from "../+storage/storage.route";
 import { clusterURL } from "../+cluster";
@@ -43,7 +43,9 @@ interface Props {
 @observer
 export class Sidebar extends React.Component<Props> {
   async componentDidMount() {
-    if (!crdStore.isLoaded && isAllowedResource('customresourcedefinitions')) crdStore.loadAll()
+    if (!crdStore.isLoaded && isAllowedResource('customresourcedefinitions')) {
+      crdStore.loadAll()
+    }
   }
 
   renderCustomResources() {

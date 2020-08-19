@@ -1,52 +1,70 @@
 import "./cluster-manager.scss"
 import React from "react";
-import { computed } from "mobx";
-import { observer } from "mobx-react";
-import { App } from "../app";
+import { Redirect, Route, Switch } from "react-router";
+import { reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { ClustersMenu } from "./clusters-menu";
 import { BottomBar } from "./bottom-bar";
-import { cssNames, IClassName } from "../../utils";
-import { Terminal } from "../dock/terminal";
-import { i18nStore } from "../../i18n";
-import { themeStore } from "../../theme.store";
-import { clusterStore, getHostedClusterId, isNoClustersView } from "../../../common/cluster-store";
-import { CubeSpinner } from "../spinner";
-
-interface Props {
-  className?: IClassName;
-  contentClass?: IClassName;
-}
+import { LandingPage, landingRoute, landingURL } from "../+landing-page";
+import { Preferences, preferencesRoute } from "../+preferences";
+import { Workspaces, workspacesRoute } from "../+workspaces";
+import { AddCluster, addClusterRoute } from "../+add-cluster";
+import { ClusterView } from "./cluster-view";
+import { ClusterSettings, clusterSettingsRoute } from "../+cluster-settings";
+import { clusterViewRoute, clusterViewURL, getMatchedCluster, getMatchedClusterId } from "./cluster-view.route";
+import { clusterStore } from "../../../common/cluster-store";
+import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 
 @observer
-export class ClusterManager extends React.Component<Props> {
-  static async init() {
-    await Promise.all([
-      i18nStore.init(),
-      themeStore.init(),
-      Terminal.preloadFonts(),
+export class ClusterManager extends React.Component {
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(getMatchedClusterId, initView, {
+        fireImmediately: true
+      }),
+      reaction(() => [
+        hasLoadedView(getMatchedClusterId()), // refresh when cluster's webview loaded
+        getMatchedCluster()?.available, // refresh on disconnect active-cluster
+      ], refreshViews, {
+        fireImmediately: true
+      })
     ])
   }
 
-  @computed get isInactive() {
-    const { activeCluster, activeClusterId, clusters } = clusterStore;
-    const isActivatedBefore = activeCluster?.initialized;
-    return clusters.size > 0 && !isActivatedBefore && activeClusterId !== getHostedClusterId();
+  componentWillUnmount() {
+    lensViews.clear();
+  }
+
+  get startUrl() {
+    const { activeClusterId } = clusterStore;
+    if (activeClusterId) {
+      return clusterViewURL({
+        params: {
+          clusterId: activeClusterId
+        }
+      })
+    }
+    return landingURL()
   }
 
   render() {
-    const { className, contentClass } = this.props;
-    const lensViewClass = cssNames("flex column", contentClass, {
-      inactive: this.isInactive,
-    });
     return (
-      <div className={cssNames("ClusterManager", className)}>
+      <div className="ClusterManager">
         <div id="draggable-top"/>
-        <div id="lens-view" className={lensViewClass}>
-          <App/>
-        </div>
+        <main>
+          <div id="lens-views"/>
+          <Switch>
+            <Route component={LandingPage} {...landingRoute}/>
+            <Route component={Preferences} {...preferencesRoute}/>
+            <Route component={Workspaces} {...workspacesRoute}/>
+            <Route component={AddCluster} {...addClusterRoute}/>
+            <Route component={ClusterView} {...clusterViewRoute}/>
+            <Route component={ClusterSettings} {...clusterSettingsRoute}/>
+            <Redirect exact to={this.startUrl}/>
+          </Switch>
+        </main>
         <ClustersMenu/>
         <BottomBar/>
-        {this.isInactive && <CubeSpinner center/>}
       </div>
     )
   }

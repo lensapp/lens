@@ -16,12 +16,17 @@
   > .head-col {
     position: sticky;
     border-bottom: 1px solid $grey-800;
+    justify-content: space-between;
   }
 
   > .content-col {
     margin-right: $spacing;
     background-color: var(--clusters-menu-bgc);
     border-radius: $radius;
+
+    > div {
+      flex: 1;
+    }
 
     > .error {
       border-radius: $radius;
@@ -40,5 +45,18 @@
 
   a {
     color: $colorInfo;
+  }
+
+  &.centered {
+    .content-col {
+      margin: 0;
+
+      > div {
+        margin: 0 auto;
+        width: 60%;
+        min-width: 570px;
+        max-width: 1000px;
+      }
+    }
   }
 }

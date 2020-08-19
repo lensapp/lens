@@ -7,10 +7,11 @@ import { openShell } from "./node-shell-session";
 import { Router } from "./router"
 import { ClusterManager } from "./cluster-manager"
 import { ContextHandler } from "./context-handler";
-import { apiKubePrefix, noClustersHost } from "../common/vars";
+import { apiKubePrefix } from "../common/vars";
 import logger from "./logger"
 
 export class LensProxy {
+  protected origin: string
   protected proxyServer: http.Server
   protected router: Router
   protected closed = false
@@ -21,12 +22,13 @@ export class LensProxy {
   }
 
   private constructor(protected port: number, protected clusterManager: ClusterManager) {
+    this.origin = `http://localhost:${port}`
     this.router = new Router();
   }
 
   listen(port = this.port): this {
     this.proxyServer = this.buildCustomProxy().listen(port);
-    logger.info(`LensProxy server has started http://localhost:${port}`);
+    logger.info(`LensProxy server has started at ${this.origin}`);
     return this;
   }
 
@@ -117,26 +119,17 @@ export class LensProxy {
   }
 
   protected async handleRequest(proxy: httpProxy, req: http.IncomingMessage, res: http.ServerResponse) {
-    if (req.headers.host.split(":")[0] === noClustersHost) {
-      this.router.handleStaticFile(req.url, res);
-      return;
-    }
     const cluster = this.clusterManager.getClusterForRequest(req)
-    if (!cluster) {
-      const reqId = this.getRequestId(req);
-      logger.error("Got request to unknown cluster", { reqId })
-      res.statusCode = 503
-      res.end()
-      return
+    if (cluster) {
+      await cluster.contextHandler.ensureServer();
+      const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler)
+      if (proxyTarget) {
+        // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
+        res.setHeader("Access-Control-Allow-Origin", this.origin);
+        return proxy.web(req, res, proxyTarget);
+      }
     }
-    const contextHandler = cluster.contextHandler
-    await contextHandler.ensureServer();
-    const proxyTarget = await this.getProxyTarget(req, contextHandler)
-    if (proxyTarget) {
-      proxy.web(req, res, proxyTarget)
-    } else {
-      this.router.route(cluster, req, res);
-    }
+    this.router.route(cluster, req, res);
   }
 
   protected async handleWsUpgrade(req: http.IncomingMessage, socket: net.Socket, head: Buffer) {

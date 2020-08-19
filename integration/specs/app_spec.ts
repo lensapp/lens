@@ -1,7 +1,6 @@
 import { Application } from "spectron"
 import * as util from "../helpers/utils"
 import { spawnSync } from "child_process"
-import { stat } from "fs"
 
 jest.setTimeout(20000)
 
@@ -11,19 +10,21 @@ describe("app start", () => {
   let app: Application
   const clickWhatsNew = async (app: Application) => {
     await app.client.waitUntilTextExists("h1", "What's new")
-    await app.client.click("button.btn-primary")
+    await app.client.click("button.primary")
     await app.client.waitUntilTextExists("h1", "Welcome")
   }
 
   const addMinikubeCluster = async (app: Application) => {
-    await app.client.click("a#add-cluster")
-    await app.client.waitUntilTextExists("legend", "Choose config:")
-    await app.client.selectByVisibleText("select#kubecontext-select", "minikube (new)")
-    await app.client.click("button.btn-primary")
+    await app.client.click("div.add-cluster")
+    await app.client.waitUntilTextExists("p", "Choose config")
+    await app.client.click("div#kubecontext-select")
+    await app.client.waitUntilTextExists("div", "minikube")
+    await app.client.click("div.minikube")
+    await app.client.click("button.primary")
   }
 
   const waitForMinikubeDashboard = async (app: Application) => {
-    await app.client.waitUntilTextExists("pre.auth-output", "Authentication proxy started")
+    await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started")
     let windowCount = await app.client.getWindowCount()
     // wait for webview to appear on window count
     while (windowCount == 1) {

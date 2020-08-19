@@ -10,8 +10,8 @@ import { Sidebar } from "./sidebar";
 import { ErrorBoundary } from "../error-boundary";
 import { Dock } from "../dock";
 import { navigate, navigation } from "../../navigation";
-import { themeStore } from "../../theme.store";
 import { getHostedCluster } from "../../../common/cluster-store";
+import { themeStore } from "../../theme.store";
 
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
@@ -47,12 +47,14 @@ export class MainLayout extends React.Component<Props> {
 
   render() {
     const { className, contentClass, headerClass, tabs, footer, footerClass, children } = this.props;
-    const { contextName: clusterName } = getHostedCluster();
     const routePath = navigation.location.pathname;
+    const cluster = getHostedCluster();
     return (
       <div className={cssNames("MainLayout", className, themeStore.activeTheme.type)}>
         <header className={cssNames("flex gaps align-center", headerClass)}>
-          <span className="cluster">{clusterName}</span>
+          <span className="cluster">
+            {cluster.preferences?.clusterName || cluster.contextName}
+          </span>
         </header>
 
         <aside className={cssNames("flex column", { pinned: this.isPinned, accessible: this.isAccessible })}>

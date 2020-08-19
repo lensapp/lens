@@ -1,9 +1,7 @@
-import type { WindowManager } from "./window-manager";
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
 import { autorun } from "mobx";
-import { broadcastIpc } from "../common/ipc";
+import { WindowManager } from "./window-manager";
 import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
-import { clusterStore } from "../common/cluster-store";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
@@ -11,45 +9,61 @@ import { clusterSettingsURL } from "../renderer/components/+cluster-settings/clu
 import logger from "./logger";
 
 export function initMenu(windowManager: WindowManager) {
-  autorun(() => {
-    logger.debug(`[MENU]: building menu, cluster=${clusterStore.activeClusterId}`);
-    buildMenu(windowManager);
+  autorun(() => buildMenu(windowManager), {
+    delay: 100
   });
 }
 
-function buildMenu(windowManager: WindowManager) {
-  const hasClusters = clusterStore.hasClusters();
-  const activeClusterId = clusterStore.activeClusterId;
-
-  function navigate(url: string) {
-    const clusterView = windowManager.getClusterView(activeClusterId);
-    broadcastIpc({
-      channel: "menu:navigate",
-      webContentId: clusterView ? clusterView.id : undefined /*no-clusters*/,
-      args: [url],
-    });
-  }
-
-  function macOnly(menuItems: MenuItemConstructorOptions[]): MenuItemConstructorOptions[] {
-    if (!isMac) return [];
+export function buildMenu(windowManager: WindowManager) {
+  function ignoreOnMac(menuItems: MenuItemConstructorOptions[]) {
+    if (isMac) return [];
     return menuItems;
   }
 
-  const fileMenu: MenuItemConstructorOptions = {
-    label: isMac ? app.getName() : "File",
+  function activeClusterOnly(menuItems: MenuItemConstructorOptions[]) {
+    if (!windowManager.activeClusterId) {
+      menuItems.forEach(item => {
+        item.enabled = false
+      });
+    }
+    return menuItems;
+  }
+
+  function navigate(url: string) {
+    logger.info(`[MENU]: navigating to ${url}`);
+    windowManager.navigate({
+      channel: "menu:navigate",
+      url: url,
+    })
+  }
+
+  function showAbout(browserWindow: BrowserWindow) {
+    const appInfo = [
+      `${appName}: ${app.getVersion()}`,
+      `Electron: ${process.versions.electron}`,
+      `Chrome: ${process.versions.chrome}`,
+      `Copyright 2020 Lakend Labs, Inc.`,
+    ]
+    dialog.showMessageBoxSync(browserWindow, {
+      title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
+      type: "info",
+      buttons: ["Close"],
+      message: `Lens`,
+      detail: appInfo.join("\r\n")
+    })
+  }
+
+  const mt: MenuItemConstructorOptions[] = [];
+
+  const macAppMenu: MenuItemConstructorOptions = {
+    label: app.getName(),
     submenu: [
       {
-        label: 'Add Cluster',
-        click() {
-          navigate(addClusterURL())
+        label: "About Lens",
+        click(menuItem: MenuItem, browserWindow: BrowserWindow) {
+          showAbout(browserWindow)
         }
       },
-      ...(hasClusters ? [{
-        label: 'Cluster Settings',
-        click() {
-          navigate(clusterSettingsURL())
-        }
-      }] : []),
       { type: 'separator' },
       {
         label: 'Preferences',
@@ -57,18 +71,56 @@ function buildMenu(windowManager: WindowManager) {
           navigate(preferencesURL())
         }
       },
-      ...macOnly([
-        { type: 'separator' },
-        { role: 'services' },
-        { type: 'separator' },
-        { role: 'hide' },
-        { role: 'hideOthers' },
-        { role: 'unhide' },
-      ]),
+      { type: 'separator' },
+      { role: 'services' },
+      { type: 'separator' },
+      { role: 'hide' },
+      { role: 'hideOthers' },
+      { role: 'unhide' },
       { type: 'separator' },
       { role: 'quit' }
     ]
   };
+
+  if (isMac) {
+    mt.push(macAppMenu);
+  }
+
+  const fileMenu: MenuItemConstructorOptions = {
+    label: "File",
+    submenu: [
+      {
+        label: 'Add Cluster',
+        click() {
+          navigate(addClusterURL())
+        }
+      },
+      ...activeClusterOnly([
+        {
+          label: 'Cluster Settings',
+          click() {
+            navigate(clusterSettingsURL({
+              params: {
+                clusterId: windowManager.activeClusterId
+              }
+            }))
+          }
+        }
+      ]),
+      ...ignoreOnMac([
+        { type: 'separator' },
+        {
+          label: 'Preferences',
+          click() {
+            navigate(preferencesURL())
+          }
+        },
+        { type: 'separator' },
+        { role: 'quit' }
+      ])
+    ]
+  };
+  mt.push(fileMenu)
 
   const editMenu: MenuItemConstructorOptions = {
     label: 'Edit',
@@ -84,7 +136,7 @@ function buildMenu(windowManager: WindowManager) {
       { role: 'selectAll' },
     ]
   };
-
+  mt.push(editMenu)
   const viewMenu: MenuItemConstructorOptions = {
     label: 'View',
     submenu: [
@@ -92,21 +144,21 @@ function buildMenu(windowManager: WindowManager) {
         label: 'Back',
         accelerator: 'CmdOrCtrl+[',
         click() {
-          webContents.getFocusedWebContents().executeJavaScript('window.history.back()')
+          webContents.getFocusedWebContents()?.goBack();
         }
       },
       {
         label: 'Forward',
         accelerator: 'CmdOrCtrl+]',
         click() {
-          webContents.getFocusedWebContents().executeJavaScript('window.history.forward()')
+          webContents.getFocusedWebContents()?.goForward();
         }
       },
       {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click() {
-          webContents.getFocusedWebContents().reload()
+          webContents.getFocusedWebContents()?.reload();
         }
       },
       { role: 'toggleDevTools' },
@@ -118,16 +170,11 @@ function buildMenu(windowManager: WindowManager) {
       { role: 'togglefullscreen' }
     ]
   };
+  mt.push(viewMenu)
 
   const helpMenu: MenuItemConstructorOptions = {
     role: 'help',
     submenu: [
-      {
-        label: "What's new?",
-        click() {
-          navigate(whatsNewURL())
-        },
-      },
       {
         label: "License",
         click: async () => {
@@ -147,27 +194,23 @@ function buildMenu(windowManager: WindowManager) {
         },
       },
       {
-        label: "About Lens",
-        click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-          const appInfo = [
-            `${appName}: ${app.getVersion()}`,
-            `Electron: ${process.versions.electron}`,
-            `Chrome: ${process.versions.chrome}`,
-            `Copyright 2020 Lakend Labs, Inc.`,
-          ]
-          dialog.showMessageBoxSync(browserWindow, {
-            title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
-            type: "info",
-            buttons: ["Close"],
-            message: `Lens`,
-            detail: appInfo.join("\r\n")
-          })
+        label: "What's new?",
+        click() {
+          navigate(whatsNewURL())
+        },
+      },
+      ...ignoreOnMac([
+        {
+          label: "About Lens",
+          click(menuItem: MenuItem, browserWindow: BrowserWindow) {
+            showAbout(browserWindow)
+          }
         }
-      }
+      ])
     ]
   };
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate([
-    fileMenu, editMenu, viewMenu, helpMenu
-  ]));
+  mt.push(helpMenu)
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(mt));
 }

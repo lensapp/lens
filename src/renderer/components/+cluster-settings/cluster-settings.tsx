@@ -7,15 +7,17 @@ import { Features } from "./features";
 import { Removal } from "./removal";
 import { Status } from "./status";
 import { General } from "./general";
-import { getHostedCluster } from "../../../common/cluster-store";
 import { WizardLayout } from "../layout/wizard-layout";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
+import { getMatchedCluster } from "../cluster-manager/cluster-view.route";
+import { navigate } from "../../navigation";
 
 @observer
 export class ClusterSettings extends React.Component {
   render() {
-    const cluster = getHostedCluster();
+    const cluster = getMatchedCluster();
+    if (!cluster) return null;
     const header = (
       <>
         <ClusterIcon
@@ -24,20 +26,18 @@ export class ClusterSettings extends React.Component {
           showTooltip={false}
         />
         <h2>{cluster.preferences.clusterName}</h2>
-        <Link to="/">
-          <Icon material="close" big />
-        </Link>
+        <Icon material="close" onClick={() => navigate("/")} big/>
       </>
     );
     return (
-      <WizardLayout header={header} className="ClusterSettings">
-        <div className="settings-wrapper">
+      <div className="ClusterSettings">
+        <WizardLayout header={header} centered>
           <Status cluster={cluster}></Status>
           <General cluster={cluster}></General>
           <Features cluster={cluster}></Features>
           <Removal cluster={cluster}></Removal>
-        </div>
-      </WizardLayout>
+        </WizardLayout>
+      </div>
     );
   }
 }

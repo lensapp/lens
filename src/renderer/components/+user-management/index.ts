@@ -1,2 +1,2 @@
 export * from "./user-management"
-export * from "./user-management.routes"
+export * from "./user-management.route"

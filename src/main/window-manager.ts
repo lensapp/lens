@@ -1,65 +1,71 @@
-import { reaction } from "mobx";
-import { BrowserWindow, shell } from "electron"
-import windowStateKeeper from "electron-window-state"
 import type { ClusterId } from "../common/cluster-store";
-import { clusterStore } from "../common/cluster-store";
-import { noClustersHost } from "../common/vars";
-import logger from "./logger";
+import { BrowserWindow, dialog, ipcMain, shell, WebContents, webContents } from "electron"
+import windowStateKeeper from "electron-window-state"
+import { observable } from "mobx";
+import { initMenu } from "./menu";
 
 export class WindowManager {
-  protected activeView: BrowserWindow;
+  protected mainView: BrowserWindow;
   protected splashWindow: BrowserWindow;
-  protected noClustersWindow: BrowserWindow;
-  protected views = new Map<ClusterId, BrowserWindow>();
-  protected disposers: CallableFunction[] = [];
   protected windowState: windowStateKeeper.State;
 
-  constructor(protected proxyPort: number, showSplash = true) {
+  @observable activeClusterId: ClusterId;
+
+  constructor(protected proxyPort: number) {
     // Manage main window size and position with state persistence
     this.windowState = windowStateKeeper({
       defaultHeight: 900,
       defaultWidth: 1440,
     });
 
-    // Show while app not ready
-    if (showSplash) {
-      this.showSplash();
-    }
+    const { width, height, x, y } = this.windowState;
+    this.mainView = new BrowserWindow({
+      x, y, width, height,
+      show: false,
+      minWidth: 900,
+      minHeight: 760,
+      titleBarStyle: "hidden",
+      backgroundColor: "#1e2124",
+      webPreferences: {
+        nodeIntegration: true,
+        nodeIntegrationInSubFrames: true,
+        enableRemoteModule: true,
+      },
+    });
+    this.windowState.manage(this.mainView);
 
-    // Manage reactive state
-    this.disposers.push(
-      // auto-show/hide "no-clusters" window when necessary
-      reaction(() => clusterStore.hasClusters(), hasClusters => {
-        this.handleNoClustersView({ activate: !hasClusters });
-      }, {
-        fireImmediately: true
-      }),
+    // open external links in default browser (target=_blank, window.open)
+    this.mainView.webContents.on("new-window", (event, url) => {
+      event.preventDefault();
+      shell.openExternal(url);
+    });
 
-      // auto-show active cluster window
-      reaction(() => clusterStore.activeClusterId, this.activateView, {
-        fireImmediately: true,
-      }),
+    // track visible cluster from ui
+    ipcMain.on("cluster-view:change", (event, clusterId: ClusterId) => {
+      this.activeClusterId = clusterId;
+    });
 
-      // auto-destroy views for removed clusters
-      reaction(() => clusterStore.removedClusters.toJS(), removedClusters => {
-        removedClusters.forEach(cluster => {
-          this.destroyClusterView(cluster.id);
-        });
-      }, {
-        delay: 25, // fix: destroy later and allow to use view's state in next activateView()
-      }),
-    );
+    // load & show app
+    this.showMain();
+    initMenu(this);
   }
 
-  protected handleNoClustersView = async ({ activate = false } = {}) => {
-    if (!this.noClustersWindow) {
-      this.noClustersWindow = this.initClusterView(null);
-      await this.noClustersWindow.loadURL(`http://${noClustersHost}:${this.proxyPort}`);
+  navigate({ url, channel, frameId }: { url: string, channel: string, frameId?: number }) {
+    if (frameId) {
+      this.mainView.webContents.sendToFrame(frameId, channel, url);
+    } else {
+      this.mainView.webContents.send(channel, url);
     }
-    if (activate) {
-      this.activeView = this.noClustersWindow;
-      this.noClustersWindow.show();
-      this.hideSplash();
+  }
+
+  async showMain() {
+    try {
+      await this.showSplash();
+      await this.mainView.loadURL(`http://localhost:${this.proxyPort}`)
+      this.mainView.show();
+      this.splashWindow.close();
+    } catch (err) {
+      dialog.showErrorBox("ERROR!", err.toString())
     }
   }
 
@@ -73,101 +79,18 @@ export class WindowManager {
         frame: false,
         resizable: false,
         show: false,
+        webPreferences: {
+          nodeIntegration: true
+        }
       });
       await this.splashWindow.loadURL("static://splash.html");
     }
     this.splashWindow.show();
   }
 
-  hideSplash() {
-    this.splashWindow.hide();
-  }
-
-  getClusterView(clusterId: ClusterId): BrowserWindow {
-    return this.views.get(clusterId);
-  }
-
-  activateView = async (clusterId: ClusterId): Promise<number> => {
-    const cluster = clusterStore.getById(clusterId);
-    if (!cluster) return;
-    try {
-      const prevActiveView = this.activeView;
-      const isLoadedBefore = !!this.getClusterView(clusterId);
-      const view = this.initClusterView(clusterId);
-      logger.info(`[WINDOW-MANAGER]: activating cluster view`, {
-        id: view.id,
-        clusterId: cluster.id,
-        contextName: cluster.contextName,
-        isLoadedBefore: isLoadedBefore,
-      });
-      if (prevActiveView !== view) {
-        this.activeView = view;
-        if (!isLoadedBefore) {
-          await cluster.whenInitialized; // wait for url
-          await view.loadURL(cluster.webContentUrl);
-          this.hideSplash();
-        }
-        // refresh position and hide previous active window
-        if (prevActiveView) {
-          view.setBounds(prevActiveView.getBounds());
-          prevActiveView.hide();
-        }
-        view.show();
-        return view.id;
-      }
-    } catch (err) {
-      logger.error(`[WINDOW-MANAGER]: can't activate cluster view`, {
-        clusterId: cluster.id,
-        err: String(err),
-      });
-    }
-  }
-
-  protected initClusterView(clusterId: ClusterId): BrowserWindow {
-    let view = this.getClusterView(clusterId);
-    if (!view) {
-      const { width, height, x, y } = this.windowState;
-      view = new BrowserWindow({
-        show: false,
-        x: x, y: y,
-        width: width,
-        height: height,
-        minWidth: 900,
-        minHeight: 760,
-        titleBarStyle: "hidden",
-        backgroundColor: "#1e2124",
-        webPreferences: {
-          nodeIntegration: true,
-          enableRemoteModule: true,
-        },
-      });
-      // open external links in default browser (target=_blank, window.open)
-      view.webContents.on("new-window", (event, url) => {
-        event.preventDefault();
-        shell.openExternal(url);
-      });
-      this.views.set(clusterId, view);
-      this.windowState.manage(view);
-    }
-    return view;
-  }
-
-  protected destroyClusterView(clusterId: ClusterId) {
-    const view = this.views.get(clusterId);
-    if (view) {
-      view.destroy();
-      this.views.delete(clusterId);
-    }
-  }
-
   destroy() {
     this.windowState.unmanage();
-    this.disposers.forEach(dispose => dispose());
-    this.disposers.length = 0;
-    this.views.forEach(view => view.destroy());
-    this.views.clear();
     this.splashWindow.destroy();
-    this.splashWindow = null;
-    this.activeView = null;
+    this.mainView.destroy();
   }
 }

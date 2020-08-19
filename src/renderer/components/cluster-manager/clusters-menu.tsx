@@ -20,7 +20,7 @@ import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
-import { clusterStatusURL } from "./cluster-status.route";
+import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
 
 // fixme: allow to rearrange clusters with drag&drop
 
@@ -34,7 +34,7 @@ export class ClustersMenu extends React.Component<Props> {
 
   showCluster = (clusterId: ClusterId) => {
     clusterStore.setActive(clusterId);
-    navigate("/"); // redirect to index
+    navigate(clusterViewURL({ params: { clusterId } }));
   }
 
   addCluster = () => {
@@ -48,18 +48,21 @@ export class ClustersMenu extends React.Component<Props> {
     menu.append(new MenuItem({
       label: _i18n._(t`Settings`),
       click: () => {
-        clusterStore.setActive(cluster.id);
-        navigate(clusterSettingsURL())
+        navigate(clusterSettingsURL({
+          params: {
+            clusterId: cluster.id
+          }
+        }))
       }
     }));
     if (cluster.online) {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
         click: async () => {
-          await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
-          if (cluster.id === clusterStore.activeClusterId) {
-            navigate(clusterStatusURL());
+          if (clusterStore.isActive(cluster.id)) {
+            navigate(landingURL());
           }
+          await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
         }
       }))
     }
@@ -72,7 +75,10 @@ export class ClustersMenu extends React.Component<Props> {
             accent: true,
             label: _i18n._(t`Remove`),
           },
-          ok: () => clusterStore.removeById(cluster.id),
+          ok: () => {
+            clusterStore.removeById(cluster.id);
+            navigate(landingURL());
+          },
           message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
         })
       }
@@ -85,11 +91,10 @@ export class ClustersMenu extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const { newContexts } = userStore;
-    const { currentWorkspaceId } = workspaceStore;
-    const clusters = clusterStore.getByWorkspaceId(currentWorkspaceId);
-    const noClusters = !clusterStore.clusters.size;
+    const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
+    const noClustersInScope = clusters.length === 0;
     const isLanding = navigation.getPath() === landingURL();
-    const showStartupHint = this.showHint && isLanding && noClusters;
+    const showStartupHint = this.showHint && isLanding && noClustersInScope;
     return (
       <div
         className={cssNames("ClustersMenu flex column gaps", className)}
@@ -111,7 +116,7 @@ export class ClustersMenu extends React.Component<Props> {
               key={cluster.id}
               showErrors={true}
               cluster={cluster}
-              isActive={cluster.id === clusterStore.activeClusterId}
+              isActive={cluster.id === getMatchedClusterId()}
               onClick={() => this.showCluster(cluster.id)}
               onContextMenu={() => this.showContextMenu(cluster)}
             />

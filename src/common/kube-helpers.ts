@@ -153,7 +153,7 @@ export function saveConfigToAppFiles(clusterId: string, kubeConfig: KubeConfig |
 
 export async function getKubeConfigLocal(): Promise<string> {
   try {
-    const configFile = path.join(process.env.HOME, '.kube', 'config');
+    const configFile = path.join(os.homedir(), '.kube', 'config');
     const file = await readFile(configFile, "utf8");
     const obj = yaml.safeLoad(file);
     if (obj.contexts) {

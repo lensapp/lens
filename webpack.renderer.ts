@@ -1,13 +1,13 @@
-import { htmlTemplate, isDevelopment, isProduction, outDir, appName, rendererDir, sassCommonVars } from "./src/common/vars";
+import { appName, htmlTemplate, isDevelopment, isProduction, buildDir, rendererDir, sassCommonVars, publicPath } from "./src/common/vars";
 import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
-import CircularDependencyPlugin from "circular-dependency-plugin"
 
 export default function (): webpack.Configuration {
+  console.info('WEBPACK:renderer', require("./src/common/vars"))
   return {
     context: __dirname,
     target: "electron-renderer",
@@ -15,11 +15,11 @@ export default function (): webpack.Configuration {
     mode: isProduction ? "production" : "development",
     cache: isDevelopment,
     entry: {
-      [appName]: path.resolve(rendererDir, "index.tsx"),
+      [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
     },
     output: {
-      publicPath: "/",
-      path: outDir,
+      publicPath: publicPath,
+      path: buildDir,
       filename: '[name].js',
       chunkFilename: 'chunks/[name].js',
     },

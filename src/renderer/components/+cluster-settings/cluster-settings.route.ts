@@ -1,8 +1,12 @@
+import type { IClusterViewRouteParams } from "../cluster-manager/cluster-view.route";
 import { RouteProps } from "react-router";
 import { buildURL } from "../../navigation";
 
-export const clusterSettingsRoute: RouteProps = {
-  path: "/cluster-settings"
+export interface IClusterSettingsRouteParams extends IClusterViewRouteParams {
 }
 
-export const clusterSettingsURL = buildURL(clusterSettingsRoute.path)
+export const clusterSettingsRoute: RouteProps = {
+  path: `/cluster/:clusterId/settings`,
+}
+
+export const clusterSettingsURL = buildURL<IClusterSettingsRouteParams>(clusterSettingsRoute.path)
