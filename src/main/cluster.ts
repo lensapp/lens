@@ -427,6 +427,10 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   protected async getAllowedNamespaces() {
+    if (this.accessibleNamespaces?.length) {
+      return this.accessibleNamespaces
+    }
+
     const api = this.getProxyKubeconfig().makeApiClient(CoreV1Api)
     try {
       const namespaceList = await api.listNamespace()
@@ -443,7 +447,7 @@ export class Cluster implements ClusterModel, ClusterState {
     } catch (error) {
       const ctx = this.getProxyKubeconfig().getContextObject(this.contextName)
       if (ctx.namespace) return [ctx.namespace]
-      return this.accessibleNamespaces || [];
+      return [];
     }
   }
 
