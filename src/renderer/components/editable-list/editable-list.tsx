@@ -5,6 +5,7 @@ import { Icon } from "../icon";
 import { Input } from "../input";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
+import { autobind } from "../../utils";
 
 export interface Props<T> {
   items: T[],
@@ -14,37 +15,48 @@ export interface Props<T> {
 
   // An optional prop used to convert T to a displayable string
   // defaults to `String`
-  display?: (item: T) => string,
+  renderItem?: (item: T, index: number) => React.ReactNode,
+}
+
+const defaultProps: Partial<Props<any>> = {
+  placeholder: "Add new item...",
+  renderItem: (item: any, index: number) => <React.Fragment key={index}>{item}</React.Fragment>
 }
 
 @observer
 export class EditableList<T> extends React.Component<Props<T>> {
+  static defaultProps = defaultProps as Props<any>;
   @observable currentNewItem = "";
 
+  @autobind()
+  onSubmit(val: string) {
+    const { add } = this.props
+
+    if (val) {
+      add(val)
+      this.currentNewItem = ""
+    }
+  }
+
   render() {
-    const { items, add, remove, display = String, placeholder = "Add new item..." } = this.props;
+    const { items, remove, renderItem, placeholder } = this.props;
 
     return (
       <div className="EditableList">
-        <div className="EditableListHeader">
+        <div className="el-header">
           <Input
             value={this.currentNewItem}
-            onSubmit={val => {
-              if (val) {
-                add(val);
-              }
-              this.currentNewItem = "";
-            }}
+            onSubmit={this.onSubmit}
             placeholder={placeholder}
             onChange={val => this.currentNewItem = val}
           />
         </div>
-        <div className="EditableListContents">
+        <div className="el-contents">
           {
             items
               .map((item, index) => [
-                <span key={`${item}-value`}>{display(item)}</span>,
-                <div key={`${item}-remove`} className="ValueRemove">
+                <span key={`${item}-value`}>{renderItem(item, index)}</span>,
+                <div key={`${item}-remove`} className="el-value-remove">
                   <Icon material="delete_outline" onClick={() => remove(({ index, oldItem: item }))} />
                 </div>
               ])

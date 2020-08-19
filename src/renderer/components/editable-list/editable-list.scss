@@ -1,9 +1,9 @@
 .EditableList {
-  .EditableListContents {
+  .el-contents {
     display: grid;
     grid-template-columns: 1fr auto;
 
-    .ValueRemove {
+    .el-value-remove {
       .Icon {
         justify-content: unset;
       }
