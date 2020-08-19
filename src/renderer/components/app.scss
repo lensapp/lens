@@ -30,7 +30,6 @@ html {
 }
 
 html, body {
-  @include set-draggable(false);
   height: 100%;
 }
 
