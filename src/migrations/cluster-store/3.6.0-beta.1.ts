@@ -13,7 +13,8 @@ import makeSynchronous from "make-synchronous"
 export default migration({
   version: "3.6.0-beta.1",
   run(store, printLog) {
-    const kubeConfigBase = path.join((app || remote.app).getPath("userData"), "kubeconfigs")
+    const userDataPath = (app || remote.app).getPath("userData")
+    const kubeConfigBase = path.join(userDataPath, "kubeconfigs")
     const storedClusters: ClusterModel[] = store.get("clusters") || [];
 
     if (!storedClusters.length) return;
@@ -41,11 +42,13 @@ export default migration({
          */
         try {
           if (cluster.preferences.icon) {
-            const fileData = fse.readFileSync(cluster.preferences.icon);
-            const { mime } = makeSynchronous(() => fileType.fromBuffer(fileData))();
+            printLog(`migrating ${cluster.preferences.icon} for ${cluster.preferences.clusterName}`)
+            const iconPath = cluster.preferences.icon.replace("store://", "")
+            const fileData = fse.readFileSync(path.join(userDataPath, iconPath));
+            const { mime = "" } = makeSynchronous(() => fileType.fromBuffer(fileData))();
 
             if (!mime) {
-              throw "unknown icon file type, deleting...";
+              printLog(`mime type not detected for ${cluster.preferences.clusterName}'s icon: ${iconPath}`)
             }
 
             cluster.preferences.icon = `data:${mime};base64, ${fileData.toString('base64')}`;
