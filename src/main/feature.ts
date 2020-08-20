@@ -5,6 +5,7 @@ import { ResourceApplier } from "./resource-applier"
 import { CoreV1Api, KubeConfig, Watch } from "@kubernetes/client-node"
 import { Cluster } from "./cluster";
 import logger from "./logger";
+import { isDevelopment } from "../common/vars";
 
 export type FeatureStatusMap = Record<string, FeatureStatus>
 export type FeatureMap = Record<string, Feature>
@@ -23,8 +24,8 @@ export interface FeatureStatus {
 }
 
 export abstract class Feature {
-  name: string;
-  latestVersion: string;
+  public name: string;
+  public latestVersion: string;
 
   abstract async upgrade(cluster: Cluster): Promise<void>;
 
@@ -33,6 +34,13 @@ export abstract class Feature {
   abstract async featureStatus(kc: KubeConfig): Promise<FeatureStatus>;
 
   constructor(public config: any) {
+  }
+
+  get folderPath() {
+    if (isDevelopment) {
+      return path.resolve(__static, "../src/features", this.name);
+    }
+    return path.resolve(__static, "../features", this.name);
   }
 
   async install(cluster: Cluster): Promise<void> {
@@ -70,9 +78,11 @@ export abstract class Feature {
   }
 
   protected renderTemplates(): string[] {
+    const folderPath = this.folderPath;
     const resources: string[] = [];
-    fs.readdirSync(this.manifestPath()).forEach(filename => {
-      const file = path.join(this.manifestPath(), filename);
+    logger.info(`[FEATURE]: render templates from ${folderPath}`);
+    fs.readdirSync(folderPath).forEach(filename => {
+      const file = path.join(folderPath, filename);
       const raw = fs.readFileSync(file);
       if (filename.endsWith('.hb')) {
         const template = hb.compile(raw.toString());
@@ -83,13 +93,5 @@ export abstract class Feature {
     });
 
     return resources;
-  }
-
-  protected manifestPath() {
-    const devPath = path.join(__dirname, "..", 'src/features', this.name);
-    if (fs.existsSync(devPath)) {
-      return devPath;
-    }
-    return path.join(__dirname, "..", 'features', this.name);
   }
 }
