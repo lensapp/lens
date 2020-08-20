@@ -3,25 +3,25 @@ import * as pty from "node-pty"
 import { ShellSession } from "./shell-session";
 import { v4 as uuid } from "uuid"
 import * as k8s from "@kubernetes/client-node"
+import { KubeConfig } from "@kubernetes/client-node"
+import { Cluster } from "./cluster"
 import logger from "./logger";
-import { KubeConfig, V1Pod } from "@kubernetes/client-node";
-import { tracker } from "./tracker"
-import { Cluster, ClusterPreferences } from "./cluster"
+import { tracker } from "../common/tracker";
 
 export class NodeShellSession extends ShellSession {
   protected nodeName: string;
   protected podId: string
   protected kc: KubeConfig
 
-  constructor(socket: WebSocket, pathToKubeconfig: string, cluster: Cluster, nodeName: string) {
-    super(socket, pathToKubeconfig, cluster)
+  constructor(socket: WebSocket, cluster: Cluster, nodeName: string) {
+    super(socket, cluster)
     this.nodeName = nodeName
     this.podId = `node-shell-${uuid()}`
-    this.kc = cluster.proxyKubeconfig()
+    this.kc = cluster.getProxyKubeconfig()
   }
 
   public async open() {
-    const shell = await this.kubectl.kubectlPath()
+    const shell = await this.kubectl.getPath()
     let args = []
     if (this.createNodeShellPod(this.podId, this.nodeName)) {
       await this.waitForRunningPod(this.podId).catch((error) => {
@@ -107,7 +107,7 @@ export class NodeShellSession extends ShellSession {
       const watch = new k8s.Watch(kc);
 
       const req = await watch.watch(`/api/v1/namespaces/kube-system/pods`, {},
-      // callback is called for each received object.
+        // callback is called for each received object.
         (_type, obj) => {
           if (obj.metadata.name == podId && obj.status.phase === "Running") {
             resolve(true)
@@ -119,9 +119,13 @@ export class NodeShellSession extends ShellSession {
           reject(false)
         }
       );
-      setTimeout(() => { req.abort(); reject(false); }, 120 * 1000);
+      setTimeout(() => {
+        req.abort();
+        reject(false);
+      }, 120 * 1000);
     })
   }
+
   protected deleteNodeShellPod() {
     const kc = this.getKubeConfig();
     const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
@@ -129,16 +133,13 @@ export class NodeShellSession extends ShellSession {
   }
 }
 
-export async function open(socket: WebSocket, pathToKubeconfig: string, cluster: Cluster, nodeName?: string): Promise<ShellSession> {
-  return new Promise(async(resolve, reject) => {
-    let shell = null
-    if (nodeName) {
-      shell = new NodeShellSession(socket, pathToKubeconfig, cluster, nodeName)
-    }
-    else {
-      shell = new ShellSession(socket, pathToKubeconfig, cluster)
-    }
-    shell.open()
-    resolve(shell)
-  })
+export async function openShell(socket: WebSocket, cluster: Cluster, nodeName?: string): Promise<ShellSession> {
+  let shell: ShellSession;
+  if (nodeName) {
+    shell = new NodeShellSession(socket, cluster, nodeName)
+  } else {
+    shell = new ShellSession(socket, cluster);
+  }
+  shell.open()
+  return shell;
 }

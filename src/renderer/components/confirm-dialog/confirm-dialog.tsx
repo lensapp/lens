@@ -5,7 +5,7 @@ import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { cssNames, noop, prevDefault } from "../../utils";
-import { Button } from "../button";
+import { Button, ButtonProps } from "../button";
 import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
 
@@ -14,7 +14,9 @@ export interface IConfirmDialogParams {
   labelOk?: ReactNode;
   labelCancel?: ReactNode;
   message?: ReactNode;
-  icon?: string;
+  icon?: ReactNode;
+  okButtonProps?: Partial<ButtonProps>
+  cancelButtonProps?: Partial<ButtonProps>
 }
 
 interface Props extends Partial<DialogProps> {
@@ -40,7 +42,7 @@ export class ConfirmDialog extends React.Component<Props> {
     ok: noop,
     labelOk: <Trans>Ok</Trans>,
     labelCancel: <Trans>Cancel</Trans>,
-    icon: "warning",
+    icon: <Icon big material="warning"/>,
   };
 
   get params(): IConfirmDialogParams {
@@ -67,18 +69,21 @@ export class ConfirmDialog extends React.Component<Props> {
 
   render() {
     const { className, ...dialogProps } = this.props;
-    const { icon, labelOk, labelCancel, message } = this.params;
+    const {
+      icon, labelOk, labelCancel, message,
+      okButtonProps = {},
+      cancelButtonProps = {},
+    } = this.params;
     return (
       <Dialog
         {...dialogProps}
-        className={cssNames("ConfirmDialog", className, icon)}
+        className={cssNames("ConfirmDialog", className)}
         isOpen={ConfirmDialog.isOpen}
         onClose={this.onClose}
         close={this.close}
       >
         <div className="confirm-content">
-          <Icon big material={icon}/>
-          {message}
+          {icon} {message}
         </div>
         <div className="confirm-buttons">
           <Button
@@ -86,6 +91,7 @@ export class ConfirmDialog extends React.Component<Props> {
             className="cancel"
             label={labelCancel}
             onClick={prevDefault(this.close)}
+            {...cancelButtonProps}
           />
           <Button
             autoFocus primary
@@ -93,6 +99,7 @@ export class ConfirmDialog extends React.Component<Props> {
             label={labelOk}
             onClick={prevDefault(this.ok)}
             waiting={this.isSaving}
+            {...okButtonProps}
           />
         </div>
       </Dialog>

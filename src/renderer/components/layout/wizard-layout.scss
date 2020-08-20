@@ -1,0 +1,62 @@
+.WizardLayout {
+  $spacing: $padding * 2;
+
+  position: relative;
+  padding: $padding * 3;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 40%;
+
+  > * {
+    @include custom-scrollbar;
+    --flex-gap: #{$spacing};
+    padding: $spacing;
+  }
+
+  > .head-col {
+    position: sticky;
+    border-bottom: 1px solid $grey-800;
+    justify-content: space-between;
+  }
+
+  > .content-col {
+    margin-right: $spacing;
+    background-color: var(--clusters-menu-bgc);
+    border-radius: $radius;
+
+    > div {
+      flex: 1;
+    }
+
+    > .error {
+      border-radius: $radius;
+      padding: $padding;
+      background-color: pink;
+    }
+  }
+
+  > .info-col {
+    border-left: 1px solid #353a3e;
+  }
+
+  p {
+    line-height: 140%;
+  }
+
+  a {
+    color: $colorInfo;
+  }
+
+  &.centered {
+    .content-col {
+      margin: 0;
+
+      > div {
+        margin: 0 auto;
+        width: 60%;
+        min-width: 570px;
+        max-width: 1000px;
+      }
+    }
+  }
+}

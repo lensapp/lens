@@ -4,71 +4,68 @@ import http from "http"
 import path from "path"
 import { readFile } from "fs-extra"
 import { Cluster } from "./cluster"
-import { configRoute } from "./routes/config"
-import { helmApi } from "./helm-api"
-import { resourceApplierApi } from "./resource-applier-api"
-import { kubeconfigRoute } from "./routes/kubeconfig"
-import { metricsRoute } from "./routes/metrics"
-import { watchRoute } from "./routes/watch"
-import { portForwardRoute } from "./routes/port-forward"
-import { apiPrefix, outDir, reactAppName } from "../common/vars";
+import { apiPrefix, appName, publicPath } from "../common/vars";
+import { helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute } from "./routes";
 
-const mimeTypes: Record<string, string> = {
-  "html": "text/html",
-  "txt": "text/plain",
-  "css": "text/css",
-  "gif": "image/gif",
-  "jpg": "image/jpeg",
-  "png": "image/png",
-  "svg": "image/svg+xml",
-  "js": "application/javascript",
-  "woff2": "font/woff2",
-  "ttf": "font/ttf"
-};
-
-interface RouteParams {
-  [key: string]: string | undefined;
+export interface RouterRequestOpts {
+  req: http.IncomingMessage;
+  res: http.ServerResponse;
+  cluster: Cluster;
+  params: RouteParams;
+  url: URL;
 }
 
-export type LensApiRequest = {
-  cluster: Cluster;
-  payload: any;
-  raw: {
-    req: http.IncomingMessage;
-  };
+export interface RouteParams extends Record<string, string> {
+  path?: string; // *-route
+  namespace?: string;
+  service?: string;
+  account?: string;
+  release?: string;
+  repo?: string;
+  chart?: string;
+}
+
+export interface LensApiRequest<P = any> {
+  path: string;
+  payload: P;
   params: RouteParams;
+  cluster: Cluster;
   response: http.ServerResponse;
   query: URLSearchParams;
-  path: string;
+  raw: {
+    req: http.IncomingMessage;
+  }
 }
 
 export class Router {
-  protected router: any
+  protected router: any;
 
   public constructor() {
     this.router = new Call.Router();
     this.addRoutes()
   }
 
-  public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse) {
-    const url = new URL(req.url, "http://localhost")
+  public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse): Promise<boolean> {
+    const url = new URL(req.url, "http://localhost");
     const path = url.pathname
     const method = req.method.toLowerCase()
-    const matchingRoute = this.router.route(method, path)
-
-    if (matchingRoute.isBoom !== true) { // route() returns error if route not found -> object.isBoom === true
-      const request = await this.getRequest({ req, res, cluster, url, params: matchingRoute.params })
+    const matchingRoute = this.router.route(method, path);
+    const routeFound = !matchingRoute.isBoom;
+    if (routeFound) {
+      const request = await this.getRequest({ req, res, cluster, url, params: matchingRoute.params });
       await matchingRoute.route(request)
       return true
-    } else {
-      return false
     }
+    return false;
   }
 
-  protected async getRequest(opts: { req: http.IncomingMessage; res: http.ServerResponse; cluster: Cluster; url: URL; params: RouteParams }) {
+  protected async getRequest(opts: RouterRequestOpts): Promise<LensApiRequest> {
     const { req, res, url, cluster, params } = opts
-    const { payload } = await Subtext.parse(req, null, { parse: true, output: 'data' });
-    const request: LensApiRequest = {
+    const { payload } = await Subtext.parse(req, null, {
+      parse: true,
+      output: "data",
+    });
+    return {
       cluster: cluster,
       path: url.pathname,
       raw: {
@@ -79,67 +76,68 @@ export class Router {
       payload: payload,
       params: params
     }
-    return request
   }
 
   protected getMimeType(filename: string) {
+    const mimeTypes: Record<string, string> = {
+      html: "text/html",
+      txt: "text/plain",
+      css: "text/css",
+      gif: "image/gif",
+      jpg: "image/jpeg",
+      png: "image/png",
+      svg: "image/svg+xml",
+      js: "application/javascript",
+      woff2: "font/woff2",
+      ttf: "font/ttf"
+    };
     return mimeTypes[path.extname(filename).slice(1)] || "text/plain"
   }
 
-  protected async handleStaticFile(filePath: string, response: http.ServerResponse) {
-    const asset = path.resolve(outDir, filePath);
+  async handleStaticFile(filePath: string, res: http.ServerResponse) {
+    const asset = path.join(__static, filePath);
     try {
       const data = await readFile(asset);
-      response.setHeader("Content-Type", this.getMimeType(asset));
-      response.write(data)
-      response.end()
+      res.setHeader("Content-Type", this.getMimeType(asset));
+      res.write(data)
+      res.end()
     } catch (err) {
-      // default to index.html so that react routes work when page is refreshed
-      this.handleStaticFile(`${reactAppName}.html`, response)
+      this.handleStaticFile(`${publicPath}/${appName}.html`, res);
     }
   }
 
   protected addRoutes() {
-    const {
-      BASE: apiBase,
-      KUBE_HELM: apiHelm,
-      KUBE_RESOURCE_APPLIER: apiResource,
-    } = apiPrefix;
-
     // Static assets
-    this.router.add({ method: 'get', path: '/{path*}' }, (request: LensApiRequest) => {
-      const { response, params } = request
-      const file = params.path || "/index.html"
-      this.handleStaticFile(file, response)
-    })
+    this.router.add({ method: 'get', path: '/{path*}' }, ({ params, response }: LensApiRequest) => {
+      this.handleStaticFile(params.path, response);
+    });
 
-    this.router.add({ method: "get", path: `${apiBase}/config` }, configRoute.routeConfig.bind(configRoute))
-    this.router.add({ method: "get", path: `${apiBase}/kubeconfig/service-account/{namespace}/{account}` }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute))
 
     // Watch API
-    this.router.add({ method: "get", path: `${apiBase}/watch` }, watchRoute.routeWatch.bind(watchRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/watch` }, watchRoute.routeWatch.bind(watchRoute))
 
     // Metrics API
-    this.router.add({ method: "post", path: `${apiBase}/metrics` }, metricsRoute.routeMetrics.bind(metricsRoute))
+    this.router.add({ method: "post", path: `${apiPrefix}/metrics` }, metricsRoute.routeMetrics.bind(metricsRoute))
 
     // Port-forward API
-    this.router.add({ method: "post", path: `${apiBase}/pods/{namespace}/{resourceType}/{resourceName}/port-forward/{port}` }, portForwardRoute.routePortForward.bind(portForwardRoute))
+    this.router.add({ method: "post", path: `${apiPrefix}/pods/{namespace}/{resourceType}/{resourceName}/port-forward/{port}` }, portForwardRoute.routePortForward.bind(portForwardRoute))
 
     // Helm API
-    this.router.add({ method: "get", path: `${apiHelm}/v2/charts` }, helmApi.listCharts.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiHelm}/v2/charts/{repo}/{chart}` }, helmApi.getChart.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiHelm}/v2/charts/{repo}/{chart}/values` }, helmApi.getChartValues.bind(helmApi))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts` }, helmRoute.listCharts.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}` }, helmRoute.getChart.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}/values` }, helmRoute.getChartValues.bind(helmRoute))
 
-    this.router.add({ method: "post", path: `${apiHelm}/v2/releases` }, helmApi.installChart.bind(helmApi))
-    this.router.add({ method: `put`, path: `${apiHelm}/v2/releases/{namespace}/{release}` }, helmApi.updateRelease.bind(helmApi))
-    this.router.add({ method: `put`, path: `${apiHelm}/v2/releases/{namespace}/{release}/rollback` }, helmApi.rollbackRelease.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiHelm}/v2/releases/{namespace?}` }, helmApi.listReleases.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiHelm}/v2/releases/{namespace}/{release}` }, helmApi.getRelease.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiHelm}/v2/releases/{namespace}/{release}/values` }, helmApi.getReleaseValues.bind(helmApi))
-    this.router.add({ method: "get", path: `${apiHelm}/v2/releases/{namespace}/{release}/history` }, helmApi.getReleaseHistory.bind(helmApi))
-    this.router.add({ method: "delete", path: `${apiHelm}/v2/releases/{namespace}/{release}` }, helmApi.deleteRelease.bind(helmApi))
+    this.router.add({ method: "post", path: `${apiPrefix}/v2/releases` }, helmRoute.installChart.bind(helmRoute))
+    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.updateRelease.bind(helmRoute))
+    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}/rollback` }, helmRoute.rollbackRelease.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace?}` }, helmRoute.listReleases.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.getRelease.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/values` }, helmRoute.getReleaseValues.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/history` }, helmRoute.getReleaseHistory.bind(helmRoute))
+    this.router.add({ method: "delete", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.deleteRelease.bind(helmRoute))
 
     // Resource Applier API
-    this.router.add({ method: "post", path: `${apiResource}/stack` }, resourceApplierApi.applyResource.bind(resourceApplierApi))
+    this.router.add({ method: "post", path: `${apiPrefix}/stack` }, resourceApplierRoute.applyResource.bind(resourceApplierRoute))
   }
 }

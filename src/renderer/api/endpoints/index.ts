@@ -1,10 +1,7 @@
-// Local express.js endpoints
-export * from "./config.api"
-export * from "./cluster.api"
-export * from "./kubeconfig.api"
-
-// Kubernetes endpoints
+// Kubernetes apis
 // Docs: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.10/
+
+export * from "./cluster.api"
 export * from "./namespaces.api"
 export * from "./cluster-role.api"
 export * from "./cluster-role-binding.api"

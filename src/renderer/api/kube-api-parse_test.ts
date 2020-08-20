@@ -1,8 +1,8 @@
-import { IKubeApiLinkBase, parseApi } from "./kube-api-parse";
+import { IKubeApiParsed, parseKubeApi } from "./kube-api-parse";
 
 interface KubeApi_Parse_Test {
   url: string;
-  expected: Required<IKubeApiLinkBase>;
+  expected: Required<IKubeApiParsed>;
 }
 
 const tests: KubeApi_Parse_Test[] = [
@@ -129,7 +129,7 @@ describe.only("parseApi unit tests", () => {
   for (const i in tests) {
     const { url: tUrl, expected:tExpect} = tests[i];
     test(`test #${parseInt(i)+1}`, () => {
-      expect(parseApi(tUrl)).toStrictEqual(tExpect);
+      expect(parseKubeApi(tUrl)).toStrictEqual(tExpect);
     });
   }
 });

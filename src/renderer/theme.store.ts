@@ -1,197 +1,98 @@
-import { action, autorun, computed, observable, reaction } from "mobx";
-import { autobind, createStorage } from "./utils";
-import { Notifications } from "./components/notifications";
+import { computed, observable, reaction } from "mobx";
+import { autobind } from "./utils/autobind";
+import { userStore } from "../common/user-store";
+import logger from "../main/logger";
 
-interface ITheme {
-  name: string;
-  type: "dark" | "light";
+export type ThemeId = string;
+
+export enum ThemeType {
+  DARK = "dark",
+  LIGHT = "light",
+}
+
+export interface Theme {
+  id: ThemeId; // filename without .json-extension
+  type: ThemeType;
+  name?: string;
+  colors?: Record<string, string>;
+  description?: string;
   author?: string;
-  colors?: {
-    [key: string]: string;
-    blue: string;
-    magenta: string;
-    golden: string;
-    halfGray: string;
-    primary: string;
-    textColorPrimary: string;
-    textColorSecondary: string;
-    textColorAccent: string;
-    borderColor: string;
-    borderFaintColor: string;
-    mainBackground: string;
-    contentColor: string;
-    layoutBackground: string;
-    layoutTabsBackground: string;
-    layoutTabsActiveColor: string;
-    layoutTabsLineColor: string;
-    sidebarLogoBackground: string;
-    sidebarActiveColor: string;
-    sidebarSubmenuActiveColor: string;
-    sidebarBackground: string;
-    buttonPrimaryBackground: string;
-    buttonDefaultBackground: string;
-    buttonAccentBackground: string;
-    buttonDisabledBackground: string;
-    tableBgcStripe: string;
-    tableBgcSelected: string;
-    tableHeaderBackground: string;
-    tableHeaderBorderWidth: string;
-    tableHeaderBorderColor: string;
-    tableHeaderColor: string;
-    tableSelectedRowColor: string;
-    helmLogoBackground: string;
-    helmImgBackground: string;
-    helmStableRepo: string;
-    helmIncubatorRepo: string;
-    helmDescriptionHr: string;
-    helmDescriptionBlockqouteColor: string;
-    helmDescriptionBlockqouteBorder: string;
-    helmDescriptionBlockquoteBackground: string;
-    helmDescriptionHeaders: string;
-    helmDescriptionH6: string;
-    helmDescriptionTdBorder: string;
-    helmDescriptionTrBackground: string;
-    helmDescriptionCodeBackground: string;
-    helmDescriptionPreBackground: string;
-    helmDescriptionPreColor: string;
-    colorSuccess: string;
-    colorOk: string;
-    colorInfo: string;
-    colorError: string;
-    colorSoftError: string;
-    colorWarning: string;
-    colorVague: string;
-    colorTerminated: string;
-    dockHeadBackground: string;
-    dockInfoBackground: string;
-    dockInfoBorderColor: string;
-    terminalBackground: string;
-    terminalForeground: string;
-    terminalCursor: string;
-    terminalCursorAccent: string;
-    terminalSelection: string;
-    terminalBlack: string;
-    terminalRed: string;
-    terminalGreen: string;
-    terminalYellow: string;
-    terminalBlue: string;
-    terminalMagenta: string;
-    terminalCyan: string;
-    terminalWhite: string;
-    terminalBrightBlack: string;
-    terminalBrightRed: string;
-    terminalBrightGreen: string;
-    terminalBrightYellow: string;
-    terminalBrightBlue: string;
-    terminalBrightMagenta: string;
-    terminalBrightCyan: string;
-    terminalBrightWhite: string;
-    dialogTextColor: string;
-    dialogBackground: string;
-    dialogHeaderBackground: string;
-    dialogFooterBackground: string;
-    drawerTogglerBackground: string;
-    drawerTitleText: string;
-    drawerSubtitleBackground: string;
-    drawerItemNameColor: string;
-    drawerItemValueColor: string;
-    boxShadow: string;
-    iconActiveColor: string;
-    iconActiveBackground: string;
-    filterAreaBackground: string;
-    chartLiveBarBackgound: string;
-    chartStripesColor: string;
-    chartCapacityColor: string;
-    pieChartDefaultColor: string;
-    selectOptionHoveredColor: string;
-    lineProgressBackground: string;
-    radioActiveBackground: string;
-  };
 }
 
 @autobind()
 export class ThemeStore {
-  protected style = document.createElement("style");
+  protected styles: HTMLStyleElement;
 
-  readonly defaultTheme: ITheme = {
-    name: "kontena-dark",
-    type: "dark",
-    colors: {} as any,
-  };
+  // bundled themes from `themes/${themeId}.json`
+  @observable themes: Theme[] = [
+    { id: "kontena-dark", type: ThemeType.DARK },
+    { id: "kontena-light", type: ThemeType.LIGHT },
+  ];
 
-  @observable activeThemeId = this.defaultTheme.name; // theme's filename without extension
-  @observable themes = observable.map<string, ITheme>([], { deep: false });
+  @computed get activeThemeId() {
+    return userStore.preferences.colorTheme;
+  }
 
-  @computed get activeTheme() {
-    return this.themes.get(this.activeThemeId) || this.defaultTheme;
+  @computed get activeTheme(): Theme {
+    const activeTheme = this.themes.find(theme => theme.id === this.activeThemeId) || this.themes[0];
+    return {
+      colors: {},
+      ...activeTheme,
+    }
   }
 
   constructor() {
-    const storage = createStorage("theme", this.activeThemeId);
-    this.activeThemeId = storage.get();
-
-    // init
-    this.style.id = "lens-theme"
-    document.head.prepend(this.style);
-    this.setTheme(this.activeThemeId);
-
-    // save active theme-id in local storage
-    reaction(() => this.activeThemeId, themeId => storage.set(themeId), {
-      fireImmediately: true
-    });
-
-    // auto-apply colors to dom from active theme
-    reaction(() => this.activeTheme, this.onChange, {
+    // auto-apply active theme
+    reaction(() => this.activeThemeId, async themeId => {
+      try {
+        await this.loadTheme(themeId);
+        this.applyTheme();
+      } catch (err) {
+        userStore.resetTheme();
+      }
+    }, {
       fireImmediately: true,
-      delay: 150,
-    });
-
-    // apply theme from configuration
-    import("./config.store").then(({ configStore }) => {
-      autorun(() => {
-        const themeId = configStore.config.lensTheme;
-        if (themeId && themeId !== this.activeThemeId) {
-          this.setTheme(themeId);
-        }
-      });
     })
   }
 
-  protected onChange = (theme: ITheme) => {
-    let cssText = "\n"
-    Object.entries(theme.colors).forEach(([propName, color]) => {
-      cssText += `--${propName}: ${color} !important;\n`
-    });
-    this.style.textContent = `:root {${cssText}} `;
+  async init() {
+    // preload all themes
+    await Promise.all(
+      this.themes.map(theme => this.loadTheme(theme.id))
+    );
   }
 
-  async load(themeId: string, { showErrorNotification = true } = {}): Promise<ITheme> {
-    if (this.themes.has(themeId)) {
-      return this.themes.get(themeId);
-    }
+  getThemeById(themeId: ThemeId): Theme {
+    return this.themes.find(theme => theme.id === themeId)
+  }
+
+  protected async loadTheme(themeId: ThemeId): Promise<Theme> {
     try {
-      const theme: ITheme = require( // eslint-disable-line @typescript-eslint/no-var-requires
-        /* webpackMode: "lazy", webpackChunkName: "theme/[request]" */
+      // todo: figure out why await import() doesn't work
+      const theme = require( // eslint-disable-line @typescript-eslint/no-var-requires
+        /* webpackChunkName: "themes/[name]" */
         `./themes/${themeId}.json`
       );
-      this.themes.set(themeId, theme);
-      return theme;
+      const existingTheme = this.getThemeById(themeId);
+      if (existingTheme) {
+        Object.assign(existingTheme, theme); // merge
+      }
+      return existingTheme;
     } catch (err) {
-      if (showErrorNotification) Notifications.error(err.toString());
-      throw err;
+      logger.error(`Can't load theme "${themeId}": ${err}`);
     }
   }
 
-  @action
-  async setTheme(themeId = this.defaultTheme.name) {
-    try {
-      await this.load(themeId);
-      this.activeThemeId = themeId;
-    } catch (err) {
-      if (themeId !== this.defaultTheme.name) {
-        this.setTheme(); // fallback to default theme
-      }
+  protected applyTheme(theme = this.activeTheme) {
+    if (!this.styles) {
+      this.styles = document.createElement("style");
+      this.styles.id = "lens-theme"
+      document.head.prepend(this.styles);
     }
+    const cssVars = Object.entries(theme.colors).map(([cssName, color]) => {
+      return `--${cssName}: ${color} !important;`
+    });
+    this.styles.textContent = `:root {\n${cssVars.join("\n")}}`;
   }
 }
 

@@ -1,9 +1,16 @@
-import ElectronStore from "electron-store"
-import * as version210Beta4 from "../migrations/user-store/2.1.0-beta.4"
+import type { ThemeId } from "../renderer/theme.store";
+import semver from "semver"
+import { action, observable, reaction, toJS } from "mobx";
+import { BaseStore } from "./base-store";
+import migrations from "../migrations/user-store"
 import { getAppVersion } from "./utils/app-version";
+import { getKubeConfigLocal, loadConfig } from "./kube-helpers";
+import { tracker } from "./tracker";
 
-export interface User {
-  id?: string;
+export interface UserStoreModel {
+  lastSeenAppVersion: string;
+  seenContexts: string[];
+  preferences: UserPreferences;
 }
 
 export interface UserPreferences {
@@ -11,76 +18,93 @@ export interface UserPreferences {
   colorTheme?: string;
   allowUntrustedCAs?: boolean;
   allowTelemetry?: boolean;
-  downloadMirror?: string;
+  downloadMirror?: string | "default";
 }
 
-export class UserStore {
-  private static instance: UserStore;
-  public store: ElectronStore;
+export class UserStore extends BaseStore<UserStoreModel> {
+  static readonly defaultTheme: ThemeId = "kontena-dark"
 
   private constructor() {
-    this.store = new ElectronStore({
-      // @ts-ignore
-      // fixme: tests are failed without "projectVersion"
-      projectVersion: getAppVersion(),
-      migrations: {
-        "2.1.0-beta.4": version210Beta4.migration,
-      }
+    super({
+      // configName: "lens-user-store", // todo: migrate from default "config.json"
+      migrations: migrations,
     });
+
+    // track telemetry availability
+    reaction(() => this.preferences.allowTelemetry, allowed => {
+      tracker.event("telemetry", allowed ? "enabled" : "disabled");
+    });
+
+    // refresh new contexts
+    this.whenLoaded.then(this.refreshNewContexts);
+    reaction(() => this.seenContexts.size, this.refreshNewContexts);
   }
 
-  public lastSeenAppVersion() {
-    return this.store.get('lastSeenAppVersion', "0.0.0")
+  @observable lastSeenAppVersion = "0.0.0"
+  @observable seenContexts = observable.set<string>();
+  @observable newContexts = observable.set<string>();
+
+  @observable preferences: UserPreferences = {
+    allowTelemetry: true,
+    allowUntrustedCAs: false,
+    colorTheme: UserStore.defaultTheme,
+    downloadMirror: "default",
+  };
+
+  get isNewVersion() {
+    return semver.gt(getAppVersion(), this.lastSeenAppVersion);
   }
 
-  public setLastSeenAppVersion(version: string) {
-    this.store.set('lastSeenAppVersion', version)
+  @action
+  resetTheme() {
+    this.preferences.colorTheme = UserStore.defaultTheme;
   }
 
-  public getSeenContexts(): Array<string> {
-    return this.store.get("seenContexts", [])
+  @action
+  saveLastSeenAppVersion() {
+    tracker.event("app", "whats-new-seen")
+    this.lastSeenAppVersion = getAppVersion();
   }
 
-  public storeSeenContext(newContexts: string[]) {
-    const seenContexts = this.getSeenContexts().concat(newContexts)
-    // store unique contexts by casting array to set first
-    const newContextSet = new Set(seenContexts)
-    const allContexts = [...newContextSet]
-    this.store.set("seenContexts", allContexts)
-    return allContexts
-  }
-
-  public setPreferences(preferences: UserPreferences) {
-    this.store.set('preferences', preferences)
-  }
-
-  public getPreferences(): UserPreferences {
-    const prefs = this.store.get("preferences", {})
-    if (!prefs.colorTheme) {
-      prefs.colorTheme = "dark"
+  protected refreshNewContexts = async () => {
+    const kubeConfig = await getKubeConfigLocal();
+    if (kubeConfig) {
+      this.newContexts.clear();
+      const localContexts = loadConfig(kubeConfig).getContexts();
+      localContexts
+        .filter(ctx => ctx.cluster)
+        .filter(ctx => !this.seenContexts.has(ctx.name))
+        .forEach(ctx => this.newContexts.add(ctx.name));
     }
-    if (!prefs.downloadMirror) {
-      prefs.downloadMirror = "default"
-    }
-    if (prefs.allowTelemetry === undefined) {
-      prefs.allowTelemetry = true
-    }
-
-    return prefs
   }
 
-  static getInstance(): UserStore {
-    if (!UserStore.instance) {
-      UserStore.instance = new UserStore();
-    }
-    return UserStore.instance;
+  @action
+  markNewContextsAsSeen() {
+    const { seenContexts, newContexts } = this;
+    this.seenContexts.replace([...seenContexts, ...newContexts]);
+    this.newContexts.clear();
   }
 
-  static resetInstance() {
-    UserStore.instance = null
+  @action
+  protected fromStore(data: Partial<UserStoreModel> = {}) {
+    const { lastSeenAppVersion, seenContexts = [], preferences } = data
+    if (lastSeenAppVersion) {
+      this.lastSeenAppVersion = lastSeenAppVersion;
+    }
+    this.seenContexts.replace(seenContexts);
+    Object.assign(this.preferences, preferences);
+  }
+
+  toJSON(): UserStoreModel {
+    const model: UserStoreModel = {
+      lastSeenAppVersion: this.lastSeenAppVersion,
+      seenContexts: Array.from(this.seenContexts),
+      preferences: this.preferences,
+    }
+    return toJS(model, {
+      recurseEverything: true,
+    })
   }
 }
 
-const userStore: UserStore = UserStore.getInstance();
-
-export { userStore };
+export const userStore = UserStore.getInstance<UserStore>();

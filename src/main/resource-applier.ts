@@ -1,47 +1,31 @@
+import type { Cluster } from "./cluster";
+import { KubernetesObject } from "@kubernetes/client-node"
 import { exec } from "child_process";
 import fs from "fs";
 import * as yaml from "js-yaml";
 import path from "path";
 import * as tempy from "tempy";
 import logger from "./logger"
-import { Cluster } from "./cluster";
-import { tracker } from "./tracker";
-
-type KubeObject = {
-  status: {};
-  metadata?: {
-    resourceVersion: number;
-    annotations?: {
-      "kubectl.kubernetes.io/last-applied-configuration": string;
-    };
-  };
-}
+import { tracker } from "../common/tracker";
+import { cloneJsonObject } from "../common/utils";
 
 export class ResourceApplier {
-  protected kubeconfigPath: string;
-  protected cluster: Cluster
-
-  constructor(cluster: Cluster, pathToKubeconfig: string) {
-    this.kubeconfigPath = pathToKubeconfig
-    this.cluster = cluster
+  constructor(protected cluster: Cluster) {
   }
 
-  public async apply(resource: any): Promise<string>  {
-    this.sanitizeObject((resource as KubeObject))
-    try {
-      tracker.event("resource", "apply")
-      return await this.kubectlApply(yaml.safeDump(resource))
-    } catch(error) {
-      throw (error)
-    }
+  async apply(resource: KubernetesObject | any): Promise<string> {
+    resource = this.sanitizeObject(resource);
+    tracker.event("resource", "apply")
+    return await this.kubectlApply(yaml.safeDump(resource));
   }
 
   protected async kubectlApply(content: string): Promise<string> {
-    const kubectl = await this.cluster.kubeCtl.kubectlPath()
+    const { kubeCtl, kubeConfigPath } = this.cluster;
+    const kubectlPath = await kubeCtl.getPath()
     return new Promise<string>((resolve, reject) => {
-      const fileName = tempy.file({name: "resource.yaml"})
+      const fileName = tempy.file({ name: "resource.yaml" })
       fs.writeFileSync(fileName, content)
-      const cmd = `"${kubectl}" apply --kubeconfig ${this.kubeconfigPath} -o json -f ${fileName}`
+      const cmd = `"${kubectlPath}" apply --kubeconfig "${kubeConfigPath}" -o json -f "${fileName}"`
       logger.debug("shooting manifests with: " + cmd);
       const execEnv: NodeJS.ProcessEnv = Object.assign({}, process.env)
       const httpsProxy = this.cluster.preferences?.httpsProxy
@@ -62,17 +46,18 @@ export class ResourceApplier {
   }
 
   public async kubectlApplyAll(resources: string[]): Promise<string> {
-    const kubectl = await this.cluster.kubeCtl.kubectlPath()
-    return new Promise<string>((resolve, reject) => {
+    const { kubeCtl, kubeConfigPath } = this.cluster;
+    const kubectlPath = await kubeCtl.getPath()
+    return new Promise((resolve, reject) => {
       const tmpDir = tempy.directory()
       // Dump each resource into tmpDir
-      for (const i in resources) {
-        fs.writeFileSync(path.join(tmpDir, `${i}.yaml`), resources[i])
-      }
-      const cmd = `"${kubectl}" apply --kubeconfig ${this.kubeconfigPath} -o json -f ${tmpDir}`
+      resources.forEach((resource, index) => {
+        fs.writeFileSync(path.join(tmpDir, `${index}.yaml`), resource);
+      })
+      const cmd = `"${kubectlPath}" apply --kubeconfig "${kubeConfigPath}" -o json -f "${tmpDir}"`
       console.log("shooting manifests with:", cmd);
       exec(cmd, (error, stdout, stderr) => {
-        if(error) {
+        if (error) {
           reject("Error applying manifests:" + error);
         }
         if (stderr != "") {
@@ -84,18 +69,14 @@ export class ResourceApplier {
     })
   }
 
-  protected sanitizeObject(resource: KubeObject) {
-    delete resource['status']
-    if (resource['metadata']) {
-      if (resource['metadata']['annotations'] && resource['metadata']['annotations']['kubectl.kubernetes.io/last-applied-configuration']) {
-        delete resource['metadata']['annotations']['kubectl.kubernetes.io/last-applied-configuration']
-      }
-      delete resource['metadata']['resourceVersion']
+  protected sanitizeObject(resource: KubernetesObject | any) {
+    resource = cloneJsonObject(resource);
+    delete resource.status;
+    delete resource.metadata?.resourceVersion;
+    const annotations = resource.metadata?.annotations;
+    if (annotations) {
+      delete annotations['kubectl.kubernetes.io/last-applied-configuration'];
     }
+    return resource;
   }
-}
-
-export async function apply(cluster: Cluster, pathToKubeconfig: string, resource: any) {
-  const resourceApplier = new ResourceApplier(cluster, pathToKubeconfig)
-  return await resourceApplier.apply(resource)
 }

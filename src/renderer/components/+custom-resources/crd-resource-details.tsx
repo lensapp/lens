@@ -11,12 +11,10 @@ import { DrawerItem } from "../drawer";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { apiManager } from "../../api/api-manager";
 import { crdStore } from "./crd.store";
-import { KubeObject } from "../../api/kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Input } from "../input";
 
-// fixme: provide type-safe check for status
-interface Props extends KubeObjectDetailsProps<KubeObject & { status: any }> {
+interface Props extends KubeObjectDetailsProps {
 }
 
 function CrdColumnValue({ value }: { value: any[] | {} | string }) {

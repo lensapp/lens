@@ -1,60 +1,75 @@
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
-import { isDevelopment, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
+import { autorun } from "mobx";
+import { WindowManager } from "./window-manager";
+import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
+import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
+import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
+import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
+import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
+import logger from "./logger";
 
-// todo: refactor + split menu sections to separated files, e.g. menus/file.menu.ts
-
-export interface MenuOptions {
-  logoutHook: any;
-  addClusterHook: any;
-  clusterSettingsHook: any;
-  showWhatsNewHook: any;
-  showPreferencesHook: any;
-  // all the above are really () => void type functions
+export function initMenu(windowManager: WindowManager) {
+  autorun(() => buildMenu(windowManager), {
+    delay: 100
+  });
 }
 
-function setClusterSettingsEnabled(enabled: boolean) {
-  const menuIndex = isMac ? 1 : 0
-  Menu.getApplicationMenu().items[menuIndex].submenu.items[1].enabled = enabled
-}
-
-function showAbout(_menuitem: MenuItem, browserWindow: BrowserWindow) {
-  const appDetails = [
-    `Version: ${app.getVersion()}`,
-  ]
-  appDetails.push(`Copyright 2020 Mirantis, Inc.`)
-  let title = "Lens"
-  if (isWindows) {
-    title = `  ${title}`
+export function buildMenu(windowManager: WindowManager) {
+  function ignoreOnMac(menuItems: MenuItemConstructorOptions[]) {
+    if (isMac) return [];
+    return menuItems;
   }
-  dialog.showMessageBoxSync(browserWindow, {
-    title,
-    type: "info",
-    buttons: ["Close"],
-    message: `Lens`,
-    detail: appDetails.join("\r\n")
-  })
-}
 
-/**
- * Constructs the menu based on the example at: https://electronjs.org/docs/api/menu#main-process
- * Menu items are constructed piece-by-piece to have slightly better control on individual sub-menus
- *
- * @param ipc the main promiceIpc handle. Needed to be able to hook IPC sending into logout click handler.
- */
-export default function initMenu(opts: MenuOptions, promiseIpc: any) {
+  function activeClusterOnly(menuItems: MenuItemConstructorOptions[]) {
+    if (!windowManager.activeClusterId) {
+      menuItems.forEach(item => {
+        item.enabled = false
+      });
+    }
+    return menuItems;
+  }
+
+  function navigate(url: string) {
+    logger.info(`[MENU]: navigating to ${url}`);
+    windowManager.navigate({
+      channel: "menu:navigate",
+      url: url,
+    })
+  }
+
+  function showAbout(browserWindow: BrowserWindow) {
+    const appInfo = [
+      `${appName}: ${app.getVersion()}`,
+      `Electron: ${process.versions.electron}`,
+      `Chrome: ${process.versions.chrome}`,
+      `Copyright 2020 Copyright 2020 Mirantis, Inc.`,
+    ]
+    dialog.showMessageBoxSync(browserWindow, {
+      title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
+      type: "info",
+      buttons: ["Close"],
+      message: `Lens`,
+      detail: appInfo.join("\r\n")
+    })
+  }
+
   const mt: MenuItemConstructorOptions[] = [];
+
   const macAppMenu: MenuItemConstructorOptions = {
     label: app.getName(),
     submenu: [
       {
         label: "About Lens",
-        click: showAbout
+        click(menuItem: MenuItem, browserWindow: BrowserWindow) {
+          showAbout(browserWindow)
+        }
       },
       { type: 'separator' },
       {
         label: 'Preferences',
-        click: opts.showPreferencesHook,
-        enabled: true
+        click() {
+          navigate(preferencesURL())
+        }
       },
       { type: 'separator' },
       { role: 'services' },
@@ -66,51 +81,46 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       { role: 'quit' }
     ]
   };
+
   if (isMac) {
     mt.push(macAppMenu);
   }
 
-  let fileMenu: MenuItemConstructorOptions;
-  if (isMac) {
-    fileMenu = {
-      label: 'File',
-      submenu: [{
-        label: 'Add Cluster...',
-        click: opts.addClusterHook,
-      },
+  const fileMenu: MenuItemConstructorOptions = {
+    label: "File",
+    submenu: [
       {
-        label: 'Cluster Settings',
-        click: opts.clusterSettingsHook,
-        enabled: false
-      }
-      ]
-    }
-  }
-  else {
-    fileMenu = {
-      label: 'File',
-      submenu: [
-        {
-          label: 'Add Cluster...',
-          click: opts.addClusterHook,
-        },
+        label: 'Add Cluster',
+        click() {
+          navigate(addClusterURL())
+        }
+      },
+      ...activeClusterOnly([
         {
           label: 'Cluster Settings',
-          click: opts.clusterSettingsHook,
-          enabled: false
-        },
+          click() {
+            navigate(clusterSettingsURL({
+              params: {
+                clusterId: windowManager.activeClusterId
+              }
+            }))
+          }
+        }
+      ]),
+      ...ignoreOnMac([
         { type: 'separator' },
         {
           label: 'Preferences',
-          click: opts.showPreferencesHook,
-          enabled: true
+          click() {
+            navigate(preferencesURL())
+          }
         },
         { type: 'separator' },
         { role: 'quit' }
-      ]
-    }
-  }
-  mt.push(fileMenu);
+      ])
+    ]
+  };
+  mt.push(fileMenu)
 
   const editMenu: MenuItemConstructorOptions = {
     label: 'Edit',
@@ -126,8 +136,7 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       { role: 'selectAll' },
     ]
   };
-  mt.push(editMenu);
-
+  mt.push(editMenu)
   const viewMenu: MenuItemConstructorOptions = {
     label: 'View',
     submenu: [
@@ -135,21 +144,21 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
         label: 'Back',
         accelerator: 'CmdOrCtrl+[',
         click() {
-          webContents.getFocusedWebContents().executeJavaScript('window.history.back()')
+          webContents.getFocusedWebContents()?.goBack();
         }
       },
       {
         label: 'Forward',
         accelerator: 'CmdOrCtrl+]',
         click() {
-          webContents.getFocusedWebContents().executeJavaScript('window.history.forward()')
+          webContents.getFocusedWebContents()?.goForward();
         }
       },
       {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click() {
-          webContents.getFocusedWebContents().reload()
+          webContents.getFocusedWebContents()?.reload();
         }
       },
       { role: 'toggleDevTools' },
@@ -161,19 +170,19 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       { role: 'togglefullscreen' }
     ]
   };
-  mt.push(viewMenu);
+  mt.push(viewMenu)
 
   const helpMenu: MenuItemConstructorOptions = {
     role: 'help',
     submenu: [
       {
-        label: 'License',
+        label: "License",
         click: async () => {
           shell.openExternal('https://k8slens.dev/licenses/eula.md');
         },
       },
       {
-        label: 'Community Slack',
+        label: "Community Slack",
         click: async () => {
           shell.openExternal(slackUrl);
         },
@@ -186,24 +195,22 @@ export default function initMenu(opts: MenuOptions, promiseIpc: any) {
       },
       {
         label: "What's new?",
-        click: opts.showWhatsNewHook,
+        click() {
+          navigate(whatsNewURL())
+        },
       },
-      ...(!isMac ? [{
-        label: "About Lens",
-        click: showAbout
-      } as MenuItemConstructorOptions] : [])
+      ...ignoreOnMac([
+        {
+          label: "About Lens",
+          click(menuItem: MenuItem, browserWindow: BrowserWindow) {
+            showAbout(browserWindow)
+          }
+        }
+      ])
     ]
   };
-  mt.push(helpMenu);
 
-  const menu = Menu.buildFromTemplate(mt);
-  Menu.setApplicationMenu(menu);
+  mt.push(helpMenu)
 
-  promiseIpc.on("enableClusterSettingsMenuItem", (clusterId: string) => {
-    setClusterSettingsEnabled(true)
-  });
-
-  promiseIpc.on("disableClusterSettingsMenuItem", () => {
-    setClusterSettingsEnabled(false)
-  });
+  Menu.setApplicationMenu(Menu.buildFromTemplate(mt));
 }

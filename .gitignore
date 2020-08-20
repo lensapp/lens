@@ -5,7 +5,7 @@ node_modules/
 yarn-error.log
 coverage/
 tmp/
-static/build/client/
+static/build/**
 binaries/client/
 binaries/server/
 locales/**/**.js

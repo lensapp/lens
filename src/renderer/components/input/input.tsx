@@ -13,7 +13,7 @@ type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps = InputHTMLAttributes<InputElement> & TextareaHTMLAttributes<InputElement> & DOMAttributes<InputElement>;
 
-export type InputProps<T = string> = Omit<InputElementProps, "onChange"> & {
+export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSubmit"> & {
   theme?: "round-black";
   className?: string;
   value?: T;
@@ -25,6 +25,7 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange"> & {
   iconRight?: string | React.ReactNode;
   validators?: Validator | Validator[];
   onChange?(value: T, evt: React.ChangeEvent<InputElement>): void;
+  onSubmit?(value: T): void;
 }
 
 interface State {
@@ -100,7 +101,7 @@ export class Input extends React.Component<InputProps, State> {
   async validate(value = this.getValue()) {
     let validationId = (this.validationId = ""); // reset every time for async validators
     const asyncValidators: Promise<any>[] = [];
-    let errors: React.ReactNode[] = [];
+    const errors: React.ReactNode[] = [];
 
     // run validators
     for (const validator of this.validators) {
@@ -130,12 +131,10 @@ export class Input extends React.Component<InputProps, State> {
 
     // handle async validators result
     if (asyncValidators.length > 0) {
-      this.setState({ validating: true, valid: false, });
+      this.setState({ validating: true, valid: false });
       const asyncErrors = await Promise.all(asyncValidators);
-      const isLastValidationCheck = this.validationId === validationId;
-      if (isLastValidationCheck) {
-        errors = this.state.errors.concat(asyncErrors.filter(err => err));
-        this.setValidation(errors);
+      if (this.validationId === validationId) {
+        this.setValidation(errors.concat(...asyncErrors.filter(err => err)));
       }
     }
 
@@ -157,7 +156,7 @@ export class Input extends React.Component<InputProps, State> {
 
   private setupValidators() {
     this.validators = conditionalValidators
-    // add conditional validators if matches input props
+      // add conditional validators if matches input props
       .filter(validator => validator.condition(this.props))
       // add custom validators
       .concat(this.props.validators)
@@ -206,6 +205,19 @@ export class Input extends React.Component<InputProps, State> {
     // when used @defaultValue instead of @value changing real input.value doesn't call render()
     if (this.isUncontrolled && this.showMaxLenIndicator) {
       this.forceUpdate();
+    }
+  }
+
+  @autobind()
+  onKeyDown(evt: React.KeyboardEvent<any>) {
+    const modified = evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey;
+
+    switch (evt.key) {
+    case "Enter":
+      if (this.props.onSubmit && !modified && !evt.repeat) {
+        this.props.onSubmit(this.getValue());
+      }
+      break;
     }
   }
 
@@ -269,8 +281,11 @@ export class Input extends React.Component<InputProps, State> {
       onFocus: this.onFocus,
       onBlur: this.onBlur,
       onChange: this.onChange,
+      onKeyDown: this.onKeyDown,
       rows: multiLine ? (rows || 1) : null,
       ref: this.bindRef,
+      type: "text",
+      spellCheck: "false",
     });
 
     return (

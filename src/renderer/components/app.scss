@@ -8,8 +8,13 @@
   border: 0;
   outline: none;
   -webkit-font-smoothing: antialiased;
-  -webkit-user-drag: none;
-  -webkit-app-region: no-drag;
+}
+
+:root {
+  --mainBackground: #1e2124;
+  --textColorPrimary: #87909c;
+  --clusters-menu-bgc: #252729;
+  --main-layout-header: 40px;
 }
 
 ::selection {
@@ -26,12 +31,26 @@ html {
 
 html, body {
   height: 100%;
-  overflow: hidden;
 }
 
 #app {
   height: 100%;
   min-height: 100%;
+
+  > * {
+    height: inherit;
+  }
+}
+
+#draggable-top {
+  @include set-draggable;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: var(--main-layout-header);
+  z-index: 1000;
+  pointer-events: none;
 }
 
 body {
@@ -60,37 +79,37 @@ hr {
 }
 
 h1 {
-  font-size: 11.2rem;
-  font-weight: $font-weight-thin;
+  color: white;
+  font-size: 28px;
+  font-weight: normal;
   letter-spacing: -.010em;
   margin: 0;
 }
 
 h2 {
   @extend h1;
-  font-size: 5.6 * $unit;
+  font-size: 24px;
 }
 
 h3 {
   @extend h2;
-  font-size: 4.5 * $unit;
+  font-size: 20px;
 }
 
 h4 {
-  @extend h2;
-  font-size: 3.4 * $unit;
+  @extend h3;
+  font-size: 18px;
 }
 
 h5 {
-  @extend h2;
-  font-size: 2.6 * $unit;
+  @extend h4;
   padding: $padding / 2 0;
+  font-size: 16px;
 }
 
 h6 {
-  @extend h2;
-  font-size: 2 * $unit;
-  font-weight: $font-weight-bold;
+  @extend h5;
+  font-size: 12px;
 }
 
 small {
@@ -98,14 +117,21 @@ small {
 }
 
 code {
-  @include custom-scrollbar;
+  display: inline-block;
+  padding: 0.2em;
+  vertical-align: middle;
+  border-radius: $radius;
   font-family: $font-monospace;
   font-size: $font-size * .9;
-  display: block;
-  background: #1a1919;
   color: #b4b5b4;
-  padding: $padding * 2;
-  white-space: pre;
+
+  &.block {
+    @include hidden-scrollbar;
+    background: #1a1919;
+    display: block;
+    white-space: pre;
+    padding: $padding * 2;
+  }
 }
 
 a {

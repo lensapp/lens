@@ -3,10 +3,10 @@ import { autobind } from "./utils";
 import { KubeObject } from "./api/kube-object";
 import { IKubeWatchEvent, kubeWatchApi } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
-import { configStore } from "./config.store";
 import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
+import { getHostedCluster } from "../common/cluster-store";
 
 @autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
@@ -23,8 +23,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     const namespaces: string[] = [].concat(namespace);
     if (namespaces.length) {
       return this.items.filter(item => namespaces.includes(item.getNs()));
-    }
-    else if (!strict) {
+    } else if (!strict) {
       return this.items;
     }
   }
@@ -47,8 +46,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
         const itemLabels = item.getLabels();
         return labels.every(label => itemLabels.includes(label));
       })
-    }
-    else {
+    } else {
       return this.items.filter((item: T) => {
         const itemLabels = item.metadata.labels || {};
         return Object.entries(labels)
@@ -62,8 +60,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       const { limit } = this;
       const query: IKubeApiQueryParams = limit ? { limit } : {};
       return this.api.list({}, query);
-    }
-    else {
+    } else {
       return Promise
         .all(allowedNamespaces.map(namespace => this.api.list({ namespace })))
         .then(items => items.flat())
@@ -79,8 +76,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     this.isLoading = true;
     let items: T[];
     try {
-      const { isClusterAdmin, allowedNamespaces } = configStore;
-      items = await this.loadItems(!isClusterAdmin ? allowedNamespaces : null);
+      const { isAdmin, allowedNamespaces } = getHostedCluster();
+      items = await this.loadItems(!isAdmin ? allowedNamespaces : null);
       items = this.filterItemsOnLoad(items);
     } finally {
       if (items) {
@@ -180,8 +177,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
         const newItem = new api.objectConstructor(object);
         if (!item) {
           items.push(newItem);
-        }
-        else {
+        } else {
           items.splice(index, 1, newItem);
         }
         break;

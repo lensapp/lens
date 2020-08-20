@@ -1,5 +1,5 @@
 import debounce from "lodash/debounce";
-import { autorun } from "mobx";
+import { reaction, toJS } from "mobx";
 import { Terminal as XTerm } from "xterm";
 import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
@@ -20,7 +20,7 @@ export class Terminal {
     Terminal.spawningPool = pool;
   }
 
-  static async preloadFonts(){
+  static async preloadFonts() {
     const fontPath = require("../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
     const fontFace = new FontFace("RobotoMono", `url(${fontPath})`);
     await fontFace.load();
@@ -33,7 +33,7 @@ export class Terminal {
   public disposers: Function[] = [];
 
   @autobind()
-  protected setTheme(colors = themeStore.activeTheme.colors) {
+  protected setTheme(colors: Record<string, string>) {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack
     const colorPrefix = "terminal"
@@ -94,19 +94,18 @@ export class Terminal {
     this.xterm.attachCustomKeyEventHandler(this.keyHandler);
 
     // bind events
-    const onResizeDisposer = dockStore.onResize(this.onResize);
-    const onData = this.xterm.onData(this.onData);
-    const onThemeChangeDisposer = autorun(() => this.setTheme(themeStore.activeTheme.colors));
+    const onDataHandler = this.xterm.onData(this.onData);
     this.viewport.addEventListener("scroll", this.onScroll);
     this.api.onReady.addListener(this.onClear, { once: true }); // clear status logs (connecting..)
     this.api.onData.addListener(this.onApiData);
     window.addEventListener("resize", this.onResize);
 
-    // add clean-up handlers to be called on destroy
     this.disposers.push(
-      onResizeDisposer,
-      onThemeChangeDisposer,
-      () => onData.dispose(),
+      reaction(() => toJS(themeStore.activeTheme.colors), this.setTheme, {
+        fireImmediately: true
+      }),
+      dockStore.onResize(this.onResize),
+      () => onDataHandler.dispose(),
       () => this.fitAddon.dispose(),
       () => this.api.removeAllListeners(),
       () => window.removeEventListener("resize", this.onResize),

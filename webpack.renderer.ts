@@ -1,31 +1,25 @@
-import { htmlTemplate, isDevelopment, isProduction, outDir, reactAppName, rendererDir, sassCommonVars, vueAppName } from "./src/common/vars";
+import { appName, htmlTemplate, isDevelopment, isProduction, buildDir, rendererDir, sassCommonVars, publicPath } from "./src/common/vars";
 import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
-import CircularDependencyPlugin from "circular-dependency-plugin"
-import { VueLoaderPlugin } from "vue-loader"
 
-export default [
-  webpackConfigReact,
-  webpackConfigVue,
-];
-
-export function webpackConfigReact(): webpack.Configuration {
+export default function (): webpack.Configuration {
+  console.info('WEBPACK:renderer', require("./src/common/vars"))
   return {
     context: __dirname,
-    name: "react",
-    target: "web",
+    target: "electron-renderer",
     devtool: "source-map", // todo: optimize in dev-mode with webpack.SourceMapDevToolPlugin
     mode: isProduction ? "production" : "development",
     cache: isDevelopment,
     entry: {
-      [reactAppName]: path.resolve(rendererDir, "components/app.tsx"),
+      [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
     },
     output: {
-      path: outDir,
+      publicPath: publicPath,
+      path: buildDir,
       filename: '[name].js',
       chunkFilename: 'chunks/[name].js',
     },
@@ -54,6 +48,10 @@ export function webpackConfigReact(): webpack.Configuration {
 
     module: {
       rules: [
+        {
+          test: /\.node$/,
+          use: "node-loader"
+        },
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
@@ -149,7 +147,7 @@ export function webpackConfigReact(): webpack.Configuration {
       // }),
 
       new HtmlWebpackPlugin({
-        filename: `${reactAppName}.html`,
+        filename: `${appName}.html`,
         template: htmlTemplate,
         inject: true,
       }),
@@ -159,79 +157,4 @@ export function webpackConfigReact(): webpack.Configuration {
       }),
     ],
   }
-}
-
-export function webpackConfigVue(): webpack.Configuration {
-  const config = webpackConfigReact();
-
-  config.name = "vue"
-  config.target = "electron-renderer";
-  config.resolve.extensions.push(".vue");
-
-  config.entry = {
-    [vueAppName]: path.resolve(rendererDir, "_vue/index.js")
-  }
-  config.resolve.alias = {
-    "@": rendererDir,
-    "vue$": "vue/dist/vue.esm.js",
-    "vue-router$": "vue-router/dist/vue-router.esm.js",
-  }
-
-  // rules and loaders
-  config.module.rules = config.module.rules
-    .filter(({ test }: { test: RegExp }) => !test.test(".ts"))
-    .filter(({ test }: { test: RegExp }) => !test.test(".css"))
-
-  config.module.rules.push(
-    {
-      test: /\.node$/,
-      use: "node-loader"
-    },
-    {
-      test: /\.vue$/,
-      use: {
-        loader: "vue-loader",
-        options: {
-          shadowMode: false,
-          loaders: {
-            css: "vue-style-loader!css-loader",
-            scss: "vue-style-loader!css-loader!sass-loader",
-          }
-        }
-      }
-    },
-    {
-      test: /\.[tj]sx?$/,
-      exclude: /node_modules/,
-      use: {
-        loader: "ts-loader",
-        options: {
-          transpileOnly: true,
-          appendTsSuffixTo: [/\.vue$/],
-        }
-      },
-    },
-    {
-      test: /\.s?css$/,
-      use: [
-        'vue-style-loader',
-        'css-loader',
-        'sass-loader'
-      ]
-    }
-  );
-
-  // plugins
-  config.plugins = [
-    new VueLoaderPlugin(),
-    new ForkTsCheckerPlugin(),
-
-    new HtmlWebpackPlugin({
-      filename: `${vueAppName}.html`,
-      template: htmlTemplate,
-      inject: true,
-    }),
-  ];
-
-  return config;
 }

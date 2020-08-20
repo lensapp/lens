@@ -1,6 +1,7 @@
 {
-  "name": "Lens Dark Theme",
+  "name": "Dark (Lens)",
   "type": "dark",
+  "description": "Original Lens dark theme",
   "author": "Mirantis",
   "colors": {
     "blue": "#3d90ce",

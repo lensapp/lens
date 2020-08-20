@@ -6,9 +6,9 @@ import { autobind, EventEmitter } from "../utils";
 import { KubeJsonApiData } from "./kube-json-api";
 import type { KubeObjectStore } from "../kube-object.store";
 import { KubeApi } from "./kube-api";
-import { configStore } from "../config.store";
 import { apiManager } from "./api-manager";
 import { apiPrefix, isDevelopment } from "../../common/vars";
+import { getHostedCluster } from "../../common/cluster-store";
 
 export interface IKubeWatchEvent<T = any> {
   type: "ADDED" | "MODIFIED" | "DELETED";
@@ -29,7 +29,6 @@ export interface IKubeWatchRouteQuery {
 export class KubeWatchApi {
   protected evtSource: EventSource;
   protected onData = new EventEmitter<[IKubeWatchEvent]>();
-  protected apiUrl = apiPrefix.BASE + "/watch";
   protected subscribers = observable.map<KubeApi, number>();
   protected reconnectTimeoutMs = 5000;
   protected maxReconnectsOnError = 10;
@@ -62,10 +61,10 @@ export class KubeWatchApi {
   }
 
   protected getQuery(): Partial<IKubeWatchRouteQuery> {
-    const { isClusterAdmin, allowedNamespaces } = configStore;
+    const { isAdmin, allowedNamespaces } = getHostedCluster()
     return {
       api: this.activeApis.map(api => {
-        if (isClusterAdmin) return api.getWatchUrl();
+        if (isAdmin) return api.getWatchUrl();
         return allowedNamespaces.map(namespace => api.getWatchUrl(namespace))
       }).flat()
     }
@@ -79,7 +78,7 @@ export class KubeWatchApi {
       return;
     }
     const query = this.getQuery();
-    const apiUrl = this.apiUrl + "?" + stringify(query);
+    const apiUrl = `${apiPrefix}/watch?` + stringify(query);
     this.evtSource = new EventSource(apiUrl);
     this.evtSource.onmessage = this.onMessage;
     this.evtSource.onerror = this.onError;

@@ -4,7 +4,7 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints";
 import { IQueryParams, navigation, setQueryParams } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
-import { isAllowedResource } from "../..//api/rbac";
+import { isAllowedResource } from "../../../common/rbac";
 
 @autobind()
 export class NamespaceStore extends KubeObjectStore<Namespace> {

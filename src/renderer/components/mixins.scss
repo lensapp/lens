@@ -89,3 +89,12 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+@mixin set-draggable($is-draggable: true) {
+  @if ($is-draggable) {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+  } @else {
+    -webkit-app-region: no-drag;
+  }
+}

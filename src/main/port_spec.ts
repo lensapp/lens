@@ -1,6 +1,8 @@
 import { EventEmitter } from 'events'
 import { getFreePort } from "./port"
 
+let newPort = 0;
+
 jest.mock("net", () => {
   return {
     createServer() {
@@ -10,7 +12,10 @@ jest.mock("net", () => {
           return this
         })
         address = () => {
-          return { port: 12345 }
+          newPort = Math.round(Math.random() * 10000)
+          return {
+            port: newPort
+          }
         }
         unref = jest.fn()
         close = jest.fn(cb => cb())
@@ -21,6 +26,6 @@ jest.mock("net", () => {
 
 describe("getFreePort", () => {
   it("finds the next free port", async () => {
-    return expect(getFreePort()).resolves.toEqual(expect.any(Number))
+    return expect(getFreePort()).resolves.toEqual(newPort);
   })
 })

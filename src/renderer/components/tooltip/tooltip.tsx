@@ -1,109 +1,151 @@
 import './tooltip.scss'
 
 import React from "react"
-import { observer } from "mobx-react";
-import { observable } from "mobx";
 import { createPortal } from "react-dom"
-import { autobind, cssNames } from "../../utils";
-import { Animate } from "../animate";
+import { observer } from "mobx-react";
+import { autobind, cssNames, IClassName } from "../../utils";
+import { observable } from "mobx";
+
+export enum TooltipPosition {
+  TOP = "top",
+  BOTTOM = "bottom",
+  LEFT = "left",
+  RIGHT = "right",
+}
 
 export interface TooltipProps {
-  htmlFor: string;
-  className?: string;
-  position?: Position;
-  useAnimation?: boolean;
-  following?: boolean; // tooltip is following mouse position
+  targetId: string; // html-id of target element to bind for
+  visible?: boolean; // initial visibility
+  offset?: number; // offset from target element in pixels (all sides)
+  usePortal?: boolean; // renders element outside of parent (in body), disable for "easy-styling", default: true
+  position?: TooltipPosition;
+  className?: IClassName;
+  formatters?: TooltipContentFormatters;
   style?: React.CSSProperties;
   children?: React.ReactNode;
 }
 
-interface Position {
-  left?: boolean;
-  right?: boolean;
-  top?: boolean;
-  bottom?: boolean;
-  center?: boolean;
+export interface TooltipContentFormatters {
+  narrow?: boolean; // max-width
+  warning?: boolean; // color
+  small?: boolean; // font-size
+  nowrap?: boolean; // white-space
+  tableView?: boolean;
 }
 
 const defaultProps: Partial<TooltipProps> = {
-  useAnimation: true,
-  position: {
-    center: true,
-    bottom: true,
-  }
-};
+  usePortal: true,
+  offset: 10,
+}
 
 @observer
 export class Tooltip extends React.Component<TooltipProps> {
   static defaultProps = defaultProps as object;
 
-  public anchor: HTMLElement;
-  public elem: HTMLElement;
+  @observable.ref elem: HTMLElement;
+  @observable activePosition: TooltipPosition;
+  @observable isVisible = !!this.props.visible;
 
-  @observable isVisible = false;
+  get targetElem(): HTMLElement {
+    return document.getElementById(this.props.targetId)
+  }
 
   componentDidMount() {
-    const { htmlFor } = this.props;
-    this.anchor = htmlFor ? document.getElementById(htmlFor) : this.elem.parentElement;
-    if (this.anchor) {
-      if (window.getComputedStyle(this.anchor).position === "static") {
-        this.anchor.style.position = "relative"
-      }
-      this.anchor.addEventListener("mouseenter", this.onMouseEnter);
-      this.anchor.addEventListener("mouseleave", this.onMouseLeave);
-      this.anchor.addEventListener("mousemove", this.onMouseMove);
-    }
+    this.targetElem.addEventListener("mouseenter", this.onEnterTarget)
+    this.targetElem.addEventListener("mouseleave", this.onLeaveTarget)
   }
 
   componentWillUnmount() {
-    if (this.anchor) {
-      this.anchor.removeEventListener("mouseenter", this.onMouseEnter);
-      this.anchor.removeEventListener("mouseleave", this.onMouseLeave);
-      this.anchor.removeEventListener("mousemove", this.onMouseMove);
-    }
+    this.targetElem.removeEventListener("mouseenter", this.onEnterTarget)
+    this.targetElem.removeEventListener("mouseleave", this.onLeaveTarget)
   }
 
   @autobind()
-  onMouseEnter(evt: MouseEvent) {
+  protected onEnterTarget(evt: MouseEvent) {
     this.isVisible = true;
-    this.onMouseMove(evt);
+    this.refreshPosition();
   }
 
   @autobind()
-  onMouseLeave(evt: MouseEvent) {
+  protected onLeaveTarget(evt: MouseEvent) {
     this.isVisible = false;
   }
 
   @autobind()
-  onMouseMove(evt: MouseEvent) {
-    if (!this.props.following) {
-      return;
+  refreshPosition() {
+    const { position } = this.props;
+    const { elem, targetElem } = this;
+
+    const positionPreference = new Set<TooltipPosition>();
+    if (typeof position !== "undefined") {
+      positionPreference.add(position);
+    }
+    positionPreference.add(TooltipPosition.RIGHT)
+      .add(TooltipPosition.BOTTOM)
+      .add(TooltipPosition.TOP)
+      .add(TooltipPosition.LEFT)
+
+    // reset position first and get all possible client-rect area for tooltip element
+    this.setPosition({ left: 0, top: 0 });
+
+    const selfBounds = elem.getBoundingClientRect();
+    const targetBounds = targetElem.getBoundingClientRect();
+    const { innerWidth: viewportWidth, innerHeight: viewportHeight } = window;
+
+    // find proper position
+    for (const pos of positionPreference) {
+      const { left, top, right, bottom } = this.getPosition(pos, selfBounds, targetBounds)
+      const fitsToWindow = left >= 0 && top >= 0 && right <= viewportWidth && bottom <= viewportHeight;
+      if (fitsToWindow) {
+        this.activePosition = pos;
+        this.setPosition({ top, left });
+        
+        return;
+      }
     }
 
-    const offsetX = -10;
-    const offsetY = 10;
-    const { clientX, clientY } = evt;
-    const { innerWidth, innerHeight } = window;
+    const preferedPosition = Array.from(positionPreference)[0];
+    const { left, top } = this.getPosition(preferedPosition, selfBounds, targetBounds)
+    this.activePosition = preferedPosition;
+    this.setPosition({ left, top });
+  }
 
-    const initialPos: Partial<CSSStyleDeclaration> = {
-      top: "auto",
-      left: "auto",
-      right: (innerWidth - clientX + offsetX) + "px",
-      bottom: (innerHeight - clientY + offsetY) + "px",
-    }
+  protected setPosition(pos: { left: number, top: number }) {
+    const elemStyle = this.elem.style;
+    elemStyle.left = pos.left + "px"
+    elemStyle.top = pos.top + "px"
+  }
 
-    Object.assign(this.elem.style, initialPos);
-
-    // correct position if not fits to viewport
-    const { left, top } = this.elem.getBoundingClientRect();
-    if (left < 0) {
-      this.elem.style.left = clientX + offsetX + "px";
-      this.elem.style.right = "auto"
+  protected getPosition(position: TooltipPosition, selfBounds: DOMRect, targetBounds: DOMRect) {
+    let left: number
+    let top: number
+    const offset = this.props.offset;
+    const horizontalCenter = targetBounds.left + (targetBounds.width - selfBounds.width) / 2;
+    const verticalCenter = targetBounds.top + (targetBounds.height - selfBounds.height) / 2;
+    switch (position) {
+    case "top":
+      left = horizontalCenter;
+      top = targetBounds.top - selfBounds.height - offset;
+      break;
+    case "bottom":
+      left = horizontalCenter;
+      top = targetBounds.bottom + offset;
+      break;
+    case "left":
+      top = verticalCenter;
+      left = targetBounds.left - selfBounds.width - offset;
+      break;
+    case "right":
+      top = verticalCenter;
+      left = targetBounds.right + offset;
+      break;
     }
-    if (top < 0) {
-      this.elem.style.top = clientY + offsetY + "px";
-      this.elem.style.bottom = "auto"
-    }
+    return {
+      left: left,
+      top: top,
+      right: left + selfBounds.width,
+      bottom: top + selfBounds.height,
+    };
   }
 
   @autobind()
@@ -112,40 +154,19 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   render() {
-    const { isVisible } = this;
-    const { useAnimation, position, following, style, children } = this.props;
-    let { className } = this.props;
-    className = cssNames('Tooltip', position, { following }, className);
+    const { style, formatters, usePortal, children } = this.props;
+    const className = cssNames("Tooltip", this.props.className, formatters, this.activePosition, {
+      hidden: !this.isVisible,
+      formatter: !!formatters,
+    });
     const tooltip = (
-      <Animate enter={isVisible} enabled={useAnimation}>
-        <div className={className} ref={this.bindRef} style={style}>
-          {children}
-        </div>
-      </Animate>
-    );
-    if (following) {
-      return createPortal(tooltip, document.body);
-    }
-    return tooltip;
-  }
-}
-
-interface TooltipContentProps {
-  className?: string;
-  narrow?: boolean; // max-width
-  warning?: boolean; // color
-  small?: boolean; // font-size
-  nowrap?: boolean; // white-space
-  tableView?: boolean;
-}
-
-export class TooltipContent extends React.Component<TooltipContentProps> {
-  render() {
-    const { className, children, ...modifiers } = this.props;
-    return (
-      <div className={cssNames("TooltipContent", className, modifiers)}>
+      <div className={className} style={style} ref={this.bindRef}>
         {children}
       </div>
     )
+    if (usePortal) {
+      return createPortal(tooltip, document.body,);
+    }
+    return tooltip;
   }
 }

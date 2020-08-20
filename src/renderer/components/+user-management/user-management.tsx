@@ -1,5 +1,4 @@
 import "./user-management.scss"
-
 import React from "react";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
@@ -9,10 +8,10 @@ import { MainLayout, TabRoute } from "../layout/main-layout";
 import { Roles } from "../+user-management-roles";
 import { RoleBindings } from "../+user-management-roles-bindings";
 import { ServiceAccounts } from "../+user-management-service-accounts";
-import { roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL, usersManagementURL } from "./user-management.routes";
+import { roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL, usersManagementURL } from "./user-management.route";
 import { namespaceStore } from "../+namespaces/namespace.store";
-import { configStore } from "../../config.store";
 import { PodSecurityPolicies, podSecurityPoliciesRoute, podSecurityPoliciesURL } from "../+pod-security-policies";
+import { isAllowedResource } from "../../../common/rbac";
 
 interface Props extends RouteComponentProps<{}> {
 }
@@ -21,7 +20,6 @@ interface Props extends RouteComponentProps<{}> {
 export class UserManagement extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
-    const { allowedResources } = configStore;
     const query = namespaceStore.getContextParams()
     tabRoutes.push(
       {
@@ -43,7 +41,7 @@ export class UserManagement extends React.Component<Props> {
         path: rolesRoute.path,
       },
     )
-    if (allowedResources.includes("podsecuritypolicies")) {
+    if (isAllowedResource("podsecuritypolicies")) {
       tabRoutes.push({
         title: <Trans>Pod Security Policies</Trans>,
         component: PodSecurityPolicies,

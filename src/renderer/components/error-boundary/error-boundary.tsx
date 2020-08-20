@@ -7,7 +7,7 @@ import { t, Trans } from "@lingui/macro";
 import { Button } from "../button";
 import { navigation } from "../../navigation";
 import { _i18n } from "../../i18n";
-import { issuesTrackerUrl, slackUrl, buildVersion } from "../../../common/vars";
+import { issuesTrackerUrl, slackUrl } from "../../../common/vars";
 
 interface Props {
 }
@@ -45,7 +45,6 @@ export class ErrorBoundary extends React.Component<Props, State> {
         <div className="ErrorBoundary flex column gaps">
           <h5>
             <Trans>App crash at <span className="contrast">{pageUrl}</span></Trans>
-            {buildVersion && <p><Trans>Build version</Trans>: {buildVersion}</p>}
           </h5>
           <p>
             <Trans>
@@ -53,7 +52,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
             </Trans>
           </p>
           <div className="flex gaps">
-            <code>
+            <code className="block">
               <p className="contrast"><Trans>Component stack</Trans>:</p>
               {errorInfo.componentStack}
             </code>

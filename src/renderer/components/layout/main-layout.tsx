@@ -7,10 +7,10 @@ import { matchPath, RouteProps } from "react-router-dom";
 import { createStorage, cssNames } from "../../utils";
 import { Tab, Tabs } from "../tabs";
 import { Sidebar } from "./sidebar";
-import { configStore } from "../../config.store";
 import { ErrorBoundary } from "../error-boundary";
 import { Dock } from "../dock";
 import { navigate, navigation } from "../../navigation";
+import { getHostedCluster } from "../../../common/cluster-store";
 import { themeStore } from "../../theme.store";
 
 export interface TabRoute extends RouteProps {
@@ -47,14 +47,14 @@ export class MainLayout extends React.Component<Props> {
 
   render() {
     const { className, contentClass, headerClass, tabs, footer, footerClass, children } = this.props;
-    const { clusterName } = configStore.config;
-    const { pathname } = navigation.location;
+    const routePath = navigation.location.pathname;
+    const cluster = getHostedCluster();
     return (
       <div className={cssNames("MainLayout", className, themeStore.activeTheme.type)}>
         <header className={cssNames("flex gaps align-center", headerClass)}>
-          <div className="box grow flex align-center">
-            {clusterName && <span>{clusterName}</span>}
-          </div>
+          <span className="cluster">
+            {cluster.preferences?.clusterName || cluster.contextName}
+          </span>
         </header>
 
         <aside className={cssNames("flex column", { pinned: this.isPinned, accessible: this.isAccessible })}>
@@ -68,7 +68,7 @@ export class MainLayout extends React.Component<Props> {
         {tabs && (
           <Tabs center onChange={url => navigate(url)}>
             {tabs.map(({ title, path, url, ...routeProps }) => {
-              const isActive = !!matchPath(pathname, { path, ...routeProps });
+              const isActive = !!matchPath(routePath, { path, ...routeProps });
               return <Tab key={url} label={title} value={url} active={isActive}/>
             })}
           </Tabs>

@@ -5,8 +5,8 @@ import { cssNames } from "../../utils/cssNames";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 
 interface Props extends React.HTMLAttributes<any>, TooltipDecoratorProps {
-  label: React.ReactNode;
   small?: boolean;
+  label?: React.ReactNode;
 }
 
 @withTooltip

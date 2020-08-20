@@ -11,7 +11,6 @@ import { namespaceStore } from "./namespace.store";
 import { _i18n } from "../../i18n";
 import { FilterIcon } from "../item-object-list/filter-icon";
 import { FilterType } from "../item-object-list/page-filters.store";
-import { isAllowedResource } from "../../api/rbac"
 
 interface Props extends SelectProps {
   showIcons?: boolean;

@@ -1,6 +1,7 @@
 {
-  "name": "Lens Light Theme",
+  "name": "Light (Lens)",
   "type": "light",
+  "description": "Original Lens light theme",
   "author": "Mirantis",
   "colors": {
     "blue": "#3d90ce",
