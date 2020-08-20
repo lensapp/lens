@@ -291,7 +291,7 @@ export class Pod extends WorkloadKubeObject {
     return PodStatus.PENDING;
   }
 
-  // Returns pod phase or container error if occured
+  // Returns pod phase or container error if occurred
   getStatusMessage() {
     if (this.getReason() === PodStatus.EVICTED) return "Evicted";
     if (this.getStatus() === PodStatus.RUNNING && this.metadata.deletionTimestamp) return "Terminating";

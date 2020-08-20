@@ -273,7 +273,7 @@ export class Kubectl {
       zshScript += "test -f \"$OLD_ZDOTDIR/.zlogin\" && . \"$OLD_ZDOTDIR/.zlogin\"\n"
       zshScript += "test -f \"$OLD_ZDOTDIR/.zshrc\" && . \"$OLD_ZDOTDIR/.zshrc\"\n"
 
-      // voodoo to replace any previous occurences of kubectl path in the PATH
+      // voodoo to replace any previous occurrences of kubectl path in the PATH
       zshScript += `kubectlpath=\"${this.dirname}"\n`
       zshScript += `helmpath=\"${helmPath}"\n`
       zshScript += "p=\":$kubectlpath:\"\n"
