@@ -20,8 +20,12 @@ compile-dev:
 	yarn compile:renderer --cache
 
 dev:
+ifeq "$(DETECTED_OS)" "Windows"
+	make init
+else
 	test -f out/main.js || make init
-	yarn dev # run electron and watch files
+endif
+	yarn dev
 
 lint:
 	yarn lint
