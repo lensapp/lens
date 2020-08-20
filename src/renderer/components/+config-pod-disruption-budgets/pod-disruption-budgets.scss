@@ -1,0 +1,15 @@
+.PodDisruptionBudgets {
+  .TableCell {
+    &.name {
+      flex: 2;
+    }
+
+    &.keys {
+      flex: 2.5;
+    }
+
+    &.age {
+      flex: .5;
+    }
+  }
+}
