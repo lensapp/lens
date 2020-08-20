@@ -185,7 +185,7 @@
     "jsonpath": "^1.0.2",
     "lodash": "^4.17.15",
     "mac-ca": "^1.0.4",
-    "make-synchronous": "^0.1.0",
+    "make-synchronous": "https://github.com/Nokel81/make-synchronous#e366285001da13f4d5c028888a56b9baf83f9cff",
     "marked": "^1.1.0",
     "md5-file": "^5.0.0",
     "mobx": "^5.15.5",

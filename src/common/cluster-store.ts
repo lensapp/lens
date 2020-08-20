@@ -1,6 +1,5 @@
 import type { WorkspaceId } from "./workspace-store";
-import path from "path";
-import { app, ipcRenderer, remote } from "electron";
+import { ipcRenderer } from "electron";
 import { unlink } from "fs-extra";
 import { action, computed, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";

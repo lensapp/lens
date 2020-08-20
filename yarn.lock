@@ -7640,10 +7640,9 @@ make-plural@^6.2.1:
   resolved "https://registry.yarnpkg.com/make-plural/-/make-plural-6.2.1.tgz#2790af1d05fb2fc35a111ce759ffdb0aca1339a3"
   integrity sha512-AmkruwJ9EjvyTv6AM8MBMK3TAeOJvhgTv5YQXzF0EP2qawhpvMjDpHvsdOIIT0Vn+BB0+IogmYZ1z+Ulm/m0Fg==
 
-make-synchronous@^0.1.0:
+"make-synchronous@https://github.com/Nokel81/make-synchronous#e366285001da13f4d5c028888a56b9baf83f9cff":
   version "0.1.0"
-  resolved "https://registry.yarnpkg.com/make-synchronous/-/make-synchronous-0.1.0.tgz#d117ef54364130775e900bd52726293cda420c0d"
-  integrity sha512-KgHpheDCBClcMtPN9EKB+BXyL7cAM8zrRVq8FbJBZzPbXgWlJqRAPMNU6NyJ05kEp4pmMOEgvftK7Jnaxpz2bA==
+  resolved "https://github.com/Nokel81/make-synchronous#e366285001da13f4d5c028888a56b9baf83f9cff"
   dependencies:
     subsume "^3.0.0"
     type-fest "^0.16.0"
@@ -9557,6 +9556,11 @@ readable-stream@^3.1.1, readable-stream@^3.6.0:
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
 
+readable-web-to-node-stream@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/readable-web-to-node-stream/-/readable-web-to-node-stream-2.0.0.tgz#751e632f466552ac0d5c440cc01470352f93c4b7"
+  integrity sha512-+oZJurc4hXpaaqsN68GoZGQAQIA3qr09Or4fqEsargABnbe5Aau8hFn6ISVleT3cpY/0n/8drn7huyyEvTbghA==
+
 readdirp@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/readdirp/-/readdirp-2.2.1.tgz#0e87622a3325aa33e892285caf8b4e846529a525"
@@ -10700,13 +10704,6 @@ subsume@^3.0.0:
   dependencies:
     escape-string-regexp "^2.0.0"
     unique-string "^2.0.0"
-
-sumchecker@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/sumchecker/-/sumchecker-2.0.2.tgz#0f42c10e5d05da5d42eea3e56c3399a37d6c5b3e"
-  integrity sha1-D0LBDl0F2l1C7qPlbDOZo31sWz4=
-  dependencies:
-    debug "^2.2.0"
 
 sumchecker@^3.0.1:
   version "3.0.1"

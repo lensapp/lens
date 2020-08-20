@@ -5,10 +5,13 @@ import path from "path"
 import { app, remote } from "electron"
 import { migration } from "../migration-wrapper";
 import fse from "fs-extra"
-import fileType from "file-type";
 import { ClusterModel } from "../../common/cluster-store";
 import { loadConfig, saveConfigToAppFiles } from "../../common/kube-helpers";
 import makeSynchronous from "make-synchronous"
+
+const AsyncFunction = Object.getPrototypeOf(async function () { return }).constructor;
+const getFileTypeFnString = `return require("file-type").fromBuffer(fileData)`;
+const getFileType = new AsyncFunction("fileData", getFileTypeFnString);
 
 export default migration({
   version: "3.6.0-beta.1",
@@ -41,11 +44,11 @@ export default migration({
          * migrate cluster icon
          */
         try {
-          if (cluster.preferences.icon) {
+          if (cluster.preferences?.icon) {
             printLog(`migrating ${cluster.preferences.icon} for ${cluster.preferences.clusterName}`)
             const iconPath = cluster.preferences.icon.replace("store://", "")
             const fileData = fse.readFileSync(path.join(userDataPath, iconPath));
-            const { mime = "" } = makeSynchronous(() => fileType.fromBuffer(fileData))();
+            const { mime = "" } = makeSynchronous(getFileType, "node")(fileData);
 
             if (!mime) {
               printLog(`mime type not detected for ${cluster.preferences.clusterName}'s icon: ${iconPath}`)
@@ -53,7 +56,7 @@ export default migration({
 
             cluster.preferences.icon = `data:${mime};base64, ${fileData.toString('base64')}`;
           } else {
-            delete cluster.preferences.icon;
+            delete cluster.preferences?.icon;
           }
         } catch (error) {
           printLog(`Failed to migrate cluster icon for cluster "${cluster.id}"`, error)
