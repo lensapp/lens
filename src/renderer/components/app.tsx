@@ -38,10 +38,11 @@ import { webFrame } from "electron";
 @observer
 export class App extends React.Component {
   static async init() {
+    const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
-    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}`)
+    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`)
     await Terminal.preloadFonts()
-    await clusterIpc.init.invokeFromRenderer(clusterId, webFrame.routingId);
+    await clusterIpc.initView.invokeFromRenderer(clusterId, frameId);
     await getHostedCluster().whenInitialized;
   }
 

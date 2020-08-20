@@ -116,12 +116,30 @@ export class BaseStore<T = any> extends Singleton {
   protected async onModelChange(model: T) {
     if (ipcMain) {
       this.save(model); // save config file
-      broadcastIpc({ channel: this.syncChannel, args: [model] }); // broadcast to renderer views
+      broadcastIpc({ channel: this.syncChannel, args: [model] }); // send to all windows (BrowserWindow, webContents)
+      this.syncInSubFrames(model); // send to all sub-frames (cluster-view is managed inside iframe)
     }
     // send "update-request" to main-process
     if (ipcRenderer) {
       ipcRenderer.send(this.syncChannel, model);
     }
+  }
+
+  protected async syncInSubFrames(model: T) {
+    const subFrames: number[] = [];
+    const { clusterStore } = await import("./cluster-store");
+    clusterStore.clustersList.forEach(cluster => {
+      if (cluster.frameId) {
+        subFrames.push(cluster.frameId)
+      }
+    });
+    subFrames.forEach(frameId => {
+      broadcastIpc({
+        channel: this.syncChannel,
+        frameId: frameId,
+        args: [model],
+      })
+    })
   }
 
   @action

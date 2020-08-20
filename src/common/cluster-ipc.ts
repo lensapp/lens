@@ -3,7 +3,7 @@ import { ClusterId, clusterStore } from "./cluster-store";
 import { tracker } from "./tracker";
 
 export const clusterIpc = {
-  init: createIpcChannel({
+  initView: createIpcChannel({
     channel: "cluster:init",
     handle: async (clusterId: ClusterId, frameId: number) => {
       const cluster = clusterStore.getById(clusterId);
