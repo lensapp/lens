@@ -13,7 +13,6 @@ import { Input } from "../input";
 import { Checkbox } from "../checkbox";
 import { Notifications } from "../notifications";
 import { Badge } from "../badge";
-import { Spinner } from "../spinner";
 import { themeStore } from "../../theme.store";
 import { history } from "../../navigation";
 import { Tooltip } from "../tooltip";
