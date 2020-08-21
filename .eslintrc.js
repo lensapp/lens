@@ -1,4 +1,4 @@
-module.exports =  {
+module.exports = {
   overrides: [
     {
       files: [
@@ -6,71 +6,104 @@ module.exports =  {
         "build/**/*.js",
       ],
       extends: [
-        'eslint:recommended',
+        "eslint:recommended",
       ],
       env: {
         node: true
       },
-      parserOptions:  {
+      parserOptions: {
         ecmaVersion: 2018,
         sourceType: 'module',
       },
       rules: {
         "indent": ["error", 2],
         "no-unused-vars": "off",
+        "semi": ["error", "never"],
       }
     },
     {
       files: [
+        "src/renderer/**/*.tsx",
         "build/*.ts",
         "src/**/*.ts",
         "integration/**/*.ts"
       ],
       parser: "@typescript-eslint/parser",
-      extends:  [
-        'plugin:@typescript-eslint/recommended',
+      plugins: [
+        "react",
       ],
-      parserOptions:  {
-        ecmaVersion: 2018,
-        sourceType: 'module',
-      },
-      rules: {
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/ban-types": "off",
-        "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/no-empty-interface": "off",
-        "indent": ["error", 2]
-      },
-    },
-    {
-      files: [
-        "src/renderer/**/*.tsx",
+      extends: [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react/recommended",
       ],
-      parser: "@typescript-eslint/parser",
-      extends:  [
-        'plugin:@typescript-eslint/recommended',
-      ],
-      parserOptions:  {
+      parserOptions: {
         ecmaVersion: 2018,
         sourceType: 'module',
         jsx: true,
       },
+      settings: {
+        react: {
+          version: "16.13",
+        },
+      },
       rules: {
         "@typescript-eslint/explicit-function-return-type": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/interface-name-prefix": "off",
-        "@typescript-eslint/no-use-before-define": "off",
+        "no-unused-vars": "off",
+        "comma-dangle": ["error", "always-multiline"],
+        "object-shorthand": ["error", "always"],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "varsIgnorePattern": "^_",
+            "argsIgnorePattern": "^_",
+            "ignoreRestSiblings": true,
+          }
+        ],
+        "quotes": [
+          "error",
+          "double",
+          {
+            "avoidEscape": true,
+          }
+        ],
+        "prefer-template": "error",
+        "no-useless-concat": "error",
+        "@typescript-eslint/no-use-before-define": [
+          "error",
+          {
+            "functions": false,
+            "classes": false,
+          }
+        ],
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/ban-ts-ignore": "off",
-        "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/explicit-module-boundary-types": ["error"],
+        "@typescript-eslint/ban-types": ["error"],
         "@typescript-eslint/no-empty-function": "off",
-        "indent": ["error", 2]
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "interface",
+            "format": ["PascalCase"],
+            "custom": {
+              "regex": "^I[A-Z]",
+              "match": false,
+            },
+          }
+        ],
+        "indent": [
+          "error",
+          2,
+          {
+            "SwitchCase": 1,
+          }
+        ],
+        "semi": ["error", "never"],
+        "react/jsx-uses-react": "error",
+        "react/jsx-uses-vars": "error",
+        "react/no-set-state": "error",
       },
     }
   ]
