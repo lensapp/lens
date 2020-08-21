@@ -61,7 +61,7 @@ msgstr "A System Name must be lowercase DNS labels separated by dots. DNS labels
 msgid "A single workspaces contains a list of clusters and their full configuration."
 msgstr "A single workspaces contains a list of clusters and their full configuration."
 
-#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:80
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:81
 msgid "API Group"
 msgstr "API Group"
 
@@ -83,7 +83,7 @@ msgstr "Account Name"
 msgid "Active"
 msgstr "Active"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:170
+#: src/renderer/components/+add-cluster/add-cluster.tsx:171
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:116
 msgid "Add Cluster"
 msgstr "Add Cluster"
@@ -100,7 +100,7 @@ msgstr "Add RoleBinding"
 msgid "Add Workspace"
 msgstr "Add Workspace"
 
-#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:111
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:112
 msgid "Add bindings to {name}"
 msgstr "Add bindings to {name}"
 
@@ -108,7 +108,7 @@ msgstr "Add bindings to {name}"
 #~ msgid "Add cluster"
 #~ msgstr "Add cluster"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:191
+#: src/renderer/components/+add-cluster/add-cluster.tsx:192
 msgid "Add cluster(s)"
 msgstr "Add cluster(s)"
 
@@ -125,8 +125,8 @@ msgstr "Add field"
 #~ msgstr "Added repos"
 
 #: src/renderer/components/+preferences/preferences.tsx:144
-msgid "Added repos:"
-msgstr "Added repos:"
+#~ msgid "Added repos:"
+#~ msgstr "Added repos:"
 
 #: src/renderer/components/+preferences/preferences.tsx:103
 msgid "Adding helm branch <0>{0}</0> has failed: {1}"
@@ -152,6 +152,7 @@ msgstr "Affinities"
 
 #: src/renderer/components/+config-autoscalers/hpa.tsx:51
 #: src/renderer/components/+config-maps/config-maps.tsx:37
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets.tsx:45
 #: src/renderer/components/+config-resource-quotas/resource-quotas.tsx:36
 #: src/renderer/components/+config-secrets/secrets.tsx:46
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:66
@@ -210,11 +211,11 @@ msgstr "Allocatable"
 msgid "Allow Privilege Escalation"
 msgstr "Allow Privilege Escalation"
 
-#: src/renderer/components/+preferences/preferences.tsx:172
+#: src/renderer/components/+preferences/preferences.tsx:162
 msgid "Allow telemetry & usage tracking"
 msgstr "Allow telemetry & usage tracking"
 
-#: src/renderer/components/+preferences/preferences.tsx:164
+#: src/renderer/components/+preferences/preferences.tsx:154
 msgid "Allow untrusted Certificate Authorities"
 msgstr "Allow untrusted Certificate Authorities"
 
@@ -301,7 +302,7 @@ msgstr "Back"
 msgid "Backends"
 msgstr "Backends"
 
-#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:93
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:94
 msgid "Binding"
 msgstr "Binding"
 
@@ -309,7 +310,7 @@ msgstr "Binding"
 msgid "Binding targets"
 msgstr "Binding targets"
 
-#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:89
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:90
 #: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:36
 msgid "Bindings"
 msgstr "Bindings"
@@ -409,7 +410,7 @@ msgstr "Cancel"
 msgid "Capacity"
 msgstr "Capacity"
 
-#: src/renderer/components/+preferences/preferences.tsx:163
+#: src/renderer/components/+preferences/preferences.tsx:153
 msgid "Certificate Trust"
 msgstr "Certificate Trust"
 
@@ -476,7 +477,7 @@ msgstr "Cluster IP"
 msgid "Cluster Issuers"
 msgstr "Cluster Issuers"
 
-#: src/renderer/components/+preferences/preferences.tsx:134
+#: src/renderer/components/+preferences/preferences.tsx:126
 msgid "Color Theme"
 msgstr "Color Theme"
 
@@ -529,7 +530,7 @@ msgstr "Config copied to clipboard"
 msgid "ConfigMap <0>{0}</0> successfully updated."
 msgstr "ConfigMap <0>{0}</0> successfully updated."
 
-#: src/renderer/components/+config/config.tsx:30
+#: src/renderer/components/+config/config.tsx:31
 msgid "ConfigMaps"
 msgstr "ConfigMaps"
 
@@ -687,6 +688,11 @@ msgstr "CronJobs"
 msgid "Current / Target"
 msgstr "Current / Target"
 
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets-details.tsx:39
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets.tsx:43
+msgid "Current Healthy"
+msgstr "Current Healthy"
+
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:103
 msgid "Current replica scale: {currentReplicas}"
 msgstr "Current replica scale: {currentReplicas}"
@@ -704,7 +710,7 @@ msgstr "Currently applied filters:"
 msgid "Custom Resources"
 msgstr "Custom Resources"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:115
+#: src/renderer/components/+add-cluster/add-cluster.tsx:116
 msgid "Custom.."
 msgstr "Custom.."
 
@@ -770,6 +776,11 @@ msgstr "Deployments"
 msgid "Description"
 msgstr "Description"
 
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets-details.tsx:43
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets.tsx:44
+msgid "Desired Healthy"
+msgstr "Desired Healthy"
+
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:107
 msgid "Desired number of replicas"
 msgstr "Desired number of replicas"
@@ -788,7 +799,7 @@ msgstr "Disk"
 msgid "Disk:"
 msgstr "Disk:"
 
-#: src/renderer/components/+preferences/preferences.tsx:168
+#: src/renderer/components/+preferences/preferences.tsx:158
 msgid "Does not affect cluster communications!"
 msgstr "Does not affect cluster communications!"
 
@@ -796,7 +807,7 @@ msgstr "Does not affect cluster communications!"
 msgid "Domains"
 msgstr "Domains"
 
-#: src/renderer/components/+preferences/preferences.tsx:137
+#: src/renderer/components/+preferences/preferences.tsx:129
 msgid "Download Mirror"
 msgstr "Download Mirror"
 
@@ -804,7 +815,7 @@ msgstr "Download Mirror"
 msgid "Download file"
 msgstr "Download file"
 
-#: src/renderer/components/+preferences/preferences.tsx:138
+#: src/renderer/components/+preferences/preferences.tsx:130
 msgid "Download mirror for kubectl"
 msgstr "Download mirror for kubectl"
 
@@ -971,11 +982,11 @@ msgstr "Group"
 msgid "Groups"
 msgstr "Groups"
 
-#: src/renderer/components/+config/config.tsx:54
+#: src/renderer/components/+config/config.tsx:55
 msgid "HPA"
 msgstr "HPA"
 
-#: src/renderer/components/+preferences/preferences.tsx:157
+#: src/renderer/components/+preferences/preferences.tsx:147
 msgid "HTTP Proxy"
 msgstr "HTTP Proxy"
 
@@ -983,7 +994,7 @@ msgstr "HTTP Proxy"
 #~ msgid "HTTP Proxy server. Used for communicating with Kubernetes API."
 #~ msgstr "HTTP Proxy server. Used for communicating with Kubernetes API."
 
-#: src/renderer/components/+preferences/preferences.tsx:140
+#: src/renderer/components/+preferences/preferences.tsx:132
 msgid "Helm"
 msgstr "Helm"
 
@@ -1177,7 +1188,7 @@ msgid "Keywords"
 msgstr "Keywords"
 
 #: src/renderer/components/+events/event-details.tsx:57
-#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:78
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:79
 #: src/renderer/components/dock/edit-resource.tsx:89
 msgid "Kind"
 msgstr "Kind"
@@ -1223,8 +1234,8 @@ msgid "Last transition time: {lastTransitionTime}"
 msgstr "Last transition time: {lastTransitionTime}"
 
 #: src/renderer/components/+preferences/preferences.tsx:126
-msgid "Lens Global Settings"
-msgstr "Lens Global Settings"
+#~ msgid "Lens Global Settings"
+#~ msgstr "Lens Global Settings"
 
 #: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:146
 msgid "Level"
@@ -1240,10 +1251,8 @@ msgstr "Limited to {0}"
 
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:72
 #: src/renderer/components/+cluster/cluster-pie-charts.tsx:115
-
 #: src/renderer/components/+workloads-pods/container-charts.tsx:40
 #: src/renderer/components/+workloads-pods/container-charts.tsx:64
-
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:48
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:72
 msgid "Limits"
@@ -1302,6 +1311,11 @@ msgstr "Match Labels"
 #: src/renderer/components/+config-autoscalers/hpa.tsx:49
 msgid "Max Pods"
 msgstr "Max Pods"
+
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets-details.tsx:35
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets.tsx:42
+msgid "Max Unavailable"
+msgstr "Max Unavailable"
 
 #: src/renderer/components/input/input.validators.ts:35
 msgid "Maximum length is {maxLength}"
@@ -1365,6 +1379,11 @@ msgstr "Metrics are not available due to missing or invalid Prometheus configura
 msgid "Metrics not available at the moment"
 msgstr "Metrics not available at the moment"
 
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets-details.tsx:31
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets.tsx:41
+msgid "Min Available"
+msgstr "Min Available"
+
 #: src/renderer/components/+config-autoscalers/hpa-details.tsx:76
 #: src/renderer/components/+config-autoscalers/hpa.tsx:48
 msgid "Min Pods"
@@ -1400,6 +1419,7 @@ msgstr "Mounts"
 #: src/renderer/components/+config-autoscalers/hpa-details.tsx:49
 #: src/renderer/components/+config-autoscalers/hpa.tsx:45
 #: src/renderer/components/+config-maps/config-maps.tsx:34
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets.tsx:39
 #: src/renderer/components/+config-resource-quotas/resource-quotas.tsx:34
 #: src/renderer/components/+config-secrets/add-secret-dialog.tsx:131
 #: src/renderer/components/+config-secrets/add-secret-dialog.tsx:148
@@ -1424,7 +1444,7 @@ msgstr "Mounts"
 #: src/renderer/components/+storage-volumes/volumes.tsx:40
 #: src/renderer/components/+user-management-roles/roles.tsx:33
 #: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:191
-#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:79
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:80
 #: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:35
 #: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:29
 #: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:36
@@ -1455,6 +1475,7 @@ msgstr "Names"
 #: src/renderer/components/+apps-releases/releases.tsx:88
 #: src/renderer/components/+config-autoscalers/hpa.tsx:46
 #: src/renderer/components/+config-maps/config-maps.tsx:35
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets.tsx:40
 #: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:129
 #: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:130
 #: src/renderer/components/+config-resource-quotas/resource-quotas.tsx:35
@@ -1473,7 +1494,7 @@ msgstr "Names"
 #: src/renderer/components/+storage-volume-claims/volume-claims.tsx:47
 #: src/renderer/components/+storage-volumes/volume-details.tsx:77
 #: src/renderer/components/+user-management-roles/roles.tsx:34
-#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:95
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:96
 #: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:37
 #: src/renderer/components/+user-management-service-accounts/create-service-account-dialog.tsx:79
 #: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:37
@@ -1504,11 +1525,11 @@ msgstr "Namespaces"
 msgid "Namespaces: {0}"
 msgstr "Namespaces: {0}"
 
-#: src/renderer/components/+preferences/preferences.tsx:167
+#: src/renderer/components/+preferences/preferences.tsx:157
 msgid "Needed with some corporate proxies that do certificate re-writing."
 msgstr "Needed with some corporate proxies that do certificate re-writing."
 
-#: src/renderer/components/+network-ingresses/ingress-details.tsx:66
+#: src/renderer/components/+network-ingresses/ingress-details.tsx:86
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:13
 #: src/renderer/components/layout/sidebar.tsx:83
 msgid "Network"
@@ -1709,13 +1730,18 @@ msgstr "Persistent Volume Claims"
 msgid "Persistent Volumes"
 msgstr "Persistent Volumes"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:62
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
 msgid "Please select kubeconfig"
 msgstr "Please select kubeconfig"
 
 #: src/renderer/components/+workloads-pods/pod-menu.tsx:50
 msgid "Pod"
 msgstr "Pod"
+
+#: src/renderer/components/+config/config.tsx:63
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets.tsx:38
+msgid "Pod Disruption Budgets"
+msgstr "Pod Disruption Budgets"
 
 #: src/renderer/components/+workloads-pods/pod-details.tsx:90
 msgid "Pod IP"
@@ -1777,8 +1803,8 @@ msgid "Ports"
 msgstr "Ports"
 
 #: src/renderer/components/+preferences/preferences.tsx:121
-msgid "Preferences"
-msgstr "Preferences"
+#~ msgid "Preferences"
+#~ msgstr "Preferences"
 
 #: src/renderer/components/+workloads-pods/pod-details.tsx:93
 msgid "Priority Class"
@@ -1798,11 +1824,11 @@ msgstr "Privileged"
 msgid "Provisioner"
 msgstr "Provisioner"
 
-#: src/renderer/components/+preferences/preferences.tsx:160
+#: src/renderer/components/+preferences/preferences.tsx:150
 msgid "Proxy is used only for non-cluster communication."
 msgstr "Proxy is used only for non-cluster communication."
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:175
+#: src/renderer/components/+add-cluster/add-cluster.tsx:176
 msgid "Proxy settings"
 msgstr "Proxy settings"
 
@@ -1857,7 +1883,7 @@ msgstr "Reclaim Policy"
 #~ msgstr "Reconnect"
 
 #: src/renderer/components/+config-autoscalers/hpa-details.tsx:70
-#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:75
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:76
 msgid "Reference"
 msgstr "Reference"
 
@@ -1882,7 +1908,7 @@ msgstr "Release: {0}"
 msgid "Releases"
 msgstr "Releases"
 
-#: src/renderer/components/+preferences/preferences.tsx:151
+#: src/renderer/components/+preferences/preferences.tsx:139
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:60
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:74
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:80
@@ -1912,7 +1938,7 @@ msgstr "Remove item?"
 msgid "Remove selected bindings for <0>{0}</0>?"
 msgstr "Remove selected bindings for <0>{0}</0>?"
 
-#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:111
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:112
 msgid "Remove selected bindings from ${name}"
 msgstr "Remove selected bindings from ${name}"
 
@@ -1948,7 +1974,7 @@ msgstr "Replicas"
 msgid "Repo/Name"
 msgstr "Repo/Name"
 
-#: src/renderer/components/+preferences/preferences.tsx:141
+#: src/renderer/components/+preferences/preferences.tsx:133
 msgid "Repositories"
 msgstr "Repositories"
 
@@ -2000,7 +2026,7 @@ msgstr "Resource"
 msgid "Resource Names"
 msgstr "Resource Names"
 
-#: src/renderer/components/+config/config.tsx:46
+#: src/renderer/components/+config/config.tsx:47
 #: src/renderer/components/+config-resource-quotas/resource-quotas.tsx:33
 #: src/renderer/components/+namespaces/namespace-details.tsx:41
 msgid "Resource Quotas"
@@ -2180,7 +2206,7 @@ msgstr "Secret successfully updated."
 msgid "Secret type"
 msgstr "Secret type"
 
-#: src/renderer/components/+config/config.tsx:38
+#: src/renderer/components/+config/config.tsx:39
 #: src/renderer/components/+config-secrets/secrets.tsx:40
 #: src/renderer/components/+workloads-pods/pod-details.tsx:113
 msgid "Secrets"
@@ -2190,7 +2216,7 @@ msgstr "Secrets"
 msgid "Select a quota.."
 msgstr "Select a quota.."
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:172
+#: src/renderer/components/+add-cluster/add-cluster.tsx:173
 msgid "Select kubeconfig"
 msgstr "Select kubeconfig"
 
@@ -2206,6 +2232,7 @@ msgstr "Select role.."
 msgid "Select service accounts"
 msgstr "Select service accounts"
 
+#: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets-details.tsx:27
 #: src/renderer/components/+network-services/service-details.tsx:37
 #: src/renderer/components/+network-services/services.tsx:50
 #: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:69
@@ -2313,7 +2340,7 @@ msgstr "StatefulSets"
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificates.tsx:67
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:48
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/issuers.tsx:68
-#: src/renderer/components/+custom-resources/crd-resource-details.tsx:46
+#: src/renderer/components/+custom-resources/crd-resource-details.tsx:56
 #: src/renderer/components/+namespaces/namespace-details.tsx:37
 #: src/renderer/components/+namespaces/namespaces.tsx:34
 #: src/renderer/components/+network-services/services.tsx:52
@@ -2399,11 +2426,11 @@ msgstr "TLS"
 msgid "Taints"
 msgstr "Taints"
 
-#: src/renderer/components/+preferences/preferences.tsx:171
+#: src/renderer/components/+preferences/preferences.tsx:161
 msgid "Telemetry & Usage Tracking"
 msgstr "Telemetry & Usage Tracking"
 
-#: src/renderer/components/+preferences/preferences.tsx:174
+#: src/renderer/components/+preferences/preferences.tsx:164
 msgid "Telemetry & usage data is collected to continuously improve the Lens experience."
 msgstr "Telemetry & usage data is collected to continuously improve the Lens experience."
 
@@ -2427,15 +2454,11 @@ msgstr "There are no logs available."
 msgid "This field is required"
 msgstr "This field is required"
 
-#: src/renderer/components/input/input.validators.ts:39
-msgid "A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics."
-msgstr "A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics."
-
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:104
 msgid "This is the quick launch menu."
 msgstr "This is the quick launch menu."
 
-#: src/renderer/components/+preferences/preferences.tsx:166
+#: src/renderer/components/+preferences/preferences.tsx:156
 msgid "This will make Lens to trust ANY certificate authority without any validations."
 msgstr "This will make Lens to trust ANY certificate authority without any validations."
 
@@ -2472,13 +2495,13 @@ msgstr "Transmit"
 #: src/renderer/components/+network-services/services.tsx:46
 #: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:152
 #: src/renderer/components/+storage-volumes/volume-details.tsx:69
-#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:94
+#: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:95
 #: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:43
 #: src/renderer/components/+workloads-pods/pod-details.tsx:140
 msgid "Type"
 msgstr "Type"
 
-#: src/renderer/components/+preferences/preferences.tsx:158
+#: src/renderer/components/+preferences/preferences.tsx:148
 msgid "Type HTTP proxy url (example: http://proxy.acme.org:8080)"
 msgstr "Type HTTP proxy url (example: http://proxy.acme.org:8080)"
 
@@ -2674,8 +2697,8 @@ msgid "and <0>{tailCount}</0> more"
 msgstr "and <0>{tailCount}</0> more"
 
 #: src/renderer/components/+preferences/preferences.tsx:126
-msgid "applicable to all clusters"
-msgstr "applicable to all clusters"
+#~ msgid "applicable to all clusters"
+#~ msgstr "applicable to all clusters"
 
 #: src/renderer/components/+nodes/nodes.tsx:57
 msgid "cores:"

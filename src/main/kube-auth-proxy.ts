@@ -84,11 +84,7 @@ export class KubeAuthProxy {
   protected async sendIpcLogMessage(res: KubeAuthProxyLog) {
     const channel = `kube-auth:${this.cluster.id}`
     logger.info(`[KUBE-AUTH]: out-channel "${channel}"`, { ...res, meta: this.cluster.getMeta() });
-    broadcastIpc({
-      // webContentId: null, // todo: send a message only to single cluster's window
-      channel: channel,
-      args: [res],
-    });
+    broadcastIpc({ channel: channel, args: [res] });
   }
 
   public exit() {

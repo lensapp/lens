@@ -132,7 +132,12 @@ export class BaseStore<T = any> extends Singleton {
     broadcastIpc(msg); // send to all windows (BrowserWindow, webContents)
     const frames = await this.getSubFrames();
     frames.forEach(frameId => {
-      broadcastIpc({ frameId, ...msg }); // send to all sub-frames (e.g. cluster-view managed in iframe)
+      // send to all sub-frames (e.g. cluster-view managed in iframe)
+      broadcastIpc({
+        ...msg,
+        frameId: frameId,
+        frameOnly: true,
+      });
     });
   }
 
