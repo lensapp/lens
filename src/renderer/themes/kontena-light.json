@@ -93,6 +93,7 @@
     "drawerItemValueColor": "#555555",
     "clusterMenuBackground": "#e8e8e8",
     "clusterMenuBorderColor": "#c9cfd3",
+    "clusterSettingsBackground": "#ffffff",
     "addClusterIconColor": "#8d8d8d",
     "boxShadow": "#0000003a",
     "iconActiveColor": "#ffffff",
