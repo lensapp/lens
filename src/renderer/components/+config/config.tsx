@@ -7,6 +7,7 @@ import { ConfigMaps, configMapsRoute, configMapsURL } from "../+config-maps";
 import { Secrets, secretsRoute, secretsURL } from "../+config-secrets";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { resourceQuotaRoute, ResourceQuotas, resourceQuotaURL } from "../+config-resource-quotas";
+import { PodDisruptionBudgets, pdbRoute, pdbURL } from "../+config-pod-disruption-budgets";
 import { configURL } from "./config.route";
 import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscalers";
 import { buildURL } from "../../navigation";
@@ -51,6 +52,14 @@ export class Config extends React.Component {
         component: HorizontalPodAutoscalers,
         url: hpaURL({ query }),
         path: hpaRoute.path,
+      })
+    }
+    if (isAllowedResource("poddisruptionbudgets")) {
+      routes.push({
+        title: <Trans>Pod Disruption Budgets</Trans>,
+        component: PodDisruptionBudgets,
+        url: pdbURL({ query }),
+        path: pdbRoute.path,
       })
     }
     return routes;
