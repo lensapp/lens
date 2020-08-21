@@ -54,12 +54,13 @@ export interface IpcBroadcastParams<A extends any[] = any> {
   channel: IpcChannel
   webContentId?: number; // send to single webContents view
   frameId?: number; // send to inner frame of webContents
+  frameOnly?: boolean; // send message only to view with provided `frameId`
   filter?: (webContent: WebContents) => boolean
   timeout?: number; // todo: add support
   args?: A;
 }
 
-export function broadcastIpc({ channel, frameId, webContentId, filter, args = [] }: IpcBroadcastParams) {
+export function broadcastIpc({ channel, frameId, frameOnly, webContentId, filter, args = [] }: IpcBroadcastParams) {
   const singleView = webContentId ? webContents.fromId(webContentId) : null;
   let views = singleView ? [singleView] : webContents.getAllWebContents();
   if (filter) {
@@ -68,7 +69,9 @@ export function broadcastIpc({ channel, frameId, webContentId, filter, args = []
   views.forEach(webContent => {
     const type = webContent.getType();
     logger.debug(`[IPC]: broadcasting "${channel}" to ${type}=${webContent.id}`, { args });
-    webContent.send(channel, ...args);
+    if (!frameOnly) {
+      webContent.send(channel, ...args);
+    }
     if (frameId) {
       webContent.sendToFrame(frameId, channel, ...args)
     }
