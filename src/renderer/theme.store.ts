@@ -94,8 +94,8 @@ export class ThemeStore {
     });
     this.styles.textContent = `:root {\n${cssVars.join("\n")}}`;
     // Adding universal theme flag which can be used in component styles
-    const rootElem = document.getElementById("app");
-    rootElem.classList.toggle("theme-light", theme.type === ThemeType.LIGHT);
+    const body = document.querySelector("body");
+    body.classList.toggle("theme-light", theme.type === ThemeType.LIGHT);
   }
 }
 

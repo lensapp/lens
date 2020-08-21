@@ -9,7 +9,7 @@
   box-shadow: 0 0 $unit * 2 $boxShadow;
   z-index: $zIndex-drawer;
 
-  &.light {
+  .theme-light & {
     .drawer-content {
       @include custom-scrollbar(dark);
     }

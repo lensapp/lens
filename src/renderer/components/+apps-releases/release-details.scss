@@ -1,13 +1,6 @@
 @import "release.mixins";
 
 .ReleaseDetails {
-  &.light {
-    .AceEditor {
-      border: 1px solid gainsboro;
-      border-radius: $radius;
-    }
-  }
-
   .DrawerItem {
     align-items: center;
   }

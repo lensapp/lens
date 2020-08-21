@@ -11,6 +11,10 @@
     @include custom-scrollbar;
     --flex-gap: #{$spacing};
     padding: $spacing;
+
+    .theme-light & {
+      @include custom-scrollbar(dark);
+    }
   }
 
   > .head-col {

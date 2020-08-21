@@ -148,9 +148,8 @@ export class AceEditor extends React.Component<Props, State> {
 
   render() {
     const { className, hidden } = this.props;
-    const themeType = themeStore.activeTheme.type;
     return (
-      <div className={cssNames("AceEditor", className, { hidden }, themeType)}>
+      <div className={cssNames("AceEditor", className, { hidden })}>
         <div className="editor" ref={e => this.elem = e}/>
       </div>
     )

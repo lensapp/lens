@@ -1,9 +1,9 @@
 .Table {
   &.scrollable {
-    &.light {
+    .theme-light & {
       @include custom-scrollbar(dark);
     }
-    
+
     @include custom-scrollbar();
     flex: 1 0 0; // hackfix: flex-basis must be "0" for proper work in firefox
   }
