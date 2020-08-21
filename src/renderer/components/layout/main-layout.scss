@@ -64,6 +64,7 @@
 
     .theme-light & {
       @include custom-scrollbar(dark);
+      overflow-y: scroll;
     }
 
     grid-area: main;

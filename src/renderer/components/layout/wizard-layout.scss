@@ -19,8 +19,8 @@
 
   > .head-col {
     position: sticky;
-    border-bottom: 1px solid $borderFaintColor;
     justify-content: space-between;
+    background-color: $clusterMenuBackground;
   }
 
   > .content-col {

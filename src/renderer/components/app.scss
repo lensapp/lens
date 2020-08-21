@@ -141,10 +141,6 @@ a {
     text-decoration: underline;
   }
 
-  &:focus {
-    color: white;
-  }
-
   &:not([href]) {
     border-bottom: 1px dotted;
     text-decoration: none;
