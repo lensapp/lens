@@ -38,7 +38,9 @@ export class Select extends React.Component<SelectProps> {
     menuPortalTarget: document.body,
   }
 
-  private theme = this.props.themeName || themeStore.activeTheme.type;
+  @computed get theme() {
+    return this.props.themeName || themeStore.activeTheme.type;
+  }
 
   private styles: Styles = {
     menuPortal: styles => ({
