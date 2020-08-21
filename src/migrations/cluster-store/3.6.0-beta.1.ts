@@ -48,7 +48,7 @@ export default migration({
             printLog(`migrating ${cluster.preferences.icon} for ${cluster.preferences.clusterName}`)
             const iconPath = cluster.preferences.icon.replace("store://", "")
             const fileData = fse.readFileSync(path.join(userDataPath, iconPath));
-            const { mime = "" } = makeSynchronous(getFileType, "node")(fileData);
+            const { mime = "" } = makeSynchronous(getFileType)(fileData);
 
             if (!mime) {
               printLog(`mime type not detected for ${cluster.preferences.clusterName}'s icon: ${iconPath}`)

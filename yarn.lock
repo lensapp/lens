@@ -7640,9 +7640,10 @@ make-plural@^6.2.1:
   resolved "https://registry.yarnpkg.com/make-plural/-/make-plural-6.2.1.tgz#2790af1d05fb2fc35a111ce759ffdb0aca1339a3"
   integrity sha512-AmkruwJ9EjvyTv6AM8MBMK3TAeOJvhgTv5YQXzF0EP2qawhpvMjDpHvsdOIIT0Vn+BB0+IogmYZ1z+Ulm/m0Fg==
 
-"make-synchronous@https://github.com/Nokel81/make-synchronous#e366285001da13f4d5c028888a56b9baf83f9cff":
-  version "0.1.0"
-  resolved "https://github.com/Nokel81/make-synchronous#e366285001da13f4d5c028888a56b9baf83f9cff"
+make-synchronous@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/make-synchronous/-/make-synchronous-0.1.1.tgz#0169f6ec769c3cf8948d66790da262740c1209e7"
+  integrity sha512-Y4SxxqhaoyMDokJQ0AZz0E+bLhRkOSR7Z/IQoTKPdS6HYi3aobal2kMHoHHoqBadPWjf07P4K1FQLXOx3wf9Yw==
   dependencies:
     subsume "^3.0.0"
     type-fest "^0.16.0"
