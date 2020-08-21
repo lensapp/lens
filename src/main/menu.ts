@@ -67,6 +67,7 @@ export function buildMenu(windowManager: WindowManager) {
       { type: 'separator' },
       {
         label: 'Preferences',
+        accelerator: 'Cmd+,',
         click() {
           navigate(preferencesURL())
         }
@@ -91,6 +92,7 @@ export function buildMenu(windowManager: WindowManager) {
     submenu: [
       {
         label: 'Add Cluster',
+        accelerator: 'CmdOrCtrl+Shift+A',
         click() {
           navigate(addClusterURL())
         }
@@ -98,6 +100,7 @@ export function buildMenu(windowManager: WindowManager) {
       ...activeClusterOnly([
         {
           label: 'Cluster Settings',
+          accelerator: 'CmdOrCtrl+Shift+S',
           click() {
             navigate(clusterSettingsURL({
               params: {
@@ -111,6 +114,7 @@ export function buildMenu(windowManager: WindowManager) {
         { type: 'separator' },
         {
           label: 'Preferences',
+          accelerator: 'Ctrl+,',
           click() {
             navigate(preferencesURL())
           }
