@@ -6,7 +6,7 @@ import { action, observable, reaction, runInAction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
-import { broadcastIpc } from "./ipc";
+import { broadcastIpc, IpcBroadcastParams } from "./ipc";
 import isEqual from "lodash/isEqual";
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
@@ -63,7 +63,7 @@ export class BaseStore<T = any> extends Singleton {
     this.isLoaded = true;
   }
 
-  protected async save(model: T) {
+  protected async saveToFile(model: T) {
     logger.info(`[STORE]: SAVING ${this.name}`);
     // todo: update when fixed https://github.com/sindresorhus/conf/issues/114
     Object.entries(model).forEach(([key, value]) => {
@@ -115,13 +115,37 @@ export class BaseStore<T = any> extends Singleton {
 
   protected async onModelChange(model: T) {
     if (ipcMain) {
-      this.save(model); // save config file
-      broadcastIpc({ channel: this.syncChannel, args: [model] }); // broadcast to renderer views
+      this.saveToFile(model); // save config file
+      this.syncToWebViews(model); // send update to renderer views
     }
     // send "update-request" to main-process
     if (ipcRenderer) {
       ipcRenderer.send(this.syncChannel, model);
     }
+  }
+
+  protected async syncToWebViews(model: T) {
+    const msg: IpcBroadcastParams = {
+      channel: this.syncChannel,
+      args: [model],
+    }
+    broadcastIpc(msg); // send to all windows (BrowserWindow, webContents)
+    const frames = await this.getSubFrames();
+    frames.forEach(frameId => {
+      broadcastIpc({ frameId, ...msg }); // send to all sub-frames (e.g. cluster-view managed in iframe)
+    });
+  }
+
+  // todo: refactor?
+  protected async getSubFrames(): Promise<number[]> {
+    const subFrames: number[] = [];
+    const { clusterStore } = await import("./cluster-store");
+    clusterStore.clustersList.forEach(cluster => {
+      if (cluster.frameId) {
+        subFrames.push(cluster.frameId)
+      }
+    });
+    return subFrames;
   }
 
   @action
