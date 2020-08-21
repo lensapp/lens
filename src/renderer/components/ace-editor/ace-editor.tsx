@@ -3,10 +3,11 @@
 import "./ace-editor.scss"
 
 import React from "react"
-import { observer } from "mobx-react";
+import { observer, disposeOnUnmount } from "mobx-react";
 import AceBuild, { Ace } from "ace-builds"
 import { autobind, cssNames } from "../../utils";
 import { themeStore } from "../../theme.store";
+import { reaction } from "mobx";
 
 interface Props extends Partial<Ace.EditorOptions> {
   className?: string;
@@ -45,6 +46,11 @@ export class AceEditor extends React.Component<Props, State> {
     require("ace-builds/src-noconflict/theme-terminal")
     require("ace-builds/src-noconflict/ext-searchbox")
   }
+
+  @disposeOnUnmount
+  themeSwitcher = reaction(() => themeStore.activeTheme, () => {
+    this.setTheme(this.theme);
+  });
 
   get theme() {
     switch (themeStore.activeTheme.type) {
