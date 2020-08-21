@@ -8,8 +8,8 @@
 
 @mixin custom-scrollbar($theme: light, $size: 7px, $borderSpacing: 5px) {
   $themes: (
-    light: rgba(255, 255, 255, .25),
-    dark: rgba(0, 0, 0, .25),
+    light: #5f6064,
+    dark: #bbb,
   );
 
   $scrollBarColor: if(map_has_key($themes, $theme), map_get($themes, $theme), none);
@@ -34,10 +34,6 @@
   &::-webkit-scrollbar-corner {
     background-color: transparent;
   }
-
-  // Firefox
-  scrollbar-color: $scrollBarColor transparent;
-  //scrollbar-width: thin;
 }
 
 // Hide scrollbar but keep the element scrollable
@@ -48,27 +44,6 @@
     width: 0;
     height: 0;
     background: transparent;
-  }
-  scrollbar-width: none; // Firefox 65+
-  -ms-overflow-style: none; // IE (10,11?), Edge(?)
-}
-
-// Cross-browser hacks
-@mixin safariOnly {
-  @media not all and (min-resolution: .001dpcm) {
-    @content;
-  }
-}
-
-@mixin firefoxOnly {
-  @-moz-document url-prefix() {
-    @content;
-  }
-}
-
-@mixin edgeOnly {
-  @supports (-ms-accelerator: true) {
-    @content;
   }
 }
 
