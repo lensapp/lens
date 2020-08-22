@@ -20,10 +20,8 @@ compile-dev:
 	yarn compile:renderer --cache
 
 dev:
-ifeq "$(DETECTED_OS)" "Windows"
+ifneq ("$(wildcard $(out/main.js))","")
 	make init
-else
-	test -f out/main.js || make init
 endif
 	yarn dev
 
