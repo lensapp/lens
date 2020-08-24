@@ -7,7 +7,6 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { Badge } from "../badge";
-import { TooltipContent } from "../tooltip";
 import { nodesStore } from "./nodes.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -127,16 +126,17 @@ export class NodeDetails extends React.Component<Props> {
                   key={type}
                   label={type}
                   className={kebabCase(type)}
-                  tooltip={
-                    <TooltipContent tableView>
-                      {Object.entries(condition).map(([key, value]) =>
-                        <div key={key} className="flex gaps align-center">
-                          <div className="name">{upperFirst(key)}</div>
-                          <div className="value">{value}</div>
-                        </div>
-                      )}
-                    </TooltipContent>
-                  }
+                  tooltip={{
+                    formatters: {
+                      tableView: true,
+                    },
+                    children: Object.entries(condition).map(([key, value]) =>
+                      <div key={key} className="flex gaps align-center">
+                        <div className="name">{upperFirst(key)}</div>
+                        <div className="value">{value}</div>
+                      </div>
+                    )
+                  }}
                 />
               )
             })

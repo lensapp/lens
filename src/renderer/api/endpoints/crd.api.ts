@@ -130,9 +130,16 @@ export class CustomResourceDefinition extends KubeObject {
   }
 }
 
-export const crdApi = new KubeApi<CustomResourceDefinition>({
+export const crdBetaApi = new KubeApi<CustomResourceDefinition>({
   kind: CustomResourceDefinition.kind,
   apiBase: "/apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions",
+  isNamespaced: false,
+  objectConstructor: CustomResourceDefinition,
+});
+
+export const crdApi = new KubeApi<CustomResourceDefinition>({
+  kind: CustomResourceDefinition.kind,
+  apiBase: "/apis/apiextensions.k8s.io/v1/customresourcedefinitions",
   isNamespaced: false,
   objectConstructor: CustomResourceDefinition,
 });

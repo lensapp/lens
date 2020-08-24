@@ -14,7 +14,6 @@ import { Pod, podsApi } from "../../api/endpoints";
 import { PodMenu } from "./pod-menu";
 import { StatusBrick } from "../status-brick";
 import { cssNames, stopPropagation } from "../../utils";
-import { TooltipContent } from "../tooltip";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { getDetailsUrl } from "../../navigation";
 import toPairs from "lodash/toPairs";
@@ -42,26 +41,29 @@ export class Pods extends React.Component<Props> {
   renderContainersStatus(pod: Pod) {
     return pod.getContainerStatuses().map(containerStatus => {
       const { name, state, ready } = containerStatus;
-      const tooltip = (
-        <TooltipContent tableView>
-          {Object.keys(state).map(status => (
-            <Fragment key={status}>
-              <div className="title">
-                {name} <span className="text-secondary">({status}{ready ? ", ready" : ""})</span>
-              </div>
-              {toPairs(state[status]).map(([name, value]) => (
-                <div key={name} className="flex gaps align-center">
-                  <div className="name">{startCase(name)}</div>
-                  <div className="value">{value}</div>
-                </div>
-              ))}
-            </Fragment>
-          ))}
-        </TooltipContent>
-      );
       return (
         <Fragment key={name}>
-          <StatusBrick className={cssNames(state, { ready })} tooltip={tooltip}/>
+          <StatusBrick
+            className={cssNames(state, { ready })}
+            tooltip={{
+              formatters: {
+                tableView: true
+              },
+              children: Object.keys(state).map(status => (
+                <Fragment key={status}>
+                  <div className="title">
+                    {name} <span className="text-secondary">({status}{ready ? ", ready" : ""})</span>
+                  </div>
+                  {toPairs(state[status]).map(([name, value]) => (
+                    <div key={name} className="flex gaps align-center">
+                      <div className="name">{startCase(name)}</div>
+                      <div className="value">{value}</div>
+                    </div>
+                  ))}
+                </Fragment>
+              ))
+            }}
+          />
         </Fragment>
       )
     });

@@ -119,7 +119,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       const subscriptions = stores.map(store => store.subscribe());
       await when(() => this.isUnmounting);
       subscriptions.forEach(dispose => dispose()); // unsubscribe all
-    } catch(error) {
+    } catch (error) {
       console.log("catched", error)
     }
   }
@@ -356,8 +356,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       const modifiedHeader = customizeHeader(placeholders, header);
       if (isReactNode(modifiedHeader)) {
         header = modifiedHeader;
-      }
-      else {
+      } else {
         header = this.renderHeaderContent({
           ...placeholders,
           ...modifiedHeader as IHeaderPlaceholders,

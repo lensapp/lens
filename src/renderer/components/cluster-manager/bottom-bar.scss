@@ -1,0 +1,13 @@
+.BottomBar {
+  $spacing: $padding / 2;
+
+  font-size: $font-size-small;
+  background-color: #3d90ce;
+  padding: $spacing $padding;
+  color: white;
+
+  #current-workspace {
+    --flex-gap: #{$spacing};
+    cursor: pointer;
+  }
+}

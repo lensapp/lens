@@ -21,6 +21,7 @@ export interface MenuProps {
   isOpen?: boolean;
   open(): void;
   close(): void;
+  id?: string;
   className?: string;
   htmlFor?: string;
   autoFocus?: boolean;
@@ -64,8 +65,7 @@ export class Menu extends React.Component<MenuProps, State> {
       const parent = this.elem.parentElement;
       const position = window.getComputedStyle(parent).position;
       if (position === 'static') parent.style.position = 'relative';
-    }
-    else if (this.isOpen) {
+    } else if (this.isOpen) {
       this.refreshPosition();
     }
     this.opener = document.getElementById(this.props.htmlFor); // might not exist in sub-menus
@@ -108,8 +108,7 @@ export class Menu extends React.Component<MenuProps, State> {
       let nextItem = reverse ? items[activeIndex - 1] : items[activeIndex + 1];
       if (!nextItem) nextItem = items[activeIndex];
       nextItem.elem.focus();
-    }
-    else {
+    } else {
       items[0].elem.focus();
     }
   }
@@ -223,7 +222,7 @@ export class Menu extends React.Component<MenuProps, State> {
   }
 
   render() {
-    const { position } = this.props;
+    const { position, id } = this.props;
     let { className, usePortal } = this.props;
     className = cssNames('Menu', className, this.state.position || position, {
       portal: usePortal,
@@ -245,7 +244,7 @@ export class Menu extends React.Component<MenuProps, State> {
     const menu = (
       <MenuContext.Provider value={this}>
         <Animate enter={this.isOpen}>
-          <ul className={className} ref={this.bindRef}>
+          <ul id={id} className={className} ref={this.bindRef}>
             {menuItems}
           </ul>
         </Animate>

@@ -1,9 +1,8 @@
 import { stringify } from "querystring";
-import { autobind, base64, EventEmitter, interval } from "../utils";
+import { autobind, base64, EventEmitter } from "../utils";
 import { WebSocketApi } from "./websocket-api";
-import { configStore } from "../config.store";
 import isEqual from "lodash/isEqual"
-import { apiPrefix, isDevelopment } from "../../common/vars";
+import { isDevelopment } from "../../common/vars";
 
 export enum TerminalChannels {
   STDIN = 0,
@@ -25,21 +24,19 @@ enum TerminalColor {
   NO_COLOR = "\u001b[0m",
 }
 
-export interface ITerminalApiOptions {
+export type TerminalApiQuery = Record<string, string> & {
   id: string;
   node?: string;
-  colorTheme?: "light" | "dark";
+  type?: string | "node";
 }
 
 export class TerminalApi extends WebSocketApi {
   protected size: { Width: number; Height: number };
-  protected currentToken: string;
-  protected tokenInterval = interval(60, this.sendNewToken); // refresh every minute
 
   public onReady = new EventEmitter<[]>();
   public isReady = false;
 
-  constructor(protected options: ITerminalApiOptions) {
+  constructor(protected options: TerminalApiQuery) {
     super({
       logging: isDevelopment,
       flushOnOpen: false,
@@ -47,50 +44,33 @@ export class TerminalApi extends WebSocketApi {
     });
   }
 
-  async getUrl(token: string) {
-    const { hostname, protocol } = location;
+  async getUrl() {
     let { port } = location;
+    const { hostname, protocol } = location;
     const { id, node } = this.options;
     const wss = `ws${protocol === "https:" ? "s" : ""}://`;
-    const queryParams = { token, id };
+    const query: TerminalApiQuery = { id };
     if (port) {
       port = `:${port}`
     }
     if (node) {
-      Object.assign(queryParams, {
-        node: node,
-        type: "node"
-      });
+      query.node = node;
+      query.type = "node";
     }
-    return `${wss}${hostname}${port}/api?${stringify(queryParams)}`;
+    return `${wss}${hostname}${port}/api?${stringify(query)}`;
   }
 
   async connect() {
-    const token = await configStore.getToken();
-    const apiUrl = await this.getUrl(token);
-    const { colorTheme } = this.options;
-    this.emitStatus("Connecting ...", {
-      color: colorTheme == "light" ? TerminalColor.GRAY : TerminalColor.LIGHT_GRAY
-    });
+    const apiUrl = await this.getUrl();
+    this.emitStatus("Connecting ...");
     this.onData.addListener(this._onReady, { prepend: true });
-    this.currentToken = token;
-    this.tokenInterval.start();
     return super.connect(apiUrl);
-  }
-
-  @autobind()
-  async sendNewToken() {
-    const token = await configStore.getToken();
-    if (!this.isReady || token == this.currentToken) return;
-    this.sendCommand(token, TerminalChannels.TOKEN);
-    this.currentToken = token;
   }
 
   destroy() {
     if (!this.socket) return;
     const exitCode = String.fromCharCode(4); // ctrl+d
     this.sendCommand(exitCode);
-    this.tokenInterval.stop();
     setTimeout(() => super.destroy(), 2000);
   }
 

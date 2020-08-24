@@ -64,6 +64,7 @@ export class RoleBindingDetails extends React.Component<Props> {
     }
     const name = roleBinding.getName();
     const { roleRef } = roleBinding;
+    const subjects = roleBinding.getSubjects();
     return (
       <div className="RoleBindingDetails">
         <KubeObjectMeta object={roleBinding}/>
@@ -83,31 +84,33 @@ export class RoleBindingDetails extends React.Component<Props> {
         </Table>
 
         <DrawerTitle title={<Trans>Bindings</Trans>}/>
-        <Table selectable className="bindings box grow">
-          <TableHead>
-            <TableCell checkbox/>
-            <TableCell className="binding"><Trans>Binding</Trans></TableCell>
-            <TableCell className="type"><Trans>Type</Trans></TableCell>
-            <TableCell className="type"><Trans>Namespace</Trans></TableCell>
-          </TableHead>
-          {
-            roleBinding.getSubjects().map((subject, i) => {
-              const { kind, name, namespace } = subject;
-              const isSelected = selectedSubjects.includes(subject);
-              return (
-                <TableRow
-                  key={i} selected={isSelected}
-                  onClick={prevDefault(() => this.selectSubject(subject))}
-                >
-                  <TableCell checkbox isChecked={isSelected}/>
-                  <TableCell className="binding">{name}</TableCell>
-                  <TableCell className="type">{kind}</TableCell>
-                  <TableCell className="ns">{namespace || "-"}</TableCell>
-                </TableRow>
-              )
-            })
-          }
-        </Table>
+        {subjects.length > 0 && (
+          <Table selectable className="bindings box grow">
+            <TableHead>
+              <TableCell checkbox/>
+              <TableCell className="binding"><Trans>Binding</Trans></TableCell>
+              <TableCell className="type"><Trans>Type</Trans></TableCell>
+              <TableCell className="type"><Trans>Namespace</Trans></TableCell>
+            </TableHead>
+            {
+              subjects.map((subject, i) => {
+                const { kind, name, namespace } = subject;
+                const isSelected = selectedSubjects.includes(subject);
+                return (
+                  <TableRow
+                    key={i} selected={isSelected}
+                    onClick={prevDefault(() => this.selectSubject(subject))}
+                  >
+                    <TableCell checkbox isChecked={isSelected}/>
+                    <TableCell className="binding">{name}</TableCell>
+                    <TableCell className="type">{kind}</TableCell>
+                    <TableCell className="ns">{namespace || "-"}</TableCell>
+                  </TableRow>
+                )
+              })
+            }
+          </Table>
+        )}
 
         <KubeEventDetails object={roleBinding}/>
 

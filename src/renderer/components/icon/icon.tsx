@@ -87,12 +87,12 @@ export class Icon extends React.PureComponent<IconProps> {
     // render as inline svg-icon
     if (svg) {
       const svgIconText = require("!!raw-loader!./" + svg + ".svg").default;
-      iconContent = <span dangerouslySetInnerHTML={{ __html: svgIconText }}/>;
+      iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }}/>;
     }
 
     // render as material-icon
     if (material) {
-      iconContent = <span className="material-icons">{material}</span>;
+      iconContent = <span className="icon">{material}</span>;
     }
 
     // wrap icon's content passed from decorator

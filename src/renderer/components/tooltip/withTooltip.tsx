@@ -7,7 +7,7 @@ import { isReactNode } from "../../utils/isReactNode";
 import uniqueId from "lodash/uniqueId"
 
 export interface TooltipDecoratorProps {
-  tooltip?: ReactNode | Omit<TooltipProps, "htmlFor">;
+  tooltip?: ReactNode | Omit<TooltipProps, "targetId">;
 }
 
 export function withTooltip<T extends React.ComponentType<any>>(Target: T): T {
@@ -18,20 +18,12 @@ export function withTooltip<T extends React.ComponentType<any>>(Target: T): T {
 
     render() {
       const { tooltip, ...targetProps } = this.props;
-
       if (tooltip) {
         const tooltipId = targetProps.id || this.tooltipId;
         const tooltipProps: TooltipProps = {
-          htmlFor: tooltipId,
-          following: true,
+          targetId: tooltipId,
           ...(isReactNode(tooltip) ? { children: tooltip } : tooltip),
         };
-        if (!tooltipProps.following) {
-          targetProps.style = {
-            position: "relative",
-            ...(targetProps.style || {})
-          }
-        }
         targetProps.id = tooltipId;
         targetProps.children = (
           <>

@@ -1,89 +1,96 @@
-import { BrowserWindow, shell } from "electron"
-import { PromiseIpc } from "electron-promise-ipc"
+import type { ClusterId } from "../common/cluster-store";
+import { BrowserWindow, dialog, ipcMain, shell, WebContents, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
-import { tracker } from "./tracker";
-import { getStaticUrl } from "../common/register-static";
+import { observable } from "mobx";
+import { initMenu } from "./menu";
 
 export class WindowManager {
-  public mainWindow: BrowserWindow = null;
-  public splashWindow: BrowserWindow = null;
-  protected promiseIpc: any
+  protected mainView: BrowserWindow;
+  protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
 
-  constructor({ showSplash = true } = {}) {
-    this.promiseIpc = new PromiseIpc({ timeout: 2000 })
-    // Manage main window size&position with persistence
+  @observable activeClusterId: ClusterId;
+
+  constructor(protected proxyPort: number) {
+    // Manage main window size and position with state persistence
     this.windowState = windowStateKeeper({
       defaultHeight: 900,
       defaultWidth: 1440,
     });
 
-    this.splashWindow = new BrowserWindow({
-      width: 500,
-      height: 300,
-      backgroundColor: "#1e2124",
-      center: true,
-      frame: false,
-      resizable: false,
+    const { width, height, x, y } = this.windowState;
+    this.mainView = new BrowserWindow({
+      x, y, width, height,
       show: false,
-      webPreferences: {
-        nodeIntegration: true
-      }
-    })
-    if (showSplash) {
-      this.splashWindow.loadURL(getStaticUrl("splash.html"))
-      this.splashWindow.show()
-    }
-
-    this.mainWindow = new BrowserWindow({
-      show: false,
-      x: this.windowState.x,
-      y: this.windowState.y,
-      width: this.windowState.width,
-      height: this.windowState.height,
-      backgroundColor: "#1e2124",
+      minWidth: 900,
+      minHeight: 760,
       titleBarStyle: "hidden",
+      backgroundColor: "#1e2124",
       webPreferences: {
         nodeIntegration: true,
-        webviewTag: true
+        nodeIntegrationInSubFrames: true,
+        enableRemoteModule: true,
       },
     });
-
-    // Hook window state manager into window lifecycle
-    this.windowState.manage(this.mainWindow);
-
-    // handle close event
-    this.mainWindow.on("close", () => {
-      this.mainWindow = null;
-    });
+    this.windowState.manage(this.mainView);
 
     // open external links in default browser (target=_blank, window.open)
-    this.mainWindow.webContents.on("new-window", (event, url) => {
+    this.mainView.webContents.on("new-window", (event, url) => {
       event.preventDefault();
       shell.openExternal(url);
     });
 
-    // handle external links
-    this.mainWindow.webContents.on("will-navigate", (event, link) => {
-      if (link.startsWith("http://localhost")) {
-        return;
-      }
-      event.preventDefault();
-      shell.openExternal(link);
-    })
+    // track visible cluster from ui
+    ipcMain.on("cluster-view:change", (event, clusterId: ClusterId) => {
+      this.activeClusterId = clusterId;
+    });
 
-    this.mainWindow.on("focus", () => {
-      tracker.event("app", "focus")
-    })
+    // load & show app
+    this.showMain();
+    initMenu(this);
   }
 
-  public showMain(url: string) {
-    this.mainWindow.loadURL(url).then(() => {
-      this.splashWindow.hide()
-      this.splashWindow.loadURL("data:text/html;charset=utf-8,").then(() => {
-        this.splashWindow.close()
-        this.mainWindow.show()
-      })
-    })
+  navigate({ url, channel, frameId }: { url: string, channel: string, frameId?: number }) {
+    if (frameId) {
+      this.mainView.webContents.sendToFrame(frameId, channel, url);
+    } else {
+      this.mainView.webContents.send(channel, url);
+    }
+  }
+
+  async showMain() {
+    try {
+      await this.showSplash();
+      await this.mainView.loadURL(`http://localhost:${this.proxyPort}`)
+      this.mainView.show();
+      this.splashWindow.close();
+    } catch (err) {
+      dialog.showErrorBox("ERROR!", err.toString())
+    }
+  }
+
+  async showSplash() {
+    if (!this.splashWindow) {
+      this.splashWindow = new BrowserWindow({
+        width: 500,
+        height: 300,
+        backgroundColor: "#1e2124",
+        center: true,
+        frame: false,
+        resizable: false,
+        show: false,
+        webPreferences: {
+          nodeIntegration: true
+        }
+      });
+      await this.splashWindow.loadURL("static://splash.html");
+    }
+    this.splashWindow.show();
+  }
+
+  destroy() {
+    this.windowState.unmanage();
+    this.splashWindow.destroy();
+    this.mainView.destroy();
   }
 }

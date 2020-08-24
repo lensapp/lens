@@ -5,13 +5,12 @@
   flex: 1;
   z-index: 10;
 
-  &.hidden {
-    visibility: hidden;
-  }
+  .theme-light & {
+    border: 1px solid gainsboro;
+    border-radius: $radius;
 
-  &.light {
     .ace_scrollbar {
-      @include custom-scrollbar($theme: dark);
+      @include custom-scrollbar(dark);
     }
   }
 

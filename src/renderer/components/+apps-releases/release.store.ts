@@ -1,11 +1,11 @@
 import isEqual from "lodash/isEqual";
-import { action, observable, when, IReactionDisposer, reaction } from "mobx";
+import { action, IReactionDisposer, observable, reaction, when } from "mobx";
 import { autobind } from "../../utils";
 import { HelmRelease, helmReleasesApi, IReleaseCreatePayload, IReleaseUpdatePayload } from "../../api/endpoints/helm-releases.api";
 import { ItemStore } from "../../item.store";
-import { configStore } from "../../config.store";
-import { secretsStore } from "../+config-secrets/secrets.store";
 import { Secret } from "../../api/endpoints";
+import { secretsStore } from "../+config-secrets/secrets.store";
+import { getHostedCluster } from "../../../common/cluster-store";
 
 @autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {
@@ -58,8 +58,8 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     this.isLoading = true;
     let items;
     try {
-      const { isClusterAdmin, allowedNamespaces } = configStore;
-      items = await this.loadItems(!isClusterAdmin ? allowedNamespaces : null);
+      const { isAdmin, allowedNamespaces } = getHostedCluster()
+      items = await this.loadItems(!isAdmin ? allowedNamespaces : null);
     } finally {
       if (items) {
         items = this.sortItems(items);
@@ -73,8 +73,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   async loadItems(namespaces?: string[]) {
     if (!namespaces) {
       return helmReleasesApi.list();
-    }
-    else {
+    } else {
       return Promise
         .all(namespaces.map(namespace => helmReleasesApi.list(namespace)))
         .then(items => items.flat());

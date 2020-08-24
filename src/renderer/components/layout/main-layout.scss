@@ -1,20 +1,12 @@
 
 .MainLayout {
-  --main-layout-header: 40px;
   --sidebar-max-size: 200px;
 
   display: grid;
   grid-template-areas: "aside header" "aside tabs" "aside main" "aside footer";
   grid-template-rows: [header] var(--main-layout-header) [tabs] min-content [main] 1fr [footer] auto;
   grid-template-columns: [sidebar] minmax(var(--main-layout-header), min-content) [main] 1fr;
-  height: 100vh;
-
-  &.light {
-    main {
-      @include custom-scrollbar(dark);
-      overflow-y: scroll;
-    }
-  }
+  height: 100%;
 
   > .Tabs {
     grid-area: tabs;
@@ -46,7 +38,6 @@
     background: $sidebarBackground;
     white-space: nowrap;
     transition: width 150ms cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 100;
 
     &.pinned {
       width: var(--sidebar-max-size);
@@ -70,6 +61,10 @@
   main {
     @include custom-scrollbar;
     $spacing: $margin * 2;
+
+    .theme-light & {
+      @include custom-scrollbar(dark);
+    }
 
     grid-area: main;
     overflow-y: scroll; // always reserve space for scrollbar (17px)

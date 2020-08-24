@@ -1,0 +1,11 @@
+.FilePicker {
+  input[type="file"] {
+    display: none;
+  }
+
+  label {
+    display: inline-flex;
+    cursor: pointer;
+    color: var(--blue);
+  }
+}

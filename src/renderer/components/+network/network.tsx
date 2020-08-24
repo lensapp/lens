@@ -12,7 +12,7 @@ import { Ingresses, ingressRoute, ingressURL } from "../+network-ingresses";
 import { NetworkPolicies, networkPoliciesRoute, networkPoliciesURL } from "../+network-policies";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { networkURL } from "./network.route";
-import { isAllowedResource } from "../../api/rbac";
+import { isAllowedResource } from "../../../common/rbac";
 
 interface Props extends RouteComponentProps<{}> {
 }

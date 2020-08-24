@@ -38,7 +38,7 @@ export const isNumber: Validator = {
 export const isUrl: Validator = {
   condition: ({ type }) => type === "url",
   message: () => _i18n._(t`Wrong url format`),
-  validate: value => !!value.match(/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/),
+  validate: value => !!value.match(/^http(s)?:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]*)*$/),
 };
 
 export const minLength: Validator = {
@@ -53,9 +53,10 @@ export const maxLength: Validator = {
   validate: (value, { maxLength }) => value.length <= maxLength,
 };
 
+const systemNameMatcher = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
 export const systemName: Validator = {
-  message: () => _i18n._(t`This field must contain only lowercase latin characters, numbers and dash.`),
-  validate: value => !!value.match(/^[a-z0-9-]+$/),
+  message: () => _i18n._(t`A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics.`),
+  validate: value => !!value.match(systemNameMatcher),
 };
 
 export const accountId: Validator = {

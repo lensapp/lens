@@ -7,6 +7,17 @@ import { KubeApi } from "../../api/kube-api";
 import { CRDResourceStore } from "./crd-resource.store";
 import { KubeObject } from "../../api/kube-object";
 
+function initStore(crd: CustomResourceDefinition) {
+  const apiBase = crd.getResourceApiBase();
+  const kind = crd.getResourceKind();
+  const isNamespaced = crd.isNamespaced();
+  const api = apiManager.getApi(apiBase) || new KubeApi({ apiBase, kind, isNamespaced });
+  
+  if (!apiManager.getStore(api)) {
+    apiManager.registerStore(api, new CRDResourceStore(api));
+  }
+}
+
 @autobind()
 export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
   api = crdApi
@@ -15,9 +26,7 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
     super();
 
     // auto-init stores for crd-s
-    reaction(() => this.items.toJS(), items => {
-      items.forEach(this.initStore);
-    })
+    reaction(() => this.items.toJS(), items => items.forEach(initStore))
   }
 
   protected sortItems(items: CustomResourceDefinition[]) {
@@ -25,23 +34,6 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
       crd => crd.getGroup(),
       crd => crd.getName(),
     ])
-  }
-
-  protected initStore(crd: CustomResourceDefinition) {
-    const apiBase = crd.getResourceApiBase();
-    let api = apiManager.getApi(apiBase);
-    if (!api) {
-      api = new KubeApi({
-        apiBase: apiBase,
-        kind: crd.getResourceKind(),
-        isNamespaced: crd.isNamespaced(),
-      });
-    }
-    let store = apiManager.getStore(api);
-    if (!store) {
-      store = new CRDResourceStore(api);
-      apiManager.registerStore(api, store);
-    }
   }
 
   @computed get groups() {
@@ -63,9 +55,10 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
   getByObject(obj: KubeObject) {
     if (!obj) return null
     const { kind, apiVersion } = obj;
-    return this.items.find(crd => {
-      return kind === crd.getResourceKind() && apiVersion === `${crd.getGroup()}/${crd.getVersion()}`
-    })
+    
+    return this.items.find(crd => (
+      kind === crd.getResourceKind() && apiVersion === `${crd.getGroup()}/${crd.getVersion()}`
+    ))
   }
 }
 

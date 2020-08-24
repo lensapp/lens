@@ -27,7 +27,7 @@ export interface JsonApiLog {
 }
 
 export interface JsonApiConfig {
-  apiPrefix: string;
+  apiBase: string;
   debug?: boolean;
 }
 
@@ -72,7 +72,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   }
 
   protected request<D>(path: string, params?: P, init: RequestInit = {}) {
-    let reqUrl = this.config.apiPrefix + path;
+    let reqUrl = this.config.apiBase + path;
     const reqInit: RequestInit = { ...this.reqInit, ...init };
     const { data, query } = params || {} as P;
     if (data && !reqInit.body) {

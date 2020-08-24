@@ -1,217 +1,267 @@
+import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
+import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
+import type { WorkspaceId } from "../common/workspace-store";
+import type { FeatureStatusMap } from "./feature"
+import { action, computed, observable, reaction, toJS, when } from "mobx";
+import { apiKubePrefix } from "../common/vars";
+import { broadcastIpc } from "../common/ipc";
 import { ContextHandler } from "./context-handler"
-import { FeatureStatusMap } from "./feature"
-import * as k8s from "./k8s"
-import { clusterStore } from "../common/cluster-store"
-import logger from "./logger"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
-import * as fm from "./feature-manager";
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager"
-import { PromiseIpc } from "electron-promise-ipc"
-import request from "request-promise-native"
-import { apiPrefix } from "../common/vars";
+import { getNodeWarningConditions, loadConfig, podHasIssues } from "../common/kube-helpers"
+import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from "./feature-manager";
+import request, { RequestPromiseOptions } from "request-promise-native"
+import { apiResources } from "../common/rbac";
+import logger from "./logger"
 
-enum ClusterStatus {
+export enum ClusterStatus {
   AccessGranted = 2,
   AccessDenied = 1,
   Offline = 0
 }
 
-export interface ClusterBaseInfo {
-  id: string;
-  kubeConfigPath: string;
-  contextName: string;
-  preferences?: ClusterPreferences;
-  port?: number;
-  workspace?: string;
-}
-
-export interface ClusterInfo extends ClusterBaseInfo {
-  url: string;
+export interface ClusterState extends ClusterModel {
+  initialized: boolean;
   apiUrl: string;
-  online?: boolean;
-  accessible?: boolean;
-  failureReason?: string;
-  nodes?: number;
-  version?: string;
-  distribution?: string;
-  isAdmin?: boolean;
-  features?: FeatureStatusMap;
-  kubeCtl?: Kubectl;
-  contextName: string;
+  online: boolean;
+  disconnected: boolean;
+  accessible: boolean;
+  failureReason: string;
+  nodes: number;
+  eventCount: number;
+  version: string;
+  distribution: string;
+  isAdmin: boolean;
+  allowedNamespaces: string[]
+  allowedResources: string[]
+  features: FeatureStatusMap;
 }
 
-export type ClusterPreferences = {
-  terminalCWD?: string;
-  clusterName?: string;
-  prometheus?: {
-    namespace: string;
-    service: string;
-    port: number;
-    prefix: string;
-  };
-  prometheusProvider?: {
-    type: string;
-  };
-  icon?: string;
-  httpsProxy?: string;
-}
-
-export class Cluster implements ClusterInfo {
-  public id: string;
-  public workspace: string;
-  public contextHandler: ContextHandler;
-  public contextName: string;
-  public url: string;
-  public port: number;
-  public apiUrl: string;
-  public online: boolean;
-  public accessible: boolean;
-  public failureReason: string;
-  public nodes: number;
-  public version: string;
-  public distribution: string;
-  public isAdmin: boolean;
-  public features: FeatureStatusMap;
+export class Cluster implements ClusterModel {
+  public id: ClusterId;
+  public frameId: number;
   public kubeCtl: Kubectl
-  public kubeConfigPath: string;
-  public eventCount: number;
-  public preferences: ClusterPreferences;
-
-  protected eventPoller: NodeJS.Timeout;
-  protected promiseIpc = new PromiseIpc({ timeout: 2000 })
-
+  public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
+  protected eventDisposers: Function[] = [];
 
-  constructor(clusterInfo: ClusterBaseInfo) {
-    if (clusterInfo) Object.assign(this, clusterInfo)
-    if (!this.preferences) this.preferences = {}
+  whenInitialized = when(() => this.initialized);
+
+  @observable initialized = false;
+  @observable contextName: string;
+  @observable workspace: WorkspaceId;
+  @observable kubeConfigPath: string;
+  @observable apiUrl: string; // cluster server url
+  @observable kubeProxyUrl: string; // lens-proxy to kube-api url
+  @observable online: boolean;
+  @observable accessible: boolean;
+  @observable disconnected: boolean;
+  @observable failureReason: string;
+  @observable nodes = 0;
+  @observable version: string;
+  @observable distribution = "unknown";
+  @observable isAdmin = false;
+  @observable eventCount = 0;
+  @observable preferences: ClusterPreferences = {};
+  @observable features: FeatureStatusMap = {};
+  @observable allowedNamespaces: string[] = [];
+  @observable allowedResources: string[] = [];
+
+  @computed get available() {
+    return this.accessible && !this.disconnected;
   }
 
-  public proxyKubeconfigPath() {
-    return this.kubeconfigManager.getPath()
+  constructor(model: ClusterModel) {
+    this.updateModel(model);
   }
 
-  public proxyKubeconfig() {
-    const kc = new KubeConfig()
-    kc.loadFromFile(this.proxyKubeconfigPath())
-    return kc
+  @action
+  updateModel(model: ClusterModel) {
+    Object.assign(this, model);
+    this.apiUrl = this.getKubeconfig().getCurrentCluster()?.server;
+    this.contextName = this.contextName || this.preferences.clusterName;
   }
 
-  public async init(kc: KubeConfig) {
-    this.apiUrl = kc.getCurrentCluster().server
-    this.contextHandler = new ContextHandler(kc, this)
-    await this.contextHandler.init() // So we get the proxy port reserved
-    this.kubeconfigManager = new KubeconfigManager(this)
-
-    this.url = this.contextHandler.url
-  }
-
-  public stopServer() {
-    this.contextHandler.stopServer()
-    clearInterval(this.eventPoller);
-  }
-
-  public async installFeature(name: string, config: any) {
-    await fm.installFeature(name, this, config)
-    return this.refreshCluster()
-  }
-
-  public async upgradeFeature(name: string, config: any) {
-    await fm.upgradeFeature(name, this, config)
-    return this.refreshCluster()
-  }
-
-  public async uninstallFeature(name: string) {
-    await fm.uninstallFeature(name, this)
-    return this.refreshCluster()
-  }
-
-  public async refreshCluster() {
-    clusterStore.reloadCluster(this)
-    this.contextHandler.setClusterPreferences(this.preferences)
-
-    const connectionStatus = await this.getConnectionStatus()
-    this.accessible = connectionStatus == ClusterStatus.AccessGranted;
-    this.online = connectionStatus > ClusterStatus.Offline;
-
-    if (this.accessible) {
-      this.distribution = this.detectKubernetesDistribution(this.version)
-      this.features = await fm.getFeatures(this)
-      this.isAdmin = await this.isClusterAdmin()
-      this.nodes = await this.getNodeCount()
-      this.kubeCtl = new Kubectl(this.version)
-      this.kubeCtl.ensureKubectl()
+  @action
+  async init(port: number) {
+    try {
+      this.contextHandler = new ContextHandler(this);
+      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
+      this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
+      this.initialized = true;
+      logger.info(`[CLUSTER]: "${this.contextName}" init success`, {
+        id: this.id,
+        context: this.contextName,
+        apiUrl: this.apiUrl
+      });
+    } catch (err) {
+      logger.error(`[CLUSTER]: init failed: ${err}`, {
+        id: this.id,
+        error: err,
+      });
     }
+  }
+
+  protected bindEvents() {
+    logger.info(`[CLUSTER]: bind events`, this.getMeta());
+    const refreshTimer = setInterval(() => this.online && this.refresh(), 30000); // every 30s
+    const refreshEventsTimer = setInterval(() => this.online && this.refreshEvents(), 3000); // every 3s
+
+    this.eventDisposers.push(
+      reaction(this.getState, this.pushState),
+      () => clearInterval(refreshTimer),
+      () => clearInterval(refreshEventsTimer),
+    );
+  }
+
+  protected unbindEvents() {
+    logger.info(`[CLUSTER]: unbind events`, this.getMeta());
+    this.eventDisposers.forEach(dispose => dispose());
+    this.eventDisposers.length = 0;
+  }
+
+  async activate() {
+    logger.info(`[CLUSTER]: activate`, this.getMeta());
+    await this.whenInitialized;
+    if (!this.eventDisposers.length) {
+      this.bindEvents();
+    }
+    if (this.disconnected) {
+      await this.reconnect();
+    }
+    await this.refresh();
+    return this.pushState();
+  }
+
+  async reconnect() {
+    logger.info(`[CLUSTER]: reconnect`, this.getMeta());
+    this.contextHandler.stopServer();
+    await this.contextHandler.ensureServer();
+    this.disconnected = false;
+  }
+
+  @action
+  disconnect() {
+    logger.info(`[CLUSTER]: disconnect`, this.getMeta());
+    this.unbindEvents();
+    this.contextHandler.stopServer();
+    this.disconnected = true;
+    this.online = false;
+    this.accessible = false;
+    this.pushState();
+  }
+
+  @action
+  async refresh() {
+    logger.info(`[CLUSTER]: refresh`, this.getMeta());
+    await this.refreshConnectionStatus(); // refresh "version", "online", etc.
+    if (this.accessible) {
+      this.kubeCtl = new Kubectl(this.version)
+      this.distribution = this.detectKubernetesDistribution(this.version)
+      const [features, isAdmin, nodesCount] = await Promise.all([
+        getFeatures(this),
+        this.isClusterAdmin(),
+        this.getNodeCount(),
+        this.kubeCtl.ensureKubectl()
+      ]);
+      this.features = features;
+      this.isAdmin = isAdmin;
+      this.nodes = nodesCount;
+      await Promise.all([
+        this.refreshEvents(),
+        this.refreshAllowedResources(),
+      ]);
+    }
+  }
+
+  @action
+  async refreshConnectionStatus() {
+    const connectionStatus = await this.getConnectionStatus();
+    this.online = connectionStatus > ClusterStatus.Offline;
+    this.accessible = connectionStatus == ClusterStatus.AccessGranted;
+  }
+
+  @action
+  async refreshAllowedResources() {
+    this.allowedNamespaces = await this.getAllowedNamespaces();
+    this.allowedResources = await this.getAllowedResources();
+  }
+
+  @action
+  async refreshEvents() {
     this.eventCount = await this.getEventCount();
   }
 
-  public getPrometheusApiPrefix() {
-    if (!this.preferences.prometheus?.prefix) {
-      return ""
-    }
-    return this.preferences.prometheus.prefix
+  protected getKubeconfig(): KubeConfig {
+    return loadConfig(this.kubeConfigPath);
   }
 
-  public save() {
-    clusterStore.storeCluster(this)
+  getProxyKubeconfig(): KubeConfig {
+    return loadConfig(this.getProxyKubeconfigPath());
   }
 
-  public toClusterInfo(): ClusterInfo {
-    return {
-      id: this.id,
-      workspace: this.workspace,
-      url: this.url,
-      contextName: this.contextName,
-      apiUrl: this.apiUrl,
-      online: this.online,
-      accessible: this.accessible,
-      failureReason: this.failureReason,
-      nodes: this.nodes,
-      version: this.version,
-      distribution: this.distribution,
-      isAdmin: this.isAdmin,
-      features: this.features,
-      kubeCtl: this.kubeCtl,
-      kubeConfigPath:  this.kubeConfigPath,
-      preferences: this.preferences
-    }
+  getProxyKubeconfigPath(): string {
+    return this.kubeconfigManager.getPath()
   }
 
-  protected async k8sRequest(path: string, opts?: request.RequestPromiseOptions) {
-    const options = Object.assign({
+  async installFeature(name: string, config: any) {
+    return installFeature(name, this, config)
+  }
+
+  async upgradeFeature(name: string, config: any) {
+    return upgradeFeature(name, this, config)
+  }
+
+  async uninstallFeature(name: string) {
+    return uninstallFeature(name, this)
+  }
+
+  protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
+    const apiUrl = this.kubeProxyUrl + path;
+    return request(apiUrl, {
       json: true,
-      timeout: 10000
-    }, (opts || {}))
-    if (!options.headers) { options.headers = {} }
-    options.headers.host = `${this.id}.localhost:${this.port}`
-    return request(`http://127.0.0.1:${this.port}${apiPrefix.KUBE_BASE}${path}`, options)
+      timeout: 5000,
+      ...options,
+      headers: {
+        Host: `${this.id}.${new URL(this.kubeProxyUrl).host}`, // required in ClusterManager.getClusterForRequest()
+        ...(options.headers || {}),
+      },
+    })
   }
 
-  protected async getConnectionStatus() {
+  getMetrics(prometheusPath: string, queryParams: IMetricsReqParams & { query: string }) {
+    const prometheusPrefix = this.preferences.prometheus?.prefix || "";
+    const metricsPath = `/api/v1/namespaces/${prometheusPath}/proxy${prometheusPrefix}/api/v1/query_range`;
+    return this.k8sRequest(metricsPath, {
+      timeout: 0,
+      resolveWithFullResponse: false,
+      json: true,
+      qs: queryParams,
+    })
+  }
+
+  protected async getConnectionStatus(): Promise<ClusterStatus> {
     try {
       const response = await this.k8sRequest("/version")
       this.version = response.gitVersion
       this.failureReason = null
       return ClusterStatus.AccessGranted;
     } catch (error) {
-      logger.error(`Failed to connect to cluster ${this.contextName}: ${JSON.stringify(error)}`)
+      logger.error(`Failed to connect cluster "${this.contextName}": ${error}`)
       if (error.statusCode) {
         if (error.statusCode >= 400 && error.statusCode < 500) {
           this.failureReason = "Invalid credentials";
           return ClusterStatus.AccessDenied;
-        }
-        else {
+        } else {
           this.failureReason = error.error || error.message;
           return ClusterStatus.Offline;
         }
-      }
-      else if (error.failed === true) {
+      } else if (error.failed === true) {
         if (error.timedOut === true) {
           this.failureReason = "Connection timed out";
           return ClusterStatus.Offline;
-        }
-        else {
+        } else {
           this.failureReason = "Failed to fetch credentials";
           return ClusterStatus.AccessDenied;
         }
@@ -221,22 +271,22 @@ export class Cluster implements ClusterInfo {
     }
   }
 
-  public async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
-    const authApi = this.proxyKubeconfig().makeApiClient(AuthorizationV1Api)
+  async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
+    const authApi = this.getProxyKubeconfig().makeApiClient(AuthorizationV1Api)
     try {
       const accessReview = await authApi.createSelfSubjectAccessReview({
         apiVersion: "authorization.k8s.io/v1",
         kind: "SelfSubjectAccessReview",
         spec: { resourceAttributes }
       })
-      return accessReview.body.status.allowed === true
+      return accessReview.body.status.allowed
     } catch (error) {
-      logger.error(`failed to request selfSubjectAccessReview: ${error.message}`)
+      logger.error(`failed to request selfSubjectAccessReview: ${error}`)
       return false
     }
   }
 
-  protected async isClusterAdmin(): Promise<boolean> {
+  async isClusterAdmin(): Promise<boolean> {
     return this.canI({
       namespace: "kube-system",
       resource: "*",
@@ -245,32 +295,17 @@ export class Cluster implements ClusterInfo {
   }
 
   protected detectKubernetesDistribution(kubernetesVersion: string): string {
-    if (kubernetesVersion.includes("gke")) {
-      return "gke"
-    }
-    else if (kubernetesVersion.includes("eks")) {
-      return "eks"
-    }
-    else if (kubernetesVersion.includes("IKS")) {
-      return "iks"
-    }
-    else if (this.apiUrl.endsWith("azmk8s.io")) {
-      return "aks"
-    }
-    else if (this.apiUrl.endsWith("k8s.ondigitalocean.com")) {
-      return "digitalocean"
-    }
-    else if (this.contextHandler.contextName.startsWith("minikube")) {
-      return "minikube"
-    }
-    else if (kubernetesVersion.includes("+")) {
-      return "custom"
-    }
-
+    if (kubernetesVersion.includes("gke")) return "gke"
+    if (kubernetesVersion.includes("eks")) return "eks"
+    if (kubernetesVersion.includes("IKS")) return "iks"
+    if (this.apiUrl.endsWith("azmk8s.io")) return "aks"
+    if (this.apiUrl.endsWith("k8s.ondigitalocean.com")) return "digitalocean"
+    if (this.contextName.startsWith("minikube")) return "minikube"
+    if (kubernetesVersion.includes("+")) return "custom"
     return "vanilla"
   }
 
-  protected async getNodeCount() {
+  protected async getNodeCount(): Promise<number> {
     try {
       const response = await this.k8sRequest("/api/v1/nodes")
       return response.items.length
@@ -280,11 +315,11 @@ export class Cluster implements ClusterInfo {
     }
   }
 
-  public async getEventCount(): Promise<number> {
+  protected async getEventCount(): Promise<number> {
     if (!this.isAdmin) {
       return 0;
     }
-    const client = this.proxyKubeconfig().makeApiClient(CoreV1Api);
+    const client = this.getProxyKubeconfig().makeApiClient(CoreV1Api);
     try {
       const response = await client.listEventForAllNamespaces(false, null, null, null, 1000);
       const uniqEventSources = new Set();
@@ -294,25 +329,125 @@ export class Cluster implements ClusterInfo {
           try {
             const pod = (await client.readNamespacedPod(w.involvedObject.name, w.involvedObject.namespace)).body;
             logger.debug(`checking pod ${w.involvedObject.namespace}/${w.involvedObject.name}`)
-            if (k8s.podHasIssues(pod)) {
+            if (podHasIssues(pod)) {
               uniqEventSources.add(w.involvedObject.uid);
             }
           } catch (err) {
           }
-        }
-        else {
+        } else {
           uniqEventSources.add(w.involvedObject.uid);
         }
       }
       let nodeNotificationCount = 0;
       const nodes = (await client.listNode()).body.items;
       nodes.map(n => {
-        nodeNotificationCount = nodeNotificationCount + k8s.getNodeWarningConditions(n).length
+        nodeNotificationCount = nodeNotificationCount + getNodeWarningConditions(n).length
       });
       return uniqEventSources.size + nodeNotificationCount;
     } catch (error) {
       logger.error("Failed to fetch event count: " + JSON.stringify(error))
       return 0;
+    }
+  }
+
+  toJSON(): ClusterModel {
+    const model: ClusterModel = {
+      id: this.id,
+      contextName: this.contextName,
+      kubeConfigPath: this.kubeConfigPath,
+      workspace: this.workspace,
+      preferences: this.preferences,
+    };
+    return toJS(model, {
+      recurseEverything: true
+    })
+  }
+
+  // serializable cluster-state used for sync btw main <-> renderer
+  getState = (): ClusterState => {
+    const state: ClusterState = {
+      ...this.toJSON(),
+      initialized: this.initialized,
+      apiUrl: this.apiUrl,
+      online: this.online,
+      disconnected: this.disconnected,
+      accessible: this.accessible,
+      failureReason: this.failureReason,
+      nodes: this.nodes,
+      version: this.version,
+      distribution: this.distribution,
+      isAdmin: this.isAdmin,
+      features: this.features,
+      eventCount: this.eventCount,
+      allowedNamespaces: this.allowedNamespaces,
+      allowedResources: this.allowedResources,
+    };
+    return toJS(state, {
+      recurseEverything: true
+    })
+  }
+
+  pushState = (state = this.getState()): ClusterState => {
+    logger.debug(`[CLUSTER]: push-state`, state);
+    broadcastIpc({
+      channel: "cluster:state",
+      frameId: this.frameId,
+      args: [state],
+    });
+    return state;
+  }
+
+  // get cluster system meta, e.g. use in "logger"
+  getMeta() {
+    return {
+      id: this.id,
+      name: this.contextName,
+      initialized: this.initialized,
+      online: this.online,
+      accessible: this.accessible,
+      disconnected: this.disconnected,
+    }
+  }
+
+  protected async getAllowedNamespaces() {
+    const api = this.getProxyKubeconfig().makeApiClient(CoreV1Api)
+    try {
+      const namespaceList = await api.listNamespace()
+      const nsAccessStatuses = await Promise.all(
+        namespaceList.body.items.map(ns => this.canI({
+          namespace: ns.metadata.name,
+          resource: "pods",
+          verb: "list",
+        }))
+      )
+      return namespaceList.body.items
+        .filter((ns, i) => nsAccessStatuses[i])
+        .map(ns => ns.metadata.name)
+    } catch (error) {
+      const ctx = this.getProxyKubeconfig().getContextObject(this.contextName)
+      if (ctx.namespace) return [ctx.namespace]
+      return []
+    }
+  }
+
+  protected async getAllowedResources() {
+    try {
+      if (!this.allowedNamespaces.length) {
+        return [];
+      }
+      const resourceAccessStatuses = await Promise.all(
+        apiResources.map(apiResource => this.canI({
+          resource: apiResource.resource,
+          group: apiResource.group,
+          verb: "list",
+          namespace: this.allowedNamespaces[0]
+        }))
+      )
+      return apiResources
+        .filter((resource, i) => resourceAccessStatuses[i])
+        .map(apiResource => apiResource.resource)
+    } catch (error) {
+      return []
     }
   }
 }

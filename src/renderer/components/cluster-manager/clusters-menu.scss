@@ -1,0 +1,85 @@
+.ClustersMenu {
+  @include hidden-scrollbar;
+  $spacing: $padding * 2;
+
+  position: relative;
+  text-align: center;
+  padding: $spacing;
+  background: $clusterMenuBackground;
+  border-right: 1px solid $clusterMenuBorderColor;
+
+  .is-mac & {
+    padding-top: $spacing * 2;
+  }
+
+  > .startup-tooltip {
+    $bgc: $mainBackground;
+    $arrowSize: 10px;
+
+    position: absolute;
+    top: 20px;
+    left: 100%;
+    margin: $padding;
+    padding: $spacing;
+    width: 320px;
+    background: $bgc;
+    z-index: 100;
+    color: white;
+    filter: drop-shadow(0 0px 2px #ffffff33);
+    pointer-events: none;
+
+    &:before {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-top: $arrowSize solid transparent;
+      border-bottom: $arrowSize solid transparent;
+      border-right: $arrowSize solid $bgc;
+      right: 100%;
+    }
+  }
+
+  > .add-cluster {
+    position: relative;
+    margin-top: $padding;
+    min-width: 43px;
+
+    .Icon {
+      border-radius: $radius;
+      padding: $padding / 3;
+      color: $addClusterIconColor;
+      background: #ffffff66;
+      cursor: pointer;
+
+      &.active {
+        opacity: 1;
+      }
+
+      &:hover {
+        box-shadow: none;
+        background: #ffffff;
+      }
+    }
+
+    .Badge {
+      $boxSize: 17px;
+      $offset: -7px;
+
+      position: absolute;
+      font-size: $font-size-small;
+      right: $offset;
+      bottom: $offset;
+      line-height: $boxSize;
+      min-width: $boxSize;
+      min-height: $boxSize;
+      text-align: center;
+      color: white;
+      background: $colorSuccess;
+      font-weight: normal;
+      border-radius: $radius;
+      padding: 0;
+      pointer-events: none;
+    }
+  }
+}

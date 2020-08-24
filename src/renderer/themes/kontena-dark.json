@@ -1,7 +1,8 @@
 {
-  "name": "Lens Dark Theme",
+  "name": "Dark (Lens)",
   "type": "dark",
-  "author": "Lakend Labs",
+  "description": "Original Lens dark theme",
+  "author": "Mirantis",
   "colors": {
     "blue": "#3d90ce",
     "magenta": "#c93dce",
@@ -89,6 +90,10 @@
     "drawerSubtitleBackground": "#373a3e",
     "drawerItemNameColor": "#87909c",
     "drawerItemValueColor": "#a0a0a0",
+    "clusterMenuBackground": "#252729",
+    "clusterMenuBorderColor": "#252729",
+    "clusterSettingsBackground": "#1e2124",
+    "addClusterIconColor": "#252729",
     "boxShadow": "#0000003a",
     "iconActiveColor": "#ffffff",
     "iconActiveBackground": "#ffffff22",

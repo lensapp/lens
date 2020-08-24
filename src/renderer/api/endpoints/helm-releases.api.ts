@@ -2,7 +2,7 @@ import jsYaml from "js-yaml";
 import { compile } from "path-to-regexp";
 import { autobind, formatDuration } from "../../utils";
 import capitalize from "lodash/capitalize";
-import { apiHelm } from "../index";
+import { apiBase } from "../index";
 import { helmChartStore } from "../../components/+apps-helm-charts/helm-chart.store";
 import { ItemObject } from "../../item.store";
 import { KubeObject } from "../kube-object";
@@ -69,14 +69,14 @@ const endpoint = compile(`/v2/releases/:namespace?/:name?`) as (
 
 export const helmReleasesApi = {
   list(namespace?: string) {
-    return apiHelm
+    return apiBase
       .get<HelmRelease[]>(endpoint({ namespace }))
       .then(releases => releases.map(HelmRelease.create));
   },
 
   get(name: string, namespace: string) {
     const path = endpoint({ name, namespace });
-    return apiHelm.get<IReleaseRawDetails>(path).then(details => {
+    return apiBase.get<IReleaseRawDetails>(path).then(details => {
       const items: KubeObject[] = JSON.parse(details.resources).items;
       const resources = items.map(item => KubeObject.create(item));
       return {
@@ -90,34 +90,34 @@ export const helmReleasesApi = {
     const { repo, ...data } = payload;
     data.chart = `${repo}/${data.chart}`;
     data.values = jsYaml.safeLoad(data.values);
-    return apiHelm.post(endpoint(), { data });
+    return apiBase.post(endpoint(), { data });
   },
 
   update(name: string, namespace: string, payload: IReleaseUpdatePayload): Promise<IReleaseUpdateDetails> {
     const { repo, ...data } = payload;
     data.chart = `${repo}/${data.chart}`;
     data.values = jsYaml.safeLoad(data.values);
-    return apiHelm.put(endpoint({ name, namespace }), { data });
+    return apiBase.put(endpoint({ name, namespace }), { data });
   },
 
   async delete(name: string, namespace: string) {
     const path = endpoint({ name, namespace });
-    return apiHelm.del(path);
+    return apiBase.del(path);
   },
 
   getValues(name: string, namespace: string) {
     const path = endpoint({ name, namespace }) + "/values";
-    return apiHelm.get<string>(path);
+    return apiBase.get<string>(path);
   },
 
   getHistory(name: string, namespace: string): Promise<IReleaseRevision[]> {
     const path = endpoint({ name, namespace }) + "/history";
-    return apiHelm.get(path);
+    return apiBase.get(path);
   },
 
   rollback(name: string, namespace: string, revision: number) {
     const path = endpoint({ name, namespace }) + "/rollback";
-    return apiHelm.put(path, {
+    return apiBase.put(path, {
       data: {
         revision: revision
       }

@@ -1,10 +1,10 @@
 import path from "path";
 import webpack, { LibraryTarget } from "webpack";
-import { isDevelopment, outDir } from "./src/common/vars";
+import { isDevelopment, buildDir } from "./src/common/vars";
 
 export const library = "dll"
 export const libraryTarget: LibraryTarget = "commonjs2"
-export const manifestPath = path.resolve(outDir, `${library}.manifest.json`);
+export const manifestPath = path.resolve(buildDir, `${library}.manifest.json`);
 
 export const packages = [
   "react", "react-dom",

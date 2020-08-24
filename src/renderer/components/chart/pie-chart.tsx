@@ -1,5 +1,6 @@
 import "./pie-chart.scss";
 import React from "react";
+import { observer } from "mobx-react";
 import ChartJS, { ChartOptions } from "chart.js";
 import { Chart, ChartProps } from "./chart";
 import { cssNames } from "../../utils";
@@ -8,6 +9,7 @@ import { themeStore } from "../../theme.store";
 interface Props extends ChartProps {
 }
 
+@observer
 export class PieChart extends React.Component<Props> {
   render() {
     const { data, className, options, ...chartProps } = this.props

@@ -9,9 +9,9 @@ import { MainLayout, TabRoute } from "../layout/main-layout";
 import { PersistentVolumes, volumesRoute, volumesURL } from "../+storage-volumes";
 import { StorageClasses, storageClassesRoute, storageClassesURL } from "../+storage-classes";
 import { PersistentVolumeClaims, volumeClaimsRoute, volumeClaimsURL } from "../+storage-volume-claims";
-import { configStore } from "../../config.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { storageURL } from "./storage.route";
+import { isAllowedResource } from "../../../common/rbac";
 
 interface Props extends RouteComponentProps<{}> {
 }
@@ -20,7 +20,6 @@ interface Props extends RouteComponentProps<{}> {
 export class Storage extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
-    const { allowedResources } = configStore;
     const query = namespaceStore.getContextParams()
 
     tabRoutes.push({
@@ -30,7 +29,7 @@ export class Storage extends React.Component<Props> {
       path: volumeClaimsRoute.path,
     })
 
-    if (allowedResources.includes('persistentvolumes')) {
+    if (isAllowedResource('persistentvolumes')) {
       tabRoutes.push({
         title: <Trans>Persistent Volumes</Trans>,
         component: PersistentVolumes,
@@ -39,7 +38,7 @@ export class Storage extends React.Component<Props> {
       });
     }
 
-    if (allowedResources.includes('storageclasses')) {
+    if (isAllowedResource('storageclasses')) {
       tabRoutes.push({
         title: <Trans>Storage Classes</Trans>,
         component: StorageClasses,

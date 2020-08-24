@@ -5,10 +5,11 @@ import path from "path"
 import shellEnv from "shell-env"
 import { app } from "electron"
 import { Kubectl } from "./kubectl"
-import { tracker } from "./tracker"
-import { Cluster, ClusterPreferences } from "./cluster"
-import { helmCli } from "./helm-cli"
+import { Cluster } from "./cluster"
+import { ClusterPreferences } from "../common/cluster-store";
+import { helmCli } from "./helm/helm-cli"
 import { isWindows } from "../common/vars";
+import { tracker } from "../common/tracker";
 
 export class ShellSession extends EventEmitter {
   static shellEnvs: Map<string, any> = new Map()
@@ -24,10 +25,10 @@ export class ShellSession extends EventEmitter {
   protected running = false;
   protected clusterId: string;
 
-  constructor(socket: WebSocket, pathToKubeconfig: string, cluster: Cluster) {
+  constructor(socket: WebSocket, cluster: Cluster) {
     super()
     this.websocket = socket
-    this.kubeconfigPath =  pathToKubeconfig
+    this.kubeconfigPath =  cluster.kubeConfigPath
     this.kubectl = new Kubectl(cluster.version)
     this.preferences = cluster.preferences || {}
     this.clusterId = cluster.id

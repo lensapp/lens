@@ -1,11 +1,6 @@
 @import "colors", "media";
 @import "../themes/theme-vars";
 
-:root {
-  --mainBackground: #1e2124;
-  --textColorPrimary: #87909c;
-}
-
 // Dimensions
 $unit: 8px;
 $padding: $unit;

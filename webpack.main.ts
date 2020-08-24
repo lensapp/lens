@@ -1,10 +1,11 @@
 import path from "path";
 import webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
-import { isDevelopment, isProduction, mainDir, outDir } from "./src/common/vars";
+import { isDevelopment, isProduction, mainDir, buildDir } from "./src/common/vars";
 import nodeExternals from "webpack-node-externals";
 
 export default function (): webpack.Configuration {
+  console.info('WEBPACK:main', require("./src/common/vars"))
   return {
     context: __dirname,
     target: "electron-main",
@@ -15,7 +16,7 @@ export default function (): webpack.Configuration {
       main: path.resolve(mainDir, "index.ts"),
     },
     output: {
-      path: outDir,
+      path: buildDir,
     },
     resolve: {
       extensions: ['.json', '.js', '.ts']

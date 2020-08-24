@@ -1,0 +1,38 @@
+.ClusterIcon {
+  --size: 37px;
+
+  position: relative;
+  border-radius: $radius;
+  padding: $radius;
+  user-select: none;
+  cursor: pointer;
+
+  &.interactive {
+    img {
+      opacity: .55;
+    }
+  }
+
+  &.active, &.interactive:hover {
+    background-color: #fff;
+
+    img {
+      opacity: 1;
+    }
+  }
+
+  img {
+    width: var(--size);
+    height: var(--size);
+  }
+
+  .Badge {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: -$padding * 1.5;
+    font-size: $font-size-small;
+    background: $colorError;
+    color: white;
+  }
+}

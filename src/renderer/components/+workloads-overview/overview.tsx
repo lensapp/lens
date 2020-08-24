@@ -17,7 +17,7 @@ import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { Spinner } from "../spinner";
 import { Events } from "../+events";
 import { KubeObjectStore } from "../../kube-object.store";
-import { isAllowedResource } from "../../api/rbac"
+import { isAllowedResource } from "../../../common/rbac"
 
 interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 }

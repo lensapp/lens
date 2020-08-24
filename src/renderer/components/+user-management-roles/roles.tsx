@@ -4,7 +4,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
-import { IRolesRouteParams } from "../+user-management/user-management.routes";
+import { IRolesRouteParams } from "../+user-management/user-management.route";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { rolesStore } from "./roles.store";
 import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";

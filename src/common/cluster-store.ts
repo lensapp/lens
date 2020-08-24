@@ -1,120 +1,189 @@
-import ElectronStore from "electron-store"
-import { Cluster, ClusterBaseInfo } from "../main/cluster";
-import * as version200Beta2 from "../migrations/cluster-store/2.0.0-beta.2"
-import * as version241 from "../migrations/cluster-store/2.4.1"
-import * as version260Beta2 from "../migrations/cluster-store/2.6.0-beta.2"
-import * as version260Beta3 from "../migrations/cluster-store/2.6.0-beta.3"
-import * as version270Beta0 from "../migrations/cluster-store/2.7.0-beta.0"
-import * as version270Beta1 from "../migrations/cluster-store/2.7.0-beta.1"
-import * as version360Beta1 from "../migrations/cluster-store/3.6.0-beta.1"
-import { getAppVersion } from "./utils/app-version";
+import type { WorkspaceId } from "./workspace-store";
+import path from "path";
+import { app, ipcRenderer, remote } from "electron";
+import { unlink } from "fs-extra";
+import { action, computed, observable, toJS } from "mobx";
+import { BaseStore } from "./base-store";
+import { Cluster, ClusterState } from "../main/cluster";
+import migrations from "../migrations/cluster-store"
+import logger from "../main/logger";
+import { tracker } from "./tracker";
 
-export class ClusterStore {
-  private static instance: ClusterStore;
-  public store: ElectronStore;
+export interface ClusterIconUpload {
+  clusterId: string;
+  name: string;
+  path: string;
+}
+
+export interface ClusterStoreModel {
+  activeCluster?: ClusterId; // last opened cluster
+  clusters?: ClusterModel[]
+}
+
+export type ClusterId = string;
+
+export interface ClusterModel {
+  id: ClusterId;
+  workspace?: WorkspaceId;
+  contextName?: string;
+  preferences?: ClusterPreferences;
+  kubeConfigPath: string;
+
+  /** @deprecated */
+  kubeConfig?: string; // yaml
+}
+
+export interface ClusterPreferences {
+  terminalCWD?: string;
+  clusterName?: string;
+  prometheus?: {
+    namespace: string;
+    service: string;
+    port: number;
+    prefix: string;
+  };
+  prometheusProvider?: {
+    type: string;
+  };
+  icon?: string;
+  httpsProxy?: string;
+}
+
+export class ClusterStore extends BaseStore<ClusterStoreModel> {
+  static get iconsDir() {
+    // TODO: remove remote cheat
+    return path.join((app || remote.app).getPath("userData"), "icons");
+  }
 
   private constructor() {
-    this.store = new ElectronStore({
-      // @ts-ignore
-      // fixme: tests are failed without "projectVersion"
-      projectVersion: getAppVersion(),
-      name: "lens-cluster-store",
+    super({
+      configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
-      migrations: {
-        "2.0.0-beta.2": version200Beta2.migration,
-        "2.4.1": version241.migration,
-        "2.6.0-beta.2": version260Beta2.migration,
-        "2.6.0-beta.3": version260Beta3.migration,
-        "2.7.0-beta.0": version270Beta0.migration,
-        "2.7.0-beta.1": version270Beta1.migration,
-        "3.6.0-beta.1": version360Beta1.migration
-      }
-    })
-  }
-
-  public getAllClusterObjects(): Array<Cluster> {
-    return this.store.get("clusters", []).map((clusterInfo: ClusterBaseInfo) => {
-      return new Cluster(clusterInfo)
-    })
-  }
-
-  public getAllClusters(): Array<ClusterBaseInfo> {
-    return this.store.get("clusters", [])
-  }
-
-  public removeCluster(id: string): void {
-    this.store.delete(id);
-    const clusterBaseInfos = this.getAllClusters()
-    const index = clusterBaseInfos.findIndex((cbi) => cbi.id === id)
-    if (index !== -1) {
-      clusterBaseInfos.splice(index, 1)
-      this.store.set("clusters", clusterBaseInfos)
+      migrations: migrations,
+    });
+    if (ipcRenderer) {
+      ipcRenderer.on("cluster:state", (event, model: ClusterState) => {
+        this.applyWithoutSync(() => {
+          logger.debug(`[CLUSTER-STORE]: received push-state at ${location.host}`, model);
+          this.getById(model.id)?.updateModel(model);
+        })
+      })
     }
   }
 
-  public removeClustersByWorkspace(workspace: string) {
-    this.getAllClusters().forEach((cluster) => {
-      if (cluster.workspace === workspace) {
-        this.removeCluster(cluster.id)
-      }
-    })
+  @observable activeClusterId: ClusterId;
+  @observable removedClusters = observable.map<ClusterId, Cluster>();
+  @observable clusters = observable.map<ClusterId, Cluster>();
+
+  @computed get activeCluster(): Cluster | null {
+    return this.getById(this.activeClusterId);
   }
 
-  public getCluster(id: string): Cluster {
-    const cluster = this.getAllClusterObjects().find((cluster) => cluster.id === id)
+  @computed get clustersList(): Cluster[] {
+    return Array.from(this.clusters.values());
+  }
+
+  isActive(id: ClusterId) {
+    return this.activeClusterId === id;
+  }
+
+  setActive(id: ClusterId) {
+    this.activeClusterId = id;
+  }
+
+  hasClusters() {
+    return this.clusters.size > 0;
+  }
+
+  hasContext(name: string) {
+    return this.clustersList.some(cluster => cluster.contextName === name);
+  }
+
+  getById(id: ClusterId): Cluster {
+    return this.clusters.get(id);
+  }
+
+  getByWorkspaceId(workspaceId: string): Cluster[] {
+    return this.clustersList.filter(cluster => cluster.workspace === workspaceId)
+  }
+
+  @action
+  async addCluster(model: ClusterModel, activate = true): Promise<Cluster> {
+    tracker.event("cluster", "add");
+    const cluster = new Cluster(model);
+    this.clusters.set(model.id, cluster);
+    if (activate) this.activeClusterId = model.id;
+    return cluster;
+  }
+
+  @action
+  async removeById(clusterId: ClusterId) {
+    tracker.event("cluster", "remove");
+    const cluster = this.getById(clusterId);
     if (cluster) {
-      return cluster
+      this.clusters.delete(clusterId);
+      if (this.activeClusterId === clusterId) {
+        this.activeClusterId = null;
+      }
+      unlink(cluster.kubeConfigPath).catch(() => null);
     }
-
-    return null
   }
 
-  public storeCluster(cluster: ClusterBaseInfo) {
-    const clusters = this.getAllClusters();
-    const index = clusters.findIndex((cl) => cl.id === cluster.id)
-    const storable = {
-      id: cluster.id,
-      kubeConfigPath: cluster.kubeConfigPath,
-      contextName: cluster.contextName,
-      preferences: cluster.preferences,
-      workspace: cluster.workspace
-    }
-    if (index === -1) {
-      clusters.push(storable)
-    }
-    else {
-      clusters[index] = storable
-    }
-    this.store.set("clusters", clusters)
-  }
-
-  public storeClusters(clusters: ClusterBaseInfo[]) {
-    clusters.forEach((cluster: ClusterBaseInfo) => {
-      this.removeCluster(cluster.id)
-      this.storeCluster(cluster)
+  @action
+  removeByWorkspaceId(workspaceId: string) {
+    this.getByWorkspaceId(workspaceId).forEach(cluster => {
+      this.removeById(cluster.id)
     })
   }
 
-  public reloadCluster(cluster: ClusterBaseInfo): void {
-    const storedCluster = this.getCluster(cluster.id);
-    if (storedCluster) {
-      cluster.kubeConfigPath = storedCluster.kubeConfigPath
-      cluster.contextName = storedCluster.contextName
-      cluster.preferences = storedCluster.preferences
-      cluster.workspace = storedCluster.workspace
-    }
+  @action
+  protected fromStore({ activeCluster, clusters = [] }: ClusterStoreModel = {}) {
+    const currentClusters = this.clusters.toJS();
+    const newClusters = new Map<ClusterId, Cluster>();
+    const removedClusters = new Map<ClusterId, Cluster>();
+
+    // update new clusters
+    clusters.forEach(clusterModel => {
+      let cluster = currentClusters.get(clusterModel.id);
+      if (cluster) {
+        cluster.updateModel(clusterModel);
+      } else {
+        cluster = new Cluster(clusterModel);
+      }
+      newClusters.set(clusterModel.id, cluster);
+    });
+
+    // update removed clusters
+    currentClusters.forEach(cluster => {
+      if (!newClusters.has(cluster.id)) {
+        removedClusters.set(cluster.id, cluster);
+      }
+    });
+
+    this.activeClusterId = newClusters.has(activeCluster) ? activeCluster : null;
+    this.clusters.replace(newClusters);
+    this.removedClusters.replace(removedClusters);
   }
 
-  static getInstance(): ClusterStore {
-    if (!ClusterStore.instance) {
-      ClusterStore.instance = new ClusterStore();
-    }
-    return ClusterStore.instance;
-  }
-
-  static resetInstance() {
-    ClusterStore.instance = null
+  toJSON(): ClusterStoreModel {
+    return toJS({
+      activeCluster: this.activeClusterId,
+      clusters: this.clustersList.map(cluster => cluster.toJSON()),
+    }, {
+      recurseEverything: true
+    })
   }
 }
 
-export const clusterStore: ClusterStore = ClusterStore.getInstance();
+export const clusterStore = ClusterStore.getInstance<ClusterStore>();
+
+export function getHostedClusterId(): ClusterId {
+  const clusterHost = location.hostname.match(/^(.*?)\.localhost/);
+  if (clusterHost) {
+    return clusterHost[1]
+  }
+}
+
+export function getHostedCluster(): Cluster {
+  return clusterStore.getById(getHostedClusterId());
+}

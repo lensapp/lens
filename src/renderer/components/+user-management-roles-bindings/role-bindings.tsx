@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { Icon } from "../icon";
-import { IRoleBindingsRouteParams } from "../+user-management/user-management.routes";
+import { IRoleBindingsRouteParams } from "../+user-management/user-management.route";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { clusterRoleBindingApi, RoleBinding, roleBindingApi } from "../../api/endpoints";
 import { roleBindingsStore } from "./role-bindings.store";

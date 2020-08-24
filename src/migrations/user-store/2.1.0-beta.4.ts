@@ -1,4 +1,9 @@
 // Add / reset "lastSeenAppVersion"
-export function migration(store: any) {
-  store.set("lastSeenAppVersion", "0.0.0");
-}
+import { migration } from "../migration-wrapper";
+
+export default migration({
+  version: "2.1.0-beta.4",
+  run(store) {
+    store.set("lastSeenAppVersion", "0.0.0");
+  }
+})

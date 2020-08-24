@@ -1,5 +1,4 @@
 import "./nodes.scss";
-
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
@@ -15,7 +14,7 @@ import { NodeMenu } from "./node-menu";
 import { LineProgress } from "../line-progress";
 import { _i18n } from "../../i18n";
 import { bytesToUnits } from "../../utils/convertMemory";
-import { Tooltip, TooltipContent } from "../tooltip";
+import { Tooltip, TooltipPosition } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
 import { apiManager } from "../../api/api-manager";
@@ -57,7 +56,10 @@ export class Nodes extends React.Component<Props> {
       <LineProgress
         max={cores}
         value={usage}
-        tooltip={_i18n._(t`CPU:`) + ` ${Math.ceil(usage * 100) / cores}\%, ` + _i18n._(t`cores:`) + ` ${cores}`}
+        tooltip={{
+          position: TooltipPosition.BOTTOM,
+          children: _i18n._(t`CPU:`) + ` ${Math.ceil(usage * 100) / cores}\%, ` + _i18n._(t`cores:`) + ` ${cores}`
+        }}
       />
     )
   }
@@ -71,7 +73,10 @@ export class Nodes extends React.Component<Props> {
       <LineProgress
         max={capacity}
         value={usage}
-        tooltip={_i18n._(t`Memory:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`}
+        tooltip={{
+          position: TooltipPosition.BOTTOM,
+          children: _i18n._(t`Memory:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
+        }}
       />
     )
   }
@@ -85,7 +90,10 @@ export class Nodes extends React.Component<Props> {
       <LineProgress
         max={capacity}
         value={usage}
-        tooltip={_i18n._(t`Disk:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`}
+        tooltip={{
+          position: TooltipPosition.BOTTOM,
+          children: _i18n._(t`Disk:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
+        }}
       />
     )
   }
@@ -101,15 +109,13 @@ export class Nodes extends React.Component<Props> {
       return (
         <div key={type} id={tooltipId} className={cssNames("condition", kebabCase(type))}>
           {type}
-          <Tooltip htmlFor={tooltipId} following>
-            <TooltipContent tableView>
-              {Object.entries(condition).map(([key, value]) =>
-                <div key={key} className="flex gaps align-center">
-                  <div className="name">{upperFirst(key)}</div>
-                  <div className="value">{value}</div>
-                </div>
-              )}
-            </TooltipContent>
+          <Tooltip targetId={tooltipId} formatters={{ tableView: true }}>
+            {Object.entries(condition).map(([key, value]) =>
+              <div key={key} className="flex gaps align-center">
+                <div className="name">{upperFirst(key)}</div>
+                <div className="value">{value}</div>
+              </div>
+            )}
           </Tooltip>
         </div>)
     })
@@ -162,7 +168,7 @@ export class Nodes extends React.Component<Props> {
               this.renderDiskUsage(node),
               <>
                 <span id={tooltipId}>{node.getTaints().length}</span>
-                <Tooltip htmlFor={tooltipId} style={{ whiteSpace: "pre-line" }}>
+                <Tooltip targetId={tooltipId} style={{ whiteSpace: "pre-line" }}>
                   {node.getTaints().map(({ key, effect }) => `${key}: ${effect}`).join("\n")}
                 </Tooltip>
               </>,

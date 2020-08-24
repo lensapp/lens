@@ -24,7 +24,7 @@ export class SelfSubjectRulesReview extends KubeObject {
   static kind = "SelfSubjectRulesReview"
 
   spec: {
-    // fixme: add more types from api docs
+    // todo: add more types from api docs
     namespace?: string;
   }
 

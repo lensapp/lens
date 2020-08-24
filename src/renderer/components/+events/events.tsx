@@ -1,13 +1,13 @@
 import "./events.scss";
 
-import React from "react";
+import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { MainLayout } from "../layout/main-layout";
 import { eventStore } from "./event.store";
 import { KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
 import { Trans } from "@lingui/macro";
 import { KubeEvent } from "../../api/endpoints/events.api";
-import { Tooltip, TooltipContent } from "../tooltip";
+import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
@@ -90,18 +90,14 @@ export class Events extends React.Component<Props> {
           const detailsUrl = getDetailsUrl(lookupApiLink(involvedObject, event));
           return [
             {
-              className: {
-                warning: isWarning
-              },
+              className: { warning: isWarning },
               title: (
-                <>
+                <Fragment>
                   <span id={tooltipId}>{message}</span>
-                  <Tooltip htmlFor={tooltipId} following>
-                    <TooltipContent narrow warning={isWarning}>
-                      {message}
-                    </TooltipContent>
+                  <Tooltip targetId={tooltipId} formatters={{ narrow: true, warning: isWarning }}>
+                    {message}
                   </Tooltip>
-                </>
+                </Fragment>
               )
             },
             event.getNs(),

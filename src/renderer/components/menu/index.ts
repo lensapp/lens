@@ -1,2 +1,2 @@
 export * from './menu'
-export * from './menu-picker'
+export * from './menu-actions'

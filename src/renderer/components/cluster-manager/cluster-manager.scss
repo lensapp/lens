@@ -1,0 +1,35 @@
+.ClusterManager {
+  display: grid;
+  grid-template-areas: "menu main" "menu main" "bottom-bar bottom-bar";
+  grid-template-rows: auto 1fr min-content;
+  grid-template-columns: min-content 1fr;
+  height: 100%;
+
+  main {
+    grid-area: main;
+    position: relative;
+    display: flex;
+
+    > * {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      background-color: $mainBackground;
+
+      > * {
+        flex: 1;
+      }
+    }
+  }
+
+  .ClustersMenu {
+    grid-area: menu;
+  }
+
+  .BottomBar {
+    grid-area: bottom-bar;
+  }
+}

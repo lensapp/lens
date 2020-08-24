@@ -5,8 +5,7 @@ import { createPortal } from "react-dom";
 import { cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import { Animate, AnimateName } from "../animate";
-import { browserHistory } from "../../navigation";
-import { themeStore } from "../../theme.store";
+import { history } from "../../navigation";
 
 export interface DrawerProps {
   open: boolean;
@@ -36,7 +35,7 @@ export class Drawer extends React.Component<DrawerProps> {
   private scrollElem: HTMLElement
   private scrollPos = new Map<string, number>();
 
-  private stopListenLocation = browserHistory.listen(() => {
+  private stopListenLocation = history.listen(() => {
     this.restoreScrollPos();
   });
 
@@ -55,13 +54,13 @@ export class Drawer extends React.Component<DrawerProps> {
 
   saveScrollPos = () => {
     if (!this.scrollElem) return;
-    const key = browserHistory.location.key;
+    const key = history.location.key;
     this.scrollPos.set(key, this.scrollElem.scrollTop);
   }
 
   restoreScrollPos = () => {
     if (!this.scrollElem) return;
-    const key = browserHistory.location.key;
+    const key = history.location.key;
     this.scrollElem.scrollTop = this.scrollPos.get(key) || 0;
   }
 
@@ -101,7 +100,7 @@ export class Drawer extends React.Component<DrawerProps> {
   render() {
     const { open, position, title, animation, children, toolbar, size, usePortal } = this.props
     let { className, contentClass } = this.props;
-    className = cssNames("Drawer", className, position, themeStore.activeTheme.type);
+    className = cssNames("Drawer", className, position);
     contentClass = cssNames("drawer-content flex column box grow", contentClass);
     const style = size ? { "--size": size } as React.CSSProperties : undefined;
     const drawer = (

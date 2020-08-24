@@ -1,5 +1,15 @@
 // Parse kube-api path and get api-version, group, etc.
+
+import type { KubeObject } from "./kube-object";
 import { splitArray } from "../../common/utils";
+import { apiManager } from "./api-manager";
+
+export interface IKubeObjectRef {
+  kind: string;
+  apiVersion: string;
+  name: string;
+  namespace?: string;
+}
 
 export interface IKubeApiLinkRef {
   apiPrefix?: string;
@@ -9,13 +19,13 @@ export interface IKubeApiLinkRef {
   namespace?: string;
 }
 
-export interface IKubeApiLinkBase extends IKubeApiLinkRef {
+export interface IKubeApiParsed extends IKubeApiLinkRef {
   apiBase: string;
   apiGroup: string;
   apiVersionWithGroup: string;
 }
 
-export function parseApi(path: string): IKubeApiLinkBase {
+export function parseKubeApi(path: string): IKubeApiParsed {
   path = new URL(path, location.origin).pathname;
   const [, prefix, ...parts] = path.split("/");
   const apiPrefix = `/${prefix}`;
@@ -40,6 +50,9 @@ export function parseApi(path: string): IKubeApiLinkBase {
     apiGroup = left.join("/");
   } else {
     switch (left.length) {
+    case 4:
+      [apiGroup, apiVersion, resource, name] = left
+      break;
     case 2:
       resource = left.pop();
       // fallthrough
@@ -56,7 +69,7 @@ export function parseApi(path: string): IKubeApiLinkBase {
        *  - `GROUP` is /^D(\.D)*$/ where D is `DNS_LABEL` and length <= 253
        *
        * There is no well defined selection from an array of items that were
-       * seperated by '/'
+       * separated by '/'
        *
        * Solution is to create a huristic. Namely:
        * 1. if '.' in left[0] then apiGroup <- left[0]
@@ -91,7 +104,7 @@ export function parseApi(path: string): IKubeApiLinkBase {
   };
 }
 
-export function createApiLink(ref: IKubeApiLinkRef): string {
+export function createKubeApiURL(ref: IKubeApiLinkRef): string {
   const { apiPrefix = "/apis", resource, apiVersion, name } = ref;
   let { namespace } = ref;
   if (namespace) {
@@ -100,4 +113,37 @@ export function createApiLink(ref: IKubeApiLinkRef): string {
   return [apiPrefix, apiVersion, namespace, resource, name]
     .filter(v => v)
     .join("/")
+}
+
+export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): string {
+  const {
+    kind, apiVersion, name,
+    namespace = parentObject.getNs()
+  } = ref;
+
+  // search in registered apis by 'kind' & 'apiVersion'
+  const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == apiVersion)
+  if (api) {
+    return api.getUrl({ namespace, name })
+  }
+
+  // lookup api by generated resource link
+  const apiPrefixes = ["/apis", "/api"];
+  const resource = kind.toLowerCase() + kind.endsWith("s") ? "es" : "s";
+  for (const apiPrefix of apiPrefixes) {
+    const apiLink = createKubeApiURL({ apiPrefix, apiVersion, name, namespace, resource });
+    if (apiManager.getApi(apiLink)) {
+      return apiLink;
+    }
+  }
+
+  // resolve by kind only (hpa's might use refs to older versions of resources for example)
+  const apiByKind = apiManager.getApi(api => api.kind === kind);
+  if (apiByKind) {
+    return apiByKind.getUrl({ name, namespace })
+  }
+
+  // otherwise generate link with default prefix
+  // resource still might exists in k8s, but api is not registered in the app
+  return createKubeApiURL({ apiVersion, name, namespace, resource })
 }

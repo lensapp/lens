@@ -3,11 +3,11 @@
 import merge from "lodash/merge"
 import { stringify } from "querystring";
 import { IKubeObjectConstructor, KubeObject } from "./kube-object";
-import { IKubeObjectRef, KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
+import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
 import { apiKube } from "./index";
 import { kubeWatchApi } from "./kube-watch-api";
 import { apiManager } from "./api-manager";
-import { createApiLink, parseApi } from "./kube-api-parse";
+import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   kind: string; // resource type within api-group, e.g. "Namespace"
@@ -26,8 +26,7 @@ export interface IKubeApiQueryParams {
 }
 
 export class KubeApi<T extends KubeObject = any> {
-  static parseApi = parseApi;
-  static createLink = createApiLink;
+  static parseApi = parseKubeApi;
 
   static watchAll(...apis: KubeApi[]) {
     const disposers = apis.map(api => api.watch());
@@ -85,7 +84,7 @@ export class KubeApi<T extends KubeObject = any> {
 
   getUrl({ name = "", namespace = "" } = {}, query?: Partial<IKubeApiQueryParams>) {
     const { apiPrefix, apiVersionWithGroup, apiResource } = this;
-    const resourcePath = KubeApi.createLink({
+    const resourcePath = createKubeApiURL({
       apiPrefix: apiPrefix,
       apiVersion: apiVersionWithGroup,
       resource: apiResource,
@@ -175,35 +174,4 @@ export class KubeApi<T extends KubeObject = any> {
   }
 }
 
-export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): string {
-  const {
-    kind, apiVersion, name,
-    namespace = parentObject.getNs()
-  } = ref;
-
-  // search in registered apis by 'kind' & 'apiVersion'
-  const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == apiVersion)
-  if (api) {
-    return api.getUrl({ namespace, name })
-  }
-
-  // lookup api by generated resource link
-  const apiPrefixes = ["/apis", "/api"];
-  const resource = kind.toLowerCase() + kind.endsWith("s") ? "es" : "s";
-  for (const apiPrefix of apiPrefixes) {
-    const apiLink = KubeApi.createLink({ apiPrefix, apiVersion, name, namespace, resource });
-    if (apiManager.getApi(apiLink)) {
-      return apiLink;
-    }
-  }
-
-  // resolve by kind only (hpa's might use refs to older versions of resources for example)
-  const apiByKind = apiManager.getApi(api => api.kind === kind);
-  if (apiByKind) {
-    return apiByKind.getUrl({ name, namespace })
-  }
-
-  // otherwise generate link with default prefix
-  // resource still might exists in k8s, but api is not registered in the app
-  return KubeApi.createLink({ apiVersion, name, namespace, resource })
-}
+export * from "./kube-api-parse"

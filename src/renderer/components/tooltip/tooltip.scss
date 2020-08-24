@@ -1,104 +1,78 @@
 
 .Tooltip {
-  --tooltip-bgc: #{$contentColor};
-  --tooltip-color: #{$textColorSecondary};
-  --tooltip-margin: #{$padding / 2 $padding / 3};
-
-  position: absolute;
-  background: var(--tooltip-bgc);
+  // use positioning relative to viewport (window)
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/position
+  position: fixed;
+  margin: 0 !important;
+  background: $mainBackground;
   font-size: small;
   font-weight: normal;
   border: 1px solid $borderColor;
   border-radius: $radius;
-  color: var(--tooltip-color);
-  margin: var(--tooltip-margin);
+  color: $textColorSecondary;
   white-space: normal;
   padding: .5em;
   text-align: center;
-  transition-delay: 100ms; // delay for .Animate
   pointer-events: none;
-  z-index: 1000;
+  transition: opacity 150ms 25ms ease-in-out;
+  z-index: 100000;
 
-  * {
-    white-space: normal;
+  &.hidden {
+    left: 0;
+    top: 0;
+    opacity: 0;
+    visibility: hidden;
   }
 
   &:empty {
     display: none;
   }
 
-  &.following {
-    position: fixed;
-  }
-
-  &:not(.following) {
-    &.left {
-      left: 0;
+  &.formatter {
+    &.nowrap {
+      &, * {
+        white-space: nowrap;
+      }
     }
 
-    &.right {
-      right: 0;
-    }
-
-    &.top {
-      bottom: 100%;
-    }
-
-    &.bottom {
-      top: 100%;
-    }
-
-    &.center {
-      left: 50%;
-      transform: translateX(-50%);
-    }
-  }
-}
-
-.TooltipContent {
-  &.nowrap {
-    white-space: nowrap;
-  }
-
-  &.narrow {
-    max-width: 300px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    word-wrap: break-word;
-    text-align: left;
-  }
-
-  &.small {
-    font-size: $font-size-small;
-  }
-
-  &.warning {
-    color: $colorError;
-  }
-
-  &.tableView {
-    min-width: 200px;
-
-    > :not(:last-child) {
-      margin-bottom: var(--flex-gap);
-    }
-
-    .title {
-      color: $textColorAccent;
-      text-align: center;
-    }
-
-    .name {
-      color: $textColorAccent;
-      text-align: right;
-      flex: 0 0 35%;
-    }
-
-    .value {
-      text-align: left;
+    &.narrow {
       max-width: 300px;
-      word-break: break-word;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      text-align: left;
+    }
+
+    &.small {
+      font-size: $font-size-small;
+    }
+
+    &.warning {
+      color: $colorError;
+    }
+
+    &.tableView {
+      min-width: 200px;
+
+      > :not(:last-child) {
+        margin-bottom: var(--flex-gap);
+      }
+
+      .title {
+        color: $textColorAccent;
+        text-align: center;
+      }
+
+      .name {
+        color: $textColorAccent;
+        text-align: right;
+        flex: 0 0 35%;
+      }
+
+      .value {
+        text-align: left;
+        max-width: 300px;
+        word-break: break-word;
+      }
     }
   }
 }

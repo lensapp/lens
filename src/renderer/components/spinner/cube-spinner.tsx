@@ -4,13 +4,14 @@ import { cssNames } from "../../utils";
 
 interface Props {
   className?: string;
+  center?: boolean;
 }
 
-export class CubeSpinner extends React.PureComponent<Props> {
+export class CubeSpinner extends React.Component<Props> {
   render() {
-    const { className } = this.props;
+    const { className, center } = this.props;
     return (
-      <div className={cssNames("CubeSpinner ", className)}>
+      <div className={cssNames("CubeSpinner ", className, { center })}>
         <div className="sk-cube-grid">
           <div className="sk-cube sk-cube1"></div>
           <div className="sk-cube sk-cube2"></div>

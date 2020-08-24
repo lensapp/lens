@@ -9,7 +9,6 @@ export type AnimateName = "opacity" | "slide-right" | "opacity-scale" | string;
 export interface AnimateProps {
   name?: AnimateName; // predefined names in css
   enter?: boolean;
-  enabled?: boolean;
   onEnter?: () => void;
   onLeave?: () => void;
 }
@@ -21,7 +20,6 @@ export class Animate extends React.Component<AnimateProps> {
   static defaultProps: AnimateProps = {
     name: "opacity",
     enter: true,
-    enabled: true,
     onEnter: noop,
     onLeave: noop,
   };
@@ -80,10 +78,7 @@ export class Animate extends React.Component<AnimateProps> {
   }
 
   render() {
-    const { name, enabled, children } = this.props;
-    if (!enabled) {
-      return children;
-    }
+    const { name } = this.props;
     const contentElem = this.contentElem;
     return React.cloneElement(contentElem, {
       className: cssNames("Animate", name, contentElem.props.className, this.statusClassName),
