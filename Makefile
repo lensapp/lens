@@ -62,5 +62,5 @@ ifeq "$(DETECTED_OS)" "Windows"
 else
 	rm -rf binaries/client/*
 	rm -rf dist/*
-	rm -rf out/*
+	rm -rf static/build/*
 endif
