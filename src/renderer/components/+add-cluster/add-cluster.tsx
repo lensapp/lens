@@ -3,27 +3,28 @@ import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { computed, observable } from "mobx";
 import { KubeConfig } from "@kubernetes/client-node";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
+import { Trans } from "@lingui/macro";
 import { Select, SelectOption } from "../select";
-import { Input } from "../input";
+import { FileInput, Input } from "../input";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { WizardLayout } from "../layout/wizard-layout";
-import { getKubeConfigLocal, loadConfig, saveConfigToAppFiles, splitConfig, validateConfig } from "../../../common/kube-helpers";
+import { kubeConfigDefaultPath, loadConfig, saveConfigToAppFiles, splitConfig, validateConfig } from "../../../common/kube-helpers";
 import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid"
 import { navigate } from "../../navigation";
 import { userStore } from "../../../common/user-store";
 import { clusterViewURL } from "../cluster-manager/cluster-view.route";
+import { cssNames } from "../../utils";
+import { Notifications } from "../notifications";
 
 @observer
 export class AddCluster extends React.Component {
   readonly custom: any = "custom"
-  @observable.ref clusterConfig: KubeConfig;
-  @observable.ref kubeConfig: KubeConfig; // local ~/.kube/config (if available)
+  @observable.ref localKubeConfig: KubeConfig;
+  @observable.ref newClusterConfig: KubeConfig;
   @observable.ref error: React.ReactNode;
 
   @observable isWaiting = false
@@ -31,25 +32,36 @@ export class AddCluster extends React.Component {
   @observable proxyServer = ""
   @observable customConfig = ""
 
-  async componentDidMount() {
-    const kubeConfig: string = await getKubeConfigLocal()
-    if (kubeConfig) {
-      this.kubeConfig = loadConfig(kubeConfig)
-    }
+  componentDidMount() {
+    this.setLocalConfigPath(userStore.kubeConfigPath);
   }
 
   componentWillUnmount() {
     userStore.markNewContextsAsSeen();
   }
 
+  protected setLocalConfigPath(filePath: string) {
+    try {
+      const kubeConfig = loadConfig(filePath);
+      validateConfig(kubeConfig);
+      this.localKubeConfig = kubeConfig;
+      this.newClusterConfig = null; // reset previously selected
+      userStore.kubeConfigPath = filePath; // save to store
+    } catch (err) {
+      Notifications.error(
+        <p>Can't read config file in <em>{filePath}</em>: {String(err)}</p>
+      );
+    }
+  }
+
   @computed get isCustom() {
-    return this.clusterConfig === this.custom;
+    return this.newClusterConfig === this.custom;
   }
 
   @computed get clusterOptions() {
     const options: SelectOption<KubeConfig>[] = [];
-    if (this.kubeConfig) {
-      splitConfig(this.kubeConfig).forEach(kubeConfig => {
+    if (this.localKubeConfig) {
+      splitConfig(this.localKubeConfig).forEach(kubeConfig => {
         const context = kubeConfig.currentContext;
         const hasContext = clusterStore.hasContext(context);
         if (!hasContext) {
@@ -71,9 +83,8 @@ export class AddCluster extends React.Component {
     if (value instanceof KubeConfig) {
       const context = value.currentContext;
       const isNew = userStore.newContexts.has(context);
-      const className = `${context} kube-context flex gaps align-center`
       return (
-        <div className={className}>
+        <div className={cssNames("kube-context flex gaps align-center", context)}>
           <span>{context}</span>
           {isNew && <Icon material="fiber_new"/>}
         </div>
@@ -83,14 +94,14 @@ export class AddCluster extends React.Component {
   };
 
   addCluster = async () => {
-    const { clusterConfig, customConfig, proxyServer } = this;
+    const { newClusterConfig, customConfig, proxyServer } = this;
     const clusterId = uuid();
     this.isWaiting = true
     this.error = ""
     try {
-      const config = this.isCustom ? loadConfig(customConfig) : clusterConfig;
+      const config = this.isCustom ? loadConfig(customConfig) : newClusterConfig;
       if (!config) {
-        this.error = <Trans>Please select kubeconfig</Trans>
+        this.error = <Trans>Please select kube-config's context</Trans>
         return;
       }
       validateConfig(config);
@@ -167,12 +178,31 @@ export class AddCluster extends React.Component {
     return (
       <WizardLayout className="AddCluster" infoPanel={this.renderInfo()}>
         <h2><Trans>Add Cluster</Trans></h2>
-        <p>Choose config:</p>
+        <div className="flex gaps align-center">
+          <label
+            htmlFor="kube-config-select"
+            className="kube-config-select flex gaps align-center box grow"
+          >
+            <span className="title">Config file</span>
+            <code>{userStore.kubeConfigPath}</code>
+          </label>
+          {kubeConfigDefaultPath !== userStore.kubeConfigPath && (
+            <Icon
+              material="settings_backup_restore"
+              onClick={() => this.setLocalConfigPath(kubeConfigDefaultPath)}
+              tooltip="Reset to defaults"
+            />
+          )}
+        </div>
+        <FileInput
+          id="kube-config-select"
+          onSelectFiles={({ file }) => this.setLocalConfigPath(file.path)}
+        />
         <Select
-          placeholder={<Trans>Select kubeconfig</Trans>}
-          value={this.clusterConfig}
+          placeholder={<Trans>Select a context</Trans>}
+          value={this.newClusterConfig}
           options={this.clusterOptions}
-          onChange={({ value }: SelectOption) => this.clusterConfig = value}
+          onChange={({ value }: SelectOption) => this.newClusterConfig = value}
           formatOptionLabel={this.formatClusterContextLabel}
           id="kubecontext-select"
         />

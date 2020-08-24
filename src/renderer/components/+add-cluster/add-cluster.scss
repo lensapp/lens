@@ -1,7 +1,31 @@
 .AddCluster {
   .Select {
+    .kube-context {
+      --flex-gap: #{$padding};
+    }
+
     &__control {
       box-shadow: 0 0 0 1px $borderFaintColor;
+    }
+  }
+
+  .kube-config-select {
+    border: 1px solid $borderColor;
+    padding: $padding / 2 $padding;
+    border-radius: $radius;
+    transition: border 200ms ease-in-out;
+
+    > .title {
+      white-space: nowrap;
+    }
+
+    &:hover {
+      border-color: $primary;
+      cursor: pointer;
+    }
+
+    code {
+      word-break: break-all;
     }
   }
 

@@ -83,7 +83,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:171
+#: src/renderer/components/+add-cluster/add-cluster.tsx:176
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:116
 msgid "Add Cluster"
 msgstr ""
@@ -108,7 +108,7 @@ msgstr ""
 #~ msgid "Add cluster"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:192
+#: src/renderer/components/+add-cluster/add-cluster.tsx:204
 msgid "Add cluster(s)"
 msgstr ""
 
@@ -447,7 +447,7 @@ msgstr ""
 
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:243
 #: src/renderer/components/dialog/logs-dialog.tsx:39
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:94
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:93
 msgid "Close"
 msgstr ""
 
@@ -518,7 +518,7 @@ msgstr ""
 msgid "Config Maps"
 msgstr ""
 
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:55
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:54
 msgid "Config copied to clipboard"
 msgstr ""
 
@@ -590,7 +590,7 @@ msgid "Conversion"
 msgstr ""
 
 #: src/renderer/components/dialog/logs-dialog.tsx:36
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:88
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:87
 msgid "Copy to clipboard"
 msgstr ""
 
@@ -706,7 +706,7 @@ msgstr ""
 msgid "Custom Resources"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:116
+#: src/renderer/components/+add-cluster/add-cluster.tsx:121
 msgid "Custom.."
 msgstr ""
 
@@ -807,7 +807,7 @@ msgstr ""
 msgid "Download Mirror"
 msgstr ""
 
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:91
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:90
 msgid "Download file"
 msgstr ""
 
@@ -1188,7 +1188,7 @@ msgstr ""
 msgid "Kubeconfig"
 msgstr ""
 
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:85
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:84
 msgid "Kubeconfig File"
 msgstr ""
 
@@ -1714,7 +1714,11 @@ msgid "Persistent Volumes"
 msgstr ""
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:63
-msgid "Please select kubeconfig"
+#~ msgid "Please select kubeconfig"
+#~ msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:64
+msgid "Please select kubeconfig context"
 msgstr ""
 
 #: src/renderer/components/+workloads-pods/pod-menu.tsx:50
@@ -1811,7 +1815,7 @@ msgstr ""
 msgid "Proxy is used only for non-cluster communication."
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:176
+#: src/renderer/components/+add-cluster/add-cluster.tsx:188
 msgid "Proxy settings"
 msgstr ""
 
@@ -2195,13 +2199,21 @@ msgstr ""
 msgid "Secrets"
 msgstr ""
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:185
+msgid "Select a context"
+msgstr ""
+
 #: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:134
 msgid "Select a quota.."
 msgstr ""
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:173
-msgid "Select kubeconfig"
-msgstr ""
+#~ msgid "Select context"
+#~ msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:173
+#~ msgid "Select kubeconfig"
+#~ msgstr ""
 
 #: src/renderer/components/+preferences/preferences.tsx:88
 #~ msgid "Select repository"
@@ -2756,7 +2768,7 @@ msgstr ""
 msgid "{0} unavailable"
 msgstr ""
 
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:129
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:128
 msgid "{accountName} kubeconfig"
 msgstr ""
 
