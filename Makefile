@@ -20,10 +20,8 @@ compile-dev:
 	yarn compile:renderer --cache
 
 dev:
-ifeq "$(DETECTED_OS)" "Windows"
+ifeq ("$(wildcard static/build/main.js)","")
 	make init
-else
-	test -f out/main.js || make init
 endif
 	yarn dev
 
@@ -57,6 +55,12 @@ else
 endif
 
 clean:
+ifeq "$(DETECTED_OS)" "Windows"
+	if exist binaries\client del /s /q binaries\client\*.*
+	if exist dist del /s /q dist\*.*
+	if exist static\build del /s /q static\build\*.*
+else
 	rm -rf binaries/client/*
 	rm -rf dist/*
 	rm -rf out/*
+endif
