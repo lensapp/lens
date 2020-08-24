@@ -2,7 +2,7 @@
   $spacing: $padding * 2;
 
   position: relative;
-  padding: $padding * 3;
+  padding: $padding * 2;
   height: 100%;
   display: grid;
   grid-template-columns: 1fr 40%;
@@ -11,17 +11,21 @@
     @include custom-scrollbar;
     --flex-gap: #{$spacing};
     padding: $spacing;
+
+    .theme-light & {
+      @include custom-scrollbar(dark);
+    }
   }
 
   > .head-col {
     position: sticky;
-    border-bottom: 1px solid $grey-800;
     justify-content: space-between;
+    background-color: $clusterMenuBackground;
   }
 
   > .content-col {
     margin-right: $spacing;
-    background-color: var(--clusters-menu-bgc);
+    background-color: $contentColor;
     border-radius: $radius;
 
     > div {
@@ -36,7 +40,7 @@
   }
 
   > .info-col {
-    border-left: 1px solid #353a3e;
+    background-color: $contentColor;
   }
 
   p {

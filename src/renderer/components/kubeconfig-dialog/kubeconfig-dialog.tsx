@@ -13,7 +13,6 @@ import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
 import { Wizard, WizardStep } from "../wizard";
-import { themeStore } from "../../theme.store";
 import { apiBase } from "../../api";
 
 interface IKubeconfigDialogData {
@@ -92,7 +91,7 @@ export class KubeConfigDialog extends React.Component<Props> {
     return (
       <Dialog
         {...dialogProps}
-        className={cssNames("KubeConfigDialog", themeStore.activeTheme.type)}
+        className={cssNames("KubeConfigDialog")}
         isOpen={isOpen}
         onOpen={this.onOpen}
         close={this.close}

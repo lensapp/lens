@@ -8,8 +8,8 @@
     padding: 0;
 
     .content-col {
-      background-color: transparent;
       padding: $padding * 8 0;
+      background-color: $clusterSettingsBackground;
 
       h2 {
         margin-bottom: $margin * 2;
@@ -40,6 +40,10 @@
     .WizardLayout .head-col {
       padding-top: 32px;
       overflow: hidden;
+
+      .Icon {
+        margin-top: -$margin * 2;
+      }
     }
   }
 

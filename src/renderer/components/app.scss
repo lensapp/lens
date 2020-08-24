@@ -12,8 +12,6 @@
 
 :root {
   --mainBackground: #1e2124;
-  --textColorPrimary: #87909c;
-  --clusters-menu-bgc: #252729;
   --main-layout-header: 40px;
 }
 
@@ -31,6 +29,7 @@ html {
 
 html, body {
   height: 100%;
+  overflow: hidden;
 }
 
 #app {
@@ -79,7 +78,7 @@ hr {
 }
 
 h1 {
-  color: white;
+  color: $textColorPrimary;
   font-size: 28px;
   font-weight: normal;
   letter-spacing: -.010em;
@@ -140,10 +139,6 @@ a {
 
   [href] {
     text-decoration: underline;
-  }
-
-  &:focus {
-    color: white;
   }
 
   &:not([href]) {

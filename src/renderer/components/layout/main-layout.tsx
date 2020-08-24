@@ -11,7 +11,6 @@ import { ErrorBoundary } from "../error-boundary";
 import { Dock } from "../dock";
 import { navigate, navigation } from "../../navigation";
 import { getHostedCluster } from "../../../common/cluster-store";
-import { themeStore } from "../../theme.store";
 
 export interface TabRoute extends RouteProps {
   title: React.ReactNode;
@@ -50,7 +49,7 @@ export class MainLayout extends React.Component<Props> {
     const routePath = navigation.location.pathname;
     const cluster = getHostedCluster();
     return (
-      <div className={cssNames("MainLayout", className, themeStore.activeTheme.type)}>
+      <div className={cssNames("MainLayout", className)}>
         <header className={cssNames("flex gaps align-center", headerClass)}>
           <span className="cluster">
             {cluster.preferences?.clusterName || cluster.contextName}

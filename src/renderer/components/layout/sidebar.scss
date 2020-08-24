@@ -20,6 +20,10 @@
   &.pinned {
     .sidebar-nav {
       @include custom-scrollbar;
+
+      .theme-light & {
+        @include custom-scrollbar(dark);
+      }
     }
   }
 

@@ -8,13 +8,6 @@
   grid-template-columns: [sidebar] minmax(var(--main-layout-header), min-content) [main] 1fr;
   height: 100%;
 
-  &.light {
-    main {
-      @include custom-scrollbar(dark);
-      overflow-y: scroll;
-    }
-  }
-
   > .Tabs {
     grid-area: tabs;
     background: $layoutTabsBackground;
@@ -68,6 +61,10 @@
   main {
     @include custom-scrollbar;
     $spacing: $margin * 2;
+
+    .theme-light & {
+      @include custom-scrollbar(dark);
+    }
 
     grid-area: main;
     overflow-y: scroll; // always reserve space for scrollbar (17px)

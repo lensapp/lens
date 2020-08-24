@@ -15,7 +15,7 @@
     .content-col {
       margin: 0;
       padding-top: $padding * 3;
-      background-color: transparent;
+      background-color: $clusterSettingsBackground;
 
       .SubTitle {
         text-transform: none;

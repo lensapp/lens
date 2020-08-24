@@ -6,7 +6,6 @@ import { cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import { Animate, AnimateName } from "../animate";
 import { history } from "../../navigation";
-import { themeStore } from "../../theme.store";
 
 export interface DrawerProps {
   open: boolean;
@@ -101,7 +100,7 @@ export class Drawer extends React.Component<DrawerProps> {
   render() {
     const { open, position, title, animation, children, toolbar, size, usePortal } = this.props
     let { className, contentClass } = this.props;
-    className = cssNames("Drawer", className, position, themeStore.activeTheme.type);
+    className = cssNames("Drawer", className, position);
     contentClass = cssNames("drawer-content flex column box grow", contentClass);
     const style = size ? { "--size": size } as React.CSSProperties : undefined;
     const drawer = (

@@ -5,7 +5,8 @@
   position: relative;
   text-align: center;
   padding: $spacing;
-  background: var(--clusters-menu-bgc);
+  background: $clusterMenuBackground;
+  border-right: 1px solid $clusterMenuBorderColor;
 
   .is-mac & {
     padding-top: $spacing * 2;
@@ -47,11 +48,9 @@
     .Icon {
       border-radius: $radius;
       padding: $padding / 3;
-      color: var(--clusters-menu-bgc) !important;
-      background: white !important;
-      font-weight: bold;
+      color: $addClusterIconColor;
+      background: #ffffff66;
       cursor: pointer;
-      opacity: 0.4;
 
       &.active {
         opacity: 1;
@@ -59,7 +58,7 @@
 
       &:hover {
         box-shadow: none;
-        opacity: .75;
+        background: #ffffff;
       }
     }
 
