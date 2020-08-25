@@ -87,7 +87,7 @@ msgstr "Account Name"
 msgid "Active"
 msgstr "Active"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:225
+#: src/renderer/components/+add-cluster/add-cluster.tsx:228
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:116
 msgid "Add Cluster"
 msgstr "Add Cluster"
@@ -112,7 +112,7 @@ msgstr "Add bindings to {name}"
 #~ msgid "Add cluster"
 #~ msgstr "Add cluster"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:243
+#: src/renderer/components/+add-cluster/add-cluster.tsx:246
 msgid "Add cluster(s)"
 msgstr "Add cluster(s)"
 
@@ -319,7 +319,7 @@ msgstr "Binding targets"
 msgid "Bindings"
 msgstr "Bindings"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:218
+#: src/renderer/components/+add-cluster/add-cluster.tsx:210
 msgid "Browse"
 msgstr "Browse"
 
@@ -1860,7 +1860,7 @@ msgstr "Provisioner"
 msgid "Proxy is used only for non-cluster communication."
 msgstr "Proxy is used only for non-cluster communication."
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:231
+#: src/renderer/components/+add-cluster/add-cluster.tsx:234
 msgid "Proxy settings"
 msgstr "Proxy settings"
 
@@ -2041,7 +2041,7 @@ msgstr "Required Drop Capabilities"
 msgid "Required field"
 msgstr "Required field"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:217
+#: src/renderer/components/+add-cluster/add-cluster.tsx:209
 #: src/renderer/components/item-object-list/page-filters-list.tsx:31
 msgid "Reset"
 msgstr "Reset"
@@ -2245,7 +2245,7 @@ msgstr "Secret type"
 msgid "Secrets"
 msgstr "Secrets"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:228
+#: src/renderer/components/+add-cluster/add-cluster.tsx:231
 msgid "Select a context"
 msgstr "Select a context"
 

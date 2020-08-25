@@ -24,7 +24,7 @@ import { Notifications } from "../notifications";
 import { Tab, Tabs } from "../tabs";
 
 // todo: improve UI/UX kube-config consuming: FILE (input + button) | PASTE TEXT (editor)
-// todo: allow to manually input kube-config file path
+// todo: allow to manually input kube-config file path (edit + save on blur + auto-replace "~" => os.homedir()
 // todo: allow to create multiple clusters at once (multi-select)
 
 enum KubeConfigSourceTab {
@@ -216,21 +216,7 @@ export class AddCluster extends React.Component {
           />
         </Tabs>
         {this.sourceTab === KubeConfigSourceTab.FILE && (
-          <div
-            className={cssNames("kube-config-select flex gaps align-center", {
-              droppable: this.dropAreaActive
-            })}
-            onDragEnter={event => this.dropAreaActive = true}
-            onDragLeave={event => this.dropAreaActive = false}
-            onDragOver={event => {
-              event.preventDefault(); // enable onDrop()-callback
-              event.dataTransfer.dropEffect = "move"
-            }}
-            onDrop={event => {
-              this.dropAreaActive = false
-              this.kubeConfigPath = event.dataTransfer.files[0].path;
-            }}
-          >
+          <div className="kube-config-select flex gaps align-center">
             <Input
               autoSelectOnFocus
               theme="round-black"
@@ -239,9 +225,17 @@ export class AddCluster extends React.Component {
               onChange={value => console.log('change', value)}
             />
             {this.kubeConfigPath !== kubeConfigDefaultPath && (
-              <Button accent label={<Trans>Reset</Trans>} onClick={this.resetKubeConfig}/>
+              <Icon
+                material="settings_backup_restore"
+                onClick={this.resetKubeConfig}
+                tooltip={<Trans>Reset</Trans>}
+              />
             )}
-            <Button primary label={<Trans>Browse</Trans>} onClick={this.selectKubeConfig}/>
+            <Icon
+              material="folder"
+              onClick={this.selectKubeConfig}
+              tooltip={<Trans>Browse</Trans>}
+            />
           </div>
         )}
         {this.sourceTab === KubeConfigSourceTab.TEXT && (
@@ -259,7 +253,23 @@ export class AddCluster extends React.Component {
 
   render() {
     return (
-      <WizardLayout className="AddCluster" infoPanel={this.renderInfo()}>
+      <WizardLayout
+        className="AddCluster"
+        infoPanel={this.renderInfo()}
+        contentClass={{ droppable: this.dropAreaActive }}
+        contentProps={{
+          onDragEnter: event => this.dropAreaActive = true,
+          onDragLeave: event => this.dropAreaActive = false,
+          onDragOver: event => {
+            event.preventDefault(); // enable onDrop()-callback
+            event.dataTransfer.dropEffect = "move"
+          },
+          onDrop: event => {
+            this.dropAreaActive = false
+            this.kubeConfigPath = event.dataTransfer.files[0].path;
+          }
+        }}
+      >
         <h2><Trans>Add Cluster</Trans></h2>
         {this.renderKubeConfigSource()}
         <Select

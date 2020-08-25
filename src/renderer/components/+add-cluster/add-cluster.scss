@@ -1,4 +1,12 @@
 .AddCluster {
+  .droppable {
+    box-shadow: 0 0 0 5px inset $primary;
+
+    > * {
+      pointer-events: none;
+    }
+  }
+
   .Select {
     .kube-context {
       --flex-gap: #{$padding};
@@ -9,19 +17,7 @@
     }
   }
 
-  .kube-config-select {
-    &.droppable {
-      box-shadow: 0 0 3px 2px $primary;
-
-      > * {
-        pointer-events: none;
-      }
-    }
-  }
-
-  .info-col {
-    code {
-      color: $pink-400;
-    }
+  code {
+    color: $pink-400;
   }
 }

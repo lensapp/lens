@@ -3,7 +3,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
 
-interface Props {
+interface Props extends React.DOMAttributes<any> {
   className?: IClassName;
   header?: React.ReactNode;
   headerClass?: IClassName;
@@ -11,22 +11,26 @@ interface Props {
   infoPanelClass?: IClassName;
   infoPanel?: React.ReactNode;
   centered?: boolean;  // Centering content horizontally
+  contentProps?: React.DOMAttributes<HTMLElement>
 }
 
 @observer
 export class WizardLayout extends React.Component<Props> {
   render() {
-    const { className, contentClass, infoPanelClass, infoPanel, header, headerClass, centered, children: content } = this.props;
+    const {
+      className, contentClass, infoPanelClass, infoPanel, header, headerClass, centered,
+      children, contentProps = {}, ...props
+    } = this.props;
     return (
-      <div className={cssNames("WizardLayout", { centered }, className)}>
+      <div {...props} className={cssNames("WizardLayout", { centered }, className)}>
         {header && (
           <div className={cssNames("head-col flex gaps align-center", headerClass)}>
             {header}
           </div>
         )}
-        <div className={cssNames("content-col flex column gaps", contentClass)}>
+        <div {...contentProps} className={cssNames("content-col flex column gaps", contentClass)}>
           <div className="flex column gaps">
-            {content}
+            {children}
           </div>
         </div>
         {infoPanel && (

@@ -88,7 +88,7 @@ msgstr "Название аккаунта"
 msgid "Active"
 msgstr "Активный"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:225
+#: src/renderer/components/+add-cluster/add-cluster.tsx:228
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:116
 msgid "Add Cluster"
 msgstr ""
@@ -113,7 +113,7 @@ msgstr "Добавить привязки к {name}"
 #~ msgid "Add cluster"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:243
+#: src/renderer/components/+add-cluster/add-cluster.tsx:246
 msgid "Add cluster(s)"
 msgstr ""
 
@@ -320,7 +320,7 @@ msgstr "Цели привязки"
 msgid "Bindings"
 msgstr "Привязки"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:218
+#: src/renderer/components/+add-cluster/add-cluster.tsx:210
 msgid "Browse"
 msgstr ""
 
@@ -1861,7 +1861,7 @@ msgstr "Комиссия"
 msgid "Proxy is used only for non-cluster communication."
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:231
+#: src/renderer/components/+add-cluster/add-cluster.tsx:234
 msgid "Proxy settings"
 msgstr ""
 
@@ -2042,7 +2042,7 @@ msgstr ""
 msgid "Required field"
 msgstr "Обязательное поле"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:217
+#: src/renderer/components/+add-cluster/add-cluster.tsx:209
 #: src/renderer/components/item-object-list/page-filters-list.tsx:31
 msgid "Reset"
 msgstr "Сбросить"
@@ -2246,7 +2246,7 @@ msgstr "Тип секрета"
 msgid "Secrets"
 msgstr "Secrets"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:228
+#: src/renderer/components/+add-cluster/add-cluster.tsx:231
 msgid "Select a context"
 msgstr ""
 
