@@ -6,6 +6,10 @@ import { ClusterStore } from "./cluster-store";
 import { workspaceStore } from "./workspace-store";
 import { saveConfigToAppFiles } from "./kube-helpers";
 
+const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png")
+
+console.log("") // fix bug
+
 let clusterStore: ClusterStore;
 
 describe("empty config", () => {
@@ -236,12 +240,13 @@ describe("pre 2.6.0 config with a cluster icon", () => {
           },
           cluster1: {
             kubeConfig: "foo",
-            icon: "icon path",
+            icon: "icon_path",
             preferences: {
               terminalCWD: "/tmp"
             }
           },
-        })
+        }),
+        "icon_path": testDataIcon,
       }
     }
     mockFs(mockOpts);
@@ -257,7 +262,7 @@ describe("pre 2.6.0 config with a cluster icon", () => {
     const storedClusterData = clusterStore.clustersList[0];
     expect(storedClusterData.hasOwnProperty('icon')).toBe(false);
     expect(storedClusterData.preferences.hasOwnProperty('icon')).toBe(true);
-    expect(storedClusterData.preferences.icon).toBe("icon path");
+    expect(storedClusterData.preferences.icon.startsWith("data:image/jpeg;base64,")).toBe(true);
   })
 })
 
@@ -274,7 +279,6 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
           },
           cluster1: {
             kubeConfig: "foo",
-            icon: "icon path",
             preferences: {
               terminalCWD: "/tmp"
             }
@@ -305,16 +309,20 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
         'lens-cluster-store.json': JSON.stringify({
           __internal__: {
             migrations: {
-              version: "2.7.0"
+              version: "3.5.0"
             }
           },
           clusters: [
             {
               id: 'cluster1',
-              kubeConfig: 'kubeconfig content'
+              kubeConfig: 'kubeconfig content',
+              preferences: {
+                icon: "store://icon_path",
+              }
             }
           ]
-        })
+        }),
+        "icon_path": testDataIcon,
       }
     };
     mockFs(mockOpts);
@@ -329,5 +337,10 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
   it("migrates to modern format with kubeconfig in a file", async () => {
     const config = clusterStore.clustersList[0].kubeConfigPath;
     expect(fs.readFileSync(config, "utf8")).toBe("kubeconfig content");
+  })
+
+  it("migrates to modern format with icon not in file", async () => {
+    const { icon } = clusterStore.clustersList[0].preferences;
+    expect(icon.startsWith("data:image/jpeg;base64, ")).toBe(true);
   })
 })
