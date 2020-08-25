@@ -32,6 +32,12 @@ export class CronJob extends KubeObject {
     jobTemplate: {
       metadata: {
         creationTimestamp?: string;
+        labels?: {
+          [key: string]: string;
+        };
+        annotations?: {
+          [key: string]: string;
+        };
       };
       spec: {
         template: {
@@ -53,7 +59,7 @@ export class CronJob extends KubeObject {
     failedJobsHistoryLimit: number;
   }
   status: {
-    lastScheduleTime: string;
+    lastScheduleTime?: string;
   }
 
   getSuspendFlag() {
@@ -61,6 +67,7 @@ export class CronJob extends KubeObject {
   }
 
   getLastScheduleTime() {
+    if (!this.status.lastScheduleTime) return "-"
     const diff = moment().diff(this.status.lastScheduleTime)
     return formatDuration(diff, true)
   }
