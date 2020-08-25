@@ -121,6 +121,8 @@ export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): st
     namespace = parentObject.getNs()
   } = ref;
 
+  if (!kind) return "";
+
   // search in registered apis by 'kind' & 'apiVersion'
   const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == apiVersion)
   if (api) {
