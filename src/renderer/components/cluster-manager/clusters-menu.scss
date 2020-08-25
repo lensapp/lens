@@ -1,5 +1,4 @@
 .ClustersMenu {
-  @include hidden-scrollbar;
   $spacing: $padding * 2;
 
   position: relative;
@@ -23,8 +22,7 @@
     padding: $spacing;
     width: 320px;
     background: $bgc;
-    z-index: 100;
-    color: white;
+    color: $textColorAccent;
     filter: drop-shadow(0 0px 2px #ffffff33);
     pointer-events: none;
 
@@ -38,6 +36,19 @@
       border-right: $arrowSize solid $bgc;
       right: 100%;
     }
+
+    .theme-light & {
+      filter: drop-shadow(0 0px 2px #777);
+      background: white;
+
+      &:before {
+        border-right-color: white;
+      }
+    }
+  }
+
+  .clusters {
+    @include hidden-scrollbar;
   }
 
   > .add-cluster {
