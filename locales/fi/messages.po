@@ -83,7 +83,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:176
+#: src/renderer/components/+add-cluster/add-cluster.tsx:196
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:116
 msgid "Add Cluster"
 msgstr ""
@@ -108,7 +108,7 @@ msgstr ""
 #~ msgid "Add cluster"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:204
+#: src/renderer/components/+add-cluster/add-cluster.tsx:223
 msgid "Add cluster(s)"
 msgstr ""
 
@@ -706,7 +706,7 @@ msgstr ""
 msgid "Custom Resources"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:121
+#: src/renderer/components/+add-cluster/add-cluster.tsx:141
 msgid "Custom.."
 msgstr ""
 
@@ -1713,13 +1713,17 @@ msgstr ""
 msgid "Persistent Volumes"
 msgstr ""
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:78
+msgid "Please select kube-config's context"
+msgstr ""
+
 #: src/renderer/components/+add-cluster/add-cluster.tsx:63
 #~ msgid "Please select kubeconfig"
 #~ msgstr ""
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:64
-msgid "Please select kubeconfig context"
-msgstr ""
+#~ msgid "Please select kubeconfig context"
+#~ msgstr ""
 
 #: src/renderer/components/+workloads-pods/pod-menu.tsx:50
 msgid "Pod"
@@ -1815,7 +1819,7 @@ msgstr ""
 msgid "Proxy is used only for non-cluster communication."
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:188
+#: src/renderer/components/+add-cluster/add-cluster.tsx:207
 msgid "Proxy settings"
 msgstr ""
 
@@ -2199,7 +2203,7 @@ msgstr ""
 msgid "Secrets"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:185
+#: src/renderer/components/+add-cluster/add-cluster.tsx:204
 msgid "Select a context"
 msgstr ""
 
@@ -2210,6 +2214,11 @@ msgstr ""
 #: src/renderer/components/+add-cluster/add-cluster.tsx:173
 #~ msgid "Select context"
 #~ msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:52
+#: src/renderer/components/+add-cluster/add-cluster.tsx:52
+msgid "Select custom kube-config file"
+msgstr ""
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:173
 #~ msgid "Select kubeconfig"
@@ -2551,6 +2560,11 @@ msgstr ""
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:58
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:99
 msgid "Usage"
+msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:53
+#: src/renderer/components/+add-cluster/add-cluster.tsx:53
+msgid "Use configuration"
 msgstr ""
 
 #: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:190

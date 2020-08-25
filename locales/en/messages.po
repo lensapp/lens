@@ -83,7 +83,7 @@ msgstr "Account Name"
 msgid "Active"
 msgstr "Active"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:176
+#: src/renderer/components/+add-cluster/add-cluster.tsx:196
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:116
 msgid "Add Cluster"
 msgstr "Add Cluster"
@@ -108,7 +108,7 @@ msgstr "Add bindings to {name}"
 #~ msgid "Add cluster"
 #~ msgstr "Add cluster"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:204
+#: src/renderer/components/+add-cluster/add-cluster.tsx:223
 msgid "Add cluster(s)"
 msgstr "Add cluster(s)"
 
@@ -710,7 +710,7 @@ msgstr "Currently applied filters:"
 msgid "Custom Resources"
 msgstr "Custom Resources"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:121
+#: src/renderer/components/+add-cluster/add-cluster.tsx:141
 msgid "Custom.."
 msgstr "Custom.."
 
@@ -1730,13 +1730,17 @@ msgstr "Persistent Volume Claims"
 msgid "Persistent Volumes"
 msgstr "Persistent Volumes"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:78
+msgid "Please select kube-config's context"
+msgstr "Please select kube-config's context"
+
 #: src/renderer/components/+add-cluster/add-cluster.tsx:63
 #~ msgid "Please select kubeconfig"
 #~ msgstr "Please select kubeconfig"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:64
-msgid "Please select kubeconfig context"
-msgstr "Please select kubeconfig context"
+#~ msgid "Please select kubeconfig context"
+#~ msgstr "Please select kubeconfig context"
 
 #: src/renderer/components/+workloads-pods/pod-menu.tsx:50
 msgid "Pod"
@@ -1832,7 +1836,7 @@ msgstr "Provisioner"
 msgid "Proxy is used only for non-cluster communication."
 msgstr "Proxy is used only for non-cluster communication."
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:188
+#: src/renderer/components/+add-cluster/add-cluster.tsx:207
 msgid "Proxy settings"
 msgstr "Proxy settings"
 
@@ -2216,7 +2220,7 @@ msgstr "Secret type"
 msgid "Secrets"
 msgstr "Secrets"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:185
+#: src/renderer/components/+add-cluster/add-cluster.tsx:204
 msgid "Select a context"
 msgstr "Select a context"
 
@@ -2227,6 +2231,11 @@ msgstr "Select a quota.."
 #: src/renderer/components/+add-cluster/add-cluster.tsx:173
 #~ msgid "Select context"
 #~ msgstr "Select context"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:52
+#: src/renderer/components/+add-cluster/add-cluster.tsx:52
+msgid "Select custom kube-config file"
+msgstr "Select custom kube-config file"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:173
 #~ msgid "Select kubeconfig"
@@ -2569,6 +2578,11 @@ msgstr "Upgrade version"
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:99
 msgid "Usage"
 msgstr "Usage"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:53
+#: src/renderer/components/+add-cluster/add-cluster.tsx:53
+msgid "Use configuration"
+msgstr "Use configuration"
 
 #: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:190
 msgid "Use same name for RoleBinding"

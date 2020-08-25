@@ -2,10 +2,12 @@ import "./add-cluster.scss"
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { computed, observable } from "mobx";
+import { remote } from "electron";
 import { KubeConfig } from "@kubernetes/client-node";
-import { Trans } from "@lingui/macro";
+import { _i18n } from "../../i18n";
+import { t, Trans } from "@lingui/macro";
 import { Select, SelectOption } from "../select";
-import { FileInput, Input } from "../input";
+import { Input } from "../input";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
@@ -33,14 +35,18 @@ export class AddCluster extends React.Component {
   @observable customConfig = ""
 
   componentDidMount() {
-    this.setLocalConfigPath(userStore.kubeConfigPath);
+    this.kubeConfigPath = userStore.kubeConfigPath;
   }
 
   componentWillUnmount() {
     userStore.markNewContextsAsSeen();
   }
 
-  protected setLocalConfigPath(filePath: string) {
+  protected get kubeConfigPath() {
+    return userStore.kubeConfigPath;
+  }
+
+  protected set kubeConfigPath(filePath: string) {
     try {
       const kubeConfig = loadConfig(filePath);
       validateConfig(kubeConfig);
@@ -51,6 +57,19 @@ export class AddCluster extends React.Component {
       Notifications.error(
         <p>Can't read config file in <em>{filePath}</em>: {String(err)}</p>
       );
+    }
+  }
+
+  selectKubeConfig = async () => {
+    const { dialog, BrowserWindow } = remote;
+    const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
+      defaultPath: this.kubeConfigPath,
+      properties: ["openFile", "showHiddenFiles"],
+      message: _i18n._(t`Select custom kube-config file`),
+      buttonLabel: _i18n._(t`Use configuration`),
+    });
+    if (!canceled && filePaths.length) {
+      this.kubeConfigPath = filePaths[0];
     }
   }
 
@@ -179,25 +198,18 @@ export class AddCluster extends React.Component {
       <WizardLayout className="AddCluster" infoPanel={this.renderInfo()}>
         <h2><Trans>Add Cluster</Trans></h2>
         <div className="flex gaps align-center">
-          <label
-            htmlFor="kube-config-select"
-            className="kube-config-select flex gaps align-center box grow"
-          >
+          <label className="kube-config-select flex gaps align-center box grow" onClick={this.selectKubeConfig}>
             <span className="title">Kubeconfig file</span>
-            <code>{userStore.kubeConfigPath}</code>
+            <code>{this.kubeConfigPath}</code>
           </label>
-          {kubeConfigDefaultPath !== userStore.kubeConfigPath && (
+          {this.kubeConfigPath !== kubeConfigDefaultPath && (
             <Icon
               material="settings_backup_restore"
-              onClick={() => this.setLocalConfigPath(kubeConfigDefaultPath)}
+              onClick={() => this.kubeConfigPath = kubeConfigDefaultPath}
               tooltip="Reset to defaults"
             />
           )}
         </div>
-        <FileInput
-          id="kube-config-select"
-          onSelectFiles={({ file }) => this.setLocalConfigPath(file.path)}
-        />
         <Select
           placeholder={<Trans>Select a context</Trans>}
           value={this.newClusterConfig}
