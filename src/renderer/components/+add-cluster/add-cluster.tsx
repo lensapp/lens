@@ -183,7 +183,7 @@ export class AddCluster extends React.Component {
             htmlFor="kube-config-select"
             className="kube-config-select flex gaps align-center box grow"
           >
-            <span className="title">Config file</span>
+            <span className="title">Kubeconfig file</span>
             <code>{userStore.kubeConfigPath}</code>
           </label>
           {kubeConfigDefaultPath !== userStore.kubeConfigPath && (
