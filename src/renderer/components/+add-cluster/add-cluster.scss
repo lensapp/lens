@@ -10,7 +10,7 @@
   }
 
   .kube-config-select {
-    border: 1px solid $borderColor;
+    border: 1px solid $borderFaintColor;
     padding: $padding / 2 $padding;
     border-radius: $radius;
     transition: border 200ms ease-in-out;
