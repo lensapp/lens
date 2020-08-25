@@ -7,6 +7,7 @@ const TabsContext = React.createContext<TabsContextValue>({});
 
 interface TabsContextValue<D = any> {
   autoFocus?: boolean;
+  withBorder?: boolean;
   value?: D;
   onChange?(value: D): void;
 }
@@ -29,16 +30,12 @@ export class Tabs extends React.PureComponent<TabsProps> {
   }
 
   render() {
-    const {
-      center, wrap, onChange, value, autoFocus,
-      scrollable = true,
-      ...elemProps
-    } = this.props;
-    let { className } = this.props;
-    className = cssNames("Tabs", className, {
-      "center": center,
-      "wrap": wrap,
-      "scrollable": scrollable,
+    const { center, wrap, onChange, value, autoFocus, scrollable = true, withBorder, ...elemProps } = this.props;
+    const className = cssNames("Tabs", this.props.className, {
+      center: center,
+      wrap: wrap,
+      scrollable: scrollable,
+      withBorder: withBorder,
     });
     return (
       <TabsContext.Provider value={{ autoFocus, value, onChange }}>

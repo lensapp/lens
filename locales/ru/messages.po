@@ -38,6 +38,10 @@ msgstr "(Пусто) (Допускается трафик ко всем пода
 #~ msgid "(new)"
 #~ msgstr ""
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:213
+#~ msgid "* Choose how to import clusters: from selected kube-config file or by manually pasting kube-config's content as a text"
+#~ msgstr ""
+
 #: src/renderer/components/item-object-list/item-list-layout.tsx:224
 msgid "<0>Filtered</0>: {itemsCount} / {allItemsCount}"
 msgstr "<0>Отфильтровано</0>: {itemsCount} / {allItemsCount}"
@@ -84,7 +88,7 @@ msgstr "Название аккаунта"
 msgid "Active"
 msgstr "Активный"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:196
+#: src/renderer/components/+add-cluster/add-cluster.tsx:225
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:116
 msgid "Add Cluster"
 msgstr ""
@@ -109,7 +113,7 @@ msgstr "Добавить привязки к {name}"
 #~ msgid "Add cluster"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:223
+#: src/renderer/components/+add-cluster/add-cluster.tsx:243
 msgid "Add cluster(s)"
 msgstr ""
 
@@ -316,6 +320,10 @@ msgstr "Цели привязки"
 msgid "Bindings"
 msgstr "Привязки"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:218
+msgid "Browse"
+msgstr ""
+
 #: src/renderer/components/error-boundary/error-boundary.tsx:37
 #~ msgid "Build version"
 #~ msgstr "Версия билда"
@@ -440,6 +448,18 @@ msgstr "Чарты"
 #: renderer/components/+apps-releases/releases.tsx:123
 #~ msgid "Checking update"
 #~ msgstr "Проверка обновлений"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:218
+#~ msgid "Choose how to import clusters: from selected kube-config file or by manually pasting kube-config's content as a text"
+#~ msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:218
+#~ msgid "Choose how to import clusters: from selected kube-config file or from manually pasted configuration contents"
+#~ msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:218
+#~ msgid "Choose how to import clusters: from selected kube-config file or from pasted yaml configuration"
+#~ msgstr ""
 
 #: src/renderer/components/+storage-volumes/volume-details.tsx:68
 #: src/renderer/components/+storage-volumes/volumes.tsx:43
@@ -711,9 +731,9 @@ msgstr "Текущие фильтры:"
 msgid "Custom Resources"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:141
-msgid "Custom.."
-msgstr ""
+#: src/renderer/components/+add-cluster/add-cluster.tsx:155
+#~ msgid "Custom.."
+#~ msgstr ""
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:95
 msgid "DNS Provider"
@@ -1711,6 +1731,10 @@ msgstr "Параллелизм"
 msgid "Parameters"
 msgstr "Параметры"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:205
+msgid "Paste as text"
+msgstr ""
+
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:94
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:102
 #: src/renderer/components/+network-ingresses/ingress-details.tsx:42
@@ -1731,7 +1755,7 @@ msgstr "Persistent Volume Claims"
 msgid "Persistent Volumes"
 msgstr "Persistent Volumes"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:78
+#: src/renderer/components/+add-cluster/add-cluster.tsx:92
 msgid "Please select kube-config's context"
 msgstr ""
 
@@ -1837,7 +1861,7 @@ msgstr "Комиссия"
 msgid "Proxy is used only for non-cluster communication."
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:207
+#: src/renderer/components/+add-cluster/add-cluster.tsx:231
 msgid "Proxy settings"
 msgstr ""
 
@@ -2018,6 +2042,7 @@ msgstr ""
 msgid "Required field"
 msgstr "Обязательное поле"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:217
 #: src/renderer/components/item-object-list/page-filters-list.tsx:31
 msgid "Reset"
 msgstr "Сбросить"
@@ -2221,7 +2246,7 @@ msgstr "Тип секрета"
 msgid "Secrets"
 msgstr "Secrets"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:204
+#: src/renderer/components/+add-cluster/add-cluster.tsx:228
 msgid "Select a context"
 msgstr ""
 
@@ -2233,14 +2258,22 @@ msgstr "Выберите квоту..."
 #~ msgid "Select context"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:52
-#: src/renderer/components/+add-cluster/add-cluster.tsx:52
+#: src/renderer/components/+add-cluster/add-cluster.tsx:62
+#: src/renderer/components/+add-cluster/add-cluster.tsx:62
 msgid "Select custom kube-config file"
 msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:212
+#~ msgid "Select file"
+#~ msgstr ""
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:173
 #~ msgid "Select kubeconfig"
 #~ msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:204
+msgid "Select or drop file"
+msgstr ""
 
 #: src/renderer/components/+preferences/preferences.tsx:88
 #~ msgid "Select repository"
@@ -2580,8 +2613,8 @@ msgstr "Обновить версию"
 msgid "Usage"
 msgstr "Использование"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:53
-#: src/renderer/components/+add-cluster/add-cluster.tsx:53
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
 msgid "Use configuration"
 msgstr ""
 

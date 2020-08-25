@@ -21,14 +21,24 @@ import { userStore } from "../../../common/user-store";
 import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
+import { Tab, Tabs } from "../tabs";
+
+// todo: improve UI/UX kube-config consuming: FILE (input + button) | PASTE TEXT (editor)
+// todo: allow to manually input kube-config file path
+// todo: allow to create multiple clusters at once (multi-select)
+
+enum KubeConfigSourceTab {
+  FILE = "file",
+  TEXT = "text"
+}
 
 @observer
 export class AddCluster extends React.Component {
-  readonly custom: any = "custom"
   @observable.ref localKubeConfig: KubeConfig;
   @observable.ref newClusterConfig: KubeConfig;
   @observable.ref error: React.ReactNode;
 
+  @observable sourceTab = KubeConfigSourceTab.FILE;
   @observable isWaiting = false
   @observable showSettings = false
   @observable dropAreaActive = false;
@@ -74,8 +84,8 @@ export class AddCluster extends React.Component {
     }
   }
 
-  @computed get isCustom() {
-    return this.newClusterConfig === this.custom;
+  resetKubeConfig = () => {
+    this.kubeConfigPath = kubeConfigDefaultPath;
   }
 
   @computed get clusterOptions() {
@@ -92,10 +102,6 @@ export class AddCluster extends React.Component {
         }
       })
     }
-    options.push({
-      label: <Trans>Custom..</Trans>,
-      value: this.custom,
-    });
     return options;
   }
 
@@ -113,13 +119,14 @@ export class AddCluster extends React.Component {
     return label;
   };
 
+  // fixme: support adding multiple clusters
   addCluster = async () => {
     const { newClusterConfig, customConfig, proxyServer } = this;
     const clusterId = uuid();
     this.isWaiting = true
     this.error = ""
     try {
-      const config = this.isCustom ? loadConfig(customConfig) : newClusterConfig;
+      const config = this.sourceTab == KubeConfigSourceTab.TEXT ? loadConfig(customConfig) : newClusterConfig;
       if (!config) {
         this.error = <Trans>Please select kube-config's context</Trans>
         return;
@@ -194,16 +201,25 @@ export class AddCluster extends React.Component {
     )
   }
 
-  render() {
+  renderKubeConfigSource() {
     return (
-      <WizardLayout className="AddCluster" infoPanel={this.renderInfo()}>
-        <h2><Trans>Add Cluster</Trans></h2>
-        <div className="flex gaps align-center">
-          <label
-            className={cssNames("kube-config-select flex gaps align-center box grow", {
+      <>
+        <Tabs withBorder onChange={v => this.sourceTab = v}>
+          <Tab
+            value={KubeConfigSourceTab.FILE}
+            label={<Trans>Select or drop file</Trans>}
+            active={this.sourceTab == KubeConfigSourceTab.FILE}/>
+          <Tab
+            value={KubeConfigSourceTab.TEXT}
+            label={<Trans>Paste as text</Trans>}
+            active={this.sourceTab == KubeConfigSourceTab.TEXT}
+          />
+        </Tabs>
+        {this.sourceTab === KubeConfigSourceTab.FILE && (
+          <div
+            className={cssNames("kube-config-select flex gaps align-center", {
               droppable: this.dropAreaActive
             })}
-            onClick={this.selectKubeConfig}
             onDragEnter={event => this.dropAreaActive = true}
             onDragLeave={event => this.dropAreaActive = false}
             onDragOver={event => {
@@ -215,24 +231,44 @@ export class AddCluster extends React.Component {
               this.kubeConfigPath = event.dataTransfer.files[0].path;
             }}
           >
-            <span className="title">Kubeconfig file</span>
-            <code>{this.kubeConfigPath}</code>
-          </label>
-          {this.kubeConfigPath !== kubeConfigDefaultPath && (
-            <Icon
-              material="settings_backup_restore"
-              onClick={() => this.kubeConfigPath = kubeConfigDefaultPath}
-              tooltip="Reset to defaults"
+            <Input
+              autoSelectOnFocus
+              theme="round-black"
+              className="kube-config-path box grow"
+              value={this.kubeConfigPath}
+              onChange={value => console.log('change', value)}
             />
-          )}
-        </div>
+            {this.kubeConfigPath !== kubeConfigDefaultPath && (
+              <Button accent label={<Trans>Reset</Trans>} onClick={this.resetKubeConfig}/>
+            )}
+            <Button primary label={<Trans>Browse</Trans>} onClick={this.selectKubeConfig}/>
+          </div>
+        )}
+        {this.sourceTab === KubeConfigSourceTab.TEXT && (
+          <AceEditor
+            autoFocus
+            showGutter={false}
+            mode="yaml"
+            value={this.customConfig}
+            onChange={value => this.customConfig = value}
+          />
+        )}
+      </>
+    )
+  }
+
+  render() {
+    return (
+      <WizardLayout className="AddCluster" infoPanel={this.renderInfo()}>
+        <h2><Trans>Add Cluster</Trans></h2>
+        {this.renderKubeConfigSource()}
         <Select
+          id="kubecontext-select" // todo: provide better mapping for integration tests (e.g. data-test-id="..")
           placeholder={<Trans>Select a context</Trans>}
           value={this.newClusterConfig}
           options={this.clusterOptions}
           onChange={({ value }: SelectOption) => this.newClusterConfig = value}
           formatOptionLabel={this.formatClusterContextLabel}
-          id="kubecontext-select"
         />
         <div className="cluster-settings">
           <a href="#" onClick={() => this.showSettings = !this.showSettings}>
@@ -251,18 +287,6 @@ export class AddCluster extends React.Component {
             <small className="hint">
               {'A HTTP proxy server URL (format: http://<address>:<port>).'}
             </small>
-          </div>
-        )}
-        {this.isCustom && (
-          <div className="custom-kubeconfig flex column gaps box grow">
-            <p>Kubeconfig:</p>
-            <AceEditor
-              autoFocus
-              showGutter={false}
-              mode="yaml"
-              value={this.customConfig}
-              onChange={value => this.customConfig = value}
-            />
           </div>
         )}
         {this.error && (

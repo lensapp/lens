@@ -10,31 +10,18 @@
   }
 
   .kube-config-select {
-    border: 1px solid $borderFaintColor;
-    padding: $padding / 2 $padding;
-    border-radius: $radius;
-    transition: border 200ms ease-in-out;
+    &.droppable {
+      box-shadow: 0 0 3px 2px $primary;
 
-    &.droppable,
-    &:hover {
-      border-color: $primary;
-      cursor: pointer;
-    }
-
-    > * {
-      pointer-events: none;
-    }
-
-    > .title {
-      white-space: nowrap;
-    }
-
-    code {
-      word-break: break-all;
+      > * {
+        pointer-events: none;
+      }
     }
   }
 
-  code {
-    color: $pink-400;
+  .info-col {
+    code {
+      color: $pink-400;
+    }
   }
 }

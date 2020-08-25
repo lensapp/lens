@@ -4,6 +4,10 @@
   -webkit-user-select: none; /* safari */
   -moz-user-select: none; /* firefox */
 
+  &.withBorder {
+    border-bottom: 1px solid $borderFaintColor;
+  }
+
   &.wrap {
     flex-wrap: wrap;
   }
@@ -24,7 +28,7 @@
 }
 
 .Tab {
-  --color-active: inherit;
+  --color-active: #{$layoutTabsActiveColor};
   --line-color-active: #{$primary};
   --line-color-focus: currentColor;
 

@@ -11,10 +11,6 @@
   > .Tabs {
     grid-area: tabs;
     background: $layoutTabsBackground;
-
-    .Tab {
-      --color-active: #{$layoutTabsActiveColor};
-    }
   }
 
   header {

@@ -37,6 +37,10 @@ msgstr "(empty) (Allowing the specific traffic to all pods in this namespace)"
 #~ msgid "(new)"
 #~ msgstr "(new)"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:213
+#~ msgid "* Choose how to import clusters: from selected kube-config file or by manually pasting kube-config's content as a text"
+#~ msgstr "* Choose how to import clusters: from selected kube-config file or by manually pasting kube-config's content as a text"
+
 #: src/renderer/components/item-object-list/item-list-layout.tsx:224
 msgid "<0>Filtered</0>: {itemsCount} / {allItemsCount}"
 msgstr "<0>Filtered</0>: {itemsCount} / {allItemsCount}"
@@ -83,7 +87,7 @@ msgstr "Account Name"
 msgid "Active"
 msgstr "Active"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:196
+#: src/renderer/components/+add-cluster/add-cluster.tsx:225
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:116
 msgid "Add Cluster"
 msgstr "Add Cluster"
@@ -108,7 +112,7 @@ msgstr "Add bindings to {name}"
 #~ msgid "Add cluster"
 #~ msgstr "Add cluster"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:223
+#: src/renderer/components/+add-cluster/add-cluster.tsx:243
 msgid "Add cluster(s)"
 msgstr "Add cluster(s)"
 
@@ -315,6 +319,10 @@ msgstr "Binding targets"
 msgid "Bindings"
 msgstr "Bindings"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:218
+msgid "Browse"
+msgstr "Browse"
+
 #: src/renderer/components/error-boundary/error-boundary.tsx:37
 #~ msgid "Build version"
 #~ msgstr "Build version"
@@ -439,6 +447,18 @@ msgstr "Charts"
 #: renderer/components/+apps-releases/releases.tsx:123
 #~ msgid "Checking update"
 #~ msgstr "Checking update"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:218
+#~ msgid "Choose how to import clusters: from selected kube-config file or by manually pasting kube-config's content as a text"
+#~ msgstr "Choose how to import clusters: from selected kube-config file or by manually pasting kube-config's content as a text"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:218
+#~ msgid "Choose how to import clusters: from selected kube-config file or from manually pasted configuration contents"
+#~ msgstr "Choose how to import clusters: from selected kube-config file or from manually pasted configuration contents"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:218
+#~ msgid "Choose how to import clusters: from selected kube-config file or from pasted yaml configuration"
+#~ msgstr "Choose how to import clusters: from selected kube-config file or from pasted yaml configuration"
 
 #: src/renderer/components/+storage-volumes/volume-details.tsx:68
 #: src/renderer/components/+storage-volumes/volumes.tsx:43
@@ -710,9 +730,9 @@ msgstr "Currently applied filters:"
 msgid "Custom Resources"
 msgstr "Custom Resources"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:141
-msgid "Custom.."
-msgstr "Custom.."
+#: src/renderer/components/+add-cluster/add-cluster.tsx:155
+#~ msgid "Custom.."
+#~ msgstr "Custom.."
 
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/certificate-details.tsx:95
 msgid "DNS Provider"
@@ -1710,6 +1730,10 @@ msgstr "Parallelism"
 msgid "Parameters"
 msgstr "Parameters"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:205
+msgid "Paste as text"
+msgstr "Paste as text"
+
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:94
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:102
 #: src/renderer/components/+network-ingresses/ingress-details.tsx:42
@@ -1730,7 +1754,7 @@ msgstr "Persistent Volume Claims"
 msgid "Persistent Volumes"
 msgstr "Persistent Volumes"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:78
+#: src/renderer/components/+add-cluster/add-cluster.tsx:92
 msgid "Please select kube-config's context"
 msgstr "Please select kube-config's context"
 
@@ -1836,7 +1860,7 @@ msgstr "Provisioner"
 msgid "Proxy is used only for non-cluster communication."
 msgstr "Proxy is used only for non-cluster communication."
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:207
+#: src/renderer/components/+add-cluster/add-cluster.tsx:231
 msgid "Proxy settings"
 msgstr "Proxy settings"
 
@@ -2017,6 +2041,7 @@ msgstr "Required Drop Capabilities"
 msgid "Required field"
 msgstr "Required field"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:217
 #: src/renderer/components/item-object-list/page-filters-list.tsx:31
 msgid "Reset"
 msgstr "Reset"
@@ -2220,7 +2245,7 @@ msgstr "Secret type"
 msgid "Secrets"
 msgstr "Secrets"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:204
+#: src/renderer/components/+add-cluster/add-cluster.tsx:228
 msgid "Select a context"
 msgstr "Select a context"
 
@@ -2232,14 +2257,22 @@ msgstr "Select a quota.."
 #~ msgid "Select context"
 #~ msgstr "Select context"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:52
-#: src/renderer/components/+add-cluster/add-cluster.tsx:52
+#: src/renderer/components/+add-cluster/add-cluster.tsx:62
+#: src/renderer/components/+add-cluster/add-cluster.tsx:62
 msgid "Select custom kube-config file"
 msgstr "Select custom kube-config file"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:212
+#~ msgid "Select file"
+#~ msgstr "Select file"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:173
 #~ msgid "Select kubeconfig"
 #~ msgstr "Select kubeconfig"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:204
+msgid "Select or drop file"
+msgstr "Select or drop file"
 
 #: src/renderer/components/+preferences/preferences.tsx:88
 #~ msgid "Select repository"
@@ -2579,8 +2612,8 @@ msgstr "Upgrade version"
 msgid "Usage"
 msgstr "Usage"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:53
-#: src/renderer/components/+add-cluster/add-cluster.tsx:53
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
 msgid "Use configuration"
 msgstr "Use configuration"
 
