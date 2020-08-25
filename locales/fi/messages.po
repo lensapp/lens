@@ -87,7 +87,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:228
+#: src/renderer/components/+add-cluster/add-cluster.tsx:248
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:116
 msgid "Add Cluster"
 msgstr ""
@@ -112,7 +112,7 @@ msgstr ""
 #~ msgid "Add cluster"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:246
+#: src/renderer/components/+add-cluster/add-cluster.tsx:266
 msgid "Add cluster(s)"
 msgstr ""
 
@@ -319,7 +319,7 @@ msgstr ""
 msgid "Bindings"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:210
+#: src/renderer/components/+add-cluster/add-cluster.tsx:227
 msgid "Browse"
 msgstr ""
 
@@ -1713,7 +1713,7 @@ msgstr ""
 msgid "Parameters"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:205
+#: src/renderer/components/+add-cluster/add-cluster.tsx:222
 msgid "Paste as text"
 msgstr ""
 
@@ -1737,7 +1737,7 @@ msgstr ""
 msgid "Persistent Volumes"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:92
+#: src/renderer/components/+add-cluster/add-cluster.tsx:106
 msgid "Please select kube-config's context"
 msgstr ""
 
@@ -1834,6 +1834,14 @@ msgstr ""
 msgid "Privileged"
 msgstr ""
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:225
+#~ msgid "Pro-tip: you can also drag-n-drop kube-config file in the left-side area"
+#~ msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:229
+msgid "Pro-tip: you can also drag-n-drop kube-config file to this area"
+msgstr ""
+
 #: src/renderer/components/+storage-classes/storage-class-details.tsx:28
 #: src/renderer/components/+storage-classes/storage-classes.tsx:35
 msgid "Provisioner"
@@ -1843,7 +1851,7 @@ msgstr ""
 msgid "Proxy is used only for non-cluster communication."
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:234
+#: src/renderer/components/+add-cluster/add-cluster.tsx:254
 msgid "Proxy settings"
 msgstr ""
 
@@ -2024,7 +2032,7 @@ msgstr ""
 msgid "Required field"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:209
+#: src/renderer/components/+add-cluster/add-cluster.tsx:226
 #: src/renderer/components/item-object-list/page-filters-list.tsx:31
 msgid "Reset"
 msgstr ""
@@ -2032,6 +2040,18 @@ msgstr ""
 #: src/renderer/components/item-object-list/item-list-layout.tsx:199
 msgid "Reset filters?"
 msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:65
+msgid "Resetting config to {0}"
+msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:68
+#~ msgid "Resetting kube-config to current {0}"
+#~ msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:68
+#~ msgid "Resetting kube-config to default: {kubeConfigDefaultPath}"
+#~ msgstr ""
 
 #: src/renderer/components/+custom-resources/crd-details.tsx:44
 #: src/renderer/components/+custom-resources/crd-list.tsx:73
@@ -2228,7 +2248,7 @@ msgstr ""
 msgid "Secrets"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:231
+#: src/renderer/components/+add-cluster/add-cluster.tsx:251
 msgid "Select a context"
 msgstr ""
 
@@ -2240,8 +2260,8 @@ msgstr ""
 #~ msgid "Select context"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:62
-#: src/renderer/components/+add-cluster/add-cluster.tsx:62
+#: src/renderer/components/+add-cluster/add-cluster.tsx:76
+#: src/renderer/components/+add-cluster/add-cluster.tsx:76
 msgid "Select custom kube-config file"
 msgstr ""
 
@@ -2249,13 +2269,17 @@ msgstr ""
 #~ msgid "Select file"
 #~ msgstr ""
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:221
+msgid "Select kube-config file"
+msgstr ""
+
 #: src/renderer/components/+add-cluster/add-cluster.tsx:173
 #~ msgid "Select kubeconfig"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:204
-msgid "Select or drop file"
-msgstr ""
+#: src/renderer/components/+add-cluster/add-cluster.tsx:224
+#~ msgid "Select or drop file"
+#~ msgstr ""
 
 #: src/renderer/components/+preferences/preferences.tsx:88
 #~ msgid "Select repository"
@@ -2595,8 +2619,8 @@ msgstr ""
 msgid "Usage"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:63
-#: src/renderer/components/+add-cluster/add-cluster.tsx:63
+#: src/renderer/components/+add-cluster/add-cluster.tsx:77
+#: src/renderer/components/+add-cluster/add-cluster.tsx:77
 msgid "Use configuration"
 msgstr ""
 

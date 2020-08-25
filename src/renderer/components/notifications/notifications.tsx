@@ -29,11 +29,12 @@ export class Notifications extends React.Component {
     });
   }
 
-  static info(message: IMessage) {
+  static info(message: IMessage, customOpts: Partial<INotification> = {}) {
     return notificationsStore.add({
-      message: message,
+      status: "info",
       timeout: 0,
-      status: "info"
+      message: message,
+      ...customOpts,
     });
   }
 

@@ -7,6 +7,10 @@
     }
   }
 
+  .hint {
+    margin-top: -$padding;
+  }
+
   .Select {
     .kube-context {
       --flex-gap: #{$padding};

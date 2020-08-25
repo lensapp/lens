@@ -1,4 +1,5 @@
 import "./add-cluster.scss"
+import os from "os";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { computed, observable } from "mobx";
@@ -23,10 +24,6 @@ import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Tab, Tabs } from "../tabs";
 
-// todo: improve UI/UX kube-config consuming: FILE (input + button) | PASTE TEXT (editor)
-// todo: allow to manually input kube-config file path (edit + save on blur + auto-replace "~" => os.homedir()
-// todo: allow to create multiple clusters at once (multi-select)
-
 enum KubeConfigSourceTab {
   FILE = "file",
   TEXT = "text"
@@ -38,6 +35,7 @@ export class AddCluster extends React.Component {
   @observable.ref newClusterConfig: KubeConfig;
   @observable.ref error: React.ReactNode;
 
+  @observable kubeConfigPath = "";
   @observable sourceTab = KubeConfigSourceTab.FILE;
   @observable isWaiting = false
   @observable showSettings = false
@@ -46,28 +44,45 @@ export class AddCluster extends React.Component {
   @observable customConfig = ""
 
   componentDidMount() {
-    this.kubeConfigPath = userStore.kubeConfigPath;
+    this.setKubeConfig(userStore.kubeConfigPath);
   }
 
   componentWillUnmount() {
     userStore.markNewContextsAsSeen();
   }
 
-  protected get kubeConfigPath() {
-    return userStore.kubeConfigPath;
-  }
-
-  protected set kubeConfigPath(filePath: string) {
+  protected setKubeConfig(filePath: string, { saveGlobal = true, throwError = false } = {}) {
     try {
       const kubeConfig = loadConfig(filePath);
       validateConfig(kubeConfig);
+      this.kubeConfigPath = filePath;
       this.localKubeConfig = kubeConfig;
       this.newClusterConfig = null; // reset previously selected
-      userStore.kubeConfigPath = filePath; // save to store
+      if (saveGlobal) {
+        userStore.kubeConfigPath = filePath; // save to store
+      }
     } catch (err) {
       Notifications.error(
         <p>Can't read config file in <em>{filePath}</em>: {String(err)}</p>
       );
+      if (throwError) {
+        throw err;
+      }
+    }
+  }
+
+  onKubeConfigInputBlur = () => {
+    const isChanged = this.kubeConfigPath !== userStore.kubeConfigPath;
+    if (isChanged) {
+      this.kubeConfigPath = this.kubeConfigPath.replace("~", os.homedir());
+      try {
+        this.setKubeConfig(this.kubeConfigPath, { throwError: true })
+      } catch (err) {
+        Notifications.info(<p>
+          <Trans>Resetting config to {userStore.kubeConfigPath}</Trans>
+        </p>, { timeout: 2500 });
+        this.setKubeConfig(userStore.kubeConfigPath);
+      }
     }
   }
 
@@ -80,12 +95,12 @@ export class AddCluster extends React.Component {
       buttonLabel: _i18n._(t`Use configuration`),
     });
     if (!canceled && filePaths.length) {
-      this.kubeConfigPath = filePaths[0];
+      this.setKubeConfig(filePaths[0]);
     }
   }
 
   resetKubeConfig = () => {
-    this.kubeConfigPath = kubeConfigDefaultPath;
+    this.setKubeConfig(kubeConfigDefaultPath);
   }
 
   @computed get clusterOptions() {
@@ -119,7 +134,7 @@ export class AddCluster extends React.Component {
     return label;
   };
 
-  // fixme: support adding multiple clusters
+  // fixme: allow to create multiple clusters at once (multi-select)
   addCluster = async () => {
     const { newClusterConfig, customConfig, proxyServer } = this;
     const clusterId = uuid();
@@ -207,7 +222,7 @@ export class AddCluster extends React.Component {
         <Tabs withBorder onChange={v => this.sourceTab = v}>
           <Tab
             value={KubeConfigSourceTab.FILE}
-            label={<Trans>Select or drop file</Trans>}
+            label={<Trans>Select kube-config file</Trans>}
             active={this.sourceTab == KubeConfigSourceTab.FILE}/>
           <Tab
             value={KubeConfigSourceTab.TEXT}
@@ -216,27 +231,32 @@ export class AddCluster extends React.Component {
           />
         </Tabs>
         {this.sourceTab === KubeConfigSourceTab.FILE && (
-          <div className="kube-config-select flex gaps align-center">
-            <Input
-              autoSelectOnFocus
-              theme="round-black"
-              className="kube-config-path box grow"
-              value={this.kubeConfigPath}
-              onChange={value => console.log('change', value)}
-            />
-            {this.kubeConfigPath !== kubeConfigDefaultPath && (
-              <Icon
-                material="settings_backup_restore"
-                onClick={this.resetKubeConfig}
-                tooltip={<Trans>Reset</Trans>}
+          <>
+            <div className="kube-config-select flex gaps align-center">
+              <Input
+                theme="round-black"
+                className="kube-config-path box grow"
+                value={this.kubeConfigPath}
+                onChange={v => this.kubeConfigPath = v}
+                onBlur={this.onKubeConfigInputBlur}
               />
-            )}
-            <Icon
-              material="folder"
-              onClick={this.selectKubeConfig}
-              tooltip={<Trans>Browse</Trans>}
-            />
-          </div>
+              {this.kubeConfigPath !== kubeConfigDefaultPath && (
+                <Icon
+                  material="settings_backup_restore"
+                  onClick={this.resetKubeConfig}
+                  tooltip={<Trans>Reset</Trans>}
+                />
+              )}
+              <Icon
+                material="folder"
+                onClick={this.selectKubeConfig}
+                tooltip={<Trans>Browse</Trans>}
+              />
+            </div>
+            <small className="hint">
+              <Trans>Pro-tip: you can also drag-n-drop kube-config file to this area</Trans>
+            </small>
+          </>
         )}
         {this.sourceTab === KubeConfigSourceTab.TEXT && (
           <AceEditor
@@ -266,7 +286,7 @@ export class AddCluster extends React.Component {
           },
           onDrop: event => {
             this.dropAreaActive = false
-            this.kubeConfigPath = event.dataTransfer.files[0].path;
+            this.setKubeConfig(event.dataTransfer.files[0].path)
           }
         }}
       >
