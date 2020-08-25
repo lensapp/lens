@@ -31,6 +31,7 @@ export class AddCluster extends React.Component {
 
   @observable isWaiting = false
   @observable showSettings = false
+  @observable dropAreaActive = false;
   @observable proxyServer = ""
   @observable customConfig = ""
 
@@ -198,7 +199,22 @@ export class AddCluster extends React.Component {
       <WizardLayout className="AddCluster" infoPanel={this.renderInfo()}>
         <h2><Trans>Add Cluster</Trans></h2>
         <div className="flex gaps align-center">
-          <label className="kube-config-select flex gaps align-center box grow" onClick={this.selectKubeConfig}>
+          <label
+            className={cssNames("kube-config-select flex gaps align-center box grow", {
+              droppable: this.dropAreaActive
+            })}
+            onClick={this.selectKubeConfig}
+            onDragEnter={event => this.dropAreaActive = true}
+            onDragLeave={event => this.dropAreaActive = false}
+            onDragOver={event => {
+              event.preventDefault(); // enable onDrop()-callback
+              event.dataTransfer.dropEffect = "move"
+            }}
+            onDrop={event => {
+              this.dropAreaActive = false
+              this.kubeConfigPath = event.dataTransfer.files[0].path;
+            }}
+          >
             <span className="title">Kubeconfig file</span>
             <code>{this.kubeConfigPath}</code>
           </label>

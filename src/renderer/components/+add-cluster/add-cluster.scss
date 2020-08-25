@@ -15,13 +15,18 @@
     border-radius: $radius;
     transition: border 200ms ease-in-out;
 
-    > .title {
-      white-space: nowrap;
-    }
-
+    &.droppable,
     &:hover {
       border-color: $primary;
       cursor: pointer;
+    }
+
+    > * {
+      pointer-events: none;
+    }
+
+    > .title {
+      white-space: nowrap;
     }
 
     code {
