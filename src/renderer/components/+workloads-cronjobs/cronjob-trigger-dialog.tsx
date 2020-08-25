@@ -97,7 +97,6 @@ export class CronJobTriggerDialog extends Component<Props> {
   render() {
     const { className, ...dialogProps } = this.props;
     const cronjobName = this.cronjob ? this.cronjob.getName() : "";
-    console.log(cronjobName);
     const header = (
       <h5>
         <Trans>Trigger CronJob <span>{cronjobName}</span></Trans>
