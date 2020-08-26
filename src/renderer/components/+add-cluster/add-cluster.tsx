@@ -72,6 +72,7 @@ export class AddCluster extends React.Component {
 
   refreshContexts = (autoSelect = true) => {
     this.selectedContexts.clear();
+    this.kubeContexts.clear();
 
     switch (this.sourceTab) {
     case KubeConfigSourceTab.FILE:
