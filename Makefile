@@ -20,8 +20,10 @@ compile-dev:
 	yarn compile:renderer --cache
 
 dev:
-	test -f out/main.js || make init
-	yarn dev # run electron and watch files
+ifeq ("$(wildcard static/build/main.js)","")
+	make init
+endif
+	yarn dev
 
 lint:
 	yarn lint
@@ -53,6 +55,12 @@ else
 endif
 
 clean:
+ifeq "$(DETECTED_OS)" "Windows"
+	if exist binaries\client del /s /q binaries\client\*.*
+	if exist dist del /s /q dist\*.*
+	if exist static\build del /s /q static\build\*.*
+else
 	rm -rf binaries/client/*
 	rm -rf dist/*
-	rm -rf out/*
+	rm -rf static/build/*
+endif

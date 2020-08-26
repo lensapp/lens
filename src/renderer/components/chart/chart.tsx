@@ -63,14 +63,14 @@ export class Chart extends React.Component<ChartProps> {
     this.renderChart()
   }
 
-  componentDidUpdate(prevProps: ChartProps) {
-    const { data, showChart, redraw } = this.props
+  componentDidUpdate() {
+    const { showChart, redraw } = this.props
     if (redraw) {
       this.chart.destroy()
       this.renderChart()
       return
     }
-    if (!isEqual(prevProps.data, data) && showChart) {
+    if (showChart) {
       if (!this.chart) this.renderChart()
       else this.updateChart()
     }

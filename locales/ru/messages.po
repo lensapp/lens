@@ -80,7 +80,7 @@ msgid "Account Name"
 msgstr "Название аккаунта"
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:51
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:46
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:50
 msgid "Active"
 msgstr "Активный"
 
@@ -174,7 +174,7 @@ msgstr "Аффинитеты"
 #: src/renderer/components/+user-management-roles/roles.tsx:35
 #: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:38
 #: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:38
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:48
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:52
 #: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:50
 #: src/renderer/components/+workloads-deployments/deployments.tsx:63
 #: src/renderer/components/+workloads-jobs/jobs.tsx:41
@@ -676,7 +676,7 @@ msgstr "Создано"
 msgid "Credentials Ref"
 msgstr "Credentials Ref"
 
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:40
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:44
 msgid "Cron Jobs"
 msgstr ""
 
@@ -1155,6 +1155,10 @@ msgstr "Список пуст"
 msgid "JSON Path"
 msgstr ""
 
+#: src/renderer/components/+workloads-cronjobs/cronjob-trigger-dialog.tsx:91
+msgid "Job name"
+msgstr ""
+
 #: src/renderer/components/+workloads/workloads.tsx:69
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:62
 #: src/renderer/components/+workloads-jobs/jobs.tsx:36
@@ -1219,7 +1223,7 @@ msgid "Last Failure Time"
 msgstr "Время последнего сбоя"
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:57
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:47
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:51
 msgid "Last schedule"
 msgstr "Последний запуск"
 
@@ -1449,7 +1453,7 @@ msgstr "Установки"
 #: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:35
 #: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:29
 #: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:36
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:41
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:45
 #: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:45
 #: src/renderer/components/+workloads-deployments/deployments.tsx:58
 #: src/renderer/components/+workloads-jobs/jobs.tsx:37
@@ -1499,7 +1503,7 @@ msgstr ""
 #: src/renderer/components/+user-management-roles-bindings/role-bindings.tsx:37
 #: src/renderer/components/+user-management-service-accounts/create-service-account-dialog.tsx:79
 #: src/renderer/components/+user-management-service-accounts/service-accounts.tsx:37
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:43
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:47
 #: src/renderer/components/+workloads-daemonsets/daemonsets.tsx:46
 #: src/renderer/components/+workloads-deployments/deployments.tsx:59
 #: src/renderer/components/+workloads-jobs/jobs.tsx:38
@@ -2156,7 +2160,7 @@ msgid "Scale Deployment <0>{deploymentName}</0>"
 msgstr "Масштабировать Deployment <0>{deploymentName}</0>"
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:46
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:44
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:48
 msgid "Schedule"
 msgstr "Расписание"
 
@@ -2414,7 +2418,7 @@ msgid "Supplemental Groups"
 msgstr ""
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:54
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:45
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:49
 msgid "Suspend"
 msgstr "Заморозка"
 
@@ -2482,6 +2486,16 @@ msgstr "Толерантности"
 #: src/renderer/components/+workloads-pods/pod-charts.tsx:89
 msgid "Transmit"
 msgstr "Транзит"
+
+#: src/renderer/components/+workloads-cronjobs/cronjob-trigger-dialog.tsx:107
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:79
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:80
+msgid "Trigger"
+msgstr ""
+
+#: src/renderer/components/+workloads-cronjobs/cronjob-trigger-dialog.tsx:103
+msgid "Trigger CronJob <0>{cronjobName}</0>"
+msgstr ""
 
 #: src/renderer/components/+cluster/cluster-issues.tsx:102
 #: src/renderer/components/+config-secrets/secret-details.tsx:74
@@ -2718,7 +2732,7 @@ msgid "listKind"
 msgstr ""
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:48
-#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:57
+#: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:61
 msgid "never"
 msgstr ""
 

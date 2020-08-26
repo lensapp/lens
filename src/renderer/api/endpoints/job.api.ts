@@ -13,7 +13,7 @@ export class Job extends WorkloadKubeObject {
     parallelism?: number;
     completions?: number;
     backoffLimit?: number;
-    selector: {
+    selector?: {
       matchLabels: {
         [name: string]: string;
       };
@@ -21,8 +21,11 @@ export class Job extends WorkloadKubeObject {
     template: {
       metadata: {
         creationTimestamp?: string;
-        labels: {
-          name: string;
+        labels?: {
+          [name: string]: string;
+        };
+        annotations?: {
+          [name: string]: string;
         };
       };
       spec: {
@@ -35,7 +38,7 @@ export class Job extends WorkloadKubeObject {
         nodeSelector?: {
           [selector: string]: string;
         };
-        tolerations: {
+        tolerations?: {
           key: string;
           operator: string;
           effect: string;
