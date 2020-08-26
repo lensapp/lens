@@ -1,7 +1,6 @@
 import { Application } from "spectron"
 import * as util from "../helpers/utils"
 import { spawnSync } from "child_process"
-import logger from "../../src/main/logger"
 
 jest.setTimeout(20000)
 
@@ -27,7 +26,6 @@ describe("app start", () => {
   const waitForMinikubeDashboard = async (app: Application) => {
     await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started")
     let windowCount = await app.client.getWindowCount()
-    logger.info("Window count: "+windowCount)
     await app.client.waitForExist(`iframe[name="minikube"]`)
     await app.client.frame("minikube")
     await app.client.waitUntilTextExists("span.link-text", "Cluster")
