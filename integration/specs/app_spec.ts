@@ -1,6 +1,7 @@
 import { Application } from "spectron"
 import * as util from "../helpers/utils"
 import { spawnSync } from "child_process"
+import logger from "../../src/main/logger"
 
 jest.setTimeout(20000)
 
@@ -26,11 +27,9 @@ describe("app start", () => {
   const waitForMinikubeDashboard = async (app: Application) => {
     await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started")
     let windowCount = await app.client.getWindowCount()
-    // wait for webview to appear on window count
-    while (windowCount == 1) {
-      windowCount = await app.client.getWindowCount()
-    }
-    await app.client.windowByIndex(windowCount - 1)
+    logger.info("Window count: "+windowCount)
+    await app.client.waitForExist(`iframe[name="minikube"]`)
+    await app.client.frame("minikube")
     await app.client.waitUntilTextExists("span.link-text", "Cluster")
   }
 
@@ -39,10 +38,10 @@ describe("app start", () => {
     await app.start()
     await app.client.waitUntilWindowLoaded()
     let windowCount = await app.client.getWindowCount()
-    while (windowCount > 1) {
+    while (windowCount > 1) { // Wait for splash screen to be closed
       windowCount = await app.client.getWindowCount()
     }
-    await app.client.windowByIndex(windowCount - 1)
+    await app.client.windowByIndex(0)
     await app.client.waitUntilWindowLoaded()
   }, 20000)
 
@@ -72,6 +71,7 @@ describe("app start", () => {
     await clickWhatsNew(app)
     await addMinikubeCluster(app)
     await waitForMinikubeDashboard(app)
+    await app.client.click('a[href="/nodes"]')
     await app.client.click(".sidebar-nav #workloads span.link-text")
     await app.client.waitUntilTextExists('a[href="/pods"]', "Pods")
     await app.client.click('a[href="/pods"]')

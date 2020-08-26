@@ -21,10 +21,10 @@ export async function initView(clusterId: ClusterId) {
   }
   logger.info(`[LENS-VIEW]: init dashboard, clusterId=${clusterId}`)
   const cluster = clusterStore.getById(clusterId);
-  await cluster.whenInitialized;
+  await cluster.whenReady;
   const parentElem = document.getElementById("lens-views");
   const iframe = document.createElement("iframe");
-  iframe.name = cluster.preferences.clusterName;
+  iframe.name = cluster.contextName;
   iframe.setAttribute("src", `//${clusterId}.${location.host}`)
   iframe.addEventListener("load", async () => {
     logger.info(`[LENS-VIEW]: loaded from ${iframe.src}`)

@@ -27,6 +27,7 @@ export interface ClusterState extends ClusterModel {
   online: boolean;
   disconnected: boolean;
   accessible: boolean;
+  ready: boolean;
   failureReason: string;
   nodes: number;
   eventCount: number;
@@ -47,6 +48,7 @@ export class Cluster implements ClusterModel {
   protected eventDisposers: Function[] = [];
 
   whenInitialized = when(() => this.initialized);
+  whenReady = when(() => this.ready);
 
   @observable initialized = false;
   @observable contextName: string;
@@ -56,6 +58,7 @@ export class Cluster implements ClusterModel {
   @observable kubeProxyUrl: string; // lens-proxy to kube-api url
   @observable online: boolean;
   @observable accessible: boolean;
+  @observable ready: boolean;
   @observable disconnected: boolean;
   @observable failureReason: string;
   @observable nodes = 0;
@@ -149,6 +152,7 @@ export class Cluster implements ClusterModel {
     this.disconnected = true;
     this.online = false;
     this.accessible = false;
+    this.ready = false;
     this.pushState();
   }
 
@@ -172,6 +176,7 @@ export class Cluster implements ClusterModel {
         this.refreshEvents(),
         this.refreshAllowedResources(),
       ]);
+      this.ready = true
     }
   }
 
@@ -370,6 +375,7 @@ export class Cluster implements ClusterModel {
       initialized: this.initialized,
       apiUrl: this.apiUrl,
       online: this.online,
+      ready: this.ready,
       disconnected: this.disconnected,
       accessible: this.accessible,
       failureReason: this.failureReason,
