@@ -11,7 +11,7 @@ export class BottomBar extends React.Component {
     const { currentWorkspace } = workspaceStore;
     return (
       <div className="BottomBar flex gaps">
-        <div id="current-workspace" className="flex gaps align-center box right">
+        <div id="current-workspace" className="flex gaps align-center box">
           <Icon small material="layers"/>
           <span className="workspace-name">{currentWorkspace.name}</span>
         </div>
