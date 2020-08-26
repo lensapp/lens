@@ -80,10 +80,6 @@ describe("empty config", () => {
     expect(wsClusters[1].id).toBe("dev");
   })
 
-  it("checks if last added cluster becomes active", () => {
-    expect(clusterStore.activeCluster.id).toBe("dev");
-  })
-
   it("sets active cluster", () => {
     clusterStore.setActive("foo");
     expect(clusterStore.activeCluster.id).toBe("foo");
