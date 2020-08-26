@@ -97,7 +97,7 @@ export class ClustersMenu extends React.Component<Props> {
     const showStartupHint = this.showHint && isLanding && noClustersInScope;
     return (
       <div
-        className={cssNames("ClustersMenu flex column gaps", className)}
+        className={cssNames("ClustersMenu flex column", className)}
         onMouseEnter={() => this.showHint = false}
       >
         {showStartupHint && (
