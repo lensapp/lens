@@ -69,7 +69,6 @@ describe("app start", () => {
     await clickWhatsNew(app)
     await addMinikubeCluster(app)
     await waitForMinikubeDashboard(app)
-    await app.client.click('a[href="/nodes"]')
     await app.client.click(".sidebar-nav #workloads span.link-text")
     await app.client.waitUntilTextExists('a[href="/pods"]', "Pods")
     await app.client.click('a[href="/pods"]')
