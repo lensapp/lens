@@ -53,6 +53,7 @@ export class PodLogsDialog extends React.Component<Props> {
   @observable logsReady = false;
   @observable selectedContainer: IPodContainer;
   @observable showTimestamps = true;
+  @observable showPrevious = false;
   @observable tailLines = 1000;
 
   lineOptions = [
@@ -67,6 +68,7 @@ export class PodLogsDialog extends React.Component<Props> {
     this.containers = pod.getContainers();
     this.initContainers = pod.getInitContainers();
     this.selectedContainer = container || this.containers[0];
+    this.showPrevious = false;
     await this.load();
     this.refresher.start();
   }
@@ -98,6 +100,7 @@ export class PodLogsDialog extends React.Component<Props> {
         timestamps: true,
         tailLines: this.tailLines ? this.tailLines : undefined,
         sinceTime: lastLogDate.toISOString(),
+        previous: this.showPrevious,
       });
       if (!this.logs) {
         this.logs = logs;
@@ -179,6 +182,11 @@ export class PodLogsDialog extends React.Component<Props> {
     this.showTimestamps = !this.showTimestamps;
   }
 
+  togglePrevious = () => {
+    this.showPrevious = !this.showPrevious;
+    this.reload();
+  }
+
   downloadLogs = () => {
     const { logs, newLogs } = this.getLogs();
     const fileName = this.selectedContainer.name + ".log";
@@ -204,7 +212,7 @@ export class PodLogsDialog extends React.Component<Props> {
   }
 
   renderControlsPanel() {
-    const { logsReady, showTimestamps } = this;
+    const { logsReady, showTimestamps, showPrevious } = this;
     if (!logsReady) return;
     const timestamps = this.getTimestamps(this.logs + this.newLogs);
     let from = "";
@@ -224,6 +232,12 @@ export class PodLogsDialog extends React.Component<Props> {
             onClick={this.toggleTimestamps}
             className={cssNames("timestamps-icon", { active: showTimestamps })}
             tooltip={(showTimestamps ? _i18n._(t`Hide`) : _i18n._(t`Show`)) + " " + _i18n._(t`timestamps`)}
+          />
+          <Icon
+            material="undo"
+            onClick={this.togglePrevious}
+            className={cssNames("undo-icon", { active: showPrevious })}
+            tooltip={(showPrevious ? _i18n._(t`Show current`) : _i18n._(t`Show previous`)) + " " + _i18n._(t`logs`)}
           />
           <Icon
             material="get_app"

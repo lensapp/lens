@@ -84,7 +84,7 @@ msgid "Active"
 msgstr "Active"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:171
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:116
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:118
 msgid "Add Cluster"
 msgstr "Add Cluster"
 
@@ -195,7 +195,7 @@ msgstr "All clusters within workspace will be cleared as well"
 msgid "All groups"
 msgstr "All groups"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:57
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:58
 msgid "All logs"
 msgstr "All logs"
 
@@ -449,9 +449,9 @@ msgstr "Claim"
 msgid "Claim Name"
 msgstr "Claim Name"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:243
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:251
 #: src/renderer/components/dialog/logs-dialog.tsx:39
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:94
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:93
 msgid "Close"
 msgstr "Close"
 
@@ -522,7 +522,7 @@ msgstr "Conditions"
 msgid "Config Maps"
 msgstr "Config Maps"
 
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:55
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:54
 msgid "Config copied to clipboard"
 msgstr "Config copied to clipboard"
 
@@ -542,7 +542,7 @@ msgstr "Configuration"
 msgid "Connection"
 msgstr "Connection"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:246
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:254
 msgid "Container"
 msgstr "Container"
 
@@ -571,7 +571,7 @@ msgid "Container runtime"
 msgstr "Container runtime"
 
 #: src/renderer/components/+workloads-pods/pod-details.tsx:122
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:186
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:193
 #: src/renderer/components/+workloads-pods/pods.tsx:77
 msgid "Containers"
 msgstr "Containers"
@@ -594,7 +594,7 @@ msgid "Conversion"
 msgstr "Conversion"
 
 #: src/renderer/components/dialog/logs-dialog.tsx:36
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:88
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:87
 msgid "Copy to clipboard"
 msgstr "Copy to clipboard"
 
@@ -811,7 +811,7 @@ msgstr "Domains"
 msgid "Download Mirror"
 msgstr "Download Mirror"
 
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:91
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:90
 msgid "Download file"
 msgstr "Download file"
 
@@ -915,7 +915,7 @@ msgstr "External IP"
 msgid "External IPs"
 msgstr "External IPs"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:106
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:109
 msgid "Failed to load logs: {0}"
 msgstr "Failed to load logs: {0}"
 
@@ -956,7 +956,7 @@ msgstr "Forbidden Sysctls"
 msgid "From"
 msgstr "From"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:212
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:219
 msgid "From <0>{from}</0> to <1>{to}</1>"
 msgstr "From <0>{from}</0> to <1>{to}</1>"
 
@@ -1019,7 +1019,7 @@ msgid "Helm branch <0>{0}</0> already in use"
 msgstr "Helm branch <0>{0}</0> already in use"
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:222
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Hide"
 msgstr "Hide"
@@ -1104,7 +1104,7 @@ msgid "Ingresses"
 msgstr "Ingresses"
 
 #: src/renderer/components/+workloads-pods/pod-details.tsx:118
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:192
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:199
 msgid "Init Containers"
 msgstr "Init Containers"
 
@@ -1201,7 +1201,7 @@ msgstr "Kind"
 msgid "Kubeconfig"
 msgstr "Kubeconfig"
 
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:85
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:84
 msgid "Kubeconfig File"
 msgstr "Kubeconfig File"
 
@@ -1262,7 +1262,7 @@ msgstr "Limited to {0}"
 msgid "Limits"
 msgstr "Limits"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:248
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:256
 msgid "Lines"
 msgstr "Lines"
 
@@ -1548,7 +1548,7 @@ msgstr "Network File System"
 msgid "Network Policies"
 msgstr "Network Policies"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:231
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:239
 msgid "New logs since opening the dialog"
 msgstr "New logs since opening the dialog"
 
@@ -1868,7 +1868,7 @@ msgstr "Readiness"
 msgid "Reason"
 msgstr "Reason"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:107
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:110
 msgid "Reason: {0} ({1})"
 msgstr "Reason: {0} ({1})"
 
@@ -2142,7 +2142,7 @@ msgstr "Runtime Class"
 #: src/renderer/components/+apps-releases/release-details.tsx:114
 #: src/renderer/components/+config-maps/config-map-details.tsx:78
 #: src/renderer/components/+config-secrets/secret-details.tsx:97
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:216
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:224
 #: src/renderer/components/+workspaces/workspaces.tsx:120
 #: src/renderer/components/dock/edit-resource.tsx:88
 msgid "Save"
@@ -2291,7 +2291,7 @@ msgstr "Shell"
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
 #: src/renderer/components/+workloads-pods/pod-container-env.tsx:100
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:222
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Show"
 msgstr "Show"
@@ -2299,6 +2299,14 @@ msgstr "Show"
 #: src/renderer/components/dock/install-chart.tsx:111
 msgid "Show Notes"
 msgstr "Show Notes"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:223
+msgid "Show current"
+msgstr "Show current"
+
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:223
+msgid "Show previous"
+msgstr "Show previous"
 
 #: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:20
 msgid "Show value"
@@ -2446,7 +2454,7 @@ msgstr "Terminal"
 msgid "Terminal session"
 msgstr "Terminal session"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:226
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:234
 msgid "There are no logs available for container."
 msgstr "There are no logs available for container."
 
@@ -2486,13 +2494,13 @@ msgstr "Tolerations"
 msgid "Transmit"
 msgstr "Transmit"
 
-#: src/renderer/components/+workloads-cronjobs/cronjob-trigger-dialog.tsx:107
+#: src/renderer/components/+workloads-cronjobs/cronjob-trigger-dialog.tsx:106
 #: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:79
 #: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:80
 msgid "Trigger"
 msgstr "Trigger"
 
-#: src/renderer/components/+workloads-cronjobs/cronjob-trigger-dialog.tsx:103
+#: src/renderer/components/+workloads-cronjobs/cronjob-trigger-dialog.tsx:102
 msgid "Trigger CronJob <0>{cronjobName}</0>"
 msgstr "Trigger CronJob <0>{cronjobName}</0>"
 
@@ -2730,12 +2738,16 @@ msgstr "kind"
 msgid "listKind"
 msgstr "listKind"
 
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:223
+msgid "logs"
+msgstr "logs"
+
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:48
 #: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:61
 msgid "never"
 msgstr "never"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:119
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:121
 msgid "new"
 msgstr "new"
 
@@ -2755,7 +2767,7 @@ msgstr "sec"
 msgid "singular"
 msgstr "singular"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:222
 msgid "timestamps"
 msgstr "timestamps"
 
@@ -2787,7 +2799,7 @@ msgstr "{0} total, {1} available"
 msgid "{0} unavailable"
 msgstr "{0} unavailable"
 
-#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:129
+#: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:128
 msgid "{accountName} kubeconfig"
 msgstr "{accountName} kubeconfig"
 
@@ -2799,7 +2811,7 @@ msgstr "{allItemsCount, plural, one {# item} other {# items}}"
 msgid "{metricsRemainCount} more..."
 msgstr "{metricsRemainCount} more..."
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:240
+#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:248
 msgid "{podName} Logs"
 msgstr "{podName} Logs"
 
