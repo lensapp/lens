@@ -87,8 +87,8 @@ msgstr "Account Name"
 msgid "Active"
 msgstr "Active"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:248
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:116
+#: src/renderer/components/+add-cluster/add-cluster.tsx:303
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:118
 msgid "Add Cluster"
 msgstr "Add Cluster"
 
@@ -112,7 +112,7 @@ msgstr "Add bindings to {name}"
 #~ msgid "Add cluster"
 #~ msgstr "Add cluster"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:266
+#: src/renderer/components/+add-cluster/add-cluster.tsx:320
 msgid "Add cluster(s)"
 msgstr "Add cluster(s)"
 
@@ -131,6 +131,10 @@ msgstr "Add field"
 #: src/renderer/components/+preferences/preferences.tsx:144
 #~ msgid "Added repos:"
 #~ msgstr "Added repos:"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:244
+#~ msgid "Adding clusters: <0>{0}</0>"
+#~ msgstr "Adding clusters: <0>{0}</0>"
 
 #: src/renderer/components/+preferences/preferences.tsx:103
 msgid "Adding helm branch <0>{0}</0> has failed: {1}"
@@ -289,7 +293,7 @@ msgstr "Are you sure you want to drain <0>{nodeName}</0>?"
 msgid "Arguments"
 msgstr "Arguments"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:106
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:108
 msgid "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
 msgstr "Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button."
 
@@ -319,7 +323,7 @@ msgstr "Binding targets"
 msgid "Bindings"
 msgstr "Bindings"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:227
+#: src/renderer/components/+add-cluster/add-cluster.tsx:251
 msgid "Browse"
 msgstr "Browse"
 
@@ -599,6 +603,14 @@ msgstr "Containers"
 #: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:184
 msgid "Context"
 msgstr "Context"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:244
+#~ msgid "Contexts: <0>{0}</0>"
+#~ msgstr "Contexts: <0>{0}</0>"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:249
+#~ msgid "Contexts: {0}"
+#~ msgstr "Contexts: {0}"
 
 #: src/renderer/components/+workloads-pods/pods.tsx:79
 #: src/renderer/components/kube-object/kube-object-meta.tsx:39
@@ -902,6 +914,10 @@ msgstr "Environment"
 #: src/renderer/components/error-boundary/error-boundary.tsx:49
 msgid "Error stack"
 msgstr "Error stack"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:129
+msgid "Error while adding cluster(s): {0}"
+msgstr "Error while adding cluster(s): {0}"
 
 #: src/renderer/components/+events/events.tsx:56
 #: src/renderer/components/+events/kube-event-details.tsx:34
@@ -1730,7 +1746,7 @@ msgstr "Parallelism"
 msgid "Parameters"
 msgstr "Parameters"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:222
+#: src/renderer/components/+add-cluster/add-cluster.tsx:245
 msgid "Paste as text"
 msgstr "Paste as text"
 
@@ -1754,9 +1770,17 @@ msgstr "Persistent Volume Claims"
 msgid "Persistent Volumes"
 msgstr "Persistent Volumes"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:95
+msgid "Please select at least one cluster context"
+msgstr "Please select at least one cluster context"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:146
+#~ msgid "Please select at least one context to add a cluster"
+#~ msgstr "Please select at least one context to add a cluster"
+
 #: src/renderer/components/+add-cluster/add-cluster.tsx:106
-msgid "Please select kube-config's context"
-msgstr "Please select kube-config's context"
+#~ msgid "Please select kube-config's context"
+#~ msgstr "Please select kube-config's context"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:63
 #~ msgid "Please select kubeconfig"
@@ -1765,6 +1789,10 @@ msgstr "Please select kube-config's context"
 #: src/renderer/components/+add-cluster/add-cluster.tsx:64
 #~ msgid "Please select kubeconfig context"
 #~ msgstr "Please select kubeconfig context"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:106
+#~ msgid "Please select kubeconfig's context"
+#~ msgstr "Please select kubeconfig's context"
 
 #: src/renderer/components/+workloads-pods/pod-menu.tsx:50
 msgid "Pod"
@@ -1851,13 +1879,33 @@ msgstr "Private Key Secret"
 msgid "Privileged"
 msgstr "Privileged"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:264
+#~ msgid "Pro-Tip: paste kubeconfig (text/yaml) to get available contexts"
+#~ msgstr "Pro-Tip: paste kubeconfig (text/yaml) to get available contexts"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:264
+#~ msgid "Pro-Tip: paste kubeconfig to collect available contexts"
+#~ msgstr "Pro-Tip: paste kubeconfig to collect available contexts"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:263
+msgid "Pro-Tip: paste kubeconfig to get available contexts"
+msgstr "Pro-Tip: paste kubeconfig to get available contexts"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:264
+#~ msgid "Pro-Tip: paste kubeconfig to parse available contexts"
+#~ msgstr "Pro-Tip: paste kubeconfig to parse available contexts"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:254
+msgid "Pro-Tip: you can also drag-n-drop kubeconfig file to this area"
+msgstr "Pro-Tip: you can also drag-n-drop kubeconfig file to this area"
+
 #: src/renderer/components/+add-cluster/add-cluster.tsx:225
 #~ msgid "Pro-tip: you can also drag-n-drop kube-config file in the left-side area"
 #~ msgstr "Pro-tip: you can also drag-n-drop kube-config file in the left-side area"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:229
-msgid "Pro-tip: you can also drag-n-drop kube-config file to this area"
-msgstr "Pro-tip: you can also drag-n-drop kube-config file to this area"
+#~ msgid "Pro-tip: you can also drag-n-drop kube-config file to this area"
+#~ msgstr "Pro-tip: you can also drag-n-drop kube-config file to this area"
 
 #: src/renderer/components/+storage-classes/storage-class-details.tsx:28
 #: src/renderer/components/+storage-classes/storage-classes.tsx:35
@@ -1868,7 +1916,7 @@ msgstr "Provisioner"
 msgid "Proxy is used only for non-cluster communication."
 msgstr "Proxy is used only for non-cluster communication."
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:254
+#: src/renderer/components/+add-cluster/add-cluster.tsx:308
 msgid "Proxy settings"
 msgstr "Proxy settings"
 
@@ -2049,7 +2097,7 @@ msgstr "Required Drop Capabilities"
 msgid "Required field"
 msgstr "Required field"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:226
+#: src/renderer/components/+add-cluster/add-cluster.tsx:250
 #: src/renderer/components/item-object-list/page-filters-list.tsx:31
 msgid "Reset"
 msgstr "Reset"
@@ -2059,8 +2107,8 @@ msgid "Reset filters?"
 msgstr "Reset filters?"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:65
-msgid "Resetting config to {0}"
-msgstr "Resetting config to {0}"
+#~ msgid "Resetting config to {0}"
+#~ msgstr "Resetting config to {0}"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:68
 #~ msgid "Resetting kube-config to current {0}"
@@ -2265,9 +2313,9 @@ msgstr "Secret type"
 msgid "Secrets"
 msgstr "Secrets"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:251
-msgid "Select a context"
-msgstr "Select a context"
+#: src/renderer/components/+add-cluster/add-cluster.tsx:253
+#~ msgid "Select a context"
+#~ msgstr "Select a context"
 
 #: src/renderer/components/+config-resource-quotas/add-quota-dialog.tsx:134
 msgid "Select a quota.."
@@ -2277,22 +2325,39 @@ msgstr "Select a quota.."
 #~ msgid "Select context"
 #~ msgstr "Select context"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:245
+#~ msgid "Select context(s)"
+#~ msgstr "Select context(s)"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:272
+msgid "Select contexts"
+msgstr "Select contexts"
+
 #: src/renderer/components/+add-cluster/add-cluster.tsx:76
 #: src/renderer/components/+add-cluster/add-cluster.tsx:76
-msgid "Select custom kube-config file"
-msgstr "Select custom kube-config file"
+#~ msgid "Select custom kube-config file"
+#~ msgstr "Select custom kube-config file"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:85
+#: src/renderer/components/+add-cluster/add-cluster.tsx:85
+msgid "Select custom kubeconfig file"
+msgstr "Select custom kubeconfig file"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:212
 #~ msgid "Select file"
 #~ msgstr "Select file"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:221
-msgid "Select kube-config file"
-msgstr "Select kube-config file"
+#~ msgid "Select kube-config file"
+#~ msgstr "Select kube-config file"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:173
 #~ msgid "Select kubeconfig"
 #~ msgstr "Select kubeconfig"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:244
+msgid "Select kubeconfig file"
+msgstr "Select kubeconfig file"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:224
 #~ msgid "Select or drop file"
@@ -2309,6 +2374,22 @@ msgstr "Select role.."
 #: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:195
 msgid "Select service accounts"
 msgstr "Select service accounts"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:244
+#~ msgid "Selected clusters: <0>{0}</0>"
+#~ msgstr "Selected clusters: <0>{0}</0>"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:244
+#~ msgid "Selected contexts ({0}): <0>{1}</0>"
+#~ msgstr "Selected contexts ({0}): <0>{1}</0>"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:271
+msgid "Selected contexts: <0>{0}</0>"
+msgstr "Selected contexts: <0>{0}</0>"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:246
+#~ msgid "Selected contexts: {0}"
+#~ msgstr "Selected contexts: {0}"
 
 #: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets-details.tsx:27
 #: src/renderer/components/+network-services/service-details.tsx:37
@@ -2486,6 +2567,10 @@ msgstr "Submitting.."
 msgid "Subsets"
 msgstr "Subsets"
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:122
+msgid "Successfully imported <0>{0}</0> cluster(s)"
+msgstr "Successfully imported <0>{0}</0> cluster(s)"
+
 #: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:128
 msgid "Supplemental Groups"
 msgstr "Supplemental Groups"
@@ -2532,7 +2617,7 @@ msgstr "There are no logs available."
 msgid "This field is required"
 msgstr "This field is required"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:104
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:106
 msgid "This is the quick launch menu."
 msgstr "This is the quick launch menu."
 
@@ -2636,8 +2721,8 @@ msgstr "Upgrade version"
 msgid "Usage"
 msgstr "Usage"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:77
-#: src/renderer/components/+add-cluster/add-cluster.tsx:77
+#: src/renderer/components/+add-cluster/add-cluster.tsx:86
+#: src/renderer/components/+add-cluster/add-cluster.tsx:86
 msgid "Use configuration"
 msgstr "Use configuration"
 
@@ -2804,7 +2889,7 @@ msgstr "listKind"
 msgid "never"
 msgstr "never"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:119
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:121
 msgid "new"
 msgstr "new"
 

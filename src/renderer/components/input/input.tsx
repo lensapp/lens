@@ -258,7 +258,7 @@ export class Input extends React.Component<InputProps, State> {
   render() {
     const {
       multiLine, showValidationLine, validators, theme, maxRows, children,
-      maxLength, rows, disabled, autoSelectOnFocus,
+      maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight,
       ...inputProps
     } = this.props;
     const { focused, dirty, valid, validating, errors } = this.state;
@@ -272,11 +272,6 @@ export class Input extends React.Component<InputProps, State> {
       validating: validating,
       validatingLine: validating && showValidationLine,
     });
-
-    // normalize icons
-    let { iconLeft, iconRight } = this.props;
-    if (isString(iconLeft)) iconLeft = <Icon material={iconLeft}/>
-    if (isString(iconRight)) iconRight = <Icon material={iconRight}/>
 
     // prepare input props
     Object.assign(inputProps, {
@@ -294,9 +289,9 @@ export class Input extends React.Component<InputProps, State> {
     return (
       <div className={className}>
         <label className="input-area flex gaps align-center">
-          {iconLeft}
+          {isString(iconLeft) ? <Icon material={iconLeft}/> : iconLeft}
           {multiLine ? <textarea {...inputProps as any}/> : <input {...inputProps as any}/>}
-          {iconRight}
+          {isString(iconRight) ? <Icon material={iconRight}/> : iconRight}
         </label>
         <div className="input-info flex gaps">
           {!valid && dirty && (

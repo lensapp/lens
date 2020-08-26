@@ -76,8 +76,10 @@ export class ClustersMenu extends React.Component<Props> {
             label: _i18n._(t`Remove`),
           },
           ok: () => {
+            if (clusterStore.activeClusterId === cluster.id) {
+              navigate(landingURL());
+            }
             clusterStore.removeById(cluster.id);
-            navigate(landingURL());
           },
           message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
         })

@@ -24,8 +24,12 @@
   &:not(.isOpen) {
     height: auto !important;
 
-    .Tab:not(:focus):after {
-      display: none;
+    .Tab {
+      --color-active: inherit;
+
+      &:not(:focus):after {
+        display: none;
+      }
     }
   }
 

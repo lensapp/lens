@@ -87,6 +87,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.activeClusterId === id;
   }
 
+  @action
   setActive(id: ClusterId) {
     this.activeClusterId = id;
   }
@@ -108,12 +109,16 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  async addCluster(model: ClusterModel, activate = true): Promise<Cluster> {
+  addCluster(model: ClusterModel): Cluster {
     tracker.event("cluster", "add");
     const cluster = new Cluster(model);
     this.clusters.set(model.id, cluster);
-    if (activate) this.activeClusterId = model.id;
     return cluster;
+  }
+
+  @action
+  addClusters(models: ClusterModel[]) {
+    models.forEach(model => this.addCluster(model));
   }
 
   @action
