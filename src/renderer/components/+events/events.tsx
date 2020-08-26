@@ -102,7 +102,7 @@ export class Events extends React.Component<Props> {
             },
             event.getNs(),
             kind,
-            detailsUrl ? <Link to={detailsUrl} title={name} onClick={stopPropagation}>{name}</Link> : name,
+            <Link to={detailsUrl} title={name} onClick={stopPropagation}>{name}</Link>,
             event.getSource(),
             event.count,
             event.getAge(),
