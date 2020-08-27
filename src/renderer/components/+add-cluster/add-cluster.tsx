@@ -71,7 +71,7 @@ export class AddCluster extends React.Component {
   }
 
   @action
-  refreshContexts(autoSelect = true) {
+  refreshContexts() {
     this.selectedContexts.clear();
     this.kubeContexts.clear();
 
@@ -90,12 +90,6 @@ export class AddCluster extends React.Component {
         this.error = String(err);
       }
       break;
-    }
-    if (autoSelect) {
-      const allContexts = Array.from(this.kubeContexts.keys());
-      if (allContexts.length <= 10) {
-        this.selectedContexts.replace(allContexts);
-      }
     }
   }
 

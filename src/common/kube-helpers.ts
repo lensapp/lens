@@ -1,6 +1,5 @@
-import { app, remote } from "electron";
 import { KubeConfig, V1Node, V1Pod } from "@kubernetes/client-node"
-import fse, { ensureDirSync, writeFileSync } from "fs-extra";
+import fse from "fs-extra";
 import path from "path"
 import os from "os"
 import yaml from "js-yaml"
