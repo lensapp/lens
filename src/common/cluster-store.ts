@@ -8,6 +8,9 @@ import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store"
 import logger from "../main/logger";
 import { tracker } from "./tracker";
+import { dumpConfigYaml } from "./kube-helpers";
+import { saveToAppFiles } from "./utils/saveToAppFiles";
+import { KubeConfig } from "@kubernetes/client-node";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -50,9 +53,19 @@ export interface ClusterPreferences {
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
-  static get iconsDir() {
-    // TODO: remove remote cheat
-    return path.join((app || remote.app).getPath("userData"), "icons");
+  static get iconsDir(): string {
+    return path.resolve((app || remote.app).getPath("userData"), "icons");
+  }
+
+  static getCustomKubeConfigPath(clusterId: ClusterId): string {
+    return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs", clusterId);
+  }
+
+  static embedCustomKubeConfig(clusterId: ClusterId, kubeConfig: KubeConfig | string): string {
+    const filePath = ClusterStore.getCustomKubeConfigPath(clusterId);
+    const fileContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
+    saveToAppFiles(filePath, fileContents);
+    return filePath;
   }
 
   private constructor() {
@@ -109,16 +122,12 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  addCluster(model: ClusterModel): Cluster {
-    tracker.event("cluster", "add");
-    const cluster = new Cluster(model);
-    this.clusters.set(model.id, cluster);
-    return cluster;
-  }
-
-  @action
-  addClusters(models: ClusterModel[]) {
-    models.forEach(model => this.addCluster(model));
+  addCluster(...models: ClusterModel[]) {
+    models.forEach(model => {
+      tracker.event("cluster", "add");
+      const cluster = new Cluster(model);
+      this.clusters.set(model.id, cluster);
+    })
   }
 
   @action
@@ -130,7 +139,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       if (this.activeClusterId === clusterId) {
         this.activeClusterId = null;
       }
-      unlink(cluster.kubeConfigPath).catch(() => null);
+      // remove only custom kubeconfigs (pasted as text)
+      if (cluster.kubeConfigPath == ClusterStore.getCustomKubeConfigPath(clusterId)) {
+        unlink(cluster.kubeConfigPath).catch(() => null);
+      }
     }
   }
 

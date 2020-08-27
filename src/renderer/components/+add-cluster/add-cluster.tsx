@@ -13,8 +13,8 @@ import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { WizardLayout } from "../layout/wizard-layout";
-import { kubeConfigDefaultPath, loadConfig, saveConfigToAppFiles, splitConfig, validateConfig } from "../../../common/kube-helpers";
-import { ClusterModel, clusterStore } from "../../../common/cluster-store";
+import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig } from "../../../common/kube-helpers";
+import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid"
 import { navigate } from "../../navigation";
@@ -53,7 +53,7 @@ export class AddCluster extends React.Component {
   }
 
   @action
-  protected setKubeConfig(filePath: string, { throwError = false } = {}) {
+  setKubeConfig(filePath: string, { throwError = false } = {}) {
     try {
       this.kubeConfigLocal = loadConfig(filePath);
       validateConfig(this.kubeConfigLocal);
@@ -70,7 +70,8 @@ export class AddCluster extends React.Component {
     }
   }
 
-  refreshContexts = (autoSelect = true) => {
+  @action
+  refreshContexts() {
     this.selectedContexts.clear();
     this.kubeContexts.clear();
 
@@ -90,13 +91,9 @@ export class AddCluster extends React.Component {
       }
       break;
     }
-    if (autoSelect) {
-      const allContexts = Array.from(this.kubeContexts.keys());
-      this.selectedContexts.replace(allContexts);
-    }
   }
 
-  protected getContexts(config: KubeConfig): Map<string, KubeConfig> {
+  getContexts(config: KubeConfig): Map<string, KubeConfig> {
     const contexts = new Map();
     splitConfig(config).forEach(config => {
       const isExists = clusterStore.hasContext(config.currentContext);
@@ -131,9 +128,12 @@ export class AddCluster extends React.Component {
       const newClusters: ClusterModel[] = this.selectedContexts.map(context => {
         const clusterId = uuid();
         const kubeConfig = this.kubeContexts.get(context);
+        const kubeConfigPath = this.sourceTab === KubeConfigSourceTab.FILE
+          ? this.kubeConfigPath // save link to original kubeconfig in file-system
+          : ClusterStore.embedCustomKubeConfig(clusterId, kubeConfig); // save in app-files folder
         return {
           id: clusterId,
-          kubeConfigPath: saveConfigToAppFiles(clusterId, kubeConfig),
+          kubeConfigPath: kubeConfigPath,
           workspace: workspaceStore.currentWorkspaceId,
           contextName: kubeConfig.currentContext,
           preferences: {
@@ -143,7 +143,7 @@ export class AddCluster extends React.Component {
         }
       });
       runInAction(() => {
-        clusterStore.addClusters(newClusters);
+        clusterStore.addCluster(...newClusters);
         if (newClusters.length === 1) {
           const clusterId = newClusters[0].id;
           clusterStore.setActive(clusterId);
@@ -292,6 +292,7 @@ export class AddCluster extends React.Component {
           isOptionSelected={() => false}
           options={allContexts}
           formatOptionLabel={this.formatContextLabel}
+          noOptionsMessage={() => _i18n._(t`No contexts available or they have been added already`)}
           onChange={({ value: ctx }: SelectOption<string>) => {
             if (this.selectedContexts.includes(ctx)) {
               this.selectedContexts.remove(ctx)

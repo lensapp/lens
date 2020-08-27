@@ -915,7 +915,7 @@ msgstr "Environment"
 msgid "Error stack"
 msgstr "Error stack"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:129
+#: src/renderer/components/+add-cluster/add-cluster.tsx:109
 msgid "Error while adding cluster(s): {0}"
 msgstr "Error while adding cluster(s): {0}"
 
@@ -1618,6 +1618,14 @@ msgstr "No"
 msgid "No Nodes Available."
 msgstr "No Nodes Available."
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:275
+#~ msgid "No contexts available or they already added"
+#~ msgstr "No contexts available or they already added"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:275
+msgid "No contexts available or they have been added already"
+msgstr "No contexts available or they have been added already"
+
 #: src/renderer/components/item-object-list/page-filters-select.tsx:84
 msgid "No filters available."
 msgstr "No filters available."
@@ -1770,7 +1778,7 @@ msgstr "Persistent Volume Claims"
 msgid "Persistent Volumes"
 msgstr "Persistent Volumes"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:95
+#: src/renderer/components/+add-cluster/add-cluster.tsx:72
 msgid "Please select at least one cluster context"
 msgstr "Please select at least one cluster context"
 
@@ -2330,16 +2338,20 @@ msgstr "Select a quota.."
 #~ msgstr "Select context(s)"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:272
-msgid "Select contexts"
-msgstr "Select contexts"
+#~ msgid "Select contexts"
+#~ msgstr "Select contexts"
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:272
+msgid "Select contexts (available: {0})"
+msgstr "Select contexts (available: {0})"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:76
 #: src/renderer/components/+add-cluster/add-cluster.tsx:76
 #~ msgid "Select custom kube-config file"
 #~ msgstr "Select custom kube-config file"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:85
-#: src/renderer/components/+add-cluster/add-cluster.tsx:85
+#: src/renderer/components/+add-cluster/add-cluster.tsx:62
+#: src/renderer/components/+add-cluster/add-cluster.tsx:62
 msgid "Select custom kubeconfig file"
 msgstr "Select custom kubeconfig file"
 
@@ -2567,7 +2579,7 @@ msgstr "Submitting.."
 msgid "Subsets"
 msgstr "Subsets"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:122
+#: src/renderer/components/+add-cluster/add-cluster.tsx:102
 msgid "Successfully imported <0>{0}</0> cluster(s)"
 msgstr "Successfully imported <0>{0}</0> cluster(s)"
 
@@ -2721,8 +2733,8 @@ msgstr "Upgrade version"
 msgid "Usage"
 msgstr "Usage"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:86
-#: src/renderer/components/+add-cluster/add-cluster.tsx:86
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
 msgid "Use configuration"
 msgstr "Use configuration"
 

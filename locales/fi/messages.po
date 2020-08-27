@@ -911,7 +911,7 @@ msgstr ""
 msgid "Error stack"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:129
+#: src/renderer/components/+add-cluster/add-cluster.tsx:109
 msgid "Error while adding cluster(s): {0}"
 msgstr ""
 
@@ -1601,6 +1601,14 @@ msgstr ""
 msgid "No Nodes Available."
 msgstr ""
 
+#: src/renderer/components/+add-cluster/add-cluster.tsx:275
+#~ msgid "No contexts available or they already added"
+#~ msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:275
+msgid "No contexts available or they have been added already"
+msgstr ""
+
 #: src/renderer/components/item-object-list/page-filters-select.tsx:84
 msgid "No filters available."
 msgstr ""
@@ -1753,7 +1761,7 @@ msgstr ""
 msgid "Persistent Volumes"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:95
+#: src/renderer/components/+add-cluster/add-cluster.tsx:72
 msgid "Please select at least one cluster context"
 msgstr ""
 
@@ -2313,7 +2321,11 @@ msgstr ""
 #~ msgstr ""
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:272
-msgid "Select contexts"
+#~ msgid "Select contexts"
+#~ msgstr ""
+
+#: src/renderer/components/+add-cluster/add-cluster.tsx:272
+msgid "Select contexts (available: {0})"
 msgstr ""
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:76
@@ -2321,8 +2333,8 @@ msgstr ""
 #~ msgid "Select custom kube-config file"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:85
-#: src/renderer/components/+add-cluster/add-cluster.tsx:85
+#: src/renderer/components/+add-cluster/add-cluster.tsx:62
+#: src/renderer/components/+add-cluster/add-cluster.tsx:62
 msgid "Select custom kubeconfig file"
 msgstr ""
 
@@ -2550,7 +2562,7 @@ msgstr ""
 msgid "Subsets"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:122
+#: src/renderer/components/+add-cluster/add-cluster.tsx:102
 msgid "Successfully imported <0>{0}</0> cluster(s)"
 msgstr ""
 
@@ -2704,8 +2716,8 @@ msgstr ""
 msgid "Usage"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:86
-#: src/renderer/components/+add-cluster/add-cluster.tsx:86
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
 msgid "Use configuration"
 msgstr ""
 
