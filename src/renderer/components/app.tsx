@@ -25,6 +25,7 @@ import { KubeObjectDetails } from "./kube-object/kube-object-details";
 import { AddRoleBindingDialog } from "./+user-management-roles-bindings";
 import { PodLogsDialog } from "./+workloads-pods/pod-logs-dialog";
 import { DeploymentScaleDialog } from "./+workloads-deployments/deployment-scale-dialog";
+import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dialog";
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../../common/rbac";
@@ -80,6 +81,7 @@ export class App extends React.Component {
             <AddRoleBindingDialog/>
             <PodLogsDialog/>
             <DeploymentScaleDialog/>
+            <CronJobTriggerDialog/>
           </ErrorBoundary>
         </Router>
       </I18nProvider>

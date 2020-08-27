@@ -99,7 +99,7 @@ export class ClustersMenu extends React.Component<Props> {
     const showStartupHint = this.showHint && isLanding && noClustersInScope; // fixme: broken, move to landing.tsx
     return (
       <div
-        className={cssNames("ClustersMenu flex column gaps", className)}
+        className={cssNames("ClustersMenu flex column", className)}
         onMouseEnter={() => this.showHint = false}
       >
         {showStartupHint && (
@@ -112,18 +112,20 @@ export class ClustersMenu extends React.Component<Props> {
             </p>
           </div>
         )}
-        {clusters.map(cluster => {
-          return (
-            <ClusterIcon
-              key={cluster.id}
-              showErrors={true}
-              cluster={cluster}
-              isActive={cluster.id === getMatchedClusterId()}
-              onClick={() => this.showCluster(cluster.id)}
-              onContextMenu={() => this.showContextMenu(cluster)}
-            />
-          )
-        })}
+        <div className="clusters flex column gaps">
+          {clusters.map(cluster => {
+            return (
+              <ClusterIcon
+                key={cluster.id}
+                showErrors={true}
+                cluster={cluster}
+                isActive={cluster.id === getMatchedClusterId()}
+                onClick={() => this.showCluster(cluster.id)}
+                onContextMenu={() => this.showContextMenu(cluster)}
+              />
+            )
+          })}
+        </div>
         <div className="add-cluster" onClick={this.addCluster}>
           <Tooltip targetId="add-cluster-icon">
             <Trans>Add Cluster</Trans>

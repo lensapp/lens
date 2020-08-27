@@ -26,6 +26,10 @@ $deployment-replicafailure: $colorError;
 $job-complete: $colorSuccess;
 $job-failed: $colorError;
 
+// Cronjob
+$cronjob-scheduled: $colorSuccess;
+$cronjob-suspended: $colorTerminated;
+
 // Pod Statuses
 $pod-status-color-list: (
   running: $pod-status-running-color,
@@ -46,6 +50,12 @@ $pod-status-color-list: (
 $job-condition-color-list: (
   complete: $job-complete,
   failed: $job-failed,
+);
+
+// Cronjob Conditions
+$cronjob-condition-color-list: (
+  scheduled: $cronjob-scheduled,
+  suspended: $cronjob-suspended,
 );
 
 @mixin pod-status-bgs {

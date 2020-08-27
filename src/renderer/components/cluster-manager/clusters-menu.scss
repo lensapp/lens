@@ -1,12 +1,11 @@
 .ClustersMenu {
-  @include hidden-scrollbar;
   $spacing: $padding * 2;
 
   position: relative;
   text-align: center;
-  padding: $spacing;
   background: $clusterMenuBackground;
   border-right: 1px solid $clusterMenuBorderColor;
+  padding-bottom: $spacing;
 
   .is-mac & {
     padding-top: $spacing * 2;
@@ -23,8 +22,7 @@
     padding: $spacing;
     width: 320px;
     background: $bgc;
-    z-index: 100;
-    color: white;
+    color: $textColorAccent;
     filter: drop-shadow(0 0px 2px #ffffff33);
     pointer-events: none;
 
@@ -38,11 +36,24 @@
       border-right: $arrowSize solid $bgc;
       right: 100%;
     }
+
+    .theme-light & {
+      filter: drop-shadow(0 0px 2px #777);
+      background: white;
+
+      &:before {
+        border-right-color: white;
+      }
+    }
+  }
+
+  .clusters {
+    @include hidden-scrollbar;
+    padding: 0 $spacing $spacing;
   }
 
   > .add-cluster {
     position: relative;
-    margin-top: $padding;
     min-width: 43px;
 
     .Icon {

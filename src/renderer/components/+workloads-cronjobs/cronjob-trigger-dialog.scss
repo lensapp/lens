@@ -1,0 +1,18 @@
+.CronJobTriggerDialog {
+  .Wizard {
+    .header {
+      span {
+        color: #a0a0a0;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .WizardStep {
+      .step-content {
+        min-height: 90px;
+        overflow: hidden;
+      }
+    }
+  }
+}

@@ -1,8 +1,24 @@
 .LandingPage {
   height: 100%;
-  background: #282b2f url(../../components/icon/crane.svg) no-repeat;
-  background-position: 0 35%;
-  background-size: 85%;
-  background-clip: content-box;
   text-align: center;
+  z-index: 0;
+
+  &::after {
+    content: "";
+    background: url(../../components/icon/crane.svg) no-repeat;
+    background-position: 0 35%;
+    background-size: 85%;
+    background-clip: content-box;
+    opacity: 1;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+
+    .theme-light & {
+      opacity: 0.2;
+    }
+  }
 }
