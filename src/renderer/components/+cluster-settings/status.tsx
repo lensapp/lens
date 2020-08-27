@@ -36,9 +36,9 @@ export class Status extends React.Component<Props> {
             </TableRow>
           );
         })}
-        <TableRow key="kubeconfig">
+        <TableRow>
           <TableCell>Kubeconfig</TableCell>
-          <TableCell className="value" onClick={this.openKubeconfig}><a>{cluster.kubeConfigPath}</a></TableCell>
+          <TableCell className="link value" onClick={this.openKubeconfig}>{cluster.kubeConfigPath}</TableCell>
         </TableRow>
       </Table>
     );
