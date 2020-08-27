@@ -1,6 +1,6 @@
 import type { WorkspaceId } from "./workspace-store";
 import path from "path";
-import { app, remote, ipcRenderer } from "electron";
+import { app, ipcRenderer, remote } from "electron";
 import { unlink } from "fs-extra";
 import { action, computed, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
@@ -53,10 +53,6 @@ export interface ClusterPreferences {
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
-  static get iconsDir(): string {
-    return path.resolve((app || remote.app).getPath("userData"), "icons");
-  }
-
   static getCustomKubeConfigPath(clusterId: ClusterId): string {
     return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs", clusterId);
   }
