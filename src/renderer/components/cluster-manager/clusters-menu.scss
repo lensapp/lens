@@ -3,9 +3,9 @@
 
   position: relative;
   text-align: center;
-  padding: $spacing;
   background: $clusterMenuBackground;
   border-right: 1px solid $clusterMenuBorderColor;
+  padding-bottom: $spacing;
 
   .is-mac & {
     padding-top: $spacing * 2;
@@ -49,11 +49,11 @@
 
   .clusters {
     @include hidden-scrollbar;
+    padding: 0 $spacing $spacing;
   }
 
   > .add-cluster {
     position: relative;
-    margin-top: $padding;
     min-width: 43px;
 
     .Icon {
