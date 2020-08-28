@@ -5,56 +5,26 @@
   text-align: center;
   background: $clusterMenuBackground;
   border-right: 1px solid $clusterMenuBorderColor;
-  padding-bottom: $spacing;
+  padding: $spacing 0;
+  min-width: 75px;
 
-  .is-mac & {
-    padding-top: $spacing * 2;
-  }
-
-  > .startup-tooltip {
-    $bgc: $mainBackground;
-    $arrowSize: 10px;
-
-    position: absolute;
-    top: 20px;
-    left: 100%;
-    margin: $padding;
-    padding: $spacing;
-    width: 320px;
-    background: $bgc;
-    color: $textColorAccent;
-    filter: drop-shadow(0 0px 2px #ffffff33);
-    pointer-events: none;
-
-    &:before {
-      content: "";
-      position: absolute;
-      width: 0;
-      height: 0;
-      border-top: $arrowSize solid transparent;
-      border-bottom: $arrowSize solid transparent;
-      border-right: $arrowSize solid $bgc;
-      right: 100%;
-    }
-
-    .theme-light & {
-      filter: drop-shadow(0 0px 2px #777);
-      background: white;
-
-      &:before {
-        border-right-color: white;
-      }
-    }
+  .is-mac &:before {
+    content: "";
+    height: 20px; // extra spacing for mac-os "traffic-light" buttons
   }
 
   .clusters {
     @include hidden-scrollbar;
-    padding: 0 $spacing $spacing;
+    padding: 0 $spacing; // extra spacing for cluster-icon's badge
+    margin-bottom: $spacing;
+
+    &:empty {
+      display: none;
+    }
   }
 
   > .add-cluster {
     position: relative;
-    min-width: 43px;
 
     .Icon {
       border-radius: $radius;

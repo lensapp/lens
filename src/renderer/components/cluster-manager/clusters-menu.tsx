@@ -2,7 +2,6 @@ import "./clusters-menu.scss"
 import { remote } from "electron"
 import React from "react";
 import { observer } from "mobx-react";
-import { observable } from "mobx";
 import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
 import type { Cluster } from "../../../main/cluster";
@@ -13,7 +12,7 @@ import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
-import { navigate, navigation } from "../../navigation";
+import { navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
@@ -30,8 +29,6 @@ interface Props {
 
 @observer
 export class ClustersMenu extends React.Component<Props> {
-  @observable showHint = true;
-
   showCluster = (clusterId: ClusterId) => {
     clusterStore.setActive(clusterId);
     navigate(clusterViewURL({ params: { clusterId } }));
@@ -94,24 +91,8 @@ export class ClustersMenu extends React.Component<Props> {
     const { className } = this.props;
     const { newContexts } = userStore;
     const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
-    const noClustersInScope = clusters.length === 0;
-    const isLanding = navigation.getPath() === landingURL();
-    const showStartupHint = this.showHint && isLanding && noClustersInScope; // fixme: broken, move to landing.tsx
     return (
-      <div
-        className={cssNames("ClustersMenu flex column", className)}
-        onMouseEnter={() => this.showHint = false}
-      >
-        {showStartupHint && (
-          <div className="startup-tooltip flex column gaps">
-            <p><Trans>This is the quick launch menu.</Trans></p>
-            <p>
-              <Trans>
-                Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button.
-              </Trans>
-            </p>
-          </div>
-        )}
+      <div className={cssNames("ClustersMenu flex column", className)}>
         <div className="clusters flex column gaps">
           {clusters.map(cluster => {
             return (
