@@ -14,7 +14,7 @@ Here you can find description of changes we've built into each release. While we
 - Allow to remove clusters from right click
 - Allow to trigger cronjobs
 - Show devtools in menu
-- Open last opened workspace as default
+- Open last active cluster as default
 - Fix format duration rounding days error
 - Handle unsupported resources properly after they've been created from editor
 - Fix CRD api parsing
