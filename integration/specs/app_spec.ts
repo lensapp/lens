@@ -2,7 +2,7 @@ import { Application } from "spectron"
 import * as util from "../helpers/utils"
 import { spawnSync } from "child_process"
 
-jest.setTimeout(20000)
+jest.setTimeout(30000)
 
 const BACKSPACE = "\uE003"
 
@@ -16,8 +16,8 @@ describe("app start", () => {
 
   const addMinikubeCluster = async (app: Application) => {
     await app.client.click("div.add-cluster")
-    await app.client.waitUntilTextExists("p", "Choose config")
-    await app.client.click("div#kubecontext-select")
+    await app.client.waitUntilTextExists("div", "Select kubeconfig file")
+    await app.client.click("div.Select__control")
     await app.client.waitUntilTextExists("div", "minikube")
     await app.client.click("div.minikube")
     await app.client.click("button.primary")
@@ -57,7 +57,7 @@ describe("app start", () => {
     await addMinikubeCluster(app)
     await waitForMinikubeDashboard(app)
     await app.client.click('a[href="/nodes"]')
-    await app.client.waitUntilTextExists("div.TableCell", "minikube")
+    await app.client.waitUntilTextExists("div.TableCell", "Ready")
   })
 
   it('allows to create a pod', async () => {
@@ -72,7 +72,7 @@ describe("app start", () => {
     await app.client.click(".sidebar-nav #workloads span.link-text")
     await app.client.waitUntilTextExists('a[href="/pods"]', "Pods")
     await app.client.click('a[href="/pods"]')
-    await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver-minikube")
+    await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver")
     await app.client.click('.Icon.new-dock-tab')
     await app.client.waitUntilTextExists("li.MenuItem.create-resource-tab", "Create resource")
     await app.client.click("li.MenuItem.create-resource-tab")
