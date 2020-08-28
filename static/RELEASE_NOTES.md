@@ -4,7 +4,7 @@ Here you can find description of changes we've built into each release. While we
 
 ## 3.6.0-beta.1 (current version)
 - Allow user to select Kubeconfig from filesystem
-- Handle Kubeconfig file as file references
+- Store reference to added Kubeconfig files
 - Show the path of the cluster's Kubeconfig in cluster settings
 - Add support for PodDisruptionBudgets
 - Add port-forwarding for containers in pod
