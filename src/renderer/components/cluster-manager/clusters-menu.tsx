@@ -76,8 +76,10 @@ export class ClustersMenu extends React.Component<Props> {
             label: _i18n._(t`Remove`),
           },
           ok: () => {
+            if (clusterStore.activeClusterId === cluster.id) {
+              navigate(landingURL());
+            }
             clusterStore.removeById(cluster.id);
-            navigate(landingURL());
           },
           message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
         })
@@ -94,7 +96,7 @@ export class ClustersMenu extends React.Component<Props> {
     const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
     const noClustersInScope = clusters.length === 0;
     const isLanding = navigation.getPath() === landingURL();
-    const showStartupHint = this.showHint && isLanding && noClustersInScope;
+    const showStartupHint = this.showHint && isLanding && noClustersInScope; // fixme: broken, move to landing.tsx
     return (
       <div
         className={cssNames("ClustersMenu flex column", className)}

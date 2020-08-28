@@ -3,17 +3,19 @@
 import "./ace-editor.scss"
 
 import React from "react"
-import { observer, disposeOnUnmount } from "mobx-react";
-import AceBuild, { Ace } from "ace-builds"
-import { autobind, cssNames } from "../../utils";
-import { themeStore } from "../../theme.store";
 import { reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
+import AceBuild, { Ace } from "ace-builds"
+import { autobind, cssNames, noop } from "../../utils";
+import { themeStore } from "../../theme.store";
 
 interface Props extends Partial<Ace.EditorOptions> {
   className?: string;
   autoFocus?: boolean;
   hidden?: boolean;
   cursorPos?: Ace.Point;
+  onFocus?(evt: FocusEvent, value: string): void;
+  onBlur?(evt: FocusEvent, value: string): void;
   onChange?(value: string, delta: Ace.Delta): void;
   onCursorPosChange?(point: Ace.Point): void;
 }
@@ -30,6 +32,8 @@ const defaultProps: Partial<Props> = {
   foldStyle: "markbegin",
   printMargin: false,
   useWorker: false,
+  onBlur: noop,
+  onFocus: noop,
 };
 
 @observer
@@ -64,7 +68,7 @@ export class AceEditor extends React.Component<Props, State> {
   async componentDidMount() {
     const {
       mode, autoFocus, className, hidden, cursorPos,
-      onChange, onCursorPosChange, children,
+      onBlur, onFocus, onChange, onCursorPosChange, children,
       ...options
     } = this.props;
 
@@ -75,6 +79,8 @@ export class AceEditor extends React.Component<Props, State> {
     this.setCursorPos(cursorPos);
 
     // bind events
+    this.editor.on("blur", (evt: any) => onBlur(evt, this.getValue()));
+    this.editor.on("focus", (evt: any) => onFocus(evt, this.getValue()));
     this.editor.on("change", this.onChange);
     this.editor.selection.on("changeCursor", this.onCursorPosChange);
 

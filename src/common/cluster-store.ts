@@ -1,5 +1,6 @@
 import type { WorkspaceId } from "./workspace-store";
-import { ipcRenderer } from "electron";
+import path from "path";
+import { app, ipcRenderer, remote } from "electron";
 import { unlink } from "fs-extra";
 import { action, computed, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
@@ -7,6 +8,9 @@ import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store"
 import logger from "../main/logger";
 import { tracker } from "./tracker";
+import { dumpConfigYaml } from "./kube-helpers";
+import { saveToAppFiles } from "./utils/saveToAppFiles";
+import { KubeConfig } from "@kubernetes/client-node";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -49,6 +53,17 @@ export interface ClusterPreferences {
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
+  static getCustomKubeConfigPath(clusterId: ClusterId): string {
+    return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs", clusterId);
+  }
+
+  static embedCustomKubeConfig(clusterId: ClusterId, kubeConfig: KubeConfig | string): string {
+    const filePath = ClusterStore.getCustomKubeConfigPath(clusterId);
+    const fileContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
+    saveToAppFiles(filePath, fileContents);
+    return filePath;
+  }
+
   private constructor() {
     super({
       configName: "lens-cluster-store",
@@ -81,6 +96,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.activeClusterId === id;
   }
 
+  @action
   setActive(id: ClusterId) {
     this.activeClusterId = id;
   }
@@ -102,12 +118,12 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  async addCluster(model: ClusterModel, activate = true): Promise<Cluster> {
-    tracker.event("cluster", "add");
-    const cluster = new Cluster(model);
-    this.clusters.set(model.id, cluster);
-    if (activate) this.activeClusterId = model.id;
-    return cluster;
+  addCluster(...models: ClusterModel[]) {
+    models.forEach(model => {
+      tracker.event("cluster", "add");
+      const cluster = new Cluster(model);
+      this.clusters.set(model.id, cluster);
+    })
   }
 
   @action
@@ -119,7 +135,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       if (this.activeClusterId === clusterId) {
         this.activeClusterId = null;
       }
-      unlink(cluster.kubeConfigPath).catch(() => null);
+      // remove only custom kubeconfigs (pasted as text)
+      if (cluster.kubeConfigPath == ClusterStore.getCustomKubeConfigPath(clusterId)) {
+        unlink(cluster.kubeConfigPath).catch(() => null);
+      }
     }
   }
 

@@ -1,5 +1,39 @@
 .AddCluster {
+  .droppable {
+    box-shadow: 0 0 0 5px inset $primary;
+
+    > * {
+      pointer-events: none;
+    }
+  }
+
+  .hint {
+    margin-top: -$padding;
+    color: $textColorSecondary;
+
+    > * {
+      vertical-align: middle;
+    }
+  }
+
+  .AceEditor {
+    min-height: 200px;
+    max-height: 400px;
+  }
+
   .Select {
+    .kube-context {
+      --flex-gap: #{$padding};
+    }
+
+    // todo: extract to component, merge with namespace-select.scss
+    &__placeholder {
+      width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
     &__control {
       box-shadow: 0 0 0 1px $borderFaintColor;
     }

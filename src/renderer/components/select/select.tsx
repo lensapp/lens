@@ -36,6 +36,7 @@ export class Select extends React.Component<SelectProps> {
   static defaultProps: SelectProps = {
     autoConvertOptions: true,
     menuPortalTarget: document.body,
+    menuPlacement: "auto",
   }
 
   @computed get theme() {

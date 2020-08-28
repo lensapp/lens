@@ -1,13 +1,16 @@
 import type { ThemeId } from "../renderer/theme.store";
 import semver from "semver"
+import { readFile } from "fs-extra"
 import { action, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store"
 import { getAppVersion } from "./utils/app-version";
-import { getKubeConfigLocal, loadConfig } from "./kube-helpers";
+import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { tracker } from "./tracker";
+import logger from "../main/logger";
 
 export interface UserStoreModel {
+  kubeConfigPath: string;
   lastSeenAppVersion: string;
   seenContexts: string[];
   preferences: UserPreferences;
@@ -37,10 +40,11 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
     // refresh new contexts
     this.whenLoaded.then(this.refreshNewContexts);
-    reaction(() => this.seenContexts.size, this.refreshNewContexts);
+    reaction(() => this.kubeConfigPath, this.refreshNewContexts);
   }
 
   @observable lastSeenAppVersion = "0.0.0"
+  @observable kubeConfigPath = kubeConfigDefaultPath; // used in add-cluster page for providing context
   @observable seenContexts = observable.set<string>();
   @observable newContexts = observable.set<string>();
 
@@ -56,6 +60,11 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   @action
+  resetKubeConfigPath() {
+    this.kubeConfigPath = kubeConfigDefaultPath;
+  }
+
+  @action
   resetTheme() {
     this.preferences.colorTheme = UserStore.defaultTheme;
   }
@@ -67,14 +76,18 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   protected refreshNewContexts = async () => {
-    const kubeConfig = await getKubeConfigLocal();
-    if (kubeConfig) {
-      this.newContexts.clear();
-      const localContexts = loadConfig(kubeConfig).getContexts();
-      localContexts
-        .filter(ctx => ctx.cluster)
-        .filter(ctx => !this.seenContexts.has(ctx.name))
-        .forEach(ctx => this.newContexts.add(ctx.name));
+    try {
+      const kubeConfig = await readFile(this.kubeConfigPath, "utf8");
+      if (kubeConfig) {
+        this.newContexts.clear();
+        loadConfig(kubeConfig).getContexts()
+          .filter(ctx => ctx.cluster)
+          .filter(ctx => !this.seenContexts.has(ctx.name))
+          .forEach(ctx => this.newContexts.add(ctx.name));
+      }
+    } catch (err) {
+      logger.error(err);
+      this.resetKubeConfigPath();
     }
   }
 
@@ -86,10 +99,13 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   @action
-  protected fromStore(data: Partial<UserStoreModel> = {}) {
-    const { lastSeenAppVersion, seenContexts = [], preferences } = data
+  protected async fromStore(data: Partial<UserStoreModel> = {}) {
+    const { lastSeenAppVersion, seenContexts = [], preferences, kubeConfigPath } = data
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;
+    }
+    if (kubeConfigPath) {
+      this.kubeConfigPath = kubeConfigPath;
     }
     this.seenContexts.replace(seenContexts);
     Object.assign(this.preferences, preferences);
@@ -97,6 +113,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   toJSON(): UserStoreModel {
     const model: UserStoreModel = {
+      kubeConfigPath: this.kubeConfigPath,
       lastSeenAppVersion: this.lastSeenAppVersion,
       seenContexts: Array.from(this.seenContexts),
       preferences: this.preferences,

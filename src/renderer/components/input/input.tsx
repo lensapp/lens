@@ -17,6 +17,7 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
   theme?: "round-black";
   className?: string;
   value?: T;
+  autoSelectOnFocus?: boolean
   multiLine?: boolean; // use text-area as input field
   maxRows?: number; // when multiLine={true} define max rows size
   dirty?: boolean; // show validation errors even if the field wasn't touched yet
@@ -112,8 +113,7 @@ export class Input extends React.Component<InputProps, State> {
       const result = validator.validate(value, this.props);
       if (isBoolean(result) && !result) {
         errors.push(this.getValidatorError(value, validator));
-      }
-      else if (result instanceof Promise) {
+      } else if (result instanceof Promise) {
         if (!validationId) {
           this.validationId = validationId = uniqueId("validation_id_");
         }
@@ -176,8 +176,9 @@ export class Input extends React.Component<InputProps, State> {
 
   @autobind()
   onFocus(evt: React.FocusEvent<InputElement>) {
-    const { onFocus } = this.props;
+    const { onFocus, autoSelectOnFocus } = this.props;
     if (onFocus) onFocus(evt);
+    if (autoSelectOnFocus) this.select();
     this.setState({ focused: true });
   }
 
@@ -255,13 +256,14 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   render() {
-    /* eslint-disable */
-    let { multiLine, showValidationLine, validators, theme, maxRows, children, iconLeft, iconRight, ...inputProps } = this.props;
-    let { className, maxLength, rows, disabled, } = this.props;
-    /* eslint-enable */
+    const {
+      multiLine, showValidationLine, validators, theme, maxRows, children,
+      maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight,
+      ...inputProps
+    } = this.props;
     const { focused, dirty, valid, validating, errors } = this.state;
 
-    className = cssNames("Input", className, {
+    const className = cssNames("Input", this.props.className, {
       [`theme ${theme}`]: theme,
       focused: focused,
       disabled: disabled,
@@ -270,10 +272,6 @@ export class Input extends React.Component<InputProps, State> {
       validating: validating,
       validatingLine: validating && showValidationLine,
     });
-
-    // normalize icons
-    if (isString(iconLeft)) iconLeft = <Icon material={iconLeft}/>
-    if (isString(iconRight)) iconRight = <Icon material={iconRight}/>
 
     // prepare input props
     Object.assign(inputProps, {
@@ -291,9 +289,9 @@ export class Input extends React.Component<InputProps, State> {
     return (
       <div className={className}>
         <label className="input-area flex gaps align-center">
-          {iconLeft}
+          {isString(iconLeft) ? <Icon material={iconLeft}/> : iconLeft}
           {multiLine ? <textarea {...inputProps as any}/> : <input {...inputProps as any}/>}
-          {iconRight}
+          {isString(iconRight) ? <Icon material={iconRight}/> : iconRight}
         </label>
         <div className="input-info flex gaps">
           {!valid && dirty && (
