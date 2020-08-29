@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, when } from "mobx";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { getMatchedCluster } from "./cluster-view.route"
 import logger from "../../../main/logger";
@@ -21,10 +21,10 @@ export async function initView(clusterId: ClusterId) {
   }
   logger.info(`[LENS-VIEW]: init dashboard, clusterId=${clusterId}`)
   const cluster = clusterStore.getById(clusterId);
-  await cluster.whenInitialized;
+  await cluster.whenReady;
   const parentElem = document.getElementById("lens-views");
   const iframe = document.createElement("iframe");
-  iframe.name = cluster.preferences.clusterName;
+  iframe.name = cluster.contextName;
   iframe.setAttribute("src", `//${clusterId}.${location.host}`)
   iframe.addEventListener("load", async () => {
     logger.info(`[LENS-VIEW]: loaded from ${iframe.src}`)
@@ -32,6 +32,12 @@ export async function initView(clusterId: ClusterId) {
   })
   lensViews.set(clusterId, { clusterId, view: iframe });
   parentElem.appendChild(iframe);
+  // auto-clean when cluster removed
+  await when(() => !clusterStore.getById(clusterId));
+  logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`)
+  parentElem.removeChild(iframe)
+  lensViews.delete(clusterId)
+
 }
 
 export function refreshViews() {

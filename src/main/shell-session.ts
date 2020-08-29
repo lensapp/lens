@@ -28,7 +28,7 @@ export class ShellSession extends EventEmitter {
   constructor(socket: WebSocket, cluster: Cluster) {
     super()
     this.websocket = socket
-    this.kubeconfigPath =  cluster.kubeConfigPath
+    this.kubeconfigPath =  cluster.getProxyKubeconfigPath()
     this.kubectl = new Kubectl(cluster.version)
     this.preferences = cluster.preferences || {}
     this.clusterId = cluster.id

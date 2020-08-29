@@ -9,7 +9,7 @@
     background-position: 0 35%;
     background-size: 85%;
     background-clip: content-box;
-    opacity: 1;
+    opacity: .75;
     top: 0;
     left: 0;
     bottom: 0;
@@ -19,6 +19,41 @@
 
     .theme-light & {
       opacity: 0.2;
+    }
+  }
+
+  .startup-hint {
+    $bgc: $mainBackground;
+    $arrowSize: 10px;
+
+    position: absolute;
+    left: 0;
+    top: 25px;
+    margin: $padding;
+    padding: $padding * 2;
+    width: 320px;
+    background: $bgc;
+    color: $textColorAccent;
+    filter: drop-shadow(0 0px 2px #ffffff33);
+
+    &:before {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-top: $arrowSize solid transparent;
+      border-bottom: $arrowSize solid transparent;
+      border-right: $arrowSize solid $bgc;
+      right: 100%;
+    }
+
+    .theme-light & {
+      filter: drop-shadow(0 0px 2px #777);
+      background: white;
+
+      &:before {
+        border-right-color: white;
+      }
     }
   }
 }

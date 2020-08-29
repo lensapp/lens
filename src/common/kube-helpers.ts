@@ -1,10 +1,11 @@
-import { app, remote } from "electron";
 import { KubeConfig, V1Node, V1Pod } from "@kubernetes/client-node"
-import fse, { ensureDirSync, readFile, writeFileSync } from "fs-extra";
+import fse from "fs-extra";
 import path from "path"
 import os from "os"
 import yaml from "js-yaml"
 import logger from "../main/logger";
+
+export const kubeConfigDefaultPath = path.join(os.homedir(), '.kube', 'config');
 
 function resolveTilde(filePath: string) {
   if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
@@ -138,30 +139,4 @@ export function getNodeWarningConditions(node: V1Node) {
   return node.status.conditions.filter(c =>
     c.status.toLowerCase() === "true" && c.type !== "Ready" && c.type !== "HostUpgrades"
   )
-}
-
-// Write kubeconfigs to "embedded" store, i.e. "/Users/ixrock/Library/Application Support/Lens/kubeconfigs"
-export function saveConfigToAppFiles(clusterId: string, kubeConfig: KubeConfig | string): string {
-  const userData = (app || remote.app).getPath("userData");
-  const kubeConfigFile = path.join(userData, `kubeconfigs/${clusterId}`)
-  const kubeConfigContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
-
-  ensureDirSync(path.dirname(kubeConfigFile));
-  writeFileSync(kubeConfigFile, kubeConfigContents);
-  return kubeConfigFile;
-}
-
-export async function getKubeConfigLocal(): Promise<string> {
-  try {
-    const configFile = path.join(os.homedir(), '.kube', 'config');
-    const file = await readFile(configFile, "utf8");
-    const obj = yaml.safeLoad(file);
-    if (obj.contexts) {
-      obj.contexts = obj.contexts.filter((ctx: any) => ctx?.context?.cluster && ctx?.name)
-    }
-    return yaml.safeDump(obj);
-  } catch (err) {
-    logger.debug(`Cannot read local kube-config: ${err}`)
-    return "";
-  }
 }

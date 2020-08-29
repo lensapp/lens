@@ -2,7 +2,34 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.5.3 (current version)
+## 3.6.0-beta.1 (current version)
+- Allow user to select Kubeconfig from filesystem
+- Store reference to added Kubeconfig files
+- Show the path of the cluster's Kubeconfig in cluster settings
+- Add support for PodDisruptionBudgets
+- Add port-forwarding for containers in pod
+- Add shortcut keys to menu items
+- Improve light theme support
+- Show GKE ingress IP
+- Allow to remove clusters from right click
+- Allow to trigger cronjobs
+- Show devtools in menu
+- Open last active cluster as default
+- Fix format duration rounding days error
+- Handle unsupported resources properly after they've been created from editor
+- Fix CRD api parsing
+- Fix: allow to edit Endpoint resources
+- Fix: handle status values that contains an object
+- Fix: incorrect path to install/uninstall feature
+- Fix: increase timeout when doing port-forward
+- Fix: change manifests order for Metrics feature
+- Fix: Master donut graph for memory usage only appears to show one master
+- Fix: Error during creation of Kubernetes secret
+- Fix: Show age of resource in seconds
+- Fix: Node shell pods are pending
+- Fix: Wrong created time in resource details
+
+## 3.5.3
 - Updated [EULA](https://k8slens.dev/licenses/eula.md)
 
 ## 3.5.2

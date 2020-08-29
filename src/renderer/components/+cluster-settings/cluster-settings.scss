@@ -66,6 +66,10 @@
             word-break: break-word;
             color: var(--textColorSecondary);
           }
+
+          .link {
+            @include pseudo-link;
+          }
         }
       }
     }

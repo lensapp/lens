@@ -4,7 +4,6 @@ import yaml from "js-yaml";
 import { Cluster } from "../main/cluster";
 import { ClusterStore } from "./cluster-store";
 import { workspaceStore } from "./workspace-store";
-import { saveConfigToAppFiles } from "./kube-helpers";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png")
 
@@ -37,7 +36,7 @@ describe("empty config", () => {
         icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
         clusterName: "minikube"
       },
-      kubeConfigPath: saveConfigToAppFiles("foo", "fancy foo config"),
+      kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", "fancy foo config"),
       workspace: workspaceStore.currentWorkspaceId
     });
     clusterStore.addCluster(cluster);
@@ -58,7 +57,7 @@ describe("empty config", () => {
       preferences: {
         clusterName: "prod"
       },
-      kubeConfigPath: saveConfigToAppFiles("prod", "fancy config"),
+      kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", "fancy config"),
       workspace: "workstation"
     });
     const devCluster = new Cluster({
@@ -66,7 +65,7 @@ describe("empty config", () => {
       preferences: {
         clusterName: "dev"
       },
-      kubeConfigPath: saveConfigToAppFiles("dev", "fancy config"),
+      kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", "fancy config"),
       workspace: "workstation"
     });
     clusterStore.addCluster(prodCluster);
@@ -84,17 +83,13 @@ describe("empty config", () => {
     expect(wsClusters[1].id).toBe("dev");
   })
 
-  it("checks if last added cluster becomes active", () => {
-    expect(clusterStore.activeCluster.id).toBe("dev");
-  })
-
   it("sets active cluster", () => {
     clusterStore.setActive("foo");
     expect(clusterStore.activeCluster.id).toBe("foo");
   })
 
   it("check if cluster's kubeconfig file saved", () => {
-    const file = saveConfigToAppFiles("boo", "kubeconfig");
+    const file = ClusterStore.embedCustomKubeConfig("boo", "kubeconfig");
     expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
   })
 
