@@ -112,7 +112,7 @@ export function createKubeApiURL(ref: IKubeApiLinkRef): string {
   }
   return [apiPrefix, apiVersion, namespace, resource, name]
     .filter(v => v)
-    .join("/").toLowerCase()
+    .join("/")
 }
 
 export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): string {
