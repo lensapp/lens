@@ -1,6 +1,8 @@
+import path from "path";
 import { action, observable, toJS } from "mobx";
 import { BaseStore } from "../common/base-store";
 import { LensExtension } from "./extension";
+import { isDevelopment } from "../common/vars";
 
 export type ExtensionId = string;
 export type ExtensionVersion = string | number;
@@ -16,6 +18,7 @@ export interface ExtensionModel {
   name: string;
   description?: string;
   enabled?: boolean;
+  updateUrl?: string;
 }
 
 export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
@@ -29,6 +32,13 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   @observable extensions = observable.map<ExtensionId, LensExtension>();
   @observable removed = observable.map<ExtensionId, LensExtension>();
 
+  get builtInExtensionsPath(): string {
+    if (isDevelopment) {
+      return path.resolve(__static, "../src/extensions");
+    }
+    return "" // todo: figure out prod-path
+  }
+
   getById(id: ExtensionId): LensExtension {
     return this.extensions.get(id);
   }
@@ -36,8 +46,9 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   async removeById(id: ExtensionId) {
     const extension = this.getById(id);
     if (extension) {
+      const unInstallStatus = await extension.uninstall()
       this.extensions.delete(id);
-      return extension.uninstall();
+      return unInstallStatus;
     }
   }
 
