@@ -7,8 +7,8 @@ export const isMac = process.platform === "darwin"
 export const isWindows = process.platform === "win32"
 export const isDebugging = process.env.DEBUG === "true";
 export const isProduction = process.env.NODE_ENV === "production"
-export const isDevelopment = isDebugging || !isProduction;
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
+export const isDevelopment = !isTestEnv && !isProduction;
 
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`
 export const publicPath = "/build/"
