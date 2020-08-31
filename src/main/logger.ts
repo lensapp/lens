@@ -1,3 +1,4 @@
+import { app } from "electron";
 import winston from "winston"
 import { isDebugging } from "../common/vars";
 
@@ -10,7 +11,10 @@ const fileOptions: winston.transports.FileTransportOptions = {
   handleExceptions: false,
   level: isDebugging ? "debug" : "info",
   filename: "lens.log",
-  dirname: __dirname,
+  dirname: app.getPath("logs"),
+  maxsize: 16 * 1024,
+  maxFiles: 16,
+  tailable: true,
 }
 
 const logger = winston.createLogger({
