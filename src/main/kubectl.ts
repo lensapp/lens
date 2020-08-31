@@ -9,7 +9,7 @@ import { helmCli } from "./helm/helm-cli"
 import { userStore } from "../common/user-store"
 import { customRequest } from "../common/request";
 import { getBundledKubectlVersion } from "../common/utils/app-version"
-import { isDevelopment, isWindows } from "../common/vars";
+import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
 
 const bundledVersion = getBundledKubectlVersion()
 const kubectlMap: Map<string, string> = new Map([
@@ -35,7 +35,7 @@ const packageMirrors: Map<string, string> = new Map([
 let bundledPath: string
 const initScriptVersionString = "# lens-initscript v3\n"
 
-if (isDevelopment) {
+if (isDevelopment || isTestEnv) {
   bundledPath = path.join(process.cwd(), "binaries", "client", process.platform, process.arch, "kubectl")
 } else {
   bundledPath = path.join(process.resourcesPath, process.arch, "kubectl")
