@@ -46,9 +46,8 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   async removeById(id: ExtensionId) {
     const extension = this.getById(id);
     if (extension) {
-      const unInstallStatus = await extension.uninstall()
+      await extension.uninstall();
       this.extensions.delete(id);
-      return unInstallStatus;
     }
   }
 

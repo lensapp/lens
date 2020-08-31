@@ -2,7 +2,7 @@
   "name": "extension-example",
   "version": "1.0.0",
   "description": "Example extension",
-  "main": "extension-example.ts",
+  "main": "example-extension.ts",
   "dependencies": {
   }
 }

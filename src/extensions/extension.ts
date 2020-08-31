@@ -29,6 +29,10 @@ export class LensExtension implements ExtensionModel {
     this.isEnabled = enabled;
   }
 
+  async init(){
+    // todo?
+  }
+
   async install() {
     // todo
   }
