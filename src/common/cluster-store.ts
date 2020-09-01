@@ -1,4 +1,4 @@
-import type { WorkspaceId } from "./workspace-store";
+import { WorkspaceId, workspaceStore } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote } from "electron";
 import { unlink } from "fs-extra";
@@ -120,6 +120,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   getByWorkspaceId(workspaceId: string): Cluster[] {
+    this.clusterOrders[workspaceId] ??= Array.from(this.clusters.values())
+      .filter(cluster => cluster.workspace === workspaceId)
+      .map(cluster => cluster.id);
     return this.clusterOrders[workspaceId].map(clusterId => this.clusters.get(clusterId));
   }
 
