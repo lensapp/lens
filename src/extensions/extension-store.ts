@@ -52,21 +52,22 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
 
   async loadExtensions(basePath: string): Promise<ExtensionManifest[]> {
     const paths = await fs.readdir(basePath);
-    const extensionsStats = paths.map(fileName => {
+    const manifestsLoading = paths.map(fileName => {
       const absPath = path.resolve(basePath, fileName);
-      const manifestPath = path.resolve(absPath, "manifest.json");
-      return fs.stat(manifestPath).then(async stat => {
-        if (stat.isFile()) {
+      const manifestPath = path.resolve(absPath, "package.json");
+      return new Promise<ExtensionManifest>(async resolve => {
+        try {
           const manifestJson = await fs.readJson(manifestPath);
-          const manifest: ExtensionManifest = {
+          resolve({
             ...manifestJson,
             manifestPath: manifestPath,
-          }
-          return manifest;
+          });
+        } catch (err) {
+          resolve(null);
         }
       })
     });
-    let extensions = await Promise.all(extensionsStats.map(extStat => extStat.catch(() => null)));
+    let extensions = await Promise.all(manifestsLoading);
     extensions = extensions.filter(v => !!v); // filter out files and invalid folders (without manifest.json)
     logger.info(`[EXTENSION-STORE]: loaded ${extensions.length} extensions`, { basePath, extensions });
     return extensions;
