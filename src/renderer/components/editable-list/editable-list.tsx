@@ -1,6 +1,6 @@
 import "./editable-list.scss"
 
-import React from "React";
+import React from "react";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { observable } from "mobx";
