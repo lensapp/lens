@@ -59,7 +59,7 @@ export class Kubectl {
 
   public static readonly bundledKubectlPath = bundledPath
   public static readonly bundledKubectlVersion: string = bundledVersion
-  public static invalidBundle: boolean = false
+  public static invalidBundle = false
   private static bundledInstance: Kubectl;
 
   // Returns the single bundled Kubectl instance
