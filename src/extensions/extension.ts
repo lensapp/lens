@@ -12,7 +12,7 @@ import logger from "../main/logger";
 
 export type ExtensionId = string;
 export type ExtensionVersion = string | number;
-export type ExtensionManifest = typeof extensionManifest;
+export type ExtensionManifest = typeof extensionManifest & ExtensionModel;
 
 export class LensExtension implements ExtensionModel {
   public id: ExtensionId;
@@ -47,7 +47,7 @@ export class LensExtension implements ExtensionModel {
   }
 
   async init() {
-    // todo?
+    // todo
   }
 
   async install() {

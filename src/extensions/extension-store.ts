@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs-extra";
 import { action, comparer, observable, toJS } from "mobx";
 import { BaseStore } from "../common/base-store";
-import { ExtensionId, ExtensionVersion, LensExtension } from "./extension";
+import { ExtensionId, ExtensionManifest, ExtensionVersion, LensExtension } from "./extension";
 import { isDevelopment } from "../common/vars";
 import logger from "../main/logger";
 
@@ -31,27 +31,45 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   @observable version: ExtensionVersion = "0.0.0";
   @observable extensions = observable.map<ExtensionId, LensExtension>();
   @observable removed = observable.map<ExtensionId, LensExtension>();
-  @observable installed = observable.set<LensExtension>([], { equals: comparer.shallow });
+  @observable installed = observable.set<ExtensionManifest>([], { equals: comparer.shallow });
 
-  async load() {
-    await this.loadExtensions();
-    return super.load();
-  }
-
-  async loadExtensions() {
-    const localExtensions = await fs.readdir(this.builtInExtensionsPath);
-    logger.info(`[EXTENSIONS]: scanning installed extensions`, { paths: localExtensions });
-    this.installed.replace(localExtensions as any[]);
-    // return localExtensions
-    // .filter(path => ![".", ".."].includes(path))
-    // .map(path => import(`${path}/package.json`));
-  }
-
-  get builtInExtensionsPath(): string {
+  get folderPath(): string {
     if (isDevelopment) {
       return path.resolve(__static, "../src/extensions");
     }
     return "" // todo: figure out prod-path
+  }
+
+  async load() {
+    await this.loadInstalledExtensions();
+    return super.load();
+  }
+
+  async loadInstalledExtensions() {
+    const extensions = await this.loadExtensions(this.folderPath);
+    this.installed.replace(extensions);
+  }
+
+  async loadExtensions(basePath: string): Promise<ExtensionManifest[]> {
+    const paths = await fs.readdir(basePath);
+    const extensionsStats = paths.map(fileName => {
+      const absPath = path.resolve(basePath, fileName);
+      const manifestPath = path.resolve(absPath, "manifest.json");
+      return fs.stat(manifestPath).then(async stat => {
+        if (stat.isFile()) {
+          const manifestJson = await fs.readJson(manifestPath);
+          const manifest: ExtensionManifest = {
+            ...manifestJson,
+            manifestPath: manifestPath,
+          }
+          return manifest;
+        }
+      })
+    });
+    let extensions = await Promise.all(extensionsStats.map(extStat => extStat.catch(() => null)));
+    extensions = extensions.filter(v => !!v); // filter out files and invalid folders (without manifest.json)
+    logger.info(`[EXTENSION-STORE]: loaded ${extensions.length} extensions`, { basePath, extensions });
+    return extensions;
   }
 
   getById(id: ExtensionId): LensExtension {
