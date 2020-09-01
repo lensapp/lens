@@ -20,7 +20,7 @@ import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
-import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
 import move from "array-move";
 
 // fixme: allow to rearrange clusters with drag&drop
@@ -105,20 +105,7 @@ export class ClustersMenu extends React.Component<Props> {
     const { newContexts } = userStore;
     const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
     return (
-      <div
-        className={cssNames("ClustersMenu flex column", className)}
-        onMouseEnter={() => this.showHint = false}
-      >
-        {showStartupHint && (
-          <div className="startup-tooltip flex column gaps">
-            <p><Trans>This is the quick launch menu.</Trans></p>
-            <p>
-              <Trans>
-                Associate clusters and choose the ones you want to access via quick launch menu by clicking the + button.
-              </Trans>
-            </p>
-          </div>
-        )}
+      <div className={cssNames("ClustersMenu flex column", className)}>
         <div className="clusters flex column gaps">
           <DragDropContext onDragEnd={this.swapClusterIconOrder}>
             <Droppable droppableId="cluster-menu" type="CLUSTER">
