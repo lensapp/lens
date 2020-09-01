@@ -9,7 +9,7 @@ import { helmCli } from "./helm/helm-cli"
 import { userStore } from "../common/user-store"
 import { customRequest } from "../common/request";
 import { getBundledKubectlVersion } from "../common/utils/app-version"
-import { isDevelopment, isWindows } from "../common/vars";
+import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
 
 const bundledVersion = getBundledKubectlVersion()
 const kubectlMap: Map<string, string> = new Map([
@@ -35,8 +35,9 @@ const packageMirrors: Map<string, string> = new Map([
 let bundledPath: string
 const initScriptVersionString = "# lens-initscript v3\n"
 
-if (isDevelopment) {
-  bundledPath = path.join(process.cwd(), "binaries", "client", process.platform, process.arch, "kubectl")
+if (isDevelopment || isTestEnv) {
+  const platformName = isWindows ? "windows" : process.platform
+  bundledPath = path.join(process.cwd(), "binaries", "client", platformName, process.arch, "kubectl")
 } else {
   bundledPath = path.join(process.resourcesPath, process.arch, "kubectl")
 }
@@ -58,6 +59,7 @@ export class Kubectl {
 
   public static readonly bundledKubectlPath = bundledPath
   public static readonly bundledKubectlVersion: string = bundledVersion
+  public static invalidBundle = false
   private static bundledInstance: Kubectl;
 
   // Returns the single bundled Kubectl instance
@@ -98,9 +100,22 @@ export class Kubectl {
     this.path = path.join(this.dirname, binaryName)
   }
 
-  public async getPath(): Promise<string> {
+  public getBundledPath() {
+    return Kubectl.bundledKubectlPath
+  }
+
+  public async getPath(bundled = false): Promise<string> {
+    // return binary name if bundled path is not functional
+    if (!await this.checkBinary(this.getBundledPath(), false)) {
+      Kubectl.invalidBundle = true
+      return path.basename(bundledPath)
+    }
+
     try {
-      await this.ensureKubectl()
+      if (!await this.ensureKubectl()) {
+        logger.error("Failed to ensure kubectl, fallback to the bundled version")
+        return Kubectl.bundledKubectlPath
+      }
       return this.path
     } catch (err) {
       logger.error("Failed to ensure kubectl, fallback to the bundled version")
@@ -119,16 +134,15 @@ export class Kubectl {
     }
   }
 
-  public async checkBinary(checkVersion = true) {
-    const exists = await pathExists(this.path)
+  public async checkBinary(path: string, checkVersion = true) {
+    const exists = await pathExists(path)
     if (exists) {
-      if (!checkVersion) {
-        return true
-      }
-
       try {
-        const { stdout } = await promiseExec(`"${this.path}" version --client=true -o json`)
+        const { stdout } = await promiseExec(`"${path}" version --client=true -o json`)
         const output = JSON.parse(stdout)
+        if (!checkVersion) {
+          return true
+        }
         let version: string = output.clientVersion.gitVersion
         if (version[0] === 'v') {
           version = version.slice(1)
@@ -165,15 +179,28 @@ export class Kubectl {
   }
 
   public async ensureKubectl(): Promise<boolean> {
+    if (Kubectl.invalidBundle) {
+      logger.error(`Detected invalid bundle binary, returning ...`)
+      return false
+    }
     await ensureDir(this.dirname, 0o755)
     return lockFile.lock(this.dirname).then(async (release) => {
       logger.debug(`Acquired a lock for ${this.kubectlVersion}`)
       const bundled = await this.checkBundled()
-      const isValid = await this.checkBinary(!bundled)
-      if (!isValid) {
+      let isValid = await this.checkBinary(this.path, !bundled)
+      if (!isValid && !bundled) {
         await this.downloadKubectl().catch((error) => {
           logger.error(error)
+          logger.debug(`Releasing lock for ${this.kubectlVersion}`)
+          release()
+          return false
         });
+        isValid = !await this.checkBinary(this.path, false)
+      }
+      if(!isValid) {
+        logger.debug(`Releasing lock for ${this.kubectlVersion}`)
+        release()
+        return false
       }
       await this.writeInitScripts().catch((error) => {
         logger.error("Failed to write init scripts");
