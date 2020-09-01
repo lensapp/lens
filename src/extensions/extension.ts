@@ -8,7 +8,7 @@ import logger from "../main/logger";
 // * Lazy load/unload extension (js/ts?) (from sources: local folder, npm_modules/@lens/some_plugin, etc.)
 // * figure out how to expose lens external apis to extension:
 // - opt1: import {someApi} from "@lens" => replaced to import from "$PATH/build/Lens.js" on the fly ?
-// - opt2: eval with injected exposed apis / contents.executeJavaScript / script[src] / etc. ?
+// - opt2: dynamic require() / contents.executeJavaScript / etc. ?
 
 export type ExtensionId = string;
 export type ExtensionVersion = string | number;
@@ -28,14 +28,14 @@ export class LensExtension implements ExtensionModel {
 
   whenReady = when(() => this.isReady);
 
-  constructor(model: ExtensionModel) {
-    this.importModel(model);
+  constructor(model: ExtensionModel, manifest?: ExtensionManifest) {
+    this.importModel(model, manifest);
   }
 
   @action
-  async importModel({ enabled, manifestPath, ...model }: ExtensionModel) {
+  async importModel({ enabled, manifestPath, ...model }: ExtensionModel, manifest?: ExtensionManifest) {
     try {
-      this.manifest = await readJsonSync(manifestPath, { throws: true })
+      this.manifest = manifest || await readJsonSync(manifestPath, { throws: true })
       this.manifestPath = manifestPath;
       this.isEnabled = enabled;
       Object.assign(this, model);

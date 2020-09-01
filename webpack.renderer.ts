@@ -22,6 +22,7 @@ export default function (): webpack.Configuration {
       path: buildDir,
       filename: '[name].js',
       chunkFilename: 'chunks/[name].js',
+      libraryTarget: "commonjs2",
     },
     resolve: {
       extensions: [

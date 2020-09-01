@@ -21,6 +21,12 @@ export interface ExtensionModel {
   updateUrl?: string;
 }
 
+export interface InstalledExtension<T extends ExtensionModel = any> {
+  manifestPath: string;
+  manifest: ExtensionManifest;
+  LensExtension: new (model: T, manifest?: ExtensionManifest) => LensExtension;
+}
+
 export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   private constructor() {
     super({
@@ -31,7 +37,7 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   @observable version: ExtensionVersion = "0.0.0";
   @observable extensions = observable.map<ExtensionId, LensExtension>();
   @observable removed = observable.map<ExtensionId, LensExtension>();
-  @observable installed = observable.set<ExtensionManifest>([], { equals: comparer.shallow });
+  @observable installed = observable.map<string, InstalledExtension>([], { equals: comparer.shallow });
 
   get folderPath(): string {
     if (isDevelopment) {
@@ -45,31 +51,41 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
     return super.load();
   }
 
-  async loadInstalledExtensions() {
-    const extensions = await this.loadExtensions(this.folderPath);
-    this.installed.replace(extensions);
+  getExtensionByManifest(manifestPath: string): InstalledExtension {
+    let manifestJson: ExtensionManifest;
+    let mainJs: string;
+    try {
+      manifestJson = __non_webpack_require__(manifestPath); // eslint-disable-line
+      mainJs = path.resolve(path.dirname(manifestPath), manifestJson.main); // fixme: compile *.ts on the fly
+      const LensExtension = __non_webpack_require__(mainJs).default; // eslint-disable-line
+      return {
+        manifestPath: manifestPath,
+        manifest: manifestJson,
+        LensExtension: LensExtension,
+      }
+    } catch (err) {
+      logger.error(`[EXTENSION-STORE]: can't load extension at ${manifestPath}: ${err}`, { manifestJson, mainJs });
+    }
   }
 
-  async loadExtensions(basePath: string): Promise<ExtensionManifest[]> {
-    const paths = await fs.readdir(basePath);
+  @action
+  async loadInstalledExtensions() {
+    const extensions = await this.loadExtensions(this.folderPath);
+    this.installed.replace(extensions.map(ext => [ext.manifestPath, ext]));
+  }
+
+  async loadExtensions(folderPath: string): Promise<InstalledExtension[]> {
+    const paths = await fs.readdir(folderPath);
     const manifestsLoading = paths.map(fileName => {
-      const absPath = path.resolve(basePath, fileName);
+      const absPath = path.resolve(folderPath, fileName);
       const manifestPath = path.resolve(absPath, "package.json");
-      return new Promise<ExtensionManifest>(async resolve => {
-        try {
-          const manifestJson = await fs.readJson(manifestPath);
-          resolve({
-            ...manifestJson,
-            manifestPath: manifestPath,
-          });
-        } catch (err) {
-          resolve(null);
-        }
-      })
+      return fs.access(manifestPath, fs.constants.F_OK)
+        .then(() => this.getExtensionByManifest(manifestPath))
+        .catch(() => null)
     });
     let extensions = await Promise.all(manifestsLoading);
     extensions = extensions.filter(v => !!v); // filter out files and invalid folders (without manifest.json)
-    logger.info(`[EXTENSION-STORE]: loaded ${extensions.length} extensions`, { basePath, extensions });
+    logger.info(`[EXTENSION-STORE]: ${extensions.length} extensions loaded`, { folderPath, extensions });
     return extensions;
   }
 
@@ -98,9 +114,19 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
         }
       })
       currentExtensions.forEach(model => {
+        const manifest = this.installed.get(model.manifestPath);
+        if (!manifest) {
+          logger.error(`[EXTENSION-STORE]: can't load extension manifest at ${model.manifestPath}`, { model })
+          return;
+        }
         const extension = this.getById(model.id)
         if (!extension) {
-          this.extensions.set(model.id, new LensExtension(model));
+          try {
+            const { LensExtension, manifest: manifestJson } = manifest;
+            this.extensions.set(model.id, new LensExtension(model, manifestJson));
+          } catch (err) {
+            logger.error(`[EXTENSION-STORE]: init extension failed: ${err}`, { model, manifest })
+          }
         } else {
           extension.importModel(model);
         }
