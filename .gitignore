@@ -8,4 +8,5 @@ tmp/
 static/build/**
 binaries/client/
 binaries/server/
+src/extensions/**/*.js
 locales/**/**.js

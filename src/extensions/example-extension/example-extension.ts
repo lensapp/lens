@@ -1,5 +1,4 @@
-// import { LensExtension } from "@lens"; // fixme: provide runtime import
-import { LensExtension } from "../extension";
+import { LensExtension } from "@lens"; // fixme: provide runtime import
 
 export default class ExampleExtension extends LensExtension {
   async init(): Promise<any> {

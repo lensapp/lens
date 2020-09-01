@@ -56,7 +56,7 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
     let mainJs: string;
     try {
       manifestJson = __non_webpack_require__(manifestPath); // eslint-disable-line
-      mainJs = path.resolve(path.dirname(manifestPath), manifestJson.main); // fixme: compile *.ts on the fly
+      mainJs = path.resolve(path.dirname(manifestPath), manifestJson.main); // todo: compile *.ts on the fly?
       const LensExtension = __non_webpack_require__(mainJs).default; // eslint-disable-line
       return {
         manifestPath: manifestPath,
