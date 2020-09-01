@@ -1,5 +1,5 @@
-import type { ClusterId } from "../common/cluster-store";
-import { BrowserWindow, dialog, ipcMain, shell, WebContents, webContents } from "electron"
+import { ClusterId, clusterStore } from "../common/cluster-store";
+import { BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { observable } from "mobx";
 import { initMenu } from "./menu";
@@ -55,6 +55,15 @@ export class WindowManager {
       this.mainView.webContents.sendToFrame(frameId, channel, url);
     } else {
       this.mainView.webContents.send(channel, url);
+    }
+  }
+
+  reload({ channel }: { channel: string }) {
+    const frameId = clusterStore.getById(this.activeClusterId)?.frameId;
+    if (frameId) {
+      this.mainView.webContents.sendToFrame(frameId, channel);
+    } else {
+      webContents.getFocusedWebContents()?.reload();
     }
   }
 

@@ -13,6 +13,7 @@ export const clusterIpc = {
       }
     },
   }),
+
   activate: createIpcChannel({
     channel: "cluster:activate",
     handle: (clusterId: ClusterId) => {
