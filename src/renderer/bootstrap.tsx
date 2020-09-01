@@ -4,6 +4,7 @@ import { render } from "react-dom";
 import { isMac } from "../common/vars";
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
+import { extensionStore } from "../extensions/extension-store";
 import { clusterStore, getHostedClusterId } from "../common/cluster-store";
 import { i18nStore } from "./i18n";
 import { themeStore } from "./theme.store";
@@ -23,6 +24,7 @@ export async function bootstrap(App: AppComponent) {
     userStore.load(),
     workspaceStore.load(),
     clusterStore.load(),
+    extensionStore.load(),
     i18nStore.init(),
     themeStore.init(),
   ]);

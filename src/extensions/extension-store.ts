@@ -1,11 +1,10 @@
 import path from "path";
-import { action, observable, toJS } from "mobx";
+import fs from "fs-extra";
+import { action, comparer, observable, toJS } from "mobx";
 import { BaseStore } from "../common/base-store";
-import { LensExtension } from "./extension";
+import { ExtensionId, ExtensionVersion, LensExtension } from "./extension";
 import { isDevelopment } from "../common/vars";
-
-export type ExtensionId = string;
-export type ExtensionVersion = string | number;
+import logger from "../main/logger";
 
 export interface ExtensionStoreModel {
   version: ExtensionVersion;
@@ -16,6 +15,7 @@ export interface ExtensionModel {
   id: ExtensionId;
   version: ExtensionVersion;
   name: string;
+  manifestPath: string;
   description?: string;
   enabled?: boolean;
   updateUrl?: string;
@@ -31,6 +31,21 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   @observable version: ExtensionVersion = "0.0.0";
   @observable extensions = observable.map<ExtensionId, LensExtension>();
   @observable removed = observable.map<ExtensionId, LensExtension>();
+  @observable installed = observable.set<LensExtension>([], { equals: comparer.shallow });
+
+  async load() {
+    await this.loadExtensions();
+    return super.load();
+  }
+
+  async loadExtensions() {
+    const localExtensions = await fs.readdir(this.builtInExtensionsPath);
+    logger.info(`[EXTENSIONS]: scanning installed extensions`, { paths: localExtensions });
+    this.installed.replace(localExtensions as any[]);
+    // return localExtensions
+    // .filter(path => ![".", ".."].includes(path))
+    // .map(path => import(`${path}/package.json`));
+  }
 
   get builtInExtensionsPath(): string {
     if (isDevelopment) {
