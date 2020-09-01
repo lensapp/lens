@@ -79,7 +79,7 @@ export class ThemeStore {
       }
       return existingTheme;
     } catch (err) {
-      logger.error(`Can't load theme "${themeId}": ${err}`);
+      logger.error(`Can't load theme "${themeId}": `, err);
     }
   }
 

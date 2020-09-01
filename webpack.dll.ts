@@ -13,7 +13,7 @@ export const packages = [
 ];
 
 export default function (): webpack.Configuration {
-  return {
+  const res: webpack.Configuration = {
     context: path.dirname(manifestPath),
     mode: isDevelopment ? "development" : "production",
     cache: isDevelopment,
@@ -31,4 +31,6 @@ export default function (): webpack.Configuration {
       })
     ],
   }
+  console.info('WEBPACK:dll', res)
+  return res
 }

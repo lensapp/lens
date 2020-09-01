@@ -248,7 +248,7 @@ export class Cluster implements ClusterModel {
       this.failureReason = null
       return ClusterStatus.AccessGranted;
     } catch (error) {
-      logger.error(`Failed to connect cluster "${this.contextName}": ${error}`)
+      logger.error(`Failed to connect cluster "${this.contextName}": `, error)
       if (error.statusCode) {
         if (error.statusCode >= 400 && error.statusCode < 500) {
           this.failureReason = "Invalid credentials";

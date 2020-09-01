@@ -100,7 +100,7 @@ elif test -f "$HOME/.bash_login"; then
 elif test -f "$HOME/.profile"; then
   . "$HOME/.profile"
 fi
-export PATH="${this.dirname}:${helmPath}:$PATH"
+export PATH="${dirname}:${helmPath}:$PATH"
 export KUBECONFIG="$tempkubeconfig"
 unset tempkubeconfig
 `;
@@ -128,7 +128,7 @@ test -f "$OLD_ZDOTDIR/.zlogin" && . "$OLD_ZDOTDIR/.zlogin"
 test -f "$OLD_ZDOTDIR/.zshrc" && . "$OLD_ZDOTDIR/.zshrc"
 
 # voodoo to replace any previous occurences of kubectl path in the PATH
-kubectlpath="${this.dirname}"
+kubectlpath="${dirname}"
 helmpath="${helmPath}"
 p=":$kubectlpath:"
 d=":$PATH:"
@@ -245,7 +245,7 @@ export class Kubectl {
 
       return true
     } catch (err) {
-      logger.error(`Could not copy the bundled kubectl to app-data: ${err}`)
+      logger.error("Could not copy the bundled kubectl to app-data: ", err)
       return false
     }
   }
@@ -262,25 +262,22 @@ export class Kubectl {
         try {
           await this.downloadKubectl();
         } catch (err) {
-          logger.error("Failed to write init scripts");
-          logger.error(err);
+          logger.error("Failed to download kubectl: ", err);
         }
       }
 
       try {
         await this.ensureLatestInitScripts();
       } catch (err) {
-        logger.error("Failed to write init scripts");
-        logger.error(err)
+        logger.error("Failed to write init scripts: ", err);
       }
 
       logger.debug(`Releasing lock for ${this.kubectlVersion}`)
       await release()
 
       return true
-    } catch (e) {
-      logger.error(`Failed to get a lock for ${this.kubectlVersion}`)
-      logger.error(e)
+    } catch (err) {
+      logger.error(`Failed to get a lock for ${this.kubectlVersion}: `, err)
       return false;
     }
   }

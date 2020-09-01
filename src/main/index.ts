@@ -21,7 +21,7 @@ import logger from "./logger"
 
 const workingDir = path.join(app.getPath("appData"), appName);
 app.setName(appName);
-if(!process.env.CICD) {
+if (!process.env.CICD) {
   app.setPath("userData", workingDir);
 }
 

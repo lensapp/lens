@@ -3,14 +3,14 @@ import webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 import { isDevelopment, isProduction, mainDir, buildDir } from "./src/common/vars";
 import nodeExternals from "webpack-node-externals";
+import TerserPlugin from "terser-webpack-plugin";
 
 export default function (): webpack.Configuration {
-  console.info('WEBPACK:main', require("./src/common/vars"))
-  return {
+  const res: webpack.Configuration = {
     context: __dirname,
     target: "electron-main",
     mode: isProduction ? "production" : "development",
-    devtool: isProduction ? "source-map" : "cheap-eval-source-map",
+    devtool: "source-map",
     cache: isDevelopment,
     entry: {
       main: path.resolve(mainDir, "index.ts"),
@@ -49,6 +49,12 @@ export default function (): webpack.Configuration {
     },
     plugins: [
       new ForkTsCheckerPlugin(),
-    ]
+    ],
+    optimization: {
+      minimize: isProduction,
+      minimizer: isProduction ? undefined : [new TerserPlugin()]
+    }
   }
+  console.info('WEBPACK:main', res)
+  return res
 }

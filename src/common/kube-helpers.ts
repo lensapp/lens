@@ -161,7 +161,7 @@ export async function getKubeConfigLocal(): Promise<string> {
     }
     return yaml.safeDump(obj);
   } catch (err) {
-    logger.debug(`Cannot read local kube-config: ${err}`)
+    logger.debug("Cannot read local kube-config: ", err)
     return "";
   }
 }

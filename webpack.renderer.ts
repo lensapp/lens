@@ -7,8 +7,7 @@ import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 
 export default function (): webpack.Configuration {
-  console.info('WEBPACK:renderer', require("./src/common/vars"))
-  return {
+  const res: webpack.Configuration = {
     context: __dirname,
     target: "electron-renderer",
     devtool: "source-map", // todo: optimize in dev-mode with webpack.SourceMapDevToolPlugin
@@ -157,4 +156,6 @@ export default function (): webpack.Configuration {
       }),
     ],
   }
+  console.info('WEBPACK:renderer', res)
+  return res
 }
