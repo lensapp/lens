@@ -14,7 +14,7 @@
     "resolveJsonModule": true,
     "declaration": true
   },
-  "files": [
+  "include": [
     "./example-extension/example-extension.ts"
   ]
 }

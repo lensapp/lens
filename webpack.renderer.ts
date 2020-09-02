@@ -25,6 +25,9 @@ export default function (): webpack.Configuration {
       libraryTarget: "commonjs2",
     },
     resolve: {
+      alias: {
+        // "@lens/extensions": "" // todo: replace in runtime to "build/LensExtensionApi.js"?
+      },
       extensions: [
         '.js', '.jsx', '.json',
         '.ts', '.tsx',

@@ -5,9 +5,12 @@ import extensionManifest from "./example-extension/package.json"
 import logger from "../main/logger";
 
 // TODO: extensions api
-// - figure out how to expose/inject lens apis to extension:
+// * figure out how to expose/inject lens apis to extension:
 // -- replace import "@lens" to real path to "build/Lens.js" or maybe "build/Lens-extensions.api.js"
 // -- load extension via NodeJS.require() / webContents.executeJavaScript()
+// * figure out how to re-use/provide-access from extension to its:
+// -- npm dependencies
+// -- folder assets/resources
 
 export type ExtensionId = string;
 export type ExtensionVersion = string | number;
