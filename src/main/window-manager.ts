@@ -1,8 +1,9 @@
-import { ClusterId, clusterStore } from "../common/cluster-store";
+import { clusterStore } from "../common/cluster-store";
 import { BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { observable } from "mobx";
 import { initMenu } from "./menu";
+import type { ClusterId } from "../common/cluster-store";
 
 export class WindowManager {
   protected mainView: BrowserWindow;
