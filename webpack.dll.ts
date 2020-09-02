@@ -1,6 +1,7 @@
 import path from "path";
 import webpack, { LibraryTarget } from "webpack";
 import { isDevelopment, buildDir } from "./src/common/vars";
+import ProgressBarPlugin from "progress-bar-webpack-plugin";
 
 export const library = "dll"
 export const libraryTarget: LibraryTarget = "commonjs2"
@@ -25,6 +26,7 @@ export default function (): webpack.Configuration {
       libraryTarget,
     },
     plugins: [
+      new ProgressBarPlugin(),
       new webpack.DllPlugin({
         name: library,
         path: manifestPath,
