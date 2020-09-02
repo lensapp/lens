@@ -18,6 +18,10 @@
     padding: 0 $spacing; // extra spacing for cluster-icon's badge
     margin-bottom: $spacing;
 
+    > :last-child {
+      margin-bottom: $margin;
+    }
+
     &:empty {
       display: none;
     }
