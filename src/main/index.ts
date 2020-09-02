@@ -21,7 +21,7 @@ import logger from "./logger"
 
 const workingDir = path.join(app.getPath("appData"), appName);
 app.setName(appName);
-if(!process.env.CICD) {
+if (!process.env.CICD) {
   app.setPath("userData", workingDir);
 }
 
@@ -49,7 +49,8 @@ async function main() {
   try {
     proxyPort = await getFreePort()
   } catch (error) {
-    await dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy")
+    logger.error(error)
+    dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy")
     app.quit();
   }
 
@@ -68,7 +69,7 @@ async function main() {
     proxyServer = LensProxy.create(proxyPort, clusterManager);
   } catch (error) {
     logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error.message}`)
-    await dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error.message || "unknown error"}`)
+    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error.message || "unknown error"}`)
     app.quit();
   }
 

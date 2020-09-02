@@ -44,6 +44,10 @@ export class KubeAuthProxy {
     }
     logger.debug(`spawning kubectl proxy with args: ${args}`)
     this.proxyProcess = spawn(proxyBin, args, { env: this.env, })
+    this.proxyProcess.on("error", (error) => {
+      this.sendIpcLogMessage({ data: error.message, error: true })
+      this.exit()
+    })
 
     this.proxyProcess.on("exit", (code) => {
       this.sendIpcLogMessage({ data: `proxy exited with code: ${code}`, error: code > 0 })

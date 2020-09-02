@@ -121,6 +121,8 @@ export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): st
     namespace = parentObject.getNs()
   } = ref;
 
+  if (!kind) return "";
+
   // search in registered apis by 'kind' & 'apiVersion'
   const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == apiVersion)
   if (api) {
@@ -129,7 +131,7 @@ export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): st
 
   // lookup api by generated resource link
   const apiPrefixes = ["/apis", "/api"];
-  const resource = kind.toLowerCase() + kind.endsWith("s") ? "es" : "s";
+  const resource = kind.endsWith("s") ? `${kind.toLowerCase()}es` : `${kind.toLowerCase()}s`;
   for (const apiPrefix of apiPrefixes) {
     const apiLink = createKubeApiURL({ apiPrefix, apiVersion, name, namespace, resource });
     if (apiManager.getApi(apiLink)) {
