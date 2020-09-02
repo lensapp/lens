@@ -9,4 +9,5 @@ static/build/**
 binaries/client/
 binaries/server/
 src/extensions/**/*.js
+src/extensions/**/*.d.ts
 locales/**/**.js
