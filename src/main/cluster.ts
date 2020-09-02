@@ -130,7 +130,7 @@ export class Cluster implements ClusterModel {
     if (!this.eventDisposers.length) {
       this.bindEvents();
     }
-    if (this.disconnected) {
+    if (this.disconnected || !this.accessible) {
       await this.reconnect();
     }
     await this.refresh();
