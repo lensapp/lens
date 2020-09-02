@@ -28,7 +28,7 @@ endif
 lint:
 	yarn lint
 
-test:
+test: download-bins
 	yarn test
 
 integration-linux:
