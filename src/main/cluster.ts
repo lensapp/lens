@@ -80,7 +80,7 @@ export class Cluster implements ClusterModel, ClusterState {
   @observable metadata: ClusterMetadata = {};
   @observable allowedNamespaces: string[] = [];
   @observable allowedResources: string[] = [];
-  @observable accessibleNamespaces?: string[];
+  @observable accessibleNamespaces: string[] = [];
 
   @computed get available() {
     return this.accessible && !this.disconnected;
@@ -427,7 +427,7 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   protected async getAllowedNamespaces() {
-    if (this.accessibleNamespaces?.length) {
+    if (this.accessibleNamespaces.length) {
       return this.accessibleNamespaces
     }
 

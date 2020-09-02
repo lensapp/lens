@@ -45,6 +45,7 @@ export class EditableList<T> extends React.Component<Props<T>> {
       <div className="EditableList">
         <div className="el-header">
           <Input
+            theme="round-black"
             value={this.currentNewItem}
             onSubmit={this.onSubmit}
             placeholder={placeholder}
@@ -53,14 +54,14 @@ export class EditableList<T> extends React.Component<Props<T>> {
         </div>
         <div className="el-contents">
           {
-            items
-              .map((item, index) => [
-                <div key={`${index}-value`}>{renderItem(item, index)}</div>,
-                <div key={`${index}-remove`} className="el-value-remove">
+            items.map((item, index) => (
+              <div key={item + `${index}`} className="el-item Badge">
+                <div>{renderItem(item, index)}</div>
+                <div className="el-value-remove">
                   <Icon material="delete_outline" onClick={() => remove(({ index, oldItem: item }))} />
                 </div>
-              ])
-              .flat()
+              </div>
+            ))
           }
         </div>
       </div>
