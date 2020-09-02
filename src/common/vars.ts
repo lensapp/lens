@@ -11,6 +11,7 @@ export const isDevelopment = isDebugging || !isProduction;
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
 
 export const appName = `${packageInfo.productName}${isDevelopment ? "Dev" : ""}`
+export const extensionApiLibName = `${appName}-extensions.api`
 export const publicPath = "/build/"
 
 // Webpack build paths
@@ -18,6 +19,7 @@ export const contextDir = process.cwd();
 export const buildDir = path.join(contextDir, "static", publicPath);
 export const mainDir = path.join(contextDir, "src/main");
 export const rendererDir = path.join(contextDir, "src/renderer");
+export const extensionsDir = path.join(contextDir, "src/extensions");
 export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 

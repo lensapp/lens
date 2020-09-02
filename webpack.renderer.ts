@@ -1,4 +1,4 @@
-import { appName, htmlTemplate, isDevelopment, isProduction, buildDir, rendererDir, sassCommonVars, publicPath } from "./src/common/vars";
+import { extensionApiLibName, appName, buildDir, extensionsDir, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars } from "./src/common/vars";
 import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
@@ -16,6 +16,7 @@ export default function (): webpack.Configuration {
     cache: isDevelopment,
     entry: {
       [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
+      [extensionApiLibName]: path.resolve(extensionsDir, "extension-api.ts"), // todo: use separated tsconfig.json?
     },
     output: {
       publicPath: publicPath,
@@ -25,9 +26,6 @@ export default function (): webpack.Configuration {
       libraryTarget: "commonjs2",
     },
     resolve: {
-      alias: {
-        // "@lens/extensions": "" // todo: replace in runtime to "build/LensExtensionApi.js"?
-      },
       extensions: [
         '.js', '.jsx', '.json',
         '.ts', '.tsx',
@@ -154,6 +152,7 @@ export default function (): webpack.Configuration {
         filename: `${appName}.html`,
         template: htmlTemplate,
         inject: true,
+        excludeChunks: [extensionApiLibName],
       }),
 
       new MiniCssExtractPlugin({

@@ -11,10 +11,10 @@
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "declaration": true
+    "resolveJsonModule": true
   },
   "include": [
-    "./example-extension/example-extension.ts"
+    "../extension-api.mock.d.ts",
+    "./example-extension.ts"
   ]
 }
