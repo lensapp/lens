@@ -155,14 +155,14 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Forward',
         accelerator: 'CmdOrCtrl+]',
         click() {
-          webContents.getFocusedWebContents()?.goForward();
+          webContents.getFocusedWebContents()?.goForward()
         }
       },
       {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click() {
-          webContents.getFocusedWebContents()?.reload();
+          windowManager.reload({ channel: "menu:reload" });
         }
       },
       { role: 'toggleDevTools' },

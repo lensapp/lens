@@ -33,8 +33,8 @@ export function getMatchedCluster() {
   return clusterStore.getById(getMatchedClusterId())
 }
 
-// Refresh global menu depending on active route's type (common/cluster view)
 if (ipcRenderer) {
+  // Refresh global menu depending on active route's type (common/cluster view)
   const isMainView = !getHostedClusterId();
   if (isMainView) {
     reaction(() => getMatchedClusterId(), clusterId => {
@@ -43,4 +43,9 @@ if (ipcRenderer) {
       fireImmediately: true
     })
   }
+
+  // Reload dashboard
+  ipcRenderer.on("menu:reload", () => {
+    location.reload();
+  });
 }
