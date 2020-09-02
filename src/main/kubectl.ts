@@ -22,9 +22,10 @@ const kubectlMap: Map<string, string> = new Map([
   ["1.13", "1.13.12"],
   ["1.14", "1.14.10"],
   ["1.15", "1.15.11"],
-  ["1.16", "1.16.8"],
+  ["1.16", "1.16.14"],
   ["1.17", bundledVersion],
-  ["1.18", "1.18.0"]
+  ["1.18", "1.18.8"],
+  ["1.19", "1.19.0"]
 ])
 
 const packageMirrors: Map<string, string> = new Map([
