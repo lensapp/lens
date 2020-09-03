@@ -2,7 +2,6 @@ import { KubeObject } from "../kube-object";
 import { VersionedKubeApi } from "../kube-api-versioned";
 import { crdResourcesURL } from "../../components/+custom-resources/crd.route";
 
-
 type AdditionalPrinterColumnsCommon = {
   name: string;
   type: "integer" | "number" | "string" | "boolean" | "date";
@@ -23,7 +22,7 @@ export class CustomResourceDefinition extends KubeObject {
 
   spec: {
     group: string;
-    version?: string;
+    version?: string; // deprecated in v1 api
     names: {
       plural: string;
       singular: string;
@@ -36,13 +35,14 @@ export class CustomResourceDefinition extends KubeObject {
       name: string;
       served: boolean;
       storage: boolean;
+      schema?: unknown; // required in v1 but not present in v1beta
       additionalPrinterColumns?: AdditionalPrinterColumnsV1[]
     }[];
     conversion: {
       strategy?: string;
       webhook?: any;
     };
-    additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[];
+    additionalPrinterColumns?: AdditionalPrinterColumnsV1Beta[]; // removed in v1
   }
   status: {
     conditions: {
@@ -98,7 +98,8 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getVersion() {
-    return this.spec.version ?? this.spec.versions.find(a => a.storage)?.name;
+    // v1 has removed the spec.version property, if it is present it must match the first version
+    return this.spec.versions[0]?.name ?? this.spec.version;
   }
 
   isNamespaced() {
@@ -127,7 +128,7 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getValidation() {
-    return JSON.stringify(this.spec.validation, null, 2);
+    return JSON.stringify(this.spec.validation ?? this.spec.versions?.[0]?.schema, null, 2);
   }
 
   getConditions() {
