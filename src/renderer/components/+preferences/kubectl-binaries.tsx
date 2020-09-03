@@ -6,6 +6,7 @@ import { Input } from '../input';
 import { SubTitle } from '../layout/sub-title';
 import { UserPreferences, userStore } from '../../../common/user-store';
 import { observer } from 'mobx-react';
+import { Kubectl } from '../../../main/kubectl';
 
 export const KubectlBinaries = observer(({ preferences }: { preferences: UserPreferences }) => {
   const [downloadPath, setDownloadPath] = useState(preferences.downloadBinariesPath || "");
@@ -31,7 +32,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
           onBlur={save}
         />
         <small className="hint">
-          <Trans>Default: $PATH/kubectl</Trans>
+          <Trans>Default:</Trans>{" "}{Kubectl.bundledKubectlPath}
         </small>
       </>
     );
