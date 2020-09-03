@@ -4,12 +4,13 @@ import { EventEmitter } from "events";
 import path from "path"
 import shellEnv from "shell-env"
 import { app } from "electron"
-import { Kubectl } from "./kubectl"
+import { Kubectl, bundledKubectl } from "./kubectl"
 import { Cluster } from "./cluster"
 import { ClusterPreferences } from "../common/cluster-store";
 import { helmCli } from "./helm/helm-cli"
 import { isWindows } from "../common/vars";
 import { tracker } from "../common/tracker";
+import { userStore } from "../common/user-store";
 
 export class ShellSession extends EventEmitter {
   static shellEnvs: Map<string, any> = new Map()
@@ -35,7 +36,8 @@ export class ShellSession extends EventEmitter {
   }
 
   public async open() {
-    this.kubectlBinDir = await this.kubectl.binDir()
+    const pathFromPreferences = userStore.preferences.kubectlBinariesPath || Kubectl.bundledKubectlPath
+    this.kubectlBinDir = userStore.preferences.downloadKubectlBinaries ? await this.kubectl.binDir() : path.dirname(pathFromPreferences)
     this.helmBinDir = helmCli.getBinaryDir()
     const env = await this.getCachedShellEnv()
     const shell = env.PTYSHELL
@@ -67,11 +69,11 @@ export class ShellSession extends EventEmitter {
   protected async getShellArgs(shell: string): Promise<Array<string>> {
     switch(path.basename(shell)) {
     case "powershell.exe":
-      return ["-NoExit", "-command", `& {Set-Location $Env:USERPROFILE; $Env:PATH="${this.kubectlBinDir};${this.helmBinDir};$Env:PATH"}`]
+      return ["-NoExit", "-command", `& {Set-Location $Env:USERPROFILE; $Env:PATH="${this.helmBinDir};${this.kubectlBinDir};$Env:PATH"}`]
     case "bash":
       return ["--init-file", path.join(this.kubectlBinDir, '.bash_set_path')]
     case "fish":
-      return ["--login", "--init-command", `export PATH="${this.kubectlBinDir}:${this.helmBinDir}:$PATH"; export KUBECONFIG="${this.kubeconfigPath}"`]
+      return ["--login", "--init-command", `export PATH="${this.helmBinDir}:${this.kubectlBinDir}:$PATH"; export KUBECONFIG="${this.kubeconfigPath}"`]
     case "zsh":
       return ["--login"]
     default:
