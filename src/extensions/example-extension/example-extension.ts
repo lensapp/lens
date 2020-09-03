@@ -1,4 +1,3 @@
-// fixme: provide runtime import / webpack.resolve.alias / require.extensions (?)
 import { LensExtension } from "@lens/extensions";
 
 export default class ExampleExtension extends LensExtension {

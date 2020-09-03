@@ -1,4 +1,4 @@
-import { extensionApiLibName, appName, buildDir, extensionsDir, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars } from "./src/common/vars";
+import { appName, buildDir, extensionsLibName, extensionsDir, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars } from "./src/common/vars";
 import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
@@ -16,7 +16,7 @@ export default function (): webpack.Configuration {
     cache: isDevelopment,
     entry: {
       [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
-      [extensionApiLibName]: path.resolve(extensionsDir, "extension-api.ts"), // todo: use separated tsconfig.json?
+      [extensionsLibName]: path.resolve(extensionsDir, "extension-api.ts"),
     },
     output: {
       publicPath: publicPath,
@@ -152,7 +152,7 @@ export default function (): webpack.Configuration {
         filename: `${appName}.html`,
         template: htmlTemplate,
         inject: true,
-        excludeChunks: [extensionApiLibName],
+        excludeChunks: [extensionsLibName],
       }),
 
       new MiniCssExtractPlugin({

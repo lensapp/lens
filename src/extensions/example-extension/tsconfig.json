@@ -11,7 +11,9 @@
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "declaration": true
   },
   "include": [
     "../extension-api.mock.d.ts",

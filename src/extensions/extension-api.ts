@@ -1,4 +1,4 @@
-// LensExtensions.api.js developer kit (Lens common components)
-// Should be published to npm (with types declarations) and also available as built-in dependency
+// Lens-extensions.api.js developer kit
+// todo: generate types instead of extension-api.mock.d.ts
 
 export * from "./extension"

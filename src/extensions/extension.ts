@@ -4,14 +4,6 @@ import { action, observable, when } from "mobx";
 import extensionManifest from "./example-extension/package.json"
 import logger from "../main/logger";
 
-// TODO: extensions api
-// * figure out how to expose/inject lens apis to extension:
-// -- replace import "@lens" to real path to "build/Lens.js" or maybe "build/Lens-extensions.api.js"
-// -- load extension via NodeJS.require() / webContents.executeJavaScript()
-// * figure out how to re-use/provide-access from extension to its:
-// -- npm dependencies
-// -- folder assets/resources
-
 export type ExtensionId = string;
 export type ExtensionVersion = string | number;
 export type ExtensionManifest = typeof extensionManifest & ExtensionModel;
@@ -49,7 +41,8 @@ export class LensExtension implements ExtensionModel {
   }
 
   async init() {
-    // todo
+    // todo: add more app/extension lifecycle hooks? e.g. onAppExit(), etc.
+    // todo: provide runtime dependencies
   }
 
   async install() {
