@@ -106,15 +106,15 @@ export class Kubectl {
   }
 
   public getPathFromPreferences() {
-    return userStore.preferences.kubectlBinariesPath || this.getBundledPath()
+    return userStore.preferences?.kubectlBinariesPath || this.getBundledPath()
   }
 
   protected getDownloadDir() {
-    return userStore.preferences.downloadBinariesPath || Kubectl.kubectlDir
+    return userStore.preferences?.downloadBinariesPath || Kubectl.kubectlDir
   }
 
   public async getPath(bundled = false): Promise<string> {
-    if (!userStore.preferences.downloadKubectlBinaries) {
+    if (userStore.preferences?.downloadKubectlBinaries === false) {
       return this.getPathFromPreferences()
     }
 
@@ -193,7 +193,7 @@ export class Kubectl {
   }
 
   public async ensureKubectl(): Promise<boolean> {
-    if (!userStore.preferences.downloadKubectlBinaries) {
+    if (userStore.preferences?.downloadKubectlBinaries === false) {
       return true
     }
     if (Kubectl.invalidBundle) {
@@ -278,7 +278,7 @@ export class Kubectl {
   }
 
   protected async writeInitScripts() {
-    const kubectlPath = userStore.preferences.downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences())
+    const kubectlPath = userStore.preferences?.downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences())
     const helmPath = helmCli.getBinaryDir()
     const fsPromises = fs.promises;
     const bashScriptPath = path.join(this.dirname, '.bash_set_path')
