@@ -1,6 +1,7 @@
 import type { ExtensionModel } from "./extension-store";
 import { readJsonSync } from "fs-extra";
-import { action, observable, when } from "mobx";
+import { action, observable } from "mobx";
+import { LensRendererRuntimeEnv } from "./extension-api.runtime";
 import extensionManifest from "./example-extension/package.json"
 import logger from "../main/logger";
 
@@ -17,12 +18,10 @@ export class LensExtension implements ExtensionModel {
   @observable version: ExtensionVersion = "0.0.0";
   @observable manifest: ExtensionManifest;
   @observable manifestPath: string;
-  @observable isReady = false;
   @observable isEnabled = false;
+  @observable.ref runtime: LensRendererRuntimeEnv;
 
-  whenReady = when(() => this.isReady);
-
-  constructor(model: ExtensionModel, manifest?: ExtensionManifest) {
+  constructor(model: ExtensionModel, manifest: ExtensionManifest) {
     this.importModel(model, manifest);
   }
 
@@ -33,16 +32,30 @@ export class LensExtension implements ExtensionModel {
       this.manifestPath = manifestPath;
       this.isEnabled = enabled;
       Object.assign(this, model);
-      this.isReady = true;
     } catch (err) {
       logger.error(`[EXTENSION]: cannot read manifest at ${manifestPath}`, { ...model, err: String(err) })
       this.disable();
     }
   }
 
-  async init() {
-    // todo: add more app/extension lifecycle hooks? e.g. onAppExit(), etc.
-    // todo: provide runtime dependencies
+  async activate(params: LensRendererRuntimeEnv) {
+    logger.info(`[EXTENSION]: activate ${this.name}@${this.version}`, this.getMeta());
+    this.runtime = params;
+  }
+
+  async deactivate() {
+    logger.info(`[EXTENSION]: deactivate ${this.name}@${this.version}`, this.getMeta());
+    this.runtime = null;
+  }
+
+  async enable() {
+    logger.info(`[EXTENSION]: enable ${this.name}@${this.version}`, this.getMeta());
+    this.isEnabled = true;
+  }
+
+  async disable() {
+    logger.info(`[EXTENSION]: disable ${this.name}@${this.version}`, this.getMeta());
+    this.isEnabled = false;
   }
 
   async install() {
@@ -53,18 +66,21 @@ export class LensExtension implements ExtensionModel {
     // todo
   }
 
+  async upgrade() {
+    // todo
+  }
+
   async checkNewVersion() {
     // todo
   }
 
-  async enable() {
-    this.isEnabled = true;
-    // todo
-  }
-
-  async disable() {
-    this.isEnabled = false;
-    // todo
+  getMeta() {
+    return {
+      id: this.id,
+      manifest: this.manifest,
+      manifestPath: this.manifestPath,
+      enabled: this.isEnabled,
+    }
   }
 
   toJSON(): ExtensionModel {
