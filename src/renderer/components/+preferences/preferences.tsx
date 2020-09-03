@@ -16,6 +16,7 @@ import { Badge } from "../badge";
 import { themeStore } from "../../theme.store";
 import { history } from "../../navigation";
 import { Tooltip } from "../tooltip";
+import { KubectlBinaries } from "./kubectl-binaries";
 
 @observer
 export class Preferences extends React.Component {
@@ -168,6 +169,8 @@ export class Preferences extends React.Component {
           <small className="hint">
             <Trans>Proxy is used only for non-cluster communication.</Trans>
           </small>
+
+          <KubectlBinaries preferences={preferences} />
 
           <h2><Trans>Certificate Trust</Trans></h2>
           <Checkbox
