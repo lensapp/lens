@@ -70,11 +70,15 @@ html {
     &__menu {
       background: var(--select-menu-bgc);
       box-shadow: inset 0 0 0 1px var(--select-menu-border-color);
+      width: max-content;
+      min-width: 100%;
 
       &-list {
         @include custom-scrollbar;
         padding-right: 1px;
         padding-left: 1px;
+        width: max-content;
+        min-width: 100%;
       }
 
       &-notice {
@@ -83,6 +87,8 @@ html {
     }
 
     &__option {
+      white-space: nowrap;
+
       &:active {
         background: $primary;
       }
