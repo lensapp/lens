@@ -1,7 +1,7 @@
 import type { ExtensionModel } from "./extension-store";
+import type { LensRendererRuntimeEnv } from "./extension-api.runtime";
 import { readJsonSync } from "fs-extra";
 import { action, observable } from "mobx";
-import { LensRendererRuntimeEnv } from "./extension-api.runtime";
 import extensionManifest from "./example-extension/package.json"
 import logger from "../main/logger";
 

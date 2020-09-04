@@ -7,6 +7,7 @@
     "declaration": false
   },
   "include": [
+    "../../../types",
     "./example-extension.ts"
   ]
 }
