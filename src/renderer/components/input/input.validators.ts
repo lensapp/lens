@@ -2,6 +2,7 @@ import type { InputProps } from "./input";
 import { ReactNode } from "react";
 import { t } from "@lingui/macro";
 import { _i18n } from '../../i18n';
+import fse from "fs-extra";
 
 export interface Validator {
   debounce?: number; // debounce for async validators in ms
@@ -40,6 +41,12 @@ export const isUrl: Validator = {
   message: () => _i18n._(t`Wrong url format`),
   validate: value => !!value.match(/^http(s)?:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]*)*$/),
 };
+
+export const isPath: Validator = {
+  condition: ({ type }) => type === "text",
+  message: () => _i18n._(t`This field must be a path to an existing file`),
+  validate: value => !value || fse.pathExistsSync(value),
+}
 
 export const minLength: Validator = {
   condition: ({ minLength }) => !!minLength,
