@@ -57,7 +57,7 @@ export class CrdResources extends React.Component<Props> {
       [sortBy.age]: (item: KubeObject) => item.metadata.creationTimestamp,
     }
     extraColumns.forEach(column => {
-      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.query(item, column.JSONPath.slice(1))
+      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.query(item, column.jsonPath.slice(1))
     })
     // todo: merge extra columns and other params to predefined view
     const { List } = apiManager.getViews(crd.getResourceApiBase());
@@ -88,9 +88,9 @@ export class CrdResources extends React.Component<Props> {
         renderTableContents={(crdInstance: KubeObject) => [
           crdInstance.getName(),
           isNamespaced && crdInstance.getNs(),
-          ...extraColumns.map(column =>
-            jsonPath.query(crdInstance, column.JSONPath.slice(1))
-          ),
+          ...extraColumns.map(column => {
+            return jsonPath.query(crdInstance, (column.jsonPath).slice(1))
+          }),
           crdInstance.getAge(),
         ]}
         renderItemMenu={(item: KubeObject) => {
