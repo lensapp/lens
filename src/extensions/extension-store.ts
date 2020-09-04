@@ -77,11 +77,13 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
     this.installed.replace(extensions.map(ext => [ext.manifestPath, ext]));
 
     // todo: remove
-    extensions.forEach(({ extensionModule, manifest }) => {
-      const LensExtension = extensionModule.default;
-      const instance = new LensExtension({ ...manifest }, manifest);
-      instance.activate();
-    })
+    if (process.isMainFrame) {
+      extensions.forEach(({ extensionModule, manifest }) => {
+        const LensExtension = extensionModule.default;
+        const instance = new LensExtension({ ...manifest }, manifest);
+        instance.activate();
+      })
+    }
   }
 
   async loadExtensions(folderPath: string): Promise<InstalledExtension[]> {
