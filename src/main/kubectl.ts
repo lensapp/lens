@@ -261,22 +261,6 @@ export class Kubectl {
     })
   }
 
-  protected async scriptIsLatest(scriptPath: string) {
-    const scriptExists = await pathExists(scriptPath)
-    if (!scriptExists) return false
-
-    try {
-      const filehandle = await fs.promises.open(scriptPath, 'r')
-      const buffer = Buffer.alloc(40)
-      await filehandle.read(buffer, 0, 40, 0)
-      await filehandle.close()
-      return buffer.toString().startsWith(initScriptVersionString)
-    } catch (err) {
-      logger.error(err)
-      return false
-    }
-  }
-
   protected async writeInitScripts() {
     const kubectlPath = userStore.preferences?.downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences())
     const helmPath = helmCli.getBinaryDir()

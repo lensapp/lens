@@ -4,7 +4,7 @@ import { EventEmitter } from "events";
 import path from "path"
 import shellEnv from "shell-env"
 import { app } from "electron"
-import { Kubectl, bundledKubectl } from "./kubectl"
+import { Kubectl } from "./kubectl"
 import { Cluster } from "./cluster"
 import { ClusterPreferences } from "../common/cluster-store";
 import { helmCli } from "./helm/helm-cli"
