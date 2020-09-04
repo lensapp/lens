@@ -28,6 +28,8 @@ export class Preferences extends React.Component {
     { value: "china", label: "China (Azure)" },
   ]
 
+  @observable httpProxy = userStore.preferences.httpsProxy || "";
+
   @computed get themeOptions(): SelectOption<string>[] {
     return themeStore.themes.map(theme => ({
       label: theme.name,
@@ -43,7 +45,19 @@ export class Preferences extends React.Component {
   }
 
   async componentDidMount() {
+    window.addEventListener('keydown', this.onEscapeKey);
     await this.loadHelmRepos();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onEscapeKey);
+  }
+
+  onEscapeKey = (evt: KeyboardEvent) => {
+    if (evt.code === "Escape") {
+      evt.stopPropagation();
+      history.goBack();
+    }
   }
 
   @action
@@ -162,8 +176,9 @@ export class Preferences extends React.Component {
           <Input
             theme="round-black"
             placeholder={_i18n._(t`Type HTTP proxy url (example: http://proxy.acme.org:8080)`)}
-            value={preferences.httpsProxy || ""}
-            onChange={v => preferences.httpsProxy = v}
+            value={this.httpProxy}
+            onChange={v => this.httpProxy = v}
+            onBlur={() => preferences.httpsProxy = this.httpProxy}
           />
           <small className="hint">
             <Trans>Proxy is used only for non-cluster communication.</Trans>
