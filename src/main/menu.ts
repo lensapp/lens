@@ -73,10 +73,9 @@ export function buildMenu(windowManager: WindowManager) {
           navigate(preferencesURL())
         }
       },
-      { type: 'separator' },
       {
         label: 'Extensions',
-        accelerator: 'CmdOrCtrl+Shift+E',
+        accelerator: 'CmdOrCtrl+E',
         click() {
           navigate(extensionsURL())
         }

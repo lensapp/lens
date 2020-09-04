@@ -1,21 +1,11 @@
 {
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "jsx": "react",
-    "target": "ES2017",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "CommonJS",
-    "moduleResolution": "Node",
-    "noImplicitAny": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true
+    "sourceMap": false,
+    "declaration": false
   },
   "include": [
-    "../extension-api.mock.d.ts",
     "./example-extension.ts"
   ]
 }

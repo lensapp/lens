@@ -1,11 +1,11 @@
 dist/
-out/
 node_modules/
 .DS_Store
 yarn-error.log
 coverage/
 tmp/
-static/build/**
+static/build
+static/types
 binaries/client/
 binaries/server/
 src/extensions/*/*.js

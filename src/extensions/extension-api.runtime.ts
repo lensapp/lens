@@ -5,7 +5,7 @@ export interface LensRendererRuntimeEnv {
   apiManager: ApiManager;
 }
 
-// todo: expose more renderer runtime variables, stores, etc.
+// todo: expose more public runtime apis: stores, managers, etc.
 export function getExtensionRuntime(): LensRendererRuntimeEnv {
   return {
     apiManager,
