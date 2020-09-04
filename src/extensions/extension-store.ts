@@ -25,7 +25,7 @@ export interface InstalledExtension<T extends ExtensionModel = any> {
   manifest: ExtensionManifest;
   extensionModule: {
     [name: string]: any;
-    default: new (model: T, manifest?: ExtensionManifest) => LensExtension
+    default: new (model: ExtensionModel, manifest?: ExtensionManifest) => LensExtension
   }
 }
 
@@ -75,6 +75,13 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   async loadInstalledExtensions() {
     const extensions = await this.loadExtensions(this.folderPath);
     this.installed.replace(extensions.map(ext => [ext.manifestPath, ext]));
+
+    // todo: remove
+    extensions.forEach(({ extensionModule, manifest }) => {
+      const LensExtension = extensionModule.default;
+      const instance = new LensExtension({ ...manifest }, manifest);
+      instance.activate();
+    })
   }
 
   async loadExtensions(folderPath: string): Promise<InstalledExtension[]> {

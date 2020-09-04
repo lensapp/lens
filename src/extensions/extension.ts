@@ -38,14 +38,12 @@ export class LensExtension implements ExtensionModel {
     }
   }
 
-  async activate(params: LensRendererRuntimeEnv) {
+  async activate() {
     logger.info(`[EXTENSION]: activate ${this.name}@${this.version}`, this.getMeta());
-    this.runtime = params;
   }
 
   async deactivate() {
     logger.info(`[EXTENSION]: deactivate ${this.name}@${this.version}`, this.getMeta());
-    this.runtime = null;
   }
 
   async enable() {
