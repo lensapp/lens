@@ -11,7 +11,7 @@ const fileOptions: winston.transports.FileTransportOptions = {
   handleExceptions: false,
   level: isDebugging ? "debug" : "info",
   filename: "lens.log",
-  dirname: (app || remote.app).getPath("logs"),
+  dirname: (app ?? remote?.app)?.getPath("logs"),
   maxsize: 16 * 1024,
   maxFiles: 16,
   tailable: true,

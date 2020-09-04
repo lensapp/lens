@@ -1,7 +1,6 @@
 import "./cluster-settings.scss";
 
 import React from "react";
-import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { Features } from "./features";
 import { Removal } from "./removal";
@@ -15,6 +14,25 @@ import { navigate } from "../../navigation";
 
 @observer
 export class ClusterSettings extends React.Component {
+  async componentDidMount() {
+    window.addEventListener('keydown', this.onEscapeKey);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onEscapeKey);
+  }
+
+  onEscapeKey = (evt: KeyboardEvent) => {
+    if (evt.code === "Escape") {
+      evt.stopPropagation();
+      this.close();
+    }
+  }
+
+  close() {
+    navigate("/");
+  }
+
   render() {
     const cluster = getMatchedCluster();
     if (!cluster) return null;
@@ -26,7 +44,7 @@ export class ClusterSettings extends React.Component {
           showTooltip={false}
         />
         <h2>{cluster.preferences.clusterName}</h2>
-        <Icon material="close" onClick={() => navigate("/")} big/>
+        <Icon material="close" onClick={this.close} big/>
       </>
     );
     return (

@@ -10,9 +10,9 @@ Lens is the only IDE you’ll ever need to take control of your Kubernetes clust
 
 ## What makes Lens special?
 
-* Amazing usability and end user experience
-* Multi cluster management; Support for hundreds of clusters
-* Standalone application; No need to install anything in-cluster
+* Amazing usability and end-user experience
+* Multi cluster management: support for hundreds of clusters
+* Standalone application: no need to install anything in-cluster
 * Real-time cluster state visualization
 * Resource utilization charts and trends with history powered by built-in Prometheus
 * Terminal access to nodes and containers
@@ -38,7 +38,7 @@ brew cask install lens
 
 ## Development (advanced)
 
-Allows faster separately re-run some of involved processes:
+Allows for faster separate re-runs of some of the more involved processes:
 
 1. `yarn dev:main` compiles electron's main process part and start watching files 
 1. `yarn dev:renderer` compiles electron's renderer part and start watching files  

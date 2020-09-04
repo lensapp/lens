@@ -57,7 +57,7 @@ export class CrdResourceDetails extends React.Component<Props> {
         <KubeObjectMeta object={object}/>
         {extraColumns.map(column => {
           const { name } = column;
-          const value = jsonPath.query(object, column.JSONPath.slice(1));
+          const value = jsonPath.query(object, (column.jsonPath).slice(1));
           return (
             <DrawerItem key={name} name={name}>
               <CrdColumnValue value={value} />
