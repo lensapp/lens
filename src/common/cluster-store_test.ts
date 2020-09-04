@@ -93,6 +93,34 @@ describe("empty config", () => {
     expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
   })
 
+  it("check if reorderring works for same from and to", () => {
+    clusterStore.swapIconOrders("workstation", 1, 1)
+
+    const clusters = clusterStore.getByWorkspaceId("workstation");
+    expect(clusters[0].id).toBe("prod")
+    expect(clusters[0].preferences.iconOrder).toBe(0)
+    expect(clusters[1].id).toBe("dev")
+    expect(clusters[1].preferences.iconOrder).toBe(1)
+  });
+
+  it("check if reorderring works for different from and to", () => {
+    clusterStore.swapIconOrders("workstation", 0, 1)
+
+    const clusters = clusterStore.getByWorkspaceId("workstation");
+    expect(clusters[0].id).toBe("dev")
+    expect(clusters[0].preferences.iconOrder).toBe(0)
+    expect(clusters[1].id).toBe("prod")
+    expect(clusters[1].preferences.iconOrder).toBe(1)
+  });
+
+  it("check if after icon reordering, changing workspaces still works", () => {
+    clusterStore.swapIconOrders("workstation", 1, 1)
+    clusterStore.getById("prod").workspace = "default"
+
+    expect(clusterStore.getByWorkspaceId("workstation").length).toBe(1);
+    expect(clusterStore.getByWorkspaceId("default").length).toBe(2);
+  });
+
   it("removes cluster from store", async () => {
     await clusterStore.removeById("foo");
     expect(clusterStore.getById("foo")).toBeUndefined();

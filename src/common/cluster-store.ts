@@ -11,6 +11,9 @@ import { tracker } from "./tracker";
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
+import _ from "lodash";
+import move from "array-move";
+import { is } from "immer/dist/internal";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -18,14 +21,9 @@ export interface ClusterIconUpload {
   path: string;
 }
 
-interface ClusterIconOrdering {
-  [workspaceId: string]: ClusterId[]
-}
-
 export interface ClusterStoreModel {
   activeCluster?: ClusterId; // last opened cluster
   clusters?: ClusterModel[]
-  iconOrder?: ClusterIconOrdering,
 }
 
 export type ClusterId = string;
@@ -53,6 +51,7 @@ export interface ClusterPreferences {
   prometheusProvider?: {
     type: string;
   };
+  iconOrder?: number;
   icon?: string;
   httpsProxy?: string;
 }
@@ -88,7 +87,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable activeClusterId: ClusterId;
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
-  @observable clusterOrders: ClusterIconOrdering = {};
 
   @computed get activeCluster(): Cluster | null {
     return this.getById(this.activeClusterId);
@@ -107,6 +105,20 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     this.activeClusterId = id;
   }
 
+  @action
+  swapIconOrders(workspace: WorkspaceId, from: number, to: number) {
+    const clusters = this.getByWorkspaceId(workspace);
+    if (from < 0 || to < 0 || from >= clusters.length || to >= clusters.length || isNaN(from) || isNaN(to)) {
+      throw new Error(`invalid from<->to arguments`)
+    }
+
+    move.mutate(clusters, from, to);
+    for (const i in clusters) {
+      // This resets the iconOrder to the current display order
+      clusters[i].preferences.iconOrder = +i;
+    }
+  }
+
   hasClusters() {
     return this.clusters.size > 0;
   }
@@ -120,10 +132,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   getByWorkspaceId(workspaceId: string): Cluster[] {
-    this.clusterOrders[workspaceId] ??= Array.from(this.clusters.values())
-      .filter(cluster => cluster.workspace === workspaceId)
-      .map(cluster => cluster.id);
-    return this.clusterOrders[workspaceId].map(clusterId => this.clusters.get(clusterId));
+    const clusters = Array.from(this.clusters.values())
+      .filter(cluster => cluster.workspace === workspaceId);
+    return _.sortBy(clusters, cluster => cluster.preferences.iconOrder)
   }
 
   @action
@@ -159,12 +170,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  protected fromStore({ activeCluster, clusters = [], iconOrder = {} }: ClusterStoreModel = {}) {
+  protected fromStore({ activeCluster, clusters = [] }: ClusterStoreModel = {}) {
     const currentClusters = this.clusters.toJS();
     const newClusters = new Map<ClusterId, Cluster>();
     const removedClusters = new Map<ClusterId, Cluster>();
-
-    this.clusterOrders = iconOrder;
 
     // update new clusters
     for (const clusterModel of clusters) {
@@ -175,13 +184,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         cluster = new Cluster(clusterModel);
       }
       newClusters.set(clusterModel.id, cluster);
-
-      if (!this.clusterOrders[cluster.workspace]) {
-        this.clusterOrders[cluster.workspace] = [];
-      }
-      if (!this.clusterOrders[cluster.workspace].includes(cluster.id)) {
-        this.clusterOrders[cluster.workspace].push(cluster.id);
-      }
     }
 
     // update removed clusters
@@ -200,7 +202,6 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return toJS({
       activeCluster: this.activeClusterId,
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
-      iconOrder: this.clusterOrders,
     }, {
       recurseEverything: true
     })

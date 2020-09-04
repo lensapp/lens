@@ -21,7 +21,6 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
-import move from "array-move";
 
 // fixme: allow to rearrange clusters with drag&drop
 
@@ -93,10 +92,11 @@ export class ClustersMenu extends React.Component<Props> {
   swapClusterIconOrder(result: DropResult) {
     if (result.reason === "DROP") {
       const { currentWorkspaceId } = workspaceStore;
-      const clusters = clusterStore.getByWorkspaceId(currentWorkspaceId);
-
-      move.mutate(clusters, result.source.index, result.destination.index);
-      clusterStore.clusterOrders[currentWorkspaceId] = clusters.map(c => c.id);
+      const {
+        source: { index: from },
+        destination: { index: to },
+      } = result
+      clusterStore.swapIconOrders(currentWorkspaceId, from, to)
     }
   }
 
