@@ -6,7 +6,7 @@ endif
 
 .PHONY: init dev build test clean
 
-init: download-bins install-deps compile-dev
+init: install-deps download-bins compile-dev
 	echo "Init done"
 
 download-bins:
