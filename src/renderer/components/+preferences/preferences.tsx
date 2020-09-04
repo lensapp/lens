@@ -140,7 +140,6 @@ export class Preferences extends React.Component {
           />
           <small className="hint">
             <Trans>Proxy is used only for non-cluster communication.</Trans>
-          </small>Proxy is used only for non-cluster communication.</Trans>
           </small>
 
           <KubectlBinaries preferences={preferences} />
