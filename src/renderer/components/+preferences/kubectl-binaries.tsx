@@ -59,13 +59,13 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         }
       />
       <SubTitle title="Download mirror" />
-          <Select
-            placeholder={<Trans>Download mirror for kubectl</Trans>}
-            options={downloadMirrorOptions}
-            value={preferences.downloadMirror}
-            onChange={({ value }: SelectOption) => preferences.downloadMirror = value}
-            disabled={!preferences.downloadKubectlBinaries}
-          />
+      <Select
+        placeholder={<Trans>Download mirror for kubectl</Trans>}
+        options={downloadMirrorOptions}
+        value={preferences.downloadMirror}
+        onChange={({ value }: SelectOption) => preferences.downloadMirror = value}
+        disabled={!preferences.downloadKubectlBinaries}
+      />
       <SubTitle title="Directory for binaries"/>
       <Input
         theme="round-black"
