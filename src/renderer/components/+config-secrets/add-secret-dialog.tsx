@@ -8,7 +8,7 @@ import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Input } from "../input";
-import { systemName } from "../input/input.validators";
+import { systemName } from "../input/input_validators";
 import { Secret, secretsApi, SecretType } from "../../api/endpoints";
 import { SubTitle } from "../layout/sub-title";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
@@ -184,7 +184,7 @@ export class AddSecretDialog extends React.Component<Props> {
         <Wizard header={header} done={this.close}>
           <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createSecret}>
             <div className="secret-name">
-              <SubTitle title={<Trans>Secret name</Trans>}/>
+              <SubTitle title={<Trans>Secret name</Trans>} />
               <Input
                 autoFocus required
                 placeholder={_i18n._(t`Name`)}
@@ -194,7 +194,7 @@ export class AddSecretDialog extends React.Component<Props> {
             </div>
             <div className="flex auto gaps">
               <div className="secret-namespace">
-                <SubTitle title={<Trans>Namespace</Trans>}/>
+                <SubTitle title={<Trans>Namespace</Trans>} />
                 <NamespaceSelect
                   themeName="light"
                   value={namespace}
@@ -202,7 +202,7 @@ export class AddSecretDialog extends React.Component<Props> {
                 />
               </div>
               <div className="secret-type">
-                <SubTitle title={<Trans>Secret type</Trans>}/>
+                <SubTitle title={<Trans>Secret type</Trans>} />
                 <Select
                   themeName="light"
                   options={this.types}

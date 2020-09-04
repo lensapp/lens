@@ -10,7 +10,7 @@ jest.mock("electron", () => {
   }
 })
 
-import { UserStore } from "./user-store"
+import { UserStore } from "../user-store"
 import { SemVer } from "semver"
 import electron from "electron"
 

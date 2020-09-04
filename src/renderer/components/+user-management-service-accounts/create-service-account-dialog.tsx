@@ -10,7 +10,7 @@ import { Wizard, WizardStep } from "../wizard";
 import { SubTitle } from "../layout/sub-title";
 import { serviceAccountsStore } from "./service-accounts.store";
 import { Input } from "../input";
-import { systemName } from "../input/input.validators";
+import { systemName } from "../input/input_validators";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Notifications } from "../notifications";
 import { showDetails } from "../../navigation";
@@ -62,14 +62,14 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
       >
         <Wizard header={header} done={this.close}>
           <WizardStep nextLabel={<Trans>Create</Trans>} next={this.createAccount}>
-            <SubTitle title={<Trans>Account Name</Trans>}/>
+            <SubTitle title={<Trans>Account Name</Trans>} />
             <Input
               autoFocus required
               placeholder={_i18n._(t`Enter a name`)}
               validators={systemName}
               value={name} onChange={v => this.name = v.toLowerCase()}
             />
-            <SubTitle title={<Trans>Namespace</Trans>}/>
+            <SubTitle title={<Trans>Namespace</Trans>} />
             <NamespaceSelect
               themeName="light"
               value={namespace}
