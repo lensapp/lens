@@ -60,7 +60,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   static embedCustomKubeConfig(clusterId: ClusterId, kubeConfig: KubeConfig | string): string {
     const filePath = ClusterStore.getCustomKubeConfigPath(clusterId);
     const fileContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
-    saveToAppFiles(filePath, fileContents);
+    saveToAppFiles(filePath, fileContents, { mode: 0o600});
     return filePath;
   }
 
