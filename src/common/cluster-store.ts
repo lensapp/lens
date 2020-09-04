@@ -1,4 +1,4 @@
-import type { WorkspaceId } from "./workspace-store";
+import { WorkspaceId, workspaceStore } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote } from "electron";
 import { unlink } from "fs-extra";
@@ -11,6 +11,9 @@ import { tracker } from "./tracker";
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
+import _ from "lodash";
+import move from "array-move";
+import { is } from "immer/dist/internal";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -48,6 +51,7 @@ export interface ClusterPreferences {
   prometheusProvider?: {
     type: string;
   };
+  iconOrder?: number;
   icon?: string;
   httpsProxy?: string;
 }
@@ -101,6 +105,20 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     this.activeClusterId = id;
   }
 
+  @action
+  swapIconOrders(workspace: WorkspaceId, from: number, to: number) {
+    const clusters = this.getByWorkspaceId(workspace);
+    if (from < 0 || to < 0 || from >= clusters.length || to >= clusters.length || isNaN(from) || isNaN(to)) {
+      throw new Error(`invalid from<->to arguments`)
+    }
+
+    move.mutate(clusters, from, to);
+    for (const i in clusters) {
+      // This resets the iconOrder to the current display order
+      clusters[i].preferences.iconOrder = +i;
+    }
+  }
+
   hasClusters() {
     return this.clusters.size > 0;
   }
@@ -114,7 +132,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   getByWorkspaceId(workspaceId: string): Cluster[] {
-    return this.clustersList.filter(cluster => cluster.workspace === workspaceId)
+    const clusters = Array.from(this.clusters.values())
+      .filter(cluster => cluster.workspace === workspaceId);
+    return _.sortBy(clusters, cluster => cluster.preferences.iconOrder)
   }
 
   @action
@@ -156,7 +176,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     const removedClusters = new Map<ClusterId, Cluster>();
 
     // update new clusters
-    clusters.forEach(clusterModel => {
+    for (const clusterModel of clusters) {
       let cluster = currentClusters.get(clusterModel.id);
       if (cluster) {
         cluster.updateModel(clusterModel);
@@ -164,7 +184,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         cluster = new Cluster(clusterModel);
       }
       newClusters.set(clusterModel.id, cluster);
-    });
+    }
 
     // update removed clusters
     currentClusters.forEach(cluster => {
