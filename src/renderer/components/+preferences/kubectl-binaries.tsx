@@ -54,10 +54,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
       <Checkbox
         label={<Trans>Download kubectl binaries</Trans>}
         value={preferences.downloadKubectlBinaries}
-        onChange={downloadKubectlBinaries => {
-          preferences.downloadKubectlBinaries = downloadKubectlBinaries
-        }
-        }
+        onChange={downloadKubectlBinaries => preferences.downloadKubectlBinaries = downloadKubectlBinaries}
       />
       <SubTitle title="Download mirror" />
       <Select
