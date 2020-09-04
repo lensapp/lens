@@ -7,10 +7,17 @@ import { SubTitle } from '../layout/sub-title';
 import { UserPreferences, userStore } from '../../../common/user-store';
 import { observer } from 'mobx-react';
 import { Kubectl } from '../../../main/kubectl';
+import { SelectOption, Select } from '../select';
 
 export const KubectlBinaries = observer(({ preferences }: { preferences: UserPreferences }) => {
   const [downloadPath, setDownloadPath] = useState(preferences.downloadBinariesPath || "");
   const [binariesPath, setBinariesPath] = useState(preferences.kubectlBinariesPath || "");
+
+  const downloadMirrorOptions: SelectOption<string>[] = [
+    { value: "default", label: "Default (Google)" },
+    { value: "china", label: "China (Azure)" },
+  ]
+
 
   const save = () => {
     preferences.downloadBinariesPath = downloadPath;
@@ -51,6 +58,15 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
           preferences.downloadKubectlBinaries = !preferences.downloadKubectlBinaries
         }
       />
+      <SubTitle title="Download mirror" />
+          <Select
+            placeholder={<Trans>Download mirror for kubectl</Trans>}
+            options={downloadMirrorOptions}
+            value={preferences.downloadMirror}
+            onChange={({ value }: SelectOption) => preferences.downloadMirror = value}
+            disabled={!preferences.downloadKubectlBinaries}
+          />
+      <SubTitle title="Directory for binaries"/>
       <Input
         theme="round-black"
         value={downloadPath}
