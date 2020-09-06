@@ -1,7 +1,7 @@
 import type { ExtensionModel } from "./extension-store";
 import type { LensRuntimeRendererEnv } from "./lens-runtime";
 import { readJsonSync } from "fs-extra";
-import { action, observable } from "mobx";
+import { action, observable, toJS } from "mobx";
 import extensionManifest from "./example-extension/package.json"
 import logger from "../main/logger";
 
@@ -40,13 +40,13 @@ export class LensExtension implements ExtensionModel {
   async enable(runtime: LensRuntimeRendererEnv) {
     this.isEnabled = true;
     this.runtime = runtime;
-    console.log(`[EXTENSION]: enable ${this.name}@${this.version}`, this.getMeta());
+    console.log(`[EXTENSION]: enabled ${this.name}@${this.version}`, this.getMeta());
   }
 
   async disable() {
     this.isEnabled = false;
     this.runtime = {};
-    console.log(`[EXTENSION]: disable ${this.name}@${this.version}`, this.getMeta());
+    console.log(`[EXTENSION]: disabled ${this.name}@${this.version}`, this.getMeta());
   }
 
   // todo
@@ -64,13 +64,15 @@ export class LensExtension implements ExtensionModel {
   }
 
   getMeta() {
-    return {
+    return toJS({
       id: this.id,
       manifest: this.manifest,
       manifestPath: this.manifestPath,
       enabled: this.isEnabled,
       runtime: this.runtime,
-    }
+    }, {
+      recurseEverything: true
+    })
   }
 
   toJSON(): ExtensionModel {

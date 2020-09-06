@@ -57,13 +57,13 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   }
 
   autoEnableOnLoad(getLensRuntimeEnv: () => LensRuntimeRendererEnv, { delay = 0 } = {}) {
-    logger.info('[EXTENSIONS-STORE]: enabled auto-activation all installed extensions');
+    logger.info('[EXTENSIONS-STORE]: auto-activation loaded extensions: ON');
     return reaction(() => this.installed.toJS(), installedExtensions => {
       installedExtensions.forEach(({ extensionModule, manifest, manifestPath }) => {
         let instance = this.getById(manifestPath);
         if (!instance) {
           const LensExtensionClass = extensionModule.default;
-          instance = new LensExtensionClass({ ...manifest }, manifest);
+          instance = new LensExtensionClass({ ...manifest, manifestPath, id: manifestPath }, manifest);
           instance.enable(getLensRuntimeEnv());
           this.extensions.set(manifestPath, instance); // save
         }
