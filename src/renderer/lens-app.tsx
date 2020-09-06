@@ -17,7 +17,7 @@ import { getLensRuntime } from "../extensions/lens-runtime";
 @observer
 export class LensApp extends React.Component {
   componentDidMount() {
-    extensionStore.enableAutoInitOnLoad(getLensRuntime);
+    extensionStore.autoEnableOnLoad(getLensRuntime);
   }
 
   render() {

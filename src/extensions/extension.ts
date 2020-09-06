@@ -5,7 +5,7 @@ import { action, observable } from "mobx";
 import extensionManifest from "./example-extension/package.json"
 import logger from "../main/logger";
 
-export type ExtensionId = string; // id or path to "%lens-extension/manifest.json"
+export type ExtensionId = string; // instance-id or abs path to "%lens-extension/manifest.json"
 export type ExtensionVersion = string | number;
 export type ExtensionManifest = typeof extensionManifest & ExtensionModel;
 
@@ -30,7 +30,6 @@ export class LensExtension implements ExtensionModel {
     try {
       this.manifest = manifest || await readJsonSync(manifestPath, { throws: true })
       this.manifestPath = manifestPath;
-      this.isEnabled = enabled;
       Object.assign(this, model);
     } catch (err) {
       logger.error(`[EXTENSION]: cannot read manifest at ${manifestPath}`, { ...model, err: String(err) })
@@ -41,13 +40,13 @@ export class LensExtension implements ExtensionModel {
   async enable(runtime: LensRuntimeRendererEnv) {
     this.isEnabled = true;
     this.runtime = runtime;
-    logger.info(`[EXTENSION]: enable ${this.name}@${this.version}`, this.getMeta());
+    console.log(`[EXTENSION]: enable ${this.name}@${this.version}`, this.getMeta());
   }
 
   async disable() {
     this.isEnabled = false;
     this.runtime = {};
-    logger.info(`[EXTENSION]: disable ${this.name}@${this.version}`, this.getMeta());
+    console.log(`[EXTENSION]: disable ${this.name}@${this.version}`, this.getMeta());
   }
 
   // todo
@@ -70,7 +69,7 @@ export class LensExtension implements ExtensionModel {
       manifest: this.manifest,
       manifestPath: this.manifestPath,
       enabled: this.isEnabled,
-      runtime: Object.keys(this.runtime),
+      runtime: this.runtime,
     }
   }
 
