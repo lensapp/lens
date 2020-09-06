@@ -1,4 +1,4 @@
-import { appName, buildDir, extensionsLibName, extensionsDir, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars } from "./src/common/vars";
+import { appName, buildDir, extensionsDir, extensionsLibName, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars } from "./src/common/vars";
 import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
@@ -6,24 +6,43 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 
-export default function (): webpack.Configuration {
-  console.info('WEBPACK:renderer', require("./src/common/vars"))
+export default [
+  webpackLensRenderer,
+  webpackExtensionsApi,
+]
+
+// todo: use common chunks/externals for "react", "react-dom", etc.
+export function webpackExtensionsApi(): webpack.Configuration {
+  const config = webpackLensRenderer({ showVars: false });
+  config.name = "extensions-api"
+  config.entry = {
+    [extensionsLibName]: path.resolve(extensionsDir, "extension-api.ts")
+  };
+  config.output.libraryTarget = "commonjs2"
+  delete config.devtool;
+  delete config.plugins;
+  return config;
+}
+
+export function webpackLensRenderer({ showVars = true } = {}): webpack.Configuration {
+  if (showVars) {
+    console.info('WEBPACK:renderer', require("./src/common/vars"));
+  }
   return {
     context: __dirname,
     target: "electron-renderer",
     devtool: "source-map", // todo: optimize in dev-mode with webpack.SourceMapDevToolPlugin
+    name: "lens-app",
     mode: isProduction ? "production" : "development",
     cache: isDevelopment,
     entry: {
       [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
-      [extensionsLibName]: path.resolve(extensionsDir, "extension-api.ts"),
     },
     output: {
       publicPath: publicPath,
       path: buildDir,
       filename: '[name].js',
       chunkFilename: 'chunks/[name].js',
-      libraryTarget: "commonjs2",
     },
     resolve: {
       extensions: [
@@ -152,7 +171,6 @@ export default function (): webpack.Configuration {
         filename: `${appName}.html`,
         template: htmlTemplate,
         inject: true,
-        excludeChunks: [extensionsLibName],
       }),
 
       new MiniCssExtractPlugin({
