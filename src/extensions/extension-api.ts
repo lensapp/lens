@@ -1,5 +1,5 @@
 // Lens-extensions api developer's kit
-export type { LensRendererRuntimeEnv } from "./extension-api.runtime";
+export type { LensRuntimeRendererEnv } from "./lens-runtime";
 
 // APIs
 export * from "./extension"

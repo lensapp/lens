@@ -1,12 +1,12 @@
-// Lens runtime params provider to hook up into extensions
+// Lens runtime for injecting to extension on activation
 import { apiManager, ApiManager } from "../renderer/api/api-manager";
 
-export interface LensRendererRuntimeEnv {
+export interface LensRuntimeRendererEnv {
   apiManager: ApiManager;
 }
 
 // todo: expose more public runtime apis: stores, managers, etc.
-export function getExtensionRuntime(): LensRendererRuntimeEnv {
+export function getLensRuntime(): LensRuntimeRendererEnv {
   return {
     apiManager,
   }

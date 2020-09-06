@@ -1,9 +1,11 @@
+import type { LensRuntimeRendererEnv } from "./lens-runtime";
 import path from "path";
 import fs from "fs-extra";
-import { action, comparer, observable, toJS } from "mobx";
+import { action, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "../common/base-store";
 import { ExtensionId, ExtensionManifest, ExtensionVersion, LensExtension } from "./extension";
 import { isDevelopment } from "../common/vars";
+import logger from "../main/logger";
 
 export interface ExtensionStoreModel {
   version: ExtensionVersion;
@@ -11,7 +13,7 @@ export interface ExtensionStoreModel {
 }
 
 export interface ExtensionModel {
-  id: ExtensionId;
+  id?: ExtensionId; // available in lens-extension instance
   version: ExtensionVersion;
   name: string;
   manifestPath: string;
@@ -39,7 +41,7 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   @observable version: ExtensionVersion = "0.0.0";
   @observable extensions = observable.map<ExtensionId, LensExtension>();
   @observable removed = observable.map<ExtensionId, LensExtension>();
-  @observable installed = observable.map<string, InstalledExtension>([], { equals: comparer.shallow });
+  @observable.shallow installed = observable.map<string, InstalledExtension>([]);
 
   get folderPath(): string {
     if (isDevelopment) {
@@ -49,8 +51,26 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   }
 
   async load() {
-    await this.loadInstalledExtensions();
+    await this.loadExtensions();
     return super.load();
+  }
+
+  enableAutoInitOnLoad(getLensRuntimeEnv: () => LensRuntimeRendererEnv, { delay = 0 } = {}) {
+    logger.info('[EXTENSIONS-STORE]: enabled: auto-init loaded extensions');
+    return reaction(() => Array.from(this.installed.values()), installedExtensions => {
+      installedExtensions.forEach(({ extensionModule, manifest, manifestPath }) => {
+        let instance = this.getById(manifestPath);
+        if (!instance) {
+          const LensExtension = extensionModule.default;
+          instance = new LensExtension({ ...manifest }, manifest);
+          this.extensions.set(manifestPath, instance); // fixme: mobx error
+          instance.enable(getLensRuntimeEnv());
+        }
+      })
+    }, {
+      fireImmediately: true,
+      delay: delay,
+    })
   }
 
   getExtensionByManifest(manifestPath: string): InstalledExtension {
@@ -72,21 +92,13 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   }
 
   @action
-  async loadInstalledExtensions() {
-    const extensions = await this.loadExtensions(this.folderPath);
-    this.installed.replace(extensions.map(ext => [ext.manifestPath, ext]));
-
-    // todo: remove
-    if (process.isMainFrame) {
-      extensions.forEach(({ extensionModule, manifest }) => {
-        const LensExtension = extensionModule.default;
-        const instance = new LensExtension({ ...manifest }, manifest);
-        instance.activate();
-      })
-    }
+  async loadExtensions() {
+    const extensions = await this.loadFromFolder(this.folderPath);
+    const extManifestMap = new Map(extensions.map(ext => [ext.manifestPath, ext]));
+    this.installed.replace(extManifestMap);
   }
 
-  async loadExtensions(folderPath: string): Promise<InstalledExtension[]> {
+  async loadFromFolder(folderPath: string): Promise<InstalledExtension[]> {
     const paths = await fs.readdir(folderPath);
     const manifestsLoading = paths.map(fileName => {
       const absPath = path.resolve(folderPath, fileName);
