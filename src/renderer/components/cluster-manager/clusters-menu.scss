@@ -63,4 +63,14 @@
       pointer-events: none;
     }
   }
+
+  > .dynamic-pages {
+    &:not(:empty) {
+      padding-top: $spacing;
+    }
+
+    .Icon {
+      --size: 40px;
+    }
+  }
 }
