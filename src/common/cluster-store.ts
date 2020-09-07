@@ -1,4 +1,4 @@
-import { WorkspaceId, workspaceStore } from "./workspace-store";
+import type { WorkspaceId } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote } from "electron";
 import { unlink } from "fs-extra";
@@ -13,7 +13,6 @@ import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
 import _ from "lodash";
 import move from "array-move";
-import { is } from "immer/dist/internal";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -64,7 +63,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   static embedCustomKubeConfig(clusterId: ClusterId, kubeConfig: KubeConfig | string): string {
     const filePath = ClusterStore.getCustomKubeConfigPath(clusterId);
     const fileContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
-    saveToAppFiles(filePath, fileContents, { mode: 0o600});
+    saveToAppFiles(filePath, fileContents, { mode: 0o600 });
     return filePath;
   }
 

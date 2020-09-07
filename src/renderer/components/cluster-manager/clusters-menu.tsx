@@ -23,8 +23,6 @@ import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
 import { dynamicPages } from "./register-page";
 
-// fixme: allow to rearrange clusters with drag&drop
-
 interface Props {
   className?: IClassName;
 }
