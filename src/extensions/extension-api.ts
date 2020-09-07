@@ -17,3 +17,6 @@ export * from "../renderer/components/slider"
 export * from "../renderer/components/spinner"
 export * from "../renderer/components/tabs"
 export * from "../renderer/components/line-progress"
+
+// Utils
+export * from "../main/logger";
