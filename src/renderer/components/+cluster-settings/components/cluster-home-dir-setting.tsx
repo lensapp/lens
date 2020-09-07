@@ -1,6 +1,6 @@
 import React from "react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
+import { observable, autorun } from "mobx";
+import { observer, disposeOnUnmount } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";
 import { Input } from "../../input";
 import { SubTitle } from "../../layout/sub-title";
@@ -11,7 +11,15 @@ interface Props {
 
 @observer
 export class ClusterHomeDirSetting extends React.Component<Props> {
-  @observable directory = this.props.cluster.preferences.terminalCWD || "";
+  @observable directory = "";
+
+  componentDidMount() {
+    disposeOnUnmount(this,
+      autorun(() => {
+        this.directory = this.props.cluster.preferences.terminalCWD || "";
+      })
+    );
+  }
 
   save = () => {
     this.props.cluster.preferences.terminalCWD = this.directory;

@@ -1,11 +1,11 @@
 import React from "react";
-import { observer } from "mobx-react";
+import { observer, disposeOnUnmount } from "mobx-react";
 import { prometheusProviders } from "../../../../common/prometheus-providers";
 import { Cluster } from "../../../../main/cluster";
 import { SubTitle } from "../../layout/sub-title";
 import { Select, SelectOption } from "../../select";
 import { Input } from "../../input";
-import { observable, computed } from "mobx";
+import { observable, computed, autorun } from "mobx";
 
 const options: SelectOption<string>[] = [
   { value: "", label: "Auto detect" },
@@ -27,14 +27,22 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
   }
 
   componentDidMount() {
-    const { prometheus, prometheusProvider } = this.props.cluster.preferences;
-    if (prometheus) {
-      const prefix = prometheus.prefix || "";
-      this.path = `${prometheus.namespace}/${prometheus.service}:${prometheus.port}${prefix}`;
-    }
-    if (prometheusProvider) {
-      this.provider = prometheusProvider.type;
-    }
+    disposeOnUnmount(this,
+      autorun(() => {
+        const { prometheus, prometheusProvider } = this.props.cluster.preferences;
+        if (prometheus) {
+          const prefix = prometheus.prefix || "";
+          this.path = `${prometheus.namespace}/${prometheus.service}:${prometheus.port}${prefix}`;
+        } else {
+          this.path = "";
+        }
+        if (prometheusProvider) {
+          this.provider = prometheusProvider.type;
+        } else {
+          this.provider = "";
+        }
+      })
+    );
   }
 
   parsePrometheusPath = () => {
