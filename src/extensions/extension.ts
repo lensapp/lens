@@ -19,7 +19,7 @@ export class LensExtension implements ExtensionModel {
   @observable manifest: ExtensionManifest;
   @observable manifestPath: string;
   @observable isEnabled = false;
-  @observable.ref runtime: Partial<LensRuntimeRendererEnv> = {};
+  @observable.ref runtime: LensRuntimeRendererEnv;
 
   constructor(model: ExtensionModel, manifest: ExtensionManifest) {
     this.importModel(model, manifest);
@@ -41,12 +41,23 @@ export class LensExtension implements ExtensionModel {
     this.isEnabled = true;
     this.runtime = runtime;
     console.log(`[EXTENSION]: enabled ${this.name}@${this.version}`, this.getMeta());
+    this.onActivate();
   }
 
   async disable() {
+    this.onDeactivate();
     this.isEnabled = false;
-    this.runtime = {};
+    this.runtime = null;
     console.log(`[EXTENSION]: disabled ${this.name}@${this.version}`, this.getMeta());
+  }
+
+  // todo: add more hooks
+  protected onActivate() {
+    // mock
+  }
+
+  protected onDeactivate() {
+    // mock
   }
 
   // todo

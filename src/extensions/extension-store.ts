@@ -80,7 +80,6 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
     try {
       manifestJson = __non_webpack_require__(manifestPath); // "__non_webpack_require__" converts to native node's require()-call
       mainJs = path.resolve(path.dirname(manifestPath), manifestJson.main);
-      mainJs = mainJs.replace(/\.ts$/i, ".js"); // todo: compile *.ts on the fly?
       const extensionModule = __non_webpack_require__(mainJs);
       return {
         manifestPath: manifestPath,

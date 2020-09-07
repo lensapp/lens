@@ -10,18 +10,18 @@ export interface PageComponents {
 }
 
 export class PagesStore {
-  all = observable.map<string, PageComponents>();
+  routes = observable.map<string, PageComponents>();
 
   getComponents(path: string): PageComponents | null {
-    return this.all.get(path);
+    return this.routes.get(path);
   }
 
   register(path: string, components: PageComponents) {
-    this.all.set(path, components);
+    this.routes.set(path, components);
   }
 
   unregister(path: string) {
-    this.all.delete(path);
+    this.routes.delete(path);
   }
 }
 
