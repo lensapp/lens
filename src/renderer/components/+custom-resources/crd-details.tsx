@@ -102,13 +102,13 @@ export class CRDDetails extends React.Component<Props> {
             </TableHead>
             {
               printerColumns.map((column, index) => {
-                const { name, type, JSONPath } = column;
+                const { name, type, jsonPath } = column;
                 return (
                   <TableRow key={index}>
                     <TableCell className="name">{name}</TableCell>
                     <TableCell className="type">{type}</TableCell>
                     <TableCell className="json-path">
-                      <Badge label={JSONPath}/>
+                      <Badge label={jsonPath}/>
                     </TableCell>
                   </TableRow>
                 )

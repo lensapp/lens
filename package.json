@@ -2,7 +2,7 @@
   "name": "kontena-lens",
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
-  "version": "3.6.0-beta.1",
+  "version": "3.6.0-beta.2",
   "main": "static/build/main.js",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
@@ -38,8 +38,8 @@
     "rebuild-pty": "yarn run electron-rebuild -f -w node-pty"
   },
   "config": {
-    "bundledKubectlVersion": "1.17.4",
-    "bundledHelmVersion": "3.2.4"
+    "bundledKubectlVersion": "1.17.11",
+    "bundledHelmVersion": "3.3.1"
   },
   "engines": {
     "node": ">=12.0 <13.0"
@@ -172,7 +172,9 @@
     "@types/module-alias": "^2.0.0",
     "@types/node": "^12.12.45",
     "@types/proper-lockfile": "^4.1.1",
+    "@types/react-beautiful-dnd": "^13.0.0",
     "@types/tar": "^4.0.3",
+    "array-move": "^3.0.0",
     "chalk": "^4.1.0",
     "conf": "^7.0.1",
     "crypto-js": "^4.0.0",
@@ -200,6 +202,7 @@
     "openid-client": "^3.15.2",
     "path-to-regexp": "^6.1.0",
     "proper-lockfile": "^4.1.1",
+    "react-beautiful-dnd": "^13.0.0",
     "react-router": "^5.2.0",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
@@ -258,8 +261,8 @@
     "@types/webpack": "^4.41.17",
     "@types/webpack-env": "^1.15.2",
     "@types/webpack-node-externals": "^1.7.1",
-    "@typescript-eslint/eslint-plugin": "^3.4.0",
-    "@typescript-eslint/parser": "^3.4.0",
+    "@typescript-eslint/eslint-plugin": "^4.0.0",
+    "@typescript-eslint/parser": "^4.0.0",
     "ace-builds": "^1.4.11",
     "ansi_up": "^4.0.4",
     "babel-core": "^7.0.0-beta.3",
@@ -270,7 +273,6 @@
     "circular-dependency-plugin": "^5.2.0",
     "color": "^3.1.2",
     "concurrently": "^5.2.0",
-    "cross-env": "^7.0.2",
     "css-element-queries": "^1.2.3",
     "css-loader": "^3.5.3",
     "dompurify": "^2.0.11",
@@ -278,7 +280,7 @@
     "electron-builder": "^22.7.0",
     "electron-notarize": "^0.3.0",
     "electron-rebuild": "^1.11.0",
-    "eslint": "^7.3.1",
+    "eslint": "^7.7.0",
     "file-loader": "^6.0.0",
     "flex.box": "^3.4.4",
     "fork-ts-checker-webpack-plugin": "^5.0.0",

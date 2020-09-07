@@ -2,7 +2,12 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.0-beta.1 (current version)
+## 3.6.0-beta.2 (current version)
+- Fix: too narrow sidebar without clusters
+- Fix app crash when iterating Events without 'kind' property defined
+- Detect non-functional bundled kubectl
+
+## 3.6.0-beta.1
 - Allow user to select Kubeconfig from filesystem
 - Store reference to added Kubeconfig files
 - Show the path of the cluster's Kubeconfig in cluster settings

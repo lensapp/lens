@@ -22,7 +22,7 @@ export class Status extends React.Component<Props> {
     const rows = [
       ["Online Status", cluster.online ? "online" : `offline (${cluster.failureReason || "unknown reason"})`],
       ["Distribution", cluster.distribution],
-      ["Kerbel Version", cluster.version],
+      ["Kernel Version", cluster.version],
       ["API Address", cluster.apiUrl],
       ["Nodes Count", cluster.nodes || "0"]
     ];

@@ -1,5 +1,7 @@
 import packageInfo from "../../package.json"
+import path from "path"
 import { bundledKubectl, Kubectl } from "../../src/main/kubectl";
+import { isWindows } from "../common/vars";
 
 jest.mock("../common/user-store");
 
@@ -13,5 +15,31 @@ describe("kubectlVersion", () => {
     const { bundledKubectlVersion } = packageInfo.config;
     const kubectl = new Kubectl(bundledKubectlVersion);
     expect(kubectl.kubectlVersion).toBe(bundledKubectl.kubectlVersion)
+  })
+})
+
+describe("getPath()", () => {
+  it("returns path to downloaded kubectl binary", async () => {
+    const { bundledKubectlVersion } = packageInfo.config;
+    const kubectl = new Kubectl(bundledKubectlVersion);
+    const kubectlPath = await kubectl.getPath()
+    let binaryName = "kubectl"
+    if (isWindows) {
+      binaryName += ".exe"
+    }
+    const expectedPath = path.join(Kubectl.kubectlDir, Kubectl.bundledKubectlVersion, binaryName)
+    expect(kubectlPath).toBe(expectedPath)
+  })
+
+  it("returns plain binary name if bundled kubectl is non-functional", async () => {
+    const { bundledKubectlVersion } = packageInfo.config;
+    const kubectl = new Kubectl(bundledKubectlVersion);
+    jest.spyOn(kubectl, "getBundledPath").mockReturnValue("/invalid/path/kubectl")
+    const kubectlPath = await kubectl.getPath()
+    let binaryName = "kubectl"
+    if (isWindows) {
+      binaryName += ".exe"
+    }
+    expect(kubectlPath).toBe(binaryName)
   })
 })

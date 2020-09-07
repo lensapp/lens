@@ -11,3 +11,4 @@ binaries/server/
 src/extensions/*/*.js
 src/extensions/*/*.d.ts
 locales/**/**.js
+lens.log

@@ -16,17 +16,14 @@ import { Badge } from "../badge";
 import { themeStore } from "../../theme.store";
 import { history } from "../../navigation";
 import { Tooltip } from "../tooltip";
+import { KubectlBinaries } from "./kubectl-binaries";
 
 @observer
 export class Preferences extends React.Component {
   @observable helmLoading = false;
   @observable helmRepos: HelmRepo[] = [];
   @observable helmAddedRepos = observable.map<string, HelmRepo>();
-
-  @observable downloadMirrorOptions: SelectOption<string>[] = [
-    { value: "default", label: "Default (Google)" },
-    { value: "china", label: "China (Azure)" },
-  ]
+  @observable httpProxy = userStore.preferences.httpsProxy || "";
 
   @computed get themeOptions(): SelectOption<string>[] {
     return themeStore.themes.map(theme => ({
@@ -43,7 +40,19 @@ export class Preferences extends React.Component {
   }
 
   async componentDidMount() {
+    window.addEventListener('keydown', this.onEscapeKey);
     await this.loadHelmRepos();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onEscapeKey);
+  }
+
+  onEscapeKey = (evt: KeyboardEvent) => {
+    if (evt.code === "Escape") {
+      evt.stopPropagation();
+      history.goBack();
+    }
   }
 
   @action
@@ -121,13 +130,19 @@ export class Preferences extends React.Component {
             onChange={({ value }: SelectOption) => preferences.colorTheme = value}
           />
 
-          <h2><Trans>Download Mirror</Trans></h2>
-          <Select
-            placeholder={<Trans>Download mirror for kubectl</Trans>}
-            options={this.downloadMirrorOptions}
-            value={preferences.downloadMirror}
-            onChange={({ value }: SelectOption) => preferences.downloadMirror = value}
+          <h2><Trans>HTTP Proxy</Trans></h2>
+          <Input
+            theme="round-black"
+            placeholder={_i18n._(t`Type HTTP proxy url (example: http://proxy.acme.org:8080)`)}
+            value={this.httpProxy}
+            onChange={v => this.httpProxy = v}
+            onBlur={() => preferences.httpsProxy = this.httpProxy}
           />
+          <small className="hint">
+            <Trans>Proxy is used only for non-cluster communication.</Trans>
+          </small>
+
+          <KubectlBinaries preferences={preferences} />
 
           <h2><Trans>Helm</Trans></h2>
           <Select
@@ -157,17 +172,6 @@ export class Preferences extends React.Component {
               )
             })}
           </div>
-
-          <h2><Trans>HTTP Proxy</Trans></h2>
-          <Input
-            theme="round-black"
-            placeholder={_i18n._(t`Type HTTP proxy url (example: http://proxy.acme.org:8080)`)}
-            value={preferences.httpsProxy || ""}
-            onChange={v => preferences.httpsProxy = v}
-          />
-          <small className="hint">
-            <Trans>Proxy is used only for non-cluster communication.</Trans>
-          </small>
 
           <h2><Trans>Certificate Trust</Trans></h2>
           <Checkbox

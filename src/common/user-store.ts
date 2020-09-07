@@ -1,4 +1,5 @@
 import type { ThemeId } from "../renderer/theme.store";
+import { app, remote } from 'electron';
 import semver from "semver"
 import { readFile } from "fs-extra"
 import { action, observable, reaction, toJS } from "mobx";
@@ -8,6 +9,7 @@ import { getAppVersion } from "./utils/app-version";
 import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { tracker } from "./tracker";
 import logger from "../main/logger";
+import path from 'path';
 
 export interface UserStoreModel {
   kubeConfigPath: string;
@@ -22,6 +24,9 @@ export interface UserPreferences {
   allowUntrustedCAs?: boolean;
   allowTelemetry?: boolean;
   downloadMirror?: string | "default";
+  downloadKubectlBinaries?: boolean;
+  downloadBinariesPath?: string;
+  kubectlBinariesPath?: string;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
@@ -53,6 +58,9 @@ export class UserStore extends BaseStore<UserStoreModel> {
     allowUntrustedCAs: false,
     colorTheme: UserStore.defaultTheme,
     downloadMirror: "default",
+    downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
+    downloadBinariesPath: this.getDefaultKubectlPath(),
+    kubectlBinariesPath: ""
   };
 
   get isNewVersion() {
@@ -96,6 +104,14 @@ export class UserStore extends BaseStore<UserStoreModel> {
     const { seenContexts, newContexts } = this;
     this.seenContexts.replace([...seenContexts, ...newContexts]);
     this.newContexts.clear();
+  }
+
+  /**
+   * Getting default directory to download kubectl binaries
+   * @returns string
+   */
+  getDefaultKubectlPath(): string {
+    return path.join((app || remote.app).getPath("userData"), "binaries")
   }
 
   @action

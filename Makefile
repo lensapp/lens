@@ -6,7 +6,7 @@ endif
 
 .PHONY: init dev build test clean
 
-init: download-bins install-deps compile-dev
+init: install-deps download-bins compile-dev
 	echo "Init done"
 
 download-bins:
@@ -28,7 +28,7 @@ endif
 lint:
 	yarn lint
 
-test:
+test: download-bins
 	yarn test
 
 integration-linux:
@@ -46,7 +46,7 @@ integration-win:
 test-app:
 	yarn test
 
-build: install-deps
+build: install-deps download-bins
 	yarn install
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn dist:win
