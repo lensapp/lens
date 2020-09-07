@@ -16,10 +16,10 @@
   .clusters {
     @include hidden-scrollbar;
     padding: 0 $spacing; // extra spacing for cluster-icon's badge
-    margin-bottom: $spacing;
+    margin-bottom: $margin;
 
-    > :last-child {
-      margin-bottom: $margin;
+    .ClusterIcon {
+      margin-bottom: $margin * 1.5;
     }
 
     &:empty {
