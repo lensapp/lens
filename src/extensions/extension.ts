@@ -87,7 +87,7 @@ export class LensExtension implements ExtensionModel {
   }
 
   toJSON(): ExtensionModel {
-    return {
+    return toJS({
       id: this.id,
       name: this.name,
       version: this.version,
@@ -95,6 +95,8 @@ export class LensExtension implements ExtensionModel {
       manifestPath: this.manifestPath,
       enabled: this.isEnabled,
       updateUrl: this.updateUrl,
-    }
+    }, {
+      recurseEverything: true,
+    })
   }
 }

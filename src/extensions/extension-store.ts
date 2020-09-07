@@ -9,7 +9,7 @@ import logger from "../main/logger";
 
 export interface ExtensionStoreModel {
   version: ExtensionVersion;
-  extensions: Record<ExtensionId, ExtensionModel>
+  extensions: [ExtensionId, ExtensionModel][]
 }
 
 export interface ExtensionModel {
@@ -35,7 +35,6 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   private constructor() {
     super({
       configName: "lens-extension-store",
-      syncEnabled: false,
     });
   }
 
@@ -131,7 +130,7 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
       this.version = version;
     }
     if (extensions) {
-      const currentExtensions = new Map(Object.entries(extensions));
+      const currentExtensions = new Map(extensions);
       this.extensions.forEach(extension => {
         if (!currentExtensions.has(extension.id)) {
           this.removed.set(extension.id, extension);
@@ -163,7 +162,7 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   toJSON(): ExtensionStoreModel {
     return toJS({
       version: this.version,
-      extensions: this.extensions.toJSON(),
+      extensions: Array.from(this.extensions).map(([id, instance]) => [id, instance.toJSON()]),
     }, {
       recurseEverything: true,
     })
