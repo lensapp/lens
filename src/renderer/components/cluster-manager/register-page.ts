@@ -1,27 +1,38 @@
 // Dynamic pages
 
 import React from "react";
-import { observable } from "mobx";
+import { computed, observable } from "mobx";
 import type { IconProps } from "../icon";
 
+export interface PageRegistration {
+  path: string;
+  type: "global" | "cluster-view";
+  components: PageComponents;
+}
+
 export interface PageComponents {
-  Main: React.ComponentType<any>;
+  Page: React.ComponentType<any>;
   MenuIcon: React.ComponentType<IconProps>;
 }
 
 export class PagesStore {
-  routes = observable.map<string, PageComponents>();
+  protected pages = observable.array<PageRegistration>([], { deep: false });
 
-  getComponents(path: string): PageComponents | null {
-    return this.routes.get(path);
+  @computed get globalPages() {
+    return this.pages.filter(page => page.type === "global");
   }
 
-  register(path: string, components: PageComponents) {
-    this.routes.set(path, components);
+  @computed get clusterPages() {
+    return this.pages.filter(page => page.type === "cluster-view");
   }
 
-  unregister(path: string) {
-    this.routes.delete(path);
+  register(params: PageRegistration) {
+    this.pages.push(params);
+    return () => {
+      this.pages.replace(
+        this.pages.filter(page => page.components !== params.components)
+      )
+    };
   }
 }
 

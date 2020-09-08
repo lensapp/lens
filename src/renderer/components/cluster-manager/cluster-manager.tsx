@@ -63,8 +63,8 @@ export class ClusterManager extends React.Component {
             <Route component={ClusterView} {...clusterViewRoute}/>
             <Route component={ClusterSettings} {...clusterSettingsRoute}/>
             <Route component={Extensions} {...extensionsRoute}/>
-            {Array.from(dynamicPages.routes).map(([path, { Main }]) => {
-              return <Route key={path} path={path} component={Main}/>
+            {dynamicPages.globalPages.map(({ path, components: { Page } }) => {
+              return <Route key={path} path={path} component={Page}/>
             })}
             <Redirect exact to={this.startUrl}/>
           </Switch>

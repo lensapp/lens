@@ -149,7 +149,7 @@ export class ClustersMenu extends React.Component<Props> {
           )}
         </div>
         <div className="dynamic-pages">
-          {Array.from(dynamicPages.routes).map(([path, { MenuIcon }]) => {
+          {dynamicPages.globalPages.map(({ path, components: { MenuIcon } }) => {
             if (MenuIcon) {
               return <MenuIcon key={path} onClick={() => navigate(path)}/>
             }

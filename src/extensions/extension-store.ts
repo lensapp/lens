@@ -13,7 +13,7 @@ export interface ExtensionStoreModel {
 }
 
 export interface ExtensionModel {
-  id?: ExtensionId; // available in lens-extension instance
+  id: ExtensionId;
   version: ExtensionVersion;
   name: string;
   manifestPath: string;

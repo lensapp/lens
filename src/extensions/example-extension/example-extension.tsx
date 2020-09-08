@@ -3,21 +3,23 @@ import React from "react";
 import path from "path";
 
 export default class ExampleExtension extends LensExtension {
-  protected routePath = "/extension-example"
+  protected unRegisterPage = Function();
 
   onActivate() {
     console.log('EXAMPLE EXTENSION: ACTIVATE', this.getMeta())
-    const { dynamicPages } = this.runtime;
-    dynamicPages.register(this.routePath, {
-      Main: ExtensionPage,
-      MenuIcon: ExtensionIcon,
+    this.unRegisterPage = this.runtime.dynamicPages.register({
+      type: "cluster-view",
+      path: "/extension-example",
+      components: {
+        Main: ExtensionPage,
+        MenuIcon: ExtensionIcon,
+      }
     })
   }
 
   onDeactivate() {
     console.log('EXAMPLE EXTENSION: DEACTIVATE', this.getMeta());
-    const { dynamicPages } = this.runtime;
-    dynamicPages.unregister(this.routePath);
+    this.unRegisterPage();
   }
 }
 
