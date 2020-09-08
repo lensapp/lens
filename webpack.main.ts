@@ -3,6 +3,7 @@ import webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 import { isDevelopment, isProduction, mainDir, buildDir } from "./src/common/vars";
 import nodeExternals from "webpack-node-externals";
+import ProgressBarPlugin from "progress-bar-webpack-plugin";
 
 export default function (): webpack.Configuration {
   console.info('WEBPACK:main', require("./src/common/vars"))
@@ -48,6 +49,7 @@ export default function (): webpack.Configuration {
       ]
     },
     plugins: [
+      new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
     ]
   }
