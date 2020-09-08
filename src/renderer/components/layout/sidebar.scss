@@ -47,11 +47,12 @@
       width: 28px;
       height: 28px;
       margin-left: 2px;
-      margin-top: 3px;
+      margin-top: 2px;
       margin-right: 10px;
 
       svg {
         --size: 28px;
+        padding: 2px;
       }
     }
 
