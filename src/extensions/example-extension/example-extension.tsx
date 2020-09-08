@@ -1,4 +1,4 @@
-import { DynamicPageType, Icon, LensExtension } from "@lens/extensions"; // fixme: map to generated types from "extension-api.d.ts"
+import { DynamicPageType, Icon, LensExtension } from "@lens/extensions"; // fixme: map to generated types from "extension-api.ts"
 import React from "react";
 import path from "path";
 
@@ -7,12 +7,18 @@ export default class ExampleExtension extends LensExtension {
 
   onActivate() {
     console.log('EXAMPLE EXTENSION: ACTIVATE', this.getMeta())
-    this.unRegisterPage = this.runtime.dynamicPages.register({
+    const { dynamicPages, components: { MainLayout } } = this.runtime;
+
+    this.unRegisterPage = dynamicPages.register({
       type: DynamicPageType.CLUSTER,
       path: "/extension-example",
       menuTitle: "Example Extension",
       components: {
-        Page: ExtensionPage,
+        Page: () => (
+          <MainLayout>
+            <ExtensionPage/>
+          </MainLayout>
+        ),
         MenuIcon: ExtensionIcon,
       }
     })
