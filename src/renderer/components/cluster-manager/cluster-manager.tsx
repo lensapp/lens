@@ -15,7 +15,7 @@ import { Extensions, extensionsRoute } from "../+extensions";
 import { clusterViewRoute, clusterViewURL, getMatchedCluster, getMatchedClusterId } from "./cluster-view.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
-import { dynamicPages } from "./register-page";
+import { dynamicPages } from "../../../extensions/register-page";
 
 @observer
 export class ClusterManager extends React.Component {

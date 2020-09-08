@@ -1,18 +1,14 @@
-// Lens runtime for injecting to extension on activation
-import { apiManager } from "../renderer/api/api-manager";
+// Lens renderer runtime params available to the extension after activation
 import logger from "../main/logger";
-import { dynamicPages } from "../renderer/components/cluster-manager/register-page";
+import { dynamicPages } from "./register-page";
 
 export interface LensRuntimeRendererEnv {
-  apiManager: typeof apiManager;
   logger: typeof logger;
   dynamicPages: typeof dynamicPages
 }
 
-// todo: expose more public runtime apis: stores, managers, etc.
 export function getLensRuntime(): LensRuntimeRendererEnv {
   return {
-    apiManager,
     logger,
     dynamicPages,
   }
