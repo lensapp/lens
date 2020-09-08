@@ -366,4 +366,9 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
     const { icon } = clusterStore.clustersList[0].preferences;
     expect(icon.startsWith("data:;base64,")).toBe(true);
   })
+
+  it("migration of icon does not have whitespace", async () => {
+    const { icon } = clusterStore.clustersList[0].preferences;
+    expect(/\s/g.exec(icon)).toBe(null);
+  })
 })
