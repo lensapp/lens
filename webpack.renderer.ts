@@ -20,7 +20,6 @@ export function webpackExtensionsApi(): webpack.Configuration {
   };
   config.output.libraryTarget = "commonjs2"
   delete config.devtool;
-  delete config.plugins;
   return config;
 }
 
