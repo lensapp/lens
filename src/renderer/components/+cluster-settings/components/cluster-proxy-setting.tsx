@@ -1,6 +1,6 @@
 import React from "react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
+import { observable, autorun } from "mobx";
+import { observer, disposeOnUnmount } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";
 import { Input } from "../../input";
 import { isUrl } from "../../input/input.validators";
@@ -12,7 +12,15 @@ interface Props {
 
 @observer
 export class ClusterProxySetting extends React.Component<Props> {
-  @observable proxy = this.props.cluster.preferences.httpsProxy || "";
+  @observable proxy = "";
+
+  componentDidMount() {
+    disposeOnUnmount(this,
+      autorun(() => {
+        this.proxy = this.props.cluster.preferences.httpsProxy || "";
+      })
+    );
+  }
 
   save = () => {
     this.props.cluster.preferences.httpsProxy = this.proxy;

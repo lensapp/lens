@@ -22,8 +22,6 @@ import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
 
-// fixme: allow to rearrange clusters with drag&drop
-
 interface Props {
   className?: IClassName;
 }

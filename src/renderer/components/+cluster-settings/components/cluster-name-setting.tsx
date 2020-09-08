@@ -1,8 +1,8 @@
 import React from "react";
 import { Cluster } from "../../../../main/cluster";
 import { Input } from "../../input";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
+import { observable, autorun } from "mobx";
+import { observer, disposeOnUnmount } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
 import { isRequired } from "../../input/input.validators";
 
@@ -12,7 +12,15 @@ interface Props {
 
 @observer
 export class ClusterNameSetting extends React.Component<Props> {
-  @observable name = this.props.cluster.preferences.clusterName || "";
+  @observable name = "";
+
+  componentDidMount() {
+    disposeOnUnmount(this,
+      autorun(() => {
+        this.name = this.props.cluster.preferences.clusterName;
+      })
+    );
+  }
 
   save = () => {
     this.props.cluster.preferences.clusterName = this.name;
