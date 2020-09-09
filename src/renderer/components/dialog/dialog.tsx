@@ -92,7 +92,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     this.props.onOpen();
     if (!this.props.pinned) {
       if (this.elem) this.elem.addEventListener('click', this.onClickOutside);
-      window.addEventListener('keydown', this.onEscapeKey);
+      document.body.addEventListener('keydown', this.onEscapeKey);
     }
   }
 
@@ -100,7 +100,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     this.props.onClose();
     if (!this.props.pinned) {
       if (this.elem) this.elem.removeEventListener('click', this.onClickOutside);
-      window.removeEventListener('keydown', this.onEscapeKey);
+      document.body.removeEventListener('keydown', this.onEscapeKey);
     }
   }
 

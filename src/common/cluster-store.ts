@@ -1,4 +1,3 @@
-import { WorkspaceId, workspaceStore } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote } from "electron";
 import { unlink } from "fs-extra";
@@ -13,7 +12,7 @@ import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
 import _ from "lodash";
 import move from "array-move";
-import { is } from "immer/dist/internal";
+import type { WorkspaceId } from "./workspace-store";
 
 export interface ClusterIconUpload {
   clusterId: string;
