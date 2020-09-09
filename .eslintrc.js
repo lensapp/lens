@@ -31,6 +31,7 @@ module.exports = {
       parser: "@typescript-eslint/parser",
       plugins: [
         "react",
+        "unused-imports",
       ],
       extends: [
         "plugin:@typescript-eslint/recommended",
@@ -52,7 +53,8 @@ module.exports = {
         "no-unused-vars": "off",
         "comma-dangle": ["error", "always-multiline"],
         "object-shorthand": ["error", "always"],
-        "@typescript-eslint/no-unused-vars": [
+        "@typescript-eslint/no-unused-vars": "off",
+        "unused-imports/no-unused-vars-ts": [
           "error",
           {
             "varsIgnorePattern": "^_",
@@ -60,6 +62,7 @@ module.exports = {
             "ignoreRestSiblings": true,
           }
         ],
+        "unused-imports/no-unused-imports-ts": "error",
         "quotes": [
           "error",
           "double",
@@ -74,6 +77,12 @@ module.exports = {
           {
             "functions": false,
             "classes": false,
+          }
+        ],
+        "no-multiple-empty-lines": [
+          "error",
+          {
+            "max": 1,
           }
         ],
         "@typescript-eslint/no-empty-interface": "off",
