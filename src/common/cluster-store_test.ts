@@ -33,7 +33,7 @@ describe("empty config", () => {
       id: "foo",
       preferences: {
         terminalCWD: "/tmp",
-        icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
+        icon: "data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
         clusterName: "minikube"
       },
       kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", "fancy foo config"),
@@ -364,6 +364,6 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
 
   it("migrates to modern format with icon not in file", async () => {
     const { icon } = clusterStore.clustersList[0].preferences;
-    expect(icon.startsWith("data:image/jpeg;base64, ")).toBe(true);
+    expect(icon.startsWith("data:image/jpeg;base64,")).toBe(true);
   })
 })
