@@ -2,7 +2,12 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.0-rc.1 (current version)
+## 3.6.0-rc.2 (current version)
+- Refresh input values on cluster change
+- Update logo
+- Fix margins in cluster menu
+
+## 3.6.0-rc.1
 - Allow user to configure directory where Kubectl binaries are downloaded
 - Allow user to configure path to Kubectl binary, instead of using bundled Kubectl
 - Log application logs also to log file
