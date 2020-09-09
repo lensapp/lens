@@ -187,7 +187,6 @@
     "jsonpath": "^1.0.2",
     "lodash": "^4.17.15",
     "mac-ca": "^1.0.4",
-    "make-synchronous": "^0.1.1",
     "marked": "^1.1.0",
     "md5-file": "^5.0.0",
     "mobx": "^5.15.5",
