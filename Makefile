@@ -47,7 +47,6 @@ test-app:
 	yarn test
 
 build: install-deps download-bins
-	yarn install
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn dist:win
 else
