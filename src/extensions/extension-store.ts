@@ -48,7 +48,7 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
     if (isDevelopment || isTestEnv) {
       return path.resolve(__static, "../src/extensions");
     }
-      return path.resolve(__static, "../extensions"); //todo figure out prod
+    return path.resolve(__static, "../extensions"); //todo figure out prod
   }
 
   async load() {
