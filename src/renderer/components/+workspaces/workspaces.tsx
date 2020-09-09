@@ -12,6 +12,7 @@ import { Icon } from "../icon";
 import { Input } from "../input";
 import { cssNames, prevDefault } from "../../utils";
 import { Button } from "../button";
+import { Notifications } from "../notifications";
 
 @observer
 export class Workspaces extends React.Component {
@@ -41,10 +42,12 @@ export class Workspaces extends React.Component {
 
   saveWorkspace = (id: WorkspaceId) => {
     const draft = toJS(this.editingWorkspaces.get(id));
-    if (draft) {
+    const { error } = workspaceStore.saveWorkspace(draft);
+    if (!error) {
       this.clearEditing(id);
-      workspaceStore.saveWorkspace(draft);
+      return;
     }
+    Notifications.error(error);
   }
 
   addWorkspace = () => {

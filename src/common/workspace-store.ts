@@ -51,6 +51,10 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     return this.workspaces.get(id);
   }
 
+  getByName(name: string): Workspace {
+    return this.workspacesList.find(workspace => workspace.name === name);
+  }
+
   @action
   setActive(id = WorkspaceStore.defaultId, { redirectToLanding = true, resetActiveCluster = true } = {}) {
     if (id === this.currentWorkspaceId) return;
@@ -67,14 +71,20 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @action
-  saveWorkspace(workspace: Workspace) {
-    const id = workspace.id;
+  saveWorkspace(workspace: Workspace): { workspace?: Workspace, error?: string} {
+    const { id, name } = workspace;
     const existingWorkspace = this.getById(id);
-    if (existingWorkspace) {
-      Object.assign(existingWorkspace, workspace);
-    } else {
-      this.workspaces.set(id, workspace);
+    if (!name) {
+      return { error: "Workspace should has a name." };
     }
+    if (this.getByName(name)) {
+      return { error: `Workspace '${name}' already exist.` };
+    }
+    if (existingWorkspace) {
+      return { workspace: Object.assign(existingWorkspace, workspace) };
+    }
+    this.workspaces.set(id, workspace);
+    return { workspace };
   }
 
   @action
