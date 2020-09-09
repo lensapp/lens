@@ -92,6 +92,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     this.props.onOpen();
     if (!this.props.pinned) {
       if (this.elem) this.elem.addEventListener('click', this.onClickOutside);
+      // Using document.body target to handle keydown event before Drawer does
       document.body.addEventListener('keydown', this.onEscapeKey);
     }
   }

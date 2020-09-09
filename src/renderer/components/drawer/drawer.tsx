@@ -40,6 +40,7 @@ export class Drawer extends React.Component<DrawerProps> {
   });
 
   componentDidMount() {
+    // Using window target for events to make sure they will be catched after other places (e.g. Dialog)
     window.addEventListener("mousedown", this.onMouseDown)
     window.addEventListener("click", this.onClickOutside)
     window.addEventListener("keydown", this.onEscapeKey)
