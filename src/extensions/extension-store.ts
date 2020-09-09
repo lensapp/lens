@@ -3,8 +3,8 @@ import path from "path";
 import fs from "fs-extra";
 import { action, observable, reaction, toJS, } from "mobx";
 import { BaseStore } from "../common/base-store";
-import { ExtensionId, ExtensionManifest, ExtensionVersion, LensExtension } from "./extension";
-import { isDevelopment, isProduction, isTestEnv } from "../common/vars";
+import { ExtensionId, ExtensionManifest, ExtensionVersion, LensExtension } from "./lens-extension";
+import { isDevelopment } from "../common/vars";
 import logger from "../main/logger";
 
 export interface ExtensionStoreModel {
@@ -47,7 +47,7 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
     if (isDevelopment) {
       return path.resolve(__static, "../src/extensions");
     }
-    return path.resolve(__static, "../extensions"); //todo figure out prod
+    return path.resolve(__static, "../extensions");
   }
 
   async load() {

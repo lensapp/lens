@@ -2,31 +2,22 @@ import { Button, DynamicPageType, Icon, LensExtension } from "@lens/extensions";
 import React from "react";
 import path from "path";
 
-let extension: ExampleExtension; // todo: provide instance from context
-
 export default class ExampleExtension extends LensExtension {
-  protected unRegisterPage = Function();
-
   onActivate() {
-    extension = this
-    console.log('EXAMPLE EXTENSION: ACTIVATE', this.getMeta())
-    const { dynamicPages } = this.runtime;
-
-    this.unRegisterPage = dynamicPages.register({
+    console.log('EXAMPLE EXTENSION: ACTIVATED', this.getMeta());
+    this.registerPage({
       type: DynamicPageType.CLUSTER,
       path: "/extension-example",
       menuTitle: "Example Extension",
       components: {
-        Page: ExtensionPage,
+        Page: () => <ExtensionPage extension={this}/>,
         MenuIcon: ExtensionIcon,
       }
     })
   }
 
   onDeactivate() {
-    extension = null;
-    console.log('EXAMPLE EXTENSION: DEACTIVATE', this.getMeta());
-    this.unRegisterPage();
+    console.log('EXAMPLE EXTENSION: DEACTIVATED', this.getMeta());
   }
 }
 
@@ -34,14 +25,15 @@ export function ExtensionIcon(props: {} /*IconProps |*/) {
   return <Icon {...props} material="camera" tooltip={path.basename(__filename)}/>
 }
 
-export class ExtensionPage extends React.Component {
+export class ExtensionPage extends React.Component<{ extension: ExampleExtension }> {
   deactivate = () => {
+    const { extension } = this.props;
     extension.runtime.navigate("/")
     extension.disable();
   }
 
   render() {
-    const { MainLayout } = extension.runtime.components;
+    const { MainLayout } = this.props.extension.runtime.components;
     return (
       <MainLayout className="ExampleExtension">
         <div className="flex column gaps align-flex-start">
