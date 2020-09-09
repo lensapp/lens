@@ -142,6 +142,7 @@ export class Workspaces extends React.Component {
                       placeholder={_i18n._(t`Name`)}
                       value={editingWorkspace.name}
                       onChange={v => editingWorkspace.name = v}
+                      autoFocus
                     />
                     <Input
                       className="description"
