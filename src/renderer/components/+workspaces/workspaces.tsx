@@ -93,6 +93,12 @@ export class Workspaces extends React.Component {
     })
   }
 
+  onInputKeypress = (evt: React.KeyboardEvent<any>, workspaceId: WorkspaceId) => {
+    if (evt.key == 'Enter') {
+      this.saveWorkspace(workspaceId);
+    }
+  }
+
   render() {
     return (
       <WizardLayout className="Workspaces" infoPanel={this.renderInfo()}>
@@ -142,6 +148,7 @@ export class Workspaces extends React.Component {
                       placeholder={_i18n._(t`Name`)}
                       value={editingWorkspace.name}
                       onChange={v => editingWorkspace.name = v}
+                      onKeyPress={(e) => this.onInputKeypress(e, workspaceId)}
                       autoFocus
                     />
                     <Input
@@ -149,16 +156,17 @@ export class Workspaces extends React.Component {
                       placeholder={_i18n._(t`Description`)}
                       value={editingWorkspace.description}
                       onChange={v => editingWorkspace.description = v}
-                    />
-                    <Icon
-                      material="cancel"
-                      tooltip={<Trans>Cancel</Trans>}
-                      onClick={() => this.clearEditing(workspaceId)}
+                      onKeyPress={(e) => this.onInputKeypress(e, workspaceId)}
                     />
                     <Icon
                       material="save"
                       tooltip={<Trans>Save</Trans>}
                       onClick={() => this.saveWorkspace(workspaceId)}
+                    />
+                    <Icon
+                      material="cancel"
+                      tooltip={<Trans>Cancel</Trans>}
+                      onClick={() => this.clearEditing(workspaceId)}
                     />
                   </Fragment>
                 )}
