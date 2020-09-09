@@ -91,6 +91,11 @@
         "to": "static/",
         "filter": "!**/main.js"
       },
+      {
+        "from": "src/extensions/",
+        "to": "./extensions/",
+        "filter": "**/*.js*"
+      },
       "LICENSE"
     ],
     "linux": {
