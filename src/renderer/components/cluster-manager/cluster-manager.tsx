@@ -11,6 +11,7 @@ import { Workspaces, workspacesRoute } from "../+workspaces";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
 import { ClusterSettings, clusterSettingsRoute } from "../+cluster-settings";
+import { Extensions, extensionsRoute } from "../+extensions";
 import { clusterViewRoute, clusterViewURL, getMatchedCluster, getMatchedClusterId } from "./cluster-view.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
@@ -60,6 +61,7 @@ export class ClusterManager extends React.Component {
             <Route component={AddCluster} {...addClusterRoute}/>
             <Route component={ClusterView} {...clusterViewRoute}/>
             <Route component={ClusterSettings} {...clusterSettingsRoute}/>
+            <Route component={Extensions} {...extensionsRoute}/>
             <Redirect exact to={this.startUrl}/>
           </Switch>
         </main>

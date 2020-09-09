@@ -2,6 +2,7 @@
 import path from "path";
 import packageInfo from "../../package.json"
 import { defineGlobal } from "./utils/defineGlobal";
+import { addAlias } from "module-alias";
 
 export const isMac = process.platform === "darwin"
 export const isWindows = process.platform === "win32"
@@ -20,6 +21,13 @@ export const mainDir = path.join(contextDir, "src/main");
 export const rendererDir = path.join(contextDir, "src/renderer");
 export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
+
+// Extensions
+export const extensionsLibName = `${appName}-extensions.api`
+export const extensionsDir = path.join(contextDir, "src/extensions");
+
+// Special dynamic module aliases
+addAlias("@lens/extensions", path.resolve(buildDir, `${extensionsLibName}.js`)); // fixme: provide path in prod
 
 // Special runtime paths
 defineGlobal("__static", {

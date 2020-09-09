@@ -3,6 +3,7 @@ declare module "mac-ca"
 declare module "win-ca"
 declare module "@hapi/call"
 declare module "@hapi/subtext"
+declare module "@lens/extensions" // fixme: provide generated types from "extension-api.ts"
 
 // Global path to static assets
 declare const __static: string;

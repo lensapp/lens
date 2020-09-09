@@ -21,8 +21,7 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
-
-// fixme: allow to rearrange clusters with drag&drop
+import { dynamicPages } from "./register-page";
 
 interface Props {
   className?: IClassName;
@@ -148,6 +147,12 @@ export class ClustersMenu extends React.Component<Props> {
           {newContexts.size > 0 && (
             <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>} />
           )}
+        </div>
+        <div className="dynamic-pages">
+          {Array.from(dynamicPages.all).map(([path, { MenuIcon }]) => {
+            if (!MenuIcon) return;
+            return <MenuIcon onClick={() => navigate(path)}/>
+          })}
         </div>
       </div>
     );

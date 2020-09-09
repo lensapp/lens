@@ -16,10 +16,10 @@
   .clusters {
     @include hidden-scrollbar;
     padding: 0 $spacing; // extra spacing for cluster-icon's badge
-    margin-bottom: $spacing;
+    margin-bottom: $margin;
 
-    > :last-child {
-      margin-bottom: $margin;
+    .ClusterIcon {
+      margin-bottom: $margin * 1.5;
     }
 
     &:empty {
@@ -65,6 +65,16 @@
       border-radius: $radius;
       padding: 0;
       pointer-events: none;
+    }
+  }
+
+  > .dynamic-pages {
+    &:not(:empty) {
+      padding-top: $spacing;
+    }
+
+    .Icon {
+      --size: 40px;
     }
   }
 }

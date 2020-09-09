@@ -1,0 +1,11 @@
+{
+  "name": "extension-example",
+  "version": "1.0.0",
+  "description": "Example extension",
+  "main": "example-extension.ts",
+  "lens": {
+    "metadata": {}
+  },
+  "dependencies": {
+  }
+}

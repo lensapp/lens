@@ -2,7 +2,24 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.0-beta.2 (current version)
+## 3.6.0-rc.1 (current version)
+- Allow user to configure directory where Kubectl binaries are downloaded
+- Allow user to configure path to Kubectl binary, instead of using bundled Kubectl
+- Log application logs also to log file
+- Restrict file permissions to only the user for pasted kubeconfigs
+- Close Preferences and Cluster Setting on Esc keypress
+- Update Kubectl versions used with Lens
+- Update Helm binary version
+- Fix: Update CRD api to use preferred version and implement v1 differences
+- Fix: Allow to drag and drop cluster icons
+- Fix: Wider version select box for Helm chart installation
+- Fix: Reload only active dashboard view, not the whole app window
+- Fix cluster icon margins
+- Fix: Reconnect non-accessible clusters on reconnect
+- Fix: Bundle Kubectl and Helm binaries
+- Fix: Remove double copyright
+
+## 3.6.0-beta.2
 - Fix: too narrow sidebar without clusters
 - Fix app crash when iterating Events without 'kind' property defined
 - Detect non-functional bundled kubectl

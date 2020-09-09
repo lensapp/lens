@@ -2,7 +2,7 @@
   "name": "kontena-lens",
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
-  "version": "3.6.0-beta.2",
+  "version": "3.6.0-rc.1",
   "main": "static/build/main.js",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
@@ -11,14 +11,16 @@
     "email": "info@k8slens.dev"
   },
   "scripts": {
-    "dev": "concurrently -k \"yarn dev-run -C\" \"yarn dev:main\" \"yarn dev:renderer\"",
-    "dev-run": "cross-env DEBUG=true nodemon --watch static/build/main.js --exec \"electron --inspect .\"",
-    "dev:main": "cross-env DEBUG=true yarn compile:main --watch",
-    "dev:renderer": "cross-env DEBUG=true yarn compile:renderer --watch",
+    "dev": "concurrently -k \"yarn dev-run -C\" yarn:dev:*",
+    "dev-run": "nodemon --watch static/build/main.js --exec \"electron --inspect .\"",
+    "dev:main": "yarn compile:main --watch",
+    "dev:renderer": "yarn compile:renderer --watch",
+    "dev:extensions": "tsc --project src/extensions/example-extension --watch",
     "compile": "env NODE_ENV=production concurrently yarn:compile:*",
     "compile:main": "webpack --config webpack.main.ts",
     "compile:renderer": "webpack --config webpack.renderer.ts",
     "compile:i18n": "lingui compile",
+    "compile:extension-api.d.ts": "tsc --project src/extensions",
     "build:linux": "yarn compile && electron-builder --linux --dir -c.productName=Lens",
     "build:mac": "yarn compile && electron-builder --mac --dir -c.productName=Lens",
     "build:win": "yarn compile && electron-builder --win --dir -c.productName=Lens",
@@ -69,7 +71,8 @@
     },
     "moduleNameMapper": {
       "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts"
-    }
+    },
+    "modulePathIgnorePatterns": ["<rootDir>/dist"]
   },
   "build": {
     "afterSign": "build/notarize.js",
@@ -88,6 +91,11 @@
         "from": "static/",
         "to": "static/",
         "filter": "!**/main.js"
+      },
+      {
+        "from": "src/extensions/",
+        "to": "./extensions/",
+        "filter": "**/*.js*"
       },
       "LICENSE"
     ],
@@ -167,6 +175,7 @@
     "@types/lodash": "^4.14.155",
     "@types/marked": "^0.7.4",
     "@types/mock-fs": "^4.10.0",
+    "@types/module-alias": "^2.0.0",
     "@types/node": "^12.12.45",
     "@types/proper-lockfile": "^4.1.1",
     "@types/react-beautiful-dnd": "^13.0.0",
@@ -193,6 +202,7 @@
     "mobx": "^5.15.5",
     "mobx-observable-history": "^1.0.3",
     "mock-fs": "^4.12.0",
+    "module-alias": "^2.2.2",
     "node-machine-id": "^1.1.12",
     "node-pty": "^0.9.0",
     "openid-client": "^3.15.2",
@@ -269,7 +279,6 @@
     "circular-dependency-plugin": "^5.2.0",
     "color": "^3.1.2",
     "concurrently": "^5.2.0",
-    "cross-env": "^7.0.2",
     "css-element-queries": "^1.2.3",
     "css-loader": "^3.5.3",
     "dompurify": "^2.0.11",
