@@ -45,7 +45,7 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   @observable installed = observable.map<ExtensionId, InstalledExtension>([], { deep: false });
 
   get folderPath(): string {
-    if (isDevelopment || isTestEnv) {
+    if (isDevelopment) {
       return path.resolve(__static, "../src/extensions");
     }
     return path.resolve(__static, "../extensions"); //todo figure out prod
