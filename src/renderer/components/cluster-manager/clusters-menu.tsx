@@ -10,7 +10,7 @@ import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
-import { cssNames, IClassName, autobind } from "../../utils";
+import { autobind, cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
 import { navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
@@ -20,8 +20,8 @@ import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
-import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
-import { dynamicPages } from "./register-page";
+import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
+import { dynamicPages } from "../../../extensions/register-page";
 
 interface Props {
   className?: IClassName;
@@ -143,15 +143,14 @@ export class ClustersMenu extends React.Component<Props> {
           <Tooltip targetId="add-cluster-icon">
             <Trans>Add Cluster</Trans>
           </Tooltip>
-          <Icon big material="add" id="add-cluster-icon" />
+          <Icon big material="add" id="add-cluster-icon"/>
           {newContexts.size > 0 && (
-            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>} />
+            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>}/>
           )}
         </div>
         <div className="dynamic-pages">
-          {Array.from(dynamicPages.all).map(([path, { MenuIcon }]) => {
-            if (!MenuIcon) return;
-            return <MenuIcon onClick={() => navigate(path)}/>
+          {dynamicPages.globalPages.map(({ path, components: { MenuIcon } }) => {
+            return <MenuIcon key={path} onClick={() => navigate(path)}/>
           })}
         </div>
       </div>

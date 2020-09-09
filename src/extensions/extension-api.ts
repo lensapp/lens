@@ -2,7 +2,8 @@
 export type { LensRuntimeRendererEnv } from "./lens-runtime";
 
 // APIs
-export * from "./extension"
+export * from "./lens-extension"
+export { DynamicPageType } from "./register-page";
 
 // Common UI components
 export * from "../renderer/components/icon"

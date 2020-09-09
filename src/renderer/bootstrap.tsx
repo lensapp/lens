@@ -10,6 +10,7 @@ import { i18nStore } from "./i18n";
 import { themeStore } from "./theme.store";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
+import { getLensRuntime } from "../extensions/lens-runtime";
 
 type AppComponent = React.ComponentType & {
   init?(): void;
@@ -32,6 +33,7 @@ export async function bootstrap(App: AppComponent) {
   // init app's dependencies if any
   if (App.init) {
     await App.init();
+    extensionStore.autoEnableOnLoad(getLensRuntime);
   }
   render(<App/>, rootElem);
 }

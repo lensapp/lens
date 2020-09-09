@@ -15,6 +15,7 @@ import { Extensions, extensionsRoute } from "../+extensions";
 import { clusterViewRoute, clusterViewURL, getMatchedCluster, getMatchedClusterId } from "./cluster-view.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
+import { dynamicPages } from "../../../extensions/register-page";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -62,6 +63,9 @@ export class ClusterManager extends React.Component {
             <Route component={ClusterView} {...clusterViewRoute}/>
             <Route component={ClusterSettings} {...clusterSettingsRoute}/>
             <Route component={Extensions} {...extensionsRoute}/>
+            {dynamicPages.globalPages.map(({ path, components: { Page } }) => {
+              return <Route key={path} path={path} component={Page}/>
+            })}
             <Redirect exact to={this.startUrl}/>
           </Switch>
         </main>

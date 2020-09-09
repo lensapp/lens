@@ -3,17 +3,17 @@ import path from "path";
 import fs from "fs-extra";
 import { action, observable, reaction, toJS, } from "mobx";
 import { BaseStore } from "../common/base-store";
-import { ExtensionId, ExtensionManifest, ExtensionVersion, LensExtension } from "./extension";
-import { isDevelopment, isProduction, isTestEnv } from "../common/vars";
+import { ExtensionId, ExtensionManifest, ExtensionVersion, LensExtension } from "./lens-extension";
+import { isDevelopment } from "../common/vars";
 import logger from "../main/logger";
 
 export interface ExtensionStoreModel {
   version: ExtensionVersion;
-  extensions: Record<ExtensionId, ExtensionModel>
+  extensions: [ExtensionId, ExtensionModel][]
 }
 
 export interface ExtensionModel {
-  id?: ExtensionId; // available in lens-extension instance
+  id: ExtensionId;
   version: ExtensionVersion;
   name: string;
   manifestPath: string;
@@ -35,7 +35,6 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   private constructor() {
     super({
       configName: "lens-extension-store",
-      syncEnabled: false,
     });
   }
 
@@ -48,7 +47,7 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
     if (isDevelopment) {
       return path.resolve(__static, "../src/extensions");
     }
-    return path.resolve(__static, "../extensions"); //todo figure out prod
+    return path.resolve(__static, "../extensions");
   }
 
   async load() {
@@ -80,7 +79,6 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
     try {
       manifestJson = __non_webpack_require__(manifestPath); // "__non_webpack_require__" converts to native node's require()-call
       mainJs = path.resolve(path.dirname(manifestPath), manifestJson.main);
-      mainJs = mainJs.replace(/\.ts$/i, ".js"); // todo: compile *.ts on the fly?
       const extensionModule = __non_webpack_require__(mainJs);
       return {
         manifestPath: manifestPath,
@@ -132,7 +130,7 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
       this.version = version;
     }
     if (extensions) {
-      const currentExtensions = new Map(Object.entries(extensions));
+      const currentExtensions = new Map(extensions);
       this.extensions.forEach(extension => {
         if (!currentExtensions.has(extension.id)) {
           this.removed.set(extension.id, extension);
@@ -164,7 +162,7 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   toJSON(): ExtensionStoreModel {
     return toJS({
       version: this.version,
-      extensions: this.extensions.toJSON(),
+      extensions: Array.from(this.extensions).map(([id, instance]) => [id, instance.toJSON()]),
     }, {
       recurseEverything: true,
     })

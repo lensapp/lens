@@ -17,7 +17,7 @@ export interface TabRoute extends RouteProps {
   url: string;
 }
 
-interface Props {
+export interface MainLayoutProps {
   className?: any;
   tabs?: TabRoute[];
   footer?: React.ReactNode;
@@ -27,7 +27,7 @@ interface Props {
 }
 
 @observer
-export class MainLayout extends React.Component<Props> {
+export class MainLayout extends React.Component<MainLayoutProps> {
   public storage = createStorage("main_layout", { pinnedSidebar: true });
 
   @observable isPinned = this.storage.get().pinnedSidebar;
