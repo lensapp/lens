@@ -31,6 +31,7 @@ describe("empty config", () => {
   it("adds new cluster to store", async () => {
     const cluster = new Cluster({
       id: "foo",
+      contextName: "minikube",
       preferences: {
         terminalCWD: "/tmp",
         icon: "data:;base64,iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
@@ -54,6 +55,7 @@ describe("empty config", () => {
   it("check if store can contain multiple clusters", () => {
     const prodCluster = new Cluster({
       id: "prod",
+      contextName: "prod",
       preferences: {
         clusterName: "prod"
       },
@@ -62,6 +64,7 @@ describe("empty config", () => {
     });
     const devCluster = new Cluster({
       id: "dev",
+      contextName: "dev",
       preferences: {
         clusterName: "dev"
       },
@@ -142,11 +145,13 @@ describe("config with existing clusters", () => {
             {
               id: 'cluster1',
               kubeConfig: 'foo',
+              contextName: 'foo',
               preferences: { terminalCWD: '/foo' }
             },
             {
               id: 'cluster2',
               kubeConfig: 'foo2',
+              contextName: 'foo2',
               preferences: { terminalCWD: '/foo2' }
             }
           ]
@@ -339,6 +344,7 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
             {
               id: 'cluster1',
               kubeConfig: 'kubeconfig content',
+              contextName: 'cluster',
               preferences: {
                 icon: "store://icon_path",
               }
