@@ -21,7 +21,6 @@ export async function initView(clusterId: ClusterId) {
   }
   logger.info(`[LENS-VIEW]: init dashboard, clusterId=${clusterId}`)
   const cluster = clusterStore.getById(clusterId);
-  await cluster.whenReady;
   const parentElem = document.getElementById("lens-views");
   const iframe = document.createElement("iframe");
   iframe.name = cluster.contextName;
@@ -32,18 +31,22 @@ export async function initView(clusterId: ClusterId) {
   })
   lensViews.set(clusterId, { clusterId, view: iframe });
   parentElem.appendChild(iframe);
-  // auto-clean when cluster removed
+  autoCleanOnRemove(clusterId, iframe);
+}
+
+export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
   await when(() => !clusterStore.getById(clusterId));
   logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`)
-  parentElem.removeChild(iframe)
+  iframe.parentElement.removeChild(iframe);
   lensViews.delete(clusterId)
-
 }
 
 export function refreshViews() {
   const cluster = getMatchedCluster();
   lensViews.forEach(({ clusterId, view, isLoaded }) => {
-    const isVisible = cluster && cluster.available && cluster.id === clusterId;
-    view.style.display = isLoaded && isVisible ? "flex" : "none"
+    const isCurrent = clusterId === cluster?.id;
+    const isReady = cluster?.available && cluster?.ready;
+    const isVisible = isCurrent && isLoaded && isReady;
+    view.style.display = isVisible ? "flex" : "none"
   })
 }
