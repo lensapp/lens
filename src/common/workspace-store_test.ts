@@ -92,6 +92,50 @@ describe("workspace store tests", () => {
 
       expect(ws.workspaces.size).toBe(2);
     })
+
+    it("cannot create workspace with existent name", () => {
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
+
+      ws.saveWorkspace({
+        id: "someid",
+        name: "default",
+      });
+
+      expect(ws.workspacesList.length).toBe(1);  // default workspace only
+    })
+
+    it("cannot create workspace with empty name", () => {
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
+
+      ws.saveWorkspace({
+        id: "random",
+        name: "",
+      });
+
+      expect(ws.workspacesList.length).toBe(1);  // default workspace only
+    })
+
+    it("cannot create workspace with ' ' name", () => {
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
+
+      ws.saveWorkspace({
+        id: "random",
+        name: " ",
+      });
+
+      expect(ws.workspacesList.length).toBe(1);  // default workspace only
+    })
+
+    it("trim workspace name", () => {
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
+
+      ws.saveWorkspace({
+        id: "random",
+        name: "default ",
+      });
+
+      expect(ws.workspacesList.length).toBe(1);  // default workspace only
+    })
   })
 
   describe("for a non-empty config", () => {
