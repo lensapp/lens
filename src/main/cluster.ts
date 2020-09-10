@@ -78,7 +78,9 @@ export class Cluster implements ClusterModel {
   constructor(model: ClusterModel) {
     this.updateModel(model);
     const kubeconfig = this.getKubeconfig()
-    this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server
+    if (kubeconfig.getContextObject(this.contextName)) {
+      this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server
+    }
   }
 
   @action
