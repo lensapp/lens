@@ -12,7 +12,7 @@ import { Icon } from "../icon";
 import { Input } from "../input";
 import { cssNames, prevDefault } from "../../utils";
 import { Button } from "../button";
-import { Notifications } from "../notifications";
+import { isRequired, Validator } from "../input/input.validators";
 
 @observer
 export class Workspaces extends React.Component {
@@ -42,12 +42,10 @@ export class Workspaces extends React.Component {
 
   saveWorkspace = (id: WorkspaceId) => {
     const draft = toJS(this.editingWorkspaces.get(id));
-    const { error } = workspaceStore.saveWorkspace(draft);
-    if (!error) {
+    const workspace = workspaceStore.saveWorkspace(draft);
+    if (workspace) {
       this.clearEditing(id);
-      return;
     }
-    Notifications.error(error);
   }
 
   addWorkspace = () => {
@@ -95,6 +93,9 @@ export class Workspaces extends React.Component {
 
   onInputKeypress = (evt: React.KeyboardEvent<any>, workspaceId: WorkspaceId) => {
     if (evt.key == 'Enter') {
+      // Trigget input validation
+      evt.currentTarget.blur();
+      evt.currentTarget.focus();
       this.saveWorkspace(workspaceId);
     }
   }
@@ -111,11 +112,15 @@ export class Workspaces extends React.Component {
             const isDefault = workspaceStore.isDefault(workspaceId);
             const isEditing = this.editingWorkspaces.has(workspaceId);
             const editingWorkspace = this.editingWorkspaces.get(workspaceId);
-            const className = cssNames("workspace flex gaps align-center", {
+            const className = cssNames("workspace flex gaps", {
               active: isActive,
               editing: isEditing,
               default: isDefault,
             });
+            const existenceValidator: Validator = {
+              message: () => `Workspace '${name}' already exists`,
+              validate: value => !workspaceStore.getByName(value.trim())
+            }
             return (
               <div key={workspaceId} className={className}>
                 {!isEditing && (
@@ -149,6 +154,7 @@ export class Workspaces extends React.Component {
                       value={editingWorkspace.name}
                       onChange={v => editingWorkspace.name = v}
                       onKeyPress={(e) => this.onInputKeypress(e, workspaceId)}
+                      validators={[isRequired, existenceValidator]}
                       autoFocus
                     />
                     <Input

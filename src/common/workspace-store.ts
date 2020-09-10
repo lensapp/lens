@@ -71,20 +71,17 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @action
-  saveWorkspace(workspace: Workspace): { workspace?: Workspace, error?: string} {
+  saveWorkspace(workspace: Workspace) {
     const { id, name } = workspace;
     const existingWorkspace = this.getById(id);
-    if (!name) {
-      return { error: "Workspace should has a name." };
-    }
-    if (this.getByName(name)) {
-      return { error: `Workspace '${name}' already exist.` };
+    if (!name.trim() || this.getByName(name.trim())) {
+      return;
     }
     if (existingWorkspace) {
-      return { workspace: Object.assign(existingWorkspace, workspace) };
+      Object.assign(existingWorkspace, workspace);
     }
     this.workspaces.set(id, workspace);
-    return { workspace };
+    return workspace;
   }
 
   @action
