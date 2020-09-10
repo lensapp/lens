@@ -2,7 +2,7 @@ import { reaction } from "mobx";
 import { ipcRenderer } from "electron";
 import { matchPath, RouteProps } from "react-router";
 import { buildURL, navigation } from "../../navigation";
-import { clusterStore, getHostedClusterId } from "../../../common/cluster-store";
+import { clusterStore } from "../../../common/cluster-store";
 import { clusterSettingsRoute } from "../+cluster-settings/cluster-settings.route";
 
 export interface IClusterViewRouteParams {
@@ -34,11 +34,10 @@ export function getMatchedCluster() {
 }
 
 if (ipcRenderer) {
-  // Refresh global menu depending on active route's type (common/cluster view)
-  const isMainView = !getHostedClusterId();
-  if (isMainView) {
+  if (process.isMainFrame) {
+    // Keep track of active cluster-id for handling IPC/menus/etc.
     reaction(() => getMatchedClusterId(), clusterId => {
-      ipcRenderer.send("cluster-view:change", clusterId);
+      ipcRenderer.send("cluster-view:current-id", clusterId);
     }, {
       fireImmediately: true
     })

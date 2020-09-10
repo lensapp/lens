@@ -409,6 +409,7 @@ export class Cluster implements ClusterModel {
       id: this.id,
       name: this.contextName,
       initialized: this.initialized,
+      ready: this.ready,
       online: this.online,
       accessible: this.accessible,
       disconnected: this.disconnected,
