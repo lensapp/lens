@@ -19,7 +19,7 @@ import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 export class ClusterManager extends React.Component {
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(getMatchedClusterId, initView, {
+      reaction(() => getMatchedClusterId(), initView, {
         fireImmediately: true
       }),
       reaction(() => [

@@ -14,7 +14,7 @@ import { cssNames, IClassName, autobind } from "../../utils";
 import { Badge } from "../badge";
 import { navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
-import { clusterSettingsURL } from "../+cluster-settings";
+import { clusterSettingsURL, clusterSettingsRoute } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -124,7 +124,7 @@ export class ClustersMenu extends React.Component<Props> {
                             key={cluster.id}
                             showErrors={true}
                             cluster={cluster}
-                            isActive={cluster.id === getMatchedClusterId()}
+                            isActive={cluster.id === getMatchedClusterId([clusterSettingsRoute])}
                             onClick={() => this.showCluster(cluster.id)}
                             onContextMenu={() => this.showContextMenu(cluster)}
                           />

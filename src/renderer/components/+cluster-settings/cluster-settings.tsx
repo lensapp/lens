@@ -9,8 +9,10 @@ import { General } from "./general";
 import { WizardLayout } from "../layout/wizard-layout";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
-import { getMatchedCluster } from "../cluster-manager/cluster-view.route";
+import { getMatchedClusterId } from "../cluster-manager/cluster-view.route";
 import { navigate } from "../../navigation";
+import { clusterSettingsRoute } from "./cluster-settings.route";
+import { clusterStore } from "../../../common/cluster-store";
 
 @observer
 export class ClusterSettings extends React.Component {
@@ -34,7 +36,7 @@ export class ClusterSettings extends React.Component {
   }
 
   render() {
-    const cluster = getMatchedCluster();
+    const cluster = clusterStore.getById(getMatchedClusterId([clusterSettingsRoute]));
     if (!cluster) return null;
     const header = (
       <>
