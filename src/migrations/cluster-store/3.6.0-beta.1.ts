@@ -12,6 +12,7 @@ export default migration({
   version: "3.6.0-beta.1",
   run(store, printLog) {
     const userDataPath = (app || remote.app).getPath("userData")
+    const iconsFolder = path.join(userDataPath, "icons")
     const kubeConfigBase = ClusterStore.getCustomKubeConfigPath("");
     const storedClusters: ClusterModel[] = store.get("clusters") || [];
 
@@ -61,5 +62,7 @@ export default migration({
     if (migratedClusters.length > 0) {
       store.set("clusters", migratedClusters)
     }
+
+    fse.removeSync(iconsFolder)
   }
 })
