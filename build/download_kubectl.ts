@@ -1,10 +1,16 @@
-import packageInfo from "../package.json";
 import fs from "fs";
-import request from "request";
+import fse from "fs-extra";
+import got from "got/dist/source";
 import md5File from "md5-file";
-import requestPromise from "request-promise-native";
-import { ensureDir, pathExists } from "fs-extra";
 import path from "path";
+import stream from "stream";
+import util, { promisify } from "util";
+
+import packageInfo from "../package.json";
+import { GotStreamFunctionOptions } from "../src/common/got-opts";
+import logger from "../src/main/logger";
+
+const pipeline = promisify(stream.pipeline);
 
 class KubectlDownloader {
   public kubectlVersion: string;
@@ -22,21 +28,26 @@ class KubectlDownloader {
   }
 
   protected async urlEtag() {
-    const response = await requestPromise({
-      method: "HEAD",
-      uri: this.url,
-      resolveWithFullResponse: true
-    }).catch((error) => { console.log(error); });
+    try {
+      const res = await got.head(this.url);
+      const { etag } = res.headers;
 
-    if (response.headers["etag"]) {
-      return response.headers["etag"].replace(/"/g, "");
+      if (Array.isArray(etag)) {
+        return etag[0].replace(/"/g, "");
+      }
+
+      if (typeof etag === "string") {
+        return etag.replace(/"/g, "");
+      }
+    } catch (err) {
+      logger.error("Failed to get etag:", err);
     }
 
     return "";
   }
 
   public async checkBinary() {
-    const exists = await pathExists(this.path);
+    const exists = await fse.pathExists(this.path);
 
     if (exists) {
       const hash = md5File.sync(this.path);
@@ -55,65 +66,57 @@ class KubectlDownloader {
     return false;
   }
 
-  public async downloadKubectl() {
+  public async downloadKubectl(): Promise<void> {
     const exists = await this.checkBinary();
 
-    if(exists) {
-      console.log("Already exists and is valid");
-
-      return;
+    if (exists) {
+      return void console.log("Already exists and is valid");
     }
-    await ensureDir(path.dirname(this.path), 0o755);
 
-    const file = fs.createWriteStream(this.path);
+    await fse.ensureDir(path.dirname(this.path), 0o755);
 
     console.log(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
-    const requestOpts: request.UriOptions & request.CoreOptions = {
-      uri: this.url,
-      gzip: true
+    const options: GotStreamFunctionOptions = {
+      decompress: true,
+      isStream: true,
     };
-    const stream = request(requestOpts);
 
-    stream.on("complete", () => {
-      console.log("kubectl binary download finished");
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      file.end(() => {});
-    });
-
-    stream.on("error", (error) => {
-      console.log(error);
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      fs.unlink(this.path, () => {});
-      throw(error);
-    });
-
-    return new Promise((resolve, reject) => {
-      file.on("close", () => {
-        console.log("kubectl binary download closed");
-        fs.chmod(this.path, 0o755, (err) => {
-          if (err) reject(err);
-        });
-        resolve();
-      });
-      stream.pipe(file);
-    });
+    try {
+      // TODO: improve the UI for this to use some sort of loading bar TUI
+      await pipeline(
+        got.stream(this.url, options),
+        fs.createWriteStream(this.path)
+      );
+      await fse.chmod(this.path, 0o755);
+    } catch (err) {
+      logger.error("Failed to download kubectl:", err);
+    }
   }
 }
 
 const downloadVersion = packageInfo.config.bundledKubectlVersion;
 const baseDir = path.join(process.env.INIT_CWD, "binaries", "client");
-const downloads = [
+
+interface DownloadTarget {
+  platform: string;
+  target: string;
+  arch: string;
+}
+
+const downloads: DownloadTarget[] = [
   { platform: "linux", arch: "amd64", target: path.join(baseDir, "linux", "x64", "kubectl") },
   { platform: "darwin", arch: "amd64", target: path.join(baseDir, "darwin", "x64", "kubectl") },
   { platform: "windows", arch: "amd64", target: path.join(baseDir, "windows", "x64", "kubectl.exe") },
   { platform: "windows", arch: "386", target: path.join(baseDir, "windows", "ia32", "kubectl.exe") }
 ];
 
-downloads.forEach((dlOpts) => {
-  console.log(dlOpts);
-  const downloader = new KubectlDownloader(downloadVersion, dlOpts.platform, dlOpts.arch, dlOpts.target);
+async function downloadOne(opts: DownloadTarget) {
+  const downloader = new KubectlDownloader(downloadVersion, opts.platform, opts.arch, opts.target);
 
-  console.log(`Downloading: ${JSON.stringify(dlOpts)}`);
-  downloader.downloadKubectl().then(() => downloader.checkBinary().then(() => console.log("Download complete")));
-});
+  console.log(`Downloading: ${util.inspect(opts, false, null, true)}`);
+  await downloader.downloadKubectl();
+  await downloader.checkBinary();
+  console.log(`Finished downloading for ${opts.platform}/${opts.arch}`);
+}
 
+Promise.all(downloads.map(downloadOne));

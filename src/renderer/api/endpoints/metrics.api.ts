@@ -2,7 +2,7 @@
 
 import moment from "moment";
 import { apiBase } from "../index";
-import type { IMetricsQuery } from "../../../main/routes/metrics-route";
+import type { MetricsQuery } from "../../../main/routes/metrics-route";
 
 export interface IMetrics {
   status: string;
@@ -34,7 +34,7 @@ export interface IMetricsReqParams {
 }
 
 export const metricsApi = {
-  async getMetrics<T = IMetricsQuery>(query: T, reqParams: IMetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: IMetrics } : IMetrics> {
+  async getMetrics<T = MetricsQuery>(query: T, reqParams: IMetricsReqParams = {}): Promise<T extends object ? { [K in keyof T]: IMetrics } : IMetrics> {
     const { range = 3600, step = 60, namespace } = reqParams;
     let { start, end } = reqParams;
 

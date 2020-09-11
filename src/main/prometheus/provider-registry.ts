@@ -1,6 +1,6 @@
 import { CoreV1Api } from "@kubernetes/client-node";
 
-export type PrometheusClusterQuery = {
+export interface PrometheusClusterQuery {
   memoryUsage: string;
   memoryRequests: string;
   memoryLimits: string;
@@ -11,18 +11,18 @@ export type PrometheusClusterQuery = {
   cpuCapacity: string;
   podUsage: string;
   podCapacity: string;
-};
+}
 
-export type PrometheusNodeQuery = {
+export interface PrometheusNodeQuery {
   memoryUsage: string;
   memoryCapacity: string;
   cpuUsage: string;
   cpuCapacity: string;
   fsSize: string;
   fsUsage: string;
-};
+}
 
-export type PrometheusPodQuery = {
+export interface PrometheusPodQuery {
   memoryUsage: string;
   memoryRequests: string;
   memoryLimits: string;
@@ -32,25 +32,26 @@ export type PrometheusPodQuery = {
   fsUsage: string;
   networkReceive: string;
   networkTransmit: string;
-};
+}
 
-export type PrometheusPvcQuery = {
+export interface PrometheusPvcQuery {
   diskUsage: string;
   diskCapacity: string;
-};
+}
 
-export type PrometheusIngressQuery = {
+export interface PrometheusIngressQuery {
   bytesSentSuccess: string;
   bytesSentFailure: string;
   requestDurationSeconds: string;
   responseDurationSeconds: string;
-};
+}
 
 export type PrometheusQueryOpts = {
   [key: string]: string | any;
 };
 
 export type PrometheusQuery = PrometheusNodeQuery | PrometheusClusterQuery | PrometheusPodQuery | PrometheusPvcQuery | PrometheusIngressQuery;
+export type PrometheusQueryKey = keyof PrometheusNodeQuery | keyof PrometheusClusterQuery | keyof PrometheusPodQuery | keyof PrometheusPvcQuery | keyof PrometheusIngressQuery;
 
 export type PrometheusService = {
   id: string;

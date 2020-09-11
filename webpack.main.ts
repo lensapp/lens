@@ -13,7 +13,8 @@ export default function (): webpack.Configuration {
     context: __dirname,
     target: "electron-main",
     mode: isProduction ? "production" : "development",
-    devtool: isProduction ? "source-map" : "cheap-eval-source-map",
+    // devtool: isProduction ? "source-map" : "cheap-eval-source-map",
+    devtool: "source-map",
     cache: isDevelopment,
     entry: {
       main: path.resolve(mainDir, "index.ts"),

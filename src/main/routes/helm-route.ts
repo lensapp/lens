@@ -52,7 +52,7 @@ class HelmApiRoute extends LensApi {
     const { cluster, params, payload, response } = request;
 
     try {
-      const result = await helmService.updateRelease(cluster, params.release, params.namespace, payload );
+      const result = await helmService.updateRelease(cluster, params.release, params.namespace, payload);
 
       this.respondJson(response, result);
     } catch (error) {
@@ -81,7 +81,7 @@ class HelmApiRoute extends LensApi {
       const result = await helmService.listReleases(cluster, params.namespace);
 
       this.respondJson(response, result);
-    } catch(error) {
+    } catch (error) {
       logger.debug(error);
       this.respondText(response, error, 422);
     }

@@ -26,7 +26,7 @@ export class BaseClusterDetector {
       timeout: 30000,
       ...options,
       headers: {
-        Host: `${this.cluster.id}.${new URL(this.cluster.kubeProxyUrl).host}`, // required in ClusterManager.getClusterForRequest()
+        Host: `${this.cluster.id}.${this.cluster.kubeProxyUrl.host}`, // required in ClusterManager.getClusterForRequest()
         ...(options.headers || {}),
       },
     });

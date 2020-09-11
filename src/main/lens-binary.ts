@@ -1,17 +1,22 @@
 import path from "path";
 import fs from "fs";
-import request from "request";
-import { ensureDir, pathExists } from "fs-extra";
+import fse from "fs-extra";
 import * as tar from "tar";
 import { isWindows } from "../common/vars";
 import winston from "winston";
+import { GotStreamFunctionOptions } from "../common/got-opts";
+import got from "got";
+import stream from "stream";
+import { promisify } from "util";
+
+const pipeline = promisify(stream.pipeline);
 
 export type LensBinaryOpts = {
   version: string;
   baseDir: string;
   originalBinaryName: string;
   newBinaryName?: string;
-  requestOpts?: request.Options;
+  requestOpts?: GotStreamFunctionOptions;
 };
 
 export class LensBinary {
@@ -26,7 +31,7 @@ export class LensBinary {
   protected platformName: string;
   protected arch: string;
   protected originalBinaryName: string;
-  protected requestOpts: request.Options;
+  protected requestOpts: GotStreamFunctionOptions;
   protected logger: Console | winston.Logger;
 
   constructor(opts: LensBinaryOpts) {
@@ -63,7 +68,7 @@ export class LensBinary {
     }
   }
 
-  public setLogger(logger: Console | winston.Logger) {
+  public setLogger(logger: Console | winston.Logger) {
     this.logger = logger;
   }
 
@@ -110,88 +115,71 @@ export class LensBinary {
   }
 
   protected async checkBinary() {
-    const exists = await pathExists(this.getBinaryPath());
-
-    return exists;
+    return fse.pathExists(this.getBinaryPath());
   }
 
   public async ensureBinary() {
-    const isValid = await this.checkBinary();
+    try {
+      if (await this.checkBinary()) {
+        return;
+      }
 
-    if (!isValid) {
-      await this.downloadBinary().catch((error) => {
-        this.logger.error(error);
-      });
-      if (this.tarPath) await this.untarBinary();
-      if (this.originalBinaryName != this.binaryName) await this.renameBinary();
+      await this.downloadBinary();
+
+      if (this.tarPath) {
+        await this.untarBinary();
+      }
+
+      if (this.originalBinaryName !== this.binaryName) {
+        await this.renameBinary();
+      }
+
       this.logger.info(`${this.originalBinaryName} has been downloaded to ${this.getBinaryPath()}`);
+    } catch (err) {
+      this.logger.error(err);
     }
   }
 
   protected async untarBinary() {
-    return new Promise<void>(resolve => {
-      this.logger.debug(`Extracting ${this.originalBinaryName} binary`);
-      tar.x({
+    this.logger.debug(`Extracting ${this.originalBinaryName} binary`);
+
+    try {
+      await tar.x({
         file: this.tarPath,
         cwd: this.dirname
-      }).then((() => {
-        resolve();
-      }));
-    });
+      });
+    } catch (err) {
+      this.logger.error(`failed to extract ${this.originalBinaryName}: `, err);
+    }
   }
 
   protected async renameBinary() {
-    return new Promise<void>((resolve, reject) => {
-      this.logger.debug(`Renaming ${this.originalBinaryName} binary to ${this.binaryName}`);
-      fs.rename(this.getOriginalBinaryPath(), this.getBinaryPath(), (err) => {
-        if (err) {
-          reject(err);
-        }
-        else {
-          resolve();
-        }
-      });
-    });
+    this.logger.debug(`Renaming ${this.originalBinaryName} binary to ${this.binaryName}`);
+
+    return fse.promises.rename(this.getOriginalBinaryPath(), this.getBinaryPath());
   }
 
   protected async downloadBinary() {
     const binaryPath = this.tarPath || this.getBinaryPath();
 
-    await ensureDir(this.getBinaryDir(), 0o755);
+    await fse.ensureDir(this.getBinaryDir(), 0o755);
 
-    const file = fs.createWriteStream(binaryPath);
     const url = this.getUrl();
-
-    this.logger.info(`Downloading ${this.originalBinaryName} ${this.binaryVersion} from ${url} to ${binaryPath}`);
-    const requestOpts: request.UriOptions & request.CoreOptions = {
-      uri: url,
-      gzip: true,
+    const requestOpts: GotStreamFunctionOptions = {
+      decompress: true,
+      isStream: true,
       ...this.requestOpts
     };
-    const stream = request(requestOpts);
 
-    stream.on("complete", () => {
-      this.logger.info(`Download of ${this.originalBinaryName} finished`);
-      file.end();
-    });
+    this.logger.info(`Downloading ${this.originalBinaryName} ${this.binaryVersion} from ${url} to ${binaryPath}`);
 
-    stream.on("error", (error) => {
-      this.logger.error(error);
-      fs.unlink(binaryPath, () => {
-        // do nothing
-      });
-      throw(error);
-    });
-
-    return new Promise((resolve, reject) => {
-      file.on("close", () => {
-        this.logger.debug(`${this.originalBinaryName} binary download closed`);
-        if (!this.tarPath) fs.chmod(binaryPath, 0o755, (err) => {
-          if (err) reject(err);
-        });
-        resolve();
-      });
-      stream.pipe(file);
-    });
+    try {
+      await pipeline(
+        got.stream(url, requestOpts),
+        fs.createWriteStream(binaryPath),
+      );
+    } catch (err) {
+      this.logger.error("Failed to download kubectl:", err);
+    }
   }
 }

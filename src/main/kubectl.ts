@@ -1,15 +1,21 @@
 import { app, remote } from "electron";
-import path from "path";
 import fs from "fs";
-import { promiseExec } from "./promise-exec";
-import logger from "./logger";
 import { ensureDir, pathExists } from "fs-extra";
+import got from "got";
+import path from "path";
 import * as lockFile from "proper-lockfile";
-import { helmCli } from "./helm/helm-cli";
+import stream from "stream";
+import { promisify } from "util";
+
+import { defaultGotOptions, GotStreamFunctionOptions } from "../common/got-opts";
 import { userStore } from "../common/user-store";
-import { customRequest } from "../common/request";
 import { getBundledKubectlVersion } from "../common/utils/app-version";
-import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
+import { isDevelopment, isTestEnv, isWindows } from "../common/vars";
+import { helmCli } from "./helm/helm-cli";
+import logger from "./logger";
+import { promiseExec } from "./promise-exec";
+
+const pipeline = promisify(stream.pipeline);
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([
@@ -273,33 +279,22 @@ export class Kubectl {
 
     logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
 
-    return new Promise((resolve, reject) => {
-      const stream = customRequest({
-        url: this.url,
-        gzip: true,
-      });
-      const file = fs.createWriteStream(this.path);
+    logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
+    const options: GotStreamFunctionOptions = {
+      ...defaultGotOptions(),
+      decompress: true,
+      isStream: true,
+    };
 
-      stream.on("complete", () => {
-        logger.debug("kubectl binary download finished");
-        file.end();
-      });
-      stream.on("error", (error) => {
-        logger.error(error);
-        fs.unlink(this.path, () => {
-          // do nothing
-        });
-        reject(error);
-      });
-      file.on("close", () => {
-        logger.debug("kubectl binary download closed");
-        fs.chmod(this.path, 0o755, (err) => {
-          if (err) reject(err);
-        });
-        resolve();
-      });
-      stream.pipe(file);
-    });
+    try {
+      // TODO: improve the UI for this to use some sort of loading bar TUI
+      await pipeline(
+        got.stream(this.url, options),
+        fs.createWriteStream(this.path)
+      );
+    } catch (err) {
+      logger.error("Failed to download kubectl:", err);
+    }
   }
 
   protected async writeInitScripts() {

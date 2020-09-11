@@ -1,6 +1,5 @@
 import { ipcMain } from "electron";
 import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../common/cluster-store";
-import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
 import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
@@ -10,12 +9,13 @@ import { AuthorizationV1Api, CoreV1Api, HttpError, KubeConfig, V1ResourceAttribu
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
 import { loadConfig, validateKubeConfig } from "../common/kube-helpers";
-import request, { RequestPromiseOptions } from "request-promise-native";
 import { apiResources, KubeApiResource } from "../common/rbac";
 import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
 import plimit from "p-limit";
+import got, { OptionsOfJSONResponseBody } from "got";
+import { URL } from "url";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -86,7 +86,7 @@ export class Cluster implements ClusterModel, ClusterState {
   whenReady = when(() => this.ready);
 
   /**
-   * Is cluster object initializinng on-going
+   * Is cluster object initializing on-going
    *
    * @observable
    */
@@ -128,7 +128,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    * @internal
    */
-  @observable kubeProxyUrl: string; // lens-proxy to kube-api url
+  @observable kubeProxyUrl: URL; // lens-proxy to kube-api url
   /**
    * Is cluster instance enabled (disabled clusters are currently hidden)
    *
@@ -298,7 +298,7 @@ export class Cluster implements ClusterModel, ClusterState {
       this.initializing = true;
       this.contextHandler = new ContextHandler(this);
       this.kubeconfigManager = await KubeconfigManager.create(this, this.contextHandler, port);
-      this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
+      this.kubeProxyUrl = new URL(`http://localhost:${port}${apiKubePrefix}`);
       this.initialized = true;
       logger.info(`[CLUSTER]: "${this.contextName}" init success`, {
         id: this.id,
@@ -495,31 +495,31 @@ export class Cluster implements ClusterModel, ClusterState {
     return this.kubeconfigManager.getPath();
   }
 
-  protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
-    options.headers ??= {};
-    options.json ??= true;
-    options.timeout ??= 30000;
-    options.headers.Host = `${this.id}.${new URL(this.kubeProxyUrl).host}`; // required in ClusterManager.getClusterForRequest()
+  private getUrlTo(path: string): URL {
+    const url = new URL(this.kubeProxyUrl.toString());
 
-    return request(this.kubeProxyUrl + path, options);
+    url.pathname += path;
+
+    return url;
   }
 
-  /**
-   *
-   * @param prometheusPath path to prometheus service
-   * @param queryParams query parameters
-   * @internal
-   */
-  getMetrics(prometheusPath: string, queryParams: IMetricsReqParams & { query: string }) {
+  protected k8sRequest<T = any>(url: URL, options: OptionsOfJSONResponseBody = {}): Promise<T> {
+    options.timeout ??= 5000;
+    options.headers ??= {};
+    options.headers["content-type"] ??= "application/json";
+    options.headers.host ??= `${this.id}.${this.kubeProxyUrl.host}`; // required in ClusterManager.getClusterForRequest()
+
+    return got<T>(url, options).json();
+  }
+
+  getMetrics(prometheusPath: string, searchParams: Record<string, any>) {
     const prometheusPrefix = this.preferences.prometheus?.prefix || "";
     const metricsPath = `/api/v1/namespaces/${prometheusPath}/proxy${prometheusPrefix}/api/v1/query_range`;
 
-    return this.k8sRequest(metricsPath, {
+    return this.k8sRequest(this.getUrlTo(metricsPath), {
       timeout: 0,
-      resolveWithFullResponse: false,
-      json: true,
       method: "POST",
-      form: queryParams,
+      form: searchParams,
     });
   }
 

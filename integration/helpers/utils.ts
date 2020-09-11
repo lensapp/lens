@@ -49,12 +49,13 @@ export function describeIf(condition: boolean) {
   return condition ? describe : describe.skip;
 }
 
-export function setup(): Application {
+export function setup(waitTimeout = 60000): Application {
   return new Application({
     path: AppPaths[process.platform], // path to electron app
     args: [],
     startTimeout: 30000,
-    waitTimeout: 60000,
+    waitTimeout,
+    chromeDriverArgs: ["remote-debugging-port=9222"],
     env: {
       CICD: "true"
     }
@@ -101,7 +102,7 @@ export async function tearDown(app: Application) {
   await app.stop();
 
   try {
-    process.kill(pid, "SIGKILL");
+    process.kill(pid, 0);
   } catch (e) {
     console.error(e);
   }

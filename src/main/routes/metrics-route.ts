@@ -4,10 +4,15 @@ import { LensApi } from "../lens-api";
 import { Cluster, ClusterMetadataKey } from "../cluster";
 import { ClusterPrometheusMetadata } from "../../common/cluster-store";
 import logger from "../logger";
+import { PrometheusQueryKey } from "../prometheus/provider-registry";
 
-export type IMetricsQuery = string | string[] | {
+export interface MetricsQuery {
   [metricName: string]: string;
-};
+}
+
+function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 // This is used for backoff retry tracking.
 const MAX_ATTEMPTS = 5;
@@ -29,7 +34,7 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
             throw new Error("Metrics not available");
           }
 
-          await new Promise(resolve => setTimeout(resolve, (attempt + 1) * 1000)); // add delay before repeating request
+          await delay((attempt + 1) * 1000); // add delay before repeating request
         }
       }
     }
@@ -40,9 +45,14 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
   return Promise.all(queries.map(loadMetric));
 }
 
+export interface MetricsResult {
+  status?: string;
+  data?: any;
+}
+
 class MetricsRoute extends LensApi {
   async routeMetrics({ response, cluster, payload, query }: LensApiRequest) {
-    const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
+    const queryParams: MetricsQuery = Object.fromEntries(query.entries());
     const prometheusMetadata: ClusterPrometheusMetadata = {};
 
     try {
@@ -72,7 +82,7 @@ class MetricsRoute extends LensApi {
         this.respondJson(response, data);
       } else {
         const queries = Object.entries(payload).map(([queryName, queryOpts]) => (
-          (prometheusProvider.getQueries(queryOpts) as Record<string, string>)[queryName]
+          (prometheusProvider.getQueries(queryOpts) as Record<PrometheusQueryKey, string>)[queryName as PrometheusQueryKey]
         ));
         const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
         const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
