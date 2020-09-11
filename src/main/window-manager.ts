@@ -1,9 +1,9 @@
+import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 import { BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { observable } from "mobx";
 import { initMenu } from "./menu";
-import type { ClusterId } from "../common/cluster-store";
 
 export class WindowManager {
   protected mainView: BrowserWindow;
@@ -42,7 +42,7 @@ export class WindowManager {
     });
 
     // track visible cluster from ui
-    ipcMain.on("cluster-view:change", (event, clusterId: ClusterId) => {
+    ipcMain.on("cluster-view:current-id", (event, clusterId: ClusterId) => {
       this.activeClusterId = clusterId;
     });
 

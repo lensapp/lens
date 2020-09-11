@@ -63,7 +63,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   static embedCustomKubeConfig(clusterId: ClusterId, kubeConfig: KubeConfig | string): string {
     const filePath = ClusterStore.getCustomKubeConfigPath(clusterId);
     const fileContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
-    saveToAppFiles(filePath, fileContents, { mode: 0o600});
+    saveToAppFiles(filePath, fileContents, { mode: 0o600 });
     return filePath;
   }
 
@@ -209,11 +209,17 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
 export const clusterStore = ClusterStore.getInstance<ClusterStore>();
 
-export function getHostedClusterId(): ClusterId {
-  const clusterHost = location.hostname.match(/^(.*?)\.localhost/);
-  if (clusterHost) {
-    return clusterHost[1]
-  }
+export function getClusterIdFromHost(hostname: string): ClusterId {
+  const subDomains = hostname.split(":")[0].split(".");
+  return subDomains.slice(-2)[0]; // e.g host == "%clusterId.localhost:45345"
+}
+
+export function getClusterFrameUrl(clusterId: ClusterId) {
+  return `//${clusterId}.${location.host}`;
+}
+
+export function getHostedClusterId() {
+  return getClusterIdFromHost(location.hostname);
 }
 
 export function getHostedCluster(): Cluster {
