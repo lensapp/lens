@@ -2,7 +2,7 @@ import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/clus
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
 import type { FeatureStatusMap } from "./feature"
-import { action, computed, intercept, observable, reaction, toJS, when } from "mobx";
+import { action, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { broadcastIpc } from "../common/ipc";
 import { ContextHandler } from "./context-handler"
@@ -126,13 +126,13 @@ export class Cluster implements ClusterModel {
     this.eventDisposers.length = 0;
   }
 
-  async activate() {
+  async activate(init = false) {
     logger.info(`[CLUSTER]: activate`, this.getMeta());
     await this.whenInitialized;
     if (!this.eventDisposers.length) {
       this.bindEvents();
     }
-    if (this.disconnected || !this.accessible) {
+    if (this.disconnected || (!init && !this.accessible)) {
       await this.reconnect();
     }
     await this.refresh();
@@ -411,6 +411,7 @@ export class Cluster implements ClusterModel {
       id: this.id,
       name: this.contextName,
       initialized: this.initialized,
+      ready: this.ready,
       online: this.online,
       accessible: this.accessible,
       disconnected: this.disconnected,

@@ -38,7 +38,7 @@ export class ClusterStatus extends React.Component<Props> {
         error: res.error,
       });
     })
-    if (!this.cluster.initialized || this.cluster.disconnected) {
+    if (this.cluster.disconnected) {
       await this.refreshCluster();
     }
   }
@@ -63,7 +63,7 @@ export class ClusterStatus extends React.Component<Props> {
     if (!hasErrors || this.isReconnecting) {
       return (
         <>
-          <CubeSpinner />
+          <CubeSpinner/>
           <pre className="kube-auth-out">
             <p>{this.isReconnecting ? "Reconnecting..." : "Connecting..."}</p>
             {authOutput.map(({ data, error }, index) => {
@@ -75,7 +75,7 @@ export class ClusterStatus extends React.Component<Props> {
     }
     return (
       <>
-        <Icon material="cloud_off" className="error" />
+        <Icon material="cloud_off" className="error"/>
         <h2>
           {cluster.preferences.clusterName}
         </h2>

@@ -4,7 +4,7 @@ import { render } from "react-dom";
 import { isMac } from "../common/vars";
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
-import { clusterStore, getHostedClusterId } from "../common/cluster-store";
+import { clusterStore } from "../common/cluster-store";
 import { i18nStore } from "./i18n";
 import { themeStore } from "./theme.store";
 import { App } from "./components/app";
@@ -35,4 +35,4 @@ export async function bootstrap(App: AppComponent) {
 }
 
 // run
-bootstrap(getHostedClusterId() ? App : LensApp);
+bootstrap(process.isMainFrame ? LensApp : App);
