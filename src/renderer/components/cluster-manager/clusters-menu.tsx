@@ -12,15 +12,16 @@ import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { cssNames, IClassName, autobind } from "../../utils";
 import { Badge } from "../badge";
-import { navigate } from "../../navigation";
+import { navigate, navigation } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL, clusterSettingsRoute } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
-import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
+import { clusterViewURL, clusterViewRoute } from "./cluster-view.route";
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
+import { matchPath } from "react-router";
 
 interface Props {
   className?: IClassName;
@@ -44,6 +45,7 @@ export class ClustersMenu extends React.Component<Props> {
     menu.append(new MenuItem({
       label: _i18n._(t`Settings`),
       click: () => {
+        clusterStore.setActive(cluster.id);
         navigate(clusterSettingsURL({
           params: {
             clusterId: cluster.id
@@ -101,6 +103,7 @@ export class ClustersMenu extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const { newContexts } = userStore;
+    const { activeClusterId } = clusterStore;
     const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
@@ -112,26 +115,33 @@ export class ClustersMenu extends React.Component<Props> {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  {clusters.map((cluster, index) => (
-                    <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
-                      {(provided: DraggableProvided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <ClusterIcon
-                            key={cluster.id}
-                            showErrors={true}
-                            cluster={cluster}
-                            isActive={cluster.id === getMatchedClusterId([clusterSettingsRoute])}
-                            onClick={() => this.showCluster(cluster.id)}
-                            onContextMenu={() => this.showContextMenu(cluster)}
-                          />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
+                  {clusters.map((cluster, index) => {
+                    const matched = matchPath(navigation.location.pathname, {
+                      path: [clusterViewRoute.path, clusterSettingsRoute.path].flat(),
+                      exact: true
+                    })
+                    const isActive = activeClusterId === cluster.id && !!matched;
+                    return (
+                      <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
+                        {(provided: DraggableProvided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <ClusterIcon
+                              key={cluster.id}
+                              showErrors={true}
+                              cluster={cluster}
+                              isActive={isActive}
+                              onClick={() => this.showCluster(cluster.id)}
+                              onContextMenu={() => this.showContextMenu(cluster)}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    )}
+                  )}
                   {provided.placeholder}
                 </div>
               )}

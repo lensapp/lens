@@ -15,13 +15,10 @@ export const clusterViewRoute: RouteProps = {
 
 export const clusterViewURL = buildURL<IClusterViewRouteParams>(clusterViewRoute.path)
 
-export function getMatchedClusterId(extraRoutes: RouteProps[] = []): string {
+export function getMatchedClusterId(): string {
   const matched = matchPath<IClusterViewRouteParams>(navigation.location.pathname, {
     exact: true,
-    path: [
-      clusterViewRoute.path,
-      ...extraRoutes.map(route => route.path)
-    ].flat(),
+    path: clusterViewRoute.path
   })
   if (matched) {
     return matched.params.clusterId;
