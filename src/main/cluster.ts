@@ -396,7 +396,7 @@ export class Cluster implements ClusterModel {
   }
 
   pushState = (state = this.getState()): ClusterState => {
-    logger.debug(`[CLUSTER]: push-state`, state);
+    logger.silly(`[CLUSTER]: push-state`, state);
     broadcastIpc({
       channel: "cluster:state",
       frameId: this.frameId,

@@ -77,7 +77,7 @@ export class BaseStore<T = any> extends Singleton {
     );
     if (ipcMain) {
       const callback = (event: IpcMainEvent, model: T) => {
-        logger.debug(`[STORE]: SYNC ${this.name} from renderer`, { model });
+        logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
       };
       ipcMain.on(this.syncChannel, callback);
@@ -85,7 +85,7 @@ export class BaseStore<T = any> extends Singleton {
     }
     if (ipcRenderer) {
       const callback = (event: IpcRendererEvent, model: T) => {
-        logger.debug(`[STORE]: SYNC ${this.name} from main`, { model });
+        logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
         this.onSync(model);
       };
       ipcRenderer.on(this.syncChannel, callback);

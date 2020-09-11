@@ -2,14 +2,16 @@ import { app, remote } from "electron";
 import winston from "winston"
 import { isDebugging } from "../common/vars";
 
+const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : isDebugging ? "debug" : "info"
+
 const consoleOptions: winston.transports.ConsoleTransportOptions = {
   handleExceptions: false,
-  level: isDebugging ? "debug" : "info",
+  level: logLevel,
 }
 
 const fileOptions: winston.transports.FileTransportOptions = {
   handleExceptions: false,
-  level: isDebugging ? "debug" : "info",
+  level: logLevel,
   filename: "lens.log",
   dirname: (app ?? remote?.app)?.getPath("logs"),
   maxsize: 16 * 1024,
