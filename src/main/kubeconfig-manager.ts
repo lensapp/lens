@@ -62,7 +62,7 @@ export class KubeconfigManager {
     // write
     const configYaml = dumpConfigYaml(proxyConfig);
     fs.ensureDir(path.dirname(tempFile));
-    fs.writeFileSync(tempFile, configYaml);
+    fs.writeFileSync(tempFile, configYaml, { mode: 0o600 });
     this.tempFile = tempFile;
     logger.debug(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
     return tempFile;
