@@ -3,7 +3,7 @@
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
 ## 3.6.0-rc.3 (current version)
-- Fix Dialog Escape keypress behavior
+- Fix Dialog Esc keypress behavior
 - Set new workspace name restrictions
 - Fix cluster's apiUrl
 - Fix: Cluster dashboard not rendered
