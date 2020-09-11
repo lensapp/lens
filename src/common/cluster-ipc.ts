@@ -3,21 +3,14 @@ import { ClusterId, clusterStore } from "./cluster-store";
 import { tracker } from "./tracker";
 
 export const clusterIpc = {
-  initView: createIpcChannel({
-    channel: "cluster:init",
-    handle: async (clusterId: ClusterId, frameId: number) => {
-      const cluster = clusterStore.getById(clusterId);
-      if (cluster) {
-        cluster.frameId = frameId; // save cluster's webFrame.routingId to be able to send push-updates
-        return cluster.pushState();
-      }
-    },
-  }),
-
   activate: createIpcChannel({
     channel: "cluster:activate",
-    handle: (clusterId: ClusterId) => {
-      return clusterStore.getById(clusterId)?.activate();
+    handle: (clusterId: ClusterId, frameId?: number) => {
+      const cluster = clusterStore.getById(clusterId);
+      if (cluster) {
+        if (frameId) cluster.frameId = frameId; // save cluster's webFrame.routingId to be able to send push-updates
+        return cluster.activate(true);
+      }
     },
   }),
 

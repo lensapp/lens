@@ -40,18 +40,19 @@
     div.logo-text {
       position: absolute;
       left: 42px;
-      top: 11.5px;
+      top: 11px;
     }
 
     .logo-icon {
       width: 28px;
       height: 28px;
       margin-left: 2px;
-      margin-top: 3px;
+      margin-top: 2px;
       margin-right: 10px;
 
       svg {
         --size: 28px;
+        padding: 2px;
       }
     }
 

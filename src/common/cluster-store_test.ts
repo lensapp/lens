@@ -31,9 +31,10 @@ describe("empty config", () => {
   it("adds new cluster to store", async () => {
     const cluster = new Cluster({
       id: "foo",
+      contextName: "minikube",
       preferences: {
         terminalCWD: "/tmp",
-        icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
+        icon: "data:;base64,iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
         clusterName: "minikube"
       },
       kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", "fancy foo config"),
@@ -54,6 +55,7 @@ describe("empty config", () => {
   it("check if store can contain multiple clusters", () => {
     const prodCluster = new Cluster({
       id: "prod",
+      contextName: "prod",
       preferences: {
         clusterName: "prod"
       },
@@ -62,6 +64,7 @@ describe("empty config", () => {
     });
     const devCluster = new Cluster({
       id: "dev",
+      contextName: "dev",
       preferences: {
         clusterName: "dev"
       },
@@ -142,11 +145,13 @@ describe("config with existing clusters", () => {
             {
               id: 'cluster1',
               kubeConfig: 'foo',
+              contextName: 'foo',
               preferences: { terminalCWD: '/foo' }
             },
             {
               id: 'cluster2',
               kubeConfig: 'foo2',
+              contextName: 'foo2',
               preferences: { terminalCWD: '/foo2' }
             }
           ]
@@ -285,7 +290,7 @@ describe("pre 2.6.0 config with a cluster icon", () => {
     const storedClusterData = clusterStore.clustersList[0];
     expect(storedClusterData.hasOwnProperty('icon')).toBe(false);
     expect(storedClusterData.preferences.hasOwnProperty('icon')).toBe(true);
-    expect(storedClusterData.preferences.icon.startsWith("data:image/jpeg;base64,")).toBe(true);
+    expect(storedClusterData.preferences.icon.startsWith("data:;base64,")).toBe(true);
   })
 })
 
@@ -339,6 +344,7 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
             {
               id: 'cluster1',
               kubeConfig: 'kubeconfig content',
+              contextName: 'cluster',
               preferences: {
                 icon: "store://icon_path",
               }
@@ -364,6 +370,6 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
 
   it("migrates to modern format with icon not in file", async () => {
     const { icon } = clusterStore.clustersList[0].preferences;
-    expect(icon.startsWith("data:image/jpeg;base64, ")).toBe(true);
+    expect(icon.startsWith("data:;base64,")).toBe(true);
   })
 })

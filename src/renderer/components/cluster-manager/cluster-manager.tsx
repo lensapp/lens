@@ -1,7 +1,7 @@
 import "./cluster-manager.scss"
 import React from "react";
 import { Redirect, Route, Switch } from "react-router";
-import { reaction } from "mobx";
+import { comparer, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ClustersMenu } from "./clusters-menu";
 import { BottomBar } from "./bottom-bar";
@@ -25,11 +25,14 @@ export class ClusterManager extends React.Component {
         fireImmediately: true
       }),
       reaction(() => [
+        getMatchedClusterId(), // refresh when active cluster-view changed
         hasLoadedView(getMatchedClusterId()), // refresh when cluster's webview loaded
         getMatchedCluster()?.available, // refresh on disconnect active-cluster
+        getMatchedCluster()?.ready, // refresh when cluster ready-state change
       ], refreshViews, {
-        fireImmediately: true
-      })
+        fireImmediately: true,
+        equals: comparer.shallow,
+      }),
     ])
   }
 

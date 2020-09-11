@@ -5,6 +5,7 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
+import ProgressBarPlugin from "progress-bar-webpack-plugin";
 
 export default [
   webpackLensRenderer,
@@ -154,6 +155,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     },
 
     plugins: [
+      new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
 
       // todo: fix remain warnings about circular dependencies

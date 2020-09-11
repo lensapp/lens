@@ -51,6 +51,10 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     return this.workspaces.get(id);
   }
 
+  getByName(name: string): Workspace {
+    return this.workspacesList.find(workspace => workspace.name === name);
+  }
+
   @action
   setActive(id = WorkspaceStore.defaultId, { redirectToLanding = true, resetActiveCluster = true } = {}) {
     if (id === this.currentWorkspaceId) return;
@@ -68,13 +72,16 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
 
   @action
   saveWorkspace(workspace: Workspace) {
-    const id = workspace.id;
+    const { id, name } = workspace;
     const existingWorkspace = this.getById(id);
+    if (!name.trim() || this.getByName(name.trim())) {
+      return;
+    }
     if (existingWorkspace) {
       Object.assign(existingWorkspace, workspace);
-    } else {
-      this.workspaces.set(id, workspace);
     }
+    this.workspaces.set(id, workspace);
+    return workspace;
   }
 
   @action
