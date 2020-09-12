@@ -9,11 +9,16 @@ import { General } from "./general";
 import { WizardLayout } from "../layout/wizard-layout";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
-import { getMatchedCluster } from "../cluster-manager/cluster-view.route";
 import { navigate } from "../../navigation";
+import { IClusterSettingsRouteParams } from "./cluster-settings.route";
+import { clusterStore } from "../../../common/cluster-store";
+import { RouteComponentProps } from "react-router";
+
+interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
+}
 
 @observer
-export class ClusterSettings extends React.Component {
+export class ClusterSettings extends React.Component<Props> {
   async componentDidMount() {
     window.addEventListener('keydown', this.onEscapeKey);
   }
@@ -34,7 +39,7 @@ export class ClusterSettings extends React.Component {
   }
 
   render() {
-    const cluster = getMatchedCluster();
+    const cluster = clusterStore.getById(this.props.match.params.clusterId);
     if (!cluster) return null;
     const header = (
       <>
