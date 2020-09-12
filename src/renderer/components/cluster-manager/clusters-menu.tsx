@@ -4,7 +4,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
-import type { Cluster } from "../../../main/cluster";
 import { userStore } from "../../../common/user-store";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
@@ -12,16 +11,16 @@ import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { cssNames, IClassName, autobind } from "../../utils";
 import { Badge } from "../badge";
-import { navigate, navigation } from "../../navigation";
+import { navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
-import { clusterSettingsURL, clusterSettingsRoute } from "../+cluster-settings";
+import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
-import { clusterViewURL, clusterViewRoute } from "./cluster-view.route";
+import { clusterViewURL } from "./cluster-view.route";
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
-import { matchPath } from "react-router";
+import type { Cluster } from "../../../main/cluster";
 
 interface Props {
   className?: IClassName;
@@ -36,6 +35,7 @@ export class ClustersMenu extends React.Component<Props> {
 
   addCluster = () => {
     navigate(addClusterURL());
+    clusterStore.setActive(null);
   }
 
   showContextMenu = (cluster: Cluster) => {
@@ -59,6 +59,7 @@ export class ClustersMenu extends React.Component<Props> {
         click: async () => {
           if (clusterStore.isActive(cluster.id)) {
             navigate(landingURL());
+            clusterStore.setActive(null);
           }
           await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
         }
@@ -103,7 +104,6 @@ export class ClustersMenu extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const { newContexts } = userStore;
-    const { activeClusterId } = clusterStore;
     const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
@@ -116,11 +116,7 @@ export class ClustersMenu extends React.Component<Props> {
                   {...provided.droppableProps}
                 >
                   {clusters.map((cluster, index) => {
-                    const matched = matchPath(navigation.location.pathname, {
-                      path: [clusterViewRoute.path, clusterSettingsRoute.path].flat(),
-                      exact: true
-                    })
-                    const isActive = activeClusterId === cluster.id && !!matched;
+                    const isActive = cluster.id === clusterStore.activeClusterId;
                     return (
                       <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
                         {(provided: DraggableProvided) => (
