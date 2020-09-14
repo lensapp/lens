@@ -2,7 +2,17 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.0-rc.2 (current version)
+## 3.6.0-rc.3 (current version)
+- Fix Dialog Esc keypress behavior
+- Set new workspace name restrictions
+- Fix cluster's apiUrl
+- Fix: Cluster dashboard not rendered
+- Fix proxy kubeconfig file permissions
+- Move verbose log lines to silly level
+- Add path to auth proxy url if present in cluster url
+- Fix path validation message
+
+## 3.6.0-rc.2
 - Refresh input values on cluster change
 - Update logo
 - Fix margins in cluster menu
