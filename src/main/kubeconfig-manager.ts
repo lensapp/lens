@@ -11,7 +11,7 @@ export class KubeconfigManager {
   protected configDir = app.getPath("temp")
   protected tempFile: string;
 
-  constructor(protected cluster: Cluster, protected contextHandler: ContextHandler) {
+  constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) {
     this.init();
   }
 
@@ -28,6 +28,10 @@ export class KubeconfigManager {
     return this.tempFile;
   }
 
+  protected resolveProxyUrl() {
+    return `http://127.0.0.1:${this.port}/${this.cluster.id}`
+  }
+
   /**
    * Creates new "temporary" kubeconfig that point to the kubectl-proxy.
    * This way any user of the config does not need to know anything about the auth etc. details.
@@ -42,7 +46,7 @@ export class KubeconfigManager {
       clusters: [
         {
           name: contextName,
-          server: await contextHandler.resolveAuthProxyUrl(),
+          server: this.resolveProxyUrl(),
           skipTLSVerify: undefined,
         }
       ],
