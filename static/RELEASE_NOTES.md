@@ -64,7 +64,7 @@ Here you can find description of changes we've built into each release. While we
 ## 3.5.2
 - Fix application not opening properly in some cases by catching and logging error from shell sync.
 
-## 3.5.1 (current version)
+## 3.5.1
 - Fix kubernetes api requests to work with non-"namespaces" pathnames
 - Fix: Handle invalid metrics responses properly
 - Fix: Display namespace defined in kubeconfig always in the namespace selector
