@@ -14,6 +14,7 @@ import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from ".
 import request, { RequestPromiseOptions } from "request-promise-native"
 import { apiResources } from "../common/rbac";
 import logger from "./logger"
+import url, { UrlWithStringQuery } from "url";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -46,6 +47,7 @@ export class Cluster implements ClusterModel {
   public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
   protected eventDisposers: Function[] = [];
+  protected clusterUrl: UrlWithStringQuery
 
   whenInitialized = when(() => this.initialized);
   whenReady = when(() => this.ready);
@@ -80,6 +82,7 @@ export class Cluster implements ClusterModel {
     const kubeconfig = this.getKubeconfig()
     if (kubeconfig.getContextObject(this.contextName)) {
       this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server
+      this.clusterUrl = url.parse(this.apiUrl)
     }
   }
 
@@ -280,6 +283,7 @@ export class Cluster implements ClusterModel {
 
   async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
     const authApi = this.getProxyKubeconfig().makeApiClient(AuthorizationV1Api)
+    authApi.defaultHeaders = { Host: this.clusterUrl.hostname }
     try {
       const accessReview = await authApi.createSelfSubjectAccessReview({
         apiVersion: "authorization.k8s.io/v1",
@@ -327,6 +331,7 @@ export class Cluster implements ClusterModel {
       return 0;
     }
     const client = this.getProxyKubeconfig().makeApiClient(CoreV1Api);
+    client.defaultHeaders = { Host: this.clusterUrl.hostname }
     try {
       const response = await client.listEventForAllNamespaces(false, null, null, null, 1000);
       const uniqEventSources = new Set();
@@ -420,6 +425,7 @@ export class Cluster implements ClusterModel {
 
   protected async getAllowedNamespaces() {
     const api = this.getProxyKubeconfig().makeApiClient(CoreV1Api)
+    api.defaultHeaders = { Host: this.clusterUrl.hostname }
     try {
       const namespaceList = await api.listNamespace()
       const nsAccessStatuses = await Promise.all(

@@ -1,9 +1,21 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
-import { Watch, KubeConfig } from "@kubernetes/client-node"
+import { Watch, KubeConfig, RequestInterface } from "@kubernetes/client-node"
 import { ServerResponse } from "http"
-import { Request } from "request"
+import request, { Request, Options, CoreOptions } from "request"
 import logger from "../logger"
+import url from "url"
+
+class WatchRequestImpl implements RequestInterface {
+  private opts: CoreOptions
+  constructor(opts: CoreOptions) {
+    this.opts = opts
+  }
+  public webRequest(opts: request.Options, callback: (err: any, response: request.Response, body: any) => void): any {
+    opts.headers = Object.assign({}, opts.headers, this.opts.headers)
+    return request(opts, callback);
+  }
+}
 
 class ApiWatcher {
   private apiUrl: string
@@ -13,9 +25,11 @@ class ApiWatcher {
   private processor: NodeJS.Timeout
   private eventBuffer: any[] = []
 
-  constructor(apiUrl: string, kubeConfig: KubeConfig, response: ServerResponse) {
+  constructor(apiUrl: string, clusterUrl: string, kubeConfig: KubeConfig, response: ServerResponse) {
     this.apiUrl = apiUrl
-    this.watch = new Watch(kubeConfig)
+    const opts: CoreOptions = { headers: { Host:url.parse(clusterUrl).hostname}}
+    const reqImpl = new WatchRequestImpl(opts)
+    this.watch = new Watch(kubeConfig, reqImpl)
     this.response = response
   }
 
@@ -90,7 +104,7 @@ class WatchRoute extends LensApi {
     logger.debug("watch using kubeconfig:" + JSON.stringify(cluster.getProxyKubeconfig(), null, 2))
 
     apis.forEach(apiUrl => {
-      const watcher = new ApiWatcher(apiUrl, cluster.getProxyKubeconfig(), response)
+      const watcher = new ApiWatcher(apiUrl, cluster.apiUrl, cluster.getProxyKubeconfig(), response)
       watcher.start()
       watchers.push(watcher)
     })
