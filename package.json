@@ -128,9 +128,6 @@
       "target": [
         "nsis"
       ],
-      "nsis": {
-        "include": "build/installer.nsh"
-      },
       "extraResources": [
         {
           "from": "binaries/client/windows/x64/kubectl.exe",
@@ -145,6 +142,9 @@
           "to": "./helm3/helm3.exe"
         }
       ]
+    },
+    "nsis": {
+      "include": "build/installer.nsh"
     },
     "publish": [
       {
