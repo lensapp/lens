@@ -111,12 +111,10 @@ export class Cluster implements ClusterModel {
   protected bindEvents() {
     logger.info(`[CLUSTER]: bind events`, this.getMeta());
     const refreshTimer = setInterval(() => this.online && this.refresh(), 30000); // every 30s
-    const refreshEventsTimer = setInterval(() => this.online && this.refreshEvents(), 3000); // every 3s
 
     this.eventDisposers.push(
       reaction(this.getState, this.pushState),
       () => clearInterval(refreshTimer),
-      () => clearInterval(refreshEventsTimer),
     );
   }
 
