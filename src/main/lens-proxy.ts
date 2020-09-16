@@ -52,7 +52,7 @@ export class LensProxy {
       this.handleRequest(proxy, req, res)
     })
     spdyProxy.on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
-      if (req.url.startsWith(`${apiPrefix}/?`)) {
+      if (req.url.startsWith(`${apiPrefix}?`)) {
         this.handleWsUpgrade(req, socket, head)
       } else {
         if (req.headers.upgrade?.startsWith("SPDY")) {
