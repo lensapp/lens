@@ -2,7 +2,14 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.1 (current version)
+## 3.6.2 (current version)
+- Fix terminal connection opening
+
+**Known issues**
+
+- Kubectl exec command does not work in terminal against clusters that are behind a load balancer and require Host header in request, for example Rancher clusters.
+
+## 3.6.1
 - Inject Host header to k8s client requests
 - Remove extra refreshEvents polling
 - Fix windows installer when app directory removed manually
