@@ -1,5 +1,6 @@
 import net from "net";
 import http from "http";
+import spdy from "spdy";
 import httpProxy from "http-proxy";
 import url from "url";
 import * as WebSocket from "ws"
@@ -40,37 +41,49 @@ export class LensProxy {
 
   protected buildCustomProxy(): http.Server {
     const proxy = this.createProxy();
-    const customProxy = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
-      this.handleRequest(proxy, req, res);
-    });
-    customProxy.on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
-      this.handleWsUpgrade(req, socket, head)
-    });
-    customProxy.on("error", (err) => {
+    const spdyProxy = spdy.createServer({
+      spdy: {
+        plain: true,
+        connection: {
+          autoSpdy31: true
+        }
+      }
+    }, (req: http.IncomingMessage, res: http.ServerResponse) => {
+      this.handleRequest(proxy, req, res)
+    })
+    spdyProxy.on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
+      if (req.url.startsWith("/api?")) {
+        this.handleWsUpgrade(req, socket, head)
+      } else {
+        if (req.headers.upgrade?.startsWith("SPDY")) {
+          this.handleSpdyProxy(proxy, req, socket, head)
+        } else {
+          socket.end()
+        }
+      }
+    })
+    spdyProxy.on("error", (err) => {
       logger.error("proxy error", err)
-    });
-    return customProxy;
+    })
+    return spdyProxy
+  }
+
+  protected async handleSpdyProxy(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
+    const cluster = this.clusterManager.getClusterForRequest(req)
+    if (cluster) {
+      const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace("/api-kube", "")
+      const apiUrl = url.parse(cluster.apiUrl)
+      const res = new http.ServerResponse(req)
+      res.assignSocket(socket)
+      res.setHeader("Location", proxyUrl)
+      res.setHeader("Host", apiUrl.hostname)
+      res.statusCode = 302
+      res.end()
+    }
   }
 
   protected createProxy(): httpProxy {
     const proxy = httpProxy.createProxyServer();
-    proxy.on("proxyRes", (proxyRes, req, res) => {
-      if (req.method !== "GET") {
-        return;
-      }
-      if (proxyRes.statusCode === 502) {
-        const cluster = this.clusterManager.getClusterForRequest(req)
-        const proxyError = cluster?.contextHandler.proxyLastError;
-        if (proxyError) {
-          return res.writeHead(502).end(proxyError);
-        }
-      }
-      const reqId = this.getRequestId(req);
-      if (this.retryCounters.has(reqId)) {
-        logger.debug(`Resetting proxy retry cache for url: ${reqId}`);
-        this.retryCounters.delete(reqId)
-      }
-    })
     proxy.on("error", (error, req, res, target) => {
       if (this.closed) {
         return;

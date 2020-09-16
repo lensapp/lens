@@ -68,7 +68,7 @@ export class ContextHandler {
     return this.prometheusPath;
   }
 
-  protected async resolveAuthProxyUrl() {
+  async resolveAuthProxyUrl() {
     const proxyPort = await this.ensurePort();
     const path = this.clusterUrl.path !== "/" ? this.clusterUrl.path : ""
     return `http://127.0.0.1:${proxyPort}${path}`;
