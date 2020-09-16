@@ -4,11 +4,11 @@ import spdy from "spdy";
 import httpProxy from "http-proxy";
 import url from "url";
 import * as WebSocket from "ws"
+import { apiPrefix, apiKubePrefix } from "../common/vars"
 import { openShell } from "./node-shell-session";
 import { Router } from "./router"
 import { ClusterManager } from "./cluster-manager"
 import { ContextHandler } from "./context-handler";
-import { apiKubePrefix } from "../common/vars";
 import logger from "./logger"
 
 export class LensProxy {
@@ -52,7 +52,7 @@ export class LensProxy {
       this.handleRequest(proxy, req, res)
     })
     spdyProxy.on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
-      if (req.url.startsWith("/api?")) {
+      if (req.url.startsWith(`${apiPrefix}/?`)) {
         this.handleWsUpgrade(req, socket, head)
       } else {
         if (req.headers.upgrade?.startsWith("SPDY")) {
@@ -71,7 +71,7 @@ export class LensProxy {
   protected async handleSpdyProxy(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
     const cluster = this.clusterManager.getClusterForRequest(req)
     if (cluster) {
-      const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace("/api-kube", "")
+      const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "")
       const apiUrl = url.parse(cluster.apiUrl)
       const res = new http.ServerResponse(req)
       res.assignSocket(socket)
