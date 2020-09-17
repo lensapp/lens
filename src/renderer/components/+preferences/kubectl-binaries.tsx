@@ -13,38 +13,14 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
   const [downloadPath, setDownloadPath] = useState(preferences.downloadBinariesPath || "");
   const [binariesPath, setBinariesPath] = useState(preferences.kubectlBinariesPath || "");
 
-  console.log(preferences);
-
   const downloadMirrorOptions: SelectOption<string>[] = [
     { value: "default", label: "Default (Google)" },
     { value: "china", label: "China (Azure)" },
   ]
 
-
   const save = () => {
     preferences.downloadBinariesPath = downloadPath;
     preferences.kubectlBinariesPath = binariesPath;
-  }
-
-  const renderPath = () => {
-    if (preferences.downloadKubectlBinaries) {
-      return null;
-    }
-    return (
-      <>
-        <SubTitle title="Path to Kubectl binary" />
-        <Input
-          theme="round-black"
-          value={binariesPath}
-          validators={isPath}
-          onChange={setBinariesPath}
-          onBlur={save}
-        />
-        <small className="hint">
-          <Trans>Default:</Trans>{" "}{Kubectl.bundledKubectlPath}
-        </small>
-      </>
-    );
   }
 
   return (
@@ -70,7 +46,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
       <Input
         theme="round-black"
         value={downloadPath}
-        placeholder={`Default: ${userStore.getDefaultKubectlPath()}`}
+        placeholder={userStore.getDefaultKubectlPath()}
         validators={isPath}
         onChange={setDownloadPath}
         onBlur={save}
@@ -79,7 +55,19 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
       <small className="hint">
         The directory to download binaries into.
       </small>
-      {renderPath()}
+      <SubTitle title="Path to Kubectl binary" />
+      <Input
+        theme="round-black"
+        placeholder={Kubectl.bundledKubectlPath}
+        value={binariesPath}
+        validators={isPath}
+        onChange={setBinariesPath}
+        onBlur={save}
+        disabled={preferences.downloadKubectlBinaries}
+      />
+      <small className="hint">
+        <Trans>The path to the kubectl binary on the system.</Trans>
+      </small>
     </>
   );
 });
