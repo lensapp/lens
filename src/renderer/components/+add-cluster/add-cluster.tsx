@@ -80,19 +80,19 @@ export class AddCluster extends React.Component {
       const contexts = this.getContexts(this.kubeConfigLocal);
       this.kubeContexts.replace(contexts);
       break;
-
     case KubeConfigSourceTab.TEXT:
       try {
         this.error = ""
         const contexts = this.getContexts(loadConfig(this.customConfig || "{}"));
         this.kubeContexts.replace(contexts);
-        if (this.kubeContexts.size === 1) {
-          this.selectedContexts.push(this.kubeContexts.keys().next().value)
-        }
       } catch (err) {
         this.error = String(err);
       }
       break;
+    }
+
+    if (this.kubeContexts.size === 1) {
+      this.selectedContexts.push(this.kubeContexts.keys().next().value)
     }
   }
 
@@ -383,7 +383,7 @@ export class AddCluster extends React.Component {
             label={<Trans>Add cluster(s)</Trans>}
             onClick={this.addClusters}
             waiting={this.isWaiting}
-            tooltip={addDisabled ? "Select at least one cluster to add." : undefined}
+            tooltip={addDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
             tooltipOverrideDisabled
           />
         </div>
