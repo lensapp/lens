@@ -67,7 +67,7 @@ export class IngressDetails extends React.Component<Props> {
   }
 
   renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
-    if (ingressPoints.length === 0) return null
+    if (!ingressPoints || ingressPoints.length === 0) return null
     return (
       <div>
         <Table className="ingress-points">
