@@ -23,7 +23,7 @@ interface Props extends RouteComponentProps {
 @observer
 export class Workloads extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
-    const query = namespaceStore.getContextParams();
+    const query = namespaceStore.contextParams;
     const routes: TabRoute[] = [
       {
         title: <Trans>Overview</Trans>,
@@ -88,8 +88,8 @@ export class Workloads extends React.Component<Props> {
     return (
       <TabLayout className="Workloads" tabs={tabRoutes}>
         <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={workloadsURL({ query: namespaceStore.getContextParams() })}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={workloadsURL({ query: namespaceStore.contextParams })} />
         </Switch>
       </TabLayout>
     )

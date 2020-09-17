@@ -21,55 +21,55 @@ import { isAllowedResource } from "../../../common/rbac";
 export class OverviewStatuses extends React.Component {
   render() {
     const { contextNs } = namespaceStore;
-    const pods = isAllowedResource("pods") ? podsStore.getAllByNs(contextNs) : [];
-    const deployments = isAllowedResource("deployments") ? deploymentStore.getAllByNs(contextNs) : [];
-    const statefulSets = isAllowedResource("statefulsets") ? statefulSetStore.getAllByNs(contextNs) : [];
-    const daemonSets = isAllowedResource("daemonsets") ? daemonSetStore.getAllByNs(contextNs) : [];
-    const jobs = isAllowedResource("jobs") ? jobStore.getAllByNs(contextNs) : [];
-    const cronJobs = isAllowedResource("cronjobs") ? cronJobStore.getAllByNs(contextNs) : [];
+    const pods = isAllowedResource("pods") ? podsStore.getAllByNs([...contextNs]) : [];
+    const deployments = isAllowedResource("deployments") ? deploymentStore.getAllByNs([...contextNs]) : [];
+    const statefulSets = isAllowedResource("statefulsets") ? statefulSetStore.getAllByNs([...contextNs]) : [];
+    const daemonSets = isAllowedResource("daemonsets") ? daemonSetStore.getAllByNs([...contextNs]) : [];
+    const jobs = isAllowedResource("jobs") ? jobStore.getAllByNs([...contextNs]) : [];
+    const cronJobs = isAllowedResource("cronjobs") ? cronJobStore.getAllByNs([...contextNs]) : [];
     return (
       <div className="OverviewStatuses">
         <div className="header flex gaps align-center">
           <h5 className="box grow"><Trans>Overview</Trans></h5>
-          <NamespaceSelectFilter/>
+          <NamespaceSelectFilter />
         </div>
-        <PageFiltersList/>
+        <PageFiltersList />
         <div className="workloads">
           {isAllowedResource("pods") &&
-          <div className="workload">
-            <div className="title"><Link to={podsURL()}><Trans>Pods</Trans> ({pods.length})</Link></div>
-            <OverviewWorkloadStatus status={podsStore.getStatuses(pods)}/>
-          </div>
+            <div className="workload">
+              <div className="title"><Link to={podsURL()}><Trans>Pods</Trans> ({pods.length})</Link></div>
+              <OverviewWorkloadStatus status={podsStore.getStatuses(pods)} />
+            </div>
           }
           {isAllowedResource("deployments") &&
-          <div className="workload">
-            <div className="title"><Link to={deploymentsURL()}><Trans>Deployments</Trans> ({deployments.length})</Link></div>
-            <OverviewWorkloadStatus status={deploymentStore.getStatuses(deployments)}/>
-          </div>
+            <div className="workload">
+              <div className="title"><Link to={deploymentsURL()}><Trans>Deployments</Trans> ({deployments.length})</Link></div>
+              <OverviewWorkloadStatus status={deploymentStore.getStatuses(deployments)} />
+            </div>
           }
           {isAllowedResource("statefulsets") &&
-          <div className="workload">
-            <div className="title"><Link to={statefulSetsURL()}><Trans>StatefulSets</Trans> ({statefulSets.length})</Link></div>
-            <OverviewWorkloadStatus status={statefulSetStore.getStatuses(statefulSets)}/>
-          </div>
+            <div className="workload">
+              <div className="title"><Link to={statefulSetsURL()}><Trans>StatefulSets</Trans> ({statefulSets.length})</Link></div>
+              <OverviewWorkloadStatus status={statefulSetStore.getStatuses(statefulSets)} />
+            </div>
           }
           {isAllowedResource("daemonsets") &&
-          <div className="workload">
-            <div className="title"><Link to={daemonSetsURL()}><Trans>DaemonSets</Trans> ({daemonSets.length})</Link></div>
-            <OverviewWorkloadStatus status={daemonSetStore.getStatuses(daemonSets)}/>
-          </div>
+            <div className="workload">
+              <div className="title"><Link to={daemonSetsURL()}><Trans>DaemonSets</Trans> ({daemonSets.length})</Link></div>
+              <OverviewWorkloadStatus status={daemonSetStore.getStatuses(daemonSets)} />
+            </div>
           }
           {isAllowedResource("jobs") &&
-          <div className="workload">
-            <div className="title"><Link to={jobsURL()}><Trans>Jobs</Trans> ({jobs.length})</Link></div>
-            <OverviewWorkloadStatus status={jobStore.getStatuses(jobs)}/>
-          </div>
+            <div className="workload">
+              <div className="title"><Link to={jobsURL()}><Trans>Jobs</Trans> ({jobs.length})</Link></div>
+              <OverviewWorkloadStatus status={jobStore.getStatuses(jobs)} />
+            </div>
           }
           {isAllowedResource("cronjobs") &&
-          <div className="workload">
-            <div className="title"><Link to={cronJobsURL()}><Trans>CronJobs</Trans> ({cronJobs.length})</Link></div>
-            <OverviewWorkloadStatus status={cronJobStore.getStatuses(cronJobs)}/>
-          </div>
+            <div className="workload">
+              <div className="title"><Link to={cronJobsURL()}><Trans>CronJobs</Trans> ({cronJobs.length})</Link></div>
+              <OverviewWorkloadStatus status={cronJobStore.getStatuses(cronJobs)} />
+            </div>
           }
         </div>
       </div>

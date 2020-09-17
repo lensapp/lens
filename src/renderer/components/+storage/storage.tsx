@@ -20,7 +20,7 @@ interface Props extends RouteComponentProps<{}> {
 export class Storage extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
-    const query = namespaceStore.getContextParams()
+    const query = namespaceStore.contextParams
 
     tabRoutes.push({
       title: <Trans>Persistent Volume Claims</Trans>,
@@ -54,8 +54,8 @@ export class Storage extends React.Component<Props> {
     return (
       <TabLayout className="Storage" tabs={tabRoutes}>
         <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={storageURL({ query: namespaceStore.getContextParams() })}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={storageURL({ query: namespaceStore.contextParams })} />
         </Switch>
       </TabLayout>
     )

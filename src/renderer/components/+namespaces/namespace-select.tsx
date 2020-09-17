@@ -5,18 +5,16 @@ import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { t, Trans } from "@lingui/macro";
 import { Select, SelectOption, SelectProps } from "../select";
-import { cssNames, noop } from "../../utils";
+import ReactSelect, { ActionMeta, components, OptionTypeBase, ValueType } from "react-select"
+import { autobind, cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
 import { _i18n } from "../../i18n";
-import { FilterIcon } from "../item-object-list/filter-icon";
-import { FilterType } from "../item-object-list/page-filters.store";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
   showClusterOption?: boolean; // show cluster option on the top (default: false)
   clusterOptionLabel?: React.ReactNode; // label for cluster option (default: "Cluster")
-  customizeOptions?(nsOptions: SelectOption[]): SelectOption[];
 }
 
 const defaultProps: Partial<Props> = {
@@ -44,12 +42,15 @@ export class NamespaceSelect extends React.Component<Props> {
   }
 
   @computed get options(): SelectOption[] {
-    const { customizeOptions, showClusterOption, clusterOptionLabel } = this.props;
-    let options: SelectOption[] = namespaceStore.items.map(ns => ({ value: ns.getName() }));
-    options = customizeOptions ? customizeOptions(options) : options;
+    const options: SelectOption[] = namespaceStore.items
+      .map(ns => ({ value: ns.getName() }))
+      .map(opt => ({ ...opt, label: this.formatOptionLabel(opt) }))
+
+    const { showClusterOption, clusterOptionLabel } = this.props;
     if (showClusterOption) {
       options.unshift({ value: null, label: clusterOptionLabel });
     }
+
     return options;
   }
 
@@ -58,7 +59,7 @@ export class NamespaceSelect extends React.Component<Props> {
     const { value, label } = option;
     return label || (
       <>
-        {showIcons && <Icon small material="layers"/>}
+        {showIcons && <Icon small material="layers" />}
         {value}
       </>
     );
@@ -70,7 +71,7 @@ export class NamespaceSelect extends React.Component<Props> {
       <Select
         className={cssNames("NamespaceSelect", className)}
         menuClass="NamespaceSelectMenu"
-        formatOptionLabel={this.formatOptionLabel}
+        autoConvertOptions={false}
         options={this.options}
         {...selectProps}
       />
@@ -78,30 +79,53 @@ export class NamespaceSelect extends React.Component<Props> {
   }
 }
 
+interface BasicNS {
+  label: React.ReactElement;
+  value: string;
+}
+
 @observer
 export class NamespaceSelectFilter extends React.Component {
+  async componentDidMount() {
+    if (!namespaceStore.isLoaded) {
+      await namespaceStore.loadAll();
+      namespaceStore.contextNs.clear();
+    }
+  }
+
+  @autobind()
+  onChange(value: BasicNS, actionMeta: ActionMeta<BasicNS>) {
+    switch (actionMeta.action) {
+    case "select-option":
+      namespaceStore.contextNs.add(actionMeta.option.value)
+      break
+    case "clear":
+      namespaceStore.contextNs.clear()
+      break
+    case "deselect-option":
+      namespaceStore.contextNs.delete(actionMeta.option.value)
+      break
+    }
+  }
+
   render() {
-    const { contextNs, hasContext, toggleContext } = namespaceStore;
-    let placeholder = <Trans>All namespaces</Trans>;
-    if (contextNs.length == 1) placeholder = <Trans>Namespace: {contextNs[0]}</Trans>
-    if (contextNs.length >= 2) placeholder = <Trans>Namespaces: {contextNs.join(", ")}</Trans>
     return (
-      <NamespaceSelect
-        placeholder={placeholder}
+      <ReactSelect
+        placeholder={<Trans>Filter by namespace...</Trans>}
+        isMulti
         closeMenuOnSelect={false}
-        isOptionSelected={() => false}
-        controlShouldRenderValue={false}
-        onChange={({ value: namespace }: SelectOption) => toggleContext(namespace)}
-        formatOptionLabel={({ value: namespace }: SelectOption) => {
-          const isSelected = hasContext(namespace);
-          return (
-            <div className="flex gaps align-center">
-              <FilterIcon type={FilterType.NAMESPACE}/>
-              <span>{namespace}</span>
-              {isSelected && <Icon small material="check" className="box right"/>}
-            </div>
-          )
+        hideSelectedOptions={false}
+        className={cssNames("Select", "NamespaceSelect", "theme-dark")}
+        classNamePrefix="Select"
+        components={{
+          Menu(props) {
+            return <components.Menu {...props} className="NamespaceSelectMenu" />
+          }
         }}
+        onChange={this.onChange}
+        options={namespaceStore.Options}
+        value={namespaceStore.SelectedValues}
+        controlShouldRenderValue={false}
       />
     )
   }

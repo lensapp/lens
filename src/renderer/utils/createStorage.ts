@@ -1,23 +1,27 @@
 // Helper to work with browser's local/session storage api
 
-export interface IStorageHelperOptions {
+export interface StorageHelperOptions<T> {
   addKeyPrefix?: boolean;
   useSession?: boolean; // use `sessionStorage` instead of `localStorage`
+  parse?(from: string): T;
+  stringify?(from: T): string;
 }
 
-export function createStorage<T>(key: string, defaultValue?: T, options?: IStorageHelperOptions) {
+export function createStorage<T>(key: string, defaultValue?: T, options?: StorageHelperOptions<T>) {
   return new StorageHelper(key, defaultValue, options);
 }
 
 export class StorageHelper<T> {
   static keyPrefix = "lens_";
 
-  static defaultOptions: IStorageHelperOptions = {
+  static defaultOptions: StorageHelperOptions<any> = {
     addKeyPrefix: true,
     useSession: false,
+    parse: JSON.parse,
+    stringify: JSON.stringify,
   }
 
-  constructor(protected key: string, protected defaultValue?: T, protected options?: IStorageHelperOptions) {
+  constructor(protected key: string, protected defaultValue?: T, protected options?: StorageHelperOptions<T>) {
     this.options = Object.assign({}, StorageHelper.defaultOptions, options);
 
     if (this.options.addKeyPrefix) {
@@ -34,16 +38,16 @@ export class StorageHelper<T> {
     const strValue = this.storage.getItem(this.key);
     if (strValue != null) {
       try {
-        return JSON.parse(strValue);
+        return this.options.parse(strValue)
       } catch (e) {
-        console.error(`Parsing json failed for pair: ${this.key}=${strValue}`)
+        console.error(`Parsing failed for pair: ${this.key}=${strValue}`)
       }
     }
     return this.defaultValue;
   }
 
   set(value: T) {
-    this.storage.setItem(this.key, JSON.stringify(value));
+    this.storage.setItem(this.key, this.options.stringify(value));
     return this;
   }
 

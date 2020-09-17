@@ -20,7 +20,7 @@ interface Props extends RouteComponentProps<{}> {
 @observer
 export class Network extends React.Component<Props> {
   static get tabRoutes(): TabRoute[] {
-    const query = namespaceStore.getContextParams()
+    const query = namespaceStore.contextParams
     const routes: TabRoute[] = [];
     if (isAllowedResource("services")) {
       routes.push({
@@ -62,8 +62,8 @@ export class Network extends React.Component<Props> {
     return (
       <TabLayout className="Network" tabs={tabRoutes}>
         <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={networkURL({ query: namespaceStore.getContextParams() })}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={networkURL({ query: namespaceStore.contextParams })} />
         </Switch>
       </TabLayout>
     )

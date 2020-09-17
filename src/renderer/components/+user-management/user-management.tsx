@@ -20,7 +20,7 @@ interface Props extends RouteComponentProps<{}> {
 export class UserManagement extends React.Component<Props> {
   static get tabRoutes() {
     const tabRoutes: TabRoute[] = [];
-    const query = namespaceStore.getContextParams()
+    const query = namespaceStore.contextParams
     tabRoutes.push(
       {
         title: <Trans>Service Accounts</Trans>,
@@ -57,8 +57,8 @@ export class UserManagement extends React.Component<Props> {
     return (
       <TabLayout className="UserManagement" tabs={tabRoutes}>
         <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={usersManagementURL({ query: namespaceStore.getContextParams() })}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={usersManagementURL({ query: namespaceStore.contextParams })} />
         </Switch>
       </TabLayout>
     )

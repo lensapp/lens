@@ -73,7 +73,7 @@ export class Sidebar extends React.Component<Props> {
 
   render() {
     const { toggle, isPinned, className } = this.props;
-    const query = namespaceStore.getContextParams();
+    const query = namespaceStore.contextParams;
     return (
       <SidebarContext.Provider value={{ pinned: isPinned }}>
         <div className={cssNames("Sidebar flex column", className, { pinned: isPinned })}>

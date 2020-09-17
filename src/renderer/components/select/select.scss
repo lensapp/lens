@@ -3,7 +3,7 @@
 
 html {
   $menuBackgroundColor: $contentColor;
-  $menuSelectedOptionBgc: $layoutBackground;
+  $menuSelectedOptionBgc: $selectedBackground;
 
   --select-menu-bgc: #{$menuBackgroundColor};
   --select-menu-border-color: #{$halfGray};

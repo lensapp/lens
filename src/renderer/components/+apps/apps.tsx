@@ -10,7 +10,7 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 @observer
 export class Apps extends React.Component {
   static get tabRoutes(): TabRoute[] {
-    const query = namespaceStore.getContextParams();
+    const query = namespaceStore.contextParams;
     return [
       {
         title: <Trans>Charts</Trans>,
@@ -32,8 +32,8 @@ export class Apps extends React.Component {
     return (
       <TabLayout className="Apps" tabs={tabRoutes}>
         <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={tabRoutes[0].url}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={tabRoutes[0].url} />
         </Switch>
       </TabLayout>
     )

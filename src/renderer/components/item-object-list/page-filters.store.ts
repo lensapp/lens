@@ -30,17 +30,17 @@ export class PageFiltersStore {
   protected syncWithContextNamespace() {
     const disposers = [
       reaction(() => this.getValues(FilterType.NAMESPACE), filteredNs => {
-        if (filteredNs.length !== namespaceStore.contextNs.length) {
-          namespaceStore.setContext(filteredNs);
+        if (filteredNs.length !== namespaceStore.contextNs.size) {
+          namespaceStore.context = filteredNs;
         }
       }),
       reaction(() => namespaceStore.contextNs.toJS(), contextNs => {
         const filteredNs = this.getValues(FilterType.NAMESPACE);
-        const isChanged = contextNs.length !== filteredNs.length;
+        const isChanged = contextNs.size !== filteredNs.length;
         if (isChanged) {
           this.filters.replace([
             ...this.filters.filter(({ type }) => type !== FilterType.NAMESPACE),
-            ...contextNs.map(ns => ({ type: FilterType.NAMESPACE, value: ns })),
+            ...[...contextNs.values()].map(ns => ({ type: FilterType.NAMESPACE, value: ns })),
           ]);
         }
       }, {

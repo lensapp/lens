@@ -20,7 +20,7 @@ export const clusterIssuersURL = buildURL("/clusterissuers");
 @observer
 export class Config extends React.Component {
   static get tabRoutes(): TabRoute[] {
-    const query = namespaceStore.getContextParams()
+    const query = namespaceStore.contextParams
     const routes: TabRoute[] = []
     if (isAllowedResource("configmaps")) {
       routes.push({
@@ -70,8 +70,8 @@ export class Config extends React.Component {
     return (
       <TabLayout className="Config" tabs={tabRoutes}>
         <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={configURL({ query: namespaceStore.getContextParams() })}/>
+          {tabRoutes.map((route, index) => <Route key={index} {...route} />)}
+          <Redirect to={configURL({ query: namespaceStore.contextParams })} />
         </Switch>
       </TabLayout>
     )

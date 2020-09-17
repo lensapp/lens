@@ -1,45 +1,50 @@
-import { action, observable, reaction } from "mobx";
+import React from "react";
+import { action, computed, observable, ObservableSet, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints";
 import { IQueryParams, navigation, setQueryParams } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { isAllowedResource } from "../../../common/rbac";
+import { Icon } from "../icon";
 
 @autobind()
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
-  contextNs = observable.array<string>();
+  contextNs = observable.set<string>();
 
-  protected storage = createStorage<string[]>("context_ns", this.contextNs);
-
-  get initNamespaces() {
-    const fromUrl = navigation.searchParams.getAsArray("namespaces");
-    return fromUrl.length ? fromUrl : this.storage.get();
-  }
+  protected storage = createStorage<Set<string>>("context_ns", this.contextNs, {
+    parse(from: string) {
+      return new Set(JSON.parse(from))
+    },
+    stringify(from: Set<string>) {
+      return JSON.stringify([...from.values()])
+    }
+  });
 
   constructor() {
     super();
 
     // restore context namespaces
-    const { initNamespaces: namespaces } = this;
-    this.setContext(namespaces);
-    this.updateUrl(namespaces);
+    const fromUrl = navigation.searchParams.getAsArray("namespaces")
+    const namespaces = fromUrl.length ? fromUrl : this.storage.get();
+    this.context = [...namespaces];
+    this.updateUrl(...namespaces);
 
     // sync with local-storage & url-search-params
     reaction(() => this.contextNs.toJS(), namespaces => {
       this.storage.set(namespaces);
-      this.updateUrl(namespaces);
+      this.updateUrl(...namespaces.values());
     });
   }
 
-  getContextParams(): Partial<IQueryParams> {
-    return {
-      namespaces: this.contextNs
-    }
+  @computed
+  get contextParams(): IQueryParams {
+    const namespaces = [...this.contextNs.values()]
+    return { namespaces }
   }
 
-  protected updateUrl(namespaces: string[]) {
+  protected updateUrl(...namespaces: string[]) {
     setQueryParams({ namespaces }, { replace: true })
   }
 
@@ -68,18 +73,42 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     })
   }
 
-  setContext(namespaces: string[]) {
+  @action
+  set context(namespaces: string[]) {
     this.contextNs.replace(namespaces);
   }
 
+  @action
   hasContext(namespace: string | string[]) {
     const context = Array.isArray(namespace) ? namespace : [namespace];
-    return context.every(namespace => this.contextNs.includes(namespace));
+    return context.every(namespace => this.contextNs.has(namespace));
   }
 
+  @action
   toggleContext(namespace: string) {
-    if (this.hasContext(namespace)) this.contextNs.remove(namespace);
-    else this.contextNs.push(namespace);
+    if (this.contextNs.has(namespace)) {
+      this.contextNs.delete(namespace)
+    } else {
+      this.contextNs.add(namespace)
+    }
+  }
+
+  @computed
+  get Options() {
+    return this.items.map(namespace => ({
+      value: namespace.getName(),
+      label: (
+        <div className="flex gaps align-center">
+          <span>{namespace.getName()}</span>
+          <Icon small material="check" className="box right" />
+        </div>
+      ),
+    }))
+  }
+
+  @computed
+  get SelectedValues() {
+    return this.Options.filter(({ value }) => this.contextNs.has(value))
   }
 
   @action
