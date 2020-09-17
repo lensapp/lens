@@ -55,15 +55,14 @@ export class ServiceAccountsDetails extends React.Component<Props> {
   }
 
   renderImagePullSecrets(imagePullSecretNames: { name: string; }[]) {
-    const { object: serviceAccount } = this.props;
     const { imagePullSecrets } = this;
     if (!imagePullSecrets) {
       return <Spinner center/>
     }
     const secrets = imagePullSecretNames.map(({name}) => {
-      let secret = imagePullSecrets.find((secret) => secret.getName() === name && secret.getNs() === serviceAccount.getNs())
+      let secret = imagePullSecrets.find((secret) => secret.getName() === name)
       if (!secret) {
-        secret = this.generateDummySecretObject(name, serviceAccount.getNs())
+        secret = this.generateDummySecretObject(name)
       }
       return secret
     })
@@ -81,7 +80,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
               small material="warning"
               tooltip={<Trans>Secret is not found</Trans>}
             />
-         </div>
+          </div>
         )
       }
       return (
@@ -92,12 +91,11 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     })
   }
 
-  generateDummySecretObject(name: string, namespace: string) {
+  generateDummySecretObject(name: string) {
     return new Secret({
       apiVersion: "v1",
       kind: "Secret",
       metadata: {
-        namespace: namespace,
         name: name,
         uid: null,
         selfLink: null,
