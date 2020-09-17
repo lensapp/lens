@@ -198,3 +198,11 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     this.items.replace(this.sortItems(items));
   }
 }
+
+export interface Statuses {
+  [key: string]: number;
+}
+
+export abstract class StatusKubeObjectStore<T extends KubeObject = any> extends KubeObjectStore<T> {
+  abstract getStatuses(items: T[]): Statuses;
+}
