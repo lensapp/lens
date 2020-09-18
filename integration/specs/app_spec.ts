@@ -20,12 +20,13 @@ describe("app start", () => {
     await app.client.click("div.Select__control")
     await app.client.waitUntilTextExists("div", "minikube")
     await app.client.click("div.minikube")
+    await app.client.click("div.Select__control")
     await app.client.click("button.primary")
   }
 
   const waitForMinikubeDashboard = async (app: Application) => {
     await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started")
-    let windowCount = await app.client.getWindowCount()
+    await app.client.getWindowCount()
     await app.client.waitForExist(`iframe[name="minikube"]`)
     await app.client.frame("minikube")
     await app.client.waitUntilTextExists("span.link-text", "Cluster")
@@ -35,10 +36,8 @@ describe("app start", () => {
     app = util.setup()
     await app.start()
     await app.client.waitUntilWindowLoaded()
-    let windowCount = await app.client.getWindowCount()
-    while (windowCount > 1) { // Wait for splash screen to be closed
-      windowCount = await app.client.getWindowCount()
-    }
+    // Wait for splash screen to be closed
+    while (await app.client.getWindowCount() > 1);
     await app.client.windowByIndex(0)
     await app.client.waitUntilWindowLoaded()
   }, 20000)
@@ -48,7 +47,7 @@ describe("app start", () => {
   })
 
   it('allows to add a cluster', async () => {
-    const status = spawnSync("minikube status", {shell: true})
+    const status = spawnSync("minikube status", { shell: true })
     if (status.status !== 0) {
       console.warn("minikube not running, skipping test")
       return
@@ -61,7 +60,7 @@ describe("app start", () => {
   })
 
   it('allows to create a pod', async () => {
-    const status = spawnSync("minikube status", {shell: true})
+    const status = spawnSync("minikube status", { shell: true })
     if (status.status !== 0) {
       console.warn("minikube not running, skipping test")
       return
