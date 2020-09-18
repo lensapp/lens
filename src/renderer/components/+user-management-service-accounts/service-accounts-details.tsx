@@ -39,9 +39,9 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     });
     this.secrets = await Promise.all(secrets);
     const imagePullSecrets = serviceAccount.getImagePullSecrets().map(async({ name }) => {
-      return secretsStore.load({ name, namespace }).catch(_err => { return null });
+      return secretsStore.load({ name, namespace }).catch(_err => { return this.generateDummySecretObject(name) });
     });
-    this.imagePullSecrets = (await Promise.all(imagePullSecrets)).filter(secret => !!secret)
+    this.imagePullSecrets = (await Promise.all(imagePullSecrets))
   })
 
   renderSecrets() {
@@ -54,20 +54,12 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     )
   }
 
-  renderImagePullSecrets(imagePullSecretNames: { name: string; }[]) {
+  renderImagePullSecrets() {
     const { imagePullSecrets } = this;
     if (!imagePullSecrets) {
       return <Spinner center/>
     }
-    const secrets = imagePullSecretNames.map(({name}) => {
-      let secret = imagePullSecrets.find((secret) => secret.getName() === name)
-      if (!secret) {
-        secret = this.generateDummySecretObject(name)
-      }
-      return secret
-    })
-
-    return this.renderSecretLinks(secrets)
+    return this.renderSecretLinks(imagePullSecrets)
   }
 
   renderSecretLinks(secrets: Secret[]) {
@@ -125,7 +117,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
         }
         {imagePullSecrets.length > 0 &&
         <DrawerItem name={<Trans>ImagePullSecrets</Trans>} className="links">
-          {this.renderImagePullSecrets(imagePullSecrets)}
+          {this.renderImagePullSecrets()}
         </DrawerItem>
         }
 
