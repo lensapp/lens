@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { Trans } from "@lingui/macro";
-import { MainLayout, TabRoute } from "../layout/main-layout";
+import { TabLayout, TabRoute } from "../layout/tab-layout";
 import { ConfigMaps, configMapsRoute, configMapsURL } from "../+config-maps";
 import { Secrets, secretsRoute, secretsURL } from "../+config-secrets";
 import { namespaceStore } from "../+namespaces/namespace.store";
@@ -68,12 +68,12 @@ export class Config extends React.Component {
   render() {
     const tabRoutes = Config.tabRoutes;
     return (
-      <MainLayout className="Config" tabs={tabRoutes}>
+      <TabLayout className="Config" tabs={tabRoutes}>
         <Switch>
           {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
           <Redirect to={configURL({ query: namespaceStore.getContextParams() })}/>
         </Switch>
-      </MainLayout>
+      </TabLayout>
     )
   }
 }

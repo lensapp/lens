@@ -3,15 +3,10 @@
   --sidebar-max-size: 200px;
 
   display: grid;
-  grid-template-areas: "aside header" "aside tabs" "aside main" "aside footer";
-  grid-template-rows: [header] var(--main-layout-header) [tabs] min-content [main] 1fr [footer] auto;
+  grid-template-areas: "aside header" "aside main" "aside footer";
+  grid-template-rows: [header] var(--main-layout-header) [main] 1fr [footer] auto;
   grid-template-columns: [sidebar] minmax(var(--main-layout-header), min-content) [main] 1fr;
   height: 100%;
-
-  > .Tabs {
-    grid-area: tabs;
-    background: $layoutTabsBackground;
-  }
 
   header {
     grid-area: header;
@@ -52,21 +47,6 @@
         z-index: $zIndex-sidebar-hover;
       }
     }
-  }
-
-  main {
-    @include custom-scrollbar;
-    $spacing: $margin * 2;
-
-    .theme-light & {
-      @include custom-scrollbar(dark);
-    }
-
-    grid-area: main;
-    overflow-y: scroll; // always reserve space for scrollbar (17px)
-    overflow-x: auto;
-    margin: $spacing;
-    margin-right: 0;
   }
 
   footer {

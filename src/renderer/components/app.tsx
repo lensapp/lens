@@ -35,6 +35,7 @@ import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store
 import logger from "../../main/logger";
 import { clusterIpc } from "../../common/cluster-ipc";
 import { webFrame } from "electron";
+import { MainLayout } from "./layout/main-layout";
 
 @observer
 export class App extends React.Component {
@@ -59,21 +60,23 @@ export class App extends React.Component {
       <I18nProvider i18n={_i18n}>
         <Router history={history}>
           <ErrorBoundary>
-            <Switch>
-              <Route component={Cluster} {...clusterRoute}/>
-              <Route component={Nodes} {...nodesRoute}/>
-              <Route component={Workloads} {...workloadsRoute}/>
-              <Route component={Config} {...configRoute}/>
-              <Route component={Network} {...networkRoute}/>
-              <Route component={Storage} {...storageRoute}/>
-              <Route component={Namespaces} {...namespacesRoute}/>
-              <Route component={Events} {...eventRoute}/>
-              <Route component={CustomResources} {...crdRoute}/>
-              <Route component={UserManagement} {...usersManagementRoute}/>
-              <Route component={Apps} {...appsRoute}/>
-              <Redirect exact from="/" to={this.startURL}/>
-              <Route component={NotFound}/>
-            </Switch>
+            <MainLayout>
+              <Switch>
+                <Route component={Cluster} {...clusterRoute}/>
+                <Route component={Nodes} {...nodesRoute}/>
+                <Route component={Workloads} {...workloadsRoute}/>
+                <Route component={Config} {...configRoute}/>
+                <Route component={Network} {...networkRoute}/>
+                <Route component={Storage} {...storageRoute}/>
+                <Route component={Namespaces} {...namespacesRoute}/>
+                <Route component={Events} {...eventRoute}/>
+                <Route component={CustomResources} {...crdRoute}/>
+                <Route component={UserManagement} {...usersManagementRoute}/>
+                <Route component={Apps} {...appsRoute}/>
+                <Redirect exact from="/" to={this.startURL}/>
+                <Route component={NotFound}/>
+              </Switch>
+            </MainLayout>
             <Notifications/>
             <ConfirmDialog/>
             <KubeObjectDetails/>

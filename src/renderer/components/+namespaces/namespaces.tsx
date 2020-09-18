@@ -4,7 +4,7 @@ import React from "react";
 import { Trans } from "@lingui/macro";
 import { Namespace, namespacesApi, NamespaceStatus } from "../../api/endpoints";
 import { AddNamespaceDialog } from "./add-namespace-dialog";
-import { MainLayout } from "../layout/main-layout";
+import { TabLayout } from "../layout/tab-layout";
 import { Badge } from "../badge";
 import { RouteComponentProps } from "react-router";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
@@ -26,7 +26,7 @@ interface Props extends RouteComponentProps<INamespacesRouteParams> {
 export class Namespaces extends React.Component<Props> {
   render() {
     return (
-      <MainLayout>
+      <TabLayout>
         <KubeObjectListLayout
           isClusterScoped
           className="Namespaces" store={namespaceStore}
@@ -65,7 +65,7 @@ export class Namespaces extends React.Component<Props> {
           })}
         />
         <AddNamespaceDialog/>
-      </MainLayout>
+      </TabLayout>
     )
   }
 }
