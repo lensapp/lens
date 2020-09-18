@@ -32,7 +32,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         onChange={downloadKubectlBinaries => preferences.downloadKubectlBinaries = downloadKubectlBinaries}
       />
       <small className="hint">
-        <Trans>Download kubectl binaries matching to Kubernetes cluster verison.</Trans>
+        <Trans>Download kubectl binaries matching to Kubernetes cluster version.</Trans>
       </small>
       <SubTitle title="Download mirror" />
       <Select
