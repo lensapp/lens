@@ -2,7 +2,17 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.2 (current version)
+## 3.6.3 (current version)
+- Fix app crash on certain situations when opening ingress details
+- Reduce app minimum size to support >= 800 x 600 resolution displays
+- Fix app crash when service account has imagePullSecrets defined but the actual secret is missing
+- Fix words in labels to be selectable either by hovering or double-clicking
+
+**Known issues**
+
+- Kubectl exec command does not work in terminal against clusters that are behind a load balancer and require Host header in request, for example Rancher clusters.
+
+## 3.6.2
 - Fix terminal connection opening
 
 **Known issues**
