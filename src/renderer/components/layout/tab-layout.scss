@@ -1,9 +1,6 @@
 
 .TabLayout {
-  display: grid;
-  grid-template-areas: "tabs" "main";
-  grid-template-rows: [tabs] min-content [main] 1fr;
-  height: 100%;
+  display: contents;
 
   > .Tabs {
     grid-area: tabs;

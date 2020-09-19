@@ -1,14 +1,18 @@
-
 .MainLayout {
   --sidebar-max-size: 200px;
 
   display: grid;
-  grid-template-areas: "aside header" "aside main" "aside footer";
-  grid-template-rows: [header] var(--main-layout-header) [main] 1fr [footer] auto;
+  grid-template-areas:
+    "aside header"
+    "aside tabs"
+    "aside main"
+    "aside footer";
+  grid-template-rows: [header] var(--main-layout-header) [tabs] min-content [main] 1fr [footer] auto;
   grid-template-columns: [sidebar] minmax(var(--main-layout-header), min-content) [main] 1fr;
+
   height: 100%;
 
-  header {
+  > header {
     grid-area: header;
     background: $layoutBackground;
     padding: $padding $padding * 2;
@@ -23,7 +27,7 @@
     }
   }
 
-  aside {
+  > aside {
     grid-area: aside;
     position: relative;
     background: $sidebarBackground;
@@ -43,10 +47,14 @@
       &.accessible:hover {
         width: var(--sidebar-max-size);
         transition-delay: 750ms;
-        box-shadow: 3px 3px 16px rgba(0, 0, 0, .35);
+        box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.35);
         z-index: $zIndex-sidebar-hover;
       }
     }
+  }
+
+  > main {
+    display: contents;
   }
 
   footer {

@@ -2,6 +2,7 @@ import "./tab-layout.scss";
 
 import React, { ReactNode } from "react";
 import { matchPath, RouteProps } from "react-router-dom";
+import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { Tab, Tabs } from "../tabs";
 import { ErrorBoundary } from "../error-boundary";
@@ -20,7 +21,7 @@ interface Props {
   contentClass?: string;
 }
 
-export const TabLayout = ({ className, contentClass, tabs, children }: Props) => {
+export const TabLayout = observer(({ className, contentClass, tabs, children }: Props) => {
   const routePath = navigation.location.pathname;
   const cluster = getHostedCluster();
   if (!cluster) {
@@ -41,4 +42,4 @@ export const TabLayout = ({ className, contentClass, tabs, children }: Props) =>
       </main>
     </div>
   );
-};
+});

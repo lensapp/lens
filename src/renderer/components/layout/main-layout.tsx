@@ -50,7 +50,9 @@ export class MainLayout extends React.Component<Props> {
           <Sidebar className="box grow" isPinned={this.isPinned} toggle={this.toggleSidebar} />
         </aside>
 
-        <ErrorBoundary>{children}</ErrorBoundary>
+        <main>
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </main>
 
         <footer className={footerClass}>{footer === undefined ? <Dock /> : footer}</footer>
       </div>
