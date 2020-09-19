@@ -1,12 +1,16 @@
+import { WebviewTag } from "electron";
 import { observable, when } from "mobx";
 import { ClusterId, clusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
-import { getMatchedCluster } from "./cluster-view.route"
 import logger from "../../../main/logger";
+import { isDebugging, isDevelopment, isProduction } from "../../../common/vars";
+import { getMatchedCluster } from "./cluster-view.route";
+
+export type LensViewElem = HTMLIFrameElement | WebviewTag;
 
 export interface LensView {
   isLoaded?: boolean
   clusterId: ClusterId;
-  view: HTMLIFrameElement
+  view: LensViewElem;
 }
 
 export const lensViews = observable.map<ClusterId, LensView>();
@@ -20,31 +24,35 @@ export async function initView(clusterId: ClusterId) {
     return;
   }
   logger.info(`[LENS-VIEW]: init dashboard, clusterId=${clusterId}`)
+  let view: LensViewElem;
   const cluster = clusterStore.getById(clusterId);
   const parentElem = document.getElementById("lens-views");
-  const iframe = document.createElement("iframe");
-  iframe.name = cluster.contextName;
-  iframe.setAttribute("src", getClusterFrameUrl(clusterId))
-  iframe.addEventListener("load", () => {
-    logger.info(`[LENS-VIEW]: loaded from ${iframe.src}`)
+  const frameUrl = getClusterFrameUrl(clusterId);
+  const onLoad = () => {
+    logger.info(`[LENS-VIEW]: loaded from ${view.src}`)
     lensViews.get(clusterId).isLoaded = true;
-  }, { once: true });
-  lensViews.set(clusterId, { clusterId, view: iframe });
-  parentElem.appendChild(iframe);
-  await autoCleanOnRemove(clusterId, iframe);
+  };
+  if (isDevelopment || isDebugging) {
+    view = document.createElement("iframe");
+    view.addEventListener("load", onLoad);
+    view.name = cluster.contextName;
+  } else if (isProduction) {
+    view = document.createElement("webview");
+    view.addEventListener("did-frame-finish-load", onLoad);
+    view.setAttribute("nodeintegration", "true");
+    view.setAttribute("enableremotemodule", "true");
+  }
+  view.setAttribute("src", frameUrl);
+  parentElem.appendChild(view);
+  lensViews.set(clusterId, { clusterId, view });
+  await autoCleanOnRemove(clusterId, view);
 }
 
-export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrameElement) {
+export async function autoCleanOnRemove(clusterId: ClusterId, view: LensViewElem) {
   await when(() => !clusterStore.getById(clusterId));
   logger.info(`[LENS-VIEW]: remove dashboard, clusterId=${clusterId}`)
-  lensViews.delete(clusterId)
-
-  // Keep frame in DOM to avoid possible bugs when same cluster re-created after being removed.
-  // In that case for some reasons `webFrame.routingId` returns some previous frameId (usage in app.tsx)
-  // Issue: https://github.com/lensapp/lens/issues/811
-  iframe.dataset.meta = `${iframe.name} was removed at ${new Date().toLocaleString()}`;
-  iframe.removeAttribute("src")
-  iframe.removeAttribute("name")
+  lensViews.delete(clusterId);
+  view.parentElement.removeChild(view);
 }
 
 export function refreshViews() {

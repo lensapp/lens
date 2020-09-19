@@ -209,13 +209,17 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
 export const clusterStore = ClusterStore.getInstance<ClusterStore>();
 
+export function isClusterView(): boolean {
+  return !!getHostedClusterId(); // note: process.isMainFrame cannot be used here since it's "true" for webview-tags
+}
+
 export function getClusterIdFromHost(hostname: string): ClusterId {
-  const subDomains = hostname.split(":")[0].split(".");
-  return subDomains.slice(-2)[0]; // e.g host == "%clusterId.localhost:45345"
+  return hostname.match(/^(.*?)\.localhost/)?.[1]
 }
 
 export function getClusterFrameUrl(clusterId: ClusterId) {
-  return `//${clusterId}.${location.host}`;
+  const { protocol, host } = location
+  return `${protocol}//${clusterId}.${host}`
 }
 
 export function getHostedClusterId() {
