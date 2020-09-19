@@ -27,32 +27,29 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     this.updateUrl(namespaces);
 
     // sync with local-storage & url-search-params
-    reaction(
-      () => this.contextNs.toJS(),
-      (namespaces) => {
-        this.storage.set(namespaces);
-        this.updateUrl(namespaces);
-      }
-    );
+    reaction(() => this.contextNs.toJS(), namespaces => {
+      this.storage.set(namespaces);
+      this.updateUrl(namespaces);
+    });
   }
 
   getContextParams(): Partial<IQueryParams> {
     return {
-      namespaces: this.contextNs,
-    };
+      namespaces: this.contextNs
+    }
   }
 
   protected updateUrl(namespaces: string[]) {
-    setQueryParams({ namespaces }, { replace: true });
+    setQueryParams({ namespaces }, { replace: true })
   }
 
   protected async loadItems(namespaces?: string[]) {
     if (!isAllowedResource("namespaces")) {
       if (namespaces) return namespaces.map(this.getDummyNamespace);
-      return [];
+      return []
     }
     if (namespaces) {
-      return Promise.all(namespaces.map((name) => this.api.get({ name })));
+      return Promise.all(namespaces.map(name => this.api.get({ name })))
     } else {
       return super.loadItems();
     }
@@ -66,9 +63,9 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
         name: name,
         uid: "",
         resourceVersion: "",
-        selfLink: `/api/v1/namespaces/${name}`,
-      },
-    });
+        selfLink: `/api/v1/namespaces/${name}`
+      }
+    })
   }
 
   setContext(namespaces: string[]) {
@@ -77,7 +74,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   hasContext(namespace: string | string[]) {
     const context = Array.isArray(namespace) ? namespace : [namespace];
-    return context.every((namespace) => this.contextNs.includes(namespace));
+    return context.every(namespace => this.contextNs.includes(namespace));
   }
 
   toggleContext(namespace: string) {
