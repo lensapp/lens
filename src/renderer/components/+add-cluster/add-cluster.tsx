@@ -80,7 +80,6 @@ export class AddCluster extends React.Component {
       const contexts = this.getContexts(this.kubeConfigLocal);
       this.kubeContexts.replace(contexts);
       break;
-
     case KubeConfigSourceTab.TEXT:
       try {
         this.error = ""
@@ -90,6 +89,10 @@ export class AddCluster extends React.Component {
         this.error = String(err);
       }
       break;
+    }
+
+    if (this.kubeContexts.size === 1) {
+      this.selectedContexts.push(this.kubeContexts.keys().next().value)
     }
   }
 
@@ -206,7 +209,7 @@ export class AddCluster extends React.Component {
           <Tab
             value={KubeConfigSourceTab.FILE}
             label={<Trans>Select kubeconfig file</Trans>}
-            active={this.sourceTab == KubeConfigSourceTab.FILE}/>
+            active={this.sourceTab == KubeConfigSourceTab.FILE} />
           <Tab
             value={KubeConfigSourceTab.TEXT}
             label={<Trans>Paste as text</Trans>}
@@ -320,13 +323,15 @@ export class AddCluster extends React.Component {
     return (
       <div className={cssNames("kube-context flex gaps align-center", context)}>
         <span>{context}</span>
-        {isNew && <Icon small material="fiber_new"/>}
-        {isSelected && <Icon small material="check" className="box right"/>}
+        {isNew && <Icon small material="fiber_new" />}
+        {isSelected && <Icon small material="check" className="box right" />}
       </div>
     )
   };
 
   render() {
+    const addDisabled = this.selectedContexts.length === 0
+
     return (
       <WizardLayout
         className="AddCluster"
@@ -374,9 +379,12 @@ export class AddCluster extends React.Component {
         <div className="actions-panel">
           <Button
             primary
+            disabled={addDisabled}
             label={<Trans>Add cluster(s)</Trans>}
             onClick={this.addClusters}
             waiting={this.isWaiting}
+            tooltip={addDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
+            tooltipOverrideDisabled
           />
         </div>
       </WizardLayout>

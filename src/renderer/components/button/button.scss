@@ -54,8 +54,7 @@
 
   form:not([novalidate]):invalid &[type=submit]:not(.active),
   &:disabled {
-    color: silver;
-    background: $buttonDisabledBackground;
+    opacity: 50%;
     pointer-events: none;
   }
 
