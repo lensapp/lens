@@ -25,7 +25,8 @@ import { uniqueId } from "lodash";
 import { v4 as uuid } from "uuid";
 import { Cluster } from "../main/cluster";
 import {kubeconfig} from '../common/utils/k8sTemplates';
-import YAML from 'yaml'
+import YAML from 'yaml';
+import { DECCManager } from "./decc-manager";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 app.setName(appName);
@@ -36,6 +37,7 @@ if (!process.env.CICD) {
 let windowManager: WindowManager;
 let clusterManager: ClusterManager;
 let proxyServer: LensProxy;
+let deccManager: DECCManager;
 //let clusterStore: ClusterStore;
 
 mangleProxyEnv()
@@ -92,12 +94,17 @@ async function main() {
     app.quit();
   }
 
+  
   //start renderer with keycloak login page
   const keycloakServer = http.createServer(function(req: http.IncomingMessage, res: http.ServerResponse) {
     res.writeHead(200, {"Content-Type": "text/html"});  
     var readSream = fs.createReadStream(__static + '/keycloak_index.html','utf8')
     readSream.pipe(res);
   }).listen(3000);
+
+  // create cluster manager
+  deccManager = new DECCManager(keycloakServer, 'a09bfce9ea3074e25b8e5e7b1df576fd-1162277427.eu-west-2.elb.amazonaws.com');
+
 
   // create window manager and open app
   windowManager = new WindowManager(proxyPort, 3000);
@@ -140,118 +147,8 @@ ipcMain.on('keycloak-token', (event, idToken, refreshToken) => {
 
   var parsedToken = userStore.decodeToken (idToken);
 
-  var namespacesUserCanAccess: string[] = workspaceStore.workspacesList;
-
-  // get all namespaces this id has access to
-  const namespaces = {
-    method: 'GET',
-    url: 'http://a09bfce9ea3074e25b8e5e7b1df576fd-1162277427.eu-west-2.elb.amazonaws.com/api/v1/namespaces',
-    headers: {
-      'Authorization': 'Bearer ' + userStore.getTokenDetails().token
-    },
-    json: true
-  };
-
-  request(namespaces)
-  .then(function(response) {
-      //API call ok....
-      const deccNamespaces = response["items"]; 
-      // logger.info(JSON.stringify(deccNamespaces));
-      
-      deccNamespaces.forEach(function(namespace) {
-        if (!ignoredDECCNamespaces.includes(namespace.metadata.name)) {
-            // console.log("Namespace Name: " + namespace.metadata.name);
-            let ns = namespace.metadata.name;
-            //console.log("parsedToken.iam_roles: ", parsedToken.iam_roles);
-            if (parsedToken.iam_roles.includes(`m:kaas:${ns}@reader`) || parsedToken.iam_roles.includes(`m:kaas:${ns}@writer`)) {
-                // add namespace to workspaceStore if not present
-                console.log(`User: ${parsedToken.preferred_username} has access to namespace: ${ns}`);
-                if (!workspaceStore.getByName(ns)) {
-                  workspaceStore.saveWorkspace({id: uuid(), name: ns, description: `DECC Namespace: ${ns}`});
-                  console.log(`Added new workspace: ${ns}`);
-                  namespacesUserCanAccess.push(ns);
-                }
-            };
-        };
-      });
-  })
-  .catch(function (err) {
-    // API call failed...
-    console.log(err);
-  });
-
-  // now lets add the clusters for each namespace
-  workspaceStore.workspacesList.forEach(function(ws) {
-    console.log(`Adding clusters for ws: ${ws.name}`);
-    var clusters = {
-      method: 'GET',
-      url: `http://a09bfce9ea3074e25b8e5e7b1df576fd-1162277427.eu-west-2.elb.amazonaws.com/apis/cluster.k8s.io/v1alpha1/namespaces/${ws.name}/clusters`,
-      headers: {
-        'Authorization': 'Bearer ' + userStore.getTokenDetails().token
-      },
-      json: true
-    };
-
-    request(clusters)
-    .then(function(response) {
-      //API call ok....
-      const deccClusters = response["items"];
-      deccClusters.forEach(function(deccCluster: object) {
-        // check if cluster is already in the cluster store
-        let clusterPresent = false;
-        clusterStore.getByWorkspaceId(ws.id).forEach(wsCluster => {
-          if (wsCluster.contextName === `${parsedToken.preferred_username}@${deccCluster.metadata.name}`) {
-            clusterPresent = true;
-          }
-        });
-
-        if ("status" in deccCluster && !clusterPresent) {
-          // clusterUCPURL = cluster.status.
-
-          let ucpDashboard = `https://${deccCluster.status.providerStatus.ucpDashboard.split(":", 2).reverse()[0].substring(2)}:443`;
-          console.log (`ucpDashboard: ${ucpDashboard}`);
-
-          const jsConfig = kubeconfig({
-            username: parsedToken.preferred_username,
-            clusterName: deccCluster.metadata.name,
-            clientId: deccCluster.status.providerStatus.oidc.clientId,
-            idpCertificateAuthorityData: deccCluster.status.providerStatus.oidc.certificate,
-            idpIssuerUrl: deccCluster.status.providerStatus.oidc.issuerUrl,
-            server: ucpDashboard,
-            apiCertificate: deccCluster.status.providerStatus.apiServerCertificate,
-            idToken: idToken,
-            refreshToken: refreshToken
-          });
-
-          console.log(`Generated kubeconfig: ${YAML.stringify(jsConfig)}`)
-
-          console.log(`Cluster Name: ${deccCluster.metadata.name}, Cluster UCP Dashboard URL: ${deccCluster.status.providerStatus.ucpDashboard}`)
-          let newCluster = new Cluster({
-            id: uuid(),
-            contextName: `${parsedToken.preferred_username}@${deccCluster.metadata.name}`,
-            preferences: {
-              // icon: "data:;base64,iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
-              clusterName: deccCluster.metadata.name,
-              httpsProxy: undefined,
-            },
-            kubeConfigPath: ClusterStore.embedCustomKubeConfig(deccCluster.metadata.uid, YAML.stringify(jsConfig)),
-            workspace: ws.name,
-          });
-
-          clusterStore.addCluster(newCluster);
-        };
-      }); 
-    })
-    .catch(function (err: string) {
-      // API call failed...
-      console.log(err);
-    });
-  });
-  
-  //TODO: Use vmURL instead of hardcoded localhost:9080 here
-//   const winURL = process.env.NODE_ENV === 'development'
-// ? `http://localhost:9080?token=${token}`
-// : `file://${__dirname}/index.html?token=${token}`
+  deccManager.getNamespacesForUser();
+  deccManager.addClustersToWorkspace();
  
   //TODO: refresh token! 
   windowManager.showMain();
