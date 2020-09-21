@@ -26,9 +26,12 @@ describe("app start", () => {
 
   const waitForMinikubeDashboard = async (app: Application) => {
     await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started")
-    await app.client.getWindowCount()
-    await app.client.waitForExist(`iframe[name="minikube"]`)
-    await app.client.frame("minikube")
+    let windowCount = await app.client.getWindowCount()
+    // wait for webview to appear on window count
+    while (windowCount == 1) {
+      windowCount = await app.client.getWindowCount()
+    }
+    await app.client.windowByIndex(windowCount - 1)
     await app.client.waitUntilTextExists("span.link-text", "Cluster")
   }
 
