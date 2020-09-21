@@ -12,7 +12,7 @@ export class WindowManager {
 
   @observable activeClusterId: ClusterId;
 
-  constructor(protected proxyPort: number) {
+  constructor(protected proxyPort: number, protected keycloakPort: number) {
     // Manage main window size and position with state persistence
     this.windowState = windowStateKeeper({
       defaultHeight: 900,
@@ -35,6 +35,22 @@ export class WindowManager {
     });
     this.windowState.manage(this.mainView);
 
+    // handle external links
+    this.mainView.webContents.on("will-navigate", (event, link) => {
+      if (link.startsWith("http://localhost")) {
+        return;
+      }
+      if (link.startsWith("https://a69adcd0687194b2b8adebdbe93f2a02-977850409.eu-west-2.elb.amazonaws.com")) {
+        return;
+      }
+      if (link.startsWith("http://a09bfce9ea3074e25b8e5e7b1df576fd-1162277427.eu-west-2.elb.amazonaws.com")) {
+        return;
+      }
+      
+      event.preventDefault();
+      shell.openExternal(link);
+    })
+
     // open external links in default browser (target=_blank, window.open)
     this.mainView.webContents.on("new-window", (event, url) => {
       event.preventDefault();
@@ -47,7 +63,7 @@ export class WindowManager {
     });
 
     // load & show app
-    this.showMain();
+    this.showKeycloak();
     initMenu(this);
   }
 
@@ -68,12 +84,23 @@ export class WindowManager {
     }
   }
 
-  async showMain() {
+  public async showKeycloak() {
     try {
       await this.showSplash();
-      await this.mainView.loadURL(`http://localhost:${this.proxyPort}`)
+      await this.mainView.loadURL(`http://localhost:${this.keycloakPort}`)
       this.mainView.show();
       this.splashWindow.close();
+    } catch (err) {
+      dialog.showErrorBox("ERROR!", err.toString())
+    }
+  }
+
+  public async showMain() {
+    try {
+      //await this.showSplash();
+      await this.mainView.loadURL(`http://localhost:${this.proxyPort}`)
+      this.mainView.show();
+      //this.splashWindow.close();
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString())
     }

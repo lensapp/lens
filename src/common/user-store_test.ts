@@ -10,7 +10,7 @@ jest.mock("electron", () => {
   }
 })
 
-import { UserStore } from "./user-store"
+import { UserStore, Keycloak } from "./user-store"
 import { SemVer } from "semver"
 import electron from "electron"
 
@@ -72,6 +72,20 @@ describe("user store tests", () => {
 
       us.lastSeenAppVersion = (new SemVer(electron.app.getVersion())).inc("major").format();
       expect(us.isNewVersion).toBe(false);
+    })
+
+    it("allows setting and retrieving keycloak", () => {
+      const us = UserStore.getInstance<UserStore>();
+
+      us.keycloak.idToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE2MDAzNDc4NzUsImV4cCI6MTYzMTg4Mzg3NSwiYXVkIjoia2FhcyIsInN1YiI6Ijc5ZTEzZGU1LTEwYzgtNGEwNC04ZmEwLWI1OWExYmIzMjIyZiIsImlhbV9yb2xlcyI6WyJtOmthYXNAd3JpdGVyIiwibTprYWFzQHJlYWRlciJdLCJqdGkiOiJlYjNlODY2MC02ZjU0LTRlMTUtOTg3YS01MGIzYjU1MmZmMTIiLCJ0eXAiOiJJRCIsImF6cCI6ImthYXMiLCJlbWFpbF92ZXJpZmllZCI6ImZhbHNlIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiYm9iIn0.e3xt3tCNQcxy5flfaQ663KzdBLrMV5gMTt537U4pCo4";
+      expect(us.keycloak.idToken).toBe("1.2.3");
+
+      us.keycloak.expiresIn = "1631883875";
+      expect(us.keycloak.idToken).toBe("1631883875");
+
+      var myKeycloak: {accessToken: "a new dummy access token", idToken: "a new dummy id token", refreshToken: "a new dummy refresg token", expiresIn: "1111", refresExpiresIn: "2222"};
+      us.setTokenDetails(myKeycloak);
+      expect(us.keycloak).toBe(myKeycloak);
     })
   })
 
