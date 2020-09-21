@@ -17,10 +17,6 @@ describe("app start", () => {
   const addMinikubeCluster = async (app: Application) => {
     await app.client.click("div.add-cluster")
     await app.client.waitUntilTextExists("div", "Select kubeconfig file")
-    await app.client.click("div.Select__control")
-    await app.client.waitUntilTextExists("div", "minikube")
-    await app.client.click("div.minikube")
-    await app.client.click("div.Select__control")
     await app.client.click("button.primary")
   }
 
