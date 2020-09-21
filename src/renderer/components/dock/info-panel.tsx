@@ -62,14 +62,13 @@ export class InfoPanel extends Component<Props> {
     this.error = "";
     this.waiting = true;
     try {
-      this.result = await this.props.submit().finally(() => {
-        this.waiting = false;
-      });
+      this.result = await this.props.submit()
       if (showNotifications) Notifications.ok(this.result);
     } catch (error) {
       this.error = error.toString();
       if (showNotifications) Notifications.error(this.error);
-      throw error;
+    } finally {
+      this.waiting = false
     }
   }
 
@@ -91,12 +90,13 @@ export class InfoPanel extends Component<Props> {
       <>
         {result && (
           <div className="success flex align-center">
-            <Icon material="done"/> <span>{result}</span>
+            <Icon material="done" />
+            <span>{result}</span>
           </div>
         )}
         {errorInfo && (
           <div className="error flex align-center">
-            <Icon material="error_outline"/>
+            <Icon material="error_outline" />
             <span>{errorInfo}</span>
           </div>
         )}
@@ -114,9 +114,9 @@ export class InfoPanel extends Component<Props> {
           {controls}
         </div>
         <div className="info flex gaps align-center">
-          {waiting ? <><Spinner/> {submittingMessage}</> : this.renderInfo()}
+          {waiting ? <><Spinner /> {submittingMessage}</> : this.renderInfo()}
         </div>
-        <Button plain label={<Trans>Cancel</Trans>} onClick={close}/>
+        <Button plain label={<Trans>Cancel</Trans>} onClick={close} />
         <Button
           primary active
           label={submitLabel}
