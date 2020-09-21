@@ -115,12 +115,12 @@ export class KubeObject implements ItemObject {
     return KubeObject.stringifyLabels(this.metadata.labels);
   }
 
-  getAnnotations(): string[] {
+  getAnnotations(filter = false): string[] {
     const labels = KubeObject.stringifyLabels(this.metadata.annotations);
-    return labels.filter(label => {
+    return filter ? labels.filter(label => {
       const skip = resourceApplierApi.annotations.some(key => label.startsWith(key));
       return !skip;
-    })
+    }) : labels;
   }
 
   getOwnerRefs() {
@@ -138,7 +138,7 @@ export class KubeObject implements ItemObject {
       getNs(),
       getId(),
       ...getLabels(),
-      ...getAnnotations(),
+      ...getAnnotations(true),
     ]
   }
 
