@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { Trans } from "@lingui/macro";
-import { MainLayout, TabRoute } from "../layout/main-layout";
+import { TabLayout, TabRoute } from "../layout/tab-layout";
 import { HelmCharts, helmChartsRoute, helmChartsURL } from "../+apps-helm-charts";
 import { HelmReleases, releaseRoute, releaseURL } from "../+apps-releases";
 import { namespaceStore } from "../+namespaces/namespace.store";
@@ -30,12 +30,12 @@ export class Apps extends React.Component {
   render() {
     const tabRoutes = Apps.tabRoutes;
     return (
-      <MainLayout className="Apps" tabs={tabRoutes}>
+      <TabLayout className="Apps" tabs={tabRoutes}>
         <Switch>
           {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
           <Redirect to={tabRoutes[0].url}/>
         </Switch>
-      </MainLayout>
+      </TabLayout>
     )
   }
 }

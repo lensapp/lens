@@ -1,15 +1,15 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
-import { MainLayout } from "../layout/main-layout";
+import { TabLayout } from "../layout/tab-layout";
 
 export class NotFound extends React.Component {
   render() {
     return (
-      <MainLayout className="NotFound" contentClass="flex" footer={null}>
+      <TabLayout className="NotFound" contentClass="flex">
         <p className="box center">
           <Trans>Page not found</Trans>
         </p>
-      </MainLayout>
-    )
+      </TabLayout>
+    );
   }
 }

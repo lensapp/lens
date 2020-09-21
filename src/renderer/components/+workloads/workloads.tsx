@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
-import { MainLayout, TabRoute } from "../layout/main-layout";
+import { TabLayout, TabRoute } from "../layout/tab-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
 import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL, workloadsURL } from "./workloads.route";
 import { namespaceStore } from "../+namespaces/namespace.store";
@@ -86,12 +86,12 @@ export class Workloads extends React.Component<Props> {
   render() {
     const tabRoutes = Workloads.tabRoutes;
     return (
-      <MainLayout className="Workloads" tabs={tabRoutes}>
+      <TabLayout className="Workloads" tabs={tabRoutes}>
         <Switch>
           {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
           <Redirect to={workloadsURL({ query: namespaceStore.getContextParams() })}/>
         </Switch>
-      </MainLayout>
+      </TabLayout>
     )
   }
 }

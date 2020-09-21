@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
-import { MainLayout, TabRoute } from "../layout/main-layout";
+import { TabLayout, TabRoute } from "../layout/tab-layout";
 import { PersistentVolumes, volumesRoute, volumesURL } from "../+storage-volumes";
 import { StorageClasses, storageClassesRoute, storageClassesURL } from "../+storage-classes";
 import { PersistentVolumeClaims, volumeClaimsRoute, volumeClaimsURL } from "../+storage-volume-claims";
@@ -52,12 +52,12 @@ export class Storage extends React.Component<Props> {
   render() {
     const tabRoutes = Storage.tabRoutes;
     return (
-      <MainLayout className="Storage" tabs={tabRoutes}>
+      <TabLayout className="Storage" tabs={tabRoutes}>
         <Switch>
           {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
           <Redirect to={storageURL({ query: namespaceStore.getContextParams() })}/>
         </Switch>
-      </MainLayout>
+      </TabLayout>
     )
   }
 }

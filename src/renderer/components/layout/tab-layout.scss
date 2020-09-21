@@ -1,0 +1,25 @@
+
+.TabLayout {
+  display: contents;
+
+  > .Tabs {
+    grid-area: tabs;
+    background: $layoutTabsBackground;
+  }
+
+
+  main {
+    @include custom-scrollbar;
+    $spacing: $margin * 2;
+
+    .theme-light & {
+      @include custom-scrollbar(dark);
+    }
+
+    grid-area: main;
+    overflow-y: scroll; // always reserve space for scrollbar (17px)
+    overflow-x: auto;
+    margin: $spacing;
+    margin-right: 0;
+  }
+}
