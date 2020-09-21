@@ -14,6 +14,14 @@ export const clusterIpc = {
     },
   }),
 
+  refresh: createIpcChannel({
+    channel: "cluster:refresh",
+    handle: (clusterId: ClusterId) => {
+      const cluster = clusterStore.getById(clusterId);
+      if (cluster) return cluster.refresh();
+    },
+  }),
+
   disconnect: createIpcChannel({
     channel: "cluster:disconnect",
     handle: (clusterId: ClusterId) => {

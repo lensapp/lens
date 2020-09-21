@@ -39,7 +39,7 @@ export class ShellSession extends EventEmitter {
   public async open() {
     this.kubectlBinDir = await this.kubectl.binDir()
     const pathFromPreferences = userStore.preferences.kubectlBinariesPath || Kubectl.bundledKubectlPath
-    this.kubectlPathDir = userStore.preferences.downloadKubectlBinaries ? await this.kubectl.binDir() : path.dirname(pathFromPreferences)
+    this.kubectlPathDir = userStore.preferences.downloadKubectlBinaries ? this.kubectlBinDir : path.dirname(pathFromPreferences)
     this.helmBinDir = helmCli.getBinaryDir()
     const env = await this.getCachedShellEnv()
     const shell = env.PTYSHELL
