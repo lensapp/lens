@@ -133,7 +133,13 @@ export class Cluster implements ClusterModel {
     if (this.disconnected || (!init && !this.accessible)) {
       await this.reconnect();
     }
-    await this.refresh();
+    await this.refreshConnectionStatus()
+    if (this.accessible) {
+      await this.refreshAllowedResources()
+      this.ready = true
+      this.kubeCtl = new Kubectl(this.version)
+      this.kubeCtl.ensureKubectl() // download kubectl in background, so it's not blocking dashboard
+    }
     return this.pushState();
   }
 
@@ -159,15 +165,14 @@ export class Cluster implements ClusterModel {
   @action
   async refresh() {
     logger.info(`[CLUSTER]: refresh`, this.getMeta());
-    await this.refreshConnectionStatus(); // refresh "version", "online", etc.
+    await this.whenInitialized;
+    await this.refreshConnectionStatus();
     if (this.accessible) {
-      this.kubeCtl = new Kubectl(this.version)
       this.distribution = this.detectKubernetesDistribution(this.version)
       const [features, isAdmin, nodesCount] = await Promise.all([
         getFeatures(this),
         this.isClusterAdmin(),
         this.getNodeCount(),
-        this.kubeCtl.ensureKubectl()
       ]);
       this.features = features;
       this.isAdmin = isAdmin;
@@ -176,8 +181,8 @@ export class Cluster implements ClusterModel {
         this.refreshEvents(),
         this.refreshAllowedResources(),
       ]);
-      this.ready = true
     }
+    this.pushState();
   }
 
   @action

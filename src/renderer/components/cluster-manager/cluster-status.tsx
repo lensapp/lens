@@ -39,7 +39,7 @@ export class ClusterStatus extends React.Component<Props> {
       });
     })
     if (this.cluster.disconnected) {
-      await this.refreshCluster();
+      await this.activateCluster();
     }
   }
 
@@ -47,13 +47,13 @@ export class ClusterStatus extends React.Component<Props> {
     ipcRenderer.removeAllListeners(`kube-auth:${this.props.clusterId}`);
   }
 
-  refreshCluster = async () => {
+  activateCluster = async () => {
     await clusterIpc.activate.invokeFromRenderer(this.props.clusterId);
   }
 
   reconnect = async () => {
     this.isReconnecting = true;
-    await this.refreshCluster();
+    await this.activateCluster();
     this.isReconnecting = false;
   }
 
