@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
+import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell } from "electron"
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
 import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
@@ -29,12 +29,13 @@ export function buildMenu(windowManager: WindowManager) {
     return menuItems;
   }
 
-  function navigate(url: string) {
+  function navigate(url: string, isClusterView = false) {
     logger.info(`[MENU]: navigating to ${url}`);
-    windowManager.navigate({
-      channel: "menu:navigate",
-      url: url,
-    })
+    if (isClusterView) {
+      windowManager.getClusterView(windowManager.activeClusterId)?.send("menu:navigate", url);
+    } else {
+      windowManager.getMainView()?.send("menu:navigate", url);
+    }
   }
 
   function showAbout(browserWindow: BrowserWindow) {
@@ -148,24 +149,31 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Back',
         accelerator: 'CmdOrCtrl+[',
         click() {
-          webContents.getFocusedWebContents()?.goBack();
+          windowManager.getActiveView()?.goBack();
         }
       },
       {
         label: 'Forward',
         accelerator: 'CmdOrCtrl+]',
         click() {
-          webContents.getFocusedWebContents()?.goForward()
+          windowManager.getActiveView()?.goForward()
         }
       },
       {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click() {
-          windowManager.reload({ channel: "menu:reload" });
+          windowManager.getActiveView()?.send("menu:reload");
         }
       },
       { role: 'toggleDevTools' },
+      {
+        accelerator: "CmdOrCtrl+Shift+I",
+        label: 'Open Dashboard Devtools',
+        click() {
+          windowManager.getClusterView(windowManager.activeClusterId)?.openDevTools();
+        }
+      },
       { type: 'separator' },
       { role: 'resetZoom' },
       { role: 'zoomIn' },

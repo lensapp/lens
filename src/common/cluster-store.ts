@@ -75,10 +75,13 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
     if (ipcRenderer) {
       ipcRenderer.on("cluster:state", (event, model: ClusterState) => {
-        this.applyWithoutSync(() => {
-          logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host}`, model);
-          this.getById(model.id)?.updateModel(model);
-        })
+        const cluster = this.getById(model.id);
+        if (cluster) {
+          this.applyWithoutSync(() => {
+            logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host}`, model);
+            cluster.updateModel(model);
+          })
+        }
       })
     }
   }
@@ -210,14 +213,14 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 export const clusterStore = ClusterStore.getInstance<ClusterStore>();
 
 export function isClusterView(): boolean {
-  return !!getHostedClusterId(); // note: process.isMainFrame cannot be used here since it's "true" for webview-tags
+  return !!getHostedClusterId(); // note: process.isMainFrame cannot be used with "webview"-tags since they have own renderer process
 }
 
 export function getClusterIdFromHost(hostname: string): ClusterId {
   return hostname.match(/^(.*?)\.localhost/)?.[1]
 }
 
-export function getClusterFrameUrl(clusterId: ClusterId) {
+export function getClusterViewUrl(clusterId: ClusterId) {
   const { protocol, host } = location
   return `${protocol}//${clusterId}.${host}`
 }

@@ -1,6 +1,5 @@
 import type { ClusterId } from "../common/cluster-store";
-import { clusterStore } from "../common/cluster-store";
-import { BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
+import { BrowserWindow, dialog, ipcMain, shell, WebContents, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { observable } from "mobx";
 import { initMenu } from "./menu";
@@ -29,7 +28,6 @@ export class WindowManager {
       backgroundColor: "#1e2124",
       webPreferences: {
         nodeIntegration: true,
-        nodeIntegrationInSubFrames: true,
         enableRemoteModule: true,
         webviewTag: true,
       },
@@ -52,21 +50,21 @@ export class WindowManager {
     initMenu(this);
   }
 
-  navigate({ url, channel, frameId }: { url: string, channel: string, frameId?: number }) {
-    if (frameId) {
-      this.mainView.webContents.sendToFrame(frameId, channel, url);
-    } else {
-      this.mainView.webContents.send(channel, url);
-    }
+  getMainView(): WebContents {
+    return this.mainView.webContents;
   }
 
-  reload({ channel }: { channel: string }) {
-    const frameId = clusterStore.getById(this.activeClusterId)?.frameId;
-    if (frameId) {
-      this.mainView.webContents.sendToFrame(frameId, channel);
-    } else {
-      webContents.getFocusedWebContents()?.reload();
+  getClusterView(clusterId: ClusterId): WebContents {
+    return webContents.getAllWebContents().find(webContent => {
+      return webContent.getURL().includes(`${clusterId}.localhost:${this.proxyPort}`);
+    })
+  }
+
+  getActiveView(): WebContents {
+    if (this.activeClusterId) {
+      return this.getClusterView(this.activeClusterId);
     }
+    return this.getMainView();
   }
 
   async showMain() {

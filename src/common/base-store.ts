@@ -6,7 +6,7 @@ import { action, observable, reaction, runInAction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
-import { broadcastIpc, IpcBroadcastParams } from "./ipc";
+import { broadcastIpc } from "./ipc";
 import isEqual from "lodash/isEqual";
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
@@ -124,33 +124,12 @@ export class BaseStore<T = any> extends Singleton {
     }
   }
 
+  // sending store's state to all WebContents (BrowserWindow, webview, etc.)
   protected async syncToWebViews(model: T) {
-    const msg: IpcBroadcastParams = {
+    broadcastIpc({
       channel: this.syncChannel,
       args: [model],
-    }
-    broadcastIpc(msg); // send to all windows (BrowserWindow, webContents)
-    const frames = await this.getSubFrames();
-    frames.forEach(frameId => {
-      // send to all sub-frames (e.g. cluster-view managed in iframe)
-      broadcastIpc({
-        ...msg,
-        frameId: frameId,
-        frameOnly: true,
-      });
     });
-  }
-
-  // todo: refactor?
-  protected async getSubFrames(): Promise<number[]> {
-    const subFrames: number[] = [];
-    const { clusterStore } = await import("./cluster-store");
-    clusterStore.clustersList.forEach(cluster => {
-      if (cluster.frameId) {
-        subFrames.push(cluster.frameId)
-      }
-    });
-    return subFrames;
   }
 
   @action

@@ -41,7 +41,6 @@ export interface ClusterState extends ClusterModel {
 
 export class Cluster implements ClusterModel {
   public id: ClusterId;
-  public frameId: number;
   public kubeCtl: Kubectl
   public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
@@ -113,7 +112,7 @@ export class Cluster implements ClusterModel {
     const refreshTimer = setInterval(() => this.online && this.refresh(), 30000); // every 30s
 
     this.eventDisposers.push(
-      reaction(this.getState, this.pushState),
+      reaction(this.getState, this.pushState, { delay: 150 }),
       () => clearInterval(refreshTimer),
     );
   }
@@ -124,7 +123,8 @@ export class Cluster implements ClusterModel {
     this.eventDisposers.length = 0;
   }
 
-  async activate(init = false) {
+  @action
+  async activate({ init = false } = {}) {
     logger.info(`[CLUSTER]: activate`, this.getMeta());
     await this.whenInitialized;
     if (!this.eventDisposers.length) {
@@ -140,9 +140,9 @@ export class Cluster implements ClusterModel {
       this.kubeCtl = new Kubectl(this.version)
       this.kubeCtl.ensureKubectl() // download kubectl in background, so it's not blocking dashboard
     }
-    return this.pushState();
   }
 
+  @action
   async reconnect() {
     logger.info(`[CLUSTER]: reconnect`, this.getMeta());
     this.contextHandler.stopServer();
@@ -402,7 +402,6 @@ export class Cluster implements ClusterModel {
     logger.silly(`[CLUSTER]: push-state`, state);
     broadcastIpc({
       channel: "cluster:state",
-      frameId: this.frameId,
       args: [state],
     });
     return state;

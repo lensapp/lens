@@ -56,7 +56,6 @@ export interface IpcBroadcastParams<A extends any[] = any> {
   frameId?: number; // send to inner frame of webContents
   frameOnly?: boolean; // send message only to view with provided `frameId`
   filter?: (webContent: WebContents) => boolean
-  timeout?: number; // todo: add support
   args?: A;
 }
 

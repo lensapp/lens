@@ -34,17 +34,15 @@ import { Terminal } from "./dock/terminal";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 import { clusterIpc } from "../../common/cluster-ipc";
-import { webFrame } from "electron";
 import { MainLayout } from "./layout/main-layout";
 
 @observer
 export class App extends React.Component {
   static async init() {
-    const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
-    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`)
+    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}`)
     await Terminal.preloadFonts()
-    await clusterIpc.activate.invokeFromRenderer(clusterId, frameId);
+    await clusterIpc.activate.invokeFromRenderer(clusterId);
     await getHostedCluster().whenReady; // cluster.refresh() is done at this point
   }
 

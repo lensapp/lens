@@ -30,7 +30,7 @@ export function getMatchedCluster() {
 }
 
 if (ipcRenderer) {
-  if (isClusterView()) {
+  if (!isClusterView()) {
     // Keep track of active cluster-id for handling IPC/menus/etc.
     reaction(() => getMatchedClusterId(), clusterId => {
       ipcRenderer.send("cluster-view:current-id", clusterId);
