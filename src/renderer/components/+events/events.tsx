@@ -2,7 +2,7 @@ import "./events.scss";
 
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
-import { MainLayout } from "../layout/main-layout";
+import { TabLayout } from "../layout/tab-layout";
 import { eventStore } from "./event.store";
 import { KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
 import { Trans } from "@lingui/macro";
@@ -118,9 +118,9 @@ export class Events extends React.Component<Props> {
       return events;
     }
     return (
-      <MainLayout>
+      <TabLayout>
         {events}
-      </MainLayout>
+      </TabLayout>
     )
   }
 }

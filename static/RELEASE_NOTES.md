@@ -2,7 +2,13 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.3 (current version)
+## 3.6.4 (current version)
+- Fix: deleted namespace does not get auto unselected
+- Get focus to dock tab (terminal & resource editor) content after resize
+- Downloading kubectl binary does not block dashboard opening anymore
+- Fix background image of What's New page on white theme
+
+## 3.6.3
 - Fix app crash on certain situations when opening ingress details
 - Reduce app minimum size to support >= 800 x 600 resolution displays
 - Fix app crash when service account has imagePullSecrets defined but the actual secret is missing

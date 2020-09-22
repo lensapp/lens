@@ -3,7 +3,7 @@ import "./cluster.scss"
 import React from "react";
 import { computed, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { MainLayout } from "../layout/main-layout";
+import { TabLayout } from "../layout/tab-layout";
 import { ClusterIssues } from "./cluster-issues";
 import { Spinner } from "../spinner";
 import { cssNames, interval, isElectron } from "../../utils";
@@ -54,7 +54,7 @@ export class Cluster extends React.Component {
   render() {
     const { isLoaded } = this;
     return (
-      <MainLayout>
+      <TabLayout>
         <div className="Cluster">
           {!isLoaded && <Spinner center/>}
           {isLoaded && (
@@ -65,7 +65,7 @@ export class Cluster extends React.Component {
             </>
           )}
         </div>
-      </MainLayout>
+      </TabLayout>
     )
   }
 }

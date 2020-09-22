@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { t, Trans } from "@lingui/macro";
 import { cssNames, interval } from "../../utils";
-import { MainLayout } from "../layout/main-layout";
+import { TabLayout } from "../layout/tab-layout";
 import { nodesStore } from "./nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object";
@@ -123,7 +123,7 @@ export class Nodes extends React.Component<Props> {
 
   render() {
     return (
-      <MainLayout>
+      <TabLayout>
         <KubeObjectListLayout
           className="Nodes"
           store={nodesStore} isClusterScoped
@@ -182,7 +182,7 @@ export class Nodes extends React.Component<Props> {
             return <NodeMenu object={item}/>
           }}
         />
-      </MainLayout>
+      </TabLayout>
     )
   }
 }

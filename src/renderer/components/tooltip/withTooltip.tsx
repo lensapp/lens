@@ -8,6 +8,11 @@ import uniqueId from "lodash/uniqueId"
 
 export interface TooltipDecoratorProps {
   tooltip?: ReactNode | Omit<TooltipProps, "targetId">;
+  /**
+   * forces tooltip to detect the target's parent for mouse events. This is
+   * useful for displaying tooltips even when the target is "disabled"
+   */
+  tooltipOverrideDisabled?: boolean;
 }
 
 export function withTooltip<T extends React.ComponentType<any>>(Target: T): T {
@@ -17,22 +22,25 @@ export function withTooltip<T extends React.ComponentType<any>>(Target: T): T {
     protected tooltipId = uniqueId("tooltip_target_");
 
     render() {
-      const { tooltip, ...targetProps } = this.props;
+      const { tooltip, tooltipOverrideDisabled, ...targetProps } = this.props;
       if (tooltip) {
         const tooltipId = targetProps.id || this.tooltipId;
         const tooltipProps: TooltipProps = {
           targetId: tooltipId,
+          tooltipOnParentHover: tooltipOverrideDisabled,
           ...(isReactNode(tooltip) ? { children: tooltip } : tooltip),
         };
         targetProps.id = tooltipId;
         targetProps.children = (
           <>
-            {targetProps.children}
-            <Tooltip {...tooltipProps}/>
+            <div>
+              {targetProps.children}
+            </div>
+            <Tooltip {...tooltipProps} />
           </>
         )
       }
-      return <Target {...targetProps as any}/>;
+      return <Target {...targetProps as any} />;
     }
   }
 
