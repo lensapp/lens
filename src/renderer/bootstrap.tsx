@@ -31,7 +31,10 @@ export async function bootstrap(App: AppComponent) {
   if (App.init) {
     await App.init();
   }
-  render(<App/>, rootElem);
+  render(<>
+    {isMac && <div id="draggable-top" />}
+    <App />
+  </>, rootElem);
 }
 
 // run

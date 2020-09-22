@@ -54,7 +54,6 @@ export class ClusterManager extends React.Component {
   render() {
     return (
       <div className="ClusterManager">
-        {isMac && <div id="draggable-top" />}
         <main>
           <div id="lens-views" />
           <Switch>
