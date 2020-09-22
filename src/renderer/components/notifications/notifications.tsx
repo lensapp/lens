@@ -5,7 +5,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react"
 import { JsonApiErrorParsed } from "../../api/json-api";
 import { cssNames, prevDefault } from "../../utils";
-import { IMessage, INotification, notificationsStore } from "./notifications.store";
+import { IMessage, INotification, notificationsStore, NotificationStatus } from "./notifications.store";
 import { Animate } from "../animate";
 import { Icon } from "../icon"
 
@@ -17,7 +17,7 @@ export class Notifications extends React.Component {
     notificationsStore.add({
       message: message,
       timeout: 2500,
-      status: "ok"
+      status: NotificationStatus.OK
     })
   }
 
@@ -25,13 +25,13 @@ export class Notifications extends React.Component {
     notificationsStore.add({
       message: message,
       timeout: 10000,
-      status: "error"
+      status: NotificationStatus.ERROR
     });
   }
 
   static info(message: IMessage, customOpts: Partial<INotification> = {}) {
     return notificationsStore.add({
-      status: "info",
+      status: NotificationStatus.INFO,
       timeout: 0,
       message: message,
       ...customOpts,
@@ -78,7 +78,7 @@ export class Notifications extends React.Component {
                 onMouseLeave={() => addAutoHideTimer(notification)}
                 onMouseEnter={() => removeAutoHideTimer(notification)}>
                 <div className="box center">
-                  <Icon material="info_outline"/>
+                  <Icon material="info_outline" />
                 </div>
                 <div className="message box grow">{msgText}</div>
                 <div className="box center">

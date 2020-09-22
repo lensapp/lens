@@ -72,7 +72,7 @@ export class HelmCharts extends Component<Props> {
             (items: HelmChart[]) => items.filter(item => !item.deprecated)
           ]}
           customizeHeader={() => (
-            <SearchInput placeholder={_i18n._(t`Search Helm Charts`)}/>
+            <SearchInput placeholder={_i18n._(t`Search Helm Charts`)} />
           )}
           renderTableHeader={[
             { className: "icon" },
@@ -99,10 +99,12 @@ export class HelmCharts extends Component<Props> {
           detailsItem={this.selectedChart}
           onDetails={this.showDetails}
         />
-        <HelmChartDetails
-          chart={this.selectedChart}
-          hideDetails={this.hideDetails}
-        />
+        {this.selectedChart && (
+          <HelmChartDetails
+            chart={this.selectedChart}
+            hideDetails={this.hideDetails}
+          />
+        )}
       </>
     );
   }
