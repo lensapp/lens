@@ -83,7 +83,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`)
     ipcRenderer.on("cluster:state", (event, model: ClusterState) => {
       this.applyWithoutSync(() => {
-        logger.info(`[CLUSTER-STORE]: received push-state at ${location.host} (${webFrame.routingId})`, model);
+        logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host} (${webFrame.routingId})`, model);
         this.getById(model.id)?.updateModel(model);
       })
     })
