@@ -125,8 +125,12 @@ export class Cluster implements ClusterModel {
   }
 
   async activate(init = false) {
-    logger.info(`[CLUSTER]: activate`, this.getMeta());
+    const clusterActivatedAt = new Date();
+    logger.info(`[CLUSTER]: activate@${clusterActivatedAt.toString()}`, this.getMeta());
     await this.whenInitialized;
+    logger.info("[CLUSTER]: activate now initialized")
+    logger.info(`[CLUSTER]: activate eventDisposers length: ${this.eventDisposers.length}`);
+    logger.info(`[CLUSTER]: activate eventDisposers: ${this.eventDisposers}`);
     if (!this.eventDisposers.length) {
       this.bindEvents();
     }
@@ -158,7 +162,8 @@ export class Cluster implements ClusterModel {
 
   @action
   async refresh() {
-    logger.info(`[CLUSTER]: refresh`, this.getMeta());
+    const clusterRefreshAt = new Date();
+    logger.info(`[CLUSTER]: refresh@${clusterRefreshAt.toString()}`, this.getMeta());
     await this.refreshConnectionStatus(); // refresh "version", "online", etc.
     if (this.accessible) {
       this.kubeCtl = new Kubectl(this.version)

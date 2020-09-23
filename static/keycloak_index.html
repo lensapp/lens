@@ -27,15 +27,14 @@ if(logoutUser){
       console.log("keycloak object: "+ JSON.stringify(keycloak));
       ipcRenderer.send('keycloak-token', keycloak.idToken, keycloak.refreshToken);
 
-        //TODO: check if token refresh is possible here
-        /*
-        setInterval(() => {
-            console.log("interval");
-            keycloak.updateToken(10).error(() => keycloak.logout());
-            console.log(keycloak.token);
-            ipcRenderer.send('keycloak-token-update', keycloak.token);
-          }, 10000);
-          */
+      //TODO: check if token refresh is possible here
+      setInterval(() => {
+        let tokenRefreshAt = new Date();
+        console.log(`keycloak interval: ${tokenRefreshAt.toString()}`);
+        keycloak.updateToken(10).error(() => keycloak.logout());
+        console.log(keycloak.token);
+        ipcRenderer.send('keycloak-token-update', keycloak.idToken, keycloak.refreshToken);
+      }, 10000);
     }
   }).error(function(error) {
     console.log('error: ' + JSON.stringify(error));

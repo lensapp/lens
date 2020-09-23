@@ -9,7 +9,7 @@
     "moduleResolution": "Node",
     "sourceMap": true,
     "strict": false,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noUnusedLocals": false,
     "noImplicitReturns": false,
     "experimentalDecorators": true,

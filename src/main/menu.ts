@@ -7,6 +7,11 @@ import { preferencesURL } from "../renderer/components/+preferences/preferences.
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
 import logger from "./logger";
+import { landingURL } from "../renderer/components/+landing-page/landing-page.route";
+
+const keycloakWinURL = process.env.NODE_ENV === 'development'
+? `http://localhost:3000/keycloak_index.html`
+: `file://${__static}/keycloak_index.html`
 
 export function initMenu(windowManager: WindowManager) {
   autorun(() => buildMenu(windowManager), {
@@ -35,6 +40,10 @@ export function buildMenu(windowManager: WindowManager) {
       channel: "menu:navigate",
       url: url,
     })
+  }
+
+  function showKeycloak() {
+    windowManager.showKeycloak()
   }
 
   function showAbout(browserWindow: BrowserWindow) {
@@ -121,7 +130,15 @@ export function buildMenu(windowManager: WindowManager) {
         },
         { type: 'separator' },
         { role: 'quit' }
-      ])
+      ]),
+      { type: 'separator' },
+      {
+        label: 'Logout',
+        click() {
+          //navigate(keycloakWinURL)
+          windowManager.showLogout()
+        } 
+      }
     ]
   };
   mt.push(fileMenu)

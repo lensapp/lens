@@ -4,6 +4,7 @@ import { BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { observable } from "mobx";
 import { initMenu } from "./menu";
+import { userStore } from "../common/user-store";
 
 export class WindowManager {
   protected mainView: BrowserWindow;
@@ -90,6 +91,16 @@ export class WindowManager {
       await this.mainView.loadURL(`http://localhost:${this.keycloakPort}`)
       this.mainView.show();
       this.splashWindow.close();
+    } catch (err) {
+      dialog.showErrorBox("ERROR!", err.toString())
+    }
+  }
+
+  public async showLogout() {
+    try {
+      userStore.saveLastLoggedInUser(userStore.token.preferredUserName);
+      await this.mainView.loadURL(`http://localhost:${this.keycloakPort}?logout=true`)
+      this.mainView.show();
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString())
     }

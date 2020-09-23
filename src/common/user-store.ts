@@ -19,6 +19,7 @@ export interface UserStoreModel {
   seenContexts: string[];
   preferences: UserPreferences;
   token: Token;
+  lastLoggedInUser: string;
 }
 
 export interface UserPreferences {
@@ -113,6 +114,8 @@ export class UserStore extends BaseStore<UserStoreModel> {
     refreshToken: ""
   }
 
+  @observable lastLoggedInUser = "";
+
   get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
   }
@@ -188,8 +191,11 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   isTokenExpired(validTill: number): boolean {
     // Create a current UnixTime style date in ms
-    const timeNow = Date.now();
-    if ((new Date(validTill * 1000).getMinutes() - new Date().getMinutes()) / 1000 / 60 < 0) {
+    const timeNow = Math.round(Date.now());
+    console.log(`isTokenExpired: timeNow: ${new Date(timeNow).toString()}`);
+    console.log(`isTokenExpired: validTill: ${new Date(validTill).toString()}`);
+    //if ((new Date(validTill).getMinutes() - new Date().getMinutes()) / 1000 / 60 < 0) {
+    if (timeNow > validTill) {
       return true;
     }
     return false;
@@ -197,6 +203,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @action
   setTokenDetails(token: string, refreshToken: string) {
+    
     let tokenDecoded = this.decodeToken(token);
     let refreshTokenDecoded = this.decodeToken(refreshToken);
     
@@ -205,13 +212,19 @@ export class UserStore extends BaseStore<UserStoreModel> {
     this.token.preferredUserName = tokenDecoded.preferred_username;
 
     // Create a current UnixTime style date in secs
-    const timeNow = Math.round(Date.now() / 1000);
-    this.token.tokenValidTill = timeNow + tokenDecoded.exp; 
-    this.token.refreshTokenValidTill = timeNow + refreshTokenDecoded.exp;
+    this.token.tokenValidTill = tokenDecoded.exp * 1000; 
+    this.token.refreshTokenValidTill = refreshTokenDecoded.exp * 1000;
 
     console.info('The saved token object is: ' + JSON.stringify(this.token));
+    const tokenSavedAt = new Date();
+    console.log(`keycloak token retrieved at: ${tokenSavedAt.toLocaleTimeString()}`);
 
     console.info('Check if token date is expired: ' + this.isTokenExpired(this.token.tokenValidTill));
+  }
+
+  @action
+  saveLastLoggedInUser(user: string) {
+    this.lastLoggedInUser = user;
   }
 
   @action
@@ -235,6 +248,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
       seenContexts: Array.from(this.seenContexts),
       preferences: this.preferences,
       token: this.token,
+      lastLoggedInUser: this.lastLoggedInUser,
     }
     return toJS(model, {
       recurseEverything: true,

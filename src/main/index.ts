@@ -50,11 +50,6 @@ const keycloakWinURL = process.env.NODE_ENV === 'development'
 : `file://${__static}/keycloak_index.html`
 const { ipcMain } = require('electron')
 
-const ignoredDECCNamespaces =  [
-  'kube-system', 'kube-public', 'openstack-provider-system', 'system',
-  'kaas', 'lcm-system', 'istio-system', 'kube-node-lease', 'stacklight'
-];
-
 async function main() {
   await shellSync();
   logger.info(`🚀 Starting Lens from "${workingDir}"`)
@@ -103,7 +98,7 @@ async function main() {
   }).listen(3000);
 
   // create cluster manager
-  deccManager = new DECCManager(keycloakServer, 'a09bfce9ea3074e25b8e5e7b1df576fd-1162277427.eu-west-2.elb.amazonaws.com');
+  //deccManager = new DECCManager(keycloakServer, 'a09bfce9ea3074e25b8e5e7b1df576fd-1162277427.eu-west-2.elb.amazonaws.com');
 
 
   // create window manager and open app
@@ -141,22 +136,31 @@ app.on("will-quit", async (event) => {
 ipcMain.on('keycloak-token', (event, idToken, refreshToken) => {
   logger.info('test keycloak close main win');
   userStore.setTokenDetails(idToken, refreshToken);
-  logger.info('saved id token and refreshToken to userStore');
+  //logger.info('saved id token and refreshToken to userStore');
 
-  logger.info('the idToken is: ' + userStore.getTokenDetails().token);
+  //logger.info('the idToken is: ' + userStore.getTokenDetails().token);
 
   var parsedToken = userStore.decodeToken (idToken);
+  // create cluster manager
+  deccManager = new DECCManager('a09bfce9ea3074e25b8e5e7b1df576fd-1162277427.eu-west-2.elb.amazonaws.com');
+  deccManager.createDECCLensEnv();
 
-  deccManager.getNamespacesForUser();
-  deccManager.addClustersToWorkspace();
- 
+  // deccManager.refreshClusterKubeConfigs();
+  // deccManager.getNamespacesForUser();
+  // deccManager.addClustersToWorkspace();
+  
   //TODO: refresh token! 
   windowManager.showMain();
 });
 
-ipcMain.on('keycloak-token-update', (event, token) => {
-  logger.error('token refresh receivied:' + token);
-  //TODO: handle refresh token! 
+ipcMain.on('keycloak-token-update', (event, idToken, refreshToken) => {
+  logger.info('token refresh receivied:' + idToken);
+  if(userStore.isTokenExpired(userStore.token.tokenValidTill)) {
+    userStore.setTokenDetails(idToken, refreshToken);
+    logger.info('saved new id token and refreshToken to userStore');
+    logger.info('the idToken is: ' + userStore.getTokenDetails().token);
+    //deccManager.refreshClusterKubeConfigs();
+  };
 });
 
 ipcMain.on('keycloak-logout', (event, data) => {
