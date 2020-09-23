@@ -32,6 +32,7 @@ html {
       background: transparent;
       min-height: 0;
       box-shadow: 0 0 0 1px $halfGray;
+      cursor: pointer;
 
       &--is-focused {
         box-shadow: 0 0 0 2px $primary;
@@ -88,6 +89,7 @@ html {
 
     &__option {
       white-space: nowrap;
+      cursor: pointer;
 
       &:active {
         background: $primary;
