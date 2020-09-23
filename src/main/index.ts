@@ -38,7 +38,6 @@ let windowManager: WindowManager;
 let clusterManager: ClusterManager;
 let proxyServer: LensProxy;
 let deccManager: DECCManager;
-//let clusterStore: ClusterStore;
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
@@ -116,12 +115,34 @@ async function main() {
   app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
     // On certificate error we disable default behaviour (stop loading the page)
     // and we then say "it is all fine - true" to the callback
-    console.log('cert error: ' + error);
+    logger.error('cert error: ' + String(error));
     event.preventDefault();
     callback(true);
   });
 
   //windowManager.showMain(keycloakWinURL);
+}
+
+async function processKCLogin(idToken, refreshToken) {
+  logger.info('processKCLogin');
+  
+  userStore.setTokenDetails(idToken, refreshToken);
+  //logger.info('saved id token and refreshToken to userStore');
+
+  //logger.info('the idToken is: ' + userStore.getTokenDetails().token);
+
+  var parsedToken = userStore.decodeToken (idToken);
+  
+  
+  if (process.env.DECC_URL != '') {
+    // create decc manager
+    deccManager = new DECCManager(process.env.DECC_URL);
+    // setup clusters from DECC
+    await deccManager.createDECCLensEnv();
+  }
+  
+  await clusterStore.load();
+  await windowManager.showMain();
 }
 
 app.on("ready", main);
@@ -134,23 +155,7 @@ app.on("will-quit", async (event) => {
 })
 
 ipcMain.on('keycloak-token', (event, idToken, refreshToken) => {
-  logger.info('test keycloak close main win');
-  userStore.setTokenDetails(idToken, refreshToken);
-  //logger.info('saved id token and refreshToken to userStore');
-
-  //logger.info('the idToken is: ' + userStore.getTokenDetails().token);
-
-  var parsedToken = userStore.decodeToken (idToken);
-  // create cluster manager
-  deccManager = new DECCManager('a09bfce9ea3074e25b8e5e7b1df576fd-1162277427.eu-west-2.elb.amazonaws.com');
-  deccManager.createDECCLensEnv();
-
-  // deccManager.refreshClusterKubeConfigs();
-  // deccManager.getNamespacesForUser();
-  // deccManager.addClustersToWorkspace();
-  
-  //TODO: refresh token! 
-  windowManager.showMain();
+  processKCLogin(idToken, refreshToken);  
 });
 
 ipcMain.on('keycloak-token-update', (event, idToken, refreshToken) => {
