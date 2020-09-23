@@ -14,6 +14,7 @@ import { ClusterSettings, clusterSettingsRoute } from "../+cluster-settings";
 import { clusterViewRoute, clusterViewURL, getMatchedCluster, getMatchedClusterId } from "./cluster-view.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
+import { isMac } from "../../../common/vars";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -53,21 +54,20 @@ export class ClusterManager extends React.Component {
   render() {
     return (
       <div className="ClusterManager">
-        <div id="draggable-top"/>
         <main>
-          <div id="lens-views"/>
+          <div id="lens-views" />
           <Switch>
-            <Route component={LandingPage} {...landingRoute}/>
-            <Route component={Preferences} {...preferencesRoute}/>
-            <Route component={Workspaces} {...workspacesRoute}/>
-            <Route component={AddCluster} {...addClusterRoute}/>
-            <Route component={ClusterView} {...clusterViewRoute}/>
-            <Route component={ClusterSettings} {...clusterSettingsRoute}/>
-            <Redirect exact to={this.startUrl}/>
+            <Route component={LandingPage} {...landingRoute} />
+            <Route component={Preferences} {...preferencesRoute} />
+            <Route component={Workspaces} {...workspacesRoute} />
+            <Route component={AddCluster} {...addClusterRoute} />
+            <Route component={ClusterView} {...clusterViewRoute} />
+            <Route component={ClusterSettings} {...clusterSettingsRoute} />
+            <Redirect exact to={this.startUrl} />
           </Switch>
         </main>
-        <ClustersMenu/>
-        <BottomBar/>
+        <ClustersMenu />
+        <BottomBar />
       </div>
     )
   }

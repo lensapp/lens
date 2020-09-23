@@ -43,7 +43,10 @@ export async function bootstrap(App: AppComponent) {
       window.location.href = "about:blank"
     }
   })
-  render(<App/>, rootElem);
+  render(<>
+    {isMac && <div id="draggable-top" />}
+    <App />
+  </>, rootElem);
 }
 
 // run

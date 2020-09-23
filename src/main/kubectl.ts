@@ -36,7 +36,7 @@ const packageMirrors: Map<string, string> = new Map([
 let bundledPath: string
 const initScriptVersionString = "# lens-initscript v3\n"
 
-if (isDevelopment || isTestEnv) {
+if (isDevelopment || isTestEnv) {
   const platformName = isWindows ? "windows" : process.platform
   bundledPath = path.join(process.cwd(), "binaries", "client", platformName, process.arch, "kubectl")
 } else {
@@ -110,7 +110,11 @@ export class Kubectl {
   }
 
   protected getDownloadDir() {
-    return userStore.preferences?.downloadBinariesPath || Kubectl.kubectlDir
+    if (userStore.preferences?.downloadBinariesPath) {
+      return path.join(userStore.preferences.downloadBinariesPath, "kubectl")
+    }
+
+    return Kubectl.kubectlDir
   }
 
   public async getPath(bundled = false): Promise<string> {
@@ -214,7 +218,7 @@ export class Kubectl {
         });
         isValid = !await this.checkBinary(this.path, false)
       }
-      if(!isValid) {
+      if (!isValid) {
         logger.debug(`Releasing lock for ${this.kubectlVersion}`)
         release()
         return false
