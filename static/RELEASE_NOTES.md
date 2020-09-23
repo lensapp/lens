@@ -2,37 +2,47 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.0-rc.2 (current version)
-- Refresh input values on cluster change
-- Update logo
-- Fix margins in cluster menu
+## 3.6.4 (current version)
+- Fix: deleted namespace does not get auto unselected
+- Get focus to dock tab (terminal & resource editor) content after resize
+- Downloading kubectl binary does not block dashboard opening anymore
+- Fix background image of What's New page on white theme
 
-## 3.6.0-rc.1
+## 3.6.3
+- Fix app crash on certain situations when opening ingress details
+- Reduce app minimum size to support >= 800 x 600 resolution displays
+- Fix app crash when service account has imagePullSecrets defined but the actual secret is missing
+- Fix words in labels to be selectable either by hovering or double-clicking
+
+**Known issues**
+
+- Kubectl exec command does not work in terminal against clusters that are behind a load balancer and require Host header in request, for example Rancher clusters.
+
+## 3.6.2
+- Fix terminal connection opening
+
+**Known issues**
+
+- Kubectl exec command does not work in terminal against clusters that are behind a load balancer and require Host header in request, for example Rancher clusters.
+
+## 3.6.1
+- Inject Host header to k8s client requests
+- Remove extra refreshEvents polling
+- Fix windows installer when app directory removed manually
+
+**Known issues**
+
+- Kubectl exec command does not work in terminal against clusters that are behind a load balancer and require Host header in request, for example Rancher clusters.
+
+## 3.6.0
 - Allow user to configure directory where Kubectl binaries are downloaded
 - Allow user to configure path to Kubectl binary, instead of using bundled Kubectl
-- Log application logs also to log file
-- Restrict file permissions to only the user for pasted kubeconfigs
-- Close Preferences and Cluster Setting on Esc keypress
+- Allow user to select Kubeconfig from filesystem
+- Show the path of the cluster's Kubeconfig in cluster settings
+- Store reference to added Kubeconfig files
+- Update logo
 - Update Kubectl versions used with Lens
 - Update Helm binary version
-- Fix: Update CRD api to use preferred version and implement v1 differences
-- Fix: Allow to drag and drop cluster icons
-- Fix: Wider version select box for Helm chart installation
-- Fix: Reload only active dashboard view, not the whole app window
-- Fix cluster icon margins
-- Fix: Reconnect non-accessible clusters on reconnect
-- Fix: Bundle Kubectl and Helm binaries
-- Fix: Remove double copyright
-
-## 3.6.0-beta.2
-- Fix: too narrow sidebar without clusters
-- Fix app crash when iterating Events without 'kind' property defined
-- Detect non-functional bundled kubectl
-
-## 3.6.0-beta.1
-- Allow user to select Kubeconfig from filesystem
-- Store reference to added Kubeconfig files
-- Show the path of the cluster's Kubeconfig in cluster settings
 - Add support for PodDisruptionBudgets
 - Add port-forwarding for containers in pod
 - Add shortcut keys to menu items
@@ -42,6 +52,30 @@ Here you can find description of changes we've built into each release. While we
 - Allow to trigger cronjobs
 - Show devtools in menu
 - Open last active cluster as default
+- Log application logs also to log file
+- Fix Dialog Esc keypress behavior
+- Set new workspace name restrictions
+- Fix cluster's apiUrl
+- Fix: Cluster dashboard not rendered
+- Fix app reload in cluster settings
+- Fix proxy kubeconfig file permissions
+- Move verbose log lines to silly level
+- Add path to auth proxy url if present in cluster url
+- Fix path validation message
+- Fix: Refresh input values on cluster change
+- Fix margins in cluster menu
+- Restrict file permissions to only the user for pasted kubeconfigs
+- Close Preferences and Cluster Setting on Esc keypress
+- Fix: Update CRD api to use preferred version and implement v1 differences
+- Fix: Allow to drag and drop cluster icons
+- Fix: Wider version select box for Helm chart installation
+- Fix: Reload only active dashboard view, not the whole app window
+- Fix cluster icon margins
+- Fix: Reconnect non-accessible clusters on reconnect
+- Fix: Remove double copyright
+- Fix: too narrow sidebar without clusters
+- Fix app crash when iterating Events without 'kind' property defined
+- Detect non-functional bundled kubectl
 - Fix format duration rounding days error
 - Handle unsupported resources properly after they've been created from editor
 - Fix CRD api parsing
@@ -62,7 +96,7 @@ Here you can find description of changes we've built into each release. While we
 ## 3.5.2
 - Fix application not opening properly in some cases by catching and logging error from shell sync.
 
-## 3.5.1 (current version)
+## 3.5.1
 - Fix kubernetes api requests to work with non-"namespaces" pathnames
 - Fix: Handle invalid metrics responses properly
 - Fix: Display namespace defined in kubeconfig always in the namespace selector

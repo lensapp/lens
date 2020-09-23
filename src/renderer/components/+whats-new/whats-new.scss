@@ -1,10 +1,24 @@
 .WhatsNew {
   $spacing: $padding * 2;
 
-  background: $mainBackground url(../../components/icon/crane.svg) no-repeat;
-  background-position: 0 35%;
-  background-size: 85%;
-  background-clip: content-box;
+  &::after {
+    content: "";
+    background: url(../../components/icon/crane.svg) no-repeat;
+    background-position: 0 35%;
+    background-size: 85%;
+    background-clip: content-box;
+    opacity: .75;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+
+    .theme-light & {
+      opacity: 0.2;
+    }
+  }
 
   .logo {
     width: 200px;

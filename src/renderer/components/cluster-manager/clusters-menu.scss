@@ -49,12 +49,11 @@
 
     .Badge {
       $boxSize: 17px;
-      $offset: -7px;
 
       position: absolute;
+      bottom: 0px;
+      transform: translateX(-50%) translateY(50%);
       font-size: $font-size-small;
-      right: $offset;
-      bottom: $offset;
       line-height: $boxSize;
       min-width: $boxSize;
       min-height: $boxSize;

@@ -68,7 +68,7 @@ export function broadcastIpc({ channel, frameId, frameOnly, webContentId, filter
   }
   views.forEach(webContent => {
     const type = webContent.getType();
-    logger.debug(`[IPC]: broadcasting "${channel}" to ${type}=${webContent.id}`, { args });
+    logger.silly(`[IPC]: broadcasting "${channel}" to ${type}=${webContent.id}`, { args });
     if (!frameOnly) {
       webContent.send(channel, ...args);
     }

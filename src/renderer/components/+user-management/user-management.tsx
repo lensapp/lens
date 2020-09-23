@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
-import { MainLayout, TabRoute } from "../layout/main-layout";
+import { TabLayout, TabRoute } from "../layout/tab-layout";
 import { Roles } from "../+user-management-roles";
 import { RoleBindings } from "../+user-management-roles-bindings";
 import { ServiceAccounts } from "../+user-management-service-accounts";
@@ -55,12 +55,12 @@ export class UserManagement extends React.Component<Props> {
   render() {
     const tabRoutes = UserManagement.tabRoutes;
     return (
-      <MainLayout className="UserManagement" tabs={tabRoutes}>
+      <TabLayout className="UserManagement" tabs={tabRoutes}>
         <Switch>
           {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
           <Redirect to={usersManagementURL({ query: namespaceStore.getContextParams() })}/>
         </Switch>
-      </MainLayout>
+      </TabLayout>
     )
   }
 }

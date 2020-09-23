@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
-import { MainLayout, TabRoute } from "../layout/main-layout";
+import { TabLayout, TabRoute } from "../layout/tab-layout";
 import { Services, servicesRoute, servicesURL } from "../+network-services";
 import { Endpoints, endpointRoute, endpointURL } from "../+network-endpoints";
 import { Ingresses, ingressRoute, ingressURL } from "../+network-ingresses";
@@ -60,12 +60,12 @@ export class Network extends React.Component<Props> {
   render() {
     const tabRoutes = Network.tabRoutes;
     return (
-      <MainLayout className="Network" tabs={tabRoutes}>
+      <TabLayout className="Network" tabs={tabRoutes}>
         <Switch>
           {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
           <Redirect to={networkURL({ query: namespaceStore.getContextParams() })}/>
         </Switch>
-      </MainLayout>
+      </TabLayout>
     )
   }
 }

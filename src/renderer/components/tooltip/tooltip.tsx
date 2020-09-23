@@ -15,6 +15,7 @@ export enum TooltipPosition {
 
 export interface TooltipProps {
   targetId: string; // html-id of target element to bind for
+  tooltipOnParentHover?: boolean; // detect hover on parent of target
   visible?: boolean; // initial visibility
   offset?: number; // offset from target element in pixels (all sides)
   usePortal?: boolean; // renders element outside of parent (in body), disable for "easy-styling", default: true
@@ -50,14 +51,22 @@ export class Tooltip extends React.Component<TooltipProps> {
     return document.getElementById(this.props.targetId)
   }
 
+  get hoverTarget(): HTMLElement {
+    if (this.props.tooltipOnParentHover) {
+      return this.targetElem.parentElement
+    }
+
+    return this.targetElem
+  }
+
   componentDidMount() {
-    this.targetElem.addEventListener("mouseenter", this.onEnterTarget)
-    this.targetElem.addEventListener("mouseleave", this.onLeaveTarget)
+    this.hoverTarget.addEventListener("mouseenter", this.onEnterTarget)
+    this.hoverTarget.addEventListener("mouseleave", this.onLeaveTarget)
   }
 
   componentWillUnmount() {
-    this.targetElem.removeEventListener("mouseenter", this.onEnterTarget)
-    this.targetElem.removeEventListener("mouseleave", this.onLeaveTarget)
+    this.hoverTarget.removeEventListener("mouseenter", this.onEnterTarget)
+    this.hoverTarget.removeEventListener("mouseleave", this.onLeaveTarget)
   }
 
   @autobind()

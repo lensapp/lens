@@ -23,8 +23,8 @@ export class WindowManager {
     this.mainView = new BrowserWindow({
       x, y, width, height,
       show: false,
-      minWidth: 900,
-      minHeight: 760,
+      minWidth: 700,  // accommodate 800 x 600 display minimum
+      minHeight: 500, // accommodate 800 x 600 display minimum
       titleBarStyle: "hidden",
       backgroundColor: "#1e2124",
       webPreferences: {

@@ -44,7 +44,7 @@ export const isUrl: Validator = {
 
 export const isPath: Validator = {
   condition: ({ type }) => type === "text",
-  message: () => _i18n._(t`This field must be a path to an existing file`),
+  message: () => _i18n._(t`This field must be a valid path`),
   validate: value => !value || fse.pathExistsSync(value),
 }
 

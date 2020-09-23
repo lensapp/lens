@@ -92,7 +92,7 @@ export class Cluster implements ClusterModel {
   async init(port: number) {
     try {
       this.contextHandler = new ContextHandler(this);
-      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler);
+      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler, port);
       this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
       this.initialized = true;
       logger.info(`[CLUSTER]: "${this.contextName}" init success`, {
@@ -111,12 +111,10 @@ export class Cluster implements ClusterModel {
   protected bindEvents() {
     logger.info(`[CLUSTER]: bind events`, this.getMeta());
     const refreshTimer = setInterval(() => this.online && this.refresh(), 30000); // every 30s
-    const refreshEventsTimer = setInterval(() => this.online && this.refreshEvents(), 3000); // every 3s
 
     this.eventDisposers.push(
       reaction(this.getState, this.pushState),
       () => clearInterval(refreshTimer),
-      () => clearInterval(refreshEventsTimer),
     );
   }
 
@@ -135,7 +133,13 @@ export class Cluster implements ClusterModel {
     if (this.disconnected || (!init && !this.accessible)) {
       await this.reconnect();
     }
-    await this.refresh();
+    await this.refreshConnectionStatus()
+    if (this.accessible) {
+      await this.refreshAllowedResources()
+      this.ready = true
+      this.kubeCtl = new Kubectl(this.version)
+      this.kubeCtl.ensureKubectl() // download kubectl in background, so it's not blocking dashboard
+    }
     return this.pushState();
   }
 
@@ -161,15 +165,14 @@ export class Cluster implements ClusterModel {
   @action
   async refresh() {
     logger.info(`[CLUSTER]: refresh`, this.getMeta());
-    await this.refreshConnectionStatus(); // refresh "version", "online", etc.
+    await this.whenInitialized;
+    await this.refreshConnectionStatus();
     if (this.accessible) {
-      this.kubeCtl = new Kubectl(this.version)
       this.distribution = this.detectKubernetesDistribution(this.version)
       const [features, isAdmin, nodesCount] = await Promise.all([
         getFeatures(this),
         this.isClusterAdmin(),
         this.getNodeCount(),
-        this.kubeCtl.ensureKubectl()
       ]);
       this.features = features;
       this.isAdmin = isAdmin;
@@ -178,8 +181,8 @@ export class Cluster implements ClusterModel {
         this.refreshEvents(),
         this.refreshAllowedResources(),
       ]);
-      this.ready = true
     }
+    this.pushState();
   }
 
   @action
@@ -396,7 +399,7 @@ export class Cluster implements ClusterModel {
   }
 
   pushState = (state = this.getState()): ClusterState => {
-    logger.debug(`[CLUSTER]: push-state`, state);
+    logger.silly(`[CLUSTER]: push-state`, state);
     broadcastIpc({
       channel: "cluster:state",
       frameId: this.frameId,

@@ -1,21 +1,38 @@
 import "./cluster-settings.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
+import { observer, disposeOnUnmount } from "mobx-react";
 import { Features } from "./features";
 import { Removal } from "./removal";
 import { Status } from "./status";
 import { General } from "./general";
+import { Cluster } from "../../../main/cluster";
 import { WizardLayout } from "../layout/wizard-layout";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
-import { getMatchedCluster } from "../cluster-manager/cluster-view.route";
 import { navigate } from "../../navigation";
+import { IClusterSettingsRouteParams } from "./cluster-settings.route";
+import { clusterStore } from "../../../common/cluster-store";
+import { RouteComponentProps } from "react-router";
+import { clusterIpc } from "../../../common/cluster-ipc";
+import { autorun } from "mobx";
+
+interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
+}
 
 @observer
-export class ClusterSettings extends React.Component {
+export class ClusterSettings extends React.Component<Props> {
+  get cluster(): Cluster {
+    return clusterStore.getById(this.props.match.params.clusterId);
+  }
+
   async componentDidMount() {
     window.addEventListener('keydown', this.onEscapeKey);
+    disposeOnUnmount(this,
+      autorun(() => {
+        this.refreshCluster();
+      })
+    )
   }
 
   componentWillUnmount() {
@@ -29,12 +46,18 @@ export class ClusterSettings extends React.Component {
     }
   }
 
+  refreshCluster = () => {
+    if(this.cluster) {
+      clusterIpc.refresh.invokeFromRenderer(this.cluster.id);
+    }
+  }
+
   close() {
     navigate("/");
   }
 
   render() {
-    const cluster = getMatchedCluster();
+    const cluster = this.cluster
     if (!cluster) return null;
     const header = (
       <>

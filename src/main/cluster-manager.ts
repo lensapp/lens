@@ -44,7 +44,7 @@ export class ClusterManager {
     // lens-server is connecting to 127.0.0.1:<port>/<uid>
     if (req.headers.host.startsWith("127.0.0.1")) {
       const clusterId = req.url.split("/")[1]
-      const cluster = clusterStore.getById(clusterId)
+      cluster = clusterStore.getById(clusterId)
       if (cluster) {
         // we need to swap path prefix so that request is proxied to kube api
         req.url = req.url.replace(`/${clusterId}`, apiKubePrefix)

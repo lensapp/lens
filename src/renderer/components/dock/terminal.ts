@@ -152,6 +152,7 @@ export class Terminal {
   onResize = () => {
     if (!this.isActive) return;
     this.fitLazy();
+    this.focus();
   }
 
   onActivate = () => {

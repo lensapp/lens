@@ -29,6 +29,7 @@ import { CronJobTriggerDialog } from "./+workloads-cronjobs/cronjob-trigger-dial
 import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../../common/rbac";
+import { MainLayout } from "./layout/main-layout";
 import { ErrorBoundary } from "./error-boundary";
 import { Terminal } from "./dock/terminal";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
@@ -60,24 +61,25 @@ export class App extends React.Component {
       <I18nProvider i18n={_i18n}>
         <Router history={history}>
           <ErrorBoundary>
-            <Switch>
-              <Route component={Cluster} {...clusterRoute}/>
-              <Route component={Nodes} {...nodesRoute}/>
-              <Route component={Workloads} {...workloadsRoute}/>
-              <Route component={Config} {...configRoute}/>
-              <Route component={Network} {...networkRoute}/>
-              <Route component={Storage} {...storageRoute}/>
-              <Route component={Namespaces} {...namespacesRoute}/>
-              <Route component={Events} {...eventRoute}/>
-              <Route component={CustomResources} {...crdRoute}/>
-              <Route component={UserManagement} {...usersManagementRoute}/>
-              <Route component={Apps} {...appsRoute}/>
-              {dynamicPages.clusterPages.map(({ path, components: { Page } }) => {
-                return <Route key={path} path={path} component={Page}/>
-              })}
-              <Redirect exact from="/" to={this.startURL}/>
-              <Route component={NotFound}/>
-            </Switch>
+            <MainLayout>
+              <Switch>
+                <Route component={Cluster} {...clusterRoute}/>
+                <Route component={Nodes} {...nodesRoute}/>
+                <Route component={Workloads} {...workloadsRoute}/>
+                <Route component={Config} {...configRoute}/>
+                <Route component={Network} {...networkRoute}/>
+                <Route component={Storage} {...storageRoute}/>
+                <Route component={Namespaces} {...namespacesRoute}/>
+                <Route component={Events} {...eventRoute}/>
+                <Route component={CustomResources} {...crdRoute}/>
+                <Route component={UserManagement} {...usersManagementRoute}/>
+                <Route component={Apps} {...appsRoute}/>
+                {dynamicPages.clusterPages.map(({ path, components: { Page } }) => {
+                  return <Route key={path} path={path} component={Page}/>
+                })}
+                <Redirect exact from="/" to={this.startURL}/>
+                <Route component={NotFound}/>
+              </Switch></MainLayout>
             <Notifications/>
             <ConfirmDialog/>
             <KubeObjectDetails/>

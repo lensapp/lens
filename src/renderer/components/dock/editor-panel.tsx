@@ -48,6 +48,7 @@ export class EditorPanel extends React.Component<Props> {
 
   onResize = () => {
     this.editor.resize();
+    this.editor.focus();
   }
 
   onCursorPosChange = (pos: Ace.Point) => {

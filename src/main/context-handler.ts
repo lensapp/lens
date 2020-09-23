@@ -70,7 +70,8 @@ export class ContextHandler {
 
   async resolveAuthProxyUrl() {
     const proxyPort = await this.ensurePort();
-    return `http://127.0.0.1:${proxyPort}`;
+    const path = this.clusterUrl.path !== "/" ? this.clusterUrl.path : ""
+    return `http://127.0.0.1:${proxyPort}${path}`;
   }
 
   async getApiTarget(isWatchRequest = false): Promise<httpProxy.ServerOptions> {
@@ -88,7 +89,7 @@ export class ContextHandler {
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
     const proxyUrl = await this.resolveAuthProxyUrl();
     return {
-      target: proxyUrl + this.clusterUrl.path,
+      target: proxyUrl,
       changeOrigin: true,
       timeout: timeout,
       headers: {

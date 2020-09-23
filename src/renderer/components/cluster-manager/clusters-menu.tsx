@@ -1,16 +1,17 @@
+import type { Cluster } from "../../../main/cluster";
 import "./clusters-menu.scss"
+
 import { remote } from "electron"
 import React from "react";
 import { observer } from "mobx-react";
 import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
-import type { Cluster } from "../../../main/cluster";
 import { userStore } from "../../../common/user-store";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
-import { autobind, cssNames, IClassName } from "../../utils";
+import { cssNames, IClassName, autobind } from "../../utils";
 import { Badge } from "../badge";
 import { navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
@@ -19,8 +20,8 @@ import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
-import { clusterViewURL, getMatchedClusterId } from "./cluster-view.route";
-import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
+import { clusterViewURL } from "./cluster-view.route";
+import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
 import { dynamicPages } from "../../../extensions/register-page";
 
 interface Props {
@@ -36,6 +37,7 @@ export class ClustersMenu extends React.Component<Props> {
 
   addCluster = () => {
     navigate(addClusterURL());
+    clusterStore.setActive(null);
   }
 
   showContextMenu = (cluster: Cluster) => {
@@ -45,6 +47,7 @@ export class ClustersMenu extends React.Component<Props> {
     menu.append(new MenuItem({
       label: _i18n._(t`Settings`),
       click: () => {
+        clusterStore.setActive(cluster.id);
         navigate(clusterSettingsURL({
           params: {
             clusterId: cluster.id
@@ -58,6 +61,7 @@ export class ClustersMenu extends React.Component<Props> {
         click: async () => {
           if (clusterStore.isActive(cluster.id)) {
             navigate(landingURL());
+            clusterStore.setActive(null);
           }
           await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
         }
@@ -113,26 +117,29 @@ export class ClustersMenu extends React.Component<Props> {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  {clusters.map((cluster, index) => (
-                    <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
-                      {(provided: DraggableProvided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <ClusterIcon
-                            key={cluster.id}
-                            showErrors={true}
-                            cluster={cluster}
-                            isActive={cluster.id === getMatchedClusterId()}
-                            onClick={() => this.showCluster(cluster.id)}
-                            onContextMenu={() => this.showContextMenu(cluster)}
-                          />
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
+                  {clusters.map((cluster, index) => {
+                    const isActive = cluster.id === clusterStore.activeClusterId;
+                    return (
+                      <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
+                        {(provided: DraggableProvided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <ClusterIcon
+                              key={cluster.id}
+                              showErrors={true}
+                              cluster={cluster}
+                              isActive={isActive}
+                              onClick={() => this.showCluster(cluster.id)}
+                              onContextMenu={() => this.showContextMenu(cluster)}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    )}
+                  )}
                   {provided.placeholder}
                 </div>
               )}
@@ -143,9 +150,9 @@ export class ClustersMenu extends React.Component<Props> {
           <Tooltip targetId="add-cluster-icon">
             <Trans>Add Cluster</Trans>
           </Tooltip>
-          <Icon big material="add" id="add-cluster-icon"/>
+          <Icon big material="add" id="add-cluster-icon" />
           {newContexts.size > 0 && (
-            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>}/>
+            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>} />
           )}
         </div>
         <div className="dynamic-pages">

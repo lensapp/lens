@@ -3,10 +3,11 @@
 
   position: absolute;
   right: 0;
-  bottom: 0;
+  top: 0;
   padding: $padding * 2;
   max-height: 100vh;
   z-index: 100000;
+  height: min-content!important;
 
   &:empty {
     display: none;
