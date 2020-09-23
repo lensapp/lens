@@ -20,7 +20,7 @@ export function webpackExtensionsApi(): webpack.Configuration {
     [extensionsLibName]: path.resolve(extensionsDir, "extension-api.ts")
   };
   config.output.libraryTarget = "commonjs2"
-  delete config.devtool;
+  config.devtool = "nosources-source-map";
   return config;
 }
 

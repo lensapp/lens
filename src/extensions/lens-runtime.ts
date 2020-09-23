@@ -2,7 +2,7 @@
 
 import logger from "../main/logger";
 import { dynamicPages } from "./register-page";
-import { MainLayout } from "../renderer/components/layout/main-layout";
+import { TabLayout } from "../renderer/components/layout/tab-layout";
 import { navigate } from "../renderer/navigation";
 
 export interface LensRuntimeRendererEnv {
@@ -10,7 +10,7 @@ export interface LensRuntimeRendererEnv {
   logger: typeof logger;
   dynamicPages: typeof dynamicPages
   components: {
-    MainLayout: typeof MainLayout
+    TabLayout: typeof TabLayout
   }
 }
 
@@ -20,7 +20,7 @@ export function getLensRuntime(): LensRuntimeRendererEnv {
     navigate,
     dynamicPages,
     components: {
-      MainLayout // fixme: refactor, import as pure component from "@lens/extensions"
+      TabLayout // fixme: refactor, import as pure component from "@lens/extensions"
     }
   }
 }

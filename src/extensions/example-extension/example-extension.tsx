@@ -33,15 +33,15 @@ export class ExtensionPage extends React.Component<{ extension: ExampleExtension
   }
 
   render() {
-    const { MainLayout } = this.props.extension.runtime.components;
+    const { TabLayout } = this.props.extension.runtime.components;
     return (
-      <MainLayout className="ExampleExtension">
+      <TabLayout className="ExampleExtension">
         <div className="flex column gaps align-flex-start">
           <p>Hello from extensions-api!</p>
           <p>File: <i>{__filename}</i></p>
           <Button accent label="Deactivate" onClick={this.deactivate}/>
         </div>
-      </MainLayout>
+      </TabLayout>
     )
   }
 }
