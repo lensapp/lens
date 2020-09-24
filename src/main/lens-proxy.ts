@@ -53,11 +53,7 @@ export class LensProxy {
       if (req.url.startsWith(`${apiPrefix}?`)) {
         this.handleWsUpgrade(req, socket, head)
       } else {
-        if (req.headers.upgrade?.startsWith("SPDY")) {
-          this.handleSpdyProxy(proxy, req, socket, head)
-        } else {
-          socket.end()
-        }
+        this.handleProxyUpgrade(proxy, req, socket, head)
       }
     })
     spdyProxy.on("error", (err) => {
@@ -66,7 +62,7 @@ export class LensProxy {
     return spdyProxy
   }
 
-  protected async handleSpdyProxy(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
+  protected async handleProxyUpgrade(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
     const cluster = this.clusterManager.getClusterForRequest(req)
     if (cluster) {
       const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "")
