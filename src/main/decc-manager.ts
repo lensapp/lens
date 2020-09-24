@@ -114,7 +114,7 @@ export class DECCManager {
     const clusterPrefix = `decc`
 
     clusterStore.getByWorkspaceId(workspace.id).forEach(cluster => {
-      if (cluster.preferences.clusterName === `${username}@${clusterPrefix}-${deccCluster.metadata.name}`) {
+      if (cluster.preferences.clusterName === `${clusterPrefix}-${deccCluster.metadata.name}`) {
         clusterPresent = true;
       }
     });
@@ -143,23 +143,12 @@ export class DECCManager {
         id: deccCluster.metadata.uid,
         contextName: `${username}@${clusterPrefix}-${deccCluster.metadata.name}`,
         preferences: {
-          clusterName: `${username}@${clusterPrefix}-${deccCluster.metadata.name}`,
+          clusterName: `${clusterPrefix}-${deccCluster.metadata.name}`,
           httpsProxy: undefined,
         },
         kubeConfigPath: ClusterStore.embedCustomKubeConfig(deccCluster.metadata.uid, YAML.stringify(jsConfig)),
         workspace: workspace.id,
       };
-
-      // let newCluster = new Cluster({
-      //   id: deccCluster.metadata.uid,
-      //   contextName: `${username}@${clusterPrefix}-${deccCluster.metadata.name}`,
-      //   preferences: {
-      //     clusterName: `${username}@${clusterPrefix}-${deccCluster.metadata.name}`,
-      //     httpsProxy: undefined,
-      //   },
-      //   kubeConfigPath: ClusterStore.embedCustomKubeConfig(deccCluster.metadata.uid, YAML.stringify(jsConfig)),
-      //   workspace: workspace.id,
-      // });
       
       newClusters.push(newCluster);
       clusterStore.addCluster(...newClusters);
