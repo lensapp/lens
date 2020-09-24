@@ -165,7 +165,7 @@ export const memoryOptions: ChartOptions = {
             }
             return bytesToUnits(parseInt(value));
           }
-          return `${value}`;
+          return bytesToUnits(value);
         },
         stepSize: 1
       }
