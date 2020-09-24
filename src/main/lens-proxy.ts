@@ -72,17 +72,16 @@ export class LensProxy {
       const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "")
       const apiUrl = url.parse(cluster.apiUrl)
       const pUrl = url.parse(proxyUrl)
-      const connectOpts = {port: parseInt(pUrl.port), host: pUrl.hostname}
+      const connectOpts = { port: parseInt(pUrl.port), host: pUrl.hostname }
       const proxySocket = new net.Socket()
       proxySocket.connect(connectOpts, () => {
         proxySocket.write(`${req.method} ${pUrl.path} HTTP/1.1\r\n`)
         proxySocket.write(`Host: ${apiUrl.host}\r\n`)
-        for(let i = 0; i < req.rawHeaders.length; i++) {
+        for (let i = 0; i < req.rawHeaders.length; i += 2) {
           const key = req.rawHeaders[i]
           if (key !== "Host" && key !== "Authorization") {
             proxySocket.write(`${req.rawHeaders[i]}: ${req.rawHeaders[i+1]}\r\n`)
           }
-          i++
         }
         proxySocket.write("\r\n")
         proxySocket.write(head)
