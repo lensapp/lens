@@ -1,6 +1,6 @@
 import "./components/app.scss"
 import React from "react";
-import { render } from "react-dom";
+import { render, unmountComponentAtNode } from "react-dom";
 import { isMac } from "../common/vars";
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
@@ -27,10 +27,22 @@ export async function bootstrap(App: AppComponent) {
     themeStore.init(),
   ]);
 
+  // Register additional store listeners
+  clusterStore.registerIpcListener();
+
   // init app's dependencies if any
   if (App.init) {
     await App.init();
   }
+  window.addEventListener("message", (ev: MessageEvent) => {
+    if (ev.data === "teardown") {
+      userStore.unregisterIpcListener()
+      workspaceStore.unregisterIpcListener()
+      clusterStore.unregisterIpcListener()
+      unmountComponentAtNode(rootElem)
+      window.location.href = "about:blank"
+    }
+  })
   render(<>
     {isMac && <div id="draggable-top" />}
     <App />

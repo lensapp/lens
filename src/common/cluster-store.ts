@@ -1,5 +1,5 @@
 import path from "path";
-import { app, ipcRenderer, remote } from "electron";
+import { app, ipcRenderer, remote, webFrame, webContents } from "electron";
 import { unlink } from "fs-extra";
 import { action, computed, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
@@ -73,19 +73,26 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       migrations: migrations,
     });
-    if (ipcRenderer) {
-      ipcRenderer.on("cluster:state", (event, model: ClusterState) => {
-        this.applyWithoutSync(() => {
-          logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host}`, model);
-          this.getById(model.id)?.updateModel(model);
-        })
-      })
-    }
   }
 
   @observable activeClusterId: ClusterId;
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
+
+  registerIpcListener() {
+    logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`)
+    ipcRenderer.on("cluster:state", (event, model: ClusterState) => {
+      this.applyWithoutSync(() => {
+        logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host} (${webFrame.routingId})`, model);
+        this.getById(model.id)?.updateModel(model);
+      })
+    })
+  }
+
+  unregisterIpcListener() {
+    super.unregisterIpcListener()
+    ipcRenderer.removeAllListeners("cluster:state")
+  }
 
   @computed get activeCluster(): Cluster | null {
     return this.getById(this.activeClusterId);

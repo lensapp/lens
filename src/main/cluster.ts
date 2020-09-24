@@ -56,10 +56,10 @@ export class Cluster implements ClusterModel {
   @observable kubeConfigPath: string;
   @observable apiUrl: string; // cluster server url
   @observable kubeProxyUrl: string; // lens-proxy to kube-api url
-  @observable online: boolean;
-  @observable accessible: boolean;
-  @observable ready: boolean;
-  @observable disconnected: boolean;
+  @observable online = false;
+  @observable accessible = false;
+  @observable ready = false;
+  @observable disconnected = true;
   @observable failureReason: string;
   @observable nodes = 0;
   @observable version: string;
@@ -124,13 +124,14 @@ export class Cluster implements ClusterModel {
     this.eventDisposers.length = 0;
   }
 
-  async activate(init = false) {
+  @action
+  async activate() {
     logger.info(`[CLUSTER]: activate`, this.getMeta());
     await this.whenInitialized;
     if (!this.eventDisposers.length) {
       this.bindEvents();
     }
-    if (this.disconnected || (!init && !this.accessible)) {
+    if (this.disconnected || !this.accessible) {
       await this.reconnect();
     }
     await this.refreshConnectionStatus()
@@ -143,6 +144,7 @@ export class Cluster implements ClusterModel {
     return this.pushState();
   }
 
+  @action
   async reconnect() {
     logger.info(`[CLUSTER]: reconnect`, this.getMeta());
     this.contextHandler.stopServer();

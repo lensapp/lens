@@ -93,6 +93,10 @@ export class BaseStore<T = any> extends Singleton {
     }
   }
 
+  unregisterIpcListener() {
+    ipcRenderer.removeAllListeners(this.syncChannel)
+  }
+
   disableSync() {
     this.syncDisposers.forEach(dispose => dispose());
     this.syncDisposers.length = 0;
