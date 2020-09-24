@@ -127,6 +127,8 @@ export class Cluster implements ClusterModel {
   async activate(init = false) {
     const clusterActivatedAt = new Date();
     logger.info(`[CLUSTER]: activate@${clusterActivatedAt.toString()}`, this.getMeta());
+    logger.info(`[CLUSTER]: activate eventDisposers length: ${this.eventDisposers.length}`);
+    logger.info(`[CLUSTER]: activate eventDisposers: ${this.eventDisposers}`);
     await this.whenInitialized;
     logger.info("[CLUSTER]: activate now initialized")
     logger.info(`[CLUSTER]: activate eventDisposers length: ${this.eventDisposers.length}`);

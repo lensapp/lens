@@ -138,7 +138,8 @@ export class DECCManager {
       //console.log(`Generated kubeconfig: ${YAML.stringify(jsConfig)}`)
 
       let newClusters: ClusterModel[] = [];
-      let newCluster = new Cluster({
+
+      let newCluster: ClusterModel = {
         id: deccCluster.metadata.uid,
         contextName: `${username}@${clusterPrefix}-${deccCluster.metadata.name}`,
         preferences: {
@@ -147,11 +148,28 @@ export class DECCManager {
         },
         kubeConfigPath: ClusterStore.embedCustomKubeConfig(deccCluster.metadata.uid, YAML.stringify(jsConfig)),
         workspace: workspace.id,
-      });
+      };
+
+      // let newCluster = new Cluster({
+      //   id: deccCluster.metadata.uid,
+      //   contextName: `${username}@${clusterPrefix}-${deccCluster.metadata.name}`,
+      //   preferences: {
+      //     clusterName: `${username}@${clusterPrefix}-${deccCluster.metadata.name}`,
+      //     httpsProxy: undefined,
+      //   },
+      //   kubeConfigPath: ClusterStore.embedCustomKubeConfig(deccCluster.metadata.uid, YAML.stringify(jsConfig)),
+      //   workspace: workspace.id,
+      // });
       
       newClusters.push(newCluster);
       clusterStore.addCluster(...newClusters);
-      logger.info(`addLensClusterToDECCWorkspace: Created Cluster Name: ${username}@${clusterPrefix}-${deccCluster.metadata.name}, Cluster UCP Dashboard URL: ${ucpDashboard}`)
+     
+      let createdCluster = clusterStore.getById(newCluster.id);
+      createdCluster.pushState();
+      clusterStore.load();
+
+      // clusterStore.setActive(newCluster.id);
+      logger.info(`addLensClusterToDECCWorkspace: Created Cluster Name: ${createdCluster.preferences.clusterName}, Cluster UCP Dashboard URL: ${ucpDashboard}`);
     };
   }
 
