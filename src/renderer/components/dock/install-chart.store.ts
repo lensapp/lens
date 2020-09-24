@@ -64,11 +64,12 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
     const data = this.getData(tabId)
     const { repo, name, version } = data
 
-    for (const i of Array(3)) {
+    // This loop is for "retrying" the "getValues" call
+    for (const _ of Array(3)) {
       const values = await helmChartsApi.getValues(repo, name, version)
       if (values) {
         this.setData(tabId, { ...data, values })
-        break
+        return
       }
     }
   }
