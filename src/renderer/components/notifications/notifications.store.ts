@@ -8,10 +8,16 @@ import { JsonApiErrorParsed } from "../../api/json-api";
 export type IMessageId = string | number;
 export type IMessage = React.ReactNode | React.ReactNode[] | JsonApiErrorParsed;
 
+export enum NotificationStatus {
+  OK = "ok",
+  ERROR = "error",
+  INFO = "info",
+}
+
 export interface INotification {
   id?: IMessageId;
   message: IMessage;
-  status?: "ok" | "error" | "info";
+  status?: NotificationStatus;
   timeout?: number; // auto-hiding timeout in milliseconds, 0 = no hide
 }
 

@@ -5,6 +5,7 @@ import { t } from "@lingui/macro";
 import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
 import { IReleaseUpdateDetails } from "../../api/endpoints/helm-releases.api";
 import { _i18n } from "../../i18n";
+import { Notifications } from "../notifications";
 
 export interface IChartInstallData {
   name: string;
@@ -27,45 +28,50 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
     });
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
-      if (!isInstallChartTab(selectedTab)) return;
-      if (isOpen) {
-        this.loadData();
+      if (isInstallChartTab(selectedTab) && isOpen) {
+        this.loadData()
+          .catch(err => Notifications.error(String(err)))
       }
     }, { delay: 250 })
   }
 
   @action
   async loadData(tabId = dockStore.selectedTabId) {
-    const { values } = this.getData(tabId);
-    const versions = this.versions.getData(tabId);
-    return Promise.all([
-      !versions && this.loadVersions(tabId),
-      !values && this.loadValues(tabId),
-    ])
+    const promises = []
+
+    if (!this.getData(tabId).values) {
+      promises.push(this.loadValues(tabId))
+    }
+
+    if (!this.versions.getData(tabId)) {
+      promises.push(this.loadVersions(tabId))
+    }
+
+    await Promise.all(promises)
   }
 
   @action
   async loadVersions(tabId: TabId) {
-    const { repo, name } = this.getData(tabId);
+    const { repo, name, version } = this.getData(tabId);
     this.versions.clearData(tabId); // reset
-    const charts = await helmChartsApi.get(repo, name);
+    const charts = await helmChartsApi.get(repo, name, version);
     const versions = charts.versions.map(chartVersion => chartVersion.version);
     this.versions.setData(tabId, versions);
   }
 
   @action
   async loadValues(tabId: TabId) {
-    const data = this.getData(tabId);
-    const { repo, name, version } = data;
-    let values = "";
-    const fetchValues = async (retry = 1, maxRetries = 3) => {
-      values = await helmChartsApi.getValues(repo, name, version);
-      if (values || retry == maxRetries) return;
-      await fetchValues(retry + 1);
-    };
-    this.setData(tabId, { ...data, values: undefined }); // reset
-    await fetchValues();
-    this.setData(tabId, { ...data, values });
+    const data = this.getData(tabId)
+    const { repo, name, version } = data
+
+    // This loop is for "retrying" the "getValues" call
+    for (const _ of Array(3)) {
+      const values = await helmChartsApi.getValues(repo, name, version)
+      if (values) {
+        this.setData(tabId, { ...data, values })
+        return
+      }
+    }
   }
 }
 
