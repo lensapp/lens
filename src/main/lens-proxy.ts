@@ -134,12 +134,16 @@ export class LensProxy {
   protected async handleRequest(proxy: httpProxy, req: http.IncomingMessage, res: http.ServerResponse) {
     const cluster = this.clusterManager.getClusterForRequest(req)
     if (cluster) {
-      await cluster.contextHandler.ensureServer();
-      const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler)
-      if (proxyTarget) {
-        // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
-        res.setHeader("Access-Control-Allow-Origin", this.origin);
-        return proxy.web(req, res, proxyTarget);
+      try {
+        await cluster.contextHandler.ensureServer();
+        const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler)
+        if (proxyTarget) {
+          // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
+          res.setHeader("Access-Control-Allow-Origin", this.origin);
+          return proxy.web(req, res, proxyTarget);
+        }
+      } catch (err) {
+        logger.error(`[lens-proxy] handleRequest: ${String(err)}`);
       }
     }
     this.router.route(cluster, req, res);

@@ -6,7 +6,7 @@ import { Cluster } from "./cluster"
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
 import { workspaceStore, Workspace } from "../common/workspace-store";
-import { userStore } from "../common/user-store";
+import { userStore, UserStore } from "../common/user-store";
 import * as request from "request-promise-native";
 import { v4 as uuid } from "uuid";
 import {kubeconfig} from '../common/utils/k8sTemplates';
@@ -15,6 +15,7 @@ import { readFile } from "fs-extra"
 import { getNodeWarningConditions, loadConfig, podHasIssues } from "../common/kube-helpers"
 import { customRequestPromise } from "../common/request";
 import orderBy from "lodash/orderBy";
+import queryString from 'query-string';
 
 const ignoredDECCNamespaces =  [
   'kube-system', 'kube-public', 'openstack-provider-system', 'system',
@@ -50,6 +51,31 @@ export class DECCManager {
       timeout: 10000,
     });
     // logger.info(`getClustersByNamespace: res - ${JSON.stringify(res)}`);
+    return res.body;
+  }
+
+  async getK8sToken(): Promise<[]> {
+    const headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
+
+    const res = await customRequestPromise({
+      uri: `http://${process.env.DECC_URL}/auth/realms/iam/protocol/openid-connect/token`,
+      headers: headers,
+      method: 'POST', body: queryString.stringify({
+        grant_type: 'password',
+        response_type: 'id_token',
+        scope: 'openid',
+        client_id: 'k8s',
+        username: `${process.env.DECC_USERNAME}`,
+        password: `${process.env.DECC_PASSWORD}`,
+      }),
+      json: true,
+      resolveWithFullResponse: true,
+      timeout: 10000,
+    });
+    // logger.info(`getTokenForCluster: res - ${JSON.stringify(res)}`);
     return res.body;
   }
 
@@ -99,6 +125,15 @@ export class DECCManager {
     }
   }
 
+  async getK8sTokenForUser() {
+    try {
+      const res = await this.getK8sToken();
+      return res;
+    } catch(err) {
+      logger.error(`getK8sTokenForUser: ${String(err)}`);
+    }
+  }
+
   addLensDECCWorkspace(ws: string) {
     const wsPrefix = `decc`;
 
@@ -108,7 +143,7 @@ export class DECCManager {
     }
   }
 
-  addLensClusterToDECCWorkspace(deccCluster, idToken: string, refreshToken: string, username: string, workspace: Workspace) {
+  addLensClusterToDECCWorkspace(deccCluster, idToken: string, refreshToken: string, username: string, workspace: Workspace, k8sToken) {
     // check if cluster is already in the cluster store
     var clusterPresent = false;
     const clusterPrefix = `decc`
@@ -123,6 +158,15 @@ export class DECCManager {
       let ucpDashboard = `https://${deccCluster.status.providerStatus.ucpDashboard.split(":", 2).reverse()[0].substring(2)}:443`;
       //logger.info(`addLensClusterToDECCWorkspace: ucpDashboard - ${ucpDashboard}`);
 
+      //let clusterToken = this.getTokenForCluster(deccCluster.metadata.uid);
+      //logger.info(`addLensClusterToDECCWorkspace: clusterToken - ${clusterToken}`);
+
+      // let parsedClusterIdToken = userStore.decodeToken(k8sToken["id_token"]);
+      // logger.info(`addLensClusterToDECCWorkspace: parsedClusterToken - ${parsedClusterIdToken}`);
+
+      const idTokenToUse = `${clusterPrefix}-${deccCluster.metadata.name}` === "decc-kaas-mgmt" ? idToken : k8sToken["id_token"]
+      const refreshTokenToUse = `${clusterPrefix}-${deccCluster.metadata.name}` === "decc-kaas-mgmt" ? refreshToken : k8sToken["refresh_token"]
+
       const jsConfig = kubeconfig({
         username: username,
         clusterName: `${clusterPrefix}-${deccCluster.metadata.name}`,
@@ -131,8 +175,8 @@ export class DECCManager {
         idpIssuerUrl: deccCluster.status.providerStatus.oidc.issuerUrl,
         server: ucpDashboard,
         apiCertificate: deccCluster.status.providerStatus.apiServerCertificate,
-        idToken: idToken,
-        refreshToken: refreshToken
+        idToken: idTokenToUse,
+        refreshToken: refreshTokenToUse
       });
 
       //console.log(`Generated kubeconfig: ${YAML.stringify(jsConfig)}`)
@@ -162,14 +206,14 @@ export class DECCManager {
     };
   }
 
-  addLensClustersToDECCWorkspace(deccClusters, idToken: string, refreshToken: string, username: string, wsName: string) {
+  addLensClustersToDECCWorkspace(deccClusters, idToken: string, refreshToken: string, username: string, wsName: string, k8sToken) {
     const wsPrefix = `decc`;
     const workspace = workspaceStore.getByName(`${wsPrefix}-${wsName}`);
 
     //logger.info(`addLensClustersToDECCWorkspace: Processing clusters in Workspace ${workspace.name} for User ${username}`);
 
     deccClusters.forEach(cluster => { 
-      this.addLensClusterToDECCWorkspace(cluster, idToken, refreshToken, username, workspace)
+      this.addLensClusterToDECCWorkspace(cluster, idToken, refreshToken, username, workspace, k8sToken)
     });
   }
 
@@ -198,7 +242,7 @@ export class DECCManager {
     }); 
   }
 
-  refreshLensDECCClusterKubeconfigs(idToken:string , refreshToken: string, username: string, workspace: string) {
+  refreshLensDECCClusterKubeconfigs(idToken:string , refreshToken: string, username: string, workspace: string, k8sToken) {
     //logger.info(`refreshLensDECCClusterKubeconfigs: Processing Workspace Name ${workspace}`);
     const wsPrefix = `decc`;
     const ws = workspaceStore.getByName(`${wsPrefix}-${workspace}`);
@@ -207,6 +251,8 @@ export class DECCManager {
 
     //logger.info(`refreshLensDECCClusterKubeconfigs: Processing Workspace ${JSON.stringify(ws)}`)
     clusterStore.getByWorkspaceId(ws.id).forEach(cluster => {
+      const idTokenToUse = cluster.preferences.clusterName === "decc-kaas-mgmt" ? idToken : k8sToken["id_token"]
+      const refreshTokenToUse = cluster.preferences.clusterName === "decc-kaas-mgmt" ? refreshToken : k8sToken["refresh_token"]
       const currentKubeConfig = loadConfig(cluster.kubeConfigPath); //readFile(cluster.kubeConfigPath, "utf8");
       // console.log(`refreshClusterKubeConfigs: Read kubeconfig from file: ${cluster.kubeConfigPath}. Contents: ${YAML.stringify(kubeConfig)}`);
       // console.log(`refreshClusterKubeConfigs: kubeconfig users[0]: ${YAML.stringify(kubeConfig.users[0])}`);
@@ -220,10 +266,11 @@ export class DECCManager {
         idpIssuerUrl: currentKubeConfig.users[0].authProvider.config["idp-issuer-url"],
         server: currentKubeConfig.clusters[0].server,
         apiCertificate: currentKubeConfig.clusters[0].caData,
-        idToken: idToken,
-        refreshToken: refreshToken
+        idToken: idTokenToUse,
+        refreshToken: refreshTokenToUse
       });
 
+      cluster.contextName = `${username}@${currentKubeConfig.clusters[0].name}`;
       ClusterStore.embedCustomKubeConfig(cluster.id, YAML.stringify(jsConfig));
       logger.info(`refreshLensDECCClusterKubeconfigs: Updated Cluster ${cluster.preferences.clusterName} kubeconfig with new token values`);
       cluster.refresh();
@@ -236,6 +283,9 @@ export class DECCManager {
     const refreshToken = userStore.token.refreshToken;
     const username = parsedIdToken.preferred_username;
     const userIAMRoles = parsedIdToken.iam_roles;
+
+    // get the token from the k8s client for this user
+    const k8sToken = await this.getK8sTokenForUser();
 
     // get all available DECC Namespaces
     const deccNamespaces = await this.getDECCNamespaces();
@@ -256,13 +306,13 @@ export class DECCManager {
           //logger.info(`createDECCLensEnv: The following clusters exist in Namespace ${ns} - ${JSON.stringify(deccClustersByNamespace)}`);
 
           // refresh tokens for any existing clusters
-          this.refreshLensDECCClusterKubeconfigs(idToken, refreshToken, username, ns);
+          this.refreshLensDECCClusterKubeconfigs(idToken, refreshToken, username, ns, k8sToken);
            
           // now lets add the workspace in Lens
           this.addLensDECCWorkspace(ns);
 
           // now lets add the clusters to the workspace
-          this.addLensClustersToDECCWorkspace(deccClustersByNamespace, idToken, refreshToken, username, ns);
+          this.addLensClustersToDECCWorkspace(deccClustersByNamespace, idToken, refreshToken, username, ns, k8sToken);
 
         } catch (err) {
           logger.error(`createDECCLensEnv: ${String(err)}`); 

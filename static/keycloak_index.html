@@ -3,6 +3,7 @@
 <script src="https://a69adcd0687194b2b8adebdbe93f2a02-977850409.eu-west-2.elb.amazonaws.com/auth/js/keycloak.js"></script>
 <script>
 const { ipcRenderer } = require('electron')
+const useK8sClientId = new URL(location.href).searchParams.get('k8s'); 
 
 var keycloak = new Keycloak({
   url: 'https://a69adcd0687194b2b8adebdbe93f2a02-977850409.eu-west-2.elb.amazonaws.com/auth',
@@ -11,13 +12,22 @@ var keycloak = new Keycloak({
   scope: 'offline_access openid',
 });
 
+var keycloakOptions = {
+  flow: 'standard', 
+  enableLogging: true, 
+  useNonce: false, 
+  onLoad: 'login-required', 
+  checkLoginIframe: false,
+  redirectUri: 'http://localhost:3000'
+}
+
 //if param "logout" was passed to this page, logout user!
 const logoutUser = new URL(location.href).searchParams.get('logout');
 if(logoutUser){
   keycloak.init();
   keycloak.logout({redirectUri: 'http://localhost:3000'});
 }else{
-  keycloak.init({ flow: 'standard', enableLogging: true, useNonce: false, onLoad: 'login-required', checkLoginIframe: false, redirectUri: 'http://localhost:3000'}).success(function(authenticated) {
+  keycloak.init(keycloakOptions).success(function(authenticated) {
     console.log('success!!');
     if (authenticated) {
       console.log("keycloak.token: " + keycloak.token);   
