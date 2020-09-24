@@ -122,8 +122,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.clusters.size > 0;
   }
 
-  hasContext(name: string) {
-    return this.clustersList.some(cluster => cluster.contextName === name);
+  hasContextInWorkspace(name: string, workspaceId: string) {
+    return this.clustersList.some(cluster => cluster.contextName === name && cluster.workspace === workspaceId);
   }
 
   getById(id: ClusterId): Cluster {
