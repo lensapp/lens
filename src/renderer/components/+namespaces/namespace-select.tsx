@@ -5,16 +5,17 @@ import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { t, Trans } from "@lingui/macro";
 import { Select, SelectOption, SelectProps } from "../select";
-import ReactSelect, { ActionMeta, components, OptionTypeBase, ValueType } from "react-select"
 import { autobind, cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
 import { _i18n } from "../../i18n";
+import ReactSelect, { ActionMeta, components } from "react-select";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
   showClusterOption?: boolean; // show cluster option on the top (default: false)
   clusterOptionLabel?: React.ReactNode; // label for cluster option (default: "Cluster")
+  customizeOptions?(nsOptions: SelectOption[]): SelectOption[];
 }
 
 const defaultProps: Partial<Props> = {
@@ -42,15 +43,12 @@ export class NamespaceSelect extends React.Component<Props> {
   }
 
   @computed get options(): SelectOption[] {
-    const options: SelectOption[] = namespaceStore.items
-      .map(ns => ({ value: ns.getName() }))
-      .map(opt => ({ ...opt, label: this.formatOptionLabel(opt) }))
-
-    const { showClusterOption, clusterOptionLabel } = this.props;
+    const { customizeOptions, showClusterOption, clusterOptionLabel } = this.props;
+    let options: SelectOption[] = namespaceStore.items.map(ns => ({ value: ns.getName() }));
+    options = customizeOptions ? customizeOptions(options) : options;
     if (showClusterOption) {
       options.unshift({ value: null, label: clusterOptionLabel });
     }
-
     return options;
   }
 
@@ -71,7 +69,7 @@ export class NamespaceSelect extends React.Component<Props> {
       <Select
         className={cssNames("NamespaceSelect", className)}
         menuClass="NamespaceSelectMenu"
-        autoConvertOptions={false}
+        formatOptionLabel={this.formatOptionLabel}
         options={this.options}
         {...selectProps}
       />
