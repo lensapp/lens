@@ -120,7 +120,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   async remove(item: Namespace) {
     await super.remove(item);
-    this.contextNs.remove(item.getName());
+    this.contextNs.delete(item.getName());
   }
 }
 
