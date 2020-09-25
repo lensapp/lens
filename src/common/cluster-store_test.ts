@@ -198,13 +198,6 @@ describe("config with existing clusters", () => {
     expect(storedClusters[1].preferences.terminalCWD).toBe('/foo2')
     expect(storedClusters[2].id).toBe('cluster3')
   })
-
-  it("allows to test if store already has context in workspace", async () => {
-    const existingContext = clusterStore.hasContextInWorkspace('foo', 'default');
-    expect(existingContext).toBeTruthy
-    const nonExistingContext = clusterStore.hasContextInWorkspace('foo2', 'foo');
-    expect(existingContext).toBeFalsy
-  })
 })
 
 describe("pre 2.0 config with an existing cluster", () => {
