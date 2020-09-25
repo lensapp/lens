@@ -19,7 +19,7 @@ describe("Lens integration tests", () => {
   const BACKSPACE = "\uE003"
   let app: Application
 
-  const awaitAppStart = async () => {
+  const appStart = async () => {
     app = util.setup()
     await app.start()
     // Wait for splash screen to be closed
@@ -35,7 +35,7 @@ describe("Lens integration tests", () => {
   }
 
   describe("app start", () => {
-    beforeAll(awaitAppStart, 20000)
+    beforeAll(appStart, 20000)
 
     afterAll(async () => {
       if (app && app.isRunning()) {
@@ -110,25 +110,47 @@ describe("Lens integration tests", () => {
 
   describeif(ready)("cluster tests", () => {
     let clusterAdded = false
-    beforeAll(awaitAppStart, 20000)
 
-    afterAll(async () => {
-      if (app && app.isRunning()) {
-        return util.tearDown(app)
-      }
-    })
-
-    it('allows to add a cluster', async () => {
+    const addCluster = async () => {
       await clickWhatsNew(app)
       await addMinikubeCluster(app)
       await waitForMinikubeDashboard(app)
       await app.client.click('a[href="/nodes"]')
       await app.client.waitUntilTextExists("div.TableCell", "Ready")
-      clusterAdded = true
+    }
+
+    describe("cluster add", () => {
+      beforeAll(appStart, 20000)
+
+      afterAll(async () => {
+        if (app && app.isRunning()) {
+          return util.tearDown(app)
+        }
+      })
+
+      it('allows to add a cluster', async () => {
+        await addCluster()
+        clusterAdded = true
+      })
     })
 
+    const appStartAddCluster = async () => {
+      if (clusterAdded) {
+        await appStart()
+        await addCluster()
+      }
+    }
+  
     describe("cluster pages", () => {
 
+      beforeAll(appStartAddCluster, 40000)
+
+      afterAll(async () => {
+        if (app && app.isRunning()) {
+          return util.tearDown(app)
+        }
+      })
+  
       const tests : {
         drawer?: string
         drawerId?: string
@@ -391,6 +413,14 @@ describe("Lens integration tests", () => {
     })
 
     describe("cluster operations", () => {
+      beforeEach(appStartAddCluster, 40000)
+
+      afterEach(async () => {
+        if (app && app.isRunning()) {
+          return util.tearDown(app)
+        }
+      })
+  
       it('shows default namespace', async () => {
         expect(clusterAdded).toBe(true)
         await app.client.click('a[href="/namespaces"]')
@@ -400,6 +430,9 @@ describe("Lens integration tests", () => {
 
       it(`creates ${TEST_NAMESPACE} namespace`, async () => {
         expect(clusterAdded).toBe(true)
+        await app.client.click('a[href="/namespaces"]')
+        await app.client.waitUntilTextExists("div.TableCell", "default")
+        await app.client.waitUntilTextExists("div.TableCell", "kube-system")
         await app.client.click("button.add-button")
         await app.client.waitUntilTextExists("div.AddNamespaceDialog", "Create Namespace")
         await app.client.keys(`${TEST_NAMESPACE}\n`)
