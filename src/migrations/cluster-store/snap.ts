@@ -3,6 +3,7 @@
 import { migration } from "../migration-wrapper";
 import { ClusterModel, ClusterStore } from "../../common/cluster-store";
 import { getAppVersion } from "../../common/utils/app-version";
+import fs from "fs"
 
 export default migration({
   version: getAppVersion(), // Run always after upgrade
@@ -19,8 +20,10 @@ export default migration({
         /**
          * replace snap version with 'current' in kubeconfig path
          */
-        const kubeconfigPath = cluster.kubeConfigPath.replace(/\/snap\/kontena-lens\/[0-9]*\//, "/snap/kontena-lens/current/")
-        cluster.kubeConfigPath = kubeconfigPath
+        if (!fs.existsSync(cluster.kubeConfigPath)) {
+          const kubeconfigPath = cluster.kubeConfigPath.replace(/\/snap\/kontena-lens\/[0-9]*\//, "/snap/kontena-lens/current/")
+          cluster.kubeConfigPath = kubeconfigPath
+        }
         return cluster;
       })
 
