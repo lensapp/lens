@@ -99,6 +99,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
       value: namespace.getName(),
       label: (
         <div className="flex gaps align-center">
+          <Icon small material="layers" className="always-visible" />
           <span>{namespace.getName()}</span>
           <Icon small material="check" className="box right" />
         </div>

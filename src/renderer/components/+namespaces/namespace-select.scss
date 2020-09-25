@@ -22,6 +22,10 @@
         }
       }
 
+      .Icon.always-visible {
+          visibility: visible;
+      }
+
       .Icon {
         visibility: hidden;
       }
