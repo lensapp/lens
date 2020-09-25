@@ -223,6 +223,7 @@ export class Issuer extends KubeObject {
   }
 
   getConditions() {
+    if (!this.status?.conditions) return [];
     const { conditions = [] } = this.status;
     return conditions.map(condition => {
       const { message, reason, lastTransitionTime, status } = condition;
