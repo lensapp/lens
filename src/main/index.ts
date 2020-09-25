@@ -18,6 +18,7 @@ import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
 import { tracker } from "../common/tracker";
 import logger from "./logger"
+import { getProxyCertificate } from "./lens-proxy-cert";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 app.setName(appName);
@@ -72,6 +73,15 @@ async function main() {
     dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error.message || "unknown error"}`)
     app.quit();
   }
+
+  const proxyCert = getProxyCertificate()
+  app.on("certificate-error", (event: Electron.Event, webContents: Electron.WebContents, url: string, error: string, certificate: Electron.Certificate, callback: (isTrusted: boolean) => void) => {
+    if (certificate.data.trim().replace(/(?:\r\n)/g, "\n") === proxyCert.cert.trim().replace(/(?:\r\n)/g, "\n")) {
+      callback(true)
+    } else {
+      callback(false)
+    }
+  })
 
   // create window manager and open app
   windowManager = new WindowManager(proxyPort);

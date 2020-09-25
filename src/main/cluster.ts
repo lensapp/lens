@@ -14,6 +14,7 @@ import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from ".
 import request, { RequestPromiseOptions } from "request-promise-native"
 import { apiResources } from "../common/rbac";
 import logger from "./logger"
+import { getProxyCertificate } from "./lens-proxy-cert";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -93,7 +94,7 @@ export class Cluster implements ClusterModel {
     try {
       this.contextHandler = new ContextHandler(this);
       this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler, port);
-      this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
+      this.kubeProxyUrl = `https://localhost:${port}${apiKubePrefix}`;
       this.initialized = true;
       logger.info(`[CLUSTER]: "${this.contextName}" init success`, {
         id: this.id,
@@ -234,6 +235,7 @@ export class Cluster implements ClusterModel {
     return request(apiUrl, {
       json: true,
       timeout: 5000,
+      strictSSL: false, // TODO: use proxy CA
       ...options,
       headers: {
         Host: `${this.id}.${new URL(this.kubeProxyUrl).host}`, // required in ClusterManager.getClusterForRequest()

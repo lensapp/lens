@@ -71,7 +71,7 @@ export class WindowManager {
   async showMain() {
     try {
       await this.showSplash();
-      await this.mainView.loadURL(`http://localhost:${this.proxyPort}`)
+      await this.mainView.loadURL(`https://localhost:${this.proxyPort}`)
       this.mainView.show();
       this.splashWindow.close();
     } catch (err) {

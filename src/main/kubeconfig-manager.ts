@@ -6,6 +6,7 @@ import path from "path"
 import fs from "fs-extra"
 import { dumpConfigYaml, loadConfig } from "../common/kube-helpers"
 import logger from "./logger"
+import { getProxyCertificate } from "./lens-proxy-cert";
 
 export class KubeconfigManager {
   protected configDir = app.getPath("temp")
@@ -29,7 +30,7 @@ export class KubeconfigManager {
   }
 
   protected resolveProxyUrl() {
-    return `http://127.0.0.1:${this.port}/${this.cluster.id}`
+    return `https://127.0.0.1:${this.port}/${this.cluster.id}`
   }
 
   /**
@@ -47,11 +48,11 @@ export class KubeconfigManager {
         {
           name: contextName,
           server: this.resolveProxyUrl(),
-          skipTLSVerify: undefined,
+          skipTLSVerify: true
         }
       ],
       users: [
-        { name: "proxy" },
+        { name: "proxy", username: "lens", password: "lens" },
       ],
       contexts: [
         {

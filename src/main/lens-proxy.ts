@@ -10,6 +10,7 @@ import { Router } from "./router"
 import { ClusterManager } from "./cluster-manager"
 import { ContextHandler } from "./context-handler";
 import logger from "./logger"
+import { getProxyCertificate } from "./lens-proxy-cert";
 
 export class LensProxy {
   protected origin: string
@@ -23,7 +24,7 @@ export class LensProxy {
   }
 
   private constructor(protected port: number, protected clusterManager: ClusterManager) {
-    this.origin = `http://localhost:${port}`
+    this.origin = `https://localhost:${port}`
     this.router = new Router();
   }
 
@@ -41,9 +42,12 @@ export class LensProxy {
 
   protected buildCustomProxy(): http.Server {
     const proxy = this.createProxy();
+    const proxyCert = getProxyCertificate()
     const spdyProxy = spdy.createServer({
+      key: proxyCert.private,
+      cert: proxyCert.cert,
       spdy: {
-        plain: true,
+        plain: false,
         protocols: ["http/1.1", "spdy/3.1"]
       }
     }, (req: http.IncomingMessage, res: http.ServerResponse) => {
