@@ -3,13 +3,16 @@ import type { LensRuntimeRendererEnv } from "./lens-runtime";
 import type { PageRegistration } from "./register-page";
 import { readJsonSync } from "fs-extra";
 import { action, observable, toJS } from "mobx";
-import extensionManifest from "./example-extension/package.json"
 import logger from "../main/logger";
 
 export type ExtensionId = string | ExtensionPackageJsonPath;
 export type ExtensionPackageJsonPath = string;
 export type ExtensionVersion = string | number;
-export type ExtensionManifest = typeof extensionManifest & ExtensionModel;
+
+export interface ExtensionManifest extends ExtensionModel {
+  main: string;
+  description?: string; // todo: add more fields similar to package.json + some extra
+}
 
 export class LensExtension implements ExtensionModel {
   public id: ExtensionId;
