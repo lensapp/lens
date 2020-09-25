@@ -31,7 +31,6 @@ export class KubeAuthProxy {
       return;
     }
     const proxyBin = await this.kubectl.getPath()
-    logger.info(proxyBin)
     const args = [
       "proxy",
       "-p", `${this.port}`,
