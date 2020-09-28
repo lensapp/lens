@@ -7,6 +7,8 @@ import json from '@rollup/plugin-json';
 import dts from "rollup-plugin-dts";
 import ignoreImport from 'rollup-plugin-ignore-import'
 
+// todo: generate extension-api.js bundle also with Rollup (?)
+
 const config: RollupOptions = {
   input: "src/extensions/extension-api.ts",
   output: [
@@ -27,10 +29,10 @@ function dtsModuleWrap({ name }: { name: string }): Plugin {
       const apiTypes = Object.values(bundle)[0] as OutputChunk; // extension-api.d.ts
       const typeRefs: string[] = []
       const declarations: string[] = []
-      let bundleLines = apiTypes.code.split("\n")
+      const apiLines = apiTypes.code.split("\n")
       let outputCode = ""
 
-      bundleLines.forEach(line => {
+      apiLines.forEach(line => {
         if (line.startsWith("///")) {
           typeRefs.push(line)
         } else {
