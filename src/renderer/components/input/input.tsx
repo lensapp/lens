@@ -282,7 +282,6 @@ export class Input extends React.Component<InputProps, State> {
       onKeyDown: this.onKeyDown,
       rows: multiLine ? (rows || 1) : null,
       ref: this.bindRef,
-      type: "text",
       spellCheck: "false",
     });
 
