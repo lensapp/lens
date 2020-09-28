@@ -39,6 +39,7 @@ export class CreateResource extends React.Component<Props> {
 
   create = async () => {
     if (this.error) return;
+    if (!this.data.trim()) return; // do not save when field is empty
     const resources = jsYaml.safeLoadAll(this.data)
       .filter(v => !!v) // skip empty documents if "---" pasted at the beginning or end
     const createdResources: string[] = [];
