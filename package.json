@@ -15,7 +15,7 @@
     "dev-run": "nodemon --watch static/build/main.js --exec \"electron --inspect .\"",
     "dev:main": "yarn compile:main --watch",
     "dev:renderer": "yarn compile:renderer --watch",
-    "dev:extensions": "rollup --config src/extensions/rollup.config.ts --watch",
+    "dev:extensions": "rollup --config src/extensions/rollup.config.js --watch",
     "compile": "env NODE_ENV=production concurrently yarn:compile:*",
     "compile:main": "webpack --config webpack.main.ts",
     "compile:renderer": "webpack --config webpack.renderer.ts",

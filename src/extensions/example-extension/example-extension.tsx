@@ -1,4 +1,4 @@
-import { Button, DynamicPageType, Icon, LensExtension } from "@lens/extensions"; // fixme: map to generated types from "extension-api.ts"
+import { Button, DynamicPageType, Icon, IconProps, LensExtension } from "@lens/extensions";
 import React from "react";
 import path from "path";
 
@@ -21,7 +21,7 @@ export default class ExampleExtension extends LensExtension {
   }
 }
 
-export function ExtensionIcon(props: {} /*IconProps |*/) {
+export function ExtensionIcon(props: IconProps) {
   return <Icon {...props} material="camera" tooltip={path.basename(__filename)}/>
 }
 
