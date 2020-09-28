@@ -6,7 +6,7 @@ import { Input } from '../input';
 import { SubTitle } from '../layout/sub-title';
 import { UserPreferences, userStore } from '../../../common/user-store';
 import { observer } from 'mobx-react';
-import { Kubectl } from '../../../main/kubectl';
+import { bundledKubectlPath } from '../../../main/kubectl';
 import { SelectOption, Select } from '../select';
 
 export const KubectlBinaries = observer(({ preferences }: { preferences: UserPreferences }) => {
@@ -58,7 +58,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
       <SubTitle title="Path to Kubectl binary" />
       <Input
         theme="round-black"
-        placeholder={Kubectl.bundledKubectlPath}
+        placeholder={bundledKubectlPath()}
         value={binariesPath}
         validators={isPath}
         onChange={setBinariesPath}
