@@ -230,16 +230,12 @@ export class Cluster implements ClusterModel {
   }
 
   protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
+    (options.headers ??= {}).Host = `${this.id}.${new URL(this.kubeProxyUrl).host}` // required in ClusterManager.getClusterForRequest()
+    options.json ??= true
+    options.timeout ??= 5000
+
     const apiUrl = this.kubeProxyUrl + path;
-    return request(apiUrl, {
-      json: true,
-      timeout: 5000,
-      ...options,
-      headers: {
-        Host: `${this.id}.${new URL(this.kubeProxyUrl).host}`, // required in ClusterManager.getClusterForRequest()
-        ...(options.headers || {}),
-      },
-    })
+    return request(apiUrl, options)
   }
 
   getMetrics(prometheusPath: string, queryParams: IMetricsReqParams & { query: string }) {
