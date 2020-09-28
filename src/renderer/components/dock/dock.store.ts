@@ -28,7 +28,11 @@ export class DockStore {
 
   protected storage = createStorage("dock", {}); // keep settings in localStorage
   public defaultTabId = this.initialTabs[0].id;
-  public minHeight = 100;
+  private _minHeight = 100;
+
+  set minHeight(val: number) {
+    this._minHeight = val
+  }
 
   @observable isOpen = false;
   @observable fullSize = false;
@@ -176,8 +180,8 @@ export class DockStore {
   }
 
   @action
-  setHeight(height: number) {
-    this.height = Math.max(0, Math.min(height, this.maxHeight));
+  setHeight(height?: number) {
+    this.height = Math.max(0, Math.min(height || this._minHeight, this.maxHeight));
   }
 
   @action

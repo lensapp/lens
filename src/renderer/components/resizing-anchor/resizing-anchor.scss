@@ -1,0 +1,46 @@
+body.resizing {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+.ResizingAnchor {
+  $prominentDimention: 12px;
+
+  position: absolute;
+  z-index: 10;
+
+  &.disabled {
+    display: none;
+  }
+
+  &.vertical {
+    left: 0;
+    right: 0;
+    cursor: row-resize;
+    height: $prominentDimention;
+
+    &.leading {
+      top: -$prominentDimention / 2;
+    }
+
+    &.trailing {
+      bottom: -$prominentDimention / 2;
+    }
+  }
+
+  &.horizontal {
+    top: 0;
+    bottom: 0;
+    cursor: col-resize;
+    width: $prominentDimention;
+
+    &.leading {
+      left: -$prominentDimention / 2;
+    }
+
+    &.trailing {
+      right: -$prominentDimention / 2;
+    }
+  }
+}
