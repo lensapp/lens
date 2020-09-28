@@ -283,6 +283,7 @@ export class Kubectl {
     bashScript += "fi\n"
     bashScript += `export PATH="${helmPath}:${kubectlPath}:$PATH"\n`
     bashScript += "export KUBECONFIG=\"$tempkubeconfig\"\n"
+    bashScript += "export NO_PROXY=localhost,127.0.0.1,$NO_PROXY\n"
     bashScript += "unset tempkubeconfig\n"
     await fsPromises.writeFile(bashScriptPath, bashScript.toString(), { mode: 0o644 })
 
@@ -308,6 +309,7 @@ export class Kubectl {
     zshScript += "d=${d/#:/}\n"
     zshScript += "export PATH=\"$helmpath:$kubectlpath:${d/%:/}\"\n"
     zshScript += "export KUBECONFIG=\"$tempkubeconfig\"\n"
+    zshScript += "export NO_PROXY=localhost,127.0.0.1,$NO_PROXY\n"
     zshScript += "unset tempkubeconfig\n"
     zshScript += "unset OLD_ZDOTDIR\n"
     await fsPromises.writeFile(zshScriptPath, zshScript.toString(), { mode: 0o644 })
