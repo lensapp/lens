@@ -7,7 +7,6 @@
 
   .theme-light & {
     border: 1px solid gainsboro;
-    border-radius: $radius;
 
     .ace_scrollbar {
       @include custom-scrollbar(dark);

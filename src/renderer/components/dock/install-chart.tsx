@@ -174,11 +174,6 @@ export class InstallChart extends Component<Props> {
 
     return (
       <div className="InstallChart flex column">
-        <EditorPanel
-          tabId={tabId}
-          value={values}
-          onChange={this.onValuesChange}
-        />
         <InfoPanel
           tabId={tabId}
           controls={panelControls}
@@ -187,6 +182,11 @@ export class InstallChart extends Component<Props> {
           submitLabel={_i18n._(t`Install`)}
           submittingMessage={_i18n._(t`Installing...`)}
           showSubmitClose={false}
+        />
+        <EditorPanel
+          tabId={tabId}
+          value={values}
+          onChange={this.onValuesChange}
         />
       </div>
     );

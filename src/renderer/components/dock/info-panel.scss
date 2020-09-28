@@ -2,7 +2,7 @@
   @include hidden-scrollbar;
 
   background: $dockInfoBackground;
-  border-top: 1px solid $dockInfoBorderColor;
+  border-bottom: 1px solid $dockInfoBorderColor;
   padding: $padding $padding * 2;
   flex-shrink: 0;
 

@@ -67,17 +67,17 @@ export class CreateResource extends React.Component<Props> {
     const { className } = this.props;
     return (
       <div className={cssNames("CreateResource flex column", className)}>
-        <EditorPanel
-          tabId={tabId}
-          value={data}
-          onChange={onChange}
-        />
         <InfoPanel
           tabId={tabId}
           error={error}
           submit={create}
           submitLabel={_i18n._(t`Create`)}
           showNotifications={false}
+        />
+        <EditorPanel
+          tabId={tabId}
+          value={data}
+          onChange={onChange}
         />
       </div>
     )
