@@ -58,7 +58,7 @@ export class NamespaceSelect extends React.Component<Props> {
     const { value, label } = option;
     return label || (
       <>
-        {showIcons && <Icon small material="layers"/>}
+        {showIcons && <Icon small material="layers" />}
         {value}
       </>
     );
@@ -91,14 +91,15 @@ export class NamespaceSelectFilter extends React.Component {
         closeMenuOnSelect={false}
         isOptionSelected={() => false}
         controlShouldRenderValue={false}
-        onChange={({ value: namespace }: SelectOption) => toggleContext(namespace)}
+        isMulti
+        onChange={([{ value }]: SelectOption[]) => toggleContext(value)}
         formatOptionLabel={({ value: namespace }: SelectOption) => {
           const isSelected = hasContext(namespace);
           return (
             <div className="flex gaps align-center">
-              <FilterIcon type={FilterType.NAMESPACE}/>
+              <FilterIcon type={FilterType.NAMESPACE} />
               <span>{namespace}</span>
-              {isSelected && <Icon small material="check" className="box right"/>}
+              {isSelected && <Icon small material="check" className="box right" />}
             </div>
           )
         }}
