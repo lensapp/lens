@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
-import { resourceURL, workloadStores } from "../+workloads";
+import { workloadURL, workloadStores } from "../+workloads";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { PageFiltersList } from "../item-object-list/page-filters-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
@@ -32,7 +32,7 @@ export class OverviewStatuses extends React.Component {
     return (
       <div className="workload" key={resource}>
         <div className="title">
-          <Link to={resourceURL[resource]()}>{ResourceNames[resource]} ({items.length})</Link>
+          <Link to={workloadURL[resource]()}>{ResourceNames[resource]} ({items.length})</Link>
         </div>
         <OverviewWorkloadStatus status={store.getStatuses(items)} />
       </div>
