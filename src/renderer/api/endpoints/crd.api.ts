@@ -50,7 +50,7 @@ export class CustomResourceDefinition extends KubeObject {
       message: string;
       reason: string;
       status: string;
-      type: string;
+      type?: string;
     }[];
     acceptedNames: {
       plural: string;
