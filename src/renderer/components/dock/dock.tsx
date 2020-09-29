@@ -4,7 +4,7 @@ import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { autobind, cssNames, prevDefault } from "../../utils";
-import { ResizingAnchor, ResizeEventData, ResizeDirection, ResizeSide } from "../resizing-anchor";
+import { ResizingAnchor, ResizeDragEvent, ResizeDirection } from "../resizing-anchor";
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { MenuItem } from "../menu";
@@ -37,7 +37,7 @@ export class Dock extends React.Component<Props> {
     }
   }
 
-  onResize = ({ movementY }: ResizeEventData) => {
+  onResize = ({ movementY }: ResizeDragEvent) => {
     const { isOpen, close, height, setHeight, minHeight, defaultHeight } = dockStore;
     console.log(height, movementY)
     const newHeight = height + movementY;
@@ -51,7 +51,7 @@ export class Dock extends React.Component<Props> {
   }
 
   onKeydown = (evt: React.KeyboardEvent<HTMLElement>) => {
-    const { close, closeTab, selectedTab, fullSize, toggleFillSize } = dockStore;
+    const { close, closeTab, selectedTab } = dockStore;
     if (!selectedTab) return;
     const { code, ctrlKey, shiftKey } = evt.nativeEvent;
     if (shiftKey && code === "Escape") {

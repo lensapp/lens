@@ -30,18 +30,35 @@ interface Props {
   direction: ResizeDirection;
   disabled?: boolean;
   placement?: ResizeSide;
-  onStart?: () => void;
-  onDrag?: (data: ResizeEventData) => void;
-  onEnd?: () => void;
+  onStart?: (data: ResizeStartEvent) => void;
+  onDrag?: (data: ResizeDragEvent) => void;
+  onEnd?: (data: ResizeEndEvent) => void;
 }
 
-export interface ResizeEventData {
+interface InitialPosition {
   initX: number;
   initY: number;
+}
+
+interface CurrentPosition {
   pageX: number;
   pageY: number;
+}
+
+interface MovementData {
   movementX: number;
   movementY: number;
+}
+
+export type ResizeStartEvent = InitialPosition
+export type ResizeDragEvent = InitialPosition & CurrentPosition & MovementData
+export type ResizeEndEvent = InitialPosition & CurrentPosition
+
+function calculateMovement(from: CurrentPosition, to: CurrentPosition): MovementData {
+  return {
+    movementX: from.pageX - to.pageX,
+    movementY: from.pageY - to.pageY,
+  }
 }
 
 const defaultProps: Partial<Props> = {
@@ -53,27 +70,25 @@ const defaultProps: Partial<Props> = {
 }
 
 export class ResizingAnchor extends React.PureComponent<Props> {
-  @observable startingPosition?: { initX: number, initY: number };
+  @observable startingPosition?: ResizeStartEvent
   @observable lastEvent?: MouseEvent
-
-  @computed get firstDragEvent() {
-    return this.lastEvent == null
-  }
 
   static defaultProps = defaultProps
   static IS_RESIZING = "resizing"
 
   constructor(props: Props) {
-    super(props);
+    super(props)
   }
 
   componentWillUnmount() {
-    document.removeEventListener("mousemove", this.onDrag);
-    document.removeEventListener("mouseup", this.onDragEnd);
+    document.removeEventListener("mousemove", this.onDrag)
+    document.removeEventListener("mouseup", this.onDragEnd)
   }
 
   @action
   onDragInit = ({ pageX, pageY, buttons }: React.MouseEvent<any>) => {
+    const { onStart } = this.props
+
     if (buttons !== 1) {
       return
     }
@@ -87,35 +102,29 @@ export class ResizingAnchor extends React.PureComponent<Props> {
       initY: pageY
     }
     this.lastEvent = undefined
-  }
 
-  calculateMovement = (event: MouseEvent) => {
-    return {
-      movementX: this.lastEvent.pageX - event.pageX,
-      movementY: this.lastEvent.pageY - event.pageY
-    }
+    onStart(this.startingPosition)
   }
 
   onDrag = _.throttle((event: MouseEvent) => {
-    const { onDrag, onStart } = this.props
+    const { onDrag } = this.props
     const { initX, initY } = this.startingPosition
     const { pageX, pageY } = event
+    const { movementX, movementY } = calculateMovement(this.lastEvent ?? event, event)
 
-    if (this.firstDragEvent) onStart()
-
-    const { movementX, movementY } = this.firstDragEvent ? event : this.calculateMovement(event)
     onDrag({ movementX, movementY, pageX, pageY, initY, initX })
-
     this.lastEvent = event
   }, 100)
 
   @action
   onDragEnd = (event: MouseEvent) => {
-    const { onEnd } = this.props;
+    const { onEnd } = this.props
+    const { initX, initY } = this.startingPosition
+    const { pageX, pageY } = event
 
-    onEnd()
-    document.removeEventListener("mousemove", this.onDrag);
-    document.removeEventListener("mouseup", this.onDragEnd);
+    onEnd(({ initX, initY, pageX, pageY }))
+    document.removeEventListener("mousemove", this.onDrag)
+    document.removeEventListener("mouseup", this.onDragEnd)
     document.body.classList.remove(ResizingAnchor.IS_RESIZING)
   }
 
