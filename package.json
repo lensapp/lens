@@ -35,7 +35,7 @@
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "lint": "eslint $@ --ext js,ts,tsx --max-warnings=0  src/",
-    "extensions:example": "tsc --project src/extensions/example-extension/tsconfig.json --watch"
+    "extensions:example": "tsc --project extensions/example-extension/tsconfig.json --watch"
   },
   "config": {
     "bundledKubectlVersion": "1.17.11",

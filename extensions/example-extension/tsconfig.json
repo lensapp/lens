@@ -1,5 +1,5 @@
 {
-  "extends": "../../../tsconfig.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": ".",
     "module": "CommonJS",
@@ -7,7 +7,7 @@
     "declaration": false
   },
   "include": [
-    "../../../types",
+    "../../types",
     "./example-extension.tsx"
   ]
 }
