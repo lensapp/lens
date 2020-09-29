@@ -1,11 +1,11 @@
-import { StatusKubeObjectStore } from "../../kube-object.store";
+import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { CronJob, cronJobApi } from "../../api/endpoints/cron-job.api";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
-export class CronJobStore extends StatusKubeObjectStore<CronJob> {
+export class CronJobStore extends KubeObjectStore<CronJob> {
   api = cronJobApi
 
   getStatuses(cronJobs?: CronJob[]) {

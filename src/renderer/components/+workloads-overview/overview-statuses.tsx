@@ -5,11 +5,12 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
-import { resourceURL, resourceStores } from "../+workloads";
+import { resourceURL, workloadStores } from "../+workloads";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { PageFiltersList } from "../item-object-list/page-filters-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
-import { isAllowedResource, KubeResource, ResourceNames } from "../../../common/rbac";
+import { isAllowedResource, KubeResource } from "../../../common/rbac";
+import { ResourceNames } from "../../../renderer/utils/rbac";
 import { autobind } from "../../utils";
 import { _i18n } from "../../i18n";
 
@@ -25,14 +26,13 @@ const resources: KubeResource[] = [
 @observer
 export class OverviewStatuses extends React.Component {
   @autobind()
-  renderWorkload(resource: KubeResource): React.ReactElement | null {
-    const store = resourceStores[resource];
-    const items = store.getAllByNs([...namespaceStore.contextNs])
-    const name = _i18n._(ResourceNames[resource])
+  renderWorkload(resource: KubeResource): React.ReactElement {
+    const store = workloadStores[resource];
+    const items = store.getAllByNs(namespaceStore.contextNs)
     return (
       <div className="workload" key={resource}>
         <div className="title">
-          <Link to={resourceURL[resource]()}>{name} ({items.length})</Link>
+          <Link to={resourceURL[resource]()}>{ResourceNames[resource]} ({items.length})</Link>
         </div>
         <OverviewWorkloadStatus status={store.getStatuses(items)} />
       </div>

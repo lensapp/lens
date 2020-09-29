@@ -1,12 +1,12 @@
 import { observable } from "mobx";
 import { Deployment, deploymentApi, IPodMetrics, podsApi, PodStatus } from "../../api/endpoints";
-import { StatusKubeObjectStore } from "../../kube-object.store";
+import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
-export class DeploymentStore extends StatusKubeObjectStore<Deployment> {
+export class DeploymentStore extends KubeObjectStore<Deployment> {
   api = deploymentApi
   @observable metrics: IPodMetrics = null;
 
@@ -18,8 +18,7 @@ export class DeploymentStore extends StatusKubeObjectStore<Deployment> {
 
   async loadMetrics(deployment: Deployment) {
     const pods = this.getChildPods(deployment);
-    const metrics = await podsApi.getMetrics(pods, deployment.getNs(), "");
-    return this.metrics = metrics;
+    this.metrics = await podsApi.getMetrics(pods, deployment.getNs(), "");
   }
 
   getStatuses(deployments?: Deployment[]) {

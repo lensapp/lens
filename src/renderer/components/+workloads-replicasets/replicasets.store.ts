@@ -10,11 +10,10 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   api = replicaSetApi
   @observable metrics: IPodMetrics = null;
 
-  loadMetrics(replicaSet: ReplicaSet) {
+  async loadMetrics(replicaSet: ReplicaSet) {
     const pods = this.getChildPods(replicaSet);
-    return podsApi.getMetrics(pods, replicaSet.getNs(), "").then(metrics =>
-      this.metrics = metrics
-    );
+    const metrics = await podsApi.getMetrics(pods, replicaSet.getNs(), "");
+    return this.metrics = metrics;
   }
 
   getChildPods(replicaSet: ReplicaSet) {

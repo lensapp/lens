@@ -19,6 +19,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     kubeWatchApi.addListener(this, this.onWatchApiEvent);
   }
 
+  getStatuses?(items: T[]): Record<string, number>;
+
   getAllByNs(namespace: string | string[], strict = false): T[] {
     const namespaces: string[] = [].concat(namespace);
     if (namespaces.length) {
@@ -197,12 +199,4 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     // update items
     this.items.replace(this.sortItems(items));
   }
-}
-
-export interface Statuses {
-  [key: string]: number;
-}
-
-export abstract class StatusKubeObjectStore<T extends KubeObject = any> extends KubeObjectStore<T> {
-  abstract getStatuses(items: T[]): Statuses;
 }

@@ -37,11 +37,11 @@ export class LocalizationStore {
     reaction(() => this.activeLang, lang => storage.set(lang));
   }
 
-  async init() {
-    await this.setLocale(this.activeLang);
+  init() {
+    this.setLocale(this.activeLang);
   }
 
-  async setLocale(locale: string) {
+  setLocale(locale: string) {
     const catalog = require(`@lingui/loader!../../locales/${locale}/messages.po`); // eslint-disable-line @typescript-eslint/no-var-requires
     _i18n.loadLocaleData(locale, { plurals: plurals[locale] });
     _i18n.load(locale, catalog.messages);
@@ -50,7 +50,7 @@ export class LocalizationStore {
     moment.locale(locale);
     this.activeLang = locale;
 
-    await _i18n.activate(locale);
+    _i18n.activate(locale);
   }
 }
 

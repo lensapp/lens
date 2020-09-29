@@ -1,13 +1,13 @@
 import countBy from "lodash/countBy";
 import { action, observable } from "mobx";
-import { StatusKubeObjectStore } from "../../kube-object.store";
+import { KubeObjectStore } from "../../kube-object.store";
 import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IPodMetrics, Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
 import { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
-export class PodsStore extends StatusKubeObjectStore<Pod> {
+export class PodsStore extends KubeObjectStore<Pod> {
   api = podsApi;
 
   @observable metrics: IPodMetrics = null;

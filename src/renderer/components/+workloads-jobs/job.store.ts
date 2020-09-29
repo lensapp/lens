@@ -1,4 +1,4 @@
-import { StatusKubeObjectStore } from "../../kube-object.store";
+import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { Job, jobApi } from "../../api/endpoints/job.api";
 import { CronJob, Pod, PodStatus } from "../../api/endpoints";
@@ -6,7 +6,7 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
-export class JobStore extends StatusKubeObjectStore<Job> {
+export class JobStore extends KubeObjectStore<Job> {
   api = jobApi
 
   getChildPods(job: Job): Pod[] {
