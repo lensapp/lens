@@ -2,7 +2,7 @@
 
 import "../common/system-ca"
 import "../common/prometheus-providers"
-import { app, dialog } from "electron"
+import { app, dialog, Tray } from "electron"
 import { appName } from "../common/vars";
 import path from "path"
 import { LensProxy } from "./lens-proxy"
@@ -13,6 +13,7 @@ import { shellSync } from "./shell-sync"
 import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { registerFileProtocol } from "../common/register-protocol";
+import { setupTrayIcon } from "./tray";
 import { clusterStore } from "../common/cluster-store"
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
@@ -28,6 +29,7 @@ if (!process.env.CICD) {
 let windowManager: WindowManager;
 let clusterManager: ClusterManager;
 let proxyServer: LensProxy;
+let trayIcon: Tray;
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
@@ -75,6 +77,7 @@ async function main() {
 
   // create window manager and open app
   windowManager = new WindowManager(proxyPort);
+  trayIcon = await setupTrayIcon();
 }
 
 app.on("ready", main);

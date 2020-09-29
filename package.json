@@ -89,6 +89,10 @@
         "to": "static/",
         "filter": "!**/main.js"
       },
+      {
+        "from": "build/icon.png",
+        "to": "static/icon.png"
+      },
       "LICENSE"
     ],
     "linux": {
