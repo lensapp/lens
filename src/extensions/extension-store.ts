@@ -4,7 +4,6 @@ import path from "path";
 import fs from "fs-extra";
 import { action, observable, reaction, toJS, } from "mobx";
 import { BaseStore } from "../common/base-store";
-import { isDevelopment } from "../common/vars";
 import logger from "../main/logger";
 
 export interface ExtensionStoreModel {
@@ -44,9 +43,6 @@ export class ExtensionStore extends BaseStore<ExtensionStoreModel> {
   @observable installed = observable.map<ExtensionId, InstalledExtension>([], { deep: false });
 
   get folderPath(): string {
-    if (isDevelopment) {
-      return path.resolve(__static, "../src/extensions");
-    }
     return path.resolve(__static, "../extensions");
   }
 

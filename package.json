@@ -15,11 +15,12 @@
     "dev-run": "nodemon --watch static/build/main.js --exec \"electron --inspect .\"",
     "dev:main": "yarn compile:main --watch",
     "dev:renderer": "yarn compile:renderer --watch",
-    "dev:extensions": "rollup --config src/extensions/rollup.config.js --watch",
+    "dev:extensions": "yarn compile:extensions --watch",
     "compile": "env NODE_ENV=production concurrently yarn:compile:*",
     "compile:main": "webpack --config webpack.main.ts",
     "compile:renderer": "webpack --config webpack.renderer.ts",
     "compile:i18n": "lingui compile",
+    "compile:extensions": "rollup --config src/extensions/rollup.config.js",
     "build:linux": "yarn compile && electron-builder --linux --dir -c.productName=Lens",
     "build:mac": "yarn compile && electron-builder --mac --dir -c.productName=Lens",
     "build:win": "yarn compile && electron-builder --win --dir -c.productName=Lens",
@@ -34,7 +35,7 @@
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "lint": "eslint $@ --ext js,ts,tsx --max-warnings=0  src/",
-    "extensions:example": "tsc --project src/extensions/example-extension/tsconfig.json --watch"
+    "extensions:example": "tsc --project extensions/example-extension/tsconfig.json --watch"
   },
   "config": {
     "bundledKubectlVersion": "1.17.11",
@@ -94,9 +95,12 @@
         "filter": "!**/main.js"
       },
       {
-        "from": "src/extensions/",
+        "from": "extensions/",
         "to": "./extensions/",
-        "filter": "**/*.js*"
+        "filter": [
+          "**/*.js*",
+          "!**/node_modules"
+        ]
       },
       "LICENSE"
     ],
