@@ -4,7 +4,6 @@ import path from "path";
 import fs from "fs-extra";
 import { action, observable, reaction, toJS, } from "mobx";
 import { BaseStore } from "../common/base-store";
-import { isDevelopment } from "../common/vars";
 import logger from "../main/logger";
 
 export interface ExtensionStoreModel {
