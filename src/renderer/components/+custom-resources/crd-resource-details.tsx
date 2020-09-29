@@ -13,8 +13,9 @@ import { apiManager } from "../../api/api-manager";
 import { crdStore } from "./crd.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Input } from "../input";
+import { CustomResourceDefinition } from "../../api/endpoints/crd.api";
 
-interface Props extends KubeObjectDetailsProps {
+interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
 
 function CrdColumnValue({ value }: { value: any[] | {} | string }) {
@@ -66,12 +67,14 @@ export class CrdResourceDetails extends React.Component<Props> {
         })}
         {showStatus && (
           <DrawerItem name={<Trans>Status</Trans>} className="status" labelsOnly>
-            {object.status.conditions.map((condition: { type: string; message: string; status: string }) => {
-              const { type, message, status } = condition;
+            {object.status.conditions.map((condition, index) => {
+              const { type, reason, message, status } = condition;
+              const kind = type || reason;
+              if (!kind) return null;
               return (
                 <Badge
-                  key={type} label={type}
-                  className={cssNames({ disabled: status === "False" }, type.toLowerCase())}
+                  key={kind + index} label={kind}
+                  className={cssNames({ disabled: status === "False" }, kind.toLowerCase())}
                   tooltip={message}
                 />
               );
