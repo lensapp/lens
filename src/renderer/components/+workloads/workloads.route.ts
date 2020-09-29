@@ -64,7 +64,7 @@ export const statefulSetsURL = buildURL<IStatefulSetsRouteParams>(statefulSetsRo
 export const jobsURL = buildURL<IJobsRouteParams>(jobsRoute.path)
 export const cronJobsURL = buildURL<ICronJobsRouteParams>(cronJobsRoute.path)
 
-export const resourceURL: Partial<Record<KubeResource, ReturnType<typeof buildURL>>> = {
+export const workloadURL: Partial<Record<KubeResource, ReturnType<typeof buildURL>>> = {
   "pods": podsURL,
   "deployments": deploymentsURL,
   "daemonsets": daemonSetsURL,
