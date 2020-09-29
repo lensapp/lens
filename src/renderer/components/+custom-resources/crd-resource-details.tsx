@@ -74,7 +74,7 @@ export class CrdResourceDetails extends React.Component<Props> {
               return (
                 <Badge
                   key={kind + index} label={kind}
-                  className={cssNames({ disabled: status === "False" }, kind)}
+                  className={cssNames({ disabled: status === "False" }, kind.toLowerCase())}
                   tooltip={message}
                 />
               );
