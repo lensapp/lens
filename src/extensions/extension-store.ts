@@ -1,9 +1,9 @@
+import type { ExtensionId, ExtensionManifest, ExtensionVersion, LensExtension } from "./lens-extension";
 import type { LensRuntimeRendererEnv } from "./lens-runtime";
 import path from "path";
 import fs from "fs-extra";
 import { action, observable, reaction, toJS, } from "mobx";
 import { BaseStore } from "../common/base-store";
-import { ExtensionId, ExtensionManifest, ExtensionVersion, LensExtension } from "./lens-extension";
 import { isDevelopment } from "../common/vars";
 import logger from "../main/logger";
 

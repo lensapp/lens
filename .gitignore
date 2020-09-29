@@ -4,6 +4,8 @@ node_modules/
 yarn-error.log
 coverage/
 tmp/
+locales/**/**.js
+lens.log
 static/build
 static/types
 binaries/client/
@@ -11,5 +13,4 @@ binaries/server/
 src/extensions/*/*.js
 src/extensions/*/*.d.ts
 src/extensions/example-extension/src/**
-locales/**/**.js
-lens.log
+types/extension-api.d.ts
