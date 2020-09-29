@@ -20,6 +20,7 @@
     "compile:main": "webpack --config webpack.main.ts",
     "compile:renderer": "webpack --config webpack.renderer.ts",
     "compile:i18n": "lingui compile",
+    "compile:extensions": "rollup --config src/extensions/rollup.config.js",
     "build:linux": "yarn compile && electron-builder --linux --dir -c.productName=Lens",
     "build:mac": "yarn compile && electron-builder --mac --dir -c.productName=Lens",
     "build:win": "yarn compile && electron-builder --win --dir -c.productName=Lens",
@@ -94,9 +95,12 @@
         "filter": "!**/main.js"
       },
       {
-        "from": "src/extensions/",
+        "from": "extensions/",
         "to": "./extensions/",
-        "filter": "**/*.js*"
+        "filter": [
+          "**/*.js*",
+          "!**/node_modules"
+        ]
       },
       "LICENSE"
     ],
