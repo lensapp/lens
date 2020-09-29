@@ -19,6 +19,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     kubeWatchApi.addListener(this, this.onWatchApiEvent);
   }
 
+  getStatuses?(items: T[]): Record<string, number>;
+
   getAllByNs(namespace: string | string[], strict = false): T[] {
     const namespaces: string[] = [].concat(namespace);
     if (namespaces.length) {
