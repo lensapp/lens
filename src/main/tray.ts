@@ -3,29 +3,30 @@ import sharp from "sharp";
 import packageInfo from "../../package.json"
 import { app, dialog, Menu, nativeImage, Tray } from "electron"
 import { isDevelopment, isMac } from "../common/vars";
-import { WindowManager } from "./window-manager";
+import { autorun } from "mobx";
 import { showAbout } from "./menu";
-import AppUpdater from "./app-updater";
+import { AppUpdater } from "./app-updater";
+import { WindowManager } from "./window-manager";
+import { clusterStore } from "../common/cluster-store";
+import { workspaceStore } from "../common/workspace-store";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
+import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
+import logger from "./logger";
+
+// note: instance of Tray should be saved somewhere, otherwise it disappears
+export let tray: Tray;
 
 export const trayIcon = isDevelopment
   ? path.resolve(__static, "../src/renderer/components/icon/logo-lens.svg")
   : path.resolve(__static, "logo.svg") // electron-builder's extraResources
 
-export async function setupTrayIcon(windowManager: WindowManager) {
-  await app.whenReady();
+export function initTray(windowManager: WindowManager) {
+  return autorun(() => buildTrayMenu(windowManager), {
+    delay: 100
+  })
+}
 
-  const iconSize = isMac ? 16 : 32; // todo: verify on windows/linux
-  const pngIcon = await sharp(trayIcon).png().toBuffer();
-  const icon = nativeImage.createFromBuffer(pngIcon).resize({
-    width: iconSize,
-    height: iconSize
-  });
-
-  const appTray = new Tray(icon)
-  appTray.setToolTip(packageInfo.description)
-  appTray.setIgnoreDoubleClickEvents(true);
-
+export async function buildTrayMenu(windowManager: WindowManager) {
   // note: browserWindow not available within menuItem.click() as argument[1] when app is not focused / hidden
   const trayMenu = Menu.buildFromTemplate([
     {
@@ -43,6 +44,25 @@ export async function setupTrayIcon(windowManager: WindowManager) {
       },
     },
     {
+      label: "Clusters",
+      submenu: workspaceStore.workspacesList.map(workspace => {
+        const clusters = clusterStore.getByWorkspaceId(workspace.id);
+        return {
+          label: workspace.name,
+          toolTip: workspace.description,
+          submenu: clusters.map(({ id: clusterId, contextName: label }) => {
+            return {
+              label,
+              click() {
+                windowManager.bringToTop();
+                windowManager.navigate(clusterViewURL({ params: { clusterId } }));
+              }
+            }
+          })
+        }
+      }),
+    },
+    {
       label: "Check for updates",
       async click() {
         const result = await AppUpdater.checkForUpdates();
@@ -57,6 +77,25 @@ export async function setupTrayIcon(windowManager: WindowManager) {
     },
   ]);
 
-  appTray.setContextMenu(trayMenu);
-  return appTray;
+  // note: all "await"-s must be defined *AFTER* getting observables for proper mobx reactions
+  await app.whenReady();
+  logger.info('[TRAY]: building tray icon and menu');
+
+  const iconSize = isMac ? 16 : 32; // todo: verify on windows/linux
+  const pngIcon = await sharp(trayIcon).png().toBuffer();
+  const icon = nativeImage.createFromBuffer(pngIcon).resize({
+    width: iconSize,
+    height: iconSize
+  });
+
+  if (tray) {
+    tray.destroy(); // remove old tray on update
+  }
+
+  tray = new Tray(icon)
+  tray.setToolTip(packageInfo.description)
+  tray.setIgnoreDoubleClickEvents(true);
+  tray.setContextMenu(trayMenu);
+
+  return tray;
 }

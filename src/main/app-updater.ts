@@ -1,7 +1,7 @@
 import { autoUpdater } from "electron-updater"
 import logger from "./logger"
 
-export default class AppUpdater {
+export class AppUpdater {
   static defaultUpdateIntervalMs = 1000 * 60 * 60 * 24 // once a day
 
   static checkForUpdates() {
