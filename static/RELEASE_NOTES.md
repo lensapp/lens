@@ -3,6 +3,7 @@
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
 ## 3.6.5 (current version)
+- Prevent drawer close when revealing secret value
 - Fix app crash when CRD conditions were not present
 - Add support for Stacklight prometheus metrics
 - Terminal: set NO_PROXY env for localhost communication
