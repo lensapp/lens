@@ -125,6 +125,8 @@ export class ShellSession extends EventEmitter {
     if (this.preferences.httpsProxy) {
       env["HTTPS_PROXY"] = this.preferences.httpsProxy
     }
+    const no_proxy = ["localhost", "127.0.0.1", env["NO_PROXY"]]
+    env["NO_PROXY"] = no_proxy.filter(address => !!address).join()
     if (env.DEBUG) { // do not pass debug option to bash
       delete env["DEBUG"]
     }
