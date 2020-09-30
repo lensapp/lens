@@ -1,5 +1,4 @@
-import { Button, DynamicPageType, Icon, IconProps, LensExtension } from "@lens/extensions";
-import React from "react";
+import { Button, DynamicPageType, Icon, IconProps, LensExtension, React } from "@lens/extensions";
 import path from "path";
 
 export default class ExampleExtension extends LensExtension {
