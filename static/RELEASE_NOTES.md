@@ -2,7 +2,12 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.5-rc.1 (current version)
+## 3.6.5 (current version)
+- Fix app crash when CRD conditions were not present
+- Add support for Stacklight prometheus metrics
+- Terminal: set NO_PROXY env for localhost communication
+- Fix CPU/Memory usage metrics when using prometheus operator
+- Display last-applied-configuration annotation
 - Fix Notifications not to block items not visually under them from being interacted with
 - Fix side bar not to scroll after clicking on lower menu item
 - Auto-select context if only one context is present in pasted Kubeconfig
