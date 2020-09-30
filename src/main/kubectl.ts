@@ -283,11 +283,11 @@ export class Kubectl {
     bashScript += "fi\n"
     bashScript += `export PATH="${helmPath}:${kubectlPath}:$PATH"\n`
     bashScript += "export KUBECONFIG=\"$tempkubeconfig\"\n"
-    bashScript += "if [ -z \"$NO_PROXY\" ]; then\n"
-    bashScript += "  export NO_PROXY=\"localhost,127.0.0.1\"\n"
-    bashScript += "elif [ \"$NO_PROXY\" != \"localhost,127.0.0.1\" ]; then\n"
-    bashScript += "  export NO_PROXY=\"localhost,127.0.0.1,$NO_PROXY\"\n"
-    bashScript += "fi\n"
+
+    bashScript += "NO_PROXY=\",${NO_PROXY:-localhost},\"\n"
+    bashScript += "NO_PROXY=\"${NO_PROXY//,localhost,/,}\"\n"
+    bashScript += "NO_PROXY=\"${NO_PROXY//,127.0.0.1,/,}\"\n"
+    bashScript += "NO_PROXY=\"localhost,127.0.0.1${NO_PROXY%,}\"\n"
     bashScript += "unset tempkubeconfig\n"
     await fsPromises.writeFile(bashScriptPath, bashScript.toString(), { mode: 0o644 })
 
@@ -313,11 +313,10 @@ export class Kubectl {
     zshScript += "d=${d/#:/}\n"
     zshScript += "export PATH=\"$helmpath:$kubectlpath:${d/%:/}\"\n"
     zshScript += "export KUBECONFIG=\"$tempkubeconfig\"\n"
-    zshScript += "if test -z \"$NO_PROXY\"; then\n"
-    zshScript += "  export NO_PROXY=\"localhost,127.0.0.1\"\n"
-    zshScript += "elif [ \"$NO_PROXY\" != \"localhost,127.0.0.1\" ]; then\n"
-    zshScript += "  export NO_PROXY=\"localhost,127.0.0.1,$NO_PROXY\"\n"
-    zshScript += "fi\n"
+    zshScript += "NO_PROXY=\",${NO_PROXY:-localhost},\"\n"
+    zshScript += "NO_PROXY=\"${NO_PROXY//,localhost,/,}\"\n"
+    zshScript += "NO_PROXY=\"${NO_PROXY//,127.0.0.1,/,}\"\n"
+    zshScript += "NO_PROXY=\"localhost,127.0.0.1${NO_PROXY%,}\"\n"
     zshScript += "unset tempkubeconfig\n"
     zshScript += "unset OLD_ZDOTDIR\n"
     await fsPromises.writeFile(zshScriptPath, zshScript.toString(), { mode: 0o644 })
