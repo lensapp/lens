@@ -4,7 +4,7 @@ import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { autobind, cssNames, prevDefault } from "../../utils";
-import { ResizingAnchor, ResizeDragEvent, ResizeDirection } from "../resizing-anchor";
+import { ResizingAnchor, ResizeDirection } from "../resizing-anchor";
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { MenuItem } from "../menu";
@@ -29,27 +29,6 @@ interface Props {
 
 @observer
 export class Dock extends React.Component<Props> {
-  onResizeStart = () => {
-    const { isOpen, open, setHeight } = dockStore;
-    if (!isOpen) {
-      open();
-      setHeight();
-    }
-  }
-
-  onResize = ({ movementY }: ResizeDragEvent) => {
-    const { isOpen, close, height, setHeight, minHeight, defaultHeight } = dockStore;
-    console.log(height, movementY)
-    const newHeight = height + movementY;
-    if (height > newHeight && newHeight < minHeight) {
-      setHeight(defaultHeight);
-      close();
-    }
-    else if (isOpen) {
-      setHeight(newHeight);
-    }
-  }
-
   onKeydown = (evt: React.KeyboardEvent<HTMLElement>) => {
     const { close, closeTab, selectedTab } = dockStore;
     if (!selectedTab) return;
@@ -107,9 +86,14 @@ export class Dock extends React.Component<Props> {
       >
         <ResizingAnchor
           disabled={!hasTabs()}
+          getCurrentExtent={() => dockStore.height}
+          minExtent={dockStore.minHeight}
+          maxExtent={dockStore.maxHeight}
           direction={ResizeDirection.VERTICAL}
-          onStart={this.onResizeStart}
-          onDrag={this.onResize}
+          onStart={dockStore.open}
+          onMinExtentSubceed={dockStore.close}
+          onMinExtentExceed={dockStore.open}
+          onDrag={dockStore.setHeight}
         />
         <div className="tabs-container flex align-center" onDoubleClick={prevDefault(toggle)}>
           <Tabs

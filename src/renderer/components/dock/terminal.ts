@@ -121,6 +121,8 @@ export class Terminal {
   }
 
   fit = () => {
+    // Since this function is debounced we need to read this value as late as possible
+    if (!this.isActive) return;
     this.fitAddon.fit();
     const { cols, rows } = this.xterm;
     this.api.sendTerminalSize(cols, rows);
@@ -150,7 +152,6 @@ export class Terminal {
   }
 
   onResize = () => {
-    if (!this.isActive) return;
     this.fitLazy();
     this.focus();
   }
@@ -171,16 +172,16 @@ export class Terminal {
     // Handle custom hotkey bindings
     if (ctrlKey) {
       switch (code) {
-      // Ctrl+C: prevent terminal exit on windows / linux (?)
-      case "KeyC":
-        if (this.xterm.hasSelection()) return false;
-        break;
+        // Ctrl+C: prevent terminal exit on windows / linux (?)
+        case "KeyC":
+          if (this.xterm.hasSelection()) return false;
+          break;
 
         // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
         // https://github.com/kontena/lens-app/issues/156#issuecomment-534906480
-      case "KeyW":
-        evt.preventDefault();
-        break;
+        case "KeyW":
+          evt.preventDefault();
+          break;
       }
     }
 
