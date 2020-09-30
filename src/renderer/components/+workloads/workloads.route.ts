@@ -1,6 +1,7 @@
 import { RouteProps } from "react-router"
 import { Workloads } from "./workloads";
 import { buildURL, IURLParams } from "../../navigation";
+import { KubeResource } from "../../../common/rbac";
 
 export const workloadsRoute: RouteProps = {
   get path() {
@@ -62,3 +63,12 @@ export const daemonSetsURL = buildURL<IDaemonSetsRouteParams>(daemonSetsRoute.pa
 export const statefulSetsURL = buildURL<IStatefulSetsRouteParams>(statefulSetsRoute.path)
 export const jobsURL = buildURL<IJobsRouteParams>(jobsRoute.path)
 export const cronJobsURL = buildURL<ICronJobsRouteParams>(cronJobsRoute.path)
+
+export const workloadURL: Partial<Record<KubeResource, ReturnType<typeof buildURL>>> = {
+  "pods": podsURL,
+  "deployments": deploymentsURL,
+  "daemonsets": daemonSetsURL,
+  "statefulsets": statefulSetsURL,
+  "jobs": jobsURL,
+  "cronjobs": cronJobsURL,
+}

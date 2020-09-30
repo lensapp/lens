@@ -19,8 +19,11 @@ export async function initView(clusterId: ClusterId) {
   if (!clusterId || lensViews.has(clusterId)) {
     return;
   }
-  logger.info(`[LENS-VIEW]: init dashboard, clusterId=${clusterId}`)
   const cluster = clusterStore.getById(clusterId);
+  if (!cluster) {
+    return;
+  }
+  logger.info(`[LENS-VIEW]: init dashboard, clusterId=${clusterId}`)
   const parentElem = document.getElementById("lens-views");
   const iframe = document.createElement("iframe");
   iframe.name = cluster.contextName;
@@ -42,9 +45,9 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
   // Keep frame in DOM to avoid possible bugs when same cluster re-created after being removed.
   // In that case for some reasons `webFrame.routingId` returns some previous frameId (usage in app.tsx)
   // Issue: https://github.com/lensapp/lens/issues/811
-  iframe.dataset.meta = `${iframe.name} was removed at ${new Date().toLocaleString()}`;
-  iframe.removeAttribute("src")
+  iframe.dataset.meta = `${iframe.name} was removed at ${new Date().toLocaleString()}`
   iframe.removeAttribute("name")
+  iframe.contentWindow.postMessage("teardown", "*")
 }
 
 export function refreshViews() {

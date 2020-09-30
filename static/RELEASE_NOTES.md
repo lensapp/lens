@@ -2,7 +2,26 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.4 (current version)
+## 3.6.5-rc.1 (current version)
+- Fix Notifications not to block items not visually under them from being interacted with
+- Fix side bar not to scroll after clicking on lower menu item
+- Auto-select context if only one context is present in pasted Kubeconfig
+- Fix background image of What's New page on white theme
+- Reduce height on draggable-top and only render it on macos
+- Download dir option is now consistent with other settings
+- Allow to add the same cluster multiple times
+- Convert bytes in memory chart properly
+- Fix empty dashboard screen after cluster is removed and added multiple times in a row to application
+- Dropdowns have pointer cursor now
+- Proxy kubectl exec requests properly
+- Pass always chart version information when dealing with helm commands
+- Fix app crash when conditions are not yet present in CRD objects
+- Fix kubeconfig generating for service account
+- Update bundled Helm binary to version 3.3.4
+- Fix clusters' kubeconfig paths that point to snap config dir to use current snap config path
+
+
+## 3.6.4
 - Fix: deleted namespace does not get auto unselected
 - Get focus to dock tab (terminal & resource editor) content after resize
 - Downloading kubectl binary does not block dashboard opening anymore

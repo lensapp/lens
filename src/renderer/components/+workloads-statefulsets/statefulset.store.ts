@@ -10,11 +10,9 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
   api = statefulSetApi
   @observable metrics: IPodMetrics = null;
 
-  loadMetrics(statefulSet: StatefulSet) {
+  async loadMetrics(statefulSet: StatefulSet) {
     const pods = this.getChildPods(statefulSet);
-    return podsApi.getMetrics(pods, statefulSet.getNs(), "").then(metrics =>
-      this.metrics = metrics
-    );
+    this.metrics = await podsApi.getMetrics(pods, statefulSet.getNs(), "");
   }
 
   getChildPods(statefulSet: StatefulSet) {

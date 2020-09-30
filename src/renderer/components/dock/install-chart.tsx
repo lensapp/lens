@@ -107,15 +107,15 @@ export class InstallChart extends Component<Props> {
 
   render() {
     const { tabId, chartData, values, versions, install } = this;
-    if (!chartData || chartData.values === undefined || !versions) {
-      return <Spinner center/>;
+    if (chartData?.values === undefined || !versions) {
+      return <Spinner center />;
     }
 
     if (this.releaseDetails) {
       return (
         <div className="InstallChartDone flex column gaps align-center justify-center">
           <p>
-            <Icon material="check" big sticker/>
+            <Icon material="check" big sticker />
           </p>
           <p><Trans>Installation complete!</Trans></p>
           <div className="flex gaps align-center">
@@ -144,7 +144,7 @@ export class InstallChart extends Component<Props> {
     const panelControls = (
       <div className="install-controls flex gaps align-center">
         <span><Trans>Chart</Trans></span>
-        <Badge label={`${repo}/${name}`} title={_i18n._(t`Repo/Name`)}/>
+        <Badge label={`${repo}/${name}`} title={_i18n._(t`Repo/Name`)} />
         <span><Trans>Version</Trans></span>
         <Select
           className="chart-version"

@@ -99,10 +99,7 @@ export class AddCluster extends React.Component {
   getContexts(config: KubeConfig): Map<string, KubeConfig> {
     const contexts = new Map();
     splitConfig(config).forEach(config => {
-      const isExists = clusterStore.hasContext(config.currentContext);
-      if (!isExists) {
-        contexts.set(config.currentContext, config);
-      }
+      contexts.set(config.currentContext, config);
     })
     return contexts
   }

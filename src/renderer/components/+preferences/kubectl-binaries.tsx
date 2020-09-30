@@ -18,44 +18,22 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
     { value: "china", label: "China (Azure)" },
   ]
 
-
   const save = () => {
     preferences.downloadBinariesPath = downloadPath;
     preferences.kubectlBinariesPath = binariesPath;
   }
 
-  const renderPath = () => {
-    if (preferences.downloadKubectlBinaries) {
-      return null;
-    }
-    return (
-      <>
-        <SubTitle title="Path to Kubectl binary"/>
-        <Input
-          theme="round-black"
-          value={binariesPath}
-          validators={isPath}
-          onChange={setBinariesPath}
-          onBlur={save}
-        />
-        <small className="hint">
-          <Trans>Default:</Trans>{" "}{Kubectl.bundledKubectlPath}
-        </small>
-      </>
-    );
-  }
-
   return (
     <>
       <h2><Trans>Kubectl Binary</Trans></h2>
-      <small className="hint">
-        <Trans>Download kubectl binaries matching to Kubernetes cluster verison.</Trans>
-      </small>
       <Checkbox
         label={<Trans>Download kubectl binaries</Trans>}
         value={preferences.downloadKubectlBinaries}
         onChange={downloadKubectlBinaries => preferences.downloadKubectlBinaries = downloadKubectlBinaries}
       />
+      <small className="hint">
+        <Trans>Download kubectl binaries matching to Kubernetes cluster version.</Trans>
+      </small>
       <SubTitle title="Download mirror" />
       <Select
         placeholder={<Trans>Download mirror for kubectl</Trans>}
@@ -64,20 +42,32 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         onChange={({ value }: SelectOption) => preferences.downloadMirror = value}
         disabled={!preferences.downloadKubectlBinaries}
       />
-      <SubTitle title="Directory for binaries"/>
+      <SubTitle title="Directory for binaries" />
       <Input
         theme="round-black"
         value={downloadPath}
-        placeholder={`Directory to download binaries into`}
+        placeholder={userStore.getDefaultKubectlPath()}
         validators={isPath}
         onChange={setDownloadPath}
         onBlur={save}
         disabled={!preferences.downloadKubectlBinaries}
       />
-      <small>
-        Default: {userStore.getDefaultKubectlPath()}
+      <small className="hint">
+        The directory to download binaries into.
       </small>
-      {renderPath()}
+      <SubTitle title="Path to Kubectl binary" />
+      <Input
+        theme="round-black"
+        placeholder={Kubectl.bundledKubectlPath}
+        value={binariesPath}
+        validators={isPath}
+        onChange={setBinariesPath}
+        onBlur={save}
+        disabled={preferences.downloadKubectlBinaries}
+      />
+      <small className="hint">
+        <Trans>The path to the kubectl binary on the system.</Trans>
+      </small>
     </>
   );
 });

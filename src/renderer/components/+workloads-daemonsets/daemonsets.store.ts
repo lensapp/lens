@@ -11,11 +11,9 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
 
   @observable metrics: IPodMetrics = null;
 
-  loadMetrics(daemonSet: DaemonSet) {
+  async loadMetrics(daemonSet: DaemonSet) {
     const pods = this.getChildPods(daemonSet);
-    return podsApi.getMetrics(pods, daemonSet.getNs(), "").then(metrics =>
-      this.metrics = metrics
-    );
+    this.metrics = await podsApi.getMetrics(pods, daemonSet.getNs(), "");
   }
 
   getChildPods(daemonSet: DaemonSet): Pod[] {

@@ -13,6 +13,7 @@
 :root {
   --mainBackground: #1e2124;
   --main-layout-header: 40px;
+  --drag-region-height: 22px
 }
 
 ::selection {
@@ -47,7 +48,7 @@ html, body {
   left: 0;
   top: 0;
   width: 100%;
-  height: var(--main-layout-header);
+  height: var(--drag-region-height);
   z-index: 1000;
   pointer-events: none;
 }

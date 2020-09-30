@@ -36,7 +36,7 @@ const packageMirrors: Map<string, string> = new Map([
 let bundledPath: string
 const initScriptVersionString = "# lens-initscript v3\n"
 
-if (isDevelopment || isTestEnv) {
+if (isDevelopment || isTestEnv) {
   const platformName = isWindows ? "windows" : process.platform
   bundledPath = path.join(process.cwd(), "binaries", "client", platformName, process.arch, "kubectl")
 } else {
@@ -110,7 +110,11 @@ export class Kubectl {
   }
 
   protected getDownloadDir() {
-    return userStore.preferences?.downloadBinariesPath || Kubectl.kubectlDir
+    if (userStore.preferences?.downloadBinariesPath) {
+      return path.join(userStore.preferences.downloadBinariesPath, "kubectl")
+    }
+
+    return Kubectl.kubectlDir
   }
 
   public async getPath(bundled = false): Promise<string> {
@@ -214,7 +218,7 @@ export class Kubectl {
         });
         isValid = !await this.checkBinary(this.path, false)
       }
-      if(!isValid) {
+      if (!isValid) {
         logger.debug(`Releasing lock for ${this.kubectlVersion}`)
         release()
         return false
@@ -279,6 +283,12 @@ export class Kubectl {
     bashScript += "fi\n"
     bashScript += `export PATH="${helmPath}:${kubectlPath}:$PATH"\n`
     bashScript += "export KUBECONFIG=\"$tempkubeconfig\"\n"
+
+    bashScript += "NO_PROXY=\",${NO_PROXY:-localhost},\"\n"
+    bashScript += "NO_PROXY=\"${NO_PROXY//,localhost,/,}\"\n"
+    bashScript += "NO_PROXY=\"${NO_PROXY//,127.0.0.1,/,}\"\n"
+    bashScript += "NO_PROXY=\"localhost,127.0.0.1${NO_PROXY%,}\"\n"
+    bashScript += "export NO_PROXY\n"
     bashScript += "unset tempkubeconfig\n"
     await fsPromises.writeFile(bashScriptPath, bashScript.toString(), { mode: 0o644 })
 
@@ -304,6 +314,11 @@ export class Kubectl {
     zshScript += "d=${d/#:/}\n"
     zshScript += "export PATH=\"$helmpath:$kubectlpath:${d/%:/}\"\n"
     zshScript += "export KUBECONFIG=\"$tempkubeconfig\"\n"
+    zshScript += "NO_PROXY=\",${NO_PROXY:-localhost},\"\n"
+    zshScript += "NO_PROXY=\"${NO_PROXY//,localhost,/,}\"\n"
+    zshScript += "NO_PROXY=\"${NO_PROXY//,127.0.0.1,/,}\"\n"
+    zshScript += "NO_PROXY=\"localhost,127.0.0.1${NO_PROXY%,}\"\n"
+    zshScript += "export NO_PROXY\n"
     zshScript += "unset tempkubeconfig\n"
     zshScript += "unset OLD_ZDOTDIR\n"
     await fsPromises.writeFile(zshScriptPath, zshScript.toString(), { mode: 0o644 })

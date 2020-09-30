@@ -9,12 +9,12 @@ type AdditionalPrinterColumnsCommon = {
   description: string;
 }
 
-type AdditionalPrinterColumnsV1 = AdditionalPrinterColumnsCommon & { 
-  jsonPath: string; 
+type AdditionalPrinterColumnsV1 = AdditionalPrinterColumnsCommon & {
+  jsonPath: string;
 }
 
-type AdditionalPrinterColumnsV1Beta = AdditionalPrinterColumnsCommon & { 
-  JSONPath: string; 
+type AdditionalPrinterColumnsV1Beta = AdditionalPrinterColumnsCommon & {
+  JSONPath: string;
 }
 
 export class CustomResourceDefinition extends KubeObject {
@@ -50,7 +50,7 @@ export class CustomResourceDefinition extends KubeObject {
       message: string;
       reason: string;
       status: string;
-      type: string;
+      type?: string;
     }[];
     acceptedNames: {
       plural: string;
@@ -132,7 +132,7 @@ export class CustomResourceDefinition extends KubeObject {
   }
 
   getConditions() {
-    if (!this.status.conditions) return [];
+    if (!this.status?.conditions) return [];
     return this.status.conditions.map(condition => {
       const { message, reason, lastTransitionTime, status } = condition;
       return {

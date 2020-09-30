@@ -55,25 +55,24 @@ export class ClusterManager extends React.Component {
   render() {
     return (
       <div className="ClusterManager">
-        <div id="draggable-top"/>
         <main>
-          <div id="lens-views"/>
+          <div id="lens-views" />
           <Switch>
-            <Route component={LandingPage} {...landingRoute}/>
-            <Route component={Preferences} {...preferencesRoute}/>
-            <Route component={Workspaces} {...workspacesRoute}/>
-            <Route component={AddCluster} {...addClusterRoute}/>
-            <Route component={ClusterView} {...clusterViewRoute}/>
-            <Route component={ClusterSettings} {...clusterSettingsRoute}/>
+            <Route component={LandingPage} {...landingRoute} />
+            <Route component={Preferences} {...preferencesRoute} />
+            <Route component={Workspaces} {...workspacesRoute} />
+            <Route component={AddCluster} {...addClusterRoute} />
+            <Route component={ClusterView} {...clusterViewRoute} />
+            <Route component={ClusterSettings} {...clusterSettingsRoute} />
             <Route component={Extensions} {...extensionsRoute}/>
             {dynamicPages.globalPages.map(({ path, components: { Page } }) => {
               return <Route key={path} path={path} component={Page}/>
             })}
-            <Redirect exact to={this.startUrl}/>
+            <Redirect exact to={this.startUrl} />
           </Switch>
         </main>
-        <ClustersMenu/>
-        <BottomBar/>
+        <ClustersMenu />
+        <BottomBar />
       </div>
     )
   }

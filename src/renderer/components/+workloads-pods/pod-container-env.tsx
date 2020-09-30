@@ -113,7 +113,8 @@ const SecretKey = (props: SecretKeyProps) => {
   const [loading, setLoading] = useState(false)
   const [secret, setSecret] = useState<Secret>()
 
-  const showKey = async () => {
+  const showKey = async (evt: React.MouseEvent) => {
+    evt.preventDefault()
     setLoading(true)
     const secret = await secretsStore.load({ name, namespace });
     setLoading(false)
@@ -126,7 +127,7 @@ const SecretKey = (props: SecretKeyProps) => {
 
   return (
     <>
-        secretKeyRef({name}.{key})&nbsp;
+      secretKeyRef({name}.{key})&nbsp;
       <Icon
         className={cssNames("secret-button", { loading })}
         material="visibility"

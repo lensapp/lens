@@ -16,11 +16,9 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
     ], "desc");
   }
 
-  loadMetrics(deployment: Deployment) {
+  async loadMetrics(deployment: Deployment) {
     const pods = this.getChildPods(deployment);
-    return podsApi.getMetrics(pods, deployment.getNs(), "").then(metrics =>
-      this.metrics = metrics
-    );
+    this.metrics = await podsApi.getMetrics(pods, deployment.getNs(), "");
   }
 
   getStatuses(deployments?: Deployment[]) {

@@ -59,8 +59,6 @@ export class UserStore extends BaseStore<UserStoreModel> {
     colorTheme: UserStore.defaultTheme,
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
-    downloadBinariesPath: this.getDefaultKubectlPath(),
-    kubectlBinariesPath: ""
   };
 
   get isNewVersion() {

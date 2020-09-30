@@ -146,14 +146,22 @@ describe("config with existing clusters", () => {
               id: 'cluster1',
               kubeConfig: 'foo',
               contextName: 'foo',
-              preferences: { terminalCWD: '/foo' }
+              preferences: { terminalCWD: '/foo' },
+              workspace: 'default'
             },
             {
               id: 'cluster2',
               kubeConfig: 'foo2',
               contextName: 'foo2',
               preferences: { terminalCWD: '/foo2' }
-            }
+            },
+            {
+              id: 'cluster3',
+              kubeConfig: 'foo',
+              contextName: 'foo',
+              preferences: { terminalCWD: '/foo' },
+              workspace: 'foo'
+            },
           ]
         })
       }
@@ -183,10 +191,12 @@ describe("config with existing clusters", () => {
 
   it("allows getting all of the clusters", async () => {
     const storedClusters = clusterStore.clustersList;
+    expect(storedClusters.length).toBe(3)
     expect(storedClusters[0].id).toBe('cluster1')
     expect(storedClusters[0].preferences.terminalCWD).toBe('/foo')
     expect(storedClusters[1].id).toBe('cluster2')
     expect(storedClusters[1].preferences.terminalCWD).toBe('/foo2')
+    expect(storedClusters[2].id).toBe('cluster3')
   })
 })
 
