@@ -90,8 +90,8 @@
         "filter": "!**/main.js"
       },
       {
-        "from": "build/icon.png",
-        "to": "static/icon.png"
+        "from": "src/renderer/components/icon/logo-lens.svg",
+        "to": "static/logo.svg"
       },
       "LICENSE"
     ],
@@ -177,6 +177,7 @@
     "@types/node": "^12.12.45",
     "@types/proper-lockfile": "^4.1.1",
     "@types/react-beautiful-dnd": "^13.0.0",
+    "@types/sharp": "^0.26.0",
     "@types/tar": "^4.0.3",
     "array-move": "^3.0.0",
     "chalk": "^4.1.0",
@@ -210,6 +211,7 @@
     "request-promise-native": "^1.0.8",
     "semver": "^7.3.2",
     "serializr": "^2.0.3",
+    "sharp": "^0.26.1",
     "shell-env": "^3.0.0",
     "spdy": "^4.0.2",
     "tar": "^6.0.2",

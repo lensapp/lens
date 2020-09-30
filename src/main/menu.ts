@@ -14,6 +14,22 @@ export function initMenu(windowManager: WindowManager) {
   });
 }
 
+export function showAbout(browserWindow: BrowserWindow) {
+  const appInfo = [
+    `${appName}: ${app.getVersion()}`,
+    `Electron: ${process.versions.electron}`,
+    `Chrome: ${process.versions.chrome}`,
+    `Copyright 2020 Mirantis, Inc.`,
+  ]
+  dialog.showMessageBoxSync(browserWindow, {
+    title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
+    type: "info",
+    buttons: ["Close"],
+    message: `Lens`,
+    detail: appInfo.join("\r\n")
+  })
+}
+
 export function buildMenu(windowManager: WindowManager) {
   function ignoreOnMac(menuItems: MenuItemConstructorOptions[]) {
     if (isMac) return [];
@@ -31,26 +47,7 @@ export function buildMenu(windowManager: WindowManager) {
 
   function navigate(url: string) {
     logger.info(`[MENU]: navigating to ${url}`);
-    windowManager.navigate({
-      channel: "menu:navigate",
-      url: url,
-    })
-  }
-
-  function showAbout(browserWindow: BrowserWindow) {
-    const appInfo = [
-      `${appName}: ${app.getVersion()}`,
-      `Electron: ${process.versions.electron}`,
-      `Chrome: ${process.versions.chrome}`,
-      `Copyright 2020 Mirantis, Inc.`,
-    ]
-    dialog.showMessageBoxSync(browserWindow, {
-      title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
-      type: "info",
-      buttons: ["Close"],
-      message: `Lens`,
-      detail: appInfo.join("\r\n")
-    })
+    windowManager.navigate(url);
   }
 
   const mt: MenuItemConstructorOptions[] = [];
@@ -162,7 +159,7 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click() {
-          windowManager.reload({ channel: "menu:reload" });
+          windowManager.reload();
         }
       },
       { role: 'toggleDevTools' },

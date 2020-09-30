@@ -13,7 +13,6 @@ import { shellSync } from "./shell-sync"
 import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { registerFileProtocol } from "../common/register-protocol";
-import { setupTrayIcon } from "./tray";
 import { clusterStore } from "../common/cluster-store"
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
@@ -77,7 +76,6 @@ async function main() {
 
   // create window manager and open app
   windowManager = new WindowManager(proxyPort);
-  trayIcon = await setupTrayIcon();
 }
 
 app.on("ready", main);

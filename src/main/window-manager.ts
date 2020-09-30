@@ -1,14 +1,16 @@
 import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
-import { BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
+import { BrowserWindow, dialog, ipcMain, shell, Tray, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { observable } from "mobx";
 import { initMenu } from "./menu";
+import { setupTrayIcon } from "./tray";
 
 export class WindowManager {
-  protected mainView: BrowserWindow;
+  public mainView: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
+  protected trayIcon: Tray;
 
   @observable activeClusterId: ClusterId;
 
@@ -48,21 +50,38 @@ export class WindowManager {
 
     // load & show app
     this.showMain();
-    initMenu(this);
+    this.initMenus();
   }
 
-  navigate({ url, channel, frameId }: { url: string, channel: string, frameId?: number }) {
+  async initMenus() {
+    initMenu(this);
+    this.trayIcon = await setupTrayIcon(this);
+  }
+
+  bringToTop() {
+    this.mainView.show();
+  }
+
+  sendToView({ channel, frameId, data = [] }: { channel: string, frameId?: number, data?: any[] }) {
     if (frameId) {
-      this.mainView.webContents.sendToFrame(frameId, channel, url);
+      this.mainView.webContents.sendToFrame(frameId, channel, ...data);
     } else {
-      this.mainView.webContents.send(channel, url);
+      this.mainView.webContents.send(channel, ...data);
     }
   }
 
-  reload({ channel }: { channel: string }) {
+  navigate(url: string, frameId?: number) {
+    this.sendToView({
+      channel: "menu:navigate",
+      frameId: frameId,
+      data: [url],
+    })
+  }
+
+  reload() {
     const frameId = clusterStore.getById(this.activeClusterId)?.frameId;
     if (frameId) {
-      this.mainView.webContents.sendToFrame(frameId, channel);
+      this.sendToView({ channel: "menu:reload", frameId });
     } else {
       webContents.getFocusedWebContents()?.reload();
     }
