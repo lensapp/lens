@@ -26,9 +26,6 @@ export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 export const extensionsLibName = `${appName}-extensions.api`
 export const extensionsDir = path.join(contextDir, "src/extensions");
 
-// Special dynamic module aliases
-addAlias("@lens/extensions", path.resolve(buildDir, `${extensionsLibName}.js`)); // fixme: provide path in prod
-
 // Special runtime paths
 defineGlobal("__static", {
   get() {
@@ -38,6 +35,13 @@ defineGlobal("__static", {
     return path.resolve(process.resourcesPath, "static")
   }
 })
+
+// Special dynamic module aliases
+if (isProduction && process.resourcesPath) {
+  addAlias("@lens/extensions", path.join(process.resourcesPath, "static", `build/${extensionsLibName}.js`))
+} else {
+  addAlias("@lens/extensions", path.join(contextDir, "static", `build/${extensionsLibName}.js`))
+}
 
 // Apis
 export const apiPrefix = "/api" // local router apis
