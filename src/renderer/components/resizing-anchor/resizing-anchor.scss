@@ -5,7 +5,7 @@ body.resizing {
 }
 
 .ResizingAnchor {
-  $prominentDimention: 12px;
+  $dimension: 12px;
 
   position: absolute;
   z-index: 10;
@@ -18,14 +18,14 @@ body.resizing {
     left: 0;
     right: 0;
     cursor: row-resize;
-    height: $prominentDimention;
+    height: $dimension;
 
     &.leading {
-      top: -$prominentDimention / 2;
+      top: -$dimension / 2;
     }
 
     &.trailing {
-      bottom: -$prominentDimention / 2;
+      bottom: -$dimension / 2;
     }
   }
 
@@ -33,14 +33,14 @@ body.resizing {
     top: 0;
     bottom: 0;
     cursor: col-resize;
-    width: $prominentDimention;
+    width: $dimension;
 
     &.leading {
-      left: -$prominentDimention / 2;
+      left: -$dimension / 2;
     }
 
     &.trailing {
-      right: -$prominentDimention / 2;
+      right: -$dimension / 2;
     }
   }
 }

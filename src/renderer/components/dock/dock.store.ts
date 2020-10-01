@@ -41,7 +41,7 @@ export class DockStore {
   }
 
   get defaultHeight() {
-    return Math.round(window.innerHeight * 0.4);
+    return Math.round(window.innerHeight / 2.5);
   }
 
   get maxHeight() {
@@ -54,11 +54,7 @@ export class DockStore {
   }
 
   constructor() {
-    const stored = this.storage.get()
-    if (Object.entries(stored).length > 0) {
-      // don't override perfectly good defaults in the class decl
-      Object.assign(this, stored);
-    }
+    Object.assign(this, this.storage.get());
 
     reaction(() => ({
       isOpen: this.isOpen,

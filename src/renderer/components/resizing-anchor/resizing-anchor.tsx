@@ -45,7 +45,7 @@ interface Props {
   direction: ResizeDirection;
 
   /**
-   * getCurrentExtent should return the current prominent dimention in the
+   * getCurrentExtent should return the current prominent dimension in the
    * given resizing direction. Width for HORIZONTAL and height for VERTICAL
    */
   getCurrentExtent: () => number;
@@ -111,40 +111,42 @@ interface Position {
 /**
  * Return the direction delta, but ignore drags leading up to a moved item
  *  1. `->|` => return `false`
- *  2. `<-|` => return `directed length (P1, P2)` (negative)
+ *  2. `<-|` => return `directed length (M, P2)` (negative)
  *  3. `-|>` => return `directed length (M, P2)` (positive)
  *  4. `<|-` => return `directed length (M, P2)` (negative)
- *  5. `|->` => return `directed length (P1, P2)` (positive)
+ *  5. `|->` => return `directed length (M, P2)` (positive)
  *  6. `|<-` => return `false`
- * @param P the starting position on the number line
- * @param Q the ending position on the number line
+ * @param P1 the starting position on the number line
+ * @param P2 the ending position on the number line
  * @param M a third point that determines if the delta is meaningful
  * @returns the directional difference between including appropriate sign.
  */
-function directionDelta(P1: number, P2: number, B: number): number | false {
-  if (P1 < B) {
-    if (P2 >= B) {
+function directionDelta(P1: number, P2: number, M: number): number | false {
+  const delta = Math.abs(M - P2)
+
+  if (P1 < M) {
+    if (P2 >= M) {
       // case 3
-      return Math.abs(B - P2)
+      return delta
     }
 
     if (P2 < P1) {
       // case 2
-      return -Math.abs(P1 - P2)
+      return -delta
     }
 
     // case 1
     return false
   }
 
-  if (P2 < B) {
+  if (P2 < M) {
     // case 4
-    return -Math.abs(B - P2)
+    return -delta
   }
 
   if (P1 < P2) {
     // case 5
-    return Math.abs(P1 - P2)
+    return delta
   }
 
   // case 6
@@ -153,7 +155,7 @@ function directionDelta(P1: number, P2: number, B: number): number | false {
 
 export class ResizingAnchor extends React.PureComponent<Props> {
   @observable lastMouseEvent?: MouseEvent
-  @observable elem: HTMLElement
+  @observable.ref ref?: React.RefObject<HTMLDivElement>;
 
   static defaultProps = {
     onStart: noop,
@@ -177,10 +179,8 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     if (props.maxExtent < props.minExtent) {
       throw new Error("maxExtent must be >= minExtent")
     }
-  }
 
-  componentDidMount() {
-    this.elem = findDOMNode(this) as HTMLElement
+    this.ref = React.createRef<HTMLDivElement>()
   }
 
   componentWillUnmount() {
@@ -205,7 +205,12 @@ export class ResizingAnchor extends React.PureComponent<Props> {
   }
 
   calculateDelta(from: Position, to: Position): number | false {
-    const boundingBox = this.elem.getBoundingClientRect()
+    const node = this.ref.current
+    if (!node) {
+      return false
+    }
+
+    const boundingBox = node.getBoundingClientRect()
 
     if (this.props.direction === ResizeDirection.HORIZONTAL) {
       const barX = Math.round(boundingBox.x + (boundingBox.width / 2))
@@ -242,6 +247,10 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     const { maxExtent, minExtent, getCurrentExtent, growthDirection } = this.props
     const { onDrag, onMaxExtentExceed, onMinExtentSubceed, onMaxExtentSubceed, onMinExtentExceed } = this.props
     const delta = this.calculateDelta(this.lastMouseEvent, event)
+
+    // always update the last mouse event
+    this.lastMouseEvent = event
+
     if (delta === false) {
       return
     }
@@ -261,12 +270,10 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     } else if (previousExtent >= maxExtent && maxExtent >= unboundedExtent) {
       onMaxExtentSubceed()
     }
-
-    this.lastMouseEvent = event
   }, 100)
 
   @action
-  onDragEnd = (event: MouseEvent) => {
+  onDragEnd = (_event: MouseEvent) => {
     this.props.onEnd()
     document.removeEventListener("mousemove", this.onDrag)
     document.removeEventListener("mouseup", this.onDragEnd)
@@ -275,6 +282,10 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
   render() {
     const { disabled, direction, placement } = this.props
-    return <div className={cssNames("ResizingAnchor", direction, placement, { disabled })} onMouseDown={this.onDragInit} />
+    return <div
+      ref={this.ref}
+      className={cssNames("ResizingAnchor", direction, placement, { disabled })}
+      onMouseDown={this.onDragInit}
+    />
   }
 }

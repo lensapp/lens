@@ -172,16 +172,16 @@ export class Terminal {
     // Handle custom hotkey bindings
     if (ctrlKey) {
       switch (code) {
-        // Ctrl+C: prevent terminal exit on windows / linux (?)
-        case "KeyC":
-          if (this.xterm.hasSelection()) return false;
-          break;
+      // Ctrl+C: prevent terminal exit on windows / linux (?)
+      case "KeyC":
+        if (this.xterm.hasSelection()) return false;
+        break;
 
-        // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
-        // https://github.com/kontena/lens-app/issues/156#issuecomment-534906480
-        case "KeyW":
-          evt.preventDefault();
-          break;
+      // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
+      // https://github.com/kontena/lens-app/issues/156#issuecomment-534906480
+      case "KeyW":
+        evt.preventDefault();
+        break;
       }
     }
 
