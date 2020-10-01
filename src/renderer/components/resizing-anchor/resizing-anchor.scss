@@ -1,0 +1,46 @@
+body.resizing {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+.ResizingAnchor {
+  $dimension: 12px;
+
+  position: absolute;
+  z-index: 10;
+
+  &.disabled {
+    display: none;
+  }
+
+  &.vertical {
+    left: 0;
+    right: 0;
+    cursor: row-resize;
+    height: $dimension;
+
+    &.leading {
+      top: -$dimension / 2;
+    }
+
+    &.trailing {
+      bottom: -$dimension / 2;
+    }
+  }
+
+  &.horizontal {
+    top: 0;
+    bottom: 0;
+    cursor: col-resize;
+    width: $dimension;
+
+    &.leading {
+      left: -$dimension / 2;
+    }
+
+    &.trailing {
+      right: -$dimension / 2;
+    }
+  }
+}

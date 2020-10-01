@@ -4,7 +4,7 @@ import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { autobind, cssNames, prevDefault } from "../../utils";
-import { Draggable, DraggableState } from "../draggable";
+import { ResizingAnchor, ResizeDirection } from "../resizing-anchor";
 import { Icon } from "../icon";
 import { Tabs } from "../tabs/tabs";
 import { MenuItem } from "../menu";
@@ -29,28 +29,8 @@ interface Props {
 
 @observer
 export class Dock extends React.Component<Props> {
-  onResizeStart = () => {
-    const { isOpen, open, setHeight, minHeight } = dockStore;
-    if (!isOpen) {
-      open();
-      setHeight(minHeight);
-    }
-  }
-
-  onResize = ({ offsetY }: DraggableState) => {
-    const { isOpen, close, height, setHeight, minHeight, defaultHeight } = dockStore;
-    const newHeight = height + offsetY;
-    if (height > newHeight && newHeight < minHeight) {
-      setHeight(defaultHeight);
-      close();
-    }
-    else if (isOpen) {
-      setHeight(newHeight);
-    }
-  }
-
   onKeydown = (evt: React.KeyboardEvent<HTMLElement>) => {
-    const { close, closeTab, selectedTab, fullSize, toggleFillSize } = dockStore;
+    const { close, closeTab, selectedTab } = dockStore;
     if (!selectedTab) return;
     const { code, ctrlKey, shiftKey } = evt.nativeEvent;
     if (shiftKey && code === "Escape") {
@@ -71,13 +51,13 @@ export class Dock extends React.Component<Props> {
   @autobind()
   renderTab(tab: IDockTab) {
     if (isTerminalTab(tab)) {
-      return <TerminalTab value={tab}/>
+      return <TerminalTab value={tab} />
     }
     if (isCreateResourceTab(tab) || isEditResourceTab(tab)) {
-      return <DockTab value={tab} icon="edit"/>
+      return <DockTab value={tab} icon="edit" />
     }
     if (isInstallChartTab(tab) || isUpgradeChartTab(tab)) {
-      return <DockTab value={tab} icon={<Icon svg="install"/>}/>
+      return <DockTab value={tab} icon={<Icon svg="install" />} />
     }
   }
 
@@ -86,11 +66,11 @@ export class Dock extends React.Component<Props> {
     if (!isOpen || !tab) return;
     return (
       <div className="tab-content" style={{ flexBasis: height }}>
-        {isCreateResourceTab(tab) && <CreateResource tab={tab}/>}
-        {isEditResourceTab(tab) && <EditResource tab={tab}/>}
-        {isInstallChartTab(tab) && <InstallChart tab={tab}/>}
-        {isUpgradeChartTab(tab) && <UpgradeChart tab={tab}/>}
-        {isTerminalTab(tab) && <TerminalWindow tab={tab}/>}
+        {isCreateResourceTab(tab) && <CreateResource tab={tab} />}
+        {isEditResourceTab(tab) && <EditResource tab={tab} />}
+        {isInstallChartTab(tab) && <InstallChart tab={tab} />}
+        {isUpgradeChartTab(tab) && <UpgradeChart tab={tab} />}
+        {isTerminalTab(tab) && <TerminalWindow tab={tab} />}
       </div>
     )
   }
@@ -104,11 +84,16 @@ export class Dock extends React.Component<Props> {
         onKeyDown={this.onKeydown}
         tabIndex={-1}
       >
-        <Draggable
-          className={cssNames("resizer", { disabled: !hasTabs() })}
-          horizontal={false}
-          onStart={this.onResizeStart}
-          onEnter={this.onResize}
+        <ResizingAnchor
+          disabled={!hasTabs()}
+          getCurrentExtent={() => dockStore.height}
+          minExtent={dockStore.minHeight}
+          maxExtent={dockStore.maxHeight}
+          direction={ResizeDirection.VERTICAL}
+          onStart={dockStore.open}
+          onMinExtentSubceed={dockStore.close}
+          onMinExtentExceed={dockStore.open}
+          onDrag={dockStore.setHeight}
         />
         <div className="tabs-container flex align-center" onDoubleClick={prevDefault(toggle)}>
           <Tabs
@@ -121,11 +106,11 @@ export class Dock extends React.Component<Props> {
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: <Trans>New tab</Trans> }} closeOnScroll={false}>
                 <MenuItem className="create-terminal-tab" onClick={() => createTerminalTab()}>
-                  <Icon small svg="terminal" size={15}/>
+                  <Icon small svg="terminal" size={15} />
                   <Trans>Terminal session</Trans>
                 </MenuItem>
                 <MenuItem className="create-resource-tab" onClick={() => createResourceTab()}>
-                  <Icon small material="create"/>
+                  <Icon small material="create" />
                   <Trans>Create resource</Trans>
                 </MenuItem>
               </MenuActions>
@@ -133,7 +118,7 @@ export class Dock extends React.Component<Props> {
             {hasTabs() && (
               <>
                 <Icon
-                  material={fullSize ? "fullscreen_exit": "fullscreen"}
+                  material={fullSize ? "fullscreen_exit" : "fullscreen"}
                   tooltip={fullSize ? <Trans>Exit full size mode</Trans> : <Trans>Fit to window</Trans>}
                   onClick={toggleFillSize}
                 />
