@@ -111,25 +111,24 @@ export class ClustersMenu extends React.Component<Props> {
               {({ innerRef, droppableProps, placeholder }: DroppableProvided) => (
                 <div ref={innerRef} {...droppableProps}>
                   {clusters.map((cluster, index) => {
-                      const isActive = cluster.id === clusterStore.activeClusterId;
-                      return (
-                        <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
-                          {({ draggableProps, dragHandleProps, innerRef }: DraggableProvided) => (
-                            <div ref={innerRef} {...draggableProps} {...dragHandleProps}>
-                              <ClusterIcon
-                                key={cluster.id}
-                                showErrors={true}
-                                cluster={cluster}
-                                isActive={isActive}
-                                onClick={() => this.showCluster(cluster.id)}
-                                onContextMenu={() => this.showContextMenu(cluster)}
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      )
-                    }
-                  )}
+                    const isActive = cluster.id === clusterStore.activeClusterId;
+                    return (
+                      <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
+                        {({ draggableProps, dragHandleProps, innerRef }: DraggableProvided) => (
+                          <div ref={innerRef} {...draggableProps} {...dragHandleProps}>
+                            <ClusterIcon
+                              key={cluster.id}
+                              showErrors={true}
+                              cluster={cluster}
+                              isActive={isActive}
+                              onClick={() => this.showCluster(cluster.id)}
+                              onContextMenu={() => this.showContextMenu(cluster)}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    )
+                  })}
                   {placeholder}
                 </div>
               )}
