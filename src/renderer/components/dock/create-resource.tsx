@@ -55,12 +55,14 @@ export class CreateResource extends React.Component<Props> {
       errors.forEach(Notifications.error);
       if (!createdResources.length) throw errors[0];
     }
-    return (
+    const successMessage = (
       <p>
         <Plural value={createdResources.length} one="Resource" other="Resources"/>{" "}
         <Trans><b>{createdResources.join(", ")}</b> successfully created</Trans>
       </p>
     )
+    Notifications.ok(successMessage)
+    return successMessage
   }
 
   render() {
