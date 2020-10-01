@@ -193,7 +193,6 @@ export class Cluster implements ClusterModel {
     const connectionStatus = await this.getConnectionStatus();
     this.online = connectionStatus > ClusterStatus.Offline;
     this.accessible = connectionStatus == ClusterStatus.AccessGranted;
-    this.pushState();
   }
 
   @action
