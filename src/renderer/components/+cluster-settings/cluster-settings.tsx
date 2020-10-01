@@ -1,7 +1,9 @@
 import "./cluster-settings.scss";
 
 import React from "react";
-import { observer, disposeOnUnmount } from "mobx-react";
+import { reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
+import { RouteComponentProps } from "react-router";
 import { Features } from "./features";
 import { Removal } from "./removal";
 import { Status } from "./status";
@@ -13,30 +15,35 @@ import { Icon } from "../icon";
 import { navigate } from "../../navigation";
 import { IClusterSettingsRouteParams } from "./cluster-settings.route";
 import { clusterStore } from "../../../common/cluster-store";
-import { RouteComponentProps } from "react-router";
 import { clusterIpc } from "../../../common/cluster-ipc";
-import { autorun } from "mobx";
 
 interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
 }
 
 @observer
 export class ClusterSettings extends React.Component<Props> {
+  get clusterId() {
+    return this.props.match.params.clusterId
+  }
+
   get cluster(): Cluster {
-    return clusterStore.getById(this.props.match.params.clusterId);
+    return clusterStore.getById(this.clusterId);
   }
 
   async componentDidMount() {
-    window.addEventListener('keydown', this.onEscapeKey);
-    disposeOnUnmount(this,
-      autorun(() => {
-        this.refreshCluster();
+    window.addEventListener("keydown", this.onEscapeKey);
+    disposeOnUnmount(this, [
+      reaction(() => this.cluster, this.refreshCluster, {
+        fireImmediately: true,
+      }),
+      reaction(() => this.clusterId, clusterId => clusterStore.setActive(clusterId), {
+        fireImmediately: true,
       })
-    )
+    ])
   }
 
   componentWillUnmount() {
-    window.removeEventListener('keydown', this.onEscapeKey);
+    window.removeEventListener("keydown", this.onEscapeKey);
   }
 
   onEscapeKey = (evt: KeyboardEvent) => {
@@ -46,10 +53,9 @@ export class ClusterSettings extends React.Component<Props> {
     }
   }
 
-  refreshCluster = () => {
-    if(this.cluster) {
-      clusterIpc.refresh.invokeFromRenderer(this.cluster.id);
-    }
+  refreshCluster = (cluster: Cluster) => {
+    if (!cluster) return;
+    clusterIpc.refresh.invokeFromRenderer(cluster.id);
   }
 
   close() {

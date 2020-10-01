@@ -12,6 +12,7 @@ import isEqual from "lodash/isEqual";
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
   autoLoad?: boolean;
   syncEnabled?: boolean;
+  syncDelayMs?: number;
 }
 
 export class BaseStore<T = any> extends Singleton {
@@ -27,6 +28,7 @@ export class BaseStore<T = any> extends Singleton {
     this.params = {
       autoLoad: false,
       syncEnabled: true,
+      syncDelayMs: 100,
       ...params,
     }
     this.init();
@@ -73,7 +75,9 @@ export class BaseStore<T = any> extends Singleton {
 
   enableSync() {
     this.syncDisposers.push(
-      reaction(() => this.toJSON(), model => this.onModelChange(model)),
+      reaction(() => this.toJSON(), model => this.onModelChange(model), {
+        delay: this.params.syncDelayMs,
+      }),
     );
     if (ipcMain) {
       const callback = (event: IpcMainEvent, model: T) => {
