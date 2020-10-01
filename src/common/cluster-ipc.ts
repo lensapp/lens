@@ -14,6 +14,17 @@ export const clusterIpc = {
     },
   }),
 
+  setFrameId: createIpcChannel({
+    channel: "cluster:set-frame-id",
+    handle: (clusterId: ClusterId, frameId?: number) => {
+      const cluster = clusterStore.getById(clusterId);
+      if (cluster) {
+        if (frameId) cluster.frameId = frameId; // save cluster's webFrame.routingId to be able to send push-updates
+        return cluster.pushState();
+      }
+    },
+  }),
+
   refresh: createIpcChannel({
     channel: "cluster:refresh",
     handle: (clusterId: ClusterId) => {

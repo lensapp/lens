@@ -11,7 +11,7 @@ import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 
 type AppComponent = React.ComponentType & {
-  init?(): void;
+  init?(): Promise<void>;
 }
 
 export async function bootstrap(App: AppComponent) {
