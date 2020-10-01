@@ -92,17 +92,6 @@ interface Props {
   onMinExtentExceed?: () => void;
 }
 
-enum MovementTrigger {
-  EXCEED_MAX = "exceed",
-  SUBCEED_MIN = "subceed",
-}
-
-interface MovementCalc {
-  newExtent?: number;
-  otherTrigger?: MovementTrigger;
-  ignore?: boolean;
-}
-
 interface Position {
   readonly pageX: number;
   readonly pageY: number;
@@ -281,11 +270,12 @@ export class ResizingAnchor extends React.PureComponent<Props> {
   }
 
   render() {
-    const { disabled, direction, placement } = this.props
+    const { disabled, direction, placement, onDoubleClick } = this.props
     return <div
       ref={this.ref}
       className={cssNames("ResizingAnchor", direction, placement, { disabled })}
       onMouseDown={this.onDragInit}
+      onDoubleClick={onDoubleClick}
     />
   }
 }
