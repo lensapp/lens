@@ -44,8 +44,8 @@ export class App extends React.Component {
     const clusterId = getHostedClusterId();
     logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`)
     await Terminal.preloadFonts()
-    await clusterIpc.activate.invokeFromRenderer(clusterId, frameId);
-    await getHostedCluster().whenReady; // cluster.refresh() is done at this point
+    await clusterIpc.setFrameId.invokeFromRenderer(clusterId, frameId);
+    await getHostedCluster().whenReady; // cluster.activate() is done at this point
   }
 
   get startURL() {
