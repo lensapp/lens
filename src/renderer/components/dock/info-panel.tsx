@@ -100,7 +100,9 @@ export class InfoPanel extends Component<Props> {
         </div>
         <Button plain label={<Trans>Cancel</Trans>} onClick={close} />
         <Button
-          primary active
+          active
+          outlined={showSubmitClose}
+          primary={!showSubmitClose}// one button always should be primary (blue)
           label={submitLabel}
           onClick={submit}
           disabled={isDisabled}
