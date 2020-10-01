@@ -11,7 +11,8 @@ body.resizing {
   z-index: 10;
 
   &.disabled {
-    display: none;
+    pointer-events: none;
+    cursor: unset;
   }
 
   &.vertical {

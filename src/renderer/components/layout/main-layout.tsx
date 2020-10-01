@@ -55,6 +55,19 @@ export class MainLayout extends React.Component<Props> {
     this.sidebarWidth = newWidth
   }
 
+  sidebarMinWidth(): number {
+    const headerPadding = 4 * 2 // 4px * (1 for right + 1 for left)
+    const appIcon = 28
+    const appName = 40
+    const pinningIcon = 22 + 10 // 10 for hover circle
+    const goodMeasure = 10
+    return headerPadding + appIcon + appName + pinningIcon + goodMeasure
+  }
+
+  sidebarMaxWidth(): number {
+    return (window.innerWidth || 500) * 0.4
+  }
+
   render() {
     const { className, headerClass, footer, footerClass, children } = this.props;
     const cluster = getHostedCluster();
@@ -77,8 +90,8 @@ export class MainLayout extends React.Component<Props> {
             onDrag={this.adjustWidth}
             onDoubleClick={this.toggleSidebar}
             disabled={!this.isPinned}
-            minExtent={100}
-            maxExtent={750}
+            minExtent={this.sidebarMinWidth()}
+            maxExtent={this.sidebarMaxWidth()}
           />
         </aside>
 

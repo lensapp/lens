@@ -39,7 +39,7 @@
       overflow: hidden;
 
       &.accessible:hover {
-        width: max-content;
+        width: var(--sidebar-width);
         transition-delay: 750ms;
         box-shadow: 3px 3px 16px rgba(0, 0, 0, 0.35);
         z-index: $zIndex-sidebar-hover;
