@@ -6,7 +6,7 @@ import { computed, observable, reaction } from "mobx";
 import { observer } from "mobx-react";
 import { matchPath, NavLink } from "react-router-dom";
 import { Trans } from "@lingui/macro";
-import { autobind, createStorage, cssNames } from "../../utils";
+import { createStorage, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { workloadsRoute, workloadsURL } from "../+workloads/workloads.route";
 import { namespacesURL } from "../+namespaces/namespaces.route";
@@ -71,19 +71,12 @@ export class Sidebar extends React.Component<Props> {
     });
   }
 
-  @autobind()
-  onDoubleClick() {
-    if (!this.props.isPinned) {
-      this.props.toggle()
-    }
-  }
-
   render() {
     const { toggle, isPinned, className } = this.props;
     const query = namespaceStore.getContextParams();
     return (
       <SidebarContext.Provider value={{ pinned: isPinned }}>
-        <div className={cssNames("Sidebar flex column", className, { pinned: isPinned })} onDoubleClick={this.onDoubleClick}>
+        <div className={cssNames("Sidebar flex column", className, { pinned: isPinned })}>
           <div className="header flex align-center">
             <NavLink exact to="/" className="box grow">
               <Icon svg="logo-full" className="logo-icon" />

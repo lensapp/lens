@@ -64,10 +64,6 @@ export class MainLayout extends React.Component<Props> {
     return headerPadding + appIcon + appName + pinningIcon + goodMeasure
   }
 
-  sidebarMaxWidth(): number {
-    return (window.innerWidth || 500) * 0.4
-  }
-
   render() {
     const { className, headerClass, footer, footerClass, children } = this.props;
     const cluster = getHostedCluster();
@@ -91,7 +87,7 @@ export class MainLayout extends React.Component<Props> {
             onDoubleClick={this.toggleSidebar}
             disabled={!this.isPinned}
             minExtent={this.sidebarMinWidth()}
-            maxExtent={this.sidebarMaxWidth()}
+            maxExtent={400}
           />
         </aside>
 
