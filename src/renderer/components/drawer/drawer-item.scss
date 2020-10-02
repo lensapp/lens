@@ -48,6 +48,11 @@
         float: left;
         margin: $spacing;
 
+        &:after {
+          content: " ";
+          display: block;
+        }
+
         &.disabled {
           opacity: 0.5;
         }
