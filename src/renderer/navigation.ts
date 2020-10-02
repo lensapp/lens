@@ -18,6 +18,7 @@ if (ipcRenderer) {
 }
 
 export function navigate(location: LocationDescriptor) {
+  if (history.location.pathname === location) return;
   navigation.push(location);
 }
 
