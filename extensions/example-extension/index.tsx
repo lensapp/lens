@@ -1,8 +1,12 @@
 import { Button, DynamicPageType, Icon, IconProps, LensExtension, React } from "@lens/extensions";
 import path from "path";
+import _ from "lodash"
+import stripAnsi from "strip-ansi"
 
 export default class ExampleExtension extends LensExtension {
   onActivate() {
+    _.has({a: 1}, "a")
+    stripAnsi("asdasdasd")
     console.log('EXAMPLE EXTENSION: ACTIVATED', this.getMeta());
     this.registerPage({
       type: DynamicPageType.CLUSTER,
@@ -36,7 +40,7 @@ export class ExtensionPage extends React.Component<{ extension: ExampleExtension
     return (
       <TabLayout className="ExampleExtension">
         <div className="flex column gaps align-flex-start">
-          <p>Hello from extensions-api!</p>
+          <p>{stripAnsi("Hello from extensions-api!!!!!!!")}</p>
           <p>File: <i>{__filename}</i></p>
           <Button accent label="Deactivate" onClick={this.deactivate}/>
         </div>

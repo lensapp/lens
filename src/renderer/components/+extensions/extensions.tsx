@@ -18,12 +18,12 @@ export class Extensions extends React.Component {
   }
 
   render() {
-    const { installed: installedExtensions } = extensionStore;
+    const { extensions } = extensionStore;
     return (
       <WizardLayout className="Extensions" infoPanel={this.renderInfoPanel()}>
         <h2>Extensions</h2>
         <pre>
-          {JSON.stringify(installedExtensions.toJSON(), null, 2)}
+          {JSON.stringify(extensions.toJSON(), null, 2)}
         </pre>
       </WizardLayout>
     );

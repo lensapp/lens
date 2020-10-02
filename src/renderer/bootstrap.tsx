@@ -4,7 +4,7 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { isMac } from "../common/vars";
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
-import { extensionStore } from "../extensions/extension-store";
+import { extensionLoader } from "../extensions/extension-loader";
 import { clusterStore } from "../common/cluster-store";
 import { i18nStore } from "./i18n";
 import { themeStore } from "./theme.store";
@@ -25,18 +25,17 @@ export async function bootstrap(App: AppComponent) {
     userStore.load(),
     workspaceStore.load(),
     clusterStore.load(),
-    extensionStore.load(),
     i18nStore.init(),
     themeStore.init(),
   ]);
 
   // Register additional store listeners
   clusterStore.registerIpcListener();
+  extensionLoader.autoEnableOnLoad(getLensRuntime);
 
   // init app's dependencies if any
   if (App.init) {
     await App.init();
-    extensionStore.autoEnableOnLoad(getLensRuntime);
   }
   window.addEventListener("message", (ev: MessageEvent) => {
     if (ev.data === "teardown") {

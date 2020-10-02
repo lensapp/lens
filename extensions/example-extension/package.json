@@ -2,11 +2,19 @@
   "name": "extension-example",
   "version": "1.0.0",
   "description": "Example extension",
-  "main": "example-extension.js",
+  "main": "dist/index.js",
   "lens": {
     "metadata": {},
     "styles": []
   },
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
+    "lodash": "^4.17.20",
+    "strip-ansi": "^6.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.3"
   }
 }
