@@ -7,7 +7,6 @@
 
   .theme-light & {
     border: 1px solid gainsboro;
-    border-radius: $radius;
 
     .ace_scrollbar {
       @include custom-scrollbar(dark);
@@ -19,7 +18,6 @@
     width: inherit;
     height: inherit;
     font-size: 90%;
-    border-radius: $radius;
   }
 
   // --Theme customization
