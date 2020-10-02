@@ -50,7 +50,7 @@ msgstr "<0>Отфильтровано</0>: {itemsCount} / {allItemsCount}"
 #~ msgid "<0>Your browser does not support all Lens features. </0> Please consider using another browser."
 #~ msgstr "<0>Ваш браузер не поддерживает все возможности Lens. </0> Пожалуйста рассмотрите использование другого современного браузера."
 
-#: src/renderer/components/dock/create-resource.tsx:56
+#: src/renderer/components/dock/create-resource.tsx:58
 msgid "<0>{0}</0> successfully created"
 msgstr ""
 
@@ -58,7 +58,7 @@ msgstr ""
 #~ msgid "A HTTP proxy server URL (format: http://<address>:<port>)"
 #~ msgstr ""
 
-#: src/renderer/components/input/input.validators.ts:46
+#: src/renderer/components/input/input_validators.ts:46
 msgid "A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics."
 msgstr "Это поле может содержать только латинские буквы в нижнем регистре, номера и дефис."
 
@@ -88,7 +88,7 @@ msgstr "Название аккаунта"
 msgid "Active"
 msgstr "Активный"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:288
+#: src/renderer/components/+add-cluster/add-cluster.tsx:289
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:130
 msgid "Add Cluster"
 msgstr ""
@@ -113,7 +113,7 @@ msgstr "Добавить привязки к {name}"
 #~ msgid "Add cluster"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:305
+#: src/renderer/components/+add-cluster/add-cluster.tsx:306
 msgid "Add cluster(s)"
 msgstr ""
 
@@ -274,7 +274,7 @@ msgstr "Версия приложения"
 msgid "App crash at <0>{pageUrl}</0>"
 msgstr "Сбой работы приложения на <0>{pageUrl}</0>"
 
-#: src/renderer/components/dock/edit-resource.tsx:88
+#: src/renderer/components/dock/edit-resource.tsx:87
 msgid "Applying.."
 msgstr "Применение.."
 
@@ -405,7 +405,7 @@ msgstr "CPU:"
 
 #: src/renderer/components/+workspaces/workspaces.tsx:133
 #: src/renderer/components/confirm-dialog/confirm-dialog.tsx:44
-#: src/renderer/components/dock/info-panel.tsx:97
+#: src/renderer/components/dock/info-panel.tsx:85
 #: src/renderer/components/wizard/wizard.tsx:130
 msgid "Cancel"
 msgstr "Отмена"
@@ -441,7 +441,7 @@ msgstr "Чарт"
 msgid "Chart Release <0>{0}</0> successfully created."
 msgstr "Релиз чарта <0>{0}</0> успешно создан."
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:105
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:124
 msgid "Chart: {0}"
 msgstr "Чарт: {0}"
 
@@ -648,7 +648,7 @@ msgstr "Кол-во"
 #: src/renderer/components/+user-management-roles/add-role-dialog.tsx:73
 #: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:212
 #: src/renderer/components/+user-management-service-accounts/create-service-account-dialog.tsx:76
-#: src/renderer/components/dock/create-resource.tsx:71
+#: src/renderer/components/dock/create-resource.tsx:74
 msgid "Create"
 msgstr "Создать"
 
@@ -692,7 +692,7 @@ msgstr "Создать новый секрет"
 msgid "Create new Service Account"
 msgstr "Создать новый Service Account"
 
-#: src/renderer/components/dock/dock.tsx:111
+#: src/renderer/components/dock/dock.tsx:93
 msgid "Create resource"
 msgstr "Создать ресурс"
 
@@ -784,8 +784,8 @@ msgid "Default Runtime Class Name"
 msgstr ""
 
 #: src/renderer/components/+preferences/kubectl-binaries.tsx:30
-msgid "Default:"
-msgstr ""
+#~ msgid "Default:"
+#~ msgstr ""
 
 #: src/renderer/components/+custom-resources/custom-resources.tsx:22
 msgid "Definitions"
@@ -849,15 +849,19 @@ msgstr "Домены"
 msgid "Download file"
 msgstr "Скачать файл"
 
-#: src/renderer/components/+preferences/kubectl-binaries.tsx:39
+#: src/renderer/components/+preferences/kubectl-binaries.tsx:24
 msgid "Download kubectl binaries"
 msgstr ""
 
 #: src/renderer/components/+preferences/kubectl-binaries.tsx:37
-msgid "Download kubectl binaries matching to Kubernetes cluster verison."
+#~ msgid "Download kubectl binaries matching to Kubernetes cluster verison."
+#~ msgstr ""
+
+#: src/renderer/components/+preferences/kubectl-binaries.tsx:26
+msgid "Download kubectl binaries matching to Kubernetes cluster version."
 msgstr ""
 
-#: src/renderer/components/+preferences/kubectl-binaries.tsx:41
+#: src/renderer/components/+preferences/kubectl-binaries.tsx:29
 msgid "Download mirror for kubectl"
 msgstr ""
 
@@ -945,7 +949,7 @@ msgstr "В кластере все в порядке"
 #~ msgid "Excluded items with \"system:\" prefix"
 #~ msgstr "За исключением объектов с префиксом “system:”"
 
-#: src/renderer/components/dock/dock.tsx:116
+#: src/renderer/components/dock/dock.tsx:98
 msgid "Exit full size mode"
 msgstr "Выйти из полного размера"
 
@@ -986,7 +990,7 @@ msgstr "Финализаторы"
 msgid "First seen"
 msgstr "Увиденно впервые"
 
-#: src/renderer/components/dock/dock.tsx:116
+#: src/renderer/components/dock/dock.tsx:98
 msgid "Fit to window"
 msgstr "По размеру окна"
 
@@ -1074,7 +1078,7 @@ msgstr "Скрыть"
 msgid "High number of replicas may cause cluster performance issues"
 msgstr "Большое количество реплик может вызвать проблемы с производительностью кластера"
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:81
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:88
 msgid "Home"
 msgstr "Ссылка"
 
@@ -1129,7 +1133,7 @@ msgstr "Изображение"
 msgid "ImagePullPolicy"
 msgstr "ImagePullPolicy"
 
-#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:80
+#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:108
 msgid "ImagePullSecrets"
 msgstr "ImagePullSecrets"
 
@@ -1154,8 +1158,8 @@ msgstr "Ingresses"
 msgid "Init Containers"
 msgstr "Контейнеры инициализации"
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:76
-#: src/renderer/components/dock/install-chart.tsx:128
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:83
+#: src/renderer/components/dock/install-chart.tsx:127
 msgid "Install"
 msgstr "Установить"
 
@@ -1163,15 +1167,15 @@ msgstr "Установить"
 msgid "Installation complete!"
 msgstr "Установка завершена!"
 
-#: src/renderer/components/dock/install-chart.tsx:128
+#: src/renderer/components/dock/install-chart.tsx:127
 msgid "Installing..."
 msgstr "Установка.."
 
-#: src/renderer/components/input/input.validators.ts:50
+#: src/renderer/components/input/input_validators.ts:50
 msgid "Invalid account ID"
 msgstr "Неверный ID аккаунта"
 
-#: src/renderer/components/input/input.validators.ts:16
+#: src/renderer/components/input/input_validators.ts:16
 msgid "Invalid number"
 msgstr "Неверный номер"
 
@@ -1232,13 +1236,13 @@ msgstr "Размер ключа"
 msgid "Keys"
 msgstr "Ключи"
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:87
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:94
 msgid "Keywords"
 msgstr "Ключевые слова"
 
 #: src/renderer/components/+events/event-details.tsx:57
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:79
-#: src/renderer/components/dock/edit-resource.tsx:89
+#: src/renderer/components/dock/edit-resource.tsx:88
 msgid "Kind"
 msgstr "Тип"
 
@@ -1250,7 +1254,7 @@ msgstr "Файл конфигурации"
 msgid "Kubeconfig File"
 msgstr "Файл конфигурации"
 
-#: src/renderer/components/+preferences/kubectl-binaries.tsx:35
+#: src/renderer/components/+preferences/kubectl-binaries.tsx:23
 msgid "Kubectl Binary"
 msgstr ""
 
@@ -1344,7 +1348,7 @@ msgstr "Логи"
 msgid "Logs copied to clipboard."
 msgstr "Скопировано."
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:84
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:91
 msgid "Maintainers"
 msgstr "Создатели"
 
@@ -1370,7 +1374,7 @@ msgstr "Макс. подов"
 msgid "Max Unavailable"
 msgstr ""
 
-#: src/renderer/components/input/input.validators.ts:41
+#: src/renderer/components/input/input_validators.ts:41
 msgid "Maximum length is {maxLength}"
 msgstr "Максимальная длина {maxLength}"
 
@@ -1442,11 +1446,11 @@ msgstr ""
 msgid "Min Pods"
 msgstr "Мин. подов"
 
-#: src/renderer/components/dock/dock.tsx:117
+#: src/renderer/components/dock/dock.tsx:99
 msgid "Minimize"
 msgstr "Минимизировать"
 
-#: src/renderer/components/input/input.validators.ts:36
+#: src/renderer/components/input/input_validators.ts:36
 msgid "Minimum length is {minLength}"
 msgstr "Минимальная длина {minLength}"
 
@@ -1455,7 +1459,7 @@ msgstr "Минимальная длина {minLength}"
 msgid "Mount Options"
 msgstr "Опции монтирования"
 
-#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:84
+#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:112
 msgid "Mountable secrets"
 msgstr "Монтируемые секреты"
 
@@ -1511,7 +1515,7 @@ msgstr "Установки"
 #: src/renderer/components/+workloads-replicasets/replicasets.tsx:50
 #: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:40
 #: src/renderer/components/+workspaces/workspaces.tsx:130
-#: src/renderer/components/dock/edit-resource.tsx:90
+#: src/renderer/components/dock/edit-resource.tsx:89
 #: src/renderer/components/kube-object/kube-object-meta.tsx:20
 msgid "Name"
 msgstr "Имя"
@@ -1557,7 +1561,7 @@ msgstr ""
 #: src/renderer/components/+workloads-jobs/jobs.tsx:38
 #: src/renderer/components/+workloads-pods/pods.tsx:76
 #: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:41
-#: src/renderer/components/dock/edit-resource.tsx:91
+#: src/renderer/components/dock/edit-resource.tsx:90
 #: src/renderer/components/dock/install-chart.tsx:122
 #: src/renderer/components/dock/upgrade-chart.tsx:98
 #: src/renderer/components/item-object-list/page-filters-select.tsx:57
@@ -1601,7 +1605,7 @@ msgstr "Network Policies"
 msgid "New logs since opening the dialog"
 msgstr "Новые логи с момента открытия диалога"
 
-#: src/renderer/components/dock/dock.tsx:104
+#: src/renderer/components/dock/dock.tsx:86
 msgid "New tab"
 msgstr "Новая вкладка"
 
@@ -1735,7 +1739,7 @@ msgstr "Ок"
 msgid "Ok, got it!"
 msgstr ""
 
-#: src/renderer/components/dock/dock.tsx:117
+#: src/renderer/components/dock/dock.tsx:99
 msgid "Open"
 msgstr "Открыть"
 
@@ -1940,7 +1944,7 @@ msgstr "Комиссия"
 msgid "Proxy is used only for non-cluster communication."
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:293
+#: src/renderer/components/+add-cluster/add-cluster.tsx:294
 msgid "Proxy settings"
 msgstr ""
 
@@ -2265,7 +2269,7 @@ msgstr ""
 #: src/renderer/components/+config-secrets/secret-details.tsx:97
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:216
 #: src/renderer/components/+workspaces/workspaces.tsx:132
-#: src/renderer/components/dock/edit-resource.tsx:88
+#: src/renderer/components/dock/edit-resource.tsx:87
 msgid "Save"
 msgstr "Сохранить"
 
@@ -2318,6 +2322,10 @@ msgstr "Секрет"
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:80
 msgid "Secret Name"
 msgstr "Название секрета"
+
+#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:72
+msgid "Secret is not found"
+msgstr ""
 
 #: src/renderer/components/+config-secrets/add-secret-dialog.tsx:147
 msgid "Secret name"
@@ -2473,7 +2481,7 @@ msgid "Shell"
 msgstr "Командная строка"
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
-#: src/renderer/components/+workloads-pods/pod-container-env.tsx:100
+#: src/renderer/components/+workloads-pods/pod-container-env.tsx:101
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Show"
@@ -2581,12 +2589,12 @@ msgstr "Тип стратегии"
 msgid "Sub-object"
 msgstr "Суб-объект"
 
-#: src/renderer/components/dock/info-panel.tsx:104
+#: src/renderer/components/dock/info-panel.tsx:93
 #: src/renderer/components/wizard/wizard.tsx:131
 msgid "Submit"
 msgstr "Отправить"
 
-#: src/renderer/components/dock/info-panel.tsx:105
+#: src/renderer/components/dock/info-panel.tsx:94
 msgid "Submitting.."
 msgstr "Применение.."
 
@@ -2628,9 +2636,13 @@ msgstr ""
 msgid "Terminal"
 msgstr "Терминал"
 
-#: src/renderer/components/dock/dock.tsx:107
+#: src/renderer/components/dock/dock.tsx:89
 msgid "Terminal session"
 msgstr "Сессия терминала"
+
+#: src/renderer/components/+preferences/kubectl-binaries.tsx:38
+msgid "The path to the kubectl binary on the system."
+msgstr ""
 
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:226
 msgid "There are no logs available for container."
@@ -2640,11 +2652,11 @@ msgstr "Для контейнера нет логов."
 msgid "There are no logs available."
 msgstr "Логи отсутствуют."
 
-#: src/renderer/components/input/input.validators.ts:6
+#: src/renderer/components/input/input_validators.ts:6
 msgid "This field is required"
 msgstr "Это обязательное поле"
 
-#: src/renderer/components/input/input.validators.ts:31
+#: src/renderer/components/input/input_validators.ts:31
 msgid "This field must be a valid path"
 msgstr ""
 
@@ -2664,7 +2676,7 @@ msgstr "Из"
 msgid "To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker."
 msgstr "Чтобы помочь нам улучшить продукт пожалуйста отправляйте ошибки на {slackLink} сообщество или {githubLink} трекер ошибок."
 
-#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:76
+#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:104
 msgid "Tokens"
 msgstr "Токены"
 
@@ -2731,12 +2743,12 @@ msgstr "Обновить"
 msgid "Updated"
 msgstr "Обновлено"
 
-#: src/renderer/components/dock/upgrade-chart.tsx:105
+#: src/renderer/components/dock/upgrade-chart.tsx:104
 msgid "Updating.."
 msgstr "Обновление.."
 
 #: src/renderer/components/+apps-releases/release-details.tsx:176
-#: src/renderer/components/dock/upgrade-chart.tsx:105
+#: src/renderer/components/dock/upgrade-chart.tsx:104
 msgid "Upgrade"
 msgstr "Обновить"
 
@@ -2800,7 +2812,7 @@ msgstr "Конфигурация"
 msgid "Verbs"
 msgstr "Определения"
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:78
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:85
 #: src/renderer/components/+apps-helm-charts/helm-charts.tsx:66
 #: src/renderer/components/+apps-releases/release-details.tsx:185
 #: src/renderer/components/+apps-releases/releases.tsx:91
@@ -2867,11 +2879,11 @@ msgstr ""
 msgid "Workspaces are used to organize number of clusters into logical groups."
 msgstr ""
 
-#: src/renderer/components/input/input.validators.ts:11
+#: src/renderer/components/input/input_validators.ts:11
 msgid "Wrong email format"
 msgstr "Неверный формат электронной почты"
 
-#: src/renderer/components/input/input.validators.ts:26
+#: src/renderer/components/input/input_validators.ts:26
 msgid "Wrong url format"
 msgstr "Неверный url формат"
 
@@ -2954,7 +2966,7 @@ msgstr ""
 msgid "timestamps"
 msgstr "временные метки"
 
-#: src/renderer/components/dock/create-resource.tsx:55
+#: src/renderer/components/dock/create-resource.tsx:57
 msgid "{0, plural, one {Resource} other {Resources}}"
 msgstr "{0, plural, one {Ресурс} few {Ресурсы} many {Ресурсы} other {Ресурсы}}"
 
@@ -3013,6 +3025,6 @@ msgstr ""
 "other {<2>Удалить <3>{selectedCount}</3> элементов <4>{selectedNames}</4> {tail}?</2>}\n"
 "}"
 
-#: src/renderer/components/dock/info-panel.tsx:99
+#: src/renderer/components/dock/info-panel.tsx:88
 msgid "{submitLabel} & Close"
 msgstr "{submitLabel} и закрыть"
