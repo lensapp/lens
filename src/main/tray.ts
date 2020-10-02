@@ -21,10 +21,14 @@ export const trayIcon = isDevelopment
   : path.resolve(__static, "logo.svg") // electron-builder's extraResources
 
 export function initTray(windowManager: WindowManager) {
-  return autorun(() => {
+  const dispose = autorun(() => {
     const menu = createTrayMenu(windowManager);
     buildTray(menu);
   })
+  return () => {
+    tray?.destroy();
+    dispose();
+  }
 }
 
 export async function buildTray(menu: Menu) {
@@ -36,10 +40,7 @@ export async function buildTray(menu: Menu) {
     height: iconSize
   });
 
-  if (tray) {
-    tray.destroy(); // remove old tray on update
-  }
-
+  tray?.destroy(); // remove previous tray first
   tray = new Tray(icon)
   tray.setToolTip(packageInfo.description)
   tray.setIgnoreDoubleClickEvents(true);

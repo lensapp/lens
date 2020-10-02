@@ -1,8 +1,9 @@
 import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
+import { userStore } from "../common/user-store";
+import { observable, reaction } from "mobx";
 import { BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
-import { observable } from "mobx";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
 
@@ -10,6 +11,7 @@ export class WindowManager {
   public mainView: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
+  protected disposers: Record<string, Function> = {};
 
   @observable activeClusterId: ClusterId;
 
@@ -52,9 +54,17 @@ export class WindowManager {
     this.initMenus();
   }
 
-  async initMenus() {
-    initMenu(this);
-    initTray(this);
+  protected async initMenus() {
+    this.disposers.menuAutoUpdater = initMenu(this);
+    this.disposers.trayAutoBind = reaction(() => userStore.preferences.trayEnabled, isEnabled => {
+      if (isEnabled) {
+        this.disposers.trayAutoUpdater = initTray(this);
+      } else {
+        this.disposers?.trayAutoUpdater();
+      }
+    }, {
+      fireImmediately: true
+    });
   }
 
   bringToTop() {
@@ -120,5 +130,9 @@ export class WindowManager {
     this.windowState.unmanage();
     this.splashWindow.destroy();
     this.mainView.destroy();
+    Object.entries(this.disposers).forEach(([name, dispose]) => {
+      dispose();
+      delete this.disposers[name]
+    });
   }
 }

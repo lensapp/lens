@@ -194,6 +194,16 @@ export class Preferences extends React.Component {
           <small className="hint">
             <Trans>Telemetry & usage data is collected to continuously improve the Lens experience.</Trans>
           </small>
+
+          <h2><Trans>Tray icon</Trans></h2>
+          <Checkbox
+            label={<Trans>Enable tray icon</Trans>}
+            value={preferences.trayEnabled}
+            onChange={v => preferences.trayEnabled = v}
+          />
+          <small className="hint">
+            <Trans>Adds OS-level tray icon and menu to get quick access to Lens</Trans>
+          </small>
         </WizardLayout>
       </div>
     );

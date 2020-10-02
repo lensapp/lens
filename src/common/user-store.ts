@@ -27,6 +27,7 @@ export interface UserPreferences {
   downloadKubectlBinaries?: boolean;
   downloadBinariesPath?: string;
   kubectlBinariesPath?: string;
+  trayEnabled?: boolean;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
@@ -59,6 +60,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     colorTheme: UserStore.defaultTheme,
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
+    trayEnabled: true,
   };
 
   get isNewVersion() {

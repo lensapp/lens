@@ -9,7 +9,7 @@ import { clusterSettingsURL } from "../renderer/components/+cluster-settings/clu
 import logger from "./logger";
 
 export function initMenu(windowManager: WindowManager) {
-  autorun(() => buildMenu(windowManager), {
+  return autorun(() => buildMenu(windowManager), {
     delay: 100
   });
 }
