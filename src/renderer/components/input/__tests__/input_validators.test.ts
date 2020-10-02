@@ -1,4 +1,4 @@
-import { isEmail, systemName } from "./input.validators";
+import { isEmail, systemName } from "../input_validators";
 
 describe("input validation tests", () => {
   describe("isEmail tests", () => {

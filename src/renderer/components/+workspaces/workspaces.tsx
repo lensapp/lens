@@ -12,7 +12,7 @@ import { Icon } from "../icon";
 import { Input } from "../input";
 import { cssNames, prevDefault } from "../../utils";
 import { Button } from "../button";
-import { isRequired, Validator } from "../input/input.validators";
+import { isRequired, Validator } from "../input/input_validators";
 
 @observer
 export class Workspaces extends React.Component {

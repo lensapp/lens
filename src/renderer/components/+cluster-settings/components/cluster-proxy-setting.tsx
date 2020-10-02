@@ -3,7 +3,7 @@ import { observable, autorun } from "mobx";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";
 import { Input } from "../../input";
-import { isUrl } from "../../input/input.validators";
+import { isUrl } from "../../input/input_validators";
 import { SubTitle } from "../../layout/sub-title";
 
 interface Props {
@@ -33,7 +33,7 @@ export class ClusterProxySetting extends React.Component<Props> {
   render() {
     return (
       <>
-        <SubTitle title="HTTP Proxy"/>
+        <SubTitle title="HTTP Proxy" />
         <p>HTTP Proxy server. Used for communicating with Kubernetes API.</p>
         <Input
           theme="round-black"
