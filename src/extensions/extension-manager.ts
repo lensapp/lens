@@ -46,6 +46,7 @@ export class ExtensionManager {
   }
 
   protected installPackageFromPath(path: string): Promise<void> {
+    const origLogger = console.log
     return new Promise((resolve, reject) => {
       npm.load({
         production: true,
@@ -54,11 +55,15 @@ export class ExtensionManager {
         dev: false,
         spin: false,
         "ignore-scripts": true,
-        loglevel: "error"
+        loglevel: "silent"
       }, (err) => {
+        console.log = function() {
+          // just to ignore ts empty function error
+        }
         npm.commands.install([
           path
         ], (err) => {
+          console.log = origLogger
           if (err) {
             reject(err)
           } else {
