@@ -6,7 +6,6 @@ import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.r
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
-import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
 import logger from "./logger";
 
 export function initMenu(windowManager: WindowManager) {
@@ -71,13 +70,6 @@ export function buildMenu(windowManager: WindowManager) {
         accelerator: 'CmdOrCtrl+,',
         click() {
           navigate(preferencesURL())
-        }
-      },
-      {
-        label: 'Extensions',
-        accelerator: 'CmdOrCtrl+E',
-        click() {
-          navigate(extensionsURL())
         }
       },
       { type: 'separator' },
