@@ -1,7 +1,6 @@
-import type { ExtensionId, LensExtension, ExtensionManifest } from "./lens-extension"
+import type { ExtensionId, LensExtension, ExtensionManifest, ExtensionModel } from "./lens-extension"
 import { broadcastIpc } from "../common/ipc"
 import type { LensRuntimeRendererEnv } from "./lens-runtime"
-import { ExtensionModel } from "./extension-store"
 import path from "path"
 import { observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
@@ -20,7 +19,7 @@ export function extensionPackagesRoot() {
 export function withExtensionPackagesRoot(callback: Function) {
   const cwd = process.cwd()
   try {
-    process.chdir(path.resolve(extensionPackagesRoot()))
+    process.chdir(extensionPackagesRoot())
     return callback()
   } finally {
     process.chdir(cwd)
@@ -44,14 +43,14 @@ export class ExtensionLoader {
   }
 
   autoEnableOnLoad(getLensRuntimeEnv: () => LensRuntimeRendererEnv, { delay = 0 } = {}) {
-    logger.info('[EXTENSIONS-MANAGER]: auto-activation loaded extensions: ON');
+    logger.info('[EXTENSIONS-LOADER]: auto-activation loaded extensions: ON');
     return reaction(() => this.extensions.toJS(), installedExtensions => {
       installedExtensions.forEach((ext) => {
         let instance = this.instances.get(ext.manifestPath)
         if (!instance) {
           const extensionModule = this.requireExtension(ext)
           if (!extensionModule) {
-            logger.error("[EXTENSION-MANAGER] failed to load extension " + ext.manifestPath)
+            logger.error("[EXTENSION-LOADER] failed to load extension " + ext.manifestPath)
             return
           }
           const LensExtensionClass = extensionModule.default;
@@ -72,7 +71,7 @@ export class ExtensionLoader {
         const extMain = path.join(path.dirname(extension.manifestPath), extension.manifest.main)
         return __non_webpack_require__(extMain)
       } catch (err) {
-        console.error(`[EXTENSION-MANAGER]: can't load extension main at ${extension.manifestPath}: ${err}`, { extension });
+        console.error(`[EXTENSION-LOADER]: can't load extension main at ${extension.manifestPath}: ${err}`, { extension });
       }
     })
   }

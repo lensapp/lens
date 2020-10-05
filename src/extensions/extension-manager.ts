@@ -17,15 +17,14 @@ export class ExtensionManager {
   async load() {
     logger.info("[EXTENSION-MANAGER] loading extensions from " + this.extensionPackagesRoot)
 
-    fs.ensureDir(path.join(this.extensionPackagesRoot, "node_modules"))
-    fs.writeFileSync(path.join(this.extensionPackagesRoot, "package.json"), `{"dependencies": []}`, {mode: 0o600})
+    await fs.ensureDir(path.join(this.extensionPackagesRoot, "node_modules"))
+    await fs.writeFile(path.join(this.extensionPackagesRoot, "package.json"), `{"dependencies": []}`, {mode: 0o600})
 
     return await this.loadExtensions();
   }
 
   async getExtensionByManifest(manifestPath: string): Promise<InstalledExtension> {
     let manifestJson: ExtensionManifest;
-    let mainJs: string;
     try {
       manifestJson = __non_webpack_require__(manifestPath)
       withExtensionPackagesRoot(() => {
@@ -41,7 +40,7 @@ export class ExtensionManager {
         manifest: manifestJson
       }
     } catch (err) {
-      logger.error(`[EXTENSION-MANAGER]: can't install extension at ${manifestPath}: ${err}`, { manifestJson, mainJs });
+      logger.error(`[EXTENSION-MANAGER]: can't install extension at ${manifestPath}: ${err}`, { manifestJson });
     }
   }
 
