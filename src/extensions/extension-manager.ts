@@ -41,7 +41,7 @@ export class ExtensionManager {
         manifest: manifestJson
       }
     } catch (err) {
-      console.error(`[EXTENSION-MANAGER]: can't install extension at ${manifestPath}: ${err}`, { manifestJson, mainJs });
+      logger.error(`[EXTENSION-MANAGER]: can't install extension at ${manifestPath}: ${err}`, { manifestJson, mainJs });
     }
   }
 
@@ -51,35 +51,15 @@ export class ExtensionManager {
         production: true,
         global: false,
         prefix: this.extensionPackagesRoot,
-        loglevel: "silent",
-        dev: false
+        dev: false,
+        spin: false,
+        "ignore-scripts": true,
+        loglevel: "error"
       }, (err) => {
         npm.commands.install([
           path
         ], (err) => {
           if (err) {
-            logger.error(err)
-            reject(err)
-          } else {
-            resolve()
-          }
-        })
-      })
-    })
-  }
-
-  protected installPackage(name: string, version: string | number): Promise<void> {
-    return new Promise((resolve, reject) => {
-      npm.load({
-        production: true,
-        global: false,
-        prefix: this.extensionPackagesRoot
-      }, (err) => {
-        npm.commands.install([
-          `${name}@${version}`
-        ], (err) => {
-          if (err) {
-            logger.error(err)
             reject(err)
           } else {
             resolve()
@@ -105,7 +85,7 @@ export class ExtensionManager {
     });
     let extensions = await Promise.all(manifestsLoading);
     extensions = extensions.filter(v => !!v); // filter out files and invalid folders (without manifest.json)
-    console.info(`[EXTENSION-MANAGER]: ${extensions.length} extensions loaded`, { folderPath, extensions });
+    logger.debug(`[EXTENSION-MANAGER]: ${extensions.length} extensions loaded`, { folderPath, extensions });
     return extensions;
   }
 }
