@@ -1,7 +1,6 @@
 import { Button, DynamicPageType, Icon, IconProps, LensExtension, React } from "@lens/extensions";
 import { CoffeeDoodle } from "react-open-doodles";
 import path from "path";
-import _ from "lodash"
 
 export default class ExampleExtension extends LensExtension {
   onActivate() {
