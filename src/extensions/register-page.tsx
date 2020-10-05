@@ -2,18 +2,24 @@
 
 import { computed, observable } from "mobx";
 import React from "react";
-import type { IconProps } from "../renderer/components/icon";
+import { RouteProps } from "react-router";
+import { IconProps } from "../renderer/components/icon";
+import { cssNames, IClassName } from "../renderer/utils";
+import { TabLayout, TabRoute } from "../renderer/components/layout/tab-layout";
 
 export enum DynamicPageType {
   GLOBAL = "lens-scope",
   CLUSTER = "cluster-view-scope",
 }
 
-export interface PageRegistration {
+export interface PageRegistration extends RouteProps {
+  className?: IClassName;
+  url?: string; // initial url to be used for building menus and tabs, otherwise "path" applied by default
   path: string; // route-path
-  menuTitle: string;
+  title: React.ReactNode; // used in sidebar's & tabs-layout
   type: DynamicPageType;
   components: PageComponents;
+  subPages?: (PageRegistration & TabRoute)[];
 }
 
 export interface PageComponents {
@@ -40,6 +46,17 @@ export class PagesStore {
         this.pages.filter(page => page.components !== params.components)
       )
     };
+  }
+}
+
+export class DynamicPage extends React.Component<{ page: PageRegistration }> {
+  render() {
+    const { className, components: { Page }, subPages = [] } = this.props.page;
+    return (
+      <TabLayout className={cssNames("ExtensionPage", className)} tabs={subPages}>
+        <Page/>
+      </TabLayout>
+    )
   }
 }
 

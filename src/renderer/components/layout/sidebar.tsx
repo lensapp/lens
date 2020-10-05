@@ -184,14 +184,14 @@ export class Sidebar extends React.Component<Props> {
             >
               {this.renderCustomResources()}
             </SidebarNavItem>
-            {dynamicPages.clusterPages.map(({ path, menuTitle, components: { MenuIcon } }) => {
+            {dynamicPages.clusterPages.map(({ path, title, components: { MenuIcon } }) => {
               return (
                 <SidebarNavItem
                   key={path}
                   id={`extension-${path}`}
                   url={path}
                   routePath={path}
-                  text={menuTitle}
+                  text={title}
                   icon={<MenuIcon/>}
                 />
               )
