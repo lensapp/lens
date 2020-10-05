@@ -8,10 +8,12 @@
     "styles": []
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "dev": "tsc --watch"
   },
   "dependencies": {
     "lodash": "^4.17.20",
+    "react-open-doodles": "^1.0.5",
     "strip-ansi": "^6.0.0"
   },
   "devDependencies": {
