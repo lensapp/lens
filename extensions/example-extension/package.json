@@ -12,7 +12,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "react-open-doodles": "^1.0.5",
+    "react-open-doodles": "^1.0.5"
   },
   "devDependencies": {
     "typescript": "^4.0.3"
