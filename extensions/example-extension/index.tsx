@@ -1,4 +1,5 @@
 import { Button, DynamicPageType, Icon, IconProps, LensExtension, React } from "@lens/extensions";
+import { CoffeeDoodle } from "react-open-doodles";
 import path from "path";
 
 export default class ExampleExtension extends LensExtension {
@@ -21,7 +22,7 @@ export default class ExampleExtension extends LensExtension {
 }
 
 export function ExtensionIcon(props: IconProps) {
-  return <Icon {...props} material="camera" tooltip={path.basename(__filename)}/>
+  return <Icon {...props} material="pages" tooltip={path.basename(__filename)}/>
 }
 
 export class ExtensionPage extends React.Component<{ extension: ExampleExtension }> {
@@ -33,10 +34,14 @@ export class ExtensionPage extends React.Component<{ extension: ExampleExtension
 
   render() {
     const { TabLayout } = this.props.extension.runtime.components;
+    const doodleStyle = {
+      width: "200px"
+    }
     return (
       <TabLayout className="ExampleExtension">
         <div className="flex column gaps align-flex-start">
-          <p>Hello from extensions-api!</p>
+          <div style={doodleStyle}><CoffeeDoodle accent="#3d90ce" /></div>
+          <p>Hello from Example extension!</p>
           <p>File: <i>{__filename}</i></p>
           <Button accent label="Deactivate" onClick={this.deactivate}/>
         </div>

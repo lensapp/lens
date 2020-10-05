@@ -1,4 +1,3 @@
-import type { ExtensionModel } from "./extension-store";
 import type { LensRuntimeRendererEnv } from "./lens-runtime";
 import type { PageRegistration } from "./register-page";
 import { readJsonSync } from "fs-extra";
@@ -8,6 +7,16 @@ import logger from "../main/logger";
 export type ExtensionId = string | ExtensionPackageJsonPath;
 export type ExtensionPackageJsonPath = string;
 export type ExtensionVersion = string | number;
+
+export interface ExtensionModel {
+  id: ExtensionId;
+  version: ExtensionVersion;
+  name: string;
+  manifestPath: string;
+  description?: string;
+  enabled?: boolean;
+  updateUrl?: string;
+}
 
 export interface ExtensionManifest extends ExtensionModel {
   main: string;
