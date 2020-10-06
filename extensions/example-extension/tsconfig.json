@@ -16,7 +16,7 @@
   },
   "include": [
     "../../types",
-    "./index.ts",
+    "./renderer.ts",
     "./main.ts"
   ],
   "exclude": [
