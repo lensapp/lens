@@ -1,4 +1,4 @@
-import type { PageStore } from "./lens-runtime"
+import type { PageStore } from "./lens-renderer-runtime"
 import type { PageRegistration } from "./page-store"
 import { LensExtension } from "./lens-extension"
 

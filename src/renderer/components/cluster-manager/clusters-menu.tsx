@@ -22,7 +22,7 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
 import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
-import { dynamicPages } from "../../../extensions/register-page";
+import { pageStore } from "../../../extensions/page-store";
 
 interface Props {
   className?: IClassName;
@@ -156,7 +156,7 @@ export class ClustersMenu extends React.Component<Props> {
           )}
         </div>
         <div className="dynamic-pages">
-          {dynamicPages.globalPages.map(({ path, components: { MenuIcon } }) => {
+          {pageStore.globalPages.map(({ path, components: { MenuIcon } }) => {
             return <MenuIcon key={path} onClick={() => navigate(path)}/>
           })}
         </div>

@@ -1,8 +1,12 @@
-import { LensExtension } from "@lens/extensions";
+import { LensMainExtension } from "@lens/extensions";
 
-export default class ExampleExtensionMain extends LensExtension {
+export default class ExampleExtensionMain extends LensMainExtension {
   onActivate() {
     console.log('EXAMPLE EXTENSION MAIN: ACTIVATED', this.getMeta());
+  }
+
+  onEvent(evt: any) {
+    //
   }
 
   onDeactivate() {
