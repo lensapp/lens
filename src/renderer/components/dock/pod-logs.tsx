@@ -62,6 +62,7 @@ export class PodLogs extends React.Component<Props> {
     const { pod, container } = this.tabData;
     this.containers = pod.getContainers();
     this.initContainers = pod.getInitContainers();
+    this.selectedContainer = container || this.containers[0];
     await this.load();
     this.refresher.start();
   }
@@ -159,9 +160,6 @@ export class PodLogs extends React.Component<Props> {
   get containerSelectOptions() {
     return [
       {
-        label: _i18n._(t`All Containers`),
-      },
-      {
         label: _i18n._(t`Containers`),
         options: this.containers.map(container => {
           return { value: container.name }
@@ -178,7 +176,6 @@ export class PodLogs extends React.Component<Props> {
 
   formatOptionLabel = (option: SelectOption) => {
     const { value, label } = option;
-    if (!value) return _i18n._(t`All Containers`);
     return label || <><Icon small material="view_carousel"/> {value}</>;
   }
 
@@ -190,7 +187,7 @@ export class PodLogs extends React.Component<Props> {
         <span><Trans>Container</Trans></span>
         <Select
           options={this.containerSelectOptions}
-          value={{ value: this.selectedContainer?.name }}
+          value={{ value: this.selectedContainer.name }}
           formatOptionLabel={this.formatOptionLabel}
           onChange={this.onContainerChange}
           autoConvertOptions={false}
