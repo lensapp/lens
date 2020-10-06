@@ -85,11 +85,14 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
           return {
             label: workspace.name,
             toolTip: workspace.description,
-            submenu: clusters.map(({ id: clusterId, preferences: { clusterName: label }, online }) => {
+            submenu: clusters.map(cluster => {
+              const { id: clusterId, preferences: { clusterName: label }, online, workspace } = cluster;
               return {
-                label: `${label}${online ? " (online)" : ""}`,
+                label: `${online ? '✓' : '\x20'.repeat(3)/*offset*/}${label}`,
                 toolTip: clusterId,
                 click() {
+                  workspaceStore.setActive(workspace);
+                  clusterStore.setActive(clusterId);
                   windowManager.bringToTop();
                   windowManager.navigate(clusterViewURL({ params: { clusterId } }));
                 }
