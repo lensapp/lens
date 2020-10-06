@@ -5,7 +5,7 @@ import { dockStore, IDockTab, TabKind } from "./dock.store";
 
 export interface IPodLogsData {
   pod: Pod;
-  container?: IPodContainer;
+  container: IPodContainer;
 }
 
 @autobind()
@@ -15,9 +15,18 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
 export const podLogsStore = new PodLogsStore();
 
 export function createPodLogsTab(data: IPodLogsData, tabParams: Partial<IDockTab> = {}) {
-  const tab = dockStore.createTab({
+  const podId = data.pod.getId();
+  let tab = dockStore.getTabById(podId);
+  if (tab) {
+    dockStore.open();
+    dockStore.selectTab(tab.id);
+    return;
+  }
+  // If no existent tab found
+  tab = dockStore.createTab({
+    id: podId,
     kind: TabKind.POD_LOGS,
-    title: "Logs",
+    title: `Logs: ${data.pod.getName()}`,
     ...tabParams
   });
   podLogsStore.setData(tab.id, data);
