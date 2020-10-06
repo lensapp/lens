@@ -38,12 +38,12 @@ export class Support extends React.Component {
     return (
       <div className="Support">
         <WizardLayout header={header} centered>
-        <h2><Trans>Community Slack Channel</Trans></h2>
-        <p>{_i18n._(t`Ask a question, see what's being discussed, join the conversation`)} <span className="supportLink" title={_i18n._(t`here`)} onClick={() => shell.openExternal(slackUrl) }>here</span></p>
-        <h2><Trans>Report an Issue</Trans></h2>
-        <p>{_i18n._(t`Review existing issues or open a new one`)} <span className="supportLink" title={_i18n._(t`here`)} onClick={() => shell.openExternal(issuesTrackerUrl) }>here</span></p>
-        <h2><Trans>Commercial Support</Trans></h2>
-        <p>TBD</p>
+          <h2><Trans>Community Slack Channel</Trans></h2>
+          <p>{_i18n._(t`Ask a question, see what's being discussed, join the conversation`)} <span className="supportLink" title={_i18n._(t`here`)} onClick={() => shell.openExternal(slackUrl) }>here</span></p>
+          <h2><Trans>Report an Issue</Trans></h2>
+          <p>{_i18n._(t`Review existing issues or open a new one`)} <span className="supportLink" title={_i18n._(t`here`)} onClick={() => shell.openExternal(issuesTrackerUrl) }>here</span></p>
+          <h2><Trans>Commercial Support</Trans></h2>
+          <p>TBD</p>
         </WizardLayout>
       </div>
     );
