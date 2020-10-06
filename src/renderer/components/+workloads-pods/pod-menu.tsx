@@ -12,6 +12,7 @@ import { cssNames, prevDefault } from "../../utils";
 import { terminalStore, createTerminalTab } from "../dock/terminal.store";
 import { _i18n } from "../../i18n";
 import { hideDetails } from "../../navigation";
+import { createPodLogsTab } from "../dock/pod-logs.store";
 
 interface Props extends KubeObjectMenuProps<Pod> {
 }
@@ -42,7 +43,10 @@ export class PodMenu extends React.Component<Props> {
   }
 
   showLogs(container: IPodContainer) {
-    PodLogsDialog.open(this.props.object, container);
+    createPodLogsTab({
+      pod: this.props.object,
+      container
+    });
   }
 
   renderShellMenu() {

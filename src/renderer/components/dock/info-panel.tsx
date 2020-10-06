@@ -13,7 +13,7 @@ import { Notifications } from "../notifications";
 
 interface Props extends OptionalProps {
   tabId: TabId;
-  submit: () => Promise<ReactNode | string>;
+  submit?: () => Promise<ReactNode | string>;
 }
 
 interface OptionalProps {
@@ -23,6 +23,7 @@ interface OptionalProps {
   submitLabel?: ReactNode;
   submittingMessage?: ReactNode;
   disableSubmit?: boolean;
+  showSubmit?: boolean;
   showSubmitClose?: boolean;
   showInlineInfo?: boolean;
   showNotifications?: boolean;
@@ -33,6 +34,7 @@ export class InfoPanel extends Component<Props> {
   static defaultProps: OptionalProps = {
     submitLabel: <Trans>Submit</Trans>,
     submittingMessage: <Trans>Submitting..</Trans>,
+    showSubmit: true,
     showSubmitClose: true,
     showInlineInfo: true,
     showNotifications: true,
@@ -87,7 +89,7 @@ export class InfoPanel extends Component<Props> {
   }
 
   render() {
-    const { className, controls, submitLabel, disableSubmit, error, submittingMessage, showSubmitClose } = this.props;
+    const { className, controls, submitLabel, disableSubmit, error, submittingMessage, showSubmit, showSubmitClose } = this.props;
     const { submit, close, submitAndClose, waiting } = this;
     const isDisabled = !!(disableSubmit || waiting || error);
     return (
@@ -99,14 +101,16 @@ export class InfoPanel extends Component<Props> {
           {waiting ? <><Spinner /> {submittingMessage}</> : this.renderErrorIcon()}
         </div>
         <Button plain label={<Trans>Cancel</Trans>} onClick={close} />
-        <Button
-          active
-          outlined={showSubmitClose}
-          primary={!showSubmitClose}// one button always should be primary (blue)
-          label={submitLabel}
-          onClick={submit}
-          disabled={isDisabled}
-        />
+        {showSubmit && (
+          <Button
+            active
+            outlined={showSubmitClose}
+            primary={!showSubmitClose}// one button always should be primary (blue)
+            label={submitLabel}
+            onClick={submit}
+            disabled={isDisabled}
+          />
+        )}
         {showSubmitClose && (
           <Button
             primary active
