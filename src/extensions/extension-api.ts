@@ -1,12 +1,13 @@
 // Lens-extensions api developer's kit
-export type { LensRuntimeRendererEnv } from "./lens-runtime";
+// TODO: add more common re-usable UI components + refactor interfaces (Props -> ComponentProps)
 
-// APIs
+// TODO: figure out how to import as normal npm-package
+export { default as React } from "react"
+
 export * from "./lens-extension"
+export { LensRuntimeRendererEnv } from "./lens-runtime";
 export { DynamicPageType } from "./register-page";
 
-// TODO: add more common re-usable UI components + refactor interfaces (Props -> ComponentProps)
-export { default as React } from "react"
 export * from "../renderer/components/icon"
 export * from "../renderer/components/tooltip"
 export * from "../renderer/components/button"

@@ -36,7 +36,7 @@ import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store
 import logger from "../../main/logger";
 import { clusterIpc } from "../../common/cluster-ipc";
 import { webFrame } from "electron";
-import { dynamicPages } from "../../extensions/register-page";
+import { DynamicPage, dynamicPages } from "../../extensions/register-page";
 
 @observer
 export class App extends React.Component {
@@ -74,8 +74,8 @@ export class App extends React.Component {
                 <Route component={CustomResources} {...crdRoute}/>
                 <Route component={UserManagement} {...usersManagementRoute}/>
                 <Route component={Apps} {...appsRoute}/>
-                {dynamicPages.clusterPages.map(({ path, components: { Page } }) => {
-                  return <Route key={path} path={path} component={Page}/>
+                {dynamicPages.clusterPages.map(page => {
+                  return <Route {...page} key={page.path} render={() => <DynamicPage page={page}/>}/>
                 })}
                 <Redirect exact from="/" to={this.startURL}/>
                 <Route component={NotFound}/>
