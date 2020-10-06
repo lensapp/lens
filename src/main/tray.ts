@@ -1,7 +1,8 @@
 import path from "path"
 import sharp from "sharp";
+import jsdom from "jsdom"
 import packageInfo from "../../package.json"
-import { dialog, Menu, nativeImage, Tray } from "electron"
+import { dialog, Menu, nativeImage, nativeTheme, Tray } from "electron"
 import { isDevelopment, isMac } from "../common/vars";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
@@ -33,8 +34,17 @@ export function initTray(windowManager: WindowManager) {
 
 export async function buildTray(menu: Menu) {
   logger.info("[TRAY]: build start");
+
+  // modify icon's svg
+  const svgDom = await jsdom.JSDOM.fromFile(trayIcon);
+  const svgRoot = svgDom.window.document.body.getElementsByTagName("svg")[0];
+  const trayIconColor = nativeTheme.themeSource == "dark" ? "white" : "#333"; // fixme: nativeTheme.themeSource always == "system" (MacOS)
+  svgRoot.innerHTML += `<style>* {fill: ${trayIconColor} !important;}</style>`
+  const svgIconBuffer = Buffer.from(svgRoot.outerHTML);
+
+  // convert to .png or .icon for system tray and resize
+  const pngIcon = await sharp(svgIconBuffer).png().toBuffer();
   const iconSize = isMac ? 16 : 32; // todo: verify on windows/linux
-  const pngIcon = await sharp(trayIcon).png().toBuffer();
   const icon = nativeImage.createFromBuffer(pngIcon).resize({
     width: iconSize,
     height: iconSize
