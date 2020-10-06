@@ -36,7 +36,9 @@ import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store
 import logger from "../../main/logger";
 import { clusterIpc } from "../../common/cluster-ipc";
 import { webFrame } from "electron";
-import { dynamicPages } from "../../extensions/register-page";
+import { pageStore } from "../../extensions/page-store";
+import { extensionLoader } from "../../extensions/extension-loader";
+import { getLensRuntime } from "../../extensions/lens-runtime";
 
 @observer
 export class App extends React.Component {
@@ -47,6 +49,7 @@ export class App extends React.Component {
     await Terminal.preloadFonts()
     await clusterIpc.activate.invokeFromRenderer(clusterId, frameId);
     await getHostedCluster().whenReady; // cluster.refresh() is done at this point
+    extensionLoader.loadOnClusterRenderer(getLensRuntime)
   }
 
   get startURL() {
@@ -74,7 +77,7 @@ export class App extends React.Component {
                 <Route component={CustomResources} {...crdRoute}/>
                 <Route component={UserManagement} {...usersManagementRoute}/>
                 <Route component={Apps} {...appsRoute}/>
-                {dynamicPages.clusterPages.map(({ path, components: { Page } }) => {
+                {pageStore.clusterPages.map(({ path, components: { Page } }) => {
                   return <Route key={path} path={path} component={Page}/>
                 })}
                 <Redirect exact from="/" to={this.startURL}/>

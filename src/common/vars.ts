@@ -24,6 +24,7 @@ export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 
 // Extensions
 export const extensionsLibName = `${appName}-extensions.api`
+export const extensionsRendererLibName = `${appName}-extensions-renderer.api`
 export const extensionsDir = path.join(contextDir, "src/extensions");
 
 // Special runtime paths
@@ -39,8 +40,10 @@ defineGlobal("__static", {
 // Special dynamic module aliases
 if (isProduction && process.resourcesPath) {
   addAlias("@lens/extensions", path.join(process.resourcesPath, "static", `build/${extensionsLibName}.js`))
+  addAlias("@lens/ui-extensions", path.join(process.resourcesPath, "static", `build/${extensionsRendererLibName}.js`))
 } else {
   addAlias("@lens/extensions", path.join(contextDir, "static", `build/${extensionsLibName}.js`))
+  addAlias("@lens/ui-extensions", path.join(contextDir, "static", `build/${extensionsRendererLibName}.js`))
 }
 
 // Apis

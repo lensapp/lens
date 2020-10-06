@@ -21,7 +21,7 @@ export interface PageComponents {
   MenuIcon: React.ComponentType<IconProps>;
 }
 
-export class PagesStore {
+export class PageStore {
   protected pages = observable.array<PageRegistration>([], { deep: false });
 
   @computed get globalPages() {
@@ -43,4 +43,4 @@ export class PagesStore {
   }
 }
 
-export const dynamicPages = new PagesStore();
+export const pageStore = new PageStore();

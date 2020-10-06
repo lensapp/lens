@@ -16,7 +16,8 @@
   },
   "include": [
     "../../types",
-    "./index.tsx"
+    "./index.ts",
+    "./main.ts"
   ],
   "exclude": [
     "node_modules",
