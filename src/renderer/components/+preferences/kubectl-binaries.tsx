@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Trans } from '@lingui/macro';
-import { isPath } from '../input/input.validators';
+import { isPath } from '../input/input_validators';
 import { Checkbox } from '../checkbox';
 import { Input } from '../input';
 import { SubTitle } from '../layout/sub-title';

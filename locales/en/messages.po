@@ -49,7 +49,7 @@ msgstr "<0>Filtered</0>: {itemsCount} / {allItemsCount}"
 #~ msgid "<0>Your browser does not support all Lens features. </0> Please consider using another browser."
 #~ msgstr "<0>Your browser does not support all Lens features. </0> Please consider using another browser."
 
-#: src/renderer/components/dock/create-resource.tsx:56
+#: src/renderer/components/dock/create-resource.tsx:58
 msgid "<0>{0}</0> successfully created"
 msgstr "<0>{0}</0> successfully created"
 
@@ -57,7 +57,7 @@ msgstr "<0>{0}</0> successfully created"
 #~ msgid "A HTTP proxy server URL (format: http://<address>:<port>)"
 #~ msgstr "A HTTP proxy server URL (format: http://<address>:<port>)"
 
-#: src/renderer/components/input/input.validators.ts:46
+#: src/renderer/components/input/input_validators.ts:46
 msgid "A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics."
 msgstr "A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics."
 
@@ -87,7 +87,7 @@ msgstr "Account Name"
 msgid "Active"
 msgstr "Active"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:288
+#: src/renderer/components/+add-cluster/add-cluster.tsx:289
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:130
 msgid "Add Cluster"
 msgstr "Add Cluster"
@@ -112,7 +112,7 @@ msgstr "Add bindings to {name}"
 #~ msgid "Add cluster"
 #~ msgstr "Add cluster"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:305
+#: src/renderer/components/+add-cluster/add-cluster.tsx:306
 msgid "Add cluster(s)"
 msgstr "Add cluster(s)"
 
@@ -273,7 +273,7 @@ msgstr "App Version"
 msgid "App crash at <0>{pageUrl}</0>"
 msgstr "App crash at <0>{pageUrl}</0>"
 
-#: src/renderer/components/dock/edit-resource.tsx:88
+#: src/renderer/components/dock/edit-resource.tsx:87
 msgid "Applying.."
 msgstr "Applying.."
 
@@ -404,7 +404,7 @@ msgstr "CPU:"
 
 #: src/renderer/components/+workspaces/workspaces.tsx:133
 #: src/renderer/components/confirm-dialog/confirm-dialog.tsx:44
-#: src/renderer/components/dock/info-panel.tsx:97
+#: src/renderer/components/dock/info-panel.tsx:85
 #: src/renderer/components/wizard/wizard.tsx:130
 msgid "Cancel"
 msgstr "Cancel"
@@ -440,7 +440,7 @@ msgstr "Chart"
 msgid "Chart Release <0>{0}</0> successfully created."
 msgstr "Chart Release <0>{0}</0> successfully created."
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:105
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:124
 msgid "Chart: {0}"
 msgstr "Chart: {0}"
 
@@ -647,7 +647,7 @@ msgstr "Count"
 #: src/renderer/components/+user-management-roles/add-role-dialog.tsx:73
 #: src/renderer/components/+user-management-roles-bindings/add-role-binding-dialog.tsx:212
 #: src/renderer/components/+user-management-service-accounts/create-service-account-dialog.tsx:76
-#: src/renderer/components/dock/create-resource.tsx:71
+#: src/renderer/components/dock/create-resource.tsx:74
 msgid "Create"
 msgstr "Create"
 
@@ -691,7 +691,7 @@ msgstr "Create new Secret"
 msgid "Create new Service Account"
 msgstr "Create new Service Account"
 
-#: src/renderer/components/dock/dock.tsx:111
+#: src/renderer/components/dock/dock.tsx:93
 msgid "Create resource"
 msgstr "Create resource"
 
@@ -783,8 +783,8 @@ msgid "Default Runtime Class Name"
 msgstr "Default Runtime Class Name"
 
 #: src/renderer/components/+preferences/kubectl-binaries.tsx:30
-msgid "Default:"
-msgstr "Default:"
+#~ msgid "Default:"
+#~ msgstr "Default:"
 
 #: src/renderer/components/+custom-resources/custom-resources.tsx:22
 msgid "Definitions"
@@ -848,15 +848,19 @@ msgstr "Domains"
 msgid "Download file"
 msgstr "Download file"
 
-#: src/renderer/components/+preferences/kubectl-binaries.tsx:39
+#: src/renderer/components/+preferences/kubectl-binaries.tsx:24
 msgid "Download kubectl binaries"
 msgstr "Download kubectl binaries"
 
 #: src/renderer/components/+preferences/kubectl-binaries.tsx:37
-msgid "Download kubectl binaries matching to Kubernetes cluster verison."
-msgstr "Download kubectl binaries matching to Kubernetes cluster verison."
+#~ msgid "Download kubectl binaries matching to Kubernetes cluster verison."
+#~ msgstr "Download kubectl binaries matching to Kubernetes cluster verison."
 
-#: src/renderer/components/+preferences/kubectl-binaries.tsx:41
+#: src/renderer/components/+preferences/kubectl-binaries.tsx:26
+msgid "Download kubectl binaries matching to Kubernetes cluster version."
+msgstr "Download kubectl binaries matching to Kubernetes cluster version."
+
+#: src/renderer/components/+preferences/kubectl-binaries.tsx:29
 msgid "Download mirror for kubectl"
 msgstr "Download mirror for kubectl"
 
@@ -944,7 +948,7 @@ msgstr "Everything is fine in the Cluster"
 #~ msgid "Excluded items with \"system:\" prefix"
 #~ msgstr "Excluded items with \"system:\" prefix"
 
-#: src/renderer/components/dock/dock.tsx:116
+#: src/renderer/components/dock/dock.tsx:98
 msgid "Exit full size mode"
 msgstr "Exit full size mode"
 
@@ -985,7 +989,7 @@ msgstr "Finalizers"
 msgid "First seen"
 msgstr "First seen"
 
-#: src/renderer/components/dock/dock.tsx:116
+#: src/renderer/components/dock/dock.tsx:98
 msgid "Fit to window"
 msgstr "Fit to window"
 
@@ -1073,7 +1077,7 @@ msgstr "Hide"
 msgid "High number of replicas may cause cluster performance issues"
 msgstr "High number of replicas may cause cluster performance issues"
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:81
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:88
 msgid "Home"
 msgstr "Home"
 
@@ -1128,7 +1132,7 @@ msgstr "Image"
 msgid "ImagePullPolicy"
 msgstr "ImagePullPolicy"
 
-#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:80
+#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:108
 msgid "ImagePullSecrets"
 msgstr "ImagePullSecrets"
 
@@ -1153,8 +1157,8 @@ msgstr "Ingresses"
 msgid "Init Containers"
 msgstr "Init Containers"
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:76
-#: src/renderer/components/dock/install-chart.tsx:128
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:83
+#: src/renderer/components/dock/install-chart.tsx:127
 msgid "Install"
 msgstr "Install"
 
@@ -1162,15 +1166,15 @@ msgstr "Install"
 msgid "Installation complete!"
 msgstr "Installation complete!"
 
-#: src/renderer/components/dock/install-chart.tsx:128
+#: src/renderer/components/dock/install-chart.tsx:127
 msgid "Installing..."
 msgstr "Installing..."
 
-#: src/renderer/components/input/input.validators.ts:50
+#: src/renderer/components/input/input_validators.ts:50
 msgid "Invalid account ID"
 msgstr "Invalid account ID"
 
-#: src/renderer/components/input/input.validators.ts:16
+#: src/renderer/components/input/input_validators.ts:16
 msgid "Invalid number"
 msgstr "Invalid number"
 
@@ -1231,13 +1235,13 @@ msgstr "Key Size"
 msgid "Keys"
 msgstr "Keys"
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:87
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:94
 msgid "Keywords"
 msgstr "Keywords"
 
 #: src/renderer/components/+events/event-details.tsx:57
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:79
-#: src/renderer/components/dock/edit-resource.tsx:89
+#: src/renderer/components/dock/edit-resource.tsx:88
 msgid "Kind"
 msgstr "Kind"
 
@@ -1249,7 +1253,7 @@ msgstr "Kubeconfig"
 msgid "Kubeconfig File"
 msgstr "Kubeconfig File"
 
-#: src/renderer/components/+preferences/kubectl-binaries.tsx:35
+#: src/renderer/components/+preferences/kubectl-binaries.tsx:23
 msgid "Kubectl Binary"
 msgstr "Kubectl Binary"
 
@@ -1343,7 +1347,7 @@ msgstr "Logs"
 msgid "Logs copied to clipboard."
 msgstr "Logs copied to clipboard."
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:84
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:91
 msgid "Maintainers"
 msgstr "Maintainers"
 
@@ -1369,7 +1373,7 @@ msgstr "Max Pods"
 msgid "Max Unavailable"
 msgstr "Max Unavailable"
 
-#: src/renderer/components/input/input.validators.ts:41
+#: src/renderer/components/input/input_validators.ts:41
 msgid "Maximum length is {maxLength}"
 msgstr "Maximum length is {maxLength}"
 
@@ -1441,11 +1445,11 @@ msgstr "Min Available"
 msgid "Min Pods"
 msgstr "Min Pods"
 
-#: src/renderer/components/dock/dock.tsx:117
+#: src/renderer/components/dock/dock.tsx:99
 msgid "Minimize"
 msgstr "Minimize"
 
-#: src/renderer/components/input/input.validators.ts:36
+#: src/renderer/components/input/input_validators.ts:36
 msgid "Minimum length is {minLength}"
 msgstr "Minimum length is {minLength}"
 
@@ -1454,7 +1458,7 @@ msgstr "Minimum length is {minLength}"
 msgid "Mount Options"
 msgstr "Mount Options"
 
-#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:84
+#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:112
 msgid "Mountable secrets"
 msgstr "Mountable secrets"
 
@@ -1510,7 +1514,7 @@ msgstr "Mounts"
 #: src/renderer/components/+workloads-replicasets/replicasets.tsx:50
 #: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:40
 #: src/renderer/components/+workspaces/workspaces.tsx:130
-#: src/renderer/components/dock/edit-resource.tsx:90
+#: src/renderer/components/dock/edit-resource.tsx:89
 #: src/renderer/components/kube-object/kube-object-meta.tsx:20
 msgid "Name"
 msgstr "Name"
@@ -1556,7 +1560,7 @@ msgstr "Names"
 #: src/renderer/components/+workloads-jobs/jobs.tsx:38
 #: src/renderer/components/+workloads-pods/pods.tsx:76
 #: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:41
-#: src/renderer/components/dock/edit-resource.tsx:91
+#: src/renderer/components/dock/edit-resource.tsx:90
 #: src/renderer/components/dock/install-chart.tsx:122
 #: src/renderer/components/dock/upgrade-chart.tsx:98
 #: src/renderer/components/item-object-list/page-filters-select.tsx:57
@@ -1600,7 +1604,7 @@ msgstr "Network Policies"
 msgid "New logs since opening the dialog"
 msgstr "New logs since opening the dialog"
 
-#: src/renderer/components/dock/dock.tsx:104
+#: src/renderer/components/dock/dock.tsx:86
 msgid "New tab"
 msgstr "New tab"
 
@@ -1734,7 +1738,7 @@ msgstr "Ok"
 msgid "Ok, got it!"
 msgstr "Ok, got it!"
 
-#: src/renderer/components/dock/dock.tsx:117
+#: src/renderer/components/dock/dock.tsx:99
 msgid "Open"
 msgstr "Open"
 
@@ -1939,7 +1943,7 @@ msgstr "Provisioner"
 msgid "Proxy is used only for non-cluster communication."
 msgstr "Proxy is used only for non-cluster communication."
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:293
+#: src/renderer/components/+add-cluster/add-cluster.tsx:294
 msgid "Proxy settings"
 msgstr "Proxy settings"
 
@@ -2264,7 +2268,7 @@ msgstr "Runtime Class"
 #: src/renderer/components/+config-secrets/secret-details.tsx:97
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:216
 #: src/renderer/components/+workspaces/workspaces.tsx:132
-#: src/renderer/components/dock/edit-resource.tsx:88
+#: src/renderer/components/dock/edit-resource.tsx:87
 msgid "Save"
 msgstr "Save"
 
@@ -2317,6 +2321,10 @@ msgstr "Secret"
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:80
 msgid "Secret Name"
 msgstr "Secret Name"
+
+#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:72
+msgid "Secret is not found"
+msgstr "Secret is not found"
 
 #: src/renderer/components/+config-secrets/add-secret-dialog.tsx:147
 msgid "Secret name"
@@ -2472,7 +2480,7 @@ msgid "Shell"
 msgstr "Shell"
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
-#: src/renderer/components/+workloads-pods/pod-container-env.tsx:100
+#: src/renderer/components/+workloads-pods/pod-container-env.tsx:101
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Show"
@@ -2580,12 +2588,12 @@ msgstr "Strategy Type"
 msgid "Sub-object"
 msgstr "Sub-object"
 
-#: src/renderer/components/dock/info-panel.tsx:104
+#: src/renderer/components/dock/info-panel.tsx:93
 #: src/renderer/components/wizard/wizard.tsx:131
 msgid "Submit"
 msgstr "Submit"
 
-#: src/renderer/components/dock/info-panel.tsx:105
+#: src/renderer/components/dock/info-panel.tsx:94
 msgid "Submitting.."
 msgstr "Submitting.."
 
@@ -2627,9 +2635,13 @@ msgstr "Telemetry & usage data is collected to continuously improve the Lens exp
 msgid "Terminal"
 msgstr "Terminal"
 
-#: src/renderer/components/dock/dock.tsx:107
+#: src/renderer/components/dock/dock.tsx:89
 msgid "Terminal session"
 msgstr "Terminal session"
+
+#: src/renderer/components/+preferences/kubectl-binaries.tsx:38
+msgid "The path to the kubectl binary on the system."
+msgstr "The path to the kubectl binary on the system."
 
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:226
 msgid "There are no logs available for container."
@@ -2639,11 +2651,11 @@ msgstr "There are no logs available for container."
 msgid "There are no logs available."
 msgstr "There are no logs available."
 
-#: src/renderer/components/input/input.validators.ts:6
+#: src/renderer/components/input/input_validators.ts:6
 msgid "This field is required"
 msgstr "This field is required"
 
-#: src/renderer/components/input/input.validators.ts:31
+#: src/renderer/components/input/input_validators.ts:31
 msgid "This field must be a valid path"
 msgstr "This field must be a valid path"
 
@@ -2663,7 +2675,7 @@ msgstr "To"
 msgid "To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker."
 msgstr "To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker."
 
-#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:76
+#: src/renderer/components/+user-management-service-accounts/service-accounts-details.tsx:104
 msgid "Tokens"
 msgstr "Tokens"
 
@@ -2730,12 +2742,12 @@ msgstr "Update"
 msgid "Updated"
 msgstr "Updated"
 
-#: src/renderer/components/dock/upgrade-chart.tsx:105
+#: src/renderer/components/dock/upgrade-chart.tsx:104
 msgid "Updating.."
 msgstr "Updating.."
 
 #: src/renderer/components/+apps-releases/release-details.tsx:176
-#: src/renderer/components/dock/upgrade-chart.tsx:105
+#: src/renderer/components/dock/upgrade-chart.tsx:104
 msgid "Upgrade"
 msgstr "Upgrade"
 
@@ -2799,7 +2811,7 @@ msgstr "Values"
 msgid "Verbs"
 msgstr "Verbs"
 
-#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:78
+#: src/renderer/components/+apps-helm-charts/helm-chart-details.tsx:85
 #: src/renderer/components/+apps-helm-charts/helm-charts.tsx:66
 #: src/renderer/components/+apps-releases/release-details.tsx:185
 #: src/renderer/components/+apps-releases/releases.tsx:91
@@ -2866,11 +2878,11 @@ msgstr "Workspaces"
 msgid "Workspaces are used to organize number of clusters into logical groups."
 msgstr "Workspaces are used to organize number of clusters into logical groups."
 
-#: src/renderer/components/input/input.validators.ts:11
+#: src/renderer/components/input/input_validators.ts:11
 msgid "Wrong email format"
 msgstr "Wrong email format"
 
-#: src/renderer/components/input/input.validators.ts:26
+#: src/renderer/components/input/input_validators.ts:26
 msgid "Wrong url format"
 msgstr "Wrong url format"
 
@@ -2953,7 +2965,7 @@ msgstr "singular"
 msgid "timestamps"
 msgstr "timestamps"
 
-#: src/renderer/components/dock/create-resource.tsx:55
+#: src/renderer/components/dock/create-resource.tsx:57
 msgid "{0, plural, one {Resource} other {Resources}}"
 msgstr "{0, plural, one {Resource} other {Resources}}"
 
@@ -3005,6 +3017,6 @@ msgstr "{resourceType} <0>{resourceName}</0> updated."
 msgid "{selectedCount, plural, one {<0>Remove item <1>{selectedNames}</1>?</0>} other {<2>Remove <3>{selectedCount}</3> items <4>{selectedNames}</4> {tail}?</2>}}"
 msgstr "{selectedCount, plural, one {<0>Remove item <1>{selectedNames}</1>?</0>} other {<2>Remove <3>{selectedCount}</3> items <4>{selectedNames}</4> {tail}?</2>}}"
 
-#: src/renderer/components/dock/info-panel.tsx:99
+#: src/renderer/components/dock/info-panel.tsx:88
 msgid "{submitLabel} & Close"
 msgstr "{submitLabel} & Close"

@@ -10,7 +10,7 @@ jest.mock("electron", () => {
   }
 })
 
-import { WorkspaceStore } from "./workspace-store"
+import { WorkspaceStore } from "../workspace-store"
 
 describe("workspace store tests", () => {
   describe("for an empty config", () => {

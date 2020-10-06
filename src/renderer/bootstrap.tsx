@@ -13,7 +13,7 @@ import { LensApp } from "./lens-app";
 import { getLensRuntime } from "../extensions/lens-runtime";
 
 type AppComponent = React.ComponentType & {
-  init?(): void;
+  init?(): Promise<void>;
 }
 
 export async function bootstrap(App: AppComponent) {

@@ -10,7 +10,7 @@ import { CronJob, cronJobApi, jobApi, Job } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 import { Input } from "../input";
-import { systemName, maxLength } from "../input/input.validators";
+import { systemName, maxLength } from "../input/input_validators";
 
 interface Props extends Partial<DialogProps> {
 }

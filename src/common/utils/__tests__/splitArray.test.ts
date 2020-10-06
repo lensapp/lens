@@ -1,4 +1,4 @@
-import { splitArray } from "./splitArray";
+import { splitArray } from "../splitArray";
 
 describe("split array on element tests", () => {
   test("empty array", () => {
@@ -16,7 +16,7 @@ describe("split array on element tests", () => {
   test("one elements, in array", () => {
     expect(splitArray([1], 1)).toStrictEqual([[], [], true]);
   });
-  
+
   test("ten elements, in front array", () => {
     expect(splitArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], 0)).toStrictEqual([[], [1, 2, 3, 4, 5, 6, 7, 8, 9], true]);
   });
