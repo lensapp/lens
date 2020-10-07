@@ -33,7 +33,7 @@ export class PodLogs extends React.Component<Props> {
     { label: 100000, value: 100000 },
   ];
 
-  async componentDidMount() {
+  componentDidMount() {
     disposeOnUnmount(this,
       reaction(() => this.props.tab.id, async () => {
         if (podLogsStore.logs.has(this.tabId)) {

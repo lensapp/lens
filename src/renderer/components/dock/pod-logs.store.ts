@@ -68,8 +68,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       });
       if (!oldLogs) {
         this.update(tabId, loadedLogs);
-      }
-      else if (oldLogs) {
+      } else {
         this.update(tabId, "", `${newLogs}\n${loadedLogs}`.trim());
       }
     } catch (error) {
