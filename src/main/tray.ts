@@ -31,9 +31,8 @@ nativeTheme.on("updated", async () => {
 });
 
 export async function initTray(windowManager: WindowManager) {
-  if (!trayIcon) {
-    trayIcon = await createTrayIconFromSvg();
-  }
+  trayIcon = await createTrayIconFromSvg(); // generate icon once on tray activation
+
   const dispose = autorun(() => {
     const menu = createTrayMenu(windowManager);
     buildTray(trayIcon, menu);

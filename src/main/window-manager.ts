@@ -59,8 +59,9 @@ export class WindowManager {
     this.disposers.trayAutoBind = reaction(() => userStore.preferences.trayEnabled, async isEnabled => {
       if (isEnabled) {
         this.disposers.trayAutoUpdater = await initTray(this);
-      } else {
-        this.disposers?.trayAutoUpdater();
+      } else if (this.disposers.trayAutoUpdater) {
+        this.disposers.trayAutoUpdater();
+        this.disposers.trayAutoUpdater = null;
       }
     }, {
       fireImmediately: true
