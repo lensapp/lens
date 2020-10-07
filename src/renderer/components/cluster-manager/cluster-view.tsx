@@ -9,7 +9,7 @@ import { hasLoadedView } from "./lens-views";
 export class ClusterView extends React.Component {
   render() {
     const cluster = getMatchedCluster();
-    const showStatus = cluster && (!cluster.available || !hasLoadedView(cluster.id))
+    const showStatus = cluster && (!cluster.available || !hasLoadedView(cluster.id) || !cluster.ready)
     return (
       <div className="ClusterView">
         {showStatus && (
