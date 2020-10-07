@@ -1,6 +1,6 @@
-import { observable } from "mobx";
+import { autorun, observable } from "mobx";
 import { Pod, IPodContainer, podsApi } from "../../api/endpoints";
-import { autobind } from "../../utils";
+import { autobind, interval } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
 import { t } from "@lingui/macro";
@@ -24,12 +24,22 @@ interface PodLogs {
 
 @autobind()
 export class PodLogsStore extends DockTabStore<IPodLogsData> {
+  private refresher = interval(10, () => this.load(dockStore.selectedTabId));
+
   @observable logs = observable.map<TabId, PodLogs>();
 
   constructor() {
     super({
       storageName: "pod_logs"
     });
+    autorun(() => {
+      const { selectedTab, isOpen } = dockStore;
+      if (isPodLogsTab(selectedTab) && isOpen) {
+        this.refresher.start();
+      } else {
+        this.refresher.stop();
+      }
+    }, { delay: 500 });
   }
 
   load = async (tabId: TabId) => {
@@ -88,6 +98,11 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
 
   clearLogs(tabId: TabId) {
     this.logs.delete(tabId);
+  }
+
+  clearData(tabId: TabId) {
+    this.data.delete(tabId);
+    this.clearLogs(tabId);
   }
 }
 

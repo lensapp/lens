@@ -33,12 +33,17 @@ export class PodLogs extends React.Component<Props> {
     { label: 100000, value: 100000 },
   ];
 
-  @disposeOnUnmount
-  updateLogsTabChange = reaction(() => this.props.tab.id, async () => {
-    this.ready = false;
-    await podLogsStore.load(this.tabId);
-    this.ready = true;
-  }, { fireImmediately: true });
+  async componentDidMount() {
+    disposeOnUnmount(this,
+      reaction(() => this.props.tab.id, async () => {
+        if (podLogsStore.logs.has(this.tabId)) {
+          this.ready = true;
+          return;
+        }
+        await this.load();
+      }, { fireImmediately: true })
+    );
+  }
 
   componentDidUpdate() {
     // scroll logs only when it's already in the end,
@@ -61,13 +66,16 @@ export class PodLogs extends React.Component<Props> {
     podLogsStore.setData(this.tabId, { ...this.tabData, ...data });
   }
 
-  reload = async () => {
-    const { clearLogs, load } = podLogsStore;
-    this.lastLineIsShown = true;
+  load = async () => {
     this.ready = false;
-    clearLogs(this.tabId);
-    await load(this.tabId);
+    await podLogsStore.load(this.tabId);
     this.ready = true;
+  }
+
+  reload = async () => {
+    podLogsStore.clearLogs(this.tabId);
+    this.lastLineIsShown = true;
+    await this.load();
   }
 
   @computed
