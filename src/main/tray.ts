@@ -82,14 +82,13 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
       label: "About Lens",
       click() {
         // note: argument[1] (browserWindow) not available when app is not focused / hidden
-        windowManager.bringToTop();
-        showAbout(windowManager.mainView);
+        windowManager.runInContextWindow(showAbout);
       },
     },
     {
       label: "Preferences",
-      click() {
-        windowManager.bringToTop();
+      async click() {
+        await windowManager.ensureMainWindow()
         windowManager.navigate(preferencesURL());
       },
     },
@@ -107,10 +106,10 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
               return {
                 label: `${online ? '✓' : '\x20'.repeat(3)/*offset*/}${label}`,
                 toolTip: clusterId,
-                click() {
+                async click() {
                   workspaceStore.setActive(workspace);
                   clusterStore.setActive(clusterId);
-                  windowManager.bringToTop();
+                  await windowManager.ensureMainWindow()
                   windowManager.navigate(clusterViewURL({ params: { clusterId } }));
                 }
               }
@@ -120,15 +119,16 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
     },
     {
       label: "Check for updates",
-      async click() {
-        const result = await AppUpdater.checkForUpdates();
-        if (!result) {
-          windowManager.bringToTop();
-          dialog.showMessageBoxSync({
-            message: "No updates available",
-            type: "info",
-          })
-        }
+      click() {
+        windowManager.runInContextWindow(async window => {
+          const result = await AppUpdater.checkForUpdates();
+          if (!result) {
+            dialog.showMessageBoxSync(window, {
+              message: "No updates available",
+              type: "info",
+            })
+          }
+        })
       },
     },
   ]);

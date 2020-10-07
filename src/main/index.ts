@@ -20,23 +20,24 @@ import { tracker } from "../common/tracker";
 import logger from "./logger"
 
 const workingDir = path.join(app.getPath("appData"), appName);
+let proxyPort: number;
+let proxyServer: LensProxy;
+let windowManager: WindowManager;
+let clusterManager: ClusterManager;
+
 app.setName(appName);
 if (!process.env.CICD) {
   app.setPath("userData", workingDir);
 }
-
-let windowManager: WindowManager;
-let clusterManager: ClusterManager;
-let proxyServer: LensProxy;
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server")
 }
 
-async function main() {
-  await shellSync();
+app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`)
+  await shellSync();
 
   tracker.event("app", "start");
   const updater = new AppUpdater()
@@ -44,22 +45,21 @@ async function main() {
 
   registerFileProtocol("static", __static);
 
-  // find free port
-  let proxyPort: number
-  try {
-    proxyPort = await getFreePort()
-  } catch (error) {
-    logger.error(error)
-    dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy")
-    app.quit();
-  }
-
-  // preload configuration from stores
+  // preload isomorphic stores
   await Promise.all([
     userStore.load(),
     clusterStore.load(),
     workspaceStore.load(),
   ]);
+
+  // find free port
+  try {
+    proxyPort = await getFreePort()
+  } catch (error) {
+    logger.error(error)
+    dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy")
+    app.exit();
+  }
 
   // create cluster manager
   clusterManager = new ClusterManager(proxyPort);
@@ -70,18 +70,30 @@ async function main() {
   } catch (error) {
     logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error.message}`)
     dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error.message || "unknown error"}`)
-    app.quit();
+    app.exit();
   }
 
-  // create window manager and open app
   windowManager = new WindowManager(proxyPort);
-}
+});
 
-app.on("ready", main);
+app.on("activate", (event, hasVisibleWindows) => {
+  logger.info('APP:ACTIVATE', { hasVisibleWindows })
+  if (!hasVisibleWindows) {
+    windowManager.initMainWindow();
+  }
+});
 
-app.on("will-quit", async (event) => {
-  event.preventDefault(); // To allow mixpanel sending to be executed
-  if (proxyServer) proxyServer.close()
-  if (clusterManager) clusterManager.stop()
-  app.exit();
+// Quit app on Cmd+Q (MacOS)
+app.on("will-quit", (event) => {
+  logger.info('APP:QUIT');
+  event.preventDefault(); // prevent app's default shutdown (e.g. required for mixpanel, GA, etc.)
+
+  if (userStore.preferences.trayEnabled) {
+    return; // with tray the app remains open
+  } else {
+    windowManager?.destroy();
+    clusterManager?.stop();
+    proxyServer?.close();
+    app.exit(); // force quite
+  }
 })

@@ -76,7 +76,15 @@ export function buildMenu(windowManager: WindowManager) {
       { role: 'hideOthers' },
       { role: 'unhide' },
       { type: 'separator' },
-      { role: 'quit' }
+      {
+        label: 'Force Quit',
+        accelerator: 'Cmd+Shift+Q',
+        click() {
+          app.exit(0); // force quit since might be blocked within app.on("will-quit")
+        }
+      },
+      { type: 'separator' },
+      { role: 'quit' },
     ]
   };
 
@@ -118,7 +126,9 @@ export function buildMenu(windowManager: WindowManager) {
         },
         { type: 'separator' },
         { role: 'quit' }
-      ])
+      ]),
+      { type: 'separator' },
+      { role: 'close' } // close current window
     ]
   };
   mt.push(fileMenu)
