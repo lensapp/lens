@@ -224,7 +224,7 @@ export class PodLogs extends React.Component<Props> {
           tabId={this.props.tab.id}
           controls={this.renderControls()}
           showSubmitClose={false}
-          showSubmit={false}
+          showButtons={false}
         />
         <div className="logs" onScroll={this.onScroll} ref={e => this.logsElement = e}>
           {this.renderLogs()}

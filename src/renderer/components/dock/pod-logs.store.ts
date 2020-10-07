@@ -122,7 +122,7 @@ export function createPodLogsTab(data: IPodLogsData, tabParams: Partial<IDockTab
     kind: TabKind.POD_LOGS,
     title: `Logs: ${data.pod.getName()}`,
     ...tabParams
-  });
+  }, false);
   podLogsStore.setData(tab.id, data);
   return tab;
 }
