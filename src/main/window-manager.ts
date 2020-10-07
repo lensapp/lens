@@ -130,11 +130,11 @@ export class WindowManager {
       await callback(this.mainWindow);
     } else {
       this.ensureTrayWindow();
-      if (this.mainWindow) this.mainWindow.hide();
+      this.mainWindow?.hide();
       this.trayWindow.show();
       await callback(this.trayWindow);
       this.trayWindow.hide();
-      if (this.mainWindow) this.mainWindow.hide();
+      this.mainWindow?.show();
       app.hide();
     }
   }
