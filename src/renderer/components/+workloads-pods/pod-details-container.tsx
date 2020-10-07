@@ -58,8 +58,8 @@ export class PodDetailsContainer extends React.Component<Props> {
         {status &&
         <DrawerItem name={<Trans>Last Status</Trans>}>
           <span>
-            {lastState}{ready ? `, ${_i18n._(t`ready`)}` : ""}
-            {lastState === 'terminated' ? ` - ${status.lastState.terminated.reason} (${_i18n._(t`exit code`)}: ${status.lastState.terminated.exitCode}), 
+            {lastState ? `${lastState}, ` : ""}
+            {lastState === 'terminated' ? `${status.lastState.terminated.reason} (${_i18n._(t`exit code`)}: ${status.lastState.terminated.exitCode}), 
               ${_i18n._(t`started at`)}: ${status.lastState.terminated.startedAt}, ${_i18n._(t`finished at`)}: ${status.lastState.terminated.finishedAt}` : ''}
           </span>
         </DrawerItem>
