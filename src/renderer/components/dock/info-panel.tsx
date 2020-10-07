@@ -23,7 +23,7 @@ interface OptionalProps {
   submitLabel?: ReactNode;
   submittingMessage?: ReactNode;
   disableSubmit?: boolean;
-  showSubmit?: boolean;
+  showButtons?: boolean
   showSubmitClose?: boolean;
   showInlineInfo?: boolean;
   showNotifications?: boolean;
@@ -34,7 +34,7 @@ export class InfoPanel extends Component<Props> {
   static defaultProps: OptionalProps = {
     submitLabel: <Trans>Submit</Trans>,
     submittingMessage: <Trans>Submitting..</Trans>,
-    showSubmit: true,
+    showButtons: true,
     showSubmitClose: true,
     showInlineInfo: true,
     showNotifications: true,
@@ -89,7 +89,7 @@ export class InfoPanel extends Component<Props> {
   }
 
   render() {
-    const { className, controls, submitLabel, disableSubmit, error, submittingMessage, showSubmit, showSubmitClose } = this.props;
+    const { className, controls, submitLabel, disableSubmit, error, submittingMessage, showButtons, showSubmitClose } = this.props;
     const { submit, close, submitAndClose, waiting } = this;
     const isDisabled = !!(disableSubmit || waiting || error);
     return (
@@ -100,24 +100,26 @@ export class InfoPanel extends Component<Props> {
         <div className="info flex gaps align-center">
           {waiting ? <><Spinner /> {submittingMessage}</> : this.renderErrorIcon()}
         </div>
-        <Button plain label={<Trans>Cancel</Trans>} onClick={close} />
-        {showSubmit && (
-          <Button
-            active
-            outlined={showSubmitClose}
-            primary={!showSubmitClose}// one button always should be primary (blue)
-            label={submitLabel}
-            onClick={submit}
-            disabled={isDisabled}
-          />
-        )}
-        {showSubmitClose && (
-          <Button
-            primary active
-            label={<Trans>{submitLabel} & Close</Trans>}
-            onClick={submitAndClose}
-            disabled={isDisabled}
-          />
+        {showButtons && (
+          <>
+            <Button plain label={<Trans>Cancel</Trans>} onClick={close} />
+            <Button
+              active
+              outlined={showSubmitClose}
+              primary={!showSubmitClose}// one button always should be primary (blue)
+              label={submitLabel}
+              onClick={submit}
+              disabled={isDisabled}
+            />
+            {showSubmitClose && (
+              <Button
+                primary active
+                label={<Trans>{submitLabel} & Close</Trans>}
+                onClick={submitAndClose}
+                disabled={isDisabled}
+              />
+            )}
+          </>
         )}
       </div>
     );
