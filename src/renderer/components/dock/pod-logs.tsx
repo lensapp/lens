@@ -3,17 +3,16 @@ import React from "react";
 import AnsiUp from "ansi_up";
 import DOMPurify from "dompurify";
 import { t, Trans } from "@lingui/macro";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
+import { computed, observable, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { _i18n } from "../../i18n";
-import { IPodContainer, podsApi } from "../../api/endpoints";
-import { cssNames, downloadFile, interval } from "../../utils";
+import { autobind, cssNames, downloadFile } from "../../utils";
 import { Icon } from "../icon";
 import { Select, SelectOption } from "../select";
 import { Spinner } from "../spinner";
 import { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
-import { podLogsStore } from "./pod-logs.store";
+import { IPodLogsData, podLogsStore } from "./pod-logs.store";
 
 interface Props {
   className?: string
@@ -22,17 +21,9 @@ interface Props {
 
 @observer
 export class PodLogs extends React.Component<Props> {
-  @observable logs = ""; // latest downloaded logs for pod
-  @observable newLogs = ""; // new logs since dialog is open
   @observable ready = false;
-  @observable selectedContainer: IPodContainer;
-  @observable showTimestamps = false;
-  @observable tailLines = 1000;
 
   private logsElement: HTMLDivElement;
-  private refresher = interval(5, () => this.load());
-  private containers: IPodContainer[] = []
-  private initContainers: IPodContainer[] = []
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
   private colorConverter = new AnsiUp();
   private lineOptions = [
@@ -40,11 +31,14 @@ export class PodLogs extends React.Component<Props> {
     { label: 1000, value: 1000 },
     { label: 10000, value: 10000 },
     { label: 100000, value: 100000 },
-  ]
+  ];
 
-  componentDidMount() {
-    this.onOpen();
-  }
+  @disposeOnUnmount
+  updateLogsTabChange = reaction(() => this.props.tab.id, async () => {
+    this.ready = false;
+    await podLogsStore.load(this.tabId);
+    this.ready = true;
+  }, { fireImmediately: true });
 
   componentDidUpdate() {
     // scroll logs only when it's already in the end,
@@ -55,80 +49,41 @@ export class PodLogs extends React.Component<Props> {
   }
 
   get tabData() {
-    return podLogsStore.getData(this.props.tab.id);
+    return podLogsStore.getData(this.tabId);
   }
 
-  onOpen = async () => {
-    const { pod, container } = this.tabData;
-    this.containers = pod.getContainers();
-    this.initContainers = pod.getInitContainers();
-    this.selectedContainer = container || this.containers[0];
-    await this.load();
-    this.refresher.start();
+  get tabId() {
+    return this.props.tab.id;
   }
 
-  load = async () => {
-    const data = this.tabData;
-    if (!data) return;
-    try {
-      // if logs already loaded, check the latest timestamp for getting updates only from this point
-      const logsTimestamps = this.getTimestamps(this.newLogs || this.logs);
-      let lastLogDate = new Date(0)
-      if (logsTimestamps) {
-        lastLogDate = new Date(logsTimestamps.slice(-1)[0]);
-        lastLogDate.setSeconds(lastLogDate.getSeconds() + 1); // avoid duplicates from last second
-      }
-      const namespace = data.pod.getNs();
-      const name = data.pod.getName();
-      const logs = await podsApi.getLogs({ namespace, name }, {
-        timestamps: true,
-        container: this.selectedContainer?.name,
-        tailLines: this.tailLines ? this.tailLines : undefined,
-        sinceTime: lastLogDate.toISOString(),
-      });
-      if (!this.logs) {
-        this.logs = logs;
-      }
-      else if (logs) {
-        this.newLogs = `${this.newLogs}\n${logs}`.trim();
-      }
-    } catch (error) {
-      this.logs = [
-        _i18n._(t`Failed to load logs: ${error.message}`),
-        _i18n._(t`Reason: ${error.reason} (${error.code})`),
-      ].join("\n")
-    }
-    this.ready = true;
+  @autobind()
+  save(data: Partial<IPodLogsData>) {
+    podLogsStore.setData(this.tabId, { ...this.tabData, ...data });
   }
 
   reload = async () => {
-    this.logs = "";
-    this.newLogs = "";
+    const { clearLogs, load } = podLogsStore;
     this.lastLineIsShown = true;
     this.ready = false;
-    this.refresher.stop();
-    await this.load();
-    this.refresher.start();
+    clearLogs(this.tabId);
+    await load(this.tabId);
+    this.ready = true;
   }
 
-  getLogs() {
-    const { logs, newLogs, showTimestamps } = this;
+  @computed
+  get logs() {
+    if (!podLogsStore.logs.has(this.tabId)) return;
+    const { oldLogs, newLogs } = podLogsStore.logs.get(this.tabId);
+    const { getData, removeTimestamps } = podLogsStore;
+    const { showTimestamps } = getData(this.tabId);
     return {
-      logs: showTimestamps ? logs : this.removeTimestamps(logs),
-      newLogs: showTimestamps ? newLogs : this.removeTimestamps(newLogs),
+      oldLogs: showTimestamps ? oldLogs : removeTimestamps(oldLogs),
+      newLogs: showTimestamps ? newLogs : removeTimestamps(newLogs)
     }
   }
 
-  getTimestamps(logs: string) {
-    return logs.match(/^\d+\S+/gm);
-  }
-
-  removeTimestamps(logs: string) {
-    return logs.replace(/^\d+.*?\s/gm, "");
-  }
-
   toggleTimestamps = () => {
-    this.showTimestamps = !this.showTimestamps;
+    this.save({ showTimestamps: !this.tabData.showTimestamps });
   }
 
   onScroll = (evt: React.UIEvent<HTMLDivElement>) => {
@@ -138,36 +93,40 @@ export class PodLogs extends React.Component<Props> {
   };
 
   downloadLogs = () => {
-    const { logs, newLogs } = this.getLogs();
-    const podName = this.tabData.pod.getName();
-    const fileName = this.selectedContainer ? this.selectedContainer.name : podName;
-    const fileContents = logs + newLogs;
+    const { oldLogs, newLogs } = this.logs;
+    const { pod, selectedContainer } = this.tabData;
+    const fileName = selectedContainer ? selectedContainer.name : pod.getName();
+    const fileContents = oldLogs + newLogs;
     downloadFile(fileName + ".log", fileContents, "text/plain");
   }
 
   onContainerChange = (option: SelectOption) => {
-    this.selectedContainer = this.containers
-      .concat(this.initContainers)
-      .find(container => container.name === option.value);
+    const { containers, initContainers } = this.tabData;
+    this.save({
+      selectedContainer: containers
+        .concat(initContainers)
+        .find(container => container.name === option.value)
+    })
     this.reload();
   }
 
   onTailLineChange = (option: SelectOption) => {
-    this.tailLines = option.value;
+    this.save({ tailLines: option.value })
     this.reload();
   }
 
   get containerSelectOptions() {
+    const { containers, initContainers } = this.tabData;
     return [
       {
         label: _i18n._(t`Containers`),
-        options: this.containers.map(container => {
+        options: containers.map(container => {
           return { value: container.name }
         }),
       },
       {
         label: _i18n._(t`Init Containers`),
-        options: this.initContainers.map(container => {
+        options: initContainers.map(container => {
           return { value: container.name }
         }),
       }
@@ -181,30 +140,29 @@ export class PodLogs extends React.Component<Props> {
 
   renderControls() {
     if (!this.ready) return null;
-    const timestamps = this.getTimestamps(this.logs + this.newLogs);
+    const { selectedContainer, showTimestamps, tailLines } = this.tabData;
+    const timestamps = podLogsStore.getTimestamps(podLogsStore.logs.get(this.tabId).oldLogs);
     return (
       <div className="controls flex gaps align-center">
         <span><Trans>Container</Trans></span>
         <Select
           options={this.containerSelectOptions}
-          value={{ value: this.selectedContainer.name }}
+          value={{ value: selectedContainer.name }}
           formatOptionLabel={this.formatOptionLabel}
           onChange={this.onContainerChange}
           autoConvertOptions={false}
         />
         <span><Trans>Lines</Trans></span>
         <Select
-          value={this.tailLines}
+          value={tailLines}
           options={this.lineOptions}
           onChange={this.onTailLineChange}
         />
         <div className="time-range">
           {timestamps && (
             <>
-              <Trans>From</Trans>{" "}
-              <b>{new Date(timestamps[0]).toLocaleString()}</b>{" "}
-              <Trans>to</Trans>{" "}
-              <b>{new Date(timestamps[timestamps.length - 1]).toLocaleString()}</b>
+              <Trans>Since</Trans>{" "}
+              <b>{new Date(timestamps[0]).toLocaleString()}</b>
             </>
           )}
         </div>
@@ -212,8 +170,8 @@ export class PodLogs extends React.Component<Props> {
           <Icon
             material="av_timer"
             onClick={this.toggleTimestamps}
-            className={cssNames("timestamps-icon", { active: this.showTimestamps })}
-            tooltip={(this.showTimestamps ? _i18n._(t`Hide`) : _i18n._(t`Show`)) + " " + _i18n._(t`timestamps`)}
+            className={cssNames("timestamps-icon", { active: showTimestamps })}
+            tooltip={(showTimestamps ? _i18n._(t`Hide`) : _i18n._(t`Show`)) + " " + _i18n._(t`timestamps`)}
           />
           <Icon
             material="get_app"
@@ -229,8 +187,8 @@ export class PodLogs extends React.Component<Props> {
     if (!this.ready) {
       return <Spinner center/>;
     }
-    const { logs, newLogs } = this.getLogs();
-    if (!logs && !newLogs) {
+    const { oldLogs, newLogs } = this.logs;
+    if (!oldLogs && !newLogs) {
       return (
         <div className="flex align-center justify-center">
           <Trans>There are no logs available for container.</Trans>
@@ -239,7 +197,7 @@ export class PodLogs extends React.Component<Props> {
     }
     return (
       <>
-        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(logs))}} />
+        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(oldLogs))}} />
         {newLogs && (
           <>
             <p className="new-logs-sep" title={_i18n._(t`New logs since opening the dialog`)}/>

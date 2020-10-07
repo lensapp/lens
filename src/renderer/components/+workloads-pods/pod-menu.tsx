@@ -42,9 +42,14 @@ export class PodMenu extends React.Component<Props> {
   }
 
   showLogs(container: IPodContainer) {
+    const pod = this.props.object;
     createPodLogsTab({
-      pod: this.props.object,
-      container
+      pod,
+      containers: pod.getContainers(),
+      initContainers: pod.getInitContainers(),
+      selectedContainer: container,
+      showTimestamps: false,
+      tailLines: 1000
     });
   }
 

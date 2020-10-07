@@ -1,15 +1,94 @@
-import { Pod, IPodContainer } from "../../api/endpoints";
+import { observable } from "mobx";
+import { Pod, IPodContainer, podsApi } from "../../api/endpoints";
 import { autobind } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
+import { t } from "@lingui/macro";
+import { _i18n } from "../../i18n";
 
 export interface IPodLogsData {
   pod: Pod;
-  container: IPodContainer;
+  selectedContainer: IPodContainer
+  containers: IPodContainer[]
+  initContainers: IPodContainer[]
+  showTimestamps: boolean
+  tailLines: number
+}
+
+type TabId = string;
+
+interface PodLogs {
+  oldLogs: string
+  newLogs: string
 }
 
 @autobind()
 export class PodLogsStore extends DockTabStore<IPodLogsData> {
+  @observable logs = observable.map<TabId, PodLogs>();
+
+  constructor() {
+    super({
+      storageName: "pod_logs"
+    });
+  }
+
+  load = async (tabId: TabId) => {
+    if (!this.logs.has(tabId)) {
+      this.logs.set(tabId, { oldLogs: "", newLogs: "" })
+    }
+    const data = this.getData(tabId);
+    const { oldLogs, newLogs } = this.logs.get(tabId);
+    const { selectedContainer, tailLines } = data;
+    const pod = new Pod(data.pod);
+    try {
+      // if logs already loaded, check the latest timestamp for getting updates only from this point
+      const logsTimestamps = this.getTimestamps(newLogs || oldLogs);
+      let lastLogDate = new Date(0);
+      if (logsTimestamps) {
+        lastLogDate = new Date(logsTimestamps.slice(-1)[0]);
+        lastLogDate.setSeconds(lastLogDate.getSeconds() + 1); // avoid duplicates from last second
+      }
+      const namespace = pod.getNs();
+      const name = pod.getName();
+      const loadedLogs = await podsApi.getLogs({ namespace, name }, {
+        sinceTime: lastLogDate.toISOString(),
+        timestamps: true,  // Always setting timestampt to separate old logs from new ones
+        container: selectedContainer.name,
+        tailLines: tailLines,
+      });
+      if (!oldLogs) {
+        this.update(tabId, loadedLogs);
+      }
+      else if (oldLogs) {
+        this.update(tabId, "", `${newLogs}\n${loadedLogs}`.trim());
+      }
+    } catch (error) {
+      this.update(tabId, [
+        _i18n._(t`Failed to load logs: ${error.message}`),
+        _i18n._(t`Reason: ${error.reason} (${error.code})`),
+      ].join("\n"));
+    }
+  }
+
+  update(tabId: TabId, oldLogs?: string, newLogs?: string) {
+    const logs = this.logs.get(tabId);
+    this.logs.set(tabId, {
+      oldLogs: oldLogs || logs.oldLogs,
+      newLogs: newLogs || logs.newLogs
+    });
+  }
+
+  getTimestamps(logs: string) {
+    return logs.match(/^\d+\S+/gm);
+  }
+
+  removeTimestamps(logs: string) {
+    return logs.replace(/^\d+.*?\s/gm, "");
+  }
+
+  clearLogs(tabId: TabId) {
+    this.logs.delete(tabId);
+  }
 }
 
 export const podLogsStore = new PodLogsStore();
