@@ -56,9 +56,9 @@ export class WindowManager {
 
   protected async initMenus() {
     this.disposers.menuAutoUpdater = initMenu(this);
-    this.disposers.trayAutoBind = reaction(() => userStore.preferences.trayEnabled, isEnabled => {
+    this.disposers.trayAutoBind = reaction(() => userStore.preferences.trayEnabled, async isEnabled => {
       if (isEnabled) {
-        this.disposers.trayAutoUpdater = initTray(this);
+        this.disposers.trayAutoUpdater = await initTray(this);
       } else {
         this.disposers?.trayAutoUpdater();
       }

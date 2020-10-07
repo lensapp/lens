@@ -2,7 +2,7 @@ import path from "path"
 import sharp from "sharp";
 import jsdom from "jsdom"
 import packageInfo from "../../package.json"
-import { dialog, Menu, nativeImage, nativeTheme, Tray } from "electron"
+import { dialog, Menu, NativeImage, nativeImage, nativeTheme, Tray } from "electron"
 import { isDevelopment, isMac } from "../common/vars";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
@@ -16,44 +16,62 @@ import logger from "./logger";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
 export let tray: Tray;
+export let trayIcon: NativeImage;
 
-export const trayIcon = isDevelopment
+export const trayIconPath = isDevelopment
   ? path.resolve(__static, "../src/renderer/components/icon/logo-lens.svg")
   : path.resolve(__static, "logo.svg") // electron-builder's extraResources
 
-export function initTray(windowManager: WindowManager) {
+// update icon when MacOS dark/light theme has changed
+nativeTheme.on("updated", async () => {
+  if (tray) {
+    trayIcon = await createTrayIconFromSvg();
+    tray.setImage(trayIcon);
+  }
+});
+
+export async function initTray(windowManager: WindowManager) {
+  if (!trayIcon) {
+    trayIcon = await createTrayIconFromSvg();
+  }
   const dispose = autorun(() => {
     const menu = createTrayMenu(windowManager);
-    buildTray(menu);
+    buildTray(trayIcon, menu);
   })
   return () => {
-    tray?.destroy();
     dispose();
+    tray?.destroy();
+    tray = null;
   }
 }
 
-export async function buildTray(menu: Menu) {
-  logger.info("[TRAY]: build start");
-
+export async function createTrayIconFromSvg(filePath = trayIconPath): Promise<NativeImage> {
   // modify icon's svg
-  const svgDom = await jsdom.JSDOM.fromFile(trayIcon);
+  const svgDom = await jsdom.JSDOM.fromFile(filePath);
   const svgRoot = svgDom.window.document.body.getElementsByTagName("svg")[0];
-  const trayIconColor = nativeTheme.themeSource == "dark" ? "white" : "#333"; // fixme: nativeTheme.themeSource always == "system" (MacOS)
+  const trayIconColor = nativeTheme.shouldUseDarkColors ? "white" : "black";
   svgRoot.innerHTML += `<style>* {fill: ${trayIconColor} !important;}</style>`
   const svgIconBuffer = Buffer.from(svgRoot.outerHTML);
 
-  // convert to .png or .icon for system tray and resize
+  // convert to .png or .ico and resize
   const pngIcon = await sharp(svgIconBuffer).png().toBuffer();
   const iconSize = isMac ? 16 : 32; // todo: verify on windows/linux
-  const icon = nativeImage.createFromBuffer(pngIcon).resize({
+  return nativeImage.createFromBuffer(pngIcon).resize({
     width: iconSize,
     height: iconSize
   });
+}
 
-  tray?.destroy(); // remove previous tray first
-  tray = new Tray(icon)
-  tray.setToolTip(packageInfo.description)
-  tray.setIgnoreDoubleClickEvents(true);
+export async function buildTray(icon: NativeImage, menu: Menu) {
+  logger.info("[TRAY]: build start");
+
+  if (!tray) {
+    tray = new Tray(icon)
+    tray.setToolTip(packageInfo.description)
+    tray.setIgnoreDoubleClickEvents(true);
+  }
+
+  tray.setImage(icon);
   tray.setContextMenu(menu);
 
   return tray;
