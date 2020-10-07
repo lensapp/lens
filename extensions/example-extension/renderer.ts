@@ -7,7 +7,7 @@ export default class ExampleExtension extends LensRendererExtension {
   }
 
   registerPages(pageStore: PageStore) {
-    this.registerPage(pageStore, {
+    this.disposers.push(pageStore.register({
       type: DynamicPageType.CLUSTER,
       path: "/extension-example",
       title: "Example Extension",
@@ -15,7 +15,7 @@ export default class ExampleExtension extends LensRendererExtension {
         Page: examplePage(this),
         MenuIcon: ExtensionIcon,
       }
-    })
+    }))
   }
 
   onDeactivate() {

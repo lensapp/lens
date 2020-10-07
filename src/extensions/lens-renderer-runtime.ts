@@ -2,11 +2,6 @@
 
 import logger from "../main/logger";
 import { navigate } from "../renderer/navigation";
-import { PageRegistration } from "./page-store";
-
-export interface PageStore {
-  register(params: PageRegistration): () => void
-}
 
 export interface LensExtensionRuntimeEnv {
   logger: typeof logger;

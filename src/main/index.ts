@@ -81,6 +81,7 @@ async function main() {
 
   extensionLoader.loadOnMain(getLensRuntime)
   extensionLoader.extensions.replace(await extensionManager.load())
+  extensionLoader.broadcastExtensions()
 }
 
 app.on("ready", main);

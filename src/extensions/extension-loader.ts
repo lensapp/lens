@@ -66,14 +66,13 @@ export class ExtensionLoader {
   }
 
   protected autoloadExtensions(getLensRuntimeEnv: () => LensExtensionRuntimeEnv, callback: (instance: LensExtension) => void) {
-    return reaction(() => this.extensions.toJS(), installedExtensions => {
-      installedExtensions.forEach((ext) => {
+    return reaction(() => this.extensions.toJS(), (installedExtensions) => {
+      for(const [id, ext] of installedExtensions) {
         let instance = this.instances.get(ext.manifestPath)
         if (!instance) {
           const extensionModule = this.requireExtension(ext)
           if (!extensionModule) {
-            logger.error("[EXTENSION-LOADER] failed to load extension " + ext.manifestPath)
-            return
+            continue
           }
           const LensExtensionClass = extensionModule.default;
           instance = new LensExtensionClass({ ...ext.manifest, manifestPath: ext.manifestPath, id: ext.manifestPath }, ext.manifest);
@@ -81,7 +80,7 @@ export class ExtensionLoader {
           callback(instance)
           this.instances.set(ext.id, instance)
         }
-      })
+      }
     }, {
       fireImmediately: true,
       delay: 0,
@@ -92,17 +91,17 @@ export class ExtensionLoader {
     let extEntrypoint = ""
     return withExtensionPackagesRoot(() => {
       try {
-        if (ipcRenderer) {
-          extEntrypoint = path.join(path.dirname(extension.manifestPath), extension.manifest.renderer)
-        } else {
-          extEntrypoint = path.join(path.dirname(extension.manifestPath), extension.manifest.main)
+        if (ipcRenderer && extension.manifest.renderer) {
+          extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.renderer))
+        } else if (extension.manifest.main) {
+          extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.main))
         }
         if (extEntrypoint !== "") {
           return __non_webpack_require__(extEntrypoint)
         }
       } catch (err) {
-        console.trace(err)
         console.error(`[EXTENSION-LOADER]: can't load extension main at ${extEntrypoint}: ${err}`, { extension });
+        console.trace(err)
       }
     })
   }

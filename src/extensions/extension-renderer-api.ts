@@ -1,9 +1,10 @@
 // Lens-extensions api developer's kit
-export type { LensExtensionRuntimeEnv, PageStore } from "./lens-renderer-runtime";
+export type { LensExtensionRuntimeEnv } from "./lens-renderer-runtime"
+export type { PageStore } from "./page-store"
 
 // APIs
 export * from "./lens-renderer-extension"
-export { DynamicPageType } from "./page-store";
+export { DynamicPageType } from "./page-store"
 
 // TODO: add more common re-usable UI components + refactor interfaces (Props -> ComponentProps)
 export { default as React } from "react"

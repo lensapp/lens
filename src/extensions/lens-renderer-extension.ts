@@ -1,12 +1,11 @@
-import type { PageStore } from "./lens-renderer-runtime"
+import type { PageStore } from "./extension-renderer-api"
 import type { PageRegistration } from "./page-store"
 import { LensExtension } from "./lens-extension"
 
-export class LensRendererExtension extends LensExtension {
+export abstract class LensRendererExtension extends LensExtension {
   registerPages(pageStore: PageStore) {
-    // mock
+    return
   }
-
 
   // Runtime helpers
   protected registerPage(pageStore: PageStore, params: PageRegistration) {

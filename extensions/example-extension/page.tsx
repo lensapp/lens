@@ -28,5 +28,5 @@ export class ExtensionPage extends React.Component<{ extension: LensRendererExte
 }
 
 export function examplePage(ext: LensRendererExtension) {
-  return () => <ExtensionPage extension={ext}/>
+  return () => <ExtensionPage extension={ext} />
 }
