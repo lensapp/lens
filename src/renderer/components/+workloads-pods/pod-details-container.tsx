@@ -27,6 +27,7 @@ export class PodDetailsContainer extends React.Component<Props> {
     const { name, image, imagePullPolicy, ports, volumeMounts, command, args } = container
     const status = pod.getContainerStatuses().find(status => status.name === container.name)
     const state = status ? Object.keys(status.state)[0] : ""
+    const lastState = status ? Object.keys(status.lastState)[0] : ""
     const ready = status ? status.ready : ""
     const liveness = pod.getLivenessProbe(container)
     const readiness = pod.getReadinessProbe(container)
@@ -51,6 +52,15 @@ export class PodDetailsContainer extends React.Component<Props> {
           <span className={cssNames("status", state)}>
             {state}{ready ? `, ${_i18n._(t`ready`)}` : ""}
             {state === 'terminated' ? ` - ${status.state.terminated.reason} (${_i18n._(t`exit code`)}: ${status.state.terminated.exitCode})` : ''}
+          </span>
+        </DrawerItem>
+        }
+        {status &&
+        <DrawerItem name={<Trans>Last Status</Trans>}>
+          <span>
+            {lastState}{ready ? `, ${_i18n._(t`ready`)}` : ""}
+            {lastState === 'terminated' ? ` - ${status.lastState.terminated.reason} (${_i18n._(t`exit code`)}: ${status.lastState.terminated.exitCode}), 
+              ${_i18n._(t`started at`)}: ${status.lastState.terminated.startedAt}, ${_i18n._(t`finished at`)}: ${status.lastState.terminated.finishedAt}` : ''}
           </span>
         </DrawerItem>
         }
