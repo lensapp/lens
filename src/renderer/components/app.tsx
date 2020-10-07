@@ -82,7 +82,6 @@ export class App extends React.Component {
             <KubeObjectDetails/>
             <KubeConfigDialog/>
             <AddRoleBindingDialog/>
-            <PodLogsDialog/>
             <DeploymentScaleDialog/>
             <CronJobTriggerDialog/>
           </ErrorBoundary>
