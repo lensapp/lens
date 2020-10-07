@@ -45,8 +45,9 @@ export function buildMenu(windowManager: WindowManager) {
     return menuItems;
   }
 
-  function navigate(url: string) {
+  async function navigate(url: string) {
     logger.info(`[MENU]: navigating to ${url}`);
+    await windowManager.ensureMainWindow();
     windowManager.navigate(url);
   }
 

@@ -94,6 +94,6 @@ app.on("will-quit", (event) => {
     windowManager?.destroy();
     clusterManager?.stop();
     proxyServer?.close();
-    app.exit(); // force quite
+    app.exit(); // forced app.quit()
   }
 })
