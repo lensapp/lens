@@ -27,8 +27,8 @@ export class DockStore {
   ];
 
   protected storage = createStorage("dock", {}); // keep settings in localStorage
-  public defaultTabId = this.initialTabs[0].id;
-  public minHeight = 100;
+  public readonly defaultTabId = this.initialTabs[0].id;
+  public readonly minHeight = 100;
 
   @observable isOpen = false;
   @observable fullSize = false;
@@ -45,11 +45,12 @@ export class DockStore {
   }
 
   get maxHeight() {
-    const mainLayoutHeader = 40;
-    const mainLayoutTabs = 33;
-    const mainLayoutMargin = 16;
-    const dockTabs = 33;
-    return window.innerHeight - mainLayoutHeader - mainLayoutTabs - mainLayoutMargin - dockTabs;
+    const mainLayoutHeader = 40
+    const mainLayoutTabs = 33
+    const mainLayoutMargin = 16
+    const dockTabs = 33
+    const preferedMax = window.innerHeight - mainLayoutHeader - mainLayoutTabs - mainLayoutMargin - dockTabs
+    return Math.max(preferedMax, this.minHeight) // don't let max < min
   }
 
   constructor() {
@@ -65,7 +66,6 @@ export class DockStore {
     });
 
     // adjust terminal height if window size changes
-    this.checkMaxHeight();
     window.addEventListener("resize", throttle(this.checkMaxHeight, 250));
   }
 
@@ -171,20 +171,19 @@ export class DockStore {
 
   @action
   selectTab(tabId: TabId) {
-    const tab = this.getTabById(tabId);
-    this.selectedTabId = tab ? tab.id : null;
+    this.selectedTabId = this.getTabById(tabId)?.id ?? null;
   }
 
   @action
-  setHeight(height: number) {
-    this.height = Math.max(0, Math.min(height, this.maxHeight));
+  setHeight(height?: number) {
+    this.height = Math.max(this.minHeight, Math.min(height || this.minHeight, this.maxHeight));
   }
 
   @action
   reset() {
     this.selectedTabId = this.defaultTabId;
     this.tabs.replace(this.initialTabs);
-    this.height = this.defaultHeight;
+    this.setHeight(this.defaultHeight);
     this.close();
   }
 }

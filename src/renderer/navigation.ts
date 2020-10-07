@@ -18,7 +18,11 @@ if (ipcRenderer) {
 }
 
 export function navigate(location: LocationDescriptor) {
+  const currentLocation = navigation.getPath();
   navigation.push(location);
+  if (currentLocation === navigation.getPath()) {
+    navigation.goBack(); // prevent sequences of same url in history
+  }
 }
 
 export interface IURLParams<P = {}, Q = {}> {

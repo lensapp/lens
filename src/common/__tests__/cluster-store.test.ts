@@ -1,9 +1,9 @@
 import fs from "fs";
 import mockFs from "mock-fs";
 import yaml from "js-yaml";
-import { Cluster } from "../main/cluster";
-import { ClusterStore } from "./cluster-store";
-import { workspaceStore } from "./workspace-store";
+import { Cluster } from "../../main/cluster";
+import { ClusterStore } from "../cluster-store";
+import { workspaceStore } from "../workspace-store";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png")
 
@@ -12,7 +12,7 @@ console.log("") // fix bug
 let clusterStore: ClusterStore;
 
 describe("empty config", () => {
-  beforeAll(() => {
+  beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
       'tmp': {
@@ -24,109 +24,120 @@ describe("empty config", () => {
     return clusterStore.load();
   })
 
-  afterAll(() => {
+  afterEach(() => {
     mockFs.restore();
   })
 
-  it("adds new cluster to store", async () => {
-    const cluster = new Cluster({
-      id: "foo",
-      contextName: "minikube",
-      preferences: {
-        terminalCWD: "/tmp",
-        icon: "data:;base64,iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
-        clusterName: "minikube"
-      },
-      kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", "fancy foo config"),
-      workspace: workspaceStore.currentWorkspaceId
+  describe("with foo cluster added", () => {
+    beforeEach(() => {
+      clusterStore.addCluster(
+        new Cluster({
+          id: "foo",
+          contextName: "minikube",
+          preferences: {
+            terminalCWD: "/tmp",
+            icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
+            clusterName: "minikube"
+          },
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", "fancy foo config"),
+          workspace: workspaceStore.currentWorkspaceId
+        })
+      );
+    })
+
+    it("adds new cluster to store", async () => {
+      const storedCluster = clusterStore.getById("foo");
+      expect(storedCluster.id).toBe("foo");
+      expect(storedCluster.preferences.terminalCWD).toBe("/tmp");
+      expect(storedCluster.preferences.icon).toBe("data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5");
+    })
+
+    it("adds cluster to default workspace", () => {
+      const storedCluster = clusterStore.getById("foo");
+      expect(storedCluster.workspace).toBe("default");
+    })
+
+    it("removes cluster from store", async () => {
+      await clusterStore.removeById("foo");
+      expect(clusterStore.getById("foo")).toBeUndefined();
+    })
+
+    it("sets active cluster", () => {
+      clusterStore.setActive("foo");
+      expect(clusterStore.activeCluster.id).toBe("foo");
+    })
+  })
+
+  describe("with prod and dev clusters added", () => {
+    beforeEach(() => {
+      clusterStore.addCluster(
+        new Cluster({
+          id: "prod",
+          contextName: "prod",
+          preferences: {
+            clusterName: "prod"
+          },
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", "fancy config"),
+          workspace: "workstation"
+        }),
+        new Cluster({
+          id: "dev",
+          contextName: "dev",
+          preferences: {
+            clusterName: "dev"
+          },
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", "fancy config"),
+          workspace: "workstation"
+        })
+      )
+    })
+
+    it("check if store can contain multiple clusters", () => {
+      expect(clusterStore.hasClusters()).toBeTruthy();
+      expect(clusterStore.clusters.size).toBe(2);
     });
-    clusterStore.addCluster(cluster);
-    const storedCluster = clusterStore.getById(cluster.id);
-    expect(storedCluster.id).toBe(cluster.id);
-    expect(storedCluster.preferences.terminalCWD).toBe(cluster.preferences.terminalCWD);
-    expect(storedCluster.preferences.icon).toBe(cluster.preferences.icon);
-  })
 
-  it("adds cluster to default workspace", () => {
-    const storedCluster = clusterStore.getById("foo");
-    expect(storedCluster.workspace).toBe("default");
-  })
+    it("gets clusters by workspaces", () => {
+      const wsClusters = clusterStore.getByWorkspaceId("workstation");
+      const defaultClusters = clusterStore.getByWorkspaceId("default");
+      expect(defaultClusters.length).toBe(0);
+      expect(wsClusters.length).toBe(2);
+      expect(wsClusters[0].id).toBe("prod");
+      expect(wsClusters[1].id).toBe("dev");
+    })
 
-  it("check if store can contain multiple clusters", () => {
-    const prodCluster = new Cluster({
-      id: "prod",
-      contextName: "prod",
-      preferences: {
-        clusterName: "prod"
-      },
-      kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", "fancy config"),
-      workspace: "workstation"
-    });
-    const devCluster = new Cluster({
-      id: "dev",
-      contextName: "dev",
-      preferences: {
-        clusterName: "dev"
-      },
-      kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", "fancy config"),
-      workspace: "workstation"
-    });
-    clusterStore.addCluster(prodCluster);
-    clusterStore.addCluster(devCluster);
-    expect(clusterStore.hasClusters()).toBeTruthy();
-    expect(clusterStore.clusters.size).toBe(3);
-  });
+    it("check if cluster's kubeconfig file saved", () => {
+      const file = ClusterStore.embedCustomKubeConfig("boo", "kubeconfig");
+      expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
+    })
 
-  it("gets clusters by workspaces", () => {
-    const wsClusters = clusterStore.getByWorkspaceId("workstation");
-    const defaultClusters = clusterStore.getByWorkspaceId("default");
-    expect(defaultClusters.length).toBe(1);
-    expect(wsClusters.length).toBe(2);
-    expect(wsClusters[0].id).toBe("prod");
-    expect(wsClusters[1].id).toBe("dev");
-  })
+    it("check if reorderring works for same from and to", () => {
+      clusterStore.swapIconOrders("workstation", 1, 1)
 
-  it("sets active cluster", () => {
-    clusterStore.setActive("foo");
-    expect(clusterStore.activeCluster.id).toBe("foo");
-  })
+      const clusters = clusterStore.getByWorkspaceId("workstation");
+      expect(clusters[0].id).toBe("prod")
+      expect(clusters[0].preferences.iconOrder).toBe(0)
+      expect(clusters[1].id).toBe("dev")
+      expect(clusters[1].preferences.iconOrder).toBe(1)
+    })
 
-  it("check if cluster's kubeconfig file saved", () => {
-    const file = ClusterStore.embedCustomKubeConfig("boo", "kubeconfig");
-    expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
-  })
+    it("check if reorderring works for different from and to", () => {
+      clusterStore.swapIconOrders("workstation", 0, 1)
 
-  it("check if reorderring works for same from and to", () => {
-    clusterStore.swapIconOrders("workstation", 1, 1)
+      const clusters = clusterStore.getByWorkspaceId("workstation");
+      expect(clusters[0].id).toBe("dev")
+      expect(clusters[0].preferences.iconOrder).toBe(0)
+      expect(clusters[1].id).toBe("prod")
+      expect(clusters[1].preferences.iconOrder).toBe(1)
+    })
 
-    const clusters = clusterStore.getByWorkspaceId("workstation");
-    expect(clusters[0].id).toBe("prod")
-    expect(clusters[0].preferences.iconOrder).toBe(0)
-    expect(clusters[1].id).toBe("dev")
-    expect(clusters[1].preferences.iconOrder).toBe(1)
-  });
+    it("check if after icon reordering, changing workspaces still works", () => {
+      clusterStore.swapIconOrders("workstation", 1, 1)
+      clusterStore.getById("prod").workspace = "default"
 
-  it("check if reorderring works for different from and to", () => {
-    clusterStore.swapIconOrders("workstation", 0, 1)
-
-    const clusters = clusterStore.getByWorkspaceId("workstation");
-    expect(clusters[0].id).toBe("dev")
-    expect(clusters[0].preferences.iconOrder).toBe(0)
-    expect(clusters[1].id).toBe("prod")
-    expect(clusters[1].preferences.iconOrder).toBe(1)
-  });
-
-  it("check if after icon reordering, changing workspaces still works", () => {
-    clusterStore.swapIconOrders("workstation", 1, 1)
-    clusterStore.getById("prod").workspace = "default"
-
-    expect(clusterStore.getByWorkspaceId("workstation").length).toBe(1);
-    expect(clusterStore.getByWorkspaceId("default").length).toBe(2);
-  });
-
-  it("removes cluster from store", async () => {
-    await clusterStore.removeById("foo");
-    expect(clusterStore.getById("foo")).toBeUndefined();
+      expect(clusterStore.getByWorkspaceId("workstation").length).toBe(1);
+      expect(clusterStore.getByWorkspaceId("default").length).toBe(1);
+    })
   })
 })
 

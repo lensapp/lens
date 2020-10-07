@@ -106,18 +106,13 @@ export class UpgradeChart extends React.Component<Props> {
           themeName="outlined"
           value={version}
           options={versions}
-          formatOptionLabel={this.formatVersionLabel}          
+          formatOptionLabel={this.formatVersionLabel}
           onChange={({ value }: SelectOption) => this.version = value}
         />
       </div>
     )
     return (
       <div className={cssNames("UpgradeChart flex column", className)}>
-        <EditorPanel
-          tabId={tabId}
-          value={value}
-          onChange={onChange}
-        />
         <InfoPanel
           tabId={tabId}
           error={error}
@@ -125,6 +120,11 @@ export class UpgradeChart extends React.Component<Props> {
           submitLabel={_i18n._(t`Upgrade`)}
           submittingMessage={_i18n._(t`Updating..`)}
           controls={controlsAndInfo}
+        />
+        <EditorPanel
+          tabId={tabId}
+          value={value}
+          onChange={onChange}
         />
       </div>
     )

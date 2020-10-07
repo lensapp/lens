@@ -2,12 +2,12 @@ import "./cluster-view.scss"
 import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
+import { RouteComponentProps } from "react-router";
 import { IClusterViewRouteParams } from "./cluster-view.route";
 import { ClusterStatus } from "./cluster-status";
 import { hasLoadedView } from "./lens-views";
 import { Cluster } from "../../../main/cluster";
 import { clusterStore } from "../../../common/cluster-store";
-import { RouteComponentProps } from "react-router";
 
 interface Props extends RouteComponentProps<IClusterViewRouteParams> {
 }
@@ -32,7 +32,7 @@ export class ClusterView extends React.Component<Props> {
 
   render() {
     const { cluster } = this;
-    const showStatus = cluster && (!cluster.available || !hasLoadedView(cluster.id))
+    const showStatus = cluster && (!cluster.available || !hasLoadedView(cluster.id) || !cluster.ready)
     return (
       <div className="ClusterView">
         {showStatus && (

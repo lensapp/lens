@@ -59,6 +59,7 @@ export class Cluster implements ClusterModel {
   @observable online = false;
   @observable accessible = false;
   @observable ready = false;
+  @observable reconnecting = false;
   @observable disconnected = true;
   @observable failureReason: string;
   @observable nodes = 0;
@@ -110,7 +111,7 @@ export class Cluster implements ClusterModel {
 
   protected bindEvents() {
     logger.info(`[CLUSTER]: bind events`, this.getMeta());
-    const refreshTimer = setInterval(() => this.online && this.refresh(), 30000); // every 30s
+    const refreshTimer = setInterval(() => !this.disconnected && this.refresh(), 30000); // every 30s
 
     this.eventDisposers.push(
       reaction(this.getState, this.pushState),
@@ -183,6 +184,9 @@ export class Cluster implements ClusterModel {
         this.refreshEvents(),
         this.refreshAllowedResources(),
       ]);
+      if (!this.ready) {
+        this.ready = true
+      }
     }
     this.pushState();
   }
@@ -233,7 +237,7 @@ export class Cluster implements ClusterModel {
     const apiUrl = this.kubeProxyUrl + path;
     return request(apiUrl, {
       json: true,
-      timeout: 5000,
+      timeout: 30000,
       ...options,
       headers: {
         Host: `${this.id}.${new URL(this.kubeProxyUrl).host}`, // required in ClusterManager.getClusterForRequest()

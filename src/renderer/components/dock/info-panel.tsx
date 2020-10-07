@@ -38,35 +38,29 @@ export class InfoPanel extends Component<Props> {
     showNotifications: true,
   }
 
-  @observable.ref result: ReactNode;
   @observable error = "";
   @observable waiting = false;
 
   componentDidMount() {
     disposeOnUnmount(this, [
       reaction(() => this.props.tabId, () => {
-        this.result = ""
-        this.error = ""
         this.waiting = false
       })
     ])
   }
 
   @computed get errorInfo() {
-    return this.error || this.props.error;
+    return this.props.error;
   }
 
   submit = async () => {
     const { showNotifications } = this.props;
-    this.result = "";
-    this.error = "";
     this.waiting = true;
     try {
-      this.result = await this.props.submit()
-      if (showNotifications) Notifications.ok(this.result);
+      const result = await this.props.submit();
+      if (showNotifications) Notifications.ok(result);
     } catch (error) {
-      this.error = error.toString();
-      if (showNotifications) Notifications.error(this.error);
+      if (showNotifications) Notifications.error(error.toString());
     } finally {
       this.waiting = false
     }
@@ -81,27 +75,15 @@ export class InfoPanel extends Component<Props> {
     dockStore.closeTab(this.props.tabId);
   }
 
-  renderInfo() {
-    if (!this.props.showInlineInfo) {
+  renderErrorIcon() {
+    if (!this.props.showInlineInfo || !this.errorInfo) {
       return;
     }
-    const { result, errorInfo } = this;
     return (
-      <>
-        {result && (
-          <div className="success flex align-center">
-            <Icon material="done" />
-            <span>{result}</span>
-          </div>
-        )}
-        {errorInfo && (
-          <div className="error flex align-center">
-            <Icon material="error_outline" />
-            <span>{errorInfo}</span>
-          </div>
-        )}
-      </>
-    )
+      <div className="error">
+        <Icon material="error_outline" tooltip={this.errorInfo}/>
+      </div>
+    );
   }
 
   render() {
@@ -114,11 +96,13 @@ export class InfoPanel extends Component<Props> {
           {controls}
         </div>
         <div className="info flex gaps align-center">
-          {waiting ? <><Spinner /> {submittingMessage}</> : this.renderInfo()}
+          {waiting ? <><Spinner /> {submittingMessage}</> : this.renderErrorIcon()}
         </div>
         <Button plain label={<Trans>Cancel</Trans>} onClick={close} />
         <Button
-          primary active
+          active
+          outlined={showSubmitClose}
+          primary={!showSubmitClose}// one button always should be primary (blue)
           label={submitLabel}
           onClick={submit}
           disabled={isDisabled}

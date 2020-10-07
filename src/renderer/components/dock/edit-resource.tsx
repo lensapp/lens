@@ -90,11 +90,6 @@ export class EditResource extends React.Component<Props> {
     const { kind, getNs, getName } = resource;
     return (
       <div className={cssNames("EditResource flex column", this.props.className)}>
-        <EditorPanel
-          tabId={tabId}
-          value={draft}
-          onChange={onChange}
-        />
         <InfoPanel
           tabId={tabId}
           error={error}
@@ -108,6 +103,11 @@ export class EditResource extends React.Component<Props> {
               <span><Trans>Namespace</Trans>:</span> <Badge label={getNs() || "global"}/>
             </div>
           )}
+        />
+        <EditorPanel
+          tabId={tabId}
+          value={draft}
+          onChange={onChange}
         />
       </div>
     )

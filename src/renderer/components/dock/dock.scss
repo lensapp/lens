@@ -14,10 +14,6 @@
       left: 0;
       bottom: 0;
       z-index: 100;
-
-      > .resizer {
-        display: none;
-      }
     }
   }
 
@@ -62,23 +58,6 @@
       top: 0;
       right: 0;
       bottom: 0;
-    }
-  }
-
-  .resizer {
-    $height: 12px;
-
-    position: absolute;
-    top: -$height / 2;
-    left: 0;
-    right: 0;
-    bottom: 100%;
-    height: $height;
-    cursor: row-resize;
-    z-index: 10;
-
-    &.disabled {
-      pointer-events: none;
     }
   }
 

@@ -14,14 +14,15 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { clusterStore } from "./cluster.store";
 import { eventStore } from "../+events/event.store";
 import { isAllowedResource } from "../../../common/rbac";
+import { getHostedCluster } from "../../../common/cluster-store";
 
 @observer
 export class Cluster extends React.Component {
   private dependentStores = [nodesStore, podsStore];
 
   private watchers = [
-    interval(60, () => clusterStore.getMetrics()),
-    interval(20, () => eventStore.loadAll())
+    interval(60, () => { getHostedCluster().available && clusterStore.getMetrics()}),
+    interval(20, () => { getHostedCluster().available && eventStore.loadAll()})
   ];
 
   @computed get isLoaded() {

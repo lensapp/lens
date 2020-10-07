@@ -28,6 +28,7 @@ export function withTooltip<T extends React.ComponentType<any>>(Target: T): T {
         const tooltipProps: TooltipProps = {
           targetId: tooltipId,
           tooltipOnParentHover: tooltipOverrideDisabled,
+          formatters: { narrow: true },
           ...(isReactNode(tooltip) ? { children: tooltip } : tooltip),
         };
         targetProps.id = tooltipId;
