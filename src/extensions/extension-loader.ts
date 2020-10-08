@@ -18,16 +18,6 @@ export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"))
 }
 
-export function withExtensionPackagesRoot(callback: Function) {
-  const cwd = process.cwd()
-  try {
-    process.chdir(extensionPackagesRoot())
-    return callback()
-  } finally {
-    process.chdir(cwd)
-  }
-}
-
 export class ExtensionLoader {
   @observable extensions = observable.map<ExtensionId, InstalledExtension>([], { deep: false });
   @observable instances = observable.map<ExtensionId, LensExtension>([], { deep: false })
