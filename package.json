@@ -198,7 +198,6 @@
     "mobx": "^5.15.5",
     "mobx-observable-history": "^1.0.3",
     "mock-fs": "^4.12.0",
-    "module-alias": "^2.2.2",
     "node-machine-id": "^1.1.12",
     "node-pty": "^0.9.0",
     "npm": "^6.14.8",

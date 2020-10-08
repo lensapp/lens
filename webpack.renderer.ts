@@ -46,7 +46,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       ]
     },
     optimization: {
-      minimize: false,
+      minimize: isProduction,
       minimizer: [
         new TerserPlugin({
           cache: true,
