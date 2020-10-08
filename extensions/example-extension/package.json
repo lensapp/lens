@@ -9,9 +9,7 @@
     "styles": []
   },
   "scripts": {
-    "build": "npm run build:main && npm run build:renderer",
-    "build:main": "tsc",
-    "build:renderer": "webpack --config webpack.config.js",
+    "build": "webpack --config webpack.config.js",
     "dev": "tsc --watch"
   },
   "dependencies": {
