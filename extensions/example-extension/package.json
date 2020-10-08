@@ -9,13 +9,17 @@
     "styles": []
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build:main && npm run build:renderer",
+    "build:main": "tsc",
+    "build:renderer": "webpack --config webpack.config.js",
     "dev": "tsc --watch"
   },
   "dependencies": {
     "react-open-doodles": "^1.0.5"
   },
   "devDependencies": {
-    "typescript": "^4.0.3"
+    "ts-loader": "^8.0.4",
+    "typescript": "^4.0.3",
+    "webpack": "^4.44.2"
   }
 }

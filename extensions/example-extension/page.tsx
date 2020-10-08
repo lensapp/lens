@@ -1,6 +1,7 @@
-import { Button, Icon, IconProps, LensRendererExtension, React } from "@lens/ui-extensions";
+import { Button, Icon, IconProps, LensRendererExtension } from "@lens/ui-extensions";
 import { CoffeeDoodle } from "react-open-doodles";
 import path from "path";
+import React from "react"
 
 export function ExtensionIcon(props: IconProps) {
   return <Icon {...props} material="pages" tooltip={path.basename(__filename)}/>

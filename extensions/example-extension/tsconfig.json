@@ -17,7 +17,6 @@
   },
   "include": [
     "../../types",
-    "./renderer.ts",
     "./main.ts"
   ],
   "exclude": [

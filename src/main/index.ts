@@ -17,10 +17,15 @@ import { clusterStore } from "../common/cluster-store"
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
 import { tracker } from "../common/tracker";
+import * as LensExtensions from "../extensions/extension-api";
 import { extensionManager } from "../extensions/extension-manager";
 import { extensionLoader } from "../extensions/extension-loader";
 import { getLensRuntime } from "../extensions/lens-runtime";
 import logger from "./logger"
+
+export {
+  LensExtensions
+}
 
 const workingDir = path.join(app.getPath("appData"), appName);
 app.setName(appName);

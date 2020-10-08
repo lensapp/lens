@@ -26,6 +26,9 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
     },
     output: {
+      libraryTarget: "global",
+      library: "",
+      globalObject: "this",
       publicPath: publicPath,
       path: buildDir,
       filename: '[name].js',
@@ -43,7 +46,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       ]
     },
     optimization: {
-      minimize: isProduction,
+      minimize: false,
       minimizer: [
         new TerserPlugin({
           cache: true,
