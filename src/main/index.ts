@@ -22,9 +22,11 @@ import { extensionManager } from "../extensions/extension-manager";
 import { extensionLoader } from "../extensions/extension-loader";
 import { getLensRuntime } from "../extensions/lens-runtime";
 import logger from "./logger"
+import * as Mobx from "mobx"
 
 export {
-  LensExtensions
+  LensExtensions,
+  Mobx
 }
 
 const workingDir = path.join(app.getPath("appData"), appName);
