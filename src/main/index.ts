@@ -86,7 +86,7 @@ app.on("activate", (event, hasVisibleWindows) => {
 // Quit app on Cmd+Q (MacOS)
 app.on("will-quit", (event) => {
   logger.info('APP:QUIT');
-  event.preventDefault(); // prevent app's default shutdown (e.g. required for mixpanel, GA, etc.)
+  event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
 
   if (userStore.preferences.trayEnabled) {
     return; // with tray the app remains open
