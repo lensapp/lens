@@ -4,13 +4,11 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { isMac } from "../common/vars";
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
-import { extensionLoader } from "../extensions/extension-loader";
 import { clusterStore } from "../common/cluster-store";
 import { i18nStore } from "./i18n";
 import { themeStore } from "./theme.store";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
-import { getLensRuntime } from "../extensions/lens-runtime";
 
 type AppComponent = React.ComponentType & {
   init?(): void;
@@ -31,7 +29,6 @@ export async function bootstrap(App: AppComponent) {
 
   // Register additional store listeners
   clusterStore.registerIpcListener();
-  extensionLoader.autoEnableOnLoad(getLensRuntime);
 
   // init app's dependencies if any
   if (App.init) {

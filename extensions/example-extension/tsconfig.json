@@ -12,11 +12,13 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
     "jsx": "react"
   },
   "include": [
     "../../types",
-    "./index.tsx"
+    "./renderer.ts",
+    "./main.ts"
   ],
   "exclude": [
     "node_modules",

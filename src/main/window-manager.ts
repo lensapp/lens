@@ -4,6 +4,7 @@ import { BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { observable } from "mobx";
 import { initMenu } from "./menu";
+import { extensionLoader } from "../extensions/extension-loader";
 
 export class WindowManager {
   protected mainView: BrowserWindow;
@@ -40,6 +41,9 @@ export class WindowManager {
       event.preventDefault();
       shell.openExternal(url);
     });
+    this.mainView.webContents.on("dom-ready", () => {
+      extensionLoader.broadcastExtensions()
+    })
 
     // track visible cluster from ui
     ipcMain.on("cluster-view:current-id", (event, clusterId: ClusterId) => {
@@ -72,8 +76,8 @@ export class WindowManager {
     try {
       await this.showSplash();
       await this.mainView.loadURL(`http://localhost:${this.proxyPort}`)
-      this.mainView.show();
-      this.splashWindow.close();
+      this.mainView.show()
+      this.splashWindow.close()
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString())
     }

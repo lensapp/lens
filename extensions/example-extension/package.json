@@ -2,7 +2,8 @@
   "name": "extension-example",
   "version": "1.0.0",
   "description": "Example extension",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
+  "renderer": "dist/renderer.js",
   "lens": {
     "metadata": {},
     "styles": []

@@ -19,6 +19,7 @@ import { workspaceStore } from "../common/workspace-store";
 import { tracker } from "../common/tracker";
 import { extensionManager } from "../extensions/extension-manager";
 import { extensionLoader } from "../extensions/extension-loader";
+import { getLensRuntime } from "../extensions/lens-runtime";
 import logger from "./logger"
 
 const workingDir = path.join(app.getPath("appData"), appName);
@@ -78,7 +79,9 @@ async function main() {
   // create window manager and open app
   windowManager = new WindowManager(proxyPort);
 
+  extensionLoader.loadOnMain(getLensRuntime)
   extensionLoader.extensions.replace(await extensionManager.load())
+  extensionLoader.broadcastExtensions()
 }
 
 app.on("ready", main);
