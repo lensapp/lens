@@ -54,6 +54,7 @@ export class Workspaces extends React.Component {
       id: workspaceId,
       name: "",
       description: "",
+      lastActiveClusterId: ""
     })
   }
 

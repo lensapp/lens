@@ -7,8 +7,9 @@ import { Trans } from "@lingui/macro";
 import { Menu, MenuItem, MenuProps } from "../menu";
 import { Icon } from "../icon";
 import { observable } from "mobx";
-import { workspaceStore } from "../../../common/workspace-store";
+import { workspaceStore, WorkspaceId } from "../../../common/workspace-store";
 import { cssNames } from "../../utils";
+import { clusterStore } from "../../../common/cluster-store";
 
 interface Props extends Partial<MenuProps> {
 }
@@ -16,6 +17,13 @@ interface Props extends Partial<MenuProps> {
 @observer
 export class WorkspaceMenu extends React.Component<Props> {
   @observable menuVisible = false;
+
+  activateWorkspace = (id: WorkspaceId) => {
+    if (clusterStore.activeClusterId) {
+      workspaceStore.setLastActiveClusterId(workspaceStore.currentWorkspace.id, clusterStore.activeClusterId);
+    }
+    workspaceStore.setActive(id);
+  }
 
   render() {
     const { className, ...menuProps } = this.props;
@@ -38,7 +46,7 @@ export class WorkspaceMenu extends React.Component<Props> {
               key={workspaceId}
               title={description}
               active={workspaceId === currentWorkspace.id}
-              onClick={() => workspaceStore.setActive(workspaceId)}
+              onClick={() => this.activateWorkspace(workspaceId)}
             >
               <Icon small material="layers"/>
               <span className="workspace">{name}</span>

@@ -3,8 +3,10 @@ import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store"
 import { landingURL } from "../renderer/components/+landing-page/landing-page.route";
 import { navigate } from "../renderer/navigation";
+import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
 
 export type WorkspaceId = string;
+export type ClusterId = string;
 
 export interface WorkspaceStoreModel {
   currentWorkspace?: WorkspaceId;
@@ -15,6 +17,7 @@ export interface Workspace {
   id: WorkspaceId;
   name: string;
   description?: string;
+  lastActiveClusterId?: ClusterId; 
 }
 
 export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
@@ -31,7 +34,8 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   @observable workspaces = observable.map<WorkspaceId, Workspace>({
     [WorkspaceStore.defaultId]: {
       id: WorkspaceStore.defaultId,
-      name: "default"
+      name: "default",
+      lastActiveClusterId: "" 
     }
   });
 
@@ -56,17 +60,35 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @action
+  setLastActiveClusterId(id: WorkspaceId, clusterId: ClusterId) {
+    if (clusterId != null) {
+      this.getById(id).lastActiveClusterId = clusterId;
+    }
+  }
+
+  @action
   setActive(id = WorkspaceStore.defaultId, { redirectToLanding = true, resetActiveCluster = true } = {}) {
+    this.setLastActiveClusterId(this.currentWorkspaceId, clusterStore.activeClusterId) 
+
     if (id === this.currentWorkspaceId) return;
-    if (!this.getById(id)) {
+    const workspaceToUse = this.getById(id); 
+  
+    if (!workspaceToUse) {
       throw new Error(`workspace ${id} doesn't exist`);
     }
-    this.currentWorkspaceId = id;
+
+    this.currentWorkspaceId = workspaceToUse.id;
+    const clusterId = workspaceToUse.lastActiveClusterId; 
     if (resetActiveCluster) {
-      clusterStore.setActive(null)
-    }
-    if (redirectToLanding) {
-      navigate(landingURL())
+      if (clusterId) {
+        clusterStore.setActive(clusterId)
+        navigate(clusterViewURL({ params: { clusterId } }));
+      } else {
+        clusterStore.setActive(null) 
+        if (redirectToLanding) {
+          navigate(landingURL())
+        }
+      }      
     }
   }
 

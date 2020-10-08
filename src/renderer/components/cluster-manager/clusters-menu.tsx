@@ -29,6 +29,10 @@ interface Props {
 @observer
 export class ClustersMenu extends React.Component<Props> {
   showCluster = (clusterId: ClusterId) => {
+    const wsId = workspaceStore.currentWorkspace.id;
+    if(clusterId) { 
+      workspaceStore.setLastActiveClusterId(wsId, clusterId);
+    }
     clusterStore.setActive(clusterId);
     navigate(clusterViewURL({ params: { clusterId } }));
   }
@@ -57,7 +61,12 @@ export class ClustersMenu extends React.Component<Props> {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
         click: async () => {
+          const wsId = workspaceStore.currentWorkspace.id;
+          const wsLastActiveClusterId = workspaceStore.currentWorkspace.lastActiveClusterId
           if (clusterStore.isActive(cluster.id)) {
+            if (wsLastActiveClusterId === cluster.id) {
+              workspaceStore.setLastActiveClusterId(wsId, "");
+            }            
             navigate(landingURL());
             clusterStore.setActive(null);
           }
@@ -75,6 +84,12 @@ export class ClustersMenu extends React.Component<Props> {
             label: _i18n._(t`Remove`),
           },
           ok: () => {
+            const wsId = workspaceStore.currentWorkspace.id;
+            const wsLastActiveClusterId = workspaceStore.currentWorkspace.lastActiveClusterId 
+            
+            if (wsLastActiveClusterId === cluster.id) {
+              workspaceStore.setLastActiveClusterId(wsId, "");
+            }
             if (clusterStore.activeClusterId === cluster.id) {
               navigate(landingURL());
             }
