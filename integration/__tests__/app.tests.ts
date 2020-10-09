@@ -29,13 +29,9 @@ describe("Lens integration tests", () => {
   }
 
   const clickWhatsNew = async (app: Application) => {
-    console.log(1)
     await app.client.waitUntilTextExists("h1", "What's new?")
-    console.log(2)
     await app.client.click("button.primary")
-    console.log(3)
     await app.client.waitUntilTextExists("h1", "Welcome")
-    console.log(4)
   }
 
   describe("app start", () => {
