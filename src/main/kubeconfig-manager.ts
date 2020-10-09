@@ -11,8 +11,12 @@ export class KubeconfigManager {
   protected configDir = app.getPath("temp")
   protected tempFile: string;
 
-  constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) {
-    this.init();
+  private constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
+
+  static async create(cluster: Cluster, contextHandler: ContextHandler, port: number) {
+    const kcm = new KubeconfigManager(cluster, contextHandler, port)
+    await kcm.init()
+    return kcm
   }
 
   protected async init() {
@@ -72,8 +76,13 @@ export class KubeconfigManager {
     return tempFile;
   }
 
-  unlink() {
+  async unlink() {
+    if (!this.tempFile) {
+      return
+    }
+
     logger.info('Deleting temporary kubeconfig: ' + this.tempFile)
-    fs.unlinkSync(this.tempFile)
+    await fs.unlink(this.tempFile)
+    this.tempFile = undefined
   }
 }

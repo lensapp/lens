@@ -289,6 +289,7 @@
     "identity-obj-proxy": "^3.0.0",
     "include-media": "^1.4.9",
     "jest": "^26.0.1",
+    "jest-mock-extended": "^1.0.10",
     "make-plural": "^6.2.1",
     "material-design-icons": "^3.0.1",
     "mini-css-extract-plugin": "^0.9.0",
