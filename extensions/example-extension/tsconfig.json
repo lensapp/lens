@@ -17,8 +17,8 @@
   },
   "include": [
     "../../types",
-    "./renderer.ts",
-    "./main.ts"
+    "./*.ts",
+    "./*.tsx"
   ],
   "exclude": [
     "node_modules",

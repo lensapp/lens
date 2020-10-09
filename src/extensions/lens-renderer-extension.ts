@@ -2,7 +2,8 @@ import type { PageStore } from "./extension-renderer-api"
 import type { PageRegistration } from "./page-store"
 import { LensExtension } from "./lens-extension"
 
-export abstract class LensRendererExtension extends LensExtension {
+export class LensRendererExtension extends LensExtension {
+
   registerPages(pageStore: PageStore) {
     return
   }

@@ -18,16 +18,6 @@ export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"))
 }
 
-export function withExtensionPackagesRoot(callback: Function) {
-  const cwd = process.cwd()
-  try {
-    process.chdir(extensionPackagesRoot())
-    return callback()
-  } finally {
-    process.chdir(cwd)
-  }
-}
-
 export class ExtensionLoader {
   @observable extensions = observable.map<ExtensionId, InstalledExtension>([], { deep: false });
   @observable instances = observable.map<ExtensionId, LensExtension>([], { deep: false })
@@ -89,21 +79,19 @@ export class ExtensionLoader {
 
   protected requireExtension(extension: InstalledExtension) {
     let extEntrypoint = ""
-    return withExtensionPackagesRoot(() => {
-      try {
-        if (ipcRenderer && extension.manifest.renderer) {
-          extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.renderer))
-        } else if (extension.manifest.main) {
-          extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.main))
-        }
-        if (extEntrypoint !== "") {
-          return __non_webpack_require__(extEntrypoint)
-        }
-      } catch (err) {
-        console.error(`[EXTENSION-LOADER]: can't load extension main at ${extEntrypoint}: ${err}`, { extension });
-        console.trace(err)
+    try {
+      if (ipcRenderer && extension.manifest.renderer) {
+        extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.renderer))
+      } else if (extension.manifest.main) {
+        extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.main))
       }
-    })
+      if (extEntrypoint !== "") {
+        return __non_webpack_require__(extEntrypoint)
+      }
+    } catch (err) {
+      console.error(`[EXTENSION-LOADER]: can't load extension main at ${extEntrypoint}: ${err}`, { extension });
+      console.trace(err)
+    }
   }
 
   getById(id: ExtensionId): InstalledExtension {
