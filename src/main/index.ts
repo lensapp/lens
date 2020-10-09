@@ -18,6 +18,7 @@ import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
 import { tracker } from "../common/tracker";
 import logger from "./logger"
+import { registerCollectors } from "./register-collectors";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 app.setName(appName);
@@ -43,6 +44,8 @@ async function main() {
   updater.start();
 
   registerFileProtocol("static", __static);
+
+  registerCollectors()
 
   // find free port
   let proxyPort: number

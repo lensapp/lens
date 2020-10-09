@@ -1,14 +1,14 @@
 import { isMac, isWindows } from "./vars";
-import winca from "win-ca"
-import macca from "mac-ca"
+import winCa from "win-ca"
+import macCa from "mac-ca"
 import logger from "../main/logger"
 
 if (isMac) {
-  for (const crt of macca.all()) {
+  for (const crt of macCa.all()) {
     const attributes = crt.issuer?.attributes?.map((a: any) => `${a.name}=${a.value}`)
     logger.debug("Using host CA: " + attributes.join(","))
   }
 }
 if (isWindows) {
-  winca.inject("+") // see: https://github.com/ukoloff/win-ca#caveats
+  winCa.inject("+") // see: https://github.com/ukoloff/win-ca#caveats
 }

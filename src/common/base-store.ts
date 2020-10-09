@@ -9,12 +9,12 @@ import logger from "../main/logger";
 import { broadcastIpc, IpcBroadcastParams } from "./ipc";
 import isEqual from "lodash/isEqual";
 
-export interface BaseStoreParams<T = any> extends ConfOptions<T> {
+export interface BaseStoreParams<T> extends ConfOptions<T> {
   autoLoad?: boolean;
   syncEnabled?: boolean;
 }
 
-export class BaseStore<T = any> extends Singleton {
+export abstract class BaseStore<T> extends Singleton {
   protected storeConfig: Config<T>;
   protected syncDisposers: Function[] = [];
 
@@ -22,7 +22,7 @@ export class BaseStore<T = any> extends Singleton {
   @observable isLoaded = false;
   @observable protected data: T;
 
-  protected constructor(protected params: BaseStoreParams) {
+  protected constructor(protected params: BaseStoreParams<T>) {
     super();
     this.params = {
       autoLoad: false,
@@ -157,10 +157,7 @@ export class BaseStore<T = any> extends Singleton {
     return subFrames;
   }
 
-  @action
-  protected fromStore(data: T) {
-    this.data = data;
-  }
+  protected abstract fromStore(data: T): void;
 
   // todo: use "serializr" ?
   toJSON(): T {

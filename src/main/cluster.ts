@@ -14,6 +14,7 @@ import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from ".
 import request, { RequestPromiseOptions } from "request-promise-native"
 import { apiResources } from "../common/rbac";
 import logger from "./logger"
+import { clusterMetaManager } from "../common/cluster-meta-manager";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -115,6 +116,7 @@ export class Cluster implements ClusterModel {
 
     this.eventDisposers.push(
       reaction(this.getState, this.pushState),
+      clusterMetaManager.startCollectingFor(this.id),
       () => clearInterval(refreshTimer),
     );
   }

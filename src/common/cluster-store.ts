@@ -1,5 +1,5 @@
 import path from "path";
-import { app, ipcRenderer, remote, webFrame, webContents } from "electron";
+import { app, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
 import { action, computed, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
