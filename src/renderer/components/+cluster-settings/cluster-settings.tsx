@@ -46,8 +46,9 @@ export class ClusterSettings extends React.Component<Props> {
     }
   }
 
-  refreshCluster = () => {
+  refreshCluster = async () => {
     if(this.cluster) {
+      await clusterIpc.activate.invokeFromRenderer(this.cluster.id);
       clusterIpc.refresh.invokeFromRenderer(this.cluster.id);
     }
   }

@@ -47,13 +47,14 @@ export class ClusterStatus extends React.Component<Props> {
     ipcRenderer.removeAllListeners(`kube-auth:${this.props.clusterId}`);
   }
 
-  activateCluster = async () => {
-    await clusterIpc.activate.invokeFromRenderer(this.props.clusterId);
+  activateCluster = async (force = false) => {
+    await clusterIpc.activate.invokeFromRenderer(this.props.clusterId, force);
   }
 
   reconnect = async () => {
+    this.authOutput = []
     this.isReconnecting = true;
-    await this.activateCluster();
+    await this.activateCluster(true);
     this.isReconnecting = false;
   }
 
