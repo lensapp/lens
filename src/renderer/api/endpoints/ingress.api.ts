@@ -2,6 +2,7 @@ import { KubeObject } from "../kube-object";
 import { autobind } from "../../utils";
 import { IMetrics, metricsApi } from "./metrics.api";
 import { KubeApi } from "../kube-api";
+import { hostname } from "os";
 
 export class IngressApi extends KubeApi<Ingress> {
   getMetrics(ingress: string, namespace: string): Promise<IIngressMetrics> {
@@ -106,6 +107,20 @@ export class Ingress extends KubeObject {
       ports.push(tlsPort)
     }
     return ports.join(", ")
+  }
+
+  getLoadBalancers() {
+    const ingressAddresses: string[] = [];
+    const { status: { loadBalancer } } = this;
+
+    if (!loadBalancer) return [];
+
+    loadBalancer.ingress.forEach(address => {
+      const entry = address.hostname ? address.hostname : address.ip;
+      ingressAddresses.push(entry); 
+    })
+
+    return ingressAddresses;
   }
 }
 
