@@ -1,7 +1,7 @@
 {
-  "name": "extension-example",
-  "version": "1.0.0",
-  "description": "Example extension",
+  "name": "lens-telemetry",
+  "version": "0.1.0",
+  "description": "Lens telemetry",
   "main": "dist/main.js",
   "renderer": "dist/renderer.js",
   "lens": {
@@ -12,12 +12,12 @@
     "build": "webpack --config webpack.config.js",
     "dev": "npm run build --watch"
   },
-  "dependencies": {
-    "react-open-doodles": "^1.0.5"
-  },
+  "dependencies": {},
   "devDependencies": {
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
-    "webpack": "^4.44.2"
+    "webpack": "^4.44.2",
+    "mobx": "^5.15.5",
+    "react": "^16.13.1"
   }
 }

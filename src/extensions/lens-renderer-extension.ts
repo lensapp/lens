@@ -1,16 +1,14 @@
-import type { PageStore } from "./extension-renderer-api"
-import type { PageRegistration } from "./page-store"
 import { LensExtension } from "./lens-extension"
+import type { PageRegistry } from "./extension-renderer-api"
+import { AppPreferenceRegistry } from "./app-preference-registry";
 
 export class LensRendererExtension extends LensExtension {
 
-  registerPages(pageStore: PageStore) {
+  registerPages(pageStore: PageRegistry) {
     return
   }
 
-  // Runtime helpers
-  protected registerPage(pageStore: PageStore, params: PageRegistration) {
-    const dispose = pageStore.register(params);
-    this.disposers.push(dispose)
+  registerAppPreferences(appPreferenceStore: AppPreferenceRegistry) {
+    return
   }
 }

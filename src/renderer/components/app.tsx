@@ -36,7 +36,7 @@ import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store
 import logger from "../../main/logger";
 import { clusterIpc } from "../../common/cluster-ipc";
 import { webFrame } from "electron";
-import { pageStore } from "../../extensions/page-store";
+import { pageRegistry } from "../../extensions/page-registry";
 import { DynamicPage } from "../../extensions/dynamic-page";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { getLensRuntime } from "../../extensions/lens-runtime";
@@ -78,7 +78,7 @@ export class App extends React.Component {
                 <Route component={CustomResources} {...crdRoute}/>
                 <Route component={UserManagement} {...usersManagementRoute}/>
                 <Route component={Apps} {...appsRoute}/>
-                {pageStore.clusterPages.map(page => {
+                {pageRegistry.clusterPages.map(page => {
                   return <Route {...page} key={page.path} render={() => <DynamicPage page={page}/>}/>
                 })}
                 <Redirect exact from="/" to={this.startURL}/>
