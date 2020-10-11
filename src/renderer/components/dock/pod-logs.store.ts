@@ -18,8 +18,8 @@ export interface IPodLogsData {
 type TabId = string;
 
 interface PodLogs {
-  oldLogs: string
-  newLogs: string
+  oldLogs?: string
+  newLogs?: string
 }
 
 @autobind()
@@ -67,24 +67,19 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
         tailLines: tailLines,
       });
       if (!oldLogs) {
-        this.update(tabId, loadedLogs);
+        this.logs.set(tabId, { oldLogs: loadedLogs, newLogs });
       } else {
-        this.update(tabId, "", `${newLogs}\n${loadedLogs}`.trim());
+        this.logs.set(tabId, { oldLogs, newLogs: loadedLogs });
       }
     } catch (error) {
-      this.update(tabId, [
-        _i18n._(t`Failed to load logs: ${error.message}`),
-        _i18n._(t`Reason: ${error.reason} (${error.code})`),
-      ].join("\n"));
+      this.logs.set(tabId, {
+        oldLogs: [
+          _i18n._(t`Failed to load logs: ${error.message}`),
+          _i18n._(t`Reason: ${error.reason} (${error.code})`)
+        ].join("\n"),
+        newLogs
+      });
     }
-  }
-
-  update(tabId: TabId, oldLogs?: string, newLogs?: string) {
-    const logs = this.logs.get(tabId);
-    this.logs.set(tabId, {
-      oldLogs: oldLogs || logs.oldLogs,
-      newLogs: newLogs || logs.newLogs
-    });
   }
 
   getTimestamps(logs: string) {
