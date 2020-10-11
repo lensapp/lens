@@ -47,6 +47,7 @@ export interface IPodLogsQuery {
   tailLines?: number;
   timestamps?: boolean;
   sinceTime?: string; // Date.toISOString()-format
+  follow?: boolean;
 }
 
 export enum PodStatus {
