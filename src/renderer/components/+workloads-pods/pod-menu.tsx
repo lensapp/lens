@@ -42,6 +42,7 @@ export class PodMenu extends React.Component<Props> {
   }
 
   showLogs(container: IPodContainer) {
+    hideDetails();
     const pod = this.props.object;
     createPodLogsTab({
       pod,
