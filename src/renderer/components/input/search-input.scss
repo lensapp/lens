@@ -7,7 +7,11 @@
   > label {
     color: inherit;
     border-radius: $radius;
-    padding: $padding / 1.33 $padding * 1.25;
+    padding: 6px 6px 6px 10px;
+
+    .Icon {
+      height: $margin * 2;
+    }
   }
 
   &.compact {
