@@ -119,6 +119,10 @@ export class WindowManager {
         show: false,
         transparent: true,
         titleBarStyle: "hidden",
+        trafficLightPosition: {
+          x: -10000,
+          y: -10000,
+        }
       });
     }
   }
