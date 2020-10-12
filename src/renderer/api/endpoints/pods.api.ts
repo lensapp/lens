@@ -42,12 +42,14 @@ export interface IPodMetrics<T = IMetrics> {
   networkTransmit: T;
 }
 
+// Reference: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#read-log-pod-v1-core
 export interface IPodLogsQuery {
   container?: string;
   tailLines?: number;
   timestamps?: boolean;
   sinceTime?: string; // Date.toISOString()-format
   follow?: boolean;
+  previous?: boolean;
 }
 
 export enum PodStatus {
