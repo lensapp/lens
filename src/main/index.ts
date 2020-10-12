@@ -91,9 +91,6 @@ app.on("will-quit", (event) => {
   if (userStore.preferences.trayEnabled) {
     return; // with tray the app remains open
   } else {
-    windowManager?.destroy();
-    clusterManager?.stop();
-    proxyServer?.close();
     app.exit(); // forced app.quit()
   }
 })

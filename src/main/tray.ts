@@ -2,7 +2,7 @@ import path from "path"
 import sharp from "sharp";
 import jsdom from "jsdom"
 import packageInfo from "../../package.json"
-import { dialog, Menu, NativeImage, nativeImage, nativeTheme, Tray } from "electron"
+import { app, dialog, Menu, NativeImage, nativeImage, nativeTheme, Tray } from "electron"
 import { isDevelopment, isMac } from "../common/vars";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
@@ -131,5 +131,12 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
         }
       },
     },
+    { type: 'separator' },
+    {
+      label: 'Quit App',
+      click() {
+        app.exit();
+      }
+    }
   ]);
 }
