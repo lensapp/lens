@@ -15,6 +15,14 @@
       white-space: nowrap;
     }
 
+    .NamespaceSelect {
+      .Select {
+        &__value-container {
+          margin-bottom: 0;
+        }
+      }
+    }
+
     .SearchInput {
       label {
         background: none;

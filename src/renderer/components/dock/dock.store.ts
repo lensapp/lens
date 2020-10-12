@@ -11,6 +11,7 @@ export enum TabKind {
   EDIT_RESOURCE = "edit-resource",
   INSTALL_CHART = "install-chart",
   UPGRADE_CHART = "upgrade-chart",
+  POD_LOGS = "pod-logs",
 }
 
 export interface IDockTab {

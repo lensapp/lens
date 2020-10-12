@@ -12,7 +12,7 @@ export function setup(): Application {
     args: [],
     path: AppPaths[process.platform],
     startTimeout: 30000,
-    waitTimeout: 30000,
+    waitTimeout: 60000,
     chromeDriverArgs: ['remote-debugging-port=9222'],
     env: {
       CICD: "true"
