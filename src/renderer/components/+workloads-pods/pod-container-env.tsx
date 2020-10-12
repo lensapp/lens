@@ -11,6 +11,7 @@ import { secretsStore } from "../+config-secrets/secrets.store";
 import { configMapsStore } from "../+config-maps/config-maps.store";
 import { Icon } from "../icon";
 import { base64, cssNames } from "../../utils";
+import _ from "lodash";
 
 interface Props {
   container: IPodContainer;
@@ -40,7 +41,9 @@ export const ContainerEnvironment = observer((props: Props) => {
   )
 
   const renderEnv = () => {
-    return env.map(variable => {
+    let orderedEnv = _.sortBy(env, 'name');
+
+    return orderedEnv.map(variable => {
       const { name, value, valueFrom } = variable
       let secretValue = null
 
