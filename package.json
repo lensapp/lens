@@ -175,6 +175,7 @@
     "@types/tar": "^4.0.3",
     "array-move": "^3.0.0",
     "chalk": "^4.1.0",
+    "command-exists": "1.2.9",
     "conf": "^7.0.1",
     "crypto-js": "^4.0.0",
     "electron-updater": "^4.3.1",
