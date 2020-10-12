@@ -9,8 +9,10 @@ export class TelemetryPreferencesStore extends BaseStore<TelemetryPreferencesMod
   private constructor() {
     super({
       configName: "telemetry-preferences-store",
+      defaults: {
+        enabled: true
+      }
     })
-    this.data.enabled = true
   }
 
   get enabled() {

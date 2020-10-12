@@ -1,14 +1,17 @@
 import { Checkbox } from "@lens/ui-extensions"
 import React from "react"
+import { observer } from "mobx-react";
 import { TelemetryPreferencesStore } from "./telemetry-preferences-store"
 
+@observer
 export class TelemetryPreferenceInput extends React.Component<{telemetry: TelemetryPreferencesStore}, {}> {
   render() {
+    const { telemetry } = this.props
     return (
       <Checkbox
         label="Allow telemetry & usage tracking"
-        value={this.props.telemetry.enabled}
-        onChange={v => this.props.telemetry.enabled = v}
+        value={telemetry.enabled}
+        onChange={v => { telemetry.enabled = v; }}
       />
     )
   }
