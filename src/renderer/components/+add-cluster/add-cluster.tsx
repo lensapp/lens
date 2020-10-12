@@ -2,7 +2,7 @@ import "./add-cluster.scss"
 import os from "os";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
-import { action, observable } from "mobx";
+import { action, observable, runInAction } from "mobx";
 import { remote } from "electron";
 import { KubeConfig } from "@kubernetes/client-node";
 import { _i18n } from "../../i18n";
@@ -121,9 +121,7 @@ export class AddCluster extends React.Component {
 
   @action
   addClusters = () => {
-    const configValidationErrors:string[] = [];
     let newClusters: ClusterModel[] = [];
-
     try {
       if (!this.selectedContexts.length) {
         this.error = <Trans>Please select at least one cluster context</Trans>
@@ -132,7 +130,7 @@ export class AddCluster extends React.Component {
       this.error = ""
       this.isWaiting = true
 
-       newClusters = this.selectedContexts.filter(context => {
+      newClusters = this.selectedContexts.filter(context => {
         try {
           const kubeConfig = this.kubeContexts.get(context);
           validateKubeConfig(kubeConfig);
@@ -164,17 +162,21 @@ export class AddCluster extends React.Component {
         }
       })
 
-
-      clusterStore.addCluster(...newClusters);
-
-      if (newClusters.length === 1) {
-        const clusterId = newClusters[0].id;
-        navigate(clusterViewURL({ params: { clusterId } }));
-      } else {
-        if (newClusters.length > 1) {Notifications.ok(
-          <Trans>Successfully imported <b>{newClusters.length}</b> cluster(s)</Trans>);
+      runInAction(() => {
+        clusterStore.addCluster(...newClusters);
+        if (newClusters.length === 1) {
+          const clusterId = newClusters[0].id;
+          clusterStore.setActive(clusterId);
+          navigate(clusterViewURL({ params: { clusterId } }));
+        } else {
+          if (newClusters.length > 1) {
+            Notifications.ok(
+              <Trans>Successfully imported <b>{newClusters.length}</b> cluster(s)</Trans>
+            );
+          }
         }
-      }
+      })
+      this.refreshContexts();
     } catch (err) {
       this.error = String(err);
       Notifications.error(<Trans>Error while adding cluster(s): {this.error}</Trans>);
@@ -226,7 +228,7 @@ export class AddCluster extends React.Component {
           <Tab
             value={KubeConfigSourceTab.FILE}
             label={<Trans>Select kubeconfig file</Trans>}
-            active={this.sourceTab == KubeConfigSourceTab.FILE}/>
+            active={this.sourceTab == KubeConfigSourceTab.FILE} />
           <Tab
             value={KubeConfigSourceTab.TEXT}
             label={<Trans>Paste as text</Trans>}
@@ -340,8 +342,8 @@ export class AddCluster extends React.Component {
     return (
       <div className={cssNames("kube-context flex gaps align-center", context)}>
         <span>{context}</span>
-        {isNew && <Icon small material="fiber_new"/>}
-        {isSelected && <Icon small material="check" className="box right"/>}
+        {isNew && <Icon small material="fiber_new" />}
+        {isSelected && <Icon small material="check" className="box right" />}
       </div>
     )
   };
