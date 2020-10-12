@@ -183,13 +183,13 @@ export class PodLogs extends React.Component<Props> {
           <Icon
             material="av_timer"
             onClick={this.toggleTimestamps}
-            className={cssNames({ active: showTimestamps })}
+            className={cssNames("timestamps-icon", { active: showTimestamps })}
             tooltip={(showTimestamps ? _i18n._(t`Hide`) : _i18n._(t`Show`)) + " " + _i18n._(t`timestamps`)}
           />
           <Icon
             material="undo"
             onClick={this.togglePrevious}
-            className={cssNames({ active: previous })}
+            className={cssNames("undo-icon", { active: previous })}
             tooltip={(previous ? _i18n._(t`Show current logs`) : _i18n._(t`Show previous terminated container logs`))}
           />
           <Icon

@@ -73,7 +73,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       } else {
         this.logs.set(tabId, { oldLogs, newLogs: loadedLogs });
       }
-    } catch (error) {
+    } catch ({error}) {
       this.logs.set(tabId, {
         oldLogs: [
           _i18n._(t`Failed to load logs: ${error.message}`),
