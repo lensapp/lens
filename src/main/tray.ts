@@ -80,9 +80,10 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
   return Menu.buildFromTemplate([
     {
       label: "About Lens",
-      click() {
+      async click() {
         // note: argument[1] (browserWindow) not available when app is not focused / hidden
-        windowManager.runInContextWindow(showAbout);
+        const browserWindow = await windowManager.ensureMainWindow();
+        showAbout(browserWindow);
       },
     },
     {
@@ -119,16 +120,15 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
     },
     {
       label: "Check for updates",
-      click() {
-        windowManager.runInContextWindow(async window => {
-          const result = await AppUpdater.checkForUpdates();
-          if (!result) {
-            dialog.showMessageBoxSync(window, {
-              message: "No updates available",
-              type: "info",
-            })
-          }
-        })
+      async click() {
+        const result = await AppUpdater.checkForUpdates();
+        const browserWindow = await windowManager.ensureMainWindow();
+        if (!result) {
+          dialog.showMessageBoxSync(browserWindow, {
+            message: "No updates available",
+            type: "info",
+          })
+        }
       },
     },
   ]);

@@ -2,7 +2,7 @@ import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
 import { observable, reaction } from "mobx";
-import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
+import { BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
@@ -10,7 +10,6 @@ import { initTray } from "./tray";
 export class WindowManager {
   protected mainWindow: BrowserWindow;
   protected splashWindow: BrowserWindow;
-  protected trayWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
   protected disposers: Record<string, Function> = {};
 
@@ -63,14 +62,13 @@ export class WindowManager {
         this.windowState.unmanage();
         this.mainWindow = null;
         this.splashWindow = null;
-        this.trayWindow = null;
       })
     }
     try {
       if (showSplash) await this.showSplash();
       await this.mainWindow.loadURL(this.mainUrl);
       this.mainWindow.show();
-      this.splashWindow.hide()
+      this.splashWindow?.hide();
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString())
     }
@@ -83,12 +81,9 @@ export class WindowManager {
   protected async initTray() {
     this.disposers.trayAutoBind = reaction(() => userStore.preferences.trayEnabled, async isEnabled => {
       if (isEnabled) {
-        this.ensureTrayWindow();
         this.disposers.trayAutoUpdater = await initTray(this);
       } else if (this.disposers.trayAutoUpdater) {
         this.disposers.trayAutoUpdater();
-        this.trayWindow.destroy();
-        this.trayWindow = null;
       }
     }, {
       fireImmediately: true
@@ -102,45 +97,10 @@ export class WindowManager {
     });
   }
 
-  async ensureMainWindow({ bringToTop = true, showSplash = true } = {}) {
-    if (!this.mainWindow) {
-      await this.initMainWindow(showSplash);
-    }
-    if (bringToTop) {
-      this.mainWindow.show();
-    } else {
-      this.mainWindow.hide();
-    }
-  }
-
-  ensureTrayWindow() {
-    if (!this.trayWindow) {
-      this.trayWindow = new BrowserWindow({
-        show: false,
-        transparent: true,
-        titleBarStyle: "hidden",
-        trafficLightPosition: {
-          x: -10000,
-          y: -10000,
-        }
-      });
-    }
-  }
-
-  async runInContextWindow(callback: (window: BrowserWindow) => any | Promise<any>) {
-    const isMainVisible = this.mainWindow?.isVisible(); // is open, but might be not on the top
-    if (isMainVisible) {
-      this.mainWindow.show();
-      await callback(this.mainWindow);
-    } else {
-      this.ensureTrayWindow();
-      this.mainWindow?.hide();
-      this.trayWindow.show();
-      await callback(this.trayWindow);
-      this.trayWindow.hide();
-      this.mainWindow?.show();
-      app.hide();
-    }
+  async ensureMainWindow(): Promise<BrowserWindow> {
+    if (!this.mainWindow) await this.initMainWindow();
+    this.mainWindow.show();
+    return this.mainWindow;
   }
 
   sendToView({ channel, frameId, data = [] }: { channel: string, frameId?: number, data?: any[] }) {
