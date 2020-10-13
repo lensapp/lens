@@ -40,4 +40,23 @@
       border-radius: $radius;
     }
   }
+
+  .jump-to-bottom {
+    position: absolute;
+    font-size: small;
+    left: 50%;
+    padding: $unit / 2 $unit * 1.5;
+    border-radius: $unit * 2;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: opacity 0.2s;
+
+    &.active {
+      opacity: 1;
+    }
+
+    .Icon {
+      --size: $unit * 2;
+    }
+  }
 }

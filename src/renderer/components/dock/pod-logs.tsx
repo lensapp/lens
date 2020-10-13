@@ -13,6 +13,7 @@ import { Spinner } from "../spinner";
 import { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { IPodLogsData, logRange, podLogsStore } from "./pod-logs.store";
+import { Button } from "../button";
 
 interface Props {
   className?: string
@@ -23,6 +24,7 @@ interface Props {
 export class PodLogs extends React.Component<Props> {
   @observable ready = false;
   @observable preloading = false; // Indicator for setting Spinner (loader) at the top of the logs
+  @observable showJumpToBottom = false;
 
   private logsElement: HTMLDivElement;
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
@@ -114,9 +116,15 @@ export class PodLogs extends React.Component<Props> {
 
   onScroll = (evt: React.UIEvent<HTMLDivElement>) => {
     const logsArea = evt.currentTarget;
+    const toBottomOffset = 100 * 16; // 100 lines * 16px (height of each line)
     const { scrollHeight, clientHeight, scrollTop } = logsArea;
     if (scrollTop === 0) {
       this.preload(scrollHeight);
+    }
+    if (scrollHeight - scrollTop > toBottomOffset) {
+      this.showJumpToBottom = true;
+    } else {
+      this.showJumpToBottom = false;
     }
     this.lastLineIsShown = clientHeight + scrollTop === scrollHeight;
   };
@@ -158,6 +166,26 @@ export class PodLogs extends React.Component<Props> {
   formatOptionLabel = (option: SelectOption) => {
     const { value, label } = option;
     return label || <><Icon small material="view_carousel"/> {value}</>;
+  }
+
+  renderJumpToBottom() {
+    if (!this.logsElement) return null;
+    return (
+      <Button
+        primary
+        className={cssNames("jump-to-bottom flex gaps", {active: this.showJumpToBottom})}
+        onClick={evt => {
+          evt.currentTarget.blur();
+          this.logsElement.scrollTo({
+            top: this.logsElement.scrollHeight,
+            behavior: "auto"
+          });
+        }}
+      >
+        <Trans>Jump to bottom</Trans>
+        <Icon material="expand_more" />
+      </Button>
+    );
   }
 
   renderControls() {
@@ -246,6 +274,7 @@ export class PodLogs extends React.Component<Props> {
           showButtons={false}
         />
         <div className="logs" onScroll={this.onScroll} ref={e => this.logsElement = e}>
+          {this.renderJumpToBottom()}
           {this.renderLogs()}
         </div>
       </div>
