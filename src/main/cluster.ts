@@ -51,12 +51,12 @@ export class Cluster implements ClusterModel {
   whenInitialized = when(() => this.initialized);
   whenReady = when(() => this.ready);
 
+  public port: number;
   @observable initialized = false;
   @observable contextName: string;
   @observable workspace: WorkspaceId;
   @observable kubeConfigPath: string;
   @observable apiUrl: string; // cluster server url
-  @observable kubeProxyUrl: string; // lens-proxy to kube-api url
   @observable online = false;
   @observable accessible = false;
   @observable ready = false;
@@ -90,12 +90,16 @@ export class Cluster implements ClusterModel {
     Object.assign(this, model);
   }
 
+  get kubeProxyUrl() {
+    return `http://localhost:${this.port}${apiKubePrefix}`
+  }
+
   @action
   async init(port: number) {
     try {
       this.contextHandler = new ContextHandler(this);
       this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler, port);
-      this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
+      this.port = port
       this.initialized = true;
       logger.info(`[CLUSTER]: "${this.contextName}" init success`, {
         id: this.id,
@@ -262,6 +266,7 @@ export class Cluster implements ClusterModel {
   protected async getConnectionStatus(): Promise<ClusterStatus> {
     try {
       const response = await this.k8sRequest("/version")
+      console.log(response)
       this.version = response.gitVersion
       this.failureReason = null
       return ClusterStatus.AccessGranted;

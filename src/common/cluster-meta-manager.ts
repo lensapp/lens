@@ -3,6 +3,8 @@ import { clusterMetaStore } from "./cluster-meta-store";
 import { ClusterId } from "./cluster-store";
 import Singleton from "./utils/singleton";
 
+export class StopError extends Error { }
+
 export abstract class ClusterMetaCollector {
   /**
    * start tells the collector to start collecting its metadata once.
