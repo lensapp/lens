@@ -27,7 +27,7 @@
     display: block;
     height: 0;
     border-top: 1px solid $primary;
-    margin: $margin * 2;
+    margin: $margin * 2 0;
 
     &:after {
       position: absolute;
@@ -44,11 +44,10 @@
   .jump-to-bottom {
     position: absolute;
     font-size: small;
-    left: 50%;
+    right: 30px;
     padding: $unit / 2 $unit * 1.5;
     border-radius: $unit * 2;
     opacity: 0;
-    transform: translateX(-50%);
     transition: opacity 0.2s;
 
     &.active {
