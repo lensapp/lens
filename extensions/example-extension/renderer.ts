@@ -1,4 +1,4 @@
-import { DynamicPageType, LensRendererExtension, PageStore } from "@lens/ui-extensions";
+import { DynamicPageType, LensRendererExtension, PageRegistry } from "@lens/ui-extensions";
 import { examplePage, ExtensionIcon } from "./page"
 
 export default class ExampleExtension extends LensRendererExtension {
@@ -6,16 +6,18 @@ export default class ExampleExtension extends LensRendererExtension {
     console.log('EXAMPLE EXTENSION RENDERER: ACTIVATED', this.getMeta());
   }
 
-  registerPages(pageStore: PageStore) {
-    this.disposers.push(pageStore.register({
-      type: DynamicPageType.CLUSTER,
-      path: "/extension-example",
-      title: "Example Extension",
-      components: {
-        Page: examplePage(this),
-        MenuIcon: ExtensionIcon,
-      }
-    }))
+  registerPages(registry: PageRegistry) {
+    this.disposers.push(
+      registry.add({
+        type: DynamicPageType.CLUSTER,
+        path: "/extension-example",
+        title: "Example Extension",
+        components: {
+          Page: examplePage(this),
+          MenuIcon: ExtensionIcon,
+        }
+      })
+    )
   }
 
   onDeactivate() {

@@ -4,6 +4,7 @@ import fs from "fs-extra"
 import logger from "../main/logger"
 import { extensionPackagesRoot, InstalledExtension } from "./extension-loader"
 import * as child_process from 'child_process';
+import { getBundledExtensions } from "../common/utils/app-version"
 
 type Dependencies = {
   [name: string]: string;
@@ -80,7 +81,11 @@ export class ExtensionManager {
   async loadFromFolder(folderPath: string): Promise<InstalledExtension[]> {
     const paths = await fs.readdir(folderPath);
     const extensions: InstalledExtension[] = []
+    const bundledExtensions = getBundledExtensions()
     for (const fileName of paths) {
+      if (!bundledExtensions.includes(fileName)) {
+        continue
+      }
       const absPath = path.resolve(folderPath, fileName);
       const manifestPath = path.resolve(absPath, "package.json");
       await fs.access(manifestPath, fs.constants.F_OK)

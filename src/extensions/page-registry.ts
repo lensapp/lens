@@ -27,7 +27,7 @@ export interface PageComponents {
   MenuIcon: React.ComponentType<IconProps>;
 }
 
-export class PageStore {
+export class PageRegistry {
   protected pages = observable.array<PageRegistration>([], { deep: false });
 
   @computed get globalPages() {
@@ -39,7 +39,7 @@ export class PageStore {
   }
 
   // todo: verify paths to avoid collision with existing pages
-  register(params: PageRegistration) {
+  add(params: PageRegistration) {
     this.pages.push(params);
     return () => {
       this.pages.replace(
@@ -49,4 +49,4 @@ export class PageStore {
   }
 }
 
-export const pageStore = new PageStore();
+export const pageRegistry = new PageRegistry();

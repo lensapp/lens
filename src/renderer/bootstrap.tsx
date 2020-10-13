@@ -1,6 +1,7 @@
 import "./components/app.scss"
 import React from "react";
 import * as Mobx from "mobx"
+import * as LensMainExtensions from "../extensions/extension-api"
 import * as LensExtensions from "../extensions/extension-renderer-api"
 import { render, unmountComponentAtNode } from "react-dom";
 import { isMac } from "../common/vars";
@@ -19,7 +20,8 @@ type AppComponent = React.ComponentType & {
 export {
   React,
   Mobx,
-  LensExtensions
+  LensExtensions,
+  LensMainExtensions
 }
 
 export async function bootstrap(App: AppComponent) {

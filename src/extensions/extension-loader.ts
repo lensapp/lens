@@ -6,7 +6,8 @@ import path from "path"
 import { observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
 import { app, remote, ipcRenderer } from "electron"
-import { pageStore } from "./page-store";
+import { pageRegistry } from "./page-registry";
+import { appPreferenceRegistry } from "./app-preference-registry"
 
 export interface InstalledExtension extends ExtensionModel {
   manifestPath: string;
@@ -37,14 +38,15 @@ export class ExtensionLoader {
   loadOnClusterRenderer(getLensRuntimeEnv: () => LensExtensionRuntimeEnv) {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer')
     this.autoloadExtensions(getLensRuntimeEnv, (instance: LensRendererExtension) => {
-      instance.registerPages(pageStore)
+      instance.registerPages(pageRegistry)
     })
   }
 
   loadOnMainRenderer(getLensRuntimeEnv: () => LensExtensionRuntimeEnv) {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer')
     this.autoloadExtensions(getLensRuntimeEnv, (instance: LensRendererExtension) => {
-      instance.registerPages(pageStore)
+      instance.registerPages(pageRegistry)
+      instance.registerAppPreferences(appPreferenceRegistry)
     })
   }
 
@@ -82,7 +84,7 @@ export class ExtensionLoader {
     try {
       if (ipcRenderer && extension.manifest.renderer) {
         extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.renderer))
-      } else if (extension.manifest.main) {
+      } else if (!ipcRenderer && extension.manifest.main) {
         extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.main))
       }
       if (extEntrypoint !== "") {

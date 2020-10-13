@@ -173,6 +173,11 @@
       "confinement": "classic"
     }
   },
+  "lens": {
+    "extensions": [
+      "telemetry"
+    ]
+  },
   "dependencies": {
     "@hapi/call": "^8.0.0",
     "@hapi/subtext": "^7.0.3",

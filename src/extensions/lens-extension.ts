@@ -59,7 +59,7 @@ export class LensExtension implements ExtensionModel {
   async enable(runtime: LensExtensionRuntimeEnv) {
     this.isEnabled = true;
     this.runtime = runtime;
-    logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`, this.getMeta());
+    logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
     this.onActivate();
   }
 
@@ -69,7 +69,7 @@ export class LensExtension implements ExtensionModel {
     this.runtime = null;
     this.disposers.forEach(cleanUp => cleanUp());
     this.disposers.length = 0;
-    logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`, this.getMeta());
+    logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
   }
 
   // todo: add more hooks
