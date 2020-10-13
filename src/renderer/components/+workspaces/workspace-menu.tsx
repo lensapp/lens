@@ -20,7 +20,7 @@ export class WorkspaceMenu extends React.Component<Props> {
 
   activateWorkspace = (id: WorkspaceId) => {
     if (clusterStore.activeClusterId) {
-      workspaceStore.setLastActiveClusterId(workspaceStore.currentWorkspace.id, clusterStore.activeClusterId);
+      workspaceStore.setLastActiveClusterId(workspaceStore.currentWorkspaceId, clusterStore.activeClusterId);
     }
     workspaceStore.setActive(id);
   }

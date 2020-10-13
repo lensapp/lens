@@ -146,9 +146,8 @@ export class AddCluster extends React.Component {
         clusterStore.addCluster(...newClusters);
         if (newClusters.length === 1) {
           const clusterId = newClusters[0].id;
-          const wsId = workspaceStore.currentWorkspace.id;
           clusterStore.setActive(clusterId);
-          workspaceStore.setLastActiveClusterId(wsId, clusterStore.activeClusterId);
+          workspaceStore.setLastActiveClusterId(workspaceStore.currentWorkspaceId, clusterStore.activeClusterId);
           navigate(clusterViewURL({ params: { clusterId } }));
         } else {
           Notifications.ok(
