@@ -12,7 +12,7 @@ import { Select, SelectOption } from "../select";
 import { Spinner } from "../spinner";
 import { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
-import { IPodLogsData, podLogsStore } from "./pod-logs.store";
+import { IPodLogsData, logRange, podLogsStore } from "./pod-logs.store";
 
 interface Props {
   className?: string
@@ -22,16 +22,11 @@ interface Props {
 @observer
 export class PodLogs extends React.Component<Props> {
   @observable ready = false;
+  @observable preloading = false; // Indicator for setting Spinner (loader) at the top of the logs
 
   private logsElement: HTMLDivElement;
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
   private colorConverter = new AnsiUp();
-  private lineOptions = [
-    { label: _i18n._(t`All logs`), value: Number.MAX_SAFE_INTEGER },
-    { label: 1000, value: 1000 },
-    { label: 10000, value: 10000 },
-    { label: 100000, value: 100000 },
-  ];
 
   componentDidMount() {
     disposeOnUnmount(this,
@@ -78,22 +73,40 @@ export class PodLogs extends React.Component<Props> {
     await this.load();
   }
 
+  /**
+   * Function loads more logs (usually after user scrolls to top) and sets proper
+   * scrolling position
+   * @param scrollHeight previous scrollHeight position before adding new lines
+   */
+  preload = async (scrollHeight: number) => {
+    if (podLogsStore.lines < logRange) return;
+    this.preloading = true;
+    await podLogsStore.load(this.tabId).then(() => this.preloading = false);
+    if (this.logsElement.scrollHeight > scrollHeight) {
+      // Set scroll position back to place where preloading started
+      this.logsElement.scrollTop = this.logsElement.scrollHeight - scrollHeight - 48;
+    }
+  }
+
+  /**
+   * Computed prop which returns logs with or without timestamps added to each line
+   */
   @computed
   get logs() {
     if (!podLogsStore.logs.has(this.tabId)) return;
-    const { oldLogs, newLogs } = podLogsStore.logs.get(this.tabId);
+    const logs = podLogsStore.logs.get(this.tabId);
     const { getData, removeTimestamps } = podLogsStore;
     const { showTimestamps } = getData(this.tabId);
-    return {
-      oldLogs: showTimestamps ? oldLogs : removeTimestamps(oldLogs),
-      newLogs: showTimestamps ? newLogs : removeTimestamps(newLogs)
-    }
+    return showTimestamps ? logs : removeTimestamps(logs);
   }
 
   toggleTimestamps = () => {
     this.save({ showTimestamps: !this.tabData.showTimestamps });
   }
 
+  /**
+   * Setting 'previous' param to load API request fetching logs from previous container
+   */
   togglePrevious = () => {
     this.save({ previous: !this.tabData.previous });
     this.reload();
@@ -102,15 +115,16 @@ export class PodLogs extends React.Component<Props> {
   onScroll = (evt: React.UIEvent<HTMLDivElement>) => {
     const logsArea = evt.currentTarget;
     const { scrollHeight, clientHeight, scrollTop } = logsArea;
+    if (scrollTop === 0) {
+      this.preload(scrollHeight);
+    }
     this.lastLineIsShown = clientHeight + scrollTop === scrollHeight;
   };
 
   downloadLogs = () => {
-    const { oldLogs, newLogs } = this.logs;
     const { pod, selectedContainer } = this.tabData;
     const fileName = selectedContainer ? selectedContainer.name : pod.getName();
-    const fileContents = oldLogs + newLogs;
-    downloadFile(fileName + ".log", fileContents, "text/plain");
+    downloadFile(fileName + ".log", this.logs, "text/plain");
   }
 
   onContainerChange = (option: SelectOption) => {
@@ -120,11 +134,6 @@ export class PodLogs extends React.Component<Props> {
         .concat(initContainers)
         .find(container => container.name === option.value)
     })
-    this.reload();
-  }
-
-  onTailLineChange = (option: SelectOption) => {
-    this.save({ tailLines: option.value })
     this.reload();
   }
 
@@ -153,8 +162,8 @@ export class PodLogs extends React.Component<Props> {
 
   renderControls() {
     if (!this.ready) return null;
-    const { selectedContainer, showTimestamps, tailLines, previous } = this.tabData;
-    const timestamps = podLogsStore.getTimestamps(podLogsStore.logs.get(this.tabId).oldLogs);
+    const { selectedContainer, showTimestamps, previous } = this.tabData;
+    const timestamps = podLogsStore.getTimestamps(podLogsStore.logs.get(this.tabId));
     return (
       <div className="controls flex gaps align-center">
         <span><Trans>Container</Trans></span>
@@ -164,12 +173,6 @@ export class PodLogs extends React.Component<Props> {
           formatOptionLabel={this.formatOptionLabel}
           onChange={this.onContainerChange}
           autoConvertOptions={false}
-        />
-        <span><Trans>Lines</Trans></span>
-        <Select
-          value={tailLines}
-          options={this.lineOptions}
-          onChange={this.onTailLineChange}
         />
         <div className="time-range">
           {timestamps && (
@@ -203,11 +206,11 @@ export class PodLogs extends React.Component<Props> {
   }
 
   renderLogs() {
+    const newLogs = false // TODO: set new logs separator and generate new logs
     if (!this.ready) {
       return <Spinner center/>;
     }
-    const { oldLogs, newLogs } = this.logs;
-    if (!oldLogs && !newLogs) {
+    if (!this.logs) {
       return (
         <div className="flex align-center justify-center">
           <Trans>There are no logs available for container.</Trans>
@@ -216,7 +219,12 @@ export class PodLogs extends React.Component<Props> {
     }
     return (
       <>
-        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(oldLogs))}} />
+        {this.preloading && (
+          <div className="flex justify-center">
+            <Spinner />
+          </div>
+        )}
+        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(this.logs))}} />
         {newLogs && (
           <>
             <p className="new-logs-sep" title={_i18n._(t`New logs since opening the dialog`)}/>

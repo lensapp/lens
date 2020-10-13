@@ -51,7 +51,6 @@ export class PodMenu extends React.Component<Props> {
       selectedContainer: container,
       showTimestamps: false,
       previous: false,
-      tailLines: 1000
     });
   }
 
