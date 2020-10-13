@@ -1,7 +1,6 @@
 import "./pod-container-env.scss";
 
 import React, { useEffect, useState } from "react";
-import flatten from "lodash/flatten";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { IPodContainer, Secret } from "../../api/endpoints";
@@ -41,7 +40,7 @@ export const ContainerEnvironment = observer((props: Props) => {
   )
 
   const renderEnv = () => {
-    let orderedEnv = _.sortBy(env, 'name');
+    const orderedEnv = _.sortBy(env, 'name');
 
     return orderedEnv.map(variable => {
       const { name, value, valueFrom } = variable
@@ -92,7 +91,7 @@ export const ContainerEnvironment = observer((props: Props) => {
         </div>
       ))
     })
-    return flatten(envVars)
+    return _.flatten(envVars)
   }
 
   return (
