@@ -20,12 +20,11 @@ export function setup(): Application {
 }
 
 export async function tearDown(app: Application) {
-  const pid = app.mainProcess.pid
-  let ppid: any = pid
-  ppid = await ppid()
+  let mpid: any = app.mainProcess.pid
+  let pid = await mpid()
   await app.stop()
   try {
-    process.kill(ppid, "SIGKILL");
+    process.kill(pid, "SIGKILL");
   } catch (e) {
     console.error(e)
   }
