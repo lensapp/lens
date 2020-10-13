@@ -2,7 +2,7 @@ import "./pod-details-container.scss"
 
 import React from "react";
 import { t, Trans } from "@lingui/macro";
-import { IPodContainer, Pod } from "../../api/endpoints";
+import { IPodContainer, IPodContainerStatus, Pod } from "../../api/endpoints";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import { StatusBrick } from "../status-brick";
@@ -21,6 +21,30 @@ interface Props {
 }
 
 export class PodDetailsContainer extends React.Component<Props> {
+  
+  renderStatus(state: string, status: IPodContainerStatus) {
+    const ready = status ? status.ready : ""
+    return (
+      <span className={cssNames("status", state)}>
+        {state}{ready ? `, ${_i18n._(t`ready`)}` : ""}
+        {state === 'terminated' ? ` - ${status.state.terminated.reason} (${_i18n._(t`exit code`)}: ${status.state.terminated.exitCode})` : ''}
+      </span>    
+    );
+  }
+
+  renderLastState(lastState: string, status: IPodContainerStatus) {
+    if (lastState === 'terminated') {
+      return (
+        <span>
+          {lastState}<br/> 
+          {_i18n._(t`Reason`)}: {status.lastState.terminated.reason} - {_i18n._(t`exit code`)}: {status.lastState.terminated.exitCode}<br/> 
+          {_i18n._(t`Started at`)}: {status.lastState.terminated.startedAt}<br/> 
+          {_i18n._(t`Finished at`)}: {status.lastState.terminated.finishedAt}<br/> 
+        </span>
+      )  
+    }
+  }
+
   render() {
     const { pod, container, metrics } = this.props
     if (!pod || !container) return null
@@ -49,19 +73,12 @@ export class PodDetailsContainer extends React.Component<Props> {
         }
         {status &&
         <DrawerItem name={<Trans>Status</Trans>}>
-          <span className={cssNames("status", state)}>
-            {state}{ready ? `, ${_i18n._(t`ready`)}` : ""}
-            {state === 'terminated' ? ` - ${status.state.terminated.reason} (${_i18n._(t`exit code`)}: ${status.state.terminated.exitCode})` : ''}
-          </span>
+          {this.renderStatus(state, status)}
         </DrawerItem>
         }
-        {status &&
+        {lastState &&
         <DrawerItem name={<Trans>Last Status</Trans>}>
-          <span>
-            {lastState ? `${lastState}, ` : ""}
-            {lastState === 'terminated' ? `${status.lastState.terminated.reason} (${_i18n._(t`exit code`)}: ${status.lastState.terminated.exitCode}), 
-              ${_i18n._(t`started at`)}: ${status.lastState.terminated.startedAt}, ${_i18n._(t`finished at`)}: ${status.lastState.terminated.finishedAt}` : ''}
-          </span>
+          {this.renderLastState(lastState, status)}
         </DrawerItem>
         }
         <DrawerItem name={<Trans>Image</Trans>}>
