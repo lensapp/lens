@@ -78,14 +78,12 @@ export function buildMenu(windowManager: WindowManager) {
       { role: 'unhide' },
       { type: 'separator' },
       {
-        label: 'Force Quit',
-        accelerator: 'Cmd+Shift+Q',
+        label: 'Quit',
+        accelerator: 'Cmd+Q',
         click() {
-          app.exit(0); // force quit since might be blocked within app.on("will-quit")
+          app.exit(); // force quit since might be blocked within app.on("will-quit")
         }
-      },
-      { type: 'separator' },
-      { role: 'quit' },
+      }
     ]
   };
 

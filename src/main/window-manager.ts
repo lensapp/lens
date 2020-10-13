@@ -2,7 +2,7 @@ import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
 import { observable, reaction } from "mobx";
-import { BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
+import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
@@ -35,6 +35,8 @@ export class WindowManager {
       });
     }
     if (!this.mainWindow) {
+      app.dock?.show(); // show icon in dock (mac-os only)
+
       const { width, height, x, y } = this.windowState;
       this.mainWindow = new BrowserWindow({
         x, y, width, height,
@@ -62,6 +64,7 @@ export class WindowManager {
         this.windowState.unmanage();
         this.mainWindow = null;
         this.splashWindow = null;
+        app.dock?.hide(); // hide icon in dock (mac-os)
       })
     }
     try {
