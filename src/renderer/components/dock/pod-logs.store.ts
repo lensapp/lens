@@ -81,14 +81,8 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
    */
   loadMore = async (tabId: TabId) => {
     const oldLogs = this.logs.get(tabId);
-    const timestamps = this.getTimestamps(oldLogs);
-    let sinceTime = new Date(0);
-    if (timestamps) {
-      sinceTime = new Date(timestamps.slice(-1)[0]);
-      sinceTime.setSeconds(sinceTime.getSeconds() + 1); // avoid duplicates from last second
-    }
     const logs = await this.loadLogs(tabId, {
-      sinceTime: sinceTime.toISOString()
+      sinceTime: this.getLastSinceTime(tabId)
     });
     // Add newly received logs to bottom
     // TODO: set a new log separator here
@@ -125,6 +119,21 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
     const id = dockStore.selectedTabId;
     const logs = this.logs.get(id);
     return logs ? logs.split("\n").length : 0;
+  }
+
+  /**
+   * It gets timestamps from all logs then returns last one + 1 second
+   * (this allows to avoid getting the last stamp in the selection)
+   * @param tabId
+   */
+  getLastSinceTime(tabId: TabId) {
+    const timestamps = this.getTimestamps(this.logs.get(tabId));
+    let stamp = new Date(0);
+    if (timestamps) {
+      stamp = new Date(timestamps.slice(-1)[0]);
+      stamp.setSeconds(stamp.getSeconds() + 1); // avoid duplicates from last second
+    }
+    return stamp.toISOString();
   }
 
   getTimestamps(logs: string) {

@@ -25,21 +25,28 @@ export class PodLogs extends React.Component<Props> {
   @observable ready = false;
   @observable preloading = false; // Indicator for setting Spinner (loader) at the top of the logs
   @observable showJumpToBottom = false;
+  @observable newLogsSince = ""; // The time after which the logs are considered to be new
 
   private logsElement: HTMLDivElement;
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
   private colorConverter = new AnsiUp();
 
   componentDidMount() {
-    disposeOnUnmount(this,
+    disposeOnUnmount(this, [
       reaction(() => this.props.tab.id, async () => {
         if (podLogsStore.logs.has(this.tabId)) {
           this.ready = true;
           return;
         }
         await this.load();
-      }, { fireImmediately: true })
-    );
+      }, { fireImmediately: true }),
+      // Setting newLogSince separator timestamp to split old logs from new ones
+      reaction(() => podLogsStore.logs.get(this.tabId), () => {
+        if (this.newLogsSince) return;
+        const timestamp = podLogsStore.getLastSinceTime(this.tabId);
+        this.newLogsSince = timestamp.split(".")[0]; // Removing milliseconds from string
+      })
+    ]);
   }
 
   componentDidUpdate() {
@@ -91,15 +98,31 @@ export class PodLogs extends React.Component<Props> {
   }
 
   /**
-   * Computed prop which returns logs with or without timestamps added to each line
+   * Computed prop which returns logs with or without timestamps added to each line and
+   * does separation between new and old logs
+   * @returns {Array} An array with 2 string items - [oldLogs, newLogs]
    */
   @computed
   get logs() {
-    if (!podLogsStore.logs.has(this.tabId)) return;
+    if (!podLogsStore.logs.has(this.tabId)) return [];
     const logs = podLogsStore.logs.get(this.tabId);
     const { getData, removeTimestamps } = podLogsStore;
     const { showTimestamps } = getData(this.tabId);
-    return showTimestamps ? logs : removeTimestamps(logs);
+    let oldLogs = logs;
+    let newLogs = "";
+    if (this.newLogsSince) {
+      // Finding separator timestamp in logs
+      const index = logs.indexOf(this.newLogsSince);
+      if (index !== -1) {
+        // Splitting logs to old and new ones
+        oldLogs = logs.substring(0, index);
+        newLogs = logs.substring(index);
+      }
+    }
+    if (!showTimestamps) {
+      return [removeTimestamps(oldLogs), removeTimestamps(newLogs)];
+    }
+    return [oldLogs, newLogs];
   }
 
   toggleTimestamps = () => {
@@ -132,7 +155,8 @@ export class PodLogs extends React.Component<Props> {
   downloadLogs = () => {
     const { pod, selectedContainer } = this.tabData;
     const fileName = selectedContainer ? selectedContainer.name : pod.getName();
-    downloadFile(fileName + ".log", this.logs, "text/plain");
+    const [oldLogs, newLogs] = this.logs;
+    downloadFile(fileName + ".log", oldLogs + newLogs, "text/plain");
   }
 
   onContainerChange = (option: SelectOption) => {
@@ -234,11 +258,11 @@ export class PodLogs extends React.Component<Props> {
   }
 
   renderLogs() {
-    const newLogs = false // TODO: set new logs separator and generate new logs
+    const [oldLogs, newLogs] = this.logs;
     if (!this.ready) {
       return <Spinner center/>;
     }
-    if (!this.logs) {
+    if (!oldLogs && !newLogs) {
       return (
         <div className="flex align-center justify-center">
           <Trans>There are no logs available for container.</Trans>
@@ -252,7 +276,7 @@ export class PodLogs extends React.Component<Props> {
             <Spinner />
           </div>
         )}
-        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(this.logs))}} />
+        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(oldLogs))}} />
         {newLogs && (
           <>
             <p className="new-logs-sep" title={_i18n._(t`New logs since opening the dialog`)}/>
