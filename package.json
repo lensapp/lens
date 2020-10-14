@@ -12,15 +12,16 @@
   },
   "scripts": {
     "dev": "concurrently -k \"yarn dev-run -C\" yarn:dev:*",
+    "dev-build": "concurrently yarn:compile:*",
     "dev-run": "nodemon --watch static/build/main.js --exec \"electron --inspect .\"",
     "dev:main": "yarn compile:main --watch",
     "dev:renderer": "yarn compile:renderer --watch",
-    "dev:extensions": "yarn compile:extensions --watch",
+    "dev:extension-rollup": "yarn compile:extension-rollup --watch",
     "compile": "env NODE_ENV=production concurrently yarn:compile:*",
     "compile:main": "webpack --config webpack.main.ts",
     "compile:renderer": "webpack --config webpack.renderer.ts",
     "compile:i18n": "lingui compile",
-    "compile:extensions": "rollup --config src/extensions/rollup.config.js",
+    "compile:extension-rollup": "rollup --config src/extensions/rollup.config.js",
     "build:linux": "yarn compile && electron-builder --linux --dir -c.productName=Lens",
     "build:mac": "yarn compile && electron-builder --mac --dir -c.productName=Lens",
     "build:win": "yarn compile && electron-builder --win --dir -c.productName=Lens",
@@ -171,6 +172,11 @@
       "confinement": "classic"
     }
   },
+  "lens": {
+    "extensions": [
+      "telemetry"
+    ]
+  },
   "dependencies": {
     "@hapi/call": "^8.0.0",
     "@hapi/subtext": "^7.0.3",
@@ -196,7 +202,6 @@
     "mobx": "^5.15.5",
     "mobx-observable-history": "^1.0.3",
     "mock-fs": "^4.12.0",
-    "module-alias": "^2.2.2",
     "node-machine-id": "^1.1.12",
     "node-pty": "^0.9.0",
     "npm": "^6.14.8",
@@ -319,8 +324,8 @@
     "progress-bar-webpack-plugin": "^2.1.0",
     "raw-loader": "^4.0.1",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",
+    "react-dom": "^16.13.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-select": "^3.1.0",

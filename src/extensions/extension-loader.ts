@@ -1,10 +1,13 @@
 import type { ExtensionId, LensExtension, ExtensionManifest, ExtensionModel } from "./lens-extension"
+import type { LensRendererExtension } from "./lens-renderer-extension"
 import { broadcastIpc } from "../common/ipc"
-import type { LensRuntimeRendererEnv } from "./lens-runtime"
+import type { LensExtensionRuntimeEnv } from "./lens-runtime"
 import path from "path"
 import { observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
 import { app, remote, ipcRenderer } from "electron"
+import { pageRegistry } from "./page-registry";
+import { appPreferenceRegistry } from "./app-preference-registry"
 
 export interface InstalledExtension extends ExtensionModel {
   manifestPath: string;
@@ -14,16 +17,6 @@ export interface InstalledExtension extends ExtensionModel {
 // lazy load so that we get correct userData
 export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"))
-}
-
-export function withExtensionPackagesRoot(callback: Function) {
-  const cwd = process.cwd()
-  try {
-    process.chdir(extensionPackagesRoot())
-    return callback()
-  } finally {
-    process.chdir(cwd)
-  }
 }
 
 export class ExtensionLoader {
@@ -42,38 +35,65 @@ export class ExtensionLoader {
     }
   }
 
-  autoEnableOnLoad(getLensRuntimeEnv: () => LensRuntimeRendererEnv, { delay = 0 } = {}) {
-    logger.info('[EXTENSIONS-LOADER]: auto-activation loaded extensions: ON');
-    return reaction(() => this.extensions.toJS(), installedExtensions => {
-      installedExtensions.forEach((ext) => {
+  loadOnClusterRenderer(getLensRuntimeEnv: () => LensExtensionRuntimeEnv) {
+    logger.info('[EXTENSIONS-LOADER]: load on cluster renderer')
+    this.autoloadExtensions(getLensRuntimeEnv, (instance: LensRendererExtension) => {
+      instance.registerPages(pageRegistry)
+    })
+  }
+
+  loadOnMainRenderer(getLensRuntimeEnv: () => LensExtensionRuntimeEnv) {
+    logger.info('[EXTENSIONS-LOADER]: load on main renderer')
+    this.autoloadExtensions(getLensRuntimeEnv, (instance: LensRendererExtension) => {
+      instance.registerPages(pageRegistry)
+      instance.registerAppPreferences(appPreferenceRegistry)
+    })
+  }
+
+  loadOnMain(getLensRuntimeEnv: () => LensExtensionRuntimeEnv) {
+    logger.info('[EXTENSIONS-LOADER]: load on main')
+    this.autoloadExtensions(getLensRuntimeEnv, (instance: LensExtension) => {
+      // todo
+    })
+  }
+
+  protected autoloadExtensions(getLensRuntimeEnv: () => LensExtensionRuntimeEnv, callback: (instance: LensExtension) => void) {
+    return reaction(() => this.extensions.toJS(), (installedExtensions) => {
+      for(const [id, ext] of installedExtensions) {
         let instance = this.instances.get(ext.manifestPath)
         if (!instance) {
           const extensionModule = this.requireExtension(ext)
           if (!extensionModule) {
-            logger.error("[EXTENSION-LOADER] failed to load extension " + ext.manifestPath)
-            return
+            continue
           }
           const LensExtensionClass = extensionModule.default;
           instance = new LensExtensionClass({ ...ext.manifest, manifestPath: ext.manifestPath, id: ext.manifestPath }, ext.manifest);
-          instance.enable(getLensRuntimeEnv());
+          instance.enable(getLensRuntimeEnv())
+          callback(instance)
           this.instances.set(ext.id, instance)
         }
-      })
+      }
     }, {
       fireImmediately: true,
-      delay: delay,
+      delay: 0,
     })
   }
 
   protected requireExtension(extension: InstalledExtension) {
-    return withExtensionPackagesRoot(() => {
-      try {
-        const extMain = path.join(path.dirname(extension.manifestPath), extension.manifest.main)
-        return __non_webpack_require__(extMain)
-      } catch (err) {
-        console.error(`[EXTENSION-LOADER]: can't load extension main at ${extension.manifestPath}: ${err}`, { extension });
+    let extEntrypoint = ""
+    try {
+      if (ipcRenderer && extension.manifest.renderer) {
+        extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.renderer))
+      } else if (!ipcRenderer && extension.manifest.main) {
+        extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.main))
       }
-    })
+      if (extEntrypoint !== "") {
+        return __non_webpack_require__(extEntrypoint)
+      }
+    } catch (err) {
+      console.error(`[EXTENSION-LOADER]: can't load extension main at ${extEntrypoint}: ${err}`, { extension });
+      console.trace(err)
+    }
   }
 
   getById(id: ExtensionId): InstalledExtension {
@@ -84,7 +104,7 @@ export class ExtensionLoader {
     const extension = this.getById(id);
     if (extension) {
       const instance = this.instances.get(extension.id)
-      if (instance) { await instance.uninstall() }
+      if (instance) { await instance.disable() }
       this.extensions.delete(id);
     }
   }

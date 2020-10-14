@@ -17,6 +17,7 @@ import { themeStore } from "../../theme.store";
 import { history } from "../../navigation";
 import { Tooltip } from "../tooltip";
 import { KubectlBinaries } from "./kubectl-binaries";
+import { appPreferenceRegistry } from "../../../extensions/app-preference-registry";
 
 @observer
 export class Preferences extends React.Component {
@@ -114,6 +115,7 @@ export class Preferences extends React.Component {
 
   render() {
     const { preferences } = userStore;
+    const extensionPreferences = appPreferenceRegistry.preferences
     const header = (
       <>
         <h2>Preferences</h2>
@@ -185,15 +187,17 @@ export class Preferences extends React.Component {
             <Trans>Does not affect cluster communications!</Trans>
           </small>
 
-          <h2><Trans>Telemetry & Usage Tracking</Trans></h2>
-          <Checkbox
-            label={<Trans>Allow telemetry & usage tracking</Trans>}
-            value={preferences.allowTelemetry}
-            onChange={v => preferences.allowTelemetry = v}
-          />
-          <small className="hint">
-            <Trans>Telemetry & usage data is collected to continuously improve the Lens experience.</Trans>
-          </small>
+          {extensionPreferences.map(({title, components: { Hint, Input}}) => {
+            return (
+              <div key={title}>
+                <h2>{title}</h2>
+                <Input />
+                <small className="hint">
+                  <Hint />
+                </small>
+              </div>
+            )
+          })}
         </WizardLayout>
       </div>
     );

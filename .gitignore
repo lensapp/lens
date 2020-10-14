@@ -14,3 +14,4 @@ src/extensions/*/*.js
 src/extensions/*/*.d.ts
 src/extensions/example-extension/src/**
 types/extension-api.d.ts
+types/extension-renderer-api.d.ts

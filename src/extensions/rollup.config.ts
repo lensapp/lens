@@ -22,6 +22,19 @@ const config: RollupOptions = {
   ],
 };
 
+const rendererConfig: RollupOptions = {
+  input: "src/extensions/extension-renderer-api.ts",
+  output: [
+    { file: "types/extension-renderer-api.d.ts", format: "es", }
+  ],
+  plugins: [
+    dts(),
+    dtsModuleWrap({ name: "@lens/ui-extensions" }),
+    ignoreImport({ extensions: ['.scss'] }),
+    json(),
+  ],
+};
+
 function dtsModuleWrap({ name }: { name: string }): Plugin {
   return {
     name,
@@ -56,4 +69,4 @@ function dtsModuleWrap({ name }: { name: string }): Plugin {
   }
 }
 
-export default config;
+export default [config, rendererConfig];

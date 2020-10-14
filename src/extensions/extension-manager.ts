@@ -2,10 +2,24 @@ import type { ExtensionManifest } from "./lens-extension"
 import path from "path"
 import fs from "fs-extra"
 import logger from "../main/logger"
-import { withExtensionPackagesRoot, extensionPackagesRoot, InstalledExtension } from "./extension-loader"
-import npm from "npm"
+import { extensionPackagesRoot, InstalledExtension } from "./extension-loader"
+import * as child_process from 'child_process';
+import { getBundledExtensions } from "../common/utils/app-version"
+
+type Dependencies = {
+  [name: string]: string;
+}
+
+type PackageJson = {
+  dependencies: Dependencies;
+}
 
 export class ExtensionManager {
+
+  protected packagesJson: PackageJson = {
+    dependencies: {}
+  }
+
   get extensionPackagesRoot() {
     return extensionPackagesRoot()
   }
@@ -14,11 +28,13 @@ export class ExtensionManager {
     return path.resolve(__static, "../extensions");
   }
 
+  get npmPath() {
+    return __non_webpack_require__.resolve('npm/bin/npm-cli')
+  }
+
   async load() {
     logger.info("[EXTENSION-MANAGER] loading extensions from " + this.extensionPackagesRoot)
-
     await fs.ensureDir(path.join(this.extensionPackagesRoot, "node_modules"))
-    await fs.writeFile(path.join(this.extensionPackagesRoot, "package.json"), `{"dependencies": []}`, {mode: 0o600})
 
     return await this.loadExtensions();
   }
@@ -27,9 +43,7 @@ export class ExtensionManager {
     let manifestJson: ExtensionManifest;
     try {
       manifestJson = __non_webpack_require__(manifestPath)
-      withExtensionPackagesRoot(() => {
-        this.installPackageFromPath(path.dirname(manifestPath))
-      })
+      this.packagesJson.dependencies[manifestJson.name] = path.dirname(manifestPath)
 
       logger.info("[EXTENSION-MANAGER] installed extension " + manifestJson.name)
       return {
@@ -44,31 +58,17 @@ export class ExtensionManager {
     }
   }
 
-  protected installPackageFromPath(path: string): Promise<void> {
-    const origLogger = console.log
+  protected installPackages(): Promise<void> {
     return new Promise((resolve, reject) => {
-      npm.load({
-        production: true,
-        global: false,
-        prefix: this.extensionPackagesRoot,
-        dev: false,
-        spin: false,
-        "ignore-scripts": true,
-        loglevel: "silent"
-      }, (err) => {
-        console.log = function() {
-          // just to ignore ts empty function error
-        }
-        npm.commands.install([
-          path
-        ], (err) => {
-          console.log = origLogger
-          if (err) {
-            reject(err)
-          } else {
-            resolve()
-          }
-        })
+      const child = child_process.fork(this.npmPath, ["install", "--silent"], {
+        cwd: extensionPackagesRoot(),
+        silent: true
+      })
+      child.on("close", () => {
+        resolve()
+      })
+      child.on("error", (err) => {
+        reject(err)
       })
     })
   }
@@ -80,15 +80,23 @@ export class ExtensionManager {
 
   async loadFromFolder(folderPath: string): Promise<InstalledExtension[]> {
     const paths = await fs.readdir(folderPath);
-    const manifestsLoading = paths.map(fileName => {
+    const extensions: InstalledExtension[] = []
+    const bundledExtensions = getBundledExtensions()
+    for (const fileName of paths) {
+      if (!bundledExtensions.includes(fileName)) {
+        continue
+      }
       const absPath = path.resolve(folderPath, fileName);
       const manifestPath = path.resolve(absPath, "package.json");
-      return fs.access(manifestPath, fs.constants.F_OK)
-        .then(async () => await this.getExtensionByManifest(manifestPath))
-        .catch(() => null)
-    });
-    let extensions = await Promise.all(manifestsLoading);
-    extensions = extensions.filter(v => !!v); // filter out files and invalid folders (without manifest.json)
+      await fs.access(manifestPath, fs.constants.F_OK)
+      const ext = await this.getExtensionByManifest(manifestPath).catch(() => null)
+      if (ext) {
+        extensions.push(ext)
+      }
+    }
+    await fs.writeFile(path.join(this.extensionPackagesRoot, "package.json"), JSON.stringify(this.packagesJson), {mode: 0o600})
+    await this.installPackages()
+
     logger.debug(`[EXTENSION-MANAGER]: ${extensions.length} extensions loaded`, { folderPath, extensions });
     return extensions;
   }

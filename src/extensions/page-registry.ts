@@ -4,8 +4,8 @@ import { computed, observable } from "mobx";
 import React from "react";
 import { RouteProps } from "react-router";
 import { IconProps } from "../renderer/components/icon";
-import { cssNames, IClassName } from "../renderer/utils";
-import { TabLayout, TabRoute } from "../renderer/components/layout/tab-layout";
+import { IClassName } from "../renderer/utils";
+import { TabRoute } from "../renderer/components/layout/tab-layout";
 
 export enum DynamicPageType {
   GLOBAL = "lens-scope",
@@ -27,7 +27,7 @@ export interface PageComponents {
   MenuIcon: React.ComponentType<IconProps>;
 }
 
-export class PagesStore {
+export class PageRegistry {
   protected pages = observable.array<PageRegistration>([], { deep: false });
 
   @computed get globalPages() {
@@ -39,7 +39,7 @@ export class PagesStore {
   }
 
   // todo: verify paths to avoid collision with existing pages
-  register(params: PageRegistration) {
+  add(params: PageRegistration) {
     this.pages.push(params);
     return () => {
       this.pages.replace(
@@ -49,15 +49,4 @@ export class PagesStore {
   }
 }
 
-export class DynamicPage extends React.Component<{ page: PageRegistration }> {
-  render() {
-    const { className, components: { Page }, subPages = [] } = this.props.page;
-    return (
-      <TabLayout className={cssNames("ExtensionPage", className)} tabs={subPages}>
-        <Page/>
-      </TabLayout>
-    )
-  }
-}
-
-export const dynamicPages = new PagesStore();
+export const pageRegistry = new PageRegistry();

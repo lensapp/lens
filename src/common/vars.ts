@@ -2,7 +2,6 @@
 import path from "path";
 import packageInfo from "../../package.json"
 import { defineGlobal } from "./utils/defineGlobal";
-import { addAlias } from "module-alias";
 
 export const isMac = process.platform === "darwin"
 export const isWindows = process.platform === "win32"
@@ -24,6 +23,7 @@ export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 
 // Extensions
 export const extensionsLibName = `${appName}-extensions.api`
+export const extensionsRendererLibName = `${appName}-extensions-renderer.api`
 export const extensionsDir = path.join(contextDir, "src/extensions");
 
 // Special runtime paths
@@ -35,13 +35,6 @@ defineGlobal("__static", {
     return path.resolve(process.resourcesPath, "static")
   }
 })
-
-// Special dynamic module aliases
-if (isProduction && process.resourcesPath) {
-  addAlias("@lens/extensions", path.join(process.resourcesPath, "static", `build/${extensionsLibName}.js`))
-} else {
-  addAlias("@lens/extensions", path.join(contextDir, "static", `build/${extensionsLibName}.js`))
-}
 
 // Apis
 export const apiPrefix = "/api" // local router apis

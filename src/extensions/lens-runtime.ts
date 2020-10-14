@@ -1,19 +1,13 @@
-// Lens renderer runtime apis exposed to extensions once activated
+// Lens extension runtime params available to extensions after activation
 
 import logger from "../main/logger";
-import { dynamicPages } from "./register-page";
-import { navigate } from "../renderer/navigation";
 
-export interface LensRuntimeRendererEnv {
-  navigate: typeof navigate;
+export interface LensExtensionRuntimeEnv {
   logger: typeof logger;
-  dynamicPages: typeof dynamicPages
 }
 
-export function getLensRuntime(): LensRuntimeRendererEnv {
+export function getLensRuntime(): LensExtensionRuntimeEnv {
   return {
-    logger,
-    navigate,
-    dynamicPages,
+    logger
   }
 }

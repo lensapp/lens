@@ -1,5 +1,4 @@
-import type { LensRuntimeRendererEnv } from "./lens-runtime";
-import type { PageRegistration } from "./register-page";
+import type { LensExtensionRuntimeEnv } from "./lens-runtime";
 import { readJsonSync } from "fs-extra";
 import { action, observable, toJS } from "mobx";
 import logger from "../main/logger";
@@ -19,7 +18,8 @@ export interface ExtensionModel {
 }
 
 export interface ExtensionManifest extends ExtensionModel {
-  main: string;
+  main?: string;
+  renderer?: string;
   description?: string; // todo: add more fields similar to package.json + some extra
 }
 
@@ -34,7 +34,7 @@ export class LensExtension implements ExtensionModel {
   @observable manifest: ExtensionManifest;
   @observable manifestPath: string;
   @observable isEnabled = false;
-  @observable.ref runtime: LensRuntimeRendererEnv;
+  @observable.ref runtime: LensExtensionRuntimeEnv;
 
   constructor(model: ExtensionModel, manifest: ExtensionManifest) {
     this.importModel(model, manifest);
@@ -52,10 +52,14 @@ export class LensExtension implements ExtensionModel {
     }
   }
 
-  async enable(runtime: LensRuntimeRendererEnv) {
+  async migrate(appVersion: string) {
+    // mock
+  }
+
+  async enable(runtime: LensExtensionRuntimeEnv) {
     this.isEnabled = true;
     this.runtime = runtime;
-    console.log(`[EXTENSION]: enabled ${this.name}@${this.version}`, this.getMeta());
+    logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
     this.onActivate();
   }
 
@@ -65,7 +69,7 @@ export class LensExtension implements ExtensionModel {
     this.runtime = null;
     this.disposers.forEach(cleanUp => cleanUp());
     this.disposers.length = 0;
-    console.log(`[EXTENSION]: disabled ${this.name}@${this.version}`, this.getMeta());
+    logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
   }
 
   // todo: add more hooks
@@ -77,27 +81,12 @@ export class LensExtension implements ExtensionModel {
     // mock
   }
 
-  // todo
-  async install(downloadUrl?: string) {
-    return;
-  }
-
-  // todo
-  async uninstall() {
-    return;
-  }
-
-  async hasNewVersion(): Promise<Partial<ExtensionModel>> {
-    return;
-  }
-
   getMeta() {
     return toJS({
       id: this.id,
       manifest: this.manifest,
       manifestPath: this.manifestPath,
-      enabled: this.isEnabled,
-      runtime: this.runtime,
+      enabled: this.isEnabled
     }, {
       recurseEverything: true
     })
@@ -115,13 +104,5 @@ export class LensExtension implements ExtensionModel {
     }, {
       recurseEverything: true,
     })
-  }
-
-  // Runtime helpers
-  protected registerPage(params: PageRegistration, autoDisable = true) {
-    const dispose = this.runtime.dynamicPages.register(params);
-    if (autoDisable) {
-      this.disposers.push(dispose);
-    }
   }
 }
