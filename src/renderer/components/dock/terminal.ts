@@ -5,7 +5,7 @@ import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
 import { TerminalApi } from "../../api/terminal-api";
 import { themeStore } from "../../theme.store";
-import { autobind } from "../../utils/autobind";
+import { autobind } from "../../utils";
 
 export class Terminal {
   static spawningPool: HTMLElement;
