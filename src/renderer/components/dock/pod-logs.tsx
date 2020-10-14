@@ -6,14 +6,14 @@ import { t, Trans } from "@lingui/macro";
 import { computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { _i18n } from "../../i18n";
-import { autobind, cssNames, downloadFile } from "../../utils";
+import { autobind, cssNames } from "../../utils";
 import { Icon } from "../icon";
-import { Select, SelectOption } from "../select";
 import { Spinner } from "../spinner";
 import { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { IPodLogsData, logRange, podLogsStore } from "./pod-logs.store";
 import { Button } from "../button";
+import { PodLogControls } from "./pod-log-controls";
 
 interface Props {
   className?: string
@@ -96,8 +96,8 @@ export class PodLogs extends React.Component<Props> {
    * @returns {Array} An array with 2 string items - [oldLogs, newLogs]
    */
   @computed
-  get logs() {
-    if (!podLogsStore.logs.has(this.tabId)) return [];
+  get logs(): [string, string] {
+    if (!podLogsStore.logs.has(this.tabId)) return ["", ""];
     const logs = podLogsStore.logs.get(this.tabId);
     const { getData, removeTimestamps, newLogSince } = podLogsStore;
     const { showTimestamps } = getData(this.tabId);
@@ -118,18 +118,6 @@ export class PodLogs extends React.Component<Props> {
     return [oldLogs, newLogs];
   }
 
-  toggleTimestamps = () => {
-    this.save({ showTimestamps: !this.tabData.showTimestamps });
-  }
-
-  /**
-   * Setting 'previous' param to load API request fetching logs from previous container
-   */
-  togglePrevious = () => {
-    this.save({ previous: !this.tabData.previous });
-    this.reload();
-  }
-
   onScroll = (evt: React.UIEvent<HTMLDivElement>) => {
     const logsArea = evt.currentTarget;
     const toBottomOffset = 100 * 16; // 100 lines * 16px (height of each line)
@@ -144,46 +132,6 @@ export class PodLogs extends React.Component<Props> {
     }
     this.lastLineIsShown = clientHeight + scrollTop === scrollHeight;
   };
-
-  downloadLogs = () => {
-    const { pod, selectedContainer } = this.tabData;
-    const fileName = selectedContainer ? selectedContainer.name : pod.getName();
-    const [oldLogs, newLogs] = this.logs;
-    downloadFile(fileName + ".log", oldLogs + newLogs, "text/plain");
-  }
-
-  onContainerChange = (option: SelectOption) => {
-    const { containers, initContainers } = this.tabData;
-    this.save({
-      selectedContainer: containers
-        .concat(initContainers)
-        .find(container => container.name === option.value)
-    })
-    this.reload();
-  }
-
-  get containerSelectOptions() {
-    const { containers, initContainers } = this.tabData;
-    return [
-      {
-        label: _i18n._(t`Containers`),
-        options: containers.map(container => {
-          return { value: container.name }
-        }),
-      },
-      {
-        label: _i18n._(t`Init Containers`),
-        options: initContainers.map(container => {
-          return { value: container.name }
-        }),
-      }
-    ];
-  }
-
-  formatOptionLabel = (option: SelectOption) => {
-    const { value, label } = option;
-    return label || <><Icon small material="view_carousel"/> {value}</>;
-  }
 
   renderJumpToBottom() {
     if (!this.logsElement) return null;
@@ -202,51 +150,6 @@ export class PodLogs extends React.Component<Props> {
         <Trans>Jump to bottom</Trans>
         <Icon material="expand_more" />
       </Button>
-    );
-  }
-
-  renderControls() {
-    if (!this.ready) return null;
-    const { selectedContainer, showTimestamps, previous } = this.tabData;
-    const timestamps = podLogsStore.getTimestamps(podLogsStore.logs.get(this.tabId));
-    return (
-      <div className="controls flex gaps align-center">
-        <span><Trans>Container</Trans></span>
-        <Select
-          options={this.containerSelectOptions}
-          value={{ value: selectedContainer.name }}
-          formatOptionLabel={this.formatOptionLabel}
-          onChange={this.onContainerChange}
-          autoConvertOptions={false}
-        />
-        <div className="time-range">
-          {timestamps && (
-            <>
-              <Trans>Since</Trans>{" "}
-              <b>{new Date(timestamps[0]).toLocaleString()}</b>
-            </>
-          )}
-        </div>
-        <div className="flex gaps">
-          <Icon
-            material="av_timer"
-            onClick={this.toggleTimestamps}
-            className={cssNames("timestamps-icon", { active: showTimestamps })}
-            tooltip={(showTimestamps ? _i18n._(t`Hide`) : _i18n._(t`Show`)) + " " + _i18n._(t`timestamps`)}
-          />
-          <Icon
-            material="undo"
-            onClick={this.togglePrevious}
-            className={cssNames("undo-icon", { active: previous })}
-            tooltip={(previous ? _i18n._(t`Show current logs`) : _i18n._(t`Show previous terminated container logs`))}
-          />
-          <Icon
-            material="get_app"
-            onClick={this.downloadLogs}
-            tooltip={_i18n._(t`Save`)}
-          />
-        </div>
-      </div>
     );
   }
 
@@ -282,11 +185,21 @@ export class PodLogs extends React.Component<Props> {
 
   render() {
     const { className } = this.props;
+    const controls = (
+      <PodLogControls
+        ready={this.ready}
+        tabId={this.tabId}
+        tabData={this.tabData}
+        logs={this.logs}
+        save={this.save}
+        reload={this.reload}
+      />
+    )
     return (
       <div className={cssNames("PodLogs flex column", className)}>
         <InfoPanel
           tabId={this.props.tab.id}
-          controls={this.renderControls()}
+          controls={controls}
           showSubmitClose={false}
           showButtons={false}
         />
