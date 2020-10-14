@@ -10,6 +10,7 @@ import { workspaceStore } from "../common/workspace-store";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
 import logger from "./logger";
+import { isDevelopment } from "../common/vars";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
 export let tray: Tray;
@@ -18,7 +19,11 @@ export let tray: Tray;
 nativeTheme.on("updated", () => tray?.setImage(getTrayIcon()));
 
 export function getTrayIcon(isDark = nativeTheme.shouldUseDarkColors): string {
-  return path.resolve(__static, "../build/icons", `tray_icon${isDark ? "_dark" : ""}.png`)
+  return path.resolve(
+    __static,
+    isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
+    `tray_icon${isDark ? "_dark" : ""}.png`
+  )
 }
 
 export function initTray(windowManager: WindowManager) {

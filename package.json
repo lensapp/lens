@@ -90,8 +90,9 @@
         "filter": "!**/main.js"
       },
       {
-        "from": "build/icons/",
-        "to": "build/icons/"
+        "from": "build/tray",
+        "to": "static/icons",
+        "filter": "*.png"
       },
       "LICENSE"
     ],
