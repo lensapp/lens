@@ -25,7 +25,6 @@ export class PodLogs extends React.Component<Props> {
   @observable ready = false;
   @observable preloading = false; // Indicator for setting Spinner (loader) at the top of the logs
   @observable showJumpToBottom = false;
-  @observable newLogsSince = ""; // The time after which the logs are considered to be new
 
   private logsElement: HTMLDivElement;
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
@@ -39,13 +38,7 @@ export class PodLogs extends React.Component<Props> {
           return;
         }
         await this.load();
-      }, { fireImmediately: true }),
-      // Setting newLogSince separator timestamp to split old logs from new ones
-      reaction(() => podLogsStore.logs.get(this.tabId), () => {
-        if (this.newLogsSince) return;
-        const timestamp = podLogsStore.getLastSinceTime(this.tabId);
-        this.newLogsSince = timestamp.split(".")[0]; // Removing milliseconds from string
-      })
+      }, { fireImmediately: true })
     ]);
   }
 
@@ -107,12 +100,12 @@ export class PodLogs extends React.Component<Props> {
     if (!podLogsStore.logs.has(this.tabId)) return [];
     const logs = podLogsStore.logs.get(this.tabId);
     const { getData, removeTimestamps } = podLogsStore;
-    const { showTimestamps } = getData(this.tabId);
+    const { showTimestamps, newLogsSince } = getData(this.tabId);
     let oldLogs = logs;
     let newLogs = "";
-    if (this.newLogsSince) {
+    if (newLogsSince) {
       // Finding separator timestamp in logs
-      const index = logs.indexOf(this.newLogsSince);
+      const index = logs.indexOf(newLogsSince);
       if (index !== -1) {
         // Splitting logs to old and new ones
         oldLogs = logs.substring(0, index);

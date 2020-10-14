@@ -1,4 +1,4 @@
-import { autorun, computed, observable } from "mobx";
+import { autorun, computed, observable, reaction } from "mobx";
 import { Pod, IPodContainer, podsApi, IPodLogsQuery } from "../../api/endpoints";
 import { autobind, interval } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
@@ -6,6 +6,7 @@ import { dockStore, IDockTab, TabKind } from "./dock.store";
 import { t } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { Notifications } from "../notifications";
+import { isDevelopment } from "../../../common/vars";
 
 export interface IPodLogsData {
   pod: Pod;
@@ -14,13 +15,14 @@ export interface IPodLogsData {
   initContainers: IPodContainer[]
   showTimestamps: boolean
   previous: boolean
+  newLogsSince?: string // Timestamp after which all logs are considered to be new
 }
 
 type TabId = string;
 type PodLogs = string;
 
 // Number for log lines to load
-export const logRange = 100; // TODO: Change to 1000 for production
+export const logRange = isDevelopment ? 100 : 1000;
 
 @autobind()
 export class PodLogsStore extends DockTabStore<IPodLogsData> {
@@ -44,6 +46,10 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
         this.refresher.stop();
       }
     }, { delay: 500 });
+
+    reaction(() => this.logs.get(dockStore.selectedTabId), () => {
+      this.setNewLogSince(dockStore.selectedTabId);
+    })
   }
 
   /**
@@ -54,23 +60,21 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
    * @param tabId
    */
   load = async (tabId: TabId) => {
-    const logs = await this.loadLogs(tabId, {
-      tailLines: this.lines + logRange
-    })
-      .then(logs => {
-        if (!this.refresher.isRunning) this.refresher.start();
-        return logs;
-      })
-      .catch(({error}) => {
-        const message = [
-          _i18n._(t`Failed to load logs: ${error.message}`),
-          _i18n._(t`Reason: ${error.reason} (${error.code})`)
-        ].join("\n");
-        this.refresher.stop();
-        Notifications.error(message);
-        return message;
+    try {
+      const logs = await this.loadLogs(tabId, {
+        tailLines: this.lines + logRange
       });
-    this.logs.set(tabId, logs);
+      if (!this.refresher.isRunning) this.refresher.start();
+      this.logs.set(tabId, logs);
+    } catch ({error}) {
+      const message = [
+        _i18n._(t`Failed to load logs: ${error.message}`),
+        _i18n._(t`Reason: ${error.reason} (${error.code})`)
+      ].join("\n");
+      this.refresher.stop();
+      Notifications.error(message);
+      this.logs.set(tabId, message);
+    }
   }
 
   /**
@@ -85,7 +89,6 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       sinceTime: this.getLastSinceTime(tabId)
     });
     // Add newly received logs to bottom
-    // TODO: set a new log separator here
     this.logs.set(tabId, oldLogs + logs);
   }
 
@@ -108,6 +111,20 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       container: selectedContainer.name,
       previous
     });
+  }
+
+  /**
+   * Sets newLogSince separator timestamp to split old logs from new ones
+   * @param tabId
+   */
+  setNewLogSince(tabId: TabId) {
+    const data = this.data.get(tabId);
+    if (data.newLogsSince || !this.logs.has(tabId)) return;
+    const timestamp = podLogsStore.getLastSinceTime(tabId);
+    this.setData(tabId, {
+      ...data,
+      newLogsSince: timestamp.split(".")[0] // Removing milliseconds from string
+    })
   }
 
   /**
