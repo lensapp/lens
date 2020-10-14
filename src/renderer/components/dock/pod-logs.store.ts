@@ -15,7 +15,6 @@ export interface IPodLogsData {
   initContainers: IPodContainer[]
   showTimestamps: boolean
   previous: boolean
-  newLogsSince?: string // Timestamp after which all logs are considered to be new
 }
 
 type TabId = string;
@@ -33,6 +32,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
   });
 
   @observable logs = observable.map<TabId, PodLogs>();
+  @observable newLogSince = observable.map<TabId, string>(); // Timestamp after which all logs are considered to be new
 
   constructor() {
     super({
@@ -118,13 +118,9 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
    * @param tabId
    */
   setNewLogSince(tabId: TabId) {
-    const data = this.data.get(tabId);
-    if (data.newLogsSince || !this.logs.has(tabId)) return;
-    const timestamp = podLogsStore.getLastSinceTime(tabId);
-    this.setData(tabId, {
-      ...data,
-      newLogsSince: timestamp.split(".")[0] // Removing milliseconds from string
-    })
+    if (!this.logs.has(tabId) || this.newLogSince.has(tabId)) return;
+    const timestamp = this.getLastSinceTime(tabId);
+    this.newLogSince.set(tabId, timestamp.split(".")[0]); // Removing milliseconds from string
   }
 
   /**

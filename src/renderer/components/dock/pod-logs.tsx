@@ -99,13 +99,13 @@ export class PodLogs extends React.Component<Props> {
   get logs() {
     if (!podLogsStore.logs.has(this.tabId)) return [];
     const logs = podLogsStore.logs.get(this.tabId);
-    const { getData, removeTimestamps } = podLogsStore;
-    const { showTimestamps, newLogsSince } = getData(this.tabId);
+    const { getData, removeTimestamps, newLogSince } = podLogsStore;
+    const { showTimestamps } = getData(this.tabId);
     let oldLogs = logs;
     let newLogs = "";
-    if (newLogsSince) {
+    if (newLogSince.has(this.tabId)) {
       // Finding separator timestamp in logs
-      const index = logs.indexOf(newLogsSince);
+      const index = logs.indexOf(newLogSince.get(this.tabId));
       if (index !== -1) {
         // Splitting logs to old and new ones
         oldLogs = logs.substring(0, index);
