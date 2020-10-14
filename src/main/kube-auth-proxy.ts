@@ -2,7 +2,7 @@ import { ChildProcess, spawn } from "child_process"
 import { waitUntilUsed } from "tcp-port-used";
 import { broadcastIpc } from "../common/ipc";
 import type { Cluster } from "./cluster"
-import { bundledKubectl, Kubectl } from "./kubectl"
+import { Kubectl } from "./kubectl"
 import logger from "./logger"
 
 export interface KubeAuthProxyLog {
@@ -23,7 +23,7 @@ export class KubeAuthProxy {
     this.env = env
     this.port = port
     this.cluster = cluster
-    this.kubectl = bundledKubectl
+    this.kubectl = Kubectl.bundled()
   }
 
   public async run(): Promise<void> {
