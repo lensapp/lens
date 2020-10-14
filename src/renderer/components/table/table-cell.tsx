@@ -2,7 +2,7 @@ import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 
 import React, { ReactNode } from "react";
-import { autobind, cssNames } from "../../utils";
+import { autobind, cssNames, displayBooleans } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
 
@@ -13,6 +13,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   title?: ReactNode;
   checkbox?: boolean; // render cell with a checkbox
   isChecked?: boolean; // mark checkbox as checked or not
+  renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
   sortBy?: TableSortBy; // column name, must be same as key in sortable object <Table sortable={}/>
   _sorting?: Partial<TableSortParams>; // <Table> sorting state, don't use this prop outside (!)
   _sort?(sortBy: TableSortBy): void; // <Table> sort function, don't use this prop outside (!)
@@ -52,20 +53,20 @@ export class TableCell extends React.Component<TableCellProps> {
     const { checkbox, isChecked } = this.props;
     const showCheckbox = isChecked !== undefined;
     if (checkbox && showCheckbox) {
-      return <Checkbox value={isChecked}/>
+      return <Checkbox value={isChecked} />
     }
   }
 
   render() {
-    const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, ...cellProps } = this.props;
+    const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, ...cellProps } = this.props;
     const classNames = cssNames("TableCell", className, {
       checkbox: checkbox,
       nowrap: _nowrap,
       sorting: this.isSortable,
     });
-    const content = title || children;
+    const content = displayBooleans(displayBoolean, title || children)
     return (
-      <div {...cellProps} className={classNames} onClick={this.onClick}>
+      <div {...cellProps} id={className} className={classNames} onClick={this.onClick}>
         {this.renderCheckbox()}
         {_nowrap ? <div className="content">{content}</div> : content}
         {this.renderSortIcon()}

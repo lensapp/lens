@@ -14,7 +14,7 @@ export class ApiManager {
       return this.apis.get(pathOrCallback) || this.apis.get(KubeApi.parseApi(pathOrCallback).apiBase);
     }
 
-    return Array.from(this.apis.values()).find(pathOrCallback);
+    return Array.from(this.apis.values()).find(pathOrCallback ?? ((api: KubeApi) => true));
   }
 
   registerApi(apiBase: string, api: KubeApi) {

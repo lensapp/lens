@@ -4,7 +4,11 @@
     "jsx": "react",
     "target": "ES2017",
     "module": "ESNext",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "moduleResolution": "Node",
     "sourceMap": true,
     "strict": false,

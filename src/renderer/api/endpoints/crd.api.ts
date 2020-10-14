@@ -9,7 +9,7 @@ type AdditionalPrinterColumnsCommon = {
   description: string;
 }
 
-type AdditionalPrinterColumnsV1 = AdditionalPrinterColumnsCommon & {
+export type AdditionalPrinterColumnsV1 = AdditionalPrinterColumnsCommon & {
   jsonPath: string;
 }
 
@@ -120,9 +120,9 @@ export class CustomResourceDefinition extends KubeObject {
     return JSON.stringify(this.spec.conversion);
   }
 
-  getPrinterColumns(ignorePriority = true) {
+  getPrinterColumns(ignorePriority = true): AdditionalPrinterColumnsV1[] {
     const columns = this.spec.versions.find(a => this.getVersion() == a.name)?.additionalPrinterColumns
-      ?? this.spec.additionalPrinterColumns?.map(({JSONPath, ...rest}) => ({ ...rest, jsonPath: JSONPath })) // map to V1 shape
+      ?? this.spec.additionalPrinterColumns?.map(({ JSONPath, ...rest }) => ({ ...rest, jsonPath: JSONPath })) // map to V1 shape
       ?? [];
     return columns
       .filter(column => column.name != "Age")
@@ -149,4 +149,3 @@ export class CustomResourceDefinition extends KubeObject {
 export const crdApi = new VersionedKubeApi<CustomResourceDefinition>({
   objectConstructor: CustomResourceDefinition
 });
-
