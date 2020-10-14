@@ -72,7 +72,6 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
         _i18n._(t`Reason: ${error.reason} (${error.code})`)
       ].join("\n");
       this.refresher.stop();
-      Notifications.error(message);
       this.logs.set(tabId, message);
     }
   }
