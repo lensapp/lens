@@ -13,7 +13,6 @@ export function setup(): Application {
     path: AppPaths[process.platform],
     startTimeout: 30000,
     waitTimeout: 60000,
-    chromeDriverArgs: ['remote-debugging-port=9222'],
     env: {
       CICD: "true"
     }
@@ -21,11 +20,12 @@ export function setup(): Application {
 }
 
 export async function tearDown(app: Application) {
-  const pid = app.mainProcess.pid
+  let mpid: any = app.mainProcess.pid
+  let pid = await mpid()
   await app.stop()
   try {
-    process.kill(pid, 0);
+    process.kill(pid, "SIGKILL");
   } catch (e) {
-    return
+    console.error(e)
   }
 }

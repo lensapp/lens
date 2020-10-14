@@ -71,7 +71,7 @@ export class WindowManager {
       if (showSplash) await this.showSplash();
       await this.mainWindow.loadURL(this.mainUrl);
       this.mainWindow.show();
-      this.splashWindow?.hide();
+      this.splashWindow?.close();
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString())
     }

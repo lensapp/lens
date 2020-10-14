@@ -87,7 +87,7 @@ app.on("activate", (event, hasVisibleWindows) => {
 app.on("will-quit", (event) => {
   logger.info('APP:QUIT');
   event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
-
+  clusterManager?.stop(); // close cluster connections
   if (userStore.preferences.trayEnabled) {
     return; // with tray the app remains open
   } else {
