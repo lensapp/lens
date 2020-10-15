@@ -569,7 +569,7 @@ msgstr ""
 msgid "Connection"
 msgstr ""
 
-#: src/renderer/components/dock/pod-logs.tsx:144
+#: src/renderer/components/dock/pod-logs.tsx:148
 msgid "Container"
 msgstr ""
 
@@ -599,7 +599,7 @@ msgstr ""
 
 #: src/renderer/components/+workloads-pods/pod-details.tsx:122
 #: src/renderer/components/+workloads-pods/pods.tsx:77
-#: src/renderer/components/dock/pod-logs.tsx:125
+#: src/renderer/components/dock/pod-logs.tsx:129
 msgid "Containers"
 msgstr ""
 
@@ -963,7 +963,7 @@ msgstr ""
 msgid "External IPs"
 msgstr ""
 
-#: src/renderer/components/dock/pod-logs.store.ts:64
+#: src/renderer/components/dock/pod-logs.store.ts:65
 msgid "Failed to load logs: {0}"
 msgstr ""
 
@@ -1067,7 +1067,7 @@ msgid "Helm branch <0>{0}</0> already in use"
 msgstr ""
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
-#: src/renderer/components/dock/pod-logs.tsx:155
+#: src/renderer/components/dock/pod-logs.tsx:159
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Hide"
 msgstr ""
@@ -1152,7 +1152,7 @@ msgid "Ingresses"
 msgstr ""
 
 #: src/renderer/components/+workloads-pods/pod-details.tsx:118
-#: src/renderer/components/dock/pod-logs.tsx:131
+#: src/renderer/components/dock/pod-logs.tsx:135
 msgid "Init Containers"
 msgstr ""
 
@@ -1313,7 +1313,7 @@ msgstr ""
 msgid "Limits"
 msgstr ""
 
-#: src/renderer/components/dock/pod-logs.tsx:146
+#: src/renderer/components/dock/pod-logs.tsx:150
 msgid "Lines"
 msgstr ""
 
@@ -1337,8 +1337,8 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-menu.tsx:99
 #: src/renderer/components/+workloads-pods/pod-menu.tsx:100
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:101
 msgid "Logs"
 msgstr ""
 
@@ -1599,7 +1599,7 @@ msgstr ""
 msgid "Network Policies"
 msgstr ""
 
-#: src/renderer/components/dock/pod-logs.tsx:173
+#: src/renderer/components/dock/pod-logs.tsx:178
 msgid "New logs since opening the dialog"
 msgstr ""
 
@@ -1842,7 +1842,7 @@ msgstr ""
 msgid "Pod Status"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-menu.tsx:76
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:77
 msgid "Pod shell"
 msgstr ""
 
@@ -1970,7 +1970,7 @@ msgstr ""
 msgid "Reason"
 msgstr ""
 
-#: src/renderer/components/dock/pod-logs.store.ts:65
+#: src/renderer/components/dock/pod-logs.store.ts:66
 msgid "Reason: {0} ({1})"
 msgstr ""
 
@@ -2259,7 +2259,7 @@ msgstr ""
 #: src/renderer/components/+config-secrets/secret-details.tsx:97
 #: src/renderer/components/+workspaces/workspaces.tsx:132
 #: src/renderer/components/dock/edit-resource.tsx:87
-#: src/renderer/components/dock/pod-logs.tsx:156
+#: src/renderer/components/dock/pod-logs.tsx:161
 msgid "Save"
 msgstr ""
 
@@ -2466,13 +2466,13 @@ msgid "Settings"
 msgstr ""
 
 #: src/renderer/components/+nodes/node-menu.tsx:48
-#: src/renderer/components/+workloads-pods/pod-menu.tsx:77
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:78
 msgid "Shell"
 msgstr ""
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
 #: src/renderer/components/+workloads-pods/pod-container-env.tsx:101
-#: src/renderer/components/dock/pod-logs.tsx:155
+#: src/renderer/components/dock/pod-logs.tsx:159
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Show"
 msgstr ""
@@ -2481,11 +2481,19 @@ msgstr ""
 msgid "Show Notes"
 msgstr ""
 
+#: src/renderer/components/dock/pod-logs.tsx:160
+msgid "Show current logs"
+msgstr ""
+
+#: src/renderer/components/dock/pod-logs.tsx:160
+msgid "Show previous terminated container logs"
+msgstr ""
+
 #: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:20
 msgid "Show value"
 msgstr ""
 
-#: src/renderer/components/dock/pod-logs.tsx:150
+#: src/renderer/components/dock/pod-logs.tsx:154
 msgid "Since"
 msgstr ""
 
@@ -2638,7 +2646,7 @@ msgstr ""
 msgid "The path to the kubectl binary on the system."
 msgstr ""
 
-#: src/renderer/components/dock/pod-logs.tsx:167
+#: src/renderer/components/dock/pod-logs.tsx:172
 msgid "There are no logs available for container."
 msgstr ""
 
@@ -2956,7 +2964,7 @@ msgstr ""
 msgid "singular"
 msgstr ""
 
-#: src/renderer/components/dock/pod-logs.tsx:155
+#: src/renderer/components/dock/pod-logs.tsx:159
 msgid "timestamps"
 msgstr ""
 
