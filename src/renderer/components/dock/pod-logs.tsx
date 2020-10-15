@@ -110,8 +110,6 @@ export class PodLogs extends React.Component<Props> {
         // Splitting logs to old and new ones
         oldLogs = logs.slice(0, index);
         newLogs = logs.slice(index);
-
-
       }
     }
     if (!showTimestamps) {
