@@ -181,7 +181,7 @@ export function createPodLogsTab(data: IPodLogsData, tabParams: Partial<IDockTab
   tab = dockStore.createTab({
     id: podId,
     kind: TabKind.POD_LOGS,
-    title: `${data.pod.getName()}`,
+    title: data.pod.getName(),
     ...tabParams
   }, false);
   podLogsStore.setData(tab.id, data);
