@@ -208,7 +208,7 @@ export class PodLogs extends React.Component<Props> {
   renderControls() {
     if (!this.ready) return null;
     const { selectedContainer, showTimestamps, previous } = this.tabData;
-    const timestamps = podLogsStore.getTimestamps(podLogsStore.logs.get(this.tabId).join("\n"));
+    const since = podLogsStore.getTimestamps(podLogsStore.logs.get(this.tabId)[0]);
     return (
       <div className="controls flex gaps align-center">
         <span><Trans>Container</Trans></span>
@@ -220,10 +220,10 @@ export class PodLogs extends React.Component<Props> {
           autoConvertOptions={false}
         />
         <div className="time-range">
-          {timestamps && (
+          {since && (
             <>
               <Trans>Since</Trans>{" "}
-              <b>{new Date(timestamps[0]).toLocaleString()}</b>
+              <b>{new Date(since[0]).toLocaleString()}</b>
             </>
           )}
         </div>
