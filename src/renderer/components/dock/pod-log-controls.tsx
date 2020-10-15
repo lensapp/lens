@@ -13,7 +13,7 @@ interface Props {
   ready: boolean
   tabId: string
   tabData: IPodLogsData
-  logs: [string, string]
+  logs: string[][]
   save: (data: Partial<IPodLogsData>) => void
   reload: () => void
 }
@@ -22,7 +22,7 @@ export const PodLogControls = observer((props: Props) => {
   if (!props.ready) return null;
   const { tabData, tabId, save, reload, logs } = props;
   const { selectedContainer, showTimestamps, previous } = tabData;
-  const timestamps = podLogsStore.getTimestamps(podLogsStore.logs.get(tabId));
+  const since = podLogsStore.getTimestamps(podLogsStore.logs.get(tabId)[0]);
   const pod = new Pod(tabData.pod);
   const toggleTimestamps = () => {
     save({ showTimestamps: !showTimestamps });
@@ -36,7 +36,7 @@ export const PodLogControls = observer((props: Props) => {
   const downloadLogs = () => {
     const fileName = selectedContainer ? selectedContainer.name : pod.getName();
     const [oldLogs, newLogs] = logs;
-    downloadFile(fileName + ".log", oldLogs + newLogs, "text/plain");
+    downloadFile(fileName + ".log", [...oldLogs, ...newLogs].join("\n"), "text/plain");
   }
 
   const onContainerChange = (option: SelectOption) => {
@@ -85,10 +85,10 @@ export const PodLogControls = observer((props: Props) => {
         autoConvertOptions={false}
       />
       <div className="time-range">
-        {timestamps && (
+        {since && (
           <>
             <Trans>Since</Trans>{" "}
-            <b>{new Date(timestamps[0]).toLocaleString()}</b>
+            <b>{new Date(since[0]).toLocaleString()}</b>
           </>
         )}
       </div>

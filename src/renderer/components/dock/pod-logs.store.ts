@@ -5,7 +5,6 @@ import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
 import { t } from "@lingui/macro";
 import { _i18n } from "../../i18n";
-import { Notifications } from "../notifications";
 import { isDevelopment } from "../../../common/vars";
 
 export interface IPodLogsData {
@@ -18,7 +17,7 @@ export interface IPodLogsData {
 }
 
 type TabId = string;
-type PodLogs = string;
+type PodLogLine = string;
 
 // Number for log lines to load
 export const logRange = isDevelopment ? 100 : 1000;
@@ -31,7 +30,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
     this.loadMore(id)
   });
 
-  @observable logs = observable.map<TabId, PodLogs>();
+  @observable logs = observable.map<TabId, PodLogLine[]>();
   @observable newLogSince = observable.map<TabId, string>(); // Timestamp after which all logs are considered to be new
 
   constructor() {
@@ -64,15 +63,14 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       const logs = await this.loadLogs(tabId, {
         tailLines: this.lines + logRange
       });
-      if (!this.refresher.isRunning) this.refresher.start();
+      this.refresher.start();
       this.logs.set(tabId, logs);
     } catch ({error}) {
       const message = [
         _i18n._(t`Failed to load logs: ${error.message}`),
         _i18n._(t`Reason: ${error.reason} (${error.code})`)
-      ].join("\n");
+      ];
       this.refresher.stop();
-      Notifications.error(message);
       this.logs.set(tabId, message);
     }
   }
@@ -89,7 +87,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       sinceTime: this.getLastSinceTime(tabId)
     });
     // Add newly received logs to bottom
-    this.logs.set(tabId, oldLogs + logs);
+    this.logs.set(tabId, [...oldLogs, ...logs]);
   }
 
   /**
@@ -105,11 +103,15 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
     const pod = new Pod(data.pod);
     const namespace = pod.getNs();
     const name = pod.getName();
-    return await podsApi.getLogs({ namespace, name }, {
+    return podsApi.getLogs({ namespace, name }, {
       ...params,
       timestamps: true,  // Always setting timestampt to separate old logs from new ones
       container: selectedContainer.name,
       previous
+    }).then(result => {
+      const logs = [...result.split("\n")]; // Transform them into array
+      logs.pop();  // Remove last empty element
+      return logs;
     });
   }
 
@@ -131,7 +133,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
   get lines() {
     const id = dockStore.selectedTabId;
     const logs = this.logs.get(id);
-    return logs ? logs.split("\n").length : 0;
+    return logs ? logs.length : 0;
   }
 
   /**
@@ -140,12 +142,10 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
    * @param tabId
    */
   getLastSinceTime(tabId: TabId) {
-    const timestamps = this.getTimestamps(this.logs.get(tabId));
-    let stamp = new Date(0);
-    if (timestamps) {
-      stamp = new Date(timestamps.slice(-1)[0]);
-      stamp.setSeconds(stamp.getSeconds() + 1); // avoid duplicates from last second
-    }
+    const logs = this.logs.get(tabId);
+    const timestamps = this.getTimestamps(logs[logs.length - 1]);
+    const stamp = new Date(timestamps[0]);
+    stamp.setSeconds(stamp.getSeconds() + 1); // avoid duplicates from last second
     return stamp.toISOString();
   }
 

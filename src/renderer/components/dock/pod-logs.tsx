@@ -80,7 +80,7 @@ export class PodLogs extends React.Component<Props> {
    * scrolling position
    * @param scrollHeight previous scrollHeight position before adding new lines
    */
-  preload = async (scrollHeight: number) => {
+  loadMore = async (scrollHeight: number) => {
     if (podLogsStore.lines < logRange) return;
     this.preloading = true;
     await podLogsStore.load(this.tabId).then(() => this.preloading = false);
@@ -93,27 +93,27 @@ export class PodLogs extends React.Component<Props> {
   /**
    * Computed prop which returns logs with or without timestamps added to each line and
    * does separation between new and old logs
-   * @returns {Array} An array with 2 string items - [oldLogs, newLogs]
+   * @returns {Array} An array with 2 items - [oldLogs, newLogs]
    */
   @computed
-  get logs(): [string, string] {
-    if (!podLogsStore.logs.has(this.tabId)) return ["", ""];
+  get logs() {
+    if (!podLogsStore.logs.has(this.tabId)) return [];
     const logs = podLogsStore.logs.get(this.tabId);
     const { getData, removeTimestamps, newLogSince } = podLogsStore;
     const { showTimestamps } = getData(this.tabId);
-    let oldLogs = logs;
-    let newLogs = "";
+    let oldLogs: string[] = logs;
+    let newLogs: string[] = [];
     if (newLogSince.has(this.tabId)) {
       // Finding separator timestamp in logs
-      const index = logs.indexOf(newLogSince.get(this.tabId));
+      const index = logs.findIndex(item => item.includes(newLogSince.get(this.tabId)));
       if (index !== -1) {
         // Splitting logs to old and new ones
-        oldLogs = logs.substring(0, index);
-        newLogs = logs.substring(index);
+        oldLogs = logs.slice(0, index);
+        newLogs = logs.slice(index);
       }
     }
     if (!showTimestamps) {
-      return [removeTimestamps(oldLogs), removeTimestamps(newLogs)];
+      return [oldLogs, newLogs].map(logs => logs.map(item => removeTimestamps(item)))
     }
     return [oldLogs, newLogs];
   }
@@ -123,7 +123,7 @@ export class PodLogs extends React.Component<Props> {
     const toBottomOffset = 100 * 16; // 100 lines * 16px (height of each line)
     const { scrollHeight, clientHeight, scrollTop } = logsArea;
     if (scrollTop === 0) {
-      this.preload(scrollHeight);
+      this.loadMore(scrollHeight);
     }
     if (scrollHeight - scrollTop > toBottomOffset) {
       this.showJumpToBottom = true;
@@ -158,7 +158,7 @@ export class PodLogs extends React.Component<Props> {
     if (!this.ready) {
       return <Spinner center/>;
     }
-    if (!oldLogs && !newLogs) {
+    if (!oldLogs.length && !newLogs.length) {
       return (
         <div className="flex align-center justify-center">
           <Trans>There are no logs available for container.</Trans>
@@ -172,11 +172,11 @@ export class PodLogs extends React.Component<Props> {
             <Spinner />
           </div>
         )}
-        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(oldLogs))}} />
-        {newLogs && (
+        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(oldLogs.join("\n"))) }} />
+        {newLogs.length > 0 && (
           <>
             <p className="new-logs-sep" title={_i18n._(t`New logs since opening the dialog`)}/>
-            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(newLogs))}} />
+            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(newLogs.join("\n"))) }} />
           </>
         )}
       </>
