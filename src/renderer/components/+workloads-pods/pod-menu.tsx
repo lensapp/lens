@@ -50,6 +50,7 @@ export class PodMenu extends React.Component<Props> {
       initContainers: pod.getInitContainers(),
       selectedContainer: container,
       showTimestamps: false,
+      previous: false,
       tailLines: 1000
     });
   }

@@ -13,6 +13,7 @@ export interface IPodLogsData {
   initContainers: IPodContainer[]
   showTimestamps: boolean
   tailLines: number
+  previous: boolean
 }
 
 type TabId = string;
@@ -48,7 +49,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
     }
     const data = this.getData(tabId);
     const { oldLogs, newLogs } = this.logs.get(tabId);
-    const { selectedContainer, tailLines } = data;
+    const { selectedContainer, tailLines, previous } = data;
     const pod = new Pod(data.pod);
     try {
       // if logs already loaded, check the latest timestamp for getting updates only from this point
@@ -64,14 +65,15 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
         sinceTime: lastLogDate.toISOString(),
         timestamps: true,  // Always setting timestampt to separate old logs from new ones
         container: selectedContainer.name,
-        tailLines: tailLines,
+        tailLines,
+        previous
       });
       if (!oldLogs) {
         this.logs.set(tabId, { oldLogs: loadedLogs, newLogs });
       } else {
         this.logs.set(tabId, { oldLogs, newLogs: loadedLogs });
       }
-    } catch (error) {
+    } catch ({error}) {
       this.logs.set(tabId, {
         oldLogs: [
           _i18n._(t`Failed to load logs: ${error.message}`),

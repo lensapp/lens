@@ -94,6 +94,11 @@ export class PodLogs extends React.Component<Props> {
     this.save({ showTimestamps: !this.tabData.showTimestamps });
   }
 
+  togglePrevious = () => {
+    this.save({ previous: !this.tabData.previous });
+    this.reload();
+  }
+
   onScroll = (evt: React.UIEvent<HTMLDivElement>) => {
     const logsArea = evt.currentTarget;
     const { scrollHeight, clientHeight, scrollTop } = logsArea;
@@ -148,7 +153,7 @@ export class PodLogs extends React.Component<Props> {
 
   renderControls() {
     if (!this.ready) return null;
-    const { selectedContainer, showTimestamps, tailLines } = this.tabData;
+    const { selectedContainer, showTimestamps, tailLines, previous } = this.tabData;
     const timestamps = podLogsStore.getTimestamps(podLogsStore.logs.get(this.tabId).oldLogs);
     return (
       <div className="controls flex gaps align-center">
@@ -180,6 +185,12 @@ export class PodLogs extends React.Component<Props> {
             onClick={this.toggleTimestamps}
             className={cssNames("timestamps-icon", { active: showTimestamps })}
             tooltip={(showTimestamps ? _i18n._(t`Hide`) : _i18n._(t`Show`)) + " " + _i18n._(t`timestamps`)}
+          />
+          <Icon
+            material="undo"
+            onClick={this.togglePrevious}
+            className={cssNames("undo-icon", { active: previous })}
+            tooltip={(previous ? _i18n._(t`Show current logs`) : _i18n._(t`Show previous terminated container logs`))}
           />
           <Icon
             material="get_app"

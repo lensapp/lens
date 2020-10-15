@@ -3,7 +3,7 @@ import type { KubeObjectDetailsProps, KubeObjectListLayoutProps, KubeObjectMenuP
 import type React from "react";
 
 import { observable } from "mobx";
-import { autobind } from "../utils/autobind";
+import { autobind } from "../utils";
 import { KubeApi } from "./kube-api";
 
 export interface ApiComponents {

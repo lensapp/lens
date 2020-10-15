@@ -32,7 +32,7 @@ import { KubeAuthProxy } from "../kube-auth-proxy"
 import { getFreePort } from "../port"
 import { broadcastIpc } from "../../common/ipc"
 import { ChildProcess, spawn, SpawnOptions } from "child_process"
-import { Kubectl } from "../kubectl"
+import { bundledKubectlPath, Kubectl } from "../kubectl"
 import { mock, MockProxy } from 'jest-mock-extended';
 import { waitUntilUsed } from 'tcp-port-used';
 import { Readable } from "stream"
@@ -81,7 +81,7 @@ describe("kube auth proxy tests", () => {
         return mockedCP.stdout
       })
       mockSpawn.mockImplementationOnce((command: string, args: readonly string[], options: SpawnOptions): ChildProcess => {
-        expect(command).toBe(Kubectl.bundledKubectlPath)
+        expect(command).toBe(bundledKubectlPath())
         return mockedCP
       })
       mockWaitUntilUsed.mockReturnValueOnce(Promise.resolve())
