@@ -67,6 +67,13 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
         showAbout(browserWindow);
       },
     },
+    { type: 'separator' },
+    {
+      label: "Open Lens",
+      async click() {
+        await windowManager.ensureMainWindow()
+      },
+    },
     {
       label: "Preferences",
       async click() {

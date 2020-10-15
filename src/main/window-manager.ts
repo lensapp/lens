@@ -1,7 +1,6 @@
 import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
-import { userStore } from "../common/user-store";
-import { observable, reaction } from "mobx";
+import { observable } from "mobx";
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { initMenu } from "./menu";
@@ -82,15 +81,7 @@ export class WindowManager {
   }
 
   protected initTray() {
-    this.disposers.trayAutoBind = reaction(() => userStore.preferences.trayEnabled, isEnabled => {
-      if (isEnabled) {
-        this.disposers.trayAutoUpdater = initTray(this);
-      } else if (this.disposers.trayAutoUpdater) {
-        this.disposers.trayAutoUpdater();
-      }
-    }, {
-      fireImmediately: true
-    });
+    this.disposers.trayAutoUpdater = initTray(this);
   }
 
   protected bindEvents() {

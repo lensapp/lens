@@ -175,23 +175,10 @@ export class Preferences extends React.Component {
 
           <h2><Trans>Auto start-up</Trans></h2>
           <Checkbox
-            label={<Trans>Open on start-up</Trans>}
+            label={<Trans>Automatically start Lens on login</Trans>}
             value={preferences.openAtLogin}
             onChange={v => preferences.openAtLogin = v}
           />
-          <small className="hint">
-            <Trans>Opens Lens app on operation system login</Trans>
-          </small>
-
-          <h2><Trans>Tray icon</Trans></h2>
-          <Checkbox
-            label={<Trans>Enable tray icon</Trans>}
-            value={preferences.trayEnabled}
-            onChange={v => preferences.trayEnabled = v}
-          />
-          <small className="hint">
-            <Trans>Adds OS-level tray icon and menu to get quick access to Lens</Trans>
-          </small>
 
           <h2><Trans>Certificate Trust</Trans></h2>
           <Checkbox
