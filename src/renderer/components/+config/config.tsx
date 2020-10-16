@@ -10,8 +10,8 @@ import { resourceQuotaRoute, ResourceQuotas, resourceQuotaURL } from "../+config
 import { PodDisruptionBudgets, pdbRoute, pdbURL } from "../+config-pod-disruption-budgets";
 import { configURL } from "./config.route";
 import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscalers";
-import { buildURL } from "../../navigation";
 import { isAllowedResource } from "../../../common/rbac"
+import { buildURL } from "../../../common/utils/buildUrl";
 
 export const certificatesURL = buildURL("/certificates");
 export const issuersURL = buildURL("/issuers");

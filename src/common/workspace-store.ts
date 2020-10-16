@@ -1,8 +1,6 @@
 import { action, computed, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store"
-import { landingURL } from "../renderer/components/+landing-page/landing-page.route";
-import { navigate } from "../renderer/navigation";
 
 export type WorkspaceId = string;
 
@@ -56,18 +54,13 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @action
-  setActive(id = WorkspaceStore.defaultId, { redirectToLanding = true, resetActiveCluster = true } = {}) {
+  setActive(id = WorkspaceStore.defaultId, reset = true) {
     if (id === this.currentWorkspaceId) return;
     if (!this.getById(id)) {
       throw new Error(`workspace ${id} doesn't exist`);
     }
     this.currentWorkspaceId = id;
-    if (resetActiveCluster) {
-      clusterStore.setActive(null)
-    }
-    if (redirectToLanding) {
-      navigate(landingURL())
-    }
+    clusterStore.activeClusterId = null; // fixme: handle previously selected cluster from current workspace
   }
 
   @action
