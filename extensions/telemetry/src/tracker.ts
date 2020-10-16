@@ -32,7 +32,6 @@ export class Tracker extends Singleton {
     this.started = true
 
     const handler = (ev: AppEvent) => {
-      console.log(ev)
       this.event(ev.name, ev.action, ev.params)
     }
     this.eventHandlers.push(handler)
