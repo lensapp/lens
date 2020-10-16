@@ -3,7 +3,6 @@ import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store"
 import { landingURL } from "../renderer/components/+landing-page/landing-page.route";
 import { navigate } from "../renderer/navigation";
-import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
 
 export type WorkspaceId = string;
 export type ClusterId = string;
@@ -82,7 +81,6 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     if (resetActiveCluster) {
       if (clusterId) {
         clusterStore.setActive(clusterId)
-        navigate(clusterViewURL({ params: { clusterId } }));
       } else {
         clusterStore.setActive(null) 
         if (redirectToLanding) {

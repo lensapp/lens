@@ -10,6 +10,8 @@ import { observable } from "mobx";
 import { workspaceStore, WorkspaceId } from "../../../common/workspace-store";
 import { cssNames } from "../../utils";
 import { clusterStore } from "../../../common/cluster-store";
+import { navigate } from "../../navigation";
+import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 
 interface Props extends Partial<MenuProps> {
 }
@@ -23,6 +25,8 @@ export class WorkspaceMenu extends React.Component<Props> {
       workspaceStore.setLastActiveClusterId(workspaceStore.currentWorkspaceId, clusterStore.activeClusterId);
     }
     workspaceStore.setActive(id);
+    const clusterId = workspaceStore.currentWorkspace.lastActiveClusterId;
+    navigate(clusterViewURL({ params: { clusterId } }));
   }
 
   render() {
