@@ -38,7 +38,15 @@ export class PodLogs extends React.Component<Props> {
           return;
         }
         await this.load();
-      }, { fireImmediately: true })
+      }, { fireImmediately: true }),
+
+      // Check if need to show JumpToBottom if new log amount is less than previous one
+      reaction(() => podLogsStore.logs.get(this.tabId), () => {
+        const { tabId } = this;
+        if (podLogsStore.logs.has(tabId) && podLogsStore.logs.get(tabId).length < logRange) {
+          this.showJumpToBottom = false;
+        }
+      })
     ]);
   }
 

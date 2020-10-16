@@ -144,7 +144,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
   getLastSinceTime(tabId: TabId) {
     const logs = this.logs.get(tabId);
     const timestamps = this.getTimestamps(logs[logs.length - 1]);
-    const stamp = new Date(timestamps[0]);
+    const stamp = new Date(timestamps ? timestamps[0] : null);
     stamp.setSeconds(stamp.getSeconds() + 1); // avoid duplicates from last second
     return stamp.toISOString();
   }
