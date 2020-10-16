@@ -1,10 +1,11 @@
-import { autorun, observable } from "mobx";
-import { Pod, IPodContainer, podsApi } from "../../api/endpoints";
+import { autorun, computed, observable, reaction } from "mobx";
+import { Pod, IPodContainer, podsApi, IPodLogsQuery } from "../../api/endpoints";
 import { autobind, interval } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
 import { t } from "@lingui/macro";
 import { _i18n } from "../../i18n";
+import { isDevelopment } from "../../../common/vars";
 
 export interface IPodLogsData {
   pod: Pod;
@@ -12,22 +13,25 @@ export interface IPodLogsData {
   containers: IPodContainer[]
   initContainers: IPodContainer[]
   showTimestamps: boolean
-  tailLines: number
   previous: boolean
 }
 
 type TabId = string;
+type PodLogLine = string;
 
-interface PodLogs {
-  oldLogs?: string
-  newLogs?: string
-}
+// Number for log lines to load
+export const logRange = isDevelopment ? 100 : 1000;
 
 @autobind()
 export class PodLogsStore extends DockTabStore<IPodLogsData> {
-  private refresher = interval(10, () => this.load(dockStore.selectedTabId));
+  private refresher = interval(10, () => {
+    const id = dockStore.selectedTabId
+    if (!this.logs.get(id)) return
+    this.loadMore(id)
+  });
 
-  @observable logs = observable.map<TabId, PodLogs>();
+  @observable logs = observable.map<TabId, PodLogLine[]>();
+  @observable newLogSince = observable.map<TabId, string>(); // Timestamp after which all logs are considered to be new
 
   constructor() {
     super({
@@ -41,47 +45,108 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
         this.refresher.stop();
       }
     }, { delay: 500 });
+
+    reaction(() => this.logs.get(dockStore.selectedTabId), () => {
+      this.setNewLogSince(dockStore.selectedTabId);
+    })
   }
 
+  /**
+   * Function prepares tailLines param for passing to API request
+   * Each time it increasing it's number, caused to fetch more logs.
+   * Also, it handles loading errors, rewriting whole logs with error
+   * messages
+   * @param tabId
+   */
   load = async (tabId: TabId) => {
-    if (!this.logs.has(tabId)) {
-      this.logs.set(tabId, { oldLogs: "", newLogs: "" })
-    }
-    const data = this.getData(tabId);
-    const { oldLogs, newLogs } = this.logs.get(tabId);
-    const { selectedContainer, tailLines, previous } = data;
-    const pod = new Pod(data.pod);
     try {
-      // if logs already loaded, check the latest timestamp for getting updates only from this point
-      const logsTimestamps = this.getTimestamps(newLogs || oldLogs);
-      let lastLogDate = new Date(0);
-      if (logsTimestamps) {
-        lastLogDate = new Date(logsTimestamps.slice(-1)[0]);
-        lastLogDate.setSeconds(lastLogDate.getSeconds() + 1); // avoid duplicates from last second
-      }
-      const namespace = pod.getNs();
-      const name = pod.getName();
-      const loadedLogs = await podsApi.getLogs({ namespace, name }, {
-        sinceTime: lastLogDate.toISOString(),
-        timestamps: true,  // Always setting timestampt to separate old logs from new ones
-        container: selectedContainer.name,
-        tailLines,
-        previous
+      const logs = await this.loadLogs(tabId, {
+        tailLines: this.lines + logRange
       });
-      if (!oldLogs) {
-        this.logs.set(tabId, { oldLogs: loadedLogs, newLogs });
-      } else {
-        this.logs.set(tabId, { oldLogs, newLogs: loadedLogs });
-      }
+      this.refresher.start();
+      this.logs.set(tabId, logs);
     } catch ({error}) {
-      this.logs.set(tabId, {
-        oldLogs: [
-          _i18n._(t`Failed to load logs: ${error.message}`),
-          _i18n._(t`Reason: ${error.reason} (${error.code})`)
-        ].join("\n"),
-        newLogs
-      });
+      const message = [
+        _i18n._(t`Failed to load logs: ${error.message}`),
+        _i18n._(t`Reason: ${error.reason} (${error.code})`)
+      ];
+      this.refresher.stop();
+      this.logs.set(tabId, message);
     }
+  }
+
+  /**
+   * Function is used to refreser/stream-like requests.
+   * It changes 'sinceTime' param each time allowing to fetch logs
+   * starting from last line recieved.
+   * @param tabId
+   */
+  loadMore = async (tabId: TabId) => {
+    const oldLogs = this.logs.get(tabId);
+    const logs = await this.loadLogs(tabId, {
+      sinceTime: this.getLastSinceTime(tabId)
+    });
+    // Add newly received logs to bottom
+    this.logs.set(tabId, [...oldLogs, ...logs]);
+  }
+
+  /**
+   * Main logs loading function adds necessary data to payload and makes
+   * an API request
+   * @param tabId
+   * @param params request parameters described in IPodLogsQuery interface
+   * @returns {Promise} A fetch request promise
+   */
+  loadLogs = async (tabId: TabId, params: Partial<IPodLogsQuery>) => {
+    const data = this.getData(tabId);
+    const { selectedContainer, previous } = data;
+    const pod = new Pod(data.pod);
+    const namespace = pod.getNs();
+    const name = pod.getName();
+    return podsApi.getLogs({ namespace, name }, {
+      ...params,
+      timestamps: true,  // Always setting timestampt to separate old logs from new ones
+      container: selectedContainer.name,
+      previous
+    }).then(result => {
+      const logs = [...result.split("\n")]; // Transform them into array
+      logs.pop();  // Remove last empty element
+      return logs;
+    });
+  }
+
+  /**
+   * Sets newLogSince separator timestamp to split old logs from new ones
+   * @param tabId
+   */
+  setNewLogSince(tabId: TabId) {
+    if (!this.logs.has(tabId) || this.newLogSince.has(tabId)) return;
+    const timestamp = this.getLastSinceTime(tabId);
+    this.newLogSince.set(tabId, timestamp.split(".")[0]); // Removing milliseconds from string
+  }
+
+  /**
+   * Converts logs into a string array
+   * @returns {number} Length of log lines
+   */
+  @computed
+  get lines() {
+    const id = dockStore.selectedTabId;
+    const logs = this.logs.get(id);
+    return logs ? logs.length : 0;
+  }
+
+  /**
+   * It gets timestamps from all logs then returns last one + 1 second
+   * (this allows to avoid getting the last stamp in the selection)
+   * @param tabId
+   */
+  getLastSinceTime(tabId: TabId) {
+    const logs = this.logs.get(tabId);
+    const timestamps = this.getTimestamps(logs[logs.length - 1]);
+    const stamp = new Date(timestamps ? timestamps[0] : null);
+    stamp.setSeconds(stamp.getSeconds() + 1); // avoid duplicates from last second
+    return stamp.toISOString();
   }
 
   getTimestamps(logs: string) {
@@ -116,7 +181,7 @@ export function createPodLogsTab(data: IPodLogsData, tabParams: Partial<IDockTab
   tab = dockStore.createTab({
     id: podId,
     kind: TabKind.POD_LOGS,
-    title: `Logs: ${data.pod.getName()}`,
+    title: data.pod.getName(),
     ...tabParams
   }, false);
   podLogsStore.setData(tab.id, data);
