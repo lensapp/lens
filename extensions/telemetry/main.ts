@@ -1,13 +1,11 @@
 import { LensMainExtension } from "@lens/extensions";
-import { TelemetryPreferencesStore } from "./src/telemetry-preferences-store"
+import { telemetryPreferencesStore } from "./src/telemetry-preferences-store"
 
 export default class TelemetryMainExtension extends LensMainExtension {
-  protected preferencesStore: TelemetryPreferencesStore
 
   async onActivate() {
     console.log("telemetry main extension activated")
-    this.preferencesStore = TelemetryPreferencesStore.getInstance<TelemetryPreferencesStore>()
-    await this.preferencesStore.load()
+    await telemetryPreferencesStore.load()
   }
 
   onDeactivate() {

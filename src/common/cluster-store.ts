@@ -7,7 +7,7 @@ import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store"
 import logger from "../main/logger";
-import { tracker } from "./tracker";
+import { appEventBus } from "./event-bus"
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
@@ -142,7 +142,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @action
   addCluster(...models: ClusterModel[]) {
     models.forEach(model => {
-      tracker.event("cluster", "add");
+      appEventBus.emit({name: "cluster", action: "add"})
       const cluster = new Cluster(model);
       this.clusters.set(model.id, cluster);
     })
@@ -150,7 +150,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   async removeById(clusterId: ClusterId) {
-    tracker.event("cluster", "remove");
+    appEventBus.emit({name: "cluster", action: "remove"})
     const cluster = this.getById(clusterId);
     if (cluster) {
       this.clusters.delete(clusterId);

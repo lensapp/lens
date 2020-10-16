@@ -12,12 +12,15 @@
     "build": "webpack --config webpack.config.js",
     "dev": "npm run build --watch"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
     "mobx": "^5.15.5",
-    "react": "^16.13.1"
+    "react": "^16.13.1",
+    "node-machine-id": "^1.1.12",
+    "universal-analytics": "^0.4.23"
   }
 }
