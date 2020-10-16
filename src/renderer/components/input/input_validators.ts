@@ -39,7 +39,7 @@ export const isNumber: Validator = {
 export const isUrl: Validator = {
   condition: ({ type }) => type === "url",
   message: () => _i18n._(t`Wrong url format`),
-  validate: value => !!value.match(/^http(s)?:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]*)*$/),
+  validate: value => !!value.match(/^$|^http(s)?:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]*)*$/),
 };
 
 export const isPath: Validator = {

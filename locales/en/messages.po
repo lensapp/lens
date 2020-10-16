@@ -87,7 +87,7 @@ msgstr "Account Name"
 msgid "Active"
 msgstr "Active"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:289
+#: src/renderer/components/+add-cluster/add-cluster.tsx:310
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:130
 msgid "Add Cluster"
 msgstr "Add Cluster"
@@ -112,7 +112,7 @@ msgstr "Add bindings to {name}"
 #~ msgid "Add cluster"
 #~ msgstr "Add cluster"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:306
+#: src/renderer/components/+add-cluster/add-cluster.tsx:327
 msgid "Add cluster(s)"
 msgstr "Add cluster(s)"
 
@@ -203,7 +203,7 @@ msgstr "All clusters within workspace will be cleared as well"
 msgid "All groups"
 msgstr "All groups"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:57
+#: src/renderer/components/dock/pod-logs.tsx:37
 msgid "All logs"
 msgstr "All logs"
 
@@ -323,7 +323,7 @@ msgstr "Binding targets"
 msgid "Bindings"
 msgstr "Bindings"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:236
+#: src/renderer/components/+add-cluster/add-cluster.tsx:257
 msgid "Browse"
 msgstr "Browse"
 
@@ -404,7 +404,7 @@ msgstr "CPU:"
 
 #: src/renderer/components/+workspaces/workspaces.tsx:133
 #: src/renderer/components/confirm-dialog/confirm-dialog.tsx:44
-#: src/renderer/components/dock/info-panel.tsx:85
+#: src/renderer/components/dock/info-panel.tsx:86
 #: src/renderer/components/wizard/wizard.tsx:130
 msgid "Cancel"
 msgstr "Cancel"
@@ -473,7 +473,6 @@ msgstr "Claim"
 msgid "Claim Name"
 msgstr "Claim Name"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:243
 #: src/renderer/components/dialog/logs-dialog.tsx:39
 #: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:93
 msgid "Close"
@@ -566,7 +565,7 @@ msgstr "Configuration"
 msgid "Connection"
 msgstr "Connection"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:246
+#: src/renderer/components/dock/pod-logs.tsx:148
 msgid "Container"
 msgstr "Container"
 
@@ -595,8 +594,8 @@ msgid "Container runtime"
 msgstr "Container runtime"
 
 #: src/renderer/components/+workloads-pods/pod-details.tsx:122
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:186
 #: src/renderer/components/+workloads-pods/pods.tsx:77
+#: src/renderer/components/dock/pod-logs.tsx:129
 msgid "Containers"
 msgstr "Containers"
 
@@ -691,7 +690,7 @@ msgstr "Create new Secret"
 msgid "Create new Service Account"
 msgstr "Create new Service Account"
 
-#: src/renderer/components/dock/dock.tsx:93
+#: src/renderer/components/dock/dock.tsx:99
 msgid "Create resource"
 msgstr "Create resource"
 
@@ -928,7 +927,8 @@ msgstr "Environment"
 msgid "Error stack"
 msgstr "Error stack"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:109
+#: src/renderer/components/+add-cluster/add-cluster.tsx:89
+#: src/renderer/components/+add-cluster/add-cluster.tsx:130
 msgid "Error while adding cluster(s): {0}"
 msgstr "Error while adding cluster(s): {0}"
 
@@ -948,7 +948,7 @@ msgstr "Everything is fine in the Cluster"
 #~ msgid "Excluded items with \"system:\" prefix"
 #~ msgstr "Excluded items with \"system:\" prefix"
 
-#: src/renderer/components/dock/dock.tsx:98
+#: src/renderer/components/dock/dock.tsx:104
 msgid "Exit full size mode"
 msgstr "Exit full size mode"
 
@@ -964,7 +964,7 @@ msgstr "External IP"
 msgid "External IPs"
 msgstr "External IPs"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:106
+#: src/renderer/components/dock/pod-logs.store.ts:65
 msgid "Failed to load logs: {0}"
 msgstr "Failed to load logs: {0}"
 
@@ -989,7 +989,7 @@ msgstr "Finalizers"
 msgid "First seen"
 msgstr "First seen"
 
-#: src/renderer/components/dock/dock.tsx:98
+#: src/renderer/components/dock/dock.tsx:104
 msgid "Fit to window"
 msgstr "Fit to window"
 
@@ -1006,8 +1006,8 @@ msgid "From"
 msgstr "From"
 
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:212
-msgid "From <0>{from}</0> to <1>{to}</1>"
-msgstr "From <0>{from}</0> to <1>{to}</1>"
+#~ msgid "From <0>{from}</0> to <1>{to}</1>"
+#~ msgstr "From <0>{from}</0> to <1>{to}</1>"
 
 #: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:125
 msgid "Fs Group"
@@ -1068,7 +1068,7 @@ msgid "Helm branch <0>{0}</0> already in use"
 msgstr "Helm branch <0>{0}</0> already in use"
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+#: src/renderer/components/dock/pod-logs.tsx:159
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Hide"
 msgstr "Hide"
@@ -1153,7 +1153,7 @@ msgid "Ingresses"
 msgstr "Ingresses"
 
 #: src/renderer/components/+workloads-pods/pod-details.tsx:118
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:192
+#: src/renderer/components/dock/pod-logs.tsx:135
 msgid "Init Containers"
 msgstr "Init Containers"
 
@@ -1314,7 +1314,7 @@ msgstr "Limited to {0}"
 msgid "Limits"
 msgstr "Limits"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:248
+#: src/renderer/components/dock/pod-logs.tsx:150
 msgid "Lines"
 msgstr "Lines"
 
@@ -1338,8 +1338,8 @@ msgstr "Load-Balancer Ingress Points"
 msgid "Loading"
 msgstr "Loading"
 
-#: src/renderer/components/+workloads-pods/pod-menu.tsx:90
-#: src/renderer/components/+workloads-pods/pod-menu.tsx:91
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:100
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:101
 msgid "Logs"
 msgstr "Logs"
 
@@ -1445,7 +1445,7 @@ msgstr "Min Available"
 msgid "Min Pods"
 msgstr "Min Pods"
 
-#: src/renderer/components/dock/dock.tsx:99
+#: src/renderer/components/dock/dock.tsx:105
 msgid "Minimize"
 msgstr "Minimize"
 
@@ -1600,11 +1600,11 @@ msgstr "Network File System"
 msgid "Network Policies"
 msgstr "Network Policies"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:231
+#: src/renderer/components/dock/pod-logs.tsx:178
 msgid "New logs since opening the dialog"
 msgstr "New logs since opening the dialog"
 
-#: src/renderer/components/dock/dock.tsx:86
+#: src/renderer/components/dock/dock.tsx:92
 msgid "New tab"
 msgstr "New tab"
 
@@ -1642,7 +1642,7 @@ msgstr "No Nodes Available."
 #~ msgid "No contexts available or they already added"
 #~ msgstr "No contexts available or they already added"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:260
+#: src/renderer/components/+add-cluster/add-cluster.tsx:281
 msgid "No contexts available or they have been added already"
 msgstr "No contexts available or they have been added already"
 
@@ -1738,7 +1738,7 @@ msgstr "Ok"
 msgid "Ok, got it!"
 msgstr "Ok, got it!"
 
-#: src/renderer/components/dock/dock.tsx:99
+#: src/renderer/components/dock/dock.tsx:105
 msgid "Open"
 msgstr "Open"
 
@@ -1774,7 +1774,7 @@ msgstr "Parallelism"
 msgid "Parameters"
 msgstr "Parameters"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:230
+#: src/renderer/components/+add-cluster/add-cluster.tsx:251
 msgid "Paste as text"
 msgstr "Paste as text"
 
@@ -1798,7 +1798,7 @@ msgstr "Persistent Volume Claims"
 msgid "Persistent Volumes"
 msgstr "Persistent Volumes"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:72
+#: src/renderer/components/+add-cluster/add-cluster.tsx:75
 msgid "Please select at least one cluster context"
 msgstr "Please select at least one cluster context"
 
@@ -1851,7 +1851,7 @@ msgstr "Pod Selector"
 msgid "Pod Status"
 msgstr "Pod Status"
 
-#: src/renderer/components/+workloads-pods/pod-menu.tsx:67
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:77
 msgid "Pod shell"
 msgstr "Pod shell"
 
@@ -1914,7 +1914,7 @@ msgstr "Privileged"
 #~ msgid "Pro-Tip: paste kubeconfig to collect available contexts"
 #~ msgstr "Pro-Tip: paste kubeconfig to collect available contexts"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:248
+#: src/renderer/components/+add-cluster/add-cluster.tsx:269
 msgid "Pro-Tip: paste kubeconfig to get available contexts"
 msgstr "Pro-Tip: paste kubeconfig to get available contexts"
 
@@ -1922,7 +1922,7 @@ msgstr "Pro-Tip: paste kubeconfig to get available contexts"
 #~ msgid "Pro-Tip: paste kubeconfig to parse available contexts"
 #~ msgstr "Pro-Tip: paste kubeconfig to parse available contexts"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:239
+#: src/renderer/components/+add-cluster/add-cluster.tsx:260
 msgid "Pro-Tip: you can also drag-n-drop kubeconfig file to this area"
 msgstr "Pro-Tip: you can also drag-n-drop kubeconfig file to this area"
 
@@ -1943,7 +1943,7 @@ msgstr "Provisioner"
 msgid "Proxy is used only for non-cluster communication."
 msgstr "Proxy is used only for non-cluster communication."
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:294
+#: src/renderer/components/+add-cluster/add-cluster.tsx:315
 msgid "Proxy settings"
 msgstr "Proxy settings"
 
@@ -1979,7 +1979,7 @@ msgstr "Readiness"
 msgid "Reason"
 msgstr "Reason"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:107
+#: src/renderer/components/dock/pod-logs.store.ts:66
 msgid "Reason: {0} ({1})"
 msgstr "Reason: {0} ({1})"
 
@@ -2124,7 +2124,7 @@ msgstr "Required Drop Capabilities"
 msgid "Required field"
 msgstr "Required field"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:235
+#: src/renderer/components/+add-cluster/add-cluster.tsx:256
 #: src/renderer/components/item-object-list/page-filters-list.tsx:31
 msgid "Reset"
 msgstr "Reset"
@@ -2266,9 +2266,9 @@ msgstr "Runtime Class"
 #: src/renderer/components/+apps-releases/release-details.tsx:114
 #: src/renderer/components/+config-maps/config-map-details.tsx:78
 #: src/renderer/components/+config-secrets/secret-details.tsx:97
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:216
 #: src/renderer/components/+workspaces/workspaces.tsx:132
 #: src/renderer/components/dock/edit-resource.tsx:87
+#: src/renderer/components/dock/pod-logs.tsx:161
 msgid "Save"
 msgstr "Save"
 
@@ -2360,7 +2360,7 @@ msgstr "Select a quota.."
 #~ msgid "Select context(s)"
 #~ msgstr "Select context(s)"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:257
+#: src/renderer/components/+add-cluster/add-cluster.tsx:278
 msgid "Select contexts"
 msgstr "Select contexts"
 
@@ -2373,8 +2373,8 @@ msgstr "Select contexts"
 #~ msgid "Select custom kube-config file"
 #~ msgstr "Select custom kube-config file"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:62
-#: src/renderer/components/+add-cluster/add-cluster.tsx:62
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
 msgid "Select custom kubeconfig file"
 msgstr "Select custom kubeconfig file"
 
@@ -2390,7 +2390,7 @@ msgstr "Select custom kubeconfig file"
 #~ msgid "Select kubeconfig"
 #~ msgstr "Select kubeconfig"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:229
+#: src/renderer/components/+add-cluster/add-cluster.tsx:250
 msgid "Select kubeconfig file"
 msgstr "Select kubeconfig file"
 
@@ -2418,7 +2418,7 @@ msgstr "Select service accounts"
 #~ msgid "Selected contexts ({0}): <0>{1}</0>"
 #~ msgstr "Selected contexts ({0}): <0>{1}</0>"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:256
+#: src/renderer/components/+add-cluster/add-cluster.tsx:277
 msgid "Selected contexts: <0>{0}</0>"
 msgstr "Selected contexts: <0>{0}</0>"
 
@@ -2475,13 +2475,13 @@ msgid "Settings"
 msgstr "Settings"
 
 #: src/renderer/components/+nodes/node-menu.tsx:48
-#: src/renderer/components/+workloads-pods/pod-menu.tsx:68
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:78
 msgid "Shell"
 msgstr "Shell"
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
 #: src/renderer/components/+workloads-pods/pod-container-env.tsx:101
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+#: src/renderer/components/dock/pod-logs.tsx:159
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Show"
 msgstr "Show"
@@ -2490,9 +2490,21 @@ msgstr "Show"
 msgid "Show Notes"
 msgstr "Show Notes"
 
+#: src/renderer/components/dock/pod-logs.tsx:160
+msgid "Show current logs"
+msgstr "Show current logs"
+
+#: src/renderer/components/dock/pod-logs.tsx:160
+msgid "Show previous terminated container logs"
+msgstr "Show previous terminated container logs"
+
 #: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:20
 msgid "Show value"
 msgstr "Show value"
+
+#: src/renderer/components/dock/pod-logs.tsx:154
+msgid "Since"
+msgstr "Since"
 
 #: src/renderer/components/+nodes/node-charts.tsx:80
 #: src/renderer/components/+storage-volume-claims/volume-claims.tsx:49
@@ -2588,12 +2600,12 @@ msgstr "Strategy Type"
 msgid "Sub-object"
 msgstr "Sub-object"
 
-#: src/renderer/components/dock/info-panel.tsx:93
+#: src/renderer/components/dock/info-panel.tsx:95
 #: src/renderer/components/wizard/wizard.tsx:131
 msgid "Submit"
 msgstr "Submit"
 
-#: src/renderer/components/dock/info-panel.tsx:94
+#: src/renderer/components/dock/info-panel.tsx:96
 msgid "Submitting.."
 msgstr "Submitting.."
 
@@ -2601,7 +2613,7 @@ msgstr "Submitting.."
 msgid "Subsets"
 msgstr "Subsets"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:102
+#: src/renderer/components/+add-cluster/add-cluster.tsx:122
 msgid "Successfully imported <0>{0}</0> cluster(s)"
 msgstr "Successfully imported <0>{0}</0> cluster(s)"
 
@@ -2635,7 +2647,7 @@ msgstr "Telemetry & usage data is collected to continuously improve the Lens exp
 msgid "Terminal"
 msgstr "Terminal"
 
-#: src/renderer/components/dock/dock.tsx:89
+#: src/renderer/components/dock/dock.tsx:95
 msgid "Terminal session"
 msgstr "Terminal session"
 
@@ -2643,7 +2655,7 @@ msgstr "Terminal session"
 msgid "The path to the kubectl binary on the system."
 msgstr "The path to the kubectl binary on the system."
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:226
+#: src/renderer/components/dock/pod-logs.tsx:172
 msgid "There are no logs available for container."
 msgstr "There are no logs available for container."
 
@@ -2773,8 +2785,8 @@ msgstr "Upgrade version"
 msgid "Usage"
 msgstr "Usage"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:63
-#: src/renderer/components/+add-cluster/add-cluster.tsx:63
+#: src/renderer/components/+add-cluster/add-cluster.tsx:64
+#: src/renderer/components/+add-cluster/add-cluster.tsx:64
 msgid "Use configuration"
 msgstr "Use configuration"
 
@@ -2961,7 +2973,7 @@ msgstr "sec"
 msgid "singular"
 msgstr "singular"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+#: src/renderer/components/dock/pod-logs.tsx:159
 msgid "timestamps"
 msgstr "timestamps"
 
@@ -3006,8 +3018,8 @@ msgid "{metricsRemainCount} more..."
 msgstr "{metricsRemainCount} more..."
 
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:240
-msgid "{podName} Logs"
-msgstr "{podName} Logs"
+#~ msgid "{podName} Logs"
+#~ msgstr "{podName} Logs"
 
 #: src/renderer/components/dock/edit-resource.tsx:56
 msgid "{resourceType} <0>{resourceName}</0> updated."
@@ -3017,6 +3029,6 @@ msgstr "{resourceType} <0>{resourceName}</0> updated."
 msgid "{selectedCount, plural, one {<0>Remove item <1>{selectedNames}</1>?</0>} other {<2>Remove <3>{selectedCount}</3> items <4>{selectedNames}</4> {tail}?</2>}}"
 msgstr "{selectedCount, plural, one {<0>Remove item <1>{selectedNames}</1>?</0>} other {<2>Remove <3>{selectedCount}</3> items <4>{selectedNames}</4> {tail}?</2>}}"
 
-#: src/renderer/components/dock/info-panel.tsx:88
+#: src/renderer/components/dock/info-panel.tsx:89
 msgid "{submitLabel} & Close"
 msgstr "{submitLabel} & Close"

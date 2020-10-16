@@ -1,7 +1,7 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
 import { spawn, ChildProcessWithoutNullStreams } from "child_process"
-import { bundledKubectl } from "../kubectl"
+import { Kubectl } from "../kubectl"
 import { getFreePort } from "../port"
 import { shell } from "electron"
 import * as tcpPortUsed from "tcp-port-used"
@@ -37,7 +37,7 @@ class PortForward {
 
   public async start() {
     this.localPort = await getFreePort()
-    const kubectlBin = await bundledKubectl.getPath()
+    const kubectlBin = await Kubectl.bundled().getPath()
     const args = [
       "--kubeconfig", this.kubeConfig,
       "port-forward",

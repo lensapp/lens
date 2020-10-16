@@ -1,0 +1,43 @@
+.PodLogs {
+  .logs {
+    @include custom-scrollbar;
+
+    // fix for `this.logsElement.scrollTop = this.logsElement.scrollHeight`
+    // `overflow: overlay` don't allow scroll to the last line
+    overflow: auto;
+
+    color: $textColorAccent;
+    background: $logsBackground;
+    line-height: var(--log-line-height);
+    border-radius: 2px;
+    padding: $padding * 2;
+    font-family: $font-monospace;
+    font-size: smaller;
+    white-space: pre;
+    flex-grow: 1;
+
+    > div {
+     // Provides font better readability on large screens
+      -webkit-font-smoothing: subpixel-antialiased;
+    }
+  }
+
+  .new-logs-sep {
+    position: relative;
+    display: block;
+    height: 0;
+    border-top: 1px solid $primary;
+    margin: $margin * 2;
+
+    &:after {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      content: 'new';
+      background: $primary;
+      color: white;
+      padding: $padding / 3;
+      border-radius: $radius;
+    }
+  }
+}

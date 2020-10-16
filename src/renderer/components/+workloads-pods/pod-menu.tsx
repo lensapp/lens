@@ -3,15 +3,15 @@ import "./pod-menu.scss";
 import React from "react";
 import { t, Trans } from "@lingui/macro";
 import { MenuItem, SubMenu } from "../menu";
-import { IPodContainer, Pod, nodesApi } from "../../api/endpoints";
+import { IPodContainer, Pod } from "../../api/endpoints";
 import { Icon } from "../icon";
 import { StatusBrick } from "../status-brick";
-import { PodLogsDialog } from "./pod-logs-dialog";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { cssNames, prevDefault } from "../../utils";
 import { terminalStore, createTerminalTab } from "../dock/terminal.store";
 import { _i18n } from "../../i18n";
 import { hideDetails } from "../../navigation";
+import { createPodLogsTab } from "../dock/pod-logs.store";
 
 interface Props extends KubeObjectMenuProps<Pod> {
 }
@@ -42,7 +42,17 @@ export class PodMenu extends React.Component<Props> {
   }
 
   showLogs(container: IPodContainer) {
-    PodLogsDialog.open(this.props.object, container);
+    hideDetails();
+    const pod = this.props.object;
+    createPodLogsTab({
+      pod,
+      containers: pod.getContainers(),
+      initContainers: pod.getInitContainers(),
+      selectedContainer: container,
+      showTimestamps: false,
+      previous: false,
+      tailLines: 1000
+    });
   }
 
   renderShellMenu() {

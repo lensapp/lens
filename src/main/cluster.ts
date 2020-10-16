@@ -46,6 +46,7 @@ export class Cluster implements ClusterModel {
   public contextHandler: ContextHandler;
   protected kubeconfigManager: KubeconfigManager;
   protected eventDisposers: Function[] = [];
+  protected activated = false;
 
   whenInitialized = when(() => this.initialized);
   whenReady = when(() => this.ready);
@@ -93,7 +94,7 @@ export class Cluster implements ClusterModel {
   async init(port: number) {
     try {
       this.contextHandler = new ContextHandler(this);
-      this.kubeconfigManager = new KubeconfigManager(this, this.contextHandler, port);
+      this.kubeconfigManager = await KubeconfigManager.create(this, this.contextHandler, port);
       this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
       this.initialized = true;
       logger.info(`[CLUSTER]: "${this.contextName}" init success`, {
@@ -126,7 +127,10 @@ export class Cluster implements ClusterModel {
   }
 
   @action
-  async activate() {
+  async activate(force = false ) {
+    if (this.activated && !force) {
+      return this.pushState();
+    }
     logger.info(`[CLUSTER]: activate`, this.getMeta());
     await this.whenInitialized;
     if (!this.eventDisposers.length) {
@@ -142,6 +146,7 @@ export class Cluster implements ClusterModel {
       this.kubeCtl = new Kubectl(this.version)
       this.kubeCtl.ensureKubectl() // download kubectl in background, so it's not blocking dashboard
     }
+    this.activated = true
     return this.pushState();
   }
 
@@ -162,6 +167,7 @@ export class Cluster implements ClusterModel {
     this.online = false;
     this.accessible = false;
     this.ready = false;
+    this.activated = false;
     this.pushState();
   }
 
@@ -184,6 +190,7 @@ export class Cluster implements ClusterModel {
         this.refreshEvents(),
         this.refreshAllowedResources(),
       ]);
+      this.ready = true
     }
     this.pushState();
   }
@@ -234,7 +241,7 @@ export class Cluster implements ClusterModel {
     const apiUrl = this.kubeProxyUrl + path;
     return request(apiUrl, {
       json: true,
-      timeout: 5000,
+      timeout: 30000,
       ...options,
       headers: {
         Host: `${this.id}.${new URL(this.kubeProxyUrl).host}`, // required in ClusterManager.getClusterForRequest()

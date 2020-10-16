@@ -6,14 +6,10 @@ import { tracker } from "./tracker";
 export const clusterIpc = {
   activate: createIpcChannel({
     channel: "cluster:activate",
-    handle: (clusterId: ClusterId, frameId?: number) => {
+    handle: (clusterId: ClusterId, force = false) => {
       const cluster = clusterStore.getById(clusterId);
       if (cluster) {
-        if (frameId) {
-          cluster.frameId = frameId; // save cluster's webFrame.routingId to be able to send push-updates
-        }
-        extensionLoader.broadcastExtensions(frameId)
-        return cluster.activate();
+        return cluster.activate(force);
       }
     },
   }),
@@ -24,6 +20,7 @@ export const clusterIpc = {
       const cluster = clusterStore.getById(clusterId);
       if (cluster) {
         if (frameId) cluster.frameId = frameId; // save cluster's webFrame.routingId to be able to send push-updates
+        extensionLoader.broadcastExtensions(frameId)
         return cluster.pushState();
       }
     },

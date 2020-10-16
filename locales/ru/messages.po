@@ -88,7 +88,7 @@ msgstr "Название аккаунта"
 msgid "Active"
 msgstr "Активный"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:289
+#: src/renderer/components/+add-cluster/add-cluster.tsx:310
 #: src/renderer/components/cluster-manager/clusters-menu.tsx:130
 msgid "Add Cluster"
 msgstr ""
@@ -113,7 +113,7 @@ msgstr "Добавить привязки к {name}"
 #~ msgid "Add cluster"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:306
+#: src/renderer/components/+add-cluster/add-cluster.tsx:327
 msgid "Add cluster(s)"
 msgstr ""
 
@@ -204,7 +204,7 @@ msgstr ""
 msgid "All groups"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:57
+#: src/renderer/components/dock/pod-logs.tsx:37
 msgid "All logs"
 msgstr "Все логи"
 
@@ -324,7 +324,7 @@ msgstr "Цели привязки"
 msgid "Bindings"
 msgstr "Привязки"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:236
+#: src/renderer/components/+add-cluster/add-cluster.tsx:257
 msgid "Browse"
 msgstr ""
 
@@ -405,7 +405,7 @@ msgstr "CPU:"
 
 #: src/renderer/components/+workspaces/workspaces.tsx:133
 #: src/renderer/components/confirm-dialog/confirm-dialog.tsx:44
-#: src/renderer/components/dock/info-panel.tsx:85
+#: src/renderer/components/dock/info-panel.tsx:86
 #: src/renderer/components/wizard/wizard.tsx:130
 msgid "Cancel"
 msgstr "Отмена"
@@ -474,7 +474,6 @@ msgstr "Запрос"
 msgid "Claim Name"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:243
 #: src/renderer/components/dialog/logs-dialog.tsx:39
 #: src/renderer/components/kubeconfig-dialog/kubeconfig-dialog.tsx:93
 msgid "Close"
@@ -567,7 +566,7 @@ msgstr "Конфигурация"
 msgid "Connection"
 msgstr "Соединение"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:246
+#: src/renderer/components/dock/pod-logs.tsx:148
 msgid "Container"
 msgstr "Контейнер"
 
@@ -596,8 +595,8 @@ msgid "Container runtime"
 msgstr "Среда контейнеров"
 
 #: src/renderer/components/+workloads-pods/pod-details.tsx:122
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:186
 #: src/renderer/components/+workloads-pods/pods.tsx:77
+#: src/renderer/components/dock/pod-logs.tsx:129
 msgid "Containers"
 msgstr "Контейнеры"
 
@@ -692,7 +691,7 @@ msgstr "Создать новый секрет"
 msgid "Create new Service Account"
 msgstr "Создать новый Service Account"
 
-#: src/renderer/components/dock/dock.tsx:93
+#: src/renderer/components/dock/dock.tsx:99
 msgid "Create resource"
 msgstr "Создать ресурс"
 
@@ -929,7 +928,8 @@ msgstr "Среда"
 msgid "Error stack"
 msgstr "Стэк ошибки"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:109
+#: src/renderer/components/+add-cluster/add-cluster.tsx:89
+#: src/renderer/components/+add-cluster/add-cluster.tsx:130
 msgid "Error while adding cluster(s): {0}"
 msgstr ""
 
@@ -949,7 +949,7 @@ msgstr "В кластере все в порядке"
 #~ msgid "Excluded items with \"system:\" prefix"
 #~ msgstr "За исключением объектов с префиксом “system:”"
 
-#: src/renderer/components/dock/dock.tsx:98
+#: src/renderer/components/dock/dock.tsx:104
 msgid "Exit full size mode"
 msgstr "Выйти из полного размера"
 
@@ -965,7 +965,7 @@ msgstr "Внешний IP"
 msgid "External IPs"
 msgstr "Внешние IP"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:106
+#: src/renderer/components/dock/pod-logs.store.ts:65
 msgid "Failed to load logs: {0}"
 msgstr "Ошибка загрузки логов: {0}"
 
@@ -990,7 +990,7 @@ msgstr "Финализаторы"
 msgid "First seen"
 msgstr "Увиденно впервые"
 
-#: src/renderer/components/dock/dock.tsx:98
+#: src/renderer/components/dock/dock.tsx:104
 msgid "Fit to window"
 msgstr "По размеру окна"
 
@@ -1007,8 +1007,8 @@ msgid "From"
 msgstr "От"
 
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:212
-msgid "From <0>{from}</0> to <1>{to}</1>"
-msgstr "От <0>{from}</0> до <1>{to}</1>"
+#~ msgid "From <0>{from}</0> to <1>{to}</1>"
+#~ msgstr "От <0>{from}</0> до <1>{to}</1>"
 
 #: src/renderer/components/+pod-security-policies/pod-security-policy-details.tsx:125
 msgid "Fs Group"
@@ -1069,7 +1069,7 @@ msgid "Helm branch <0>{0}</0> already in use"
 msgstr ""
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+#: src/renderer/components/dock/pod-logs.tsx:159
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Hide"
 msgstr "Скрыть"
@@ -1154,7 +1154,7 @@ msgid "Ingresses"
 msgstr "Ingresses"
 
 #: src/renderer/components/+workloads-pods/pod-details.tsx:118
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:192
+#: src/renderer/components/dock/pod-logs.tsx:135
 msgid "Init Containers"
 msgstr "Контейнеры инициализации"
 
@@ -1315,7 +1315,7 @@ msgstr ""
 msgid "Limits"
 msgstr "Лимиты"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:248
+#: src/renderer/components/dock/pod-logs.tsx:150
 msgid "Lines"
 msgstr "Строки"
 
@@ -1339,8 +1339,8 @@ msgstr ""
 msgid "Loading"
 msgstr "Загрузка"
 
-#: src/renderer/components/+workloads-pods/pod-menu.tsx:90
-#: src/renderer/components/+workloads-pods/pod-menu.tsx:91
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:100
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:101
 msgid "Logs"
 msgstr "Логи"
 
@@ -1446,7 +1446,7 @@ msgstr ""
 msgid "Min Pods"
 msgstr "Мин. подов"
 
-#: src/renderer/components/dock/dock.tsx:99
+#: src/renderer/components/dock/dock.tsx:105
 msgid "Minimize"
 msgstr "Минимизировать"
 
@@ -1601,11 +1601,11 @@ msgstr "Сетевая файловая система"
 msgid "Network Policies"
 msgstr "Network Policies"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:231
+#: src/renderer/components/dock/pod-logs.tsx:178
 msgid "New logs since opening the dialog"
 msgstr "Новые логи с момента открытия диалога"
 
-#: src/renderer/components/dock/dock.tsx:86
+#: src/renderer/components/dock/dock.tsx:92
 msgid "New tab"
 msgstr "Новая вкладка"
 
@@ -1643,7 +1643,7 @@ msgstr "Нет доступных нод."
 #~ msgid "No contexts available or they already added"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:260
+#: src/renderer/components/+add-cluster/add-cluster.tsx:281
 msgid "No contexts available or they have been added already"
 msgstr ""
 
@@ -1739,7 +1739,7 @@ msgstr "Ок"
 msgid "Ok, got it!"
 msgstr ""
 
-#: src/renderer/components/dock/dock.tsx:99
+#: src/renderer/components/dock/dock.tsx:105
 msgid "Open"
 msgstr "Открыть"
 
@@ -1775,7 +1775,7 @@ msgstr "Параллелизм"
 msgid "Parameters"
 msgstr "Параметры"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:230
+#: src/renderer/components/+add-cluster/add-cluster.tsx:251
 msgid "Paste as text"
 msgstr ""
 
@@ -1799,7 +1799,7 @@ msgstr "Persistent Volume Claims"
 msgid "Persistent Volumes"
 msgstr "Persistent Volumes"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:72
+#: src/renderer/components/+add-cluster/add-cluster.tsx:75
 msgid "Please select at least one cluster context"
 msgstr ""
 
@@ -1852,7 +1852,7 @@ msgstr "Селектор подов"
 msgid "Pod Status"
 msgstr "Статус подов"
 
-#: src/renderer/components/+workloads-pods/pod-menu.tsx:67
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:77
 msgid "Pod shell"
 msgstr "Командная строка пода"
 
@@ -1915,7 +1915,7 @@ msgstr ""
 #~ msgid "Pro-Tip: paste kubeconfig to collect available contexts"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:248
+#: src/renderer/components/+add-cluster/add-cluster.tsx:269
 msgid "Pro-Tip: paste kubeconfig to get available contexts"
 msgstr ""
 
@@ -1923,7 +1923,7 @@ msgstr ""
 #~ msgid "Pro-Tip: paste kubeconfig to parse available contexts"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:239
+#: src/renderer/components/+add-cluster/add-cluster.tsx:260
 msgid "Pro-Tip: you can also drag-n-drop kubeconfig file to this area"
 msgstr ""
 
@@ -1944,7 +1944,7 @@ msgstr "Комиссия"
 msgid "Proxy is used only for non-cluster communication."
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:294
+#: src/renderer/components/+add-cluster/add-cluster.tsx:315
 msgid "Proxy settings"
 msgstr ""
 
@@ -1980,7 +1980,7 @@ msgstr "Готовность"
 msgid "Reason"
 msgstr "Причина"
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:107
+#: src/renderer/components/dock/pod-logs.store.ts:66
 msgid "Reason: {0} ({1})"
 msgstr "Причина: {0} ({1})"
 
@@ -2125,7 +2125,7 @@ msgstr ""
 msgid "Required field"
 msgstr "Обязательное поле"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:235
+#: src/renderer/components/+add-cluster/add-cluster.tsx:256
 #: src/renderer/components/item-object-list/page-filters-list.tsx:31
 msgid "Reset"
 msgstr "Сбросить"
@@ -2267,9 +2267,9 @@ msgstr ""
 #: src/renderer/components/+apps-releases/release-details.tsx:114
 #: src/renderer/components/+config-maps/config-map-details.tsx:78
 #: src/renderer/components/+config-secrets/secret-details.tsx:97
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:216
 #: src/renderer/components/+workspaces/workspaces.tsx:132
 #: src/renderer/components/dock/edit-resource.tsx:87
+#: src/renderer/components/dock/pod-logs.tsx:161
 msgid "Save"
 msgstr "Сохранить"
 
@@ -2361,7 +2361,7 @@ msgstr "Выберите квоту..."
 #~ msgid "Select context(s)"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:257
+#: src/renderer/components/+add-cluster/add-cluster.tsx:278
 msgid "Select contexts"
 msgstr ""
 
@@ -2374,8 +2374,8 @@ msgstr ""
 #~ msgid "Select custom kube-config file"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:62
-#: src/renderer/components/+add-cluster/add-cluster.tsx:62
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
+#: src/renderer/components/+add-cluster/add-cluster.tsx:63
 msgid "Select custom kubeconfig file"
 msgstr ""
 
@@ -2391,7 +2391,7 @@ msgstr ""
 #~ msgid "Select kubeconfig"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:229
+#: src/renderer/components/+add-cluster/add-cluster.tsx:250
 msgid "Select kubeconfig file"
 msgstr ""
 
@@ -2419,7 +2419,7 @@ msgstr "Выбрать сервисные аккаунты"
 #~ msgid "Selected contexts ({0}): <0>{1}</0>"
 #~ msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:256
+#: src/renderer/components/+add-cluster/add-cluster.tsx:277
 msgid "Selected contexts: <0>{0}</0>"
 msgstr ""
 
@@ -2476,13 +2476,13 @@ msgid "Settings"
 msgstr ""
 
 #: src/renderer/components/+nodes/node-menu.tsx:48
-#: src/renderer/components/+workloads-pods/pod-menu.tsx:68
+#: src/renderer/components/+workloads-pods/pod-menu.tsx:78
 msgid "Shell"
 msgstr "Командная строка"
 
 #: src/renderer/components/+config-secrets/secret-details.tsx:93
 #: src/renderer/components/+workloads-pods/pod-container-env.tsx:101
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+#: src/renderer/components/dock/pod-logs.tsx:159
 #: src/renderer/components/drawer/drawer-param-toggler.tsx:19
 msgid "Show"
 msgstr "Показать"
@@ -2491,9 +2491,21 @@ msgstr "Показать"
 msgid "Show Notes"
 msgstr "Показать логи"
 
+#: src/renderer/components/dock/pod-logs.tsx:160
+msgid "Show current logs"
+msgstr ""
+
+#: src/renderer/components/dock/pod-logs.tsx:160
+msgid "Show previous terminated container logs"
+msgstr ""
+
 #: src/renderer/components/+user-management-service-accounts/service-accounts-secret.tsx:20
 msgid "Show value"
 msgstr "Показать значение"
+
+#: src/renderer/components/dock/pod-logs.tsx:154
+msgid "Since"
+msgstr ""
 
 #: src/renderer/components/+nodes/node-charts.tsx:80
 #: src/renderer/components/+storage-volume-claims/volume-claims.tsx:49
@@ -2589,12 +2601,12 @@ msgstr "Тип стратегии"
 msgid "Sub-object"
 msgstr "Суб-объект"
 
-#: src/renderer/components/dock/info-panel.tsx:93
+#: src/renderer/components/dock/info-panel.tsx:95
 #: src/renderer/components/wizard/wizard.tsx:131
 msgid "Submit"
 msgstr "Отправить"
 
-#: src/renderer/components/dock/info-panel.tsx:94
+#: src/renderer/components/dock/info-panel.tsx:96
 msgid "Submitting.."
 msgstr "Применение.."
 
@@ -2602,7 +2614,7 @@ msgstr "Применение.."
 msgid "Subsets"
 msgstr ""
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:102
+#: src/renderer/components/+add-cluster/add-cluster.tsx:122
 msgid "Successfully imported <0>{0}</0> cluster(s)"
 msgstr ""
 
@@ -2636,7 +2648,7 @@ msgstr ""
 msgid "Terminal"
 msgstr "Терминал"
 
-#: src/renderer/components/dock/dock.tsx:89
+#: src/renderer/components/dock/dock.tsx:95
 msgid "Terminal session"
 msgstr "Сессия терминала"
 
@@ -2644,7 +2656,7 @@ msgstr "Сессия терминала"
 msgid "The path to the kubectl binary on the system."
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:226
+#: src/renderer/components/dock/pod-logs.tsx:172
 msgid "There are no logs available for container."
 msgstr "Для контейнера нет логов."
 
@@ -2774,8 +2786,8 @@ msgstr "Обновить версию"
 msgid "Usage"
 msgstr "Использование"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:63
-#: src/renderer/components/+add-cluster/add-cluster.tsx:63
+#: src/renderer/components/+add-cluster/add-cluster.tsx:64
+#: src/renderer/components/+add-cluster/add-cluster.tsx:64
 msgid "Use configuration"
 msgstr ""
 
@@ -2962,7 +2974,7 @@ msgstr "сек"
 msgid "singular"
 msgstr ""
 
-#: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:215
+#: src/renderer/components/dock/pod-logs.tsx:159
 msgid "timestamps"
 msgstr "временные метки"
 
@@ -3007,8 +3019,8 @@ msgid "{metricsRemainCount} more..."
 msgstr "{metricsRemainCount} еще…"
 
 #: src/renderer/components/+workloads-pods/pod-logs-dialog.tsx:240
-msgid "{podName} Logs"
-msgstr "{podName} логи"
+#~ msgid "{podName} Logs"
+#~ msgstr "{podName} логи"
 
 #: src/renderer/components/dock/edit-resource.tsx:56
 msgid "{resourceType} <0>{resourceName}</0> updated."
@@ -3025,6 +3037,6 @@ msgstr ""
 "other {<2>Удалить <3>{selectedCount}</3> элементов <4>{selectedNames}</4> {tail}?</2>}\n"
 "}"
 
-#: src/renderer/components/dock/info-panel.tsx:88
+#: src/renderer/components/dock/info-panel.tsx:89
 msgid "{submitLabel} & Close"
 msgstr "{submitLabel} и закрыть"

@@ -22,6 +22,8 @@ import { createResourceTab, isCreateResourceTab } from "./create-resource.store"
 import { isEditResourceTab } from "./edit-resource.store";
 import { isInstallChartTab } from "./install-chart.store";
 import { isUpgradeChartTab } from "./upgrade-chart.store";
+import { PodLogs } from "./pod-logs";
+import { isPodLogsTab } from "./pod-logs.store";
 
 interface Props {
   className?: string;
@@ -59,6 +61,9 @@ export class Dock extends React.Component<Props> {
     if (isInstallChartTab(tab) || isUpgradeChartTab(tab)) {
       return <DockTab value={tab} icon={<Icon svg="install" />} />
     }
+    if (isPodLogsTab(tab)) {
+      return <DockTab value={tab} icon="subject" />
+    }
   }
 
   renderTabContent() {
@@ -71,6 +76,7 @@ export class Dock extends React.Component<Props> {
         {isInstallChartTab(tab) && <InstallChart tab={tab} />}
         {isUpgradeChartTab(tab) && <UpgradeChart tab={tab} />}
         {isTerminalTab(tab) && <TerminalWindow tab={tab} />}
+        {isPodLogsTab(tab) && <PodLogs tab={tab} />}
       </div>
     )
   }
