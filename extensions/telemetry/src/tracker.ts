@@ -36,7 +36,7 @@ export class Tracker extends Singleton {
       this.event(ev.name, ev.action, ev.params)
     }
     this.eventHandlers.push(handler)
-    appEventBus.on(handler)
+    appEventBus.addListener(handler)
   }
 
   stop() {
@@ -45,7 +45,7 @@ export class Tracker extends Singleton {
     this.started = false
 
     for (const handler of this.eventHandlers) {
-      appEventBus.off(handler)
+      appEventBus.removeListener(handler)
     }
   }
 
