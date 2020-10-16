@@ -27,7 +27,7 @@ export class Tracker extends Singleton {
   }
 
   start() {
-    if (this.started) { return }
+    if (this.started === true) { return }
 
     this.started = true
 

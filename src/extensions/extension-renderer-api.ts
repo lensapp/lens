@@ -6,7 +6,8 @@ export * from "./lens-extension"
 export * from "./lens-renderer-extension"
 export { DynamicPageType, PageRegistry } from "./page-registry"
 export { AppPreferenceRegistry } from "./app-preference-registry"
-export { appEventBus, AppEvent } from "../common/event-bus"
+export { appEventBus } from "../common/event-bus"
+export type { AppEvent } from "../common/event-bus"
 export { Singleton } from "../common/utils"
 
 // TODO: add more common re-usable UI components + refactor interfaces (Props -> ComponentProps)

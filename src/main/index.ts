@@ -89,7 +89,9 @@ async function main() {
   extensionLoader.extensions.replace(await extensionManager.load())
   extensionLoader.broadcastExtensions()
 
-  appEventBus.emit({name: "app", action: "start"})
+  setTimeout(() => {
+    appEventBus.emit({name: "app", action: "start"})
+  }, 1000)
 }
 
 app.on("ready", main);
