@@ -183,7 +183,7 @@ export class PodLogs extends React.Component<Props> {
         <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(oldLogs.join("\n"))) }} />
         {newLogs.length > 0 && (
           <>
-            <p className="new-logs-sep" title={_i18n._(t`New logs since opening the dialog`)}/>
+            <p className="new-logs-sep" title={_i18n._(t`New logs since opening logs tab`)}/>
             <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(newLogs.join("\n"))) }} />
           </>
         )}
