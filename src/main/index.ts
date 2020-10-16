@@ -89,5 +89,4 @@ app.on("will-quit", (event) => {
   event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
   clusterManager?.stop(); // close cluster connections
   return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
-  // app.exit(); // forced app.quit
 })
