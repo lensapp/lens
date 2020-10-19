@@ -5,6 +5,9 @@ import { Icon } from "../icon";
 import { WorkspaceMenu } from "../+workspaces/workspace-menu";
 import { workspaceStore } from "../../../common/workspace-store";
 
+import { supportURL } from "../+support/support.route";
+import { navigate } from "../../navigation";
+
 @observer
 export class BottomBar extends React.Component {
   render() {
@@ -16,6 +19,13 @@ export class BottomBar extends React.Component {
           <span className="workspace-name">{currentWorkspace.name}</span>
         </div>
         <WorkspaceMenu htmlFor="current-workspace"/>
+        <div id="support" className="flex gaps align-center box right">
+          <Icon 
+            small
+            svg="support"
+            onClick={() => navigate(supportURL())}
+          />
+        </div>
       </div>
     )
   }
