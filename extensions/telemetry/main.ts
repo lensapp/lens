@@ -1,16 +1,17 @@
 import { LensMainExtension } from "@lens/extensions";
-import { TelemetryPreferencesStore } from "./src/telemetry-preferences-store"
+import { telemetryPreferencesStore } from "./src/telemetry-preferences-store"
+import { tracker } from "./src/tracker";
 
 export default class TelemetryMainExtension extends LensMainExtension {
-  protected preferencesStore: TelemetryPreferencesStore
 
   async onActivate() {
     console.log("telemetry main extension activated")
-    this.preferencesStore = TelemetryPreferencesStore.getInstance<TelemetryPreferencesStore>()
-    await this.preferencesStore.load()
+    tracker.start()
+    await telemetryPreferencesStore.load()
   }
 
   onDeactivate() {
+    tracker.stop()
     console.log("telemetry main extension deactivated")
   }
 }

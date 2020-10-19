@@ -1,15 +1,14 @@
 import { AppPreferenceRegistry, LensRendererExtension } from "@lens/ui-extensions";
-import { TelemetryPreferencesStore } from "./src/telemetry-preferences-store"
+import { telemetryPreferencesStore } from "./src/telemetry-preferences-store"
 import { TelemetryPreferenceHint, TelemetryPreferenceInput } from "./src/telemetry-preference"
+import { tracker } from "./src/tracker"
 import React from "react"
 
 export default class TelemetryRendererExtension extends LensRendererExtension {
-  protected preferencesStore: TelemetryPreferencesStore
-
   async onActivate() {
     console.log("telemetry extension activated")
-    this.preferencesStore = TelemetryPreferencesStore.getInstance<TelemetryPreferencesStore>()
-    await this.preferencesStore.load()
+    tracker.start()
+    await telemetryPreferencesStore.load()
   }
 
   registerAppPreferences(registry: AppPreferenceRegistry) {
@@ -18,7 +17,7 @@ export default class TelemetryRendererExtension extends LensRendererExtension {
         title: "Telemetry & Usage Tracking",
         components: {
           Hint: () => <TelemetryPreferenceHint />,
-          Input: () => <TelemetryPreferenceInput telemetry={this.preferencesStore} />
+          Input: () => <TelemetryPreferenceInput telemetry={telemetryPreferencesStore} />
         }
       })
     )

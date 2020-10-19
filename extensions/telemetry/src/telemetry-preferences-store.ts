@@ -31,3 +31,5 @@ export class TelemetryPreferencesStore extends BaseStore<TelemetryPreferencesMod
     })
   }
 }
+
+export const telemetryPreferencesStore = TelemetryPreferencesStore.getInstance<TelemetryPreferencesStore>()

@@ -1,7 +1,7 @@
 import { createIpcChannel } from "./ipc";
 import { ClusterId, clusterStore } from "./cluster-store";
 import { extensionLoader } from "../extensions/extension-loader"
-import { tracker } from "./tracker";
+import { appEventBus } from "./event-bus"
 
 export const clusterIpc = {
   activate: createIpcChannel({
@@ -37,7 +37,7 @@ export const clusterIpc = {
   disconnect: createIpcChannel({
     channel: "cluster:disconnect",
     handle: (clusterId: ClusterId) => {
-      tracker.event("cluster", "stop");
+      appEventBus.emit({name: "cluster", action: "stop"});
       return clusterStore.getById(clusterId)?.disconnect();
     },
   }),
@@ -45,7 +45,7 @@ export const clusterIpc = {
   installFeature: createIpcChannel({
     channel: "cluster:install-feature",
     handle: async (clusterId: ClusterId, feature: string, config?: any) => {
-      tracker.event("cluster", "install", feature);
+      appEventBus.emit({name: "cluster", action: "install", params: { feature: feature}})
       const cluster = clusterStore.getById(clusterId);
       if (cluster) {
         await cluster.installFeature(feature, config)
@@ -58,7 +58,7 @@ export const clusterIpc = {
   uninstallFeature: createIpcChannel({
     channel: "cluster:uninstall-feature",
     handle: (clusterId: ClusterId, feature: string) => {
-      tracker.event("cluster", "uninstall", feature);
+      appEventBus.emit({name: "cluster", action: "uninstall", params: { feature: feature}})
       return clusterStore.getById(clusterId)?.uninstallFeature(feature)
     }
   }),
@@ -66,7 +66,7 @@ export const clusterIpc = {
   upgradeFeature: createIpcChannel({
     channel: "cluster:upgrade-feature",
     handle: (clusterId: ClusterId, feature: string, config?: any) => {
-      tracker.event("cluster", "upgrade", feature);
+      appEventBus.emit({name: "cluster", action: "upgrade", params: { feature: feature}})
       return clusterStore.getById(clusterId)?.upgradeFeature(feature, config)
     }
   }),

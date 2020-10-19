@@ -16,7 +16,7 @@ import { registerFileProtocol } from "../common/register-protocol";
 import { clusterStore } from "../common/cluster-store"
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
-import { tracker } from "../common/tracker";
+import { appEventBus } from "../common/event-bus"
 import * as LensExtensions from "../extensions/extension-api";
 import { extensionManager } from "../extensions/extension-manager";
 import { extensionLoader } from "../extensions/extension-loader";
@@ -48,7 +48,6 @@ async function main() {
   await shellSync();
   logger.info(`🚀 Starting Lens from "${workingDir}"`)
 
-  tracker.event("app", "start");
   const updater = new AppUpdater()
   updater.start();
 
@@ -89,6 +88,10 @@ async function main() {
   extensionLoader.loadOnMain(getLensRuntime)
   extensionLoader.extensions.replace(await extensionManager.load())
   extensionLoader.broadcastExtensions()
+
+  setTimeout(() => {
+    appEventBus.emit({name: "app", action: "start"})
+  }, 1000)
 }
 
 app.on("ready", main);
