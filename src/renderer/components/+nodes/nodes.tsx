@@ -57,7 +57,7 @@ export class Nodes extends React.Component<Props> {
         max={cores}
         value={usage}
         tooltip={{
-          position: TooltipPosition.BOTTOM,
+          preferredPositions: TooltipPosition.BOTTOM,
           children: _i18n._(t`CPU:`) + ` ${Math.ceil(usage * 100) / cores}\%, ` + _i18n._(t`cores:`) + ` ${cores}`
         }}
       />
@@ -74,7 +74,7 @@ export class Nodes extends React.Component<Props> {
         max={capacity}
         value={usage}
         tooltip={{
-          position: TooltipPosition.BOTTOM,
+          preferredPositions: TooltipPosition.BOTTOM,
           children: _i18n._(t`Memory:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
         }}
       />
@@ -91,7 +91,7 @@ export class Nodes extends React.Component<Props> {
         max={capacity}
         value={usage}
         tooltip={{
-          position: TooltipPosition.BOTTOM,
+          preferredPositions: TooltipPosition.BOTTOM,
           children: _i18n._(t`Disk:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
         }}
       />
