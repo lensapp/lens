@@ -5,6 +5,7 @@ import windowStateKeeper from "electron-window-state"
 import { observable } from "mobx";
 import { initMenu } from "./menu";
 import { extensionLoader } from "../extensions/extension-loader";
+import { appEventBus } from "../common/event-bus"
 
 export class WindowManager {
   protected mainView: BrowserWindow;
@@ -43,6 +44,12 @@ export class WindowManager {
     });
     this.mainView.webContents.on("dom-ready", () => {
       extensionLoader.broadcastExtensions()
+    })
+    this.mainView.on("focus", () => {
+      appEventBus.emit({name: "app", action: "focus"})
+    })
+    this.mainView.on("blur", () => {
+      appEventBus.emit({name: "app", action: "blur"})
     })
 
     // track visible cluster from ui
