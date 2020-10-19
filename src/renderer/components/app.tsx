@@ -39,6 +39,7 @@ import { pageRegistry } from "../../extensions/page-registry";
 import { DynamicPage } from "../../extensions/dynamic-page";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { getLensRuntime } from "../../extensions/lens-runtime";
+import { appEventBus } from "../../common/event-bus"
 
 @observer
 export class App extends React.Component {
@@ -51,6 +52,9 @@ export class App extends React.Component {
     await clusterIpc.setFrameId.invokeFromRenderer(clusterId, frameId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
     extensionLoader.loadOnClusterRenderer(getLensRuntime)
+    appEventBus.emit({name: "cluster", action: "open", params: {
+      clusterId: clusterId
+    }})
   }
 
   get startURL() {
