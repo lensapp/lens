@@ -174,7 +174,8 @@
   },
   "lens": {
     "extensions": [
-      "telemetry"
+      "telemetry",
+      "support-page"
     ]
   },
   "dependencies": {

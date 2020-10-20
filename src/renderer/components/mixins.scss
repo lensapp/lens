@@ -6,6 +6,7 @@
 @import "table/table.mixins";
 @import "+network/network-mixins";
 
+// todo: re-use in other places with theming
 @mixin custom-scrollbar-themed($invert: false) {
   @if ($invert) {
     @include custom-scrollbar(dark);
