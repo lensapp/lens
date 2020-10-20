@@ -10665,6 +10665,11 @@ spdy@^4.0.2:
     select-hose "^2.0.0"
     spdy-transport "^3.0.0"
 
+spectron-keys@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/spectron-keys/-/spectron-keys-0.0.1.tgz#45c3aa535e85fe5f5c71fd18cfa43927826f65db"
+  integrity sha1-RcOqU16F/l9ccf0Yz6Q5J4JvZds=
+
 spectron@11.0.0:
   version "11.0.0"
   resolved "https://registry.yarnpkg.com/spectron/-/spectron-11.0.0.tgz#79d785e6b8898638e77b5186711e3910ed4ca09b"

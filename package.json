@@ -310,6 +310,7 @@
     "react-window": "^1.8.5",
     "sass-loader": "^8.0.2",
     "spectron": "11.0.0",
+    "spectron-keys": "0.0.1",
     "style-loader": "^1.2.1",
     "terser-webpack-plugin": "^3.0.3",
     "ts-jest": "^26.1.0",

@@ -5,6 +5,7 @@
   cluster and vice versa.
 */
 import { Application } from "spectron"
+const spectronKeys = require("spectron-keys")
 import * as util from "../helpers/utils"
 import { spawnSync } from "child_process"
 
@@ -54,10 +55,12 @@ describe("Lens integration tests", () => {
       await app.client.keys(['Shift', 'Meta'])
     })
 
-    it.skip('shows "preferences"', async () => {
-      await app.client.keys(['Meta', ','])
+    it('shows "preferences"', async () => {
+      await app.client.keys(spectronKeys.mapAccelerator("Control+F2"))  // attempt to activate the menu bar (I know this is macos only, trying anything)
+      await app.client.keys(spectronKeys.mapAccelerator("Control")) // "key up" the Control key
+      await app.client.keys(spectronKeys.mapAccelerator("CommandOrControl+,")) // Preferences accelerator
       await app.client.waitUntilTextExists("h2", "Preferences")
-      await app.client.keys('Meta')
+      await app.client.keys(spectronKeys.mapAccelerator("CommandOrControl"))  // "key up" the CommandOrControl key
     })
 
     it.skip('quits Lens"', async () => {
