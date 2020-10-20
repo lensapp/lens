@@ -48,16 +48,15 @@ describe("Lens integration tests", () => {
     })
 
     // Todo figure out how to access main menu to get these to work
-    it.skip('shows "add cluster"', async () => {
-      await app.client.keys(['Shift', 'Meta', 'A'])
+    it('shows "add cluster"', async () => {
+      await app.electron.ipcRenderer.send('test-menu-item-click', "File", "Add Cluster")
       await app.client.waitUntilTextExists("h2", "Add Cluster")
-      await app.client.keys(['Shift', 'Meta'])
     })
 
-    it.skip('shows "preferences"', async () => {
-      await app.client.keys(['Meta', ','])
+    it('shows "preferences"', async () => {
+      let appName: string = process.platform === "darwin" ? "Lens" : "File"
+      await app.electron.ipcRenderer.send('test-menu-item-click', appName, "Preferences")
       await app.client.waitUntilTextExists("h2", "Preferences")
-      await app.client.keys('Meta')
     })
 
     it.skip('quits Lens"', async () => {

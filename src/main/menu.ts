@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron"
+import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron"
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
 import { appName, isMac, isWindows } from "../common/vars";
@@ -235,4 +235,35 @@ export function buildMenu(windowManager: WindowManager) {
 
   const menu = Menu.buildFromTemplate(Object.values(appMenu));
   Menu.setApplicationMenu(menu);
+
+  if (!!process.env.JEST_WORKER_ID) {
+    ipcMain.on('test-menu-item-click', (event: IpcMainEvent, ...names: string[]) => {
+      let menu: Menu = Menu.getApplicationMenu()
+      const parentLabels: string[] = [];
+      let menuItem: MenuItem
+
+      for (let name of names) {
+        parentLabels.push(name);
+        menuItem = menu?.items?.find(item => item.label === name);
+        if (!menuItem) {
+          break;
+        }
+        menu = menuItem.submenu;
+      }
+    
+      if (!menuItem) {
+        logger.info(`[MENU:test-menu-item-click] Cannot find menu item ${parentLabels.join(" -> ")}`);
+        return;
+      }
+
+      let { enabled, visible, click } = menuItem;
+      if (enabled === false || visible === false || typeof click !== 'function') {
+        logger.info(`[MENU:test-menu-item-click] Menu item ${parentLabels.join(" -> ")} not clickable`);
+        return;
+      }
+
+      logger.info(`[MENU:test-menu-item-click] Menu item ${parentLabels.join(" -> ")} click!`);
+      menuItem.click();
+    });
+  }
 }
