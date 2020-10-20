@@ -1,14 +1,14 @@
 import { LensExtension } from "./lens-extension"
-import type { PageRegistry } from "./extension-renderer-api"
-import { AppPreferenceRegistry } from "./app-preference-registry";
+import type { PageRegistry } from "./page-registry"
+import type { AppPreferenceRegistry } from "./app-preference-registry";
 
 export class LensRendererExtension extends LensExtension {
 
-  registerPages(pageStore: PageRegistry) {
+  registerPages(registry: PageRegistry) {
     return
   }
 
-  registerAppPreferences(appPreferenceStore: AppPreferenceRegistry) {
+  registerAppPreferences(registry: AppPreferenceRegistry) {
     return
   }
 }
