@@ -29,10 +29,17 @@
           font-family: $font-monospace;
           font-size: smaller;
           white-space: pre;
-          -webkit-font-smoothing: auto;
+          -webkit-font-smoothing: auto; // Better readability on non-retina screens
 
           &:hover {
+            // TODO: Use a theme var to styling
             background: #35373a;
+          }
+
+          span {
+            border-radius: 2px;
+            background-color: #8cc474b8;
+            -webkit-font-smoothing: auto;
           }
         }
       }

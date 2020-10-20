@@ -8,14 +8,17 @@ import { Icon } from "../icon";
 import { _i18n } from "../../i18n";
 import { cssNames, downloadFile } from "../../utils";
 import { Pod } from "../../api/endpoints";
+import { PodLogSearch } from "./pod-log-search";
 
 interface Props {
   ready: boolean
   tabId: string
   tabData: IPodLogsData
-  logs: string[][]
+  logs: string[]
   save: (data: Partial<IPodLogsData>) => void
   reload: () => void
+  onSearch: (query: string) => void
+  search: string
 }
 
 export const PodLogControls = observer((props: Props) => {
@@ -24,6 +27,7 @@ export const PodLogControls = observer((props: Props) => {
   const { selectedContainer, showTimestamps, previous } = tabData;
   const since = podLogsStore.getTimestamps(podLogsStore.logs.get(tabId)[0]);
   const pod = new Pod(tabData.pod);
+
   const toggleTimestamps = () => {
     save({ showTimestamps: !showTimestamps });
   }
@@ -110,6 +114,7 @@ export const PodLogControls = observer((props: Props) => {
           onClick={downloadLogs}
           tooltip={_i18n._(t`Save`)}
         />
+        <PodLogSearch onSearch={props.onSearch} search={props.search} />
       </div>
     </div>
   );

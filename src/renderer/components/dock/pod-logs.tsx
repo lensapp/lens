@@ -27,6 +27,7 @@ export class PodLogs extends React.Component<Props> {
   @observable ready = false;
   @observable preloading = false; // Indicator for setting Spinner (loader) at the top of the logs
   @observable showJumpToBottom = false;
+  @observable findQuery = ""; // A text from search field
 
   private logsElement = React.createRef<HTMLDivElement>();  // A reference for outer container in VirtualList
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
@@ -102,6 +103,14 @@ export class PodLogs extends React.Component<Props> {
   }
 
   /**
+   * Updating findQuery observable
+   * @param query {string} A text from search field
+   */
+  onSearch(query: string) {
+    this.findQuery = query;
+  }
+
+  /**
    * Computed prop which returns logs with or without timestamps added to each line
    * @returns {Array} An array log items
    */
@@ -138,9 +147,22 @@ export class PodLogs extends React.Component<Props> {
    */
   getLogRow = (index: number) => {
     const isSeparator = this.logs[index] === "---newlogs---"; // TODO: Use constant separator
+    const { findQuery } = this;
+    const item = this.logs[index];
+    const contents: React.ReactElement[] = [];
+    if (findQuery) {
+      // If search is enabled, replace keyword with backgrounded <span> to "highlight" searchable text
+      const pieces = item.split(findQuery);
+      pieces.forEach((piece, index) => {
+        const overlay = index !== pieces.length - 1 ? <span>{findQuery}</span> : null
+        contents.push(
+          <>{piece}{overlay}</>
+        );
+      })
+    }
     return (
       <div className={cssNames("LogRow", { separator: isSeparator })}>
-        {this.logs[index]}
+        {contents.length > 1 ? contents : item}
       </div>
     );
   }
@@ -207,6 +229,8 @@ export class PodLogs extends React.Component<Props> {
         logs={this.logs}
         save={this.save}
         reload={this.reload}
+        search={this.findQuery}
+        onSearch={this.onSearch}
       />
     )
     return (
