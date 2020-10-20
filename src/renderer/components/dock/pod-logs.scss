@@ -6,19 +6,36 @@
     // `overflow: overlay` don't allow scroll to the last line
     overflow: auto;
 
+    position: relative;
     color: $textColorAccent;
     background: $logsBackground;
-    line-height: var(--log-line-height);
-    border-radius: 2px;
-    padding: $padding * 2;
-    font-family: $font-monospace;
-    font-size: smaller;
-    white-space: pre;
     flex-grow: 1;
 
-    > div {
-     // Provides font better readability on large screens
-      -webkit-font-smoothing: subpixel-antialiased;
+    .find-overlay {
+      position: absolute;
+      border-radius: 2px;
+      background-color: #8cc474;
+      margin-top: 4px;
+      opacity: 0.5;
+    }
+
+    .VirtualList {
+      height: 100%;
+
+      .list {
+        .LogRow {
+          padding: 2px 16px;
+          height: 18px;  // Must be equal to lineHeight variable in pod-logs.scss
+          font-family: $font-monospace;
+          font-size: smaller;
+          white-space: pre;
+          -webkit-font-smoothing: auto;
+
+          &:hover {
+            background: #35373a;
+          }
+        }
+      }
     }
   }
 
@@ -48,6 +65,8 @@
     border-radius: $unit * 2;
     opacity: 0;
     transition: opacity 0.2s;
+    z-index: 2;
+    top: 20px;
 
     &.active {
       opacity: 1;

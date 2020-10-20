@@ -159,7 +159,7 @@ export class Table extends React.Component<TableProps> {
         <VirtualList
           items={sortedItems}
           rowHeights={rowHeights}
-          getTableRow={getTableRow}
+          getRow={getTableRow}
           selectedItemId={selectedItemId}
           className={className}
         />

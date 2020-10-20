@@ -1,8 +1,6 @@
 import "./pod-logs.scss";
 import React from "react";
-import AnsiUp from "ansi_up";
-import DOMPurify from "dompurify";
-import { t, Trans } from "@lingui/macro";
+import { Trans } from "@lingui/macro";
 import { computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { _i18n } from "../../i18n";
@@ -14,11 +12,15 @@ import { InfoPanel } from "./info-panel";
 import { IPodLogsData, logRange, podLogsStore } from "./pod-logs.store";
 import { Button } from "../button";
 import { PodLogControls } from "./pod-log-controls";
+import { VirtualListRef } from "../virtual-list";
+import debounce from "lodash/debounce";
 
 interface Props {
   className?: string
   tab: IDockTab
 }
+
+const lineHeight = 18; // Height of a log line. Should correlate with styles in pod-logs.scss
 
 @observer
 export class PodLogs extends React.Component<Props> {
@@ -26,9 +28,8 @@ export class PodLogs extends React.Component<Props> {
   @observable preloading = false; // Indicator for setting Spinner (loader) at the top of the logs
   @observable showJumpToBottom = false;
 
-  private logsElement: HTMLDivElement;
+  private logsElement = React.createRef<HTMLDivElement>();  // A reference for outer container in VirtualList
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
-  private colorConverter = new AnsiUp();
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -53,8 +54,8 @@ export class PodLogs extends React.Component<Props> {
   componentDidUpdate() {
     // scroll logs only when it's already in the end,
     // otherwise it can interrupt reading by jumping after loading new logs update
-    if (this.logsElement && this.lastLineIsShown) {
-      this.logsElement.scrollTop = this.logsElement.scrollHeight;
+    if (this.logsElement.current && this.lastLineIsShown) {
+      this.logsElement.current.scrollTop = this.logsElement.current.scrollHeight;
     }
   }
 
@@ -88,50 +89,39 @@ export class PodLogs extends React.Component<Props> {
    * scrolling position
    * @param scrollHeight previous scrollHeight position before adding new lines
    */
-  loadMore = async (scrollHeight: number) => {
-    if (podLogsStore.lines < logRange) return;
+  loadMore = async () => {
+    const lines = podLogsStore.lines;
+    if (lines < logRange) return;
     this.preloading = true;
-    await podLogsStore.load(this.tabId).then(() => this.preloading = false);
-    if (this.logsElement.scrollHeight > scrollHeight) {
+    await podLogsStore.load(this.tabId);
+    this.preloading = false;
+    if (podLogsStore.lines > lines) {
       // Set scroll position back to place where preloading started
-      this.logsElement.scrollTop = this.logsElement.scrollHeight - scrollHeight - 48;
+      this.logsElement.current.scrollTop = (podLogsStore.lines - lines) * lineHeight;
     }
   }
 
   /**
-   * Computed prop which returns logs with or without timestamps added to each line and
-   * does separation between new and old logs
-   * @returns {Array} An array with 2 items - [oldLogs, newLogs]
+   * Computed prop which returns logs with or without timestamps added to each line
+   * @returns {Array} An array log items
    */
   @computed
-  get logs() {
+  get logs(): string[] {
     if (!podLogsStore.logs.has(this.tabId)) return [];
     const logs = podLogsStore.logs.get(this.tabId);
-    const { getData, removeTimestamps, newLogSince } = podLogsStore;
+    const { getData, removeTimestamps } = podLogsStore;
     const { showTimestamps } = getData(this.tabId);
-    let oldLogs: string[] = logs;
-    let newLogs: string[] = [];
-    if (newLogSince.has(this.tabId)) {
-      // Finding separator timestamp in logs
-      const index = logs.findIndex(item => item.includes(newLogSince.get(this.tabId)));
-      if (index !== -1) {
-        // Splitting logs to old and new ones
-        oldLogs = logs.slice(0, index);
-        newLogs = logs.slice(index);
-      }
-    }
     if (!showTimestamps) {
-      return [oldLogs, newLogs].map(logs => logs.map(item => removeTimestamps(item)))
+      return logs.map(item => removeTimestamps(item));
     }
-    return [oldLogs, newLogs];
+    return logs;
   }
 
-  onScroll = (evt: React.UIEvent<HTMLDivElement>) => {
-    const logsArea = evt.currentTarget;
-    const toBottomOffset = 100 * 16; // 100 lines * 16px (height of each line)
-    const { scrollHeight, clientHeight, scrollTop } = logsArea;
+  onScroll = debounce(() => {
+    const toBottomOffset = 100 * lineHeight; // 100 lines * 18px (height of each line)
+    const { scrollHeight, clientHeight, scrollTop } = this.logsElement.current;
     if (scrollTop === 0) {
-      this.loadMore(scrollHeight);
+      this.loadMore();
     }
     if (scrollHeight - scrollTop > toBottomOffset) {
       this.showJumpToBottom = true;
@@ -139,7 +129,21 @@ export class PodLogs extends React.Component<Props> {
       this.showJumpToBottom = false;
     }
     this.lastLineIsShown = clientHeight + scrollTop === scrollHeight;
-  };
+  }, 300);  // Debouncing to let virtual list do its internal works
+
+  /**
+   * A function is called by VirtualList for rendering each of the row
+   * @param index {Number} index of the log element in logs array
+   * @returns A react element with a row itself
+   */
+  getLogRow = (index: number) => {
+    const isSeparator = this.logs[index] === "---newlogs---"; // TODO: Use constant separator
+    return (
+      <div className={cssNames("LogRow", { separator: isSeparator })}>
+        {this.logs[index]}
+      </div>
+    );
+  }
 
   renderJumpToBottom() {
     if (!this.logsElement) return null;
@@ -149,8 +153,8 @@ export class PodLogs extends React.Component<Props> {
         className={cssNames("jump-to-bottom flex gaps", {active: this.showJumpToBottom})}
         onClick={evt => {
           evt.currentTarget.blur();
-          this.logsElement.scrollTo({
-            top: this.logsElement.scrollHeight,
+          this.logsElement.current.scrollTo({
+            top: this.logsElement.current.scrollHeight,
             behavior: "auto"
           });
         }}
@@ -162,11 +166,13 @@ export class PodLogs extends React.Component<Props> {
   }
 
   renderLogs() {
-    const [oldLogs, newLogs] = this.logs;
+    // Generating equal heights for each row with ability to do multyrow logs in future
+    // e. g. for wrapping logs feature
+    const rowHeights = new Array(this.logs.length).fill(lineHeight);
     if (!this.ready) {
       return <Spinner center/>;
     }
-    if (!oldLogs.length && !newLogs.length) {
+    if (!this.logs.length) {
       return (
         <div className="flex align-center justify-center">
           <Trans>There are no logs available for container.</Trans>
@@ -177,16 +183,16 @@ export class PodLogs extends React.Component<Props> {
       <>
         {this.preloading && (
           <div className="flex justify-center">
-            <Spinner />
+            <Spinner center />
           </div>
         )}
-        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(oldLogs.join("\n"))) }} />
-        {newLogs.length > 0 && (
-          <>
-            <p className="new-logs-sep" title={_i18n._(t`New logs since opening logs tab`)}/>
-            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(this.colorConverter.ansi_to_html(newLogs.join("\n"))) }} />
-          </>
-        )}
+        <VirtualListRef
+          items={this.logs}
+          rowHeights={rowHeights}
+          getRow={this.getLogRow}
+          onScroll={this.onScroll}
+          ref={this.logsElement}
+        />
       </>
     );
   }
@@ -211,7 +217,7 @@ export class PodLogs extends React.Component<Props> {
           showSubmitClose={false}
           showButtons={false}
         />
-        <div className="logs" onScroll={this.onScroll} ref={e => this.logsElement = e}>
+        <div className="logs">
           {this.renderJumpToBottom()}
           {this.renderLogs()}
         </div>
