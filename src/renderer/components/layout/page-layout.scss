@@ -6,21 +6,21 @@
   display: grid !important;
   grid-template-rows: min-content 1fr;
 
-  // global page, covers whole app screen
-  &.global {
+  // covers whole app view area
+  &.top {
     position: fixed !important; // allow to cover ClustersMenu
     z-index: 1;
+
+    // adds extra space for traffic-light top buttons (mac only)
+    .is-mac & > .header {
+      padding-top: $spacing * 2;
+    }
   }
 
   > .header {
     position: sticky;
     padding: $spacing;
     background-color: $layoutTabsBackground;
-
-    // add extra spacing for traffic-light top buttons (mac only)
-    .is-mac & {
-      padding-top: $spacing * 2;
-    }
   }
 
   > .content-wrapper {
@@ -45,6 +45,15 @@
 
   a {
     color: $colorInfo;
+  }
+
+  .SubTitle {
+    text-transform: none;
+    margin-bottom: 0 !important;
+
+    + * + .hint {
+      margin-top: -$padding / 2;
+    }
   }
 
   .Select {

@@ -2,7 +2,7 @@ import "./page-layout.scss"
 
 import React from "react";
 import { observer } from "mobx-react";
-import { cssNames, IClassName } from "../../utils";
+import { autobind, cssNames, IClassName } from "../../utils";
 import { Icon } from "../icon";
 import { navigation } from "../../navigation";
 
@@ -13,7 +13,8 @@ export interface PageLayoutProps extends React.DOMAttributes<any> {
   contentClass?: IClassName;
   provideBackButtonNavigation?: boolean;
   contentGaps?: boolean;
-  fullScreen?: boolean; // covers whole app view
+  showOnTop?: boolean; // covers whole app view
+  back?: (evt: React.MouseEvent | KeyboardEvent) => void;
 }
 
 const defaultProps: Partial<PageLayoutProps> = {
@@ -25,7 +26,14 @@ const defaultProps: Partial<PageLayoutProps> = {
 export class PageLayout extends React.Component<PageLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  back = () => navigation.goBack();
+  @autobind()
+  back(evt?: React.MouseEvent | KeyboardEvent) {
+    if (this.props.back) {
+      this.props.back(evt);
+    } else {
+      navigation.goBack();
+    }
+  }
 
   async componentDidMount() {
     window.addEventListener('keydown', this.onEscapeKey);
@@ -41,17 +49,18 @@ export class PageLayout extends React.Component<PageLayoutProps> {
     }
     if (evt.code === "Escape") {
       evt.stopPropagation();
-      this.back();
+      this.back(evt);
     }
   }
 
   render() {
     const {
-      className, contentClass, header, headerClass, provideBackButtonNavigation,
-      contentGaps, fullScreen, children, ...elemProps
+      contentClass, header, headerClass, provideBackButtonNavigation,
+      contentGaps, showOnTop, children, ...elemProps
     } = this.props;
+    const className = cssNames("PageLayout", { top: showOnTop }, this.props.className);
     return (
-      <div {...elemProps} className={cssNames("PageLayout", className, { global: fullScreen })}>
+      <div {...elemProps} className={className}>
         <div className={cssNames("header flex gaps align-center", headerClass)}>
           {header}
           {provideBackButtonNavigation && (

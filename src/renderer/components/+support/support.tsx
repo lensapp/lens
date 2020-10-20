@@ -10,7 +10,7 @@ import { PageLayout } from "../layout/page-layout";
 export class Support extends React.Component {
   render() {
     return (
-      <PageLayout fullScreen className="Support" header={<h2>Support</h2>}>
+      <PageLayout showOnTop className="Support" header={<h2>Support</h2>}>
         <h2><Trans>Community Slack Channel</Trans></h2>
         <p>
           <Trans>Ask a question, see what's being discussed, join the conversation <a className="supportLink" href={slackUrl} target="_blank">here</a></Trans>{" "}
