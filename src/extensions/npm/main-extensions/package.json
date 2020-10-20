@@ -1,0 +1,15 @@
+{
+  "name": "@k8slens/main-extensions",
+  "productName": "Lens extensions",
+  "description": "Lens - The Kubernetes IDE: extensions",
+  "version": "0.0.0",
+  "copyright": "© 2020, Mirantis, Inc.",
+  "license": "MIT",
+  "files": [
+    "api.d.ts"
+  ],
+  "author": {
+    "name": "Mirantis, Inc.",
+    "email": "info@k8slens.dev"
+  }
+}

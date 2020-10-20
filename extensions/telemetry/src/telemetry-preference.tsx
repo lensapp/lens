@@ -1,4 +1,4 @@
-import { Component } from "@lens/ui-extensions"
+import { Component } from "@k8slens/renderer-extensions"
 import React from "react"
 import { observer } from "mobx-react";
 import { TelemetryPreferencesStore } from "./telemetry-preferences-store"

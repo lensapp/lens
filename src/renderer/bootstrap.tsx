@@ -2,7 +2,7 @@ import "./components/app.scss"
 import React from "react";
 import * as Mobx from "mobx"
 import * as LensMainExtensions from "../extensions/extension-api"
-import * as LensExtensions from "../extensions/extension-renderer-api"
+import * as LensRendererExtensions from "../extensions/extension-renderer-api"
 import { render, unmountComponentAtNode } from "react-dom";
 import { isMac } from "../common/vars";
 import { userStore } from "../common/user-store";
@@ -20,7 +20,7 @@ type AppComponent = React.ComponentType & {
 export {
   React,
   Mobx,
-  LensExtensions,
+  LensRendererExtensions,
   LensMainExtensions
 }
 

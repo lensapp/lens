@@ -1,12 +1,12 @@
-import { Singleton, appEventBus, AppEvent } from "@lens/extensions"
+import { EventBus, Util } from "@k8slens/main-extensions"
 import ua from "universal-analytics"
 import { machineIdSync } from "node-machine-id"
 import { telemetryPreferencesStore } from "./telemetry-preferences-store"
 
-export class Tracker extends Singleton {
+export class Tracker extends Util.Singleton {
   static readonly GA_ID = "UA-159377374-1"
 
-  protected eventHandlers: Array<(ev: AppEvent ) => void> = []
+  protected eventHandlers: Array<(ev: EventBus.AppEvent ) => void> = []
   protected started = false
   protected visitor: ua.Visitor
   protected machineId: string = null;
@@ -31,11 +31,11 @@ export class Tracker extends Singleton {
 
     this.started = true
 
-    const handler = (ev: AppEvent) => {
+    const handler = (ev: EventBus.AppEvent) => {
       this.event(ev.name, ev.action, ev.params)
     }
     this.eventHandlers.push(handler)
-    appEventBus.addListener(handler)
+    EventBus.appEventBus.addListener(handler)
   }
 
   stop() {
@@ -44,7 +44,7 @@ export class Tracker extends Singleton {
     this.started = false
 
     for (const handler of this.eventHandlers) {
-      appEventBus.removeListener(handler)
+      EventBus.appEventBus.removeListener(handler)
     }
   }
 

@@ -17,7 +17,7 @@ module.exports = [
     },
     externals: [
       {
-        "@lens/extensions": "var global.LensExtensions",
+        "@k8slens/main-extensions": "var global.LensMainExtensions",
         "react": "var global.React",
         "mobx": "var global.Mobx"
       }
@@ -48,8 +48,8 @@ module.exports = [
     },
     externals: [
       {
-        "@lens/ui-extensions": "var global.LensExtensions",
-        "@lens/extensions": "var global.LensMainExtensions",
+        "@k8slens/renderer-extensions": "var global.LensRendererExtensions",
+        "@k8slens/main-extensions": "var global.LensMainExtensions",
         "react": "var global.React",
         "mobx": "var global.Mobx"
       }
