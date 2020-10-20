@@ -1,2 +1,2 @@
-export { DynamicPageType, PageRegistry } from "../page-registry"
-export { AppPreferenceRegistry } from "../app-preference-registry"
+export { PageRegistryType, PageRegistry, PageRegistration, PageComponents } from "../page-registry"
+export { AppPreferenceRegistry, AppPreferenceComponents, AppPreferenceRegistration } from "../app-preference-registry"

@@ -9,7 +9,7 @@ export default class ExampleExtension extends LensRendererExtension {
   registerPages(registry: Registry.PageRegistry) {
     this.disposers.push(
       registry.add({
-        type: Registry.DynamicPageType.CLUSTER,
+        type: Registry.PageRegistryType.CLUSTER,
         path: "/extension-example",
         title: "Example Extension",
         components: {

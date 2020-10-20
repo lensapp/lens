@@ -5,7 +5,6 @@ import { observer } from "mobx-react";
 import { Icon } from "../icon";
 import { WorkspaceMenu } from "../+workspaces/workspace-menu";
 import { workspaceStore } from "../../../common/workspace-store";
-import { supportURL } from "../+support/support.route";
 import { navigate } from "../../navigation";
 
 @observer
@@ -24,7 +23,7 @@ export class BottomBar extends React.Component {
           material="support"
           tooltip="Support"
           className="support-icon box right"
-          onClick={() => navigate(supportURL())}
+          onClick={() => navigate("/support")}
         />
       </div>
     )

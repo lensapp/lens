@@ -7,7 +7,6 @@ import { ClustersMenu } from "./clusters-menu";
 import { BottomBar } from "./bottom-bar";
 import { LandingPage, landingRoute, landingURL } from "../+landing-page";
 import { Preferences, preferencesRoute } from "../+preferences";
-import { Support, supportRoute } from "../+support";
 import { Workspaces, workspacesRoute } from "../+workspaces";
 import { AddCluster, addClusterRoute } from "../+add-cluster";
 import { ClusterView } from "./cluster-view";
@@ -60,13 +59,12 @@ export class ClusterManager extends React.Component {
           <Switch>
             <Route component={LandingPage} {...landingRoute} />
             <Route component={Preferences} {...preferencesRoute} />
-            <Route component={Support} {...supportRoute} />
             <Route component={Workspaces} {...workspacesRoute} />
             <Route component={AddCluster} {...addClusterRoute} />
             <Route component={ClusterView} {...clusterViewRoute} />
             <Route component={ClusterSettings} {...clusterSettingsRoute} />
-            {pageRegistry.globalPages.map(({ path, components: { Page } }) => {
-              return <Route key={path} path={path} component={Page}/>
+            {pageRegistry.globalPages.map(({ path, url = String(path), components: { Page } }) => {
+              return <Route key={url} path={path} component={Page}/>
             })}
             <Redirect exact to={this.startUrl} />
           </Switch>

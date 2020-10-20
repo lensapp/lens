@@ -2,11 +2,11 @@
 
 import logger from "../main/logger";
 
-export interface LensExtensionRuntimeEnv {
+export interface LensExtensionMainRuntimeEnv {
   logger: typeof logger;
 }
 
-export function getLensRuntime(): LensExtensionRuntimeEnv {
+export function getLensRuntime(): LensExtensionMainRuntimeEnv {
   return {
     logger
   }

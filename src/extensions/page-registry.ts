@@ -7,38 +7,37 @@ import { IconProps } from "../renderer/components/icon";
 import { IClassName } from "../renderer/utils";
 import { TabRoute } from "../renderer/components/layout/tab-layout";
 
-export enum DynamicPageType {
+export enum PageRegistryType {
   GLOBAL = "lens-scope",
   CLUSTER = "cluster-view-scope",
 }
 
 export interface PageRegistration extends RouteProps {
+  type: PageRegistryType;
+  components: PageComponents;
   className?: IClassName;
   url?: string; // initial url to be used for building menus and tabs, otherwise "path" applied by default
-  path: string; // route-path
-  title: React.ReactNode; // used in sidebar's & tabs-layout
-  type: DynamicPageType;
-  components: PageComponents;
+  title?: React.ReactNode; // used in sidebar's & tabs-layout if provided
   subPages?: (PageRegistration & TabRoute)[];
 }
 
 export interface PageComponents {
   Page: React.ComponentType<any>;
-  MenuIcon: React.ComponentType<IconProps>;
+  MenuIcon?: React.ComponentType<IconProps>;
 }
 
 export class PageRegistry {
   protected pages = observable.array<PageRegistration>([], { deep: false });
 
   @computed get globalPages() {
-    return this.pages.filter(page => page.type === DynamicPageType.GLOBAL);
+    return this.pages.filter(page => page.type === PageRegistryType.GLOBAL);
   }
 
   @computed get clusterPages() {
-    return this.pages.filter(page => page.type === DynamicPageType.CLUSTER);
+    return this.pages.filter(page => page.type === PageRegistryType.CLUSTER);
   }
 
-  // todo: verify paths to avoid collision with existing pages
+  // fixme: validate route paths to avoid collisions
   add(params: PageRegistration) {
     this.pages.push(params);
     return () => {

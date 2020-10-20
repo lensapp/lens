@@ -9,11 +9,10 @@
     "styles": []
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "dev": "npm run build --watch"
+    "build": "webpack -p",
+    "dev": "webpack --watch"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",

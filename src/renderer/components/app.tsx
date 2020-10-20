@@ -38,8 +38,8 @@ import { webFrame } from "electron";
 import { pageRegistry } from "../../extensions/page-registry";
 import { DynamicPage } from "../../extensions/dynamic-page";
 import { extensionLoader } from "../../extensions/extension-loader";
-import { getLensRuntime } from "../../extensions/lens-runtime";
-import { appEventBus } from "../../common/event-bus"
+import { getLensRuntimeRenderer } from "../../extensions/lens-renderer-runtime";
+import { appEventBus } from "../../common/event-bus"
 
 @observer
 export class App extends React.Component {
@@ -51,7 +51,7 @@ export class App extends React.Component {
 
     await clusterIpc.setFrameId.invokeFromRenderer(clusterId, frameId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
-    extensionLoader.loadOnClusterRenderer(getLensRuntime)
+    extensionLoader.loadOnClusterRenderer(getLensRuntimeRenderer)
     appEventBus.emit({name: "cluster", action: "open", params: {
       clusterId: clusterId
     }})
@@ -83,7 +83,7 @@ export class App extends React.Component {
                 <Route component={UserManagement} {...usersManagementRoute}/>
                 <Route component={Apps} {...appsRoute}/>
                 {pageRegistry.clusterPages.map(page => {
-                  return <Route {...page} key={page.path} render={() => <DynamicPage page={page}/>}/>
+                  return <Route {...page} key={String(page.path)} render={() => <DynamicPage page={page}/>}/>
                 })}
                 <Redirect exact from="/" to={this.startURL}/>
                 <Route component={NotFound}/>

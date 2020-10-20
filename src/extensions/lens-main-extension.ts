@@ -1,11 +1,17 @@
 import { LensExtension } from "./lens-extension"
+import type { MenuRegistry } from "./menu-registry";
+import type { StatusBarRegistry } from "./status-bar-registry";
 
 export class LensMainExtension extends LensExtension {
-  async registerAppMenus() {
+  registerAppMenus(registry: MenuRegistry) {
     //
   }
 
-  async registerPrometheusProviders(registry: any) {
+  registerStatusBarIcon(registry: StatusBarRegistry) {
+    //
+  }
+
+  registerPrometheusProviders(registry: any) {
     //
   }
 }

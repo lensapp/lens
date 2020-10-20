@@ -1,4 +1,3 @@
-import type { LensExtensionRuntimeEnv } from "./lens-runtime";
 import { readJsonSync } from "fs-extra";
 import { action, observable, toJS } from "mobx";
 import logger from "../main/logger";
@@ -34,7 +33,7 @@ export class LensExtension implements ExtensionModel {
   @observable manifest: ExtensionManifest;
   @observable manifestPath: string;
   @observable isEnabled = false;
-  @observable.ref runtime: LensExtensionRuntimeEnv;
+  @observable.ref runtime: any;
 
   constructor(model: ExtensionModel, manifest: ExtensionManifest) {
     this.importModel(model, manifest);
@@ -56,7 +55,7 @@ export class LensExtension implements ExtensionModel {
     // mock
   }
 
-  async enable(runtime: LensExtensionRuntimeEnv) {
+  async enable(runtime: any) {
     this.isEnabled = true;
     this.runtime = runtime;
     logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
