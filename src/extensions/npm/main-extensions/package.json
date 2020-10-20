@@ -1,5 +1,5 @@
 {
-  "name": "@k8slens/extensions",
+  "name": "@k8slens/main-extensions",
   "productName": "Lens extensions",
   "description": "Lens - The Kubernetes IDE: extensions",
   "version": "0.0.0",
