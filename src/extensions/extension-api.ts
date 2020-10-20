@@ -1,9 +1,14 @@
 // Lens-extensions api developer's kit
 export type { LensExtensionRuntimeEnv } from "./lens-runtime";
+export * from "./lens-main-extension"
 
 // APIs
-export * from "./lens-main-extension"
-export { BaseStore } from "../common/base-store"
-export { appEventBus } from "../common/event-bus"
-export type { AppEvent } from "../common/event-bus"
-export { Singleton } from "../common/utils"
+import * as EventBus from "./main-api/event-bus"
+import * as Store from "./main-api/stores"
+import * as Util from "./main-api/utils"
+
+export {
+  EventBus,
+  Store,
+  Util
+}
