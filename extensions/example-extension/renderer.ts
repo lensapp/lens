@@ -1,4 +1,4 @@
-import { Registry, LensRendererExtension } from "@lens/ui-extensions";
+import { Registry, LensRendererExtension } from "@k8slens/renderer-extensions";
 import { examplePage, ExtensionIcon } from "./page"
 
 export default class ExampleExtension extends LensRendererExtension {

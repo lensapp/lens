@@ -24,7 +24,7 @@
   },
   "include": [
     "renderer.ts",
-    "../../types/",
+    "../../src/extensions/npm/**/*.d.ts",
     "src/**/*"
   ],
 }
