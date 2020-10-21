@@ -59,9 +59,7 @@ export class CrdResources extends React.Component<Props> {
     extraColumns.forEach(column => {
       sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.query(item, column.jsonPath.slice(1))
     })
-    // todo: merge extra columns and other params to predefined view
-    const { List } = apiManager.getViews(crd.getResourceApiBase());
-    const ListView = List || KubeObjectListLayout;
+    const ListView = KubeObjectListLayout;
     return (
       <ListView
         className="CrdResources"
@@ -102,10 +100,6 @@ export class CrdResources extends React.Component<Props> {
 }
 
 export function CrdResourceMenu(props: KubeObjectMenuProps<KubeObject>) {
-  const { Menu } = apiManager.getViews(props.object.selfLink);
-  if (Menu) {
-    return <Menu {...props}/>
-  }
   return (
     <KubeObjectMenu {...props}/>
   )

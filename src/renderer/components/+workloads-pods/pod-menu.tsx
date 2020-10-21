@@ -12,6 +12,7 @@ import { terminalStore, createTerminalTab } from "../dock/terminal.store";
 import { _i18n } from "../../i18n";
 import { hideDetails } from "../../navigation";
 import { createPodLogsTab } from "../dock/pod-logs.store";
+import { kubeObjectMenuRegistry } from "../../api/kube-object-menu-registry";
 
 interface Props extends KubeObjectMenuProps<Pod> {
 }
@@ -123,12 +124,11 @@ export class PodMenu extends React.Component<Props> {
   }
 
   render() {
-    const { ...menuProps } = this.props;
     return (
-      <KubeObjectMenu {...menuProps} className="PodMenu">
+      <>
         {this.renderShellMenu()}
         {this.renderLogsMenu()}
-      </KubeObjectMenu>
+      </>
     )
   }
 }

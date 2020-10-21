@@ -1,1 +1,1 @@
-export { navigate } from "../../renderer/navigation"
+export { navigate, hideDetails, showDetails } from "../../renderer/navigation"

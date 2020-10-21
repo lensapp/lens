@@ -11,6 +11,8 @@ import { Spinner } from "../spinner";
 import { apiManager, ApiComponents } from "../../api/api-manager";
 import { crdStore } from "../+custom-resources/crd.store";
 import { CrdResourceDetails, CrdResourceMenu } from "../+custom-resources";
+import { KubeObjectMenu } from "./kube-object-menu"
+import { kubeObjectDetailRegistry } from "../../api/kube-object-details-registry";
 
 export interface KubeObjectDetailsProps<T = KubeObject> {
   className?: string;
@@ -65,11 +67,14 @@ export class KubeObjectDetails extends React.Component {
     const isOpen = !!(object || isLoading || loadingError);
     let title = "";
     let apiComponents: ApiComponents;
+    let details: JSX.Element[];
     if (object) {
-      const { kind, getName, selfLink } = object;
+      const { kind, getName } = object;
       title = `${kind}: ${getName()}`;
-      apiComponents = apiManager.getViews(selfLink);
-      if (isCrdInstance && !apiComponents.Details) {
+      details = kubeObjectDetailRegistry.getItemsForKind(object.kind, object.apiVersion).map((item, index) => {
+        return <item.components.Details object={object} key={`object-details-${index}`}/>
+      })
+      if (isCrdInstance && details.length === 0) {
         apiComponents.Details = CrdResourceDetails
         apiComponents.Menu = CrdResourceMenu
       }
@@ -79,12 +84,12 @@ export class KubeObjectDetails extends React.Component {
         className="KubeObjectDetails flex column"
         open={isOpen}
         title={title}
-        toolbar={apiComponents && apiComponents.Menu && <apiComponents.Menu object={object} toolbar/>}
+        toolbar={<KubeObjectMenu object={object} toolbar={true} />}
         onClose={hideDetails}
       >
         {isLoading && <Spinner center/>}
         {loadingError && <div className="box center">{loadingError}</div>}
-        {apiComponents && apiComponents.Details && <apiComponents.Details object={object}/>}
+        {details}
       </Drawer>
     )
   }

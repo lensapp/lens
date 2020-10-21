@@ -8,9 +8,7 @@ import { Link } from "react-router-dom";
 import { stopPropagation } from "../../utils";
 import { KubeObjectListLayout } from "../kube-object";
 import { crdStore } from "./crd.store";
-import { apiManager } from "../../api/api-manager";
-import { crdApi, CustomResourceDefinition } from "../../api/endpoints/crd.api";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { Select, SelectOption } from "../select";
 import { navigation, setQueryParams } from "../../navigation";
 import { Icon } from "../icon";
@@ -103,20 +101,8 @@ export class CrdList extends React.Component {
             crd.getAge(),
           ]
         }}
-        renderItemMenu={(item: CustomResourceDefinition) => {
-          return <CRDMenu object={item}/>
-        }}
       />
     )
   }
 }
 
-export function CRDMenu(props: KubeObjectMenuProps<CustomResourceDefinition>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(crdApi, {
-  Menu: CRDMenu,
-});

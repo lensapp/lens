@@ -64,20 +64,7 @@ export class PodDisruptionBudgets extends React.Component<Props> {
             pdb.getAge(),
           ]
         }}
-        renderItemMenu={(pdb: PodDisruptionBudget) => {
-          return <PodDisruptionBudgetsMenu object={pdb}/>
-        }}
       />
     );
   }
 }
-
-export function PodDisruptionBudgetsMenu(props: KubeObjectMenuProps<PodDisruptionBudget>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(pdbApi, {
-  Menu: PodDisruptionBudgetsMenu,
-})

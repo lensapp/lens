@@ -48,9 +48,6 @@ export class ResourceQuotas extends React.Component<Props> {
             resourceQuota.getNs(),
             resourceQuota.getAge(),
           ]}
-          renderItemMenu={(item: ResourceQuota) => {
-            return <ResourceQuotaMenu object={item}/>
-          }}
           addRemoveButtons={{
             onAdd: () => AddQuotaDialog.open(),
             addTooltip: <Trans>Create new ResourceQuota</Trans>
@@ -61,13 +58,3 @@ export class ResourceQuotas extends React.Component<Props> {
     );
   }
 }
-
-export function ResourceQuotaMenu(props: KubeObjectMenuProps<ResourceQuota>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  );
-}
-
-apiManager.registerViews(resourceQuotaApi, {
-  Menu: ResourceQuotaMenu,
-})

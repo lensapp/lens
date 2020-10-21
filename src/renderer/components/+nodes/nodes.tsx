@@ -17,7 +17,7 @@ import { bytesToUnits } from "../../utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
-import { apiManager } from "../../api/api-manager";
+import { kubeObjectMenuRegistry } from "../../api/kube-object-menu-registry"
 
 enum sortBy {
   name = "name",
@@ -178,15 +178,8 @@ export class Nodes extends React.Component<Props> {
               this.renderConditions(node),
             ]
           }}
-          renderItemMenu={(item: Node) => {
-            return <NodeMenu object={item}/>
-          }}
         />
       </TabLayout>
     )
   }
 }
-
-apiManager.registerViews(nodesApi, {
-  Menu: NodeMenu,
-});

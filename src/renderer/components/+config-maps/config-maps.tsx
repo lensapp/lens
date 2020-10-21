@@ -50,20 +50,8 @@ export class ConfigMaps extends React.Component<Props> {
           configMap.getKeys().join(", "),
           configMap.getAge(),
         ]}
-        renderItemMenu={(item: ConfigMap) => {
-          return <ConfigMapMenu object={item}/>
-        }}
       />
     );
   }
 }
 
-export function ConfigMapMenu(props: KubeObjectMenuProps<ConfigMap>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(configMapApi, {
-  Menu: ConfigMapMenu,
-})

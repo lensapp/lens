@@ -8,6 +8,7 @@ import logger from "../main/logger"
 import { app, remote, ipcRenderer } from "electron"
 import { pageRegistry } from "./page-registry";
 import { appPreferenceRegistry } from "./app-preference-registry"
+import { kubeObjectMenuRegistry } from "../renderer/api/kube-object-menu-registry"
 
 export interface InstalledExtension extends ExtensionModel {
   manifestPath: string;
@@ -39,6 +40,7 @@ export class ExtensionLoader {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer')
     this.autoloadExtensions(getLensRuntimeEnv, (instance: LensRendererExtension) => {
       instance.registerPages(pageRegistry)
+      instance.registerKubeObjectMenus(kubeObjectMenuRegistry)
     })
   }
 

@@ -52,7 +52,7 @@ export function NodeMenu(props: KubeObjectMenuProps<Node>) {
   }
 
   return (
-    <KubeObjectMenu {...props}>
+    <>
       <MenuItem onClick={shell}>
         <Icon svg="ssh" interactive={toolbar} title={_i18n._(t`Node shell`)}/>
         <span className="title"><Trans>Shell</Trans></span>
@@ -73,6 +73,6 @@ export function NodeMenu(props: KubeObjectMenuProps<Node>) {
         <Icon material="delete_sweep" title={_i18n._(t`Drain`)} interactive={toolbar}/>
         <span className="title"><Trans>Drain</Trans></span>
       </MenuItem>
-    </KubeObjectMenu>
+    </>
   );
 }

@@ -9,7 +9,6 @@ import { cssNames } from "../../utils";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { apiManager } from "../../api/api-manager";
 import { crdStore } from "./crd.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Input } from "../input";
@@ -39,20 +38,13 @@ export class CrdResourceDetails extends React.Component<Props> {
     return crdStore.getByObject(this.props.object);
   }
 
-  @computed get CustomDetailsViews() {
-    return apiManager.getViews(this.props.object.selfLink).Details;
-  }
-
   render() {
     const { object } = this.props;
-    const { crd, CustomDetailsViews } = this;
+    const { crd } = this;
     if (!object || !crd) return null;
     const className = cssNames("CrdResourceDetails", crd.getResourceKind());
     const extraColumns = crd.getPrinterColumns();
     const showStatus = !extraColumns.find(column => column.name == "Status") && object.status?.conditions;
-    if (CustomDetailsViews) {
-      return <CustomDetailsViews className={className} object={object}/>
-    }
     return (
       <div className={className}>
         <KubeObjectMeta object={object}/>

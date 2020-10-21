@@ -9,7 +9,7 @@ import { RouteComponentProps } from "react-router";
 import { volumeClaimStore } from "../+storage-volume-claims/volume-claim.store";
 import { IPodsRouteParams } from "../+workloads";
 import { eventStore } from "../+events/event.store";
-import { KubeObjectListLayout } from "../kube-object";
+import { KubeObjectListLayout, KubeObjectMenu } from "../kube-object";
 import { Pod, podsApi } from "../../api/endpoints";
 import { PodMenu } from "./pod-menu";
 import { StatusBrick } from "../status-brick";
@@ -20,7 +20,6 @@ import toPairs from "lodash/toPairs";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import { lookupApiLink } from "../../api/kube-api";
-import { apiManager } from "../../api/api-manager";
 
 enum sortBy {
   name = "name",
@@ -119,14 +118,7 @@ export class Pods extends React.Component<Props> {
           pod.getAge(),
           { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) }
         ]}
-        renderItemMenu={(item: Pod) => {
-          return <PodMenu object={item}/>
-        }}
       />
     )
   }
 }
-
-apiManager.registerViews(podsApi, {
-  Menu: PodMenu,
-})
