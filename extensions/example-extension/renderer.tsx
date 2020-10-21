@@ -1,5 +1,6 @@
-import { Registry, LensRendererExtension } from "@k8slens/renderer-extensions";
-import { examplePage, ExtensionIcon } from "./page"
+import { LensRendererExtension, Registry } from "@k8slens/extensions";
+import { ExamplePage, ExampleIcon } from "./page"
+import React from "react"
 
 export default class ExampleExtension extends LensRendererExtension {
   onActivate() {
@@ -13,8 +14,8 @@ export default class ExampleExtension extends LensRendererExtension {
         path: "/extension-example",
         title: "Example Extension",
         components: {
-          Page: examplePage(this),
-          MenuIcon: ExtensionIcon,
+          Page: () => <ExamplePage extension={this} />,
+          MenuIcon: ExampleIcon,
         }
       })
     )

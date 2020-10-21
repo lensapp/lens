@@ -10,24 +10,11 @@ import ignoreImport from 'rollup-plugin-ignore-import'
 const config: RollupOptions = {
   input: "src/extensions/extension-api.ts",
   output: [
-    { file: "src/extensions/npm/main-extensions/api.d.ts", format: "es", }
+    { file: "src/extensions/npm/extensions/api.d.ts", format: "es", }
   ],
   plugins: [
     dts(),
-    dtsModuleWrap({ name: "@k8slens/main-extensions" }),
-    ignoreImport({ extensions: ['.scss'] }),
-    json(),
-  ],
-};
-
-const rendererConfig: RollupOptions = {
-  input: "src/extensions/extension-renderer-api.ts",
-  output: [
-    { file: "src/extensions/npm/renderer-extensions/api.d.ts", format: "es", }
-  ],
-  plugins: [
-    dts(),
-    dtsModuleWrap({ name: "@k8slens/renderer-extensions" }),
+    dtsModuleWrap({ name: "@k8slens/extensions" }),
     ignoreImport({ extensions: ['.scss'] }),
     json(),
   ],
@@ -67,4 +54,4 @@ function dtsModuleWrap({ name }: { name: string }): Plugin {
   }
 }
 
-export default [config, rendererConfig];
+export default [config];

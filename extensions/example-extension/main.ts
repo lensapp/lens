@@ -1,4 +1,4 @@
-import { LensMainExtension } from "@k8slens/main-extensions";
+import { LensMainExtension } from "@k8slens/extensions";
 
 export default class ExampleExtensionMain extends LensMainExtension {
   onActivate() {

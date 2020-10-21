@@ -1,4 +1,4 @@
-import { Registry, LensRendererExtension } from "@k8slens/renderer-extensions";
+import { LensRendererExtension, Registry } from "@k8slens/extensions";
 import { telemetryPreferencesStore } from "./src/telemetry-preferences-store"
 import { TelemetryPreferenceHint, TelemetryPreferenceInput } from "./src/telemetry-preference"
 import { tracker } from "./src/tracker"
@@ -8,7 +8,7 @@ export default class TelemetryRendererExtension extends LensRendererExtension {
   async onActivate() {
     console.log("telemetry extension activated")
     tracker.start()
-    await telemetryPreferencesStore.load()
+    await telemetryPreferencesStore.loadExtension(this)
   }
 
   registerAppPreferences(registry: Registry.AppPreferenceRegistry) {

@@ -17,7 +17,7 @@ import { clusterStore } from "../common/cluster-store"
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
 import { appEventBus } from "../common/event-bus"
-import * as LensMainExtensions from "../extensions/extension-api";
+import * as LensExtensions from "../extensions/core-extension-api";
 import { extensionManager } from "../extensions/extension-manager";
 import { extensionLoader } from "../extensions/extension-loader";
 import { getLensRuntime } from "../extensions/lens-runtime";
@@ -25,7 +25,7 @@ import logger from "./logger"
 import * as Mobx from "mobx"
 
 export {
-  LensMainExtensions,
+  LensExtensions,
   Mobx
 }
 
