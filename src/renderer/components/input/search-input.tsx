@@ -48,6 +48,9 @@ export class SearchInput extends React.Component<Props> {
     if (this.props.updateUrl) {
       this.updateUrl.flush();
     }
+    if (this.props.onChange) {
+      this.props.onChange("", null);
+    }
   }
 
   onChange = (val: string, evt: React.ChangeEvent<any>) => {

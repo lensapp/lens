@@ -95,7 +95,7 @@ export const PodLogControls = observer((props: Props) => {
           </>
         )}
       </div>
-      <div className="flex gaps">
+      <div className="flex box grow gaps align-center">
         <Icon
           material="av_timer"
           onClick={toggleTimestamps}
