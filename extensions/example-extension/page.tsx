@@ -1,13 +1,14 @@
-import { Component, LensRendererExtension } from "@k8slens/renderer-extensions";
+import { LensRendererExtension } from "@k8slens/core-extensions";
+import { Component } from "@k8slens/renderer-extensions";
 import { CoffeeDoodle } from "react-open-doodles";
 import path from "path";
 import React from "react"
 
-export function ExtensionIcon(props: Component.IconProps) {
+export function ExampleIcon(props: Component.IconProps) {
   return <Component.Icon {...props} material="pages" tooltip={path.basename(__filename)}/>
 }
 
-export class ExtensionPage extends React.Component<{ extension: LensRendererExtension }> {
+export class ExamplePage extends React.Component<{ extension: LensRendererExtension }> {
   deactivate = () => {
     const { extension } = this.props;
     extension.disable();
@@ -26,8 +27,4 @@ export class ExtensionPage extends React.Component<{ extension: LensRendererExte
       </div>
     )
   }
-}
-
-export function examplePage(ext: LensRendererExtension) {
-  return () => <ExtensionPage extension={ext} />
 }

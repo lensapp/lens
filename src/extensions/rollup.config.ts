@@ -8,20 +8,20 @@ import dts from "rollup-plugin-dts";
 import ignoreImport from 'rollup-plugin-ignore-import'
 
 const config: RollupOptions = {
-  input: "src/extensions/extension-api.ts",
+  input: "src/extensions/core-extension-api.ts",
   output: [
-    { file: "src/extensions/npm/main-extensions/api.d.ts", format: "es", }
+    { file: "src/extensions/npm/core-extensions/api.d.ts", format: "es", }
   ],
   plugins: [
     dts(),
-    dtsModuleWrap({ name: "@k8slens/main-extensions" }),
+    dtsModuleWrap({ name: "@k8slens/core-extensions" }),
     ignoreImport({ extensions: ['.scss'] }),
     json(),
   ],
 };
 
 const rendererConfig: RollupOptions = {
-  input: "src/extensions/extension-renderer-api.ts",
+  input: "src/extensions/renderer-extension-api.ts",
   output: [
     { file: "src/extensions/npm/renderer-extensions/api.d.ts", format: "es", }
   ],

@@ -1,7 +1,7 @@
 {
-  "name": "@k8slens/main-extensions",
-  "productName": "Lens extensions",
-  "description": "Lens - The Kubernetes IDE: extensions",
+  "name": "@k8slens/core-extensions",
+  "productName": "Lens core extensions",
+  "description": "Lens - The Kubernetes IDE: core extensions",
   "version": "0.0.0",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",

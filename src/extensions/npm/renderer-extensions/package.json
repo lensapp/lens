@@ -1,7 +1,7 @@
 {
   "name": "@k8slens/renderer-extensions",
-  "productName": "Lens extensions",
-  "description": "Lens - The Kubernetes IDE: extensions",
+  "productName": "Lens renderer extensions",
+  "description": "Lens - The Kubernetes IDE: renderer extensions",
   "version": "0.0.0",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",

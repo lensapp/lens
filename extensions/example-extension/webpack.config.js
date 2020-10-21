@@ -17,8 +17,9 @@ module.exports = [
     },
     externals: [
       {
-        "@k8slens/main-extensions": "var global.LensMainExtensions",
+        "@k8slens/core-extensions": "var global.LensCoreExtensions",
         "mobx": "var global.Mobx",
+        "react": "var global.React"
       }
     ],
     resolve: {
@@ -31,7 +32,7 @@ module.exports = [
     },
   },
   {
-    entry: './renderer.ts',
+    entry: './renderer.tsx',
     context: __dirname,
     target: "electron-renderer",
     mode: "production",
@@ -47,6 +48,7 @@ module.exports = [
     externals: [
       {
         "@k8slens/renderer-extensions": "var global.LensRendererExtensions",
+        "@k8slens/core-extensions": "var global.LensCoreExtensions",
         "react": "var global.React",
         "mobx": "var global.Mobx"
       }
