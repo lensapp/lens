@@ -4,7 +4,7 @@ import "./virtual-list.scss";
 
 import React, { Component } from "react";
 import { observer } from "mobx-react";
-import { ListChildComponentProps, VariableSizeList } from "react-window";
+import { Align, ListChildComponentProps, VariableSizeList } from "react-window";
 import { cssNames, noop } from "../../utils";
 import { TableRowProps } from "../table/table-row";
 import { ItemObject } from "../../item.store";
@@ -83,8 +83,8 @@ export class VirtualList extends Component<Props, State> {
     this.listRef.current.scrollToItem(index, "start");
   })
 
-  scrollToItem = (index: number) => {
-    this.listRef.current.scrollToItem(index)
+  scrollToItem = (index: number, align: Align) => {
+    this.listRef.current.scrollToItem(index, align)
   }
 
   render() {

@@ -118,8 +118,8 @@ export class PodLogs extends React.Component<Props> {
   @autobind()
   toOverlay() {
     const { activeOverlayLine } = searchStore;
-    if (!this.virtualListRef.current || activeOverlayLine == -1) return;
-    this.virtualListRef.current.scrollToItem(activeOverlayLine);
+    if (!this.virtualListRef.current || activeOverlayLine === undefined) return;
+    this.virtualListRef.current.scrollToItem(activeOverlayLine, "center");
   }
 
   /**

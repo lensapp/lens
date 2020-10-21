@@ -106,9 +106,10 @@ export class SearchStore {
     return value.replace( /[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&" );
   }
 
+  @action
   reset() {
     this.searchQuery = "";
-    this.activeOverlayIndex = -1
+    this.activeOverlayIndex = -1;
   }
 }
 
