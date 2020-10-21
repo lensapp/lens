@@ -112,9 +112,11 @@ export class BaseStore<T = any> extends Singleton {
 
   protected onSync(model: T) {
     // todo: use "resourceVersion" if merge required (to avoid equality checks => better performance)
-    if (!isEqual(this.toJSON(), model)) {
-      this.fromStore(model);
-    }
+    this.applyWithoutSync(() => {
+      if (!isEqual(this.toJSON(), model)) {
+        this.fromStore(model);
+      }
+    })
   }
 
   protected async onModelChange(model: T) {
