@@ -9,15 +9,13 @@ import { nodesStore } from "./nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { INodesRouteParams } from "./nodes.route";
-import { Node, nodesApi } from "../../api/endpoints/nodes.api";
-import { NodeMenu } from "./node-menu";
+import { Node } from "../../api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
 import { _i18n } from "../../i18n";
 import { bytesToUnits } from "../../utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
-import { kubeObjectMenuRegistry } from "../../api/kube-object-menu-registry"
 
 enum sortBy {
   name = "name",
