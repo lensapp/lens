@@ -7,7 +7,6 @@ import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObject } from "../../api/kube-object";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { ICRDRouteParams } from "./crd.route";
 import { autorun, computed } from "mobx";
 import { crdStore } from "./crd.store";
@@ -91,16 +90,7 @@ export class CrdResources extends React.Component<Props> {
           }),
           crdInstance.getAge(),
         ]}
-        renderItemMenu={(item: KubeObject) => {
-          return <CrdResourceMenu object={item}/>
-        }}
       />
     )
   }
-}
-
-export function CrdResourceMenu(props: KubeObjectMenuProps<KubeObject>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
 }

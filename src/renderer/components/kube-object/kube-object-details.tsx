@@ -8,9 +8,9 @@ import { getDetails, hideDetails } from "../../navigation";
 import { Drawer } from "../drawer";
 import { KubeObject } from "../../api/kube-object";
 import { Spinner } from "../spinner";
-import { apiManager, ApiComponents } from "../../api/api-manager";
+import { apiManager } from "../../api/api-manager";
 import { crdStore } from "../+custom-resources/crd.store";
-import { CrdResourceDetails, CrdResourceMenu } from "../+custom-resources";
+import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMenu } from "./kube-object-menu"
 import { kubeObjectDetailRegistry } from "../../api/kube-object-details-registry";
 
@@ -66,7 +66,6 @@ export class KubeObjectDetails extends React.Component {
     const { object, isLoading, loadingError, isCrdInstance } = this;
     const isOpen = !!(object || isLoading || loadingError);
     let title = "";
-    let apiComponents: ApiComponents;
     let details: JSX.Element[];
     if (object) {
       const { kind, getName } = object;
@@ -75,8 +74,7 @@ export class KubeObjectDetails extends React.Component {
         return <item.components.Details object={object} key={`object-details-${index}`}/>
       })
       if (isCrdInstance && details.length === 0) {
-        apiComponents.Details = CrdResourceDetails
-        apiComponents.Menu = CrdResourceMenu
+        details.push(<CrdResourceDetails object={object} />)
       }
     }
     return (
