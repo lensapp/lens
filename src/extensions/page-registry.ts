@@ -38,12 +38,10 @@ export class PageRegistry {
   }
 
   // fixme: validate route paths to avoid collisions
-  add(params: PageRegistration) {
-    this.pages.push(params);
+  add(pageInit: PageRegistration) {
+    this.pages.push(pageInit);
     return () => {
-      this.pages.replace(
-        this.pages.filter(page => page.components !== params.components)
-      )
+      this.pages.remove(pageInit); // works because of {deep: false}
     };
   }
 }
