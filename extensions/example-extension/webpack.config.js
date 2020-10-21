@@ -17,7 +17,7 @@ module.exports = [
     },
     externals: [
       {
-        "@k8slens/core-extensions": "var global.LensCoreExtensions",
+        "@k8slens/extensions": "var global.LensExtensions",
         "mobx": "var global.Mobx",
         "react": "var global.React"
       }
@@ -47,8 +47,7 @@ module.exports = [
     },
     externals: [
       {
-        "@k8slens/renderer-extensions": "var global.LensRendererExtensions",
-        "@k8slens/core-extensions": "var global.LensCoreExtensions",
+        "@k8slens/extensions": "var global.LensExtensions",
         "react": "var global.React",
         "mobx": "var global.Mobx"
       }

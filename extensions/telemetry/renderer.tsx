@@ -1,4 +1,4 @@
-import { LensRendererExtension, Registry } from "@k8slens/core-extensions";
+import { LensRendererExtension, Registry } from "@k8slens/extensions";
 import { telemetryPreferencesStore } from "./src/telemetry-preferences-store"
 import { TelemetryPreferenceHint, TelemetryPreferenceInput } from "./src/telemetry-preference"
 import { tracker } from "./src/tracker"

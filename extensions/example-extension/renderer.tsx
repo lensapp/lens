@@ -1,4 +1,4 @@
-import { LensRendererExtension, Registry } from "@k8slens/core-extensions";
+import { LensRendererExtension, Registry } from "@k8slens/extensions";
 import { ExamplePage, ExampleIcon } from "./page"
 import React from "react"
 

@@ -1,5 +1,4 @@
-import { LensRendererExtension } from "@k8slens/core-extensions";
-import { Component } from "@k8slens/renderer-extensions";
+import { LensRendererExtension, Component } from "@k8slens/extensions";
 import { CoffeeDoodle } from "react-open-doodles";
 import path from "path";
 import React from "react"

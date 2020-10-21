@@ -1,4 +1,4 @@
-import { LensMainExtension } from "@k8slens/core-extensions";
+import { LensMainExtension } from "@k8slens/extensions";
 import { telemetryPreferencesStore } from "./src/telemetry-preferences-store"
 import { tracker } from "./src/tracker";
 

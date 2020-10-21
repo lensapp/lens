@@ -2,8 +2,7 @@ import "./components/app.scss"
 import React from "react";
 import * as Mobx from "mobx"
 import * as MobxReact from "mobx-react"
-import * as LensCoreExtensions from "../extensions/core-extension-api"
-import * as LensRendererExtensions from "../extensions/renderer-extension-api"
+import * as LensExtensions from "../extensions/extension-api"
 import { render, unmountComponentAtNode } from "react-dom";
 import { isMac } from "../common/vars";
 import { userStore } from "../common/user-store";
@@ -22,8 +21,7 @@ export {
   React,
   Mobx,
   MobxReact,
-  LensRendererExtensions,
-  LensCoreExtensions
+  LensExtensions
 }
 
 export async function bootstrap(App: AppComponent) {

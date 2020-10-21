@@ -1,4 +1,4 @@
-import { Store } from "@k8slens/core-extensions";
+import { Store } from "@k8slens/extensions";
 import { toJS } from "mobx"
 
 export type TelemetryPreferencesModel = {
