@@ -13,6 +13,7 @@ import { IPodLogsData, logRange, podLogsStore } from "./pod-logs.store";
 import { Button } from "../button";
 import { PodLogControls } from "./pod-log-controls";
 import { VirtualList } from "../virtual-list";
+import { searchStore } from "./search.store";
 import debounce from "lodash/debounce";
 
 interface Props {
@@ -27,7 +28,6 @@ export class PodLogs extends React.Component<Props> {
   @observable ready = false;
   @observable preloading = false; // Indicator for setting Spinner (loader) at the top of the logs
   @observable showJumpToBottom = false;
-  @observable findQuery = ""; // A text from search field
 
   private logsElement = React.createRef<HTMLDivElement>(); // A reference for outer container in VirtualList
   private virtualListRef = React.createRef<VirtualList>(); // A reference for VirtualList component
@@ -104,11 +104,22 @@ export class PodLogs extends React.Component<Props> {
   }
 
   /**
-   * Updating findQuery observable
+   * A function for various actions after search is happened
    * @param query {string} A text from search field
    */
+  @autobind()
   onSearch(query: string) {
-    this.findQuery = query;
+    this.toOverlay();
+  }
+
+  /**
+   * Scrolling to active overlay (search word highlight)
+   */
+  @autobind()
+  toOverlay() {
+    const { activeOverlayLine } = searchStore;
+    if (!this.virtualListRef.current || activeOverlayLine == -1) return;
+    this.virtualListRef.current.scrollToItem(activeOverlayLine);
   }
 
   /**
@@ -143,21 +154,27 @@ export class PodLogs extends React.Component<Props> {
 
   /**
    * A function is called by VirtualList for rendering each of the row
-   * @param index {Number} index of the log element in logs array
+   * @param rowIndex {Number} index of the log element in logs array
    * @returns A react element with a row itself
    */
-  getLogRow = (index: number) => {
-    const isSeparator = this.logs[index] === "---newlogs---"; // TODO: Use constant separator
-    const { findQuery } = this;
-    const item = this.logs[index];
+  getLogRow = (rowIndex: number) => {
+    const isSeparator = this.logs[rowIndex] === "---newlogs---"; // TODO: Use constant separator
+    const { searchQuery, isActiveOverlay } = searchStore;
+    const item = this.logs[rowIndex];
     const contents: React.ReactElement[] = [];
-    if (findQuery) {
+    if (searchQuery) {
       // If search is enabled, replace keyword with backgrounded <span> to "highlight" searchable text
-      const pieces = item.split(findQuery);
+      const pieces = item.split(searchQuery);
       pieces.forEach((piece, index) => {
-        const overlay = index !== pieces.length - 1 ? <span>{findQuery}</span> : null
+        const active = isActiveOverlay(rowIndex, index);
+        const lastItem = index === pieces.length - 1;
+        const overlay = !lastItem ?
+          <span className={cssNames({ active })}>{searchQuery}</span> :
+          null
         contents.push(
-          <>{piece}{overlay}</>
+          <React.Fragment key={piece + index}>
+            {piece}{overlay}
+          </React.Fragment>
         );
       })
     }
@@ -231,8 +248,9 @@ export class PodLogs extends React.Component<Props> {
         logs={this.logs}
         save={this.save}
         reload={this.reload}
-        search={this.findQuery}
         onSearch={this.onSearch}
+        toPrevOverlay={this.toOverlay}
+        toNextOverlay={this.toOverlay}
       />
     )
     return (

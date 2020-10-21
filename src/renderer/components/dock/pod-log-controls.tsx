@@ -8,9 +8,9 @@ import { Icon } from "../icon";
 import { _i18n } from "../../i18n";
 import { cssNames, downloadFile } from "../../utils";
 import { Pod } from "../../api/endpoints";
-import { PodLogSearch } from "./pod-log-search";
+import { PodLogSearch, PodLogSearchProps } from "./pod-log-search";
 
-interface Props {
+interface Props extends PodLogSearchProps {
   ready: boolean
   tabId: string
   tabData: IPodLogsData
@@ -18,7 +18,6 @@ interface Props {
   save: (data: Partial<IPodLogsData>) => void
   reload: () => void
   onSearch: (query: string) => void
-  search: string
 }
 
 export const PodLogControls = observer((props: Props) => {
@@ -114,7 +113,7 @@ export const PodLogControls = observer((props: Props) => {
           onClick={downloadLogs}
           tooltip={_i18n._(t`Save`)}
         />
-        <PodLogSearch onSearch={props.onSearch} search={props.search} />
+        <PodLogSearch {...props} />
       </div>
     </div>
   );

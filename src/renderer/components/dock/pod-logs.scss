@@ -40,6 +40,10 @@
             border-radius: 2px;
             background-color: #8cc474b8;
             -webkit-font-smoothing: auto;
+
+            &.active {
+              background-color: orange;
+            }
           }
         }
       }
