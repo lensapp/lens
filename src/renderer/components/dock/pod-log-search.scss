@@ -1,0 +1,12 @@
+.PodLogsSearch {
+  .SearchInput {
+    min-width: 150px;
+
+    label {
+      background: none;
+      border: none;
+      border-radius: $radius;
+      box-shadow: 0 0 0 1px $halfGray;
+    }
+  }
+}

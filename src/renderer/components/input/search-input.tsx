@@ -13,10 +13,12 @@ import { _i18n } from '../../i18n';
 
 interface Props extends InputProps {
   compact?: boolean; // show only search-icon when not focused
+  updateUrl?: boolean;
 }
 
 const defaultProps: Partial<Props> = {
   autoFocus: true,
+  updateUrl: true,
   get placeholder() {
     return _i18n._(t`Search...`)
   },
@@ -26,20 +28,26 @@ const defaultProps: Partial<Props> = {
 export class SearchInput extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
-  @observable inputVal = ""; // fix: use empty string to avoid react warnings
+  @observable inputVal = this.props.value || ""; // fix: use empty string to avoid react warnings
 
   @disposeOnUnmount
-  updateInput = autorun(() => this.inputVal = getSearch())
+  updateInput = autorun(() => {
+    if (this.props.updateUrl) this.inputVal = getSearch();
+  })
   updateUrl = debounce((val: string) => setSearch(val), 250)
 
   setValue = (value: string) => {
     this.inputVal = value;
-    this.updateUrl(value);
+    if (this.props.updateUrl) {
+      this.updateUrl(value);
+    }
   }
 
   clear = () => {
     this.setValue("");
-    this.updateUrl.flush();
+    if (this.props.updateUrl) {
+      this.updateUrl.flush();
+    }
   }
 
   onChange = (val: string, evt: React.ChangeEvent<any>) => {
@@ -63,7 +71,7 @@ export class SearchInput extends React.Component<Props> {
 
   render() {
     const { inputVal } = this;
-    const { className, compact, ...inputProps } = this.props;
+    const { className, compact, updateUrl, ...inputProps } = this.props;
     const icon = inputVal
       ? <Icon small material="close" onClick={this.clear}/>
       : <Icon small material="search"/>

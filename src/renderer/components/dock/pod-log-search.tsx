@@ -1,7 +1,8 @@
+import "./pod-log-search.scss";
+
 import React from "react";
 import { observer } from "mobx-react";
-import { cssNames } from "../../utils";
-import { Input } from "../input";
+import { SearchInput } from "../input";
 import { Button } from "@material-ui/core";
 import { searchStore } from "./search.store";
 
@@ -14,7 +15,7 @@ export interface PodLogSearchProps {
 
 export const PodLogSearch = observer((props: PodLogSearchProps) => {
   const { logs, onSearch, toPrevOverlay, toNextOverlay } = props;
-  const { setNextOverlayActive, setPrevOverlayActive } = searchStore;
+  const { setNextOverlayActive, setPrevOverlayActive, searchQuery } = searchStore;
 
   const setSearch = (query: string) => {
     searchStore.onSearch(logs, query);
@@ -33,10 +34,10 @@ export const PodLogSearch = observer((props: PodLogSearchProps) => {
 
   return (
     <div className="PodLogsSearch">
-      <Input
-        className={cssNames("SearchInput")}
-        value={searchStore.searchQuery}
+      <SearchInput
+        value={searchQuery}
         onChange={setSearch}
+        updateUrl={false}
       />
       {/* <span>{activeOverlay} / {totalOverlays}</span> */}
       <Button onClick={onPrevOverlay}>prev</Button>
