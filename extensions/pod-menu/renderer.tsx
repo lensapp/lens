@@ -5,7 +5,7 @@ import React from "react"
 
 export default class PodMenuRendererExtension extends LensRendererExtension {
   async onActivate() {
-    console.log("pod-shell extension activated")
+    console.log("pod-menu extension activated")
   }
 
   registerKubeObjectMenus(registry: Registry.KubeObjectMenuRegistry) {
@@ -27,9 +27,5 @@ export default class PodMenuRendererExtension extends LensRendererExtension {
         }
       })
     )
-  }
-
-  onDeactivate() {
-    console.log("pod-shell extension deactivated")
   }
 }
