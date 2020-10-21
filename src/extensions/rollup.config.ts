@@ -10,7 +10,7 @@ import ignoreImport from 'rollup-plugin-ignore-import'
 const config: RollupOptions = {
   input: "src/extensions/extension-api.ts",
   output: [
-    { file: "src/extensions/npm/core-extensions/api.d.ts", format: "es", }
+    { file: "src/extensions/npm/extensions/api.d.ts", format: "es", }
   ],
   plugins: [
     dts(),
