@@ -12,7 +12,7 @@ import { InfoPanel } from "./info-panel";
 import { IPodLogsData, logRange, podLogsStore } from "./pod-logs.store";
 import { Button } from "../button";
 import { PodLogControls } from "./pod-log-controls";
-import { VirtualListRef } from "../virtual-list";
+import { VirtualList } from "../virtual-list";
 import debounce from "lodash/debounce";
 
 interface Props {
@@ -29,7 +29,8 @@ export class PodLogs extends React.Component<Props> {
   @observable showJumpToBottom = false;
   @observable findQuery = ""; // A text from search field
 
-  private logsElement = React.createRef<HTMLDivElement>();  // A reference for outer container in VirtualList
+  private logsElement = React.createRef<HTMLDivElement>(); // A reference for outer container in VirtualList
+  private virtualListRef = React.createRef<VirtualList>(); // A reference for VirtualList component
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
 
   componentDidMount() {
@@ -208,12 +209,13 @@ export class PodLogs extends React.Component<Props> {
             <Spinner center />
           </div>
         )}
-        <VirtualListRef
+        <VirtualList
           items={this.logs}
           rowHeights={rowHeights}
           getRow={this.getLogRow}
           onScroll={this.onScroll}
-          ref={this.logsElement}
+          outerRef={this.logsElement}
+          ref={this.virtualListRef}
         />
       </>
     );

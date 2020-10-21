@@ -83,6 +83,10 @@ export class VirtualList extends Component<Props, State> {
     this.listRef.current.scrollToItem(index, "start");
   })
 
+  scrollToItem = (index: number) => {
+    this.listRef.current.scrollToItem(index)
+  }
+
   render() {
     const { width, className, items, getRow, onScroll, outerRef } = this.props;
     const { height, overscanCount } = this.state;
@@ -130,10 +134,3 @@ const Row = observer((props: RowProps) => {
     style: Object.assign({}, row.props.style, style)
   });
 })
-
-// A wrapper for passing ref back to parent component. This allows parent
-// to control behavior of child component's DOM node. Scrolling event in our case.
-// More info about ref forwading: https://reactjs.org/docs/forwarding-refs.html#forwarding-refs-to-dom-components
-export const VirtualListRef = React.forwardRef((props: Props, ref) => (
-  <VirtualList outerRef={ref} {...props} />
-));
