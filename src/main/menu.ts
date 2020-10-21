@@ -242,7 +242,7 @@ export function buildMenu(windowManager: WindowManager) {
       const parentLabels: string[] = [];
       let menuItem: MenuItem
 
-      for (let name of names) {
+      for (const name of names) {
         parentLabels.push(name);
         menuItem = menu?.items?.find(item => item.label === name);
         if (!menuItem) {
@@ -256,7 +256,7 @@ export function buildMenu(windowManager: WindowManager) {
         return;
       }
 
-      let { enabled, visible, click } = menuItem;
+      const { enabled, visible, click } = menuItem;
       if (enabled === false || visible === false || typeof click !== 'function') {
         logger.info(`[MENU:test-menu-item-click] Menu item ${parentLabels.join(" -> ")} not clickable`);
         return;
