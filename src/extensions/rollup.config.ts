@@ -7,29 +7,14 @@ import json from '@rollup/plugin-json';
 import dts from "rollup-plugin-dts";
 import ignoreImport from 'rollup-plugin-ignore-import'
 
-// todo: generate extension-api.js bundle also with Rollup (?)
-
 const config: RollupOptions = {
   input: "src/extensions/extension-api.ts",
   output: [
-    { file: "types/extension-api.d.ts", format: "es", }
+    { file: "src/extensions/npm/extensions/api.d.ts", format: "es", }
   ],
   plugins: [
     dts(),
-    dtsModuleWrap({ name: "@lens/extensions" }),
-    ignoreImport({ extensions: ['.scss'] }),
-    json(),
-  ],
-};
-
-const rendererConfig: RollupOptions = {
-  input: "src/extensions/extension-renderer-api.ts",
-  output: [
-    { file: "types/extension-renderer-api.d.ts", format: "es", }
-  ],
-  plugins: [
-    dts(),
-    dtsModuleWrap({ name: "@lens/ui-extensions" }),
+    dtsModuleWrap({ name: "@k8slens/extensions" }),
     ignoreImport({ extensions: ['.scss'] }),
     json(),
   ],
@@ -69,4 +54,4 @@ function dtsModuleWrap({ name }: { name: string }): Plugin {
   }
 }
 
-export default [config, rendererConfig];
+export default [config];

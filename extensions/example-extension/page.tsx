@@ -1,13 +1,13 @@
-import { Button, Icon, IconProps, LensRendererExtension } from "@lens/ui-extensions";
+import { LensRendererExtension, Component } from "@k8slens/extensions";
 import { CoffeeDoodle } from "react-open-doodles";
 import path from "path";
 import React from "react"
 
-export function ExtensionIcon(props: IconProps) {
-  return <Icon {...props} material="pages" tooltip={path.basename(__filename)}/>
+export function ExampleIcon(props: Component.IconProps) {
+  return <Component.Icon {...props} material="pages" tooltip={path.basename(__filename)}/>
 }
 
-export class ExtensionPage extends React.Component<{ extension: LensRendererExtension }> {
+export class ExamplePage extends React.Component<{ extension: LensRendererExtension }> {
   deactivate = () => {
     const { extension } = this.props;
     extension.disable();
@@ -22,12 +22,8 @@ export class ExtensionPage extends React.Component<{ extension: LensRendererExte
         <div style={doodleStyle}><CoffeeDoodle accent="#3d90ce" /></div>
         <p>Hello from Example extension!</p>
         <p>File: <i>{__filename}</i></p>
-        <Button accent label="Deactivate" onClick={this.deactivate}/>
+        <Component.Button accent label="Deactivate" onClick={this.deactivate}/>
       </div>
     )
   }
-}
-
-export function examplePage(ext: LensRendererExtension) {
-  return () => <ExtensionPage extension={ext} />
 }

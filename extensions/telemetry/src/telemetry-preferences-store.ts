@@ -1,14 +1,14 @@
-import { BaseStore } from "@lens/extensions";
+import { Store } from "@k8slens/extensions";
 import { toJS } from "mobx"
 
 export type TelemetryPreferencesModel = {
   enabled: boolean;
 }
 
-export class TelemetryPreferencesStore extends BaseStore<TelemetryPreferencesModel> {
+export class TelemetryPreferencesStore extends Store.ExtensionStore<TelemetryPreferencesModel> {
   private constructor() {
     super({
-      configName: "telemetry-preferences-store",
+      configName: "preferences-store",
       defaults: {
         enabled: true
       }
