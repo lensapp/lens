@@ -17,8 +17,13 @@ export interface PodLogSearchProps {
 
 export const PodLogSearch = observer((props: PodLogSearchProps) => {
   const { logs, onSearch, toPrevOverlay, toNextOverlay } = props;
-  const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences } = searchStore;
+  const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = searchStore;
   const jumpDisabled = !searchQuery || !occurrences.length;
+  const findCounts = (
+    <div className="find-count">
+      {activeFind}/{totalFinds}
+    </div>
+  );
 
   const setSearch = (query: string) => {
     searchStore.onSearch(logs, query);
@@ -40,9 +45,9 @@ export const PodLogSearch = observer((props: PodLogSearchProps) => {
       <SearchInput
         value={searchQuery}
         onChange={setSearch}
-        updateUrl={false}
+        closeIcon={false}
+        contentRight={totalFinds > 0 && findCounts}
       />
-      {/* <span>{activeOverlay} / {totalOverlays}</span> */}
       <Icon
         material="keyboard_arrow_up"
         tooltip={_i18n._(t`Previous`)}
@@ -54,6 +59,11 @@ export const PodLogSearch = observer((props: PodLogSearchProps) => {
         tooltip={_i18n._(t`Next`)}
         onClick={onNextOverlay}
         disabled={jumpDisabled}
+      />
+      <Icon
+        material="close"
+        tooltip={_i18n._(t`Clear`)}
+        onClick={() => setSearch("")}
       />
     </div>
   );

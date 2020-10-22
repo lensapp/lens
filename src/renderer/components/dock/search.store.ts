@@ -87,6 +87,14 @@ export class SearchStore {
     return this.occurrences[this.activeOverlayIndex];
   }
 
+  @computed get activeFind(): number {
+    return this.activeOverlayIndex + 1;
+  }
+
+  @computed get totalFinds(): number {
+    return this.occurrences.length;
+  }
+
   /**
    * Checks if overlay is active (to highlight it with orange background usually)
    * @param line Index of the line where overlay is located
@@ -110,6 +118,7 @@ export class SearchStore {
   reset() {
     this.searchQuery = "";
     this.activeOverlayIndex = -1;
+    this.occurrences = [];
   }
 }
 
