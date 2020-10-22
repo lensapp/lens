@@ -10,7 +10,7 @@ import { Endpoint } from "../../api/endpoints";
 import { _i18n } from "../../i18n";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { EndpointSubsetList } from "./endpoint-subset-list";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-details-registry";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Endpoint> {
 }

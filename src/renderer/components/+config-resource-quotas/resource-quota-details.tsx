@@ -10,7 +10,7 @@ import { ResourceQuota } from "../../api/endpoints/resource-quota.api";
 import { LineProgress } from "../line-progress";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
-import { kubeObjectDetailRegistry } from "../../api/kube-object-details-registry";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { ReplicaSetDetails } from "../+workloads-replicasets";
 
 interface Props extends KubeObjectDetailsProps<ResourceQuota> {
