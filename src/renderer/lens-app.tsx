@@ -16,7 +16,7 @@ import { extensionLoader } from "../extensions/extension-loader";
 @observer
 export class LensApp extends React.Component {
   static async init() {
-    extensionLoader.loadOnMainRenderer();
+    extensionLoader.loadOnClusterManagerRenderer();
   }
 
   render() {

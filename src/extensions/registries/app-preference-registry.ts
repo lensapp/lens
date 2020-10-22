@@ -1,5 +1,5 @@
-import { observable } from "mobx"
-import React from "react"
+import type React from "react"
+import { BaseRegistry } from "./base-registry";
 
 export interface AppPreferenceComponents {
   Hint: React.ComponentType<any>;
@@ -11,17 +11,7 @@ export interface AppPreferenceRegistration {
   components: AppPreferenceComponents;
 }
 
-export class AppPreferenceRegistry {
-  preferences = observable.array<AppPreferenceRegistration>([], { deep: false });
-
-  add(preference: AppPreferenceRegistration) {
-    this.preferences.push(preference)
-    return () => {
-      this.preferences.replace(
-        this.preferences.filter(c => c !== preference)
-      )
-    };
-  }
+export class AppPreferenceRegistry extends BaseRegistry<AppPreferenceRegistration> {
 }
 
 export const appPreferenceRegistry = new AppPreferenceRegistry()

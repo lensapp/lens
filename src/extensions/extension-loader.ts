@@ -34,33 +34,33 @@ export class ExtensionLoader {
     }
   }
 
-  loadOnClusterRenderer() {
-    logger.info('[EXTENSIONS-LOADER]: load on cluster renderer')
-    this.autoloadExtensions((instance: LensRendererExtension) => {
-      instance.registerPages(pageRegistry)
-    })
-  }
-
-  loadOnMainRenderer() {
-    logger.info('[EXTENSIONS-LOADER]: load on main renderer')
-    this.autoloadExtensions((instance: LensRendererExtension) => {
-      instance.registerPages(pageRegistry)
-      instance.registerAppPreferences(appPreferenceRegistry)
-    })
-  }
-
   loadOnMain() {
     logger.info('[EXTENSIONS-LOADER]: load on main')
     this.autoloadExtensions((instance: LensMainExtension) => {
       instance.registerAppMenus(menuRegistry);
-      instance.registerStatusBarIcon(statusBarRegistry);
+    })
+  }
+
+  loadOnClusterManagerRenderer() {
+    logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
+    this.autoloadExtensions((instance: LensRendererExtension) => {
+      instance.registerPages(pageRegistry)
+      instance.registerAppPreferences(appPreferenceRegistry)
+      instance.registerStatusBarIcon(statusBarRegistry)
+    })
+  }
+
+  loadOnClusterRenderer() {
+    logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
+    this.autoloadExtensions((instance: LensRendererExtension) => {
+      instance.registerPages(pageRegistry)
     })
   }
 
   protected autoloadExtensions(callback: (instance: LensExtension) => void) {
     return reaction(() => this.extensions.toJS(), (installedExtensions) => {
       for (const [id, ext] of installedExtensions) {
-        let instance = this.instances.get(ext.manifestPath)
+        let instance = this.instances.get(ext.name)
         if (!instance) {
           const extensionModule = this.requireExtension(ext)
           if (!extensionModule) {
@@ -70,7 +70,7 @@ export class ExtensionLoader {
           instance = new LensExtensionClass({ ...ext.manifest, manifestPath: ext.manifestPath, id: ext.manifestPath }, ext.manifest);
           instance.enable();
           callback(instance)
-          this.instances.set(ext.id, instance)
+          this.instances.set(ext.name, instance)
         }
       }
     }, {

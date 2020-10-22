@@ -1,24 +1,14 @@
-// Extensions API -> Global menu customize
+// Extensions API -> Global menu customizations
 
-import { observable } from "mobx";
-import { MenuItemConstructorOptions } from "electron";
 import type { MenuTopId } from "../../main/menu";
+import type { MenuItemConstructorOptions } from "electron";
+import { BaseRegistry } from "./base-registry";
 
 export interface MenuRegistration extends MenuItemConstructorOptions {
   parentId?: MenuTopId;
 }
 
-export class MenuRegistry {
-  protected items = observable.array([], { deep: false });
-
-  getItems(): MenuRegistration[] {
-    return this.items.toJS();
-  }
-
-  add(item: MenuRegistration) {
-    this.items.push(item);
-    return () => this.items.remove(item)
-  }
+export class MenuRegistry extends BaseRegistry<MenuRegistration> {
 }
 
 export const menuRegistry = new MenuRegistry();

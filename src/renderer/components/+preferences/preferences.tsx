@@ -103,7 +103,6 @@ export class Preferences extends React.Component {
 
   render() {
     const { preferences } = userStore;
-    const extensionPreferences = appPreferenceRegistry.preferences;
     const header = <h2><Trans>Preferences</Trans></h2>;
     return (
       <PageLayout showOnTop className="Preferences" header={header}>
@@ -170,7 +169,7 @@ export class Preferences extends React.Component {
         </small>
 
         <div className="extensions flex column gaps">
-          {extensionPreferences.map(({ title, components: { Hint, Input } }, index) => {
+          {appPreferenceRegistry.getItems().map(({ title, components: { Hint, Input } }, index) => {
             return (
               <div key={index} className="preference">
                 <h2>{title}</h2>
