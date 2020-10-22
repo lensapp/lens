@@ -90,11 +90,17 @@ export class BaseStore<T = any> extends Singleton {
     if (ipcRenderer) {
       const callback = (event: IpcRendererEvent, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
-        this.onSync(model);
+        this.onSyncFromMain(model);
       };
       ipcRenderer.on(this.syncChannel, callback);
       this.syncDisposers.push(() => ipcRenderer.off(this.syncChannel, callback));
     }
+  }
+
+  protected onSyncFromMain(model: T) {
+    this.applyWithoutSync(() => {
+      this.onSync(model)
+    })
   }
 
   unregisterIpcListener() {
@@ -116,11 +122,9 @@ export class BaseStore<T = any> extends Singleton {
 
   protected onSync(model: T) {
     // todo: use "resourceVersion" if merge required (to avoid equality checks => better performance)
-    this.applyWithoutSync(() => {
-      if (!isEqual(this.toJSON(), model)) {
-        this.fromStore(model);
-      }
-    })
+    if (!isEqual(this.toJSON(), model)) {
+      this.fromStore(model);
+    }
   }
 
   protected async onModelChange(model: T) {
