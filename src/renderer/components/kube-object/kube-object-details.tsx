@@ -12,7 +12,7 @@ import { apiManager } from "../../api/api-manager";
 import { crdStore } from "../+custom-resources/crd.store";
 import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMenu } from "./kube-object-menu"
-import { kubeObjectDetailRegistry } from "../../api/kube-object-details-registry";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 export interface KubeObjectDetailsProps<T = KubeObject> {
   className?: string;
