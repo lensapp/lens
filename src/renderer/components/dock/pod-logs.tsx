@@ -14,6 +14,7 @@ import { Button } from "../button";
 import { PodLogControls } from "./pod-log-controls";
 import { VirtualList } from "../virtual-list";
 import { searchStore } from "./search.store";
+import { ListOnScrollProps } from "react-window";
 import debounce from "lodash/debounce";
 
 interface Props {
@@ -138,10 +139,11 @@ export class PodLogs extends React.Component<Props> {
     return logs;
   }
 
-  onScroll = debounce(() => {
+  onScroll = debounce((props: ListOnScrollProps) => {
     const toBottomOffset = 100 * lineHeight; // 100 lines * 18px (height of each line)
     const { scrollHeight, clientHeight, scrollTop } = this.logsElement.current;
-    if (scrollTop === 0) {
+    // Trigger loading only if scrolled by user
+    if (scrollTop === 0 && !props.scrollUpdateWasRequested) {
       this.loadMore();
     }
     if (scrollHeight - scrollTop > toBottomOffset) {
@@ -150,7 +152,7 @@ export class PodLogs extends React.Component<Props> {
       this.showJumpToBottom = false;
     }
     this.lastLineIsShown = clientHeight + scrollTop === scrollHeight;
-  }, 300);  // Debouncing to let virtual list do its internal works
+  }, 300); // Debouncing to let virtual list do its internal works
 
   /**
    * A function is called by VirtualList for rendering each of the row
