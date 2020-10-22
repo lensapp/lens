@@ -389,13 +389,13 @@ describe("Lens integration tests", () => {
           it(`shows ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true)
             await app.client.click(`.sidebar-nav #${drawerId} span.link-text`)
-            await app.client.waitUntilTextExists(`a[href="/${pages[0].href}"]`, pages[0].name)
+            await app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name)
           })
         }
         pages.forEach(({ name, href, expectedSelector, expectedText }) => {
           it(`shows ${drawer}->${name} page`, async () => {
             expect(clusterAdded).toBe(true)
-            await app.client.click(`a[href="/${href}"]`)
+            await app.client.click(`a[href^="/${href}"]`)
             await app.client.waitUntilTextExists(expectedSelector, expectedText)
           })
         })
@@ -404,7 +404,7 @@ describe("Lens integration tests", () => {
           it(`hides ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true)
             await app.client.click(`.sidebar-nav #${drawerId} span.link-text`)
-            await expect(app.client.waitUntilTextExists(`a[href="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow()
+            await expect(app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow()
           })
         }
       })
@@ -440,8 +440,8 @@ describe("Lens integration tests", () => {
       it(`creates a pod in ${TEST_NAMESPACE} namespace`, async () => {
         expect(clusterAdded).toBe(true)
         await app.client.click(".sidebar-nav #workloads span.link-text")
-        await app.client.waitUntilTextExists('a[href="/pods"]', "Pods")
-        await app.client.click('a[href="/pods"]')
+        await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods")
+        await app.client.click('a[href^="/pods"]')
         await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver")
         await app.client.click('.Icon.new-dock-tab')
         await app.client.waitUntilTextExists("li.MenuItem.create-resource-tab", "Create resource")
