@@ -1,4 +1,4 @@
-import { LensMainExtension, Registry } from "@k8slens/extensions";
+import { LensMainExtension, Registry, windowManager } from "@k8slens/extensions";
 import { supportPageURL } from "./src/support.route";
 
 export default class SupportPageMainExtension extends LensMainExtension {
@@ -11,9 +11,11 @@ export default class SupportPageMainExtension extends LensMainExtension {
       registry.add({
         parentId: "help",
         label: "Support",
-        async click() {
-          // fixme: require runtime windowManager (ensureMainWindow + navigate for main)
-          console.log(`navigate: ${supportPageURL()}`);
+        click() {
+          windowManager.navigate({
+            channel: "menu:navigate", // fixme: use windowManager.ensureMainWindow from Tray's PR
+            url: supportPageURL(),
+          });
         }
       })
     )
