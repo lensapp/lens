@@ -23,9 +23,8 @@ export class DetectorRegistry {
         const data = await detector.detect()
         if (!data) continue;
         const existingValue = results[detector.key]
-        if ((existingValue && existingValue.accuracy < data.accuracy) || !existingValue) { // previous value exists and is less accurate
-          results[detector.key] = data
-        }
+        if (existingValue && existingValue.accuracy > data.accuracy) continue; // previous value exists and is more accurate
+        results[detector.key] = data
       } catch (e) {
         // detector raised error, do nothing
       }
