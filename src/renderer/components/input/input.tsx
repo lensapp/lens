@@ -24,6 +24,7 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
   showValidationLine?: boolean; // show animated validation line for async validators
   iconLeft?: string | React.ReactNode; // material-icon name in case of string-type
   iconRight?: string | React.ReactNode;
+  contentRight?: string | React.ReactNode; // Any component of string goes after iconRight
   validators?: Validator | Validator[];
   onChange?(value: T, evt: React.ChangeEvent<InputElement>): void;
   onSubmit?(value: T): void;
@@ -258,7 +259,7 @@ export class Input extends React.Component<InputProps, State> {
   render() {
     const {
       multiLine, showValidationLine, validators, theme, maxRows, children,
-      maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight,
+      maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight, contentRight,
       ...inputProps
     } = this.props;
     const { focused, dirty, valid, validating, errors } = this.state;
@@ -291,6 +292,7 @@ export class Input extends React.Component<InputProps, State> {
           {isString(iconLeft) ? <Icon material={iconLeft} /> : iconLeft}
           {multiLine ? <textarea {...inputProps as any} /> : <input {...inputProps as any} />}
           {isString(iconRight) ? <Icon material={iconRight} /> : iconRight}
+          {contentRight}
         </label>
         <div className="input-info flex gaps">
           {!valid && dirty && (

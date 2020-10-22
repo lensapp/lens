@@ -12,7 +12,7 @@ import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
 import { ItemObject, ItemStore } from "../../item.store";
-import { SearchInput } from "../input";
+import { SearchInputUrl } from "../input";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
@@ -349,7 +349,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           [FilterType.NAMESPACE]: true, // namespace-select used instead
         }}/>
       </>,
-      search: <SearchInput/>,
+      search: <SearchInputUrl/>,
     }
     let header = this.renderHeaderContent(placeholders);
     if (customizeHeader) {

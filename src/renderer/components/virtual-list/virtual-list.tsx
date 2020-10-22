@@ -4,7 +4,7 @@ import "./virtual-list.scss";
 
 import React, { Component } from "react";
 import { observer } from "mobx-react";
-import { Align, ListChildComponentProps, VariableSizeList } from "react-window";
+import { Align, ListChildComponentProps, ListOnScrollProps, VariableSizeList } from "react-window";
 import { cssNames, noop } from "../../utils";
 import { TableRowProps } from "../table/table-row";
 import { ItemObject } from "../../item.store";
@@ -22,7 +22,7 @@ interface Props<T extends ItemObject = any> {
   readyOffset?: number;
   selectedItemId?: string;
   getRow?: (uid: string | number) => React.ReactElement<any>;
-  onScroll?: () => any;
+  onScroll?: (props: ListOnScrollProps) => any;
   outerRef?: ((instance: unknown) => void) | React.MutableRefObject<unknown>
 }
 
@@ -107,7 +107,7 @@ export class VirtualList extends Component<Props, State> {
           ref={this.listRef}
           outerRef={outerRef}
           children={Row}
-          onScroll={() => onScroll()}
+          onScroll={onScroll}
         />
       </div>
     );
