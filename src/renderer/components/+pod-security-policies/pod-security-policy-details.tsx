@@ -5,11 +5,11 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { PodSecurityPolicy, pspApi } from "../../api/endpoints";
+import { PodSecurityPolicy } from "../../api/endpoints";
 import { Badge } from "../badge";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<PodSecurityPolicy> {
 }
@@ -209,6 +209,10 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(pspApi, {
-  Details: PodSecurityPolicyDetails,
-});
+kubeObjectDetailRegistry.add({
+  kind: "PodSecurityPolicy",
+  apiVersions: ["policy/v1beta1"],
+  components: {
+    Details: (props) => <PodSecurityPolicyDetails {...props}/>
+  }
+})

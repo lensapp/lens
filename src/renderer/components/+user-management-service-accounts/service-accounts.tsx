@@ -13,7 +13,7 @@ import { KubeObjectListLayout } from "../kube-object";
 import { IServiceAccountsRouteParams } from "../+user-management";
 import { serviceAccountsStore } from "./service-accounts.store";
 import { CreateServiceAccountDialog } from "./create-service-account-dialog";
-import { apiManager } from "../../api/api-manager";
+import { kubeObjectMenuRegistry } from "../../api/kube-object-menu-registry";
 
 enum sortBy {
   name = "name",
@@ -64,18 +64,20 @@ export class ServiceAccounts extends React.Component<Props> {
   }
 }
 
-export function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
+function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
   const { object, toolbar } = props;
   return (
-    <KubeObjectMenu {...props}>
-      <MenuItem onClick={() => openServiceAccountKubeConfig(object)}>
-        <Icon material="insert_drive_file" title="Kubeconfig File" interactive={toolbar}/>
-        <span className="title"><Trans>Kubeconfig</Trans></span>
-      </MenuItem>
-    </KubeObjectMenu>
+    <MenuItem onClick={() => openServiceAccountKubeConfig(object)}>
+      <Icon material="insert_drive_file" title="Kubeconfig File" interactive={toolbar}/>
+      <span className="title"><Trans>Kubeconfig</Trans></span>
+    </MenuItem>
   )
 }
 
-apiManager.registerViews(serviceAccountsApi, {
-  Menu: ServiceAccountMenu,
+kubeObjectMenuRegistry.add({
+  kind: "ServiceAccount",
+  apiVersions: ["v1"],
+  components: {
+    MenuItem: ServiceAccountMenu
+  }
 })

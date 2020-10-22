@@ -13,12 +13,12 @@ import { KubeEventDetails } from "../+events/kube-event-details";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { StatefulSet, statefulSetApi } from "../../api/endpoints";
+import { StatefulSet } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<StatefulSet> {
 }
@@ -95,6 +95,11 @@ export class StatefulSetDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(statefulSetApi, {
-  Details: StatefulSetDetails
+
+kubeObjectDetailRegistry.add({
+  kind: "StatefulSet",
+  apiVersions: ["apps/v1"],
+  components: {
+    Details: (props: any) => <StatefulSetDetails {...props} />
+  }
 })

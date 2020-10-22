@@ -7,14 +7,14 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { cssNames } from "../../utils";
-import { HorizontalPodAutoscaler, hpaApi, HpaMetricType, IHpaMetric } from "../../api/endpoints/hpa.api";
+import { HorizontalPodAutoscaler, HpaMetricType, IHpaMetric } from "../../api/endpoints/hpa.api";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { Trans } from "@lingui/macro";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { getDetailsUrl } from "../../navigation";
 import { lookupApiLink } from "../../api/kube-api";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<HorizontalPodAutoscaler> {
 }
@@ -128,6 +128,10 @@ export class HpaDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(hpaApi, {
-  Details: HpaDetails,
-});
+kubeObjectDetailRegistry.add({
+  kind: "HorizontalPodAutoscaler",
+  apiVersions: ["autoscaling/v1"],
+  components: {
+    Details: (props) => <HpaDetails {...props} />
+  }
+})

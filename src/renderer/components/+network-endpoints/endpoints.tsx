@@ -47,9 +47,6 @@ export class Endpoints extends React.Component<Props> {
           endpoint.toString(),
           endpoint.getAge(),
         ]}
-        renderItemMenu={(item: Endpoint) => {
-          return <EndpointMenu object={item}/>
-        }}
         tableProps={{
           customRowHeights: (item: Endpoint, lineHeight, paddings) => {
             const lines = item.getEndpointSubsets().length || 1;
@@ -60,13 +57,3 @@ export class Endpoints extends React.Component<Props> {
     )
   }
 }
-
-export function EndpointMenu(props: KubeObjectMenuProps<Endpoint>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(endpointApi, {
-  Menu: EndpointMenu
-})

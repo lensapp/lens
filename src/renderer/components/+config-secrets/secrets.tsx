@@ -61,9 +61,6 @@ export class Secrets extends React.Component<Props> {
             secret.type,
             secret.getAge(),
           ]}
-          renderItemMenu={(item: Secret) => {
-            return <SecretMenu object={item}/>
-          }}
           addRemoveButtons={{
             onAdd: () => AddSecretDialog.open(),
             addTooltip: <Trans>Create new Secret</Trans>
@@ -74,13 +71,3 @@ export class Secrets extends React.Component<Props> {
     );
   }
 }
-
-export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(secretsApi, {
-  Menu: SecretMenu,
-})

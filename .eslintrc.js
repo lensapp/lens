@@ -4,6 +4,7 @@ module.exports =  {
       files: [
         "src/renderer/**/*.js",
         "build/**/*.js",
+        "extensions/**/*.js"
       ],
       extends: [
         'eslint:recommended',

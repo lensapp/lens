@@ -47,20 +47,7 @@ export class NetworkPolicies extends React.Component<Props> {
           item.getTypes().join(", "),
           item.getAge(),
         ]}
-        renderItemMenu={(item: NetworkPolicy) => {
-          return <NetworkPolicyMenu object={item}/>
-        }}
       />
     )
   }
 }
-
-export function NetworkPolicyMenu(props: KubeObjectMenuProps<NetworkPolicy>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(networkPolicyApi, {
-  Menu: NetworkPolicyMenu,
-})

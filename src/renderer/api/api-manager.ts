@@ -53,22 +53,6 @@ export class ApiManager {
   getStore(api: string | KubeApi): KubeObjectStore {
     return this.stores.get(this.resolveApi(api));
   }
-
-  registerViews(api: KubeApi | KubeApi[], views: ApiComponents) {
-    if (Array.isArray(api)) {
-      api.forEach(api => this.registerViews(api, views));
-      return;
-    }
-    const currentViews = this.views.get(api) || {};
-    this.views.set(api, {
-      ...currentViews,
-      ...views,
-    });
-  }
-
-  getViews(api: string | KubeApi): ApiComponents {
-    return this.views.get(this.resolveApi(api)) || {}
-  }
 }
 
 export const apiManager = new ApiManager();
