@@ -86,4 +86,10 @@
       --size: $unit * 2;
     }
   }
+
+  .PodLogControls {
+    .Select {
+      min-width: 150px;
+    }
+  }
 }
