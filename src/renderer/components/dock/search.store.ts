@@ -36,7 +36,7 @@ export class SearchStore {
   findOccurencies(text: string[], query: string) {
     const occurences: number[] = [];
     text.forEach((line, index) => {
-      const regex = new RegExp(this.escapeRegex(query), "g");
+      const regex = new RegExp(this.escapeRegex(query), "gi");
       const matches = [...line.matchAll(regex)];
       matches.forEach(() => occurences.push(index));
     });

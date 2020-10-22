@@ -164,14 +164,18 @@ export class PodLogs extends React.Component<Props> {
     const { searchQuery, isActiveOverlay } = searchStore;
     const item = this.logs[rowIndex];
     const contents: React.ReactElement[] = [];
-    if (searchQuery) {
-      // If search is enabled, replace keyword with backgrounded <span> to "highlight" searchable text
-      const pieces = item.split(searchQuery);
+    if (searchQuery) { // If search is enabled, replace keyword with backgrounded <span>
+      // Case-insensitive search (lowercasing query and keywords in line)
+      const regex = new RegExp(searchStore.escapeRegex(searchQuery), "gi");
+      const matches = item.matchAll(regex);
+      const modified = item.replace(regex, match => match.toLowerCase());
+      // Splitting text line by keyword
+      const pieces = modified.split(searchQuery.toLowerCase());
       pieces.forEach((piece, index) => {
         const active = isActiveOverlay(rowIndex, index);
         const lastItem = index === pieces.length - 1;
         const overlay = !lastItem ?
-          <span className={cssNames({ active })}>{searchQuery}</span> :
+          <span className={cssNames({ active })}>{matches.next().value}</span> :
           null
         contents.push(
           <React.Fragment key={piece + index}>
