@@ -34,6 +34,7 @@ export class SearchStore {
    * @returns {Array} Array of line indexes [0, 0, 14, 17, 17, 17, 20...]
    */
   findOccurencies(text: string[], query: string) {
+    if (!text) return;
     const occurences: number[] = [];
     text.forEach((line, index) => {
       const regex = new RegExp(this.escapeRegex(query), "gi");

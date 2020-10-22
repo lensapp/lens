@@ -140,18 +140,27 @@ export class PodLogs extends React.Component<Props> {
   }
 
   onScroll = debounce((props: ListOnScrollProps) => {
+    if (!this.logsElement.current) return;
     const toBottomOffset = 100 * lineHeight; // 100 lines * 18px (height of each line)
-    const { scrollHeight, clientHeight, scrollTop } = this.logsElement.current;
-    // Trigger loading only if scrolled by user
-    if (scrollTop === 0 && !props.scrollUpdateWasRequested) {
-      this.loadMore();
-    }
-    if (scrollHeight - scrollTop > toBottomOffset) {
-      this.showJumpToBottom = true;
+    const { scrollHeight, clientHeight } = this.logsElement.current;
+    const { scrollDirection, scrollOffset, scrollUpdateWasRequested } = props;
+    if (scrollDirection == "forward") {
+      if (scrollHeight - scrollOffset < toBottomOffset) {
+        this.showJumpToBottom = false;
+      }
+      if (clientHeight + scrollOffset === scrollHeight) {
+        this.lastLineIsShown = true;
+      }
     } else {
-      this.showJumpToBottom = false;
+      this.lastLineIsShown = false;
+      // Trigger loading only if scrolled by user
+      if (scrollOffset === 0 && !scrollUpdateWasRequested) {
+        this.loadMore();
+      }
+      if (scrollHeight - scrollOffset > toBottomOffset) {
+        this.showJumpToBottom = true;
+      }
     }
-    this.lastLineIsShown = clientHeight + scrollTop === scrollHeight;
   }, 300); // Debouncing to let virtual list do its internal works
 
   /**

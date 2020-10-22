@@ -21,7 +21,7 @@ type TabId = string;
 type PodLogLine = string;
 
 // Number for log lines to load
-export const logRange = isDevelopment ? 100 : 1000;
+export const logRange = 1000;
 
 @autobind()
 export class PodLogsStore extends DockTabStore<IPodLogsData> {
