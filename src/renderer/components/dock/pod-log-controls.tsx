@@ -22,9 +22,9 @@ interface Props extends PodLogSearchProps {
 
 export const PodLogControls = observer((props: Props) => {
   if (!props.ready) return null;
-  const { tabData, tabId, save, reload, logs } = props;
+  const { tabData, save, reload, logs } = props;
   const { selectedContainer, showTimestamps, previous } = tabData;
-  const since = podLogsStore.getTimestamps(podLogsStore.logs.get(tabId)[0]);
+  const since = logs.length ? podLogsStore.getTimestamps(logs[0]) : null;
   const pod = new Pod(tabData.pod);
 
   const toggleTimestamps = () => {

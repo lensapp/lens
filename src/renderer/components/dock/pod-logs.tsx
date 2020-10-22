@@ -212,6 +212,7 @@ export class PodLogs extends React.Component<Props> {
             top: this.logsElement.current.scrollHeight,
             behavior: "auto"
           });
+          this.showJumpToBottom = false;
         }}
       >
         <Trans>Jump to bottom</Trans>
@@ -229,7 +230,7 @@ export class PodLogs extends React.Component<Props> {
     }
     if (!this.logs.length) {
       return (
-        <div className="flex align-center justify-center">
+        <div className="flex box grow align-center justify-center">
           <Trans>There are no logs available for container.</Trans>
         </div>
       );
@@ -248,6 +249,7 @@ export class PodLogs extends React.Component<Props> {
           onScroll={this.onScroll}
           outerRef={this.logsElement}
           ref={this.virtualListRef}
+          className="box grow"
         />
       </>
     );
@@ -276,7 +278,7 @@ export class PodLogs extends React.Component<Props> {
           showSubmitClose={false}
           showButtons={false}
         />
-        <div className="logs">
+        <div className="logs flex">
           {this.renderJumpToBottom()}
           {this.renderLogs()}
         </div>

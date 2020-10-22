@@ -5,7 +5,6 @@ import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
 import { t } from "@lingui/macro";
 import { _i18n } from "../../i18n";
-import { isDevelopment } from "../../../common/vars";
 import { searchStore } from "./search.store";
 
 export interface IPodLogsData {
@@ -21,7 +20,7 @@ type TabId = string;
 type PodLogLine = string;
 
 // Number for log lines to load
-export const logRange = 1000;
+export const logRange = 500;
 
 @autobind()
 export class PodLogsStore extends DockTabStore<IPodLogsData> {
@@ -90,6 +89,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
    * @param tabId
    */
   loadMore = async (tabId: TabId) => {
+    if (!this.logs.get(tabId).length) return;
     const oldLogs = this.logs.get(tabId);
     const logs = await this.loadLogs(tabId, {
       sinceTime: this.getLastSinceTime(tabId)
@@ -128,7 +128,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
    * @param tabId
    */
   setNewLogSince(tabId: TabId) {
-    if (!this.logs.has(tabId) || this.newLogSince.has(tabId)) return;
+    if (!this.logs.has(tabId) || !this.logs.get(tabId).length || this.newLogSince.has(tabId)) return;
     const timestamp = this.getLastSinceTime(tabId);
     this.newLogSince.set(tabId, timestamp.split(".")[0]); // Removing milliseconds from string
   }
