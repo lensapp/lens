@@ -152,7 +152,16 @@ export interface IPodContainerStatus {
       reason: string;
     };
   };
-  lastState: {};
+  lastState: {
+    [index: string]: object;
+    terminated?: {
+      startedAt: string;
+      finishedAt: string;
+      exitCode: number;
+      reason: string;
+      containerID: string;
+    };
+  };
   ready: boolean;
   restartCount: number;
   image: string;

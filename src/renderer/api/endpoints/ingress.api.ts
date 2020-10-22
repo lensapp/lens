@@ -107,6 +107,14 @@ export class Ingress extends KubeObject {
     }
     return ports.join(", ")
   }
+
+  getLoadBalancers() {
+    const { status: { loadBalancer = { ingress: [] } } } = this;
+    
+    return (loadBalancer.ingress ?? []).map(address => (
+      address.hostname || address.ip
+    ))
+  }
 }
 
 export const ingressApi = new IngressApi({
