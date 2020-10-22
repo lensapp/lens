@@ -12,7 +12,7 @@ export class SearchStore {
    * @param query Search query from input
    */
   @action
-  onSearch(text: string[], query: string) {
+  onSearch(text: string[], query = this.searchQuery) {
     this.searchQuery = query;
     if (!query) {
       this.reset();

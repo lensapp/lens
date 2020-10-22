@@ -49,6 +49,8 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
 
     reaction(() => this.logs.get(dockStore.selectedTabId), () => {
       this.setNewLogSince(dockStore.selectedTabId);
+      // Refresh search when logs changed
+      searchStore.onSearch(this.logs.get(dockStore.selectedTabId));
     })
 
     reaction(() => dockStore.selectedTabId, () => {
