@@ -56,11 +56,15 @@ export class BaseStore<T = any> extends Singleton {
       ...confOptions,
       projectName: "lens",
       projectVersion: getAppVersion(),
-      cwd: (app || remote.app).getPath("userData"),
+      cwd: this.storePath(),
     });
     logger.info(`[STORE]: LOADED from ${this.storeConfig.path}`);
     this.fromStore(this.storeConfig.store);
     this.isLoaded = true;
+  }
+
+  protected storePath() {
+    return (app || remote.app).getPath("userData")
   }
 
   protected async saveToFile(model: T) {

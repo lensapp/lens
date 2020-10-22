@@ -1,4 +1,4 @@
-import { EventBus, Util } from "@lens/extensions"
+import { EventBus, Util } from "@k8slens/extensions"
 import ua from "universal-analytics"
 import { machineIdSync } from "node-machine-id"
 import { telemetryPreferencesStore } from "./telemetry-preferences-store"
