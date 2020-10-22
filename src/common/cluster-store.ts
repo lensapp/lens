@@ -20,6 +20,10 @@ export interface ClusterIconUpload {
   path: string;
 }
 
+export interface ClusterMetadata {
+  [key: string]: string | number | boolean;
+}
+
 export interface ClusterStoreModel {
   activeCluster?: ClusterId; // last opened cluster
   clusters?: ClusterModel[]
@@ -32,6 +36,7 @@ export interface ClusterModel {
   workspace?: WorkspaceId;
   contextName?: string;
   preferences?: ClusterPreferences;
+  metadata?: ClusterMetadata;
   kubeConfigPath: string;
 
   /** @deprecated */
