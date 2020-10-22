@@ -14,7 +14,7 @@ import { ClusterSettings, clusterSettingsRoute } from "../+cluster-settings";
 import { clusterViewRoute, clusterViewURL, getMatchedCluster, getMatchedClusterId } from "./cluster-view.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
-import { pageRegistry } from "../../../extensions/page-registry";
+import { pageRegistry } from "../../../extensions/registries/page-registry";
 
 @observer
 export class ClusterManager extends React.Component {

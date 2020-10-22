@@ -2,7 +2,7 @@
 
 import { observable } from "mobx";
 import { MenuItemConstructorOptions } from "electron";
-import type { MenuTopId } from "../main/menu";
+import type { MenuTopId } from "../../main/menu";
 
 export interface MenuRegistration extends MenuItemConstructorOptions {
   parentId?: MenuTopId;

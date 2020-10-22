@@ -3,6 +3,13 @@ import path from "path"
 const outputPath = path.resolve(__dirname, 'dist');
 
 // TODO: figure out how to share base TS and Webpack configs from Lens (npm, filesystem, etc?)
+const lensExternals = {
+  "@k8slens/extensions": "var global.LensExtensions",
+  "react": "var global.React",
+  "mobx": "var global.Mobx",
+  "mobx-react": "var global.MobxReact",
+};
+
 export default [
   {
     entry: './main.ts',
@@ -19,14 +26,10 @@ export default [
       ],
     },
     externals: [
-      {
-        "@lens/extensions": "var global.LensExtensions",
-        "react": "var global.React",
-        "mobx": "var global.Mobx"
-      }
+      lensExternals,
     ],
     resolve: {
-      extensions: [ '.tsx', '.ts', '.js' ],
+      extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
       libraryTarget: "commonjs2",
@@ -50,15 +53,10 @@ export default [
       ],
     },
     externals: [
-      {
-        "@lens/ui-extensions": "var global.LensExtensions",
-        "@lens/extensions": "var global.LensMainExtensions",
-        "react": "var global.React",
-        "mobx": "var global.Mobx"
-      }
+      lensExternals,
     ],
     resolve: {
-      extensions: [ '.tsx', '.ts', '.js' ],
+      extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
       libraryTarget: "commonjs2",

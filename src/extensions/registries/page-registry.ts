@@ -1,11 +1,11 @@
 // Extensions-api -> Dynamic pages
 
+import type React from "react";
+import type { RouteProps } from "react-router";
+import type { IconProps } from "../../renderer/components/icon";
+import type { IClassName } from "../../renderer/utils";
+import type { TabRoute } from "../../renderer/components/layout/tab-layout";
 import { computed, observable } from "mobx";
-import React from "react";
-import { RouteProps } from "react-router";
-import { IconProps } from "../renderer/components/icon";
-import { IClassName } from "../renderer/utils";
-import { TabRoute } from "../renderer/components/layout/tab-layout";
 
 export enum PageRegistryType {
   GLOBAL = "lens-scope",
@@ -40,9 +40,7 @@ export class PageRegistry {
   // fixme: validate route paths to avoid collisions
   add(pageInit: PageRegistration) {
     this.pages.push(pageInit);
-    return () => {
-      this.pages.remove(pageInit); // works because of {deep: false}
-    };
+    return () => this.pages.remove(pageInit); // works because of {deep: false};
   }
 }
 

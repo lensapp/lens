@@ -1,4 +1,4 @@
-import { LensMainExtension, Registry } from "@lens/extensions";
+import { LensMainExtension, Registry } from "@k8slens/extensions";
 import { supportPageURL } from "./src/support.route";
 
 export default class SupportPageMainExtension extends LensMainExtension {

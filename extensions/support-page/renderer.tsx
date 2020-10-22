@@ -1,4 +1,4 @@
-import { LensRendererExtension, Registry } from "@lens/ui-extensions";
+import { LensRendererExtension, Registry } from "@k8slens/extensions";
 import { Support } from "./src/support";
 import { supportPageRoute, supportPageURL } from "./src/support.route";
 

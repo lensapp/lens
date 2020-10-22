@@ -6,7 +6,7 @@ import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.r
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
-import { menuRegistry } from "../extensions/menu-registry";
+import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help"

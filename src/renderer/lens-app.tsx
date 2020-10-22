@@ -12,12 +12,11 @@ import { WhatsNew, whatsNewRoute } from "./components/+whats-new";
 import { Notifications } from "./components/notifications";
 import { ConfirmDialog } from "./components/confirm-dialog";
 import { extensionLoader } from "../extensions/extension-loader";
-import { getLensRuntimeRenderer } from "../extensions/lens-renderer-runtime";
 
 @observer
 export class LensApp extends React.Component {
   static async init() {
-    extensionLoader.loadOnMainRenderer(getLensRuntimeRenderer)
+    extensionLoader.loadOnMainRenderer();
   }
 
   render() {

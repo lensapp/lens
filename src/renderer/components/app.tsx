@@ -35,10 +35,9 @@ import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store
 import logger from "../../main/logger";
 import { clusterIpc } from "../../common/cluster-ipc";
 import { webFrame } from "electron";
-import { pageRegistry } from "../../extensions/page-registry";
+import { pageRegistry } from "../../extensions/registries/page-registry";
 import { DynamicPage } from "../../extensions/dynamic-page";
 import { extensionLoader } from "../../extensions/extension-loader";
-import { getLensRuntimeRenderer } from "../../extensions/lens-renderer-runtime";
 import { appEventBus } from "../../common/event-bus"
 
 @observer
@@ -51,7 +50,7 @@ export class App extends React.Component {
 
     await clusterIpc.setFrameId.invokeFromRenderer(clusterId, frameId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
-    extensionLoader.loadOnClusterRenderer(getLensRuntimeRenderer)
+    extensionLoader.loadOnClusterRenderer();
     appEventBus.emit({name: "cluster", action: "open", params: {
       clusterId: clusterId
     }})

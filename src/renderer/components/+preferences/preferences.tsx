@@ -16,7 +16,7 @@ import { Badge } from "../badge";
 import { themeStore } from "../../theme.store";
 import { Tooltip } from "../tooltip";
 import { KubectlBinaries } from "./kubectl-binaries";
-import { appPreferenceRegistry } from "../../../extensions/app-preference-registry";
+import { appPreferenceRegistry } from "../../../extensions/registries/app-preference-registry";
 import { PageLayout } from "../layout/page-layout";
 
 @observer

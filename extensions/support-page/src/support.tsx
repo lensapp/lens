@@ -3,7 +3,7 @@
 
 import React from "react"
 import { observer } from "mobx-react"
-import { CommonVars, Component } from "@lens/ui-extensions";
+import { CommonVars, Component } from "@k8slens/extensions";
 
 @observer
 export class Support extends React.Component {

@@ -33,7 +33,6 @@ export class LensExtension implements ExtensionModel {
   @observable manifest: ExtensionManifest;
   @observable manifestPath: string;
   @observable isEnabled = false;
-  @observable.ref runtime: any;
 
   constructor(model: ExtensionModel, manifest: ExtensionManifest) {
     this.importModel(model, manifest);
@@ -55,9 +54,8 @@ export class LensExtension implements ExtensionModel {
     // mock
   }
 
-  async enable(runtime: any) {
+  async enable() {
     this.isEnabled = true;
-    this.runtime = runtime;
     logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
     this.onActivate();
   }
@@ -65,7 +63,6 @@ export class LensExtension implements ExtensionModel {
   async disable() {
     this.onDeactivate();
     this.isEnabled = false;
-    this.runtime = null;
     this.disposers.forEach(cleanUp => cleanUp());
     this.disposers.length = 0;
     logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);

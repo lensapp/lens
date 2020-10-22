@@ -1,17 +1,12 @@
-import type { ExtensionId, LensExtension, ExtensionManifest, ExtensionModel } from "./lens-extension"
+import type { ExtensionId, ExtensionManifest, ExtensionModel, LensExtension } from "./lens-extension"
 import type { LensMainExtension } from "./lens-main-extension"
 import type { LensRendererExtension } from "./lens-renderer-extension"
-import type { LensExtensionMainRuntimeEnv } from "./lens-runtime"
-import type { LensExtensionRendererRuntimeEnv } from "./lens-renderer-runtime"
 import path from "path"
 import { broadcastIpc } from "../common/ipc"
 import { observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
-import { app, remote, ipcRenderer } from "electron"
-import { pageRegistry } from "./page-registry";
-import { appPreferenceRegistry } from "./app-preference-registry"
-import { menuRegistry } from "./menu-registry";
-import { statusBarRegistry } from "./status-bar-registry";
+import { app, ipcRenderer, remote } from "electron"
+import { appPreferenceRegistry, menuRegistry, pageRegistry, statusBarRegistry } from "./registries";
 
 export interface InstalledExtension extends ExtensionModel {
   manifestPath: string;
@@ -39,32 +34,32 @@ export class ExtensionLoader {
     }
   }
 
-  loadOnClusterRenderer(getLensRuntimeEnv: () => LensExtensionRendererRuntimeEnv) {
+  loadOnClusterRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer')
-    this.autoloadExtensions(getLensRuntimeEnv, (instance: LensRendererExtension) => {
+    this.autoloadExtensions((instance: LensRendererExtension) => {
       instance.registerPages(pageRegistry)
     })
   }
 
-  loadOnMainRenderer(getLensRuntimeEnv: () => LensExtensionRendererRuntimeEnv) {
+  loadOnMainRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer')
-    this.autoloadExtensions(getLensRuntimeEnv, (instance: LensRendererExtension) => {
+    this.autoloadExtensions((instance: LensRendererExtension) => {
       instance.registerPages(pageRegistry)
       instance.registerAppPreferences(appPreferenceRegistry)
     })
   }
 
-  loadOnMain(getLensRuntimeEnv: () => LensExtensionMainRuntimeEnv) {
+  loadOnMain() {
     logger.info('[EXTENSIONS-LOADER]: load on main')
-    this.autoloadExtensions(getLensRuntimeEnv, (instance: LensMainExtension) => {
+    this.autoloadExtensions((instance: LensMainExtension) => {
       instance.registerAppMenus(menuRegistry);
       instance.registerStatusBarIcon(statusBarRegistry);
     })
   }
 
-  protected autoloadExtensions(getLensRuntimeEnv: () => object, callback: (instance: LensExtension) => void) {
+  protected autoloadExtensions(callback: (instance: LensExtension) => void) {
     return reaction(() => this.extensions.toJS(), (installedExtensions) => {
-      for(const [id, ext] of installedExtensions) {
+      for (const [id, ext] of installedExtensions) {
         let instance = this.instances.get(ext.manifestPath)
         if (!instance) {
           const extensionModule = this.requireExtension(ext)
@@ -73,7 +68,7 @@ export class ExtensionLoader {
           }
           const LensExtensionClass = extensionModule.default;
           instance = new LensExtensionClass({ ...ext.manifest, manifestPath: ext.manifestPath, id: ext.manifestPath }, ext.manifest);
-          instance.enable(getLensRuntimeEnv())
+          instance.enable();
           callback(instance)
           this.instances.set(ext.id, instance)
         }
@@ -109,7 +104,9 @@ export class ExtensionLoader {
     const extension = this.getById(id);
     if (extension) {
       const instance = this.instances.get(extension.id)
-      if (instance) { await instance.disable() }
+      if (instance) {
+        await instance.disable()
+      }
       this.extensions.delete(id);
     }
   }
