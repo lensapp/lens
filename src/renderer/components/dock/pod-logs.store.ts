@@ -6,6 +6,7 @@ import { dockStore, IDockTab, TabKind } from "./dock.store";
 import { t } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { isDevelopment } from "../../../common/vars";
+import { searchStore } from "./search.store";
 
 export interface IPodLogsData {
   pod: Pod;
@@ -48,6 +49,11 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
 
     reaction(() => this.logs.get(dockStore.selectedTabId), () => {
       this.setNewLogSince(dockStore.selectedTabId);
+    })
+
+    reaction(() => dockStore.selectedTabId, () => {
+      // Clear search query on tab change
+      searchStore.reset();
     })
   }
 
