@@ -38,8 +38,7 @@ export const PodLogControls = observer((props: Props) => {
 
   const downloadLogs = () => {
     const fileName = selectedContainer ? selectedContainer.name : pod.getName();
-    const [oldLogs, newLogs] = logs;
-    downloadFile(fileName + ".log", [...oldLogs, ...newLogs].join("\n"), "text/plain");
+    downloadFile(fileName + ".log", logs.join("\n"), "text/plain");
   }
 
   const onContainerChange = (option: SelectOption) => {
