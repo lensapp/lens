@@ -7,9 +7,11 @@ export * from "./lens-renderer-extension"
 import * as EventBus from "./core-api/event-bus"
 import * as Store from "./core-api/stores"
 import * as Util from "./core-api/utils"
+import * as App from "./core-api/app"
 import * as Registry from "./core-api/registries"
 
 export {
+  App,
   EventBus,
   Registry,
   Store,
