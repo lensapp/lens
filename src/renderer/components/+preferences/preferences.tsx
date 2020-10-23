@@ -17,6 +17,7 @@ import { themeStore } from "../../theme.store";
 import { history } from "../../navigation";
 import { Tooltip } from "../tooltip";
 import { KubectlBinaries } from "./kubectl-binaries";
+import { isMac } from "../../../common/vars";
 
 @observer
 export class Preferences extends React.Component {
@@ -194,6 +195,21 @@ export class Preferences extends React.Component {
           <small className="hint">
             <Trans>Telemetry & usage data is collected to continuously improve the Lens experience.</Trans>
           </small>
+
+          {isMac && (
+            <>
+              <h2><Trans>Hardware Acceleration</Trans></h2>
+              <Checkbox
+                label={<Trans>Disable hardware acceleration</Trans>}
+                value={preferences.disableHardwareAcceleration}
+                onChange={v => preferences.disableHardwareAcceleration = v}
+              />
+              <small className="hint">
+                <Trans>Enabled hardware acceleration can cause rendering issues on some devices with the MacOS.</Trans><br />
+                <Trans>You need to restart the app to activate the changes.</Trans>
+              </small>
+            </>
+          )}
         </WizardLayout>
       </div>
     );

@@ -56,7 +56,6 @@ async function main() {
 
   // preload configuration from stores
   await Promise.all([
-    userStore.load(),
     clusterStore.load(),
     workspaceStore.load(),
   ]);
@@ -75,6 +74,12 @@ async function main() {
 
   // create window manager and open app
   windowManager = new WindowManager(proxyPort);
+}
+
+// Disable hardware acceleration if flag is checked in Preferences
+userStore.load();
+if (userStore.preferences.disableHardwareAcceleration) {
+  app.disableHardwareAcceleration();
 }
 
 app.on("ready", main);

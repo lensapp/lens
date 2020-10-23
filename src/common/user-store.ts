@@ -27,6 +27,7 @@ export interface UserPreferences {
   downloadKubectlBinaries?: boolean;
   downloadBinariesPath?: string;
   kubectlBinariesPath?: string;
+  disableHardwareAcceleration?: boolean;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
