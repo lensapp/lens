@@ -92,4 +92,10 @@
       min-width: 150px;
     }
   }
+
+  &.noscroll {
+    .logs .VirtualList .list {
+      overflow-x: hidden!important; // fixing scroll to bottom issues in PodLogs
+    }
+  }
 }

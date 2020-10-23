@@ -22,8 +22,8 @@ interface Props<T extends ItemObject = any> {
   readyOffset?: number;
   selectedItemId?: string;
   getRow?: (uid: string | number) => React.ReactElement<any>;
-  onScroll?: (props: ListOnScrollProps) => any;
-  outerRef?: ((instance: unknown) => void) | React.MutableRefObject<unknown>
+  onScroll?: (props: ListOnScrollProps) => void;
+  outerRef?: React.Ref<any>
 }
 
 interface State {
@@ -59,7 +59,7 @@ export class VirtualList extends Component<Props, State> {
   componentDidUpdate(prevProps: Props) {
     const { items, rowHeights } = this.props;
     if (prevProps.items.length !== items.length || !isEqual(prevProps.rowHeights, rowHeights)) {
-      this.listRef.current.resetAfterIndex(0, true);
+      this.listRef.current.resetAfterIndex(0, false);
     }
   }
 

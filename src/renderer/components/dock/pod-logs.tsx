@@ -1,7 +1,7 @@
 import "./pod-logs.scss";
 import React from "react";
 import { Trans } from "@lingui/macro";
-import { computed, observable, reaction } from "mobx";
+import { action, computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { _i18n } from "../../i18n";
 import { autobind, cssNames } from "../../utils";
@@ -15,7 +15,6 @@ import { PodLogControls } from "./pod-log-controls";
 import { VirtualList } from "../virtual-list";
 import { searchStore } from "./search.store";
 import { ListOnScrollProps } from "react-window";
-import debounce from "lodash/debounce";
 
 interface Props {
   className?: string
@@ -29,6 +28,7 @@ export class PodLogs extends React.Component<Props> {
   @observable ready = false;
   @observable preloading = false; // Indicator for setting Spinner (loader) at the top of the logs
   @observable showJumpToBottom = false;
+  @observable hideHorizontalScroll = true; // Hiding scrollbar allows to scroll logs down to last element
 
   private logsElement = React.createRef<HTMLDivElement>(); // A reference for outer container in VirtualList
   private virtualListRef = React.createRef<VirtualList>(); // A reference for VirtualList component
@@ -37,11 +37,8 @@ export class PodLogs extends React.Component<Props> {
   componentDidMount() {
     disposeOnUnmount(this, [
       reaction(() => this.props.tab.id, async () => {
-        if (podLogsStore.logs.has(this.tabId)) {
-          this.ready = true;
-          return;
-        }
         await this.load();
+        this.scrollToBottom();
       }, { fireImmediately: true }),
 
       // Check if need to show JumpToBottom if new log amount is less than previous one
@@ -90,7 +87,6 @@ export class PodLogs extends React.Component<Props> {
   /**
    * Function loads more logs (usually after user scrolls to top) and sets proper
    * scrolling position
-   * @param scrollHeight previous scrollHeight position before adding new lines
    */
   loadMore = async () => {
     const lines = podLogsStore.lines;
@@ -139,7 +135,7 @@ export class PodLogs extends React.Component<Props> {
     return logs;
   }
 
-  onScroll = debounce((props: ListOnScrollProps) => {
+  onScroll = (props: ListOnScrollProps) => {
     if (!this.logsElement.current) return;
     const toBottomOffset = 100 * lineHeight; // 100 lines * 18px (height of each line)
     const { scrollHeight, clientHeight } = this.logsElement.current;
@@ -161,7 +157,17 @@ export class PodLogs extends React.Component<Props> {
         this.showJumpToBottom = true;
       }
     }
-  }, 300); // Debouncing to let virtual list do its internal works
+  }
+
+  @action
+  scrollToBottom = () => {
+    if (!this.virtualListRef.current) return;
+    this.hideHorizontalScroll = true;
+    this.virtualListRef.current.scrollToItem(this.logs.length, "end");
+    this.showJumpToBottom = false;
+    // Showing horizontal scrollbar after VirtualList settles down
+    setTimeout(() => this.hideHorizontalScroll = false, 500);
+  }
 
   /**
    * A function is called by VirtualList for rendering each of the row
@@ -208,11 +214,7 @@ export class PodLogs extends React.Component<Props> {
         className={cssNames("jump-to-bottom flex gaps", {active: this.showJumpToBottom})}
         onClick={evt => {
           evt.currentTarget.blur();
-          this.logsElement.current.scrollTo({
-            top: this.logsElement.current.scrollHeight,
-            behavior: "auto"
-          });
-          this.showJumpToBottom = false;
+          this.scrollToBottom();
         }}
       >
         <Trans>Jump to bottom</Trans>
@@ -271,7 +273,7 @@ export class PodLogs extends React.Component<Props> {
       />
     )
     return (
-      <div className={cssNames("PodLogs flex column", className)}>
+      <div className={cssNames("PodLogs flex column", className, { noscroll: this.hideHorizontalScroll })}>
         <InfoPanel
           tabId={this.props.tab.id}
           controls={controls}
