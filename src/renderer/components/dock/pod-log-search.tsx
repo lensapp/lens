@@ -1,6 +1,6 @@
 import "./pod-log-search.scss";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { SearchInput } from "../input";
 import { searchStore } from "./search.store";
@@ -39,6 +39,11 @@ export const PodLogSearch = observer((props: PodLogSearchProps) => {
     setNextOverlayActive();
     toNextOverlay();
   }
+
+  useEffect(() => {
+    // Refresh search when logs changed
+    searchStore.onSearch(logs);
+  }, [logs]);
 
   return (
     <div className="PodLogsSearch flex box grow justify-flex-end gaps align-center">

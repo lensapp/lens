@@ -18,7 +18,7 @@ export class SearchStore {
       this.reset();
       return;
     }
-    this.occurrences = this.findOccurencies(text, query);
+    this.occurrences = this.findOccurences(text, query);
     if (!this.occurrences.length) return;
 
     // If new highlighted keyword in exact same place as previous one, then no changing in active overlay
@@ -33,7 +33,7 @@ export class SearchStore {
    * @param query Search query from input
    * @returns {Array} Array of line indexes [0, 0, 14, 17, 17, 17, 20...]
    */
-  findOccurencies(text: string[], query: string) {
+  findOccurences(text: string[], query: string) {
     if (!text) return [];
     const occurences: number[] = [];
     text.forEach((line, index) => {
