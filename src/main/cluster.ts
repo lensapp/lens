@@ -142,6 +142,7 @@ export class Cluster implements ClusterModel {
     await this.refreshConnectionStatus()
     if (this.accessible) {
       await this.refreshAllowedResources()
+      this.isAdmin = await this.isClusterAdmin()
       this.ready = true
       this.kubeCtl = new Kubectl(this.version)
       this.kubeCtl.ensureKubectl() // download kubectl in background, so it's not blocking dashboard
