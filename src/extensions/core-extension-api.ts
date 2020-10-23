@@ -8,8 +8,10 @@ import * as EventBus from "./core-api/event-bus"
 import * as Store from "./core-api/stores"
 import * as Util from "./core-api/utils"
 import * as Registry from "./core-api/registries"
+import * as ClusterFeature from "./core-api/cluster-feature"
 
 export {
+  ClusterFeature,
   EventBus,
   Registry,
   Store,

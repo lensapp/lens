@@ -8,6 +8,8 @@ import { KubeApi } from "../kube-api";
 @autobind()
 export class CronJob extends KubeObject {
   static kind = "CronJob"
+  static namespaced = true
+  static apiBase = "/apis/batch/v1beta1/cronjobs"
 
   kind: string
   apiVersion: string
@@ -88,8 +90,5 @@ export class CronJob extends KubeObject {
 }
 
 export const cronJobApi = new KubeApi({
-  kind: CronJob.kind,
-  apiBase: "/apis/batch/v1beta1/cronjobs",
-  isNamespaced: true,
   objectConstructor: CronJob,
 });

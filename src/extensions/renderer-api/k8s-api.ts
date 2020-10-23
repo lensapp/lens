@@ -1,6 +1,5 @@
-
 export { apiManager } from "../../renderer/api/api-manager";
-export { KubeApi } from "../../renderer/api/kube-api";
+export { KubeApi, forCluster, IKubeApiCluster } from "../../renderer/api/kube-api";
 export { KubeObject } from "../../renderer/api/kube-object";
 export { Pod, podsApi, IPodContainer, IPodContainerStatus } from "../../renderer/api/endpoints";
 export { Node, nodesApi } from "../../renderer/api/endpoints";

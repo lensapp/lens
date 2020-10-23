@@ -2,10 +2,10 @@ import fs from "fs";
 import path from "path"
 import hb from "handlebars"
 import { ResourceApplier } from "./resource-applier"
-import { CoreV1Api, KubeConfig, Watch } from "@kubernetes/client-node"
 import { Cluster } from "./cluster";
 import logger from "./logger";
-import { isDevelopment } from "../common/vars";
+import { app, remote } from "electron"
+import { clusterIpc } from "../common/cluster-ipc"
 
 export type FeatureStatusMap = Record<string, FeatureStatus>
 export type FeatureMap = Record<string, Feature>
@@ -26,59 +26,25 @@ export interface FeatureStatus {
 export abstract class Feature {
   public name: string;
   public latestVersion: string;
+  public config: any;
+
+  abstract async install(cluster: Cluster): Promise<void>;
 
   abstract async upgrade(cluster: Cluster): Promise<void>;
 
   abstract async uninstall(cluster: Cluster): Promise<void>;
 
-  abstract async featureStatus(kc: KubeConfig): Promise<FeatureStatus>;
+  abstract async featureStatus(cluster: Cluster): Promise<FeatureStatus>;
 
-  constructor(public config: any) {
-  }
-
-  get folderPath() {
-    if (isDevelopment) {
-      return path.resolve(__static, "../src/features", this.name);
-    }
-    return path.resolve(__static, "../features", this.name);
-  }
-
-  async install(cluster: Cluster): Promise<void> {
-    const resources = this.renderTemplates();
-    try {
-      await new ResourceApplier(cluster).kubectlApplyAll(resources);
-    } catch (err) {
-      logger.error("Installing feature error", { err, cluster });
-      throw err;
+  protected async applyResources(cluster: Cluster, resources: string[]) {
+    if (app) {
+      await new ResourceApplier(cluster).kubectlApplyAll(resources)
+    } else {
+      await clusterIpc.kubectlApplyAll.invokeFromRenderer(cluster.id, resources)
     }
   }
 
-  protected async deleteNamespace(kc: KubeConfig, name: string) {
-    return new Promise(async (resolve, reject) => {
-      const client = kc.makeApiClient(CoreV1Api)
-      const result = await client.deleteNamespace("lens-metrics", 'false', undefined, undefined, undefined, "Foreground");
-      const nsVersion = result.body.metadata.resourceVersion;
-      const nsWatch = new Watch(kc);
-      const query: Record<string, string> = {
-        resourceVersion: nsVersion,
-        fieldSelector: "metadata.name=lens-metrics",
-      }
-      const req = await nsWatch.watch('/api/v1/namespaces', query,
-        (phase, obj) => {
-          if (phase === 'DELETED') {
-            logger.debug(`namespace ${name} finally gone`)
-            req.abort();
-            resolve()
-          }
-        },
-        (err?: any) => {
-          if (err) reject(err);
-        });
-    });
-  }
-
-  protected renderTemplates(): string[] {
-    const folderPath = this.folderPath;
+  protected renderTemplates(folderPath: string): string[] {
     const resources: string[] = [];
     logger.info(`[FEATURE]: render templates from ${folderPath}`);
     fs.readdirSync(folderPath).forEach(filename => {

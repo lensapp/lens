@@ -8,13 +8,15 @@ import { apiKube } from "./index";
 import { kubeWatchApi } from "./kube-watch-api";
 import { apiManager } from "./api-manager";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
+import { apiKubePrefix, isDevelopment } from "../../common/vars";
+import * as URL from "url"
 
 export interface IKubeApiOptions<T extends KubeObject> {
-  kind: string; // resource type within api-group, e.g. "Namespace"
-  apiBase: string; // base api-path for listing all resources, e.g. "/api/v1/pods"
-  isNamespaced: boolean;
+  apiBase?: string; // base api-path for listing all resources, e.g. "/api/v1/pods"
   objectConstructor?: IKubeObjectConstructor<T>;
   request?: KubeJsonApi;
+  isNamespaced?: boolean;
+  kind?: string;
 }
 
 export interface IKubeApiQueryParams {
@@ -23,6 +25,25 @@ export interface IKubeApiQueryParams {
   timeoutSeconds?: number;
   limit?: number; // doesn't work with ?watch
   continue?: string; // might be used with ?limit from second request
+}
+
+export interface IKubeApiCluster {
+  id: string;
+}
+
+export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeClass: IKubeObjectConstructor<T>): KubeApi<T> {
+  const request = new KubeJsonApi({
+    apiBase: apiKubePrefix,
+    debug: isDevelopment,
+  }, {
+    headers: {
+      "X-Cluster-ID": cluster.id
+    }
+  });
+  return new KubeApi({
+    objectConstructor: kubeClass,
+    request: request
+  })
 }
 
 export class KubeApi<T extends KubeObject = any> {
@@ -48,11 +69,14 @@ export class KubeApi<T extends KubeObject = any> {
 
   constructor(protected options: IKubeApiOptions<T>) {
     const {
-      kind,
-      isNamespaced = false,
       objectConstructor = KubeObject as IKubeObjectConstructor,
-      request = apiKube
+      request = apiKube,
+      kind = options.objectConstructor?.kind,
+      isNamespaced = options.objectConstructor?.namespaced
     } = options || {};
+    if (!options.apiBase) {
+      options.apiBase = objectConstructor.apiBase
+    }
     const { apiBase, apiPrefix, apiGroup, apiVersion, apiVersionWithGroup, resource } = KubeApi.parseApi(options.apiBase);
 
     this.kind = kind;

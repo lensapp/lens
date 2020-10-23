@@ -176,7 +176,8 @@
     "extensions": [
       "telemetry",
       "pod-menu",
-      "node-menu"
+      "node-menu",
+      "metrics-cluster-feature"
     ]
   },
   "dependencies": {

@@ -6,6 +6,8 @@ import { KubeApi } from "../kube-api";
 @autobind()
 export class ConfigMap extends KubeObject {
   static kind = "ConfigMap";
+  static namespaced = true;
+  static apiBase = "/api/v1/configmaps"
 
   constructor(data: KubeJsonApiData) {
     super(data);
@@ -22,8 +24,5 @@ export class ConfigMap extends KubeObject {
 }
 
 export const configMapApi = new KubeApi({
-  kind: ConfigMap.kind,
-  apiBase: "/api/v1/configmaps",
-  isNamespaced: true,
   objectConstructor: ConfigMap,
 });

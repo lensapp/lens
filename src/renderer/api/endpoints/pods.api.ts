@@ -163,6 +163,8 @@ export interface IPodContainerStatus {
 @autobind()
 export class Pod extends WorkloadKubeObject {
   static kind = "Pod"
+  static namespaced = true
+  static apiBase = "/api/v1/pods"
 
   spec: {
     volumes?: {
@@ -419,8 +421,5 @@ export class Pod extends WorkloadKubeObject {
 }
 
 export const podsApi = new PodsApi({
-  kind: Pod.kind,
-  apiBase: "/api/v1/pods",
-  isNamespaced: true,
   objectConstructor: Pod,
 });

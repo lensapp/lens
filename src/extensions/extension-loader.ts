@@ -9,6 +9,7 @@ import { app, remote, ipcRenderer } from "electron"
 import { pageRegistry } from "./page-registry";
 import { appPreferenceRegistry } from "./app-preference-registry"
 import { kubeObjectMenuRegistry } from "../renderer/api/kube-object-menu-registry"
+import { clusterFeatureRegistry } from "./cluster-feature-registry"
 
 export interface InstalledExtension extends ExtensionModel {
   manifestPath: string;
@@ -49,6 +50,7 @@ export class ExtensionLoader {
     this.autoloadExtensions(getLensRuntimeEnv, (instance: LensRendererExtension) => {
       instance.registerPages(pageRegistry)
       instance.registerAppPreferences(appPreferenceRegistry)
+      instance.registerClusterFeatures(clusterFeatureRegistry)
     })
   }
 
@@ -62,7 +64,7 @@ export class ExtensionLoader {
   protected autoloadExtensions(getLensRuntimeEnv: () => LensExtensionRuntimeEnv, callback: (instance: LensExtension) => void) {
     return reaction(() => this.extensions.toJS(), (installedExtensions) => {
       for(const [id, ext] of installedExtensions) {
-        let instance = this.instances.get(ext.manifestPath)
+        let instance = this.instances.get(ext.id)
         if (!instance) {
           const extensionModule = this.requireExtension(ext)
           if (!extensionModule) {
@@ -70,9 +72,12 @@ export class ExtensionLoader {
           }
           const LensExtensionClass = extensionModule.default;
           instance = new LensExtensionClass({ ...ext.manifest, manifestPath: ext.manifestPath, id: ext.manifestPath }, ext.manifest);
-          instance.enable(getLensRuntimeEnv())
-          callback(instance)
-          this.instances.set(ext.id, instance)
+          try {
+            instance.enable(getLensRuntimeEnv())
+            callback(instance)
+          } finally {
+            this.instances.set(ext.id, instance)
+          }
         }
       }
     }, {

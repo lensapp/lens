@@ -10,7 +10,6 @@ import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from 
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager"
 import { getNodeWarningConditions, loadConfig, podHasIssues } from "../common/kube-helpers"
-import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from "./feature-manager";
 import request, { RequestPromiseOptions } from "request-promise-native"
 import { apiResources } from "../common/rbac";
 import logger from "./logger"
@@ -36,7 +35,6 @@ export interface ClusterState extends ClusterModel {
   isAdmin: boolean;
   allowedNamespaces: string[]
   allowedResources: string[]
-  features: FeatureStatusMap;
 }
 
 export class Cluster implements ClusterModel {
@@ -69,7 +67,6 @@ export class Cluster implements ClusterModel {
   @observable isAdmin = false;
   @observable eventCount = 0;
   @observable preferences: ClusterPreferences = {};
-  @observable features: FeatureStatusMap = {};
   @observable allowedNamespaces: string[] = [];
   @observable allowedResources: string[] = [];
 
@@ -178,12 +175,10 @@ export class Cluster implements ClusterModel {
     await this.refreshConnectionStatus();
     if (this.accessible) {
       this.distribution = this.detectKubernetesDistribution(this.version)
-      const [features, isAdmin, nodesCount] = await Promise.all([
-        getFeatures(this),
+      const [isAdmin, nodesCount] = await Promise.all([
         this.isClusterAdmin(),
         this.getNodeCount(),
       ]);
-      this.features = features;
       this.isAdmin = isAdmin;
       this.nodes = nodesCount;
       await Promise.all([
@@ -223,18 +218,6 @@ export class Cluster implements ClusterModel {
 
   getProxyKubeconfigPath(): string {
     return this.kubeconfigManager.getPath()
-  }
-
-  async installFeature(name: string, config: any) {
-    return installFeature(name, this, config)
-  }
-
-  async upgradeFeature(name: string, config: any) {
-    return upgradeFeature(name, this, config)
-  }
-
-  async uninstallFeature(name: string) {
-    return uninstallFeature(name, this)
   }
 
   protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
@@ -398,7 +381,6 @@ export class Cluster implements ClusterModel {
       version: this.version,
       distribution: this.distribution,
       isAdmin: this.isAdmin,
-      features: this.features,
       eventCount: this.eventCount,
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,

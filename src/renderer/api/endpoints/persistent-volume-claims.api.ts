@@ -24,6 +24,8 @@ export interface IPvcMetrics<T = IMetrics> {
 @autobind()
 export class PersistentVolumeClaim extends KubeObject {
   static kind = "PersistentVolumeClaim"
+  static namespaced = true
+  static apiBase = "/api/v1/persistentvolumeclaims"
 
   spec: {
     accessModes: string[];
@@ -81,8 +83,5 @@ export class PersistentVolumeClaim extends KubeObject {
 }
 
 export const pvcApi = new PersistentVolumeClaimsApi({
-  kind: PersistentVolumeClaim.kind,
-  apiBase: "/api/v1/persistentvolumeclaims",
-  isNamespaced: true,
   objectConstructor: PersistentVolumeClaim,
 });
