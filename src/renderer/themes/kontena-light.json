@@ -62,6 +62,7 @@
     "dockInfoBackground": "#e8e8e8",
     "dockInfoBorderColor": "#c9cfd3",
     "logsBackground": "#ffffff",
+    "logRowHoverBackground": "#eeeeee",
     "terminalBackground": "#ffffff",
     "terminalForeground": "#2d2d2d",
     "terminalCursor": "#2d2d2d",
