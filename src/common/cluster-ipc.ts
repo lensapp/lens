@@ -30,7 +30,7 @@ export const clusterIpc = {
     channel: "cluster:refresh",
     handle: (clusterId: ClusterId) => {
       const cluster = clusterStore.getById(clusterId);
-      if (cluster) return cluster.refresh();
+      if (cluster) return cluster.refresh({ refreshMetadata: true })
     },
   }),
 

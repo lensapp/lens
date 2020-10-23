@@ -11,13 +11,13 @@ import { nodesStore } from "./nodes.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { Node, nodesApi } from "../../api/endpoints";
+import { Node } from "../../api/endpoints";
 import { NodeCharts } from "./node-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { KubeEventDetails } from "../+events/kube-event-details";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Node> {
 }
@@ -155,6 +155,10 @@ export class NodeDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(nodesApi, {
-  Details: NodeDetails,
-});
+kubeObjectDetailRegistry.add({
+  kind: "Node",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <NodeDetails {...props} />
+  }
+})

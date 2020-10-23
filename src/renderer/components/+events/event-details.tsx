@@ -7,12 +7,12 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { eventApi, KubeEvent } from "../../api/endpoints/events.api";
-import { apiManager } from "../../api/api-manager";
+import { KubeEvent } from "../../api/endpoints/events.api";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { getDetailsUrl } from "../../navigation";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { lookupApiLink } from "../../api/kube-api";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<KubeEvent> {
 }
@@ -74,6 +74,10 @@ export class EventDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(eventApi, {
-  Details: EventDetails,
-});
+kubeObjectDetailRegistry.add({
+  kind: "Event",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <EventDetails {...props}/>
+  }
+})

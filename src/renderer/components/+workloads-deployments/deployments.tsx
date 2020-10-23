@@ -21,7 +21,8 @@ import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
 import { KubeEventIcon } from "../+events/kube-event-icon";
-import { apiManager } from "../../api/api-manager";
+import { kubeObjectMenuRegistry } from "../../api/kube-object-menu-registry";
+import { DeploymentDetails } from "./deployment-details";
 
 enum sortBy {
   name = "name",
@@ -96,15 +97,18 @@ export class Deployments extends React.Component<Props> {
 export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
   const { object, toolbar } = props;
   return (
-    <KubeObjectMenu {...props}>
-      <MenuItem onClick={() => DeploymentScaleDialog.open(object)}>
-        <Icon material="open_with" title={_i18n._(t`Scale`)} interactive={toolbar}/>
-        <span className="title"><Trans>Scale</Trans></span>
-      </MenuItem>
-    </KubeObjectMenu>
+    <MenuItem onClick={() => DeploymentScaleDialog.open(object)}>
+      <Icon material="open_with" title={_i18n._(t`Scale`)} interactive={toolbar}/>
+      <span className="title"><Trans>Scale</Trans></span>
+    </MenuItem>
   )
 }
 
-apiManager.registerViews(deploymentApi, {
-  Menu: DeploymentMenu,
-});
+kubeObjectMenuRegistry.add({
+  kind: "Deployment",
+  apiVersions: ["apps/v1"],
+  components: {
+    MenuItem: DeploymentMenu
+  }
+})
+

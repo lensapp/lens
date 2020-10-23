@@ -5,15 +5,15 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
 import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { Ingress, ILoadBalancerIngress, ingressApi } from "../../api/endpoints";
+import { Ingress, ILoadBalancerIngress } from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { ingressStore } from "./ingress.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { IngressCharts } from "./ingress-charts";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {
 }
@@ -134,6 +134,10 @@ export class IngressDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(ingressApi, {
-  Details: IngressDetails,
+kubeObjectDetailRegistry.add({
+  kind: "Ingress",
+  apiVersions: ["extensions/v1beta1"],
+  components: {
+    Details: (props) => <IngressDetails {...props} />
+  }
 })

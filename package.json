@@ -175,6 +175,8 @@
   "lens": {
     "extensions": [
       "telemetry",
+      "pod-menu",
+      "node-menu",
       "support-page"
     ]
   },
