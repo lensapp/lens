@@ -129,6 +129,7 @@ export const helmReleasesApi = {
 export class HelmRelease implements ItemObject {
   constructor(data: any) {
     Object.assign(this, data);
+    this.revision = parseInt(data.revision);
   }
 
   static create(data: any) {
