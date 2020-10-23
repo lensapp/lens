@@ -128,7 +128,7 @@ export class Preferences extends React.Component {
         <KubectlBinaries preferences={preferences}/>
 
         <h2><Trans>Helm</Trans></h2>
-        <Select
+        <Select id="HelmRepoSelect"
           placeholder={<Trans>Repositories</Trans>}
           isLoading={this.helmLoading}
           isDisabled={this.helmLoading}
