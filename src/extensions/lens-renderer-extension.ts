@@ -1,6 +1,5 @@
 import { LensExtension } from "./lens-extension"
-import type { PageRegistry, AppPreferenceRegistry, StatusBarRegistry } from "./registries/page-registry"
-import type { KubeObjectMenuRegistry } from "../renderer/api/kube-object-menu-registry";
+import type { PageRegistry, AppPreferenceRegistry, StatusBarRegistry, KubeObjectMenuRegistry } from "./registries"
 
 export class LensRendererExtension extends LensExtension {
   registerPages(registry: PageRegistry) {

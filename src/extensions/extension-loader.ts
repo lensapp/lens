@@ -6,9 +6,7 @@ import { broadcastIpc } from "../common/ipc"
 import { observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
-import { appPreferenceRegistry, menuRegistry, pageRegistry, statusBarRegistry, kubeObjectMenuRegistry } from "./registries";
-import { app, remote, ipcRenderer } from "electron"
-import { pageRegistry } from "./page-registry";
+import { appPreferenceRegistry, kubeObjectMenuRegistry, menuRegistry, pageRegistry, statusBarRegistry } from "./registries";
 
 export interface InstalledExtension extends ExtensionModel {
   manifestPath: string;
