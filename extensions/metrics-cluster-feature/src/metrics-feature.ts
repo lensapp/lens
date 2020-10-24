@@ -58,37 +58,31 @@ export class MetricsFeature extends ClusterFeature.Feature {
       sc.metadata?.annotations?.['storageclass.beta.kubernetes.io/is-default-class'] === 'true'
     ));
 
-    const template = super.renderTemplates(path.join(__dirname, "../resources/"))
-    console.log(template)
-    super.applyResources(cluster, template)
+    super.applyResources(cluster, super.renderTemplates(path.join(__dirname, "../resources/")))
   }
 
   async upgrade(cluster: Store.Cluster): Promise<void> {
     return this.install(cluster)
   }
 
-  async featureStatus(cluster: Store.Cluster): Promise<ClusterFeature.FeatureStatus> {
-    const status: ClusterFeature.FeatureStatus = {
-      currentVersion: null,
-      installed: false,
-      latestVersion: this.latestVersion,
-      canUpgrade: false, // Dunno yet
-    };
-
+  async updateStatus(cluster: Store.Cluster): Promise<ClusterFeature.FeatureStatus> {
     try {
       const statefulSet = K8sApi.forCluster(cluster, K8sApi.StatefulSet)
       const prometheus = await statefulSet.get({name: "prometheus", namespace: "lens-metrics"})
-      console.log("prom", cluster)
       if (prometheus?.kind) {
-        status.installed = true;
-        status.currentVersion = prometheus.spec.template.spec.containers[0].image.split(":")[1];
-        status.canUpgrade = semver.lt(status.currentVersion, this.latestVersion, true);
+        this.status.installed = true;
+        this.status.currentVersion = prometheus.spec.template.spec.containers[0].image.split(":")[1];
+        this.status.canUpgrade = semver.lt(this.status.currentVersion, this.latestVersion, true);
+      } else {
+        this.status.installed = false
       }
-    } catch {
-      // ignore error
+    } catch(e) {
+      if (e?.error?.code === 404) {
+        this.status.installed = false
+      }
     }
 
-    return status;
+    return this.status
   }
 
   async uninstall(cluster: Store.Cluster): Promise<void> {

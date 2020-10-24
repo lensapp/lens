@@ -1,20 +1,12 @@
 import fs from "fs";
 import path from "path"
 import hb from "handlebars"
+import { observable } from "mobx"
 import { ResourceApplier } from "./resource-applier"
 import { Cluster } from "./cluster";
 import logger from "./logger";
-import { app, remote } from "electron"
+import { app } from "electron"
 import { clusterIpc } from "../common/cluster-ipc"
-
-export type FeatureStatusMap = Record<string, FeatureStatus>
-export type FeatureMap = Record<string, Feature>
-
-export interface FeatureInstallRequest {
-  clusterId: string;
-  name: string;
-  config?: any;
-}
 
 export interface FeatureStatus {
   currentVersion: string;
@@ -24,9 +16,16 @@ export interface FeatureStatus {
 }
 
 export abstract class Feature {
-  public name: string;
-  public latestVersion: string;
-  public config: any;
+  name: string;
+  latestVersion: string;
+  config: any;
+
+  @observable status: FeatureStatus = {
+    currentVersion: null,
+    installed: false,
+    latestVersion: null,
+    canUpgrade: false
+  }
 
   abstract async install(cluster: Cluster): Promise<void>;
 
@@ -34,7 +33,7 @@ export abstract class Feature {
 
   abstract async uninstall(cluster: Cluster): Promise<void>;
 
-  abstract async featureStatus(cluster: Cluster): Promise<FeatureStatus>;
+  abstract async updateStatus(cluster: Cluster): Promise<FeatureStatus>;
 
   protected async applyResources(cluster: Cluster, resources: string[]) {
     if (app) {

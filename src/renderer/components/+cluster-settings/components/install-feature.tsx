@@ -5,7 +5,8 @@ import { Cluster } from "../../../../main/cluster";
 import { Button } from "../../button";
 import { Notifications } from "../../notifications";
 import { Spinner } from "../../spinner";
-import { Feature, FeatureStatus } from "../../../../main/feature";
+import { Feature } from "../../../../main/feature";
+import { interval } from "../../../utils";
 
 interface Props {
   cluster: Cluster
@@ -15,14 +16,21 @@ interface Props {
 @observer
 export class InstallFeature extends React.Component<Props> {
   @observable loading = false;
-  @observable status: FeatureStatus
 
   componentDidMount() {
-    this.props.feature.featureStatus(this.props.cluster).then((status) => {
-      this.status = status
+    const feature = this.props.feature
+    const cluster = this.props.cluster
+    const statusUpdate = interval(20, () => {
+      feature.updateStatus(cluster)
     })
+    statusUpdate.start(true)
+
+    disposeOnUnmount(this, () => {
+      statusUpdate.stop()
+    })
+
     disposeOnUnmount(this,
-      reaction(() => this.status, () => {
+      reaction(() => feature.status.installed, () => {
         this.loading = false;
       }, { equals: comparer.structural })
     );
@@ -32,11 +40,9 @@ export class InstallFeature extends React.Component<Props> {
     const { cluster, feature } = this.props;
     const disabled = !cluster.isAdmin || this.loading;
     const loadingIcon = this.loading ? <Spinner/> : null;
-    const features = this.status
-    if (!features) return null
     return (
       <div className="flex gaps align-center">
-        {features.canUpgrade &&
+        {feature.status.canUpgrade &&
           <Button
             primary
             disabled={disabled}
@@ -47,7 +53,7 @@ export class InstallFeature extends React.Component<Props> {
             Upgrade
           </Button>
         }
-        {features.installed &&
+        {feature.status.installed &&
           <Button
             accent
             disabled={disabled}
@@ -58,7 +64,7 @@ export class InstallFeature extends React.Component<Props> {
             Uninstall
           </Button>
         }
-        {!features.installed && !features.canUpgrade &&
+        {!feature.status.installed && !feature.status.canUpgrade &&
           <Button
             primary
             disabled={disabled}
