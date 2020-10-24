@@ -14,7 +14,7 @@ export interface ILanguage {
 
 export const _i18n = setupI18n({
   missing: (message, id) => {
-    console.warn('Missing localization:', message, id);
+    // console.warn('Missing localization:', message, id);
     return id;
   }
 });

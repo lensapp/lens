@@ -6,7 +6,7 @@ import { editResourceTab } from "../dock/edit-resource.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
 import { hideDetails } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
-import { kubeObjectMenuRegistry } from "../../api/kube-object-menu-registry";
+import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
 export interface KubeObjectMenuProps<T extends KubeObject = any> extends MenuActionsProps {
   object: T;

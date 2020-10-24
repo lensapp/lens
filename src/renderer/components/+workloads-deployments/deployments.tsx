@@ -4,8 +4,8 @@ import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { t, Trans } from "@lingui/macro";
-import { Deployment, deploymentApi } from "../../api/endpoints";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { Deployment } from "../../api/endpoints";
+import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
@@ -21,8 +21,7 @@ import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
 import { KubeEventIcon } from "../+events/kube-event-icon";
-import { kubeObjectMenuRegistry } from "../../api/kube-object-menu-registry";
-import { DeploymentDetails } from "./deployment-details";
+import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
 enum sortBy {
   name = "name",

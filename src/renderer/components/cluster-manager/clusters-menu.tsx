@@ -11,7 +11,7 @@ import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
-import { cssNames, IClassName, autobind } from "../../utils";
+import { autobind, cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
 import { navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
@@ -21,8 +21,8 @@ import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
-import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
-import { pageRegistry } from "../../../extensions/page-registry";
+import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
+import { pageRegistry } from "../../../extensions/registries/page-registry";
 
 interface Props {
   className?: IClassName;
@@ -155,9 +155,10 @@ export class ClustersMenu extends React.Component<Props> {
             <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>} />
           )}
         </div>
-        <div className="dynamic-pages">
-          {pageRegistry.globalPages.map(({ path, components: { MenuIcon } }) => {
-            return <MenuIcon key={path} onClick={() => navigate(path)}/>
+        <div className="extensions">
+          {pageRegistry.globalPages.map(({ path, url = String(path), components: { MenuIcon } }) => {
+            if (!MenuIcon) return;
+            return <MenuIcon key={url} onClick={() => navigate(url)}/>
           })}
         </div>
       </div>

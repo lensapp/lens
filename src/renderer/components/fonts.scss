@@ -1,6 +1,14 @@
 // Custom fonts
-@import "~material-design-icons/iconfont/material-icons.css";
 @import "~typeface-roboto/index.css";
+
+// Material Design Icons, used primarily in icon.tsx
+// Latest: https://github.com/google/material-design-icons/tree/master/font
+@font-face {
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/MaterialIcons-Regular.ttf") format("truetype");
+}
 
 // Patched RobotoMono font with icons
 // RobotoMono Windows Compatible for using in terminal

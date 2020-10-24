@@ -9,8 +9,8 @@
     "styles": []
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "dev": "npm run build --watch"
+    "build": "webpack -p",
+    "dev": "webpack --watch"
   },
   "dependencies": {},
   "devDependencies": {

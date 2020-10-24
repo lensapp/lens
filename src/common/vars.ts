@@ -21,11 +21,6 @@ export const rendererDir = path.join(contextDir, "src/renderer");
 export const htmlTemplate = path.resolve(rendererDir, "template.html");
 export const sassCommonVars = path.resolve(rendererDir, "components/vars.scss");
 
-// Extensions
-export const extensionsLibName = `${appName}-extensions.api`
-export const extensionsRendererLibName = `${appName}-extensions-renderer.api`
-export const extensionsDir = path.join(contextDir, "src/extensions");
-
 // Special runtime paths
 defineGlobal("__static", {
   get() {
