@@ -10,11 +10,13 @@ import * as Store from "./stores"
 import * as Util from "./utils"
 import * as Registry from "../registries"
 import * as CommonVars from "../../common/vars";
+import * as ClusterFeature from "./cluster-feature"
 
 export let windowManager: WindowManager;
 
 export {
   EventBus,
+  ClusterFeature,
   Store,
   Util,
   Registry,

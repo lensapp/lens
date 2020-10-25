@@ -23,7 +23,7 @@
     }
   },
   "include": [
-    "renderer.ts",
+    "renderer.tsx",
     "../../src/extensions/npm/**/*.d.ts",
     "src/**/*"
   ]
