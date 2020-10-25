@@ -1,10 +1,14 @@
 import { observable } from "mobx"
-import { Feature } from "../main/feature";
+import { ClusterFeature } from "./cluster-feature";
+
+export interface ClusterFeatureComponents {
+  Description: React.ComponentType<any>;
+}
 
 export interface ClusterFeatureRegistration {
   title: string;
-  description: string;
-  feature: Feature
+  components: ClusterFeatureComponents
+  feature: ClusterFeature
 }
 
 export class ClusterFeatureRegistry {

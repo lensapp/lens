@@ -5,17 +5,18 @@ import { Cluster } from "../../../../main/cluster";
 import { Button } from "../../button";
 import { Notifications } from "../../notifications";
 import { Spinner } from "../../spinner";
-import { Feature } from "../../../../main/feature";
+import { ClusterFeature } from "../../../../extensions/cluster-feature";
 import { interval } from "../../../utils";
 
 interface Props {
   cluster: Cluster
-  feature: Feature
+  feature: ClusterFeature
 }
 
 @observer
 export class InstallFeature extends React.Component<Props> {
   @observable loading = false;
+  @observable message = "";
 
   componentDidMount() {
     const feature = this.props.feature
@@ -32,6 +33,7 @@ export class InstallFeature extends React.Component<Props> {
     disposeOnUnmount(this,
       reaction(() => feature.status.installed, () => {
         this.loading = false;
+        this.message = ""
       }, { equals: comparer.structural })
     );
   }
@@ -57,9 +59,10 @@ export class InstallFeature extends React.Component<Props> {
           <Button
             accent
             disabled={disabled}
-            onClick={this.runAction(() =>
+            onClick={this.runAction(async () => {
+              this.message = "Uninstalling feature ..."
               feature.uninstall(cluster)
-            )}
+            })}
           >
             Uninstall
           </Button>
@@ -68,15 +71,17 @@ export class InstallFeature extends React.Component<Props> {
           <Button
             primary
             disabled={disabled}
-            onClick={this.runAction(() =>
+            onClick={this.runAction(async () =>{
+              this.message = "Installing feature ..."
               feature.install(cluster)
-            )}
+            })}
           >
             Install
           </Button>
         }
         {loadingIcon}
         {!cluster.isAdmin && <span className='admin-note'>Actions can only be performed by admins.</span>}
+        {cluster.isAdmin && this.loading && this.message !== "" && <span className='admin-note'>{this.message}</span>}
       </div>
     );
   }

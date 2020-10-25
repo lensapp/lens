@@ -19,7 +19,7 @@ export class Features extends React.Component<Props> {
             <InstallFeature cluster={cluster} feature={f.feature}>
               <>
                 <SubTitle title={f.title}/>
-                <p>{f.description}</p>
+                <p><f.components.Description /></p>
               </>
             </InstallFeature>
           )

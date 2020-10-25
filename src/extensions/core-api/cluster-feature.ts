@@ -1,1 +1,1 @@
-export { Feature, FeatureStatus } from "../../main/feature"
+export { ClusterFeature as Feature, ClusterFeatureStatus as FeatureStatus } from "../cluster-feature"

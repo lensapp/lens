@@ -2,25 +2,25 @@ import fs from "fs";
 import path from "path"
 import hb from "handlebars"
 import { observable } from "mobx"
-import { ResourceApplier } from "./resource-applier"
-import { Cluster } from "./cluster";
-import logger from "./logger";
+import { ResourceApplier } from "../main/resource-applier"
+import { Cluster } from "../main/cluster";
+import logger from "../main/logger";
 import { app } from "electron"
 import { clusterIpc } from "../common/cluster-ipc"
 
-export interface FeatureStatus {
+export interface ClusterFeatureStatus {
   currentVersion: string;
   installed: boolean;
   latestVersion: string;
   canUpgrade: boolean;
 }
 
-export abstract class Feature {
+export abstract class ClusterFeature {
   name: string;
   latestVersion: string;
   config: any;
 
-  @observable status: FeatureStatus = {
+  @observable status: ClusterFeatureStatus = {
     currentVersion: null,
     installed: false,
     latestVersion: null,
@@ -33,7 +33,7 @@ export abstract class Feature {
 
   abstract async uninstall(cluster: Cluster): Promise<void>;
 
-  abstract async updateStatus(cluster: Cluster): Promise<FeatureStatus>;
+  abstract async updateStatus(cluster: Cluster): Promise<ClusterFeatureStatus>;
 
   protected async applyResources(cluster: Cluster, resources: string[]) {
     if (app) {
