@@ -1,11 +1,7 @@
 import { LensExtension } from "./lens-extension"
-import type { PageRegistry } from "./page-registry"
-import type { AppPreferenceRegistry } from "./app-preference-registry";
-import type { KubeObjectMenuRegistry } from "../renderer/api/kube-object-menu-registry";
-import type { ClusterFeatureRegistry } from "./core-api/registries";
+import type { PageRegistry, AppPreferenceRegistry, StatusBarRegistry, KubeObjectMenuRegistry, ClusterFeatureRegistry } from "./registries"
 
 export class LensRendererExtension extends LensExtension {
-
   registerPages(registry: PageRegistry) {
     return
   }
@@ -15,6 +11,10 @@ export class LensRendererExtension extends LensExtension {
   }
 
   registerClusterFeatures(registry: ClusterFeatureRegistry) {
+    return
+  }
+
+  registerStatusBarIcon(registry: StatusBarRegistry) {
     return
   }
 

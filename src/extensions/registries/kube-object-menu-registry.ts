@@ -1,5 +1,5 @@
-import { observable } from "mobx"
 import React from "react"
+import { BaseRegistry } from "./base-registry";
 
 export interface KubeObjectMenuComponents {
   MenuItem: React.ComponentType<any>;
@@ -11,18 +11,7 @@ export interface KubeObjectMenuRegistration {
   components: KubeObjectMenuComponents;
 }
 
-export class KubeObjectMenuRegistry {
-  items = observable.array<KubeObjectMenuRegistration>([], { deep: false });
-
-  add(item: KubeObjectMenuRegistration) {
-    this.items.push(item)
-    return () => {
-      this.items.replace(
-        this.items.filter(c => c !== item)
-      )
-    };
-  }
-
+export class KubeObjectMenuRegistry extends BaseRegistry<KubeObjectMenuRegistration> {
   getItemsForKind(kind: string, apiVersion: string) {
     return this.items.filter((item) => {
       return item.kind === kind && item.apiVersions.includes(apiVersion)

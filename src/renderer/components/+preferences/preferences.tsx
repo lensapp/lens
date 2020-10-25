@@ -1,10 +1,10 @@
 import "./preferences.scss"
+
 import React from "react";
 import { observer } from "mobx-react";
 import { action, computed, observable } from "mobx";
 import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
-import { WizardLayout } from "../layout/wizard-layout";
 import { Icon } from "../icon";
 import { Select, SelectOption } from "../select";
 import { userStore } from "../../../common/user-store";
@@ -14,10 +14,10 @@ import { Checkbox } from "../checkbox";
 import { Notifications } from "../notifications";
 import { Badge } from "../badge";
 import { themeStore } from "../../theme.store";
-import { history } from "../../navigation";
 import { Tooltip } from "../tooltip";
 import { KubectlBinaries } from "./kubectl-binaries";
-import { appPreferenceRegistry } from "../../../extensions/app-preference-registry";
+import { appPreferenceRegistry } from "../../../extensions/registries/app-preference-registry";
+import { PageLayout } from "../layout/page-layout";
 
 @observer
 export class Preferences extends React.Component {
@@ -41,19 +41,7 @@ export class Preferences extends React.Component {
   }
 
   async componentDidMount() {
-    window.addEventListener('keydown', this.onEscapeKey);
     await this.loadHelmRepos();
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.onEscapeKey);
-  }
-
-  onEscapeKey = (evt: KeyboardEvent) => {
-    if (evt.code === "Escape") {
-      evt.stopPropagation();
-      history.goBack();
-    }
   }
 
   @action
@@ -115,91 +103,85 @@ export class Preferences extends React.Component {
 
   render() {
     const { preferences } = userStore;
-    const extensionPreferences = appPreferenceRegistry.preferences
-    const header = (
-      <>
-        <h2>Preferences</h2>
-        <Icon material="close" big onClick={history.goBack}/>
-      </>
-    );
+    const header = <h2><Trans>Preferences</Trans></h2>;
     return (
-      <div className="Preferences">
-        <WizardLayout header={header} centered>
-          <h2><Trans>Color Theme</Trans></h2>
-          <Select
-            options={this.themeOptions}
-            value={preferences.colorTheme}
-            onChange={({ value }: SelectOption) => preferences.colorTheme = value}
-          />
+      <PageLayout showOnTop className="Preferences" header={header}>
+        <h2><Trans>Color Theme</Trans></h2>
+        <Select
+          options={this.themeOptions}
+          value={preferences.colorTheme}
+          onChange={({ value }: SelectOption) => preferences.colorTheme = value}
+        />
 
-          <h2><Trans>HTTP Proxy</Trans></h2>
-          <Input
-            theme="round-black"
-            placeholder={_i18n._(t`Type HTTP proxy url (example: http://proxy.acme.org:8080)`)}
-            value={this.httpProxy}
-            onChange={v => this.httpProxy = v}
-            onBlur={() => preferences.httpsProxy = this.httpProxy}
-          />
-          <small className="hint">
-            <Trans>Proxy is used only for non-cluster communication.</Trans>
-          </small>
+        <h2><Trans>HTTP Proxy</Trans></h2>
+        <Input
+          theme="round-black"
+          placeholder={_i18n._(t`Type HTTP proxy url (example: http://proxy.acme.org:8080)`)}
+          value={this.httpProxy}
+          onChange={v => this.httpProxy = v}
+          onBlur={() => preferences.httpsProxy = this.httpProxy}
+        />
+        <small className="hint">
+          <Trans>Proxy is used only for non-cluster communication.</Trans>
+        </small>
 
-          <KubectlBinaries preferences={preferences} />
+        <KubectlBinaries preferences={preferences}/>
 
-          <h2><Trans>Helm</Trans></h2>
-          <Select
-            placeholder={<Trans>Repositories</Trans>}
-            isLoading={this.helmLoading}
-            isDisabled={this.helmLoading}
-            options={this.helmOptions}
-            onChange={this.onRepoSelect}
-            formatOptionLabel={this.formatHelmOptionLabel}
-            controlShouldRenderValue={false}
-          />
-          <div className="repos flex gaps column">
-            {Array.from(this.helmAddedRepos).map(([name, repo]) => {
-              const tooltipId = `message-${name}`;
-              return (
-                <Badge key={name} className="added-repo flex gaps align-center justify-space-between">
-                  <span id={tooltipId} className="repo">{name}</span>
-                  <Icon
-                    material="delete"
-                    onClick={() => this.removeRepo(repo)}
-                    tooltip={<Trans>Remove</Trans>}
-                  />
-                  <Tooltip targetId={tooltipId} formatters={{ narrow: true }}>
-                    {repo.url}
-                  </Tooltip>
-                </Badge>
-              )
-            })}
-          </div>
-
-          <h2><Trans>Certificate Trust</Trans></h2>
-          <Checkbox
-            label={<Trans>Allow untrusted Certificate Authorities</Trans>}
-            value={preferences.allowUntrustedCAs}
-            onChange={v => preferences.allowUntrustedCAs = v}
-          />
-          <small className="hint">
-            <Trans>This will make Lens to trust ANY certificate authority without any validations.</Trans>{" "}
-            <Trans>Needed with some corporate proxies that do certificate re-writing.</Trans>{" "}
-            <Trans>Does not affect cluster communications!</Trans>
-          </small>
-
-          {extensionPreferences.map(({title, components: { Hint, Input}}) => {
+        <h2><Trans>Helm</Trans></h2>
+        <Select
+          placeholder={<Trans>Repositories</Trans>}
+          isLoading={this.helmLoading}
+          isDisabled={this.helmLoading}
+          options={this.helmOptions}
+          onChange={this.onRepoSelect}
+          formatOptionLabel={this.formatHelmOptionLabel}
+          controlShouldRenderValue={false}
+        />
+        <div className="repos flex gaps column">
+          {Array.from(this.helmAddedRepos).map(([name, repo]) => {
+            const tooltipId = `message-${name}`;
             return (
-              <div key={title}>
+              <Badge key={name} className="added-repo flex gaps align-center justify-space-between">
+                <span id={tooltipId} className="repo">{name}</span>
+                <Icon
+                  material="delete"
+                  onClick={() => this.removeRepo(repo)}
+                  tooltip={<Trans>Remove</Trans>}
+                />
+                <Tooltip targetId={tooltipId} formatters={{ narrow: true }}>
+                  {repo.url}
+                </Tooltip>
+              </Badge>
+            )
+          })}
+        </div>
+
+        <h2><Trans>Certificate Trust</Trans></h2>
+        <Checkbox
+          label={<Trans>Allow untrusted Certificate Authorities</Trans>}
+          value={preferences.allowUntrustedCAs}
+          onChange={v => preferences.allowUntrustedCAs = v}
+        />
+        <small className="hint">
+          <Trans>This will make Lens to trust ANY certificate authority without any validations.</Trans>{" "}
+          <Trans>Needed with some corporate proxies that do certificate re-writing.</Trans>{" "}
+          <Trans>Does not affect cluster communications!</Trans>
+        </small>
+
+        <div className="extensions flex column gaps">
+          {appPreferenceRegistry.getItems().map(({ title, components: { Hint, Input } }, index) => {
+            return (
+              <div key={index} className="preference">
                 <h2>{title}</h2>
-                <Input />
+                <Input/>
                 <small className="hint">
-                  <Hint />
+                  <Hint/>
                 </small>
               </div>
             )
           })}
-        </WizardLayout>
-      </div>
+        </div>
+      </PageLayout>
     );
   }
 }

@@ -1,5 +1,5 @@
 import { observable } from "mobx"
-import { ClusterFeature } from "./cluster-feature";
+import { ClusterFeature } from "../cluster-feature";
 
 export interface ClusterFeatureComponents {
   Description: React.ComponentType<any>;

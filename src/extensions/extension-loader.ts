@@ -1,15 +1,12 @@
-import type { ExtensionId, LensExtension, ExtensionManifest, ExtensionModel } from "./lens-extension"
+import type { ExtensionId, ExtensionManifest, ExtensionModel, LensExtension } from "./lens-extension"
+import type { LensMainExtension } from "./lens-main-extension"
 import type { LensRendererExtension } from "./lens-renderer-extension"
-import { broadcastIpc } from "../common/ipc"
-import type { LensExtensionRuntimeEnv } from "./lens-runtime"
 import path from "path"
+import { broadcastIpc } from "../common/ipc"
 import { observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
-import { app, remote, ipcRenderer } from "electron"
-import { pageRegistry } from "./page-registry";
-import { appPreferenceRegistry } from "./app-preference-registry"
-import { kubeObjectMenuRegistry } from "../renderer/api/kube-object-menu-registry"
-import { clusterFeatureRegistry } from "./cluster-feature-registry"
+import { app, ipcRenderer, remote } from "electron"
+import { appPreferenceRegistry, kubeObjectMenuRegistry, menuRegistry, pageRegistry, statusBarRegistry, clusterFeatureRegistry } from "./registries";
 
 export interface InstalledExtension extends ExtensionModel {
   manifestPath: string;
@@ -37,31 +34,32 @@ export class ExtensionLoader {
     }
   }
 
-  loadOnClusterRenderer(getLensRuntimeEnv: () => LensExtensionRuntimeEnv) {
-    logger.info('[EXTENSIONS-LOADER]: load on cluster renderer')
-    this.autoloadExtensions(getLensRuntimeEnv, (instance: LensRendererExtension) => {
+  loadOnMain() {
+    logger.info('[EXTENSIONS-LOADER]: load on main')
+    this.autoloadExtensions((instance: LensMainExtension) => {
+      instance.registerAppMenus(menuRegistry);
+    })
+  }
+
+  loadOnClusterManagerRenderer() {
+    logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
+    this.autoloadExtensions((instance: LensRendererExtension) => {
+      instance.registerPages(pageRegistry)
+      instance.registerAppPreferences(appPreferenceRegistry)
+      instance.registerClusterFeatures(clusterFeatureRegistry)
+      instance.registerStatusBarIcon(statusBarRegistry)
+    })
+  }
+
+  loadOnClusterRenderer() {
+    logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
+    this.autoloadExtensions((instance: LensRendererExtension) => {
       instance.registerPages(pageRegistry)
       instance.registerKubeObjectMenus(kubeObjectMenuRegistry)
     })
   }
 
-  loadOnMainRenderer(getLensRuntimeEnv: () => LensExtensionRuntimeEnv) {
-    logger.info('[EXTENSIONS-LOADER]: load on main renderer')
-    this.autoloadExtensions(getLensRuntimeEnv, (instance: LensRendererExtension) => {
-      instance.registerPages(pageRegistry)
-      instance.registerAppPreferences(appPreferenceRegistry)
-      instance.registerClusterFeatures(clusterFeatureRegistry)
-    })
-  }
-
-  loadOnMain(getLensRuntimeEnv: () => LensExtensionRuntimeEnv) {
-    logger.info('[EXTENSIONS-LOADER]: load on main')
-    this.autoloadExtensions(getLensRuntimeEnv, (instance: LensExtension) => {
-      // todo
-    })
-  }
-
-  protected autoloadExtensions(getLensRuntimeEnv: () => LensExtensionRuntimeEnv, callback: (instance: LensExtension) => void) {
+  protected autoloadExtensions(callback: (instance: LensExtension) => void) {
     return reaction(() => this.extensions.toJS(), (installedExtensions) => {
       for(const [id, ext] of installedExtensions) {
         let instance = this.instances.get(ext.id)
@@ -73,7 +71,7 @@ export class ExtensionLoader {
           const LensExtensionClass = extensionModule.default;
           instance = new LensExtensionClass({ ...ext.manifest, manifestPath: ext.manifestPath, id: ext.manifestPath }, ext.manifest);
           try {
-            instance.enable(getLensRuntimeEnv())
+            instance.enable()
             callback(instance)
           } finally {
             this.instances.set(ext.id, instance)
@@ -111,7 +109,9 @@ export class ExtensionLoader {
     const extension = this.getById(id);
     if (extension) {
       const instance = this.instances.get(extension.id)
-      if (instance) { await instance.disable() }
+      if (instance) {
+        await instance.disable()
+      }
       this.extensions.delete(id);
     }
   }

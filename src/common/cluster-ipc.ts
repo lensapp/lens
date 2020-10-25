@@ -2,7 +2,6 @@ import { createIpcChannel } from "./ipc";
 import { ClusterId, clusterStore } from "./cluster-store";
 import { extensionLoader } from "../extensions/extension-loader"
 import { appEventBus } from "./event-bus"
-import { clusterFeatureRegistry } from "../extensions/cluster-feature-registry";
 import { ResourceApplier } from "../main/resource-applier";
 
 export const clusterIpc = {
@@ -32,7 +31,7 @@ export const clusterIpc = {
     channel: "cluster:refresh",
     handle: (clusterId: ClusterId) => {
       const cluster = clusterStore.getById(clusterId);
-      if (cluster) return cluster.refresh();
+      if (cluster) return cluster.refresh({ refreshMetadata: true })
     },
   }),
 
