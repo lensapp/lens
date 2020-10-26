@@ -2,16 +2,15 @@ import "./endpoint-details.scss"
 
 import React from "react";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { DrawerItem, DrawerTitle } from "../drawer";
-import { Badge } from "../badge";
+import { Trans } from "@lingui/macro";
+import { DrawerTitle } from "../drawer";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { Endpoint, endpointApi } from "../../api/endpoints";
+import { Endpoint } from "../../api/endpoints";
 import { _i18n } from "../../i18n";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { EndpointSubsetList } from "./endpoint-subset-list";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Endpoint> {
 }
@@ -39,6 +38,10 @@ export class EndpointDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(endpointApi, {
-  Details: EndpointDetails,
+kubeObjectDetailRegistry.add({
+  kind: "Endpoints",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <EndpointDetails {...props} />
+  }
 })

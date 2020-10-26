@@ -6,14 +6,14 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
-import { Namespace, namespacesApi } from "../../api/endpoints";
+import { Namespace } from "../../api/endpoints";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { Link } from "react-router-dom";
 import { getDetailsUrl } from "../../navigation";
 import { Spinner } from "../spinner";
 import { resourceQuotaStore } from "../+config-resource-quotas/resource-quotas.store";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Namespace> {
 }
@@ -56,6 +56,10 @@ export class NamespaceDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(namespacesApi, {
-  Details: NamespaceDetails
-});
+kubeObjectDetailRegistry.add({
+  kind: "Namespace",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <NamespaceDetails {...props} />
+  }
+})

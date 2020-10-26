@@ -3,7 +3,7 @@ import "./role-binding-details.scss"
 import React from "react";
 import { t, Trans } from "@lingui/macro";
 import { AddRemoveButtons } from "../add-remove-buttons";
-import { clusterRoleBindingApi, IRoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
+import { IRoleBindingSubject, RoleBinding } from "../../api/endpoints";
 import { autobind, prevDefault } from "../../utils";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -15,8 +15,8 @@ import { roleBindingsStore } from "./role-bindings.store";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { _i18n } from "../../i18n";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<RoleBinding> {
 }
@@ -125,6 +125,17 @@ export class RoleBindingDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews([roleBindingApi, clusterRoleBindingApi], {
-  Details: RoleBindingDetails,
-});
+kubeObjectDetailRegistry.add({
+  kind: "RoleBinding",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  components: {
+    Details: (props) => <RoleBindingDetails {...props} />
+  }
+})
+kubeObjectDetailRegistry.add({
+  kind: "ClusterRoleBinding",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  components: {
+    Details: (props) => <RoleBindingDetails {...props} />
+  }
+})

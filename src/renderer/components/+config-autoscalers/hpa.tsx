@@ -80,20 +80,8 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
             )
           })
         ]}
-        renderItemMenu={(item: HorizontalPodAutoscaler) => {
-          return <HpaMenu object={item}/>
-        }}
       />
     );
   }
 }
 
-export function HpaMenu(props: KubeObjectMenuProps<HorizontalPodAutoscaler>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(hpaApi, {
-  Menu: HpaMenu,
-})

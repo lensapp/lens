@@ -21,8 +21,8 @@ import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { ReplicaSets } from "../+workloads-replicasets";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Deployment> {
 }
@@ -122,6 +122,10 @@ export class DeploymentDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(deploymentApi, {
-  Details: DeploymentDetails
+kubeObjectDetailRegistry.add({
+  kind: "Deployment",
+  apiVersions: ["apps/v1"],
+  components: {
+    Details: (props: any) => <DeploymentDetails {...props} />
+  }
 })

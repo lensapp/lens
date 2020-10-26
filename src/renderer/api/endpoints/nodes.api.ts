@@ -31,6 +31,8 @@ export interface INodeMetrics<T = IMetrics> {
 @autobind()
 export class Node extends KubeObject {
   static kind = "Node"
+  static namespaced = false
+  static apiBase = "/api/v1/nodes"
 
   spec: {
     podCIDR: string;
@@ -156,8 +158,5 @@ export class Node extends KubeObject {
 }
 
 export const nodesApi = new NodesApi({
-  kind: Node.kind,
-  apiBase: "/api/v1/nodes",
-  isNamespaced: false,
   objectConstructor: Node,
 });

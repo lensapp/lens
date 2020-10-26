@@ -9,13 +9,13 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { Link } from "react-router-dom";
-import { Secret, ServiceAccount, serviceAccountsApi } from "../../api/endpoints";
+import { Secret, ServiceAccount } from "../../api/endpoints";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { getDetailsUrl } from "../../navigation";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Icon } from "../icon";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<ServiceAccount> {
 }
@@ -132,6 +132,10 @@ export class ServiceAccountsDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(serviceAccountsApi, {
-  Details: ServiceAccountsDetails
+kubeObjectDetailRegistry.add({
+  kind: "ServiceAccount",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <ServiceAccountsDetails {...props} />
+  }
 })

@@ -4,19 +4,19 @@ import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { t, Trans } from "@lingui/macro";
-import { CronJob, cronJobApi } from "../../api/endpoints/cron-job.api";
+import { CronJob } from "../../api/endpoints/cron-job.api";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { cronJobStore } from "./cronjob.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { eventStore } from "../+events/event.store";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { ICronJobsRouteParams } from "../+workloads";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeEventIcon } from "../+events/kube-event-icon";
 import { _i18n } from "../../i18n";
-import { apiManager } from "../../api/api-manager";
 import { CronJobTriggerDialog } from "./cronjob-trigger-dialog";
+import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
 enum sortBy {
   name = "name",
@@ -85,15 +85,17 @@ export class CronJobs extends React.Component<Props> {
 export function CronJobMenu(props: KubeObjectMenuProps<CronJob>) {
   const { object, toolbar } = props;
   return (
-    <KubeObjectMenu {...props}>
-      <MenuItem onClick={() => CronJobTriggerDialog.open(object)}>
-        <Icon material="play_circle_filled" title={_i18n._(t`Trigger`)} interactive={toolbar}/>
-        <span className="title"><Trans>Trigger</Trans></span>
-      </MenuItem>
-    </KubeObjectMenu>
+    <MenuItem onClick={() => CronJobTriggerDialog.open(object)}>
+      <Icon material="play_circle_filled" title={_i18n._(t`Trigger`)} interactive={toolbar}/>
+      <span className="title"><Trans>Trigger</Trans></span>
+    </MenuItem>
   )
 }
 
-apiManager.registerViews(cronJobApi, {
-  Menu: CronJobMenu,
+kubeObjectMenuRegistry.add({
+  kind: "CronJob",
+  apiVersions: ["batch/v1beta1"],
+  components: {
+    MenuItem: CronJobMenu
+  }
 })

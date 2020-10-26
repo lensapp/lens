@@ -8,6 +8,8 @@ import { JsonApiParams } from "../json-api";
 @autobind()
 export class Job extends WorkloadKubeObject {
   static kind = "Job"
+  static namespaced = true
+  static apiBase = "/apis/batch/v1/jobs"
 
   spec: {
     parallelism?: number;
@@ -102,8 +104,5 @@ export class Job extends WorkloadKubeObject {
 }
 
 export const jobApi = new KubeApi({
-  kind: Job.kind,
-  apiBase: "/apis/batch/v1/jobs",
-  isNamespaced: true,
   objectConstructor: Job,
 });

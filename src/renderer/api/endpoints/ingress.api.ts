@@ -32,6 +32,8 @@ export interface ILoadBalancerIngress {
 @autobind()
 export class Ingress extends KubeObject {
   static kind = "Ingress"
+  static namespaced = true
+  static apiBase = "/apis/extensions/v1beta1/ingresses"
 
   spec: {
     tls: {
@@ -110,8 +112,5 @@ export class Ingress extends KubeObject {
 }
 
 export const ingressApi = new IngressApi({
-  kind: Ingress.kind,
-  apiBase: "/apis/extensions/v1beta1/ingresses",
-  isNamespaced: true,
   objectConstructor: Ingress,
 });

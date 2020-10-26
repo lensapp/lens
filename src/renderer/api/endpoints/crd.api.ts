@@ -19,6 +19,8 @@ type AdditionalPrinterColumnsV1Beta = AdditionalPrinterColumnsCommon & {
 
 export class CustomResourceDefinition extends KubeObject {
   static kind = "CustomResourceDefinition";
+  static namespaced = false;
+  static apiBase = "/apis/apiextensions.k8s.io/v1/customresourcedefinitions"
 
   spec: {
     group: string;
@@ -145,9 +147,6 @@ export class CustomResourceDefinition extends KubeObject {
 }
 
 export const crdApi = new VersionedKubeApi<CustomResourceDefinition>({
-  kind: CustomResourceDefinition.kind,
-  apiBase: "/apis/apiextensions.k8s.io/v1/customresourcedefinitions",
-  isNamespaced: false,
   objectConstructor: CustomResourceDefinition
 });
 

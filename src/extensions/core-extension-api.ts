@@ -9,9 +9,11 @@ import * as Store from "./core-api/stores"
 import * as Util from "./core-api/utils"
 import * as App from "./core-api/app"
 import * as Registry from "./core-api/registries"
+import * as ClusterFeature from "./core-api/cluster-feature"
 
 export {
   App,
+  ClusterFeature,
   EventBus,
   Registry,
   Store,
