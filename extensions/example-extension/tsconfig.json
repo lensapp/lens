@@ -16,7 +16,6 @@
     "jsx": "react"
   },
   "include": [
-    "../../src/extensions/npm/**/*.d.ts",
     "./*.ts",
     "./*.tsx"
   ],

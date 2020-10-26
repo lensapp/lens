@@ -56,7 +56,13 @@ else
 endif
 
 build-extensions:
-	$(foreach file, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(file) build;)
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(dir) build;)
+
+build-npm:
+	yarn npm:fix-package-version
+
+publish-npm: build-npm
+	cd src/extensions/npm/extensions && npm publish
 
 clean:
 ifeq "$(DETECTED_OS)" "Windows"
