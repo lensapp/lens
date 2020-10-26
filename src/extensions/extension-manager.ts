@@ -84,9 +84,10 @@ export class ExtensionManager {
   }
 
   async loadFromFolder(folderPaths: string[]): Promise<InstalledExtension[]> {
-    const extensions: InstalledExtension[] = []
+    let allExtensions: InstalledExtension[] = []
     const bundledExtensions = getBundledExtensions()
-    folderPaths.forEach(async folderPath => {
+    for (let folderPath of folderPaths) {
+      const extensions: InstalledExtension[] = []
       const paths = await fs.readdir(folderPath);
       for (const fileName of paths) {
         if (!bundledExtensions.includes(fileName)) {
@@ -100,12 +101,14 @@ export class ExtensionManager {
           extensions.push(ext)
         }
       }
-      await fs.writeFile(path.join(this.extensionPackagesRoot, "package.json"), JSON.stringify(this.packagesJson), {mode: 0o600})
-      await this.installPackages()
 
       logger.debug(`[EXTENSION-MANAGER]: ${extensions.length} extensions loaded`, { folderPath, extensions });
-    })
-    return extensions;
+      allExtensions = allExtensions.concat(extensions)
+    }
+    await fs.writeFile(path.join(this.extensionPackagesRoot, "package.json"), JSON.stringify(this.packagesJson), {mode: 0o600})
+    await this.installPackages()
+
+    return allExtensions;
   }
 }
 
