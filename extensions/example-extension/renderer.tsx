@@ -7,10 +7,9 @@ export default class ExampleExtension extends LensRendererExtension {
     console.log('EXAMPLE EXTENSION RENDERER: ACTIVATED', this.getMeta());
   }
 
-  registerPages(registry: Registry.PageRegistry) {
+  registerClusterPage(registry: Registry.ClusterPageRegistry) {
     this.disposers.push(
       registry.add({
-        type: Registry.PageRegistryType.CLUSTER,
         path: "/extension-example",
         title: "Example Extension",
         components: {

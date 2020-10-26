@@ -22,7 +22,7 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
-import { pageRegistry } from "../../../extensions/registries/page-registry";
+import { globalPageRegistry } from "../../../extensions/registries/page-registry";
 
 interface Props {
   className?: IClassName;
@@ -156,8 +156,10 @@ export class ClustersMenu extends React.Component<Props> {
           )}
         </div>
         <div className="extensions">
-          {pageRegistry.globalPages.map(({ path, url = String(path), components: { MenuIcon } }) => {
-            if (!MenuIcon) return;
+          {globalPageRegistry.getItems().map(({ path, url = String(path), hideInMenu, components: { MenuIcon } }) => {
+            if (!MenuIcon || hideInMenu) {
+              return;
+            }
             return <MenuIcon key={url} onClick={() => navigate(url)}/>
           })}
         </div>

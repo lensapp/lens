@@ -1,8 +1,12 @@
 import { LensExtension } from "./lens-extension"
-import type { PageRegistry, AppPreferenceRegistry, StatusBarRegistry, KubeObjectMenuRegistry, ClusterFeatureRegistry } from "./registries"
+import type { GlobalPageRegistry, ClusterPageRegistry, AppPreferenceRegistry, StatusBarRegistry, KubeObjectMenuRegistry, ClusterFeatureRegistry } from "./registries"
 
 export class LensRendererExtension extends LensExtension {
-  registerPages(registry: PageRegistry) {
+  registerGlobalPage(registry: GlobalPageRegistry) {
+    return
+  }
+
+  registerClusterPage(registry: ClusterPageRegistry) {
     return
   }
 
