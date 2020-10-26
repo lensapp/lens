@@ -47,7 +47,7 @@ export class ExtensionLoader {
       instance.registerPages(pageRegistry)
       instance.registerAppPreferences(appPreferenceRegistry)
       instance.registerClusterFeatures(clusterFeatureRegistry)
-      instance.registerStatusBarIcon(statusBarRegistry)
+      instance.registerStatusBarItem(statusBarRegistry)
     })
   }
 

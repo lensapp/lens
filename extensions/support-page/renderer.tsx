@@ -21,15 +21,17 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
     )
   }
 
-  registerStatusBarIcon(registry: Registry.StatusBarRegistry) {
+  registerStatusBarItem(registry: Registry.StatusBarRegistry) {
     this.disposers.push(
       registry.add({
-        icon: (
-          <Component.Icon
-            material="support"
-            tooltip="Support"
+        item: (
+          <div
+            className="flex align-center gaps hover-highlight"
             onClick={() => Navigation.navigate(supportPageURL())}
-          />
+          >
+            <Component.Icon material="help_outline" small />
+            <span>Support</span>
+          </div>
         )
       })
     )

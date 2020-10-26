@@ -13,7 +13,7 @@ export class BottomBar extends React.Component {
     const { currentWorkspace } = workspaceStore;
     return (
       <div className="BottomBar flex gaps">
-        <div id="current-workspace" className="flex gaps align-center">
+        <div id="current-workspace" className="flex gaps align-center hover-highlight">
           <Icon small material="layers"/>
           <span className="workspace-name">{currentWorkspace.name}</span>
         </div>
@@ -21,9 +21,9 @@ export class BottomBar extends React.Component {
           htmlFor="current-workspace"
         />
         <div className="extensions box grow flex gaps justify-flex-end">
-          {statusBarRegistry.getItems().map(({ icon }, index) => {
-            if (!icon) return;
-            return <React.Fragment key={index}>{icon}</React.Fragment>
+          {statusBarRegistry.getItems().map(({ item }, index) => {
+            if (!item) return;
+            return <React.Fragment key={index}>{item}</React.Fragment>
           })}
         </div>
       </div>

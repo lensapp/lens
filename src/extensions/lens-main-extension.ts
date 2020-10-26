@@ -7,7 +7,7 @@ export class LensMainExtension extends LensExtension {
     //
   }
 
-  registerStatusBarIcon(registry: StatusBarRegistry) {
+  registerStatusBarItem(registry: StatusBarRegistry) {
     //
   }
 
