@@ -75,10 +75,6 @@ export class Cluster implements ClusterModel {
   @observable eventCount = 0;
   @observable preferences: ClusterPreferences = {};
   @observable metadata: ClusterMetadata = {};
-<<<<<<< HEAD
-  @observable features: FeatureStatusMap = {};
-=======
->>>>>>> extensions-api
   @observable allowedNamespaces: string[] = [];
   @observable allowedResources: string[] = [];
 
