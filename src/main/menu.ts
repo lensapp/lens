@@ -253,7 +253,7 @@ export function buildMenu(windowManager: WindowManager) {
         menu = menuItem.submenu;
       }
     
-      let menuPath: string = parentLabels.join(" -> ")
+      const menuPath: string = parentLabels.join(" -> ")
       if (!menuItem) {
         logger.info(`[MENU:test-menu-item-click] Cannot find menu item ${menuPath}`);
         return;
