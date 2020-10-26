@@ -40,6 +40,16 @@ export const PodLogSearch = observer((props: PodLogSearchProps) => {
     toNextOverlay();
   }
 
+  const onClear = () => {
+    setSearch("");
+  }
+
+  const onKeyDown = (evt: React.KeyboardEvent<any>) => {
+    if (evt.key === "Enter") {
+      onNextOverlay();
+    }
+  }
+
   useEffect(() => {
     // Refresh search when logs changed
     searchStore.onSearch(logs);
@@ -52,6 +62,8 @@ export const PodLogSearch = observer((props: PodLogSearchProps) => {
         onChange={setSearch}
         closeIcon={false}
         contentRight={totalFinds > 0 && findCounts}
+        onClear={onClear}
+        onKeyDown={onKeyDown}
       />
       <Icon
         material="keyboard_arrow_up"
@@ -68,7 +80,7 @@ export const PodLogSearch = observer((props: PodLogSearchProps) => {
       <Icon
         material="close"
         tooltip={_i18n._(t`Clear`)}
-        onClick={() => setSearch("")}
+        onClick={onClear}
       />
     </div>
   );

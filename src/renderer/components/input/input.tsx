@@ -214,6 +214,10 @@ export class Input extends React.Component<InputProps, State> {
   onKeyDown(evt: React.KeyboardEvent<any>) {
     const modified = evt.shiftKey || evt.metaKey || evt.altKey || evt.ctrlKey;
 
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(evt);
+    }
+
     switch (evt.key) {
     case "Enter":
       if (this.props.onSubmit && !modified && !evt.repeat) {
