@@ -1,7 +1,7 @@
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
-import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
+import { appName, isMac, isWindows } from "../common/vars";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
@@ -175,27 +175,15 @@ export function buildMenu(windowManager: WindowManager) {
     role: 'help',
     submenu: [
       {
-        label: "License",
-        click: async () => {
-          shell.openExternal('https://k8slens.dev/licenses/eula.md');
-        },
-      },
-      {
-        label: "Community Slack",
-        click: async () => {
-          shell.openExternal(slackUrl);
-        },
-      },
-      {
-        label: 'Report an Issue',
-        click: async () => {
-          shell.openExternal(issuesTrackerUrl);
-        },
-      },
-      {
         label: "What's new?",
         click() {
           navigate(whatsNewURL())
+        },
+      },
+      {
+        label: "License",
+        click: async () => {
+          shell.openExternal('https://k8slens.dev/licenses/eula.md');
         },
       },
       ...ignoreOnMac([
