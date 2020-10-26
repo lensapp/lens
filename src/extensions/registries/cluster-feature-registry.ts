@@ -1,4 +1,4 @@
-import { observable } from "mobx"
+import { BaseRegistry } from "./base-registry";
 import { ClusterFeature } from "../cluster-feature";
 
 export interface ClusterFeatureComponents {
@@ -11,17 +11,6 @@ export interface ClusterFeatureRegistration {
   feature: ClusterFeature
 }
 
-export class ClusterFeatureRegistry {
-  features = observable.array<ClusterFeatureRegistration>([], { deep: false });
-
-  add(feature: ClusterFeatureRegistration) {
-    this.features.push(feature)
-    return () => {
-      this.features.replace(
-        this.features.filter(f => f !== feature)
-      )
-    };
-  }
-}
+export class ClusterFeatureRegistry extends BaseRegistry<ClusterFeatureRegistration> {}
 
 export const clusterFeatureRegistry = new ClusterFeatureRegistry()
