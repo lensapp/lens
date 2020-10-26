@@ -6,9 +6,9 @@ export default class SupportPageMainExtension extends LensMainExtension {
     console.log("support page extension activated")
   }
 
-  async registerAppMenus(registry: Registry.MenuRegistry) {
-    this.disposers.push(
-      registry.add({
+  registerAppMenus(registry: Registry.MenuRegistry) {
+    return [
+      {
         parentId: "help",
         label: "Support",
         click() {
@@ -17,7 +17,7 @@ export default class SupportPageMainExtension extends LensMainExtension {
             url: supportPageURL(),
           });
         }
-      })
-    )
+      }
+    ]
   }
 }

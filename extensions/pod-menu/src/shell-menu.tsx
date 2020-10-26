@@ -3,10 +3,10 @@
 import React from "react";
 import { Component, K8sApi, Util, Navigation } from "@k8slens/extensions";
 
-interface Props extends Component.KubeObjectMenuProps<K8sApi.Pod> {
+export interface PodShellMenuProps extends Component.KubeObjectMenuProps<K8sApi.Pod> {
 }
 
-export class PodShellMenu extends React.Component<Props> {
+export class PodShellMenu extends React.Component<PodShellMenuProps> {
   async execShell(container?: string) {
     Navigation.hideDetails();
     const { object: pod } = this.props

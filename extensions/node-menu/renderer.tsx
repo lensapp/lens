@@ -1,6 +1,6 @@
 import { Registry, LensRendererExtension } from "@k8slens/extensions";
 import React from "react"
-import { NodeMenu } from "./src/node-menu"
+import { NodeMenu, NodeMenuProps } from "./src/node-menu"
 
 export default class NodeMenuRendererExtension extends LensRendererExtension {
   async onActivate() {
@@ -8,14 +8,14 @@ export default class NodeMenuRendererExtension extends LensRendererExtension {
   }
 
   registerKubeObjectMenus(registry: Registry.KubeObjectMenuRegistry) {
-    this.disposers.push(
-      registry.add({
+    return [
+      {
         kind: "Node",
         apiVersions: ["v1"],
         components: {
-          MenuItem: (props) => <NodeMenu {...props} />
+          MenuItem: (props: NodeMenuProps) => <NodeMenu {...props} />
         }
-      })
-    )
+      }
+    ]
   }
 }

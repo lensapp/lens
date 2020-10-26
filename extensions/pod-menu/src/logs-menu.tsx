@@ -1,10 +1,10 @@
 import React from "react";
 import { Component, K8sApi, Util, Navigation } from "@k8slens/extensions";
 
-interface Props extends Component.KubeObjectMenuProps<K8sApi.Pod> {
+export interface PodLogsMenuProps extends Component.KubeObjectMenuProps<K8sApi.Pod> {
 }
 
-export class PodLogsMenu extends React.Component<Props> {
+export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
   showLogs(container: K8sApi.IPodContainer) {
     Navigation.hideDetails();
     const pod = this.props.object;

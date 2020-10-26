@@ -8,22 +8,22 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
     console.log("support page extension activated")
   }
 
-  registerGlobalPage(registry: Registry.GlobalPageRegistry) {
-    this.disposers.push(
-      registry.add({
+  registerGlobalPages(registry: Registry.GlobalPageRegistry) {
+    return [
+      {
         ...supportPageRoute,
         url: supportPageURL(),
         hideInMenu: true,
         components: {
           Page: Support,
         }
-      })
-    )
+      }
+    ]
   }
 
-  registerStatusBarItem(registry: Registry.StatusBarRegistry) {
-    this.disposers.push(
-      registry.add({
+  registerStatusBarItems(registry: Registry.StatusBarRegistry) {
+    return [
+      {
         item: (
           <div
             className="flex align-center gaps hover-highlight"
@@ -33,7 +33,7 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
             <span>Support</span>
           </div>
         )
-      })
-    )
+      }
+    ]
   }
 }

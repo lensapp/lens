@@ -1,6 +1,6 @@
 import { Registry, LensRendererExtension } from "@k8slens/extensions";
-import { PodShellMenu } from "./src/shell-menu"
-import { PodLogsMenu } from "./src/logs-menu"
+import { PodShellMenu, PodShellMenuProps } from "./src/shell-menu"
+import { PodLogsMenu, PodLogsMenuProps } from "./src/logs-menu"
 import React from "react"
 
 export default class PodMenuRendererExtension extends LensRendererExtension {
@@ -9,23 +9,21 @@ export default class PodMenuRendererExtension extends LensRendererExtension {
   }
 
   registerKubeObjectMenus(registry: Registry.KubeObjectMenuRegistry) {
-    this.disposers.push(
-      registry.add({
+    return [
+      {
         kind: "Pod",
         apiVersions: ["v1"],
         components: {
-          MenuItem: (props) => <PodShellMenu {...props} />
+          MenuItem: (props: PodShellMenuProps) => <PodShellMenu {...props} />
         }
-      })
-    )
-    this.disposers.push(
-      registry.add({
+      },
+      {
         kind: "Pod",
         apiVersions: ["v1"],
         components: {
-          MenuItem: (props) => <PodLogsMenu {...props} />
+          MenuItem: (props: PodLogsMenuProps) => <PodLogsMenu {...props} />
         }
-      })
-    )
+      }
+    ]
   }
 }

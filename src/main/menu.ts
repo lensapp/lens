@@ -209,7 +209,7 @@ export function buildMenu(windowManager: WindowManager) {
   // Modify menu from extensions-api
   menuRegistry.getItems().forEach(({ parentId, ...menuItem }) => {
     try {
-      const topMenu = appMenu[parentId].submenu as MenuItemConstructorOptions[];
+      const topMenu = appMenu[parentId as MenuTopId].submenu as MenuItemConstructorOptions[];
       topMenu.push(menuItem);
     } catch (err) {
       logger.error(`[MENU]: can't register menu item, parentId=${parentId}`, { menuItem })

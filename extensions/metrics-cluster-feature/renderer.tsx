@@ -4,8 +4,8 @@ import React from "react"
 
 export default class ClusterMetricsFeatureExtension extends LensRendererExtension {
   registerClusterFeatures(registry: Registry.ClusterFeatureRegistry) {
-    this.disposers.push(
-      registry.add({
+    return [
+      {
         title: "Metrics Stack",
         components: {
           Description: () => {
@@ -19,7 +19,7 @@ export default class ClusterMetricsFeatureExtension extends LensRendererExtensio
           }
         },
         feature: new MetricsFeature()
-      })
-    )
+      }
+    ]
   }
 }

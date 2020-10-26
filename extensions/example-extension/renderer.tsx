@@ -8,16 +8,16 @@ export default class ExampleExtension extends LensRendererExtension {
   }
 
   registerClusterPage(registry: Registry.ClusterPageRegistry) {
-    this.disposers.push(
-      registry.add({
+    return [
+      {
         path: "/extension-example",
         title: "Example Extension",
         components: {
           Page: () => <ExamplePage extension={this} />,
           MenuIcon: ExampleIcon,
         }
-      })
-    )
+      }
+    ]
   }
 
   onDeactivate() {

@@ -1,7 +1,10 @@
 import React from "react";
 import { Component, K8sApi, Navigation} from "@k8slens/extensions"
 
-export function NodeMenu(props: Component.KubeObjectMenuProps<K8sApi.Node>) {
+export interface NodeMenuProps extends Component.KubeObjectMenuProps<K8sApi.Node> {
+}
+
+export function NodeMenu(props: NodeMenuProps) {
   const { object: node, toolbar } = props;
   if (!node) return null;
   const nodeName = node.getName();

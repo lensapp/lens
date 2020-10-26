@@ -12,15 +12,15 @@ export default class TelemetryRendererExtension extends LensRendererExtension {
   }
 
   registerAppPreferences(registry: Registry.AppPreferenceRegistry) {
-    this.disposers.push(
-      registry.add({
+    return [
+      {
         title: "Telemetry & Usage Tracking",
         components: {
           Hint: () => <TelemetryPreferenceHint />,
           Input: () => <TelemetryPreferenceInput telemetry={telemetryPreferencesStore} />
         }
-      })
-    )
+      }
+    ]
   }
 
   onDeactivate() {
