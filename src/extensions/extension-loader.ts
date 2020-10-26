@@ -6,7 +6,7 @@ import { broadcastIpc } from "../common/ipc"
 import { observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
-import { appPreferenceRegistry, kubeObjectMenuRegistry, menuRegistry, pageRegistry, statusBarRegistry } from "./registries";
+import { appPreferenceRegistry, kubeObjectMenuRegistry, menuRegistry, pageRegistry, statusBarRegistry, clusterFeatureRegistry } from "./registries";
 
 export interface InstalledExtension extends ExtensionModel {
   manifestPath: string;
@@ -46,6 +46,7 @@ export class ExtensionLoader {
     this.autoloadExtensions((instance: LensRendererExtension) => {
       instance.registerPages(pageRegistry)
       instance.registerAppPreferences(appPreferenceRegistry)
+      instance.registerClusterFeatures(clusterFeatureRegistry)
       instance.registerStatusBarIcon(statusBarRegistry)
     })
   }
@@ -60,8 +61,8 @@ export class ExtensionLoader {
 
   protected autoloadExtensions(callback: (instance: LensExtension) => void) {
     return reaction(() => this.extensions.toJS(), (installedExtensions) => {
-      for (const [id, ext] of installedExtensions) {
-        let instance = this.instances.get(ext.name)
+      for(const [id, ext] of installedExtensions) {
+        let instance = this.instances.get(ext.id)
         if (!instance) {
           const extensionModule = this.requireExtension(ext)
           if (!extensionModule) {
@@ -69,9 +70,12 @@ export class ExtensionLoader {
           }
           const LensExtensionClass = extensionModule.default;
           instance = new LensExtensionClass({ ...ext.manifest, manifestPath: ext.manifestPath, id: ext.manifestPath }, ext.manifest);
-          instance.enable();
-          callback(instance)
-          this.instances.set(ext.name, instance)
+          try {
+            instance.enable()
+            callback(instance)
+          } finally {
+            this.instances.set(ext.id, instance)
+          }
         }
       }
     }, {

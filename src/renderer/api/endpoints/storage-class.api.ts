@@ -5,6 +5,8 @@ import { KubeApi } from "../kube-api";
 @autobind()
 export class StorageClass extends KubeObject {
   static kind = "StorageClass"
+  static namespaced = false
+  static apiBase = "/apis/storage.k8s.io/v1/storageclasses"
 
   provisioner: string; // e.g. "storage.k8s.io/v1"
   mountOptions?: string[];
@@ -32,8 +34,5 @@ export class StorageClass extends KubeObject {
 }
 
 export const storageClassApi = new KubeApi({
-  kind: StorageClass.kind,
-  apiBase: "/apis/storage.k8s.io/v1/storageclasses",
-  isNamespaced: false,
   objectConstructor: StorageClass,
 });

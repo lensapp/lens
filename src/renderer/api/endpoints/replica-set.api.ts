@@ -7,6 +7,8 @@ import { KubeApi } from "../kube-api";
 @autobind()
 export class ReplicaSet extends WorkloadKubeObject {
   static kind = "ReplicaSet"
+  static namespaced = true
+  static apiBase = "/apis/apps/v1/replicasets"
 
   spec: {
     replicas?: number;
@@ -51,8 +53,5 @@ export class ReplicaSet extends WorkloadKubeObject {
 }
 
 export const replicaSetApi = new KubeApi({
-  kind: ReplicaSet.kind,
-  apiBase: "/apis/apps/v1/replicasets",
-  isNamespaced: true,
   objectConstructor: ReplicaSet,
 });

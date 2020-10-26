@@ -1,5 +1,5 @@
 import { LensExtension } from "./lens-extension"
-import type { PageRegistry, AppPreferenceRegistry, StatusBarRegistry, KubeObjectMenuRegistry } from "./registries"
+import type { PageRegistry, AppPreferenceRegistry, StatusBarRegistry, KubeObjectMenuRegistry, ClusterFeatureRegistry } from "./registries"
 
 export class LensRendererExtension extends LensExtension {
   registerPages(registry: PageRegistry) {
@@ -7,6 +7,10 @@ export class LensRendererExtension extends LensExtension {
   }
 
   registerAppPreferences(registry: AppPreferenceRegistry) {
+    return
+  }
+
+  registerClusterFeatures(registry: ClusterFeatureRegistry) {
     return
   }
 

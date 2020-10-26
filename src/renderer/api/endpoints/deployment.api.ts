@@ -28,6 +28,8 @@ export class DeploymentApi extends KubeApi<Deployment> {
 @autobind()
 export class Deployment extends WorkloadKubeObject {
   static kind = "Deployment"
+  static namespaced = true
+  static apiBase = "/apis/apps/v1/deployments"
 
   spec: {
     replicas: number;
@@ -164,8 +166,5 @@ export class Deployment extends WorkloadKubeObject {
 }
 
 export const deploymentApi = new DeploymentApi({
-  kind: Deployment.kind,
-  apiBase: "/apis/apps/v1/deployments",
-  isNamespaced: true,
   objectConstructor: Deployment,
 });

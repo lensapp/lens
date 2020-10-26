@@ -177,6 +177,7 @@
       "telemetry",
       "pod-menu",
       "node-menu",
+      "metrics-cluster-feature",
       "support-page"
     ]
   },

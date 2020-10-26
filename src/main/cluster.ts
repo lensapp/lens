@@ -1,7 +1,6 @@
 import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
-import type { FeatureStatusMap } from "./feature"
 import { action, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { broadcastIpc } from "../common/ipc";
@@ -10,7 +9,6 @@ import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from 
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager"
 import { getNodeWarningConditions, loadConfig, podHasIssues } from "../common/kube-helpers"
-import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from "./feature-manager";
 import request, { RequestPromiseOptions } from "request-promise-native"
 import { apiResources } from "../common/rbac";
 import logger from "./logger"
@@ -47,7 +45,6 @@ export interface ClusterState extends ClusterModel {
   isAdmin: boolean;
   allowedNamespaces: string[]
   allowedResources: string[]
-  features: FeatureStatusMap;
 }
 
 export class Cluster implements ClusterModel {
@@ -78,7 +75,6 @@ export class Cluster implements ClusterModel {
   @observable eventCount = 0;
   @observable preferences: ClusterPreferences = {};
   @observable metadata: ClusterMetadata = {};
-  @observable features: FeatureStatusMap = {};
   @observable allowedNamespaces: string[] = [];
   @observable allowedResources: string[] = [];
 
@@ -194,12 +190,7 @@ export class Cluster implements ClusterModel {
     await this.whenInitialized;
     await this.refreshConnectionStatus();
     if (this.accessible) {
-      const [features, isAdmin] = await Promise.all([
-        getFeatures(this),
-        this.isClusterAdmin(),
-      ]);
-      this.features = features;
-      this.isAdmin = isAdmin;
+      this.isAdmin = await this.isClusterAdmin();
       await Promise.all([
         this.refreshEvents(),
         this.refreshAllowedResources(),
@@ -248,18 +239,6 @@ export class Cluster implements ClusterModel {
 
   getProxyKubeconfigPath(): string {
     return this.kubeconfigManager.getPath()
-  }
-
-  async installFeature(name: string, config: any) {
-    return installFeature(name, this, config)
-  }
-
-  async upgradeFeature(name: string, config: any) {
-    return upgradeFeature(name, this, config)
-  }
-
-  async uninstallFeature(name: string) {
-    return uninstallFeature(name, this)
   }
 
   protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
@@ -400,7 +379,6 @@ export class Cluster implements ClusterModel {
       accessible: this.accessible,
       failureReason: this.failureReason,
       isAdmin: this.isAdmin,
-      features: this.features,
       eventCount: this.eventCount,
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,

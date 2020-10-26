@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "baseUrl": ".",
     "module": "CommonJS",
     "target": "ES2017",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
@@ -14,17 +13,15 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
-    "jsx": "react",
-    "paths": {
-      "*": [
-        "node_modules/*",
-        "../../types/*"
-      ]
-    }
+    "jsx": "react"
   },
   "include": [
-    "renderer.tsx",
     "../../src/extensions/npm/**/*.d.ts",
-    "src/**/*"
+    "./*.ts",
+    "./*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "*.js"
   ]
 }
