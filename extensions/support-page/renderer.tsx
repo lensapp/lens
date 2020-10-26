@@ -1,5 +1,5 @@
 import React from "react";
-import { Component, LensRendererExtension, Navigation, Registry } from "@k8slens/extensions";
+import { Component, LensRendererExtension, Navigation } from "@k8slens/extensions";
 import { supportPageRoute, supportPageURL } from "./src/support.route";
 import { Support } from "./src/support";
 
@@ -8,22 +8,22 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
     console.log("support page extension activated")
   }
 
-  registerGlobalPage(registry: Registry.GlobalPageRegistry) {
-    this.disposers.push(
-      registry.add({
+  globalPages() {
+    return [
+      {
         ...supportPageRoute,
         url: supportPageURL(),
         hideInMenu: true,
         components: {
           Page: Support,
         }
-      })
-    )
+      }
+    ]
   }
 
-  registerStatusBarItem(registry: Registry.StatusBarRegistry) {
-    this.disposers.push(
-      registry.add({
+  statusBarItems() {
+    return [
+      {
         item: (
           <div
             className="flex align-center gaps hover-highlight"
@@ -33,7 +33,7 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
             <span>Support</span>
           </div>
         )
-      })
-    )
+      }
+    ]
   }
 }

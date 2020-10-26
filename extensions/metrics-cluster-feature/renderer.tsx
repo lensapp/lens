@@ -1,11 +1,11 @@
-import { Registry, LensRendererExtension } from "@k8slens/extensions"
+import { LensRendererExtension } from "@k8slens/extensions"
 import { MetricsFeature } from "./src/metrics-feature"
 import React from "react"
 
 export default class ClusterMetricsFeatureExtension extends LensRendererExtension {
-  registerClusterFeatures(registry: Registry.ClusterFeatureRegistry) {
-    this.disposers.push(
-      registry.add({
+  clusterFeatures() {
+    return [
+      {
         title: "Metrics Stack",
         components: {
           Description: () => {
@@ -19,7 +19,7 @@ export default class ClusterMetricsFeatureExtension extends LensRendererExtensio
           }
         },
         feature: new MetricsFeature()
-      })
-    )
+      }
+    ]
   }
 }
