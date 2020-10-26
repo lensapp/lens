@@ -18,7 +18,7 @@ export class LensRendererExtension extends LensExtension {
     return
   }
 
-  registerStatusBarIcon(registry: StatusBarRegistry) {
+  registerStatusBarItem(registry: StatusBarRegistry) {
     return
   }
 

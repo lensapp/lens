@@ -4,7 +4,7 @@ import React from "react";
 import { BaseRegistry } from "./base-registry";
 
 export interface StatusBarRegistration {
-  icon?: React.ReactNode;
+  item?: React.ReactNode;
 }
 
 export class StatusBarRegistry extends BaseRegistry<StatusBarRegistration> {
