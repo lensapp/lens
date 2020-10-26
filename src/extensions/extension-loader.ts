@@ -6,7 +6,7 @@ import { broadcastIpc } from "../common/ipc"
 import { observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
-import { appPreferenceRegistry, kubeObjectMenuRegistry, menuRegistry, pageRegistry, statusBarRegistry, clusterFeatureRegistry } from "./registries";
+import { appPreferenceRegistry, clusterFeatureRegistry, clusterPageRegistry, globalPageRegistry, kubeObjectMenuRegistry, menuRegistry, statusBarRegistry } from "./registries";
 
 export interface InstalledExtension extends ExtensionModel {
   manifestPath: string;
@@ -44,7 +44,7 @@ export class ExtensionLoader {
   loadOnClusterManagerRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
     this.autoloadExtensions((instance: LensRendererExtension) => {
-      instance.registerPages(pageRegistry)
+      instance.registerGlobalPage(globalPageRegistry)
       instance.registerAppPreferences(appPreferenceRegistry)
       instance.registerClusterFeatures(clusterFeatureRegistry)
       instance.registerStatusBarIcon(statusBarRegistry)
@@ -54,7 +54,7 @@ export class ExtensionLoader {
   loadOnClusterRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
     this.autoloadExtensions((instance: LensRendererExtension) => {
-      instance.registerPages(pageRegistry)
+      instance.registerClusterPage(clusterPageRegistry)
       instance.registerKubeObjectMenus(kubeObjectMenuRegistry)
     })
   }

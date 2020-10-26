@@ -28,7 +28,7 @@ import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resourc
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { navigation } from "../../navigation";
 import { isAllowedResource } from "../../../common/rbac"
-import { pageRegistry } from "../../../extensions/registries/page-registry";
+import { clusterPageRegistry } from "../../../extensions/registries/page-registry";
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
 type SidebarContextValue = {
@@ -184,8 +184,10 @@ export class Sidebar extends React.Component<Props> {
             >
               {this.renderCustomResources()}
             </SidebarNavItem>
-            {pageRegistry.clusterPages.map(({ path, title, url = String(path), components: { MenuIcon } }) => {
-              if (!MenuIcon) return;
+            {clusterPageRegistry.getItems().map(({ path, title, url = String(path), hideInMenu, components: { MenuIcon } }) => {
+              if (!MenuIcon || hideInMenu) {
+                return;
+              }
               return (
                 <SidebarNavItem
                   key={url} id={`sidebar_item_${url}`}

@@ -8,12 +8,12 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
     console.log("support page extension activated")
   }
 
-  registerPages(registry: Registry.PageRegistry) {
+  registerGlobalPage(registry: Registry.GlobalPageRegistry) {
     this.disposers.push(
       registry.add({
         ...supportPageRoute,
-        type: Registry.PageRegistryType.GLOBAL,
         url: supportPageURL(),
+        hideInMenu: true,
         components: {
           Page: Support,
         }
