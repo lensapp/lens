@@ -1,5 +1,6 @@
 import type { ExtensionManifest } from "./lens-extension"
 import path from "path"
+import os from "os"
 import fs from "fs-extra"
 import logger from "../main/logger"
 import { extensionPackagesRoot, InstalledExtension } from "./extension-loader"
@@ -24,8 +25,12 @@ export class ExtensionManager {
     return extensionPackagesRoot()
   }
 
-  get folderPath(): string {
+  get inTreeFolderPath(): string {
     return path.resolve(__static, "../extensions");
+  }
+
+  get localFolderPath(): string {
+    return path.join(os.homedir(), ".k8slens", "extensions");
   }
 
   get npmPath() {
@@ -35,7 +40,7 @@ export class ExtensionManager {
   async load() {
     logger.info("[EXTENSION-MANAGER] loading extensions from " + this.extensionPackagesRoot)
     await fs.ensureDir(path.join(this.extensionPackagesRoot, "node_modules"))
-
+    await fs.ensureDir(this.localFolderPath)
     return await this.loadExtensions();
   }
 
@@ -74,30 +79,32 @@ export class ExtensionManager {
   }
 
   async loadExtensions() {
-    const extensions = await this.loadFromFolder(this.folderPath);
+    const extensions = await this.loadFromFolder([this.inTreeFolderPath, this.localFolderPath])
     return new Map(extensions.map(ext => [ext.id, ext]));
   }
 
-  async loadFromFolder(folderPath: string): Promise<InstalledExtension[]> {
-    const paths = await fs.readdir(folderPath);
+  async loadFromFolder(folderPaths: string[]): Promise<InstalledExtension[]> {
     const extensions: InstalledExtension[] = []
     const bundledExtensions = getBundledExtensions()
-    for (const fileName of paths) {
-      if (!bundledExtensions.includes(fileName)) {
-        continue
+    folderPaths.forEach(async folderPath => {
+      const paths = await fs.readdir(folderPath);
+      for (const fileName of paths) {
+        if (!bundledExtensions.includes(fileName)) {
+          continue
+        }
+        const absPath = path.resolve(folderPath, fileName);
+        const manifestPath = path.resolve(absPath, "package.json");
+        await fs.access(manifestPath, fs.constants.F_OK)
+        const ext = await this.getExtensionByManifest(manifestPath).catch(() => null)
+        if (ext) {
+          extensions.push(ext)
+        }
       }
-      const absPath = path.resolve(folderPath, fileName);
-      const manifestPath = path.resolve(absPath, "package.json");
-      await fs.access(manifestPath, fs.constants.F_OK)
-      const ext = await this.getExtensionByManifest(manifestPath).catch(() => null)
-      if (ext) {
-        extensions.push(ext)
-      }
-    }
-    await fs.writeFile(path.join(this.extensionPackagesRoot, "package.json"), JSON.stringify(this.packagesJson), {mode: 0o600})
-    await this.installPackages()
+      await fs.writeFile(path.join(this.extensionPackagesRoot, "package.json"), JSON.stringify(this.packagesJson), {mode: 0o600})
+      await this.installPackages()
 
-    logger.debug(`[EXTENSION-MANAGER]: ${extensions.length} extensions loaded`, { folderPath, extensions });
+      logger.debug(`[EXTENSION-MANAGER]: ${extensions.length} extensions loaded`, { folderPath, extensions });
+    })
     return extensions;
   }
 }
