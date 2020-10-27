@@ -50,8 +50,7 @@ export function buildMenu(windowManager: WindowManager) {
 
   async function navigate(url: string) {
     logger.info(`[MENU]: navigating to ${url}`);
-    await windowManager.ensureMainWindow();
-    windowManager.navigate(url);
+    await windowManager.navigate(url);
   }
 
   const macAppMenu: MenuItemConstructorOptions = {

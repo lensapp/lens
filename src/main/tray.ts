@@ -43,8 +43,6 @@ export function initTray(windowManager: WindowManager) {
 }
 
 export function buildTray(icon: string | NativeImage, menu: Menu) {
-  logger.info("[TRAY]: build start");
-
   if (!tray) {
     tray = new Tray(icon)
     tray.setToolTip(packageInfo.description)
@@ -76,8 +74,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
     },
     {
       label: "Preferences",
-      async click() {
-        await windowManager.ensureMainWindow()
+      click() {
         windowManager.navigate(preferencesURL());
       },
     },
@@ -98,7 +95,6 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
                 async click() {
                   workspaceStore.setActive(workspace);
                   clusterStore.setActive(clusterId);
-                  await windowManager.ensureMainWindow()
                   windowManager.navigate(clusterViewURL({ params: { clusterId } }));
                 }
               }
@@ -110,8 +106,8 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
       label: "Check for updates",
       async click() {
         const result = await AppUpdater.checkForUpdates();
-        const browserWindow = await windowManager.ensureMainWindow();
         if (!result) {
+          const browserWindow = await windowManager.ensureMainWindow();
           dialog.showMessageBoxSync(browserWindow, {
             message: "No updates available",
             type: "info",

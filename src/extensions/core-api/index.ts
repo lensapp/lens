@@ -12,6 +12,7 @@ import * as Util from "./utils"
 import * as Registry from "../registries"
 import * as ClusterFeature from "./cluster-feature"
 
+// TODO: allow to expose windowManager.navigate() as Navigation.navigate() in runtime
 export let windowManager: WindowManager;
 
 export {

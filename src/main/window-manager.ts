@@ -117,7 +117,8 @@ export class WindowManager {
     }
   }
 
-  navigate(url: string, frameId?: number) {
+  async navigate(url: string, frameId?: number) {
+    await this.ensureMainWindow();
     this.sendToView({
       channel: "menu:navigate",
       frameId: frameId,
