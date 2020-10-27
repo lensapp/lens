@@ -1,28 +1,12 @@
+import type { AppPreferenceRegistration, ClusterFeatureRegistration, KubeObjectMenuRegistration, PageRegistration, StatusBarRegistration } from "./registries"
+import { observable } from "mobx";
 import { LensExtension } from "./lens-extension"
-import type { GlobalPageRegistry, ClusterPageRegistry, AppPreferenceRegistry, StatusBarRegistry, KubeObjectMenuRegistry, ClusterFeatureRegistry } from "./registries"
 
 export class LensRendererExtension extends LensExtension {
-  registerGlobalPage(registry: GlobalPageRegistry) {
-    return
-  }
-
-  registerClusterPage(registry: ClusterPageRegistry) {
-    return
-  }
-
-  registerAppPreferences(registry: AppPreferenceRegistry) {
-    return
-  }
-
-  registerClusterFeatures(registry: ClusterFeatureRegistry) {
-    return
-  }
-
-  registerStatusBarItem(registry: StatusBarRegistry) {
-    return
-  }
-
-  registerKubeObjectMenus(registry: KubeObjectMenuRegistry) {
-    return
-  }
+  @observable.shallow globalPages: PageRegistration[] = []
+  @observable.shallow clusterPages: PageRegistration[] = []
+  @observable.shallow appPreferences: AppPreferenceRegistration[] = []
+  @observable.shallow clusterFeatures: ClusterFeatureRegistration[] = []
+  @observable.shallow statusBarItems: StatusBarRegistration[] = []
+  @observable.shallow kubeObjectMenuItems: KubeObjectMenuRegistration[] = []
 }
