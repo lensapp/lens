@@ -3,6 +3,7 @@ import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store"
 import { landingURL } from "../renderer/components/+landing-page/landing-page.route";
 import { navigate } from "../renderer/navigation";
+import { appEventBus } from "./event-bus";
 
 export type WorkspaceId = string;
 
@@ -79,6 +80,9 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     }
     if (existingWorkspace) {
       Object.assign(existingWorkspace, workspace);
+      appEventBus.emit({name: "workspace", action: "update"})
+    } else {
+      appEventBus.emit({name: "workspace", action: "add"})
     }
     this.workspaces.set(id, workspace);
     return workspace;
@@ -95,6 +99,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       this.currentWorkspaceId = WorkspaceStore.defaultId; // reset to default
     }
     this.workspaces.delete(id);
+    appEventBus.emit({name: "workspace", action: "remove"})
     clusterStore.removeByWorkspaceId(id)
   }
 
