@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: lensapp/docs
-          path: /lensdocs
+          path: lensdocs
 
 
       - name: Deploy docs
