@@ -59,10 +59,11 @@ build-extensions:
 	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(dir) build;)
 
 build-npm:
+	yarn compile:extension-rollup
 	yarn npm:fix-package-version
 
 publish-npm: build-npm
-	cd src/extensions/npm/extensions && npm publish
+	cd src/extensions/npm/extensions && npm publish --access=public
 
 clean:
 ifeq "$(DETECTED_OS)" "Windows"
