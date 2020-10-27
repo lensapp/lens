@@ -33,7 +33,7 @@ jobs:
       - name: mkdocs deploy
         run: | 
            cd lens/
-           mkdocs gh-deploy
+           mkdocs gh-deploy --force
 
            
 #      - name: Commit files
