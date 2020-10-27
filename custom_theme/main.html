@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block footer %}
+<div role="contentinfo">
+  <!-- Copyright etc -->
+  {% if config.copyright %}
+    <p>{{ config.copyright }}</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+/* https://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs 
+
+and https://github.com/readthedocs/sphinx_rtd_theme/issues/295
+
+*/
+.wy-nav-content {
+  max-width: none !important;
+}
+
+
+/* and fix wrap bug per https://rackerlabs.github.io/docs-rackspace/tools/rtd-tables.html */
+.wy-table-responsive table td {
+  /* !important prevents the common CSS stylesheets from overriding
+  this as on RTD they are loaded after this stylesheet */
+  white-space: normal !important;
+}
+
+.wy-table-responsive {
+  overflow: visible !important;
+}
