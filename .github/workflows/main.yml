@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout Release from lens
         uses: actions/checkout@v2
+        with:
+          repository: lensapp/lens
+          path: lens
 
       - name: Checkout Branch "gh-pages" from "lensapp/docs"
         uses: actions/checkout@v2
@@ -29,8 +32,9 @@ jobs:
           
       - name: Build mkdocs and copy to .-/lensdocs
         run: | 
+           cd lens/
            mkdocs build
-           cp -R site/*  ./lensdocs/.
+           cp -R site/*  ../lensdocs/.
            
       - name: Commit files
         run: |
