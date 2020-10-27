@@ -15,11 +15,11 @@ jobs:
           repository: lensapp/lens
           path: lens
 
-      - name: Checkout Branch "gh-pages" from "lensapp/docs"
-        uses: actions/checkout@v2
-        with:
-          repository: lensapp/docs
-          path: lensdocs
+ #     - name: Checkout Branch "gh-pages" from "lensapp/docs"
+ #       uses: actions/checkout@v2
+ #       with:
+ #         repository: lensapp/docs
+ #         path: lensdocs
 
       - name: Set up Python 3.7 
         uses: actions/setup-python@v2 
@@ -30,24 +30,24 @@ jobs:
           python -m pip install --upgrade pip 
           pip install mkdocs-material 
           
-      - name: Build mkdocs and copy to .-/lensdocs
+      - name: mkdocs deploy
         run: | 
            cd lens/
-           mkdocs build
-           cp -R site/*  ../lensdocs/.
+           mkdocs gh-deploy
+
            
-      - name: Commit files
-        run: |
-          cd lensdocs/
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -am "Build mkdocs from GH-Actions"
+#      - name: Commit files
+#        run: |
+#          cd lensdocs/
+#          git config --local user.email "action@github.com"
+#          git config --local user.name "GitHub Action"
+#          git commit -am "Build mkdocs from GH-Actions"
           
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          directory: ./lensdocs
-          repository: lensapp/docs
-          branch: gh-pages
-          github_token: ${{ secrets.GH_TOKEN }}
+#      - name: Push changes
+#        uses: ad-m/github-push-action@master
+#        with:
+#          directory: ./lensdocs
+#          repository: lensapp/docs
+#          branch: gh-pages
+#          github_token: ${{ secrets.GH_TOKEN }}
           
