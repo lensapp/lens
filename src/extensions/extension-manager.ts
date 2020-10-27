@@ -80,8 +80,8 @@ export class ExtensionManager {
 
   async loadExtensions() {
     const bundledExtensions = await this.loadBundledExtensions()
-    const localExtendions = await this.loadFromFolder(this.localFolderPath)
-    const extensions = bundledExtensions.concat(localExtendions)
+    const localExtensions = await this.loadFromFolder(this.localFolderPath)
+    const extensions = bundledExtensions.concat(localExtensions)
     return new Map(extensions.map(ext => [ext.id, ext]));
   }
 
