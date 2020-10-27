@@ -79,36 +79,57 @@ export class ExtensionManager {
   }
 
   async loadExtensions() {
-    const extensions = await this.loadFromFolder([this.inTreeFolderPath, this.localFolderPath])
+    const bundledExtensions = await this.loadBundledExtensions()
+    const localExtendions = await this.loadFromFolder(this.localFolderPath)
+    const extensions = bundledExtensions.concat(localExtendions)
     return new Map(extensions.map(ext => [ext.id, ext]));
   }
 
-  async loadFromFolder(folderPaths: string[]): Promise<InstalledExtension[]> {
-    let allExtensions: InstalledExtension[] = []
+  async loadBundledExtensions() {
+    const extensions: InstalledExtension[] = []
+    const folderPath = this.inTreeFolderPath
     const bundledExtensions = getBundledExtensions()
-    for (const folderPath of folderPaths) {
-      const extensions: InstalledExtension[] = []
-      const paths = await fs.readdir(folderPath);
-      for (const fileName of paths) {
-        if (!bundledExtensions.includes(fileName)) {
-          continue
-        }
-        const absPath = path.resolve(folderPath, fileName);
-        const manifestPath = path.resolve(absPath, "package.json");
-        await fs.access(manifestPath, fs.constants.F_OK)
-        const ext = await this.getExtensionByManifest(manifestPath).catch(() => null)
-        if (ext) {
-          extensions.push(ext)
-        }
+    const paths = await fs.readdir(folderPath);
+    for (const fileName of paths) {
+      if (!bundledExtensions.includes(fileName)) {
+        continue
       }
-
-      logger.debug(`[EXTENSION-MANAGER]: ${extensions.length} extensions loaded`, { folderPath, extensions });
-      allExtensions = allExtensions.concat(extensions)
+      const absPath = path.resolve(folderPath, fileName);
+      const manifestPath = path.resolve(absPath, "package.json");
+      await fs.access(manifestPath, fs.constants.F_OK)
+      const ext = await this.getExtensionByManifest(manifestPath).catch(() => null)
+      if (ext) {
+        extensions.push(ext)
+      }
     }
+    logger.debug(`[EXTENSION-MANAGER]: ${extensions.length} extensions loaded`, { folderPath, extensions });
+    await fs.writeFile(path.join(this.extensionPackagesRoot, "package.json"), JSON.stringify(this.packagesJson), {mode: 0o600})
+    await this.installPackages()
+    return extensions
+  }
+
+  async loadFromFolder(folderPath: string): Promise<InstalledExtension[]> {
+    const bundledExtensions = getBundledExtensions()
+    const extensions: InstalledExtension[] = []
+    const paths = await fs.readdir(folderPath);
+    for (const fileName of paths) {
+      if (bundledExtensions.includes(fileName)) { // do no allow to override bundled extensions
+        continue
+      }
+      const absPath = path.resolve(folderPath, fileName);
+      const manifestPath = path.resolve(absPath, "package.json");
+      await fs.access(manifestPath, fs.constants.F_OK)
+      const ext = await this.getExtensionByManifest(manifestPath).catch(() => null)
+      if (ext) {
+        extensions.push(ext)
+      }
+    }
+
+    logger.debug(`[EXTENSION-MANAGER]: ${extensions.length} extensions loaded`, { folderPath, extensions });
     await fs.writeFile(path.join(this.extensionPackagesRoot, "package.json"), JSON.stringify(this.packagesJson), {mode: 0o600})
     await this.installPackages()
 
-    return allExtensions;
+    return extensions;
   }
 }
 
