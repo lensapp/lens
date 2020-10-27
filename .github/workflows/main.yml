@@ -12,13 +12,15 @@ jobs:
       - name: Checkout Release from lens
         uses: actions/checkout@v2
 
-      - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
       - name: Checkout Branch "gh-pages" from "lensapp/docs"
         uses: actions/checkout@v2
         with:
           repository: lensapp/docs
           path: /lensdocs
+
+
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
