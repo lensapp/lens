@@ -118,7 +118,6 @@ describe("create clusters", () => {
         }
       }
     }
-
     jest.spyOn(Cluster.prototype, "isClusterAdmin").mockReturnValue(Promise.resolve(true))
     jest.spyOn(Cluster.prototype, "canI")
       .mockImplementationOnce((attr: V1ResourceAttributes): Promise<boolean> => {
@@ -162,7 +161,6 @@ describe("create clusters", () => {
     expect(c.accessible).toBe(true)
     expect(c.allowedNamespaces.length).toBe(1)
     expect(c.allowedResources.length).toBe(apiResources.length)
-
     c.disconnect()
     jest.resetAllMocks()
   })

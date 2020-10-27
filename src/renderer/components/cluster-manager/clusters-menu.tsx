@@ -1,4 +1,6 @@
+import type { Cluster } from "../../../main/cluster";
 import "./clusters-menu.scss"
+
 import { remote } from "electron"
 import React from "react";
 import { observer } from "mobx-react";
@@ -9,7 +11,7 @@ import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
-import { cssNames, IClassName, autobind } from "../../utils";
+import { autobind, cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
 import { navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
@@ -19,8 +21,8 @@ import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
-import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
-import type { Cluster } from "../../../main/cluster";
+import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
+import { globalPageRegistry } from "../../../extensions/registries/page-registry";
 
 interface Props {
   className?: IClassName;
@@ -152,6 +154,14 @@ export class ClustersMenu extends React.Component<Props> {
           {newContexts.size > 0 && (
             <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>} />
           )}
+        </div>
+        <div className="extensions">
+          {globalPageRegistry.getItems().map(({ path, url = String(path), hideInMenu, components: { MenuIcon } }) => {
+            if (!MenuIcon || hideInMenu) {
+              return;
+            }
+            return <MenuIcon key={url} onClick={() => navigate(url)}/>
+          })}
         </div>
       </div>
     );

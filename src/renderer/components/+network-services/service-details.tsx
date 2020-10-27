@@ -7,13 +7,13 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { Service, serviceApi, endpointApi } from "../../api/endpoints";
+import { Service, endpointApi } from "../../api/endpoints";
 import { _i18n } from "../../i18n";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ServicePortComponent } from "./service-port-component";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Service> {
 }
@@ -85,6 +85,10 @@ export class ServiceDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(serviceApi, {
-  Details: ServiceDetails,
+kubeObjectDetailRegistry.add({
+  kind: "Service",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <ServiceDetails {...props} />
+  }
 })

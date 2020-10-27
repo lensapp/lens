@@ -1,3 +1,4 @@
+import type { WorkspaceId } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote, webFrame, webContents } from "electron";
 import { unlink } from "fs-extra";
@@ -6,18 +7,21 @@ import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store"
 import logger from "../main/logger";
-import { tracker } from "./tracker";
+import { appEventBus } from "./event-bus"
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
 import _ from "lodash";
 import move from "array-move";
-import type { WorkspaceId } from "./workspace-store";
 
 export interface ClusterIconUpload {
   clusterId: string;
   name: string;
   path: string;
+}
+
+export interface ClusterMetadata {
+  [key: string]: string | number | boolean;
 }
 
 export interface ClusterStoreModel {
@@ -32,6 +36,7 @@ export interface ClusterModel {
   workspace?: WorkspaceId;
   contextName?: string;
   preferences?: ClusterPreferences;
+  metadata?: ClusterMetadata;
   kubeConfigPath: string;
 
   /** @deprecated */
@@ -142,7 +147,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @action
   addCluster(...models: ClusterModel[]) {
     models.forEach(model => {
-      tracker.event("cluster", "add");
+      appEventBus.emit({name: "cluster", action: "add"})
       const cluster = new Cluster(model);
       this.clusters.set(model.id, cluster);
     })
@@ -150,7 +155,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   async removeById(clusterId: ClusterId) {
-    tracker.event("cluster", "remove");
+    appEventBus.emit({name: "cluster", action: "remove"})
     const cluster = this.getById(clusterId);
     if (cluster) {
       this.clusters.delete(clusterId);

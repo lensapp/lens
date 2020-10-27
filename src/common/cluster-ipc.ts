@@ -1,6 +1,8 @@
 import { createIpcChannel } from "./ipc";
 import { ClusterId, clusterStore } from "./cluster-store";
-import { tracker } from "./tracker";
+import { extensionLoader } from "../extensions/extension-loader"
+import { appEventBus } from "./event-bus"
+import { ResourceApplier } from "../main/resource-applier";
 
 export const clusterIpc = {
   activate: createIpcChannel({
@@ -19,6 +21,7 @@ export const clusterIpc = {
       const cluster = clusterStore.getById(clusterId);
       if (cluster) {
         if (frameId) cluster.frameId = frameId; // save cluster's webFrame.routingId to be able to send push-updates
+        extensionLoader.broadcastExtensions(frameId)
         return cluster.pushState();
       }
     },
@@ -28,44 +31,29 @@ export const clusterIpc = {
     channel: "cluster:refresh",
     handle: (clusterId: ClusterId) => {
       const cluster = clusterStore.getById(clusterId);
-      if (cluster) return cluster.refresh();
+      if (cluster) return cluster.refresh({ refreshMetadata: true })
     },
   }),
 
   disconnect: createIpcChannel({
     channel: "cluster:disconnect",
     handle: (clusterId: ClusterId) => {
-      tracker.event("cluster", "stop");
+      appEventBus.emit({name: "cluster", action: "stop"});
       return clusterStore.getById(clusterId)?.disconnect();
     },
   }),
 
-  installFeature: createIpcChannel({
-    channel: "cluster:install-feature",
-    handle: async (clusterId: ClusterId, feature: string, config?: any) => {
-      tracker.event("cluster", "install", feature);
+  kubectlApplyAll: createIpcChannel({
+    channel: "cluster:kubectl-apply-all",
+    handle: (clusterId: ClusterId, resources: string[]) => {
+      appEventBus.emit({name: "cluster", action: "kubectl-apply-all"})
       const cluster = clusterStore.getById(clusterId);
       if (cluster) {
-        await cluster.installFeature(feature, config)
+        const applier = new ResourceApplier(cluster)
+        applier.kubectlApplyAll(resources)
       } else {
         throw `${clusterId} is not a valid cluster id`;
       }
-    }
-  }),
-
-  uninstallFeature: createIpcChannel({
-    channel: "cluster:uninstall-feature",
-    handle: (clusterId: ClusterId, feature: string) => {
-      tracker.event("cluster", "uninstall", feature);
-      return clusterStore.getById(clusterId)?.uninstallFeature(feature)
-    }
-  }),
-
-  upgradeFeature: createIpcChannel({
-    channel: "cluster:upgrade-feature",
-    handle: (clusterId: ClusterId, feature: string, config?: any) => {
-      tracker.event("cluster", "upgrade", feature);
-      return clusterStore.getById(clusterId)?.upgradeFeature(feature, config)
     }
   }),
 }

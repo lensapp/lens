@@ -3,14 +3,12 @@ import "./pod-disruption-budgets-details.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
-import { DrawerItem, DrawerTitle } from "../drawer";
+import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { PodDisruptionBudget, pdbApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
-import { KubeObjectStore } from "../../kube-object.store";
+import { PodDisruptionBudget } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<PodDisruptionBudget> {
 }
@@ -56,6 +54,10 @@ export class PodDisruptionBudgetDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(pdbApi, {
-  Details: PodDisruptionBudgetDetails,
-});
+kubeObjectDetailRegistry.add({
+  kind: "PodDisruptionBudget",
+  apiVersions: ["policy/v1beta1"],
+  components: {
+    Details: (props) => <PodDisruptionBudgetDetails {...props} />
+  }
+})

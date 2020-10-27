@@ -1,21 +1,19 @@
 import "./cluster-settings.scss";
 
 import React from "react";
-import { observer, disposeOnUnmount } from "mobx-react";
+import { autorun } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { Features } from "./features";
 import { Removal } from "./removal";
 import { Status } from "./status";
 import { General } from "./general";
 import { Cluster } from "../../../main/cluster";
-import { WizardLayout } from "../layout/wizard-layout";
 import { ClusterIcon } from "../cluster-icon";
-import { Icon } from "../icon";
-import { navigate } from "../../navigation";
 import { IClusterSettingsRouteParams } from "./cluster-settings.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { RouteComponentProps } from "react-router";
 import { clusterIpc } from "../../../common/cluster-ipc";
-import { autorun } from "mobx";
+import { PageLayout } from "../layout/page-layout";
 
 interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
 }
@@ -27,7 +25,6 @@ export class ClusterSettings extends React.Component<Props> {
   }
 
   async componentDidMount() {
-    window.addEventListener('keydown', this.onEscapeKey);
     disposeOnUnmount(this,
       autorun(() => {
         this.refreshCluster();
@@ -35,26 +32,11 @@ export class ClusterSettings extends React.Component<Props> {
     )
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.onEscapeKey);
-  }
-
-  onEscapeKey = (evt: KeyboardEvent) => {
-    if (evt.code === "Escape") {
-      evt.stopPropagation();
-      this.close();
-    }
-  }
-
   refreshCluster = async () => {
-    if(this.cluster) {
+    if (this.cluster) {
       await clusterIpc.activate.invokeFromRenderer(this.cluster.id);
-      clusterIpc.refresh.invokeFromRenderer(this.cluster.id);
+      await clusterIpc.refresh.invokeFromRenderer(this.cluster.id);
     }
-  }
-
-  close() {
-    navigate("/");
   }
 
   render() {
@@ -62,24 +44,17 @@ export class ClusterSettings extends React.Component<Props> {
     if (!cluster) return null;
     const header = (
       <>
-        <ClusterIcon
-          cluster={cluster}
-          showErrors={false}
-          showTooltip={false}
-        />
+        <ClusterIcon cluster={cluster} showErrors={false} showTooltip={false}/>
         <h2>{cluster.preferences.clusterName}</h2>
-        <Icon material="close" onClick={this.close} big/>
       </>
     );
     return (
-      <div className="ClusterSettings">
-        <WizardLayout header={header} centered>
-          <Status cluster={cluster}></Status>
-          <General cluster={cluster}></General>
-          <Features cluster={cluster}></Features>
-          <Removal cluster={cluster}></Removal>
-        </WizardLayout>
-      </div>
+      <PageLayout className="ClusterSettings" header={header}>
+        <Status cluster={cluster}></Status>
+        <General cluster={cluster}></General>
+        <Features cluster={cluster}></Features>
+        <Removal cluster={cluster}></Removal>
+      </PageLayout>
     );
   }
 }

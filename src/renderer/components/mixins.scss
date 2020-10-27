@@ -6,6 +6,22 @@
 @import "table/table.mixins";
 @import "+network/network-mixins";
 
+// todo: re-use in other places with theming
+@mixin custom-scrollbar-themed($invert: false) {
+  @if ($invert) {
+    @include custom-scrollbar(dark);
+    .theme-light & {
+      @include custom-scrollbar(light);
+    }
+  } @else {
+    // fits better with dark background
+    @include custom-scrollbar(light);
+    .theme-light & {
+      @include custom-scrollbar(dark);
+    }
+  }
+}
+
 @mixin custom-scrollbar($theme: light, $size: 7px, $borderSpacing: 5px) {
   $themes: (
     light: #5f6064,

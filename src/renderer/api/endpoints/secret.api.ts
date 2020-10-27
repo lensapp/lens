@@ -22,6 +22,8 @@ export interface ISecretRef {
 @autobind()
 export class Secret extends KubeObject {
   static kind = "Secret"
+  static namespaced = true
+  static apiBase = "/api/v1/secrets"
 
   type: SecretType;
   data: {
@@ -44,8 +46,5 @@ export class Secret extends KubeObject {
 }
 
 export const secretsApi = new KubeApi({
-  kind: Secret.kind,
-  apiBase: "/api/v1/secrets",
-  isNamespaced: true,
   objectConstructor: Secret,
 });

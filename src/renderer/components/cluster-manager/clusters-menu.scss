@@ -66,4 +66,14 @@
       pointer-events: none;
     }
   }
+
+  > .extensions {
+    &:not(:empty) {
+      padding-top: $spacing;
+    }
+
+    .Icon {
+      --size: 40px;
+    }
+  }
 }

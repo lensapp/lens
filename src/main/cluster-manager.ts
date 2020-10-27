@@ -49,6 +49,8 @@ export class ClusterManager {
         // we need to swap path prefix so that request is proxied to kube api
         req.url = req.url.replace(`/${clusterId}`, apiKubePrefix)
       }
+    } else if (req.headers["x-cluster-id"]) {
+      cluster = clusterStore.getById(req.headers["x-cluster-id"].toString())
     } else {
       const clusterId = getClusterIdFromHost(req.headers.host);
       cluster = clusterStore.getById(clusterId)

@@ -1,3 +1,5 @@
+EXTENSIONS_DIR = ./extensions
+
 ifeq ($(OS),Windows_NT)
     DETECTED_OS := Windows
 else
@@ -46,12 +48,15 @@ integration-win:
 test-app:
 	yarn test
 
-build: install-deps download-bins
+build: install-deps download-bins build-extensions
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn dist:win
 else
 	yarn dist
 endif
+
+build-extensions:
+	$(foreach file, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(file) build;)
 
 clean:
 ifeq "$(DETECTED_OS)" "Windows"

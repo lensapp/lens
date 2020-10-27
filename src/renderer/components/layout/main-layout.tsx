@@ -10,7 +10,7 @@ import { Dock } from "../dock";
 import { getHostedCluster } from "../../../common/cluster-store";
 import { ResizeDirection, ResizeGrowthDirection, ResizeSide, ResizingAnchor } from "../resizing-anchor";
 
-interface Props {
+export interface MainLayoutProps {
   className?: any;
   footer?: React.ReactNode;
   headerClass?: string;
@@ -18,7 +18,7 @@ interface Props {
 }
 
 @observer
-export class MainLayout extends React.Component<Props> {
+export class MainLayout extends React.Component<MainLayoutProps> {
   public storage = createStorage("main_layout", {
     pinnedSidebar: true,
     sidebarWidth: 200,

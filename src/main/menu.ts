@@ -1,12 +1,15 @@
 import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
-import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
+import { appName, isMac, isWindows } from "../common/vars";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
+import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
+
+export type MenuTopId = "mac" | "file" | "edit" | "view" | "help"
 
 export function initMenu(windowManager: WindowManager) {
   autorun(() => buildMenu(windowManager), {
@@ -53,8 +56,6 @@ export function buildMenu(windowManager: WindowManager) {
     })
   }
 
-  const mt: MenuItemConstructorOptions[] = [];
-
   const macAppMenu: MenuItemConstructorOptions = {
     label: app.getName(),
     submenu: [
@@ -67,7 +68,7 @@ export function buildMenu(windowManager: WindowManager) {
       { type: 'separator' },
       {
         label: 'Preferences',
-        accelerator: 'Cmd+,',
+        accelerator: 'CmdOrCtrl+,',
         click() {
           navigate(preferencesURL())
         }
@@ -82,10 +83,6 @@ export function buildMenu(windowManager: WindowManager) {
       { role: 'quit' }
     ]
   };
-
-  if (isMac) {
-    mt.push(macAppMenu);
-  }
 
   const fileMenu: MenuItemConstructorOptions = {
     label: "File",
@@ -124,7 +121,6 @@ export function buildMenu(windowManager: WindowManager) {
       ])
     ]
   };
-  mt.push(fileMenu)
 
   const editMenu: MenuItemConstructorOptions = {
     label: 'Edit',
@@ -140,7 +136,7 @@ export function buildMenu(windowManager: WindowManager) {
       { role: 'selectAll' },
     ]
   };
-  mt.push(editMenu)
+
   const viewMenu: MenuItemConstructorOptions = {
     label: 'View',
     submenu: [
@@ -174,33 +170,20 @@ export function buildMenu(windowManager: WindowManager) {
       { role: 'togglefullscreen' }
     ]
   };
-  mt.push(viewMenu)
 
   const helpMenu: MenuItemConstructorOptions = {
     role: 'help',
     submenu: [
       {
-        label: "License",
-        click: async () => {
-          shell.openExternal('https://k8slens.dev/licenses/eula.md');
-        },
-      },
-      {
-        label: "Community Slack",
-        click: async () => {
-          shell.openExternal(slackUrl);
-        },
-      },
-      {
-        label: 'Report an Issue',
-        click: async () => {
-          shell.openExternal(issuesTrackerUrl);
-        },
-      },
-      {
         label: "What's new?",
         click() {
           navigate(whatsNewURL())
+        },
+      },
+      {
+        label: "License",
+        click: async () => {
+          shell.openExternal('https://k8slens.dev/licenses/eula.md');
         },
       },
       ...ignoreOnMac([
@@ -214,7 +197,29 @@ export function buildMenu(windowManager: WindowManager) {
     ]
   };
 
-  mt.push(helpMenu)
+  // Prepare menu items order
+  const appMenu: Record<MenuTopId, MenuItemConstructorOptions> = {
+    mac: macAppMenu,
+    file: fileMenu,
+    edit: editMenu,
+    view: viewMenu,
+    help: helpMenu,
+  }
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(mt));
+  // Modify menu from extensions-api
+  menuRegistry.getItems().forEach(({ parentId, ...menuItem }) => {
+    try {
+      const topMenu = appMenu[parentId].submenu as MenuItemConstructorOptions[];
+      topMenu.push(menuItem);
+    } catch (err) {
+      logger.error(`[MENU]: can't register menu item, parentId=${parentId}`, { menuItem })
+    }
+  })
+
+  if (!isMac) {
+    delete appMenu.mac
+  }
+
+  const menu = Menu.buildFromTemplate(Object.values(appMenu));
+  Menu.setApplicationMenu(menu);
 }

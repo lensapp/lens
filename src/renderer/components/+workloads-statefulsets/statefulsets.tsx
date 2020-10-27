@@ -60,20 +60,7 @@ export class StatefulSets extends React.Component<Props> {
           <KubeEventIcon object={statefulSet}/>,
           statefulSet.getAge(),
         ]}
-        renderItemMenu={(item: StatefulSet) => {
-          return <StatefulSetMenu object={item}/>
-        }}
       />
     )
   }
 }
-
-export function StatefulSetMenu(props: KubeObjectMenuProps<StatefulSet>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(statefulSetApi, {
-  Menu: StatefulSetMenu,
-})

@@ -4,6 +4,7 @@ module.exports =  {
       files: [
         "src/renderer/**/*.js",
         "build/**/*.js",
+        "extensions/**/*.js"
       ],
       extends: [
         'eslint:recommended',
@@ -24,7 +25,9 @@ module.exports =  {
       files: [
         "build/*.ts",
         "src/**/*.ts",
-        "integration/**/*.ts"
+        "integration/**/*.ts",
+        "src/extensions/**/*.ts*",
+        "extensions/**/*.ts*"
       ],
       parser: "@typescript-eslint/parser",
       extends:  [

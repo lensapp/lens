@@ -53,9 +53,6 @@ export class Namespaces extends React.Component<Props> {
             item.getAge(),
             { title: item.getStatus(), className: item.getStatus().toLowerCase() },
           ]}
-          renderItemMenu={(item: Namespace) => {
-            return <NamespaceMenu object={item}/>
-          }}
           addRemoveButtons={{
             addTooltip: <Trans>Add Namespace</Trans>,
             onAdd: () => AddNamespaceDialog.open(),
@@ -69,13 +66,3 @@ export class Namespaces extends React.Component<Props> {
     )
   }
 }
-
-export function NamespaceMenu(props: KubeObjectMenuProps<Namespace>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(namespacesApi, {
-  Menu: NamespaceMenu,
-});

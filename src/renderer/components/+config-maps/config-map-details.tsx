@@ -11,9 +11,9 @@ import { Button } from "../button";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { configMapsStore } from "./config-maps.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { ConfigMap, configMapApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
+import { ConfigMap } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<ConfigMap> {
 }
@@ -94,6 +94,10 @@ export class ConfigMapDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(configMapApi, {
-  Details: ConfigMapDetails
+kubeObjectDetailRegistry.add({
+  kind: "ConfigMap",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <ConfigMapDetails {...props} />
+  }
 })

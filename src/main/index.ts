@@ -2,6 +2,8 @@
 
 import "../common/system-ca"
 import "../common/prometheus-providers"
+import * as Mobx from "mobx"
+import * as LensExtensions from "../extensions/core-api";
 import { app, dialog } from "electron"
 import { appName } from "../common/vars";
 import path from "path"
@@ -16,7 +18,9 @@ import { registerFileProtocol } from "../common/register-protocol";
 import { clusterStore } from "../common/cluster-store"
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
-import { tracker } from "../common/tracker";
+import { appEventBus } from "../common/event-bus"
+import { extensionManager } from "../extensions/extension-manager";
+import { extensionLoader } from "../extensions/extension-loader";
 import logger from "./logger"
 
 const workingDir = path.join(app.getPath("appData"), appName);
@@ -25,7 +29,6 @@ if (!process.env.CICD) {
   app.setPath("userData", workingDir);
 }
 
-let windowManager: WindowManager;
 let clusterManager: ClusterManager;
 let proxyServer: LensProxy;
 
@@ -38,7 +41,6 @@ async function main() {
   await shellSync();
   logger.info(`🚀 Starting Lens from "${workingDir}"`)
 
-  tracker.event("app", "start");
   const updater = new AppUpdater()
   updater.start();
 
@@ -74,7 +76,15 @@ async function main() {
   }
 
   // create window manager and open app
-  windowManager = new WindowManager(proxyPort);
+  LensExtensionsApi.windowManager = new WindowManager(proxyPort);
+
+  extensionLoader.loadOnMain()
+  extensionLoader.extensions.replace(await extensionManager.load())
+  extensionLoader.broadcastExtensions()
+
+  setTimeout(() => {
+    appEventBus.emit({name: "app", action: "start"})
+  }, 1000)
 }
 
 app.on("ready", main);
@@ -85,3 +95,13 @@ app.on("will-quit", async (event) => {
   if (clusterManager) clusterManager.stop()
   app.exit();
 })
+
+// Extensions-api runtime exports
+export const LensExtensionsApi = {
+  ...LensExtensions,
+};
+
+export {
+  Mobx,
+  LensExtensionsApi as LensExtensions,
+}
