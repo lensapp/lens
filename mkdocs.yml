@@ -7,4 +7,4 @@ repo_url: 'https://github.com/lensapp/lens'
 nav:
     - Home: index.md
 theme:
-  name: 'material'
+  name: 'readthedocs'
