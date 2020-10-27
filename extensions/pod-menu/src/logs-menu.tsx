@@ -15,7 +15,6 @@ export class PodLogsMenu extends React.Component<Props> {
       selectedContainer: container,
       showTimestamps: false,
       previous: false,
-      tailLines: 1000
     });
   }
 

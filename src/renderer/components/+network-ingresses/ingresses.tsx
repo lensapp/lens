@@ -39,12 +39,14 @@ export class Ingresses extends React.Component<Props> {
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
           { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
+          { title: <Trans>LoadBalancers</Trans>, className: "loadbalancers" },
           { title: <Trans>Rules</Trans>, className: "rules" },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(ingress: Ingress) => [
           ingress.getName(),
           ingress.getNs(),
+          ingress.getLoadBalancers().map(lb => <p key={lb}>{lb}</p>),
           ingress.getRoutes().map(route => <p key={route}>{route}</p>),
           ingress.getAge(),
         ]}

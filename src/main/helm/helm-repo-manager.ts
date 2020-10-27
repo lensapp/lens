@@ -37,12 +37,12 @@ export class HelmRepoManager extends Singleton {
 
   async loadAvailableRepos(): Promise<HelmRepo[]> {
     const res = await customRequestPromise({
-      uri: "https://hub.helm.sh/assets/js/repos.json",
+      uri: "https://github.com/lensapp/artifact-hub-repositories/releases/download/latest/repositories.json",
       json: true,
       resolveWithFullResponse: true,
       timeout: 10000,
     });
-    return orderBy<HelmRepo>(res.body.data, repo => repo.name);
+    return orderBy<HelmRepo>(res.body, repo => repo.name);
   }
 
   async init() {
