@@ -46,7 +46,8 @@ jobs:
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
-          directory: ./lensdocs 
+          directory: ./lensdocs
+          repository: lensapp/docs
           branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
           
