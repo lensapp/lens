@@ -27,11 +27,21 @@ jobs:
           python -m pip install --upgrade pip 
           pip install mkdocs-material 
           
-      - name: Build mkdocs
+      - name: Build mkdocs and copy to .-/lensdocs
         run: | 
            mkdocs build
            cp -R site/*  ./lensdocs/.
-           cd ./lensdocs/
-           git commit -am "Build mkdocs from GH-Actions"
-           git push
+           
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -am "Build mkdocs from GH-Actions"
+          
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          directory: ./lensdocs 
+          branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           
