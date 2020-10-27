@@ -1,4 +1,4 @@
-import { LensMainExtension, Registry, windowManager } from "@k8slens/extensions";
+import { LensMainExtension, windowManager } from "@k8slens/extensions";
 import { supportPageURL } from "./src/support.route";
 
 export default class SupportPageMainExtension extends LensMainExtension {
@@ -6,7 +6,7 @@ export default class SupportPageMainExtension extends LensMainExtension {
     console.log("support page extension activated")
   }
 
-  registerAppMenus(registry: Registry.MenuRegistry) {
+  registerAppMenus() {
     return [
       {
         parentId: "help",

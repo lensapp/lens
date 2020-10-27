@@ -1,12 +1,12 @@
 import { LensExtension } from "./lens-extension"
-import type { MenuRegistration, MenuRegistry } from "./registries/menu-registry";
+import type { MenuRegistration } from "./registries/menu-registry";
 
 export class LensMainExtension extends LensExtension {
-  registerAppMenus(registry: MenuRegistry): MenuRegistration[] {
+  registerAppMenus(): MenuRegistration[] {
     return []
   }
 
-  registerPrometheusProviders(registry: any): any[] {
+  registerPrometheusProviders(): any[] {
     return []
   }
 }

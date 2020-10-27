@@ -1,5 +1,5 @@
 import React from "react";
-import { Component, LensRendererExtension, Navigation, Registry } from "@k8slens/extensions";
+import { Component, LensRendererExtension, Navigation } from "@k8slens/extensions";
 import { supportPageRoute, supportPageURL } from "./src/support.route";
 import { Support } from "./src/support";
 
@@ -8,7 +8,7 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
     console.log("support page extension activated")
   }
 
-  registerGlobalPages(registry: Registry.GlobalPageRegistry) {
+  registerGlobalPages() {
     return [
       {
         ...supportPageRoute,
@@ -21,7 +21,7 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
     ]
   }
 
-  registerStatusBarItems(registry: Registry.StatusBarRegistry) {
+  registerStatusBarItems() {
     return [
       {
         item: (

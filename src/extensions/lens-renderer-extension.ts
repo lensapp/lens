@@ -1,28 +1,28 @@
 import { LensExtension } from "./lens-extension"
-import type { GlobalPageRegistry, ClusterPageRegistry, AppPreferenceRegistry, StatusBarRegistry, KubeObjectMenuRegistry, ClusterFeatureRegistry, PageRegistration, AppPreferenceRegistration, ClusterFeatureRegistration, StatusBarRegistration, KubeObjectMenuRegistration } from "./registries"
+import type { AppPreferenceRegistration, ClusterFeatureRegistration, KubeObjectMenuRegistration, PageRegistration, StatusBarRegistration } from "./registries"
 
 export class LensRendererExtension extends LensExtension {
-  registerGlobalPages(registry: GlobalPageRegistry): PageRegistration[] {
+  registerGlobalPages(): PageRegistration[] {
     return []
   }
 
-  registerClusterPages(registry: ClusterPageRegistry): PageRegistration[] {
+  registerClusterPages(): PageRegistration[] {
     return []
   }
 
-  registerAppPreferences(registry: AppPreferenceRegistry): AppPreferenceRegistration[] {
+  registerAppPreferences(): AppPreferenceRegistration[] {
     return []
   }
 
-  registerClusterFeatures(registry: ClusterFeatureRegistry): ClusterFeatureRegistration[] {
+  registerClusterFeatures(): ClusterFeatureRegistration[] {
     return []
   }
 
-  registerStatusBarItems(registry: StatusBarRegistry): StatusBarRegistration[] {
+  registerStatusBarItems(): StatusBarRegistration[] {
     return []
   }
 
-  registerKubeObjectMenus(registry: KubeObjectMenuRegistry): KubeObjectMenuRegistration[] {
+  registerKubeObjectMenus(): KubeObjectMenuRegistration[] {
     return []
   }
 }
