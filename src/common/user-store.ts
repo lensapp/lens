@@ -66,7 +66,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     if (app) {
       // track telemetry availability
       reaction(() => this.preferences.allowTelemetry, allowed => {
-        tracker.event("telemetry", allowed ? "enabled" : "disabled");
+        appEventBus.emit({name: "telemetry", action: allowed ? "enabled" : "disabled"})
       });
 
       // open at system start-up

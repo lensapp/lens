@@ -1,4 +1,5 @@
 import "./cluster-manager.scss"
+
 import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { comparer, reaction } from "mobx";
@@ -15,6 +16,7 @@ import { clusterViewRoute, clusterViewURL } from "./cluster-view.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import { globalPageRegistry } from "../../../extensions/registries/page-registry";
+import { getMatchedClusterId } from "../../navigation";
 
 @observer
 export class ClusterManager extends React.Component {

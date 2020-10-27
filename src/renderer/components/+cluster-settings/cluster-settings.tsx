@@ -2,6 +2,7 @@ import "./cluster-settings.scss";
 
 import React from "react";
 import { reaction } from "mobx";
+import { RouteComponentProps } from "react-router";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { Features } from "./features";
 import { Removal } from "./removal";
@@ -12,6 +13,7 @@ import { ClusterIcon } from "../cluster-icon";
 import { IClusterSettingsRouteParams } from "./cluster-settings.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { clusterIpc } from "../../../common/cluster-ipc";
+import { PageLayout } from "../layout/page-layout";
 
 interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
 }

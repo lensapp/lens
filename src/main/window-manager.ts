@@ -3,10 +3,10 @@ import { clusterStore } from "../common/cluster-store";
 import { observable } from "mobx";
 import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
-import { initMenu } from "./menu";
-import { initTray } from "./tray";
 import { extensionLoader } from "../extensions/extension-loader";
 import { appEventBus } from "../common/event-bus"
+import { initMenu } from "./menu";
+import { initTray } from "./tray";
 
 export class WindowManager {
   protected mainWindow: BrowserWindow;

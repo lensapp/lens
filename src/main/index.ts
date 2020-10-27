@@ -27,6 +27,7 @@ const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
 let proxyServer: LensProxy;
 let clusterManager: ClusterManager;
+let windowManager: WindowManager;
 
 app.setName(appName);
 if (!process.env.CICD) {
@@ -75,14 +76,15 @@ app.on("ready", async () => {
     app.exit();
   }
 
-  LensExtensionsApi.windowManager = new WindowManager(proxyPort);
+  windowManager = new WindowManager(proxyPort);
 
+  LensExtensionsApi.windowManager = windowManager; // expose to extensions
   extensionLoader.loadOnMain()
   extensionLoader.extensions.replace(await extensionManager.load())
   extensionLoader.broadcastExtensions()
 
   setTimeout(() => {
-    appEventBus.emit({name: "app", action: "start"})
+    appEventBus.emit({ name: "app", action: "start" })
   }, 1000)
 });
 
