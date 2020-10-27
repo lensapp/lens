@@ -5,6 +5,8 @@ docs_dir: docs/
 repo_name: 'lensapp/lens'
 repo_url: 'https://github.com/lensapp/lens'
 nav:
-    - Home: index.md
+    - Overview: index.md
+    - Get Started:
+        - Your First Extension: your_first_extension.md
 theme:
   name: 'readthedocs'
