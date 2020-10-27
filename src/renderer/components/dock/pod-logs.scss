@@ -27,7 +27,7 @@
     display: block;
     height: 0;
     border-top: 1px solid $primary;
-    margin: $margin * 2;
+    margin: $margin * 2 0;
 
     &:after {
       position: absolute;
@@ -38,6 +38,23 @@
       color: white;
       padding: $padding / 3;
       border-radius: $radius;
+    }
+  }
+
+  .jump-to-bottom {
+    position: absolute;
+    right: 30px;
+    padding: $unit / 2 $unit * 1.5;
+    border-radius: $unit * 2;
+    opacity: 0;
+    transition: opacity 0.2s;
+
+    &.active {
+      opacity: 1;
+    }
+
+    .Icon {
+      --size: $unit * 2;
     }
   }
 }

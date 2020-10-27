@@ -1,8 +1,9 @@
 import "./cluster-settings.scss";
 
 import React from "react";
-import { autorun } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { reaction } from "mobx";
+import { RouteComponentProps } from "react-router";
+import { observer, disposeOnUnmount } from "mobx-react";
 import { Features } from "./features";
 import { Removal } from "./removal";
 import { Status } from "./status";
@@ -11,7 +12,6 @@ import { Cluster } from "../../../main/cluster";
 import { ClusterIcon } from "../cluster-icon";
 import { IClusterSettingsRouteParams } from "./cluster-settings.route";
 import { clusterStore } from "../../../common/cluster-store";
-import { RouteComponentProps } from "react-router";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { PageLayout } from "../layout/page-layout";
 
@@ -20,16 +20,23 @@ interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
 
 @observer
 export class ClusterSettings extends React.Component<Props> {
-  get cluster(): Cluster {
-    return clusterStore.getById(this.props.match.params.clusterId);
+  get clusterId() {
+    return this.props.match.params.clusterId
   }
 
-  async componentDidMount() {
-    disposeOnUnmount(this,
-      autorun(() => {
-        this.refreshCluster();
+  get cluster(): Cluster {
+    return clusterStore.getById(this.clusterId);
+  }
+
+  componentDidMount() {
+    disposeOnUnmount(this, [
+      reaction(() => this.cluster, this.refreshCluster, {
+        fireImmediately: true,
+      }),
+      reaction(() => this.clusterId, clusterId => clusterStore.setActive(clusterId), {
+        fireImmediately: true,
       })
-    )
+    ])
   }
 
   refreshCluster = async () => {

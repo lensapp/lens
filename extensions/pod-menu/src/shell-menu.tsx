@@ -33,7 +33,6 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
 
   render() {
     const { object, toolbar } = this.props
-    console.log(Object.keys(object))
     const containers = object.getRunningContainers();
     if (!containers.length) return;
     return (

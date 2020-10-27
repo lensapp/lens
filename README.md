@@ -40,9 +40,10 @@ brew cask install lens
 
 Allows for faster separate re-runs of some of the more involved processes:
 
-1. `yarn dev:main` compiles electron's main process part and start watching files 
-1. `yarn dev:renderer` compiles electron's renderer part and start watching files  
-1. `yarn dev-run` runs app in dev-mode and restarts when electron's main process file has changed
+1. `yarn dev:main` compiles electron's main process app part 
+1. `yarn dev:renderer` compiles electron's renderer app part  
+1. `yarn dev:extension-types` compile declaration types for `@k8slens/extensions`  
+1. `yarn dev-run` runs app in dev-mode and auto-restart when main process file has changed
 
 ## Developer's ~~RTFM~~ recommended list:
 

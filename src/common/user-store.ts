@@ -27,6 +27,7 @@ export interface UserPreferences {
   downloadKubectlBinaries?: boolean;
   downloadBinariesPath?: string;
   kubectlBinariesPath?: string;
+  openAtLogin?: boolean;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
@@ -38,14 +39,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
       migrations: migrations,
     });
 
-    // track telemetry availability
-    reaction(() => this.preferences.allowTelemetry, allowed => {
-      appEventBus.emit({name: "telemetry", action: allowed ? "enabled" : "disabled"})
-    });
-
-    // refresh new contexts
-    this.whenLoaded.then(this.refreshNewContexts);
-    reaction(() => this.kubeConfigPath, this.refreshNewContexts);
+    this.handleOnLoad();
   }
 
   @observable lastSeenAppVersion = "0.0.0"
@@ -59,7 +53,30 @@ export class UserStore extends BaseStore<UserStoreModel> {
     colorTheme: UserStore.defaultTheme,
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
+    openAtLogin: true,
   };
+
+  protected async handleOnLoad() {
+    await this.whenLoaded;
+
+    // refresh new contexts
+    this.refreshNewContexts();
+    reaction(() => this.kubeConfigPath, this.refreshNewContexts);
+
+    if (app) {
+      // track telemetry availability
+      reaction(() => this.preferences.allowTelemetry, allowed => {
+        appEventBus.emit({name: "telemetry", action: allowed ? "enabled" : "disabled"})
+      });
+
+      // open at system start-up
+      reaction(() => this.preferences.openAtLogin, open => {
+        app.setLoginItemSettings({ openAtLogin: open });
+      }, {
+        fireImmediately: true,
+      });
+    }
+  }
 
   get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
