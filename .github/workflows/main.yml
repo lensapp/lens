@@ -49,5 +49,5 @@ jobs:
           directory: ./lensdocs
           repository: lensapp/docs
           branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN }}
           
