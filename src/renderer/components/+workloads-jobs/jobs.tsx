@@ -64,20 +64,7 @@ export class Jobs extends React.Component<Props> {
             }
           ]
         }}
-        renderItemMenu={(item: Job) => {
-          return <JobMenu object={item}/>
-        }}
       />
     )
   }
 }
-
-export function JobMenu(props: KubeObjectMenuProps<Job>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(jobApi, {
-  Menu: JobMenu,
-})

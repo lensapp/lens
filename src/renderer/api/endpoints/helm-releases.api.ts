@@ -141,7 +141,7 @@ export class HelmRelease implements ItemObject {
   chart: string
   status: string
   updated: string
-  revision: number
+  revision: string
 
   getId() {
     return this.namespace + this.name;
@@ -165,7 +165,7 @@ export class HelmRelease implements ItemObject {
   }
 
   getRevision() {
-    return this.revision;
+    return parseInt(this.revision, 10);
   }
 
   getStatus() {

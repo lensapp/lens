@@ -9,15 +9,13 @@ import { nodesStore } from "./nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { INodesRouteParams } from "./nodes.route";
-import { Node, nodesApi } from "../../api/endpoints/nodes.api";
-import { NodeMenu } from "./node-menu";
+import { Node } from "../../api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
 import { _i18n } from "../../i18n";
 import { bytesToUnits } from "../../utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
-import { apiManager } from "../../api/api-manager";
 
 enum sortBy {
   name = "name",
@@ -57,7 +55,7 @@ export class Nodes extends React.Component<Props> {
         max={cores}
         value={usage}
         tooltip={{
-          position: TooltipPosition.BOTTOM,
+          preferredPositions: TooltipPosition.BOTTOM,
           children: _i18n._(t`CPU:`) + ` ${Math.ceil(usage * 100) / cores}\%, ` + _i18n._(t`cores:`) + ` ${cores}`
         }}
       />
@@ -74,7 +72,7 @@ export class Nodes extends React.Component<Props> {
         max={capacity}
         value={usage}
         tooltip={{
-          position: TooltipPosition.BOTTOM,
+          preferredPositions: TooltipPosition.BOTTOM,
           children: _i18n._(t`Memory:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
         }}
       />
@@ -91,7 +89,7 @@ export class Nodes extends React.Component<Props> {
         max={capacity}
         value={usage}
         tooltip={{
-          position: TooltipPosition.BOTTOM,
+          preferredPositions: TooltipPosition.BOTTOM,
           children: _i18n._(t`Disk:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
         }}
       />
@@ -178,15 +176,8 @@ export class Nodes extends React.Component<Props> {
               this.renderConditions(node),
             ]
           }}
-          renderItemMenu={(item: Node) => {
-            return <NodeMenu object={item}/>
-          }}
         />
       </TabLayout>
     )
   }
 }
-
-apiManager.registerViews(nodesApi, {
-  Menu: NodeMenu,
-});

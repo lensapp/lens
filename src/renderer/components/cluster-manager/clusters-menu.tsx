@@ -1,8 +1,8 @@
 import "./clusters-menu.scss"
 
-import type { Cluster } from "../../../main/cluster";
-import { remote } from "electron"
 import React from "react";
+import { remote } from "electron"
+import type { Cluster } from "../../../main/cluster";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
 import { _i18n } from "../../i18n";
@@ -22,6 +22,8 @@ import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
+import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
+import { globalPageRegistry } from "../../../extensions/registries/page-registry";
 
 interface Props {
   className?: IClassName;
@@ -143,6 +145,12 @@ export class ClustersMenu extends React.Component<Props> {
           {newContexts.size > 0 && (
             <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>}/>
           )}
+        </div>
+        <div className="extensions">
+          {globalPageRegistry.getItems().map(({ path, url = String(path), hideInMenu, components: { MenuIcon } }) => {
+            if (!MenuIcon || hideInMenu) return;
+            return <MenuIcon key={url} onClick={() => navigate(url)}/>
+          })}
         </div>
       </div>
     );

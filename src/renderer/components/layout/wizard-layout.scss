@@ -8,13 +8,9 @@
   grid-template-columns: 1fr 40%;
 
   > * {
-    @include custom-scrollbar;
+    @include custom-scrollbar-themed;
     --flex-gap: #{$spacing};
     padding: $spacing;
-
-    .theme-light & {
-      @include custom-scrollbar(dark);
-    }
   }
 
   > .head-col {

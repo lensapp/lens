@@ -99,6 +99,8 @@ export class EndpointSubset implements IEndpointSubset {
 @autobind()
 export class Endpoint extends KubeObject {
   static kind = "Endpoints"
+  static namespaced = true
+  static apiBase = "/api/v1/endpoints"
 
   subsets: IEndpointSubset[]
 
@@ -118,8 +120,5 @@ export class Endpoint extends KubeObject {
 }
 
 export const endpointApi = new KubeApi({
-  kind: Endpoint.kind,
-  apiBase: "/api/v1/endpoints",
-  isNamespaced: true,
   objectConstructor: Endpoint,
 });

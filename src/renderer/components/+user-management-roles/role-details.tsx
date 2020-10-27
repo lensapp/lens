@@ -6,9 +6,9 @@ import { DrawerTitle } from "../drawer";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { observer } from "mobx-react";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
+import { Role } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Role> {
 }
@@ -66,6 +66,18 @@ export class RoleDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews([roleApi, clusterRoleApi], {
-  Details: RoleDetails,
+kubeObjectDetailRegistry.add({
+  kind: "Role",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  components: {
+    Details: (props) => <RoleDetails {...props}/>
+  }
+})
+
+kubeObjectDetailRegistry.add({
+  kind: "ClusterRole",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  components: {
+    Details: (props) => <RoleDetails {...props}/>
+  }
 })

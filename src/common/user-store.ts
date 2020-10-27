@@ -7,7 +7,7 @@ import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store"
 import { getAppVersion } from "./utils/app-version";
 import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
-import { tracker } from "./tracker";
+import { appEventBus } from "./event-bus"
 import logger from "../main/logger";
 import path from 'path';
 
@@ -94,7 +94,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @action
   saveLastSeenAppVersion() {
-    tracker.event("app", "whats-new-seen")
+    appEventBus.emit({name: "app", action: "whats-new-seen"})
     this.lastSeenAppVersion = getAppVersion();
   }
 

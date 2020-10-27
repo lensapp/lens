@@ -6,6 +6,8 @@ import { KubeApi } from "../kube-api";
 @autobind()
 export class PersistentVolume extends KubeObject {
   static kind = "PersistentVolume"
+  static namespaced = false
+  static apiBase = "/api/v1/persistentvolumes"
 
   spec: {
     capacity: {
@@ -64,8 +66,5 @@ export class PersistentVolume extends KubeObject {
 }
 
 export const persistentVolumeApi = new KubeApi({
-  kind: PersistentVolume.kind,
-  apiBase: "/api/v1/persistentvolumes",
-  isNamespaced: false,
   objectConstructor: PersistentVolume,
 });

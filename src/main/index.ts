@@ -2,6 +2,8 @@
 
 import "../common/system-ca"
 import "../common/prometheus-providers"
+import * as Mobx from "mobx"
+import * as LensExtensions from "../extensions/core-api";
 import { app, dialog } from "electron"
 import { appName } from "../common/vars";
 import path from "path"
@@ -16,13 +18,14 @@ import { registerFileProtocol } from "../common/register-protocol";
 import { clusterStore } from "../common/cluster-store"
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
-import { tracker } from "../common/tracker";
+import { appEventBus } from "../common/event-bus"
+import { extensionManager } from "../extensions/extension-manager";
+import { extensionLoader } from "../extensions/extension-loader";
 import logger from "./logger"
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
 let proxyServer: LensProxy;
-let windowManager: WindowManager;
 let clusterManager: ClusterManager;
 
 app.setName(appName);
@@ -39,7 +42,6 @@ app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`)
   await shellSync();
 
-  tracker.event("app", "start");
   const updater = new AppUpdater()
   updater.start();
 
@@ -73,7 +75,15 @@ app.on("ready", async () => {
     app.exit();
   }
 
-  windowManager = new WindowManager(proxyPort);
+  LensExtensionsApi.windowManager = new WindowManager(proxyPort);
+
+  extensionLoader.loadOnMain()
+  extensionLoader.extensions.replace(await extensionManager.load())
+  extensionLoader.broadcastExtensions()
+
+  setTimeout(() => {
+    appEventBus.emit({name: "app", action: "start"})
+  }, 1000)
 });
 
 app.on("activate", (event, hasVisibleWindows) => {
@@ -90,3 +100,13 @@ app.on("will-quit", (event) => {
   clusterManager?.stop(); // close cluster connections
   return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
 })
+
+// Extensions-api runtime exports
+export const LensExtensionsApi = {
+  ...LensExtensions,
+};
+
+export {
+  Mobx,
+  LensExtensionsApi as LensExtensions,
+}

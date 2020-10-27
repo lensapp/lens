@@ -6,7 +6,7 @@ import * as yaml from "js-yaml";
 import path from "path";
 import * as tempy from "tempy";
 import logger from "./logger"
-import { tracker } from "../common/tracker";
+import { appEventBus } from "../common/event-bus"
 import { cloneJsonObject } from "../common/utils";
 
 export class ResourceApplier {
@@ -15,7 +15,7 @@ export class ResourceApplier {
 
   async apply(resource: KubernetesObject | any): Promise<string> {
     resource = this.sanitizeObject(resource);
-    tracker.event("resource", "apply")
+    appEventBus.emit({name: "resource", action: "apply"})
     return await this.kubectlApply(yaml.safeDump(resource));
   }
 

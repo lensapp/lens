@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { EventEmitter } from "../utils/eventEmitter";
+import { EventEmitter } from "../../common/event-emitter";
 
 interface IParams {
   url?: string;          // connection url, starts with ws:// or wss://

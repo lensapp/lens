@@ -40,6 +40,8 @@ export interface IHpaMetric {
 
 export class HorizontalPodAutoscaler extends KubeObject {
   static kind = "HorizontalPodAutoscaler";
+  static namespaced = true;
+  static apiBase = "/apis/autoscaling/v2beta1/horizontalpodautoscalers"
 
   spec: {
     scaleTargetRef: {
@@ -133,8 +135,5 @@ export class HorizontalPodAutoscaler extends KubeObject {
 }
 
 export const hpaApi = new KubeApi({
-  kind: HorizontalPodAutoscaler.kind,
-  apiBase: "/apis/autoscaling/v2beta1/horizontalpodautoscalers",
-  isNamespaced: true,
   objectConstructor: HorizontalPodAutoscaler,
 });

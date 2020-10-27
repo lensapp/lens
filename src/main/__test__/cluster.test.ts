@@ -38,6 +38,7 @@ import { getFreePort } from "../port";
 import { V1ResourceAttributes } from "@kubernetes/client-node";
 import { apiResources } from "../../common/rbac";
 import request from "request-promise-native"
+import { Kubectl } from "../kubectl";
 
 const mockedRequest = request as jest.MockedFunction<typeof request>
 
@@ -73,6 +74,7 @@ describe("create clusters", () => {
       })
     }
     mockFs(mockOpts)
+    jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValue(Promise.resolve(true))
   })
 
   afterEach(() => {
@@ -116,7 +118,7 @@ describe("create clusters", () => {
         }
       }
     }
-
+    jest.spyOn(Cluster.prototype, "isClusterAdmin").mockReturnValue(Promise.resolve(true))
     jest.spyOn(Cluster.prototype, "canI")
       .mockImplementationOnce((attr: V1ResourceAttributes): Promise<boolean> => {
         expect(attr.namespace).toBe("default")
@@ -159,7 +161,7 @@ describe("create clusters", () => {
     expect(c.accessible).toBe(true)
     expect(c.allowedNamespaces.length).toBe(1)
     expect(c.allowedResources.length).toBe(apiResources.length)
-
+    c.disconnect()
     jest.resetAllMocks()
   })
 })

@@ -5,6 +5,8 @@ import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electro
 import windowStateKeeper from "electron-window-state"
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
+import { extensionLoader } from "../extensions/extension-loader";
+import { appEventBus } from "../common/event-bus"
 
 export class WindowManager {
   protected mainWindow: BrowserWindow;
@@ -34,7 +36,8 @@ export class WindowManager {
       });
     }
     if (!this.mainWindow) {
-      app.dock?.show(); // show icon in dock (mac-os only)
+      // show icon in dock (mac-os only)
+      app.dock?.show();
 
       const { width, height, x, y } = this.windowState;
       this.mainWindow = new BrowserWindow({
@@ -57,6 +60,15 @@ export class WindowManager {
         event.preventDefault();
         shell.openExternal(url);
       });
+      this.mainWindow.webContents.on("dom-ready", () => {
+        extensionLoader.broadcastExtensions()
+      })
+      this.mainWindow.on("focus", () => {
+        appEventBus.emit({name: "app", action: "focus"})
+      })
+      this.mainWindow.on("blur", () => {
+        appEventBus.emit({name: "app", action: "blur"})
+      })
 
       // clean up
       this.mainWindow.on("closed", () => {

@@ -13,10 +13,10 @@ import { base64 } from "../../utils";
 import { Icon } from "../icon";
 import { secretsStore } from "./secrets.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { Secret, secretsApi } from "../../api/endpoints";
+import { Secret } from "../../api/endpoints";
 import { _i18n } from "../../i18n";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Secret> {
 }
@@ -113,6 +113,10 @@ export class SecretDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(secretsApi, {
-  Details: SecretDetails,
+kubeObjectDetailRegistry.add({
+  kind: "Secret",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <SecretDetails {...props} />
+  }
 })

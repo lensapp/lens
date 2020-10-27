@@ -7,6 +7,8 @@ import { KubeApi } from "../kube-api";
 @autobind()
 export class StatefulSet extends WorkloadKubeObject {
   static kind = "StatefulSet"
+  static namespaced = true
+  static apiBase = "/apis/apps/v1/statefulsets"
 
   spec: {
     serviceName: string;
@@ -77,8 +79,5 @@ export class StatefulSet extends WorkloadKubeObject {
 }
 
 export const statefulSetApi = new KubeApi({
-  kind: StatefulSet.kind,
-  apiBase: "/apis/apps/v1/statefulsets",
-  isNamespaced: true,
   objectConstructor: StatefulSet,
 });
