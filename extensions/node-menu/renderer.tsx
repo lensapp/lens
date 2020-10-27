@@ -3,19 +3,13 @@ import React from "react"
 import { NodeMenu, NodeMenuProps } from "./src/node-menu"
 
 export default class NodeMenuRendererExtension extends LensRendererExtension {
-  async onActivate() {
-    console.log("node-menu extension activated")
-  }
-
-  registerKubeObjectMenus() {
-    return [
-      {
-        kind: "Node",
-        apiVersions: ["v1"],
-        components: {
-          MenuItem: (props: NodeMenuProps) => <NodeMenu {...props} />
-        }
+  kubeObjectMenuItems = [
+    {
+      kind: "Node",
+      apiVersions: ["v1"],
+      components: {
+        MenuItem: (props: NodeMenuProps) => <NodeMenu {...props} />
       }
-    ]
-  }
+    }
+  ]
 }

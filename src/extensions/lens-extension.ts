@@ -78,8 +78,8 @@ export class LensExtension implements ExtensionModel {
     // mock
   }
 
-  register<T = any>(registry: BaseRegistry<T>, registryItems: T[]) {
-    const disposers = registryItems.map(item => registry.add(item));
+  registerTo<T = any>(registry: BaseRegistry<T>, items: T[] = []) {
+    const disposers = items.map(item => registry.add(item));
     this.disposers.push(...disposers);
     return () => {
       this.disposers = this.disposers.filter(disposer => !disposers.includes(disposer))

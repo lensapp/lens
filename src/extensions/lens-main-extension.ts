@@ -1,12 +1,7 @@
-import { LensExtension } from "./lens-extension"
 import type { MenuRegistration } from "./registries/menu-registry";
+import { observable } from "mobx";
+import { LensExtension } from "./lens-extension"
 
 export class LensMainExtension extends LensExtension {
-  registerAppMenus(): MenuRegistration[] {
-    return []
-  }
-
-  registerPrometheusProviders(): any[] {
-    return []
-  }
+  @observable.shallow appMenus: MenuRegistration[] = []
 }

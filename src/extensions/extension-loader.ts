@@ -37,25 +37,25 @@ export class ExtensionLoader {
   loadOnMain() {
     logger.info('[EXTENSIONS-LOADER]: load on main')
     this.autoloadExtensions((extension: LensMainExtension) => {
-      extension.register(menuRegistry, extension.registerAppMenus())
+      extension.registerTo(menuRegistry, extension.appMenus)
     })
   }
 
   loadOnClusterManagerRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
     this.autoloadExtensions((extension: LensRendererExtension) => {
-      extension.register(globalPageRegistry, extension.registerGlobalPages())
-      extension.register(appPreferenceRegistry, extension.registerAppPreferences())
-      extension.register(clusterFeatureRegistry, extension.registerClusterFeatures())
-      extension.register(statusBarRegistry, extension.registerStatusBarItems())
+      extension.registerTo(globalPageRegistry, extension.globalPages)
+      extension.registerTo(appPreferenceRegistry, extension.appPreferences)
+      extension.registerTo(clusterFeatureRegistry, extension.clusterFeatures)
+      extension.registerTo(statusBarRegistry, extension.statusBarItems)
     })
   }
 
   loadOnClusterRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
     this.autoloadExtensions((extension: LensRendererExtension) => {
-      extension.register(clusterPageRegistry, extension.registerClusterPages())
-      extension.register(kubeObjectMenuRegistry, extension.registerKubeObjectMenus())
+      extension.registerTo(clusterPageRegistry, extension.clusterPages)
+      extension.registerTo(kubeObjectMenuRegistry, extension.kubeObjectMenuItems)
     })
   }
 

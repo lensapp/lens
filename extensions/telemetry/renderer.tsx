@@ -5,25 +5,19 @@ import { tracker } from "./src/tracker"
 import React from "react"
 
 export default class TelemetryRendererExtension extends LensRendererExtension {
+  appPreferences = [
+    {
+      title: "Telemetry & Usage Tracking",
+      components: {
+        Hint: () => <TelemetryPreferenceHint/>,
+        Input: () => <TelemetryPreferenceInput telemetry={telemetryPreferencesStore}/>
+      }
+    }
+  ];
+
   async onActivate() {
     console.log("telemetry extension activated")
     tracker.start()
     await telemetryPreferencesStore.loadExtension(this)
-  }
-
-  registerAppPreferences() {
-    return [
-      {
-        title: "Telemetry & Usage Tracking",
-        components: {
-          Hint: () => <TelemetryPreferenceHint />,
-          Input: () => <TelemetryPreferenceInput telemetry={telemetryPreferencesStore} />
-        }
-      }
-    ]
-  }
-
-  onDeactivate() {
-    console.log("telemetry extension deactivated")
   }
 }

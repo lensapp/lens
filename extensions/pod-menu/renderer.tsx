@@ -4,26 +4,20 @@ import { PodLogsMenu, PodLogsMenuProps } from "./src/logs-menu"
 import React from "react"
 
 export default class PodMenuRendererExtension extends LensRendererExtension {
-  async onActivate() {
-    console.log("pod-menu extension activated")
-  }
-
-  registerKubeObjectMenus() {
-    return [
-      {
-        kind: "Pod",
-        apiVersions: ["v1"],
-        components: {
-          MenuItem: (props: PodShellMenuProps) => <PodShellMenu {...props} />
-        }
-      },
-      {
-        kind: "Pod",
-        apiVersions: ["v1"],
-        components: {
-          MenuItem: (props: PodLogsMenuProps) => <PodLogsMenu {...props} />
-        }
+  kubeObjectMenuItems = [
+    {
+      kind: "Pod",
+      apiVersions: ["v1"],
+      components: {
+        MenuItem: (props: PodShellMenuProps) => <PodShellMenu {...props} />
       }
-    ]
-  }
+    },
+    {
+      kind: "Pod",
+      apiVersions: ["v1"],
+      components: {
+        MenuItem: (props: PodLogsMenuProps) => <PodLogsMenu {...props} />
+      }
+    }
+  ]
 }
