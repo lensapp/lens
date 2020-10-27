@@ -1,0 +1,10 @@
+site_name: Test docs
+site_description: 'A docs test'
+site_author: ''
+docs_dir: docs/
+repo_name: 'lensapp/lens'
+repo_url: 'https://github.com/lensapp/lens'
+nav:
+    - Home: index.md
+theme:
+  name: 'material'
