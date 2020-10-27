@@ -59,7 +59,7 @@ build-extensions:
 	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(dir) build;)
 
 build-npm:
-	yarn compile:extension-rollup
+	yarn compile:extension-types
 	yarn npm:fix-package-version
 
 publish-npm: build-npm
