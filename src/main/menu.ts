@@ -12,9 +12,25 @@ import logger from "./logger";
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help"
 
 export function initMenu(windowManager: WindowManager) {
-  autorun(() => buildMenu(windowManager), {
+  return autorun(() => buildMenu(windowManager), {
     delay: 100
   });
+}
+
+export function showAbout(browserWindow: BrowserWindow) {
+  const appInfo = [
+    `${appName}: ${app.getVersion()}`,
+    `Electron: ${process.versions.electron}`,
+    `Chrome: ${process.versions.chrome}`,
+    `Copyright 2020 Mirantis, Inc.`,
+  ]
+  dialog.showMessageBoxSync(browserWindow, {
+    title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
+    type: "info",
+    buttons: ["Close"],
+    message: `Lens`,
+    detail: appInfo.join("\r\n")
+  })
 }
 
 export function buildMenu(windowManager: WindowManager) {
@@ -32,28 +48,9 @@ export function buildMenu(windowManager: WindowManager) {
     return menuItems;
   }
 
-  function navigate(url: string) {
+  async function navigate(url: string) {
     logger.info(`[MENU]: navigating to ${url}`);
-    windowManager.navigate({
-      channel: "menu:navigate",
-      url: url,
-    })
-  }
-
-  function showAbout(browserWindow: BrowserWindow) {
-    const appInfo = [
-      `${appName}: ${app.getVersion()}`,
-      `Electron: ${process.versions.electron}`,
-      `Chrome: ${process.versions.chrome}`,
-      `Copyright 2020 Mirantis, Inc.`,
-    ]
-    dialog.showMessageBoxSync(browserWindow, {
-      title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
-      type: "info",
-      buttons: ["Close"],
-      message: `Lens`,
-      detail: appInfo.join("\r\n")
-    })
+    await windowManager.navigate(url);
   }
 
   const macAppMenu: MenuItemConstructorOptions = {
@@ -80,7 +77,13 @@ export function buildMenu(windowManager: WindowManager) {
       { role: 'hideOthers' },
       { role: 'unhide' },
       { type: 'separator' },
-      { role: 'quit' }
+      {
+        label: 'Quit',
+        accelerator: 'Cmd+Q',
+        click() {
+          app.exit(); // force quit since might be blocked within app.on("will-quit")
+        }
+      }
     ]
   };
 
@@ -118,7 +121,9 @@ export function buildMenu(windowManager: WindowManager) {
         },
         { type: 'separator' },
         { role: 'quit' }
-      ])
+      ]),
+      { type: 'separator' },
+      { role: 'close' } // close current window
     ]
   };
 
@@ -158,7 +163,7 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click() {
-          windowManager.reload({ channel: "menu:reload" });
+          windowManager.reload();
         }
       },
       { role: 'toggleDevTools' },
@@ -209,7 +214,7 @@ export function buildMenu(windowManager: WindowManager) {
   // Modify menu from extensions-api
   menuRegistry.getItems().forEach(({ parentId, ...menuItem }) => {
     try {
-      const topMenu = appMenu[parentId].submenu as MenuItemConstructorOptions[];
+      const topMenu = appMenu[parentId as MenuTopId].submenu as MenuItemConstructorOptions[];
       topMenu.push(menuItem);
     } catch (err) {
       logger.error(`[MENU]: can't register menu item, parentId=${parentId}`, { menuItem })

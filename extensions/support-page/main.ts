@@ -12,10 +12,7 @@ export default class SupportPageMainExtension extends LensMainExtension {
         parentId: "help",
         label: "Support",
         click() {
-          windowManager.navigate({
-            channel: "menu:navigate", // fixme: use windowManager.ensureMainWindow from Tray's PR
-            url: supportPageURL(),
-          });
+          windowManager.navigate(supportPageURL());
         }
       })
     )
