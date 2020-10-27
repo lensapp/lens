@@ -63,7 +63,7 @@ build-npm:
 	yarn npm:fix-package-version
 
 publish-npm: build-npm
-	echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+	npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
 	cd src/extensions/npm/extensions && npm publish --access=public
 
 clean:
