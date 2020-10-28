@@ -1,3 +1,16 @@
 .Extensions {
-  
+  .content {
+    height: 100%;
+  }
+
+  .Badge.extension {
+    display: flex;
+    margin: 0;
+    padding: $padding $padding * 2;
+
+    .name {
+      color: $textColorAccent;
+      padding-bottom: $padding;
+    }
+  }
 }
