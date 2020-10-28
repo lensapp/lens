@@ -35,6 +35,7 @@ nav:
           - Theming: extensions/capabilities/theming.md
         - Extension Guides:
           - Overview: extensions/guides/overview.md
+          - Renderer Extension: extensions/guides/renderer-extension.md
         - Testing and Publishing:
           - Testing Extensions: extensions/testing-and-publishing/testing.md
           - Publishing Extensions: extensions/testing-and-publishing/publishing.md
