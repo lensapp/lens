@@ -131,6 +131,9 @@ export class ExtensionManager {
         continue
       }
       const absPath = path.resolve(folderPath, fileName);
+      if (!fs.existsSync(absPath) || !fs.lstatSync(absPath).isDirectory()) {
+        continue;
+      }
       const manifestPath = path.resolve(absPath, "package.json");
       await fs.access(manifestPath, fs.constants.F_OK)
       const ext = await this.getExtensionByManifest(manifestPath).catch(() => null)
