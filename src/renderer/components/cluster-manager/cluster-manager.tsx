@@ -15,6 +15,8 @@ import { clusterViewRoute, clusterViewURL, getMatchedCluster, getMatchedClusterI
 import { clusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import { globalPageRegistry } from "../../../extensions/registries/page-registry";
+import { extensionsRoute } from "../+extensions";
+import { Extensions } from "../+extensions/extensions";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -59,6 +61,7 @@ export class ClusterManager extends React.Component {
           <Switch>
             <Route component={LandingPage} {...landingRoute} />
             <Route component={Preferences} {...preferencesRoute} />
+            <Route component={Extensions} {...extensionsRoute} />
             <Route component={Workspaces} {...workspacesRoute} />
             <Route component={AddCluster} {...addClusterRoute} />
             <Route component={ClusterView} {...clusterViewRoute} />

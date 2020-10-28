@@ -7,6 +7,7 @@ import { preferencesURL } from "../renderer/components/+preferences/preferences.
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
 import { menuRegistry } from "../extensions/registries/menu-registry";
+import { extensionsURL } from "../renderer/components/+extensions";
 import logger from "./logger";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help"
@@ -71,6 +72,12 @@ export function buildMenu(windowManager: WindowManager) {
         accelerator: 'CmdOrCtrl+,',
         click() {
           navigate(preferencesURL())
+        }
+      },
+      {
+        label: 'Extensions',
+        click() {
+          navigate(extensionsURL())
         }
       },
       { type: 'separator' },
