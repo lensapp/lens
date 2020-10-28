@@ -43,7 +43,7 @@ theme:
     - navigation.instant
 
 extra_css:
-  - css/extra.css
+  - stylesheets/extra.css
 
 plugins:
   - search

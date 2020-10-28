@@ -1,0 +1,8 @@
+:root {
+  --md-primary-fg-color:        #3d90ce;
+}
+
+:root > * {
+  /* Footer */
+  --md-footer-bg-color:         #3d90ce;
+}
