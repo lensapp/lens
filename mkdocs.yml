@@ -29,6 +29,7 @@ nav:
         - Get Started: 
           - Your First Extension: extensions/get-started/your-first-extension.md
           - Extension Anatomy: extensions/get-started/anatomy.md
+          - Wrapping Up: extensions/get-started/wrapping-up.md
         - Extension Capabilities: 
           - Overview: extensions/capabilities/overview.md
           - Common Capabilities: extensions/capabilities/common-capabilities.md
