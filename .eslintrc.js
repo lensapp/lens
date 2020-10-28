@@ -28,7 +28,8 @@ module.exports =  {
         "src/**/*.ts",
         "integration/**/*.ts",
         "src/extensions/**/*.ts*",
-        "extensions/**/*.ts*"
+        "extensions/**/*.ts*",
+        "__mocks__/*.ts",
       ],
       parser: "@typescript-eslint/parser",
       extends:  [
