@@ -26,7 +26,6 @@ To get the most out of Lens, start by reviewing a few introductory topics:
 
 [Extension API](/extensions/overview/) - Learn how to write a Lens extension.
 
-...
 
 ## Downloads
 

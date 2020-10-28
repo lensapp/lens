@@ -22,7 +22,7 @@ nav:
     - User Guide:
       - Clusters: 
         - Add cluster: clusters/add-cluster.md
-        - Delete cluster: clusters/delete-cluster.md
+        - Remove cluster: clusters/remove-cluster.md
         - Settings: clusters/settings.md
     - Extensions:
         - Overview: extensions/overview.md
