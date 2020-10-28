@@ -48,6 +48,7 @@ export class ExtensionManager {
   async load() {
     logger.info("[EXTENSION-MANAGER] loading extensions from " + this.extensionPackagesRoot)
     if (this.inTreeFolderPath !== this.inTreeTargetPath) {
+      // we need to copy in-tree extensions so that we can symlink them properly on "npm install"
       await fs.remove(this.inTreeTargetPath)
       await fs.ensureDir(this.inTreeTargetPath)
       await fs.copy(this.inTreeFolderPath, this.inTreeTargetPath)
