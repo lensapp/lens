@@ -7,24 +7,21 @@ Lens is the most powerful IDE for people who need to deal with Kubernetes cluste
 <iframe width="560" height="315" src="https://www.youtube.com/embed/04v2ODsmtIs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
-## How to build extensions?
-
-And now this:
+## Top Extensions
 
 - One
 - Two
 - Three
 
 
-## What's new?
+## First Steps
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam non ligula id tellus vehicula vestibulum sed quis neque. Pellentesque sed mollis augue, sit amet condimentum enim. Morbi commodo risus gravida dui gravida, ac vulputate erat consectetur. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Morbi dapibus molestie augue. 
+To get the most out of Lens, start by reviewing a few introductory topics:
 
-## Looking for help
+[Extension API](https://docs.k8slens.dev) - Learn how to write a Lens extension.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam non ligula id tellus vehicula vestibulum sed quis neque. Pellentesque sed mollis augue, sit amet condimentum enim. Morbi commodo risus gravida dui gravida, ac vulputate erat consectetur. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Morbi dapibus molestie augue. 
+...
 
+## Downloads
 
-## Download Lens K8s IDE
-
-Go to [Lens](https://k8slens.dev)
+[Download Lens IDE](https://github.com/lensapp/lens/releases/tag/v3.6.7) - Quickly find the appropriate install for your platform (Windows, macOS and Linux)
