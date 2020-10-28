@@ -4,3 +4,7 @@ Lens collects telemetry data, which is used to help understand how to improve th
 
 ## Disable telemetry reporting
 
+If you don't wish to send usage data to Mirantis, you can disable the "Telemetry & Usage Tracking" in the Lens preferences.
+
+From `File > Preferences` (macOS: `Lens > Preferences`), search for `Telemetry & Usage Tracking`, and uncheck the `Allow telemetry & usage tracking`. This will silence all telemetry events from Lens going forward. Telemetry information may have been collected and sent up until the point when you disable the setting.
+![Disable Telemetry & Usage Tracking](images/disabled-telemetry-usage-tracking.png)
