@@ -9,8 +9,27 @@ copyright: Copyright &copy; 2020 <a href="https://mirantis.com/">Mirantis Inc.</
 edit_uri: ""
 nav:
     - Overview: index.md
-    - Get Started:
-        - Your First Extension: your_first_extension.md
+    - Setup: 
+      - Overview: setup/overview.md
+      - Linux: setup/linux.md
+      - macOS: setup/macos.md
+      - Windows: setup/windows.md
+      - Network: setup/network.md
+    - Extensions:
+        - Overview: extensions/overview.md
+        - Get Started: 
+          - Your First Extension: extensions/get-started/your-first-extension.md
+          - Extension Anatomy: extensions/get-started/anatomy.md
+        - Extension Capabilities: 
+          - Overview: extensions/capabilities/overview.md
+          - Common Capabilities:  extensions/capabilities/common-capabilities.md
+          - Theming: extensions/capabilities/theming.md
+        - Extension Guides:
+          - Overview: extensions/guides/overview.md
+        - Testing and Publishing:
+          - Testing Extensions: extensions/testing-and-publishing/testing.md
+          - Publishing Extensions: extensions/testing-and-publishing/publishing.md
+          - Bundling Extensions: extensions/testing-and-publishing/bundling.md
 theme:
   name: 'material'
   highlightjs: true
