@@ -22,7 +22,7 @@ nav:
           - Extension Anatomy: extensions/get-started/anatomy.md
         - Extension Capabilities: 
           - Overview: extensions/capabilities/overview.md
-          - Common Capabilities:  extensions/capabilities/common-capabilities.md
+          - Common Capabilities: extensions/capabilities/common-capabilities.md
           - Theming: extensions/capabilities/theming.md
         - Extension Guides:
           - Overview: extensions/guides/overview.md
