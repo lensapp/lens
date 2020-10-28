@@ -17,6 +17,8 @@ nav:
       - Network: setup/network.md
     - Get Started:
       - Intro Videos: get-started/intro-videos.md
+      - Settings: get-started/settings.md
+      - Telemetry: get-started/telemetry.md
     - Extensions:
         - Overview: extensions/overview.md
         - Get Started: 
@@ -53,8 +55,8 @@ plugins:
 
 markdown_extensions:
   - toc:
-      permalink: true
-      toc_depth: 0
+      permalink: "#"
+      toc_depth: 3
 
 extra:
   generator: false
