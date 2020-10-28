@@ -1,7 +1,7 @@
 import { RouteProps } from "react-router";
-import { configMapsURL } from "../+config-maps";
 import { Config } from "./config";
-import { IURLParams } from "../../navigation";
+import { IURLParams } from "../../../common/utils/buildUrl";
+import { configMapsURL } from "../+config-maps/config-maps.route";
 
 export const configRoute: RouteProps = {
   get path() {

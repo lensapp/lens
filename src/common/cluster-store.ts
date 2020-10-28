@@ -1,6 +1,6 @@
 import type { WorkspaceId } from "./workspace-store";
 import path from "path";
-import { app, ipcRenderer, remote, webFrame, webContents } from "electron";
+import { app, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
 import { action, computed, observable, toJS } from "mobx";
 import { BaseStore } from "./base-store";
@@ -113,7 +113,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   setActive(id: ClusterId) {
-    this.activeClusterId = id;
+    this.activeClusterId = this.clusters.has(id) ? id : null;
   }
 
   @action
@@ -160,7 +160,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     if (cluster) {
       this.clusters.delete(clusterId);
       if (this.activeClusterId === clusterId) {
-        this.activeClusterId = null;
+        this.setActive(null);
       }
       // remove only custom kubeconfigs (pasted as text)
       if (cluster.kubeConfigPath == ClusterStore.getCustomKubeConfigPath(clusterId)) {

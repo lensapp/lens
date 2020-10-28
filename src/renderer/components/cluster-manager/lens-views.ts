@@ -1,6 +1,6 @@
 import { observable, when } from "mobx";
 import { ClusterId, clusterStore, getClusterFrameUrl } from "../../../common/cluster-store";
-import { getMatchedCluster } from "./cluster-view.route"
+import { getMatchedClusterId } from "../../navigation";
 import logger from "../../../main/logger";
 
 export interface LensView {
@@ -51,7 +51,7 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
 }
 
 export function refreshViews() {
-  const cluster = getMatchedCluster();
+  const cluster = clusterStore.getById(getMatchedClusterId());
   lensViews.forEach(({ clusterId, view, isLoaded }) => {
     const isCurrent = clusterId === cluster?.id;
     const isReady = cluster?.available && cluster?.ready;

@@ -156,6 +156,13 @@ export class Preferences extends React.Component {
           })}
         </div>
 
+        <h2><Trans>Auto start-up</Trans></h2>
+        <Checkbox
+          label={<Trans>Automatically start Lens on login</Trans>}
+          value={preferences.openAtLogin}
+          onChange={v => preferences.openAtLogin = v}
+        />
+
         <h2><Trans>Certificate Trust</Trans></h2>
         <Checkbox
           label={<Trans>Allow untrusted Certificate Authorities</Trans>}

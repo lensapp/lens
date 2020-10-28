@@ -5,9 +5,7 @@
   "version": "0.0.0",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
-  "files": [
-    "api.d.ts"
-  ],
+  "types": "api.d.ts",
   "author": {
     "name": "Mirantis, Inc.",
     "email": "info@k8slens.dev"

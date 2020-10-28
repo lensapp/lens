@@ -56,7 +56,15 @@ else
 endif
 
 build-extensions:
-	$(foreach file, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(file) build;)
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(dir) build;)
+
+build-npm:
+	yarn compile:extension-types
+	yarn npm:fix-package-version
+
+publish-npm: build-npm
+	npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+	cd src/extensions/npm/extensions && npm publish --access=public
 
 clean:
 ifeq "$(DETECTED_OS)" "Windows"

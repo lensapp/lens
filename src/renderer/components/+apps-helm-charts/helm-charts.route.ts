@@ -1,6 +1,6 @@
-import { RouteProps } from "react-router"
+import type { RouteProps } from "react-router";
+import { buildURL } from "../../../common/utils/buildUrl";
 import { appsRoute } from "../+apps/apps.route";
-import { buildURL } from "../../navigation";
 
 export const helmChartsRoute: RouteProps = {
   path: appsRoute.path + "/charts/:repo?/:chartName?"

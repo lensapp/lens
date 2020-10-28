@@ -10,9 +10,9 @@ import * as EventBus from "./event-bus"
 import * as Store from "./stores"
 import * as Util from "./utils"
 import * as Registry from "../registries"
-import * as CommonVars from "../../common/vars";
 import * as ClusterFeature from "./cluster-feature"
 
+// TODO: allow to expose windowManager.navigate() as Navigation.navigate() in runtime
 export let windowManager: WindowManager;
 
 export {
@@ -22,5 +22,4 @@ export {
   Store,
   Util,
   Registry,
-  CommonVars,
 }

@@ -1,41 +1,21 @@
 // Navigation helpers
 
 import { ipcRenderer } from "electron";
-import { compile } from "path-to-regexp"
-import { createBrowserHistory, createMemoryHistory, LocationDescriptor } from "history";
+import { matchPath } from "react-router";
+import { reaction } from "mobx";
 import { createObservableHistory } from "mobx-observable-history";
+import { createBrowserHistory, createMemoryHistory, LocationDescriptor } from "history";
 import logger from "../main/logger";
+import { clusterViewRoute, IClusterViewRouteParams } from "./components/cluster-manager/cluster-view.route";
 
 export const history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
 export const navigation = createObservableHistory(history);
-
-// handle navigation from other process (e.g. system menus in main, common->cluster view interactions)
-if (ipcRenderer) {
-  ipcRenderer.on("menu:navigate", (event, location: LocationDescriptor) => {
-    logger.info(`[IPC]: ${event.type} ${JSON.stringify(location)}`, event);
-    navigate(location);
-  })
-}
 
 export function navigate(location: LocationDescriptor) {
   const currentLocation = navigation.getPath();
   navigation.push(location);
   if (currentLocation === navigation.getPath()) {
     navigation.goBack(); // prevent sequences of same url in history
-  }
-}
-
-export interface IURLParams<P = {}, Q = {}> {
-  params?: P;
-  query?: IQueryParams & Q;
-}
-
-// todo: extract building urls to commons (also used in menu.ts)
-// fixme: missing types validation for params & query
-export function buildURL<P extends object, Q = object>(path: string | string[]) {
-  const pathBuilder = compile(path.toString());
-  return function ({ params, query }: IURLParams<P, Q> = {}) {
-    return pathBuilder(params) + (query ? getQueryString(query, false) : "")
   }
 }
 
@@ -100,3 +80,33 @@ export function setSearch(text: string) {
 export function getSearch() {
   return navigation.searchParams.get("search") || "";
 }
+
+export function getMatchedClusterId(): string {
+  const matched = matchPath<IClusterViewRouteParams>(navigation.location.pathname, {
+    exact: true,
+    path: clusterViewRoute.path
+  });
+  return matched?.params.clusterId;
+}
+
+//-- EVENTS
+
+if (process.isMainFrame) {
+  // Keep track of active cluster-id for handling IPC/menus/etc.
+  reaction(() => getMatchedClusterId(), clusterId => {
+    ipcRenderer.send("cluster-view:current-id", clusterId);
+  }, {
+    fireImmediately: true
+  })
+}
+
+// Handle navigation via IPC (e.g. from top menu)
+ipcRenderer.on("menu:navigate", (event, location: LocationDescriptor) => {
+  logger.info(`[IPC]: ${event.type} ${JSON.stringify(location)}`, event);
+  navigate(location);
+});
+
+// Reload dashboard window
+ipcRenderer.on("menu:reload", () => {
+  location.reload();
+});
