@@ -17,7 +17,7 @@ nav:
       - Network: setup/network.md
     - Get Started:
       - Intro Videos: get-started/intro-videos.md
-      - Settings: get-started/settings.md
+      - Themes: get-started/themes.md
       - Telemetry: get-started/telemetry.md
     - Extensions:
         - Overview: extensions/overview.md
