@@ -19,17 +19,17 @@ nav:
         - Overview: extensions/overview.md
         - Get Started: 
           - Your First Extension: extensions/get-started/your-first-extension.md
-          - Extension Anatomy: extensions/get-started/your-first-extension.md
+          - Extension Anatomy: extensions/get-started/anatomy.md
         - Extension Capabilities: 
-          - Overview: extensions/get-started/your-first-extension.md
-          - Common Capabilities:  extensions/get-started/your-first-extension.md
-          - Theming: extensions/get-started/your-first-extension.md
+          - Overview: extensions/capabilities/overview.md
+          - Common Capabilities: extensions/capabilities/common-capabilities.md
+          - Theming: extensions/capabilities/theming.md
         - Extension Guides:
-          - Overview: extensions/get-started/your-first-extension.md
+          - Overview: extensions/guides/overview.md
         - Testing and Publishing:
-          - Testing Extensions: extensions/get-started/your-first-extension.md
-          - Publishing Extensions: extensions/get-started/your-first-extension.md
-          - Bundling Extensions: extensions/get-started/your-first-extension.md
+          - Testing Extensions: extensions/testing-and-publishing/testing.md
+          - Publishing Extensions: extensions/testing-and-publishing/publishing.md
+          - Bundling Extensions: extensions/testing-and-publishing/bundling.md
 theme:
   name: 'material'
   highlightjs: true
