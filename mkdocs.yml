@@ -12,7 +12,7 @@ nav:
     - Get Started:
         - Your First Extension: your_first_extension.md
 theme:
-  name: 'readthedocs'
+  name: 'material'
   highlightjs: true
   language: 'en'
   custom_dir: custom_theme
