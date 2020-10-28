@@ -15,6 +15,8 @@ nav:
       - macOS: setup/macos.md
       - Windows: setup/windows.md
       - Network: setup/network.md
+    - Get Started:
+      - Intro Videos: get-started/intro-videos.md
     - Extensions:
         - Overview: extensions/overview.md
         - Get Started: 
