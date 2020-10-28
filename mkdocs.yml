@@ -1,5 +1,5 @@
-site_name: Lens Extensions
-site_description: Lens Extensions Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!
+site_name: Documentation for Lens IDE
+site_description: Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!
 site_author: Mirantis, Inc.
 site_url: https://docs.k8slens.dev
 docs_dir: docs/
