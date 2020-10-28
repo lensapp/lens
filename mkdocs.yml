@@ -19,15 +19,11 @@ nav:
       - Intro Videos: get-started/intro-videos.md
       - Themes: get-started/themes.md
       - Telemetry: get-started/telemetry.md
-    - Clusters: 
-      - Add cluster: clusters/add-cluster.md
-      - Settings:
-        - General: clusters/settings/general.md
-        - Workspaces: clusters/settings/workspaces.md
-        - HTTP Proxy: clusters/settings/http-proxy.md
-        - Features: 
-          - Metrics: clusters/settings/features/metrics.md
-          - User Mode: clusters/settings/features/user-mode.md
+    - User Guide:
+      - Clusters: 
+        - Add cluster: clusters/add-cluster.md
+        - Delete cluster: clusters/delete-cluster.md
+        - Settings: clusters/settings.md
     - Extensions:
         - Overview: extensions/overview.md
         - Get Started: 
