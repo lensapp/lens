@@ -20,10 +20,14 @@ Lens is the most powerful IDE for people who need to deal with Kubernetes cluste
 
 To get the most out of Lens, start by reviewing a few introductory topics:
 
+[Intro Videos](/get-started/intro-videos/) - Begin your journey with Lens through these introductory videos.
+
+[Add Clusters](/clusters/add-cluster/) - Add your first Cluster to radically improve productivity and the speed of business.
+
 [Extension API](/extensions/overview/) - Learn how to write a Lens extension.
 
 ...
 
 ## Downloads
 
-[Download Lens IDE](https://github.com/lensapp/lens/releases) - Quickly find the appropriate install for your platform (Windows, macOS and Linux)
+[Download Lens IDE](/setup/overview/) - Quickly find the appropriate install for your platform (Windows, macOS and Linux)
