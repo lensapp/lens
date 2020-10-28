@@ -25,8 +25,16 @@ export class ExtensionManager {
     return extensionPackagesRoot()
   }
 
+  get inTreeTargetPath() {
+    return path.join(this.extensionPackagesRoot, "extensions")
+  }
+
   get inTreeFolderPath(): string {
     return path.resolve(__static, "../extensions");
+  }
+
+  get nodeModulesPath(): string {
+    return path.join(this.extensionPackagesRoot, "node_modules")
   }
 
   get localFolderPath(): string {
@@ -39,7 +47,13 @@ export class ExtensionManager {
 
   async load() {
     logger.info("[EXTENSION-MANAGER] loading extensions from " + this.extensionPackagesRoot)
-    await fs.ensureDir(path.join(this.extensionPackagesRoot, "node_modules"))
+    if (this.inTreeFolderPath !== this.inTreeTargetPath) {
+      // we need to copy in-tree extensions so that we can symlink them properly on "npm install"
+      await fs.remove(this.inTreeTargetPath)
+      await fs.ensureDir(this.inTreeTargetPath)
+      await fs.copy(this.inTreeFolderPath, this.inTreeTargetPath)
+    }
+    await fs.ensureDir(this.nodeModulesPath)
     await fs.ensureDir(this.localFolderPath)
     return await this.loadExtensions();
   }
@@ -55,7 +69,7 @@ export class ExtensionManager {
         id: manifestJson.name,
         version: manifestJson.version,
         name: manifestJson.name,
-        manifestPath: path.join(this.extensionPackagesRoot, "node_modules", manifestJson.name, "package.json"),
+        manifestPath: path.join(this.nodeModulesPath, manifestJson.name, "package.json"),
         manifest: manifestJson
       }
     } catch (err) {
@@ -87,7 +101,7 @@ export class ExtensionManager {
 
   async loadBundledExtensions() {
     const extensions: InstalledExtension[] = []
-    const folderPath = this.inTreeFolderPath
+    const folderPath = this.inTreeTargetPath
     const bundledExtensions = getBundledExtensions()
     const paths = await fs.readdir(folderPath);
     for (const fileName of paths) {
