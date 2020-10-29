@@ -1,3 +1,5 @@
+import moment from "moment";
+
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
@@ -23,6 +25,25 @@ export class DeploymentApi extends KubeApi<Deployment> {
       }
     })
   }
+
+  restart(params: { namespace: string; name: string }) {
+    return this.request.patch(this.getUrl(params), {
+      data: {
+        spec: {
+          template: {
+            metadata: {
+              annotations: {"kubectl.kubernetes.io/restartedAt" : moment.utc().format()}
+            }
+          }
+        }
+      }
+    },
+    {
+      headers: {
+        'content-type': 'application/strategic-merge-patch+json'
+      }
+    })
+  }
 }
 
 @autobind()
@@ -38,6 +59,7 @@ export class Deployment extends WorkloadKubeObject {
       metadata: {
         creationTimestamp?: string;
         labels: { [app: string]: string };
+        annotations?: { [app: string]: string };
       };
       spec: {
         containers: {

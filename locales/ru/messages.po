@@ -550,6 +550,14 @@ msgstr "Состояние"
 msgid "Conditions"
 msgstr "Состояния"
 
+#: src/renderer/components/+workloads-deployments/deployments.tsx: 118
+msgid "Restart"
+msgstr "Перезагрузка"
+
+#: src/renderer/components/+workloads-deployments/deployments.tsx: 121
+msgid "Are you sure you want to restart deployment <0>{0}</0>?"
+msgstr "Выполнить перезагрузку деплоймента <0>{0}</0>?"
+
 #: src/renderer/components/+config-maps/config-maps.tsx:33
 msgid "Config Maps"
 msgstr ""
