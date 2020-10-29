@@ -1,0 +1,4 @@
+# Direct dependencies
+mkdocs==1.1.2
+mkdocs-material==6.1.0
+mkdocs-git-revision-date-localized-plugin==0.7.3
