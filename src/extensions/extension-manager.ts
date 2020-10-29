@@ -63,6 +63,7 @@ export class ExtensionManager {
   async getExtensionByManifest(manifestPath: string): Promise<InstalledExtension> {
     let manifestJson: ExtensionManifest;
     try {
+      fs.accessSync(manifestPath, fs.constants.F_OK); // check manifest file for existence
       manifestJson = __non_webpack_require__(manifestPath)
       this.packagesJson.dependencies[manifestJson.name] = path.dirname(manifestPath)
 
@@ -113,7 +114,6 @@ export class ExtensionManager {
       }
       const absPath = path.resolve(folderPath, fileName);
       const manifestPath = path.resolve(absPath, "package.json");
-      await fs.access(manifestPath, fs.constants.F_OK)
       const ext = await this.getExtensionByManifest(manifestPath).catch(() => null)
       if (ext) {
         extensions.push(ext)
@@ -133,8 +133,10 @@ export class ExtensionManager {
         continue
       }
       const absPath = path.resolve(folderPath, fileName);
+      if (!fs.existsSync(absPath) || !fs.lstatSync(absPath).isDirectory()) { // skip non-directories
+        continue;
+      }
       const manifestPath = path.resolve(absPath, "package.json");
-      await fs.access(manifestPath, fs.constants.F_OK)
       const ext = await this.getExtensionByManifest(manifestPath).catch(() => null)
       if (ext) {
         extensions.push(ext)
