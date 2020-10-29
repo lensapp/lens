@@ -19,7 +19,7 @@ export class WorkspaceMenu extends React.Component<Props> {
 
   render() {
     const { className, ...menuProps } = this.props;
-    const { workspacesList, currentWorkspace } = workspaceStore;
+    const { enabledWorkspacesList, currentWorkspace } = workspaceStore;
     return (
       <Menu
         {...menuProps}
@@ -32,7 +32,7 @@ export class WorkspaceMenu extends React.Component<Props> {
         <Link className="workspaces-title" to={workspacesURL()}>
           <Trans>Workspaces</Trans>
         </Link>
-        {workspacesList.map(({ id: workspaceId, name, description }) => {
+        {enabledWorkspacesList.map(({ id: workspaceId, name, description }) => {
           return (
             <MenuItem
               key={workspaceId}

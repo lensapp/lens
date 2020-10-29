@@ -103,6 +103,7 @@ export class ClustersMenu extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const { newContexts } = userStore;
+    const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId)
     const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
@@ -136,11 +137,11 @@ export class ClustersMenu extends React.Component<Props> {
             </Droppable>
           </DragDropContext>
         </div>
-        <div className="add-cluster" onClick={this.addCluster}>
+        <div className="add-cluster" >
           <Tooltip targetId="add-cluster-icon">
             <Trans>Add Cluster</Trans>
           </Tooltip>
-          <Icon big material="add" id="add-cluster-icon"/>
+          <Icon big material="add" id="add-cluster-icon" disabled={workspace.isManaged()} onClick={this.addCluster}/>
           {newContexts.size > 0 && (
             <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>}/>
           )}

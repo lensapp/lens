@@ -10,7 +10,7 @@ export class ClusterManager {
   constructor(public readonly port: number) {
     // auto-init clusters
     autorun(() => {
-      clusterStore.clusters.forEach(cluster => {
+      clusterStore.enabledClustersList.forEach(cluster => {
         if (!cluster.initialized) {
           logger.info(`[CLUSTER-MANAGER]: init cluster`, cluster.getMeta());
           cluster.init(port);

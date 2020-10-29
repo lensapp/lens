@@ -33,11 +33,12 @@ export type ClusterId = string;
 
 export interface ClusterModel {
   id: ClusterId;
+  kubeConfigPath: string;
   workspace?: WorkspaceId;
   contextName?: string;
   preferences?: ClusterPreferences;
   metadata?: ClusterMetadata;
-  kubeConfigPath: string;
+  ownerRef?: string;
 
   /** @deprecated */
   kubeConfig?: string; // yaml
@@ -78,6 +79,12 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       migrations: migrations,
     });
+
+    if (!ipcRenderer) {
+      setInterval(() => {
+        this.pushState()
+      }, 5000)
+    }
   }
 
   @observable activeClusterId: ClusterId;
@@ -86,11 +93,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   registerIpcListener() {
     logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`)
-    ipcRenderer.on("cluster:state", (event, model: ClusterState) => {
-      this.applyWithoutSync(() => {
-        logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host} (${webFrame.routingId})`, model);
-        this.getById(model.id)?.updateModel(model);
-      })
+    ipcRenderer.on("cluster:state", (event, clusterId: string, state: ClusterState) => {
+      logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host} (${webFrame.routingId})`, clusterId, state);
+      this.getById(clusterId)?.setState(state)
     })
   }
 
@@ -99,12 +104,22 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     ipcRenderer.removeAllListeners("cluster:state")
   }
 
+  pushState() {
+    this.clusters.forEach((c) => {
+      c.pushState()
+    })
+  }
+
   @computed get activeCluster(): Cluster | null {
     return this.getById(this.activeClusterId);
   }
 
   @computed get clustersList(): Cluster[] {
     return Array.from(this.clusters.values());
+  }
+
+  @computed get enabledClustersList(): Cluster[] {
+    return this.clustersList.filter((c) => c.enabled)
   }
 
   isActive(id: ClusterId) {
@@ -145,12 +160,29 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  addCluster(...models: ClusterModel[]) {
+  addClusters(...models: ClusterModel[]): Cluster[] {
+    const clusters: Cluster[] = []
     models.forEach(model => {
-      appEventBus.emit({name: "cluster", action: "add"})
-      const cluster = new Cluster(model);
-      this.clusters.set(model.id, cluster);
+      clusters.push(this.addCluster(model))
     })
+
+    return clusters
+  }
+
+  @action
+  addCluster(model: ClusterModel): Cluster {
+    appEventBus.emit({name: "cluster", action: "add"})
+    let cluster: Cluster = null
+    if (model instanceof Cluster === false) {
+      cluster = new Cluster(model)
+    }
+    this.clusters.set(model.id, cluster);
+
+    return cluster
+  }
+
+  async removeCluster(model: ClusterModel) {
+    await this.removeById(model.id)
   }
 
   @action
@@ -189,6 +221,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         cluster.updateModel(clusterModel);
       } else {
         cluster = new Cluster(clusterModel);
+        if (!cluster.isManaged()) {
+          cluster.enabled = true
+        }
       }
       newClusters.set(clusterModel.id, cluster);
     }

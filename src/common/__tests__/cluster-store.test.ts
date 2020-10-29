@@ -70,7 +70,7 @@ describe("empty config", () => {
 
   describe("with prod and dev clusters added", () => {
     beforeEach(() => {
-      clusterStore.addCluster(
+      clusterStore.addClusters(
         new Cluster({
           id: "prod",
           contextName: "prod",
