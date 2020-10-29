@@ -59,6 +59,9 @@ theme:
         name: Switch to dark mode
   features:
     - navigation.instant
+    - toc.autohide
+    - search.suggest
+    - search.highlight
 
 extra_css:
   - stylesheets/extra.css

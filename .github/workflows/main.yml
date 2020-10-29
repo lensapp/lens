@@ -15,12 +15,12 @@ jobs:
           repository: lensapp/lens
           path: lens
 
-      - name: Checkout lensapp/mkdocs-material-insiders
-        uses: actions/checkout@v2
-        with:
-          repository: lensapp/mkdocs-material-insiders
-          path: mkdocs-material-insiders
-          token: ${{ secrets.GH_TOKEN }}
+      # - name: Checkout lensapp/mkdocs-material-insiders
+      #   uses: actions/checkout@v2
+      #   with:
+      #     repository: lensapp/mkdocs-material-insiders
+      #     path: mkdocs-material-insiders
+      #     token: ${{ secrets.GH_TOKEN }}
 
       - name: Set up Python 3.7 
         uses: actions/setup-python@v2 
