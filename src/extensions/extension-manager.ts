@@ -47,7 +47,9 @@ export class ExtensionManager {
 
   async load() {
     logger.info("[EXTENSION-MANAGER] loading extensions from " + this.extensionPackagesRoot)
-    if (this.inTreeFolderPath !== this.inTreeTargetPath) {
+    try {
+      await fs.access(this.inTreeFolderPath, fs.constants.W_OK)
+    } catch {
       // we need to copy in-tree extensions so that we can symlink them properly on "npm install"
       await fs.remove(this.inTreeTargetPath)
       await fs.ensureDir(this.inTreeTargetPath)
@@ -79,7 +81,7 @@ export class ExtensionManager {
 
   protected installPackages(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const child = child_process.fork(this.npmPath, ["install", "--silent"], {
+      const child = child_process.fork(this.npmPath, ["install", "--silent", "--no-audit", "--only=prod", "--prefer-offline"], {
         cwd: extensionPackagesRoot(),
         silent: true
       })
@@ -95,6 +97,7 @@ export class ExtensionManager {
   async loadExtensions() {
     const bundledExtensions = await this.loadBundledExtensions()
     const localExtensions = await this.loadFromFolder(this.localFolderPath)
+    await this.installPackages()
     const extensions = bundledExtensions.concat(localExtensions)
     return new Map(extensions.map(ext => [ext.id, ext]));
   }
@@ -118,7 +121,6 @@ export class ExtensionManager {
     }
     logger.debug(`[EXTENSION-MANAGER]: ${extensions.length} extensions loaded`, { folderPath, extensions });
     await fs.writeFile(path.join(this.extensionPackagesRoot, "package.json"), JSON.stringify(this.packagesJson), {mode: 0o600})
-    await this.installPackages()
     return extensions
   }
 
@@ -141,7 +143,6 @@ export class ExtensionManager {
 
     logger.debug(`[EXTENSION-MANAGER]: ${extensions.length} extensions loaded`, { folderPath, extensions });
     await fs.writeFile(path.join(this.extensionPackagesRoot, "package.json"), JSON.stringify(this.packagesJson), {mode: 0o600})
-    await this.installPackages()
 
     return extensions;
   }
