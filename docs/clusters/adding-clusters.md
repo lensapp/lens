@@ -1,4 +1,4 @@
-# Add Cluster
+# Adding clusters
 
 Add clusters by clicking the Add Cluster button in the left-side menu. You'll need to obtain a working kubeconfig for the cluster you want to add. You can either browse it from the file system or paste it as a text from the clipboard.
 

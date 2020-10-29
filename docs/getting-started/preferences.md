@@ -1,7 +1,7 @@
 # Preferences
 
 
-## Color Themes
+## Color themes
 
 Color themes let you modify the colors in Lens user interface to suit your preferences and work environment.
 
@@ -9,7 +9,7 @@ In Lens, open the Preferences with **File** > **Preferences**. (**Code** > **Pre
 ![Color Theme](images/color-theme.png)
 
 
-## Telemetry & Usage Tracking
+## Telemetry & usage tracking
 
 Lens collects telemetry data, which is used to help understand how to improve the product. For example, this usage data helps to debug issues, such as slow start-up times, and to prioritize new features. While we appreciate the insights this data provides, we also know that not everyone wants to send usage data and you can disable telemetry as described in [disable telemetry reporting](#disable-telemetry-reporting). You can also read our [privacy statement](https://www.mirantis.com/company/privacy-policy/) to learn more.
 
