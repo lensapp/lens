@@ -10,7 +10,8 @@ Simple Lens extension that adds "hello-world" page to a cluster menu.
 
 ```sh
 mkdir -p ~/.k8slens/extensions
-git clone https://github.com/lensapp/lens-extension-samples.git ~/.k8slens/extensions
+git clone https://github.com/lensapp/lens-extension-samples.git
+cp -pr lens-extension-samples/helloworld-sample ~/.k8slens/extensions
 ```
 
 To build the extension you can use `make` or run the `npm` commands manually:
