@@ -21,4 +21,4 @@ Watch this introductory video to see Lens in action:
 
 ## Quickstart
 
-Learn to [add clusters](/clusters/add-cluster/) to improve productivity and increase the speed of business.
+Get up and running quickly by learning to [add clusters](/clusters/add-cluster/).
