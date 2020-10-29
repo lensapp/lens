@@ -38,8 +38,9 @@ export class Tracker extends Util.Singleton {
     }
     this.eventHandlers.push(handler)
     EventBus.appEventBus.addListener(handler)
-
-    this.reportInterval = setInterval(this.reportData, 60 * 60 * 1000) // report every 1h
+    this.reportInterval = setInterval(() => {
+      this.reportData()
+    }, 60 * 60 * 1000) // report every 1h
   }
 
   stop() {

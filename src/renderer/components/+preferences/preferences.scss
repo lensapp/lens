@@ -21,4 +21,8 @@
       display: none;
     }
   }
+
+  .Checkbox {
+    align-self: start; // limit clickable area to checkbox + text
+  }
 }

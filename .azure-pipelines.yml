@@ -149,6 +149,11 @@ jobs:
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
           GH_TOKEN: $(GH_TOKEN)
+      - script: make publish-npm
+        displayName: Publish npm package
+        condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
+        env:
+          NPM_TOKEN: $(NPM_TOKEN)
       - bash: |
           mkdir -p "$AZURE_CACHE_FOLDER"
           tar -czf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" "$YARN_CACHE_FOLDER"

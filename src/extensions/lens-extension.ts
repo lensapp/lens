@@ -1,6 +1,7 @@
 import { readJsonSync } from "fs-extra";
 import { action, observable, toJS } from "mobx";
 import logger from "../main/logger";
+import { BaseRegistry } from "./registries/base-registry";
 
 export type ExtensionId = string | ExtensionPackageJsonPath;
 export type ExtensionPackageJsonPath = string;
@@ -25,7 +26,7 @@ export interface ExtensionManifest extends ExtensionModel {
 export class LensExtension implements ExtensionModel {
   public id: ExtensionId;
   public updateUrl: string;
-  protected disposers: Function[] = [];
+  protected disposers: (() => void)[] = [];
 
   @observable name = "";
   @observable description = "";
@@ -75,6 +76,14 @@ export class LensExtension implements ExtensionModel {
 
   protected onDeactivate() {
     // mock
+  }
+
+  registerTo<T = any>(registry: BaseRegistry<T>, items: T[] = []) {
+    const disposers = items.map(item => registry.add(item));
+    this.disposers.push(...disposers);
+    return () => {
+      this.disposers = this.disposers.filter(disposer => !disposers.includes(disposer))
+    };
   }
 
   getMeta() {

@@ -1,4 +1,5 @@
 module.exports =  {
+  ignorePatterns: ["src/extensions/npm/extensions/api.d.ts"],
   overrides: [
     {
       files: [

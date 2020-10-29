@@ -3,13 +3,13 @@
 
 import React from "react"
 import { observer } from "mobx-react"
-import { CommonVars, Component } from "@k8slens/extensions";
+import { App, Component } from "@k8slens/extensions";
 
 @observer
 export class Support extends React.Component {
   render() {
     const { PageLayout } = Component;
-    const { slackUrl, issuesTrackerUrl } = CommonVars;
+    const { slackUrl, issuesTrackerUrl } = App;
     return (
       <PageLayout showOnTop className="Support" header={<h2>Support</h2>}>
         <h2>Community Slack Channel</h2>
