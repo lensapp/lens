@@ -3,6 +3,11 @@
 Lens is lightweight and simple to install. You'll be up and running in just a few minutes.
 
 
+## System requirements
+
+You can review the [System Requirements](/supporting/requirements/) to check if your computer configuration is supported.
+
+
 ## macOS
 
 1. [Download Lens](https://github.com/lensapp/lens/releases) for macOS.

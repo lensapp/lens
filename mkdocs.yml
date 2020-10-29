@@ -12,7 +12,7 @@ nav:
     - Getting started: 
       - Downloading Lens: getting-started/downloading-lens.md
       - Preferences: getting-started/preferences.md
-      - Introductory videos: getting-started/introductory-videos
+      - Introductory videos: getting-started/introductory-videos.md
     - Clusters: 
       - Adding clusters: clusters/adding-clusters.md
       - Removing cluster: clusters/removing-clusters.md
