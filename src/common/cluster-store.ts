@@ -170,14 +170,13 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  addCluster(model: ClusterModel): Cluster {
+  addCluster(model: ClusterModel | Cluster ): Cluster {
     appEventBus.emit({name: "cluster", action: "add"})
-    let cluster: Cluster = null
-    if (model instanceof Cluster === false) {
+    let cluster = model as Cluster;
+    if (!(model instanceof Cluster)) {
       cluster = new Cluster(model)
     }
     this.clusters.set(model.id, cluster);
-
     return cluster
   }
 
