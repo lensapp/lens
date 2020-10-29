@@ -186,6 +186,12 @@ export function buildMenu(windowManager: WindowManager) {
         },
       },
       {
+        label: "Documentation",
+        click: async () => {
+          shell.openExternal('https://docs.k8slens.dev/');
+        },
+      },
+      {
         label: "License",
         click: async () => {
           shell.openExternal('https://k8slens.dev/licenses/eula.md');
