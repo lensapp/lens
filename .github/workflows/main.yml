@@ -15,11 +15,12 @@ jobs:
           repository: lensapp/lens
           path: lens
 
- #     - name: Checkout Branch "gh-pages" from "lensapp/docs"
- #       uses: actions/checkout@v2
- #       with:
- #         repository: lensapp/docs
- #         path: lensdocs
+      - name: Checkout lensapp/mkdocs-material-insiders
+        uses: actions/checkout@v2
+        with:
+          repository: lensapp/mkdocs-material-insiders
+          path: mkdocs-material-insiders
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Set up Python 3.7 
         uses: actions/setup-python@v2 
@@ -27,8 +28,9 @@ jobs:
           python-version: '3.x' 
       - name: Install dependencies 
         run: | 
-          python -m pip install --upgrade pip 
-          pip install mkdocs-material mkdocs-git-revision-date-localized-plugin
+          python -m pip install --upgrade pip
+          pip install -r mkdocs-material-insiders/requirements.txt 
+          pip install mkdocs-git-revision-date-localized-plugin
           
       - name: mkdocs deploy
         run: | 
