@@ -111,7 +111,10 @@
           "!**/node_modules"
         ]
       },
-      "LICENSE"
+      {
+        "from": "extensions/license/LICENSE",
+        "to": "LICENSE"
+      }
     ],
     "linux": {
       "category": "Network",
@@ -185,6 +188,7 @@
       "pod-menu",
       "node-menu",
       "metrics-cluster-feature",
+      "license",
       "support-page"
     ]
   },
