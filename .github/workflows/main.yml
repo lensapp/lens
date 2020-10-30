@@ -9,15 +9,11 @@ jobs:
     name: Deploy docs
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Release from lens
-        uses: actions/checkout@v2
-        with:
-          repository: lensapp/lens
-
       - name: Set up Python 3.7 
         uses: actions/setup-python@v2 
         with: 
           python-version: '3.x' 
+
       - name: Install dependencies 
         run: | 
           python -m pip install --upgrade pip
@@ -29,6 +25,11 @@ jobs:
            git config --local user.email "action@github.com"
            git config --local user.name "GitHub Action"
           
+      - name: Checkout Release from lens
+        uses: actions/checkout@v2
+        with:
+          repository: lensapp/lens
+
       - name: mkdocs deploy latest
         run: | 
            mike deploy --push 0.6
