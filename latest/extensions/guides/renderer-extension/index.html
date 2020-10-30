@@ -192,17 +192,55 @@
               <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
-                    
+                    <!--
+  Copyright (c) 2016-2020 Martin Donath <martin.donath@squidfunk.com>
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Mitigate bug: https://github.com/mkdocs/mkdocs/issues/2191 -->
+
+
+
+<!-- Main navigation -->
+<nav
+  class="md-nav md-nav--primary"
+  aria-label="Navigation"
+  data-md-level="0"
+>
+
+  <!-- Site title -->
   <label class="md-nav__title" for="__drawer">
-    <a href="https://docs.k8slens.dev" title="Lens Documentation" class="md-nav__button md-logo" aria-label="Lens Documentation">
+    <a
+      href="https://docs.k8slens.dev"
+      title="Lens Documentation"
+      class="md-nav__button md-logo"
+      aria-label="Lens Documentation"
+    >
       
   <img src="../../../img/lens-logo-icon.svg" alt="logo">
 
     </a>
     Lens Documentation
   </label>
+
+  <!-- Repository containing source -->
   
     <div class="md-nav__source">
       
@@ -217,6 +255,8 @@
 </a>
     </div>
   
+
+  <!-- Render item list -->
   <ul class="md-nav__list" data-md-scrollfix>
     
       
@@ -643,6 +683,11 @@
 
     
   </ul>
+  <div>
+    <p>
+      <a class="md-nav__title" style="color: #3d90ce;"" href="https://k8slens.dev">Lens Website</a>
+    </p>
+  </div>
 </nav>
                   </div>
                 </div>
