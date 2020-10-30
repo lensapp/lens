@@ -1,31 +1,40 @@
 import { EventBus, Util, Store, App } from "@k8slens/extensions"
 import ua from "universal-analytics"
+import Analytics from "analytics-node"
 import { machineIdSync } from "node-machine-id"
 import { telemetryPreferencesStore } from "./telemetry-preferences-store"
 
 export class Tracker extends Util.Singleton {
   static readonly GA_ID = "UA-159377374-1"
-
+  static readonly SEGMENT_KEY = "YENwswyhlOgz8P7EFKUtIZ2MfON7Yxqb"
   protected eventHandlers: Array<(ev: EventBus.AppEvent ) => void> = []
   protected started = false
   protected visitor: ua.Visitor
+  protected analytics: Analytics
   protected machineId: string = null;
   protected ip: string = null;
   protected appVersion: string;
   protected locale: string;
-  protected electronUA: string;
+  protected userAgent: string;
+  protected anonymousId: string;
+  protected os: string
 
   protected reportInterval: NodeJS.Timeout
 
   private constructor() {
     super();
+    this.anonymousId = machineIdSync()
+    this.os = this.resolveOS()
+    this.userAgent = `Lens ${App.version} (${this.os})`
     try {
-      this.visitor = ua(Tracker.GA_ID, machineIdSync(), { strictCidFormat: false })
+      this.visitor = ua(Tracker.GA_ID, this.anonymousId, { strictCidFormat: false })
     } catch (error) {
       this.visitor = ua(Tracker.GA_ID)
     }
+
+    this.analytics = new Analytics(Tracker.SEGMENT_KEY, { flushAt: 1 })
     this.visitor.set("dl", "https://telemetry.k8slens.dev")
-    this.visitor.set("ua", `Lens ${App.version} (${this.getOS()})`)
+    this.visitor.set("ua", this.userAgent)
   }
 
   start() {
@@ -38,6 +47,9 @@ export class Tracker extends Util.Singleton {
     }
     this.eventHandlers.push(handler)
     EventBus.appEventBus.addListener(handler)
+  }
+
+  reportPeriodically() {
     this.reportInterval = setInterval(() => {
       this.reportData()
     }, 60 * 60 * 1000) // report every 1h
@@ -61,12 +73,13 @@ export class Tracker extends Util.Singleton {
   }
 
   protected reportData() {
-    const clustersList = Store.clusterStore.clustersList
+    const clustersList = Store.clusterStore.enabledClustersList
 
     this.event("generic-data", "report", {
       appVersion: App.version,
+      os: this.os,
       clustersCount: clustersList.length,
-      workspacesCount: Store.workspaceStore.workspacesList.length
+      workspacesCount: Store.workspaceStore.enabledWorkspacesList.length
     })
 
     clustersList.forEach((cluster) => {
@@ -78,6 +91,7 @@ export class Tracker extends Util.Singleton {
   protected reportClusterData(cluster: Store.ClusterModel) {
     this.event("cluster-data", "report", {
       id: cluster.metadata.id,
+      managed: !!cluster.ownerRef,
       kubernetesVersion: cluster.metadata.version,
       distribution: cluster.metadata.distribution,
       nodesCount: cluster.metadata.nodes,
@@ -85,7 +99,7 @@ export class Tracker extends Util.Singleton {
     })
   }
 
-  protected getOS() {
+  protected resolveOS() {
     let os = ""
     if (App.isMac) {
       os = "MacOS"
@@ -115,6 +129,19 @@ export class Tracker extends Util.Singleton {
         ea: eventAction,
         ...otherParams,
       }).send()
+
+      this.analytics.track({
+        anonymousId: this.anonymousId,
+        event: `${eventCategory} ${eventAction}`,
+        context: {
+          userAgent: this.userAgent,
+        },
+        properties: {
+          category: eventCategory,
+          ...otherParams,
+        },
+
+      })
     } catch (err) {
       console.error(`Failed to track "${eventCategory}:${eventAction}"`, err)
     }

@@ -7,6 +7,7 @@ export default class TelemetryMainExtension extends LensMainExtension {
   async onActivate() {
     console.log("telemetry main extension activated")
     tracker.start()
+    tracker.reportPeriodically()
     await telemetryPreferencesStore.loadExtension(this)
   }
 
