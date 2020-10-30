@@ -22,14 +22,15 @@ export class RemoveClusterButton extends React.Component<Props> {
       labelOk: <Trans>Yes</Trans>,
       labelCancel: <Trans>No</Trans>,
       ok: async () => {
-        await clusterStore.removeById(cluster.id); 
+        await clusterStore.removeById(cluster.id);
       }
     })
   }
 
   render() {
+    const { cluster } = this.props;
     return (
-      <Button accent onClick={this.confirmRemoveCluster} className="button-area">
+      <Button accent onClick={this.confirmRemoveCluster} className="button-area" disabled={cluster.isManaged}>
         Remove Cluster
       </Button>
     );

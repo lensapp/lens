@@ -19,8 +19,12 @@ export class Workspaces extends React.Component {
   @observable editingWorkspaces = observable.map<WorkspaceId, Workspace>();
 
   @computed get workspaces(): Workspace[] {
+    const currentWorkspaces: Map<WorkspaceId, Workspace> = new Map()
+    workspaceStore.enabledWorkspacesList.forEach((w) => {
+      currentWorkspaces.set(w.id, w)
+    })
     const allWorkspaces = new Map([
-      ...workspaceStore.workspaces,
+      ...currentWorkspaces,
       ...this.editingWorkspaces,
     ]);
     return Array.from(allWorkspaces.values());
@@ -42,7 +46,7 @@ export class Workspaces extends React.Component {
 
   saveWorkspace = (id: WorkspaceId) => {
     const draft = toJS(this.editingWorkspaces.get(id));
-    const workspace = workspaceStore.saveWorkspace(draft);
+    const workspace = workspaceStore.addWorkspace(draft);
     if (workspace) {
       this.clearEditing(id);
     }
@@ -50,11 +54,11 @@ export class Workspaces extends React.Component {
 
   addWorkspace = () => {
     const workspaceId = uuid();
-    this.editingWorkspaces.set(workspaceId, {
+    this.editingWorkspaces.set(workspaceId, new Workspace({
       id: workspaceId,
       name: "",
-      description: "",
-    })
+      description: ""
+    }))
   }
 
   editWorkspace = (id: WorkspaceId) => {
@@ -76,7 +80,7 @@ export class Workspaces extends React.Component {
       },
       ok: () => {
         this.clearEditing(id);
-        workspaceStore.removeWorkspace(id);
+        workspaceStore.removeWorkspace(workspace);
       },
       message: (
         <div className="confirm flex column gaps">
@@ -107,11 +111,12 @@ export class Workspaces extends React.Component {
           <Trans>Workspaces</Trans>
         </h2>
         <div className="items flex column gaps">
-          {this.workspaces.map(({ id: workspaceId, name, description }) => {
+          {this.workspaces.map(({ id: workspaceId, name, description, ownerRef }) => {
             const isActive = workspaceStore.currentWorkspaceId === workspaceId;
             const isDefault = workspaceStore.isDefault(workspaceId);
             const isEditing = this.editingWorkspaces.has(workspaceId);
             const editingWorkspace = this.editingWorkspaces.get(workspaceId);
+            const managed = !!ownerRef
             const className = cssNames("workspace flex gaps", {
               active: isActive,
               editing: isEditing,
@@ -130,7 +135,7 @@ export class Workspaces extends React.Component {
                       {isActive && <span> <Trans>(current)</Trans></span>}
                     </span>
                     <span className="description">{description}</span>
-                    {!isDefault && (
+                    {!isDefault && !managed && (
                       <Fragment>
                         <Icon
                           material="edit"
