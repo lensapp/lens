@@ -32,7 +32,7 @@ jobs:
       - name: mkdocs deploy latest
         if: contains(github.ref, 'refs/heads/')
         run: | 
-           mike deploy --push --force --rebase 0.3
+           mike deploy --push --rebase 0.4
         
       - name: mkdocs deploy new release / tag
         if: contains(github.ref, 'refs/tags/v')
