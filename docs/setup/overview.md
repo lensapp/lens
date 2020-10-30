@@ -9,11 +9,11 @@ Lens is the most powerful IDE for people who need to deal with Kubernetes cluste
 
 Follow the platform-specific guides below:
 
-* [Linux](/setup/linux/)
-* [macOS](/setup/macos/)
-* [Windows](/setup/windows/)
+* [Linux](linux/)
+* [macOS](macos/)
+* [Windows](windows/)
 
-Lens is lightweight and should run on most available hardware and platform versions. You can review the [System Requirements](/supporting/requirements/) to check if your computer configuration is supported.
+Lens is lightweight and should run on most available hardware and platform versions. You can review the [System Requirements](supporting/requirements/) to check if your computer configuration is supported.
 
 
 ## Update cadence
