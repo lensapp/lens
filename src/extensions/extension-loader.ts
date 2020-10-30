@@ -3,10 +3,11 @@ import type { LensMainExtension } from "./lens-main-extension"
 import type { LensRendererExtension } from "./lens-renderer-extension"
 import path from "path"
 import { broadcastIpc } from "../common/ipc"
-import { observable, reaction, toJS, } from "mobx"
+import { computed, observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
 import { appPreferenceRegistry, clusterFeatureRegistry, clusterPageRegistry, globalPageRegistry, kubeObjectMenuRegistry, menuRegistry, statusBarRegistry } from "./registries";
+import { getBundledExtensions } from "../common/utils"
 
 export interface InstalledExtension extends ExtensionModel {
   manifestPath: string;
@@ -32,6 +33,16 @@ export class ExtensionLoader {
         })
       })
     }
+  }
+
+  @computed get userExtensions() {
+    const builtIn = getBundledExtensions().map(ext => `lens-${ext}`)
+    const extensions: LensExtension[] = []
+    this.instances.forEach(instance => {
+      if (builtIn.includes(instance.name)) return
+      extensions.push(instance)
+    })
+    return extensions
   }
 
   loadOnMain() {
