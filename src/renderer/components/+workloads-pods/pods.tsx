@@ -1,6 +1,6 @@
 import "./pods.scss"
 
-import React, { Fragment } from "react";
+import React, { Children, Fragment } from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { Trans } from "@lingui/macro";
@@ -19,6 +19,8 @@ import toPairs from "lodash/toPairs";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import { lookupApiLink } from "../../api/kube-api";
+import { resourceStatusRegistry } from "../../../extensions/registries/resource-status-registry";
+import { ResourceStatus } from "../resource-status";
 
 enum sortBy {
   name = "name",
@@ -65,6 +67,25 @@ export class Pods extends React.Component<Props> {
         </Fragment>
       )
     });
+  }
+
+  renderPodStatus(pod: Pod) {
+    const podStatusTextsFromExtensions = resourceStatusRegistry.getItemsForKind(pod.kind, pod.apiVersion).map((item, index) => {
+      const podStatusResolver = item.resolver(pod)
+      return (
+        <span key={`resource-status-${index}`} className={podStatusResolver.getStatusColor()}>
+          {podStatusResolver.getStatusText()}
+        </span>
+      )
+    });
+    return {
+      className: kebabCase(pod.getStatusMessage()),
+      children: (
+        <span>
+          {pod.getStatusMessage()} {podStatusTextsFromExtensions}
+        </span>
+      )
+    }
   }
 
   render() {
@@ -115,7 +136,7 @@ export class Pods extends React.Component<Props> {
           }),
           pod.getQosClass(),
           pod.getAge(),
-          { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) }
+          this.renderPodStatus(pod)
         ]}
       />
     )

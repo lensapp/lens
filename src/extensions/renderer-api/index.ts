@@ -4,9 +4,11 @@
 import * as Component from "./components"
 import * as K8sApi from "./k8s-api"
 import * as Navigation from "./navigation"
+import * as ResourceStatus from "./resource-status"
 
 export {
   Component,
   K8sApi,
   Navigation,
+  ResourceStatus
 }

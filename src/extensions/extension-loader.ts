@@ -8,7 +8,7 @@ import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
 import {
   appPreferenceRegistry, clusterFeatureRegistry, clusterPageRegistry, globalPageRegistry,
-  kubeObjectDetailRegistry, kubeObjectMenuRegistry, menuRegistry, statusBarRegistry
+  kubeObjectDetailRegistry, kubeObjectMenuRegistry, menuRegistry, statusBarRegistry, resourceStatusRegistry
 } from "./registries";
 
 export interface InstalledExtension extends ExtensionModel {
@@ -59,7 +59,11 @@ export class ExtensionLoader {
     this.autoloadExtensions((extension: LensRendererExtension) => {
       extension.registerTo(clusterPageRegistry, extension.clusterPages)
       extension.registerTo(kubeObjectMenuRegistry, extension.kubeObjectMenuItems)
+<<<<<<< HEAD
       extension.registerTo(kubeObjectDetailRegistry, extension.kubeObjectDetailItems)
+=======
+      extension.registerTo(resourceStatusRegistry, extension.resourceStatusTexts)
+>>>>>>> 4f6b790d... Implement API ResourceStatusText extension
     })
   }
 
