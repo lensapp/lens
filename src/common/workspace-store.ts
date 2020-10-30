@@ -41,7 +41,7 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
     }
   }
 
-  isManaged(): boolean {
+  get isManaged(): boolean {
     return !!this.ownerRef
   }
 
@@ -92,7 +92,6 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   registerIpcListener() {
     logger.info("[WORKSPACE-STORE] starting to listen state events")
     ipcRenderer.on("workspace:state", (event, workspaceId: string, state: WorkspaceState) => {
-      console.log(workspaceId, state)
       this.getById(workspaceId)?.setState(state)
     })
   }
@@ -148,7 +147,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       throw new Error(`workspace ${id} doesn't exist`);
     }
     this.currentWorkspaceId = id;
-    clusterStore.activeClusterId = null; // fixme: handle previously selected cluster from current workspace
+    clusterStore.activeCluster = null; // fixme: handle previously selected cluster from current workspace
   }
 
   @action
@@ -197,7 +196,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       this.workspaces.clear();
       workspaces.forEach(ws => {
         const workspace = new Workspace(ws)
-        if (!workspace.ownerRef) {
+        if (!workspace.isManaged) {
           workspace.enabled = true
         }
         this.workspaces.set(workspace.id, workspace)

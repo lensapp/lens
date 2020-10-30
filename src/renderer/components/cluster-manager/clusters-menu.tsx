@@ -101,10 +101,11 @@ export class ClustersMenu extends React.Component<Props> {
   }
 
   render() {
-    const { className } = this.props;
-    const { newContexts } = userStore;
+    const { className } = this.props
+    const { newContexts } = userStore
     const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId)
-    const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
+    const clusters = clusterStore.getByWorkspaceId(workspace.id)
+    const activeClusterId = clusterStore.activeCluster
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
         <div className="clusters flex column gaps">
@@ -113,7 +114,7 @@ export class ClustersMenu extends React.Component<Props> {
               {({ innerRef, droppableProps, placeholder }: DroppableProvided) => (
                 <div ref={innerRef} {...droppableProps}>
                   {clusters.map((cluster, index) => {
-                    const isActive = cluster.id === clusterStore.activeClusterId;
+                    const isActive = cluster.id === activeClusterId;
                     return (
                       <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
                         {({ draggableProps, dragHandleProps, innerRef }: DraggableProvided) => (
@@ -141,7 +142,7 @@ export class ClustersMenu extends React.Component<Props> {
           <Tooltip targetId="add-cluster-icon">
             <Trans>Add Cluster</Trans>
           </Tooltip>
-          <Icon big material="add" id="add-cluster-icon" disabled={workspace.isManaged()} onClick={this.addCluster}/>
+          <Icon big material="add" id="add-cluster-icon" disabled={workspace.isManaged} onClick={this.addCluster}/>
           {newContexts.size > 0 && (
             <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>}/>
           )}

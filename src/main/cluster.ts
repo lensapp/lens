@@ -97,7 +97,7 @@ export class Cluster implements ClusterModel, ClusterState {
     }
   }
 
-  isManaged(): boolean {
+  get isManaged(): boolean {
     return !!this.ownerRef
   }
 

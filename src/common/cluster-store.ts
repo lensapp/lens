@@ -87,7 +87,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     }
   }
 
-  @observable activeClusterId: ClusterId;
+  @observable activeCluster: ClusterId;
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 
@@ -110,8 +110,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     })
   }
 
-  @computed get activeCluster(): Cluster | null {
-    return this.getById(this.activeClusterId);
+  get activeClusterId() {
+    return this.activeCluster
   }
 
   @computed get clustersList(): Cluster[] {
@@ -122,13 +122,17 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.clustersList.filter((c) => c.enabled)
   }
 
+  @computed get active(): Cluster | null {
+    return this.getById(this.activeCluster);
+  }
+
   isActive(id: ClusterId) {
-    return this.activeClusterId === id;
+    return this.activeCluster === id;
   }
 
   @action
   setActive(id: ClusterId) {
-    this.activeClusterId = this.clusters.has(id) ? id : null;
+    this.activeCluster = this.clusters.has(id) ? id : null;
   }
 
   @action
@@ -190,7 +194,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     const cluster = this.getById(clusterId);
     if (cluster) {
       this.clusters.delete(clusterId);
-      if (this.activeClusterId === clusterId) {
+      if (this.activeCluster === clusterId) {
         this.setActive(null);
       }
       // remove only custom kubeconfigs (pasted as text)
@@ -220,7 +224,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         cluster.updateModel(clusterModel);
       } else {
         cluster = new Cluster(clusterModel);
-        if (!cluster.isManaged()) {
+        if (!cluster.isManaged) {
           cluster.enabled = true
         }
       }
@@ -234,14 +238,14 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       }
     });
 
-    this.activeClusterId = newClusters.has(activeCluster) ? activeCluster : null;
+    this.activeCluster = newClusters.has(activeCluster) ? activeCluster : null;
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
   }
 
   toJSON(): ClusterStoreModel {
     return toJS({
-      activeCluster: this.activeClusterId,
+      activeCluster: this.activeCluster,
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
     }, {
       recurseEverything: true
