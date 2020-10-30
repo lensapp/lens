@@ -1,6 +1,7 @@
 .Icon {
   --size: 21px;
   --small-size: 18px;
+  --smallest-size: 16px;
   --big-size: 32px;
   --color-active: #{$iconActiveColor};
   --bgc-active: #{$iconActiveBackground};
@@ -20,6 +21,12 @@
   font-size: var(--size);
   width: var(--size);
   height: var(--size);
+
+  &.smallest {
+    font-size: var(--smallest-size);
+    width: var(--smallest-size);
+    height: var(--smallest-size);
+  }
 
   &.small {
     font-size: var(--small-size);
