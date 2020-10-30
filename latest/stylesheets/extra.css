@@ -1,5 +1,6 @@
 :root {
   --md-primary-fg-color:        #3d90ce;
+  --md-accent-fg-color:         #3d90ce;
 }
 
 :root > * {
