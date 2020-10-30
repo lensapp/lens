@@ -87,3 +87,5 @@ extra:
     - icon: fontawesome/brands/slack
       link: http://k8slens.slack.com/
       name: Lens on Slack
+  version:
+    method: mike
