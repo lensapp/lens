@@ -12,5 +12,16 @@
 
   .info-col {
     flex: 0.6;
+    align-self: flex-start;
+  }
+
+  .SearchInput {
+    margin-top: $margin / 2;
+    margin-bottom: $margin * 2;
+
+    > label {
+      padding: $padding $padding * 2;
+      border-radius: $radius;
+    }
   }
 }
