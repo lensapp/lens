@@ -1,4 +1,4 @@
-site_name: Lens - The Kubernetes IDE Documentation
+site_name: Lens Documentation
 site_description: Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!
 site_author: Mirantis, Inc.
 site_url: https://docs.k8slens.dev
