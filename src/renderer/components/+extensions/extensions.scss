@@ -1,7 +1,7 @@
 .Extensions {
   .Badge.extension {
     display: flex;
-    margin: 0;
+    margin-bottom: $margin;
     padding: $padding $padding * 2;
 
     .name {
@@ -18,6 +18,7 @@
   .SearchInput {
     margin-top: $margin / 2;
     margin-bottom: $margin * 2;
+    max-width: none;
 
     > label {
       padding: $padding $padding * 2;
