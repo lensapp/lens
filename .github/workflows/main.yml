@@ -43,8 +43,8 @@ jobs:
         run: | 
            mike deploy --push --force --update-aliases latest
         
-      - name: mkdocs deploy new tag
-        if: (!contains(github.ref, "refs/tags/v"))
+      - name: mkdocs deploy new release / tag
+        if: contains(github.ref, "refs/tags/v")
         run: | 
            mike deploy --push --force --update-aliases ${{ github.ref }} latest
            mike set-default --force --push latest
