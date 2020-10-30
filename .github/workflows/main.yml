@@ -39,7 +39,7 @@ jobs:
            git config --local user.name "GitHub Action"
           
       - name: mkdocs deploy latest
-        if: (!contains(github.ref, "refs/tags/"))
+        if: contains(github.ref, "refs/heads/"))
         run: | 
            mike deploy --push --force --update-aliases latest
         
