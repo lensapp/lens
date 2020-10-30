@@ -42,11 +42,7 @@ jobs:
         if: contains(github.ref, 'refs/heads/')
         run: | 
            cd lens/
-           mike list
-           mike deploy --push --rebase --update-aliases latest
-           ls -lah lens/
-           ls -lah lens/docs/
-           ls -lah lens/sites/
+           mike deploy --push --rebase --update-aliases ${{ github.ref }} latest
         
       - name: mkdocs deploy new release / tag
         if: contains(github.ref, 'refs/tags/v')
