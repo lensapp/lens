@@ -1,8 +1,4 @@
 .Extensions {
-  .content {
-    height: 100%;
-  }
-
   .Badge.extension {
     display: flex;
     margin: 0;
@@ -12,5 +8,9 @@
       color: $textColorAccent;
       padding-bottom: $padding;
     }
+  }
+
+  .info-col {
+    flex: 0.6;
   }
 }
