@@ -22,7 +22,7 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
           className="flex align-center gaps hover-highlight"
           onClick={() => Navigation.navigate(supportPageURL())}
         >
-          <Component.Icon material="help" xs/>
+          <Component.Icon material="help" smallest />
         </div>
       )
     }
