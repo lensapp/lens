@@ -35,14 +35,14 @@ jobs:
           
       - name: mkdocs deploy latest
         run: | 
-           mike deploy --push 0.11
+           mike deploy --push 0.1
 
         
       - name: mkdocs deploy new release / tag
         if: contains(github.ref, 'refs/tags/v')
         run: | 
-           mike deploy --push --rebase --update-aliases ${{ github.sha }} latest
-           mike set-default --rebase --push ${{ github.sha }}
+           mike deploy --push--update-aliases ${{ github.ref }} latest
+           mike set-default --push ${{ github.ref }}
           
 
 
