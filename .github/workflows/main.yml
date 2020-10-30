@@ -24,10 +24,7 @@ jobs:
           pip install git+https://${{ secrets.GH_TOKEN }}@github.com/lensapp/mkdocs-material-insiders.git
           pip install mkdocs-git-revision-date-localized-plugin mike
           
-      - name: git config
-        run: | 
-           git config --local user.email "action@github.com"
-           git config --local user.name "GitHub Action"
+
           
       - name: mkdocs deploy latest
         if: contains(github.ref, 'refs/heads/')
