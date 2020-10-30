@@ -34,6 +34,7 @@ nav:
           - Testing Extensions: extensions/testing-and-publishing/testing.md
           - Publishing Extensions: extensions/testing-and-publishing/publishing.md
           - Bundling Extensions: extensions/testing-and-publishing/bundling.md
+    - Lens Website: https://k8slens.dev
 theme:
   name: 'material'
   highlightjs: true
