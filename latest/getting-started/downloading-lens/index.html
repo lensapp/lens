@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/clusters/remove-cluster/">
+        <link rel="canonical" href="https://docs.k8slens.dev/getting-started/downloading-lens/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Remove cluster - Lens Documentation</title>
+        <title>Downloading Lens - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#remove-cluster" class="md-skip">
+        <a href="#downloading-lens" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Remove cluster
+              Downloading Lens
             
           </span>
         </div>
@@ -235,19 +235,21 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
     
     <label class="md-nav__link" for="nav-2">
-      Setup
+      Getting started
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Setup" data-md-level="1">
+    <nav class="md-nav" aria-label="Getting started" data-md-level="1">
       <label class="md-nav__title" for="nav-2">
         <span class="md-nav__icon md-icon"></span>
-        Setup
+        Getting started
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -256,10 +258,128 @@
           
           
 
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Downloading Lens
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Downloading Lens
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-requirements" class="md-nav__link">
+    System requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#macos" class="md-nav__link">
+    macOS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows" class="md-nav__link">
+    Windows
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux" class="md-nav__link">
+    Linux
+  </a>
+  
+    <nav class="md-nav" aria-label="Linux">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snap" class="md-nav__link">
+    Snap
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network" class="md-nav__link">
+    Network
+  </a>
+  
+    <nav class="md-nav" aria-label="Network">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxy-server-support" class="md-nav__link">
+    Proxy server support
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update-cadence" class="md-nav__link">
+    Update cadence
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quickstart" class="md-nav__link">
+    Quickstart
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
 
   <li class="md-nav__item">
-    <a href="../../setup/overview/" class="md-nav__link">
-      Overview
+    <a href="../preferences/" class="md-nav__link">
+      Preferences
     </a>
   </li>
 
@@ -270,44 +390,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../setup/linux/" class="md-nav__link">
-      Linux
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../setup/macos/" class="md-nav__link">
-      macOS
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../setup/windows/" class="md-nav__link">
-      Windows
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../setup/network/" class="md-nav__link">
-      Network
+    <a href="../introductory-videos/" class="md-nav__link">
+      Introductory videos
     </a>
   </li>
 
@@ -327,98 +411,11 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
     
     <label class="md-nav__link" for="nav-3">
-      Get Started
-      <span class="md-nav__icon md-icon"></span>
-    </label>
-    <nav class="md-nav" aria-label="Get Started" data-md-level="1">
-      <label class="md-nav__title" for="nav-3">
-        <span class="md-nav__icon md-icon"></span>
-        Get Started
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../get-started/intro-videos/" class="md-nav__link">
-      Intro Videos
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../get-started/themes/" class="md-nav__link">
-      Themes
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../get-started/telemetry/" class="md-nav__link">
-      Telemetry
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-  
-
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
-    
-    <label class="md-nav__link" for="nav-4">
-      User Guide
-      <span class="md-nav__icon md-icon"></span>
-    </label>
-    <nav class="md-nav" aria-label="User Guide" data-md-level="1">
-      <label class="md-nav__title" for="nav-4">
-        <span class="md-nav__icon md-icon"></span>
-        User Guide
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-  
-
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-    
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-1" type="checkbox" id="nav-4-1" checked>
-    
-    <label class="md-nav__link" for="nav-4-1">
       Clusters
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Clusters" data-md-level="2">
-      <label class="md-nav__title" for="nav-4-1">
+    <nav class="md-nav" aria-label="Clusters" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
         <span class="md-nav__icon md-icon"></span>
         Clusters
       </label>
@@ -431,30 +428,9 @@
 
 
   <li class="md-nav__item">
-    <a href="../add-cluster/" class="md-nav__link">
-      Add cluster
+    <a href="../../clusters/adding-clusters/" class="md-nav__link">
+      Adding clusters
     </a>
-  </li>
-
-        
-          
-          
-          
-
-  
-
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
-      Remove cluster
-    </a>
-    
   </li>
 
         
@@ -464,14 +440,21 @@
 
 
   <li class="md-nav__item">
-    <a href="../settings/" class="md-nav__link">
-      Settings
+    <a href="../../clusters/removing-clusters/" class="md-nav__link">
+      Removing cluster
     </a>
   </li>
 
         
-      </ul>
-    </nav>
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../clusters/settings/" class="md-nav__link">
+      Settings
+    </a>
   </li>
 
         
@@ -487,14 +470,14 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
-    <label class="md-nav__link" for="nav-5">
+    <label class="md-nav__link" for="nav-4">
       Extensions
       <span class="md-nav__icon md-icon"></span>
     </label>
     <nav class="md-nav" aria-label="Extensions" data-md-level="1">
-      <label class="md-nav__title" for="nav-5">
+      <label class="md-nav__title" for="nav-4">
         <span class="md-nav__icon md-icon"></span>
         Extensions
       </label>
@@ -520,14 +503,14 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5-2" type="checkbox" id="nav-5-2">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-2" type="checkbox" id="nav-4-2">
     
-    <label class="md-nav__link" for="nav-5-2">
+    <label class="md-nav__link" for="nav-4-2">
       Get Started
       <span class="md-nav__icon md-icon"></span>
     </label>
     <nav class="md-nav" aria-label="Get Started" data-md-level="2">
-      <label class="md-nav__title" for="nav-5-2">
+      <label class="md-nav__title" for="nav-4-2">
         <span class="md-nav__icon md-icon"></span>
         Get Started
       </label>
@@ -582,14 +565,14 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5-3" type="checkbox" id="nav-5-3">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-3" type="checkbox" id="nav-4-3">
     
-    <label class="md-nav__link" for="nav-5-3">
+    <label class="md-nav__link" for="nav-4-3">
       Extension Capabilities
       <span class="md-nav__icon md-icon"></span>
     </label>
     <nav class="md-nav" aria-label="Extension Capabilities" data-md-level="2">
-      <label class="md-nav__title" for="nav-5-3">
+      <label class="md-nav__title" for="nav-4-3">
         <span class="md-nav__icon md-icon"></span>
         Extension Capabilities
       </label>
@@ -644,14 +627,14 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5-4" type="checkbox" id="nav-5-4">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-4" type="checkbox" id="nav-4-4">
     
-    <label class="md-nav__link" for="nav-5-4">
+    <label class="md-nav__link" for="nav-4-4">
       Extension Guides
       <span class="md-nav__icon md-icon"></span>
     </label>
     <nav class="md-nav" aria-label="Extension Guides" data-md-level="2">
-      <label class="md-nav__title" for="nav-5-4">
+      <label class="md-nav__title" for="nav-4-4">
         <span class="md-nav__icon md-icon"></span>
         Extension Guides
       </label>
@@ -694,14 +677,14 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-5-5" type="checkbox" id="nav-5-5">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-5" type="checkbox" id="nav-4-5">
     
-    <label class="md-nav__link" for="nav-5-5">
+    <label class="md-nav__link" for="nav-4-5">
       Testing and Publishing
       <span class="md-nav__icon md-icon"></span>
     </label>
     <nav class="md-nav" aria-label="Testing and Publishing" data-md-level="2">
-      <label class="md-nav__title" for="nav-5-5">
+      <label class="md-nav__title" for="nav-4-5">
         <span class="md-nav__icon md-icon"></span>
         Testing and Publishing
       </label>
@@ -766,6 +749,104 @@
                 
               
               
+                <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                  <div class="md-sidebar__scrollwrap">
+                    <div class="md-sidebar__inner">
+                      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#system-requirements" class="md-nav__link">
+    System requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#macos" class="md-nav__link">
+    macOS
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#windows" class="md-nav__link">
+    Windows
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linux" class="md-nav__link">
+    Linux
+  </a>
+  
+    <nav class="md-nav" aria-label="Linux">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snap" class="md-nav__link">
+    Snap
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network" class="md-nav__link">
+    Network
+  </a>
+  
+    <nav class="md-nav" aria-label="Network">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxy-server-support" class="md-nav__link">
+    Proxy server support
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update-cadence" class="md-nav__link">
+    Update cadence
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quickstart" class="md-nav__link">
+    Quickstart
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                    </div>
+                  </div>
+                </div>
+              
             
           
           <div class="md-content">
@@ -773,10 +854,41 @@
               
                 
                 
-                <h1 id="remove-cluster">Remove Cluster<a class="headerlink" href="#remove-cluster" title="Permanent link">#</a></h1>
-<p>You can remove a Lens Clusters from your cluster list using the context-menu of the cluster item in the left-side menu. By right-clicking the cluster of choice you can hit the <code>Remove</code> button to delete it from your list. </p>
-<p><strong>NOTE</strong>: This will only remove the cluster from your Lens Cluster list but not affect your actual Kubernetes Cluster or its configuration!</p>
-<p><img alt="Remove Cluster" src="../images/remove-cluster.png" /></p>
+                <h1 id="downloading-lens">Downloading Lens<a class="headerlink" href="#downloading-lens" title="Permanent link">#</a></h1>
+<p>Lens is lightweight and simple to install. You'll be up and running in just a few minutes.</p>
+<h2 id="system-requirements">System requirements<a class="headerlink" href="#system-requirements" title="Permanent link">#</a></h2>
+<p>Review the <a href="/supporting/requirements/">System Requirements</a> to check if your computer configuration is supported.</p>
+<h2 id="macos">macOS<a class="headerlink" href="#macos" title="Permanent link">#</a></h2>
+<ol>
+<li><a href="https://github.com/lensapp/lens/releases">Download Lens</a> for macOS.</li>
+<li>Open the browser's download list and locate the downloaded archive.</li>
+<li>Select the 'magnifying glass' icon to open the archive in Finder.</li>
+<li>Double-click <code>Lens-{version}.dmg</code> and drag <code>Lens.app</code> to the <code>Applications</code> folder, making it available in the macOS Launchpad.</li>
+<li>Add Lens to your Dock by right-clicking on the icon to bring up the context menu and choosing <strong>Options</strong>, <strong>Keep in Dock</strong>.</li>
+</ol>
+<h2 id="windows">Windows<a class="headerlink" href="#windows" title="Permanent link">#</a></h2>
+<ol>
+<li>Download the <a href="https://github.com/lensapp/lens/releases">Lens installer</a> for Windows.</li>
+<li>Once it is downloaded, run the installer <code>Lens-Setup-{version}.exe</code>. This will only take a minute.</li>
+<li>By default, Lens is installed under <code>C:\users\{username}\AppData\Local\Programs\Lens</code>.</li>
+</ol>
+<h2 id="linux">Linux<a class="headerlink" href="#linux" title="Permanent link">#</a></h2>
+<p>See the <a href="https://github.com/lensapp/lens/releases">Download Lens</a> page for a complete list of available installation options.</p>
+<h3 id="snap">Snap<a class="headerlink" href="#snap" title="Permanent link">#</a></h3>
+<p>Lens is officially distributed as a Snap package in the <a href="https://snapcraft.io/store">Snap Store</a>:</p>
+<p><a href="https://snapcraft.io/kontena-lens"><img alt="Get it from the Snap Store" src="../images/snap-store.png" /></a></p>
+<p>You can install it by running:</p>
+<pre><code class="language-bash">sudo snap install kontena-lens --classic
+</code></pre>
+<h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">#</a></h2>
+<p>Lens is built on top of Electron and benefits from all the networking stack capabilities of Chromium. </p>
+<h3 id="proxy-server-support">Proxy server support<a class="headerlink" href="#proxy-server-support" title="Permanent link">#</a></h3>
+<p>...</p>
+<h2 id="update-cadence">Update cadence<a class="headerlink" href="#update-cadence" title="Permanent link">#</a></h2>
+<p>Lens releases a new version each month with new features and important bug fixes. Lens supports auto updating and you will be prompted to install the new release when it becomes available!</p>
+<p>To stay current with the Lens features, you can review the <a href="https://github.com/lensapp/lens/releases">release notes</a>.</p>
+<h2 id="quickstart">Quickstart<a class="headerlink" href="#quickstart" title="Permanent link">#</a></h2>
+<p>Get up and running quickly by learning to <a href="/clusters/add-cluster/">add clusters</a>.</p>
                 
                   
                     
@@ -808,7 +920,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../add-cluster/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../.." class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -817,19 +929,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Add cluster
+                Overview
               </div>
             </div>
           </a>
         
         
-          <a href="../settings/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../preferences/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Settings
+                Preferences
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
