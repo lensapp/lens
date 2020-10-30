@@ -35,6 +35,8 @@ jobs:
       - name: mkdocs deploy
         run: | 
            cd lens/
+           git config --local user.email "action@github.com"
+           git config --local user.name "GitHub Action"
            mike deploy --push --update-aliases 4.0.0 latest
 
            
