@@ -64,7 +64,7 @@ describe("empty config", () => {
 
     it("sets active cluster", () => {
       clusterStore.setActive("foo");
-      expect(clusterStore.activeCluster.id).toBe("foo");
+      expect(clusterStore.active.id).toBe("foo");
     })
   })
 

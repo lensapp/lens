@@ -73,6 +73,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return filePath;
   }
 
+  @observable activeCluster: ClusterId;
+  @observable removedClusters = observable.map<ClusterId, Cluster>();
+  @observable clusters = observable.map<ClusterId, Cluster>();
+
   private constructor() {
     super({
       configName: "lens-cluster-store",
@@ -80,16 +84,17 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       migrations: migrations,
     });
 
+    this.pushStateToViewsPeriodically()
+  }
+
+  protected pushStateToViewsPeriodically() {
     if (!ipcRenderer) {
+      // This is a bit of a hack, we need to do this because we might loose messages that are sent before a view is ready
       setInterval(() => {
         this.pushState()
       }, 5000)
     }
   }
-
-  @observable activeCluster: ClusterId;
-  @observable removedClusters = observable.map<ClusterId, Cluster>();
-  @observable clusters = observable.map<ClusterId, Cluster>();
 
   registerIpcListener() {
     logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`)

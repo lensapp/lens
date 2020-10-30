@@ -61,9 +61,6 @@ export interface IpcBroadcastParams<A extends any[] = any> {
 }
 
 export function broadcastIpc({ channel, frameId, frameOnly, webContentId, filter, args = [] }: IpcBroadcastParams) {
-  if (!webContents) {
-    return
-  }
   const singleView = webContentId ? webContents.fromId(webContentId) : null;
   let views = singleView ? [singleView] : webContents.getAllWebContents();
   if (filter) {
