@@ -9,21 +9,14 @@ copyright: Copyright &copy; 2020 <a href="https://mirantis.com/">Mirantis Inc.</
 edit_uri: ""
 nav:
     - Overview: index.md
-    - Setup: 
-      - Overview: setup/overview.md
-      - Linux: setup/linux.md
-      - macOS: setup/macos.md
-      - Windows: setup/windows.md
-      - Network: setup/network.md
-    - Get Started:
-      - Intro Videos: get-started/intro-videos.md
-      - Themes: get-started/themes.md
-      - Telemetry: get-started/telemetry.md
-    - User Guide:
-      - Clusters: 
-        - Add cluster: clusters/add-cluster.md
-        - Remove cluster: clusters/remove-cluster.md
-        - Settings: clusters/settings.md
+    - Getting started: 
+      - Downloading Lens: getting-started/downloading-lens.md
+      - Preferences: getting-started/preferences.md
+      - Introductory videos: getting-started/introductory-videos.md
+    - Clusters: 
+      - Adding clusters: clusters/adding-clusters.md
+      - Removing cluster: clusters/removing-clusters.md
+      - Settings: clusters/settings.md
     - Extensions:
         - Overview: extensions/overview.md
         - Get Started: 
