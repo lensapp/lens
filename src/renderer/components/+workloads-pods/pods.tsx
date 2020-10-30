@@ -1,6 +1,6 @@
 import "./pods.scss"
 
-import React, { Children, Fragment } from "react";
+import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { Trans } from "@lingui/macro";
@@ -20,7 +20,6 @@ import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import { lookupApiLink } from "../../api/kube-api";
 import { resourceStatusRegistry } from "../../../extensions/registries/resource-status-registry";
-import { ResourceStatus } from "../resource-status";
 
 enum sortBy {
   name = "name",
