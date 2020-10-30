@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "./out",
     "jsx": "react",
     "target": "ES2017",
     "module": "ESNext",

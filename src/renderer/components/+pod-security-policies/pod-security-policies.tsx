@@ -50,20 +50,7 @@ export class PodSecurityPolicies extends React.Component {
             item.getAge(),
           ]
         }}
-        renderItemMenu={(item: PodSecurityPolicy) => {
-          return <PodSecurityPolicyMenu object={item}/>
-        }}
       />
     )
   }
 }
-
-export function PodSecurityPolicyMenu(props: KubeObjectMenuProps<PodSecurityPolicy>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(pspApi, {
-  Menu: PodSecurityPolicyMenu,
-})

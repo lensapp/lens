@@ -21,10 +21,10 @@ export class Status extends React.Component<Props> {
     const { cluster } = this.props;
     const rows = [
       ["Online Status", cluster.online ? "online" : `offline (${cluster.failureReason || "unknown reason"})`],
-      ["Distribution", cluster.distribution],
-      ["Kernel Version", cluster.version],
-      ["API Address", cluster.apiUrl],
-      ["Nodes Count", cluster.nodes || "0"]
+      ["Distribution", cluster.metadata.distribution ? String(cluster.metadata.distribution) : "N/A"],
+      ["Kernel Version", cluster.metadata.version ? String(cluster.metadata.version) : "N/A"],
+      ["API Address", cluster.apiUrl || "N/A"],
+      ["Nodes Count", cluster.metadata.nodes ? String(cluster.metadata.nodes) : "N/A"]
     ];
     return (
       <Table scrollable={false}>

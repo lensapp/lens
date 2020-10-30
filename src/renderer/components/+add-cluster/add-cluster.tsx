@@ -46,6 +46,7 @@ export class AddCluster extends React.Component {
   @observable dropAreaActive = false;
 
   componentDidMount() {
+    clusterStore.setActive(null);
     this.setKubeConfig(userStore.kubeConfigPath);
   }
 
@@ -118,17 +119,16 @@ export class AddCluster extends React.Component {
     }
   }
 
+  @action
   addClusters = () => {
-    const configValidationErrors:string[] = [];
     let newClusters: ClusterModel[] = [];
-
     try {
       if (!this.selectedContexts.length) {
         this.error = <Trans>Please select at least one cluster context</Trans>
         return;
       }
       this.error = ""
-      this.isWaiting = true      
+      this.isWaiting = true
 
       newClusters = this.selectedContexts.filter(context => {
         try {
@@ -138,8 +138,8 @@ export class AddCluster extends React.Component {
         } catch (err) {
           this.error = String(err.message)
           if (err instanceof ExecValidationNotFoundError ) {
-            Notifications.error(<Trans>Error while adding cluster(s): {this.error}</Trans>); 
-            return false; 
+            Notifications.error(<Trans>Error while adding cluster(s): {this.error}</Trans>);
+            return false;
           } else {
             throw new Error(err);
           }
@@ -163,13 +163,13 @@ export class AddCluster extends React.Component {
       })
 
       runInAction(() => {
-        clusterStore.addCluster(...newClusters);
+        clusterStore.addClusters(...newClusters);
         if (newClusters.length === 1) {
           const clusterId = newClusters[0].id;
           clusterStore.setActive(clusterId);
           navigate(clusterViewURL({ params: { clusterId } }));
         } else {
-          if (newClusters.length > 1) { 
+          if (newClusters.length > 1) {
             Notifications.ok(
               <Trans>Successfully imported <b>{newClusters.length}</b> cluster(s)</Trans>
             );

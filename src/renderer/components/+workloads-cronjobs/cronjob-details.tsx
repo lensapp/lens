@@ -12,9 +12,9 @@ import { KubeEventDetails } from "../+events/kube-event-details";
 import { cronJobStore } from "./cronjob.store";
 import { getDetailsUrl } from "../../navigation";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { CronJob, cronJobApi, Job } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
+import { CronJob, Job } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<CronJob> {
 }
@@ -87,6 +87,10 @@ export class CronJobDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(cronJobApi, {
-  Details: CronJobDetails,
+kubeObjectDetailRegistry.add({
+  kind: "CronJob",
+  apiVersions: ["batch/v1"],
+  components: {
+    Details: (props) => <CronJobDetails {...props} />
+  }
 })

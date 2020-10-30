@@ -9,10 +9,10 @@ import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { getDetailsUrl } from "../../navigation";
-import { PersistentVolume, persistentVolumeApi, pvcApi } from "../../api/endpoints";
+import { PersistentVolume, pvcApi } from "../../api/endpoints";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolume> {
 }
@@ -103,6 +103,10 @@ export class PersistentVolumeDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(persistentVolumeApi, {
-  Details: PersistentVolumeDetails
+kubeObjectDetailRegistry.add({
+  kind: "PersistentVolume",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <PersistentVolumeDetails {...props} />
+  }
 })

@@ -8,10 +8,10 @@ import { Badge } from "../badge";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { observer } from "mobx-react";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { StorageClass, storageClassApi } from "../../api/endpoints";
+import { StorageClass } from "../../api/endpoints";
 import { _i18n } from "../../i18n";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<StorageClass> {
 }
@@ -62,6 +62,10 @@ export class StorageClassDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(storageClassApi, {
-  Details: StorageClassDetails
+kubeObjectDetailRegistry.add({
+  kind: "StorageClass",
+  apiVersions: ["storage.k8s.io/v1"],
+  components: {
+    Details: (props) => <StorageClassDetails {...props} />
+  }
 })

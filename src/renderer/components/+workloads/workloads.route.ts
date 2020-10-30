@@ -1,7 +1,7 @@
-import { RouteProps } from "react-router"
-import { Workloads } from "./workloads";
-import { buildURL, IURLParams } from "../../navigation";
+import type { RouteProps } from "react-router";
+import { buildURL, IURLParams } from "../../../common/utils/buildUrl";
 import { KubeResource } from "../../../common/rbac";
+import { Workloads } from "./workloads";
 
 export const workloadsRoute: RouteProps = {
   get path() {

@@ -12,13 +12,13 @@ import { KubeEventDetails } from "../+events/kube-event-details";
 import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { DaemonSet, daemonSetApi } from "../../api/endpoints";
+import { DaemonSet } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -97,6 +97,10 @@ export class DaemonSetDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(daemonSetApi, {
-  Details: DaemonSetDetails,
+kubeObjectDetailRegistry.add({
+  kind: "DaemonSet",
+  apiVersions: ["apps/v1"],
+  components: {
+    Details: (props: any) => <DaemonSetDetails {...props} />
+  }
 })

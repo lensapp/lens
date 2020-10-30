@@ -7,6 +7,8 @@ import { KubeApi } from "../kube-api";
 @autobind()
 export class DaemonSet extends WorkloadKubeObject {
   static kind = "DaemonSet"
+  static namespaced = true
+  static apiBase = "/apis/apps/v1/daemonsets"
 
   spec: {
     selector: {
@@ -69,8 +71,5 @@ export class DaemonSet extends WorkloadKubeObject {
 }
 
 export const daemonSetApi = new KubeApi({
-  kind: DaemonSet.kind,
-  apiBase: "/apis/apps/v1/daemonsets",
-  isNamespaced: true,
   objectConstructor: DaemonSet,
 });

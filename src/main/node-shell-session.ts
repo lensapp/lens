@@ -6,7 +6,7 @@ import * as k8s from "@kubernetes/client-node"
 import { KubeConfig } from "@kubernetes/client-node"
 import { Cluster } from "./cluster"
 import logger from "./logger";
-import { tracker } from "../common/tracker";
+import { appEventBus } from "../common/event-bus"
 
 export class NodeShellSession extends ShellSession {
   protected nodeName: string;
@@ -44,7 +44,7 @@ export class NodeShellSession extends ShellSession {
     this.closeWebsocketOnProcessExit()
     this.exitProcessOnWebsocketClose()
 
-    tracker.event("node-shell", "open")
+    appEventBus.emit({name: "node-shell", action: "open"})
   }
 
   protected exit(code = 1000) {

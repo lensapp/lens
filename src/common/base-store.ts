@@ -56,11 +56,15 @@ export class BaseStore<T = any> extends Singleton {
       ...confOptions,
       projectName: "lens",
       projectVersion: getAppVersion(),
-      cwd: (app || remote.app).getPath("userData"),
+      cwd: this.storePath(),
     });
     logger.info(`[STORE]: LOADED from ${this.storeConfig.path}`);
     this.fromStore(this.storeConfig.store);
     this.isLoaded = true;
+  }
+
+  protected storePath() {
+    return (app || remote.app).getPath("userData")
   }
 
   protected async saveToFile(model: T) {
@@ -86,11 +90,17 @@ export class BaseStore<T = any> extends Singleton {
     if (ipcRenderer) {
       const callback = (event: IpcRendererEvent, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
-        this.onSync(model);
+        this.onSyncFromMain(model);
       };
       ipcRenderer.on(this.syncChannel, callback);
       this.syncDisposers.push(() => ipcRenderer.off(this.syncChannel, callback));
     }
+  }
+
+  protected onSyncFromMain(model: T) {
+    this.applyWithoutSync(() => {
+      this.onSync(model)
+    })
   }
 
   unregisterIpcListener() {

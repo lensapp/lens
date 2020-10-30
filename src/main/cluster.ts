@@ -1,7 +1,7 @@
-import type { ClusterId, ClusterModel, ClusterPreferences } from "../common/cluster-store"
+import { ipcMain } from "electron"
+import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
-import type { FeatureStatusMap } from "./feature"
 import { action, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { broadcastIpc } from "../common/ipc";
@@ -10,10 +10,11 @@ import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from 
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager"
 import { getNodeWarningConditions, loadConfig, podHasIssues } from "../common/kube-helpers"
-import { getFeatures, installFeature, uninstallFeature, upgradeFeature } from "./feature-manager";
 import request, { RequestPromiseOptions } from "request-promise-native"
 import { apiResources } from "../common/rbac";
 import logger from "./logger"
+import { VersionDetector } from "./cluster-detectors/version-detector";
+import { detectorRegistry } from "./cluster-detectors/detector-registry";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -21,7 +22,19 @@ export enum ClusterStatus {
   Offline = 0
 }
 
-export interface ClusterState extends ClusterModel {
+export enum ClusterMetadataKey {
+  VERSION = "version",
+  CLUSTER_ID = "id",
+  DISTRIBUTION = "distribution",
+  NODES_COUNT = "nodes",
+  LAST_SEEN = "lastSeen"
+}
+
+export type ClusterRefreshOptions = {
+  refreshMetadata?: boolean
+}
+
+export interface ClusterState {
   initialized: boolean;
   apiUrl: string;
   online: boolean;
@@ -29,21 +42,18 @@ export interface ClusterState extends ClusterModel {
   accessible: boolean;
   ready: boolean;
   failureReason: string;
-  nodes: number;
   eventCount: number;
-  version: string;
-  distribution: string;
   isAdmin: boolean;
   allowedNamespaces: string[]
   allowedResources: string[]
-  features: FeatureStatusMap;
 }
 
-export class Cluster implements ClusterModel {
+export class Cluster implements ClusterModel, ClusterState {
   public id: ClusterId;
   public frameId: number;
   public kubeCtl: Kubectl
   public contextHandler: ContextHandler;
+  public ownerRef: string;
   protected kubeconfigManager: KubeconfigManager;
   protected eventDisposers: Function[] = [];
   protected activated = false;
@@ -57,24 +67,26 @@ export class Cluster implements ClusterModel {
   @observable kubeConfigPath: string;
   @observable apiUrl: string; // cluster server url
   @observable kubeProxyUrl: string; // lens-proxy to kube-api url
+  @observable enabled = false;
   @observable online = false;
   @observable accessible = false;
   @observable ready = false;
   @observable reconnecting = false;
   @observable disconnected = true;
   @observable failureReason: string;
-  @observable nodes = 0;
-  @observable version: string;
-  @observable distribution = "unknown";
   @observable isAdmin = false;
   @observable eventCount = 0;
   @observable preferences: ClusterPreferences = {};
-  @observable features: FeatureStatusMap = {};
+  @observable metadata: ClusterMetadata = {};
   @observable allowedNamespaces: string[] = [];
   @observable allowedResources: string[] = [];
 
   @computed get available() {
     return this.accessible && !this.disconnected;
+  }
+
+  get version(): string {
+    return String(this.metadata?.version) || ""
   }
 
   constructor(model: ClusterModel) {
@@ -83,6 +95,10 @@ export class Cluster implements ClusterModel {
     if (kubeconfig.getContextObject(this.contextName)) {
       this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server
     }
+  }
+
+  get isManaged(): boolean {
+    return !!this.ownerRef
   }
 
   @action
@@ -113,11 +129,17 @@ export class Cluster implements ClusterModel {
   protected bindEvents() {
     logger.info(`[CLUSTER]: bind events`, this.getMeta());
     const refreshTimer = setInterval(() => !this.disconnected && this.refresh(), 30000); // every 30s
+    const refreshMetadataTimer = setInterval(() => !this.disconnected && this.refreshMetadata(), 900000); // every 15 minutes
 
-    this.eventDisposers.push(
-      reaction(this.getState, this.pushState),
-      () => clearInterval(refreshTimer),
-    );
+    if (ipcMain) {
+      this.eventDisposers.push(
+        reaction(() => this.getState(), () => this.pushState()),
+        () => {
+          clearInterval(refreshTimer);
+          clearInterval(refreshMetadataTimer);
+        },
+      );
+    }
   }
 
   protected unbindEvents() {
@@ -142,6 +164,7 @@ export class Cluster implements ClusterModel {
     await this.refreshConnectionStatus()
     if (this.accessible) {
       await this.refreshAllowedResources()
+      this.isAdmin = await this.isClusterAdmin()
       this.ready = true
       this.kubeCtl = new Kubectl(this.version)
       this.kubeCtl.ensureKubectl() // download kubectl in background, so it's not blocking dashboard
@@ -172,27 +195,30 @@ export class Cluster implements ClusterModel {
   }
 
   @action
-  async refresh() {
+  async refresh(opts: ClusterRefreshOptions = {}) {
     logger.info(`[CLUSTER]: refresh`, this.getMeta());
     await this.whenInitialized;
     await this.refreshConnectionStatus();
     if (this.accessible) {
-      this.distribution = this.detectKubernetesDistribution(this.version)
-      const [features, isAdmin, nodesCount] = await Promise.all([
-        getFeatures(this),
-        this.isClusterAdmin(),
-        this.getNodeCount(),
-      ]);
-      this.features = features;
-      this.isAdmin = isAdmin;
-      this.nodes = nodesCount;
+      this.isAdmin = await this.isClusterAdmin();
       await Promise.all([
         this.refreshEvents(),
         this.refreshAllowedResources(),
       ]);
+      if (opts.refreshMetadata) {
+        this.refreshMetadata()
+      }
       this.ready = true
     }
     this.pushState();
+  }
+
+  @action
+  async refreshMetadata() {
+    logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
+    const metadata = await detectorRegistry.detectForCluster(this)
+    const existingMetadata = this.metadata
+    this.metadata = Object.assign(existingMetadata, metadata)
   }
 
   @action
@@ -225,18 +251,6 @@ export class Cluster implements ClusterModel {
     return this.kubeconfigManager.getPath()
   }
 
-  async installFeature(name: string, config: any) {
-    return installFeature(name, this, config)
-  }
-
-  async upgradeFeature(name: string, config: any) {
-    return upgradeFeature(name, this, config)
-  }
-
-  async uninstallFeature(name: string) {
-    return uninstallFeature(name, this)
-  }
-
   protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
     const apiUrl = this.kubeProxyUrl + path;
     return request(apiUrl, {
@@ -263,9 +277,9 @@ export class Cluster implements ClusterModel {
 
   protected async getConnectionStatus(): Promise<ClusterStatus> {
     try {
-      const response = await this.k8sRequest("/version")
-      this.version = response.gitVersion
-      this.failureReason = null
+      const versionDetector = new VersionDetector(this)
+      const versionData = await versionDetector.detect()
+      this.metadata.version = versionData.value
       return ClusterStatus.AccessGranted;
     } catch (error) {
       logger.error(`Failed to connect cluster "${this.contextName}": ${error}`)
@@ -314,27 +328,6 @@ export class Cluster implements ClusterModel {
     })
   }
 
-  protected detectKubernetesDistribution(kubernetesVersion: string): string {
-    if (kubernetesVersion.includes("gke")) return "gke"
-    if (kubernetesVersion.includes("eks")) return "eks"
-    if (kubernetesVersion.includes("IKS")) return "iks"
-    if (this.apiUrl.endsWith("azmk8s.io")) return "aks"
-    if (this.apiUrl.endsWith("k8s.ondigitalocean.com")) return "digitalocean"
-    if (this.contextName.startsWith("minikube")) return "minikube"
-    if (kubernetesVersion.includes("+")) return "custom"
-    return "vanilla"
-  }
-
-  protected async getNodeCount(): Promise<number> {
-    try {
-      const response = await this.k8sRequest("/api/v1/nodes")
-      return response.items.length
-    } catch (error) {
-      logger.debug(`failed to request node list: ${error.message}`)
-      return null
-    }
-  }
-
   protected async getEventCount(): Promise<number> {
     if (!this.isAdmin) {
       return 0;
@@ -377,6 +370,8 @@ export class Cluster implements ClusterModel {
       kubeConfigPath: this.kubeConfigPath,
       workspace: this.workspace,
       preferences: this.preferences,
+      metadata: this.metadata,
+      ownerRef: this.ownerRef
     };
     return toJS(model, {
       recurseEverything: true
@@ -384,9 +379,8 @@ export class Cluster implements ClusterModel {
   }
 
   // serializable cluster-state used for sync btw main <-> renderer
-  getState = (): ClusterState => {
+  getState(): ClusterState {
     const state: ClusterState = {
-      ...this.toJSON(),
       initialized: this.initialized,
       apiUrl: this.apiUrl,
       online: this.online,
@@ -394,11 +388,7 @@ export class Cluster implements ClusterModel {
       disconnected: this.disconnected,
       accessible: this.accessible,
       failureReason: this.failureReason,
-      nodes: this.nodes,
-      version: this.version,
-      distribution: this.distribution,
       isAdmin: this.isAdmin,
-      features: this.features,
       eventCount: this.eventCount,
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,
@@ -408,14 +398,18 @@ export class Cluster implements ClusterModel {
     })
   }
 
-  pushState = (state = this.getState()): ClusterState => {
+  @action
+  setState(state: ClusterState) {
+    Object.assign(this, state)
+  }
+
+  pushState(state = this.getState()) {
     logger.silly(`[CLUSTER]: push-state`, state);
     broadcastIpc({
       channel: "cluster:state",
       frameId: this.frameId,
-      args: [state],
-    });
-    return state;
+      args: [this.id, state],
+    })
   }
 
   // get cluster system meta, e.g. use in "logger"

@@ -70,20 +70,8 @@ export class DaemonSets extends React.Component<Props> {
           this.renderNodeSelector(daemonSet),
           daemonSet.getAge(),
         ]}
-        renderItemMenu={(item: DaemonSet) => {
-          return <DaemonSetMenu object={item}/>
-        }}
       />
     )
   }
 }
 
-export function DaemonSetMenu(props: KubeObjectMenuProps<DaemonSet>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(daemonSetApi, {
-  Menu: DaemonSetMenu,
-})

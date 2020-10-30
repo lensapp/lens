@@ -88,7 +88,7 @@ msgid "Active"
 msgstr "Active"
 
 #: src/renderer/components/+add-cluster/add-cluster.tsx:310
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:130
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:127
 msgid "Add Cluster"
 msgstr "Add Cluster"
 
@@ -219,11 +219,11 @@ msgstr "Allocatable"
 msgid "Allow Privilege Escalation"
 msgstr "Allow Privilege Escalation"
 
-#: src/renderer/components/+preferences/preferences.tsx:169
+#: src/renderer/components/+preferences/preferences.tsx:172
 msgid "Allow telemetry & usage tracking"
 msgstr "Allow telemetry & usage tracking"
 
-#: src/renderer/components/+preferences/preferences.tsx:161
+#: src/renderer/components/+preferences/preferences.tsx:164
 msgid "Allow untrusted Certificate Authorities"
 msgstr "Allow untrusted Certificate Authorities"
 
@@ -300,6 +300,14 @@ msgstr "Associate clusters and choose the ones you want to access via quick laun
 #: src/renderer/components/+custom-resources/certmanager.k8s.io/issuer-details.tsx:101
 msgid "Auth App Role"
 msgstr "Auth App Role"
+
+#: src/renderer/components/+preferences/preferences.tsx:160
+msgid "Auto start-up"
+msgstr "Auto start-up"
+
+#: src/renderer/components/+preferences/preferences.tsx:161
+msgid "Automatically start Lens on login"
+msgstr "Automatically start Lens on login"
 
 #: src/renderer/components/error-boundary/error-boundary.tsx:53
 #: src/renderer/components/wizard/wizard.tsx:130
@@ -422,7 +430,7 @@ msgstr "Cancel"
 msgid "Capacity"
 msgstr "Capacity"
 
-#: src/renderer/components/+preferences/preferences.tsx:160
+#: src/renderer/components/+preferences/preferences.tsx:163
 msgid "Certificate Trust"
 msgstr "Certificate Trust"
 
@@ -817,7 +825,7 @@ msgstr "Desired Healthy"
 msgid "Desired number of replicas"
 msgstr "Desired number of replicas"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:65
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:62
 msgid "Disconnect"
 msgstr "Disconnect"
 
@@ -831,7 +839,7 @@ msgstr "Disk"
 msgid "Disk:"
 msgstr "Disk:"
 
-#: src/renderer/components/+preferences/preferences.tsx:165
+#: src/renderer/components/+preferences/preferences.tsx:168
 msgid "Does not affect cluster communications!"
 msgstr "Does not affect cluster communications!"
 
@@ -927,8 +935,8 @@ msgstr "Environment"
 msgid "Error stack"
 msgstr "Error stack"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:89
-#: src/renderer/components/+add-cluster/add-cluster.tsx:130
+#: src/renderer/components/+add-cluster/add-cluster.tsx:88
+#: src/renderer/components/+add-cluster/add-cluster.tsx:129
 msgid "Error while adding cluster(s): {0}"
 msgstr "Error while adding cluster(s): {0}"
 
@@ -1581,7 +1589,7 @@ msgstr "Namespaces"
 msgid "Namespaces: {0}"
 msgstr "Namespaces: {0}"
 
-#: src/renderer/components/+preferences/preferences.tsx:164
+#: src/renderer/components/+preferences/preferences.tsx:167
 msgid "Needed with some corporate proxies that do certificate re-writing."
 msgstr "Needed with some corporate proxies that do certificate re-writing."
 
@@ -1798,7 +1806,7 @@ msgstr "Persistent Volume Claims"
 msgid "Persistent Volumes"
 msgstr "Persistent Volumes"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:75
+#: src/renderer/components/+add-cluster/add-cluster.tsx:74
 msgid "Please select at least one cluster context"
 msgstr "Please select at least one cluster context"
 
@@ -2025,8 +2033,8 @@ msgstr "Releases"
 
 #: src/renderer/components/+preferences/preferences.tsx:152
 #: src/renderer/components/+user-management-roles-bindings/role-binding-details.tsx:60
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:76
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:82
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:73
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:79
 #: src/renderer/components/item-object-list/item-list-layout.tsx:179
 #: src/renderer/components/menu/menu-actions.tsx:49
 #: src/renderer/components/menu/menu-actions.tsx:85
@@ -2470,7 +2478,7 @@ msgstr "Set"
 msgid "Set quota"
 msgstr "Set quota"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:53
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:51
 msgid "Settings"
 msgstr "Settings"
 
@@ -2613,7 +2621,7 @@ msgstr "Submitting.."
 msgid "Subsets"
 msgstr "Subsets"
 
-#: src/renderer/components/+add-cluster/add-cluster.tsx:122
+#: src/renderer/components/+add-cluster/add-cluster.tsx:121
 msgid "Successfully imported <0>{0}</0> cluster(s)"
 msgstr "Successfully imported <0>{0}</0> cluster(s)"
 
@@ -2635,11 +2643,11 @@ msgstr "TLS"
 msgid "Taints"
 msgstr "Taints"
 
-#: src/renderer/components/+preferences/preferences.tsx:168
+#: src/renderer/components/+preferences/preferences.tsx:171
 msgid "Telemetry & Usage Tracking"
 msgstr "Telemetry & Usage Tracking"
 
-#: src/renderer/components/+preferences/preferences.tsx:171
+#: src/renderer/components/+preferences/preferences.tsx:174
 msgid "Telemetry & usage data is collected to continuously improve the Lens experience."
 msgstr "Telemetry & usage data is collected to continuously improve the Lens experience."
 
@@ -2675,7 +2683,7 @@ msgstr "This field must be a valid path"
 msgid "This is the quick launch menu."
 msgstr "This is the quick launch menu."
 
-#: src/renderer/components/+preferences/preferences.tsx:163
+#: src/renderer/components/+preferences/preferences.tsx:166
 msgid "This will make Lens to trust ANY certificate authority without any validations."
 msgstr "This will make Lens to trust ANY certificate authority without any validations."
 
@@ -2953,7 +2961,7 @@ msgstr "listKind"
 msgid "never"
 msgstr "never"
 
-#: src/renderer/components/cluster-manager/clusters-menu.tsx:133
+#: src/renderer/components/cluster-manager/clusters-menu.tsx:130
 msgid "new"
 msgstr "new"
 

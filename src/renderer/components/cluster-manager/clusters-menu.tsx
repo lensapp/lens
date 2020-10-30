@@ -1,6 +1,9 @@
 import "./clusters-menu.scss"
-import { remote } from "electron"
+
 import React from "react";
+import { remote } from "electron"
+import type { Cluster } from "../../../main/cluster";
+import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
 import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
@@ -9,7 +12,7 @@ import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
-import { cssNames, IClassName, autobind } from "../../utils";
+import { autobind, cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
 import { navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
@@ -19,8 +22,7 @@ import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
-import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
-import type { Cluster } from "../../../main/cluster";
+import { globalPageRegistry } from "../../../extensions/registries/page-registry";
 
 interface Props {
   className?: IClassName;
@@ -29,13 +31,11 @@ interface Props {
 @observer
 export class ClustersMenu extends React.Component<Props> {
   showCluster = (clusterId: ClusterId) => {
-    clusterStore.setActive(clusterId);
     navigate(clusterViewURL({ params: { clusterId } }));
   }
 
   addCluster = () => {
     navigate(addClusterURL());
-    clusterStore.setActive(null);
   }
 
   showContextMenu = (cluster: Cluster) => {
@@ -45,7 +45,6 @@ export class ClustersMenu extends React.Component<Props> {
     menu.append(new MenuItem({
       label: _i18n._(t`Settings`),
       click: () => {
-        clusterStore.setActive(cluster.id);
         navigate(clusterSettingsURL({
           params: {
             clusterId: cluster.id
@@ -102,29 +101,24 @@ export class ClustersMenu extends React.Component<Props> {
   }
 
   render() {
-    const { className } = this.props;
-    const { newContexts } = userStore;
-    const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
+    const { className } = this.props
+    const { newContexts } = userStore
+    const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId)
+    const clusters = clusterStore.getByWorkspaceId(workspace.id)
+    const activeClusterId = clusterStore.activeCluster
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
         <div className="clusters flex column gaps">
           <DragDropContext onDragEnd={this.swapClusterIconOrder}>
             <Droppable droppableId="cluster-menu" type="CLUSTER">
-              {(provided: DroppableProvided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
+              {({ innerRef, droppableProps, placeholder }: DroppableProvided) => (
+                <div ref={innerRef} {...droppableProps}>
                   {clusters.map((cluster, index) => {
-                    const isActive = cluster.id === clusterStore.activeClusterId;
+                    const isActive = cluster.id === activeClusterId;
                     return (
                       <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
-                        {(provided: DraggableProvided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
+                        {({ draggableProps, dragHandleProps, innerRef }: DraggableProvided) => (
+                          <div ref={innerRef} {...draggableProps} {...dragHandleProps}>
                             <ClusterIcon
                               key={cluster.id}
                               showErrors={true}
@@ -136,22 +130,28 @@ export class ClustersMenu extends React.Component<Props> {
                           </div>
                         )}
                       </Draggable>
-                    )}
-                  )}
-                  {provided.placeholder}
+                    )
+                  })}
+                  {placeholder}
                 </div>
               )}
             </Droppable>
           </DragDropContext>
         </div>
-        <div className="add-cluster" onClick={this.addCluster}>
+        <div className="add-cluster" >
           <Tooltip targetId="add-cluster-icon">
             <Trans>Add Cluster</Trans>
           </Tooltip>
-          <Icon big material="add" id="add-cluster-icon" />
+          <Icon big material="add" id="add-cluster-icon" disabled={workspace.isManaged} onClick={this.addCluster}/>
           {newContexts.size > 0 && (
-            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>} />
+            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>}/>
           )}
+        </div>
+        <div className="extensions">
+          {globalPageRegistry.getItems().map(({ path, url = String(path), hideInMenu, components: { MenuIcon } }) => {
+            if (!MenuIcon || hideInMenu) return;
+            return <MenuIcon key={url} onClick={() => navigate(url)}/>
+          })}
         </div>
       </div>
     );

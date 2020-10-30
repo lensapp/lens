@@ -32,6 +32,8 @@ export class ServicePort implements IServicePort {
 @autobind()
 export class Service extends KubeObject {
   static kind = "Service"
+  static namespaced = true
+  static apiBase = "/api/v1/services"
 
   spec: {
     type: string;
@@ -93,8 +95,5 @@ export class Service extends KubeObject {
 }
 
 export const serviceApi = new KubeApi({
-  kind: Service.kind,
-  apiBase: "/api/v1/services",
-  isNamespaced: true,
   objectConstructor: Service,
 });

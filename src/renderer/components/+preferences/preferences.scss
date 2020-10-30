@@ -1,60 +1,28 @@
 .Preferences {
-  position: fixed!important; // Allows to cover ClustersMenu
-  z-index: 1;
+  $spacing: $padding * 2;
 
-  .WizardLayout {
-    grid-template-columns: unset;
-    grid-template-rows: 76px 1fr;
-    padding: 0;
+  .repos {
+    position: relative;
 
-    .content-col {
-      padding: $padding * 8 0;
-      background-color: $clusterSettingsBackground;
-
-      h2 {
-        margin-bottom: $margin * 2;
-
-        &:not(:first-child) {
-          margin-top: $margin * 3;
-        }
-      }
-
-      .SubTitle {
-        text-transform: none;
-        margin: 0!important;
-      }
-
-      .repos {
-        position: relative;
-
-        .Badge {
-          display: flex;
-          margin: 0;
-          margin-bottom: 1px;
-          padding: $padding $padding * 2;
-        }
-      }
-
-      .hint {
-        margin-top: -$margin;
-      }
+    .Badge {
+      display: flex;
+      margin: 0;
+      margin-bottom: 1px;
+      padding: $padding $spacing;
     }
   }
 
-  .is-mac & {
-    .WizardLayout .head-col {
-      padding-top: 32px;
-      overflow: hidden;
+  .extensions {
+    h2 {
+      margin: $spacing 0;
+    }
 
-      .Icon {
-        margin-top: -$margin * 2;
-      }
+    &:empty {
+      display: none;
     }
   }
 
-  .Select {
-    &__control {
-      box-shadow: 0 0 0 1px $borderFaintColor;
-    }
+  .Checkbox {
+    align-self: start; // limit clickable area to checkbox + text
   }
 }

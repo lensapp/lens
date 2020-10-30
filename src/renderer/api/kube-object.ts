@@ -10,6 +10,8 @@ import { resourceApplierApi } from "./endpoints/resource-applier.api";
 
 export type IKubeObjectConstructor<T extends KubeObject = any> = (new (data: KubeJsonApiData | any) => T) & {
   kind?: string;
+  namespaced?: boolean;
+  apiBase?: string;
 };
 
 export interface IKubeObjectMetadata {
@@ -43,6 +45,7 @@ export type IKubeMetaField = keyof IKubeObjectMetadata;
 @autobind()
 export class KubeObject implements ItemObject {
   static readonly kind: string;
+  static readonly namespaced: boolean;
 
   static create(data: any) {
     return new KubeObject(data);

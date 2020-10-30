@@ -54,9 +54,6 @@ export class RoleBindings extends React.Component<Props> {
           binding.getNs() || "-",
           binding.getAge(),
         ]}
-        renderItemMenu={(item: RoleBinding) => {
-          return <RoleBindingMenu object={item}/>
-        }}
         addRemoveButtons={{
           onAdd: () => AddRoleBindingDialog.open(),
           addTooltip: <Trans>Create new RoleBinding</Trans>,
@@ -65,13 +62,3 @@ export class RoleBindings extends React.Component<Props> {
     )
   }
 }
-
-export function RoleBindingMenu(props: KubeObjectMenuProps<RoleBinding>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews([roleBindingApi, clusterRoleBindingApi], {
-  Menu: RoleBindingMenu,
-})

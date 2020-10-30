@@ -7,7 +7,7 @@ export * from "../../common/utils"
 
 export * from "./cssVar"
 export * from "./cssNames"
-export * from "./eventEmitter"
+export * from "../../common/event-emitter"
 export * from "./downloadFile"
 export * from "./prevDefault"
 export * from "./createStorage"

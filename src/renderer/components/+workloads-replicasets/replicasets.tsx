@@ -92,7 +92,3 @@ export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>) {
     <KubeObjectMenu {...props}/>
   )
 }
-
-apiManager.registerViews(replicaSetApi, {
-  Menu: ReplicaSetMenu,
-});
