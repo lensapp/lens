@@ -40,6 +40,7 @@ export async function bootstrap(App: AppComponent) {
 
   // Register additional store listeners
   clusterStore.registerIpcListener();
+  workspaceStore.registerIpcListener();
 
   // init app's dependencies if any
   if (App.init) {

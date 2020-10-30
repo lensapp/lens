@@ -26,7 +26,7 @@ export class ClusterWorkspaceSetting extends React.Component<Props> {
         <Select
           value={this.props.cluster.workspace}
           onChange={({value}) => this.props.cluster.workspace = value}
-          options={workspaceStore.workspacesList.map(w =>
+          options={workspaceStore.enabledWorkspacesList.map(w =>
             ({value: w.id, label: w.name})
           )}
         />

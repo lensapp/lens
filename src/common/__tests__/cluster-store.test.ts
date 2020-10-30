@@ -64,13 +64,13 @@ describe("empty config", () => {
 
     it("sets active cluster", () => {
       clusterStore.setActive("foo");
-      expect(clusterStore.activeCluster.id).toBe("foo");
+      expect(clusterStore.active.id).toBe("foo");
     })
   })
 
   describe("with prod and dev clusters added", () => {
     beforeEach(() => {
-      clusterStore.addCluster(
+      clusterStore.addClusters(
         new Cluster({
           id: "prod",
           contextName: "prod",
