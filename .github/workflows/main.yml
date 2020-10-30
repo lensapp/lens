@@ -30,9 +30,9 @@ jobs:
            git config --local user.name "GitHub Action"
           
       - name: mkdocs deploy latest
-        if: contains(github.ref, 'refs/heads/')
         run: | 
-           mike deploy --push --rebase 0.5
+           mike deploy --push --update-aliases 0.1 latest
+           mike set-default --push latest
         
       - name: mkdocs deploy new release / tag
         if: contains(github.ref, 'refs/tags/v')
