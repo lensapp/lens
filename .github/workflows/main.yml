@@ -42,6 +42,7 @@ jobs:
         if: contains(github.ref, 'refs/heads/')
         run: | 
            cd lens/
+           mike list
            mike deploy --push --rebase --update-aliases latest
            ls -lah lens/
            ls -lah lens/docs/
