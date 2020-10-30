@@ -16,8 +16,7 @@ import { clusterViewRoute, clusterViewURL } from "./cluster-view.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import { globalPageRegistry } from "../../../extensions/registries/page-registry";
-import { extensionsRoute } from "../+extensions";
-import { Extensions } from "../+extensions/extensions";
+import { Extensions, extensionsRoute } from "../+extensions";
 import { getMatchedClusterId } from "../../navigation";
 
 @observer

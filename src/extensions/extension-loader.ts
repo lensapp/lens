@@ -35,7 +35,7 @@ export class ExtensionLoader {
     }
   }
 
-  @computed get userExtensions() {
+  @computed get userExtensions(): LensExtension[] {
     const builtIn = getBundledExtensions().map(ext => `lens-${ext}`)
     const extensions: LensExtension[] = []
     this.instances.forEach(instance => {

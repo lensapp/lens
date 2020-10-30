@@ -1,12 +1,10 @@
 .Extensions {
-  .Badge.extension {
-    display: flex;
-    margin-bottom: $margin;
-    padding: $padding $padding * 2;
-
-    .name {
-      color: $textColorAccent;
-      padding-bottom: $padding;
+  .extension-list {
+    .extension {
+      display: flex;
+      margin-bottom: $margin;
+      padding: $padding $padding * 2;
+      background: $colorVague;
     }
   }
 
