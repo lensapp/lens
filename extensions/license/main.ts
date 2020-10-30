@@ -1,5 +1,4 @@
-import { LensMainExtension } from "@k8slens/extensions";
-import { shell } from "electron";
+import { LensMainExtension, Util } from "@k8slens/extensions";
 
 export default class LicenseLensMainExtension extends LensMainExtension {
   appMenus = [
@@ -7,7 +6,7 @@ export default class LicenseLensMainExtension extends LensMainExtension {
       parentId: "help",
       label: "License",
       async click() {
-        shell.openExternal("https://k8slens.dev/licenses/eula.md");
+        Util.openExternal("https://k8slens.dev/licenses/eula.md")
       }
     }
   ]
