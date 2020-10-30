@@ -1,10 +1,10 @@
 import "./search-input.scss";
 
-import React from "react";
+import React, { createRef } from "react";
 import { t } from "@lingui/macro";
 import { observer } from "mobx-react";
 import { _i18n } from "../../i18n";
-import { cssNames } from "../../utils";
+import { autobind, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { Input, InputProps } from "./input";
 
@@ -25,6 +25,16 @@ const defaultProps: Partial<Props> = {
 @observer
 export class SearchInput extends React.Component<Props> {
   static defaultProps = defaultProps as object;
+
+  private input = createRef<Input>();
+
+  componentDidMount() {
+    addEventListener("keydown", this.focus);
+  }
+
+  componentWillUnmount() {
+    removeEventListener("keydown", this.focus);
+  }
 
   clear = () => {
     if (this.props.onClear) {
@@ -48,6 +58,14 @@ export class SearchInput extends React.Component<Props> {
     }
   }
 
+  @autobind()
+  focus(evt: KeyboardEvent) {
+    const meta = evt.metaKey || evt.ctrlKey;
+    if (meta && evt.key == "f") {
+      this.input.current.focus();
+    }
+  }
+
   render() {
     const { className, compact, closeIcon, onClear, ...inputProps } = this.props;
     const icon = this.props.value
@@ -60,6 +78,7 @@ export class SearchInput extends React.Component<Props> {
         onChange={this.onChange}
         onKeyDown={this.onKeyDown}
         iconRight={icon}
+        ref={this.input}
       />
     )
   }
