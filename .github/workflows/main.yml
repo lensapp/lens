@@ -38,6 +38,7 @@ jobs:
            git config --local user.email "action@github.com"
            git config --local user.name "GitHub Action"
            mike deploy --push --force --update-aliases 4.0.0 latest
+           mike set-default --force --push latest
 
            
 #      - name: Commit files
