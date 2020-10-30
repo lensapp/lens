@@ -7,7 +7,9 @@
   --md-footer-bg-color:         #3d90ce;
 }
 
-
+.md-version__list {
+  overflow: auto;
+}
 
 ul.video-list {
   counter-reset: section;
