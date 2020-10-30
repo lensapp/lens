@@ -1,11 +1,13 @@
 .Extensions {
-  .extension-list {
-    .extension {
-      display: flex;
-      margin-bottom: $margin;
-      padding: $padding $padding * 2;
-      background: $colorVague;
-    }
+  .extension {
+    --flex-gap: $padding / 3;
+    padding: $padding $padding * 2;
+    background: $colorVague;
+    border-radius: $radius;
+  }
+
+  .extensions-path {
+    word-break: break-all;
   }
 
   .info-col {
