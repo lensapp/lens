@@ -31,8 +31,8 @@ jobs:
           
       - name: mkdocs deploy latest
         run: | 
-           mike deploy --push --update-aliases 0.1 latest
-           mike set-default --push latest
+           mike deploy --push 0.6
+
         
       - name: mkdocs deploy new release / tag
         if: contains(github.ref, 'refs/tags/v')
