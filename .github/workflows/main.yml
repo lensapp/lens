@@ -35,7 +35,7 @@ jobs:
           
       - name: mkdocs deploy latest
         run: | 
-           mike deploy --push 0.1
+           mike deploy --push latest
 
         
       - name: mkdocs deploy new release / tag
