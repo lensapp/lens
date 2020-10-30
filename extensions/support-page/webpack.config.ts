@@ -2,7 +2,6 @@ import path from "path"
 
 const outputPath = path.resolve(__dirname, 'dist');
 
-// TODO: figure out how to share base TS and Webpack configs from Lens (npm, filesystem, etc?)
 const lensExternals = {
   "@k8slens/extensions": "var global.LensExtensions",
   "react": "var global.React",
@@ -50,6 +49,14 @@ export default [
           use: 'ts-loader',
           exclude: /node_modules/,
         },
+        {
+          test: /\.s?css$/,
+          use: [
+            "style-loader",
+            "css-loader",
+            "sass-loader",
+          ]
+        }
       ],
     },
     externals: [

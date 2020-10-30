@@ -1,6 +1,6 @@
-// TODO: figure out how to consume styles / handle import "./support.scss"
 // TODO: support localization / figure out how to extract / consume i18n strings
 
+import "./support.scss"
 import React from "react"
 import { observer } from "mobx-react"
 import { App, Component } from "@k8slens/extensions";
