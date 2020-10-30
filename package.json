@@ -71,7 +71,8 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "moduleNameMapper": {
-      "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts"
+      "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts",
+      "^@lingui/macro$": "<rootDir>/__mocks__/@linguiMacro.ts"
     },
     "modulePathIgnorePatterns": [
       "<rootDir>/dist"
