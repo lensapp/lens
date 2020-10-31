@@ -1,7 +1,7 @@
 {
   "name": "lens-license",
   "version": "0.1.0",
-  "description": "License item",
+  "description": "License menu item",
   "main": "dist/main.js",
   "scripts": {
     "build": "webpack -p",
