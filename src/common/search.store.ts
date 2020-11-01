@@ -1,5 +1,5 @@
 import { action, computed, observable } from "mobx";
-import { autobind } from "../../utils";
+import { autobind } from "../renderer/utils";
 
 export class SearchStore {
   @observable searchQuery = ""; // Text in the search input
