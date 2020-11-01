@@ -5,7 +5,7 @@ import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
 import { t } from "@lingui/macro";
 import { _i18n } from "../../i18n";
-import { searchStore } from "../../../common/search.store";
+import { searchStore } from "../../../common/search-store";
 
 export interface IPodLogsData {
   pod: Pod;

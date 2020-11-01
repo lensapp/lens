@@ -13,7 +13,7 @@ import { IPodLogsData, logRange, podLogsStore } from "./pod-logs.store";
 import { Button } from "../button";
 import { PodLogControls } from "./pod-log-controls";
 import { VirtualList } from "../virtual-list";
-import { searchStore } from "../../../common/search.store";
+import { searchStore } from "../../../common/search-store";
 import { ListOnScrollProps } from "react-window";
 
 interface Props {
