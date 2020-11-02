@@ -1,4 +1,4 @@
-import type { ExtensionId, ExtensionManifest, ExtensionModel, LensExtension } from "./lens-extension"
+import type { LensExtension, LensExtensionConstructor, LensExtensionManifest } from "./lens-extension"
 import type { LensMainExtension } from "./lens-main-extension"
 import type { LensRendererExtension } from "./lens-renderer-extension"
 import path from "path"
@@ -6,15 +6,14 @@ import { broadcastIpc } from "../common/ipc"
 import { computed, observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
-import {
-  appPreferenceRegistry, clusterFeatureRegistry, clusterPageRegistry, globalPageRegistry,
-  kubeObjectDetailRegistry, kubeObjectMenuRegistry, menuRegistry, statusBarRegistry
-} from "./registries";
-import { getBundledExtensions } from "../common/utils"
+import * as registries from "./registries";
 
-export interface InstalledExtension extends ExtensionModel {
+type ExtensionManifestPath = string; // path to package.json
+
+export interface InstalledExtension {
   manifestPath: string;
-  manifest: ExtensionManifest;
+  manifest: LensExtensionManifest;
+  isBundled?: boolean; // defined in package.json
 }
 
 // lazy load so that we get correct userData
@@ -23,14 +22,14 @@ export function extensionPackagesRoot() {
 }
 
 export class ExtensionLoader {
-  @observable extensions = observable.map<ExtensionId, InstalledExtension>([], { deep: false });
-  @observable instances = observable.map<ExtensionId, LensExtension>([], { deep: false })
+  @observable extensions = observable.map<ExtensionManifestPath, InstalledExtension>([], { deep: false });
+  @observable instances = observable.map<ExtensionManifestPath, LensExtension>([], { deep: false })
 
   constructor() {
     if (ipcRenderer) {
       ipcRenderer.on("extensions:loaded", (event, extensions: InstalledExtension[]) => {
         extensions.forEach((ext) => {
-          if (!this.getById(ext.manifestPath)) {
+          if (!this.getByManifest(ext.manifestPath)) {
             this.extensions.set(ext.manifestPath, ext)
           }
         })
@@ -39,57 +38,52 @@ export class ExtensionLoader {
   }
 
   @computed get userExtensions(): LensExtension[] {
-    const builtIn = getBundledExtensions().map(ext => `lens-${ext}`)
-    const extensions: LensExtension[] = []
-    this.instances.forEach(instance => {
-      if (builtIn.includes(instance.name)) return
-      extensions.push(instance)
-    })
-    return extensions
+    return [...this.instances.values()].filter(ext => !ext.isBundled)
   }
 
   loadOnMain() {
     logger.info('[EXTENSIONS-LOADER]: load on main')
     this.autoloadExtensions((extension: LensMainExtension) => {
-      extension.registerTo(menuRegistry, extension.appMenus)
+      extension.registerTo(registries.menuRegistry, extension.appMenus)
     })
   }
 
   loadOnClusterManagerRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
     this.autoloadExtensions((extension: LensRendererExtension) => {
-      extension.registerTo(globalPageRegistry, extension.globalPages)
-      extension.registerTo(appPreferenceRegistry, extension.appPreferences)
-      extension.registerTo(clusterFeatureRegistry, extension.clusterFeatures)
-      extension.registerTo(statusBarRegistry, extension.statusBarItems)
+      extension.registerTo(registries.globalPageRegistry, extension.globalPages)
+      extension.registerTo(registries.appPreferenceRegistry, extension.appPreferences)
+      extension.registerTo(registries.clusterFeatureRegistry, extension.clusterFeatures)
+      extension.registerTo(registries.statusBarRegistry, extension.statusBarItems)
     })
   }
 
   loadOnClusterRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
     this.autoloadExtensions((extension: LensRendererExtension) => {
-      extension.registerTo(clusterPageRegistry, extension.clusterPages)
-      extension.registerTo(kubeObjectMenuRegistry, extension.kubeObjectMenuItems)
-      extension.registerTo(kubeObjectDetailRegistry, extension.kubeObjectDetailItems)
+      extension.registerTo(registries.clusterPageRegistry, extension.clusterPages)
+      extension.registerTo(registries.kubeObjectMenuRegistry, extension.kubeObjectMenuItems)
+      extension.registerTo(registries.kubeObjectDetailRegistry, extension.kubeObjectDetailItems)
     })
   }
 
   protected autoloadExtensions(callback: (instance: LensExtension) => void) {
     return reaction(() => this.extensions.toJS(), (installedExtensions) => {
-      for(const [id, ext] of installedExtensions) {
-        let instance = this.instances.get(ext.id)
+      for (const [id, ext] of installedExtensions) {
+        let instance = this.instances.get(ext.manifestPath)
         if (!instance) {
           const extensionModule = this.requireExtension(ext)
           if (!extensionModule) {
             continue
           }
-          const LensExtensionClass = extensionModule.default;
-          instance = new LensExtensionClass({ ...ext.manifest, manifestPath: ext.manifestPath, id: ext.manifestPath }, ext.manifest);
           try {
+            const LensExtensionClass: LensExtensionConstructor = extensionModule.default;
+            instance = new LensExtensionClass(ext);
             instance.enable()
             callback(instance)
-          } finally {
-            this.instances.set(ext.id, instance)
+            this.instances.set(ext.manifestPath, instance)
+          } catch (err) {
+            logger.error(`[EXTENSIONS-LOADER]: activating extension error`, { ext, err })
           }
         }
       }
@@ -116,19 +110,8 @@ export class ExtensionLoader {
     }
   }
 
-  getById(id: ExtensionId): InstalledExtension {
-    return this.extensions.get(id);
-  }
-
-  async removeById(id: ExtensionId) {
-    const extension = this.getById(id);
-    if (extension) {
-      const instance = this.instances.get(extension.id)
-      if (instance) {
-        await instance.disable()
-      }
-      this.extensions.delete(id);
-    }
+  getByManifest(manifestPath: ExtensionManifestPath): InstalledExtension {
+    return this.extensions.get(manifestPath);
   }
 
   broadcastExtensions(frameId?: number) {

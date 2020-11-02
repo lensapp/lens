@@ -1,58 +1,42 @@
-import { readJsonSync } from "fs-extra";
-import { action, observable, toJS } from "mobx";
+import { observable, toJS } from "mobx";
 import logger from "../main/logger";
 import { BaseRegistry } from "./registries/base-registry";
+import type { InstalledExtension } from "./extension-loader";
 
-export type ExtensionId = string | ExtensionPackageJsonPath;
-export type ExtensionPackageJsonPath = string;
-export type ExtensionVersion = string | number;
+export type LensExtensionConstructor = new (init: InstalledExtension) => LensExtension;
 
-export interface ExtensionModel {
-  id: ExtensionId;
-  version: ExtensionVersion;
+export interface LensExtensionManifest {
   name: string;
-  manifestPath: string;
+  version: string;
   description?: string;
-  enabled?: boolean;
-  updateUrl?: string;
+  main?: string; // path to %ext/dist/main.js
+  renderer?: string; // path to %ext/dist/renderer.js
 }
 
-export interface ExtensionManifest extends ExtensionModel {
-  main?: string;
-  renderer?: string;
-  description?: string; // todo: add more fields similar to package.json + some extra
-}
-
-export class LensExtension implements ExtensionModel {
-  public id: ExtensionId;
-  public updateUrl: string;
+export class LensExtension {
+  public manifest: LensExtensionManifest;
+  public manifestPath: string;
+  public isBundled: boolean;
   protected disposers: (() => void)[] = [];
 
-  @observable name = "";
-  @observable description = "";
-  @observable version: ExtensionVersion = "0.0.0";
-  @observable manifest: ExtensionManifest;
-  @observable manifestPath: string;
   @observable isEnabled = false;
 
-  constructor(model: ExtensionModel, manifest: ExtensionManifest) {
-    this.importModel(model, manifest);
+  constructor({ manifest, manifestPath, isBundled }: InstalledExtension) {
+    this.manifest = manifest
+    this.manifestPath = manifestPath
+    this.isBundled = !!isBundled
   }
 
-  @action
-  async importModel({ enabled, manifestPath, ...model }: ExtensionModel, manifest?: ExtensionManifest) {
-    try {
-      this.manifest = manifest || await readJsonSync(manifestPath, { throws: true })
-      this.manifestPath = manifestPath;
-      Object.assign(this, model);
-    } catch (err) {
-      logger.error(`[EXTENSION]: cannot read manifest at ${manifestPath}`, { ...model, err: String(err) })
-      this.disable();
-    }
+  get name() {
+    return this.manifest.name
   }
 
-  async migrate(appVersion: string) {
-    // mock
+  get version() {
+    return this.manifest.version
+  }
+
+  get description() {
+    return this.manifest.description
   }
 
   async enable() {
@@ -69,7 +53,6 @@ export class LensExtension implements ExtensionModel {
     logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
   }
 
-  // todo: add more hooks
   protected onActivate() {
     // mock
   }
@@ -86,26 +69,13 @@ export class LensExtension implements ExtensionModel {
     };
   }
 
-  getMeta() {
+  toJSON() {
     return toJS({
-      id: this.id,
-      manifest: this.manifest,
-      manifestPath: this.manifestPath,
-      enabled: this.isEnabled
-    }, {
-      recurseEverything: true
-    })
-  }
-
-  toJSON(): ExtensionModel {
-    return toJS({
-      id: this.id,
       name: this.name,
       version: this.version,
       description: this.description,
       manifestPath: this.manifestPath,
-      enabled: this.isEnabled,
-      updateUrl: this.updateUrl,
+      isEnabled: this.isEnabled,
     }, {
       recurseEverything: true,
     })

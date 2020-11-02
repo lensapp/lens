@@ -1,5 +1,4 @@
 import "./extensions.scss";
-
 import { shell } from "electron";
 import React from "react";
 import { computed, observable } from "mobx";
@@ -18,8 +17,13 @@ export class Extensions extends React.Component {
   @observable search = ""
 
   @computed get extensions() {
-    const extensions = extensionLoader.userExtensions
-    return extensions.filter(ext => ext.name.includes(this.search))
+    const searchText = this.search.toLowerCase();
+    return extensionLoader.userExtensions.filter(({ name, description }) => {
+      return [
+        name.toLowerCase().includes(searchText),
+        description.toLowerCase().includes(searchText),
+      ].some(v => v)
+    })
   }
 
   get extensionsPath() {
@@ -62,12 +66,16 @@ export class Extensions extends React.Component {
         </div>
       )
     }
-    return extensions.map(({ id, name, description }) => {
+    return extensions.map(({ manifestPath, name, description }) => {
       return (
-        <div key={id} className="extension flex gaps align-center">
+        <div key={manifestPath} className="extension flex gaps align-center">
           <div className="box grow flex column gaps">
-            <div className="package">Package: <code className="name">{name}</code></div>
-            <div>Description: <span className="text-secondary">{description}</span></div>
+            <div className="package">
+              Name: <code className="name">{name}</code>
+            </div>
+            <div>
+              Description: <span className="text-secondary">{description}</span>
+            </div>
           </div>
           <Button plain active onClick={() => console.log(`//todo: disable ${name}`)}>
             Disable
