@@ -8,7 +8,7 @@ area/extension:
   - extensions/**/*
   - src/extensions/**/*
 area/documentation:
-  - READEME.md
+  - README.md
   - docs/**/*
 area/ci:
   - .github/workflows/**/*
