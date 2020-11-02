@@ -59,6 +59,6 @@ Lens releases a new version each month with new features and important bug fixes
 To stay current with the Lens features, you can review the [release notes](https://github.com/lensapp/lens/releases).
 
 
-## Quickstart
+## Quick Start
 
 Get up and running quickly by learning to [add clusters](/clusters/add-cluster/).
