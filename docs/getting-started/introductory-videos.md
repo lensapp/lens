@@ -1,6 +1,6 @@
 # Introductory Videos
 
-Start your journey using Lens with this set of introductory videos! These videos are designed to give you an overview of Lens various features and quickly get you familiar with them.
+Continue your Lens journey with this set of introductory videos! These videos are meant to quickly familiarize you with Lens' various powerful features. 
 
 <ul class="video-list">
 	<li class="video">
