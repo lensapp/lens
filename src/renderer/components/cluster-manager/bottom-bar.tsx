@@ -14,7 +14,7 @@ export class BottomBar extends React.Component {
     return (
       <div className="BottomBar flex gaps">
         <div id="current-workspace" className="flex gaps align-center hover-highlight">
-          <Icon small material="layers"/>
+          <Icon smallest material="layers"/>
           <span className="workspace-name">{currentWorkspace.name}</span>
         </div>
         <WorkspaceMenu

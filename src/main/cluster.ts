@@ -67,12 +67,12 @@ export class Cluster implements ClusterModel, ClusterState {
   @observable kubeConfigPath: string;
   @observable apiUrl: string; // cluster server url
   @observable kubeProxyUrl: string; // lens-proxy to kube-api url
-  @observable enabled = false;
-  @observable online = false;
-  @observable accessible = false;
-  @observable ready = false;
+  @observable enabled = false; // only enabled clusters are visible to users
+  @observable online = false; // describes if we can detect that cluster is online
+  @observable accessible = false; // if user is able to access cluster resources
+  @observable ready = false; // cluster is in usable state
   @observable reconnecting = false;
-  @observable disconnected = true;
+  @observable disconnected = true; // false if user has selected to connect
   @observable failureReason: string;
   @observable isAdmin = false;
   @observable eventCount = 0;
@@ -127,16 +127,16 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   protected bindEvents() {
-    logger.info(`[CLUSTER]: bind events`, this.getMeta());
-    const refreshTimer = setInterval(() => !this.disconnected && this.refresh(), 30000); // every 30s
-    const refreshMetadataTimer = setInterval(() => !this.disconnected && this.refreshMetadata(), 900000); // every 15 minutes
+    logger.info(`[CLUSTER]: bind events`, this.getMeta())
+    const refreshTimer = setInterval(() => !this.disconnected && this.refresh(), 30000) // every 30s
+    const refreshMetadataTimer = setInterval(() => !this.disconnected && this.refreshMetadata(), 900000) // every 15 minutes
 
     if (ipcMain) {
       this.eventDisposers.push(
         reaction(() => this.getState(), () => this.pushState()),
         () => {
-          clearInterval(refreshTimer);
-          clearInterval(refreshMetadataTimer);
+          clearInterval(refreshTimer)
+          clearInterval(refreshMetadataTimer)
         },
       );
     }
