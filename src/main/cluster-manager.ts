@@ -1,5 +1,6 @@
 import "../common/cluster-ipc";
 import type http from "http"
+import { ipcMain } from "electron"
 import { autorun } from "mobx";
 import { clusterStore, getClusterIdFromHost } from "../common/cluster-store"
 import { Cluster } from "./cluster"
@@ -30,6 +31,29 @@ export class ClusterManager {
     }, {
       delay: 250
     });
+
+    ipcMain.on("network:offline", () => { this.onNetworkOffline() })
+    ipcMain.on("network:online", () => { this.onNetworkOnline() })
+  }
+
+  protected onNetworkOffline() {
+    logger.info("[CLUSTER-MANAGER]: network is offline")
+    clusterStore.enabledClustersList.forEach((cluster) => {
+      if (!cluster.disconnected) {
+        cluster.online = false
+        cluster.accessible = false
+        cluster.refreshConnectionStatus().catch((e) => e)
+      }
+    })
+  }
+
+  protected onNetworkOnline() {
+    logger.info("[CLUSTER-MANAGER]: network is online")
+    clusterStore.enabledClustersList.forEach((cluster) => {
+      if (!cluster.disconnected) {
+        cluster.refreshConnectionStatus().catch((e) => e)
+      }
+    })
   }
 
   stop() {
