@@ -92,6 +92,10 @@
     }
   }
 
+  .logs .VirtualList .list {
+    overflow-x: scroll!important;
+  }
+
   &.noscroll {
     .logs .VirtualList .list {
       overflow-x: hidden!important; // fixing scroll to bottom issues in PodLogs

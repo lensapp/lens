@@ -112,6 +112,7 @@ export const PodLogControls = observer((props: Props) => {
           material="get_app"
           onClick={downloadLogs}
           tooltip={_i18n._(t`Save`)}
+          className="download-icon"
         />
         <PodLogSearch {...props} />
       </div>
