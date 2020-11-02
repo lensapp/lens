@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect'
 
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
@@ -110,7 +110,7 @@ describe('<DeploymentScaleDialog />', () => {
     let currentScale, desiredScale
     // we need to wait for the DeploymentScaleDialog to show up
     // because there is an <Animate /> in <Dialog /> which renders null at start.
-    await waitFor(async () => 
+    await waitFor(async () =>
       [currentScale, desiredScale] = await Promise.all([
         getByTestId('current-scale'),
         getByTestId('desired-scale'),
@@ -118,6 +118,37 @@ describe('<DeploymentScaleDialog />', () => {
     );
     expect(currentScale).toHaveTextContent(`${initReplicas}`);
     expect(desiredScale).toHaveTextContent(`${initReplicas}`);
+  });
+
+  it('changes the desired scale when clicking the icon buttons +/-', async () => {
+    const initReplicas = 1
+    deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
+    const { getByTestId } = render(<DeploymentScaleDialog />);
+    DeploymentScaleDialog.open(dummyDeployment);
+    let desiredScale, up, down
+    await waitFor(async () => 
+      [desiredScale, up, down] = await Promise.all([
+        getByTestId('desired-scale'),
+        getByTestId('desired-replicas-up'),
+        getByTestId('desired-replicas-down'),
+      ])
+    );
+    // initially, the desired scale should equals to initReplicas
+    expect(desiredScale).toHaveTextContent(`${initReplicas}`);
+    fireEvent.click(up);
+    expect(desiredScale).toHaveTextContent('2');
+    fireEvent.click(down);
+    expect(desiredScale).toHaveTextContent('1');
+    // edge case, desiredScale must > 0
+    fireEvent.click(down);
+    fireEvent.click(down);
+    expect(desiredScale).toHaveTextContent('1');
+    const times = 120;
+    // edge case, desiredScale must < scaleMax (100)
+    for (let i = 0; i < times; i++) {
+      fireEvent.click(up);
+    }
+    expect(desiredScale).toHaveTextContent('100');
   });
 
 });
