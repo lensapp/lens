@@ -1,0 +1,13 @@
+---
+area/ui:
+  - src/renderer/**/*
+area/test:
+  - integration/**/*
+  - __mocks__/**/*
+area/extension:
+  - extensions/**/*
+  - src/extensions/**/*
+area/documentation:
+  - READEME.md
+dependencies:
+  - yarn.lock
