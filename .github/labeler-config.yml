@@ -9,5 +9,7 @@ area/extension:
   - src/extensions/**/*
 area/documentation:
   - READEME.md
+area/ci:
+  - .github/workflows/**/*
 dependencies:
   - yarn.lock
