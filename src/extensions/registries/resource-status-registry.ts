@@ -8,21 +8,15 @@ export enum ResourceStatusColor {
   ERROR = "error"
 }
 
-export abstract class ResourceStatusResolver {
-  protected object: KubeObject
-
-  constructor(object: KubeObject) {
-    this.object = object
-  }
-
-  public abstract getStatusText(): string
-  public abstract getStatusColor(): string
+export type ResourceStatus = {
+  text: string;
+  color: string;
 }
 
 export interface ResourceStatusRegistration {
   kind: string;
   apiVersions: string[];
-  resolver: (object: KubeObject) => ResourceStatusResolver;
+  resolver: (object: KubeObject) => ResourceStatus;
 }
 
 export class ResourceStatusRegistry extends BaseRegistry<ResourceStatusRegistration> {
