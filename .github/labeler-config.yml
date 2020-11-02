@@ -9,7 +9,9 @@ area/extension:
   - src/extensions/**/*
 area/documentation:
   - READEME.md
+  - docs/**/*
 area/ci:
   - .github/workflows/**/*
+  - .azure-pipelines.yml
 dependencies:
   - yarn.lock
