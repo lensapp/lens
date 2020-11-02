@@ -111,7 +111,6 @@ export class KubeWatchApi {
 
   protected async onRouteEvent(event: IKubeWatchRouteEvent) {
     if (event.type === "STREAM_END") {
-      console.log("stream end")
       this.disconnect();
       const { apiBase, namespace } = KubeApi.parseApi(event.url);
       const api = apiManager.getApi(apiBase);
