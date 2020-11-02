@@ -127,20 +127,19 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   protected bindEvents() {
-    if (!ipcMain) {
-      return
-    }
     logger.info(`[CLUSTER]: bind events`, this.getMeta())
     const refreshTimer = setInterval(() => !this.disconnected && this.refresh(), 30000) // every 30s
     const refreshMetadataTimer = setInterval(() => !this.disconnected && this.refreshMetadata(), 900000) // every 15 minutes
 
-    this.eventDisposers.push(
-      reaction(() => this.getState(), () => this.pushState()),
-      () => {
-        clearInterval(refreshTimer)
-        clearInterval(refreshMetadataTimer)
-      },
-    );
+    if (ipcMain) {
+      this.eventDisposers.push(
+        reaction(() => this.getState(), () => this.pushState()),
+        () => {
+          clearInterval(refreshTimer)
+          clearInterval(refreshMetadataTimer)
+        },
+      );
+    }
   }
 
   protected unbindEvents() {
