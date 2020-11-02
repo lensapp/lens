@@ -66,7 +66,8 @@ export class Extensions extends React.Component {
         </div>
       )
     }
-    return extensions.map(({ manifestPath, name, description }) => {
+    return extensions.map(ext => {
+      const { manifestPath, name, description, isEnabled } = ext;
       return (
         <div key={manifestPath} className="extension flex gaps align-center">
           <div className="box grow flex column gaps">
@@ -77,9 +78,12 @@ export class Extensions extends React.Component {
               Description: <span className="text-secondary">{description}</span>
             </div>
           </div>
-          <Button plain active onClick={() => console.log(`//todo: disable ${name}`)}>
-            Disable
-          </Button>
+          {!isEnabled && (
+            <Button plain active onClick={() => ext.enable()}>Enable</Button>
+          )}
+          {isEnabled && (
+            <Button accent onClick={() => ext.disable()}>Disable</Button>
+          )}
         </div>
       )
     })
