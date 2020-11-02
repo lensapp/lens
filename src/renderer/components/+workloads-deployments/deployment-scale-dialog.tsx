@@ -88,11 +88,11 @@ export class DeploymentScaleDialog extends Component<Props> {
     const warning = currentReplicas < 10 && desiredReplicas > 90;
     return (
       <>
-        <div className="current-scale">
+        <div className="current-scale" data-testid="current-scale">
           <Trans>Current replica scale: {currentReplicas}</Trans>
         </div>
         <div className="flex gaps align-center">
-          <div className="desired-scale">
+          <div className="desired-scale" data-testid="desired-scale">
             <Trans>Desired number of replicas</Trans>: {desiredReplicas}
           </div>
           <div className="slider-container">
