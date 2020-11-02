@@ -31,7 +31,7 @@ export class DistributionDetector extends BaseClusterDetector {
     if (this.isCustom()) {
       return { value: "custom", accuracy: 10}
     }
-    return { value: "vanilla", accuracy: 10}
+    return { value: "unknown", accuracy: 10}
   }
 
   public async getKubernetesVersion() {

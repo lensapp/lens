@@ -6,7 +6,10 @@ import { broadcastIpc } from "../common/ipc"
 import { observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
-import { appPreferenceRegistry, clusterFeatureRegistry, clusterPageRegistry, globalPageRegistry, kubeObjectMenuRegistry, menuRegistry, statusBarRegistry } from "./registries";
+import {
+  appPreferenceRegistry, clusterFeatureRegistry, clusterPageRegistry, globalPageRegistry,
+  kubeObjectDetailRegistry, kubeObjectMenuRegistry, menuRegistry, statusBarRegistry
+} from "./registries";
 
 export interface InstalledExtension extends ExtensionModel {
   manifestPath: string;
@@ -56,6 +59,7 @@ export class ExtensionLoader {
     this.autoloadExtensions((extension: LensRendererExtension) => {
       extension.registerTo(clusterPageRegistry, extension.clusterPages)
       extension.registerTo(kubeObjectMenuRegistry, extension.kubeObjectMenuItems)
+      extension.registerTo(kubeObjectDetailRegistry, extension.kubeObjectDetailItems)
     })
   }
 
