@@ -82,6 +82,12 @@ export class LensProxy {
         proxySocket.write("\r\n")
         proxySocket.write(head)
       })
+
+      proxySocket.setKeepAlive(true)
+      socket.setKeepAlive(true)
+      proxySocket.setTimeout(0)
+      socket.setTimeout(0)
+
       proxySocket.on('data', function (chunk) {
         socket.write(chunk)
       })
