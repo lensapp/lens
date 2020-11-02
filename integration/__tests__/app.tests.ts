@@ -499,7 +499,6 @@ describe("Lens integration tests", () => {
         // Click through controls
         await app.client.click(".PodLogControls .timestamps-icon")
         await app.client.click(".PodLogControls .undo-icon")
-        await app.client.click(".PodLogControls .download-icon")
       })
     })
   })
