@@ -163,7 +163,7 @@ export class AddCluster extends React.Component {
       })
 
       runInAction(() => {
-        clusterStore.addCluster(...newClusters);
+        clusterStore.addClusters(...newClusters);
         if (newClusters.length === 1) {
           const clusterId = newClusters[0].id;
           clusterStore.setActive(clusterId);

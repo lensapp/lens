@@ -21,6 +21,7 @@
     "mobx": "^5.15.5",
     "react": "^16.13.1",
     "node-machine-id": "^1.1.12",
-    "universal-analytics": "^0.4.23"
+    "universal-analytics": "^0.4.23",
+    "analytics-node": "^3.4.0-beta.3"
   }
 }
