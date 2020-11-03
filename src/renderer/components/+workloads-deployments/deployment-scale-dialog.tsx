@@ -103,7 +103,7 @@ export class DeploymentScaleDialog extends Component<Props> {
           <div className="desired-scale" data-testid="desired-scale">
             <Trans>Desired number of replicas</Trans>: {desiredReplicas}
           </div>
-          <div className="slider-container">
+          <div className="slider-container flex align-center">
             <Slider value={desiredReplicas} max={scaleMax} onChange={onChange as any /** see: https://github.com/mui-org/material-ui/issues/20191 */}/>
           </div>
           <div className="plus-minus-container">
