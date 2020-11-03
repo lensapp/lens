@@ -33,15 +33,15 @@ lint:
 test: download-bins
 	yarn test
 
-integration-linux: build-extensions
+integration-linux: build-npm build-extensions
 	yarn build:linux
 	yarn integration
 
-integration-mac: build-extensions
+integration-mac: build-npm build-extensions
 	yarn build:mac
 	yarn integration
 
-integration-win: build-extensions
+integration-win: build-npm build-extensions
 	yarn build:win
 	yarn integration
 
