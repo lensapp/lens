@@ -53,59 +53,45 @@ export class ExtensionLoader extends BaseStore<ExtensionLoaderStoreModel> {
   loadOnMain() {
     logger.info('[EXTENSIONS-LOADER]: load on main')
     this.autoInitExtensions();
-    this.autoEnableExtensions((extension: LensMainExtension) => {
-      this.handleActivation(extension, () => [
-        registries.menuRegistry.add(...extension.appMenus)
-      ])
-    })
+    this.autoEnableExtensions((extension: LensMainExtension) => [
+      registries.menuRegistry.add(...extension.appMenus)
+    ])
   }
 
   loadOnClusterManagerRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
     this.autoInitExtensions();
-    this.autoEnableExtensions((extension: LensRendererExtension) => {
-      this.handleActivation(extension, () => [
-        registries.globalPageRegistry.add(...extension.globalPages),
-        registries.appPreferenceRegistry.add(...extension.appPreferences),
-        registries.clusterFeatureRegistry.add(...extension.clusterFeatures),
-        registries.statusBarRegistry.add(...extension.statusBarItems),
-      ])
-    })
+    this.autoEnableExtensions((extension: LensRendererExtension) => [
+      registries.globalPageRegistry.add(...extension.globalPages),
+      registries.appPreferenceRegistry.add(...extension.appPreferences),
+      registries.clusterFeatureRegistry.add(...extension.clusterFeatures),
+      registries.statusBarRegistry.add(...extension.statusBarItems),
+    ])
   }
 
   loadOnClusterRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
     this.autoInitExtensions();
-    this.autoEnableExtensions((extension: LensRendererExtension) => {
-      this.handleActivation(extension, () => [
-        registries.clusterPageRegistry.add(...extension.clusterPages),
-        registries.kubeObjectMenuRegistry.add(...extension.kubeObjectMenuItems),
-        registries.kubeObjectDetailRegistry.add(...extension.kubeObjectDetailItems),
-      ])
-    })
+    this.autoEnableExtensions((extension: LensRendererExtension) => [
+      registries.clusterPageRegistry.add(...extension.clusterPages),
+      registries.kubeObjectMenuRegistry.add(...extension.kubeObjectMenuItems),
+      registries.kubeObjectDetailRegistry.add(...extension.kubeObjectDetailItems),
+    ])
   }
 
-  protected isEnabledInStore(ext: LensExtension) {
-    const extensionState = this.state.get(ext.id);
-    return !extensionState /*enabled by default*/ || extensionState.isEnabled;
-  }
-
-  protected handleActivation(ext: LensExtension, addToRegistry: () => Function[]) {
-    const enabledInStore = this.isEnabledInStore(ext);
-    if (enabledInStore) {
-      this.disposers.set(ext.id, addToRegistry())
-    } else {
-      this.disposers.get(ext.id)?.forEach(dispose => dispose())
-      this.disposers.delete(ext.id)
-    }
-  }
-
-  protected autoEnableExtensions(callback: (ext: LensExtension) => void) {
+  protected autoEnableExtensions(register: (ext: LensExtension) => Function[]) {
     return autorun(() => {
       this.instances.forEach(ext => {
-        const isEnabled = this.isEnabledInStore(ext);
+        const extensionState = this.state.get(ext.id);
+        const isEnabled = !extensionState /*enabled by default*/ || extensionState.isEnabled;
+        const isRegistered = this.disposers.has(ext.id);
+        if (isEnabled && !isRegistered) {
+          this.disposers.set(ext.id, register(ext))
+        } else if (!isEnabled && isRegistered) {
+          this.disposers.get(ext.id).forEach(dispose => dispose())
+          this.disposers.delete(ext.id)
+        }
         ext.toggle(isEnabled);
-        callback(ext);
       })
     })
   }
