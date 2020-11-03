@@ -65,7 +65,6 @@ export class PodDetails extends React.Component<Props> {
     const { nodeName } = spec;
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
-    const labels = pod.getLabels();
     const metrics = podsStore.metrics;
     return (
       <div className="PodDetails">
