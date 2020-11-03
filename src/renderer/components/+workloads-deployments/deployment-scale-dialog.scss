@@ -29,6 +29,9 @@
 
     .plus-minus-container {
       margin-left: $margin * 2;
+      .Icon {
+        --color-active: black;
+      }
     }
 
     .warning {

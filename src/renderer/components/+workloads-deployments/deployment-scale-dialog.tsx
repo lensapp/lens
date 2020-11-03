@@ -107,20 +107,16 @@ export class DeploymentScaleDialog extends Component<Props> {
             <Slider value={desiredReplicas} max={scaleMax} onChange={onChange as any /** see: https://github.com/mui-org/material-ui/issues/20191 */}/>
           </div>
           <div className="plus-minus-container">
-            <i
-              className="Icon material"
+            <Icon
+              material="add_circle_outline"
               onClick={this.desiredReplicasUp}
               data-testid="desired-replicas-up"
-            >
-              <span className="icon">add_circle_outline</span>
-            </i>
-            <i
-              className="Icon material"
+            />
+            <Icon
+              material="remove_circle_outline"
               onClick={this.desiredReplicasDown}
               data-testid="desired-replicas-down"
-            >
-              <span className="icon">remove_circle_outline</span>
-            </i>
+            />
           </div>
         </div>
         {warning &&
