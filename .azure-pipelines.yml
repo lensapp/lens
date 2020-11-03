@@ -39,6 +39,8 @@ jobs:
         displayName: Install dependencies
       - script: make integration-win
         displayName: Run integration tests
+      - script: make test-extensions
+        displayName: Run In-tree Extension tests
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Build
@@ -78,6 +80,8 @@ jobs:
         displayName: Run tests
       - script: make integration-mac
         displayName: Run integration tests
+      - script: make test-extensions
+        displayName: Run In-tree Extension tests
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Build
@@ -119,6 +123,8 @@ jobs:
         condition: eq(variables.CACHE_RESTORED, 'true')
       - script: make install-deps
         displayName: Install dependencies
+      - script: make test-extensions
+        displayName: Run In-tree Extension tests
       - script: make lint
         displayName: Lint
       - script: make test

@@ -5,7 +5,8 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "webpack -p",
-    "dev": "webpack --watch"
+    "dev": "webpack --watch",
+    "test": "echo NO TESTS"
   },
   "dependencies": {},
   "devDependencies": {

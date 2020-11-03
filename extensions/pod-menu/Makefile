@@ -1,5 +1,8 @@
 install-deps:
-	npm install
+	yarn install
 
 build: install-deps
-	npm run build
+	yarn run build
+
+test:
+	yarn run test
