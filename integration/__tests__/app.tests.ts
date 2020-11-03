@@ -462,9 +462,6 @@ describe("Lens integration tests", () => {
         await app.client.click("button.Button=Create & Close")
         // Wait until first bits of pod appears on dashboard
         await app.client.waitForExist(".name=nginx-create-pod-test")
-        // Open pod details
-        await app.client.click(".name=nginx-create-pod-test")
-        await app.client.waitUntilTextExists("div.drawer-title-text", "Pod: nginx-create-pod-test")
       })
     })
 
