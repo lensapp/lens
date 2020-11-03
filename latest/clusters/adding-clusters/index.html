@@ -672,10 +672,16 @@
                 
                 
                 <h1 id="adding-clusters">Adding clusters<a class="headerlink" href="#adding-clusters" title="Permanent link">#</a></h1>
-<p>Add clusters by clicking the Add Cluster button in the left-side menu. You'll need to obtain a working kubeconfig for the cluster you want to add. You can either browse it from the file system or paste it as a text from the clipboard.</p>
-<p>Selected cluster contexts are added as a separate item in the left-side cluster menu to allow you to operate easily on multiple clusters and/or contexts.</p>
-<p><strong>NOTE</strong>: Any manually added cluster is not merged into your kubeconfig file.</p>
+<p>Add clusters by clicking the <strong>Add Cluster</strong> button in the left-side menu. </p>
+<ol>
+<li>Click the <strong>Add Cluster</strong> button (indicated with a '+' icon).</li>
+<li>Enter the path to your kubeconfig file. You'll need to have a kubeconfig file for the cluster you want to add. You can either browse for the path from the file system or or enter it directly.</li>
+</ol>
+<p>Selected <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/#context">cluster contexts</a> are added as a separate item in the left-side cluster menu to allow you to operate easily on multiple clusters and/or contexts.</p>
+<p><strong>NOTE</strong>: Any cluster that you added manually will not be merged into your kubeconfig file.</p>
 <p><img alt="Add Cluster" src="../images/add-cluster.png" /></p>
+<p>For more information on kubeconfig see <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Kubernetes docs</a>.</p>
+<p>To see your currently-enabled config with <code>kubectl</code>, enter <code>kubectl config view --minify --raw</code> in your terminal.</p>
                 
                   
                     
