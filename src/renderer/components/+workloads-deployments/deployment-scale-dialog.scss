@@ -28,7 +28,7 @@
     }
 
     .plus-minus-container {
-      margin-left: 15px;
+      margin-left: $margin * 2
       // for vertical align with .slider-container
       margin-top: -4px;
     }
