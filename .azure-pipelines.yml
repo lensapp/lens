@@ -37,6 +37,10 @@ jobs:
         displayName: Cache Yarn packages
       - script: make install-deps
         displayName: Install dependencies
+      - script: make build-npm
+        displayName: Generate npm package
+      - script: make build-extensions
+        displayName: Build bundled extensions
       - script: make integration-win
         displayName: Run integration tests
       - script: make build
@@ -74,6 +78,10 @@ jobs:
         condition: eq(variables.CACHE_RESTORED, 'true')
       - script: make install-deps
         displayName: Install dependencies
+      - script: make build-npm
+        displayName: Generate npm package
+      - script: make build-extensions
+        displayName: Build bundled extensions
       - script: make test
         displayName: Run tests
       - script: make integration-mac
@@ -121,6 +129,10 @@ jobs:
         displayName: Install dependencies
       - script: make lint
         displayName: Lint
+      - script: make build-npm
+        displayName: Generate npm package
+      - script: make build-extensions
+        displayName: Build bundled extensions
       - script: make test
         displayName: Run tests
       - bash: |
