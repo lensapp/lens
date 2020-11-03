@@ -67,9 +67,9 @@ export class Extensions extends React.Component {
       )
     }
     return extensions.map(ext => {
-      const { manifestPath, name, description, isEnabled } = ext;
+      const { id, name, description, isEnabled } = ext;
       return (
-        <div key={manifestPath} className="extension flex gaps align-center">
+        <div key={id} className="extension flex gaps align-center">
           <div className="box grow flex column gaps">
             <div className="package">
               Name: <code className="name">{name}</code>

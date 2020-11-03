@@ -1,18 +1,21 @@
-import type { LensExtension, LensExtensionConstructor, LensExtensionManifest } from "./lens-extension"
+import type { LensExtension, LensExtensionConstructor, LensExtensionId, LensExtensionManifest, LensExtensionStoreModel } from "./lens-extension"
 import type { LensMainExtension } from "./lens-main-extension"
 import type { LensRendererExtension } from "./lens-renderer-extension"
 import path from "path"
 import { broadcastIpc } from "../common/ipc"
-import { computed, observable, reaction, toJS, } from "mobx"
+import { action, computed, observable, reaction, toJS } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
+import { BaseStore } from "../common/base-store";
 import * as registries from "./registries";
 
-type ExtensionManifestPath = string; // path to package.json
+export interface ExtensionLoaderStoreModel {
+  extensions: LensExtensionStoreModel[]
+}
 
 export interface InstalledExtension {
-  manifestPath: string;
   manifest: LensExtensionManifest;
+  manifestPath: string;
   isBundled?: boolean; // defined in package.json
 }
 
@@ -21,19 +24,23 @@ export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"))
 }
 
-export class ExtensionLoader {
-  @observable extensions = observable.map<ExtensionManifestPath, InstalledExtension>([], { deep: false });
-  @observable instances = observable.map<ExtensionManifestPath, LensExtension>([], { deep: false })
+export class ExtensionLoader extends BaseStore<ExtensionLoaderStoreModel> {
+  @observable extensions = observable.map<LensExtensionId, InstalledExtension>([], { deep: false });
+  @observable instances = observable.map<LensExtensionId, LensExtension>([], { deep: false })
+  @observable state = observable.map<LensExtensionId, LensExtensionStoreModel>();
 
   constructor() {
+    super({
+      configName: "lens-extensions",
+    });
     if (ipcRenderer) {
       ipcRenderer.on("extensions:loaded", (event, extensions: InstalledExtension[]) => {
         extensions.forEach((ext) => {
-          if (!this.getByManifest(ext.manifestPath)) {
+          if (!this.extensions.has(ext.manifestPath)) {
             this.extensions.set(ext.manifestPath, ext)
           }
         })
-      })
+      });
     }
   }
 
@@ -43,14 +50,16 @@ export class ExtensionLoader {
 
   loadOnMain() {
     logger.info('[EXTENSIONS-LOADER]: load on main')
-    this.autoloadExtensions((extension: LensMainExtension) => {
+    this.autoInitExtensions();
+    this.autoEnableExtensions((extension: LensMainExtension) => {
       extension.registerTo(registries.menuRegistry, extension.appMenus)
     })
   }
 
   loadOnClusterManagerRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
-    this.autoloadExtensions((extension: LensRendererExtension) => {
+    this.autoInitExtensions();
+    this.autoEnableExtensions((extension: LensRendererExtension) => {
       extension.registerTo(registries.globalPageRegistry, extension.globalPages)
       extension.registerTo(registries.appPreferenceRegistry, extension.appPreferences)
       extension.registerTo(registries.clusterFeatureRegistry, extension.clusterFeatures)
@@ -60,14 +69,32 @@ export class ExtensionLoader {
 
   loadOnClusterRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
-    this.autoloadExtensions((extension: LensRendererExtension) => {
+    this.autoInitExtensions();
+    this.autoEnableExtensions((extension: LensRendererExtension) => {
       extension.registerTo(registries.clusterPageRegistry, extension.clusterPages)
       extension.registerTo(registries.kubeObjectMenuRegistry, extension.kubeObjectMenuItems)
       extension.registerTo(registries.kubeObjectDetailRegistry, extension.kubeObjectDetailItems)
     })
   }
 
-  protected autoloadExtensions(callback: (instance: LensExtension) => void) {
+  protected autoEnableExtensions(callback: (ext: LensExtension) => void) {
+    return reaction(() => this.instances.toJS(), instances => {
+      instances.forEach(ext => {
+        const extensionState = this.state.get(ext.id);
+        const enabledInStore = !extensionState /*enabled by default*/ || extensionState.isEnabled;
+        if (!ext.isEnabled && enabledInStore) {
+          ext.enable();
+          callback(ext);
+        } else if (ext.isEnabled && !enabledInStore) {
+          ext.disable();
+        }
+      })
+    }, {
+      fireImmediately: true,
+    })
+  }
+
+  protected autoInitExtensions() {
     return reaction(() => this.extensions.toJS(), (installedExtensions) => {
       for (const [id, ext] of installedExtensions) {
         let instance = this.instances.get(ext.manifestPath)
@@ -79,17 +106,14 @@ export class ExtensionLoader {
           try {
             const LensExtensionClass: LensExtensionConstructor = extensionModule.default;
             instance = new LensExtensionClass(ext);
-            instance.enable()
-            callback(instance)
-            this.instances.set(ext.manifestPath, instance)
+            this.instances.set(ext.manifestPath, instance);
           } catch (err) {
-            logger.error(`[EXTENSIONS-LOADER]: activating extension error`, { ext, err })
+            logger.error(`[EXTENSIONS-LOADER]: init extension instance error`, { ext, err })
           }
         }
       }
     }, {
       fireImmediately: true,
-      delay: 0,
     })
   }
 
@@ -110,26 +134,31 @@ export class ExtensionLoader {
     }
   }
 
-  getByManifest(manifestPath: ExtensionManifestPath): InstalledExtension {
-    return this.extensions.get(manifestPath);
-  }
-
   broadcastExtensions(frameId?: number) {
     broadcastIpc({
       channel: "extensions:loaded",
       frameId: frameId,
       frameOnly: !!frameId,
-      args: [this.toJSON().extensions],
+      args: [
+        Array.from(this.extensions.toJS().values())
+      ],
     })
   }
 
-  toJSON() {
+  @action
+  protected fromStore({ extensions = [] }: ExtensionLoaderStoreModel) {
+    extensions.forEach(ext => {
+      this.state.set(ext.id, ext);
+    })
+  }
+
+  toJSON(): ExtensionLoaderStoreModel {
     return toJS({
-      extensions: Array.from(this.extensions).map(([id, instance]) => instance),
+      extensions: this.userExtensions.map(ext => ext.toJSON())
     }, {
       recurseEverything: true,
     })
   }
 }
 
-export const extensionLoader = new ExtensionLoader()
+export const extensionLoader: ExtensionLoader = ExtensionLoader.getInstance();

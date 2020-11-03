@@ -53,6 +53,7 @@ app.on("ready", async () => {
     userStore.load(),
     clusterStore.load(),
     workspaceStore.load(),
+    extensionLoader.load(),
   ]);
 
   // find free port

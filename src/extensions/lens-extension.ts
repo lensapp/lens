@@ -1,9 +1,16 @@
-import { observable, toJS } from "mobx";
+import { action, observable, toJS } from "mobx";
 import logger from "../main/logger";
 import { BaseRegistry } from "./registries/base-registry";
 import type { InstalledExtension } from "./extension-loader";
 
+export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (init: InstalledExtension) => LensExtension;
+
+export interface LensExtensionStoreModel {
+  id: LensExtensionId;
+  name: string;
+  isEnabled?: boolean;
+}
 
 export interface LensExtensionManifest {
   name: string;
@@ -27,6 +34,10 @@ export class LensExtension {
     this.isBundled = !!isBundled
   }
 
+  get id(): LensExtensionId {
+    return this.manifestPath;
+  }
+
   get name() {
     return this.manifest.name
   }
@@ -39,18 +50,30 @@ export class LensExtension {
     return this.manifest.description
   }
 
+  @action
   async enable() {
+    if (this.isEnabled) return;
     this.isEnabled = true;
     logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
     this.onActivate();
   }
 
+  @action
   async disable() {
+    if (!this.isEnabled) return;
     this.onDeactivate();
     this.isEnabled = false;
     this.disposers.forEach(cleanUp => cleanUp());
     this.disposers.length = 0;
     logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
+  }
+
+  toggle(enable?: boolean) {
+    if (typeof enable === "boolean") {
+      enable ? this.enable() : this.disable()
+    } else {
+      this.isEnabled ? this.disable() : this.enable()
+    }
   }
 
   protected onActivate() {
@@ -69,12 +92,10 @@ export class LensExtension {
     };
   }
 
-  toJSON() {
+  toJSON(): LensExtensionStoreModel {
     return toJS({
+      id: this.id,
       name: this.name,
-      version: this.version,
-      description: this.description,
-      manifestPath: this.manifestPath,
       isEnabled: this.isEnabled,
     }, {
       recurseEverything: true,
