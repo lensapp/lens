@@ -8,7 +8,7 @@ repo_url: https://github.com/lensapp/lens
 copyright: Copyright &copy; 2020 <a href="https://mirantis.com/">Mirantis Inc.</a> - All rights reserved.
 edit_uri: ""
 nav:
-    - Overview: index.md
+    - Overview: README.md
     - Getting started: 
       - Downloading Lens: getting-started/downloading-lens.md
       - Preferences: getting-started/preferences.md

@@ -8,7 +8,9 @@ Lens is the most powerful Kubernetes IDE on the market. It is a standalone appli
 
 Watch this introductory video to see Lens in action:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/04v2ODsmtIs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Screenshot](img/lens-intro-video-screenshot.png)](https://youtu.be/04v2ODsmtIs)
+
+**Note:** Use CTRL+click (on Windows and Linux) or CMD+click (on MacOS) to open the above in a new tab
 
 ## Downloading Lens
 
