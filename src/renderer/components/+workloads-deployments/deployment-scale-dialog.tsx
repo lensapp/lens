@@ -106,7 +106,7 @@ export class DeploymentScaleDialog extends Component<Props> {
           <div className="slider-container flex align-center">
             <Slider value={desiredReplicas} max={scaleMax} onChange={onChange as any /** see: https://github.com/mui-org/material-ui/issues/20191 */}/>
           </div>
-          <div className="plus-minus-container">
+          <div className="plus-minus-container flex gaps">
             <Icon
               material="add_circle_outline"
               onClick={this.desiredReplicasUp}
