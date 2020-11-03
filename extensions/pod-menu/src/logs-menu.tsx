@@ -22,7 +22,7 @@ export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
     const { object: pod, toolbar } = this.props
     const containers = pod.getAllContainers();
     const statuses = pod.getContainerStatuses();
-    if (!containers.length) return;
+    if (!containers.length) return null;
     return (
       <Component.MenuItem onClick={Util.prevDefault(() => this.showLogs(containers[0]))}>
         <Component.Icon material="subject" title="Logs" interactive={toolbar}/>
