@@ -16,4 +16,4 @@ Watch this introductory video to see Lens in action:
 
 ## Quick Start
 
-Get up and running quickly by learning to [add clusters](/clusters/adding-clusters/).
+Get up and running quickly by learning to [add clusters](clusters/adding-clusters.md).
