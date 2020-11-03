@@ -71,10 +71,14 @@
       "^.+\\.tsx?$": "ts-jest"
     },
     "moduleNameMapper": {
-      "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts"
+      "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts",
+      "^@lingui/macro$": "<rootDir>/__mocks__/@linguiMacro.ts"
     },
     "modulePathIgnorePatterns": [
       "<rootDir>/dist"
+    ],
+    "setupFiles": [
+      "<rootDir>/src/jest.setup.ts"
     ]
   },
   "build": {
@@ -264,6 +268,8 @@
     "@lingui/react": "^3.0.0-13",
     "@material-ui/core": "^4.10.1",
     "@rollup/plugin-json": "^4.1.0",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.0",
     "@types/chart.js": "^2.9.21",
     "@types/circular-dependency-plugin": "^5.0.1",
     "@types/color": "^3.0.1",
@@ -337,6 +343,7 @@
     "identity-obj-proxy": "^3.0.0",
     "include-media": "^1.4.9",
     "jest": "^26.0.1",
+    "jest-fetch-mock": "^3.0.3",
     "jest-mock-extended": "^1.0.10",
     "make-plural": "^6.2.1",
     "mini-css-extract-plugin": "^0.9.0",
