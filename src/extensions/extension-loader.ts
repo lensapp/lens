@@ -50,15 +50,6 @@ export class ExtensionLoader extends BaseStore<ExtensionLoaderStoreModel> {
     return [...this.instances.values()].filter(ext => !ext.isBundled)
   }
 
-  protected handleActivation(ext: LensExtension, addToRegistry: () => Function[]) {
-    if (ext.isEnabled) {
-      this.disposers.set(ext.id, addToRegistry())
-    } else {
-      this.disposers.get(ext.id)?.forEach(dispose => dispose())
-      this.disposers.delete(ext.id)
-    }
-  }
-
   loadOnMain() {
     logger.info('[EXTENSIONS-LOADER]: load on main')
     this.autoInitExtensions();
@@ -94,18 +85,27 @@ export class ExtensionLoader extends BaseStore<ExtensionLoaderStoreModel> {
     })
   }
 
+  protected isEnabledInStore(ext: LensExtension) {
+    const extensionState = this.state.get(ext.id);
+    return !extensionState /*enabled by default*/ || extensionState.isEnabled;
+  }
+
+  protected handleActivation(ext: LensExtension, addToRegistry: () => Function[]) {
+    const enabledInStore = this.isEnabledInStore(ext);
+    if (enabledInStore) {
+      this.disposers.set(ext.id, addToRegistry())
+    } else {
+      this.disposers.get(ext.id)?.forEach(dispose => dispose())
+      this.disposers.delete(ext.id)
+    }
+  }
+
   protected autoEnableExtensions(callback: (ext: LensExtension) => void) {
     return autorun(() => {
       this.instances.forEach(ext => {
-        const extensionState = this.state.get(ext.id);
-        const enabledInStore = !extensionState /*enabled by default*/ || extensionState.isEnabled;
-        if (!ext.isEnabled && enabledInStore) {
-          ext.enable();
-          callback(ext);
-        } else if (ext.isEnabled && !enabledInStore) {
-          ext.disable();
-          callback(ext);
-        }
+        const isEnabled = this.isEnabledInStore(ext);
+        ext.toggle(isEnabled);
+        callback(ext);
       })
     })
   }
