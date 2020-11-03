@@ -1,6 +1,5 @@
 import { action, observable, toJS } from "mobx";
 import logger from "../main/logger";
-import { BaseRegistry } from "./registries/base-registry";
 import type { InstalledExtension } from "./extension-loader";
 
 export type LensExtensionId = string; // path to manifest (package.json)
@@ -24,7 +23,6 @@ export class LensExtension {
   public manifest: LensExtensionManifest;
   public manifestPath: string;
   public isBundled: boolean;
-  protected disposers: (() => void)[] = [];
 
   @observable isEnabled = false;
 
@@ -54,17 +52,15 @@ export class LensExtension {
   async enable() {
     if (this.isEnabled) return;
     this.isEnabled = true;
-    logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
     this.onActivate();
+    logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
   }
 
   @action
   async disable() {
     if (!this.isEnabled) return;
-    this.onDeactivate();
     this.isEnabled = false;
-    this.disposers.forEach(cleanUp => cleanUp());
-    this.disposers.length = 0;
+    this.onDeactivate();
     logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
   }
 
@@ -82,14 +78,6 @@ export class LensExtension {
 
   protected onDeactivate() {
     // mock
-  }
-
-  registerTo<T = any>(registry: BaseRegistry<T>, items: T[] = []) {
-    const disposers = items.map(item => registry.add(item));
-    this.disposers.push(...disposers);
-    return () => {
-      this.disposers = this.disposers.filter(disposer => !disposers.includes(disposer))
-    };
   }
 
   toJSON(): LensExtensionStoreModel {

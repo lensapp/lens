@@ -3,7 +3,7 @@ import type { LensMainExtension } from "./lens-main-extension"
 import type { LensRendererExtension } from "./lens-renderer-extension"
 import path from "path"
 import { broadcastIpc } from "../common/ipc"
-import { action, computed, observable, reaction, toJS } from "mobx"
+import { action, autorun, computed, observable, reaction, toJS } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
 import { BaseStore } from "../common/base-store";
@@ -25,6 +25,8 @@ export function extensionPackagesRoot() {
 }
 
 export class ExtensionLoader extends BaseStore<ExtensionLoaderStoreModel> {
+  protected disposers = new Map<LensExtensionId, Function[]>();
+
   @observable extensions = observable.map<LensExtensionId, InstalledExtension>([], { deep: false });
   @observable instances = observable.map<LensExtensionId, LensExtension>([], { deep: false })
   @observable state = observable.map<LensExtensionId, LensExtensionStoreModel>();
@@ -48,11 +50,22 @@ export class ExtensionLoader extends BaseStore<ExtensionLoaderStoreModel> {
     return [...this.instances.values()].filter(ext => !ext.isBundled)
   }
 
+  protected handleActivation(ext: LensExtension, addToRegistry: () => Function[]) {
+    if (ext.isEnabled) {
+      this.disposers.set(ext.id, addToRegistry())
+    } else {
+      this.disposers.get(ext.id)?.forEach(dispose => dispose())
+      this.disposers.delete(ext.id)
+    }
+  }
+
   loadOnMain() {
     logger.info('[EXTENSIONS-LOADER]: load on main')
     this.autoInitExtensions();
     this.autoEnableExtensions((extension: LensMainExtension) => {
-      extension.registerTo(registries.menuRegistry, extension.appMenus)
+      this.handleActivation(extension, () => [
+        registries.menuRegistry.add(...extension.appMenus)
+      ])
     })
   }
 
@@ -60,10 +73,12 @@ export class ExtensionLoader extends BaseStore<ExtensionLoaderStoreModel> {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
     this.autoInitExtensions();
     this.autoEnableExtensions((extension: LensRendererExtension) => {
-      extension.registerTo(registries.globalPageRegistry, extension.globalPages)
-      extension.registerTo(registries.appPreferenceRegistry, extension.appPreferences)
-      extension.registerTo(registries.clusterFeatureRegistry, extension.clusterFeatures)
-      extension.registerTo(registries.statusBarRegistry, extension.statusBarItems)
+      this.handleActivation(extension, () => [
+        registries.globalPageRegistry.add(...extension.globalPages),
+        registries.appPreferenceRegistry.add(...extension.appPreferences),
+        registries.clusterFeatureRegistry.add(...extension.clusterFeatures),
+        registries.statusBarRegistry.add(...extension.statusBarItems),
+      ])
     })
   }
 
@@ -71,15 +86,17 @@ export class ExtensionLoader extends BaseStore<ExtensionLoaderStoreModel> {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
     this.autoInitExtensions();
     this.autoEnableExtensions((extension: LensRendererExtension) => {
-      extension.registerTo(registries.clusterPageRegistry, extension.clusterPages)
-      extension.registerTo(registries.kubeObjectMenuRegistry, extension.kubeObjectMenuItems)
-      extension.registerTo(registries.kubeObjectDetailRegistry, extension.kubeObjectDetailItems)
+      this.handleActivation(extension, () => [
+        registries.clusterPageRegistry.add(...extension.clusterPages),
+        registries.kubeObjectMenuRegistry.add(...extension.kubeObjectMenuItems),
+        registries.kubeObjectDetailRegistry.add(...extension.kubeObjectDetailItems),
+      ])
     })
   }
 
   protected autoEnableExtensions(callback: (ext: LensExtension) => void) {
-    return reaction(() => this.instances.toJS(), instances => {
-      instances.forEach(ext => {
+    return autorun(() => {
+      this.instances.forEach(ext => {
         const extensionState = this.state.get(ext.id);
         const enabledInStore = !extensionState /*enabled by default*/ || extensionState.isEnabled;
         if (!ext.isEnabled && enabledInStore) {
@@ -87,10 +104,9 @@ export class ExtensionLoader extends BaseStore<ExtensionLoaderStoreModel> {
           callback(ext);
         } else if (ext.isEnabled && !enabledInStore) {
           ext.disable();
+          callback(ext);
         }
       })
-    }, {
-      fireImmediately: true,
     })
   }
 
