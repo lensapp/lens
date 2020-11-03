@@ -61,4 +61,4 @@ To stay current with the Lens features, you can review the [release notes](https
 
 ## Quick Start
 
-Get up and running quickly by learning to [add clusters](/clusters/add-cluster/).
+Get up and running quickly by learning to [add clusters](/clusters/adding-clusters.md/).
