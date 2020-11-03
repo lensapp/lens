@@ -142,8 +142,12 @@ export class ExtensionManager {
         continue
       }
       const absPath = path.resolve(folderPath, fileName);
-      if (!fs.existsSync(absPath) || !fs.lstatSync(absPath).isDirectory()) { // skip non-directories
-        continue;
+      if (!fs.existsSync(absPath)) {
+        continue
+      }
+      const lstat = await fs.lstat(absPath)
+      if (!lstat.isDirectory() && !lstat.isSymbolicLink()) { // skip non-directories
+        continue
       }
       const manifestPath = path.resolve(absPath, "package.json");
       const ext = await this.getByManifest(manifestPath).catch(() => null)
