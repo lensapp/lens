@@ -1,7 +1,7 @@
 import { LensRendererExtension, K8sApi } from "@k8slens/extensions";
 import { resolveStatus, resolveStatusForCronJobs, resolveStatusForPods } from "./src/resolver"
 
-export default class NodeMenuRendererExtension extends LensRendererExtension {
+export default class EventResourceStatusRendererExtension extends LensRendererExtension {
   resourceStatusTexts = [
     {
       kind: "Pod",
