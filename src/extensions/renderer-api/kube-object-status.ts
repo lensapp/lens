@@ -1,0 +1,1 @@
+export { KubeObjectStatus as Status, KubeObjectStatusLevel as Level } from "../registries/kube-object-status-registry"

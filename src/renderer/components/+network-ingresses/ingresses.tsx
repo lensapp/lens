@@ -8,7 +8,7 @@ import { Ingress } from "../../api/endpoints/ingress.api"
 import { ingressStore } from "./ingress.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { Trans } from "@lingui/macro";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -45,7 +45,7 @@ export class Ingresses extends React.Component<Props> {
         ]}
         renderTableContents={(ingress: Ingress) => [
           ingress.getName(),
-          <KubeResourceStatusIcon object={ingress} />,
+          <KubeObjectStatusIcon object={ingress} />,
           ingress.getNs(),
           ingress.getLoadBalancers().map(lb => <p key={lb}>{lb}</p>),
           ingress.getRoutes().map(route => <p key={route}>{route}</p>),

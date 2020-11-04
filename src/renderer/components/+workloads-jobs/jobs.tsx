@@ -11,7 +11,7 @@ import { Job } from "../../api/endpoints/job.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { IJobsRouteParams } from "../+workloads";
 import kebabCase from "lodash/kebabCase";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -54,7 +54,7 @@ export class Jobs extends React.Component<Props> {
             job.getName(),
             job.getNs(),
             `${job.getCompletions()} / ${job.getDesiredCompletions()}`,
-            <KubeResourceStatusIcon object={job}/>,
+            <KubeObjectStatusIcon object={job}/>,
             job.getAge(),
             condition && {
               title: condition.type,

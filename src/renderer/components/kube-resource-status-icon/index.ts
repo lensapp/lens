@@ -1,1 +1,0 @@
-export * from "./kube-resource-status-icon"

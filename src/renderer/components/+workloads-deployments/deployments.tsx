@@ -21,7 +21,7 @@ import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -81,7 +81,7 @@ export class Deployments extends React.Component<Props> {
           deployment.getNs(),
           this.renderPods(deployment),
           deployment.getReplicas(),
-          <KubeResourceStatusIcon object={deployment}/>,
+          <KubeObjectStatusIcon object={deployment}/>,
           deployment.getAge(),
           this.renderConditions(deployment),
         ]}

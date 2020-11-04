@@ -1,6 +1,6 @@
-import { ResourceStatus, K8sApi } from "@k8slens/extensions";
+import { KubeObjectStatus, K8sApi } from "@k8slens/extensions";
 
-export function resolveStatus(object: K8sApi.KubeObject): ResourceStatus.Status {
+export function resolveStatus(object: K8sApi.KubeObject): KubeObjectStatus.Status {
   const eventStore = K8sApi.apiManager.getStore(K8sApi.eventApi)
   const events = (eventStore as K8sApi.EventStore).getEventsByObject(object);
   let warnings = events.filter(evt => evt.isWarning());
@@ -9,13 +9,13 @@ export function resolveStatus(object: K8sApi.KubeObject): ResourceStatus.Status 
   }
   const event = [...warnings, ...events][0]; // get latest event
   return {
-    level: ResourceStatus.Level.WARNING,
+    level: KubeObjectStatus.Level.WARNING,
     text: `${event.message}`,
     timestamp: event.metadata.creationTimestamp
   }
 }
 
-export function resolveStatusForPods(pod: K8sApi.Pod): ResourceStatus.Status {
+export function resolveStatusForPods(pod: K8sApi.Pod): KubeObjectStatus.Status {
   if (!pod.hasIssues()) {
     return null
   }
@@ -27,13 +27,13 @@ export function resolveStatusForPods(pod: K8sApi.Pod): ResourceStatus.Status {
   }
   const event = [...warnings, ...events][0]; // get latest event
   return {
-    level: ResourceStatus.Level.WARNING,
+    level: KubeObjectStatus.Level.WARNING,
     text: `${event.message}`,
     timestamp: event.metadata.creationTimestamp
   }
 }
 
-export function resolveStatusForCronJobs(cronJob: K8sApi.CronJob): ResourceStatus.Status {
+export function resolveStatusForCronJobs(cronJob: K8sApi.CronJob): KubeObjectStatus.Status {
   const eventStore = K8sApi.apiManager.getStore(K8sApi.eventApi)
   let events = (eventStore as K8sApi.EventStore).getEventsByObject(cronJob);
   let warnings = events.filter(evt => evt.isWarning());
@@ -45,7 +45,7 @@ export function resolveStatusForCronJobs(cronJob: K8sApi.CronJob): ResourceStatu
   }
   const event = [...warnings, ...events][0]; // get latest event
   return {
-    level: ResourceStatus.Level.WARNING,
+    level: KubeObjectStatus.Level.WARNING,
     text: `${event.message}`,
     timestamp: event.metadata.creationTimestamp
   }

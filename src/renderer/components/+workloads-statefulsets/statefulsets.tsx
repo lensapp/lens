@@ -11,7 +11,7 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { IStatefulSetsRouteParams } from "../+workloads";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -55,7 +55,7 @@ export class StatefulSets extends React.Component<Props> {
           statefulSet.getName(),
           statefulSet.getNs(),
           this.getPodsLength(statefulSet),
-          <KubeResourceStatusIcon object={statefulSet}/>,
+          <KubeObjectStatusIcon object={statefulSet}/>,
           statefulSet.getAge(),
         ]}
       />

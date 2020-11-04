@@ -9,7 +9,7 @@ import { rolesStore } from "./roles.store";
 import { Role } from "../../api/endpoints";
 import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleDialog } from "./add-role-dialog";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -45,7 +45,7 @@ export class Roles extends React.Component<Props> {
           ]}
           renderTableContents={(role: Role) => [
             role.getName(),
-            <KubeResourceStatusIcon object={role} />,
+            <KubeObjectStatusIcon object={role} />,
             role.getNs() || "-",
             role.getAge(),
           ]}

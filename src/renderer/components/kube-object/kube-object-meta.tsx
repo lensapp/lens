@@ -5,7 +5,7 @@ import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { getDetailsUrl } from "../../navigation";
 import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 export interface Props {
   object: KubeObject;
@@ -37,7 +37,7 @@ export class KubeObjectMeta extends React.Component<Props> {
           {getAge(true, false)} <Trans>ago</Trans> ({creationTimestamp})
         </DrawerItem>
         <DrawerItem name={<Trans>Name</Trans>} hidden={this.isHidden("name")}>
-          {getName()} <KubeResourceStatusIcon object={object} />
+          {getName()} <KubeObjectStatusIcon object={object} />
         </DrawerItem>
         <DrawerItem name={<Trans>Namespace</Trans>} hidden={this.isHidden("namespace") || !getNs()}>
           {getNs()}

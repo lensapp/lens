@@ -11,7 +11,7 @@ import { AddQuotaDialog } from "./add-quota-dialog";
 import { resourceQuotaStore } from "./resource-quotas.store";
 import { IResourceQuotaRouteParams } from "./resource-quotas.route";
 import { apiManager } from "../../api/api-manager";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -47,7 +47,7 @@ export class ResourceQuotas extends React.Component<Props> {
           ]}
           renderTableContents={(resourceQuota: ResourceQuota) => [
             resourceQuota.getName(),
-            <KubeResourceStatusIcon object={resourceQuota}/>,
+            <KubeObjectStatusIcon object={resourceQuota}/>,
             resourceQuota.getNs(),
             resourceQuota.getAge(),
           ]}

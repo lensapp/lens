@@ -16,7 +16,7 @@ import { bytesToUnits } from "../../utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -163,7 +163,7 @@ export class Nodes extends React.Component<Props> {
             const tooltipId = `node-taints-${node.getId()}`;
             return [
               node.getName(),
-              <KubeResourceStatusIcon object={node} />,
+              <KubeObjectStatusIcon object={node} />,
               this.renderCpuUsage(node),
               this.renderMemoryUsage(node),
               this.renderDiskUsage(node),

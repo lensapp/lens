@@ -8,7 +8,7 @@ import { StorageClass, storageClassApi } from "../../api/endpoints/storage-class
 import { KubeObjectListLayout } from "../kube-object";
 import { IStorageClassesRouteParams } from "./storage-classes.route";
 import { storageClassStore } from "./storage-class.store";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -48,7 +48,7 @@ export class StorageClasses extends React.Component<Props> {
         ]}
         renderTableContents={(storageClass: StorageClass) => [
           storageClass.getName(),
-          <KubeResourceStatusIcon object={storageClass} />,
+          <KubeObjectStatusIcon object={storageClass} />,
           storageClass.provisioner,
           storageClass.getReclaimPolicy(),
           storageClass.isDefault() ? <Trans>Yes</Trans> : null,

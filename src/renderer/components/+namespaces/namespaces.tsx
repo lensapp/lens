@@ -10,7 +10,7 @@ import { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
 import { INamespacesRouteParams } from "./namespaces.route";
 import { namespaceStore } from "./namespace.store";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -49,7 +49,7 @@ export class Namespaces extends React.Component<Props> {
           ]}
           renderTableContents={(item: Namespace) => [
             item.getName(),
-            <KubeResourceStatusIcon object={item} />,
+            <KubeObjectStatusIcon object={item} />,
             item.getLabels().map(label => <Badge key={label} label={label}/>),
             item.getAge(),
             { title: item.getStatus(), className: item.getStatus().toLowerCase() },

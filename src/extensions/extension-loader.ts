@@ -8,7 +8,7 @@ import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
 import {
   appPreferenceRegistry, clusterFeatureRegistry, clusterPageRegistry, globalPageRegistry,
-  kubeObjectDetailRegistry, kubeObjectMenuRegistry, menuRegistry, statusBarRegistry, resourceStatusRegistry
+  kubeObjectDetailRegistry, kubeObjectMenuRegistry, menuRegistry, statusBarRegistry, kubeObjectStatusRegistry
 } from "./registries";
 
 export interface InstalledExtension extends ExtensionModel {
@@ -60,7 +60,7 @@ export class ExtensionLoader {
       extension.registerTo(clusterPageRegistry, extension.clusterPages)
       extension.registerTo(kubeObjectMenuRegistry, extension.kubeObjectMenuItems)
       extension.registerTo(kubeObjectDetailRegistry, extension.kubeObjectDetailItems)
-      extension.registerTo(resourceStatusRegistry, extension.resourceStatusTexts)
+      extension.registerTo(kubeObjectStatusRegistry, extension.kubeObjectStatusTexts)
     })
   }
 

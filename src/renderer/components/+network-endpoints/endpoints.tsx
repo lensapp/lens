@@ -8,7 +8,7 @@ import { Endpoint } from "../../api/endpoints/endpoint.api"
 import { endpointStore } from "./endpoints.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { Trans } from "@lingui/macro";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -43,7 +43,7 @@ export class Endpoints extends React.Component<Props> {
         ]}
         renderTableContents={(endpoint: Endpoint) => [
           endpoint.getName(),
-          <KubeResourceStatusIcon object={endpoint} />,
+          <KubeObjectStatusIcon object={endpoint} />,
           endpoint.getNs(),
           endpoint.toString(),
           endpoint.getAge(),

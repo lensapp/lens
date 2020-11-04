@@ -6,7 +6,7 @@ import { Trans } from "@lingui/macro";
 import { KubeObjectListLayout } from "../kube-object";
 import { podSecurityPoliciesStore } from "./pod-security-policies.store";
 import { PodSecurityPolicy, pspApi } from "../../api/endpoints";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -45,7 +45,7 @@ export class PodSecurityPolicies extends React.Component {
         renderTableContents={(item: PodSecurityPolicy) => {
           return [
             item.getName(),
-            <KubeResourceStatusIcon object={item} />,
+            <KubeObjectStatusIcon object={item} />,
             item.isPrivileged() ? <Trans>Yes</Trans> : <Trans>No</Trans>,
             item.getVolumes().join(", "),
             item.getAge(),

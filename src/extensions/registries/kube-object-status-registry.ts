@@ -2,25 +2,25 @@ import { KubeObject } from "../renderer-api/k8s-api";
 
 import { BaseRegistry } from "./base-registry";
 
-export enum ResourceStatusLevel {
+export enum KubeObjectStatusLevel {
   INFO = 1,
   WARNING = 2,
   CRITICAL = 3
 }
 
-export type ResourceStatus = {
+export type KubeObjectStatus = {
   level: number;
   text: string;
   timestamp?: string;
 }
 
-export interface ResourceStatusRegistration {
+export interface KubeObjectStatusRegistration {
   kind: string;
   apiVersions: string[];
-  resolve: (object: KubeObject) => ResourceStatus;
+  resolve: (object: KubeObject) => KubeObjectStatus;
 }
 
-export class ResourceStatusRegistry extends BaseRegistry<ResourceStatusRegistration> {
+export class KubeObjectStatusRegistry extends BaseRegistry<KubeObjectStatusRegistration> {
   getItemsForKind(kind: string, apiVersion: string) {
     return this.items.filter((item) => {
       return item.kind === kind && item.apiVersions.includes(apiVersion)
@@ -28,4 +28,4 @@ export class ResourceStatusRegistry extends BaseRegistry<ResourceStatusRegistrat
   }
 }
 
-export const resourceStatusRegistry = new ResourceStatusRegistry();
+export const kubeObjectStatusRegistry = new KubeObjectStatusRegistry();

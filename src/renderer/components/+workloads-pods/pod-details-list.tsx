@@ -14,7 +14,7 @@ import { showDetails } from "../../navigation";
 import { reaction } from "mobx";
 import { Spinner } from "../spinner";
 import { DrawerTitle } from "../drawer";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -107,7 +107,7 @@ export class PodDetailsList extends React.Component<Props> {
         onClick={prevDefault(() => showDetails(pod.selfLink, false))}
       >
         <TableCell className="name">{pod.getName()}</TableCell>
-        <TableCell className="warning"><KubeResourceStatusIcon object={pod}/></TableCell>
+        <TableCell className="warning"><KubeObjectStatusIcon object={pod}/></TableCell>
         <TableCell className="namespace">{pod.getNs()}</TableCell>
         <TableCell className="cpu">{this.renderCpuUsage(`cpu-${pod.getId()}`, metrics.cpu)}</TableCell>
         <TableCell className="memory">{this.renderMemoryUsage(`memory-${pod.getId()}`, metrics.memory)}</TableCell>

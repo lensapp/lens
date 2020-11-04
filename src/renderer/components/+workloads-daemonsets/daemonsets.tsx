@@ -12,7 +12,7 @@ import { KubeObjectListLayout } from "../kube-object";
 import { IDaemonSetsRouteParams } from "../+workloads";
 import { Trans } from "@lingui/macro";
 import { Badge } from "../badge";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -64,7 +64,7 @@ export class DaemonSets extends React.Component<Props> {
           daemonSet.getName(),
           daemonSet.getNs(),
           this.getPodsLength(daemonSet),
-          <KubeResourceStatusIcon object={daemonSet}/>,
+          <KubeObjectStatusIcon object={daemonSet}/>,
           this.renderNodeSelector(daemonSet),
           daemonSet.getAge(),
         ]}

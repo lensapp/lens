@@ -18,7 +18,7 @@ import toPairs from "lodash/toPairs";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import { lookupApiLink } from "../../api/kube-api";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 
 enum sortBy {
@@ -81,7 +81,7 @@ export class Pods extends React.Component<Props> {
 
   renderPodStatusIcons(pod: Pod) {
     return (
-      <KubeResourceStatusIcon object={pod} />
+      <KubeObjectStatusIcon object={pod} />
     )
   }
   render() {

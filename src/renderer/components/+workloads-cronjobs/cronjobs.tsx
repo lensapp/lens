@@ -16,7 +16,7 @@ import { KubeObjectListLayout } from "../kube-object";
 import { _i18n } from "../../i18n";
 import { CronJobTriggerDialog } from "./cronjob-trigger-dialog";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -62,7 +62,7 @@ export class CronJobs extends React.Component<Props> {
         ]}
         renderTableContents={(cronJob: CronJob) => [
           cronJob.getName(),
-          <KubeResourceStatusIcon object={cronJob} />,
+          <KubeObjectStatusIcon object={cronJob} />,
           cronJob.getNs(),
           cronJob.isNeverRun() ? <Trans>never</Trans> : cronJob.getSchedule(),
           cronJob.getSuspendFlag(),

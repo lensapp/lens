@@ -9,7 +9,7 @@ import { RoleBinding } from "../../api/endpoints";
 import { roleBindingsStore } from "./role-bindings.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -48,7 +48,7 @@ export class RoleBindings extends React.Component<Props> {
         ]}
         renderTableContents={(binding: RoleBinding) => [
           binding.getName(),
-          <KubeResourceStatusIcon object={binding} />,
+          <KubeObjectStatusIcon object={binding} />,
           binding.getSubjectNames(),
           binding.getNs() || "-",
           binding.getAge(),

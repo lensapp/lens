@@ -10,7 +10,7 @@ import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-
 import { KubeObjectListLayout } from "../kube-object";
 import { IConfigMapsRouteParams } from "./config-maps.route";
 import { apiManager } from "../../api/api-manager";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -48,7 +48,7 @@ export class ConfigMaps extends React.Component<Props> {
         ]}
         renderTableContents={(configMap: ConfigMap) => [
           configMap.getName(),
-          <KubeResourceStatusIcon object={configMap}/>,
+          <KubeObjectStatusIcon object={configMap}/>,
           configMap.getNs(),
           configMap.getKeys().join(", "),
           configMap.getAge(),

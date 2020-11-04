@@ -10,7 +10,7 @@ import { HorizontalPodAutoscaler } from "../../api/endpoints/hpa.api";
 import { hpaStore } from "./hpa.store";
 import { Badge } from "../badge";
 import { cssNames } from "../../utils";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -62,7 +62,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
         ]}
         renderTableContents={(hpa: HorizontalPodAutoscaler) => [
           hpa.getName(),
-          <KubeResourceStatusIcon object={hpa} />,
+          <KubeObjectStatusIcon object={hpa} />,
           hpa.getNs(),
           this.getTargets(hpa),
           hpa.getMinPods(),

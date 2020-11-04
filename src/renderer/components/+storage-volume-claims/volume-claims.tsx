@@ -13,7 +13,7 @@ import { unitsToBytes } from "../../utils/convertMemory";
 import { stopPropagation } from "../../utils";
 import { getDetailsUrl } from "../../navigation";
 import { storageClassApi } from "../../api/endpoints";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -68,7 +68,7 @@ export class PersistentVolumeClaims extends React.Component<Props> {
           }));
           return [
             pvc.getName(),
-            <KubeResourceStatusIcon object={pvc} />,
+            <KubeObjectStatusIcon object={pvc} />,
             pvc.getNs(),
             <Link to={storageClassDetailsUrl} onClick={stopPropagation}>
               {storageClassName}

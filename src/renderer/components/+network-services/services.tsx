@@ -9,7 +9,7 @@ import { Service } from "../../api/endpoints/service.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { serviceStore } from "./services.store";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -61,7 +61,7 @@ export class Services extends React.Component<Props> {
         ]}
         renderTableContents={(service: Service) => [
           service.getName(),
-          <KubeResourceStatusIcon object={service} />,
+          <KubeObjectStatusIcon object={service} />,
           service.getNs(),
           service.getType(),
           service.getClusterIp(),

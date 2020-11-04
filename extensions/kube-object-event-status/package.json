@@ -1,7 +1,7 @@
 {
-  "name": "event-resource-status",
+  "name": "kube-object-event-status",
   "version": "0.1.0",
-  "description": "Adds resource status from events",
+  "description": "Adds kube object status from events",
   "renderer": "dist/renderer.js",
   "lens": {
     "metadata": {},

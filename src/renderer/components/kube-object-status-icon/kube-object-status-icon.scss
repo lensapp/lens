@@ -1,32 +1,32 @@
-.ResourceStatusIcon {
+.KubeObjectStatusIcon {
   &.warning {
     color: $golden;
   }
 }
 
-.ResourceStatusTooltip {
+.KubeObjectStatusTooltip {
   white-space: normal;
 
-
-  .ResourceStatusLevel {
+  .level {
     padding: 4px;
 
     &:not(:only-child):not(:last-child) {
       border-bottom: 1px solid $borderFaintColor;
     }
 
+    .title {
+      font-weight: bold;
+      .Icon {
+        margin-right: $margin;
+      }
+    }
+
     .msg {
       margin: $margin / 2
     }
+
     .age {
       color: $halfGray;
-    }
-  }
-
-  .ResourceStatusTitle {
-    font-weight: bold;
-    .Icon {
-      margin-right: $margin;
     }
   }
 }

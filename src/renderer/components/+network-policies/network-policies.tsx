@@ -8,7 +8,7 @@ import { NetworkPolicy } from "../../api/endpoints/network-policy.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { INetworkPoliciesRouteParams } from "./network-policies.route";
 import { networkPolicyStore } from "./network-policy.store";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -43,7 +43,7 @@ export class NetworkPolicies extends React.Component<Props> {
         ]}
         renderTableContents={(item: NetworkPolicy) => [
           item.getName(),
-          <KubeResourceStatusIcon object={item} />,
+          <KubeObjectStatusIcon object={item} />,
           item.getNs(),
           item.getTypes().join(", "),
           item.getAge(),

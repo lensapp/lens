@@ -12,7 +12,7 @@ import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { secretsStore } from "./secrets.store";
 import { apiManager } from "../../api/api-manager";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -57,7 +57,7 @@ export class Secrets extends React.Component<Props> {
           ]}
           renderTableContents={(secret: Secret) => [
             secret.getName(),
-            <KubeResourceStatusIcon object={secret} />,
+            <KubeObjectStatusIcon object={secret} />,
             secret.getNs(),
             secret.getLabels().map(label => <Badge key={label} label={label}/>),
             secret.getKeys().join(", "),

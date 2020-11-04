@@ -14,7 +14,7 @@ import { IServiceAccountsRouteParams } from "../+user-management";
 import { serviceAccountsStore } from "./service-accounts.store";
 import { CreateServiceAccountDialog } from "./create-service-account-dialog";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
-import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -49,7 +49,7 @@ export class ServiceAccounts extends React.Component<Props> {
           ]}
           renderTableContents={(account: ServiceAccount) => [
             account.getName(),
-            <KubeResourceStatusIcon object={account} />,
+            <KubeObjectStatusIcon object={account} />,
             account.getNs(),
             account.getAge(),
           ]}

@@ -191,7 +191,7 @@
       "metrics-cluster-feature",
       "license-menu-item",
       "support-page",
-      "event-resource-status"
+      "kube-object-event-status"
     ]
   },
   "dependencies": {
