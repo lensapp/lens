@@ -1,11 +1,17 @@
-import type { LensExtensionManifest } from "./lens-extension"
+import type { LensExtensionId, LensExtensionManifest } from "./lens-extension"
 import path from "path"
 import os from "os"
 import fs from "fs-extra"
+import child_process from "child_process";
 import logger from "../main/logger"
-import { extensionPackagesRoot, InstalledExtension } from "./extension-loader"
-import * as child_process from 'child_process';
+import { extensionPackagesRoot } from "./extension-loader"
 import { getBundledExtensions } from "../common/utils/app-version"
+
+export interface InstalledExtension {
+  manifest: LensExtensionManifest;
+  manifestPath: string;
+  isBundled?: boolean; // defined in package.json
+}
 
 type Dependencies = {
   [name: string]: string;
@@ -51,7 +57,7 @@ export class ExtensionManager {
     return path.join(this.extensionPackagesRoot, "package.json")
   }
 
-  async load(): Promise<Map<string, InstalledExtension>> {
+  async load(): Promise<Map<LensExtensionId, InstalledExtension>> {
     logger.info("[EXTENSION-MANAGER] loading extensions from " + this.extensionPackagesRoot)
     if (fs.existsSync(path.join(this.extensionPackagesRoot, "package-lock.json"))) {
       await fs.remove(path.join(this.extensionPackagesRoot, "package-lock.json"))
@@ -71,7 +77,7 @@ export class ExtensionManager {
     return await this.loadExtensions();
   }
 
-  async getByManifest(manifestPath: string): Promise<InstalledExtension> {
+  protected async getByManifest(manifestPath: string): Promise<InstalledExtension> {
     let manifestJson: LensExtensionManifest;
     try {
       fs.accessSync(manifestPath, fs.constants.F_OK); // check manifest file for existence
@@ -81,7 +87,7 @@ export class ExtensionManager {
       logger.info("[EXTENSION-MANAGER] installed extension " + manifestJson.name)
       return {
         manifestPath: path.join(this.nodeModulesPath, manifestJson.name, "package.json"),
-        manifest: manifestJson
+        manifest: manifestJson,
       }
     } catch (err) {
       logger.error(`[EXTENSION-MANAGER]: can't install extension at ${manifestPath}: ${err}`, { manifestJson });

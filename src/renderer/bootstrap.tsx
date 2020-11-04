@@ -13,7 +13,6 @@ import { i18nStore } from "./i18n";
 import { themeStore } from "./theme.store";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
-import { extensionLoader } from "../extensions/extension-loader";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
@@ -35,7 +34,6 @@ export async function bootstrap(App: AppComponent) {
     userStore.load(),
     workspaceStore.load(),
     clusterStore.load(),
-    extensionLoader.load(),
     i18nStore.init(),
     themeStore.init(),
   ]);
