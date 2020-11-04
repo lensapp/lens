@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.0-alpha.3 (current version)
+## 4.0.0-alpha.4 (current version)
 
 - Extension API
 - Improved pod logs
@@ -14,6 +14,8 @@ Here you can find description of changes we've built into each release. While we
 - Status bar visual fixes
 - Fix proxy upgrade socket timeouts
 - Fix UI staleness after network issues
+- Add +/- buttons in scale deployment popup screen
+- Update chart details when selecting another chart
 
 ## 3.6.6
 - Fix labels' word boundary to cover only drawer badges
