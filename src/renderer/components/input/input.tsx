@@ -3,7 +3,7 @@ import "./input.scss";
 import React, { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { autobind, cssNames, debouncePromise } from "../../utils";
 import { Icon } from "../icon";
-import { conditionalValidators, Validator } from "./input.validators";
+import { conditionalValidators, Validator } from "./input_validators";
 import isString from "lodash/isString"
 import isFunction from "lodash/isFunction"
 import isBoolean from "lodash/isBoolean"
@@ -288,9 +288,9 @@ export class Input extends React.Component<InputProps, State> {
     return (
       <div className={className}>
         <label className="input-area flex gaps align-center">
-          {isString(iconLeft) ? <Icon material={iconLeft}/> : iconLeft}
-          {multiLine ? <textarea {...inputProps as any}/> : <input {...inputProps as any}/>}
-          {isString(iconRight) ? <Icon material={iconRight}/> : iconRight}
+          {isString(iconLeft) ? <Icon material={iconLeft} /> : iconLeft}
+          {multiLine ? <textarea {...inputProps as any} /> : <input {...inputProps as any} />}
+          {isString(iconRight) ? <Icon material={iconRight} /> : iconRight}
         </label>
         <div className="input-info flex gaps">
           {!valid && dirty && (

@@ -1,0 +1,29 @@
+{
+  "name": "lens-telemetry",
+  "version": "0.1.0",
+  "description": "Lens telemetry",
+  "main": "dist/main.js",
+  "renderer": "dist/renderer.js",
+  "lens": {
+    "metadata": {},
+    "styles": []
+  },
+  "scripts": {
+    "build": "webpack -p",
+    "dev": "webpack --watch",
+    "test": "echo NO TESTS"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
+    "@types/analytics-node": "^3.1.3",
+    "ts-loader": "^8.0.4",
+    "typescript": "^4.0.3",
+    "webpack": "^4.44.2",
+    "mobx": "^5.15.5",
+    "react": "^16.13.1",
+    "node-machine-id": "^1.1.12",
+    "universal-analytics": "^0.4.23",
+    "analytics-node": "^3.4.0-beta.3"
+  }
+}

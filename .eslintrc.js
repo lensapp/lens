@@ -1,9 +1,11 @@
 module.exports =  {
+  ignorePatterns: ["src/extensions/npm/extensions/api.d.ts"],
   overrides: [
     {
       files: [
         "src/renderer/**/*.js",
         "build/**/*.js",
+        "extensions/**/*.js"
       ],
       extends: [
         'eslint:recommended',
@@ -24,7 +26,10 @@ module.exports =  {
       files: [
         "build/*.ts",
         "src/**/*.ts",
-        "integration/**/*.ts"
+        "integration/**/*.ts",
+        "src/extensions/**/*.ts*",
+        "extensions/**/*.ts*",
+        "__mocks__/*.ts",
       ],
       parser: "@typescript-eslint/parser",
       extends:  [

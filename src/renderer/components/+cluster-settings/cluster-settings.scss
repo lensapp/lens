@@ -1,87 +1,51 @@
 .ClusterSettings {
-  .WizardLayout {
-    grid-template-columns: unset;
-    grid-template-rows: 76px 1fr;
-    padding: 0;
+  $spacing: $padding * 3;
 
-    .head-col {
-      justify-content: space-between;
+  > .content-wrapper {
+    --flex-gap: #{$spacing};
+  }
 
-      :nth-child(2) {
-        flex: 1 0 0;
-      }
-    }
+  // TODO: move sub-component styles to separate files
+  .admin-note {
+    font-size: small;
+    opacity: 0.5;
+    margin-left: $margin;
+  }
 
-    .content-col {
-      margin: 0;
-      padding-top: $padding * 3;
-      background-color: $clusterSettingsBackground;
+  .button-area {
+    margin-top: $margin * 2;
+  }
 
-      .SubTitle {
-        text-transform: none;
-      }
+  .file-loader {
+    margin-top: $margin * 2;
+  }
 
-      > div {
-        margin-top: $margin * 5;
-      }
+  .status-table {
+    margin: $spacing 0;
 
-      .admin-note {
-        font-size: small;
-        opacity: 0.5;
-        margin-left: $margin;
-      }
+    .Table {
+      border: 1px solid var(--drawerSubtitleBackground);
+      border-radius: $radius;
 
-      .button-area {
-        margin-top: $margin * 2;
-      }
+      .TableRow {
+        &:not(:last-of-type) {
+          border-bottom: 1px solid var(--drawerSubtitleBackground);
+        }
 
-      .file-loader {
-        margin-top: $margin * 2;
-      }
+        .value {
+          flex-grow: 2;
+          word-break: break-word;
+          color: var(--textColorSecondary);
+        }
 
-      .hint {
-        font-size: smaller;
-        opacity: 0.8;
-      }
-
-      p + p, .hint + p {
-        padding-top: $padding;
-      }
-    }
-
-    .status-table {
-      margin: $margin * 3 0;
-
-      .Table {
-        border: 1px solid var(--drawerSubtitleBackground);
-        border-radius: $radius;
-
-        .TableRow {
-          &:not(:last-of-type) {
-            border-bottom: 1px solid var(--drawerSubtitleBackground);
-          }
-
-          .value {
-            flex-grow: 2;
-            word-break: break-word;
-            color: var(--textColorSecondary);
-          }
-
-          .link {
-            @include pseudo-link;
-          }
+        .link {
+          @include pseudo-link;
         }
       }
     }
+  }
 
-    .Input, .Select {
-      margin-top: 10px;
-    }
-
-    .Select {
-      &__control {
-        box-shadow: 0 0 0 1px $borderFaintColor;
-      }
-    }
+  .Input, .Select {
+    margin-top: $padding;
   }
 }

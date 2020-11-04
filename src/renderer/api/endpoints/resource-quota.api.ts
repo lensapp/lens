@@ -32,6 +32,8 @@ export interface IResourceQuotaValues {
 
 export class ResourceQuota extends KubeObject {
   static kind = "ResourceQuota"
+  static namespaced = true
+  static apiBase = "/api/v1/resourcequotas"
 
   constructor(data: KubeJsonApiData) {
     super(data);
@@ -61,8 +63,5 @@ export class ResourceQuota extends KubeObject {
 }
 
 export const resourceQuotaApi = new KubeApi({
-  kind: ResourceQuota.kind,
-  apiBase: "/api/v1/resourcequotas",
-  isNamespaced: true,
   objectConstructor: ResourceQuota,
 });

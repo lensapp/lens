@@ -1,5 +1,9 @@
 import "./components/app.scss"
+
 import React from "react";
+import * as Mobx from "mobx"
+import * as MobxReact from "mobx-react"
+import * as LensExtensions from "../extensions/extension-api"
 import { render, unmountComponentAtNode } from "react-dom";
 import { isMac } from "../common/vars";
 import { userStore } from "../common/user-store";
@@ -11,7 +15,14 @@ import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 
 type AppComponent = React.ComponentType & {
-  init?(): void;
+  init?(): Promise<void>;
+}
+
+export {
+  React,
+  Mobx,
+  MobxReact,
+  LensExtensions
 }
 
 export async function bootstrap(App: AppComponent) {
@@ -29,6 +40,7 @@ export async function bootstrap(App: AppComponent) {
 
   // Register additional store listeners
   clusterStore.registerIpcListener();
+  workspaceStore.registerIpcListener();
 
   // init app's dependencies if any
   if (App.init) {

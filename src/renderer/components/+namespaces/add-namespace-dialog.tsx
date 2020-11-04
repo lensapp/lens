@@ -10,7 +10,7 @@ import { Wizard, WizardStep } from "../wizard";
 import { namespaceStore } from "./namespace.store";
 import { Namespace } from "../../api/endpoints";
 import { Input } from "../input";
-import { systemName } from "../input/input.validators";
+import { systemName } from "../input/input_validators";
 import { Notifications } from "../notifications";
 
 interface Props extends DialogProps {

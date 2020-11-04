@@ -7,6 +7,8 @@ import { KubeApi } from "../kube-api";
 @autobind()
 export class KubeEvent extends KubeObject {
   static kind = "Event"
+  static namespaced = true
+  static apiBase = "/api/v1/events"
 
   involvedObject: {
     kind: string;
@@ -52,8 +54,5 @@ export class KubeEvent extends KubeObject {
 }
 
 export const eventApi = new KubeApi({
-  kind: KubeEvent.kind,
-  apiBase: "/api/v1/events",
-  isNamespaced: true,
   objectConstructor: KubeEvent,
 })

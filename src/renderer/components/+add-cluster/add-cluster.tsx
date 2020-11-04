@@ -13,7 +13,7 @@ import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { WizardLayout } from "../layout/wizard-layout";
-import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig } from "../../../common/kube-helpers";
+import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
 import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid"
@@ -23,6 +23,7 @@ import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Tab, Tabs } from "../tabs";
+import { ExecValidationNotFoundError } from "../../../common/custom-errors";
 
 enum KubeConfigSourceTab {
   FILE = "file",
@@ -45,6 +46,7 @@ export class AddCluster extends React.Component {
   @observable dropAreaActive = false;
 
   componentDidMount() {
+    clusterStore.setActive(null);
     this.setKubeConfig(userStore.kubeConfigPath);
   }
 
@@ -117,7 +119,9 @@ export class AddCluster extends React.Component {
     }
   }
 
+  @action
   addClusters = () => {
+    let newClusters: ClusterModel[] = [];
     try {
       if (!this.selectedContexts.length) {
         this.error = <Trans>Please select at least one cluster context</Trans>
@@ -125,7 +129,22 @@ export class AddCluster extends React.Component {
       }
       this.error = ""
       this.isWaiting = true
-      const newClusters: ClusterModel[] = this.selectedContexts.map(context => {
+
+      newClusters = this.selectedContexts.filter(context => {
+        try {
+          const kubeConfig = this.kubeContexts.get(context);
+          validateKubeConfig(kubeConfig);
+          return true;
+        } catch (err) {
+          this.error = String(err.message)
+          if (err instanceof ExecValidationNotFoundError ) {
+            Notifications.error(<Trans>Error while adding cluster(s): {this.error}</Trans>);
+            return false;
+          } else {
+            throw new Error(err);
+          }
+        }
+      }).map(context => {
         const clusterId = uuid();
         const kubeConfig = this.kubeContexts.get(context);
         const kubeConfigPath = this.sourceTab === KubeConfigSourceTab.FILE
@@ -141,17 +160,20 @@ export class AddCluster extends React.Component {
             httpsProxy: this.proxyServer || undefined,
           },
         }
-      });
+      })
+
       runInAction(() => {
-        clusterStore.addCluster(...newClusters);
+        clusterStore.addClusters(...newClusters);
         if (newClusters.length === 1) {
           const clusterId = newClusters[0].id;
           clusterStore.setActive(clusterId);
           navigate(clusterViewURL({ params: { clusterId } }));
         } else {
-          Notifications.ok(
-            <Trans>Successfully imported <b>{newClusters.length}</b> cluster(s)</Trans>
-          );
+          if (newClusters.length > 1) {
+            Notifications.ok(
+              <Trans>Successfully imported <b>{newClusters.length}</b> cluster(s)</Trans>
+            );
+          }
         }
       })
       this.refreshContexts();

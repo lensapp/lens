@@ -38,6 +38,8 @@ export interface IPolicyEgress {
 @autobind()
 export class NetworkPolicy extends KubeObject {
   static kind = "NetworkPolicy"
+  static namespaced = true
+  static apiBase = "/apis/networking.k8s.io/v1/networkpolicies"
 
   spec: {
     podSelector: {
@@ -65,8 +67,5 @@ export class NetworkPolicy extends KubeObject {
 }
 
 export const networkPolicyApi = new KubeApi({
-  kind: NetworkPolicy.kind,
-  apiBase: "/apis/networking.k8s.io/v1/networkpolicies",
-  isNamespaced: true,
   objectConstructor: NetworkPolicy,
 });

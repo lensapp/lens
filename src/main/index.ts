@@ -2,13 +2,15 @@
 
 import "../common/system-ca"
 import "../common/prometheus-providers"
+import * as Mobx from "mobx"
+import * as LensExtensions from "../extensions/core-api";
 import { app, dialog } from "electron"
 import { appName } from "../common/vars";
 import path from "path"
 import { LensProxy } from "./lens-proxy"
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
-import AppUpdater from "./app-updater"
+import { AppUpdater } from "./app-updater"
 import { shellSync } from "./shell-sync"
 import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
@@ -16,50 +18,51 @@ import { registerFileProtocol } from "../common/register-protocol";
 import { clusterStore } from "../common/cluster-store"
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
-import { tracker } from "../common/tracker";
+import { appEventBus } from "../common/event-bus"
+import { extensionManager } from "../extensions/extension-manager";
+import { extensionLoader } from "../extensions/extension-loader";
 import logger from "./logger"
 
 const workingDir = path.join(app.getPath("appData"), appName);
+let proxyPort: number;
+let proxyServer: LensProxy;
+let clusterManager: ClusterManager;
+let windowManager: WindowManager;
+
 app.setName(appName);
 if (!process.env.CICD) {
   app.setPath("userData", workingDir);
 }
-
-let windowManager: WindowManager;
-let clusterManager: ClusterManager;
-let proxyServer: LensProxy;
 
 mangleProxyEnv()
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server")
 }
 
-async function main() {
-  await shellSync();
+app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`)
+  await shellSync();
 
-  tracker.event("app", "start");
   const updater = new AppUpdater()
   updater.start();
 
   registerFileProtocol("static", __static);
 
-  // find free port
-  let proxyPort: number
-  try {
-    proxyPort = await getFreePort()
-  } catch (error) {
-    logger.error(error)
-    dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy")
-    app.quit();
-  }
-
-  // preload configuration from stores
+  // preload isomorphic stores
   await Promise.all([
     userStore.load(),
     clusterStore.load(),
     workspaceStore.load(),
   ]);
+
+  // find free port
+  try {
+    proxyPort = await getFreePort()
+  } catch (error) {
+    logger.error(error)
+    dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy")
+    app.exit();
+  }
 
   // create cluster manager
   clusterManager = new ClusterManager(proxyPort);
@@ -70,18 +73,42 @@ async function main() {
   } catch (error) {
     logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error.message}`)
     dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error.message || "unknown error"}`)
-    app.quit();
+    app.exit();
   }
 
-  // create window manager and open app
   windowManager = new WindowManager(proxyPort);
-}
 
-app.on("ready", main);
+  LensExtensionsApi.windowManager = windowManager; // expose to extensions
+  extensionLoader.loadOnMain()
+  extensionLoader.extensions.replace(await extensionManager.load())
+  extensionLoader.broadcastExtensions()
 
-app.on("will-quit", async (event) => {
-  event.preventDefault(); // To allow mixpanel sending to be executed
-  if (proxyServer) proxyServer.close()
-  if (clusterManager) clusterManager.stop()
-  app.exit();
+  setTimeout(() => {
+    appEventBus.emit({ name: "app", action: "start" })
+  }, 1000)
+});
+
+app.on("activate", (event, hasVisibleWindows) => {
+  logger.info('APP:ACTIVATE', { hasVisibleWindows })
+  if (!hasVisibleWindows) {
+    windowManager.initMainWindow();
+  }
+});
+
+// Quit app on Cmd+Q (MacOS)
+app.on("will-quit", (event) => {
+  logger.info('APP:QUIT');
+  event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
+  clusterManager?.stop(); // close cluster connections
+  return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
 })
+
+// Extensions-api runtime exports
+export const LensExtensionsApi = {
+  ...LensExtensions,
+};
+
+export {
+  Mobx,
+  LensExtensionsApi as LensExtensions,
+}

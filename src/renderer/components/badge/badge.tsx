@@ -18,13 +18,6 @@ export class Badge extends React.Component<Props> {
         {label}
         {children}
       </span>
-      { /**
-          * This is a zero-width-space. It makes there be a word seperation
-          * between adjacent Badge's because <span>'s are ignored for browers'
-          * word detection algorithmns use for determining the extent of the
-          * text to highlight on multi-click sequences.
-          */}
-      &#8203;
     </>
   }
 }

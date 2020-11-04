@@ -70,20 +70,7 @@ export class Services extends React.Component<Props> {
           service.getAge(),
           { title: service.getStatus(), className: service.getStatus().toLowerCase() },
         ]}
-        renderItemMenu={(item: Service) => {
-          return <ServiceMenu object={item}/>
-        }}
       />
     )
   }
 }
-
-export function ServiceMenu(props: KubeObjectMenuProps<Service>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(serviceApi, {
-  Menu: ServiceMenu
-})

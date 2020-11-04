@@ -72,20 +72,7 @@ export class PersistentVolumes extends React.Component<Props> {
             { title: volume.getStatus(), className: volume.getStatus().toLowerCase() }
           ]
         }}
-        renderItemMenu={(item: PersistentVolume) => {
-          return <PersistentVolumeMenu object={item}/>
-        }}
       />
     )
   }
 }
-
-export function PersistentVolumeMenu(props: KubeObjectMenuProps<PersistentVolume>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(persistentVolumeApi, {
-  Menu: PersistentVolumeMenu,
-})

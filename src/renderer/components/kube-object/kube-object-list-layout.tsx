@@ -6,6 +6,7 @@ import { KubeObject } from "../../api/kube-object";
 import { getSelectedDetails, showDetails } from "../../navigation";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
 import { KubeObjectStore } from "../../kube-object.store";
+import { KubeObjectMenu } from "./kube-object-menu";
 
 export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
   store: KubeObjectStore;
@@ -34,6 +35,9 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
         className={cssNames("KubeObjectListLayout", className)}
         detailsItem={this.selectedItem}
         onDetails={this.onDetails}
+        renderItemMenu={(item) => {
+          return <KubeObjectMenu object={item}/>
+        }}
       />
     );
   }

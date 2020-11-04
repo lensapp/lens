@@ -1,13 +1,28 @@
 .BottomBar {
   $spacing: $padding / 2;
+  --flex-gap: #{$spacing};
 
   font-size: $font-size-small;
   background-color: #3d90ce;
-  padding: $padding / 4 $padding;
+  padding: 0 2px;
   color: white;
+  height: 22px;
 
   #current-workspace {
-    --flex-gap: #{$spacing};
+    padding: $padding / 4 $padding / 2;
     cursor: pointer;
+  }
+
+  .hover-highlight {
+    &:hover {
+      background-color: #ffffff33;
+      cursor: pointer;
+    }
+  }
+
+  .extensions {
+    > * {
+      padding: $padding / 4 $padding / 2;
+    }
   }
 }

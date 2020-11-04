@@ -10,7 +10,7 @@ export class DeploymentApi extends KubeApi<Deployment> {
   getReplicas(params: { namespace: string; name: string }): Promise<number> {
     return this.request
       .get(this.getScaleApiUrl(params))
-      .then(({ status }: any) => status.replicas)
+      .then(({ status }: any) => status?.replicas)
   }
 
   scale(params: { namespace: string; name: string }, replicas: number) {
@@ -28,6 +28,8 @@ export class DeploymentApi extends KubeApi<Deployment> {
 @autobind()
 export class Deployment extends WorkloadKubeObject {
   static kind = "Deployment"
+  static namespaced = true
+  static apiBase = "/apis/apps/v1/deployments"
 
   spec: {
     replicas: number;
@@ -164,8 +166,5 @@ export class Deployment extends WorkloadKubeObject {
 }
 
 export const deploymentApi = new DeploymentApi({
-  kind: Deployment.kind,
-  apiBase: "/apis/apps/v1/deployments",
-  isNamespaced: true,
   objectConstructor: Deployment,
 });

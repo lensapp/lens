@@ -14,6 +14,7 @@ import { KubeObjectDetailsProps } from "../kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { Input } from "../input";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
@@ -133,6 +134,10 @@ export class CRDDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(crdApi, {
-  Details: CRDDetails
+kubeObjectDetailRegistry.add({
+  kind: "CustomResourceDefinition",
+  apiVersions: ["apiextensions.k8s.io/v1", "apiextensions.k8s.io/v1beta1"],
+  components: {
+    Details: (props) => <CRDDetails {...props} />
+  }
 })

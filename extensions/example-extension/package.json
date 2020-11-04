@@ -1,0 +1,25 @@
+{
+  "name": "extension-example",
+  "version": "1.0.0",
+  "description": "Example extension",
+  "main": "dist/main.js",
+  "renderer": "dist/renderer.js",
+  "lens": {
+    "metadata": {},
+    "styles": []
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "dev": "npm run build --watch",
+    "test": "echo NO TESTS"
+  },
+  "dependencies": {
+    "react-open-doodles": "^1.0.5"
+  },
+  "devDependencies": {
+    "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
+    "ts-loader": "^8.0.4",
+    "typescript": "^4.0.3",
+    "webpack": "^4.44.2"
+  }
+}

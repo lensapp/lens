@@ -1,0 +1,64 @@
+.PageLayout {
+  $spacing: $padding * 2;
+
+  position: relative;
+  height: 100%;
+  display: grid !important;
+  grid-template-rows: min-content 1fr;
+
+  // covers whole app view area
+  &.top {
+    position: fixed !important; // allow to cover ClustersMenu
+    z-index: 1;
+
+    // adds extra space for traffic-light top buttons (mac only)
+    .is-mac & > .header {
+      padding-top: $spacing * 2;
+    }
+  }
+
+  > .header {
+    position: sticky;
+    padding: $spacing;
+    background-color: $layoutTabsBackground;
+  }
+
+  > .content-wrapper {
+    @include custom-scrollbar-themed;
+    padding: $spacing * 2;
+
+    > .content {
+      margin: 0 auto;
+      width: 60%;
+      min-width: 570px;
+      max-width: 1000px;
+    }
+  }
+
+  h2:not(:first-of-type) {
+    margin-top: $spacing;
+  }
+
+  p {
+    line-height: 140%;
+  }
+
+  a {
+    color: $colorInfo;
+  }
+
+  .SubTitle {
+    text-transform: none;
+    margin-bottom: 0 !important;
+
+    + * + .hint {
+      margin-top: -$padding / 2;
+    }
+  }
+
+  .Select {
+    &__control {
+      box-shadow: 0 0 0 1px $borderFaintColor;
+    }
+  }
+}

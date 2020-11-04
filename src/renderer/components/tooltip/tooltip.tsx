@@ -11,6 +11,10 @@ export enum TooltipPosition {
   BOTTOM = "bottom",
   LEFT = "left",
   RIGHT = "right",
+  TOP_LEFT = "top_left",
+  TOP_RIGHT = "top_right",
+  BOTTOM_LEFT = "bottom_left",
+  BOTTOM_RIGHT = "bottom_right",
 }
 
 export interface TooltipProps {
@@ -19,7 +23,7 @@ export interface TooltipProps {
   visible?: boolean; // initial visibility
   offset?: number; // offset from target element in pixels (all sides)
   usePortal?: boolean; // renders element outside of parent (in body), disable for "easy-styling", default: true
-  position?: TooltipPosition;
+  preferredPositions?: TooltipPosition | TooltipPosition[];
   className?: IClassName;
   formatters?: TooltipContentFormatters;
   style?: React.CSSProperties;
@@ -82,17 +86,25 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   @autobind()
   refreshPosition() {
-    const { position } = this.props;
+    const { preferredPositions } = this.props;
     const { elem, targetElem } = this;
 
-    const positionPreference = new Set<TooltipPosition>();
-    if (typeof position !== "undefined") {
-      positionPreference.add(position);
+    let positions = new Set<TooltipPosition>([
+      TooltipPosition.RIGHT,
+      TooltipPosition.BOTTOM,
+      TooltipPosition.TOP,
+      TooltipPosition.LEFT,
+      TooltipPosition.TOP_RIGHT,
+      TooltipPosition.TOP_LEFT,
+      TooltipPosition.BOTTOM_RIGHT,
+      TooltipPosition.BOTTOM_LEFT,
+    ]);
+    if (preferredPositions) {
+      positions = new Set([
+        ...[preferredPositions].flat(),
+        ...positions,
+      ])
     }
-    positionPreference.add(TooltipPosition.RIGHT)
-      .add(TooltipPosition.BOTTOM)
-      .add(TooltipPosition.TOP)
-      .add(TooltipPosition.LEFT)
 
     // reset position first and get all possible client-rect area for tooltip element
     this.setPosition({ left: 0, top: 0 });
@@ -102,20 +114,20 @@ export class Tooltip extends React.Component<TooltipProps> {
     const { innerWidth: viewportWidth, innerHeight: viewportHeight } = window;
 
     // find proper position
-    for (const pos of positionPreference) {
+    for (const pos of positions) {
       const { left, top, right, bottom } = this.getPosition(pos, selfBounds, targetBounds)
       const fitsToWindow = left >= 0 && top >= 0 && right <= viewportWidth && bottom <= viewportHeight;
       if (fitsToWindow) {
         this.activePosition = pos;
         this.setPosition({ top, left });
-        
         return;
       }
     }
 
-    const preferedPosition = Array.from(positionPreference)[0];
-    const { left, top } = this.getPosition(preferedPosition, selfBounds, targetBounds)
-    this.activePosition = preferedPosition;
+    // apply fallback position if nothing helped from above
+    const fallbackPosition = Array.from(positions)[0];
+    const { left, top } = this.getPosition(fallbackPosition, selfBounds, targetBounds)
+    this.activePosition = fallbackPosition;
     this.setPosition({ left, top });
   }
 
@@ -125,35 +137,54 @@ export class Tooltip extends React.Component<TooltipProps> {
     elemStyle.top = pos.top + "px"
   }
 
-  protected getPosition(position: TooltipPosition, selfBounds: DOMRect, targetBounds: DOMRect) {
-    let left: number
-    let top: number
+  protected getPosition(position: TooltipPosition, tooltipBounds: DOMRect, targetBounds: DOMRect) {
+    let left: number;
+    let top: number;
     const offset = this.props.offset;
-    const horizontalCenter = targetBounds.left + (targetBounds.width - selfBounds.width) / 2;
-    const verticalCenter = targetBounds.top + (targetBounds.height - selfBounds.height) / 2;
+    const horizontalCenter = targetBounds.left + (targetBounds.width - tooltipBounds.width) / 2;
+    const verticalCenter = targetBounds.top + (targetBounds.height - tooltipBounds.height) / 2;
+    const topCenter = targetBounds.top - tooltipBounds.height - offset;
+    const bottomCenter = targetBounds.bottom + offset;
     switch (position) {
     case "top":
       left = horizontalCenter;
-      top = targetBounds.top - selfBounds.height - offset;
+      top = topCenter;
       break;
     case "bottom":
       left = horizontalCenter;
-      top = targetBounds.bottom + offset;
+      top = bottomCenter;
       break;
     case "left":
       top = verticalCenter;
-      left = targetBounds.left - selfBounds.width - offset;
+      left = targetBounds.left - tooltipBounds.width - offset;
       break;
     case "right":
       top = verticalCenter;
       left = targetBounds.right + offset;
       break;
+    case "top_left":
+      left = targetBounds.left;
+      top = topCenter;
+      break;
+    case "top_right":
+    default:
+      left = targetBounds.right - tooltipBounds.width;
+      top = topCenter;
+      break;
+    case "bottom_left":
+      top = bottomCenter;
+      left = targetBounds.left;
+      break;
+    case "bottom_right":
+      top = bottomCenter;
+      left = targetBounds.right - tooltipBounds.width;
+      break;
     }
     return {
       left: left,
       top: top,
-      right: left + selfBounds.width,
-      bottom: top + selfBounds.height,
+      right: left + tooltipBounds.width,
+      bottom: top + tooltipBounds.height,
     };
   }
 

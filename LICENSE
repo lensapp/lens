@@ -1,8 +1,13 @@
-MIT License
-
 Copyright (c) 2020 Mirantis, Inc.
 
-All rights reserved.
+Portions of this software are licensed as follows:
+
+* All content residing under the "docs/" directory of this repository, if that 
+directory exists, is licensed under "Creative Commons: CC BY-SA 4.0 license".
+* All third party components incorporated into the Lens Software are licensed 
+under the original license provided by the owner of the applicable component.
+* Content outside of the above mentioned directories or restrictions above is 
+available under the "MIT" license as defined below.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

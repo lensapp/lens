@@ -1,3 +1,5 @@
+EXTENSIONS_DIR = ./extensions
+
 ifeq ($(OS),Windows_NT)
     DETECTED_OS := Windows
 else
@@ -31,27 +33,43 @@ lint:
 test: download-bins
 	yarn test
 
-integration-linux:
+integration-linux: build-extension-types build-extensions
 	yarn build:linux
 	yarn integration
 
-integration-mac:
+integration-mac: build-extension-types build-extensions
 	yarn build:mac
 	yarn integration
 
-integration-win:
+integration-win: build-extension-types build-extensions
 	yarn build:win
 	yarn integration
 
 test-app:
 	yarn test
 
-build: install-deps download-bins
+build: install-deps download-bins build-extensions
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn dist:win
 else
 	yarn dist
 endif
+
+build-extensions:
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(dir) build;)
+
+test-extensions:
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(dir) test;)
+
+build-npm: build-extension-types
+	yarn npm:fix-package-version
+
+build-extension-types:
+	yarn compile:extension-types
+
+publish-npm: build-npm
+	npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+	cd src/extensions/npm/extensions && npm publish --access=public
 
 clean:
 ifeq "$(DETECTED_OS)" "Windows"

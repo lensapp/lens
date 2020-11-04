@@ -3,6 +3,9 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
 export class ClusterApi extends KubeApi<Cluster> {
+  static kind = "Cluster"
+  static namespaced = true
+
   async getMetrics(nodeNames: string[], params?: IMetricsReqParams): Promise<IClusterMetrics> {
     const nodes = nodeNames.join("|");
     const opts = { category: "cluster", nodes: nodes }
@@ -49,6 +52,7 @@ export interface IClusterMetrics<T = IMetrics> {
 
 export class Cluster extends KubeObject {
   static kind = "Cluster";
+  static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters"
 
   spec: {
     clusterNetwork?: {
@@ -91,8 +95,5 @@ export class Cluster extends KubeObject {
 }
 
 export const clusterApi = new ClusterApi({
-  kind: Cluster.kind,
-  apiBase: "/apis/cluster.k8s.io/v1alpha1/clusters",
-  isNamespaced: true,
   objectConstructor: Cluster,
 });

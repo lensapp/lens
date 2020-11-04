@@ -53,20 +53,7 @@ export class StorageClasses extends React.Component<Props> {
           storageClass.isDefault() ? <Trans>Yes</Trans> : null,
           storageClass.getAge(),
         ]}
-        renderItemMenu={(item: StorageClass) => {
-          return <StorageClassMenu object={item}/>
-        }}
       />
     )
   }
 }
-
-export function StorageClassMenu(props: KubeObjectMenuProps<StorageClass>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(storageClassApi, {
-  Menu: StorageClassMenu,
-})

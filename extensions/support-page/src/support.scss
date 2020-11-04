@@ -1,0 +1,13 @@
+.PageLayout.Support {
+  a[target=_blank] {
+    text-decoration: none;
+    border-bottom: 1px solid;
+
+    &:after {
+      content: "launch";
+      font: small "Material Icons";
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+  }
+}

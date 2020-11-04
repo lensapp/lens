@@ -36,15 +36,21 @@ const packageMirrors: Map<string, string> = new Map([
 let bundledPath: string
 const initScriptVersionString = "# lens-initscript v3\n"
 
-if (isDevelopment || isTestEnv) {
-  const platformName = isWindows ? "windows" : process.platform
-  bundledPath = path.join(process.cwd(), "binaries", "client", platformName, process.arch, "kubectl")
-} else {
-  bundledPath = path.join(process.resourcesPath, process.arch, "kubectl")
-}
+export function bundledKubectlPath(): string {
+  if (bundledPath) { return bundledPath }
 
-if (isWindows) {
-  bundledPath = `${bundledPath}.exe`
+  if (isDevelopment || isTestEnv) {
+    const platformName = isWindows ? "windows" : process.platform
+    bundledPath = path.join(process.cwd(), "binaries", "client", platformName, process.arch, "kubectl")
+  } else {
+    bundledPath = path.join(process.resourcesPath, process.arch, "kubectl")
+  }
+
+  if (isWindows) {
+    bundledPath = `${bundledPath}.exe`
+  }
+
+  return bundledPath
 }
 
 export class Kubectl {
@@ -58,7 +64,6 @@ export class Kubectl {
     return path.join((app || remote.app).getPath("userData"), "binaries", "kubectl")
   }
 
-  public static readonly bundledKubectlPath = bundledPath
   public static readonly bundledKubectlVersion: string = bundledVersion
   public static invalidBundle = false
   private static bundledInstance: Kubectl;
@@ -102,7 +107,7 @@ export class Kubectl {
   }
 
   public getBundledPath() {
-    return Kubectl.bundledKubectlPath
+    return bundledKubectlPath()
   }
 
   public getPathFromPreferences() {
@@ -125,19 +130,19 @@ export class Kubectl {
     // return binary name if bundled path is not functional
     if (!await this.checkBinary(this.getBundledPath(), false)) {
       Kubectl.invalidBundle = true
-      return path.basename(bundledPath)
+      return path.basename(this.getBundledPath())
     }
 
     try {
       if (!await this.ensureKubectl()) {
         logger.error("Failed to ensure kubectl, fallback to the bundled version")
-        return Kubectl.bundledKubectlPath
+        return this.getBundledPath()
       }
       return this.path
     } catch (err) {
       logger.error("Failed to ensure kubectl, fallback to the bundled version")
       logger.error(err)
-      return Kubectl.bundledKubectlPath
+      return this.getBundledPath()
     }
   }
 
@@ -183,7 +188,7 @@ export class Kubectl {
       try {
         const exist = await pathExists(this.path)
         if (!exist) {
-          await fs.promises.copyFile(Kubectl.bundledKubectlPath, this.path)
+          await fs.promises.copyFile(this.getBundledPath(), this.path)
           await fs.promises.chmod(this.path, 0o755)
         }
         return true
@@ -283,6 +288,12 @@ export class Kubectl {
     bashScript += "fi\n"
     bashScript += `export PATH="${helmPath}:${kubectlPath}:$PATH"\n`
     bashScript += "export KUBECONFIG=\"$tempkubeconfig\"\n"
+
+    bashScript += "NO_PROXY=\",${NO_PROXY:-localhost},\"\n"
+    bashScript += "NO_PROXY=\"${NO_PROXY//,localhost,/,}\"\n"
+    bashScript += "NO_PROXY=\"${NO_PROXY//,127.0.0.1,/,}\"\n"
+    bashScript += "NO_PROXY=\"localhost,127.0.0.1${NO_PROXY%,}\"\n"
+    bashScript += "export NO_PROXY\n"
     bashScript += "unset tempkubeconfig\n"
     await fsPromises.writeFile(bashScriptPath, bashScript.toString(), { mode: 0o644 })
 
@@ -308,6 +319,11 @@ export class Kubectl {
     zshScript += "d=${d/#:/}\n"
     zshScript += "export PATH=\"$helmpath:$kubectlpath:${d/%:/}\"\n"
     zshScript += "export KUBECONFIG=\"$tempkubeconfig\"\n"
+    zshScript += "NO_PROXY=\",${NO_PROXY:-localhost},\"\n"
+    zshScript += "NO_PROXY=\"${NO_PROXY//,localhost,/,}\"\n"
+    zshScript += "NO_PROXY=\"${NO_PROXY//,127.0.0.1,/,}\"\n"
+    zshScript += "NO_PROXY=\"localhost,127.0.0.1${NO_PROXY%,}\"\n"
+    zshScript += "export NO_PROXY\n"
     zshScript += "unset tempkubeconfig\n"
     zshScript += "unset OLD_ZDOTDIR\n"
     await fsPromises.writeFile(zshScriptPath, zshScript.toString(), { mode: 0o644 })
@@ -321,6 +337,3 @@ export class Kubectl {
     return packageMirrors.get("default") // MacOS packages are only available from default
   }
 }
-
-const bundledKubectl = Kubectl.bundled()
-export { bundledKubectl }

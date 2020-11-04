@@ -22,6 +22,8 @@ export interface ISelfSubjectReviewRule {
 
 export class SelfSubjectRulesReview extends KubeObject {
   static kind = "SelfSubjectRulesReview"
+  static namespaced = false
+  static apiBase = "/apis/authorization.k8s.io/v1/selfsubjectrulesreviews"
 
   spec: {
     // todo: add more types from api docs
@@ -61,8 +63,5 @@ export class SelfSubjectRulesReview extends KubeObject {
 }
 
 export const selfSubjectRulesReviewApi = new SelfSubjectRulesReviewApi({
-  kind: SelfSubjectRulesReview.kind,
-  apiBase: "/apis/authorization.k8s.io/v1/selfsubjectrulesreviews",
-  isNamespaced: false,
   objectConstructor: SelfSubjectRulesReview,
 });

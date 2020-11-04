@@ -1,17 +1,36 @@
-import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
+import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents } from "electron"
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
-import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
+import { appName, isMac, isWindows } from "../common/vars";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
+import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 
+export type MenuTopId = "mac" | "file" | "edit" | "view" | "help"
+
 export function initMenu(windowManager: WindowManager) {
-  autorun(() => buildMenu(windowManager), {
+  return autorun(() => buildMenu(windowManager), {
     delay: 100
   });
+}
+
+export function showAbout(browserWindow: BrowserWindow) {
+  const appInfo = [
+    `${appName}: ${app.getVersion()}`,
+    `Electron: ${process.versions.electron}`,
+    `Chrome: ${process.versions.chrome}`,
+    `Copyright 2020 Mirantis, Inc.`,
+  ]
+  dialog.showMessageBoxSync(browserWindow, {
+    title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
+    type: "info",
+    buttons: ["Close"],
+    message: `Lens`,
+    detail: appInfo.join("\r\n")
+  })
 }
 
 export function buildMenu(windowManager: WindowManager) {
@@ -29,31 +48,10 @@ export function buildMenu(windowManager: WindowManager) {
     return menuItems;
   }
 
-  function navigate(url: string) {
+  async function navigate(url: string) {
     logger.info(`[MENU]: navigating to ${url}`);
-    windowManager.navigate({
-      channel: "menu:navigate",
-      url: url,
-    })
+    await windowManager.navigate(url);
   }
-
-  function showAbout(browserWindow: BrowserWindow) {
-    const appInfo = [
-      `${appName}: ${app.getVersion()}`,
-      `Electron: ${process.versions.electron}`,
-      `Chrome: ${process.versions.chrome}`,
-      `Copyright 2020 Mirantis, Inc.`,
-    ]
-    dialog.showMessageBoxSync(browserWindow, {
-      title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
-      type: "info",
-      buttons: ["Close"],
-      message: `Lens`,
-      detail: appInfo.join("\r\n")
-    })
-  }
-
-  const mt: MenuItemConstructorOptions[] = [];
 
   const macAppMenu: MenuItemConstructorOptions = {
     label: app.getName(),
@@ -67,7 +65,7 @@ export function buildMenu(windowManager: WindowManager) {
       { type: 'separator' },
       {
         label: 'Preferences',
-        accelerator: 'Cmd+,',
+        accelerator: 'CmdOrCtrl+,',
         click() {
           navigate(preferencesURL())
         }
@@ -79,13 +77,15 @@ export function buildMenu(windowManager: WindowManager) {
       { role: 'hideOthers' },
       { role: 'unhide' },
       { type: 'separator' },
-      { role: 'quit' }
+      {
+        label: 'Quit',
+        accelerator: 'Cmd+Q',
+        click() {
+          app.exit(); // force quit since might be blocked within app.on("will-quit")
+        }
+      }
     ]
   };
-
-  if (isMac) {
-    mt.push(macAppMenu);
-  }
 
   const fileMenu: MenuItemConstructorOptions = {
     label: "File",
@@ -121,10 +121,11 @@ export function buildMenu(windowManager: WindowManager) {
         },
         { type: 'separator' },
         { role: 'quit' }
-      ])
+      ]),
+      { type: 'separator' },
+      { role: 'close' } // close current window
     ]
   };
-  mt.push(fileMenu)
 
   const editMenu: MenuItemConstructorOptions = {
     label: 'Edit',
@@ -140,7 +141,7 @@ export function buildMenu(windowManager: WindowManager) {
       { role: 'selectAll' },
     ]
   };
-  mt.push(editMenu)
+
   const viewMenu: MenuItemConstructorOptions = {
     label: 'View',
     submenu: [
@@ -162,7 +163,7 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click() {
-          windowManager.reload({ channel: "menu:reload" });
+          windowManager.reload();
         }
       },
       { role: 'toggleDevTools' },
@@ -174,29 +175,10 @@ export function buildMenu(windowManager: WindowManager) {
       { role: 'togglefullscreen' }
     ]
   };
-  mt.push(viewMenu)
 
   const helpMenu: MenuItemConstructorOptions = {
     role: 'help',
     submenu: [
-      {
-        label: "License",
-        click: async () => {
-          shell.openExternal('https://k8slens.dev/licenses/eula.md');
-        },
-      },
-      {
-        label: "Community Slack",
-        click: async () => {
-          shell.openExternal(slackUrl);
-        },
-      },
-      {
-        label: 'Report an Issue',
-        click: async () => {
-          shell.openExternal(issuesTrackerUrl);
-        },
-      },
       {
         label: "What's new?",
         click() {
@@ -214,7 +196,29 @@ export function buildMenu(windowManager: WindowManager) {
     ]
   };
 
-  mt.push(helpMenu)
+  // Prepare menu items order
+  const appMenu: Record<MenuTopId, MenuItemConstructorOptions> = {
+    mac: macAppMenu,
+    file: fileMenu,
+    edit: editMenu,
+    view: viewMenu,
+    help: helpMenu,
+  }
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(mt));
+  // Modify menu from extensions-api
+  menuRegistry.getItems().forEach(({ parentId, ...menuItem }) => {
+    try {
+      const topMenu = appMenu[parentId as MenuTopId].submenu as MenuItemConstructorOptions[];
+      topMenu.push(menuItem);
+    } catch (err) {
+      logger.error(`[MENU]: can't register menu item, parentId=${parentId}`, { menuItem })
+    }
+  })
+
+  if (!isMac) {
+    delete appMenu.mac
+  }
+
+  const menu = Menu.buildFromTemplate(Object.values(appMenu));
+  Menu.setApplicationMenu(menu);
 }

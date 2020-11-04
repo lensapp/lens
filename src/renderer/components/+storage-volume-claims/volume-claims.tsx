@@ -82,20 +82,7 @@ export class PersistentVolumeClaims extends React.Component<Props> {
             { title: pvc.getStatus(), className: pvc.getStatus().toLowerCase() },
           ]
         }}
-        renderItemMenu={(item: PersistentVolumeClaim) => {
-          return <PersistentVolumeClaimMenu object={item}/>
-        }}
       />
     )
   }
 }
-
-export function PersistentVolumeClaimMenu(props: KubeObjectMenuProps<PersistentVolumeClaim>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(pvcApi, {
-  Menu: PersistentVolumeClaimMenu,
-})

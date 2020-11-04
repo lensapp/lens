@@ -42,11 +42,14 @@ export interface IPodMetrics<T = IMetrics> {
   networkTransmit: T;
 }
 
+// Reference: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#read-log-pod-v1-core
 export interface IPodLogsQuery {
   container?: string;
   tailLines?: number;
   timestamps?: boolean;
   sinceTime?: string; // Date.toISOString()-format
+  follow?: boolean;
+  previous?: boolean;
 }
 
 export enum PodStatus {
@@ -149,7 +152,16 @@ export interface IPodContainerStatus {
       reason: string;
     };
   };
-  lastState: {};
+  lastState: {
+    [index: string]: object;
+    terminated?: {
+      startedAt: string;
+      finishedAt: string;
+      exitCode: number;
+      reason: string;
+      containerID: string;
+    };
+  };
   ready: boolean;
   restartCount: number;
   image: string;
@@ -160,6 +172,8 @@ export interface IPodContainerStatus {
 @autobind()
 export class Pod extends WorkloadKubeObject {
   static kind = "Pod"
+  static namespaced = true
+  static apiBase = "/api/v1/pods"
 
   spec: {
     volumes?: {
@@ -416,8 +430,5 @@ export class Pod extends WorkloadKubeObject {
 }
 
 export const podsApi = new PodsApi({
-  kind: Pod.kind,
-  apiBase: "/api/v1/pods",
-  isNamespaced: true,
   objectConstructor: Pod,
 });

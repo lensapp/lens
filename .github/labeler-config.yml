@@ -1,0 +1,17 @@
+---
+area/ui:
+  - src/renderer/**/*
+area/test:
+  - integration/**/*
+  - __mocks__/**/*
+area/extension:
+  - extensions/**/*
+  - src/extensions/**/*
+area/documentation:
+  - README.md
+  - docs/**/*
+area/ci:
+  - .github/workflows/**/*
+  - .azure-pipelines.yml
+dependencies:
+  - yarn.lock

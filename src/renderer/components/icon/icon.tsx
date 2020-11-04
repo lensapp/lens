@@ -15,6 +15,7 @@ export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorPr
   href?: string;              // render icon as hyperlink
   size?: string | number;     // icon-size
   small?: boolean;            // pre-defined icon-size
+  smallest?: boolean;            // pre-defined icon-size
   big?: boolean;              // pre-defined icon-size
   active?: boolean;           // apply active-state styles
   interactive?: boolean;      // indicates that icon is interactive and highlight it on focus/hover
@@ -63,7 +64,7 @@ export class Icon extends React.PureComponent<IconProps> {
     const { isInteractive } = this;
     const {
       // skip passing props to icon's html element
-      className, href, link, material, svg, size, small, big,
+      className, href, link, material, svg, size, smallest, small, big,
       disabled, sticker, active, focusable, children,
       interactive: _interactive,
       onClick: _onClick,
@@ -75,7 +76,7 @@ export class Icon extends React.PureComponent<IconProps> {
     const iconProps: Partial<IconProps> = {
       className: cssNames("Icon", className,
         { svg, material, interactive: isInteractive, disabled, sticker, active, focusable },
-        !size ? { small, big } : {}
+        !size ? { smallest, small, big } : {}
       ),
       onClick: isInteractive ? this.onClick : undefined,
       onKeyDown: isInteractive ? this.onKeyDown : undefined,

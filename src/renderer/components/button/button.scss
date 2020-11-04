@@ -41,6 +41,17 @@
     }
   }
 
+  &.outlined {
+    color: inherit;
+    background: transparent;
+
+    &.active,
+    &:focus {
+      color: inherit;
+      box-shadow: 0 0 0 1px inset;
+    }
+  }
+
   &.big {
     font-size: 2.2 * $unit;
     border-radius: 50px;

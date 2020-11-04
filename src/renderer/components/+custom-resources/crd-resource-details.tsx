@@ -9,12 +9,12 @@ import { cssNames } from "../../utils";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { apiManager } from "../../api/api-manager";
 import { crdStore } from "./crd.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Input } from "../input";
+import { CustomResourceDefinition } from "../../api/endpoints/crd.api";
 
-interface Props extends KubeObjectDetailsProps {
+interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
 
 function CrdColumnValue({ value }: { value: any[] | {} | string }) {
@@ -38,20 +38,13 @@ export class CrdResourceDetails extends React.Component<Props> {
     return crdStore.getByObject(this.props.object);
   }
 
-  @computed get CustomDetailsViews() {
-    return apiManager.getViews(this.props.object.selfLink).Details;
-  }
-
   render() {
     const { object } = this.props;
-    const { crd, CustomDetailsViews } = this;
+    const { crd } = this;
     if (!object || !crd) return null;
     const className = cssNames("CrdResourceDetails", crd.getResourceKind());
     const extraColumns = crd.getPrinterColumns();
     const showStatus = !extraColumns.find(column => column.name == "Status") && object.status?.conditions;
-    if (CustomDetailsViews) {
-      return <CustomDetailsViews className={className} object={object}/>
-    }
     return (
       <div className={className}>
         <KubeObjectMeta object={object}/>
@@ -66,12 +59,14 @@ export class CrdResourceDetails extends React.Component<Props> {
         })}
         {showStatus && (
           <DrawerItem name={<Trans>Status</Trans>} className="status" labelsOnly>
-            {object.status.conditions.map((condition: { type: string; message: string; status: string }) => {
-              const { type, message, status } = condition;
+            {object.status.conditions.map((condition, index) => {
+              const { type, reason, message, status } = condition;
+              const kind = type || reason;
+              if (!kind) return null;
               return (
                 <Badge
-                  key={type} label={type}
-                  className={cssNames({ disabled: status === "False" }, type.toLowerCase())}
+                  key={kind + index} label={kind}
+                  className={cssNames({ disabled: status === "False" }, kind.toLowerCase())}
                   tooltip={message}
                 />
               );

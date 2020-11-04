@@ -6,7 +6,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { autorun, observable, reaction, toJS } from "mobx";
 import { Trans } from "@lingui/macro";
-import { IPodMetrics, nodesApi, Pod, podsApi, pvcApi, configMapApi } from "../../api/endpoints";
+import { IPodMetrics, nodesApi, Pod, pvcApi, configMapApi } from "../../api/endpoints";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { autobind, cssNames, interval } from "../../utils";
@@ -22,9 +22,8 @@ import { getDetailsUrl } from "../../navigation";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { getItemMetrics } from "../../api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
-import { lookupApiLink } from "../../api/kube-api";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Pod> {
 }
@@ -66,7 +65,6 @@ export class PodDetails extends React.Component<Props> {
     const { nodeName } = spec;
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
-    const labels = pod.getLabels();
     const metrics = podsStore.metrics;
     return (
       <div className="PodDetails">
@@ -223,6 +221,10 @@ export class PodDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(podsApi, {
-  Details: PodDetails
+kubeObjectDetailRegistry.add({
+  kind: "Pod",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props: any) => <PodDetails {...props} />
+  }
 })

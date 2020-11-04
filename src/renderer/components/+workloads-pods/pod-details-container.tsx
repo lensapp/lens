@@ -2,7 +2,7 @@ import "./pod-details-container.scss"
 
 import React from "react";
 import { t, Trans } from "@lingui/macro";
-import { IPodContainer, Pod } from "../../api/endpoints";
+import { IPodContainer, IPodContainerStatus, Pod } from "../../api/endpoints";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import { StatusBrick } from "../status-brick";
@@ -21,12 +21,37 @@ interface Props {
 }
 
 export class PodDetailsContainer extends React.Component<Props> {
+  
+  renderStatus(state: string, status: IPodContainerStatus) {
+    const ready = status ? status.ready : ""
+    return (
+      <span className={cssNames("status", state)}>
+        {state}{ready ? `, ${_i18n._(t`ready`)}` : ""}
+        {state === 'terminated' ? ` - ${status.state.terminated.reason} (${_i18n._(t`exit code`)}: ${status.state.terminated.exitCode})` : ''}
+      </span>    
+    );
+  }
+
+  renderLastState(lastState: string, status: IPodContainerStatus) {
+    if (lastState === 'terminated') {
+      return (
+        <span>
+          {lastState}<br/> 
+          {_i18n._(t`Reason`)}: {status.lastState.terminated.reason} - {_i18n._(t`exit code`)}: {status.lastState.terminated.exitCode}<br/> 
+          {_i18n._(t`Started at`)}: {status.lastState.terminated.startedAt}<br/> 
+          {_i18n._(t`Finished at`)}: {status.lastState.terminated.finishedAt}<br/> 
+        </span>
+      )  
+    }
+  }
+
   render() {
     const { pod, container, metrics } = this.props
     if (!pod || !container) return null
     const { name, image, imagePullPolicy, ports, volumeMounts, command, args } = container
     const status = pod.getContainerStatuses().find(status => status.name === container.name)
     const state = status ? Object.keys(status.state)[0] : ""
+    const lastState = status ? Object.keys(status.lastState)[0] : ""
     const ready = status ? status.ready : ""
     const liveness = pod.getLivenessProbe(container)
     const readiness = pod.getReadinessProbe(container)
@@ -48,10 +73,12 @@ export class PodDetailsContainer extends React.Component<Props> {
         }
         {status &&
         <DrawerItem name={<Trans>Status</Trans>}>
-          <span className={cssNames("status", state)}>
-            {state}{ready ? `, ${_i18n._(t`ready`)}` : ""}
-            {state === 'terminated' ? ` - ${status.state.terminated.reason} (${_i18n._(t`exit code`)}: ${status.state.terminated.exitCode})` : ''}
-          </span>
+          {this.renderStatus(state, status)}
+        </DrawerItem>
+        }
+        {lastState &&
+        <DrawerItem name={<Trans>Last Status</Trans>}>
+          {this.renderLastState(lastState, status)}
         </DrawerItem>
         }
         <DrawerItem name={<Trans>Image</Trans>}>

@@ -5,6 +5,8 @@ import { KubeApi } from "../kube-api";
 @autobind()
 export class PodSecurityPolicy extends KubeObject {
   static kind = "PodSecurityPolicy"
+  static namespaced = false
+  static apiBase = "/apis/policy/v1beta1/podsecuritypolicies"
 
   spec: {
     allowPrivilegeEscalation?: boolean;
@@ -87,8 +89,5 @@ export class PodSecurityPolicy extends KubeObject {
 }
 
 export const pspApi = new KubeApi({
-  kind: PodSecurityPolicy.kind,
-  apiBase: "/apis/policy/v1beta1/podsecuritypolicies",
-  isNamespaced: false,
   objectConstructor: PodSecurityPolicy,
 });
