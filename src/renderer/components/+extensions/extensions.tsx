@@ -9,6 +9,7 @@ import { Button } from "../button";
 import { WizardLayout } from "../layout/wizard-layout";
 import { Input } from "../input";
 import { Icon } from "../icon";
+import { PageLayout } from "../layout/page-layout";
 import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionManager } from "../../../extensions/extension-manager";
 
@@ -91,20 +92,21 @@ export class Extensions extends React.Component {
 
   render() {
     return (
-      <WizardLayout className="Extensions" infoPanel={this.renderInfo()}>
-        <h2><Trans>Extensions</Trans></h2>
-        <Input
-          autoFocus
-          theme="round-black"
-          className="SearchInput"
-          placeholder={_i18n._(t`Search extensions`)}
-          value={this.search}
-          onChange={(value) => this.search = value}
-        />
-        <div className="extension-list flex column gaps">
-          {this.renderExtensions()}
-        </div>
-      </WizardLayout>
+      <PageLayout showOnTop className="Extensions" header={<h2>Extensions</h2>}>
+        <WizardLayout infoPanel={this.renderInfo()}>
+          <Input
+            autoFocus
+            theme="round-black"
+            className="SearchInput"
+            placeholder={_i18n._(t`Search extensions`)}
+            value={this.search}
+            onChange={(value) => this.search = value}
+          />
+          <div className="extension-list flex column gaps">
+            {this.renderExtensions()}
+          </div>
+        </WizardLayout>
+      </PageLayout>
     );
   }
 }

@@ -1,4 +1,7 @@
 .Extensions {
+  --width: 100%;
+  --max-width: auto;
+
   .extension {
     --flex-gap: $padding / 3;
     padding: $padding $padding * 2;
@@ -10,9 +13,13 @@
     word-break: break-all;
   }
 
-  .info-col {
-    flex: 0.6;
-    align-self: flex-start;
+  .WizardLayout {
+    padding: 0;
+
+    .info-col {
+      flex: 0.6;
+      align-self: flex-start;
+    }
   }
 
   .SearchInput {
