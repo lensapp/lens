@@ -5,7 +5,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { ipcRenderer } from "electron";
 import { computed, observable } from "mobx";
-import { clusterIpc } from "../../../common/cluster-ipc";
+import { requestMain, subscribeToBroadcast } from "../../../common/ipc";
 import { Icon } from "../icon";
 import { Button } from "../button";
 import { cssNames, IClassName } from "../../utils";
@@ -32,7 +32,7 @@ export class ClusterStatus extends React.Component<Props> {
   }
 
   async componentDidMount() {
-    ipcRenderer.on(`kube-auth:${this.cluster.id}`, (evt, res: KubeAuthProxyLog) => {
+    subscribeToBroadcast(`kube-auth:${this.cluster.id}`, (evt, res: KubeAuthProxyLog) => {
       this.authOutput.push({
         data: res.data.trimRight(),
         error: res.error,
@@ -48,7 +48,7 @@ export class ClusterStatus extends React.Component<Props> {
   }
 
   activateCluster = async (force = false) => {
-    await clusterIpc.activate.invokeFromRenderer(this.props.clusterId, force);
+    await requestMain("cluster:activate", this.props.clusterId, force)
   }
 
   reconnect = async () => {

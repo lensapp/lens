@@ -13,16 +13,17 @@ import { WhatsNew, whatsNewRoute } from "./components/+whats-new";
 import { Notifications } from "./components/notifications";
 import { ConfirmDialog } from "./components/confirm-dialog";
 import { extensionLoader } from "../extensions/extension-loader";
+import { broadcastMessage } from "../common/ipc";
 
 @observer
 export class LensApp extends React.Component {
   static async init() {
     extensionLoader.loadOnClusterManagerRenderer();
     window.addEventListener("offline", () => {
-      ipcRenderer.send("network:offline")
+      broadcastMessage("network:offline")
     })
     window.addEventListener("online", () => {
-      ipcRenderer.send("network:online")
+      broadcastMessage("network:online")
     })
   }
 

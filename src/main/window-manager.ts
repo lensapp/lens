@@ -1,10 +1,10 @@
 import type { ClusterId } from "../common/cluster-store";
 import { clusterStore } from "../common/cluster-store";
 import { observable } from "mobx";
-import { app, BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
+import { app, BrowserWindow, dialog, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
-import { extensionLoader } from "../extensions/extension-loader";
 import { appEventBus } from "../common/event-bus"
+import { subscribeToBroadcast } from "../common/ipc"
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
 
@@ -61,7 +61,7 @@ export class WindowManager {
         shell.openExternal(url);
       });
       this.mainWindow.webContents.on("dom-ready", () => {
-        extensionLoader.broadcastExtensions()
+        appEventBus.emit({name: "app", action: "dom-ready"})
       })
       this.mainWindow.on("focus", () => {
         appEventBus.emit({name: "app", action: "focus"})
@@ -98,9 +98,9 @@ export class WindowManager {
 
   protected bindEvents() {
     // track visible cluster from ui
-    ipcMain.on("cluster-view:current-id", (event, clusterId: ClusterId) => {
+    subscribeToBroadcast("cluster-view:current-id", (event, clusterId: ClusterId) => {
       this.activeClusterId = clusterId;
-    });
+    })
   }
 
   async ensureMainWindow(): Promise<BrowserWindow> {

@@ -1,7 +1,6 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
 import { observer } from "mobx-react";
-import { clusterIpc } from "../../../../common/cluster-ipc";
 import { clusterStore } from "../../../../common/cluster-store";
 import { Cluster } from "../../../../main/cluster";
 import { autobind } from "../../../utils";

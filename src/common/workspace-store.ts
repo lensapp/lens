@@ -3,7 +3,7 @@ import { action, computed, observable, toJS, reaction } from "mobx";
 import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store"
 import { appEventBus } from "./event-bus";
-import { broadcastIpc } from "../common/ipc";
+import { broadcastMessage } from "../common/ipc";
 import logger from "../main/logger";
 
 export type WorkspaceId = string;
@@ -53,10 +53,7 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
 
   pushState(state = this.getState()) {
     logger.silly("[WORKSPACE] pushing state", {...state, id: this.id})
-    broadcastIpc({
-      channel: "workspace:state",
-      args: [this.id, toJS(state)],
-    });
+    broadcastMessage("workspace:state", this.id, toJS(state))
   }
 
   @action

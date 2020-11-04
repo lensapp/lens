@@ -2,10 +2,12 @@ import type { ExtensionId, ExtensionManifest, ExtensionModel, LensExtension } fr
 import type { LensMainExtension } from "./lens-main-extension"
 import type { LensRendererExtension } from "./lens-renderer-extension"
 import path from "path"
-import { broadcastIpc } from "../common/ipc"
+import { broadcastMessage, subscribeToBroadcast } from "../common/ipc"
 import { observable, reaction, toJS, } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
+import { appEventBus } from "./core-api/event-bus"
+import { clusterStore } from "./core-api/stores"
 import {
   appPreferenceRegistry, clusterFeatureRegistry, clusterPageRegistry, globalPageRegistry,
   kubeObjectDetailRegistry, kubeObjectMenuRegistry, menuRegistry, statusBarRegistry
@@ -27,12 +29,24 @@ export class ExtensionLoader {
 
   constructor() {
     if (ipcRenderer) {
-      ipcRenderer.on("extensions:loaded", (event, extensions: InstalledExtension[]) => {
+      subscribeToBroadcast("extensions:loaded", (event, extensions: InstalledExtension[]) => {
         extensions.forEach((ext) => {
           if (!this.getById(ext.manifestPath)) {
             this.extensions.set(ext.manifestPath, ext)
           }
         })
+      })
+    } else {
+      reaction(() => this.extensions.toJS(), () => {
+        this.broadcastExtensions()
+      })
+      appEventBus.addListener((ev) => {
+        if (ev.name === "app" && ev.action === "dom-ready") {
+          this.broadcastExtensions()
+        }
+      })
+      reaction(() => clusterStore.connectedClustersList, () => {
+        this.broadcastExtensions()
       })
     }
   }
@@ -120,13 +134,8 @@ export class ExtensionLoader {
     }
   }
 
-  broadcastExtensions(frameId?: number) {
-    broadcastIpc({
-      channel: "extensions:loaded",
-      frameId: frameId,
-      frameOnly: !!frameId,
-      args: [this.toJSON().extensions],
-    })
+  broadcastExtensions() {
+    broadcastMessage("extensions:loaded", this.toJSON().extensions)
   }
 
   toJSON() {

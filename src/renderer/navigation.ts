@@ -7,6 +7,7 @@ import { createObservableHistory } from "mobx-observable-history";
 import { createBrowserHistory, createMemoryHistory, LocationDescriptor } from "history";
 import logger from "../main/logger";
 import { clusterViewRoute, IClusterViewRouteParams } from "./components/cluster-manager/cluster-view.route";
+import { broadcastMessage, subscribeToBroadcast } from "../common/ipc";
 
 export const history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
 export const navigation = createObservableHistory(history);
@@ -94,19 +95,19 @@ export function getMatchedClusterId(): string {
 if (process.isMainFrame) {
   // Keep track of active cluster-id for handling IPC/menus/etc.
   reaction(() => getMatchedClusterId(), clusterId => {
-    ipcRenderer.send("cluster-view:current-id", clusterId);
+    broadcastMessage("cluster-view:current-id", clusterId)
   }, {
     fireImmediately: true
   })
 }
 
 // Handle navigation via IPC (e.g. from top menu)
-ipcRenderer.on("menu:navigate", (event, location: LocationDescriptor) => {
+subscribeToBroadcast("menu:navigate", (event, location: LocationDescriptor) => {
   logger.info(`[IPC]: ${event.type} ${JSON.stringify(location)}`, event);
   navigate(location);
-});
+})
 
 // Reload dashboard window
-ipcRenderer.on("menu:reload", () => {
+subscribeToBroadcast("menu:reload", () => {
   location.reload();
-});
+})

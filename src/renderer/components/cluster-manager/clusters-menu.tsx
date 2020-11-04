@@ -2,6 +2,7 @@ import "./clusters-menu.scss"
 
 import React from "react";
 import { remote } from "electron"
+import { requestMain } from "../../../common/ipc";
 import type { Cluster } from "../../../main/cluster";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
@@ -20,7 +21,6 @@ import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
-import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
 import { globalPageRegistry } from "../../../extensions/registries/page-registry";
 
@@ -60,7 +60,7 @@ export class ClustersMenu extends React.Component<Props> {
             navigate(landingURL());
             clusterStore.setActive(null);
           }
-          await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
+          await requestMain("cluster:disconnect", cluster.id)
         }
       }))
     }

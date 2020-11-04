@@ -72,9 +72,15 @@ export class Sidebar extends React.Component<Props> {
     });
   }
 
+  @computed
+  get pageRegistryItems() {
+    return clusterPageRegistry.getItems()
+  }
+
   render() {
     const { toggle, isPinned, className } = this.props;
     const query = namespaceStore.getContextParams();
+    const registryItems = this.pageRegistryItems
     return (
       <SidebarContext.Provider value={{ pinned: isPinned }}>
         <div className={cssNames("Sidebar flex column", className, { pinned: isPinned })}>
@@ -184,7 +190,7 @@ export class Sidebar extends React.Component<Props> {
             >
               {this.renderCustomResources()}
             </SidebarNavItem>
-            {clusterPageRegistry.getItems().map(({ path, title, url = String(path), hideInMenu, components: { MenuIcon } }) => {
+            {registryItems.map(({ path, title, url = String(path), hideInMenu, components: { MenuIcon } }) => {
               if (!MenuIcon || hideInMenu) {
                 return;
               }
