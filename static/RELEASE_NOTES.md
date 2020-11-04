@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.0-alpha.2 (current version)
+## 4.0.0-alpha.3 (current version)
 
 - Extension API
 - Improved pod logs
@@ -11,6 +11,9 @@ Here you can find description of changes we've built into each release. While we
 - Add LoadBalancer information to Ingress view
 - Move tracker to an extension
 - Add support page (as an extension)
+- Status bar visual fixes
+- Fix proxy upgrade socket timeouts
+- Fix UI staleness after network issues
 
 ## 3.6.6
 - Fix labels' word boundary to cover only drawer badges
