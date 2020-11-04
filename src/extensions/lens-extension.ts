@@ -1,75 +1,111 @@
-import { readJsonSync } from "fs-extra";
-import { action, observable, toJS } from "mobx";
+import type { InstalledExtension } from "./extension-manager";
+import { action, reaction } from "mobx";
 import logger from "../main/logger";
-import { BaseRegistry } from "./registries/base-registry";
+import { ExtensionStore } from "./extension-store";
 
-export type ExtensionId = string | ExtensionPackageJsonPath;
-export type ExtensionPackageJsonPath = string;
-export type ExtensionVersion = string | number;
+export type LensExtensionId = string; // path to manifest (package.json)
+export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
 
-export interface ExtensionModel {
-  id: ExtensionId;
-  version: ExtensionVersion;
+export interface LensExtensionManifest {
   name: string;
-  manifestPath: string;
+  version: string;
   description?: string;
-  enabled?: boolean;
-  updateUrl?: string;
+  main?: string; // path to %ext/dist/main.js
+  renderer?: string; // path to %ext/dist/renderer.js
 }
 
-export interface ExtensionManifest extends ExtensionModel {
-  main?: string;
-  renderer?: string;
-  description?: string; // todo: add more fields similar to package.json + some extra
+export interface LensExtensionStoreModel {
+  isEnabled: boolean;
 }
 
-export class LensExtension implements ExtensionModel {
-  public id: ExtensionId;
-  public updateUrl: string;
-  protected disposers: (() => void)[] = [];
+export class LensExtension<S extends ExtensionStore<LensExtensionStoreModel> = any> {
+  protected store: S;
+  readonly manifest: LensExtensionManifest;
+  readonly manifestPath: string;
+  readonly isBundled: boolean;
 
-  @observable name = "";
-  @observable description = "";
-  @observable version: ExtensionVersion = "0.0.0";
-  @observable manifest: ExtensionManifest;
-  @observable manifestPath: string;
-  @observable isEnabled = false;
+  constructor({ manifest, manifestPath, isBundled }: InstalledExtension) {
+    this.manifest = manifest
+    this.manifestPath = manifestPath
+    this.isBundled = !!isBundled
+    this.init();
+  }
 
-  constructor(model: ExtensionModel, manifest: ExtensionManifest) {
-    this.importModel(model, manifest);
+  protected async init(store: S = createBaseStore().getInstance()) {
+    this.store = store;
+    await this.store.loadExtension(this);
+    reaction(() => this.store.data.isEnabled, (isEnabled = true) => {
+      this.toggle(isEnabled); // handle activation & deactivation
+    }, {
+      fireImmediately: true
+    });
+  }
+
+  get isEnabled() {
+    return !!this.store.data.isEnabled;
+  }
+
+  get id(): LensExtensionId {
+    return this.manifestPath;
+  }
+
+  get name() {
+    return this.manifest.name
+  }
+
+  get version() {
+    return this.manifest.version
+  }
+
+  get description() {
+    return this.manifest.description
   }
 
   @action
-  async importModel({ enabled, manifestPath, ...model }: ExtensionModel, manifest?: ExtensionManifest) {
-    try {
-      this.manifest = manifest || await readJsonSync(manifestPath, { throws: true })
-      this.manifestPath = manifestPath;
-      Object.assign(this, model);
-    } catch (err) {
-      logger.error(`[EXTENSION]: cannot read manifest at ${manifestPath}`, { ...model, err: String(err) })
-      this.disable();
-    }
-  }
-
-  async migrate(appVersion: string) {
-    // mock
-  }
-
   async enable() {
-    this.isEnabled = true;
-    logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
+    if (this.isEnabled) return;
+    this.store.data.isEnabled = true;
     this.onActivate();
+    logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
   }
 
+  @action
   async disable() {
+    if (!this.isEnabled) return;
+    this.store.data.isEnabled = false;
     this.onDeactivate();
-    this.isEnabled = false;
-    this.disposers.forEach(cleanUp => cleanUp());
-    this.disposers.length = 0;
     logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
   }
 
-  // todo: add more hooks
+  toggle(enable?: boolean) {
+    if (typeof enable === "boolean") {
+      enable ? this.enable() : this.disable()
+    } else {
+      this.isEnabled ? this.disable() : this.enable()
+    }
+  }
+
+  async whenEnabled(handlers: () => Function[]) {
+    const disposers: Function[] = [];
+    const unregisterHandlers = () => {
+      disposers.forEach(unregister => unregister())
+      disposers.length = 0;
+    }
+    const cancelReaction = reaction(() => this.isEnabled, isEnabled => {
+      if (isEnabled) {
+        disposers.push(...handlers());
+      } else {
+        unregisterHandlers();
+      }
+    }, {
+      fireImmediately: true
+    })
+    return () => {
+      unregisterHandlers();
+      cancelReaction();
+    }
+  }
+
   protected onActivate() {
     // mock
   }
@@ -77,37 +113,14 @@ export class LensExtension implements ExtensionModel {
   protected onDeactivate() {
     // mock
   }
+}
 
-  registerTo<T = any>(registry: BaseRegistry<T>, items: T[] = []) {
-    const disposers = items.map(item => registry.add(item));
-    this.disposers.push(...disposers);
-    return () => {
-      this.disposers = this.disposers.filter(disposer => !disposers.includes(disposer))
-    };
-  }
-
-  getMeta() {
-    return toJS({
-      id: this.id,
-      manifest: this.manifest,
-      manifestPath: this.manifestPath,
-      enabled: this.isEnabled
-    }, {
-      recurseEverything: true
-    })
-  }
-
-  toJSON(): ExtensionModel {
-    return toJS({
-      id: this.id,
-      name: this.name,
-      version: this.version,
-      description: this.description,
-      manifestPath: this.manifestPath,
-      enabled: this.isEnabled,
-      updateUrl: this.updateUrl,
-    }, {
-      recurseEverything: true,
-    })
+function createBaseStore() {
+  return class extends ExtensionStore<LensExtensionStoreModel> {
+    constructor() {
+      super({
+        configName: "state"
+      });
+    }
   }
 }
