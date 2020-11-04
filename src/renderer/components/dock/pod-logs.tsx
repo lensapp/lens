@@ -175,7 +175,6 @@ export class PodLogs extends React.Component<Props> {
    * @returns A react element with a row itself
    */
   getLogRow = (rowIndex: number) => {
-    const isSeparator = this.logs[rowIndex] === "---newlogs---"; // TODO: Use constant separator
     const { searchQuery, isActiveOverlay } = searchStore;
     const item = this.logs[rowIndex];
     const contents: React.ReactElement[] = [];
@@ -200,7 +199,7 @@ export class PodLogs extends React.Component<Props> {
       })
     }
     return (
-      <div className={cssNames("LogRow", { separator: isSeparator })}>
+      <div className={cssNames("LogRow")}>
         {contents.length > 1 ? contents : item}
       </div>
     );

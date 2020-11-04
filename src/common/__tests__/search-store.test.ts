@@ -22,7 +22,7 @@ describe("search store tests", () => {
     expect(searchStore.occurrences).toEqual([]);
   })
 
-  it("doesn't brake if no text provided", () => {
+  it("doesn't break if no text provided", () => {
     searchStore.onSearch(null, "replica");
     expect(searchStore.occurrences).toEqual([]);
 
