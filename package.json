@@ -190,7 +190,8 @@
       "node-menu",
       "metrics-cluster-feature",
       "license-menu-item",
-      "support-page"
+      "support-page",
+      "event-resource-status"
     ]
   },
   "dependencies": {

@@ -19,6 +19,10 @@
       flex-grow: 2;
     }
 
+    &.warning {
+      @include table-cell-warning;
+    }
+
     &.namespace {
       flex-grow: 1.2;
     }

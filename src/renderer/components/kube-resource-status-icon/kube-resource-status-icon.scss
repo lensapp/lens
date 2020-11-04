@@ -1,0 +1,32 @@
+.ResourceStatusIcon {
+  &.warning {
+    color: $golden;
+  }
+}
+
+.ResourceStatusTooltip {
+  white-space: normal;
+
+
+  .ResourceStatusLevel {
+    padding: 4px;
+
+    &:not(:only-child):not(:last-child) {
+      border-bottom: 1px solid $borderFaintColor;
+    }
+
+    .msg {
+      margin: $margin / 2
+    }
+    .age {
+      color: $halfGray;
+    }
+  }
+
+  .ResourceStatusTitle {
+    font-weight: bold;
+    .Icon {
+      margin-right: $margin;
+    }
+  }
+}

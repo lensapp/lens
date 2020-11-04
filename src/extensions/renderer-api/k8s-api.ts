@@ -2,6 +2,7 @@ export { isAllowedResource } from "../../common/rbac"
 export { apiManager } from "../../renderer/api/api-manager";
 export { KubeObjectStore } from "../../renderer/kube-object.store"
 export { KubeApi, forCluster, IKubeApiCluster } from "../../renderer/api/kube-api";
+export type { EventStore } from "../../renderer/components/+events/event.store"
 export { KubeObject } from "../../renderer/api/kube-object";
 export { Pod, podsApi, IPodContainer, IPodContainerStatus } from "../../renderer/api/endpoints";
 export { Node, nodesApi } from "../../renderer/api/endpoints";

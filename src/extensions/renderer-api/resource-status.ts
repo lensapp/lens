@@ -1,1 +1,1 @@
-export { ResourceStatus as Status, ResourceStatusColor as Color } from "../registries/resource-status-registry"
+export { ResourceStatus as Status, ResourceStatusLevel as Level } from "../registries/resource-status-registry"

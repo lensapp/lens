@@ -2,21 +2,22 @@ import { KubeObject } from "../renderer-api/k8s-api";
 
 import { BaseRegistry } from "./base-registry";
 
-export enum ResourceStatusColor {
-  INFO = "info",
-  SUCCESS = "success",
-  ERROR = "error"
+export enum ResourceStatusLevel {
+  INFO = 1,
+  WARNING = 2,
+  CRITICAL = 3
 }
 
 export type ResourceStatus = {
+  level: number;
   text: string;
-  color: string;
+  timestamp?: string;
 }
 
 export interface ResourceStatusRegistration {
   kind: string;
   apiVersions: string[];
-  resolver: (object: KubeObject) => ResourceStatus;
+  resolve: (object: KubeObject) => ResourceStatus;
 }
 
 export class ResourceStatusRegistry extends BaseRegistry<ResourceStatusRegistration> {

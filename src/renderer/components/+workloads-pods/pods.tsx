@@ -13,13 +13,13 @@ import { KubeObjectListLayout } from "../kube-object";
 import { Pod } from "../../api/endpoints";
 import { StatusBrick } from "../status-brick";
 import { cssNames, stopPropagation } from "../../utils";
-import { KubeEventIcon } from "../+events/kube-event-icon";
 import { getDetailsUrl } from "../../navigation";
 import toPairs from "lodash/toPairs";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import { lookupApiLink } from "../../api/kube-api";
-import { resourceStatusRegistry } from "../../../extensions/registries/resource-status-registry";
+import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
+
 
 enum sortBy {
   name = "name",
@@ -69,24 +69,21 @@ export class Pods extends React.Component<Props> {
   }
 
   renderPodStatus(pod: Pod) {
-    const podStatusTextsFromExtensions = resourceStatusRegistry.getItemsForKind(pod.kind, pod.apiVersion).map((item, index) => {
-      const podStatusResolver = item.resolver(pod)
-      return (
-        <span key={`resource-status-${index}`} className={podStatusResolver.getStatusColor()}>
-          {podStatusResolver.getStatusText()}
-        </span>
-      )
-    });
     return {
       className: kebabCase(pod.getStatusMessage()),
       children: (
         <span>
-          {pod.getStatusMessage()} {podStatusTextsFromExtensions}
+          {pod.getStatusMessage()}
         </span>
       )
     }
   }
 
+  renderPodStatusIcons(pod: Pod) {
+    return (
+      <KubeResourceStatusIcon object={pod} />
+    )
+  }
   render() {
     return (
       <KubeObjectListLayout
@@ -120,7 +117,7 @@ export class Pods extends React.Component<Props> {
         ]}
         renderTableContents={(pod: Pod) => [
           pod.getName(),
-          pod.hasIssues() && <KubeEventIcon object={pod}/>,
+          this.renderPodStatusIcons(pod),
           pod.getNs(),
           this.renderContainersStatus(pod),
           pod.getRestartsCount(),

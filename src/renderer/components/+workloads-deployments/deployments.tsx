@@ -20,8 +20,8 @@ import { _i18n } from "../../i18n";
 import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
-import { KubeEventIcon } from "../+events/kube-event-icon";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { KubeResourceStatusIcon } from "../kube-resource-status-icon";
 
 enum sortBy {
   name = "name",
@@ -81,7 +81,7 @@ export class Deployments extends React.Component<Props> {
           deployment.getNs(),
           this.renderPods(deployment),
           deployment.getReplicas(),
-          <KubeEventIcon object={deployment}/>,
+          <KubeResourceStatusIcon object={deployment}/>,
           deployment.getAge(),
           this.renderConditions(deployment),
         ]}
