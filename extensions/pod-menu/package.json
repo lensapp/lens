@@ -9,7 +9,8 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "dev": "npm run build --watch"
+    "dev": "npm run build --watch",
+    "test": "echo NO TESTS"
   },
   "dependencies": {},
   "devDependencies": {
