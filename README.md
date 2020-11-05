@@ -45,6 +45,16 @@ Allows for faster separate re-runs of some of the more involved processes:
 1. `yarn dev:extension-types` compile declaration types for `@k8slens/extensions`  
 1. `yarn dev-run` runs app in dev-mode and auto-restart when main process file has changed
 
+## Development (documentation) 
+
+Run a local instance of `mkdocs serve` in a docker container for developing the Lens Documentation.
+
+> Prerequisites: docker, yarn
+
+* `yarn mkdocs-serve-local` - local build and serve of mkdocs with auto update enabled
+
+Go to [localhost:8000](http://127.0.0.1:8000)
+
 ## Developer's ~~RTFM~~ recommended list:
 
 - [TypeScript](https://www.typescriptlang.org/docs/home.html) (front-end/back-end) 
@@ -52,6 +62,8 @@ Allows for faster separate re-runs of some of the more involved processes:
 - [MobX](https://mobx.js.org/) (app-state-management, back-end/front-end)
 - [ElectronJS](https://www.electronjs.org/docs) (chrome/node)
 - [NodeJS](https://nodejs.org/dist/latest-v12.x/docs/api/) (api docs)
+
+
 
 ## Contributing
 
