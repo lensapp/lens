@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents } from "electron"
+import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron"
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
 import { appName, isMac, isWindows } from "../common/vars";
@@ -193,21 +193,12 @@ export function buildMenu(windowManager: WindowManager) {
           navigate(whatsNewURL())
         },
       },
-<<<<<<< HEAD
       {
         label: "Documentation",
         click: async () => {
           shell.openExternal('https://docs.k8slens.dev/');
         },
       },
-      {
-        label: "License",
-        click: async () => {
-          shell.openExternal('https://k8slens.dev/licenses/eula.md');
-        },
-      },
-=======
->>>>>>> master
       ...ignoreOnMac([
         {
           label: "About Lens",
