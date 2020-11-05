@@ -118,10 +118,12 @@ export class PodLogs extends React.Component<Props> {
     if (!this.virtualListRef.current || activeOverlayLine === undefined) return;
     // Scroll vertically
     this.virtualListRef.current.scrollToItem(activeOverlayLine, "center");
-    // Scroll horizontally
-    const overlay = document.querySelector(".PodLogs .list span.active");
-    if (!overlay) return;
-    overlay.scrollIntoViewIfNeeded();
+    // Scroll horizontally in timeout since virtual list need some time to prepare its contents
+    setTimeout(() => {
+      const overlay = document.querySelector(".PodLogs .list span.active");
+      if (!overlay) return;
+      overlay.scrollIntoViewIfNeeded();
+    }, 100);
   }
 
   /**
