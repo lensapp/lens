@@ -7,4 +7,4 @@ export * from "./status-bar-registry"
 export * from "./kube-object-detail-registry";
 export * from "./kube-object-menu-registry";
 export * from "./cluster-feature-registry"
-export * from "./kube-object-status-registry"
+export { kubeObjectStatusRegistry, KubeObjectStatusRegistration } from "./kube-object-status-registry"
