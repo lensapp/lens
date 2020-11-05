@@ -20,7 +20,7 @@ The cluster name is inheritated from the kubeconfig by default. You can change t
 
 ### Workspace
 
-This is the Lens Workspace that the cluster is associated with. You can change to another workspace or create a new workspace - this option will take you the Workspaces editor where you can create a new workspace and then 
+This is the Lens Workspace that the cluster is associated with. You can change to another workspace or create a new workspace - this option will take you the Workspaces editor where you can create a new workspace and then
 navigate back to the cluster settings.
 
 ### Cluster Icon
@@ -49,14 +49,6 @@ The terminat working directory can be configured here - by default it is set to 
 ## Features
 
 Additional Lens features that can be installed by the user.
-
-### Metrics
-
-Enable timeseries data visualization (Prometheus stack) for your cluster. Install this only if you don't have existing Prometheus stack installed.
-
-### User Mode
-
-User Mode feature enables non-admin users to see namespaces they have access to. This is achieved by configuring RBAC rules so that every authenticated user is granted to list namespaces.
 
 ## Removal
 
