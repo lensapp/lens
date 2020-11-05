@@ -9,7 +9,7 @@ import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber"
 
 export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
-  material?: string;          // material-icon, see available names at https://jossef.github.io/material-design-icons-iconfont/
+  material?: string;          // material-icon, see available names at https://material.io/icons/
   svg?: string;               // svg-filename without extension in current folder
   link?: LocationDescriptor;   // render icon as NavLink from react-router-dom
   href?: string;              // render icon as hyperlink
@@ -32,7 +32,7 @@ export class Icon extends React.PureComponent<IconProps> {
 
   get isInteractive() {
     const { interactive, onClick, href, link } = this.props;
-    return !!(interactive || onClick || href || link);
+    return interactive || !!(onClick || href || link);
   }
 
   @autobind()
@@ -87,7 +87,7 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render as inline svg-icon
     if (svg) {
-      const svgIconText = require(`!!raw-loader!./${svg}.svg`).default;
+      const svgIconText = require("!!raw-loader!./" + svg + ".svg").default;
       iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }}/>;
     }
 
