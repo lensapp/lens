@@ -8,33 +8,35 @@ repo_url: https://github.com/lensapp/lens
 copyright: Copyright &copy; 2020 <a href="https://mirantis.com/">Mirantis Inc.</a> - All rights reserved.
 edit_uri: ""
 nav:
-    - Overview: README.md
-    - Getting started: 
-      - Downloading Lens: getting-started/downloading-lens.md
-      - Preferences: getting-started/preferences.md
-      - Introductory videos: getting-started/introductory-videos.md
-    - Clusters: 
-      - Adding clusters: clusters/adding-clusters.md
-      - Removing cluster: clusters/removing-clusters.md
-      - Settings: clusters/settings.md
-    - Extensions:
-        - Overview: extensions/overview.md
-        - Get Started: 
-          - Your First Extension: extensions/get-started/your-first-extension.md
-          - Extension Anatomy: extensions/get-started/anatomy.md
-          - Wrapping Up: extensions/get-started/wrapping-up.md
-        - Extension Capabilities: 
-          - Overview: extensions/capabilities/overview.md
-          - Common Capabilities: extensions/capabilities/common-capabilities.md
-          - Theming: extensions/capabilities/theming.md
-        - Extension Guides:
-          - Overview: extensions/guides/overview.md
-          - Renderer Extension: extensions/guides/renderer-extension.md
-        - Testing and Publishing:
-          - Testing Extensions: extensions/testing-and-publishing/testing.md
-          - Publishing Extensions: extensions/testing-and-publishing/publishing.md
-          - Bundling Extensions: extensions/testing-and-publishing/bundling.md
-    - Lens Website: https://k8slens.dev
+  - Overview: README.md
+  - Getting Started: getting-started/README.md
+  - Managing Clusters:
+    - Adding clusters: clusters/adding-clusters.md
+    - Removing cluster: clusters/removing-clusters.md
+    - Settings: clusters/settings.md
+  - Using Helm Charts: helm/README.md
+  - Using Extensions: extensions/usage/README.md
+  - Preferences: getting-started/preferences.md
+  - Extension Development:
+    - Overview: extensions/README.md
+    - Get Started:
+      - Your First Extension: extensions/get-started/your-first-extension.md
+      - Extension Anatomy: extensions/get-started/anatomy.md
+      - Wrapping Up: extensions/get-started/wrapping-up.md
+    - Extension Capabilities:
+      - Overview: extensions/capabilities/README.md
+      - Common Capabilities: extensions/capabilities/common-capabilities.md
+      - Theming: extensions/capabilities/theming.md
+    - Extension Guides:
+      - Overview: extensions/guides/README.md
+      - Renderer Extension: extensions/guides/renderer-extension.md
+    - Testing and Publishing:
+      - Testing Extensions: extensions/testing-and-publishing/testing.md
+      - Publishing Extensions: extensions/testing-and-publishing/publishing.md
+      - Bundling Extensions: extensions/testing-and-publishing/bundling.md
+    - API Reference: extensions/api/README.md
+  - Contributing: contributing/README.md
+  - FAQ: faq/README.md
 theme:
   name: 'material'
   highlightjs: true
@@ -81,5 +83,8 @@ extra:
     - icon: fontawesome/brands/slack
       link: http://k8slens.slack.com/
       name: Lens on Slack
+    - icon: fontawesome/solid/link
+      link: https://k8slens.dev/
+      name: Lens Website
   version:
     method: mike
