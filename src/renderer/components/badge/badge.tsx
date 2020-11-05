@@ -22,6 +22,8 @@
 import "./badge.scss";
 
 import React from "react";
+import { computed, makeObservable, observable } from "mobx";
+import { observer } from "mobx-react";
 import { cssNames } from "../../utils/cssNames";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 
@@ -29,19 +31,76 @@ export interface BadgeProps extends React.HTMLAttributes<any>, TooltipDecoratorP
   small?: boolean;
   flat?: boolean;
   label?: React.ReactNode;
+  isExpanded?: boolean; // always force state to this value
 }
 
 @withTooltip
+@observer
 export class Badge extends React.Component<BadgeProps> {
-  render() {
-    const { className, label, small, flat, children, ...elemProps } = this.props;
-    const clickable = Boolean(this.props.onClick);
+  @observable _isExpanded = false;
+  @observable hasHighlightedText = false;
+  @observable ref = React.createRef<HTMLDivElement>();
 
-    return <>
-      <span className={cssNames("Badge", { small, flat, clickable }, className)} {...elemProps}>
+  constructor(props: BadgeProps) {
+    super(props);
+    makeObservable(this);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("selectionchange", this.onSelectionChange);
+  }
+
+  @computed get isExpanded() {
+    return this.props.isExpanded ?? this._isExpanded;
+  }
+
+  @computed get isExpandable() {
+    if (!this.ref.current) {
+      return false;
+    }
+
+    const { flat } = this.props;
+    const { scrollWidth, clientWidth, clientHeight, scrollHeight } = this.ref.current;
+
+    return !flat && (clientWidth < scrollWidth || clientHeight < scrollHeight);
+  }
+
+  onSelectionChange = () => {
+    this.hasHighlightedText ||= document.getSelection().toString().length > 0;
+  };
+
+  onMouseDown = () => {
+    this.onSelectionChange(); // initial "event" fire on mouse down (for clearing old selections)
+    document.addEventListener("selectionchange", this.onSelectionChange);
+  };
+
+  onMouseUp = () => {
+    document.removeEventListener("selectionchange", this.onSelectionChange);
+
+    if (!this.hasHighlightedText) {
+      this._isExpanded = !this._isExpanded;
+    }
+
+    this.hasHighlightedText = false;
+  };
+
+  render() {
+    const { isExpandable, isExpanded } = this;
+    const { className, label, small, flat, children, isExpanded: _, ...elemProps } = this.props;
+    const clickable = Boolean(this.props.onClick);
+    const classNames = cssNames("Badge", className, {
+      small,
+      flat,
+      isExpandable,
+      isExpanded,
+      clickable,
+    });
+
+    return (
+      <div {...elemProps} className={classNames} onMouseUp={this.onMouseUp} onMouseDown={this.onMouseDown} ref={this.ref}>
         {label}
         {children}
-      </span>
-    </>;
+      </div>
+    );
   }
 }

@@ -21,10 +21,25 @@
 
 .Badge {
   display: inline-block;
-  white-space: nowrap;
+  background: $colorVague;
+  color: $textColorSecondary;
+  border-radius: $radius;
+  padding: .2em .4em;
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+
+  &.isExpandable {
+    cursor: pointer;
+
+    &:hover {
+      background-color: $mainBackground;
+    }
+  }
+
+  &:not(.isExpanded) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   &:not(.flat) {
     background: $colorVague;
