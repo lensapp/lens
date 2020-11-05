@@ -30,4 +30,15 @@ export { Role, roleApi } from "../../renderer/api/endpoints";
 export { RoleBinding, roleBindingApi } from "../../renderer/api/endpoints";
 export { ClusterRole, clusterRoleApi } from "../../renderer/api/endpoints";
 export { ClusterRoleBinding, clusterRoleBindingApi } from "../../renderer/api/endpoints";
-export { KubeObjectStatus, KubeObjectStatusLevel } from "../registries/kube-object-status-registry"
+
+export type KubeObjectStatus = {
+  level: KubeObjectStatusLevel;
+  text: string;
+  timestamp?: string;
+}
+
+export enum KubeObjectStatusLevel {
+  INFO = 1,
+  WARNING = 2,
+  CRITICAL = 3
+}

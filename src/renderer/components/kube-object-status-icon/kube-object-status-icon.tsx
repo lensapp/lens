@@ -4,7 +4,8 @@ import React from "react";
 import { Icon } from "../icon";
 import { KubeObject } from "../../api/kube-object";
 import { cssNames, formatDuration } from "../../utils";
-import { KubeObjectStatusRegistration, KubeObjectStatus, KubeObjectStatusLevel, kubeObjectStatusRegistry } from "../../../extensions/registries/kube-object-status-registry"
+import { KubeObjectStatusRegistration, kubeObjectStatusRegistry } from "../../../extensions/registries/kube-object-status-registry"
+import { KubeObjectStatus, KubeObjectStatusLevel } from "../../..//extensions/renderer-api/k8s-api";
 import { computed } from "mobx";
 
 interface Props {
