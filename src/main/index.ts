@@ -15,13 +15,12 @@ import { shellSync } from "./shell-sync"
 import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { registerFileProtocol } from "../common/register-protocol";
+import logger from "./logger"
 import { clusterStore } from "../common/cluster-store"
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
 import { appEventBus } from "../common/event-bus"
-import { extensionManager } from "../extensions/extension-manager";
 import { extensionLoader } from "../extensions/extension-loader";
-import logger from "./logger"
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -48,7 +47,7 @@ app.on("ready", async () => {
 
   registerFileProtocol("static", __static);
 
-  // preload isomorphic stores
+  // preload
   await Promise.all([
     userStore.load(),
     clusterStore.load(),
@@ -76,12 +75,8 @@ app.on("ready", async () => {
     app.exit();
   }
 
-  windowManager = new WindowManager(proxyPort);
-
-  LensExtensionsApi.windowManager = windowManager; // expose to extensions
-  extensionLoader.loadOnMain()
-  extensionLoader.extensions.replace(await extensionManager.load())
-  extensionLoader.broadcastExtensions()
+  LensExtensionsApi.windowManager = windowManager = new WindowManager(proxyPort);
+  extensionLoader.init(); // call after windowManager to see splash earlier
 
   setTimeout(() => {
     appEventBus.emit({ name: "app", action: "start" })

@@ -15,7 +15,7 @@ export class ExtensionStore<T = any> extends BaseStore<T> {
     await super.load()
   }
 
-  protected storePath() {
-    return path.join(super.storePath(), "extension-store", this.extension.name)
+  protected cwd() {
+    return path.join(super.cwd(), "extension-store", this.extension.name)
   }
 }

@@ -1,3 +1,4 @@
+import { ipcMain } from "electron"
 import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences } from "../common/cluster-store"
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
@@ -33,7 +34,7 @@ export type ClusterRefreshOptions = {
   refreshMetadata?: boolean
 }
 
-export interface ClusterState extends ClusterModel {
+export interface ClusterState {
   initialized: boolean;
   apiUrl: string;
   online: boolean;
@@ -47,11 +48,12 @@ export interface ClusterState extends ClusterModel {
   allowedResources: string[]
 }
 
-export class Cluster implements ClusterModel {
+export class Cluster implements ClusterModel, ClusterState {
   public id: ClusterId;
   public frameId: number;
   public kubeCtl: Kubectl
   public contextHandler: ContextHandler;
+  public ownerRef: string;
   protected kubeconfigManager: KubeconfigManager;
   protected eventDisposers: Function[] = [];
   protected activated = false;
@@ -65,11 +67,12 @@ export class Cluster implements ClusterModel {
   @observable kubeConfigPath: string;
   @observable apiUrl: string; // cluster server url
   @observable kubeProxyUrl: string; // lens-proxy to kube-api url
-  @observable online = false;
-  @observable accessible = false;
-  @observable ready = false;
+  @observable enabled = false; // only enabled clusters are visible to users
+  @observable online = false; // describes if we can detect that cluster is online
+  @observable accessible = false; // if user is able to access cluster resources
+  @observable ready = false; // cluster is in usable state
   @observable reconnecting = false;
-  @observable disconnected = true;
+  @observable disconnected = true; // false if user has selected to connect
   @observable failureReason: string;
   @observable isAdmin = false;
   @observable eventCount = 0;
@@ -81,6 +84,7 @@ export class Cluster implements ClusterModel {
   @computed get available() {
     return this.accessible && !this.disconnected;
   }
+
   get version(): string {
     return String(this.metadata?.version) || ""
   }
@@ -91,6 +95,10 @@ export class Cluster implements ClusterModel {
     if (kubeconfig.getContextObject(this.contextName)) {
       this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server
     }
+  }
+
+  get isManaged(): boolean {
+    return !!this.ownerRef
   }
 
   @action
@@ -119,17 +127,19 @@ export class Cluster implements ClusterModel {
   }
 
   protected bindEvents() {
-    logger.info(`[CLUSTER]: bind events`, this.getMeta());
-    const refreshTimer = setInterval(() => !this.disconnected && this.refresh(), 30000); // every 30s
-    const refreshMetadataTimer = setInterval(() => !this.disconnected && this.refreshMetadata(), 900000); // every 15 minutes
+    logger.info(`[CLUSTER]: bind events`, this.getMeta())
+    const refreshTimer = setInterval(() => !this.disconnected && this.refresh(), 30000) // every 30s
+    const refreshMetadataTimer = setInterval(() => !this.disconnected && this.refreshMetadata(), 900000) // every 15 minutes
 
-    this.eventDisposers.push(
-      reaction(this.getState, this.pushState),
-      () => {
-        clearInterval(refreshTimer);
-        clearInterval(refreshMetadataTimer);
-      },
-    );
+    if (ipcMain) {
+      this.eventDisposers.push(
+        reaction(() => this.getState(), () => this.pushState()),
+        () => {
+          clearInterval(refreshTimer)
+          clearInterval(refreshMetadataTimer)
+        },
+      );
+    }
   }
 
   protected unbindEvents() {
@@ -361,6 +371,7 @@ export class Cluster implements ClusterModel {
       workspace: this.workspace,
       preferences: this.preferences,
       metadata: this.metadata,
+      ownerRef: this.ownerRef
     };
     return toJS(model, {
       recurseEverything: true
@@ -368,9 +379,8 @@ export class Cluster implements ClusterModel {
   }
 
   // serializable cluster-state used for sync btw main <-> renderer
-  getState = (): ClusterState => {
+  getState(): ClusterState {
     const state: ClusterState = {
-      ...this.toJSON(),
       initialized: this.initialized,
       apiUrl: this.apiUrl,
       online: this.online,
@@ -388,14 +398,18 @@ export class Cluster implements ClusterModel {
     })
   }
 
-  pushState = (state = this.getState()): ClusterState => {
+  @action
+  setState(state: ClusterState) {
+    Object.assign(this, state)
+  }
+
+  pushState(state = this.getState()) {
     logger.silly(`[CLUSTER]: push-state`, state);
     broadcastIpc({
       channel: "cluster:state",
       frameId: this.frameId,
-      args: [state],
-    });
-    return state;
+      args: [this.id, state],
+    })
   }
 
   // get cluster system meta, e.g. use in "logger"

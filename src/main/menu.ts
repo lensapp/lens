@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
+import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents } from "electron"
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
 import { appName, isMac, isWindows } from "../common/vars";
@@ -6,6 +6,7 @@ import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.r
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
+import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
 import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 
@@ -68,6 +69,13 @@ export function buildMenu(windowManager: WindowManager) {
         accelerator: 'CmdOrCtrl+,',
         click() {
           navigate(preferencesURL())
+        }
+      },
+      {
+        label: 'Extensions',
+        accelerator: 'CmdOrCtrl+Shift+E',
+        click() {
+          navigate(extensionsURL())
         }
       },
       { type: 'separator' },
@@ -185,6 +193,7 @@ export function buildMenu(windowManager: WindowManager) {
           navigate(whatsNewURL())
         },
       },
+<<<<<<< HEAD
       {
         label: "Documentation",
         click: async () => {
@@ -197,6 +206,8 @@ export function buildMenu(windowManager: WindowManager) {
           shell.openExternal('https://k8slens.dev/licenses/eula.md');
         },
       },
+=======
+>>>>>>> master
       ...ignoreOnMac([
         {
           label: "About Lens",

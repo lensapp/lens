@@ -54,6 +54,9 @@ export class App extends React.Component {
     appEventBus.emit({name: "cluster", action: "open", params: {
       clusterId: clusterId
     }})
+    window.addEventListener("online", () => {
+      window.location.reload()
+    })
   }
 
   get startURL() {

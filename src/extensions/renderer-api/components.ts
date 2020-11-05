@@ -11,7 +11,8 @@ export * from "../../renderer/components/drawer"
 
 // kube helpers
 export { KubeObjectDetailsProps, KubeObjectMenuProps } from "../../renderer/components/kube-object"
-export { KubeObjectMeta } from "../../renderer/components/kube-object/kube-object-meta";
+export { KubeObjectMeta } from "../../renderer/components/kube-object/kube-object-meta"
+export { KubeObjectListLayout, KubeObjectListLayoutProps } from "../../renderer/components/kube-object/kube-object-list-layout";
 export { KubeEventDetails } from "../../renderer/components/+events/kube-event-details"
 
 // specific exports

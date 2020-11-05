@@ -1,0 +1,22 @@
+{
+  "name": "lens-license",
+  "version": "0.1.0",
+  "description": "License menu item",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "webpack -p",
+    "dev": "webpack --watch",
+    "test": "echo NO TESTS"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/webpack": "^4.41.17",
+    "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
+    "mobx": "^5.15.5",
+    "react": "^16.13.1",
+    "ts-loader": "^8.0.4",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3",
+    "webpack": "^4.44.2"
+  }
+}

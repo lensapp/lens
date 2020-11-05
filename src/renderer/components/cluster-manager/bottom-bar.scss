@@ -4,8 +4,9 @@
 
   font-size: $font-size-small;
   background-color: #3d90ce;
-  padding: 0 $padding;
+  padding: 0 2px;
   color: white;
+  height: 22px;
 
   #current-workspace {
     padding: $padding / 4 $padding / 2;
