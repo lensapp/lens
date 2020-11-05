@@ -71,19 +71,19 @@ export class Deployments extends React.Component<Props> {
         renderHeaderTitle={<Trans>Deployments</Trans>}
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { className: "warning" },
           { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
           { title: <Trans>Pods</Trans>, className: "pods" },
           { title: <Trans>Replicas</Trans>, className: "replicas", sortBy: sortBy.replicas },
-          { className: "warning" },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Conditions</Trans>, className: "conditions", sortBy: sortBy.condition },
         ]}
         renderTableContents={(deployment: Deployment) => [
           deployment.getName(),
+          <KubeObjectStatusIcon object={deployment}/>,
           deployment.getNs(),
           this.renderPods(deployment),
           deployment.getReplicas(),
-          <KubeObjectStatusIcon object={deployment}/>,
           deployment.getAge(),
           this.renderConditions(deployment),
         ]}

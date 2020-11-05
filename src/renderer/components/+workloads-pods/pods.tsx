@@ -68,22 +68,6 @@ export class Pods extends React.Component<Props> {
     });
   }
 
-  renderPodStatus(pod: Pod) {
-    return {
-      className: kebabCase(pod.getStatusMessage()),
-      children: (
-        <span>
-          {pod.getStatusMessage()}
-        </span>
-      )
-    }
-  }
-
-  renderPodStatusIcons(pod: Pod) {
-    return (
-      <KubeObjectStatusIcon object={pod} />
-    )
-  }
   render() {
     return (
       <KubeObjectListLayout
@@ -117,7 +101,7 @@ export class Pods extends React.Component<Props> {
         ]}
         renderTableContents={(pod: Pod) => [
           pod.getName(),
-          this.renderPodStatusIcons(pod),
+          <KubeObjectStatusIcon object={pod} />,
           pod.getNs(),
           this.renderContainersStatus(pod),
           pod.getRestartsCount(),
@@ -132,7 +116,7 @@ export class Pods extends React.Component<Props> {
           }),
           pod.getQosClass(),
           pod.getAge(),
-          this.renderPodStatus(pod)
+          { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) }
         ]}
       />
     )
