@@ -1,4 +1,7 @@
+$material-design-icons-font-directory-path: '~material-design-icons-iconfont/dist/fonts/';
+
 // Custom fonts
+@import "~material-design-icons-iconfont/src/material-design-icons";
 @import "~typeface-roboto/index.css";
 
 // Material Design Icons, used primarily in icon.tsx
