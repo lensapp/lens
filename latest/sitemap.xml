@@ -4,15 +4,7 @@
      <lastmod>2020-11-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/getting-started/downloading-lens/</loc>
-     <lastmod>2020-11-05</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://docs.k8slens.dev/getting-started/preferences/</loc>
-     <lastmod>2020-11-05</lastmod>
-     <changefreq>daily</changefreq>
-    </url><url>
-     <loc>https://docs.k8slens.dev/getting-started/introductory-videos/</loc>
+     <loc>https://docs.k8slens.dev/getting-started/</loc>
      <lastmod>2020-11-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -28,7 +20,19 @@
      <lastmod>2020-11-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/overview/</loc>
+     <loc>https://docs.k8slens.dev/helm/</loc>
+     <lastmod>2020-11-05</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://docs.k8slens.dev/extensions/usage/</loc>
+     <lastmod>2020-11-05</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://docs.k8slens.dev/getting-started/preferences/</loc>
+     <lastmod>2020-11-05</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://docs.k8slens.dev/extensions/</loc>
      <lastmod>2020-11-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -44,7 +48,7 @@
      <lastmod>2020-11-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/capabilities/overview/</loc>
+     <loc>https://docs.k8slens.dev/extensions/capabilities/</loc>
      <lastmod>2020-11-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -56,7 +60,7 @@
      <lastmod>2020-11-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>https://docs.k8slens.dev/extensions/guides/overview/</loc>
+     <loc>https://docs.k8slens.dev/extensions/guides/</loc>
      <lastmod>2020-11-05</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -73,6 +77,18 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://docs.k8slens.dev/extensions/testing-and-publishing/bundling/</loc>
+     <lastmod>2020-11-05</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://docs.k8slens.dev/extensions/api/</loc>
+     <lastmod>2020-11-05</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://docs.k8slens.dev/contributing/</loc>
+     <lastmod>2020-11-05</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://docs.k8slens.dev/faq/</loc>
      <lastmod>2020-11-05</lastmod>
      <changefreq>daily</changefreq>
     </url>

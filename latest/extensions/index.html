@@ -9,24 +9,24 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/extensions/testing-and-publishing/testing/">
+        <link rel="canonical" href="https://docs.k8slens.dev/extensions/">
       
       
         <meta name="author" content="Mirantis, Inc.">
       
-      <link rel="shortcut icon" href="../../../img/favicon.ico">
+      <link rel="shortcut icon" href="../img/favicon.ico">
       <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.0+insiders-1.7.0">
     
     
       
-        <title>Testing Extensions - Lens Documentation</title>
+        <title>Overview - Lens Documentation</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.406af9ae.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.406af9ae.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ec60dfa4.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ec60dfa4.min.css">
         
       
     
@@ -41,7 +41,7 @@
     
     
     
-      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
     
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -74,6 +74,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#lens-extension-api" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -85,7 +90,7 @@
   <nav class="md-header-nav md-grid" aria-label="Header">
     <a href="https://docs.k8slens.dev" title="Lens Documentation" class="md-header-nav__button md-logo" aria-label="Lens Documentation">
       
-  <img src="../../../img/lens-logo-icon.svg" alt="logo">
+  <img src="../img/lens-logo-icon.svg" alt="logo">
 
     </a>
     <label class="md-header-nav__button md-icon" for="__drawer">
@@ -101,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Testing Extensions
+              Overview
             
           </span>
         </div>
@@ -193,7 +198,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href="https://docs.k8slens.dev" title="Lens Documentation" class="md-nav__button md-logo" aria-label="Lens Documentation">
       
-  <img src="../../../img/lens-logo-icon.svg" alt="logo">
+  <img src="../img/lens-logo-icon.svg" alt="logo">
 
     </a>
     Lens Documentation
@@ -220,7 +225,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../.." class="md-nav__link">
+    <a href=".." class="md-nav__link">
       Overview
     </a>
   </li>
@@ -232,7 +237,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../getting-started/" class="md-nav__link">
+    <a href="../getting-started/" class="md-nav__link">
       Getting Started
     </a>
   </li>
@@ -265,7 +270,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../clusters/adding-clusters/" class="md-nav__link">
+    <a href="../clusters/adding-clusters/" class="md-nav__link">
       Adding clusters
     </a>
   </li>
@@ -277,7 +282,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../clusters/removing-clusters/" class="md-nav__link">
+    <a href="../clusters/removing-clusters/" class="md-nav__link">
       Removing cluster
     </a>
   </li>
@@ -289,7 +294,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../clusters/settings/" class="md-nav__link">
+    <a href="../clusters/settings/" class="md-nav__link">
       Settings
     </a>
   </li>
@@ -306,7 +311,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../helm/" class="md-nav__link">
+    <a href="../helm/" class="md-nav__link">
       Using Helm Charts
     </a>
   </li>
@@ -318,7 +323,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../usage/" class="md-nav__link">
+    <a href="usage/" class="md-nav__link">
       Using Extensions
     </a>
   </li>
@@ -330,7 +335,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../getting-started/preferences/" class="md-nav__link">
+    <a href="../getting-started/preferences/" class="md-nav__link">
       Preferences
     </a>
   </li>
@@ -363,11 +368,77 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../../" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Overview
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
       Overview
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-can-extensions-do" class="md-nav__link">
+    What can extensions do
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-build-extensions" class="md-nav__link">
+    How to build extensions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new" class="md-nav__link">
+    What's new
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#looking-for-help" class="md-nav__link">
+    Looking for help
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#download-lens-the-kubernetes-ide" class="md-nav__link">
+    Download Lens - The Kubernetes IDE
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -398,7 +469,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../get-started/your-first-extension/" class="md-nav__link">
+    <a href="get-started/your-first-extension/" class="md-nav__link">
       Your First Extension
     </a>
   </li>
@@ -410,7 +481,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../get-started/anatomy/" class="md-nav__link">
+    <a href="get-started/anatomy/" class="md-nav__link">
       Extension Anatomy
     </a>
   </li>
@@ -422,7 +493,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../get-started/wrapping-up/" class="md-nav__link">
+    <a href="get-started/wrapping-up/" class="md-nav__link">
       Wrapping Up
     </a>
   </li>
@@ -460,7 +531,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../capabilities/" class="md-nav__link">
+    <a href="capabilities/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -472,7 +543,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../capabilities/common-capabilities/" class="md-nav__link">
+    <a href="capabilities/common-capabilities/" class="md-nav__link">
       Common Capabilities
     </a>
   </li>
@@ -484,7 +555,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../capabilities/theming/" class="md-nav__link">
+    <a href="capabilities/theming/" class="md-nav__link">
       Theming
     </a>
   </li>
@@ -522,7 +593,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../guides/" class="md-nav__link">
+    <a href="guides/" class="md-nav__link">
       Overview
     </a>
   </li>
@@ -534,7 +605,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../guides/renderer-extension/" class="md-nav__link">
+    <a href="guides/renderer-extension/" class="md-nav__link">
       Renderer Extension
     </a>
   </li>
@@ -549,12 +620,10 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-5" type="checkbox" id="nav-7-5" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-5" type="checkbox" id="nav-7-5">
     
     <label class="md-nav__link" for="nav-7-5">
       Testing and Publishing
@@ -572,18 +641,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="testing-and-publishing/testing/" class="md-nav__link">
       Testing Extensions
     </a>
-    
   </li>
 
         
@@ -593,7 +655,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../publishing/" class="md-nav__link">
+    <a href="testing-and-publishing/publishing/" class="md-nav__link">
       Publishing Extensions
     </a>
   </li>
@@ -605,7 +667,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../bundling/" class="md-nav__link">
+    <a href="testing-and-publishing/bundling/" class="md-nav__link">
       Bundling Extensions
     </a>
   </li>
@@ -622,7 +684,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api/" class="md-nav__link">
+    <a href="api/" class="md-nav__link">
       API Reference
     </a>
   </li>
@@ -639,7 +701,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../contributing/" class="md-nav__link">
+    <a href="../contributing/" class="md-nav__link">
       Contributing
     </a>
   </li>
@@ -651,7 +713,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../../faq/" class="md-nav__link">
+    <a href="../faq/" class="md-nav__link">
       FAQ
     </a>
   </li>
@@ -664,15 +726,112 @@
               </div>
             
             
+              
+              
+                
+              
+              
+                <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                  <div class="md-sidebar__scrollwrap">
+                    <div class="md-sidebar__inner">
+                      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-can-extensions-do" class="md-nav__link">
+    What can extensions do
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-build-extensions" class="md-nav__link">
+    How to build extensions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-new" class="md-nav__link">
+    What's new
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#looking-for-help" class="md-nav__link">
+    Looking for help
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#download-lens-the-kubernetes-ide" class="md-nav__link">
+    Download Lens - The Kubernetes IDE
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                    </div>
+                  </div>
+                </div>
+              
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Testing Extensions</h1>
-                
-                
+                <h1 id="lens-extension-api">Lens Extension API<a class="headerlink" href="#lens-extension-api" title="Permanent link">#</a></h1>
+<p>The Extensions API in Lens allows users to customize and enhance the Lens experience by creating their own menus or page content that is extended from the existing pages. Many of the core features of Lens are built as extensions and use the same Extension API.</p>
+<p>This documentation describes:</p>
+<ul>
+<li>How to build, run, test and publish an extension</li>
+<li>How to take advantage of Lens's Extension API</li>
+<li>Where to find <a href="guides/overview.md">guides</a> and <a href="https://github.com/lensapp/lens-extension-samples">code samples</a> to help get you started</li>
+</ul>
+<p>Code samples are available at <a href="https://github.com/lensapp/lens-extension-samples">lensapp/lens-extension-samples</a>.</p>
+<h2 id="what-can-extensions-do">What can extensions do<a class="headerlink" href="#what-can-extensions-do" title="Permanent link">#</a></h2>
+<p>Here are some examples of what you can achieve with the Extension API:</p>
+<ul>
+<li>Add custom components &amp; views in the UI - Extending the Lens Workbench</li>
+</ul>
+<p>If you'd like to have a more comprehensive overview of the Extension API, refer to the <a href="capabilities/overview.md">Extension Capabilities Overview</a> page. <a href="guides/overview.md">Extension Guides Overview</a> also includes a list of code samples and guides that illustrate various Extension API usage.</p>
+<h2 id="how-to-build-extensions">How to build extensions<a class="headerlink" href="#how-to-build-extensions" title="Permanent link">#</a></h2>
+<p>Building a good extension can take a lot of effort. Here is what each section of the API doc can help you with:</p>
+<ul>
+<li><strong>Get Started</strong> teaches fundamental concepts for building extensions with the Hello World sample.</li>
+<li><strong>Extension Capabilities</strong> dissects Lens's Extension API into smaller categories and points you to more detailed topics.</li>
+<li><strong>Extension Guides</strong> includes guides and code samples that explain specific usages of Lens Extension API.</li>
+<li><strong>Testing and Publishing</strong> includes in-depth guides on various extension development topics, such as testing and publishing extensions.</li>
+<li><strong>Advanced Topics</strong> explains advanced concepts such as integrating with 3rd party applications/services.</li>
+<li><strong>References</strong> contains exhaustive references for the Lens Extension API, Contribution Points, and many other topics.</li>
+</ul>
+<h2 id="whats-new">What's new<a class="headerlink" href="#whats-new" title="Permanent link">#</a></h2>
+<p>Lens updates on a monthly cadence, and that applies to the Extension API as well. New features and APIs become available every month to increase the power and scope of Lens extensions.</p>
+<p>To stay current with the Extension API and Lens features in general, you can review the <a href="https://github.com/lensapp/lens/releases">release notes</a>.</p>
+<h2 id="looking-for-help">Looking for help<a class="headerlink" href="#looking-for-help" title="Permanent link">#</a></h2>
+<p>If you have questions for extension development, try asking on:</p>
+<ul>
+<li><a href="http://k8slens.slack.com/">Lens Dev Slack</a>: Public chatroom for Lens developers. Some Lens team members chime in on conversations.</li>
+</ul>
+<p>To provide feedback on the documentation or issues with the Lens Extension API, create new issues at <a href="https://github.com/lensapp/lens/issues">lensapp/lens</a> with the labels <code>area/documentation</code> and/or <code>area/extension</code>.</p>
+<h2 id="download-lens-the-kubernetes-ide">Download Lens - The Kubernetes IDE<a class="headerlink" href="#download-lens-the-kubernetes-ide" title="Permanent link">#</a></h2>
+<p>Go to <a href="https://k8slens.dev">Lens</a></p>
                 
                   
                     
@@ -704,7 +863,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../../guides/renderer-extension/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../getting-started/preferences/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -713,19 +872,19 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Renderer Extension
+                Preferences
               </div>
             </div>
           </a>
         
         
-          <a href="../publishing/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="get-started/your-first-extension/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Publishing Extensions
+                Your First Extension
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
@@ -781,15 +940,15 @@
       
     </div>
     
-      <script src="../../../assets/javascripts/vendor.4d7724a9.min.js"></script>
-      <script src="../../../assets/javascripts/bundle.0421a6ad.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      <script src="../assets/javascripts/vendor.4d7724a9.min.js"></script>
+      <script src="../assets/javascripts/bundle.0421a6ad.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
       
       <script>
         app = initialize({
-          base: "../../..",
+          base: "..",
           features: ['navigation.instant', 'toc.autohide', 'search.suggest', 'search.highlight'],
           search: Object.assign({
-            worker: "../../../assets/javascripts/worker/search.0f64ce30.min.js"
+            worker: "../assets/javascripts/worker/search.0f64ce30.min.js"
           }, typeof search !== "undefined" && search),
           version: {'method': 'mike'}
         })
