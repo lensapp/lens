@@ -18,7 +18,7 @@ export class LensExtension {
   readonly manifestPath: string;
   readonly isBundled: boolean;
 
-  @observable isEnabled = false;
+  @observable private isEnabled = false;
 
   constructor({ manifest, manifestPath, isBundled }: InstalledExtension) {
     this.manifest = manifest
