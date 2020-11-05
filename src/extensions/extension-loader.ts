@@ -4,10 +4,11 @@ import type { LensRendererExtension } from "./lens-renderer-extension"
 import type { InstalledExtension } from "./extension-manager";
 import path from "path"
 import { broadcastIpc } from "../common/ipc"
-import { computed, observable, reaction, when } from "mobx"
+import { action, computed, observable, reaction, toJS, when } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
 import * as registries from "./registries";
+import { extensionsStore } from "./extensions-store";
 
 // lazy load so that we get correct userData
 export function extensionPackagesRoot() {
@@ -16,8 +17,8 @@ export function extensionPackagesRoot() {
 
 export class ExtensionLoader {
   @observable isLoaded = false;
-  protected extensions = observable.map<LensExtensionId, InstalledExtension>([], { deep: false });
-  protected instances = observable.map<LensExtensionId, LensExtension>([], { deep: false })
+  protected extensions = observable.map<LensExtensionId, InstalledExtension>();
+  protected instances = observable.map<LensExtensionId, LensExtension>()
 
   constructor() {
     if (ipcRenderer) {
@@ -30,18 +31,39 @@ export class ExtensionLoader {
         })
       });
     }
+    this.manageExtensionsState();
   }
 
-  @computed get userExtensions(): LensExtension[] {
-    return [...this.instances.values()].filter(ext => !ext.isBundled)
+  @computed get userExtensions(): InstalledExtension[] {
+    return Array.from(this.toJSON().values()).filter(ext => !ext.isBundled)
   }
 
-  async init() {
-    const { extensionManager } = await import("./extension-manager");
-    const installedExtensions = await extensionManager.load();
-    this.extensions.replace(installedExtensions);
+  protected async manageExtensionsState() {
+    await extensionsStore.whenLoaded;
+    await when(() => this.isLoaded);
+
+    // apply initial state
+    this.extensions.forEach((ext, extId) => {
+      ext.enabled = ext.isBundled || extensionsStore.isEnabled(extId);
+    })
+
+    // handle updated state from store
+    reaction(() => extensionsStore.extensions.toJS(), extensionsState => {
+      extensionsState.forEach((state, extId) => {
+        const ext = this.extensions.get(extId);
+        if (ext && !ext.isBundled && ext.enabled !== state.enabled) {
+          ext.enabled = state.enabled;
+        }
+      })
+    });
+  }
+
+  @action
+  async init(extensions: Map<LensExtensionId, InstalledExtension>) {
+    this.extensions.replace(extensions);
     this.isLoaded = true;
     this.loadOnMain();
+    this.broadcastExtensions();
   }
 
   loadOnMain() {
@@ -71,22 +93,26 @@ export class ExtensionLoader {
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Function[]) {
-    return reaction(() => this.extensions.toJS(), (installedExtensions) => {
-      for (const [id, ext] of installedExtensions) {
-        let instance = this.instances.get(ext.manifestPath)
-        if (!instance) {
+    return reaction(() => this.toJSON(), (installedExtensions) => {
+      for (const [extId, ext] of installedExtensions) {
+        let instance = this.instances.get(extId);
+        if (ext.enabled && !instance) {
           const extensionModule = this.requireExtension(ext)
           if (!extensionModule) {
-            continue
+            continue;
           }
           try {
             const LensExtensionClass: LensExtensionConstructor = extensionModule.default;
             instance = new LensExtensionClass(ext);
             instance.whenEnabled(() => register(instance));
-            this.instances.set(ext.manifestPath, instance);
+            instance.enable();
+            this.instances.set(extId, instance);
           } catch (err) {
             logger.error(`[EXTENSIONS-LOADER]: init extension instance error`, { ext, err })
           }
+        } else if (!ext.enabled && instance) {
+          instance.disable();
+          this.instances.delete(extId);
         }
       }
     }, {
@@ -111,6 +137,13 @@ export class ExtensionLoader {
     }
   }
 
+  toJSON() {
+    return toJS(this.extensions, {
+      exportMapsAsObjects: false,
+      recurseEverything: true,
+    })
+  }
+
   async broadcastExtensions(frameId?: number) {
     await when(() => this.isLoaded);
     broadcastIpc({
@@ -118,7 +151,7 @@ export class ExtensionLoader {
       frameId: frameId,
       frameOnly: !!frameId,
       args: [
-        Array.from(this.extensions.toJS().values())
+        Array.from(this.toJSON().values()),
       ],
     })
   }

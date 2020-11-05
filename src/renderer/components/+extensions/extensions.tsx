@@ -12,6 +12,7 @@ import { Icon } from "../icon";
 import { PageLayout } from "../layout/page-layout";
 import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionManager } from "../../../extensions/extension-manager";
+import { extensionsStore } from "../../../extensions/extensions-store";
 
 @observer
 export class Extensions extends React.Component {
@@ -19,7 +20,8 @@ export class Extensions extends React.Component {
 
   @computed get extensions() {
     const searchText = this.search.toLowerCase();
-    return extensionLoader.userExtensions.filter(({ name, description }) => {
+    return extensionLoader.userExtensions.filter(ext => {
+      const { name, description } = ext.manifest;
       return [
         name.toLowerCase().includes(searchText),
         description.toLowerCase().includes(searchText),
@@ -68,9 +70,10 @@ export class Extensions extends React.Component {
       )
     }
     return extensions.map(ext => {
-      const { id, name, description, isEnabled } = ext;
+      const { manifestPath: extId, enabled, manifest } = ext;
+      const { name, description } = manifest;
       return (
-        <div key={id} className="extension flex gaps align-center">
+        <div key={extId} className="extension flex gaps align-center">
           <div className="box grow flex column gaps">
             <div className="package">
               Name: <code className="name">{name}</code>
@@ -79,11 +82,11 @@ export class Extensions extends React.Component {
               Description: <span className="text-secondary">{description}</span>
             </div>
           </div>
-          {!isEnabled && (
-            <Button plain active onClick={() => ext.enable()}>Enable</Button>
+          {!enabled && (
+            <Button plain active onClick={() => extensionsStore.setEnabled(extId, true)}>Enable</Button>
           )}
-          {isEnabled && (
-            <Button accent onClick={() => ext.disable()}>Disable</Button>
+          {enabled && (
+            <Button accent onClick={() => extensionsStore.setEnabled(extId, false)}>Disable</Button>
           )}
         </div>
       )
@@ -102,7 +105,7 @@ export class Extensions extends React.Component {
             value={this.search}
             onChange={(value) => this.search = value}
           />
-          <div className="extension-list flex column gaps">
+          <div className="extension-list">
             {this.renderExtensions()}
           </div>
         </WizardLayout>
