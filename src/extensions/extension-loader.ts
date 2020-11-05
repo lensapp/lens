@@ -1,20 +1,13 @@
-import type { ExtensionId, ExtensionManifest, ExtensionModel, LensExtension } from "./lens-extension"
+import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "./lens-extension"
 import type { LensMainExtension } from "./lens-main-extension"
 import type { LensRendererExtension } from "./lens-renderer-extension"
+import type { InstalledExtension } from "./extension-manager";
 import path from "path"
 import { broadcastIpc } from "../common/ipc"
-import { observable, reaction, toJS, } from "mobx"
+import { computed, observable, reaction, when } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
-import {
-  appPreferenceRegistry, clusterFeatureRegistry, clusterPageRegistry, globalPageRegistry,
-  kubeObjectDetailRegistry, kubeObjectMenuRegistry, menuRegistry, statusBarRegistry
-} from "./registries";
-
-export interface InstalledExtension extends ExtensionModel {
-  manifestPath: string;
-  manifest: ExtensionManifest;
-}
+import * as registries from "./registries";
 
 // lazy load so that we get correct userData
 export function extensionPackagesRoot() {
@@ -22,69 +15,82 @@ export function extensionPackagesRoot() {
 }
 
 export class ExtensionLoader {
-  @observable extensions = observable.map<ExtensionId, InstalledExtension>([], { deep: false });
-  @observable instances = observable.map<ExtensionId, LensExtension>([], { deep: false })
+  @observable isLoaded = false;
+  protected extensions = observable.map<LensExtensionId, InstalledExtension>([], { deep: false });
+  protected instances = observable.map<LensExtensionId, LensExtension>([], { deep: false })
 
   constructor() {
     if (ipcRenderer) {
       ipcRenderer.on("extensions:loaded", (event, extensions: InstalledExtension[]) => {
+        this.isLoaded = true;
         extensions.forEach((ext) => {
-          if (!this.getById(ext.manifestPath)) {
+          if (!this.extensions.has(ext.manifestPath)) {
             this.extensions.set(ext.manifestPath, ext)
           }
         })
-      })
+      });
     }
+  }
+
+  @computed get userExtensions(): LensExtension[] {
+    return [...this.instances.values()].filter(ext => !ext.isBundled)
+  }
+
+  async init() {
+    const { extensionManager } = await import("./extension-manager");
+    const installedExtensions = await extensionManager.load();
+    this.extensions.replace(installedExtensions);
+    this.isLoaded = true;
+    this.loadOnMain();
   }
 
   loadOnMain() {
     logger.info('[EXTENSIONS-LOADER]: load on main')
-    this.autoloadExtensions((extension: LensMainExtension) => {
-      extension.registerTo(menuRegistry, extension.appMenus)
-    })
+    this.autoInitExtensions((extension: LensMainExtension) => [
+      registries.menuRegistry.add(...extension.appMenus)
+    ]);
   }
 
   loadOnClusterManagerRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
-    this.autoloadExtensions((extension: LensRendererExtension) => {
-      extension.registerTo(globalPageRegistry, extension.globalPages)
-      extension.registerTo(appPreferenceRegistry, extension.appPreferences)
-      extension.registerTo(clusterFeatureRegistry, extension.clusterFeatures)
-      extension.registerTo(statusBarRegistry, extension.statusBarItems)
-    })
+    this.autoInitExtensions((extension: LensRendererExtension) => [
+      registries.globalPageRegistry.add(...extension.globalPages),
+      registries.appPreferenceRegistry.add(...extension.appPreferences),
+      registries.clusterFeatureRegistry.add(...extension.clusterFeatures),
+      registries.statusBarRegistry.add(...extension.statusBarItems),
+    ]);
   }
 
   loadOnClusterRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
-    this.autoloadExtensions((extension: LensRendererExtension) => {
-      extension.registerTo(clusterPageRegistry, extension.clusterPages)
-      extension.registerTo(kubeObjectMenuRegistry, extension.kubeObjectMenuItems)
-      extension.registerTo(kubeObjectDetailRegistry, extension.kubeObjectDetailItems)
-    })
+    this.autoInitExtensions((extension: LensRendererExtension) => [
+      registries.clusterPageRegistry.add(...extension.clusterPages),
+      registries.kubeObjectMenuRegistry.add(...extension.kubeObjectMenuItems),
+      registries.kubeObjectDetailRegistry.add(...extension.kubeObjectDetailItems),
+    ]);
   }
 
-  protected autoloadExtensions(callback: (instance: LensExtension) => void) {
+  protected autoInitExtensions(register: (ext: LensExtension) => Function[]) {
     return reaction(() => this.extensions.toJS(), (installedExtensions) => {
-      for(const [id, ext] of installedExtensions) {
-        let instance = this.instances.get(ext.id)
+      for (const [id, ext] of installedExtensions) {
+        let instance = this.instances.get(ext.manifestPath)
         if (!instance) {
           const extensionModule = this.requireExtension(ext)
           if (!extensionModule) {
             continue
           }
-          const LensExtensionClass = extensionModule.default;
-          instance = new LensExtensionClass({ ...ext.manifest, manifestPath: ext.manifestPath, id: ext.manifestPath }, ext.manifest);
           try {
-            instance.enable()
-            callback(instance)
-          } finally {
-            this.instances.set(ext.id, instance)
+            const LensExtensionClass: LensExtensionConstructor = extensionModule.default;
+            instance = new LensExtensionClass(ext);
+            instance.whenEnabled(() => register(instance));
+            this.instances.set(ext.manifestPath, instance);
+          } catch (err) {
+            logger.error(`[EXTENSIONS-LOADER]: init extension instance error`, { ext, err })
           }
         }
       }
     }, {
       fireImmediately: true,
-      delay: 0,
     })
   }
 
@@ -105,37 +111,17 @@ export class ExtensionLoader {
     }
   }
 
-  getById(id: ExtensionId): InstalledExtension {
-    return this.extensions.get(id);
-  }
-
-  async removeById(id: ExtensionId) {
-    const extension = this.getById(id);
-    if (extension) {
-      const instance = this.instances.get(extension.id)
-      if (instance) {
-        await instance.disable()
-      }
-      this.extensions.delete(id);
-    }
-  }
-
-  broadcastExtensions(frameId?: number) {
+  async broadcastExtensions(frameId?: number) {
+    await when(() => this.isLoaded);
     broadcastIpc({
       channel: "extensions:loaded",
       frameId: frameId,
       frameOnly: !!frameId,
-      args: [this.toJSON().extensions],
-    })
-  }
-
-  toJSON() {
-    return toJS({
-      extensions: Array.from(this.extensions).map(([id, instance]) => instance),
-    }, {
-      recurseEverything: true,
+      args: [
+        Array.from(this.extensions.toJS().values())
+      ],
     })
   }
 }
 
-export const extensionLoader = new ExtensionLoader()
+export const extensionLoader = new ExtensionLoader();

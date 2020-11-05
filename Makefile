@@ -33,15 +33,15 @@ lint:
 test: download-bins
 	yarn test
 
-integration-linux:
+integration-linux: build-extension-types build-extensions
 	yarn build:linux
 	yarn integration
 
-integration-mac:
+integration-mac: build-extension-types build-extensions
 	yarn build:mac
 	yarn integration
 
-integration-win:
+integration-win: build-extension-types build-extensions
 	yarn build:win
 	yarn integration
 
@@ -58,9 +58,14 @@ endif
 build-extensions:
 	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(dir) build;)
 
-build-npm:
-	yarn compile:extension-types
+test-extensions:
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(dir) test;)
+
+build-npm: build-extension-types
 	yarn npm:fix-package-version
+
+build-extension-types:
+	yarn compile:extension-types
 
 publish-npm: build-npm
 	npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"

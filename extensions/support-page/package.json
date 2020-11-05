@@ -6,12 +6,12 @@
   "renderer": "dist/renderer.js",
   "scripts": {
     "build": "webpack -p",
-    "dev": "webpack --watch"
+    "dev": "webpack --watch",
+    "test": "echo NO TESTS"
   },
   "dependencies": {},
   "devDependencies": {
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
-    "@types/node": "^14.11.11",
     "@types/react": "^16.9.53",
     "@types/react-router": "^5.1.8",
     "@types/webpack": "^4.41.17",
