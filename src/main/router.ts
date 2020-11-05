@@ -94,9 +94,16 @@ export class Router {
     return mimeTypes[path.extname(filename).slice(1)] || "text/plain"
   }
 
-  async handleStaticFile(filePath: string, res: http.ServerResponse) {
+  async handleStaticFile(filePath: string, res: http.ServerResponse, requestpath?: string) {
     const asset = path.join(__static, filePath);
     try {
+      if (path.basename(requestpath).includes(appName)) {
+        res.writeHead(307,
+          { Location: 'http://localhost:9000' + requestpath }
+        );
+        res.end();
+        return;
+      }
       const data = await readFile(asset);
       res.setHeader("Content-Type", this.getMimeType(asset));
       res.write(data)
@@ -108,8 +115,8 @@ export class Router {
 
   protected addRoutes() {
     // Static assets
-    this.router.add({ method: 'get', path: '/{path*}' }, ({ params, response }: LensApiRequest) => {
-      this.handleStaticFile(params.path, response);
+    this.router.add({ method: 'get', path: '/{path*}' }, ({ params, response, path }: LensApiRequest) => {
+      this.handleStaticFile(params.path, response, path);
     });
 
     this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute))
