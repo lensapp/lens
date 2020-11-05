@@ -6,6 +6,7 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
+import HardSourceWebpackPlugin from 'hard-source-webpack-plugin';
 
 export default [
   webpackLensRenderer
@@ -19,6 +20,13 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     context: __dirname,
     target: "electron-renderer",
     devtool: "source-map", // todo: optimize in dev-mode with webpack.SourceMapDevToolPlugin
+    devServer: {
+      contentBase: buildDir,
+      port: 9000,
+      host: "localhost",
+      hot: true,
+      disableHostCheck: true,
+    },
     name: "lens-app",
     mode: isProduction ? "production" : "development",
     cache: isDevelopment,
@@ -172,6 +180,8 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       new MiniCssExtractPlugin({
         filename: "[name].css",
       }),
+
+      new HardSourceWebpackPlugin()
     ],
   }
 }
