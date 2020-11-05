@@ -1,5 +1,8 @@
 .PageLayout {
   $spacing: $padding * 2;
+  --width: 60%;
+  --max-width: 1000px;
+  --min-width: 570px;
 
   position: relative;
   height: 100%;
@@ -26,12 +29,15 @@
   > .content-wrapper {
     @include custom-scrollbar-themed;
     padding: $spacing * 2;
+    display: flex;
+    flex-direction: column;
 
     > .content {
+      flex: 1;
       margin: 0 auto;
-      width: 60%;
-      min-width: 570px;
-      max-width: 1000px;
+      width: var(--width);
+      min-width: var(--min-width);
+      max-width: var(--max-width);
     }
   }
 

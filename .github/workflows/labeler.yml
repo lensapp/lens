@@ -1,7 +1,7 @@
 ---
 name: "Pull Request Labeler"
 
-'on':
+on:
   - pull_request
 
 jobs:
@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/labeler@v2
+        if: github.repository == 'lensapp/lens'
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           configuration-path: .github/labeler-config.yml

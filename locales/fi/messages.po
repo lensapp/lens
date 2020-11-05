@@ -545,6 +545,14 @@ msgstr ""
 msgid "Conditions"
 msgstr ""
 
+#: src/renderer/components/+workloads-deployments/deployments.tsx: 118
+msgid "Restart"
+msgstr ""
+
+#: src/renderer/components/+workloads-deployments/deployments.tsx: 121
+msgid "Are you sure you want to restart deployment <0>{0}</0>?"
+msgstr ""
+
 #: src/renderer/components/+config-maps/config-maps.tsx:33
 msgid "Config Maps"
 msgstr ""
