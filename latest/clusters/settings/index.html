@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cluster-settings" class="md-skip">
+        <a href="#settings" class="md-skip">
           Skip to content
         </a>
       
@@ -405,6 +405,26 @@
   <a href="#features" class="md-nav__link">
     Features
   </a>
+  
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    Metrics
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-mode" class="md-nav__link">
+    User Mode
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -881,6 +901,26 @@
     Features
   </a>
   
+    <nav class="md-nav" aria-label="Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    Metrics
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-mode" class="md-nav__link">
+    User Mode
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -904,38 +944,50 @@
               
                 
                 
-                <h1 id="cluster-settings">Cluster Settings<a class="headerlink" href="#cluster-settings" title="Permanent link">#</a></h1>
-<p>It is easy to configure Lens Clusters to your liking through its various settings. By right-clicking the cluster of choice you can open <code>Settings</code>.</p>
+                <h1 id="settings">Settings<a class="headerlink" href="#settings" title="Permanent link">#</a></h1>
+<p>It is easy to configure Lens Clusters to your liking through its various settings. </p>
+<ol>
+<li>Right-click the name of the cluster in the left-side menu that you want to open the settings for. </li>
+<li>Click <strong>Settings</strong>.</li>
+</ol>
+<p><img alt="Cluster settings" src="../images/cluster-context-menu.png" /></p>
 <h2 id="status">Status<a class="headerlink" href="#status" title="Permanent link">#</a></h2>
-<p>An overview of the cluster status.</p>
+<p>Overview of the cluster status</p>
 <h3 id="cluster-status">Cluster Status<a class="headerlink" href="#cluster-status" title="Permanent link">#</a></h3>
-<p>This section provides cluster details including the detected distribution, kernel version, API endpoint and online status.</p>
+<p>Cluster status information including the detected distribution, kernel version, API endpoint, and online status</p>
+<p><img alt="Cluster settings status" src="../images/cluster-settings-status.png" /></p>
 <h2 id="general">General<a class="headerlink" href="#general" title="Permanent link">#</a></h2>
-<p>General information for the cluster with some settings that can be customized.</p>
+<p>General cluster settings</p>
 <h3 id="cluster-name">Cluster Name<a class="headerlink" href="#cluster-name" title="Permanent link">#</a></h3>
-<p>The cluster name is inheritated from the kubeconfig by default. You can change the cluster name to another value by updating here. Note this does not update your kubeconfig file.</p>
+<p>The cluster name is inheritated by default from the kubeconfig file. Change the cluster name to another value by updating it here. Note that doing so does not update your kubeconfig file.</p>
 <h3 id="workspace">Workspace<a class="headerlink" href="#workspace" title="Permanent link">#</a></h3>
-<p>This is the Lens Workspace that the cluster is associated with. You can change to another workspace or create a new workspace - this option will take you the Workspaces editor where you can create a new workspace and then
-navigate back to the cluster settings.</p>
+<p>This is the Lens workspace that the cluster is associated with. Change workspaces by selecting a different workspace from the dropdown menu. Create a new workspace by clicking <strong>workspace</strong> in "Define cluster workspace" above the dropdown menu. This option will take you the workspaces editor. Create a new workspace and then navigate back to cluster settings.</p>
 <h3 id="cluster-icon">Cluster Icon<a class="headerlink" href="#cluster-icon" title="Permanent link">#</a></h3>
-<p>A random cluster icon is associated with your cluster when it is first created. You can define your own cluster icon here.</p>
+<p>Lens randomly generates an icon to associate with each newly-created cluster. Use this setting to choose your own icon.</p>
 <h3 id="http-proxy">HTTP Proxy<a class="headerlink" href="#http-proxy" title="Permanent link">#</a></h3>
-<p>If you need to use a HTTP proxy to communicate with the Kubernetes API you can define it here.</p>
+<p>Some users will need to define an HTTP proxy for communicating with the Kubernetes API. Use this setting to do so.</p>
 <h3 id="prometheus">Prometheus<a class="headerlink" href="#prometheus" title="Permanent link">#</a></h3>
-<p>Lens can be configured to query a Prometheus server that is installed in the cluster. The query format used can be configured here to either auto-detect or a pre-configured query format. The available formats are:</p>
+<p>Lens can be configured to query a Prometheus server installed in the cluster. Select a query format by choosing either to auto-detect or from the following configurations:</p>
 <ul>
 <li>Lens</li>
 <li>Helm Operator</li>
 <li>Prometheus Operator</li>
 <li>Stacklight</li>
 </ul>
-<p>For more details of custom Prometheus configurations refer to this <a href="https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md">guide</a>.</p>
+<p>To learn more about custom Prometheus configurations, please refer to this <a href="https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md">guide</a>.</p>
 <h3 id="working-directory">Working Directory<a class="headerlink" href="#working-directory" title="Permanent link">#</a></h3>
-<p>The terminat working directory can be configured here - by default it is set to <code>$HOME</code>.</p>
+<p>Use this field to set the terminal working directory. The default is <code>$HOME</code>.</p>
+<p><img alt="Cluster settings general" src="../images/cluster-settings-general.png" /></p>
 <h2 id="features">Features<a class="headerlink" href="#features" title="Permanent link">#</a></h2>
-<p>Additional Lens features that can be installed by the user.</p>
+<p>Additional Lens features that can be installed by the user</p>
+<h3 id="metrics">Metrics<a class="headerlink" href="#metrics" title="Permanent link">#</a></h3>
+<p>Enable timeseries data visualization (Prometheus stack) for your cluster. Install this only if you don't have existing Prometheus stack installed.</p>
+<h3 id="user-mode">User Mode<a class="headerlink" href="#user-mode" title="Permanent link">#</a></h3>
+<p>User Mode feature enables non-admin users to see namespaces they have access to. This is achieved by configuring RBAC rules so that every authenticated user is granted to list namespaces.</p>
+<p><img alt="Cluster settings features" src="../images/cluster-settings-features.png" /></p>
 <h2 id="removal">Removal<a class="headerlink" href="#removal" title="Permanent link">#</a></h2>
-<p>Remove the current cluster.</p>
+<p>Use this setting to remove the current cluster.</p>
+<p><img alt="Cluster settings removal" src="../images/cluster-settings-removal.png" /></p>
                 
                   
                     
@@ -944,7 +996,7 @@ navigate back to the cluster settings.</p>
 <div class="md-source-date">
   <small>
     
-      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">November 5, 2020</span>
+      Last update: <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">November 6, 2020</span>
     
   </small>
 </div>
