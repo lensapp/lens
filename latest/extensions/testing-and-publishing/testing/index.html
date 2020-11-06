@@ -74,6 +74,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#testing-extensions" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -579,10 +584,61 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Testing Extensions
+        <span class="md-nav__icon md-icon"></span>
+      </label>
     
     <a href="./" class="md-nav__link md-nav__link--active">
       Testing Extensions
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#consolelog" class="md-nav__link">
+    Console.log
+  </a>
+  
+    <nav class="md-nav" aria-label="Console.log">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#renderer-process-logs" class="md-nav__link">
+    Renderer process logs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-process-logs" class="md-nav__link">
+    Main process logs
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -664,15 +720,85 @@
               </div>
             
             
+              
+              
+                
+              
+              
+                <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                  <div class="md-sidebar__scrollwrap">
+                    <div class="md-sidebar__inner">
+                      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#consolelog" class="md-nav__link">
+    Console.log
+  </a>
+  
+    <nav class="md-nav" aria-label="Console.log">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#renderer-process-logs" class="md-nav__link">
+    Renderer process logs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#main-process-logs" class="md-nav__link">
+    Main process logs
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                    </div>
+                  </div>
+                </div>
+              
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Testing Extensions</h1>
-                
-                
+                <h1 id="testing-extensions">Testing Extensions<a class="headerlink" href="#testing-extensions" title="Permanent link">#</a></h1>
+<h2 id="consolelog">Console.log<a class="headerlink" href="#consolelog" title="Permanent link">#</a></h2>
+<p><code>console.log()</code> might be handy for extension developers to prints out info/errors from extensions. To use <code>console.log</code>, note that Lens is based on Electron. Electron has two types of processes: <a href="https://www.electronjs.org/docs/tutorial/quick-start#main-and-renderer-processes">Main and Renderer</a>.</p>
+<h3 id="renderer-process-logs">Renderer process logs<a class="headerlink" href="#renderer-process-logs" title="Permanent link">#</a></h3>
+<p><code>console.log()</code> in Renderer process is printed in the Console in Developer Tools (View &gt; Toggle Developer Tools).</p>
+<h3 id="main-process-logs">Main process logs<a class="headerlink" href="#main-process-logs" title="Permanent link">#</a></h3>
+<p>To view the logs from the main process is a bit trickier, since you cannot open developer tools for them. On MacOSX, one way is to run Lens from the terminal.</p>
+<div class="highlight"><pre><span></span><code>/Applications/Lens.app/Contents/MacOS/Lens
+</code></pre></div>
+<p>You can alos use <a href="https://support.apple.com/en-gb/guide/console/welcome/mac">Console.app</a> to view logs from Lens.</p>
+<p>On linux, you can get PID of Lens first</p>
+<div class="highlight"><pre><span></span><code>ps aux <span class="p">|</span> grep Lens <span class="p">|</span> grep -v grep
+</code></pre></div>
+<p>And get logs by the PID</p>
+<div class="highlight"><pre><span></span><code>tail -f /proc/<span class="o">[</span>pid<span class="o">]</span>/fd/1 <span class="c1"># stdout (console.log)</span>
+tail -f /proc/<span class="o">[</span>pid<span class="o">]</span>/fd/2 <span class="c1"># stdout (console.error)</span>
+</code></pre></div>
                 
                   
                     
