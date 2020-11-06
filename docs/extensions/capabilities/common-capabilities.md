@@ -58,17 +58,33 @@ export default class ExampleMainExtension extends LensMainExtension {
 
 ## Renderer Extension
 
-A renderer extension runs in a browser context and it's visible directly via Lens main window. If you want to see logs from this extension you need to check them via Developer Tools -> console.
+A renderer extension runs in a browser context and it's visible directly via Lens main window. If you want to see logs from this extension you need to check them via View -> Toggle Developer Tools -> Console.
 
+### Activate
+
+An extension can register a custom callback that is executed when an extension is activated (started).
+
+``` javascript
+import { LensRendererExtension } from "@k8slens/extensions"
+
+export default class ExampleExtension extends LensRendererExtension {
+  async onActivate() {
+    console.log("hello world")
+  }
+}
 ```
-export class LensRendererExtension extends LensExtension {
-  @observable.shallow globalPages: PageRegistration[] = []
-  @observable.shallow clusterPages: PageRegistration[] = []
-  @observable.shallow appPreferences: AppPreferenceRegistration[] = []
-  @observable.shallow clusterFeatures: ClusterFeatureRegistration[] = []
-  @observable.shallow statusBarItems: StatusBarRegistration[] = []
-  @observable.shallow kubeObjectDetailItems: KubeObjectDetailRegistration[] = []
-  @observable.shallow kubeObjectMenuItems: KubeObjectMenuRegistration[] = []
+
+### Deactivate
+
+An extension can register a custom callback that is executed when an extension is deactivated (stopped).
+
+``` javascript
+import { LensRendererExtension } from "@k8slens/extensions"
+
+export default class ExampleMainExtension extends LensRendererExtension {
+  async onDeactivate() {
+    console.log("bye bye")
+  }
 }
 ```
 
@@ -173,7 +189,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 ### Status Bar Items
 
-An extension can register a custom icon/text to a status bar area.
+An extension can register custom icons/texts to a status bar area.
 
 ``` typescript
 import React from "react";
@@ -190,6 +206,29 @@ export default class ExampleExtension extends LensRendererExtension {
           <Component.Icon material="favorite" smallest />
         </div>
       )
+    }
+  ]
+}
+
+```
+
+### Kubernetes Object Menu Items
+
+An extension can register custom menu items (actions) for specified Kubernetes kinds/apiVersions.
+
+``` typescript
+import React from "react"
+import { LensRendererExtension } from "@k8slens/extensions";
+import { CustomMenuItem, CustomMenuItemProps } from "./src/custom-menu-item"
+
+export default class ExampleExtension extends LensRendererExtension {
+  kubeObjectMenuItems = [
+    {
+      kind: "Node",
+      apiVersions: ["v1"],
+      components: {
+        MenuItem: (props: CustomMenuItemProps) => <CustomMenuItem {...props} />
+      }
     }
   ]
 }
