@@ -74,6 +74,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#extension-anatomy" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -417,10 +422,61 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Extension Anatomy
+        <span class="md-nav__icon md-icon"></span>
+      </label>
     
     <a href="./" class="md-nav__link md-nav__link--active">
       Extension Anatomy
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#extension-file-structure" class="md-nav__link">
+    Extension File Structure
+  </a>
+  
+    <nav class="md-nav" aria-label="Extension File Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extension-manifest" class="md-nav__link">
+    Extension Manifest
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extension-entry-files" class="md-nav__link">
+    Extension Entry Files
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -664,15 +720,151 @@
               </div>
             
             
+              
+              
+                
+              
+              
+                <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                  <div class="md-sidebar__scrollwrap">
+                    <div class="md-sidebar__inner">
+                      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#extension-file-structure" class="md-nav__link">
+    Extension File Structure
+  </a>
+  
+    <nav class="md-nav" aria-label="Extension File Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extension-manifest" class="md-nav__link">
+    Extension Manifest
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extension-entry-files" class="md-nav__link">
+    Extension Entry Files
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                    </div>
+                  </div>
+                </div>
+              
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Extension Anatomy</h1>
-                
-                
+                <h1 id="extension-anatomy">Extension Anatomy<a class="headerlink" href="#extension-anatomy" title="Permanent link">#</a></h1>
+<p>You've now learnt how to get basic extension running. In this topic you will learn some fundamental concepts to Lens Extension development; How does it work under the hood?</p>
+<p><code>Hello World</code> extension does three things:</p>
+<ul>
+<li>Hooks on <code>onActivate()</code> and ouputs message into console.</li>
+<li>Hooks on <code>onDectivate()</code> and ouputs message into console.</li>
+<li>Registers <code>ClusterPage</code> so that page is visible in the sidebars of cluster dashboards.</li>
+</ul>
+<p>Let's take a closer look at Hello World sample's source code and see how to achieve these things.</p>
+<h2 id="extension-file-structure">Extension File Structure<a class="headerlink" href="#extension-file-structure" title="Permanent link">#</a></h2>
+<div class="highlight"><pre><span></span><code>.
+├── .gitignore          // Ignore build output and node_modules
+├── Makefile            // Config for build tasks that compiles the extension
+├── README.md           // Readable description of your extension&#39;s functionality
+├── src
+│   └── page.tsx         // Extension&#39;s additional source code
+├── main.ts              // Source code for extension&#39;s main entrypoint
+├── package.json         // Extension manifest and dependencies
+├── renderer.tsx         // Source code for extension&#39;s renderer entrypoint
+├── tsconfig.json        // TypeScript configuration
+├── webpack.config.js    // Webpack configuration
+</code></pre></div>
+<p>Extension directory contains extension's entry files and few configuration files. Let's focus on <code>package.json</code>, <code>main.ts</code> and <code>renderer.tsx</code> which are essential to understanding the <code>Hello World</code> extension.</p>
+<h3 id="extension-manifest">Extension Manifest<a class="headerlink" href="#extension-manifest" title="Permanent link">#</a></h3>
+<p>Each Lens extension must have <code>package.json</code>. The <code>package.json</code> contains a mix of Node.js fields such as scripts and dependencies and Lens specific fields such as <code>publisher</code> and <code>contributes</code>. Here are some most important fields:</p>
+<ul>
+<li><code>name</code> and <code>publisher</code>: Lens uses <code>@&lt;publisher&gt;/&lt;name&gt;</code> as a unique ID for the extension. For example, the Hello World sample has the ID <code>@lensapp-samples/helloworld-sample</code>. Lens uses the ID to uniquely identify your extension</li>
+<li><code>main</code>: The extension's entry point run in <code>main</code> process.</li>
+<li><code>renderer</code>: The extension's entry point run in <code>renderer</code> process.</li>
+<li><code>engines.lens</code>: This specifies the minimum version of Lens API that the extension depends on.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+  <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;helloworld-sample&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;publisher&quot;</span><span class="o">:</span> <span class="s2">&quot;lens-samples&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;0.0.1&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Lens helloworld-sample&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;license&quot;</span><span class="o">:</span> <span class="s2">&quot;MIT&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;homepage&quot;</span><span class="o">:</span> <span class="s2">&quot;https://github.com/lensapp/lens-extension-samples&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;engines&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;lens&quot;</span><span class="o">:</span> <span class="s2">&quot;^4.0.0&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;main&quot;</span><span class="o">:</span> <span class="s2">&quot;dist/main.js&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;renderer&quot;</span><span class="o">:</span> <span class="s2">&quot;dist/renderer.js&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;scripts&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;build&quot;</span><span class="o">:</span> <span class="s2">&quot;webpack --config webpack.config.js&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dev&quot;</span><span class="o">:</span> <span class="s2">&quot;npm run build --watch&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;dependencies&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;react-open-doodles&quot;</span><span class="o">:</span> <span class="s2">&quot;^1.0.5&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;devDependencies&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="o">:</span> <span class="s2">&quot;^4.0.0-alpha.2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ts-loader&quot;</span><span class="o">:</span> <span class="s2">&quot;^8.0.4&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;typescript&quot;</span><span class="o">:</span> <span class="s2">&quot;^4.0.3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;@types/react&quot;</span><span class="o">:</span> <span class="s2">&quot;^16.9.35&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;@types/node&quot;</span><span class="o">:</span> <span class="s2">&quot;^12.0.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;webpack&quot;</span><span class="o">:</span> <span class="s2">&quot;^4.44.2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;webpack-cli&quot;</span><span class="o">:</span> <span class="s2">&quot;^3.3.11&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="extension-entry-files">Extension Entry Files<a class="headerlink" href="#extension-entry-files" title="Permanent link">#</a></h2>
+<p>Lens extensions can have two separate entry files. One file that is used in <code>main</code> process of Lens application and antoher that is used in <code>renderer</code> process. <code>main</code> entry file should export class that extends <code>LensMainExtension</code> and <code>renderer</code> entry file should export class that extends <code>LensRendererExtension</code>.</p>
+<p>Both extensions classes have <code>onActivate</code> and <code>onDeactivate</code> methods. <code>onActivate</code> is executed when your extension activation happens. You may want to initialize something in your extension at this point. <code>onDeactivate</code> gives you a chance to clean up before your extension becomes deactivated. For many extensions, explicit cleanup may not be required, and you don't need to override this method. However, if an extension needs to perform an operation when Lens is shutting down or the extension is disabled or uninstalled, this is the method to do so.</p>
+<p><code>Hello world</code> extension does not do anything special on <code>main</code> process, so let's focus on the <code>renderer</code> side. On <code>renderer</code> entry point, <code>Hello world</code> extension defines one <code>Cluster Page</code> object that registers <code>/extension-example</code> path that renders <code>ExamplePage</code> React component. It registers also <code>MenuItem</code> component that displays <code>ExampleIcon</code> React component and "Hello World" text in the sidebar of cluster dashboards. These React components are defined in additional <code>./src/page.tsx</code> file.</p>
+<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>
+<span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
+  <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nx">path</span><span class="o">:</span> <span class="s2">&quot;/extension-example&quot;</span><span class="p">,</span>
+      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Hello World&quot;</span><span class="p">,</span>
+      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span>
+        <span class="nx">MenuIcon</span>: <span class="kt">ExampleIcon</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>Hello World</code> extension uses only one capability (<code>Cluster Page</code>) of Lens extensions. The <a href="/extensions/capabilities/">Extension Capabilities Overview</a> topic helps you find the right capabilities you can use with your own extension.</p>
                 
                   
                     
