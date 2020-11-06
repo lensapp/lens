@@ -4,7 +4,7 @@ Common Capabilities are important building blocks for your extensions. Almost al
 
 ## Main Extension
 
-A main extension runs in the background and it's not visible directly via Lens main window. If you want to see logs from this extension you need to start Lens from the command line.
+A main extension runs in the background and, apart from app menu items, does not add content to the Lens UI. If you want to see logs from this extension you need to start Lens from the command line.
 
 ### Activate
 
