@@ -97,22 +97,24 @@ export class ExtensionLoader {
       for (const [extId, ext] of installedExtensions) {
         let instance = this.instances.get(extId);
         if (ext.enabled && !instance) {
-          const extensionModule = this.requireExtension(ext)
-          if (!extensionModule) {
-            continue;
-          }
           try {
+            const extensionModule = this.requireExtension(ext)
+            if (!extensionModule) continue;
             const LensExtensionClass: LensExtensionConstructor = extensionModule.default;
             instance = new LensExtensionClass(ext);
             instance.whenEnabled(() => register(instance));
             instance.enable();
             this.instances.set(extId, instance);
           } catch (err) {
-            logger.error(`[EXTENSIONS-LOADER]: init extension instance error`, { ext, err })
+            logger.error(`[EXTENSION-LOADER]: activation extension error`, { ext, err })
           }
         } else if (!ext.enabled && instance) {
-          instance.disable();
-          this.instances.delete(extId);
+          try {
+            instance.disable();
+            this.instances.delete(extId);
+          } catch (err) {
+            logger.error(`[EXTENSION-LOADER]: deactivation extension error`, { ext, err })
+          }
         }
       }
     }, {
