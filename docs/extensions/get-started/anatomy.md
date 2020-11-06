@@ -37,7 +37,7 @@ Each Lens extension must have `package.json`. The `package.json` contains a mix 
 - `renderer`: The extension's entry point run in `renderer` process.
 - `engines.lens`: This specifies the minimum version of Lens API that the extension depends on.
 
-```json
+``` javascript
 {
   "name": "helloworld-sample",
   "publisher": "lens-samples",
@@ -76,7 +76,7 @@ Both extensions classes have `onActivate` and `onDeactivate` methods. `onActivat
 
 `Hello world` extension does not do anything special on `main` process, so let's focus on the `renderer` side. On `renderer` entry point, `Hello world` extension returns one `ClusterPage` object that registers `/extension-example` path that renders `ExamplePage` React component. It registers also `MenuItem` component that displays `ExampleIcon` React component and "Hello World" text in the sidebar of cluster dashboards. These React components are defined in additional `./src/page.tsx` file.
 
-```
+``` typescript
 import { LensRendererExtension } from "@k8slens/extensions";
 import { ExampleIcon, ExamplePage } from "./page"
 import React from "react"
