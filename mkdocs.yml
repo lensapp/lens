@@ -67,6 +67,9 @@ plugins:
   - git-revision-date-localized
 
 markdown_extensions:
+  - pymdownx.highlight: {}
+  - pymdownx.superfences: {}
+  - pymdownx.inlinehilite: {}
   - toc:
       permalink: "#"
       toc_depth: 3
