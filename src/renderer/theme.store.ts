@@ -25,8 +25,8 @@ export class ThemeStore {
 
   // bundled themes from `themes/${themeId}.json`
   @observable themes: Theme[] = [
-    { id: "kontena-dark", type: ThemeType.DARK },
-    { id: "kontena-light", type: ThemeType.LIGHT },
+    { id: "lens-dark", type: ThemeType.DARK },
+    { id: "lens-light", type: ThemeType.LIGHT },
   ];
 
   @computed get activeThemeId() {
