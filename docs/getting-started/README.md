@@ -1,4 +1,4 @@
-# Downloading Lens
+# Getting Started
 
 Lens is lightweight and simple to install. You'll be up and running in just a few minutes.
 
@@ -41,17 +41,6 @@ You can install it by running:
 sudo snap install kontena-lens --classic
 ```
 
-
-## Network
-
-Lens is built on top of Electron and benefits from all the networking stack capabilities of Chromium. 
-
-
-### Proxy server support
-
-...
-
-
 ## Update cadence
 
 Lens releases a new version each month with new features and important bug fixes. Lens supports auto updating and you will be prompted to install the new release when it becomes available!
@@ -59,6 +48,8 @@ Lens releases a new version each month with new features and important bug fixes
 To stay current with the Lens features, you can review the [release notes](https://github.com/lensapp/lens/releases).
 
 
-## Quick Start
+## Next Steps
 
-Get up and running quickly by learning to [add clusters](../clusters/adding-clusters.md).
+- [Add clusters](../clusters/adding-clusters.md)
+- [Watch introductory videos](./introductory-videos.md)
+
