@@ -1,55 +1,75 @@
-# Cluster Settings
+# Settings
 
-It is easy to configure Lens Clusters to your liking through its various settings. By right-clicking the cluster of choice you can open `Settings`.
+It is easy to configure Lens Clusters to your liking through its various settings. 
+
+1. Right-click the name of the cluster in the left-side menu that you want to open the settings for. 
+2. Click **Settings**.
+
+![Cluster settings](images/cluster-context-menu.png)
 
 ## Status
 
-An overview of the cluster status.
+Overview of the cluster status
 
 ### Cluster Status
 
-This section provides cluster details including the detected distribution, kernel version, API endpoint and online status.
+Cluster status information including the detected distribution, kernel version, API endpoint, and online status
+
+![Cluster settings status](images/cluster-settings-status.png)
 
 ## General
 
-General information for the cluster with some settings that can be customized.
+General cluster settings
 
 ### Cluster Name
 
-The cluster name is inheritated from the kubeconfig by default. You can change the cluster name to another value by updating here. Note this does not update your kubeconfig file.
+The cluster name is inheritated by default from the kubeconfig file. Change the cluster name to another value by updating it here. Note that doing so does not update your kubeconfig file.
 
 ### Workspace
 
-This is the Lens Workspace that the cluster is associated with. You can change to another workspace or create a new workspace - this option will take you the Workspaces editor where you can create a new workspace and then
-navigate back to the cluster settings.
+This is the Lens workspace that the cluster is associated with. Change workspaces by selecting a different workspace from the dropdown menu. Create a new workspace by clicking **workspace** in "Define cluster workspace" above the dropdown menu. This option will take you the workspaces editor. Create a new workspace and then navigate back to cluster settings.
 
 ### Cluster Icon
 
-A random cluster icon is associated with your cluster when it is first created. You can define your own cluster icon here.
+Lens randomly generates an icon to associate with each newly-created cluster. Use this setting to choose your own icon.
 
 ### HTTP Proxy
 
-If you need to use a HTTP proxy to communicate with the Kubernetes API you can define it here.
+Some users will need to define an HTTP proxy for communicating with the Kubernetes API. Use this setting to do so.
 
 ### Prometheus
 
-Lens can be configured to query a Prometheus server that is installed in the cluster. The query format used can be configured here to either auto-detect or a pre-configured query format. The available formats are:
+Lens can be configured to query a Prometheus server installed in the cluster. Select a query format by choosing either to auto-detect or from the following configurations:
 
 * Lens
 * Helm Operator
 * Prometheus Operator
 * Stacklight
 
-For more details of custom Prometheus configurations refer to this [guide](https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md).
+To learn more about custom Prometheus configurations, please refer to this [guide](https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md).
 
 ### Working Directory
 
-The terminat working directory can be configured here - by default it is set to `$HOME`.
+Use this field to set the terminal working directory. The default is `$HOME`.
+
+![Cluster settings general](images/cluster-settings-general.png)
 
 ## Features
 
-Additional Lens features that can be installed by the user.
+Additional Lens features that can be installed by the user
+
+### Metrics
+
+Enable timeseries data visualization (Prometheus stack) for your cluster. Install this only if you don't have existing Prometheus stack installed.
+
+### User Mode
+
+User Mode feature enables non-admin users to see namespaces they have access to. This is achieved by configuring RBAC rules so that every authenticated user is granted to list namespaces.
+
+![Cluster settings features](images/cluster-settings-features.png)
 
 ## Removal
 
-Remove the current cluster.
+Use this setting to remove the current cluster.
+
+![Cluster settings removal](images/cluster-settings-removal.png)
