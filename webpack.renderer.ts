@@ -1,4 +1,4 @@
-import { appName, buildDir, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars } from "./src/common/vars";
+import { appName, buildDir, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars, webpackDevServerPort } from "./src/common/vars";
 import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
@@ -7,6 +7,7 @@ import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import HardSourceWebpackPlugin from 'hard-source-webpack-plugin';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 
 export default [
   webpackLensRenderer
@@ -22,10 +23,12 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     devtool: "source-map", // todo: optimize in dev-mode with webpack.SourceMapDevToolPlugin
     devServer: {
       contentBase: buildDir,
-      port: 9000,
+      port: webpackDevServerPort,
       host: "localhost",
       hot: true,
+      // to avoid cors errors when requests is from iframes
       disableHostCheck: true,
+      headers: { 'Access-Control-Allow-Origin': '*' },
     },
     name: "lens-app",
     mode: isProduction ? "production" : "development",
@@ -87,7 +90,11 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
                   ["@babel/preset-env", {
                     modules: "commonjs" // ling-ui
                   }],
-                ]
+                ],
+                plugins: [
+                  // ... other plugins
+                  isDevelopment && require.resolve('react-refresh/babel'),
+                ].filter(Boolean),
               }
             },
             {
@@ -181,7 +188,9 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         filename: "[name].css",
       }),
 
-      new HardSourceWebpackPlugin()
+      isDevelopment && new HardSourceWebpackPlugin(),
+      isDevelopment && new webpack.HotModuleReplacementPlugin(),
+      isDevelopment && new ReactRefreshWebpackPlugin(),
     ],
   }
 }
