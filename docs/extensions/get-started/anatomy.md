@@ -19,11 +19,11 @@ Let's take a closer look at Hello World sample's source code and see how to achi
 ├── README.md           // Readable description of your extension's functionality
 ├── src
 │   └── page.tsx         // Extension's additional source code
-├── main.ts             // Source code for extension's main entrypoint
+├── main.ts              // Source code for extension's main entrypoint
 ├── package.json         // Extension manifest and dependencies
 ├── renderer.tsx         // Source code for extension's renderer entrypoint
 ├── tsconfig.json        // TypeScript configuration
-├── webpack.config.json  // Webpack configuration
+├── webpack.config.js    // Webpack configuration
 ```
 
 Extension directory contains extension's entry files and few configuration files. Let's focus on `package.json`, `main.ts` and `renderer.tsx` which are essential to understanding the `Hello World` extension.
