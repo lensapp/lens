@@ -74,7 +74,7 @@ Lens extensions can have two separate entry files. One file that is used in `mai
 
 Both extensions classes have `onActivate` and `onDeactivate` methods. `onActivate` is executed when your extension activation happens. You may want to initialize something in your extension at this point. `onDeactivate` gives you a chance to clean up before your extension becomes deactivated. For many extensions, explicit cleanup may not be required, and you don't need to override this method. However, if an extension needs to perform an operation when Lens is shutting down or the extension is disabled or uninstalled, this is the method to do so.
 
-`Hello world` extension does not do anything special on `main` process, so let's focus on the `renderer` side. On `renderer` entry point, `Hello world` extension returns one `ClusterPage` object that registers `/extension-example` path that renders `ExamplePage` React component. It registers also `MenuItem` component that displays `ExampleIcon` React component and "Hello World" text in the sidebar of cluster dashboards. These React components are defined in additional `./src/page.tsx` file.
+`Hello world` extension does not do anything special on `main` process, so let's focus on the `renderer` side. On `renderer` entry point, `Hello world` extension defines one `Cluster Page` object that registers `/extension-example` path that renders `ExamplePage` React component. It registers also `MenuItem` component that displays `ExampleIcon` React component and "Hello World" text in the sidebar of cluster dashboards. These React components are defined in additional `./src/page.tsx` file.
 
 ``` typescript
 import { LensRendererExtension } from "@k8slens/extensions";
@@ -95,4 +95,4 @@ export default class ExampleExtension extends LensRendererExtension {
 }
 ```
 
-`Hello World` extension uses only one capability (`ClusterPage`) of Lens extensions. The [Extension Capabilities Overview](/extensions/capabilities/) topic helps you find the right capabilities you can use with your own extension.
+`Hello World` extension uses only one capability (`Cluster Page`) of Lens extensions. The [Extension Capabilities Overview](/extensions/capabilities/) topic helps you find the right capabilities you can use with your own extension.
