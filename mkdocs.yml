@@ -9,21 +9,21 @@ copyright: Copyright &copy; 2020 <a href="https://mirantis.com/">Mirantis Inc.</
 edit_uri: ""
 nav:
     - Overview: README.md
-    - Getting started: 
+    - Getting started:
       - Downloading Lens: getting-started/downloading-lens.md
       - Preferences: getting-started/preferences.md
       - Introductory videos: getting-started/introductory-videos.md
-    - Clusters: 
+    - Clusters:
       - Adding clusters: clusters/adding-clusters.md
       - Removing cluster: clusters/removing-clusters.md
       - Settings: clusters/settings.md
     - Extensions:
         - Overview: extensions/overview.md
-        - Get Started: 
+        - Get Started:
           - Your First Extension: extensions/get-started/your-first-extension.md
           - Extension Anatomy: extensions/get-started/anatomy.md
           - Wrapping Up: extensions/get-started/wrapping-up.md
-        - Extension Capabilities: 
+        - Extension Capabilities:
           - Overview: extensions/capabilities/overview.md
           - Common Capabilities: extensions/capabilities/common-capabilities.md
           - Theming: extensions/capabilities/theming.md
@@ -65,6 +65,9 @@ plugins:
   - git-revision-date-localized
 
 markdown_extensions:
+  - pymdownx.highlight: {}
+  - pymdownx.superfences: {}
+  - pymdownx.inlinehilite: {}
   - toc:
       permalink: "#"
       toc_depth: 3
