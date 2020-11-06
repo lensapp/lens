@@ -1,6 +1,6 @@
 # Your First Extension
 
-In this topic, we'll teach you the fundamental concepts for building extensions. Make sure you have [Node.js](https://nodejs.org/en/) and [Git](https://git-scm.com/) installed....
+In this topic, we'll teach you the fundamental concepts for building extensions.
 
 ## Installing and Building the extension
 
@@ -11,7 +11,7 @@ Simple Lens extension that adds "Hello World" page to a cluster menu.
 First you will need to clone the [Lens Extension samples](https://github.com/lensapp/lens-extension-samples) repository to your local machine:
 
 ```sh
-git clone https://github.com/lensapp/lens-extension-samples.git 
+git clone https://github.com/lensapp/lens-extension-samples.git
 ```
 
 Next you need to create a symlink from the directory that Lens will monitor for user installed extensions to the sample extension, in this case **helloworld-sample**:
