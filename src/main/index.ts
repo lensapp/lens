@@ -21,6 +21,8 @@ import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
 import { appEventBus } from "../common/event-bus"
 import { extensionLoader } from "../extensions/extension-loader";
+import { extensionManager } from "../extensions/extension-manager";
+import { extensionsStore } from "../extensions/extensions-store";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -52,6 +54,7 @@ app.on("ready", async () => {
     userStore.load(),
     clusterStore.load(),
     workspaceStore.load(),
+    extensionsStore.load(),
   ]);
 
   // find free port
@@ -76,7 +79,7 @@ app.on("ready", async () => {
   }
 
   LensExtensionsApi.windowManager = windowManager = new WindowManager(proxyPort);
-  extensionLoader.init(); // call after windowManager to see splash earlier
+  extensionLoader.init(await extensionManager.load()); // call after windowManager to see splash earlier
 
   setTimeout(() => {
     appEventBus.emit({ name: "app", action: "start" })

@@ -2,11 +2,17 @@
   --width: 100%;
   --max-width: auto;
 
-  .extension {
-    --flex-gap: $padding / 3;
-    padding: $padding $padding * 2;
-    background: $colorVague;
-    border-radius: $radius;
+  .extension-list {
+    .extension {
+      --flex-gap: $padding / 3;
+      padding: $padding $padding * 2;
+      background: $colorVague;
+      border-radius: $radius;
+
+      &:not(:first-of-type) {
+        margin-top: $padding * 2;
+      }
+    }
   }
 
   .extensions-path {
