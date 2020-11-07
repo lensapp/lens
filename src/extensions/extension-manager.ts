@@ -10,7 +10,7 @@ import { getBundledExtensions } from "../common/utils/app-version"
 export interface InstalledExtension {
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
-  readonly isBundled?: boolean; // defined in project root's package.json
+  readonly isBundled: boolean; // defined in project root's package.json
   isEnabled: boolean;
 }
 
