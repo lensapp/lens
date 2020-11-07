@@ -12,7 +12,6 @@ import { Icon } from "../icon";
 import { PageLayout } from "../layout/page-layout";
 import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionManager } from "../../../extensions/extension-manager";
-import { extensionsStore } from "../../../extensions/extensions-store";
 
 @observer
 export class Extensions extends React.Component {
@@ -20,7 +19,7 @@ export class Extensions extends React.Component {
 
   @computed get extensions() {
     const searchText = this.search.toLowerCase();
-    return extensionLoader.userExtensions.filter(ext => {
+    return Array.from(extensionLoader.userExtensions.values()).filter(ext => {
       const { name, description } = ext.manifest;
       return [
         name.toLowerCase().includes(searchText),
@@ -70,7 +69,7 @@ export class Extensions extends React.Component {
       )
     }
     return extensions.map(ext => {
-      const { manifestPath: extId, enabled, manifest } = ext;
+      const { manifestPath: extId, isEnabled, manifest } = ext;
       const { name, description } = manifest;
       return (
         <div key={extId} className="extension flex gaps align-center">
@@ -82,11 +81,11 @@ export class Extensions extends React.Component {
               Description: <span className="text-secondary">{description}</span>
             </div>
           </div>
-          {!enabled && (
-            <Button plain active onClick={() => extensionsStore.setEnabled(extId, true)}>Enable</Button>
+          {!isEnabled && (
+            <Button plain active onClick={() => ext.isEnabled = true}>Enable</Button>
           )}
-          {enabled && (
-            <Button accent onClick={() => extensionsStore.setEnabled(extId, false)}>Disable</Button>
+          {isEnabled && (
+            <Button accent onClick={() => ext.isEnabled = false}>Disable</Button>
           )}
         </div>
       )
