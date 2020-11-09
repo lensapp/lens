@@ -5,7 +5,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react"
 import { JsonApiErrorParsed } from "../../api/json-api";
 import { cssNames, prevDefault } from "../../utils";
-import { IMessage, INotification, notificationsStore, NotificationStatus } from "./notifications.store";
+import { NotificationMessage, Notification, notificationsStore, NotificationStatus } from "./notifications.store";
 import { Animate } from "../animate";
 import { Icon } from "../icon"
 
@@ -13,7 +13,7 @@ import { Icon } from "../icon"
 export class Notifications extends React.Component {
   public elem: HTMLElement;
 
-  static ok(message: IMessage) {
+  static ok(message: NotificationMessage) {
     notificationsStore.add({
       message: message,
       timeout: 2500,
@@ -21,7 +21,7 @@ export class Notifications extends React.Component {
     })
   }
 
-  static error(message: IMessage) {
+  static error(message: NotificationMessage) {
     notificationsStore.add({
       message: message,
       timeout: 10000,
@@ -29,7 +29,7 @@ export class Notifications extends React.Component {
     });
   }
 
-  static info(message: IMessage, customOpts: Partial<INotification> = {}) {
+  static info(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
     return notificationsStore.add({
       status: NotificationStatus.INFO,
       timeout: 0,
@@ -56,7 +56,7 @@ export class Notifications extends React.Component {
     })
   }
 
-  getMessage(notification: INotification) {
+  getMessage(notification: Notification) {
     let { message } = notification;
     if (message instanceof JsonApiErrorParsed) {
       message = message.toString();

@@ -17,6 +17,7 @@ export * from "../../renderer/components/input/input"
 export * from "../../renderer/components/icon"
 export * from "../../renderer/components/tooltip"
 export * from "../../renderer/components/tabs"
+export * from "../../renderer/components/table"
 export * from "../../renderer/components/badge"
 export * from "../../renderer/components/drawer"
 export * from "../../renderer/components/dialog"
@@ -29,8 +30,6 @@ export * from "../../renderer/components/stepper"
 
 // kube helpers
 export * from "../../renderer/components/kube-object"
-export * from "../../renderer/components/kube-object/kube-object-meta"
-export * from "../../renderer/components/kube-object/kube-object-list-layout";
 export * from "../../renderer/components/+events/kube-event-details"
 
 // specific exports
