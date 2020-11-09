@@ -47,16 +47,16 @@ jobs:
            for filename in docs/extensions/api/**/*.md; do [ -e "$filename" ] || continue; sed -i '1s/^/---\ntitle: API Reference\n---\n/' $filename; done
   
            
-#      - name: mkdocs deploy latest
-#        run: | 
-#           mike deploy --push latest
+      - name: mkdocs deploy latest
+        run: | 
+           mike deploy --push latest
 
         
- #     - name: mkdocs deploy new release / tag
- #       if: contains(github.ref, 'refs/tags/v')
- #       run: | 
- #          mike deploy --push--update-aliases ${{ github.ref }} latest
- #          mike set-default --push ${{ github.ref }}
+      - name: mkdocs deploy new release / tag
+        if: contains(github.ref, 'refs/tags/v')
+        run: | 
+           mike deploy --push--update-aliases ${{ github.ref }} latest
+           mike set-default --push ${{ github.ref }}
           
 
 
