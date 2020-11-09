@@ -36,7 +36,9 @@ jobs:
            git pull
           
           
-      - name: typedocs generate Extensions API Reference
+      - name: typedocs generate Extensions API Reference (Node.js ${{ matrix.node-version }})
+        with:
+          node-version: ${{ matrix.node-version }}
         run: | 
            yarn install
            yarn typedocs-extensions-api
