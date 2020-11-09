@@ -64,7 +64,7 @@ extra_css:
 
 plugins:
   - search
-#  - git-revision-date-localized
+  - git-revision-date-localized
 
 markdown_extensions:
   - pymdownx.highlight: {}
