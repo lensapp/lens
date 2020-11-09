@@ -6,15 +6,14 @@ import { Trans } from "@lingui/macro";
 import { KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { cssNames } from "../../utils";
-import { Icon } from "../icon";
 import { eventStore } from "./event.store";
 
-interface Props {
+export interface KubeEventDetailsProps {
   object: KubeObject;
 }
 
 @observer
-export class KubeEventDetails extends React.Component<Props> {
+export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
   async componentDidMount() {
     eventStore.loadAll();
   }

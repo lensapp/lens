@@ -2,17 +2,16 @@ import React from "react";
 import { Trans } from "@lingui/macro";
 import { IKubeMetaField, KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
-import { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { getDetailsUrl } from "../../navigation";
 import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
 
-export interface Props {
+export interface KubeObjectMetaProps {
   object: KubeObject;
   hideFields?: IKubeMetaField[];
 }
 
-export class KubeObjectMeta extends React.Component<Props> {
+export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
   static defaultHiddenFields: IKubeMetaField[] = [
     "uid", "resourceVersion", "selfLink"
   ];

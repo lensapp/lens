@@ -3,13 +3,16 @@ import "./input.scss";
 import React, { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { autobind, cssNames, debouncePromise } from "../../utils";
 import { Icon } from "../icon";
-import { conditionalValidators, Validator } from "./input_validators";
+import * as Validators from "./input_validators";
+import { InputValidator } from "./input_validators";
 import isString from "lodash/isString"
 import isFunction from "lodash/isFunction"
 import isBoolean from "lodash/isBoolean"
 import uniqueId from "lodash/uniqueId"
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+const { conditionalValidators, ...InputValidators } = Validators;
+export { InputValidators, InputValidator }
+
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps = InputHTMLAttributes<InputElement> & TextareaHTMLAttributes<InputElement> & DOMAttributes<InputElement>;
 
@@ -24,7 +27,7 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
   showValidationLine?: boolean; // show animated validation line for async validators
   iconLeft?: string | React.ReactNode; // material-icon name in case of string-type
   iconRight?: string | React.ReactNode;
-  validators?: Validator | Validator[];
+  validators?: InputValidator | InputValidator[];
   onChange?(value: T, evt: React.ChangeEvent<InputElement>): void;
   onSubmit?(value: T): void;
 }
@@ -49,7 +52,7 @@ export class Input extends React.Component<InputProps, State> {
   static defaultProps = defaultProps as object;
 
   public input: InputElement;
-  public validators: Validator[] = [];
+  public validators: InputValidator[] = [];
 
   public state: State = {
     dirty: !!this.props.dirty,
@@ -149,7 +152,7 @@ export class Input extends React.Component<InputProps, State> {
     });
   }
 
-  private getValidatorError(value: string, { message }: Validator) {
+  private getValidatorError(value: string, { message }: InputValidator) {
     if (isFunction(message)) return message(value, this.props)
     return message || "";
   }
@@ -288,9 +291,9 @@ export class Input extends React.Component<InputProps, State> {
     return (
       <div className={className}>
         <label className="input-area flex gaps align-center">
-          {isString(iconLeft) ? <Icon material={iconLeft} /> : iconLeft}
+          {isString(iconLeft) ? <Icon material={iconLeft}/> : iconLeft}
           {multiLine ? <textarea {...inputProps as any} /> : <input {...inputProps as any} />}
-          {isString(iconRight) ? <Icon material={iconRight} /> : iconRight}
+          {isString(iconRight) ? <Icon material={iconRight}/> : iconRight}
         </label>
         <div className="input-info flex gaps">
           {!valid && dirty && (

@@ -2,12 +2,12 @@ import './cube-spinner.scss'
 import React from 'react'
 import { cssNames } from "../../utils";
 
-interface Props {
+export interface CubeSpinnerProps {
   className?: string;
   center?: boolean;
 }
 
-export class CubeSpinner extends React.Component<Props> {
+export class CubeSpinner extends React.Component<CubeSpinnerProps> {
   render() {
     const { className, center } = this.props;
     return (
