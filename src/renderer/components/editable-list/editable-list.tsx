@@ -6,6 +6,7 @@ import { Input } from "../input";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { autobind } from "../../utils";
+import { _i18n } from "../../i18n";
 
 export interface Props<T> {
   items: T[],
@@ -19,7 +20,7 @@ export interface Props<T> {
 }
 
 const defaultProps: Partial<Props<any>> = {
-  placeholder: "Add new item...",
+  placeholder: _i18n._("Add new item..."),
   renderItem: (item: any, index: number) => <React.Fragment key={index}>{item}</React.Fragment>
 }
 

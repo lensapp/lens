@@ -5,6 +5,7 @@ import { SubTitle } from "../../layout/sub-title";
 import { EditableList } from "../../editable-list";
 import { observable } from "mobx";
 import { _i18n } from "../../../i18n";
+import { Trans } from "@lingui/macro";
 
 interface Props {
   cluster: Cluster;
@@ -18,7 +19,7 @@ export class ClusterAccessibleNamespaces extends React.Component<Props> {
     return (
       <>
         <SubTitle title="Accessible Namespaces" />
-        <p>This setting is useful for manually specifying which namespaces you have access to. This is useful when you don't have permissions to list namespaces.</p>
+        <p><Trans>This setting is useful for manually specifying which namespaces you have access to. This is useful when you don't have permissions to list namespaces.</Trans></p>
         <EditableList
           placeholder={_i18n._("Add new namespace...")}
           add={(newNamespace) => {
