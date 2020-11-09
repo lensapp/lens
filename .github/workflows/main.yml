@@ -8,6 +8,9 @@ jobs:
   build:
     name: Deploy docs
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
     steps:
       - name: Set up Python 3.7 
         uses: actions/setup-python@v2 
@@ -35,8 +38,8 @@ jobs:
           
       - name: typedocs generate Extensions API Reference
         run: | 
-           yarn install --ignore-engines
-           yarn --ignore-engines typedocs-extensions-api
+           yarn install
+           yarn typedocs-extensions-api
 
 #      - name: mkdocs deploy latest
 #        run: | 
