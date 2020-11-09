@@ -47,17 +47,23 @@ describe("Lens integration tests", () => {
       await clickWhatsNew(app)
     })
 
-    // Todo figure out how to access main menu to get these to work
-    it.skip('shows "add cluster"', async () => {
-      await app.client.keys(['Shift', 'Meta', 'A'])
+    it('shows "add cluster"', async () => {
+      await app.electron.ipcRenderer.send('test-menu-item-click', "File", "Add Cluster")
       await app.client.waitUntilTextExists("h2", "Add Cluster")
-      await app.client.keys(['Shift', 'Meta'])
     })
 
-    it.skip('shows "preferences"', async () => {
-      await app.client.keys(['Meta', ','])
-      await app.client.waitUntilTextExists("h2", "Preferences")
-      await app.client.keys('Meta')
+    describe("preferences page", () => {
+      it('shows "preferences"', async () => {
+        let appName: string = process.platform === "darwin" ? "Lens" : "File"
+        await app.electron.ipcRenderer.send('test-menu-item-click', appName, "Preferences")
+        await app.client.waitUntilTextExists("h2", "Preferences")
+      })
+
+      it('ensures helm repos', async () => {
+        await app.client.waitUntilTextExists("div.repos #message-stable", "stable") // wait for the helm-cli to fetch the stable repo
+        await app.client.click("#HelmRepoSelect") // click the repo select to activate the drop-down
+        await app.client.waitUntilTextExists("div.Select__option", "")  // wait for at least one option to appear (any text)
+      })
     })
 
     it.skip('quits Lens"', async () => {

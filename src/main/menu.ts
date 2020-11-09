@@ -1,7 +1,7 @@
-import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron"
+import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron"
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
-import { appName, isMac, isWindows } from "../common/vars";
+import { appName, isMac, isWindows, isTestEnv } from "../common/vars";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
@@ -235,4 +235,38 @@ export function buildMenu(windowManager: WindowManager) {
 
   const menu = Menu.buildFromTemplate(Object.values(appMenu));
   Menu.setApplicationMenu(menu);
+
+  if (isTestEnv) {
+    // this is a workaround for the test environment (spectron) not being able to directly access
+    // the application menus (https://github.com/electron-userland/spectron/issues/21)
+    ipcMain.on('test-menu-item-click', (event: IpcMainEvent, ...names: string[]) => {
+      let menu: Menu = Menu.getApplicationMenu()
+      const parentLabels: string[] = [];
+      let menuItem: MenuItem
+
+      for (const name of names) {
+        parentLabels.push(name);
+        menuItem = menu?.items?.find(item => item.label === name);
+        if (!menuItem) {
+          break;
+        }
+        menu = menuItem.submenu;
+      }
+    
+      const menuPath: string = parentLabels.join(" -> ")
+      if (!menuItem) {
+        logger.info(`[MENU:test-menu-item-click] Cannot find menu item ${menuPath}`);
+        return;
+      }
+
+      const { enabled, visible, click } = menuItem;
+      if (enabled === false || visible === false || typeof click !== 'function') {
+        logger.info(`[MENU:test-menu-item-click] Menu item ${menuPath} not clickable`);
+        return;
+      }
+
+      logger.info(`[MENU:test-menu-item-click] Menu item ${menuPath} click!`);
+      menuItem.click();
+    });
+  }
 }
