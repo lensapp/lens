@@ -34,15 +34,17 @@ jobs:
            git config --local user.email "action@github.com"
            git config --local user.name "GitHub Action"
            git pull
-          
-          
-      - name: typedocs generate Extensions API Reference (Node.js ${{ matrix.node-version }})
+           
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+  
+      - name: typedocs generate Extensions API Reference (Node.js ${{ matrix.node-version }})
         run: | 
            yarn install
            yarn typedocs-extensions-api
-
+           
 #      - name: mkdocs deploy latest
 #        run: | 
 #           mike deploy --push latest
