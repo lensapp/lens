@@ -1,0 +1,28 @@
+.EditableList {
+  .el-contents {
+    display: flex;
+    flex-direction: column;
+    margin-top: $padding * 2;
+
+    .el-value-remove {
+      .Icon {
+        justify-content: unset;
+      }
+    }
+
+    .el-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      padding: $padding $padding * 2;
+      margin-bottom: 1px;
+
+      :last-child {
+        margin-bottom: unset;
+      }
+
+      :first-child {
+        align-self: center;
+      }
+    }
+  }
+}
