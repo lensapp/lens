@@ -97,7 +97,7 @@
 
   .tick {
     color: $tickColor;
-    font: $font-size * 1.3 "Material Icons";
+    font: calc($font-size * 1.3) "Material Icons";
 
     &:after {
       content: "radio_button_unchecked";
