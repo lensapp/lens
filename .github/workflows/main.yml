@@ -44,11 +44,8 @@ jobs:
         run: | 
            yarn install
            yarn typedocs-extensions-api
-           
-           for filename in api/**/*.md; do
-              [ -e "$filename" ] || continue
-              sed -i '' '1s/^/---\ntitle: API Reference\n---\n/' $filename
-           done
+           for filename in docs/extensions/api/**/*.md; do [ -e "$filename" ] || continue; sed -i '1s/^/---\ntitle: API Reference\n---\n/' $filename; done
+  
            
 #      - name: mkdocs deploy latest
 #        run: | 
