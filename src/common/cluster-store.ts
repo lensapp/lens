@@ -39,6 +39,7 @@ export interface ClusterModel {
   preferences?: ClusterPreferences;
   metadata?: ClusterMetadata;
   ownerRef?: string;
+  accessibleNamespaces?: string[];
 
   /** @deprecated */
   kubeConfig?: string; // yaml
@@ -179,8 +180,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @action
-  addCluster(model: ClusterModel | Cluster ): Cluster {
-    appEventBus.emit({name: "cluster", action: "add"})
+  addCluster(model: ClusterModel | Cluster): Cluster {
+    appEventBus.emit({ name: "cluster", action: "add" })
     let cluster = model as Cluster;
     if (!(model instanceof Cluster)) {
       cluster = new Cluster(model)
@@ -195,7 +196,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   async removeById(clusterId: ClusterId) {
-    appEventBus.emit({name: "cluster", action: "remove"})
+    appEventBus.emit({ name: "cluster", action: "remove" })
     const cluster = this.getById(clusterId);
     if (cluster) {
       this.clusters.delete(clusterId);

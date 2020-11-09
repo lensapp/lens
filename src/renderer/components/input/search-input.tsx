@@ -1,22 +1,22 @@
 import "./search-input.scss";
 
-import React from "react";
-import debounce from "lodash/debounce"
-import { autorun, observable } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import React, { createRef } from "react";
 import { t } from "@lingui/macro";
+import { observer } from "mobx-react";
+import { _i18n } from "../../i18n";
+import { autobind, cssNames } from "../../utils";
 import { Icon } from "../icon";
-import { cssNames } from "../../utils";
 import { Input, InputProps } from "./input";
-import { getSearch, setSearch } from "../../navigation";
-import { _i18n } from '../../i18n';
 
 interface Props extends InputProps {
   compact?: boolean; // show only search-icon when not focused
+  closeIcon?: boolean;
+  onClear?: () => void;
 }
 
 const defaultProps: Partial<Props> = {
   autoFocus: true,
+  closeIcon: true,
   get placeholder() {
     return _i18n._(t`Search...`)
   },
@@ -26,27 +26,24 @@ const defaultProps: Partial<Props> = {
 export class SearchInput extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
-  @observable inputVal = ""; // fix: use empty string to avoid react warnings
+  private input = createRef<Input>();
 
-  @disposeOnUnmount
-  updateInput = autorun(() => this.inputVal = getSearch())
-  updateUrl = debounce((val: string) => setSearch(val), 250)
+  componentDidMount() {
+    addEventListener("keydown", this.focus);
+  }
 
-  setValue = (value: string) => {
-    this.inputVal = value;
-    this.updateUrl(value);
+  componentWillUnmount() {
+    removeEventListener("keydown", this.focus);
   }
 
   clear = () => {
-    this.setValue("");
-    this.updateUrl.flush();
+    if (this.props.onClear) {
+      this.props.onClear();
+    }
   }
 
   onChange = (val: string, evt: React.ChangeEvent<any>) => {
-    this.setValue(val);
-    if (this.props.onChange) {
-      this.props.onChange(val, evt);
-    }
+    this.props.onChange(val, evt);
   }
 
   onKeyDown = (evt: React.KeyboardEvent<any>) => {
@@ -61,20 +58,27 @@ export class SearchInput extends React.Component<Props> {
     }
   }
 
+  @autobind()
+  focus(evt: KeyboardEvent) {
+    const meta = evt.metaKey || evt.ctrlKey;
+    if (meta && evt.key == "f") {
+      this.input.current.focus();
+    }
+  }
+
   render() {
-    const { inputVal } = this;
-    const { className, compact, ...inputProps } = this.props;
-    const icon = inputVal
-      ? <Icon small material="close" onClick={this.clear}/>
+    const { className, compact, closeIcon, onClear, ...inputProps } = this.props;
+    const icon = this.props.value
+      ? closeIcon ? <Icon small material="close" onClick={this.clear}/> : null
       : <Icon small material="search"/>
     return (
       <Input
         {...inputProps}
         className={cssNames("SearchInput", className, { compact })}
-        value={inputVal}
         onChange={this.onChange}
         onKeyDown={this.onKeyDown}
         iconRight={icon}
+        ref={this.input}
       />
     )
   }

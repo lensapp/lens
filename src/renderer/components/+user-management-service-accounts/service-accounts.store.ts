@@ -14,4 +14,4 @@ export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
 }
 
 export const serviceAccountsStore = new ServiceAccountsStore();
-apiManager.registerStore(serviceAccountsApi, serviceAccountsStore);
+apiManager.registerStore(serviceAccountsStore);

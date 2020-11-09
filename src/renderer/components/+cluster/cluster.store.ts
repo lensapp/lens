@@ -107,4 +107,4 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
 }
 
 export const clusterStore = new ClusterStore();
-apiManager.registerStore(clusterApi, clusterStore);
+apiManager.registerStore(clusterStore);

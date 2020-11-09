@@ -9,4 +9,4 @@ export class PodDisruptionBudgetsStore extends KubeObjectStore<PodDisruptionBudg
 }
 
 export const podDisruptionBudgetsStore = new PodDisruptionBudgetsStore();
-apiManager.registerStore(pdbApi, podDisruptionBudgetsStore);
+apiManager.registerStore(podDisruptionBudgetsStore);

@@ -6,6 +6,7 @@ import { ClusterIconSetting } from "./components/cluster-icon-setting";
 import { ClusterProxySetting } from "./components/cluster-proxy-setting";
 import { ClusterPrometheusSetting } from "./components/cluster-prometheus-setting";
 import { ClusterHomeDirSetting } from "./components/cluster-home-dir-setting";
+import { ClusterAccessibleNamespaces } from "./components/cluster-accessible-namespaces";
 
 interface Props {
   cluster: Cluster;
@@ -21,6 +22,7 @@ export class General extends React.Component<Props> {
       <ClusterProxySetting cluster={this.props.cluster} />
       <ClusterPrometheusSetting cluster={this.props.cluster} />
       <ClusterHomeDirSetting cluster={this.props.cluster} />
+      <ClusterAccessibleNamespaces cluster={this.props.cluster} />
     </div>;
   }
 }

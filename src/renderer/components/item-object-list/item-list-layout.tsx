@@ -5,14 +5,14 @@ import React, { ReactNode } from "react";
 import { computed, observable, reaction, toJS, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Plural, Trans } from "@lingui/macro";
-import { ConfirmDialog, IConfirmDialogParams } from "../confirm-dialog";
-import { SortingCallback, Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps } from "../table";
+import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
+import { TableSortCallback, Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps } from "../table";
 import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
 import { ItemObject, ItemStore } from "../../item.store";
-import { SearchInput } from "../input";
+import { SearchInputUrl } from "../input";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
@@ -52,7 +52,7 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   isSelectable?: boolean; // show checkbox in rows for selecting items
   isSearchable?: boolean; // apply search-filter & add search-input
   copyClassNameFromHeadCells?: boolean;
-  sortingCallbacks?: { [sortBy: string]: SortingCallback };
+  sortingCallbacks?: { [sortBy: string]: TableSortCallback };
   tableProps?: Partial<TableProps>; // low-level table configuration
   renderTableHeader: TableCellProps[] | null;
   renderTableContents: (item: T) => (ReactNode | TableCellProps)[];
@@ -67,7 +67,7 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   onDetails?: (item: T) => void;
 
   // other
-  customizeRemoveDialog?: (selectedItems: T[]) => Partial<IConfirmDialogParams>;
+  customizeRemoveDialog?: (selectedItems: T[]) => Partial<ConfirmDialogParams>;
   renderFooter?: (parent: ItemListLayout) => React.ReactNode;
 }
 
@@ -349,7 +349,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           [FilterType.NAMESPACE]: true, // namespace-select used instead
         }}/>
       </>,
-      search: <SearchInput/>,
+      search: <SearchInputUrl/>,
     }
     let header = this.renderHeaderContent(placeholders);
     if (customizeHeader) {

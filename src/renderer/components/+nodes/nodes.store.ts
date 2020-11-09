@@ -69,4 +69,4 @@ export class NodesStore extends KubeObjectStore<Node> {
 }
 
 export const nodesStore = new NodesStore()
-apiManager.registerStore(nodesApi, nodesStore);
+apiManager.registerStore(nodesStore);
