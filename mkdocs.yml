@@ -34,7 +34,7 @@ nav:
       - Testing Extensions: extensions/testing-and-publishing/testing.md
       - Publishing Extensions: extensions/testing-and-publishing/publishing.md
       - Bundling Extensions: extensions/testing-and-publishing/bundling.md
-    - API Reference: api/modules/_src_extensions_extension_api_.md
+    - API Reference: extensions/api/modules/_src_extensions_extension_api_.md
   - Contributing: contributing/README.md
   - FAQ: faq/README.md
 theme:
