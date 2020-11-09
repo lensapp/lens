@@ -95,4 +95,4 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 }
 
 export const namespaceStore = new NamespaceStore();
-apiManager.registerStore(namespacesApi, namespaceStore);
+apiManager.registerStore(namespaceStore);

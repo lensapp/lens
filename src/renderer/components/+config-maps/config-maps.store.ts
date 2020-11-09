@@ -9,4 +9,4 @@ export class ConfigMapsStore extends KubeObjectStore<ConfigMap> {
 }
 
 export const configMapsStore = new ConfigMapsStore();
-apiManager.registerStore(configMapApi, configMapsStore);
+apiManager.registerStore(configMapsStore);

@@ -9,4 +9,4 @@ export class NetworkPolicyStore extends KubeObjectStore<NetworkPolicy> {
 }
 
 export const networkPolicyStore = new NetworkPolicyStore();
-apiManager.registerStore(networkPolicyApi, networkPolicyStore);
+apiManager.registerStore(networkPolicyStore);
