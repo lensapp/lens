@@ -54,9 +54,9 @@ describe("Lens integration tests", () => {
 
     describe("preferences page", () => {
       it('shows "preferences"', async () => {
-      let appName: string = process.platform === "darwin" ? "Lens" : "File"
-      await app.electron.ipcRenderer.send('test-menu-item-click', appName, "Preferences")
-      await app.client.waitUntilTextExists("h2", "Preferences")
+        let appName: string = process.platform === "darwin" ? "Lens" : "File"
+        await app.electron.ipcRenderer.send('test-menu-item-click', appName, "Preferences")
+        await app.client.waitUntilTextExists("h2", "Preferences")
       })
 
       it('ensures helm repos', async () => {
