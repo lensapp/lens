@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/extensions/get-started/your-first-extension/">
+        <link rel="canonical" href="https://docs.k8slens.dev/extensions/get-started/overview/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Your First Extension - Lens Documentation</title>
+        <title>Extension Development Overview - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#your-first-extension" class="md-skip">
+        <a href="#extension-development-overview" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Your First Extension
+              Extension Development Overview
             
           </span>
         </div>
@@ -345,12 +345,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
     <label class="md-nav__link" for="nav-7">
       Extension Development
@@ -380,12 +378,10 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-2" type="checkbox" id="nav-7-2" checked>
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-2" type="checkbox" id="nav-7-2">
     
     <label class="md-nav__link" for="nav-7-2">
       Get Started
@@ -403,76 +399,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-      
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Your First Extension
-        <span class="md-nav__icon md-icon"></span>
-      </label>
-    
-    <a href="./" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../your-first-extension/" class="md-nav__link">
       Your First Extension
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installing-and-building-the-extension" class="md-nav__link">
-    Installing and Building the extension
-  </a>
-  
-    <nav class="md-nav" aria-label="Installing and Building the extension">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#linux" class="md-nav__link">
-    Linux
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#developing-the-extension" class="md-nav__link">
-    Developing the extension
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    Next steps
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -823,35 +754,15 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installing-and-building-the-extension" class="md-nav__link">
-    Installing and Building the extension
-  </a>
-  
-    <nav class="md-nav" aria-label="Installing and Building the extension">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#linux" class="md-nav__link">
-    Linux
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#developing-the-extension" class="md-nav__link">
-    Developing the extension
+  <a href="#required" class="md-nav__link">
+    Required:
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    Next steps
+  <a href="#recommened" class="md-nav__link">
+    Recommened:
   </a>
   
 </li>
@@ -870,45 +781,21 @@
               
                 
                 
-                <h1 id="your-first-extension">Your First Extension<a class="headerlink" href="#your-first-extension" title="Permanent link">#</a></h1>
-<p>In this topic, we'll teach you the fundamental concepts for building extensions.</p>
-<h2 id="installing-and-building-the-extension">Installing and Building the extension<a class="headerlink" href="#installing-and-building-the-extension" title="Permanent link">#</a></h2>
-<p>Simple Lens extension that adds "Hello World" page to a cluster menu.</p>
-<h3 id="linux">Linux<a class="headerlink" href="#linux" title="Permanent link">#</a></h3>
-<p>First you will need to clone the <a href="https://github.com/lensapp/lens-extension-samples">Lens Extension samples</a> repository to your local machine:</p>
-<div class="highlight"><pre><span></span><code>git clone https://github.com/lensapp/lens-extension-samples.git
-</code></pre></div>
-<p>Next you need to create a symlink from the directory that Lens will monitor for user installed extensions to the sample extension, in this case <strong>helloworld-sample</strong>:</p>
-<div class="highlight"><pre><span></span><code>mkdir -p ~/.k8slens/extensions
-<span class="nb">cd</span> ~/.k8slens/extensions
-ln -s &lt;lens-extension-samples directory&gt;/helloworld-sample helloworld-sample
-</code></pre></div>
-<p>To build the extension you can use <code>make</code> or run the <code>npm</code> commands manually:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> &lt;lens-extension-samples directory&gt;/helloworld-sample
-make build
-</code></pre></div>
-<p>OR</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> &lt;lens-extension-samples directory&gt;/helloworld-sample
-npm install
-npm run build
-</code></pre></div>
-<p>If you want to watch for any source code changes and automatically rebuild the extension you can use:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span> &lt;lens-extension-samples directory&gt;/helloworld-sample
-npm run dev
-</code></pre></div>
-<p>Finally, if you already have Lens open you will need to quit and restart Lens for the extension to be loaded. After this initial restart you can reload Lens and it will pick up any new builds of the extension. Within Lens connect to an existing cluster or <a href="../../../clusters/adding-clusters/">create a new one</a>. You should see then see the "Hello World" page in the Lens sidebar cluster menu.</p>
-<h2 id="developing-the-extension">Developing the extension<a class="headerlink" href="#developing-the-extension" title="Permanent link">#</a></h2>
-<p>Let's make a change to the message that our helloworld-sample extension displays:</p>
+                <h1 id="extension-development-overview">Extension Development Overview<a class="headerlink" href="#extension-development-overview" title="Permanent link">#</a></h1>
+<p>This is a general overview to how the development of an extension will procede. For building extensions there will be a few things that you should have installed, and some that might help.</p>
+<h3 id="required">Required:<a class="headerlink" href="#required" title="Permanent link">#</a></h3>
 <ul>
-<li>Navigate to <code>&lt;lens-extension-samples directory&gt;/helloworld-sample</code>.</li>
-<li>Change the message from HelloWorld! to <strong>Hello Lens Extensions</strong> in <code>page.tsx</code>.</li>
-<li>Rebuild the extension or, if you used <code>npm run dev</code>, the extension should automatically rebuild.</li>
-<li>Reload the Lens window and click on the Hello World page.</li>
-<li>You should see the updated message showing up.</li>
+<li><a href="https://www.nodejs.org/en/">Node.js</a></li>
+<li><a href="https://www.git-scm.com/">Git</a></li>
+<li>Some sort of text editor, we recommend <a href="https://code.visualstudio.com/">VSCode</a></li>
+<li>We use <a href="https://www.webpack.js.org/">Webpack</a> for compilation. All extension need to be at least compatable with a webpack system.</li>
 </ul>
-<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
-<p>In the next topic, <a href="../anatomy/">Extension Anatomy</a>, we'll take a closer look at the source code of the Hello World sample and explain key concepts.</p>
-<p>You can find the source code of this tutorial at: <a href="https://github.com/lensapp/lens-extension-samples/tree/master/helloworld-sample">lensapp/lens-extension-samples</a>. The <a href="../guides/overview.md">Extension Guides</a> topic contains other samples, each illustrating a different Lens Extension API.</p>
+<h3 id="recommened">Recommened:<a class="headerlink" href="#recommened" title="Permanent link">#</a></h3>
+<p>-</p>
+<p>All <em>Lens</em> extensions are javascript packages. We recommend that you program in <a href="https://www.typescriptlang.org/">Typescript</a> because it catches quite a few easily to make errors around passing data around in javascript.</p>
+<p><em>Lens</em> is a standard <a href="https://www.electronjs.org/">Electron</a> application which both main and renderer processes. An extension is made up of two parts, one for each of <em>Lens</em>'s core processes. When an extension is loaded each part is loaded and then notified that it has been loaded. From there the extension can start doing is work.</p>
+<p><em>Lens</em> uses <a href="https://www.reactjs.org/">React</a> as it UI framework and even provides some of our own components for reuse by extensions. An extension is resonsible for the lifetime of any resources it spins up. If an extension's main part starts new processes they all must be stopped and cleaned up when the extension is deactivated or unloaded.</p>
+<p>See <a href="../your-first-extension/">Your First Extension</a> to get started.</p>
                 
                   
                     
@@ -936,41 +823,6 @@ npm run dev
       
         
 <footer class="md-footer">
-  
-    <div class="md-footer-nav">
-      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
-        
-          <a href="../../" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-            </div>
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Previous
-                </span>
-                Overview
-              </div>
-            </div>
-          </a>
-        
-        
-          <a href="../anatomy/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
-            <div class="md-footer-nav__title">
-              <div class="md-ellipsis">
-                <span class="md-footer-nav__direction">
-                  Next
-                </span>
-                Extension Anatomy
-              </div>
-            </div>
-            <div class="md-footer-nav__button md-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
-    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
