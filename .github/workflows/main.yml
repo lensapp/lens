@@ -2,7 +2,7 @@ name: Publish docs via GitHub Pages
 on:
   push:
     branches:
-      - master
+      - documentation-typedocs
 
 jobs:
   build:
@@ -33,16 +33,20 @@ jobs:
            git pull
           
           
-      - name: mkdocs deploy latest
+      - name: typedocs generate Extensions API Reference
         run: | 
-           mike deploy --push latest
+           yarn typedocs-extensions-api
+
+#      - name: mkdocs deploy latest
+#        run: | 
+#           mike deploy --push latest
 
         
-      - name: mkdocs deploy new release / tag
-        if: contains(github.ref, 'refs/tags/v')
-        run: | 
-           mike deploy --push--update-aliases ${{ github.ref }} latest
-           mike set-default --push ${{ github.ref }}
+ #     - name: mkdocs deploy new release / tag
+ #       if: contains(github.ref, 'refs/tags/v')
+ #       run: | 
+ #          mike deploy --push--update-aliases ${{ github.ref }} latest
+ #          mike set-default --push ${{ github.ref }}
           
 
 

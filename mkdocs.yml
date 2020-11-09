@@ -34,7 +34,7 @@ nav:
       - Testing Extensions: extensions/testing-and-publishing/testing.md
       - Publishing Extensions: extensions/testing-and-publishing/publishing.md
       - Bundling Extensions: extensions/testing-and-publishing/bundling.md
-    - API Reference: extensions/api/README.md
+    - API Reference: api/modules/_src_extensions_extension_api_.md
   - Contributing: contributing/README.md
   - FAQ: faq/README.md
 theme:
@@ -64,7 +64,7 @@ extra_css:
 
 plugins:
   - search
-  - git-revision-date-localized
+#  - git-revision-date-localized
 
 markdown_extensions:
   - pymdownx.highlight: {}
