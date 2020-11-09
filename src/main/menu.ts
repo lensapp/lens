@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents } from "electron"
+import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron"
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
 import { appName, isMac, isWindows } from "../common/vars";
@@ -191,6 +191,12 @@ export function buildMenu(windowManager: WindowManager) {
         label: "What's new?",
         click() {
           navigate(whatsNewURL())
+        },
+      },
+      {
+        label: "Documentation",
+        click: async () => {
+          shell.openExternal('https://docs.k8slens.dev/');
         },
       },
       ...ignoreOnMac([

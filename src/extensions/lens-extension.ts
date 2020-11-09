@@ -1,7 +1,6 @@
 import type { InstalledExtension } from "./extension-manager";
-import { action, reaction } from "mobx";
+import { action, observable, reaction } from "mobx";
 import logger from "../main/logger";
-import { ExtensionStore } from "./extension-store";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -14,35 +13,17 @@ export interface LensExtensionManifest {
   renderer?: string; // path to %ext/dist/renderer.js
 }
 
-export interface LensExtensionStoreModel {
-  isEnabled: boolean;
-}
-
-export class LensExtension<S extends ExtensionStore<LensExtensionStoreModel> = any> {
-  protected store: S;
+export class LensExtension {
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
   readonly isBundled: boolean;
+
+  @observable private isEnabled = false;
 
   constructor({ manifest, manifestPath, isBundled }: InstalledExtension) {
     this.manifest = manifest
     this.manifestPath = manifestPath
     this.isBundled = !!isBundled
-    this.init();
-  }
-
-  protected async init(store: S = createBaseStore().getInstance()) {
-    this.store = store;
-    await this.store.loadExtension(this);
-    reaction(() => this.store.data.isEnabled, (isEnabled = true) => {
-      this.toggle(isEnabled); // handle activation & deactivation
-    }, {
-      fireImmediately: true
-    });
-  }
-
-  get isEnabled() {
-    return !!this.store.data.isEnabled;
   }
 
   get id(): LensExtensionId {
@@ -64,7 +45,7 @@ export class LensExtension<S extends ExtensionStore<LensExtensionStoreModel> = a
   @action
   async enable() {
     if (this.isEnabled) return;
-    this.store.data.isEnabled = true;
+    this.isEnabled = true;
     this.onActivate();
     logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
   }
@@ -72,7 +53,7 @@ export class LensExtension<S extends ExtensionStore<LensExtensionStoreModel> = a
   @action
   async disable() {
     if (!this.isEnabled) return;
-    this.store.data.isEnabled = false;
+    this.isEnabled = false;
     this.onDeactivate();
     logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
   }
@@ -112,15 +93,5 @@ export class LensExtension<S extends ExtensionStore<LensExtensionStoreModel> = a
 
   protected onDeactivate() {
     // mock
-  }
-}
-
-function createBaseStore() {
-  return class extends ExtensionStore<LensExtensionStoreModel> {
-    constructor() {
-      super({
-        configName: "state"
-      });
-    }
   }
 }
