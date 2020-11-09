@@ -1,4 +1,4 @@
-import { appName, buildDir, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars } from "./src/common/vars";
+import { appName, buildDir, htmlTemplate, isDevelopment, isProduction, publicPath, rendererDir, sassCommonVars, webpackDevServerPort } from "./src/common/vars";
 import path from "path";
 import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
@@ -6,6 +6,8 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
+import HardSourceWebpackPlugin from 'hard-source-webpack-plugin';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 
 export default [
   webpackLensRenderer
@@ -19,6 +21,15 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     context: __dirname,
     target: "electron-renderer",
     devtool: "source-map", // todo: optimize in dev-mode with webpack.SourceMapDevToolPlugin
+    devServer: {
+      contentBase: buildDir,
+      port: webpackDevServerPort,
+      host: "localhost",
+      hot: true,
+      // to avoid cors errors when requests is from iframes
+      disableHostCheck: true,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+    },
     name: "lens-app",
     mode: isProduction ? "production" : "development",
     cache: isDevelopment,
@@ -79,7 +90,10 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
                   ["@babel/preset-env", {
                     modules: "commonjs" // ling-ui
                   }],
-                ]
+                ],
+                plugins: [
+                  isDevelopment && require.resolve('react-refresh/babel'),
+                ].filter(Boolean),
               }
             },
             {
@@ -172,6 +186,11 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       new MiniCssExtractPlugin({
         filename: "[name].css",
       }),
-    ],
+
+      isDevelopment && new HardSourceWebpackPlugin(),
+      isDevelopment && new webpack.HotModuleReplacementPlugin(),
+      isDevelopment && new ReactRefreshWebpackPlugin(),
+      
+    ].filter(Boolean),
   }
 }
