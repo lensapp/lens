@@ -36,6 +36,11 @@ nav:
       - Bundling Extensions: extensions/testing-and-publishing/bundling.md
     - API Reference: extensions/api/README.md
   - Contributing: contributing/README.md
+    - Development: contributing/development.md
+    - Documentation: contributing/documentation.md
+    - Maintainers: contributing/maintainers.md
+    - Promotion: contributing/promotion.md
+
   - FAQ: faq/README.md
 theme:
   name: 'material'
