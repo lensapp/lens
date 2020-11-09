@@ -19,7 +19,7 @@
     
     
       
-        <title>Index - Lens Documentation</title>
+        <title>API Reference - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#k8slensextensions" class="md-skip">
+        <a href="#lens-extension-api-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Index
+              API Reference
             
           </span>
         </div>
@@ -345,10 +345,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
     
     <label class="md-nav__link" for="nav-7">
       Extension Development
@@ -487,8 +489,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../capabilities/theming/" class="md-nav__link">
-      Theming
+    <a href="../capabilities/styling/" class="md-nav__link">
+      Styling
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../capabilities/color-reference/" class="md-nav__link">
+      Color reference
     </a>
   </li>
 
@@ -614,11 +628,20 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="modules/_src_extensions_extension_api_/" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
       API Reference
     </a>
+    
   </li>
 
         
@@ -632,10 +655,84 @@
       
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+    
+    <label class="md-nav__link" for="nav-8">
+      Contributing
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Contributing" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon"></span>
+        Contributing
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
     <a href="../../contributing/" class="md-nav__link">
-      Contributing
+      Overview
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../contributing/development/" class="md-nav__link">
+      Development
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../contributing/documentation/" class="md-nav__link">
+      Documentation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../contributing/maintainers/" class="md-nav__link">
+      Maintainers
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../contributing/promotion/" class="md-nav__link">
+      Promotion
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
     
@@ -663,49 +760,6 @@
                 
               
               
-                <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-                  <div class="md-sidebar__scrollwrap">
-                    <div class="md-sidebar__inner">
-                      
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#index" class="md-nav__link">
-    Index
-  </a>
-  
-    <nav class="md-nav" aria-label="Index">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#modules" class="md-nav__link">
-    Modules
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                    </div>
-                  </div>
-                </div>
-              
             
           
           <div class="md-content">
@@ -713,286 +767,8 @@
               
                 
                 
-                <p><strong><a href="./">@k8slens/extensions</a></strong></p>
-<blockquote>
-<p>Globals</p>
-</blockquote>
-<h1 id="k8slensextensions">@k8slens/extensions<a class="headerlink" href="#k8slensextensions" title="Permanent link">#</a></h1>
-<h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
-<h3 id="modules">Modules<a class="headerlink" href="#modules" title="Permanent link">#</a></h3>
-<ul>
-<li><a href="modules/_package_/">"package"</a></li>
-<li><a href="modules/_src_common_base_store_/">"src/common/base-store"</a></li>
-<li><a href="modules/_src_common_cluster_ipc_/">"src/common/cluster-ipc"</a></li>
-<li><a href="modules/_src_common_cluster_store_/">"src/common/cluster-store"</a></li>
-<li><a href="modules/_src_common_custom_errors_/">"src/common/custom-errors"</a></li>
-<li><a href="modules/_src_common_event_bus_/">"src/common/event-bus"</a></li>
-<li><a href="modules/_src_common_event_emitter_/">"src/common/event-emitter"</a></li>
-<li><a href="modules/_src_common_ipc_/">"src/common/ipc"</a></li>
-<li><a href="modules/_src_common_kube_helpers_/">"src/common/kube-helpers"</a></li>
-<li><a href="modules/_src_common_prometheus_providers_/">"src/common/prometheus-providers"</a></li>
-<li><a href="modules/_src_common_rbac_/">"src/common/rbac"</a></li>
-<li><a href="modules/_src_common_request_/">"src/common/request"</a></li>
-<li><a href="modules/_src_common_user_store_/">"src/common/user-store"</a></li>
-<li><a href="modules/_src_common_utils_app_version_/">"src/common/utils/app-version"</a></li>
-<li><a href="modules/_src_common_utils_autobind_/">"src/common/utils/autobind"</a></li>
-<li><a href="modules/_src_common_utils_base64_/">"src/common/utils/base64"</a></li>
-<li><a href="modules/_src_common_utils_buildurl_/">"src/common/utils/buildUrl"</a></li>
-<li><a href="modules/_src_common_utils_camelcase_/">"src/common/utils/camelCase"</a></li>
-<li><a href="modules/_src_common_utils_clonejson_/">"src/common/utils/cloneJson"</a></li>
-<li><a href="modules/_src_common_utils_debouncepromise_/">"src/common/utils/debouncePromise"</a></li>
-<li><a href="modules/_src_common_utils_defineglobal_/">"src/common/utils/defineGlobal"</a></li>
-<li><a href="modules/_src_common_utils_getrandid_/">"src/common/utils/getRandId"</a></li>
-<li><a href="modules/_src_common_utils_index_/">"src/common/utils/index"</a></li>
-<li><a href="modules/_src_common_utils_openexternal_/">"src/common/utils/openExternal"</a></li>
-<li><a href="modules/_src_common_utils_savetoappfiles_/">"src/common/utils/saveToAppFiles"</a></li>
-<li><a href="modules/_src_common_utils_singleton_/">"src/common/utils/singleton"</a></li>
-<li><a href="modules/_src_common_utils_splitarray_/">"src/common/utils/splitArray"</a></li>
-<li><a href="modules/_src_common_vars_/">"src/common/vars"</a></li>
-<li><a href="modules/_src_common_workspace_store_/">"src/common/workspace-store"</a></li>
-<li><a href="modules/_src_extensions_cluster_feature_/">"src/extensions/cluster-feature"</a></li>
-<li><a href="modules/_src_extensions_core_api_app_/">"src/extensions/core-api/app"</a></li>
-<li><a href="modules/_src_extensions_core_api_cluster_feature_/">"src/extensions/core-api/cluster-feature"</a></li>
-<li><a href="modules/_src_extensions_core_api_event_bus_/">"src/extensions/core-api/event-bus"</a></li>
-<li><a href="modules/_src_extensions_core_api_index_/">"src/extensions/core-api/index"</a></li>
-<li><a href="modules/_src_extensions_core_api_stores_/">"src/extensions/core-api/stores"</a></li>
-<li><a href="modules/_src_extensions_core_api_utils_/">"src/extensions/core-api/utils"</a></li>
-<li><a href="modules/_src_extensions_extension_api_/">"src/extensions/extension-api"</a></li>
-<li><a href="modules/_src_extensions_extension_loader_/">"src/extensions/extension-loader"</a></li>
-<li><a href="modules/_src_extensions_extension_manager_/">"src/extensions/extension-manager"</a></li>
-<li><a href="modules/_src_extensions_extension_store_/">"src/extensions/extension-store"</a></li>
-<li><a href="modules/_src_extensions_extensions_store_/">"src/extensions/extensions-store"</a></li>
-<li><a href="modules/_src_extensions_lens_extension_/">"src/extensions/lens-extension"</a></li>
-<li><a href="modules/_src_extensions_lens_main_extension_/">"src/extensions/lens-main-extension"</a></li>
-<li><a href="modules/_src_extensions_lens_renderer_extension_/">"src/extensions/lens-renderer-extension"</a></li>
-<li><a href="modules/_src_extensions_registries_app_preference_registry_/">"src/extensions/registries/app-preference-registry"</a></li>
-<li><a href="modules/_src_extensions_registries_base_registry_/">"src/extensions/registries/base-registry"</a></li>
-<li><a href="modules/_src_extensions_registries_cluster_feature_registry_/">"src/extensions/registries/cluster-feature-registry"</a></li>
-<li><a href="modules/_src_extensions_registries_index_/">"src/extensions/registries/index"</a></li>
-<li><a href="modules/_src_extensions_registries_kube_object_detail_registry_/">"src/extensions/registries/kube-object-detail-registry"</a></li>
-<li><a href="modules/_src_extensions_registries_kube_object_menu_registry_/">"src/extensions/registries/kube-object-menu-registry"</a></li>
-<li><a href="modules/_src_extensions_registries_menu_registry_/">"src/extensions/registries/menu-registry"</a></li>
-<li><a href="modules/_src_extensions_registries_page_registry_/">"src/extensions/registries/page-registry"</a></li>
-<li><a href="modules/_src_extensions_registries_status_bar_registry_/">"src/extensions/registries/status-bar-registry"</a></li>
-<li><a href="modules/_src_extensions_renderer_api_components_/">"src/extensions/renderer-api/components"</a></li>
-<li><a href="modules/_src_extensions_renderer_api_index_/">"src/extensions/renderer-api/index"</a></li>
-<li><a href="modules/_src_extensions_renderer_api_k8s_api_/">"src/extensions/renderer-api/k8s-api"</a></li>
-<li><a href="modules/_src_extensions_renderer_api_navigation_/">"src/extensions/renderer-api/navigation"</a></li>
-<li><a href="modules/_src_main_app_updater_/">"src/main/app-updater"</a></li>
-<li><a href="modules/_src_main_cluster_/">"src/main/cluster"</a></li>
-<li><a href="modules/_src_main_cluster_detectors_base_cluster_detector_/">"src/main/cluster-detectors/base-cluster-detector"</a></li>
-<li><a href="modules/_src_main_cluster_detectors_cluster_id_detector_/">"src/main/cluster-detectors/cluster-id-detector"</a></li>
-<li><a href="modules/_src_main_cluster_detectors_detector_registry_/">"src/main/cluster-detectors/detector-registry"</a></li>
-<li><a href="modules/_src_main_cluster_detectors_distribution_detector_/">"src/main/cluster-detectors/distribution-detector"</a></li>
-<li><a href="modules/_src_main_cluster_detectors_last_seen_detector_/">"src/main/cluster-detectors/last-seen-detector"</a></li>
-<li><a href="modules/_src_main_cluster_detectors_nodes_count_detector_/">"src/main/cluster-detectors/nodes-count-detector"</a></li>
-<li><a href="modules/_src_main_cluster_detectors_version_detector_/">"src/main/cluster-detectors/version-detector"</a></li>
-<li><a href="modules/_src_main_context_handler_/">"src/main/context-handler"</a></li>
-<li><a href="modules/_src_main_helm_helm_chart_manager_/">"src/main/helm/helm-chart-manager"</a></li>
-<li><a href="modules/_src_main_helm_helm_cli_/">"src/main/helm/helm-cli"</a></li>
-<li><a href="modules/_src_main_helm_helm_release_manager_/">"src/main/helm/helm-release-manager"</a></li>
-<li><a href="modules/_src_main_helm_helm_repo_manager_/">"src/main/helm/helm-repo-manager"</a></li>
-<li><a href="modules/_src_main_helm_helm_service_/">"src/main/helm/helm-service"</a></li>
-<li><a href="modules/_src_main_kube_auth_proxy_/">"src/main/kube-auth-proxy"</a></li>
-<li><a href="modules/_src_main_kubeconfig_manager_/">"src/main/kubeconfig-manager"</a></li>
-<li><a href="modules/_src_main_kubectl_/">"src/main/kubectl"</a></li>
-<li><a href="modules/_src_main_lens_api_/">"src/main/lens-api"</a></li>
-<li><a href="modules/_src_main_lens_binary_/">"src/main/lens-binary"</a></li>
-<li><a href="modules/_src_main_logger_/">"src/main/logger"</a></li>
-<li><a href="modules/_src_main_menu_/">"src/main/menu"</a></li>
-<li><a href="modules/_src_main_port_/">"src/main/port"</a></li>
-<li><a href="modules/_src_main_prometheus_helm_/">"src/main/prometheus/helm"</a></li>
-<li><a href="modules/_src_main_prometheus_lens_/">"src/main/prometheus/lens"</a></li>
-<li><a href="modules/_src_main_prometheus_operator_/">"src/main/prometheus/operator"</a></li>
-<li><a href="modules/_src_main_prometheus_provider_registry_/">"src/main/prometheus/provider-registry"</a></li>
-<li><a href="modules/_src_main_prometheus_stacklight_/">"src/main/prometheus/stacklight"</a></li>
-<li><a href="modules/_src_main_promise_exec_/">"src/main/promise-exec"</a></li>
-<li><a href="modules/_src_main_resource_applier_/">"src/main/resource-applier"</a></li>
-<li><a href="modules/_src_main_router_/">"src/main/router"</a></li>
-<li><a href="modules/_src_main_routes_helm_route_/">"src/main/routes/helm-route"</a></li>
-<li><a href="modules/_src_main_routes_index_/">"src/main/routes/index"</a></li>
-<li><a href="modules/_src_main_routes_kubeconfig_route_/">"src/main/routes/kubeconfig-route"</a></li>
-<li><a href="modules/_src_main_routes_metrics_route_/">"src/main/routes/metrics-route"</a></li>
-<li><a href="modules/_src_main_routes_port_forward_route_/">"src/main/routes/port-forward-route"</a></li>
-<li><a href="modules/_src_main_routes_resource_applier_route_/">"src/main/routes/resource-applier-route"</a></li>
-<li><a href="modules/_src_main_routes_watch_route_/">"src/main/routes/watch-route"</a></li>
-<li><a href="modules/_src_main_tray_/">"src/main/tray"</a></li>
-<li><a href="modules/_src_main_window_manager_/">"src/main/window-manager"</a></li>
-<li><a href="modules/_src_migrations_cluster_store_2_0_0_beta_2_/">"src/migrations/cluster-store/2.0.0-beta.2"</a></li>
-<li><a href="modules/_src_migrations_cluster_store_2_4_1_/">"src/migrations/cluster-store/2.4.1"</a></li>
-<li><a href="modules/_src_migrations_cluster_store_2_6_0_beta_2_/">"src/migrations/cluster-store/2.6.0-beta.2"</a></li>
-<li><a href="modules/_src_migrations_cluster_store_2_6_0_beta_3_/">"src/migrations/cluster-store/2.6.0-beta.3"</a></li>
-<li><a href="modules/_src_migrations_cluster_store_2_7_0_beta_0_/">"src/migrations/cluster-store/2.7.0-beta.0"</a></li>
-<li><a href="modules/_src_migrations_cluster_store_2_7_0_beta_1_/">"src/migrations/cluster-store/2.7.0-beta.1"</a></li>
-<li><a href="modules/_src_migrations_cluster_store_3_6_0_beta_1_/">"src/migrations/cluster-store/3.6.0-beta.1"</a></li>
-<li><a href="modules/_src_migrations_cluster_store_index_/">"src/migrations/cluster-store/index"</a></li>
-<li><a href="modules/_src_migrations_cluster_store_snap_/">"src/migrations/cluster-store/snap"</a></li>
-<li><a href="modules/_src_migrations_migration_wrapper_/">"src/migrations/migration-wrapper"</a></li>
-<li><a href="modules/_src_migrations_user_store_2_1_0_beta_4_/">"src/migrations/user-store/2.1.0-beta.4"</a></li>
-<li><a href="modules/_src_migrations_user_store_index_/">"src/migrations/user-store/index"</a></li>
-<li><a href="modules/_src_renderer_api_api_manager_/">"src/renderer/api/api-manager"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_cluster_role_binding_api_/">"src/renderer/api/endpoints/cluster-role-binding.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_cluster_role_api_/">"src/renderer/api/endpoints/cluster-role.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_cluster_api_/">"src/renderer/api/endpoints/cluster.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_configmap_api_/">"src/renderer/api/endpoints/configmap.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_crd_api_/">"src/renderer/api/endpoints/crd.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_cron_job_api_/">"src/renderer/api/endpoints/cron-job.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_daemon_set_api_/">"src/renderer/api/endpoints/daemon-set.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_deployment_api_/">"src/renderer/api/endpoints/deployment.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_endpoint_api_/">"src/renderer/api/endpoints/endpoint.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_events_api_/">"src/renderer/api/endpoints/events.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_hpa_api_/">"src/renderer/api/endpoints/hpa.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_index_/">"src/renderer/api/endpoints/index"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_ingress_api_/">"src/renderer/api/endpoints/ingress.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_job_api_/">"src/renderer/api/endpoints/job.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_metrics_api_/">"src/renderer/api/endpoints/metrics.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_namespaces_api_/">"src/renderer/api/endpoints/namespaces.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_network_policy_api_/">"src/renderer/api/endpoints/network-policy.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_nodes_api_/">"src/renderer/api/endpoints/nodes.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_persistent_volume_claims_api_/">"src/renderer/api/endpoints/persistent-volume-claims.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_persistent_volume_api_/">"src/renderer/api/endpoints/persistent-volume.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_pod_metrics_api_/">"src/renderer/api/endpoints/pod-metrics.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_poddisruptionbudget_api_/">"src/renderer/api/endpoints/poddisruptionbudget.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_pods_api_/">"src/renderer/api/endpoints/pods.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_podsecuritypolicy_api_/">"src/renderer/api/endpoints/podsecuritypolicy.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_replica_set_api_/">"src/renderer/api/endpoints/replica-set.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_resource_applier_api_/">"src/renderer/api/endpoints/resource-applier.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_resource_quota_api_/">"src/renderer/api/endpoints/resource-quota.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_role_binding_api_/">"src/renderer/api/endpoints/role-binding.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_role_api_/">"src/renderer/api/endpoints/role.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_secret_api_/">"src/renderer/api/endpoints/secret.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_selfsubjectrulesreviews_api_/">"src/renderer/api/endpoints/selfsubjectrulesreviews.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_service_accounts_api_/">"src/renderer/api/endpoints/service-accounts.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_service_api_/">"src/renderer/api/endpoints/service.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_stateful_set_api_/">"src/renderer/api/endpoints/stateful-set.api"</a></li>
-<li><a href="modules/_src_renderer_api_endpoints_storage_class_api_/">"src/renderer/api/endpoints/storage-class.api"</a></li>
-<li><a href="modules/_src_renderer_api_index_/">"src/renderer/api/index"</a></li>
-<li><a href="modules/_src_renderer_api_json_api_/">"src/renderer/api/json-api"</a></li>
-<li><a href="modules/_src_renderer_api_kube_api_/">"src/renderer/api/kube-api"</a></li>
-<li><a href="modules/_src_renderer_api_kube_api_parse_/">"src/renderer/api/kube-api-parse"</a></li>
-<li><a href="modules/_src_renderer_api_kube_api_versioned_/">"src/renderer/api/kube-api-versioned"</a></li>
-<li><a href="modules/_src_renderer_api_kube_json_api_/">"src/renderer/api/kube-json-api"</a></li>
-<li><a href="modules/_src_renderer_api_kube_object_/">"src/renderer/api/kube-object"</a></li>
-<li><a href="modules/_src_renderer_api_kube_object_detail_registry_/">"src/renderer/api/kube-object-detail-registry"</a></li>
-<li><a href="modules/_src_renderer_api_kube_watch_api_/">"src/renderer/api/kube-watch-api"</a></li>
-<li><a href="modules/_src_renderer_api_terminal_api_/">"src/renderer/api/terminal-api"</a></li>
-<li><a href="modules/_src_renderer_api_websocket_api_/">"src/renderer/api/websocket-api"</a></li>
-<li><a href="modules/_src_renderer_api_workload_kube_object_/">"src/renderer/api/workload-kube-object"</a></li>
-<li><a href="modules/_src_renderer_components__add_cluster_add_cluster_route_/">"src/renderer/components/+add-cluster/add-cluster.route"</a></li>
-<li><a href="modules/_src_renderer_components__cluster_settings_cluster_settings_route_/">"src/renderer/components/+cluster-settings/cluster-settings.route"</a></li>
-<li><a href="modules/_src_renderer_components__custom_resources_crd_details_/">"src/renderer/components/+custom-resources/crd-details"</a></li>
-<li><a href="modules/_src_renderer_components__custom_resources_crd_list_/">"src/renderer/components/+custom-resources/crd-list"</a></li>
-<li><a href="modules/_src_renderer_components__custom_resources_crd_resource_details_/">"src/renderer/components/+custom-resources/crd-resource-details"</a></li>
-<li><a href="modules/_src_renderer_components__custom_resources_crd_resource_store_/">"src/renderer/components/+custom-resources/crd-resource.store"</a></li>
-<li><a href="modules/_src_renderer_components__custom_resources_crd_resources_/">"src/renderer/components/+custom-resources/crd-resources"</a></li>
-<li><a href="modules/_src_renderer_components__custom_resources_crd_route_/">"src/renderer/components/+custom-resources/crd.route"</a></li>
-<li><a href="modules/_src_renderer_components__custom_resources_crd_store_/">"src/renderer/components/+custom-resources/crd.store"</a></li>
-<li><a href="modules/_src_renderer_components__custom_resources_index_/">"src/renderer/components/+custom-resources/index"</a></li>
-<li><a href="modules/_src_renderer_components__events_event_store_/">"src/renderer/components/+events/event.store"</a></li>
-<li><a href="modules/_src_renderer_components__events_kube_event_details_/">"src/renderer/components/+events/kube-event-details"</a></li>
-<li><a href="modules/_src_renderer_components__extensions_extensions_route_/">"src/renderer/components/+extensions/extensions.route"</a></li>
-<li><a href="modules/_src_renderer_components__namespaces_namespace_select_/">"src/renderer/components/+namespaces/namespace-select"</a></li>
-<li><a href="modules/_src_renderer_components__namespaces_namespace_store_/">"src/renderer/components/+namespaces/namespace.store"</a></li>
-<li><a href="modules/_src_renderer_components__preferences_preferences_route_/">"src/renderer/components/+preferences/preferences.route"</a></li>
-<li><a href="modules/_src_renderer_components__whats_new_whats_new_route_/">"src/renderer/components/+whats-new/whats-new.route"</a></li>
-<li><a href="modules/_src_renderer_components__workloads_pods_pods_store_/">"src/renderer/components/+workloads-pods/pods.store"</a></li>
-<li><a href="modules/_src_renderer_components_ace_editor_ace_editor_/">"src/renderer/components/ace-editor/ace-editor"</a></li>
-<li><a href="modules/_src_renderer_components_ace_editor_index_/">"src/renderer/components/ace-editor/index"</a></li>
-<li><a href="modules/_src_renderer_components_add_remove_buttons_add_remove_buttons_/">"src/renderer/components/add-remove-buttons/add-remove-buttons"</a></li>
-<li><a href="modules/_src_renderer_components_add_remove_buttons_index_/">"src/renderer/components/add-remove-buttons/index"</a></li>
-<li><a href="modules/_src_renderer_components_animate_animate_/">"src/renderer/components/animate/animate"</a></li>
-<li><a href="modules/_src_renderer_components_animate_index_/">"src/renderer/components/animate/index"</a></li>
-<li><a href="modules/_src_renderer_components_badge_badge_/">"src/renderer/components/badge/badge"</a></li>
-<li><a href="modules/_src_renderer_components_badge_index_/">"src/renderer/components/badge/index"</a></li>
-<li><a href="modules/_src_renderer_components_button_button_/">"src/renderer/components/button/button"</a></li>
-<li><a href="modules/_src_renderer_components_button_index_/">"src/renderer/components/button/index"</a></li>
-<li><a href="modules/_src_renderer_components_checkbox_checkbox_/">"src/renderer/components/checkbox/checkbox"</a></li>
-<li><a href="modules/_src_renderer_components_checkbox_index_/">"src/renderer/components/checkbox/index"</a></li>
-<li><a href="modules/_src_renderer_components_cluster_manager_cluster_view_route_/">"src/renderer/components/cluster-manager/cluster-view.route"</a></li>
-<li><a href="modules/_src_renderer_components_confirm_dialog_confirm_dialog_/">"src/renderer/components/confirm-dialog/confirm-dialog"</a></li>
-<li><a href="modules/_src_renderer_components_confirm_dialog_index_/">"src/renderer/components/confirm-dialog/index"</a></li>
-<li><a href="modules/_src_renderer_components_dialog_dialog_/">"src/renderer/components/dialog/dialog"</a></li>
-<li><a href="modules/_src_renderer_components_dialog_index_/">"src/renderer/components/dialog/index"</a></li>
-<li><a href="modules/_src_renderer_components_dock_dock_tab_store_/">"src/renderer/components/dock/dock-tab.store"</a></li>
-<li><a href="modules/_src_renderer_components_dock_dock_store_/">"src/renderer/components/dock/dock.store"</a></li>
-<li><a href="modules/_src_renderer_components_dock_edit_resource_store_/">"src/renderer/components/dock/edit-resource.store"</a></li>
-<li><a href="modules/_src_renderer_components_dock_pod_logs_store_/">"src/renderer/components/dock/pod-logs.store"</a></li>
-<li><a href="modules/_src_renderer_components_dock_terminal_/">"src/renderer/components/dock/terminal"</a></li>
-<li><a href="modules/_src_renderer_components_dock_terminal_store_/">"src/renderer/components/dock/terminal.store"</a></li>
-<li><a href="modules/_src_renderer_components_drawer_drawer_/">"src/renderer/components/drawer/drawer"</a></li>
-<li><a href="modules/_src_renderer_components_drawer_drawer_item_/">"src/renderer/components/drawer/drawer-item"</a></li>
-<li><a href="modules/_src_renderer_components_drawer_drawer_item_labels_/">"src/renderer/components/drawer/drawer-item-labels"</a></li>
-<li><a href="modules/_src_renderer_components_drawer_drawer_param_toggler_/">"src/renderer/components/drawer/drawer-param-toggler"</a></li>
-<li><a href="modules/_src_renderer_components_drawer_drawer_title_/">"src/renderer/components/drawer/drawer-title"</a></li>
-<li><a href="modules/_src_renderer_components_drawer_index_/">"src/renderer/components/drawer/index"</a></li>
-<li><a href="modules/_src_renderer_components_error_boundary_error_boundary_/">"src/renderer/components/error-boundary/error-boundary"</a></li>
-<li><a href="modules/_src_renderer_components_error_boundary_index_/">"src/renderer/components/error-boundary/index"</a></li>
-<li><a href="modules/_src_renderer_components_icon_icon_/">"src/renderer/components/icon/icon"</a></li>
-<li><a href="modules/_src_renderer_components_icon_index_/">"src/renderer/components/icon/index"</a></li>
-<li><a href="modules/_src_renderer_components_input_file_input_/">"src/renderer/components/input/file-input"</a></li>
-<li><a href="modules/_src_renderer_components_input_index_/">"src/renderer/components/input/index"</a></li>
-<li><a href="modules/_src_renderer_components_input_input_/">"src/renderer/components/input/input"</a></li>
-<li><a href="modules/_src_renderer_components_input_input_validators_/">"src/renderer/components/input/input_validators"</a></li>
-<li><a href="modules/_src_renderer_components_input_search_input_/">"src/renderer/components/input/search-input"</a></li>
-<li><a href="modules/_src_renderer_components_item_object_list_filter_icon_/">"src/renderer/components/item-object-list/filter-icon"</a></li>
-<li><a href="modules/_src_renderer_components_item_object_list_item_list_layout_/">"src/renderer/components/item-object-list/item-list-layout"</a></li>
-<li><a href="modules/_src_renderer_components_item_object_list_page_filters_list_/">"src/renderer/components/item-object-list/page-filters-list"</a></li>
-<li><a href="modules/_src_renderer_components_item_object_list_page_filters_select_/">"src/renderer/components/item-object-list/page-filters-select"</a></li>
-<li><a href="modules/_src_renderer_components_item_object_list_page_filters_store_/">"src/renderer/components/item-object-list/page-filters.store"</a></li>
-<li><a href="modules/_src_renderer_components_kube_object_index_/">"src/renderer/components/kube-object/index"</a></li>
-<li><a href="modules/_src_renderer_components_kube_object_kube_object_details_/">"src/renderer/components/kube-object/kube-object-details"</a></li>
-<li><a href="modules/_src_renderer_components_kube_object_kube_object_list_layout_/">"src/renderer/components/kube-object/kube-object-list-layout"</a></li>
-<li><a href="modules/_src_renderer_components_kube_object_kube_object_menu_/">"src/renderer/components/kube-object/kube-object-menu"</a></li>
-<li><a href="modules/_src_renderer_components_kube_object_kube_object_meta_/">"src/renderer/components/kube-object/kube-object-meta"</a></li>
-<li><a href="modules/_src_renderer_components_layout_page_layout_/">"src/renderer/components/layout/page-layout"</a></li>
-<li><a href="modules/_src_renderer_components_layout_tab_layout_/">"src/renderer/components/layout/tab-layout"</a></li>
-<li><a href="modules/_src_renderer_components_menu_index_/">"src/renderer/components/menu/index"</a></li>
-<li><a href="modules/_src_renderer_components_menu_menu_/">"src/renderer/components/menu/menu"</a></li>
-<li><a href="modules/_src_renderer_components_menu_menu_actions_/">"src/renderer/components/menu/menu-actions"</a></li>
-<li><a href="modules/_src_renderer_components_no_items_index_/">"src/renderer/components/no-items/index"</a></li>
-<li><a href="modules/_src_renderer_components_no_items_no_items_/">"src/renderer/components/no-items/no-items"</a></li>
-<li><a href="modules/_src_renderer_components_notifications_index_/">"src/renderer/components/notifications/index"</a></li>
-<li><a href="modules/_src_renderer_components_notifications_notifications_/">"src/renderer/components/notifications/notifications"</a></li>
-<li><a href="modules/_src_renderer_components_notifications_notifications_store_/">"src/renderer/components/notifications/notifications.store"</a></li>
-<li><a href="modules/_src_renderer_components_select_index_/">"src/renderer/components/select/index"</a></li>
-<li><a href="modules/_src_renderer_components_select_select_/">"src/renderer/components/select/select"</a></li>
-<li><a href="modules/_src_renderer_components_spinner_cube_spinner_/">"src/renderer/components/spinner/cube-spinner"</a></li>
-<li><a href="modules/_src_renderer_components_spinner_index_/">"src/renderer/components/spinner/index"</a></li>
-<li><a href="modules/_src_renderer_components_spinner_spinner_/">"src/renderer/components/spinner/spinner"</a></li>
-<li><a href="modules/_src_renderer_components_status_brick_index_/">"src/renderer/components/status-brick/index"</a></li>
-<li><a href="modules/_src_renderer_components_status_brick_status_brick_/">"src/renderer/components/status-brick/status-brick"</a></li>
-<li><a href="modules/_src_renderer_components_table_index_/">"src/renderer/components/table/index"</a></li>
-<li><a href="modules/_src_renderer_components_table_table_/">"src/renderer/components/table/table"</a></li>
-<li><a href="modules/_src_renderer_components_table_table_cell_/">"src/renderer/components/table/table-cell"</a></li>
-<li><a href="modules/_src_renderer_components_table_table_head_/">"src/renderer/components/table/table-head"</a></li>
-<li><a href="modules/_src_renderer_components_table_table_row_/">"src/renderer/components/table/table-row"</a></li>
-<li><a href="modules/_src_renderer_components_tabs_index_/">"src/renderer/components/tabs/index"</a></li>
-<li><a href="modules/_src_renderer_components_tabs_tabs_/">"src/renderer/components/tabs/tabs"</a></li>
-<li><a href="modules/_src_renderer_components_tooltip_index_/">"src/renderer/components/tooltip/index"</a></li>
-<li><a href="modules/_src_renderer_components_tooltip_tooltip_/">"src/renderer/components/tooltip/tooltip"</a></li>
-<li><a href="modules/_src_renderer_components_tooltip_withtooltip_/">"src/renderer/components/tooltip/withTooltip"</a></li>
-<li><a href="modules/_src_renderer_components_virtual_list_index_/">"src/renderer/components/virtual-list/index"</a></li>
-<li><a href="modules/_src_renderer_components_virtual_list_virtual_list_/">"src/renderer/components/virtual-list/virtual-list"</a></li>
-<li><a href="modules/_src_renderer_i18n_/">"src/renderer/i18n"</a></li>
-<li><a href="modules/_src_renderer_item_store_/">"src/renderer/item.store"</a></li>
-<li><a href="modules/_src_renderer_kube_object_store_/">"src/renderer/kube-object.store"</a></li>
-<li><a href="modules/_src_renderer_navigation_/">"src/renderer/navigation"</a></li>
-<li><a href="modules/_src_renderer_theme_store_/">"src/renderer/theme.store"</a></li>
-<li><a href="modules/_src_renderer_utils_cancelablefetch_/">"src/renderer/utils/cancelableFetch"</a></li>
-<li><a href="modules/_src_renderer_utils_convertcpu_/">"src/renderer/utils/convertCpu"</a></li>
-<li><a href="modules/_src_renderer_utils_convertmemory_/">"src/renderer/utils/convertMemory"</a></li>
-<li><a href="modules/_src_renderer_utils_copytoclipboard_/">"src/renderer/utils/copyToClipboard"</a></li>
-<li><a href="modules/_src_renderer_utils_createstorage_/">"src/renderer/utils/createStorage"</a></li>
-<li><a href="modules/_src_renderer_utils_cssnames_/">"src/renderer/utils/cssNames"</a></li>
-<li><a href="modules/_src_renderer_utils_cssvar_/">"src/renderer/utils/cssVar"</a></li>
-<li><a href="modules/_src_renderer_utils_downloadfile_/">"src/renderer/utils/downloadFile"</a></li>
-<li><a href="modules/_src_renderer_utils_formatduration_/">"src/renderer/utils/formatDuration"</a></li>
-<li><a href="modules/_src_renderer_utils_index_/">"src/renderer/utils/index"</a></li>
-<li><a href="modules/_src_renderer_utils_interval_/">"src/renderer/utils/interval"</a></li>
-<li><a href="modules/_src_renderer_utils_isreactnode_/">"src/renderer/utils/isReactNode"</a></li>
-<li><a href="modules/_src_renderer_utils_metricunitstonumber_/">"src/renderer/utils/metricUnitsToNumber"</a></li>
-<li><a href="modules/_src_renderer_utils_prevdefault_/">"src/renderer/utils/prevDefault"</a></li>
-</ul>
+                <h1 id="lens-extension-api-reference">Lens Extension API Reference<a class="headerlink" href="#lens-extension-api-reference" title="Permanent link">#</a></h1>
+<p>TBD</p>
                 
                   
                     
@@ -1020,6 +796,41 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../testing-and-publishing/bundling/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Bundling Extensions
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../../contributing/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Overview
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">

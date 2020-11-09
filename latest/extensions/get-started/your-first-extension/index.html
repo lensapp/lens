@@ -556,8 +556,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../../capabilities/theming/" class="md-nav__link">
-      Theming
+    <a href="../../capabilities/styling/" class="md-nav__link">
+      Styling
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../capabilities/color-reference/" class="md-nav__link">
+      Color reference
     </a>
   </li>
 
@@ -685,7 +697,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../api/modules/_src_extensions_extension_api_/" class="md-nav__link">
+    <a href="../../api/" class="md-nav__link">
       API Reference
     </a>
   </li>
@@ -701,10 +713,84 @@
       
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+    
+    <label class="md-nav__link" for="nav-8">
+      Contributing
+      <span class="md-nav__icon md-icon"></span>
+    </label>
+    <nav class="md-nav" aria-label="Contributing" data-md-level="1">
+      <label class="md-nav__title" for="nav-8">
+        <span class="md-nav__icon md-icon"></span>
+        Contributing
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
     <a href="../../../contributing/" class="md-nav__link">
-      Contributing
+      Overview
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../contributing/development/" class="md-nav__link">
+      Development
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../contributing/documentation/" class="md-nav__link">
+      Documentation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../contributing/maintainers/" class="md-nav__link">
+      Maintainers
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../../contributing/promotion/" class="md-nav__link">
+      Promotion
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
     
@@ -797,12 +883,12 @@
                 
                 
                 <h1 id="your-first-extension">Your First Extension<a class="headerlink" href="#your-first-extension" title="Permanent link">#</a></h1>
-<p>In this topic, we'll teach you the fundamental concepts for building extensions. Make sure you have <a href="https://nodejs.org/en/">Node.js</a> and <a href="https://git-scm.com/">Git</a> installed....</p>
+<p>In this topic, we'll teach you the fundamental concepts for building extensions.</p>
 <h2 id="installing-and-building-the-extension">Installing and Building the extension<a class="headerlink" href="#installing-and-building-the-extension" title="Permanent link">#</a></h2>
 <p>Simple Lens extension that adds "Hello World" page to a cluster menu.</p>
 <h3 id="linux">Linux<a class="headerlink" href="#linux" title="Permanent link">#</a></h3>
 <p>First you will need to clone the <a href="https://github.com/lensapp/lens-extension-samples">Lens Extension samples</a> repository to your local machine:</p>
-<div class="highlight"><pre><span></span><code>git clone https://github.com/lensapp/lens-extension-samples.git 
+<div class="highlight"><pre><span></span><code>git clone https://github.com/lensapp/lens-extension-samples.git
 </code></pre></div>
 <p>Next you need to create a symlink from the directory that Lens will monitor for user installed extensions to the sample extension, in this case <strong>helloworld-sample</strong>:</p>
 <div class="highlight"><pre><span></span><code>mkdir -p ~/.k8slens/extensions
