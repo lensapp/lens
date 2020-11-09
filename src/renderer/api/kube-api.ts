@@ -9,7 +9,6 @@ import { kubeWatchApi } from "./kube-watch-api";
 import { apiManager } from "./api-manager";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { apiKubePrefix, isDevelopment } from "../../common/vars";
-import * as URL from "url"
 
 export interface IKubeApiOptions<T extends KubeObject> {
   apiBase?: string; // base api-path for listing all resources, e.g. "/api/v1/pods"

@@ -3,12 +3,12 @@ import './spinner.scss'
 import React from 'react'
 import { cssNames } from "../../utils";
 
-interface Props extends React.HTMLProps<any> {
+export interface SpinnerProps extends React.HTMLProps<any> {
   singleColor?: boolean;
   center?: boolean;
 }
 
-export class Spinner extends React.Component<Props, {}> {
+export class Spinner extends React.Component<SpinnerProps, {}> {
   private elem: HTMLElement;
 
   static defaultProps = {

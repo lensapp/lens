@@ -43,4 +43,4 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
 }
 
 export const daemonSetStore = new DaemonSetStore();
-apiManager.registerStore(daemonSetApi, daemonSetStore);
+apiManager.registerStore(daemonSetStore);

@@ -9,4 +9,4 @@ export class StorageClassStore extends KubeObjectStore<StorageClass> {
 }
 
 export const storageClassStore = new StorageClassStore();
-apiManager.registerStore(storageClassApi, storageClassStore);
+apiManager.registerStore(storageClassStore);

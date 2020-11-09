@@ -42,4 +42,4 @@ export class JobStore extends KubeObjectStore<Job> {
 }
 
 export const jobStore = new JobStore();
-apiManager.registerStore(jobApi, jobStore);
+apiManager.registerStore(jobStore);

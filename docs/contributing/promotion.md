@@ -17,11 +17,11 @@ There are many sites where you can vote, recommend, favorite and star us.
 
 Here are some nice blog posts and videos about our project for you to get some inspiration:
 
-[Onboard AWS EKS Cluster on Lens(Kubernetes IDE)](https://dev.to/himwad05/onboard-aws-eks-cluster-on-lens-kubernetes-ide-492l)
-[Using Lens to Manage All Your Kubernetes Cluster](https://medium.com/@magicmagnate/using-lens-to-manage-all-your-kubernetes-cluster-c1ef88fdb476)
-[Kontena Lens - Beautiful Kubernetes UI](https://www.youtube.com/watch?v=YGgaiGdYfdI)
-[Gerenciando Kubernetes com Lens e Octant](https://www.youtube.com/watch?v=h9ZqDelJLQQ)
-[Walkthrough of Kubernetes IDE - Lens](https://www.youtube.com/watch?v=602aHZSdEfY)
-[LENS - Interfaz Gráfica para Kubernetes en 1 PASO.](https://www.youtube.com/watch?v=DFMKcR4BqwM)
+* [Onboard AWS EKS Cluster on Lens(Kubernetes IDE)](https://dev.to/himwad05/onboard-aws-eks-cluster-on-lens-kubernetes-ide-492l)
+* [Using Lens to Manage All Your Kubernetes Cluster](https://medium.com/@magicmagnate/using-lens-to-manage-all-your-kubernetes-cluster-c1ef88fdb476)
+* [Kontena Lens - Beautiful Kubernetes UI](https://www.youtube.com/watch?v=YGgaiGdYfdI)
+* [Gerenciando Kubernetes com Lens e Octant](https://www.youtube.com/watch?v=h9ZqDelJLQQ)
+* [Walkthrough of Kubernetes IDE - Lens](https://www.youtube.com/watch?v=602aHZSdEfY)
+* [LENS - Interfaz Gráfica para Kubernetes en 1 PASO.](https://www.youtube.com/watch?v=DFMKcR4BqwM)
 
 Psst... If you have created some content around Lens, let us know!

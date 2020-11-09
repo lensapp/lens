@@ -3,7 +3,7 @@ import React from "react";
 import { cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 
-interface Props extends React.HTMLProps<any>, TooltipDecoratorProps {
+export interface LineProgressProps extends React.HTMLProps<any>, TooltipDecoratorProps {
   value: number;
   min?: number;
   max?: number;
@@ -12,8 +12,8 @@ interface Props extends React.HTMLProps<any>, TooltipDecoratorProps {
 }
 
 @withTooltip
-export class LineProgress extends React.PureComponent<Props> {
-  static defaultProps: Props = {
+export class LineProgress extends React.PureComponent<LineProgressProps> {
+  static defaultProps: LineProgressProps = {
     value: 0,
     min: 0,
     max: 100,

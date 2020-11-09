@@ -9,4 +9,4 @@ export class ServiceStore extends KubeObjectStore<Service> {
 }
 
 export const serviceStore = new ServiceStore();
-apiManager.registerStore(serviceApi, serviceStore);
+apiManager.registerStore(serviceStore);
