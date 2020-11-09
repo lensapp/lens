@@ -8,8 +8,8 @@ This is a general overview to how the development of an extension will procede. 
 - Some sort of text editor, we recommend [VSCode](https://code.visualstudio.com/)
 - We use [Webpack](https://www.webpack.js.org/) for compilation. All extension need to be at least compatable with a webpack system.
 
-### Recommened
-- [Yarn](https://www.yarnpkg.com/), this is a better Command Line Interface (CLI) tool for downloading packages than `npm`
+### Recommened:
+-
 
 All *Lens* extensions are javascript packages. We recommend that you program in [Typescript](https://www.typescriptlang.org/) because it catches quite a few easily to make errors around passing data around in javascript.
 
