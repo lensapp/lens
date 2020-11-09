@@ -4,20 +4,20 @@ import "./slider.scss";
 
 import React, { Component } from "react";
 import { cssNames } from "../../utils";
-import MaterialSlider, { SliderClassKey, SliderProps } from "@material-ui/core/Slider";
+import MaterialSlider, { SliderClassKey, SliderProps as MaterialSliderProps } from "@material-ui/core/Slider";
 
-interface Props extends Omit<SliderProps, "onChange"> {
+export interface SliderProps extends Omit<MaterialSliderProps, "onChange"> {
   className?: string;
   onChange?(evt: React.FormEvent<any>, value: number): void;
 }
 
-const defaultProps: Partial<Props> = {
+const defaultProps: Partial<SliderProps> = {
   step: 1,
   min: 0,
   max: 100,
 };
 
-export class Slider extends Component<Props> {
+export class Slider extends Component<SliderProps> {
   static defaultProps = defaultProps as object;
 
   private classNames: Partial<{ [P in SliderClassKey]: string }> = {

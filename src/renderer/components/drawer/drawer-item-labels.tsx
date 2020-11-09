@@ -2,11 +2,11 @@ import React from "react";
 import { DrawerItem, DrawerItemProps } from "./drawer-item";
 import { Badge } from "../badge";
 
-interface Props extends DrawerItemProps {
+export interface DrawerItemLabelsProps extends DrawerItemProps {
   labels: string[];
 }
 
-export function DrawerItemLabels(props: Props) {
+export function DrawerItemLabels(props: DrawerItemLabelsProps) {
   const { labels, ...itemProps } = props;
   if (!labels || !labels.length) {
     return null;
