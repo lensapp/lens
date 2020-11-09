@@ -385,7 +385,7 @@
     "typeface-roboto": "^0.0.75",
     "typescript": "^4.0.2",
     "url-loader": "^4.1.0",
-    "webpack": "^4.43.0",
+    "webpack": "^4.44.2",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0",
     "webpack-node-externals": "^1.7.2",
