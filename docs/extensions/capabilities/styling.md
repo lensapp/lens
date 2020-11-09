@@ -1,4 +1,4 @@
-# Styling
+# Styling an extension
 Lens provides a set of global styles and UI components that can be used by any extension to preserve look and feel of the application.
 
 ## Styling approach
@@ -24,7 +24,7 @@ Lens using 2 built-in themes located in `src/renderer/themes` folder each for li
 ![Color Theme](images/theme-selector.png)
 
 When Lens gets loaded it transforms selected theme `json` file into list of [CSS Custom Properties (CSS Variables)](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) which then gets injected into `:root` element so any of the down-level components can use them.
-![CSS vars listed in devtools](images/theme-selector.png)
+![CSS vars listed in devtools](images/css-vars-in-devtools.png)
 
 When user changes a theme, the process is repeated, new css variables appear instead of previous ones.
 
@@ -86,7 +86,7 @@ After theme file gets parsed it provides list of theme-defined colors. Most of t
 
 They can be used in form of `var(--magenta)`.
 
-A complete list of all themable colors can be found in the [color reference](color-reference).
+A complete list of all themable colors can be found in the [color reference](../color-reference).
 
 Colors values are located inside `src/renderer/themes/lens-dark.json` and `src/renderer/themes/lens-light.json` files.
 
