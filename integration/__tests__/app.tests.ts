@@ -410,6 +410,40 @@ describe("Lens integration tests", () => {
       })
     })
 
+    describe("viewing pod logs", () => {
+      beforeEach(appStartAddCluster, 40000)
+
+      afterEach(async () => {
+        if (app && app.isRunning()) {
+          return util.tearDown(app)
+        }
+      })
+
+      it(`shows a logs for a pod`, async () => {
+        expect(clusterAdded).toBe(true)
+        // Go to Pods page
+        await app.client.click(".sidebar-nav #workloads span.link-text")
+        await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods")
+        await app.client.click('a[href^="/pods"]')
+        await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver")
+        // Open logs tab in dock
+        await app.client.click(".list .TableRow:first-child")
+        await app.client.waitForVisible(".Drawer")
+        await app.client.click(".drawer-title .Menu li:nth-child(2)")
+        // Check if controls are available
+        await app.client.waitForVisible(".PodLogs .VirtualList")
+        await app.client.waitForVisible(".PodLogControls")
+        await app.client.waitForVisible(".PodLogControls .SearchInput")
+        await app.client.waitForVisible(".PodLogControls .SearchInput input")
+        // Search for semicolon
+        await app.client.keys(":")
+        await app.client.waitForVisible(".PodLogs .list span.active")
+        // Click through controls
+        await app.client.click(".PodLogControls .timestamps-icon")
+        await app.client.click(".PodLogControls .undo-icon")
+      })
+    })
+
     describe("cluster operations", () => {
       beforeEach(appStartAddCluster, 40000)
 

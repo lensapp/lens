@@ -8,22 +8,26 @@ import { Icon } from "../icon";
 import { _i18n } from "../../i18n";
 import { cssNames, downloadFile } from "../../utils";
 import { Pod } from "../../api/endpoints";
+import { PodLogSearch, PodLogSearchProps } from "./pod-log-search";
 
-interface Props {
+interface Props extends PodLogSearchProps {
   ready: boolean
   tabId: string
   tabData: IPodLogsData
-  logs: string[][]
+  logs: string[]
   save: (data: Partial<IPodLogsData>) => void
   reload: () => void
+  onSearch: (query: string) => void
 }
 
 export const PodLogControls = observer((props: Props) => {
   if (!props.ready) return null;
-  const { tabData, tabId, save, reload, logs } = props;
+  const { tabData, save, reload, tabId, logs } = props;
   const { selectedContainer, showTimestamps, previous } = tabData;
-  const since = podLogsStore.getTimestamps(podLogsStore.logs.get(tabId)[0]);
+  const rawLogs = podLogsStore.logs.get(tabId);
+  const since = rawLogs.length ? podLogsStore.getTimestamps(rawLogs[0]) : null;
   const pod = new Pod(tabData.pod);
+
   const toggleTimestamps = () => {
     save({ showTimestamps: !showTimestamps });
   }
@@ -35,8 +39,7 @@ export const PodLogControls = observer((props: Props) => {
 
   const downloadLogs = () => {
     const fileName = selectedContainer ? selectedContainer.name : pod.getName();
-    const [oldLogs, newLogs] = logs;
-    downloadFile(fileName + ".log", [...oldLogs, ...newLogs].join("\n"), "text/plain");
+    downloadFile(fileName + ".log", logs.join("\n"), "text/plain");
   }
 
   const onContainerChange = (option: SelectOption) => {
@@ -92,7 +95,7 @@ export const PodLogControls = observer((props: Props) => {
           </>
         )}
       </div>
-      <div className="flex gaps">
+      <div className="flex box grow gaps align-center">
         <Icon
           material="av_timer"
           onClick={toggleTimestamps}
@@ -109,7 +112,9 @@ export const PodLogControls = observer((props: Props) => {
           material="get_app"
           onClick={downloadLogs}
           tooltip={_i18n._(t`Save`)}
+          className="download-icon"
         />
+        <PodLogSearch {...props} />
       </div>
     </div>
   );
