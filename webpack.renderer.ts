@@ -92,7 +92,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
                   }],
                 ],
                 plugins: [
-                  // ... other plugins
                   isDevelopment && require.resolve('react-refresh/babel'),
                 ].filter(Boolean),
               }
@@ -191,6 +190,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       isDevelopment && new HardSourceWebpackPlugin(),
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
-    ],
+      
+    ].filter(Boolean),
   }
 }

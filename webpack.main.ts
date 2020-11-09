@@ -49,6 +49,6 @@ export default function (): webpack.Configuration {
       new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
       isDevelopment && new HardSourceWebpackPlugin(),
-    ]
+    ].filter(Boolean)
   }
 }
