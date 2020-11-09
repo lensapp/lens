@@ -9,4 +9,4 @@ export class PersistentVolumesStore extends KubeObjectStore<PersistentVolume> {
 }
 
 export const volumesStore = new PersistentVolumesStore();
-apiManager.registerStore(persistentVolumeApi, volumesStore);
+apiManager.registerStore(volumesStore);

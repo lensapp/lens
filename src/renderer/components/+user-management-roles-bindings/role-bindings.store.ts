@@ -30,8 +30,7 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
       return Promise.all(
         namespaces.map(namespace => roleBindingApi.list({ namespace }))
       ).then(items => items.flat())
-    }
-    else {
+    } else {
       return Promise.all([clusterRoleBindingApi.list(), roleBindingApi.list()])
         .then(items => items.flat())
     }
@@ -40,8 +39,7 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
   protected async createItem(params: { name: string; namespace?: string }, data?: Partial<RoleBinding>) {
     if (params.namespace) {
       return roleBindingApi.create(params, data)
-    }
-    else {
+    } else {
       return clusterRoleBindingApi.create(params, data)
     }
   }
@@ -58,8 +56,7 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
       newSubjects = uniqBy(currentSubjects.concat(addSubjects), ({ kind, name, namespace }) => {
         return [kind, name, namespace].join("-");
       })
-    }
-    else if (removeSubjects) {
+    } else if (removeSubjects) {
       newSubjects = difference(currentSubjects, removeSubjects);
     }
     return this.update(roleBinding, {
@@ -71,5 +68,7 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
 
 export const roleBindingsStore = new RoleBindingsStore();
 
-apiManager.registerStore(roleBindingApi, roleBindingsStore);
-apiManager.registerStore(clusterRoleBindingApi, roleBindingsStore);
+apiManager.registerStore(roleBindingsStore, [
+  roleBindingApi,
+  clusterRoleBindingApi,
+]);

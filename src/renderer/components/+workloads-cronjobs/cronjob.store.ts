@@ -30,4 +30,4 @@ export class CronJobStore extends KubeObjectStore<CronJob> {
 }
 
 export const cronJobStore = new CronJobStore();
-apiManager.registerStore(cronJobApi, cronJobStore);
+apiManager.registerStore(cronJobStore);

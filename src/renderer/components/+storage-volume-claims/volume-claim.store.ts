@@ -20,4 +20,4 @@ export class VolumeClaimStore extends KubeObjectStore<PersistentVolumeClaim> {
 }
 
 export const volumeClaimStore = new VolumeClaimStore();
-apiManager.registerStore(pvcApi, volumeClaimStore);
+apiManager.registerStore(volumeClaimStore);

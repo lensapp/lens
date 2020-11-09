@@ -31,4 +31,4 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
 }
 
 export const replicaSetStore = new ReplicaSetStore();
-apiManager.registerStore(replicaSetApi, replicaSetStore);
+apiManager.registerStore(replicaSetStore);

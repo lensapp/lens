@@ -9,4 +9,4 @@ export class HPAStore extends KubeObjectStore<HorizontalPodAutoscaler> {
 }
 
 export const hpaStore = new HPAStore();
-apiManager.registerStore(hpaApi, hpaStore);
+apiManager.registerStore(hpaStore);

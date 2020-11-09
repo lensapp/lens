@@ -50,4 +50,4 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
 }
 
 export const deploymentStore = new DeploymentStore();
-apiManager.registerStore(deploymentApi, deploymentStore);
+apiManager.registerStore(deploymentStore);

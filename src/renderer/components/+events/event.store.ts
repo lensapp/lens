@@ -49,4 +49,4 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
 }
 
 export const eventStore = new EventStore();
-apiManager.registerStore(eventApi, eventStore);
+apiManager.registerStore(eventStore);
