@@ -35,6 +35,7 @@ jobs:
           
       - name: typedocs generate Extensions API Reference
         run: | 
+           yarn install --ignore-engines
            yarn --ignore-engines typedocs-extensions-api
 
 #      - name: mkdocs deploy latest
