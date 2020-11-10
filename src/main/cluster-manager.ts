@@ -38,7 +38,7 @@ export class ClusterManager {
 
   protected onNetworkOffline() {
     logger.info("[CLUSTER-MANAGER]: network is offline")
-    clusterStore.enabledClustersList.forEach((cluster) => {
+    clusterStore.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.online = false
         cluster.accessible = false
@@ -49,7 +49,7 @@ export class ClusterManager {
 
   protected onNetworkOnline() {
     logger.info("[CLUSTER-MANAGER]: network is online")
-    clusterStore.enabledClustersList.forEach((cluster) => {
+    clusterStore.clustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
         cluster.refreshConnectionStatus().catch((e) => e)
       }
