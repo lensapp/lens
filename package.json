@@ -2,7 +2,7 @@
   "name": "kontena-lens",
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
-  "version": "4.0.0-alpha.4",
+  "version": "4.0.0-alpha.5",
   "main": "static/build/main.js",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
