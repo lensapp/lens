@@ -38,17 +38,6 @@ export class MainLayout extends React.Component<MainLayoutProps> {
     (sidebarWidth) => this.storage.merge({ sidebarWidth })
   );
 
-  componentDidMount() {
-    // Toggling .mouse-intent class if mouse or keyboard using in the dashboard
-    // This allows to remove focus styling to elements when mouse is used
-    window.addEventListener("click", (evt) => {
-      if (!evt.detail) return; // No mouse used (e.g. hitted spacebar on button)
-      document.body.classList.add("mouse-intent");
-    })
-    window.addEventListener("keydown", (evt) => {
-      document.body.classList.remove("mouse-intent");
-    })
-  }
 
   toggleSidebar = () => {
     this.isPinned = !this.isPinned;
