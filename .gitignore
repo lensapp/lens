@@ -15,3 +15,4 @@ src/extensions/*/*.d.ts
 types/extension-api.d.ts
 types/extension-renderer-api.d.ts
 extensions/*/dist
+docs/extensions/api
