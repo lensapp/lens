@@ -13,9 +13,11 @@ World’s most popular Kubernetes IDE provides a simplified, consistent entry po
 * Amazing usability and end-user experience
 * Multi cluster management: support for hundreds of clusters
 * Standalone application: no need to install anything in-cluster
+* Lens installs anywhere, elimanting the need to wrangle credentials
 * Real-time cluster state visualization
 * Resource utilization charts and trends with history powered by built-in Prometheus
 * Terminal access to nodes and containers
+* Clusters can be local (e.g. minikube) or external (e.g. EKS, GKE, Aks)
 * Performance optimized to handle massive clusters (tested with a cluster running 25k pods)
 * Full support for Kubernetes RBAC
 * Browse and Deploy Helm charts with one click-Install
