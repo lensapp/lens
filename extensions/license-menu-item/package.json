@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack -p",
     "dev": "webpack --watch",
-    "test": "echo NO TESTS"
+    "test": "jest --passWithNoTests --env=jsdom src $@"
   },
   "dependencies": {},
   "devDependencies": {

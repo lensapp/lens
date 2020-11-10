@@ -10,7 +10,7 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "dev": "npm run build --watch",
-    "test": "echo NO TESTS"
+    "test": "jest --passWithNoTests --env=jsdom src $@"
   },
   "dependencies": {},
   "devDependencies": {
