@@ -56,11 +56,11 @@ export class CrdResources extends React.Component<Props> {
       [sortBy.age]: (item: KubeObject) => item.metadata.creationTimestamp,
     }
     extraColumns.forEach(column => {
-      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.query(item, column.jsonPath.slice(1))
+      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.value(item, column.jsonPath.slice(1))
     })
-    const ListView = KubeObjectListLayout;
+
     return (
-      <ListView
+      <KubeObjectListLayout
         className="CrdResources"
         isClusterScoped={!isNamespaced}
         store={store}
@@ -85,9 +85,10 @@ export class CrdResources extends React.Component<Props> {
         renderTableContents={(crdInstance: KubeObject) => [
           crdInstance.getName(),
           isNamespaced && crdInstance.getNs(),
-          ...extraColumns.map(column => {
-            return jsonPath.query(crdInstance, (column.jsonPath).slice(1))
-          }),
+          ...extraColumns.map(column => ({
+            renderBoolean: true,
+            children: jsonPath.value(crdInstance, column.jsonPath.slice(1)),
+          })),
           crdInstance.getAge(),
         ]}
       />
