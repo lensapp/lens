@@ -48,6 +48,7 @@ export class ThemeStore {
         await this.loadTheme(themeId);
         this.applyTheme();
       } catch (err) {
+        logger.error(err);
         userStore.resetTheme();
       }
     }, {
@@ -79,7 +80,7 @@ export class ThemeStore {
       }
       return existingTheme;
     } catch (err) {
-      logger.error(`Can't load theme "${themeId}": ${err}`);
+      throw new Error(`Can't load theme "${themeId}": ${err}`);
     }
   }
 
@@ -90,7 +91,7 @@ export class ThemeStore {
       document.head.prepend(this.styles);
     }
     const cssVars = Object.entries(theme.colors).map(([cssName, color]) => {
-      return `--${cssName}: ${color} !important;`
+      return `--${cssName}: ${color};`;
     });
     this.styles.textContent = `:root {\n${cssVars.join("\n")}}`;
     // Adding universal theme flag which can be used in component styles
