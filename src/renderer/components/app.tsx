@@ -46,6 +46,9 @@ export class App extends React.Component {
     await Terminal.preloadFonts()
     await clusterIpc.setFrameId.invokeFromRenderer(clusterId, frameId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
+    window.addEventListener("online", () => {
+      window.location.reload()
+    })
   }
 
   get startURL() {

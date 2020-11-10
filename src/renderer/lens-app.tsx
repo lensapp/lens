@@ -1,5 +1,6 @@
 import "../common/system-ca"
 import React from "react";
+import { ipcRenderer } from "electron";
 import { Route, Router, Switch } from "react-router";
 import { observer } from "mobx-react";
 import { userStore } from "../common/user-store";
@@ -14,6 +15,15 @@ import { ConfirmDialog } from "./components/confirm-dialog";
 
 @observer
 export class LensApp extends React.Component {
+  static async init() {
+    window.addEventListener("offline", () => {
+      ipcRenderer.send("network:offline")
+    })
+    window.addEventListener("online", () => {
+      ipcRenderer.send("network:online")
+    })
+  }
+
   render() {
     return (
       <I18nProvider i18n={_i18n}>

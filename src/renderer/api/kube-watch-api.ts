@@ -109,17 +109,22 @@ export class KubeWatchApi {
     }
   }
 
-  protected async onRouteEvent({ type, url }: IKubeWatchRouteEvent) {
-    if (type === "STREAM_END") {
+  protected async onRouteEvent(event: IKubeWatchRouteEvent) {
+    if (event.type === "STREAM_END") {
       this.disconnect();
-      const { apiBase, namespace } = KubeApi.parseApi(url);
+      const { apiBase, namespace } = KubeApi.parseApi(event.url);
       const api = apiManager.getApi(apiBase);
       if (api) {
         try {
           await api.refreshResourceVersion({ namespace });
           this.reconnect();
         } catch (error) {
-          console.debug("failed to refresh resource version", error)
+          console.error("failed to refresh resource version", error)
+          if (this.subscribers.size > 0) {
+            setTimeout(() => {
+              this.onRouteEvent(event)
+            }, 1000)
+          }
         }
       }
     }

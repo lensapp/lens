@@ -61,7 +61,7 @@ export class Cluster implements ClusterModel {
   @observable accessible = false;
   @observable ready = false;
   @observable reconnecting = false;
-  @observable disconnected = true;
+  @observable disconnected = true; // false if user has selected to connect
   @observable failureReason: string;
   @observable nodes = 0;
   @observable version: string;
