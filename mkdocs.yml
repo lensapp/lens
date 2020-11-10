@@ -11,30 +11,29 @@ nav:
   - Overview: README.md
   - Getting Started: getting-started/README.md
   - Managing Clusters:
-    - Adding clusters: clusters/adding-clusters.md
-    - Removing cluster: clusters/removing-clusters.md
+    - Adding Clusters: clusters/adding-clusters.md
+    - Removing Clusters: clusters/removing-clusters.md
     - Settings: clusters/settings.md
   - Using Helm Charts: helm/README.md
   - Using Extensions: extensions/usage/README.md
   - Preferences: getting-started/preferences.md
   - Extension Development:
     - Overview: extensions/README.md
-    - Get Started:
+    - Getting Started:
+      - Overview: extensions/get-started/overview.md
       - Your First Extension: extensions/get-started/your-first-extension.md
       - Extension Anatomy: extensions/get-started/anatomy.md
       - Wrapping Up: extensions/get-started/wrapping-up.md
     - Extension Capabilities:
-      - Overview: extensions/capabilities/README.md
       - Common Capabilities: extensions/capabilities/common-capabilities.md
       - Styling: extensions/capabilities/styling.md
-      - Color reference: extensions/capabilities/color-reference.md
+      - Color Reference: extensions/capabilities/color-reference.md
     - Extension Guides:
       - Overview: extensions/guides/README.md
       - Renderer Extension: extensions/guides/renderer-extension.md
     - Testing and Publishing:
       - Testing Extensions: extensions/testing-and-publishing/testing.md
       - Publishing Extensions: extensions/testing-and-publishing/publishing.md
-      - Bundling Extensions: extensions/testing-and-publishing/bundling.md
     - API Reference: extensions/api/README.md
   - Contributing:
     - Overview: contributing/README.md

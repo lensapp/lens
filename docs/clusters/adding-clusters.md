@@ -1,4 +1,4 @@
-# Adding clusters
+# Adding Clusters
 
 Add clusters by clicking the **Add Cluster** button in the left-side menu. 
 

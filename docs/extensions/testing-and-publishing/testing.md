@@ -4,11 +4,11 @@
 
 `console.log()` might be handy for extension developers to prints out info/errors from extensions. To use `console.log`, note that Lens is based on Electron. Electron has two types of processes: [Main and Renderer](https://www.electronjs.org/docs/tutorial/quick-start#main-and-renderer-processes).
 
-### Renderer process logs
+### Renderer Process Logs
 
 `console.log()` in Renderer process is printed in the Console in Developer Tools (View > Toggle Developer Tools).
 
-### Main process logs
+### Main Process Logs
 
 To view the logs from the main process is a bit trickier, since you cannot open developer tools for them. On MacOSX, one way is to run Lens from the terminal.
 

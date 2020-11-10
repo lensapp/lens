@@ -21,6 +21,6 @@ Lens has been tested on the following platforms:
 
 ...
 
-### Additional Linux requirements
+### Additional Linux Requirements
 
 ...
