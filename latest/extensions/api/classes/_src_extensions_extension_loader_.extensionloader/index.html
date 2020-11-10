@@ -1024,33 +1024,33 @@
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
 <p>+ <strong>new ExtensionLoader</strong>(): <a href="./">ExtensionLoader</a></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L23">src/extensions/extension-loader.ts:23</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L23">src/extensions/extension-loader.ts:23</a></em></p>
 <p><strong>Returns:</strong> <a href="./">ExtensionLoader</a></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="extensions">extensions<a class="headerlink" href="#extensions" title="Permanent link">#</a></h3>
 <p>• <code>Protected</code> <strong>extensions</strong>: ObservableMap\<string, <a href="../interfaces/_src_extensions_extension_manager_.installedextension.md">InstalledExtension</a>> = observable.map\<LensExtensionId, InstalledExtension>()</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L19">src/extensions/extension-loader.ts:19</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L19">src/extensions/extension-loader.ts:19</a></em></p>
 <hr />
 <h3 id="instances">instances<a class="headerlink" href="#instances" title="Permanent link">#</a></h3>
 <p>• <code>Protected</code> <strong>instances</strong>: ObservableMap\<string, <a href="_src_extensions_lens_extension_.lensextension.md">LensExtension</a>> = observable.map\<LensExtensionId, LensExtension>()</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L20">src/extensions/extension-loader.ts:20</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L20">src/extensions/extension-loader.ts:20</a></em></p>
 <hr />
 <h3 id="isloaded">isLoaded<a class="headerlink" href="#isloaded" title="Permanent link">#</a></h3>
 <p>•  <strong>isLoaded</strong>: boolean = false</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L22">src/extensions/extension-loader.ts:22</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L22">src/extensions/extension-loader.ts:22</a></em></p>
 <hr />
 <h3 id="whenloaded">whenLoaded<a class="headerlink" href="#whenloaded" title="Permanent link">#</a></h3>
 <p>•  <strong>whenLoaded</strong>: <a href="../../interfaces/_src_renderer_utils_cancelablefetch_.cancelablepromise/#promise">Promise</a>\<void> &amp; { cancel: () =&gt; void  } = when(() =&gt; this.isLoaded)</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L23">src/extensions/extension-loader.ts:23</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L23">src/extensions/extension-loader.ts:23</a></em></p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="userextensions">userExtensions<a class="headerlink" href="#userextensions" title="Permanent link">#</a></h3>
 <p>• get <strong>userExtensions</strong>(): Map\&lt;<a href="../../modules/_src_extensions_lens_extension_/#lensextensionid">LensExtensionId</a>, <a href="../../interfaces/_src_extensions_extension_manager_.installedextension/">InstalledExtension</a>&gt;</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L39">src/extensions/extension-loader.ts:39</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L39">src/extensions/extension-loader.ts:39</a></em></p>
 <p><strong>Returns:</strong> Map\&lt;<a href="../../modules/_src_extensions_lens_extension_/#lensextensionid">LensExtensionId</a>, <a href="../../interfaces/_src_extensions_extension_manager_.installedextension/">InstalledExtension</a>&gt;</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="autoinitextensions">autoInitExtensions<a class="headerlink" href="#autoinitextensions" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code><strong>autoInitExtensions</strong>(<code>register</code>: (ext: <a href="../_src_extensions_lens_extension_.lensextension/">LensExtension</a>) =&gt; Function[]): IReactionDisposer</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L83">src/extensions/extension-loader.ts:83</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L83">src/extensions/extension-loader.ts:83</a></em></p>
 <h4>Parameters:</h4>
 <table>
 <thead>
@@ -1070,7 +1070,7 @@
 <hr />
 <h3 id="broadcastextensions">broadcastExtensions<a class="headerlink" href="#broadcastextensions" title="Permanent link">#</a></h3>
 <p>▸ <strong>broadcastExtensions</strong>(<code>frameId?</code>: number): <a href="../../interfaces/_src_renderer_utils_cancelablefetch_.cancelablepromise/#promise">Promise</a>\<void></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L140">src/extensions/extension-loader.ts:140</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L140">src/extensions/extension-loader.ts:140</a></em></p>
 <h4>Parameters:</h4>
 <table>
 <thead>
@@ -1090,7 +1090,7 @@
 <hr />
 <h3 id="getextension">getExtension<a class="headerlink" href="#getextension" title="Permanent link">#</a></h3>
 <p>▸ <strong>getExtension</strong>(<code>extId</code>: <a href="../../modules/_src_extensions_lens_extension_/#lensextensionid">LensExtensionId</a>): <a href="../../interfaces/_src_extensions_extension_manager_.installedextension/">InstalledExtension</a></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L129">src/extensions/extension-loader.ts:129</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L129">src/extensions/extension-loader.ts:129</a></em></p>
 <h4>Parameters:</h4>
 <table>
 <thead>
@@ -1110,7 +1110,7 @@
 <hr />
 <h3 id="init">init<a class="headerlink" href="#init" title="Permanent link">#</a></h3>
 <p>▸ <strong>init</strong>(<code>extensions</code>: Map\&lt;<a href="../../modules/_src_extensions_lens_extension_/#lensextensionid">LensExtensionId</a>, <a href="../../interfaces/_src_extensions_extension_manager_.installedextension/">InstalledExtension</a>&gt;): <a href="../../interfaces/_src_renderer_utils_cancelablefetch_.cancelablepromise/#promise">Promise</a>\<void></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L50">src/extensions/extension-loader.ts:50</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L50">src/extensions/extension-loader.ts:50</a></em></p>
 <h4>Parameters:</h4>
 <table>
 <thead>
@@ -1130,22 +1130,22 @@
 <hr />
 <h3 id="loadonclustermanagerrenderer">loadOnClusterManagerRenderer<a class="headerlink" href="#loadonclustermanagerrenderer" title="Permanent link">#</a></h3>
 <p>▸ <strong>loadOnClusterManagerRenderer</strong>(): void</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L64">src/extensions/extension-loader.ts:64</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L64">src/extensions/extension-loader.ts:64</a></em></p>
 <p><strong>Returns:</strong> void</p>
 <hr />
 <h3 id="loadonclusterrenderer">loadOnClusterRenderer<a class="headerlink" href="#loadonclusterrenderer" title="Permanent link">#</a></h3>
 <p>▸ <strong>loadOnClusterRenderer</strong>(): void</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L74">src/extensions/extension-loader.ts:74</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L74">src/extensions/extension-loader.ts:74</a></em></p>
 <p><strong>Returns:</strong> void</p>
 <hr />
 <h3 id="loadonmain">loadOnMain<a class="headerlink" href="#loadonmain" title="Permanent link">#</a></h3>
 <p>▸ <strong>loadOnMain</strong>(): void</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L57">src/extensions/extension-loader.ts:57</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L57">src/extensions/extension-loader.ts:57</a></em></p>
 <p><strong>Returns:</strong> void</p>
 <hr />
 <h3 id="requireextension">requireExtension<a class="headerlink" href="#requireextension" title="Permanent link">#</a></h3>
 <p>▸ <code>Protected</code><strong>requireExtension</strong>(<code>extension</code>: <a href="../../interfaces/_src_extensions_extension_manager_.installedextension/">InstalledExtension</a>): any</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L112">src/extensions/extension-loader.ts:112</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L112">src/extensions/extension-loader.ts:112</a></em></p>
 <h4>Parameters:</h4>
 <table>
 <thead>
@@ -1165,7 +1165,7 @@
 <hr />
 <h3 id="tojson">toJSON<a class="headerlink" href="#tojson" title="Permanent link">#</a></h3>
 <p>▸ <strong>toJSON</strong>(): Map\&lt;<a href="../../modules/_src_extensions_lens_extension_/#lensextensionid">LensExtensionId</a>, <a href="../../interfaces/_src_extensions_extension_manager_.installedextension/">InstalledExtension</a>&gt;</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/a78bbb5f/src/extensions/extension-loader.ts#L133">src/extensions/extension-loader.ts:133</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/cb57e4ed/src/extensions/extension-loader.ts#L133">src/extensions/extension-loader.ts:133</a></em></p>
 <p><strong>Returns:</strong> Map\&lt;<a href="../../modules/_src_extensions_lens_extension_/#lensextensionid">LensExtensionId</a>, <a href="../../interfaces/_src_extensions_extension_manager_.installedextension/">InstalledExtension</a>&gt;</p>
                 
                   
