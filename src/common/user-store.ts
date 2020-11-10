@@ -89,7 +89,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @action
   async resetTheme() {
-    await userStore.whenLoaded;
+    await this.whenLoaded;
     this.preferences.colorTheme = UserStore.defaultTheme;
   }
 
