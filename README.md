@@ -18,6 +18,8 @@ World’s most popular Kubernetes IDE provides a simplified, consistent entry po
 * Terminal access to nodes and containers
 * Performance optimized to handle massive clusters (tested with a cluster running 25k pods)
 * Full support for Kubernetes RBAC
+* Browse and Deploy Helm charts with one click-Install
+
 
 ## Installation
 
