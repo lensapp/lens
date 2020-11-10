@@ -1,3 +1,4 @@
+import type React from "react"
 import { BaseRegistry } from "./base-registry";
 import { ClusterFeature } from "../cluster-feature";
 

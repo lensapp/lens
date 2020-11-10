@@ -65,6 +65,7 @@ export class ExtensionLoader {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
     this.autoInitExtensions((extension: LensRendererExtension) => [
       registries.globalPageRegistry.add(...extension.globalPages),
+      registries.globalPageMenuRegistry.add(...extension.globalPageMenus),
       registries.appPreferenceRegistry.add(...extension.appPreferences),
       registries.clusterFeatureRegistry.add(...extension.clusterFeatures),
       registries.statusBarRegistry.add(...extension.statusBarItems),
@@ -75,6 +76,7 @@ export class ExtensionLoader {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
     this.autoInitExtensions((extension: LensRendererExtension) => [
       registries.clusterPageRegistry.add(...extension.clusterPages),
+      registries.clusterPageMenuRegistry.add(...extension.clusterPageMenus),
       registries.kubeObjectMenuRegistry.add(...extension.kubeObjectMenuItems),
       registries.kubeObjectDetailRegistry.add(...extension.kubeObjectDetailItems),
     ]);

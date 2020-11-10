@@ -1,44 +1,39 @@
 import "./user-management.scss"
 import React from "react";
 import { observer } from "mobx-react";
-import { Redirect, Route, Switch } from "react-router";
-import { RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
-import { TabLayout, TabRoute } from "../layout/tab-layout";
+import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { Roles } from "../+user-management-roles";
 import { RoleBindings } from "../+user-management-roles-bindings";
 import { ServiceAccounts } from "../+user-management-service-accounts";
-import { roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL, usersManagementURL } from "./user-management.route";
+import { roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL } from "./user-management.route";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { PodSecurityPolicies, podSecurityPoliciesRoute, podSecurityPoliciesURL } from "../+pod-security-policies";
 import { isAllowedResource } from "../../../common/rbac";
 
-interface Props extends RouteComponentProps<{}> {
-}
-
 @observer
-export class UserManagement extends React.Component<Props> {
+export class UserManagement extends React.Component {
   static get tabRoutes() {
-    const tabRoutes: TabRoute[] = [];
+    const tabRoutes: TabLayoutRoute[] = [];
     const query = namespaceStore.getContextParams()
     tabRoutes.push(
       {
         title: <Trans>Service Accounts</Trans>,
         component: ServiceAccounts,
         url: serviceAccountsURL({ query }),
-        path: serviceAccountsRoute.path,
+        routePath: serviceAccountsRoute.path.toString(),
       },
       {
         title: <Trans>Role Bindings</Trans>,
         component: RoleBindings,
         url: roleBindingsURL({ query }),
-        path: roleBindingsRoute.path,
+        routePath: roleBindingsRoute.path.toString(),
       },
       {
         title: <Trans>Roles</Trans>,
         component: Roles,
         url: rolesURL({ query }),
-        path: rolesRoute.path,
+        routePath: rolesRoute.path.toString(),
       },
     )
     if (isAllowedResource("podsecuritypolicies")) {
@@ -46,21 +41,15 @@ export class UserManagement extends React.Component<Props> {
         title: <Trans>Pod Security Policies</Trans>,
         component: PodSecurityPolicies,
         url: podSecurityPoliciesURL(),
-        path: podSecurityPoliciesRoute.path,
+        routePath: podSecurityPoliciesRoute.path.toString(),
       })
     }
     return tabRoutes;
   }
 
   render() {
-    const tabRoutes = UserManagement.tabRoutes;
     return (
-      <TabLayout className="UserManagement" tabs={tabRoutes}>
-        <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={usersManagementURL({ query: namespaceStore.getContextParams() })}/>
-        </Switch>
-      </TabLayout>
+      <TabLayout className="UserManagement" tabs={UserManagement.tabRoutes}/>
     )
   }
 }

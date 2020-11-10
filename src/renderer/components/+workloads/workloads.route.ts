@@ -5,7 +5,7 @@ import { Workloads } from "./workloads";
 
 export const workloadsRoute: RouteProps = {
   get path() {
-    return Workloads.tabRoutes.map(({ path }) => path).flat()
+    return Workloads.tabRoutes.map(({ routePath }) => routePath).flat()
   }
 }
 

@@ -4,7 +4,7 @@ import { UserManagement } from "./user-management"
 
 export const usersManagementRoute: RouteProps = {
   get path() {
-    return UserManagement.tabRoutes.map(({ path }) => path).flat()
+    return UserManagement.tabRoutes.map(({ routePath }) => routePath).flat()
   }
 }
 

@@ -1,4 +1,4 @@
-import type { TabRoute } from "./tab-layout";
+import type { TabLayoutRoute } from "./tab-layout";
 import "./sidebar.scss";
 
 import React from "react";
@@ -27,9 +27,9 @@ import { crdStore } from "../+custom-resources/crd.store";
 import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resources";
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { navigation } from "../../navigation";
-import { clusterPageRegistry } from "../../../extensions/registries/page-registry";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "../../../common/rbac"
 import { Spinner } from "../spinner";
+import { clusterPageMenuRegistry } from "../../../extensions/registries";
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
 type SidebarContextValue = {
@@ -56,18 +56,17 @@ export class Sidebar extends React.Component<Props> {
     }
 
     return Object.entries(crdStore.groups).map(([group, crds]) => {
-      const submenus = crds.map((crd) => {
+      const submenus: TabLayoutRoute[] = crds.map((crd) => {
         return {
           title: crd.getResourceKind(),
           component: CrdList,
           url: crd.getResourceUrl(),
-          path: crdResourcesRoute.path,
+          routePath: String(crdResourcesRoute.path),
         };
       });
       return (
         <SidebarNavItem
           key={group}
-          id={group}
           className="sub-menu-parent"
           url={crdURL({ query: { groups: group } })}
           subMenus={submenus}
@@ -98,21 +97,18 @@ export class Sidebar extends React.Component<Props> {
           </div>
           <div className="sidebar-nav flex column box grow-fixed">
             <SidebarNavItem
-              id="cluster"
               isHidden={!isAllowedResource("nodes")}
               url={clusterURL()}
               text={<Trans>Cluster</Trans>}
               icon={<Icon svg="kube" />}
             />
             <SidebarNavItem
-              id="nodes"
               isHidden={!isAllowedResource("nodes")}
               url={nodesURL()}
               text={<Trans>Nodes</Trans>}
               icon={<Icon svg="nodes" />}
             />
             <SidebarNavItem
-              id="workloads"
               isHidden={Workloads.tabRoutes.length == 0}
               url={workloadsURL({ query })}
               routePath={workloadsRoute.path}
@@ -121,7 +117,6 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon svg="workloads" />}
             />
             <SidebarNavItem
-              id="config"
               isHidden={Config.tabRoutes.length == 0}
               url={configURL({ query })}
               routePath={configRoute.path}
@@ -130,7 +125,6 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon material="list" />}
             />
             <SidebarNavItem
-              id="networks"
               isHidden={Network.tabRoutes.length == 0}
               url={networkURL({ query })}
               routePath={networkRoute.path}
@@ -139,7 +133,6 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon material="device_hub" />}
             />
             <SidebarNavItem
-              id="storage"
               isHidden={Storage.tabRoutes.length == 0}
               url={storageURL({ query })}
               routePath={storageRoute.path}
@@ -148,14 +141,12 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Storage</Trans>}
             />
             <SidebarNavItem
-              id="namespaces"
               isHidden={!isAllowedResource("namespaces")}
               url={namespacesURL()}
               icon={<Icon material="layers" />}
               text={<Trans>Namespaces</Trans>}
             />
             <SidebarNavItem
-              id="events"
               isHidden={!isAllowedResource("events")}
               url={eventsURL({ query })}
               routePath={eventRoute.path}
@@ -163,7 +154,6 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Events</Trans>}
             />
             <SidebarNavItem
-              id="apps"
               url={appsURL({ query })}
               subMenus={Apps.tabRoutes}
               routePath={appsRoute.path}
@@ -171,7 +161,6 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Apps</Trans>}
             />
             <SidebarNavItem
-              id="users"
               url={usersManagementURL({ query })}
               routePath={usersManagementRoute.path}
               subMenus={UserManagement.tabRoutes}
@@ -179,7 +168,6 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Access Control</Trans>}
             />
             <SidebarNavItem
-              id="custom-resources"
               isHidden={!isAllowedResource("customresourcedefinitions")}
               url={crdURL()}
               subMenus={CustomResources.tabRoutes}
@@ -189,17 +177,13 @@ export class Sidebar extends React.Component<Props> {
             >
               {this.renderCustomResources()}
             </SidebarNavItem>
-            {clusterPageRegistry.getItems().map(({ path, title, url = String(path), hideInMenu, components: { MenuIcon } }) => {
-              if (!MenuIcon || hideInMenu) {
-                return;
-              }
+            {clusterPageMenuRegistry.getItems().map(({ title, url, components: { Icon } }) => {
+              const routePath = "" // todo: find in page-registry
               return (
                 <SidebarNavItem
-                  key={url} id={`sidebar_item_${url}`}
-                  url={url}
-                  routePath={path}
-                  text={title}
-                  icon={<MenuIcon />}
+                  key={url} url={url}
+                  routePath={routePath}
+                  text={title} icon={<Icon />}
                 />
               )
             })}
@@ -211,46 +195,45 @@ export class Sidebar extends React.Component<Props> {
 }
 
 interface SidebarNavItemProps {
-  id: string;
   url: string;
   text: React.ReactNode | string;
   className?: string;
   icon?: React.ReactNode;
   isHidden?: boolean;
   routePath?: string | string[];
-  subMenus?: TabRoute[];
+  subMenus?: TabLayoutRoute[];
 }
 
 const navItemStorage = createStorage<[string, boolean][]>("sidebar_menu_item", []);
 const navItemState = observable.map<string, boolean>(navItemStorage.get());
-reaction(
-  () => [...navItemState],
-  (value) => navItemStorage.set(value)
-);
+reaction(() => [...navItemState], (value) => navItemStorage.set(value));
 
 @observer
 class SidebarNavItem extends React.Component<SidebarNavItemProps> {
   static contextType = SidebarContext;
   public context: SidebarContextValue;
 
+  get itemId() {
+    return this.props.url;
+  }
+
   @computed get isExpanded() {
-    return navItemState.get(this.props.id);
+    return navItemState.get(this.itemId);
   }
 
   toggleSubMenu = () => {
-    navItemState.set(this.props.id, !this.isExpanded);
+    navItemState.set(this.itemId, !this.isExpanded);
   };
 
   isActive = () => {
-    const { routePath, url } = this.props;
-    const { pathname } = navigation.location;
-    return !!matchPath(pathname, {
-      path: routePath || url,
+    const { url, routePath = url } = this.props;
+    return !!matchPath(navigation.location.pathname, {
+      path: routePath
     });
   };
 
   render() {
-    const { id, isHidden, subMenus = [], icon, text, url, children, className } = this.props;
+    const { isHidden, subMenus = [], icon, text, url, children, className } = this.props;
     if (isHidden) {
       return null;
     }
@@ -258,7 +241,7 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
     if (extendedView) {
       const isActive = this.isActive();
       return (
-        <div id={id} className={cssNames("SidebarNavItem", className)}>
+        <div className={cssNames("SidebarNavItem", className)}>
           <div className={cssNames("nav-item", { active: isActive })} onClick={this.toggleSubMenu}>
             {icon}
             <span className="link-text">{text}</span>

@@ -2,23 +2,20 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Redirect, Route, Switch } from "react-router";
 import { Trans } from "@lingui/macro";
-import { TabLayout, TabRoute } from "../layout/tab-layout";
+import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { crdResourcesRoute, crdRoute, crdURL, crdDefinitionsRoute } from "./crd.route";
 import { CrdList } from "./crd-list";
 import { CrdResources } from "./crd-resources";
 
-// todo: next steps - customization via plugins
-// todo: list views (rows content), full details view and if possible chart/prometheus hooks
-
 @observer
 export class CustomResources extends React.Component {
-  static get tabRoutes(): TabRoute[] {
+  static get tabRoutes(): TabLayoutRoute[] {
     return [
       {
         title: <Trans>Definitions</Trans>,
         component: CustomResources,
         url: crdURL(),
-        path: crdRoute.path,
+        routePath: crdRoute.path.toString(),
       }
     ]
   }
