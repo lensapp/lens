@@ -9,4 +9,4 @@ export class SecretsStore extends KubeObjectStore<Secret> {
 }
 
 export const secretsStore = new SecretsStore();
-apiManager.registerStore(secretsApi, secretsStore);
+apiManager.registerStore(secretsStore);

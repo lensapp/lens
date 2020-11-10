@@ -14,7 +14,7 @@ function initStore(crd: CustomResourceDefinition) {
   const api = apiManager.getApi(apiBase) || new KubeApi({ apiBase, kind, isNamespaced });
   
   if (!apiManager.getStore(api)) {
-    apiManager.registerStore(api, new CRDResourceStore(api));
+    apiManager.registerStore(new CRDResourceStore(api));
   }
 }
 
@@ -64,4 +64,4 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
 
 export const crdStore = new CRDStore();
 
-apiManager.registerStore(crdApi, crdStore);
+apiManager.registerStore(crdStore);

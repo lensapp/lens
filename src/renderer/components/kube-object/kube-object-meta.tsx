@@ -7,12 +7,12 @@ import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-export interface Props {
+export interface KubeObjectMetaProps {
   object: KubeObject;
   hideFields?: IKubeMetaField[];
 }
 
-export class KubeObjectMeta extends React.Component<Props> {
+export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
   static defaultHiddenFields: IKubeMetaField[] = [
     "uid", "resourceVersion", "selfLink"
   ];

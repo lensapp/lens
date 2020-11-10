@@ -11,6 +11,18 @@
 }
 
 :root {
+  --unit: 8px;
+  --padding: var(--unit);
+  --margin: var(--unit);
+  --border-radius: 3px;
+  --font-main: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  --font-monospace: Lucida Console, Monaco, Consolas, monospace;
+  --font-size-small: calc(1.5 * var(--unit));
+  --font-size: calc(1.75 * var(--unit));
+  --font-size-big: calc(2 * var(--unit));
+  --font-weight-thin: 300;
+  --font-weight-normal: 400;
+  --font-weight-bold: 500;
   --mainBackground: #1e2124;
   --main-layout-header: 40px;
   --drag-region-height: 22px
@@ -122,7 +134,7 @@ code {
   vertical-align: middle;
   border-radius: $radius;
   font-family: $font-monospace;
-  font-size: $font-size * .9;
+  font-size: calc($font-size * .9);
   color: #b4b5b4;
 
   &.block {

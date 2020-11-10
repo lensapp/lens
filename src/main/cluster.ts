@@ -80,13 +80,14 @@ export class Cluster implements ClusterModel, ClusterState {
   @observable metadata: ClusterMetadata = {};
   @observable allowedNamespaces: string[] = [];
   @observable allowedResources: string[] = [];
+  @observable accessibleNamespaces: string[] = [];
 
   @computed get available() {
     return this.accessible && !this.disconnected;
   }
 
   get version(): string {
-    return String(this.metadata?.version) || ""
+    return String(this.metadata?.version) || ""
   }
 
   constructor(model: ClusterModel) {
@@ -149,7 +150,7 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   @action
-  async activate(force = false ) {
+  async activate(force = false) {
     if (this.activated && !force) {
       return this.pushState();
     }
@@ -340,7 +341,7 @@ export class Cluster implements ClusterModel, ClusterState {
       for (const w of warnings) {
         if (w.involvedObject.kind === 'Pod') {
           try {
-            const pod = (await client.readNamespacedPod(w.involvedObject.name, w.involvedObject.namespace)).body;
+            const { body: pod } = await client.readNamespacedPod(w.involvedObject.name, w.involvedObject.namespace);
             logger.debug(`checking pod ${w.involvedObject.namespace}/${w.involvedObject.name}`)
             if (podHasIssues(pod)) {
               uniqEventSources.add(w.involvedObject.uid);
@@ -351,11 +352,10 @@ export class Cluster implements ClusterModel, ClusterState {
           uniqEventSources.add(w.involvedObject.uid);
         }
       }
-      let nodeNotificationCount = 0;
       const nodes = (await client.listNode()).body.items;
-      nodes.map(n => {
-        nodeNotificationCount = nodeNotificationCount + getNodeWarningConditions(n).length
-      });
+      const nodeNotificationCount = nodes
+        .map(getNodeWarningConditions)
+        .reduce((sum, conditions) => sum + conditions.length, 0);
       return uniqEventSources.size + nodeNotificationCount;
     } catch (error) {
       logger.error("Failed to fetch event count: " + JSON.stringify(error))
@@ -371,7 +371,8 @@ export class Cluster implements ClusterModel, ClusterState {
       workspace: this.workspace,
       preferences: this.preferences,
       metadata: this.metadata,
-      ownerRef: this.ownerRef
+      ownerRef: this.ownerRef,
+      accessibleNamespaces: this.accessibleNamespaces,
     };
     return toJS(model, {
       recurseEverything: true
@@ -426,6 +427,10 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   protected async getAllowedNamespaces() {
+    if (this.accessibleNamespaces.length) {
+      return this.accessibleNamespaces
+    }
+
     const api = this.getProxyKubeconfig().makeApiClient(CoreV1Api)
     try {
       const namespaceList = await api.listNamespace()
@@ -442,7 +447,7 @@ export class Cluster implements ClusterModel, ClusterState {
     } catch (error) {
       const ctx = this.getProxyKubeconfig().getContextObject(this.contextName)
       if (ctx.namespace) return [ctx.namespace]
-      return []
+      return [];
     }
   }
 

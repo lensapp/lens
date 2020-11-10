@@ -42,4 +42,4 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
 }
 
 export const statefulSetStore = new StatefulSetStore();
-apiManager.registerStore(statefulSetApi, statefulSetStore);
+apiManager.registerStore(statefulSetStore);

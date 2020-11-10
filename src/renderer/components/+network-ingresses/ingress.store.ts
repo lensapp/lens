@@ -19,4 +19,4 @@ export class IngressStore extends KubeObjectStore<Ingress> {
 }
 
 export const ingressStore = new IngressStore();
-apiManager.registerStore(ingressApi, ingressStore);
+apiManager.registerStore(ingressStore);

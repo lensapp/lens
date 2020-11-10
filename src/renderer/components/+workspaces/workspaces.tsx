@@ -12,7 +12,7 @@ import { Icon } from "../icon";
 import { Input } from "../input";
 import { cssNames, prevDefault } from "../../utils";
 import { Button } from "../button";
-import { isRequired, Validator } from "../input/input_validators";
+import { isRequired, InputValidator } from "../input/input_validators";
 
 @observer
 export class Workspaces extends React.Component {
@@ -122,7 +122,7 @@ export class Workspaces extends React.Component {
               editing: isEditing,
               default: isDefault,
             });
-            const existenceValidator: Validator = {
+            const existenceValidator: InputValidator = {
               message: () => `Workspace '${name}' already exists`,
               validate: value => !workspaceStore.getByName(value.trim())
             }

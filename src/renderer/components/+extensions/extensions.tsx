@@ -19,7 +19,8 @@ export class Extensions extends React.Component {
 
   @computed get extensions() {
     const searchText = this.search.toLowerCase();
-    return extensionLoader.userExtensions.filter(({ name, description }) => {
+    return Array.from(extensionLoader.userExtensions.values()).filter(ext => {
+      const { name, description } = ext.manifest;
       return [
         name.toLowerCase().includes(searchText),
         description.toLowerCase().includes(searchText),
@@ -68,9 +69,10 @@ export class Extensions extends React.Component {
       )
     }
     return extensions.map(ext => {
-      const { id, name, description, isEnabled } = ext;
+      const { manifestPath: extId, isEnabled, manifest } = ext;
+      const { name, description } = manifest;
       return (
-        <div key={id} className="extension flex gaps align-center">
+        <div key={extId} className="extension flex gaps align-center">
           <div className="box grow flex column gaps">
             <div className="package">
               Name: <code className="name">{name}</code>
@@ -80,10 +82,10 @@ export class Extensions extends React.Component {
             </div>
           </div>
           {!isEnabled && (
-            <Button plain active onClick={() => ext.enable()}>Enable</Button>
+            <Button plain active onClick={() => ext.isEnabled = true}>Enable</Button>
           )}
           {isEnabled && (
-            <Button accent onClick={() => ext.disable()}>Disable</Button>
+            <Button accent onClick={() => ext.isEnabled = false}>Disable</Button>
           )}
         </div>
       )
@@ -102,7 +104,7 @@ export class Extensions extends React.Component {
             value={this.search}
             onChange={(value) => this.search = value}
           />
-          <div className="extension-list flex column gaps">
+          <div className="extension-list">
             {this.renderExtensions()}
           </div>
         </WizardLayout>

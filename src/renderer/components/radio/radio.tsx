@@ -5,7 +5,7 @@ import uniqueId from "lodash/uniqueId";
 
 // todo: refactor with contexts
 
-interface RadioGroupProps {
+export interface RadioGroupProps {
   className?: any;
   value?: any;
   asButtons?: boolean;
@@ -35,7 +35,7 @@ export class RadioGroup extends React.Component<RadioGroupProps, {}> {
   }
 }
 
-type RadioProps = React.HTMLProps<any> & {
+export type RadioProps = React.HTMLProps<any> & {
   name?: string;
   label?: React.ReactNode | any;
   value?: any;

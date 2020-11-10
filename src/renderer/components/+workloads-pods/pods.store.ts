@@ -76,4 +76,4 @@ export class PodsStore extends KubeObjectStore<Pod> {
 }
 
 export const podsStore = new PodsStore();
-apiManager.registerStore(podsApi, podsStore);
+apiManager.registerStore(podsStore);

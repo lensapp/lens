@@ -47,17 +47,23 @@ describe("Lens integration tests", () => {
       await clickWhatsNew(app)
     })
 
-    // Todo figure out how to access main menu to get these to work
-    it.skip('shows "add cluster"', async () => {
-      await app.client.keys(['Shift', 'Meta', 'A'])
+    it('shows "add cluster"', async () => {
+      await app.electron.ipcRenderer.send('test-menu-item-click', "File", "Add Cluster")
       await app.client.waitUntilTextExists("h2", "Add Cluster")
-      await app.client.keys(['Shift', 'Meta'])
     })
 
-    it.skip('shows "preferences"', async () => {
-      await app.client.keys(['Meta', ','])
-      await app.client.waitUntilTextExists("h2", "Preferences")
-      await app.client.keys('Meta')
+    describe("preferences page", () => {
+      it('shows "preferences"', async () => {
+        let appName: string = process.platform === "darwin" ? "Lens" : "File"
+        await app.electron.ipcRenderer.send('test-menu-item-click', appName, "Preferences")
+        await app.client.waitUntilTextExists("h2", "Preferences")
+      })
+
+      it('ensures helm repos', async () => {
+        await app.client.waitUntilTextExists("div.repos #message-stable", "stable") // wait for the helm-cli to fetch the stable repo
+        await app.client.click("#HelmRepoSelect") // click the repo select to activate the drop-down
+        await app.client.waitUntilTextExists("div.Select__option", "")  // wait for at least one option to appear (any text)
+      })
     })
 
     it.skip('quits Lens"', async () => {
@@ -407,6 +413,40 @@ describe("Lens integration tests", () => {
             await expect(app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow()
           })
         }
+      })
+    })
+
+    describe("viewing pod logs", () => {
+      beforeEach(appStartAddCluster, 40000)
+
+      afterEach(async () => {
+        if (app && app.isRunning()) {
+          return util.tearDown(app)
+        }
+      })
+
+      it(`shows a logs for a pod`, async () => {
+        expect(clusterAdded).toBe(true)
+        // Go to Pods page
+        await app.client.click(".sidebar-nav #workloads span.link-text")
+        await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods")
+        await app.client.click('a[href^="/pods"]')
+        await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver")
+        // Open logs tab in dock
+        await app.client.click(".list .TableRow:first-child")
+        await app.client.waitForVisible(".Drawer")
+        await app.client.click(".drawer-title .Menu li:nth-child(2)")
+        // Check if controls are available
+        await app.client.waitForVisible(".PodLogs .VirtualList")
+        await app.client.waitForVisible(".PodLogControls")
+        await app.client.waitForVisible(".PodLogControls .SearchInput")
+        await app.client.waitForVisible(".PodLogControls .SearchInput input")
+        // Search for semicolon
+        await app.client.keys(":")
+        await app.client.waitForVisible(".PodLogs .list span.active")
+        // Click through controls
+        await app.client.click(".PodLogControls .timestamps-icon")
+        await app.client.click(".PodLogControls .undo-icon")
       })
     })
 

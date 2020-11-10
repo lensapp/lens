@@ -1,5 +1,5 @@
 import "./table-cell.scss";
-import type { SortBy, SortParams } from "./table";
+import type { TableSortBy, TableSortParams } from "./table";
 
 import React, { ReactNode } from "react";
 import { autobind, cssNames } from "../../utils";
@@ -13,9 +13,9 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   title?: ReactNode;
   checkbox?: boolean; // render cell with a checkbox
   isChecked?: boolean; // mark checkbox as checked or not
-  sortBy?: SortBy; // column name, must be same as key in sortable object <Table sortable={}/>
-  _sorting?: Partial<SortParams>; // <Table> sorting state, don't use this prop outside (!)
-  _sort?(sortBy: SortBy): void; // <Table> sort function, don't use this prop outside (!)
+  sortBy?: TableSortBy; // column name, must be same as key in sortable object <Table sortable={}/>
+  _sorting?: Partial<TableSortParams>; // <Table> sorting state, don't use this prop outside (!)
+  _sort?(sortBy: TableSortBy): void; // <Table> sort function, don't use this prop outside (!)
   _nowrap?: boolean; // indicator, might come from parent <TableHead>, don't use this prop outside (!)
 }
 

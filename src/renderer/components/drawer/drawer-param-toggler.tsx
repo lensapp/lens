@@ -5,14 +5,14 @@ import { Icon } from "../icon";
 import { cssNames } from "../../utils";
 import { _i18n } from "../../i18n";
 
-interface Props {
+export interface DrawerParamTogglerProps {
   label: string | number;
 }
 
 interface State {
   open?: boolean;
 }
-export class DrawerParamToggler extends React.Component<Props, State> {
+export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps, State> {
   public state: State = {}
 
   toggle = () => {

@@ -28,8 +28,7 @@ export class RolesStore extends KubeObjectStore<Role> {
       return Promise.all(
         namespaces.map(namespace => roleApi.list({ namespace }))
       ).then(items => items.flat())
-    }
-    else {
+    } else {
       return Promise.all([clusterRoleApi.list(), roleApi.list()])
         .then(items => items.flat())
     }
@@ -38,8 +37,7 @@ export class RolesStore extends KubeObjectStore<Role> {
   protected async createItem(params: { name: string; namespace?: string }, data?: Partial<Role>) {
     if (params.namespace) {
       return roleApi.create(params, data)
-    }
-    else {
+    } else {
       return clusterRoleApi.create(params, data)
     }
   }
@@ -47,5 +45,7 @@ export class RolesStore extends KubeObjectStore<Role> {
 
 export const rolesStore = new RolesStore();
 
-apiManager.registerStore(roleApi, rolesStore);
-apiManager.registerStore(clusterRoleApi, rolesStore);
+apiManager.registerStore(rolesStore, [
+  roleApi,
+  clusterRoleApi,
+]);

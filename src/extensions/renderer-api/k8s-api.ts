@@ -42,3 +42,4 @@ export enum KubeObjectStatusLevel {
   WARNING = 2,
   CRITICAL = 3
 }
+export { CustomResourceDefinition, crdApi } from "../../renderer/api/endpoints";

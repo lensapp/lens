@@ -12,14 +12,14 @@ export interface TabRoute extends RouteProps {
   url: string;
 }
 
-interface Props {
+export interface TabLayoutProps {
   children: ReactNode;
   className?: any;
   tabs?: TabRoute[];
   contentClass?: string;
 }
 
-export const TabLayout = observer(({ className, contentClass, tabs, children }: Props) => {
+export const TabLayout = observer(({ className, contentClass, tabs, children }: TabLayoutProps) => {
   const routePath = navigation.location.pathname;
   return (
     <div className={cssNames("TabLayout", className)}>
