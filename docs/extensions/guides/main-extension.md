@@ -2,11 +2,11 @@
 
 The main extension api is the interface to Lens' main process (Lens runs in main and renderer processes). It allows you to access, configure, and customize Lens data, add custom application menu items, and generally run custom code in Lens' main process.
 
-## LensMainExtension Class
+## `LensMainExtension` Class
 
 To create a main extension simply extend the `LensMainExtension` class:
 
-```
+``` typescript
 import { LensMainExtension } from "@k8slens/extensions";
 
 export default class ExampleExtensionMain extends LensMainExtension {
@@ -24,18 +24,18 @@ There are two methods that you can override to facilitate running your custom co
 
 The following example is a little more interesting in that it accesses some Lens state data and periodically logs the name of the currently active cluster in Lens.
 
-```
+``` typescript
 import { LensMainExtension, Store } from "@k8slens/extensions"
 
 const clusterStore = Store.clusterStore
 
-export class CurrentClusterExtensionMain extends LensMainExtension {
+export class ActiveClusterExtensionMain extends LensMainExtension {
 
   timer: NodeJS.Timeout
 
   onActivate() {
     this.timer = setInterval(() => {
-      console.log("current cluster is ", clusterStore.activeCluster)
+      console.log("active cluster is ", clusterStore.activeCluster)
     }, 5000)
   }
 
@@ -45,13 +45,13 @@ export class CurrentClusterExtensionMain extends LensMainExtension {
 }
 ```
 
-See the [Stores]() guide for more details on accessing Lens state data.
+See the [Stores](../stores) guide for more details on accessing Lens state data.
 
 ### `appMenus`
 
 The only UI feature customizable in the main extension api is the application menu. Custom menu items can be inserted and linked to custom functionality, such as navigating to a specific page. The following example demonstrates adding a menu item to the Help menu.
 
-```
+``` typescript
 import { LensMainExtension } from "@k8slens/extensions";
 
 export default class SamplePageMainExtension extends LensMainExtension {
