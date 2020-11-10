@@ -8,6 +8,9 @@ jobs:
   build:
     name: Deploy docs
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
     steps:
       - name: Set up Python 3.7 
         uses: actions/setup-python@v2 
@@ -31,8 +34,19 @@ jobs:
            git config --local user.email "action@github.com"
            git config --local user.name "GitHub Action"
            git pull
-          
-          
+           
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+  
+      - name: Generate Extensions API Reference using typedocs
+        run: | 
+           yarn install
+           yarn typedocs-extensions-api
+           for filename in docs/extensions/api/**/*.md; do [ -e "$filename" ] || continue; sed -i '1s/^/---\ntitle: API Reference\n---\n/' $filename; done
+  
+           
       - name: mkdocs deploy latest
         run: | 
            mike deploy --push latest

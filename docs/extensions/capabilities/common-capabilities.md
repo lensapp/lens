@@ -245,7 +245,7 @@ import { LensRendererExtension } from "@k8slens/extensions";
 import { CustomKindDetails, CustomKindDetailsProps } from "./src/custom-kind-details"
 
 export default class ExampleExtension extends LensRendererExtension {
-  kubeObjectMenuItems = [
+  kubeObjectDetailItems = [
     {
       kind: "CustomKind",
       apiVersions: ["custom.acme.org/v1"],

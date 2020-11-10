@@ -2,7 +2,7 @@
   "name": "kontena-lens",
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
-  "version": "4.0.0-alpha.4",
+  "version": "4.0.0-alpha.5",
   "main": "static/build/main.js",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
@@ -38,7 +38,8 @@
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "build:tray-icons": "yarn run ts-node build/build_tray_icon.ts",
     "lint": "eslint $@ --ext js,ts,tsx --max-warnings=0  src/",
-    "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest"
+    "mkdocs-serve-local": "yarn typedocs-extensions-api && docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
+    "typedocs-extensions-api": "npx typedoc --plugin typedoc-plugin-markdown --readme none --name @k8slens/extensions --ignoreCompilerErrors --out docs/extensions/api --mode modules --excludePrivate --includes src/ src/extensions/extension-api.ts"
   },
   "config": {
     "bundledKubectlVersion": "1.17.11",
@@ -280,7 +281,6 @@
     "@types/electron-window-state": "^2.0.34",
     "@types/fs-extra": "^9.0.1",
     "@types/hapi": "^18.0.3",
-    "@types/hard-source-webpack-plugin": "^1.0.1",
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/html-webpack-plugin": "^3.2.3",
     "@types/http-proxy": "^1.17.4",
@@ -342,7 +342,6 @@
     "file-loader": "^6.0.0",
     "flex.box": "^3.4.4",
     "fork-ts-checker-webpack-plugin": "^5.0.0",
-    "hard-source-webpack-plugin": "^0.13.1",
     "hoist-non-react-statics": "^3.3.2",
     "html-webpack-plugin": "^4.3.0",
     "identity-obj-proxy": "^3.0.0",
@@ -382,6 +381,8 @@
     "ts-loader": "^7.0.5",
     "ts-node": "^8.10.2",
     "type-fest": "^0.18.0",
+    "typedoc": "^0.19.2",
+    "typedoc-plugin-markdown": "^3.0.11",
     "typeface-roboto": "^0.0.75",
     "typescript": "^4.0.2",
     "url-loader": "^4.1.0",
@@ -389,6 +390,7 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0",
     "webpack-node-externals": "^1.7.2",
+    "what-input": "^5.2.10",
     "xterm": "^4.6.0",
     "xterm-addon-fit": "^0.4.0"
   }
