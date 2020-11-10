@@ -6,32 +6,32 @@ export default class EventResourceStatusRendererExtension extends LensRendererEx
     {
       kind: "Pod",
       apiVersions: ["v1"],
-      resolve: (object: K8sApi.Pod) => resolveStatusForPods(object)
+      resolve: (pod: K8sApi.Pod) => resolveStatusForPods(pod)
     },
     {
       kind: "ReplicaSet",
       apiVersions: ["v1"],
-      resolve: (object: K8sApi.KubeObject) => resolveStatus(object)
+      resolve: (replicaSet: K8sApi.ReplicaSet) => resolveStatus(replicaSet)
     },
     {
       kind: "Deployment",
       apiVersions: ["apps/v1"],
-      resolve: (object: K8sApi.KubeObject) => resolveStatus(object)
+      resolve: (deployment: K8sApi.Deployment) => resolveStatus(deployment)
     },
     {
       kind: "StatefulSet",
       apiVersions: ["apps/v1"],
-      resolve: (object: K8sApi.KubeObject) => resolveStatus(object)
+      resolve: (statefulSet: K8sApi.StatefulSet) => resolveStatus(statefulSet)
     },
     {
       kind: "DaemonSet",
       apiVersions: ["apps/v1"],
-      resolve: (object: K8sApi.KubeObject) => resolveStatus(object)
+      resolve: (daemonSet: K8sApi.DaemonSet) => resolveStatus(daemonSet)
     },
     {
       kind: "Job",
       apiVersions: ["batch/v1"],
-      resolve: (object: K8sApi.KubeObject) => resolveStatus(object)
+      resolve: (job: K8sApi.Job) => resolveStatus(job)
     },
     {
       kind: "CronJob",

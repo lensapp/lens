@@ -13,6 +13,7 @@ export { Job, jobApi } from "../../renderer/api/endpoints";
 export { CronJob, cronJobApi } from "../../renderer/api/endpoints";
 export { ConfigMap, configMapApi } from "../../renderer/api/endpoints";
 export { Secret, secretsApi, ISecretRef } from "../../renderer/api/endpoints";
+export { ReplicaSet, replicaSetApi } from "../../renderer/api/endpoints";
 export { ResourceQuota, resourceQuotaApi } from "../../renderer/api/endpoints";
 export { HorizontalPodAutoscaler, hpaApi } from "../../renderer/api/endpoints";
 export { PodDisruptionBudget, pdbApi } from "../../renderer/api/endpoints";
@@ -30,16 +31,5 @@ export { Role, roleApi } from "../../renderer/api/endpoints";
 export { RoleBinding, roleBindingApi } from "../../renderer/api/endpoints";
 export { ClusterRole, clusterRoleApi } from "../../renderer/api/endpoints";
 export { ClusterRoleBinding, clusterRoleBindingApi } from "../../renderer/api/endpoints";
-
-export type KubeObjectStatus = {
-  level: KubeObjectStatusLevel;
-  text: string;
-  timestamp?: string;
-}
-
-export enum KubeObjectStatusLevel {
-  INFO = 1,
-  WARNING = 2,
-  CRITICAL = 3
-}
 export { CustomResourceDefinition, crdApi } from "../../renderer/api/endpoints";
+export { KubeObjectStatus, KubeObjectStatusLevel} from "./kube-object-status"
