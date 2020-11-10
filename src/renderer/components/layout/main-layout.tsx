@@ -38,6 +38,7 @@ export class MainLayout extends React.Component<MainLayoutProps> {
     (sidebarWidth) => this.storage.merge({ sidebarWidth })
   );
 
+
   toggleSidebar = () => {
     this.isPinned = !this.isPinned;
     this.isAccessible = false;
