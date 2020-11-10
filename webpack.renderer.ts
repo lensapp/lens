@@ -6,7 +6,6 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
-import HardSourceWebpackPlugin from 'hard-source-webpack-plugin';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 
 export default [
@@ -187,7 +186,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         filename: "[name].css",
       }),
 
-      isDevelopment && new HardSourceWebpackPlugin(),
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
       
