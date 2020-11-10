@@ -1,4 +1,4 @@
-# Extension Anatomy
+# Extension anatomy
 
 You've now learnt how to get basic extension running. In this topic you will learn some fundamental concepts to Lens Extension development; How does it work under the hood?
 
@@ -10,7 +10,7 @@ You've now learnt how to get basic extension running. In this topic you will lea
 
 Let's take a closer look at Hello World sample's source code and see how to achieve these things.
 
-## Extension File Structure
+## Extension file structure
 
 ```
 .
@@ -28,7 +28,7 @@ Let's take a closer look at Hello World sample's source code and see how to achi
 
 Extension directory contains extension's entry files and few configuration files. Let's focus on `package.json`, `main.ts` and `renderer.tsx` which are essential to understanding the `Hello World` extension.
 
-### Extension Manifest
+### Extension manifest
 
 Each Lens extension must have `package.json`. The `package.json` contains a mix of Node.js fields such as scripts and dependencies and Lens specific fields such as `publisher` and `contributes`. Here are some most important fields:
 
@@ -69,7 +69,7 @@ Each Lens extension must have `package.json`. The `package.json` contains a mix 
 }
 ```
 
-## Extension Entry Files
+## Extension entry files
 Lens extensions can have two separate entry files. One file that is used in `main` process of Lens application and antoher that is used in `renderer` process. `main` entry file should export class that extends `LensMainExtension` and `renderer` entry file should export class that extends `LensRendererExtension`.
 
 Both extensions classes have `onActivate` and `onDeactivate` methods. `onActivate` is executed when your extension activation happens. You may want to initialize something in your extension at this point. `onDeactivate` gives you a chance to clean up before your extension becomes deactivated. For many extensions, explicit cleanup may not be required, and you don't need to override this method. However, if an extension needs to perform an operation when Lens is shutting down or the extension is disabled or uninstalled, this is the method to do so.

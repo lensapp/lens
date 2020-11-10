@@ -1,3 +1,3 @@
-# Using Helm Charts
+# Using Helm charts
 
 TBD

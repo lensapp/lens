@@ -1,4 +1,4 @@
-# Lens Extension API
+# Lens extension API
 
 The Extensions API in Lens allows users to customize and enhance the Lens experience by creating their own menus or page content that is extended from the existing pages. Many of the core features of Lens are built as extensions and use the same Extension API.
 

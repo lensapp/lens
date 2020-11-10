@@ -12,6 +12,6 @@ Here are some ideas how you can contribute!
 
 If you are an influencer, blogger or journalist, feel free to [spread the word](./promotion.md)!
 
-## Code of Conduct
+## Code of conduct
 
 This project adheres to the [Contributor Covenant](https://www.contributor-covenant.org/) code of conduct. By participating and contributing to Lens, you are expected to uphold this code. Please report unacceptable behaviour to info@k8slens.dev

@@ -1,4 +1,4 @@
-# Getting Started
+# Getting started
 
 Lens is lightweight and simple to install. You'll be up and running in just a few minutes.
 
@@ -48,7 +48,7 @@ Lens releases a new version each month with new features and important bug fixes
 To stay current with the Lens features, you can review the [release notes](https://github.com/lensapp/lens/releases).
 
 
-## Next Steps
+## Next steps
 
 - [Add clusters](../clusters/adding-clusters.md)
 - [Watch introductory videos](./introductory-videos.md)

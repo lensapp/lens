@@ -1,8 +1,8 @@
-# Promoting
+# Promotiion
 
 Help promote Lens! If you are not a developer (or even if you are), you can still contribute to the project, a lot, by helping us promote it. As we are a free open source project, the community is our most important asset, so here are some ways that you can help the project continue to grow.
 
-## Follow, Like, Recommend, Favorite, Vote and Star Us
+## Follow, like, recommend, favorite, vote, and star us
 
 There are many sites where you can vote, recommend, favorite and star us.
 
@@ -13,7 +13,7 @@ There are many sites where you can vote, recommend, favorite and star us.
 * [Reddit](https://www.reddit.com/search/?q=lens%20kubernetes&sort=new) - Upvote and be an ambassador of Lens by participating relevant discussions on Reddit
 * [Hacker News](https://hn.algolia.com/?dateRange=all&page=0&prefix=false&query=lens%20kubernetes&sort=byDate&type=story) - Upvote and be an ambassador of Lens by participating relevant discussions on Hacker News
 
-## Write Blogs or Make Videos About Us
+## Write blogs or make videos about us
 
 Here are some nice blog posts and videos about our project for you to get some inspiration:
 

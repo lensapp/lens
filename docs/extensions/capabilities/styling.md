@@ -90,7 +90,7 @@ A complete list of all themable colors can be found in the [color reference](../
 
 Colors values are located inside `src/renderer/themes/lens-dark.json` and `src/renderer/themes/lens-light.json` files.
 
-## Using CSS Variables inside CSS-in-JS components
+## Using CSS variables inside CSS-in-JS components
 If a developer uses an `Emotion` (or similar) framework to work with styles inside an extension, they can use variables in the following form:
 ```
 const Container = styled.div(() => ({

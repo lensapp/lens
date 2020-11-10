@@ -1,8 +1,8 @@
-# Common Capabilities
+# Common capabilities
 
 Common Capabilities are important building blocks for your extensions. Almost all extensions use some of these functionalities. Here is how you can take advantage of them.
 
-## Main Extension
+## Main extension
 
 A main extension runs in the background and, apart from app menu items, does not add content to the Lens UI. If you want to see logs from this extension you need to start Lens from the command line.
 
@@ -34,7 +34,7 @@ export default class ExampleMainExtension extends LensMainExtension {
 }
 ```
 
-### App Menus
+### App menus
 
 An extension can register custom App menus that will be displayed on OS native menus.
 
@@ -56,7 +56,7 @@ export default class ExampleMainExtension extends LensMainExtension {
 }
 ```
 
-## Renderer Extension
+## Renderer extension
 
 A renderer extension runs in a browser context and it's visible directly via Lens main window. If you want to see logs from this extension you need to check them via View -> Toggle Developer Tools -> Console.
 
@@ -88,7 +88,7 @@ export default class ExampleMainExtension extends LensRendererExtension {
 }
 ```
 
-### Global Pages
+### Global pages
 
 An extension can register custom global pages (views) to Lens main window. Global page is a full screen page that hides all the other content from a window.
 
@@ -110,7 +110,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 }
 ```
 
-### App Preferences
+### App preferences
 
 An extension can register custom app preferences. An extension is responsible for storing a state for custom preferences.
 
@@ -134,7 +134,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 }
 ```
 
-### Cluster Pages
+### Cluster pages
 
 An extension can register custom cluster pages which are visible in a cluster menu when a cluster is opened.
 
@@ -158,7 +158,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 ```
 
-### Cluster Features
+### Cluster features
 
 An extension can register installable features for a cluster. A cluster feature is visible in "Cluster Settings" page.
 
@@ -187,7 +187,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 ```
 
-### Status Bar Items
+### Status bar items
 
 An extension can register custom icons/texts to a status bar area.
 
@@ -212,7 +212,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 ```
 
-### Kubernetes Object Menu Items
+### Kubernetes object menu items
 
 An extension can register custom menu items (actions) for specified Kubernetes kinds/apiVersions.
 
@@ -235,7 +235,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 ```
 
-### Kubernetes Object Details
+### Kubernetes object details
 
 An extension can register custom details (content) for specified Kubernetes kinds/apiVersions.
 

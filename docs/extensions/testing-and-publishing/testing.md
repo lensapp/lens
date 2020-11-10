@@ -1,4 +1,4 @@
-# Testing Extensions
+# Testing extensions
 
 ## Console.log
 

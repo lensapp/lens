@@ -2,7 +2,7 @@
 
 We are glad to see you are interested in contributing to Lens documentation. If this is the first Open Source project you will contribute to, we strongly suggest reading GitHub's excellent guide: [How to Contribute to Open Source](https://opensource.guide/how-to-contribute).
 
-## Finding Documentation Issues to Work On
+## Finding documentation issues to work on
 
 You can find a list of open documentation related issues [here](https://github.com/lensapp/lens/issues?q=is%3Aopen+is%3Aissue+label%3Aarea%2Fdocumentation). When you find something you would like to work on:
 
@@ -10,7 +10,7 @@ You can find a list of open documentation related issues [here](https://github.c
 2. One of the maintainers will assign the issue for you.
 3. You can start working on the issue. Once done, simply submit a pull request.
 
-## Requirements for Documentation Pull Requests
+## Requirements for documentation pull requests
 
 When you create a new pull request, we expect some requirements to be met.
 

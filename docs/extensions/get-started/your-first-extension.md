@@ -1,8 +1,8 @@
-# Your First Extension
+# Your first extension
 
 In this topic, we'll teach you the fundamental concepts for building extensions.
 
-## Installing and Building the extension
+## Installing and building the extension
 
 Simple Lens extension that adds "Hello World" page to a cluster menu.
 

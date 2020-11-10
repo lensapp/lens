@@ -1,3 +1,3 @@
-# Using Extensions
+# Using extensions
 
 TBD
