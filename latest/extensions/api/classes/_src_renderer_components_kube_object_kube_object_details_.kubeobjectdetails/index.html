@@ -1184,15 +1184,15 @@ Should be used with type annotation or static contextType.</p>
 <hr />
 <h3 id="isloading">isLoading<a class="headerlink" href="#isloading" title="Permanent link">#</a></h3>
 <p>•  <strong>isLoading</strong>: boolean = false</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/renderer/components/kube-object/kube-object-details.tsx#L24">src/renderer/components/kube-object/kube-object-details.tsx:24</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/renderer/components/kube-object/kube-object-details.tsx#L24">src/renderer/components/kube-object/kube-object-details.tsx:24</a></em></p>
 <hr />
 <h3 id="loader">loader<a class="headerlink" href="#loader" title="Permanent link">#</a></h3>
 <p>•  <strong>loader</strong>: IReactionDisposer = reaction(() =&gt; [ this.path, this.object, // resource might be updated via watch-event or from already opened details crdStore.items.length, // crd stores initialized after loading ], async () =&gt; { this.loadingError = "" const { path, object } = this; if (!object) { const store = apiManager.getStore(path); if (store) { this.isLoading = true try { await store.loadFromPath(path) } catch (err) { this.loadingError = \<Trans>Resource loading has failed: \<b>{err.toString()}\</b>\</Trans> } finally { this.isLoading = false } } } })</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/renderer/components/kube-object/kube-object-details.tsx#L43">src/renderer/components/kube-object/kube-object-details.tsx:43</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/renderer/components/kube-object/kube-object-details.tsx#L43">src/renderer/components/kube-object/kube-object-details.tsx:43</a></em></p>
 <hr />
 <h3 id="loadingerror">loadingError<a class="headerlink" href="#loadingerror" title="Permanent link">#</a></h3>
 <p>•  <strong>loadingError</strong>: React.ReactNode</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/renderer/components/kube-object/kube-object-details.tsx#L25">src/renderer/components/kube-object/kube-object-details.tsx:25</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/renderer/components/kube-object/kube-object-details.tsx#L25">src/renderer/components/kube-object/kube-object-details.tsx:25</a></em></p>
 <hr />
 <h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">#</a></h3>
 <p>• <code>Readonly</code> <strong>props</strong>: Readonly\&lt;{}&gt; &amp; Readonly\&lt;{ children?: ReactNode  }&gt;</p>
@@ -1232,17 +1232,17 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="iscrdinstance">isCrdInstance<a class="headerlink" href="#iscrdinstance" title="Permanent link">#</a></h3>
 <p>• get <strong>isCrdInstance</strong>(): boolean</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/renderer/components/kube-object/kube-object-details.tsx#L38">src/renderer/components/kube-object/kube-object-details.tsx:38</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/renderer/components/kube-object/kube-object-details.tsx#L38">src/renderer/components/kube-object/kube-object-details.tsx:38</a></em></p>
 <p><strong>Returns:</strong> boolean</p>
 <hr />
 <h3 id="object">object<a class="headerlink" href="#object" title="Permanent link">#</a></h3>
 <p>• get <strong>object</strong>(): any</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/renderer/components/kube-object/kube-object-details.tsx#L31">src/renderer/components/kube-object/kube-object-details.tsx:31</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/renderer/components/kube-object/kube-object-details.tsx#L31">src/renderer/components/kube-object/kube-object-details.tsx:31</a></em></p>
 <p><strong>Returns:</strong> any</p>
 <hr />
 <h3 id="path">path<a class="headerlink" href="#path" title="Permanent link">#</a></h3>
 <p>• get <strong>path</strong>(): string</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/renderer/components/kube-object/kube-object-details.tsx#L27">src/renderer/components/kube-object/kube-object-details.tsx:27</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/renderer/components/kube-object/kube-object-details.tsx#L27">src/renderer/components/kube-object/kube-object-details.tsx:27</a></em></p>
 <p><strong>Returns:</strong> string</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="unsafe_componentwillmount">UNSAFE_componentWillMount<a class="headerlink" href="#unsafe_componentwillmount" title="Permanent link">#</a></h3>
@@ -1541,7 +1541,7 @@ lifecycle events from running.</p>
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): Element</p>
 <p><em>Overrides void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/renderer/components/kube-object/kube-object-details.tsx#L65">src/renderer/components/kube-object/kube-object-details.tsx:65</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/renderer/components/kube-object/kube-object-details.tsx#L65">src/renderer/components/kube-object/kube-object-details.tsx:65</a></em></p>
 <p><strong>Returns:</strong> Element</p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>

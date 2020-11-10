@@ -918,7 +918,7 @@
 <h2 id="type-aliases_1">Type aliases<a class="headerlink" href="#type-aliases_1" title="Permanent link">#</a></h2>
 <h3 id="prometheusclusterquery">PrometheusClusterQuery<a class="headerlink" href="#prometheusclusterquery" title="Permanent link">#</a></h3>
 <p>Ƭ  <strong>PrometheusClusterQuery</strong>: { cpuCapacity: string ; cpuLimits: string ; cpuRequests: string ; cpuUsage: string ; memoryCapacity: string ; memoryLimits: string ; memoryRequests: string ; memoryUsage: string ; podCapacity: string ; podUsage: string  }</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/main/prometheus/provider-registry.ts#L3">src/main/prometheus/provider-registry.ts:3</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/main/prometheus/provider-registry.ts#L3">src/main/prometheus/provider-registry.ts:3</a></em></p>
 <h4>Type declaration:</h4>
 <table>
 <thead>
@@ -973,7 +973,7 @@
 <hr />
 <h3 id="prometheusingressquery">PrometheusIngressQuery<a class="headerlink" href="#prometheusingressquery" title="Permanent link">#</a></h3>
 <p>Ƭ  <strong>PrometheusIngressQuery</strong>: { bytesSentFailure: string ; bytesSentSuccess: string ; requestDurationSeconds: string ; responseDurationSeconds: string  }</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/main/prometheus/provider-registry.ts#L42">src/main/prometheus/provider-registry.ts:42</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/main/prometheus/provider-registry.ts#L42">src/main/prometheus/provider-registry.ts:42</a></em></p>
 <h4>Type declaration:</h4>
 <table>
 <thead>
@@ -1004,7 +1004,7 @@
 <hr />
 <h3 id="prometheusnodequery">PrometheusNodeQuery<a class="headerlink" href="#prometheusnodequery" title="Permanent link">#</a></h3>
 <p>Ƭ  <strong>PrometheusNodeQuery</strong>: { cpuCapacity: string ; cpuUsage: string ; fsSize: string ; fsUsage: string ; memoryCapacity: string ; memoryUsage: string  }</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/main/prometheus/provider-registry.ts#L16">src/main/prometheus/provider-registry.ts:16</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/main/prometheus/provider-registry.ts#L16">src/main/prometheus/provider-registry.ts:16</a></em></p>
 <h4>Type declaration:</h4>
 <table>
 <thead>
@@ -1043,7 +1043,7 @@
 <hr />
 <h3 id="prometheuspodquery">PrometheusPodQuery<a class="headerlink" href="#prometheuspodquery" title="Permanent link">#</a></h3>
 <p>Ƭ  <strong>PrometheusPodQuery</strong>: { cpuLimits: string ; cpuRequests: string ; cpuUsage: string ; fsUsage: string ; memoryLimits: string ; memoryRequests: string ; memoryUsage: string ; networkReceive: string ; networkTransmit: string  }</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/main/prometheus/provider-registry.ts#L25">src/main/prometheus/provider-registry.ts:25</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/main/prometheus/provider-registry.ts#L25">src/main/prometheus/provider-registry.ts:25</a></em></p>
 <h4>Type declaration:</h4>
 <table>
 <thead>
@@ -1094,11 +1094,11 @@
 <hr />
 <h3 id="prometheusproviderlist">PrometheusProviderList<a class="headerlink" href="#prometheusproviderlist" title="Permanent link">#</a></h3>
 <p>Ƭ  <strong>PrometheusProviderList</strong>: { [key:string]: <a href="../../interfaces/_src_main_prometheus_provider_registry_.prometheusprovider/">PrometheusProvider</a>;  }</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/main/prometheus/provider-registry.ts#L69">src/main/prometheus/provider-registry.ts:69</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/main/prometheus/provider-registry.ts#L69">src/main/prometheus/provider-registry.ts:69</a></em></p>
 <hr />
 <h3 id="prometheuspvcquery">PrometheusPvcQuery<a class="headerlink" href="#prometheuspvcquery" title="Permanent link">#</a></h3>
 <p>Ƭ  <strong>PrometheusPvcQuery</strong>: { diskCapacity: string ; diskUsage: string  }</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/main/prometheus/provider-registry.ts#L37">src/main/prometheus/provider-registry.ts:37</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/main/prometheus/provider-registry.ts#L37">src/main/prometheus/provider-registry.ts:37</a></em></p>
 <h4>Type declaration:</h4>
 <table>
 <thead>
@@ -1121,15 +1121,15 @@
 <hr />
 <h3 id="prometheusquery">PrometheusQuery<a class="headerlink" href="#prometheusquery" title="Permanent link">#</a></h3>
 <p>Ƭ  <strong>PrometheusQuery</strong>: <a href="./#prometheusnodequery">PrometheusNodeQuery</a> | <a href="./#prometheusclusterquery">PrometheusClusterQuery</a> | <a href="./#prometheuspodquery">PrometheusPodQuery</a> | <a href="./#prometheuspvcquery">PrometheusPvcQuery</a> | <a href="./#prometheusingressquery">PrometheusIngressQuery</a></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/main/prometheus/provider-registry.ts#L53">src/main/prometheus/provider-registry.ts:53</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/main/prometheus/provider-registry.ts#L53">src/main/prometheus/provider-registry.ts:53</a></em></p>
 <hr />
 <h3 id="prometheusqueryopts">PrometheusQueryOpts<a class="headerlink" href="#prometheusqueryopts" title="Permanent link">#</a></h3>
 <p>Ƭ  <strong>PrometheusQueryOpts</strong>: { [key:string]: string | any;  }</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/main/prometheus/provider-registry.ts#L49">src/main/prometheus/provider-registry.ts:49</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/main/prometheus/provider-registry.ts#L49">src/main/prometheus/provider-registry.ts:49</a></em></p>
 <hr />
 <h3 id="prometheusservice">PrometheusService<a class="headerlink" href="#prometheusservice" title="Permanent link">#</a></h3>
 <p>Ƭ  <strong>PrometheusService</strong>: { id: string ; namespace: string ; port: number ; service: string  }</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/05188ef3/src/main/prometheus/provider-registry.ts#L55">src/main/prometheus/provider-registry.ts:55</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/dd90dcb7/src/main/prometheus/provider-registry.ts#L55">src/main/prometheus/provider-registry.ts:55</a></em></p>
 <h4>Type declaration:</h4>
 <table>
 <thead>
