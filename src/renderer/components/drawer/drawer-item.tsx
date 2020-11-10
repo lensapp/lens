@@ -22,7 +22,7 @@ export class DrawerItem extends React.Component<DrawerItemProps> {
     return (
       <div {...elemProps} className={classNames} title={title}>
         <span className="name">{name}</span>
-        <div className="value">{content}</div>
+        <span className="value">{content}</span>
       </div>
     )
   }
