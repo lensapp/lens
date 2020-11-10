@@ -29,3 +29,4 @@ export { Role, roleApi } from "../../renderer/api/endpoints";
 export { RoleBinding, roleBindingApi } from "../../renderer/api/endpoints";
 export { ClusterRole, clusterRoleApi } from "../../renderer/api/endpoints";
 export { ClusterRoleBinding, clusterRoleBindingApi } from "../../renderer/api/endpoints";
+export { CustomResourceDefinition, crdApi } from "../../renderer/api/endpoints";
