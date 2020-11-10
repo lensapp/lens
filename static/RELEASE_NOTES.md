@@ -2,7 +2,14 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.7 (current version)
+## 3.6.8 (current version)
+- Fix cluster connection issue when opening cluster settings for disconnected clusters
+- Fetch available Helm repositories from Artifact HUB
+- Check if user is cluster admin before opening cluster dashboard
+- Fix issue when application is disconnecting too fast from pod shell
+- Fix UI staleness after network issues
+
+## 3.6.7
 - Fix cluster dashboard opening when cluster is initially offline
 
 ## 3.6.6
