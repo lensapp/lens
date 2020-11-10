@@ -3,7 +3,11 @@
     "outDir": "dist",
     "module": "CommonJS",
     "target": "ES2017",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "moduleResolution": "Node",
     "sourceMap": false,
     "declaration": false,
@@ -17,7 +21,10 @@
   },
   "include": [
     "./*.ts",
-    "./*.tsx"
+    "./*.tsx",
+    "src/renderer.tsx",
+    "src/page.tsx",
+    "src/main.ts"
   ],
   "exclude": [
     "node_modules",

@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = [
   {
-    entry: './main.ts',
+    entry: './src/main.ts',
     context: __dirname,
     target: "electron-main",
     mode: "production",
@@ -23,7 +23,7 @@ module.exports = [
       }
     ],
     resolve: {
-      extensions: [ '.tsx', '.ts', '.js' ],
+      extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
       libraryTarget: "commonjs2",
@@ -32,7 +32,7 @@ module.exports = [
     },
   },
   {
-    entry: './renderer.tsx',
+    entry: './src/renderer.tsx',
     context: __dirname,
     target: "electron-renderer",
     mode: "production",
@@ -53,7 +53,7 @@ module.exports = [
       }
     ],
     resolve: {
-      extensions: [ '.tsx', '.ts', '.js' ],
+      extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
       libraryTarget: "commonjs2",

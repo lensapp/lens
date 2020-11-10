@@ -8,7 +8,7 @@ export default class ExampleExtension extends LensRendererExtension {
       path: "/extension-example",
       title: "Example Extension",
       components: {
-        Page: () => <ExamplePage extension={this}/>,
+        Page: () => <ExamplePage extension={this} />,
         MenuIcon: ExampleIcon,
       }
     }
