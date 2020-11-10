@@ -38,7 +38,8 @@ import { webFrame } from "electron";
 import { clusterPageRegistry } from "../../extensions/registries/page-registry";
 import { DynamicPage } from "../../extensions/dynamic-page";
 import { extensionLoader } from "../../extensions/extension-loader";
-import { appEventBus } from "../../common/event-bus"
+import { appEventBus } from "../../common/event-bus";
+import whatInput from 'what-input';
 
 @observer
 export class App extends React.Component {
@@ -57,6 +58,7 @@ export class App extends React.Component {
     window.addEventListener("online", () => {
       window.location.reload()
     })
+    whatInput.ask() // Start to monitor user input device
   }
 
   get startURL() {
