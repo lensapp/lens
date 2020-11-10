@@ -38,7 +38,8 @@
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "build:tray-icons": "yarn run ts-node build/build_tray_icon.ts",
     "lint": "eslint $@ --ext js,ts,tsx --max-warnings=0  src/",
-    "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest"
+    "mkdocs-serve-local": "yarn typedocs-extensions-api && docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
+    "typedocs-extensions-api": "npx typedoc --plugin typedoc-plugin-markdown --readme none --name @k8slens/extensions --ignoreCompilerErrors --out docs/extensions/api --mode modules --excludePrivate --includes src/ src/extensions/extension-api.ts"
   },
   "config": {
     "bundledKubectlVersion": "1.17.11",
@@ -381,6 +382,8 @@
     "ts-jest": "^26.1.0",
     "ts-loader": "^7.0.5",
     "ts-node": "^8.10.2",
+    "typedoc": "^0.19.2",
+    "typedoc-plugin-markdown": "^3.0.11",
     "type-fest": "^0.18.0",
     "typeface-roboto": "^0.0.75",
     "typescript": "^4.0.2",
