@@ -2,15 +2,17 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.0-alpha.4 (current version)
+## 4.0.0-alpha.5 (current version)
 
 - Extension API
 - Improved pod logs
+- Mechanism for users to specify accessible namespaces
 - Tray icon
 - Add last-status information for container
 - Add LoadBalancer information to Ingress view
 - Move tracker to an extension
 - Add support page (as an extension)
+- Ability to restart deployment
 - Status bar visual fixes
 - Fix proxy upgrade socket timeouts
 - Fix UI staleness after network issues
