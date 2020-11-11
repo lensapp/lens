@@ -56,30 +56,30 @@ export class ExtensionLoader {
 
   loadOnMain() {
     logger.info('[EXTENSIONS-LOADER]: load on main')
-    this.autoInitExtensions((extension: LensMainExtension) => [
-      registries.menuRegistry.add(extension, extension.appMenus)
+    this.autoInitExtensions((ext: LensMainExtension) => [
+      registries.menuRegistry.add(ext.appMenus, { ext })
     ]);
   }
 
   loadOnClusterManagerRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
-    this.autoInitExtensions((extension: LensRendererExtension) => [
-      registries.globalPageRegistry.add(extension, extension.globalPages),
-      registries.globalPageMenuRegistry.add(extension, extension.globalPageMenus),
-      registries.appPreferenceRegistry.add(extension, extension.appPreferences),
-      registries.clusterFeatureRegistry.add(extension, extension.clusterFeatures),
-      registries.statusBarRegistry.add(extension, extension.statusBarItems),
+    this.autoInitExtensions((ext: LensRendererExtension) => [
+      registries.globalPageRegistry.add(ext.globalPages, { ext }),
+      registries.globalPageMenuRegistry.add(ext.globalPageMenus, { ext }),
+      registries.appPreferenceRegistry.add(ext.appPreferences, { ext }),
+      registries.clusterFeatureRegistry.add(ext.clusterFeatures, { ext }),
+      registries.statusBarRegistry.add(ext.statusBarItems, { ext }),
     ]);
   }
 
   loadOnClusterRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
-    this.autoInitExtensions((extension: LensRendererExtension) => [
-      registries.clusterPageRegistry.add(extension, extension.clusterPages),
-      registries.clusterPageMenuRegistry.add(extension, extension.clusterPageMenus),
-      registries.kubeObjectMenuRegistry.add(extension, extension.kubeObjectMenuItems),
-      registries.kubeObjectDetailRegistry.add(extension, extension.kubeObjectDetailItems),
-      registries.kubeObjectStatusRegistry.add(extension, extension.kubeObjectStatusTexts)
+    this.autoInitExtensions((ext: LensRendererExtension) => [
+      registries.clusterPageRegistry.add(ext.clusterPages, { ext }),
+      registries.clusterPageMenuRegistry.add(ext.clusterPageMenus, { ext }),
+      registries.kubeObjectMenuRegistry.add(ext.kubeObjectMenuItems, { ext }),
+      registries.kubeObjectDetailRegistry.add(ext.kubeObjectDetailItems, { ext }),
+      registries.kubeObjectStatusRegistry.add(ext.kubeObjectStatusTexts, { ext })
     ])
   }
 

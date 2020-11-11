@@ -94,12 +94,10 @@ export class ConfigMapDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add(null, [
-  {
-    kind: "ConfigMap",
-    apiVersions: ["v1"],
-    components: {
-      Details: (props) => <ConfigMapDetails {...props} />
-    }
+kubeObjectDetailRegistry.add({
+  kind: "ConfigMap",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <ConfigMapDetails {...props} />
   }
-])
+})

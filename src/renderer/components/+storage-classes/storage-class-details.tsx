@@ -62,12 +62,10 @@ export class StorageClassDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add(null, [
-  {
-    kind: "StorageClass",
-    apiVersions: ["storage.k8s.io/v1"],
-    components: {
-      Details: (props) => <StorageClassDetails {...props} />
-    }
+kubeObjectDetailRegistry.add({
+  kind: "StorageClass",
+  apiVersions: ["storage.k8s.io/v1"],
+  components: {
+    Details: (props) => <StorageClassDetails {...props} />
   }
-])
+})

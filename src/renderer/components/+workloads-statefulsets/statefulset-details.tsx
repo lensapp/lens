@@ -96,12 +96,10 @@ export class StatefulSetDetails extends React.Component<Props> {
 }
 
 
-kubeObjectDetailRegistry.add(null, [
-  {
-    kind: "StatefulSet",
-    apiVersions: ["apps/v1"],
-    components: {
-      Details: (props: any) => <StatefulSetDetails {...props} />
-    }
+kubeObjectDetailRegistry.add({
+  kind: "StatefulSet",
+  apiVersions: ["apps/v1"],
+  components: {
+    Details: (props: any) => <StatefulSetDetails {...props} />
   }
-])
+})

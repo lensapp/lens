@@ -77,12 +77,10 @@ function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
   )
 }
 
-kubeObjectMenuRegistry.add(null, [
-  {
-    kind: "ServiceAccount",
-    apiVersions: ["v1"],
-    components: {
-      MenuItem: ServiceAccountMenu
-    }
+kubeObjectMenuRegistry.add({
+  kind: "ServiceAccount",
+  apiVersions: ["v1"],
+  components: {
+    MenuItem: ServiceAccountMenu
   }
-])
+})

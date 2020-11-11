@@ -129,12 +129,10 @@ export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
   )
 }
 
-kubeObjectMenuRegistry.add(null, [
-  {
-    kind: "Deployment",
-    apiVersions: ["apps/v1"],
-    components: {
-      MenuItem: DeploymentMenu
-    }
+kubeObjectMenuRegistry.add({
+  kind: "Deployment",
+  apiVersions: ["apps/v1"],
+  components: {
+    MenuItem: DeploymentMenu
   }
-])
+})

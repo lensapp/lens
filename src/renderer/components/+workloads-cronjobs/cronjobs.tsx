@@ -88,12 +88,10 @@ export function CronJobMenu(props: KubeObjectMenuProps<CronJob>) {
   )
 }
 
-kubeObjectMenuRegistry.add(null, [
-  {
-    kind: "CronJob",
-    apiVersions: ["batch/v1beta1"],
-    components: {
-      MenuItem: CronJobMenu
-    }
+kubeObjectMenuRegistry.add({
+  kind: "CronJob",
+  apiVersions: ["batch/v1beta1"],
+  components: {
+    MenuItem: CronJobMenu
   }
-])
+})

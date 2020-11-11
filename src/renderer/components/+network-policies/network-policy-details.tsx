@@ -144,12 +144,10 @@ export class NetworkPolicyDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add(null, [
-  {
-    kind: "NetworkPolicy",
-    apiVersions: ["networking.k8s.io/v1"],
-    components: {
-      Details: (props) => <NetworkPolicyDetails {...props} />
-    }
+kubeObjectDetailRegistry.add({
+  kind: "NetworkPolicy",
+  apiVersions: ["networking.k8s.io/v1"],
+  components: {
+    Details: (props) => <NetworkPolicyDetails {...props} />
   }
-])
+})

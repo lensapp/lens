@@ -107,12 +107,10 @@ export class JobDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add(null, [
-  {
-    kind: "Job",
-    apiVersions: ["batch/v1"],
-    components: {
-      Details: (props: any) => <JobDetails {...props}/>
-    }
+kubeObjectDetailRegistry.add({
+  kind: "Job",
+  apiVersions: ["batch/v1"],
+  components: {
+    Details: (props: any) => <JobDetails {...props}/>
   }
-])
+})

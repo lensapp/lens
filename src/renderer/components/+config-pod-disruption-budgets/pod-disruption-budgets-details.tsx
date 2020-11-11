@@ -54,12 +54,10 @@ export class PodDisruptionBudgetDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add(null, [
-  {
-    kind: "PodDisruptionBudget",
-    apiVersions: ["policy/v1beta1"],
-    components: {
-      Details: (props) => <PodDisruptionBudgetDetails {...props} />
-    }
+kubeObjectDetailRegistry.add({
+  kind: "PodDisruptionBudget",
+  apiVersions: ["policy/v1beta1"],
+  components: {
+    Details: (props) => <PodDisruptionBudgetDetails {...props} />
   }
-])
+})

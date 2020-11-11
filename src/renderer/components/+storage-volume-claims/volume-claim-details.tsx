@@ -95,12 +95,10 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add(null, [
-  {
-    kind: "PersistentVolumeClaim",
-    apiVersions: ["v1"],
-    components: {
-      Details: (props) => <PersistentVolumeClaimDetails {...props} />
-    }
+kubeObjectDetailRegistry.add({
+  kind: "PersistentVolumeClaim",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <PersistentVolumeClaimDetails {...props} />
   }
-])
+})

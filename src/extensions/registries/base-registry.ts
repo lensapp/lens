@@ -2,6 +2,11 @@
 import { action, observable } from "mobx";
 import { LensExtension } from "../lens-extension";
 
+export interface BaseRegistryAddMeta {
+  ext?: LensExtension | null;
+  merge?: boolean
+}
+
 export class BaseRegistry<T extends object = any> {
   private items = observable.map<LensExtension, T[]>([], { deep: false });
 
@@ -15,23 +20,28 @@ export class BaseRegistry<T extends object = any> {
   }
 
   @action
-  add(ext: LensExtension | null, items: T[], merge = true) {
+  add(items: T | T[], { ext = null, merge = true }: BaseRegistryAddMeta = {}) {
+    const itemsList: T[] = Array.isArray(items) ? items : [items];
     if (merge && this.items.has(ext)) {
       const newItems = new Set(this.items.get(ext));
-      items.forEach(item => newItems.add(item))
+      itemsList.forEach(item => newItems.add(item))
       this.items.set(ext, [...newItems]);
     } else {
-      this.items.set(ext, items);
+      this.items.set(ext, itemsList);
     }
-    return () => this.remove(ext, items)
+    return () => this.remove(itemsList, ext)
   }
 
   @action
-  remove(ext: LensExtension | null, items: T[]) {
-    const storedItems = this.items.get(ext);
+  remove(items: T[], key: LensExtension = null) {
+    const storedItems = this.items.get(key);
     if (storedItems) {
       const newItems = storedItems.filter(item => !items.includes(item)); // works because of {deep: false};
-      this.items.set(ext, newItems);
+      if (newItems.length > 0) {
+        this.items.set(key, newItems)
+      } else {
+        this.items.delete(key);
+      }
     }
   }
 }
