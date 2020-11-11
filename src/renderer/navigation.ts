@@ -11,6 +11,9 @@ import { clusterViewRoute, IClusterViewRouteParams } from "./components/cluster-
 export const history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
 export const navigation = createObservableHistory(history);
 
+/**
+ * Navigate to a location. Works only in renderer.
+ */
 export function navigate(location: LocationDescriptor) {
   const currentLocation = navigation.getPath();
   navigation.push(location);
