@@ -13,10 +13,10 @@ import { eventStore } from "../+events/event.store";
 import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { ICronJobsRouteParams } from "../+workloads";
 import { KubeObjectListLayout } from "../kube-object";
-import { KubeEventIcon } from "../+events/kube-event-icon";
 import { _i18n } from "../../i18n";
 import { CronJobTriggerDialog } from "./cronjob-trigger-dialog";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -62,11 +62,7 @@ export class CronJobs extends React.Component<Props> {
         ]}
         renderTableContents={(cronJob: CronJob) => [
           cronJob.getName(),
-          <KubeEventIcon object={cronJob} filterEvents={events => {
-            if (!cronJob.isNeverRun()) return events;
-            return events.filter(event => event.reason != "FailedNeedsStart");
-          }
-          }/>,
+          <KubeObjectStatusIcon object={cronJob} />,
           cronJob.getNs(),
           cronJob.isNeverRun() ? <Trans>never</Trans> : cronJob.getSchedule(),
           cronJob.getSuspendFlag(),

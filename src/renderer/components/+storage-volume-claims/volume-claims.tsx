@@ -5,8 +5,7 @@ import { observer } from "mobx-react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
 import { volumeClaimStore } from "./volume-claim.store";
-import { PersistentVolumeClaim, pvcApi } from "../../api/endpoints/persistent-volume-claims.api";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { PersistentVolumeClaim } from "../../api/endpoints/persistent-volume-claims.api";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { IVolumeClaimsRouteParams } from "./volume-claims.route";
@@ -14,7 +13,7 @@ import { unitsToBytes } from "../../utils/convertMemory";
 import { stopPropagation } from "../../utils";
 import { getDetailsUrl } from "../../navigation";
 import { storageClassApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -53,6 +52,7 @@ export class PersistentVolumeClaims extends React.Component<Props> {
         renderHeaderTitle={<Trans>Persistent Volume Claims</Trans>}
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { className: "warning" },
           { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
           { title: <Trans>Storage class</Trans>, className: "storageClass", sortBy: sortBy.storageClass },
           { title: <Trans>Size</Trans>, className: "size", sortBy: sortBy.size },
@@ -68,6 +68,7 @@ export class PersistentVolumeClaims extends React.Component<Props> {
           }));
           return [
             pvc.getName(),
+            <KubeObjectStatusIcon object={pvc} />,
             pvc.getNs(),
             <Link to={storageClassDetailsUrl} onClick={stopPropagation}>
               {storageClassName}

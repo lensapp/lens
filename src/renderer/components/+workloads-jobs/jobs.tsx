@@ -7,13 +7,11 @@ import { Trans } from "@lingui/macro";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import { eventStore } from "../+events/event.store";
-import { Job, jobApi } from "../../api/endpoints/job.api";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { Job } from "../../api/endpoints/job.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { IJobsRouteParams } from "../+workloads";
-import { KubeEventIcon } from "../+events/kube-event-icon";
 import kebabCase from "lodash/kebabCase";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -56,7 +54,7 @@ export class Jobs extends React.Component<Props> {
             job.getName(),
             job.getNs(),
             `${job.getCompletions()} / ${job.getDesiredCompletions()}`,
-            <KubeEventIcon object={job}/>,
+            <KubeObjectStatusIcon object={job}/>,
             job.getAge(),
             condition && {
               title: condition.type,

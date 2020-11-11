@@ -10,6 +10,7 @@ import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-
 import { KubeObjectDetailsProps, KubeObjectListLayout } from "../kube-object";
 import { IPodDisruptionBudgetsRouteParams } from "./pod-disruption-budgets.route";
 import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -46,6 +47,7 @@ export class PodDisruptionBudgets extends React.Component<Props> {
         renderHeaderTitle={<Trans>Pod Disruption Budgets</Trans>}
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { className: "warning" },
           { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
           { title: <Trans>Min Available</Trans>, className: "min-available", sortBy: sortBy.minAvailable },
           { title: <Trans>Max Unavailable</Trans>, className: "max-unavailable", sortBy: sortBy.maxUnavailable },
@@ -56,6 +58,7 @@ export class PodDisruptionBudgets extends React.Component<Props> {
         renderTableContents={(pdb: PodDisruptionBudget) => {
           return [
             pdb.getName(),
+            <KubeObjectStatusIcon object={pdb} />,
             pdb.getNs(),
             pdb.getMinAvailable(),
             pdb.getMaxUnavailable(),

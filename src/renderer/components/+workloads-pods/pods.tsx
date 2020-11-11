@@ -13,12 +13,13 @@ import { KubeObjectListLayout } from "../kube-object";
 import { Pod } from "../../api/endpoints";
 import { StatusBrick } from "../status-brick";
 import { cssNames, stopPropagation } from "../../utils";
-import { KubeEventIcon } from "../+events/kube-event-icon";
 import { getDetailsUrl } from "../../navigation";
 import toPairs from "lodash/toPairs";
 import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import { lookupApiLink } from "../../api/kube-api";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+
 
 enum sortBy {
   name = "name",
@@ -100,7 +101,7 @@ export class Pods extends React.Component<Props> {
         ]}
         renderTableContents={(pod: Pod) => [
           pod.getName(),
-          pod.hasIssues() && <KubeEventIcon object={pod}/>,
+          <KubeObjectStatusIcon object={pod} />,
           pod.getNs(),
           this.renderContainersStatus(pod),
           pod.getRestartsCount(),

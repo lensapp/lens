@@ -5,11 +5,10 @@ import { RouteComponentProps } from "react-router-dom";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { StorageClass, storageClassApi } from "../../api/endpoints/storage-class.api";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
 import { IStorageClassesRouteParams } from "./storage-classes.route";
 import { storageClassStore } from "./storage-class.store";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -41,6 +40,7 @@ export class StorageClasses extends React.Component<Props> {
         renderHeaderTitle={<Trans>Storage Classes</Trans>}
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { className: "warning" },
           { title: <Trans>Provisioner</Trans>, className: "provisioner", sortBy: sortBy.provisioner },
           { title: <Trans>Reclaim Policy</Trans>, className: "reclaim-policy", sortBy: sortBy.reclaimPolicy },
           { title: <Trans>Default</Trans>, className: "is-default" },
@@ -48,6 +48,7 @@ export class StorageClasses extends React.Component<Props> {
         ]}
         renderTableContents={(storageClass: StorageClass) => [
           storageClass.getName(),
+          <KubeObjectStatusIcon object={storageClass} />,
           storageClass.provisioner,
           storageClass.getReclaimPolicy(),
           storageClass.isDefault() ? <Trans>Yes</Trans> : null,

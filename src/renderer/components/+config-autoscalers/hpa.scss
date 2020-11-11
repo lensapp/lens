@@ -6,6 +6,10 @@
       flex: 1.5;
     }
 
+    &.warning {
+      @include table-cell-warning;
+    }
+
     &.metrics {
       flex: 1.5;
     }
