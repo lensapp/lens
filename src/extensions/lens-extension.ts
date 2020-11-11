@@ -15,7 +15,7 @@ export interface LensExtensionManifest {
 }
 
 export class LensExtension {
-  readonly routePrefix = "/extensions/:name"
+  readonly routePrefix = "/extension/:name"
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
   readonly isBundled: boolean;
@@ -45,11 +45,11 @@ export class LensExtension {
   }
 
   getPageUrl(baseUrl: string) {
-    return compile(this.routePrefix)({ name: this.name }) + "/" + baseUrl
+    return compile(this.routePrefix)({ name: this.name }) + baseUrl
   }
 
   getPageRoute(baseRoute: string) {
-    return this.routePrefix + "/" + baseRoute;
+    return this.routePrefix + baseRoute;
   }
 
   @action
