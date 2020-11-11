@@ -19,10 +19,10 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
     {
       item: (
         <div
-          className="flex align-center gaps hover-highlight"
+          className="SupportPageIcon flex align-center"
           onClick={() => Navigation.navigate(supportPageURL())}
         >
-          <Component.Icon material="help" smallest />
+          <Component.Icon interactive material="help" smallest />
         </div>
       )
     }
