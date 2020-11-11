@@ -25,11 +25,9 @@ export interface IKubeApiQueryParams {
   timeoutSeconds?: number;
   limit?: number; // doesn't work with ?watch
   continue?: string; // might be used with ?limit from second request
-  labelSelector?: string | string[]; // restrict list of objects by their labels, e.g. labelSelector: ["label=value"]
-  fieldSelector?: string | string[]; // restrict list of objects by their fields, e.g. fieldSelector: "field=name"
 }
 
-export interface IKubeApiPreferredVersion {
+export interface IKubePreferredVersion {
   preferredVersion?: {
     version: string;
   }
@@ -112,7 +110,7 @@ export class KubeApi<T extends KubeObject = any> {
     if (!this.options.checkPreferredVersion || this.apiVersionPreferred === undefined) {
       return;
     }
-    const res = await this.request.get<IKubeApiPreferredVersion>(`${this.apiPrefix}/${this.apiGroup}`);
+    const res = await this.request.get<IKubePreferredVersion>(`${this.apiPrefix}/${this.apiGroup}`);
     Object.defineProperty(this, "apiVersionPreferred", {
       value: res?.preferredVersion?.version ?? null,
     });
@@ -143,17 +141,7 @@ export class KubeApi<T extends KubeObject = any> {
       namespace: this.isNamespaced ? namespace : undefined,
       name: name,
     });
-    return resourcePath + (query ? `?` + stringify(this.normalizeQuery(query)) : "");
-  }
-
-  protected normalizeQuery(query: Partial<IKubeApiQueryParams> = {}) {
-    if (query.labelSelector) {
-      query.labelSelector = [query.labelSelector].flat().join(",")
-    }
-    if (query.fieldSelector) {
-      query.fieldSelector = [query.fieldSelector].flat().join(",")
-    }
-    return query;
+    return resourcePath + (query ? `?` + stringify(query) : "");
   }
 
   protected parseResponse(data: KubeJsonApiData | KubeJsonApiData[] | KubeJsonApiDataList, namespace?: string): any {
