@@ -17,4 +17,9 @@ export class LensRendererExtension extends LensExtension {
   @observable.shallow statusBarItems: StatusBarRegistration[] = []
   @observable.shallow kubeObjectDetailItems: KubeObjectDetailRegistration[] = []
   @observable.shallow kubeObjectMenuItems: KubeObjectMenuRegistration[] = []
+
+  async navigate(location: string){
+    const { navigate } = await import("../renderer/navigation");
+    navigate(this.getPageUrl(location));
+  }
 }

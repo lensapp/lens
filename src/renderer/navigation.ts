@@ -4,11 +4,11 @@ import { ipcRenderer } from "electron";
 import { matchPath, RouteProps } from "react-router";
 import { reaction } from "mobx";
 import { createObservableHistory } from "mobx-observable-history";
-import { createBrowserHistory, createMemoryHistory, LocationDescriptor } from "history";
+import { createBrowserHistory, LocationDescriptor } from "history";
 import logger from "../main/logger";
 import { clusterViewRoute, IClusterViewRouteParams } from "./components/cluster-manager/cluster-view.route";
 
-export const history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
+export const history = createBrowserHistory();
 export const navigation = createObservableHistory(history);
 
 /**

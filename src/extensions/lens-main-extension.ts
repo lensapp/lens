@@ -7,6 +7,8 @@ export class LensMainExtension extends LensExtension {
   @observable.shallow appMenus: MenuRegistration[] = []
 
   async navigate(location: string, frameId?: number) {
-    await WindowManager.getInstance<WindowManager>().navigate(location, frameId)
+    const windowManager = WindowManager.getInstance<WindowManager>();
+    const url = this.getPageUrl(location);
+    await windowManager.navigate(url, frameId)
   }
 }

@@ -7,7 +7,7 @@ export default class SupportPageMainExtension extends LensMainExtension {
       parentId: "help",
       label: "Support",
       click: () => {
-        this.navigate(this.getPageUrl(pageUrl)); // todo: simplify
+        this.navigate(pageUrl);
       }
     }
   ]
