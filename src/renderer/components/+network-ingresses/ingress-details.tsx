@@ -134,10 +134,12 @@ export class IngressDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "Ingress",
-  apiVersions: ["extensions/v1beta1"],
-  components: {
-    Details: (props) => <IngressDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "Ingress",
+    apiVersions: ["extensions/v1beta1"],
+    components: {
+      Details: (props) => <IngressDetails {...props} />
+    }
   }
-})
+])

@@ -132,10 +132,12 @@ export class ServiceAccountsDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "ServiceAccount",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <ServiceAccountsDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "ServiceAccount",
+    apiVersions: ["v1"],
+    components: {
+      Details: (props) => <ServiceAccountsDetails {...props} />
+    }
   }
-})
+])

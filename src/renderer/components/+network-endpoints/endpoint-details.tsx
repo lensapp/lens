@@ -7,7 +7,6 @@ import { DrawerTitle } from "../drawer";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { Endpoint } from "../../api/endpoints";
-import { _i18n } from "../../i18n";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { EndpointSubsetList } from "./endpoint-subset-list";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
@@ -38,10 +37,12 @@ export class EndpointDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "Endpoints",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <EndpointDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "Endpoints",
+    apiVersions: ["v1"],
+    components: {
+      Details: (props) => <EndpointDetails {...props} />
+    }
   }
-})
+])

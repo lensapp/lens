@@ -134,10 +134,12 @@ export class CRDDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "CustomResourceDefinition",
-  apiVersions: ["apiextensions.k8s.io/v1", "apiextensions.k8s.io/v1beta1"],
-  components: {
-    Details: (props) => <CRDDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "CustomResourceDefinition",
+    apiVersions: ["apiextensions.k8s.io/v1", "apiextensions.k8s.io/v1beta1"],
+    components: {
+      Details: (props) => <CRDDetails {...props} />
+    }
   }
-})
+])

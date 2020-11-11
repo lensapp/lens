@@ -97,10 +97,12 @@ export class ReplicaSetDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "ReplicaSet",
-  apiVersions: ["apps/v1"],
-  components: {
-    Details: (props: any) => <ReplicaSetDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "ReplicaSet",
+    apiVersions: ["apps/v1"],
+    components: {
+      Details: (props: any) => <ReplicaSetDetails {...props} />
+    }
   }
-})
+])

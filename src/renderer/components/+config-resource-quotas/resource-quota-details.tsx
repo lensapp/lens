@@ -16,8 +16,6 @@ import { ReplicaSetDetails } from "../+workloads-replicasets";
 interface Props extends KubeObjectDetailsProps<ResourceQuota> {
 }
 
-const onlyNumbers = /$[0-9]*^/g;
-
 function transformUnit(name: string, value: string): number {
   if (name.includes("memory") || name.includes("storage")) {
     return unitsToBytes(value)
@@ -98,10 +96,12 @@ export class ResourceQuotaDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "ResourceQuota",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <ReplicaSetDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "ResourceQuota",
+    apiVersions: ["v1"],
+    components: {
+      Details: (props) => <ReplicaSetDetails {...props} />
+    }
   }
-})
+])

@@ -87,10 +87,12 @@ export class CronJobDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "CronJob",
-  apiVersions: ["batch/v1"],
-  components: {
-    Details: (props) => <CronJobDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "CronJob",
+    apiVersions: ["batch/v1"],
+    components: {
+      Details: (props) => <CronJobDetails {...props} />
+    }
   }
-})
+])

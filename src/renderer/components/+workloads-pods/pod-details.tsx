@@ -221,10 +221,12 @@ export class PodDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "Pod",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props: any) => <PodDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "Pod",
+    apiVersions: ["v1"],
+    components: {
+      Details: (props: any) => <PodDetails {...props} />
+    }
   }
-})
+])

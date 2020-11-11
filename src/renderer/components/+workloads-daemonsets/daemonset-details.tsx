@@ -97,10 +97,12 @@ export class DaemonSetDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "DaemonSet",
-  apiVersions: ["apps/v1"],
-  components: {
-    Details: (props: any) => <DaemonSetDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "DaemonSet",
+    apiVersions: ["apps/v1"],
+    components: {
+      Details: (props: any) => <DaemonSetDetails {...props} />
+    }
   }
-})
+])

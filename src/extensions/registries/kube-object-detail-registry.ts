@@ -13,7 +13,7 @@ export interface KubeObjectDetailRegistration {
 
 export class KubeObjectDetailRegistry extends BaseRegistry<KubeObjectDetailRegistration> {
   getItemsForKind(kind: string, apiVersion: string) {
-    return this.items.filter((item) => {
+    return this.getItems().filter((item) => {
       return item.kind === kind && item.apiVersions.includes(apiVersion)
     })
   }

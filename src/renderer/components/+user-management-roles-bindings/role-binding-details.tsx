@@ -125,17 +125,19 @@ export class RoleBindingDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "RoleBinding",
-  apiVersions: ["rbac.authorization.k8s.io/v1"],
-  components: {
-    Details: (props) => <RoleBindingDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "RoleBinding",
+    apiVersions: ["rbac.authorization.k8s.io/v1"],
+    components: {
+      Details: (props) => <RoleBindingDetails {...props} />
+    }
+  },
+  {
+    kind: "ClusterRoleBinding",
+    apiVersions: ["rbac.authorization.k8s.io/v1"],
+    components: {
+      Details: (props) => <RoleBindingDetails {...props} />
+    }
   }
-})
-kubeObjectDetailRegistry.add({
-  kind: "ClusterRoleBinding",
-  apiVersions: ["rbac.authorization.k8s.io/v1"],
-  components: {
-    Details: (props) => <RoleBindingDetails {...props} />
-  }
-})
+])

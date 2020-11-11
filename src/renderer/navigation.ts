@@ -1,7 +1,7 @@
 // Navigation helpers
 
 import { ipcRenderer } from "electron";
-import { matchPath } from "react-router";
+import { matchPath, RouteProps } from "react-router";
 import { reaction } from "mobx";
 import { createObservableHistory } from "mobx-observable-history";
 import { createBrowserHistory, createMemoryHistory, LocationDescriptor } from "history";
@@ -17,6 +17,10 @@ export function navigate(location: LocationDescriptor) {
   if (currentLocation === navigation.getPath()) {
     navigation.goBack(); // prevent sequences of same url in history
   }
+}
+
+export function isActiveRoute(route: string | string[] | RouteProps): boolean {
+  return !!matchPath(navigation.location.pathname, route);
 }
 
 // common params for all pages

@@ -4,4 +4,5 @@ export type { KubeObjectDetailRegistration, KubeObjectDetailComponents } from ".
 export type { KubeObjectMenuRegistration, KubeObjectMenuComponents } from "../registries/kube-object-menu-registry"
 export type { KubeObjectStatusRegistration } from "../registries/kube-object-status-registry"
 export type { PageRegistration, PageComponents } from "../registries/page-registry"
+export type { PageMenuRegistration, PageMenuComponents } from "../registries/page-menu-registry"
 export type { StatusBarRegistration } from "../registries/status-bar-registry"

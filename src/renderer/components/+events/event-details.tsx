@@ -74,10 +74,12 @@ export class EventDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "Event",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <EventDetails {...props}/>
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "Event",
+    apiVersions: ["v1"],
+    components: {
+      Details: (props) => <EventDetails {...props}/>
+    }
   }
-})
+])

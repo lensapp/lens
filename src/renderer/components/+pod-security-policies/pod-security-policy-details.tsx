@@ -209,10 +209,12 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "PodSecurityPolicy",
-  apiVersions: ["policy/v1beta1"],
-  components: {
-    Details: (props) => <PodSecurityPolicyDetails {...props}/>
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "PodSecurityPolicy",
+    apiVersions: ["policy/v1beta1"],
+    components: {
+      Details: (props) => <PodSecurityPolicyDetails {...props}/>
+    }
   }
-})
+])

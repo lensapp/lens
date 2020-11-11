@@ -56,10 +56,12 @@ export class NamespaceDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "Namespace",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <NamespaceDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "Namespace",
+    apiVersions: ["v1"],
+    components: {
+      Details: (props) => <NamespaceDetails {...props} />
+    }
   }
-})
+])

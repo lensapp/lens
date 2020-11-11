@@ -155,10 +155,12 @@ export class NodeDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "Node",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <NodeDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "Node",
+    apiVersions: ["v1"],
+    components: {
+      Details: (props) => <NodeDetails {...props} />
+    }
   }
-})
+])

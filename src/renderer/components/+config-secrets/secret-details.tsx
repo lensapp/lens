@@ -113,10 +113,12 @@ export class SecretDetails extends React.Component<Props> {
   }
 }
 
-kubeObjectDetailRegistry.add({
-  kind: "Secret",
-  apiVersions: ["v1"],
-  components: {
-    Details: (props) => <SecretDetails {...props} />
+kubeObjectDetailRegistry.add(null, [
+  {
+    kind: "Secret",
+    apiVersions: ["v1"],
+    components: {
+      Details: (props) => <SecretDetails {...props} />
+    }
   }
-})
+])
