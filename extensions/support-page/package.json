@@ -9,15 +9,13 @@
     "dev": "webpack --watch",
     "test": "echo NO TESTS"
   },
+  "dependencies": {},
   "devDependencies": {
-    "@emotion/core": "^10.1.1",
-    "@emotion/styled": "^10.0.27",
     "@k8slens/extensions": "file:../../src/extensions/npm/extensions",
     "@types/react": "^16.9.53",
     "@types/react-router": "^5.1.8",
     "@types/webpack": "^4.41.17",
     "css-loader": "^5.0.0",
-    "emotion": "^10.0.27",
     "mobx": "^5.15.5",
     "react": "^16.13.1",
     "sass-loader": "^10.0.4",
