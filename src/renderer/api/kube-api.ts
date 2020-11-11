@@ -16,6 +16,7 @@ export interface IKubeApiOptions<T extends KubeObject> {
   request?: KubeJsonApi;
   isNamespaced?: boolean;
   kind?: string;
+  checkPreferredVersion?: boolean;
 }
 
 export interface IKubeApiQueryParams {
@@ -24,6 +25,14 @@ export interface IKubeApiQueryParams {
   timeoutSeconds?: number;
   limit?: number; // doesn't work with ?watch
   continue?: string; // might be used with ?limit from second request
+  labelSelector?: string | string[]; // restrict list of objects by their labels, e.g. labelSelector: ["label=value"]
+  fieldSelector?: string | string[]; // restrict list of objects by their fields, e.g. fieldSelector: "field=name"
+}
+
+export interface IKubeApiPreferredVersion {
+  preferredVersion?: {
+    version: string;
+  }
 }
 
 export interface IKubeApiCluster {
@@ -58,7 +67,7 @@ export class KubeApi<T extends KubeObject = any> {
   readonly apiPrefix: string
   readonly apiGroup: string
   readonly apiVersion: string
-  readonly apiVersionWithGroup: string
+  readonly apiVersionPreferred?: string;
   readonly apiResource: string
   readonly isNamespaced: boolean
 
@@ -84,13 +93,34 @@ export class KubeApi<T extends KubeObject = any> {
     this.apiPrefix = apiPrefix;
     this.apiGroup = apiGroup;
     this.apiVersion = apiVersion;
-    this.apiVersionWithGroup = apiVersionWithGroup;
     this.apiResource = resource;
     this.request = request;
     this.objectConstructor = objectConstructor;
 
+    this.checkPreferredVersion();
     this.parseResponse = this.parseResponse.bind(this);
     apiManager.registerApi(apiBase, this);
+  }
+
+  get apiVersionWithGroup() {
+    return [this.apiGroup, this.apiVersionPreferred ?? this.apiVersion]
+      .filter(Boolean)
+      .join("/")
+  }
+
+  protected async checkPreferredVersion() {
+    if (!this.options.checkPreferredVersion || this.apiVersionPreferred === undefined) {
+      return;
+    }
+    const res = await this.request.get<IKubeApiPreferredVersion>(`${this.apiPrefix}/${this.apiGroup}`);
+    Object.defineProperty(this, "apiVersionPreferred", {
+      value: res?.preferredVersion?.version ?? null,
+    });
+
+    if (this.apiVersionPreferred) {
+      Object.defineProperty(this, "apiBase", { value: this.getUrl() })
+      apiManager.registerApi(this.apiBase, this);
+    }
   }
 
   setResourceVersion(namespace = "", newVersion: string) {
@@ -106,15 +136,24 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   getUrl({ name = "", namespace = "" } = {}, query?: Partial<IKubeApiQueryParams>) {
-    const { apiPrefix, apiVersionWithGroup, apiResource } = this;
     const resourcePath = createKubeApiURL({
-      apiPrefix: apiPrefix,
-      apiVersion: apiVersionWithGroup,
-      resource: apiResource,
+      apiPrefix: this.apiPrefix,
+      apiVersion: this.apiVersionWithGroup,
+      resource: this.apiResource,
       namespace: this.isNamespaced ? namespace : undefined,
       name: name,
     });
-    return resourcePath + (query ? `?` + stringify(query) : "");
+    return resourcePath + (query ? `?` + stringify(this.normalizeQuery(query)) : "");
+  }
+
+  protected normalizeQuery(query: Partial<IKubeApiQueryParams> = {}) {
+    if (query.labelSelector) {
+      query.labelSelector = [query.labelSelector].flat().join(",")
+    }
+    if (query.fieldSelector) {
+      query.fieldSelector = [query.fieldSelector].flat().join(",")
+    }
+    return query;
   }
 
   protected parseResponse(data: KubeJsonApiData | KubeJsonApiData[] | KubeJsonApiDataList, namespace?: string): any {
@@ -144,18 +183,21 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   async list({ namespace = "" } = {}, query?: IKubeApiQueryParams): Promise<T[]> {
+    await this.checkPreferredVersion();
     return this.request
       .get(this.getUrl({ namespace }), { query })
       .then(data => this.parseResponse(data, namespace));
   }
 
   async get({ name = "", namespace = "default" } = {}, query?: IKubeApiQueryParams): Promise<T> {
+    await this.checkPreferredVersion();
     return this.request
       .get(this.getUrl({ namespace, name }), { query })
       .then(this.parseResponse);
   }
 
   async create({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T> {
+    await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace });
 
     return this.request
@@ -173,6 +215,7 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   async update({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T> {
+    await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace, name });
     return this.request
       .put(apiUrl, { data })
@@ -180,6 +223,7 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   async delete({ name = "", namespace = "default" }) {
+    await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace, name });
     return this.request.del(apiUrl)
   }

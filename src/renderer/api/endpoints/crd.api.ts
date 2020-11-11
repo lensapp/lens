@@ -1,6 +1,6 @@
 import { KubeObject } from "../kube-object";
-import { VersionedKubeApi } from "../kube-api-versioned";
 import { crdResourcesURL } from "../../components/+custom-resources/crd.route";
+import { KubeApi } from "../kube-api";
 
 type AdditionalPrinterColumnsCommon = {
   name: string;
@@ -146,6 +146,7 @@ export class CustomResourceDefinition extends KubeObject {
   }
 }
 
-export const crdApi = new VersionedKubeApi<CustomResourceDefinition>({
-  objectConstructor: CustomResourceDefinition
+export const crdApi = new KubeApi<CustomResourceDefinition>({
+  objectConstructor: CustomResourceDefinition,
+  checkPreferredVersion: true,
 });
