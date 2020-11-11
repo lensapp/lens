@@ -19,6 +19,16 @@ Here you can find description of changes we've built into each release. While we
 - Add +/- buttons in scale deployment popup screen
 - Update chart details when selecting another chart
 
+## 3.6.8
+- Fix cluster connection issue when opening cluster settings for disconnected clusters
+- Fetch available Helm repositories from Artifact HUB
+- Check if user is cluster admin before opening cluster dashboard
+- Fix issue when application is disconnecting too fast from pod shell
+- Fix UI staleness after network issues
+
+## 3.6.7
+- Fix cluster dashboard opening when cluster is initially offline
+
 ## 3.6.6
 - Fix labels' word boundary to cover only drawer badges
 - Fix cluster dashboard opening not to start authentication proxy twice
