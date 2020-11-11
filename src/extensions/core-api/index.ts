@@ -9,12 +9,14 @@ import * as Store from "./stores"
 import * as Util from "./utils"
 import * as ClusterFeature from "./cluster-feature"
 import * as Navigation from "./navigation"
+import * as Interface from "../interfaces"
 
 export {
   App,
   EventBus,
   ClusterFeature,
   Navigation,
+  Interface,
   Store,
   Util,
 }
