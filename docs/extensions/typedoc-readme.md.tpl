@@ -1,8 +1,6 @@
 # Extension API Reference
 
-## Index
-
-### Modules
+## Modules
 
 * [App](modules/_core_api_app_.md)
 * [ClusterFeature](modules/_core_api_cluster_feature_.md)
@@ -13,17 +11,11 @@
 * [K8sApi](modules/_renderer_api_k8s_api_.md)
 * [Navigation](modules/_renderer_api_navigation_.md)
 
-### Classes
+## Classes
 
 * [LensMainExtension](classes/lensmainextension.md)
 * [LensRendererExtension](classes/lensrendererextension.md)
 
-### Variables
-
-* [windowManager](README.md#windowmanager)
-
 ## Variables
 
-### windowManager
-
-• `Let` **windowManager**: WindowManager
+* [windowManager](README.md#windowmanager)
