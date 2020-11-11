@@ -77,6 +77,7 @@ export class ExtensionLoader {
       registries.clusterPageRegistry.add(...extension.clusterPages),
       registries.kubeObjectMenuRegistry.add(...extension.kubeObjectMenuItems),
       registries.kubeObjectDetailRegistry.add(...extension.kubeObjectDetailItems),
+      registries.kubeObjectExtraDetailRegistry.add(...extension.kubeObjectExtraDetailItems),
       registries.kubeObjectStatusRegistry.add(...extension.kubeObjectStatusTexts)
     ])
 
