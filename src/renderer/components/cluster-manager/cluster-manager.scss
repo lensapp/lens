@@ -9,20 +9,6 @@
     grid-area: main;
     position: relative;
     display: flex;
-
-    > * {
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      background-color: $mainBackground;
-
-      > * {
-        flex: 1;
-      }
-    }
   }
 
   .ClustersMenu {
@@ -31,5 +17,19 @@
 
   .BottomBar {
     grid-area: bottom-bar;
+  }
+
+  #lens-views {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    background-color: $mainBackground;
+
+    iframe {
+      flex: 1;
+    }
   }
 }

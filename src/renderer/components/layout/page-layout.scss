@@ -5,6 +5,7 @@
   --min-width: 570px;
 
   position: relative;
+  width: 100%;
   height: 100%;
   display: grid !important;
   grid-template-rows: min-content 1fr;
@@ -13,6 +14,11 @@
   &.top {
     position: fixed !important; // allow to cover ClustersMenu
     z-index: 1;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $mainBackground;
 
     // adds extra space for traffic-light top buttons (mac only)
     .is-mac & > .header {
