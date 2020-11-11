@@ -104,7 +104,7 @@ kubeObjectDetailRegistry.add({
 kubeObjectDetailRegistry.add({
   kind: "PersistentVolumeClaim",
   apiVersions: ["v1"],
-  priority: 0,
+  priority: 5,
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }

@@ -133,7 +133,7 @@ kubeObjectDetailRegistry.add({
 kubeObjectDetailRegistry.add({
   kind: "RoleBinding",
   apiVersions: ["rbac.authorization.k8s.io/v1"],
-  priority: 0,
+  priority: 5,
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
@@ -150,7 +150,7 @@ kubeObjectDetailRegistry.add({
 kubeObjectDetailRegistry.add({
   kind: "ClusterRoleBinding",
   apiVersions: ["rbac.authorization.k8s.io/v1"],
-  priority: 0,
+  priority: 5,
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }

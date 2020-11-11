@@ -103,6 +103,7 @@ kubeObjectDetailRegistry.add({
 kubeObjectDetailRegistry.add({
   kind: "ConfigMap",
   apiVersions: ["v1"],
+  priority: 5,
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }

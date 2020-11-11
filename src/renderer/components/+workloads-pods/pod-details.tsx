@@ -231,7 +231,7 @@ kubeObjectDetailRegistry.add({
 kubeObjectDetailRegistry.add({
   kind: "Pod",
   apiVersions: ["v1"],
-  priority: 0,
+  priority: 5,
   components: {
     Details: (props: KubeObjectDetailsProps<Pod>) => <KubeEventDetails {...props} />
   }

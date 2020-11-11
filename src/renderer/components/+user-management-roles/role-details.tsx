@@ -74,7 +74,7 @@ kubeObjectDetailRegistry.add({
 kubeObjectDetailRegistry.add({
   kind: "Role",
   apiVersions: ["rbac.authorization.k8s.io/v1"],
-  priority: 0,
+  priority: 5,
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
@@ -90,7 +90,7 @@ kubeObjectDetailRegistry.add({
 kubeObjectDetailRegistry.add({
   kind: "ClusterRole",
   apiVersions: ["rbac.authorization.k8s.io/v1"],
-  priority: 0,
+  priority: 5,
   components: {
     Details: (props) => <KubeEventDetails {...props}/>
   }
