@@ -109,17 +109,16 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   protected async checkPreferredVersion() {
-    if (!this.options.checkPreferredVersion || this.apiVersionPreferred === undefined) {
-      return;
-    }
-    const res = await this.request.get<IKubePreferredVersion>(`${this.apiPrefix}/${this.apiGroup}`);
-    Object.defineProperty(this, "apiVersionPreferred", {
-      value: res?.preferredVersion?.version ?? null,
-    });
+    if (this.options.checkPreferredVersion && this.apiVersionPreferred === undefined) {
+      const res = await this.request.get<IKubePreferredVersion>(`${this.apiPrefix}/${this.apiGroup}`);
+      Object.defineProperty(this, "apiVersionPreferred", {
+        value: res?.preferredVersion?.version ?? null,
+      });
 
-    if (this.apiVersionPreferred) {
-      Object.defineProperty(this, "apiBase", { value: this.getUrl() })
-      apiManager.registerApi(this.apiBase, this);
+      if (this.apiVersionPreferred) {
+        Object.defineProperty(this, "apiBase", { value: this.getUrl() })
+        apiManager.registerApi(this.apiBase, this);
+      }
     }
   }
 
