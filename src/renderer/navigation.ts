@@ -3,24 +3,13 @@
 import { ipcRenderer } from "electron";
 import { matchPath } from "react-router";
 import { reaction } from "mobx";
-import { createObservableHistory, IObservableHistory } from "mobx-observable-history";
-import { createBrowserHistory, createMemoryHistory, LocationDescriptor, History } from "history";
+import { createObservableHistory } from "mobx-observable-history";
+import { createBrowserHistory, createMemoryHistory, LocationDescriptor } from "history";
 import logger from "../main/logger";
 import { clusterViewRoute, IClusterViewRouteParams } from "./components/cluster-manager/cluster-view.route";
 
-let history: History
-let navigation: IObservableHistory
-
-if (ipcRenderer) {
-  history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
-  navigation = createObservableHistory(history);
-}
-
-export {
-  history,
-  navigation
-}
-
+export const history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
+export const navigation = createObservableHistory(history);
 
 export function navigate(location: LocationDescriptor) {
   const currentLocation = navigation.getPath();
@@ -116,15 +105,14 @@ if (process.isMainFrame) {
     fireImmediately: true
   })
 }
-if (ipcRenderer) {
-  // Handle navigation via IPC (e.g. from top menu)
-  ipcRenderer.on("menu:navigate", (event, location: LocationDescriptor) => {
-    logger.info(`[IPC]: ${event.type} ${JSON.stringify(location)}`, event);
-    navigate(location);
-  });
 
-  // Reload dashboard window
-  ipcRenderer.on("menu:reload", () => {
-    location.reload();
-  });
-}
+// Handle navigation via IPC (e.g. from top menu)
+ipcRenderer.on("menu:navigate", (event, location: LocationDescriptor) => {
+  logger.info(`[IPC]: ${event.type} ${JSON.stringify(location)}`, event);
+  navigate(location);
+});
+
+// Reload dashboard window
+ipcRenderer.on("menu:reload", () => {
+  location.reload();
+});
