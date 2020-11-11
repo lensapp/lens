@@ -16,11 +16,11 @@ World’s most popular Kubernetes IDE provides a simplified, consistent entry po
 * Lens installs anywhere, elimanting the need to wrangle credentials
 * Real-time cluster state visualization
 * Resource utilization charts and trends with history powered by built-in Prometheus
-* Terminal access to nodes and containers
+* Smart terminal access to nodes and containers
 * Clusters can be local (e.g. minikube) or external (e.g. EKS, GKE, AKS)
 * Performance optimized to handle massive clusters (tested with a cluster running 25k pods)
 * RBAC security is preserved, as Lens uses the standard kubectl API 
-* Helm Chart Service Deployment: Browse and deploy Helm charts with one click-Install
+* Helm chart service deployment: Browse and deploy Helm charts with one click-Install
 
 
 ## Installation
