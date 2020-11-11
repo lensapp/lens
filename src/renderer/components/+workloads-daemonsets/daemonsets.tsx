@@ -3,8 +3,7 @@ import "./daemonsets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { DaemonSet, daemonSetApi } from "../../api/endpoints";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { DaemonSet } from "../../api/endpoints";
 import { eventStore } from "../+events/event.store";
 import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -13,8 +12,7 @@ import { KubeObjectListLayout } from "../kube-object";
 import { IDaemonSetsRouteParams } from "../+workloads";
 import { Trans } from "@lingui/macro";
 import { Badge } from "../badge";
-import { KubeEventIcon } from "../+events/kube-event-icon";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -66,7 +64,7 @@ export class DaemonSets extends React.Component<Props> {
           daemonSet.getName(),
           daemonSet.getNs(),
           this.getPodsLength(daemonSet),
-          <KubeEventIcon object={daemonSet}/>,
+          <KubeObjectStatusIcon object={daemonSet}/>,
           this.renderNodeSelector(daemonSet),
           daemonSet.getAge(),
         ]}

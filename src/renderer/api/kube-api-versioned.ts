@@ -51,6 +51,6 @@ export class VersionedKubeApi<T extends KubeObject = any> extends KubeApi<T> {
       namespace: isNamespaced ? namespace : undefined,
       name: name,
     });
-    return resourcePath + (query ? `?` + stringify(query) : "");
+    return resourcePath + (query ? `?` + stringify(this.normalizeQuery(query)) : "");
   }
 }

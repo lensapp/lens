@@ -4,6 +4,10 @@
       &.volumes {
         flex-grow: 2;
       }
+
+      &.warning {
+        @include table-cell-warning;
+      }
     }
   }
 }
