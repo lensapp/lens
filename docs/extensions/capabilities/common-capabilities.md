@@ -100,10 +100,19 @@ import { ExamplePage } from "./src/example-page"
 export default class ExampleRendererExtension extends LensRendererExtension {
   globalPages = [
     {
-      path: "/example-route",
-      hideInMenu: true,
+      routePath: "/items/:id?",
       components: {
         Page: ExamplePage,
+      }
+    }
+  ]
+
+  globalPageMenus = [
+    {
+      url: "/items/1",
+      title: "Example page", // used in icon's tooltip
+      components: {
+        Icon: () => <Component.Icon material="arrow"/>,
       }
     }
   ]
@@ -146,11 +155,20 @@ import { ExampleIcon, ExamplePage } from "./src/page"
 export default class ExampleExtension extends LensRendererExtension {
   clusterPages = [
     {
-      path: "/extension-example",
-      title: "Example Extension",
+      routePath: "/extension-example",
+      exact: true,
       components: {
         Page: () => <ExamplePage extension={this}/>,
-        MenuIcon: ExampleIcon,
+      }
+    }
+  ]
+
+  clusterPageMenus = [
+    {
+      url: "/extension-example",
+      title: "Example Extension",
+      components: {
+        Icon: ExampleIcon,
       }
     }
   ]
