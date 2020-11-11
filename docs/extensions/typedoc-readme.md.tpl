@@ -9,7 +9,7 @@
 * [Util](modules/_core_api_utils_.md)
 * [Component](modules/_renderer_api_components_.md)
 * [K8sApi](modules/_renderer_api_k8s_api_.md)
-* [Navigation](modules/_core_api_navigation_.md)
+* [Navigation](modules/_renderer_api_navigation_.md)
 
 ## Classes
 
