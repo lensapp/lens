@@ -30,12 +30,12 @@ nav:
       - Color reference: extensions/capabilities/color-reference.md
     - Extension guides:
       - Overview: extensions/guides/README.md
-      - Renderer Extension: extensions/guides/renderer-extension.md
-    - Testing and Publishing:
-      - Testing Extensions: extensions/testing-and-publishing/testing.md
-      - Publishing Extensions: extensions/testing-and-publishing/publishing.md
-      - Bundling Extensions: extensions/testing-and-publishing/bundling.md
-    - API Reference: extensions/api/README.md
+      - Renderer extension: extensions/guides/renderer-extension.md
+    - Testing and publishing:
+      - Testing extensions: extensions/testing-and-publishing/testing.md
+      - Publishing extensions: extensions/testing-and-publishing/publishing.md
+      - Bundling extensions: extensions/testing-and-publishing/bundling.md
+    - API reference: extensions/api/README.md
   - Contributing:
     - Overview: contributing/README.md
     - Development: contributing/development.md
