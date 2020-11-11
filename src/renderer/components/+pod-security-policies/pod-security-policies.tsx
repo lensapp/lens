@@ -4,10 +4,9 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { KubeObjectListLayout } from "../kube-object";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { podSecurityPoliciesStore } from "./pod-security-policies.store";
 import { PodSecurityPolicy, pspApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -38,6 +37,7 @@ export class PodSecurityPolicies extends React.Component {
         renderHeaderTitle={<Trans>Pod Security Policies</Trans>}
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { className: "warning" },
           { title: <Trans>Privileged</Trans>, className: "privileged", sortBy: sortBy.privileged },
           { title: <Trans>Volumes</Trans>, className: "volumes", sortBy: sortBy.volumes },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
@@ -45,6 +45,7 @@ export class PodSecurityPolicies extends React.Component {
         renderTableContents={(item: PodSecurityPolicy) => {
           return [
             item.getName(),
+            <KubeObjectStatusIcon object={item} />,
             item.isPrivileged() ? <Trans>Yes</Trans> : <Trans>No</Trans>,
             item.getVolumes().join(", "),
             item.getAge(),

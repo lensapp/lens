@@ -3,5 +3,9 @@
     &.rules {
       flex-grow: 3.0;
     }
+
+    &.warning {
+      @include table-cell-warning;
+    }
   }
 }

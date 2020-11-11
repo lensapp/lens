@@ -3,5 +3,9 @@
     &.endpoints {
       flex-grow: 5.0;
     }
+
+    &.warning {
+      @include table-cell-warning;
+    }
   }
 }
