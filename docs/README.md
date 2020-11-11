@@ -16,6 +16,6 @@ Watch this introductory video to see Lens in action:
 
 [Download Lens](https://github.com/lensapp/lens/releases) for macOS, Windows, or Linux.
 
-## Quick Start
+## Quick start
 
 Get up and running quickly by learning to [add clusters](clusters/adding-clusters.md).
