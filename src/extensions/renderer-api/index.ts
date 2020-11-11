@@ -8,5 +8,5 @@ import * as Navigation from "./navigation"
 export {
   Component,
   K8sApi,
-  Navigation,
+  Navigation
 }

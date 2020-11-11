@@ -1,4 +1,4 @@
-import { LensMainExtension, windowManager } from "@k8slens/extensions";
+import { LensMainExtension } from "@k8slens/extensions";
 import { pageUrl } from "./src/common-vars";
 
 export default class SupportPageMainExtension extends LensMainExtension {
@@ -7,7 +7,7 @@ export default class SupportPageMainExtension extends LensMainExtension {
       parentId: "help",
       label: "Support",
       click: () => {
-        windowManager.navigate(this.getPageUrl(pageUrl)); // todo: simplify
+        this.navigate(this.getPageUrl(pageUrl)); // todo: simplify
       }
     }
   ]

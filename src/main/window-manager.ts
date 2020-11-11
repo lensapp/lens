@@ -7,8 +7,9 @@ import { extensionLoader } from "../extensions/extension-loader";
 import { appEventBus } from "../common/event-bus"
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
+import { Singleton } from "../common/utils";
 
-export class WindowManager {
+export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
@@ -17,6 +18,7 @@ export class WindowManager {
   @observable activeClusterId: ClusterId;
 
   constructor(protected proxyPort: number) {
+    super();
     this.bindEvents();
     this.initMenu();
     this.initTray();

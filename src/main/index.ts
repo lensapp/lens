@@ -78,7 +78,7 @@ app.on("ready", async () => {
     app.exit();
   }
 
-  LensExtensionsApi.windowManager = windowManager = new WindowManager(proxyPort);
+  windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
   extensionLoader.init(await extensionManager.load()); // call after windowManager to see splash earlier
 
   setTimeout(() => {
