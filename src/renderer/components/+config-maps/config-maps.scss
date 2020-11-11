@@ -4,6 +4,10 @@
       flex: 2;
     }
 
+    &.warning {
+      @include table-cell-warning;
+    }
+
     &.keys {
       flex: 2.5;
     }

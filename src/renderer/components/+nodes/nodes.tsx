@@ -16,6 +16,7 @@ import { bytesToUnits } from "../../utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -148,6 +149,7 @@ export class Nodes extends React.Component<Props> {
           renderHeaderTitle={<Trans>Nodes</Trans>}
           renderTableHeader={[
             { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { className: "warning" },
             { title: <Trans>CPU</Trans>, className: "cpu", sortBy: sortBy.cpu },
             { title: <Trans>Memory</Trans>, className: "memory", sortBy: sortBy.memory },
             { title: <Trans>Disk</Trans>, className: "disk", sortBy: sortBy.disk },
@@ -161,6 +163,7 @@ export class Nodes extends React.Component<Props> {
             const tooltipId = `node-taints-${node.getId()}`;
             return [
               node.getName(),
+              <KubeObjectStatusIcon object={node} />,
               this.renderCpuUsage(node),
               this.renderMemoryUsage(node),
               this.renderDiskUsage(node),

@@ -7,6 +7,10 @@
       text-overflow: ellipsis;
     }
 
+    &.warning {
+      @include table-cell-warning;
+    }
+
     &.cpu {
       flex: 1.0;
       align-self: center;

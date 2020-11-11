@@ -5,12 +5,11 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { IServicesRouteParams } from "./services.route";
-import { Service, serviceApi } from "../../api/endpoints/service.api";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { Service } from "../../api/endpoints/service.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { serviceStore } from "./services.store";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -50,6 +49,7 @@ export class Services extends React.Component<Props> {
         renderHeaderTitle={<Trans>Services</Trans>}
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { className: "warning" },
           { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
           { title: <Trans>Type</Trans>, className: "type", sortBy: sortBy.type },
           { title: <Trans>Cluster IP</Trans>, className: "clusterIp", sortBy: sortBy.clusterIp, },
@@ -61,6 +61,7 @@ export class Services extends React.Component<Props> {
         ]}
         renderTableContents={(service: Service) => [
           service.getName(),
+          <KubeObjectStatusIcon object={service} />,
           service.getNs(),
           service.getType(),
           service.getClusterIp(),

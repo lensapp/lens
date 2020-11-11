@@ -4,16 +4,14 @@ import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { Trans } from "@lingui/macro";
-import { StatefulSet, statefulSetApi } from "../../api/endpoints";
+import { StatefulSet } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
 import { IStatefulSetsRouteParams } from "../+workloads";
-import { KubeEventIcon } from "../+events/kube-event-icon";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -57,7 +55,7 @@ export class StatefulSets extends React.Component<Props> {
           statefulSet.getName(),
           statefulSet.getNs(),
           this.getPodsLength(statefulSet),
-          <KubeEventIcon object={statefulSet}/>,
+          <KubeObjectStatusIcon object={statefulSet}/>,
           statefulSet.getAge(),
         ]}
       />

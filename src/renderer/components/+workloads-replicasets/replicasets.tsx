@@ -12,6 +12,7 @@ import { DrawerTitle } from "../drawer";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { showDetails } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -56,6 +57,7 @@ export class ReplicaSets extends React.Component<Props> {
         >
           <TableHead>
             <TableCell className="name" sortBy={sortBy.name}><Trans>Name</Trans></TableCell>
+            <TableCell className="warning"/>
             <TableCell className="namespace" sortBy={sortBy.namespace}>Namespace</TableCell>
             <TableCell className="pods" sortBy={sortBy.pods}><Trans>Pods</Trans></TableCell>
             <TableCell className="age" sortBy={sortBy.age}><Trans>Age</Trans></TableCell>
@@ -71,6 +73,7 @@ export class ReplicaSets extends React.Component<Props> {
                   onClick={prevDefault(() => showDetails(replica.selfLink, false))}
                 >
                   <TableCell className="name">{replica.getName()}</TableCell>
+                  <TableCell className="warning"><KubeObjectStatusIcon object={replica}/></TableCell>
                   <TableCell className="namespace">{replica.getNs()}</TableCell>
                   <TableCell className="pods">{this.getPodsLength(replica)}</TableCell>
                   <TableCell className="age">{replica.getAge()}</TableCell>

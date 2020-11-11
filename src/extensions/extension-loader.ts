@@ -77,7 +77,9 @@ export class ExtensionLoader {
       registries.clusterPageRegistry.add(...extension.clusterPages),
       registries.kubeObjectMenuRegistry.add(...extension.kubeObjectMenuItems),
       registries.kubeObjectDetailRegistry.add(...extension.kubeObjectDetailItems),
-    ]);
+      registries.kubeObjectStatusRegistry.add(...extension.kubeObjectStatusTexts)
+    ])
+
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Function[]) {
