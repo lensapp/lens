@@ -11,6 +11,9 @@ import { clusterViewRoute, IClusterViewRouteParams } from "./components/cluster-
 export const history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
 export const navigation = createObservableHistory(history);
 
+/**
+ * Navigate to a location. Works only in renderer.
+ */
 export function navigate(location: LocationDescriptor) {
   const currentLocation = navigation.getPath();
   navigation.push(location);
@@ -60,6 +63,9 @@ export function getDetailsUrl(details: string) {
   });
 }
 
+/**
+ * Show details. Works only in renderer.
+ */
 export function showDetails(path: string, resetSelected = true) {
   navigation.searchParams.merge({
     details: path,
@@ -67,6 +73,9 @@ export function showDetails(path: string, resetSelected = true) {
   })
 }
 
+/**
+ * Hide details. Works only in renderer.
+ */
 export function hideDetails() {
   showDetails(null)
 }

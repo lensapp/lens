@@ -16,6 +16,3 @@
 * [LensMainExtension](classes/lensmainextension.md)
 * [LensRendererExtension](classes/lensrendererextension.md)
 
-## Variables
-
-* [windowManager](README.md#windowmanager)
