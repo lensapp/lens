@@ -1,4 +1,4 @@
-import { LensMainExtension, windowManager } from "@k8slens/extensions";
+import { LensMainExtension } from "@k8slens/extensions";
 import { supportPageURL } from "./src/support.route";
 
 export default class SupportPageMainExtension extends LensMainExtension {
@@ -6,8 +6,8 @@ export default class SupportPageMainExtension extends LensMainExtension {
     {
       parentId: "help",
       label: "Support",
-      click() {
-        windowManager.navigate(supportPageURL());
+      click: () => {
+        this.navigate(supportPageURL());
       }
     }
   ]

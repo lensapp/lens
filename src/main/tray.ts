@@ -16,7 +16,7 @@ import { isDevelopment } from "../common/vars";
 export let tray: Tray;
 
 // refresh icon when MacOS dark/light theme has changed
-nativeTheme.on("updated", () => tray?.setImage(getTrayIcon()));
+nativeTheme?.on("updated", () => tray?.setImage(getTrayIcon()));
 
 export function getTrayIcon(isDark = nativeTheme.shouldUseDarkColors): string {
   return path.resolve(
