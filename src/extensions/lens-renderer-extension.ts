@@ -4,7 +4,9 @@ import type {
   PageRegistration, StatusBarRegistration, KubeObjectStatusRegistration
 } from "./registries"
 import { observable } from "mobx";
-import { LensExtension } from "./lens-extension"
+import { LensExtension } from "./lens-extension";
+import { LocationDescriptor } from "history";
+import { navigate } from "../renderer/navigation";
 
 export class LensRendererExtension extends LensExtension {
   @observable.shallow globalPages: PageRegistration[] = []
@@ -15,4 +17,8 @@ export class LensRendererExtension extends LensExtension {
   @observable.shallow statusBarItems: StatusBarRegistration[] = []
   @observable.shallow kubeObjectDetailItems: KubeObjectDetailRegistration[] = []
   @observable.shallow kubeObjectMenuItems: KubeObjectMenuRegistration[] = []
+
+  navigate(location: LocationDescriptor) {
+    navigate(location)
+  }
 }
