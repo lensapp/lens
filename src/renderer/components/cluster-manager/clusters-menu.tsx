@@ -5,7 +5,6 @@ import { remote } from "electron"
 import type { Cluster } from "../../../main/cluster";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
-import { matchPath } from "react-router";
 import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
 import { userStore } from "../../../common/user-store";
@@ -15,7 +14,7 @@ import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
-import { navigate, navigation } from "../../navigation";
+import { isActiveRoute, navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
@@ -153,12 +152,11 @@ export class ClustersMenu extends React.Component<Props> {
             const registeredPage = globalPageRegistry.getById(menuItemId);
             if (!registeredPage) return;
             const { routePath, exact } = registeredPage;
-            const isActive = !!matchPath(navigation.location.pathname, { path: routePath, exact });
             return (
               <Icon
                 key={routePath}
                 tooltip={title}
-                active={isActive}
+                active={isActiveRoute({ path: routePath, exact })}
                 onClick={() => navigate(url)}
               />
             )

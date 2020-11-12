@@ -49,7 +49,7 @@ export class LensExtension {
   }
 
   getPageRoute(baseRoute = "") {
-    return this.routePrefix + baseRoute;
+    return this.getPageUrl() + baseRoute;
   }
 
   @action
