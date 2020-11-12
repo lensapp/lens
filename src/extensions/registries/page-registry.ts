@@ -20,7 +20,7 @@ export interface PageComponents {
   Page: React.ComponentType<any>;
 }
 
-export class PageRegistry extends BaseRegistry<PageRegistration> {
+export class PageRegistry<T extends PageRegistration> extends BaseRegistry<T> {
   getItems() {
     return super.getItems().map(item => {
       item.routePath = item.extension.getPageRoute(item.routePath)
@@ -29,5 +29,5 @@ export class PageRegistry extends BaseRegistry<PageRegistration> {
   }
 }
 
-export const globalPageRegistry = new PageRegistry();
+export const globalPageRegistry = new PageRegistry<Omit<PageRegistration, "subPages">>();
 export const clusterPageRegistry = new PageRegistry();

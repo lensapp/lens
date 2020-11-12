@@ -97,6 +97,7 @@ export class Sidebar extends React.Component<Props> {
           </div>
           <div className="sidebar-nav flex column box grow-fixed">
             <SidebarNavItem
+              testId="cluster"
               isActive={isActiveRoute(clusterRoute)}
               isHidden={!isAllowedResource("nodes")}
               url={clusterURL()}
@@ -104,6 +105,7 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon svg="kube"/>}
             />
             <SidebarNavItem
+              testId="nodes"
               isActive={isActiveRoute(nodesRoute)}
               isHidden={!isAllowedResource("nodes")}
               url={nodesURL()}
@@ -111,6 +113,7 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon svg="nodes"/>}
             />
             <SidebarNavItem
+              testId="workloads"
               isActive={isActiveRoute(workloadsRoute)}
               isHidden={Workloads.tabRoutes.length == 0}
               url={workloadsURL({ query })}
@@ -119,6 +122,7 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon svg="workloads"/>}
             />
             <SidebarNavItem
+              testId="config"
               isActive={isActiveRoute(configRoute)}
               isHidden={Config.tabRoutes.length == 0}
               url={configURL({ query })}
@@ -127,6 +131,7 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon material="list"/>}
             />
             <SidebarNavItem
+              testId="networks"
               isActive={isActiveRoute(networkRoute)}
               isHidden={Network.tabRoutes.length == 0}
               url={networkURL({ query })}
@@ -135,6 +140,7 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon material="device_hub"/>}
             />
             <SidebarNavItem
+              testId="storage"
               isActive={isActiveRoute(storageRoute)}
               isHidden={Storage.tabRoutes.length == 0}
               url={storageURL({ query })}
@@ -143,6 +149,7 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Storage</Trans>}
             />
             <SidebarNavItem
+              testId="namespaces"
               isActive={isActiveRoute(namespacesRoute)}
               isHidden={!isAllowedResource("namespaces")}
               url={namespacesURL()}
@@ -150,6 +157,7 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Namespaces</Trans>}
             />
             <SidebarNavItem
+              testId="events"
               isActive={isActiveRoute(eventRoute)}
               isHidden={!isAllowedResource("events")}
               url={eventsURL({ query })}
@@ -157,6 +165,7 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Events</Trans>}
             />
             <SidebarNavItem
+              testId="apps"
               isActive={isActiveRoute(appsRoute)}
               url={appsURL({ query })}
               subMenus={Apps.tabRoutes}
@@ -164,6 +173,7 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Apps</Trans>}
             />
             <SidebarNavItem
+              testId="users"
               isActive={isActiveRoute(usersManagementRoute)}
               url={usersManagementURL({ query })}
               subMenus={UserManagement.tabRoutes}
@@ -171,6 +181,7 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Access Control</Trans>}
             />
             <SidebarNavItem
+              testId="custom-resources"
               isActive={isActiveRoute(crdRoute)}
               isHidden={!isAllowedResource("customresourcedefinitions")}
               url={crdURL()}
@@ -209,6 +220,7 @@ interface SidebarNavItemProps {
   isHidden?: boolean;
   isActive?: boolean;
   subMenus?: TabLayoutRoute[];
+  testId?: string; // data-test-id="" property for integration tests
 }
 
 const navItemStorage = createStorage<[string, boolean][]>("sidebar_menu_item", []);
@@ -233,14 +245,14 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
   };
 
   render() {
-    const { isHidden, isActive, subMenus = [], icon, text, url, children, className } = this.props;
+    const { isHidden, isActive, subMenus = [], icon, text, url, children, className, testId } = this.props;
     if (isHidden) {
       return null;
     }
     const extendedView = (subMenus.length > 0 || children) && this.context.pinned;
     if (extendedView) {
       return (
-        <div className={cssNames("SidebarNavItem", className)}>
+        <div className={cssNames("SidebarNavItem", className)} data-test-id={testId}>
           <div className={cssNames("nav-item", { active: isActive })} onClick={this.toggleSubMenu}>
             {icon}
             <span className="link-text">{text}</span>
