@@ -6,7 +6,7 @@ In this topic, we'll teach you the fundamental concepts for building extensions.
 
 Simple Lens extension that adds "Hello World" page to a cluster menu.
 
-### Linux
+### Setup the extension directory
 
 First you will need to clone the [Lens Extension samples](https://github.com/lensapp/lens-extension-samples) repository to your local machine:
 
@@ -16,11 +16,35 @@ git clone https://github.com/lensapp/lens-extension-samples.git
 
 Next you need to create a symlink from the directory that Lens will monitor for user installed extensions to the sample extension, in this case **helloworld-sample**:
 
+**Linux & MacOS**
 ```sh
 mkdir -p ~/.k8slens/extensions
 cd ~/.k8slens/extensions
-ln -s <lens-extension-samples directory>/helloworld-sample helloworld-sample
+ln -s lens-extension-samples/helloworld-sample helloworld-sample
 ```
+
+**Windows**
+
+Create the directory that Lens will monitor for user installed extensions:
+
+```sh
+mkdir C:\Users\<user>\.k8slens\extensions -force
+cd C:\Users\<user>\.k8slens\extensions
+```
+
+If you have administrator rights, you can create symlink to the sample extension, in this case **helloworld-sample**:
+
+```sh
+cmd /c mklink /D helloworld-sample lens-extension-samples\helloworld-sample
+```
+
+Without administrator rights, you need to copy the extensions sample directory into `C:\Users\<user>\.k8slens\extensions`:
+
+```
+Copy-Item 'lens-extension-samples\helloworld-sample' 'C:\Users\<user>\.k8slens\extensions\helloworld-sample'
+```
+
+### Build the extension
 
 To build the extension you can use `make` or run the `npm` commands manually:
 
