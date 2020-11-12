@@ -121,8 +121,6 @@ export class HpaDetails extends React.Component<Props> {
         <div className="metrics">
           {this.renderMetrics()}
         </div>
-
-        <KubeEventDetails object={hpa}/>
       </div>
     );
   }
@@ -133,5 +131,14 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["autoscaling/v1"],
   components: {
     Details: (props) => <HpaDetails {...props} />
+  }
+})
+
+kubeObjectDetailRegistry.add({
+  kind: "HorizontalPodAutoscaler",
+  apiVersions: ["autoscaling/v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
   }
 })

@@ -89,7 +89,6 @@ export class StatefulSetDetails extends React.Component<Props> {
         </DrawerItem>
         <ResourceMetricsText metrics={metrics}/>
         <PodDetailsList pods={childPods} owner={statefulSet}/>
-        <KubeEventDetails object={statefulSet}/>
       </div>
     )
   }
@@ -101,5 +100,14 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["apps/v1"],
   components: {
     Details: (props: any) => <StatefulSetDetails {...props} />
+  }
+})
+
+kubeObjectDetailRegistry.add({
+  kind: "StatefulSet",
+  apiVersions: ["apps/v1"],
+  priority: 5,
+  components: {
+    Details: (props: any) => <KubeEventDetails {...props} />
   }
 })

@@ -78,8 +78,6 @@ export class ServiceDetails extends React.Component<Props> {
         <DrawerTitle title={_i18n._(t`Endpoint`)}/>
 
         <ServiceDetailsEndpoint endpoint={endpoint} />
-
-        <KubeEventDetails object={service}/>
       </div>
     );
   }
@@ -90,5 +88,14 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["v1"],
   components: {
     Details: (props) => <ServiceDetails {...props} />
+  }
+})
+
+kubeObjectDetailRegistry.add({
+  kind: "Service",
+  apiVersions: ["v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
   }
 })

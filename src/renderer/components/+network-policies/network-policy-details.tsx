@@ -137,8 +137,6 @@ export class NetworkPolicyDetails extends React.Component<Props> {
             })}
           </>
         )}
-
-        <KubeEventDetails object={policy}/>
       </div>
     );
   }
@@ -149,5 +147,14 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["networking.k8s.io/v1"],
   components: {
     Details: (props) => <NetworkPolicyDetails {...props} />
+  }
+})
+
+kubeObjectDetailRegistry.add({
+  kind: "NetworkPolicy",
+  apiVersions: ["networking.k8s.io/v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
   }
 })

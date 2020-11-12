@@ -29,7 +29,7 @@ export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
       )
     }
     return (
-      <>
+      <div>
         <DrawerTitle className="flex gaps align-center">
           <span><Trans>Events</Trans></span>
         </DrawerTitle>
@@ -57,7 +57,7 @@ export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
             )
           })}
         </div>
-      </>
+      </div>
     )
   }
 }
