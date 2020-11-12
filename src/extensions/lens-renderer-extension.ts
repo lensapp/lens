@@ -5,6 +5,7 @@ import type {
 } from "./registries"
 import { observable } from "mobx";
 import { LensExtension } from "./lens-extension"
+import { ipcRenderer } from "electron"
 
 export class LensRendererExtension extends LensExtension {
   @observable.shallow globalPages: PageRegistration[] = []
@@ -18,8 +19,7 @@ export class LensRendererExtension extends LensExtension {
   @observable.shallow kubeObjectDetailItems: KubeObjectDetailRegistration[] = []
   @observable.shallow kubeObjectMenuItems: KubeObjectMenuRegistration[] = []
 
-  async navigate(location: string){
-    const { navigate } = await import("../renderer/navigation");
-    navigate(this.getPageUrl(location));
+  navigate(location: string) {
+    ipcRenderer.emit("renderer:navigate", location)
   }
 }
