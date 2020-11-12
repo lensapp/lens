@@ -13,6 +13,7 @@ const itif = (condition: boolean) => condition ? it : it.skip
 
 jest.setTimeout(60000)
 
+// FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
 describe("Lens integration tests", () => {
   const TEST_NAMESPACE = "integration-tests"
 
@@ -394,7 +395,7 @@ describe("Lens integration tests", () => {
         if (drawer !== "") {
           it(`shows ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true)
-            await app.client.click(`.sidebar-nav #${drawerId} span.link-text`)
+            await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`)
             await app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name)
           })
         }
@@ -409,7 +410,7 @@ describe("Lens integration tests", () => {
           // hide the drawer
           it(`hides ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true)
-            await app.client.click(`.sidebar-nav #${drawerId} span.link-text`)
+            await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`)
             await expect(app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow()
           })
         }
@@ -428,7 +429,7 @@ describe("Lens integration tests", () => {
       it(`shows a logs for a pod`, async () => {
         expect(clusterAdded).toBe(true)
         // Go to Pods page
-        await app.client.click(".sidebar-nav #workloads span.link-text")
+        await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text")
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods")
         await app.client.click('a[href^="/pods"]')
         await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver")
@@ -479,7 +480,7 @@ describe("Lens integration tests", () => {
 
       it(`creates a pod in ${TEST_NAMESPACE} namespace`, async () => {
         expect(clusterAdded).toBe(true)
-        await app.client.click(".sidebar-nav #workloads span.link-text")
+        await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text")
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods")
         await app.client.click('a[href^="/pods"]')
         await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver")

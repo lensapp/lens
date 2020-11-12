@@ -5,7 +5,7 @@ import { IURLParams } from "../../../common/utils/buildUrl";
 
 export const networkRoute: RouteProps = {
   get path() {
-    return Network.tabRoutes.map(({ path }) => path).flat()
+    return Network.tabRoutes.map(({ routePath }) => routePath).flat()
   }
 }
 

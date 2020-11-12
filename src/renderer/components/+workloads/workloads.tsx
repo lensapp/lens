@@ -2,12 +2,10 @@ import "./workloads.scss"
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Redirect, Route, Switch } from "react-router";
-import { RouteComponentProps } from "react-router-dom";
 import { Trans } from "@lingui/macro";
-import { TabLayout, TabRoute } from "../layout/tab-layout";
+import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
-import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL, workloadsURL } from "./workloads.route";
+import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL } from "./workloads.route";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Pods } from "../+workloads-pods";
 import { Deployments } from "../+workloads-deployments";
@@ -17,19 +15,16 @@ import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
 import { isAllowedResource } from "../../../common/rbac"
 
-interface Props extends RouteComponentProps {
-}
-
 @observer
-export class Workloads extends React.Component<Props> {
-  static get tabRoutes(): TabRoute[] {
+export class Workloads extends React.Component {
+  static get tabRoutes(): TabLayoutRoute[] {
     const query = namespaceStore.getContextParams();
-    const routes: TabRoute[] = [
+    const routes: TabLayoutRoute[] = [
       {
         title: <Trans>Overview</Trans>,
         component: WorkloadsOverview,
         url: overviewURL({ query }),
-        path: overviewRoute.path
+        routePath: overviewRoute.path.toString()
       }
     ]
     if (isAllowedResource("pods")) {
@@ -37,7 +32,7 @@ export class Workloads extends React.Component<Props> {
         title: <Trans>Pods</Trans>,
         component: Pods,
         url: podsURL({ query }),
-        path: podsRoute.path
+        routePath: podsRoute.path.toString()
       })
     }
     if (isAllowedResource("deployments")) {
@@ -45,7 +40,7 @@ export class Workloads extends React.Component<Props> {
         title: <Trans>Deployments</Trans>,
         component: Deployments,
         url: deploymentsURL({ query }),
-        path: deploymentsRoute.path,
+        routePath: deploymentsRoute.path.toString(),
       })
     }
     if (isAllowedResource("daemonsets")) {
@@ -53,7 +48,7 @@ export class Workloads extends React.Component<Props> {
         title: <Trans>DaemonSets</Trans>,
         component: DaemonSets,
         url: daemonSetsURL({ query }),
-        path: daemonSetsRoute.path,
+        routePath: daemonSetsRoute.path.toString(),
       })
     }
     if (isAllowedResource("statefulsets")) {
@@ -61,7 +56,7 @@ export class Workloads extends React.Component<Props> {
         title: <Trans>StatefulSets</Trans>,
         component: StatefulSets,
         url: statefulSetsURL({ query }),
-        path: statefulSetsRoute.path,
+        routePath: statefulSetsRoute.path.toString(),
       })
     }
     if (isAllowedResource("jobs")) {
@@ -69,7 +64,7 @@ export class Workloads extends React.Component<Props> {
         title: <Trans>Jobs</Trans>,
         component: Jobs,
         url: jobsURL({ query }),
-        path: jobsRoute.path,
+        routePath: jobsRoute.path.toString(),
       })
     }
     if (isAllowedResource("cronjobs")) {
@@ -77,21 +72,15 @@ export class Workloads extends React.Component<Props> {
         title: <Trans>CronJobs</Trans>,
         component: CronJobs,
         url: cronJobsURL({ query }),
-        path: cronJobsRoute.path,
+        routePath: cronJobsRoute.path.toString(),
       })
     }
     return routes;
   }
 
   render() {
-    const tabRoutes = Workloads.tabRoutes;
     return (
-      <TabLayout className="Workloads" tabs={tabRoutes}>
-        <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={workloadsURL({ query: namespaceStore.getContextParams() })}/>
-        </Switch>
-      </TabLayout>
+      <TabLayout className="Workloads" tabs={Workloads.tabRoutes}/>
     )
   }
 }

@@ -6,12 +6,12 @@ import { observer } from "mobx-react"
 import { App, Component } from "@k8slens/extensions";
 
 @observer
-export class Support extends React.Component {
+export class SupportPage extends React.Component {
   render() {
     const { PageLayout } = Component;
     const { slackUrl, issuesTrackerUrl } = App;
     return (
-      <PageLayout showOnTop className="Support" header={<h2>Support</h2>}>
+      <PageLayout showOnTop className="SupportPage" header={<h2>Support</h2>}>
         <h2>Community Slack Channel</h2>
         <p>
           Ask a question, see what's being discussed, join the conversation <a href={slackUrl} target="_blank">here</a>

@@ -1,11 +1,11 @@
 import React from "react"
-import { BaseRegistry } from "./base-registry";
+import { BaseRegistry, BaseRegistryItem } from "./base-registry";
 
 export interface KubeObjectDetailComponents {
   Details: React.ComponentType<any>;
 }
 
-export interface KubeObjectDetailRegistration {
+export interface KubeObjectDetailRegistration extends BaseRegistryItem {
   kind: string;
   apiVersions: string[];
   components: KubeObjectDetailComponents;
@@ -14,7 +14,7 @@ export interface KubeObjectDetailRegistration {
 
 export class KubeObjectDetailRegistry extends BaseRegistry<KubeObjectDetailRegistration> {
   getItemsForKind(kind: string, apiVersion: string) {
-    const items = this.items.filter((item) => {
+    const items = this.getItems().filter((item) => {
       return item.kind === kind && item.apiVersions.includes(apiVersion)
     }).map((item) => {
       if (item.priority === null) {

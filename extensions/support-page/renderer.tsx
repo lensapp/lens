@@ -1,28 +1,21 @@
 import React from "react";
-import { Component, LensRendererExtension, Navigation } from "@k8slens/extensions";
-import { supportPageRoute, supportPageURL } from "./src/support.route";
-import { Support } from "./src/support";
+import { Component, Interface, LensRendererExtension } from "@k8slens/extensions";
+import { SupportPage } from "./src/support";
 
 export default class SupportPageRendererExtension extends LensRendererExtension {
-  globalPages = [
+  globalPages: Interface.PageRegistration[] = [
     {
-      ...supportPageRoute,
-      url: supportPageURL(),
-      hideInMenu: true,
       components: {
-        Page: Support,
+        Page: SupportPage,
       }
     }
   ]
 
-  statusBarItems = [
+  statusBarItems: Interface.StatusBarRegistration[] = [
     {
       item: (
-        <div
-          className="SupportPageIcon flex align-center"
-          onClick={() => Navigation.navigate(supportPageURL())}
-        >
-          <Component.Icon interactive material="help" smallest />
+        <div className="SupportPageIcon flex align-center" onClick={() => this.navigate()}>
+          <Component.Icon interactive material="help" smallest/>
         </div>
       )
     }

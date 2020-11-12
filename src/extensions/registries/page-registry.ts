@@ -1,31 +1,33 @@
 // Extensions-api -> Custom page registration
 
-import type React from "react";
-import type { RouteProps } from "react-router";
-import type { IconProps } from "../../renderer/components/icon";
-import type { IClassName } from "../../renderer/utils";
-import type { TabRoute } from "../../renderer/components/layout/tab-layout";
-import { BaseRegistry } from "./base-registry";
+import React from "react";
+import { BaseRegistry, BaseRegistryItem } from "./base-registry";
 
-export interface PageRegistration extends RouteProps {
-  className?: IClassName;
-  url?: string; // initial url to be used for building menus and tabs, otherwise "path" applied by default
-  title?: React.ReactNode; // used in sidebar's & tabs-layout if provided
-  hideInMenu?: boolean; // hide element within app's navigation menu
-  subPages?: (PageRegistration & TabRoute)[];
+export interface PageRegistration extends BaseRegistryItem {
+  routePath?: string; // additional (suffix) route path to base extension's route: "/extension/:name"
+  exact?: boolean; // route matching flag, see: https://reactrouter.com/web/api/NavLink/exact-bool
+  components: PageComponents;
+  subPages?: SubPageRegistration[];
+}
+
+export interface SubPageRegistration {
+  routePath: string; // required for sub-pages
+  exact?: boolean;
   components: PageComponents;
 }
 
 export interface PageComponents {
   Page: React.ComponentType<any>;
-  MenuIcon?: React.ComponentType<IconProps>;
 }
 
-export class GlobalPageRegistry extends BaseRegistry<PageRegistration> {
+export class PageRegistry<T extends PageRegistration> extends BaseRegistry<T> {
+  getItems() {
+    return super.getItems().map(item => {
+      item.routePath = item.extension.getPageRoute(item.routePath)
+      return item
+    });
+  }
 }
 
-export class ClusterPageRegistry extends BaseRegistry<PageRegistration> {
-}
-
-export const globalPageRegistry = new GlobalPageRegistry();
-export const clusterPageRegistry = new ClusterPageRegistry();
+export const globalPageRegistry = new PageRegistry<Omit<PageRegistration, "subPages">>();
+export const clusterPageRegistry = new PageRegistry();

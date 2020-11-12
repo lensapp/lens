@@ -1,5 +1,4 @@
 import { LensMainExtension } from "@k8slens/extensions";
-import { supportPageURL } from "./src/support.route";
 
 export default class SupportPageMainExtension extends LensMainExtension {
   appMenus = [
@@ -7,7 +6,7 @@ export default class SupportPageMainExtension extends LensMainExtension {
       parentId: "help",
       label: "Support",
       click: () => {
-        this.navigate(supportPageURL());
+        this.navigate();
       }
     }
   ]

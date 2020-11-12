@@ -100,10 +100,17 @@ import { ExamplePage } from "./src/example-page"
 export default class ExampleRendererExtension extends LensRendererExtension {
   globalPages = [
     {
-      path: "/example-route",
-      hideInMenu: true,
       components: {
         Page: ExamplePage,
+      }
+    }
+  ]
+
+  globalPageMenus = [
+    {
+      title: "Example page", // used in icon's tooltip
+      components: {
+        Icon: () => <Component.Icon material="arrow"/>,
       }
     }
   ]
@@ -146,11 +153,20 @@ import { ExampleIcon, ExamplePage } from "./src/page"
 export default class ExampleExtension extends LensRendererExtension {
   clusterPages = [
     {
-      path: "/extension-example",
-      title: "Example Extension",
+      routePath: "/extension-example", // optional
+      exact: true, // optional
       components: {
         Page: () => <ExamplePage extension={this}/>,
-        MenuIcon: ExampleIcon,
+      }
+    }
+  ]
+
+  clusterPageMenus = [
+    {
+      url: "/extension-example", // optional
+      title: "Example Extension",
+      components: {
+        Icon: ExampleIcon,
       }
     }
   ]
@@ -199,11 +215,8 @@ export default class ExampleExtension extends LensRendererExtension {
   statusBarItems = [
     {
       item: (
-        <div
-          className="flex align-center gaps hover-highlight"
-          onClick={() => Navigation.navigate("/example-page")}
-        >
-          <Component.Icon material="favorite" smallest />
+        <div className="flex align-center gaps hover-highlight" onClick={() => this.navigate("/example-page")} >
+          <Component.Icon material="favorite" />
         </div>
       )
     }

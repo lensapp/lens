@@ -1,14 +1,14 @@
 // Navigation helpers
 
 import { ipcRenderer } from "electron";
-import { matchPath } from "react-router";
+import { matchPath, RouteProps } from "react-router";
 import { reaction } from "mobx";
 import { createObservableHistory } from "mobx-observable-history";
-import { createBrowserHistory, createMemoryHistory, LocationDescriptor } from "history";
+import { createBrowserHistory, LocationDescriptor } from "history";
 import logger from "../main/logger";
 import { clusterViewRoute, IClusterViewRouteParams } from "./components/cluster-manager/cluster-view.route";
 
-export const history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
+export const history = createBrowserHistory();
 export const navigation = createObservableHistory(history);
 
 /**
@@ -20,6 +20,10 @@ export function navigate(location: LocationDescriptor) {
   if (currentLocation === navigation.getPath()) {
     navigation.goBack(); // prevent sequences of same url in history
   }
+}
+
+export function isActiveRoute(route: string | string[] | RouteProps): boolean {
+  return !!matchPath(navigation.location.pathname, route);
 }
 
 // common params for all pages
