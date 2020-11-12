@@ -1106,10 +1106,17 @@
 <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleRendererExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">globalPages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-      <span class="nx">path</span><span class="o">:</span> <span class="s2">&quot;/example-route&quot;</span><span class="p">,</span>
-      <span class="nx">hideInMenu</span>: <span class="kt">true</span><span class="p">,</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">Page</span>: <span class="kt">ExamplePage</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+
+  <span class="nx">globalPageMenus</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Example page&quot;</span><span class="p">,</span> <span class="c1">// used in icon&#39;s tooltip</span>
+      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">Icon</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">Icon</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;arrow&quot;</span><span class="o">/&gt;</span><span class="p">,</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">]</span>
@@ -1144,11 +1151,20 @@
 <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-      <span class="nx">path</span><span class="o">:</span> <span class="s2">&quot;/extension-example&quot;</span><span class="p">,</span>
-      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Example Extension&quot;</span><span class="p">,</span>
+      <span class="nx">routePath</span><span class="o">:</span> <span class="s2">&quot;/extension-example&quot;</span><span class="p">,</span> <span class="c1">// optional</span>
+      <span class="nx">exact</span>: <span class="kt">true</span><span class="p">,</span> <span class="c1">// optional</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span>
-        <span class="nx">MenuIcon</span>: <span class="kt">ExampleIcon</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+
+  <span class="nx">clusterPageMenus</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;/extension-example&quot;</span><span class="p">,</span> <span class="c1">// optional</span>
+      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Example Extension&quot;</span><span class="p">,</span>
+      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">Icon</span>: <span class="kt">ExampleIcon</span><span class="p">,</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">]</span>
@@ -1187,11 +1203,8 @@
   <span class="nx">statusBarItems</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nx">item</span><span class="o">:</span> <span class="p">(</span>
-        <span class="o">&lt;</span><span class="nx">div</span>
-          <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;flex align-center gaps hover-highlight&quot;</span>
-          <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">Navigation</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;/example-page&quot;</span><span class="p">)}</span>
-        <span class="o">&gt;</span>
-          <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">Icon</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;favorite&quot;</span> <span class="nx">smallest</span> <span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;flex align-center gaps hover-highlight&quot;</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;/example-page&quot;</span><span class="p">)}</span> <span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">Icon</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;favorite&quot;</span> <span class="o">/&gt;</span>
         <span class="o">&lt;</span><span class="err">/div&gt;</span>
       <span class="p">)</span>
     <span class="p">}</span>

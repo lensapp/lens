@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/extensions/api/interfaces/_renderer_api_navigation_.routeprops/">
+        <link rel="canonical" href="https://docs.k8slens.dev/extensions/api/interfaces/_interfaces_index_.pagemenuregistration/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Interface: RouteProps - Lens Documentation</title>
+        <title>Interface: PageMenuRegistration - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#interface-routeprops" class="md-skip">
+        <a href="#interface-pagemenuregistration" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Interface: RouteProps
+              Interface: PageMenuRegistration
             
           </span>
         </div>
@@ -801,57 +801,36 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#optional-children" class="md-nav__link">
-    Optional children
+  <a href="#components" class="md-nav__link">
+    components
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-component" class="md-nav__link">
-    Optional component
+  <a href="#id" class="md-nav__link">
+    id
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-exact" class="md-nav__link">
-    Optional exact
+  <a href="#optional-submenus" class="md-nav__link">
+    Optional subMenus
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-location" class="md-nav__link">
-    Optional location
+  <a href="#title" class="md-nav__link">
+    title
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-path" class="md-nav__link">
-    Optional path
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optional-render" class="md-nav__link">
-    Optional render
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optional-sensitive" class="md-nav__link">
-    Optional sensitive
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#optional-strict" class="md-nav__link">
-    Optional strict
+  <a href="#optional-url" class="md-nav__link">
+    Optional url
   </a>
   
 </li>
@@ -875,74 +854,42 @@
               
                 
                 
-                <h1 id="interface-routeprops">Interface: RouteProps<a class="headerlink" href="#interface-routeprops" title="Permanent link">#</a></h1>
+                <h1 id="interface-pagemenuregistration">Interface: PageMenuRegistration<a class="headerlink" href="#interface-pagemenuregistration" title="Permanent link">#</a></h1>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li><strong>RouteProps</strong></li>
+<li>BaseRegistryItem</li>
 </ul>
-<p>↳ <a href="../_interfaces_index_.pageregistration/">PageRegistration</a></p>
-<p>↳ <a href="../_renderer_api_components_.tabroute/">TabRoute</a></p>
+<p>↳ <strong>PageMenuRegistration</strong></p>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#optional-children">children</a></li>
-<li><a href="./#optional-component">component</a></li>
-<li><a href="./#optional-exact">exact</a></li>
-<li><a href="./#optional-location">location</a></li>
-<li><a href="./#optional-path">path</a></li>
-<li><a href="./#optional-render">render</a></li>
-<li><a href="./#optional-sensitive">sensitive</a></li>
-<li><a href="./#optional-strict">strict</a></li>
+<li><a href="./#components">components</a></li>
+<li><a href="./#id">id</a></li>
+<li><a href="./#optional-submenus">subMenus</a></li>
+<li><a href="./#title">title</a></li>
+<li><a href="./#optional-url">url</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="optional-children"><code>Optional</code> children<a class="headerlink" href="#optional-children" title="Permanent link">#</a></h3>
-<p>• <strong>children</strong>? : <em>function | React.ReactNode</em></p>
-<p>Defined in node_modules/@types/react-router/index.d.ts:91</p>
+<h3 id="components">components<a class="headerlink" href="#components" title="Permanent link">#</a></h3>
+<p>• <strong>components</strong>: <em><a href="../_interfaces_index_.pagemenucomponents/">PageMenuComponents</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/faa1cef3/src/extensions/registries/page-menu-registry.ts#L11">src/extensions/registries/page-menu-registry.ts:11</a></em></p>
 <hr />
-<h3 id="optional-component"><code>Optional</code> component<a class="headerlink" href="#optional-component" title="Permanent link">#</a></h3>
-<p>• <strong>component</strong>? : <em>React.ComponentType‹RouteComponentProps‹any›› | React.ComponentType‹any›</em></p>
-<p>Defined in node_modules/@types/react-router/index.d.ts:89</p>
+<h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
+<p>• <strong>id</strong>: <em>BaseRegistryItemId</em></p>
+<p><em>Overrides <a href="../_interfaces_index_.apppreferenceregistration/">AppPreferenceRegistration</a>.<a href="../_interfaces_index_.apppreferenceregistration/#optional-id">id</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/faa1cef3/src/extensions/registries/page-menu-registry.ts#L8">src/extensions/registries/page-menu-registry.ts:8</a></em></p>
 <hr />
-<h3 id="optional-exact"><code>Optional</code> exact<a class="headerlink" href="#optional-exact" title="Permanent link">#</a></h3>
-<p>• <strong>exact</strong>? : <em>boolean</em></p>
-<p>Defined in node_modules/@types/react-router/index.d.ts:93</p>
+<h3 id="optional-submenus"><code>Optional</code> subMenus<a class="headerlink" href="#optional-submenus" title="Permanent link">#</a></h3>
+<p>• <strong>subMenus</strong>? : <em>PageSubMenuRegistration[]</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/faa1cef3/src/extensions/registries/page-menu-registry.ts#L12">src/extensions/registries/page-menu-registry.ts:12</a></em></p>
 <hr />
-<h3 id="optional-location"><code>Optional</code> location<a class="headerlink" href="#optional-location" title="Permanent link">#</a></h3>
-<p>• <strong>location</strong>? : <em>Location</em></p>
-<p>Defined in node_modules/@types/react-router/index.d.ts:88</p>
+<h3 id="title">title<a class="headerlink" href="#title" title="Permanent link">#</a></h3>
+<p>• <strong>title</strong>: <em>React.ReactNode</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/faa1cef3/src/extensions/registries/page-menu-registry.ts#L10">src/extensions/registries/page-menu-registry.ts:10</a></em></p>
 <hr />
-<h3 id="optional-path"><code>Optional</code> path<a class="headerlink" href="#optional-path" title="Permanent link">#</a></h3>
-<p>• <strong>path</strong>? : <em>string | string[]</em></p>
-<p>Defined in node_modules/@types/react-router/index.d.ts:92</p>
-<hr />
-<h3 id="optional-render"><code>Optional</code> render<a class="headerlink" href="#optional-render" title="Permanent link">#</a></h3>
-<p>• <strong>render</strong>? : <em>function</em></p>
-<p>Defined in node_modules/@types/react-router/index.d.ts:90</p>
-<h4>Type declaration:</h4>
-<p>▸ (<code>props</code>: RouteComponentProps‹any›): <em>React.ReactNode</em></p>
-<p><strong>Parameters:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>props</code></td>
-<td>RouteComponentProps‹any›</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h3 id="optional-sensitive"><code>Optional</code> sensitive<a class="headerlink" href="#optional-sensitive" title="Permanent link">#</a></h3>
-<p>• <strong>sensitive</strong>? : <em>boolean</em></p>
-<p>Defined in node_modules/@types/react-router/index.d.ts:94</p>
-<hr />
-<h3 id="optional-strict"><code>Optional</code> strict<a class="headerlink" href="#optional-strict" title="Permanent link">#</a></h3>
-<p>• <strong>strict</strong>? : <em>boolean</em></p>
-<p>Defined in node_modules/@types/react-router/index.d.ts:95</p>
+<h3 id="optional-url"><code>Optional</code> url<a class="headerlink" href="#optional-url" title="Permanent link">#</a></h3>
+<p>• <strong>url</strong>? : <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/faa1cef3/src/extensions/registries/page-menu-registry.ts#L9">src/extensions/registries/page-menu-registry.ts:9</a></em></p>
                 
               
               
