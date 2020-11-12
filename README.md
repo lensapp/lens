@@ -19,9 +19,9 @@ World’s most popular Kubernetes IDE provides a simplified, consistent entry po
 * Smart terminal access to nodes and containers
 * Clusters can be local (e.g. minikube) or external (e.g. EKS, GKE, AKS)
 * Performance optimized to handle massive clusters (tested with a cluster running 25k pods)
-* RBAC security is preserved, as Lens uses the standard kubectl API 
+* RBAC security is preserved, as Lens uses the standard kubernetes API 
 * Lens Extensions are used to add custom visualizations and functionality to accelerate development workflows for all the technologies and services that integrate with Kubernetes
-* Helm chart service deployment: Browse and deploy Helm charts with one click-Install
+* Helm Package deployment: Browse and deploy Helm charts with one click-Install
 
 ## Installation
 
