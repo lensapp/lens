@@ -1,4 +1,6 @@
 .ClusterView {
+  flex: 1;
+
   &:empty {
     display: none;
   }
