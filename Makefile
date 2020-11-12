@@ -59,7 +59,7 @@ build-extensions:
 	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), (cd $(dir) && npm install && npm run build || exit);)
 
 test-extensions:
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), (cd $(dir) && npm run test || exit);)
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), (cd $(dir) && npm install --dev && npm run test || exit);)
 
 build-npm: build-extension-types
 	yarn npm:fix-package-version
