@@ -3,7 +3,8 @@ on:
   push:
     branches:
       - master
-
+    tags:
+      - 'v*'
 jobs:
   build:
     name: Deploy docs
@@ -27,13 +28,12 @@ jobs:
       - name: Checkout Release from lens
         uses: actions/checkout@v2
         with:
-          repository: lensapp/lens
+          fetch-depth: 0
 
       - name: git config
         run: |
            git config --local user.email "action@github.com"
            git config --local user.name "GitHub Action"
-           git pull
 
       - name: Using Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -46,16 +46,14 @@ jobs:
            yarn typedocs-extensions-api
 
       - name: mkdocs deploy latest
+        if: contains(github.ref, 'refs/heads/master')
         run: |
-           mike deploy --push latest
+           mike deploy --push --update-aliases master latest
 
 
       - name: mkdocs deploy new release / tag
         if: contains(github.ref, 'refs/tags/v')
         run: |
-           mike deploy --push--update-aliases ${{ github.ref }} latest
-           mike set-default --push ${{ github.ref }}
-
-
-
-
+           VERSION=$(git describe --tags `git rev-list --tags --max-count=1`)
+           mike deploy --push --update-aliases $VERSION latest
+           mike set-default --push $VERSION
