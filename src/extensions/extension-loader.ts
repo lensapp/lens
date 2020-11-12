@@ -57,29 +57,29 @@ export class ExtensionLoader {
   loadOnMain() {
     logger.info('[EXTENSIONS-LOADER]: load on main')
     this.autoInitExtensions((ext: LensMainExtension) => [
-      registries.menuRegistry.add(ext.appMenus, { ext })
+      registries.menuRegistry.add(ext.appMenus, { key: ext })
     ]);
   }
 
   loadOnClusterManagerRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)')
     this.autoInitExtensions((ext: LensRendererExtension) => [
-      registries.globalPageRegistry.add(ext.globalPages, { ext }),
-      registries.globalPageMenuRegistry.add(ext.globalPageMenus, { ext }),
-      registries.appPreferenceRegistry.add(ext.appPreferences, { ext }),
-      registries.clusterFeatureRegistry.add(ext.clusterFeatures, { ext }),
-      registries.statusBarRegistry.add(ext.statusBarItems, { ext }),
+      registries.globalPageRegistry.add(ext.globalPages, { key: ext }),
+      registries.globalPageMenuRegistry.add(ext.globalPageMenus, { key: ext }),
+      registries.appPreferenceRegistry.add(ext.appPreferences, { key: ext }),
+      registries.clusterFeatureRegistry.add(ext.clusterFeatures, { key: ext }),
+      registries.statusBarRegistry.add(ext.statusBarItems, { key: ext }),
     ]);
   }
 
   loadOnClusterRenderer() {
     logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)')
     this.autoInitExtensions((ext: LensRendererExtension) => [
-      registries.clusterPageRegistry.add(ext.clusterPages, { ext }),
-      registries.clusterPageMenuRegistry.add(ext.clusterPageMenus, { ext }),
-      registries.kubeObjectMenuRegistry.add(ext.kubeObjectMenuItems, { ext }),
-      registries.kubeObjectDetailRegistry.add(ext.kubeObjectDetailItems, { ext }),
-      registries.kubeObjectStatusRegistry.add(ext.kubeObjectStatusTexts, { ext })
+      registries.clusterPageRegistry.add(ext.clusterPages, { key: ext }),
+      registries.clusterPageMenuRegistry.add(ext.clusterPageMenus, { key: ext }),
+      registries.kubeObjectMenuRegistry.add(ext.kubeObjectMenuItems, { key: ext }),
+      registries.kubeObjectDetailRegistry.add(ext.kubeObjectDetailItems, { key: ext }),
+      registries.kubeObjectStatusRegistry.add(ext.kubeObjectStatusTexts, { key: ext })
     ])
   }
 

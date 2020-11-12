@@ -1,9 +1,9 @@
 // Extensions API -> Status bar customizations
 
 import React from "react";
-import { BaseRegistry } from "./base-registry";
+import { BaseRegistry, BaseRegistryItem } from "./base-registry";
 
-export interface StatusBarRegistration {
+export interface StatusBarRegistration extends BaseRegistryItem {
   item?: React.ReactNode;
 }
 

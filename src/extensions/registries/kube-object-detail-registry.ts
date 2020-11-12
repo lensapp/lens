@@ -1,11 +1,11 @@
 import React from "react"
-import { BaseRegistry } from "./base-registry";
+import { BaseRegistry, BaseRegistryItem } from "./base-registry";
 
 export interface KubeObjectDetailComponents {
   Details: React.ComponentType<any>;
 }
 
-export interface KubeObjectDetailRegistration {
+export interface KubeObjectDetailRegistration extends BaseRegistryItem {
   kind: string;
   apiVersions: string[];
   components: KubeObjectDetailComponents;

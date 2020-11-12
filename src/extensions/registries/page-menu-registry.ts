@@ -2,28 +2,26 @@
 
 import type React from "react";
 import type { IconProps } from "../../renderer/components/icon";
-import { BaseRegistry } from "./base-registry";
-import { matchPath } from "react-router";
+import { BaseRegistry, BaseRegistryItem, BaseRegistryItemId } from "./base-registry";
 
-export interface PageMenuRegistration {
-  url: string;
+export interface PageMenuRegistration extends BaseRegistryItem {
+  id: BaseRegistryItemId; // required id from page-registry item to match with
+  url?: string; // when not provided initial extension's path used, e.g. "/extension/lens-extension-name"
   title: React.ReactNode;
   components: PageMenuComponents;
-  subMenus?: Omit<PageMenuRegistration, "components" | "subMenus">[];
+  subMenus?: PageSubMenuRegistration[];
+}
+
+export interface PageSubMenuRegistration {
+  url: string;
+  title: React.ReactNode;
 }
 
 export interface PageMenuComponents {
   Icon: React.ComponentType<IconProps>;
 }
 
-export class PageMenuRegistry extends BaseRegistry<PageMenuRegistration> {
-  getByMatchingRoute(routePath: string | string[], exact?: boolean) {
-    return this.getItems().find(item => !!matchPath(item.url, {
-      path: routePath,
-      exact,
-    }))
-  }
-
+export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {
   getItems() {
     return super.getItems().map(item => {
       item.url = item.extension.getPageUrl(item.url)

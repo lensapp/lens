@@ -149,8 +149,8 @@ export class ClustersMenu extends React.Component<Props> {
           )}
         </div>
         <div className="extensions">
-          {globalPageMenuRegistry.getItems().map(({ title, url, components: { Icon } }) => {
-            const registeredPage = globalPageRegistry.getByMatchingUrl(url);
+          {globalPageMenuRegistry.getItems().map(({ id: menuItemId, title, url, components: { Icon } }) => {
+            const registeredPage = globalPageRegistry.getById(menuItemId);
             if (!registeredPage) return;
             const { routePath, exact } = registeredPage;
             const isActive = !!matchPath(navigation.location.pathname, { path: routePath, exact });

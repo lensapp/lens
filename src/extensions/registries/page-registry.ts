@@ -1,14 +1,19 @@
 // Extensions-api -> Custom page registration
 
 import React from "react";
-import { matchPath } from "react-router";
-import { BaseRegistry } from "./base-registry";
+import { BaseRegistry, BaseRegistryItem } from "./base-registry";
 
-export interface PageRegistration {
-  routePath: string; // react-router's path, e.g. "/page/:id"
+export interface PageRegistration extends BaseRegistryItem {
+  routePath?: string; // additional (suffix) route path to base extension's route: "/extension/:name"
   exact?: boolean; // route matching flag, see: https://reactrouter.com/web/api/NavLink/exact-bool
   components: PageComponents;
-  subPages?: Omit<PageRegistration, "subPages">[];
+  subPages?: SubPageRegistration[];
+}
+
+export interface SubPageRegistration {
+  routePath: string; // required for sub-pages
+  exact?: boolean;
+  components: PageComponents;
 }
 
 export interface PageComponents {
@@ -16,12 +21,6 @@ export interface PageComponents {
 }
 
 export class PageRegistry extends BaseRegistry<PageRegistration> {
-  getByMatchingUrl(baseUrl: string) {
-    return this.getItems().find(({ routePath: path, exact }) => {
-      return !!matchPath(baseUrl, { path, exact });
-    })
-  }
-
   getItems() {
     return super.getItems().map(item => {
       item.routePath = item.extension.getPageRoute(item.routePath)

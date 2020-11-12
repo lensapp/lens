@@ -13,7 +13,7 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
     }
   ]
 
-  statusBarItems = [
+  statusBarItems: Interface.StatusBarRegistration[] = [
     {
       item: (
         <div className="flex align-center gaps hover-highlight" onClick={() => this.navigate(pageUrl)}>

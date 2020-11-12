@@ -100,7 +100,6 @@ import { ExamplePage } from "./src/example-page"
 export default class ExampleRendererExtension extends LensRendererExtension {
   globalPages = [
     {
-      routePath: "/items/:id?",
       components: {
         Page: ExamplePage,
       }
@@ -109,7 +108,6 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 
   globalPageMenus = [
     {
-      url: "/items/1",
       title: "Example page", // used in icon's tooltip
       components: {
         Icon: () => <Component.Icon material="arrow"/>,
@@ -155,8 +153,8 @@ import { ExampleIcon, ExamplePage } from "./src/page"
 export default class ExampleExtension extends LensRendererExtension {
   clusterPages = [
     {
-      routePath: "/extension-example",
-      exact: true,
+      routePath: "/extension-example", // optional
+      exact: true, // optional
       components: {
         Page: () => <ExamplePage extension={this}/>,
       }
@@ -165,7 +163,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
   clusterPageMenus = [
     {
-      url: "/extension-example",
+      url: "/extension-example", // optional
       title: "Example Extension",
       components: {
         Icon: ExampleIcon,
@@ -217,11 +215,8 @@ export default class ExampleExtension extends LensRendererExtension {
   statusBarItems = [
     {
       item: (
-        <div
-          className="flex align-center gaps hover-highlight"
-          onClick={() => Navigation.navigate("/example-page")}
-        >
-          <Component.Icon material="favorite" smallest />
+        <div className="flex align-center gaps hover-highlight" onClick={() => this.navigate("/example-page")} >
+          <Component.Icon material="favorite" />
         </div>
       )
     }

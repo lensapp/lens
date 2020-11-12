@@ -44,11 +44,11 @@ export class LensExtension {
     return this.manifest.description
   }
 
-  getPageUrl(baseUrl: string) {
-    return compile(this.routePrefix)({ name: this.name }) + baseUrl
+  getPageUrl(baseUrl = "") {
+    return compile(this.routePrefix)({ name: this.name }) + baseUrl;
   }
 
-  getPageRoute(baseRoute: string) {
+  getPageRoute(baseRoute = "") {
     return this.routePrefix + baseRoute;
   }
 

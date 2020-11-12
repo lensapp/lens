@@ -74,17 +74,17 @@ export class App extends React.Component {
   }
 
   renderExtensionRoutes() {
-    return clusterPageRegistry.getItems().map(({ components: { Page }, exact, routePath, subPages }) => {
+    return clusterPageRegistry.getItems().map(({ id: pageId, components: { Page }, exact, routePath, subPages }) => {
       const Component = () => {
         if (subPages) {
           const tabs: TabLayoutRoute[] = subPages.map(({ exact, routePath, components: { Page } }) => {
-            const matchingUrl = clusterPageMenuRegistry.getByMatchingRoute(routePath, exact)
-            if (!matchingUrl) return;
+            const menuItem = clusterPageMenuRegistry.getById(pageId);
+            if (!menuItem) return;
             return {
               routePath, exact,
               component: Page,
-              url: matchingUrl.url,
-              title: matchingUrl.title,
+              url: menuItem.url,
+              title: menuItem.title,
             }
           }).filter(Boolean);
           if (tabs.length > 0) {

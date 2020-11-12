@@ -1,11 +1,7 @@
-import type {
-  AppPreferenceRegistration, ClusterFeatureRegistration,
-  KubeObjectMenuRegistration, KubeObjectDetailRegistration, StatusBarRegistration, KubeObjectStatusRegistration,
-  PageRegistration, PageMenuRegistration,
-} from "./registries"
+import type { AppPreferenceRegistration, ClusterFeatureRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration, KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, } from "./registries"
+import { ipcRenderer } from "electron"
 import { observable } from "mobx";
 import { LensExtension } from "./lens-extension"
-import { ipcRenderer } from "electron"
 
 export class LensRendererExtension extends LensExtension {
   @observable.shallow globalPages: PageRegistration[] = []
@@ -20,6 +16,6 @@ export class LensRendererExtension extends LensExtension {
   @observable.shallow kubeObjectMenuItems: KubeObjectMenuRegistration[] = []
 
   navigate(location: string) {
-    ipcRenderer.emit("renderer:navigate", location)
+    ipcRenderer.emit("renderer:navigate", this.getPageUrl(location))
   }
 }
