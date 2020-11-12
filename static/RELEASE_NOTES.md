@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.0-alpha.5 (current version)
+## 4.0.0-beta.1 (current version)
 
 - Extension API
 - Improved pod logs
