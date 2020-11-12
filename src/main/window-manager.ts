@@ -122,7 +122,7 @@ export class WindowManager extends Singleton {
   async navigate(url: string, frameId?: number) {
     await this.ensureMainWindow();
     this.sendToView({
-      channel: "menu:navigate",
+      channel: "renderer:navigate",
       frameId: frameId,
       data: [url],
     })
@@ -131,7 +131,7 @@ export class WindowManager extends Singleton {
   reload() {
     const frameId = clusterStore.getById(this.activeClusterId)?.frameId;
     if (frameId) {
-      this.sendToView({ channel: "menu:reload", frameId });
+      this.sendToView({ channel: "renderer:reload", frameId });
     } else {
       webContents.getFocusedWebContents()?.reload();
     }

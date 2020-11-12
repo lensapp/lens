@@ -110,12 +110,12 @@ if (process.isMainFrame) {
 }
 
 // Handle navigation via IPC (e.g. from top menu)
-ipcRenderer.on("menu:navigate", (event, location: LocationDescriptor) => {
+ipcRenderer.on("renderer:navigate", (event, location: LocationDescriptor) => {
   logger.info(`[IPC]: ${event.type} ${JSON.stringify(location)}`, event);
   navigate(location);
 });
 
 // Reload dashboard window
-ipcRenderer.on("menu:reload", () => {
+ipcRenderer.on("renderer:reload", () => {
   location.reload();
 });
