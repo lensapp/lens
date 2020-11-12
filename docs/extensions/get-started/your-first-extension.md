@@ -20,7 +20,7 @@ Next you need to create a symlink from the directory that Lens will monitor for 
 ```sh
 mkdir -p ~/.k8slens/extensions
 cd ~/.k8slens/extensions
-ln -s <lens-extension-samples directory>/helloworld-sample helloworld-sample
+ln -s lens-extension-samples/helloworld-sample helloworld-sample
 ```
 
 **Windows**
@@ -35,13 +35,13 @@ cd C:\Users\<user>\.k8slens\extensions
 If you have administrator rights, you can create symlink to the sample extension, in this case **helloworld-sample**:
 
 ```sh
-cmd /c mklink /D helloworld-sample <lens-extension-samples directory>\helloworld-sample
+cmd /c mklink /D helloworld-sample lens-extension-samples\helloworld-sample
 ```
 
 Without administrator rights, you need to copy the extensions sample directory into `C:\Users\<user>\.k8slens\extensions`:
 
 ```
-Copy-Item '<lens-extension-samples directory>\helloworld-sample' 'C:\Users\<user>\.k8slens\extensions\helloworld-sample'
+Copy-Item 'lens-extension-samples\helloworld-sample' 'C:\Users\<user>\.k8slens\extensions\helloworld-sample'
 ```
 
 ### Build the extension
