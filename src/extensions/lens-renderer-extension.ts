@@ -1,5 +1,4 @@
 import type { AppPreferenceRegistration, ClusterFeatureRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration, KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, } from "./registries"
-import { ipcRenderer } from "electron"
 import { observable } from "mobx";
 import { LensExtension } from "./lens-extension"
 
@@ -15,7 +14,8 @@ export class LensRendererExtension extends LensExtension {
   @observable.shallow kubeObjectDetailItems: KubeObjectDetailRegistration[] = []
   @observable.shallow kubeObjectMenuItems: KubeObjectMenuRegistration[] = []
 
-  navigate(location: string) {
-    ipcRenderer.emit("renderer:navigate", this.getPageUrl(location))
+  async navigate(location?: string) {
+    const { navigate } = await import("../renderer/navigation");
+    navigate(this.getPageUrl(location));
   }
 }

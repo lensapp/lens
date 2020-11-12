@@ -1,14 +1,12 @@
 import React from "react";
 import { Component, Interface, LensRendererExtension } from "@k8slens/extensions";
-import { Support } from "./src/support";
-import { pageRoute, pageUrl } from "./src/common-vars";
+import { SupportPage } from "./src/support";
 
 export default class SupportPageRendererExtension extends LensRendererExtension {
   globalPages: Interface.PageRegistration[] = [
     {
-      routePath: pageRoute,
       components: {
-        Page: Support,
+        Page: SupportPage,
       }
     }
   ]
@@ -16,7 +14,7 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
   statusBarItems: Interface.StatusBarRegistration[] = [
     {
       item: (
-        <div className="flex align-center gaps hover-highlight" onClick={() => this.navigate(pageUrl)}>
+        <div className="flex align-center gaps hover-highlight" onClick={() => this.navigate()}>
           <Component.Icon material="help" smallest/>
         </div>
       )
