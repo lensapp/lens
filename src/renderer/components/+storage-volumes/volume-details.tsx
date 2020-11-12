@@ -96,8 +96,6 @@ export class PersistentVolumeDetails extends React.Component<Props> {
             </DrawerItem>
           </>
         )}
-
-        <KubeEventDetails object={volume}/>
       </div>
     );
   }
@@ -108,5 +106,14 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["v1"],
   components: {
     Details: (props) => <PersistentVolumeDetails {...props} />
+  }
+})
+
+kubeObjectDetailRegistry.add({
+  kind: "PersistentVolume",
+  apiVersions: ["v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
   }
 })

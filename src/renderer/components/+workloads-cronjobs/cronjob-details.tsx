@@ -81,7 +81,6 @@ export class CronJobDetails extends React.Component<Props> {
             }
           </>
         }
-        <KubeEventDetails object={cronJob}/>
       </div>
     )
   }
@@ -92,5 +91,13 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["batch/v1"],
   components: {
     Details: (props) => <CronJobDetails {...props} />
+  }
+})
+kubeObjectDetailRegistry.add({
+  kind: "CronJob",
+  apiVersions: ["batch/v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
   }
 })

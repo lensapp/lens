@@ -91,7 +91,6 @@ export class ReplicaSetDetails extends React.Component<Props> {
         </DrawerItem>
         <ResourceMetricsText metrics={metrics}/>
         <PodDetailsList pods={childPods} owner={replicaSet}/>
-        <KubeEventDetails object={replicaSet}/>
       </div>
     )
   }
@@ -102,5 +101,13 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["apps/v1"],
   components: {
     Details: (props: any) => <ReplicaSetDetails {...props} />
+  }
+})
+kubeObjectDetailRegistry.add({
+  kind: "ReplicaSet",
+  apiVersions: ["apps/v1"],
+  priority: 5,
+  components: {
+    Details: (props: any) => <KubeEventDetails {...props} />
   }
 })

@@ -2,7 +2,6 @@ export { isAllowedResource } from "../../common/rbac"
 export { apiManager } from "../../renderer/api/api-manager";
 export { KubeObjectStore } from "../../renderer/kube-object.store"
 export { KubeApi, forCluster, IKubeApiCluster } from "../../renderer/api/kube-api";
-export { VersionedKubeApi } from "../../renderer/api/kube-api-versioned";
 export { KubeObject } from "../../renderer/api/kube-object";
 export { Pod, podsApi, PodsApi, IPodContainer, IPodContainerStatus } from "../../renderer/api/endpoints";
 export { Node, nodesApi, NodesApi } from "../../renderer/api/endpoints";
@@ -32,10 +31,10 @@ export { RoleBinding, roleBindingApi } from "../../renderer/api/endpoints";
 export { ClusterRole, clusterRoleApi } from "../../renderer/api/endpoints";
 export { ClusterRoleBinding, clusterRoleBindingApi } from "../../renderer/api/endpoints";
 export { CustomResourceDefinition, crdApi } from "../../renderer/api/endpoints";
-export { KubeObjectStatus, KubeObjectStatusLevel} from "./kube-object-status"
+export { KubeObjectStatus, KubeObjectStatusLevel } from "./kube-object-status"
 
 // stores
-export type { EventStore } from "../../renderer/components/+events/event.store"
+export type { EventStore } from "../../renderer/components/+events/event.store"
 export type { PodsStore } from "../../renderer/components/+workloads-pods/pods.store"
 export type { NodesStore } from "../../renderer/components/+nodes/nodes.store"
 export type { DeploymentStore } from "../../renderer/components/+workloads-deployments/deployments.store"

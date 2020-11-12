@@ -125,8 +125,6 @@ export class ServiceAccountsDetails extends React.Component<Props> {
         <div className="secrets">
           {this.renderSecrets()}
         </div>
-
-        <KubeEventDetails object={serviceAccount}/>
       </div>
     )
   }
@@ -137,5 +135,13 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["v1"],
   components: {
     Details: (props) => <ServiceAccountsDetails {...props} />
+  }
+})
+kubeObjectDetailRegistry.add({
+  kind: "ServiceAccount",
+  apiVersions: ["v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
   }
 })
