@@ -23,7 +23,6 @@
     "compile:i18n": "lingui compile",
     "compile:extension-types": "rollup --config src/extensions/rollup.config.js",
     "npm:fix-package-version": "ts-node build/set_npm_version.ts",
-    "intree-extensions": "ts-node scripts/intree-extensions.ts",
     "build:linux": "yarn compile && electron-builder --linux --dir -c.productName=Lens",
     "build:mac": "yarn compile && electron-builder --mac --dir -c.productName=Lens",
     "build:win": "yarn compile && electron-builder --win --dir -c.productName=Lens",

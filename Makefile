@@ -56,10 +56,10 @@ else
 endif
 
 build-extensions:
-	yarn intree-extensions $(EXTENSIONS_DIR) build
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), cd $(dir) && npm install && npm build;)
 
 test-extensions:
-	yarn intree-extensions $(EXTENSIONS_DIR) test
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), cd $(dir) && npm test;)
 
 build-npm: build-extension-types
 	yarn npm:fix-package-version
