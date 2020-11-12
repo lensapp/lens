@@ -444,8 +444,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#linux" class="md-nav__link">
-    Linux
+  <a href="#setup-the-extension-directory" class="md-nav__link">
+    Setup the extension directory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-the-extension" class="md-nav__link">
+    Build the extension
   </a>
   
 </li>
@@ -843,8 +850,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#linux" class="md-nav__link">
-    Linux
+  <a href="#setup-the-extension-directory" class="md-nav__link">
+    Setup the extension directory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-the-extension" class="md-nav__link">
+    Build the extension
   </a>
   
 </li>
@@ -886,15 +900,28 @@
 <p>In this topic, we'll teach you the fundamental concepts for building extensions.</p>
 <h2 id="installing-and-building-the-extension">Installing and Building the extension<a class="headerlink" href="#installing-and-building-the-extension" title="Permanent link">#</a></h2>
 <p>Simple Lens extension that adds "Hello World" page to a cluster menu.</p>
-<h3 id="linux">Linux<a class="headerlink" href="#linux" title="Permanent link">#</a></h3>
+<h3 id="setup-the-extension-directory">Setup the extension directory<a class="headerlink" href="#setup-the-extension-directory" title="Permanent link">#</a></h3>
 <p>First you will need to clone the <a href="https://github.com/lensapp/lens-extension-samples">Lens Extension samples</a> repository to your local machine:</p>
 <div class="highlight"><pre><span></span><code>git clone https://github.com/lensapp/lens-extension-samples.git
 </code></pre></div>
 <p>Next you need to create a symlink from the directory that Lens will monitor for user installed extensions to the sample extension, in this case <strong>helloworld-sample</strong>:</p>
+<p><strong>Linux &amp; MacOS</strong>
 <div class="highlight"><pre><span></span><code>mkdir -p ~/.k8slens/extensions
 <span class="nb">cd</span> ~/.k8slens/extensions
-ln -s &lt;lens-extension-samples directory&gt;/helloworld-sample helloworld-sample
+ln -s lens-extension-samples/helloworld-sample helloworld-sample
+</code></pre></div></p>
+<p><strong>Windows</strong></p>
+<p>Create the directory that Lens will monitor for user installed extensions:</p>
+<div class="highlight"><pre><span></span><code>mkdir C:<span class="se">\U</span>sers<span class="se">\&lt;</span>user&gt;<span class="se">\.</span>k8slens<span class="se">\e</span>xtensions -force
+<span class="nb">cd</span> C:<span class="se">\U</span>sers<span class="se">\&lt;</span>user&gt;<span class="se">\.</span>k8slens<span class="se">\e</span>xtensions
 </code></pre></div>
+<p>If you have administrator rights, you can create symlink to the sample extension, in this case <strong>helloworld-sample</strong>:</p>
+<div class="highlight"><pre><span></span><code>cmd /c mklink /D helloworld-sample lens-extension-samples<span class="se">\h</span>elloworld-sample
+</code></pre></div>
+<p>Without administrator rights, you need to copy the extensions sample directory into <code>C:\Users\&lt;user&gt;\.k8slens\extensions</code>:</p>
+<div class="highlight"><pre><span></span><code>Copy-Item &#39;lens-extension-samples\helloworld-sample&#39; &#39;C:\Users\&lt;user&gt;\.k8slens\extensions\helloworld-sample&#39;
+</code></pre></div>
+<h3 id="build-the-extension">Build the extension<a class="headerlink" href="#build-the-extension" title="Permanent link">#</a></h3>
 <p>To build the extension you can use <code>make</code> or run the <code>npm</code> commands manually:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span> &lt;lens-extension-samples directory&gt;/helloworld-sample
 make build
