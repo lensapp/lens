@@ -15,5 +15,4 @@ src/extensions/*/*.d.ts
 types/extension-api.d.ts
 types/extension-renderer-api.d.ts
 extensions/*/dist
-extensions/*/package-lock.json
 docs/extensions/api
