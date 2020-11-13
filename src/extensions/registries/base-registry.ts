@@ -2,7 +2,7 @@
 import { action, observable } from "mobx";
 
 export class BaseRegistry<T = any> {
-  protected items = observable<T>([], { deep: false });
+  private items = observable<T>([], { deep: false });
 
   getItems(): T[] {
     return this.items.toJS();
