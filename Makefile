@@ -15,7 +15,8 @@ download-bins:
 	yarn download-bins
 
 install-deps:
-	yarn install --frozen-lockfile
+	yarn install --frozen-lockfile --verbose
+	yarn check --verify-tree --integrity
 
 compile-dev:
 	yarn compile:main --cache
