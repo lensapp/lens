@@ -41,5 +41,5 @@ export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegist
   }
 }
 
-export const globalPageMenuRegistry = new PageMenuRegistry<Omit<PageMenuRegistration, "subMenus">>();
-export const clusterPageMenuRegistry = new PageMenuRegistry();
+export const globalPageMenuRegistry = new PageMenuRegistry<PageMenuRegistration>();
+export const clusterPageMenuRegistry = new PageMenuRegistry<PageMenuRegistration>();

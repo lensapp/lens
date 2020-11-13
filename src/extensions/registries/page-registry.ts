@@ -5,7 +5,7 @@ import { action } from "mobx";
 import { compile } from "path-to-regexp";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension } from "../lens-extension"
-import { PageMenuTarget } from "./page-menu-registry";
+import type { PageMenuTarget } from "./page-menu-registry";
 
 export interface PageRegistration {
   id: string; // will be automatically prefixed with extension name
@@ -50,5 +50,5 @@ export class PageRegistry<T extends PageRegistration> extends BaseRegistry<T> {
   }
 }
 
-export const globalPageRegistry = new PageRegistry<Omit<PageRegistration, "subPages">>();
-export const clusterPageRegistry = new PageRegistry();
+export const globalPageRegistry = new PageRegistry<PageRegistration>();
+export const clusterPageRegistry = new PageRegistry<PageRegistration>();
