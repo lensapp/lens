@@ -70,7 +70,7 @@ export class ClusterManager extends React.Component {
             <Route component={ClusterView} {...clusterViewRoute} />
             <Route component={ClusterSettings} {...clusterSettingsRoute} />
             {globalPageRegistry.getItems().map(({ routePath, exact, components: { Page } }) => {
-              return <Route key={routePath} path={routePath} component={Page} exact={true}/>
+              return <Route key={routePath} path={routePath} component={Page} exact={exact}/>
             })}
             <Redirect exact to={this.startUrl}/>
           </Switch>
