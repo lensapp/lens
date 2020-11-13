@@ -1,15 +1,21 @@
 // Extensions-api -> Register page menu items
 
 import type React from "react";
+import { action } from "mobx";
 import type { IconProps } from "../../renderer/components/icon";
-import { BaseRegistry, BaseRegistryItem, BaseRegistryItemId } from "./base-registry";
+import { BaseRegistry } from "./base-registry";
+import { LensExtension } from "../lens-extension";
 
-export interface PageMenuRegistration extends BaseRegistryItem {
-  id: BaseRegistryItemId; // required id from page-registry item to match with
-  url?: string; // when not provided initial extension's path used, e.g. "/extension/lens-extension-name"
+export interface PageMenuTarget {
+  pageId: string;
+  extensionId?: string;
+  params?: object;
+}
+
+export interface PageMenuRegistration {
+  target?: PageMenuTarget;
   title: React.ReactNode;
   components: PageMenuComponents;
-  subMenus?: PageSubMenuRegistration[];
 }
 
 export interface PageSubMenuRegistration {
@@ -22,13 +28,18 @@ export interface PageMenuComponents {
 }
 
 export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {
-  getItems() {
-    return super.getItems().map(item => {
-      item.url = item.extension.getPageUrl(item.url)
-      return item
-    });
+
+  @action
+  add(items: T[], ext?: LensExtension) {
+    const normalizedItems = items.map((menu) => {
+      if (menu.target && !menu.target.extensionId) {
+        menu.target.extensionId = ext.name
+      }
+      return menu
+    })
+    return super.add(normalizedItems);
   }
 }
 
-export const globalPageMenuRegistry = new PageMenuRegistry<Omit<PageMenuRegistration, "subMenus">>();
-export const clusterPageMenuRegistry = new PageMenuRegistry();
+export const globalPageMenuRegistry = new PageMenuRegistry<PageMenuRegistration>();
+export const clusterPageMenuRegistry = new PageMenuRegistry<PageMenuRegistration>();
