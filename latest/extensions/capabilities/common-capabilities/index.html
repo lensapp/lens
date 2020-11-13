@@ -1106,6 +1106,8 @@
 <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleRendererExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">globalPages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
+      <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;example&quot;</span><span class="p">,</span>
+      <span class="nx">routePath</span><span class="o">:</span> <span class="s2">&quot;/example&quot;</span><span class="p">,</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">Page</span>: <span class="kt">ExamplePage</span><span class="p">,</span>
       <span class="p">}</span>
@@ -1115,6 +1117,7 @@
   <span class="nx">globalPageMenus</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Example page&quot;</span><span class="p">,</span> <span class="c1">// used in icon&#39;s tooltip</span>
+      <span class="nx">target</span><span class="o">:</span> <span class="p">{</span> <span class="nx">pageId</span><span class="o">:</span> <span class="s2">&quot;example&quot;</span> <span class="p">}</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">Icon</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">Icon</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;arrow&quot;</span><span class="o">/&gt;</span><span class="p">,</span>
       <span class="p">}</span>
