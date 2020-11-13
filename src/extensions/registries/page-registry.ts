@@ -43,6 +43,9 @@ export class PageRegistry<T extends PageRegistration> extends BaseRegistry<T> {
   }
 
   getByPageMenuTarget(target: PageMenuTarget) {
+    if (!target) {
+      return null
+    }
     return this.getItems().find((page) => page.routePath.startsWith(`/extension/${target.extensionId}/`) && page.id === target.pageId)
   }
 }

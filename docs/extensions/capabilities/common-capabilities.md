@@ -100,6 +100,8 @@ import { ExamplePage } from "./src/example-page"
 export default class ExampleRendererExtension extends LensRendererExtension {
   globalPages = [
     {
+      id: "example",
+      routePath: "/example",
       components: {
         Page: ExamplePage,
       }
@@ -109,6 +111,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
   globalPageMenus = [
     {
       title: "Example page", // used in icon's tooltip
+      target: { pageId: "example" }
       components: {
         Icon: () => <Component.Icon material="arrow"/>,
       }

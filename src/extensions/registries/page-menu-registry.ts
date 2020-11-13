@@ -33,7 +33,8 @@ export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegist
   @action
   add(items: T[], ext?: LensExtension) {
     const normalizedItems = items.map((i) => {
-      if (!i.target.extensionId) {
+      console.log(i)
+      if (i.target && !i.target.extensionId) {
         i.target.extensionId = ext.name
       }
       return i
