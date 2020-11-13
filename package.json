@@ -340,7 +340,6 @@
     "electron-builder": "^22.7.0",
     "electron-notarize": "^0.3.0",
     "eslint": "^7.7.0",
-    "execa": "^4.1.0",
     "file-loader": "^6.0.0",
     "flex.box": "^3.4.4",
     "fork-ts-checker-webpack-plugin": "^5.0.0",
