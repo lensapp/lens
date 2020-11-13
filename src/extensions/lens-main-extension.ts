@@ -8,7 +8,7 @@ export class LensMainExtension extends LensExtension {
 
   async navigate(location?: string, frameId?: number) {
     const windowManager = WindowManager.getInstance<WindowManager>();
-    const url = this.getPageUrl(location); // get full path to extension's page
+    const url = this.getPageRoute(location); // get full path to extension's page
     await windowManager.navigate(url, frameId);
   }
 }

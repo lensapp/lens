@@ -23,10 +23,10 @@ export interface PageMenuComponents {
 
 export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {
   getItems() {
-    return super.getItems().map(item => {
-      item.url = item.extension.getPageUrl(item.url)
-      return item
-    });
+    return super.getItems().map(menuItem => ({
+      ...menuItem,
+      url: menuItem.extension.getPageRoute(menuItem.url),
+    }));
   }
 }
 

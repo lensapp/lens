@@ -44,13 +44,9 @@ export class LensExtension {
     return this.manifest.description
   }
 
-  getPageUrl(baseUrl = "") {
+  getPageRoute(suffixPathOrUrl = "") {
     const validUrlName = this.name.replace("@", "").replace("/", "-");
-    return compile(this.routePrefix)({ name: validUrlName }) + baseUrl;
-  }
-
-  getPageRoute(baseRoute = "") {
-    return this.getPageUrl() + baseRoute;
+    return compile(this.routePrefix)({ name: validUrlName }) + suffixPathOrUrl;
   }
 
   @action

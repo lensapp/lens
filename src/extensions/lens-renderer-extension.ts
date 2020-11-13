@@ -16,6 +16,6 @@ export class LensRendererExtension extends LensExtension {
 
   async navigate(location?: string) {
     const { navigate } = await import("../renderer/navigation");
-    navigate(this.getPageUrl(location));
+    navigate(this.getPageRoute(location));
   }
 }

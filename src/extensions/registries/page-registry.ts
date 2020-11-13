@@ -22,9 +22,16 @@ export interface PageComponents {
 
 export class PageRegistry<T extends PageRegistration> extends BaseRegistry<T> {
   getItems() {
-    return super.getItems().map(item => {
-      item.routePath = item.extension.getPageRoute(item.routePath)
-      return item
+    return super.getItems().map(page => {
+      const pageRoute = page.extension.getPageRoute(page.routePath);
+      return {
+        ...page,
+        routePath: pageRoute,
+        subPages: page?.subPages?.map(subPage => ({
+          ...subPage,
+          routePath: pageRoute + subPage.routePath
+        }))
+      }
     });
   }
 }
