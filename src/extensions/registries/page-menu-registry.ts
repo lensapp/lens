@@ -18,11 +18,6 @@ export interface PageMenuRegistration {
   components: PageMenuComponents;
 }
 
-export interface PageSubMenuRegistration {
-  url: string;
-  title: React.ReactNode;
-}
-
 export interface PageMenuComponents {
   Icon: React.ComponentType<IconProps>;
 }

@@ -28,4 +28,8 @@ describe("getPageUrl", () => {
     ext.manifest.name = "@foo/bar"
     expect(getPageUrl(ext)).toBe("/extension/foo-bar")
   })
+
+  it("adds / prefix", () => {
+    expect(getPageUrl(ext, "test")).toBe("/extension/foo-bar/test")
+  })
 })

@@ -14,12 +14,6 @@ export interface PageRegistration {
   components: PageComponents;
 }
 
-export interface SubPageRegistration {
-  routePath: string; // required for sub-pages
-  exact?: boolean;
-  components: PageComponents;
-}
-
 export interface PageComponents {
   Page: React.ComponentType<any>;
 }
@@ -27,6 +21,9 @@ export interface PageComponents {
 const routePrefix = "/extension/:name"
 
 export function getPageUrl(ext: LensExtension, baseUrl = "") {
+  if (baseUrl !== "" && !baseUrl.startsWith("/")) {
+    baseUrl = "/" + baseUrl
+  }
   const validUrlName = ext.name.replace("@", "").replace("/", "-");
   return compile(routePrefix)({ name: validUrlName }) + baseUrl;
 }
@@ -35,9 +32,12 @@ export class PageRegistry<T extends PageRegistration> extends BaseRegistry<T> {
 
   @action
   add(items: T[], ext?: LensExtension) {
-    const normalizedItems = items.map((i) => {
-      i.routePath = getPageUrl(ext, i.routePath)
-      return i
+    const normalizedItems = items.map((page) => {
+      if (!page.routePath) {
+        page.routePath = `/${page.id}`
+      }
+      page.routePath = getPageUrl(ext, page.routePath)
+      return page
     })
     return super.add(normalizedItems);
   }
