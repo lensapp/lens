@@ -191,8 +191,9 @@ export class Sidebar extends React.Component<Props> {
             >
               {this.renderCustomResources()}
             </SidebarNavItem>
-            {clusterPageMenuRegistry.getItems().map(({ id: menuItemId, title, url, components: { Icon } }) => {
-              const registeredPage = clusterPageRegistry.getById(menuItemId);
+            {clusterPageMenuRegistry.getItems().map(({ title, url, components: { Icon } }) => {
+              const registeredPage = clusterPageRegistry.getByUrl(url);
+              console.log(url, registeredPage)
               if (!registeredPage) return;
               const { routePath, exact } = registeredPage;
               return (

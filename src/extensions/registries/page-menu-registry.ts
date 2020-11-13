@@ -1,11 +1,13 @@
 // Extensions-api -> Register page menu items
 
 import type React from "react";
+import { action } from "mobx";
 import type { IconProps } from "../../renderer/components/icon";
-import { BaseRegistry, BaseRegistryItem, BaseRegistryItemId } from "./base-registry";
+import { BaseRegistry } from "./base-registry";
+import { LensExtension } from "../lens-extension";
+import { getPageUrl } from "./page-registry";
 
-export interface PageMenuRegistration extends BaseRegistryItem {
-  id: BaseRegistryItemId; // required id from page-registry item to match with
+export interface PageMenuRegistration {
   url?: string; // when not provided initial extension's path used, e.g. "/extension/lens-extension-name"
   title: React.ReactNode;
   components: PageMenuComponents;
@@ -22,11 +24,17 @@ export interface PageMenuComponents {
 }
 
 export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {
-  getItems() {
-    return super.getItems().map(item => {
-      item.url = item.extension.getPageUrl(item.url)
-      return item
-    });
+  @action
+  add(items: T[], ext?: LensExtension) {
+    const normalizedItems = items.map((i) => {
+      i.url = getPageUrl(ext, i.url)
+      return i
+    })
+    return super.add(normalizedItems);
+  }
+
+  getByRoutePath(routePath: string) {
+    return this.getItems().find((i) => i.url === routePath)
   }
 }
 

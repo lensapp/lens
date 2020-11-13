@@ -1,9 +1,12 @@
 // Extensions-api -> Custom page registration
 
 import React from "react";
-import { BaseRegistry, BaseRegistryItem } from "./base-registry";
+import { action } from "mobx";
+import { compile } from "path-to-regexp";
+import { BaseRegistry } from "./base-registry";
+import { LensExtension } from "../lens-extension"
 
-export interface PageRegistration extends BaseRegistryItem {
+export interface PageRegistration {
   routePath?: string; // additional (suffix) route path to base extension's route: "/extension/:name"
   exact?: boolean; // route matching flag, see: https://reactrouter.com/web/api/NavLink/exact-bool
   components: PageComponents;
@@ -20,12 +23,26 @@ export interface PageComponents {
   Page: React.ComponentType<any>;
 }
 
+const routePrefix = "/extension/:name"
+
+export function getPageUrl(ext: LensExtension, baseUrl = "") {
+  const validUrlName = ext.name.replace("@", "").replace("/", "-");
+  return compile(routePrefix)({ name: validUrlName }) + baseUrl;
+}
+
 export class PageRegistry<T extends PageRegistration> extends BaseRegistry<T> {
-  getItems() {
-    return super.getItems().map(item => {
-      item.routePath = item.extension.getPageRoute(item.routePath)
-      return item
-    });
+
+  @action
+  add(items: T[], ext?: LensExtension) {
+    const normalizedItems = items.map((i) => {
+      i.routePath = getPageUrl(ext, i.routePath)
+      return i
+    })
+    return super.add(normalizedItems);
+  }
+
+  getByUrl(url: string) {
+    return this.getItems().find((i) => i.routePath === url)
   }
 }
 

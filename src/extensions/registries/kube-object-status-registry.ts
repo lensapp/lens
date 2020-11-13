@@ -1,7 +1,7 @@
 import { KubeObject, KubeObjectStatus } from "../renderer-api/k8s-api";
-import { BaseRegistry, BaseRegistryItem } from "./base-registry";
+import { BaseRegistry } from "./base-registry";
 
-export interface KubeObjectStatusRegistration extends BaseRegistryItem {
+export interface KubeObjectStatusRegistration {
   kind: string;
   apiVersions: string[];
   resolve: (object: KubeObject) => KubeObjectStatus;
