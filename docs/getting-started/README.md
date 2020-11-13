@@ -3,7 +3,7 @@
 Lens is lightweight and simple to install. You'll be up and running in just a few minutes.
 
 
-## System requirements
+## System Requirements
 
 Review the [System Requirements](/supporting/requirements/) to check if your computer configuration is supported.
 
@@ -41,7 +41,7 @@ You can install it by running:
 sudo snap install kontena-lens --classic
 ```
 
-## Update cadence
+## Update Cadence
 
 Lens releases a new version each month with new features and important bug fixes. Lens supports auto updating and you will be prompted to install the new release when it becomes available!
 

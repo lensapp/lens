@@ -2,11 +2,11 @@
 
 In this topic, we'll teach you the fundamental concepts for building extensions.
 
-## Installing and Building the extension
+## Installing and Building the Extension
 
 Simple Lens extension that adds "Hello World" page to a cluster menu.
 
-### Setup the extension directory
+### Setup the Extension Directory
 
 First you will need to clone the [Lens Extension samples](https://github.com/lensapp/lens-extension-samples) repository to your local machine:
 
@@ -16,7 +16,7 @@ git clone https://github.com/lensapp/lens-extension-samples.git
 
 Next you need to create a symlink from the directory that Lens will monitor for user installed extensions to the sample extension, in this case **helloworld-sample**:
 
-**Linux & MacOS**
+**Linux & macOS**
 ```sh
 mkdir -p ~/.k8slens/extensions
 cd ~/.k8slens/extensions
@@ -44,7 +44,7 @@ Without administrator rights, you need to copy the extensions sample directory i
 Copy-Item 'lens-extension-samples\helloworld-sample' 'C:\Users\<user>\.k8slens\extensions\helloworld-sample'
 ```
 
-### Build the extension
+### Build the Extension
 
 To build the extension you can use `make` or run the `npm` commands manually:
 
@@ -70,7 +70,7 @@ npm run dev
 
 Finally, if you already have Lens open you will need to quit and restart Lens for the extension to be loaded. After this initial restart you can reload Lens and it will pick up any new builds of the extension. Within Lens connect to an existing cluster or [create a new one](../../clusters/adding-clusters.md). You should see then see the "Hello World" page in the Lens sidebar cluster menu.
 
-## Developing the extension
+## Developing the Extension
 
 Let's make a change to the message that our helloworld-sample extension displays:
 
@@ -80,7 +80,7 @@ Let's make a change to the message that our helloworld-sample extension displays
 * Reload the Lens window and click on the Hello World page.
 * You should see the updated message showing up.
 
-## Next steps
+## Next Steps
 
 In the next topic, [Extension Anatomy](anatomy.md), we'll take a closer look at the source code of the Hello World sample and explain key concepts.
 

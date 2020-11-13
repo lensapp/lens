@@ -1,4 +1,4 @@
-# Promoting
+# Promotion
 
 Help promote Lens! If you are not a developer (or even if you are), you can still contribute to the project, a lot, by helping us promote it. As we are a free open source project, the community is our most important asset, so here are some ways that you can help the project continue to grow.
 

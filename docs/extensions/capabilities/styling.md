@@ -1,8 +1,8 @@
-# Styling an extension
+# Styling an Extension
+Lens provides a set of global styles and UI components that can be used by any extension to preserve look and feel of the application.
 
-Lens provides a set of global styles and UI components that can be used by any extension to preserve the look and feel of the application.
-
-## Layout
+## Styling Approach
+Lens heavily uses SCSS preprocessor with a set of predefined variables and mixins.
 
 For layout tasks Lens is using [flex.box](https://www.npmjs.com/package/flex.box) library which provides helpful class names to specify some of the [flexbox](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox) properties. For example, `div` with class names:
 
@@ -55,7 +55,8 @@ When the user changes the theme, the process is repeated, and new CSS Variables 
 
 If you want to follow a selected theme to keep the 'native' Lens look and feel, respecting the light/dark appearance of your extension, you can use the provided variables and built-in Lens components such as `Button`, `Select`, `Table`, etc.
 
-There is a set of CSS Variables available for extensions to use for theming. They are all located inside `:root` and are defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss):
+## Injected Styles
+Every extention is affected by list of default global styles defined in `src/renderer/components/app.scss`. These are basic browser resets like setting `box-sizing` property for every element, default text and background colors, default font size, basic headings visualisation etc.
 
 ```css
 --font-main: 'Roboto', 'Helvetica', 'Arial', sans-serif;
@@ -70,6 +71,9 @@ There is a set of CSS Variables available for extensions to use for theming. The
 
 as well as in [the theme modules](https://github.com/lensapp/lens/tree/master/src/renderer/themes):
 
+## Variables to Use
+### Basic Styling
+There is a list of CSS Variables available for extension to use. Basic variables located inside `:root` selected in `src/renderer/components/app.scss`:
 ```
 --blue: #3d90ce;
 --magenta: #c93dce;
@@ -99,53 +103,38 @@ They can be used in form of `var(--magenta)`, e.g.
 }
 ```
 
-A complete list of all themable colors can be found in the [color reference](../color-reference).
-
-### Theme switching
-
-When the light theme is active, the `<body>` element gets a "theme-light" class, `<body class="theme-light">`. If the class isn't there, assume the theme is dark. The active theme can be changed in the `Preferences` page:
-![Color Theme](images/theme-selector.png)
-
-Currently, there is no prescribed way of detecting changes to the theme in JavaScript. [This issue](https://github.com/lensapp/lens/issues/1336) hopes to improve on this. In the meantime, you can use a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to observe the `<body>` element's `class` attribute to see if the "theme-light" class gets added to it:
-
-```javascript
-...
-  useEffect(function () {
-    const observer = new MutationObserver(function (mutations: MutationRecord[]) {
-      mutations.forEach((mutation: MutationRecord) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-          if ((mutation.target as HTMLElement).classList.contains('theme-light')) {
-            // theme is LIGHT
-          } else {
-            // theme is DARK
-          }
-        }
-      });
-    });
-
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-
-    return function () {
-      observer.disconnect();
-    };
-  }, []); // run once on mount
+### Themable Colors
+After theme file gets parsed it provides list of theme-defined colors. Most of their values are different for light and dark themes. You can use them to preserve consitent view of extension with respect of selected theme.
+```
+  "blue": "#3d90ce",
+  "magenta": "#c93dce",
+  "golden": "#ffc63d",
+  "halfGray": "#87909c80",
+  "primary": "#3d90ce",
+  "textColorPrimary": "#555555",
+  "textColorSecondary": "#51575d",
+  "textColorAccent": "#333333",
+  "borderColor": "#c9cfd3",
+  "borderFaintColor": "#dfdfdf",
+  "mainBackground": "#f1f1f1",
+  "contentColor": "#ffffff",
+  "layoutBackground": "#e8e8e8",
+  "layoutTabsBackground": "#f8f8f8",
+  "layoutTabsActiveColor": "#333333",
+  "layoutTabsLineColor": "#87909c80"
+  ...
 ...
 ```
 
-## Injected styles
+## Injected Styles
 
 Every extension is affected by list of default global styles defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss). These are basic browser resets and element styles like setting the `box-sizing` property for every element, default text and background colors, default font sizes, basic heading formatting, etc.
 
 Extension may overwrite these if needed. They have low CSS specificity, so overriding them should be fairly easy.
 
-## CSS-in-JS
-
-If an extension uses a system like `Emotion` to work with styles, it can use CSS variables as follows:
-
-```javascript
+## Using CSS Cariables Inside CSS-in-JS components
+If a developer uses an `Emotion` (or similar) framework to work with styles inside an extension, they can use variables in the following form:
+```
 const Container = styled.div(() => ({
   backgroundColor: 'var(--mainBackground)'
 }));

@@ -10,7 +10,7 @@ This documentation describes:
 
 Code samples are available at [lensapp/lens-extension-samples](https://github.com/lensapp/lens-extension-samples).
 
-## What can extensions do
+## What Extensions Can Do
 
 Here are some examples of what you can achieve with the Extension API:
 
@@ -18,7 +18,7 @@ Here are some examples of what you can achieve with the Extension API:
 
 If you'd like to have a more comprehensive overview of the Extension API, refer to the [Extension Capabilities Overview](capabilities/overview.md) page. [Extension Guides Overview](guides/overview.md) also includes a list of code samples and guides that illustrate various Extension API usage.
 
-## How to build extensions
+## How to Build Extensions
 
 Building a good extension can take a lot of effort. Here is what each section of the API doc can help you with:
 
@@ -29,13 +29,13 @@ Building a good extension can take a lot of effort. Here is what each section of
 * **Advanced Topics** explains advanced concepts such as integrating with 3rd party applications/services.
 * **References** contains exhaustive references for the Lens Extension API, Contribution Points, and many other topics.
 
-## What's new
+## What's New
 
 Lens updates on a monthly cadence, and that applies to the Extension API as well. New features and APIs become available every month to increase the power and scope of Lens extensions.
 
 To stay current with the Extension API and Lens features in general, you can review the [release notes](https://github.com/lensapp/lens/releases).
 
-## Looking for help
+## Looking for Help
 
 If you have questions for extension development, try asking on:
 
@@ -43,6 +43,6 @@ If you have questions for extension development, try asking on:
 
 To provide feedback on the documentation or issues with the Lens Extension API, create new issues at [lensapp/lens](https://github.com/lensapp/lens/issues) with the labels `area/documentation` and/or `area/extension`.
 
-## Download Lens - The Kubernetes IDE
+## Downloading Lens
 
 Go to [Lens](https://k8slens.dev)

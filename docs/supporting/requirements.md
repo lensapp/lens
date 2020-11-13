@@ -17,10 +17,10 @@ Lens has been tested on the following platforms:
 * Windows
 * Linux
 
-### Additional Windows requirements
+### Additional Windows Requirements
 
 ...
 
-### Additional Linux requirements
+### Additional Linux Requirements
 
 ...
