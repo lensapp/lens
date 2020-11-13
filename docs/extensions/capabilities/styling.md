@@ -53,7 +53,7 @@ When Lens is loaded, it transforms the selected theme `json` file into a list of
 
 When the user changes the theme, the process is repeated, and new CSS Variables appear instead of previous ones.
 
-If you want to follow a selected theme to keep the 'native' Lens look and feel, respecting the light/dark appearance of your extension, you can use the provided variables and build-in Lens components such as buttons, dropdowns, checkboxes etc.
+If you want to follow a selected theme to keep the 'native' Lens look and feel, respecting the light/dark appearance of your extension, you can use the provided variables and built-in Lens components such as `Button`, `Select`, `Table`, etc.
 
 There is a set of CSS Variables available for extensions to use for theming. They are all located inside `:root` and are defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss):
 
@@ -137,7 +137,7 @@ Currently, there is no prescribed way of detecting changes to the theme in JavaS
 
 ## Injected styles
 
-Every extention is affected by list of default global styles defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss). These are basic browser resets and element styles like setting the `box-sizing` property for every element, default text and background colors, default font sizes, basic heading formatting, etc.
+Every extension is affected by list of default global styles defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss). These are basic browser resets and element styles like setting the `box-sizing` property for every element, default text and background colors, default font sizes, basic heading formatting, etc.
 
 Extension may overwrite these if needed. They have low CSS specificity, so overriding them should be fairly easy.
 
