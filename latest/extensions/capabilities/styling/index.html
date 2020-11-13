@@ -522,9 +522,22 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#styling-approach" class="md-nav__link">
-    Styling approach
+  <a href="#layout" class="md-nav__link">
+    Layout
   </a>
+  
+    <nav class="md-nav" aria-label="Layout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layout-variables" class="md-nav__link">
+    Layout Variables
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -532,6 +545,26 @@
   <a href="#themes" class="md-nav__link">
     Themes
   </a>
+  
+    <nav class="md-nav" aria-label="Themes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#theme-variables" class="md-nav__link">
+    Theme Variables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theme-switching" class="md-nav__link">
+    Theme switching
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -543,35 +576,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#variables-to-use" class="md-nav__link">
-    Variables to use
-  </a>
-  
-    <nav class="md-nav" aria-label="Variables to use">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-styling" class="md-nav__link">
-    Basic styling
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#themable-colors" class="md-nav__link">
-    Themable colors
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#using-css-variables-inside-css-in-js-components" class="md-nav__link">
-    Using CSS Variables inside CSS-in-JS components
+  <a href="#css-in-js" class="md-nav__link">
+    CSS-in-JS
   </a>
   
 </li>
@@ -856,9 +862,22 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#styling-approach" class="md-nav__link">
-    Styling approach
+  <a href="#layout" class="md-nav__link">
+    Layout
   </a>
+  
+    <nav class="md-nav" aria-label="Layout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layout-variables" class="md-nav__link">
+    Layout Variables
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -866,6 +885,26 @@
   <a href="#themes" class="md-nav__link">
     Themes
   </a>
+  
+    <nav class="md-nav" aria-label="Themes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#theme-variables" class="md-nav__link">
+    Theme Variables
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#theme-switching" class="md-nav__link">
+    Theme switching
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -877,35 +916,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#variables-to-use" class="md-nav__link">
-    Variables to use
-  </a>
-  
-    <nav class="md-nav" aria-label="Variables to use">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-styling" class="md-nav__link">
-    Basic styling
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#themable-colors" class="md-nav__link">
-    Themable colors
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#using-css-variables-inside-css-in-js-components" class="md-nav__link">
-    Using CSS Variables inside CSS-in-JS components
+  <a href="#css-in-js" class="md-nav__link">
+    CSS-in-JS
   </a>
   
 </li>
@@ -925,82 +937,113 @@
                 
                 
                 <h1 id="styling-an-extension">Styling an extension<a class="headerlink" href="#styling-an-extension" title="Permanent link">#</a></h1>
-<p>Lens provides a set of global styles and UI components that can be used by any extension to preserve look and feel of the application.</p>
-<h2 id="styling-approach">Styling approach<a class="headerlink" href="#styling-approach" title="Permanent link">#</a></h2>
-<p>Lens heavily uses SCSS preprocessor with a set of predefined variables and mixins.</p>
-<p>For layout tasks Lens is using <a href="https://www.npmjs.com/package/flex.box">flex.box</a> library which provides helpful class names to specify some of the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox">flexbox</a> properties. For example, <code>div</code> with class names:
-<div class="highlight"><pre><span></span><code>&lt;div className=&quot;flex column align-center&quot;&gt;&lt;/div&gt;
+<p>Lens provides a set of global styles and UI components that can be used by any extension to preserve the look and feel of the application.</p>
+<h2 id="layout">Layout<a class="headerlink" href="#layout" title="Permanent link">#</a></h2>
+<p>For layout tasks Lens is using <a href="https://www.npmjs.com/package/flex.box">flex.box</a> library which provides helpful class names to specify some of the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox">flexbox</a> properties. For example, <code>div</code> with class names:</p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="o">=</span><span class="s">&quot;flex column align-center&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 </code></pre></div>
-at the end will have following css properties:
-<div class="highlight"><pre><span></span><code>div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-</code></pre></div></p>
+<p>at the end will have following css properties:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">div</span> <span class="p">{</span>
+  <span class="k">display</span><span class="p">:</span> <span class="kc">flex</span><span class="p">;</span>
+  <span class="k">flex-direction</span><span class="p">:</span> <span class="kc">column</span><span class="p">;</span>
+  <span class="k">align-items</span><span class="p">:</span> <span class="kc">center</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>However, feel free to use any styling technique or framework like <a href="https://github.com/emotion-js/emotion">Emotion</a> or just plain CSS if you prefer.</p>
+<h3 id="layout-variables">Layout Variables<a class="headerlink" href="#layout-variables" title="Permanent link">#</a></h3>
+<p>There is a set of CSS Variables available for extensions to use for basic layout needs. They are located inside <code>:root</code> and are defined in <a href="https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss">app.scss</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">--unit</span><span class="o">:</span> <span class="nt">8px</span><span class="o">;</span>
+<span class="nt">--padding</span><span class="o">:</span> <span class="nt">var</span><span class="o">(</span><span class="nt">--unit</span><span class="o">);</span>
+<span class="nt">--margin</span><span class="o">:</span> <span class="nt">var</span><span class="o">(</span><span class="nt">--unit</span><span class="o">);</span>
+<span class="nt">--border-radius</span><span class="o">:</span> <span class="nt">3px</span><span class="o">;</span>
+</code></pre></div>
+<p>They are intended to set consistent margins and paddings across components, e.g.</p>
+<div class="highlight"><pre><span></span><code><span class="p">.</span><span class="nc">status</span> <span class="p">{</span>
+  <span class="k">padding-left</span><span class="p">:</span> <span class="nb">calc</span><span class="p">(</span><span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">padding</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
+  <span class="k">border-radius</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">border</span><span class="o">-</span><span class="n">radius</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <h2 id="themes">Themes<a class="headerlink" href="#themes" title="Permanent link">#</a></h2>
-<p>Lens using 2 built-in themes located in <code>src/renderer/themes</code> folder each for light and dark color schemes. Active theme can be changed in the <code>Preferences</code> page.
-<img alt="Color Theme" src="../images/theme-selector.png" /></p>
-<p>When Lens gets loaded it transforms selected theme <code>json</code> file into list of <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS Custom Properties (CSS Variables)</a> which then gets injected into <code>:root</code> element so any of the down-level components can use them.
+<p>Lens is using two built-in themes defined in <a href="https://github.com/lensapp/lens/tree/master/src/renderer/themes">the themes directory</a>, one for light, and one for dark color schemes.</p>
+<h3 id="theme-variables">Theme Variables<a class="headerlink" href="#theme-variables" title="Permanent link">#</a></h3>
+<p>When Lens is loaded, it transforms the selected theme <code>json</code> file into a list of <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS Custom Properties (CSS Variables)</a> which then gets injected into the <code>:root</code> element so any of the down-level components can use them.
 <img alt="CSS vars listed in devtools" src="../images/css-vars-in-devtools.png" /></p>
-<p>When user changes a theme, the process is repeated, new css variables appear instead of previous ones.</p>
-<p>If you want to follow a selected theme to keep the 'native' Lens look and feel, respecting the light/dark appearance of your extension, you can use provided variables and build-in lens components such as buttons, dropdowns, checkboxes etc.</p>
-<h2 id="injected-styles">Injected styles<a class="headerlink" href="#injected-styles" title="Permanent link">#</a></h2>
-<p>Every extention is affected by list of default global styles defined in <code>src/renderer/components/app.scss</code>. These are basic browser resets like setting <code>box-sizing</code> property for every element, default text and background colors, default font size, basic headings visualisation etc.</p>
-<p>Extension may overwrite them if needed.</p>
-<h2 id="variables-to-use">Variables to use<a class="headerlink" href="#variables-to-use" title="Permanent link">#</a></h2>
-<h3 id="basic-styling">Basic styling<a class="headerlink" href="#basic-styling" title="Permanent link">#</a></h3>
-<p>There is a list of CSS Variables available for extension to use. Basic variables located inside <code>:root</code> selected in <code>src/renderer/components/app.scss</code>:
-<div class="highlight"><pre><span></span><code>  --unit: 8px;
-  --padding: var(--unit);
-  --margin: var(--unit);
-  --border-radius: 3px;
-  --font-main: &#39;Roboto&#39;, &#39;Helvetica&#39;, &#39;Arial&#39;, sans-serif;
-  --font-monospace: Lucida Console, Monaco, Consolas, monospace;
-  --font-size-small: calc(1.5 * var(--unit));
-  --font-size: calc(1.75 * var(--unit));
-  --font-size-big: calc(2 * var(--unit));
-  --font-weight-thin: 300;
-  --font-weight-normal: 400;
-  --font-weight-bold: 500;
-</code></pre></div></p>
-<p>They're intended to set consistent paddings and font-sizes across components, e.g.
-<div class="highlight"><pre><span></span><code>.status {
-  padding-left: calc(var(--padding) * 2);
-  font-size: var(--font-size-small);
-}
-</code></pre></div></p>
-<h3 id="themable-colors">Themable colors<a class="headerlink" href="#themable-colors" title="Permanent link">#</a></h3>
-<p>After theme file gets parsed it provides list of theme-defined colors. Most of their values are different for light and dark themes. You can use them to preserve consitent view of extension with respect of selected theme.
-<div class="highlight"><pre><span></span><code>  &quot;blue&quot;: &quot;#3d90ce&quot;,
-  &quot;magenta&quot;: &quot;#c93dce&quot;,
-  &quot;golden&quot;: &quot;#ffc63d&quot;,
-  &quot;halfGray&quot;: &quot;#87909c80&quot;,
-  &quot;primary&quot;: &quot;#3d90ce&quot;,
-  &quot;textColorPrimary&quot;: &quot;#555555&quot;,
-  &quot;textColorSecondary&quot;: &quot;#51575d&quot;,
-  &quot;textColorAccent&quot;: &quot;#333333&quot;,
-  &quot;borderColor&quot;: &quot;#c9cfd3&quot;,
-  &quot;borderFaintColor&quot;: &quot;#dfdfdf&quot;,
-  &quot;mainBackground&quot;: &quot;#f1f1f1&quot;,
-  &quot;contentColor&quot;: &quot;#ffffff&quot;,
-  &quot;layoutBackground&quot;: &quot;#e8e8e8&quot;,
-  &quot;layoutTabsBackground&quot;: &quot;#f8f8f8&quot;,
-  &quot;layoutTabsActiveColor&quot;: &quot;#333333&quot;,
-  &quot;layoutTabsLineColor&quot;: &quot;#87909c80&quot;
-  ...
+<p>When the user changes the theme, the process is repeated, and new CSS Variables appear instead of previous ones.</p>
+<p>If you want to follow a selected theme to keep the 'native' Lens look and feel, respecting the light/dark appearance of your extension, you can use the provided variables and build-in Lens components such as buttons, dropdowns, checkboxes etc.</p>
+<p>There is a set of CSS Variables available for extensions to use for theming. They are all located inside <code>:root</code> and are defined in <a href="https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss">app.scss</a>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">--font-main</span><span class="o">:</span> <span class="s1">&#39;Roboto&#39;</span><span class="o">,</span> <span class="s1">&#39;Helvetica&#39;</span><span class="o">,</span> <span class="s1">&#39;Arial&#39;</span><span class="o">,</span> <span class="nt">sans-serif</span><span class="o">;</span>
+<span class="nt">--font-monospace</span><span class="o">:</span> <span class="nt">Lucida</span> <span class="nt">Console</span><span class="o">,</span> <span class="nt">Monaco</span><span class="o">,</span> <span class="nt">Consolas</span><span class="o">,</span> <span class="nt">monospace</span><span class="o">;</span>
+<span class="nt">--font-size-small</span><span class="o">:</span> <span class="nt">calc</span><span class="o">(</span><span class="nt">1</span><span class="p">.</span><span class="nc">5</span> <span class="o">*</span> <span class="nt">var</span><span class="o">(</span><span class="nt">--unit</span><span class="o">));</span>
+<span class="nt">--font-size</span><span class="o">:</span> <span class="nt">calc</span><span class="o">(</span><span class="nt">1</span><span class="p">.</span><span class="nc">75</span> <span class="o">*</span> <span class="nt">var</span><span class="o">(</span><span class="nt">--unit</span><span class="o">));</span>
+<span class="nt">--font-size-big</span><span class="o">:</span> <span class="nt">calc</span><span class="o">(</span><span class="nt">2</span> <span class="o">*</span> <span class="nt">var</span><span class="o">(</span><span class="nt">--unit</span><span class="o">));</span>
+<span class="nt">--font-weight-thin</span><span class="o">:</span> <span class="nt">300</span><span class="o">;</span>
+<span class="nt">--font-weight-normal</span><span class="o">:</span> <span class="nt">400</span><span class="o">;</span>
+<span class="nt">--font-weight-bold</span><span class="o">:</span> <span class="nt">500</span><span class="o">;</span>
+</code></pre></div>
+<p>as well as in <a href="https://github.com/lensapp/lens/tree/master/src/renderer/themes">the theme modules</a>:</p>
+<div class="highlight"><pre><span></span><code>--blue: #3d90ce;
+--magenta: #c93dce;
+--golden: #ffc63d;
+--halfGray: #87909c80;
+--primary: #3d90ce;
+--textColorPrimary: #555555;
+--textColorSecondary: #51575d;
+--textColorAccent: #333333;
+--borderColor: #c9cfd3;
+--borderFaintColor: #dfdfdf;
+--mainBackground: #f1f1f1;
+--contentColor: #ffffff;
+--layoutBackground: #e8e8e8;
+--layoutTabsBackground: #f8f8f8;
+--layoutTabsActiveColor: #333333;
+--layoutTabsLineColor: #87909c80;
 ...
-</code></pre></div></p>
-<p>They can be used in form of <code>var(--magenta)</code>.</p>
+</code></pre></div>
+<p>They can be used in form of <code>var(--magenta)</code>, e.g.</p>
+<div class="highlight"><pre><span></span><code><span class="p">.</span><span class="nc">status</span> <span class="p">{</span>
+  <span class="k">font-size</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">font</span><span class="o">-</span><span class="n">size</span><span class="o">-</span><span class="kc">small</span><span class="p">);</span>
+  <span class="k">background-color</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">colorSuccess</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
 <p>A complete list of all themable colors can be found in the <a href="../color-reference">color reference</a>.</p>
-<p>Colors values are located inside <code>src/renderer/themes/lens-dark.json</code> and <code>src/renderer/themes/lens-light.json</code> files.</p>
-<h2 id="using-css-variables-inside-css-in-js-components">Using CSS Variables inside CSS-in-JS components<a class="headerlink" href="#using-css-variables-inside-css-in-js-components" title="Permanent link">#</a></h2>
-<p>If a developer uses an <code>Emotion</code> (or similar) framework to work with styles inside an extension, they can use variables in the following form:
-<div class="highlight"><pre><span></span><code>const Container = styled.div(() =&gt; ({
-  backgroundColor: &#39;var(--mainBackground)&#39;
-}));
-</code></pre></div></p>
+<h3 id="theme-switching">Theme switching<a class="headerlink" href="#theme-switching" title="Permanent link">#</a></h3>
+<p>When the light theme is active, the <code>&lt;body&gt;</code> element gets a "theme-light" class, <code>&lt;body class="theme-light"&gt;</code>. If the class isn't there, assume the theme is dark. The active theme can be changed in the <code>Preferences</code> page:
+<img alt="Color Theme" src="../images/theme-selector.png" /></p>
+<p>Currently, there is no prescribed way of detecting changes to the theme in JavaScript. <a href="https://github.com/lensapp/lens/issues/1336">This issue</a> hopes to improve on this. In the meantime, you can use a <a href="https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver">MutationObserver</a> to observe the <code>&lt;body&gt;</code> element's <code>class</code> attribute to see if the "theme-light" class gets added to it:</p>
+<div class="highlight"><pre><span></span><code><span class="p">...</span>
+  <span class="nx">useEffect</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">observer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MutationObserver</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">mutations</span><span class="o">:</span> <span class="nx">MutationRecord</span><span class="p">[])</span> <span class="p">{</span>
+      <span class="nx">mutations</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">mutation</span><span class="o">:</span> <span class="nx">MutationRecord</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">mutation</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s1">&#39;attributes&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">mutation</span><span class="p">.</span><span class="nx">attributeName</span> <span class="o">===</span> <span class="s1">&#39;class&#39;</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">((</span><span class="nx">mutation</span><span class="p">.</span><span class="nx">target</span> <span class="nx">as</span> <span class="nx">HTMLElement</span><span class="p">).</span><span class="nx">classList</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="s1">&#39;theme-light&#39;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="c1">// theme is LIGHT</span>
+          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="c1">// theme is DARK</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+
+    <span class="nx">observer</span><span class="p">.</span><span class="nx">observe</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">attributes</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nx">attributeFilter</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">],</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="nx">observer</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">();</span>
+    <span class="p">};</span>
+  <span class="p">},</span> <span class="p">[]);</span> <span class="c1">// run once on mount</span>
+<span class="p">...</span>
+</code></pre></div>
+<h2 id="injected-styles">Injected styles<a class="headerlink" href="#injected-styles" title="Permanent link">#</a></h2>
+<p>Every extention is affected by list of default global styles defined in <a href="https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss">app.scss</a>. These are basic browser resets and element styles like setting the <code>box-sizing</code> property for every element, default text and background colors, default font sizes, basic heading formatting, etc.</p>
+<p>Extension may overwrite these if needed. They have low CSS specificity, so overriding them should be fairly easy.</p>
+<h2 id="css-in-js">CSS-in-JS<a class="headerlink" href="#css-in-js" title="Permanent link">#</a></h2>
+<p>If an extension uses a system like <code>Emotion</code> to work with styles, it can use CSS variables as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">const</span> <span class="nx">Container</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">({</span>
+  <span class="nx">backgroundColor</span><span class="o">:</span> <span class="s1">&#39;var(--mainBackground)&#39;</span>
+<span class="p">}));</span>
+</code></pre></div>
                 
               
               
