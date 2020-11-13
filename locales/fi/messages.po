@@ -140,6 +140,42 @@ msgstr ""
 msgid "Adding helm branch <0>{0}</0> has failed: {1}"
 msgstr ""
 
+#: src/renderer/components/+preferences/add-helm-repo-dialog.tsx:91
+msgid "Helm repository <0>{0}</0> has added"
+msgstr ""
+
+#: src/renderer/components/+preferences/add-helm-repo-dialog.tsx:128
+msgid "Skip TLS certificate checks for the repository"
+msgstr ""
+
+#: src/renderer/components/+preferences/add-helm-repo-dialog.tsx:128
+msgid "Key file"
+msgstr ""
+
+#: src/renderer/components/+preferences/add-helm-repo-dialog.tsx:129
+msgid "Ca file"
+msgstr ""
+
+#: src/renderer/components/+preferences/add-helm-repo-dialog.tsx:130
+msgid "Cerificate file"
+msgstr ""
+
+#: src/renderer/components/+preferences/add-helm-repo-dialog.tsx:134
+msgid "Username"
+msgstr ""
+
+#: src/renderer/components/+preferences/add-helm-repo-dialog.tsx:140
+msgid "Password"
+msgstr ""
+
+#: src/renderer/components/+preferences/add-helm-repo-dialog.tsx:163
+msgid "Helm repo name"
+msgstr ""
+
+#: src/renderer/components/+preferences/add-helm-repo-dialog.tsx:163
+msgid "More"
+msgstr ""
+
 #: src/renderer/components/+preferences/preferences.tsx:108
 #~ msgid "Adding repo <0>{0}</0> has failed: {1}"
 #~ msgstr ""
