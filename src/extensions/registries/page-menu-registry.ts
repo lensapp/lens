@@ -5,7 +5,6 @@ import { action } from "mobx";
 import type { IconProps } from "../../renderer/components/icon";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension } from "../lens-extension";
-import { PageRegistration } from "../interfaces";
 
 export interface PageMenuTarget {
   pageId: string;
@@ -32,12 +31,11 @@ export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegist
 
   @action
   add(items: T[], ext?: LensExtension) {
-    const normalizedItems = items.map((i) => {
-      console.log(i)
-      if (i.target && !i.target.extensionId) {
-        i.target.extensionId = ext.name
+    const normalizedItems = items.map((menu) => {
+      if (menu.target && !menu.target.extensionId) {
+        menu.target.extensionId = ext.name
       }
-      return i
+      return menu
     })
     return super.add(normalizedItems);
   }

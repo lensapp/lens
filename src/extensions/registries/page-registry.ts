@@ -8,7 +8,7 @@ import { LensExtension } from "../lens-extension"
 import { PageMenuTarget } from "./page-menu-registry";
 
 export interface PageRegistration {
-  id: string; // hello-world:id
+  id: string; // will be automatically prefixed with extension name
   routePath?: string; // additional (suffix) route path to base extension's route: "/extension/:name"
   exact?: boolean; // route matching flag, see: https://reactrouter.com/web/api/NavLink/exact-bool
   components: PageComponents;
