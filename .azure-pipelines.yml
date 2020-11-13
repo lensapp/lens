@@ -1,6 +1,5 @@
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
-  AZURE_CACHE_FOLDER: $(Pipeline.Workspace)/.azure-cache
 pr:
   - master
   - releases/*
@@ -29,11 +28,13 @@ jobs:
         inputs:
           versionSpec: $(node_version)
         displayName: Install Node.js
-      - task: CacheBeta@0
+      - task: Cache@2
         inputs:
           key: yarn | $(Agent.OS) | yarn.lock
+          restoreKeys: |
+            yarn | "$(Agent.OS)"
+            yarn
           path: $(YARN_CACHE_FOLDER)
-          cacheHitVar: CACHE_RESTORED
         displayName: Cache Yarn packages
       - script: make install-deps
         displayName: Install dependencies
@@ -67,17 +68,14 @@ jobs:
         inputs:
           versionSpec: $(node_version)
         displayName: Install Node.js
-      - task: CacheBeta@0
+      - task: Cache@2
         inputs:
-          key: cache | $(Agent.OS) | yarn.lock
-          path: $(AZURE_CACHE_FOLDER)
-          cacheHitVar: CACHE_RESTORED
+          key: yarn | $(Agent.OS) | yarn.lock
+          restoreKeys: |
+            yarn | "$(Agent.OS)"
+            yarn
+          path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
-      - bash: |
-          mkdir -p "$YARN_CACHE_FOLDER"
-          tar -xzf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" -C /
-        displayName: "Unpack cache"
-        condition: eq(variables.CACHE_RESTORED, 'true')
       - script: make install-deps
         displayName: Install dependencies
       - script: make build-npm
@@ -99,10 +97,6 @@ jobs:
           CSC_LINK: $(CSC_LINK)
           CSC_KEY_PASSWORD: $(CSC_KEY_PASSWORD)
           GH_TOKEN: $(GH_TOKEN)
-      - bash: |
-          mkdir -p "$AZURE_CACHE_FOLDER"
-          tar -czf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" "$YARN_CACHE_FOLDER"
-        displayName: Pack cache
   - job: Linux
     pool:
       vmImage: ubuntu-16.04
@@ -118,17 +112,14 @@ jobs:
         inputs:
           versionSpec: $(node_version)
         displayName: Install Node.js
-      - task: CacheBeta@0
+      - task: Cache@2
         inputs:
-          key: cache | $(Agent.OS) | yarn.lock
-          path: $(AZURE_CACHE_FOLDER)
-          cacheHitVar: CACHE_RESTORED
+          key: yarn | $(Agent.OS) | yarn.lock
+          restoreKeys: |
+            yarn | "$(Agent.OS)"
+            yarn
+          path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
-      - bash: |
-          mkdir -p "$YARN_CACHE_FOLDER"
-          tar -xzf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" -C /
-        displayName: "Unpack cache"
-        condition: eq(variables.CACHE_RESTORED, 'true')
       - script: make install-deps
         displayName: Install dependencies
       - script: make test-extensions
@@ -172,7 +163,3 @@ jobs:
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
           NPM_TOKEN: $(NPM_TOKEN)
-      - bash: |
-          mkdir -p "$AZURE_CACHE_FOLDER"
-          tar -czf "$AZURE_CACHE_FOLDER/yarn-cache.tar.gz" "$YARN_CACHE_FOLDER"
-        displayName: Pack cache
