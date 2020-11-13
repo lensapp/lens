@@ -5,13 +5,18 @@ import { action } from "mobx";
 import type { IconProps } from "../../renderer/components/icon";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension } from "../lens-extension";
-import { getPageUrl } from "./page-registry";
+import { PageRegistration } from "../interfaces";
+
+export interface PageMenuTarget {
+  pageId: string;
+  extensionId: string;
+  params: object;
+}
 
 export interface PageMenuRegistration {
-  url?: string; // when not provided initial extension's path used, e.g. "/extension/lens-extension-name"
+  target?: PageMenuTarget;
   title: React.ReactNode;
   components: PageMenuComponents;
-  subMenus?: PageSubMenuRegistration[];
 }
 
 export interface PageSubMenuRegistration {
@@ -24,17 +29,14 @@ export interface PageMenuComponents {
 }
 
 export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {
+
   @action
   add(items: T[], ext?: LensExtension) {
     const normalizedItems = items.map((i) => {
-      i.url = getPageUrl(ext, i.url)
+      i.target.extensionId = ext.name
       return i
     })
     return super.add(normalizedItems);
-  }
-
-  getByRoutePath(routePath: string) {
-    return this.getItems().find((i) => i.url === routePath)
   }
 }
 

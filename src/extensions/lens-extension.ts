@@ -14,7 +14,6 @@ export interface LensExtensionManifest {
 }
 
 export class LensExtension {
-  readonly routePrefix = "/extension/:name"
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
   readonly isBundled: boolean;

@@ -1,6 +1,7 @@
 import type { AppPreferenceRegistration, ClusterFeatureRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration, KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, } from "./registries"
 import { observable } from "mobx";
 import { LensExtension } from "./lens-extension"
+import { getPageUrl } from "./registries/page-registry"
 
 export class LensRendererExtension extends LensExtension {
   @observable.shallow globalPages: PageRegistration[] = []
@@ -16,6 +17,6 @@ export class LensRendererExtension extends LensExtension {
 
   async navigate(location?: string) {
     const { navigate } = await import("../renderer/navigation");
-    navigate(this.getPageUrl(location));
+    navigate(getPageUrl(this, location));
   }
 }

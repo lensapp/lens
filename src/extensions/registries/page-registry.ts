@@ -5,12 +5,13 @@ import { action } from "mobx";
 import { compile } from "path-to-regexp";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension } from "../lens-extension"
+import { PageMenuTarget } from "./page-menu-registry";
 
 export interface PageRegistration {
+  id: string; // hello-world:id
   routePath?: string; // additional (suffix) route path to base extension's route: "/extension/:name"
   exact?: boolean; // route matching flag, see: https://reactrouter.com/web/api/NavLink/exact-bool
   components: PageComponents;
-  subPages?: SubPageRegistration[];
 }
 
 export interface SubPageRegistration {
@@ -41,8 +42,8 @@ export class PageRegistry<T extends PageRegistration> extends BaseRegistry<T> {
     return super.add(normalizedItems);
   }
 
-  getByUrl(url: string) {
-    return this.getItems().find((i) => i.routePath === url)
+  getByPageMenuTarget(target: PageMenuTarget) {
+    return this.getItems().find((page) => page.routePath.startsWith(`/extension/${target.extensionId}/`) && page.id === target.pageId)
   }
 }
 
