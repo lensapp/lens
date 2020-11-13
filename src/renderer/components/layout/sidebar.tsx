@@ -193,7 +193,6 @@ export class Sidebar extends React.Component<Props> {
             </SidebarNavItem>
             {clusterPageMenuRegistry.getItems().map(({ title, url, components: { Icon } }) => {
               const registeredPage = clusterPageRegistry.getByUrl(url);
-              console.log(url, registeredPage)
               if (!registeredPage) return;
               const { routePath, exact } = registeredPage;
               return (
