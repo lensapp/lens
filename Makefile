@@ -15,7 +15,8 @@ download-bins:
 	yarn download-bins
 
 install-deps:
-	yarn install --frozen-lockfile
+	yarn install --frozen-lockfile --verbose
+	yarn check --verify-tree --integrity
 
 compile-dev:
 	yarn compile:main --cache
@@ -56,10 +57,10 @@ else
 endif
 
 build-extensions:
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(dir) build || exit $?; )
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), (cd $(dir) && npm install && npm run build || exit $?);)
 
 test-extensions:
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), $(MAKE) -C $(dir) test || exit $?; )
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), (cd $(dir) && npm install --dev && npm run test || exit $?);)
 
 build-npm: build-extension-types
 	yarn npm:fix-package-version
