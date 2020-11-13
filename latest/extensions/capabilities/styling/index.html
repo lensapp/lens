@@ -969,7 +969,7 @@
 <p>When Lens is loaded, it transforms the selected theme <code>json</code> file into a list of <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS Custom Properties (CSS Variables)</a> which then gets injected into the <code>:root</code> element so any of the down-level components can use them.
 <img alt="CSS vars listed in devtools" src="../images/css-vars-in-devtools.png" /></p>
 <p>When the user changes the theme, the process is repeated, and new CSS Variables appear instead of previous ones.</p>
-<p>If you want to follow a selected theme to keep the 'native' Lens look and feel, respecting the light/dark appearance of your extension, you can use the provided variables and build-in Lens components such as buttons, dropdowns, checkboxes etc.</p>
+<p>If you want to follow a selected theme to keep the 'native' Lens look and feel, respecting the light/dark appearance of your extension, you can use the provided variables and built-in Lens components such as <code>Button</code>, <code>Select</code>, <code>Table</code>, etc.</p>
 <p>There is a set of CSS Variables available for extensions to use for theming. They are all located inside <code>:root</code> and are defined in <a href="https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss">app.scss</a>:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">--font-main</span><span class="o">:</span> <span class="s1">&#39;Roboto&#39;</span><span class="o">,</span> <span class="s1">&#39;Helvetica&#39;</span><span class="o">,</span> <span class="s1">&#39;Arial&#39;</span><span class="o">,</span> <span class="nt">sans-serif</span><span class="o">;</span>
 <span class="nt">--font-monospace</span><span class="o">:</span> <span class="nt">Lucida</span> <span class="nt">Console</span><span class="o">,</span> <span class="nt">Monaco</span><span class="o">,</span> <span class="nt">Consolas</span><span class="o">,</span> <span class="nt">monospace</span><span class="o">;</span>
@@ -1036,7 +1036,7 @@
 <span class="p">...</span>
 </code></pre></div>
 <h2 id="injected-styles">Injected styles<a class="headerlink" href="#injected-styles" title="Permanent link">#</a></h2>
-<p>Every extention is affected by list of default global styles defined in <a href="https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss">app.scss</a>. These are basic browser resets and element styles like setting the <code>box-sizing</code> property for every element, default text and background colors, default font sizes, basic heading formatting, etc.</p>
+<p>Every extension is affected by list of default global styles defined in <a href="https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss">app.scss</a>. These are basic browser resets and element styles like setting the <code>box-sizing</code> property for every element, default text and background colors, default font sizes, basic heading formatting, etc.</p>
 <p>Extension may overwrite these if needed. They have low CSS specificity, so overriding them should be fairly easy.</p>
 <h2 id="css-in-js">CSS-in-JS<a class="headerlink" href="#css-in-js" title="Permanent link">#</a></h2>
 <p>If an extension uses a system like <code>Emotion</code> to work with styles, it can use CSS variables as follows:</p>
