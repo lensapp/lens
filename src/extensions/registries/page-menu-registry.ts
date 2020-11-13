@@ -9,8 +9,8 @@ import { PageRegistration } from "../interfaces";
 
 export interface PageMenuTarget {
   pageId: string;
-  extensionId: string;
-  params: object;
+  extensionId?: string;
+  params?: object;
 }
 
 export interface PageMenuRegistration {
@@ -33,7 +33,9 @@ export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegist
   @action
   add(items: T[], ext?: LensExtension) {
     const normalizedItems = items.map((i) => {
-      i.target.extensionId = ext.name
+      if (!i.target.extensionId) {
+        i.target.extensionId = ext.name
+      }
       return i
     })
     return super.add(normalizedItems);
