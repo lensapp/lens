@@ -117,7 +117,7 @@ export class Workspaces extends React.Component {
             const isEditing = this.editingWorkspaces.has(workspaceId);
             const editingWorkspace = this.editingWorkspaces.get(workspaceId);
             const managed = !!ownerRef
-            const className = cssNames("workspace flex gaps", {
+            const className = cssNames("workspace flex gaps align-center", {
               active: isActive,
               editing: isEditing,
               default: isDefault,
