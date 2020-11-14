@@ -20,11 +20,15 @@ export interface PageComponents {
 
 const routePrefix = "/extension/:name"
 
+export function sanitizeExtensioName(name: string) {
+  return name.replace("@", "").replace("/", "-")
+}
+
 export function getPageUrl(ext: LensExtension, baseUrl = "") {
   if (baseUrl !== "" && !baseUrl.startsWith("/")) {
     baseUrl = "/" + baseUrl
   }
-  const validUrlName = ext.name.replace("@", "").replace("/", "-");
+  const validUrlName = sanitizeExtensioName(ext.name);
   return compile(routePrefix)({ name: validUrlName }) + baseUrl;
 }
 
@@ -46,7 +50,8 @@ export class PageRegistry<T extends PageRegistration> extends BaseRegistry<T> {
     if (!target) {
       return null
     }
-    return this.getItems().find((page) => page.routePath.startsWith(`/extension/${target.extensionId}/`) && page.id === target.pageId)
+    const routePath = `/extension/${sanitizeExtensioName(target.extensionId)}/`
+    return this.getItems().find((page) => page.routePath.startsWith(routePath) && page.id === target.pageId) || null
   }
 }
 
