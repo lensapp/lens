@@ -1,5 +1,6 @@
-import { getPageUrl } from "../page-registry"
+import { getPageUrl, globalPageRegistry } from "../page-registry"
 import { LensExtension } from "../../lens-extension"
+import React from "react";
 
 let ext: LensExtension = null
 
@@ -31,5 +32,51 @@ describe("getPageUrl", () => {
 
   it("adds / prefix", () => {
     expect(getPageUrl(ext, "test")).toBe("/extension/foo-bar/test")
+  })
+})
+
+describe("globalPageRegistry", () => {
+  beforeEach(async () => {
+    ext = new LensExtension({
+      manifest: {
+        name: "@acme/foo-bar",
+        version: "0.1.1"
+      },
+      manifestPath: "/this/is/fake/package.json",
+      isBundled: false,
+      isEnabled: true
+    })
+    globalPageRegistry.add([
+      {
+        id: "test-page",
+        components: {
+          Page: () => React.createElement('Text')
+        }
+      },
+      {
+        id: "another-page",
+        components: {
+          Page: () => React.createElement('Text')
+        }
+      },
+    ], ext)
+  })
+
+  describe("getByPageMenuTarget", () => {
+    it("returns matching page", () => {
+      const page = globalPageRegistry.getByPageMenuTarget({
+        pageId: "test-page",
+        extensionId: ext.name
+      })
+      expect(page.id).toEqual("test-page")
+    })
+
+    it("returns null if target not found", () => {
+      const page = globalPageRegistry.getByPageMenuTarget({
+        pageId: "wrong-page",
+        extensionId: ext.name
+      })
+      expect(page).toBeNull()
+    })
   })
 })
