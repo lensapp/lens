@@ -22,8 +22,7 @@ import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
-import { globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
-import { compile } from "path-to-regexp";
+import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
 
 interface Props {
   className?: IClassName;
@@ -152,13 +151,14 @@ export class ClustersMenu extends React.Component<Props> {
           {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
             const registeredPage = globalPageRegistry.getByPageMenuTarget(target);
             if (!registeredPage) return;
-            const { routePath, exact } = registeredPage;
+            const { routePath, exact, extensionId, id: pageId } = registeredPage;
+            const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: target.params });
             return (
               <Icon
                 key={routePath}
                 tooltip={title}
                 active={isActiveRoute({ path: routePath, exact })}
-                onClick={() => navigate(compile(routePath)(target.params))}
+                onClick={() => navigate(pageUrl)}
               />
             )
           })}
