@@ -77,7 +77,8 @@
       "^@lingui/macro$": "<rootDir>/__mocks__/@linguiMacro.ts"
     },
     "modulePathIgnorePatterns": [
-      "<rootDir>/dist"
+      "<rootDir>/dist",
+      "<rootDir>/src/extensions/npm"
     ],
     "setupFiles": [
       "<rootDir>/src/jest.setup.ts"
