@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "files": [
+    "src/extensions/extension-api.ts",
+  ],
+  "compilerOptions": {
+    "sourceMap": false,
+    "declaration": true
+  },
+}

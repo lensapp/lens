@@ -35,6 +35,9 @@
       "module": "CommonJS"
     }
   },
+  "include": [
+    "types/*.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "out",
