@@ -86,7 +86,7 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   get version(): string {
-    return String(this.metadata?.version) || ""
+    return String(this.metadata?.version) || ""
   }
 
   constructor(model: ClusterModel) {
@@ -149,7 +149,7 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   @action
-  async activate(force = false ) {
+  async activate(force = false) {
     if (this.activated && !force) {
       return this.pushState();
     }
@@ -252,12 +252,12 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
-    (options.headers ??= {}).Host = `${this.id}.${new URL(this.kubeProxyUrl).host}` // required in ClusterManager.getClusterForRequest()
+    options.headers ??= {}
     options.json ??= true
     options.timeout ??= 30000
+    options.headers.Host = `${this.id}.${new URL(this.kubeProxyUrl).host}` // required in ClusterManager.getClusterForRequest()
 
-    const apiUrl = this.kubeProxyUrl + path;
-    return request(apiUrl, options)
+    return request(this.kubeProxyUrl + path, options)
   }
 
   getMetrics(prometheusPath: string, queryParams: IMetricsReqParams & { query: string }) {
