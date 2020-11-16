@@ -1,7 +1,7 @@
-# Theme color reference
+# Theme Color Reference
 You can use theme-based CSS Variables to style an extension according to the active theme.
 
-## Base colors
+## Base Colors
 - `--blue`: blue color.
 - `--magenta`: magenta color.
 - `--golden`: gold/yellow color.
@@ -17,16 +17,16 @@ You can use theme-based CSS Variables to style an extension according to the act
 - `--colorTerminated`: terminated, closed, stale color.
 - `--boxShadow`: semi-transparent box-shadow color.
 
-## Text colors
+## Text Colors
 - `--textColorPrimary`: foreground text color.
 - `--textColorSecondary`: foreground text color for different paragraps, parts of text.
 - `--textColorAccent`: foreground text color to highlight its parts.
 
-## Border colors
+## Border Colors
 - `--borderColor`: border color.
 - `--borderFaintColor`: fainted (lighter or darker, which depends on the theme) border color.
 
-## Layout colors
+## Layout Colors
 - `--mainBackground`: main background color for the app.
 - `--contentColor`: background color for panels contains some data.
 - `--layoutBackground`: background color for layout parts.
@@ -34,19 +34,19 @@ You can use theme-based CSS Variables to style an extension according to the act
 - `--layoutTabsActiveColor`: foreground color for general tabs.
 - `--layoutTabsLineColor`: background color for lines under general tabs.
 
-## Sidebar colors
+## Sidebar Colors
 - `--sidebarLogoBackground`: background color behind logo in sidebar.
 - `--sidebarActiveColor`: foreground color for active menu items in sidebar.
 - `--sidebarSubmenuActiveColor`: foreground color for active submenu items in sidebar.
 - `--sidebarBackground`: background color for sidebar.
 
-## Button colors
+## Button Colors
 - `--buttonPrimaryBackground`: button background color for primary actions.
 - `--buttonDefaultBackground`: default button background color.
 - `--buttonAccentBackground`: accent button background color.
 - `--buttonDisabledBackground`: disabled button background color.
 
-## Table colors
+## Table Colors
 - `--tableBgcStripe`: background color for odd rows in table.
 - `--tableBgcSelected`: background color for selected row in table.
 - `--tableHeaderBackground`: background color for table header.
@@ -55,12 +55,12 @@ You can use theme-based CSS Variables to style an extension according to the act
 - `--tableHeaderColor`: foreground color for table header.
 - `--tableSelectedRowColor`: foreground color for selected row in table.
 
-## Dock colors
+## Dock Colors
 - `--dockHeadBackground`: background color for dock's header.
 - `--dockInfoBackground`: background color for dock's info panel.
 - `--dockInfoBorderColor`: border color for dock's info panel.
 
-## Helm chart colors
+## Helm Chart Colors
 - `--helmLogoBackground`: background color for chart logo.
 - `--helmImgBackground`: background color for chart image.
 - `--helmStableRepo`: background color for stable repo.
@@ -77,7 +77,7 @@ You can use theme-based CSS Variables to style an extension according to the act
 - `--helmDescriptionPreBackground`: Helm chart description pre background color.
 - `--helmDescriptionPreColor`: Helm chart description pre foreground color.
 
-## Terminal colors
+## Terminal Colors
 - `--terminalBackground`: Terminal background color.
 - `--terminalForeground`: Terminal foreground color.
 - `--terminalCursor`: Terminal cursor color.
@@ -100,17 +100,17 @@ You can use theme-based CSS Variables to style an extension according to the act
 - `--terminalBrightCyan`: Terminal bright cyan color.
 - `--terminalBrightWhite`: Terminal bright white color.
 
-## Dialog colors
+## Dialog Colors
 - `--dialogHeaderBackground`: background color for dialog header.
 - `--dialogFooterBackground`: background color for dialog footer.
 
-## Detail panel (Drawer) colors
+## Detail Panel (Drawer) Colors
 - `--drawerTitleText`: drawer title foreground color.
 - `--drawerSubtitleBackground`: drawer subtitle foreground color.
 - `--drawerItemNameColor`: foreground color for item name in drawer.
 - `--drawerItemValueColor`: foreground color for item value in drawer.
 
-## Misc colors
+## Misc Colors
 - `--logsBackground`: background color for pod logs.
 - `--clusterMenuBackground`: background color for cluster menu.
 - `--clusterMenuBorderColor`: border color for cluster menu.
