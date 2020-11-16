@@ -6,6 +6,7 @@ import { readFile } from "fs-extra"
 import { Cluster } from "./cluster"
 import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "../common/vars";
 import { helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute } from "./routes";
+import logger from "./logger"
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;
@@ -94,7 +95,7 @@ export class Router {
     return mimeTypes[path.extname(filename).slice(1)] || "text/plain"
   }
 
-  async handleStaticFile(filePath: string, res: http.ServerResponse, req: http.IncomingMessage) {
+  async handleStaticFile(filePath: string, res: http.ServerResponse, req: http.IncomingMessage, retryCount = 0) {
     const asset = path.join(__static, filePath);
     try {
       const filename = path.basename(req.url);
@@ -112,7 +113,13 @@ export class Router {
       res.write(data);
       res.end();
     } catch (err) {
-      this.handleStaticFile(`${publicPath}/${appName}.html`, res, req);
+      if (retryCount > 5) {
+        logger.error("handleStaticFile:", err.toString())
+        res.statusCode = 404
+        res.end()
+        return
+      }
+      this.handleStaticFile(`${publicPath}/${appName}.html`, res, req, Math.max(retryCount, 0) + 1);
     }
   }
 
@@ -120,7 +127,7 @@ export class Router {
     // Static assets
     this.router.add(
       { method: 'get', path: '/{path*}' },
-      ({ params, response, path, raw: { req }}: LensApiRequest) => {
+      ({ params, response, path, raw: { req } }: LensApiRequest) => {
         this.handleStaticFile(params.path, response, req);
       });
 

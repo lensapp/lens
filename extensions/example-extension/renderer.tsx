@@ -5,11 +5,21 @@ import React from "react"
 export default class ExampleExtension extends LensRendererExtension {
   clusterPages = [
     {
-      path: "/extension-example",
+      id: "example",
+      routePath: "/extension-example",
       title: "Example Extension",
       components: {
         Page: () => <ExamplePage extension={this}/>,
-        MenuIcon: ExampleIcon,
+      }
+    }
+  ]
+
+  clusterPageMenus = [
+    {
+      target: { pageId: "example", params: {} },
+      title: "Example Extension",
+      components: {
+        Icon: ExampleIcon,
       }
     }
   ]

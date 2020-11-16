@@ -5,7 +5,6 @@ import { remote } from "electron"
 import type { Cluster } from "../../../main/cluster";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
-import { matchPath } from "react-router";
 import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
 import { userStore } from "../../../common/user-store";
@@ -15,7 +14,7 @@ import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
-import { navigate, navigation } from "../../navigation";
+import { isActiveRoute, navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
@@ -24,6 +23,7 @@ import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
 import { globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
+import { compile } from "path-to-regexp";
 
 interface Props {
   className?: IClassName;
@@ -149,17 +149,16 @@ export class ClustersMenu extends React.Component<Props> {
           )}
         </div>
         <div className="extensions">
-          {globalPageMenuRegistry.getItems().map(({ id: menuItemId, title, url, components: { Icon } }) => {
-            const registeredPage = globalPageRegistry.getById(menuItemId);
+          {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
+            const registeredPage = globalPageRegistry.getByPageMenuTarget(target);
             if (!registeredPage) return;
             const { routePath, exact } = registeredPage;
-            const isActive = !!matchPath(navigation.location.pathname, { path: routePath, exact });
             return (
               <Icon
                 key={routePath}
                 tooltip={title}
-                active={isActive}
-                onClick={() => navigate(url)}
+                active={isActiveRoute({ path: routePath, exact })}
+                onClick={() => navigate(compile(routePath)(target.params))}
               />
             )
           })}

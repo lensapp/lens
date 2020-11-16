@@ -30,6 +30,7 @@ import { isActiveRoute } from "../../navigation";
 import { isAllowedResource } from "../../../common/rbac"
 import { Spinner } from "../spinner";
 import { clusterPageMenuRegistry, clusterPageRegistry } from "../../../extensions/registries";
+import { compile } from "path-to-regexp";
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
 type SidebarContextValue = {
@@ -191,10 +192,11 @@ export class Sidebar extends React.Component<Props> {
             >
               {this.renderCustomResources()}
             </SidebarNavItem>
-            {clusterPageMenuRegistry.getItems().map(({ id: menuItemId, title, url, components: { Icon } }) => {
-              const registeredPage = clusterPageRegistry.getById(menuItemId);
+            {clusterPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
+              const registeredPage = clusterPageRegistry.getByPageMenuTarget(target);
               if (!registeredPage) return;
               const { routePath, exact } = registeredPage;
+              const url = compile(routePath)(target.params)
               return (
                 <SidebarNavItem
                   key={url}

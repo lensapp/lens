@@ -1,6 +1,5 @@
 import type { InstalledExtension } from "./extension-manager";
 import { action, observable, reaction } from "mobx";
-import { compile } from "path-to-regexp"
 import logger from "../main/logger";
 
 export type LensExtensionId = string; // path to manifest (package.json)
@@ -15,7 +14,6 @@ export interface LensExtensionManifest {
 }
 
 export class LensExtension {
-  readonly routePrefix = "/extension/:name"
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
   readonly isBundled: boolean;
@@ -42,14 +40,6 @@ export class LensExtension {
 
   get description() {
     return this.manifest.description
-  }
-
-  getPageUrl(baseUrl = "") {
-    return compile(this.routePrefix)({ name: this.name }) + baseUrl;
-  }
-
-  getPageRoute(baseRoute = "") {
-    return this.routePrefix + baseRoute;
   }
 
   @action

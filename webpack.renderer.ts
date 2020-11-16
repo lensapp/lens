@@ -188,7 +188,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
 
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
-      
+
     ].filter(Boolean),
   }
 }

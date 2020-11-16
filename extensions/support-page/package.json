@@ -7,7 +7,7 @@
   "scripts": {
     "build": "webpack -p",
     "dev": "webpack --watch",
-    "test": "echo NO TESTS"
+    "test": "jest --passWithNoTests --env=jsdom src $@"
   },
   "dependencies": {},
   "devDependencies": {
@@ -16,6 +16,7 @@
     "@types/react-router": "^5.1.8",
     "@types/webpack": "^4.41.17",
     "css-loader": "^5.0.0",
+    "jest": "^26.6.3",
     "mobx": "^5.15.5",
     "react": "^16.13.1",
     "sass-loader": "^10.0.4",
