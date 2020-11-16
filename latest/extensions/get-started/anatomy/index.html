@@ -271,7 +271,7 @@
 
   <li class="md-nav__item">
     <a href="../../../clusters/adding-clusters/" class="md-nav__link">
-      Adding clusters
+      Adding Clusters
     </a>
   </li>
 
@@ -283,7 +283,7 @@
 
   <li class="md-nav__item">
     <a href="../../../clusters/removing-clusters/" class="md-nav__link">
-      Removing cluster
+      Removing Clusters
     </a>
   </li>
 
@@ -388,16 +388,28 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-2" type="checkbox" id="nav-7-2" checked>
     
     <label class="md-nav__link" for="nav-7-2">
-      Get Started
+      Getting Started
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Get Started" data-md-level="2">
+    <nav class="md-nav" aria-label="Getting Started" data-md-level="2">
       <label class="md-nav__title" for="nav-7-2">
         <span class="md-nav__icon md-icon"></span>
-        Get Started
+        Getting Started
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../overview/" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
         
           
           
@@ -525,18 +537,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../../capabilities/" class="md-nav__link">
-      Overview
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../capabilities/common-capabilities/" class="md-nav__link">
       Common Capabilities
     </a>
@@ -562,7 +562,7 @@
 
   <li class="md-nav__item">
     <a href="../../capabilities/color-reference/" class="md-nav__link">
-      Color reference
+      Color Reference
     </a>
   </li>
 
@@ -663,18 +663,6 @@
   <li class="md-nav__item">
     <a href="../../testing-and-publishing/publishing/" class="md-nav__link">
       Publishing Extensions
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../testing-and-publishing/bundling/" class="md-nav__link">
-      Bundling Extensions
     </a>
   </li>
 
@@ -869,14 +857,14 @@
                 
                 
                 <h1 id="extension-anatomy">Extension Anatomy<a class="headerlink" href="#extension-anatomy" title="Permanent link">#</a></h1>
-<p>You've now learnt how to get basic extension running. In this topic you will learn some fundamental concepts to Lens Extension development; How does it work under the hood?</p>
-<p><code>Hello World</code> extension does three things:</p>
+<p>In the <a href="../your-first-extension/">previous section</a> you learned how to create your first extension. In this section you will learn how this extension works under the hood.</p>
+<p>The Hello World sample extension does three things:</p>
 <ul>
-<li>Hooks on <code>onActivate()</code> and ouputs message into console.</li>
-<li>Hooks on <code>onDectivate()</code> and ouputs message into console.</li>
-<li>Registers <code>ClusterPage</code> so that page is visible in the sidebars of cluster dashboards.</li>
+<li>Implements <code>onActivate()</code> and outputs a message to the console.</li>
+<li>Implements <code>onDectivate()</code> and outputs a message to the console.</li>
+<li>Registers <code>ClusterPage</code> so that the page is visible in the left-side menu of the cluster dashboard.</li>
 </ul>
-<p>Let's take a closer look at Hello World sample's source code and see how to achieve these things.</p>
+<p>Let's take a closer look at our Hello World sample's source code and see how these three things are achieved.</p>
 <h2 id="extension-file-structure">Extension File Structure<a class="headerlink" href="#extension-file-structure" title="Permanent link">#</a></h2>
 <div class="highlight"><pre><span></span><code>.
 ├── .gitignore          // Ignore build output and node_modules
@@ -890,14 +878,14 @@
 ├── tsconfig.json        // TypeScript configuration
 ├── webpack.config.js    // Webpack configuration
 </code></pre></div>
-<p>Extension directory contains extension's entry files and few configuration files. Let's focus on <code>package.json</code>, <code>main.ts</code> and <code>renderer.tsx</code> which are essential to understanding the <code>Hello World</code> extension.</p>
+<p>The extension directory contains the extension's entry files and a few configuration files. Three files: <code>package.json</code>, <code>main.ts</code> and <code>renderer.tsx</code> are essential to understanding the Hello World sample extension. We'll look at those first.</p>
 <h3 id="extension-manifest">Extension Manifest<a class="headerlink" href="#extension-manifest" title="Permanent link">#</a></h3>
-<p>Each Lens extension must have <code>package.json</code>. The <code>package.json</code> contains a mix of Node.js fields such as scripts and dependencies and Lens specific fields such as <code>publisher</code> and <code>contributes</code>. Here are some most important fields:</p>
+<p>Each Lens extension must have a <code>package.json</code> file. It contains a mix of Node.js fields, including scripts and dependencies, and Lens-specific fields such as <code>publisher</code> and <code>contributes</code>. Some of the most-important fields include:</p>
 <ul>
-<li><code>name</code> and <code>publisher</code>: Lens uses <code>@&lt;publisher&gt;/&lt;name&gt;</code> as a unique ID for the extension. For example, the Hello World sample has the ID <code>@lensapp-samples/helloworld-sample</code>. Lens uses the ID to uniquely identify your extension</li>
-<li><code>main</code>: The extension's entry point run in <code>main</code> process.</li>
-<li><code>renderer</code>: The extension's entry point run in <code>renderer</code> process.</li>
-<li><code>engines.lens</code>: This specifies the minimum version of Lens API that the extension depends on.</li>
+<li><code>name</code> and <code>publisher</code>: Lens uses <code>@&lt;publisher&gt;/&lt;name&gt;</code> as a unique ID for the extension. For example, the Hello World sample has the ID <code>@lensapp-samples/helloworld-sample</code>. Lens uses this ID to uniquely identify your extension.</li>
+<li><code>main</code>: the extension's entry point run in <code>main</code> process.</li>
+<li><code>renderer</code>: the extension's entry point run in <code>renderer</code> process.</li>
+<li><code>engines.lens</code>: the minimum version of Lens API that the extension depends upon.</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
   <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;helloworld-sample&quot;</span><span class="p">,</span>
@@ -930,9 +918,9 @@
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="extension-entry-files">Extension Entry Files<a class="headerlink" href="#extension-entry-files" title="Permanent link">#</a></h2>
-<p>Lens extensions can have two separate entry files. One file that is used in <code>main</code> process of Lens application and antoher that is used in <code>renderer</code> process. <code>main</code> entry file should export class that extends <code>LensMainExtension</code> and <code>renderer</code> entry file should export class that extends <code>LensRendererExtension</code>.</p>
-<p>Both extensions classes have <code>onActivate</code> and <code>onDeactivate</code> methods. <code>onActivate</code> is executed when your extension activation happens. You may want to initialize something in your extension at this point. <code>onDeactivate</code> gives you a chance to clean up before your extension becomes deactivated. For many extensions, explicit cleanup may not be required, and you don't need to override this method. However, if an extension needs to perform an operation when Lens is shutting down or the extension is disabled or uninstalled, this is the method to do so.</p>
-<p><code>Hello world</code> extension does not do anything special on <code>main</code> process, so let's focus on the <code>renderer</code> side. On <code>renderer</code> entry point, <code>Hello world</code> extension defines one <code>Cluster Page</code> object that registers <code>/extension-example</code> path that renders <code>ExamplePage</code> React component. It registers also <code>MenuItem</code> component that displays <code>ExampleIcon</code> React component and "Hello World" text in the sidebar of cluster dashboards. These React components are defined in additional <code>./src/page.tsx</code> file.</p>
+<p>Lens extensions can have two separate entry files. One file is used in the <code>main</code> process of the Lens application and the other is used in the <code>renderer</code> process. The <code>main</code> entry file exports the class that extends <code>LensMainExtension</code>, and the <code>renderer</code> entry file exports the class that extends <code>LensRendererExtension</code>.</p>
+<p>Both extension classes have <code>onActivate</code> and <code>onDeactivate</code> methods. The <code>onActivate</code> method is executed when your extension is activated. If you need to initialize something in your extension, this is where such an operation should occur. The <code>onDeactivate</code> method gives you a chance to clean up before your extension becomes deactivated. For extensions where explicit cleanup is not required, you don't need to override this method. However, if an extension needs to perform an operation when Lens is shutting down (or if the extension is disabled or uninstalled), this is the method where such an operation should occur.</p>
+<p>The Hello World sample extension does not do anything on the <code>main</code> process, so we'll focus on the <code>renderer</code> process, instead. On the <code>renderer</code> entry point, the Hello World sample extension defines the <code>Cluster Page</code> object. The <code>Cluster Page</code> object registers the <code>/extension-example</code> path, and this path renders the <code>ExamplePage</code> React component. It also registers the <code>MenuItem</code> component that displays the <code>ExampleIcon</code> React component and the "Hello World" text in the left-side menu of the cluster dashboard. These React components are defined in the additional <code>./src/page.tsx</code> file.</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>
 <span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
@@ -948,7 +936,7 @@
   <span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><code>Hello World</code> extension uses only one capability (<code>Cluster Page</code>) of Lens extensions. The <a href="/extensions/capabilities/">Extension Capabilities Overview</a> topic helps you find the right capabilities you can use with your own extension.</p>
+<p>The Hello World sample extension uses the <code>Cluster Page</code> capability, which is just one of the Lens extension API's capabilities. The <a href="../../capabilities/common-capabilities/">Common Capabilities</a> page will help you home in on the right capabilities to use with your own extensions. </p>
                 
               
               

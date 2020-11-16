@@ -271,7 +271,7 @@
 
   <li class="md-nav__item">
     <a href="../../../clusters/adding-clusters/" class="md-nav__link">
-      Adding clusters
+      Adding Clusters
     </a>
   </li>
 
@@ -283,7 +283,7 @@
 
   <li class="md-nav__item">
     <a href="../../../clusters/removing-clusters/" class="md-nav__link">
-      Removing cluster
+      Removing Clusters
     </a>
   </li>
 
@@ -386,16 +386,28 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-2" type="checkbox" id="nav-7-2">
     
     <label class="md-nav__link" for="nav-7-2">
-      Get Started
+      Getting Started
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Get Started" data-md-level="2">
+    <nav class="md-nav" aria-label="Getting Started" data-md-level="2">
       <label class="md-nav__title" for="nav-7-2">
         <span class="md-nav__icon md-icon"></span>
-        Get Started
+        Getting Started
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../get-started/overview/" class="md-nav__link">
+      Overview
+    </a>
+  </li>
+
         
           
           
@@ -460,18 +472,6 @@
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../" class="md-nav__link">
-      Overview
-    </a>
-  </li>
-
         
           
           
@@ -558,7 +558,7 @@
         
           <li class="md-nav__item">
   <a href="#theme-switching" class="md-nav__link">
-    Theme switching
+    Theme Switching
   </a>
   
 </li>
@@ -570,7 +570,7 @@
       
         <li class="md-nav__item">
   <a href="#injected-styles" class="md-nav__link">
-    Injected styles
+    Injected Styles
   </a>
   
 </li>
@@ -596,7 +596,7 @@
 
   <li class="md-nav__item">
     <a href="../color-reference/" class="md-nav__link">
-      Color reference
+      Color Reference
     </a>
   </li>
 
@@ -697,18 +697,6 @@
   <li class="md-nav__item">
     <a href="../../testing-and-publishing/publishing/" class="md-nav__link">
       Publishing Extensions
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../testing-and-publishing/bundling/" class="md-nav__link">
-      Bundling Extensions
     </a>
   </li>
 
@@ -898,7 +886,7 @@
         
           <li class="md-nav__item">
   <a href="#theme-switching" class="md-nav__link">
-    Theme switching
+    Theme Switching
   </a>
   
 </li>
@@ -910,7 +898,7 @@
       
         <li class="md-nav__item">
   <a href="#injected-styles" class="md-nav__link">
-    Injected styles
+    Injected Styles
   </a>
   
 </li>
@@ -936,7 +924,7 @@
               
                 
                 
-                <h1 id="styling-an-extension">Styling an extension<a class="headerlink" href="#styling-an-extension" title="Permanent link">#</a></h1>
+                <h1 id="styling-an-extension">Styling an Extension<a class="headerlink" href="#styling-an-extension" title="Permanent link">#</a></h1>
 <p>Lens provides a set of global styles and UI components that can be used by any extension to preserve the look and feel of the application.</p>
 <h2 id="layout">Layout<a class="headerlink" href="#layout" title="Permanent link">#</a></h2>
 <p>For layout tasks Lens is using <a href="https://www.npmjs.com/package/flex.box">flex.box</a> library which provides helpful class names to specify some of the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox">flexbox</a> properties. For example, <code>div</code> with class names:</p>
@@ -1006,7 +994,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <p>A complete list of all themable colors can be found in the <a href="../color-reference">color reference</a>.</p>
-<h3 id="theme-switching">Theme switching<a class="headerlink" href="#theme-switching" title="Permanent link">#</a></h3>
+<h3 id="theme-switching">Theme Switching<a class="headerlink" href="#theme-switching" title="Permanent link">#</a></h3>
 <p>When the light theme is active, the <code>&lt;body&gt;</code> element gets a "theme-light" class, <code>&lt;body class="theme-light"&gt;</code>. If the class isn't there, assume the theme is dark. The active theme can be changed in the <code>Preferences</code> page:
 <img alt="Color Theme" src="../images/theme-selector.png" /></p>
 <p>Currently, there is no prescribed way of detecting changes to the theme in JavaScript. <a href="https://github.com/lensapp/lens/issues/1336">This issue</a> hopes to improve on this. In the meantime, you can use a <a href="https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver">MutationObserver</a> to observe the <code>&lt;body&gt;</code> element's <code>class</code> attribute to see if the "theme-light" class gets added to it:</p>
@@ -1035,7 +1023,7 @@
   <span class="p">},</span> <span class="p">[]);</span> <span class="c1">// run once on mount</span>
 <span class="p">...</span>
 </code></pre></div>
-<h2 id="injected-styles">Injected styles<a class="headerlink" href="#injected-styles" title="Permanent link">#</a></h2>
+<h2 id="injected-styles">Injected Styles<a class="headerlink" href="#injected-styles" title="Permanent link">#</a></h2>
 <p>Every extension is affected by list of default global styles defined in <a href="https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss">app.scss</a>. These are basic browser resets and element styles like setting the <code>box-sizing</code> property for every element, default text and background colors, default font sizes, basic heading formatting, etc.</p>
 <p>Extension may overwrite these if needed. They have low CSS specificity, so overriding them should be fairly easy.</p>
 <h2 id="css-in-js">CSS-in-JS<a class="headerlink" href="#css-in-js" title="Permanent link">#</a></h2>
@@ -1083,7 +1071,7 @@
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Color reference
+                Color Reference
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

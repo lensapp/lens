@@ -19,7 +19,7 @@
     
     
       
-        <title>Extension Development Overview - Lens Documentation</title>
+        <title>Overview - Lens Documentation</title>
       
     
     
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Extension Development Overview
+              Overview
             
           </span>
         </div>
@@ -271,7 +271,7 @@
 
   <li class="md-nav__item">
     <a href="../../../clusters/adding-clusters/" class="md-nav__link">
-      Adding clusters
+      Adding Clusters
     </a>
   </li>
 
@@ -283,7 +283,7 @@
 
   <li class="md-nav__item">
     <a href="../../../clusters/removing-clusters/" class="md-nav__link">
-      Removing cluster
+      Removing Clusters
     </a>
   </li>
 
@@ -345,10 +345,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
     
     <label class="md-nav__link" for="nav-7">
       Extension Development
@@ -378,22 +380,81 @@
           
           
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-2" type="checkbox" id="nav-7-2">
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-7-2" type="checkbox" id="nav-7-2" checked>
     
     <label class="md-nav__link" for="nav-7-2">
-      Get Started
+      Getting Started
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Get Started" data-md-level="2">
+    <nav class="md-nav" aria-label="Getting Started" data-md-level="2">
       <label class="md-nav__title" for="nav-7-2">
         <span class="md-nav__icon md-icon"></span>
-        Get Started
+        Getting Started
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Overview
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="./" class="md-nav__link md-nav__link--active">
+      Overview
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#required" class="md-nav__link">
+    Required:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended" class="md-nav__link">
+    Recommended:
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
         
           
           
@@ -463,18 +524,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../../capabilities/" class="md-nav__link">
-      Overview
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../capabilities/common-capabilities/" class="md-nav__link">
       Common Capabilities
     </a>
@@ -500,7 +549,7 @@
 
   <li class="md-nav__item">
     <a href="../../capabilities/color-reference/" class="md-nav__link">
-      Color reference
+      Color Reference
     </a>
   </li>
 
@@ -601,18 +650,6 @@
   <li class="md-nav__item">
     <a href="../../testing-and-publishing/publishing/" class="md-nav__link">
       Publishing Extensions
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../testing-and-publishing/bundling/" class="md-nav__link">
-      Bundling Extensions
     </a>
   </li>
 
@@ -773,8 +810,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#recommened" class="md-nav__link">
-    Recommened:
+  <a href="#recommended" class="md-nav__link">
+    Recommended:
   </a>
   
 </li>
@@ -794,19 +831,18 @@
                 
                 
                 <h1 id="extension-development-overview">Extension Development Overview<a class="headerlink" href="#extension-development-overview" title="Permanent link">#</a></h1>
-<p>This is a general overview to how the development of an extension will procede. For building extensions there will be a few things that you should have installed, and some that might help.</p>
+<p>This is a general overview to how the development of an extension will procede. For building extensions there will be a few things that you should have installed, and some other things that might be of help.</p>
 <h3 id="required">Required:<a class="headerlink" href="#required" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="https://www.nodejs.org/en/">Node.js</a></li>
 <li><a href="https://www.git-scm.com/">Git</a></li>
-<li>Some sort of text editor, we recommend <a href="https://code.visualstudio.com/">VSCode</a></li>
+<li>Some sort of text editor – we recommend <a href="https://code.visualstudio.com/">VSCode</a></li>
 <li>We use <a href="https://www.webpack.js.org/">Webpack</a> for compilation. All extension need to be at least compatable with a webpack system.</li>
 </ul>
-<h3 id="recommened">Recommened:<a class="headerlink" href="#recommened" title="Permanent link">#</a></h3>
-<p>-</p>
-<p>All <em>Lens</em> extensions are javascript packages. We recommend that you program in <a href="https://www.typescriptlang.org/">Typescript</a> because it catches quite a few easily to make errors around passing data around in javascript.</p>
-<p><em>Lens</em> is a standard <a href="https://www.electronjs.org/">Electron</a> application which both main and renderer processes. An extension is made up of two parts, one for each of <em>Lens</em>'s core processes. When an extension is loaded each part is loaded and then notified that it has been loaded. From there the extension can start doing is work.</p>
-<p><em>Lens</em> uses <a href="https://www.reactjs.org/">React</a> as it UI framework and even provides some of our own components for reuse by extensions. An extension is resonsible for the lifetime of any resources it spins up. If an extension's main part starts new processes they all must be stopped and cleaned up when the extension is deactivated or unloaded.</p>
+<h3 id="recommended">Recommended:<a class="headerlink" href="#recommended" title="Permanent link">#</a></h3>
+<p>All Lens extensions are javascript packages. We recommend that you program in <a href="https://www.typescriptlang.org/">Typescript</a> because it catches many common errors.</p>
+<p>Lens is a standard <a href="https://www.electronjs.org/">Electron</a> application with both main and renderer processes. An extension is made up of two parts, one for each of Lens's core processes. When an extension is loaded, each part is first loaded and issues a notification that it has been loaded. From there, the extension can start doing is work.</p>
+<p>Lens uses <a href="https://www.reactjs.org/">React</a> as its UI framework and provides some of Lens's own components for reuse with extensions. An extension is resonsible for the lifetime of any resources it spins up. If an extension's main part starts new processes they all must be stopped and cleaned up when the extension is deactivated or unloaded.</p>
 <p>See <a href="../your-first-extension/">Your First Extension</a> to get started.</p>
                 
               
@@ -822,6 +858,41 @@
       
         
 <footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../../" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Overview
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../your-first-extension/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Your First Extension
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
