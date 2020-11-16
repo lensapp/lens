@@ -803,8 +803,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#id" class="md-nav__link">
-    id
+  <a href="#optional-id" class="md-nav__link">
+    Optional id
   </a>
   
 </li>
@@ -845,25 +845,39 @@
 <ul>
 <li><a href="./#components">components</a></li>
 <li><a href="./#optional-exact">exact</a></li>
-<li><a href="./#id">id</a></li>
+<li><a href="./#optional-id">id</a></li>
 <li><a href="./#optional-routepath">routePath</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="components">components<a class="headerlink" href="#components" title="Permanent link">#</a></h3>
 <p>• <strong>components</strong>: <em><a href="../_interfaces_index_.pagecomponents/">PageComponents</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/596e60a6/src/extensions/registries/page-registry.ts#L14">src/extensions/registries/page-registry.ts:14</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/13dbdac2/src/extensions/registries/page-registry.ts#L35">src/extensions/registries/page-registry.ts:35</a></em></p>
 <hr />
 <h3 id="optional-exact"><code>Optional</code> exact<a class="headerlink" href="#optional-exact" title="Permanent link">#</a></h3>
 <p>• <strong>exact</strong>? : <em>boolean</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/596e60a6/src/extensions/registries/page-registry.ts#L13">src/extensions/registries/page-registry.ts:13</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/13dbdac2/src/extensions/registries/page-registry.ts#L34">src/extensions/registries/page-registry.ts:34</a></em></p>
+<p>Strict route matching to provided page-id, read also: https://reactrouter.com/web/api/NavLink/exact-bool
+In case when more than one page registered at same extension "pageId" is required to identify different pages,
+It might be useful to provide <code>exact: true</code> in some cases to avoid overlapping routes.
+Without {exact:true} second page never matches since first page-id/route already includes partial route.</p>
+<p><strong><code>example</code></strong> const pages = [
+ {id: "/users", exact: true},
+ {id: "/users/:userId?"}
+]
+Pro-tip: registering pages in opposite order will make same effect without "exact".</p>
 <hr />
-<h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">#</a></h3>
-<p>• <strong>id</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/596e60a6/src/extensions/registries/page-registry.ts#L11">src/extensions/registries/page-registry.ts:11</a></em></p>
+<h3 id="optional-id"><code>Optional</code> id<a class="headerlink" href="#optional-id" title="Permanent link">#</a></h3>
+<p>• <strong>id</strong>? : <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/13dbdac2/src/extensions/registries/page-registry.ts#L17">src/extensions/registries/page-registry.ts:17</a></em></p>
+<p>Page ID or additional route path to indicate uniqueness within current extension registered pages
+Might contain special url placeholders, e.g. "/users/:userId?" (? - marks as optional param)
+When not provided, first registered page without "id" would be used for page-menus without target.pageId for same extension</p>
 <hr />
 <h3 id="optional-routepath"><code>Optional</code> routePath<a class="headerlink" href="#optional-routepath" title="Permanent link">#</a></h3>
 <p>• <strong>routePath</strong>? : <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/596e60a6/src/extensions/registries/page-registry.ts#L12">src/extensions/registries/page-registry.ts:12</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/13dbdac2/src/extensions/registries/page-registry.ts#L22">src/extensions/registries/page-registry.ts:22</a></em></p>
+<p>Alias to page ID which assume to be used as path with possible :param placeholders</p>
+<p><strong><code>deprecated</code></strong></p>
                 
               
               
