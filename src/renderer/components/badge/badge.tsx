@@ -37,11 +37,14 @@ export class Badge extends React.Component<BadgeProps> {
       return null
     }
 
-    if (this.isExpanded) {
-      return <Icon className="expansionIcon" size={20} material="close_fullscreen" onClick={this.onClick} />
-    }
-
-    return <Icon className="expansionIcon" size={20} material="open_in_full" onClick={this.onClick} />
+    const material = this.isExpanded ? "close_fullscreen" : "open_in_full"
+    return <Icon
+      className="expansionIcon"
+      size={12}
+      material={material}
+      focusable={false}
+      onClick={this.onClick}
+    />
   }
 
   render() {
