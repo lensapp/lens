@@ -16,6 +16,11 @@ export interface PageRegistration {
    */
   id?: string;
   /**
+   * Alias to page ID which assume to be used as path with possible :param placeholders
+   * @deprecated
+   */
+  routePath?: string;
+  /**
    * Strict route matching to provided page-id, read also: https://reactrouter.com/web/api/NavLink/exact-bool
    * In case when more than one page registered at same extension "pageId" is required to identify different pages,
    * It might be useful to provide `exact: true` in some cases to avoid overlapping routes.
@@ -62,7 +67,7 @@ export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage>
       registeredPages = items.map(page => ({
         ...page,
         extensionId: ext.name,
-        routePath: getExtensionPageUrl({ extensionId: ext.name, pageId: page.id }),
+        routePath: getExtensionPageUrl({ extensionId: ext.name, pageId: page.id ?? page.routePath }),
       }))
     } catch (err) {
       logger.error(`[EXTENSION]: page-registration failed`, {

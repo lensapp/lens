@@ -82,14 +82,6 @@ describe("globalPageRegistry", () => {
       expect(page.id).toEqual("test-page")
     })
 
-    it("returns matching page", () => {
-      const page = globalPageRegistry.getByPageMenuTarget({
-        pageId: "test-page",
-        extensionId: ext.name
-      })
-      expect(page.id).toEqual("test-page")
-    })
-
     it("returns null if target not found", () => {
       const page = globalPageRegistry.getByPageMenuTarget({
         pageId: "wrong-page",
