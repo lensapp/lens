@@ -7,31 +7,24 @@
   white-space: nowrap;
   max-width: 100%;
   position: relative;
+  cursor: pointer;
 
-  >.children {
-    overflow: hidden;
-    text-overflow: ellipsis;
+  &:hover {
+    background-color: $mainBackground;
   }
 
   &.small {
     font-size: $font-size-small;
   }
 
-  &.expanded {
-    overflow: unset;
-    text-overflow: unset;
-    white-space: unset;
-  }
+  .label-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
 
-  > .expansionIcon {
-    transform: scaleX(-1);
-    position: absolute;
-    z-index: 1;
-    right: -6px;
-    bottom: -6px;
-    color: $textColorAccent;
-    background-color: $halfGray;
-    border-radius: 50%;
-    padding: 2px;
+    &.isExpanded {
+      overflow: unset;
+      text-overflow: unset;
+      white-space: normal;
+    }
   }
 }

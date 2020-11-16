@@ -6,55 +6,36 @@ import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 import { observer } from "mobx-react";
 import { autobind } from "../../utils";
 import { observable } from "mobx";
-import { Icon } from "../icon";
 
 export interface BadgeProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
   small?: boolean;
   label?: React.ReactNode;
+  isExpanded?: boolean; // by default: false (minimized)
 }
 
 @withTooltip
 @observer
 export class Badge extends React.Component<BadgeProps> {
-  private elem: HTMLElement;
-
-  @observable isExpanded = false
-  @observable canBeExpanded = false
-
-  componentDidMount() {
-    this.canBeExpanded = this.elem.offsetWidth < this.elem.scrollWidth
-  }
+  @observable isExpanded = false;
 
   @autobind()
-  onClick() {
-    if (this.canBeExpanded) {
-      this.isExpanded = !this.isExpanded
-    }
-  }
-
-  renderExpansionIcon() {
-    if (!this.canBeExpanded) {
-      return null
-    }
-
-    const material = this.isExpanded ? "close_fullscreen" : "open_in_full"
-    return <Icon
-      className="expansionIcon"
-      size={12}
-      material={material}
-      focusable={false}
-      onClick={this.onClick}
-    />
+  onMouseRelease() {
+    const textSelected = document.getSelection().toString().trim() !== "";
+    if (textSelected) return;
+    this.isExpanded = this.props.isExpanded /*force to use state from outside*/ ?? !this.isExpanded /*toggle*/;
   }
 
   render() {
-    const { className, label, small, children, ...elemProps } = this.props;
-    const classNames = cssNames("Badge", className, { small, expanded: this.isExpanded })
-
+    const { className, label, small, children, isExpanded, ...elemProps } = this.props;
+    const classNames = cssNames("Badge", className, {
+      small: small,
+    })
+    const labelClass = cssNames("label-content", {
+      isExpanded: this.isExpanded,
+    })
     return (
-      <div className={classNames} {...elemProps}>
-        {this.renderExpansionIcon()}
-        <div className="children" ref={ref => (this.elem = ref)}>
+      <div {...elemProps} className={classNames}>
+        <div className={labelClass} onMouseUp={this.onMouseRelease}>
           {label}
           {children}
         </div>
