@@ -1,18 +1,18 @@
 # Wrapping Up
 
-In the [Your First Extension](your-first-extension.md) topic, you learned how to create and run an extension. In the [Extension Anatomy](anatomy.md) topic, you learned fundamental concepts to Lens extension development. However, this is just a small glimpse of what can be created with Lens Extensions. Below are some suggested routes for furthering your Lens extension development skills.
+In [Your First Extension](your-first-extension.md), you learned how to create and run an extension. In [Extension Anatomy](anatomy.md), you learned in detail how a basic extension works. This is just a glimpse into what can be created with Lens extensions. Below are some suggested routes for learning more.
 
 ## Extension Capabilities
 
-In this section, we split the Lens extension points into a few categories, each with short descriptions as to what your extension could achieve. Validate that your extension idea is achievable by reading the [Extension Capabilities](../capabilities/overview.md) section for new extension ideas.
+In this section, you'll find information on common extension capabilities, styling information, and a color reference guide. Determine whether your idea for an extension is doable and get ideas for new extensions by reading through the [Common Capabilities](../capabilities/common-capabilities.md) page.
 
-## Guides & Samples
+## Guides and Samples
 
-We have a great collection of sample extensions that you can adapt from, and some of them include a detailed guide that explains the source code. You can find all Samples & Guides in the [lens-extension-samples](https://github.com/lensapp/lens-extension-samples) repository.
+Here you'll find a collection of sample extensions that you can use as a base to work from. Some of these samples include a detailed guide that explains the source code. You can find all samples and guides in the [lens-extension-samples](https://github.com/lensapp/lens-extension-samples) repository.
 
 ## Testing and Publishing
 
-This section includes topics that help you develop high-quality Lens extensions. For example, you can learn
+In this section, you can learn:
 
-* How to add [integration tests](../testing-and-publishing/testing.md) for your extension
+* How to add [integration tests](../testing-and-publishing/testing.md) to your extension
 * How to [publish your extension](../testing-and-publishing/publishing.md)

@@ -1,4 +1,4 @@
-# Styling an extension
+# Styling an Extension
 
 Lens provides a set of global styles and UI components that can be used by any extension to preserve the look and feel of the application.
 
@@ -101,7 +101,7 @@ They can be used in form of `var(--magenta)`, e.g.
 
 A complete list of all themable colors can be found in the [color reference](../color-reference).
 
-### Theme switching
+### Theme Switching
 
 When the light theme is active, the `<body>` element gets a "theme-light" class, `<body class="theme-light">`. If the class isn't there, assume the theme is dark. The active theme can be changed in the `Preferences` page:
 ![Color Theme](images/theme-selector.png)
@@ -135,7 +135,7 @@ Currently, there is no prescribed way of detecting changes to the theme in JavaS
 ...
 ```
 
-## Injected styles
+## Injected Styles
 
 Every extension is affected by list of default global styles defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss). These are basic browser resets and element styles like setting the `box-sizing` property for every element, default text and background colors, default font sizes, basic heading formatting, etc.
 

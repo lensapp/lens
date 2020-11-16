@@ -1,4 +1,4 @@
-# Removing clusters
+# Removing Clusters
 
 Remove Lens clusters using the context menu that appears when you right-click the cluster in the left-side menu that you want to remove. 
 

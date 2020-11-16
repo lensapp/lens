@@ -1,14 +1,14 @@
 # Extension Anatomy
 
-You've now learnt how to get basic extension running. In this topic you will learn some fundamental concepts to Lens Extension development; How does it work under the hood?
+In the [previous section](your-first-extension.md) you learned how to create your first extension. In this section you will learn how this extension works under the hood.
 
-`Hello World` extension does three things:
+The Hello World sample extension does three things:
 
-- Hooks on `onActivate()` and ouputs message into console.
-- Hooks on `onDectivate()` and ouputs message into console.
-- Registers `ClusterPage` so that page is visible in the sidebars of cluster dashboards.
+- Implements `onActivate()` and outputs a message to the console.
+- Implements `onDectivate()` and outputs a message to the console.
+- Registers `ClusterPage` so that the page is visible in the left-side menu of the cluster dashboard.
 
-Let's take a closer look at Hello World sample's source code and see how to achieve these things.
+Let's take a closer look at our Hello World sample's source code and see how these three things are achieved.
 
 ## Extension File Structure
 
@@ -26,16 +26,16 @@ Let's take a closer look at Hello World sample's source code and see how to achi
 ├── webpack.config.js    // Webpack configuration
 ```
 
-Extension directory contains extension's entry files and few configuration files. Let's focus on `package.json`, `main.ts` and `renderer.tsx` which are essential to understanding the `Hello World` extension.
+The extension directory contains the extension's entry files and a few configuration files. Three files: `package.json`, `main.ts` and `renderer.tsx` are essential to understanding the Hello World sample extension. We'll look at those first.
 
 ### Extension Manifest
 
-Each Lens extension must have `package.json`. The `package.json` contains a mix of Node.js fields such as scripts and dependencies and Lens specific fields such as `publisher` and `contributes`. Here are some most important fields:
+Each Lens extension must have a `package.json` file. It contains a mix of Node.js fields, including scripts and dependencies, and Lens-specific fields such as `publisher` and `contributes`. Some of the most-important fields include:
 
-- `name` and `publisher`: Lens uses `@<publisher>/<name>` as a unique ID for the extension. For example, the Hello World sample has the ID `@lensapp-samples/helloworld-sample`. Lens uses the ID to uniquely identify your extension
-- `main`: The extension's entry point run in `main` process.
-- `renderer`: The extension's entry point run in `renderer` process.
-- `engines.lens`: This specifies the minimum version of Lens API that the extension depends on.
+- `name` and `publisher`: Lens uses `@<publisher>/<name>` as a unique ID for the extension. For example, the Hello World sample has the ID `@lensapp-samples/helloworld-sample`. Lens uses this ID to uniquely identify your extension.
+- `main`: the extension's entry point run in `main` process.
+- `renderer`: the extension's entry point run in `renderer` process.
+- `engines.lens`: the minimum version of Lens API that the extension depends upon.
 
 ``` javascript
 {
@@ -70,11 +70,12 @@ Each Lens extension must have `package.json`. The `package.json` contains a mix 
 ```
 
 ## Extension Entry Files
-Lens extensions can have two separate entry files. One file that is used in `main` process of Lens application and antoher that is used in `renderer` process. `main` entry file should export class that extends `LensMainExtension` and `renderer` entry file should export class that extends `LensRendererExtension`.
 
-Both extensions classes have `onActivate` and `onDeactivate` methods. `onActivate` is executed when your extension activation happens. You may want to initialize something in your extension at this point. `onDeactivate` gives you a chance to clean up before your extension becomes deactivated. For many extensions, explicit cleanup may not be required, and you don't need to override this method. However, if an extension needs to perform an operation when Lens is shutting down or the extension is disabled or uninstalled, this is the method to do so.
+Lens extensions can have two separate entry files. One file is used in the `main` process of the Lens application and the other is used in the `renderer` process. The `main` entry file exports the class that extends `LensMainExtension`, and the `renderer` entry file exports the class that extends `LensRendererExtension`.
 
-`Hello world` extension does not do anything special on `main` process, so let's focus on the `renderer` side. On `renderer` entry point, `Hello world` extension defines one `Cluster Page` object that registers `/extension-example` path that renders `ExamplePage` React component. It registers also `MenuItem` component that displays `ExampleIcon` React component and "Hello World" text in the sidebar of cluster dashboards. These React components are defined in additional `./src/page.tsx` file.
+Both extension classes have `onActivate` and `onDeactivate` methods. The `onActivate` method is executed when your extension is activated. If you need to initialize something in your extension, this is where such an operation should occur. The `onDeactivate` method gives you a chance to clean up before your extension becomes deactivated. For extensions where explicit cleanup is not required, you don't need to override this method. However, if an extension needs to perform an operation when Lens is shutting down (or if the extension is disabled or uninstalled), this is the method where such an operation should occur.
+
+The Hello World sample extension does not do anything on the `main` process, so we'll focus on the `renderer` process, instead. On the `renderer` entry point, the Hello World sample extension defines the `Cluster Page` object. The `Cluster Page` object registers the `/extension-example` path, and this path renders the `ExamplePage` React component. It also registers the `MenuItem` component that displays the `ExampleIcon` React component and the "Hello World" text in the left-side menu of the cluster dashboard. These React components are defined in the additional `./src/page.tsx` file.
 
 ``` typescript
 import { LensRendererExtension } from "@k8slens/extensions";
@@ -93,4 +94,4 @@ export default class ExampleExtension extends LensRendererExtension {
 }
 ```
 
-`Hello World` extension uses only one capability (`Cluster Page`) of Lens extensions. The [Extension Capabilities Overview](/extensions/capabilities/) topic helps you find the right capabilities you can use with your own extension.
+The Hello World sample extension uses the `Cluster Page` capability, which is just one of the Lens extension API's capabilities. The [Common Capabilities](../capabilities/common-capabilities.md) page will help you home in on the right capabilities to use with your own extensions. 
