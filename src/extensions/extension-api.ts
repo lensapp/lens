@@ -1,4 +1,4 @@
-// Extension-api types generation bundle (used by rollup.js)
+// Extension-api types generation bundle
 
 export * from "./core-api"
 export * from "./renderer-api"

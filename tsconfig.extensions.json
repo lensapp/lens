@@ -7,5 +7,5 @@
     "module": "CommonJS",
     "sourceMap": false,
     "declaration": true
-  },
+  }
 }

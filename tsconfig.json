@@ -36,6 +36,7 @@
     }
   },
   "include": [
+    "src/**/*",
     "types/*.d.ts"
   ],
   "exclude": [
