@@ -26,7 +26,7 @@ import { Network } from "../+network";
 import { crdStore } from "../+custom-resources/crd.store";
 import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resources";
 import { CustomResources } from "../+custom-resources/custom-resources";
-import { isActiveRoute } from "../../navigation";
+import { isActiveRoute, navigation } from "../../navigation";
 import { isAllowedResource } from "../../../common/rbac"
 import { Spinner } from "../spinner";
 import { clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
@@ -194,15 +194,14 @@ export class Sidebar extends React.Component<Props> {
             {clusterPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
               const registeredPage = clusterPageRegistry.getByPageMenuTarget(target);
               if (!registeredPage) return;
-              const { routePath, exact, extensionId, id: pageId } = registeredPage;
+              const { extensionId, id: pageId } = registeredPage;
               const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: target.params });
+              const isActive = pageUrl === navigation.location.pathname;
               return (
                 <SidebarNavItem
-                  key={pageUrl}
-                  url={pageUrl}
-                  text={title}
-                  icon={<Icon/>}
-                  isActive={isActiveRoute({ path: routePath, exact })}
+                  key={pageUrl} url={pageUrl}
+                  text={title} icon={<Icon/>}
+                  isActive={isActive}
                 />
               )
             })}

@@ -14,7 +14,7 @@ import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
-import { isActiveRoute, navigate } from "../../navigation";
+import { navigate, navigation } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
@@ -151,13 +151,14 @@ export class ClustersMenu extends React.Component<Props> {
           {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
             const registeredPage = globalPageRegistry.getByPageMenuTarget(target);
             if (!registeredPage) return;
-            const { routePath, exact, extensionId, id: pageId } = registeredPage;
+            const { extensionId, id: pageId } = registeredPage;
             const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: target.params });
+            const isActive = pageUrl === navigation.location.pathname;
             return (
               <Icon
-                key={routePath}
+                key={pageUrl}
                 tooltip={title}
-                active={isActiveRoute({ path: routePath, exact })}
+                active={isActive}
                 onClick={() => navigate(pageUrl)}
               />
             )

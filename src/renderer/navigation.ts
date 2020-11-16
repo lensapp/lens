@@ -22,8 +22,12 @@ export function navigate(location: LocationDescriptor) {
   }
 }
 
+export function matchParams<P>(route: string | string[] | RouteProps) {
+  return matchPath<P>(navigation.location.pathname, route);
+}
+
 export function isActiveRoute(route: string | string[] | RouteProps): boolean {
-  return !!matchPath(navigation.location.pathname, route);
+  return !!matchParams(route);
 }
 
 // common params for all pages
