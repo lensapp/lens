@@ -20,27 +20,33 @@ export default class ExampleExtensionMain extends LensMainExtension {
 }
 ```
 
-There are two methods that you can override to facilitate running your custom code. `onActivate()` is called when your extension has been successfully enabled. By overriding `onActivate()` you can initiate your custom code. `onDeactivate()` is called when the extension is disabled (typically from the [Lens Extensions Page]()) and when overridden gives you a chance to clean up after your extension, if necessary. The example above simply logs messages when the extension is enabled and disabled. 
+There are two methods that you can implement to facilitate running your custom code. `onActivate()` is called when your extension has been successfully enabled. By overriding `onActivate()` you can initiate your custom code. `onDeactivate()` is called when the extension is disabled (typically from the [Lens Extensions Page]()) and when implemented gives you a chance to clean up after your extension, if necessary. The example above simply logs messages when the extension is enabled and disabled. Note that to see standard output from the main process there must be a console connected to it. This is typically achieved by starting Lens from the command prompt.
 
 The following example is a little more interesting in that it accesses some Lens state data and periodically logs the name of the currently active cluster in Lens.
 
 ``` typescript
-import { LensMainExtension, Store } from "@k8slens/extensions"
+import { LensMainExtension, Store } from "@k8slens/extensions";
 
 const clusterStore = Store.clusterStore
 
-export class ActiveClusterExtensionMain extends LensMainExtension {
+export default class ActiveClusterExtensionMain extends LensMainExtension {
 
   timer: NodeJS.Timeout
 
   onActivate() {
+    console.log("Cluster logger activated");
     this.timer = setInterval(() => {
-      console.log("active cluster is ", clusterStore.activeCluster)
+      if (!clusterStore.active) {
+        console.log("No active cluster");
+        return;
+      }
+      console.log("active cluster is", clusterStore.active.contextName)
     }, 5000)
   }
 
   onDeactivate() {
       clearInterval(this.timer)
+      console.log("Cluster logger deactivated");
   }
 }
 ```
