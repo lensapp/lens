@@ -9,6 +9,7 @@
   "types": "dist/src/extensions/extension-api.d.ts",
   "files": [
     "dist/**/*.ts",
+    "__mocks__/*.ts",
     "dist/**/*.js"
   ],
   "author": {
