@@ -127,6 +127,13 @@ export function buildMenu(windowManager: WindowManager) {
             navigate(preferencesURL())
           }
         },
+        {
+          label: 'Extensions',
+          accelerator: 'Ctrl+Shift+E',
+          click() {
+            navigate(extensionsURL())
+          }
+        },
         { type: 'separator' },
         { role: 'quit' }
       ]),
