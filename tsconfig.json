@@ -35,12 +35,17 @@
       "module": "CommonJS"
     }
   },
+  "include": [
+    "src/**/*",
+    "types/*.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "out",
     "dist",
     "coverage",
     "binaries",
-    "static"
+    "static",
+    "src/extensions/npm"
   ]
 }
