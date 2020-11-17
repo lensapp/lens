@@ -316,7 +316,6 @@
     "@types/terser-webpack-plugin": "^3.0.0",
     "@types/universal-analytics": "^0.4.4",
     "@types/uuid": "^8.0.0",
-    "@types/webdriverio": "^4.13.0",
     "@types/webpack": "^4.41.17",
     "@types/webpack-dev-server": "^3.11.1",
     "@types/webpack-env": "^1.15.2",
@@ -371,7 +370,7 @@
     "react-window": "^1.8.5",
     "sass-loader": "^8.0.2",
     "sharp": "^0.26.1",
-    "spectron": "11.0.0",
+    "spectron": "^11.0.0",
     "style-loader": "^1.2.1",
     "terser-webpack-plugin": "^3.0.3",
     "ts-jest": "^26.1.0",
@@ -387,8 +386,12 @@
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0",
     "webpack-node-externals": "^1.7.2",
+    "webdriverio": "6.1.2",
     "what-input": "^5.2.10",
     "xterm": "^4.6.0",
     "xterm-addon-fit": "^0.4.0"
+  },
+  "resolutions": {
+    "got": "<=11.5.1"
   }
 }

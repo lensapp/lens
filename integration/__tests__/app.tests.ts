@@ -29,9 +29,25 @@ describe("Lens integration tests", () => {
     await app.client.waitUntilWindowLoaded()
   }
 
+  const click = async (selector: string) => {
+    return (await app.client.$(selector)).click()
+  }
+
+  const waitForVisible = async (selector: string) => {
+    return (await app.client.$(selector)).waitForDisplayed()
+  }
+
+  const waitForEnabled = async (selector: string) => {
+    return (await app.client.$(selector)).waitForEnabled()
+  }
+
+  const waitForExist = async (selector: string) => {
+    return (await app.client.$(selector)).waitForExist()
+  }
+
   const clickWhatsNew = async (app: Application) => {
     await app.client.waitUntilTextExists("h1", "What's new?")
-    await app.client.click("button.primary")
+    await click("button.primary")
     await app.client.waitUntilTextExists("h1", "Welcome")
   }
 
@@ -55,14 +71,14 @@ describe("Lens integration tests", () => {
 
     describe("preferences page", () => {
       it('shows "preferences"', async () => {
-        let appName: string = process.platform === "darwin" ? "Lens" : "File"
+        const appName: string = process.platform === "darwin" ? "Lens" : "File"
         await app.electron.ipcRenderer.send('test-menu-item-click', appName, "Preferences")
         await app.client.waitUntilTextExists("h2", "Preferences")
       })
 
       it('ensures helm repos', async () => {
-        await app.client.waitUntilTextExists("div.repos #message-stable", "stable") // wait for the helm-cli to fetch the stable repo
-        await app.client.click("#HelmRepoSelect") // click the repo select to activate the drop-down
+        await app.client.waitUntilTextExists("div.repos #message-stable", "stable", 2000) // wait for the helm-cli to fetch the stable repo
+        await click("#HelmRepoSelect") // click the repo select to activate the drop-down
         await app.client.waitUntilTextExists("div.Select__option", "")  // wait for at least one option to appear (any text)
       })
     })
@@ -97,21 +113,21 @@ describe("Lens integration tests", () => {
   const ready = minikubeReady()
 
   const addMinikubeCluster = async (app: Application) => {
-    await app.client.click("div.add-cluster")
+    await click("div.add-cluster")
     await app.client.waitUntilTextExists("div", "Select kubeconfig file")
-    await app.client.click("div.Select__control") // show the context drop-down list
+    await click("div.Select__control") // show the context drop-down list
     await app.client.waitUntilTextExists("div", "minikube")
-    if (!await app.client.$("button.primary").isEnabled()) {
-      await app.client.click("div.minikube") // select minikube context
+    if (!(await app.client.$("button.primary")).isEnabled()) {
+      await click("div.minikube") // select minikube context
     } // else the only context, which must be 'minikube', is automatically selected
-    await app.client.click("div.Select__control") // hide the context drop-down list (it might be obscuring the Add cluster(s) button)
-    await app.client.click("button.primary") // add minikube cluster
+    await click("div.Select__control") // hide the context drop-down list (it might be obscuring the Add cluster(s) button)
+    await click("button.primary") // add minikube cluster
   }
 
   const waitForMinikubeDashboard = async (app: Application) => {
     await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started")
-    await app.client.waitForExist(`iframe[name="minikube"]`)
-    await app.client.frame("minikube")
+    await (await app.client.$(`iframe[name="minikube"]`)).waitForExist()
+    await app.client.switchToFrame("minikube")
     await app.client.waitUntilTextExists("span.link-text", "Cluster")
   }
 
@@ -122,7 +138,7 @@ describe("Lens integration tests", () => {
       await clickWhatsNew(app)
       await addMinikubeCluster(app)
       await waitForMinikubeDashboard(app)
-      await app.client.click('a[href="/nodes"]')
+      await click('a[href="/nodes"]')
       await app.client.waitUntilTextExists("div.TableCell", "Ready")
     }
 
@@ -395,14 +411,14 @@ describe("Lens integration tests", () => {
         if (drawer !== "") {
           it(`shows ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true)
-            await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`)
+            await click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`)
             await app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name)
           })
         }
         pages.forEach(({ name, href, expectedSelector, expectedText }) => {
           it(`shows ${drawer}->${name} page`, async () => {
             expect(clusterAdded).toBe(true)
-            await app.client.click(`a[href^="/${href}"]`)
+            await click(`a[href^="/${href}"]`)
             await app.client.waitUntilTextExists(expectedSelector, expectedText)
           })
         })
@@ -410,7 +426,7 @@ describe("Lens integration tests", () => {
           // hide the drawer
           it(`hides ${drawer} drawer`, async () => {
             expect(clusterAdded).toBe(true)
-            await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`)
+            await click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`)
             await expect(app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow()
           })
         }
@@ -429,25 +445,25 @@ describe("Lens integration tests", () => {
       it(`shows a logs for a pod`, async () => {
         expect(clusterAdded).toBe(true)
         // Go to Pods page
-        await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text")
+        await click(".sidebar-nav [data-test-id='workloads'] span.link-text")
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods")
-        await app.client.click('a[href^="/pods"]')
+        await click('a[href^="/pods"]')
         await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver")
         // Open logs tab in dock
-        await app.client.click(".list .TableRow:first-child")
-        await app.client.waitForVisible(".Drawer")
-        await app.client.click(".drawer-title .Menu li:nth-child(2)")
+        await click(".list .TableRow:first-child")
+        await waitForVisible(".Drawer")
+        await click(".drawer-title .Menu li:nth-child(2)")
         // Check if controls are available
-        await app.client.waitForVisible(".PodLogs .VirtualList")
-        await app.client.waitForVisible(".PodLogControls")
-        await app.client.waitForVisible(".PodLogControls .SearchInput")
-        await app.client.waitForVisible(".PodLogControls .SearchInput input")
+        await waitForVisible(".PodLogs .VirtualList")
+        await waitForVisible(".PodLogControls")
+        await waitForVisible(".PodLogControls .SearchInput")
+        await waitForVisible(".PodLogControls .SearchInput input")
         // Search for semicolon
         await app.client.keys(":")
-        await app.client.waitForVisible(".PodLogs .list span.active")
+        await waitForVisible(".PodLogs .list span.active")
         // Click through controls
-        await app.client.click(".PodLogControls .timestamps-icon")
-        await app.client.click(".PodLogControls .undo-icon")
+        await click(".PodLogControls .timestamps-icon")
+        await click(".PodLogControls .undo-icon")
       })
     })
 
@@ -462,32 +478,32 @@ describe("Lens integration tests", () => {
 
       it('shows default namespace', async () => {
         expect(clusterAdded).toBe(true)
-        await app.client.click('a[href="/namespaces"]')
+        await click('a[href="/namespaces"]')
         await app.client.waitUntilTextExists("div.TableCell", "default")
         await app.client.waitUntilTextExists("div.TableCell", "kube-system")
       })
 
       it(`creates ${TEST_NAMESPACE} namespace`, async () => {
         expect(clusterAdded).toBe(true)
-        await app.client.click('a[href="/namespaces"]')
+        await click('a[href="/namespaces"]')
         await app.client.waitUntilTextExists("div.TableCell", "default")
         await app.client.waitUntilTextExists("div.TableCell", "kube-system")
-        await app.client.click("button.add-button")
+        await click("button.add-button")
         await app.client.waitUntilTextExists("div.AddNamespaceDialog", "Create Namespace")
         await app.client.keys(`${TEST_NAMESPACE}\n`)
-        await app.client.waitForExist(`.name=${TEST_NAMESPACE}`)
+        await waitForExist(`.name=${TEST_NAMESPACE}`)
       })
 
       it(`creates a pod in ${TEST_NAMESPACE} namespace`, async () => {
         expect(clusterAdded).toBe(true)
-        await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text")
+        await click(".sidebar-nav [data-test-id='workloads'] span.link-text")
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods")
-        await app.client.click('a[href^="/pods"]')
+        await click('a[href^="/pods"]')
         await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver")
-        await app.client.click('.Icon.new-dock-tab')
+        await click('.Icon.new-dock-tab')
         await app.client.waitUntilTextExists("li.MenuItem.create-resource-tab", "Create resource")
-        await app.client.click("li.MenuItem.create-resource-tab")
-        await app.client.waitForVisible(".CreateResource div.ace_content")
+        await click("li.MenuItem.create-resource-tab")
+        await waitForVisible(".CreateResource div.ace_content")
         // Write pod manifest to editor
         await app.client.keys("apiVersion: v1\n")
         await app.client.keys("kind: Pod\n")
@@ -499,12 +515,12 @@ describe("Lens integration tests", () => {
         await app.client.keys("- name: nginx-create-pod-test\n")
         await app.client.keys("  image: nginx:alpine\n")
         // Create deployment
-        await app.client.waitForEnabled("button.Button=Create & Close")
-        await app.client.click("button.Button=Create & Close")
+        await waitForEnabled("button.Button=Create & Close")
+        await click("button.Button=Create & Close")
         // Wait until first bits of pod appears on dashboard
-        await app.client.waitForExist(".name=nginx-create-pod-test")
+        await waitForExist(".name=nginx-create-pod-test")
         // Open pod details
-        await app.client.click(".name=nginx-create-pod-test")
+        await click(".name=nginx-create-pod-test")
         await app.client.waitUntilTextExists("div.drawer-title-text", "Pod: nginx-create-pod-test")
       })
     })
