@@ -1,30 +1,24 @@
 .Badge {
+  position: relative;
   display: inline-block;
   background: $colorVague;
   color: $textColorSecondary;
   border-radius: $radius;
   padding: .2em .4em;
-  white-space: nowrap;
   max-width: 100%;
-  position: relative;
-  cursor: pointer;
 
-  &:hover {
+  &.interactive:hover {
     background-color: $mainBackground;
+    cursor: pointer;
+  }
+
+  &:not(.isExpanded) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &.small {
     font-size: $font-size-small;
-  }
-
-  .label-content {
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    &.isExpanded {
-      overflow: unset;
-      text-overflow: unset;
-      white-space: normal;
-    }
   }
 }
