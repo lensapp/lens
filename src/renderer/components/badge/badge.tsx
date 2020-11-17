@@ -13,6 +13,15 @@ export interface BadgeProps extends React.HTMLAttributes<any>, TooltipDecoratorP
   isExpanded?: boolean; // always force state to this value
 }
 
+const badgeMeta = observable({
+  hasTextSelected: false,
+});
+
+// Common handler for all Badge instances
+document.addEventListener("selectionchange", () => {
+  badgeMeta.hasTextSelected = window.getSelection().toString().trim().length > 0
+});
+
 @withTooltip
 @observer
 export class Badge extends React.Component<BadgeProps> {
@@ -25,8 +34,7 @@ export class Badge extends React.Component<BadgeProps> {
 
   @autobind()
   onMouseUp(evt: React.MouseEvent) {
-    const isTextSelected = !!document.getSelection().toString().trim();
-    if (!this.isExpandable || isTextSelected) return; // no action required
+    if (!this.isExpandable || badgeMeta.hasTextSelected) return; // no action required
     this.isExpanded = !this.isExpanded;
   }
 
