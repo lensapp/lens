@@ -6,9 +6,11 @@ import { clusterStore, getClusterIdFromHost } from "../common/cluster-store"
 import { Cluster } from "./cluster"
 import logger from "./logger";
 import { apiKubePrefix } from "../common/vars";
+import { Singleton } from "../common/utils";
 
-export class ClusterManager {
+export class ClusterManager extends Singleton {
   constructor(public readonly port: number) {
+    super()
     // auto-init clusters
     autorun(() => {
       clusterStore.enabledClustersList.forEach(cluster => {
