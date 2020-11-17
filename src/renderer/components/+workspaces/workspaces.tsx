@@ -115,7 +115,7 @@ export class Workspaces extends React.Component {
           <Trans>Workspaces</Trans>
         </h2>
         <div className="items flex column gaps">
-          {this.workspaces.map(({ id: workspaceId, name, description, ownerRef, enabled }) => {
+          {this.workspaces.map(({ id: workspaceId, name, description, ownerRef }) => {
             const isActive = workspaceStore.currentWorkspaceId === workspaceId;
             const isDefault = workspaceStore.isDefault(workspaceId);
             const isEditing = this.editingWorkspaces.has(workspaceId);
@@ -131,7 +131,7 @@ export class Workspaces extends React.Component {
               validate: value => !workspaceStore.getByName(value.trim())
             }
             return (
-              <div key={workspaceId} className={cssNames(className, {enabled: enabled || isEditing})}>
+              <div key={workspaceId} className={cssNames(className)}>
                 {!isEditing && (
                   <Fragment>
                     <span className="name flex gaps align-center">
