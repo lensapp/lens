@@ -1,4 +1,5 @@
 EXTENSIONS_DIR = ./extensions
+extensions = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir})
 extension_node_modules = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/node_modules)
 extension_dists = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/dist)
 
@@ -8,16 +9,10 @@ else
     DETECTED_OS := $(shell uname)
 endif
 
-.PHONY: init
-init: install-deps download-bins compile-dev
-	echo "Init done"
-
-.PHONY: download-bins
-download-bins:
+binaries/client:
 	yarn download-bins
 
-.PHONY: install-deps
-install-deps:
+node_modules:
 	yarn install --frozen-lockfile --verbose
 	yarn check --verify-tree --integrity
 
@@ -27,7 +22,7 @@ compile-dev:
 	yarn compile:renderer --cache
 
 .PHONY: dev
-dev: build-extensions
+dev: node_modules binaries/client build-extensions
 	yarn dev
 
 .PHONY: lint
@@ -35,7 +30,7 @@ lint:
 	yarn lint
 
 .PHONY: test
-test: download-bins
+test: binaries/client
 	yarn test
 
 .PHONY: integration-linux
@@ -58,7 +53,7 @@ test-app:
 	yarn test
 
 .PHONY: build
-build: install-deps download-bins build-extensions
+build: install-deps binaries/client build-extensions
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn dist:win
 else
@@ -66,9 +61,9 @@ else
 endif
 
 $(extension_node_modules):
-	cd $(@:/node_modules="") && npm install --no-audit --no-fund
+	cd $(@:/node_modules=) && npm install --no-audit --no-fund
 
-$(extension_dists):
+$(extension_dists): build-extension-types
 	cd $(@:/dist=) && npm run build
 
 .PHONY: build-extensions
@@ -76,7 +71,7 @@ build-extensions: $(extension_node_modules) $(extension_dists)
 
 .PHONY: test-extensions
 test-extensions: $(extension_node_modules)
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), (cd $(dir) && npm run test || exit $?);)
+	$(foreach dir, $(extensions), (cd $(dir) && npm run test || exit $?);)
 
 .PHONY: copy-extension-themes
 copy-extension-themes:
