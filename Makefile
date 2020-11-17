@@ -66,9 +66,8 @@ endif
 
 .PHONY: $(extension_node_modules)
 $(extension_node_modules):
-	cd $(@:/node_modules=) && npm install --no-audit --no-fund
+	cd $(@:/node_modules=) && yarn import && yarn install && rm yarn.lock
 
-.PHONY: $(extension_dists)
 $(extension_dists): src/extensions/npm/extensions/dist
 	cd $(@:/dist=) && npm run build
 
