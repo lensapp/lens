@@ -66,10 +66,10 @@ else
 endif
 
 $(extension_node_modules):
-	cd $(dir $@) && npm install --no-audit --no-fund
+	cd $(@:/node_modules=) && npm install --no-audit --no-fund
 
 $(extension_dists):
-	cd $(dir $@) && npm run build
+	cd $(@:/node_modules=) && npm run build
 
 .PHONY: build-extensions
 build-extensions: $(extension_node_modules) $(extension_dists)
