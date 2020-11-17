@@ -1,4 +1,7 @@
 EXTENSIONS_DIR = ./extensions
+extensions = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir})
+extension_node_modules = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/node_modules)
+extension_dists = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/dist)
 
 ifeq ($(OS),Windows_NT)
     DETECTED_OS := Windows
@@ -6,18 +9,15 @@ else
     DETECTED_OS := $(shell uname)
 endif
 
-.PHONY: init
-init: install-deps download-bins compile-dev
-	echo "Init done"
-
-.PHONY: download-bins
-download-bins:
+binaries/client:
 	yarn download-bins
 
-.PHONY: install-deps
-install-deps:
+node_modules:
 	yarn install --frozen-lockfile --verbose
 	yarn check --verify-tree --integrity
+
+static/build/LensDev.html:
+	yarn compile:renderer
 
 .PHONY: compile-dev
 compile-dev:
@@ -25,10 +25,7 @@ compile-dev:
 	yarn compile:renderer --cache
 
 .PHONY: dev
-dev:
-ifeq ("$(wildcard static/build/main.js)","")
-	make init
-endif
+dev: node_modules binaries/client build-extensions static/build/LensDev.html
 	yarn dev
 
 .PHONY: lint
@@ -36,7 +33,7 @@ lint:
 	yarn lint
 
 .PHONY: test
-test: download-bins
+test: binaries/client
 	yarn test
 
 .PHONY: integration-linux
@@ -59,20 +56,25 @@ test-app:
 	yarn test
 
 .PHONY: build
-build: install-deps download-bins build-extensions
+build: node_modules binaries/client build-extensions
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn dist:win
 else
 	yarn dist
 endif
 
+$(extension_node_modules):
+	cd $(@:/node_modules=) && npm install --no-audit --no-fund
+
+$(extension_dists): src/extensions/npm/extensions/dist
+	cd $(@:/dist=) && npm run build
+
 .PHONY: build-extensions
-build-extensions:
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), (cd $(dir) && npm install && npm run build || exit $?);)
+build-extensions: $(extension_node_modules) $(extension_dists)
 
 .PHONY: test-extensions
-test-extensions:
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), (cd $(dir) && npm install --dev && npm run test || exit $?);)
+test-extensions: $(extension_node_modules)
+	$(foreach dir, $(extensions), (cd $(dir) && npm run test || exit $?);)
 
 .PHONY: copy-extension-themes
 copy-extension-themes:
@@ -97,6 +99,16 @@ publish-npm: build-npm
 	npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
 	cd src/extensions/npm/extensions && npm publish --access=public
 
+.PHONY: clean-extensions
+clean-extensions:
+ifeq "$(DETECTED_OS)" "Windows"
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), if exist $(dir)\dist del /s /q $(dir)\dist)
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), if exist $(dir)\node_modules del /s /q $(dir)\node_modules)
+else
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/dist)
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/node_modules)
+endif
+
 .PHONY: clean-npm
 clean-npm:
 ifeq "$(DETECTED_OS)" "Windows"
@@ -110,13 +122,13 @@ else
 endif
 
 .PHONY: clean
-clean: clean-npm
+clean: clean-npm clean-extensions
 ifeq "$(DETECTED_OS)" "Windows"
-	if exist binaries\client del /s /q binaries\client\*.*
+	if exist binaries\client del /s /q binaries\client
 	if exist dist del /s /q dist\*.*
 	if exist static\build del /s /q static\build\*.*
 else
-	rm -rf binaries/client/*
+	rm -rf binaries/client
 	rm -rf dist/*
 	rm -rf static/build/*
 endif
