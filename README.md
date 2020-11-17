@@ -36,7 +36,6 @@ brew cask install lens
 
 > Prerequisites: Nodejs v12, make, yarn
 
-* `make init` - initial compilation, installing deps, etc.
 * `make dev` - builds and starts the app
 * `make test` - run tests
 
