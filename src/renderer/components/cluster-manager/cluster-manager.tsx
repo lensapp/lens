@@ -18,7 +18,6 @@ import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import { globalPageRegistry } from "../../../extensions/registries/page-registry";
 import { Extensions, extensionsRoute } from "../+extensions";
 import { getMatchedClusterId } from "../../navigation";
-import { ClosingPage, closingRoute } from "../+closing-page";
 
 @observer
 export class ClusterManager extends React.Component {
@@ -64,7 +63,6 @@ export class ClusterManager extends React.Component {
           <div id="lens-views"/>
           <Switch>
             <Route component={LandingPage} {...landingRoute} />
-            <Route component={ClosingPage} {...closingRoute} />
             <Route component={Preferences} {...preferencesRoute} />
             <Route component={Extensions} {...extensionsRoute} />
             <Route component={Workspaces} {...workspacesRoute} />

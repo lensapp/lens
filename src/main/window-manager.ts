@@ -157,6 +157,11 @@ export class WindowManager extends Singleton {
     this.splashWindow.show();
   }
 
+  hide() {
+    if (!this.mainWindow?.isDestroyed()) this.mainWindow.hide();
+    if (!this.splashWindow.isDestroyed()) this.splashWindow.hide();
+  }
+
   destroy() {
     this.mainWindow.destroy();
     this.splashWindow.destroy();

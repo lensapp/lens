@@ -9,7 +9,6 @@ import { clusterSettingsURL } from "../renderer/components/+cluster-settings/clu
 import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
 import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
-import { appEventBus } from "../common/event-bus";
 import { exitApp } from "./exit-app";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help"

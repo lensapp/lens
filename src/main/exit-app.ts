@@ -10,7 +10,7 @@ export function exitApp() {
   const windowManager = WindowManager.getInstance<WindowManager>()
   const clusterManager = ClusterManager.getInstance<ClusterManager>()
   appEventBus.emit({ name: "service", action: "close" })
-  windowManager.navigate(closingURL());
+  windowManager?.hide();
   clusterManager?.stop();
   logger.info('SERVICE:QUIT');
   setTimeout(() => {
