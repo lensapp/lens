@@ -4,13 +4,11 @@ Lens provides a set of global styles and UI components that can be used by any e
 
 ## Layout
 
-For layout tasks Lens is using [flex.box](https://www.npmjs.com/package/flex.box) library which provides helpful class names to specify some of the [flexbox](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox) properties. For example, `div` with class names:
+For layout tasks, Lens uses the [flex.box](https://www.npmjs.com/package/flex.box) library which provides helpful class names to specify some of the [flexbox](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox) properties. For example, consider the following HTML and its associated CSS properties:
 
 ```html
 <div className="flex column align-center"></div>
 ```
-
-at the end will have following css properties:
 
 ```css
 div {
@@ -20,11 +18,11 @@ div {
 }
 ```
 
-However, feel free to use any styling technique or framework like [Emotion](https://github.com/emotion-js/emotion) or just plain CSS if you prefer.
+However, you are free to use any styling technique or framework you like, including [Emotion](https://github.com/emotion-js/emotion) or even plain CSS.
 
 ### Layout Variables
 
-There is a set of CSS Variables available for extensions to use for basic layout needs. They are located inside `:root` and are defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss):
+There is a set of CSS variables available for for basic layout needs. They are located inside `:root` and are defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss):
 
 ```css
 --unit: 8px;
@@ -33,7 +31,7 @@ There is a set of CSS Variables available for extensions to use for basic layout
 --border-radius: 3px;
 ```
 
-They are intended to set consistent margins and paddings across components, e.g.
+These variables are intended to set consistent margins and paddings across components. For example:
 
 ```css
 .status {
@@ -44,18 +42,18 @@ They are intended to set consistent margins and paddings across components, e.g.
 
 ## Themes
 
-Lens is using two built-in themes defined in [the themes directory](https://github.com/lensapp/lens/tree/master/src/renderer/themes), one for light, and one for dark color schemes.
+Lens uses two built-in themes defined in [the themes directory](https://github.com/lensapp/lens/tree/master/src/renderer/themes) – one light and one dark.
 
 ### Theme Variables
 
-When Lens is loaded, it transforms the selected theme `json` file into a list of [CSS Custom Properties (CSS Variables)](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) which then gets injected into the `:root` element so any of the down-level components can use them.
+When Lens is loaded, it transforms the selected theme's `json` file into a list of [CSS Custom Properties (CSS Variables)](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties). This list then gets injected into the `:root` element so that any of the down-level components can use them.
 ![CSS vars listed in devtools](images/css-vars-in-devtools.png)
 
-When the user changes the theme, the process is repeated, and new CSS Variables appear instead of previous ones.
+When the user changes the theme, the above process is repeated, and new CSS variables appear, replacing the previous ones.
 
-If you want to follow a selected theme to keep the 'native' Lens look and feel, respecting the light/dark appearance of your extension, you can use the provided variables and built-in Lens components such as `Button`, `Select`, `Table`, etc.
+If you want to preserve Lens's native look and feel, with respect to the lightness or darkness of your extension, you can use the provided variables and built-in Lens components such as `Button`, `Select`, `Table`, and so on.
 
-There is a set of CSS Variables available for extensions to use for theming. They are all located inside `:root` and are defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss):
+There is a set of CSS variables available for extensions to use for theming. They are all located inside `:root` and are defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss):
 
 ```css
 --font-main: 'Roboto', 'Helvetica', 'Arial', sans-serif;
@@ -90,7 +88,7 @@ as well as in [the theme modules](https://github.com/lensapp/lens/tree/master/sr
 ...
 ```
 
-They can be used in form of `var(--magenta)`, e.g.
+These variables can be used in the following form: `var(--magenta)`. For example:
 
 ```css
 .status {
@@ -99,14 +97,14 @@ They can be used in form of `var(--magenta)`, e.g.
 }
 ```
 
-A complete list of all themable colors can be found in the [color reference](../color-reference).
+A complete list of themable colors can be found in the [Color Reference](../color-reference).
 
 ### Theme Switching
 
-When the light theme is active, the `<body>` element gets a "theme-light" class, `<body class="theme-light">`. If the class isn't there, assume the theme is dark. The active theme can be changed in the `Preferences` page:
+When the light theme is active, the `<body>` element gets a "theme-light" class, or: `<body class="theme-light">`. If the class isn't there, the theme defaults to dark. The active theme can be changed in the **Preferences** page:
 ![Color Theme](images/theme-selector.png)
 
-Currently, there is no prescribed way of detecting changes to the theme in JavaScript. [This issue](https://github.com/lensapp/lens/issues/1336) hopes to improve on this. In the meantime, you can use a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) to observe the `<body>` element's `class` attribute to see if the "theme-light" class gets added to it:
+Currently, there is no prescribed way of detecting changes to the theme in JavaScript. [This issue](https://github.com/lensapp/lens/issues/1336) has been raised to resolve this problem. In the meantime, you can use a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) in order to observe the `<body>` element's `class` attribute in order to see if the "theme-light" class gets added to it:
 
 ```javascript
 ...
@@ -137,9 +135,9 @@ Currently, there is no prescribed way of detecting changes to the theme in JavaS
 
 ## Injected Styles
 
-Every extension is affected by list of default global styles defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss). These are basic browser resets and element styles like setting the `box-sizing` property for every element, default text and background colors, default font sizes, basic heading formatting, etc.
+Every extension is affected by the list of default global styles defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss). These are basic browser resets and element styles, including setting the `box-sizing` property for every element, default text and background colors, default font sizes, basic heading formatting, and so on.
 
-Extension may overwrite these if needed. They have low CSS specificity, so overriding them should be fairly easy.
+Extensions may overwrite these defaults if needed. They have low CSS specificity, so overriding them should be fairly easy.
 
 ## CSS-in-JS
 

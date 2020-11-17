@@ -13,7 +13,7 @@ We recommend:
 
 Lens has been tested on the following platforms:
 
-* OS X
+* macOS
 * Windows
 * Linux
 

@@ -1,14 +1,14 @@
 # Common Capabilities
 
-Common Capabilities are important building blocks for your extensions. Almost all extensions use some of these functionalities. Here is how you can take advantage of them.
+Here we will discuss common and important building blocks for your extensions, and explain how you can use them. Almost all extensions use some of these functionalities.
 
 ## Main Extension
 
-A main extension runs in the background and, apart from app menu items, does not add content to the Lens UI. If you want to see logs from this extension you need to start Lens from the command line.
+The main extension runs in the background. It adds app menu items to the Lens UI. In order to see logs from this extension, you need to start Lens from the command line.
 
 ### Activate
 
-An extension can register a custom callback that is executed when an extension is activated (started).
+This extension can register a custom callback that is executed when an extension is activated (started).
 
 ``` javascript
 import { LensMainExtension } from "@k8slens/extensions"
@@ -22,7 +22,7 @@ export default class ExampleMainExtension extends LensMainExtension {
 
 ### Deactivate
 
-An extension can register a custom callback that is executed when an extension is deactivated (stopped).
+This extension can register a custom callback that is executed when an extension is deactivated (stopped).
 
 ``` javascript
 import { LensMainExtension } from "@k8slens/extensions"
@@ -36,7 +36,7 @@ export default class ExampleMainExtension extends LensMainExtension {
 
 ### App Menus
 
-An extension can register custom App menus that will be displayed on OS native menus.
+This extension can register custom app menus that will be displayed on OS native menus.
 
 Example:
 
@@ -58,11 +58,11 @@ export default class ExampleMainExtension extends LensMainExtension {
 
 ## Renderer Extension
 
-A renderer extension runs in a browser context and it's visible directly via Lens main window. If you want to see logs from this extension you need to check them via View -> Toggle Developer Tools -> Console.
+The renderer extension runs in a browser context, and is visible in Lens's main window. In order to see logs from this extension you need to check them via **View** > **Toggle Developer Tools** > **Console**.
 
 ### Activate
 
-An extension can register a custom callback that is executed when an extension is activated (started).
+This extension can register a custom callback that is executed when an extension is activated (started).
 
 ``` javascript
 import { LensRendererExtension } from "@k8slens/extensions"
@@ -76,7 +76,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 ### Deactivate
 
-An extension can register a custom callback that is executed when an extension is deactivated (stopped).
+This extension can register a custom callback that is executed when an extension is deactivated (stopped).
 
 ``` javascript
 import { LensRendererExtension } from "@k8slens/extensions"
@@ -90,7 +90,7 @@ export default class ExampleMainExtension extends LensRendererExtension {
 
 ### Global Pages
 
-An extension can register custom global pages (views) to Lens main window. Global page is a full screen page that hides all the other content from a window.
+This extension can register custom global pages (views) to Lens's main window. The global page is a full-screen page that hides all other content from a window.
 
 ``` typescript
 import React from "react"
@@ -122,7 +122,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 
 ### App Preferences
 
-An extension can register custom app preferences. An extension is responsible for storing a state for custom preferences.
+This extension can register custom app preferences. It is responsible for storing a state for custom preferences.
 
 ``` typescript
 import React from "react"
@@ -146,7 +146,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 
 ### Cluster Pages
 
-An extension can register custom cluster pages which are visible in a cluster menu when a cluster is opened.
+This extension can register custom cluster pages. These pages are visible in a cluster menu when a cluster is opened.
 
 ``` typescript
 import React from "react"
@@ -179,7 +179,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 ### Cluster Features
 
-An extension can register installable features for a cluster. A cluster feature is visible in "Cluster Settings" page.
+This extension can register installable features for a cluster. These features are visible in the "Cluster Settings" page.
 
 ``` typescript
 import React from "react"
@@ -208,7 +208,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 ### Status Bar Items
 
-An extension can register custom icons/texts to a status bar area.
+This extension can register custom icons and text to a status bar area.
 
 ``` typescript
 import React from "react";
@@ -230,7 +230,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 ### Kubernetes Object Menu Items
 
-An extension can register custom menu items (actions) for specified Kubernetes kinds/apiVersions.
+This extension can register custom menu items (actions) for specified Kubernetes kinds/apiVersions.
 
 ``` typescript
 import React from "react"
@@ -253,7 +253,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 ### Kubernetes Object Details
 
-An extension can register custom details (content) for specified Kubernetes kinds/apiVersions.
+This extension can register custom details (content) for specified Kubernetes kinds/apiVersions.
 
 ``` typescript
 import React from "react"
