@@ -69,7 +69,7 @@ $(extension_node_modules):
 	cd $(@:/node_modules=) && npm install --no-audit --no-fund
 
 $(extension_dists):
-	cd $(@:/node_modules=) && npm run build
+	cd $(@:/dist=) && npm run build
 
 .PHONY: build-extensions
 build-extensions: $(extension_node_modules) $(extension_dists)
