@@ -45,9 +45,13 @@ export class Workspaces extends React.Component {
   }
 
   saveWorkspace = (id: WorkspaceId) => {
-    const draft = toJS(this.editingWorkspaces.get(id));
-    const workspace = workspaceStore.addWorkspace(draft);
-    if (workspace) {
+    const workspace = new Workspace(this.editingWorkspaces.get(id));
+    if (workspaceStore.getById(id)) {
+      workspaceStore.updateWorkspace(workspace);
+      this.clearEditing(id);
+      return;
+    }
+    if (workspaceStore.addWorkspace(workspace)) {
       this.clearEditing(id);
     }
   }

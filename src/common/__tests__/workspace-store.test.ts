@@ -38,15 +38,18 @@ describe("workspace store tests", () => {
       expect(() => ws.removeWorkspaceById(WorkspaceStore.defaultId)).toThrowError("Cannot remove");
     })
 
-    it("can update default workspace name", () => {
+    it("can update workspace description", () => {
       const ws = WorkspaceStore.getInstance<WorkspaceStore>();
 
-      ws.addWorkspace(new Workspace({
-        id: WorkspaceStore.defaultId,
+      const workspace = ws.addWorkspace(new Workspace({
+        id: "foobar",
         name: "foobar",
       }));
 
-      expect(ws.currentWorkspace.name).toBe("foobar");
+      workspace.description = "Foobar description";
+      ws.updateWorkspace(workspace);
+
+      expect(ws.getById("foobar").description).toBe("Foobar description");
     })
 
     it("can add workspaces", () => {
