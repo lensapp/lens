@@ -29,13 +29,16 @@
           font-family: $font-monospace;
           font-size: smaller;
           white-space: pre;
-          -webkit-font-smoothing: auto; // Better readability on non-retina screens
 
           &:hover {
             background: $logRowHoverBackground;
           }
 
           span {
+            -webkit-font-smoothing: auto; // Better readability on non-retina screens
+          }
+
+          span.overlay {
             border-radius: 2px;
             background-color: #8cc474b8;
             -webkit-font-smoothing: auto;
