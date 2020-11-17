@@ -85,6 +85,7 @@ export class WindowManager extends Singleton {
       await this.mainWindow.loadURL(this.mainUrl);
       this.mainWindow.show();
       this.splashWindow?.close();
+      appEventBus.emit({ name: "app", action: "start" })
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString())
     }

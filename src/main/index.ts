@@ -67,7 +67,7 @@ app.on("ready", async () => {
   }
 
   // create cluster manager
-  clusterManager = new ClusterManager(proxyPort);
+  clusterManager = ClusterManager.getInstance<ClusterManager>(proxyPort);
 
   // run proxy
   try {
@@ -82,7 +82,7 @@ app.on("ready", async () => {
   extensionLoader.init(await extensionManager.load()); // call after windowManager to see splash earlier
 
   setTimeout(() => {
-    appEventBus.emit({ name: "app", action: "start" })
+    appEventBus.emit({ name: "service", action: "start" })
   }, 1000)
 });
 
@@ -96,6 +96,7 @@ app.on("activate", (event, hasVisibleWindows) => {
 // Quit app on Cmd+Q (MacOS)
 app.on("will-quit", (event) => {
   logger.info('APP:QUIT');
+  appEventBus.emit({name: "app", action: "close"})
   event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
   clusterManager?.stop(); // close cluster connections
   return; // skip exit to make tray work, to quit go to app's global menu or tray's menu

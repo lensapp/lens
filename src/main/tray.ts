@@ -1,6 +1,6 @@
 import path from "path"
 import packageInfo from "../../package.json"
-import { app, dialog, Menu, NativeImage, nativeTheme, Tray } from "electron"
+import { dialog, Menu, NativeImage, nativeTheme, Tray } from "electron"
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
 import { AppUpdater } from "./app-updater";
@@ -11,6 +11,7 @@ import { preferencesURL } from "../renderer/components/+preferences/preferences.
 import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
 import logger from "./logger";
 import { isDevelopment } from "../common/vars";
+import { exitApp } from "./exit-app";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
 export let tray: Tray;
@@ -119,7 +120,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
     {
       label: 'Quit App',
       click() {
-        app.exit();
+        exitApp()
       }
     }
   ]);
