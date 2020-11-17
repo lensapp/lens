@@ -10,5 +10,10 @@
     > .description {
       flex: 1;
     }
+
+    &:not(.enabled) {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   }
 }

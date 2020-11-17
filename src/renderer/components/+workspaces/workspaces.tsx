@@ -20,7 +20,7 @@ export class Workspaces extends React.Component {
 
   @computed get workspaces(): Workspace[] {
     const currentWorkspaces: Map<WorkspaceId, Workspace> = new Map()
-    workspaceStore.enabledWorkspacesList.forEach((w) => {
+    workspaceStore.workspacesList.forEach((w) => {
       currentWorkspaces.set(w.id, w)
     })
     const allWorkspaces = new Map([
@@ -115,7 +115,7 @@ export class Workspaces extends React.Component {
           <Trans>Workspaces</Trans>
         </h2>
         <div className="items flex column gaps">
-          {this.workspaces.map(({ id: workspaceId, name, description, ownerRef }) => {
+          {this.workspaces.map(({ id: workspaceId, name, description, ownerRef, enabled }) => {
             const isActive = workspaceStore.currentWorkspaceId === workspaceId;
             const isDefault = workspaceStore.isDefault(workspaceId);
             const isEditing = this.editingWorkspaces.has(workspaceId);
@@ -131,7 +131,7 @@ export class Workspaces extends React.Component {
               validate: value => !workspaceStore.getByName(value.trim())
             }
             return (
-              <div key={workspaceId} className={className}>
+              <div key={workspaceId} className={cssNames(className, {enabled: enabled || isEditing})}>
                 {!isEditing && (
                   <Fragment>
                     <span className="name flex gaps align-center">
