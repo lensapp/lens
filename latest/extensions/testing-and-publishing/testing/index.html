@@ -858,18 +858,21 @@
                 
                 <h1 id="testing-extensions">Testing Extensions<a class="headerlink" href="#testing-extensions" title="Permanent link">#</a></h1>
 <h2 id="consolelog">Console.log<a class="headerlink" href="#consolelog" title="Permanent link">#</a></h2>
-<p><code>console.log()</code> might be handy for extension developers to prints out info/errors from extensions. To use <code>console.log</code>, note that Lens is based on Electron. Electron has two types of processes: <a href="https://www.electronjs.org/docs/tutorial/quick-start#main-and-renderer-processes">Main and Renderer</a>.</p>
+<p>Extension developers might find <code>console.log()</code> useful for printing out information and errors from extensions. To use <code>console.log()</code>, note that Lens is based on Electron, and that Electron has two types of processes: <a href="https://www.electronjs.org/docs/tutorial/quick-start#main-and-renderer-processes">Main and Renderer</a>.</p>
 <h3 id="renderer-process-logs">Renderer Process Logs<a class="headerlink" href="#renderer-process-logs" title="Permanent link">#</a></h3>
-<p><code>console.log()</code> in Renderer process is printed in the Console in Developer Tools (View &gt; Toggle Developer Tools).</p>
+<p>In the Renderer process, <code>console.log()</code> is printed in the Console in Developer Tools (<strong>View</strong> &gt; <strong>Toggle Developer Tools</strong>).</p>
 <h3 id="main-process-logs">Main Process Logs<a class="headerlink" href="#main-process-logs" title="Permanent link">#</a></h3>
-<p>To view the logs from the main process is a bit trickier, since you cannot open developer tools for them. On MacOSX, one way is to run Lens from the terminal.</p>
+<p>Viewing the logs from the Main process is a little trickier, since they cannot be printed using Developer Tools. </p>
+<h4>macOS</h4>
+<p>On macOS, view the Main process logs by running Lens from the terminal:</p>
 <div class="highlight"><pre><span></span><code>/Applications/Lens.app/Contents/MacOS/Lens
 </code></pre></div>
-<p>You can alos use <a href="https://support.apple.com/en-gb/guide/console/welcome/mac">Console.app</a> to view logs from Lens.</p>
-<p>On linux, you can get PID of Lens first</p>
+<p>You can also use <a href="https://support.apple.com/en-gb/guide/console/welcome/mac">Console.app</a> to view the Main process logs.</p>
+<h4>Linux</h4>
+<p>On Linux, you can access the Main process logs using the Lens PID. First get the PID:</p>
 <div class="highlight"><pre><span></span><code>ps aux <span class="p">|</span> grep Lens <span class="p">|</span> grep -v grep
 </code></pre></div>
-<p>And get logs by the PID</p>
+<p>Then get the Main process logs using the PID:</p>
 <div class="highlight"><pre><span></span><code>tail -f /proc/<span class="o">[</span>pid<span class="o">]</span>/fd/1 <span class="c1"># stdout (console.log)</span>
 tail -f /proc/<span class="o">[</span>pid<span class="o">]</span>/fd/2 <span class="c1"># stdout (console.error)</span>
 </code></pre></div>

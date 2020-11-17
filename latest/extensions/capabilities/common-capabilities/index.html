@@ -1023,11 +1023,11 @@
                 
                 
                 <h1 id="common-capabilities">Common Capabilities<a class="headerlink" href="#common-capabilities" title="Permanent link">#</a></h1>
-<p>Common Capabilities are important building blocks for your extensions. Almost all extensions use some of these functionalities. Here is how you can take advantage of them.</p>
+<p>Here we will discuss common and important building blocks for your extensions, and explain how you can use them. Almost all extensions use some of these functionalities.</p>
 <h2 id="main-extension">Main Extension<a class="headerlink" href="#main-extension" title="Permanent link">#</a></h2>
-<p>A main extension runs in the background and, apart from app menu items, does not add content to the Lens UI. If you want to see logs from this extension you need to start Lens from the command line.</p>
+<p>The main extension runs in the background. It adds app menu items to the Lens UI. In order to see logs from this extension, you need to start Lens from the command line.</p>
 <h3 id="activate">Activate<a class="headerlink" href="#activate" title="Permanent link">#</a></h3>
-<p>An extension can register a custom callback that is executed when an extension is activated (started).</p>
+<p>This extension can register a custom callback that is executed when an extension is activated (started).</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 
 <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleMainExtension</span> <span class="kr">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
@@ -1037,7 +1037,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="deactivate">Deactivate<a class="headerlink" href="#deactivate" title="Permanent link">#</a></h3>
-<p>An extension can register a custom callback that is executed when an extension is deactivated (stopped).</p>
+<p>This extension can register a custom callback that is executed when an extension is deactivated (stopped).</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 
 <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleMainExtension</span> <span class="kr">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
@@ -1047,7 +1047,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="app-menus">App Menus<a class="headerlink" href="#app-menus" title="Permanent link">#</a></h3>
-<p>An extension can register custom App menus that will be displayed on OS native menus.</p>
+<p>This extension can register custom app menus that will be displayed on OS native menus.</p>
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span><span class="p">,</span> <span class="nx">windowManager</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 
@@ -1064,9 +1064,9 @@
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="renderer-extension">Renderer Extension<a class="headerlink" href="#renderer-extension" title="Permanent link">#</a></h2>
-<p>A renderer extension runs in a browser context and it's visible directly via Lens main window. If you want to see logs from this extension you need to check them via View -&gt; Toggle Developer Tools -&gt; Console.</p>
+<p>The renderer extension runs in a browser context, and is visible in Lens's main window. In order to see logs from this extension you need to check them via <strong>View</strong> &gt; <strong>Toggle Developer Tools</strong> &gt; <strong>Console</strong>.</p>
 <h3 id="activate_1">Activate<a class="headerlink" href="#activate_1" title="Permanent link">#</a></h3>
-<p>An extension can register a custom callback that is executed when an extension is activated (started).</p>
+<p>This extension can register a custom callback that is executed when an extension is activated (started).</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 
 <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
@@ -1076,7 +1076,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="deactivate_1">Deactivate<a class="headerlink" href="#deactivate_1" title="Permanent link">#</a></h3>
-<p>An extension can register a custom callback that is executed when an extension is deactivated (stopped).</p>
+<p>This extension can register a custom callback that is executed when an extension is deactivated (stopped).</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 
 <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleMainExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
@@ -1086,7 +1086,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="global-pages">Global Pages<a class="headerlink" href="#global-pages" title="Permanent link">#</a></h3>
-<p>An extension can register custom global pages (views) to Lens main window. Global page is a full screen page that hides all the other content from a window.</p>
+<p>This extension can register custom global pages (views) to Lens's main window. The global page is a full-screen page that hides all other content from a window.</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/example-page&quot;</span>
@@ -1114,7 +1114,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="app-preferences">App Preferences<a class="headerlink" href="#app-preferences" title="Permanent link">#</a></h3>
-<p>An extension can register custom app preferences. An extension is responsible for storing a state for custom preferences.</p>
+<p>This extension can register custom app preferences. It is responsible for storing a state for custom preferences.</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">myCustomPreferencesStore</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/my-custom-preferences-store&quot;</span>
@@ -1134,7 +1134,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="cluster-pages">Cluster Pages<a class="headerlink" href="#cluster-pages" title="Permanent link">#</a></h3>
-<p>An extension can register custom cluster pages which are visible in a cluster menu when a cluster is opened.</p>
+<p>This extension can register custom cluster pages. These pages are visible in a cluster menu when a cluster is opened.</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">ExampleIcon</span><span class="p">,</span> <span class="nx">ExamplePage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/page&quot;</span>
@@ -1162,7 +1162,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="cluster-features">Cluster Features<a class="headerlink" href="#cluster-features" title="Permanent link">#</a></h3>
-<p>An extension can register installable features for a cluster. A cluster feature is visible in "Cluster Settings" page.</p>
+<p>This extension can register installable features for a cluster. These features are visible in the "Cluster Settings" page.</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">MyCustomFeature</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/my-custom-feature&quot;</span>
@@ -1186,7 +1186,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="status-bar-items">Status Bar Items<a class="headerlink" href="#status-bar-items" title="Permanent link">#</a></h3>
-<p>An extension can register custom icons/texts to a status bar area.</p>
+<p>This extension can register custom icons and text to a status bar area.</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">LensRendererExtension</span><span class="p">,</span> <span class="nx">Navigation</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
@@ -1203,7 +1203,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="kubernetes-object-menu-items">Kubernetes Object Menu Items<a class="headerlink" href="#kubernetes-object-menu-items" title="Permanent link">#</a></h3>
-<p>An extension can register custom menu items (actions) for specified Kubernetes kinds/apiVersions.</p>
+<p>This extension can register custom menu items (actions) for specified Kubernetes kinds/apiVersions.</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">CustomMenuItem</span><span class="p">,</span> <span class="nx">CustomMenuItemProps</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/custom-menu-item&quot;</span>
@@ -1221,7 +1221,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="kubernetes-object-details">Kubernetes Object Details<a class="headerlink" href="#kubernetes-object-details" title="Permanent link">#</a></h3>
-<p>An extension can register custom details (content) for specified Kubernetes kinds/apiVersions.</p>
+<p>This extension can register custom details (content) for specified Kubernetes kinds/apiVersions.</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 <span class="kr">import</span> <span class="p">{</span> <span class="nx">CustomKindDetails</span><span class="p">,</span> <span class="nx">CustomKindDetailsProps</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/custom-kind-details&quot;</span>
