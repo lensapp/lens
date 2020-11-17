@@ -3,7 +3,9 @@ on:
   push:
     branches:
       - master
-
+  release:
+    types: 
+      - published
 jobs:
   build:
     name: Deploy docs
@@ -27,13 +29,12 @@ jobs:
       - name: Checkout Release from lens
         uses: actions/checkout@v2
         with:
-          repository: lensapp/lens
+          fetch-depth: 0
 
       - name: git config
         run: |
            git config --local user.email "action@github.com"
            git config --local user.name "GitHub Action"
-           git pull
 
       - name: Using Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -45,17 +46,19 @@ jobs:
            yarn install
            yarn typedocs-extensions-api
 
-      - name: mkdocs deploy latest
+      - name: mkdocs deploy master
+        if: contains(github.ref, 'refs/heads/master')
         run: |
-           mike deploy --push latest
+           mike deploy --push master
 
-
-      - name: mkdocs deploy new release / tag
-        if: contains(github.ref, 'refs/tags/v')
+      - name: Get the release version
+        if: contains(github.ref, 'refs/tags/v') # && !github.event.release.prerelease (generate pre-release docs until Lens 4.0.0 is GA, see #1408)
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+  
+      - name: mkdocs deploy new release
+        if: contains(github.ref, 'refs/tags/v') # && !github.event.release.prerelease (generate pre-release docs until Lens 4.0.0 is GA, see #1408)
         run: |
-           mike deploy --push--update-aliases ${{ github.ref }} latest
-           mike set-default --push ${{ github.ref }}
-
-
-
-
+           mike deploy --push --update-aliases ${{ steps.get_version.outputs.VERSION }} latest
+           mike set-default --push ${{ steps.get_version.outputs.VERSION }}
+           
