@@ -1,6 +1,6 @@
 EXTENSIONS_DIR = ./extensions
-extension_node_modules = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/node_modules/)
-extension_dists = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/dist/)
+extension_node_modules = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/node_modules)
+extension_dists = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/dist)
 
 ifeq ($(OS),Windows_NT)
     DETECTED_OS := Windows
@@ -66,7 +66,7 @@ else
 endif
 
 $(extension_node_modules):
-	cd $(@:/node_modules=) && npm install --no-audit --no-fund
+	cd $(@:/node_modules="") && npm install --no-audit --no-fund
 
 $(extension_dists):
 	cd $(@:/dist=) && npm run build
