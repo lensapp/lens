@@ -56,7 +56,7 @@ test-app:
 	yarn test
 
 .PHONY: build
-build: install-deps binaries/client build-extensions
+build: node_modules binaries/client build-extensions
 ifeq "$(DETECTED_OS)" "Windows"
 	yarn dist:win
 else
