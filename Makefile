@@ -1,4 +1,6 @@
 EXTENSIONS_DIR = ./extensions
+extension_node_modules = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/node_modules/)
+extension_dists = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/dist/)
 
 ifeq ($(OS),Windows_NT)
     DETECTED_OS := Windows
@@ -25,10 +27,7 @@ compile-dev:
 	yarn compile:renderer --cache
 
 .PHONY: dev
-dev:
-ifeq ("$(wildcard static/build/main.js)","")
-	make init
-endif
+dev: build-extensions
 	yarn dev
 
 .PHONY: lint
@@ -66,13 +65,18 @@ else
 	yarn dist
 endif
 
+$(extension_node_modules):
+	cd $(dir $@) && npm install --no-audit --no-fund
+
+$(extension_dists):
+	cd $(dir $@) && npm run build
+
 .PHONY: build-extensions
-build-extensions:
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), (cd $(dir) && npm install && npm run build || exit $?);)
+build-extensions: $(extension_node_modules) $(extension_dists)
 
 .PHONY: test-extensions
-test-extensions:
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), (cd $(dir) && npm install --dev && npm run test || exit $?);)
+test-extensions: $(extension_node_modules)
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), (cd $(dir) && npm run test || exit $?);)
 
 .PHONY: copy-extension-themes
 copy-extension-themes:
@@ -97,6 +101,16 @@ publish-npm: build-npm
 	npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
 	cd src/extensions/npm/extensions && npm publish --access=public
 
+.PHONY: clean-extensions
+clean-extensions:
+ifeq "$(DETECTED_OS)" "Windows"
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), if exist $(dir)\dist del /s /q $(dir)\dist)
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), if exist $(dir)\node_modules del /s /q $(dir)\node_modules)
+else
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/dist)
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/node_modules)
+endif
+
 .PHONY: clean-npm
 clean-npm:
 ifeq "$(DETECTED_OS)" "Windows"
@@ -110,7 +124,7 @@ else
 endif
 
 .PHONY: clean
-clean: clean-npm
+clean: clean-npm clean-extensions
 ifeq "$(DETECTED_OS)" "Windows"
 	if exist binaries\client del /s /q binaries\client\*.*
 	if exist dist del /s /q dist\*.*
