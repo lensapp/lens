@@ -13,6 +13,6 @@ export function exitApp() {
   clusterManager?.stop();
   logger.info('SERVICE:QUIT');
   setTimeout(() => {
-     app.exit()
+    app.exit()
   }, 1000)
 }
