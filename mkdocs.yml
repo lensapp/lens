@@ -22,6 +22,7 @@ nav:
     - Getting Started:
       - Overview: extensions/get-started/overview.md
       - Your First Extension: extensions/get-started/your-first-extension.md
+      - Generator: extensions/get-started/generator.md
       - Extension Anatomy: extensions/get-started/anatomy.md
       - Wrapping Up: extensions/get-started/wrapping-up.md
     - Extension Capabilities:
