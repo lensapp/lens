@@ -24,6 +24,7 @@ import { extensionLoader } from "../extensions/extension-loader";
 import { extensionsStore } from "../extensions/extensions-store";
 import { InstalledExtension, extensionDiscovery } from "../extensions/extension-discovery";
 import type { LensExtensionId } from "../extensions/lens-extension";
+import { installDeveloperTools } from "./developer-tools";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -49,6 +50,8 @@ app.on("ready", async () => {
   updater.start();
 
   registerFileProtocol("static", __static);
+
+  await installDeveloperTools();
 
   // preload
   await Promise.all([
