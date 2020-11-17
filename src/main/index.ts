@@ -93,10 +93,9 @@ app.on("activate", (event, hasVisibleWindows) => {
   }
 });
 
-// Quit app on Cmd+Q (MacOS)
-app.on("will-quit", (event) => {
-  logger.info('APP:QUIT');
-  event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
+// Prevent app.exit() on closing all windows
+app.on("window-all-closed", () => {
+  logger.info('APP:CLOSE');
   clusterManager?.stop(); // close cluster connections
   return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
 })
