@@ -134,7 +134,7 @@ export class LensProxy {
       try {
         res.writeHead(500).end("Oops, something went wrong.")
       } catch (e) {
-        // Can't send headers. Probably app is closing.
+        logger.error(`[LENS-PROXY]: Failed to write headers: `, e)
       }
     })
 
