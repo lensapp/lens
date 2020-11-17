@@ -60,6 +60,6 @@ Then, Reload Lens by CMD+R (Mac) / Ctrl+R (Linux/Windows), you should see the me
 
 You can take a closer look at [Common Capabilities](../capabilities/common-capabilities.md) of extension, how to [style](../capabilities/styling.md) the extension. Or the [Extension Anatomy](anatomy.md).
 
-Welcome to to raise an [issue](https://github.com/lensapp/generator-lens-ext/issues) for Lens Extension Generator, if you find problems, or have feature requests.
+You are welcome to raise an [issue](https://github.com/lensapp/generator-lens-ext/issues) for Lens Extension Generator, if you find problems, or have feature requests.
 
 The source code of the generator is hosted at [Github](https://github.com/lensapp/generator-lens-ext)
