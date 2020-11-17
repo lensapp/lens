@@ -16,13 +16,16 @@ node_modules:
 	yarn install --frozen-lockfile --verbose
 	yarn check --verify-tree --integrity
 
+static/build/LensDev.html:
+	yarn compile:renderer
+
 .PHONY: compile-dev
 compile-dev:
 	yarn compile:main --cache
 	yarn compile:renderer --cache
 
 .PHONY: dev
-dev: node_modules binaries/client build-extensions
+dev: node_modules binaries/client build-extensions static/build/LensDev.html
 	yarn dev
 
 .PHONY: lint
@@ -63,7 +66,7 @@ endif
 $(extension_node_modules):
 	cd $(@:/node_modules=) && npm install --no-audit --no-fund
 
-$(extension_dists): build-extension-types
+$(extension_dists): src/extensions/npm/extensions/dist
 	cd $(@:/dist=) && npm run build
 
 .PHONY: build-extensions
@@ -121,11 +124,11 @@ endif
 .PHONY: clean
 clean: clean-npm clean-extensions
 ifeq "$(DETECTED_OS)" "Windows"
-	if exist binaries\client del /s /q binaries\client\*.*
+	if exist binaries\client del /s /q binaries\client
 	if exist dist del /s /q dist\*.*
 	if exist static\build del /s /q static\build\*.*
 else
-	rm -rf binaries/client/*
+	rm -rf binaries/client
 	rm -rf dist/*
 	rm -rf static/build/*
 endif
