@@ -36,7 +36,7 @@ jobs:
             yarn
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
-      - script: make install-deps
+      - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
         displayName: Generate npm package
@@ -76,7 +76,7 @@ jobs:
             yarn
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
-      - script: make install-deps
+      - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
         displayName: Generate npm package
@@ -122,7 +122,7 @@ jobs:
             yarn
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
-      - script: make install-deps
+      - script: make node_modules
         displayName: Install dependencies
       - script: make lint
         displayName: Lint
