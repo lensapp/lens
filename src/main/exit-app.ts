@@ -3,7 +3,6 @@ import { WindowManager } from "./window-manager";
 import { appEventBus } from "../common/event-bus";
 import { ClusterManager } from "./cluster-manager";
 import logger from "./logger";
-import { closingURL } from "../renderer/components/+closing-page/closing-page.route";
 
 
 export function exitApp() {
