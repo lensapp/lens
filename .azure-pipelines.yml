@@ -40,7 +40,7 @@ jobs:
         displayName: Install dependencies
       - script: make build-npm
         displayName: Generate npm package
-      - script: make build-extensions
+      - script: make -j2 build-extensions
         displayName: Build bundled extensions
       - script: make integration-win
         displayName: Run integration tests
@@ -80,7 +80,7 @@ jobs:
         displayName: Install dependencies
       - script: make build-npm
         displayName: Generate npm package
-      - script: make build-extensions
+      - script: make -j2 build-extensions
         displayName: Build bundled extensions
       - script: make test
         displayName: Run tests
@@ -128,7 +128,7 @@ jobs:
         displayName: Lint
       - script: make build-npm
         displayName: Generate npm package
-      - script: make build-extensions
+      - script: make -j2 build-extensions
         displayName: Build bundled extensions
       - script: make test
         displayName: Run tests
