@@ -134,18 +134,23 @@ export function buildMenu(windowManager: WindowManager) {
           click() {
             navigate(extensionsURL())
           }
-        },
+        }
+      ]),
+      { type: 'separator' },
+      {
+        role: 'close',
+        label: "Close Window"
+      },
+      ...ignoreOnMac([
         { type: 'separator' },
         {
-          label: 'Quit',
+          label: 'Exit',
           accelerator: 'Alt+F4',
           click() {
             exitApp()
           }
         }
-      ]),
-      { type: 'separator' },
-      { role: 'close' } // close current window
+      ])
     ]
   };
 
