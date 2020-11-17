@@ -20,7 +20,7 @@ export class Workspaces extends React.Component {
 
   @computed get workspaces(): Workspace[] {
     const currentWorkspaces: Map<WorkspaceId, Workspace> = new Map()
-    workspaceStore.enabledWorkspacesList.forEach((w) => {
+    workspaceStore.workspacesList.forEach((w) => {
       currentWorkspaces.set(w.id, w)
     })
     const allWorkspaces = new Map([
@@ -45,9 +45,13 @@ export class Workspaces extends React.Component {
   }
 
   saveWorkspace = (id: WorkspaceId) => {
-    const draft = toJS(this.editingWorkspaces.get(id));
-    const workspace = workspaceStore.addWorkspace(draft);
-    if (workspace) {
+    const workspace = new Workspace(this.editingWorkspaces.get(id));
+    if (workspaceStore.getById(id)) {
+      workspaceStore.updateWorkspace(workspace);
+      this.clearEditing(id);
+      return;
+    }
+    if (workspaceStore.addWorkspace(workspace)) {
       this.clearEditing(id);
     }
   }
@@ -127,7 +131,7 @@ export class Workspaces extends React.Component {
               validate: value => !workspaceStore.getByName(value.trim())
             }
             return (
-              <div key={workspaceId} className={className}>
+              <div key={workspaceId} className={cssNames(className)}>
                 {!isEditing && (
                   <Fragment>
                     <span className="name flex gaps align-center">
