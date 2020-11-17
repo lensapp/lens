@@ -12,8 +12,9 @@ endif
 binaries/client:
 	yarn download-bins
 
+.PHONY: node_modules
 node_modules:
-	yarn install --frozen-lockfile --verbose
+	yarn install --frozen-lockfile
 	yarn check --verify-tree --integrity
 
 static/build/LensDev.html:
@@ -63,9 +64,11 @@ else
 	yarn dist
 endif
 
+.PHONY: $(extension_node_modules)
 $(extension_node_modules):
 	cd $(@:/node_modules=) && npm install --no-audit --no-fund
 
+.PHONY: $(extension_dists)
 $(extension_dists): src/extensions/npm/extensions/dist
 	cd $(@:/dist=) && npm run build
 
