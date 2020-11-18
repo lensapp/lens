@@ -10,6 +10,8 @@ import { Router } from "./router";
 import { ClusterManager } from "./cluster-manager";
 import { ContextHandler } from "./context-handler";
 import logger from "./logger";
+import _ from "lodash";
+import { clusterStore } from "../common/cluster-store";
 
 export class LensProxy {
   protected origin: string;
@@ -64,50 +66,55 @@ export class LensProxy {
 
   protected async handleProxyUpgrade(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
     const cluster = this.clusterManager.getClusterForRequest(req);
-    if (cluster) {
-      const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
-      const apiUrl = url.parse(cluster.apiUrl);
-      const pUrl = url.parse(proxyUrl);
-      const connectOpts = { port: parseInt(pUrl.port), host: pUrl.hostname };
-      const proxySocket = new net.Socket();
-      proxySocket.connect(connectOpts, () => {
-        proxySocket.write(`${req.method} ${pUrl.path} HTTP/1.1\r\n`);
-        proxySocket.write(`Host: ${apiUrl.host}\r\n`);
-        for (let i = 0; i < req.rawHeaders.length; i += 2) {
-          const key = req.rawHeaders[i];
-          if (key !== "Host" && key !== "Authorization") {
-            proxySocket.write(`${req.rawHeaders[i]}: ${req.rawHeaders[i+1]}\r\n`);
-          }
-        }
-        proxySocket.write("\r\n");
-        proxySocket.write(head);
-      });
-
-      proxySocket.setKeepAlive(true);
-      socket.setKeepAlive(true);
-      proxySocket.setTimeout(0);
-      socket.setTimeout(0);
-
-      proxySocket.on('data', function (chunk) {
-        socket.write(chunk);
-      });
-      proxySocket.on('end', function () {
-        socket.end();
-      });
-      proxySocket.on('error', function (err) {
-        socket.write("HTTP/" + req.httpVersion + " 500 Connection error\r\n\r\n");
-        socket.end();
-      });
-      socket.on('data', function (chunk) {
-        proxySocket.write(chunk);
-      });
-      socket.on('end', function () {
-        proxySocket.end();
-      });
-      socket.on('error', function () {
-        proxySocket.end();
-      });
+    if (!cluster) {
+      return;
     }
+
+    const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
+    const apiUrl = url.parse(cluster.apiUrl);
+    const pUrl = url.parse(proxyUrl);
+    const connectOpts = { port: parseInt(pUrl.port), host: pUrl.hostname };
+    const proxySocket = new net.Socket();
+    proxySocket.connect(connectOpts, () => {
+      proxySocket.write(`${req.method} ${pUrl.path} HTTP/1.1\r\n`);
+      proxySocket.write(`Host: ${apiUrl.host}\r\n`);
+
+      for (const [key, value] of _.chunk(req.rawHeaders, 2)) {
+        if (["Host", "Authorization"].includes(key)) {
+          continue;
+        }
+
+        proxySocket.write(`${key}: ${value}\r\n`);
+      }
+
+      proxySocket.write("\r\n");
+      proxySocket.write(head);
+    });
+
+    proxySocket.setKeepAlive(true);
+    socket.setKeepAlive(true);
+    proxySocket.setTimeout(0);
+    socket.setTimeout(0);
+
+    proxySocket.on('data', function (chunk) {
+      socket.write(chunk);
+    });
+    proxySocket.on('end', function () {
+      socket.end();
+    });
+    proxySocket.on('error', function (err) {
+      socket.write(`HTTP/${req.httpVersion} 500 Connection error\r\n\r\n`);
+      socket.end();
+    });
+    socket.on('data', function (chunk) {
+      proxySocket.write(chunk);
+    });
+    socket.on('end', function () {
+      proxySocket.end();
+    });
+    socket.on('error', function () {
+      proxySocket.end();
+    });
   }
 
   protected createProxy(): httpProxy {
@@ -166,6 +173,10 @@ export class LensProxy {
   protected async handleRequest(proxy: httpProxy, req: http.IncomingMessage, res: http.ServerResponse) {
     const cluster = this.clusterManager.getClusterForRequest(req);
     if (cluster) {
+      if (!cluster.initialized) {
+        return res.writeHead(404).end(`cluster: ${cluster.name} is not initialized`);
+      }
+
       const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler);
       if (proxyTarget) {
         // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"

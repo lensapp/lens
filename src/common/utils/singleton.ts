@@ -11,6 +11,10 @@ type Constructor<T = {}> = new (...args: any[]) => T;
 class Singleton {
   private static instances = new WeakMap<object, Singleton>();
 
+  protected constructor() {
+    // to prevent constucting
+  }
+
   // todo: improve types inferring
   static getInstance<T>(...args: ConstructorParameters<Constructor<T>>): T {
     if (!Singleton.instances.has(this)) {

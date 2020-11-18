@@ -1,12 +1,12 @@
 import path from "path";
 import packageInfo from "../../package.json";
-import { dialog, Menu, NativeImage, nativeTheme, Tray } from "electron";
+import { dialog, Menu, MenuItemConstructorOptions, NativeImage, nativeTheme, Tray } from "electron";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
 import { AppUpdater } from "./app-updater";
 import { WindowManager } from "./window-manager";
-import { clusterStore } from "../common/cluster-store";
-import { workspaceStore } from "../common/workspace-store";
+import { ClusterRenderInfo, clusterStore } from "../common/cluster-store";
+import { Workspace, workspaceStore } from "../common/workspace-store";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
 import logger from "./logger";
@@ -33,7 +33,7 @@ export function initTray(windowManager: WindowManager) {
       const menu = createTrayMenu(windowManager);
       buildTray(getTrayIcon(), menu);
     } catch (err) {
-      logger.error(`[TRAY]: building failed: ${err}`);
+      logger.error(`[TRAY]: building failed: `, err);
     }
   });
   return () => {
@@ -82,25 +82,23 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
     {
       label: "Clusters",
       submenu: workspaceStore.enabledWorkspacesList
-        .filter(workspace => clusterStore.getByWorkspaceId(workspace.id).length > 0) // hide empty workspaces
-        .map(workspace => {
-          const clusters = clusterStore.getByWorkspaceId(workspace.id);
-          return {
-            label: workspace.name,
-            toolTip: workspace.description,
-            submenu: clusters.map(cluster => {
-              const { id: clusterId, name: label, online, workspace } = cluster;
-              return {
-                label: `${online ? '✓' : '\x20'.repeat(3)/*offset*/}${label}`,
-                toolTip: clusterId,
-                async click() {
-                  workspaceStore.setActive(workspace);
-                  windowManager.navigate(clusterViewURL({ params: { clusterId } }));
-                }
-              };
-            })
-          };
-        }),
+        .map((workspace): [Workspace, ClusterRenderInfo[]] => [workspace, clusterStore.getByWorkspaceId(workspace.id)])
+        .filter(([, clusters]) => clusters.length > 0)
+        .map(([workspace, clusters]): MenuItemConstructorOptions => ({
+          label: workspace.name,
+          toolTip: workspace.description,
+          submenu: clusters.map(({ id: clusterId, name, online, workspace, DeadError }) => ({
+            label: name,
+            enabled: !!!DeadError,
+            checked: online,
+            toolTip: clusterId,
+            type: "radio",
+            async click() {
+              workspaceStore.setActive(workspace);
+              windowManager.navigate(clusterViewURL({ params: { clusterId } }));
+            }
+          }))
+        })),
     },
     {
       label: "Check for updates",

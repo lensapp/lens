@@ -4,17 +4,16 @@ import React, { DOMAttributes } from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Params as HashiconParams } from "@emeraldpay/hashicon";
 import { Hashicon } from "@emeraldpay/hashicon-react";
-import { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
 import { Tooltip } from "../tooltip";
-import { eventStore } from "../+events/event.store";
-import { forCluster } from "../../api/kube-api";
-import { subscribeToBroadcast, unsubscribeAllFromBroadcast } from "../../../common/ipc";
-import { observable, when } from "mobx";
+import { subscribeToBroadcast } from "../../../common/ipc";
+import { observable } from "mobx";
+import { ClusterRenderInfo } from "../../../common/cluster-store";
+import { Icon } from "../icon";
 
 interface Props extends DOMAttributes<HTMLElement> {
-  cluster: Cluster;
+  cluster: ClusterRenderInfo;
   className?: IClassName;
   errorClass?: IClassName;
   showErrors?: boolean;
@@ -51,24 +50,32 @@ export class ClusterIcon extends React.Component<Props> {
 
   render() {
     const {
-      cluster, showErrors, showTooltip, errorClass, options, interactive, isActive,
+      cluster, showErrors, showTooltip, errorClass, options, interactive, isActive, className,
       children, ...elemProps
     } = this.props;
-    const { name, preferences, id: clusterId } = cluster;
     const eventCount = this.eventCount;
-    const { icon } = preferences;
+    const { name, preferences: { icon }, id: clusterId, DeadError } = cluster;
     const clusterIconId = `cluster-icon-${clusterId}`;
-    const className = cssNames("ClusterIcon flex inline", this.props.className, {
-      interactive: interactive !== undefined ? interactive : !!this.props.onClick,
+    const isDead = !!DeadError;
+    const classNames = cssNames("ClusterIcon flex inline", className, {
+      interactive: interactive ?? !!this.props.onClick,
       active: isActive,
     });
     return (
-      <div {...elemProps} className={className} id={showTooltip ? clusterIconId : null}>
+      <div {...elemProps} className={classNames} id={showTooltip ? clusterIconId : null}>
         {showTooltip && (
           <Tooltip targetId={clusterIconId}>{name}</Tooltip>
         )}
-        {icon && <img src={icon} alt={name}/>}
-        {!icon && <Hashicon value={clusterId} options={options}/>}
+        {
+          icon
+            ? <img src={icon} alt={name} />
+            : <Hashicon value={clusterId} options={options} />
+        }
+        {
+          isDead && (
+            <Icon className="dead-error" material="error" />
+          )
+        }
         {showErrors && eventCount > 0 && !isActive && (
           <Badge
             className={cssNames("events-count", errorClass)}

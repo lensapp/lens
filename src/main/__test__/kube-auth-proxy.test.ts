@@ -27,6 +27,7 @@ jest.mock("../../common/ipc");
 jest.mock("child_process");
 jest.mock("tcp-port-used");
 
+import mockFs from "mock-fs";
 import { Cluster } from "../cluster";
 import { KubeAuthProxy } from "../kube-auth-proxy";
 import { getFreePort } from "../port";
@@ -36,6 +37,10 @@ import { bundledKubectlPath, Kubectl } from "../kubectl";
 import { mock, MockProxy } from 'jest-mock-extended';
 import { waitUntilUsed } from 'tcp-port-used';
 import { Readable } from "stream";
+import { app, remote } from "electron";
+import { Console } from "console";
+
+console = new Console(process.stdout, process.stderr); // fix mockFS
 
 const mockBroadcastIpc = broadcastMessage as jest.MockedFunction<typeof broadcastMessage>;
 const mockSpawn = spawn as jest.MockedFunction<typeof spawn>;
@@ -44,6 +49,14 @@ const mockWaitUntilUsed = waitUntilUsed as jest.MockedFunction<typeof waitUntilU
 describe("kube auth proxy tests", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    const mockOpts = {
+      'fake-path.yml': JSON.stringify({})
+    };
+    mockFs(mockOpts);
+  });
+
+  afterEach(() => {
+    mockFs.restore();
   });
 
   it("calling exit multiple times shouldn't throw", async () => {

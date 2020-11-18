@@ -11,8 +11,7 @@ export class LandingPage extends React.Component {
   @observable showHint = true;
 
   render() {
-    const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
-    const noClustersInScope = !clusters.length;
+    const noClustersInScope = clusterStore.getCountInWorkspace(workspaceStore.currentWorkspaceId) === 0;
     const showStartupHint = this.showHint && noClustersInScope;
     return (
       <div className="LandingPage flex">

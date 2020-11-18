@@ -4,7 +4,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router";
 import { comparer, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { ClustersMenu } from "./clusters-menu";
+import { ClusterMenu } from "./clusters-menu";
 import { BottomBar } from "./bottom-bar";
 import { LandingPage, landingRoute, landingURL } from "../+landing-page";
 import { Preferences, preferencesRoute } from "../+preferences";
@@ -60,7 +60,7 @@ export class ClusterManager extends React.Component {
     return (
       <div className="ClusterManager">
         <main>
-          <div id="lens-views"/>
+          <div id="lens-views" />
           <Switch>
             <Route component={LandingPage} {...landingRoute} />
             <Route component={Preferences} {...preferencesRoute} />
@@ -70,13 +70,13 @@ export class ClusterManager extends React.Component {
             <Route component={ClusterView} {...clusterViewRoute} />
             <Route component={ClusterSettings} {...clusterSettingsRoute} />
             {globalPageRegistry.getItems().map(({ routePath, exact, components: { Page } }) => {
-              return <Route key={routePath} path={routePath} component={Page} exact={exact}/>;
+              return <Route key={routePath} path={routePath} component={Page} exact={exact} />;
             })}
-            <Redirect exact to={this.startUrl}/>
+            <Redirect exact to={this.startUrl} />
           </Switch>
         </main>
-        <ClustersMenu/>
-        <BottomBar/>
+        <ClusterMenu />
+        <BottomBar />
       </div>
     );
   }

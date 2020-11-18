@@ -1,8 +1,8 @@
 import React from "react";
 import { action, observable } from "mobx";
-import { autobind } from "../../utils";
-import uniqueId from "lodash/uniqueId";
-import { JsonApiErrorParsed } from "../../api/json-api";
+import { autobind, Singleton } from "./utils";
+import _ from "lodash";
+import { JsonApiErrorParsed } from "../renderer/api/json-api";
 
 export type NotificationId = string | number;
 export type NotificationMessage = React.ReactNode | React.ReactNode[] | JsonApiErrorParsed;
@@ -21,10 +21,10 @@ export interface Notification {
 }
 
 @autobind()
-export class NotificationsStore {
+export class NotificationsStore extends Singleton {
   public notifications = observable.array<Notification>([], { deep: false });
 
-  protected autoHideTimers = new Map<NotificationId, number>();
+  protected autoHideTimers = new Map<NotificationId, NodeJS.Timeout>();
 
   getById(id: NotificationId): Notification | null {
     return this.notifications.find(item => item.id === id) ?? null;
@@ -35,7 +35,7 @@ export class NotificationsStore {
     if (!notification) return;
     this.removeAutoHideTimer(id);
     if (notification?.timeout) {
-      const timer = window.setTimeout(() => this.remove(id), notification.timeout);
+      const timer = setTimeout(() => this.remove(id), notification.timeout);
       this.autoHideTimers.set(id, timer);
     }
   }
@@ -50,7 +50,7 @@ export class NotificationsStore {
   @action
   add(notification: Notification): () => void {
     const id = notification.id ?? (
-      notification.id = uniqueId("notification_")
+      notification.id = _.uniqueId("notification_")
     );
     const index = this.notifications.findIndex(item => item.id === id);
     if (index > -1) {
@@ -69,4 +69,4 @@ export class NotificationsStore {
   }
 }
 
-export const notificationsStore = new NotificationsStore();
+export const notificationsStore = NotificationsStore.getInstance<NotificationsStore>();

@@ -8,13 +8,14 @@ import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
 import logger from "../main/logger";
 import { appEventBus } from "./event-bus";
-import { dumpConfigYaml } from "./kube-helpers";
+import { dumpConfigYaml, LoadKubeError } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
 import { subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import _ from "lodash";
 import move from "array-move";
 import type { WorkspaceId } from "./workspace-store";
+import { notificationsStore, NotificationStatus } from "./notifications.store";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -73,6 +74,14 @@ export interface ClusterPrometheusPreferences {
   };
 }
 
+export interface ClusterRenderInfo extends ClusterModel {
+  DeadError?: LoadKubeError; // this != undefined => dead
+  isAdmin: boolean;
+  name: string;
+  eventCount: number;
+  online: boolean;
+}
+
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
   static getCustomKubeConfigPath(clusterId: ClusterId): string {
     return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs", clusterId);
@@ -88,6 +97,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable activeCluster: ClusterId;
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
+  @observable deadClusters = observable.map<ClusterId, [ClusterModel, LoadKubeError]>();
 
   private constructor() {
     super({
@@ -137,6 +147,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return Array.from(this.clusters.values());
   }
 
+  @computed get deadClustersList(): [ClusterModel, LoadKubeError][] {
+    return Array.from(this.deadClusters.values());
+  }
+
   @computed get enabledClustersList(): Cluster[] {
     return this.clustersList.filter((c) => c.enabled);
   }
@@ -182,10 +196,32 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.clusters.get(id);
   }
 
-  getByWorkspaceId(workspaceId: string): Cluster[] {
-    const clusters = Array.from(this.clusters.values())
-      .filter(cluster => cluster.workspace === workspaceId);
-    return _.sortBy(clusters, cluster => cluster.preferences.iconOrder);
+  getDeadById(id: ClusterId): [ClusterModel, LoadKubeError] {
+    return this.deadClusters.get(id);
+  }
+
+  getByWorkspaceId(workspaceId: string): ClusterRenderInfo[] {
+    const aliveClusters: ClusterRenderInfo[] = this.clustersList.filter(c => c.workspace === workspaceId);
+    const deadClusters: ClusterRenderInfo[] = this.deadClustersList
+      .filter(([c]) => c.workspace === workspaceId)
+      .map(([cluster, error]) => ({
+        DeadError: error,
+        name: cluster.contextName,
+        isAdmin: false,
+        eventCount: 0,
+        online: false,
+        ...cluster,
+      }));
+
+
+    return _.sortBy([...aliveClusters, ...deadClusters], c => c.preferences?.iconOrder);
+  }
+
+  getCountInWorkspace(workspaceId: string): number {
+    const aliveCount = this.clustersList.filter(c => c.workspace === workspaceId).length;
+    const deadCount = this.deadClustersList.filter(([c]) => c.workspace === workspaceId).length;
+
+    return aliveCount + deadCount;
   }
 
   @action
@@ -241,6 +277,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     const currentClusters = this.clusters.toJS();
     const newClusters = new Map<ClusterId, Cluster>();
     const removedClusters = new Map<ClusterId, Cluster>();
+    const deadClusters = new Map<ClusterId, [ClusterModel, LoadKubeError]>();
 
     // update new clusters
     for (const clusterModel of clusters) {
@@ -248,7 +285,29 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       if (cluster) {
         cluster.updateModel(clusterModel);
       } else {
-        cluster = new Cluster(clusterModel);
+        try {
+          cluster = new Cluster(clusterModel);
+        } catch (err) {
+          if (err instanceof LoadKubeError) {
+            deadClusters.set(clusterModel.id, [clusterModel, err]);
+            logger.error(`[CLUSTER-STORE]: marking cluster as dead`, {
+              err,
+              name: clusterModel.contextName,
+              id: clusterModel.id,
+            });
+
+            notificationsStore.add({
+              message: `Cluster ${clusterModel.contextName} is reporting an error: ${err.toString()}`,
+              id: `${clusterModel.id}_IS_DEAD_NOTIFICATION`, // this **should** prevent double errors because we are loading the stores twice
+              status: NotificationStatus.ERROR,
+              timeout: 10000,
+            });
+            continue;
+          }
+
+          throw err;
+        }
+
         if (!cluster.isManaged) {
           cluster.enabled = true;
         }
@@ -264,14 +323,22 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     });
 
     this.activeCluster = newClusters.has(activeCluster) ? activeCluster : null;
+    this.deadClusters.replace(deadClusters);
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
+  }
+
+  @computed private get clustersAsJson(): ClusterModel[] {
+    const clusters = this.clustersList.map(c => c.toJSON());
+    const dead = Array.from(this.deadClusters.values()).map(([c]) => c);
+
+    return [...clusters, ...dead];
   }
 
   toJSON(): ClusterStoreModel {
     return toJS({
       activeCluster: this.activeCluster,
-      clusters: this.clustersList.map(cluster => cluster.toJSON()),
+      clusters: this.clustersAsJson,
     }, {
       recurseEverything: true
     });

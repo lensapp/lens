@@ -40,24 +40,23 @@ export class Icon extends React.PureComponent<IconProps> {
     if (this.props.disabled) {
       return;
     }
-    if (this.props.onClick) {
-      this.props.onClick(evt);
-    }
+
+    this.props.onClick?.(evt);
   }
 
   @autobind()
   onKeyDown(evt: React.KeyboardEvent<any>) {
     switch (evt.nativeEvent.code) {
       case "Space":
-      case "Enter":
+      case "Enter": {
         const icon = findDOMNode(this) as HTMLElement;
         setTimeout(() => icon.click());
         evt.preventDefault();
         break;
+      }
     }
-    if (this.props.onKeyDown) {
-      this.props.onKeyDown(evt);
-    }
+
+    this.props.onKeyDown?.(evt);
   }
 
   render() {
@@ -88,7 +87,7 @@ export class Icon extends React.PureComponent<IconProps> {
     // render as inline svg-icon
     if (svg) {
       const svgIconText = require("!!raw-loader!./" + svg + ".svg").default;
-      iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }}/>;
+      iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }} />;
     }
 
     // render as material-icon
@@ -106,10 +105,10 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render icon type
     if (link) {
-      return <NavLink {...iconProps} to={link}/>;
+      return <NavLink {...iconProps} to={link} />;
     }
     if (href) {
-      return <a {...iconProps} href={href}/>;
+      return <a {...iconProps} href={href} />;
     }
     return <i {...iconProps} />;
   }

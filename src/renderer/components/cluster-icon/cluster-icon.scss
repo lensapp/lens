@@ -26,6 +26,15 @@
     height: var(--size);
   }
 
+  .Icon.dead-error {
+    position: absolute;
+    border-radius: 50%;
+    right: 0px;
+    top: 0px;
+    color: $colorError;
+    background-color: black;
+  }
+
   .Badge {
     position: absolute;
     right: 0;

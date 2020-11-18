@@ -3,13 +3,12 @@ import "./clusters-menu.scss";
 import React from "react";
 import { remote } from "electron";
 import { requestMain } from "../../../common/ipc";
-import type { Cluster } from "../../../main/cluster";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
 import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
 import { userStore } from "../../../common/user-store";
-import { ClusterId, clusterStore } from "../../../common/cluster-store";
+import { ClusterId, ClusterRenderInfo, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
@@ -30,7 +29,7 @@ interface Props {
 }
 
 @observer
-export class ClustersMenu extends React.Component<Props> {
+export class ClusterMenu extends React.Component<Props> {
   showCluster = (clusterId: ClusterId) => {
     navigate(clusterViewURL({ params: { clusterId } }));
   };
@@ -39,7 +38,7 @@ export class ClustersMenu extends React.Component<Props> {
     navigate(addClusterURL());
   };
 
-  showContextMenu = (cluster: Cluster) => {
+  showContextMenu = (cluster: ClusterRenderInfo) => {
     const { Menu, MenuItem } = remote;
     const menu = new Menu();
 
@@ -115,25 +114,22 @@ export class ClustersMenu extends React.Component<Props> {
             <Droppable droppableId="cluster-menu" type="CLUSTER">
               {({ innerRef, droppableProps, placeholder }: DroppableProvided) => (
                 <div ref={innerRef} {...droppableProps}>
-                  {clusters.map((cluster, index) => {
-                    const isActive = cluster.id === activeClusterId;
-                    return (
-                      <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
-                        {({ draggableProps, dragHandleProps, innerRef }: DraggableProvided) => (
-                          <div ref={innerRef} {...draggableProps} {...dragHandleProps}>
-                            <ClusterIcon
-                              key={cluster.id}
-                              showErrors={true}
-                              cluster={cluster}
-                              isActive={isActive}
-                              onClick={() => this.showCluster(cluster.id)}
-                              onContextMenu={() => this.showContextMenu(cluster)}
-                            />
-                          </div>
-                        )}
-                      </Draggable>
-                    );
-                  })}
+                  {clusters.map((cluster, index) => (
+                    <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
+                      {({ draggableProps, dragHandleProps, innerRef }: DraggableProvided) => (
+                        <div ref={innerRef} {...draggableProps} {...dragHandleProps}>
+                          <ClusterIcon
+                            key={cluster.id}
+                            showErrors={true}
+                            cluster={cluster}
+                            isActive={cluster.id === activeClusterId}
+                            onClick={() => this.showCluster(cluster.id)}
+                            onContextMenu={() => this.showContextMenu(cluster)}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
                   {placeholder}
                 </div>
               )}
@@ -144,9 +140,9 @@ export class ClustersMenu extends React.Component<Props> {
           <Tooltip targetId="add-cluster-icon">
             <Trans>Add Cluster</Trans>
           </Tooltip>
-          <Icon big material="add" id="add-cluster-icon" disabled={workspace.isManaged} onClick={this.addCluster}/>
+          <Icon big material="add" id="add-cluster-icon" disabled={workspace.isManaged} onClick={this.addCluster} />
           {newContexts.size > 0 && (
-            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>}/>
+            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>} />
           )}
         </div>
         <div className="extensions">

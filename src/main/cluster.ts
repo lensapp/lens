@@ -51,9 +51,9 @@ export interface ClusterState {
 export class Cluster implements ClusterModel, ClusterState {
   public id: ClusterId;
   public kubeCtl: Kubectl;
-  public contextHandler: ContextHandler;
+  public contextHandler?: ContextHandler;
   public ownerRef: string;
-  protected kubeconfigManager: KubeconfigManager;
+  protected kubeconfigManager?: KubeconfigManager;
   protected eventDisposers: Function[] = [];
   protected activated = false;
 
@@ -85,7 +85,7 @@ export class Cluster implements ClusterModel, ClusterState {
   }
 
   @computed get name() {
-    return this.preferences.clusterName || this.contextName;
+    return this.preferences.clusterName || this.contextName;
   }
 
   @computed get prometheusPreferences(): ClusterPrometheusPreferences {
@@ -101,9 +101,12 @@ export class Cluster implements ClusterModel, ClusterState {
 
   constructor(model: ClusterModel) {
     this.updateModel(model);
+
     const kubeconfig = this.getKubeconfig();
-    if (kubeconfig.getContextObject(this.contextName)) {
-      this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
+    const contextObj = kubeconfig.getContextObject(this.contextName);
+    if (contextObj) {
+      const clusterObj = kubeconfig.getCluster(contextObj.cluster);
+      this.apiUrl = clusterObj.server;
     }
   }
 
@@ -386,6 +389,7 @@ export class Cluster implements ClusterModel, ClusterState {
       online: this.online,
       accessible: this.accessible,
       disconnected: this.disconnected,
+      activated: this.activated,
     };
   }
 

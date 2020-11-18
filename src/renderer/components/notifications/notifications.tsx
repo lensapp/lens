@@ -5,7 +5,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { JsonApiErrorParsed } from "../../api/json-api";
 import { cssNames, prevDefault } from "../../utils";
-import { Notification, NotificationMessage, notificationsStore, NotificationStatus } from "./notifications.store";
+import { NotificationMessage, Notification, notificationsStore, NotificationStatus } from "../../../common/notifications.store";
 import { Animate } from "../animate";
 import { Icon } from "../icon";
 

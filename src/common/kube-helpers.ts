@@ -16,13 +16,55 @@ function resolveTilde(filePath: string) {
   return filePath;
 }
 
-export function loadConfig(pathOrContent?: string): KubeConfig {
-  const kc = new KubeConfig();
+export class LoadKubeError extends Error {
+  public type: string;
+}
 
-  if (fse.pathExistsSync(pathOrContent)) {
-    kc.loadFromFile(path.resolve(resolveTilde(pathOrContent)));
-  } else {
-    kc.loadFromString(pathOrContent);
+export class AccessError extends LoadKubeError {
+  type = "AccessError";
+
+  constructor(public pathname: string) {
+    super();
+  }
+
+  toString() {
+    return `Failed to loading the kube config. Permission denied.\n\n${this.pathname}`;
+  }
+}
+
+export class ExistError extends LoadKubeError {
+  type = "ExistError";
+
+  constructor(public pathname: string) {
+    super();
+  }
+
+  toString() {
+    return `Failed to loading the kube config. No such file.\n\n${this.pathname}`;
+  }
+}
+
+export function loadConfig(pathOrContent: string): KubeConfig {
+  const kc = new KubeConfig();
+  try {
+    kc.loadFromFile(pathOrContent);
+  } catch (err) {
+    switch (err.code) {
+      case "ENOENT": { // No such file or directory
+        const dir = path.dirname(pathOrContent);
+        const dirStat = fse.statSync(dir);
+        if (dirStat.isDirectory()) {
+          throw new ExistError(pathOrContent);
+        }
+
+        kc.loadFromString(pathOrContent);
+        break;
+      }
+      case "EACCES":
+        throw new AccessError(pathOrContent);
+      default:
+        kc.loadFromString(pathOrContent);
+    }
   }
 
   return kc;
@@ -145,15 +187,15 @@ export function getNodeWarningConditions(node: V1Node) {
 
 /**
  * Validates kubeconfig supplied in the add clusters screen. At present this will just validate
- * the User struct, specifically the command passed to the exec substructure. 
- */ 
-export function validateKubeConfig (config: KubeConfig) {
+ * the User struct, specifically the command passed to the exec substructure.
+ */
+export function validateKubeConfig(config: KubeConfig) {
   // we only receive a single context, cluster & user object here so lets validate them as this
   // will be called when we add a new cluster to Lens
   logger.debug(`validateKubeConfig: validating kubeconfig - ${JSON.stringify(config)}`);
 
   // Validate the User Object
-  const user = config.getCurrentUser();  
+  const user = config.getCurrentUser();
   if (user.exec) {
     const execCommand = user.exec["command"];
     // check if the command is absolute or not

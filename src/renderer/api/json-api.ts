@@ -2,7 +2,7 @@
 
 import { stringify } from "querystring";
 import { EventEmitter } from "../../common/event-emitter";
-import { cancelableFetch } from "../utils/cancelableFetch";
+import { cancelableFetch, CancelablePromise } from "../utils/cancelableFetch";
 
 export interface JsonApiData {
 }
@@ -71,7 +71,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     return this.request<T>(path, params, { ...reqInit, method: "delete" });
   }
 
-  protected request<D>(path: string, params?: P, init: RequestInit = {}) {
+  protected request<D>(path: string, params?: P, init: RequestInit = {}): CancelablePromise<D> {
     let reqUrl = this.config.apiBase + path;
     const reqInit: RequestInit = { ...this.reqInit, ...init };
     const { data, query } = params || {} as P;
@@ -92,28 +92,27 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     });
   }
 
-  protected parseResponse<D>(res: Response, log: JsonApiLog): Promise<D> {
+  protected async parseResponse<D>(res: Response, log: JsonApiLog): Promise<D> {
     const { status } = res;
-    return res.text().then(text => {
-      let data;
-      try {
-        data = text ? JSON.parse(text) : ""; // DELETE-requests might not have response-body
-      } catch (e) {
-        data = text;
-      }
-      if (status >= 200 && status < 300) {
-        this.onData.emit(data, res);
-        this.writeLog({ ...log, data });
-        return data;
-      } else if (log.method === "GET" && res.status === 403) {
-        this.writeLog({ ...log, data });
-      } else {
-        const error = new JsonApiErrorParsed(data, this.parseError(data, res));
-        this.onError.emit(error, res);
-        this.writeLog({ ...log, error });
-        throw error;
-      }
-    });
+    const text = await res.text();
+    let data;
+    try {
+      data = text ? JSON.parse(text) : ""; // DELETE-requests might not have response-body
+    } catch (e) {
+      data = text;
+    }
+    if (status >= 200 && status < 300) {
+      this.onData.emit(data, res);
+      this.writeLog({ ...log, data });
+      return data;
+    } else if (log.method === "GET" && res.status === 403) {
+      this.writeLog({ ...log, data });
+    } else {
+      const error = new JsonApiErrorParsed(data, this.parseError(data, res));
+      this.onError.emit(error, res);
+      this.writeLog({ ...log, error });
+      throw error;
+    }
   }
 
   protected parseError(error: JsonApiError | string, res: Response): string[] {

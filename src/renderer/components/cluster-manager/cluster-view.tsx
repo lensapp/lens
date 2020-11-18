@@ -7,7 +7,9 @@ import { IClusterViewRouteParams } from "./cluster-view.route";
 import { ClusterStatus } from "./cluster-status";
 import { hasLoadedView } from "./lens-views";
 import { Cluster } from "../../../main/cluster";
-import { clusterStore } from "../../../common/cluster-store";
+import { ClusterModel, clusterStore } from "../../../common/cluster-store";
+import { LoadKubeError } from "../../../common/kube-helpers";
+import { ClusterDeadStatus } from "./cluster-dead-status";
 
 interface Props extends RouteComponentProps<IClusterViewRouteParams> {
 }
@@ -22,6 +24,10 @@ export class ClusterView extends React.Component<Props> {
     return clusterStore.getById(this.clusterId);
   }
 
+  get deadCluster(): [ClusterModel, LoadKubeError] {
+    return clusterStore.getDeadById(this.clusterId);
+  }
+
   async componentDidMount() {
     disposeOnUnmount(this, [
       reaction(() => this.clusterId, clusterId => clusterStore.setActive(clusterId), {
@@ -31,13 +37,16 @@ export class ClusterView extends React.Component<Props> {
   }
 
   render() {
-    const { cluster } = this;
+    const { cluster, deadCluster } = this;
     const showStatus = cluster && (!cluster.available || !hasLoadedView(cluster.id) || !cluster.ready);
     return (
       <div className="ClusterView flex align-center">
-        {showStatus && (
-          <ClusterStatus key={cluster.id} clusterId={cluster.id} className="box center"/>
-        )}
+        {showStatus
+          ? <ClusterStatus key={cluster.id} clusterId={cluster.id} className="box center" />
+          : deadCluster && (
+            <ClusterDeadStatus cluster={deadCluster[0]} error={deadCluster[1]} />
+          )
+        }
       </div>
     );
   }
