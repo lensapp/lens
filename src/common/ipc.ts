@@ -10,7 +10,7 @@ export function handleRequest(channel: string, listener: (...args: any[]) => any
 }
 
 export async function requestMain(channel: string, ...args: any[]) {
-  return await ipcRenderer.invoke(channel, ...args)
+  return ipcRenderer.invoke(channel, ...args)
 }
 
 async function getSubFrames(): Promise<number[]> {
@@ -25,7 +25,9 @@ async function getSubFrames(): Promise<number[]> {
 }
 
 export function broadcastMessage(channel: string, ...args: any[]) {
-  const views = (webContents || remote.webContents).getAllWebContents();
+  const views = (webContents || remote?.webContents)?.getAllWebContents();
+  if (!views) return
+
   views.forEach(webContent => {
     const type = webContent.getType();
     logger.silly(`[IPC]: broadcasting "${channel}" to ${type}=${webContent.id}`, { args });
