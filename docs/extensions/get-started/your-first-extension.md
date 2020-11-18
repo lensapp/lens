@@ -1,6 +1,6 @@
 # Your First Extension
 
-We recommend to always use [Yeoman generator for Lens Extension](https://github.com/lensapp/generator-lens-ext) to start new extension project. [Read the generator guide here](generator.md).
+We recommend to always use [Yeoman generator for Lens Extension](https://github.com/lensapp/generator-lens-ext) to start new extension project. [Read the generator guide here](../guides/generator.md).
 
 If you want to setup the project manually, please continue reading.
 
