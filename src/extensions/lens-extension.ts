@@ -3,7 +3,7 @@ import { action, observable, reaction } from "mobx";
 import logger from "../main/logger";
 
 export type LensExtensionId = string; // path to manifest (package.json)
-export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
+export type LensExtensionConstructor = new (ext: InstalledExtension) => LensExtension;
 
 export interface LensExtensionManifest {
   name: string;
@@ -13,7 +13,13 @@ export interface LensExtensionManifest {
   renderer?: string; // path to %ext/dist/renderer.js
 }
 
-export class LensExtension {
+/**
+ * LensExtension is an abstract class representing a loaded extensions.
+ *
+ * To make an extension, a new class that extends this class must be made and
+ * must not have a different constructor type.
+ */
+export abstract class LensExtension {
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
   readonly isBundled: boolean;
@@ -46,7 +52,7 @@ export class LensExtension {
   async enable() {
     if (this.isEnabled) return;
     this.isEnabled = true;
-    this.onActivate();
+    await this.onActivate();
     logger.info(`[EXTENSION]: enabled ${this.name}@${this.version}`);
   }
 
@@ -54,7 +60,7 @@ export class LensExtension {
   async disable() {
     if (!this.isEnabled) return;
     this.isEnabled = false;
-    this.onDeactivate();
+    await this.onDeactivate();
     logger.info(`[EXTENSION]: disabled ${this.name}@${this.version}`);
   }
 
@@ -87,11 +93,7 @@ export class LensExtension {
     };
   }
 
-  protected onActivate() {
-    // mock
-  }
+  protected abstract onActivate(): void | Promise<void>;
 
-  protected onDeactivate() {
-    // mock
-  }
+  protected abstract onDeactivate(): void | Promise<void>;
 }

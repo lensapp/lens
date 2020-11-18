@@ -3,7 +3,7 @@ import { observable } from "mobx";
 import { LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
 
-export class LensRendererExtension extends LensExtension {
+export abstract class LensRendererExtension extends LensExtension {
   @observable.shallow globalPages: PageRegistration[] = [];
   @observable.shallow clusterPages: PageRegistration[] = [];
   @observable.shallow globalPageMenus: PageMenuRegistration[] = [];
