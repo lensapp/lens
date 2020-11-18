@@ -89,7 +89,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
             label: workspace.name,
             toolTip: workspace.description,
             submenu: clusters.map(cluster => {
-              const { id: clusterId, preferences: { clusterName: label }, online, workspace } = cluster;
+              const { id: clusterId, name: label, online, workspace } = cluster;
               return {
                 label: `${online ? '✓' : '\x20'.repeat(3)/*offset*/}${label}`,
                 toolTip: clusterId,

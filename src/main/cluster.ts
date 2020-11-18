@@ -86,6 +86,10 @@ export class Cluster implements ClusterModel, ClusterState {
     return this.accessible && !this.disconnected;
   }
 
+  @computed get name() {
+    return this.preferences.clusterName || this.contextName
+  }
+
   get version(): string {
     return String(this.metadata?.version) || ""
   }

@@ -65,7 +65,7 @@ export class MainLayout extends React.Component<MainLayoutProps> {
     return (
       <div className={cssNames("MainLayout", className)} style={this.getSidebarSize() as any}>
         <header className={cssNames("flex gaps align-center", headerClass)}>
-          <span className="cluster">{cluster.preferences.clusterName || cluster.contextName}</span>
+          <span className="cluster">{cluster.name}</span>
         </header>
 
         <aside className={cssNames("flex column", { pinned: this.isPinned, accessible: this.isAccessible })}>
