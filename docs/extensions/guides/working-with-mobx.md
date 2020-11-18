@@ -24,7 +24,7 @@ Further reading is available from `mobx`'s [website](https://mobx.js.org/the-gis
 
 ## Basic usage of mobx:
 
-When using `Lens`'s extension's API, some of the provided types are marked as `observable` (or others) and are documented as such.
+When using `Lens`'s extension's API, some of the provided types are marked as `observable` and are documented as such.
 These can be used as normal types and the combination of `mobx` and `react` work to determine when a rerender should occur.
 
 ---
@@ -37,12 +37,15 @@ That could be achieved using roughly the following code:
 ```typescript
 import { LensMainExtension, MenuRegistration } from "@k8slens/extensions";
 import observables from "./observables" // a collection of observable data
+import { IReactionDisposer } from "mobx";
 
 interface MenuRegistrationWithId extends MenuRegistration {
   id?: string;
 }
 
 export default class ExtensionMain extends LensMainExtension {
+  menuReactionDispose?: IReactionDisposer;
+
   appMenus: MenuRegistrationWithId[] = [
     {
       parentId: "file",
@@ -53,10 +56,8 @@ export default class ExtensionMain extends LensMainExtension {
     },
   ];
 
-  constructor() {
-    super()
-
-    reaction(
+  onActivate() {
+    this.menuReactionDispose = reaction(
       () => observables.clusterIsInState,
       clusterIsInState => {
         if (clusterIsInState) {
@@ -73,6 +74,11 @@ export default class ExtensionMain extends LensMainExtension {
         }
       }
     )
+  }
+
+  onDeactivate() {
+    this.menuReactionDispose?.() // always clenaup mobx disposers
+    this.menuReactionDispose = undefined
   }
 }
 ```
