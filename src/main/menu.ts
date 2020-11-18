@@ -9,6 +9,7 @@ import { clusterSettingsURL } from "../renderer/components/+cluster-settings/clu
 import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
 import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
+import { exitApp } from "./exit-app";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help"
 
@@ -89,7 +90,7 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Quit',
         accelerator: 'Cmd+Q',
         click() {
-          app.exit(); // force quit since might be blocked within app.on("will-quit")
+          exitApp()
         }
       }
     ]
@@ -135,7 +136,13 @@ export function buildMenu(windowManager: WindowManager) {
           }
         },
         { type: 'separator' },
-        { role: 'quit' }
+        {
+          label: 'Quit',
+          accelerator: 'Alt+F4',
+          click() {
+            exitApp()
+          }
+        }
       ]),
       { type: 'separator' },
       { role: 'close' } // close current window
@@ -259,7 +266,7 @@ export function buildMenu(windowManager: WindowManager) {
         }
         menu = menuItem.submenu;
       }
-    
+
       const menuPath: string = parentLabels.join(" -> ")
       if (!menuItem) {
         logger.info(`[MENU:test-menu-item-click] Cannot find menu item ${menuPath}`);
