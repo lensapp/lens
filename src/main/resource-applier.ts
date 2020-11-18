@@ -1,4 +1,4 @@
-import type { Cluster } from "./cluster";
+import type { ManagedCluster } from "./managed-cluster"
 import { KubernetesObject } from "@kubernetes/client-node"
 import { exec } from "child_process";
 import fs from "fs";
@@ -10,7 +10,7 @@ import { appEventBus } from "../common/event-bus"
 import { cloneJsonObject } from "../common/utils";
 
 export class ResourceApplier {
-  constructor(protected cluster: Cluster) {
+  constructor(protected managedCluster: ManagedCluster) {
   }
 
   async apply(resource: KubernetesObject | any): Promise<string> {
@@ -20,15 +20,15 @@ export class ResourceApplier {
   }
 
   protected async kubectlApply(content: string): Promise<string> {
-    const { kubeCtl } = this.cluster;
+    const { kubeCtl } = this.managedCluster.cluster;
     const kubectlPath = await kubeCtl.getPath()
     return new Promise<string>((resolve, reject) => {
       const fileName = tempy.file({ name: "resource.yaml" })
       fs.writeFileSync(fileName, content)
-      const cmd = `"${kubectlPath}" apply --kubeconfig "${this.cluster.getProxyKubeconfigPath()}" -o json -f "${fileName}"`
+      const cmd = `"${kubectlPath}" apply --kubeconfig "${this.managedCluster.getProxyKubeconfigPath()}" -o json -f "${fileName}"`
       logger.debug("shooting manifests with: " + cmd);
       const execEnv: NodeJS.ProcessEnv = Object.assign({}, process.env)
-      const httpsProxy = this.cluster.preferences?.httpsProxy
+      const httpsProxy = this.managedCluster.cluster.preferences?.httpsProxy
       if (httpsProxy) {
         execEnv["HTTPS_PROXY"] = httpsProxy
       }
@@ -46,7 +46,7 @@ export class ResourceApplier {
   }
 
   public async kubectlApplyAll(resources: string[]): Promise<string> {
-    const { kubeCtl } = this.cluster;
+    const { kubeCtl } = this.managedCluster.cluster;
     const kubectlPath = await kubeCtl.getPath()
     return new Promise((resolve, reject) => {
       const tmpDir = tempy.directory()
@@ -54,7 +54,7 @@ export class ResourceApplier {
       resources.forEach((resource, index) => {
         fs.writeFileSync(path.join(tmpDir, `${index}.yaml`), resource);
       })
-      const cmd = `"${kubectlPath}" apply --kubeconfig "${this.cluster.getProxyKubeconfigPath()}" -o json -f "${tmpDir}"`
+      const cmd = `"${kubectlPath}" apply --kubeconfig "${this.managedCluster.getProxyKubeconfigPath()}" -o json -f "${tmpDir}"`
       console.log("shooting manifests with:", cmd);
       exec(cmd, (error, stdout, stderr) => {
         if (error) {

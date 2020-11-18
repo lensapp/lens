@@ -26,6 +26,7 @@ jest.mock("winston", () => ({
 import { KubeconfigManager } from "../kubeconfig-manager"
 import mockFs from "mock-fs"
 import { Cluster } from "../cluster";
+import { ManagedCluster } from "../managed-cluster";
 import { workspaceStore } from "../../common/workspace-store";
 import { ContextHandler } from "../context-handler";
 import { getFreePort } from "../port";
@@ -78,7 +79,7 @@ describe("kubeconfig manager tests", () => {
       kubeConfigPath: "minikube-config.yml",
       workspace: workspaceStore.currentWorkspaceId
     })
-    const contextHandler = new ContextHandler(cluster)
+    const contextHandler = new ContextHandler(new ManagedCluster(cluster))
     const port = await getFreePort()
     const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port)
 
@@ -98,7 +99,7 @@ describe("kubeconfig manager tests", () => {
       kubeConfigPath: "minikube-config.yml",
       workspace: workspaceStore.currentWorkspaceId
     })
-    const contextHandler = new ContextHandler(cluster)
+    const contextHandler = new ContextHandler(new ManagedCluster(cluster))
     const port = await getFreePort()
     const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port)
 

@@ -5,7 +5,7 @@ import path from "path"
 import shellEnv from "shell-env"
 import { app } from "electron"
 import { Kubectl } from "./kubectl"
-import { Cluster } from "./cluster"
+import { ManagedCluster } from "./managed-cluster"
 import { ClusterPreferences } from "../common/cluster-store";
 import { helmCli } from "./helm/helm-cli"
 import { isWindows } from "../common/vars";
@@ -27,13 +27,13 @@ export class ShellSession extends EventEmitter {
   protected running = false;
   protected clusterId: string;
 
-  constructor(socket: WebSocket, cluster: Cluster) {
+  constructor(socket: WebSocket, managedCluster: ManagedCluster) {
     super()
     this.websocket = socket
-    this.kubeconfigPath =  cluster.getProxyKubeconfigPath()
-    this.kubectl = new Kubectl(cluster.version)
-    this.preferences = cluster.preferences || {}
-    this.clusterId = cluster.id
+    this.kubeconfigPath =  managedCluster.getProxyKubeconfigPath()
+    this.kubectl = new Kubectl(managedCluster.cluster.version)
+    this.preferences = managedCluster.cluster.preferences || {}
+    this.clusterId = managedCluster.cluster.id
   }
 
   public async open() {

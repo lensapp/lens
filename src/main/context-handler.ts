@@ -1,6 +1,6 @@
 import type { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry"
 import type { ClusterPreferences } from "../common/cluster-store";
-import type { Cluster } from "./cluster"
+import type { ManagedCluster } from "./managed-cluster";
 import type httpProxy from "http-proxy"
 import url, { UrlWithStringQuery } from "url";
 import { CoreV1Api } from "@kubernetes/client-node"
@@ -17,9 +17,13 @@ export class ContextHandler {
   protected prometheusProvider: string
   protected prometheusPath: string
 
-  constructor(protected cluster: Cluster) {
-    this.clusterUrl = url.parse(cluster.apiUrl);
-    this.setupPrometheus(cluster.preferences);
+  get cluster() {
+    return this.managedCluster.cluster
+  }
+
+  constructor(protected managedCluster: ManagedCluster) {
+    this.clusterUrl = url.parse(this.cluster.apiUrl);
+    this.setupPrometheus(this.cluster.preferences);
   }
 
   protected setupPrometheus(preferences: ClusterPreferences = {}) {
@@ -48,7 +52,7 @@ export class ContextHandler {
   async getPrometheusService(): Promise<PrometheusService> {
     const providers = this.prometheusProvider ? prometheusProviders.filter(provider => provider.id == this.prometheusProvider) : prometheusProviders;
     const prometheusPromises: Promise<PrometheusService>[] = providers.map(async (provider: PrometheusProvider): Promise<PrometheusService> => {
-      const apiClient = this.cluster.getProxyKubeconfig().makeApiClient(CoreV1Api)
+      const apiClient = this.managedCluster.getProxyKubeconfig().makeApiClient(CoreV1Api)
       return await provider.getPrometheusService(apiClient)
     })
     const resolvedPrometheusServices = await Promise.all(prometheusPromises)

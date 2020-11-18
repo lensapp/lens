@@ -8,6 +8,7 @@ import logger from "../main/logger";
 import { app } from "electron"
 import { requestMain } from "../common/ipc";
 import { clusterKubectlApplyAllHandler } from "../common/cluster-ipc";
+import { ClusterManager } from "../main/cluster-manager";
 
 export interface ClusterFeatureStatus {
   currentVersion: string;
@@ -38,7 +39,8 @@ export abstract class ClusterFeature {
 
   protected async applyResources(cluster: Cluster, resources: string[]) {
     if (app) {
-      await new ResourceApplier(cluster).kubectlApplyAll(resources)
+      const managedCluster = ClusterManager.getInstance<ClusterManager>().getClusterById(cluster.id)
+      await new ResourceApplier(managedCluster).kubectlApplyAll(resources)
     } else {
       await requestMain(clusterKubectlApplyAllHandler, cluster.id, resources)
     }

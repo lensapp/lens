@@ -3,7 +3,7 @@ import fs from "fs";
 import * as yaml from "js-yaml";
 import { promiseExec} from "../promise-exec"
 import { helmCli } from "./helm-cli";
-import { Cluster } from "../cluster";
+import { ManagedCluster } from "../managed-cluster";
 import { toCamelCase } from "../../common/utils/camelCase";
 
 export class HelmReleaseManager {
@@ -48,7 +48,7 @@ export class HelmReleaseManager {
     }
   }
 
-  public async upgradeRelease(name: string, chart: string, values: any, namespace: string, version: string, cluster: Cluster){
+  public async upgradeRelease(name: string, chart: string, values: any, namespace: string, version: string, cluster: ManagedCluster){
     const helm = await helmCli.binaryPath()
     const fileName = tempy.file({name: "values.yaml"})
     await fs.promises.writeFile(fileName, yaml.safeDump(values))
@@ -64,7 +64,7 @@ export class HelmReleaseManager {
     }
   }
 
-  public async getRelease(name: string, namespace: string, cluster: Cluster) {
+  public async getRelease(name: string, namespace: string, cluster: ManagedCluster) {
     const helm = await helmCli.binaryPath()
     const {stdout, stderr} = await promiseExec(`"${helm}" status ${name} --output json --namespace ${namespace} --kubeconfig ${cluster.getProxyKubeconfigPath()}`).catch((error) => { throw(error.stderr)})
     const release = JSON.parse(stdout)
@@ -97,10 +97,10 @@ export class HelmReleaseManager {
     return stdout
   }
 
-  protected async getResources(name: string, namespace: string, cluster: Cluster) {
+  protected async getResources(name: string, namespace: string, managedCluster: ManagedCluster) {
     const helm = await helmCli.binaryPath()
-    const kubectl = await cluster.kubeCtl.getPath()
-    const pathToKubeconfig = cluster.getProxyKubeconfigPath()
+    const kubectl = await managedCluster.cluster.kubeCtl.getPath()
+    const pathToKubeconfig = managedCluster.getProxyKubeconfigPath()
     const { stdout } = await promiseExec(`"${helm}" get manifest ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} | "${kubectl}" get -n ${namespace} --kubeconfig ${pathToKubeconfig} -f - -o=json`).catch((error) => {
       return { stdout: JSON.stringify({items: []})}
     })

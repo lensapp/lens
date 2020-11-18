@@ -3,7 +3,7 @@ import Subtext from "@hapi/subtext"
 import http from "http"
 import path from "path"
 import { readFile } from "fs-extra"
-import { Cluster } from "./cluster"
+import { ManagedCluster } from "./managed-cluster"
 import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "../common/vars";
 import { helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute } from "./routes";
 import logger from "./logger"
@@ -11,7 +11,7 @@ import logger from "./logger"
 export interface RouterRequestOpts {
   req: http.IncomingMessage;
   res: http.ServerResponse;
-  cluster: Cluster;
+  cluster: ManagedCluster;
   params: RouteParams;
   url: URL;
 }
@@ -30,7 +30,7 @@ export interface LensApiRequest<P = any> {
   path: string;
   payload: P;
   params: RouteParams;
-  cluster: Cluster;
+  cluster: ManagedCluster;
   response: http.ServerResponse;
   query: URLSearchParams;
   raw: {
@@ -46,7 +46,7 @@ export class Router {
     this.addRoutes()
   }
 
-  public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse): Promise<boolean> {
+  public async route(cluster: ManagedCluster, req: http.IncomingMessage, res: http.ServerResponse): Promise<boolean> {
     const url = new URL(req.url, "http://localhost");
     const path = url.pathname
     const method = req.method.toLowerCase()

@@ -1,6 +1,6 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
-import { Cluster } from "../cluster"
+import { ManagedCluster } from "../managed-cluster"
 import _ from "lodash"
 
 export type IMetricsQuery = string | string[] | {
@@ -12,7 +12,7 @@ const MAX_ATTEMPTS = 5
 const ATTEMPTS = [...(_.fill(Array(MAX_ATTEMPTS - 1), false)), true]
 
 // prometheus metrics loader
-async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPath: string, queryParams: Record<string, string>): Promise<any[]> {
+async function loadMetrics(promQueries: string[], cluster: ManagedCluster, prometheusPath: string, queryParams: Record<string, string>): Promise<any[]> {
   const queries = promQueries.map(p => p.trim())
   const loaders = new Map<string, Promise<any>>()
 

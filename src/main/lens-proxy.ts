@@ -63,10 +63,10 @@ export class LensProxy {
   }
 
   protected async handleProxyUpgrade(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
-    const cluster = this.clusterManager.getClusterForRequest(req)
-    if (cluster) {
-      const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "")
-      const apiUrl = url.parse(cluster.apiUrl)
+    const managedCluster = this.clusterManager.getClusterForRequest(req)
+    if (managedCluster) {
+      const proxyUrl = await managedCluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "")
+      const apiUrl = url.parse(managedCluster.cluster.apiUrl)
       const pUrl = url.parse(proxyUrl)
       const connectOpts = { port: parseInt(pUrl.port), host: pUrl.hostname }
       const proxySocket = new net.Socket()

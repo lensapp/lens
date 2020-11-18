@@ -1,18 +1,18 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
-import { Cluster } from "../cluster"
+import { ManagedCluster } from "../managed-cluster"
 import { CoreV1Api, V1Secret } from "@kubernetes/client-node"
 
-function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster) {
+function generateKubeConfig(username: string, secret: V1Secret, managedCluster: ManagedCluster) {
   const tokenData = Buffer.from(secret.data["token"], "base64")
   return {
     'apiVersion': 'v1',
     'kind': 'Config',
     'clusters': [
       {
-        'name': cluster.contextName,
+        'name': managedCluster.cluster.contextName,
         'cluster': {
-          'server': cluster.apiUrl,
+          'server': managedCluster.cluster.apiUrl,
           'certificate-authority-data': secret.data["ca.crt"]
         }
       }
@@ -27,15 +27,15 @@ function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster
     ],
     'contexts': [
       {
-        'name': cluster.contextName,
+        'name': managedCluster.cluster.contextName,
         'context': {
           'user': username,
-          'cluster': cluster.contextName,
+          'cluster': managedCluster.cluster.contextName,
           'namespace': secret.metadata.namespace,
         }
       }
     ],
-    'current-context': cluster.contextName
+    'current-context': managedCluster.cluster.contextName
   }
 }
 

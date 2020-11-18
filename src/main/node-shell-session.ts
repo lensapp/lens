@@ -4,7 +4,7 @@ import { ShellSession } from "./shell-session";
 import { v4 as uuid } from "uuid"
 import * as k8s from "@kubernetes/client-node"
 import { KubeConfig } from "@kubernetes/client-node"
-import { Cluster } from "./cluster"
+import { ManagedCluster } from "./managed-cluster"
 import logger from "./logger";
 import { appEventBus } from "../common/event-bus"
 
@@ -13,7 +13,7 @@ export class NodeShellSession extends ShellSession {
   protected podId: string
   protected kc: KubeConfig
 
-  constructor(socket: WebSocket, cluster: Cluster, nodeName: string) {
+  constructor(socket: WebSocket, cluster: ManagedCluster, nodeName: string) {
     super(socket, cluster)
     this.nodeName = nodeName
     this.podId = `node-shell-${uuid()}`
@@ -133,7 +133,7 @@ export class NodeShellSession extends ShellSession {
   }
 }
 
-export async function openShell(socket: WebSocket, cluster: Cluster, nodeName?: string): Promise<ShellSession> {
+export async function openShell(socket: WebSocket, cluster: ManagedCluster, nodeName?: string): Promise<ShellSession> {
   let shell: ShellSession;
   if (nodeName) {
     shell = new NodeShellSession(socket, cluster, nodeName)

@@ -77,13 +77,13 @@ class PortForwardRoute extends LensApi {
     const { namespace, port, resourceType, resourceName } = params
 
     let portForward = PortForward.getPortforward({
-      clusterId: cluster.id, kind: resourceType, name: resourceName,
+      clusterId: cluster.cluster.id, kind: resourceType, name: resourceName,
       namespace: namespace, port: port
     })
     if (!portForward) {
       logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`)
       portForward = new PortForward({
-        clusterId: cluster.id,
+        clusterId: cluster.cluster.id,
         kind: resourceType,
         namespace: namespace,
         name: resourceName,

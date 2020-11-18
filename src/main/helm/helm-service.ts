@@ -1,11 +1,11 @@
-import { Cluster } from "../cluster";
+import { ManagedCluster } from "../managed-cluster";
 import logger from "../logger";
 import { repoManager } from "./helm-repo-manager";
 import { HelmChartManager } from "./helm-chart-manager";
 import { releaseManager } from "./helm-release-manager";
 
 class HelmService {
-  public async installChart(cluster: Cluster, data: { chart: string; values: {}; name: string; namespace: string; version: string }) {
+  public async installChart(cluster: ManagedCluster, data: { chart: string; values: {}; name: string; namespace: string; version: string }) {
     return await releaseManager.installChart(data.chart, data.values, data.name, data.namespace, data.version, cluster.getProxyKubeconfigPath())
   }
 
@@ -45,37 +45,37 @@ class HelmService {
     return chartManager.getValues(chartName, version)
   }
 
-  public async listReleases(cluster: Cluster, namespace: string = null) {
+  public async listReleases(cluster: ManagedCluster, namespace: string = null) {
     await repoManager.init()
     return await releaseManager.listReleases(cluster.getProxyKubeconfigPath(), namespace)
   }
 
-  public async getRelease(cluster: Cluster, releaseName: string, namespace: string) {
+  public async getRelease(cluster: ManagedCluster, releaseName: string, namespace: string) {
     logger.debug("Fetch release")
     return await releaseManager.getRelease(releaseName, namespace, cluster)
   }
 
-  public async getReleaseValues(cluster: Cluster, releaseName: string, namespace: string) {
+  public async getReleaseValues(cluster: ManagedCluster, releaseName: string, namespace: string) {
     logger.debug("Fetch release values")
     return await releaseManager.getValues(releaseName, namespace, cluster.getProxyKubeconfigPath())
   }
 
-  public async getReleaseHistory(cluster: Cluster, releaseName: string, namespace: string) {
+  public async getReleaseHistory(cluster: ManagedCluster, releaseName: string, namespace: string) {
     logger.debug("Fetch release history")
     return await releaseManager.getHistory(releaseName, namespace, cluster.getProxyKubeconfigPath())
   }
 
-  public async deleteRelease(cluster: Cluster, releaseName: string, namespace: string) {
+  public async deleteRelease(cluster: ManagedCluster, releaseName: string, namespace: string) {
     logger.debug("Delete release")
     return await releaseManager.deleteRelease(releaseName, namespace, cluster.getProxyKubeconfigPath())
   }
 
-  public async updateRelease(cluster: Cluster, releaseName: string, namespace: string, data: { chart: string; values: {}; version: string }) {
+  public async updateRelease(cluster: ManagedCluster, releaseName: string, namespace: string, data: { chart: string; values: {}; version: string }) {
     logger.debug("Upgrade release")
     return await releaseManager.upgradeRelease(releaseName, data.chart, data.values, namespace, data.version, cluster)
   }
 
-  public async rollback(cluster: Cluster, releaseName: string, namespace: string, revision: number) {
+  public async rollback(cluster: ManagedCluster, releaseName: string, namespace: string, revision: number) {
     logger.debug("Rollback release")
     const output = await releaseManager.rollback(releaseName, namespace, revision, cluster.getProxyKubeconfigPath())
     return { message: output }
