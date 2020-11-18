@@ -12,6 +12,7 @@ import { cssNames, IClassName } from "../../utils";
 import { Cluster } from "../../../main/cluster";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { CubeSpinner } from "../spinner";
+import { clusterActivateHandler } from "../../../common/cluster-ipc";
 
 interface Props {
   className?: IClassName;
@@ -48,7 +49,7 @@ export class ClusterStatus extends React.Component<Props> {
   }
 
   activateCluster = async (force = false) => {
-    await requestMain("cluster:activate", this.props.clusterId, force)
+    await requestMain(clusterActivateHandler, this.props.clusterId, force)
   }
 
   reconnect = async () => {

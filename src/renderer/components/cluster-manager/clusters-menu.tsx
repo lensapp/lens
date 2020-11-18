@@ -23,6 +23,7 @@ import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterViewURL } from "./cluster-view.route";
 import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
+import { clusterDisconnectHandler } from "../../../common/cluster-ipc";
 
 interface Props {
   className?: IClassName;
@@ -60,7 +61,7 @@ export class ClustersMenu extends React.Component<Props> {
             navigate(landingURL());
             clusterStore.setActive(null);
           }
-          await requestMain("cluster:disconnect", cluster.id)
+          await requestMain(clusterDisconnectHandler, cluster.id)
         }
       }))
     }

@@ -39,6 +39,7 @@ import { extensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus"
 import { requestMain } from "../../common/ipc";
 import whatInput from 'what-input';
+import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 
 @observer
 export class App extends React.Component {
@@ -48,7 +49,7 @@ export class App extends React.Component {
     logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`)
     await Terminal.preloadFonts()
 
-    await requestMain("cluster:set-frame-id", clusterId, frameId)
+    await requestMain(clusterSetFrameIdHandler, clusterId, frameId)
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
     extensionLoader.loadOnClusterRenderer();
     appEventBus.emit({

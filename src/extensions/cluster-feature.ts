@@ -7,6 +7,7 @@ import { Cluster } from "../main/cluster";
 import logger from "../main/logger";
 import { app } from "electron"
 import { requestMain } from "../common/ipc";
+import { clusterKubectlApplyAllHandler } from "../common/cluster-ipc";
 
 export interface ClusterFeatureStatus {
   currentVersion: string;
@@ -39,7 +40,7 @@ export abstract class ClusterFeature {
     if (app) {
       await new ResourceApplier(cluster).kubectlApplyAll(resources)
     } else {
-      await requestMain("cluster:kubectl-apply-all", cluster.id, resources)
+      await requestMain(clusterKubectlApplyAllHandler, cluster.id, resources)
     }
   }
 

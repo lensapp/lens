@@ -4,15 +4,21 @@ import { appEventBus } from "./event-bus"
 import { ResourceApplier } from "../main/resource-applier";
 import { ipcMain } from "electron";
 
+export const clusterActivateHandler = "cluster:activate"
+export const clusterSetFrameIdHandler = "cluster:set-frame-id"
+export const clusterRefreshHandler = "cluster:refresh"
+export const clusterDisconnectHandler = "cluster:disconnect"
+export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all"
+
 if (ipcMain) {
-  handleRequest("cluster:activate", (event, clusterId: ClusterId, force = false) => {
+  handleRequest(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     const cluster = clusterStore.getById(clusterId);
     if (cluster) {
       return cluster.activate(force);
     }
   })
 
-  handleRequest("cluster:set-frame-id", (event, clusterId: ClusterId, frameId?: number) => {
+  handleRequest(clusterSetFrameIdHandler, (event, clusterId: ClusterId, frameId?: number) => {
     const cluster = clusterStore.getById(clusterId);
     if (cluster) {
       if (frameId) cluster.frameId = frameId; // save cluster's webFrame.routingId to be able to send push-updates
@@ -20,17 +26,17 @@ if (ipcMain) {
     }
   })
 
-  handleRequest("cluster:refresh", (event, clusterId: ClusterId) => {
+  handleRequest(clusterRefreshHandler, (event, clusterId: ClusterId) => {
     const cluster = clusterStore.getById(clusterId);
     if (cluster) return cluster.refresh({ refreshMetadata: true })
   })
 
-  handleRequest("cluster:disconnect", (event, clusterId: ClusterId) => {
+  handleRequest(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
     appEventBus.emit({name: "cluster", action: "stop"});
     return clusterStore.getById(clusterId)?.disconnect();
   })
 
-  handleRequest("cluster:kubectl-apply-all", (event, clusterId: ClusterId, resources: string[]) => {
+  handleRequest(clusterKubectlApplyAllHandler, (event, clusterId: ClusterId, resources: string[]) => {
     appEventBus.emit({name: "cluster", action: "kubectl-apply-all"})
     const cluster = clusterStore.getById(clusterId);
     if (cluster) {
