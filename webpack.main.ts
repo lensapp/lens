@@ -47,6 +47,6 @@ export default function (): webpack.Configuration {
     plugins: [
       new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
-    ]
+    ].filter(Boolean)
   }
 }

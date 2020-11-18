@@ -9,7 +9,10 @@ import { Button, ButtonProps } from "../button";
 import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
 
-export interface IConfirmDialogParams {
+export interface ConfirmDialogProps extends Partial<DialogProps> {
+}
+
+export interface ConfirmDialogParams {
   ok?: () => void;
   labelOk?: ReactNode;
   labelCancel?: ReactNode;
@@ -19,17 +22,14 @@ export interface IConfirmDialogParams {
   cancelButtonProps?: Partial<ButtonProps>
 }
 
-interface Props extends Partial<DialogProps> {
-}
-
 @observer
-export class ConfirmDialog extends React.Component<Props> {
+export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
   @observable static isOpen = false;
-  @observable.ref static params: IConfirmDialogParams;
+  @observable.ref static params: ConfirmDialogParams;
 
   @observable isSaving = false;
 
-  static open(params: IConfirmDialogParams) {
+  static open(params: ConfirmDialogParams) {
     ConfirmDialog.isOpen = true;
     ConfirmDialog.params = params;
   }
@@ -38,14 +38,14 @@ export class ConfirmDialog extends React.Component<Props> {
     ConfirmDialog.isOpen = false;
   }
 
-  public defaultParams: IConfirmDialogParams = {
+  public defaultParams: ConfirmDialogParams = {
     ok: noop,
     labelOk: <Trans>Ok</Trans>,
     labelCancel: <Trans>Cancel</Trans>,
     icon: <Icon big material="warning"/>,
   };
 
-  get params(): IConfirmDialogParams {
+  get params(): ConfirmDialogParams {
     return Object.assign({}, this.defaultParams, ConfirmDialog.params);
   }
 

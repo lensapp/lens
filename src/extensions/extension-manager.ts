@@ -1,11 +1,18 @@
-import type { ExtensionManifest } from "./lens-extension"
+import type { LensExtensionId, LensExtensionManifest } from "./lens-extension"
 import path from "path"
 import os from "os"
 import fs from "fs-extra"
+import child_process from "child_process";
 import logger from "../main/logger"
-import { extensionPackagesRoot, InstalledExtension } from "./extension-loader"
-import * as child_process from 'child_process';
+import { extensionPackagesRoot } from "./extension-loader"
 import { getBundledExtensions } from "../common/utils/app-version"
+
+export interface InstalledExtension {
+  readonly manifest: LensExtensionManifest;
+  readonly manifestPath: string;
+  readonly isBundled: boolean; // defined in project root's package.json
+  isEnabled: boolean;
+}
 
 type Dependencies = {
   [name: string]: string;
@@ -51,7 +58,7 @@ export class ExtensionManager {
     return path.join(this.extensionPackagesRoot, "package.json")
   }
 
-  async load() {
+  async load(): Promise<Map<LensExtensionId, InstalledExtension>> {
     logger.info("[EXTENSION-MANAGER] loading extensions from " + this.extensionPackagesRoot)
     if (fs.existsSync(path.join(this.extensionPackagesRoot, "package-lock.json"))) {
       await fs.remove(path.join(this.extensionPackagesRoot, "package-lock.json"))
@@ -71,8 +78,8 @@ export class ExtensionManager {
     return await this.loadExtensions();
   }
 
-  async getExtensionByManifest(manifestPath: string): Promise<InstalledExtension> {
-    let manifestJson: ExtensionManifest;
+  protected async getByManifest(manifestPath: string, { isBundled = false } = {}): Promise<InstalledExtension> {
+    let manifestJson: LensExtensionManifest;
     try {
       fs.accessSync(manifestPath, fs.constants.F_OK); // check manifest file for existence
       manifestJson = __non_webpack_require__(manifestPath)
@@ -80,11 +87,10 @@ export class ExtensionManager {
 
       logger.info("[EXTENSION-MANAGER] installed extension " + manifestJson.name)
       return {
-        id: manifestJson.name,
-        version: manifestJson.version,
-        name: manifestJson.name,
         manifestPath: path.join(this.nodeModulesPath, manifestJson.name, "package.json"),
-        manifest: manifestJson
+        manifest: manifestJson,
+        isBundled: isBundled,
+        isEnabled: isBundled,
       }
     } catch (err) {
       logger.error(`[EXTENSION-MANAGER]: can't install extension at ${manifestPath}: ${err}`, { manifestJson });
@@ -109,10 +115,10 @@ export class ExtensionManager {
   async loadExtensions() {
     const bundledExtensions = await this.loadBundledExtensions()
     const localExtensions = await this.loadFromFolder(this.localFolderPath)
-    await fs.writeFile(path.join(this.packageJsonPath), JSON.stringify(this.packagesJson, null, 2), {mode: 0o600})
+    await fs.writeFile(path.join(this.packageJsonPath), JSON.stringify(this.packagesJson, null, 2), { mode: 0o600 })
     await this.installPackages()
     const extensions = bundledExtensions.concat(localExtensions)
-    return new Map(extensions.map(ext => [ext.id, ext]));
+    return new Map(extensions.map(ext => [ext.manifestPath, ext]));
   }
 
   async loadBundledExtensions() {
@@ -126,7 +132,7 @@ export class ExtensionManager {
       }
       const absPath = path.resolve(folderPath, fileName);
       const manifestPath = path.resolve(absPath, "package.json");
-      const ext = await this.getExtensionByManifest(manifestPath).catch(() => null)
+      const ext = await this.getByManifest(manifestPath, { isBundled: true }).catch(() => null)
       if (ext) {
         extensions.push(ext)
       }
@@ -152,7 +158,7 @@ export class ExtensionManager {
         continue
       }
       const manifestPath = path.resolve(absPath, "package.json");
-      const ext = await this.getExtensionByManifest(manifestPath).catch(() => null)
+      const ext = await this.getByManifest(manifestPath).catch(() => null)
       if (ext) {
         extensions.push(ext)
       }

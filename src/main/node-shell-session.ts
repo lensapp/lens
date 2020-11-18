@@ -73,7 +73,7 @@ export class NodeShellSession extends ShellSession {
         }],
         containers: [{
           name: "shell",
-          image: "docker.io/alpine:3.9",
+          image: "docker.io/alpine:3.12",
           securityContext: {
             privileged: true,
           },

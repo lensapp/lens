@@ -31,7 +31,7 @@ export interface UserPreferences {
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
-  static readonly defaultTheme: ThemeId = "kontena-dark"
+  static readonly defaultTheme: ThemeId = "lens-dark"
 
   private constructor() {
     super({
@@ -88,7 +88,8 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   @action
-  resetTheme() {
+  async resetTheme() {
+    await this.whenLoaded;
     this.preferences.colorTheme = UserStore.defaultTheme;
   }
 

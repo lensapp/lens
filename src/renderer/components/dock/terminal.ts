@@ -178,7 +178,6 @@ export class Terminal {
         break;
 
       // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
-      // https://github.com/kontena/lens-app/issues/156#issuecomment-534906480
       case "KeyW":
         evt.preventDefault();
         break;

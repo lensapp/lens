@@ -101,7 +101,6 @@ export class JobDetails extends React.Component<Props> {
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <PodDetailsList pods={childPods} owner={job}/>
-        <KubeEventDetails object={job}/>
       </div>
     )
   }
@@ -112,5 +111,13 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["batch/v1"],
   components: {
     Details: (props: any) => <JobDetails {...props}/>
+  }
+})
+kubeObjectDetailRegistry.add({
+  kind: "Job",
+  apiVersions: ["batch/v1"],
+  priority: 5,
+  components: {
+    Details: (props: any) => <KubeEventDetails {...props}/>
   }
 })

@@ -15,13 +15,14 @@ import { shellSync } from "./shell-sync"
 import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
 import { registerFileProtocol } from "../common/register-protocol";
+import logger from "./logger"
 import { clusterStore } from "../common/cluster-store"
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
 import { appEventBus } from "../common/event-bus"
-import { extensionManager } from "../extensions/extension-manager";
 import { extensionLoader } from "../extensions/extension-loader";
-import logger from "./logger"
+import { extensionManager } from "../extensions/extension-manager";
+import { extensionsStore } from "../extensions/extensions-store";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -48,11 +49,12 @@ app.on("ready", async () => {
 
   registerFileProtocol("static", __static);
 
-  // preload isomorphic stores
+  // preload
   await Promise.all([
     userStore.load(),
     clusterStore.load(),
     workspaceStore.load(),
+    extensionsStore.load(),
   ]);
 
   // find free port
@@ -65,7 +67,7 @@ app.on("ready", async () => {
   }
 
   // create cluster manager
-  clusterManager = new ClusterManager(proxyPort);
+  clusterManager = ClusterManager.getInstance<ClusterManager>(proxyPort);
 
   // run proxy
   try {
@@ -76,15 +78,11 @@ app.on("ready", async () => {
     app.exit();
   }
 
-  windowManager = new WindowManager(proxyPort);
-
-  LensExtensionsApi.windowManager = windowManager; // expose to extensions
-  extensionLoader.loadOnMain()
-  extensionLoader.extensions.replace(await extensionManager.load())
-  extensionLoader.broadcastExtensions()
+  windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
+  extensionLoader.init(await extensionManager.load()); // call after windowManager to see splash earlier
 
   setTimeout(() => {
-    appEventBus.emit({ name: "app", action: "start" })
+    appEventBus.emit({ name: "service", action: "start" })
   }, 1000)
 });
 
@@ -98,6 +96,7 @@ app.on("activate", (event, hasVisibleWindows) => {
 // Quit app on Cmd+Q (MacOS)
 app.on("will-quit", (event) => {
   logger.info('APP:QUIT');
+  appEventBus.emit({name: "app", action: "close"})
   event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
   clusterManager?.stop(); // close cluster connections
   return; // skip exit to make tray work, to quit go to app's global menu or tray's menu

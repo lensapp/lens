@@ -5,17 +5,17 @@
 $unit: 8px;
 $padding: $unit;
 $margin: $unit;
-$radius: ceil($unit * .3);
+$radius: var(--border-radius);
 
 // Fonts
-$font-main: 'Roboto', 'Helvetica', 'Arial', sans-serif !default;
-$font-monospace: Lucida Console, Monaco, Consolas, monospace;
-$font-size-small: floor(1.5 * $unit);
-$font-size: floor(1.75 * $unit);
-$font-size-big: floor(2 * $unit);
-$font-weight-thin: 300;
-$font-weight-normal: 400;
-$font-weight-bold: 500;
+$font-main: var(--font-main);
+$font-monospace: var(--font-monospace);
+$font-size-small: var(--font-size-small);
+$font-size: var(--font-size);
+$font-size-big: var(--font-size-big);
+$font-weight-thin: var(--font-weight-thin);
+$font-weight-normal: var(--font-weight-normal);
+$font-weight-bold: var(--font-weight-bold);
 
 // Z-index correlations
 $zIndex-sidebar-hover: 500;

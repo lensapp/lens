@@ -15,14 +15,14 @@ import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
-import { navigate } from "../../navigation";
+import { navigate, navigation } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterViewURL } from "./cluster-view.route";
-import { globalPageRegistry } from "../../../extensions/registries/page-registry";
+import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
 
 interface Props {
   className?: IClassName;
@@ -138,7 +138,7 @@ export class ClustersMenu extends React.Component<Props> {
             </Droppable>
           </DragDropContext>
         </div>
-        <div className="add-cluster" >
+        <div className="add-cluster">
           <Tooltip targetId="add-cluster-icon">
             <Trans>Add Cluster</Trans>
           </Tooltip>
@@ -148,9 +148,20 @@ export class ClustersMenu extends React.Component<Props> {
           )}
         </div>
         <div className="extensions">
-          {globalPageRegistry.getItems().map(({ path, url = String(path), hideInMenu, components: { MenuIcon } }) => {
-            if (!MenuIcon || hideInMenu) return;
-            return <MenuIcon key={url} onClick={() => navigate(url)}/>
+          {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
+            const registeredPage = globalPageRegistry.getByPageMenuTarget(target);
+            if (!registeredPage) return;
+            const { extensionId, id: pageId } = registeredPage;
+            const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: target.params });
+            const isActive = pageUrl === navigation.location.pathname;
+            return (
+              <Icon
+                key={pageUrl}
+                tooltip={title}
+                active={isActive}
+                onClick={() => navigate(pageUrl)}
+              />
+            )
           })}
         </div>
       </div>

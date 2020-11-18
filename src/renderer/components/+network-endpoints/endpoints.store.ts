@@ -9,4 +9,4 @@ export class EndpointStore extends KubeObjectStore<Endpoint> {
 }
 
 export const endpointStore = new EndpointStore();
-apiManager.registerStore(endpointApi, endpointStore);
+apiManager.registerStore(endpointStore);

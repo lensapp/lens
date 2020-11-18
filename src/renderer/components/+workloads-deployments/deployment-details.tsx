@@ -116,7 +116,6 @@ export class DeploymentDetails extends React.Component<Props> {
         <ResourceMetricsText metrics={metrics}/>
         <ReplicaSets replicaSets={replicaSets}/>
         <PodDetailsList pods={childPods} owner={deployment}/>
-        <KubeEventDetails object={deployment}/>
       </div>
     )
   }
@@ -127,5 +126,13 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["apps/v1"],
   components: {
     Details: (props: any) => <DeploymentDetails {...props} />
+  }
+})
+kubeObjectDetailRegistry.add({
+  kind: "Deployment",
+  apiVersions: ["apps/v1"],
+  priority: 5,
+  components: {
+    Details: (props: any) => <KubeEventDetails {...props} />
   }
 })

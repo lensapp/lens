@@ -59,8 +59,6 @@ export class RoleDetails extends React.Component<Props> {
             </div>
           )
         })}
-
-        <KubeEventDetails object={role}/>
       </div>
     )
   }
@@ -73,11 +71,27 @@ kubeObjectDetailRegistry.add({
     Details: (props) => <RoleDetails {...props}/>
   }
 })
+kubeObjectDetailRegistry.add({
+  kind: "Role",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
+  }
+})
 
 kubeObjectDetailRegistry.add({
   kind: "ClusterRole",
   apiVersions: ["rbac.authorization.k8s.io/v1"],
   components: {
     Details: (props) => <RoleDetails {...props}/>
+  }
+})
+kubeObjectDetailRegistry.add({
+  kind: "ClusterRole",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props}/>
   }
 })

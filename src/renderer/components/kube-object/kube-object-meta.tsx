@@ -2,17 +2,17 @@ import React from "react";
 import { Trans } from "@lingui/macro";
 import { IKubeMetaField, KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
-import { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { getDetailsUrl } from "../../navigation";
 import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-export interface Props {
+export interface KubeObjectMetaProps {
   object: KubeObject;
   hideFields?: IKubeMetaField[];
 }
 
-export class KubeObjectMeta extends React.Component<Props> {
+export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
   static defaultHiddenFields: IKubeMetaField[] = [
     "uid", "resourceVersion", "selfLink"
   ];
@@ -37,7 +37,7 @@ export class KubeObjectMeta extends React.Component<Props> {
           {getAge(true, false)} <Trans>ago</Trans> ({creationTimestamp})
         </DrawerItem>
         <DrawerItem name={<Trans>Name</Trans>} hidden={this.isHidden("name")}>
-          {getName()}
+          {getName()} <KubeObjectStatusIcon object={object} />
         </DrawerItem>
         <DrawerItem name={<Trans>Namespace</Trans>} hidden={this.isHidden("namespace") || !getNs()}>
           {getNs()}

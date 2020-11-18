@@ -2,7 +2,7 @@ import path from "path"
 import Config from "conf"
 import { Options as ConfOptions } from "conf/dist/source/types"
 import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron"
-import { action, observable, reaction, runInAction, toJS, when } from "mobx";
+import { action, IReactionOptions, observable, reaction, runInAction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
@@ -12,6 +12,7 @@ import isEqual from "lodash/isEqual";
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
   autoLoad?: boolean;
   syncEnabled?: boolean;
+  syncOptions?: IReactionOptions;
 }
 
 export class BaseStore<T = any> extends Singleton {
@@ -20,7 +21,7 @@ export class BaseStore<T = any> extends Singleton {
 
   whenLoaded = when(() => this.isLoaded);
   @observable isLoaded = false;
-  @observable protected data: T;
+  @observable data = {} as T;
 
   protected constructor(protected params: BaseStoreParams) {
     super();
@@ -44,6 +45,10 @@ export class BaseStore<T = any> extends Singleton {
     return `store-sync-main:${this.name}`
   }
 
+  get path() {
+    return this.storeConfig.path;
+  }
+
   protected async init() {
     if (this.params.autoLoad) {
       await this.load();
@@ -60,19 +65,19 @@ export class BaseStore<T = any> extends Singleton {
       ...confOptions,
       projectName: "lens",
       projectVersion: getAppVersion(),
-      cwd: this.storePath(),
+      cwd: this.cwd(),
     });
-    logger.info(`[STORE]: LOADED from ${this.storeConfig.path}`);
+    logger.info(`[STORE]: LOADED from ${this.path}`);
     this.fromStore(this.storeConfig.store);
     this.isLoaded = true;
   }
 
-  protected storePath() {
+  protected cwd() {
     return (app || remote.app).getPath("userData")
   }
 
   protected async saveToFile(model: T) {
-    logger.info(`[STORE]: SAVING ${this.name}`);
+    logger.info(`[STORE]: SAVING ${this.path}`);
     // todo: update when fixed https://github.com/sindresorhus/conf/issues/114
     Object.entries(model).forEach(([key, value]) => {
       this.storeConfig.set(key, value);
@@ -81,7 +86,7 @@ export class BaseStore<T = any> extends Singleton {
 
   enableSync() {
     this.syncDisposers.push(
-      reaction(() => this.toJSON(), model => this.onModelChange(model)),
+      reaction(() => this.toJSON(), model => this.onModelChange(model), this.params.syncOptions),
     );
     if (ipcMain) {
       const callback = (event: IpcMainEvent, model: T) => {
@@ -143,6 +148,7 @@ export class BaseStore<T = any> extends Singleton {
 
   @action
   protected fromStore(data: T) {
+    if (!data) return;
     this.data = data;
   }
 

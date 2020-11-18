@@ -149,7 +149,6 @@ export class NodeDetails extends React.Component<Props> {
           maxCpu={node.getCpuCapacity()}
           maxMemory={node.getMemoryCapacity()}
         />
-        <KubeEventDetails object={node}/>
       </div>
     )
   }
@@ -160,5 +159,14 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["v1"],
   components: {
     Details: (props) => <NodeDetails {...props} />
+  }
+})
+
+kubeObjectDetailRegistry.add({
+  kind: "Node",
+  apiVersions: ["v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
   }
 })

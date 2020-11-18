@@ -1,4 +1,4 @@
-.PageLayout.Support {
+.SupportPage {
   a[target=_blank] {
     text-decoration: none;
     border-bottom: 1px solid;
@@ -10,4 +10,10 @@
       margin-left: 2px;
     }
   }
+}
+
+.SupportPageIcon {
+  color: white;
+  font-size: var(--font-size-small);
+  padding-right: calc(var(--padding) / 2);
 }

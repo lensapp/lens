@@ -4,7 +4,11 @@
     "jsx": "react",
     "target": "ES2017",
     "module": "ESNext",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "moduleResolution": "Node",
     "sourceMap": true,
     "strict": false,
@@ -14,7 +18,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-    "allowJs": true,
+    "allowJs": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "traceResolution": false,
@@ -31,12 +35,17 @@
       "module": "CommonJS"
     }
   },
+  "include": [
+    "src/**/*",
+    "types/*.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "out",
     "dist",
     "coverage",
     "binaries",
-    "static"
+    "static",
+    "src/extensions/npm"
   ]
 }

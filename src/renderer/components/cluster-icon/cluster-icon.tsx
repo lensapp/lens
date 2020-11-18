@@ -34,8 +34,8 @@ export class ClusterIcon extends React.Component<Props> {
       cluster, showErrors, showTooltip, errorClass, options, interactive, isActive,
       children, ...elemProps
     } = this.props;
-    const { isAdmin, eventCount, preferences, id: clusterId } = cluster;
-    const { clusterName, icon } = preferences;
+    const { isAdmin, name, eventCount, preferences, id: clusterId } = cluster;
+    const { icon } = preferences;
     const clusterIconId = `cluster-icon-${clusterId}`;
     const className = cssNames("ClusterIcon flex inline", this.props.className, {
       interactive: interactive !== undefined ? interactive : !!this.props.onClick,
@@ -44,9 +44,9 @@ export class ClusterIcon extends React.Component<Props> {
     return (
       <div {...elemProps} className={className} id={showTooltip ? clusterIconId : null}>
         {showTooltip && (
-          <Tooltip targetId={clusterIconId}>{clusterName}</Tooltip>
+          <Tooltip targetId={clusterIconId}>{name}</Tooltip>
         )}
-        {icon && <img src={icon} alt={clusterName}/>}
+        {icon && <img src={icon} alt={name}/>}
         {!icon && <Hashicon value={clusterId} options={options}/>}
         {showErrors && isAdmin && eventCount > 0 && (
           <Badge

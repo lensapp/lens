@@ -1,4 +1,7 @@
 .PodLogs {
+  --overlay-bg: #8cc474b8;
+  --overlay-active-bg: orange;
+
   .logs {
     @include custom-scrollbar;
 
@@ -6,38 +9,49 @@
     // `overflow: overlay` don't allow scroll to the last line
     overflow: auto;
 
+    position: relative;
     color: $textColorAccent;
     background: $logsBackground;
-    line-height: var(--log-line-height);
-    border-radius: 2px;
-    padding: $padding * 2;
-    font-family: $font-monospace;
-    font-size: smaller;
-    white-space: pre;
     flex-grow: 1;
 
-    > div {
-     // Provides font better readability on large screens
-      -webkit-font-smoothing: subpixel-antialiased;
-    }
-  }
+    .VirtualList {
+      height: 100%;
 
-  .new-logs-sep {
-    position: relative;
-    display: block;
-    height: 0;
-    border-top: 1px solid $primary;
-    margin: $margin * 2 0;
+      .list {
+        .LogRow {
+          padding: 2px 16px;
+          height: 18px;  // Must be equal to lineHeight variable in pod-logs.scss
+          font-family: $font-monospace;
+          font-size: smaller;
+          white-space: pre;
 
-    &:after {
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      content: 'new';
-      background: $primary;
-      color: white;
-      padding: $padding / 3;
-      border-radius: $radius;
+          &:hover {
+            background: $logRowHoverBackground;
+          }
+
+          span {
+            -webkit-font-smoothing: auto; // Better readability on non-retina screens
+          }
+
+          span.overlay {
+            border-radius: 2px;
+            -webkit-font-smoothing: auto;
+            background-color: var(--overlay-bg);
+
+            span {
+              background-color: var(--overlay-bg)!important; // Rewriting inline styles from AnsiUp library
+            }
+
+            &.active {
+              background-color: var(--overlay-active-bg);
+
+              span {
+                background-color: var(--overlay-active-bg)!important; // Rewriting inline styles from AnsiUp library
+              }
+            }
+          }
+        }
+      }
     }
   }
 
@@ -47,7 +61,8 @@
     padding: $unit / 2 $unit * 1.5;
     border-radius: $unit * 2;
     opacity: 0;
-    transition: opacity 0.2s;
+    z-index: 2;
+    top: 20px;
 
     &.active {
       opacity: 1;
@@ -55,6 +70,22 @@
 
     .Icon {
       --size: $unit * 2;
+    }
+  }
+
+  .PodLogControls {
+    .Select {
+      min-width: 150px;
+    }
+  }
+
+  .logs .VirtualList .list {
+    overflow-x: scroll!important;
+  }
+
+  &.noscroll {
+    .logs .VirtualList .list {
+      overflow-x: hidden!important; // fixing scroll to bottom issues in PodLogs
     }
   }
 }

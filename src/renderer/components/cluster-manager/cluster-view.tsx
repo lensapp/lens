@@ -34,7 +34,7 @@ export class ClusterView extends React.Component<Props> {
     const { cluster } = this;
     const showStatus = cluster && (!cluster.available || !hasLoadedView(cluster.id) || !cluster.ready)
     return (
-      <div className="ClusterView">
+      <div className="ClusterView flex align-center">
         {showStatus && (
           <ClusterStatus key={cluster.id} clusterId={cluster.id} className="box center"/>
         )}

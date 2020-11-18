@@ -91,7 +91,6 @@ export class DaemonSetDetails extends React.Component<Props> {
         </DrawerItem>
         <ResourceMetricsText metrics={metrics}/>
         <PodDetailsList pods={childPods} owner={daemonSet}/>
-        <KubeEventDetails object={daemonSet}/>
       </div>
     )
   }
@@ -102,5 +101,13 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["apps/v1"],
   components: {
     Details: (props: any) => <DaemonSetDetails {...props} />
+  }
+})
+kubeObjectDetailRegistry.add({
+  kind: "DaemonSet",
+  apiVersions: ["apps/v1"],
+  priority: 5,
+  components: {
+    Details: (props: any) => <KubeEventDetails {...props} />
   }
 })

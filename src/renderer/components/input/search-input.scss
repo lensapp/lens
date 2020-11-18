@@ -6,7 +6,10 @@
 
   > label {
     color: inherit;
+    background: none;
+    border: none;
     border-radius: $radius;
+    box-shadow: 0 0 0 1px $halfGray;
     padding: 6px 6px 6px 10px;
 
     .Icon {

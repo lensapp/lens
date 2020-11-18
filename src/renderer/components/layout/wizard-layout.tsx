@@ -3,7 +3,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
 
-interface Props extends React.DOMAttributes<any> {
+export interface WizardLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
   header?: React.ReactNode;
   headerClass?: IClassName;
@@ -15,7 +15,7 @@ interface Props extends React.DOMAttributes<any> {
 }
 
 @observer
-export class WizardLayout extends React.Component<Props> {
+export class WizardLayout extends React.Component<WizardLayoutProps> {
   render() {
     const {
       className, contentClass, infoPanelClass, infoPanel, header, headerClass, centered,

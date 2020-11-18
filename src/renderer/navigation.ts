@@ -1,23 +1,34 @@
 // Navigation helpers
 
 import { ipcRenderer } from "electron";
-import { matchPath } from "react-router";
+import { matchPath, RouteProps } from "react-router";
 import { reaction } from "mobx";
 import { createObservableHistory } from "mobx-observable-history";
-import { createBrowserHistory, createMemoryHistory, LocationDescriptor } from "history";
+import { createBrowserHistory, LocationDescriptor } from "history";
 import logger from "../main/logger";
 import { clusterViewRoute, IClusterViewRouteParams } from "./components/cluster-manager/cluster-view.route";
 import { broadcastMessage, subscribeToBroadcast } from "../common/ipc";
 
-export const history = typeof window !== "undefined" ? createBrowserHistory() : createMemoryHistory();
+export const history = createBrowserHistory();
 export const navigation = createObservableHistory(history);
 
+/**
+ * Navigate to a location. Works only in renderer.
+ */
 export function navigate(location: LocationDescriptor) {
   const currentLocation = navigation.getPath();
   navigation.push(location);
   if (currentLocation === navigation.getPath()) {
     navigation.goBack(); // prevent sequences of same url in history
   }
+}
+
+export function matchParams<P>(route: string | string[] | RouteProps) {
+  return matchPath<P>(navigation.location.pathname, route);
+}
+
+export function isActiveRoute(route: string | string[] | RouteProps): boolean {
+  return !!matchParams(route);
 }
 
 // common params for all pages
@@ -61,6 +72,9 @@ export function getDetailsUrl(details: string) {
   });
 }
 
+/**
+ * Show details. Works only in renderer.
+ */
 export function showDetails(path: string, resetSelected = true) {
   navigation.searchParams.merge({
     details: path,
@@ -68,6 +82,9 @@ export function showDetails(path: string, resetSelected = true) {
   })
 }
 
+/**
+ * Hide details. Works only in renderer.
+ */
 export function hideDetails() {
   showDetails(null)
 }
@@ -102,12 +119,12 @@ if (process.isMainFrame) {
 }
 
 // Handle navigation via IPC (e.g. from top menu)
-subscribeToBroadcast("menu:navigate", (event, location: LocationDescriptor) => {
+subscribeToBroadcast("renderer:navigate", (event, location: LocationDescriptor) => {
   logger.info(`[IPC]: ${event.type} ${JSON.stringify(location)}`, event);
   navigate(location);
 })
 
 // Reload dashboard window
-subscribeToBroadcast("menu:reload", () => {
+subscribeToBroadcast("renderer:reload", () => {
   location.reload();
 })

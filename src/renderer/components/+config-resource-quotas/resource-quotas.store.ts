@@ -9,4 +9,4 @@ export class ResourceQuotasStore extends KubeObjectStore<ResourceQuota> {
 }
 
 export const resourceQuotaStore = new ResourceQuotasStore();
-apiManager.registerStore(resourceQuotaApi, resourceQuotaStore);
+apiManager.registerStore(resourceQuotaStore);

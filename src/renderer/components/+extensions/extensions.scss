@@ -1,0 +1,41 @@
+.Extensions {
+  --width: 100%;
+  --max-width: auto;
+
+  .extension-list {
+    .extension {
+      --flex-gap: $padding / 3;
+      padding: $padding $padding * 2;
+      background: $colorVague;
+      border-radius: $radius;
+
+      &:not(:first-of-type) {
+        margin-top: $padding * 2;
+      }
+    }
+  }
+
+  .extensions-path {
+    word-break: break-all;
+  }
+
+  .WizardLayout {
+    padding: 0;
+
+    .info-col {
+      flex: 0.6;
+      align-self: flex-start;
+    }
+  }
+
+  .SearchInput {
+    margin-top: $margin / 2;
+    margin-bottom: $margin * 2;
+    max-width: none;
+
+    > label {
+      padding: $padding $padding * 2;
+      border-radius: $radius;
+    }
+  }
+}

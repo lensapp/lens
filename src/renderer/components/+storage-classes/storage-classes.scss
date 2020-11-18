@@ -3,5 +3,9 @@
     &.is-default {
       flex: .5;
     }
+
+    &.warning {
+      @include table-cell-warning;
+    }
   }
 }

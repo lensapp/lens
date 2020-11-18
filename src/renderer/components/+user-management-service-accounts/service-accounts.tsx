@@ -14,6 +14,7 @@ import { IServiceAccountsRouteParams } from "../+user-management";
 import { serviceAccountsStore } from "./service-accounts.store";
 import { CreateServiceAccountDialog } from "./create-service-account-dialog";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -42,11 +43,13 @@ export class ServiceAccounts extends React.Component<Props> {
           renderHeaderTitle={<Trans>Service Accounts</Trans>}
           renderTableHeader={[
             { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { className: "warning" },
             { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(account: ServiceAccount) => [
             account.getName(),
+            <KubeObjectStatusIcon object={account} />,
             account.getNs(),
             account.getAge(),
           ]}

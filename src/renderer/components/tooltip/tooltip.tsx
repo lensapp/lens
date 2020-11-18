@@ -167,7 +167,6 @@ export class Tooltip extends React.Component<TooltipProps> {
       top = topCenter;
       break;
     case "top_right":
-    default:
       left = targetBounds.right - tooltipBounds.width;
       top = topCenter;
       break;

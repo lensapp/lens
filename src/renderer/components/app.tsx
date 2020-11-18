@@ -35,10 +35,10 @@ import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store
 import logger from "../../main/logger";
 import { webFrame } from "electron";
 import { clusterPageRegistry } from "../../extensions/registries/page-registry";
-import { DynamicPage } from "../../extensions/dynamic-page";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus"
 import { requestMain } from "../../common/ipc";
+import whatInput from 'what-input';
 
 @observer
 export class App extends React.Component {
@@ -51,12 +51,17 @@ export class App extends React.Component {
     await requestMain("cluster:set-frame-id", clusterId, frameId)
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
     extensionLoader.loadOnClusterRenderer();
-    appEventBus.emit({name: "cluster", action: "open", params: {
-      clusterId: clusterId
-    }})
+    appEventBus.emit({
+      name: "cluster",
+      action: "open",
+      params: {
+        clusterId: clusterId
+      }
+    })
     window.addEventListener("online", () => {
       window.location.reload()
     })
+    whatInput.ask() // Start to monitor user input device
   }
 
   get startURL() {
@@ -64,6 +69,12 @@ export class App extends React.Component {
       return clusterURL();
     }
     return workloadsURL();
+  }
+
+  renderExtensionRoutes() {
+    return clusterPageRegistry.getItems().map(({ components: { Page }, exact, routePath }) => {
+      return <Route key={routePath} path={routePath} exact={exact} component={Page}/>
+    })
   }
 
   render() {
@@ -84,12 +95,11 @@ export class App extends React.Component {
                 <Route component={CustomResources} {...crdRoute}/>
                 <Route component={UserManagement} {...usersManagementRoute}/>
                 <Route component={Apps} {...appsRoute}/>
-                {clusterPageRegistry.getItems().map(page => {
-                  return <Route {...page} key={String(page.path)} render={() => <DynamicPage page={page}/>}/>
-                })}
+                {this.renderExtensionRoutes()}
                 <Redirect exact from="/" to={this.startURL}/>
                 <Route component={NotFound}/>
-              </Switch></MainLayout>
+              </Switch>
+            </MainLayout>
             <Notifications/>
             <ConfirmDialog/>
             <KubeObjectDetails/>

@@ -5,8 +5,8 @@ import isObject from "lodash/isObject"
 import uniqueId from "lodash/uniqueId";
 import { JsonApiErrorParsed } from "../../api/json-api";
 
-export type IMessageId = string | number;
-export type IMessage = React.ReactNode | React.ReactNode[] | JsonApiErrorParsed;
+export type NotificationId = string | number;
+export type NotificationMessage = React.ReactNode | React.ReactNode[] | JsonApiErrorParsed;
 
 export enum NotificationStatus {
   OK = "ok",
@@ -14,20 +14,20 @@ export enum NotificationStatus {
   INFO = "info",
 }
 
-export interface INotification {
-  id?: IMessageId;
-  message: IMessage;
+export interface Notification {
+  id?: NotificationId;
+  message: NotificationMessage;
   status?: NotificationStatus;
   timeout?: number; // auto-hiding timeout in milliseconds, 0 = no hide
 }
 
 @autobind()
 export class NotificationsStore {
-  public notifications = observable<INotification>([], { deep: false });
+  public notifications = observable<Notification>([], { deep: false });
 
-  protected autoHideTimers = new Map<IMessageId, number>();
+  protected autoHideTimers = new Map<NotificationId, number>();
 
-  addAutoHideTimer(notification: INotification) {
+  addAutoHideTimer(notification: Notification) {
     this.removeAutoHideTimer(notification);
     const { id, timeout } = notification;
     if (timeout) {
@@ -36,7 +36,7 @@ export class NotificationsStore {
     }
   }
 
-  removeAutoHideTimer(notification: INotification) {
+  removeAutoHideTimer(notification: Notification) {
     const { id } = notification;
     if (this.autoHideTimers.has(id)) {
       clearTimeout(this.autoHideTimers.get(id));
@@ -45,7 +45,7 @@ export class NotificationsStore {
   }
 
   @action
-  add(notification: INotification) {
+  add(notification: Notification) {
     if (!notification.id) {
       notification.id = uniqueId("notification_");
     }
@@ -56,11 +56,11 @@ export class NotificationsStore {
   }
 
   @action
-  remove(itemOrId: IMessageId | INotification) {
+  remove(itemOrId: NotificationId | Notification) {
     if (!isObject(itemOrId)) {
       itemOrId = this.notifications.find(item => item.id === itemOrId);
     }
-    return this.notifications.remove(itemOrId as INotification);
+    return this.notifications.remove(itemOrId as Notification);
   }
 }
 

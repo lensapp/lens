@@ -10,7 +10,7 @@ import debounce from "lodash/debounce"
 export const MenuContext = React.createContext<MenuContextValue>(null);
 export type MenuContextValue = Menu;
 
-interface MenuPosition {
+export interface MenuPosition {
   left?: boolean;
   top?: boolean;
   right?: boolean;

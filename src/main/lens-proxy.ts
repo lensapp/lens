@@ -131,7 +131,11 @@ export class LensProxy {
           }
         }
       }
-      res.writeHead(500).end("Oops, something went wrong.")
+      try {
+        res.writeHead(500).end("Oops, something went wrong.")
+      } catch (e) {
+        logger.error(`[LENS-PROXY]: Failed to write headers: `, e)
+      }
     })
 
     return proxy;

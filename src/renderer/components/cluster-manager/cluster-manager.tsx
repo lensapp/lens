@@ -16,6 +16,7 @@ import { clusterViewRoute, clusterViewURL } from "./cluster-view.route";
 import { clusterStore } from "../../../common/cluster-store";
 import { hasLoadedView, initView, lensViews, refreshViews } from "./lens-views";
 import { globalPageRegistry } from "../../../extensions/registries/page-registry";
+import { Extensions, extensionsRoute } from "../+extensions";
 import { getMatchedClusterId } from "../../navigation";
 
 @observer
@@ -63,12 +64,13 @@ export class ClusterManager extends React.Component {
           <Switch>
             <Route component={LandingPage} {...landingRoute} />
             <Route component={Preferences} {...preferencesRoute} />
+            <Route component={Extensions} {...extensionsRoute} />
             <Route component={Workspaces} {...workspacesRoute} />
             <Route component={AddCluster} {...addClusterRoute} />
             <Route component={ClusterView} {...clusterViewRoute} />
             <Route component={ClusterSettings} {...clusterSettingsRoute} />
-            {globalPageRegistry.getItems().map(({ path, url = String(path), components: { Page } }) => {
-              return <Route key={url} path={path} component={Page}/>
+            {globalPageRegistry.getItems().map(({ routePath, exact, components: { Page } }) => {
+              return <Route key={routePath} path={routePath} component={Page} exact={exact}/>
             })}
             <Redirect exact to={this.startUrl}/>
           </Switch>

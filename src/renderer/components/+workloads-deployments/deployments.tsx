@@ -4,11 +4,12 @@ import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { t, Trans } from "@lingui/macro";
-import { Deployment } from "../../api/endpoints";
+import { Deployment, deploymentApi } from "../../api/endpoints";
 import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
+import { ConfirmDialog } from "../confirm-dialog";
 import { deploymentStore } from "./deployments.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -20,8 +21,9 @@ import { _i18n } from "../../i18n";
 import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
-import { KubeEventIcon } from "../+events/kube-event-icon";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { Notifications } from "../notifications";
 
 enum sortBy {
   name = "name",
@@ -69,19 +71,19 @@ export class Deployments extends React.Component<Props> {
         renderHeaderTitle={<Trans>Deployments</Trans>}
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { className: "warning" },
           { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
           { title: <Trans>Pods</Trans>, className: "pods" },
           { title: <Trans>Replicas</Trans>, className: "replicas", sortBy: sortBy.replicas },
-          { className: "warning" },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Conditions</Trans>, className: "conditions", sortBy: sortBy.condition },
         ]}
         renderTableContents={(deployment: Deployment) => [
           deployment.getName(),
+          <KubeObjectStatusIcon object={deployment}/>,
           deployment.getNs(),
           this.renderPods(deployment),
           deployment.getReplicas(),
-          <KubeEventIcon object={deployment}/>,
           deployment.getAge(),
           this.renderConditions(deployment),
         ]}
@@ -96,10 +98,34 @@ export class Deployments extends React.Component<Props> {
 export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
   const { object, toolbar } = props;
   return (
-    <MenuItem onClick={() => DeploymentScaleDialog.open(object)}>
-      <Icon material="open_with" title={_i18n._(t`Scale`)} interactive={toolbar}/>
-      <span className="title"><Trans>Scale</Trans></span>
-    </MenuItem>
+    <>
+      <MenuItem onClick={() => DeploymentScaleDialog.open(object)}>
+        <Icon material="open_with" title={_i18n._(t`Scale`)} interactive={toolbar}/>
+        <span className="title"><Trans>Scale</Trans></span>
+      </MenuItem>
+      <MenuItem onClick={() => ConfirmDialog.open({
+        ok: async () =>
+        {
+          try {
+            await deploymentApi.restart({
+              namespace: object.getNs(),
+              name: object.getName(),
+            })
+          } catch (err) {
+            Notifications.error(err);
+          }
+        },
+        labelOk: _i18n._(t`Restart`),
+        message: (
+          <p>
+            <Trans>Are you sure you want to restart deployment <b>{object.getName()}</b>?</Trans>
+          </p>
+        ),
+      })}>
+        <Icon material="autorenew" title={_i18n._(t`Restart`)} interactive={toolbar}/>
+        <span className="title"><Trans>Restart</Trans></span>
+      </MenuItem>
+    </>
   )
 }
 
@@ -110,4 +136,3 @@ kubeObjectMenuRegistry.add({
     MenuItem: DeploymentMenu
   }
 })
-

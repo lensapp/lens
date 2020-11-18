@@ -215,7 +215,6 @@ export class PodDetails extends React.Component<Props> {
             })}
           </>
         )}
-        <KubeEventDetails object={pod}/>
       </div>
     )
   }
@@ -225,6 +224,15 @@ kubeObjectDetailRegistry.add({
   kind: "Pod",
   apiVersions: ["v1"],
   components: {
-    Details: (props: any) => <PodDetails {...props} />
+    Details: (props: KubeObjectDetailsProps<Pod>) => <PodDetails {...props} />
+  }
+})
+
+kubeObjectDetailRegistry.add({
+  kind: "Pod",
+  apiVersions: ["v1"],
+  priority: 5,
+  components: {
+    Details: (props: KubeObjectDetailsProps<Pod>) => <KubeEventDetails {...props} />
   }
 })

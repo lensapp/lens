@@ -5,7 +5,7 @@ import { IURLParams } from "../../../common/utils/buildUrl";
 
 export const storageRoute: RouteProps = {
   get path() {
-    return Storage.tabRoutes.map(({ path }) => path).flat()
+    return Storage.tabRoutes.map(({ routePath }) => routePath).flat()
   }
 }
 

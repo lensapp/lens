@@ -2,7 +2,7 @@ import "./stepper.scss";
 import React from "react";
 import { cssNames } from "../../utils";
 
-interface Props extends React.HTMLProps<any> {
+export interface StepperProps extends React.HTMLProps<any> {
   step: number;
   steps: Step[];
 }
@@ -11,7 +11,7 @@ interface Step {
   title?: string;
 }
 
-export class Stepper extends React.Component<Props, {}> {
+export class Stepper extends React.Component<StepperProps, {}> {
   render() {
     const { className, steps, ...props } = this.props;
     const stepsCount = steps.length;

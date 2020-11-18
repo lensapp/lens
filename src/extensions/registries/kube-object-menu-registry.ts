@@ -13,7 +13,7 @@ export interface KubeObjectMenuRegistration {
 
 export class KubeObjectMenuRegistry extends BaseRegistry<KubeObjectMenuRegistration> {
   getItemsForKind(kind: string, apiVersion: string) {
-    return this.items.filter((item) => {
+    return this.getItems().filter((item) => {
       return item.kind === kind && item.apiVersions.includes(apiVersion)
     })
   }

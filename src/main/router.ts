@@ -4,8 +4,9 @@ import http from "http"
 import path from "path"
 import { readFile } from "fs-extra"
 import { Cluster } from "./cluster"
-import { apiPrefix, appName, publicPath } from "../common/vars";
+import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "../common/vars";
 import { helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute } from "./routes";
+import logger from "./logger"
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;
@@ -94,23 +95,41 @@ export class Router {
     return mimeTypes[path.extname(filename).slice(1)] || "text/plain"
   }
 
-  async handleStaticFile(filePath: string, res: http.ServerResponse) {
+  async handleStaticFile(filePath: string, res: http.ServerResponse, req: http.IncomingMessage, retryCount = 0) {
     const asset = path.join(__static, filePath);
     try {
+      const filename = path.basename(req.url);
+      // redirect requests to [appName].js, [appName].html /sockjs-node/ to webpack-dev-server (for hot-reload support)
+      const toWebpackDevServer = filename.includes(appName) || filename.includes('hot-update') || req.url.includes('sockjs-node');
+      if (isDevelopment && toWebpackDevServer) {
+        const redirectLocation = `http://localhost:${webpackDevServerPort}` + req.url;
+        res.statusCode = 307;
+        res.setHeader('Location', redirectLocation);
+        res.end();
+        return;
+      }
       const data = await readFile(asset);
       res.setHeader("Content-Type", this.getMimeType(asset));
-      res.write(data)
-      res.end()
+      res.write(data);
+      res.end();
     } catch (err) {
-      this.handleStaticFile(`${publicPath}/${appName}.html`, res);
+      if (retryCount > 5) {
+        logger.error("handleStaticFile:", err.toString())
+        res.statusCode = 404
+        res.end()
+        return
+      }
+      this.handleStaticFile(`${publicPath}/${appName}.html`, res, req, Math.max(retryCount, 0) + 1);
     }
   }
 
   protected addRoutes() {
     // Static assets
-    this.router.add({ method: 'get', path: '/{path*}' }, ({ params, response }: LensApiRequest) => {
-      this.handleStaticFile(params.path, response);
-    });
+    this.router.add(
+      { method: 'get', path: '/{path*}' },
+      ({ params, response, path, raw: { req } }: LensApiRequest) => {
+        this.handleStaticFile(params.path, response, req);
+      });
 
     this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute))
 

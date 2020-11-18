@@ -10,7 +10,7 @@ import { KubeObject } from "../../api/kube-object";
 import { ICRDRouteParams } from "./crd.route";
 import { autorun, computed } from "mobx";
 import { crdStore } from "./crd.store";
-import { SortingCallback } from "../table";
+import { TableSortCallback } from "../table";
 import { apiManager } from "../../api/api-manager";
 
 interface Props extends RouteComponentProps<ICRDRouteParams> {
@@ -50,17 +50,17 @@ export class CrdResources extends React.Component<Props> {
     if (!crd) return null;
     const isNamespaced = crd.isNamespaced();
     const extraColumns = crd.getPrinterColumns(false);  // Cols with priority bigger than 0 are shown in details
-    const sortingCallbacks: { [sortBy: string]: SortingCallback } = {
+    const sortingCallbacks: { [sortBy: string]: TableSortCallback } = {
       [sortBy.name]: (item: KubeObject) => item.getName(),
       [sortBy.namespace]: (item: KubeObject) => item.getNs(),
       [sortBy.age]: (item: KubeObject) => item.metadata.creationTimestamp,
     }
     extraColumns.forEach(column => {
-      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.query(item, column.jsonPath.slice(1))
+      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.value(item, column.jsonPath.slice(1))
     })
-    const ListView = KubeObjectListLayout;
+
     return (
-      <ListView
+      <KubeObjectListLayout
         className="CrdResources"
         isClusterScoped={!isNamespaced}
         store={store}
@@ -85,9 +85,10 @@ export class CrdResources extends React.Component<Props> {
         renderTableContents={(crdInstance: KubeObject) => [
           crdInstance.getName(),
           isNamespaced && crdInstance.getNs(),
-          ...extraColumns.map(column => {
-            return jsonPath.query(crdInstance, (column.jsonPath).slice(1))
-          }),
+          ...extraColumns.map(column => ({
+            renderBoolean: true,
+            children: jsonPath.value(crdInstance, column.jsonPath.slice(1)),
+          })),
           crdInstance.getAge(),
         ]}
       />

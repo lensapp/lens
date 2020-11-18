@@ -7,8 +7,9 @@ import { appEventBus } from "../common/event-bus"
 import { subscribeToBroadcast } from "../common/ipc"
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
+import { Singleton } from "../common/utils";
 
-export class WindowManager {
+export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
@@ -17,6 +18,7 @@ export class WindowManager {
   @observable activeClusterId: ClusterId;
 
   constructor(protected proxyPort: number) {
+    super();
     this.bindEvents();
     this.initMenu();
     this.initTray();
@@ -83,6 +85,7 @@ export class WindowManager {
       await this.mainWindow.loadURL(this.mainUrl);
       this.mainWindow.show();
       this.splashWindow?.close();
+      appEventBus.emit({ name: "app", action: "start" })
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString())
     }
@@ -120,7 +123,7 @@ export class WindowManager {
   async navigate(url: string, frameId?: number) {
     await this.ensureMainWindow();
     this.sendToView({
-      channel: "menu:navigate",
+      channel: "renderer:navigate",
       frameId: frameId,
       data: [url],
     })
@@ -129,7 +132,7 @@ export class WindowManager {
   reload() {
     const frameId = clusterStore.getById(this.activeClusterId)?.frameId;
     if (frameId) {
-      this.sendToView({ channel: "menu:reload", frameId });
+      this.sendToView({ channel: "renderer:reload", frameId });
     } else {
       webContents.getFocusedWebContents()?.reload();
     }
@@ -152,6 +155,11 @@ export class WindowManager {
       await this.splashWindow.loadURL("static://splash.html");
     }
     this.splashWindow.show();
+  }
+
+  hide() {
+    if (!this.mainWindow?.isDestroyed()) this.mainWindow.hide();
+    if (!this.splashWindow.isDestroyed()) this.splashWindow.hide();
   }
 
   destroy() {
