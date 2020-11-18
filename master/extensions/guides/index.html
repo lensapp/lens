@@ -74,6 +74,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#extension-guides" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -541,11 +546,61 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
     
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Overview
+        <span class="md-nav__icon md-icon"></span>
+      </label>
     
     <a href="./" class="md-nav__link md-nav__link--active">
       Overview
     </a>
     
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#guides" class="md-nav__link">
+    Guides
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samples" class="md-nav__link">
+    Samples
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="main-extension/" class="md-nav__link">
+      Main Extension
+    </a>
   </li>
 
         
@@ -738,15 +793,115 @@
               </div>
             
             
+              
+              
+                
+              
+              
+                <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                  <div class="md-sidebar__scrollwrap">
+                    <div class="md-sidebar__inner">
+                      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#guides" class="md-nav__link">
+    Guides
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#samples" class="md-nav__link">
+    Samples
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                    </div>
+                  </div>
+                </div>
+              
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Overview</h1>
-                
-                
+                <h1 id="extension-guides">Extension Guides<a class="headerlink" href="#extension-guides" title="Permanent link">#</a></h1>
+<p>The basics of the Lens Extension API are covered in <a href="../get-started/your-first-extension/">Your First Extension</a>. In this section detailed code guides and samples are used to explain how to use specific Lens Extension APIs.</p>
+<p>Each guide or sample will include:</p>
+<ul>
+<li>Clearly commented source code.</li>
+<li>Instructions for running the sample extension.</li>
+<li>Image of the sample extension's appearance and usage.</li>
+<li>Listing of Extension API being used.</li>
+<li>Explanation of Extension API concepts.</li>
+</ul>
+<h2 id="guides">Guides<a class="headerlink" href="#guides" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Guide</th>
+<th>APIs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="main-extension/">Main process extension</a></td>
+<td>LensMainExtension</td>
+</tr>
+<tr>
+<td><a href="renderer-extension/">Renderer process extension</a></td>
+<td>LensRendererExtension</td>
+</tr>
+<tr>
+<td><a href="stores.md">Stores</a></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="components.md">Components</a></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="kube-object-list-layout.md">KubeObjectListLayout</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="samples">Samples<a class="headerlink" href="#samples" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Sample</th>
+<th>APIs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/lensapp/lens-extension-samples/tree/master/helloworld-sample">helloworld</a></td>
+<td>LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps</td>
+</tr>
+<tr>
+<td><a href="https://github.com/lensapp/lens-extension-samples/tree/master/minikube-sample">minikube</a></td>
+<td>LensMainExtension <br> Store.clusterStore <br> Store.workspaceStore</td>
+</tr>
+</tbody>
+</table>
                 
               
               
@@ -780,13 +935,13 @@
           </a>
         
         
-          <a href="renderer-extension/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="main-extension/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Renderer Extension
+                Main Extension
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">
