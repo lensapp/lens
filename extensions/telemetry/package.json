@@ -9,7 +9,7 @@
     "styles": []
   },
   "scripts": {
-    "build": "webpack -p",
+    "build": "npm run webpack -p",
     "dev": "webpack --watch",
     "test": "jest --passWithNoTests --env=jsdom src $@"
   },

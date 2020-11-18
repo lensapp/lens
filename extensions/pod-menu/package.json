@@ -8,7 +8,7 @@
     "styles": []
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "build": "npm run webpack --config webpack.config.js",
     "dev": "npm run build --watch",
     "test": "jest --passWithNoTests --env=jsdom src $@"
   },

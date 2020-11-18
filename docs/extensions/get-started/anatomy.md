@@ -51,7 +51,7 @@ Each Lens extension must have a `package.json` file. It contains a mix of Node.j
   "main": "dist/main.js",
   "renderer": "dist/renderer.js",
   "scripts": {
-    "build": "webpack --config webpack.config.js",
+    "build": "npm run webpack --config webpack.config.js",
     "dev": "npm run build --watch"
   },
   "dependencies": {
@@ -94,4 +94,4 @@ export default class ExampleExtension extends LensRendererExtension {
 }
 ```
 
-The Hello World sample extension uses the `Cluster Page` capability, which is just one of the Lens extension API's capabilities. The [Common Capabilities](../capabilities/common-capabilities.md) page will help you home in on the right capabilities to use with your own extensions. 
+The Hello World sample extension uses the `Cluster Page` capability, which is just one of the Lens extension API's capabilities. The [Common Capabilities](../capabilities/common-capabilities.md) page will help you home in on the right capabilities to use with your own extensions.
