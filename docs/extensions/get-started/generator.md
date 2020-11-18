@@ -18,7 +18,7 @@ yo lens-ext
 # ? Install dependencies after initialization? Yes
 # ? Which package manager to use? yarn
 # ? symlink created extension folder to ~/.k8slens/extensions (mac/linux) or :User
-s<user>.k8slensextensions (win)? Yes
+s\<user>\.k8slens\extensions (windows)? Yes
 ```
 
 Start webpack, which watches the `my-first-lens-ext` folder.
