@@ -153,18 +153,18 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   @action
   addWorkspace(workspace: Workspace) {
     const { id, name } = workspace;
-    const existingWorkspace = this.getById(id);
     if (!name.trim() || this.getByName(name.trim())) {
       return;
     }
-    if (existingWorkspace) {
-      Object.assign(existingWorkspace, workspace);
-      appEventBus.emit({name: "workspace", action: "update"})
-    } else {
-      appEventBus.emit({name: "workspace", action: "add"})
-    }
     this.workspaces.set(id, workspace);
+    appEventBus.emit({name: "workspace", action: "add"})
     return workspace;
+  }
+
+  @action
+  updateWorkspace(workspace: Workspace) {
+    this.workspaces.set(workspace.id, workspace);
+    appEventBus.emit({name: "workspace", action: "update"});
   }
 
   @action

@@ -5,8 +5,6 @@ import { SupportPage } from "./src/support";
 export default class SupportPageRendererExtension extends LensRendererExtension {
   globalPages: Interface.PageRegistration[] = [
     {
-      id: "support",
-      routePath: "/support",
       components: {
         Page: SupportPage,
       }
@@ -16,7 +14,7 @@ export default class SupportPageRendererExtension extends LensRendererExtension 
   statusBarItems: Interface.StatusBarRegistration[] = [
     {
       item: (
-        <div className="SupportPageIcon flex align-center" onClick={() => this.navigate("/support")}>
+        <div className="SupportPageIcon flex align-center" onClick={() => this.navigate()}>
           <Component.Icon interactive material="help" smallest/>
         </div>
       )

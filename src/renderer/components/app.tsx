@@ -29,7 +29,6 @@ import { CustomResources } from "./+custom-resources/custom-resources";
 import { crdRoute } from "./+custom-resources";
 import { isAllowedResource } from "../../common/rbac";
 import { MainLayout } from "./layout/main-layout";
-import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { ErrorBoundary } from "./error-boundary";
 import { Terminal } from "./dock/terminal";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
@@ -37,7 +36,6 @@ import logger from "../../main/logger";
 import { clusterIpc } from "../../common/cluster-ipc";
 import { webFrame } from "electron";
 import { clusterPageRegistry } from "../../extensions/registries/page-registry";
-import { clusterPageMenuRegistry } from "../../extensions/registries";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
 import whatInput from 'what-input';
@@ -75,10 +73,7 @@ export class App extends React.Component {
 
   renderExtensionRoutes() {
     return clusterPageRegistry.getItems().map(({ components: { Page }, exact, routePath }) => {
-      const Component = () => {
-        return <Page/>
-      };
-      return <Route key={routePath} path={routePath} exact={exact} component={Component}/>
+      return <Route key={routePath} path={routePath} exact={exact} component={Page}/>
     })
   }
 

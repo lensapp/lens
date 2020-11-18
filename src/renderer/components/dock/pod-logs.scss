@@ -1,4 +1,7 @@
 .PodLogs {
+  --overlay-bg: #8cc474b8;
+  --overlay-active-bg: orange;
+
   .logs {
     @include custom-scrollbar;
 
@@ -11,14 +14,6 @@
     background: $logsBackground;
     flex-grow: 1;
 
-    .find-overlay {
-      position: absolute;
-      border-radius: 2px;
-      background-color: #8cc474;
-      margin-top: 4px;
-      opacity: 0.5;
-    }
-
     .VirtualList {
       height: 100%;
 
@@ -29,42 +24,34 @@
           font-family: $font-monospace;
           font-size: smaller;
           white-space: pre;
-          -webkit-font-smoothing: auto; // Better readability on non-retina screens
 
           &:hover {
             background: $logRowHoverBackground;
           }
 
           span {
+            -webkit-font-smoothing: auto; // Better readability on non-retina screens
+          }
+
+          span.overlay {
             border-radius: 2px;
-            background-color: #8cc474b8;
             -webkit-font-smoothing: auto;
+            background-color: var(--overlay-bg);
+
+            span {
+              background-color: var(--overlay-bg)!important; // Rewriting inline styles from AnsiUp library
+            }
 
             &.active {
-              background-color: orange;
+              background-color: var(--overlay-active-bg);
+
+              span {
+                background-color: var(--overlay-active-bg)!important; // Rewriting inline styles from AnsiUp library
+              }
             }
           }
         }
       }
-    }
-  }
-
-  .new-logs-sep {
-    position: relative;
-    display: block;
-    height: 0;
-    border-top: 1px solid $primary;
-    margin: $margin * 2 0;
-
-    &:after {
-      position: absolute;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      content: 'new';
-      background: $primary;
-      color: white;
-      padding: $padding / 3;
-      border-radius: $radius;
     }
   }
 

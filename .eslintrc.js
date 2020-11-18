@@ -1,5 +1,5 @@
 module.exports =  {
-  ignorePatterns: ["src/extensions/npm/extensions/api.d.ts"],
+  ignorePatterns: ["src/extensions/npm/extensions/dist/**/*"],
   overrides: [
     {
       files: [

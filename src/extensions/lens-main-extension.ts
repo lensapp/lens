@@ -2,14 +2,18 @@ import type { MenuRegistration } from "./registries/menu-registry";
 import { observable } from "mobx";
 import { LensExtension } from "./lens-extension"
 import { WindowManager } from "../main/window-manager";
-import { getPageUrl } from "./registries/page-registry"
+import { getExtensionPageUrl } from "./registries/page-registry"
 
 export class LensMainExtension extends LensExtension {
   @observable.shallow appMenus: MenuRegistration[] = []
 
-  async navigate(location?: string, frameId?: number) {
+  async navigate<P extends object>(pageId?: string, params?: P, frameId?: number) {
     const windowManager = WindowManager.getInstance<WindowManager>();
-    const url = getPageUrl(this, location); // get full path to extension's page
-    await windowManager.navigate(url, frameId);
+    const pageUrl = getExtensionPageUrl({
+      extensionId: this.name,
+      pageId: pageId,
+      params: params ?? {}, // compile to url with params
+    });
+    await windowManager.navigate(pageUrl, frameId);
   }
 }

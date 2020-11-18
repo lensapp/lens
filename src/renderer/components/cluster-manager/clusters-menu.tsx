@@ -14,7 +14,7 @@ import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
-import { isActiveRoute, navigate } from "../../navigation";
+import { navigate, navigation } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
@@ -22,8 +22,7 @@ import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
-import { globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
-import { compile } from "path-to-regexp";
+import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
 
 interface Props {
   className?: IClassName;
@@ -152,13 +151,15 @@ export class ClustersMenu extends React.Component<Props> {
           {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
             const registeredPage = globalPageRegistry.getByPageMenuTarget(target);
             if (!registeredPage) return;
-            const { routePath, exact } = registeredPage;
+            const { extensionId, id: pageId } = registeredPage;
+            const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: target.params });
+            const isActive = pageUrl === navigation.location.pathname;
             return (
               <Icon
-                key={routePath}
+                key={pageUrl}
                 tooltip={title}
-                active={isActiveRoute({ path: routePath, exact })}
-                onClick={() => navigate(compile(routePath)(target.params))}
+                active={isActive}
+                onClick={() => navigate(pageUrl)}
               />
             )
           })}

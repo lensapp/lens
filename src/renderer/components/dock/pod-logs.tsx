@@ -1,5 +1,7 @@
 import "./pod-logs.scss";
 import React from "react";
+import AnsiUp from 'ansi_up';
+import DOMPurify from "dompurify"
 import { Trans } from "@lingui/macro";
 import { action, computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -33,6 +35,7 @@ export class PodLogs extends React.Component<Props> {
   private logsElement = React.createRef<HTMLDivElement>(); // A reference for outer container in VirtualList
   private virtualListRef = React.createRef<VirtualList>(); // A reference for VirtualList component
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
+  private colorConverter = new AnsiUp();
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -185,6 +188,7 @@ export class PodLogs extends React.Component<Props> {
     const { searchQuery, isActiveOverlay } = searchStore;
     const item = this.logs[rowIndex];
     const contents: React.ReactElement[] = [];
+    const ansiToHtml = (ansi: string) => DOMPurify.sanitize(this.colorConverter.ansi_to_html(ansi));
     if (searchQuery) { // If search is enabled, replace keyword with backgrounded <span>
       // Case-insensitive search (lowercasing query and keywords in line)
       const regex = new RegExp(searchStore.escapeRegex(searchQuery), "gi");
@@ -195,19 +199,26 @@ export class PodLogs extends React.Component<Props> {
       pieces.forEach((piece, index) => {
         const active = isActiveOverlay(rowIndex, index);
         const lastItem = index === pieces.length - 1;
+        const overlayValue = matches.next().value;
         const overlay = !lastItem ?
-          <span className={cssNames({ active })}>{matches.next().value}</span> :
+          <span
+            className={cssNames("overlay", { active })}
+            dangerouslySetInnerHTML={{ __html: ansiToHtml(overlayValue) }}
+          /> :
           null
         contents.push(
           <React.Fragment key={piece + index}>
-            {piece}{overlay}
+            <span dangerouslySetInnerHTML={{ __html: ansiToHtml(piece) }} />
+            {overlay}
           </React.Fragment>
         );
       })
     }
     return (
       <div className={cssNames("LogRow")}>
-        {contents.length > 1 ? contents : item}
+        {contents.length > 1 ? contents : (
+          <span dangerouslySetInnerHTML={{ __html: ansiToHtml(item) }} />
+        )}
       </div>
     );
   }
