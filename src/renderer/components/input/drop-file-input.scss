@@ -1,0 +1,9 @@
+.DropFileInput {
+  &.droppable {
+    box-shadow: 0 0 0 5px $primary; // fixme: might not work sometimes
+
+    > * {
+      pointer-events: none;
+    }
+  }
+}

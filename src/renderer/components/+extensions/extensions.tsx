@@ -7,7 +7,7 @@ import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { Button } from "../button";
 import { WizardLayout } from "../layout/wizard-layout";
-import { Input, InputValidators } from "../input";
+import { DropFileInput, Input, InputValidators } from "../input";
 import { Icon } from "../icon";
 import { PageLayout } from "../layout/page-layout";
 import { CopyToClick } from "../copy-to-click/copy-to-click";
@@ -35,7 +35,7 @@ export class Extensions extends React.Component {
     return extensionManager.localFolderPath;
   }
 
-  selectPackedExtensionsDialog = async () => {
+  selectLocalExtensionsDialog = async () => {
     const { dialog, BrowserWindow, app } = remote;
     const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
       defaultPath: app.getPath("downloads"),
@@ -51,15 +51,23 @@ export class Extensions extends React.Component {
     }
   }
 
+  // todo
   installFromUrl = () => {
     if (!this.downloadUrl) {
       this.input?.focus();
       return;
     }
-
+    console.log('Install from URL', this.downloadUrl);
   }
 
+  // todo
   installFromLocalPath = (filePaths: string[]) => {
+    console.log('Install select from dialog', filePaths)
+  }
+
+  // todo
+  installOnDrop = (files: File[]) => {
+    console.log('Install from D&D', files);
   }
 
   renderInfo() {
@@ -104,7 +112,7 @@ export class Extensions extends React.Component {
           <Button
             primary
             label="Select local extensions"
-            onClick={this.selectPackedExtensionsDialog}
+            onClick={this.selectLocalExtensionsDialog}
           />
           <small className="hint">
             <Trans>Pro-Tip 1: you can download extension archive.tgz via npm by</Trans>{" "}
@@ -163,19 +171,21 @@ export class Extensions extends React.Component {
   render() {
     return (
       <PageLayout showOnTop className="Extensions" header={<h2>Extensions</h2>}>
-        <WizardLayout infoPanel={this.renderInfo()}>
-          <Input
-            autoFocus
-            theme="round-black"
-            className="SearchInput"
-            placeholder={_i18n._(t`Search extensions`)}
-            value={this.search}
-            onChange={(value) => this.search = value}
-          />
-          <div className="extensions-list">
-            {this.renderExtensions()}
-          </div>
-        </WizardLayout>
+        <DropFileInput onDropFiles={this.installOnDrop}>
+          <WizardLayout infoPanel={this.renderInfo()}>
+            <Input
+              autoFocus
+              theme="round-black"
+              className="SearchInput"
+              placeholder={_i18n._(t`Search extensions`)}
+              value={this.search}
+              onChange={(value) => this.search = value}
+            />
+            <div className="extensions-list">
+              {this.renderExtensions()}
+            </div>
+          </WizardLayout>
+        </DropFileInput>
       </PageLayout>
     );
   }

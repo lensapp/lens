@@ -47,9 +47,8 @@ export class CopyToClick extends React.Component<CopyToClickProps> {
     try {
       const rootElem = this.rootReactElem;
       return React.cloneElement(rootElem, {
-        ...(rootElem || {}).props,
         onClick: this.onClick,
-      })
+      });
     } catch (err) {
       logger.error(`Invalid usage components/CopyToClick usage. Children must contain root html element.`, { err: String(err) })
       return this.rootReactElem;
