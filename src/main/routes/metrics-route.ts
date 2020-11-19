@@ -3,7 +3,6 @@ import _ from "lodash";
 import { LensApiRequest } from "../router";
 import { LensApi } from "../lens-api";
 import { Cluster, ClusterMetadataKey } from "../cluster";
-import _ from "lodash";
 import { ClusterPrometheusMetadata } from "../../common/cluster-store";
 
 export type IMetricsQuery = string | string[] | {
