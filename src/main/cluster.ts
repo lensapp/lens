@@ -33,7 +33,6 @@ export interface ClusterState {
 
 export class Cluster implements ClusterModel, ClusterState {
   public id: ClusterId;
-  public frameId: number;
   public kubeCtl: Kubectl
   public ownerRef: string;
 

@@ -4,6 +4,7 @@ import { appEventBus } from "./event-bus"
 import { ResourceApplier } from "../main/resource-applier";
 import { ipcMain } from "electron";
 import { ClusterManager } from "../main/cluster-manager";
+import { clusterFrameMap } from "./cluster-frames"
 
 export const clusterActivateHandler = "cluster:activate"
 export const clusterSetFrameIdHandler = "cluster:set-frame-id"
@@ -23,7 +24,7 @@ if (ipcMain) {
   handleRequest(clusterSetFrameIdHandler, (event, clusterId: ClusterId, frameId?: number) => {
     const managedCluster = getById(clusterId);
     if (managedCluster) {
-      if (frameId) managedCluster.cluster.frameId = frameId; // save cluster's webFrame.routingId to be able to send push-updates
+      clusterFrameMap.set(managedCluster.cluster.id, frameId)
       return managedCluster.cluster.pushState();
     }
   })
@@ -34,7 +35,11 @@ if (ipcMain) {
 
   handleRequest(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
     appEventBus.emit({name: "cluster", action: "stop"});
-    return getById(clusterId)?.disconnect();
+    const managedCluster = getById(clusterId);
+    if (managedCluster) {
+      managedCluster.disconnect();
+      clusterFrameMap.delete(managedCluster.id)
+    }
   })
 
   handleRequest(clusterKubectlApplyAllHandler, (event, clusterId: ClusterId, resources: string[]) => {

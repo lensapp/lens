@@ -3,12 +3,10 @@ import type { LensMainExtension } from "./lens-main-extension"
 import type { LensRendererExtension } from "./lens-renderer-extension"
 import type { InstalledExtension } from "./extension-manager";
 import path from "path"
-import { broadcastMessage, subscribeToBroadcast } from "../common/ipc"
+import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc"
 import { action, computed, observable, reaction, toJS, when } from "mobx"
 import logger from "../main/logger"
 import { app, ipcRenderer, remote } from "electron"
-import { appEventBus } from "./core-api/event-bus"
-import { clusterStore } from "./core-api/stores"
 import * as registries from "./registries";
 import { extensionsStore } from "./extensions-store";
 
@@ -20,36 +18,10 @@ export function extensionPackagesRoot() {
 export class ExtensionLoader {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
   protected instances = observable.map<LensExtensionId, LensExtension>();
+  protected readonly requestExtensionsChannel = "extensions:loaded"
 
   @observable isLoaded = false;
   whenLoaded = when(() => this.isLoaded);
-
-  constructor() {
-    if (ipcRenderer) {
-      subscribeToBroadcast("extensions:loaded", (event, extensions: [LensExtensionId, InstalledExtension][]) => {
-        console.log("extensions", extensions)
-        this.isLoaded = true;
-        extensions.forEach(([extId, ext]) => {
-          if (!this.extensions.has(extId)) {
-            this.extensions.set(extId, ext)
-          }
-        })
-      });
-    } else {
-      reaction(() => this.extensions.toJS(), () => {
-        this.broadcastExtensions()
-      })
-      appEventBus.addListener((ev) => {
-        if (ev.name === "app" && ev.action === "dom-ready") {
-          this.broadcastExtensions()
-        }
-      })
-      reaction(() => clusterStore.connectedClustersList, () => {
-        this.broadcastExtensions()
-      })
-    }
-    extensionsStore.manageState(this);
-  }
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
     const extensions = this.extensions.toJS();
@@ -62,11 +34,45 @@ export class ExtensionLoader {
   }
 
   @action
-  async init(extensions: Map<LensExtensionId, InstalledExtension>) {
-    this.extensions.replace(extensions);
+  async init(extensions?: Map<LensExtensionId, InstalledExtension>) {
+    if (extensions) {
+      this.extensions.replace(extensions);
+    }
+    if (ipcRenderer) {
+      this.initRenderer()
+    } else {
+      this.initMain()
+    }
+    extensionsStore.manageState(this);
+  }
+
+  protected async initMain() {
     this.isLoaded = true;
     this.loadOnMain();
     this.broadcastExtensions();
+
+    reaction(() => this.extensions.toJS(), () => {
+      this.broadcastExtensions()
+    })
+
+    handleRequest(this.requestExtensionsChannel, () => {
+      return Array.from(this.toJSON())
+    })
+  }
+
+  protected async initRenderer() {
+    const extensionListHandler = ( extensions: [LensExtensionId, InstalledExtension][]) => {
+      this.isLoaded = true;
+      extensions.forEach(([extId, ext]) => {
+        if (!this.extensions.has(extId)) {
+          this.extensions.set(extId, ext)
+        }
+      })
+    }
+    requestMain(this.requestExtensionsChannel).then(extensionListHandler)
+    subscribeToBroadcast(this.requestExtensionsChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
+      extensionListHandler(extensions)
+    });
   }
 
   loadOnMain() {
@@ -156,7 +162,7 @@ export class ExtensionLoader {
   }
 
   broadcastExtensions() {
-    broadcastMessage("extensions:loaded", Array.from(this.toJSON()))
+    broadcastMessage(this.requestExtensionsChannel, Array.from(this.toJSON()))
   }
 }
 

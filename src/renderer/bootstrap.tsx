@@ -14,6 +14,7 @@ import { clusterStore } from "../common/cluster-store";
 import { i18nStore } from "./i18n";
 import { themeStore } from "./theme.store";
 import { extensionsStore } from "../extensions/extensions-store";
+import { extensionLoader } from "../extensions/extension-loader";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
@@ -29,6 +30,8 @@ export {
 export async function bootstrap(App: AppComponent) {
   const rootElem = document.getElementById("app")
   rootElem.classList.toggle("is-mac", isMac);
+
+  extensionLoader.init()
 
   // preload common stores
   await Promise.all([
