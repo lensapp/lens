@@ -59,7 +59,7 @@ export class ClusterPageMenuRegistry extends BaseRegistry<ClusterPageMenuRegistr
   }
 
   getSubItems(parent: ClusterPageMenuRegistration) {
-    return this.getItems().filter((item) => item.parentId === parent.id)
+    return this.getItems().filter((item) => item.parentId === parent.id && item.target.extensionId === parent.target.extensionId)
   }
 
   getByPage(page: RegisteredPage) {
