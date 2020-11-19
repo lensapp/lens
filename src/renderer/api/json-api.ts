@@ -110,23 +110,23 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       } else {
         const error = new JsonApiErrorParsed(data, this.parseError(data, res));
         this.onError.emit(error, res);
-        this.writeLog({ ...log, error })
+        this.writeLog({ ...log, error });
         throw error;
       }
-    })
+    });
   }
 
   protected parseError(error: JsonApiError | string, res: Response): string[] {
     if (typeof error === "string") {
-      return [error]
+      return [error];
     }
     else if (Array.isArray(error.errors)) {
-      return error.errors.map(error => error.title)
+      return error.errors.map(error => error.title);
     }
     else if (error.message) {
-      return [error.message]
+      return [error.message];
     }
-    return [res.statusText || "Error!"]
+    return [res.statusText || "Error!"];
   }
 
   protected writeLog(log: JsonApiLog) {

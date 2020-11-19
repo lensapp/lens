@@ -6,13 +6,13 @@ import logger from "./logger";
 
 
 export function exitApp() {
-  const windowManager = WindowManager.getInstance<WindowManager>()
-  const clusterManager = ClusterManager.getInstance<ClusterManager>()
-  appEventBus.emit({ name: "service", action: "close" })
+  const windowManager = WindowManager.getInstance<WindowManager>();
+  const clusterManager = ClusterManager.getInstance<ClusterManager>();
+  appEventBus.emit({ name: "service", action: "close" });
   windowManager.hide();
   clusterManager.stop();
   logger.info('SERVICE:QUIT');
   setTimeout(() => {
-    app.exit()
-  }, 1000)
+    app.exit();
+  }, 1000);
 }

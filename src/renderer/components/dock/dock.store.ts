@@ -1,7 +1,7 @@
 import MD5 from "crypto-js/md5";
 import { action, computed, IReactionOptions, observable, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
-import throttle from "lodash/throttle"
+import throttle from "lodash/throttle";
 
 export type TabId = string;
 
@@ -46,12 +46,12 @@ export class DockStore {
   }
 
   get maxHeight() {
-    const mainLayoutHeader = 40
-    const mainLayoutTabs = 33
-    const mainLayoutMargin = 16
-    const dockTabs = 33
-    const preferedMax = window.innerHeight - mainLayoutHeader - mainLayoutTabs - mainLayoutMargin - dockTabs
-    return Math.max(preferedMax, this.minHeight) // don't let max < min
+    const mainLayoutHeader = 40;
+    const mainLayoutTabs = 33;
+    const mainLayoutMargin = 16;
+    const dockTabs = 33;
+    const preferedMax = window.innerHeight - mainLayoutHeader - mainLayoutTabs - mainLayoutMargin - dockTabs;
+    return Math.max(preferedMax, this.minHeight); // don't let max < min
   }
 
   constructor() {
@@ -138,7 +138,7 @@ export class DockStore {
     const tab: IDockTab = { id: tabId, ...anonTab };
     if (addNumber) {
       const tabNumber = this.getNewTabNumber(tab.kind);
-      if (tabNumber > 1) tab.title += ` (${tabNumber})`
+      if (tabNumber > 1) tab.title += ` (${tabNumber})`;
     }
     this.tabs.push(tab);
     this.selectTab(tab.id);

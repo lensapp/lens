@@ -1,4 +1,4 @@
-import "./cluster-icon.scss"
+import "./cluster-icon.scss";
 
 import React, { DOMAttributes } from "react";
 import { observer } from "mobx-react";

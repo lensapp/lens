@@ -1,4 +1,4 @@
-import "./error-boundary.scss"
+import "./error-boundary.scss";
 
 import React, { ErrorInfo } from "react";
 import { reaction } from "mobx";
@@ -25,7 +25,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   resetOnNavigate = reaction(
     () => navigation.getPath(),
     () => this.setState({ error: null, errorInfo: null })
-  )
+  );
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ error, errorInfo });
@@ -33,13 +33,13 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
   back = () => {
     navigation.goBack();
-  }
+  };
 
   render() {
     const { error, errorInfo } = this.state;
     if (error) {
-      const slackLink = <a href={slackUrl} target="_blank">Slack</a>
-      const githubLink = <a href={issuesTrackerUrl} target="_blank">Github</a>
+      const slackLink = <a href={slackUrl} target="_blank">Slack</a>;
+      const githubLink = <a href={issuesTrackerUrl} target="_blank">Github</a>;
       const pageUrl = location.href;
       return (
         <div className="ErrorBoundary flex column gaps">
@@ -67,7 +67,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
             onClick={this.back}
           />
         </div>
-      )
+      );
     }
     return this.props.children;
   }

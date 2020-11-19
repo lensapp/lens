@@ -106,14 +106,14 @@ export class Events extends React.Component<Props> {
             event.getSource(),
             event.count,
             event.getAge(),
-          ]
+          ];
         }}
         virtual={!compact}
         filterItems={[
           items => compact ? items.slice(0, compactLimit) : items,
         ]}
       />
-    )
+    );
     if (compact) {
       return events;
     }
@@ -121,6 +121,6 @@ export class Events extends React.Component<Props> {
       <TabLayout>
         {events}
       </TabLayout>
-    )
+    );
   }
 }

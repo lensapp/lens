@@ -1,7 +1,7 @@
 import moment from "moment";
 import { observable, reaction } from "mobx";
 import { setupI18n } from "@lingui/core";
-import orderBy from "lodash/orderBy"
+import orderBy from "lodash/orderBy";
 import { autobind, createStorage } from "./utils";
 
 const plurals: Record<string, Function> = require('make-plural/plurals'); // eslint-disable-line @typescript-eslint/no-var-requires
@@ -21,7 +21,7 @@ export const _i18n = setupI18n({
 
 @autobind()
 export class LocalizationStore {
-  readonly defaultLocale = "en"
+  readonly defaultLocale = "en";
   @observable activeLang = this.defaultLocale;
 
   // todo: verify with package.json ling-ui "locales"

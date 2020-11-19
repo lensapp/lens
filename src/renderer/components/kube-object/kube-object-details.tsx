@@ -1,6 +1,6 @@
-import "./kube-object-details.scss"
+import "./kube-object-details.scss";
 
-import React from "react"
+import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { computed, observable, reaction } from "mobx";
 import { Trans } from "@lingui/macro";
@@ -11,7 +11,7 @@ import { Spinner } from "../spinner";
 import { apiManager } from "../../api/api-manager";
 import { crdStore } from "../+custom-resources/crd.store";
 import { CrdResourceDetails } from "../+custom-resources";
-import { KubeObjectMenu } from "./kube-object-menu"
+import { KubeObjectMenu } from "./kube-object-menu";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 export interface KubeObjectDetailsProps<T = KubeObject> {
@@ -25,7 +25,7 @@ export class KubeObjectDetails extends React.Component {
   @observable.ref loadingError: React.ReactNode;
 
   @computed get path() {
-    return getDetails()
+    return getDetails();
   }
 
   @computed get object() {
@@ -45,22 +45,22 @@ export class KubeObjectDetails extends React.Component {
     this.object, // resource might be updated via watch-event or from already opened details
     crdStore.items.length, // crd stores initialized after loading
   ], async () => {
-    this.loadingError = ""
+    this.loadingError = "";
     const { path, object } = this;
     if (!object) {
       const store = apiManager.getStore(path);
       if (store) {
-        this.isLoading = true
+        this.isLoading = true;
         try {
-          await store.loadFromPath(path)
+          await store.loadFromPath(path);
         } catch (err) {
-          this.loadingError = <Trans>Resource loading has failed: <b>{err.toString()}</b></Trans>
+          this.loadingError = <Trans>Resource loading has failed: <b>{err.toString()}</b></Trans>;
         } finally {
-          this.isLoading = false
+          this.isLoading = false;
         }
       }
     }
-  })
+  });
 
   render() {
     const { object, isLoading, loadingError, isCrdInstance } = this;
@@ -71,10 +71,10 @@ export class KubeObjectDetails extends React.Component {
       const { kind, getName } = object;
       title = `${kind}: ${getName()}`;
       details = kubeObjectDetailRegistry.getItemsForKind(object.kind, object.apiVersion).map((item, index) => {
-        return <item.components.Details object={object} key={`object-details-${index}`}/>
-      })
+        return <item.components.Details object={object} key={`object-details-${index}`}/>;
+      });
       if (isCrdInstance && details.length === 0) {
-        details.push(<CrdResourceDetails object={object} />)
+        details.push(<CrdResourceDetails object={object} />);
       }
     }
     return (
@@ -89,6 +89,6 @@ export class KubeObjectDetails extends React.Component {
         {loadingError && <div className="box center">{loadingError}</div>}
         {details}
       </Drawer>
-    )
+    );
   }
 }

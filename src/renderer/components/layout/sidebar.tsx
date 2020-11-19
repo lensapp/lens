@@ -27,7 +27,7 @@ import { crdStore } from "../+custom-resources/crd.store";
 import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resources";
 import { CustomResources } from "../+custom-resources/custom-resources";
 import { isActiveRoute, navigation } from "../../navigation";
-import { isAllowedResource } from "../../../common/rbac"
+import { isAllowedResource } from "../../../common/rbac";
 import { Spinner } from "../spinner";
 import { clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
 
@@ -52,7 +52,7 @@ export class Sidebar extends React.Component<Props> {
 
   renderCustomResources() {
     if (crdStore.isLoading) {
-      return <Spinner centerHorizontal/>
+      return <Spinner centerHorizontal/>;
     }
 
     return Object.entries(crdStore.groups).map(([group, crds]) => {
@@ -203,7 +203,7 @@ export class Sidebar extends React.Component<Props> {
                   text={title} icon={<Icon/>}
                   isActive={isActive}
                 />
-              )
+              );
             })}
           </div>
         </div>

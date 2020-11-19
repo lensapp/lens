@@ -6,10 +6,10 @@ export default migration({
   run(store, log) {
     for (const value of store) {
       const clusterKey = value[0];
-      if (clusterKey === "__internal__") continue
+      if (clusterKey === "__internal__") continue;
       const cluster = value[1];
-      cluster.workspace = "default"
-      store.set(clusterKey, cluster)
+      cluster.workspace = "default";
+      store.set(clusterKey, cluster);
     }
   }
-})
+});

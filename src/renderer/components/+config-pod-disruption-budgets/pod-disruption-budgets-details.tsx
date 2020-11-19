@@ -18,8 +18,8 @@ export class PodDisruptionBudgetDetails extends React.Component<Props> {
 
   render() {
     const { object: pdb } = this.props;
-    if (!pdb) return null
-    const { status, spec } = pdb
+    if (!pdb) return null;
+    const { status, spec } = pdb;
     const selectors = pdb.getSelectors();
     return (
       <div className="PdbDetails">
@@ -50,7 +50,7 @@ export class PodDisruptionBudgetDetails extends React.Component<Props> {
         </DrawerItem>
 
       </div>
-    )
+    );
   }
 }
 
@@ -60,4 +60,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <PodDisruptionBudgetDetails {...props} />
   }
-})
+});

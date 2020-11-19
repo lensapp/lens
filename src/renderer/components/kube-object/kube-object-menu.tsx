@@ -52,7 +52,7 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
     const resourceName = object.getName();
     return (
       <p><Trans>Remove {resourceKind} <b>{resourceName}</b>?</Trans></p>
-    )
+    );
   }
 
   render() {
@@ -61,8 +61,8 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
     if (!object) return null;
 
     const menuItems = kubeObjectMenuRegistry.getItemsForKind(object.kind, object.apiVersion).map((item, index) => {
-      return <item.components.MenuItem object={object} key={`menu-item-${index}`} toolbar={toolbar} />
-    })
+      return <item.components.MenuItem object={object} key={`menu-item-${index}`} toolbar={toolbar} />;
+    });
     return (
       <MenuActions
         className={cssNames("KubeObjectMenu", className)}
@@ -74,6 +74,6 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
       >
         {menuItems}
       </MenuActions>
-    )
+    );
   }
 }

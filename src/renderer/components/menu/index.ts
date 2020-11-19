@@ -1,2 +1,2 @@
-export * from './menu'
-export * from './menu-actions'
+export * from './menu';
+export * from './menu-actions';

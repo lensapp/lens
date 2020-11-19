@@ -1,4 +1,4 @@
-import "./workspace-menu.scss"
+import "./workspace-menu.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
@@ -43,9 +43,9 @@ export class WorkspaceMenu extends React.Component<Props> {
               <Icon small material="layers"/>
               <span className="workspace">{name}</span>
             </MenuItem>
-          )
+          );
         })}
       </Menu>
-    )
+    );
   }
 }

@@ -6,9 +6,9 @@ import { KubeApi } from "../kube-api";
 
 @autobind()
 export class ReplicaSet extends WorkloadKubeObject {
-  static kind = "ReplicaSet"
-  static namespaced = true
-  static apiBase = "/apis/apps/v1/replicasets"
+  static kind = "ReplicaSet";
+  static namespaced = true;
+  static apiBase = "/apis/apps/v1/replicasets";
 
   spec: {
     replicas?: number;
@@ -37,18 +37,18 @@ export class ReplicaSet extends WorkloadKubeObject {
     terminationGracePeriodSeconds?: number;
     dnsPolicy?: string;
     schedulerName?: string;
-  }
+  };
   status: {
     replicas: number;
     fullyLabeledReplicas: number;
     readyReplicas: number;
     availableReplicas: number;
     observedGeneration: number;
-  }
+  };
 
   getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
-    return [...containers].map(container => container.image)
+    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
+    return [...containers].map(container => container.image);
   }
 }
 

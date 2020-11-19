@@ -1,11 +1,11 @@
 // Ace code editor - https://ace.c9.io
 // Playground - https://ace.c9.io/build/kitchen-sink.html
-import "./ace-editor.scss"
+import "./ace-editor.scss";
 
-import React from "react"
+import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import AceBuild, { Ace } from "ace-builds"
+import AceBuild, { Ace } from "ace-builds";
 import { autobind, cssNames, noop } from "../../utils";
 import { themeStore } from "../../theme.store";
 
@@ -45,10 +45,10 @@ export class AceEditor extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    require("ace-builds/src-noconflict/mode-yaml")
-    require("ace-builds/src-noconflict/theme-dreamweaver")
-    require("ace-builds/src-noconflict/theme-terminal")
-    require("ace-builds/src-noconflict/ext-searchbox")
+    require("ace-builds/src-noconflict/mode-yaml");
+    require("ace-builds/src-noconflict/theme-dreamweaver");
+    require("ace-builds/src-noconflict/theme-terminal");
+    require("ace-builds/src-noconflict/ext-searchbox");
   }
 
   @disposeOnUnmount
@@ -59,7 +59,7 @@ export class AceEditor extends React.Component<Props, State> {
   get theme() {
     switch (themeStore.activeTheme.type) {
     case "light":
-      return "dreamweaver"
+      return "dreamweaver";
     case "dark":
       return "terminal";
     }
@@ -118,7 +118,7 @@ export class AceEditor extends React.Component<Props, State> {
   }
 
   getValue() {
-    return this.editor.getValue()
+    return this.editor.getValue();
   }
 
   setValue(value: string, cursorPos?: number) {
@@ -164,6 +164,6 @@ export class AceEditor extends React.Component<Props, State> {
       <div className={cssNames("AceEditor", className, { hidden })}>
         <div className="editor" ref={e => this.elem = e}/>
       </div>
-    )
+    );
   }
 }

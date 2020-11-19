@@ -1,4 +1,4 @@
-import "./volume-claims.scss"
+import "./volume-claims.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -81,9 +81,9 @@ export class PersistentVolumeClaims extends React.Component<Props> {
             )),
             pvc.getAge(),
             { title: pvc.getStatus(), className: pvc.getStatus().toLowerCase() },
-          ]
+          ];
         }}
       />
-    )
+    );
   }
 }

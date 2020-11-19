@@ -1,13 +1,13 @@
 import './notifications.scss';
 
-import React from 'react'
+import React from 'react';
 import { reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react"
+import { disposeOnUnmount, observer } from "mobx-react";
 import { JsonApiErrorParsed } from "../../api/json-api";
 import { cssNames, prevDefault } from "../../utils";
 import { NotificationMessage, Notification, notificationsStore, NotificationStatus } from "./notifications.store";
 import { Animate } from "../animate";
-import { Icon } from "../icon"
+import { Icon } from "../icon";
 
 @observer
 export class Notifications extends React.Component {
@@ -18,7 +18,7 @@ export class Notifications extends React.Component {
       message: message,
       timeout: 2500,
       status: NotificationStatus.OK
-    })
+    });
   }
 
   static error(message: NotificationMessage) {
@@ -53,7 +53,7 @@ export class Notifications extends React.Component {
     this.elem.scrollTo({
       top: this.elem.scrollHeight,
       behavior: "smooth"
-    })
+    });
   }
 
   getMessage(notification: Notification) {
@@ -89,9 +89,9 @@ export class Notifications extends React.Component {
                 </div>
               </div>
             </Animate>
-          )
+          );
         })}
       </div>
-    )
+    );
   }
 }

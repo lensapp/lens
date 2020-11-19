@@ -1,7 +1,7 @@
-import path from "path"
-import Config from "conf"
-import { Options as ConfOptions } from "conf/dist/source/types"
-import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron"
+import path from "path";
+import Config from "conf";
+import { Options as ConfOptions } from "conf/dist/source/types";
+import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron";
 import { action, IReactionOptions, observable, reaction, runInAction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
@@ -32,7 +32,7 @@ export abstract class BaseStore<T = any> extends Singleton {
       autoLoad: false,
       syncEnabled: true,
       ...params,
-    }
+    };
     this.init();
   }
 
@@ -41,11 +41,11 @@ export abstract class BaseStore<T = any> extends Singleton {
   }
 
   protected get syncRendererChannel() {
-    return `store-sync-renderer:${this.path}`
+    return `store-sync-renderer:${this.path}`;
   }
 
   protected get syncMainChannel() {
-    return `store-sync-main:${this.path}`
+    return `store-sync-main:${this.path}`;
   }
 
   get path() {
@@ -76,7 +76,7 @@ export abstract class BaseStore<T = any> extends Singleton {
   }
 
   protected cwd() {
-    return (app || remote.app).getPath("userData")
+    return (app || remote.app).getPath("userData");
   }
 
   protected async saveToFile(model: T) {
@@ -96,7 +96,7 @@ export abstract class BaseStore<T = any> extends Singleton {
         logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
       };
-      subscribeToBroadcast(this.syncMainChannel, callback)
+      subscribeToBroadcast(this.syncMainChannel, callback);
       this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncMainChannel, callback));
     }
     if (ipcRenderer) {
@@ -104,20 +104,20 @@ export abstract class BaseStore<T = any> extends Singleton {
         logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
         this.onSyncFromMain(model);
       };
-      subscribeToBroadcast(this.syncRendererChannel, callback)
+      subscribeToBroadcast(this.syncRendererChannel, callback);
       this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncRendererChannel, callback));
     }
   }
 
   protected onSyncFromMain(model: T) {
     this.applyWithoutSync(() => {
-      this.onSync(model)
-    })
+      this.onSync(model);
+    });
   }
 
   unregisterIpcListener() {
-    ipcRenderer.removeAllListeners(this.syncMainChannel)
-    ipcRenderer.removeAllListeners(this.syncRendererChannel)
+    ipcRenderer.removeAllListeners(this.syncMainChannel);
+    ipcRenderer.removeAllListeners(this.syncRendererChannel);
   }
 
   disableSync() {
@@ -143,9 +143,9 @@ export abstract class BaseStore<T = any> extends Singleton {
   protected async onModelChange(model: T) {
     if (ipcMain) {
       this.saveToFile(model); // save config file
-      broadcastMessage(this.syncRendererChannel, model)
+      broadcastMessage(this.syncRendererChannel, model);
     } else {
-      broadcastMessage(this.syncMainChannel, model)
+      broadcastMessage(this.syncMainChannel, model);
     }
   }
 

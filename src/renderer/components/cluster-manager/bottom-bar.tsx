@@ -1,4 +1,4 @@
-import "./bottom-bar.scss"
+import "./bottom-bar.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -23,10 +23,10 @@ export class BottomBar extends React.Component {
         <div className="extensions box grow flex gaps justify-flex-end">
           {statusBarRegistry.getItems().map(({ item }, index) => {
             if (!item) return;
-            return <React.Fragment key={index}>{item}</React.Fragment>
+            return <React.Fragment key={index}>{item}</React.Fragment>;
           })}
         </div>
       </div>
-    )
+    );
   }
 }

@@ -10,12 +10,12 @@ export interface StatusBrickProps extends React.HTMLAttributes<any>, TooltipDeco
 @withTooltip
 export class StatusBrick extends React.Component<StatusBrickProps> {
   render() {
-    const { className, ...elemProps } = this.props
+    const { className, ...elemProps } = this.props;
     return (
       <div
         className={cssNames("StatusBrick", className)}
         {...elemProps}
       />
-    )
+    );
   }
 }

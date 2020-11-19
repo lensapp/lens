@@ -1,6 +1,6 @@
-import "./terminal-tab.scss"
+import "./terminal-tab.scss";
 
-import React from "react"
+import React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { autobind, cssNames } from "../../utils";
@@ -17,8 +17,8 @@ interface Props extends DockTabProps {
 export class TerminalTab extends React.Component<Props> {
   componentDidMount() {
     reaction(() => this.isDisconnected === true, () => {
-      dockStore.closeTab(this.tabId)
-    })
+      dockStore.closeTab(this.tabId);
+    });
   }
 
   get tabId() {
@@ -55,6 +55,6 @@ export class TerminalTab extends React.Component<Props> {
           />
         )}
       />
-    )
+    );
   }
 }

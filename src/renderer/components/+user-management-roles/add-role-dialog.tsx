@@ -1,4 +1,4 @@
-import "./add-role-dialog.scss"
+import "./add-role-dialog.scss";
 
 import React from "react";
 import { observable } from "mobx";
@@ -31,11 +31,11 @@ export class AddRoleDialog extends React.Component<Props> {
 
   close = () => {
     AddRoleDialog.close();
-  }
+  };
 
   reset = () => {
-    this.roleName = ""
-  }
+    this.roleName = "";
+  };
 
   createRole = async () => {
     try {
@@ -46,7 +46,7 @@ export class AddRoleDialog extends React.Component<Props> {
     } catch (err) {
       Notifications.error(err.toString());
     }
-  }
+  };
 
   render() {
     const { ...dialogProps } = this.props;
@@ -74,6 +74,6 @@ export class AddRoleDialog extends React.Component<Props> {
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

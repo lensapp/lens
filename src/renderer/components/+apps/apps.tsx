@@ -23,12 +23,12 @@ export class Apps extends React.Component {
         url: releaseURL({ query }),
         routePath: releaseRoute.path.toString(),
       },
-    ]
+    ];
   }
 
   render() {
     return (
       <TabLayout className="Apps" tabs={Apps.tabRoutes}/>
-    )
+    );
   }
 }

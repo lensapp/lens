@@ -1,10 +1,10 @@
-import "./endpoints.scss"
+import "./endpoints.scss";
 
-import React from "react"
+import React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router-dom"
-import { EndpointRouteParams } from "./endpoints.route"
-import { Endpoint } from "../../api/endpoints/endpoint.api"
+import { RouteComponentProps } from "react-router-dom";
+import { EndpointRouteParams } from "./endpoints.route";
+import { Endpoint } from "../../api/endpoints/endpoint.api";
 import { endpointStore } from "./endpoints.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { Trans } from "@lingui/macro";
@@ -55,6 +55,6 @@ export class Endpoints extends React.Component<Props> {
           }
         }}
       />
-    )
+    );
   }
 }

@@ -10,8 +10,8 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class EventStore extends KubeObjectStore<KubeEvent> {
-  api = eventApi
-  limit = 1000
+  api = eventApi;
+  limit = 1000;
 
   protected bindWatchEventsUpdater() {
     return super.bindWatchEventsUpdater(5000);
@@ -20,7 +20,7 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
   protected sortItems(items: KubeEvent[]) {
     return super.sortItems(items, [
       event => event.metadata.creationTimestamp
-    ], "desc")
+    ], "desc");
   }
 
   getEventsByObject(obj: KubeObject): KubeEvent[] {
