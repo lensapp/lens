@@ -80,14 +80,14 @@ export class Extensions extends React.Component {
           features of Lens are built as extensions and use the same Extension API.
         </div>
         <div>
-          <em>All custom extensions located in:</em>
+          <p><em>All custom extensions located in:</em></p>
           <div className="extensions-path flex inline" onClick={() => shell.openPath(this.extensionsPath)}>
             <Icon material="folder" tooltip={{ children: "Open folder", preferredPositions: "bottom" }}/>
             <code>{this.extensionsPath}</code>
           </div>
         </div>
         <div className="install-extension flex column gaps">
-          <em>Install extensions from local file-system or URL:</em>
+          <p><em>Install extensions from local file-system or URL:</em></p>
           <div className="install-extension-by-url flex gaps align-center">
             <Icon
               material="get_app"

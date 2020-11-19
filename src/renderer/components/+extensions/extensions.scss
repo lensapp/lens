@@ -1,22 +1,23 @@
 .Extensions {
+  $spacing: $padding * 2;
   --width: 100%;
   --max-width: auto;
 
   .extensions-list {
     .extension {
       --flex-gap: $padding / 3;
-      padding: $padding $padding * 2;
+      padding: $padding $spacing;
       background: $colorVague;
       border-radius: $radius;
 
       &:not(:first-of-type) {
-        margin-top: $padding * 2;
+        margin-top: $spacing;
       }
     }
   }
 
   .extensions-info {
-    --flex-gap: #{$padding * 3};
+    --flex-gap: #{$spacing};
 
     > .flex.gaps {
       --flex-gap: #{$padding};
