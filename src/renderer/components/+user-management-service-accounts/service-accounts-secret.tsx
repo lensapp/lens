@@ -18,7 +18,7 @@ interface State {
 export class ServiceAccountsSecret extends React.Component<Props, State> {
   public state: State = {
     showToken: false,
-  }
+  };
 
   renderSecretValue() {
     const { secret } = this.props;

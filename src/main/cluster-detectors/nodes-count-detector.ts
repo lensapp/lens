@@ -2,7 +2,7 @@ import { BaseClusterDetector } from "./base-cluster-detector";
 import { ClusterMetadataKey } from "../cluster";
 
 export class NodesCountDetector extends BaseClusterDetector {
-  key = ClusterMetadataKey.NODES_COUNT
+  key = ClusterMetadataKey.NODES_COUNT;
 
   public async detect() {
     if (!this.cluster.accessible) return null;

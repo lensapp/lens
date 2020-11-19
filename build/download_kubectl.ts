@@ -7,10 +7,10 @@ import { ensureDir, pathExists } from "fs-extra";
 import path from "path";
 
 class KubectlDownloader {
-  public kubectlVersion: string
-  protected url: string
+  public kubectlVersion: string;
+  protected url: string;
   protected path: string;
-  protected dirname: string
+  protected dirname: string;
 
   constructor(clusterVersion: string, platform: string, arch: string, target: string) {
     this.kubectlVersion = clusterVersion;

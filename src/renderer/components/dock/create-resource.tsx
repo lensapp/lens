@@ -22,7 +22,7 @@ interface Props {
 
 @observer
 export class CreateResource extends React.Component<Props> {
-  @observable error = ""
+  @observable error = "";
 
   get tabId() {
     return this.props.tab.id;
@@ -35,7 +35,7 @@ export class CreateResource extends React.Component<Props> {
   onChange = (value: string, error?: string) => {
     createResourceStore.setData(this.tabId, value);
     this.error = error;
-  }
+  };
 
   create = async () => {
     if (this.error) return;
@@ -63,7 +63,7 @@ export class CreateResource extends React.Component<Props> {
     );
     Notifications.ok(successMessage);
     return successMessage;
-  }
+  };
 
   render() {
     const { tabId, data, error, create, onChange } = this;

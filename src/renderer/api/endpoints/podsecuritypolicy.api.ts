@@ -4,9 +4,9 @@ import { KubeApi } from "../kube-api";
 
 @autobind()
 export class PodSecurityPolicy extends KubeObject {
-  static kind = "PodSecurityPolicy"
-  static namespaced = false
-  static apiBase = "/apis/policy/v1beta1/podsecuritypolicies"
+  static kind = "PodSecurityPolicy";
+  static namespaced = false;
+  static apiBase = "/apis/policy/v1beta1/podsecuritypolicies";
 
   spec: {
     allowPrivilegeEscalation?: boolean;
@@ -66,7 +66,7 @@ export class PodSecurityPolicy extends KubeObject {
       ranges: { max: number; min: number }[];
     };
     volumes?: string[];
-  }
+  };
 
   isPrivileged() {
     return !!this.spec.privileged;

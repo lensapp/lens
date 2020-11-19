@@ -2,8 +2,8 @@ import { BaseClusterDetector } from "./base-cluster-detector";
 import { ClusterMetadataKey } from "../cluster";
 
 export class DistributionDetector extends BaseClusterDetector {
-  key = ClusterMetadataKey.DISTRIBUTION
-  version: string
+  key = ClusterMetadataKey.DISTRIBUTION;
+  version: string;
 
   public async detect() {
     this.version = await this.getKubernetesVersion();

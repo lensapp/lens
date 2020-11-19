@@ -10,7 +10,7 @@ import logger from "../logger";
 export type HelmEnv = Record<string, string> & {
   HELM_REPOSITORY_CACHE?: string;
   HELM_REPOSITORY_CONFIG?: string;
-}
+};
 
 export interface HelmRepoConfig {
   repositories: HelmRepo[]
@@ -29,11 +29,11 @@ export interface HelmRepo {
 }
 
 export class HelmRepoManager extends Singleton {
-  static cache = {} // todo: remove implicit updates in helm-chart-manager.ts
+  static cache = {}; // todo: remove implicit updates in helm-chart-manager.ts
 
   protected repos: HelmRepo[];
-  protected helmEnv: HelmEnv
-  protected initialized: boolean
+  protected helmEnv: HelmEnv;
+  protected initialized: boolean;
 
   async loadAvailableRepos(): Promise<HelmRepo[]> {
     const res = await customRequestPromise({

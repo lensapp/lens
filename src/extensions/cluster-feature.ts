@@ -26,7 +26,7 @@ export abstract class ClusterFeature {
     installed: false,
     latestVersion: null,
     canUpgrade: false
-  }
+  };
 
   abstract async install(cluster: Cluster): Promise<void>;
 

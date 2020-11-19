@@ -154,7 +154,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       }
       return items;
     },
-  }
+  };
 
   @computed get isReady() {
     const { isReady, store } = this.props;

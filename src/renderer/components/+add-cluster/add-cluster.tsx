@@ -39,10 +39,10 @@ export class AddCluster extends React.Component {
   @observable selectedContexts = observable.array<string>();
   @observable sourceTab = KubeConfigSourceTab.FILE;
   @observable kubeConfigPath = "";
-  @observable customConfig = ""
-  @observable proxyServer = ""
-  @observable isWaiting = false
-  @observable showSettings = false
+  @observable customConfig = "";
+  @observable proxyServer = "";
+  @observable isWaiting = false;
+  @observable showSettings = false;
   @observable dropAreaActive = false;
 
   componentDidMount() {
@@ -117,7 +117,7 @@ export class AddCluster extends React.Component {
     if (!canceled && filePaths.length) {
       this.setKubeConfig(filePaths[0]);
     }
-  }
+  };
 
   @action
   addClusters = () => {
@@ -183,7 +183,7 @@ export class AddCluster extends React.Component {
     } finally {
       this.isWaiting = false;
     }
-  }
+  };
 
   renderInfo() {
     return (
@@ -328,13 +328,13 @@ export class AddCluster extends React.Component {
         this.setKubeConfig(userStore.kubeConfigPath); // revert to previous valid path
       }
     }
-  }
+  };
 
   onKubeConfigTabChange = (tabId: KubeConfigSourceTab) => {
     this.sourceTab = tabId;
     this.error = "";
     this.refreshContexts();
-  }
+  };
 
   protected formatContextLabel = ({ value: context }: SelectOption<string>) => {
     const isNew = userStore.newContexts.has(context);

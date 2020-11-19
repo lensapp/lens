@@ -7,7 +7,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class JobStore extends KubeObjectStore<Job> {
-  api = jobApi
+  api = jobApi;
 
   getChildPods(job: Job): Pod[] {
     return podsStore.getPodsByOwner(job);

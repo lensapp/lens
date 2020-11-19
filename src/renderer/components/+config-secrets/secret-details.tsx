@@ -49,11 +49,11 @@ export class SecretDetails extends React.Component<Props> {
       Notifications.error(err);
     }
     this.isSaving = false;
-  }
+  };
 
   editData = (name: string, value: string, encoded: boolean) => {
     this.data[name] = encoded ? value : base64.encode(value);
-  }
+  };
 
   render() {
     const { object: secret } = this.props;

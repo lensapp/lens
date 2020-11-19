@@ -42,7 +42,7 @@ export type RadioProps = React.HTMLProps<any> & {
   checked?: boolean;
   disabled?: boolean;
   onChange?(value: React.ChangeEvent<HTMLInputElement>): void;
-}
+};
 
 export class Radio extends React.Component<RadioProps> {
   private elem: HTMLElement;
@@ -52,7 +52,7 @@ export class Radio extends React.Component<RadioProps> {
     if (!checked && onChange) {
       onChange(value);
     }
-  }
+  };
 
   onKeyDown = (e: React.KeyboardEvent<any>) => {
     const SPACE_KEY = e.keyCode === 32;
@@ -61,7 +61,7 @@ export class Radio extends React.Component<RadioProps> {
       this.elem.click();
       e.preventDefault();
     }
-  }
+  };
 
   render() {
     const { className, label, checked, children, ...inputProps } = this.props;

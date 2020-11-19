@@ -32,7 +32,7 @@ export enum ClusterMetadataKey {
 
 export type ClusterRefreshOptions = {
   refreshMetadata?: boolean
-}
+};
 
 export interface ClusterState {
   initialized: boolean;
@@ -50,7 +50,7 @@ export interface ClusterState {
 
 export class Cluster implements ClusterModel, ClusterState {
   public id: ClusterId;
-  public kubeCtl: Kubectl
+  public kubeCtl: Kubectl;
   public contextHandler: ContextHandler;
   public ownerRef: string;
   protected kubeconfigManager: KubeconfigManager;

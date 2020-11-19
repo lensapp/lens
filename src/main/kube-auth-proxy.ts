@@ -12,13 +12,13 @@ export interface KubeAuthProxyLog {
 }
 
 export class KubeAuthProxy {
-  public lastError: string
+  public lastError: string;
 
-  protected cluster: Cluster
-  protected env: NodeJS.ProcessEnv = null
-  protected proxyProcess: ChildProcess
-  protected port: number
-  protected kubectl: Kubectl
+  protected cluster: Cluster;
+  protected env: NodeJS.ProcessEnv = null;
+  protected proxyProcess: ChildProcess;
+  protected port: number;
+  protected kubectl: Kubectl;
 
   constructor(cluster: Cluster, port: number, env: NodeJS.ProcessEnv) {
     this.env = env;

@@ -54,7 +54,7 @@ export class Workspaces extends React.Component {
     if (workspaceStore.addWorkspace(workspace)) {
       this.clearEditing(id);
     }
-  }
+  };
 
   addWorkspace = () => {
     const workspaceId = uuid();
@@ -63,16 +63,16 @@ export class Workspaces extends React.Component {
       name: "",
       description: ""
     }));
-  }
+  };
 
   editWorkspace = (id: WorkspaceId) => {
     const workspace = workspaceStore.getById(id);
     this.editingWorkspaces.set(id, toJS(workspace));
-  }
+  };
 
   clearEditing = (id: WorkspaceId) => {
     this.editingWorkspaces.delete(id);
-  }
+  };
 
   removeWorkspace = (id: WorkspaceId) => {
     const workspace = workspaceStore.getById(id);
@@ -97,7 +97,7 @@ export class Workspaces extends React.Component {
         </div>
       ),
     });
-  }
+  };
 
   onInputKeypress = (evt: React.KeyboardEvent<any>, workspaceId: WorkspaceId) => {
     if (evt.key == 'Enter') {
@@ -106,7 +106,7 @@ export class Workspaces extends React.Component {
       evt.currentTarget.focus();
       this.saveWorkspace(workspaceId);
     }
-  }
+  };
 
   render() {
     return (

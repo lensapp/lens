@@ -62,7 +62,7 @@ export class NamespaceSelect extends React.Component<Props> {
         {value}
       </>
     );
-  }
+  };
 
   render() {
     const { className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps } = this.props;

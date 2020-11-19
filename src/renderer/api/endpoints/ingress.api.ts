@@ -31,9 +31,9 @@ export interface ILoadBalancerIngress {
 }
 @autobind()
 export class Ingress extends KubeObject {
-  static kind = "Ingress"
-  static namespaced = true
-  static apiBase = "/apis/extensions/v1beta1/ingresses"
+  static kind = "Ingress";
+  static namespaced = true;
+  static apiBase = "/apis/extensions/v1beta1/ingresses";
 
   spec: {
     tls: {
@@ -55,12 +55,12 @@ export class Ingress extends KubeObject {
       serviceName: string;
       servicePort: number;
     };
-  }
+  };
   status: {
     loadBalancer: {
       ingress: ILoadBalancerIngress[];
     };
-  }
+  };
 
   getRoutes() {
     const { spec: { tls, rules } } = this;

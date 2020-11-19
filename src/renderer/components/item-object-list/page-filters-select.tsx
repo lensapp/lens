@@ -26,7 +26,7 @@ export class PageFiltersSelect extends React.Component<Props> {
   static defaultProps: Props = {
     allowEmpty: true,
     disableFilters: {},
-  }
+  };
 
   @computed get groupedOptions() {
     const options: GroupSelectOption<SelectOptionFilter>[] = [];
@@ -65,7 +65,7 @@ export class PageFiltersSelect extends React.Component<Props> {
         {selected && <Icon small material="check" className="box right"/>}
       </div>
     );
-  }
+  };
 
   private onSelect = (option: SelectOptionFilter) => {
     const { type, value, selected } = option;
@@ -77,7 +77,7 @@ export class PageFiltersSelect extends React.Component<Props> {
     else {
       removeFilter(filter);
     }
-  }
+  };
 
   render() {
     const { groupedOptions, formatLabel, onSelect, options } = this;

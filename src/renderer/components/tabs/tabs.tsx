@@ -12,7 +12,7 @@ interface TabsContextValue<D = any> {
   onChange?(value: D): void;
 }
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export interface TabsProps<D = any> extends TabsContextValue<D>, Omit<DOMAttributes<HTMLElement>, "onChange"> {
   className?: string;

@@ -57,15 +57,15 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       this.isSaving = false;
     }
     this.close();
-  }
+  };
 
   onClose = () => {
     this.isSaving = false;
-  }
+  };
 
   close = () => {
     ConfirmDialog.close();
-  }
+  };
 
   render() {
     const { className, ...dialogProps } = this.props;

@@ -10,8 +10,8 @@ import { appEventBus } from "../common/event-bus";
 
 export class NodeShellSession extends ShellSession {
   protected nodeName: string;
-  protected podId: string
-  protected kc: KubeConfig
+  protected podId: string;
+  protected kc: KubeConfig;
 
   constructor(socket: WebSocket, cluster: Cluster, nodeName: string) {
     super(socket, cluster);

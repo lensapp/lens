@@ -31,7 +31,7 @@ export interface UserPreferences {
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
-  static readonly defaultTheme: ThemeId = "lens-dark"
+  static readonly defaultTheme: ThemeId = "lens-dark";
 
   private constructor() {
     super({
@@ -42,7 +42,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     this.handleOnLoad();
   }
 
-  @observable lastSeenAppVersion = "0.0.0"
+  @observable lastSeenAppVersion = "0.0.0";
   @observable kubeConfigPath = kubeConfigDefaultPath; // used in add-cluster page for providing context
   @observable seenContexts = observable.set<string>();
   @observable newContexts = observable.set<string>();
@@ -113,7 +113,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
       logger.error(err);
       this.resetKubeConfigPath();
     }
-  }
+  };
 
   @action
   markNewContextsAsSeen() {

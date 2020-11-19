@@ -3,9 +3,9 @@ import { CoreV1Api } from "@kubernetes/client-node";
 import logger from "../logger";
 
 export class PrometheusStacklight implements PrometheusProvider {
-  id = "stacklight"
-  name = "Stacklight"
-  rateAccuracy = "1m"
+  id = "stacklight";
+  name = "Stacklight";
+  rateAccuracy = "1m";
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
     try {

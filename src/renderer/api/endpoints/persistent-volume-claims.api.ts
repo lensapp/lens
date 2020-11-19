@@ -23,9 +23,9 @@ export interface IPvcMetrics<T = IMetrics> {
 
 @autobind()
 export class PersistentVolumeClaim extends KubeObject {
-  static kind = "PersistentVolumeClaim"
-  static namespaced = true
-  static apiBase = "/api/v1/persistentvolumeclaims"
+  static kind = "PersistentVolumeClaim";
+  static namespaced = true;
+  static apiBase = "/api/v1/persistentvolumeclaims";
 
   spec: {
     accessModes: string[];
@@ -45,10 +45,10 @@ export class PersistentVolumeClaim extends KubeObject {
         storage: string; // 8Gi
       };
     };
-  }
+  };
   status: {
     phase: string; // Pending
-  }
+  };
 
   getPods(allPods: Pod[]): Pod[] {
     const pods = allPods.filter(pod => pod.getNs() === this.getNs());

@@ -6,9 +6,9 @@ import { KubeApi } from "../kube-api";
 
 @autobind()
 export class KubeEvent extends KubeObject {
-  static kind = "Event"
-  static namespaced = true
-  static apiBase = "/api/v1/events"
+  static kind = "Event";
+  static namespaced = true;
+  static apiBase = "/api/v1/events";
 
   involvedObject: {
     kind: string;
@@ -18,20 +18,20 @@ export class KubeEvent extends KubeObject {
     apiVersion: string;
     resourceVersion: string;
     fieldPath: string;
-  }
-  reason: string
-  message: string
+  };
+  reason: string;
+  message: string;
   source: {
     component: string;
     host: string;
-  }
-  firstTimestamp: string
-  lastTimestamp: string
-  count: number
-  type: string
-  eventTime: null
-  reportingComponent: string
-  reportingInstance: string
+  };
+  firstTimestamp: string;
+  lastTimestamp: string;
+  count: number;
+  type: string;
+  eventTime: null;
+  reportingComponent: string;
+  reportingInstance: string;
 
   isWarning() {
     return this.type === "Warning";

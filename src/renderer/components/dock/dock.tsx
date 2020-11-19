@@ -42,13 +42,13 @@ export class Dock extends React.Component<Props> {
       if (selectedTab.pinned) close();
       else closeTab(selectedTab.id);
     }
-  }
+  };
 
   onChangeTab = (tab: IDockTab) => {
     const { open, selectTab } = dockStore;
     open();
     selectTab(tab.id);
-  }
+  };
 
   @autobind()
   renderTab(tab: IDockTab) {

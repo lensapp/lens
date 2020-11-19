@@ -7,9 +7,9 @@ import { JsonApiParams } from "../json-api";
 
 @autobind()
 export class Job extends WorkloadKubeObject {
-  static kind = "Job"
-  static namespaced = true
-  static apiBase = "/apis/batch/v1/jobs"
+  static kind = "Job";
+  static namespaced = true;
+  static apiBase = "/apis/batch/v1/jobs";
 
   spec: {
     parallelism?: number;
@@ -56,7 +56,7 @@ export class Job extends WorkloadKubeObject {
     serviceAccountName?: string;
     serviceAccount?: string;
     schedulerName?: string;
-  }
+  };
   status: {
     conditions: {
       type: string;
@@ -68,7 +68,7 @@ export class Job extends WorkloadKubeObject {
     startTime: string;
     completionTime: string;
     succeeded: number;
-  }
+  };
 
   getDesiredCompletions() {
     return this.spec.completions || 0;

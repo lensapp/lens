@@ -21,7 +21,7 @@ export const _i18n = setupI18n({
 
 @autobind()
 export class LocalizationStore {
-  readonly defaultLocale = "en"
+  readonly defaultLocale = "en";
   @observable activeLang = this.defaultLocale;
 
   // todo: verify with package.json ling-ui "locales"

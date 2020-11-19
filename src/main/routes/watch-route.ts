@@ -6,12 +6,12 @@ import { Request } from "request";
 import logger from "../logger";
 
 class ApiWatcher {
-  private apiUrl: string
-  private response: ServerResponse
-  private watchRequest: Request
-  private watch: Watch
-  private processor: NodeJS.Timeout
-  private eventBuffer: any[] = []
+  private apiUrl: string;
+  private response: ServerResponse;
+  private watchRequest: Request;
+  private watch: Watch;
+  private processor: NodeJS.Timeout;
+  private eventBuffer: any[] = [];
 
   constructor(apiUrl: string, kubeConfig: KubeConfig, response: ServerResponse) {
     this.apiUrl = apiUrl;

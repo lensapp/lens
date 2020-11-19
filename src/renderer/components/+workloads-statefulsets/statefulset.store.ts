@@ -7,7 +7,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
-  api = statefulSetApi
+  api = statefulSetApi;
   @observable metrics: IPodMetrics = null;
 
   async loadMetrics(statefulSet: StatefulSet) {

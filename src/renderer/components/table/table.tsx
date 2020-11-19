@@ -16,7 +16,7 @@ import { ItemObject } from "../../item.store";
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
-export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy }
+export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy };
 export type TableSortCallback<D = any> = (data: D) => string | number | (string | number)[];
 
 export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
@@ -51,7 +51,7 @@ export class Table extends React.Component<TableProps> {
     rowPadding: "8px",
     rowLineHeight: "17px",
     sortSyncWithUrl: true,
-  }
+  };
 
   @observable sortParamsLocal = this.props.sortByDefault;
 

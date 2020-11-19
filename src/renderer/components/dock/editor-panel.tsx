@@ -21,7 +21,7 @@ export class EditorPanel extends React.Component<Props> {
 
   public editor: AceEditor;
 
-  @observable yamlError = ""
+  @observable yamlError = "";
 
   componentDidMount() {
     // validate and run callback with optional error
@@ -44,23 +44,23 @@ export class EditorPanel extends React.Component<Props> {
 
   onTabChange = () => {
     this.editor.focus();
-  }
+  };
 
   onResize = () => {
     this.editor.resize();
     this.editor.focus();
-  }
+  };
 
   onCursorPosChange = (pos: Ace.Point) => {
     EditorPanel.cursorPos.setData(this.props.tabId, pos);
-  }
+  };
 
   onChange = (value: string) => {
     this.validate(value);
     if (this.props.onChange) {
       this.props.onChange(value, this.yamlError);
     }
-  }
+  };
 
   render() {
     const { value, tabId } = this.props;

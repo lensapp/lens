@@ -12,22 +12,22 @@ export type LensBinaryOpts = {
   originalBinaryName: string;
   newBinaryName?: string;
   requestOpts?: request.Options;
-}
+};
 
 export class LensBinary {
 
-  public binaryVersion: string
-  protected directory: string
-  protected url: string
+  public binaryVersion: string;
+  protected directory: string;
+  protected url: string;
   protected path: string;
   protected tarPath: string;
-  protected dirname: string
-  protected binaryName: string
-  protected platformName: string
-  protected arch: string
-  protected originalBinaryName: string
-  protected requestOpts: request.Options
-  protected logger: Console | winston.Logger
+  protected dirname: string;
+  protected binaryName: string;
+  protected platformName: string;
+  protected arch: string;
+  protected originalBinaryName: string;
+  protected requestOpts: request.Options;
+  protected logger: Console | winston.Logger;
 
   constructor(opts: LensBinaryOpts) {
     const baseDir = opts.baseDir;

@@ -27,7 +27,7 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
 
   onChange = (value: string) => {
     this.directory = value;
-  }
+  };
 
   render() {
     return (

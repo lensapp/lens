@@ -18,7 +18,7 @@ import { extensionLoader } from "../extensions/extension-loader";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
-}
+};
 
 export {
   React,

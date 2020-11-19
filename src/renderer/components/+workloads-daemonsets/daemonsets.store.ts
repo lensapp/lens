@@ -7,7 +7,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
-  api = daemonSetApi
+  api = daemonSetApi;
 
   @observable metrics: IPodMetrics = null;
 

@@ -49,7 +49,8 @@ module.exports =  {
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/no-empty-interface": "off",
         "indent": ["error", 2],
-        "semi": ["error", "always"],
+        "semi": "off",
+        "@typescript-eslint/semi": ["error"],
       },
     },
     {
@@ -78,7 +79,8 @@ module.exports =  {
         "@typescript-eslint/ban-types": "off",
         "@typescript-eslint/no-empty-function": "off",
         "indent": ["error", 2],
-        "semi": ["error", "always"],
+        "semi": "off",
+        "@typescript-eslint/semi": ["error"],
       },
     }
   ]

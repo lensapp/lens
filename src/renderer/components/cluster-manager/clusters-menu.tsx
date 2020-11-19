@@ -33,11 +33,11 @@ interface Props {
 export class ClustersMenu extends React.Component<Props> {
   showCluster = (clusterId: ClusterId) => {
     navigate(clusterViewURL({ params: { clusterId } }));
-  }
+  };
 
   addCluster = () => {
     navigate(addClusterURL());
-  }
+  };
 
   showContextMenu = (cluster: Cluster) => {
     const { Menu, MenuItem } = remote;
@@ -87,7 +87,7 @@ export class ClustersMenu extends React.Component<Props> {
     menu.popup({
       window: remote.getCurrentWindow()
     });
-  }
+  };
 
   @autobind()
   swapClusterIconOrder(result: DropResult) {

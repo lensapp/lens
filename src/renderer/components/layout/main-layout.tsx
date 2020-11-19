@@ -26,7 +26,7 @@ export class MainLayout extends React.Component<MainLayoutProps> {
 
   @observable isPinned = this.storage.get().pinnedSidebar;
   @observable isAccessible = true;
-  @observable sidebarWidth = this.storage.get().sidebarWidth
+  @observable sidebarWidth = this.storage.get().sidebarWidth;
 
   @disposeOnUnmount syncPinnedStateWithStorage = reaction(
     () => this.isPinned,
@@ -49,7 +49,7 @@ export class MainLayout extends React.Component<MainLayoutProps> {
     return {
       "--sidebar-width": `${this.sidebarWidth}px`,
     };
-  }
+  };
 
   @autobind()
   adjustWidth(newWidth: number): void {

@@ -15,25 +15,25 @@ export class SearchInputUrl extends React.Component<Props> {
   @observable inputVal = ""; // fix: use empty string to avoid react warnings
 
   @disposeOnUnmount
-  updateInput = autorun(() => this.inputVal = getSearch())
-  updateUrl = debounce((val: string) => setSearch(val), 250)
+  updateInput = autorun(() => this.inputVal = getSearch());
+  updateUrl = debounce((val: string) => setSearch(val), 250);
 
   setValue = (value: string) => {
     this.inputVal = value;
     this.updateUrl(value);
-  }
+  };
 
   clear = () => {
     this.setValue("");
     this.updateUrl.flush();
-  }
+  };
 
   onChange = (val: string, evt: React.ChangeEvent<any>) => {
     this.setValue(val);
     if (this.props.onChange) {
       this.props.onChange(val, evt);
     }
-  }
+  };
 
   render() {
     const { inputVal } = this;

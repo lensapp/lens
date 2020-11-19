@@ -54,18 +54,18 @@ export function bundledKubectlPath(): string {
 }
 
 export class Kubectl {
-  public kubectlVersion: string
-  protected directory: string
-  protected url: string
-  protected path: string
-  protected dirname: string
+  public kubectlVersion: string;
+  protected directory: string;
+  protected url: string;
+  protected path: string;
+  protected dirname: string;
 
   static get kubectlDir() {
     return path.join((app || remote.app).getPath("userData"), "binaries", "kubectl");
   }
 
-  public static readonly bundledKubectlVersion: string = bundledVersion
-  public static invalidBundle = false
+  public static readonly bundledKubectlVersion: string = bundledVersion;
+  public static invalidBundle = false;
   private static bundledInstance: Kubectl;
 
   // Returns the single bundled Kubectl instance

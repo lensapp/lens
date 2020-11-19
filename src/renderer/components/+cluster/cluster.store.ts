@@ -18,7 +18,7 @@ export enum MetricNodeRole {
 
 @autobind()
 export class ClusterStore extends KubeObjectStore<Cluster> {
-  api = clusterApi
+  api = clusterApi;
 
   @observable metrics: Partial<IClusterMetrics> = {};
   @observable liveMetrics: Partial<IClusterMetrics> = {};

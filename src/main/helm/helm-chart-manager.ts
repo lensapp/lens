@@ -7,11 +7,11 @@ import { helmCli } from "./helm-cli";
 
 type CachedYaml = {
   entries: any; // todo: types
-}
+};
 
 export class HelmChartManager {
-  protected cache: any = {}
-  protected repo: HelmRepo
+  protected cache: any = {};
+  protected repo: HelmRepo;
 
   constructor(repo: HelmRepo){
     this.cache = HelmRepoManager.cache;

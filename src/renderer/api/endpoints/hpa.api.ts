@@ -20,7 +20,7 @@ export type IHpaMetricData<T = any> = T & {
   currentAverageValue?: string;
   targetAverageUtilization?: number;
   targetAverageValue?: string;
-}
+};
 
 export interface IHpaMetric {
   [kind: string]: IHpaMetricData;
@@ -41,7 +41,7 @@ export interface IHpaMetric {
 export class HorizontalPodAutoscaler extends KubeObject {
   static kind = "HorizontalPodAutoscaler";
   static namespaced = true;
-  static apiBase = "/apis/autoscaling/v2beta1/horizontalpodautoscalers"
+  static apiBase = "/apis/autoscaling/v2beta1/horizontalpodautoscalers";
 
   spec: {
     scaleTargetRef: {
@@ -52,7 +52,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
     minReplicas: number;
     maxReplicas: number;
     metrics: IHpaMetric[];
-  }
+  };
   status: {
     currentReplicas: number;
     desiredReplicas: number;
@@ -64,7 +64,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
       status: string;
       type: string;
     }[];
-  }
+  };
 
   getMaxPods() {
     return this.spec.maxReplicas || 0;

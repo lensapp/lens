@@ -13,11 +13,11 @@ interface State {
   open?: boolean;
 }
 export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps, State> {
-  public state: State = {}
+  public state: State = {};
 
   toggle = () => {
     this.setState({ open: !this.state.open });
-  }
+  };
 
   render() {
     const { label, children } = this.props;

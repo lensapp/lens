@@ -30,9 +30,9 @@ const defaultProps: Partial<DrawerProps> = {
 export class Drawer extends React.Component<DrawerProps> {
   static defaultProps = defaultProps as object;
 
-  private mouseDownTarget: HTMLElement
-  private contentElem: HTMLElement
-  private scrollElem: HTMLElement
+  private mouseDownTarget: HTMLElement;
+  private contentElem: HTMLElement;
+  private scrollElem: HTMLElement;
   private scrollPos = new Map<string, number>();
 
   private stopListenLocation = history.listen(() => {
@@ -57,13 +57,13 @@ export class Drawer extends React.Component<DrawerProps> {
     if (!this.scrollElem) return;
     const key = history.location.key;
     this.scrollPos.set(key, this.scrollElem.scrollTop);
-  }
+  };
 
   restoreScrollPos = () => {
     if (!this.scrollElem) return;
     const key = history.location.key;
     this.scrollElem.scrollTop = this.scrollPos.get(key) || 0;
-  }
+  };
 
   onEscapeKey = (evt: KeyboardEvent) => {
     if (!this.props.open) {
@@ -72,7 +72,7 @@ export class Drawer extends React.Component<DrawerProps> {
     if (evt.code === "Escape") {
       this.close();
     }
-  }
+  };
 
   onClickOutside = (evt: MouseEvent) => {
     const { contentElem, mouseDownTarget, close, props: { open } } = this;
@@ -85,18 +85,18 @@ export class Drawer extends React.Component<DrawerProps> {
       close();
     }
     this.mouseDownTarget = null;
-  }
+  };
 
   onMouseDown = (evt: MouseEvent) => {
     if (this.props.open) {
       this.mouseDownTarget = evt.target as HTMLElement;
     }
-  }
+  };
 
   close = () => {
     const { open, onClose } = this.props;
     if (open) onClose();
-  }
+  };
 
   render() {
     const { open, position, title, animation, children, toolbar, size, usePortal } = this.props;

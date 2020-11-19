@@ -32,7 +32,7 @@ export class ReplicaSets extends React.Component<Props> {
     [sortBy.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
     [sortBy.age]: (replicaSet: ReplicaSet) => replicaSet.metadata.creationTimestamp,
     [sortBy.pods]: (replicaSet: ReplicaSet) => this.getPodsLength(replicaSet),
-  }
+  };
 
   getPodsLength(replicaSet: ReplicaSet) {
     return replicaSetStore.getChildPods(replicaSet).length;

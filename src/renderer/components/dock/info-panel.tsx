@@ -38,7 +38,7 @@ export class InfoPanel extends Component<Props> {
     showSubmitClose: true,
     showInlineInfo: true,
     showNotifications: true,
-  }
+  };
 
   @observable error = "";
   @observable waiting = false;
@@ -66,16 +66,16 @@ export class InfoPanel extends Component<Props> {
     } finally {
       this.waiting = false;
     }
-  }
+  };
 
   submitAndClose = async () => {
     await this.submit();
     this.close();
-  }
+  };
 
   close = () => {
     dockStore.closeTab(this.props.tabId);
-  }
+  };
 
   renderErrorIcon() {
     if (!this.props.showInlineInfo || !this.errorInfo) {

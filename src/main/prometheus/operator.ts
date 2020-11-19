@@ -3,9 +3,9 @@ import { CoreV1Api, V1Service } from "@kubernetes/client-node";
 import logger from "../logger";
 
 export class PrometheusOperator implements PrometheusProvider {
-  rateAccuracy = "1m"
-  id = "operator"
-  name = "Prometheus Operator"
+  rateAccuracy = "1m";
+  id = "operator";
+  name = "Prometheus Operator";
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
     try {

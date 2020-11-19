@@ -12,10 +12,10 @@ import { KubeAuthProxy } from "./kube-auth-proxy";
 export class ContextHandler {
   public proxyPort: number;
   public clusterUrl: UrlWithStringQuery;
-  protected kubeAuthProxy: KubeAuthProxy
-  protected apiTarget: httpProxy.ServerOptions
-  protected prometheusProvider: string
-  protected prometheusPath: string
+  protected kubeAuthProxy: KubeAuthProxy;
+  protected apiTarget: httpProxy.ServerOptions;
+  protected prometheusProvider: string;
+  protected prometheusPath: string;
 
   constructor(protected cluster: Cluster) {
     this.clusterUrl = url.parse(cluster.apiUrl);

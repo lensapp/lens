@@ -136,7 +136,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
 
   static defaultProps: WizardStepProps = {
     scrollable: true,
-  }
+  };
 
   componentWillUnmount() {
     this.unmounting = true;
@@ -146,7 +146,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
     const { isFirst, prev, done } = this.props;
     if (isFirst() && done) done();
     else prev();
-  }
+  };
 
   next = () => {
     const next = this.props.next;
@@ -167,7 +167,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
     else {
       nextStep();
     }
-  }
+  };
 
   submit = () => {
     if (!this.form.noValidate) {
@@ -175,7 +175,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
       if (!valid) return;
     }
     this.next();
-  }
+  };
 
   renderLoading() {
     return (

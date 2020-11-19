@@ -60,7 +60,7 @@ export class KubeObjectDetails extends React.Component {
         }
       }
     }
-  })
+  });
 
   render() {
     const { object, isLoading, loadingError, isCrdInstance } = this;

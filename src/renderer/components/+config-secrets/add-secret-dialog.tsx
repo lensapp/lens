@@ -58,7 +58,7 @@ export class AddSecretDialog extends React.Component<Props> {
         { key: "kubernetes.io/service-account.uid", required: true }
       ],
     },
-  }
+  };
 
   get types() {
     return Object.keys(this.secretTemplate) as SecretType[];
@@ -72,11 +72,11 @@ export class AddSecretDialog extends React.Component<Props> {
   reset = () => {
     this.name = "";
     this.secret = this.secretTemplate;
-  }
+  };
 
   close = () => {
     AddSecretDialog.close();
-  }
+  };
 
   private getDataFromFields = (fields: ISecretTemplateField[] = [], processValue?: (val: string) => string) => {
     return fields.reduce<any>((data, field) => {
@@ -86,7 +86,7 @@ export class AddSecretDialog extends React.Component<Props> {
       }
       return data;
     }, {});
-  }
+  };
 
   createSecret = async () => {
     const { name, namespace, type } = this;
@@ -109,18 +109,18 @@ export class AddSecretDialog extends React.Component<Props> {
     } catch (err) {
       Notifications.error(err);
     }
-  }
+  };
 
   addField = (field: ISecretField) => {
     const fields = this.secret[this.type][field] || [];
     fields.push({ key: "", value: "" });
     this.secret[this.type][field] = fields;
-  }
+  };
 
   removeField = (field: ISecretField, index: number) => {
     const fields = this.secret[this.type][field] || [];
     fields.splice(index, 1);
-  }
+  };
 
   renderFields(field: ISecretField) {
     const fields = this.secret[this.type][field] || [];

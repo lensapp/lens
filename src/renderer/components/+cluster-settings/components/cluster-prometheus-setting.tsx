@@ -60,13 +60,13 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
       port: parseInt(parsed[2]),
       prefix: apiPrefix
     };
-  }
+  };
 
   onSaveProvider = () => {
     this.props.cluster.preferences.prometheusProvider = this.provider ?
       { type: this.provider } :
       null;
-  }
+  };
 
   onSavePath = () => {
     this.props.cluster.preferences.prometheus = this.parsePrometheusPath();

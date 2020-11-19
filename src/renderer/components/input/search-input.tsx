@@ -40,11 +40,11 @@ export class SearchInput extends React.Component<Props> {
     if (this.props.onClear) {
       this.props.onClear();
     }
-  }
+  };
 
   onChange = (val: string, evt: React.ChangeEvent<any>) => {
     this.props.onChange(val, evt);
-  }
+  };
 
   onKeyDown = (evt: React.KeyboardEvent<any>) => {
     if (this.props.onKeyDown) {
@@ -56,7 +56,7 @@ export class SearchInput extends React.Component<Props> {
       this.clear();
       evt.stopPropagation();
     }
-  }
+  };
 
   @autobind()
   focus(evt: KeyboardEvent) {

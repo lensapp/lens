@@ -143,7 +143,7 @@ function directionDelta(P1: number, P2: number, M: number): number | false {
 }
 
 export class ResizingAnchor extends React.PureComponent<Props> {
-  @observable lastMouseEvent?: MouseEvent
+  @observable lastMouseEvent?: MouseEvent;
   @observable.ref ref?: React.RefObject<HTMLDivElement>;
 
   static defaultProps = {
@@ -160,8 +160,8 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     maxExtent: Number.POSITIVE_INFINITY,
     minExtent: 0,
     placement: ResizeSide.LEADING,
-  }
-  static IS_RESIZING = "resizing"
+  };
+  static IS_RESIZING = "resizing";
 
   constructor(props: Props) {
     super(props);
@@ -191,7 +191,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
     this.lastMouseEvent = undefined;
     onStart();
-  }
+  };
 
   calculateDelta(from: Position, to: Position): number | false {
     const node = this.ref.current;
@@ -259,7 +259,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     } else if (previousExtent >= maxExtent && maxExtent >= unboundedExtent) {
       onMaxExtentSubceed();
     }
-  }, 100)
+  }, 100);
 
   @action
   onDragEnd = (_event: MouseEvent) => {
@@ -267,7 +267,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     document.removeEventListener("mousemove", this.onDrag);
     document.removeEventListener("mouseup", this.onDragEnd);
     document.body.classList.remove(ResizingAnchor.IS_RESIZING);
-  }
+  };
 
   render() {
     const { disabled, direction, placement, onDoubleClick } = this.props;

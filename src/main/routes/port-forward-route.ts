@@ -8,7 +8,7 @@ import * as tcpPortUsed from "tcp-port-used";
 import logger from "../logger";
 
 class PortForward {
-  public static portForwards: PortForward[] = []
+  public static portForwards: PortForward[] = [];
 
   static getPortforward(forward: {clusterId: string; kind: string; name: string; namespace: string; port: string}) {
     return PortForward.portForwards.find((pf) => {
@@ -22,14 +22,14 @@ class PortForward {
     });
   }
 
-  public clusterId: string
-  public process: ChildProcessWithoutNullStreams
-  public kubeConfig: string
-  public kind: string
-  public namespace: string
-  public name: string
-  public port: string
-  public localPort: number
+  public clusterId: string;
+  public process: ChildProcessWithoutNullStreams;
+  public kubeConfig: string;
+  public kind: string;
+  public namespace: string;
+  public name: string;
+  public port: string;
+  public localPort: number;
 
   constructor(obj: any) {
     Object.assign(this, obj);

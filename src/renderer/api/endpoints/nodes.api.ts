@@ -30,9 +30,9 @@ export interface INodeMetrics<T = IMetrics> {
 
 @autobind()
 export class Node extends KubeObject {
-  static kind = "Node"
-  static namespaced = false
-  static apiBase = "/api/v1/nodes"
+  static kind = "Node";
+  static namespaced = false;
+  static apiBase = "/api/v1/nodes";
 
   spec: {
     podCIDR: string;
@@ -43,7 +43,7 @@ export class Node extends KubeObject {
       effect: string;
     }[];
     unschedulable?: boolean;
-  }
+  };
   status: {
     capacity: {
       cpu: string;
@@ -83,7 +83,7 @@ export class Node extends KubeObject {
       names: string[];
       sizeBytes: number;
     }[];
-  }
+  };
 
   getNodeConditionText() {
     const { conditions } = this.status;

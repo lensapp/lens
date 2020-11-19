@@ -15,7 +15,7 @@ export class StorageHelper<T> {
   static defaultOptions: IStorageHelperOptions = {
     addKeyPrefix: true,
     useSession: false,
-  }
+  };
 
   constructor(protected key: string, protected defaultValue?: T, protected options?: IStorageHelperOptions) {
     this.options = Object.assign({}, StorageHelper.defaultOptions, options);

@@ -44,11 +44,11 @@ export class HelmCharts extends Component<Props> {
         }
       }));
     }
-  }
+  };
 
   hideDetails = () => {
     this.showDetails(null);
-  }
+  };
 
   render() {
     return (

@@ -62,14 +62,14 @@ export class KubeApi<T extends KubeObject = any> {
     return () => disposers.forEach(unwatch => unwatch());
   }
 
-  readonly kind: string
-  readonly apiBase: string
-  readonly apiPrefix: string
-  readonly apiGroup: string
-  readonly apiVersion: string
+  readonly kind: string;
+  readonly apiBase: string;
+  readonly apiPrefix: string;
+  readonly apiGroup: string;
+  readonly apiVersion: string;
   readonly apiVersionPreferred?: string;
-  readonly apiResource: string
-  readonly isNamespaced: boolean
+  readonly apiResource: string;
+  readonly isNamespaced: boolean;
 
   public objectConstructor: IKubeObjectConstructor<T>;
   protected request: KubeJsonApi;
