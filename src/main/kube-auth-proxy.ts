@@ -4,6 +4,7 @@ import { broadcastIpc } from "../common/ipc";
 import type { Cluster } from "./cluster"
 import { Kubectl } from "./kubectl"
 import logger from "./logger"
+import * as url from "url"
 
 export interface KubeAuthProxyLog {
   data: string;
@@ -26,17 +27,22 @@ export class KubeAuthProxy {
     this.kubectl = Kubectl.bundled()
   }
 
+  get acceptHosts() {
+    return url.parse(this.cluster.apiUrl).hostname;
+  }
+
   public async run(): Promise<void> {
     if (this.proxyProcess) {
       return;
     }
+
     const proxyBin = await this.kubectl.getPath()
     const args = [
       "proxy",
       "-p", `${this.port}`,
       "--kubeconfig", `${this.cluster.kubeConfigPath}`,
       "--context", `${this.cluster.contextName}`,
-      "--accept-hosts", ".*",
+      "--accept-hosts", this.acceptHosts,
       "--reject-paths", "^[^/]"
     ]
     if (process.env.DEBUG_PROXY === "true") {
