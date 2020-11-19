@@ -38,7 +38,7 @@ if (ipcMain) {
     const managedCluster = getById(clusterId);
     if (managedCluster) {
       managedCluster.disconnect();
-      clusterFrameMap.delete(managedCluster.id)
+      clusterFrameMap.delete(managedCluster.cluster.id)
     }
   })
 
