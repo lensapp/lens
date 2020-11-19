@@ -27,18 +27,22 @@ export class KubeAuthProxy {
     this.kubectl = Kubectl.bundled()
   }
 
+  get acceptHosts() {
+    return url.parse(this.cluster.apiUrl).hostname;
+  }
+
   public async run(): Promise<void> {
     if (this.proxyProcess) {
       return;
     }
-    const clusterUrl = url.parse(this.cluster.apiUrl);
+
     const proxyBin = await this.kubectl.getPath()
     const args = [
       "proxy",
       "-p", `${this.port}`,
       "--kubeconfig", `${this.cluster.kubeConfigPath}`,
       "--context", `${this.cluster.contextName}`,
-      "--accept-hosts", clusterUrl.hostname,
+      "--accept-hosts", this.acceptHosts,
       "--reject-paths", "^[^/]"
     ]
     if (process.env.DEBUG_PROXY === "true") {
