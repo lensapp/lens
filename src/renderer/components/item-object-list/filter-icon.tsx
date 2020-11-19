@@ -9,13 +9,13 @@ interface Props extends Partial<IconProps> {
 export function FilterIcon(props: Props) {
   const { type, ...iconProps } = props;
   switch (type) {
-  case FilterType.NAMESPACE:
-    return <Icon small material="layers" {...iconProps}/>;
+    case FilterType.NAMESPACE:
+      return <Icon small material="layers" {...iconProps}/>;
 
-  case FilterType.SEARCH:
-    return <Icon small material="search" {...iconProps}/>;
+    case FilterType.SEARCH:
+      return <Icon small material="search" {...iconProps}/>;
 
-  default:
-    return <Icon small material="filter_list" {...iconProps}/>;
+    default:
+      return <Icon small material="filter_list" {...iconProps}/>;
   }
 }

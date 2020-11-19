@@ -85,11 +85,11 @@ export class FilePicker extends React.Component<Props> {
     const { limit: [minLimit, maxLimit] = [0, Infinity], onOverLimit } = this.props;
     if (files.length > maxLimit) {
       switch (onOverLimit) {
-      case OverLimitStyle.CAP:
-        files.length = maxLimit;
-        break;
-      case OverLimitStyle.REJECT:
-        throw `Too many files. Expected at most ${maxLimit}. Got ${files.length}.`;
+        case OverLimitStyle.CAP:
+          files.length = maxLimit;
+          break;
+        case OverLimitStyle.REJECT:
+          throw `Too many files. Expected at most ${maxLimit}. Got ${files.length}.`;
       }
     }
     if (files.length < minLimit) {
@@ -103,15 +103,15 @@ export class FilePicker extends React.Component<Props> {
     const { onOverSizeLimit, maxSize } = this.props;
 
     switch (onOverSizeLimit) {
-    case OverSizeLimitStyle.FILTER:
-      return files.filter(file => file.size <= maxSize );
-    case OverSizeLimitStyle.REJECT:
-      const firstFileToLarge = files.find(file => file.size > maxSize);
-      if (firstFileToLarge) {
-        throw `${firstFileToLarge.name} is too large. Maximum size is ${maxSize}. Has size of ${firstFileToLarge.size}`;
-      }
+      case OverSizeLimitStyle.FILTER:
+        return files.filter(file => file.size <= maxSize );
+      case OverSizeLimitStyle.REJECT:
+        const firstFileToLarge = files.find(file => file.size > maxSize);
+        if (firstFileToLarge) {
+          throw `${firstFileToLarge.name} is too large. Maximum size is ${maxSize}. Has size of ${firstFileToLarge.size}`;
+        }
 
-      return files;
+        return files;
     }
   }
 
@@ -124,20 +124,20 @@ export class FilePicker extends React.Component<Props> {
     }
 
     switch (onOverTotalSizeLimit) {
-    case OverTotalSizeLimitStyle.FILTER_LARGEST:
-      files = _.orderBy(files, ["size"]);
-    case OverTotalSizeLimitStyle.FILTER_LAST:
-      let newTotalSize = totalSize;
+      case OverTotalSizeLimitStyle.FILTER_LARGEST:
+        files = _.orderBy(files, ["size"]);
+      case OverTotalSizeLimitStyle.FILTER_LAST:
+        let newTotalSize = totalSize;
       
-      for (;files.length > 0;) {
-        newTotalSize -= files.pop().size;
-        if (newTotalSize <= maxTotalSize) {
-          break;
+        for (;files.length > 0;) {
+          newTotalSize -= files.pop().size;
+          if (newTotalSize <= maxTotalSize) {
+            break;
+          }
         }
-      }
-      return files;
-    case OverTotalSizeLimitStyle.REJECT:
-      throw `Total file size to upload is too large. Expected at most ${maxTotalSize}. Found ${totalSize}.`;
+        return files;
+      case OverTotalSizeLimitStyle.REJECT:
+        throw `Total file size to upload is too large. Expected at most ${maxTotalSize}. Found ${totalSize}.`;
     }
   }
 
@@ -192,12 +192,12 @@ export class FilePicker extends React.Component<Props> {
 
   getIconRight(): React.ReactNode {
     switch (this.status) {
-    case FileInputStatus.CLEAR:
-      return <Icon className="clean" material="cloud_upload"></Icon>;
-    case FileInputStatus.PROCESSING:
-      return <Spinner />;
-    case FileInputStatus.ERROR:
-      return <Icon material="error" title={this.errorText}></Icon>;
+      case FileInputStatus.CLEAR:
+        return <Icon className="clean" material="cloud_upload"></Icon>;
+      case FileInputStatus.PROCESSING:
+        return <Spinner />;
+      case FileInputStatus.ERROR:
+        return <Icon material="error" title={this.errorText}></Icon>;
     }
   }
 }

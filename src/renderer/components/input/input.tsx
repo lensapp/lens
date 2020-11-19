@@ -222,11 +222,11 @@ export class Input extends React.Component<InputProps, State> {
     }
 
     switch (evt.key) {
-    case "Enter":
-      if (this.props.onSubmit && !modified && !evt.repeat) {
-        this.props.onSubmit(this.getValue());
-      }
-      break;
+      case "Enter":
+        if (this.props.onSubmit && !modified && !evt.repeat) {
+          this.props.onSubmit(this.getValue());
+        }
+        break;
     }
   }
 
