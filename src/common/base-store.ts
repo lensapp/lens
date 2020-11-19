@@ -2,7 +2,7 @@ import path from "path"
 import Config from "conf"
 import { Options as ConfOptions } from "conf/dist/source/types"
 import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron"
-import { action, comparer, IReactionOptions, observable, reaction, runInAction, toJS, when } from "mobx";
+import { action, IReactionOptions, observable, reaction, runInAction, toJS, when } from "mobx";
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
@@ -28,9 +28,6 @@ export class BaseStore<T = any> extends Singleton {
     this.params = {
       autoLoad: false,
       syncEnabled: true,
-      syncOptions: {
-        equals: comparer.structural,
-      },
       ...params,
     }
     this.init();

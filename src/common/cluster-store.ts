@@ -2,7 +2,7 @@ import type { WorkspaceId } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
-import { action, computed, observable, reaction, toJS } from "mobx";
+import { action, comparer, computed, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store"
@@ -90,6 +90,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
       migrations: migrations,
+      syncOptions: {
+        equals: comparer.structural,
+      },
     });
 
     this.pushStateToViewsAutomatically()
