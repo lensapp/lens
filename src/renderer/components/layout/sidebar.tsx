@@ -77,12 +77,15 @@ export class Sidebar extends React.Component<Props> {
   }
 
   getTabLayoutRoutes(menu: ClusterPageMenuRegistration, page: RegisteredPage): TabLayoutRoute[] {
+    console.log("Menu", menu)
     if (!menu.id) {
       return [];
     }
     const routes: TabLayoutRoute[] = [];
-    clusterPageMenuRegistry.getSubItems(menu.id).forEach((subItem) => {
+
+    clusterPageMenuRegistry.getSubItems(menu).forEach((subItem) => {
       const subPage = clusterPageRegistry.getByPageMenuTarget(subItem.target);
+      console.log(subItem, subPage)
       if (subPage) {
         routes.push({
           routePath: subPage.id,
@@ -93,15 +96,6 @@ export class Sidebar extends React.Component<Props> {
         });
       }
     });
-    if (routes.length > 0) {
-      routes.unshift({
-        routePath: page.routePath,
-        url: getExtensionPageUrl({ extensionId: page.extensionId, pageId: page.id, params: menu.target.params }),
-        title: <Trans>Overview</Trans>,
-        component: page.components.Page,
-        exact: page.exact
-      });
-    }
     return routes;
   }
 
@@ -222,11 +216,17 @@ export class Sidebar extends React.Component<Props> {
             </SidebarNavItem>
             {clusterPageMenuRegistry.getRootItems().map((menuItem) => {
               const registeredPage = clusterPageRegistry.getByPageMenuTarget(menuItem.target);
-              if (!registeredPage) return;
-              const { extensionId, id: pageId } = registeredPage;
-              const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
-              const isActive = pageUrl === navigation.location.pathname;
+              let pageUrl: string
+              let isActive = false
+              if (registeredPage) {
+                const { extensionId, id: pageId } = registeredPage;
+                pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
+                isActive = pageUrl === navigation.location.pathname;
+              }
               const tabRoutes = this.getTabLayoutRoutes(menuItem, registeredPage)
+              if (!registeredPage && tabRoutes.length == 0) {
+                return
+              }
               return (
                 <SidebarNavItem
                   key={pageUrl} url={pageUrl}

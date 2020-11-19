@@ -40,7 +40,7 @@ import { appEventBus } from "../../common/event-bus"
 import { requestMain } from "../../common/ipc";
 import whatInput from 'what-input';
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
-import { clusterPageMenuRegistry } from "../../extensions/registries";
+import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
 import { TabLayoutRoute, TabLayout } from "./layout/tab-layout";
 import { Trans } from "@lingui/macro";
 
@@ -75,13 +75,12 @@ export class App extends React.Component {
     return workloadsURL();
   }
 
-  getTabLayoutRoutes(page: RegisteredPage) {
-    const menuItem = clusterPageMenuRegistry.getByPage(page);
+  getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
     const routes: TabLayoutRoute[] = [];
     if (!menuItem.id) {
       return routes;
     }
-    clusterPageMenuRegistry.getSubItems(menuItem.id).forEach((item) => {
+    clusterPageMenuRegistry.getSubItems(menuItem).forEach((item) => {
       const page = clusterPageRegistry.getByPageMenuTarget(item.target);
       if (page) {
         routes.push({
@@ -93,27 +92,18 @@ export class App extends React.Component {
         });
       }
     });
-    if (routes.length > 0) {
-      routes.unshift({
-        routePath: page.routePath,
-        url: getExtensionPageUrl({ extensionId: page.extensionId, pageId: page.id, params: menuItem.target.params }),
-        title: <Trans>Overview</Trans>,
-        component: page.components.Page,
-        exact: page.exact
-      })
-    }
     return routes;
   }
 
   renderExtensionTabLayoutRoutes() {
     return clusterPageMenuRegistry.getRootItems().map((menu, index) => {
-      const page = clusterPageRegistry.getByPageMenuTarget(menu.target)
-      if (page) {
-        const tabRoutes = this.getTabLayoutRoutes(page)
-        if (tabRoutes.length > 0) {
-          const pageComponent = () => <TabLayout tabs={tabRoutes} />
-          return <Route key={"extension-tab-layout-route-" + index} component={pageComponent}/>
-        } else {
+      const tabRoutes = this.getTabLayoutRoutes(menu)
+      if (tabRoutes.length > 0) {
+        const pageComponent = () => <TabLayout tabs={tabRoutes} />
+        return <Route key={"extension-tab-layout-route-" + index} component={pageComponent}/>
+      } else {
+        const page = clusterPageRegistry.getByPageMenuTarget(menu.target)
+        if (page) {
           const pageComponent = () => <page.components.Page />
           return <Route key={"extension-tab-layout-route-" + index} path={page.routePath} exact={page.exact} component={pageComponent}/>
         }
