@@ -86,6 +86,7 @@ export class Pods extends React.Component<Props> {
         searchFilters={[
           (pod: Pod) => pod.getSearchFields(),
           (pod: Pod) => pod.getStatusMessage(),
+          (pod: Pod) => pod.status.podIP,
         ]}
         renderHeaderTitle={<Trans>Pods</Trans>}
         renderTableHeader={[
