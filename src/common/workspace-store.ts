@@ -12,7 +12,6 @@ export type WorkspaceId = string;
 export interface WorkspaceStoreModel {
   workspaces: WorkspaceModel[];
   currentWorkspace?: WorkspaceId;
-  lastActiveClusterId?: ClusterId;
 }
 
 export interface WorkspaceModel {
@@ -20,6 +19,7 @@ export interface WorkspaceModel {
   name: string;
   description?: string;
   ownerRef?: string;
+  lastActiveClusterId?: ClusterId;
 }
 
 export interface WorkspaceState {
