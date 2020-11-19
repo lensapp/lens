@@ -29,7 +29,7 @@ export type ClusterPrometheusMetadata = {
   success?: boolean;
   provider?: string;
   autoDetected?: boolean;
-}
+};
 
 export interface ClusterStoreModel {
   activeCluster?: ClusterId; // last opened cluster

@@ -1,5 +1,5 @@
 
-import _ from "lodash"
+import _ from "lodash";
 import { LensApiRequest } from "../router";
 import { LensApi } from "../lens-api";
 import { Cluster, ClusterMetadataKey } from "../cluster";
@@ -71,7 +71,7 @@ class MetricsRoute extends LensApi {
         const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
         this.respondJson(response, data);
       }
-      prometheusMetadata.success = true
+      prometheusMetadata.success = true;
     } catch {
       prometheusMetadata.success = false;
       this.respondJson(response, {});
