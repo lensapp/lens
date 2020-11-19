@@ -1,4 +1,4 @@
-import "./volume-claim-details.scss"
+import "./volume-claim-details.scss";
 
 import React, { Fragment } from "react";
 import { reaction } from "mobx";
@@ -99,7 +99,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <PersistentVolumeClaimDetails {...props} />
   }
-})
+});
 
 kubeObjectDetailRegistry.add({
   kind: "PersistentVolumeClaim",
@@ -108,4 +108,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});

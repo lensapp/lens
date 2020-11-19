@@ -34,7 +34,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     return this.items.find(item => {
       return item.getName() === name && (
         namespace ? item.getNs() === namespace : true
-      )
+      );
     });
   }
 
@@ -47,13 +47,13 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       return this.items.filter((item: T) => {
         const itemLabels = item.getLabels();
         return labels.every(label => itemLabels.includes(label));
-      })
+      });
     } else {
       return this.items.filter((item: T) => {
         const itemLabels = item.metadata.labels || {};
         return Object.entries(labels)
-          .every(([key, value]) => itemLabels[key] === value)
-      })
+          .every(([key, value]) => itemLabels[key] === value);
+      });
     }
   }
 
@@ -65,7 +65,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     } else {
       return Promise
         .all(allowedNamespaces.map(namespace => this.api.list({ namespace })))
-        .then(items => items.flat())
+        .then(items => items.flat());
     }
   }
 
@@ -147,7 +147,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   protected bindWatchEventsUpdater(delay = 1000) {
     return reaction(() => this.eventsBuffer.toJS()[0], this.updateFromEventsBuffer, {
       delay: delay
-    })
+    });
   }
 
   subscribe(apis = [this.api]) {

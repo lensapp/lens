@@ -9,7 +9,7 @@ const defaultOptions = {
   interval: 61,
   stripeMinutes: 10,
   stripeColor: "#ffffff08",
-}
+};
 
 export const ZebraStripes = {
   updated: null as Moment,  // timestamp which all stripe movements based on
@@ -62,7 +62,7 @@ export const ZebraStripes = {
     this.options = {
       ...defaultOptions,
       ...this.getOptions(chart)
-    }
+    };
     this.updated = this.getLastUpdate(chart);
   },
 
@@ -92,4 +92,4 @@ export const ZebraStripes = {
       cover.style.backgroundPositionX = -step * minutes + "px";
     }
   }
-}
+};

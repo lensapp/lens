@@ -1,6 +1,6 @@
 import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
 
-import "./cluster-status.scss"
+import "./cluster-status.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { ipcRenderer } from "electron";
@@ -38,7 +38,7 @@ export class ClusterStatus extends React.Component<Props> {
         data: res.data.trimRight(),
         error: res.error,
       });
-    })
+    });
     if (this.cluster.disconnected) {
       await this.activateCluster();
     }
@@ -49,15 +49,15 @@ export class ClusterStatus extends React.Component<Props> {
   }
 
   activateCluster = async (force = false) => {
-    await requestMain(clusterActivateHandler, this.props.clusterId, force)
-  }
+    await requestMain(clusterActivateHandler, this.props.clusterId, force);
+  };
 
   reconnect = async () => {
-    this.authOutput = []
+    this.authOutput = [];
     this.isReconnecting = true;
     await this.activateCluster(true);
     this.isReconnecting = false;
-  }
+  };
 
   renderContent() {
     const { authOutput, cluster, hasErrors } = this;
@@ -69,7 +69,7 @@ export class ClusterStatus extends React.Component<Props> {
           <pre className="kube-auth-out">
             <p>{this.isReconnecting ? "Reconnecting..." : "Connecting..."}</p>
             {authOutput.map(({ data, error }, index) => {
-              return <p key={index} className={cssNames({ error })}>{data}</p>
+              return <p key={index} className={cssNames({ error })}>{data}</p>;
             })}
           </pre>
         </>
@@ -83,7 +83,7 @@ export class ClusterStatus extends React.Component<Props> {
         </h2>
         <pre className="kube-auth-out">
           {authOutput.map(({ data, error }, index) => {
-            return <p key={index} className={cssNames({ error })}>{data}</p>
+            return <p key={index} className={cssNames({ error })}>{data}</p>;
           })}
         </pre>
         {failureReason && (

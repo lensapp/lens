@@ -15,7 +15,7 @@ export class Terminal {
     // https://xtermjs.org/docs/api/terminal/classes/terminal/#open
     const pool = document.createElement("div");
     pool.className = "terminal-init";
-    pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden"
+    pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden";
     document.body.appendChild(pool);
     Terminal.spawningPool = pool;
   }
@@ -36,7 +36,7 @@ export class Terminal {
   protected setTheme(colors: Record<string, string>) {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack
-    const colorPrefix = "terminal"
+    const colorPrefix = "terminal";
     const terminalColors = Object.entries(colors)
       .filter(([name]) => name.startsWith(colorPrefix))
       .reduce<any>((colors, [name, color]) => {
@@ -132,39 +132,39 @@ export class Terminal {
 
   focus = () => {
     this.xterm.focus();
-  }
+  };
 
   onApiData = (data: string) => {
     this.xterm.write(data);
-  }
+  };
 
   onData = (data: string) => {
     if (!this.api.isReady) return;
     this.api.sendCommand(data);
-  }
+  };
 
   onScroll = () => {
     this.scrollPos = this.viewport.scrollTop;
-  }
+  };
 
   onClear = () => {
     this.xterm.clear();
-  }
+  };
 
   onResize = () => {
     this.fitLazy();
     this.focus();
-  }
+  };
 
   onActivate = () => {
     this.fit();
     setTimeout(() => this.focus(), 250); // delay used to prevent focus on active tab
     this.viewport.scrollTop = this.scrollPos; // restore last scroll position
-  }
+  };
 
   onClickLink = (evt: MouseEvent, link: string) => {
     window.open(link, "_blank");
-  }
+  };
 
   keyHandler = (evt: KeyboardEvent): boolean => {
     const { code, ctrlKey, type } = evt;
@@ -190,7 +190,7 @@ export class Terminal {
     }
 
     return true;
-  }
+  };
 }
 
 Terminal.init();

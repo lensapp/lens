@@ -6,9 +6,9 @@ import { KubeApi } from "../kube-api";
 
 @autobind()
 export class DaemonSet extends WorkloadKubeObject {
-  static kind = "DaemonSet"
-  static namespaced = true
-  static apiBase = "/apis/apps/v1/daemonsets"
+  static kind = "DaemonSet";
+  static namespaced = true;
+  static apiBase = "/apis/apps/v1/daemonsets";
 
   spec: {
     selector: {
@@ -51,7 +51,7 @@ export class DaemonSet extends WorkloadKubeObject {
       };
     };
     revisionHistoryLimit: number;
-  }
+  };
   status: {
     currentNumberScheduled: number;
     numberMisscheduled: number;
@@ -61,12 +61,12 @@ export class DaemonSet extends WorkloadKubeObject {
     updatedNumberScheduled: number;
     numberAvailable: number;
     numberUnavailable: number;
-  }
+  };
 
   getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
-    const initContainers: IPodContainer[] = get(this, "spec.template.spec.initContainers", [])
-    return [...containers, ...initContainers].map(container => container.image)
+    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
+    const initContainers: IPodContainer[] = get(this, "spec.template.spec.initContainers", []);
+    return [...containers, ...initContainers].map(container => container.image);
   }
 }
 

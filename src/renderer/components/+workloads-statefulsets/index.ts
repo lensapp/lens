@@ -1,2 +1,2 @@
-export * from "./statefulsets"
-export * from "./statefulset-details"
+export * from "./statefulsets";
+export * from "./statefulset-details";

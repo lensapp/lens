@@ -33,7 +33,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
         this.loadAll();
       }
       this.releaseSecrets = [...secrets];
-    })
+    });
   }
 
   unwatch() {
@@ -48,7 +48,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     const labels = {
       owner: "helm",
       name: release.getName()
-    }
+    };
     return secretsStore.getByLabel(labels)
       .filter(secret => secret.getNs() == release.getNs())[0];
   }
@@ -58,7 +58,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     this.isLoading = true;
     let items;
     try {
-      const { isAdmin, allowedNamespaces } = getHostedCluster()
+      const { isAdmin, allowedNamespaces } = getHostedCluster();
       items = await this.loadItems(!isAdmin ? allowedNamespaces : null);
     } finally {
       if (items) {

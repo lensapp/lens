@@ -42,27 +42,27 @@ export class Dock extends React.Component<Props> {
       if (selectedTab.pinned) close();
       else closeTab(selectedTab.id);
     }
-  }
+  };
 
   onChangeTab = (tab: IDockTab) => {
     const { open, selectTab } = dockStore;
     open();
     selectTab(tab.id);
-  }
+  };
 
   @autobind()
   renderTab(tab: IDockTab) {
     if (isTerminalTab(tab)) {
-      return <TerminalTab value={tab} />
+      return <TerminalTab value={tab} />;
     }
     if (isCreateResourceTab(tab) || isEditResourceTab(tab)) {
-      return <DockTab value={tab} icon="edit" />
+      return <DockTab value={tab} icon="edit" />;
     }
     if (isInstallChartTab(tab) || isUpgradeChartTab(tab)) {
-      return <DockTab value={tab} icon={<Icon svg="install" />} />
+      return <DockTab value={tab} icon={<Icon svg="install" />} />;
     }
     if (isPodLogsTab(tab)) {
-      return <DockTab value={tab} icon="subject" />
+      return <DockTab value={tab} icon="subject" />;
     }
   }
 
@@ -78,7 +78,7 @@ export class Dock extends React.Component<Props> {
         {isTerminalTab(tab) && <TerminalWindow tab={tab} />}
         {isPodLogsTab(tab) && <PodLogs tab={tab} />}
       </div>
-    )
+    );
   }
 
   render() {
@@ -139,6 +139,6 @@ export class Dock extends React.Component<Props> {
         </div>
         {this.renderTabContent()}
       </div>
-    )
+    );
   }
 }

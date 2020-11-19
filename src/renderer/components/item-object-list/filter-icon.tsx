@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { Icon, IconProps } from "../icon";
 import { FilterType } from "./page-filters.store";
 
@@ -16,6 +16,6 @@ export function FilterIcon(props: Props) {
     return <Icon small material="search" {...iconProps}/>;
 
   default:
-    return <Icon small material="filter_list" {...iconProps}/>
+    return <Icon small material="filter_list" {...iconProps}/>;
   }
 }

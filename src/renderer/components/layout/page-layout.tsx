@@ -1,4 +1,4 @@
-import "./page-layout.scss"
+import "./page-layout.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -20,7 +20,7 @@ export interface PageLayoutProps extends React.DOMAttributes<any> {
 const defaultProps: Partial<PageLayoutProps> = {
   provideBackButtonNavigation: true,
   contentGaps: true,
-}
+};
 
 @observer
 export class PageLayout extends React.Component<PageLayoutProps> {
@@ -51,7 +51,7 @@ export class PageLayout extends React.Component<PageLayoutProps> {
       evt.stopPropagation();
       this.back(evt);
     }
-  }
+  };
 
   render() {
     const {
@@ -77,6 +77,6 @@ export class PageLayout extends React.Component<PageLayoutProps> {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

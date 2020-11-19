@@ -24,7 +24,7 @@ export class FileInput extends React.Component<Props> {
 
   selectFiles = () => {
     this.input.click(); // opens system dialog for selecting files
-  }
+  };
 
   protected onChange = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = Array.from(evt.target.files);
@@ -41,15 +41,15 @@ export class FileInput extends React.Component<Props> {
               file: file,
               data: reader.result,
               error: reader.error ? String(reader.error) : null,
-            })
+            });
           };
           reader.readAsText(file);
-        })
+        });
       });
       selectedFiles = await Promise.all(readingFiles);
     }
     this.props.onSelectFiles(...selectedFiles);
-  }
+  };
 
   render() {
     const { onSelectFiles, readAsText, ...props } = this.props;
@@ -61,6 +61,6 @@ export class FileInput extends React.Component<Props> {
         ref={e => this.input = e}
         {...props}
       />
-    )
+    );
   }
 }

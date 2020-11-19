@@ -38,7 +38,7 @@ export class ThemeStore {
     return {
       colors: {},
       ...activeTheme,
-    }
+    };
   }
 
   constructor() {
@@ -53,7 +53,7 @@ export class ThemeStore {
       }
     }, {
       fireImmediately: true,
-    })
+    });
   }
 
   async init() {
@@ -64,7 +64,7 @@ export class ThemeStore {
   }
 
   getThemeById(themeId: ThemeId): Theme {
-    return this.themes.find(theme => theme.id === themeId)
+    return this.themes.find(theme => theme.id === themeId);
   }
 
   protected async loadTheme(themeId: ThemeId): Promise<Theme> {
@@ -87,7 +87,7 @@ export class ThemeStore {
   protected applyTheme(theme = this.activeTheme) {
     if (!this.styles) {
       this.styles = document.createElement("style");
-      this.styles.id = "lens-theme"
+      this.styles.id = "lens-theme";
       document.head.prepend(this.styles);
     }
     const cssVars = Object.entries(theme.colors).map(([cssName, color]) => {

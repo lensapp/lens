@@ -35,16 +35,16 @@ export class HelmChartDetails extends Component<Props> {
   }
 
   chartUpdater = autorun(() => {
-    this.selectedChart = null
-    const { chart: { name, repo, version } } = this.props
+    this.selectedChart = null;
+    const { chart: { name, repo, version } } = this.props;
     helmChartsApi.get(repo, name, version).then(result => {
-      this.readme = result.readme
-      this.chartVersions = result.versions
-      this.selectedChart = result.versions[0]
+      this.readme = result.readme;
+      this.chartVersions = result.versions;
+      this.selectedChart = result.versions[0];
     },
     error => {
       this.error = error;
-    })
+    });
   });
 
   @autobind()
@@ -55,7 +55,7 @@ export class HelmChartDetails extends Component<Props> {
     try {
       this.chartPromise?.cancel();
       const { chart: { name, repo } } = this.props;
-      const { readme } = await (this.chartPromise = helmChartsApi.get(repo, name, version))
+      const { readme } = await (this.chartPromise = helmChartsApi.get(repo, name, version));
       this.readme = readme;
     } catch (error) {
       this.error = error;
@@ -65,7 +65,7 @@ export class HelmChartDetails extends Component<Props> {
   @autobind()
   install() {
     createInstallChartTab(this.selectedChart);
-    this.props.hideDetails()
+    this.props.hideDetails();
   }
 
   renderIntroduction() {
@@ -112,14 +112,14 @@ export class HelmChartDetails extends Component<Props> {
 
   renderReadme() {
     if (this.readme === null) {
-      return <Spinner center />
+      return <Spinner center />;
     }
 
     return (
       <div className="chart-description">
         <MarkdownViewer markdown={this.readme} />
       </div>
-    )
+    );
   }
 
   renderContent() {
@@ -132,7 +132,7 @@ export class HelmChartDetails extends Component<Props> {
         <div className="box grow">
           <p className="error">{this.error}</p>
         </div>
-      )
+      );
     }
 
     return (

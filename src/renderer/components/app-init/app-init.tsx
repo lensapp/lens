@@ -1,6 +1,6 @@
-import "./app-init.scss"
+import "./app-init.scss";
 
-import React from "react"
+import React from "react";
 import { render } from "react-dom";
 import { t } from "@lingui/macro";
 import { CubeSpinner } from "../spinner";
@@ -46,6 +46,6 @@ export class AppInit extends React.Component<Props> {
           <CubeSpinner/>
         </div>
       </div>
-    )
+    );
   }
 }

@@ -1,4 +1,4 @@
-import "./workloads.scss"
+import "./workloads.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -13,7 +13,7 @@ import { DaemonSets } from "../+workloads-daemonsets";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
-import { isAllowedResource } from "../../../common/rbac"
+import { isAllowedResource } from "../../../common/rbac";
 
 @observer
 export class Workloads extends React.Component {
@@ -26,14 +26,14 @@ export class Workloads extends React.Component {
         url: overviewURL({ query }),
         routePath: overviewRoute.path.toString()
       }
-    ]
+    ];
     if (isAllowedResource("pods")) {
       routes.push({
         title: <Trans>Pods</Trans>,
         component: Pods,
         url: podsURL({ query }),
         routePath: podsRoute.path.toString()
-      })
+      });
     }
     if (isAllowedResource("deployments")) {
       routes.push({
@@ -41,7 +41,7 @@ export class Workloads extends React.Component {
         component: Deployments,
         url: deploymentsURL({ query }),
         routePath: deploymentsRoute.path.toString(),
-      })
+      });
     }
     if (isAllowedResource("daemonsets")) {
       routes.push({
@@ -49,7 +49,7 @@ export class Workloads extends React.Component {
         component: DaemonSets,
         url: daemonSetsURL({ query }),
         routePath: daemonSetsRoute.path.toString(),
-      })
+      });
     }
     if (isAllowedResource("statefulsets")) {
       routes.push({
@@ -57,7 +57,7 @@ export class Workloads extends React.Component {
         component: StatefulSets,
         url: statefulSetsURL({ query }),
         routePath: statefulSetsRoute.path.toString(),
-      })
+      });
     }
     if (isAllowedResource("jobs")) {
       routes.push({
@@ -65,7 +65,7 @@ export class Workloads extends React.Component {
         component: Jobs,
         url: jobsURL({ query }),
         routePath: jobsRoute.path.toString(),
-      })
+      });
     }
     if (isAllowedResource("cronjobs")) {
       routes.push({
@@ -73,7 +73,7 @@ export class Workloads extends React.Component {
         component: CronJobs,
         url: cronJobsURL({ query }),
         routePath: cronJobsRoute.path.toString(),
-      })
+      });
     }
     return routes;
   }
@@ -81,6 +81,6 @@ export class Workloads extends React.Component {
   render() {
     return (
       <TabLayout className="Workloads" tabs={Workloads.tabRoutes}/>
-    )
+    );
   }
 }

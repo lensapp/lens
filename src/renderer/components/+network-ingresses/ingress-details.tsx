@@ -30,8 +30,8 @@ export class IngressDetails extends React.Component<Props> {
   }
 
   renderPaths(ingress: Ingress) {
-    const { spec: { rules } } = ingress
-    if (!rules || !rules.length) return null
+    const { spec: { rules } } = ingress;
+    if (!rules || !rules.length) return null;
     return rules.map((rule, index) => {
       return (
         <div className="rules" key={index}>
@@ -48,7 +48,7 @@ export class IngressDetails extends React.Component<Props> {
               </TableHead>
               {
                 rule.http.paths.map((path, index) => {
-                  const backend = `${path.backend.serviceName}:${path.backend.servicePort}`
+                  const backend = `${path.backend.serviceName}:${path.backend.servicePort}`;
                   return (
                     <TableRow key={index}>
                       <TableCell className="path">{path.path || ""}</TableCell>
@@ -56,18 +56,18 @@ export class IngressDetails extends React.Component<Props> {
                         <p key={backend}>{backend}</p>
                       </TableCell>
                     </TableRow>
-                  )
+                  );
                 })
               }
             </Table>
           )}
         </div>
-      )
-    })
+      );
+    });
   }
 
   renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
-    if (!ingressPoints || ingressPoints.length === 0) return null
+    if (!ingressPoints || ingressPoints.length === 0) return null;
     return (
       <div>
         <Table className="ingress-points">
@@ -81,11 +81,11 @@ export class IngressDetails extends React.Component<Props> {
                 <TableCell className="name">{hostname ? hostname : "-"}</TableCell>
                 <TableCell className="ingresspoints">{ip ? ip : "-"}</TableCell>
               </TableRow>
-            )})
+            );})
           })
         </Table>
       </div>
-    )
+    );
   }
 
   render() {
@@ -94,7 +94,7 @@ export class IngressDetails extends React.Component<Props> {
       return null;
     }
     const { spec, status } = ingress;
-    const ingressPoints = status?.loadBalancer?.ingress
+    const ingressPoints = status?.loadBalancer?.ingress;
     const { metrics } = ingressStore;
     const metricTabs = [
       <Trans>Network</Trans>,
@@ -128,7 +128,7 @@ export class IngressDetails extends React.Component<Props> {
         <DrawerTitle title={<Trans>Load-Balancer Ingress Points</Trans>}/>
         {this.renderIngressPoints(ingressPoints)}
       </div>
-    )
+    );
   }
 }
 
@@ -138,7 +138,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <IngressDetails {...props} />
   }
-})
+});
 kubeObjectDetailRegistry.add({
   kind: "Ingress",
   apiVersions: ["extensions/v1beta1"],
@@ -146,4 +146,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});

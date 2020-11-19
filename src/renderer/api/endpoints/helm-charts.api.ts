@@ -41,7 +41,7 @@ export const helmChartsApi = {
         return {
           readme,
           versions,
-        }
+        };
       });
   },
 
@@ -61,27 +61,27 @@ export class HelmChart {
     return new HelmChart(data);
   }
 
-  apiVersion: string
-  name: string
-  version: string
-  repo: string
-  kubeVersion?: string
-  created: string
-  description?: string
-  digest: string
-  keywords?: string[]
-  home?: string
-  sources?: string[]
+  apiVersion: string;
+  name: string;
+  version: string;
+  repo: string;
+  kubeVersion?: string;
+  created: string;
+  description?: string;
+  digest: string;
+  keywords?: string[];
+  home?: string;
+  sources?: string[];
   maintainers?: {
     name: string;
     email: string;
     url: string;
-  }[]
-  engine?: string
-  icon?: string
-  appVersion?: string
-  deprecated?: boolean
-  tillerVersion?: string
+  }[];
+  engine?: string;
+  icon?: string;
+  appVersion?: string;
+  deprecated?: boolean;
+  tillerVersion?: string;
 
   getId() {
     return this.digest;

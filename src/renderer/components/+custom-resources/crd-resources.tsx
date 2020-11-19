@@ -32,7 +32,7 @@ export class CrdResources extends React.Component<Props> {
           store.loadAll();
         }
       })
-    ])
+    ]);
   }
 
   @computed get crd() {
@@ -41,7 +41,7 @@ export class CrdResources extends React.Component<Props> {
   }
 
   @computed get store() {
-    if (!this.crd) return null
+    if (!this.crd) return null;
     return apiManager.getStore(this.crd.getResourceApiBase());
   }
 
@@ -54,10 +54,10 @@ export class CrdResources extends React.Component<Props> {
       [sortBy.name]: (item: KubeObject) => item.getName(),
       [sortBy.namespace]: (item: KubeObject) => item.getNs(),
       [sortBy.age]: (item: KubeObject) => item.metadata.creationTimestamp,
-    }
+    };
     extraColumns.forEach(column => {
-      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.value(item, column.jsonPath.slice(1))
-    })
+      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.value(item, column.jsonPath.slice(1));
+    });
 
     return (
       <KubeObjectListLayout
@@ -78,7 +78,7 @@ export class CrdResources extends React.Component<Props> {
               title: name,
               className: name.toLowerCase(),
               sortBy: name
-            }
+            };
           }),
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
@@ -92,6 +92,6 @@ export class CrdResources extends React.Component<Props> {
           crdInstance.getAge(),
         ]}
       />
-    )
+    );
   }
 }

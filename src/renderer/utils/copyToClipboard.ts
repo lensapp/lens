@@ -4,7 +4,7 @@ export function copyToClipboard(elem: HTMLElement, resetSelection = true): boole
   let clearSelection: () => void;
   if (isSelectable(elem)) {
     elem.select();
-    clearSelection = () => elem.setSelectionRange(0, 0)
+    clearSelection = () => elem.setSelectionRange(0, 0);
   }
   else {
     const selection = window.getSelection();

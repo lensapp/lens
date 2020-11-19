@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect'
+import '@testing-library/jest-dom/extend-expect';
 
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
 jest.mock("../../api/endpoints");
@@ -91,7 +91,7 @@ const dummyDeployment = {
   toPlainObject: jest.fn(),
   update: jest.fn(),
   delete: jest.fn(),
-}
+};
 
 describe('<DeploymentScaleDialog />', () => {
 
@@ -103,7 +103,7 @@ describe('<DeploymentScaleDialog />', () => {
   it('inits with a dummy deployment with mocked current/desired scale', async () => {
     // mock deploymentApi.getReplicas() which will be called 
     // when <DeploymentScaleDialog /> rendered.
-    const initReplicas = 3
+    const initReplicas = 3;
     deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
     const { getByTestId } = render(<DeploymentScaleDialog />);
     DeploymentScaleDialog.open(dummyDeployment);
@@ -113,7 +113,7 @@ describe('<DeploymentScaleDialog />', () => {
       const [currentScale, desiredScale] = await Promise.all([
         getByTestId('current-scale'),
         getByTestId('desired-scale'),
-      ])
+      ]);
       expect(currentScale).toHaveTextContent(`${initReplicas}`);
       expect(desiredScale).toHaveTextContent(`${initReplicas}`);
     });
@@ -121,7 +121,7 @@ describe('<DeploymentScaleDialog />', () => {
   });
 
   it('changes the desired scale when clicking the icon buttons +/-', async () => {
-    const initReplicas = 1
+    const initReplicas = 1;
     deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
     const { getByTestId } = render(<DeploymentScaleDialog />);
     DeploymentScaleDialog.open(dummyDeployment);
@@ -130,7 +130,7 @@ describe('<DeploymentScaleDialog />', () => {
       expect(desiredScale).toHaveTextContent(`${initReplicas}`);
     });
     const up = await getByTestId('desired-replicas-up');
-    const down = await getByTestId('desired-replicas-down')
+    const down = await getByTestId('desired-replicas-down');
     fireEvent.click(up);
     expect(await getByTestId('desired-scale')).toHaveTextContent(`${initReplicas + 1}`);
     fireEvent.click(down);

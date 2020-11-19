@@ -39,7 +39,7 @@ export class DeploymentScaleDialog extends Component<Props> {
 
   close = () => {
     DeploymentScaleDialog.close();
-  }
+  };
 
   @computed get scaleMax() {
     const { currentReplicas } = this;
@@ -57,15 +57,15 @@ export class DeploymentScaleDialog extends Component<Props> {
     });
     this.desiredReplicas = this.currentReplicas;
     this.ready = true;
-  }
+  };
 
   onClose = () => {
     this.ready = false;
-  }
+  };
 
   onChange = (evt: React.ChangeEvent, value: number) => {
     this.desiredReplicas = value;
-  }
+  };
 
   scale = async () => {
     const { deployment } = this;
@@ -81,14 +81,14 @@ export class DeploymentScaleDialog extends Component<Props> {
     } catch (err) {
       Notifications.error(err);
     }
-  }
+  };
 
   desiredReplicasUp = () => {
-    this.desiredReplicas < this.scaleMax && this.desiredReplicas++
-  }
+    this.desiredReplicas < this.scaleMax && this.desiredReplicas++;
+  };
   
   desiredReplicasDown = () => {
-    this.desiredReplicas > 1 && this.desiredReplicas--
+    this.desiredReplicas > 1 && this.desiredReplicas--;
   };
 
   renderContents() {
@@ -126,7 +126,7 @@ export class DeploymentScaleDialog extends Component<Props> {
         </div>
         }
       </>
-    )
+    );
   }
 
   render() {

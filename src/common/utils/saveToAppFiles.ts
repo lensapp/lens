@@ -2,7 +2,7 @@
 import path from "path";
 import { app, remote } from "electron";
 import { ensureDirSync, writeFileSync } from "fs-extra";
-import { WriteFileOptions } from "fs"
+import { WriteFileOptions } from "fs";
 
 export function saveToAppFiles(filePath: string, contents: any, options?: WriteFileOptions): string {
   const absPath = path.resolve((app || remote.app).getPath("userData"), filePath);

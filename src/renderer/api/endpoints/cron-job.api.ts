@@ -7,12 +7,12 @@ import { KubeApi } from "../kube-api";
 
 @autobind()
 export class CronJob extends KubeObject {
-  static kind = "CronJob"
-  static namespaced = true
-  static apiBase = "/apis/batch/v1beta1/cronjobs"
+  static kind = "CronJob";
+  static namespaced = true;
+  static apiBase = "/apis/batch/v1beta1/cronjobs";
 
-  kind: string
-  apiVersion: string
+  kind: string;
+  apiVersion: string;
   metadata: {
     name: string;
     namespace: string;
@@ -26,7 +26,7 @@ export class CronJob extends KubeObject {
     annotations: {
       [key: string]: string;
     };
-  }
+  };
   spec: {
     schedule: string;
     concurrencyPolicy: string;
@@ -59,23 +59,23 @@ export class CronJob extends KubeObject {
     };
     successfulJobsHistoryLimit: number;
     failedJobsHistoryLimit: number;
-  }
+  };
   status: {
     lastScheduleTime?: string;
-  }
+  };
 
   getSuspendFlag() {
-    return this.spec.suspend.toString()
+    return this.spec.suspend.toString();
   }
 
   getLastScheduleTime() {
-    if (!this.status.lastScheduleTime) return "-"
-    const diff = moment().diff(this.status.lastScheduleTime)
-    return formatDuration(diff, true)
+    if (!this.status.lastScheduleTime) return "-";
+    const diff = moment().diff(this.status.lastScheduleTime);
+    return formatDuration(diff, true);
   }
 
   getSchedule() {
-    return this.spec.schedule
+    return this.spec.schedule;
   }
 
   isNeverRun() {

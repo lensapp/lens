@@ -60,7 +60,7 @@ export class CRDDetails extends React.Component<Props> {
         <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
           {
             crd.getConditions().map(condition => {
-              const { type, message, lastTransitionTime, status } = condition
+              const { type, message, lastTransitionTime, status } = condition;
               return (
                 <Badge
                   key={type}
@@ -112,7 +112,7 @@ export class CRDDetails extends React.Component<Props> {
                       <Badge label={jsonPath}/>
                     </TableCell>
                   </TableRow>
-                )
+                );
               })
             }
           </Table>
@@ -130,7 +130,7 @@ export class CRDDetails extends React.Component<Props> {
         </>
         }
       </div>
-    )
+    );
   }
 }
 
@@ -140,4 +140,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <CRDDetails {...props} />
   }
-})
+});

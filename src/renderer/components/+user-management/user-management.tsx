@@ -1,4 +1,4 @@
-import "./user-management.scss"
+import "./user-management.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
@@ -15,7 +15,7 @@ import { isAllowedResource } from "../../../common/rbac";
 export class UserManagement extends React.Component {
   static get tabRoutes() {
     const tabRoutes: TabLayoutRoute[] = [];
-    const query = namespaceStore.getContextParams()
+    const query = namespaceStore.getContextParams();
     tabRoutes.push(
       {
         title: <Trans>Service Accounts</Trans>,
@@ -35,14 +35,14 @@ export class UserManagement extends React.Component {
         url: rolesURL({ query }),
         routePath: rolesRoute.path.toString(),
       },
-    )
+    );
     if (isAllowedResource("podsecuritypolicies")) {
       tabRoutes.push({
         title: <Trans>Pod Security Policies</Trans>,
         component: PodSecurityPolicies,
         url: podSecurityPoliciesURL(),
         routePath: podSecurityPoliciesRoute.path.toString(),
-      })
+      });
     }
     return tabRoutes;
   }
@@ -50,6 +50,6 @@ export class UserManagement extends React.Component {
   render() {
     return (
       <TabLayout className="UserManagement" tabs={UserManagement.tabRoutes}/>
-    )
+    );
   }
 }

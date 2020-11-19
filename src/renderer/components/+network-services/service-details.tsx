@@ -1,4 +1,4 @@
-import "./service-details.scss"
+import "./service-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -24,14 +24,14 @@ export class ServiceDetails extends React.Component<Props> {
     if (!endpointStore.isLoaded) {
       endpointStore.loadAll();
     }
-    endpointApi.watch()
+    endpointApi.watch();
   }
 
   render() {
     const { object: service } = this.props;
     if (!service) return;
     const { spec } = service;
-    const endpoint = endpointStore.getByName(service.getName(), service.getNs())
+    const endpoint = endpointStore.getByName(service.getName(), service.getNs());
     return (
       <div className="ServicesDetails">
         <KubeObjectMeta object={service}/>
@@ -89,7 +89,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <ServiceDetails {...props} />
   }
-})
+});
 
 kubeObjectDetailRegistry.add({
   kind: "Service",
@@ -98,4 +98,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});

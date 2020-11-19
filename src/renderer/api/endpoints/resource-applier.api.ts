@@ -1,4 +1,4 @@
-import jsYaml from "js-yaml"
+import jsYaml from "js-yaml";
 import { KubeObject } from "../kube-object";
 import { KubeJsonApiData } from "../kube-json-api";
 import { apiBase } from "../index";
@@ -21,7 +21,7 @@ export const resourceApplierApi = {
           if (api) {
             return new api.objectConstructor(obj);
           } else {
-            return new KubeObject(obj)
+            return new KubeObject(obj);
           }
         });
         return items.length === 1 ? items[0] : items;

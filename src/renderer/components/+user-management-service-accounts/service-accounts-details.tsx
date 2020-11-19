@@ -39,27 +39,27 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     });
     this.secrets = await Promise.all(secrets);
     const imagePullSecrets = serviceAccount.getImagePullSecrets().map(async({ name }) => {
-      return secretsStore.load({ name, namespace }).catch(_err => { return this.generateDummySecretObject(name) });
+      return secretsStore.load({ name, namespace }).catch(_err => { return this.generateDummySecretObject(name); });
     });
-    this.imagePullSecrets = await Promise.all(imagePullSecrets)
-  })
+    this.imagePullSecrets = await Promise.all(imagePullSecrets);
+  });
 
   renderSecrets() {
     const { secrets } = this;
     if (!secrets) {
-      return <Spinner center/>
+      return <Spinner center/>;
     }
     return secrets.map(secret =>
       <ServiceAccountsSecret key={secret.getId()} secret={secret}/>
-    )
+    );
   }
 
   renderImagePullSecrets() {
     const { imagePullSecrets } = this;
     if (!imagePullSecrets) {
-      return <Spinner center/>
+      return <Spinner center/>;
     }
-    return this.renderSecretLinks(imagePullSecrets)
+    return this.renderSecretLinks(imagePullSecrets);
   }
 
   renderSecretLinks(secrets: Secret[]) {
@@ -73,14 +73,14 @@ export class ServiceAccountsDetails extends React.Component<Props> {
               tooltip={<Trans>Secret is not found</Trans>}
             />
           </div>
-        )
+        );
       }
       return (
         <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
           {secret.getName()}
         </Link>
-      )
-    })
+      );
+    });
   }
 
   generateDummySecretObject(name: string) {
@@ -93,7 +93,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
         selfLink: null,
         resourceVersion: null
       }
-    })
+    });
   }
 
   render() {
@@ -104,8 +104,8 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     const tokens = secretsStore.items.filter(secret =>
       secret.getNs() == serviceAccount.getNs() &&
       secret.getAnnotations().some(annot => annot == `kubernetes.io/service-account.name: ${serviceAccount.getName()}`)
-    )
-    const imagePullSecrets = serviceAccount.getImagePullSecrets()
+    );
+    const imagePullSecrets = serviceAccount.getImagePullSecrets();
     return (
       <div className="ServiceAccountsDetails">
         <KubeObjectMeta object={serviceAccount}/>
@@ -126,7 +126,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
           {this.renderSecrets()}
         </div>
       </div>
-    )
+    );
   }
 }
 
@@ -136,7 +136,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <ServiceAccountsDetails {...props} />
   }
-})
+});
 kubeObjectDetailRegistry.add({
   kind: "ServiceAccount",
   apiVersions: ["v1"],
@@ -144,4 +144,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});

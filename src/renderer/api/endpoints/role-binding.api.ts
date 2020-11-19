@@ -11,23 +11,23 @@ export interface IRoleBindingSubject {
 
 @autobind()
 export class RoleBinding extends KubeObject {
-  static kind = "RoleBinding"
-  static namespaced = true
-  static apiBase = "/apis/rbac.authorization.k8s.io/v1/rolebindings"
+  static kind = "RoleBinding";
+  static namespaced = true;
+  static apiBase = "/apis/rbac.authorization.k8s.io/v1/rolebindings";
 
-  subjects?: IRoleBindingSubject[]
+  subjects?: IRoleBindingSubject[];
   roleRef: {
     kind: string;
     name: string;
     apiGroup?: string;
-  }
+  };
 
   getSubjects() {
     return this.subjects || [];
   }
 
   getSubjectNames(): string {
-    return this.getSubjects().map(subject => subject.name).join(", ")
+    return this.getSubjects().map(subject => subject.name).join(", ");
   }
 }
 

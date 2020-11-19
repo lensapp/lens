@@ -28,7 +28,7 @@ export class ClusterProxySetting extends React.Component<Props> {
 
   onChange = (value: string) => {
     this.proxy = value;
-  }
+  };
 
   render() {
     return (

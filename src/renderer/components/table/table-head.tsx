@@ -15,7 +15,7 @@ export interface TableHeadProps extends React.DOMAttributes<HTMLDivElement> {
 export class TableHead extends React.Component<TableHeadProps> {
   static defaultProps: TableHeadProps = {
     sticky: true,
-  }
+  };
 
   render() {
     const { className, sticky, nowrap, showTopLine, children, ...headProps } = this.props;
@@ -27,6 +27,6 @@ export class TableHead extends React.Component<TableHeadProps> {
       <div className={classNames} {...headProps}>
         {children}
       </div>
-    )
+    );
   }
 }

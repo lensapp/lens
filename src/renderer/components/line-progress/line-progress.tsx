@@ -23,7 +23,7 @@ export class LineProgress extends React.PureComponent<LineProgressProps> {
   render() {
     const { className, min, max, value, precise, children, ...props } = this.props;
     let valuePercents = Math.min(100, value / (max - min) * 100);
-    const valuePercentsRounded = +valuePercents.toFixed(precise)
+    const valuePercentsRounded = +valuePercents.toFixed(precise);
     if (valuePercentsRounded) {
       valuePercents = valuePercentsRounded;
     }

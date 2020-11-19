@@ -60,7 +60,7 @@ export class Nodes extends React.Component<Props> {
           children: _i18n._(t`CPU:`) + ` ${Math.ceil(usage * 100) / cores}\%, ` + _i18n._(t`cores:`) + ` ${cores}`
         }}
       />
-    )
+    );
   }
 
   renderMemoryUsage(node: Node) {
@@ -77,7 +77,7 @@ export class Nodes extends React.Component<Props> {
           children: _i18n._(t`Memory:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
         }}
       />
-    )
+    );
   }
 
   renderDiskUsage(node: Node): any {
@@ -94,17 +94,17 @@ export class Nodes extends React.Component<Props> {
           children: _i18n._(t`Disk:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
         }}
       />
-    )
+    );
   }
 
   renderConditions(node: Node) {
     if (!node.status.conditions) {
-      return null
+      return null;
     }
     const conditions = node.getActiveConditions();
     return conditions.map(condition => {
-      const { type } = condition
-      const tooltipId = `node-${node.getName()}-condition-${type}`
+      const { type } = condition;
+      const tooltipId = `node-${node.getName()}-condition-${type}`;
       return (
         <div key={type} id={tooltipId} className={cssNames("condition", kebabCase(type))}>
           {type}
@@ -116,8 +116,8 @@ export class Nodes extends React.Component<Props> {
               </div>
             )}
           </Tooltip>
-        </div>)
-    })
+        </div>);
+    });
   }
 
   render() {
@@ -177,10 +177,10 @@ export class Nodes extends React.Component<Props> {
               node.status.nodeInfo.kubeletVersion,
               node.getAge(),
               this.renderConditions(node),
-            ]
+            ];
           }}
         />
       </TabLayout>
-    )
+    );
   }
 }

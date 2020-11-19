@@ -1,5 +1,5 @@
-import './cube-spinner.scss'
-import React from 'react'
+import './cube-spinner.scss';
+import React from 'react';
 import { cssNames } from "../../utils";
 
 export interface CubeSpinnerProps {
@@ -24,6 +24,6 @@ export class CubeSpinner extends React.Component<CubeSpinnerProps> {
           <div className="sk-cube sk-cube9"></div>
         </div>
       </div>
-    )
+    );
   }
 }

@@ -3,7 +3,7 @@ import { buildURL } from "../../../common/utils/buildUrl";
 
 export const resourceQuotaRoute: RouteProps = {
   path: "/resourcequotas"
-}
+};
 
 export interface IResourceQuotaRouteParams {
 }
