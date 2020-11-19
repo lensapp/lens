@@ -1,4 +1,4 @@
-import "./cluster-manager.scss"
+import "./cluster-manager.scss";
 
 import React from "react";
 import { Redirect, Route, Switch } from "react-router";
@@ -37,7 +37,7 @@ export class ClusterManager extends React.Component {
         fireImmediately: true,
         equals: comparer.shallow,
       }),
-    ])
+    ]);
   }
 
   componentWillUnmount() {
@@ -51,9 +51,9 @@ export class ClusterManager extends React.Component {
         params: {
           clusterId: activeClusterId
         }
-      })
+      });
     }
-    return landingURL()
+    return landingURL();
   }
 
   render() {
@@ -70,7 +70,7 @@ export class ClusterManager extends React.Component {
             <Route component={ClusterView} {...clusterViewRoute} />
             <Route component={ClusterSettings} {...clusterSettingsRoute} />
             {globalPageRegistry.getItems().map(({ routePath, exact, components: { Page } }) => {
-              return <Route key={routePath} path={routePath} component={Page} exact={exact}/>
+              return <Route key={routePath} path={routePath} component={Page} exact={exact}/>;
             })}
             <Redirect exact to={this.startUrl}/>
           </Switch>
@@ -78,6 +78,6 @@ export class ClusterManager extends React.Component {
         <ClustersMenu/>
         <BottomBar/>
       </div>
-    )
+    );
   }
 }

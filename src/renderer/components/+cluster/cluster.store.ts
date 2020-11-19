@@ -35,7 +35,7 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
     Object.assign(this, storage.get());
     reaction(() => {
       const { metricType, metricNodeRole } = this;
-      return { metricType, metricNodeRole }
+      return { metricType, metricNodeRole };
     },
     settings => storage.set(settings)
     );
@@ -85,9 +85,9 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
   getMetricsValues(source: Partial<IClusterMetrics>): [number, string][] {
     switch (this.metricType) {
     case MetricType.CPU:
-      return normalizeMetrics(source.cpuUsage).data.result[0].values
+      return normalizeMetrics(source.cpuUsage).data.result[0].values;
     case MetricType.MEMORY:
-      return normalizeMetrics(source.memoryUsage).data.result[0].values
+      return normalizeMetrics(source.memoryUsage).data.result[0].values;
     default:
       return [];
     }

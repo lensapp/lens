@@ -13,5 +13,5 @@ export function cssVar(elem: HTMLElement) {
       if (typeof value === "number") value = value + "px";
       elem.style.setProperty(name, value);
     }
-  }
+  };
 }

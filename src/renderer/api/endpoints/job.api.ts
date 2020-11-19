@@ -91,15 +91,15 @@ export class Job extends WorkloadKubeObject {
   }
 
   getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
-    return [...containers].map(container => container.image)
+    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
+    return [...containers].map(container => container.image);
   }
 
   delete() {
     const params: JsonApiParams = {
       query: { propagationPolicy: "Background" }
-    }
-    return super.delete(params)
+    };
+    return super.delete(params);
   }
 }
 

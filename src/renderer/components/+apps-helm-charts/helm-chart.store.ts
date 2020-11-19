@@ -1,9 +1,9 @@
-import semver from "semver"
+import semver from "semver";
 import { observable } from "mobx";
 import { autobind } from "../../utils";
 import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
 import { ItemStore } from "../../item.store";
-import flatten from "lodash/flatten"
+import flatten from "lodash/flatten";
 
 export interface IChartVersion {
   repo: string;
@@ -24,7 +24,7 @@ export class HelmChartStore extends ItemStore<HelmChart> {
 
   protected sortVersions = (versions: IChartVersion[]) => {
     return versions.sort((first, second) => {
-      return semver.compare(second.version, first.version)
+      return semver.compare(second.version, first.version);
     });
   };
 
@@ -38,8 +38,8 @@ export class HelmChartStore extends ItemStore<HelmChart> {
         return versions.map(chart => ({
           repo: repo,
           version: chart.getVersion()
-        }))
-      })
+        }));
+      });
     };
     if (!this.isLoaded) {
       await this.loadAll();

@@ -5,13 +5,13 @@ import { autobind, cssNames, debouncePromise } from "../../utils";
 import { Icon } from "../icon";
 import * as Validators from "./input_validators";
 import { InputValidator } from "./input_validators";
-import isString from "lodash/isString"
-import isFunction from "lodash/isFunction"
-import isBoolean from "lodash/isBoolean"
-import uniqueId from "lodash/uniqueId"
+import isString from "lodash/isString";
+import isFunction from "lodash/isFunction";
+import isBoolean from "lodash/isBoolean";
+import uniqueId from "lodash/uniqueId";
 
 const { conditionalValidators, ...InputValidators } = Validators;
-export { InputValidators, InputValidator }
+export { InputValidators, InputValidator };
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
 type InputElementProps = InputHTMLAttributes<InputElement> & TextareaHTMLAttributes<InputElement> & DOMAttributes<InputElement>;
@@ -47,7 +47,7 @@ const defaultProps: Partial<InputProps> = {
   maxRows: 10000,
   showValidationLine: true,
   validators: [],
-}
+};
 
 export class Input extends React.Component<InputProps, State> {
   static defaultProps = defaultProps as object;
@@ -86,7 +86,7 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   select() {
-    this.input.select()
+    this.input.select();
   }
 
   private autoFitHeight() {
@@ -154,7 +154,7 @@ export class Input extends React.Component<InputProps, State> {
   }
 
   private getValidatorError(value: string, { message }: InputValidator) {
-    if (isFunction(message)) return message(value, this.props)
+    if (isFunction(message)) return message(value, this.props);
     return message || "";
   }
 

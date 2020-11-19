@@ -1,4 +1,4 @@
-import "./add-cluster.scss"
+import "./add-cluster.scss";
 import os from "os";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
@@ -16,7 +16,7 @@ import { WizardLayout } from "../layout/wizard-layout";
 import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
 import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
-import { v4 as uuid } from "uuid"
+import { v4 as uuid } from "uuid";
 import { navigate } from "../../navigation";
 import { userStore } from "../../../common/user-store";
 import { clusterViewURL } from "../cluster-manager/cluster-view.route";
@@ -84,7 +84,7 @@ export class AddCluster extends React.Component {
       break;
     case KubeConfigSourceTab.TEXT:
       try {
-        this.error = ""
+        this.error = "";
         const contexts = this.getContexts(loadConfig(this.customConfig || "{}"));
         this.kubeContexts.replace(contexts);
       } catch (err) {
@@ -94,7 +94,7 @@ export class AddCluster extends React.Component {
     }
 
     if (this.kubeContexts.size === 1) {
-      this.selectedContexts.push(this.kubeContexts.keys().next().value)
+      this.selectedContexts.push(this.kubeContexts.keys().next().value);
     }
   }
 
@@ -102,8 +102,8 @@ export class AddCluster extends React.Component {
     const contexts = new Map();
     splitConfig(config).forEach(config => {
       contexts.set(config.currentContext, config);
-    })
-    return contexts
+    });
+    return contexts;
   }
 
   selectKubeConfigDialog = async () => {
@@ -124,11 +124,11 @@ export class AddCluster extends React.Component {
     let newClusters: ClusterModel[] = [];
     try {
       if (!this.selectedContexts.length) {
-        this.error = <Trans>Please select at least one cluster context</Trans>
+        this.error = <Trans>Please select at least one cluster context</Trans>;
         return;
       }
-      this.error = ""
-      this.isWaiting = true
+      this.error = "";
+      this.isWaiting = true;
 
       newClusters = this.selectedContexts.filter(context => {
         try {
@@ -136,7 +136,7 @@ export class AddCluster extends React.Component {
           validateKubeConfig(kubeConfig);
           return true;
         } catch (err) {
-          this.error = String(err.message)
+          this.error = String(err.message);
           if (err instanceof ExecValidationNotFoundError ) {
             Notifications.error(<Trans>Error while adding cluster(s): {this.error}</Trans>);
             return false;
@@ -159,8 +159,8 @@ export class AddCluster extends React.Component {
             clusterName: kubeConfig.currentContext,
             httpsProxy: this.proxyServer || undefined,
           },
-        }
-      })
+        };
+      });
 
       runInAction(() => {
         clusterStore.addClusters(...newClusters);
@@ -175,7 +175,7 @@ export class AddCluster extends React.Component {
             );
           }
         }
-      })
+      });
       this.refreshContexts();
     } catch (err) {
       this.error = String(err);
@@ -218,7 +218,7 @@ export class AddCluster extends React.Component {
           Lens app might not have all login shell env variables set automatically.
         </p>
       </Fragment>
-    )
+    );
   }
 
   renderKubeConfigSource() {
@@ -281,7 +281,7 @@ export class AddCluster extends React.Component {
           </>
         )}
       </>
-    )
+    );
   }
 
   renderContextSelector() {
@@ -302,7 +302,7 @@ export class AddCluster extends React.Component {
           noOptionsMessage={() => _i18n._(t`No contexts available or they have been added already`)}
           onChange={({ value: ctx }: SelectOption<string>) => {
             if (this.selectedContexts.includes(ctx)) {
-              this.selectedContexts.remove(ctx)
+              this.selectedContexts.remove(ctx);
             } else {
               this.selectedContexts.push(ctx);
             }
@@ -315,7 +315,7 @@ export class AddCluster extends React.Component {
           </small>
         )}
       </>
-    )
+    );
   }
 
   onKubeConfigInputBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
@@ -345,11 +345,11 @@ export class AddCluster extends React.Component {
         {isNew && <Icon small material="fiber_new" />}
         {isSelected && <Icon small material="check" className="box right" />}
       </div>
-    )
+    );
   };
 
   render() {
-    const addDisabled = this.selectedContexts.length === 0
+    const addDisabled = this.selectedContexts.length === 0;
 
     return (
       <WizardLayout
@@ -361,12 +361,12 @@ export class AddCluster extends React.Component {
           onDragLeave: event => this.dropAreaActive = false,
           onDragOver: event => {
             event.preventDefault(); // enable onDrop()-callback
-            event.dataTransfer.dropEffect = "move"
+            event.dataTransfer.dropEffect = "move";
           },
           onDrop: event => {
             this.sourceTab = KubeConfigSourceTab.FILE;
-            this.dropAreaActive = false
-            this.setKubeConfig(event.dataTransfer.files[0].path)
+            this.dropAreaActive = false;
+            this.setKubeConfig(event.dataTransfer.files[0].path);
           }
         }}
       >
@@ -407,6 +407,6 @@ export class AddCluster extends React.Component {
           />
         </div>
       </WizardLayout>
-    )
+    );
   }
 }

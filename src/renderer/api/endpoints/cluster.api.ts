@@ -8,7 +8,7 @@ export class ClusterApi extends KubeApi<Cluster> {
 
   async getMetrics(nodeNames: string[], params?: IMetricsReqParams): Promise<IClusterMetrics> {
     const nodes = nodeNames.join("|");
-    const opts = { category: "cluster", nodes: nodes }
+    const opts = { category: "cluster", nodes: nodes };
 
     return metricsApi.getMetrics({
       memoryUsage: opts,

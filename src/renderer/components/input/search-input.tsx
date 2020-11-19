@@ -18,9 +18,9 @@ const defaultProps: Partial<Props> = {
   autoFocus: true,
   closeIcon: true,
   get placeholder() {
-    return _i18n._(t`Search...`)
+    return _i18n._(t`Search...`);
   },
-}
+};
 
 @observer
 export class SearchInput extends React.Component<Props> {
@@ -70,7 +70,7 @@ export class SearchInput extends React.Component<Props> {
     const { className, compact, closeIcon, onClear, ...inputProps } = this.props;
     const icon = this.props.value
       ? closeIcon ? <Icon small material="close" onClick={this.clear}/> : null
-      : <Icon small material="search"/>
+      : <Icon small material="search"/>;
     return (
       <Input
         {...inputProps}
@@ -80,6 +80,6 @@ export class SearchInput extends React.Component<Props> {
         iconRight={icon}
         ref={this.input}
       />
-    )
+    );
   }
 }

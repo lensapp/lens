@@ -1,4 +1,4 @@
-import "./endpoint-details.scss"
+import "./endpoint-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -28,7 +28,7 @@ export class EndpointDetails extends React.Component<Props> {
           endpoint.getEndpointSubsets().map((subset) => {
             return(
               <EndpointSubsetList subset={subset} endpoint={endpoint}/>
-            )
+            );
           })
         }
       </div>
@@ -42,7 +42,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <EndpointDetails {...props} />
   }
-})
+});
 kubeObjectDetailRegistry.add({
   kind: "Endpoints",
   apiVersions: ["v1"],
@@ -50,4 +50,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});

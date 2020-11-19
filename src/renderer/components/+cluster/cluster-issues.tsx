@@ -1,4 +1,4 @@
-import "./cluster-issues.scss"
+import "./cluster-issues.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -43,7 +43,7 @@ export class ClusterIssues extends React.Component<Props> {
 
     // Node bad conditions
     nodesStore.items.forEach(node => {
-      const { kind, selfLink, getId, getName } = node
+      const { kind, selfLink, getId, getName } = node;
       node.getWarningConditions().forEach(({ message }) => {
         warnings.push({
           kind,
@@ -51,8 +51,8 @@ export class ClusterIssues extends React.Component<Props> {
           getName,
           selfLink,
           message,
-        })
-      })
+        });
+      });
     });
 
     // Warning events for Workloads
@@ -67,7 +67,7 @@ export class ClusterIssues extends React.Component<Props> {
         kind,
         selfLink: lookupApiLink(involvedObject, error),
       });
-    })
+    });
 
     return warnings;
   }

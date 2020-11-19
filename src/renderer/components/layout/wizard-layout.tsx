@@ -1,4 +1,4 @@
-import "./wizard-layout.scss"
+import "./wizard-layout.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
@@ -39,6 +39,6 @@ export class WizardLayout extends React.Component<WizardLayoutProps> {
           </div>
         )}
       </div>
-    )
+    );
   }
 }

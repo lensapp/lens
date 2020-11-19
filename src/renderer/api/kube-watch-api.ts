@@ -1,7 +1,7 @@
 // Kubernetes watch-api consumer
 
 import { computed, observable, reaction } from "mobx";
-import { stringify } from "querystring"
+import { stringify } from "querystring";
 import { autobind, EventEmitter } from "../utils";
 import { KubeJsonApiData } from "./kube-json-api";
 import type { KubeObjectStore } from "../kube-object.store";
@@ -61,13 +61,13 @@ export class KubeWatchApi {
   }
 
   protected getQuery(): Partial<IKubeWatchRouteQuery> {
-    const { isAdmin, allowedNamespaces } = getHostedCluster()
+    const { isAdmin, allowedNamespaces } = getHostedCluster();
     return {
       api: this.activeApis.map(api => {
         if (isAdmin) return api.getWatchUrl();
-        return allowedNamespaces.map(namespace => api.getWatchUrl(namespace))
+        return allowedNamespaces.map(namespace => api.getWatchUrl(namespace));
       }).flat()
-    }
+    };
   }
 
   // todo: maybe switch to websocket to avoid often reconnects
@@ -119,11 +119,11 @@ export class KubeWatchApi {
           await api.refreshResourceVersion({ namespace });
           this.reconnect();
         } catch (error) {
-          console.error("failed to refresh resource version", error)
+          console.error("failed to refresh resource version", error);
           if (this.subscribers.size > 0) {
             setTimeout(() => {
-              this.onRouteEvent(event)
-            }, 1000)
+              this.onRouteEvent(event);
+            }, 1000);
           }
         }
       }

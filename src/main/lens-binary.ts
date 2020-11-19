@@ -1,10 +1,10 @@
-import path from "path"
-import fs from "fs"
-import request from "request"
-import { ensureDir, pathExists } from "fs-extra"
-import * as tar from "tar"
+import path from "path";
+import fs from "fs";
+import request from "request";
+import { ensureDir, pathExists } from "fs-extra";
+import * as tar from "tar";
 import { isWindows } from "../common/vars";
-import winston from "winston"
+import winston from "winston";
 
 export type LensBinaryOpts = {
   version: string;
@@ -30,159 +30,159 @@ export class LensBinary {
   protected logger: Console | winston.Logger
 
   constructor(opts: LensBinaryOpts) {
-    const baseDir = opts.baseDir
-    this.originalBinaryName = opts.originalBinaryName
-    this.binaryName = opts.newBinaryName || opts.originalBinaryName
-    this.binaryVersion = opts.version
-    this.requestOpts = opts.requestOpts
-    this.logger = console
-    let arch = null
+    const baseDir = opts.baseDir;
+    this.originalBinaryName = opts.originalBinaryName;
+    this.binaryName = opts.newBinaryName || opts.originalBinaryName;
+    this.binaryVersion = opts.version;
+    this.requestOpts = opts.requestOpts;
+    this.logger = console;
+    let arch = null;
 
     if (process.arch == "x64") {
-      arch = "amd64"
+      arch = "amd64";
     }
     else if (process.arch == "x86" || process.arch == "ia32") {
-      arch = "386"
+      arch = "386";
     }
     else {
-      arch = process.arch
+      arch = process.arch;
     }
-    this.arch = arch
-    this.platformName = isWindows ? "windows" : process.platform
-    this.dirname = path.normalize(path.join(baseDir, this.binaryName))
+    this.arch = arch;
+    this.platformName = isWindows ? "windows" : process.platform;
+    this.dirname = path.normalize(path.join(baseDir, this.binaryName));
     if (isWindows) {
-      this.binaryName = this.binaryName + ".exe"
-      this.originalBinaryName = this.originalBinaryName + ".exe"
+      this.binaryName = this.binaryName + ".exe";
+      this.originalBinaryName = this.originalBinaryName + ".exe";
     }
-    const tarName = this.getTarName()
+    const tarName = this.getTarName();
     if (tarName) {
-      this.tarPath = path.join(this.dirname, tarName)
+      this.tarPath = path.join(this.dirname, tarName);
     }
   }
 
   public setLogger(logger: Console | winston.Logger) {
-    this.logger = logger
+    this.logger = logger;
   }
 
   protected binaryDir() {
-    throw new Error("binaryDir not implemented")
+    throw new Error("binaryDir not implemented");
   }
 
   public async binaryPath() {
-    await this.ensureBinary()
-    return this.getBinaryPath()
+    await this.ensureBinary();
+    return this.getBinaryPath();
   }
 
   protected getTarName(): string | null {
-    return null
+    return null;
   }
 
   protected getUrl() {
-    return ""
+    return "";
   }
 
   protected getBinaryPath() {
-    return ""
+    return "";
   }
 
   protected getOriginalBinaryPath() {
-    return ""
+    return "";
   }
 
   public getBinaryDir() {
-    return path.dirname(this.getBinaryPath())
+    return path.dirname(this.getBinaryPath());
   }
 
   public async binDir() {
     try {
-      await this.ensureBinary()
-      return this.dirname
+      await this.ensureBinary();
+      return this.dirname;
     } catch (err) {
-      this.logger.error(err)
-      return ""
+      this.logger.error(err);
+      return "";
     }
   }
 
   protected async checkBinary() {
-    const exists = await pathExists(this.getBinaryPath())
-    return exists
+    const exists = await pathExists(this.getBinaryPath());
+    return exists;
   }
 
   public async ensureBinary() {
-    const isValid = await this.checkBinary()
+    const isValid = await this.checkBinary();
     if (!isValid) {
       await this.downloadBinary().catch((error) => {
-        this.logger.error(error)
+        this.logger.error(error);
       });
-      if (this.tarPath) await this.untarBinary()
-      if (this.originalBinaryName != this.binaryName) await this.renameBinary()
-      this.logger.info(`${this.originalBinaryName} has been downloaded to ${this.getBinaryPath()}`)
+      if (this.tarPath) await this.untarBinary();
+      if (this.originalBinaryName != this.binaryName) await this.renameBinary();
+      this.logger.info(`${this.originalBinaryName} has been downloaded to ${this.getBinaryPath()}`);
     }
   }
 
   protected async untarBinary() {
     return new Promise<void>((resolve, reject) => {
-      this.logger.debug(`Extracting ${this.originalBinaryName} binary`)
+      this.logger.debug(`Extracting ${this.originalBinaryName} binary`);
       tar.x({
         file: this.tarPath,
         cwd: this.dirname
       }).then((_ => {
-        resolve()
-      }))
-    })
+        resolve();
+      }));
+    });
   }
 
   protected async renameBinary() {
     return new Promise<void>((resolve, reject) => {
-      this.logger.debug(`Renaming ${this.originalBinaryName} binary to ${this.binaryName}`)
+      this.logger.debug(`Renaming ${this.originalBinaryName} binary to ${this.binaryName}`);
       fs.rename(this.getOriginalBinaryPath(), this.getBinaryPath(), (err) => {
         if (err) {
-          reject(err)
+          reject(err);
         }
         else {
-          resolve()
+          resolve();
         }
-      })
-    })
+      });
+    });
   }
 
   protected async downloadBinary() {
-    const binaryPath = this.tarPath || this.getBinaryPath()
-    await ensureDir(this.getBinaryDir(), 0o755)
+    const binaryPath = this.tarPath || this.getBinaryPath();
+    await ensureDir(this.getBinaryDir(), 0o755);
 
-    const file = fs.createWriteStream(binaryPath)
-    const url = this.getUrl()
+    const file = fs.createWriteStream(binaryPath);
+    const url = this.getUrl();
 
-    this.logger.info(`Downloading ${this.originalBinaryName} ${this.binaryVersion} from ${url} to ${binaryPath}`)
+    this.logger.info(`Downloading ${this.originalBinaryName} ${this.binaryVersion} from ${url} to ${binaryPath}`);
     const requestOpts: request.UriOptions & request.CoreOptions = {
       uri: url,
       gzip: true,
       ...this.requestOpts
-    }
+    };
 
-    const stream = request(requestOpts)
+    const stream = request(requestOpts);
 
     stream.on("complete", () => {
-      this.logger.info(`Download of ${this.originalBinaryName} finished`)
-      file.end()
-    })
+      this.logger.info(`Download of ${this.originalBinaryName} finished`);
+      file.end();
+    });
 
     stream.on("error", (error) => {
-      this.logger.error(error)
+      this.logger.error(error);
       fs.unlink(binaryPath, () => {
         // do nothing
-      })
-      throw(error)
-    })
+      });
+      throw(error);
+    });
     return new Promise((resolve, reject) => {
       file.on("close", () => {
-        this.logger.debug(`${this.originalBinaryName} binary download closed`)
+        this.logger.debug(`${this.originalBinaryName} binary download closed`);
         if (!this.tarPath) fs.chmod(binaryPath, 0o755, (err) => {
           if (err) reject(err);
-        })
-        resolve()
-      })
-      stream.pipe(file)
-    })
+        });
+        resolve();
+      });
+      stream.pipe(file);
+    });
   }
 }

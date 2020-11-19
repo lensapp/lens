@@ -70,25 +70,25 @@ export class CustomResourceDefinition extends KubeObject {
         group: this.getGroup(),
         name: this.getPluralName(),
       }
-    })
+    });
   }
 
   getResourceApiBase() {
     const { group } = this.spec;
-    return `/apis/${group}/${this.getVersion()}/${this.getPluralName()}`
+    return `/apis/${group}/${this.getVersion()}/${this.getPluralName()}`;
   }
 
   getPluralName() {
-    return this.getNames().plural
+    return this.getNames().plural;
   }
 
   getResourceKind() {
-    return this.spec.names.kind
+    return this.spec.names.kind;
   }
 
   getResourceTitle() {
     const name = this.getPluralName();
-    return name[0].toUpperCase() + name.substr(1)
+    return name[0].toUpperCase() + name.substr(1);
   }
 
   getGroup() {
@@ -141,7 +141,7 @@ export class CustomResourceDefinition extends KubeObject {
         ...condition,
         isReady: status === "True",
         tooltip: `${message || reason} (${lastTransitionTime})`
-      }
+      };
     });
   }
 }

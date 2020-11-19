@@ -36,7 +36,7 @@ export class SecretDetails extends React.Component<Props> {
           this.revealSecret = {};
         }
       })
-    ])
+    ]);
   }
 
   saveSecret = async () => {
@@ -97,7 +97,7 @@ export class SecretDetails extends React.Component<Props> {
                       }
                     </div>
                   </div>
-                )
+                );
               })
             }
             <Button
@@ -119,4 +119,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <SecretDetails {...props} />
   }
-})
+});

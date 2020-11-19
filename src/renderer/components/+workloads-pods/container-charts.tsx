@@ -101,4 +101,4 @@ export const ContainerCharts = observer(() => {
       data={{ datasets: datasets[tabId] }}
     />
   );
-})
+});

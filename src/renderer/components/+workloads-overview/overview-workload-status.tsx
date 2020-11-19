@@ -21,7 +21,7 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
   @observable elem: HTMLElement
 
   componentDidMount() {
-    this.elem = findDOMNode(this) as HTMLElement
+    this.elem = findDOMNode(this) as HTMLElement;
   }
 
   getStatusColor(status: string) {
@@ -29,9 +29,9 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
   }
 
   renderChart() {
-    if (!this.elem) return null
-    const { status } = this.props
-    const statuses = Object.entries(status)
+    if (!this.elem) return null;
+    const { status } = this.props;
+    const statuses = Object.entries(status);
     const chartData: Partial<ChartData> = {
       labels: [] as string[],
       datasets: [{
@@ -39,21 +39,21 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
         backgroundColor: [themeStore.activeTheme.colors.pieChartDefaultColor],
         label: "Empty"
       }]
-    }
+    };
     if (statuses.some(([key, val]) => val > 0)) {
       const dataset: any = {
         data: [],
         backgroundColor: [],
         label: "Status",
-      }
+      };
       statuses.forEach(([key, val]) => {
         if (val !== 0) {
-          dataset.data.push(val)
-          dataset.backgroundColor.push(this.getStatusColor(key))
-          chartData.labels.push(capitalize(key) + ": " + val)
+          dataset.data.push(val);
+          dataset.backgroundColor.push(this.getStatusColor(key));
+          chartData.labels.push(capitalize(key) + ": " + val);
         }
-      })
-      chartData.datasets[0] = dataset
+      });
+      chartData.datasets[0] = dataset;
     }
     const options = {
       elements: {
@@ -61,10 +61,10 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
           borderWidth: 0,
         },
       },
-    }
+    };
     return (
       <PieChart data={chartData} options={options}/>
-    )
+    );
   }
 
   render() {
@@ -74,6 +74,6 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
           {this.renderChart()}
         </div>
       </div>
-    )
+    );
   }
 }

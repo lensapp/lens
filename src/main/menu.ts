@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron"
+import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
 import { appName, isMac, isWindows, isTestEnv } from "../common/vars";
@@ -25,14 +25,14 @@ export function showAbout(browserWindow: BrowserWindow) {
     `Electron: ${process.versions.electron}`,
     `Chrome: ${process.versions.chrome}`,
     `Copyright 2020 Mirantis, Inc.`,
-  ]
+  ];
   dialog.showMessageBoxSync(browserWindow, {
     title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
     type: "info",
     buttons: ["Close"],
     message: `Lens`,
     detail: appInfo.join("\r\n")
-  })
+  });
 }
 
 export function buildMenu(windowManager: WindowManager) {
@@ -44,7 +44,7 @@ export function buildMenu(windowManager: WindowManager) {
   function activeClusterOnly(menuItems: MenuItemConstructorOptions[]) {
     if (!windowManager.activeClusterId) {
       menuItems.forEach(item => {
-        item.enabled = false
+        item.enabled = false;
       });
     }
     return menuItems;
@@ -61,7 +61,7 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "About Lens",
         click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-          showAbout(browserWindow)
+          showAbout(browserWindow);
         }
       },
       { type: 'separator' },
@@ -69,14 +69,14 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Preferences',
         accelerator: 'CmdOrCtrl+,',
         click() {
-          navigate(preferencesURL())
+          navigate(preferencesURL());
         }
       },
       {
         label: 'Extensions',
         accelerator: 'CmdOrCtrl+Shift+E',
         click() {
-          navigate(extensionsURL())
+          navigate(extensionsURL());
         }
       },
       { type: 'separator' },
@@ -90,7 +90,7 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Quit',
         accelerator: 'Cmd+Q',
         click() {
-          exitApp()
+          exitApp();
         }
       }
     ]
@@ -103,7 +103,7 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Add Cluster',
         accelerator: 'CmdOrCtrl+Shift+A',
         click() {
-          navigate(addClusterURL())
+          navigate(addClusterURL());
         }
       },
       ...activeClusterOnly([
@@ -115,7 +115,7 @@ export function buildMenu(windowManager: WindowManager) {
               params: {
                 clusterId: windowManager.activeClusterId
               }
-            }))
+            }));
           }
         }
       ]),
@@ -125,14 +125,14 @@ export function buildMenu(windowManager: WindowManager) {
           label: 'Preferences',
           accelerator: 'Ctrl+,',
           click() {
-            navigate(preferencesURL())
+            navigate(preferencesURL());
           }
         },
         {
           label: 'Extensions',
           accelerator: 'Ctrl+Shift+E',
           click() {
-            navigate(extensionsURL())
+            navigate(extensionsURL());
           }
         }
       ]),
@@ -147,7 +147,7 @@ export function buildMenu(windowManager: WindowManager) {
           label: 'Exit',
           accelerator: 'Alt+F4',
           click() {
-            exitApp()
+            exitApp();
           }
         }
       ])
@@ -183,7 +183,7 @@ export function buildMenu(windowManager: WindowManager) {
         label: 'Forward',
         accelerator: 'CmdOrCtrl+]',
         click() {
-          webContents.getFocusedWebContents()?.goForward()
+          webContents.getFocusedWebContents()?.goForward();
         }
       },
       {
@@ -209,7 +209,7 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "What's new?",
         click() {
-          navigate(whatsNewURL())
+          navigate(whatsNewURL());
         },
       },
       {
@@ -222,7 +222,7 @@ export function buildMenu(windowManager: WindowManager) {
         {
           label: "About Lens",
           click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-            showAbout(browserWindow)
+            showAbout(browserWindow);
           }
         }
       ])
@@ -236,7 +236,7 @@ export function buildMenu(windowManager: WindowManager) {
     edit: editMenu,
     view: viewMenu,
     help: helpMenu,
-  }
+  };
 
   // Modify menu from extensions-api
   menuRegistry.getItems().forEach(({ parentId, ...menuItem }) => {
@@ -244,12 +244,12 @@ export function buildMenu(windowManager: WindowManager) {
       const topMenu = appMenu[parentId as MenuTopId].submenu as MenuItemConstructorOptions[];
       topMenu.push(menuItem);
     } catch (err) {
-      logger.error(`[MENU]: can't register menu item, parentId=${parentId}`, { menuItem })
+      logger.error(`[MENU]: can't register menu item, parentId=${parentId}`, { menuItem });
     }
-  })
+  });
 
   if (!isMac) {
-    delete appMenu.mac
+    delete appMenu.mac;
   }
 
   const menu = Menu.buildFromTemplate(Object.values(appMenu));
@@ -259,9 +259,9 @@ export function buildMenu(windowManager: WindowManager) {
     // this is a workaround for the test environment (spectron) not being able to directly access
     // the application menus (https://github.com/electron-userland/spectron/issues/21)
     ipcMain.on('test-menu-item-click', (event: IpcMainEvent, ...names: string[]) => {
-      let menu: Menu = Menu.getApplicationMenu()
+      let menu: Menu = Menu.getApplicationMenu();
       const parentLabels: string[] = [];
-      let menuItem: MenuItem
+      let menuItem: MenuItem;
 
       for (const name of names) {
         parentLabels.push(name);
@@ -272,7 +272,7 @@ export function buildMenu(windowManager: WindowManager) {
         menu = menuItem.submenu;
       }
 
-      const menuPath: string = parentLabels.join(" -> ")
+      const menuPath: string = parentLabels.join(" -> ");
       if (!menuItem) {
         logger.info(`[MENU:test-menu-item-click] Cannot find menu item ${menuPath}`);
         return;

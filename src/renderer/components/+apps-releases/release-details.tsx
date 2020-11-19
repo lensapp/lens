@@ -77,7 +77,7 @@ export class ReleaseDetails extends Component<Props> {
   updateValues = async () => {
     const { release } = this.props;
     const name = release.getName();
-    const namespace = release.getNs()
+    const namespace = release.getNs();
     const data = {
       chart: release.getChart(),
       repo: await release.getRepo(),
@@ -121,7 +121,7 @@ export class ReleaseDetails extends Component<Props> {
           />
         </div>
       </div>
-    )
+    );
   }
 
   renderNotes() {
@@ -222,13 +222,13 @@ export class ReleaseDetails extends Component<Props> {
         <DrawerTitle title={_i18n._(t`Resources`)}/>
         {this.renderResources()}
       </div>
-    )
+    );
   }
 
   render() {
-    const { release, hideDetails } = this.props
-    const title = release ? <Trans>Release: {release.getName()}</Trans> : ""
-    const toolbar = <HelmReleaseMenu release={release} toolbar hideDetails={hideDetails}/>
+    const { release, hideDetails } = this.props;
+    const title = release ? <Trans>Release: {release.getName()}</Trans> : "";
+    const toolbar = <HelmReleaseMenu release={release} toolbar hideDetails={hideDetails}/>;
     return (
       <Drawer
         className={cssNames("ReleaseDetails", themeStore.activeTheme.type)}
@@ -240,6 +240,6 @@ export class ReleaseDetails extends Component<Props> {
       >
         {this.renderContent()}
       </Drawer>
-    )
+    );
   }
 }

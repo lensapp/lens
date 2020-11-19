@@ -21,24 +21,24 @@ jest.mock("winston", () => ({
     Console: jest.fn(),
     File: jest.fn(),
   }
-}))
+}));
 
-import { KubeconfigManager } from "../kubeconfig-manager"
-import mockFs from "mock-fs"
+import { KubeconfigManager } from "../kubeconfig-manager";
+import mockFs from "mock-fs";
 import { Cluster } from "../cluster";
 import { workspaceStore } from "../../common/workspace-store";
 import { ContextHandler } from "../context-handler";
 import { getFreePort } from "../port";
-import fse from "fs-extra"
+import fse from "fs-extra";
 import { loadYaml } from "@kubernetes/client-node";
 import { Console } from "console";
 
-console = new Console(process.stdout, process.stderr) // fix mockFS
+console = new Console(process.stdout, process.stderr); // fix mockFS
 
 describe("kubeconfig manager tests", () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-  })
+    jest.clearAllMocks();
+  });
 
   beforeEach(() => {
     const mockOpts = {
@@ -63,13 +63,13 @@ describe("kubeconfig manager tests", () => {
         kind: "Config",
         preferences: {},
       })
-    }
-    mockFs(mockOpts)
-  })
+    };
+    mockFs(mockOpts);
+  });
 
   afterEach(() => {
-    mockFs.restore()
-  })
+    mockFs.restore();
+  });
 
   it("should create 'temp' kube config with proxy", async () => {
     const cluster = new Cluster({
@@ -77,19 +77,19 @@ describe("kubeconfig manager tests", () => {
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
       workspace: workspaceStore.currentWorkspaceId
-    })
-    const contextHandler = new ContextHandler(cluster)
-    const port = await getFreePort()
-    const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port)
+    });
+    const contextHandler = new ContextHandler(cluster);
+    const port = await getFreePort();
+    const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port);
 
-    expect(logger.error).not.toBeCalled()
-    expect(kubeConfManager.getPath()).toBe("tmp/kubeconfig-foo")
-    const file = await fse.readFile(kubeConfManager.getPath())
-    const yml = loadYaml<any>(file.toString())
-    expect(yml["current-context"]).toBe("minikube")
-    expect(yml["clusters"][0]["cluster"]["server"]).toBe(`http://127.0.0.1:${port}/foo`)
-    expect(yml["users"][0]["name"]).toBe("proxy")
-  })
+    expect(logger.error).not.toBeCalled();
+    expect(kubeConfManager.getPath()).toBe("tmp/kubeconfig-foo");
+    const file = await fse.readFile(kubeConfManager.getPath());
+    const yml = loadYaml<any>(file.toString());
+    expect(yml["current-context"]).toBe("minikube");
+    expect(yml["clusters"][0]["cluster"]["server"]).toBe(`http://127.0.0.1:${port}/foo`);
+    expect(yml["users"][0]["name"]).toBe("proxy");
+  });
 
   it("should remove 'temp' kube config on unlink and remove reference from inside class", async () => {
     const cluster = new Cluster({
@@ -97,16 +97,16 @@ describe("kubeconfig manager tests", () => {
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
       workspace: workspaceStore.currentWorkspaceId
-    })
-    const contextHandler = new ContextHandler(cluster)
-    const port = await getFreePort()
-    const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port)
+    });
+    const contextHandler = new ContextHandler(cluster);
+    const port = await getFreePort();
+    const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port);
 
-    const configPath = kubeConfManager.getPath()
-    expect(await fse.pathExists(configPath)).toBe(true)
-    await kubeConfManager.unlink()
-    expect(await fse.pathExists(configPath)).toBe(false)
-    await kubeConfManager.unlink() // doesn't throw
-    expect(kubeConfManager.getPath()).toBeUndefined()
-  })
-})
+    const configPath = kubeConfManager.getPath();
+    expect(await fse.pathExists(configPath)).toBe(true);
+    await kubeConfManager.unlink();
+    expect(await fse.pathExists(configPath)).toBe(false);
+    await kubeConfManager.unlink(); // doesn't throw
+    expect(kubeConfManager.getPath()).toBeUndefined();
+  });
+});

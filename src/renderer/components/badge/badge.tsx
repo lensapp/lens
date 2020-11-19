@@ -1,4 +1,4 @@
-import "./badge.scss"
+import "./badge.scss";
 
 import React from "react";
 import { cssNames } from "../../utils/cssNames";
@@ -18,6 +18,6 @@ export class Badge extends React.Component<BadgeProps> {
         {label}
         {children}
       </span>
-    </>
+    </>;
   }
 }

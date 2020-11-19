@@ -1,5 +1,5 @@
-import "./page-filters-list.scss"
-import React from "react"
+import "./page-filters-list.scss";
+import React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { Badge } from "../badge";
@@ -56,11 +56,11 @@ export class PageFiltersList extends React.Component<Props> {
                   </>
                 )}
               />
-            )
+            );
           })}
         </div>
       </>
-    )
+    );
   }
 
   render() {
@@ -68,6 +68,6 @@ export class PageFiltersList extends React.Component<Props> {
       <div className="PageFiltersList">
         {this.renderContent()}
       </div>
-    )
+    );
   }
 }

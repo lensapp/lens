@@ -26,14 +26,14 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
     super();
 
     // auto-init stores for crd-s
-    reaction(() => this.items.toJS(), items => items.forEach(initStore))
+    reaction(() => this.items.toJS(), items => items.forEach(initStore));
   }
 
   protected sortItems(items: CustomResourceDefinition[]) {
     return super.sortItems(items, [
       crd => crd.getGroup(),
       crd => crd.getName(),
-    ])
+    ]);
   }
 
   @computed get groups() {
@@ -43,7 +43,7 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
       if (!groups[group]) groups[group] = [];
       groups[group].push(crd);
       return groups;
-    }, groups)
+    }, groups);
   }
 
   getByGroup(group: string, pluralName: string) {
@@ -53,12 +53,12 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
   }
 
   getByObject(obj: KubeObject) {
-    if (!obj) return null
+    if (!obj) return null;
     const { kind, apiVersion } = obj;
     
     return this.items.find(crd => (
       kind === crd.getResourceKind() && apiVersion === `${crd.getGroup()}/${crd.getVersion()}`
-    ))
+    ));
   }
 }
 

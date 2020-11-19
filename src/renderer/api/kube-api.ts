@@ -1,6 +1,6 @@
 // Base class for building all kubernetes apis
 
-import merge from "lodash/merge"
+import merge from "lodash/merge";
 import { stringify } from "querystring";
 import { IKubeObjectConstructor, KubeObject } from "./kube-object";
 import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
@@ -51,7 +51,7 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
   return new KubeApi({
     objectConstructor: kubeClass,
     request: request
-  })
+  });
 }
 
 export class KubeApi<T extends KubeObject = any> {
@@ -83,7 +83,7 @@ export class KubeApi<T extends KubeObject = any> {
       isNamespaced = options.objectConstructor?.namespaced
     } = options || {};
     if (!options.apiBase) {
-      options.apiBase = objectConstructor.apiBase
+      options.apiBase = objectConstructor.apiBase;
     }
     const { apiBase, apiPrefix, apiGroup, apiVersion, apiVersionWithGroup, resource } = KubeApi.parseApi(options.apiBase);
 
@@ -105,7 +105,7 @@ export class KubeApi<T extends KubeObject = any> {
   get apiVersionWithGroup() {
     return [this.apiGroup, this.apiVersionPreferred ?? this.apiVersion]
       .filter(Boolean)
-      .join("/")
+      .join("/");
   }
 
   protected async checkPreferredVersion() {
@@ -116,7 +116,7 @@ export class KubeApi<T extends KubeObject = any> {
       });
 
       if (this.apiVersionPreferred) {
-        Object.defineProperty(this, "apiBase", { value: this.getUrl() })
+        Object.defineProperty(this, "apiBase", { value: this.getUrl() });
         apiManager.registerApi(this.apiBase, this);
       }
     }
@@ -147,10 +147,10 @@ export class KubeApi<T extends KubeObject = any> {
 
   protected normalizeQuery(query: Partial<IKubeApiQueryParams> = {}) {
     if (query.labelSelector) {
-      query.labelSelector = [query.labelSelector].flat().join(",")
+      query.labelSelector = [query.labelSelector].flat().join(",");
     }
     if (query.fieldSelector) {
-      query.fieldSelector = [query.fieldSelector].flat().join(",")
+      query.fieldSelector = [query.fieldSelector].flat().join(",");
     }
     return query;
   }
@@ -170,7 +170,7 @@ export class KubeApi<T extends KubeObject = any> {
         kind: this.kind,
         apiVersion: apiVersion,
         ...item,
-      }))
+      }));
     }
 
     // custom apis might return array for list response, e.g. users, groups, etc.
@@ -218,13 +218,13 @@ export class KubeApi<T extends KubeObject = any> {
     const apiUrl = this.getUrl({ namespace, name });
     return this.request
       .put(apiUrl, { data })
-      .then(this.parseResponse)
+      .then(this.parseResponse);
   }
 
   async delete({ name = "", namespace = "default" }) {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace, name });
-    return this.request.del(apiUrl)
+    return this.request.del(apiUrl);
   }
 
   getWatchUrl(namespace = "", query: IKubeApiQueryParams = {}) {
@@ -232,7 +232,7 @@ export class KubeApi<T extends KubeObject = any> {
       watch: 1,
       resourceVersion: this.getResourceVersion(namespace),
       ...query,
-    })
+    });
   }
 
   watch(): () => void {
@@ -240,4 +240,4 @@ export class KubeApi<T extends KubeObject = any> {
   }
 }
 
-export * from "./kube-api-parse"
+export * from "./kube-api-parse";

@@ -35,14 +35,14 @@ export class ClusterIconSetting extends React.Component<Props> {
         cluster.preferences.icon = undefined;
       }
     } catch (e) {
-      this.errorText = e.toString()
-      this.status = GeneralInputStatus.ERROR
+      this.errorText = e.toString();
+      this.status = GeneralInputStatus.ERROR;
     }
   }
 
   getClearButton() {
     if (this.props.cluster.preferences.icon) {
-      return <Button tooltip="Revert back to default icon" accent onClick={() => this.onIconPick([])}>Clear</Button>
+      return <Button tooltip="Revert back to default icon" accent onClick={() => this.onIconPick([])}>Clear</Button>;
     }
   }
 

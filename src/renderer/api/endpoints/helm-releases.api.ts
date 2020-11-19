@@ -82,7 +82,7 @@ export const helmReleasesApi = {
       return {
         ...details,
         resources
-      }
+      };
     });
   },
 
@@ -156,12 +156,12 @@ export class HelmRelease implements ItemObject {
   }
 
   getChart(withVersion = false) {
-    let chart = this.chart
+    let chart = this.chart;
     if(!withVersion && this.getVersion() != "" ) {
-      const search = new RegExp(`-${this.getVersion()}`)
+      const search = new RegExp(`-${this.getVersion()}`);
       chart = chart.replace(search, "");
     }
-    return chart
+    return chart;
   }
 
   getRevision() {
@@ -173,12 +173,12 @@ export class HelmRelease implements ItemObject {
   }
 
   getVersion() {
-    const versions = this.chart.match(/(v?\d+)[^-].*$/)
+    const versions = this.chart.match(/(v?\d+)[^-].*$/);
     if (versions) {
-      return versions[0]
+      return versions[0];
     }
     else {
-      return ""
+      return "";
     }
   }
 

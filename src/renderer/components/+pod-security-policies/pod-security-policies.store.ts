@@ -8,5 +8,5 @@ export class PodSecurityPoliciesStore extends KubeObjectStore<PodSecurityPolicy>
   api = pspApi
 }
 
-export const podSecurityPoliciesStore = new PodSecurityPoliciesStore()
+export const podSecurityPoliciesStore = new PodSecurityPoliciesStore();
 apiManager.registerStore(podSecurityPoliciesStore);

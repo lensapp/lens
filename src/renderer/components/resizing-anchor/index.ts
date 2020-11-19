@@ -1,1 +1,1 @@
-export * from './resizing-anchor'
+export * from './resizing-anchor';

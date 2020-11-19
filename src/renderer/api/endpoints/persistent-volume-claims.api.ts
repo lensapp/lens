@@ -51,13 +51,13 @@ export class PersistentVolumeClaim extends KubeObject {
   }
 
   getPods(allPods: Pod[]): Pod[] {
-    const pods = allPods.filter(pod => pod.getNs() === this.getNs())
+    const pods = allPods.filter(pod => pod.getNs() === this.getNs());
     return pods.filter(pod => {
       return pod.getVolumes().filter(volume =>
         volume.persistentVolumeClaim &&
         volume.persistentVolumeClaim.claimName === this.getName()
-      ).length > 0
-    })
+      ).length > 0;
+    });
   }
 
   getStorage(): string {
@@ -78,7 +78,7 @@ export class PersistentVolumeClaim extends KubeObject {
 
   getStatus(): string {
     if (this.status) return this.status.phase;
-    return "-"
+    return "-";
   }
 }
 

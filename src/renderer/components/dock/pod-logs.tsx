@@ -1,7 +1,7 @@
 import "./pod-logs.scss";
 import React from "react";
 import AnsiUp from 'ansi_up';
-import DOMPurify from "dompurify"
+import DOMPurify from "dompurify";
 import { Trans } from "@lingui/macro";
 import { action, computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -205,14 +205,14 @@ export class PodLogs extends React.Component<Props> {
             className={cssNames("overlay", { active })}
             dangerouslySetInnerHTML={{ __html: ansiToHtml(overlayValue) }}
           /> :
-          null
+          null;
         contents.push(
           <React.Fragment key={piece + index}>
             <span dangerouslySetInnerHTML={{ __html: ansiToHtml(piece) }} />
             {overlay}
           </React.Fragment>
         );
-      })
+      });
     }
     return (
       <div className={cssNames("LogRow")}>
@@ -288,7 +288,7 @@ export class PodLogs extends React.Component<Props> {
         toPrevOverlay={this.toOverlay}
         toNextOverlay={this.toOverlay}
       />
-    )
+    );
     return (
       <div className={cssNames("PodLogs flex column", className, { noscroll: this.hideHorizontalScroll })}>
         <InfoPanel

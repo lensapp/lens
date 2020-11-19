@@ -1,4 +1,4 @@
-import { CoreV1Api } from "@kubernetes/client-node"
+import { CoreV1Api } from "@kubernetes/client-node";
 
 export type PrometheusClusterQuery = {
   memoryUsage: string;
@@ -77,14 +77,14 @@ export class PrometheusProviderRegistry {
     if (!this.prometheusProviders[type]) {
       throw "Unknown Prometheus provider";
     }
-    return this.prometheusProviders[type]
+    return this.prometheusProviders[type];
   }
 
   static registerProvider(key: string, provider: PrometheusProvider) {
-    this.prometheusProviders[key] = provider
+    this.prometheusProviders[key] = provider;
   }
 
   static getProviders(): PrometheusProvider[] {
-    return Object.values(this.prometheusProviders)
+    return Object.values(this.prometheusProviders);
   }
 }

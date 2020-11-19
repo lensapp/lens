@@ -1,4 +1,4 @@
-import "./add-role-binding-dialog.scss"
+import "./add-role-binding-dialog.scss";
 
 import React from "react";
 import { computed, observable } from "mobx";
@@ -67,7 +67,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   @computed get selectedBindings() {
     return [
       ...this.selectedAccounts,
-    ]
+    ];
   }
 
   close = () => {
@@ -121,7 +121,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
           name: item.getName(),
           kind: item.kind,
           namespace: item.getNs(),
-        }
+        };
       }
       return item;
     });
@@ -152,7 +152,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   };
 
   @computed get roleOptions(): BindingSelectOption[] {
-    let roles = rolesStore.items as Role[]
+    let roles = rolesStore.items as Role[];
     if (this.bindContext) {
       // show only cluster-roles or roles for selected context namespace
       roles = roles.filter(role => !role.getNs() || role.getNs() === this.bindContext);
@@ -163,8 +163,8 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       return {
         value: role.getId(),
         label: name + (namespace ? ` (${namespace})` : "")
-      }
-    })
+      };
+    });
   }
 
   @computed get serviceAccountOptions(): BindingSelectOption[] {
@@ -175,8 +175,8 @@ export class AddRoleBindingDialog extends React.Component<Props> {
         item: account,
         value: name,
         label: <><Icon small material="account_box"/> {name} ({namespace})</>
-      }
-    })
+      };
+    });
   }
 
   renderContents() {
@@ -240,7 +240,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
           maxMenuHeight={200}
         />
       </>
-    )
+    );
   }
 
   render() {
@@ -275,6 +275,6 @@ export class AddRoleBindingDialog extends React.Component<Props> {
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

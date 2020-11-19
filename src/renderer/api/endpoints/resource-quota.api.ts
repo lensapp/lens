@@ -37,7 +37,7 @@ export class ResourceQuota extends KubeObject {
 
   constructor(data: KubeJsonApiData) {
     super(data);
-    this.spec = this.spec || {} as any
+    this.spec = this.spec || {} as any;
   }
 
   spec: {

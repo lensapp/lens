@@ -1,5 +1,5 @@
-import startCase from "lodash/startCase"
-import "./volume-details.scss"
+import startCase from "lodash/startCase";
+import "./volume-details.scss";
 
 import React from "react";
 import { Trans } from "@lingui/macro";
@@ -107,7 +107,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <PersistentVolumeDetails {...props} />
   }
-})
+});
 
 kubeObjectDetailRegistry.add({
   kind: "PersistentVolume",
@@ -116,4 +116,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});

@@ -9,16 +9,16 @@ export class CronJobStore extends KubeObjectStore<CronJob> {
   api = cronJobApi
 
   getStatuses(cronJobs?: CronJob[]) {
-    const status = { suspended: 0, scheduled: 0 }
+    const status = { suspended: 0, scheduled: 0 };
     cronJobs.forEach(cronJob => {
       if (cronJob.spec.suspend) {
-        status.suspended++
+        status.suspended++;
       }
       else {
-        status.scheduled++
+        status.scheduled++;
       }
-    })
-    return status
+    });
+    return status;
   }
 
   getActiveJobsNum(cronJob: CronJob) {

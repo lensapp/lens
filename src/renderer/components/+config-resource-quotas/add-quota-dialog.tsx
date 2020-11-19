@@ -193,12 +193,12 @@ export class AddQuotaDialog extends React.Component<Props> {
                     <div className="value">{value}</div>
                     <Icon material="clear" onClick={() => this.quotas[quota] = ""} />
                   </div>
-                )
+                );
               })}
             </div>
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

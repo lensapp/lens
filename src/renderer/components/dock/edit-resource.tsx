@@ -3,7 +3,7 @@ import "./edit-resource.scss";
 import React from "react";
 import { autorun, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import jsYaml from "js-yaml"
+import jsYaml from "js-yaml";
 import { t, Trans } from "@lingui/macro";
 import { IDockTab } from "./dock.store";
 import { cssNames } from "../../utils";
@@ -110,6 +110,6 @@ export class EditResource extends React.Component<Props> {
           onChange={onChange}
         />
       </div>
-    )
+    );
   }
 }

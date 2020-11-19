@@ -21,9 +21,9 @@ export class LensExtension {
   @observable private isEnabled = false;
 
   constructor({ manifest, manifestPath, isBundled }: InstalledExtension) {
-    this.manifest = manifest
-    this.manifestPath = manifestPath
-    this.isBundled = !!isBundled
+    this.manifest = manifest;
+    this.manifestPath = manifestPath;
+    this.isBundled = !!isBundled;
   }
 
   get id(): LensExtensionId {
@@ -31,15 +31,15 @@ export class LensExtension {
   }
 
   get name() {
-    return this.manifest.name
+    return this.manifest.name;
   }
 
   get version() {
-    return this.manifest.version
+    return this.manifest.version;
   }
 
   get description() {
-    return this.manifest.description
+    return this.manifest.description;
   }
 
   @action
@@ -60,18 +60,18 @@ export class LensExtension {
 
   toggle(enable?: boolean) {
     if (typeof enable === "boolean") {
-      enable ? this.enable() : this.disable()
+      enable ? this.enable() : this.disable();
     } else {
-      this.isEnabled ? this.disable() : this.enable()
+      this.isEnabled ? this.disable() : this.enable();
     }
   }
 
   async whenEnabled(handlers: () => Function[]) {
     const disposers: Function[] = [];
     const unregisterHandlers = () => {
-      disposers.forEach(unregister => unregister())
+      disposers.forEach(unregister => unregister());
       disposers.length = 0;
-    }
+    };
     const cancelReaction = reaction(() => this.isEnabled, isEnabled => {
       if (isEnabled) {
         disposers.push(...handlers());
@@ -80,11 +80,11 @@ export class LensExtension {
       }
     }, {
       fireImmediately: true
-    })
+    });
     return () => {
       unregisterHandlers();
       cancelReaction();
-    }
+    };
   }
 
   protected onActivate() {

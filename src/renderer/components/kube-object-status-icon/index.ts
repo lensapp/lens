@@ -1,1 +1,1 @@
-export * from "./kube-object-status-icon"
+export * from "./kube-object-status-icon";

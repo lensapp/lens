@@ -21,15 +21,15 @@ export class StorageClass extends KubeObject {
     return (
       annotations["storageclass.kubernetes.io/is-default-class"] === "true" ||
       annotations["storageclass.beta.kubernetes.io/is-default-class"] === "true"
-    )
+    );
   }
 
   getVolumeBindingMode() {
-    return this.volumeBindingMode || "-"
+    return this.volumeBindingMode || "-";
   }
 
   getReclaimPolicy() {
-    return this.reclaimPolicy || "-"
+    return this.reclaimPolicy || "-";
   }
 }
 

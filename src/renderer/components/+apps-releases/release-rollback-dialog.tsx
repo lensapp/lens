@@ -10,7 +10,7 @@ import { HelmRelease, helmReleasesApi, IReleaseRevision } from "../../api/endpoi
 import { releaseStore } from "./release.store";
 import { Select, SelectOption } from "../select";
 import { Notifications } from "../notifications";
-import orderBy from "lodash/orderBy"
+import orderBy from "lodash/orderBy";
 
 interface Props extends DialogProps {
 }
@@ -65,7 +65,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
   renderContent() {
     const { revision, revisions } = this;
     if (!revision) {
-      return <p><Trans>No revisions to rollback.</Trans></p>
+      return <p><Trans>No revisions to rollback.</Trans></p>;
     }
     return (
       <div className="flex gaps align-center">
@@ -78,13 +78,13 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
           onChange={({ value }: SelectOption<IReleaseRevision>) => this.revision = value}
         />
       </div>
-    )
+    );
   }
 
   render() {
     const { ...dialogProps } = this.props;
     const releaseName = this.release ? this.release.getName() : "";
-    const header = <h5><Trans>Rollback <b>{releaseName}</b></Trans></h5>
+    const header = <h5><Trans>Rollback <b>{releaseName}</b></Trans></h5>;
     return (
       <Dialog
         {...dialogProps}
@@ -104,6 +104,6 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

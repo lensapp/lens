@@ -41,7 +41,7 @@ export const helmChartsApi = {
         return {
           readme,
           versions,
-        }
+        };
       });
   },
 

@@ -1,4 +1,4 @@
-import "./file-picker.scss"
+import "./file-picker.scss";
 
 import React from "react";
 import fse from "fs-extra";
@@ -125,7 +125,7 @@ export class FilePicker extends React.Component<Props> {
 
     switch (onOverTotalSizeLimit) {
     case OverTotalSizeLimitStyle.FILTER_LARGEST:
-      files = _.orderBy(files, ["size"])
+      files = _.orderBy(files, ["size"]);
     case OverTotalSizeLimitStyle.FILTER_LAST:
       let newTotalSize = totalSize;
       
@@ -193,11 +193,11 @@ export class FilePicker extends React.Component<Props> {
   getIconRight(): React.ReactNode {
     switch (this.status) {
     case FileInputStatus.CLEAR:
-      return <Icon className="clean" material="cloud_upload"></Icon>
+      return <Icon className="clean" material="cloud_upload"></Icon>;
     case FileInputStatus.PROCESSING:
       return <Spinner />;
     case FileInputStatus.ERROR:
-      return <Icon material="error" title={this.errorText}></Icon>
+      return <Icon material="error" title={this.errorText}></Icon>;
     }
   }
 }

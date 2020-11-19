@@ -45,6 +45,6 @@ export class KubeEventIcon extends React.Component<Props> {
           )
         }}
       />
-    )
+    );
   }
 }

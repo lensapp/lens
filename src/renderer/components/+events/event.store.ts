@@ -20,7 +20,7 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
   protected sortItems(items: KubeEvent[]) {
     return super.sortItems(items, [
       event => event.metadata.creationTimestamp
-    ], "desc")
+    ], "desc");
   }
 
   getEventsByObject(obj: KubeObject): KubeEvent[] {

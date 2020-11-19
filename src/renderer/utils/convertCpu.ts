@@ -5,9 +5,9 @@ const million = thousand * thousand;
 const shortBillion = thousand * million;
 
 export function cpuUnitsToNumber(cpu: string) {
-  const cpuNum = parseInt(cpu)
-  if (cpu.includes("m")) return cpuNum / thousand
-  if (cpu.includes("u")) return cpuNum / million
-  if (cpu.includes("n")) return cpuNum / shortBillion
-  return parseFloat(cpu)
+  const cpuNum = parseInt(cpu);
+  if (cpu.includes("m")) return cpuNum / thousand;
+  if (cpu.includes("u")) return cpuNum / million;
+  if (cpu.includes("n")) return cpuNum / shortBillion;
+  return parseFloat(cpu);
 }

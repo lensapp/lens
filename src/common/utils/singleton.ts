@@ -24,5 +24,5 @@ class Singleton {
   }
 }
 
-export { Singleton }
+export { Singleton };
 export default Singleton;

@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import { observer } from "mobx-react";
 import { computed } from "mobx";
 import { t, Trans } from "@lingui/macro";
@@ -42,9 +42,9 @@ export class PageFiltersSelect extends React.Component<Props> {
             value: name,
             icon: <Icon small material="layers"/>,
             selected: selectedValues.includes(name),
-          }
+          };
         })
-      })
+      });
     }
     return options;
   }
@@ -53,7 +53,7 @@ export class PageFiltersSelect extends React.Component<Props> {
     return this.groupedOptions.reduce((options, optGroup) => {
       options.push(...optGroup.options);
       return options;
-    }, [])
+    }, []);
   }
 
   private formatLabel = (option: SelectOptionFilter) => {
@@ -98,6 +98,6 @@ export class PageFiltersSelect extends React.Component<Props> {
         formatOptionLabel={formatLabel}
         onChange={onSelect}
       />
-    )
+    );
   }
 }

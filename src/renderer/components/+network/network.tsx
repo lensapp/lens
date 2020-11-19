@@ -1,4 +1,4 @@
-import "./network.scss"
+import "./network.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -14,7 +14,7 @@ import { isAllowedResource } from "../../../common/rbac";
 @observer
 export class Network extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-    const query = namespaceStore.getContextParams()
+    const query = namespaceStore.getContextParams();
     const routes: TabLayoutRoute[] = [];
     if (isAllowedResource("services")) {
       routes.push({
@@ -22,7 +22,7 @@ export class Network extends React.Component {
         component: Services,
         url: servicesURL({ query }),
         routePath: servicesRoute.path.toString(),
-      })
+      });
     }
     if (isAllowedResource("endpoints")) {
       routes.push({
@@ -30,7 +30,7 @@ export class Network extends React.Component {
         component: Endpoints,
         url: endpointURL({ query }),
         routePath: endpointRoute.path.toString(),
-      })
+      });
     }
     if (isAllowedResource("ingresses")) {
       routes.push({
@@ -38,7 +38,7 @@ export class Network extends React.Component {
         component: Ingresses,
         url: ingressURL({ query }),
         routePath: ingressRoute.path.toString(),
-      })
+      });
     }
     if (isAllowedResource("networkpolicies")) {
       routes.push({
@@ -46,14 +46,14 @@ export class Network extends React.Component {
         component: NetworkPolicies,
         url: networkPoliciesURL({ query }),
         routePath: networkPoliciesRoute.path.toString(),
-      })
+      });
     }
-    return routes
+    return routes;
   }
 
   render() {
     return (
       <TabLayout className="Network" tabs={Network.tabRoutes}/>
-    )
+    );
   }
 }

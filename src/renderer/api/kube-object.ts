@@ -65,7 +65,7 @@ export class KubeObject implements ItemObject {
 
   static stringifyLabels(labels: { [name: string]: string }): string[] {
     if (!labels) return [];
-    return Object.entries(labels).map(([name, value]) => `${name}=${value}`)
+    return Object.entries(labels).map(([name, value]) => `${name}=${value}`);
   }
 
   constructor(data: KubeJsonApiData) {
@@ -78,7 +78,7 @@ export class KubeObject implements ItemObject {
   status?: any; // todo: type-safety support
 
   get selfLink() {
-    return this.metadata.selfLink
+    return this.metadata.selfLink;
   }
 
   getId() {
@@ -131,18 +131,18 @@ export class KubeObject implements ItemObject {
     return refs.map(ownerRef => ({
       ...ownerRef,
       namespace: this.getNs(),
-    }))
+    }));
   }
 
   getSearchFields() {
-    const { getName, getId, getNs, getAnnotations, getLabels } = this
+    const { getName, getId, getNs, getAnnotations, getLabels } = this;
     return [
       getName(),
       getNs(),
       getId(),
       ...getLabels(),
       ...getAnnotations(true),
-    ]
+    ];
   }
 
   toPlainObject(): object {

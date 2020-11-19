@@ -48,7 +48,7 @@ export class PersistentVolume extends KubeObject {
   getCapacity(inBytes = false) {
     const capacity = this.spec.capacity;
     if (capacity) {
-      if (inBytes) return unitsToBytes(capacity.storage)
+      if (inBytes) return unitsToBytes(capacity.storage);
       return capacity.storage;
     }
     return 0;
