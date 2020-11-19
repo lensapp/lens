@@ -6,7 +6,7 @@ import { action, IReactionOptions, observable, reaction, runInAction, toJS, when
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
-import { broadcastIpc, IpcBroadcastParams } from "./ipc";
+import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "./ipc";
 import isEqual from "lodash/isEqual";
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
@@ -37,12 +37,16 @@ export class BaseStore<T = any> extends Singleton {
     return path.basename(this.storeConfig.path);
   }
 
-  get path() {
-    return this.storeConfig.path;
+  protected get syncRendererChannel() {
+    return `store-sync-renderer:${this.path}`
   }
 
-  get syncChannel() {
-    return `STORE-SYNC:${this.path}`
+  protected get syncMainChannel() {
+    return `store-sync-main:${this.path}`
+  }
+
+  get path() {
+    return this.storeConfig.path;
   }
 
   protected async init() {
@@ -89,16 +93,16 @@ export class BaseStore<T = any> extends Singleton {
         logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
       };
-      ipcMain.on(this.syncChannel, callback);
-      this.syncDisposers.push(() => ipcMain.off(this.syncChannel, callback));
+      subscribeToBroadcast(this.syncMainChannel, callback)
+      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncMainChannel, callback));
     }
     if (ipcRenderer) {
       const callback = (event: IpcRendererEvent, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
         this.onSyncFromMain(model);
       };
-      ipcRenderer.on(this.syncChannel, callback);
-      this.syncDisposers.push(() => ipcRenderer.off(this.syncChannel, callback));
+      subscribeToBroadcast(this.syncRendererChannel, callback)
+      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncRendererChannel, callback));
     }
   }
 
@@ -109,7 +113,8 @@ export class BaseStore<T = any> extends Singleton {
   }
 
   unregisterIpcListener() {
-    ipcRenderer.removeAllListeners(this.syncChannel)
+    ipcRenderer.removeAllListeners(this.syncMainChannel)
+    ipcRenderer.removeAllListeners(this.syncRendererChannel)
   }
 
   disableSync() {
@@ -135,41 +140,10 @@ export class BaseStore<T = any> extends Singleton {
   protected async onModelChange(model: T) {
     if (ipcMain) {
       this.saveToFile(model); // save config file
-      this.syncToWebViews(model); // send update to renderer views
+      broadcastMessage(this.syncRendererChannel, model)
+    } else {
+      broadcastMessage(this.syncMainChannel, model)
     }
-    // send "update-request" to main-process
-    if (ipcRenderer) {
-      ipcRenderer.send(this.syncChannel, model);
-    }
-  }
-
-  protected async syncToWebViews(model: T) {
-    const msg: IpcBroadcastParams = {
-      channel: this.syncChannel,
-      args: [model],
-    }
-    broadcastIpc(msg); // send to all windows (BrowserWindow, webContents)
-    const frames = await this.getSubFrames();
-    frames.forEach(frameId => {
-      // send to all sub-frames (e.g. cluster-view managed in iframe)
-      broadcastIpc({
-        ...msg,
-        frameId: frameId,
-        frameOnly: true,
-      });
-    });
-  }
-
-  // todo: refactor?
-  protected async getSubFrames(): Promise<number[]> {
-    const subFrames: number[] = [];
-    const { clusterStore } = await import("./cluster-store");
-    clusterStore.clustersList.forEach(cluster => {
-      if (cluster.frameId) {
-        subFrames.push(cluster.frameId)
-      }
-    });
-    return subFrames;
   }
 
   @action
