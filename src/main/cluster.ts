@@ -4,7 +4,7 @@ import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
 import { action, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
-import { broadcastIpc } from "../common/ipc";
+import { broadcastMessage } from "../common/ipc";
 import { ContextHandler } from "./context-handler"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import { Kubectl } from "./kubectl";
@@ -50,7 +50,6 @@ export interface ClusterState {
 
 export class Cluster implements ClusterModel, ClusterState {
   public id: ClusterId;
-  public frameId: number;
   public kubeCtl: Kubectl
   public contextHandler: ContextHandler;
   public ownerRef: string;
@@ -171,18 +170,22 @@ export class Cluster implements ClusterModel, ClusterState {
       await this.refreshAllowedResources()
       this.isAdmin = await this.isClusterAdmin()
       this.ready = true
-      this.kubeCtl = new Kubectl(this.version)
-      this.kubeCtl.ensureKubectl() // download kubectl in background, so it's not blocking dashboard
+      this.ensureKubectl()
     }
     this.activated = true
     return this.pushState();
   }
 
+  protected async ensureKubectl() {
+    this.kubeCtl = new Kubectl(this.version)
+    return this.kubeCtl.ensureKubectl() // download kubectl in background, so it's not blocking dashboard
+  }
+
   @action
   async reconnect() {
     logger.info(`[CLUSTER]: reconnect`, this.getMeta());
-    this.contextHandler.stopServer();
-    await this.contextHandler.ensureServer();
+    this.contextHandler?.stopServer();
+    await this.contextHandler?.ensureServer();
     this.disconnected = false;
   }
 
@@ -190,7 +193,7 @@ export class Cluster implements ClusterModel, ClusterState {
   disconnect() {
     logger.info(`[CLUSTER]: disconnect`, this.getMeta());
     this.unbindEvents();
-    this.contextHandler.stopServer();
+    this.contextHandler?.stopServer();
     this.disconnected = true;
     this.online = false;
     this.accessible = false;
@@ -406,11 +409,7 @@ export class Cluster implements ClusterModel, ClusterState {
 
   pushState(state = this.getState()) {
     logger.silly(`[CLUSTER]: push-state`, state);
-    broadcastIpc({
-      channel: "cluster:state",
-      frameId: this.frameId,
-      args: [this.id, state],
-    })
+    broadcastMessage("cluster:state", this.id, state)
   }
 
   // get cluster system meta, e.g. use in "logger"

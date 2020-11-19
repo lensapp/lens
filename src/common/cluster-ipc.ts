@@ -1,59 +1,55 @@
-import { createIpcChannel } from "./ipc";
+import { handleRequest } from "./ipc";
 import { ClusterId, clusterStore } from "./cluster-store";
-import { extensionLoader } from "../extensions/extension-loader"
 import { appEventBus } from "./event-bus"
 import { ResourceApplier } from "../main/resource-applier";
+import { ipcMain } from "electron";
+import { clusterFrameMap } from "./cluster-frames"
 
-export const clusterIpc = {
-  activate: createIpcChannel({
-    channel: "cluster:activate",
-    handle: (clusterId: ClusterId, force = false) => {
-      const cluster = clusterStore.getById(clusterId);
-      if (cluster) {
-        return cluster.activate(force);
-      }
-    },
-  }),
+export const clusterActivateHandler = "cluster:activate"
+export const clusterSetFrameIdHandler = "cluster:set-frame-id"
+export const clusterRefreshHandler = "cluster:refresh"
+export const clusterDisconnectHandler = "cluster:disconnect"
+export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all"
 
-  setFrameId: createIpcChannel({
-    channel: "cluster:set-frame-id",
-    handle: (clusterId: ClusterId, frameId?: number) => {
-      const cluster = clusterStore.getById(clusterId);
-      if (cluster) {
-        if (frameId) cluster.frameId = frameId; // save cluster's webFrame.routingId to be able to send push-updates
-        extensionLoader.broadcastExtensions(frameId)
-        return cluster.pushState();
-      }
-    },
-  }),
 
-  refresh: createIpcChannel({
-    channel: "cluster:refresh",
-    handle: (clusterId: ClusterId) => {
-      const cluster = clusterStore.getById(clusterId);
-      if (cluster) return cluster.refresh({ refreshMetadata: true })
-    },
-  }),
-
-  disconnect: createIpcChannel({
-    channel: "cluster:disconnect",
-    handle: (clusterId: ClusterId) => {
-      appEventBus.emit({name: "cluster", action: "stop"});
-      return clusterStore.getById(clusterId)?.disconnect();
-    },
-  }),
-
-  kubectlApplyAll: createIpcChannel({
-    channel: "cluster:kubectl-apply-all",
-    handle: (clusterId: ClusterId, resources: string[]) => {
-      appEventBus.emit({name: "cluster", action: "kubectl-apply-all"})
-      const cluster = clusterStore.getById(clusterId);
-      if (cluster) {
-        const applier = new ResourceApplier(cluster)
-        applier.kubectlApplyAll(resources)
-      } else {
-        throw `${clusterId} is not a valid cluster id`;
-      }
+if (ipcMain) {
+  handleRequest(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
+    const cluster = clusterStore.getById(clusterId);
+    if (cluster) {
+      return cluster.activate(force);
     }
-  }),
+  })
+
+  handleRequest(clusterSetFrameIdHandler, (event, clusterId: ClusterId, frameId: number) => {
+    const cluster = clusterStore.getById(clusterId);
+    if (cluster) {
+      clusterFrameMap.set(cluster.id, frameId)
+      return cluster.pushState();
+    }
+  })
+
+  handleRequest(clusterRefreshHandler, (event, clusterId: ClusterId) => {
+    const cluster = clusterStore.getById(clusterId);
+    if (cluster) return cluster.refresh({ refreshMetadata: true })
+  })
+
+  handleRequest(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
+    appEventBus.emit({name: "cluster", action: "stop"});
+    const cluster = clusterStore.getById(clusterId);
+    if (cluster) {
+      cluster.disconnect();
+      clusterFrameMap.delete(cluster.id)
+    }
+  })
+
+  handleRequest(clusterKubectlApplyAllHandler, (event, clusterId: ClusterId, resources: string[]) => {
+    appEventBus.emit({name: "cluster", action: "kubectl-apply-all"})
+    const cluster = clusterStore.getById(clusterId);
+    if (cluster) {
+      const applier = new ResourceApplier(cluster)
+      applier.kubectlApplyAll(resources)
+    } else {
+      throw `${clusterId} is not a valid cluster id`;
+    }
+  })
 }

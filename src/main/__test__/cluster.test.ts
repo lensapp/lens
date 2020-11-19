@@ -49,6 +49,8 @@ describe("create clusters", () => {
     jest.clearAllMocks()
   })
 
+  let c: Cluster
+
   beforeEach(() => {
     const mockOpts = {
       "minikube-config.yml": JSON.stringify({
@@ -75,6 +77,12 @@ describe("create clusters", () => {
     }
     mockFs(mockOpts)
     jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValue(Promise.resolve(true))
+    c = new Cluster({
+      id: "foo",
+      contextName: "minikube",
+      kubeConfigPath: "minikube-config.yml",
+      workspace: workspaceStore.currentWorkspaceId
+    })
   })
 
   afterEach(() => {
@@ -82,22 +90,18 @@ describe("create clusters", () => {
   })
 
   it("should be able to create a cluster from a cluster model and apiURL should be decoded", () => {
-    const c = new Cluster({
-      id: "foo",
-      contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-      workspace: workspaceStore.currentWorkspaceId
-    })
     expect(c.apiUrl).toBe("https://192.168.64.3:8443")
   })
 
+  it("reconnect should not throw if contextHandler is missing", () => {
+    expect(() => c.reconnect()).not.toThrowError()
+  })
+
+  it("disconnect should not throw if contextHandler is missing", () => {
+    expect(() => c.disconnect()).not.toThrowError()
+  })
+
   it("init should not throw if everything is in order", async () => {
-    const c = new Cluster({
-      id: "foo",
-      contextName: "minikube",
-      kubeConfigPath: "minikube-config.yml",
-      workspace: workspaceStore.currentWorkspaceId
-    })
     await c.init(await getFreePort())
     expect(logger.info).toBeCalledWith(expect.stringContaining("init success"), {
       id: "foo",
@@ -147,7 +151,15 @@ describe("create clusters", () => {
       return Promise.resolve({ gitVersion: "1.2.3" })
     }) as any)
 
-    const c = new Cluster({
+    const c = new class extends Cluster {
+      // only way to mock protected methods, without these we leak promises
+      protected bindEvents() {
+        return
+      }
+      protected async ensureKubectl() {
+        return Promise.resolve(true)
+      }
+    }({
       id: "foo",
       contextName: "minikube",
       kubeConfigPath: "minikube-config.yml",
