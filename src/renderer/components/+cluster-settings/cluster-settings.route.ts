@@ -7,6 +7,6 @@ export interface IClusterSettingsRouteParams extends IClusterViewRouteParams {
 
 export const clusterSettingsRoute: RouteProps = {
   path: `/cluster/:clusterId/settings`,
-}
+};
 
-export const clusterSettingsURL = buildURL<IClusterSettingsRouteParams>(clusterSettingsRoute.path)
+export const clusterSettingsURL = buildURL<IClusterSettingsRouteParams>(clusterSettingsRoute.path);

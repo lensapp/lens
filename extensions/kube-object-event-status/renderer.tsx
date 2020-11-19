@@ -1,5 +1,5 @@
 import { LensRendererExtension, K8sApi } from "@k8slens/extensions";
-import { resolveStatus, resolveStatusForCronJobs, resolveStatusForPods } from "./src/resolver"
+import { resolveStatus, resolveStatusForCronJobs, resolveStatusForPods } from "./src/resolver";
 
 export default class EventResourceStatusRendererExtension extends LensRendererExtension {
   kubeObjectStatusTexts = [

@@ -42,12 +42,12 @@ export class StatefulSetDetails extends React.Component<Props> {
 
   render() {
     const { object: statefulSet } = this.props;
-    if (!statefulSet) return null
-    const images = statefulSet.getImages()
-    const selectors = statefulSet.getSelectors()
-    const nodeSelector = statefulSet.getNodeSelectors()
-    const childPods = statefulSetStore.getChildPods(statefulSet)
-    const metrics = statefulSetStore.metrics
+    if (!statefulSet) return null;
+    const images = statefulSet.getImages();
+    const selectors = statefulSet.getSelectors();
+    const nodeSelector = statefulSet.getNodeSelectors();
+    const childPods = statefulSetStore.getChildPods(statefulSet);
+    const metrics = statefulSetStore.metrics;
     return (
       <div className="StatefulSetDetails">
         {podsStore.isLoaded && (
@@ -90,7 +90,7 @@ export class StatefulSetDetails extends React.Component<Props> {
         <ResourceMetricsText metrics={metrics}/>
         <PodDetailsList pods={childPods} owner={statefulSet}/>
       </div>
-    )
+    );
   }
 }
 
@@ -101,7 +101,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props: any) => <StatefulSetDetails {...props} />
   }
-})
+});
 
 kubeObjectDetailRegistry.add({
   kind: "StatefulSet",
@@ -110,4 +110,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props: any) => <KubeEventDetails {...props} />
   }
-})
+});

@@ -11,7 +11,7 @@ export class PodsApi extends KubeApi<Pod> {
 
   getMetrics(pods: Pod[], namespace: string, selector = "pod, namespace"): Promise<IPodMetrics> {
     const podSelector = pods.map(pod => pod.getName()).join("|");
-    const opts = { category: "pods", pods: podSelector, namespace, selector }
+    const opts = { category: "pods", pods: podSelector, namespace, selector };
 
     return metricsApi.getMetrics({
       cpuUsage: opts,
@@ -171,9 +171,9 @@ export interface IPodContainerStatus {
 
 @autobind()
 export class Pod extends WorkloadKubeObject {
-  static kind = "Pod"
-  static namespaced = true
-  static apiBase = "/api/v1/pods"
+  static kind = "Pod";
+  static namespaced = true;
+  static apiBase = "/api/v1/pods";
 
   spec: {
     volumes?: {
@@ -215,7 +215,7 @@ export class Pod extends WorkloadKubeObject {
       tolerationSeconds: number;
     }[];
     affinity: IAffinity;
-  }
+  };
   status: {
     phase: string;
     conditions: {
@@ -231,7 +231,7 @@ export class Pod extends WorkloadKubeObject {
     containerStatuses?: IPodContainerStatus[];
     qosClass: string;
     reason?: string;
-  }
+  };
 
   getInitContainers() {
     return this.spec.initContainers || [];
@@ -246,11 +246,11 @@ export class Pod extends WorkloadKubeObject {
   }
 
   getRunningContainers() {
-    const statuses = this.getContainerStatuses()
+    const statuses = this.getContainerStatuses();
     return this.getAllContainers().filter(container => {
-      return statuses.find(status => status.name === container.name && !!status.state["running"])
+      return statuses.find(status => status.name === container.name && !!status.state["running"]);
     }
-    )
+    );
   }
 
   getContainerStatuses(includeInitContainers = true) {
@@ -323,7 +323,7 @@ export class Pod extends WorkloadKubeObject {
           const { reason } = state.terminated;
           message = reason ? reason : "Terminated";
         }
-      })
+      });
     }
     if (message) return message;
     return this.getStatusPhase();
@@ -348,32 +348,32 @@ export class Pod extends WorkloadKubeObject {
   }
 
   getNodeSelectors(): string[] {
-    const { nodeSelector } = this.spec
-    if (!nodeSelector) return []
-    return Object.entries(nodeSelector).map(values => values.join(": "))
+    const { nodeSelector } = this.spec;
+    if (!nodeSelector) return [];
+    return Object.entries(nodeSelector).map(values => values.join(": "));
   }
 
   getTolerations() {
-    return this.spec.tolerations || []
+    return this.spec.tolerations || [];
   }
 
   getAffinity(): IAffinity {
-    return this.spec.affinity
+    return this.spec.affinity;
   }
 
   hasIssues() {
     const notReady = !!this.getConditions().find(condition => {
-      return condition.type == "Ready" && condition.status !== "True"
+      return condition.type == "Ready" && condition.status !== "True";
     });
     const crashLoop = !!this.getContainerStatuses().find(condition => {
-      const waiting = condition.state.waiting
-      return (waiting && waiting.reason == "CrashLoopBackOff")
-    })
+      const waiting = condition.state.waiting;
+      return (waiting && waiting.reason == "CrashLoopBackOff");
+    });
     return (
       notReady ||
       crashLoop ||
       this.getStatusPhase() !== "Running"
-    )
+    );
   }
 
   getLivenessProbe(container: IPodContainer) {
@@ -418,14 +418,14 @@ export class Pod extends WorkloadKubeObject {
   }
 
   getNodeName() {
-    return this.spec?.nodeName
+    return this.spec?.nodeName;
   }
 
   getSelectedNodeOs() {
-    if (!this.spec.nodeSelector) return
-    if (!this.spec.nodeSelector["kubernetes.io/os"] && !this.spec.nodeSelector["beta.kubernetes.io/os"]) return
+    if (!this.spec.nodeSelector) return;
+    if (!this.spec.nodeSelector["kubernetes.io/os"] && !this.spec.nodeSelector["beta.kubernetes.io/os"]) return;
 
-    return this.spec.nodeSelector["kubernetes.io/os"] || this.spec.nodeSelector["beta.kubernetes.io/os"]
+    return this.spec.nodeSelector["kubernetes.io/os"] || this.spec.nodeSelector["beta.kubernetes.io/os"];
   }
 }
 

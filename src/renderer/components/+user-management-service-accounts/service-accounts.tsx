@@ -54,7 +54,7 @@ export class ServiceAccounts extends React.Component<Props> {
             account.getAge(),
           ]}
           renderItemMenu={(item: ServiceAccount) => {
-            return <ServiceAccountMenu object={item}/>
+            return <ServiceAccountMenu object={item}/>;
           }}
           addRemoveButtons={{
             onAdd: () => CreateServiceAccountDialog.open(),
@@ -63,7 +63,7 @@ export class ServiceAccounts extends React.Component<Props> {
         />
         <CreateServiceAccountDialog/>
       </>
-    )
+    );
   }
 }
 
@@ -74,7 +74,7 @@ function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
       <Icon material="insert_drive_file" title="Kubeconfig File" interactive={toolbar}/>
       <span className="title"><Trans>Kubeconfig</Trans></span>
     </MenuItem>
-  )
+  );
 }
 
 kubeObjectMenuRegistry.add({
@@ -83,4 +83,4 @@ kubeObjectMenuRegistry.add({
   components: {
     MenuItem: ServiceAccountMenu
   }
-})
+});

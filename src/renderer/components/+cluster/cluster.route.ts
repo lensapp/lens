@@ -3,6 +3,6 @@ import { buildURL } from "../../../common/utils/buildUrl";
 
 export const clusterRoute: RouteProps = {
   path: "/cluster"
-}
+};
 
-export const clusterURL = buildURL(clusterRoute.path)
+export const clusterURL = buildURL(clusterRoute.path);

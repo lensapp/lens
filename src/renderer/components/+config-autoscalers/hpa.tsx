@@ -1,4 +1,4 @@
-import "./hpa.scss"
+import "./hpa.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -78,7 +78,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
                 tooltip={tooltip}
                 className={cssNames(type.toLowerCase())}
               />
-            )
+            );
           })
         ]}
       />

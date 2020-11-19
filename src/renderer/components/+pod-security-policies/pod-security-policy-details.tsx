@@ -33,12 +33,12 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
         {ranges && (
           <DrawerItem name={<Trans>Ranges (Min-Max)</Trans>} labelsOnly>
             {ranges.map(({ min, max }, index) => {
-              return <Badge key={index} label={`${min} - ${max}`}/>
+              return <Badge key={index} label={`${min} - ${max}`}/>;
             })}
           </DrawerItem>
         )}
       </>
-    )
+    );
   }
 
   render() {
@@ -137,7 +137,7 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
         {hostPorts && (
           <DrawerItem name={<Trans>Host Ports (Min-Max)</Trans>} labelsOnly>
             {hostPorts.map(({ min, max }, index) => {
-              return <Badge key={index} label={`${min} - ${max}`}/>
+              return <Badge key={index} label={`${min} - ${max}`}/>;
             })}
           </DrawerItem>
         )}
@@ -156,7 +156,7 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
                     <TableCell>{pathPrefix}</TableCell>
                     <TableCell>{readOnly ? <Trans>Yes</Trans> : <Trans>No</Trans>}</TableCell>
                   </TableRow>
-                )
+                );
               })}
             </Table>
           </>
@@ -205,7 +205,7 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
         )}
 
       </div>
-    )
+    );
   }
 }
 
@@ -215,4 +215,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <PodSecurityPolicyDetails {...props}/>
   }
-})
+});

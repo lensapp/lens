@@ -1,4 +1,4 @@
-import "./config-maps.scss"
+import "./config-maps.scss";
 
 import React from "react";
 import { observer } from "mobx-react";

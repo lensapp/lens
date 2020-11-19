@@ -35,8 +35,8 @@ export class GlobalPageMenuRegistry extends BaseRegistry<PageMenuRegistration> {
         extensionId: ext.name,
         ...(menuItem.target || {}),
       };
-      return menuItem
-    })
+      return menuItem;
+    });
     return super.add(normalizedItems);
   }
 }

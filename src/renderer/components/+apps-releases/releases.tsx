@@ -48,7 +48,7 @@ export class HelmReleases extends Component<Props> {
 
   showDetails = (item: HelmRelease) => {
     if (!item) {
-      navigation.merge(releaseURL())
+      navigation.merge(releaseURL());
     }
     else {
       navigation.merge(releaseURL({
@@ -56,13 +56,13 @@ export class HelmReleases extends Component<Props> {
           name: item.getName(),
           namespace: item.getNs()
         }
-      }))
+      }));
     }
-  }
+  };
 
   hideDetails = () => {
     this.showDetails(null);
-  }
+  };
 
   renderRemoveDialogMessage(selectedItems: HelmRelease[]) {
     const releaseNames = selectedItems.map(item => item.getName()).join(", ");
@@ -73,7 +73,7 @@ export class HelmReleases extends Component<Props> {
           <Trans>Note: StatefulSet Volumes won't be deleted automatically</Trans>
         </p>
       </div>
-    )
+    );
   }
 
   render() {
@@ -122,7 +122,7 @@ export class HelmReleases extends Component<Props> {
               release.appVersion,
               { title: release.getStatus(), className: kebabCase(release.getStatus()) },
               release.getUpdated(),
-            ]
+            ];
           }}
           renderItemMenu={(release: HelmRelease) => {
             return (
@@ -130,7 +130,7 @@ export class HelmReleases extends Component<Props> {
                 release={release}
                 removeConfirmationMessage={this.renderRemoveDialogMessage([release])}
               />
-            )
+            );
           }}
           customizeRemoveDialog={(selectedItems: HelmRelease[]) => ({
             message: this.renderRemoveDialogMessage(selectedItems)

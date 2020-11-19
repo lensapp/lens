@@ -32,7 +32,7 @@ export const isNumber: InputValidator = {
       isNaN(numVal) ||
       (min != null && numVal < min) ||
       (max != null && numVal > max)
-    )
+    );
   },
 };
 
@@ -46,7 +46,7 @@ export const isPath: InputValidator = {
   condition: ({ type }) => type === "text",
   message: () => _i18n._(t`This field must be a valid path`),
   validate: value => !value || fse.pathExistsSync(value),
-}
+};
 
 export const minLength: InputValidator = {
   condition: ({ minLength }) => !!minLength,

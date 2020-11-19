@@ -1,4 +1,4 @@
-import "./network-policies.scss"
+import "./network-policies.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -49,6 +49,6 @@ export class NetworkPolicies extends React.Component<Props> {
           item.getAge(),
         ]}
       />
-    )
+    );
   }
 }

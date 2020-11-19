@@ -12,34 +12,34 @@ export class DetectorRegistry {
   registry = observable.array<typeof BaseClusterDetector>([], { deep: false });
 
   add(detectorClass: typeof BaseClusterDetector) {
-    this.registry.push(detectorClass)
+    this.registry.push(detectorClass);
   }
 
   async detectForCluster(cluster: Cluster): Promise<ClusterMetadata> {
-    const results: {[key: string]: ClusterDetectionResult } = {}
+    const results: {[key: string]: ClusterDetectionResult } = {};
     for (const detectorClass of this.registry) {
-      const detector = new detectorClass(cluster)
+      const detector = new detectorClass(cluster);
       try {
-        const data = await detector.detect()
+        const data = await detector.detect();
         if (!data) continue;
-        const existingValue = results[detector.key]
+        const existingValue = results[detector.key];
         if (existingValue && existingValue.accuracy > data.accuracy) continue; // previous value exists and is more accurate
-        results[detector.key] = data
+        results[detector.key] = data;
       } catch (e) {
         // detector raised error, do nothing
       }
     }
-    const metadata: ClusterMetadata = {}
+    const metadata: ClusterMetadata = {};
     for (const [key, result] of Object.entries(results)) {
-      metadata[key] = result.value
+      metadata[key] = result.value;
     }
-    return metadata
+    return metadata;
   }
 }
 
-export const detectorRegistry = new DetectorRegistry()
-detectorRegistry.add(ClusterIdDetector)
-detectorRegistry.add(LastSeenDetector)
-detectorRegistry.add(VersionDetector)
-detectorRegistry.add(DistributionDetector)
-detectorRegistry.add(NodesCountDetector)
+export const detectorRegistry = new DetectorRegistry();
+detectorRegistry.add(ClusterIdDetector);
+detectorRegistry.add(LastSeenDetector);
+detectorRegistry.add(VersionDetector);
+detectorRegistry.add(DistributionDetector);
+detectorRegistry.add(NodesCountDetector);

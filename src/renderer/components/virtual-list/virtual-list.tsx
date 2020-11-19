@@ -36,7 +36,7 @@ const defaultProps: Partial<Props> = {
   initialOffset: 1,
   readyOffset: 10,
   onScroll: noop
-}
+};
 
 export class VirtualList extends Component<Props, State> {
   static defaultProps = defaultProps as object;
@@ -70,8 +70,8 @@ export class VirtualList extends Component<Props, State> {
     if (parentHeight === height) return;
     this.setState({
       height: parentHeight,
-    })
-  }, 250)
+    });
+  }, 250);
 
   getItemSize = (index: number) => this.props.rowHeights[index];
 
@@ -81,11 +81,11 @@ export class VirtualList extends Component<Props, State> {
     const index = items.findIndex(item => item.getId() == selectedItemId);
     if (index === -1) return;
     this.listRef.current.scrollToItem(index, "start");
-  })
+  });
 
   scrollToItem = (index: number, align: Align) => {
-    this.listRef.current.scrollToItem(index, align)
-  }
+    this.listRef.current.scrollToItem(index, align);
+  };
 
   render() {
     const { width, className, items, getRow, onScroll, outerRef } = this.props;
@@ -133,4 +133,4 @@ const Row = observer((props: RowProps) => {
   return React.cloneElement(row, {
     style: Object.assign({}, row.props.style, style)
   });
-})
+});

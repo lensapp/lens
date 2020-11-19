@@ -1,3 +1,3 @@
-import { observable } from "mobx"
+import { observable } from "mobx";
 
 export const clusterFrameMap = observable.map<string, number>();

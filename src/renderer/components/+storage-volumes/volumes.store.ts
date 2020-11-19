@@ -5,7 +5,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class PersistentVolumesStore extends KubeObjectStore<PersistentVolume> {
-  api = persistentVolumeApi
+  api = persistentVolumeApi;
 }
 
 export const volumesStore = new PersistentVolumesStore();

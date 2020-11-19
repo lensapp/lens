@@ -1,13 +1,13 @@
-import "./whats-new.scss"
+import "./whats-new.scss";
 import fs from "fs";
 import path from "path";
 import React from "react";
 import { observer } from "mobx-react";
-import { userStore } from "../../../common/user-store"
+import { userStore } from "../../../common/user-store";
 import { navigate } from "../../navigation";
 import { Button } from "../button";
 import { Trans } from "@lingui/macro";
-import marked from "marked"
+import marked from "marked";
 
 @observer
 export class WhatsNew extends React.Component {
@@ -16,7 +16,7 @@ export class WhatsNew extends React.Component {
   ok = () => {
     navigate("/");
     userStore.saveLastSeenAppVersion();
-  }
+  };
 
   render() {
     const logo = require("../../components/icon/lens-logo.svg");

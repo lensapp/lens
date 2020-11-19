@@ -1,7 +1,7 @@
 import React from "react";
-import { action, observable } from "mobx"
+import { action, observable } from "mobx";
 import { autobind } from "../../utils";
-import isObject from "lodash/isObject"
+import isObject from "lodash/isObject";
 import uniqueId from "lodash/uniqueId";
 import { JsonApiErrorParsed } from "../../api/json-api";
 
@@ -50,7 +50,7 @@ export class NotificationsStore {
       notification.id = uniqueId("notification_");
     }
     const index = this.notifications.findIndex(item => item.id === notification.id);
-    if (index > -1) this.notifications.splice(index, 1, notification)
+    if (index > -1) this.notifications.splice(index, 1, notification);
     else this.notifications.push(notification);
     this.addAutoHideTimer(notification);
   }

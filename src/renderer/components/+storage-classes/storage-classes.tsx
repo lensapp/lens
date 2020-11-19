@@ -1,4 +1,4 @@
-import "./storage-classes.scss"
+import "./storage-classes.scss";
 
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
@@ -55,6 +55,6 @@ export class StorageClasses extends React.Component<Props> {
           storageClass.getAge(),
         ]}
       />
-    )
+    );
   }
 }

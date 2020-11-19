@@ -28,7 +28,7 @@ export class ClusterNameSetting extends React.Component<Props> {
 
   onChange = (value: string) => {
     this.name = value;
-  }
+  };
 
   render() {
     return (

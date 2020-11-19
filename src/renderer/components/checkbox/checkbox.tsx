@@ -1,5 +1,5 @@
-import './checkbox.scss'
-import React from 'react'
+import './checkbox.scss';
+import React from 'react';
 import { autobind, cssNames } from "../../utils";
 
 export interface CheckboxProps<T = boolean> {
@@ -18,7 +18,7 @@ export class Checkbox extends React.PureComponent<CheckboxProps> {
   @autobind()
   onChange(evt: React.ChangeEvent<HTMLInputElement>) {
     if (this.props.onChange) {
-      this.props.onChange(this.input.checked, evt)
+      this.props.onChange(this.input.checked, evt);
     }
   }
 

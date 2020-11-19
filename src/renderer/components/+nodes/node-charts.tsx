@@ -140,7 +140,7 @@ export const NodeCharts = observer(() => {
         }
       }
     }
-  }
+  };
 
   const options = [cpuOptions, memoryOptions, memoryOptions, podOptions];
 
@@ -151,4 +151,4 @@ export const NodeCharts = observer(() => {
       data={{ datasets: datasets[tabId] }}
     />
   );
-})
+});

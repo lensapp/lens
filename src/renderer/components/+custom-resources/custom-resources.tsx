@@ -17,7 +17,7 @@ export class CustomResources extends React.Component {
         url: crdURL(),
         routePath: crdRoute.path.toString(),
       }
-    ]
+    ];
   }
 
   render() {

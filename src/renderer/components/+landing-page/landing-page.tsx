@@ -1,4 +1,4 @@
-import "./landing-page.scss"
+import "./landing-page.scss";
 import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -37,6 +37,6 @@ export class LandingPage extends React.Component {
           </div>
         )}
       </div>
-    )
+    );
   }
 }

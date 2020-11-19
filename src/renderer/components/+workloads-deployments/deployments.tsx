@@ -1,4 +1,4 @@
-import "./deployments.scss"
+import "./deployments.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -39,17 +39,17 @@ interface Props extends RouteComponentProps<IDeploymentsRouteParams> {
 @observer
 export class Deployments extends React.Component<Props> {
   renderPods(deployment: Deployment) {
-    const { replicas, availableReplicas } = deployment.status
-    return `${availableReplicas || 0}/${replicas || 0}`
+    const { replicas, availableReplicas } = deployment.status;
+    return `${availableReplicas || 0}/${replicas || 0}`;
   }
 
   renderConditions(deployment: Deployment) {
-    const conditions = orderBy(deployment.getConditions(true), "type", "asc")
+    const conditions = orderBy(deployment.getConditions(true), "type", "asc");
     return conditions.map(({ type, message }) => (
       <span key={type} className={cssNames("condition", kebabCase(type))} title={message}>
         {type}
       </span>
-    ))
+    ));
   }
 
   render() {
@@ -88,10 +88,10 @@ export class Deployments extends React.Component<Props> {
           this.renderConditions(deployment),
         ]}
         renderItemMenu={(item: Deployment) => {
-          return <DeploymentMenu object={item}/>
+          return <DeploymentMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
@@ -110,7 +110,7 @@ export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
             await deploymentApi.restart({
               namespace: object.getNs(),
               name: object.getName(),
-            })
+            });
           } catch (err) {
             Notifications.error(err);
           }
@@ -126,7 +126,7 @@ export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
         <span className="title"><Trans>Restart</Trans></span>
       </MenuItem>
     </>
-  )
+  );
 }
 
 kubeObjectMenuRegistry.add({
@@ -135,4 +135,4 @@ kubeObjectMenuRegistry.add({
   components: {
     MenuItem: DeploymentMenu
   }
-})
+});

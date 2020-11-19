@@ -1,1 +1,1 @@
-export * from './status-brick'
+export * from './status-brick';

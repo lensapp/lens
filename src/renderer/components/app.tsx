@@ -36,7 +36,7 @@ import logger from "../../main/logger";
 import { webFrame } from "electron";
 import { clusterPageRegistry, getExtensionPageUrl, PageRegistration, RegisteredPage } from "../../extensions/registries/page-registry";
 import { extensionLoader } from "../../extensions/extension-loader";
-import { appEventBus } from "../../common/event-bus"
+import { appEventBus } from "../../common/event-bus";
 import { requestMain } from "../../common/ipc";
 import whatInput from 'what-input';
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
@@ -49,10 +49,10 @@ export class App extends React.Component {
   static async init() {
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
-    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`)
-    await Terminal.preloadFonts()
+    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`);
+    await Terminal.preloadFonts();
 
-    await requestMain(clusterSetFrameIdHandler, clusterId, frameId)
+    await requestMain(clusterSetFrameIdHandler, clusterId, frameId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
     extensionLoader.loadOnClusterRenderer();
     appEventBus.emit({
@@ -61,11 +61,11 @@ export class App extends React.Component {
       params: {
         clusterId: clusterId
       }
-    })
+    });
     window.addEventListener("online", () => {
-      window.location.reload()
-    })
-    whatInput.ask() // Start to monitor user input device
+      window.location.reload();
+    });
+    whatInput.ask(); // Start to monitor user input device
   }
 
   get startURL() {
@@ -113,11 +113,11 @@ export class App extends React.Component {
 
   renderExtensionRoutes() {
     return clusterPageRegistry.getItems().map((page, index) => {
-      const menu = clusterPageMenuRegistry.getByPage(page)
+      const menu = clusterPageMenuRegistry.getByPage(page);
       if (!menu) {
-        return <Route key={"extension-route-" + index} path={page.routePath} exact={page.exact} component={page.components.Page}/>
+        return <Route key={"extension-route-" + index} path={page.routePath} exact={page.exact} component={page.components.Page}/>;
       }
-    })
+    });
   }
 
   render() {
@@ -154,6 +154,6 @@ export class App extends React.Component {
           </ErrorBoundary>
         </Router>
       </I18nProvider>
-    )
+    );
   }
 }

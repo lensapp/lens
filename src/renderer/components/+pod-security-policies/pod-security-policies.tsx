@@ -49,9 +49,9 @@ export class PodSecurityPolicies extends React.Component {
             item.isPrivileged() ? <Trans>Yes</Trans> : <Trans>No</Trans>,
             item.getVolumes().join(", "),
             item.getAge(),
-          ]
+          ];
         }}
       />
-    )
+    );
   }
 }
