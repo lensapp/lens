@@ -2,7 +2,7 @@ import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences } fro
 import type { WorkspaceId } from "../common/workspace-store";
 import { action, computed, observable, toJS, when } from "mobx";
 import { broadcastMessage } from "../common/ipc";
-import { KubeConfig } from "@kubernetes/client-node"
+import { KubeConfig } from "@kubernetes/client-node";
 import { Kubectl } from "./kubectl";
 import { loadConfig } from "../common/kube-helpers"
 import logger from "./logger";
@@ -14,8 +14,6 @@ export enum ClusterMetadataKey {
   NODES_COUNT = "nodes",
   LAST_SEEN = "lastSeen"
 }
-
-
 
 export interface ClusterState {
   initialized: boolean;
@@ -151,6 +149,4 @@ export class Cluster implements ClusterModel, ClusterState {
       disconnected: this.disconnected,
     }
   }
-
-
 }
