@@ -1,6 +1,6 @@
-import './spinner.scss'
+import './spinner.scss';
 
-import React from 'react'
+import React from 'react';
 import { cssNames } from "../../utils";
 
 export interface SpinnerProps extends React.HTMLProps<any> {

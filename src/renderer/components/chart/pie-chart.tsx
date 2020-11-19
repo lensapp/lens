@@ -12,9 +12,9 @@ interface Props extends ChartProps {
 @observer
 export class PieChart extends React.Component<Props> {
   render() {
-    const { data, className, options, ...chartProps } = this.props
+    const { data, className, options, ...chartProps } = this.props;
     const { contentColor } = themeStore.activeTheme.colors;
-    const cutouts = [88, 76, 63]
+    const cutouts = [88, 76, 63];
     const opts: ChartOptions = this.props.showChart === false ? {} : {
       maintainAspectRatio: false,
       tooltips: {
@@ -22,9 +22,9 @@ export class PieChart extends React.Component<Props> {
         callbacks: {
           title: () => "",
           label: (tooltipItem, data) => {
-            const dataset: any = data["datasets"][tooltipItem.datasetIndex]
-            const metaData = Object.values<{ total: number }>(dataset["_meta"])[0]
-            const percent = Math.round((dataset["data"][tooltipItem["index"]] / metaData.total) * 100)
+            const dataset: any = data["datasets"][tooltipItem.datasetIndex];
+            const metaData = Object.values<{ total: number }>(dataset["_meta"])[0];
+            const percent = Math.round((dataset["data"][tooltipItem["index"]] / metaData.total) * 100);
             if (isNaN(percent)) return "N/A";
             return percent + "%";
           },
@@ -45,7 +45,7 @@ export class PieChart extends React.Component<Props> {
       cutoutPercentage: cutouts[data.datasets.length - 1] || 50,
       responsive: true,
       ...options
-    }
+    };
     return (
       <Chart
         className={cssNames("PieChart flex column align-center", className)}
@@ -53,7 +53,7 @@ export class PieChart extends React.Component<Props> {
         options={opts}
         {...chartProps}
       />
-    )
+    );
   }
 }
 

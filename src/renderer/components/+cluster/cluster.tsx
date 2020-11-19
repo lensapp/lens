@@ -1,4 +1,4 @@
-import "./cluster.scss"
+import "./cluster.scss";
 
 import React from "react";
 import { computed, reaction } from "mobx";
@@ -21,19 +21,19 @@ export class Cluster extends React.Component {
   private dependentStores = [nodesStore, podsStore];
 
   private watchers = [
-    interval(60, () => { getHostedCluster().available && clusterStore.getMetrics()}),
-    interval(20, () => { getHostedCluster().available && eventStore.loadAll()})
+    interval(60, () => { getHostedCluster().available && clusterStore.getMetrics();}),
+    interval(20, () => { getHostedCluster().available && eventStore.loadAll();})
   ];
 
   @computed get isLoaded() {
-    return nodesStore.isLoaded && podsStore.isLoaded
+    return nodesStore.isLoaded && podsStore.isLoaded;
   }
 
   // todo: refactor
   async componentDidMount() {
     const { dependentStores } = this;
     if (!isAllowedResource("nodes")) {
-      dependentStores.splice(dependentStores.indexOf(nodesStore), 1)
+      dependentStores.splice(dependentStores.indexOf(nodesStore), 1);
     }
     this.watchers.forEach(watcher => watcher.start(true));
 
@@ -49,7 +49,7 @@ export class Cluster extends React.Component {
         () => clusterStore.metricNodeRole,
         () => this.watchers.forEach(watcher => watcher.restart())
       )
-    ])
+    ]);
   }
 
   render() {
@@ -67,6 +67,6 @@ export class Cluster extends React.Component {
           )}
         </div>
       </TabLayout>
-    )
+    );
   }
 }

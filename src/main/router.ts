@@ -1,12 +1,12 @@
-import Call from "@hapi/call"
-import Subtext from "@hapi/subtext"
-import http from "http"
-import path from "path"
-import { readFile } from "fs-extra"
-import { Cluster } from "./cluster"
+import Call from "@hapi/call";
+import Subtext from "@hapi/subtext";
+import http from "http";
+import path from "path";
+import { readFile } from "fs-extra";
+import { Cluster } from "./cluster";
 import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "../common/vars";
 import { helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute } from "./routes";
-import logger from "./logger"
+import logger from "./logger";
 
 export interface RouterRequestOpts {
   req: http.IncomingMessage;
@@ -43,25 +43,25 @@ export class Router {
 
   public constructor() {
     this.router = new Call.Router();
-    this.addRoutes()
+    this.addRoutes();
   }
 
   public async route(cluster: Cluster, req: http.IncomingMessage, res: http.ServerResponse): Promise<boolean> {
     const url = new URL(req.url, "http://localhost");
-    const path = url.pathname
-    const method = req.method.toLowerCase()
+    const path = url.pathname;
+    const method = req.method.toLowerCase();
     const matchingRoute = this.router.route(method, path);
     const routeFound = !matchingRoute.isBoom;
     if (routeFound) {
       const request = await this.getRequest({ req, res, cluster, url, params: matchingRoute.params });
-      await matchingRoute.route(request)
-      return true
+      await matchingRoute.route(request);
+      return true;
     }
     return false;
   }
 
   protected async getRequest(opts: RouterRequestOpts): Promise<LensApiRequest> {
-    const { req, res, url, cluster, params } = opts
+    const { req, res, url, cluster, params } = opts;
     const { payload } = await Subtext.parse(req, null, {
       parse: true,
       output: "data",
@@ -76,7 +76,7 @@ export class Router {
       query: url.searchParams,
       payload: payload,
       params: params
-    }
+    };
   }
 
   protected getMimeType(filename: string) {
@@ -92,7 +92,7 @@ export class Router {
       woff2: "font/woff2",
       ttf: "font/ttf"
     };
-    return mimeTypes[path.extname(filename).slice(1)] || "text/plain"
+    return mimeTypes[path.extname(filename).slice(1)] || "text/plain";
   }
 
   async handleStaticFile(filePath: string, res: http.ServerResponse, req: http.IncomingMessage, retryCount = 0) {
@@ -114,10 +114,10 @@ export class Router {
       res.end();
     } catch (err) {
       if (retryCount > 5) {
-        logger.error("handleStaticFile:", err.toString())
-        res.statusCode = 404
-        res.end()
-        return
+        logger.error("handleStaticFile:", err.toString());
+        res.statusCode = 404;
+        res.end();
+        return;
       }
       this.handleStaticFile(`${publicPath}/${appName}.html`, res, req, Math.max(retryCount, 0) + 1);
     }
@@ -131,32 +131,32 @@ export class Router {
         this.handleStaticFile(params.path, response, req);
       });
 
-    this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/kubeconfig/service-account/{namespace}/{account}` }, kubeconfigRoute.routeServiceAccountRoute.bind(kubeconfigRoute));
 
     // Watch API
-    this.router.add({ method: "get", path: `${apiPrefix}/watch` }, watchRoute.routeWatch.bind(watchRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/watch` }, watchRoute.routeWatch.bind(watchRoute));
 
     // Metrics API
-    this.router.add({ method: "post", path: `${apiPrefix}/metrics` }, metricsRoute.routeMetrics.bind(metricsRoute))
+    this.router.add({ method: "post", path: `${apiPrefix}/metrics` }, metricsRoute.routeMetrics.bind(metricsRoute));
 
     // Port-forward API
-    this.router.add({ method: "post", path: `${apiPrefix}/pods/{namespace}/{resourceType}/{resourceName}/port-forward/{port}` }, portForwardRoute.routePortForward.bind(portForwardRoute))
+    this.router.add({ method: "post", path: `${apiPrefix}/pods/{namespace}/{resourceType}/{resourceName}/port-forward/{port}` }, portForwardRoute.routePortForward.bind(portForwardRoute));
 
     // Helm API
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts` }, helmRoute.listCharts.bind(helmRoute))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}` }, helmRoute.getChart.bind(helmRoute))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}/values` }, helmRoute.getChartValues.bind(helmRoute))
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts` }, helmRoute.listCharts.bind(helmRoute));
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}` }, helmRoute.getChart.bind(helmRoute));
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/charts/{repo}/{chart}/values` }, helmRoute.getChartValues.bind(helmRoute));
 
-    this.router.add({ method: "post", path: `${apiPrefix}/v2/releases` }, helmRoute.installChart.bind(helmRoute))
-    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.updateRelease.bind(helmRoute))
-    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}/rollback` }, helmRoute.rollbackRelease.bind(helmRoute))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace?}` }, helmRoute.listReleases.bind(helmRoute))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.getRelease.bind(helmRoute))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/values` }, helmRoute.getReleaseValues.bind(helmRoute))
-    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/history` }, helmRoute.getReleaseHistory.bind(helmRoute))
-    this.router.add({ method: "delete", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.deleteRelease.bind(helmRoute))
+    this.router.add({ method: "post", path: `${apiPrefix}/v2/releases` }, helmRoute.installChart.bind(helmRoute));
+    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.updateRelease.bind(helmRoute));
+    this.router.add({ method: `put`, path: `${apiPrefix}/v2/releases/{namespace}/{release}/rollback` }, helmRoute.rollbackRelease.bind(helmRoute));
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace?}` }, helmRoute.listReleases.bind(helmRoute));
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.getRelease.bind(helmRoute));
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/values` }, helmRoute.getReleaseValues.bind(helmRoute));
+    this.router.add({ method: "get", path: `${apiPrefix}/v2/releases/{namespace}/{release}/history` }, helmRoute.getReleaseHistory.bind(helmRoute));
+    this.router.add({ method: "delete", path: `${apiPrefix}/v2/releases/{namespace}/{release}` }, helmRoute.deleteRelease.bind(helmRoute));
 
     // Resource Applier API
-    this.router.add({ method: "post", path: `${apiPrefix}/stack` }, resourceApplierRoute.applyResource.bind(resourceApplierRoute))
+    this.router.add({ method: "post", path: `${apiPrefix}/stack` }, resourceApplierRoute.applyResource.bind(resourceApplierRoute));
   }
 }

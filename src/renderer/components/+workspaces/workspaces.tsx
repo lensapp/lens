@@ -1,11 +1,11 @@
-import "./workspaces.scss"
+import "./workspaces.scss";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { computed, observable, toJS } from "mobx";
 import { t, Trans } from "@lingui/macro";
 import { WizardLayout } from "../layout/wizard-layout";
 import { Workspace, WorkspaceId, workspaceStore } from "../../../common/workspace-store";
-import { v4 as uuid } from "uuid"
+import { v4 as uuid } from "uuid";
 import { _i18n } from "../../i18n";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon } from "../icon";
@@ -19,10 +19,10 @@ export class Workspaces extends React.Component {
   @observable editingWorkspaces = observable.map<WorkspaceId, Workspace>();
 
   @computed get workspaces(): Workspace[] {
-    const currentWorkspaces: Map<WorkspaceId, Workspace> = new Map()
+    const currentWorkspaces: Map<WorkspaceId, Workspace> = new Map();
     workspaceStore.workspacesList.forEach((w) => {
-      currentWorkspaces.set(w.id, w)
-    })
+      currentWorkspaces.set(w.id, w);
+    });
     const allWorkspaces = new Map([
       ...currentWorkspaces,
       ...this.editingWorkspaces,
@@ -41,7 +41,7 @@ export class Workspaces extends React.Component {
           <Trans>A single workspaces contains a list of clusters and their full configuration.</Trans>
         </p>
       </Fragment>
-    )
+    );
   }
 
   saveWorkspace = (id: WorkspaceId) => {
@@ -54,7 +54,7 @@ export class Workspaces extends React.Component {
     if (workspaceStore.addWorkspace(workspace)) {
       this.clearEditing(id);
     }
-  }
+  };
 
   addWorkspace = () => {
     const workspaceId = uuid();
@@ -62,17 +62,17 @@ export class Workspaces extends React.Component {
       id: workspaceId,
       name: "",
       description: ""
-    }))
-  }
+    }));
+  };
 
   editWorkspace = (id: WorkspaceId) => {
     const workspace = workspaceStore.getById(id);
     this.editingWorkspaces.set(id, toJS(workspace));
-  }
+  };
 
   clearEditing = (id: WorkspaceId) => {
     this.editingWorkspaces.delete(id);
-  }
+  };
 
   removeWorkspace = (id: WorkspaceId) => {
     const workspace = workspaceStore.getById(id);
@@ -96,8 +96,8 @@ export class Workspaces extends React.Component {
           </p>
         </div>
       ),
-    })
-  }
+    });
+  };
 
   onInputKeypress = (evt: React.KeyboardEvent<any>, workspaceId: WorkspaceId) => {
     if (evt.key == 'Enter') {
@@ -106,7 +106,7 @@ export class Workspaces extends React.Component {
       evt.currentTarget.focus();
       this.saveWorkspace(workspaceId);
     }
-  }
+  };
 
   render() {
     return (
@@ -120,7 +120,7 @@ export class Workspaces extends React.Component {
             const isDefault = workspaceStore.isDefault(workspaceId);
             const isEditing = this.editingWorkspaces.has(workspaceId);
             const editingWorkspace = this.editingWorkspaces.get(workspaceId);
-            const managed = !!ownerRef
+            const managed = !!ownerRef;
             const className = cssNames("workspace flex gaps align-center", {
               active: isActive,
               editing: isEditing,
@@ -129,7 +129,7 @@ export class Workspaces extends React.Component {
             const existenceValidator: InputValidator = {
               message: () => `Workspace '${name}' already exists`,
               validate: value => !workspaceStore.getByName(value.trim())
-            }
+            };
             return (
               <div key={workspaceId} className={cssNames(className)}>
                 {!isEditing && (
@@ -186,7 +186,7 @@ export class Workspaces extends React.Component {
                   </Fragment>
                 )}
               </div>
-            )
+            );
           })}
         </div>
         <Button

@@ -1,7 +1,8 @@
-import "./clusters-menu.scss"
+import "./clusters-menu.scss";
 
 import React from "react";
-import { remote } from "electron"
+import { remote } from "electron";
+import { requestMain } from "../../../common/ipc";
 import type { Cluster } from "../../../main/cluster";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
@@ -20,9 +21,9 @@ import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
-import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
 import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
+import { clusterDisconnectHandler } from "../../../common/cluster-ipc";
 
 interface Props {
   className?: IClassName;
@@ -32,14 +33,14 @@ interface Props {
 export class ClustersMenu extends React.Component<Props> {
   showCluster = (clusterId: ClusterId) => {
     navigate(clusterViewURL({ params: { clusterId } }));
-  }
+  };
 
   addCluster = () => {
     navigate(addClusterURL());
-  }
+  };
 
   showContextMenu = (cluster: Cluster) => {
-    const { Menu, MenuItem } = remote
+    const { Menu, MenuItem } = remote;
     const menu = new Menu();
 
     menu.append(new MenuItem({
@@ -49,7 +50,7 @@ export class ClustersMenu extends React.Component<Props> {
           params: {
             clusterId: cluster.id
           }
-        }))
+        }));
       }
     }));
     if (cluster.online) {
@@ -60,9 +61,9 @@ export class ClustersMenu extends React.Component<Props> {
             navigate(landingURL());
             clusterStore.setActive(null);
           }
-          await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
+          await requestMain(clusterDisconnectHandler, cluster.id);
         }
-      }))
+      }));
     }
     menu.append(new MenuItem({
       label: _i18n._(t`Remove`),
@@ -80,13 +81,13 @@ export class ClustersMenu extends React.Component<Props> {
             clusterStore.removeById(cluster.id);
           },
           message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
-        })
+        });
       }
     }));
     menu.popup({
       window: remote.getCurrentWindow()
-    })
-  }
+    });
+  };
 
   @autobind()
   swapClusterIconOrder(result: DropResult) {
@@ -95,17 +96,17 @@ export class ClustersMenu extends React.Component<Props> {
       const {
         source: { index: from },
         destination: { index: to },
-      } = result
-      clusterStore.swapIconOrders(currentWorkspaceId, from, to)
+      } = result;
+      clusterStore.swapIconOrders(currentWorkspaceId, from, to);
     }
   }
 
   render() {
-    const { className } = this.props
-    const { newContexts } = userStore
-    const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId)
-    const clusters = clusterStore.getByWorkspaceId(workspace.id)
-    const activeClusterId = clusterStore.activeCluster
+    const { className } = this.props;
+    const { newContexts } = userStore;
+    const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
+    const clusters = clusterStore.getByWorkspaceId(workspace.id);
+    const activeClusterId = clusterStore.activeCluster;
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
         <div className="clusters flex column gaps">
@@ -130,7 +131,7 @@ export class ClustersMenu extends React.Component<Props> {
                           </div>
                         )}
                       </Draggable>
-                    )
+                    );
                   })}
                   {placeholder}
                 </div>
@@ -161,7 +162,7 @@ export class ClustersMenu extends React.Component<Props> {
                 active={isActive}
                 onClick={() => navigate(pageUrl)}
               />
-            )
+            );
           })}
         </div>
       </div>

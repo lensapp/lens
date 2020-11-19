@@ -23,11 +23,11 @@ export function cancelableFetch(reqInfo: RequestInfo, reqInit: RequestInit = {})
       promise.then = function (onfulfilled, onrejected) {
         const data = Object.getPrototypeOf(this).then.call(this, onfulfilled, onrejected);
         return wrapResult(data);
-      }
+      };
       promise.cancel = cancel;
     }
     return result;
-  }
+  };
 
   const req = fetch(reqInfo, { ...reqInit, signal });
   return wrapResult(req);

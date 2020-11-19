@@ -14,7 +14,7 @@ export class Status extends React.Component<Props> {
   @autobind()
   openKubeconfig() {
     const { cluster } = this.props;
-    shell.showItemInFolder(cluster.kubeConfigPath)
+    shell.showItemInFolder(cluster.kubeConfigPath);
   }
 
   renderStatusRows() {

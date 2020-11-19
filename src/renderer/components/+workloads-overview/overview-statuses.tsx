@@ -1,4 +1,4 @@
-import "./overview-statuses.scss"
+import "./overview-statuses.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -21,14 +21,14 @@ const resources: KubeResource[] = [
   "daemonsets",
   "jobs",
   "cronjobs",
-]
+];
 
 @observer
 export class OverviewStatuses extends React.Component {
   @autobind()
   renderWorkload(resource: KubeResource): React.ReactElement {
     const store = workloadStores[resource];
-    const items = store.getAllByNs(namespaceStore.contextNs)
+    const items = store.getAllByNs(namespaceStore.contextNs);
     return (
       <div className="workload" key={resource}>
         <div className="title">
@@ -36,7 +36,7 @@ export class OverviewStatuses extends React.Component {
         </div>
         <OverviewWorkloadStatus status={store.getStatuses(items)} />
       </div>
-    )
+    );
   }
 
   render() {
@@ -55,6 +55,6 @@ export class OverviewStatuses extends React.Component {
           {workloads}
         </div>
       </div>
-    )
+    );
   }
 }

@@ -42,11 +42,11 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   };
 
   @disposeOnUnmount
-  closeOnNavigate = reaction(() => navigation.getPath(), () => this.close())
+  closeOnNavigate = reaction(() => navigation.getPath(), () => this.close());
 
   public state: DialogState = {
     isOpen: this.props.isOpen,
-  }
+  };
 
   get elem() {
     return findDOMNode(this) as HTMLElement;
@@ -95,7 +95,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
       // Using document.body target to handle keydown event before Drawer does
       document.body.addEventListener('keydown', this.onEscapeKey);
     }
-  }
+  };
 
   onClose = () => {
     this.props.onClose();
@@ -103,7 +103,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
       if (this.elem) this.elem.removeEventListener('click', this.onClickOutside);
       document.body.removeEventListener('keydown', this.onEscapeKey);
     }
-  }
+  };
 
   onEscapeKey = (evt: KeyboardEvent) => {
     const escapeKey = evt.code === "Escape";
@@ -111,7 +111,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
       this.close();
       evt.stopPropagation();
     }
-  }
+  };
 
   onClickOutside = (evt: MouseEvent) => {
     const target = evt.target as HTMLElement;
@@ -119,7 +119,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
       this.close();
       evt.stopPropagation();
     }
-  }
+  };
 
   render() {
     const { modal, animated, pinned } = this.props;

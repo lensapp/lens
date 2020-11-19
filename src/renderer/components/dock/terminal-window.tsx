@@ -24,7 +24,7 @@ export class TerminalWindow extends React.Component<Props> {
       reaction(() => this.props.tab.id, tabId => this.activate(tabId), {
         fireImmediately: true
       })
-    ])
+    ]);
   }
 
   activate(tabId = this.props.tab.id) {
@@ -40,6 +40,6 @@ export class TerminalWindow extends React.Component<Props> {
         className={cssNames("TerminalWindow", className, themeStore.activeTheme.type)}
         ref={e => this.elem = e}
       />
-    )
+    );
   }
 }

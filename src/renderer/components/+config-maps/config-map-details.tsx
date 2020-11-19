@@ -31,7 +31,7 @@ export class ConfigMapDetails extends React.Component<Props> {
           this.data.replace(configMap.data); // refresh
         }
       })
-    ])
+    ]);
   }
 
   save = async () => {
@@ -47,7 +47,7 @@ export class ConfigMapDetails extends React.Component<Props> {
     } finally {
       this.isSaving = false;
     }
-  }
+  };
 
   render() {
     const { object: configMap } = this.props;
@@ -75,7 +75,7 @@ export class ConfigMapDetails extends React.Component<Props> {
                         />
                       </div>
                     </div>
-                  )
+                  );
                 })
               }
               <Button
@@ -98,7 +98,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <ConfigMapDetails {...props} />
   }
-})
+});
 
 kubeObjectDetailRegistry.add({
   kind: "ConfigMap",
@@ -107,6 +107,6 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});
 
 

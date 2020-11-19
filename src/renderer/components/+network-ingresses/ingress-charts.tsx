@@ -94,4 +94,4 @@ export const IngressCharts = observer(() => {
       data={{ datasets: datasets[tabId] }}
     />
   );
-})
+});

@@ -30,24 +30,24 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
       const { selectedTab, isOpen } = dockStore;
       if (isInstallChartTab(selectedTab) && isOpen) {
         this.loadData()
-          .catch(err => Notifications.error(String(err)))
+          .catch(err => Notifications.error(String(err)));
       }
-    }, { delay: 250 })
+    }, { delay: 250 });
   }
 
   @action
   async loadData(tabId = dockStore.selectedTabId) {
-    const promises = []
+    const promises = [];
 
     if (!this.getData(tabId).values) {
-      promises.push(this.loadValues(tabId))
+      promises.push(this.loadValues(tabId));
     }
 
     if (!this.versions.getData(tabId)) {
-      promises.push(this.loadVersions(tabId))
+      promises.push(this.loadVersions(tabId));
     }
 
-    await Promise.all(promises)
+    await Promise.all(promises);
   }
 
   @action
@@ -61,15 +61,15 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
 
   @action
   async loadValues(tabId: TabId) {
-    const data = this.getData(tabId)
-    const { repo, name, version } = data
+    const data = this.getData(tabId);
+    const { repo, name, version } = data;
 
     // This loop is for "retrying" the "getValues" call
     for (const _ of Array(3)) {
-      const values = await helmChartsApi.getValues(repo, name, version)
+      const values = await helmChartsApi.getValues(repo, name, version);
       if (values) {
-        this.setData(tabId, { ...data, values })
-        return
+        this.setData(tabId, { ...data, values });
+        return;
       }
     }
   }

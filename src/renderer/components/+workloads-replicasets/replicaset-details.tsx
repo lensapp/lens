@@ -40,15 +40,15 @@ export class ReplicaSetDetails extends React.Component<Props> {
   }
 
   render() {
-    const { object: replicaSet } = this.props
-    if (!replicaSet) return null
-    const { metrics } = replicaSetStore
-    const { status } = replicaSet
-    const { availableReplicas, replicas } = status
-    const selectors = replicaSet.getSelectors()
-    const nodeSelector = replicaSet.getNodeSelectors()
-    const images = replicaSet.getImages()
-    const childPods = replicaSetStore.getChildPods(replicaSet)
+    const { object: replicaSet } = this.props;
+    if (!replicaSet) return null;
+    const { metrics } = replicaSetStore;
+    const { status } = replicaSet;
+    const { availableReplicas, replicas } = status;
+    const selectors = replicaSet.getSelectors();
+    const nodeSelector = replicaSet.getNodeSelectors();
+    const images = replicaSet.getImages();
+    const childPods = replicaSetStore.getChildPods(replicaSet);
     return (
       <div className="ReplicaSetDetails">
         {podsStore.isLoaded && (
@@ -92,7 +92,7 @@ export class ReplicaSetDetails extends React.Component<Props> {
         <ResourceMetricsText metrics={metrics}/>
         <PodDetailsList pods={childPods} owner={replicaSet}/>
       </div>
-    )
+    );
   }
 }
 
@@ -102,7 +102,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props: any) => <ReplicaSetDetails {...props} />
   }
-})
+});
 kubeObjectDetailRegistry.add({
   kind: "ReplicaSet",
   apiVersions: ["apps/v1"],
@@ -110,4 +110,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props: any) => <KubeEventDetails {...props} />
   }
-})
+});

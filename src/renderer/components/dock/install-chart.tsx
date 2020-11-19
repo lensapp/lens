@@ -103,7 +103,7 @@ export class InstallChart extends Component<Props> {
     return (
       <p><Trans>Chart Release <b>{details.release.name}</b> successfully created.</Trans></p>
     );
-  }
+  };
 
   render() {
     const { tabId, chartData, values, versions, install } = this;
@@ -137,7 +137,7 @@ export class InstallChart extends Component<Props> {
             logs={this.releaseDetails.log}
           />
         </div>
-      )
+      );
     }
 
     const { repo, name, version, namespace, releaseName } = chartData;

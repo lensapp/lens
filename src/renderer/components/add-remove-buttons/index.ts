@@ -1,1 +1,1 @@
-export * from "./add-remove-buttons"
+export * from "./add-remove-buttons";

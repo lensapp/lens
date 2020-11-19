@@ -1,10 +1,10 @@
 // Tooltip decorator for simple composition with other components
 
-import React, { HTMLAttributes, ReactNode } from "react"
+import React, { HTMLAttributes, ReactNode } from "react";
 import hoistNonReactStatics from "hoist-non-react-statics";
 import { Tooltip, TooltipProps } from "./tooltip";
 import { isReactNode } from "../../utils/isReactNode";
-import uniqueId from "lodash/uniqueId"
+import uniqueId from "lodash/uniqueId";
 
 export interface TooltipDecoratorProps {
   tooltip?: ReactNode | Omit<TooltipProps, "targetId">;
@@ -39,11 +39,11 @@ export function withTooltip<T extends React.ComponentType<any>>(Target: T): T {
             </div>
             <Tooltip {...tooltipProps} />
           </>
-        )
+        );
       }
       return <Target {...targetProps as any} />;
     }
-  }
+  };
 
   return hoistNonReactStatics(DecoratedComponent, Target) as any;
 }

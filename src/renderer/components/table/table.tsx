@@ -9,14 +9,14 @@ import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
 import { navigation, setQueryParams } from "../../navigation";
-import orderBy from "lodash/orderBy"
+import orderBy from "lodash/orderBy";
 import { ItemObject } from "../../item.store";
 
 // todo: refactor + decouple search from location
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
-export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy }
+export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy };
 export type TableSortCallback<D = any> = (data: D) => string | number | (string | number)[];
 
 export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
@@ -51,14 +51,14 @@ export class Table extends React.Component<TableProps> {
     rowPadding: "8px",
     rowLineHeight: "17px",
     sortSyncWithUrl: true,
-  }
+  };
 
   @observable sortParamsLocal = this.props.sortByDefault;
 
   @computed get sortParams(): Partial<TableSortParams> {
     if (this.props.sortSyncWithUrl) {
-      const sortBy = navigation.searchParams.get("sortBy")
-      const orderBy = navigation.searchParams.get("orderBy")
+      const sortBy = navigation.searchParams.get("sortBy");
+      const orderBy = navigation.searchParams.get("orderBy");
       return { sortBy, orderBy };
     }
     return this.sortParamsLocal || {};
@@ -86,7 +86,7 @@ export class Table extends React.Component<TableProps> {
               _sort: this.sort,
               _sorting: this.sortParams,
               _nowrap: headElem.props.nowrap,
-            })
+            });
           })
         });
       }
@@ -108,13 +108,13 @@ export class Table extends React.Component<TableProps> {
   protected onSort(params: TableSortParams) {
     const { sortSyncWithUrl, onSort } = this.props;
     if (sortSyncWithUrl) {
-      setQueryParams(params)
+      setQueryParams(params);
     }
     else {
       this.sortParamsLocal = params;
     }
     if (onSort) {
-      onSort(params)
+      onSort(params);
     }
   }
 
@@ -139,8 +139,8 @@ export class Table extends React.Component<TableProps> {
       sortedItems = this.getSorted(sortedItems);
       if (rows.length) {
         rows = sortedItems.map(item => rows.find(row => {
-          return item == row.props.sortItem
-        }))
+          return item == row.props.sortItem;
+        }));
       }
     }
     if (!rows.length && !items.length && noItems) {
@@ -179,6 +179,6 @@ export class Table extends React.Component<TableProps> {
         {this.renderHead()}
         {this.renderRows()}
       </div>
-    )
+    );
   }
 }

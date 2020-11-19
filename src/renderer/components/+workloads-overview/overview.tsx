@@ -1,4 +1,4 @@
-import "./overview.scss"
+import "./overview.scss";
 
 import React from "react";
 import { observable, when } from "mobx";
@@ -17,7 +17,7 @@ import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { Spinner } from "../spinner";
 import { Events } from "../+events";
 import { KubeObjectStore } from "../../kube-object.store";
-import { isAllowedResource } from "../../../common/rbac"
+import { isAllowedResource } from "../../../common/rbac";
 
 interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 }
@@ -67,7 +67,7 @@ export class WorkloadsOverview extends React.Component<Props> {
 
   renderContents() {
     if (!this.isReady) {
-      return <Spinner center/>
+      return <Spinner center/>;
     }
     return (
       <>
@@ -78,7 +78,7 @@ export class WorkloadsOverview extends React.Component<Props> {
           className="box grow"
         /> }
       </>
-    )
+    );
   }
 
   render() {
@@ -86,6 +86,6 @@ export class WorkloadsOverview extends React.Component<Props> {
       <div className="WorkloadsOverview flex column gaps">
         {this.renderContents()}
       </div>
-    )
+    );
   }
 }

@@ -1,4 +1,4 @@
-import "./role-bindings.scss"
+import "./role-bindings.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -58,6 +58,6 @@ export class RoleBindings extends React.Component<Props> {
           addTooltip: <Trans>Create new RoleBinding</Trans>,
         }}
       />
-    )
+    );
   }
 }

@@ -7,6 +7,7 @@ import { createObservableHistory } from "mobx-observable-history";
 import { createBrowserHistory, LocationDescriptor } from "history";
 import logger from "../main/logger";
 import { clusterViewRoute, IClusterViewRouteParams } from "./components/cluster-manager/cluster-view.route";
+import { broadcastMessage, subscribeToBroadcast } from "../common/ipc";
 
 export const history = createBrowserHistory();
 export const navigation = createObservableHistory(history);
@@ -44,10 +45,10 @@ export function getQueryString(params?: Partial<IQueryParams>, merge = true) {
   const searchParams = navigation.searchParams.copyWith(params);
   if (!merge) {
     Array.from(searchParams.keys()).forEach(key => {
-      if (!(key in params)) searchParams.delete(key)
-    })
+      if (!(key in params)) searchParams.delete(key);
+    });
   }
-  return searchParams.toString({ withPrefix: true })
+  return searchParams.toString({ withPrefix: true });
 }
 
 export function setQueryParams<T>(params?: T & IQueryParams, { merge = true, replace = false } = {}) {
@@ -56,11 +57,11 @@ export function setQueryParams<T>(params?: T & IQueryParams, { merge = true, rep
 }
 
 export function getDetails() {
-  return navigation.searchParams.get("details")
+  return navigation.searchParams.get("details");
 }
 
 export function getSelectedDetails() {
-  return navigation.searchParams.get("selected") || getDetails()
+  return navigation.searchParams.get("selected") || getDetails();
 }
 
 export function getDetailsUrl(details: string) {
@@ -78,20 +79,20 @@ export function showDetails(path: string, resetSelected = true) {
   navigation.searchParams.merge({
     details: path,
     selected: resetSelected ? null : getSelectedDetails(),
-  })
+  });
 }
 
 /**
  * Hide details. Works only in renderer.
  */
 export function hideDetails() {
-  showDetails(null)
+  showDetails(null);
 }
 
 export function setSearch(text: string) {
   navigation.replace({
     search: getQueryString({ search: text })
-  })
+  });
 }
 
 export function getSearch() {
@@ -111,19 +112,19 @@ export function getMatchedClusterId(): string {
 if (process.isMainFrame) {
   // Keep track of active cluster-id for handling IPC/menus/etc.
   reaction(() => getMatchedClusterId(), clusterId => {
-    ipcRenderer.send("cluster-view:current-id", clusterId);
+    broadcastMessage("cluster-view:current-id", clusterId);
   }, {
     fireImmediately: true
-  })
+  });
 }
 
 // Handle navigation via IPC (e.g. from top menu)
-ipcRenderer.on("renderer:navigate", (event, location: LocationDescriptor) => {
+subscribeToBroadcast("renderer:navigate", (event, location: LocationDescriptor) => {
   logger.info(`[IPC]: ${event.type} ${JSON.stringify(location)}`, event);
   navigate(location);
 });
 
 // Reload dashboard window
-ipcRenderer.on("renderer:reload", () => {
+subscribeToBroadcast("renderer:reload", () => {
   location.reload();
 });

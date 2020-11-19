@@ -1,22 +1,22 @@
 import type { KubeConfig } from "@kubernetes/client-node";
-import type { Cluster } from "./cluster"
+import type { Cluster } from "./cluster";
 import type { ContextHandler } from "./context-handler";
-import { app } from "electron"
-import path from "path"
-import fs from "fs-extra"
-import { dumpConfigYaml, loadConfig } from "../common/kube-helpers"
-import logger from "./logger"
+import { app } from "electron";
+import path from "path";
+import fs from "fs-extra";
+import { dumpConfigYaml, loadConfig } from "../common/kube-helpers";
+import logger from "./logger";
 
 export class KubeconfigManager {
-  protected configDir = app.getPath("temp")
+  protected configDir = app.getPath("temp");
   protected tempFile: string;
 
   private constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
 
   static async create(cluster: Cluster, contextHandler: ContextHandler, port: number) {
-    const kcm = new KubeconfigManager(cluster, contextHandler, port)
-    await kcm.init()
-    return kcm
+    const kcm = new KubeconfigManager(cluster, contextHandler, port);
+    await kcm.init();
+    return kcm;
   }
 
   protected async init() {
@@ -24,7 +24,7 @@ export class KubeconfigManager {
       await this.contextHandler.ensurePort();
       await this.createProxyKubeconfig();
     } catch (err) {
-      logger.error(`Failed to created temp config for auth-proxy`, { err })
+      logger.error(`Failed to created temp config for auth-proxy`, { err });
     }
   }
 
@@ -33,7 +33,7 @@ export class KubeconfigManager {
   }
 
   protected resolveProxyUrl() {
-    return `http://127.0.0.1:${this.port}/${this.cluster.id}`
+    return `http://127.0.0.1:${this.port}/${this.cluster.id}`;
   }
 
   /**
@@ -78,11 +78,11 @@ export class KubeconfigManager {
 
   async unlink() {
     if (!this.tempFile) {
-      return
+      return;
     }
 
-    logger.info('Deleting temporary kubeconfig: ' + this.tempFile)
-    await fs.unlink(this.tempFile)
-    this.tempFile = undefined
+    logger.info('Deleting temporary kubeconfig: ' + this.tempFile);
+    await fs.unlink(this.tempFile);
+    this.tempFile = undefined;
   }
 }

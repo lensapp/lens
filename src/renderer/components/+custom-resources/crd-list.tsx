@@ -1,4 +1,4 @@
-import "./crd-list.scss"
+import "./crd-list.scss";
 
 import React from "react";
 import { Trans } from "@lingui/macro";
@@ -24,7 +24,7 @@ enum sortBy {
 @observer
 export class CrdList extends React.Component {
   @computed get groups() {
-    return navigation.searchParams.getAsArray("groups")
+    return navigation.searchParams.getAsArray("groups");
   }
 
   onGroupChange(group: string) {
@@ -32,7 +32,7 @@ export class CrdList extends React.Component {
     const index = groups.findIndex(item => item == group);
     if (index !== -1) groups.splice(index, 1);
     else groups.push(group);
-    setQueryParams({ groups })
+    setQueryParams({ groups });
   }
 
   render() {
@@ -52,14 +52,14 @@ export class CrdList extends React.Component {
         searchFilters={Object.values(sortingCallbacks)}
         filterItems={[
           (items: CustomResourceDefinition[]) => {
-            return selectedGroups.length ? items.filter(item => selectedGroups.includes(item.getGroup())) : items
+            return selectedGroups.length ? items.filter(item => selectedGroups.includes(item.getGroup())) : items;
           }
         ]}
         renderHeaderTitle={<Trans>Custom Resources</Trans>}
         customizeHeader={() => {
           let placeholder = <Trans>All groups</Trans>;
-          if (selectedGroups.length == 1) placeholder = <><Trans>Group</Trans>: {selectedGroups[0]}</>
-          if (selectedGroups.length >= 2) placeholder = <><Trans>Groups</Trans>: {selectedGroups.join(", ")}</>
+          if (selectedGroups.length == 1) placeholder = <><Trans>Group</Trans>: {selectedGroups[0]}</>;
+          if (selectedGroups.length >= 2) placeholder = <><Trans>Groups</Trans>: {selectedGroups.join(", ")}</>;
           return {
             // todo: move to global filters
             filters: (
@@ -77,11 +77,11 @@ export class CrdList extends React.Component {
                       <span>{group}</span>
                       {isSelected && <Icon small material="check" className="box right"/>}
                     </div>
-                  )
+                  );
                 }}
               />
             )
-          }
+          };
         }}
         renderTableHeader={[
           { title: <Trans>Resource</Trans>, className: "kind", sortBy: sortBy.kind },
@@ -99,10 +99,10 @@ export class CrdList extends React.Component {
             crd.getVersion(),
             crd.getScope(),
             crd.getAge(),
-          ]
+          ];
         }}
       />
-    )
+    );
   }
 }
 

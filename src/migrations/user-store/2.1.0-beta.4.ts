@@ -6,4 +6,4 @@ export default migration({
   run(store) {
     store.set("lastSeenAppVersion", "0.0.0");
   }
-})
+});

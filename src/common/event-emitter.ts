@@ -35,6 +35,6 @@ export class EventEmitter<D extends [...any[]]> {
       const result = callback(...data);
       if (result === false) return; // break cycle
       return true;
-    })
+    });
   }
 }

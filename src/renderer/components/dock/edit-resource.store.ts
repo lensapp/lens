@@ -42,7 +42,7 @@ export class EditResourceStore extends DockTabStore<KubeEditResource> {
         }, {
           delay: 100 // make sure all stores initialized
         }));
-      })
+      });
     });
   }
 
@@ -58,7 +58,7 @@ export class EditResourceStore extends DockTabStore<KubeEditResource> {
     Array.from(this.watchers).forEach(([tabId, dispose]) => {
       this.watchers.delete(tabId);
       dispose();
-    })
+    });
   }
 }
 

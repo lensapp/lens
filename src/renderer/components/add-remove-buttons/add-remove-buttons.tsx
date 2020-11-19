@@ -14,7 +14,7 @@ export interface AddRemoveButtonsProps extends React.HTMLAttributes<any> {
 
 export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps> {
   renderButtons() {
-    const { onRemove, onAdd, addTooltip, removeTooltip } = this.props
+    const { onRemove, onAdd, addTooltip, removeTooltip } = this.props;
     const buttons = [
       {
         onClick: onRemove,
@@ -33,13 +33,13 @@ export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps>
       if (!button.onClick) {
         return null;
       }
-      const { onClick, className, icon, tooltip } = button
+      const { onClick, className, icon, tooltip } = button;
       return (
         <Button key={icon} big round primary onClick={onClick} className={className} tooltip={tooltip}>
           <Icon material={icon}/>
         </Button>
-      )
-    })
+      );
+    });
   }
 
   render() {
@@ -47,6 +47,6 @@ export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps>
       <div className={cssNames("AddRemoveButtons flex gaps", this.props.className)}>
         {this.renderButtons()}
       </div>
-    )
+    );
   }
 }

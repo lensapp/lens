@@ -71,10 +71,10 @@ export class CronJobs extends React.Component<Props> {
           cronJob.getAge(),
         ]}
         renderItemMenu={(item: CronJob) => {
-          return <CronJobMenu object={item}/>
+          return <CronJobMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
@@ -85,7 +85,7 @@ export function CronJobMenu(props: KubeObjectMenuProps<CronJob>) {
       <Icon material="play_circle_filled" title={_i18n._(t`Trigger`)} interactive={toolbar}/>
       <span className="title"><Trans>Trigger</Trans></span>
     </MenuItem>
-  )
+  );
 }
 
 kubeObjectMenuRegistry.add({
@@ -94,4 +94,4 @@ kubeObjectMenuRegistry.add({
   components: {
     MenuItem: CronJobMenu
   }
-})
+});

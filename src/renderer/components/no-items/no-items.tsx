@@ -1,4 +1,4 @@
-import "./no-items.scss"
+import "./no-items.scss";
 
 import React from "react";
 import { Trans } from "@lingui/macro";
@@ -17,5 +17,5 @@ export function NoItems(props: Props) {
         {children || <Trans>Item list is empty</Trans>}
       </div>
     </div>
-  )
+  );
 }

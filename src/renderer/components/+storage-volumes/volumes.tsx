@@ -1,4 +1,4 @@
-import "./volumes.scss"
+import "./volumes.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -71,9 +71,9 @@ export class PersistentVolumes extends React.Component<Props> {
             ),
             volume.getAge(),
             { title: volume.getStatus(), className: volume.getStatus().toLowerCase() }
-          ]
+          ];
         }}
       />
-    )
+    );
   }
 }

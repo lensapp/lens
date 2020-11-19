@@ -3,7 +3,7 @@ import { buildURL } from "../../../common/utils/buildUrl";
 
 export const secretsRoute: RouteProps = {
   path: "/secrets"
-}
+};
 
 export interface ISecretsRouteParams {
 }

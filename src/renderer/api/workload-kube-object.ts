@@ -65,16 +65,16 @@ export class WorkloadKubeObject extends KubeObject {
   }
 
   getTolerations(): IToleration[] {
-    return get(this, "spec.template.spec.tolerations", [])
+    return get(this, "spec.template.spec.tolerations", []);
   }
 
   getAffinity(): IAffinity {
-    return get(this, "spec.template.spec.affinity")
+    return get(this, "spec.template.spec.affinity");
   }
 
   getAffinityNumber() {
-    const affinity = this.getAffinity()
-    if (!affinity) return 0
-    return Object.keys(affinity).length
+    const affinity = this.getAffinity();
+    if (!affinity) return 0;
+    return Object.keys(affinity).length;
   }
 }

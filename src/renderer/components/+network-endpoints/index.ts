@@ -1,3 +1,3 @@
-export * from "./endpoints.route"
-export * from "./endpoints"
-export * from "./endpoint-details"
+export * from "./endpoints.route";
+export * from "./endpoints";
+export * from "./endpoint-details";

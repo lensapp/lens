@@ -13,4 +13,4 @@ export default migration({
       store.set(contextName, { kubeConfig: value[1] });
     }
   }
-})
+});

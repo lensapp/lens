@@ -1,7 +1,7 @@
 import { stringify } from "querystring";
 import { autobind, base64, EventEmitter } from "../utils";
 import { WebSocketApi } from "./websocket-api";
-import isEqual from "lodash/isEqual"
+import isEqual from "lodash/isEqual";
 import { isDevelopment } from "../../common/vars";
 
 export enum TerminalChannels {
@@ -28,7 +28,7 @@ export type TerminalApiQuery = Record<string, string> & {
   id: string;
   node?: string;
   type?: string | "node";
-}
+};
 
 export class TerminalApi extends WebSocketApi {
   protected size: { Width: number; Height: number };
@@ -51,7 +51,7 @@ export class TerminalApi extends WebSocketApi {
     const wss = `ws${protocol === "https:" ? "s" : ""}://`;
     const query: TerminalApiQuery = { id };
     if (port) {
-      port = `:${port}`
+      port = `:${port}`;
     }
     if (node) {
       query.node = node;
