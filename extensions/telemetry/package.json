@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "npm run webpack -p",
-    "dev": "webpack --watch",
+    "dev": "npm run webpack --watch",
     "test": "jest --passWithNoTests --env=jsdom src $@"
   },
   "dependencies": {},
