@@ -166,25 +166,25 @@ export class Menu extends React.Component<MenuProps, State> {
   onKeyDown(evt: KeyboardEvent) {
     if (!this.isOpen) return;
     switch (evt.code) {
-    case "Escape":
-      this.close();
-      break;
+      case "Escape":
+        this.close();
+        break;
 
-    case "Space":
-    case "Enter":
-      const focusedItem = this.focusedItem;
-      if (focusedItem) {
-        focusedItem.elem.click();
-        evt.preventDefault();
-      }
-      break;
+      case "Space":
+      case "Enter":
+        const focusedItem = this.focusedItem;
+        if (focusedItem) {
+          focusedItem.elem.click();
+          evt.preventDefault();
+        }
+        break;
 
-    case "ArrowUp":
-      this.focusNextItem(true);
-      break;
-    case "ArrowDown":
-      this.focusNextItem();
-      break;
+      case "ArrowUp":
+        this.focusNextItem(true);
+        break;
+      case "ArrowDown":
+        this.focusNextItem();
+        break;
     }
   }
 

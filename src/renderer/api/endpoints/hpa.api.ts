@@ -101,14 +101,14 @@ export class HorizontalPodAutoscaler extends KubeObject {
   protected getMetricName(metric: IHpaMetric): string {
     const { type, resource, pods, object, external } = metric;
     switch (type) {
-    case HpaMetricType.Resource:
-      return resource.name;
-    case HpaMetricType.Pods:
-      return pods.metricName;
-    case HpaMetricType.Object:
-      return object.metricName;
-    case HpaMetricType.External:
-      return external.metricName;
+      case HpaMetricType.Resource:
+        return resource.name;
+      case HpaMetricType.Pods:
+        return pods.metricName;
+      case HpaMetricType.Object:
+        return object.metricName;
+      case HpaMetricType.External:
+        return external.metricName;
     }
   }
 

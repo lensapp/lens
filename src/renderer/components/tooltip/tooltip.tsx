@@ -146,38 +146,38 @@ export class Tooltip extends React.Component<TooltipProps> {
     const topCenter = targetBounds.top - tooltipBounds.height - offset;
     const bottomCenter = targetBounds.bottom + offset;
     switch (position) {
-    case "top":
-      left = horizontalCenter;
-      top = topCenter;
-      break;
-    case "bottom":
-      left = horizontalCenter;
-      top = bottomCenter;
-      break;
-    case "left":
-      top = verticalCenter;
-      left = targetBounds.left - tooltipBounds.width - offset;
-      break;
-    case "right":
-      top = verticalCenter;
-      left = targetBounds.right + offset;
-      break;
-    case "top_left":
-      left = targetBounds.left;
-      top = topCenter;
-      break;
-    case "top_right":
-      left = targetBounds.right - tooltipBounds.width;
-      top = topCenter;
-      break;
-    case "bottom_left":
-      top = bottomCenter;
-      left = targetBounds.left;
-      break;
-    case "bottom_right":
-      top = bottomCenter;
-      left = targetBounds.right - tooltipBounds.width;
-      break;
+      case "top":
+        left = horizontalCenter;
+        top = topCenter;
+        break;
+      case "bottom":
+        left = horizontalCenter;
+        top = bottomCenter;
+        break;
+      case "left":
+        top = verticalCenter;
+        left = targetBounds.left - tooltipBounds.width - offset;
+        break;
+      case "right":
+        top = verticalCenter;
+        left = targetBounds.right + offset;
+        break;
+      case "top_left":
+        left = targetBounds.left;
+        top = topCenter;
+        break;
+      case "top_right":
+        left = targetBounds.right - tooltipBounds.width;
+        top = topCenter;
+        break;
+      case "bottom_left":
+        top = bottomCenter;
+        left = targetBounds.left;
+        break;
+      case "bottom_right":
+        top = bottomCenter;
+        left = targetBounds.right - tooltipBounds.width;
+        break;
     }
     return {
       left: left,

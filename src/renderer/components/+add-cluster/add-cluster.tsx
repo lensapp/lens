@@ -78,19 +78,19 @@ export class AddCluster extends React.Component {
     this.kubeContexts.clear();
 
     switch (this.sourceTab) {
-    case KubeConfigSourceTab.FILE:
-      const contexts = this.getContexts(this.kubeConfigLocal);
-      this.kubeContexts.replace(contexts);
-      break;
-    case KubeConfigSourceTab.TEXT:
-      try {
-        this.error = "";
-        const contexts = this.getContexts(loadConfig(this.customConfig || "{}"));
+      case KubeConfigSourceTab.FILE:
+        const contexts = this.getContexts(this.kubeConfigLocal);
         this.kubeContexts.replace(contexts);
-      } catch (err) {
-        this.error = String(err);
-      }
-      break;
+        break;
+      case KubeConfigSourceTab.TEXT:
+        try {
+          this.error = "";
+          const contexts = this.getContexts(loadConfig(this.customConfig || "{}"));
+          this.kubeContexts.replace(contexts);
+        } catch (err) {
+          this.error = String(err);
+        }
+        break;
     }
 
     if (this.kubeContexts.size === 1) {
