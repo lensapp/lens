@@ -7,7 +7,7 @@ import { subscribeToBroadcast } from "../common/ipc"
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import { Singleton } from "../common/utils";
-import { clusterFrameMap } from "../common/cluster-ipc";
+import { clusterFrameMap } from "../common/cluster-frames";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;

@@ -4,7 +4,7 @@
 
 import { ipcMain, ipcRenderer, webContents, remote } from "electron";
 import logger from "../main/logger";
-import { clusterFrameMap } from "./cluster-ipc";
+import { clusterFrameMap } from "./cluster-frames";
 
 export function handleRequest(channel: string, listener: (...args: any[]) => any) {
   ipcMain.handle(channel, listener)

@@ -3,14 +3,14 @@ import { ClusterId, clusterStore } from "./cluster-store";
 import { appEventBus } from "./event-bus"
 import { ResourceApplier } from "../main/resource-applier";
 import { ipcMain } from "electron";
-import { observable } from "mobx";
+import { clusterFrameMap } from "./cluster-frames"
 
 export const clusterActivateHandler = "cluster:activate"
 export const clusterSetFrameIdHandler = "cluster:set-frame-id"
 export const clusterRefreshHandler = "cluster:refresh"
 export const clusterDisconnectHandler = "cluster:disconnect"
 export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all"
-export const clusterFrameMap = observable.map<ClusterId, number>();
+
 
 if (ipcMain) {
   handleRequest(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
