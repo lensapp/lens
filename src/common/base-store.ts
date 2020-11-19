@@ -38,11 +38,11 @@ export class BaseStore<T = any> extends Singleton {
   }
 
   get syncRendererChannel() {
-    return `store-sync-renderer:${this.name}`
+    return `store-sync-renderer:${this.path}`
   }
 
   get syncMainChannel() {
-    return `store-sync-main:${this.name}`
+    return `store-sync-main:${this.path}`
   }
 
   get path() {
