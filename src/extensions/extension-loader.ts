@@ -23,31 +23,6 @@ export class ExtensionLoader {
   @observable isLoaded = false;
   whenLoaded = when(() => this.isLoaded);
 
-  constructor() {
-    if (ipcRenderer) {
-      const extensionListHandler = ( extensions: [LensExtensionId, InstalledExtension][]) => {
-        this.isLoaded = true;
-        extensions.forEach(([extId, ext]) => {
-          if (!this.extensions.has(extId)) {
-            this.extensions.set(extId, ext)
-          }
-        })
-      }
-      requestMain(this.requestExtensionsChannel).then(extensionListHandler)
-      subscribeToBroadcast(this.requestExtensionsChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
-        extensionListHandler(extensions)
-      });
-    } else {
-      reaction(() => this.extensions.toJS(), () => {
-        this.broadcastExtensions()
-      })
-      handleRequest(this.requestExtensionsChannel, () => {
-        return Array.from(this.toJSON())
-      })
-    }
-    extensionsStore.manageState(this);
-  }
-
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
     const extensions = this.extensions.toJS();
     extensions.forEach((ext, extId) => {
@@ -59,11 +34,45 @@ export class ExtensionLoader {
   }
 
   @action
-  async init(extensions: Map<LensExtensionId, InstalledExtension>) {
-    this.extensions.replace(extensions);
+  async init(extensions?: Map<LensExtensionId, InstalledExtension>) {
+    if (extensions) {
+      this.extensions.replace(extensions);
+    }
+    if (ipcRenderer) {
+      this.initRenderer()
+    } else {
+      this.initMain()
+    }
+    extensionsStore.manageState(this);
+  }
+
+  protected async initMain() {
     this.isLoaded = true;
     this.loadOnMain();
     this.broadcastExtensions();
+
+    reaction(() => this.extensions.toJS(), () => {
+      this.broadcastExtensions()
+    })
+
+    handleRequest(this.requestExtensionsChannel, () => {
+      return Array.from(this.toJSON())
+    })
+  }
+
+  protected async initRenderer() {
+    const extensionListHandler = ( extensions: [LensExtensionId, InstalledExtension][]) => {
+      this.isLoaded = true;
+      extensions.forEach(([extId, ext]) => {
+        if (!this.extensions.has(extId)) {
+          this.extensions.set(extId, ext)
+        }
+      })
+    }
+    requestMain(this.requestExtensionsChannel).then(extensionListHandler)
+    subscribeToBroadcast(this.requestExtensionsChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
+      extensionListHandler(extensions)
+    });
   }
 
   loadOnMain() {
