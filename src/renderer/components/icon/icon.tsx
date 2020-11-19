@@ -32,7 +32,7 @@ export class Icon extends React.PureComponent<IconProps> {
 
   get isInteractive() {
     const { interactive, onClick, href, link } = this.props;
-    return interactive || !!(onClick || href || link);
+    return interactive ?? !!(onClick || href || link);
   }
 
   @autobind()

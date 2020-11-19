@@ -2,7 +2,7 @@
   --width: 100%;
   --max-width: auto;
 
-  .extension-list {
+  .extensions-list {
     .extension {
       --flex-gap: $padding / 3;
       padding: $padding $padding * 2;
@@ -11,6 +11,20 @@
 
       &:not(:first-of-type) {
         margin-top: $padding * 2;
+      }
+    }
+  }
+
+  .extensions-info {
+    .flex.gaps {
+      --flex-gap: #{$padding};
+    }
+    .install-extension {
+      code {
+        &:hover {
+          color: $textColorSecondary;
+        }
+        cursor: pointer;
       }
     }
   }

@@ -107,3 +107,9 @@
     }
   }
 }
+
+.Tooltip.InputTooltipError {
+  --bgc: #{$colorError};
+  --color: white;
+  --border: 1px solid currentColor;
+}
