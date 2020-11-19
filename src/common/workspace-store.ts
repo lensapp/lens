@@ -5,9 +5,9 @@ import { clusterStore } from "./cluster-store"
 import { appEventBus } from "./event-bus";
 import { broadcastMessage } from "../common/ipc";
 import logger from "../main/logger";
+import type { ClusterId } from "./cluster-store"
 
 export type WorkspaceId = string;
-export type ClusterId = string;
 
 export interface WorkspaceStoreModel {
   workspaces: WorkspaceModel[];
