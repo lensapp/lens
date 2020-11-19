@@ -57,11 +57,7 @@ export class ClustersMenu extends React.Component<Props> {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
         click: async () => {
-          const lastActiveClusterId = workspaceStore.currentWorkspace.lastActiveClusterId;
           if (clusterStore.isActive(cluster.id)) {
-            if (lastActiveClusterId === cluster.id) {
-              workspaceStore.setLastActiveClusterId("");
-            }
             navigate(landingURL());
             clusterStore.setActive(null);
           }
@@ -79,12 +75,9 @@ export class ClustersMenu extends React.Component<Props> {
             label: _i18n._(t`Remove`),
           },
           ok: () => {
-            const lastActiveClusterId = workspaceStore.currentWorkspace.lastActiveClusterId;
-            if (lastActiveClusterId === cluster.id) {
-              workspaceStore.setLastActiveClusterId("");
-            }
             if (clusterStore.activeClusterId === cluster.id) {
               navigate(landingURL());
+              clusterStore.setActive(null);
             }
             clusterStore.removeById(cluster.id);
           },

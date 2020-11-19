@@ -188,10 +188,8 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @action
-  setLastActiveClusterId(clusterId: ClusterId, workspaceId = this.currentWorkspaceId) {
-    if (clusterId != null) {
-      this.getById(workspaceId).lastActiveClusterId = clusterId;
-    }
+  setLastActiveClusterId(clusterId?: ClusterId, workspaceId = this.currentWorkspaceId) {
+    this.getById(workspaceId).lastActiveClusterId = clusterId;
   }
 
   @action
