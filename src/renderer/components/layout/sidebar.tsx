@@ -97,6 +97,31 @@ export class Sidebar extends React.Component<Props> {
     return routes;
   }
 
+  renderRegisteredMenus() {
+    return clusterPageMenuRegistry.getRootItems().map((menuItem) => {
+      const registeredPage = clusterPageRegistry.getByPageMenuTarget(menuItem.target);
+      let pageUrl: string;
+      let isActive = false;
+      if (registeredPage) {
+        const { extensionId, id: pageId } = registeredPage;
+        pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
+        isActive = pageUrl === navigation.location.pathname;
+      }
+      const tabRoutes = this.getTabLayoutRoutes(menuItem);
+      if (!registeredPage && tabRoutes.length == 0) {
+        return;
+      }
+      return (
+        <SidebarNavItem
+          key={pageUrl} url={pageUrl}
+          text={menuItem.title} icon={<menuItem.components.Icon/>}
+          isActive={isActive}
+          subMenus={tabRoutes}
+        />
+      );
+    });
+  }
+
   render() {
     const { toggle, isPinned, className } = this.props;
     const query = namespaceStore.getContextParams();
@@ -212,28 +237,7 @@ export class Sidebar extends React.Component<Props> {
             >
               {this.renderCustomResources()}
             </SidebarNavItem>
-            {clusterPageMenuRegistry.getRootItems().map((menuItem) => {
-              const registeredPage = clusterPageRegistry.getByPageMenuTarget(menuItem.target);
-              let pageUrl: string;
-              let isActive = false;
-              if (registeredPage) {
-                const { extensionId, id: pageId } = registeredPage;
-                pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
-                isActive = pageUrl === navigation.location.pathname;
-              }
-              const tabRoutes = this.getTabLayoutRoutes(menuItem);
-              if (!registeredPage && tabRoutes.length == 0) {
-                return;
-              }
-              return (
-                <SidebarNavItem
-                  key={pageUrl} url={pageUrl}
-                  text={menuItem.title} icon={<menuItem.components.Icon/>}
-                  isActive={isActive}
-                  subMenus={tabRoutes}
-                />
-              );
-            })}
+            {this.renderRegisteredMenus()}
           </div>
         </div>
       </SidebarContext.Provider>
