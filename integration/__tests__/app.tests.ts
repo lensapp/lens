@@ -55,7 +55,7 @@ describe("Lens integration tests", () => {
 
     describe("preferences page", () => {
       it('shows "preferences"', async () => {
-        let appName: string = process.platform === "darwin" ? "Lens" : "File"
+        const appName: string = process.platform === "darwin" ? "Lens" : "File"
         await app.electron.ipcRenderer.send('test-menu-item-click', appName, "Preferences")
         await app.client.waitUntilTextExists("h2", "Preferences")
       })
@@ -70,6 +70,41 @@ describe("Lens integration tests", () => {
     it.skip('quits Lens"', async () => {
       await app.client.keys(['Meta', 'Q'])
       await app.client.keys('Meta')
+    })
+  })
+
+  describe("workspaces", () => {
+    beforeAll(appStart, 20000)
+
+    afterAll(async () => {
+      if (app && app.isRunning()) {
+        return util.tearDown(app)
+      }
+    })
+
+    it('switches between workspaces', async () => {
+      await clickWhatsNew(app)
+      await app.client.click('#current-workspace .Icon')
+      await app.client.click('a[href="/workspaces"]')
+      await app.client.click('.Workspaces button.Button')
+      await app.client.keys("test-workspace")
+      await app.client.click('.Workspaces .Input.description input')
+      await app.client.keys("test description")
+      await app.client.click('.Workspaces .workspace.editing .Icon')
+      await app.client.waitUntilTextExists(".workspace .name a", "test-workspace")
+      await addMinikubeCluster(app)
+      await app.client.waitForExist(`iframe[name="minikube"]`)
+      await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active")
+
+      // Go to test-workspace
+      await app.client.click('#current-workspace .Icon')
+      await app.client.click('.WorkspaceMenu li[title="test description"]')
+      await addMinikubeCluster(app)
+
+      // Back to default one
+      await app.client.click('#current-workspace .Icon')
+      await app.client.click('.WorkspaceMenu > li:first-of-type')
+      await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active")
     })
   })
 
