@@ -36,14 +36,15 @@ export class Extensions extends React.Component {
   }
 
   selectLocalExtensionsDialog = async () => {
+    const supportedFormats = [".tgz", ".tar.gz"]
     const { dialog, BrowserWindow, app } = remote;
     const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
       defaultPath: app.getPath("downloads"),
       properties: ["openFile", "multiSelections"],
-      message: _i18n._(t`Select extensions to add to Lens (*.tgz`),
+      message: _i18n._(t`Select extensions to install (supported: ${supportedFormats.join(", ")}), `),
       buttonLabel: _i18n._(t`Use configuration`),
       filters: [
-        { name: "tarball", extensions: [".tgz", ".tar.gz"] }
+        { name: "tarball", extensions: supportedFormats }
       ]
     });
     if (!canceled && filePaths.length) {
@@ -79,19 +80,21 @@ export class Extensions extends React.Component {
           features of Lens are built as extensions and use the same Extension API.
         </div>
         <div>
-          <em>Extensions installed and loaded from</em>
-          <div className="extensions-path flex inline">
+          <em>All custom extensions located in:</em>
+          <div className="extensions-path flex inline" onClick={() => shell.openPath(this.extensionsPath)}>
+            <Icon material="folder" tooltip={{ children: "Open folder", preferredPositions: "bottom" }}/>
             <code>{this.extensionsPath}</code>
-            <Icon
-              material="folder"
-              tooltip="Open folder"
-              onClick={() => shell.openPath(this.extensionsPath)}
-            />
           </div>
         </div>
         <div className="install-extension flex column gaps">
           <em>Install extensions from local file-system or URL:</em>
           <div className="install-extension-by-url flex gaps align-center">
+            <Icon
+              material="get_app"
+              tooltip={{ children: "Download and Install", preferredPositions: "bottom" }}
+              interactive={this.downloadUrl.length > 0}
+              onClick={this.installFromUrl}
+            />
             <Input
               showErrorsAsTooltip={true}
               className="box grow"
@@ -102,12 +105,6 @@ export class Extensions extends React.Component {
               onChange={v => this.downloadUrl = v}
               onSubmit={this.installFromUrl}
               ref={e => this.input = e}
-            />
-            <Icon
-              material="get_app"
-              tooltip="Download and install"
-              interactive={this.downloadUrl.length > 0}
-              onClick={this.installFromUrl}
             />
           </div>
           <Button
