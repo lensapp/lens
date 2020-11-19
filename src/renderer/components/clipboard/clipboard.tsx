@@ -1,4 +1,4 @@
-import "./copy-to-click.scss"
+import "./clipboard.scss"
 import React from "react"
 import { findDOMNode } from "react-dom";
 import { autobind } from "../../../common/utils";
@@ -7,20 +7,21 @@ import { copyToClipboard } from "../../utils/copyToClipboard";
 import logger from "../../../main/logger";
 import { cssNames } from "../../utils";
 
-export interface CopyToClickProps {
+export interface CopyToClipboardProps {
   resetSelection?: boolean;
   showNotification?: boolean;
-  selector?: string; // allows to copy partial content with css-selector from children-element
+  cssSelectorLimit?: string; // allows to copy partial content with css-selector in children-element context
   getNotificationMessage?(copiedText: string): React.ReactNode;
 }
 
-export const defaultProps: Partial<CopyToClickProps> = {
+export const defaultProps: Partial<CopyToClipboardProps> = {
   getNotificationMessage(copiedText: string) {
     return <p>Copied to clipboard: <em>{copiedText}</em></p>
   }
 }
 
-export class CopyToClick extends React.Component<CopyToClickProps> {
+export class Clipboard extends React.Component<CopyToClipboardProps> {
+  static displayName = "Clipboard"
   static defaultProps = defaultProps as object;
 
   get rootElem(): HTMLElement {
@@ -32,18 +33,17 @@ export class CopyToClick extends React.Component<CopyToClickProps> {
   }
 
   @autobind()
-  onClick(evt: React.MouseEvent<HTMLElement>) {
-    if (!this.rootElem || !this.rootElem.contains(evt.target as any)) {
-      return;
-    }
-    const { showNotification, resetSelection, getNotificationMessage, selector } = this.props;
-    const contentElem = selector ? this.rootElem.querySelector<HTMLElement>(selector) : this.rootElem;
-    const { copiedText, copied } = copyToClipboard(contentElem, { resetSelection });
-    if (copied && showNotification) {
-      Notifications.ok(getNotificationMessage(copiedText));
-    }
+  onClick(evt: React.MouseEvent) {
     if (this.rootReactElem.props.onClick) {
-      this.rootReactElem.props.onClick(evt); // pass event to content element as well when provided
+      this.rootReactElem.props.onClick(evt); // pass event to children-root-element if any
+    }
+    const { showNotification, resetSelection, getNotificationMessage, cssSelectorLimit } = this.props;
+    const contentElem = this.rootElem.querySelector<any>(cssSelectorLimit) || this.rootElem;
+    if (contentElem) {
+      const { copiedText, copied } = copyToClipboard(contentElem, { resetSelection });
+      if (copied && showNotification) {
+        Notifications.ok(getNotificationMessage(copiedText));
+      }
     }
   }
 
@@ -51,7 +51,7 @@ export class CopyToClick extends React.Component<CopyToClickProps> {
     try {
       let rootElem = this.rootReactElem;
       return React.cloneElement(rootElem, {
-        className: cssNames("CopyToClick", rootElem.props.className),
+        className: cssNames(Clipboard.displayName, rootElem.props.className),
         onClick: this.onClick,
       });
     } catch (err) {

@@ -10,7 +10,7 @@ import { WizardLayout } from "../layout/wizard-layout";
 import { DropFileInput, Input, InputValidators } from "../input";
 import { Icon } from "../icon";
 import { PageLayout } from "../layout/page-layout";
-import { CopyToClick } from "../copy-to-click/copy-to-click";
+import { Clipboard } from "../clipboard";
 import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionManager } from "../../../extensions/extension-manager";
 
@@ -116,18 +116,18 @@ export class Extensions extends React.Component {
             <Trans><b>Pro-Tip 1</b>: you can download extension archive.tgz via NPM:</Trans>
           </p>
           <ul>
-            <CopyToClick showNotification selector="code">
+            <Clipboard showNotification cssSelectorLimit="code">
               <li>
                 <code>npm pack %name</code>
                 <em> (click to copy)</em>
               </li>
-            </CopyToClick>
-            <CopyToClick showNotification selector="code">
-              <li className="click-to-copy">
+            </Clipboard>
+            <Clipboard showNotification cssSelectorLimit="code">
+              <li>
                 <code>npm view %name dist.tarball</code>
                 <em> (click to copy)</em>
               </li>
-            </CopyToClick>
+            </Clipboard>
           </ul>
           <p className="hint">
             <Trans><b>Pro-Tip 2</b>: you also can drop archive from file-system to this window to request installation</Trans>
