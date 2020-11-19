@@ -74,12 +74,12 @@ export class Tracker extends Util.Singleton {
 
   protected reportData() {
     const clustersList = Store.clusterStore.enabledClustersList
-
     this.event("generic-data", "report", {
       appVersion: App.version,
       os: this.os,
       clustersCount: clustersList.length,
-      workspacesCount: Store.workspaceStore.enabledWorkspacesList.length
+      workspacesCount: Store.workspaceStore.enabledWorkspacesList.length,
+      extensions: App.getEnabledExtensions()
     })
 
     clustersList.forEach((cluster) => {

@@ -9,6 +9,7 @@ export interface LensExtensionsStoreModel {
 
 export interface LensExtensionState {
   enabled?: boolean;
+  name: string;
 }
 
 export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
@@ -20,11 +21,16 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   protected state = observable.map<LensExtensionId, LensExtensionState>();
 
+  get enabledExtensions(): string[] {
+    return Array.from(this.state.toJS().values()).filter(ext => ext.enabled).map(ext => ext.name )
+  }
+
   protected getState(extensionLoader: ExtensionLoader) {
     const state: Record<LensExtensionId, LensExtensionState> = {};
     return Array.from(extensionLoader.userExtensions).reduce((state, [extId, ext]) => {
       state[extId] = {
         enabled: ext.isEnabled,
+        name: ext.manifest.name,
       }
       return state;
     }, state)
