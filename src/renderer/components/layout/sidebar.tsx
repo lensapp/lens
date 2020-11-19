@@ -77,7 +77,6 @@ export class Sidebar extends React.Component<Props> {
   }
 
   getTabLayoutRoutes(menu: ClusterPageMenuRegistration): TabLayoutRoute[] {
-    console.log("Menu", menu)
     if (!menu.id) {
       return [];
     }
@@ -85,7 +84,6 @@ export class Sidebar extends React.Component<Props> {
 
     clusterPageMenuRegistry.getSubItems(menu).forEach((subItem) => {
       const subPage = clusterPageRegistry.getByPageMenuTarget(subItem.target);
-      console.log(subItem, subPage)
       if (subPage) {
         routes.push({
           routePath: subPage.routePath,
