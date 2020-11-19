@@ -4,7 +4,7 @@ import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
 import { action, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
-import { broadcastIpc } from "../common/ipc";
+import { broadcastMessage } from "../common/ipc";
 import { ContextHandler } from "./context-handler"
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node"
 import { Kubectl } from "./kubectl";
@@ -50,7 +50,6 @@ export interface ClusterState {
 
 export class Cluster implements ClusterModel, ClusterState {
   public id: ClusterId;
-  public frameId: number;
   public kubeCtl: Kubectl
   public contextHandler: ContextHandler;
   public ownerRef: string;
@@ -406,11 +405,7 @@ export class Cluster implements ClusterModel, ClusterState {
 
   pushState(state = this.getState()) {
     logger.silly(`[CLUSTER]: push-state`, state);
-    broadcastIpc({
-      channel: "cluster:state",
-      frameId: this.frameId,
-      args: [this.id, state],
-    })
+    broadcastMessage("cluster:state", this.id, state)
   }
 
   // get cluster system meta, e.g. use in "logger"

@@ -2,7 +2,7 @@ import type { WorkspaceId } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
-import { action, computed, observable, toJS } from "mobx";
+import { action, computed, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store"
@@ -13,6 +13,7 @@ import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
 import _ from "lodash";
 import move from "array-move";
+import { subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -85,21 +86,20 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       migrations: migrations,
     });
 
-    this.pushStateToViewsPeriodically()
+    this.pushStateToViewsAutomatically()
   }
 
-  protected pushStateToViewsPeriodically() {
+  protected pushStateToViewsAutomatically() {
     if (!ipcRenderer) {
-      // This is a bit of a hack, we need to do this because we might loose messages that are sent before a view is ready
-      setInterval(() => {
+      reaction(() => this.connectedClustersList, () => {
         this.pushState()
-      }, 5000)
+      })
     }
   }
 
   registerIpcListener() {
     logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`)
-    ipcRenderer.on("cluster:state", (event, clusterId: string, state: ClusterState) => {
+    subscribeToBroadcast("cluster:state", (event, clusterId: string, state: ClusterState) => {
       logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host} (${webFrame.routingId})`, clusterId, state);
       this.getById(clusterId)?.setState(state)
     })
@@ -107,7 +107,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   unregisterIpcListener() {
     super.unregisterIpcListener()
-    ipcRenderer.removeAllListeners("cluster:state")
+    unsubscribeAllFromBroadcast("cluster:state")
   }
 
   pushState() {
@@ -130,6 +130,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @computed get active(): Cluster | null {
     return this.getById(this.activeCluster);
+  }
+
+  @computed get connectedClustersList(): Cluster[] {
+    return this.clustersList.filter((c) => !c.disconnected)
   }
 
   isActive(id: ClusterId) {
