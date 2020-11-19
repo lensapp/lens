@@ -3,7 +3,7 @@ import { buildURL } from "../../../common/utils/buildUrl";
 
 export const configMapsRoute: RouteProps = {
   path: "/configmaps"
-}
+};
 
 export interface IConfigMapsRouteParams {
 }

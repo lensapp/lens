@@ -52,7 +52,7 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const { name, namespace } = this;
-    const header = <h5><Trans>Create Service Account</Trans></h5>
+    const header = <h5><Trans>Create Service Account</Trans></h5>;
     return (
       <Dialog
         {...dialogProps}
@@ -78,6 +78,6 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

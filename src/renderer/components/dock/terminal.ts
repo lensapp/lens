@@ -15,7 +15,7 @@ export class Terminal {
     // https://xtermjs.org/docs/api/terminal/classes/terminal/#open
     const pool = document.createElement("div");
     pool.className = "terminal-init";
-    pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden"
+    pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden";
     document.body.appendChild(pool);
     Terminal.spawningPool = pool;
   }
@@ -36,7 +36,7 @@ export class Terminal {
   protected setTheme(colors: Record<string, string>) {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack
-    const colorPrefix = "terminal"
+    const colorPrefix = "terminal";
     const terminalColors = Object.entries(colors)
       .filter(([name]) => name.startsWith(colorPrefix))
       .reduce<any>((colors, [name, color]) => {

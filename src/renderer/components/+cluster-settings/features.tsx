@@ -22,7 +22,7 @@ export class Features extends React.Component<Props> {
                 <p><f.components.Description /></p>
               </>
             </InstallFeature>
-          )
+          );
         })}
       </div>
     );

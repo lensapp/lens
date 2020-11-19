@@ -59,7 +59,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
       service: parsed[1],
       port: parseInt(parsed[2]),
       prefix: apiPrefix
-    }
+    };
   }
 
   onSaveProvider = () => {

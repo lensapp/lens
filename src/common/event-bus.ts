@@ -1,4 +1,4 @@
-import { EventEmitter } from "./event-emitter"
+import { EventEmitter } from "./event-emitter";
 
 export type AppEvent = {
   name: string;
@@ -6,4 +6,4 @@ export type AppEvent = {
   params?: object;
 }
 
-export const appEventBus = new EventEmitter<[AppEvent]>()
+export const appEventBus = new EventEmitter<[AppEvent]>();

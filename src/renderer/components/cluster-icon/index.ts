@@ -1,1 +1,1 @@
-export * from "./cluster-icon"
+export * from "./cluster-icon";

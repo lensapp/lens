@@ -1,4 +1,4 @@
-import "./upgrade-chart.scss"
+import "./upgrade-chart.scss";
 
 import React from "react";
 import { observable, reaction } from "mobx";
@@ -68,7 +68,7 @@ export class UpgradeChart extends React.Component<Props> {
     if (this.error) return;
     const { version, repo } = this.version;
     const releaseName = this.release.getName();
-    const releaseNs = this.release.getNs()
+    const releaseNs = this.release.getNs();
     await releaseStore.update(releaseName, releaseNs, {
       chart: this.release.getChart(),
       values: this.value,
@@ -78,7 +78,7 @@ export class UpgradeChart extends React.Component<Props> {
       <p>
         <Trans>Release <b>{releaseName}</b> successfully upgraded to version <b>{version}</b></Trans>
       </p>
-    )
+    );
   }
 
   formatVersionLabel = ({ value }: SelectOption<IChartVersion>) => {
@@ -110,7 +110,7 @@ export class UpgradeChart extends React.Component<Props> {
           onChange={({ value }: SelectOption) => this.version = value}
         />
       </div>
-    )
+    );
     return (
       <div className={cssNames("UpgradeChart flex column", className)}>
         <InfoPanel
@@ -127,6 +127,6 @@ export class UpgradeChart extends React.Component<Props> {
           onChange={onChange}
         />
       </div>
-    )
+    );
   }
 }

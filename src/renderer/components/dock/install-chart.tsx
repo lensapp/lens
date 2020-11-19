@@ -137,7 +137,7 @@ export class InstallChart extends Component<Props> {
             logs={this.releaseDetails.log}
           />
         </div>
-      )
+      );
     }
 
     const { repo, name, version, namespace, releaseName } = chartData;

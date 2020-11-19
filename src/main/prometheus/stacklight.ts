@@ -1,6 +1,6 @@
 import { PrometheusProvider, PrometheusQueryOpts, PrometheusQuery, PrometheusService } from "./provider-registry";
 import { CoreV1Api } from "@kubernetes/client-node";
-import logger from "../logger"
+import logger from "../logger";
 
 export class PrometheusStacklight implements PrometheusProvider {
   id = "stacklight"
@@ -9,16 +9,16 @@ export class PrometheusStacklight implements PrometheusProvider {
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
     try {
-      const resp = await client.readNamespacedService("prometheus-server", "stacklight")
-      const service = resp.body
+      const resp = await client.readNamespacedService("prometheus-server", "stacklight");
+      const service = resp.body;
       return {
         id: this.id,
         namespace: service.metadata.namespace,
         service: service.metadata.name,
         port: service.spec.ports[0].port
-      }
+      };
     } catch(error) {
-      logger.warn(`PrometheusLens: failed to list services: ${error.response.body.message}`)
+      logger.warn(`PrometheusLens: failed to list services: ${error.response.body.message}`);
     }
   }
 
@@ -42,7 +42,7 @@ export class PrometheusStacklight implements PrometheusProvider {
         podCapacity: `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="pods"}) by (component)`,
         fsSize: `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint="/"}) by (node)`,
         fsUsage: `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint="/"} - node_filesystem_avail_bytes{node=~"${opts.nodes}", mountpoint="/"}) by (node)`
-      }
+      };
     case 'nodes':
       return {
         memoryUsage: `sum (node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) by (node)`,
@@ -51,7 +51,7 @@ export class PrometheusStacklight implements PrometheusProvider {
         cpuCapacity: `sum(kube_node_status_allocatable{resource="cpu"}) by (node)`,
         fsSize: `sum(node_filesystem_size_bytes{mountpoint="/"}) by (node)`,
         fsUsage: `sum(node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}) by (node)`
-      }
+      };
     case 'pods':
       return {
         cpuUsage: `sum(rate(container_cpu_usage_seconds_total{container!="POD",container!="",pod=~"${opts.pods}",namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (${opts.selector})`,
@@ -63,21 +63,21 @@ export class PrometheusStacklight implements PrometheusProvider {
         fsUsage: `sum(container_fs_usage_bytes{container!="POD",container!="",pod=~"${opts.pods}",namespace="${opts.namespace}"}) by (${opts.selector})`,
         networkReceive: `sum(rate(container_network_receive_bytes_total{pod=~"${opts.pods}",namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (${opts.selector})`,
         networkTransmit: `sum(rate(container_network_transmit_bytes_total{pod=~"${opts.pods}",namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (${opts.selector})`
-      }
+      };
     case 'pvc':
       return {
         diskUsage: `sum(kubelet_volume_stats_used_bytes{persistentvolumeclaim="${opts.pvc}"}) by (persistentvolumeclaim, namespace)`,
         diskCapacity: `sum(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="${opts.pvc}"}) by (persistentvolumeclaim, namespace)`
-      }
+      };
     case 'ingress':
       const bytesSent = (ingress: string, statuses: string) =>
-        `sum(rate(nginx_ingress_controller_bytes_sent_sum{ingress="${ingress}", status=~"${statuses}"}[${this.rateAccuracy}])) by (ingress)`
+        `sum(rate(nginx_ingress_controller_bytes_sent_sum{ingress="${ingress}", status=~"${statuses}"}[${this.rateAccuracy}])) by (ingress)`;
       return {
         bytesSentSuccess: bytesSent(opts.igress, "^2\\\\d*"),
         bytesSentFailure: bytesSent(opts.ingres, "^5\\\\d*"),
         requestDurationSeconds: `sum(rate(nginx_ingress_controller_request_duration_seconds_sum{ingress="${opts.ingress}"}[${this.rateAccuracy}])) by (ingress)`,
         responseDurationSeconds: `sum(rate(nginx_ingress_controller_response_duration_seconds_sum{ingress="${opts.ingress}"}[${this.rateAccuracy}])) by (ingress)`
-      }
+      };
     }
   }
 }

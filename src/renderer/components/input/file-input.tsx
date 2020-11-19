@@ -41,10 +41,10 @@ export class FileInput extends React.Component<Props> {
               file: file,
               data: reader.result,
               error: reader.error ? String(reader.error) : null,
-            })
+            });
           };
           reader.readAsText(file);
-        })
+        });
       });
       selectedFiles = await Promise.all(readingFiles);
     }
@@ -61,6 +61,6 @@ export class FileInput extends React.Component<Props> {
         ref={e => this.input = e}
         {...props}
       />
-    )
+    );
   }
 }

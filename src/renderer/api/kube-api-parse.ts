@@ -51,7 +51,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
   } else {
     switch (left.length) {
     case 4:
-      [apiGroup, apiVersion, resource, name] = left
+      [apiGroup, apiVersion, resource, name] = left;
       break;
     case 2:
       resource = left.pop();
@@ -79,11 +79,11 @@ export function parseKubeApi(path: string): IKubeApiParsed {
        */
       if (left[0].includes('.') || left[1].match(/^v[0-9]/)) {
         [apiGroup, apiVersion] = left;
-        resource = left.slice(2).join("/")
+        resource = left.slice(2).join("/");
       } else {
         apiGroup = "";
         apiVersion = left[0];
-        [resource, name] = left.slice(1)
+        [resource, name] = left.slice(1);
       }
       break;
     }
@@ -93,7 +93,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
   const apiBase = [apiPrefix, apiGroup, apiVersion, resource].filter(v => v).join("/");
 
   if (!apiBase) {
-    throw new Error(`invalid apiPath: ${path}`)
+    throw new Error(`invalid apiPath: ${path}`);
   }
 
   return {
@@ -108,11 +108,11 @@ export function createKubeApiURL(ref: IKubeApiLinkRef): string {
   const { apiPrefix = "/apis", resource, apiVersion, name } = ref;
   let { namespace } = ref;
   if (namespace) {
-    namespace = `namespaces/${namespace}`
+    namespace = `namespaces/${namespace}`;
   }
   return [apiPrefix, apiVersion, namespace, resource, name]
     .filter(v => v)
-    .join("/")
+    .join("/");
 }
 
 export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): string {
@@ -124,9 +124,9 @@ export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): st
   if (!kind) return "";
 
   // search in registered apis by 'kind' & 'apiVersion'
-  const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == apiVersion)
+  const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == apiVersion);
   if (api) {
-    return api.getUrl({ namespace, name })
+    return api.getUrl({ namespace, name });
   }
 
   // lookup api by generated resource link
@@ -142,10 +142,10 @@ export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): st
   // resolve by kind only (hpa's might use refs to older versions of resources for example)
   const apiByKind = apiManager.getApi(api => api.kind === kind);
   if (apiByKind) {
-    return apiByKind.getUrl({ name, namespace })
+    return apiByKind.getUrl({ name, namespace });
   }
 
   // otherwise generate link with default prefix
   // resource still might exists in k8s, but api is not registered in the app
-  return createKubeApiURL({ apiVersion, name, namespace, resource })
+  return createKubeApiURL({ apiVersion, name, namespace, resource });
 }

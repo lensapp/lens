@@ -103,6 +103,6 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
           />
         </div>
       </Dialog>
-    )
+    );
   }
 }

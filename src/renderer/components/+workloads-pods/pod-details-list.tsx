@@ -55,7 +55,7 @@ export class PodDetailsList extends React.Component<Props> {
     this.metricsWatcher.start(true);
     disposeOnUnmount(this, [
       reaction(() => this.props.owner, () => this.metricsWatcher.restart(true))
-    ])
+    ]);
   }
 
   componentWillUnmount() {

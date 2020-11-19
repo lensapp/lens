@@ -6,13 +6,13 @@ import { KubeApi } from "../kube-api";
 
 export class DeploymentApi extends KubeApi<Deployment> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
-    return this.getUrl(params) + "/scale"
+    return this.getUrl(params) + "/scale";
   }
 
   getReplicas(params: { namespace: string; name: string }): Promise<number> {
     return this.request
       .get(this.getScaleApiUrl(params))
-      .then(({ status }: any) => status?.replicas)
+      .then(({ status }: any) => status?.replicas);
   }
 
   scale(params: { namespace: string; name: string }, replicas: number) {
@@ -23,7 +23,7 @@ export class DeploymentApi extends KubeApi<Deployment> {
           replicas: replicas
         }
       }
-    })
+    });
   }
 
   restart(params: { namespace: string; name: string }) {
@@ -42,7 +42,7 @@ export class DeploymentApi extends KubeApi<Deployment> {
       headers: {
         'content-type': 'application/strategic-merge-patch+json'
       }
-    })
+    });
   }
 }
 
@@ -170,16 +170,16 @@ export class Deployment extends WorkloadKubeObject {
   }
 
   getConditions(activeOnly = false) {
-    const { conditions } = this.status
-    if (!conditions) return []
+    const { conditions } = this.status;
+    if (!conditions) return [];
     if (activeOnly) {
-      return conditions.filter(c => c.status === "True")
+      return conditions.filter(c => c.status === "True");
     }
-    return conditions
+    return conditions;
   }
 
   getConditionsText(activeOnly = true) {
-    return this.getConditions(activeOnly).map(({ type }) => type).join(" ")
+    return this.getConditions(activeOnly).map(({ type }) => type).join(" ");
   }
 
   getReplicas() {

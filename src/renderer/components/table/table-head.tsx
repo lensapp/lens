@@ -27,6 +27,6 @@ export class TableHead extends React.Component<TableHeadProps> {
       <div className={classNames} {...headProps}>
         {children}
       </div>
-    )
+    );
   }
 }

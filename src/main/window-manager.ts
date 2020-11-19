@@ -1,9 +1,9 @@
 import type { ClusterId } from "../common/cluster-store";
 import { observable } from "mobx";
-import { app, BrowserWindow, dialog, shell, webContents } from "electron"
-import windowStateKeeper from "electron-window-state"
-import { appEventBus } from "../common/event-bus"
-import { subscribeToBroadcast } from "../common/ipc"
+import { app, BrowserWindow, dialog, shell, webContents } from "electron";
+import windowStateKeeper from "electron-window-state";
+import { appEventBus } from "../common/event-bus";
+import { subscribeToBroadcast } from "../common/ipc";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import { Singleton } from "../common/utils";
@@ -26,7 +26,7 @@ export class WindowManager extends Singleton {
   }
 
   get mainUrl() {
-    return `http://localhost:${this.proxyPort}`
+    return `http://localhost:${this.proxyPort}`;
   }
 
   async initMainWindow(showSplash = true) {
@@ -63,14 +63,14 @@ export class WindowManager extends Singleton {
         shell.openExternal(url);
       });
       this.mainWindow.webContents.on("dom-ready", () => {
-        appEventBus.emit({name: "app", action: "dom-ready"})
-      })
+        appEventBus.emit({name: "app", action: "dom-ready"});
+      });
       this.mainWindow.on("focus", () => {
-        appEventBus.emit({name: "app", action: "focus"})
-      })
+        appEventBus.emit({name: "app", action: "focus"});
+      });
       this.mainWindow.on("blur", () => {
-        appEventBus.emit({name: "app", action: "blur"})
-      })
+        appEventBus.emit({name: "app", action: "blur"});
+      });
 
       // clean up
       this.mainWindow.on("closed", () => {
@@ -78,16 +78,16 @@ export class WindowManager extends Singleton {
         this.mainWindow = null;
         this.splashWindow = null;
         app.dock?.hide(); // hide icon in dock (mac-os)
-      })
+      });
     }
     try {
       if (showSplash) await this.showSplash();
       await this.mainWindow.loadURL(this.mainUrl);
       this.mainWindow.show();
       this.splashWindow?.close();
-      appEventBus.emit({ name: "app", action: "start" })
+      appEventBus.emit({ name: "app", action: "start" });
     } catch (err) {
-      dialog.showErrorBox("ERROR!", err.toString())
+      dialog.showErrorBox("ERROR!", err.toString());
     }
   }
 
@@ -103,7 +103,7 @@ export class WindowManager extends Singleton {
     // track visible cluster from ui
     subscribeToBroadcast("cluster-view:current-id", (event, clusterId: ClusterId) => {
       this.activeClusterId = clusterId;
-    })
+    });
   }
 
   async ensureMainWindow(): Promise<BrowserWindow> {
@@ -126,11 +126,11 @@ export class WindowManager extends Singleton {
       channel: "renderer:navigate",
       frameId: frameId,
       data: [url],
-    })
+    });
   }
 
   reload() {
-    const frameId = clusterFrameMap.get(this.activeClusterId)
+    const frameId = clusterFrameMap.get(this.activeClusterId);
     if (frameId) {
       this.sendToView({ channel: "renderer:reload", frameId });
     } else {
@@ -169,7 +169,7 @@ export class WindowManager extends Singleton {
     this.splashWindow = null;
     Object.entries(this.disposers).forEach(([name, dispose]) => {
       dispose();
-      delete this.disposers[name]
+      delete this.disposers[name];
     });
   }
 }

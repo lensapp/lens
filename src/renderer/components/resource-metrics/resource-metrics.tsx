@@ -68,7 +68,7 @@ export function ResourceMetrics({ object, loader, interval, tabs, children, clas
         </div>
       </>
     );
-  }
+  };
 
   return (
     <div className={cssNames("ResourceMetrics flex column", className)}>

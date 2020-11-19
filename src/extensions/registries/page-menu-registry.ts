@@ -29,8 +29,8 @@ export class PageMenuRegistry extends BaseRegistry<PageMenuRegistration, Require
         extensionId: ext.name,
         ...(menuItem.target || {}),
       };
-      return menuItem
-    })
+      return menuItem;
+    });
     return super.add(normalizedItems);
   }
 }

@@ -81,7 +81,7 @@ export class ReplicaSets extends React.Component<Props> {
                     <ReplicaSetMenu object={replica}/>
                   </TableCell>
                 </TableRow>
-              )
+              );
             })
           }
         </Table>
@@ -93,5 +93,5 @@ export class ReplicaSets extends React.Component<Props> {
 export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>) {
   return (
     <KubeObjectMenu {...props}/>
-  )
+  );
 }

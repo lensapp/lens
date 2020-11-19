@@ -1,25 +1,25 @@
 // Main process
 
-import "../common/system-ca"
-import "../common/prometheus-providers"
-import * as Mobx from "mobx"
+import "../common/system-ca";
+import "../common/prometheus-providers";
+import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
-import { app, dialog } from "electron"
+import { app, dialog } from "electron";
 import { appName } from "../common/vars";
-import path from "path"
-import { LensProxy } from "./lens-proxy"
+import path from "path";
+import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
-import { AppUpdater } from "./app-updater"
-import { shellSync } from "./shell-sync"
-import { getFreePort } from "./port"
-import { mangleProxyEnv } from "./proxy-env"
+import { AppUpdater } from "./app-updater";
+import { shellSync } from "./shell-sync";
+import { getFreePort } from "./port";
+import { mangleProxyEnv } from "./proxy-env";
 import { registerFileProtocol } from "../common/register-protocol";
-import logger from "./logger"
-import { clusterStore } from "../common/cluster-store"
+import logger from "./logger";
+import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
-import { appEventBus } from "../common/event-bus"
+import { appEventBus } from "../common/event-bus";
 import { extensionLoader } from "../extensions/extension-loader";
 import { extensionManager } from "../extensions/extension-manager";
 import { extensionsStore } from "../extensions/extensions-store";
@@ -35,16 +35,16 @@ if (!process.env.CICD) {
   app.setPath("userData", workingDir);
 }
 
-mangleProxyEnv()
+mangleProxyEnv();
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
-  process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server")
+  process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
 }
 
 app.on("ready", async () => {
-  logger.info(`🚀 Starting Lens from "${workingDir}"`)
+  logger.info(`🚀 Starting Lens from "${workingDir}"`);
   await shellSync();
 
-  const updater = new AppUpdater()
+  const updater = new AppUpdater();
   updater.start();
 
   registerFileProtocol("static", __static);
@@ -59,10 +59,10 @@ app.on("ready", async () => {
 
   // find free port
   try {
-    proxyPort = await getFreePort()
+    proxyPort = await getFreePort();
   } catch (error) {
-    logger.error(error)
-    dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy")
+    logger.error(error);
+    dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy");
     app.exit();
   }
 
@@ -73,22 +73,22 @@ app.on("ready", async () => {
   try {
     proxyServer = LensProxy.create(proxyPort, clusterManager);
   } catch (error) {
-    logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error.message}`)
-    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error.message || "unknown error"}`)
+    logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error.message}`);
+    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error.message || "unknown error"}`);
     app.exit();
   }
 
-  extensionLoader.init()
+  extensionLoader.init();
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
   extensionLoader.initExtensions(await extensionManager.load()); // call after windowManager to see splash earlier
 
   setTimeout(() => {
-    appEventBus.emit({ name: "service", action: "start" })
-  }, 1000)
+    appEventBus.emit({ name: "service", action: "start" });
+  }, 1000);
 });
 
 app.on("activate", (event, hasVisibleWindows) => {
-  logger.info('APP:ACTIVATE', { hasVisibleWindows })
+  logger.info('APP:ACTIVATE', { hasVisibleWindows });
   if (!hasVisibleWindows) {
     windowManager.initMainWindow();
   }
@@ -97,11 +97,11 @@ app.on("activate", (event, hasVisibleWindows) => {
 // Quit app on Cmd+Q (MacOS)
 app.on("will-quit", (event) => {
   logger.info('APP:QUIT');
-  appEventBus.emit({name: "app", action: "close"})
+  appEventBus.emit({name: "app", action: "close"});
   event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
   clusterManager?.stop(); // close cluster connections
   return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
-})
+});
 
 // Extensions-api runtime exports
 export const LensExtensionsApi = {
@@ -111,4 +111,4 @@ export const LensExtensionsApi = {
 export {
   Mobx,
   LensExtensionsApi as LensExtensions,
-}
+};

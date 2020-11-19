@@ -44,6 +44,6 @@ export class SearchInputUrl extends React.Component<Props> {
         onClear={this.clear}
         {...this.props}
       />
-    )
+    );
   }
 }

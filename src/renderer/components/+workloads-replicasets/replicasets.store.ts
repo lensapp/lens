@@ -22,7 +22,7 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   getReplicaSetsByOwner(deployment: Deployment) {
     return this.items.filter(replicaSet =>
       !!replicaSet.getOwnerRefs().find(owner => owner.uid === deployment.getId())
-    )
+    );
   }
 
   reset() {

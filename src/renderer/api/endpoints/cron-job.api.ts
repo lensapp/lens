@@ -65,17 +65,17 @@ export class CronJob extends KubeObject {
   }
 
   getSuspendFlag() {
-    return this.spec.suspend.toString()
+    return this.spec.suspend.toString();
   }
 
   getLastScheduleTime() {
-    if (!this.status.lastScheduleTime) return "-"
-    const diff = moment().diff(this.status.lastScheduleTime)
-    return formatDuration(diff, true)
+    if (!this.status.lastScheduleTime) return "-";
+    const diff = moment().diff(this.status.lastScheduleTime);
+    return formatDuration(diff, true);
   }
 
   getSchedule() {
-    return this.spec.schedule
+    return this.spec.schedule;
   }
 
   isNeverRun() {

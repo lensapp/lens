@@ -6,8 +6,8 @@ import React, { ReactNode } from "react";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
-import ReactSelect, { ActionMeta, components, Props as ReactSelectProps, Styles } from "react-select"
-import Creatable, { CreatableProps } from "react-select/creatable"
+import ReactSelect, { ActionMeta, components, Props as ReactSelectProps, Styles } from "react-select";
+import Creatable, { CreatableProps } from "react-select/creatable";
 import { themeStore } from "../../theme.store";
 
 const { Menu } = components;
@@ -70,7 +70,7 @@ export class Select extends React.Component<SelectProps> {
     if (autoConvertOptions && Array.isArray(options)) {
       return options.map(opt => {
         return this.isValidOption(opt) ? opt : { value: opt, label: String(opt) };
-      })
+      });
     }
     return options as SelectOption[];
   }
@@ -116,7 +116,7 @@ export class Select extends React.Component<SelectProps> {
           />
         ),
       }
-    }
+    };
     return isCreatable
       ? <Creatable {...selectProps}/>
       : <ReactSelect {...selectProps}/>;

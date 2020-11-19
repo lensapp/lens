@@ -22,13 +22,13 @@ export class LogsDialog extends React.Component<Props> {
 
   copyToClipboard = () => {
     if (copyToClipboard(this.logsElem)) {
-      Notifications.ok(_i18n._(t`Logs copied to clipboard.`))
+      Notifications.ok(_i18n._(t`Logs copied to clipboard.`));
     }
   }
 
   render() {
     const { title, logs, ...dialogProps } = this.props;
-    const header = <h5>{title}</h5>
+    const header = <h5>{title}</h5>;
     const customButtons = (
       <div className="buttons flex gaps align-center justify-space-between">
         <Button plain onClick={this.copyToClipboard}>
@@ -38,7 +38,7 @@ export class LogsDialog extends React.Component<Props> {
           <Trans>Close</Trans>
         </Button>
       </div>
-    )
+    );
     return (
       <Dialog {...dialogProps} className="LogsDialog">
         <Wizard header={header} done={dialogProps.close}>
@@ -49,6 +49,6 @@ export class LogsDialog extends React.Component<Props> {
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

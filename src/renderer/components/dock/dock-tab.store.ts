@@ -28,16 +28,16 @@ export class DockTabStore<T = any> {
         if (!currentTabs.includes(tabId)) {
           this.clearData(tabId);
         }
-      })
+      });
     });
   }
 
   protected serializeData() {
     const { storageSerializer } = this.options;
     return Array.from(this.data).map(([tabId, tabData]) => {
-      if (storageSerializer) return [tabId, storageSerializer(tabData)]
+      if (storageSerializer) return [tabId, storageSerializer(tabData)];
       return [tabId, tabData];
-    })
+    });
   }
 
   getData(tabId: TabId) {

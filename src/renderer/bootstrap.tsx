@@ -1,9 +1,9 @@
-import "./components/app.scss"
+import "./components/app.scss";
 
 import React from "react";
-import * as Mobx from "mobx"
-import * as MobxReact from "mobx-react"
-import * as LensExtensions from "../extensions/extension-api"
+import * as Mobx from "mobx";
+import * as MobxReact from "mobx-react";
+import * as LensExtensions from "../extensions/extension-api";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { render, unmountComponentAtNode } from "react-dom";
@@ -25,13 +25,13 @@ export {
   Mobx,
   MobxReact,
   LensExtensions
-}
+};
 
 export async function bootstrap(App: AppComponent) {
-  const rootElem = document.getElementById("app")
+  const rootElem = document.getElementById("app");
   rootElem.classList.toggle("is-mac", isMac);
 
-  extensionLoader.init()
+  extensionLoader.init();
 
   // preload common stores
   await Promise.all([
@@ -53,13 +53,13 @@ export async function bootstrap(App: AppComponent) {
   }
   window.addEventListener("message", (ev: MessageEvent) => {
     if (ev.data === "teardown") {
-      userStore.unregisterIpcListener()
-      workspaceStore.unregisterIpcListener()
-      clusterStore.unregisterIpcListener()
-      unmountComponentAtNode(rootElem)
-      window.location.href = "about:blank"
+      userStore.unregisterIpcListener();
+      workspaceStore.unregisterIpcListener();
+      clusterStore.unregisterIpcListener();
+      unmountComponentAtNode(rootElem);
+      window.location.href = "about:blank";
     }
-  })
+  });
   render(<>
     {isMac && <div id="draggable-top" />}
     <App />

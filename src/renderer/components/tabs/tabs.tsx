@@ -45,7 +45,7 @@ export class Tabs extends React.PureComponent<TabsProps> {
           ref={this.bindRef}
         />
       </TabsContext.Provider>
-    )
+    );
   }
 }
 
@@ -137,6 +137,6 @@ export class Tab extends React.PureComponent<TabProps> {
           {label}
         </div>
       </div>
-    )
+    );
   }
 }

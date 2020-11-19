@@ -38,21 +38,21 @@ export class KubeEvent extends KubeObject {
   }
 
   getSource() {
-    const { component, host } = this.source
-    return `${component} ${host || ""}`
+    const { component, host } = this.source;
+    return `${component} ${host || ""}`;
   }
 
   getFirstSeenTime() {
-    const diff = moment().diff(this.firstTimestamp)
-    return formatDuration(diff, true)
+    const diff = moment().diff(this.firstTimestamp);
+    return formatDuration(diff, true);
   }
 
   getLastSeenTime() {
-    const diff = moment().diff(this.lastTimestamp)
-    return formatDuration(diff, true)
+    const diff = moment().diff(this.lastTimestamp);
+    return formatDuration(diff, true);
   }
 }
 
 export const eventApi = new KubeApi({
   objectConstructor: KubeEvent,
-})
+});

@@ -27,7 +27,7 @@ export class RoleBinding extends KubeObject {
   }
 
   getSubjectNames(): string {
-    return this.getSubjects().map(subject => subject.name).join(", ")
+    return this.getSubjects().map(subject => subject.name).join(", ");
   }
 }
 

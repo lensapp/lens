@@ -57,7 +57,7 @@ export class NetworkPolicy extends KubeObject {
     if (!this.spec.podSelector || !this.spec.podSelector.matchLabels) return [];
     return Object
       .entries(this.spec.podSelector.matchLabels)
-      .map(data => data.join(":"))
+      .map(data => data.join(":"));
   }
 
   getTypes(): string[] {

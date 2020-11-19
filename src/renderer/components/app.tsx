@@ -36,7 +36,7 @@ import logger from "../../main/logger";
 import { webFrame } from "electron";
 import { clusterPageRegistry } from "../../extensions/registries/page-registry";
 import { extensionLoader } from "../../extensions/extension-loader";
-import { appEventBus } from "../../common/event-bus"
+import { appEventBus } from "../../common/event-bus";
 import { requestMain } from "../../common/ipc";
 import whatInput from 'what-input';
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
@@ -46,10 +46,10 @@ export class App extends React.Component {
   static async init() {
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
-    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`)
-    await Terminal.preloadFonts()
+    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`);
+    await Terminal.preloadFonts();
 
-    await requestMain(clusterSetFrameIdHandler, clusterId, frameId)
+    await requestMain(clusterSetFrameIdHandler, clusterId, frameId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
     extensionLoader.loadOnClusterRenderer();
     appEventBus.emit({
@@ -58,11 +58,11 @@ export class App extends React.Component {
       params: {
         clusterId: clusterId
       }
-    })
+    });
     window.addEventListener("online", () => {
-      window.location.reload()
-    })
-    whatInput.ask() // Start to monitor user input device
+      window.location.reload();
+    });
+    whatInput.ask(); // Start to monitor user input device
   }
 
   get startURL() {
@@ -74,8 +74,8 @@ export class App extends React.Component {
 
   renderExtensionRoutes() {
     return clusterPageRegistry.getItems().map(({ components: { Page }, exact, routePath }) => {
-      return <Route key={routePath} path={routePath} exact={exact} component={Page}/>
-    })
+      return <Route key={routePath} path={routePath} exact={exact} component={Page}/>;
+    });
   }
 
   render() {
@@ -111,6 +111,6 @@ export class App extends React.Component {
           </ErrorBoundary>
         </Router>
       </I18nProvider>
-    )
+    );
   }
 }

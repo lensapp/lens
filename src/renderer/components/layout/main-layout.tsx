@@ -48,12 +48,12 @@ export class MainLayout extends React.Component<MainLayoutProps> {
   getSidebarSize = () => {
     return {
       "--sidebar-width": `${this.sidebarWidth}px`,
-    }
+    };
   }
 
   @autobind()
   adjustWidth(newWidth: number): void {
-    this.sidebarWidth = newWidth
+    this.sidebarWidth = newWidth;
   }
 
   render() {

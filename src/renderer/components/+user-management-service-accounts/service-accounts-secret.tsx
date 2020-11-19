@@ -1,4 +1,4 @@
-import "./service-accounts-secret.scss"
+import "./service-accounts-secret.scss";
 
 import React from "react";
 import moment from "moment";
@@ -21,8 +21,8 @@ export class ServiceAccountsSecret extends React.Component<Props, State> {
   }
 
   renderSecretValue() {
-    const { secret } = this.props
-    const { showToken } = this.state
+    const { secret } = this.props;
+    const { showToken } = this.state;
     return (
       <>
         {!showToken && (
@@ -39,7 +39,7 @@ export class ServiceAccountsSecret extends React.Component<Props, State> {
           <span className="raw-value">{secret.getToken()}</span>
         )}
       </>
-    )
+    );
   }
 
   render() {
@@ -65,6 +65,6 @@ export class ServiceAccountsSecret extends React.Component<Props, State> {
           <span className="value">{type}</span>
         </div>
       </div>
-    )
+    );
   }
 }

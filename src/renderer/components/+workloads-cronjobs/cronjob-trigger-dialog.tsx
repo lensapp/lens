@@ -91,7 +91,7 @@ export class CronJobTriggerDialog extends Component<Props> {
           />
         </div>
       </>
-    )
+    );
   }
 
   render() {

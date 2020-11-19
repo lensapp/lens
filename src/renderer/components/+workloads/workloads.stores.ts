@@ -14,4 +14,4 @@ export const workloadStores: Partial<Record<KubeResource, KubeObjectStore>> = {
   "statefulsets": statefulSetStore,
   "jobs": jobStore,
   "cronjobs": cronJobStore,
-}
+};

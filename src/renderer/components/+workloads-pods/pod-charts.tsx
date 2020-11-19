@@ -128,4 +128,4 @@ export const PodCharts = observer(() => {
       data={{ datasets: datasets[tabId] }}
     />
   );
-})
+});

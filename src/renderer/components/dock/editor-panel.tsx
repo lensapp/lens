@@ -1,5 +1,5 @@
 import React from "react";
-import jsYaml from "js-yaml"
+import jsYaml from "js-yaml";
 import { observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
@@ -30,7 +30,7 @@ export class EditorPanel extends React.Component<Props> {
     disposeOnUnmount(this, [
       dockStore.onTabChange(this.onTabChange, { delay: 250 }),
       dockStore.onResize(this.onResize, { delay: 250 }),
-    ])
+    ]);
   }
 
   validate(value: string) {
@@ -77,6 +77,6 @@ export class EditorPanel extends React.Component<Props> {
         onCursorPosChange={this.onCursorPosChange}
         ref={e => this.editor = e}
       />
-    )
+    );
   }
 }

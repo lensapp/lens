@@ -86,7 +86,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
         ...condition,
         isReady: status === "True",
         tooltip: `${message || reason} (${lastTransitionTime})`
-      }
+      };
     });
   }
 
@@ -102,7 +102,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
     const { type, resource, pods, object, external } = metric;
     switch (type) {
     case HpaMetricType.Resource:
-      return resource.name
+      return resource.name;
     case HpaMetricType.Pods:
       return pods.metricName;
     case HpaMetricType.Object:
@@ -128,7 +128,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
     }
     if (target) {
       targetValue = target.targetAverageUtilization || target.targetAverageValue || target.targetValue;
-      if (target.targetAverageUtilization) targetValue += "%"
+      if (target.targetAverageUtilization) targetValue += "%";
     }
     return `${currentValue} / ${targetValue}`;
   }

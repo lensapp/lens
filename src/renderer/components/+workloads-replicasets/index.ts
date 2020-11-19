@@ -1,2 +1,2 @@
-export * from "./replicasets"
-export * from "./replicaset-details"
+export * from "./replicasets";
+export * from "./replicaset-details";

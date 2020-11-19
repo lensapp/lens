@@ -1,13 +1,13 @@
 import { app, remote } from "electron";
-import winston from "winston"
+import winston from "winston";
 import { isDebugging } from "../common/vars";
 
-const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : isDebugging ? "debug" : "info"
+const logLevel = process.env.LOG_LEVEL ? process.env.LOG_LEVEL : isDebugging ? "debug" : "info";
 
 const consoleOptions: winston.transports.ConsoleTransportOptions = {
   handleExceptions: false,
   level: logLevel,
-}
+};
 
 const fileOptions: winston.transports.FileTransportOptions = {
   handleExceptions: false,
@@ -17,7 +17,7 @@ const fileOptions: winston.transports.FileTransportOptions = {
   maxsize: 16 * 1024,
   maxFiles: 16,
   tailable: true,
-}
+};
 
 const logger = winston.createLogger({
   format: winston.format.combine(
@@ -30,4 +30,4 @@ const logger = winston.createLogger({
   ],
 });
 
-export default logger
+export default logger;

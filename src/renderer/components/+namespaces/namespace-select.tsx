@@ -1,4 +1,4 @@
-import "./namespace-select.scss"
+import "./namespace-select.scss";
 
 import React from "react";
 import { computed } from "mobx";
@@ -83,8 +83,8 @@ export class NamespaceSelectFilter extends React.Component {
   render() {
     const { contextNs, hasContext, toggleContext } = namespaceStore;
     let placeholder = <Trans>All namespaces</Trans>;
-    if (contextNs.length == 1) placeholder = <Trans>Namespace: {contextNs[0]}</Trans>
-    if (contextNs.length >= 2) placeholder = <Trans>Namespaces: {contextNs.join(", ")}</Trans>
+    if (contextNs.length == 1) placeholder = <Trans>Namespace: {contextNs[0]}</Trans>;
+    if (contextNs.length >= 2) placeholder = <Trans>Namespaces: {contextNs.join(", ")}</Trans>;
     return (
       <NamespaceSelect
         placeholder={placeholder}
@@ -101,9 +101,9 @@ export class NamespaceSelectFilter extends React.Component {
               <span>{namespace}</span>
               {isSelected && <Icon small material="check" className="box right" />}
             </div>
-          )
+          );
         }}
       />
-    )
+    );
   }
 }

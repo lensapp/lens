@@ -41,16 +41,16 @@ export class Drawer extends React.Component<DrawerProps> {
 
   componentDidMount() {
     // Using window target for events to make sure they will be catched after other places (e.g. Dialog)
-    window.addEventListener("mousedown", this.onMouseDown)
-    window.addEventListener("click", this.onClickOutside)
-    window.addEventListener("keydown", this.onEscapeKey)
+    window.addEventListener("mousedown", this.onMouseDown);
+    window.addEventListener("click", this.onClickOutside);
+    window.addEventListener("keydown", this.onEscapeKey);
   }
 
   componentWillUnmount() {
     this.stopListenLocation();
-    window.removeEventListener("mousedown", this.onMouseDown)
-    window.removeEventListener("click", this.onClickOutside)
-    window.removeEventListener("keydown", this.onEscapeKey)
+    window.removeEventListener("mousedown", this.onMouseDown);
+    window.removeEventListener("click", this.onClickOutside);
+    window.removeEventListener("keydown", this.onEscapeKey);
   }
 
   saveScrollPos = () => {
@@ -75,31 +75,31 @@ export class Drawer extends React.Component<DrawerProps> {
   }
 
   onClickOutside = (evt: MouseEvent) => {
-    const { contentElem, mouseDownTarget, close, props: { open } } = this
+    const { contentElem, mouseDownTarget, close, props: { open } } = this;
     if (!open || evt.defaultPrevented || contentElem.contains(mouseDownTarget)) {
       return;
     }
     const clickedElem = evt.target as HTMLElement;
     const isOutsideAnyDrawer = !clickedElem.closest('.Drawer');
     if (isOutsideAnyDrawer) {
-      close()
+      close();
     }
-    this.mouseDownTarget = null
+    this.mouseDownTarget = null;
   }
 
   onMouseDown = (evt: MouseEvent) => {
     if (this.props.open) {
-      this.mouseDownTarget = evt.target as HTMLElement
+      this.mouseDownTarget = evt.target as HTMLElement;
     }
   }
 
   close = () => {
-    const { open, onClose } = this.props
+    const { open, onClose } = this.props;
     if (open) onClose();
   }
 
   render() {
-    const { open, position, title, animation, children, toolbar, size, usePortal } = this.props
+    const { open, position, title, animation, children, toolbar, size, usePortal } = this.props;
     let { className, contentClass } = this.props;
     className = cssNames("Drawer", className, position);
     contentClass = cssNames("drawer-content flex column box grow", contentClass);
@@ -119,7 +119,7 @@ export class Drawer extends React.Component<DrawerProps> {
           </div>
         </div>
       </Animate>
-    )
+    );
     return usePortal ? createPortal(drawer, document.body) : drawer;
   }
 }

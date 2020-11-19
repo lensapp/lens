@@ -51,7 +51,7 @@ export class HpaDetails extends React.Component<Props> {
           </Trans>
         );
       }
-    }
+    };
 
     return (
       <Table>
@@ -68,7 +68,7 @@ export class HpaDetails extends React.Component<Props> {
                 <TableCell className="name">{name}</TableCell>
                 <TableCell className="metrics">{values}</TableCell>
               </TableRow>
-            )
+            );
           })
         }
       </Table>
@@ -113,7 +113,7 @@ export class HpaDetails extends React.Component<Props> {
                 tooltip={tooltip}
                 className={cssNames({ [type.toLowerCase()]: isReady })}
               />
-            )
+            );
           })}
         </DrawerItem>
 
@@ -132,7 +132,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <HpaDetails {...props} />
   }
-})
+});
 
 kubeObjectDetailRegistry.add({
   kind: "HorizontalPodAutoscaler",
@@ -141,4 +141,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});

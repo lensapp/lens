@@ -1,7 +1,7 @@
-import type { AppPreferenceRegistration, ClusterFeatureRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration, KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, } from "./registries"
+import type { AppPreferenceRegistration, ClusterFeatureRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration, KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, } from "./registries";
 import { observable } from "mobx";
-import { LensExtension } from "./lens-extension"
-import { getExtensionPageUrl } from "./registries/page-registry"
+import { LensExtension } from "./lens-extension";
+import { getExtensionPageUrl } from "./registries/page-registry";
 
 export class LensRendererExtension extends LensExtension {
   @observable.shallow globalPages: PageRegistration[] = []

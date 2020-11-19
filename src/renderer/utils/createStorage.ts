@@ -36,7 +36,7 @@ export class StorageHelper<T> {
       try {
         return JSON.parse(strValue);
       } catch (e) {
-        console.error(`Parsing json failed for pair: ${this.key}=${strValue}`)
+        console.error(`Parsing json failed for pair: ${this.key}=${strValue}`);
       }
     }
     return this.defaultValue;

@@ -28,7 +28,7 @@ export class RadioGroup extends React.Component<RadioGroupProps, {}> {
             disabled: disabled !== undefined ? disabled : radio.props.disabled,
             checked: radio.props.value === value,
             onChange: onChange
-          } as any)
+          } as any);
         })}
       </div>
     );

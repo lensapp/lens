@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx"
+import { action, computed, observable } from "mobx";
 import { clusterApi, IClusterMetrics, INodeMetrics, Node, nodesApi } from "../../api/endpoints";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
@@ -30,11 +30,11 @@ export class NodesStore extends KubeObjectStore<Node> {
   }
 
   @computed get masterNodes() {
-    return this.items.filter(node => node.getRoleLabels().includes("master"))
+    return this.items.filter(node => node.getRoleLabels().includes("master"));
   }
 
   @computed get workerNodes() {
-    return this.items.filter(node => !node.getRoleLabels().includes("master"))
+    return this.items.filter(node => !node.getRoleLabels().includes("master"));
   }
 
   getLastMetricValues(node: Node, metricNames: string[]): number[] {
@@ -50,7 +50,7 @@ export class NodesStore extends KubeObjectStore<Node> {
             result.metric.node,
             result.metric.instance,
             result.metric.kubernetes_node,
-          ].includes(nodeName)
+          ].includes(nodeName);
         });
         return result ? parseFloat(result.values.slice(-1)[0][1]) : 0;
       } catch (e) {
@@ -68,5 +68,5 @@ export class NodesStore extends KubeObjectStore<Node> {
   }
 }
 
-export const nodesStore = new NodesStore()
+export const nodesStore = new NodesStore();
 apiManager.registerStore(nodesStore);

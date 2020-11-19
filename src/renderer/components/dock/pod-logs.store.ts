@@ -25,9 +25,9 @@ export const logRange = 500;
 @autobind()
 export class PodLogsStore extends DockTabStore<IPodLogsData> {
   private refresher = interval(10, () => {
-    const id = dockStore.selectedTabId
-    if (!this.logs.get(id)) return
-    this.loadMore(id)
+    const id = dockStore.selectedTabId;
+    if (!this.logs.get(id)) return;
+    this.loadMore(id);
   });
 
   @observable logs = observable.map<TabId, PodLogLine[]>();
@@ -48,12 +48,12 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
 
     reaction(() => this.logs.get(dockStore.selectedTabId), () => {
       this.setNewLogSince(dockStore.selectedTabId);
-    })
+    });
 
     reaction(() => dockStore.selectedTabId, () => {
       // Clear search query on tab change
       searchStore.reset();
-    })
+    });
   }
 
   /**

@@ -6,7 +6,7 @@ const defaultOptions = {
   coverBars: 3,
   borderColor: "#44474A",
   backgroundColor: "#00000033"
-}
+};
 
 export const BackgroundBlock = {
   options: {},
@@ -19,7 +19,7 @@ export const BackgroundBlock = {
     this.options = {
       ...defaultOptions,
       ...this.getOptions(chart)
-    }
+    };
   },
 
   beforeDraw(chart: ChartJS) {
@@ -39,4 +39,4 @@ export const BackgroundBlock = {
     ctx.stroke();
     ctx.restore();
   }
-}
+};

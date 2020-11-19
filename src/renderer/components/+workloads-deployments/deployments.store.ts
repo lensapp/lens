@@ -22,26 +22,26 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
   }
 
   getStatuses(deployments?: Deployment[]) {
-    const status = { failed: 0, pending: 0, running: 0 }
+    const status = { failed: 0, pending: 0, running: 0 };
     deployments.forEach(deployment => {
       const pods = this.getChildPods(deployment);
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
-        status.failed++
+        status.failed++;
       }
       else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
-        status.pending++
+        status.pending++;
       }
       else {
-        status.running++
+        status.running++;
       }
-    })
-    return status
+    });
+    return status;
   }
 
   getChildPods(deployment: Deployment) {
     return podsStore
       .getByLabel(deployment.getTemplateLabels())
-      .filter(pod => pod.getNs() === deployment.getNs())
+      .filter(pod => pod.getNs() === deployment.getNs());
   }
 
   reset() {

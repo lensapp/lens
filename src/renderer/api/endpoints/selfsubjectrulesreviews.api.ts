@@ -58,7 +58,7 @@ export class SelfSubjectRulesReview extends KubeObject {
         const separator = apiGroup == "" ? "" : ".";
         return resource + separator + apiGroup;
       })
-    }
+    };
   }
 }
 

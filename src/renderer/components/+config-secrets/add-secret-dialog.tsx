@@ -1,4 +1,4 @@
-import "./add-secret-dialog.scss"
+import "./add-secret-dialog.scss";
 
 import React from "react";
 import { observable } from "mobx";
@@ -85,7 +85,7 @@ export class AddSecretDialog extends React.Component<Props> {
         data[key] = processValue ? processValue(value) : value;
       }
       return data;
-    }, {})
+    }, {});
   }
 
   createSecret = async () => {
@@ -100,7 +100,7 @@ export class AddSecretDialog extends React.Component<Props> {
         annotations: this.getDataFromFields(annotations),
         labels: this.getDataFromFields(labels),
       } as IKubeObjectMetadata
-    }
+    };
     try {
       const newSecret = await secretsApi.create({ namespace, name }, secret);
       showDetails(newSecret.selfLink);
@@ -163,11 +163,11 @@ export class AddSecretDialog extends React.Component<Props> {
                   onClick={() => this.removeField(field, index)}
                 />
               </div>
-            )
+            );
           })}
         </div>
       </>
-    )
+    );
   }
 
   render() {
@@ -216,6 +216,6 @@ export class AddSecretDialog extends React.Component<Props> {
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

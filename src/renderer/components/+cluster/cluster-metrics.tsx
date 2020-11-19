@@ -72,7 +72,7 @@ export const ClusterMetrics = observer(() => {
       return <Spinner center/>;
     }
     if (!memoryCapacity || !cpuCapacity) {
-      return <ClusterNoMetrics className="empty"/>
+      return <ClusterNoMetrics className="empty"/>;
     }
     return (
       <BarChart

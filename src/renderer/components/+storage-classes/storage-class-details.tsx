@@ -66,7 +66,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <StorageClassDetails {...props} />
   }
-})
+});
 
 kubeObjectDetailRegistry.add({
   kind: "StorageClass",
@@ -75,4 +75,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});

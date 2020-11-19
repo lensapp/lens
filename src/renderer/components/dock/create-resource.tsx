@@ -1,7 +1,7 @@
 import "./create-resource.scss";
 
 import React from "react";
-import jsYaml from "js-yaml"
+import jsYaml from "js-yaml";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Plural, t, Trans } from "@lingui/macro";
@@ -41,14 +41,14 @@ export class CreateResource extends React.Component<Props> {
     if (this.error) return;
     if (!this.data.trim()) return; // do not save when field is empty
     const resources = jsYaml.safeLoadAll(this.data)
-      .filter(v => !!v) // skip empty documents if "---" pasted at the beginning or end
+      .filter(v => !!v); // skip empty documents if "---" pasted at the beginning or end
     const createdResources: string[] = [];
     const errors: string[] = [];
     await Promise.all(
       resources.map(data => {
         return resourceApplierApi.update(data)
           .then(item => createdResources.push(item.getName()))
-          .catch((err: JsonApiErrorParsed) => errors.push(err.toString()))
+          .catch((err: JsonApiErrorParsed) => errors.push(err.toString()));
       })
     );
     if (errors.length) {
@@ -60,9 +60,9 @@ export class CreateResource extends React.Component<Props> {
         <Plural value={createdResources.length} one="Resource" other="Resources"/>{" "}
         <Trans><b>{createdResources.join(", ")}</b> successfully created</Trans>
       </p>
-    )
-    Notifications.ok(successMessage)
-    return successMessage
+    );
+    Notifications.ok(successMessage);
+    return successMessage;
   }
 
   render() {
@@ -83,6 +83,6 @@ export class CreateResource extends React.Component<Props> {
           onChange={onChange}
         />
       </div>
-    )
+    );
   }
 }

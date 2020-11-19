@@ -18,42 +18,42 @@ interface Props {
 }
 
 export const ContainerEnvironment = observer((props: Props) => {
-  const { container: { env, envFrom }, namespace } = props
+  const { container: { env, envFrom }, namespace } = props;
 
   useEffect(
     () =>
       autorun(() => {
         env && env.forEach(variable => {
-          const { valueFrom } = variable
+          const { valueFrom } = variable;
           if (valueFrom && valueFrom.configMapKeyRef) {
-            configMapsStore.load({ name: valueFrom.configMapKeyRef.name, namespace })
+            configMapsStore.load({ name: valueFrom.configMapKeyRef.name, namespace });
           }
-        })
+        });
         envFrom && envFrom.forEach(item => {
-          const { configMapRef } = item
+          const { configMapRef } = item;
           if (configMapRef && configMapRef.name) {
-            configMapsStore.load({ name: configMapRef.name, namespace })
+            configMapsStore.load({ name: configMapRef.name, namespace });
           }
-        })
+        });
       }),
     []
-  )
+  );
 
   const renderEnv = () => {
     const orderedEnv = _.sortBy(env, 'name');
 
     return orderedEnv.map(variable => {
-      const { name, value, valueFrom } = variable
-      let secretValue = null
+      const { name, value, valueFrom } = variable;
+      let secretValue = null;
 
       if (value) {
-        secretValue = value
+        secretValue = value;
       }
       if (valueFrom) {
-        const { fieldRef, secretKeyRef, configMapKeyRef } = valueFrom
+        const { fieldRef, secretKeyRef, configMapKeyRef } = valueFrom;
         if (fieldRef) {
-          const { apiVersion, fieldPath } = fieldRef
-          secretValue = `fieldRef(${apiVersion}:${fieldPath})`
+          const { apiVersion, fieldPath } = fieldRef;
+          secretValue = `fieldRef(${apiVersion}:${fieldPath})`;
         }
         if (secretKeyRef) {
           secretValue = (
@@ -61,14 +61,14 @@ export const ContainerEnvironment = observer((props: Props) => {
               reference={secretKeyRef}
               namespace={namespace}
             />
-          )
+          );
         }
         if (configMapKeyRef) {
-          const { name, key } = configMapKeyRef
-          const configMap = configMapsStore.getByName(name, namespace)
+          const { name, key } = configMapKeyRef;
+          const configMap = configMapsStore.getByName(name, namespace);
           secretValue = configMap ?
             configMap.data[key] :
-            `configMapKeyRef(${name}${key})`
+            `configMapKeyRef(${name}${key})`;
         }
       }
 
@@ -76,31 +76,31 @@ export const ContainerEnvironment = observer((props: Props) => {
         <div className="variable" key={name}>
           <span className="var-name">{name}</span>: {secretValue}
         </div>
-      )
-    })
-  }
+      );
+    });
+  };
 
   const renderEnvFrom = () => {
     const envVars = envFrom.map(vars => {
-      if (!vars.configMapRef || !vars.configMapRef.name) return
-      const configMap = configMapsStore.getByName(vars.configMapRef.name, namespace)
-      if (!configMap) return
+      if (!vars.configMapRef || !vars.configMapRef.name) return;
+      const configMap = configMapsStore.getByName(vars.configMapRef.name, namespace);
+      if (!configMap) return;
       return Object.entries(configMap.data).map(([name, value]) => (
         <div className="variable" key={name}>
           <span className="var-name">{name}</span>: {value}
         </div>
-      ))
-    })
-    return _.flatten(envVars)
-  }
+      ));
+    });
+    return _.flatten(envVars);
+  };
 
   return (
     <DrawerItem name={<Trans>Environment</Trans>} className="ContainerEnvironment">
       {env && renderEnv()}
       {envFrom && renderEnvFrom()}
     </DrawerItem>
-  )
-})
+  );
+});
 
 interface SecretKeyProps {
   reference: {
@@ -111,20 +111,20 @@ interface SecretKeyProps {
 }
 
 const SecretKey = (props: SecretKeyProps) => {
-  const { reference: { name, key }, namespace } = props
-  const [loading, setLoading] = useState(false)
-  const [secret, setSecret] = useState<Secret>()
+  const { reference: { name, key }, namespace } = props;
+  const [loading, setLoading] = useState(false);
+  const [secret, setSecret] = useState<Secret>();
 
   const showKey = async (evt: React.MouseEvent) => {
-    evt.preventDefault()
-    setLoading(true)
+    evt.preventDefault();
+    setLoading(true);
     const secret = await secretsStore.load({ name, namespace });
-    setLoading(false)
-    setSecret(secret)
-  }
+    setLoading(false);
+    setSecret(secret);
+  };
 
   if (secret?.data?.[key]) {
-    return <>{base64.decode(secret.data[key])}</>
+    return <>{base64.decode(secret.data[key])}</>;
   }
 
   return (
@@ -137,5 +137,5 @@ const SecretKey = (props: SecretKeyProps) => {
         onClick={showKey}
       />
     </>
-  )
-}
+  );
+};

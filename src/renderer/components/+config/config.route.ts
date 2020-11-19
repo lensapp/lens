@@ -5,8 +5,8 @@ import { configMapsURL } from "../+config-maps/config-maps.route";
 
 export const configRoute: RouteProps = {
   get path() {
-    return Config.tabRoutes.map(({ routePath }) => routePath).flat()
+    return Config.tabRoutes.map(({ routePath }) => routePath).flat();
   }
-}
+};
 
 export const configURL = (params?: IURLParams) => configMapsURL(params);

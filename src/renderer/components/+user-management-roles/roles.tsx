@@ -1,4 +1,4 @@
-import "./roles.scss"
+import "./roles.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -56,6 +56,6 @@ export class Roles extends React.Component<Props> {
         />
         <AddRoleDialog/>
       </>
-    )
+    );
   }
 }

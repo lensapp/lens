@@ -1,2 +1,2 @@
-export * from "./storage.route"
-export * from "./storage"
+export * from "./storage.route";
+export * from "./storage";

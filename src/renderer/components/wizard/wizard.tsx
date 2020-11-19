@@ -48,7 +48,7 @@ export class Wizard extends React.Component<WizardProps, State> {
         isLast: this.isLastStep,
         ...commonProps,
         ...stepProps
-      } as WizardStepProps<any>)
+      } as WizardStepProps<any>);
     });
   }
 
@@ -80,7 +80,7 @@ export class Wizard extends React.Component<WizardProps, State> {
 
   render() {
     const { className, title, header, hideSteps } = this.props;
-    const steps = this.steps.map(stepElem => ({ title: stepElem.props.title }))
+    const steps = this.steps.map(stepElem => ({ title: stepElem.props.title }));
     const step = React.cloneElement(this.steps[this.step - 1]);
     return (
       <div className={cssNames("Wizard", className)}>
@@ -182,7 +182,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
       <div className="step-loading flex center">
         <Spinner/>
       </div>
-    )
+    );
   }
 
   render() {
@@ -225,6 +225,6 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
         )}
         {afterContent}
       </form>
-    )
+    );
   }
 }

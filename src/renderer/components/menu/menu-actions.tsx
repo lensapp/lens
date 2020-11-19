@@ -1,4 +1,4 @@
-import "./menu-actions.scss"
+import "./menu-actions.scss";
 
 import React, { isValidElement } from "react";
 import { observable } from "mobx";
@@ -25,7 +25,7 @@ export interface MenuActionsProps extends Partial<MenuProps> {
 export class MenuActions extends React.Component<MenuActionsProps> {
   static defaultProps: MenuActionsProps = {
     get removeConfirmationMessage() {
-      return _i18n._(t`Remove item?`)
+      return _i18n._(t`Remove item?`);
     }
   }
 
@@ -49,7 +49,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
       ok: removeAction,
       labelOk: _i18n._(t`Remove`),
       message: <div>{removeConfirmationMessage}</div>,
-    })
+    });
   }
 
   renderTriggerIcon() {
@@ -66,13 +66,13 @@ export class MenuActions extends React.Component<MenuActionsProps> {
       material: isString(triggerIcon) ? triggerIcon : undefined,
       active: this.isOpen,
       ...(typeof triggerIcon === "object" ? triggerIcon : {}),
-    }
+    };
     if (iconProps.tooltip && this.isOpen) {
       delete iconProps.tooltip; // don't show tooltip for icon when menu is open
     }
     return (
       <Icon {...iconProps}/>
-    )
+    );
   }
 
   render() {
@@ -113,6 +113,6 @@ export class MenuActions extends React.Component<MenuActionsProps> {
           )}
         </Menu>
       </>
-    )
+    );
   }
 }

@@ -1,4 +1,4 @@
-import type React from "react"
+import type React from "react";
 import { BaseRegistry } from "./base-registry";
 
 export interface AppPreferenceComponents {
@@ -14,4 +14,4 @@ export interface AppPreferenceRegistration {
 export class AppPreferenceRegistry extends BaseRegistry<AppPreferenceRegistration> {
 }
 
-export const appPreferenceRegistry = new AppPreferenceRegistry()
+export const appPreferenceRegistry = new AppPreferenceRegistry();
