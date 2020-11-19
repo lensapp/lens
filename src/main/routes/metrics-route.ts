@@ -73,7 +73,9 @@ class MetricsRoute extends LensApi {
       prometheusMetadata["success"] = false
       this.respondJson(response, {})
     } finally {
-      cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata
+      if (JSON.stringify(cluster.metadata[ClusterMetadataKey.PROMETHEUS]) !== JSON.stringify(prometheusMetadata)) {
+        cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata
+      }
     }
   }
 }
