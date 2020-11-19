@@ -139,6 +139,7 @@ export class Cluster implements ClusterModel, ClusterState {
     if (ipcMain) {
       this.eventDisposers.push(
         reaction(() => this.getState(), () => this.pushState()),
+        reaction(() => this.preferences, () => this.contextHandler.setupPrometheus(this.preferences)),
         () => {
           clearInterval(refreshTimer)
           clearInterval(refreshMetadataTimer)

@@ -21,7 +21,13 @@ export interface ClusterIconUpload {
 }
 
 export interface ClusterMetadata {
-  [key: string]: string | number | boolean;
+  [key: string]: string | number | boolean | object;
+}
+
+export type ClusterPrometheusMetadata = {
+  success?: boolean;
+  provider?: string;
+  autoDetected?: boolean;
 }
 
 export interface ClusterStoreModel {
