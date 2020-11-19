@@ -2,8 +2,9 @@
 // https://www.electronjs.org/docs/api/ipc-main
 // https://www.electronjs.org/docs/api/ipc-renderer
 
-import { ipcMain, ipcRenderer, webContents, remote } from "electron"
+import { ipcMain, ipcRenderer, webContents, remote } from "electron";
 import logger from "../main/logger";
+import { clusterFrameMap } from "./cluster-ipc";
 
 export function handleRequest(channel: string, listener: (...args: any[]) => any) {
   ipcMain.handle(channel, listener)
@@ -15,11 +16,8 @@ export async function requestMain(channel: string, ...args: any[]) {
 
 async function getSubFrames(): Promise<number[]> {
   const subFrames: number[] = [];
-  const { clusterStore } = await import("./cluster-store");
-  clusterStore.clustersList.forEach(cluster => {
-    if (cluster.frameId) {
-      subFrames.push(cluster.frameId)
-    }
+  clusterFrameMap.forEach((frameId, _) => {
+    subFrames.push(frameId)
   });
   return subFrames;
 }

@@ -1,5 +1,4 @@
 import type { ClusterId } from "../common/cluster-store";
-import { clusterStore } from "../common/cluster-store";
 import { observable } from "mobx";
 import { app, BrowserWindow, dialog, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
@@ -8,6 +7,7 @@ import { subscribeToBroadcast } from "../common/ipc"
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import { Singleton } from "../common/utils";
+import { clusterFrameMap } from "../common/cluster-ipc";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
@@ -130,7 +130,7 @@ export class WindowManager extends Singleton {
   }
 
   reload() {
-    const frameId = clusterStore.getById(this.activeClusterId)?.frameId;
+    const frameId = clusterFrameMap.get(this.activeClusterId)
     if (frameId) {
       this.sendToView({ channel: "renderer:reload", frameId });
     } else {
