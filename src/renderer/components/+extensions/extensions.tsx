@@ -115,17 +115,28 @@ export class Extensions extends React.Component {
             label="Select local extensions"
             onClick={this.selectLocalExtensionsDialog}
           />
-          <small className="hint">
-            <Trans>Pro-Tip 1: you can download extension archive.tgz via npm by</Trans>{" "}
-            <CopyToClick showNotification><code>npm pack %name</code></CopyToClick>
-            <CopyToClick showNotification><code>npm view %name dist.tarball</code></CopyToClick>{" "}
-            <em className="text-secondary">(click to copy)</em>
-          </small>
-          <small className="hint">
-            <Trans>Pro-Tip 2: you also can drop archive from file-system to this window to install</Trans>
-          </small>
+          <p className="hint">
+            <Trans><b>Pro-Tip 1</b>: you can download extension archive.tgz via NPM:</Trans>
+          </p>
+          <ul>
+            <CopyToClick showNotification selector="code">
+              <li>
+                <code>npm pack %name</code>
+                <em> (click to copy)</em>
+              </li>
+            </CopyToClick>
+            <CopyToClick showNotification selector="code">
+              <li className="click-to-copy">
+                <code>npm view %name dist.tarball</code>
+                <em> (click to copy)</em>
+              </li>
+            </CopyToClick>
+          </ul>
+          <p className="hint">
+            <Trans><b>Pro-Tip 2</b>: you also can drop archive from file-system to this window to request installation</Trans>
+          </p>
         </div>
-        <div className="more-info flex inline gaps">
+        <div className="more-info flex inline gaps align-center">
           <Icon material="local_fire_department"/>
           <p>
             Check out documentation to <a href="https://docs.k8slens.dev/" target="_blank">learn more</a>

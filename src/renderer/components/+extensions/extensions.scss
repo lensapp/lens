@@ -16,15 +16,15 @@
   }
 
   .extensions-info {
-    .flex.gaps {
+    --flex-gap: #{$padding * 3};
+
+    > .flex.gaps {
       --flex-gap: #{$padding};
     }
+
     .install-extension {
-      code {
-        &:hover {
-          color: $textColorSecondary;
-        }
-        cursor: pointer;
+      .CopyToClick:hover code {
+        color: $textColorSecondary;
       }
     }
   }
