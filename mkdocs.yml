@@ -30,6 +30,7 @@ nav:
       - Color Reference: extensions/capabilities/color-reference.md
     - Extension Guides:
       - Overview: extensions/guides/README.md
+      - Main Extension: extensions/guides/main-extension.md
       - Renderer Extension: extensions/guides/renderer-extension.md
     - Testing and Publishing:
       - Testing Extensions: extensions/testing-and-publishing/testing.md

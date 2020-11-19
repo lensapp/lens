@@ -58,6 +58,7 @@ describe("kube auth proxy tests", () => {
     let port: number
     let mockedCP: MockProxy<ChildProcess>
     let listeners: Record<string, (...args: any[]) => void>
+    let proxy: KubeAuthProxy
 
     beforeEach(async () => {
       port = await getFreePort()
@@ -85,43 +86,41 @@ describe("kube auth proxy tests", () => {
         return mockedCP
       })
       mockWaitUntilUsed.mockReturnValueOnce(Promise.resolve())
+      const cluster = new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" })
+      jest.spyOn(cluster, "apiUrl", "get").mockReturnValue("https://fake.k8s.internal")
+      proxy = new KubeAuthProxy(cluster, port, {})
     })
 
     it("should call spawn and broadcast errors", async () => {
-      const kap = new KubeAuthProxy(new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" }), port, {})
-      await kap.run()
+      await proxy.run()
       listeners["error"]({ message: "foobarbat" })
 
       expect(mockBroadcastIpc).toBeCalledWith({ channel: "kube-auth:foobar", args: [{ data: "foobarbat", error: true }] })
     })
 
     it("should call spawn and broadcast exit", async () => {
-      const kap = new KubeAuthProxy(new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" }), port, {})
-      await kap.run()
+      await proxy.run()
       listeners["exit"](0)
 
       expect(mockBroadcastIpc).toBeCalledWith({ channel: "kube-auth:foobar", args: [{ data: "proxy exited with code: 0", error: false }] })
     })
 
     it("should call spawn and broadcast errors from stderr", async () => {
-      const kap = new KubeAuthProxy(new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" }), port, {})
-      await kap.run()
+      await proxy.run()
       listeners["stderr/data"]("an error")
 
       expect(mockBroadcastIpc).toBeCalledWith({ channel: "kube-auth:foobar", args: [{ data: "an error", error: true }] })
     })
 
     it("should call spawn and broadcast stdout serving info", async () => {
-      const kap = new KubeAuthProxy(new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" }), port, {})
-      await kap.run()
+      await proxy.run()
       listeners["stdout/data"]("Starting to serve on")
 
       expect(mockBroadcastIpc).toBeCalledWith({ channel: "kube-auth:foobar", args: [{ data: "Authentication proxy started\n" }] })
     })
 
     it("should call spawn and broadcast stdout other info", async () => {
-      const kap = new KubeAuthProxy(new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" }), port, {})
-      await kap.run()
+      await proxy.run()
       listeners["stdout/data"]("some info")
 
       expect(mockBroadcastIpc).toBeCalledWith({ channel: "kube-auth:foobar", args: [{ data: "some info" }] })

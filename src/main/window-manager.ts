@@ -85,6 +85,7 @@ export class WindowManager extends Singleton {
       await this.mainWindow.loadURL(this.mainUrl);
       this.mainWindow.show();
       this.splashWindow?.close();
+      appEventBus.emit({ name: "app", action: "start" })
     } catch (err) {
       dialog.showErrorBox("ERROR!", err.toString())
     }
@@ -154,6 +155,11 @@ export class WindowManager extends Singleton {
       await this.splashWindow.loadURL("static://splash.html");
     }
     this.splashWindow.show();
+  }
+
+  hide() {
+    if (!this.mainWindow?.isDestroyed()) this.mainWindow.hide();
+    if (!this.splashWindow.isDestroyed()) this.splashWindow.hide();
   }
 
   destroy() {
