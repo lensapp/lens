@@ -38,7 +38,7 @@ interface OptionalProps {
 export class PodDetailsList extends React.Component<Props> {
   static defaultProps: OptionalProps = {
     showTitle: true
-  }
+  };
 
   private metricsWatcher = interval(120, () => {
     podsStore.loadKubeMetrics(this.props.owner.getNs());
@@ -49,13 +49,13 @@ export class PodDetailsList extends React.Component<Props> {
     [sortBy.namespace]: (pod: Pod) => pod.getNs(),
     [sortBy.cpu]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).cpu,
     [sortBy.memory]: (pod: Pod) => podsStore.getPodKubeMetrics(pod).memory,
-  }
+  };
 
   componentDidMount() {
     this.metricsWatcher.start(true);
     disposeOnUnmount(this, [
       reaction(() => this.props.owner, () => this.metricsWatcher.restart(true))
-    ])
+    ]);
   }
 
   componentWillUnmount() {

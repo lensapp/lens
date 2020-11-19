@@ -62,4 +62,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <NamespaceDetails {...props} />
   }
-})
+});

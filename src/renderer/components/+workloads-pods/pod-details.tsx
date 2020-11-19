@@ -1,4 +1,4 @@
-import "./pod-details.scss"
+import "./pod-details.scss";
 
 import React from "react";
 import kebabCase from "lodash/kebabCase";
@@ -106,7 +106,7 @@ export class PodDetails extends React.Component<Props> {
                   className={cssNames({ disabled: status === "False" })}
                   tooltip={<Trans>Last transition time: {lastTransitionTime}</Trans>}
                 />
-              )
+              );
             })
           }
         </DrawerItem>
@@ -134,7 +134,7 @@ export class PodDetails extends React.Component<Props> {
         }
         {
           pod.getInitContainers() && pod.getInitContainers().map(container => {
-            return <PodDetailsContainer key={container.name} pod={pod} container={container}/>
+            return <PodDetailsContainer key={container.name} pod={pod} container={container}/>;
           })
         }
         <DrawerTitle title={<Trans>Containers</Trans>}/>
@@ -149,7 +149,7 @@ export class PodDetails extends React.Component<Props> {
                 container={container}
                 metrics={metrics}
               />
-            )
+            );
           })
         }
 
@@ -159,7 +159,7 @@ export class PodDetails extends React.Component<Props> {
             {volumes.map(volume => {
               const claimName = volume.persistentVolumeClaim ? volume.persistentVolumeClaim.claimName : null;
               const configMap = volume.configMap ? volume.configMap.name : null;
-              const type = Object.keys(volume)[1]
+              const type = Object.keys(volume)[1];
 
               return (
                 <div key={volume.name} className="volume">
@@ -211,12 +211,12 @@ export class PodDetails extends React.Component<Props> {
                     </DrawerItem>
                   )}
                 </div>
-              )
+              );
             })}
           </>
         )}
       </div>
-    )
+    );
   }
 }
 
@@ -226,7 +226,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props: KubeObjectDetailsProps<Pod>) => <PodDetails {...props} />
   }
-})
+});
 
 kubeObjectDetailRegistry.add({
   kind: "Pod",
@@ -235,4 +235,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props: KubeObjectDetailsProps<Pod>) => <KubeEventDetails {...props} />
   }
-})
+});

@@ -1,11 +1,11 @@
-import './menu.scss'
+import './menu.scss';
 
 import React, { Fragment, ReactElement, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { autobind, cssNames, noop } from "../../utils";
 import { Animate } from "../animate";
 import { Icon, IconProps } from "../icon";
-import debounce from "lodash/debounce"
+import debounce from "lodash/debounce";
 
 export const MenuContext = React.createContext<MenuContextValue>(null);
 export type MenuContextValue = Menu;
@@ -129,8 +129,8 @@ export class Menu extends React.Component<MenuProps, State> {
 
     // setup initial position
     const position: MenuPosition = { left: true, bottom: true };
-    this.elem.style.left = left + "px"
-    this.elem.style.top = bottom + "px"
+    this.elem.style.left = left + "px";
+    this.elem.style.top = bottom + "px";
 
     // correct position if menu doesn't fit to viewport
     const menuPos = this.elem.getBoundingClientRect();
@@ -266,7 +266,7 @@ export function SubMenu(props: Partial<MenuProps>) {
       closeOnClickItem={false}
       {...menuProps}
     />
-  )
+  );
 }
 
 export interface MenuItemProps extends React.HTMLProps<any> {
@@ -327,10 +327,10 @@ export class MenuItem extends React.Component<MenuItemProps> {
       onClick: this.onClick,
       children: icon ? <><Icon {...iconProps}/> {children}</> : children,
       ref: this.bindRef,
-    }
+    };
     if (this.isLink) {
-      return <a {...elemProps}/>
+      return <a {...elemProps}/>;
     }
-    return <li {...elemProps}/>
+    return <li {...elemProps}/>;
   }
 }

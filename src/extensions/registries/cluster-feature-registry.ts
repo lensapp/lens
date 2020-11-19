@@ -1,4 +1,4 @@
-import type React from "react"
+import type React from "react";
 import { BaseRegistry } from "./base-registry";
 import { ClusterFeature } from "../cluster-feature";
 
@@ -15,4 +15,4 @@ export interface ClusterFeatureRegistration {
 export class ClusterFeatureRegistry extends BaseRegistry<ClusterFeatureRegistration> {
 }
 
-export const clusterFeatureRegistry = new ClusterFeatureRegistry()
+export const clusterFeatureRegistry = new ClusterFeatureRegistry();

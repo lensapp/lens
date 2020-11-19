@@ -66,7 +66,7 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
         } as IMetricsResult],
       },
       status: "",
-    }
+    };
   }
 
   const { result } = metrics.data;
@@ -78,7 +78,7 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
         if (!res.values || !res.values.length) return;
         while (res.values.length < frames) {
           const timestamp = moment.unix(res.values[0][0]).subtract(1, "minute").unix();
-          res.values.unshift([timestamp, "0"])
+          res.values.unshift([timestamp, "0"]);
         }
       });
     }
@@ -103,7 +103,7 @@ export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: s
   const itemMetrics = { ...metrics };
   for (const metric in metrics) {
     if (!metrics[metric]?.data?.result) {
-      continue
+      continue;
     }
     const results = metrics[metric].data.result;
     const result = results.find(res => Object.values(res.metric)[0] == itemName);

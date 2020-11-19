@@ -1,4 +1,4 @@
-import './icon.scss'
+import './icon.scss';
 
 import React, { ReactNode } from "react";
 import { findDOMNode } from "react-dom";
@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import { LocationDescriptor } from 'history';
 import { autobind, cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
-import isNumber from "lodash/isNumber"
+import isNumber from "lodash/isNumber";
 
 export interface IconProps extends React.HTMLAttributes<any>, TooltipDecoratorProps {
   material?: string;          // material-icon, see available names at https://material.io/icons/
@@ -106,11 +106,11 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render icon type
     if (link) {
-      return <NavLink {...iconProps} to={link}/>
+      return <NavLink {...iconProps} to={link}/>;
     }
     if (href) {
-      return <a {...iconProps} href={href}/>
+      return <a {...iconProps} href={href}/>;
     }
-    return <i {...iconProps} />
+    return <i {...iconProps} />;
   }
 }

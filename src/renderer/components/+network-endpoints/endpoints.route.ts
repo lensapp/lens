@@ -3,9 +3,9 @@ import { buildURL } from "../../../common/utils/buildUrl";
 
 export const endpointRoute: RouteProps = {
   path: "/endpoints"
-}
+};
 
 export interface EndpointRouteParams {
 }
 
-export const endpointURL = buildURL<EndpointRouteParams>(endpointRoute.path)
+export const endpointURL = buildURL<EndpointRouteParams>(endpointRoute.path);

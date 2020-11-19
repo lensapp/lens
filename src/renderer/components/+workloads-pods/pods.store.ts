@@ -30,19 +30,19 @@ export class PodsStore extends KubeObjectStore<Pod> {
   getPodsByOwner(workload: WorkloadKubeObject): Pod[] {
     if (!workload) return [];
     return this.items.filter(pod => {
-      const owners = pod.getOwnerRefs()
-      if (!owners.length) return
-      return owners.find(owner => owner.uid === workload.getId())
-    })
+      const owners = pod.getOwnerRefs();
+      if (!owners.length) return;
+      return owners.find(owner => owner.uid === workload.getId());
+    });
   }
 
   getPodsByNode(node: string) {
-    if (!this.isLoaded) return []
-    return this.items.filter(pod => pod.spec.nodeName === node)
+    if (!this.isLoaded) return [];
+    return this.items.filter(pod => pod.spec.nodeName === node);
   }
 
   getStatuses(pods: Pod[]) {
-    return countBy(pods.map(pod => pod.getStatus()))
+    return countBy(pods.map(pod => pod.getStatus()));
   }
 
   getPodKubeMetrics(pod: Pod) {
@@ -57,16 +57,16 @@ export class PodsStore extends KubeObjectStore<Pod> {
     if (!metrics) return empty;
     return containers.reduce((total, container) => {
       const metric = metrics.containers.find(item => item.name == container.name);
-      let cpu = "0"
-      let memory = "0"
+      let cpu = "0";
+      let memory = "0";
       if (metric && metric.usage) {
-        cpu = metric.usage.cpu || "0"
-        memory = metric.usage.memory || "0"
+        cpu = metric.usage.cpu || "0";
+        memory = metric.usage.memory || "0";
       }
       return {
         cpu: total.cpu + cpuUnitsToNumber(cpu),
         memory: total.memory + unitsToBytes(memory)
-      }
+      };
     }, empty);
   }
 

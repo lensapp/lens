@@ -6,9 +6,9 @@ import { KubeApi } from "../kube-api";
 
 @autobind()
 export class StatefulSet extends WorkloadKubeObject {
-  static kind = "StatefulSet"
-  static namespaced = true
-  static apiBase = "/apis/apps/v1/statefulsets"
+  static kind = "StatefulSet";
+  static namespaced = true;
+  static apiBase = "/apis/apps/v1/statefulsets";
 
   spec: {
     serviceName: string;
@@ -62,7 +62,7 @@ export class StatefulSet extends WorkloadKubeObject {
         };
       };
     }[];
-  }
+  };
   status: {
     observedGeneration: number;
     replicas: number;
@@ -70,11 +70,11 @@ export class StatefulSet extends WorkloadKubeObject {
     currentRevision: string;
     updateRevision: string;
     collisionCount: number;
-  }
+  };
 
   getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
-    return [...containers].map(container => container.image)
+    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
+    return [...containers].map(container => container.image);
   }
 }
 

@@ -7,7 +7,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
-  api = replicaSetApi
+  api = replicaSetApi;
   @observable metrics: IPodMetrics = null;
 
   async loadMetrics(replicaSet: ReplicaSet) {
@@ -22,7 +22,7 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   getReplicaSetsByOwner(deployment: Deployment) {
     return this.items.filter(replicaSet =>
       !!replicaSet.getOwnerRefs().find(owner => owner.uid === deployment.getId())
-    )
+    );
   }
 
   reset() {

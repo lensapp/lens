@@ -1,7 +1,7 @@
 import "./pod-logs.scss";
 import React from "react";
 import AnsiUp from 'ansi_up';
-import DOMPurify from "dompurify"
+import DOMPurify from "dompurify";
 import { Trans } from "@lingui/macro";
 import { action, computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -79,13 +79,13 @@ export class PodLogs extends React.Component<Props> {
     this.ready = false;
     await podLogsStore.load(this.tabId);
     this.ready = true;
-  }
+  };
 
   reload = async () => {
     podLogsStore.clearLogs(this.tabId);
     this.lastLineIsShown = true;
     await this.load();
-  }
+  };
 
   /**
    * Function loads more logs (usually after user scrolls to top) and sets proper
@@ -101,7 +101,7 @@ export class PodLogs extends React.Component<Props> {
       // Set scroll position back to place where preloading started
       this.logsElement.current.scrollTop = (podLogsStore.lines - lines) * lineHeight;
     }
-  }
+  };
 
   /**
    * A function for various actions after search is happened
@@ -167,7 +167,7 @@ export class PodLogs extends React.Component<Props> {
         this.showJumpToBottom = true;
       }
     }
-  }
+  };
 
   @action
   scrollToBottom = () => {
@@ -177,7 +177,7 @@ export class PodLogs extends React.Component<Props> {
     this.showJumpToBottom = false;
     // Showing horizontal scrollbar after VirtualList settles down
     setTimeout(() => this.hideHorizontalScroll = false, 500);
-  }
+  };
 
   /**
    * A function is called by VirtualList for rendering each of the row
@@ -205,14 +205,14 @@ export class PodLogs extends React.Component<Props> {
             className={cssNames("overlay", { active })}
             dangerouslySetInnerHTML={{ __html: ansiToHtml(overlayValue) }}
           /> :
-          null
+          null;
         contents.push(
           <React.Fragment key={piece + index}>
             <span dangerouslySetInnerHTML={{ __html: ansiToHtml(piece) }} />
             {overlay}
           </React.Fragment>
         );
-      })
+      });
     }
     return (
       <div className={cssNames("LogRow")}>
@@ -221,7 +221,7 @@ export class PodLogs extends React.Component<Props> {
         )}
       </div>
     );
-  }
+  };
 
   renderJumpToBottom() {
     if (!this.logsElement) return null;
@@ -288,7 +288,7 @@ export class PodLogs extends React.Component<Props> {
         toPrevOverlay={this.toOverlay}
         toNextOverlay={this.toOverlay}
       />
-    )
+    );
     return (
       <div className={cssNames("PodLogs flex column", className, { noscroll: this.hideHorizontalScroll })}>
         <InfoPanel

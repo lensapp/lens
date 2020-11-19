@@ -19,7 +19,7 @@ export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
   }
 
   render() {
-    const { object: pod, toolbar } = this.props
+    const { object: pod, toolbar } = this.props;
     const containers = pod.getAllContainers();
     const statuses = pod.getContainerStatuses();
     if (!containers.length) return null;
@@ -33,25 +33,25 @@ export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
             <Component.SubMenu>
               {
                 containers.map(container => {
-                  const { name } = container
+                  const { name } = container;
                   const status = statuses.find(status => status.name === name);
                   const brick = status ? (
                     <Component.StatusBrick
                       className={Util.cssNames(Object.keys(status.state)[0], { ready: status.ready })}
                     />
-                  ) : null
+                  ) : null;
                   return (
                     <Component.MenuItem key={name} onClick={Util.prevDefault(() => this.showLogs(container))} className="flex align-center">
                       {brick}
                       {name}
                     </Component.MenuItem>
-                  )
+                  );
                 })
               }
             </Component.SubMenu>
           </>
         )}
       </Component.MenuItem>
-    )
+    );
   }
 }

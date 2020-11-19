@@ -24,7 +24,7 @@ export class ApiManager {
   }
 
   protected resolveApi(api: string | KubeApi): KubeApi {
-    if (typeof api === "string") return this.getApi(api)
+    if (typeof api === "string") return this.getApi(api);
     return api;
   }
 
@@ -41,7 +41,7 @@ export class ApiManager {
   registerStore(store: KubeObjectStore, apis: KubeApi[] = [store.api]) {
     apis.forEach(api => {
       this.stores.set(api, store);
-    })
+    });
   }
 
   getStore(api: string | KubeApi): KubeObjectStore {

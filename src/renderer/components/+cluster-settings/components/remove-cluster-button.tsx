@@ -23,7 +23,7 @@ export class RemoveClusterButton extends React.Component<Props> {
       ok: async () => {
         await clusterStore.removeById(cluster.id);
       }
-    })
+    });
   }
 
   render() {

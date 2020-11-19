@@ -1,4 +1,4 @@
-import "./role-binding-details.scss"
+import "./role-binding-details.scss";
 
 import React from "react";
 import { t, Trans } from "@lingui/macro";
@@ -30,7 +30,7 @@ export class RoleBindingDetails extends React.Component<Props> {
       reaction(() => this.props.object, (obj) => {
         this.selectedSubjects.clear();
       })
-    ])
+    ]);
   }
 
   selectSubject(subject: IRoleBindingSubject) {
@@ -40,7 +40,7 @@ export class RoleBindingDetails extends React.Component<Props> {
       isSelected
         ? selectedSubjects.filter(sub => sub !== subject) // unselect
         : selectedSubjects.concat(subject) // select
-    )
+    );
   }
 
   @autobind()
@@ -53,7 +53,7 @@ export class RoleBindingDetails extends React.Component<Props> {
       message: (
         <p><Trans>Remove selected bindings for <b>{roleBinding.getName()}</b>?</Trans></p>
       )
-    })
+    });
   }
 
   render() {
@@ -106,7 +106,7 @@ export class RoleBindingDetails extends React.Component<Props> {
                     <TableCell className="type">{kind}</TableCell>
                     <TableCell className="ns">{namespace || "-"}</TableCell>
                   </TableRow>
-                )
+                );
               })
             }
           </Table>
@@ -119,7 +119,7 @@ export class RoleBindingDetails extends React.Component<Props> {
           removeTooltip={<Trans>Remove selected bindings from ${name}</Trans>}
         />
       </div>
-    )
+    );
   }
 }
 
@@ -129,7 +129,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <RoleBindingDetails {...props} />
   }
-})
+});
 kubeObjectDetailRegistry.add({
   kind: "RoleBinding",
   apiVersions: ["rbac.authorization.k8s.io/v1"],
@@ -137,7 +137,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});
 
 
 kubeObjectDetailRegistry.add({
@@ -146,7 +146,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <RoleBindingDetails {...props} />
   }
-})
+});
 kubeObjectDetailRegistry.add({
   kind: "ClusterRoleBinding",
   apiVersions: ["rbac.authorization.k8s.io/v1"],
@@ -154,4 +154,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});

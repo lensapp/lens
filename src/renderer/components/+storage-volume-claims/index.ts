@@ -1,4 +1,4 @@
-export * from "./volume-claims.route"
-export * from "./volume-claims"
-export * from "./volume-claim-details"
+export * from "./volume-claims.route";
+export * from "./volume-claims";
+export * from "./volume-claim-details";
 

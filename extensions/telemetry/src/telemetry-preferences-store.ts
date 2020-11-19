@@ -1,5 +1,5 @@
 import { Store } from "@k8slens/extensions";
-import { toJS } from "mobx"
+import { toJS } from "mobx";
 
 export type TelemetryPreferencesModel = {
   enabled: boolean;
@@ -14,11 +14,11 @@ export class TelemetryPreferencesStore extends Store.ExtensionStore<TelemetryPre
       defaults: {
         enabled: true
       }
-    })
+    });
   }
 
   protected fromStore({ enabled }: TelemetryPreferencesModel): void {
-    this.enabled = enabled
+    this.enabled = enabled;
   }
 
   toJSON(): TelemetryPreferencesModel {
@@ -26,8 +26,8 @@ export class TelemetryPreferencesStore extends Store.ExtensionStore<TelemetryPre
       enabled: this.enabled
     }, {
       recurseEverything: true
-    })
+    });
   }
 }
 
-export const telemetryPreferencesStore = TelemetryPreferencesStore.getInstance<TelemetryPreferencesStore>()
+export const telemetryPreferencesStore = TelemetryPreferencesStore.getInstance<TelemetryPreferencesStore>();

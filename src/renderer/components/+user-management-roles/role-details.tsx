@@ -1,4 +1,4 @@
-import "./role-details.scss"
+import "./role-details.scss";
 
 import React from "react";
 import { Trans } from "@lingui/macro";
@@ -57,10 +57,10 @@ export class RoleDetails extends React.Component<Props> {
                 </>
               )}
             </div>
-          )
+          );
         })}
       </div>
-    )
+    );
   }
 }
 
@@ -70,7 +70,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <RoleDetails {...props}/>
   }
-})
+});
 kubeObjectDetailRegistry.add({
   kind: "Role",
   apiVersions: ["rbac.authorization.k8s.io/v1"],
@@ -78,7 +78,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});
 
 kubeObjectDetailRegistry.add({
   kind: "ClusterRole",
@@ -86,7 +86,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <RoleDetails {...props}/>
   }
-})
+});
 kubeObjectDetailRegistry.add({
   kind: "ClusterRole",
   apiVersions: ["rbac.authorization.k8s.io/v1"],
@@ -94,4 +94,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props}/>
   }
-})
+});

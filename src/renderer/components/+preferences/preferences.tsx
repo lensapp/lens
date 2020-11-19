@@ -1,4 +1,4 @@
-import "./preferences.scss"
+import "./preferences.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -30,14 +30,14 @@ export class Preferences extends React.Component {
     return themeStore.themes.map(theme => ({
       label: theme.name,
       value: theme.id,
-    }))
+    }));
   }
 
   @computed get helmOptions(): SelectOption<HelmRepo>[] {
     return this.helmRepos.map(repo => ({
       label: repo.name,
       value: repo,
-    }))
+    }));
   }
 
   async componentDidMount() {
@@ -65,7 +65,7 @@ export class Preferences extends React.Component {
       await repoManager.addRepo(repo);
       this.helmAddedRepos.set(repo.name, repo);
     } catch (err) {
-      Notifications.error(<Trans>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</Trans>)
+      Notifications.error(<Trans>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</Trans>);
     }
   }
 
@@ -76,20 +76,20 @@ export class Preferences extends React.Component {
     } catch (err) {
       Notifications.error(
         <Trans>Removing helm branch <b>{repo.name}</b> has failed: {String(err)}</Trans>
-      )
+      );
     }
   }
 
   onRepoSelect = async ({ value: repo }: SelectOption<HelmRepo>) => {
     const isAdded = this.helmAddedRepos.has(repo.name);
     if (isAdded) {
-      Notifications.ok(<Trans>Helm branch <b>{repo.name}</b> already in use</Trans>)
+      Notifications.ok(<Trans>Helm branch <b>{repo.name}</b> already in use</Trans>);
       return;
     }
     this.helmLoading = true;
     await this.addRepo(repo);
     this.helmLoading = false;
-  }
+  };
 
   formatHelmOptionLabel = ({ value: repo }: SelectOption<HelmRepo>) => {
     const isAdded = this.helmAddedRepos.has(repo.name);
@@ -98,8 +98,8 @@ export class Preferences extends React.Component {
         <span>{repo.name}</span>
         {isAdded && <Icon small material="check" className="box right"/>}
       </div>
-    )
-  }
+    );
+  };
 
   render() {
     const { preferences } = userStore;
@@ -152,7 +152,7 @@ export class Preferences extends React.Component {
                   {repo.url}
                 </Tooltip>
               </Badge>
-            )
+            );
           })}
         </div>
 
@@ -185,7 +185,7 @@ export class Preferences extends React.Component {
                   <Hint/>
                 </small>
               </div>
-            )
+            );
           })}
         </div>
       </PageLayout>

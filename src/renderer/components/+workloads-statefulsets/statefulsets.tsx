@@ -59,6 +59,6 @@ export class StatefulSets extends React.Component<Props> {
           statefulSet.getAge(),
         ]}
       />
-    )
+    );
   }
 }

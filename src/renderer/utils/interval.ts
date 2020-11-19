@@ -26,7 +26,7 @@ export function interval(timeSec = 1, callback: IntervalCallback, autoRun = fals
     get isRunning() {
       return isRunning;
     }
-  }
+  };
   if (autoRun) intervalManager.start();
   return intervalManager;
 }

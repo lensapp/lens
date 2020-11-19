@@ -24,6 +24,6 @@ export class TableRow extends React.Component<TableRowProps> {
       <div className={classNames} {...rowProps}>
         {children}
       </div>
-    )
+    );
   }
 }

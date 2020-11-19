@@ -1,6 +1,6 @@
 // Register custom protocols
 
-import { protocol } from "electron"
+import { protocol } from "electron";
 import path from "path";
 
 export function registerFileProtocol(name: string, basePath: string) {
@@ -8,5 +8,5 @@ export function registerFileProtocol(name: string, basePath: string) {
     const filePath = request.url.replace(name + "://", "");
     const absPath = path.resolve(basePath, filePath);
     callback({ path: absPath });
-  })
+  });
 }

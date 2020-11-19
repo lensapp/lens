@@ -1,6 +1,6 @@
-import "./dock-tab.scss"
+import "./dock-tab.scss";
 
-import React from "react"
+import React from "react";
 import { observer } from "mobx-react";
 import { t } from "@lingui/macro";
 import { autobind, cssNames, prevDefault } from "../../utils";
@@ -39,13 +39,13 @@ export class DockTab extends React.Component<DockTabProps> {
           />
         )}
       </div>
-    )
+    );
     return (
       <Tab
         {...tabProps}
         className={cssNames("DockTab", className, { pinned })}
         label={label}
       />
-    )
+    );
   }
 }

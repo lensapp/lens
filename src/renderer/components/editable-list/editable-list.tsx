@@ -1,4 +1,4 @@
-import "./editable-list.scss"
+import "./editable-list.scss";
 
 import React from "react";
 import { Icon } from "../icon";
@@ -22,7 +22,7 @@ export interface Props<T> {
 const defaultProps: Partial<Props<any>> = {
   placeholder: _i18n._("Add new item..."),
   renderItem: (item: any, index: number) => <React.Fragment key={index}>{item}</React.Fragment>
-}
+};
 
 @observer
 export class EditableList<T> extends React.Component<Props<T>> {
@@ -31,11 +31,11 @@ export class EditableList<T> extends React.Component<Props<T>> {
 
   @autobind()
   onSubmit(val: string) {
-    const { add } = this.props
+    const { add } = this.props;
 
     if (val) {
-      add(val)
-      this.currentNewItem = ""
+      add(val);
+      this.currentNewItem = "";
     }
   }
 
@@ -66,6 +66,6 @@ export class EditableList<T> extends React.Component<Props<T>> {
           }
         </div>
       </div>
-    )
+    );
   }
 }

@@ -35,12 +35,12 @@ export class JobDetails extends React.Component<Props> {
   render() {
     const { object: job } = this.props;
     if (!job) return null;
-    const selectors = job.getSelectors()
-    const nodeSelector = job.getNodeSelectors()
-    const images = job.getImages()
-    const childPods = jobStore.getChildPods(job)
-    const ownerRefs = job.getOwnerRefs()
-    const condition = job.getCondition()
+    const selectors = job.getSelectors();
+    const nodeSelector = job.getNodeSelectors();
+    const images = job.getImages();
+    const childPods = jobStore.getChildPods(job);
+    const ownerRefs = job.getOwnerRefs();
+    const condition = job.getCondition();
     return (
       <div className="JobDetails">
         <KubeObjectMeta object={job}/>
@@ -70,7 +70,7 @@ export class JobDetails extends React.Component<Props> {
           {
             ownerRefs.map(ref => {
               const { name, kind } = ref;
-              const detailsUrl = getDetailsUrl(lookupApiLink(ref, job))
+              const detailsUrl = getDetailsUrl(lookupApiLink(ref, job));
               return (
                 <p key={name}>
                   {kind} <Link to={detailsUrl}>{name}</Link>
@@ -102,7 +102,7 @@ export class JobDetails extends React.Component<Props> {
         </DrawerItem>
         <PodDetailsList pods={childPods} owner={job}/>
       </div>
-    )
+    );
   }
 }
 
@@ -112,7 +112,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props: any) => <JobDetails {...props}/>
   }
-})
+});
 kubeObjectDetailRegistry.add({
   kind: "Job",
   apiVersions: ["batch/v1"],
@@ -120,4 +120,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props: any) => <KubeEventDetails {...props}/>
   }
-})
+});

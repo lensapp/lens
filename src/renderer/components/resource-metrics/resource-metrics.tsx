@@ -22,7 +22,7 @@ export type IResourceMetricsValue<T extends KubeObject = any, P = any> = {
   object: T;
   tabId: number;
   params?: P;
-}
+};
 
 export const ResourceMetricsContext = createContext<IResourceMetricsValue>(null);
 
@@ -68,7 +68,7 @@ export function ResourceMetrics({ object, loader, interval, tabs, children, clas
         </div>
       </>
     );
-  }
+  };
 
   return (
     <div className={cssNames("ResourceMetrics flex column", className)}>

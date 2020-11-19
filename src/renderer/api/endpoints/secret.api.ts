@@ -21,15 +21,15 @@ export interface ISecretRef {
 
 @autobind()
 export class Secret extends KubeObject {
-  static kind = "Secret"
-  static namespaced = true
-  static apiBase = "/api/v1/secrets"
+  static kind = "Secret";
+  static namespaced = true;
+  static apiBase = "/api/v1/secrets";
 
   type: SecretType;
   data: {
     [prop: string]: string;
     token?: string;
-  }
+  };
 
   constructor(data: KubeJsonApiData) {
     super(data);

@@ -5,7 +5,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class HPAStore extends KubeObjectStore<HorizontalPodAutoscaler> {
-  api = hpaApi
+  api = hpaApi;
 }
 
 export const hpaStore = new HPAStore();

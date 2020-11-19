@@ -1,4 +1,4 @@
-import "./pods.scss"
+import "./pods.scss";
 
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
@@ -64,7 +64,7 @@ export class Pods extends React.Component<Props> {
             }}
           />
         </Fragment>
-      )
+      );
     });
   }
 
@@ -113,13 +113,13 @@ export class Pods extends React.Component<Props> {
               <Link key={name} to={detailsLink} className="owner" onClick={stopPropagation}>
                 {kind}
               </Link>
-            )
+            );
           }),
           pod.getQosClass(),
           pod.getAge(),
           { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) }
         ]}
       />
-    )
+    );
   }
 }

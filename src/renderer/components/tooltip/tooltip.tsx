@@ -1,7 +1,7 @@
-import './tooltip.scss'
+import './tooltip.scss';
 
-import React from "react"
-import { createPortal } from "react-dom"
+import React from "react";
+import { createPortal } from "react-dom";
 import { observer } from "mobx-react";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { observable } from "mobx";
@@ -41,7 +41,7 @@ export interface TooltipContentFormatters {
 const defaultProps: Partial<TooltipProps> = {
   usePortal: true,
   offset: 10,
-}
+};
 
 @observer
 export class Tooltip extends React.Component<TooltipProps> {
@@ -52,25 +52,25 @@ export class Tooltip extends React.Component<TooltipProps> {
   @observable isVisible = !!this.props.visible;
 
   get targetElem(): HTMLElement {
-    return document.getElementById(this.props.targetId)
+    return document.getElementById(this.props.targetId);
   }
 
   get hoverTarget(): HTMLElement {
     if (this.props.tooltipOnParentHover) {
-      return this.targetElem.parentElement
+      return this.targetElem.parentElement;
     }
 
-    return this.targetElem
+    return this.targetElem;
   }
 
   componentDidMount() {
-    this.hoverTarget.addEventListener("mouseenter", this.onEnterTarget)
-    this.hoverTarget.addEventListener("mouseleave", this.onLeaveTarget)
+    this.hoverTarget.addEventListener("mouseenter", this.onEnterTarget);
+    this.hoverTarget.addEventListener("mouseleave", this.onLeaveTarget);
   }
 
   componentWillUnmount() {
-    this.hoverTarget.removeEventListener("mouseenter", this.onEnterTarget)
-    this.hoverTarget.removeEventListener("mouseleave", this.onLeaveTarget)
+    this.hoverTarget.removeEventListener("mouseenter", this.onEnterTarget);
+    this.hoverTarget.removeEventListener("mouseleave", this.onLeaveTarget);
   }
 
   @autobind()
@@ -103,7 +103,7 @@ export class Tooltip extends React.Component<TooltipProps> {
       positions = new Set([
         ...[preferredPositions].flat(),
         ...positions,
-      ])
+      ]);
     }
 
     // reset position first and get all possible client-rect area for tooltip element
@@ -115,7 +115,7 @@ export class Tooltip extends React.Component<TooltipProps> {
 
     // find proper position
     for (const pos of positions) {
-      const { left, top, right, bottom } = this.getPosition(pos, selfBounds, targetBounds)
+      const { left, top, right, bottom } = this.getPosition(pos, selfBounds, targetBounds);
       const fitsToWindow = left >= 0 && top >= 0 && right <= viewportWidth && bottom <= viewportHeight;
       if (fitsToWindow) {
         this.activePosition = pos;
@@ -126,15 +126,15 @@ export class Tooltip extends React.Component<TooltipProps> {
 
     // apply fallback position if nothing helped from above
     const fallbackPosition = Array.from(positions)[0];
-    const { left, top } = this.getPosition(fallbackPosition, selfBounds, targetBounds)
+    const { left, top } = this.getPosition(fallbackPosition, selfBounds, targetBounds);
     this.activePosition = fallbackPosition;
     this.setPosition({ left, top });
   }
 
   protected setPosition(pos: { left: number, top: number }) {
     const elemStyle = this.elem.style;
-    elemStyle.left = pos.left + "px"
-    elemStyle.top = pos.top + "px"
+    elemStyle.left = pos.left + "px";
+    elemStyle.top = pos.top + "px";
   }
 
   protected getPosition(position: TooltipPosition, tooltipBounds: DOMRect, targetBounds: DOMRect) {
@@ -202,7 +202,7 @@ export class Tooltip extends React.Component<TooltipProps> {
       <div className={className} style={style} ref={this.bindRef}>
         {children}
       </div>
-    )
+    );
     if (usePortal) {
       return createPortal(tooltip, document.body,);
     }

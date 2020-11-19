@@ -38,7 +38,7 @@ export const VolumeClaimDiskChart = observer(() => {
       borderColor: chartCapacityColor,
       data: capacity.map(([x, y]) => ({ x, y }))
     }
-  ]
+  ];
 
   return (
     <BarChart

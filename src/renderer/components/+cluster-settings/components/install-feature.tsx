@@ -19,21 +19,21 @@ export class InstallFeature extends React.Component<Props> {
   @observable message = "";
 
   componentDidMount() {
-    const feature = this.props.feature
-    const cluster = this.props.cluster
+    const feature = this.props.feature;
+    const cluster = this.props.cluster;
     const statusUpdate = interval(20, () => {
-      feature.updateStatus(cluster)
-    })
-    statusUpdate.start(true)
+      feature.updateStatus(cluster);
+    });
+    statusUpdate.start(true);
 
     disposeOnUnmount(this, () => {
-      statusUpdate.stop()
-    })
+      statusUpdate.stop();
+    });
 
     disposeOnUnmount(this,
       reaction(() => feature.status.installed, () => {
         this.loading = false;
-        this.message = ""
+        this.message = "";
       }, { equals: comparer.structural })
     );
   }
@@ -60,8 +60,8 @@ export class InstallFeature extends React.Component<Props> {
             accent
             disabled={disabled}
             onClick={this.runAction(async () => {
-              this.message = "Uninstalling feature ..."
-              feature.uninstall(cluster)
+              this.message = "Uninstalling feature ...";
+              feature.uninstall(cluster);
             })}
           >
             Uninstall
@@ -72,8 +72,8 @@ export class InstallFeature extends React.Component<Props> {
             primary
             disabled={disabled}
             onClick={this.runAction(async () =>{
-              this.message = "Installing feature ..."
-              feature.install(cluster)
+              this.message = "Installing feature ...";
+              feature.install(cluster);
             })}
           >
             Install

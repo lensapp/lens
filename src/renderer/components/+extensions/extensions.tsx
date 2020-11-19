@@ -15,7 +15,7 @@ import { extensionManager } from "../../../extensions/extension-manager";
 
 @observer
 export class Extensions extends React.Component {
-  @observable search = ""
+  @observable search = "";
 
   @computed get extensions() {
     const searchText = this.search.toLowerCase();
@@ -24,8 +24,8 @@ export class Extensions extends React.Component {
       return [
         name.toLowerCase().includes(searchText),
         description.toLowerCase().includes(searchText),
-      ].some(v => v)
-    })
+      ].some(v => v);
+    });
   }
 
   get extensionsPath() {
@@ -55,7 +55,7 @@ export class Extensions extends React.Component {
           Check out documentation to <a href="https://docs.k8slens.dev/" target="_blank">learn more</a>
         </div>
       </div>
-    )
+    );
   }
 
   renderExtensions() {
@@ -66,7 +66,7 @@ export class Extensions extends React.Component {
           {search && <Trans>No search results found</Trans>}
           {!search && <p><Trans>There are no extensions in</Trans> <code>{extensionsPath}</code></p>}
         </div>
-      )
+      );
     }
     return extensions.map(ext => {
       const { manifestPath: extId, isEnabled, manifest } = ext;
@@ -88,8 +88,8 @@ export class Extensions extends React.Component {
             <Button accent onClick={() => ext.isEnabled = false}>Disable</Button>
           )}
         </div>
-      )
-    })
+      );
+    });
   }
 
   render() {

@@ -26,7 +26,7 @@ export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
         <DrawerTitle className="flex gaps align-center">
           <span><Trans>Events</Trans></span>
         </DrawerTitle>
-      )
+      );
     }
     return (
       <div>
@@ -35,7 +35,7 @@ export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
         </DrawerTitle>
         <div className="KubeEventDetails">
           {events.map(evt => {
-            const { message, count, lastTimestamp, involvedObject } = evt
+            const { message, count, lastTimestamp, involvedObject } = evt;
             return (
               <div className="event" key={evt.getId()}>
                 <div className={cssNames("title", { warning: evt.isWarning() })}>
@@ -54,10 +54,10 @@ export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
                   {lastTimestamp}
                 </DrawerItem>
               </div>
-            )
+            );
           })}
         </div>
       </div>
-    )
+    );
   }
 }

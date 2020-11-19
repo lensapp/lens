@@ -19,7 +19,7 @@ interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 
 function convertSpecValue(value: any): any {
   if (Array.isArray(value)) {
-    return value.map(convertSpecValue)
+    return value.map(convertSpecValue);
   }
 
   if (typeof value === "object") {
@@ -31,10 +31,10 @@ function convertSpecValue(value: any): any {
         className="box grow"
         value={JSON.stringify(value, null, 2)}
       />
-    )
+    );
   }
 
-  return value
+  return value;
 }
 
 @observer
@@ -48,13 +48,13 @@ export class CrdResourceDetails extends React.Component<Props> {
       <DrawerItem key={name} name={name} renderBoolean>
         {convertSpecValue(jsonPath.value(crd, jp.slice(1)))}
       </DrawerItem>
-    ))
+    ));
   }
 
   renderStatus(crd: CustomResourceDefinition, columns: AdditionalPrinterColumnsV1[]) {
     const showStatus = !columns.find(column => column.name == "Status") && crd.status?.conditions;
     if (!showStatus) {
-      return null
+      return null;
     }
 
     const conditions = crd.status.conditions
@@ -66,13 +66,13 @@ export class CrdResourceDetails extends React.Component<Props> {
           className={cssNames({ disabled: status === "False" }, kind.toLowerCase())}
           tooltip={message}
         />
-      ))
+      ));
 
     return (
       <DrawerItem name={<Trans>Status</Trans>} className="status" labelsOnly>
         {conditions}
       </DrawerItem>
-    )
+    );
   }
 
   render() {
@@ -90,6 +90,6 @@ export class CrdResourceDetails extends React.Component<Props> {
         {this.renderAdditionalColumns(object, extraColumns)}
         {this.renderStatus(object, extraColumns)}
       </div>
-    )
+    );
   }
 }

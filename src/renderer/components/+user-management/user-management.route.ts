@@ -1,23 +1,23 @@
 import type { RouteProps } from "react-router";
 import { buildURL, IURLParams } from "../../../common/utils/buildUrl";
-import { UserManagement } from "./user-management"
+import { UserManagement } from "./user-management";
 
 export const usersManagementRoute: RouteProps = {
   get path() {
-    return UserManagement.tabRoutes.map(({ routePath }) => routePath).flat()
+    return UserManagement.tabRoutes.map(({ routePath }) => routePath).flat();
   }
-}
+};
 
 // Routes
 export const serviceAccountsRoute: RouteProps = {
   path: "/service-accounts"
-}
+};
 export const rolesRoute: RouteProps = {
   path: "/roles"
-}
+};
 export const roleBindingsRoute: RouteProps = {
   path: "/role-bindings"
-}
+};
 
 // Route params
 export interface IServiceAccountsRouteParams {
@@ -31,6 +31,6 @@ export interface IRolesRouteParams {
 
 // URL-builders
 export const usersManagementURL = (params?: IURLParams) => serviceAccountsURL(params);
-export const serviceAccountsURL = buildURL<IServiceAccountsRouteParams>(serviceAccountsRoute.path)
-export const roleBindingsURL = buildURL<IRoleBindingsRouteParams>(roleBindingsRoute.path)
-export const rolesURL = buildURL<IRoleBindingsRouteParams>(rolesRoute.path)
+export const serviceAccountsURL = buildURL<IServiceAccountsRouteParams>(serviceAccountsRoute.path);
+export const roleBindingsURL = buildURL<IRoleBindingsRouteParams>(roleBindingsRoute.path);
+export const rolesURL = buildURL<IRoleBindingsRouteParams>(rolesRoute.path);

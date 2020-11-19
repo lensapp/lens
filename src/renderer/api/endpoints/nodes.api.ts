@@ -5,7 +5,7 @@ import { KubeApi } from "../kube-api";
 
 export class NodesApi extends KubeApi<Node> {
   getMetrics(): Promise<INodeMetrics> {
-    const opts = { category: "nodes"}
+    const opts = { category: "nodes"};
 
     return metricsApi.getMetrics({
       memoryUsage: opts,
@@ -30,9 +30,9 @@ export interface INodeMetrics<T = IMetrics> {
 
 @autobind()
 export class Node extends KubeObject {
-  static kind = "Node"
-  static namespaced = false
-  static apiBase = "/api/v1/nodes"
+  static kind = "Node";
+  static namespaced = false;
+  static apiBase = "/api/v1/nodes";
 
   spec: {
     podCIDR: string;
@@ -43,7 +43,7 @@ export class Node extends KubeObject {
       effect: string;
     }[];
     unschedulable?: boolean;
-  }
+  };
   status: {
     capacity: {
       cpu: string;
@@ -83,15 +83,15 @@ export class Node extends KubeObject {
       names: string[];
       sizeBytes: number;
     }[];
-  }
+  };
 
   getNodeConditionText() {
-    const { conditions } = this.status
-    if (!conditions) return ""
+    const { conditions } = this.status;
+    if (!conditions) return "";
     return conditions.reduce((types, current) => {
-      if (current.status !== "True") return ""
-      return types += ` ${current.type}`
-    }, "")
+      if (current.status !== "True") return "";
+      return types += ` ${current.type}`;
+    }, "");
   }
 
   getTaints() {
@@ -101,23 +101,23 @@ export class Node extends KubeObject {
   getRoleLabels() {
     const roleLabels = Object.keys(this.metadata.labels).filter(key =>
       key.includes("node-role.kubernetes.io")
-    ).map(key => key.match(/([^/]+$)/)[0]) // all after last slash
+    ).map(key => key.match(/([^/]+$)/)[0]); // all after last slash
 
     if (this.metadata.labels["kubernetes.io/role"] != undefined) {
-      roleLabels.push(this.metadata.labels["kubernetes.io/role"])
+      roleLabels.push(this.metadata.labels["kubernetes.io/role"]);
     }
 
-    return roleLabels.join(", ")
+    return roleLabels.join(", ");
   }
 
   getCpuCapacity() {
-    if (!this.status.capacity || !this.status.capacity.cpu) return 0
-    return cpuUnitsToNumber(this.status.capacity.cpu)
+    if (!this.status.capacity || !this.status.capacity.cpu) return 0;
+    return cpuUnitsToNumber(this.status.capacity.cpu);
   }
 
   getMemoryCapacity() {
-    if (!this.status.capacity || !this.status.capacity.memory) return 0
-    return unitsToBytes(this.status.capacity.memory)
+    if (!this.status.capacity || !this.status.capacity.memory) return 0;
+    return unitsToBytes(this.status.capacity.memory);
   }
 
   getConditions() {
@@ -144,16 +144,16 @@ export class Node extends KubeObject {
   }
 
   getOperatingSystem(): string {
-    const label = this.getLabels().find(label => label.startsWith("kubernetes.io/os="))
+    const label = this.getLabels().find(label => label.startsWith("kubernetes.io/os="));
     if (label) {
-      return label.split("=", 2)[1]
+      return label.split("=", 2)[1];
     }
 
-    return "linux"
+    return "linux";
   }
 
   isUnschedulable() {
-    return this.spec.unschedulable
+    return this.spec.unschedulable;
   }
 }
 

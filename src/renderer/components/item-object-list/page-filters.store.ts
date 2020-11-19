@@ -85,7 +85,7 @@ export class PageFiltersStore {
   getByType(type: FilterType, value?: any): Filter {
     return this.filters.find(filter => filter.type === type && (
       arguments.length > 1 ? filter.value === value : true
-    ))
+    ));
   }
 
   getValues(type: FilterType) {

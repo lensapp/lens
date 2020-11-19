@@ -24,7 +24,7 @@ export const ClusterPieCharts = observer(() => {
         <p><Trans>Specified limits are higher than node capacity!</Trans></p>
       </div>
     );
-  }
+  };
 
   const renderCharts = () => {
     const data = getMetricLastPoints(clusterStore.metrics);
@@ -168,7 +168,7 @@ export const ClusterPieCharts = observer(() => {
         </div>
       </div>
     );
-  }
+  };
 
   const renderContent = () => {
     const { masterNodes, workerNodes } = nodesStore;
@@ -194,11 +194,11 @@ export const ClusterPieCharts = observer(() => {
       return <ClusterNoMetrics className="empty"/>;
     }
     return renderCharts();
-  }
+  };
 
   return (
     <div className="ClusterPieCharts flex">
       {renderContent()}
     </div>
   );
-})
+});

@@ -1,6 +1,6 @@
-import { LensExtension } from "../lens-extension"
+import { LensExtension } from "../lens-extension";
 
-let ext: LensExtension = null
+let ext: LensExtension = null;
 
 describe("lens extension", () => {
   beforeEach(async () => {
@@ -12,12 +12,12 @@ describe("lens extension", () => {
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,
       isEnabled: true
-    })
-  })
+    });
+  });
 
   describe("name", () => {
     it("returns name", () => {
-      expect(ext.name).toBe("foo-bar")
-    })
-  })
-})
+      expect(ext.name).toBe("foo-bar");
+    });
+  });
+});

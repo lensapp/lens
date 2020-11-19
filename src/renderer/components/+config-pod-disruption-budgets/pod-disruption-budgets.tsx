@@ -1,4 +1,4 @@
-import "./pod-disruption-budgets.scss"
+import "./pod-disruption-budgets.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
@@ -65,7 +65,7 @@ export class PodDisruptionBudgets extends React.Component<Props> {
             pdb.getCurrentHealthy(),
             pdb.getDesiredHealthy(),
             pdb.getAge(),
-          ]
+          ];
         }}
       />
     );
