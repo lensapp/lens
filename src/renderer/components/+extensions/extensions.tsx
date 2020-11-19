@@ -100,6 +100,7 @@ export class Extensions extends React.Component {
               validators={InputValidators.isUrl}
               value={this.downloadUrl} // TODO: in addition we could support npm-package-name (if non-url value)?
               onChange={v => this.downloadUrl = v}
+              onSubmit={this.installFromUrl}
               ref={e => this.input = e}
             />
             <Icon
