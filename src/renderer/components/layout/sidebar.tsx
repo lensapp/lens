@@ -214,16 +214,16 @@ export class Sidebar extends React.Component<Props> {
             </SidebarNavItem>
             {clusterPageMenuRegistry.getRootItems().map((menuItem) => {
               const registeredPage = clusterPageRegistry.getByPageMenuTarget(menuItem.target);
-              let pageUrl: string
-              let isActive = false
+              let pageUrl: string;
+              let isActive = false;
               if (registeredPage) {
                 const { extensionId, id: pageId } = registeredPage;
                 pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
                 isActive = pageUrl === navigation.location.pathname;
               }
-              const tabRoutes = this.getTabLayoutRoutes(menuItem)
+              const tabRoutes = this.getTabLayoutRoutes(menuItem);
               if (!registeredPage && tabRoutes.length == 0) {
-                return
+                return;
               }
               return (
                 <SidebarNavItem

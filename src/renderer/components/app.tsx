@@ -97,18 +97,18 @@ export class App extends React.Component {
 
   renderExtensionTabLayoutRoutes() {
     return clusterPageMenuRegistry.getRootItems().map((menu, index) => {
-      const tabRoutes = this.getTabLayoutRoutes(menu)
+      const tabRoutes = this.getTabLayoutRoutes(menu);
       if (tabRoutes.length > 0) {
-        const pageComponent = () => <TabLayout tabs={tabRoutes} />
-        return <Route key={"extension-tab-layout-route-" + index} component={pageComponent}/>
+        const pageComponent = () => <TabLayout tabs={tabRoutes} />;
+        return <Route key={"extension-tab-layout-route-" + index} component={pageComponent}/>;
       } else {
-        const page = clusterPageRegistry.getByPageMenuTarget(menu.target)
+        const page = clusterPageRegistry.getByPageMenuTarget(menu.target);
         if (page) {
-          const pageComponent = () => <page.components.Page />
-          return <Route key={"extension-tab-layout-route-" + index} path={page.routePath} exact={page.exact} component={pageComponent}/>
+          const pageComponent = () => <page.components.Page />;
+          return <Route key={"extension-tab-layout-route-" + index} path={page.routePath} exact={page.exact} component={pageComponent}/>;
         }
       }
-    })
+    });
   }
 
   renderExtensionRoutes() {

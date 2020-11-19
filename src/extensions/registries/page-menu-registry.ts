@@ -49,21 +49,21 @@ export class ClusterPageMenuRegistry extends BaseRegistry<ClusterPageMenuRegistr
         extensionId: ext.name,
         ...(menuItem.target || {}),
       };
-      return menuItem
-    })
+      return menuItem;
+    });
     return super.add(normalizedItems);
   }
 
   getRootItems() {
-    return this.getItems().filter((item) => !item.parentId)
+    return this.getItems().filter((item) => !item.parentId);
   }
 
   getSubItems(parent: ClusterPageMenuRegistration) {
-    return this.getItems().filter((item) => item.parentId === parent.id && item.target.extensionId === parent.target.extensionId)
+    return this.getItems().filter((item) => item.parentId === parent.id && item.target.extensionId === parent.target.extensionId);
   }
 
   getByPage(page: RegisteredPage) {
-    return this.getItems().find((item) => item.target?.pageId == page.id && item.target?.extensionId === page.extensionId)
+    return this.getItems().find((item) => item.target?.pageId == page.id && item.target?.extensionId === page.extensionId);
   }
 }
 
