@@ -46,10 +46,10 @@ class MetricsRoute extends LensApi {
         cluster.contextHandler.getPrometheusPath(),
         cluster.contextHandler.getPrometheusProvider()
       ])
-      prometheusMetadata["provider"] = prometheusProvider?.id
-      prometheusMetadata["autoDetected"] = !cluster.preferences.prometheusProvider?.type
+      prometheusMetadata.provider = prometheusProvider?.id
+      prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type
       if (!prometheusPath) {
-        prometheusMetadata["success"] = false
+        prometheusMetadata.success = false
         this.respondJson(response, {})
         return
       }
@@ -68,9 +68,9 @@ class MetricsRoute extends LensApi {
         const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]))
         this.respondJson(response, data)
       }
-      prometheusMetadata["success"] = true
+      prometheusMetadata.success = true
     } catch {
-      prometheusMetadata["success"] = false
+      prometheusMetadata.success = false
       this.respondJson(response, {})
     } finally {
       cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata
