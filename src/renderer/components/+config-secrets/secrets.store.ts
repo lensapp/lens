@@ -5,7 +5,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class SecretsStore extends KubeObjectStore<Secret> {
-  api = secretsApi
+  api = secretsApi;
 }
 
 export const secretsStore = new SecretsStore();

@@ -3,7 +3,7 @@ import { createHash } from "crypto";
 import { ClusterMetadataKey } from "../cluster";
 
 export class ClusterIdDetector extends BaseClusterDetector {
-  key = ClusterMetadataKey.CLUSTER_ID
+  key = ClusterMetadataKey.CLUSTER_ID;
 
   public async detect() {
     let id: string;

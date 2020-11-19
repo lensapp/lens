@@ -15,7 +15,7 @@ import { extensionManager } from "../../../extensions/extension-manager";
 
 @observer
 export class Extensions extends React.Component {
-  @observable search = ""
+  @observable search = "";
 
   @computed get extensions() {
     const searchText = this.search.toLowerCase();

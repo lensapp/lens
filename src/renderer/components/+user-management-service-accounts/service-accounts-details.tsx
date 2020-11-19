@@ -42,7 +42,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
       return secretsStore.load({ name, namespace }).catch(_err => { return this.generateDummySecretObject(name); });
     });
     this.imagePullSecrets = await Promise.all(imagePullSecrets);
-  })
+  });
 
   renderSecrets() {
     const { secrets } = this;

@@ -24,7 +24,7 @@ export class FileInput extends React.Component<Props> {
 
   selectFiles = () => {
     this.input.click(); // opens system dialog for selecting files
-  }
+  };
 
   protected onChange = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = Array.from(evt.target.files);
@@ -49,7 +49,7 @@ export class FileInput extends React.Component<Props> {
       selectedFiles = await Promise.all(readingFiles);
     }
     this.props.onSelectFiles(...selectedFiles);
-  }
+  };
 
   render() {
     const { onSelectFiles, readAsText, ...props } = this.props;

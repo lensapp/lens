@@ -31,11 +31,11 @@ export class AddRoleDialog extends React.Component<Props> {
 
   close = () => {
     AddRoleDialog.close();
-  }
+  };
 
   reset = () => {
     this.roleName = "";
-  }
+  };
 
   createRole = async () => {
     try {
@@ -46,7 +46,7 @@ export class AddRoleDialog extends React.Component<Props> {
     } catch (err) {
       Notifications.error(err.toString());
     }
-  }
+  };
 
   render() {
     const { ...dialogProps } = this.props;

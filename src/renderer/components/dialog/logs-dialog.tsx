@@ -24,7 +24,7 @@ export class LogsDialog extends React.Component<Props> {
     if (copyToClipboard(this.logsElem)) {
       Notifications.ok(_i18n._(t`Logs copied to clipboard.`));
     }
-  }
+  };
 
   render() {
     const { title, logs, ...dialogProps } = this.props;

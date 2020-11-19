@@ -72,8 +72,8 @@ export class KubeObject implements ItemObject {
     Object.assign(this, data);
   }
 
-  apiVersion: string
-  kind: string
+  apiVersion: string;
+  kind: string;
   metadata: IKubeObjectMetadata;
   status?: any; // todo: type-safety support
 

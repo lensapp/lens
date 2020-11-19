@@ -6,7 +6,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class CronJobStore extends KubeObjectStore<CronJob> {
-  api = cronJobApi
+  api = cronJobApi;
 
   getStatuses(cronJobs?: CronJob[]) {
     const status = { suspended: 0, scheduled: 0 };

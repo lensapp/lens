@@ -46,11 +46,11 @@ export class KubeConfigDialog extends React.Component<Props> {
 
   close = () => {
     KubeConfigDialog.close();
-  }
+  };
 
   onOpen = () => {
     this.loadConfig();
-  }
+  };
 
   async loadConfig() {
     const config = await this.data.loader().catch(err => {
@@ -64,11 +64,11 @@ export class KubeConfigDialog extends React.Component<Props> {
     if (this.config && copyToClipboard(this.configTextArea)) {
       Notifications.ok(<Trans>Config copied to clipboard</Trans>);
     }
-  }
+  };
 
   download = () => {
     downloadFile("config", this.config, "text/yaml");
-  }
+  };
 
   render() {
     const { isOpen, data = {} } = KubeConfigDialog;

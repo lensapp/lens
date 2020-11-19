@@ -18,7 +18,7 @@ interface Props {
 
 @observer
 export class OverviewWorkloadStatus extends React.Component<Props> {
-  @observable elem: HTMLElement
+  @observable elem: HTMLElement;
 
   componentDidMount() {
     this.elem = findDOMNode(this) as HTMLElement;

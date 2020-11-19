@@ -45,7 +45,7 @@ export class AddQuotaDialog extends React.Component<Props> {
     "count/deployments.extensions": "",
   };
 
-  public defaultNamespace = "default"
+  public defaultNamespace = "default";
 
   @observable quotaName = "";
   @observable quotaSelectValue = "";
@@ -83,11 +83,11 @@ export class AddQuotaDialog extends React.Component<Props> {
     if (!this.quotaSelectValue) return;
     this.quotas[this.quotaSelectValue] = this.quotaInputValue;
     this.quotaInputValue = "";
-  }
+  };
 
   close = () => {
     AddQuotaDialog.close();
-  }
+  };
 
   reset = () => {
     this.quotaName = "";
@@ -95,7 +95,7 @@ export class AddQuotaDialog extends React.Component<Props> {
     this.quotaInputValue = "";
     this.namespace = this.defaultNamespace;
     this.quotas = AddQuotaDialog.defaultQuotas;
-  }
+  };
 
   addQuota = async () => {
     try {
@@ -113,7 +113,7 @@ export class AddQuotaDialog extends React.Component<Props> {
     } catch (err) {
       Notifications.error(err);
     }
-  }
+  };
 
   onInputQuota = (evt: React.KeyboardEvent) => {
     switch (evt.key) {
@@ -122,7 +122,7 @@ export class AddQuotaDialog extends React.Component<Props> {
       evt.preventDefault(); // don't submit form
       break;
     }
-  }
+  };
 
   render() {
     const { ...dialogProps } = this.props;

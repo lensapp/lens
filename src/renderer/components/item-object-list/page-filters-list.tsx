@@ -18,10 +18,10 @@ export class PageFiltersList extends React.Component<Props> {
     get filters() {
       return pageFilters.activeFilters;
     }
-  }
+  };
 
-  reset = () => pageFilters.reset()
-  remove = (filter: Filter) => pageFilters.removeFilter(filter)
+  reset = () => pageFilters.reset();
+  remove = (filter: Filter) => pageFilters.removeFilter(filter);
 
   renderContent() {
     const { filters } = this.props;

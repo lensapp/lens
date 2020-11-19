@@ -47,7 +47,7 @@ export class ConfigMapDetails extends React.Component<Props> {
     } finally {
       this.isSaving = false;
     }
-  }
+  };
 
   render() {
     const { object: configMap } = this.props;

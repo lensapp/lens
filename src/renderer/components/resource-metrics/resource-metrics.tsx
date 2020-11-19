@@ -22,7 +22,7 @@ export type IResourceMetricsValue<T extends KubeObject = any, P = any> = {
   object: T;
   tabId: number;
   params?: P;
-}
+};
 
 export const ResourceMetricsContext = createContext<IResourceMetricsValue>(null);
 

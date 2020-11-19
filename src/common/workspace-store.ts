@@ -27,12 +27,12 @@ export interface WorkspaceState {
 }
 
 export class Workspace implements WorkspaceModel, WorkspaceState {
-  @observable id: WorkspaceId
-  @observable name: string
-  @observable description?: string
-  @observable ownerRef?: string
-  @observable enabled: boolean
-  @observable lastActiveClusterId?: ClusterId
+  @observable id: WorkspaceId;
+  @observable name: string;
+  @observable description?: string;
+  @observable ownerRef?: string;
+  @observable enabled: boolean;
+  @observable lastActiveClusterId?: ClusterId;
 
   constructor(data: WorkspaceModel) {
     Object.assign(this, data);
@@ -76,7 +76,7 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
 }
 
 export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
-  static readonly defaultId: WorkspaceId = "default"
+  static readonly defaultId: WorkspaceId = "default";
 
   private constructor() {
     super({

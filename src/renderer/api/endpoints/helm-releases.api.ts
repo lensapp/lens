@@ -135,13 +135,13 @@ export class HelmRelease implements ItemObject {
     return new HelmRelease(data);
   }
 
-  appVersion: string
-  name: string
-  namespace: string
-  chart: string
-  status: string
-  updated: string
-  revision: string
+  appVersion: string;
+  name: string;
+  namespace: string;
+  chart: string;
+  status: string;
+  updated: string;
+  revision: string;
 
   getId() {
     return this.namespace + this.name;

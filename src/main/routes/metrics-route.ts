@@ -5,7 +5,7 @@ import _ from "lodash";
 
 export type IMetricsQuery = string | string[] | {
   [metricName: string]: string;
-}
+};
 
 // This is used for backoff retry tracking.
 const MAX_ATTEMPTS = 5;

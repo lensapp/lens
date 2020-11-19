@@ -3,8 +3,8 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
 export class ClusterApi extends KubeApi<Cluster> {
-  static kind = "Cluster"
-  static namespaced = true
+  static kind = "Cluster";
+  static namespaced = true;
 
   async getMetrics(nodeNames: string[], params?: IMetricsReqParams): Promise<IClusterMetrics> {
     const nodes = nodeNames.join("|");
@@ -52,7 +52,7 @@ export interface IClusterMetrics<T = IMetrics> {
 
 export class Cluster extends KubeObject {
   static kind = "Cluster";
-  static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters"
+  static apiBase = "/apis/cluster.k8s.io/v1alpha1/clusters";
 
   spec: {
     clusterNetwork?: {
@@ -69,7 +69,7 @@ export class Cluster extends KubeObject {
         profile: string;
       };
     };
-  }
+  };
   status?: {
     apiEndpoints: {
       host: string;
@@ -84,7 +84,7 @@ export class Cluster extends KubeObject {
     };
     errorMessage?: string;
     errorReason?: string;
-  }
+  };
 
   getStatus() {
     if (this.metadata.deletionTimestamp) return ClusterStatus.REMOVING;

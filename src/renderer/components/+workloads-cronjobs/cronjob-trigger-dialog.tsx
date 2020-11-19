@@ -39,18 +39,18 @@ export class CronJobTriggerDialog extends Component<Props> {
 
   close = () => {
     CronJobTriggerDialog.close();
-  }
+  };
 
   onOpen = async () => {
     const { cronjob } = this;
     this.jobName = cronjob ? cronjob.getName() + "-manual-" + Math.random().toString(36).slice(2, 7) : "";
     this.jobName = this.jobName.slice(0, 63);
     this.ready = true;
-  }
+  };
 
   onClose = () => {
     this.ready = false;
-  }
+  };
 
   trigger = async () => {
     const { cronjob } = this;
@@ -72,7 +72,7 @@ export class CronJobTriggerDialog extends Component<Props> {
     } catch (err) {
       Notifications.error(err);
     }
-  }
+  };
 
   renderContents() {
     return (

@@ -11,7 +11,7 @@ import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 import { exitApp } from "./exit-app";
 
-export type MenuTopId = "mac" | "file" | "edit" | "view" | "help"
+export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
 
 export function initMenu(windowManager: WindowManager) {
   return autorun(() => buildMenu(windowManager), {

@@ -13,11 +13,11 @@ import { appEventBus } from "../common/event-bus";
 import { userStore } from "../common/user-store";
 
 export class ShellSession extends EventEmitter {
-  static shellEnvs: Map<string, any> = new Map()
+  static shellEnvs: Map<string, any> = new Map();
 
-  protected websocket: WebSocket
-  protected shellProcess: pty.IPty
-  protected kubeconfigPath: string
+  protected websocket: WebSocket;
+  protected shellProcess: pty.IPty;
+  protected kubeconfigPath: string;
   protected nodeShellPod: string;
   protected kubectl: Kubectl;
   protected kubectlBinDir: string;

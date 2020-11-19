@@ -21,20 +21,20 @@ export interface ISelfSubjectReviewRule {
 }
 
 export class SelfSubjectRulesReview extends KubeObject {
-  static kind = "SelfSubjectRulesReview"
-  static namespaced = false
-  static apiBase = "/apis/authorization.k8s.io/v1/selfsubjectrulesreviews"
+  static kind = "SelfSubjectRulesReview";
+  static namespaced = false;
+  static apiBase = "/apis/authorization.k8s.io/v1/selfsubjectrulesreviews";
 
   spec: {
     // todo: add more types from api docs
     namespace?: string;
-  }
+  };
 
   status: {
     resourceRules: ISelfSubjectReviewRule[];
     nonResourceRules: ISelfSubjectReviewRule[];
     incomplete: boolean;
-  }
+  };
 
   getResourceRules() {
     const rules = this.status && this.status.resourceRules || [];

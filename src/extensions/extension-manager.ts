@@ -16,19 +16,19 @@ export interface InstalledExtension {
 
 type Dependencies = {
   [name: string]: string;
-}
+};
 
 type PackageJson = {
   dependencies: Dependencies;
-}
+};
 
 export class ExtensionManager {
 
-  protected bundledFolderPath: string
+  protected bundledFolderPath: string;
 
   protected packagesJson: PackageJson = {
     dependencies: {}
-  }
+  };
 
   get extensionPackagesRoot() {
     return extensionPackagesRoot();

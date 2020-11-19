@@ -72,7 +72,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
 
   close = () => {
     AddRoleBindingDialog.close();
-  }
+  };
 
   async loadData() {
     const stores = [
@@ -96,13 +96,13 @@ export class AddRoleBindingDialog extends React.Component<Props> {
         this.bindContext = role.getNs() || "";
       }
     }
-  }
+  };
 
   reset = () => {
     this.selectedRoleId = "";
     this.bindContext = "";
     this.selectedAccounts.clear();
-  }
+  };
 
   onBindContextChange = (namespace: string) => {
     this.bindContext = namespace;
@@ -110,7 +110,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
     if (this.bindContext && this.bindContext !== roleContext) {
       this.selectedRoleId = ""; // reset previously selected role for specific context
     }
-  }
+  };
 
   createBindings = async () => {
     const { selectedRole, bindContext: namespace, selectedBindings, bindingName, useRoleForBindingName } = this;

@@ -12,11 +12,11 @@ import { ContextHandler } from "./context-handler";
 import logger from "./logger";
 
 export class LensProxy {
-  protected origin: string
-  protected proxyServer: http.Server
-  protected router: Router
-  protected closed = false
-  protected retryCounters = new Map<string, number>()
+  protected origin: string;
+  protected proxyServer: http.Server;
+  protected router: Router;
+  protected closed = false;
+  protected retryCounters = new Map<string, number>();
 
   static create(port: number, clusterManager: ClusterManager) {
     return new LensProxy(port, clusterManager).listen();

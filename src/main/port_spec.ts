@@ -10,15 +10,15 @@ jest.mock("net", () => {
         listen = jest.fn(() => {
           this.emit('listening');
           return this;
-        })
+        });
         address = () => {
           newPort = Math.round(Math.random() * 10000);
           return {
             port: newPort
           };
-        }
-        unref = jest.fn()
-        close = jest.fn(cb => cb())
+        };
+        unref = jest.fn();
+        close = jest.fn(cb => cb());
       };
     },
   };

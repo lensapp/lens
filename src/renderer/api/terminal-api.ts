@@ -28,7 +28,7 @@ export type TerminalApiQuery = Record<string, string> & {
   id: string;
   node?: string;
   type?: string | "node";
-}
+};
 
 export class TerminalApi extends WebSocketApi {
   protected size: { Width: number; Height: number };

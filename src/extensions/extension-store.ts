@@ -3,7 +3,7 @@ import * as path from "path";
 import { LensExtension } from "./lens-extension";
 
 export abstract class ExtensionStore<T> extends BaseStore<T> {
-  protected extension: LensExtension
+  protected extension: LensExtension;
 
   async loadExtension(extension: LensExtension) {
     this.extension = extension;

@@ -89,7 +89,7 @@ export class Preferences extends React.Component {
     this.helmLoading = true;
     await this.addRepo(repo);
     this.helmLoading = false;
-  }
+  };
 
   formatHelmOptionLabel = ({ value: repo }: SelectOption<HelmRepo>) => {
     const isAdded = this.helmAddedRepos.has(repo.name);
@@ -99,7 +99,7 @@ export class Preferences extends React.Component {
         {isAdded && <Icon small material="check" className="box right"/>}
       </div>
     );
-  }
+  };
 
   render() {
     const { preferences } = userStore;

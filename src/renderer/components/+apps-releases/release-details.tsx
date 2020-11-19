@@ -94,13 +94,13 @@ export class ReleaseDetails extends Component<Props> {
       Notifications.error(err);
     }
     this.saving = false;
-  }
+  };
 
   upgradeVersion = () => {
     const { release, hideDetails } = this.props;
     createUpgradeChartTab(release);
     hideDetails();
-  }
+  };
 
   renderValues() {
     const { values, saving } = this;

@@ -51,7 +51,7 @@ export class PageLayout extends React.Component<PageLayoutProps> {
       evt.stopPropagation();
       this.back(evt);
     }
-  }
+  };
 
   render() {
     const {

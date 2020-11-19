@@ -18,7 +18,7 @@ export function extensionPackagesRoot() {
 export class ExtensionLoader {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
   protected instances = observable.map<LensExtensionId, LensExtension>();
-  protected readonly requestExtensionsChannel = "extensions:loaded"
+  protected readonly requestExtensionsChannel = "extensions:loaded";
 
   @observable isLoaded = false;
   whenLoaded = when(() => this.isLoaded);

@@ -2,7 +2,7 @@ export type KubeObjectStatus = {
   level: KubeObjectStatusLevel;
   text: string;
   timestamp?: string;
-}
+};
 
 export enum KubeObjectStatusLevel {
   INFO = 1,

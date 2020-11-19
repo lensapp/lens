@@ -171,9 +171,9 @@ export interface IPodContainerStatus {
 
 @autobind()
 export class Pod extends WorkloadKubeObject {
-  static kind = "Pod"
-  static namespaced = true
-  static apiBase = "/api/v1/pods"
+  static kind = "Pod";
+  static namespaced = true;
+  static apiBase = "/api/v1/pods";
 
   spec: {
     volumes?: {
@@ -215,7 +215,7 @@ export class Pod extends WorkloadKubeObject {
       tolerationSeconds: number;
     }[];
     affinity: IAffinity;
-  }
+  };
   status: {
     phase: string;
     conditions: {
@@ -231,7 +231,7 @@ export class Pod extends WorkloadKubeObject {
     containerStatuses?: IPodContainerStatus[];
     qosClass: string;
     reason?: string;
-  }
+  };
 
   getInitContainers() {
     return this.spec.initContainers || [];

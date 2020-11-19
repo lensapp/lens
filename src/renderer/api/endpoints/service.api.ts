@@ -31,9 +31,9 @@ export class ServicePort implements IServicePort {
 
 @autobind()
 export class Service extends KubeObject {
-  static kind = "Service"
-  static namespaced = true
-  static apiBase = "/api/v1/services"
+  static kind = "Service";
+  static namespaced = true;
+  static apiBase = "/api/v1/services";
 
   spec: {
     type: string;
@@ -44,7 +44,7 @@ export class Service extends KubeObject {
     selector: { [key: string]: string };
     ports: ServicePort[];
     externalIPs?: string[]; // https://kubernetes.io/docs/concepts/services-networking/service/#external-ips
-  }
+  };
 
   status: {
     loadBalancer?: {
@@ -53,7 +53,7 @@ export class Service extends KubeObject {
         hostname?: string;
       }[];
     };
-  }
+  };
 
   getClusterIp() {
     return this.spec.clusterIP;

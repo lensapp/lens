@@ -25,7 +25,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   resetOnNavigate = reaction(
     () => navigation.getPath(),
     () => this.setState({ error: null, errorInfo: null })
-  )
+  );
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ error, errorInfo });
@@ -33,7 +33,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
   back = () => {
     navigation.goBack();
-  }
+  };
 
   render() {
     const { error, errorInfo } = this.state;

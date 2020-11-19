@@ -46,7 +46,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
     this.revisions.replace(releases);
     this.revision = this.revisions[0];
     this.isLoading = false;
-  }
+  };
 
   rollback = async () => {
     const revisionNumber = this.revision.revision;
@@ -60,7 +60,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
 
   close = () => {
     ReleaseRollbackDialog.close();
-  }
+  };
 
   renderContent() {
     const { revision, revisions } = this;

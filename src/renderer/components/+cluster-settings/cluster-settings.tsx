@@ -45,7 +45,7 @@ export class ClusterSettings extends React.Component<Props> {
       await requestMain(clusterActivateHandler, this.cluster.id);
       await requestMain(clusterRefreshHandler, this.cluster.id);
     }
-  }
+  };
 
   render() {
     const cluster = this.cluster;

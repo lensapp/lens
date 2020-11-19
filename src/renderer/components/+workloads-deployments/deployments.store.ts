@@ -7,7 +7,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class DeploymentStore extends KubeObjectStore<Deployment> {
-  api = deploymentApi
+  api = deploymentApi;
   @observable metrics: IPodMetrics = null;
 
   protected sortItems(items: Deployment[]) {

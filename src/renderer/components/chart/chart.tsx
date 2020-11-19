@@ -51,11 +51,11 @@ const defaultProps: Partial<ChartProps> = {
 export class Chart extends React.Component<ChartProps> {
   static defaultProps = defaultProps as object;
 
-  private canvas = React.createRef<HTMLCanvasElement>()
-  private chart: ChartJS
+  private canvas = React.createRef<HTMLCanvasElement>();
+  private chart: ChartJS;
   // ChartJS adds _meta field to any data object passed to it.
   // We clone new data prop into currentChartData to compare props and prevProps
-  private currentChartData: ChartData
+  private currentChartData: ChartData;
 
   componentDidMount() {
     const { showChart } = this.props;

@@ -5,7 +5,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
-  api = serviceAccountsApi
+  api = serviceAccountsApi;
 
   protected async createItem(params: { name: string; namespace?: string }) {
     await super.createItem(params);

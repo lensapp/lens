@@ -58,11 +58,11 @@ export class HelmReleases extends Component<Props> {
         }
       }));
     }
-  }
+  };
 
   hideDetails = () => {
     this.showDetails(null);
-  }
+  };
 
   renderRemoveDialogMessage(selectedItems: HelmRelease[]) {
     const releaseNames = selectedItems.map(item => item.getName()).join(", ");

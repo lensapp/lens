@@ -62,7 +62,7 @@ export class UpgradeChart extends React.Component<Props> {
   onChange = (value: string, error?: string) => {
     upgradeChartStore.values.setData(this.tabId, value);
     this.error = error;
-  }
+  };
 
   upgrade = async () => {
     if (this.error) return;
@@ -79,13 +79,13 @@ export class UpgradeChart extends React.Component<Props> {
         <Trans>Release <b>{releaseName}</b> successfully upgraded to version <b>{version}</b></Trans>
       </p>
     );
-  }
+  };
 
   formatVersionLabel = ({ value }: SelectOption<IChartVersion>) => {
     const chartName = this.release.getChart();
     const { repo, version } = value;
     return `${repo}/${chartName}-${version}`;
-  }
+  };
 
   render() {
     const { tabId, release, value, error, onChange, upgrade, versions, version } = this;

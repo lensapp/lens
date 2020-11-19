@@ -37,7 +37,7 @@ export class Select extends React.Component<SelectProps> {
     autoConvertOptions: true,
     menuPortalTarget: document.body,
     menuPlacement: "auto",
-  }
+  };
 
   @computed get theme() {
     return this.props.themeName || themeStore.activeTheme.type;

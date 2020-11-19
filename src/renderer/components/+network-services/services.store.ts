@@ -5,7 +5,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class ServiceStore extends KubeObjectStore<Service> {
-  api = serviceApi
+  api = serviceApi;
 }
 
 export const serviceStore = new ServiceStore();

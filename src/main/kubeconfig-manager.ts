@@ -8,7 +8,7 @@ import { dumpConfigYaml, loadConfig } from "../common/kube-helpers";
 import logger from "./logger";
 
 export class KubeconfigManager {
-  protected configDir = app.getPath("temp")
+  protected configDir = app.getPath("temp");
   protected tempFile: string;
 
   private constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }

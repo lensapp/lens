@@ -48,9 +48,9 @@ export class DeploymentApi extends KubeApi<Deployment> {
 
 @autobind()
 export class Deployment extends WorkloadKubeObject {
-  static kind = "Deployment"
-  static namespaced = true
-  static apiBase = "/apis/apps/v1/deployments"
+  static kind = "Deployment";
+  static namespaced = true;
+  static apiBase = "/apis/apps/v1/deployments";
 
   spec: {
     replicas: number;
@@ -151,7 +151,7 @@ export class Deployment extends WorkloadKubeObject {
         maxSurge: number;
       };
     };
-  }
+  };
   status: {
     observedGeneration: number;
     replicas: number;
@@ -167,7 +167,7 @@ export class Deployment extends WorkloadKubeObject {
       reason: string;
       message: string;
     }[];
-  }
+  };
 
   getConditions(activeOnly = false) {
     const { conditions } = this.status;

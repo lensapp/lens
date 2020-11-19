@@ -33,7 +33,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
 
   close = () => {
     AddNamespaceDialog.close();
-  }
+  };
 
   addNamespace = async () => {
     const { namespace } = this;
@@ -45,7 +45,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
       Notifications.error(err);
       onError && onError(err);
     }
-  }
+  };
 
   render() {
     const { ...dialogProps } = this.props;

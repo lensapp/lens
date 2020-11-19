@@ -31,7 +31,7 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
   validators?: InputValidator | InputValidator[];
   onChange?(value: T, evt: React.ChangeEvent<InputElement>): void;
   onSubmit?(value: T): void;
-}
+};
 
 interface State {
   focused?: boolean;
@@ -59,7 +59,7 @@ export class Input extends React.Component<InputProps, State> {
     dirty: !!this.props.dirty,
     valid: true,
     errors: [],
-  }
+  };
 
   setValue(value: string) {
     if (value !== this.getValue()) {

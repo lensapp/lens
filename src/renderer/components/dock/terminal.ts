@@ -132,39 +132,39 @@ export class Terminal {
 
   focus = () => {
     this.xterm.focus();
-  }
+  };
 
   onApiData = (data: string) => {
     this.xterm.write(data);
-  }
+  };
 
   onData = (data: string) => {
     if (!this.api.isReady) return;
     this.api.sendCommand(data);
-  }
+  };
 
   onScroll = () => {
     this.scrollPos = this.viewport.scrollTop;
-  }
+  };
 
   onClear = () => {
     this.xterm.clear();
-  }
+  };
 
   onResize = () => {
     this.fitLazy();
     this.focus();
-  }
+  };
 
   onActivate = () => {
     this.fit();
     setTimeout(() => this.focus(), 250); // delay used to prevent focus on active tab
     this.viewport.scrollTop = this.scrollPos; // restore last scroll position
-  }
+  };
 
   onClickLink = (evt: MouseEvent, link: string) => {
     window.open(link, "_blank");
-  }
+  };
 
   keyHandler = (evt: KeyboardEvent): boolean => {
     const { code, ctrlKey, type } = evt;
@@ -190,7 +190,7 @@ export class Terminal {
     }
 
     return true;
-  }
+  };
 }
 
 Terminal.init();

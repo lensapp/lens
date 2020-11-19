@@ -6,7 +6,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class NodesStore extends KubeObjectStore<Node> {
-  api = nodesApi
+  api = nodesApi;
 
   @observable metrics: Partial<INodeMetrics> = {};
   @observable nodeMetrics: Partial<IClusterMetrics> = null;

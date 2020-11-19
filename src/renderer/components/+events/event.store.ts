@@ -10,8 +10,8 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class EventStore extends KubeObjectStore<KubeEvent> {
-  api = eventApi
-  limit = 1000
+  api = eventApi;
+  limit = 1000;
 
   protected bindWatchEventsUpdater() {
     return super.bindWatchEventsUpdater(5000);

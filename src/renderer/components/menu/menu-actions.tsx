@@ -27,7 +27,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
     get removeConfirmationMessage() {
       return _i18n._(t`Remove item?`);
     }
-  }
+  };
 
   public id = uniqueId("menu_actions_");
 

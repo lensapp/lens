@@ -50,14 +50,14 @@ export class ClusterStatus extends React.Component<Props> {
 
   activateCluster = async (force = false) => {
     await requestMain(clusterActivateHandler, this.props.clusterId, force);
-  }
+  };
 
   reconnect = async () => {
     this.authOutput = [];
     this.isReconnecting = true;
     await this.activateCluster(true);
     this.isReconnecting = false;
-  }
+  };
 
   renderContent() {
     const { authOutput, cluster, hasErrors } = this;

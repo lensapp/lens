@@ -4,7 +4,7 @@ export type KubeResource =
   "namespaces" | "nodes" | "events" | "resourcequotas" |
   "services" | "secrets" | "configmaps" | "ingresses" | "networkpolicies" | "persistentvolumes" | "storageclasses" |
   "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "jobs" | "cronjobs" |
-  "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets"
+  "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets";
 
 export interface KubeApiResource {
   resource: KubeResource; // valid resource name

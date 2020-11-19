@@ -7,7 +7,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
-  api = replicaSetApi
+  api = replicaSetApi;
   @observable metrics: IPodMetrics = null;
 
   async loadMetrics(replicaSet: ReplicaSet) {

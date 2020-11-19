@@ -4,11 +4,11 @@ import { Cluster } from "../cluster";
 export type ClusterDetectionResult = {
   value: string | number | boolean
   accuracy: number
-}
+};
 
 export class BaseClusterDetector {
-  cluster: Cluster
-  key: string
+  cluster: Cluster;
+  key: string;
 
   constructor(cluster: Cluster) {
     this.cluster = cluster;

@@ -62,7 +62,7 @@ export class EditResource extends React.Component<Props> {
   onChange = (draft: string, error?: string) => {
     this.error = error;
     this.saveDraft(draft);
-  }
+  };
 
   save = async () => {
     if (this.error) {
@@ -79,7 +79,7 @@ export class EditResource extends React.Component<Props> {
         <Trans>{resourceType} <b>{resourceName}</b> updated.</Trans>
       </p>
     );
-  }
+  };
 
   render() {
     const { tabId, resource, tabData, error, onChange, save } = this;
