@@ -15,10 +15,10 @@ export const apiKube = new KubeJsonApi({
 // Common handler for HTTP api errors
 export function onApiError(error: JsonApiErrorParsed, res: Response) {
   switch (res.status) {
-  case 403:
-    error.isUsedForNotification = true;
-    Notifications.error(error);
-    break;
+    case 403:
+      error.isUsedForNotification = true;
+      Notifications.error(error);
+      break;
   }
 }
 

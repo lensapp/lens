@@ -48,12 +48,12 @@ export class Icon extends React.PureComponent<IconProps> {
   @autobind()
   onKeyDown(evt: React.KeyboardEvent<any>) {
     switch (evt.nativeEvent.code) {
-    case "Space":
-    case "Enter":
-      const icon = findDOMNode(this) as HTMLElement;
-      setTimeout(() => icon.click());
-      evt.preventDefault();
-      break;
+      case "Space":
+      case "Enter":
+        const icon = findDOMNode(this) as HTMLElement;
+        setTimeout(() => icon.click());
+        evt.preventDefault();
+        break;
     }
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);
