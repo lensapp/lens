@@ -27,7 +27,8 @@ export enum ClusterMetadataKey {
   CLUSTER_ID = "id",
   DISTRIBUTION = "distribution",
   NODES_COUNT = "nodes",
-  LAST_SEEN = "lastSeen"
+  LAST_SEEN = "lastSeen",
+  PROMETHEUS = "prometheus"
 }
 
 export type ClusterRefreshOptions = {

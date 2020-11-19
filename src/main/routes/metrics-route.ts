@@ -1,6 +1,6 @@
 import { LensApiRequest } from "../router"
 import { LensApi } from "../lens-api"
-import { Cluster } from "../cluster"
+import { Cluster, ClusterMetadataKey } from "../cluster"
 import _ from "lodash"
 import { ClusterPrometheusMetadata } from "../../common/cluster-store"
 
@@ -73,7 +73,7 @@ class MetricsRoute extends LensApi {
       prometheusMetadata["success"] = false
       this.respondJson(response, {})
     } finally {
-      cluster.metadata["prometheus"] = prometheusMetadata
+      cluster.metadata[ClusterMetadataKey.PROMETHEUS] = prometheusMetadata
     }
   }
 }
