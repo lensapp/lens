@@ -22,7 +22,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
   protected state = observable.map<LensExtensionId, LensExtensionState>();
 
   get enabledExtensions(): string[] {
-    return Array.from(this.state.toJS().values()).filter(ext => ext.enabled).map(ext => ext.name )
+    return Array.from(this.state.toJS().values()).filter(ext => ext.enabled).map(ext => ext.name );
   }
 
   protected getState(extensionLoader: ExtensionLoader) {
