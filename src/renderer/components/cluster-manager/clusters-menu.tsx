@@ -31,7 +31,6 @@ interface Props {
 @observer
 export class ClustersMenu extends React.Component<Props> {
   showCluster = (clusterId: ClusterId) => {
-    workspaceStore.setLastActiveClusterId(clusterId);
     navigate(clusterViewURL({ params: { clusterId } }));
   }
 

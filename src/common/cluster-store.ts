@@ -1,4 +1,4 @@
-import type { WorkspaceId } from "./workspace-store";
+import { WorkspaceId, workspaceStore } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
@@ -138,7 +138,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   setActive(id: ClusterId) {
-    this.activeCluster = this.clusters.has(id) ? id : null;
+    const clusterId = this.clusters.has(id) ? id : null;
+    this.activeCluster = clusterId;
+    workspaceStore.setLastActiveClusterId(clusterId);
   }
 
   @action
