@@ -170,18 +170,22 @@ export class Cluster implements ClusterModel, ClusterState {
       await this.refreshAllowedResources()
       this.isAdmin = await this.isClusterAdmin()
       this.ready = true
-      this.kubeCtl = new Kubectl(this.version)
-      this.kubeCtl.ensureKubectl() // download kubectl in background, so it's not blocking dashboard
+      this.ensureKubectl()
     }
     this.activated = true
     return this.pushState();
   }
 
+  protected async ensureKubectl() {
+    this.kubeCtl = new Kubectl(this.version)
+    return this.kubeCtl.ensureKubectl() // download kubectl in background, so it's not blocking dashboard
+  }
+
   @action
   async reconnect() {
     logger.info(`[CLUSTER]: reconnect`, this.getMeta());
-    this.contextHandler.stopServer();
-    await this.contextHandler.ensureServer();
+    this.contextHandler?.stopServer();
+    await this.contextHandler?.ensureServer();
     this.disconnected = false;
   }
 
@@ -189,7 +193,7 @@ export class Cluster implements ClusterModel, ClusterState {
   disconnect() {
     logger.info(`[CLUSTER]: disconnect`, this.getMeta());
     this.unbindEvents();
-    this.contextHandler.stopServer();
+    this.contextHandler?.stopServer();
     this.disconnected = true;
     this.online = false;
     this.accessible = false;
