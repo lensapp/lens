@@ -29,7 +29,7 @@ import { CustomResources } from "../+custom-resources/custom-resources";
 import { isActiveRoute, navigation } from "../../navigation";
 import { isAllowedResource } from "../../../common/rbac"
 import { Spinner } from "../spinner";
-import { clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
+import { ClusterPageMenuRegistration, clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl, RegisteredPage } from "../../../extensions/registries";
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
 type SidebarContextValue = {
@@ -74,6 +74,35 @@ export class Sidebar extends React.Component<Props> {
         />
       );
     });
+  }
+
+  getTabLayoutRoutes(menu: ClusterPageMenuRegistration, page: RegisteredPage): TabLayoutRoute[] {
+    if (!menu.id) {
+      return [];
+    }
+    const routes: TabLayoutRoute[] = [];
+    clusterPageMenuRegistry.getSubItems(menu.id).forEach((subItem) => {
+      const subPage = clusterPageRegistry.getByPageMenuTarget(subItem.target);
+      if (subPage) {
+        routes.push({
+          routePath: subPage.id,
+          url: getExtensionPageUrl({ extensionId: subPage.extensionId, pageId: subPage.id, params: subItem.target.params }),
+          title: subItem.title,
+          component: subPage.components.Page,
+          exact: subPage.exact
+        });
+      }
+    });
+    if (routes.length > 0) {
+      routes.unshift({
+        routePath: page.routePath,
+        url: getExtensionPageUrl({ extensionId: page.extensionId, pageId: page.id, params: menu.target.params }),
+        title: <Trans>Overview</Trans>,
+        component: page.components.Page,
+        exact: page.exact
+      });
+    }
+    return routes;
   }
 
   render() {
@@ -191,17 +220,19 @@ export class Sidebar extends React.Component<Props> {
             >
               {this.renderCustomResources()}
             </SidebarNavItem>
-            {clusterPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
-              const registeredPage = clusterPageRegistry.getByPageMenuTarget(target);
+            {clusterPageMenuRegistry.getRootItems().map((menuItem) => {
+              const registeredPage = clusterPageRegistry.getByPageMenuTarget(menuItem.target);
               if (!registeredPage) return;
               const { extensionId, id: pageId } = registeredPage;
-              const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: target.params });
+              const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
               const isActive = pageUrl === navigation.location.pathname;
+              const tabRoutes = this.getTabLayoutRoutes(menuItem, registeredPage)
               return (
                 <SidebarNavItem
                   key={pageUrl} url={pageUrl}
-                  text={title} icon={<Icon/>}
+                  text={menuItem.title} icon={<menuItem.components.Icon/>}
                   isActive={isActive}
+                  subMenus={tabRoutes}
                 />
               )
             })}
