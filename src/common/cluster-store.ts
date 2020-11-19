@@ -52,9 +52,15 @@ export interface ClusterModel {
   kubeConfig?: string; // yaml
 }
 
-export interface ClusterPreferences {
+export interface ClusterPreferences extends ClusterPrometheusPreferences{
   terminalCWD?: string;
   clusterName?: string;
+  iconOrder?: number;
+  icon?: string;
+  httpsProxy?: string;
+}
+
+export interface ClusterPrometheusPreferences {
   prometheus?: {
     namespace: string;
     service: string;
@@ -64,9 +70,6 @@ export interface ClusterPreferences {
   prometheusProvider?: {
     type: string;
   };
-  iconOrder?: number;
-  icon?: string;
-  httpsProxy?: string;
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {

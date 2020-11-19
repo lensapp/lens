@@ -1,5 +1,5 @@
 import type { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry"
-import type { ClusterPreferences } from "../common/cluster-store";
+import type { ClusterPrometheusPreferences } from "../common/cluster-store";
 import type { Cluster } from "./cluster"
 import type httpProxy from "http-proxy"
 import url, { UrlWithStringQuery } from "url";
@@ -22,7 +22,7 @@ export class ContextHandler {
     this.setupPrometheus(cluster.preferences);
   }
 
-  public setupPrometheus(preferences: ClusterPreferences = {}) {
+  public setupPrometheus(preferences: ClusterPrometheusPreferences = {}) {
     this.prometheusProvider = preferences.prometheusProvider?.type;
     this.prometheusPath = null;
     if (preferences.prometheus) {
