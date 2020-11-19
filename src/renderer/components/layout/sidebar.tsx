@@ -76,7 +76,7 @@ export class Sidebar extends React.Component<Props> {
     });
   }
 
-  getTabLayoutRoutes(menu: ClusterPageMenuRegistration, page: RegisteredPage): TabLayoutRoute[] {
+  getTabLayoutRoutes(menu: ClusterPageMenuRegistration): TabLayoutRoute[] {
     console.log("Menu", menu)
     if (!menu.id) {
       return [];
@@ -88,7 +88,7 @@ export class Sidebar extends React.Component<Props> {
       console.log(subItem, subPage)
       if (subPage) {
         routes.push({
-          routePath: subPage.id,
+          routePath: subPage.routePath,
           url: getExtensionPageUrl({ extensionId: subPage.extensionId, pageId: subPage.id, params: subItem.target.params }),
           title: subItem.title,
           component: subPage.components.Page,
@@ -223,7 +223,7 @@ export class Sidebar extends React.Component<Props> {
                 pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
                 isActive = pageUrl === navigation.location.pathname;
               }
-              const tabRoutes = this.getTabLayoutRoutes(menuItem, registeredPage)
+              const tabRoutes = this.getTabLayoutRoutes(menuItem)
               if (!registeredPage && tabRoutes.length == 0) {
                 return
               }
