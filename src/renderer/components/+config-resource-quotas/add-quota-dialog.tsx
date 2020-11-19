@@ -117,10 +117,10 @@ export class AddQuotaDialog extends React.Component<Props> {
 
   onInputQuota = (evt: React.KeyboardEvent) => {
     switch (evt.key) {
-    case "Enter":
-      this.setQuota();
-      evt.preventDefault(); // don't submit form
-      break;
+      case "Enter":
+        this.setQuota();
+        evt.preventDefault(); // don't submit form
+        break;
     }
   };
 

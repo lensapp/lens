@@ -70,16 +70,16 @@ export class ShellSession extends EventEmitter {
 
   protected async getShellArgs(shell: string): Promise<Array<string>> {
     switch(path.basename(shell)) {
-    case "powershell.exe":
-      return ["-NoExit", "-command", `& {Set-Location $Env:USERPROFILE; $Env:PATH="${this.helmBinDir};${this.kubectlPathDir};$Env:PATH"}`];
-    case "bash":
-      return ["--init-file", path.join(this.kubectlBinDir, '.bash_set_path')];
-    case "fish":
-      return ["--login", "--init-command", `export PATH="${this.helmBinDir}:${this.kubectlPathDir}:$PATH"; export KUBECONFIG="${this.kubeconfigPath}"`];
-    case "zsh":
-      return ["--login"];
-    default:
-      return [];
+      case "powershell.exe":
+        return ["-NoExit", "-command", `& {Set-Location $Env:USERPROFILE; $Env:PATH="${this.helmBinDir};${this.kubectlPathDir};$Env:PATH"}`];
+      case "bash":
+        return ["--init-file", path.join(this.kubectlBinDir, '.bash_set_path')];
+      case "fish":
+        return ["--login", "--init-command", `export PATH="${this.helmBinDir}:${this.kubectlPathDir}:$PATH"; export KUBECONFIG="${this.kubeconfigPath}"`];
+      case "zsh":
+        return ["--login"];
+      default:
+        return [];
     }
   }
 
@@ -148,16 +148,16 @@ export class ShellSession extends EventEmitter {
 
       const message = Buffer.from(data.slice(1, data.length), "base64").toString();
       switch (data[0]) {
-      case "0":
-        this.shellProcess.write(message);
-        break;
-      case "4":
-        const resizeMsgObj = JSON.parse(message);
-        this.shellProcess.resize(resizeMsgObj["Width"], resizeMsgObj["Height"]);
-        break;
-      case "9":
-        this.emit('newToken', message);
-        break;
+        case "0":
+          this.shellProcess.write(message);
+          break;
+        case "4":
+          const resizeMsgObj = JSON.parse(message);
+          this.shellProcess.resize(resizeMsgObj["Width"], resizeMsgObj["Height"]);
+          break;
+        case "9":
+          this.emit('newToken', message);
+          break;
       }
     });
   }

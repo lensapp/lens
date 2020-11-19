@@ -174,20 +174,20 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       const api = apiManager.getApi(selfLink);
 
       switch (type) {
-      case "ADDED":
-      case "MODIFIED":
-        const newItem = new api.objectConstructor(object);
-        if (!item) {
-          items.push(newItem);
-        } else {
-          items.splice(index, 1, newItem);
-        }
-        break;
-      case "DELETED":
-        if (item) {
-          items.splice(index, 1);
-        }
-        break;
+        case "ADDED":
+        case "MODIFIED":
+          const newItem = new api.objectConstructor(object);
+          if (!item) {
+            items.push(newItem);
+          } else {
+            items.splice(index, 1, newItem);
+          }
+          break;
+        case "DELETED":
+          if (item) {
+            items.splice(index, 1);
+          }
+          break;
       }
     });
 

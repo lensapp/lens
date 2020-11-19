@@ -26,30 +26,30 @@ export class HpaDetails extends React.Component<Props> {
 
     const renderName = (metric: IHpaMetric) => {
       switch (metric.type) {
-      case HpaMetricType.Resource:
-        const addition = metric.resource.targetAverageUtilization ? <Trans>(as a percentage of request)</Trans> : "";
-        return <Trans>Resource {metric.resource.name} on Pods {addition}</Trans>;
+        case HpaMetricType.Resource:
+          const addition = metric.resource.targetAverageUtilization ? <Trans>(as a percentage of request)</Trans> : "";
+          return <Trans>Resource {metric.resource.name} on Pods {addition}</Trans>;
 
-      case HpaMetricType.Pods:
-        return <Trans>{metric.pods.metricName} on Pods</Trans>;
+        case HpaMetricType.Pods:
+          return <Trans>{metric.pods.metricName} on Pods</Trans>;
 
-      case HpaMetricType.Object:
-        const { target } = metric.object;
-        const { kind, name } = target;
-        const objectUrl = getDetailsUrl(lookupApiLink(target, hpa));
-        return (
-          <Trans>
-            {metric.object.metricName} on{" "}
-            <Link to={objectUrl}>{kind}/{name}</Link>
-          </Trans>
-        );
-      case HpaMetricType.External:
-        return (
-          <Trans>
-            {metric.external.metricName} on{" "}
-            {JSON.stringify(metric.external.selector)}
-          </Trans>
-        );
+        case HpaMetricType.Object:
+          const { target } = metric.object;
+          const { kind, name } = target;
+          const objectUrl = getDetailsUrl(lookupApiLink(target, hpa));
+          return (
+            <Trans>
+              {metric.object.metricName} on{" "}
+              <Link to={objectUrl}>{kind}/{name}</Link>
+            </Trans>
+          );
+        case HpaMetricType.External:
+          return (
+            <Trans>
+              {metric.external.metricName} on{" "}
+              {JSON.stringify(metric.external.selector)}
+            </Trans>
+          );
       }
     };
 
