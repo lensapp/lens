@@ -15,10 +15,7 @@ export interface BaseStoreParams<T = any> extends ConfOptions<T> {
   syncOptions?: IReactionOptions;
 }
 
-/**
- * Note: T should only contain base JSON serializable types.
- */
-export abstract class BaseStore<T = any> extends Singleton {
+export class BaseStore<T = any> extends Singleton {
   protected storeConfig: Config<T>;
   protected syncDisposers: Function[] = [];
 
@@ -149,19 +146,16 @@ export abstract class BaseStore<T = any> extends Singleton {
     }
   }
 
-  /**
-   * fromStore is called internally when a child class syncs with the file
-   * system.
-   * @param data the parsed information read from the stored JSON file
-   */
-  protected abstract fromStore(data: T): void;
+  @action
+  protected fromStore(data: T) {
+    if (!data) return;
+    this.data = data;
+  }
 
-  /**
-   * toJSON is called when syncing the store to the filesystem. It should
-   * produce a JSON serializable object representaion of the current state.
-   *
-   * It is recommended that a round trip is valid. Namely, calling
-   * `this.fromStore(this.toJSON())` shouldn't change the state.
-   */
-  abstract toJSON(): T;
+  // todo: use "serializr" ?
+  toJSON(): T {
+    return toJS(this.data, {
+      recurseEverything: true,
+    })
+  }
 }
