@@ -104,9 +104,8 @@ export class IngressDetails extends React.Component<Props> {
       <Trans>Duration</Trans>,
     ];
 
-    const serviceName = spec?.defaultBackend?.service.name ?? spec?.backend?.serviceName;
-    const servicePort = spec?.defaultBackend?.service.port.number ?? spec?.defaultBackend?.service.port.name ?? spec?.backend?.servicePort;
-
+    const { serviceName, servicePort } = ingress.getServiceNamePort();
+    
     return (
       <div className="IngressDetails">
         <ResourceMetrics
