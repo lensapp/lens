@@ -1,6 +1,6 @@
-import path from "path";
-import packageInfo from "../../package.json";
-import { dialog, Menu, NativeImage, nativeTheme, Tray } from "electron";
+import path from "path"
+import packageInfo from "../../package.json"
+import { dialog, Menu, NativeImage, nativeTheme, Tray } from "electron"
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
 import { AppUpdater } from "./app-updater";
@@ -24,7 +24,7 @@ export function getTrayIcon(isDark = nativeTheme.shouldUseDarkColors): string {
     __static,
     isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
     `tray_icon${isDark ? "_dark" : ""}.png`
-  );
+  )
 }
 
 export function initTray(windowManager: WindowManager) {
@@ -35,18 +35,18 @@ export function initTray(windowManager: WindowManager) {
     } catch (err) {
       logger.error(`[TRAY]: building failed: ${err}`);
     }
-  });
+  })
   return () => {
     dispose();
     tray?.destroy();
     tray = null;
-  };
+  }
 }
 
 export function buildTray(icon: string | NativeImage, menu: Menu) {
   if (!tray) {
-    tray = new Tray(icon);
-    tray.setToolTip(packageInfo.description);
+    tray = new Tray(icon)
+    tray.setToolTip(packageInfo.description)
     tray.setIgnoreDoubleClickEvents(true);
   }
 
@@ -70,7 +70,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
     {
       label: "Open Lens",
       async click() {
-        await windowManager.ensureMainWindow();
+        await windowManager.ensureMainWindow()
       },
     },
     {
@@ -97,9 +97,9 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
                   workspaceStore.setActive(workspace);
                   windowManager.navigate(clusterViewURL({ params: { clusterId } }));
                 }
-              };
+              }
             })
-          };
+          }
         }),
     },
     {
@@ -111,7 +111,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
           dialog.showMessageBoxSync(browserWindow, {
             message: "No updates available",
             type: "info",
-          });
+          })
         }
       },
     },
@@ -119,7 +119,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
     {
       label: 'Quit App',
       click() {
-        exitApp();
+        exitApp()
       }
     }
   ]);
