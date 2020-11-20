@@ -82,7 +82,7 @@ describe("Lens integration tests", () => {
       }
     });
 
-    it('switches between workspaces', async () => {
+    it('creates new workspace', async () => {
       await clickWhatsNew(app);
       await app.client.click('#current-workspace .Icon');
       await app.client.click('a[href="/workspaces"]');
@@ -92,6 +92,9 @@ describe("Lens integration tests", () => {
       await app.client.keys("test description");
       await app.client.click('.Workspaces .workspace.editing .Icon');
       await app.client.waitUntilTextExists(".workspace .name a", "test-workspace");
+    });
+
+    it('switches between workspaces', async () => {
       await addMinikubeCluster(app);
       await app.client.waitForExist(`iframe[name="minikube"]`);
       await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active");
