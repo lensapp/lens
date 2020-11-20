@@ -79,4 +79,4 @@ describe("KubeApi", () => {
     expect(kubeApi.apiPrefix).toEqual("/apis");
     expect(kubeApi.apiGroup).toEqual("extensions");
   });
-})
+});

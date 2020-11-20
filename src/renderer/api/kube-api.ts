@@ -162,7 +162,7 @@ export class KubeApi<T extends KubeObject = any> {
       return {
         apiPrefix: this.apiPrefix,
         apiGroup: this.apiGroup
-      }
+      };
     }
 
     throw new Error(`Can't find working API for the Kubernetes resource ${this.apiResource}`);
