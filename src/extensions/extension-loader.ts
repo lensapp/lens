@@ -34,17 +34,16 @@ export class ExtensionLoader {
   }
 
   @action
-  async init() {
+  async init(extensions?: Map<LensExtensionId, InstalledExtension>) {
+    if (extensions) {
+      this.extensions.replace(extensions);
+    }
     if (ipcRenderer) {
       this.initRenderer()
     } else {
       this.initMain()
     }
     extensionsStore.manageState(this);
-  }
-
-  initExtensions(extensions?: Map<LensExtensionId, InstalledExtension>) {
-    this.extensions.replace(extensions)
   }
 
   protected async initMain() {

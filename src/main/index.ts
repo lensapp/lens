@@ -78,9 +78,8 @@ app.on("ready", async () => {
     app.exit();
   }
 
-  extensionLoader.init()
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
-  extensionLoader.initExtensions(await extensionManager.load()); // call after windowManager to see splash earlier
+  extensionLoader.init(await extensionManager.load()); // call after windowManager to see splash earlier
 
   setTimeout(() => {
     appEventBus.emit({ name: "service", action: "start" })
