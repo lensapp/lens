@@ -26,7 +26,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
       if (state.enabled) {
         extensions.push(state.name);
       }
-    })
+    });
     return extensions;
   }
 
