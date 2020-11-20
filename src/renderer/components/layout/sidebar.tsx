@@ -98,23 +98,30 @@ export class Sidebar extends React.Component<Props> {
   }
 
   renderRegisteredMenus() {
-    return clusterPageMenuRegistry.getRootItems().map((menuItem) => {
+    return clusterPageMenuRegistry.getRootItems().map((menuItem, index) => {
       const registeredPage = clusterPageRegistry.getByPageMenuTarget(menuItem.target);
+      const tabRoutes = this.getTabLayoutRoutes(menuItem);
       let pageUrl: string;
+      let routePath: string;
       let isActive = false;
       if (registeredPage) {
         const { extensionId, id: pageId } = registeredPage;
         pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
-        isActive = pageUrl === navigation.location.pathname;
-      }
-      const tabRoutes = this.getTabLayoutRoutes(menuItem);
-      if (!registeredPage && tabRoutes.length == 0) {
+        routePath = registeredPage.routePath;
+        isActive = isActiveRoute(registeredPage.routePath);
+      } else if (tabRoutes.length > 0) {
+        pageUrl = tabRoutes[0].url;
+        routePath = tabRoutes[0].routePath;
+        isActive = isActiveRoute(tabRoutes.map((tab) => tab.routePath));
+      } else {
         return;
       }
       return (
         <SidebarNavItem
-          key={pageUrl} url={pageUrl}
-          text={menuItem.title} icon={<menuItem.components.Icon/>}
+          key={"registered-item-" + index}
+          url={pageUrl}
+          text={menuItem.title}
+          icon={<menuItem.components.Icon/>}
           isActive={isActive}
           subMenus={tabRoutes}
         />
