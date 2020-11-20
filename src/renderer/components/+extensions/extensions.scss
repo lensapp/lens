@@ -24,8 +24,12 @@
     }
 
     .install-extension {
-      .Clipboard:hover code {
-        color: $textColorSecondary;
+      .Clipboard {
+        font-size: $font-size-small;
+
+        &:hover {
+          color: $textColorSecondary;
+        }
       }
     }
   }

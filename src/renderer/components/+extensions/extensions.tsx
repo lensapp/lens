@@ -1,5 +1,7 @@
 import "./extensions.scss";
 import { remote, shell } from "electron";
+import path from "path";
+import fse from "fs-extra";
 import React from "react";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
@@ -13,10 +15,12 @@ import { PageLayout } from "../layout/page-layout";
 import { Clipboard } from "../clipboard";
 import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionManager } from "../../../extensions/extension-manager";
+import { Notifications } from "../notifications";
+import request from "request";
+import logger from "../../../main/logger";
 
 @observer
 export class Extensions extends React.Component {
-  @observable.ref input: Input;
   @observable search = "";
   @observable downloadUrl = "";
 
@@ -41,34 +45,75 @@ export class Extensions extends React.Component {
     const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
       defaultPath: app.getPath("downloads"),
       properties: ["openFile", "multiSelections"],
-      message: _i18n._(t`Select extensions to install (supported: ${supportedFormats.join(", ")}), `),
+      message: _i18n._(t`Select extensions to install (supported formats: ${supportedFormats.join(", ")}), `),
       buttonLabel: _i18n._(t`Use configuration`),
       filters: [
         { name: "tarball", extensions: supportedFormats }
       ]
     });
     if (!canceled && filePaths.length) {
-      this.installFromLocalPath(filePaths);
+      this.installFromSelectFileDialog(filePaths);
     }
   }
 
-  // todo
-  installFromUrl = () => {
-    if (!this.downloadUrl) {
-      this.input?.focus();
+  // fixme: doesn't work
+  // todo: move to common/utils
+  async downloadFile(url: string, fileName = path.basename(url)): Promise<File> {
+    return new Promise((resolve, reject) => {
+      const downloadingReq = request(url, { gzip: true });
+      downloadingReq.on("complete", (res, body: Buffer) => {
+        resolve(new File([body], fileName));
+      });
+      downloadingReq.on("error", reject);
+    })
+  }
+
+  installFromUrl = async () => {
+    const { downloadUrl } = this;
+    if (!downloadUrl) {
       return;
     }
-    console.log('Install from URL', this.downloadUrl);
+    let tarballUrl: string;
+    if (InputValidators.isUrl.validate(downloadUrl)) {
+      tarballUrl = downloadUrl;
+    } else {
+      try {
+        tarballUrl = extensionManager.getNpmPackageTarballUrl(downloadUrl);
+      } catch (err) {
+        Notifications.error(`Error: npm package "${downloadUrl}" not found`);
+        return;
+      }
+    }
+    logger.info('Install from packed extension URL', { tarballUrl });
+    if (tarballUrl) {
+      try {
+        const file = await this.downloadFile(tarballUrl);
+        this.installExtensionFromFile([file]);
+      } catch (err) {
+        Notifications.error(`Installing extension from ${tarballUrl} has failed: ${String(err)}`);
+      }
+    }
   }
 
-  // todo
-  installFromLocalPath = (filePaths: string[]) => {
-    console.log('Install select from dialog', filePaths)
+  installFromSelectFileDialog = async (filePaths: string[]) => {
+    logger.info('Install from select dialog', { filePaths });
+    const files: File[] = await Promise.all(
+      filePaths.map(filePath => {
+        const fileName = path.basename(filePath);
+        return fse.readFile(filePath).then(buffer => new File([buffer], fileName));
+      })
+    );
+    return this.installExtensionFromFile(files);
   }
 
-  // todo
   installOnDrop = (files: File[]) => {
-    console.log('Install from D&D', files);
+    logger.info('Install from D&D', { files });
+    return this.installExtensionFromFile(files);
+  }
+
+  // todo
+  async installExtensionFromFile(files: File[]) {
+    console.log(`Install files:`, files);
   }
 
   renderInfo() {
@@ -80,31 +125,29 @@ export class Extensions extends React.Component {
           features of Lens are built as extensions and use the same Extension API.
         </div>
         <div>
-          <p><em>All custom extensions located in:</em></p>
+          <p><em>Extensions loaded from:</em></p>
           <div className="extensions-path flex inline" onClick={() => shell.openPath(this.extensionsPath)}>
             <Icon material="folder" tooltip={{ children: "Open folder", preferredPositions: "bottom" }}/>
             <code>{this.extensionsPath}</code>
           </div>
         </div>
         <div className="install-extension flex column gaps">
-          <p><em>Install extensions from local file-system or URL:</em></p>
+          <p><em>Install extensions from archive (tarball.tgz):</em></p>
           <div className="install-extension-by-url flex gaps align-center">
-            <Icon
-              material="get_app"
-              tooltip={{ children: "Download and Install", preferredPositions: "bottom" }}
-              interactive={this.downloadUrl.length > 0}
-              onClick={this.installFromUrl}
-            />
             <Input
               showErrorsAsTooltip={true}
               className="box grow"
               theme="round-black"
-              placeholder="URL, e.g. https://registry.npmjs.org/%path-to-ext.tgz"
-              validators={InputValidators.isUrl}
-              value={this.downloadUrl} // TODO: in addition we could support npm-package-name (if non-url value)?
+              placeholder="URL or NPM package name"
+              value={this.downloadUrl}
               onChange={v => this.downloadUrl = v}
               onSubmit={this.installFromUrl}
-              ref={e => this.input = e}
+            />
+            <Icon
+              material="get_app"
+              tooltip={{ children: "Install", preferredPositions: "bottom" }}
+              interactive={this.downloadUrl.length > 0}
+              onClick={this.installFromUrl}
             />
           </div>
           <Button
@@ -113,24 +156,13 @@ export class Extensions extends React.Component {
             onClick={this.selectLocalExtensionsDialog}
           />
           <p className="hint">
-            <Trans><b>Pro-Tip 1</b>: you can download extension archive.tgz via NPM:</Trans>
+            <Trans><b>Pro-Tip 1</b>: you can download NPM-package to local folder with</Trans>
+            <Clipboard showNotification>
+              <code>npm pack %package-name</code>
+            </Clipboard>
           </p>
-          <ul>
-            <Clipboard showNotification cssSelectorLimit="code">
-              <li>
-                <code>npm pack %name</code>
-                <em> (click to copy)</em>
-              </li>
-            </Clipboard>
-            <Clipboard showNotification cssSelectorLimit="code">
-              <li>
-                <code>npm view %name dist.tarball</code>
-                <em> (click to copy)</em>
-              </li>
-            </Clipboard>
-          </ul>
           <p className="hint">
-            <Trans><b>Pro-Tip 2</b>: you also can drop archive from file-system to this window to request installation</Trans>
+            <Trans><b>Pro-Tip 2</b>: you can drag & drop extension's tarball here to request installation</Trans>
           </p>
         </div>
         <div className="more-info flex inline gaps align-center">

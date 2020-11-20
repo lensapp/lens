@@ -97,6 +97,11 @@ export class ExtensionManager {
     }
   }
 
+  getNpmPackageTarballUrl(packageName: string) {
+    const command = [this.npmPath, "view", packageName, "dist.tarball", "--silent"];
+    return child_process.execSync(command.join(" "), { encoding: "utf8" });
+  }
+
   protected installPackages(): Promise<void> {
     return new Promise((resolve, reject) => {
       const child = child_process.fork(this.npmPath, ["install", "--silent", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock"], {
