@@ -2,7 +2,12 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.8 (current version)
+## 3.6.9 (current version)
+- Use Alpine 3.12 for node shell sessions
+- Fix errors on app quit
+- Fix kube-auth-proxy to accept only target cluster hostname
+
+## 3.6.8
 - Fix cluster connection issue when opening cluster settings for disconnected clusters
 - Fetch available Helm repositories from Artifact HUB
 - Check if user is cluster admin before opening cluster dashboard
