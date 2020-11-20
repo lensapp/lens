@@ -1,4 +1,4 @@
-import "./storage.scss"
+import "./storage.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -14,14 +14,14 @@ import { isAllowedResource } from "../../../common/rbac";
 export class Storage extends React.Component {
   static get tabRoutes() {
     const tabRoutes: TabLayoutRoute[] = [];
-    const query = namespaceStore.getContextParams()
+    const query = namespaceStore.getContextParams();
 
     tabRoutes.push({
       title: <Trans>Persistent Volume Claims</Trans>,
       component: PersistentVolumeClaims,
       url: volumeClaimsURL({ query }),
       routePath: volumeClaimsRoute.path.toString(),
-    })
+    });
 
     if (isAllowedResource('persistentvolumes')) {
       tabRoutes.push({
@@ -38,7 +38,7 @@ export class Storage extends React.Component {
         component: StorageClasses,
         url: storageClassesURL(),
         routePath: storageClassesRoute.path.toString(),
-      })
+      });
     }
     return tabRoutes;
   }
@@ -46,6 +46,6 @@ export class Storage extends React.Component {
   render() {
     return (
       <TabLayout className="Storage" tabs={Storage.tabRoutes}/>
-    )
+    );
   }
 }

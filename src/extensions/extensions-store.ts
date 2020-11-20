@@ -1,6 +1,6 @@
 import type { LensExtensionId } from "./lens-extension";
 import type { ExtensionLoader } from "./extension-loader";
-import { BaseStore } from "../common/base-store"
+import { BaseStore } from "../common/base-store";
 import { action, observable, reaction, toJS } from "mobx";
 
 export interface LensExtensionsStoreModel {
@@ -25,9 +25,9 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
     return Array.from(extensionLoader.userExtensions).reduce((state, [extId, ext]) => {
       state[extId] = {
         enabled: ext.isEnabled,
-      }
+      };
       return state;
-    }, state)
+    }, state);
   }
 
   async manageState(extensionLoader: ExtensionLoader) {
@@ -46,13 +46,13 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
         if (ext && !ext.isBundled) {
           ext.isEnabled = state.enabled;
         }
-      })
-    })
+      });
+    });
 
     // save state on change `extension.isEnabled`
     reaction(() => this.getState(extensionLoader), extensionsState => {
-      this.state.merge(extensionsState)
-    })
+      this.state.merge(extensionsState);
+    });
   }
 
   isEnabled(extId: LensExtensionId) {
@@ -70,7 +70,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
       extensions: this.state.toJSON(),
     }, {
       recurseEverything: true
-    })
+    });
   }
 }
 

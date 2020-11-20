@@ -1,13 +1,13 @@
 import type { ThemeId } from "../renderer/theme.store";
 import { app, remote } from 'electron';
-import semver from "semver"
-import { readFile } from "fs-extra"
+import semver from "semver";
+import { readFile } from "fs-extra";
 import { action, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
-import migrations from "../migrations/user-store"
+import migrations from "../migrations/user-store";
 import { getAppVersion } from "./utils/app-version";
 import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
-import { appEventBus } from "./event-bus"
+import { appEventBus } from "./event-bus";
 import logger from "../main/logger";
 import path from 'path';
 
@@ -31,7 +31,7 @@ export interface UserPreferences {
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
-  static readonly defaultTheme: ThemeId = "lens-dark"
+  static readonly defaultTheme: ThemeId = "lens-dark";
 
   private constructor() {
     super({
@@ -42,7 +42,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     this.handleOnLoad();
   }
 
-  @observable lastSeenAppVersion = "0.0.0"
+  @observable lastSeenAppVersion = "0.0.0";
   @observable kubeConfigPath = kubeConfigDefaultPath; // used in add-cluster page for providing context
   @observable seenContexts = observable.set<string>();
   @observable newContexts = observable.set<string>();
@@ -66,7 +66,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     if (app) {
       // track telemetry availability
       reaction(() => this.preferences.allowTelemetry, allowed => {
-        appEventBus.emit({name: "telemetry", action: allowed ? "enabled" : "disabled"})
+        appEventBus.emit({name: "telemetry", action: allowed ? "enabled" : "disabled"});
       });
 
       // open at system start-up
@@ -95,7 +95,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @action
   saveLastSeenAppVersion() {
-    appEventBus.emit({name: "app", action: "whats-new-seen"})
+    appEventBus.emit({name: "app", action: "whats-new-seen"});
     this.lastSeenAppVersion = getAppVersion();
   }
 
@@ -113,7 +113,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
       logger.error(err);
       this.resetKubeConfigPath();
     }
-  }
+  };
 
   @action
   markNewContextsAsSeen() {
@@ -127,12 +127,12 @@ export class UserStore extends BaseStore<UserStoreModel> {
    * @returns string
    */
   getDefaultKubectlPath(): string {
-    return path.join((app || remote.app).getPath("userData"), "binaries")
+    return path.join((app || remote.app).getPath("userData"), "binaries");
   }
 
   @action
   protected async fromStore(data: Partial<UserStoreModel> = {}) {
-    const { lastSeenAppVersion, seenContexts = [], preferences, kubeConfigPath } = data
+    const { lastSeenAppVersion, seenContexts = [], preferences, kubeConfigPath } = data;
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;
     }
@@ -149,10 +149,10 @@ export class UserStore extends BaseStore<UserStoreModel> {
       lastSeenAppVersion: this.lastSeenAppVersion,
       seenContexts: Array.from(this.seenContexts),
       preferences: this.preferences,
-    }
+    };
     return toJS(model, {
       recurseEverything: true,
-    })
+    });
   }
 }
 

@@ -1,11 +1,11 @@
 import fs from "fs";
-import path from "path"
-import hb from "handlebars"
-import { observable } from "mobx"
-import { ResourceApplier } from "../main/resource-applier"
+import path from "path";
+import hb from "handlebars";
+import { observable } from "mobx";
+import { ResourceApplier } from "../main/resource-applier";
 import { Cluster } from "../main/cluster";
 import logger from "../main/logger";
-import { app } from "electron"
+import { app } from "electron";
 import { requestMain } from "../common/ipc";
 import { clusterKubectlApplyAllHandler } from "../common/cluster-ipc";
 
@@ -26,7 +26,7 @@ export abstract class ClusterFeature {
     installed: false,
     latestVersion: null,
     canUpgrade: false
-  }
+  };
 
   abstract async install(cluster: Cluster): Promise<void>;
 
@@ -38,9 +38,9 @@ export abstract class ClusterFeature {
 
   protected async applyResources(cluster: Cluster, resources: string[]) {
     if (app) {
-      await new ResourceApplier(cluster).kubectlApplyAll(resources)
+      await new ResourceApplier(cluster).kubectlApplyAll(resources);
     } else {
-      await requestMain(clusterKubectlApplyAllHandler, cluster.id, resources)
+      await requestMain(clusterKubectlApplyAllHandler, cluster.id, resources);
     }
   }
 

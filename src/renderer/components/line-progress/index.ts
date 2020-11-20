@@ -1,1 +1,1 @@
-export * from './line-progress'
+export * from './line-progress';

@@ -42,12 +42,12 @@ export class NodeDetails extends React.Component<Props> {
   render() {
     const { object: node } = this.props;
     if (!node) return;
-    const { status } = node
-    const { nodeInfo, addresses, capacity, allocatable } = status
+    const { status } = node;
+    const { nodeInfo, addresses, capacity, allocatable } = status;
     const conditions = node.getActiveConditions();
-    const taints = node.getTaints()
-    const childPods = podsStore.getPodsByNode(node.getName())
-    const metrics = nodesStore.nodeMetrics
+    const taints = node.getTaints();
+    const childPods = podsStore.getPodsByNode(node.getName());
+    const metrics = nodesStore.nodeMetrics;
     const metricTabs = [
       <Trans>CPU</Trans>,
       <Trans>Memory</Trans>,
@@ -120,7 +120,7 @@ export class NodeDetails extends React.Component<Props> {
         <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
           {
             conditions.map(condition => {
-              const { type } = condition
+              const { type } = condition;
               return (
                 <Badge
                   key={type}
@@ -138,7 +138,7 @@ export class NodeDetails extends React.Component<Props> {
                     )
                   }}
                 />
-              )
+              );
             })
           }
         </DrawerItem>
@@ -150,7 +150,7 @@ export class NodeDetails extends React.Component<Props> {
           maxMemory={node.getMemoryCapacity()}
         />
       </div>
-    )
+    );
   }
 }
 
@@ -160,7 +160,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <NodeDetails {...props} />
   }
-})
+});
 
 kubeObjectDetailRegistry.add({
   kind: "Node",
@@ -169,4 +169,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});

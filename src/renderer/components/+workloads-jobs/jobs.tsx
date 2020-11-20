@@ -60,9 +60,9 @@ export class Jobs extends React.Component<Props> {
               title: condition.type,
               className: kebabCase(condition.type),
             }
-          ]
+          ];
         }}
       />
-    )
+    );
   }
 }

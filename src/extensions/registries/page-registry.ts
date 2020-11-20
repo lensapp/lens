@@ -45,7 +45,7 @@ export interface PageComponents {
 }
 
 export function sanitizeExtensionName(name: string) {
-  return name.replace("@", "").replace("/", "-")
+  return name.replace("@", "").replace("/", "-");
 }
 
 export function getExtensionPageUrl<P extends object>({ extensionId, pageId = "", params }: PageMenuTarget<P>): string {
@@ -68,13 +68,13 @@ export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage>
         ...page,
         extensionId: ext.name,
         routePath: getExtensionPageUrl({ extensionId: ext.name, pageId: page.id ?? page.routePath }),
-      }))
+      }));
     } catch (err) {
       logger.error(`[EXTENSION]: page-registration failed`, {
         items,
         extension: ext,
         error: String(err),
-      })
+      });
     }
     return super.add(registeredPages);
   }

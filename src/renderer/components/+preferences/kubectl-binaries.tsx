@@ -16,12 +16,12 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
   const downloadMirrorOptions: SelectOption<string>[] = [
     { value: "default", label: "Default (Google)" },
     { value: "china", label: "China (Azure)" },
-  ]
+  ];
 
   const save = () => {
     preferences.downloadBinariesPath = downloadPath;
     preferences.kubectlBinariesPath = binariesPath;
-  }
+  };
 
   return (
     <>

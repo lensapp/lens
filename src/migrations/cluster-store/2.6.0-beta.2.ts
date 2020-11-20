@@ -6,7 +6,7 @@ export default migration({
   run(store, log) {
     for (const value of store) {
       const clusterKey = value[0];
-      if (clusterKey === "__internal__") continue
+      if (clusterKey === "__internal__") continue;
       const cluster = value[1];
       if (!cluster.preferences) cluster.preferences = {};
       if (cluster.icon) {
@@ -16,4 +16,4 @@ export default migration({
       store.set(clusterKey, { contextName: clusterKey, kubeConfig: value[1].kubeConfig, preferences: value[1].preferences });
     }
   }
-})
+});

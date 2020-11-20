@@ -1,1 +1,1 @@
-export { kubeObjectDetailRegistry } from "../../extensions/registries/kube-object-detail-registry"
+export { kubeObjectDetailRegistry } from "../../extensions/registries/kube-object-detail-registry";

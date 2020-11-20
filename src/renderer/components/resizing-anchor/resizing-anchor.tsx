@@ -1,7 +1,7 @@
 import "./resizing-anchor.scss";
 import React from "react";
 import { action, observable } from "mobx";
-import _ from "lodash"
+import _ from "lodash";
 import { findDOMNode } from "react-dom";
 import { cssNames, noop } from "../../utils";
 
@@ -111,39 +111,39 @@ interface Position {
  * @returns the directional difference between including appropriate sign.
  */
 function directionDelta(P1: number, P2: number, M: number): number | false {
-  const delta = Math.abs(M - P2)
+  const delta = Math.abs(M - P2);
 
   if (P1 < M) {
     if (P2 >= M) {
       // case 3
-      return delta
+      return delta;
     }
 
     if (P2 < P1) {
       // case 2
-      return -delta
+      return -delta;
     }
 
     // case 1
-    return false
+    return false;
   }
 
   if (P2 < M) {
     // case 4
-    return -delta
+    return -delta;
   }
 
   if (P1 < P2) {
     // case 5
-    return delta
+    return delta;
   }
 
   // case 6
-  return false
+  return false;
 }
 
 export class ResizingAnchor extends React.PureComponent<Props> {
-  @observable lastMouseEvent?: MouseEvent
+  @observable lastMouseEvent?: MouseEvent;
   @observable.ref ref?: React.RefObject<HTMLDivElement>;
 
   static defaultProps = {
@@ -160,53 +160,53 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     maxExtent: Number.POSITIVE_INFINITY,
     minExtent: 0,
     placement: ResizeSide.LEADING,
-  }
-  static IS_RESIZING = "resizing"
+  };
+  static IS_RESIZING = "resizing";
 
   constructor(props: Props) {
-    super(props)
+    super(props);
     if (props.maxExtent < props.minExtent) {
-      throw new Error("maxExtent must be >= minExtent")
+      throw new Error("maxExtent must be >= minExtent");
     }
 
-    this.ref = React.createRef<HTMLDivElement>()
+    this.ref = React.createRef<HTMLDivElement>();
   }
 
   componentWillUnmount() {
-    document.removeEventListener("mousemove", this.onDrag)
-    document.removeEventListener("mouseup", this.onDragEnd)
+    document.removeEventListener("mousemove", this.onDrag);
+    document.removeEventListener("mouseup", this.onDragEnd);
   }
 
   @action
   onDragInit = (event: React.MouseEvent) => {
-    const { onStart, onlyButtons } = this.props
+    const { onStart, onlyButtons } = this.props;
 
     if (typeof onlyButtons === "number" && onlyButtons !== event.buttons) {
-      return
+      return;
     }
 
-    document.addEventListener("mousemove", this.onDrag)
-    document.addEventListener("mouseup", this.onDragEnd)
-    document.body.classList.add(ResizingAnchor.IS_RESIZING)
+    document.addEventListener("mousemove", this.onDrag);
+    document.addEventListener("mouseup", this.onDragEnd);
+    document.body.classList.add(ResizingAnchor.IS_RESIZING);
 
-    this.lastMouseEvent = undefined
-    onStart()
-  }
+    this.lastMouseEvent = undefined;
+    onStart();
+  };
 
   calculateDelta(from: Position, to: Position): number | false {
-    const node = this.ref.current
+    const node = this.ref.current;
     if (!node) {
-      return false
+      return false;
     }
 
-    const boundingBox = node.getBoundingClientRect()
+    const boundingBox = node.getBoundingClientRect();
 
     if (this.props.direction === ResizeDirection.HORIZONTAL) {
-      const barX = Math.round(boundingBox.x + (boundingBox.width / 2))
-      return directionDelta(from.pageX, to.pageX, barX)
+      const barX = Math.round(boundingBox.x + (boundingBox.width / 2));
+      return directionDelta(from.pageX, to.pageX, barX);
     } else { // direction === ResizeDirection.VERTICAL
-      const barY = Math.round(boundingBox.y + (boundingBox.height / 2))
-      return directionDelta(from.pageY, to.pageY, barY)
+      const barY = Math.round(boundingBox.y + (boundingBox.height / 2));
+      return directionDelta(from.pageY, to.pageY, barY);
     }
   }
 
@@ -229,53 +229,53 @@ export class ResizingAnchor extends React.PureComponent<Props> {
      */
 
     if (!this.lastMouseEvent) {
-      this.lastMouseEvent = event
-      return
+      this.lastMouseEvent = event;
+      return;
     }
 
-    const { maxExtent, minExtent, getCurrentExtent, growthDirection } = this.props
-    const { onDrag, onMaxExtentExceed, onMinExtentSubceed, onMaxExtentSubceed, onMinExtentExceed } = this.props
-    const delta = this.calculateDelta(this.lastMouseEvent, event)
+    const { maxExtent, minExtent, getCurrentExtent, growthDirection } = this.props;
+    const { onDrag, onMaxExtentExceed, onMinExtentSubceed, onMaxExtentSubceed, onMinExtentExceed } = this.props;
+    const delta = this.calculateDelta(this.lastMouseEvent, event);
 
     // always update the last mouse event
-    this.lastMouseEvent = event
+    this.lastMouseEvent = event;
 
     if (delta === false) {
-      return
+      return;
     }
 
-    const previousExtent = getCurrentExtent()
-    const unboundedExtent = previousExtent + (delta * growthDirection)
-    const boundedExtent = Math.round(Math.max(minExtent, Math.min(maxExtent, unboundedExtent)))
-    onDrag(boundedExtent)
+    const previousExtent = getCurrentExtent();
+    const unboundedExtent = previousExtent + (delta * growthDirection);
+    const boundedExtent = Math.round(Math.max(minExtent, Math.min(maxExtent, unboundedExtent)));
+    onDrag(boundedExtent);
 
     if (previousExtent <= minExtent && minExtent <= unboundedExtent) {
-      onMinExtentExceed()
+      onMinExtentExceed();
     } else if (previousExtent >= minExtent && minExtent >= unboundedExtent) {
-      onMinExtentSubceed()
+      onMinExtentSubceed();
     }
     if (previousExtent <= maxExtent && maxExtent <= unboundedExtent) {
-      onMaxExtentExceed()
+      onMaxExtentExceed();
     } else if (previousExtent >= maxExtent && maxExtent >= unboundedExtent) {
-      onMaxExtentSubceed()
+      onMaxExtentSubceed();
     }
-  }, 100)
+  }, 100);
 
   @action
   onDragEnd = (_event: MouseEvent) => {
-    this.props.onEnd()
-    document.removeEventListener("mousemove", this.onDrag)
-    document.removeEventListener("mouseup", this.onDragEnd)
-    document.body.classList.remove(ResizingAnchor.IS_RESIZING)
-  }
+    this.props.onEnd();
+    document.removeEventListener("mousemove", this.onDrag);
+    document.removeEventListener("mouseup", this.onDragEnd);
+    document.body.classList.remove(ResizingAnchor.IS_RESIZING);
+  };
 
   render() {
-    const { disabled, direction, placement, onDoubleClick } = this.props
+    const { disabled, direction, placement, onDoubleClick } = this.props;
     return <div
       ref={this.ref}
       className={cssNames("ResizingAnchor", direction, placement, { disabled })}
       onMouseDown={this.onDragInit}
       onDoubleClick={onDoubleClick}
-    />
+    />;
   }
 }

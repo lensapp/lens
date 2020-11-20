@@ -3,7 +3,7 @@ import { buildURL } from "../../../common/utils/buildUrl";
 
 export const servicesRoute: RouteProps = {
   path: "/services"
-}
+};
 
 export interface IServicesRouteParams {
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import jsYaml from "js-yaml"
+import jsYaml from "js-yaml";
 import { observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { cssNames } from "../../utils";
@@ -21,7 +21,7 @@ export class EditorPanel extends React.Component<Props> {
 
   public editor: AceEditor;
 
-  @observable yamlError = ""
+  @observable yamlError = "";
 
   componentDidMount() {
     // validate and run callback with optional error
@@ -30,7 +30,7 @@ export class EditorPanel extends React.Component<Props> {
     disposeOnUnmount(this, [
       dockStore.onTabChange(this.onTabChange, { delay: 250 }),
       dockStore.onResize(this.onResize, { delay: 250 }),
-    ])
+    ]);
   }
 
   validate(value: string) {
@@ -44,23 +44,23 @@ export class EditorPanel extends React.Component<Props> {
 
   onTabChange = () => {
     this.editor.focus();
-  }
+  };
 
   onResize = () => {
     this.editor.resize();
     this.editor.focus();
-  }
+  };
 
   onCursorPosChange = (pos: Ace.Point) => {
     EditorPanel.cursorPos.setData(this.props.tabId, pos);
-  }
+  };
 
   onChange = (value: string) => {
     this.validate(value);
     if (this.props.onChange) {
       this.props.onChange(value, this.yamlError);
     }
-  }
+  };
 
   render() {
     const { value, tabId } = this.props;
@@ -77,6 +77,6 @@ export class EditorPanel extends React.Component<Props> {
         onCursorPosChange={this.onCursorPosChange}
         ref={e => this.editor = e}
       />
-    )
+    );
   }
 }

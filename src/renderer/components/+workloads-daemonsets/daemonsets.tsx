@@ -33,7 +33,7 @@ export class DaemonSets extends React.Component<Props> {
   renderNodeSelector(daemonSet: DaemonSet) {
     return daemonSet.getNodeSelectors().map(selector => (
       <Badge key={selector} label={selector}/>
-    ))
+    ));
   }
 
   render() {
@@ -69,7 +69,7 @@ export class DaemonSets extends React.Component<Props> {
           daemonSet.getAge(),
         ]}
       />
-    )
+    );
   }
 }
 

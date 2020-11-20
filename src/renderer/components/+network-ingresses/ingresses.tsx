@@ -1,10 +1,10 @@
-import "./ingresses.scss"
+import "./ingresses.scss";
 
-import React from "react"
+import React from "react";
 import { observer } from "mobx-react";
-import { RouteComponentProps } from "react-router-dom"
-import { IngressRouteParams } from "./ingresses.route"
-import { Ingress } from "../../api/endpoints/ingress.api"
+import { RouteComponentProps } from "react-router-dom";
+import { IngressRouteParams } from "./ingresses.route";
+import { Ingress } from "../../api/endpoints/ingress.api";
 import { ingressStore } from "./ingress.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { Trans } from "@lingui/macro";
@@ -58,6 +58,6 @@ export class Ingresses extends React.Component<Props> {
           }
         }}
       />
-    )
+    );
   }
 }

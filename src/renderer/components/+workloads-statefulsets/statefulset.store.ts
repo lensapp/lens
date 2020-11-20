@@ -7,7 +7,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
-  api = statefulSetApi
+  api = statefulSetApi;
   @observable metrics: IPodMetrics = null;
 
   async loadMetrics(statefulSet: StatefulSet) {
@@ -16,24 +16,24 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
   }
 
   getChildPods(statefulSet: StatefulSet) {
-    return podsStore.getPodsByOwner(statefulSet)
+    return podsStore.getPodsByOwner(statefulSet);
   }
 
   getStatuses(statefulSets: StatefulSet[]) {
-    const status = { failed: 0, pending: 0, running: 0 }
+    const status = { failed: 0, pending: 0, running: 0 };
     statefulSets.forEach(statefulSet => {
-      const pods = this.getChildPods(statefulSet)
+      const pods = this.getChildPods(statefulSet);
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
-        status.failed++
+        status.failed++;
       }
       else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
-        status.pending++
+        status.pending++;
       }
       else {
-        status.running++
+        status.running++;
       }
-    })
-    return status
+    });
+    return status;
   }
 
   reset() {

@@ -25,7 +25,7 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
     else {
       showDetails(item.selfLink);
     }
-  }
+  };
 
   render() {
     const { className, ...layoutProps } = this.props;
@@ -36,7 +36,7 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
         detailsItem={this.selectedItem}
         onDetails={this.onDetails}
         renderItemMenu={(item) => {
-          return <KubeObjectMenu object={item}/>
+          return <KubeObjectMenu object={item}/>;
         }}
       />
     );

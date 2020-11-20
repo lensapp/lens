@@ -3,7 +3,7 @@ import { buildURL } from "../../../common/utils/buildUrl";
 
 export const networkPoliciesRoute: RouteProps = {
   path: "/network-policies"
-}
+};
 
 export interface INetworkPoliciesRouteParams {
 }

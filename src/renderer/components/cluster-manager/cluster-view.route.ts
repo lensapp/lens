@@ -8,6 +8,6 @@ export interface IClusterViewRouteParams {
 export const clusterViewRoute: RouteProps = {
   exact: true,
   path: "/cluster/:clusterId",
-}
+};
 
-export const clusterViewURL = buildURL<IClusterViewRouteParams>(clusterViewRoute.path)
+export const clusterViewURL = buildURL<IClusterViewRouteParams>(clusterViewRoute.path);

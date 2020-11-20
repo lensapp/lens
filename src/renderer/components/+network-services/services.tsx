@@ -1,4 +1,4 @@
-import "./services.scss"
+import "./services.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
@@ -72,6 +72,6 @@ export class Services extends React.Component<Props> {
           { title: service.getStatus(), className: service.getStatus().toLowerCase() },
         ]}
       />
-    )
+    );
   }
 }

@@ -37,6 +37,6 @@ export class Slider extends Component<SliderProps> {
           ...this.classNames
         }}
       />
-    )
+    );
   }
 }

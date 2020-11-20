@@ -46,7 +46,7 @@ export class HelmReleaseMenu extends React.Component<Props> {
           </MenuItem>
         )}
       </>
-    )
+    );
   }
 
   render() {

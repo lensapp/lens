@@ -146,7 +146,7 @@ export class WebSocketApi {
   }
 
   protected _onError(evt: Event) {
-    this.writeLog('%cERROR', 'color:red;font-weight:bold;', evt)
+    this.writeLog('%cERROR', 'color:red;font-weight:bold;', evt);
   }
 
   protected _onClose(evt: CloseEvent) {

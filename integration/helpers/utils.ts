@@ -4,7 +4,7 @@ const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/Lens.exe",
   "linux": "./dist/linux-unpacked/kontena-lens",
   "darwin": "./dist/mac/Lens.app/Contents/MacOS/Lens",
-}
+};
 
 export function setup(): Application {
   return new Application({
@@ -16,16 +16,16 @@ export function setup(): Application {
     env: {
       CICD: "true"
     }
-  })
+  });
 }
 
 export async function tearDown(app: Application) {
-  let mpid: any = app.mainProcess.pid
-  let pid = await mpid()
-  await app.stop()
+  const mpid: any = app.mainProcess.pid;
+  const pid = await mpid();
+  await app.stop();
   try {
     process.kill(pid, "SIGKILL");
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
 }

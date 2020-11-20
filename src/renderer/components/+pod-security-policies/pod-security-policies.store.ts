@@ -5,8 +5,8 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class PodSecurityPoliciesStore extends KubeObjectStore<PodSecurityPolicy> {
-  api = pspApi
+  api = pspApi;
 }
 
-export const podSecurityPoliciesStore = new PodSecurityPoliciesStore()
+export const podSecurityPoliciesStore = new PodSecurityPoliciesStore();
 apiManager.registerStore(podSecurityPoliciesStore);
