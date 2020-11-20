@@ -96,6 +96,7 @@ describe("Lens integration tests", () => {
 
     it('adds cluster in default workspace', async () => {
       await addMinikubeCluster(app);
+      await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
       await app.client.waitForExist(`iframe[name="minikube"]`);
       await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active");
     });
@@ -104,6 +105,8 @@ describe("Lens integration tests", () => {
       await app.client.click('#current-workspace .Icon');
       await app.client.click('.WorkspaceMenu li[title="test description"]');
       await addMinikubeCluster(app);
+      await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
+      await app.client.waitForExist(`iframe[name="minikube"]`);
     });
 
     it('checks if default workspace has active cluster', async () => {
@@ -145,7 +148,6 @@ describe("Lens integration tests", () => {
       await app.client.click("div.minikube"); // select minikube context
     } // else the only context, which must be 'minikube', is automatically selected
     await app.client.click("div.Select__control"); // hide the context drop-down list (it might be obscuring the Add cluster(s) button)
-    await app.client.click("button.primary"); // blur focus from previous select
     await app.client.click("button.primary"); // add minikube cluster
   };
 
