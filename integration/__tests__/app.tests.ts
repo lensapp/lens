@@ -145,6 +145,7 @@ describe("Lens integration tests", () => {
       await app.client.click("div.minikube"); // select minikube context
     } // else the only context, which must be 'minikube', is automatically selected
     await app.client.click("div.Select__control"); // hide the context drop-down list (it might be obscuring the Add cluster(s) button)
+    await app.client.click("button.primary"); // blur focus from previous select
     await app.client.click("button.primary"); // add minikube cluster
   };
 
