@@ -8,10 +8,22 @@ import { apiKube } from "./index";
 import { kubeWatchApi } from "./kube-watch-api";
 import { apiManager } from "./api-manager";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
-import { apiKubePrefix, isDevelopment } from "../../common/vars";
+import { apiKubePrefix, isDevelopment, isTestEnv } from "../../common/vars";
 
 export interface IKubeApiOptions<T extends KubeObject> {
-  apiBase?: string; // base api-path for listing all resources, e.g. "/api/v1/pods"
+  /**
+   * base api-path for listing all resources, e.g. "/api/v1/pods"
+   */
+  apiBase?: string;
+
+  /**
+   * If the API uses a different API endpoint (e.g. apiBase) depending on the cluster version,
+   * fallback API bases can be listed individually.
+   * The first (existing) API base is used in the requests, if apiBase is not found.
+   * This option only has effect if checkPreferredVersion is true.
+   */
+  fallbackApiBases?: string[];
+
   objectConstructor?: IKubeObjectConstructor<T>;
   request?: KubeJsonApi;
   isNamespaced?: boolean;
@@ -33,6 +45,17 @@ export interface IKubePreferredVersion {
   preferredVersion?: {
     version: string;
   }
+}
+
+export interface IKubeResourceList {
+  resources: {
+    kind: string;
+    name: string;
+    namespaced: boolean;
+    singularName: string;
+    storageVersionHash: string;
+    verbs: string[];
+  }[];
 }
 
 export interface IKubeApiCluster {
@@ -85,7 +108,7 @@ export class KubeApi<T extends KubeObject = any> {
     if (!options.apiBase) {
       options.apiBase = objectConstructor.apiBase;
     }
-    const { apiBase, apiPrefix, apiGroup, apiVersion, apiVersionWithGroup, resource } = KubeApi.parseApi(options.apiBase);
+    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = KubeApi.parseApi(options.apiBase);
 
     this.kind = kind;
     this.isNamespaced = isNamespaced;
@@ -108,8 +131,73 @@ export class KubeApi<T extends KubeObject = any> {
       .join("/");
   }
 
+  /**
+   * Returns the latest API prefix/group that contains the required resource.
+   * First tries options.apiBase, then urls in order from options.fallbackApiBases.
+   */
+  private async getLatestApiPrefixGroup() {
+    // Note that this.options.apiBase is the "full" url, whereas this.apiBase is parsed
+    const apiBases = [this.options.apiBase, ...this.options.fallbackApiBases];
+
+    for (const apiUrl of apiBases) {
+      // Split e.g. "/apis/extensions/v1beta1/ingresses" to parts
+      const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = KubeApi.parseApi(apiUrl);
+
+      // Request available resources
+      try {
+        const response = await this.request.get<IKubeResourceList>(`${apiPrefix}/${apiVersionWithGroup}`);
+
+        // If the resource is found in the group, use this apiUrl
+        if (response.resources?.find(kubeResource => kubeResource.name === resource)) {
+          return { apiPrefix, apiGroup };
+        }
+      } catch (error) {
+        // Exception is ignored as we can try the next url
+        console.error(error);
+      }
+    }
+
+    // Avoid throwing in tests
+    if (isTestEnv) {
+      return {
+        apiPrefix: this.apiPrefix,
+        apiGroup: this.apiGroup
+      };
+    }
+
+    throw new Error(`Can't find working API for the Kubernetes resource ${this.apiResource}`);
+  }
+
+  /**
+   * Get the apiPrefix and apiGroup to be used for fetching the preferred version.
+   */
+  private async getPreferredVersionPrefixGroup() {
+    if (this.options.fallbackApiBases) {
+      return this.getLatestApiPrefixGroup();
+    } else {
+      return {
+        apiPrefix: this.apiPrefix,
+        apiGroup: this.apiGroup
+      };
+    }
+  }
+
   protected async checkPreferredVersion() {
+    if (this.options.fallbackApiBases && !this.options.checkPreferredVersion) {
+      throw new Error("checkPreferredVersion must be enabled if fallbackApiBases is set in KubeApi");
+    }
+
     if (this.options.checkPreferredVersion && this.apiVersionPreferred === undefined) {
+      const { apiPrefix, apiGroup } = await this.getPreferredVersionPrefixGroup();
+
+      // The apiPrefix and apiGroup might change due to fallbackApiBases, so we must override them
+      Object.defineProperty(this, "apiPrefix", {
+        value: apiPrefix
+      });
+      Object.defineProperty(this, "apiGroup", {
+        value: apiGroup
+      });
+
       const res = await this.request.get<IKubePreferredVersion>(`${this.apiPrefix}/${this.apiGroup}`);
       Object.defineProperty(this, "apiVersionPreferred", {
         value: res?.preferredVersion?.version ?? null,
