@@ -35,6 +35,29 @@ describe("Lens integration tests", () => {
     await app.client.waitUntilTextExists("h1", "Welcome");
   };
 
+  const minikubeReady = (): boolean => {
+    // determine if minikube is running
+    let status = spawnSync("minikube status", { shell: true });
+    if (status.status !== 0) {
+      console.warn("minikube not running");
+      return false;
+    }
+
+    // Remove TEST_NAMESPACE if it already exists
+    status = spawnSync(`minikube kubectl -- get namespace ${TEST_NAMESPACE}`, { shell: true });
+    if (status.status === 0) {
+      console.warn(`Removing existing ${TEST_NAMESPACE} namespace`);
+      status = spawnSync(`minikube kubectl -- delete namespace ${TEST_NAMESPACE}`, { shell: true });
+      if (status.status !== 0) {
+        console.warn(`Error removing ${TEST_NAMESPACE} namespace: ${status.stderr.toString()}`);
+        return false;
+      }
+      console.log(status.stdout.toString());
+    }
+    return true;
+  };
+  const ready = minikubeReady();
+
   describe("app start", () => {
     beforeAll(appStart, 20000);
 
@@ -73,7 +96,7 @@ describe("Lens integration tests", () => {
     });
   });
 
-  describe("workspaces", () => {
+  describeif(ready)("workspaces", () => {
     beforeAll(appStart, 20000);
 
     afterAll(async () => {
@@ -115,29 +138,6 @@ describe("Lens integration tests", () => {
       await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active");
     });
   });
-
-  const minikubeReady = (): boolean => {
-    // determine if minikube is running
-    let status = spawnSync("minikube status", { shell: true });
-    if (status.status !== 0) {
-      console.warn("minikube not running");
-      return false;
-    }
-
-    // Remove TEST_NAMESPACE if it already exists
-    status = spawnSync(`minikube kubectl -- get namespace ${TEST_NAMESPACE}`, { shell: true });
-    if (status.status === 0) {
-      console.warn(`Removing existing ${TEST_NAMESPACE} namespace`);
-      status = spawnSync(`minikube kubectl -- delete namespace ${TEST_NAMESPACE}`, { shell: true });
-      if (status.status !== 0) {
-        console.warn(`Error removing ${TEST_NAMESPACE} namespace: ${status.stderr.toString()}`);
-        return false;
-      }
-      console.log(status.stdout.toString());
-    }
-    return true;
-  };
-  const ready = minikubeReady();
 
   const addMinikubeCluster = async (app: Application) => {
     await app.client.click("div.add-cluster");
