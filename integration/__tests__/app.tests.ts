@@ -94,17 +94,19 @@ describe("Lens integration tests", () => {
       await app.client.waitUntilTextExists(".workspace .name a", "test-workspace");
     });
 
-    it('switches between workspaces', async () => {
+    it('adds cluster in default workspace', async () => {
       await addMinikubeCluster(app);
       await app.client.waitForExist(`iframe[name="minikube"]`);
       await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active");
+    });
 
-      // Go to test-workspace
+    it('adds cluster in test-workspace', async () => {
       await app.client.click('#current-workspace .Icon');
       await app.client.click('.WorkspaceMenu li[title="test description"]');
       await addMinikubeCluster(app);
+    });
 
-      // Back to default one
+    it('checks if default workspace has active cluster', async () => {
       await app.client.click('#current-workspace .Icon');
       await app.client.click('.WorkspaceMenu > li:first-of-type');
       await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active");
