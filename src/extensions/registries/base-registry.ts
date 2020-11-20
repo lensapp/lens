@@ -2,19 +2,18 @@
 import { action, observable } from "mobx";
 import { LensExtension } from "../lens-extension";
 
-export class BaseRegistry<T = object, I extends T = T> {
+export class BaseRegistry<T> {
   private items = observable<T>([], { deep: false });
 
-  getItems(): I[] {
-    return this.items.toJS() as I[];
+  getItems(): T[] {
+    return this.items.toJS();
   }
 
-  add(items: T | T[], ext?: LensExtension): () => void; // allow method overloading with required "ext"
+  add(items: T[], ext?: LensExtension): () => void; // allow method overloading with required "ext"
   @action
-  add(items: T | T[]) {
-    const normalizedItems = (Array.isArray(items) ? items : [items]);
-    this.items.push(...normalizedItems);
-    return () => this.remove(...normalizedItems);
+  add(items: T[]) {
+    this.items.push(...items);
+    return () => this.remove(...items);
   }
 
   @action

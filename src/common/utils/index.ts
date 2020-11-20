@@ -1,5 +1,7 @@
 // Common utils (main OR renderer)
 
+export const noop: any = () => { /* */ };
+
 export * from "./app-version";
 export * from "./autobind";
 export * from "./base64";

@@ -7,6 +7,7 @@ import { compile } from "path-to-regexp";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension } from "../lens-extension";
 import logger from "../../main/logger";
+import { noop } from "../../common/utils";
 
 export interface PageRegistration {
   /**
@@ -59,24 +60,26 @@ export function getExtensionPageUrl<P extends object>({ extensionId, pageId = ""
   return extPageRoutePath;
 }
 
-export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage> {
+export class PageRegistry extends BaseRegistry<RegisteredPage> {
   @action
   add(items: PageRegistration[], ext: LensExtension) {
-    let registeredPages: RegisteredPage[] = [];
     try {
-      registeredPages = items.map(page => ({
+      const pages = items.map(page => ({
         ...page,
         extensionId: ext.name,
         routePath: getExtensionPageUrl({ extensionId: ext.name, pageId: page.id ?? page.routePath }),
       }));
+
+      return super.add(pages);
     } catch (err) {
       logger.error(`[EXTENSION]: page-registration failed`, {
         items,
         extension: ext,
         error: String(err),
       });
+
+      return noop;
     }
-    return super.add(registeredPages);
   }
 
   getUrl<P extends object>({ extensionId, id: pageId }: RegisteredPage, params?: P) {
