@@ -4,6 +4,7 @@ import { BrowserWindow, dialog, ipcMain, shell, webContents } from "electron"
 import windowStateKeeper from "electron-window-state"
 import { observable } from "mobx";
 import { initMenu } from "./menu";
+import { tracker } from "../common/tracker";
 
 export class WindowManager {
   protected mainView: BrowserWindow;
@@ -39,6 +40,10 @@ export class WindowManager {
     this.mainView.webContents.on("new-window", (event, url) => {
       event.preventDefault();
       shell.openExternal(url);
+    });
+
+    this.mainView.on("focus", () => {
+      tracker.event("app", "focus")
     });
 
     // track visible cluster from ui
