@@ -62,9 +62,10 @@ export function getExtensionPageUrl<P extends object>({ extensionId, pageId = ""
 
 export class PageRegistry extends BaseRegistry<RegisteredPage> {
   @action
-  add(items: PageRegistration[], ext: LensExtension) {
+  add(items: PageRegistration | PageRegistration[], ext: LensExtension) {
+    const itemArray = Array.isArray(items) ? items : [items];
     try {
-      const pages = items.map(page => ({
+      const pages = itemArray.map(page => ({
         ...page,
         extensionId: ext.name,
         routePath: getExtensionPageUrl({ extensionId: ext.name, pageId: page.id ?? page.routePath }),

@@ -9,11 +9,12 @@ export class BaseRegistry<T> {
     return this.items.toJS();
   }
 
-  add(items: T[], ext?: LensExtension): () => void; // allow method overloading with required "ext"
+  add(items: T | T[], ext?: LensExtension): () => void; // allow method overloading with required "ext"
   @action
-  add(items: T[]) {
-    this.items.push(...items);
-    return () => this.remove(...items);
+  add(items: T | T[]) {
+    const itemArray: T[] = Array.isArray(items) ? items : [items];
+    this.items.push(...itemArray);
+    return () => this.remove(...itemArray);
   }
 
   @action
