@@ -75,7 +75,7 @@ export class Workspaces extends React.Component {
     const clusterId = workspaceStore.getById(id).lastActiveClusterId;
     workspaceStore.setActive(id);
     clusterStore.setActive(clusterId);
-  }
+  };
 
   clearEditing = (id: WorkspaceId) => {
     this.editingWorkspaces.delete(id);

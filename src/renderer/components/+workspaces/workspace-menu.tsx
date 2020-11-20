@@ -28,7 +28,7 @@ export class WorkspaceMenu extends React.Component<Props> {
     } else {
       navigate(landingURL());
     }
-  }
+  };
 
   render() {
     const { className, ...menuProps } = this.props;
