@@ -1,4 +1,4 @@
-import type { WorkspaceId } from "./workspace-store";
+import { workspaceStore } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
@@ -11,9 +11,10 @@ import { appEventBus } from "./event-bus";
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
+import { subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import _ from "lodash";
 import move from "array-move";
-import { subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
+import type { WorkspaceId } from "./workspace-store";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -142,7 +143,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   setActive(id: ClusterId) {
-    this.activeCluster = this.clusters.has(id) ? id : null;
+    const clusterId = this.clusters.has(id) ? id : null;
+    this.activeCluster = clusterId;
+    workspaceStore.setLastActiveClusterId(clusterId);
   }
 
   @action

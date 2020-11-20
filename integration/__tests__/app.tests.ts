@@ -35,6 +35,29 @@ describe("Lens integration tests", () => {
     await app.client.waitUntilTextExists("h1", "Welcome");
   };
 
+  const minikubeReady = (): boolean => {
+    // determine if minikube is running
+    let status = spawnSync("minikube status", { shell: true });
+    if (status.status !== 0) {
+      console.warn("minikube not running");
+      return false;
+    }
+
+    // Remove TEST_NAMESPACE if it already exists
+    status = spawnSync(`minikube kubectl -- get namespace ${TEST_NAMESPACE}`, { shell: true });
+    if (status.status === 0) {
+      console.warn(`Removing existing ${TEST_NAMESPACE} namespace`);
+      status = spawnSync(`minikube kubectl -- delete namespace ${TEST_NAMESPACE}`, { shell: true });
+      if (status.status !== 0) {
+        console.warn(`Error removing ${TEST_NAMESPACE} namespace: ${status.stderr.toString()}`);
+        return false;
+      }
+      console.log(status.stdout.toString());
+    }
+    return true;
+  };
+  const ready = minikubeReady();
+
   describe("app start", () => {
     beforeAll(appStart, 20000);
 
@@ -73,28 +96,48 @@ describe("Lens integration tests", () => {
     });
   });
 
-  const minikubeReady = (): boolean => {
-    // determine if minikube is running
-    let status = spawnSync("minikube status", { shell: true });
-    if (status.status !== 0) {
-      console.warn("minikube not running");
-      return false;
-    }
+  describeif(ready)("workspaces", () => {
+    beforeAll(appStart, 20000);
 
-    // Remove TEST_NAMESPACE if it already exists
-    status = spawnSync(`minikube kubectl -- get namespace ${TEST_NAMESPACE}`, { shell: true });
-    if (status.status === 0) {
-      console.warn(`Removing existing ${TEST_NAMESPACE} namespace`);
-      status = spawnSync(`minikube kubectl -- delete namespace ${TEST_NAMESPACE}`, { shell: true });
-      if (status.status !== 0) {
-        console.warn(`Error removing ${TEST_NAMESPACE} namespace: ${status.stderr.toString()}`);
-        return false;
+    afterAll(async () => {
+      if (app && app.isRunning()) {
+        return util.tearDown(app);
       }
-      console.log(status.stdout.toString());
-    }
-    return true;
-  };
-  const ready = minikubeReady();
+    });
+
+    it('creates new workspace', async () => {
+      await clickWhatsNew(app);
+      await app.client.click('#current-workspace .Icon');
+      await app.client.click('a[href="/workspaces"]');
+      await app.client.click('.Workspaces button.Button');
+      await app.client.keys("test-workspace");
+      await app.client.click('.Workspaces .Input.description input');
+      await app.client.keys("test description");
+      await app.client.click('.Workspaces .workspace.editing .Icon');
+      await app.client.waitUntilTextExists(".workspace .name a", "test-workspace");
+    });
+
+    it('adds cluster in default workspace', async () => {
+      await addMinikubeCluster(app);
+      await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
+      await app.client.waitForExist(`iframe[name="minikube"]`);
+      await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active");
+    });
+
+    it('adds cluster in test-workspace', async () => {
+      await app.client.click('#current-workspace .Icon');
+      await app.client.click('.WorkspaceMenu li[title="test description"]');
+      await addMinikubeCluster(app);
+      await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
+      await app.client.waitForExist(`iframe[name="minikube"]`);
+    });
+
+    it('checks if default workspace has active cluster', async () => {
+      await app.client.click('#current-workspace .Icon');
+      await app.client.click('.WorkspaceMenu > li:first-of-type');
+      await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active");
+    });
+  });
 
   const addMinikubeCluster = async (app: Application) => {
     await app.client.click("div.add-cluster");

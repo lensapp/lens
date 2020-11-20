@@ -13,6 +13,7 @@ import { Input } from "../input";
 import { cssNames, prevDefault } from "../../utils";
 import { Button } from "../button";
 import { isRequired, InputValidator } from "../input/input_validators";
+import { clusterStore } from "../../../common/cluster-store";
 
 @observer
 export class Workspaces extends React.Component {
@@ -68,6 +69,12 @@ export class Workspaces extends React.Component {
   editWorkspace = (id: WorkspaceId) => {
     const workspace = workspaceStore.getById(id);
     this.editingWorkspaces.set(id, toJS(workspace));
+  };
+
+  activateWorkspace = (id: WorkspaceId) => {
+    const clusterId = workspaceStore.getById(id).lastActiveClusterId;
+    workspaceStore.setActive(id);
+    clusterStore.setActive(clusterId);
   };
 
   clearEditing = (id: WorkspaceId) => {
@@ -135,7 +142,7 @@ export class Workspaces extends React.Component {
                 {!isEditing && (
                   <Fragment>
                     <span className="name flex gaps align-center">
-                      <a href="#" onClick={prevDefault(() => workspaceStore.setActive(workspaceId))}>{name}</a>
+                      <a href="#" onClick={prevDefault(() => this.activateWorkspace(workspaceId))}>{name}</a>
                       {isActive && <span> <Trans>(current)</Trans></span>}
                     </span>
                     <span className="description">{description}</span>

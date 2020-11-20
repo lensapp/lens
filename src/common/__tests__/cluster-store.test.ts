@@ -65,6 +65,7 @@ describe("empty config", () => {
     it("sets active cluster", () => {
       clusterStore.setActive("foo");
       expect(clusterStore.active.id).toBe("foo");
+      expect(workspaceStore.currentWorkspace.lastActiveClusterId).toBe("foo");
     });
   });
 
