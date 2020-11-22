@@ -83,7 +83,7 @@ export class HelmRepoManager extends Singleton {
           repositories: []
         }));
       if (!repositories.length) {
-        await this.addRepo({ name: "stable", url: "https://kubernetes-charts.storage.googleapis.com/" });
+        await this.addRepo({ name: "bitnami", url: "https://charts.bitnami.com/bitnami" });
         return await this.repositories();
       }
       return repositories.map(repo => ({
