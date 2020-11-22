@@ -101,7 +101,7 @@ publish-npm: build-npm
 
 .PHONY: docs
 docs:
- yarn mkdocs-serve-local
+	yarn mkdocs-serve-local
 
 .PHONY: clean-extensions
 clean-extensions:
