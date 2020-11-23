@@ -1,18 +1,18 @@
-import { randomBytes } from "crypto"
-import { SHA256 } from "crypto-js"
-import { app } from "electron"
-import fse from "fs-extra"
-import { action, observable, toJS } from "mobx"
-import path from "path"
-import { BaseStore } from "../common/base-store"
-import { LensExtensionId } from "../extensions/lens-extension"
+import { randomBytes } from "crypto";
+import { SHA256 } from "crypto-js";
+import { app } from "electron";
+import fse from "fs-extra";
+import { action, observable, toJS } from "mobx";
+import path from "path";
+import { BaseStore } from "../common/base-store";
+import { LensExtensionId } from "../extensions/lens-extension";
 
 interface FSProvisionModel {
   extensions: Record<string, string>; // extension names to paths
 }
 
 export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
-  @observable registeredExtensions = observable.map<LensExtensionId, string>()
+  @observable registeredExtensions = observable.map<LensExtensionId, string>();
 
   private constructor() {
     super({
@@ -29,20 +29,20 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
    */
   async requestDirectory(extensionName: string): Promise<string> {
     if (!this.registeredExtensions.has(extensionName)) {
-      const salt = randomBytes(32).toString("hex")
-      const hashedName = SHA256(`${extensionName}/${salt}`).toString()
-      const dirPath = path.resolve(app.getPath("userData"), "extension_data", hashedName)
-      this.registeredExtensions.set(extensionName, dirPath)
+      const salt = randomBytes(32).toString("hex");
+      const hashedName = SHA256(`${extensionName}/${salt}`).toString();
+      const dirPath = path.resolve(app.getPath("userData"), "extension_data", hashedName);
+      this.registeredExtensions.set(extensionName, dirPath);
     }
 
-    const dirPath = this.registeredExtensions.get(extensionName)
-    await fse.ensureDir(dirPath)
-    return dirPath
+    const dirPath = this.registeredExtensions.get(extensionName);
+    await fse.ensureDir(dirPath);
+    return dirPath;
   }
 
   @action
   protected fromStore({ extensions }: FSProvisionModel = { extensions: {} }): void {
-    this.registeredExtensions.merge(extensions)
+    this.registeredExtensions.merge(extensions);
   }
 
   toJSON(): FSProvisionModel {
@@ -50,8 +50,8 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
       extensions: this.registeredExtensions.toJSON(),
     }, {
       recurseEverything: true
-    })
+    });
   }
 }
 
-export const filesystemProvisionerStore = FilesystemProvisionerStore.getInstance<FilesystemProvisionerStore>()
+export const filesystemProvisionerStore = FilesystemProvisionerStore.getInstance<FilesystemProvisionerStore>();
