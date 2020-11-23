@@ -28,7 +28,7 @@ export class AccessError extends LoadKubeError {
   }
 
   toString() {
-    return `Failed to loading the kube config. Permission denied.\n\n${this.pathname}`;
+    return `Failed loading the kube config. Permission denied.\n\n${this.pathname}`;
   }
 }
 
@@ -40,18 +40,19 @@ export class ExistError extends LoadKubeError {
   }
 
   toString() {
-    return `Failed to loading the kube config. No such file.\n\n${this.pathname}`;
+    return `Failed loading the kube config. No such file.\n\n${this.pathname}`;
   }
 }
 
 export function loadConfig(pathOrContent: string): KubeConfig {
   const kc = new KubeConfig();
+  const pathVersion = resolveTilde(pathOrContent);
   try {
-    kc.loadFromFile(pathOrContent);
+    kc.loadFromFile(pathVersion);
   } catch (err) {
     switch (err.code) {
       case "ENOENT": { // No such file or directory
-        const dir = path.dirname(pathOrContent);
+        const dir = path.dirname(pathVersion);
         const dirStat = fse.statSync(dir);
         if (dirStat.isDirectory()) {
           throw new ExistError(pathOrContent);
