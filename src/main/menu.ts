@@ -218,6 +218,12 @@ export function buildMenu(windowManager: WindowManager) {
           shell.openExternal('https://docs.k8slens.dev/');
         },
       },
+      {
+        label: "Support",
+        click: async () => {
+          shell.openExternal('https://docs.k8slens.dev/latest/support/');
+        },
+      },
       ...ignoreOnMac([
         {
           label: "About Lens",
