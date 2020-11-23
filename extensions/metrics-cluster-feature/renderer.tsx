@@ -19,5 +19,5 @@ export default class ClusterMetricsFeatureExtension extends LensRendererExtensio
       },
       feature: new MetricsFeature()
     }
-  ]
+  ];
 }
