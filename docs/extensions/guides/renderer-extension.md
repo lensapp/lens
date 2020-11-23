@@ -116,7 +116,7 @@ export class ExamplePage extends React.Component<{ extension: LensRendererExtens
 }
 ```
 
-`ExampleIcon` introduces one of Lens' built-in components available to extension developers, the `Component.Icon`. Built in are the [Material Design](https://material.io) icons. One can be selected by name via the `material` field. `ExampleIcon` also sets a tooltip, shown when the Lens user hovers over the icon with a mouse, by setting the `tooltip` field.
+`ExampleIcon` introduces one of Lens' built-in components available to extension developers, the `Component.Icon`. Built in are the [Material Design](https://material.io) [icons](https://material.io/resources/icons/). One can be selected by name via the `material` field. `ExampleIcon` also sets a tooltip, shown when the Lens user hovers over the icon with a mouse, by setting the `tooltip` field.
 
 A cluster page menu can also be used to define a foldout submenu in the cluster dashboard sidebar. This enables the grouping of cluster pages. The following example shows how to specify a submenu having two menu items:
 
@@ -267,7 +267,7 @@ export class HelpPage extends React.Component<{ extension: LensRendererExtension
 }
 ```
 
-`HelpIcon` introduces one of Lens' built-in components available to extension developers, the `Component.Icon`. Built in are the [Material Design](https://material.io) icons. One can be selected by name via the `material` field. 
+`HelpIcon` introduces one of Lens' built-in components available to extension developers, the `Component.Icon`. Built in are the [Material Design](https://material.io) [icons](https://material.io/resources/icons/). One can be selected by name via the `material` field. 
 
 
 
