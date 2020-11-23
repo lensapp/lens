@@ -30,7 +30,7 @@ git remote add $GITHUB_USER git@github.com:${GITHUB_USER}/lens.git
 git remote set-url --push origin no_push
 
 # Set your fork remote as a default push target
-git push --set-upstream $GITHUB_USER main
+git push --set-upstream $GITHUB_USER master
 ```
 
 Your remotes should look something like this:
@@ -56,7 +56,7 @@ Rebase your branch:
 ```
 git fetch origin
 
-git rebase origin/main
+git rebase origin/master
 Current branch my_feature_branch is up to date.
 ```
 
