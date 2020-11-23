@@ -278,7 +278,7 @@
     "@types/circular-dependency-plugin": "^5.0.1",
     "@types/color": "^3.0.1",
     "@types/crypto-js": "^3.1.47",
-    "@types/dompurify": "^2.0.2",
+    "@types/dompurify": "^2.0.4",
     "@types/electron-window-state": "^2.0.34",
     "@types/fs-extra": "^9.0.1",
     "@types/hapi": "^18.0.3",
