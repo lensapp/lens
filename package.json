@@ -274,7 +274,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@testing-library/jest-dom": "^5.11.5",
     "@testing-library/react": "^11.1.0",
-    "@types/chart.js": "^2.9.21",
+    "@types/chart.js": "^2.9.28",
     "@types/circular-dependency-plugin": "^5.0.1",
     "@types/color": "^3.0.1",
     "@types/crypto-js": "^3.1.47",
