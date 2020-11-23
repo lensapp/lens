@@ -1,6 +1,7 @@
 import "./extensions.scss";
-import { remote, shell } from "electron";
+import { app, remote, shell } from "electron";
 import path from "path";
+import tar from "tar";
 import fse from "fs-extra";
 import React from "react";
 import { computed, observable } from "mobx";
@@ -9,7 +10,7 @@ import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { Button } from "../button";
 import { WizardLayout } from "../layout/wizard-layout";
-import { DropFileInput, Input, InputValidators } from "../input";
+import { DropFileInput, Input, InputValidators, SearchInput } from "../input";
 import { Icon } from "../icon";
 import { PageLayout } from "../layout/page-layout";
 import { Clipboard } from "../clipboard";
@@ -76,7 +77,7 @@ export class Extensions extends React.Component {
     if (tarballUrl) {
       try {
         const { promise: filePromise } = downloadFile({ url: tarballUrl });
-        this.installExtensionFromFile([await filePromise]);
+        this.requestInstall([await filePromise]);
       } catch (err) {
         Notifications.error(`Installing extension from ${tarballUrl} has failed: ${String(err)}`);
       }
@@ -84,24 +85,49 @@ export class Extensions extends React.Component {
   }
 
   installFromSelectFileDialog = async (filePaths: string[]) => {
-    logger.info('Install from select dialog', { filePaths });
+    logger.info('Install from file-select dialog', { files: filePaths });
     const files: File[] = await Promise.all(
       filePaths.map(filePath => {
         const fileName = path.basename(filePath);
         return fse.readFile(filePath).then(buffer => new File([buffer], fileName));
       })
     );
-    return this.installExtensionFromFile(files);
+    return this.requestInstall(files);
   }
 
   installOnDrop = (files: File[]) => {
-    logger.info('Install from D&D', { files });
-    return this.installExtensionFromFile(files);
+    logger.info('Install from D&D', { files: files.map(file => file.path) });
+    return this.requestInstall(files);
   }
 
   // todo
-  async installExtensionFromFile(files: File[]) {
-    console.log(`Install files:`, files);
+  async installExtension(tarball: File, cleanUp?: () => void) {
+    logger.info(`Installing extension ${tarball.name} to ${this.extensionsPath}`);
+    const tempDir = path.join(app.getPath("temp"), "extensions");
+    await fse.ensureDir(tempDir);
+    const unpack = () => {
+      tar.extract({
+        cwd: tempDir,
+      })
+    }
+    if (cleanUp) {
+      cleanUp();
+    }
+  }
+
+  // todo: show name and description from unpacked archive
+  async requestInstall(files: File[]) {
+    files.forEach((ext: File) => {
+      const removeNotification = Notifications.info(
+        <div className="InstallingExtensionNotification flex gaps">
+          <p>Install extension <em>{ext.name}</em>?</p>
+          <Button
+            label="Confirm"
+            onClick={() => this.installExtension(ext, removeNotification)}
+          />
+        </div>
+      );
+    })
   }
 
   renderInfo() {
@@ -140,11 +166,11 @@ export class Extensions extends React.Component {
           </div>
           <Button
             primary
-            label="Select local extensions"
+            label="Select extensions to install"
             onClick={this.selectLocalExtensionsDialog}
           />
           <p className="hint">
-            <Trans><b>Pro-Tip 1</b>: you can download NPM-package to local folder with</Trans>
+            <Trans><b>Pro-Tip 1</b>: you can download tarball from NPM via</Trans>
             <Clipboard showNotification>
               <code>npm pack %package-name</code>
             </Clipboard>
@@ -202,10 +228,7 @@ export class Extensions extends React.Component {
       <PageLayout showOnTop className="Extensions" header={<h2>Extensions</h2>}>
         <DropFileInput onDropFiles={this.installOnDrop}>
           <WizardLayout infoPanel={this.renderInfo()}>
-            <Input
-              autoFocus
-              theme="round-black"
-              className="SearchInput"
+            <SearchInput
               placeholder={_i18n._(t`Search extensions`)}
               value={this.search}
               onChange={(value) => this.search = value}

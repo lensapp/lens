@@ -51,15 +51,12 @@
       align-self: flex-start;
     }
   }
+}
 
-  .SearchInput {
-    margin-top: $margin / 2;
-    margin-bottom: $margin * 2;
-    max-width: none;
-
-    > label {
-      padding: $padding $padding * 2;
-      border-radius: $radius;
-    }
+.InstallingExtensionNotification {
+  .Button {
+    background-color: unset;
+    border: 1px solid currentColor;
+    box-shadow: none !important;
   }
 }
