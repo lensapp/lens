@@ -9,8 +9,9 @@ export interface KubeObjectStatusRegistration {
 
 export class KubeObjectStatusRegistry extends BaseRegistry<KubeObjectStatusRegistration> {
   getItemsForKind(kind: string, apiVersion: string) {
-    return this.getItems()
-      .filter(item => item.kind === kind && item.apiVersions.includes(apiVersion));
+    return this.getItems().filter((item) => {
+      return item.kind === kind && item.apiVersions.includes(apiVersion);
+    });
   }
 }
 

@@ -30,16 +30,28 @@ export interface PageMenuComponents {
 export class GlobalPageMenuRegistry extends BaseRegistry<PageMenuRegistration> {
   @action
   add(items: PageMenuRegistration[], ext: LensExtension) {
-    const norm = items.map(item => ((item.target ??= {}).extensionId = ext.name, item));
-    return super.add(norm);
+    const normalizedItems = items.map(menuItem => {
+      menuItem.target = {
+        extensionId: ext.name,
+        ...(menuItem.target || {}),
+      };
+      return menuItem;
+    });
+    return super.add(normalizedItems);
   }
 }
 
 export class ClusterPageMenuRegistry extends BaseRegistry<ClusterPageMenuRegistration> {
   @action
   add(items: PageMenuRegistration[], ext: LensExtension) {
-    const norm = items.map(item => ((item.target ??= {}).extensionId = ext.name, item));
-    return super.add(norm);
+    const normalizedItems = items.map(menuItem => {
+      menuItem.target = {
+        extensionId: ext.name,
+        ...(menuItem.target || {}),
+      };
+      return menuItem;
+    });
+    return super.add(normalizedItems);
   }
 
   getRootItems() {
