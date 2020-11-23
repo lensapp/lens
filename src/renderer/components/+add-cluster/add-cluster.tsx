@@ -24,6 +24,7 @@ import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Tab, Tabs } from "../tabs";
 import { ExecValidationNotFoundError } from "../../../common/custom-errors";
+import { appEventBus } from "../../../common/event-bus";
 
 enum KubeConfigSourceTab {
   FILE = "file",
@@ -48,6 +49,7 @@ export class AddCluster extends React.Component {
   componentDidMount() {
     clusterStore.setActive(null);
     this.setKubeConfig(userStore.kubeConfigPath);
+    appEventBus.emit({ name: "cluster-add", action: "start" });
   }
 
   componentWillUnmount() {
@@ -129,7 +131,7 @@ export class AddCluster extends React.Component {
       }
       this.error = "";
       this.isWaiting = true;
-
+      appEventBus.emit({ name: "cluster-add", action: "click" });
       newClusters = this.selectedContexts.filter(context => {
         try {
           const kubeConfig = this.kubeContexts.get(context);
