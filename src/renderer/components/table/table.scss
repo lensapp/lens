@@ -5,6 +5,10 @@
     }
   }
 
+  &.scrollable {
+    overflow: auto;
+  }
+
   &.selectable {
     .TableHead, .TableRow {
       padding: 0 $padding;
