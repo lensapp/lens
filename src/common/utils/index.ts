@@ -12,3 +12,4 @@ export * from "./splitArray";
 export * from "./saveToAppFiles";
 export * from "./singleton";
 export * from "./openExternal";
+export * from "./downloadFile";

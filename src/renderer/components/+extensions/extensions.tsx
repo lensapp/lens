@@ -16,8 +16,8 @@ import { Clipboard } from "../clipboard";
 import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionManager } from "../../../extensions/extension-manager";
 import { Notifications } from "../notifications";
-import request from "request";
 import logger from "../../../main/logger";
+import { downloadFile } from "../../../common/utils";
 
 @observer
 export class Extensions extends React.Component {
@@ -56,18 +56,6 @@ export class Extensions extends React.Component {
     }
   }
 
-  // fixme: doesn't work
-  // todo: move to common/utils
-  async downloadFile(url: string, fileName = path.basename(url)): Promise<File> {
-    return new Promise((resolve, reject) => {
-      const downloadingReq = request(url, { gzip: true });
-      downloadingReq.on("complete", (res, body: Buffer) => {
-        resolve(new File([body], fileName));
-      });
-      downloadingReq.on("error", reject);
-    })
-  }
-
   installFromUrl = async () => {
     const { downloadUrl } = this;
     if (!downloadUrl) {
@@ -87,8 +75,8 @@ export class Extensions extends React.Component {
     logger.info('Install from packed extension URL', { tarballUrl });
     if (tarballUrl) {
       try {
-        const file = await this.downloadFile(tarballUrl);
-        this.installExtensionFromFile([file]);
+        const { promise: filePromise } = downloadFile({ url: tarballUrl });
+        this.installExtensionFromFile([await filePromise]);
       } catch (err) {
         Notifications.error(`Installing extension from ${tarballUrl} has failed: ${String(err)}`);
       }
