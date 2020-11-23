@@ -98,8 +98,12 @@ export class ExtensionManager {
   }
 
   getNpmPackageTarballUrl(packageName: string) {
-    const command = [this.npmPath, "view", packageName, "dist.tarball", "--silent"];
-    return child_process.execSync(command.join(" "), { encoding: "utf8" }).trim();
+    try {
+      const command = [this.npmPath, "view", packageName, "dist.tarball", "--silent"];
+      return child_process.execSync(command.join(" "), { encoding: "utf8" }).trim();
+    } catch (err) {
+      return null;
+    }
   }
 
   protected installPackages(): Promise<void> {

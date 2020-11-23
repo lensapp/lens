@@ -1,7 +1,7 @@
 import "./extensions.scss";
-import { app, remote, shell } from "electron";
+import { remote, shell } from "electron";
+import os from "os";
 import path from "path";
-import tar from "tar";
 import fse from "fs-extra";
 import React from "react";
 import { computed, observable } from "mobx";
@@ -14,14 +14,28 @@ import { DropFileInput, Input, InputValidators, SearchInput } from "../input";
 import { Icon } from "../icon";
 import { PageLayout } from "../layout/page-layout";
 import { Clipboard } from "../clipboard";
+import logger from "../../../main/logger";
 import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionManager } from "../../../extensions/extension-manager";
+import { LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
 import { Notifications } from "../notifications";
-import logger from "../../../main/logger";
 import { downloadFile } from "../../../common/utils";
+import { extractTar, readFileFromTar } from "../../../common/utils/tar";
+
+interface InstallRequest {
+  fileName: string;
+  filePath?: string;
+  data?: Buffer;
+}
+
+interface InstallRequestValidated extends InstallRequest {
+  manifest: LensExtensionManifest;
+  tmpFile: string; // temp file for unpacking
+}
 
 @observer
 export class Extensions extends React.Component {
+  private supportedFormats = [".tar", ".tgz"];
   @observable search = "";
   @observable downloadUrl = "";
 
@@ -40,94 +54,190 @@ export class Extensions extends React.Component {
     return extensionManager.localFolderPath;
   }
 
-  selectLocalExtensionsDialog = async () => {
-    const supportedFormats = [".tgz", ".tar.gz"]
+  getExtensionDestFolder(name: string) {
+    return path.join(this.extensionsPath, sanitizeExtensionName(name));
+  }
+
+  installFromSelectFileDialog = async () => {
     const { dialog, BrowserWindow, app } = remote;
     const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
       defaultPath: app.getPath("downloads"),
       properties: ["openFile", "multiSelections"],
-      message: _i18n._(t`Select extensions to install (supported formats: ${supportedFormats.join(", ")}), `),
+      message: _i18n._(t`Select extensions to install (formats: ${this.supportedFormats.join(", ")}), `),
       buttonLabel: _i18n._(t`Use configuration`),
       filters: [
-        { name: "tarball", extensions: supportedFormats }
+        { name: "tarball", extensions: this.supportedFormats }
       ]
     });
     if (!canceled && filePaths.length) {
-      this.installFromSelectFileDialog(filePaths);
+      this.requestInstall(
+        filePaths.map(filePath => ({
+          fileName: path.basename(filePath),
+          filePath: filePath,
+        }))
+      );
     }
   }
 
-  installFromUrl = async () => {
-    const { downloadUrl } = this;
-    if (!downloadUrl) {
-      return;
-    }
-    let tarballUrl: string;
-    if (InputValidators.isUrl.validate(downloadUrl)) {
-      tarballUrl = downloadUrl;
+  installExtensions = () => {
+    if (this.downloadUrl) {
+      this.installFromNpmOrUrl(this.downloadUrl);
+      this.downloadUrl = "";
     } else {
-      try {
-        tarballUrl = extensionManager.getNpmPackageTarballUrl(downloadUrl);
-      } catch (err) {
-        Notifications.error(`Error: npm package "${downloadUrl}" not found`);
+      this.installFromSelectFileDialog();
+    }
+  }
+
+  installFromNpmOrUrl = async (url = this.downloadUrl) => {
+    if (!InputValidators.isUrl.validate(url)) {
+      url = extensionManager.getNpmPackageTarballUrl(url);
+      if (!url) {
+        Notifications.error(`Error: npm package "${url}" not found!`);
         return;
       }
     }
-    logger.info('Install from packed extension URL', { tarballUrl });
-    if (tarballUrl) {
-      try {
-        const { promise: filePromise } = downloadFile({ url: tarballUrl });
-        this.requestInstall([await filePromise]);
-      } catch (err) {
-        Notifications.error(`Installing extension from ${tarballUrl} has failed: ${String(err)}`);
-      }
+    try {
+      const { promise: filePromise } = downloadFile({ url });
+      this.requestInstall([{
+        fileName: path.basename(url),
+        data: await filePromise,
+      }]);
+    } catch (err) {
+      Notifications.error(
+        <div className="flex column gaps">
+          <p>Installation from URL has failed: <b>{String(err)}</b></p>
+          <p>URL: <em>{url}</em></p>
+        </div>
+      );
     }
-  }
-
-  installFromSelectFileDialog = async (filePaths: string[]) => {
-    logger.info('Install from file-select dialog', { files: filePaths });
-    const files: File[] = await Promise.all(
-      filePaths.map(filePath => {
-        const fileName = path.basename(filePath);
-        return fse.readFile(filePath).then(buffer => new File([buffer], fileName));
-      })
-    );
-    return this.requestInstall(files);
   }
 
   installOnDrop = (files: File[]) => {
-    logger.info('Install from D&D', { files: files.map(file => file.path) });
-    return this.requestInstall(files);
+    logger.info('Install from D&D');
+    return this.requestInstall(
+      files.map(file => ({
+        fileName: path.basename(file.path),
+        filePath: file.path,
+      }))
+    );
   }
 
-  // todo
-  async installExtension(tarball: File, cleanUp?: () => void) {
-    logger.info(`Installing extension ${tarball.name} to ${this.extensionsPath}`);
-    const tempDir = path.join(app.getPath("temp"), "extensions");
-    await fse.ensureDir(tempDir);
-    const unpack = () => {
-      tar.extract({
-        cwd: tempDir,
-      })
-    }
-    if (cleanUp) {
-      cleanUp();
-    }
-  }
+  async requestInstall(installRequests: InstallRequest[]) {
+    const pendingFiles: Promise<any>[] = [];
 
-  // todo: show name and description from unpacked archive
-  async requestInstall(files: File[]) {
-    files.forEach((ext: File) => {
+    // read extensions with provided system path if any
+    installRequests.forEach(ext => {
+      if (ext.data) return;
+      const promise = fse.readFile(ext.filePath)
+        .then(data => ext.data = data)
+        .catch(err => {
+          Notifications.error(`Error while reading "${ext.filePath}": ${String(err)}`);
+        });
+      pendingFiles.push(promise)
+    });
+    await Promise.all(pendingFiles);
+    installRequests = installRequests.filter(item => item.data); // remove items with reading errors
+
+    // prepare temp folder
+    const tempFolder = path.join(os.tmpdir(), "lens-extensions");
+    await fse.ensureDir(tempFolder);
+
+    // copy files to temp, get extension info from package.json and do basic validation
+    let validatedInstalls: Promise<InstallRequestValidated>[] = installRequests.map(async installReq => {
+      const { fileName, data } = installReq;
+      const tempFile = path.join(tempFolder, fileName);
+      await fse.writeFileSync(tempFile, data); // copy to temp
+      try {
+        const packageJson: Buffer = await readFileFromTar(tempFile, {
+          // tarball from npm contains single root folder "package/*"
+          fileMatcher: (path: string) => !!path.match(/(\w+\/)?package\.json$/),
+          notFoundMessage: "Extension's manifest file (package.json) not found",
+        });
+        const manifest: LensExtensionManifest = JSON.parse(packageJson.toString("utf8"));
+        if (!manifest.lens && !manifest.renderer) {
+          throw `package.json must specify "main" and/or "renderer" fields`;
+        }
+        return {
+          ...installReq,
+          manifest: manifest,
+          tmpFile: tempFile,
+        }
+      } catch (err) {
+        fse.unlink(tempFile).catch(() => null); // remove invalid temp file
+        Notifications.error(
+          <div className="flex column gaps">
+            <p>Installing <em>{fileName}</em> has failed, skipping.</p>
+            <p>Reason: <em>{String(err)}</em></p>
+          </div>
+        );
+      }
+    });
+
+    // final step, provide UI with extension info for reviewing and confirming installation
+    const extensions = await Promise.all(validatedInstalls);
+    extensions.forEach(install => {
+      if (!install) {
+        return; // skip validating errors if any
+      }
+      const { fileName, manifest } = install;
+      const { name, version, description } = manifest;
+      const extensionFolder = this.getExtensionDestFolder(name);
+      const folderExists = fse.existsSync(extensionFolder);
       const removeNotification = Notifications.info(
-        <div className="InstallingExtensionNotification flex gaps">
-          <p>Install extension <em>{ext.name}</em>?</p>
-          <Button
-            label="Confirm"
-            onClick={() => this.installExtension(ext, removeNotification)}
-          />
+        <div className="InstallingExtensionNotification flex gaps align-center">
+          <div className="flex column gaps">
+            <p>Install extension <b title={fileName}>{name}@{version}</b>?</p>
+            <p>Description: <em>{description}</em></p>
+            {folderExists && (
+              <div className="folder-remove-warning flex gaps inline align-center" onClick={() => shell.openPath(extensionFolder)}>
+                <Icon small material="warning"/>
+                <p>
+                  <b>Warning:</b> <code>{extensionFolder}</code> will be removed before installation.
+                </p>
+              </div>
+            )}
+          </div>
+          <Button autoFocus label="Install" onClick={() => {
+            removeNotification();
+            this.unpackExtension(install);
+          }}/>
         </div>
       );
     })
+  }
+
+  async unpackExtension({ fileName, tmpFile, manifest: { name, version } }: InstallRequestValidated) {
+    logger.info(`Unpacking extension ${name} from ${fileName}`);
+    const unpackingTempFolder = path.join(path.dirname(tmpFile), path.basename(tmpFile) + "-unpacked");
+    const extensionFolder = this.getExtensionDestFolder(name);
+    try {
+      // extract to temp folder first
+      await fse.remove(unpackingTempFolder).catch(Function);
+      await fse.ensureDir(unpackingTempFolder);
+      await extractTar(tmpFile, { cwd: unpackingTempFolder });
+
+      // move contents to extensions folder
+      const unpackedFiles = await fse.readdir(unpackingTempFolder);
+      let unpackedRootFolder = unpackingTempFolder;
+      if (unpackedFiles.length === 1) {
+        // handle case when extension.tgz packed with top root folder,
+        // e.g. "npm pack %ext_name" downloads file with "package" root folder within tarball
+        unpackedRootFolder = path.join(unpackingTempFolder, unpackedFiles[0]);
+      }
+      await fse.ensureDir(extensionFolder);
+      await fse.move(unpackedRootFolder, extensionFolder, { overwrite: true });
+      Notifications.ok(
+        <p>Extension <b>{name}/{version}</b> successfully installed!</p>
+      );
+    } catch (err) {
+      Notifications.error(
+        <p>Installing extension <b>{name}</b> has failed: <em>{err}</em></p>
+      );
+    } finally {
+      // clean up
+      fse.remove(unpackingTempFolder).catch(Function);
+      fse.unlink(tmpFile).catch(Function);
+    }
   }
 
   renderInfo() {
@@ -146,31 +256,25 @@ export class Extensions extends React.Component {
           </div>
         </div>
         <div className="install-extension flex column gaps">
-          <p><em>Install extensions from archive (tarball.tgz):</em></p>
-          <div className="install-extension-by-url flex gaps align-center">
-            <Input
-              showErrorsAsTooltip={true}
-              className="box grow"
-              theme="round-black"
-              placeholder="URL or NPM package name"
-              value={this.downloadUrl}
-              onChange={v => this.downloadUrl = v}
-              onSubmit={this.installFromUrl}
-            />
-            <Icon
-              material="get_app"
-              tooltip={{ children: "Install", preferredPositions: "bottom" }}
-              interactive={this.downloadUrl.length > 0}
-              onClick={this.installFromUrl}
-            />
-          </div>
+          <em>
+            Install extensions from tarball ({this.supportedFormats.join(", ")}):
+          </em>
+          <Input
+            showErrorsAsTooltip={true}
+            className="box grow"
+            theme="round-black"
+            placeholder="URL or npm-package-name"
+            value={this.downloadUrl}
+            onChange={v => this.downloadUrl = v}
+            onSubmit={this.installExtensions}
+          />
           <Button
             primary
-            label="Select extensions to install"
-            onClick={this.selectLocalExtensionsDialog}
+            label="Add extensions"
+            onClick={this.installExtensions}
           />
           <p className="hint">
-            <Trans><b>Pro-Tip 1</b>: you can download tarball from NPM via</Trans>
+            <Trans><b>Pro-Tip 1</b>: you can download packed extension from NPM via</Trans>
             <Clipboard showNotification>
               <code>npm pack %package-name</code>
             </Clipboard>
