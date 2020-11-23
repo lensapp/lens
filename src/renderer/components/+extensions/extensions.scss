@@ -58,12 +58,11 @@
 }
 
 .InstallingExtensionNotification {
-  .folder-remove-warning {
+  .remove-folder-warning {
     font-size: $font-size-small;
-    color: inherit;
-    cursor: pointer;
     font-style: italic;
     opacity: .8;
+    cursor: pointer;
 
     &:hover {
       opacity: 1;

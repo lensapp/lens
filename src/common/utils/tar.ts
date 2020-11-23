@@ -37,7 +37,7 @@ export function readFileFromTar(tarFilePath: string, opts: ReadFileFromTarOpts):
     if (!fileChunks.length) {
       reject(notFoundMessage);
     }
-  })
+  });
 }
 
 export function extractTar(filePath: string, opts: ExtractOptions & { sync?: boolean } = {}) {
@@ -45,5 +45,5 @@ export function extractTar(filePath: string, opts: ExtractOptions & { sync?: boo
     file: filePath,
     cwd: path.dirname(filePath),
     ...opts,
-  })
+  });
 }

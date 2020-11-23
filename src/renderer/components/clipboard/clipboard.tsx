@@ -1,5 +1,5 @@
-import "./clipboard.scss"
-import React from "react"
+import "./clipboard.scss";
+import React from "react";
 import { findDOMNode } from "react-dom";
 import { autobind } from "../../../common/utils";
 import { Notifications } from "../notifications";
@@ -16,12 +16,12 @@ export interface CopyToClipboardProps {
 
 export const defaultProps: Partial<CopyToClipboardProps> = {
   getNotificationMessage(copiedText: string) {
-    return <p>Copied to clipboard: <em>{copiedText}</em></p>
+    return <p>Copied to clipboard: <em>{copiedText}</em></p>;
   }
-}
+};
 
 export class Clipboard extends React.Component<CopyToClipboardProps> {
-  static displayName = "Clipboard"
+  static displayName = "Clipboard";
   static defaultProps = defaultProps as object;
 
   get rootElem(): HTMLElement {
@@ -49,13 +49,13 @@ export class Clipboard extends React.Component<CopyToClipboardProps> {
 
   render() {
     try {
-      let rootElem = this.rootReactElem;
+      const rootElem = this.rootReactElem;
       return React.cloneElement(rootElem, {
         className: cssNames(Clipboard.displayName, rootElem.props.className),
         onClick: this.onClick,
       });
     } catch (err) {
-      logger.error(`Invalid usage components/CopyToClick usage. Children must contain root html element.`, { err: String(err) })
+      logger.error(`Invalid usage components/CopyToClick usage. Children must contain root html element.`, { err: String(err) });
       return this.rootReactElem;
     }
   }

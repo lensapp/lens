@@ -32,5 +32,5 @@ export function downloadFile(opts: DownloadFileOptions): DownloadFileTicket {
     cancel() {
       req.abort();
     }
-  }
+  };
 }

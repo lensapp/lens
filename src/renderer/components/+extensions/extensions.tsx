@@ -77,7 +77,7 @@ export class Extensions extends React.Component {
         }))
       );
     }
-  }
+  };
 
   installExtensions = () => {
     if (this.downloadUrl) {
@@ -86,13 +86,14 @@ export class Extensions extends React.Component {
     } else {
       this.installFromSelectFileDialog();
     }
-  }
+  };
 
   installFromNpmOrUrl = async (url = this.downloadUrl) => {
     if (!InputValidators.isUrl.validate(url)) {
-      url = extensionManager.getNpmPackageTarballUrl(url);
+      const npmPackageName = url;
+      url = extensionManager.getNpmPackageTarballUrl(npmPackageName);
       if (!url) {
-        Notifications.error(`Error: npm package "${url}" not found!`);
+        Notifications.error(`Error: npm package "${npmPackageName}" not found!`);
         return;
       }
     }
@@ -110,7 +111,7 @@ export class Extensions extends React.Component {
         </div>
       );
     }
-  }
+  };
 
   installOnDrop = (files: File[]) => {
     logger.info('Install from D&D');
@@ -120,7 +121,7 @@ export class Extensions extends React.Component {
         filePath: file.path,
       }))
     );
-  }
+  };
 
   async requestInstall(installRequests: InstallRequest[]) {
     const pendingFiles: Promise<any>[] = [];
@@ -133,7 +134,7 @@ export class Extensions extends React.Component {
         .catch(err => {
           Notifications.error(`Error while reading "${ext.filePath}": ${String(err)}`);
         });
-      pendingFiles.push(promise)
+      pendingFiles.push(promise);
     });
     await Promise.all(pendingFiles);
     installRequests = installRequests.filter(item => item.data); // remove items with reading errors
@@ -143,7 +144,7 @@ export class Extensions extends React.Component {
     await fse.ensureDir(tempFolder);
 
     // copy files to temp, get extension info from package.json and do basic validation
-    let validatedInstalls: Promise<InstallRequestValidated>[] = installRequests.map(async installReq => {
+    const validatedInstalls: Promise<InstallRequestValidated>[] = installRequests.map(async installReq => {
       const { fileName, data } = installReq;
       const tempFile = path.join(tempFolder, fileName);
       await fse.writeFileSync(tempFile, data); // copy to temp
@@ -161,7 +162,7 @@ export class Extensions extends React.Component {
           ...installReq,
           manifest: manifest,
           tmpFile: tempFile,
-        }
+        };
       } catch (err) {
         fse.unlink(tempFile).catch(() => null); // remove invalid temp file
         Notifications.error(
@@ -189,11 +190,8 @@ export class Extensions extends React.Component {
             <p>Install extension <b title={fileName}>{name}@{version}</b>?</p>
             <p>Description: <em>{description}</em></p>
             {folderExists && (
-              <div className="folder-remove-warning flex gaps inline align-center" onClick={() => shell.openPath(extensionFolder)}>
-                <Icon small material="warning"/>
-                <p>
-                  <b>Warning:</b> <code>{extensionFolder}</code> will be removed before installation.
-                </p>
+              <div className="remove-folder-warning" onClick={() => shell.openPath(extensionFolder)}>
+                <b>Warning:</b> <code>{extensionFolder}</code> will be removed before installation.
               </div>
             )}
           </div>
@@ -203,7 +201,7 @@ export class Extensions extends React.Component {
           }}/>
         </div>
       );
-    })
+    });
   }
 
   async unpackExtension({ fileName, tmpFile, manifest: { name, version } }: InstallRequestValidated) {

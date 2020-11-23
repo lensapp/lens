@@ -121,7 +121,7 @@ export class AddCluster extends React.Component {
   onDropKubeConfig = (files: File[]) => {
     this.sourceTab = KubeConfigSourceTab.FILE;
     this.setKubeConfig(files[0].path);
-  }
+  };
 
   @action
   addClusters = () => {

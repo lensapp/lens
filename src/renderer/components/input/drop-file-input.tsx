@@ -1,5 +1,5 @@
-import "./drop-file-input.scss"
-import React from "react"
+import "./drop-file-input.scss";
+import React from "react";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
@@ -69,7 +69,7 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
         return React.cloneElement(contentElem, contentElemProps);
       }
     } catch (err) {
-      logger.error("Invalid root content-element for DropFileInput", { err: String(err) })
+      logger.error("Invalid root content-element for DropFileInput", { err: String(err) });
       return this.props.children;
     }
   }
