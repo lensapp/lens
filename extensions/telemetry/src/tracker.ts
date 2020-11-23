@@ -3,6 +3,8 @@ import ua from "universal-analytics";
 import Analytics from "analytics-node";
 import { machineIdSync } from "node-machine-id";
 import { telemetryPreferencesStore } from "./telemetry-preferences-store";
+import { reaction, IReactionDisposer } from "mobx";
+import { comparer } from "mobx";
 
 export class Tracker extends Util.Singleton {
   static readonly GA_ID = "UA-159377374-1"
@@ -18,6 +20,7 @@ export class Tracker extends Util.Singleton {
   protected userAgent: string;
   protected anonymousId: string;
   protected os: string
+  protected disposers: IReactionDisposer[]
 
   protected reportInterval: NodeJS.Timeout
 
@@ -35,6 +38,7 @@ export class Tracker extends Util.Singleton {
     this.analytics = new Analytics(Tracker.SEGMENT_KEY, { flushAt: 1 });
     this.visitor.set("dl", "https://telemetry.k8slens.dev");
     this.visitor.set("ua", this.userAgent);
+    this.disposers = [];
   }
 
   start() {
@@ -47,6 +51,21 @@ export class Tracker extends Util.Singleton {
     };
     this.eventHandlers.push(handler);
     EventBus.appEventBus.addListener(handler);
+  }
+
+  watchExtensions() {
+    let previousExtensions = App.getEnabledExtensions();
+    this.disposers.push(reaction(() => App.getEnabledExtensions(), (currentExtensions) => {
+      const removedExtensions = previousExtensions.filter(x => !currentExtensions.includes(x));
+      removedExtensions.forEach(ext => {
+        this.event("extension", "disable", { extension: ext });
+      });
+      const newExtensions = currentExtensions.filter(x => !previousExtensions.includes(x));
+      newExtensions.forEach(ext => {
+        this.event("extension", "enable", { extension: ext });
+      })
+      previousExtensions = currentExtensions;
+    }, { equals: comparer.structural }));
   }
 
   reportPeriodically() {
@@ -66,6 +85,9 @@ export class Tracker extends Util.Singleton {
     if (this.reportInterval) {
       clearInterval(this.reportInterval);
     }
+    this.disposers.forEach(disposer => {
+      disposer();
+    });
   }
 
   protected async isTelemetryAllowed(): Promise<boolean> {
@@ -79,7 +101,8 @@ export class Tracker extends Util.Singleton {
       appVersion: App.version,
       os: this.os,
       clustersCount: clustersList.length,
-      workspacesCount: Store.workspaceStore.enabledWorkspacesList.length
+      workspacesCount: Store.workspaceStore.enabledWorkspacesList.length,
+      extensions: App.getEnabledExtensions()
     });
 
     clustersList.forEach((cluster) => {
