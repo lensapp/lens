@@ -66,10 +66,7 @@
 
   .drawer-content {
     overflow: auto;
-
-    > *:not(.Spinner) {
-      padding: var(--spacing);
-    }
+    padding: var(--spacing);
 
     .Table .TableHead {
       background-color: $contentColor;
