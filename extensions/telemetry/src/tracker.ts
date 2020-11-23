@@ -7,22 +7,22 @@ import { reaction, IReactionDisposer } from "mobx";
 import { comparer } from "mobx";
 
 export class Tracker extends Util.Singleton {
-  static readonly GA_ID = "UA-159377374-1"
-  static readonly SEGMENT_KEY = "YENwswyhlOgz8P7EFKUtIZ2MfON7Yxqb"
-  protected eventHandlers: Array<(ev: EventBus.AppEvent ) => void> = []
-  protected started = false
-  protected visitor: ua.Visitor
-  protected analytics: Analytics
+  static readonly GA_ID = "UA-159377374-1";
+  static readonly SEGMENT_KEY = "YENwswyhlOgz8P7EFKUtIZ2MfON7Yxqb";
+  protected eventHandlers: Array<(ev: EventBus.AppEvent ) => void> = [];
+  protected started = false;
+  protected visitor: ua.Visitor;
+  protected analytics: Analytics;
   protected machineId: string = null;
   protected ip: string = null;
   protected appVersion: string;
   protected locale: string;
   protected userAgent: string;
   protected anonymousId: string;
-  protected os: string
-  protected disposers: IReactionDisposer[]
+  protected os: string;
+  protected disposers: IReactionDisposer[];
 
-  protected reportInterval: NodeJS.Timeout
+  protected reportInterval: NodeJS.Timeout;
 
   private constructor() {
     super();
@@ -63,7 +63,7 @@ export class Tracker extends Util.Singleton {
       const newExtensions = currentExtensions.filter(x => !previousExtensions.includes(x));
       newExtensions.forEach(ext => {
         this.event("extension", "enable", { extension: ext });
-      })
+      });
       previousExtensions = currentExtensions;
     }, { equals: comparer.structural }));
   }

@@ -11,5 +11,5 @@ export default class NodeMenuRendererExtension extends LensRendererExtension {
         MenuItem: (props: NodeMenuProps) => <NodeMenu {...props} />
       }
     }
-  ]
+  ];
 }

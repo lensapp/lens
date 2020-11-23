@@ -38,5 +38,5 @@ export default class EventResourceStatusRendererExtension extends LensRendererEx
       apiVersions: ["batch/v1"],
       resolve: (cronJob: K8sApi.CronJob) => resolveStatusForCronJobs(cronJob)
     },
-  ]
+  ];
 }
