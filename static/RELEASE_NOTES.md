@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.0-beta.3 (current version)
+## 4.0.0-beta.4 (current version)
 
 - Extension API
 - Improved pod logs
@@ -10,6 +10,7 @@ Here you can find description of changes we've built into each release. While we
 - Tray icon
 - Add last-status information for container
 - Add LoadBalancer information to Ingress view
+- Add search by ip to Pod view
 - Move tracker to an extension
 - Add support page (as an extension)
 - Ability to restart deployment
@@ -19,6 +20,8 @@ Here you can find description of changes we've built into each release. While we
 - Add +/- buttons in scale deployment popup screen
 - Update chart details when selecting another chart
 - Use latest alpine version (3.12) for shell sessions
+- Fix errors on app quit
+- Fix kube-auth-proxy to accept only target cluster hostname
 
 ## 3.6.8
 - Fix cluster connection issue when opening cluster settings for disconnected clusters

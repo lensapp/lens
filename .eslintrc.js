@@ -1,5 +1,8 @@
 module.exports = {
-  ignorePatterns: ["src/extensions/npm/extensions/dist/**/*"],
+  ignorePatterns: [
+    "**/node_modules/**/*",
+    "**/dist/**/*",
+  ],
   overrides: [
     {
       files: [

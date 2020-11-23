@@ -67,7 +67,7 @@
     "terminalForeground": "#2d2d2d",
     "terminalCursor": "#2d2d2d",
     "terminalCursorAccent": "#ffffff",
-    "terminalSelection": "#bfbfbf",
+    "terminalSelection": "#bfbfbf66",
     "terminalBlack": "#2d2d2d",
     "terminalRed": "#cd3734 ",
     "terminalGreen": "#18cf12",

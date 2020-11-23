@@ -1,7 +1,7 @@
 import type { LensExtensionId } from "./lens-extension";
 import type { ExtensionLoader } from "./extension-loader";
 import { BaseStore } from "../common/base-store";
-import { action, observable, reaction, toJS } from "mobx";
+import { action, computed, observable, reaction, toJS } from "mobx";
 
 export interface LensExtensionsStoreModel {
   extensions: Record<LensExtensionId, LensExtensionState>;
@@ -9,6 +9,7 @@ export interface LensExtensionsStoreModel {
 
 export interface LensExtensionState {
   enabled?: boolean;
+  name: string;
 }
 
 export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
@@ -18,6 +19,17 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
     });
   }
 
+  @computed
+  get enabledExtensions() {
+    const extensions: string[] = [];
+    this.state.forEach((state, id) => {
+      if (state.enabled) {
+        extensions.push(state.name);
+      }
+    });
+    return extensions;
+  }
+
   protected state = observable.map<LensExtensionId, LensExtensionState>();
 
   protected getState(extensionLoader: ExtensionLoader) {
@@ -25,6 +37,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
     return Array.from(extensionLoader.userExtensions).reduce((state, [extId, ext]) => {
       state[extId] = {
         enabled: ext.isEnabled,
+        name: ext.manifest.name,
       };
       return state;
     }, state);
