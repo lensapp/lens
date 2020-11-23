@@ -1,5 +1,7 @@
 // Common utils (main OR renderer)
 
+export const noop: any = () => { /* empty */ };
+
 export * from "./app-version";
 export * from "./autobind";
 export * from "./base64";
@@ -12,3 +14,4 @@ export * from "./splitArray";
 export * from "./saveToAppFiles";
 export * from "./singleton";
 export * from "./openExternal";
+export * from "./rectify-array";
