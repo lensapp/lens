@@ -688,9 +688,66 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Development
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
     <a href="./" class="md-nav__link md-nav__link--active">
       Development
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-reading" class="md-nav__link">
+    Recommended Reading:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-development-environment" class="md-nav__link">
+    Local Development Environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-workflow" class="md-nav__link">
+    Github Workflow
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-testing" class="md-nav__link">
+    Code Testing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -760,6 +817,64 @@
                 
               
               
+                <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                  <div class="md-sidebar__scrollwrap">
+                    <div class="md-sidebar__inner">
+                      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-reading" class="md-nav__link">
+    Recommended Reading:
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-development-environment" class="md-nav__link">
+    Local Development Environment
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-workflow" class="md-nav__link">
+    Github Workflow
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-testing" class="md-nav__link">
+    Code Testing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    License
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                    </div>
+                  </div>
+                </div>
+              
             
           
           <div class="md-content">
@@ -768,7 +883,39 @@
                 
                 
                 <h1 id="development">Development<a class="headerlink" href="#development" title="Permanent link">#</a></h1>
-<p>TBD</p>
+<p>Thank you for taking the time to make a contribution to Lens. The following document is a set of guidelines and instructions for contributing to Lens.</p>
+<p>When contributing to this repository, please consider first discussing the change you wish to make by opening an issue.</p>
+<h2 id="recommended-reading">Recommended Reading:<a class="headerlink" href="#recommended-reading" title="Permanent link">#</a></h2>
+<ul>
+<li><a href="https://www.typescriptlang.org/docs/home.html">TypeScript</a> (front-end/back-end)</li>
+<li><a href="https://reactjs.org/docs/getting-started.html">ReactJS</a> (front-end, ui)</li>
+<li><a href="https://mobx.js.org/">MobX</a> (app-state-management, back-end/front-end)</li>
+<li><a href="https://www.electronjs.org/docs">ElectronJS</a> (chrome/node)</li>
+<li><a href="https://nodejs.org/dist/latest-v12.x/docs/api/">NodeJS</a> (api docs)</li>
+</ul>
+<h2 id="local-development-environment">Local Development Environment<a class="headerlink" href="#local-development-environment" title="Permanent link">#</a></h2>
+<blockquote>
+<p>Prerequisites: Nodejs v12, make, yarn</p>
+</blockquote>
+<ul>
+<li><code>make dev</code> - builds and starts the app</li>
+<li><code>make clean</code> - cleanup local environment build artifacts</li>
+</ul>
+<h2 id="github-workflow">Github Workflow<a class="headerlink" href="#github-workflow" title="Permanent link">#</a></h2>
+<p>We Use <a href="https://guides.github.com/introduction/flow/index.html">Github Flow</a>, so all code changes are tracked via Pull Requests.
+A detailed guide on the recommended workflow can be found below:</p>
+<ul>
+<li><a href="../github_workflow/">Github Workflow</a></li>
+</ul>
+<h2 id="code-testing">Code Testing<a class="headerlink" href="#code-testing" title="Permanent link">#</a></h2>
+<p>All submitted PRs go through a set of tests and reviews. You can run most of these tests <em>before</em> a PR is submitted.
+In fact, we recommend it, because it will save on many possible review iterations and automated tests.
+The testing guidelines can be found here:</p>
+<ul>
+<li><a href="../testing/">Contributor's Guide to Testing</a></li>
+</ul>
+<h2 id="license">License<a class="headerlink" href="#license" title="Permanent link">#</a></h2>
+<p>By contributing, you agree that your contributions will be licensed as described in <a href="https://github.com/lensapp/lens/blob/master/LICENSE">LICENSE</a>.</p>
                 
               
               
