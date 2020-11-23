@@ -6,6 +6,7 @@ import child_process from "child_process";
 import logger from "../main/logger";
 import { extensionPackagesRoot } from "./extension-loader";
 import { getBundledExtensions } from "../common/utils/app-version";
+import { extensionsStore } from "./extensions-store";
 
 export interface InstalledExtension {
   readonly manifest: LensExtensionManifest;
@@ -160,6 +161,7 @@ export class ExtensionManager {
       const manifestPath = path.resolve(absPath, "package.json");
       const ext = await this.getByManifest(manifestPath).catch(() => null);
       if (ext) {
+        ext.isEnabled =  extensionsStore.isEnabled(ext.manifestPath);
         extensions.push(ext);
       }
     }
