@@ -7,7 +7,7 @@
     .Badge {
       display: flex;
       margin: 0;
-      margin-bottom: 1px;
+      margin-bottom: 1px!important;
       padding: $padding $spacing;
     }
   }

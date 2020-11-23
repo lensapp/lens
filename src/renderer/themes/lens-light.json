@@ -39,13 +39,13 @@
     "helmImgBackground": "#e8e8e8",
     "helmStableRepo": "#3d90ce",
     "helmIncubatorRepo": "#ff7043",
-    "helmDescriptionHr": "#41474a",
+    "helmDescriptionHr": "#dddddd",
     "helmDescriptionBlockqouteColor": "#555555",
     "helmDescriptionBlockqouteBorder": "#8a8f93",
     "helmDescriptionBlockquoteBackground": "#eeeeee",
     "helmDescriptionHeaders": "#3e4147",
     "helmDescriptionH6": "#6a737d",
-    "helmDescriptionTdBorder": "#47494a",
+    "helmDescriptionTdBorder": "#c6c6c6",
     "helmDescriptionTrBackground": "#1c2125",
     "helmDescriptionCodeBackground": "#ffffff1a",
     "helmDescriptionPreBackground": "#eeeeee",
@@ -108,6 +108,7 @@
     "selectOptionHoveredColor": "#ffffff",
     "lineProgressBackground": "#e8e8e8",
     "radioActiveBackground": "#f1f1f1",
-    "menuActiveBackground": "#e8e8e8"
+    "menuActiveBackground": "#e8e8e8",
+    "scrollBarColor": "#bbbbbb"
   }
 }

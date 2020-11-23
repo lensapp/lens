@@ -33,7 +33,7 @@
   }
 
   > .content-wrapper {
-    @include custom-scrollbar-themed;
+    overflow: auto;
     padding: $spacing * 2;
     display: flex;
     flex-direction: column;

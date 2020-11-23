@@ -9,8 +9,8 @@
   grid-template-columns: 1fr 40%;
 
   > * {
-    @include custom-scrollbar-themed;
     --flex-gap: #{$spacing};
+    overflow: auto;
     padding: $spacing;
   }
 
