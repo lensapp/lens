@@ -12,14 +12,22 @@ class HelmApiRoute extends LensApi {
 
   public async getChart(request: LensApiRequest) {
     const { params, query, response } = request;
-    const chart = await helmService.getChart(params.repo, params.chart, query.get("version"));
-    this.respondJson(response, chart);
+    try {
+      const chart = await helmService.getChart(params.repo, params.chart, query.get("version"));
+      this.respondJson(response, chart);
+    } catch (error) {
+      this.respondText(response, error, 422);
+    }
   }
 
   public async getChartValues(request: LensApiRequest) {
     const { params, query, response } = request;
-    const values = await helmService.getChartValues(params.repo, params.chart, query.get("version"));
-    this.respondJson(response, values);
+    try {
+      const values = await helmService.getChartValues(params.repo, params.chart, query.get("version"));
+      this.respondJson(response, values);
+    } catch (error) {
+      this.respondText(response, error, 422);
+    }
   }
 
   public async installChart(request: LensApiRequest) {
