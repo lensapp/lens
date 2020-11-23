@@ -27,6 +27,10 @@ World’s most popular Kubernetes IDE provides a simplified, consistent entry po
 
 See [Getting Started](https://docs.k8slens.dev/latest/getting-started/) page.
 
+## Development
+
+See [Development](https://docs.k8slens.dev/latest/contributing/development/) page.
+
 ## Contributing
 
 See [Contributing](https://docs.k8slens.dev/latest/contributing/) page.
