@@ -15,7 +15,7 @@ export class Notifications extends React.Component {
 
   static ok(message: NotificationMessage) {
     notificationsStore.add({
-      message: message,
+      message,
       timeout: 2500,
       status: NotificationStatus.OK
     });
@@ -23,7 +23,7 @@ export class Notifications extends React.Component {
 
   static error(message: NotificationMessage) {
     notificationsStore.add({
-      message: message,
+      message,
       timeout: 10000,
       status: NotificationStatus.ERROR
     });
@@ -33,7 +33,7 @@ export class Notifications extends React.Component {
     return notificationsStore.add({
       status: NotificationStatus.INFO,
       timeout: 0,
-      message: message,
+      message,
       ...customOpts,
     });
   }

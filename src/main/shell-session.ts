@@ -47,7 +47,7 @@ export class ShellSession extends EventEmitter {
     this.shellProcess = pty.spawn(shell, args, {
       cols: 80,
       cwd: this.cwd() || env.HOME,
-      env: env,
+      env,
       name: "xterm-256color",
       rows: 30,
     });

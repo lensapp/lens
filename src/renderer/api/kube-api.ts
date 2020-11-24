@@ -73,7 +73,7 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
   });
   return new KubeApi({
     objectConstructor: kubeClass,
-    request: request
+    request
   });
 }
 
@@ -228,7 +228,7 @@ export class KubeApi<T extends KubeObject = any> {
       apiVersion: this.apiVersionWithGroup,
       resource: this.apiResource,
       namespace: this.isNamespaced ? namespace : undefined,
-      name: name,
+      name,
     });
     return resourcePath + (query ? `?` + stringify(this.normalizeQuery(query)) : "");
   }
@@ -256,7 +256,7 @@ export class KubeApi<T extends KubeObject = any> {
       this.setResourceVersion("", metadata.resourceVersion);
       return items.map(item => new KubeObjectConstructor({
         kind: this.kind,
-        apiVersion: apiVersion,
+        apiVersion,
         ...item,
       }));
     }

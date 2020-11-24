@@ -21,8 +21,10 @@ import { userStore } from "../common/user-store";
 import { workspaceStore } from "../common/workspace-store";
 import { appEventBus } from "../common/event-bus";
 import { extensionLoader } from "../extensions/extension-loader";
-import { extensionManager } from "../extensions/extension-manager";
 import { extensionsStore } from "../extensions/extensions-store";
+import { InstalledExtension, extensionDiscovery } from "../extensions/extension-discovery";
+import type { LensExtensionId } from "../extensions/lens-extension";
+import { installDeveloperTools } from "./developer-tools";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -48,6 +50,8 @@ app.on("ready", async () => {
   updater.start();
 
   registerFileProtocol("static", __static);
+
+  await installDeveloperTools();
 
   // preload
   await Promise.all([
@@ -79,8 +83,22 @@ app.on("ready", async () => {
   }
 
   extensionLoader.init();
+
+  extensionDiscovery.init();
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
-  extensionLoader.initExtensions(await extensionManager.load()); // call after windowManager to see splash earlier
+
+  // call after windowManager to see splash earlier
+  const extensions = await extensionDiscovery.load();
+
+  // Subscribe to extensions that are copied or deleted to/from the extensions folder
+  extensionDiscovery.events.on("add", (extension: InstalledExtension) => {
+    extensionLoader.addExtension(extension);
+  });
+  extensionDiscovery.events.on("remove", (lensExtensionId: LensExtensionId) => {
+    extensionLoader.removeExtension(lensExtensionId);
+  });
+
+  extensionLoader.initExtensions(extensions);
 
   setTimeout(() => {
     appEventBus.emit({ name: "service", action: "start" });

@@ -137,7 +137,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       else {
         const name = useRoleForBindingName ? selectedRole.getName() : bindingName;
         roleBinding = await roleBindingsStore.create({ name, namespace }, {
-          subjects: subjects,
+          subjects,
           roleRef: {
             name: selectedRole.getName(),
             kind: selectedRole.kind,

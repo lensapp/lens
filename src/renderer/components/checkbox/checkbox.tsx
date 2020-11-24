@@ -30,7 +30,7 @@ export class Checkbox extends React.PureComponent<CheckboxProps> {
   render() {
     const { label, inline, className, value, theme, children, ...inputProps } = this.props;
     const componentClass = cssNames('Checkbox flex', className, {
-      inline: inline,
+      inline,
       checked: value,
       disabled: this.props.disabled,
       ["theme-" + theme]: theme,

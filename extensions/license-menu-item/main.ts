@@ -6,7 +6,7 @@ export default class LicenseLensMainExtension extends LensMainExtension {
       parentId: "help",
       label: "License",
       async click() {
-        Util.openExternal("https://k8slens.dev/licenses/eula.md");
+        Util.openExternal("https://k8slens.dev/licenses/eula");
       }
     }
   ];

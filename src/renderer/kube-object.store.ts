@@ -146,7 +146,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   protected bindWatchEventsUpdater(delay = 1000) {
     return reaction(() => this.eventsBuffer.toJS()[0], this.updateFromEventsBuffer, {
-      delay: delay
+      delay
     });
   }
 

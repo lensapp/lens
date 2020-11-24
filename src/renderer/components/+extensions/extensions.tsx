@@ -17,7 +17,7 @@ import { PageLayout } from "../layout/page-layout";
 import { Clipboard } from "../clipboard";
 import logger from "../../../main/logger";
 import { extensionLoader } from "../../../extensions/extension-loader";
-import { extensionManager } from "../../../extensions/extension-manager";
+import { extensionDiscovery } from "../../../extensions/extension-discovery";
 import { LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
 import { Notifications } from "../notifications";
 import { downloadFile } from "../../../common/utils";
@@ -57,7 +57,7 @@ export class Extensions extends React.Component {
   }
 
   get extensionsPath() {
-    return extensionManager.localFolderPath;
+    return extensionDiscovery.localFolderPath;
   }
 
   getExtensionPackageTemp(fileName = "") {

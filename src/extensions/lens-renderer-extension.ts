@@ -19,7 +19,7 @@ export class LensRendererExtension extends LensExtension {
     const { navigate } = await import("../renderer/navigation");
     const pageUrl = getExtensionPageUrl({
       extensionId: this.name,
-      pageId: pageId,
+      pageId,
       params: params ?? {}, // compile to url with params
     });
     navigate(pageUrl);

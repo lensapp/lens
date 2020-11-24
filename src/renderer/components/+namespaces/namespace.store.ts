@@ -60,7 +60,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
       kind: "Namespace",
       apiVersion: "v1",
       metadata: {
-        name: name,
+        name,
         uid: "",
         resourceVersion: "",
         selfLink: `/api/v1/namespaces/${name}`

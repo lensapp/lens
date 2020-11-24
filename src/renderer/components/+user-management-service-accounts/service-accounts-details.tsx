@@ -88,7 +88,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
       apiVersion: "v1",
       kind: "Secret",
       metadata: {
-        name: name,
+        name,
         uid: null,
         selfLink: null,
         resourceVersion: null
