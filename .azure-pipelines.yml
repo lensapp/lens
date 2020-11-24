@@ -6,18 +6,18 @@ pr:
 trigger:
   branches:
     include:
-      - '*'
+    - '*'
   tags:
     include:
-      - "*"
+    - "*"
 jobs:
   - job: Windows
     pool:
       vmImage: windows-2019
     strategy:
       matrix:
-        node_14.x:
-          node_version: 14.x
+        node_12.x:
+          node_version: 12.x
     steps:
       - powershell: |
           $CI_BUILD_TAG = git describe --tags
@@ -58,8 +58,8 @@ jobs:
       vmImage: macOS-10.14
     strategy:
       matrix:
-        node_14.x:
-          node_version: 14.x
+        node_12.x:
+          node_version: 12.x
     steps:
       - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         displayName: Set the tag name as an environment variable
@@ -104,8 +104,8 @@ jobs:
       vmImage: ubuntu-16.04
     strategy:
       matrix:
-        node_14.x:
-          node_version: 14.x
+        node_12.x:
+          node_version: 12.x
     steps:
       - script: CI_BUILD_TAG=`git describe --tags` && echo "##vso[task.setvariable variable=CI_BUILD_TAG]$CI_BUILD_TAG"
         displayName: Set the tag name as an environment variable

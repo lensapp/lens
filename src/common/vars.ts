@@ -41,3 +41,5 @@ export const apiKubePrefix = "/api-kube"; // k8s cluster apis
 // Links
 export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues";
 export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI";
+export const docsUrl = "https://docs.k8slens.dev/";
+export const supportUrl = "https://docs.k8slens.dev/latest/support/";

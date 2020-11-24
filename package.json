@@ -47,7 +47,7 @@
     "bundledHelmVersion": "3.3.4"
   },
   "engines": {
-    "node": ">=12 <=14"
+    "node": ">=12 <13"
   },
   "lingui": {
     "locales": [

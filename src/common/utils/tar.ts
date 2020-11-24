@@ -25,10 +25,10 @@ export function readFileFromTar(tarFilePath: string, opts: ReadFileFromTarOpts):
         entry.on("data", chunk => {
           fileChunks.push(chunk);
         });
-        entry.on("error", err => {
+        entry.once("error", err => {
           reject(`Reading ${entry.path} error: ${err}`);
         });
-        entry.on("end", () => {
+        entry.once("end", () => {
           resolve(Buffer.concat(fileChunks));
         });
       },

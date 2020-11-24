@@ -11,24 +11,23 @@ export interface DownloadFileTicket {
   cancel(): void;
 }
 
-export function downloadFile(opts: DownloadFileOptions): DownloadFileTicket {
-  const { url, gzip = true } = opts;
+export function downloadFile({ url, gzip = true }: DownloadFileOptions): DownloadFileTicket {
   const fileChunks: Buffer[] = [];
   const req = request(url, { gzip });
   const promise: Promise<Buffer> = new Promise((resolve, reject) => {
     req.on("data", (chunk: Buffer) => {
       fileChunks.push(chunk);
     });
-    req.on("complete", () => {
-      resolve(Buffer.concat(fileChunks));
-    });
-    req.on("error", err => {
+    req.once("error", err => {
       reject({ url, err });
+    });
+    req.once("complete", () => {
+      resolve(Buffer.concat(fileChunks));
     });
   });
   return {
-    url: url,
-    promise: promise,
+    url,
+    promise,
     cancel() {
       req.abort();
     }

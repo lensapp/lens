@@ -88,12 +88,11 @@
   //- Themes
 
   &.theme {
-    &.invalid {
-      box-shadow: 0 0 0 2px $colorError;
-      border-radius: $radius;
-    }
-
     &.round-black {
+      &.invalid label {
+        border-color: $colorSoftError !important;
+      }
+
       label {
         background: $mainBackground;
         border: 1px solid $borderFaintColor;
@@ -115,6 +114,6 @@
 
 .Tooltip.InputTooltipError {
   --bgc: #{$colorError};
-  --border: 1px solid $colorSoftError;
+  --border: none;
   --color: white;
 }

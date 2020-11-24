@@ -22,16 +22,6 @@
     > .flex.gaps {
       --flex-gap: #{$padding};
     }
-
-    .install-extension {
-      .Clipboard {
-        font-size: $font-size-small;
-
-        &:hover {
-          color: $textColorSecondary;
-        }
-      }
-    }
   }
 
   .extensions-path {
@@ -43,8 +33,22 @@
     }
   }
 
+  .Clipboard {
+    display: inline;
+    vertical-align: baseline;
+    font-size: $font-size-small;
+
+    &:hover {
+      color: $textColorSecondary;
+    }
+  }
+
   .SearchInput {
     --spacing: #{$padding};
+  }
+
+  .SubTitle {
+    font-style: italic;
   }
 
   .WizardLayout {
