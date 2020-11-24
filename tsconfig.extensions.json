@@ -1,11 +1,9 @@
 {
   "extends": "./tsconfig.json",
-  "files": [
-    "src/extensions/extension-api.ts",
-  ],
   "compilerOptions": {
     "module": "CommonJS",
-    "sourceMap": false,
-    "declaration": true
+    "declaration": true, // should output .d.ts
+    "sourceMap": true, // for use with webpack's devtool: 'inline-source-map'
+    "outDir": "./src/extensions/npm/extensions/dist" // where .d.ts output
   }
 }

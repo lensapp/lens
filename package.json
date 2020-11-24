@@ -21,7 +21,7 @@
     "compile:main": "yarn run webpack --config webpack.main.ts",
     "compile:renderer": "yarn run webpack --config webpack.renderer.ts",
     "compile:i18n": "yarn run lingui compile",
-    "compile:extension-types": "yarn run tsc -p ./tsconfig.extensions.json --outDir src/extensions/npm/extensions/dist",
+    "compile:extension-types": "yarn run webpack --config webpack.extensions.ts",
     "npm:fix-package-version": "yarn run ts-node build/set_npm_version.ts",
     "build:linux": "yarn run compile && electron-builder --linux --dir -c.productName=Lens",
     "build:mac": "yarn run compile && electron-builder --mac --dir -c.productName=Lens",
