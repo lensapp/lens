@@ -1,4 +1,4 @@
-import type { InstalledExtension } from "./extension-manager";
+import type { InstalledExtension } from "./extension-discovery";
 import { action, observable, reaction } from "mobx";
 import logger from "../main/logger";
 
@@ -27,6 +27,7 @@ export class LensExtension {
   }
 
   get id(): LensExtensionId {
+    // This is the symlinked path under node_modules
     return this.manifestPath;
   }
 

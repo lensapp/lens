@@ -11,7 +11,7 @@ import { Input } from "../input";
 import { Icon } from "../icon";
 import { PageLayout } from "../layout/page-layout";
 import { extensionLoader } from "../../../extensions/extension-loader";
-import { extensionManager } from "../../../extensions/extension-manager";
+import { extensionDiscovery } from "../../../extensions/extension-discovery";
 
 @observer
 export class Extensions extends React.Component {
@@ -29,7 +29,7 @@ export class Extensions extends React.Component {
   }
 
   get extensionsPath() {
-    return extensionManager.localFolderPath;
+    return extensionDiscovery.localFolderPath;
   }
 
   renderInfo() {
