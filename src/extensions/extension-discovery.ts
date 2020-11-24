@@ -91,7 +91,7 @@ export class ExtensionDiscovery {
   init() {
     this.watchExtensions();
   }
-    
+
   /**
    * Watches for added/removed local extensions.
    * Dependencies are installed automatically after an extension folder is copied.
@@ -303,7 +303,6 @@ export class ExtensionDiscovery {
       }
 
       const extension = await this.loadExtensionFromPath(absPath);
-
       if (extension) {
         extensions.push(extension);
       }
