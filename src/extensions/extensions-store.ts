@@ -65,7 +65,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   isEnabled(extId: LensExtensionId) {
     const state = this.state.get(extId);
-    return !state /* enabled by default */ || state.enabled;
+    return state && state.enabled; // by default false
   }
 
   @action
