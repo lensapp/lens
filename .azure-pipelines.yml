@@ -30,10 +30,9 @@ jobs:
         displayName: Install Node.js
       - task: Cache@2
         inputs:
-          key: yarn | $(Agent.OS) | yarn.lock
+          key: 'yarn | "$(Agent.OS)"" | yarn.lock'
           restoreKeys: |
             yarn | "$(Agent.OS)"
-            yarn
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
       - script: make node_modules
@@ -70,10 +69,9 @@ jobs:
         displayName: Install Node.js
       - task: Cache@2
         inputs:
-          key: yarn | $(Agent.OS) | yarn.lock
+          key: 'yarn | "$(Agent.OS)" | yarn.lock'
           restoreKeys: |
             yarn | "$(Agent.OS)"
-            yarn
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
       - script: make node_modules
@@ -116,10 +114,9 @@ jobs:
         displayName: Install Node.js
       - task: Cache@2
         inputs:
-          key: yarn | $(Agent.OS) | yarn.lock
+          key: 'yarn | "$(Agent.OS)" | yarn.lock'
           restoreKeys: |
             yarn | "$(Agent.OS)"
-            yarn
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
       - script: make node_modules
