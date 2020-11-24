@@ -23,6 +23,9 @@ export default function (): webpack.Configuration {
     resolve: {
       extensions: ['.json', '.js', '.ts']
     },
+    optimization: {
+      usedExports: true,
+    },
     externals: [
       nodeExternals()
     ],

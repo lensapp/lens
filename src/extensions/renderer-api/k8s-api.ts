@@ -1,9 +1,11 @@
 export { isAllowedResource } from "../../common/rbac";
 export { apiManager } from "../../renderer/api/api-manager";
 export { KubeObjectStore } from "../../renderer/kube-object.store";
-export { KubeApi, forCluster, IKubeApiCluster } from "../../renderer/api/kube-api";
+export { KubeApi, forCluster } from "../../renderer/api/kube-api";
+export type { IKubeApiCluster } from "../../renderer/api/kube-api";
 export { KubeObject } from "../../renderer/api/kube-object";
-export { Pod, podsApi, PodsApi, IPodContainer, IPodContainerStatus } from "../../renderer/api/endpoints";
+export { Pod, podsApi, PodsApi } from "../../renderer/api/endpoints";
+export type { IPodContainer, IPodContainerStatus } from "../../renderer/api/endpoints";
 export { Node, nodesApi, NodesApi } from "../../renderer/api/endpoints";
 export { Deployment, deploymentApi, DeploymentApi } from "../../renderer/api/endpoints";
 export { DaemonSet, daemonSetApi } from "../../renderer/api/endpoints";
@@ -11,7 +13,8 @@ export { StatefulSet, statefulSetApi } from "../../renderer/api/endpoints";
 export { Job, jobApi } from "../../renderer/api/endpoints";
 export { CronJob, cronJobApi } from "../../renderer/api/endpoints";
 export { ConfigMap, configMapApi } from "../../renderer/api/endpoints";
-export { Secret, secretsApi, ISecretRef } from "../../renderer/api/endpoints";
+export { Secret, secretsApi } from "../../renderer/api/endpoints";
+export type { ISecretRef } from "../../renderer/api/endpoints";
 export { ReplicaSet, replicaSetApi } from "../../renderer/api/endpoints";
 export { ResourceQuota, resourceQuotaApi } from "../../renderer/api/endpoints";
 export { HorizontalPodAutoscaler, hpaApi } from "../../renderer/api/endpoints";
@@ -31,7 +34,8 @@ export { RoleBinding, roleBindingApi } from "../../renderer/api/endpoints";
 export { ClusterRole, clusterRoleApi } from "../../renderer/api/endpoints";
 export { ClusterRoleBinding, clusterRoleBindingApi } from "../../renderer/api/endpoints";
 export { CustomResourceDefinition, crdApi } from "../../renderer/api/endpoints";
-export { KubeObjectStatus, KubeObjectStatusLevel } from "./kube-object-status";
+export { KubeObjectStatusLevel } from "./kube-object-status";
+export type { KubeObjectStatus } from "./kube-object-status";
 
 // stores
 export type { EventStore } from "../../renderer/components/+events/event.store";

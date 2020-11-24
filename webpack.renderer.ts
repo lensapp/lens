@@ -57,6 +57,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     },
     optimization: {
       minimize: isProduction,
+      usedExports: true,
       minimizer: [
         new TerserPlugin({
           cache: true,
@@ -85,11 +86,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
             {
               loader: "babel-loader",
               options: {
-                presets: [
-                  ["@babel/preset-env", {
-                    modules: "commonjs" // ling-ui
-                  }],
-                ],
                 plugins: [
                   isDevelopment && require.resolve('react-refresh/babel'),
                 ].filter(Boolean),
