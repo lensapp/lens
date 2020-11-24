@@ -9,5 +9,5 @@ export default class LicenseLensMainExtension extends LensMainExtension {
         Util.openExternal("https://k8slens.dev/licenses/eula.md");
       }
     }
-  ]
+  ];
 }

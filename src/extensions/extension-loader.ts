@@ -1,20 +1,25 @@
+import { app, ipcRenderer, remote } from "electron";
+import { action, computed, observable, reaction, toJS, when } from "mobx";
+import path from "path";
+import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import logger from "../main/logger";
+import type { InstalledExtension } from "./extension-discovery";
+import { extensionsStore } from "./extensions-store";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "./lens-extension";
 import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
-import type { InstalledExtension } from "./extension-manager";
-import path from "path";
-import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
-import { action, computed, observable, reaction, toJS, when } from "mobx";
-import logger from "../main/logger";
-import { app, ipcRenderer, remote } from "electron";
 import * as registries from "./registries";
-import { extensionsStore } from "./extensions-store";
 
 // lazy load so that we get correct userData
 export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"));
 }
 
+const logModule = "[EXTENSIONS-LOADER]";
+
+/**
+ * Loads installed extensions to the Lens application
+ */
 export class ExtensionLoader {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
   protected instances = observable.map<LensExtensionId, LensExtension>();
@@ -47,6 +52,17 @@ export class ExtensionLoader {
     this.extensions.replace(extensions);
   }
 
+  addExtension(extension: InstalledExtension) {
+    this.extensions.set(extension.manifestPath as LensExtensionId, extension);
+  }
+
+  removeExtension(lensExtensionId: LensExtensionId) {
+    // TODO: Remove the extension properly (from menus etc.)
+    if (!this.extensions.delete(lensExtensionId)) {
+      throw new Error(`Can't remove extension ${lensExtensionId}, doesn't exist.`);
+    }
+  }
+
   protected async initMain() {
     this.isLoaded = true;
     this.loadOnMain();
@@ -77,14 +93,14 @@ export class ExtensionLoader {
   }
 
   loadOnMain() {
-    logger.info('[EXTENSIONS-LOADER]: load on main');
+    logger.info(`${logModule}: load on main`);
     this.autoInitExtensions((ext: LensMainExtension) => [
       registries.menuRegistry.add(ext.appMenus)
     ]);
   }
 
   loadOnClusterManagerRenderer() {
-    logger.info('[EXTENSIONS-LOADER]: load on main renderer (cluster manager)');
+    logger.info(`${logModule}: load on main renderer (cluster manager)`);
     this.autoInitExtensions((ext: LensRendererExtension) => [
       registries.globalPageRegistry.add(ext.globalPages, ext),
       registries.globalPageMenuRegistry.add(ext.globalPageMenus, ext),
@@ -95,7 +111,7 @@ export class ExtensionLoader {
   }
 
   loadOnClusterRenderer() {
-    logger.info('[EXTENSIONS-LOADER]: load on cluster renderer (dashboard)');
+    logger.info(`${logModule}: load on cluster renderer (dashboard)`);
     this.autoInitExtensions((ext: LensRendererExtension) => [
       registries.clusterPageRegistry.add(ext.clusterPages, ext),
       registries.clusterPageMenuRegistry.add(ext.clusterPageMenus, ext),
@@ -118,14 +134,15 @@ export class ExtensionLoader {
             instance.enable();
             this.instances.set(extId, instance);
           } catch (err) {
-            logger.error(`[EXTENSION-LOADER]: activation extension error`, { ext, err });
+            logger.error(`${logModule}: activation extension error`, { ext, err });
           }
         } else if (!ext.isEnabled && instance) {
+          logger.info(`${logModule} deleting extension ${extId}`);
           try {
             instance.disable();
             this.instances.delete(extId);
           } catch (err) {
-            logger.error(`[EXTENSION-LOADER]: deactivation extension error`, { ext, err });
+            logger.error(`${logModule}: deactivation extension error`, { ext, err });
           }
         }
       }
@@ -146,7 +163,7 @@ export class ExtensionLoader {
         return __non_webpack_require__(extEntrypoint).default;
       }
     } catch (err) {
-      console.error(`[EXTENSION-LOADER]: can't load extension main at ${extEntrypoint}: ${err}`, { extension });
+      console.error(`${logModule}: can't load extension main at ${extEntrypoint}: ${err}`, { extension });
       console.trace(err);
     }
   }

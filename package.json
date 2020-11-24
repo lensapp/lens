@@ -37,7 +37,7 @@
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "build:tray-icons": "yarn run ts-node build/build_tray_icon.ts",
-    "lint": "yarn run eslint $@ --ext js,ts,tsx --max-warnings=0 src/ integration/ __mocks__/ build/",
+    "lint": "yarn run eslint $@ --ext js,ts,tsx --max-warnings=0 src/ integration/ __mocks__/ build/ extensions/",
     "lint:fix": "yarn run lint --fix",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
     "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts"
@@ -216,7 +216,9 @@
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/tar": "^4.0.3",
     "array-move": "^3.0.0",
+    "await-lock": "^2.1.0",
     "chalk": "^4.1.0",
+    "chokidar": "^3.4.3",
     "command-exists": "1.2.9",
     "conf": "^7.0.1",
     "crypto-js": "^4.0.0",

@@ -12,7 +12,7 @@ export default class ExampleExtension extends LensRendererExtension {
         Page: () => <ExamplePage extension={this}/>,
       }
     }
-  ]
+  ];
 
   clusterPageMenus = [
     {
@@ -22,5 +22,5 @@ export default class ExampleExtension extends LensRendererExtension {
         Icon: ExampleIcon,
       }
     }
-  ]
+  ];
 }

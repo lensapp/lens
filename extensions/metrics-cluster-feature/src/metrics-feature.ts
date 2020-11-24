@@ -25,8 +25,8 @@ export interface MetricsConfiguration {
 }
 
 export class MetricsFeature extends ClusterFeature.Feature {
-  name = "metrics"
-  latestVersion = "v2.17.2-lens1"
+  name = "metrics";
+  latestVersion = "v2.17.2-lens1";
 
   config: MetricsConfiguration = {
     persistence: {
