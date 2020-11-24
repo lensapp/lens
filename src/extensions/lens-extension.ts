@@ -1,5 +1,6 @@
 import type { InstalledExtension } from "./extension-discovery";
 import { action, observable, reaction } from "mobx";
+import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 
 export type LensExtensionId = string; // path to manifest (package.json)
@@ -37,6 +38,17 @@ export class LensExtension {
 
   get version() {
     return this.manifest.version;
+  }
+
+  /**
+   * getExtensionFileFolder returns the path to an already created folder. This
+   * folder is for the sole use of this extension.
+   *
+   * Note: there is no security done on this folder, only obfiscation of the
+   * folder name.
+   */
+  async getExtensionFileFolder(): Promise<string> {
+    return filesystemProvisionerStore.requestDirectory(this.id);
   }
 
   get description() {

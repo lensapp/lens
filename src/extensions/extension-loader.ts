@@ -131,21 +131,25 @@ export class ExtensionLoader {
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Function[]>) {
     return reaction(() => this.toJSON(), installedExtensions => {
       for (const [extId, ext] of installedExtensions) {
-        let instance = this.instances.get(extId);
-        if (ext.isEnabled && !instance) {
+        const alreadyInit = this.instances.has(extId);
+
+        if (ext.isEnabled && !alreadyInit) {
           try {
-            const LensExtensionClass: LensExtensionConstructor = this.requireExtension(ext);
-            if (!LensExtensionClass) continue;
-            instance = new LensExtensionClass(ext);
+            const LensExtensionClass = this.requireExtension(ext);
+            if (!LensExtensionClass) {
+              continue;
+            }
+
+            const instance = new LensExtensionClass(ext);
             instance.whenEnabled(() => register(instance));
             instance.enable();
             this.instances.set(extId, instance);
           } catch (err) {
             logger.error(`${logModule}: activation extension error`, { ext, err });
           }
-        } else if (!ext.isEnabled && instance) {
-          logger.info(`${logModule} deleting extension ${extId}`);
+        } else if (!ext.isEnabled && alreadyInit) {
           try {
+            const instance = this.instances.get(extId);
             instance.disable();
             this.instances.delete(extId);
           } catch (err) {
@@ -158,7 +162,7 @@ export class ExtensionLoader {
     });
   }
 
-  protected requireExtension(extension: InstalledExtension) {
+  protected requireExtension(extension: InstalledExtension): LensExtensionConstructor {
     let extEntrypoint = "";
     try {
       if (ipcRenderer && extension.manifest.renderer) {
