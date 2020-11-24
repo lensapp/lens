@@ -1,7 +1,9 @@
 import type { AppPreferenceRegistration, ClusterFeatureRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration, KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, } from "./registries";
+import type { Cluster } from "../main/cluster";
 import { observable } from "mobx";
 import { LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
+
 
 export class LensRendererExtension extends LensExtension {
   @observable.shallow globalPages: PageRegistration[] = [];
@@ -23,5 +25,12 @@ export class LensRendererExtension extends LensExtension {
       params: params ?? {}, // compile to url with params
     });
     navigate(pageUrl);
+  }
+
+  /**
+   * Defines if extension is enabled for a given cluster. Defaults to `true`.
+   */
+  async isEnabledForCluster(cluster: Cluster): Promise<Boolean> {
+    return true;
   }
 }
