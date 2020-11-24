@@ -32,6 +32,7 @@ nav:
       - Overview: extensions/guides/README.md
       - Main Extension: extensions/guides/main-extension.md
       - Renderer Extension: extensions/guides/renderer-extension.md
+      - Generator: extensions/guides/generator.md
     - Testing and Publishing:
       - Testing Extensions: extensions/testing-and-publishing/testing.md
       - Publishing Extensions: extensions/testing-and-publishing/publishing.md
