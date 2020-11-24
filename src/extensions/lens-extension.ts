@@ -67,15 +67,16 @@ export class LensExtension {
     }
   }
 
-  async whenEnabled(handlers: () => Function[]) {
+  async whenEnabled(handlers: () => Promise<Function[]>) {
     const disposers: Function[] = [];
     const unregisterHandlers = () => {
       disposers.forEach(unregister => unregister());
       disposers.length = 0;
     };
-    const cancelReaction = reaction(() => this.isEnabled, isEnabled => {
+    const cancelReaction = reaction(() => this.isEnabled, async (isEnabled) => {
       if (isEnabled) {
-        disposers.push(...handlers());
+        const handlerDisposers = await handlers();
+        disposers.push(...handlerDisposers);
       } else {
         unregisterHandlers();
       }

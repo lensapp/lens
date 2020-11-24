@@ -1,6 +1,7 @@
 import { app, ipcRenderer, remote } from "electron";
 import { action, computed, observable, reaction, toJS, when } from "mobx";
 import path from "path";
+import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
@@ -94,14 +95,14 @@ export class ExtensionLoader {
 
   loadOnMain() {
     logger.info(`${logModule}: load on main`);
-    this.autoInitExtensions((ext: LensMainExtension) => [
+    this.autoInitExtensions(async (ext: LensMainExtension) => [
       registries.menuRegistry.add(ext.appMenus)
     ]);
   }
 
   loadOnClusterManagerRenderer() {
     logger.info(`${logModule}: load on main renderer (cluster manager)`);
-    this.autoInitExtensions((ext: LensRendererExtension) => [
+    this.autoInitExtensions(async (ext: LensRendererExtension) => [
       registries.globalPageRegistry.add(ext.globalPages, ext),
       registries.globalPageMenuRegistry.add(ext.globalPageMenus, ext),
       registries.appPreferenceRegistry.add(ext.appPreferences),
@@ -112,16 +113,22 @@ export class ExtensionLoader {
 
   loadOnClusterRenderer() {
     logger.info(`${logModule}: load on cluster renderer (dashboard)`);
-    this.autoInitExtensions((ext: LensRendererExtension) => [
-      registries.clusterPageRegistry.add(ext.clusterPages, ext),
-      registries.clusterPageMenuRegistry.add(ext.clusterPageMenus, ext),
-      registries.kubeObjectMenuRegistry.add(ext.kubeObjectMenuItems),
-      registries.kubeObjectDetailRegistry.add(ext.kubeObjectDetailItems),
-      registries.kubeObjectStatusRegistry.add(ext.kubeObjectStatusTexts)
-    ]);
+    const cluster = getHostedCluster();
+    this.autoInitExtensions(async (ext: LensRendererExtension) => {
+      if (await ext.isEnabledForCluster(cluster) === false) {
+        return [];
+      }
+      return [
+        registries.clusterPageRegistry.add(ext.clusterPages, ext),
+        registries.clusterPageMenuRegistry.add(ext.clusterPageMenus, ext),
+        registries.kubeObjectMenuRegistry.add(ext.kubeObjectMenuItems),
+        registries.kubeObjectDetailRegistry.add(ext.kubeObjectDetailItems),
+        registries.kubeObjectStatusRegistry.add(ext.kubeObjectStatusTexts)
+      ];
+    });
   }
 
-  protected autoInitExtensions(register: (ext: LensExtension) => Function[]) {
+  protected autoInitExtensions(register: (ext: LensExtension) => Promise<Function[]>) {
     return reaction(() => this.toJSON(), installedExtensions => {
       for (const [extId, ext] of installedExtensions) {
         let instance = this.instances.get(extId);
