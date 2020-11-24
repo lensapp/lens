@@ -60,7 +60,7 @@ export class TableCell extends React.Component<TableCellProps> {
   render() {
     const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, ...cellProps } = this.props;
     const classNames = cssNames("TableCell", className, {
-      checkbox: checkbox,
+      checkbox,
       nowrap: _nowrap,
       sorting: this.isSortable,
     });

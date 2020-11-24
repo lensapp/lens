@@ -32,10 +32,10 @@ export class Tabs extends React.PureComponent<TabsProps> {
   render() {
     const { center, wrap, onChange, value, autoFocus, scrollable = true, withBorder, ...elemProps } = this.props;
     const className = cssNames("Tabs", this.props.className, {
-      center: center,
-      wrap: wrap,
-      scrollable: scrollable,
-      withBorder: withBorder,
+      center,
+      wrap,
+      scrollable,
+      withBorder,
     });
     return (
       <TabsContext.Provider value={{ autoFocus, value, onChange }}>
@@ -120,7 +120,7 @@ export class Tab extends React.PureComponent<TabProps> {
     let { className } = this.props;
     className = cssNames("Tab flex gaps align-center", className, {
       "active": this.isActive,
-      "disabled": disabled,
+      disabled,
     });
     return (
       <div

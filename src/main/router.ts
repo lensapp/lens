@@ -67,15 +67,15 @@ export class Router {
       output: "data",
     });
     return {
-      cluster: cluster,
+      cluster,
       path: url.pathname,
       raw: {
-        req: req,
+        req,
       },
       response: res,
       query: url.searchParams,
-      payload: payload,
-      params: params
+      payload,
+      params
     };
   }
 

@@ -55,7 +55,7 @@ export class EditResource extends React.Component<Props> {
     }
     editResourceStore.setData(this.tabId, {
       ...this.tabData,
-      draft: draft,
+      draft,
     });
   }
 

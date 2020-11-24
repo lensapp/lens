@@ -84,7 +84,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     super({
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
-      migrations: migrations,
+      migrations,
     });
 
     this.pushStateToViewsAutomatically();

@@ -11,7 +11,7 @@ export class LensMainExtension extends LensExtension {
     const windowManager = WindowManager.getInstance<WindowManager>();
     const pageUrl = getExtensionPageUrl({
       extensionId: this.name,
-      pageId: pageId,
+      pageId,
       params: params ?? {}, // compile to url with params
     });
     await windowManager.navigate(pageUrl, frameId);

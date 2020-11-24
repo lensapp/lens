@@ -149,7 +149,7 @@ export class Input extends React.Component<InputProps, State> {
     this.setState({
       validating: false,
       valid: !errors.length,
-      errors: errors,
+      errors,
     });
   }
 
@@ -273,11 +273,11 @@ export class Input extends React.Component<InputProps, State> {
 
     const className = cssNames("Input", this.props.className, {
       [`theme ${theme}`]: theme,
-      focused: focused,
-      disabled: disabled,
+      focused,
+      disabled,
       invalid: !valid,
-      dirty: dirty,
-      validating: validating,
+      dirty,
+      validating,
       validatingLine: validating && showValidationLine,
     });
 

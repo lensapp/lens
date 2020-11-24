@@ -92,11 +92,11 @@ export class AddSecretDialog extends React.Component<Props> {
     const { name, namespace, type } = this;
     const { data = [], labels = [], annotations = [] } = this.secret[type];
     const secret: Partial<Secret> = {
-      type: type,
+      type,
       data: this.getDataFromFields(data, val => val ? base64.encode(val) : ""),
       metadata: {
-        name: name,
-        namespace: namespace,
+        name,
+        namespace,
         annotations: this.getDataFromFields(annotations),
         labels: this.getDataFromFields(labels),
       } as IKubeObjectMetadata

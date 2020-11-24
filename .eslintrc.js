@@ -26,6 +26,7 @@ module.exports = {
         }],
         "no-unused-vars": "off",
         "semi": ["error", "always"],
+        "object-shorthand": "error",
       }
     },
     {
@@ -58,6 +59,7 @@ module.exports = {
         }],
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
+        "object-shorthand": "error",
       },
     },
     {
@@ -90,6 +92,7 @@ module.exports = {
         }],
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
+        "object-shorthand": "error",
       },
     }
   ]

@@ -180,8 +180,8 @@ export class Tooltip extends React.Component<TooltipProps> {
         break;
     }
     return {
-      left: left,
-      top: top,
+      left,
+      top,
       right: left + tooltipBounds.width,
       bottom: top + tooltipBounds.height,
     };
