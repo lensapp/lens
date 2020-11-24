@@ -20,7 +20,7 @@ export class DeploymentApi extends KubeApi<Deployment> {
       data: {
         metadata: params,
         spec: {
-          replicas: replicas
+          replicas
         }
       }
     });

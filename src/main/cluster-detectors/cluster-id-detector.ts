@@ -13,7 +13,7 @@ export class ClusterIdDetector extends BaseClusterDetector {
       id = this.cluster.apiUrl;
     }
     const value = createHash("sha256").update(id).digest("hex");
-    return { value: value, accuracy: 100 };
+    return { value, accuracy: 100 };
   }
 
   protected async getDefaultNamespaceId() {

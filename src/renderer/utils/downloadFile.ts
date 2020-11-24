@@ -1,5 +1,5 @@
 export function downloadFile(filename: string, contents: any, type: string) {
-  const data = new Blob([contents], { type: type });
+  const data = new Blob([contents], { type });
   const url = URL.createObjectURL(data);
   const link = document.createElement("a");
   link.href = url;

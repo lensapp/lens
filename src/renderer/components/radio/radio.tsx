@@ -24,10 +24,10 @@ export class RadioGroup extends React.Component<RadioGroupProps, {}> {
       <div className={className}>
         {radios.map(radio => {
           return React.cloneElement(radio, {
-            name: name,
+            name,
             disabled: disabled !== undefined ? disabled : radio.props.disabled,
             checked: radio.props.value === value,
-            onChange: onChange
+            onChange
           } as any);
         })}
       </div>
@@ -66,7 +66,7 @@ export class Radio extends React.Component<RadioProps> {
   render() {
     const { className, label, checked, children, ...inputProps } = this.props;
     const componentClass = cssNames('Radio flex align-center', className, {
-      checked: checked,
+      checked,
       disabled: this.props.disabled,
     });
     return (

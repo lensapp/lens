@@ -82,7 +82,7 @@ export class Table extends React.Component<TableProps> {
               typeof elem.props.children === "string" ? elem.props.children : undefined
             );
             return React.cloneElement(elem, {
-              title: title,
+              title,
               _sort: this.sort,
               _sorting: this.sortParams,
               _nowrap: headElem.props.nowrap,

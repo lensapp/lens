@@ -36,7 +36,7 @@ export class HelmChartStore extends ItemStore<HelmChart> {
     const loadVersions = (repo: string) => {
       return helmChartsApi.get(repo, chartName).then(({ versions }) => {
         return versions.map(chart => ({
-          repo: repo,
+          repo,
           version: chart.getVersion()
         }));
       });

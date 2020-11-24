@@ -38,7 +38,7 @@ export class FileInput extends React.Component<Props> {
           const reader = new FileReader();
           reader.onloadend = () => {
             resolve({
-              file: file,
+              file,
               data: reader.result,
               error: reader.error ? String(reader.error) : null,
             });

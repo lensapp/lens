@@ -152,7 +152,7 @@ export class AddCluster extends React.Component {
           : ClusterStore.embedCustomKubeConfig(clusterId, kubeConfig); // save in app-files folder
         return {
           id: clusterId,
-          kubeConfigPath: kubeConfigPath,
+          kubeConfigPath,
           workspace: workspaceStore.currentWorkspaceId,
           contextName: kubeConfig.currentContext,
           preferences: {

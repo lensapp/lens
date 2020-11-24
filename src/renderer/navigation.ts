@@ -67,7 +67,7 @@ export function getSelectedDetails() {
 export function getDetailsUrl(details: string) {
   if (!details) return "";
   return getQueryString({
-    details: details,
+    details,
     selected: getSelectedDetails(),
   });
 }
