@@ -4,23 +4,18 @@ import tar, { ExtractOptions, FileStat } from "tar";
 import path from "path";
 
 export interface ReadFileFromTarOpts {
-  fileName?: string;
-  fileMatcher?(path: string, entry: FileStat): boolean;
-  notFoundMessage?: string;
+  tarPath: string;
+  filePath: string;
+  parseJson?: boolean;
 }
 
-export function readFileFromTar(tarFilePath: string, opts: ReadFileFromTarOpts): Promise<Buffer> {
+export function readFileFromTar<R = Buffer>({tarPath, filePath, parseJson}: ReadFileFromTarOpts): Promise<R> {
   return new Promise(async (resolve, reject) => {
     const fileChunks: Buffer[] = [];
-    const {
-      fileName,
-      fileMatcher = (path: string) => path === fileName,
-      notFoundMessage = "File not found",
-    } = opts;
 
     await tar.list({
-      file: tarFilePath,
-      filter: fileMatcher,
+      file: tarPath,
+      filter: path => path === filePath,
       onentry(entry: FileStat) {
         entry.on("data", chunk => {
           fileChunks.push(chunk);
@@ -29,15 +24,26 @@ export function readFileFromTar(tarFilePath: string, opts: ReadFileFromTarOpts):
           reject(`Reading ${entry.path} error: ${err}`);
         });
         entry.once("end", () => {
-          resolve(Buffer.concat(fileChunks));
+          const data = Buffer.concat(fileChunks);
+          const result = parseJson ? JSON.parse(data.toString("utf8")) : data;
+          resolve(result);
         });
       },
     });
 
     if (!fileChunks.length) {
-      reject(notFoundMessage);
+      reject(null);
     }
   });
+}
+
+export async function listTarEntries(filePath: string): Promise<string[]> {
+  const entries: string[] = [];
+  await tar.list({
+    file: filePath,
+    onentry: (entry: FileStat) => entries.push(entry.path as any as string),
+  });
+  return entries;
 }
 
 export function extractTar(filePath: string, opts: ExtractOptions & { sync?: boolean } = {}) {

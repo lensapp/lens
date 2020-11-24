@@ -20,8 +20,8 @@ import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionDiscovery, manifestFilename } from "../../../extensions/extension-discovery";
 import { LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
 import { Notifications } from "../notifications";
-import { downloadFile, escapeRegExp } from "../../../common/utils";
-import { extractTar, readFileFromTar } from "../../../common/utils/tar";
+import { downloadFile } from "../../../common/utils";
+import { extractTar, listTarEntries, readFileFromTar } from "../../../common/utils/tar";
 import { docsUrl } from "../../../common/vars";
 
 interface InstallRequest {
@@ -142,14 +142,20 @@ export class Extensions extends React.Component {
   }
 
   async validatePackage(filePath: string): Promise<LensExtensionManifest> {
-    const manifestMatcher = RegExp(String.raw`^(\w+\/)?${escapeRegExp(manifestFilename)}$`);
+    const tarFiles = await listTarEntries(filePath);
 
-    const packageJson: Buffer = await readFileFromTar(filePath, {
-      notFoundMessage: `Invalid extension package, ${manifestFilename} not found`,
-      // tarball from npm contains single root folder "package/*"
-      fileMatcher: (path: string) => !!path.match(manifestMatcher),
+    // tarball from npm contains single root folder "package/*"
+    const hasSingleRootFolder = tarFiles.every(entry => entry.startsWith(tarFiles[0]));
+    const manifestLocation = hasSingleRootFolder ? path.join(tarFiles[0], manifestFilename) : manifestFilename;
+
+    if(!tarFiles.includes(manifestLocation)) {
+      throw `invalid package, ${manifestFilename} not found`;
+    }
+    const manifest = await readFileFromTar<LensExtensionManifest>({
+      tarPath: filePath,
+      filePath: manifestLocation,
+      parseJson: true,
     });
-    const manifest: LensExtensionManifest = JSON.parse(packageJson.toString("utf8"));
     if (!manifest.lens && !manifest.renderer) {
       throw `${manifestFilename} must specify "main" and/or "renderer" fields`;
     }
