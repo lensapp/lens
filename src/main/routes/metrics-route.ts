@@ -1,4 +1,3 @@
-
 import _ from "lodash";
 import { LensApiRequest } from "../router";
 import { LensApi } from "../lens-api";
@@ -25,6 +24,7 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
           return await cluster.getMetrics(prometheusPath, { query, ...queryParams });
         } catch (error) {
           if (lastAttempt || (error?.statusCode >= 400 && error?.statusCode < 500)) {
+            logger.error("[Metrics]: metrics not available", { err });
             throw new Error("Metrics not available");
           }
 
