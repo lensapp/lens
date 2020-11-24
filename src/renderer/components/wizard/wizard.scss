@@ -19,10 +19,6 @@
     padding: var(--wizard-spacing);
     height: var(--wizard-content-height);
     max-height: var(--wizard-content-max-height);
-
-    &::-webkit-scrollbar-thumb {
-      background-color: #bbbbbb; // Always light scrollbar in dialogs
-    }
   }
 
   > .header {
