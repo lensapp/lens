@@ -3,6 +3,7 @@ import { LensApiRequest } from "../router";
 import { LensApi } from "../lens-api";
 import { Cluster, ClusterMetadataKey } from "../cluster";
 import { ClusterPrometheusMetadata } from "../../common/cluster-store";
+import logger from "../logger";
 
 export type IMetricsQuery = string | string[] | {
   [metricName: string]: string;
@@ -24,7 +25,7 @@ async function loadMetrics(promQueries: string[], cluster: Cluster, prometheusPa
           return await cluster.getMetrics(prometheusPath, { query, ...queryParams });
         } catch (error) {
           if (lastAttempt || (error?.statusCode >= 400 && error?.statusCode < 500)) {
-            logger.error("[Metrics]: metrics not available", { err });
+            logger.error("[Metrics]: metrics not available", { error });
             throw new Error("Metrics not available");
           }
 
