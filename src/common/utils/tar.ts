@@ -9,7 +9,7 @@ export interface ReadFileFromTarOpts {
   parseJson?: boolean;
 }
 
-export function readFileFromTar<R = Buffer>({tarPath, filePath, parseJson}: ReadFileFromTarOpts): Promise<R> {
+export function readFileFromTar<R = Buffer>({ tarPath, filePath, parseJson }: ReadFileFromTarOpts): Promise<R> {
   return new Promise(async (resolve, reject) => {
     const fileChunks: Buffer[] = [];
 
@@ -21,7 +21,7 @@ export function readFileFromTar<R = Buffer>({tarPath, filePath, parseJson}: Read
           fileChunks.push(chunk);
         });
         entry.once("error", err => {
-          reject(`Reading ${entry.path} error: ${err}`);
+          reject(new Error(`reading file has failed ${entry.path}: ${err}`));
         });
         entry.once("end", () => {
           const data = Buffer.concat(fileChunks);
@@ -32,7 +32,7 @@ export function readFileFromTar<R = Buffer>({tarPath, filePath, parseJson}: Read
     });
 
     if (!fileChunks.length) {
-      reject(null);
+      reject(new Error("Not found"));
     }
   });
 }
