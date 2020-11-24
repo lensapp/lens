@@ -83,7 +83,7 @@ export class Extensions extends React.Component {
       this.requestInstall(
         filePaths.map(filePath => ({
           fileName: path.basename(filePath),
-          filePath: filePath,
+          filePath,
         }))
       );
     }
@@ -172,7 +172,7 @@ export class Extensions extends React.Component {
           const manifest = await this.validatePackage(tempFile);
           validatedRequests.push({
             ...req,
-            manifest: manifest,
+            manifest,
             tmpFile: tempFile,
           });
         } catch (err) {

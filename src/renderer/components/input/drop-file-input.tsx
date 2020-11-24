@@ -61,10 +61,10 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
           className: cssNames("DropFileInput", className, {
             droppable: this.dropAreaActive,
           }),
-          onDragEnter: onDragEnter,
-          onDragLeave: onDragLeave,
-          onDragOver: onDragOver,
-          onDrop: onDrop,
+          onDragEnter,
+          onDragLeave,
+          onDragOver,
+          onDrop,
         };
         return React.cloneElement(contentElem, contentElemProps);
       }
