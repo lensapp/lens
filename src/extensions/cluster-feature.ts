@@ -21,9 +21,6 @@ export abstract class ClusterFeature {
   latestVersion: string;
   config: any;
 
-  /**
-   * @observable
-   */
   @observable status: ClusterFeatureStatus = {
     currentVersion: null,
     installed: false,
