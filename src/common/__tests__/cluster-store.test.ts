@@ -2,7 +2,7 @@ import fs from "fs";
 import mockFs from "mock-fs";
 import yaml from "js-yaml";
 import { Cluster } from "../../main/cluster";
-import { ClusterStore } from "../cluster-store";
+import { ClusterModel, ClusterStore } from "../cluster-store";
 import { workspaceStore } from "../workspace-store";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
@@ -145,7 +145,32 @@ describe("empty config", () => {
 describe("config with existing clusters", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
+    const clusters: ClusterModel[] = [
+      {
+        id: 'cluster1',
+        kubeConfigPath: 'cluster1.yml',
+        contextName: 'foo',
+        preferences: { terminalCWD: '/foo' },
+        workspace: 'default'
+      },
+      {
+        id: 'cluster2',
+        kubeConfigPath: 'cluster2.yml',
+        contextName: 'foo2',
+        preferences: { terminalCWD: '/foo2' }
+      },
+      {
+        id: 'cluster3',
+        kubeConfigPath: 'cluster3.yml',
+        contextName: 'foo',
+        preferences: { terminalCWD: '/foo' },
+        workspace: 'foo'
+      },
+    ];
     const mockOpts = {
+      'cluster1.yml': JSON.stringify({}),
+      'cluster2.yml': JSON.stringify({}),
+      'cluster3.yml': JSON.stringify({}),
       'tmp': {
         'lens-cluster-store.json': JSON.stringify({
           __internal__: {
@@ -153,28 +178,7 @@ describe("config with existing clusters", () => {
               version: "99.99.99"
             }
           },
-          clusters: [
-            {
-              id: 'cluster1',
-              kubeConfig: 'foo',
-              contextName: 'foo',
-              preferences: { terminalCWD: '/foo' },
-              workspace: 'default'
-            },
-            {
-              id: 'cluster2',
-              kubeConfig: 'foo2',
-              contextName: 'foo2',
-              preferences: { terminalCWD: '/foo2' }
-            },
-            {
-              id: 'cluster3',
-              kubeConfig: 'foo',
-              contextName: 'foo',
-              preferences: { terminalCWD: '/foo' },
-              workspace: 'foo'
-            },
-          ]
+          clusters,
         })
       }
     };

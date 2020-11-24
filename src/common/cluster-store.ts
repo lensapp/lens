@@ -49,9 +49,6 @@ export interface ClusterModel {
   metadata?: ClusterMetadata;
   ownerRef?: string;
   accessibleNamespaces?: string[];
-
-  /** @deprecated */
-  kubeConfig?: string; // yaml
 }
 
 export interface ClusterPreferences extends ClusterPrometheusPreferences{
