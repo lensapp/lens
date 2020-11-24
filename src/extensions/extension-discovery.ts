@@ -227,12 +227,7 @@ export class ExtensionDiscovery {
       manifestJson = __non_webpack_require__(manifestPath);
       const installedManifestPath = path.join(this.nodeModulesPath, manifestJson.name, "package.json");
       this.packagesJson.dependencies[manifestJson.name] = path.dirname(manifestPath);
-
-      if (!isBundled) {
-        isEnabled = extensionsStore.isEnabled(installedManifestPath);
-      } else {
-        isEnabled = true;
-      }
+      const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
 
       return {
         manifestPath: installedManifestPath,
