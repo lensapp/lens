@@ -11,7 +11,6 @@ import { ClusterManager } from "./cluster-manager";
 import { ContextHandler } from "./context-handler";
 import logger from "./logger";
 import _ from "lodash";
-import { clusterStore } from "../common/cluster-store";
 
 export class LensProxy {
   protected origin: string;
