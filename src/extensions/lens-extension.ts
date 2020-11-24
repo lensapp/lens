@@ -99,5 +99,5 @@ export class LensExtension {
 }
 
 export function sanitizeExtensionName(name: string) {
-  return name.replace("@", "").replace("/", "-");
+  return name.replace("@", "").replace("/", "--");
 }

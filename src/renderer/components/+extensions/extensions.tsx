@@ -20,8 +20,7 @@ import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionDiscovery, manifestFilename } from "../../../extensions/extension-discovery";
 import { LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
 import { Notifications } from "../notifications";
-import { downloadFile } from "../../../common/utils";
-import { extractTar, listTarEntries, readFileFromTar } from "../../../common/utils/tar";
+import { downloadFile, extractTar, listTarEntries, readFileFromTar } from "../../../common/utils";
 import { docsUrl } from "../../../common/vars";
 
 interface InstallRequest {
@@ -36,7 +35,7 @@ interface InstallRequestPreloaded extends InstallRequest {
 
 interface InstallRequestValidated extends InstallRequestPreloaded {
   manifest: LensExtensionManifest;
-  tmpFile: string; // temp file for unpacking
+  tempFile: string; // temp system path to packed extension for unpacking
 }
 
 @observer
@@ -145,11 +144,12 @@ export class Extensions extends React.Component {
     const tarFiles = await listTarEntries(filePath);
 
     // tarball from npm contains single root folder "package/*"
-    const hasSingleRootFolder = tarFiles.every(entry => entry.startsWith(tarFiles[0]));
-    const manifestLocation = hasSingleRootFolder ? path.join(tarFiles[0], manifestFilename) : manifestFilename;
+    const rootFolder = tarFiles[0].split("/")[0];
+    const packedInRootFolder = tarFiles.every(entry => entry.startsWith(rootFolder));
+    const manifestLocation = packedInRootFolder ? path.join(rootFolder, manifestFilename) : manifestFilename;
 
-    if(!tarFiles.includes(manifestLocation)) {
-      throw `invalid package, ${manifestFilename} not found`;
+    if (!tarFiles.includes(manifestLocation)) {
+      throw new Error(`invalid extension bundle, ${manifestFilename} not found`);
     }
     const manifest = await readFileFromTar<LensExtensionManifest>({
       tarPath: filePath,
@@ -157,7 +157,7 @@ export class Extensions extends React.Component {
       parseJson: true,
     });
     if (!manifest.lens && !manifest.renderer) {
-      throw `${manifestFilename} must specify "main" and/or "renderer" fields`;
+      throw new Error(`${manifestFilename} must specify "main" and/or "renderer" fields`);
     }
     return manifest;
   }
@@ -181,7 +181,7 @@ export class Extensions extends React.Component {
           validatedRequests.push({
             ...req,
             manifest,
-            tmpFile: tempFile,
+            tempFile,
           });
         } catch (err) {
           fse.unlink(tempFile).catch(() => null); // remove invalid temp package
@@ -231,16 +231,16 @@ export class Extensions extends React.Component {
     });
   }
 
-  async unpackExtension({ fileName, tmpFile, manifest: { name, version } }: InstallRequestValidated) {
+  async unpackExtension({ fileName, tempFile, manifest: { name, version } }: InstallRequestValidated) {
     const extName = `${name}@${version}`;
-    logger.info(`Unpacking extension ${extName}`, { fileName, tmpFile });
-    const unpackingTempFolder = path.join(path.dirname(tmpFile), path.basename(tmpFile) + "-unpacked");
+    logger.info(`Unpacking extension ${extName}`, { fileName, tempFile });
+    const unpackingTempFolder = path.join(path.dirname(tempFile), path.basename(tempFile) + "-unpacked");
     const extensionFolder = this.getExtensionDestFolder(name);
     try {
       // extract to temp folder first
       await fse.remove(unpackingTempFolder).catch(Function);
       await fse.ensureDir(unpackingTempFolder);
-      await extractTar(tmpFile, { cwd: unpackingTempFolder });
+      await extractTar(tempFile, { cwd: unpackingTempFolder });
 
       // move contents to extensions folder
       const unpackedFiles = await fse.readdir(unpackingTempFolder);
@@ -262,7 +262,7 @@ export class Extensions extends React.Component {
     } finally {
       // clean up
       fse.remove(unpackingTempFolder).catch(Function);
-      fse.unlink(tmpFile).catch(Function);
+      fse.unlink(tempFile).catch(Function);
     }
   }
 

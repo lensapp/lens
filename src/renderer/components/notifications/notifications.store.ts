@@ -34,7 +34,7 @@ export class NotificationsStore {
     const notification = this.getById(id);
     if (!notification) return;
     this.removeAutoHideTimer(id);
-    if (notification.timeout) {
+    if (notification?.timeout) {
       const timer = window.setTimeout(() => this.remove(id), notification.timeout);
       this.autoHideTimers.set(id, timer);
     }
