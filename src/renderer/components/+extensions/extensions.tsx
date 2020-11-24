@@ -17,10 +17,10 @@ import { PageLayout } from "../layout/page-layout";
 import { Clipboard } from "../clipboard";
 import logger from "../../../main/logger";
 import { extensionLoader } from "../../../extensions/extension-loader";
-import { extensionDiscovery } from "../../../extensions/extension-discovery";
+import { extensionDiscovery, manifestFilename } from "../../../extensions/extension-discovery";
 import { LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
 import { Notifications } from "../notifications";
-import { downloadFile } from "../../../common/utils";
+import { downloadFile, escapeRegExp } from "../../../common/utils";
 import { extractTar, readFileFromTar } from "../../../common/utils/tar";
 import { docsUrl } from "../../../common/vars";
 
@@ -142,14 +142,16 @@ export class Extensions extends React.Component {
   }
 
   async validatePackage(filePath: string): Promise<LensExtensionManifest> {
+    const manifestMatcher = RegExp(String.raw`^(\w+\/)?${escapeRegExp(manifestFilename)}$`);
+
     const packageJson: Buffer = await readFileFromTar(filePath, {
+      notFoundMessage: `Invalid extension package, ${manifestFilename} not found`,
       // tarball from npm contains single root folder "package/*"
-      fileMatcher: (path: string) => !!path.match(/(\w+\/)?package\.json$/),
-      notFoundMessage: "Invalid extension, package.json not found",
+      fileMatcher: (path: string) => !!path.match(manifestMatcher),
     });
     const manifest: LensExtensionManifest = JSON.parse(packageJson.toString("utf8"));
     if (!manifest.lens && !manifest.renderer) {
-      throw `package.json must specify "main" and/or "renderer" fields`;
+      throw `${manifestFilename} must specify "main" and/or "renderer" fields`;
     }
     return manifest;
   }
