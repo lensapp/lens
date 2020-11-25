@@ -19,6 +19,7 @@ Each guide or sample will include:
 | [Stores](stores.md) | |
 | [Components](components.md) | |
 | [KubeObjectListLayout](kube-object-list-layout.md) | |
+| [Working with mobx](working-with-mobx.md) | |
 
 ## Samples
 
