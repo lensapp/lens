@@ -107,6 +107,7 @@
     "selectOptionHoveredColor": "#87909c",
     "lineProgressBackground": "#414448",
     "radioActiveBackground": "#36393e",
-    "menuActiveBackground": "#36393e"
+    "menuActiveBackground": "#36393e",
+    "scrollBarColor": "#5f6064"
   }
 }

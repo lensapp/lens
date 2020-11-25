@@ -1,4 +1,4 @@
-import "./badge.scss"
+import "./badge.scss";
 
 import React from "react";
 import { computed, observable } from "mobx";
@@ -49,12 +49,12 @@ export class Badge extends React.Component<BadgeProps> {
       small: small,
       interactive: this.isExpandable,
       isExpanded: isExpanded ?? this.isExpanded,
-    })
+    });
     return (
       <div {...elemProps} className={classNames} onMouseUp={this.onMouseUp} ref={this.bindRef}>
         {label}
         {children}
       </div>
-    )
+    );
   }
 }

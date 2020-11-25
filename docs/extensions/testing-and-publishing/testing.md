@@ -2,29 +2,35 @@
 
 ## Console.log
 
-`console.log()` might be handy for extension developers to prints out info/errors from extensions. To use `console.log`, note that Lens is based on Electron. Electron has two types of processes: [Main and Renderer](https://www.electronjs.org/docs/tutorial/quick-start#main-and-renderer-processes).
+Extension developers might find `console.log()` useful for printing out information and errors from extensions. To use `console.log()`, note that Lens is based on Electron, and that Electron has two types of processes: [Main and Renderer](https://www.electronjs.org/docs/tutorial/quick-start#main-and-renderer-processes).
 
 ### Renderer Process Logs
 
-`console.log()` in Renderer process is printed in the Console in Developer Tools (View > Toggle Developer Tools).
+In the Renderer process, `console.log()` is printed in the Console in Developer Tools (**View** > **Toggle Developer Tools**).
 
 ### Main Process Logs
 
-To view the logs from the main process is a bit trickier, since you cannot open developer tools for them. On MacOSX, one way is to run Lens from the terminal.
+Viewing the logs from the Main process is a little trickier, since they cannot be printed using Developer Tools. 
+
+#### macOS
+
+On macOS, view the Main process logs by running Lens from the terminal:
 
 ```bash
 /Applications/Lens.app/Contents/MacOS/Lens
 ```
 
-You can alos use [Console.app](https://support.apple.com/en-gb/guide/console/welcome/mac) to view logs from Lens.
+You can also use [Console.app](https://support.apple.com/en-gb/guide/console/welcome/mac) to view the Main process logs.
 
-On linux, you can get PID of Lens first
+#### Linux
+
+On Linux, you can access the Main process logs using the Lens PID. First get the PID:
 
 ```bash
 ps aux | grep Lens | grep -v grep
 ```
 
-And get logs by the PID
+Then get the Main process logs using the PID:
 
 ```bash
 tail -f /proc/[pid]/fd/1 # stdout (console.log)

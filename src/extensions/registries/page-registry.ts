@@ -5,8 +5,9 @@ import path from "path";
 import { action } from "mobx";
 import { compile } from "path-to-regexp";
 import { BaseRegistry } from "./base-registry";
-import { LensExtension } from "../lens-extension";
+import { LensExtension, sanitizeExtensionName } from "../lens-extension";
 import logger from "../../main/logger";
+import { recitfy } from "../../common/utils";
 
 export interface PageRegistration {
   /**
@@ -15,11 +16,6 @@ export interface PageRegistration {
    * When not provided, first registered page without "id" would be used for page-menus without target.pageId for same extension
    */
   id?: string;
-  /**
-   * Alias to page ID which assume to be used as path with possible :param placeholders
-   * @deprecated
-   */
-  routePath?: string;
   /**
    * Strict route matching to provided page-id, read also: https://reactrouter.com/web/api/NavLink/exact-bool
    * In case when more than one page registered at same extension "pageId" is required to identify different pages,
@@ -44,10 +40,6 @@ export interface PageComponents {
   Page: React.ComponentType<any>;
 }
 
-export function sanitizeExtensionName(name: string) {
-  return name.replace("@", "").replace("/", "-")
-}
-
 export function getExtensionPageUrl<P extends object>({ extensionId, pageId = "", params }: PageMenuTarget<P>): string {
   const extensionBaseUrl = compile(`/extension/:name`)({
     name: sanitizeExtensionName(extensionId), // compile only with extension-id first and define base path
@@ -59,22 +51,23 @@ export function getExtensionPageUrl<P extends object>({ extensionId, pageId = ""
   return extPageRoutePath;
 }
 
-export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage> {
+export class PageRegistry extends BaseRegistry<RegisteredPage> {
   @action
-  add(items: PageRegistration[], ext: LensExtension) {
+  add(items: PageRegistration | PageRegistration[], ext: LensExtension) {
+    const itemArray = recitfy(items);
     let registeredPages: RegisteredPage[] = [];
     try {
-      registeredPages = items.map(page => ({
+      registeredPages = itemArray.map(page => ({
         ...page,
         extensionId: ext.name,
-        routePath: getExtensionPageUrl({ extensionId: ext.name, pageId: page.id ?? page.routePath }),
-      }))
+        routePath: getExtensionPageUrl({ extensionId: ext.name, pageId: page.id }),
+      }));
     } catch (err) {
       logger.error(`[EXTENSION]: page-registration failed`, {
         items,
         extension: ext,
         error: String(err),
-      })
+      });
     }
     return super.add(registeredPages);
   }

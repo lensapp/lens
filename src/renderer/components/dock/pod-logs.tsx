@@ -1,5 +1,7 @@
 import "./pod-logs.scss";
 import React from "react";
+import AnsiUp from 'ansi_up';
+import DOMPurify from "dompurify";
 import { Trans } from "@lingui/macro";
 import { action, computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
@@ -33,6 +35,7 @@ export class PodLogs extends React.Component<Props> {
   private logsElement = React.createRef<HTMLDivElement>(); // A reference for outer container in VirtualList
   private virtualListRef = React.createRef<VirtualList>(); // A reference for VirtualList component
   private lastLineIsShown = true; // used for proper auto-scroll content after refresh
+  private colorConverter = new AnsiUp();
 
   componentDidMount() {
     disposeOnUnmount(this, [
@@ -76,13 +79,13 @@ export class PodLogs extends React.Component<Props> {
     this.ready = false;
     await podLogsStore.load(this.tabId);
     this.ready = true;
-  }
+  };
 
   reload = async () => {
     podLogsStore.clearLogs(this.tabId);
     this.lastLineIsShown = true;
     await this.load();
-  }
+  };
 
   /**
    * Function loads more logs (usually after user scrolls to top) and sets proper
@@ -98,7 +101,7 @@ export class PodLogs extends React.Component<Props> {
       // Set scroll position back to place where preloading started
       this.logsElement.current.scrollTop = (podLogsStore.lines - lines) * lineHeight;
     }
-  }
+  };
 
   /**
    * A function for various actions after search is happened
@@ -164,7 +167,7 @@ export class PodLogs extends React.Component<Props> {
         this.showJumpToBottom = true;
       }
     }
-  }
+  };
 
   @action
   scrollToBottom = () => {
@@ -174,7 +177,7 @@ export class PodLogs extends React.Component<Props> {
     this.showJumpToBottom = false;
     // Showing horizontal scrollbar after VirtualList settles down
     setTimeout(() => this.hideHorizontalScroll = false, 500);
-  }
+  };
 
   /**
    * A function is called by VirtualList for rendering each of the row
@@ -185,6 +188,7 @@ export class PodLogs extends React.Component<Props> {
     const { searchQuery, isActiveOverlay } = searchStore;
     const item = this.logs[rowIndex];
     const contents: React.ReactElement[] = [];
+    const ansiToHtml = (ansi: string) => DOMPurify.sanitize(this.colorConverter.ansi_to_html(ansi));
     if (searchQuery) { // If search is enabled, replace keyword with backgrounded <span>
       // Case-insensitive search (lowercasing query and keywords in line)
       const regex = new RegExp(searchStore.escapeRegex(searchQuery), "gi");
@@ -195,22 +199,29 @@ export class PodLogs extends React.Component<Props> {
       pieces.forEach((piece, index) => {
         const active = isActiveOverlay(rowIndex, index);
         const lastItem = index === pieces.length - 1;
+        const overlayValue = matches.next().value;
         const overlay = !lastItem ?
-          <span className={cssNames({ active })}>{matches.next().value}</span> :
-          null
+          <span
+            className={cssNames("overlay", { active })}
+            dangerouslySetInnerHTML={{ __html: ansiToHtml(overlayValue) }}
+          /> :
+          null;
         contents.push(
           <React.Fragment key={piece + index}>
-            {piece}{overlay}
+            <span dangerouslySetInnerHTML={{ __html: ansiToHtml(piece) }} />
+            {overlay}
           </React.Fragment>
         );
-      })
+      });
     }
     return (
       <div className={cssNames("LogRow")}>
-        {contents.length > 1 ? contents : item}
+        {contents.length > 1 ? contents : (
+          <span dangerouslySetInnerHTML={{ __html: ansiToHtml(item) }} />
+        )}
       </div>
     );
-  }
+  };
 
   renderJumpToBottom() {
     if (!this.logsElement) return null;
@@ -277,7 +288,7 @@ export class PodLogs extends React.Component<Props> {
         toPrevOverlay={this.toOverlay}
         toNextOverlay={this.toOverlay}
       />
-    )
+    );
     return (
       <div className={cssNames("PodLogs flex column", className, { noscroll: this.hideHorizontalScroll })}>
         <InfoPanel

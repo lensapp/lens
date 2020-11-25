@@ -22,8 +22,8 @@ interface Props extends Partial<DialogProps> {
 export class CreateServiceAccountDialog extends React.Component<Props> {
   @observable static isOpen = false;
 
-  @observable name = ""
-  @observable namespace = "default"
+  @observable name = "";
+  @observable namespace = "default";
 
   static open() {
     CreateServiceAccountDialog.isOpen = true;
@@ -35,7 +35,7 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
 
   close = () => {
     CreateServiceAccountDialog.close();
-  }
+  };
 
   createAccount = async () => {
     const { name, namespace } = this;
@@ -47,12 +47,12 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
     } catch (err) {
       Notifications.error(err);
     }
-  }
+  };
 
   render() {
     const { ...dialogProps } = this.props;
     const { name, namespace } = this;
-    const header = <h5><Trans>Create Service Account</Trans></h5>
+    const header = <h5><Trans>Create Service Account</Trans></h5>;
     return (
       <Dialog
         {...dialogProps}
@@ -78,6 +78,6 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

@@ -2,7 +2,7 @@
   "name": "kontena-lens",
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0-beta.4",
   "main": "static/build/main.js",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
@@ -37,7 +37,8 @@
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "build:tray-icons": "yarn run ts-node build/build_tray_icon.ts",
-    "lint": "yarn run eslint $@ --ext js,ts,tsx --max-warnings=0  src/",
+    "lint": "yarn run eslint $@ --ext js,ts,tsx --max-warnings=0 src/ integration/ __mocks__/ build/ extensions/",
+    "lint:fix": "yarn run lint --fix",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
     "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts"
   },
@@ -46,7 +47,7 @@
     "bundledHelmVersion": "3.3.4"
   },
   "engines": {
-    "node": ">=12.0 <13.0"
+    "node": ">=12 <13"
   },
   "lingui": {
     "locales": [
@@ -193,7 +194,6 @@
       "node-menu",
       "metrics-cluster-feature",
       "license-menu-item",
-      "support-page",
       "kube-object-event-status"
     ]
   },
@@ -214,15 +214,17 @@
     "@types/node": "^12.12.45",
     "@types/proper-lockfile": "^4.1.1",
     "@types/react-beautiful-dnd": "^13.0.0",
-    "@types/tar": "^4.0.3",
+    "@types/tar": "^4.0.4",
     "array-move": "^3.0.0",
+    "await-lock": "^2.1.0",
     "chalk": "^4.1.0",
+    "chokidar": "^3.4.3",
     "command-exists": "1.2.9",
     "conf": "^7.0.1",
     "crypto-js": "^4.0.0",
+    "electron-devtools-installer": "^3.1.1",
     "electron-updater": "^4.3.1",
     "electron-window-state": "^5.0.3",
-    "file-type": "^14.7.1",
     "filenamify": "^4.1.0",
     "fs-extra": "^9.0.1",
     "handlebars": "^4.7.6",
@@ -248,7 +250,7 @@
     "serializr": "^2.0.3",
     "shell-env": "^3.0.0",
     "spdy": "^4.0.2",
-    "tar": "^6.0.2",
+    "tar": "^6.0.5",
     "tcp-port-used": "^1.0.1",
     "tempy": "^0.5.0",
     "uuid": "^8.1.0",
@@ -279,6 +281,7 @@
     "@types/color": "^3.0.1",
     "@types/crypto-js": "^3.1.47",
     "@types/dompurify": "^2.0.2",
+    "@types/electron-devtools-installer": "^2.2.0",
     "@types/electron-window-state": "^2.0.34",
     "@types/fs-extra": "^9.0.1",
     "@types/hapi": "^18.0.3",
@@ -310,7 +313,6 @@
     "@types/sharp": "^0.26.0",
     "@types/shelljs": "^0.8.8",
     "@types/spdy": "^3.4.4",
-    "@types/tar": "^4.0.3",
     "@types/tcp-port-used": "^1.0.0",
     "@types/tempy": "^0.3.0",
     "@types/terser-webpack-plugin": "^3.0.0",

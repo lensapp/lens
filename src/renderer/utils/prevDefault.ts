@@ -17,7 +17,7 @@ export function prevDefault<E extends React.SyntheticEvent | Event>(callback: (e
     evt.preventDefault();
     evt.stopPropagation();
     return callback(evt);
-  }
+  };
 }
 
 export function stopPropagation(evt: Event | React.SyntheticEvent) {

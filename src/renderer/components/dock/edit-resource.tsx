@@ -3,7 +3,7 @@ import "./edit-resource.scss";
 import React from "react";
 import { autorun, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import jsYaml from "js-yaml"
+import jsYaml from "js-yaml";
 import { t, Trans } from "@lingui/macro";
 import { IDockTab } from "./dock.store";
 import { cssNames } from "../../utils";
@@ -55,14 +55,14 @@ export class EditResource extends React.Component<Props> {
     }
     editResourceStore.setData(this.tabId, {
       ...this.tabData,
-      draft: draft,
+      draft,
     });
   }
 
   onChange = (draft: string, error?: string) => {
     this.error = error;
     this.saveDraft(draft);
-  }
+  };
 
   save = async () => {
     if (this.error) {
@@ -79,7 +79,7 @@ export class EditResource extends React.Component<Props> {
         <Trans>{resourceType} <b>{resourceName}</b> updated.</Trans>
       </p>
     );
-  }
+  };
 
   render() {
     const { tabId, resource, tabData, error, onChange, save } = this;
@@ -110,6 +110,6 @@ export class EditResource extends React.Component<Props> {
           onChange={onChange}
         />
       </div>
-    )
+    );
   }
 }

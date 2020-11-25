@@ -90,7 +90,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     const item = [...this.data].find(item => item[1].releaseName === releaseName);
     if (item) {
       const [tabId] = item;
-      return dockStore.getTabById(tabId)
+      return dockStore.getTabById(tabId);
     }
   }
 }
@@ -113,7 +113,7 @@ export function createUpgradeChartTab(release: HelmRelease, tabParams: Partial<I
     upgradeChartStore.setData(tab.id, {
       releaseName: release.getName(),
       releaseNamespace: release.getNs()
-    })
+    });
   }
   return tab;
 }

@@ -1,17 +1,12 @@
 .Table {
-  &.scrollable {
-    .theme-light & {
-      @include custom-scrollbar(dark);
-    }
-
-    @include custom-scrollbar();
-    flex: 1 0 0; // hackfix: flex-basis must be "0" for proper work in firefox
-  }
-
   &.autoSize {
     .TableCell {
       flex: 1 0;
     }
+  }
+
+  &.scrollable {
+    overflow: auto;
   }
 
   &.selectable {

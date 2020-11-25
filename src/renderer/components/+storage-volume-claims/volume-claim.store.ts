@@ -6,7 +6,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class VolumeClaimStore extends KubeObjectStore<PersistentVolumeClaim> {
-  api = pvcApi
+  api = pvcApi;
   @observable metrics: IPvcMetrics = null;
 
   @action

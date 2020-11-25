@@ -36,7 +36,7 @@ export class SecretDetails extends React.Component<Props> {
           this.revealSecret = {};
         }
       })
-    ])
+    ]);
   }
 
   saveSecret = async () => {
@@ -49,11 +49,11 @@ export class SecretDetails extends React.Component<Props> {
       Notifications.error(err);
     }
     this.isSaving = false;
-  }
+  };
 
   editData = (name: string, value: string, encoded: boolean) => {
     this.data[name] = encoded ? value : base64.encode(value);
-  }
+  };
 
   render() {
     const { object: secret } = this.props;
@@ -97,7 +97,7 @@ export class SecretDetails extends React.Component<Props> {
                       }
                     </div>
                   </div>
-                )
+                );
               })
             }
             <Button
@@ -119,4 +119,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <SecretDetails {...props} />
   }
-})
+});

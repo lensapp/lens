@@ -43,12 +43,12 @@ export class DaemonSetDetails extends React.Component<Props> {
   render() {
     const { object: daemonSet } = this.props;
     if (!daemonSet) return null;
-    const { spec } = daemonSet
+    const { spec } = daemonSet;
     const selectors = daemonSet.getSelectors();
-    const images = daemonSet.getImages()
-    const nodeSelector = daemonSet.getNodeSelectors()
-    const childPods = daemonSetStore.getChildPods(daemonSet)
-    const metrics = daemonSetStore.metrics
+    const images = daemonSet.getImages();
+    const nodeSelector = daemonSet.getNodeSelectors();
+    const childPods = daemonSetStore.getChildPods(daemonSet);
+    const metrics = daemonSetStore.metrics;
     return (
       <div className="DaemonSetDetails">
         {podsStore.isLoaded && (
@@ -92,7 +92,7 @@ export class DaemonSetDetails extends React.Component<Props> {
         <ResourceMetricsText metrics={metrics}/>
         <PodDetailsList pods={childPods} owner={daemonSet}/>
       </div>
-    )
+    );
   }
 }
 
@@ -102,7 +102,7 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props: any) => <DaemonSetDetails {...props} />
   }
-})
+});
 kubeObjectDetailRegistry.add({
   kind: "DaemonSet",
   apiVersions: ["apps/v1"],
@@ -110,4 +110,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props: any) => <KubeEventDetails {...props} />
   }
-})
+});

@@ -30,17 +30,16 @@ jobs:
         displayName: Install Node.js
       - task: Cache@2
         inputs:
-          key: yarn | $(Agent.OS) | yarn.lock
+          key: 'yarn | "$(Agent.OS)"" | yarn.lock'
           restoreKeys: |
             yarn | "$(Agent.OS)"
-            yarn
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
-      - script: make install-deps
+      - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
         displayName: Generate npm package
-      - script: make build-extensions
+      - script: make -j2 build-extensions
         displayName: Build bundled extensions
       - script: make integration-win
         displayName: Run integration tests
@@ -70,17 +69,16 @@ jobs:
         displayName: Install Node.js
       - task: Cache@2
         inputs:
-          key: yarn | $(Agent.OS) | yarn.lock
+          key: 'yarn | "$(Agent.OS)" | yarn.lock'
           restoreKeys: |
             yarn | "$(Agent.OS)"
-            yarn
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
-      - script: make install-deps
+      - script: make node_modules
         displayName: Install dependencies
       - script: make build-npm
         displayName: Generate npm package
-      - script: make build-extensions
+      - script: make -j2 build-extensions
         displayName: Build bundled extensions
       - script: make test
         displayName: Run tests
@@ -116,19 +114,18 @@ jobs:
         displayName: Install Node.js
       - task: Cache@2
         inputs:
-          key: yarn | $(Agent.OS) | yarn.lock
+          key: 'yarn | "$(Agent.OS)" | yarn.lock'
           restoreKeys: |
             yarn | "$(Agent.OS)"
-            yarn
           path: $(YARN_CACHE_FOLDER)
         displayName: Cache Yarn packages
-      - script: make install-deps
+      - script: make node_modules
         displayName: Install dependencies
       - script: make lint
         displayName: Lint
       - script: make build-npm
         displayName: Generate npm package
-      - script: make build-extensions
+      - script: make -j2 build-extensions
         displayName: Build bundled extensions
       - script: make test
         displayName: Run tests

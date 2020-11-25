@@ -33,35 +33,40 @@ import { ErrorBoundary } from "./error-boundary";
 import { Terminal } from "./dock/terminal";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
-import { clusterIpc } from "../../common/cluster-ipc";
 import { webFrame } from "electron";
-import { clusterPageRegistry } from "../../extensions/registries/page-registry";
+import { clusterPageRegistry, getExtensionPageUrl, PageRegistration, RegisteredPage } from "../../extensions/registries/page-registry";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
+import { requestMain } from "../../common/ipc";
 import whatInput from 'what-input';
+import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
+import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
+import { TabLayoutRoute, TabLayout } from "./layout/tab-layout";
+import { Trans } from "@lingui/macro";
+import {StatefulSetScaleDialog} from "./+workloads-statefulsets/statefulset-scale-dialog";
 
 @observer
 export class App extends React.Component {
   static async init() {
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
-    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`)
-    await Terminal.preloadFonts()
+    logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`);
+    await Terminal.preloadFonts();
 
-    await clusterIpc.setFrameId.invokeFromRenderer(clusterId, frameId);
+    await requestMain(clusterSetFrameIdHandler, clusterId, frameId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
     extensionLoader.loadOnClusterRenderer();
     appEventBus.emit({
       name: "cluster",
       action: "open",
       params: {
-        clusterId: clusterId
+        clusterId
       }
-    })
+    });
     window.addEventListener("online", () => {
-      window.location.reload()
-    })
-    whatInput.ask() // Start to monitor user input device
+      window.location.reload();
+    });
+    whatInput.ask(); // Start to monitor user input device
   }
 
   get startURL() {
@@ -71,10 +76,49 @@ export class App extends React.Component {
     return workloadsURL();
   }
 
+  getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
+    const routes: TabLayoutRoute[] = [];
+    if (!menuItem.id) {
+      return routes;
+    }
+    clusterPageMenuRegistry.getSubItems(menuItem).forEach((item) => {
+      const page = clusterPageRegistry.getByPageMenuTarget(item.target);
+      if (page) {
+        routes.push({
+          routePath: page.routePath,
+          url: getExtensionPageUrl({ extensionId: page.extensionId, pageId: page.id, params: item.target.params }),
+          title: item.title,
+          component: page.components.Page,
+          exact: page.exact
+        });
+      }
+    });
+    return routes;
+  }
+
+  renderExtensionTabLayoutRoutes() {
+    return clusterPageMenuRegistry.getRootItems().map((menu, index) => {
+      const tabRoutes = this.getTabLayoutRoutes(menu);
+      if (tabRoutes.length > 0) {
+        const pageComponent = () => <TabLayout tabs={tabRoutes} />;
+        return <Route key={"extension-tab-layout-route-" + index} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
+      } else {
+        const page = clusterPageRegistry.getByPageMenuTarget(menu.target);
+        if (page) {
+          const pageComponent = () => <page.components.Page />;
+          return <Route key={"extension-tab-layout-route-" + index} path={page.routePath} exact={page.exact} component={pageComponent}/>;
+        }
+      }
+    });
+  }
+
   renderExtensionRoutes() {
-    return clusterPageRegistry.getItems().map(({ components: { Page }, exact, routePath }) => {
-      return <Route key={routePath} path={routePath} exact={exact} component={Page}/>
-    })
+    return clusterPageRegistry.getItems().map((page, index) => {
+      const menu = clusterPageMenuRegistry.getByPage(page);
+      if (!menu) {
+        return <Route key={"extension-route-" + index} path={page.routePath} exact={page.exact} component={page.components.Page}/>;
+      }
+    });
   }
 
   render() {
@@ -95,6 +139,7 @@ export class App extends React.Component {
                 <Route component={CustomResources} {...crdRoute}/>
                 <Route component={UserManagement} {...usersManagementRoute}/>
                 <Route component={Apps} {...appsRoute}/>
+                {this.renderExtensionTabLayoutRoutes()}
                 {this.renderExtensionRoutes()}
                 <Redirect exact from="/" to={this.startURL}/>
                 <Route component={NotFound}/>
@@ -106,10 +151,11 @@ export class App extends React.Component {
             <KubeConfigDialog/>
             <AddRoleBindingDialog/>
             <DeploymentScaleDialog/>
+            <StatefulSetScaleDialog/>
             <CronJobTriggerDialog/>
           </ErrorBoundary>
         </Router>
       </I18nProvider>
-    )
+    );
   }
 }

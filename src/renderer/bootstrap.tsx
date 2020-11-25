@@ -1,9 +1,9 @@
-import "./components/app.scss"
+import "./components/app.scss";
 
 import React from "react";
-import * as Mobx from "mobx"
-import * as MobxReact from "mobx-react"
-import * as LensExtensions from "../extensions/extension-api"
+import * as Mobx from "mobx";
+import * as MobxReact from "mobx-react";
+import * as LensExtensions from "../extensions/extension-api";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
 import { render, unmountComponentAtNode } from "react-dom";
@@ -14,21 +14,25 @@ import { clusterStore } from "../common/cluster-store";
 import { i18nStore } from "./i18n";
 import { themeStore } from "./theme.store";
 import { extensionsStore } from "../extensions/extensions-store";
+import { extensionLoader } from "../extensions/extension-loader";
+import { filesystemProvisionerStore } from "../main/extension-filesystem";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
-}
+};
 
 export {
   React,
   Mobx,
   MobxReact,
   LensExtensions
-}
+};
 
 export async function bootstrap(App: AppComponent) {
-  const rootElem = document.getElementById("app")
+  const rootElem = document.getElementById("app");
   rootElem.classList.toggle("is-mac", isMac);
+
+  extensionLoader.init();
 
   // preload common stores
   await Promise.all([
@@ -36,6 +40,7 @@ export async function bootstrap(App: AppComponent) {
     workspaceStore.load(),
     clusterStore.load(),
     extensionsStore.load(),
+    filesystemProvisionerStore.load(),
     i18nStore.init(),
     themeStore.init(),
   ]);
@@ -50,13 +55,13 @@ export async function bootstrap(App: AppComponent) {
   }
   window.addEventListener("message", (ev: MessageEvent) => {
     if (ev.data === "teardown") {
-      userStore.unregisterIpcListener()
-      workspaceStore.unregisterIpcListener()
-      clusterStore.unregisterIpcListener()
-      unmountComponentAtNode(rootElem)
-      window.location.href = "about:blank"
+      userStore.unregisterIpcListener();
+      workspaceStore.unregisterIpcListener();
+      clusterStore.unregisterIpcListener();
+      unmountComponentAtNode(rootElem);
+      window.location.href = "about:blank";
     }
-  })
+  });
   render(<>
     {isMac && <div id="draggable-top" />}
     <App />

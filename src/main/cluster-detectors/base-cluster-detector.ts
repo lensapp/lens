@@ -1,21 +1,21 @@
-import request, { RequestPromiseOptions } from "request-promise-native"
+import request, { RequestPromiseOptions } from "request-promise-native";
 import { Cluster } from "../cluster";
 
 export type ClusterDetectionResult = {
   value: string | number | boolean
   accuracy: number
-}
+};
 
 export class BaseClusterDetector {
-  cluster: Cluster
-  key: string
+  cluster: Cluster;
+  key: string;
 
   constructor(cluster: Cluster) {
-    this.cluster = cluster
+    this.cluster = cluster;
   }
 
   detect(): Promise<ClusterDetectionResult> {
-    return null
+    return null;
   }
 
   protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
@@ -28,6 +28,6 @@ export class BaseClusterDetector {
         Host: `${this.cluster.id}.${new URL(this.cluster.kubeProxyUrl).host}`, // required in ClusterManager.getClusterForRequest()
         ...(options.headers || {}),
       },
-    })
+    });
   }
 }

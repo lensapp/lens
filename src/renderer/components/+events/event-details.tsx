@@ -70,7 +70,7 @@ export class EventDetails extends React.Component<Props> {
           </TableRow>
         </Table>
       </div>
-    )
+    );
   }
 }
 
@@ -80,4 +80,4 @@ kubeObjectDetailRegistry.add({
   components: {
     Details: (props) => <EventDetails {...props}/>
   }
-})
+});

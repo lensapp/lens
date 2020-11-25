@@ -12,7 +12,7 @@ interface TabsContextValue<D = any> {
   onChange?(value: D): void;
 }
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
 export interface TabsProps<D = any> extends TabsContextValue<D>, Omit<DOMAttributes<HTMLElement>, "onChange"> {
   className?: string;
@@ -32,10 +32,10 @@ export class Tabs extends React.PureComponent<TabsProps> {
   render() {
     const { center, wrap, onChange, value, autoFocus, scrollable = true, withBorder, ...elemProps } = this.props;
     const className = cssNames("Tabs", this.props.className, {
-      center: center,
-      wrap: wrap,
-      scrollable: scrollable,
-      withBorder: withBorder,
+      center,
+      wrap,
+      scrollable,
+      withBorder,
     });
     return (
       <TabsContext.Provider value={{ autoFocus, value, onChange }}>
@@ -45,7 +45,7 @@ export class Tabs extends React.PureComponent<TabsProps> {
           ref={this.bindRef}
         />
       </TabsContext.Provider>
-    )
+    );
   }
 }
 
@@ -120,7 +120,7 @@ export class Tab extends React.PureComponent<TabProps> {
     let { className } = this.props;
     className = cssNames("Tab flex gaps align-center", className, {
       "active": this.isActive,
-      "disabled": disabled,
+      disabled,
     });
     return (
       <div
@@ -137,6 +137,6 @@ export class Tab extends React.PureComponent<TabProps> {
           {label}
         </div>
       </div>
-    )
+    );
   }
 }

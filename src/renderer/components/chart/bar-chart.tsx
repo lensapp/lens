@@ -31,7 +31,7 @@ export class BarChart extends React.Component<Props> {
     const getBarColor: Scriptable<string> = ({ dataset }) => {
       const color = dataset.borderColor;
       return Color(color).alpha(0.2).string();
-    }
+    };
 
     // Remove empty sets and insert default data
     const chartData: ChartData = {
@@ -45,7 +45,7 @@ export class BarChart extends React.Component<Props> {
             barPercentage: 1,
             categoryPercentage: 1,
             ...item
-          }
+          };
         })
     };
 
@@ -109,15 +109,15 @@ export class BarChart extends React.Component<Props> {
         position: "cursor",
         callbacks: {
           title: tooltipItems => {
-            const now = new Date().getTime()
+            const now = new Date().getTime();
             if (new Date(tooltipItems[0].xLabel).getTime() > now) return "";
-            return `${tooltipItems[0].xLabel}`
+            return `${tooltipItems[0].xLabel}`;
           },
           labelColor: ({ datasetIndex }) => {
             return {
               borderColor: "darkgray",
               backgroundColor: chartData.datasets[datasetIndex].borderColor as string
-            }
+            };
           }
         }
       },
@@ -137,7 +137,7 @@ export class BarChart extends React.Component<Props> {
     };
     const options = merge(barOptions, customOptions);
     if (chartData.datasets.length == 0) {
-      return <NoMetrics/>
+      return <NoMetrics/>;
     }
     return (
       <Chart
@@ -148,7 +148,7 @@ export class BarChart extends React.Component<Props> {
         plugins={plugins}
         {...settings}
       />
-    )
+    );
   }
 }
 
@@ -180,7 +180,7 @@ export const memoryOptions: ChartOptions = {
       }
     }
   }
-}
+};
 
 // Default options for all charts with cpu units or other decimal numbers
 export const cpuOptions: ChartOptions = {
@@ -206,4 +206,4 @@ export const cpuOptions: ChartOptions = {
       }
     }
   }
-}
+};

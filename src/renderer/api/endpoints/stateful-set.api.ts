@@ -4,11 +4,34 @@ import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
+export class StatefulSetApi extends KubeApi<StatefulSet> {
+  protected getScaleApiUrl(params: { namespace: string; name: string }) {
+    return this.getUrl(params) + "/scale";
+  }
+
+  getReplicas(params: { namespace: string; name: string }): Promise<number> {
+    return this.request
+      .get(this.getScaleApiUrl(params))
+      .then(({ status }: any) => status?.replicas);
+  }
+
+  scale(params: { namespace: string; name: string }, replicas: number) {
+    return this.request.put(this.getScaleApiUrl(params), {
+      data: {
+        metadata: params,
+        spec: {
+          replicas
+        }
+      }
+    });
+  }
+}
+
 @autobind()
 export class StatefulSet extends WorkloadKubeObject {
-  static kind = "StatefulSet"
-  static namespaced = true
-  static apiBase = "/apis/apps/v1/statefulsets"
+  static kind = "StatefulSet";
+  static namespaced = true;
+  static apiBase = "/apis/apps/v1/statefulsets";
 
   spec: {
     serviceName: string;
@@ -62,22 +85,27 @@ export class StatefulSet extends WorkloadKubeObject {
         };
       };
     }[];
-  }
+  };
   status: {
     observedGeneration: number;
     replicas: number;
     currentReplicas: number;
+    readyReplicas: number;
     currentRevision: string;
     updateRevision: string;
     collisionCount: number;
+  };
+
+  getReplicas() {
+    return this.spec.replicas || 0;
   }
 
   getImages() {
-    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", [])
-    return [...containers].map(container => container.image)
+    const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
+    return [...containers].map(container => container.image);
   }
 }
 
-export const statefulSetApi = new KubeApi({
+export const statefulSetApi = new StatefulSetApi({
   objectConstructor: StatefulSet,
 });

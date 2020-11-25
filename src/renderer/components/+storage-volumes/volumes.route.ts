@@ -3,7 +3,7 @@ import { buildURL } from "../../../common/utils/buildUrl";
 
 export const volumesRoute: RouteProps = {
   path: "/persistent-volumes"
-}
+};
 
 export interface IVolumesRouteParams {
 }

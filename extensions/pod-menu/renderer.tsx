@@ -1,7 +1,7 @@
 import { LensRendererExtension } from "@k8slens/extensions";
-import { PodShellMenu, PodShellMenuProps } from "./src/shell-menu"
-import { PodLogsMenu, PodLogsMenuProps } from "./src/logs-menu"
-import React from "react"
+import { PodShellMenu, PodShellMenuProps } from "./src/shell-menu";
+import { PodLogsMenu, PodLogsMenuProps } from "./src/logs-menu";
+import React from "react";
 
 export default class PodMenuRendererExtension extends LensRendererExtension {
   kubeObjectMenuItems = [
@@ -19,5 +19,5 @@ export default class PodMenuRendererExtension extends LensRendererExtension {
         MenuItem: (props: PodLogsMenuProps) => <PodLogsMenu {...props} />
       }
     }
-  ]
+  ];
 }

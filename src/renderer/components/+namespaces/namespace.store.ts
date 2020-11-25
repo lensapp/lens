@@ -36,20 +36,20 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   getContextParams(): Partial<IQueryParams> {
     return {
       namespaces: this.contextNs
-    }
+    };
   }
 
   protected updateUrl(namespaces: string[]) {
-    setQueryParams({ namespaces }, { replace: true })
+    setQueryParams({ namespaces }, { replace: true });
   }
 
   protected async loadItems(namespaces?: string[]) {
     if (!isAllowedResource("namespaces")) {
       if (namespaces) return namespaces.map(this.getDummyNamespace);
-      return []
+      return [];
     }
     if (namespaces) {
-      return Promise.all(namespaces.map(name => this.api.get({ name })))
+      return Promise.all(namespaces.map(name => this.api.get({ name })));
     } else {
       return super.loadItems();
     }
@@ -60,12 +60,12 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
       kind: "Namespace",
       apiVersion: "v1",
       metadata: {
-        name: name,
+        name,
         uid: "",
         resourceVersion: "",
         selfLink: `/api/v1/namespaces/${name}`
       }
-    })
+    });
   }
 
   setContext(namespaces: string[]) {

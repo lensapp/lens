@@ -26,7 +26,7 @@ export class MainLayout extends React.Component<MainLayoutProps> {
 
   @observable isPinned = this.storage.get().pinnedSidebar;
   @observable isAccessible = true;
-  @observable sidebarWidth = this.storage.get().sidebarWidth
+  @observable sidebarWidth = this.storage.get().sidebarWidth;
 
   @disposeOnUnmount syncPinnedStateWithStorage = reaction(
     () => this.isPinned,
@@ -48,12 +48,12 @@ export class MainLayout extends React.Component<MainLayoutProps> {
   getSidebarSize = () => {
     return {
       "--sidebar-width": `${this.sidebarWidth}px`,
-    }
-  }
+    };
+  };
 
   @autobind()
   adjustWidth(newWidth: number): void {
-    this.sidebarWidth = newWidth
+    this.sidebarWidth = newWidth;
   }
 
   render() {
@@ -65,7 +65,7 @@ export class MainLayout extends React.Component<MainLayoutProps> {
     return (
       <div className={cssNames("MainLayout", className)} style={this.getSidebarSize() as any}>
         <header className={cssNames("flex gaps align-center", headerClass)}>
-          <span className="cluster">{cluster.preferences.clusterName || cluster.contextName}</span>
+          <span className="cluster">{cluster.name}</span>
         </header>
 
         <aside className={cssNames("flex column", { pinned: this.isPinned, accessible: this.isAccessible })}>

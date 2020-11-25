@@ -1,7 +1,6 @@
 import React from "react";
 import { Trans } from "@lingui/macro";
 import { observer } from "mobx-react";
-import { clusterIpc } from "../../../../common/cluster-ipc";
 import { clusterStore } from "../../../../common/cluster-store";
 import { Cluster } from "../../../../main/cluster";
 import { autobind } from "../../../utils";
@@ -24,7 +23,7 @@ export class RemoveClusterButton extends React.Component<Props> {
       ok: async () => {
         await clusterStore.removeById(cluster.id);
       }
-    })
+    });
   }
 
   render() {

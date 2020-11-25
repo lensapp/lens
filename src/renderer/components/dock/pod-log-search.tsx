@@ -33,22 +33,22 @@ export const PodLogSearch = observer((props: PodLogSearchProps) => {
   const onPrevOverlay = () => {
     setPrevOverlayActive();
     toPrevOverlay();
-  }
+  };
 
   const onNextOverlay = () => {
     setNextOverlayActive();
     toNextOverlay();
-  }
+  };
 
   const onClear = () => {
     setSearch("");
-  }
+  };
 
   const onKeyDown = (evt: React.KeyboardEvent<any>) => {
     if (evt.key === "Enter") {
       onNextOverlay();
     }
-  }
+  };
 
   useEffect(() => {
     // Refresh search when logs changed
@@ -60,7 +60,7 @@ export const PodLogSearch = observer((props: PodLogSearchProps) => {
       <SearchInput
         value={searchQuery}
         onChange={setSearch}
-        closeIcon={false}
+        showClearIcon={false}
         contentRight={totalFinds > 0 && findCounts}
         onClear={onClear}
         onKeyDown={onKeyDown}

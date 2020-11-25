@@ -20,12 +20,11 @@ For an overview of the Lens Extension API, refer to the [Common Capabilities](ca
 
 Here is what each section of the Lens Extension API docs can help you with:
 
-* **Get Started** teaches fundamental concepts for building extensions with the Hello World sample.
+* **Getting Started** teaches fundamental concepts for building extensions with the Hello World sample.
 * **Extension Capabilities** dissects Lens's Extension API into smaller categories and points you to more detailed topics.
 * **Extension Guides** includes guides and code samples that explain specific usages of Lens Extension API.
 * **Testing and Publishing** includes in-depth guides on various extension development topics, such as testing and publishing extensions.
-* **Advanced Topics** explains advanced concepts such as integrating with 3rd party applications/services.
-* **References** contains exhaustive references for the Lens Extension API, Contribution Points, and many other topics.
+* **API Reference** contains exhaustive references for the Lens Extension API, Contribution Points, and many other topics.
 
 ## What's New
 

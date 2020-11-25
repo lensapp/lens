@@ -46,31 +46,31 @@ export class TableCell extends React.Component<TableCellProps> {
         className={cssNames("sortIcon", { enabled: sortActive })}
         material={sortIconName}
       />
-    )
+    );
   }
 
   renderCheckbox() {
     const { checkbox, isChecked } = this.props;
     const showCheckbox = isChecked !== undefined;
     if (checkbox && showCheckbox) {
-      return <Checkbox value={isChecked} />
+      return <Checkbox value={isChecked} />;
     }
   }
 
   render() {
     const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, ...cellProps } = this.props;
     const classNames = cssNames("TableCell", className, {
-      checkbox: checkbox,
+      checkbox,
       nowrap: _nowrap,
       sorting: this.isSortable,
     });
-    const content = displayBooleans(displayBoolean, title || children)
+    const content = displayBooleans(displayBoolean, title || children);
     return (
       <div {...cellProps} id={className} className={classNames} onClick={this.onClick}>
         {this.renderCheckbox()}
         {_nowrap ? <div className="content">{content}</div> : content}
         {this.renderSortIcon()}
       </div>
-    )
+    );
   }
 }

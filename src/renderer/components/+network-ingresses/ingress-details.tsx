@@ -14,6 +14,7 @@ import { KubeObjectDetailsProps } from "../kube-object";
 import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { getBackendServiceNamePort } from "../../api/endpoints/ingress.api";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {
 }
@@ -30,8 +31,8 @@ export class IngressDetails extends React.Component<Props> {
   }
 
   renderPaths(ingress: Ingress) {
-    const { spec: { rules } } = ingress
-    if (!rules || !rules.length) return null
+    const { spec: { rules } } = ingress;
+    if (!rules || !rules.length) return null;
     return rules.map((rule, index) => {
       return (
         <div className="rules" key={index}>
@@ -48,7 +49,9 @@ export class IngressDetails extends React.Component<Props> {
               </TableHead>
               {
                 rule.http.paths.map((path, index) => {
-                  const backend = `${path.backend.serviceName}:${path.backend.servicePort}`
+                  const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
+                  const backend =`${serviceName}:${servicePort}`;
+
                   return (
                     <TableRow key={index}>
                       <TableCell className="path">{path.path || ""}</TableCell>
@@ -56,18 +59,18 @@ export class IngressDetails extends React.Component<Props> {
                         <p key={backend}>{backend}</p>
                       </TableCell>
                     </TableRow>
-                  )
+                  );
                 })
               }
             </Table>
           )}
         </div>
-      )
-    })
+      );
+    });
   }
 
   renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
-    if (!ingressPoints || ingressPoints.length === 0) return null
+    if (!ingressPoints || ingressPoints.length === 0) return null;
     return (
       <div>
         <Table className="ingress-points">
@@ -81,11 +84,11 @@ export class IngressDetails extends React.Component<Props> {
                 <TableCell className="name">{hostname ? hostname : "-"}</TableCell>
                 <TableCell className="ingresspoints">{ip ? ip : "-"}</TableCell>
               </TableRow>
-            )})
+            );})
           })
         </Table>
       </div>
-    )
+    );
   }
 
   render() {
@@ -94,12 +97,15 @@ export class IngressDetails extends React.Component<Props> {
       return null;
     }
     const { spec, status } = ingress;
-    const ingressPoints = status?.loadBalancer?.ingress
+    const ingressPoints = status?.loadBalancer?.ingress;
     const { metrics } = ingressStore;
     const metricTabs = [
       <Trans>Network</Trans>,
       <Trans>Duration</Trans>,
     ];
+
+    const { serviceName, servicePort } = ingress.getServiceNamePort();
+    
     return (
       <div className="IngressDetails">
         <ResourceMetrics
@@ -117,9 +123,9 @@ export class IngressDetails extends React.Component<Props> {
           {spec.tls.map((tls, index) => <p key={index}>{tls.secretName}</p>)}
         </DrawerItem>
         }
-        {spec.backend && spec.backend.serviceName && spec.backend.servicePort &&
+        {serviceName && servicePort &&
         <DrawerItem name={<Trans>Service</Trans>}>
-          {spec.backend.serviceName}:{spec.backend.servicePort}
+          {serviceName}:{servicePort}
         </DrawerItem>
         }
         <DrawerTitle title={<Trans>Rules</Trans>}/>
@@ -128,22 +134,22 @@ export class IngressDetails extends React.Component<Props> {
         <DrawerTitle title={<Trans>Load-Balancer Ingress Points</Trans>}/>
         {this.renderIngressPoints(ingressPoints)}
       </div>
-    )
+    );
   }
 }
 
 kubeObjectDetailRegistry.add({
   kind: "Ingress",
-  apiVersions: ["extensions/v1beta1"],
+  apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
   components: {
     Details: (props) => <IngressDetails {...props} />
   }
-})
+});
 kubeObjectDetailRegistry.add({
   kind: "Ingress",
-  apiVersions: ["extensions/v1beta1"],
+  apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
   priority: 5,
   components: {
     Details: (props) => <KubeEventDetails {...props} />
   }
-})
+});

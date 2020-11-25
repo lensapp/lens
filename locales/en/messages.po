@@ -738,6 +738,7 @@ msgstr "Current / Target"
 msgid "Current Healthy"
 msgstr "Current Healthy"
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:101
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:103
 msgid "Current replica scale: {currentReplicas}"
 msgstr "Current replica scale: {currentReplicas}"
@@ -828,6 +829,7 @@ msgstr "Description"
 msgid "Desired Healthy"
 msgstr "Desired Healthy"
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:105
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:107
 msgid "Desired number of replicas"
 msgstr "Desired number of replicas"
@@ -1091,6 +1093,7 @@ msgstr "Helm branch <0>{0}</0> already in use"
 msgid "Hide"
 msgstr "Hide"
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:127
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:116
 msgid "High number of replicas may cause cluster performance issues"
 msgstr "High number of replicas may cause cluster performance issues"
@@ -2298,6 +2301,7 @@ msgstr "Runtime Class"
 msgid "Save"
 msgstr "Save"
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:155
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:128
 #: src/renderer/components/+workloads-deployments/deployments.tsx:83
 #: src/renderer/components/+workloads-deployments/deployments.tsx:84
@@ -2307,6 +2311,10 @@ msgstr "Scale"
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:124
 msgid "Scale Deployment <0>{deploymentName}</0>"
 msgstr "Scale Deployment <0>{deploymentName}</0>"
+
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:139
+msgid "Scale Stateful Set <0>{statefulSetName}</0>"
+msgstr "Scale Stateful Set <0>{statefulSetName}</0>"
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:45
 #: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:46

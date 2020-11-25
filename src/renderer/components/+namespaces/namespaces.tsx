@@ -1,4 +1,4 @@
-import "./namespaces.scss"
+import "./namespaces.scss";
 
 import React from "react";
 import { Trans } from "@lingui/macro";
@@ -64,6 +64,6 @@ export class Namespaces extends React.Component<Props> {
         />
         <AddNamespaceDialog/>
       </TabLayout>
-    )
+    );
   }
 }

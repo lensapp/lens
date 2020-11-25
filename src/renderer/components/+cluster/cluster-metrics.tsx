@@ -27,7 +27,7 @@ export const ClusterMetrics = observer(() => {
     id: metricType + metricNodeRole,
     label: metricType.toUpperCase() + " usage",
     borderColor: colors[metricType],
-    data: data
+    data
   }];
   const cpuOptions: ChartOptions = {
     scales: {
@@ -72,7 +72,7 @@ export const ClusterMetrics = observer(() => {
       return <Spinner center/>;
     }
     if (!memoryCapacity || !cpuCapacity) {
-      return <ClusterNoMetrics className="empty"/>
+      return <ClusterNoMetrics className="empty"/>;
     }
     return (
       <BarChart

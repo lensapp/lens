@@ -6,7 +6,7 @@ import { Select, SelectOption } from "../select";
 import { Badge } from "../badge";
 import { Icon } from "../icon";
 import { _i18n } from "../../i18n";
-import { cssNames, downloadFile } from "../../utils";
+import { cssNames, saveFileDialog } from "../../utils";
 import { Pod } from "../../api/endpoints";
 import { PodLogSearch, PodLogSearchProps } from "./pod-log-search";
 
@@ -30,17 +30,17 @@ export const PodLogControls = observer((props: Props) => {
 
   const toggleTimestamps = () => {
     save({ showTimestamps: !showTimestamps });
-  }
+  };
 
   const togglePrevious = () => {
     save({ previous: !previous });
     reload();
-  }
+  };
 
   const downloadLogs = () => {
     const fileName = selectedContainer ? selectedContainer.name : pod.getName();
-    downloadFile(fileName + ".log", logs.join("\n"), "text/plain");
-  }
+    saveFileDialog(fileName + ".log", logs.join("\n"), "text/plain");
+  };
 
   const onContainerChange = (option: SelectOption) => {
     const { containers, initContainers } = tabData;
@@ -48,9 +48,9 @@ export const PodLogControls = observer((props: Props) => {
       selectedContainer: containers
         .concat(initContainers)
         .find(container => container.name === option.value)
-    })
+    });
     reload();
-  }
+  };
 
   const containerSelectOptions = () => {
     const { containers, initContainers } = tabData;
@@ -58,22 +58,22 @@ export const PodLogControls = observer((props: Props) => {
       {
         label: _i18n._(t`Containers`),
         options: containers.map(container => {
-          return { value: container.name }
+          return { value: container.name };
         }),
       },
       {
         label: _i18n._(t`Init Containers`),
         options: initContainers.map(container => {
-          return { value: container.name }
+          return { value: container.name };
         }),
       }
     ];
-  }
+  };
 
   const formatOptionLabel = (option: SelectOption) => {
     const { value, label } = option;
     return label || <><Icon small material="view_carousel"/> {value}</>;
-  }
+  };
 
   return (
     <div className="PodLogControls flex gaps align-center">

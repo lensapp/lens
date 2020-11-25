@@ -3,12 +3,12 @@ import { useState, useEffect } from "react";
 import { useInterval } from "../../hooks";
 
 type IMetricValues = [number, string][];
-type IChartData = { x: number; y: string }[]
+type IChartData = { x: number; y: string }[];
 
 const defaultParams = {
   fetchInterval: 15,
   updateInterval: 5
-}
+};
 
 export function useRealTimeMetrics(metrics: IMetricValues, chartData: IChartData, params = defaultParams) {
   const [index, setIndex] = useState(0);

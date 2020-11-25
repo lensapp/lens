@@ -23,7 +23,7 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
   }
 
   render() {
-    const object = this.props.object
+    const object = this.props.object;
     const {
       getName, getNs, getLabels, getResourceVersion, selfLink,
       getAnnotations, getFinalizers, getId, getAge,
@@ -82,6 +82,6 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
         </DrawerItem>
         }
       </>
-    )
+    );
   }
 }

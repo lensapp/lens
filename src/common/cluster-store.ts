@@ -1,18 +1,20 @@
-import type { WorkspaceId } from "./workspace-store";
+import { workspaceStore } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
-import { action, computed, observable, toJS } from "mobx";
+import { action, computed, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
-import migrations from "../migrations/cluster-store"
+import migrations from "../migrations/cluster-store";
 import logger from "../main/logger";
-import { appEventBus } from "./event-bus"
+import { appEventBus } from "./event-bus";
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
+import { subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import _ from "lodash";
 import move from "array-move";
+import type { WorkspaceId } from "./workspace-store";
 
 export interface ClusterIconUpload {
   clusterId: string;
@@ -82,42 +84,41 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     super({
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
-      migrations: migrations,
+      migrations,
     });
 
-    this.pushStateToViewsPeriodically()
+    this.pushStateToViewsAutomatically();
   }
 
-  protected pushStateToViewsPeriodically() {
+  protected pushStateToViewsAutomatically() {
     if (!ipcRenderer) {
-      // This is a bit of a hack, we need to do this because we might loose messages that are sent before a view is ready
-      setInterval(() => {
-        this.pushState()
-      }, 5000)
+      reaction(() => this.connectedClustersList, () => {
+        this.pushState();
+      });
     }
   }
 
   registerIpcListener() {
-    logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`)
-    ipcRenderer.on("cluster:state", (event, clusterId: string, state: ClusterState) => {
+    logger.info(`[CLUSTER-STORE] start to listen (${webFrame.routingId})`);
+    subscribeToBroadcast("cluster:state", (event, clusterId: string, state: ClusterState) => {
       logger.silly(`[CLUSTER-STORE]: received push-state at ${location.host} (${webFrame.routingId})`, clusterId, state);
-      this.getById(clusterId)?.setState(state)
-    })
+      this.getById(clusterId)?.setState(state);
+    });
   }
 
   unregisterIpcListener() {
-    super.unregisterIpcListener()
-    ipcRenderer.removeAllListeners("cluster:state")
+    super.unregisterIpcListener();
+    unsubscribeAllFromBroadcast("cluster:state");
   }
 
   pushState() {
     this.clusters.forEach((c) => {
-      c.pushState()
-    })
+      c.pushState();
+    });
   }
 
   get activeClusterId() {
-    return this.activeCluster
+    return this.activeCluster;
   }
 
   @computed get clustersList(): Cluster[] {
@@ -125,11 +126,15 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @computed get enabledClustersList(): Cluster[] {
-    return this.clustersList.filter((c) => c.enabled)
+    return this.clustersList.filter((c) => c.enabled);
   }
 
   @computed get active(): Cluster | null {
     return this.getById(this.activeCluster);
+  }
+
+  @computed get connectedClustersList(): Cluster[] {
+    return this.clustersList.filter((c) => !c.disconnected);
   }
 
   isActive(id: ClusterId) {
@@ -138,14 +143,16 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   setActive(id: ClusterId) {
-    this.activeCluster = this.clusters.has(id) ? id : null;
+    const clusterId = this.clusters.has(id) ? id : null;
+    this.activeCluster = clusterId;
+    workspaceStore.setLastActiveClusterId(clusterId);
   }
 
   @action
   swapIconOrders(workspace: WorkspaceId, from: number, to: number) {
     const clusters = this.getByWorkspaceId(workspace);
     if (from < 0 || to < 0 || from >= clusters.length || to >= clusters.length || isNaN(from) || isNaN(to)) {
-      throw new Error(`invalid from<->to arguments`)
+      throw new Error(`invalid from<->to arguments`);
     }
 
     move.mutate(clusters, from, to);
@@ -166,37 +173,37 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   getByWorkspaceId(workspaceId: string): Cluster[] {
     const clusters = Array.from(this.clusters.values())
       .filter(cluster => cluster.workspace === workspaceId);
-    return _.sortBy(clusters, cluster => cluster.preferences.iconOrder)
+    return _.sortBy(clusters, cluster => cluster.preferences.iconOrder);
   }
 
   @action
   addClusters(...models: ClusterModel[]): Cluster[] {
-    const clusters: Cluster[] = []
+    const clusters: Cluster[] = [];
     models.forEach(model => {
-      clusters.push(this.addCluster(model))
-    })
+      clusters.push(this.addCluster(model));
+    });
 
-    return clusters
+    return clusters;
   }
 
   @action
   addCluster(model: ClusterModel | Cluster): Cluster {
-    appEventBus.emit({ name: "cluster", action: "add" })
+    appEventBus.emit({ name: "cluster", action: "add" });
     let cluster = model as Cluster;
     if (!(model instanceof Cluster)) {
-      cluster = new Cluster(model)
+      cluster = new Cluster(model);
     }
     this.clusters.set(model.id, cluster);
-    return cluster
+    return cluster;
   }
 
   async removeCluster(model: ClusterModel) {
-    await this.removeById(model.id)
+    await this.removeById(model.id);
   }
 
   @action
   async removeById(clusterId: ClusterId) {
-    appEventBus.emit({ name: "cluster", action: "remove" })
+    appEventBus.emit({ name: "cluster", action: "remove" });
     const cluster = this.getById(clusterId);
     if (cluster) {
       this.clusters.delete(clusterId);
@@ -213,8 +220,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @action
   removeByWorkspaceId(workspaceId: string) {
     this.getByWorkspaceId(workspaceId).forEach(cluster => {
-      this.removeById(cluster.id)
-    })
+      this.removeById(cluster.id);
+    });
   }
 
   @action
@@ -231,7 +238,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       } else {
         cluster = new Cluster(clusterModel);
         if (!cluster.isManaged) {
-          cluster.enabled = true
+          cluster.enabled = true;
         }
       }
       newClusters.set(clusterModel.id, cluster);
@@ -255,7 +262,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       clusters: this.clustersList.map(cluster => cluster.toJSON()),
     }, {
       recurseEverything: true
-    })
+    });
   }
 }
 

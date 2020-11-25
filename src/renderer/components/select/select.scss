@@ -75,7 +75,6 @@ html {
       min-width: 100%;
 
       &-list {
-        @include custom-scrollbar;
         padding-right: 1px;
         padding-left: 1px;
         width: max-content;
@@ -152,10 +151,6 @@ html {
       --select-option-selected-bgc: $textColorSecondary;
 
       .Select {
-        &__menu-list {
-          @include custom-scrollbar($theme: dark);
-        }
-
         &__multi-value {
           background: none;
           box-shadow: 0 0 0 1px $textColorSecondary;
