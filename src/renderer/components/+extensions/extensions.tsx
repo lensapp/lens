@@ -293,6 +293,9 @@ export class Extensions extends React.Component {
             label="Install"
             onClick={this.addExtensions}
           />
+          <p className="hint">
+            <Trans><b>Pro-Tip</b>: you can drag & drop extension's tarball here to request installation</Trans>
+          </p>
         </div>
       </div>
     );
