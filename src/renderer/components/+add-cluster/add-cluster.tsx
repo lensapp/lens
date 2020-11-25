@@ -195,21 +195,19 @@ export class AddCluster extends React.Component {
 
   renderInfo() {
     return (
-      <Fragment>
-        <p>
-          Add clusters by clicking the <span className="text-primary">Add Cluster</span> button.
-          You'll need to obtain a working kubeconfig for the cluster you want to add.
-          You can either browse it from the file system or paste it as a text from the clipboard.
-          Read more about adding clusters <a href={`${docsUrl}/latest/clusters/adding-clusters/`} target="_blank">here</a>.
-        </p>
-      </Fragment>
+      <p>
+        Add clusters by clicking the <span className="text-primary">Add Cluster</span> button.
+        You'll need to obtain a working kubeconfig for the cluster you want to add.
+        You can either browse it from the file system or paste it as a text from the clipboard.
+        Read more about adding clusters <a href={`${docsUrl}/latest/clusters/adding-clusters/`} target="_blank">here</a>.
+      </p>
     );
   }
 
   renderKubeConfigSource() {
     return (
       <>
-        <Tabs withBorder onChange={this.onKubeConfigTabChange}>
+        <Tabs onChange={this.onKubeConfigTabChange}>
           <Tab
             value={KubeConfigSourceTab.FILE}
             label={<Trans>Select kubeconfig file</Trans>}
@@ -221,7 +219,7 @@ export class AddCluster extends React.Component {
           />
         </Tabs>
         {this.sourceTab === KubeConfigSourceTab.FILE && (
-          <>
+          <div>
             <div className="kube-config-select flex gaps align-center">
               <Input
                 theme="round-black"
@@ -246,10 +244,10 @@ export class AddCluster extends React.Component {
             <small className="hint">
               <Trans>Pro-Tip: you can also drag-n-drop kubeconfig file to this area</Trans>
             </small>
-          </>
+          </div>
         )}
         {this.sourceTab === KubeConfigSourceTab.TEXT && (
-          <>
+          <div className="flex column">
             <AceEditor
               autoFocus
               showGutter={false}
@@ -263,7 +261,7 @@ export class AddCluster extends React.Component {
             <small className="hint">
               <Trans>Pro-Tip: paste kubeconfig to get available contexts</Trans>
             </small>
-          </>
+          </div>
         )}
       </>
     );
@@ -275,7 +273,7 @@ export class AddCluster extends React.Component {
       ? <Trans>Selected contexts: <b>{this.selectedContexts.length}</b></Trans>
       : <Trans>Select contexts</Trans>;
     return (
-      <>
+      <div>
         <Select
           id="kubecontext-select" // todo: provide better mapping for integration tests (e.g. data-test-id="..")
           placeholder={placeholder}
@@ -299,7 +297,7 @@ export class AddCluster extends React.Component {
             <code>{this.selectedContexts.join(", ")}</code>
           </small>
         )}
-      </>
+      </div>
     );
   }
 
