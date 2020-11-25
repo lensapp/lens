@@ -1,13 +1,16 @@
-# Welcome to Lens support
-Here you will find different ways of getting support for Lens.
+# Support
 
-## Community Slack Channel
-We have an active and growing community! Ask a question, see what's being discussed, get insights to up and coming features, help others, join the conversation on our community slack <a href="https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI" target="_blank">here</a>
+Here you will find different ways of getting support for Lens IDE.
 
-## Open Source Github Repository
-Search feature requests, submit an idea, review existing issues, or open a new one at our Github repository <a href="https://github.com/lensapp/lens/issues" target="_blank">here</a>
+## Community Support
 
-## Enterprise Support
-If you are interested in paid support options designed for enterprises to cover Lens usage at scale please see the following links:
- 
-- <a href="https://www.mirantis.com/support/enterprise-support-services" target="_blank">Mirantis</a>
+* [Community Slack](https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI) - Request for support and help from the Lens community via Slack.
+* [Github Issues](https://github.com/lensapp/lens/issues) - Submit your issues and feature requests to Lens IDE via Github.
+
+## Commercial Support & Services
+
+If you are interested in paid support options, professional services or training, please see the offerings from the following vendors:
+
+* [Mirantis](https://www.mirantis.com/software/lens/) offers commercial support for officially released versions of Lens IDE on MacOS, Windows and Linux operating systems. In addition, Mirantis offers professional services to create proprietary / custom Lens IDE extensions and custom `msi` packaging to meet enterprise IT policies for software distribution and configuration. Training is also available.
+
+If you'd like to get your business listed in here, please contact us via email [info@k8slens.dev](mailto:info@k8slens.dev)

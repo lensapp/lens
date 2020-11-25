@@ -6,7 +6,6 @@ import React, { Component } from "react";
 import marked from "marked";
 import DOMPurify from "dompurify";
 import { cssNames } from "../../utils";
-import { themeStore } from "../../theme.store";
 
 DOMPurify.addHook('afterSanitizeAttributes', function (node) {
   // Set all elements owning target to target=_blank
@@ -29,7 +28,7 @@ export class MarkdownViewer extends Component<Props> {
     const html = DOMPurify.sanitize(marked(markdown));
     return (
       <div
-        className={cssNames("MarkDownViewer", className, themeStore.activeTheme.type)}
+        className={cssNames("MarkDownViewer", className)}
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );

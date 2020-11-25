@@ -15,6 +15,7 @@ import { i18nStore } from "./i18n";
 import { themeStore } from "./theme.store";
 import { extensionsStore } from "../extensions/extensions-store";
 import { extensionLoader } from "../extensions/extension-loader";
+import { filesystemProvisionerStore } from "../main/extension-filesystem";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
@@ -39,6 +40,7 @@ export async function bootstrap(App: AppComponent) {
     workspaceStore.load(),
     clusterStore.load(),
     extensionsStore.load(),
+    filesystemProvisionerStore.load(),
     i18nStore.init(),
     themeStore.init(),
   ]);

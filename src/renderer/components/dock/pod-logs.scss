@@ -3,12 +3,7 @@
   --overlay-active-bg: orange;
 
   .logs {
-    @include custom-scrollbar;
-
-    // fix for `this.logsElement.scrollTop = this.logsElement.scrollHeight`
-    // `overflow: overlay` don't allow scroll to the last line
     overflow: auto;
-
     position: relative;
     color: $textColorAccent;
     background: $logsBackground;

@@ -6,52 +6,6 @@
 @import "table/table.mixins";
 @import "+network/network-mixins";
 
-// todo: re-use in other places with theming
-@mixin custom-scrollbar-themed($invert: false) {
-  @if ($invert) {
-    @include custom-scrollbar(dark);
-    .theme-light & {
-      @include custom-scrollbar(light);
-    }
-  } @else {
-    // fits better with dark background
-    @include custom-scrollbar(light);
-    .theme-light & {
-      @include custom-scrollbar(dark);
-    }
-  }
-}
-
-@mixin custom-scrollbar($theme: light, $size: 7px, $borderSpacing: 5px) {
-  $themes: (
-    light: #5f6064,
-    dark: #bbb,
-  );
-
-  $scrollBarColor: if(map_has_key($themes, $theme), map_get($themes, $theme), none);
-  $scrollBarSize: calc(#{$size} + #{$borderSpacing} * 2);
-
-  overflow: auto; // allow scrolling for container
-
-  // Webkit
-  &::-webkit-scrollbar {
-    width: $scrollBarSize;
-    height: $scrollBarSize;
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: $scrollBarColor;
-    background-clip: padding-box;
-    border: $borderSpacing solid transparent;
-    border-radius: $scrollBarSize;
-  }
-
-  &::-webkit-scrollbar-corner {
-    background-color: transparent;
-  }
-}
-
 // Hide scrollbar but keep the element scrollable
 @mixin hidden-scrollbar {
   overflow: auto;

@@ -26,7 +26,7 @@
   }
 
   > .content {
-    @include custom-scrollbar;
+    overflow: auto;
     margin-top: $spacing;
     padding: $spacing * 2;
 

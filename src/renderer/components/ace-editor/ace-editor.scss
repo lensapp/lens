@@ -7,10 +7,6 @@
 
   .theme-light & {
     border: 1px solid gainsboro;
-
-    .ace_scrollbar {
-      @include custom-scrollbar(dark);
-    }
   }
 
   > .editor {
@@ -50,9 +46,5 @@
 
   .ace_comment {
     color: #808080;
-  }
-
-  .ace_scrollbar {
-    @include custom-scrollbar;
   }
 }
