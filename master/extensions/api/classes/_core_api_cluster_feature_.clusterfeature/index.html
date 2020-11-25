@@ -839,22 +839,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#config" class="md-nav__link">
-    config
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#latestversion" class="md-nav__link">
-    latestVersion
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#name" class="md-nav__link">
-    name
+  <a href="#templatecontext" class="md-nav__link">
+    templateContext
   </a>
   
 </li>
@@ -963,7 +949,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#latestversion_1" class="md-nav__link">
+  <a href="#latestversion" class="md-nav__link">
     latestVersion
   </a>
   
@@ -996,9 +982,7 @@
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#config">config</a></li>
-<li><a href="./#latestversion">latestVersion</a></li>
-<li><a href="./#name">name</a></li>
+<li><a href="./#templatecontext">templateContext</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
@@ -1014,37 +998,35 @@
 <li><a href="./#status">status</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="config">config<a class="headerlink" href="#config" title="Permanent link">#</a></h3>
-<p>• <strong>config</strong>: <em>any</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L22">src/extensions/cluster-feature.ts:22</a></em></p>
-<hr />
-<h3 id="latestversion">latestVersion<a class="headerlink" href="#latestversion" title="Permanent link">#</a></h3>
-<p>• <strong>latestVersion</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L21">src/extensions/cluster-feature.ts:21</a></em></p>
-<hr />
-<h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
-<p>• <strong>name</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L20">src/extensions/cluster-feature.ts:20</a></em></p>
+<h3 id="templatecontext">templateContext<a class="headerlink" href="#templatecontext" title="Permanent link">#</a></h3>
+<p>• <strong>templateContext</strong>: <em>any</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L29">src/extensions/cluster-feature.ts:29</a></em></p>
+<p>this field sets the template parameters that are to be applied to any templated kubernetes resources that are to be installed for the feature.
+See the renderTemplates() method for more details</p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="protected-applyresources"><code>Protected</code> applyResources<a class="headerlink" href="#protected-applyresources" title="Permanent link">#</a></h3>
-<p>▸ <strong>applyResources</strong>(<code>cluster</code>: <a href="../_core_api_stores_.cluster/">Cluster</a>, <code>resources</code>: string[]): <em>Promise‹void›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L39">src/extensions/cluster-feature.ts:39</a></em></p>
+<p>▸ <strong>applyResources</strong>(<code>cluster</code>: <a href="../_core_api_stores_.cluster/">Cluster</a>, <code>resourceSpec</code>: string | string[]): <em>Promise‹void›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L85">src/extensions/cluster-feature.ts:85</a></em></p>
+<p>this is a helper method that conveniently applies kubernetes resources to the cluster.</p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>cluster</code></td>
 <td><a href="../_core_api_stores_.cluster/">Cluster</a></td>
+<td>the cluster that the resources are to be applied to</td>
 </tr>
 <tr>
-<td><code>resources</code></td>
-<td>string[]</td>
+<td><code>resourceSpec</code></td>
+<td>string &#124; string[]</td>
+<td>as a string type this is a folder path that is searched for files specifying kubernetes resources. The files are read and if any of the resource files are templated, the template parameters are filled using the templateContext field (See renderTemplate() method). Finally the resources are applied to the cluster. As a string[] type resourceSpec is treated as an array of fully formed (not templated) kubernetes resources that are applied to the cluster</td>
 </tr>
 </tbody>
 </table>
@@ -1052,19 +1034,23 @@
 <hr />
 <h3 id="abstract-install"><code>Abstract</code> install<a class="headerlink" href="#abstract-install" title="Permanent link">#</a></h3>
 <p>▸ <strong>install</strong>(<code>cluster</code>: <a href="../_core_api_stores_.cluster/">Cluster</a>): <em>Promise‹void›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L31">src/extensions/cluster-feature.ts:31</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L47">src/extensions/cluster-feature.ts:47</a></em></p>
+<p>to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be installed. The implementation
+of this method should install kubernetes resources using the applyResources() method, or by directly accessing the kubernetes api (K8sApi)</p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>cluster</code></td>
 <td><a href="../_core_api_stores_.cluster/">Cluster</a></td>
+<td>the cluster that the feature is to be installed on</td>
 </tr>
 </tbody>
 </table>
@@ -1072,39 +1058,48 @@
 <hr />
 <h3 id="protected-rendertemplates"><code>Protected</code> renderTemplates<a class="headerlink" href="#protected-rendertemplates" title="Permanent link">#</a></h3>
 <p>▸ <strong>renderTemplates</strong>(<code>folderPath</code>: string): <em>string[]</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L47">src/extensions/cluster-feature.ts:47</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L109">src/extensions/cluster-feature.ts:109</a></em></p>
+<p>this is a helper method that conveniently reads kubernetes resource files into a string array. It also fills templated resource files with the template parameter values
+specified by the templateContext field. Templated files must end with the extension '.hb' and the template syntax must be compatible with handlebars.js</p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>folderPath</code></td>
 <td>string</td>
+<td>this is a folder path that is searched for files defining kubernetes resources.</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>string[]</em></p>
+<p>an array of strings, each string being the contents of a resource file found in the folder path. This can be passed directly to applyResources()</p>
 <hr />
 <h3 id="abstract-uninstall"><code>Abstract</code> uninstall<a class="headerlink" href="#abstract-uninstall" title="Permanent link">#</a></h3>
 <p>▸ <strong>uninstall</strong>(<code>cluster</code>: <a href="../_core_api_stores_.cluster/">Cluster</a>): <em>Promise‹void›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L35">src/extensions/cluster-feature.ts:35</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L63">src/extensions/cluster-feature.ts:63</a></em></p>
+<p>to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be uninstalled. The implementation
+of this method should install kubernetes resources using the kubernetes api (K8sApi)</p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>cluster</code></td>
 <td><a href="../_core_api_stores_.cluster/">Cluster</a></td>
+<td>the cluster that the feature is to be uninstalled from</td>
 </tr>
 </tbody>
 </table>
@@ -1112,39 +1107,50 @@
 <hr />
 <h3 id="abstract-updatestatus"><code>Abstract</code> updateStatus<a class="headerlink" href="#abstract-updatestatus" title="Permanent link">#</a></h3>
 <p>▸ <strong>updateStatus</strong>(<code>cluster</code>: <a href="../_core_api_stores_.cluster/">Cluster</a>): <em>Promise‹<a href="../../interfaces/_core_api_cluster_feature_.clusterfeaturestatus/">ClusterFeatureStatus</a>›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L37">src/extensions/cluster-feature.ts:37</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L75">src/extensions/cluster-feature.ts:75</a></em></p>
+<p>to be implemented in the derived class, this method is called periodically by Lens to determine details about the feature's current status. The implementation
+of this method should provide the current status information. The currentVersion and latestVersion fields may be displayed by Lens in describing the feature.
+The installed field should be set to true if the feature has been installed, otherwise false. Also, Lens relies on the canUpgrade field to determine if the feature
+can be upgraded so the implementation should set the canUpgrade field according to specific rules for the feature, if relevant.</p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>cluster</code></td>
 <td><a href="../_core_api_stores_.cluster/">Cluster</a></td>
+<td>the cluster that the feature may be installed on</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>Promise‹<a href="../../interfaces/_core_api_cluster_feature_.clusterfeaturestatus/">ClusterFeatureStatus</a>›</em></p>
+<p>a promise, resolved with the updated ClusterFeatureStatus</p>
 <hr />
 <h3 id="abstract-upgrade"><code>Abstract</code> upgrade<a class="headerlink" href="#abstract-upgrade" title="Permanent link">#</a></h3>
 <p>▸ <strong>upgrade</strong>(<code>cluster</code>: <a href="../_core_api_stores_.cluster/">Cluster</a>): <em>Promise‹void›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L33">src/extensions/cluster-feature.ts:33</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L55">src/extensions/cluster-feature.ts:55</a></em></p>
+<p>to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be ugraded. The implementation
+of this method should upgrade the kubernetes resources already installed, if relevant to the feature</p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>cluster</code></td>
 <td><a href="../_core_api_stores_.cluster/">Cluster</a></td>
+<td>the cluster that the feature is to be upgraded on</td>
 </tr>
 </tbody>
 </table>
@@ -1152,19 +1158,20 @@
 <h2 id="object-literals_1">Object literals<a class="headerlink" href="#object-literals_1" title="Permanent link">#</a></h2>
 <h3 id="status">status<a class="headerlink" href="#status" title="Permanent link">#</a></h3>
 <h3 id="status-object">▪ <strong>status</strong>: <em>object</em><a class="headerlink" href="#status-object" title="Permanent link">#</a></h3>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L24">src/extensions/cluster-feature.ts:24</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L34">src/extensions/cluster-feature.ts:34</a></em></p>
+<p>this field holds the current feature status, is accessed directly by Lens</p>
 <h3 id="canupgrade">canUpgrade<a class="headerlink" href="#canupgrade" title="Permanent link">#</a></h3>
 <p>• <strong>canUpgrade</strong>: <em>false</em> = false</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L28">src/extensions/cluster-feature.ts:28</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L38">src/extensions/cluster-feature.ts:38</a></em></p>
 <h3 id="currentversion">currentVersion<a class="headerlink" href="#currentversion" title="Permanent link">#</a></h3>
 <p>• <strong>currentVersion</strong>: <em>null</em> = null</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L25">src/extensions/cluster-feature.ts:25</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L35">src/extensions/cluster-feature.ts:35</a></em></p>
 <h3 id="installed">installed<a class="headerlink" href="#installed" title="Permanent link">#</a></h3>
 <p>• <strong>installed</strong>: <em>false</em> = false</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L26">src/extensions/cluster-feature.ts:26</a></em></p>
-<h3 id="latestversion_1">latestVersion<a class="headerlink" href="#latestversion_1" title="Permanent link">#</a></h3>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L36">src/extensions/cluster-feature.ts:36</a></em></p>
+<h3 id="latestversion">latestVersion<a class="headerlink" href="#latestversion" title="Permanent link">#</a></h3>
 <p>• <strong>latestVersion</strong>: <em>null</em> = null</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/ab24325e/src/extensions/cluster-feature.ts#L27">src/extensions/cluster-feature.ts:27</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/73724b5a/src/extensions/cluster-feature.ts#L37">src/extensions/cluster-feature.ts:37</a></em></p>
                 
               
               
