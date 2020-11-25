@@ -30,7 +30,6 @@ const colorConverter = new AnsiUp();
 export class PodLogList extends React.Component<Props> {
   @observable isJumpButtonVisible = false;
   @observable isLastLineVisible = true;
-  @observable isScrollHidden = false;
 
   private virtualListDiv = React.createRef<HTMLDivElement>(); // A reference for outer container in VirtualList
   private virtualListRef = React.createRef<VirtualList>(); // A reference for VirtualList component
@@ -173,7 +172,6 @@ export class PodLogList extends React.Component<Props> {
 
   render() {
     const { logs, isLoading } = this.props;
-    const { isScrollHidden } = this;
     const isInitLoading = isLoading && !logs.length;
     const rowHeights = new Array(logs.length).fill(this.lineHeight);
     if (isInitLoading) {
@@ -187,7 +185,7 @@ export class PodLogList extends React.Component<Props> {
       );
     }
     return (
-      <div className={cssNames("PodLogList flex", { isLoading, isScrollHidden })}>
+      <div className={cssNames("PodLogList flex", { isLoading })}>
         <VirtualList
           items={logs}
           rowHeights={rowHeights}
