@@ -28,7 +28,7 @@ export class MetricsFeature extends ClusterFeature.Feature {
   name = "metrics";
   latestVersion = "v2.17.2-lens1";
 
-  config: MetricsConfiguration = {
+  templateContext: MetricsConfiguration = {
     persistence: {
       enabled: false,
       storageClass: null,
@@ -53,12 +53,12 @@ export class MetricsFeature extends ClusterFeature.Feature {
     // Check if there are storageclasses
     const storageClassApi = K8sApi.forCluster(cluster, K8sApi.StorageClass);
     const scs = await storageClassApi.list();
-    this.config.persistence.enabled = scs.some(sc => (
+    this.templateContext.persistence.enabled = scs.some(sc => (
       sc.metadata?.annotations?.['storageclass.kubernetes.io/is-default-class'] === 'true' ||
       sc.metadata?.annotations?.['storageclass.beta.kubernetes.io/is-default-class'] === 'true'
     ));
 
-    super.applyResources(cluster, super.renderTemplates(path.join(__dirname, "../resources/")));
+    super.applyResources(cluster, path.join(__dirname, "../resources/"));
   }
 
   async upgrade(cluster: Store.Cluster): Promise<void> {
