@@ -47,7 +47,7 @@ export abstract class ClusterFeature {
   abstract async install(cluster: Cluster): Promise<void>;
 
   /**
-   * to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be ugraded. The implementation
+   * to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be upgraded. The implementation
    * of this method should upgrade the kubernetes resources already installed, if relevant to the feature
    * 
    * @param cluster the cluster that the feature is to be upgraded on
@@ -56,7 +56,7 @@ export abstract class ClusterFeature {
 
   /**
    * to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be uninstalled. The implementation
-   * of this method should install kubernetes resources using the kubernetes api (K8sApi)
+   * of this method should uninstall kubernetes resources using the kubernetes api (K8sApi)
    * 
    * @param cluster the cluster that the feature is to be uninstalled from
    */
