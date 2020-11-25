@@ -73,11 +73,17 @@ export class App extends React.Component {
   }
 
   async componentDidMount() {
-    console.log("hello");
     const cluster = getHostedCluster();
-    await eventStore.loadAll();
-    await nodesStore.loadAll();
-    await podsStore.loadAll();
+    const promises: Promise<void>[] = [];
+    if (isAllowedResource("events") && isAllowedResource("pods")) {
+      promises.push(eventStore.loadAll());
+      promises.push(podsStore.loadAll());
+    }
+    if (isAllowedResource("nodes")) {
+      promises.push(nodesStore.loadAll());
+    }
+    await Promise.all(promises);
+
     eventStore.subscribe();
     nodesStore.subscribe();
     podsStore.subscribe();
