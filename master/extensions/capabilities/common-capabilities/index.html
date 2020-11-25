@@ -1131,7 +1131,6 @@
   <span class="nx">globalPages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;example&quot;</span><span class="p">,</span>
-      <span class="nx">routePath</span><span class="o">:</span> <span class="s2">&quot;/example&quot;</span><span class="p">,</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">Page</span>: <span class="kt">ExamplePage</span><span class="p">,</span>
       <span class="p">}</span>
@@ -1178,7 +1177,7 @@
 <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-      <span class="nx">routePath</span><span class="o">:</span> <span class="s2">&quot;/extension-example&quot;</span><span class="p">,</span> <span class="c1">// optional</span>
+      <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;extension-example&quot;</span><span class="p">,</span> <span class="c1">// optional</span>
       <span class="nx">exact</span>: <span class="kt">true</span><span class="p">,</span> <span class="c1">// optional</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span>
