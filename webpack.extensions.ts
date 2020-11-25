@@ -4,15 +4,17 @@ import webpack from "webpack";
 import { sassCommonVars } from "./src/common/vars";
 
 export default function (): webpack.Configuration {
+    const entry = "./src/extensions/extension-api.ts"
+    const outDir = "./src/extensions/npm/extensions/dist";
     return {
         // Compile for Electron for renderer process
         // see <https://webpack.js.org/configuration/target/>
         target: "electron-renderer",
-        entry: './src/extensions/extension-api.ts',
+        entry,
         output: {
             filename: 'extension-api.js',
             // need to be an absolute path
-            path: path.resolve(__dirname, 'src/extensions/npm/extensions/dist/src/extensions'),
+            path: path.resolve(__dirname, `${outDir}/src/extensions`),
             // can be use in commonjs environments
             // e.g. require('@k8slens/extensions')
             libraryTarget: "commonjs"
@@ -23,7 +25,14 @@ export default function (): webpack.Configuration {
                     test: /\.tsx?$/,
                     loader: 'ts-loader',
                     options: {
-                        configFile: 'tsconfig.extensions.json',
+                        // !! ts-loader will use tsconfig.json at folder root
+                        // !! changes in tsconfig.json may have side effects
+                        // !! on '@k8slens/extensions' module
+                        compilerOptions: {
+                            declaration: true, // output .d.ts
+                            sourceMap: false, // to override sourceMap: true in tsconfig.json
+                            outDir // where the .d.ts should be located
+                        }
                     }
                 },
                 // for src/renderer/components/fonts/roboto-mono-nerd.ttf
@@ -41,9 +50,9 @@ export default function (): webpack.Configuration {
                 {
                     test: /\.s?css$/,
                     use: [
-                        // Creates `style` nodes from JS strings
+                        // creates `style` nodes from JS strings
                         "style-loader",
-                        // Translates CSS into CommonJS
+                        // translates CSS into CommonJS
                         "css-loader",
                         {
                             loader: "sass-loader",
