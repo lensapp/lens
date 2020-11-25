@@ -101,7 +101,6 @@ export default class ExampleRendererExtension extends LensRendererExtension {
   globalPages = [
     {
       id: "example",
-      routePath: "/example",
       components: {
         Page: ExamplePage,
       }
@@ -156,7 +155,7 @@ import { ExampleIcon, ExamplePage } from "./src/page"
 export default class ExampleExtension extends LensRendererExtension {
   clusterPages = [
     {
-      routePath: "/extension-example", // optional
+      id: "extension-example", // optional
       exact: true, // optional
       components: {
         Page: () => <ExamplePage extension={this}/>,

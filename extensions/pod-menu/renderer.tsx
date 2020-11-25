@@ -19,5 +19,5 @@ export default class PodMenuRendererExtension extends LensRendererExtension {
         MenuItem: (props: PodLogsMenuProps) => <PodLogsMenu {...props} />
       }
     }
-  ]
+  ];
 }

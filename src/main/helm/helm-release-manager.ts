@@ -40,7 +40,7 @@ export class HelmReleaseManager {
         log: stdout,
         release: {
           name: releaseName,
-          namespace: namespace
+          namespace
         }
       };
     } finally {

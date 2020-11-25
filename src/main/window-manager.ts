@@ -124,7 +124,7 @@ export class WindowManager extends Singleton {
     await this.ensureMainWindow();
     this.sendToView({
       channel: "renderer:navigate",
-      frameId: frameId,
+      frameId,
       data: [url],
     });
   }

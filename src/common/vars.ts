@@ -6,8 +6,8 @@ import { defineGlobal } from "./utils/defineGlobal";
 export const isMac = process.platform === "darwin";
 export const isWindows = process.platform === "win32";
 export const isLinux = process.platform === "linux";
-export const isDebugging = process.env.DEBUG === "true";
-export const isSnap = !!process.env["SNAP"];
+export const isDebugging = ["true", "1", "yes", "y", "on"].includes((process.env.DEBUG ?? "").toLowerCase());
+export const isSnap = !!process.env.SNAP;
 export const isProduction = process.env.NODE_ENV === "production";
 export const isTestEnv = !!process.env.JEST_WORKER_ID;
 export const isDevelopment = !isTestEnv && !isProduction;
@@ -41,3 +41,5 @@ export const apiKubePrefix = "/api-kube"; // k8s cluster apis
 // Links
 export const issuesTrackerUrl = "https://github.com/lensapp/lens/issues";
 export const slackUrl = "https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI";
+export const docsUrl = "https://docs.k8slens.dev/";
+export const supportUrl = "https://docs.k8slens.dev/latest/support/";

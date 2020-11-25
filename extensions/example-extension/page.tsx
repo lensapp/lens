@@ -11,7 +11,7 @@ export class ExamplePage extends React.Component<{ extension: LensRendererExtens
   deactivate = () => {
     const { extension } = this.props;
     extension.disable();
-  }
+  };
 
   render() {
     const doodleStyle = {

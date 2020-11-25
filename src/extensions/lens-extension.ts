@@ -1,5 +1,6 @@
-import type { InstalledExtension } from "./extension-manager";
+import type { InstalledExtension } from "./extension-discovery";
 import { action, observable, reaction } from "mobx";
+import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
 
 export type LensExtensionId = string; // path to manifest (package.json)
@@ -11,6 +12,7 @@ export interface LensExtensionManifest {
   description?: string;
   main?: string; // path to %ext/dist/main.js
   renderer?: string; // path to %ext/dist/renderer.js
+  lens?: object; // fixme: add more required fields for validation
 }
 
 export class LensExtension {
@@ -27,6 +29,7 @@ export class LensExtension {
   }
 
   get id(): LensExtensionId {
+    // This is the symlinked path under node_modules
     return this.manifestPath;
   }
 
@@ -36,6 +39,17 @@ export class LensExtension {
 
   get version() {
     return this.manifest.version;
+  }
+
+  /**
+   * getExtensionFileFolder returns the path to an already created folder. This
+   * folder is for the sole use of this extension.
+   *
+   * Note: there is no security done on this folder, only obfiscation of the
+   * folder name.
+   */
+  async getExtensionFileFolder(): Promise<string> {
+    return filesystemProvisionerStore.requestDirectory(this.id);
   }
 
   get description() {
@@ -66,15 +80,16 @@ export class LensExtension {
     }
   }
 
-  async whenEnabled(handlers: () => Function[]) {
+  async whenEnabled(handlers: () => Promise<Function[]>) {
     const disposers: Function[] = [];
     const unregisterHandlers = () => {
       disposers.forEach(unregister => unregister());
       disposers.length = 0;
     };
-    const cancelReaction = reaction(() => this.isEnabled, isEnabled => {
+    const cancelReaction = reaction(() => this.isEnabled, async (isEnabled) => {
       if (isEnabled) {
-        disposers.push(...handlers());
+        const handlerDisposers = await handlers();
+        disposers.push(...handlerDisposers);
       } else {
         unregisterHandlers();
       }
@@ -94,4 +109,8 @@ export class LensExtension {
   protected onDeactivate() {
     // mock
   }
+}
+
+export function sanitizeExtensionName(name: string) {
+  return name.replace("@", "").replace("/", "--");
 }

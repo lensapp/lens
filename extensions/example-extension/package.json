@@ -1,5 +1,5 @@
 {
-  "name": "extension-example",
+  "name": "example-extension",
   "version": "1.0.0",
   "description": "Example extension",
   "main": "dist/main.js",

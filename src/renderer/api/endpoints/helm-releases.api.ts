@@ -119,7 +119,7 @@ export const helmReleasesApi = {
     const path = endpoint({ name, namespace }) + "/rollback";
     return apiBase.put(path, {
       data: {
-        revision: revision
+        revision
       }
     });
   }

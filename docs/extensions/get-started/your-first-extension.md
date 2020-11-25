@@ -1,5 +1,11 @@
 # Your First Extension
 
+We recommend to always use [Yeoman generator for Lens Extension](https://github.com/lensapp/generator-lens-ext) to start new extension project. [Read the generator guide here](../guides/generator.md).
+
+If you want to setup the project manually, please continue reading.
+
+## First Extension
+
 In this topic, you'll learn the basics of building extensions by creating an extension that adds a "Hello World" page to a cluster menu.
 
 ## Install the Extension

@@ -3,7 +3,7 @@ import { toJS } from "mobx";
 
 export type TelemetryPreferencesModel = {
   enabled: boolean;
-}
+};
 
 export class TelemetryPreferencesStore extends Store.ExtensionStore<TelemetryPreferencesModel> {
   enabled = true;

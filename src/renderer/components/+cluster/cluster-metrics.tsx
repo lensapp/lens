@@ -27,7 +27,7 @@ export const ClusterMetrics = observer(() => {
     id: metricType + metricNodeRole,
     label: metricType.toUpperCase() + " usage",
     borderColor: colors[metricType],
-    data: data
+    data
   }];
   const cpuOptions: ChartOptions = {
     scales: {

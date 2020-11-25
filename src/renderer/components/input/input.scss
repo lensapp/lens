@@ -89,6 +89,10 @@
 
   &.theme {
     &.round-black {
+      &.invalid label {
+        border-color: $colorSoftError !important;
+      }
+
       label {
         background: $mainBackground;
         border: 1px solid $borderFaintColor;
@@ -106,4 +110,10 @@
       }
     }
   }
+}
+
+.Tooltip.InputTooltipError {
+  --bgc: #{$colorError};
+  --border: none;
+  --color: white;
 }

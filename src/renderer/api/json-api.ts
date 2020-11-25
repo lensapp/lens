@@ -84,8 +84,8 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     }
     const infoLog: JsonApiLog = {
       method: reqInit.method.toUpperCase(),
-      reqUrl: reqUrl,
-      reqInit: reqInit,
+      reqUrl,
+      reqInit,
     };
     return cancelableFetch(reqUrl, reqInit).then(res => {
       return this.parseResponse<D>(res, infoLog);

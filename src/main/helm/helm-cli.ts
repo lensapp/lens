@@ -8,7 +8,7 @@ export class HelmCli extends LensBinary {
   public constructor(baseDir: string, version: string) {
     const opts: LensBinaryOpts = {
       version,
-      baseDir: baseDir,
+      baseDir,
       originalBinaryName: "helm",
       newBinaryName: "helm3"
     };

@@ -1,5 +1,8 @@
 module.exports = {
-  ignorePatterns: ["src/extensions/npm/extensions/dist/**/*"],
+  ignorePatterns: [
+    "**/node_modules/**/*",
+    "**/dist/**/*",
+  ],
   overrides: [
     {
       files: [
@@ -23,6 +26,7 @@ module.exports = {
         }],
         "no-unused-vars": "off",
         "semi": ["error", "always"],
+        "object-shorthand": "error",
       }
     },
     {
@@ -55,6 +59,7 @@ module.exports = {
         }],
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
+        "object-shorthand": "error",
       },
     },
     {
@@ -87,6 +92,7 @@ module.exports = {
         }],
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
+        "object-shorthand": "error",
       },
     }
   ]

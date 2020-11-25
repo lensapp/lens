@@ -59,7 +59,7 @@ export class App extends React.Component {
       name: "cluster",
       action: "open",
       params: {
-        clusterId: clusterId
+        clusterId
       }
     });
     window.addEventListener("online", () => {

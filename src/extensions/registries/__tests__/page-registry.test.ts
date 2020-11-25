@@ -25,8 +25,8 @@ describe("getPageUrl", () => {
     expect(getExtensionPageUrl({ extensionId: ext.name, pageId: "/test" })).toBe("/extension/foo-bar/test");
   });
 
-  it("removes @", () => {
-    expect(getExtensionPageUrl({ extensionId: "@foo/bar" })).toBe("/extension/foo-bar");
+  it("removes @ and replace `/` to `--`", () => {
+    expect(getExtensionPageUrl({ extensionId: "@foo/bar" })).toBe("/extension/foo--bar");
   });
 
   it("adds / prefix", () => {

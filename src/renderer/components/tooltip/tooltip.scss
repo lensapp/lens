@@ -1,15 +1,20 @@
 
 .Tooltip {
+  --bgc: #{$mainBackground};
+  --radius: #{$radius};
+  --color: #{$textColorSecondary};
+  --border: 1px solid #{$borderColor};
+
   // use positioning relative to viewport (window)
   // https://developer.mozilla.org/en-US/docs/Web/CSS/position
   position: fixed;
   margin: 0 !important;
-  background: $mainBackground;
+  background: var(--bgc);
   font-size: small;
   font-weight: normal;
-  border: 1px solid $borderColor;
-  border-radius: $radius;
-  color: $textColorSecondary;
+  border: var(--border);
+  border-radius: var(--radius);
+  color: var(--color);
   white-space: normal;
   padding: .5em;
   text-align: center;

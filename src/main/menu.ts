@@ -1,7 +1,7 @@
 import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
-import { appName, isMac, isWindows, isTestEnv } from "../common/vars";
+import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl } from "../common/vars";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
@@ -24,6 +24,7 @@ export function showAbout(browserWindow: BrowserWindow) {
     `${appName}: ${app.getVersion()}`,
     `Electron: ${process.versions.electron}`,
     `Chrome: ${process.versions.chrome}`,
+    `Node: ${process.versions.node}`,
     `Copyright 2020 Mirantis, Inc.`,
   ];
   dialog.showMessageBoxSync(browserWindow, {
@@ -215,13 +216,13 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "Documentation",
         click: async () => {
-          shell.openExternal('https://docs.k8slens.dev/');
+          shell.openExternal(docsUrl);
         },
       },
       {
         label: "Support",
         click: async () => {
-          shell.openExternal('https://docs.k8slens.dev/latest/support/');
+          shell.openExternal(supportUrl);
         },
       },
       ...ignoreOnMac([

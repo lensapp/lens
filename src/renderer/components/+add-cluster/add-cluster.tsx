@@ -8,7 +8,7 @@ import { KubeConfig } from "@kubernetes/client-node";
 import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
 import { Select, SelectOption } from "../select";
-import { Input } from "../input";
+import { DropFileInput, Input } from "../input";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
@@ -24,6 +24,7 @@ import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Tab, Tabs } from "../tabs";
 import { ExecValidationNotFoundError } from "../../../common/custom-errors";
+import { appEventBus } from "../../../common/event-bus";
 
 enum KubeConfigSourceTab {
   FILE = "file",
@@ -43,11 +44,11 @@ export class AddCluster extends React.Component {
   @observable proxyServer = "";
   @observable isWaiting = false;
   @observable showSettings = false;
-  @observable dropAreaActive = false;
 
   componentDidMount() {
     clusterStore.setActive(null);
     this.setKubeConfig(userStore.kubeConfigPath);
+    appEventBus.emit({ name: "cluster-add", action: "start" });
   }
 
   componentWillUnmount() {
@@ -119,6 +120,11 @@ export class AddCluster extends React.Component {
     }
   };
 
+  onDropKubeConfig = (files: File[]) => {
+    this.sourceTab = KubeConfigSourceTab.FILE;
+    this.setKubeConfig(files[0].path);
+  };
+
   @action
   addClusters = () => {
     let newClusters: ClusterModel[] = [];
@@ -129,7 +135,7 @@ export class AddCluster extends React.Component {
       }
       this.error = "";
       this.isWaiting = true;
-
+      appEventBus.emit({ name: "cluster-add", action: "click" });
       newClusters = this.selectedContexts.filter(context => {
         try {
           const kubeConfig = this.kubeContexts.get(context);
@@ -137,7 +143,7 @@ export class AddCluster extends React.Component {
           return true;
         } catch (err) {
           this.error = String(err.message);
-          if (err instanceof ExecValidationNotFoundError ) {
+          if (err instanceof ExecValidationNotFoundError) {
             Notifications.error(<Trans>Error while adding cluster(s): {this.error}</Trans>);
             return false;
           } else {
@@ -152,7 +158,7 @@ export class AddCluster extends React.Component {
           : ClusterStore.embedCustomKubeConfig(clusterId, kubeConfig); // save in app-files folder
         return {
           id: clusterId,
-          kubeConfigPath: kubeConfigPath,
+          kubeConfigPath,
           workspace: workspaceStore.currentWorkspaceId,
           contextName: kubeConfig.currentContext,
           preferences: {
@@ -228,7 +234,7 @@ export class AddCluster extends React.Component {
           <Tab
             value={KubeConfigSourceTab.FILE}
             label={<Trans>Select kubeconfig file</Trans>}
-            active={this.sourceTab == KubeConfigSourceTab.FILE} />
+            active={this.sourceTab == KubeConfigSourceTab.FILE}/>
           <Tab
             value={KubeConfigSourceTab.TEXT}
             label={<Trans>Paste as text</Trans>}
@@ -342,71 +348,55 @@ export class AddCluster extends React.Component {
     return (
       <div className={cssNames("kube-context flex gaps align-center", context)}>
         <span>{context}</span>
-        {isNew && <Icon small material="fiber_new" />}
-        {isSelected && <Icon small material="check" className="box right" />}
+        {isNew && <Icon small material="fiber_new"/>}
+        {isSelected && <Icon small material="check" className="box right"/>}
       </div>
     );
   };
 
   render() {
     const addDisabled = this.selectedContexts.length === 0;
-
     return (
-      <WizardLayout
-        className="AddCluster"
-        infoPanel={this.renderInfo()}
-        contentClass={{ droppable: this.dropAreaActive }}
-        contentProps={{
-          onDragEnter: event => this.dropAreaActive = true,
-          onDragLeave: event => this.dropAreaActive = false,
-          onDragOver: event => {
-            event.preventDefault(); // enable onDrop()-callback
-            event.dataTransfer.dropEffect = "move";
-          },
-          onDrop: event => {
-            this.sourceTab = KubeConfigSourceTab.FILE;
-            this.dropAreaActive = false;
-            this.setKubeConfig(event.dataTransfer.files[0].path);
-          }
-        }}
-      >
-        <h2><Trans>Add Cluster</Trans></h2>
-        {this.renderKubeConfigSource()}
-        {this.renderContextSelector()}
-        <div className="cluster-settings">
-          <a href="#" onClick={() => this.showSettings = !this.showSettings}>
-            <Trans>Proxy settings</Trans>
-          </a>
-        </div>
-        {this.showSettings && (
-          <div className="proxy-settings">
-            <p>HTTP Proxy server. Used for communicating with Kubernetes API.</p>
-            <Input
-              autoFocus
-              value={this.proxyServer}
-              onChange={value => this.proxyServer = value}
-              theme="round-black"
-            />
-            <small className="hint">
-              {'A HTTP proxy server URL (format: http://<address>:<port>).'}
-            </small>
+      <DropFileInput onDropFiles={this.onDropKubeConfig}>
+        <WizardLayout className="AddCluster" infoPanel={this.renderInfo()}>
+          <h2><Trans>Add Cluster</Trans></h2>
+          {this.renderKubeConfigSource()}
+          {this.renderContextSelector()}
+          <div className="cluster-settings">
+            <a href="#" onClick={() => this.showSettings = !this.showSettings}>
+              <Trans>Proxy settings</Trans>
+            </a>
           </div>
-        )}
-        {this.error && (
-          <div className="error">{this.error}</div>
-        )}
-        <div className="actions-panel">
-          <Button
-            primary
-            disabled={addDisabled}
-            label={<Trans>Add cluster(s)</Trans>}
-            onClick={this.addClusters}
-            waiting={this.isWaiting}
-            tooltip={addDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
-            tooltipOverrideDisabled
-          />
-        </div>
-      </WizardLayout>
+          {this.showSettings && (
+            <div className="proxy-settings">
+              <p>HTTP Proxy server. Used for communicating with Kubernetes API.</p>
+              <Input
+                autoFocus
+                value={this.proxyServer}
+                onChange={value => this.proxyServer = value}
+                theme="round-black"
+              />
+              <small className="hint">
+                {'A HTTP proxy server URL (format: http://<address>:<port>).'}
+              </small>
+            </div>
+          )}
+          {this.error && (
+            <div className="error">{this.error}</div>
+          )}
+          <div className="actions-panel">
+            <Button
+              primary
+              disabled={addDisabled}
+              label={<Trans>Add cluster(s)</Trans>}
+              onClick={this.addClusters}
+              waiting={this.isWaiting}
+              tooltip={addDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
+              tooltipOverrideDisabled
+            />
+          </div>
+        </WizardLayout>
+      </DropFileInput>
     );
   }
 }
