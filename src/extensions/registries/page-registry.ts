@@ -16,6 +16,8 @@ export interface PageRegistration {
    * When not provided, first registered page without "id" would be used for page-menus without target.pageId for same extension
    */
   id?: string;
+
+  params?: object;
   /**
    * Strict route matching to provided page-id, read also: https://reactrouter.com/web/api/NavLink/exact-bool
    * In case when more than one page registered at same extension "pageId" is required to identify different pages,
@@ -34,6 +36,7 @@ export interface PageRegistration {
 export interface RegisteredPage extends PageRegistration {
   extensionId: string; // required for compiling registered page to url with page-menu-target to compare
   routePath: string; // full route-path to registered extension page
+  params?: object; // default values of page parameters, empty value could mean optional??
 }
 
 export interface PageComponents {
@@ -57,11 +60,18 @@ export class PageRegistry extends BaseRegistry<RegisteredPage> {
     const itemArray = recitfy(items);
     let registeredPages: RegisteredPage[] = [];
     try {
-      registeredPages = itemArray.map(page => ({
-        ...page,
-        extensionId: ext.name,
-        routePath: getExtensionPageUrl({ extensionId: ext.name, pageId: page.id }),
-      }));
+      registeredPages = itemArray.map(page => {
+        let idPath: string = page.id;
+        if (page.params) {
+          // build the route path with :params
+          idPath = [idPath, ...Object.keys(page.params)].join("/:");
+        }
+        return {
+          ...page,
+          extensionId: ext.name,
+          routePath: getExtensionPageUrl({ extensionId: ext.name, pageId: idPath }),
+        };
+      });
     } catch (err) {
       logger.error(`[EXTENSION]: page-registration failed`, {
         items,
