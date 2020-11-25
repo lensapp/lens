@@ -137,7 +137,7 @@ export class Preferences extends React.Component {
           formatOptionLabel={this.formatHelmOptionLabel}
           controlShouldRenderValue={false}
         />
-        <div className="repos flex gaps column">
+        <div className="repos flex column">
           {Array.from(this.helmAddedRepos).map(([name, repo]) => {
             const tooltipId = `message-${name}`;
             return (

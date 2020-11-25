@@ -1,15 +1,6 @@
 @import "~flex.box";
 @import "fonts";
 
-*, *:before, *:after {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  outline: none;
-  -webkit-font-smoothing: antialiased;
-}
-
 :root {
   --unit: 8px;
   --padding: var(--unit);
@@ -25,6 +16,33 @@
   --font-weight-bold: 500;
   --main-layout-header: 40px;
   --drag-region-height: 22px
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 16px;
+  height: 15px; // Align sizes visually
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollBarColor);
+  background-clip: padding-box;
+  border: 4px solid transparent;
+  border-right-width: 5px;
+  border-radius: 16px;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
 }
 
 ::selection {
