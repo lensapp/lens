@@ -1,8 +1,6 @@
 
 import path from 'path';
 import webpack from "webpack";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
-
 import { sassCommonVars } from "./src/common/vars";
 
 export default function (): webpack.Configuration {
@@ -15,6 +13,8 @@ export default function (): webpack.Configuration {
             filename: 'extension-api.js',
             // need to be an absolute path
             path: path.resolve(__dirname, 'src/extensions/npm/extensions/dist/src/extensions'),
+            // can be use in commonjs environments
+            // e.g. require('@k8slens/extensions')
             libraryTarget: "commonjs"
         },
         module: {
@@ -41,18 +41,13 @@ export default function (): webpack.Configuration {
                 {
                     test: /\.s?css$/,
                     use: [
-                        // https://webpack.js.org/plugins/mini-css-extract-plugin/
-                        MiniCssExtractPlugin.loader,
-                        {
-                            loader: "css-loader",
-                            options: {
-                                sourceMap: true
-                            },
-                        },
+                        // Creates `style` nodes from JS strings
+                        "style-loader",
+                        // Translates CSS into CommonJS
+                        "css-loader",
                         {
                             loader: "sass-loader",
                             options: {
-                                sourceMap: true,
                                 prependData: `@import "${path.basename(sassCommonVars)}";`,
                                 sassOptions: {
                                     includePaths: [
@@ -77,10 +72,7 @@ export default function (): webpack.Configuration {
             // new DeclarationBundlerPlugin({
             //   moduleName: '@k8slens/extensions',
             //    out: 'extension-api.d.ts',
-            // }),
-            new MiniCssExtractPlugin({
-                filename: "[name].css",
-            }),
+            // })
         ]
     };
 }
