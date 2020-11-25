@@ -282,7 +282,7 @@ export class Extensions extends React.Component {
             className="box grow"
             theme="round-black"
             iconLeft="link"
-            placeholder={`URL to packed extension (${this.supportedFormats.join(", ")})`}
+            placeholder={`URL to an extension package (${this.supportedFormats.join(", ")})`}
             validators={InputValidators.isUrl}
             value={this.downloadUrl}
             onChange={v => this.downloadUrl = v}
