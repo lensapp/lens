@@ -114,3 +114,7 @@ export class LensExtension {
 export function sanitizeExtensionName(name: string) {
   return name.replace("@", "").replace("/", "--");
 }
+
+export function extensionDisplayName(name: string, version: string) {
+  return `${name}@${version}`;
+}

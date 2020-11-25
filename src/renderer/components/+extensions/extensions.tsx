@@ -1,27 +1,27 @@
-import "./extensions.scss";
+import { t, Trans } from "@lingui/macro";
 import { remote, shell } from "electron";
-import os from "os";
-import path from "path";
 import fse from "fs-extra";
-import React from "react";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
-import { Button } from "../button";
-import { DropFileInput, Input, InputValidator, InputValidators, SearchInput } from "../input";
-import { Icon } from "../icon";
-import { SubTitle } from "../layout/sub-title";
-import { PageLayout } from "../layout/page-layout";
-import logger from "../../../main/logger";
-import { extensionLoader } from "../../../extensions/extension-loader";
-import { extensionDiscovery, manifestFilename } from "../../../extensions/extension-discovery";
-import { LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
-import { Notifications } from "../notifications";
+import os from "os";
+import path from "path";
+import React from "react";
 import { downloadFile, extractTar, listTarEntries, readFileFromTar } from "../../../common/utils";
 import { docsUrl } from "../../../common/vars";
+import { extensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
+import { extensionLoader } from "../../../extensions/extension-loader";
+import { extensionDisplayName, LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
+import logger from "../../../main/logger";
+import { _i18n } from "../../i18n";
 import { prevDefault } from "../../utils";
+import { Button } from "../button";
+import { Icon } from "../icon";
+import { DropFileInput, Input, InputValidator, InputValidators, SearchInput } from "../input";
+import { PageLayout } from "../layout/page-layout";
+import { SubTitle } from "../layout/sub-title";
+import { Notifications } from "../notifications";
 import { TooltipPosition } from "../tooltip";
+import "./extensions.scss";
 
 interface InstallRequest {
   fileName: string;
@@ -112,9 +112,9 @@ export class Extensions extends React.Component {
       else if (InputValidators.isPath.validate(installPath)) {
         this.requestInstall({ fileName, filePath: installPath });
       }
-    } catch (err) {
+    } catch (error) {
       Notifications.error(
-        <p>Installation has failed: <b>{String(err)}</b></p>
+        <p>Installation has failed: <b>{String(error)}</b></p>
       );
     }
   };
@@ -131,6 +131,7 @@ export class Extensions extends React.Component {
 
   async preloadExtensions(requests: InstallRequest[], { showError = true } = {}) {
     const preloadedRequests = requests.filter(req => req.data);
+
     await Promise.all(
       requests
         .filter(req => !req.data && req.filePath)
@@ -138,13 +139,14 @@ export class Extensions extends React.Component {
           return fse.readFile(req.filePath).then(data => {
             req.data = data;
             preloadedRequests.push(req);
-          }).catch(err => {
+          }).catch(error => {
             if (showError) {
-              Notifications.error(`Error while reading "${req.filePath}": ${String(err)}`);
+              Notifications.error(`Error while reading "${req.filePath}": ${String(error)}`);
             }
           });
         })
     );
+
     return preloadedRequests as InstallRequestPreloaded[];
   }
 
@@ -191,13 +193,13 @@ export class Extensions extends React.Component {
             manifest,
             tempFile,
           });
-        } catch (err) {
+        } catch (error) {
           fse.unlink(tempFile).catch(() => null); // remove invalid temp package
           if (showErrors) {
             Notifications.error(
               <div className="flex column gaps">
                 <p>Installing <em>{req.fileName}</em> has failed, skipping.</p>
-                <p>Reason: <em>{String(err)}</em></p>
+                <p>Reason: <em>{String(error)}</em></p>
               </div>
             );
           }
@@ -241,7 +243,7 @@ export class Extensions extends React.Component {
   }
 
   async unpackExtension({ fileName, tempFile, manifest: { name, version } }: InstallRequestValidated) {
-    const extName = `${name}@${version}`;
+    const extName = extensionDisplayName(name, version);
     logger.info(`Unpacking extension ${extName}`, { fileName, tempFile });
     const unpackingTempFolder = path.join(path.dirname(tempFile), path.basename(tempFile) + "-unpacked");
     const extensionFolder = this.getExtensionDestFolder(name);
@@ -264,14 +266,26 @@ export class Extensions extends React.Component {
       Notifications.ok(
         <p>Extension <b>{extName}</b> successfully installed!</p>
       );
-    } catch (err) {
+    } catch (error) {
       Notifications.error(
-        <p>Installing extension <b>{extName}</b> has failed: <em>{err}</em></p>
+        <p>Installing extension <b>{extName}</b> has failed: <em>{error}</em></p>
       );
     } finally {
       // clean up
       fse.remove(unpackingTempFolder).catch(Function);
       fse.unlink(tempFile).catch(Function);
+    }
+  }
+
+  async uninstallExtension(extension: InstalledExtension) {
+    const extensionName = extensionDisplayName(extension.manifest.name, extension.manifest.version);
+
+    try {
+      await extensionDiscovery.uninstallExtension(extension.absolutePath);
+    } catch (error) {
+      Notifications.error(
+        <p>Uninstalling extension <b>{extensionName}</b> has failed: <em>{error?.message ?? ""}</em></p>
+      );
     }
   }
 
@@ -293,6 +307,7 @@ export class Extensions extends React.Component {
     return extensions.map(ext => {
       const { manifestPath: extId, isEnabled, manifest } = ext;
       const { name, description } = manifest;
+
       return (
         <div key={extId} className="extension flex gaps align-center">
           <div className="box grow">
@@ -303,12 +318,17 @@ export class Extensions extends React.Component {
               Description: <span className="text-secondary">{description}</span>
             </div>
           </div>
-          {!isEnabled && (
-            <Button plain active onClick={() => ext.isEnabled = true}>Enable</Button>
-          )}
-          {isEnabled && (
-            <Button accent onClick={() => ext.isEnabled = false}>Disable</Button>
-          )}
+          <div className="actions">
+            {!isEnabled && (
+              <Button plain active onClick={() => ext.isEnabled = true}>Enable</Button>
+            )}
+            {isEnabled && (
+              <Button accent onClick={() => ext.isEnabled = false}>Disable</Button>
+            )}
+            <Button plain active onClick={() => {
+              this.uninstallExtension(ext);
+            }}>Uninstall</Button>
+          </div>
         </div>
       );
     });

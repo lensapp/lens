@@ -18,6 +18,7 @@ jest.mock(
                   name: "TestExtension",
                   version: "1.0.0",
                 },
+                absolutePath: "/test/1",
                 manifestPath,
                 isBundled: false,
                 isEnabled: true,
@@ -30,6 +31,7 @@ jest.mock(
                   name: "TestExtension2",
                   version: "2.0.0",
                 },
+                absolutePath: "/test/2",
                 manifestPath: manifestPath2,
                 isBundled: false,
                 isEnabled: true,
@@ -52,6 +54,7 @@ jest.mock(
                       name: "TestExtension",
                       version: "1.0.0",
                     },
+                    absolutePath: "/test/1",
                     manifestPath,
                     isBundled: false,
                     isEnabled: true,
@@ -64,7 +67,8 @@ jest.mock(
                       name: "TestExtension3",
                       version: "3.0.0",
                     },
-                    manifestPath3,
+                    absolutePath: "/test/3",
+                    manifestPath: manifestPath3,
                     isBundled: false,
                     isEnabled: true,
                   },
@@ -94,6 +98,7 @@ describe("ExtensionLoader", () => {
       expect(extensionLoader.userExtensions).toMatchInlineSnapshot(`
         Map {
           "manifest/path" => Object {
+            "absolutePath": "/test/1",
             "isBundled": false,
             "isEnabled": true,
             "manifest": Object {
@@ -103,13 +108,14 @@ describe("ExtensionLoader", () => {
             "manifestPath": "manifest/path",
           },
           "manifest/path3" => Object {
+            "absolutePath": "/test/3",
             "isBundled": false,
             "isEnabled": true,
             "manifest": Object {
               "name": "TestExtension3",
               "version": "3.0.0",
             },
-            "manifestPath3": "manifest/path3",
+            "manifestPath": "manifest/path3",
           },
         }
       `);

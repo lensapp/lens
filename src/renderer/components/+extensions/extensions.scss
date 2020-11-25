@@ -26,6 +26,10 @@
       padding: $padding $spacing;
       background: $layoutBackground;
       border-radius: $radius;
+
+      .actions > button:not(:last-child) {
+        margin-right: $spacing / 2;
+      }
     }
   }
 

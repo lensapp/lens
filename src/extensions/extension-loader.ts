@@ -68,15 +68,18 @@ export class ExtensionLoader {
     logger.info(`${logModule} deleting extension instance ${lensExtensionId}`);
     const instance = this.instances.get(lensExtensionId);
 
-    if (instance) {
-      try {
-        instance.disable();
-        this.events.emit("remove", instance);
-        this.instances.delete(lensExtensionId);
-      } catch (error) {
-        logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
-      }
+    if (!instance) {
+      return;
     }
+
+    try {
+      instance.disable();
+      this.events.emit("remove", instance);
+      this.instances.delete(lensExtensionId);
+    } catch (error) {
+      logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
+    }
+
   }
 
   removeExtension(lensExtensionId: LensExtensionId) {
@@ -85,7 +88,6 @@ export class ExtensionLoader {
     if (!this.extensions.delete(lensExtensionId)) {
       throw new Error(`Can't remove extension ${lensExtensionId}, doesn't exist.`);
     }
-
   }
 
   protected async initMain() {
