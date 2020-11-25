@@ -136,6 +136,7 @@ describe("Lens integration tests", () => {
 
     it('adds cluster in test-workspace', async () => {
       await app.client.click('#current-workspace .Icon');
+      await app.client.waitForVisible('.WorkspaceMenu li[title="test description"]');
       await app.client.click('.WorkspaceMenu li[title="test description"]');
       await addMinikubeCluster(app);
       await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
@@ -144,6 +145,7 @@ describe("Lens integration tests", () => {
 
     it('checks if default workspace has active cluster', async () => {
       await app.client.click('#current-workspace .Icon');
+      await app.client.waitForVisible('.WorkspaceMenu > li:first-of-type');
       await app.client.click('.WorkspaceMenu > li:first-of-type');
       await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active");
     });
