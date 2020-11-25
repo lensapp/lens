@@ -1,4 +1,6 @@
-.AddCluster {
+.AddClusters {
+  $spacing: $padding * 2;
+
   .hint {
     margin-top: -$padding;
     color: $textColorSecondary;

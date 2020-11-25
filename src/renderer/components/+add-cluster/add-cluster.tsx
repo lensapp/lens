@@ -25,6 +25,8 @@ import { Notifications } from "../notifications";
 import { Tab, Tabs } from "../tabs";
 import { ExecValidationNotFoundError } from "../../../common/custom-errors";
 import { appEventBus } from "../../../common/event-bus";
+import { PageLayout } from "../layout/page-layout";
+import { docsUrl } from "../../../common/vars";
 
 enum KubeConfigSourceTab {
   FILE = "file",
@@ -194,34 +196,11 @@ export class AddCluster extends React.Component {
   renderInfo() {
     return (
       <Fragment>
-        <h2>Clusters associated with Lens</h2>
         <p>
           Add clusters by clicking the <span className="text-primary">Add Cluster</span> button.
-          You'll need to obtain a working kubeconfig for the cluster you want to add. You can either browse it from the file system or paste it as a text from the clipboard.
-        </p>
-        <p>
-          Selected <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/#context" target="_blank">cluster contexts</a> are added as a separate item in the
-          left-side cluster menu to allow you to operate easily on multiple clusters and/or contexts.
-        </p>
-        <p>
-          For more information on kubeconfig see <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/" target="_blank">Kubernetes docs</a>.
-        </p>
-        <p>
-          NOTE: Any manually added cluster is not merged into your kubeconfig file.
-        </p>
-        <p>
-          To see your currently enabled config with <code>kubectl</code>, use <code>kubectl config view --minify --raw</code> command in your terminal.
-        </p>
-        <p>
-          When connecting to a cluster, make sure you have a valid and working kubeconfig for the cluster. Following lists known "gotchas" in some authentication types used in kubeconfig with Lens
-          app.
-        </p>
-        <h3>Exec auth plugins</h3>
-        <p>
-          When using <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#configuration" target="_blank">exec auth</a> plugins make sure the paths that are used to call
-          any binaries
-          are full paths as Lens app might not be able to call binaries with relative paths. Make also sure that you pass all needed information either as arguments or env variables in the config,
-          Lens app might not have all login shell env variables set automatically.
+          You'll need to obtain a working kubeconfig for the cluster you want to add.
+          You can either browse it from the file system or paste it as a text from the clipboard.
+          Read more about adding clusters <a href={`${docsUrl}/latest/clusters/adding-clusters/`} target="_blank">here</a>.
         </p>
       </Fragment>
     );
@@ -357,9 +336,12 @@ export class AddCluster extends React.Component {
   render() {
     const addDisabled = this.selectedContexts.length === 0;
     return (
-      <DropFileInput onDropFiles={this.onDropKubeConfig}>
-        <WizardLayout className="AddCluster" infoPanel={this.renderInfo()}>
-          <h2><Trans>Add Cluster</Trans></h2>
+      <PageLayout className="AddClusters" header={<h2>Add Clusters</h2>}>
+        <h2>Add Clusters from Kubeconfig</h2>
+
+        {this.renderInfo()}
+
+        <DropFileInput onDropFiles={this.onDropKubeConfig}>
           {this.renderKubeConfigSource()}
           {this.renderContextSelector()}
           <div className="cluster-settings">
@@ -384,19 +366,20 @@ export class AddCluster extends React.Component {
           {this.error && (
             <div className="error">{this.error}</div>
           )}
+
           <div className="actions-panel">
             <Button
               primary
               disabled={addDisabled}
-              label={<Trans>Add cluster(s)</Trans>}
+              label={this.selectedContexts.length < 2 ? <Trans>Add cluster</Trans> : <Trans>Add clusters</Trans>}
               onClick={this.addClusters}
               waiting={this.isWaiting}
               tooltip={addDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
               tooltipOverrideDisabled
             />
           </div>
-        </WizardLayout>
-      </DropFileInput>
+        </DropFileInput>
+      </PageLayout>
     );
   }
 }
