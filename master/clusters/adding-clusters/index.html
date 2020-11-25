@@ -280,9 +280,38 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Adding Clusters
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
     <a href="./" class="md-nav__link md-nav__link--active">
       Adding Clusters
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#exec-auth-plugins" class="md-nav__link">
+    Exec auth plugins
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -784,6 +813,36 @@
                 
               
               
+                <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                  <div class="md-sidebar__scrollwrap">
+                    <div class="md-sidebar__inner">
+                      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#exec-auth-plugins" class="md-nav__link">
+    Exec auth plugins
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                    </div>
+                  </div>
+                </div>
+              
             
           
           <div class="md-content">
@@ -792,7 +851,7 @@
                 
                 
                 <h1 id="adding-clusters">Adding Clusters<a class="headerlink" href="#adding-clusters" title="Permanent link">#</a></h1>
-<p>Add clusters by clicking the <strong>Add Cluster</strong> button in the left-side menu. </p>
+<p>Add clusters by clicking the <strong>Add Cluster</strong> button in the left-side menu.</p>
 <ol>
 <li>Click the <strong>Add Cluster</strong> button (indicated with a '+' icon).</li>
 <li>Enter the path to your kubeconfig file. You'll need to have a kubeconfig file for the cluster you want to add. You can either browse for the path from the file system or or enter it directly.</li>
@@ -802,6 +861,9 @@
 <p><img alt="Add Cluster" src="../images/add-cluster.png" /></p>
 <p>For more information on kubeconfig see <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Kubernetes docs</a>.</p>
 <p>To see your currently-enabled config with <code>kubectl</code>, enter <code>kubectl config view --minify --raw</code> in your terminal.</p>
+<p>When connecting to a cluster, make sure you have a valid and working kubeconfig for the cluster. Following lists known "gotchas" in some authentication types used in kubeconfig with Lens app.</p>
+<h2 id="exec-auth-plugins">Exec auth plugins<a class="headerlink" href="#exec-auth-plugins" title="Permanent link">#</a></h2>
+<p>When using <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#configuration">exec auth</a> plugins make sure the paths that are used to call any binaries are full paths as Lens app might not be able to call binaries with relative paths. Make also sure that you pass all needed information either as arguments or env variables in the config, Lens app might not have all login shell env variables set automatically.</p>
                 
               
               
