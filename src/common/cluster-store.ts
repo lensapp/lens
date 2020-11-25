@@ -202,7 +202,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.deadClusters.get(id);
   }
 
-  getByWorkspaceId(workspaceId: string): ClusterRenderInfo[] {
+  getRendererInfoByWorkspace(workspaceId: string): ClusterRenderInfo[] {
     const aliveClusters: ClusterRenderInfo[] = this.clustersList.filter(c => c.workspace === workspaceId);
     const deadClusters: ClusterRenderInfo[] = this.deadClustersList
       .filter(([c]) => c.workspace === workspaceId)
@@ -217,6 +217,11 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
 
     return _.sortBy([...aliveClusters, ...deadClusters], c => c.preferences?.iconOrder);
+  }
+
+  getByWorkspaceId(workspaceId: string): Cluster[] {
+    const clusters = this.clustersList.filter(c => c.workspace === workspaceId);
+    return _.sortBy(clusters, c => c.preferences?.iconOrder);
   }
 
   getCountInWorkspace(workspaceId: string): number {

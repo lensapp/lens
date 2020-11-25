@@ -82,7 +82,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
     {
       label: "Clusters",
       submenu: workspaceStore.enabledWorkspacesList
-        .map((workspace): [Workspace, ClusterRenderInfo[]] => [workspace, clusterStore.getByWorkspaceId(workspace.id)])
+        .map((workspace): [Workspace, ClusterRenderInfo[]] => [workspace, clusterStore.getRendererInfoByWorkspace(workspace.id)])
         .filter(([, clusters]) => clusters.length > 0)
         .map(([workspace, clusters]): MenuItemConstructorOptions => ({
           label: workspace.name,
