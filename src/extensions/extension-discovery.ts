@@ -17,7 +17,7 @@ export interface InstalledExtension {
   }
 
 const logModule = "[EXTENSION-DISCOVERY]";
-const manifestFilename = "package.json";
+export const manifestFilename = "package.json";
 
 /**
  * Returns true if the lstat is for a directory-like file (e.g. isDirectory or symbolic link)

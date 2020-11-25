@@ -1,12 +1,4 @@
 .AddCluster {
-  .droppable {
-    box-shadow: 0 0 0 5px inset $primary;
-
-    > * {
-      pointer-events: none;
-    }
-  }
-
   .hint {
     margin-top: -$padding;
     color: $textColorSecondary;

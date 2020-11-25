@@ -6,7 +6,7 @@ import { Select, SelectOption } from "../select";
 import { Badge } from "../badge";
 import { Icon } from "../icon";
 import { _i18n } from "../../i18n";
-import { cssNames, downloadFile } from "../../utils";
+import { cssNames, saveFileDialog } from "../../utils";
 import { Pod } from "../../api/endpoints";
 import { PodLogSearch, PodLogSearchProps } from "./pod-log-search";
 
@@ -39,7 +39,7 @@ export const PodLogControls = observer((props: Props) => {
 
   const downloadLogs = () => {
     const fileName = selectedContainer ? selectedContainer.name : pod.getName();
-    downloadFile(fileName + ".log", logs.join("\n"), "text/plain");
+    saveFileDialog(fileName + ".log", logs.join("\n"), "text/plain");
   };
 
   const onContainerChange = (option: SelectOption) => {

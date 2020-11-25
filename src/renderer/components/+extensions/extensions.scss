@@ -1,22 +1,54 @@
 .Extensions {
+  $spacing: $padding * 2;
   --width: 100%;
   --max-width: auto;
 
-  .extension-list {
+  .extensions-list {
     .extension {
       --flex-gap: $padding / 3;
-      padding: $padding $padding * 2;
+      padding: $padding $spacing;
       background: $colorVague;
       border-radius: $radius;
 
       &:not(:first-of-type) {
-        margin-top: $padding * 2;
+        margin-top: $spacing;
       }
+    }
+  }
+
+  .extensions-info {
+    --flex-gap: #{$spacing};
+
+    > .flex.gaps {
+      --flex-gap: #{$padding};
     }
   }
 
   .extensions-path {
     word-break: break-all;
+
+    &:hover code {
+      color: $textColorSecondary;
+      cursor: pointer;
+    }
+  }
+
+  .Clipboard {
+    display: inline;
+    vertical-align: baseline;
+    font-size: $font-size-small;
+
+    &:hover {
+      color: $textColorSecondary;
+    }
+  }
+
+  .SearchInput {
+    --spacing: #{$padding};
+  }
+
+  .SubTitle {
+    font-style: italic;
   }
 
   .WizardLayout {
@@ -27,15 +59,28 @@
       align-self: flex-start;
     }
   }
+}
 
-  .SearchInput {
-    margin-top: $margin / 2;
-    margin-bottom: $margin * 2;
-    max-width: none;
+.InstallingExtensionNotification {
+  .remove-folder-warning {
+    font-size: $font-size-small;
+    font-style: italic;
+    opacity: .8;
+    cursor: pointer;
 
-    > label {
-      padding: $padding $padding * 2;
-      border-radius: $radius;
+    &:hover {
+      opacity: 1;
     }
+
+    code {
+      display: inline;
+      color: inherit;
+    }
+  }
+
+  .Button {
+    background-color: unset;
+    border: 1px solid currentColor;
+    box-shadow: none !important;
   }
 }

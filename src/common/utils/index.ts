@@ -15,3 +15,6 @@ export * from "./saveToAppFiles";
 export * from "./singleton";
 export * from "./openExternal";
 export * from "./rectify-array";
+export * from "./downloadFile";
+export * from "./escapeRegExp";
+export * from "./tar";

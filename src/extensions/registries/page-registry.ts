@@ -5,7 +5,7 @@ import path from "path";
 import { action } from "mobx";
 import { compile } from "path-to-regexp";
 import { BaseRegistry } from "./base-registry";
-import { LensExtension } from "../lens-extension";
+import { LensExtension, sanitizeExtensionName } from "../lens-extension";
 import logger from "../../main/logger";
 import { recitfy } from "../../common/utils";
 
@@ -43,10 +43,6 @@ export interface RegisteredPage extends PageRegistration {
 
 export interface PageComponents {
   Page: React.ComponentType<any>;
-}
-
-export function sanitizeExtensionName(name: string) {
-  return name.replace("@", "").replace("/", "-");
 }
 
 export function getExtensionPageUrl<P extends object>({ extensionId, pageId = "", params }: PageMenuTarget<P>): string {

@@ -11,7 +11,6 @@ export interface WizardLayoutProps extends React.DOMAttributes<any> {
   infoPanelClass?: IClassName;
   infoPanel?: React.ReactNode;
   centered?: boolean;  // Centering content horizontally
-  contentProps?: React.DOMAttributes<HTMLElement>
 }
 
 @observer
@@ -19,7 +18,7 @@ export class WizardLayout extends React.Component<WizardLayoutProps> {
   render() {
     const {
       className, contentClass, infoPanelClass, infoPanel, header, headerClass, centered,
-      children, contentProps = {}, ...props
+      children, ...props
     } = this.props;
     return (
       <div {...props} className={cssNames("WizardLayout", { centered }, className)}>
@@ -28,7 +27,7 @@ export class WizardLayout extends React.Component<WizardLayoutProps> {
             {header}
           </div>
         )}
-        <div {...contentProps} className={cssNames("content-col flex column gaps", contentClass)}>
+        <div className={cssNames("content-col flex column gaps", contentClass)}>
           <div className="flex column gaps">
             {children}
           </div>

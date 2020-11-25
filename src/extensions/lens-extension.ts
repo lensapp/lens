@@ -12,6 +12,7 @@ export interface LensExtensionManifest {
   description?: string;
   main?: string; // path to %ext/dist/main.js
   renderer?: string; // path to %ext/dist/renderer.js
+  lens?: object; // fixme: add more required fields for validation
 }
 
 export class LensExtension {
@@ -108,4 +109,8 @@ export class LensExtension {
   protected onDeactivate() {
     // mock
   }
+}
+
+export function sanitizeExtensionName(name: string) {
+  return name.replace("@", "").replace("/", "--");
 }
