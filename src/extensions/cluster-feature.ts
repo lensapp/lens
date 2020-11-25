@@ -46,7 +46,7 @@ export abstract class ClusterFeature {
    */
   abstract async install(cluster: Cluster): Promise<void>;
 
-/**
+  /**
    * to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be ugraded. The implementation
    * of this method should upgrade the kubernetes resources already installed, if relevant to the feature
    * 
@@ -54,7 +54,7 @@ export abstract class ClusterFeature {
    */
   abstract async upgrade(cluster: Cluster): Promise<void>;
 
-/**
+  /**
    * to be implemented in the derived class, this method is typically called by Lens when a user has indicated that this feature is to be uninstalled. The implementation
    * of this method should install kubernetes resources using the kubernetes api (K8sApi)
    * 
@@ -62,7 +62,7 @@ export abstract class ClusterFeature {
    */
   abstract async uninstall(cluster: Cluster): Promise<void>;
 
-/**
+  /**
    * to be implemented in the derived class, this method is called periodically by Lens to determine details about the feature's current status. The implementation
    * of this method should provide the current status information. The currentVersion and latestVersion fields may be displayed by Lens in describing the feature. 
    * The installed field should be set to true if the feature has been installed, otherwise false. Also, Lens relies on the canUpgrade field to determine if the feature
@@ -74,7 +74,7 @@ export abstract class ClusterFeature {
    */
   abstract async updateStatus(cluster: Cluster): Promise<ClusterFeatureStatus>;
 
-/**
+  /**
    * this is a helper method that conveniently applies kubernetes resources to the cluster.
    * 
    * @param cluster the cluster that the resources are to be applied to
@@ -98,7 +98,7 @@ export abstract class ClusterFeature {
     }
   }
 
-/**
+  /**
    * this is a helper method that conveniently reads kubernetes resource files into a string array. It also fills templated resource files with the template parameter values
    * specified by the templateContext field. Templated files must end with the extension '.hb' and the template syntax must be compatible with handlebars.js
    * 
