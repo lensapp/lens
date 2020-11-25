@@ -1,15 +1,6 @@
 .AddClusters {
   $spacing: $padding * 2;
 
-  .hint {
-    margin-top: -$padding;
-    color: $textColorSecondary;
-
-    > * {
-      vertical-align: middle;
-    }
-  }
-
   .AceEditor {
     min-height: 200px;
     max-height: 400px;
