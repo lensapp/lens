@@ -322,40 +322,6 @@ export class Cluster implements ClusterModel, ClusterState {
     });
   }
 
-  protected async getEventCount(): Promise<number> {
-    if (!this.isAdmin) {
-      return 0;
-    }
-    const client = this.getProxyKubeconfig().makeApiClient(CoreV1Api);
-    try {
-      const response = await client.listEventForAllNamespaces(false, null, null, null, 1000);
-      const uniqEventSources = new Set();
-      const warnings = response.body.items.filter(e => e.type !== 'Normal');
-      for (const w of warnings) {
-        if (w.involvedObject.kind === 'Pod') {
-          try {
-            const { body: pod } = await client.readNamespacedPod(w.involvedObject.name, w.involvedObject.namespace);
-            logger.debug(`checking pod ${w.involvedObject.namespace}/${w.involvedObject.name}`);
-            if (podHasIssues(pod)) {
-              uniqEventSources.add(w.involvedObject.uid);
-            }
-          } catch (err) {
-          }
-        } else {
-          uniqEventSources.add(w.involvedObject.uid);
-        }
-      }
-      const nodes = (await client.listNode()).body.items;
-      const nodeNotificationCount = nodes
-        .map(getNodeWarningConditions)
-        .reduce((sum, conditions) => sum + conditions.length, 0);
-      return uniqEventSources.size + nodeNotificationCount;
-    } catch (error) {
-      logger.error("Failed to fetch event count: " + JSON.stringify(error));
-      return 0;
-    }
-  }
-
   toJSON(): ClusterModel {
     const model: ClusterModel = {
       id: this.id,
