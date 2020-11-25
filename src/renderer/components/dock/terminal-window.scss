@@ -5,17 +5,7 @@
   margin-left: $padding * 2;
   margin-top: $padding * 2;
 
-  .theme-light & {
-    .xterm-viewport {
-      @include custom-scrollbar(dark);
-    }
-  }
-
   > .xterm {
     overflow: hidden;
-  }
-
-  .xterm-viewport {
-    @include custom-scrollbar;
   }
 }

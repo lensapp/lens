@@ -6,6 +6,7 @@ import path from "path";
 import { getBundledExtensions } from "../common/utils/app-version";
 import logger from "../main/logger";
 import { extensionInstaller, PackageJson } from "./extension-installer";
+import { extensionsStore } from "./extensions-store";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
 
 export interface InstalledExtension {
@@ -91,7 +92,7 @@ export class ExtensionDiscovery {
   init() {
     this.watchExtensions();
   }
-    
+
   /**
    * Watches for added/removed local extensions.
    * Dependencies are installed automatically after an extension folder is copied.
@@ -213,24 +214,26 @@ export class ExtensionDiscovery {
     }
   }
 
-  protected async getByManifest(manifestPath: string, { isBundled = false, isEnabled = isBundled }: {
+  protected async getByManifest(manifestPath: string, { isBundled = false }: {
     isBundled?: boolean;
-    isEnabled?: boolean;
   } = {}): Promise<InstalledExtension | null> {
     let manifestJson: LensExtensionManifest;
+    let isEnabled: boolean;
 
     try {
       // check manifest file for existence
       fs.accessSync(manifestPath, fs.constants.F_OK);
 
       manifestJson = __non_webpack_require__(manifestPath);
+      const installedManifestPath = path.join(this.nodeModulesPath, manifestJson.name, "package.json");
       this.packagesJson.dependencies[manifestJson.name] = path.dirname(manifestPath);
+      const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
 
       return {
-        manifestPath: path.join(this.nodeModulesPath, manifestJson.name, "package.json"),
+        manifestPath: installedManifestPath,
         manifest: manifestJson,
         isBundled,
-        isEnabled,
+        isEnabled
       };
     } catch (error) {
       logger.error(`${logModule}: can't install extension at ${manifestPath}: ${error}`, { manifestJson });
@@ -316,13 +319,12 @@ export class ExtensionDiscovery {
   /**
    * Loads extension from absolute path, updates this.packagesJson to include it and returns the extension.
    */
-  async loadExtensionFromPath(absPath: string, { isBundled = false, isEnabled = isBundled }: {
+  async loadExtensionFromPath(absPath: string, { isBundled = false }: {
     isBundled?: boolean;
-    isEnabled?: boolean;
   } = {}): Promise<InstalledExtension | null> {
     const manifestPath = path.resolve(absPath, manifestFilename);
 
-    return this.getByManifest(manifestPath, { isBundled, isEnabled });
+    return this.getByManifest(manifestPath, { isBundled });
   }
 }
 

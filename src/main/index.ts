@@ -25,6 +25,7 @@ import { extensionsStore } from "../extensions/extensions-store";
 import { InstalledExtension, extensionDiscovery } from "../extensions/extension-discovery";
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
+import { filesystemProvisionerStore } from "./extension-filesystem";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -59,6 +60,7 @@ app.on("ready", async () => {
     clusterStore.load(),
     workspaceStore.load(),
     extensionsStore.load(),
+    filesystemProvisionerStore.load(),
   ]);
 
   // find free port
