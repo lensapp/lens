@@ -5,7 +5,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { JsonApiErrorParsed } from "../../api/json-api";
 import { cssNames, prevDefault } from "../../utils";
-import { NotificationMessage, Notification, notificationsStore, NotificationStatus } from "./notifications.store";
+import { Notification, NotificationMessage, notificationsStore, NotificationStatus } from "./notifications.store";
 import { Animate } from "../animate";
 import { Icon } from "../icon";
 
@@ -15,7 +15,7 @@ export class Notifications extends React.Component {
 
   static ok(message: NotificationMessage) {
     notificationsStore.add({
-      message: message,
+      message,
       timeout: 2500,
       status: NotificationStatus.OK
     });
@@ -23,7 +23,7 @@ export class Notifications extends React.Component {
 
   static error(message: NotificationMessage) {
     notificationsStore.add({
-      message: message,
+      message,
       timeout: 10000,
       status: NotificationStatus.ERROR
     });
@@ -33,7 +33,7 @@ export class Notifications extends React.Component {
     return notificationsStore.add({
       status: NotificationStatus.INFO,
       timeout: 0,
-      message: message,
+      message,
       ...customOpts,
     });
   }
@@ -75,16 +75,16 @@ export class Notifications extends React.Component {
             <Animate key={id}>
               <div
                 className={cssNames("notification flex align-center", status)}
-                onMouseLeave={() => addAutoHideTimer(notification)}
-                onMouseEnter={() => removeAutoHideTimer(notification)}>
+                onMouseLeave={() => addAutoHideTimer(id)}
+                onMouseEnter={() => removeAutoHideTimer(id)}>
                 <div className="box center">
-                  <Icon material="info_outline" />
+                  <Icon material="info_outline"/>
                 </div>
                 <div className="message box grow">{msgText}</div>
                 <div className="box center">
                   <Icon
                     material="close" className="close"
-                    onClick={prevDefault(() => remove(notification))}
+                    onClick={prevDefault(() => remove(id))}
                   />
                 </div>
               </div>

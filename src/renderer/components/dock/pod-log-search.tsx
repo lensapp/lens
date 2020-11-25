@@ -60,7 +60,7 @@ export const PodLogSearch = observer((props: PodLogSearchProps) => {
       <SearchInput
         value={searchQuery}
         onChange={setSearch}
-        closeIcon={false}
+        showClearIcon={false}
         contentRight={totalFinds > 0 && findCounts}
         onClear={onClear}
         onKeyDown={onKeyDown}

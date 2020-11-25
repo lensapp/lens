@@ -15,7 +15,7 @@
   }
 
   @mixin scrollableContent() {
-    @include custom-scrollbar($theme: dark);
+    overflow: auto;
     padding: var(--wizard-spacing);
     height: var(--wizard-content-height);
     max-height: var(--wizard-content-max-height);

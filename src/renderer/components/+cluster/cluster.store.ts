@@ -84,12 +84,12 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
 
   getMetricsValues(source: Partial<IClusterMetrics>): [number, string][] {
     switch (this.metricType) {
-    case MetricType.CPU:
-      return normalizeMetrics(source.cpuUsage).data.result[0].values;
-    case MetricType.MEMORY:
-      return normalizeMetrics(source.memoryUsage).data.result[0].values;
-    default:
-      return [];
+      case MetricType.CPU:
+        return normalizeMetrics(source.cpuUsage).data.result[0].values;
+      case MetricType.MEMORY:
+        return normalizeMetrics(source.memoryUsage).data.result[0].values;
+      default:
+        return [];
     }
   }
 

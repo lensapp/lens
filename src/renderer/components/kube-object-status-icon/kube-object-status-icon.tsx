@@ -21,27 +21,27 @@ export class KubeObjectStatusIcon extends React.Component<Props> {
 
   statusClassName(level: number): string {
     switch (level) {
-    case KubeObjectStatusLevel.INFO:
-      return "info";
-    case KubeObjectStatusLevel.WARNING:
-      return "warning";
-    case KubeObjectStatusLevel.CRITICAL:
-      return "error";
-    default:
-      return "";
+      case KubeObjectStatusLevel.INFO:
+        return "info";
+      case KubeObjectStatusLevel.WARNING:
+        return "warning";
+      case KubeObjectStatusLevel.CRITICAL:
+        return "error";
+      default:
+        return "";
     }
   }
 
   statusTitle(level: number): string {
     switch (level) {
-    case KubeObjectStatusLevel.INFO:
-      return "Info";
-    case KubeObjectStatusLevel.WARNING:
-      return "Warning";
-    case KubeObjectStatusLevel.CRITICAL:
-      return "Critical";
-    default:
-      return "";
+      case KubeObjectStatusLevel.INFO:
+        return "Info";
+      case KubeObjectStatusLevel.WARNING:
+        return "Warning";
+      case KubeObjectStatusLevel.CRITICAL:
+        return "Critical";
+      default:
+        return "";
     }
   }
 

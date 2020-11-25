@@ -36,7 +36,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
   private constructor() {
     super({
       // configName: "lens-user-store", // todo: migrate from default "config.json"
-      migrations: migrations,
+      migrations,
     });
 
     this.handleOnLoad();

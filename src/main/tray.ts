@@ -95,7 +95,6 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
                 toolTip: clusterId,
                 async click() {
                   workspaceStore.setActive(workspace);
-                  clusterStore.setActive(clusterId);
                   windowManager.navigate(clusterViewURL({ params: { clusterId } }));
                 }
               };

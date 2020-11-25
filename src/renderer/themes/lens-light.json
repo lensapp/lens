@@ -39,13 +39,13 @@
     "helmImgBackground": "#e8e8e8",
     "helmStableRepo": "#3d90ce",
     "helmIncubatorRepo": "#ff7043",
-    "helmDescriptionHr": "#41474a",
+    "helmDescriptionHr": "#dddddd",
     "helmDescriptionBlockqouteColor": "#555555",
     "helmDescriptionBlockqouteBorder": "#8a8f93",
     "helmDescriptionBlockquoteBackground": "#eeeeee",
     "helmDescriptionHeaders": "#3e4147",
     "helmDescriptionH6": "#6a737d",
-    "helmDescriptionTdBorder": "#47494a",
+    "helmDescriptionTdBorder": "#c6c6c6",
     "helmDescriptionTrBackground": "#1c2125",
     "helmDescriptionCodeBackground": "#ffffff1a",
     "helmDescriptionPreBackground": "#eeeeee",
@@ -67,7 +67,7 @@
     "terminalForeground": "#2d2d2d",
     "terminalCursor": "#2d2d2d",
     "terminalCursorAccent": "#ffffff",
-    "terminalSelection": "#bfbfbf",
+    "terminalSelection": "#bfbfbf66",
     "terminalBlack": "#2d2d2d",
     "terminalRed": "#cd3734 ",
     "terminalGreen": "#18cf12",
@@ -108,6 +108,7 @@
     "selectOptionHoveredColor": "#ffffff",
     "lineProgressBackground": "#e8e8e8",
     "radioActiveBackground": "#f1f1f1",
-    "menuActiveBackground": "#e8e8e8"
+    "menuActiveBackground": "#e8e8e8",
+    "scrollBarColor": "#bbbbbb"
   }
 }

@@ -99,6 +99,10 @@ publish-npm: build-npm
 	npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
 	cd src/extensions/npm/extensions && npm publish --access=public
 
+.PHONY: docs
+docs:
+	yarn mkdocs-serve-local
+
 .PHONY: clean-extensions
 clean-extensions:
 ifeq "$(DETECTED_OS)" "Windows"

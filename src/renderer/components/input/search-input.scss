@@ -1,5 +1,6 @@
 .Input.SearchInput {
   --compact-focus-width: 190px;
+  --spacing: 6px 6px 6px 10px;
 
   max-width: 900px;
   min-width: 220px;
@@ -10,7 +11,7 @@
     border: none;
     border-radius: $radius;
     box-shadow: 0 0 0 1px $halfGray;
-    padding: 6px 6px 6px 10px;
+    padding: var(--spacing);
 
     .Icon {
       height: $margin * 2;

@@ -85,7 +85,7 @@ import React from "react"
 export default class ExampleExtension extends LensRendererExtension {
   clusterPages = [
     {
-      routePath: "/extension-example",
+      id: "extension-example",
       components: {
         Page: () => <ExamplePage extension={this}/>,
       }
@@ -94,4 +94,4 @@ export default class ExampleExtension extends LensRendererExtension {
 }
 ```
 
-The Hello World sample extension uses the `Cluster Page` capability, which is just one of the Lens extension API's capabilities. The [Common Capabilities](../capabilities/common-capabilities.md) page will help you home in on the right capabilities to use with your own extensions. 
+The Hello World sample extension uses the `Cluster Page` capability, which is just one of the Lens extension API's capabilities. The [Common Capabilities](../capabilities/common-capabilities.md) page will help you home in on the right capabilities to use with your own extensions.

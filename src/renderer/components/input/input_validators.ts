@@ -39,13 +39,13 @@ export const isNumber: InputValidator = {
 export const isUrl: InputValidator = {
   condition: ({ type }) => type === "url",
   message: () => _i18n._(t`Wrong url format`),
-  validate: value => !!value.match(/^$|^http(s)?:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]*)*$/),
+  validate: value => !!value.match(/^http(s)?:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]*)*$/),
 };
 
 export const isPath: InputValidator = {
   condition: ({ type }) => type === "text",
   message: () => _i18n._(t`This field must be a valid path`),
-  validate: value => !value || fse.pathExistsSync(value),
+  validate: value => value && fse.pathExistsSync(value),
 };
 
 export const minLength: InputValidator = {

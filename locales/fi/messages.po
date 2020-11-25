@@ -734,6 +734,7 @@ msgstr ""
 msgid "Current Healthy"
 msgstr ""
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:101
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:103
 msgid "Current replica scale: {currentReplicas}"
 msgstr ""
@@ -824,6 +825,7 @@ msgstr ""
 msgid "Desired Healthy"
 msgstr ""
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:105
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:107
 msgid "Desired number of replicas"
 msgstr ""
@@ -1082,6 +1084,7 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:127
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:116
 msgid "High number of replicas may cause cluster performance issues"
 msgstr ""
@@ -2281,6 +2284,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:155
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:128
 #: src/renderer/components/+workloads-deployments/deployments.tsx:83
 #: src/renderer/components/+workloads-deployments/deployments.tsx:84
@@ -2289,6 +2293,10 @@ msgstr ""
 
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:124
 msgid "Scale Deployment <0>{deploymentName}</0>"
+msgstr ""
+
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:139
+msgid "Scale Stateful Set <0>{statefulSetName}</0>"
 msgstr ""
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:45

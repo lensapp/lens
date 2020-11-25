@@ -77,6 +77,7 @@ export class ClustersMenu extends React.Component<Props> {
           ok: () => {
             if (clusterStore.activeClusterId === cluster.id) {
               navigate(landingURL());
+              clusterStore.setActive(null);
             }
             clusterStore.removeById(cluster.id);
           },

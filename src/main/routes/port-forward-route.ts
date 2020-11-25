@@ -78,16 +78,16 @@ class PortForwardRoute extends LensApi {
 
     let portForward = PortForward.getPortforward({
       clusterId: cluster.id, kind: resourceType, name: resourceName,
-      namespace: namespace, port: port
+      namespace, port
     });
     if (!portForward) {
       logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`);
       portForward = new PortForward({
         clusterId: cluster.id,
         kind: resourceType,
-        namespace: namespace,
+        namespace,
         name: resourceName,
-        port: port,
+        port,
         kubeConfig: cluster.getProxyKubeconfigPath()
       });
       const started = await portForward.start();

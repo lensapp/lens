@@ -1,20 +1,21 @@
 // Base class for extensions-api registries
 import { action, observable } from "mobx";
 import { LensExtension } from "../lens-extension";
+import { recitfy } from "../../common/utils";
 
-export class BaseRegistry<T = object, I extends T = T> {
+export class BaseRegistry<T> {
   private items = observable<T>([], { deep: false });
 
-  getItems(): I[] {
-    return this.items.toJS() as I[];
+  getItems(): T[] {
+    return this.items.toJS();
   }
 
   add(items: T | T[], ext?: LensExtension): () => void; // allow method overloading with required "ext"
   @action
   add(items: T | T[]) {
-    const normalizedItems = (Array.isArray(items) ? items : [items]);
-    this.items.push(...normalizedItems);
-    return () => this.remove(...normalizedItems);
+    const itemArray = recitfy(items);
+    this.items.push(...itemArray);
+    return () => this.remove(...itemArray);
   }
 
   @action

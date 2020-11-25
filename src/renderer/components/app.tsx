@@ -43,6 +43,7 @@ import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
 import { TabLayoutRoute, TabLayout } from "./layout/tab-layout";
 import { Trans } from "@lingui/macro";
+import {StatefulSetScaleDialog} from "./+workloads-statefulsets/statefulset-scale-dialog";
 
 @observer
 export class App extends React.Component {
@@ -59,7 +60,7 @@ export class App extends React.Component {
       name: "cluster",
       action: "open",
       params: {
-        clusterId: clusterId
+        clusterId
       }
     });
     window.addEventListener("online", () => {
@@ -100,7 +101,7 @@ export class App extends React.Component {
       const tabRoutes = this.getTabLayoutRoutes(menu);
       if (tabRoutes.length > 0) {
         const pageComponent = () => <TabLayout tabs={tabRoutes} />;
-        return <Route key={"extension-tab-layout-route-" + index} component={pageComponent}/>;
+        return <Route key={"extension-tab-layout-route-" + index} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
       } else {
         const page = clusterPageRegistry.getByPageMenuTarget(menu.target);
         if (page) {
@@ -150,6 +151,7 @@ export class App extends React.Component {
             <KubeConfigDialog/>
             <AddRoleBindingDialog/>
             <DeploymentScaleDialog/>
+            <StatefulSetScaleDialog/>
             <CronJobTriggerDialog/>
           </ErrorBoundary>
         </Router>

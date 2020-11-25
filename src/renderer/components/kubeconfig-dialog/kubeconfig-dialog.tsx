@@ -7,7 +7,7 @@ import jsYaml from "js-yaml";
 import { Trans } from "@lingui/macro";
 import { AceEditor } from "../ace-editor";
 import { ServiceAccount } from "../../api/endpoints";
-import { copyToClipboard, cssNames, downloadFile } from "../../utils";
+import { copyToClipboard, cssNames, saveFileDialog } from "../../utils";
 import { Button } from "../button";
 import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
@@ -67,7 +67,7 @@ export class KubeConfigDialog extends React.Component<Props> {
   };
 
   download = () => {
-    downloadFile("config", this.config, "text/yaml");
+    saveFileDialog("config", this.config, "text/yaml");
   };
 
   render() {

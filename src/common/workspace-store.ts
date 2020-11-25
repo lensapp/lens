@@ -5,12 +5,13 @@ import { clusterStore } from "./cluster-store";
 import { appEventBus } from "./event-bus";
 import { broadcastMessage } from "../common/ipc";
 import logger from "../main/logger";
+import type { ClusterId } from "./cluster-store";
 
 export type WorkspaceId = string;
 
 export interface WorkspaceStoreModel {
+  workspaces: WorkspaceModel[];
   currentWorkspace?: WorkspaceId;
-  workspaces: WorkspaceModel[]
 }
 
 export interface WorkspaceModel {
@@ -18,6 +19,7 @@ export interface WorkspaceModel {
   name: string;
   description?: string;
   ownerRef?: string;
+  lastActiveClusterId?: ClusterId;
 }
 
 export interface WorkspaceState {
@@ -30,6 +32,7 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
   @observable description?: string;
   @observable ownerRef?: string;
   @observable enabled: boolean;
+  @observable lastActiveClusterId?: ClusterId;
 
   constructor(data: WorkspaceModel) {
     Object.assign(this, data);
@@ -66,7 +69,8 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
       id: this.id,
       name: this.name,
       description: this.description,
-      ownerRef: this.ownerRef
+      ownerRef: this.ownerRef,
+      lastActiveClusterId: this.lastActiveClusterId
     });
   }
 }
@@ -138,13 +142,12 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @action
-  setActive(id = WorkspaceStore.defaultId, reset = true) {
+  setActive(id = WorkspaceStore.defaultId) {
     if (id === this.currentWorkspaceId) return;
     if (!this.getById(id)) {
       throw new Error(`workspace ${id} doesn't exist`);
     }
     this.currentWorkspaceId = id;
-    clusterStore.activeCluster = null; // fixme: handle previously selected cluster from current workspace
   }
 
   @action
@@ -182,6 +185,11 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     this.workspaces.delete(id);
     appEventBus.emit({name: "workspace", action: "remove"});
     clusterStore.removeByWorkspaceId(id);
+  }
+
+  @action
+  setLastActiveClusterId(clusterId?: ClusterId, workspaceId = this.currentWorkspaceId) {
+    this.getById(workspaceId).lastActiveClusterId = clusterId;
   }
 
   @action

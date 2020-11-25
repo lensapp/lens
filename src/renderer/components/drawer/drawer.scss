@@ -10,12 +10,6 @@
   box-shadow: 0 0 $unit * 2 $boxShadow;
   z-index: $zIndex-drawer;
 
-  .theme-light & {
-    .drawer-content {
-      @include custom-scrollbar(dark);
-    }
-  }
-
   &.left {
     left: 0;
   }
@@ -71,11 +65,8 @@
   }
 
   .drawer-content {
-    @include custom-scrollbar;
-
-    > *:not(.Spinner) {
-      padding: var(--spacing);
-    }
+    overflow: auto;
+    padding: var(--spacing);
 
     .Table .TableHead {
       background-color: $contentColor;

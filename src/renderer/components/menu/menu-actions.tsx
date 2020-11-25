@@ -81,7 +81,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
       ...menuProps
     } = this.props;
     const menuClassName = cssNames("MenuActions flex", className, {
-      toolbar: toolbar,
+      toolbar,
       gaps: toolbar, // add spacing for .flex
     });
     const autoClose = !toolbar;
