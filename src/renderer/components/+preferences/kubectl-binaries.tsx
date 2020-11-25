@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Trans } from '@lingui/macro';
-import { isPath } from '../input/input_validators';
 import { Checkbox } from '../checkbox';
-import { Input } from '../input';
+import { Input, InputValidators } from '../input';
 import { SubTitle } from '../layout/sub-title';
 import { UserPreferences, userStore } from '../../../common/user-store';
 import { observer } from 'mobx-react';
@@ -12,6 +11,7 @@ import { SelectOption, Select } from '../select';
 export const KubectlBinaries = observer(({ preferences }: { preferences: UserPreferences }) => {
   const [downloadPath, setDownloadPath] = useState(preferences.downloadBinariesPath || "");
   const [binariesPath, setBinariesPath] = useState(preferences.kubectlBinariesPath || "");
+  const pathValidator = downloadPath ? InputValidators.isPath : undefined;
 
   const downloadMirrorOptions: SelectOption<string>[] = [
     { value: "default", label: "Default (Google)" },
@@ -47,7 +47,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         theme="round-black"
         value={downloadPath}
         placeholder={userStore.getDefaultKubectlPath()}
-        validators={isPath}
+        validators={pathValidator}
         onChange={setDownloadPath}
         onBlur={save}
         disabled={!preferences.downloadKubectlBinaries}
@@ -60,7 +60,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         theme="round-black"
         placeholder={bundledKubectlPath()}
         value={binariesPath}
-        validators={isPath}
+        validators={pathValidator}
         onChange={setBinariesPath}
         onBlur={save}
         disabled={preferences.downloadKubectlBinaries}

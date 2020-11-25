@@ -3,6 +3,7 @@ import request from "request";
 export interface DownloadFileOptions {
   url: string;
   gzip?: boolean;
+  timeout?: number;
 }
 
 export interface DownloadFileTicket {
@@ -11,9 +12,9 @@ export interface DownloadFileTicket {
   cancel(): void;
 }
 
-export function downloadFile({ url, gzip = true }: DownloadFileOptions): DownloadFileTicket {
+export function downloadFile({ url, timeout, gzip = true }: DownloadFileOptions): DownloadFileTicket {
   const fileChunks: Buffer[] = [];
-  const req = request(url, { gzip });
+  const req = request(url, { gzip, timeout });
   const promise: Promise<Buffer> = new Promise((resolve, reject) => {
     req.on("data", (chunk: Buffer) => {
       fileChunks.push(chunk);

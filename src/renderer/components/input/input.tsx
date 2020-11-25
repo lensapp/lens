@@ -3,13 +3,13 @@ import "./input.scss";
 import React, { DOMAttributes, InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { autobind, cssNames, debouncePromise, getRandId } from "../../utils";
 import { Icon } from "../icon";
+import { Tooltip, TooltipProps } from "../tooltip";
 import * as Validators from "./input_validators";
 import { InputValidator } from "./input_validators";
 import isString from "lodash/isString";
 import isFunction from "lodash/isFunction";
 import isBoolean from "lodash/isBoolean";
 import uniqueId from "lodash/uniqueId";
-import { Tooltip } from "../tooltip";
 
 const { conditionalValidators, ...InputValidators } = Validators;
 export { InputValidators, InputValidator };
@@ -26,7 +26,7 @@ export type InputProps<T = string> = Omit<InputElementProps, "onChange" | "onSub
   maxRows?: number; // when multiLine={true} define max rows size
   dirty?: boolean; // show validation errors even if the field wasn't touched yet
   showValidationLine?: boolean; // show animated validation line for async validators
-  showErrorsAsTooltip?: boolean; // show validation errors as a tooltip :hover (instead of block below)
+  showErrorsAsTooltip?: boolean | Omit<TooltipProps, "targetId">; // show validation errors as a tooltip :hover (instead of block below)
   iconLeft?: string | React.ReactNode; // material-icon name in case of string-type
   iconRight?: string | React.ReactNode;
   contentRight?: string | React.ReactNode; // Any component of string goes after iconRight
@@ -62,6 +62,10 @@ export class Input extends React.Component<InputProps, State> {
     valid: true,
     errors: [],
   };
+
+  isValid() {
+    return this.state.valid;
+  }
 
   setValue(value: string) {
     if (value !== this.getValue()) {
@@ -268,7 +272,8 @@ export class Input extends React.Component<InputProps, State> {
   render() {
     const {
       multiLine, showValidationLine, validators, theme, maxRows, children, showErrorsAsTooltip,
-      maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight, contentRight,
+      maxLength, rows, disabled, autoSelectOnFocus, iconLeft, iconRight, contentRight, id,
+      dirty: _dirty, // excluded from passing to input-element
       ...inputProps
     } = this.props;
     const { focused, dirty, valid, validating, errors } = this.state;
@@ -294,29 +299,35 @@ export class Input extends React.Component<InputProps, State> {
       ref: this.bindRef,
       spellCheck: "false",
     });
-    const tooltipId = showErrorsAsTooltip ? getRandId({ prefix: "input_tooltip_id" }) : undefined;
     const showErrors = errors.length > 0 && !valid && dirty;
     const errorsInfo = (
       <div className="errors box grow">
         {errors.map((error, i) => <p key={i}>{error}</p>)}
       </div>
     );
+    const componentId = id || showErrorsAsTooltip ? getRandId({ prefix: "input_tooltip_id" }) : undefined;
+    let tooltipError: React.ReactNode;
+    if (showErrorsAsTooltip && showErrors) {
+      const tooltipProps = typeof showErrorsAsTooltip === "object" ? showErrorsAsTooltip : {};
+      tooltipProps.className = cssNames("InputTooltipError", tooltipProps.className);
+      tooltipError = (
+        <Tooltip targetId={componentId} {...tooltipProps}>
+          <div className="flex gaps align-center">
+            <Icon material="error_outline"/>
+            {errorsInfo}
+          </div>
+        </Tooltip>
+      );
+    }
     return (
-      <div id={tooltipId} className={className}>
+      <div id={componentId} className={className}>
+        {tooltipError}
         <label className="input-area flex gaps align-center" id="">
           {isString(iconLeft) ? <Icon material={iconLeft}/> : iconLeft}
           {multiLine ? <textarea {...inputProps as any} /> : <input {...inputProps as any} />}
           {isString(iconRight) ? <Icon material={iconRight}/> : iconRight}
           {contentRight}
         </label>
-        {showErrorsAsTooltip && showErrors && (
-          <Tooltip targetId={tooltipId} className="InputTooltipError">
-            <div className="flex gaps align-center">
-              <Icon material="error_outline"/>
-              {errorsInfo}
-            </div>
-          </Tooltip>
-        )}
         <div className="input-info flex gaps">
           {!showErrorsAsTooltip && showErrors && errorsInfo}
           {this.showMaxLenIndicator && (

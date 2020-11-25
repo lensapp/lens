@@ -1,61 +1,36 @@
-.Extensions {
+.PageLayout.Extensions {
   $spacing: $padding * 2;
-  --width: 100%;
-  --max-width: auto;
+  --width: 50%;
 
-  .extensions-list {
-    .extension {
-      --flex-gap: $padding / 3;
-      padding: $padding $spacing;
-      background: $colorVague;
-      border-radius: $radius;
+  h2 {
+    margin-bottom: $padding;
+  }
 
-      &:not(:first-of-type) {
-        margin-top: $spacing;
-      }
+  .no-extensions {
+    --flex-gap: #{$padding};
+    padding: $padding;
+
+    code {
+      font-size: $font-size-small;
     }
   }
 
-  .extensions-info {
+  .install-extension {
+    margin: $spacing * 2 0;
+  }
+
+  .installed-extensions {
     --flex-gap: #{$spacing};
 
-    > .flex.gaps {
-      --flex-gap: #{$padding};
-    }
-  }
-
-  .extensions-path {
-    word-break: break-all;
-
-    &:hover code {
-      color: $textColorSecondary;
-      cursor: pointer;
-    }
-  }
-
-  .Clipboard {
-    display: inline;
-    vertical-align: baseline;
-    font-size: $font-size-small;
-
-    &:hover {
-      color: $textColorSecondary;
+    .extension {
+      padding: $padding $spacing;
+      background: $layoutBackground;
+      border-radius: $radius;
     }
   }
 
   .SearchInput {
-    --spacing: #{$padding};
-    width: 100%;
-    max-width: none;
-  }
-
-  .WizardLayout {
-    padding: 0;
-
-    .info-col {
-      flex: 0.6;
-      align-self: flex-start;
-    }
+    --spacing: 10px;
   }
 }
 

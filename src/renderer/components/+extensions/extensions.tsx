@@ -9,8 +9,7 @@ import { observer } from "mobx-react";
 import { t, Trans } from "@lingui/macro";
 import { _i18n } from "../../i18n";
 import { Button } from "../button";
-import { WizardLayout } from "../layout/wizard-layout";
-import { DropFileInput, Input, InputValidators, SearchInput } from "../input";
+import { DropFileInput, Input, InputValidator, InputValidators, SearchInput } from "../input";
 import { Icon } from "../icon";
 import { SubTitle } from "../layout/sub-title";
 import { PageLayout } from "../layout/page-layout";
@@ -21,6 +20,8 @@ import { LensExtensionManifest, sanitizeExtensionName } from "../../../extension
 import { Notifications } from "../notifications";
 import { downloadFile, extractTar, listTarEntries, readFileFromTar } from "../../../common/utils";
 import { docsUrl } from "../../../common/vars";
+import { prevDefault } from "../../utils";
+import { TooltipPosition } from "../tooltip";
 
 interface InstallRequest {
   fileName: string;
@@ -40,8 +41,16 @@ interface InstallRequestValidated extends InstallRequestPreloaded {
 @observer
 export class Extensions extends React.Component {
   private supportedFormats = [".tar", ".tgz"];
+
+  private installPathValidator: InputValidator = {
+    message: <Trans>Invalid URL or absolute path</Trans>,
+    validate(value: string) {
+      return InputValidators.isUrl.validate(value) || InputValidators.isPath.validate(value);
+    }
+  };
+
   @observable search = "";
-  @observable downloadUrl = "";
+  @observable installPath = "";
 
   @computed get extensions() {
     const searchText = this.search.toLowerCase();
@@ -87,25 +96,25 @@ export class Extensions extends React.Component {
     }
   };
 
-  addExtensions = () => {
-    const { downloadUrl } = this;
-    if (downloadUrl && InputValidators.isUrl.validate(downloadUrl)) {
-      this.installFromUrl(downloadUrl);
-    } else {
-      this.installFromSelectFileDialog();
-    }
-  };
-
-  installFromUrl = async (url: string) => {
+  installFromUrlOrPath = async () => {
+    const { installPath } = this;
+    if (!installPath) return;
+    const fileName = path.basename(installPath);
     try {
-      const { promise: filePromise } = downloadFile({ url });
-      this.requestInstall([{
-        fileName: path.basename(url),
-        data: await filePromise,
-      }]);
+      // install via url
+      // fixme: improve error messages for non-tar-file URLs
+      if (InputValidators.isUrl.validate(installPath)) {
+        const { promise: filePromise } = downloadFile({ url: installPath, timeout: 60000 /*1m*/ });
+        const data = await filePromise;
+        this.requestInstall({ fileName, data });
+      }
+      // otherwise installing from system path
+      else if (InputValidators.isPath.validate(installPath)) {
+        this.requestInstall({ fileName, filePath: installPath });
+      }
     } catch (err) {
       Notifications.error(
-        <p>Installation via URL has failed: <b>{String(err)}</b></p>
+        <p>Installation has failed: <b>{String(err)}</b></p>
       );
     }
   };
@@ -198,7 +207,8 @@ export class Extensions extends React.Component {
     return validatedRequests;
   }
 
-  async requestInstall(requests: InstallRequest[]) {
+  async requestInstall(init: InstallRequest | InstallRequest[]) {
+    const requests = Array.isArray(init) ? init : [init];
     const preloadedRequests = await this.preloadExtensions(requests);
     const validatedRequests = await this.createTempFilesAndValidate(preloadedRequests);
 
@@ -265,49 +275,16 @@ export class Extensions extends React.Component {
     }
   }
 
-  renderInfo() {
-    return (
-      <div className="extensions-info flex column gaps">
-        <h2>Lens Extensions</h2>
-        <div>
-          The features that Lens includes out-of-the-box are just the start.
-          Lens extensions let you add new features to your installation to support your workflow.
-          Rich extensibility model lets extension authors plug directly into the Lens UI and contribute functionality through the same APIs used by Lens itself.
-          Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank">learn more</a>.
-        </div>
-        <div className="install-extension flex column gaps">
-          <SubTitle title="Install extension:"/>
-          <Input
-            showErrorsAsTooltip={true}
-            className="box grow"
-            theme="round-black"
-            iconLeft="link"
-            placeholder={`URL to an extension package (${this.supportedFormats.join(", ")})`}
-            validators={InputValidators.isUrl}
-            value={this.downloadUrl}
-            onChange={v => this.downloadUrl = v}
-            onSubmit={this.addExtensions}
-          />
-          <Button
-            primary
-            label="Install"
-            onClick={this.addExtensions}
-          />
-          <p className="hint">
-            <Trans><b>Pro-Tip</b>: you can drag & drop extension's tarball here to request installation</Trans>
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   renderExtensions() {
     const { extensions, extensionsPath, search } = this;
     if (!extensions.length) {
       return (
-        <div className="flex align-center box grow justify-center gaps">
-          {search && <Trans>No search results found</Trans>}
-          {!search && <p><Trans>There are no extensions in</Trans> <code>{extensionsPath}</code></p>}
+        <div className="no-extensions flex box gaps justify-center">
+          <Icon material="info"/>
+          <div>
+            {search && <p>No search results found</p>}
+            {!search && <p>There are no extensions in <code>{extensionsPath}</code></p>}
+          </div>
         </div>
       );
     }
@@ -316,11 +293,11 @@ export class Extensions extends React.Component {
       const { name, description } = manifest;
       return (
         <div key={extId} className="extension flex gaps align-center">
-          <div className="box grow flex column gaps">
-            <div className="package">
+          <div className="box grow">
+            <div className="name">
               Name: <code className="name">{name}</code>
             </div>
-            <div>
+            <div className="description">
               Description: <span className="text-secondary">{description}</span>
             </div>
           </div>
@@ -336,21 +313,64 @@ export class Extensions extends React.Component {
   }
 
   render() {
+    const topHeader = <h2>Manage Lens Extensions</h2>;
+    const { installPath } = this;
     return (
-      <PageLayout showOnTop className="Extensions" header={<h2>Extensions</h2>}>
-        <DropFileInput onDropFiles={this.installOnDrop}>
-          <WizardLayout infoPanel={this.renderInfo()}>
+      <DropFileInput onDropFiles={this.installOnDrop}>
+        <PageLayout showOnTop className="Extensions flex column gaps" header={topHeader} contentGaps={false}>
+          <h2>Lens Extensions</h2>
+          <div>
+            The features that Lens includes out-of-the-box are just the start.
+            Lens extensions let you add new features to your installation to support your workflow.
+            Rich extensibility model lets extension authors plug directly into the Lens UI and contribute functionality through the same APIs used by Lens itself.
+            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank">learn more</a>.
+          </div>
+
+          <div className="install-extension flex column gaps">
+            <SubTitle title={<Trans>Install Extension:</Trans>}/>
+            <div className="extension-input flex box gaps align-center">
+              <Input
+                className="box grow"
+                theme="round-black"
+                placeholder={`Path or URL to an extension package (${this.supportedFormats.join(", ")})`}
+                showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
+                validators={installPath ? this.installPathValidator : undefined}
+                value={installPath}
+                onChange={v => this.installPath = v}
+                onSubmit={this.installFromUrlOrPath}
+                iconLeft="link"
+                iconRight={
+                  <Icon
+                    interactive
+                    material="folder"
+                    onMouseDown={prevDefault(this.installFromSelectFileDialog)}
+                    tooltip={<Trans>Browse</Trans>}
+                  />
+                }
+              />
+            </div>
+            <Button
+              primary
+              label="Install"
+              disabled={!this.installPathValidator.validate(installPath)}
+              onClick={this.installFromUrlOrPath}
+            />
+            <small className="hint">
+              <Trans><b>Pro-Tip</b>: you can drag & drop extension's tarball-file to install</Trans>
+            </small>
+          </div>
+
+          <h2>Installed Extensions</h2>
+          <div className="installed-extensions flex column gaps">
             <SearchInput
-              placeholder={_i18n._(t`Search installed extensions`)}
+              placeholder="Search extensions by name or description"
               value={this.search}
               onChange={(value) => this.search = value}
             />
-            <div className="extensions-list">
-              {this.renderExtensions()}
-            </div>
-          </WizardLayout>
-        </DropFileInput>
-      </PageLayout>
+            {this.renderExtensions()}
+          </div>
+        </PageLayout>
+      </DropFileInput>
     );
   }
 }
