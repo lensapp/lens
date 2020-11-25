@@ -1,7 +1,6 @@
 
 import path from 'path';
 import webpack from "webpack";
-import nodeExternals from "webpack-node-externals";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 
 import { sassCommonVars } from "./src/common/vars";
@@ -11,12 +10,6 @@ export default function (): webpack.Configuration {
         // Compile for Electron for renderer process
         // see <https://webpack.js.org/configuration/target/>
         target: "electron-renderer",
-        externals: [
-             // in order to ignore all modules in node_modules folder
-             // <https://www.npmjs.com/package/webpack-node-externals>
-             nodeExternals()
-        ],
-        devtool: 'inline-source-map',
         entry: './src/extensions/extension-api.ts',
         output: {
             filename: 'extension-api.js',
@@ -73,7 +66,7 @@ export default function (): webpack.Configuration {
             ]
         },
         resolve: {
-            extensions: ['.ts', '.tsx']
+            extensions: ['.ts', '.tsx', '.js']
         },
         plugins: [
             // In ts-loader's README they said to output a built .d.ts file, 
