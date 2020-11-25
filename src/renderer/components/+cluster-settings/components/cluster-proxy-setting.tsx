@@ -2,8 +2,7 @@ import React from "react";
 import { observable, autorun } from "mobx";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { Cluster } from "../../../../main/cluster";
-import { Input } from "../../input";
-import { isUrl } from "../../input/input_validators";
+import { Input, InputValidators } from "../../input";
 import { SubTitle } from "../../layout/sub-title";
 
 interface Props {
@@ -41,7 +40,7 @@ export class ClusterProxySetting extends React.Component<Props> {
           onChange={this.onChange}
           onBlur={this.save}
           placeholder="http://<address>:<port>"
-          validators={isUrl}
+          validators={this.proxy ? InputValidators.isUrl : undefined}
         />
       </>
     );
