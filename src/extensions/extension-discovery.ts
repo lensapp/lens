@@ -306,7 +306,6 @@ export class ExtensionDiscovery {
       }
 
       const extension = await this.loadExtensionFromPath(absPath);
-
       if (extension) {
         extensions.push(extension);
       }

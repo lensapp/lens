@@ -6,7 +6,6 @@ export default class ExampleExtension extends LensRendererExtension {
   clusterPages = [
     {
       id: "example",
-      routePath: "/extension-example",
       title: "Example Extension",
       components: {
         Page: () => <ExamplePage extension={this}/>,
