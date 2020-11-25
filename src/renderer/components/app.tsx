@@ -37,13 +37,16 @@ import { webFrame } from "electron";
 import { clusterPageRegistry, getExtensionPageUrl, PageRegistration, RegisteredPage } from "../../extensions/registries/page-registry";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
-import { requestMain } from "../../common/ipc";
+import { broadcastMessage, requestMain } from "../../common/ipc";
 import whatInput from 'what-input';
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
 import { TabLayoutRoute, TabLayout } from "./layout/tab-layout";
-import { Trans } from "@lingui/macro";
-import {StatefulSetScaleDialog} from "./+workloads-statefulsets/statefulset-scale-dialog";
+import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
+import { eventStore } from "./+events/event.store";
+import { reaction, computed } from "mobx";
+import { nodesStore } from "./+nodes/nodes.store";
+import { podsStore } from "./+workloads-pods/pods.store";
 
 @observer
 export class App extends React.Component {
@@ -67,6 +70,32 @@ export class App extends React.Component {
       window.location.reload();
     });
     whatInput.ask(); // Start to monitor user input device
+  }
+
+  async componentDidMount() {
+    console.log("hello");
+    const cluster = getHostedCluster();
+    await eventStore.loadAll();
+    await nodesStore.loadAll();
+    await podsStore.loadAll();
+    eventStore.subscribe();
+    nodesStore.subscribe();
+    podsStore.subscribe();
+
+    reaction(() => this.warningsCount, (count) => {
+      broadcastMessage(`cluster-warning-event-count:${cluster.id}`, count);
+    });
+  }
+
+  @computed
+  get warningsCount() {
+    let warnings = 0;
+    nodesStore.items.forEach(node => {
+      warnings = warnings + node.getWarningConditions().length;
+    });
+    warnings = warnings + eventStore.getWarnings().length;
+
+    return warnings;
   }
 
   get startURL() {

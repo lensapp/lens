@@ -42,7 +42,6 @@ export interface ClusterState {
   accessible: boolean;
   ready: boolean;
   failureReason: string;
-  eventCount: number;
   isAdmin: boolean;
   allowedNamespaces: string[]
   allowedResources: string[]
@@ -74,7 +73,6 @@ export class Cluster implements ClusterModel, ClusterState {
   @observable disconnected = true; // false if user has selected to connect
   @observable failureReason: string;
   @observable isAdmin = false;
-  @observable eventCount = 0;
   @observable preferences: ClusterPreferences = {};
   @observable metadata: ClusterMetadata = {};
   @observable allowedNamespaces: string[] = [];
@@ -209,10 +207,7 @@ export class Cluster implements ClusterModel, ClusterState {
     await this.refreshConnectionStatus();
     if (this.accessible) {
       this.isAdmin = await this.isClusterAdmin();
-      await Promise.all([
-        this.refreshEvents(),
-        this.refreshAllowedResources(),
-      ]);
+      await this.refreshAllowedResources();
       if (opts.refreshMetadata) {
         this.refreshMetadata();
       }
@@ -240,11 +235,6 @@ export class Cluster implements ClusterModel, ClusterState {
   async refreshAllowedResources() {
     this.allowedNamespaces = await this.getAllowedNamespaces();
     this.allowedResources = await this.getAllowedResources();
-  }
-
-  @action
-  async refreshEvents() {
-    this.eventCount = await this.getEventCount();
   }
 
   protected getKubeconfig(): KubeConfig {
@@ -393,7 +383,6 @@ export class Cluster implements ClusterModel, ClusterState {
       accessible: this.accessible,
       failureReason: this.failureReason,
       isAdmin: this.isAdmin,
-      eventCount: this.eventCount,
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,
     };
