@@ -19,7 +19,7 @@ const badgeMeta = observable({
 
 // Common handler for all Badge instances
 document.addEventListener("selectionchange", () => {
-  badgeMeta.hasTextSelected = window.getSelection().toString().trim().length > 0
+  badgeMeta.hasTextSelected = window.getSelection().toString().trim().length > 0;
 });
 
 @withTooltip
@@ -46,7 +46,7 @@ export class Badge extends React.Component<BadgeProps> {
   render() {
     const { className, label, small, children, isExpanded, ...elemProps } = this.props;
     const classNames = cssNames("Badge", className, {
-      small: small,
+      small,
       interactive: this.isExpandable,
       isExpanded: isExpanded ?? this.isExpanded,
     });
