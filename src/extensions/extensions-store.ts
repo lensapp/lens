@@ -47,11 +47,6 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
     await extensionLoader.whenLoaded;
     await this.whenLoaded;
 
-    // activate user-extensions when state is ready
-    extensionLoader.userExtensions.forEach((ext, extId) => {
-      ext.isEnabled = this.isEnabled(extId);
-    });
-
     // apply state on changes from store
     reaction(() => this.state.toJS(), extensionsState => {
       extensionsState.forEach((state, extId) => {
@@ -70,7 +65,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   isEnabled(extId: LensExtensionId) {
     const state = this.state.get(extId);
-    return !state /* enabled by default */ || state.enabled;
+    return state && state.enabled; // by default false
   }
 
   @action
