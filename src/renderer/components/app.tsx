@@ -43,6 +43,7 @@ import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
 import { TabLayoutRoute, TabLayout } from "./layout/tab-layout";
 import { Trans } from "@lingui/macro";
+import {StatefulSetScaleDialog} from "./+workloads-statefulsets/statefulset-scale-dialog";
 
 @observer
 export class App extends React.Component {
@@ -150,6 +151,7 @@ export class App extends React.Component {
             <KubeConfigDialog/>
             <AddRoleBindingDialog/>
             <DeploymentScaleDialog/>
+            <StatefulSetScaleDialog/>
             <CronJobTriggerDialog/>
           </ErrorBoundary>
         </Router>

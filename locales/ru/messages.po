@@ -739,6 +739,7 @@ msgstr "Текущее / Цель"
 msgid "Current Healthy"
 msgstr ""
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:101
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:103
 msgid "Current replica scale: {currentReplicas}"
 msgstr "Текущий размер реплики: {currentReplicas}"
@@ -829,6 +830,7 @@ msgstr "Описание"
 msgid "Desired Healthy"
 msgstr ""
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:105
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:107
 msgid "Desired number of replicas"
 msgstr "Нужный уровень реплик"
@@ -1092,6 +1094,7 @@ msgstr ""
 msgid "Hide"
 msgstr "Скрыть"
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:127
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:116
 msgid "High number of replicas may cause cluster performance issues"
 msgstr "Большое количество реплик может вызвать проблемы с производительностью кластера"
@@ -2299,6 +2302,7 @@ msgstr ""
 msgid "Save"
 msgstr "Сохранить"
 
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:155
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:128
 #: src/renderer/components/+workloads-deployments/deployments.tsx:83
 #: src/renderer/components/+workloads-deployments/deployments.tsx:84
@@ -2308,6 +2312,10 @@ msgstr "Масштабировать"
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:124
 msgid "Scale Deployment <0>{deploymentName}</0>"
 msgstr "Масштабировать Deployment <0>{deploymentName}</0>"
+
+#: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:139
+msgid "Scale Stateful Set <0>{statefulSetName}</0>"
+msgstr "Масштабировать Stateful Set <0>{statefulSetName}</0>"
 
 #: src/renderer/components/+workloads-cronjobs/cronjob-details.tsx:45
 #: src/renderer/components/+workloads-cronjobs/cronjobs.tsx:46
