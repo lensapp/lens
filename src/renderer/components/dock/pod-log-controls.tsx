@@ -1,3 +1,4 @@
+import "./pod-log-controls.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { IPodLogsData, podLogsStore } from "./pod-logs.store";
@@ -21,10 +22,9 @@ interface Props extends PodLogSearchProps {
 }
 
 export const PodLogControls = observer((props: Props) => {
-  if (!props.ready) return null;
   const { tabData, save, reload, tabId, logs } = props;
   const { selectedContainer, showTimestamps, previous } = tabData;
-  const rawLogs = podLogsStore.logs.get(tabId);
+  const rawLogs = podLogsStore.logs.get(tabId) || [];
   const since = rawLogs.length ? podLogsStore.getTimestamps(rawLogs[0]) : null;
   const pod = new Pod(tabData.pod);
 
