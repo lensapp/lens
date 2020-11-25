@@ -47,6 +47,7 @@ import { eventStore } from "./+events/event.store";
 import { reaction, computed } from "mobx";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
+import { sum } from "lodash";
 
 @observer
 export class App extends React.Component {
@@ -83,10 +84,13 @@ export class App extends React.Component {
       promises.push(nodesStore.loadAll());
     }
     await Promise.all(promises);
-
-    eventStore.subscribe();
-    nodesStore.subscribe();
-    podsStore.subscribe();
+    if (eventStore.isLoaded && podsStore.isLoaded) {
+      eventStore.subscribe();
+      podsStore.subscribe();
+    }
+    if (nodesStore.isLoaded) {
+      nodesStore.subscribe();
+    }
 
     reaction(() => this.warningsCount, (count) => {
       broadcastMessage(`cluster-warning-event-count:${cluster.id}`, count);
@@ -95,10 +99,8 @@ export class App extends React.Component {
 
   @computed
   get warningsCount() {
-    let warnings = 0;
-    nodesStore.items.forEach(node => {
-      warnings = warnings + node.getWarningConditions().length;
-    });
+    let warnings = sum(nodesStore.items
+      .map(node => node.getWarningConditions().length));
     warnings = warnings + eventStore.getWarnings().length;
 
     return warnings;

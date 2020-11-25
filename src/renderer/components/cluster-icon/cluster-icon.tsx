@@ -41,9 +41,7 @@ export class ClusterIcon extends React.Component<Props> {
 
   componentDidMount() {
     const subscriber = subscribeToBroadcast(this.eventCountBroadcast, (ev, eventCount) => {
-      if (eventCount != this.eventCount) {
-        this.eventCount = eventCount;
-      }
+      this.eventCount = eventCount;
     });
 
     disposeOnUnmount(this, [
