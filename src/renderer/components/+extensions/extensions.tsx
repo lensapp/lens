@@ -14,7 +14,6 @@ import { DropFileInput, Input, InputValidators, SearchInput } from "../input";
 import { Icon } from "../icon";
 import { SubTitle } from "../layout/sub-title";
 import { PageLayout } from "../layout/page-layout";
-import { Clipboard } from "../clipboard";
 import logger from "../../../main/logger";
 import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionDiscovery, manifestFilename } from "../../../extensions/extension-discovery";
@@ -269,26 +268,21 @@ export class Extensions extends React.Component {
   renderInfo() {
     return (
       <div className="extensions-info flex column gaps">
-        <h2>Lens Extension API</h2>
+        <h2>Lens Extensions</h2>
         <div>
-          The Extensions API in Lens allows users to customize and enhance the Lens experience by creating their own menus or page content that is extended from the existing pages. Many of the core
-          features of Lens are built as extensions and use the same Extension API.
-        </div>
-        <div>
-          <SubTitle title="Extensions loaded from:"/>
-          <div className="extensions-path flex inline" onClick={() => shell.openPath(this.extensionsPath)}>
-            <Icon material="folder" tooltip={{ children: "Open folder", preferredPositions: "bottom" }}/>
-            <code>{this.extensionsPath}</code>
-          </div>
+          The features that Lens includes out-of-the-box are just the start.
+          Lens extensions let you add new features to your installation to support your workflow.
+          Rich extensibility model lets extension authors plug directly into the Lens UI and contribute functionality through the same APIs used by Lens itself.
+          Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank">learn more</a>.
         </div>
         <div className="install-extension flex column gaps">
-          <SubTitle title="Install extensions:"/>
+          <SubTitle title="Install extension:"/>
           <Input
             showErrorsAsTooltip={true}
             className="box grow"
             theme="round-black"
             iconLeft="link"
-            placeholder={`URL to packed extension (${this.supportedFormats.join(", ")})`}
+            placeholder={`URL to an extension package (${this.supportedFormats.join(", ")})`}
             validators={InputValidators.isUrl}
             value={this.downloadUrl}
             onChange={v => this.downloadUrl = v}
@@ -296,27 +290,11 @@ export class Extensions extends React.Component {
           />
           <Button
             primary
-            label="Add extensions"
+            label="Install"
             onClick={this.addExtensions}
           />
           <p className="hint">
-            <Trans><b>Pro-Tip 1</b>: you can obtain package tarball from NPM via</Trans>{" "}
-            <Clipboard showNotification>
-              <code>npm view %package dist.tarball</code>
-            </Clipboard>
-            <span> or download package first with </span>
-            <Clipboard showNotification>
-              <code>npm pack %package</code>
-            </Clipboard>
-          </p>
-          <p className="hint">
-            <Trans><b>Pro-Tip 2</b>: you can drag & drop extension's tarball here to request installation</Trans>
-          </p>
-        </div>
-        <div className="more-info flex inline gaps align-center">
-          <Icon material="local_fire_department"/>
-          <p>
-            Check out documentation to <a href={docsUrl} target="_blank">learn more</a>
+            <Trans><b>Pro-Tip</b>: you can drag & drop extension's tarball here to request installation</Trans>
           </p>
         </div>
       </div>
@@ -363,7 +341,7 @@ export class Extensions extends React.Component {
         <DropFileInput onDropFiles={this.installOnDrop}>
           <WizardLayout infoPanel={this.renderInfo()}>
             <SearchInput
-              placeholder={_i18n._(t`Search extensions`)}
+              placeholder={_i18n._(t`Search installed extensions`)}
               value={this.search}
               onChange={(value) => this.search = value}
             />
