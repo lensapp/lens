@@ -36,11 +36,11 @@ export class PageLayout extends React.Component<PageLayoutProps> {
   }
 
   async componentDidMount() {
-    window.addEventListener('keydown', this.onEscapeKey);
+    window.addEventListener("keydown", this.onEscapeKey);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('keydown', this.onEscapeKey);
+    window.removeEventListener("keydown", this.onEscapeKey);
   }
 
   onEscapeKey = (evt: KeyboardEvent) => {

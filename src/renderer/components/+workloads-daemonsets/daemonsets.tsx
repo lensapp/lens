@@ -64,7 +64,7 @@ export class DaemonSets extends React.Component<Props> {
           daemonSet.getName(),
           daemonSet.getNs(),
           this.getPodsLength(daemonSet),
-          <KubeObjectStatusIcon object={daemonSet}/>,
+          <KubeObjectStatusIcon key="icon" object={daemonSet}/>,
           this.renderNodeSelector(daemonSet),
           daemonSet.getAge(),
         ]}
@@ -72,4 +72,3 @@ export class DaemonSets extends React.Component<Props> {
     );
   }
 }
-

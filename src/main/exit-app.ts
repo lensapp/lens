@@ -11,7 +11,7 @@ export function exitApp() {
   appEventBus.emit({ name: "service", action: "close" });
   windowManager.hide();
   clusterManager.stop();
-  logger.info('SERVICE:QUIT');
+  logger.info("SERVICE:QUIT");
   setTimeout(() => {
     app.exit();
   }, 1000);

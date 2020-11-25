@@ -43,7 +43,7 @@ export class NetworkPolicies extends React.Component<Props> {
         ]}
         renderTableContents={(item: NetworkPolicy) => [
           item.getName(),
-          <KubeObjectStatusIcon object={item} />,
+          <KubeObjectStatusIcon key="icon" object={item} />,
           item.getNs(),
           item.getTypes().join(", "),
           item.getAge(),

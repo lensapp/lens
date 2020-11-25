@@ -19,18 +19,17 @@ export class PodDisruptionBudgetDetails extends React.Component<Props> {
   render() {
     const { object: pdb } = this.props;
     if (!pdb) return null;
-    const { status, spec } = pdb;
     const selectors = pdb.getSelectors();
     return (
       <div className="PdbDetails">
         <KubeObjectMeta object={pdb}/>
 
         {selectors.length > 0 &&
-        <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
-          {
-            selectors.map(label => <Badge key={label} label={label}/>)
-          }
-        </DrawerItem>
+          <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+            {
+              selectors.map(label => <Badge key={label} label={label}/>)
+            }
+          </DrawerItem>
         }
 
         <DrawerItem name={<Trans>Min Available</Trans>}>

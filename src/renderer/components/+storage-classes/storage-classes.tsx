@@ -4,7 +4,7 @@ import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
-import { StorageClass, storageClassApi } from "../../api/endpoints/storage-class.api";
+import { StorageClass } from "../../api/endpoints/storage-class.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { IStorageClassesRouteParams } from "./storage-classes.route";
 import { storageClassStore } from "./storage-class.store";
@@ -48,7 +48,7 @@ export class StorageClasses extends React.Component<Props> {
         ]}
         renderTableContents={(storageClass: StorageClass) => [
           storageClass.getName(),
-          <KubeObjectStatusIcon object={storageClass} />,
+          <KubeObjectStatusIcon key="icon" object={storageClass} />,
           storageClass.provisioner,
           storageClass.getReclaimPolicy(),
           storageClass.isDefault() ? <Trans>Yes</Trans> : null,

@@ -40,7 +40,7 @@ export class DeploymentApi extends KubeApi<Deployment> {
     },
     {
       headers: {
-        'content-type': 'application/strategic-merge-patch+json'
+        "content-type": "application/strategic-merge-patch+json"
       }
     });
   }

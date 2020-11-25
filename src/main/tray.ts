@@ -66,7 +66,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
         showAbout(browserWindow);
       },
     },
-    { type: 'separator' },
+    { type: "separator" },
     {
       label: "Open Lens",
       async click() {
@@ -91,7 +91,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
             submenu: clusters.map(cluster => {
               const { id: clusterId, name: label, online, workspace } = cluster;
               return {
-                label: `${online ? '✓' : '\x20'.repeat(3)/*offset*/}${label}`,
+                label: `${online ? "✓" : "\x20".repeat(3)/*offset*/}${label}`,
                 toolTip: clusterId,
                 async click() {
                   workspaceStore.setActive(workspace);
@@ -115,9 +115,9 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
         }
       },
     },
-    { type: 'separator' },
+    { type: "separator" },
     {
-      label: 'Quit App',
+      label: "Quit App",
       click() {
         exitApp();
       }

@@ -70,7 +70,7 @@ export class HelmReleases extends Component<Props> {
       <div>
         <Trans>Remove <b>{releaseNames}</b>?</Trans>
         <p className="warning">
-          <Trans>Note: StatefulSet Volumes won't be deleted automatically</Trans>
+          <Trans>Note: StatefulSet Volumes won&apos;t be deleted automatically</Trans>
         </p>
       </div>
     );

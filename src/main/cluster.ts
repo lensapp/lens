@@ -9,7 +9,7 @@ import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
-import { getNodeWarningConditions, loadConfig, podHasIssues } from "../common/kube-helpers";
+import { loadConfig } from "../common/kube-helpers";
 import request, { RequestPromiseOptions } from "request-promise-native";
 import { apiResources } from "../common/rbac";
 import logger from "./logger";

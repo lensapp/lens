@@ -107,7 +107,7 @@ export class PodDetailsList extends React.Component<Props> {
         onClick={prevDefault(() => showDetails(pod.selfLink, false))}
       >
         <TableCell className="name">{pod.getName()}</TableCell>
-        <TableCell className="warning"><KubeObjectStatusIcon object={pod}/></TableCell>
+        <TableCell className="warning"><KubeObjectStatusIcon key="icon" object={pod}/></TableCell>
         <TableCell className="namespace">{pod.getNs()}</TableCell>
         <TableCell className="cpu">{this.renderCpuUsage(`cpu-${pod.getId()}`, metrics.cpu)}</TableCell>
         <TableCell className="memory">{this.renderMemoryUsage(`memory-${pod.getId()}`, metrics.memory)}</TableCell>

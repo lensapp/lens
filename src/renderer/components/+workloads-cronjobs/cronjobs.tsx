@@ -62,7 +62,7 @@ export class CronJobs extends React.Component<Props> {
         ]}
         renderTableContents={(cronJob: CronJob) => [
           cronJob.getName(),
-          <KubeObjectStatusIcon object={cronJob} />,
+          <KubeObjectStatusIcon key="icon" object={cronJob} />,
           cronJob.getNs(),
           cronJob.isNeverRun() ? <Trans>never</Trans> : cronJob.getSchedule(),
           cronJob.getSuspendFlag(),

@@ -1,9 +1,9 @@
-import './icon.scss';
+import "./icon.scss";
 
 import React, { ReactNode } from "react";
 import { findDOMNode } from "react-dom";
 import { NavLink } from "react-router-dom";
-import { LocationDescriptor } from 'history';
+import { LocationDescriptor } from "history";
 import { autobind, cssNames } from "../../utils";
 import { TooltipDecoratorProps, withTooltip } from "../tooltip";
 import isNumber from "lodash/isNumber";
@@ -49,11 +49,13 @@ export class Icon extends React.PureComponent<IconProps> {
   onKeyDown(evt: React.KeyboardEvent<any>) {
     switch (evt.nativeEvent.code) {
       case "Space":
-      case "Enter":
+      case "Enter": {
+        // eslint-disable-next-line react/no-find-dom-node
         const icon = findDOMNode(this) as HTMLElement;
         setTimeout(() => icon.click());
         evt.preventDefault();
         break;
+      }
     }
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);

@@ -7,7 +7,7 @@ import logger from "../main/logger";
 import commandExists from "command-exists";
 import { ExecValidationNotFoundError } from "./custom-errors";
 
-export const kubeConfigDefaultPath = path.join(os.homedir(), '.kube', 'config');
+export const kubeConfigDefaultPath = path.join(os.homedir(), ".kube", "config");
 
 function resolveTilde(filePath: string) {
   if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
@@ -78,15 +78,15 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
     apiVersion: "v1",
     kind: "Config",
     preferences: {},
-    'current-context': kubeConfig.currentContext,
+    "current-context": kubeConfig.currentContext,
     clusters: kubeConfig.clusters.map(cluster => {
       return {
         name: cluster.name,
         cluster: {
-          'certificate-authority-data': cluster.caData,
-          'certificate-authority': cluster.caFile,
+          "certificate-authority-data": cluster.caData,
+          "certificate-authority": cluster.caFile,
           server: cluster.server,
-          'insecure-skip-tls-verify': cluster.skipTLSVerify
+          "insecure-skip-tls-verify": cluster.skipTLSVerify
         }
       };
     }),
@@ -104,11 +104,11 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
       return {
         name: user.name,
         user: {
-          'client-certificate-data': user.certData,
-          'client-certificate': user.certFile,
-          'client-key-data': user.keyData,
-          'client-key': user.keyFile,
-          'auth-provider': user.authProvider,
+          "client-certificate-data": user.certData,
+          "client-certificate": user.certFile,
+          "client-key-data": user.keyData,
+          "client-key": user.keyFile,
+          "auth-provider": user.authProvider,
           exec: user.exec,
           token: user.token,
           username: user.username,

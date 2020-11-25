@@ -84,7 +84,7 @@ export class HelmCharts extends Component<Props> {
 
           ]}
           renderTableContents={(chart: HelmChart) => [
-            <figure>
+            <figure key="image">
               <img
                 src={chart.getIcon() || require("./helm-placeholder.svg")}
                 onLoad={evt => evt.currentTarget.classList.add("visible")}

@@ -1,7 +1,7 @@
 // Extensions-api -> Register page menu items
 import type { IconProps } from "../../renderer/components/icon";
 import type React from "react";
-import { action, computed } from "mobx";
+import { action } from "mobx";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension } from "../lens-extension";
 import { RegisteredPage } from "./page-registry";

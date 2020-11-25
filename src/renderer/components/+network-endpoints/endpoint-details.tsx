@@ -7,7 +7,6 @@ import { DrawerTitle } from "../drawer";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { Endpoint } from "../../api/endpoints";
-import { _i18n } from "../../i18n";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { EndpointSubsetList } from "./endpoint-subset-list";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
@@ -25,11 +24,9 @@ export class EndpointDetails extends React.Component<Props> {
         <KubeObjectMeta object={endpoint}/>
         <DrawerTitle title={<Trans>Subsets</Trans>}/>
         {
-          endpoint.getEndpointSubsets().map((subset) => {
-            return(
-              <EndpointSubsetList subset={subset} endpoint={endpoint}/>
-            );
-          })
+          endpoint.getEndpointSubsets().map((subset) => (
+            <EndpointSubsetList key={subset.toString()} subset={subset} endpoint={endpoint} />
+          ))
         }
       </div>
     );

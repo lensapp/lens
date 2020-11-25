@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events';
+import { EventEmitter } from "events";
 import { getFreePort } from "./port";
 
 let newPort = 0;
@@ -8,7 +8,7 @@ jest.mock("net", () => {
     createServer() {
       return new class MockServer extends EventEmitter {
         listen = jest.fn(() => {
-          this.emit('listening');
+          this.emit("listening");
           return this;
         });
         address = () => {

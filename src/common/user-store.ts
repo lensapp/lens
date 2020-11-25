@@ -1,5 +1,5 @@
 import type { ThemeId } from "../renderer/theme.store";
-import { app, remote } from 'electron';
+import { app, remote } from "electron";
 import semver from "semver";
 import { readFile } from "fs-extra";
 import { action, observable, reaction, toJS } from "mobx";
@@ -9,7 +9,7 @@ import { getAppVersion } from "./utils/app-version";
 import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { appEventBus } from "./event-bus";
 import logger from "../main/logger";
-import path from 'path';
+import path from "path";
 
 export interface UserStoreModel {
   kubeConfigPath: string;

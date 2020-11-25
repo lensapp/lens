@@ -106,8 +106,9 @@ export class Dock extends React.Component<Props> {
             autoFocus={isOpen}
             className="dock-tabs"
             value={selectedTab} onChange={this.onChangeTab}
-            children={tabs.map(tab => <Fragment key={tab.id}>{this.renderTab(tab)}</Fragment>)}
-          />
+          >
+            {tabs.map(tab => <Fragment key={tab.id}>{this.renderTab(tab)}</Fragment>)}
+          </Tabs>
           <div className="toolbar flex gaps align-center box grow">
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: <Trans>New tab</Trans> }} closeOnScroll={false}>

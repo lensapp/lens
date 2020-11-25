@@ -1,6 +1,5 @@
 import "../common/system-ca";
 import React from "react";
-import { ipcRenderer } from "electron";
 import { Route, Router, Switch } from "react-router";
 import { observer } from "mobx-react";
 import { userStore } from "../common/user-store";

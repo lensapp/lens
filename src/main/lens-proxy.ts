@@ -88,23 +88,23 @@ export class LensProxy {
       proxySocket.setTimeout(0);
       socket.setTimeout(0);
 
-      proxySocket.on('data', function (chunk) {
+      proxySocket.on("data", function (chunk) {
         socket.write(chunk);
       });
-      proxySocket.on('end', function () {
+      proxySocket.on("end", function () {
         socket.end();
       });
-      proxySocket.on('error', function (err) {
+      proxySocket.on("error", function () {
         socket.write("HTTP/" + req.httpVersion + " 500 Connection error\r\n\r\n");
         socket.end();
       });
-      socket.on('data', function (chunk) {
+      socket.on("data", function (chunk) {
         proxySocket.write(chunk);
       });
-      socket.on('end', function () {
+      socket.on("end", function () {
         proxySocket.end();
       });
-      socket.on('error', function () {
+      socket.on("error", function () {
         proxySocket.end();
       });
     }

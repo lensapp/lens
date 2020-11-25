@@ -1,7 +1,7 @@
 // Fix embedded kubeconfig paths under snap config
 
 import { migration } from "../migration-wrapper";
-import { ClusterModel, ClusterStore } from "../../common/cluster-store";
+import { ClusterModel } from "../../common/cluster-store";
 import { getAppVersion } from "../../common/utils/app-version";
 import fs from "fs";
 

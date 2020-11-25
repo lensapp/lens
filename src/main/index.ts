@@ -77,6 +77,7 @@ app.on("ready", async () => {
 
   // run proxy
   try {
+    // eslint-disable-next-line unused-imports/no-unused-vars-ts
     proxyServer = LensProxy.create(proxyPort, clusterManager);
   } catch (error) {
     logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error.message}`);
@@ -108,7 +109,7 @@ app.on("ready", async () => {
 });
 
 app.on("activate", (event, hasVisibleWindows) => {
-  logger.info('APP:ACTIVATE', { hasVisibleWindows });
+  logger.info("APP:ACTIVATE", { hasVisibleWindows });
   if (!hasVisibleWindows) {
     windowManager.initMainWindow();
   }
@@ -116,7 +117,7 @@ app.on("activate", (event, hasVisibleWindows) => {
 
 // Quit app on Cmd+Q (MacOS)
 app.on("will-quit", (event) => {
-  logger.info('APP:QUIT');
+  logger.info("APP:QUIT");
   appEventBus.emit({name: "app", action: "close"});
   event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
   clusterManager?.stop(); // close cluster connections

@@ -3,13 +3,9 @@ import "./pod-disruption-budgets.scss";
 import * as React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
-import { RouteComponentProps } from "react-router";
 import { podDisruptionBudgetsStore } from "./pod-disruption-budgets.store";
-import { PodDisruptionBudget, pdbApi } from "../../api/endpoints/poddisruptionbudget.api";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { PodDisruptionBudget } from "../../api/endpoints/poddisruptionbudget.api";
 import { KubeObjectDetailsProps, KubeObjectListLayout } from "../kube-object";
-import { IPodDisruptionBudgetsRouteParams } from "./pod-disruption-budgets.route";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
@@ -58,7 +54,7 @@ export class PodDisruptionBudgets extends React.Component<Props> {
         renderTableContents={(pdb: PodDisruptionBudget) => {
           return [
             pdb.getName(),
-            <KubeObjectStatusIcon object={pdb} />,
+            <KubeObjectStatusIcon key="icon" object={pdb} />,
             pdb.getNs(),
             pdb.getMinAvailable(),
             pdb.getMaxUnavailable(),

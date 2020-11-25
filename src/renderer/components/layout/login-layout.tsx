@@ -16,7 +16,7 @@ export class LoginLayout extends React.Component<Props> {
   render() {
     const { className, header, title, footer, children } = this.props;
     return (
-      <section className={cssNames('LoginLayout flex', className)}>
+      <section className={cssNames("LoginLayout flex", className)}>
         <div className="header">{header}</div>
         <div className="box main">
           <div className="title">

@@ -49,6 +49,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   };
 
   get elem() {
+    // eslint-disable-next-line react/no-find-dom-node
     return findDOMNode(this) as HTMLElement;
   }
 
@@ -91,17 +92,17 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   onOpen = () => {
     this.props.onOpen();
     if (!this.props.pinned) {
-      if (this.elem) this.elem.addEventListener('click', this.onClickOutside);
+      if (this.elem) this.elem.addEventListener("click", this.onClickOutside);
       // Using document.body target to handle keydown event before Drawer does
-      document.body.addEventListener('keydown', this.onEscapeKey);
+      document.body.addEventListener("keydown", this.onEscapeKey);
     }
   };
 
   onClose = () => {
     this.props.onClose();
     if (!this.props.pinned) {
-      if (this.elem) this.elem.removeEventListener('click', this.onClickOutside);
-      document.body.removeEventListener('keydown', this.onEscapeKey);
+      if (this.elem) this.elem.removeEventListener("click", this.onClickOutside);
+      document.body.removeEventListener("keydown", this.onEscapeKey);
     }
   };
 

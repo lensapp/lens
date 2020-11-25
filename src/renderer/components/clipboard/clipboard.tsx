@@ -25,6 +25,7 @@ export class Clipboard extends React.Component<CopyToClipboardProps> {
   static defaultProps = defaultProps as object;
 
   get rootElem(): HTMLElement {
+    // eslint-disable-next-line react/no-find-dom-node
     return findDOMNode(this) as HTMLElement;
   }
 

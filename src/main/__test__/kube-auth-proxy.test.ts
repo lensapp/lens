@@ -31,10 +31,10 @@ import { Cluster } from "../cluster";
 import { KubeAuthProxy } from "../kube-auth-proxy";
 import { getFreePort } from "../port";
 import { broadcastMessage } from "../../common/ipc";
-import { ChildProcess, spawn, SpawnOptions } from "child_process";
+import { ChildProcess, spawn } from "child_process";
 import { bundledKubectlPath, Kubectl } from "../kubectl";
-import { mock, MockProxy } from 'jest-mock-extended';
-import { waitUntilUsed } from 'tcp-port-used';
+import { mock, MockProxy } from "jest-mock-extended";
+import { waitUntilUsed } from "tcp-port-used";
 import { Readable } from "stream";
 
 const mockBroadcastIpc = broadcastMessage as jest.MockedFunction<typeof broadcastMessage>;
@@ -81,7 +81,7 @@ describe("kube auth proxy tests", () => {
         listeners[`stdout/${event}`] = listener;
         return mockedCP.stdout;
       });
-      mockSpawn.mockImplementationOnce((command: string, args: readonly string[], options: SpawnOptions): ChildProcess => {
+      mockSpawn.mockImplementationOnce((command: string): ChildProcess => {
         expect(command).toBe(bundledKubectlPath());
         return mockedCP;
       });

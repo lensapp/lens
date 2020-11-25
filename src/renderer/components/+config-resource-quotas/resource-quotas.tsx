@@ -4,13 +4,11 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
-import { ResourceQuota, resourceQuotaApi } from "../../api/endpoints/resource-quota.api";
+import { ResourceQuota } from "../../api/endpoints/resource-quota.api";
 import { AddQuotaDialog } from "./add-quota-dialog";
 import { resourceQuotaStore } from "./resource-quotas.store";
 import { IResourceQuotaRouteParams } from "./resource-quotas.route";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
@@ -47,7 +45,7 @@ export class ResourceQuotas extends React.Component<Props> {
           ]}
           renderTableContents={(resourceQuota: ResourceQuota) => [
             resourceQuota.getName(),
-            <KubeObjectStatusIcon object={resourceQuota}/>,
+            <KubeObjectStatusIcon key="icon" object={resourceQuota}/>,
             resourceQuota.getNs(),
             resourceQuota.getAge(),
           ]}

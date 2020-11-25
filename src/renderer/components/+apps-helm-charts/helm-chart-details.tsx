@@ -93,11 +93,11 @@ export class HelmChartDetails extends Component<Props> {
             />
           </DrawerItem>
           <DrawerItem name={_i18n._(t`Home`)}>
-            <a href={selectedChart.getHome()} target="_blank">{selectedChart.getHome()}</a>
+            <a href={selectedChart.getHome()} target="_blank" rel="noreferrer">{selectedChart.getHome()}</a>
           </DrawerItem>
           <DrawerItem name={_i18n._(t`Maintainers`)} className="maintainers">
             {selectedChart.getMaintainers().map(({ name, email, url }) =>
-              <a key={name} href={url || `mailto:${email}`} target="_blank">{name}</a>
+              <a key={name} href={url || `mailto:${email}`} target="_blank" rel="noreferrer">{name}</a>
             )}
           </DrawerItem>
           {selectedChart.getKeywords().length > 0 && (

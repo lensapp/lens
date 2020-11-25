@@ -160,7 +160,7 @@ export class ExtensionDiscovery {
     if (path.relative(this.localFolderPath, filePath) === extensionFolderName) {
       const extensionName: string | undefined = Object
         .entries(this.packagesJson.dependencies)
-        .find(([_name, extensionFolder]) => filePath === extensionFolder)?.[0];
+        .find(([, extensionFolder]) => filePath === extensionFolder)?.[0];
 
       if (extensionName !== undefined) {
         delete this.packagesJson.dependencies[extensionName];
@@ -242,7 +242,6 @@ export class ExtensionDiscovery {
     isBundled?: boolean;
   } = {}): Promise<InstalledExtension | null> {
     let manifestJson: LensExtensionManifest;
-    let isEnabled: boolean;
 
     try {
       // check manifest file for existence

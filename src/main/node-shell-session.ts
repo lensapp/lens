@@ -24,7 +24,7 @@ export class NodeShellSession extends ShellSession {
     const shell = await this.kubectl.getPath();
     let args = [];
     if (this.createNodeShellPod(this.podId, this.nodeName)) {
-      await this.waitForRunningPod(this.podId).catch((error) => {
+      await this.waitForRunningPod(this.podId).catch(() => {
         this.exit(1001);
       });
     }
@@ -108,7 +108,7 @@ export class NodeShellSession extends ShellSession {
 
       const req = await watch.watch(`/api/v1/namespaces/kube-system/pods`, {},
         // callback is called for each received object.
-        (_type, obj) => {
+        (type, obj) => {
           if (obj.metadata.name == podId && obj.status.phase === "Running") {
             resolve(true);
           }

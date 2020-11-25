@@ -90,19 +90,16 @@ export class CrdList extends React.Component {
           { title: <Trans>Scope</Trans>, className: "scope", sortBy: sortBy.scope },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
-        renderTableContents={(crd: CustomResourceDefinition) => {
-          return [
-            <Link to={crd.getResourceUrl()} onClick={stopPropagation}>
-              {crd.getResourceTitle()}
-            </Link>,
-            crd.getGroup(),
-            crd.getVersion(),
-            crd.getScope(),
-            crd.getAge(),
-          ];
-        }}
+        renderTableContents={(crd: CustomResourceDefinition) => [
+          <Link key="link" to={crd.getResourceUrl()} onClick={stopPropagation}>
+            {crd.getResourceTitle()}
+          </Link>,
+          crd.getGroup(),
+          crd.getVersion(),
+          crd.getScope(),
+          crd.getAge(),
+        ]}
       />
     );
   }
 }
-

@@ -12,7 +12,6 @@ import { DropFileInput, Input } from "../input";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
-import { WizardLayout } from "../layout/wizard-layout";
 import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
 import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
@@ -67,7 +66,7 @@ export class AddCluster extends React.Component {
       userStore.kubeConfigPath = filePath; // save to store
     } catch (err) {
       Notifications.error(
-        <div>Can't setup <code>{filePath}</code> as kubeconfig: {String(err)}</div>
+        <div>Can&apos;t setup <code>{filePath}</code> as kubeconfig: {String(err)}</div>
       );
       if (throwError) {
         throw err;
@@ -197,9 +196,9 @@ export class AddCluster extends React.Component {
     return (
       <p>
         Add clusters by clicking the <span className="text-primary">Add Cluster</span> button.
-        You'll need to obtain a working kubeconfig for the cluster you want to add.
+        You&apos;ll need to obtain a working kubeconfig for the cluster you want to add.
         You can either browse it from the file system or paste it as a text from the clipboard.
-        Read more about adding clusters <a href={`${docsUrl}/latest/clusters/adding-clusters/`} target="_blank">here</a>.
+        Read more about adding clusters <a href={`${docsUrl}/latest/clusters/adding-clusters/`} rel="noreferrer" target="_blank">here</a>.
       </p>
     );
   }
@@ -301,7 +300,7 @@ export class AddCluster extends React.Component {
     );
   }
 
-  onKubeConfigInputBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
+  onKubeConfigInputBlur = () => {
     const isChanged = this.kubeConfigPath !== userStore.kubeConfigPath;
     if (isChanged) {
       this.kubeConfigPath = this.kubeConfigPath.replace("~", os.homedir());
@@ -357,7 +356,7 @@ export class AddCluster extends React.Component {
                 theme="round-black"
               />
               <small className="hint">
-                {'A HTTP proxy server URL (format: http://<address>:<port>).'}
+                {"A HTTP proxy server URL (format: http://<address>:<port>)."}
               </small>
             </div>
           )}

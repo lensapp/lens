@@ -65,7 +65,7 @@ export class Radio extends React.Component<RadioProps> {
 
   render() {
     const { className, label, checked, children, ...inputProps } = this.props;
-    const componentClass = cssNames('Radio flex align-center', className, {
+    const componentClass = cssNames("Radio flex align-center", className, {
       checked,
       disabled: this.props.disabled,
     });

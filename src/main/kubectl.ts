@@ -123,6 +123,10 @@ export class Kubectl {
   }
 
   public async getPath(bundled = false): Promise<string> {
+    if (bundled) {
+      return this.getBundledPath();
+    }
+
     if (userStore.preferences?.downloadKubectlBinaries === false) {
       return this.getPathFromPreferences();
     }
@@ -167,7 +171,7 @@ export class Kubectl {
           return true;
         }
         let version: string = output.clientVersion.gitVersion;
-        if (version[0] === 'v') {
+        if (version[0] === "v") {
           version = version.slice(1);
         }
         if (version === this.kubectlVersion) {
@@ -274,7 +278,7 @@ export class Kubectl {
     const kubectlPath = userStore.preferences?.downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences());
     const helmPath = helmCli.getBinaryDir();
     const fsPromises = fs.promises;
-    const bashScriptPath = path.join(this.dirname, '.bash_set_path');
+    const bashScriptPath = path.join(this.dirname, ".bash_set_path");
 
     let bashScript = "" + initScriptVersionString;
     bashScript += "tempkubeconfig=\"$KUBECONFIG\"\n";
@@ -297,7 +301,7 @@ export class Kubectl {
     bashScript += "unset tempkubeconfig\n";
     await fsPromises.writeFile(bashScriptPath, bashScript.toString(), { mode: 0o644 });
 
-    const zshScriptPath = path.join(this.dirname, '.zlogin');
+    const zshScriptPath = path.join(this.dirname, ".zlogin");
 
     let zshScript = "" + initScriptVersionString;
 

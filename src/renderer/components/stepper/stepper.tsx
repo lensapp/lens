@@ -18,7 +18,7 @@ export class Stepper extends React.Component<StepperProps, {}> {
     let { step } = this.props;
     step = Math.min(Math.max(1, step), stepsCount);
     return (
-      <div {...props} className={cssNames('Stepper flex auto', className)}>
+      <div {...props} className={cssNames("Stepper flex auto", className)}>
         {steps.map(({ title }, i) => {
           const stepNumber = i + 1;
           const isLast = i === stepsCount - 1;
