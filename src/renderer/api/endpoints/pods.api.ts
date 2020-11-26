@@ -111,6 +111,7 @@ export interface IPodContainer {
   }[];
   livenessProbe?: IContainerProbe;
   readinessProbe?: IContainerProbe;
+  startupProbe?: IContainerProbe;
   imagePullPolicy: string;
 }
 
@@ -382,6 +383,10 @@ export class Pod extends WorkloadKubeObject {
 
   getReadinessProbe(container: IPodContainer) {
     return this.getProbe(container.readinessProbe);
+  }
+
+  getStartupProbe(container: IPodContainer) {
+    return this.getProbe(container.startupProbe);
   }
 
   getProbe(probeData: IContainerProbe) {
