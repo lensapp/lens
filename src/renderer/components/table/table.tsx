@@ -20,7 +20,7 @@ export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy };
 export type TableSortCallback<D = any> = (data: D) => string | number | (string | number)[];
 
 export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
-  items?: ItemObject[];  // Raw items data
+  items?: any[];  // Raw items data
   className?: string;
   autoSize?: boolean;   // Setup auto-sizing for all columns (flex: 1 0)
   selectable?: boolean; // Highlight rows on hover
@@ -40,7 +40,7 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
   rowPadding?: string;
   rowLineHeight?: string;
   customRowHeights?: (item: object, lineHeight: number, paddings: number) => number;
-  getTableRow?: (uid: string) => React.ReactElement<TableRowProps>;
+  getTableRow?: (uid: string | number) => React.ReactElement<TableRowProps>;
 }
 
 @observer
