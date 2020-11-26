@@ -182,10 +182,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     }
 
     move.mutate(clusters, from, to);
-    for (const i in clusters) {
-      // This resets the iconOrder to the current display order
-      clusters[i].preferences.iconOrder = +i;
-    }
+    clusters.map((cluster, index) => {
+      cluster.preferences ??= {};
+      cluster.preferences.iconOrder = index;
+    });
   }
 
   hasClusters() {
@@ -336,8 +336,11 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 export const clusterStore = ClusterStore.getInstance<ClusterStore>();
 
 export function getRendererInfoByWorkspace(workspaceId: string): ClusterRenderInfo[] {
-  const aliveClusters: ClusterRenderInfo[] = clusterStore.clustersList.filter(c => c.workspace === workspaceId);
-  const deadClusters: ClusterRenderInfo[] = clusterStore.deadClustersList
+  const aliveClusters: ClusterRenderInfo[] = ClusterStore.getInstance<ClusterStore>()
+    .clustersList
+    .filter(c => c.workspace === workspaceId);
+  const deadClusters: ClusterRenderInfo[] = ClusterStore.getInstance<ClusterStore>()
+    .deadClustersList
     .filter(([c]) => c.workspace === workspaceId)
     .map(([cluster, error]) => ({
       DeadError: error,
@@ -350,8 +353,11 @@ export function getRendererInfoByWorkspace(workspaceId: string): ClusterRenderIn
 }
 
 export function getClusterModelByWorkspace(workspaceId: string): ClusterModel[] {
-  const aliveClusters: ClusterModel[] = clusterStore.clustersList.filter(c => c.workspace === workspaceId);
-  const deadClusters: ClusterModel[] = clusterStore.deadClustersList
+  const aliveClusters: ClusterModel[] = ClusterStore.getInstance<ClusterStore>()
+    .clustersList
+    .filter(c => c.workspace === workspaceId);
+  const deadClusters: ClusterModel[] = ClusterStore.getInstance<ClusterStore>()
+    .deadClustersList
     .filter(([c]) => c.workspace === workspaceId)
     .map(([cluster]) => cluster);
 
@@ -372,5 +378,5 @@ export function getHostedClusterId() {
 }
 
 export function getHostedCluster(): Cluster {
-  return clusterStore.getById(getHostedClusterId());
+  return ClusterStore.getInstance<ClusterStore>().getById(getHostedClusterId());
 }
