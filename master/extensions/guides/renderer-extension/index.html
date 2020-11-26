@@ -1227,42 +1227,100 @@
 <span class="p">}</span>
 </code></pre></div>
 <p><code>HelpIcon</code> introduces one of Lens' built-in components available to extension developers, the <code>Component.Icon</code>. Built in are the <a href="https://material.io">Material Design</a> <a href="https://material.io/resources/icons/">icons</a>. One can be selected by name via the <code>material</code> field. </p>
-<hr />
-<p>WIP below!</p>
-<hr />
 <h3 id="clusterfeatures"><code>clusterFeatures</code><a class="headerlink" href="#clusterfeatures" title="Permanent link">#</a></h3>
-<p>Cluster features are Kubernetes resources that can applied and managed to the active cluster. They can be installed/uninstalled from the <a href="">cluster settings page</a>. 
-The following example shows how to add a cluster feature:</p>
+<p>Cluster features are Kubernetes resources that can be applied to and managed within the active cluster. They can be installed/uninstalled by the Lens user from the <a href="">cluster settings page</a>. 
+The following example shows how to add a cluster feature as part of a <code>LensRendererExtension</code>:</p>
 <p><div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">MetricsFeature</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/metrics-feature&quot;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">ExampleFeature</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/example-feature&quot;</span>
 <span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
 
-<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ClusterMetricsFeatureExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
+<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleFeatureExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">clusterFeatures</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Metrics Stack&quot;</span><span class="p">,</span>
+      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Example Feature&quot;</span><span class="p">,</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">Description</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
           <span class="k">return</span> <span class="p">(</span>
             <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span>
-                <span class="nx">Enable</span> <span class="nx">timeseries</span> <span class="nx">data</span> <span class="nx">visualization</span> <span class="p">(</span><span class="nx">Prometheus</span> <span class="nx">stack</span><span class="p">)</span> <span class="k">for</span> <span class="nx">your</span> <span class="nx">cluster</span><span class="p">.</span>
-                <span class="nx">Install</span> <span class="k">this</span> <span class="nx">only</span> <span class="k">if</span> <span class="nx">you</span> <span class="nx">don</span><span class="err">&#39;</span><span class="nx">t</span> <span class="nx">have</span> <span class="nx">existing</span> <span class="nx">Prometheus</span> <span class="nx">stack</span> <span class="nx">installed</span><span class="p">.</span>
-                <span class="nx">You</span> <span class="nx">can</span> <span class="nx">see</span> <span class="nx">preview</span> <span class="k">of</span> <span class="nx">manifests</span> <span class="o">&lt;</span><span class="nx">a</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;https://github.com/lensapp/lens/tree/master/extensions/lens-metrics/resources&quot;</span> <span class="nx">target</span><span class="o">=</span><span class="s2">&quot;_blank&quot;</span><span class="o">&gt;</span><span class="nx">here</span><span class="o">&lt;</span><span class="err">/a&gt;.</span>
-              <span class="o">&lt;</span><span class="err">/span&gt;</span>
+                <span class="nx">Enable</span> <span class="nx">an</span> <span class="nx">example</span> <span class="nx">feature</span><span class="p">.</span>
+            <span class="o">&lt;</span><span class="err">/span&gt;</span>
           <span class="p">)</span>
         <span class="p">}</span>
       <span class="p">},</span>
-      <span class="nx">feature</span>: <span class="kt">new</span> <span class="nx">MetricsFeature</span><span class="p">()</span>
+      <span class="nx">feature</span>: <span class="kt">new</span> <span class="nx">ExampleFeature</span><span class="p">()</span>
     <span class="p">}</span>
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
-The <code>title</code> and <code>components.Description</code> fields appear on the cluster settings page. The cluster feature must extend the abstract class <code>ClusterFeature.Feature</code>, and specifically implement the following methods:</p>
+The <code>title</code> and <code>components.Description</code> fields provide content that appears on the cluster settings page, in the <strong>Features</strong> section. The <code>feature</code> field must specify an instance which extends the abstract class <code>ClusterFeature.Feature</code>, and specifically implement the following methods:</p>
 <div class="highlight"><pre><span></span><code>  <span class="kr">abstract</span> <span class="nx">install</span><span class="p">(</span><span class="nx">cluster</span>: <span class="kt">Cluster</span><span class="p">)</span><span class="o">:</span> <span class="nx">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
   <span class="kr">abstract</span> <span class="nx">upgrade</span><span class="p">(</span><span class="nx">cluster</span>: <span class="kt">Cluster</span><span class="p">)</span><span class="o">:</span> <span class="nx">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
   <span class="kr">abstract</span> <span class="nx">uninstall</span><span class="p">(</span><span class="nx">cluster</span>: <span class="kt">Cluster</span><span class="p">)</span><span class="o">:</span> <span class="nx">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span><span class="p">;</span>
   <span class="kr">abstract</span> <span class="nx">updateStatus</span><span class="p">(</span><span class="nx">cluster</span>: <span class="kt">Cluster</span><span class="p">)</span><span class="o">:</span> <span class="nx">Promise</span><span class="o">&lt;</span><span class="nx">ClusterFeatureStatus</span><span class="o">&gt;</span><span class="p">;</span>
 </code></pre></div>
+<p>The <code>install()</code> method is typically called by Lens when a user has indicated that this feature is to be installed (i.e. clicked <strong>Install</strong> for the feature on the cluster settings page). The implementation of this method should install kubernetes resources using the <code>applyResources()</code> method, or by directly accessing the kubernetes api (<a href="tbd"><code>K8sApi</code></a>).</p>
+<p>The <code>upgrade()</code> method is typically called by Lens when a user has indicated that this feature is to be upgraded (i.e. clicked <strong>Upgrade</strong> for the feature on the cluster settings page). The implementation of this method should upgrade the kubernetes resources already installed, if relevant to the feature.</p>
+<p>The <code>uninstall()</code> method is typically called by Lens when a user has indicated that this feature is to be uninstalled (i.e. clicked <strong>Uninstall</strong> for the feature on the cluster settings page). The implementation of this method should uninstall kubernetes resources using the kubernetes api (<code>K8sApi</code>)</p>
+<p>The <code>updateStatus()</code> method is called periodically by Lens to determine details about the feature's current status. The implementation of this method should provide the current status information in the <code>status</code> field of the <code>ClusterFeature.Feature</code> parent class. The <code>status.currentVersion</code> and <code>status.latestVersion</code> fields may be displayed by Lens in describing the feature. The <code>status.installed</code> field should be set to true if the feature is currently installed, otherwise false. Also, Lens relies on the <code>status.canUpgrade</code> field to determine if the feature can be upgraded (i.e a new version could be available) so the implementation should set the <code>status.canUpgrade</code> field according to specific rules for the feature, if relevant.</p>
+<p>The following shows a very simple implementation of a <code>ClusterFeature</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">ClusterFeature</span><span class="p">,</span> <span class="nx">Store</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="o">*</span> <span class="kr">as</span> <span class="nx">path</span> <span class="nx">from</span> <span class="s2">&quot;path&quot;</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ExampleFeature</span> <span class="kr">extends</span> <span class="nx">ClusterFeature</span><span class="p">.</span><span class="nx">Feature</span> <span class="p">{</span>
+
+  <span class="nx">async</span> <span class="nx">install</span><span class="p">(</span><span class="nx">cluster</span>: <span class="kt">Store.Cluster</span><span class="p">)</span><span class="o">:</span> <span class="nx">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+
+    <span class="kr">super</span><span class="p">.</span><span class="nx">applyResources</span><span class="p">(</span><span class="nx">cluster</span><span class="p">,</span> <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s2">&quot;../resources/&quot;</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="nx">async</span> <span class="nx">upgrade</span><span class="p">(</span><span class="nx">cluster</span>: <span class="kt">Store.Cluster</span><span class="p">)</span><span class="o">:</span> <span class="nx">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">install</span><span class="p">(</span><span class="nx">cluster</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nx">async</span> <span class="nx">updateStatus</span><span class="p">(</span><span class="nx">cluster</span>: <span class="kt">Store.Cluster</span><span class="p">)</span><span class="o">:</span> <span class="nx">Promise</span><span class="o">&lt;</span><span class="nx">ClusterFeature</span><span class="p">.</span><span class="nx">FeatureStatus</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="kr">const</span> <span class="nx">pod</span> <span class="o">=</span> <span class="nx">K8sApi</span><span class="p">.</span><span class="nx">forCluster</span><span class="p">(</span><span class="nx">cluster</span><span class="p">,</span> <span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Pod</span><span class="p">);</span>
+      <span class="kr">const</span> <span class="nx">examplePod</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">pod</span><span class="p">.</span><span class="nx">get</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;example-pod&quot;</span><span class="p">,</span> <span class="nx">namespace</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">});</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">examplePod</span><span class="o">?</span><span class="p">.</span><span class="nx">kind</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">installed</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">currentVersion</span> <span class="o">=</span> <span class="nx">examplePod</span><span class="p">.</span><span class="nx">spec</span><span class="p">.</span><span class="nx">containers</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">image</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">canUpgrade</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>  <span class="c1">// a real implementation would perform a check here that is relevant to the specific feature </span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">installed</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">canUpgrade</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="o">?</span><span class="p">.</span><span class="nx">error</span><span class="o">?</span><span class="p">.</span><span class="nx">code</span> <span class="o">===</span> <span class="mi">404</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">installed</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">canUpgrade</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">status</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">async</span> <span class="nx">uninstall</span><span class="p">(</span><span class="nx">cluster</span>: <span class="kt">Store.Cluster</span><span class="p">)</span><span class="o">:</span> <span class="nx">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">podApi</span> <span class="o">=</span> <span class="nx">K8sApi</span><span class="p">.</span><span class="nx">forCluster</span><span class="p">(</span><span class="nx">cluster</span><span class="p">,</span> <span class="nx">K8sApi</span><span class="p">.</span><span class="nx">Pod</span><span class="p">);</span>
+    <span class="nx">await</span> <span class="nx">podApi</span><span class="p">.</span><span class="k">delete</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span> <span class="s2">&quot;example-pod&quot;</span><span class="p">,</span> <span class="nx">namespace</span><span class="o">:</span> <span class="s2">&quot;default&quot;</span><span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This example implements the <code>install()</code> method by simply invoking the helper <code>applyResources()</code> method. <code>applyResources()</code> tries to apply all resources read from all files found in the folder path provided. In this case this folder path is the <code>../resources</code> subfolder relative to current source code's folder. The file <code>../resources/example-pod.yml</code> could contain:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pod</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">example-pod</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">containers</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">example-pod</span>
+    <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nginx</span>
+</code></pre></div>
+<p>The <code>upgrade()</code> method in the example above is implemented by simply invoking the <code>install()</code> method. Depending on the feature to be supported by an extension, upgrading may require additional and/or different steps.</p>
+<p>The <code>uninstall()</code> method is implemented in the example above by utilizing the <a href="tbd"><code>K8sApi</code></a> provided by Lens to simply delete the <code>example-pod</code> pod applied by the <code>install()</code> method.</p>
+<p>The <code>updateStatus()</code> method is implemented above by using the <a href="tbd"><code>K8sApi</code></a> as well, this time to get information from the <code>example-pod</code> pod, in particular to determine if it is installed, what version is associated with it, and if it can be upgraded. How the status is updated for a specific cluster feature is up to the implementation. </p>
+<hr />
+<p>WIP below!</p>
+<hr />
 <h3 id="apppreferences"><code>appPreferences</code><a class="headerlink" href="#apppreferences" title="Permanent link">#</a></h3>
 <p>The Preferences page is essentially a global page. Extensions can add custom preferences to the Preferences page, thus providing a single location for users to configure global, for Lens and extensions alike.</p>
 <div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
