@@ -1,8 +1,8 @@
 import { ipcMain } from "electron";
-import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences } from "../common/cluster-store";
+import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../common/cluster-store";
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
-import { action, computed, observable, reaction, toJS, when } from "mobx";
+import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { broadcastMessage } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
@@ -27,7 +27,8 @@ export enum ClusterMetadataKey {
   CLUSTER_ID = "id",
   DISTRIBUTION = "distribution",
   NODES_COUNT = "nodes",
-  LAST_SEEN = "lastSeen"
+  LAST_SEEN = "lastSeen",
+  PROMETHEUS = "prometheus"
 }
 
 export type ClusterRefreshOptions = {
@@ -87,6 +88,13 @@ export class Cluster implements ClusterModel, ClusterState {
     return this.preferences.clusterName || this.contextName;
   }
 
+  @computed get prometheusPreferences(): ClusterPrometheusPreferences {
+    const { prometheus, prometheusProvider } = this.preferences;
+    return toJS({ prometheus, prometheusProvider }, {
+      recurseEverything: true,
+    });
+  }
+
   get version(): string {
     return String(this.metadata?.version) || "";
   }
@@ -136,6 +144,7 @@ export class Cluster implements ClusterModel, ClusterState {
     if (ipcMain) {
       this.eventDisposers.push(
         reaction(() => this.getState(), () => this.pushState()),
+        reaction(() => this.prometheusPreferences, (prefs) => this.contextHandler.setupPrometheus(prefs), { equals: comparer.structural, }),
         () => {
           clearInterval(refreshTimer);
           clearInterval(refreshMetadataTimer);
