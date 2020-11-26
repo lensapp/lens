@@ -16,21 +16,18 @@ export interface LensExtensionManifest {
 }
 
 export class LensExtension {
+  readonly id: LensExtensionId;
   readonly manifest: LensExtensionManifest;
   readonly manifestPath: string;
   readonly isBundled: boolean;
 
   @observable private isEnabled = false;
 
-  constructor({ manifest, manifestPath, isBundled }: InstalledExtension) {
+  constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
+    this.id = id;
     this.manifest = manifest;
     this.manifestPath = manifestPath;
     this.isBundled = !!isBundled;
-  }
-
-  get id(): LensExtensionId {
-    // This is the symlinked path under node_modules
-    return this.manifestPath;
   }
 
   get name() {

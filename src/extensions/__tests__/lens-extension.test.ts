@@ -9,6 +9,7 @@ describe("lens extension", () => {
         name: "foo-bar",
         version: "0.1.1"
       },
+      id: "/this/is/fake/package.json",
       absolutePath: "/absolute/fake/",
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,

@@ -1,8 +1,9 @@
 import { t, Trans } from "@lingui/macro";
 import { remote, shell } from "electron";
 import fse from "fs-extra";
-import { computed, observable } from "mobx";
-import { observer } from "mobx-react";
+import { map, omit } from "lodash";
+import { computed, observable, ObservableMap, reaction } from "mobx";
+import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
 import React from "react";
@@ -38,6 +39,12 @@ interface InstallRequestValidated extends InstallRequestPreloaded {
   tempFile: string; // temp system path to packed extension for unpacking
 }
 
+interface ExtensionState {
+  displayName: string;
+  // Possible states the extension can be
+  state: "uninstalling";
+}
+
 @observer
 export class Extensions extends React.Component {
   private supportedFormats = [".tar", ".tgz"];
@@ -49,8 +56,38 @@ export class Extensions extends React.Component {
     }
   };
 
+  @observable
+  extensionState = observable.map<string, ExtensionState>();
+
   @observable search = "";
   @observable installPath = "";
+
+  /**
+   * Extensions that were removed from extensions but are still in "uninstalling" state
+   */
+  @computed get removedUninstalling() {
+    return Array.from(this.extensionState.entries()).filter(([id, extension]) => 
+      extension.state === "uninstalling" && !this.extensions.find(extension => extension.id === id)
+    ).map(([id, extension]) => ({ ...extension, id }));
+  }
+  
+  componentDidMount() {
+    disposeOnUnmount(this,
+      reaction(() => this.extensions, (extensions) => {
+        const removedUninstalling = this.removedUninstalling;
+
+        removedUninstalling.forEach(({ displayName }) => {
+          Notifications.ok(
+            <p>Extension <b>{displayName}</b> successfully uninstalled!</p>
+          );
+        });
+
+        removedUninstalling.forEach(({ id }) => {
+          this.extensionState.delete(id);
+        });
+      })
+    );
+  }
 
   @computed get extensions() {
     const searchText = this.search.toLowerCase();
@@ -58,8 +95,8 @@ export class Extensions extends React.Component {
       const { name, description } = ext.manifest;
       return [
         name.toLowerCase().includes(searchText),
-        description.toLowerCase().includes(searchText),
-      ].some(v => v);
+        description?.toLowerCase().includes(searchText),
+      ].some(value => value);
     });
   }
 
@@ -278,14 +315,21 @@ export class Extensions extends React.Component {
   }
 
   async uninstallExtension(extension: InstalledExtension) {
-    const extensionName = extensionDisplayName(extension.manifest.name, extension.manifest.version);
+    const displayName = extensionDisplayName(extension.manifest.name, extension.manifest.version);
 
     try {
+      this.extensionState.set(extension.id, {
+        state: "uninstalling",
+        displayName
+      });
+
       await extensionDiscovery.uninstallExtension(extension.absolutePath);
     } catch (error) {
       Notifications.error(
-        <p>Uninstalling extension <b>{extensionName}</b> has failed: <em>{error?.message ?? ""}</em></p>
+        <p>Uninstalling extension <b>{displayName}</b> has failed: <em>{error?.message ?? ""}</em></p>
       );
+      // Remove uninstall state on uninstall failure
+      this.extensionState.delete(extension.id);
     }
   }
 
@@ -305,11 +349,12 @@ export class Extensions extends React.Component {
     }
 
     return extensions.map(ext => {
-      const { manifestPath: extId, isEnabled, manifest } = ext;
+      const { id, isEnabled, manifest } = ext;
       const { name, description } = manifest;
+      const isUninstalling = this.extensionState.get(id)?.state === "uninstalling";
 
       return (
-        <div key={extId} className="extension flex gaps align-center">
+        <div key={id} className="extension flex gaps align-center">
           <div className="box grow">
             <div className="name">
               Name: <code className="name">{name}</code>
@@ -320,12 +365,12 @@ export class Extensions extends React.Component {
           </div>
           <div className="actions">
             {!isEnabled && (
-              <Button plain active onClick={() => ext.isEnabled = true}>Enable</Button>
+              <Button plain active disabled={isUninstalling} onClick={() => ext.isEnabled = true}>Enable</Button>
             )}
             {isEnabled && (
-              <Button accent onClick={() => ext.isEnabled = false}>Disable</Button>
+              <Button accent disabled={isUninstalling} onClick={() => ext.isEnabled = false}>Disable</Button>
             )}
-            <Button plain active onClick={() => {
+            <Button plain active disabled={isUninstalling} waiting={isUninstalling}onClick={() => {
               this.uninstallExtension(ext);
             }}>Uninstall</Button>
           </div>
