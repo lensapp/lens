@@ -11,6 +11,12 @@ import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
 
 export interface InstalledExtension {
     readonly manifest: LensExtensionManifest;
+
+    // Absolute path to the non-symlinked source folder,
+    // e.g. "/Users/user/.k8slens/extensions/helloworld"
+    readonly absolutePath: string;
+
+    // Absolute to the symlinked package.json file
     readonly manifestPath: string;
     readonly isBundled: boolean; // defined in project root's package.json
     isEnabled: boolean;
@@ -174,6 +180,24 @@ export class ExtensionDiscovery {
     }
   };
 
+  /**
+   * Uninstalls extension by path.
+   * The application will detect the folder unlink and remove the extension from the UI automatically.
+   * @param absolutePath Path to the non-symlinked folder of the extension
+   */
+  async uninstallExtension(absolutePath: string) {
+    logger.info(`${logModule} Uninstalling ${absolutePath}`);
+  
+    const exists = await fs.pathExists(absolutePath);
+
+    if (!exists) {
+      throw new Error(`Extension path ${absolutePath} doesn't exist`);
+    }
+
+    // fs.remove does nothing if the path doesn't exist anymore
+    await fs.remove(absolutePath);
+  }
+
   async load(): Promise<Map<LensExtensionId, InstalledExtension>> {
     if (this.loadStarted) {
       // The class is simplified by only supporting .load() to be called once
@@ -230,6 +254,7 @@ export class ExtensionDiscovery {
       const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
 
       return {
+        absolutePath: path.dirname(manifestPath),
         manifestPath: installedManifestPath,
         manifest: manifestJson,
         isBundled,

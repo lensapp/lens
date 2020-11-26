@@ -11,6 +11,7 @@ describe("getPageUrl", () => {
         name: "foo-bar",
         version: "0.1.1"
       },
+      absolutePath: "/absolute/fake/",
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,
       isEnabled: true
@@ -41,6 +42,7 @@ describe("globalPageRegistry", () => {
         name: "@acme/foo-bar",
         version: "0.1.1"
       },
+      absolutePath: "/absolute/fake/",
       manifestPath: "/this/is/fake/package.json",
       isBundled: false,
       isEnabled: true
