@@ -361,6 +361,7 @@
     "nodemon": "^2.0.4",
     "patch-package": "^6.2.2",
     "postinstall-postinstall": "^2.1.0",
+    "prettier": "^2.2.0",
     "progress-bar-webpack-plugin": "^2.1.0",
     "raw-loader": "^4.0.1",
     "react": "^16.14.0",

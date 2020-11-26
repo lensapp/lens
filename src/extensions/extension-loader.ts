@@ -1,4 +1,5 @@
 import { app, ipcRenderer, remote } from "electron";
+import { EventEmitter } from "events";
 import { action, computed, observable, reaction, toJS, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
@@ -26,26 +27,32 @@ export class ExtensionLoader {
   protected instances = observable.map<LensExtensionId, LensExtension>();
   protected readonly requestExtensionsChannel = "extensions:loaded";
 
+  // emits event "remove" of type LensExtension when the extension is removed
+  private events = new EventEmitter();
+
   @observable isLoaded = false;
   whenLoaded = when(() => this.isLoaded);
 
   @computed get userExtensions(): Map<LensExtensionId, InstalledExtension> {
     const extensions = this.extensions.toJS();
+
     extensions.forEach((ext, extId) => {
       if (ext.isBundled) {
         extensions.delete(extId);
       }
     });
+
     return extensions;
   }
 
   @action
   async init() {
     if (ipcRenderer) {
-      this.initRenderer();
+      await this.initRenderer();
     } else {
-      this.initMain();
+      await this.initMain();
     }
+
     extensionsStore.manageState(this);
   }
 
@@ -57,11 +64,28 @@ export class ExtensionLoader {
     this.extensions.set(extension.manifestPath as LensExtensionId, extension);
   }
 
+  removeInstance(lensExtensionId: LensExtensionId) {
+    logger.info(`${logModule} deleting extension instance ${lensExtensionId}`);
+    const instance = this.instances.get(lensExtensionId);
+
+    if (instance) {
+      try {
+        instance.disable();
+        this.events.emit("remove", instance);
+        this.instances.delete(lensExtensionId);
+      } catch (error) {
+        logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
+      }
+    }
+  }
+
   removeExtension(lensExtensionId: LensExtensionId) {
-    // TODO: Remove the extension properly (from menus etc.)
+    this.removeInstance(lensExtensionId);
+
     if (!this.extensions.delete(lensExtensionId)) {
       throw new Error(`Can't remove extension ${lensExtensionId}, doesn't exist.`);
     }
+
   }
 
   protected async initMain() {
@@ -79,14 +103,25 @@ export class ExtensionLoader {
   }
 
   protected async initRenderer() {
-    const extensionListHandler = ( extensions: [LensExtensionId, InstalledExtension][]) => {
+    const extensionListHandler = (extensions: [LensExtensionId, InstalledExtension][]) => {
       this.isLoaded = true;
+      const receivedExtensionIds = extensions.map(([lensExtensionId]) => lensExtensionId);
+
+      // Add new extensions
       extensions.forEach(([extId, ext]) => {
         if (!this.extensions.has(extId)) {
           this.extensions.set(extId, ext);
         }
       });
+
+      // Remove deleted extensions
+      this.extensions.forEach((_, lensExtensionId) => {
+        if (!receivedExtensionIds.includes(lensExtensionId)) {
+          this.removeExtension(lensExtensionId);
+        }
+      });
     };
+
     requestMain(this.requestExtensionsChannel).then(extensionListHandler);
     subscribeToBroadcast(this.requestExtensionsChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
       extensionListHandler(extensions);
@@ -95,36 +130,73 @@ export class ExtensionLoader {
 
   loadOnMain() {
     logger.info(`${logModule}: load on main`);
-    this.autoInitExtensions(async (ext: LensMainExtension) => [
-      registries.menuRegistry.add(ext.appMenus)
-    ]);
+    this.autoInitExtensions(async (extension: LensMainExtension) => {
+      // Each .add returns a function to remove the item
+      const removeItems = [
+        registries.menuRegistry.add(extension.appMenus)
+      ];
+
+      this.events.on("remove", (removedExtension: LensRendererExtension) => {
+        // manifestPath is considered the id
+        if (removedExtension.manifestPath === extension.manifestPath) {
+          removeItems.forEach(remove => {
+            remove();
+          });
+        }
+      });
+
+      return removeItems;
+    });
   }
 
   loadOnClusterManagerRenderer() {
     logger.info(`${logModule}: load on main renderer (cluster manager)`);
-    this.autoInitExtensions(async (ext: LensRendererExtension) => [
-      registries.globalPageRegistry.add(ext.globalPages, ext),
-      registries.globalPageMenuRegistry.add(ext.globalPageMenus, ext),
-      registries.appPreferenceRegistry.add(ext.appPreferences),
-      registries.clusterFeatureRegistry.add(ext.clusterFeatures),
-      registries.statusBarRegistry.add(ext.statusBarItems),
-    ]);
+    this.autoInitExtensions(async (extension: LensRendererExtension) => {
+      const removeItems = [
+        registries.globalPageRegistry.add(extension.globalPages, extension),
+        registries.globalPageMenuRegistry.add(extension.globalPageMenus, extension),
+        registries.appPreferenceRegistry.add(extension.appPreferences),
+        registries.clusterFeatureRegistry.add(extension.clusterFeatures),
+        registries.statusBarRegistry.add(extension.statusBarItems),
+      ];
+
+      this.events.on("remove", (removedExtension: LensRendererExtension) => {
+        if (removedExtension.manifestPath === extension.manifestPath) {
+          removeItems.forEach(remove => {
+            remove();
+          });
+        }
+      });
+
+      return removeItems;
+    });
   }
 
   loadOnClusterRenderer() {
     logger.info(`${logModule}: load on cluster renderer (dashboard)`);
     const cluster = getHostedCluster();
-    this.autoInitExtensions(async (ext: LensRendererExtension) => {
-      if (await ext.isEnabledForCluster(cluster) === false) {
+    this.autoInitExtensions(async (extension: LensRendererExtension) => {
+      if (await extension.isEnabledForCluster(cluster) === false) {
         return [];
       }
-      return [
-        registries.clusterPageRegistry.add(ext.clusterPages, ext),
-        registries.clusterPageMenuRegistry.add(ext.clusterPageMenus, ext),
-        registries.kubeObjectMenuRegistry.add(ext.kubeObjectMenuItems),
-        registries.kubeObjectDetailRegistry.add(ext.kubeObjectDetailItems),
-        registries.kubeObjectStatusRegistry.add(ext.kubeObjectStatusTexts)
+
+      const removeItems = [
+        registries.clusterPageRegistry.add(extension.clusterPages, extension),
+        registries.clusterPageMenuRegistry.add(extension.clusterPageMenus, extension),
+        registries.kubeObjectMenuRegistry.add(extension.kubeObjectMenuItems),
+        registries.kubeObjectDetailRegistry.add(extension.kubeObjectDetailItems),
+        registries.kubeObjectStatusRegistry.add(extension.kubeObjectStatusTexts)
       ];
+
+      this.events.on("remove", (removedExtension: LensRendererExtension) => {
+        if (removedExtension.manifestPath === extension.manifestPath) {
+          removeItems.forEach(remove => {
+            remove();
+          });
+        }
+      });
+
+      return removeItems;
     });
   }
 
@@ -148,13 +220,7 @@ export class ExtensionLoader {
             logger.error(`${logModule}: activation extension error`, { ext, err });
           }
         } else if (!ext.isEnabled && alreadyInit) {
-          try {
-            const instance = this.instances.get(extId);
-            instance.disable();
-            this.instances.delete(extId);
-          } catch (err) {
-            logger.error(`${logModule}: deactivation extension error`, { ext, err });
-          }
+          this.removeInstance(extId);
         }
       }
     }, {

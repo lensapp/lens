@@ -277,6 +277,7 @@ export class Extensions extends React.Component {
 
   renderExtensions() {
     const { extensions, extensionsPath, search } = this;
+
     if (!extensions.length) {
       return (
         <div className="no-extensions flex box gaps justify-center">
@@ -288,6 +289,7 @@ export class Extensions extends React.Component {
         </div>
       );
     }
+
     return extensions.map(ext => {
       const { manifestPath: extId, isEnabled, manifest } = ext;
       const { name, description } = manifest;
