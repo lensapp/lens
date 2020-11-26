@@ -7,8 +7,6 @@ import { workspaceStore } from "../workspace-store";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
 
-console.log(""); // fix bug
-
 let clusterStore: ClusterStore;
 
 describe("empty config", () => {
