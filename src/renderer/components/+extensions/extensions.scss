@@ -1,61 +1,40 @@
-.Extensions {
+.PageLayout.Extensions {
   $spacing: $padding * 2;
-  --width: 100%;
-  --max-width: auto;
+  --width: 50%;
 
-  .extensions-list {
+  h2 {
+    margin-bottom: $padding;
+  }
+
+  .no-extensions {
+    --flex-gap: #{$padding};
+    padding: $padding;
+
+    code {
+      font-size: $font-size-small;
+    }
+  }
+
+  .install-extension {
+    margin: $spacing * 2 0;
+  }
+
+  .installed-extensions {
+    --flex-gap: #{$spacing};
+
     .extension {
-      --flex-gap: $padding / 3;
       padding: $padding $spacing;
-      background: $colorVague;
+      background: $layoutBackground;
       border-radius: $radius;
 
-      &:not(:first-of-type) {
-        margin-top: $spacing;
+      .actions > button:not(:last-child) {
+        margin-right: $spacing / 2;
       }
     }
   }
 
-  .extensions-info {
-    --flex-gap: #{$spacing};
-
-    > .flex.gaps {
-      --flex-gap: #{$padding};
-    }
-  }
-
-  .extensions-path {
-    word-break: break-all;
-
-    &:hover code {
-      color: $textColorSecondary;
-      cursor: pointer;
-    }
-  }
-
-  .Clipboard {
-    display: inline;
-    vertical-align: baseline;
-    font-size: $font-size-small;
-
-    &:hover {
-      color: $textColorSecondary;
-    }
-  }
-
   .SearchInput {
-    --spacing: #{$padding};
-    width: 100%;
-    max-width: none;
-  }
-
-  .WizardLayout {
-    padding: 0;
-
-    .info-col {
-      flex: 0.6;
-      align-self: flex-start;
-    }
+    --spacing: 10px;
   }
 }
 

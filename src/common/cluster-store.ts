@@ -2,7 +2,7 @@ import { workspaceStore } from "./workspace-store";
 import path from "path";
 import { app, ipcRenderer, remote, webFrame } from "electron";
 import { unlink } from "fs-extra";
-import { action, computed, observable, reaction, toJS } from "mobx";
+import { action, comparer, computed, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import { Cluster, ClusterState } from "../main/cluster";
 import migrations from "../migrations/cluster-store";
@@ -23,8 +23,14 @@ export interface ClusterIconUpload {
 }
 
 export interface ClusterMetadata {
-  [key: string]: string | number | boolean;
+  [key: string]: string | number | boolean | object;
 }
+
+export type ClusterPrometheusMetadata = {
+  success?: boolean;
+  provider?: string;
+  autoDetected?: boolean;
+};
 
 export interface ClusterStoreModel {
   activeCluster?: ClusterId; // last opened cluster
@@ -47,9 +53,15 @@ export interface ClusterModel {
   kubeConfig?: string; // yaml
 }
 
-export interface ClusterPreferences {
+export interface ClusterPreferences extends ClusterPrometheusPreferences{
   terminalCWD?: string;
   clusterName?: string;
+  iconOrder?: number;
+  icon?: string;
+  httpsProxy?: string;
+}
+
+export interface ClusterPrometheusPreferences {
   prometheus?: {
     namespace: string;
     service: string;
@@ -59,9 +71,6 @@ export interface ClusterPreferences {
   prometheusProvider?: {
     type: string;
   };
-  iconOrder?: number;
-  icon?: string;
-  httpsProxy?: string;
 }
 
 export class ClusterStore extends BaseStore<ClusterStoreModel> {
@@ -84,6 +93,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     super({
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
+      syncOptions: {
+        equals: comparer.structural,
+      },
       migrations,
     });
 

@@ -38,7 +38,7 @@ export class PrometheusStacklight implements PrometheusProvider {
           cpuRequests:`sum(kube_pod_container_resource_requests{node=~"${opts.nodes}", resource="cpu"}) by (component)`,
           cpuLimits: `sum(kube_pod_container_resource_limits{node=~"${opts.nodes}", resource="cpu"}) by (component)`,
           cpuCapacity: `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="cpu"}) by (component)`,
-          podUsage: `sum(kubelet_running_pod_count{instance=~"${opts.nodes}"})`,
+          podUsage: `sum({__name__=~"kubelet_running_pod_count|kubelet_running_pods", instance=~"${opts.nodes}"})`,
           podCapacity: `sum(kube_node_status_capacity{node=~"${opts.nodes}", resource="pods"}) by (component)`,
           fsSize: `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint="/"}) by (node)`,
           fsUsage: `sum(node_filesystem_size_bytes{node=~"${opts.nodes}", mountpoint="/"} - node_filesystem_avail_bytes{node=~"${opts.nodes}", mountpoint="/"}) by (node)`

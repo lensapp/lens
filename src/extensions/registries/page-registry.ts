@@ -7,7 +7,7 @@ import { compile } from "path-to-regexp";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, sanitizeExtensionName } from "../lens-extension";
 import logger from "../../main/logger";
-import { recitfy } from "../../common/utils";
+import { rectify } from "../../common/utils";
 
 export interface PageRegistration {
   /**
@@ -54,7 +54,7 @@ export function getExtensionPageUrl<P extends object>({ extensionId, pageId = ""
 export class PageRegistry extends BaseRegistry<RegisteredPage> {
   @action
   add(items: PageRegistration | PageRegistration[], ext: LensExtension) {
-    const itemArray = recitfy(items);
+    const itemArray = rectify(items);
     let registeredPages: RegisteredPage[] = [];
     try {
       registeredPages = itemArray.map(page => ({

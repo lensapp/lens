@@ -1,26 +1,27 @@
-import "./extensions.scss";
+import { t, Trans } from "@lingui/macro";
 import { remote, shell } from "electron";
-import os from "os";
-import path from "path";
 import fse from "fs-extra";
-import React from "react";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
-import { Button } from "../button";
-import { WizardLayout } from "../layout/wizard-layout";
-import { DropFileInput, Input, InputValidators, SearchInput } from "../input";
-import { Icon } from "../icon";
-import { SubTitle } from "../layout/sub-title";
-import { PageLayout } from "../layout/page-layout";
-import logger from "../../../main/logger";
-import { extensionLoader } from "../../../extensions/extension-loader";
-import { extensionDiscovery, manifestFilename } from "../../../extensions/extension-discovery";
-import { LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
-import { Notifications } from "../notifications";
+import os from "os";
+import path from "path";
+import React from "react";
 import { downloadFile, extractTar, listTarEntries, readFileFromTar } from "../../../common/utils";
 import { docsUrl } from "../../../common/vars";
+import { extensionDiscovery, InstalledExtension, manifestFilename } from "../../../extensions/extension-discovery";
+import { extensionLoader } from "../../../extensions/extension-loader";
+import { extensionDisplayName, LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
+import logger from "../../../main/logger";
+import { _i18n } from "../../i18n";
+import { prevDefault } from "../../utils";
+import { Button } from "../button";
+import { Icon } from "../icon";
+import { DropFileInput, Input, InputValidator, InputValidators, SearchInput } from "../input";
+import { PageLayout } from "../layout/page-layout";
+import { SubTitle } from "../layout/sub-title";
+import { Notifications } from "../notifications";
+import { TooltipPosition } from "../tooltip";
+import "./extensions.scss";
 
 interface InstallRequest {
   fileName: string;
@@ -40,8 +41,16 @@ interface InstallRequestValidated extends InstallRequestPreloaded {
 @observer
 export class Extensions extends React.Component {
   private supportedFormats = [".tar", ".tgz"];
+
+  private installPathValidator: InputValidator = {
+    message: <Trans>Invalid URL or absolute path</Trans>,
+    validate(value: string) {
+      return InputValidators.isUrl.validate(value) || InputValidators.isPath.validate(value);
+    }
+  };
+
   @observable search = "";
-  @observable downloadUrl = "";
+  @observable installPath = "";
 
   @computed get extensions() {
     const searchText = this.search.toLowerCase();
@@ -87,25 +96,25 @@ export class Extensions extends React.Component {
     }
   };
 
-  addExtensions = () => {
-    const { downloadUrl } = this;
-    if (downloadUrl && InputValidators.isUrl.validate(downloadUrl)) {
-      this.installFromUrl(downloadUrl);
-    } else {
-      this.installFromSelectFileDialog();
-    }
-  };
-
-  installFromUrl = async (url: string) => {
+  installFromUrlOrPath = async () => {
+    const { installPath } = this;
+    if (!installPath) return;
+    const fileName = path.basename(installPath);
     try {
-      const { promise: filePromise } = downloadFile({ url });
-      this.requestInstall([{
-        fileName: path.basename(url),
-        data: await filePromise,
-      }]);
-    } catch (err) {
+      // install via url
+      // fixme: improve error messages for non-tar-file URLs
+      if (InputValidators.isUrl.validate(installPath)) {
+        const { promise: filePromise } = downloadFile({ url: installPath, timeout: 60000 /*1m*/ });
+        const data = await filePromise;
+        this.requestInstall({ fileName, data });
+      }
+      // otherwise installing from system path
+      else if (InputValidators.isPath.validate(installPath)) {
+        this.requestInstall({ fileName, filePath: installPath });
+      }
+    } catch (error) {
       Notifications.error(
-        <p>Installation via URL has failed: <b>{String(err)}</b></p>
+        <p>Installation has failed: <b>{String(error)}</b></p>
       );
     }
   };
@@ -122,6 +131,7 @@ export class Extensions extends React.Component {
 
   async preloadExtensions(requests: InstallRequest[], { showError = true } = {}) {
     const preloadedRequests = requests.filter(req => req.data);
+
     await Promise.all(
       requests
         .filter(req => !req.data && req.filePath)
@@ -129,13 +139,14 @@ export class Extensions extends React.Component {
           return fse.readFile(req.filePath).then(data => {
             req.data = data;
             preloadedRequests.push(req);
-          }).catch(err => {
+          }).catch(error => {
             if (showError) {
-              Notifications.error(`Error while reading "${req.filePath}": ${String(err)}`);
+              Notifications.error(`Error while reading "${req.filePath}": ${String(error)}`);
             }
           });
         })
     );
+
     return preloadedRequests as InstallRequestPreloaded[];
   }
 
@@ -182,13 +193,13 @@ export class Extensions extends React.Component {
             manifest,
             tempFile,
           });
-        } catch (err) {
+        } catch (error) {
           fse.unlink(tempFile).catch(() => null); // remove invalid temp package
           if (showErrors) {
             Notifications.error(
               <div className="flex column gaps">
                 <p>Installing <em>{req.fileName}</em> has failed, skipping.</p>
-                <p>Reason: <em>{String(err)}</em></p>
+                <p>Reason: <em>{String(error)}</em></p>
               </div>
             );
           }
@@ -198,7 +209,8 @@ export class Extensions extends React.Component {
     return validatedRequests;
   }
 
-  async requestInstall(requests: InstallRequest[]) {
+  async requestInstall(init: InstallRequest | InstallRequest[]) {
+    const requests = Array.isArray(init) ? init : [init];
     const preloadedRequests = await this.preloadExtensions(requests);
     const validatedRequests = await this.createTempFilesAndValidate(preloadedRequests);
 
@@ -231,7 +243,7 @@ export class Extensions extends React.Component {
   }
 
   async unpackExtension({ fileName, tempFile, manifest: { name, version } }: InstallRequestValidated) {
-    const extName = `${name}@${version}`;
+    const extName = extensionDisplayName(name, version);
     logger.info(`Unpacking extension ${extName}`, { fileName, tempFile });
     const unpackingTempFolder = path.join(path.dirname(tempFile), path.basename(tempFile) + "-unpacked");
     const extensionFolder = this.getExtensionDestFolder(name);
@@ -254,9 +266,9 @@ export class Extensions extends React.Component {
       Notifications.ok(
         <p>Extension <b>{extName}</b> successfully installed!</p>
       );
-    } catch (err) {
+    } catch (error) {
       Notifications.error(
-        <p>Installing extension <b>{extName}</b> has failed: <em>{err}</em></p>
+        <p>Installing extension <b>{extName}</b> has failed: <em>{error}</em></p>
       );
     } finally {
       // clean up
@@ -265,92 +277,122 @@ export class Extensions extends React.Component {
     }
   }
 
-  renderInfo() {
-    return (
-      <div className="extensions-info flex column gaps">
-        <h2>Lens Extensions</h2>
-        <div>
-          The features that Lens includes out-of-the-box are just the start.
-          Lens extensions let you add new features to your installation to support your workflow.
-          Rich extensibility model lets extension authors plug directly into the Lens UI and contribute functionality through the same APIs used by Lens itself.
-          Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank">learn more</a>.
-        </div>
-        <div className="install-extension flex column gaps">
-          <SubTitle title="Install extension:"/>
-          <Input
-            showErrorsAsTooltip={true}
-            className="box grow"
-            theme="round-black"
-            iconLeft="link"
-            placeholder={`URL to an extension package (${this.supportedFormats.join(", ")})`}
-            validators={InputValidators.isUrl}
-            value={this.downloadUrl}
-            onChange={v => this.downloadUrl = v}
-            onSubmit={this.addExtensions}
-          />
-          <Button
-            primary
-            label="Install"
-            onClick={this.addExtensions}
-          />
-          <p className="hint">
-            <Trans><b>Pro-Tip</b>: you can drag & drop extension's tarball here to request installation</Trans>
-          </p>
-        </div>
-      </div>
-    );
+  async uninstallExtension(extension: InstalledExtension) {
+    const extensionName = extensionDisplayName(extension.manifest.name, extension.manifest.version);
+
+    try {
+      await extensionDiscovery.uninstallExtension(extension.absolutePath);
+    } catch (error) {
+      Notifications.error(
+        <p>Uninstalling extension <b>{extensionName}</b> has failed: <em>{error?.message ?? ""}</em></p>
+      );
+    }
   }
 
   renderExtensions() {
     const { extensions, extensionsPath, search } = this;
+
     if (!extensions.length) {
       return (
-        <div className="flex align-center box grow justify-center gaps">
-          {search && <Trans>No search results found</Trans>}
-          {!search && <p><Trans>There are no extensions in</Trans> <code>{extensionsPath}</code></p>}
+        <div className="no-extensions flex box gaps justify-center">
+          <Icon material="info"/>
+          <div>
+            {search && <p>No search results found</p>}
+            {!search && <p>There are no extensions in <code>{extensionsPath}</code></p>}
+          </div>
         </div>
       );
     }
+
     return extensions.map(ext => {
       const { manifestPath: extId, isEnabled, manifest } = ext;
       const { name, description } = manifest;
+
       return (
         <div key={extId} className="extension flex gaps align-center">
-          <div className="box grow flex column gaps">
-            <div className="package">
+          <div className="box grow">
+            <div className="name">
               Name: <code className="name">{name}</code>
             </div>
-            <div>
+            <div className="description">
               Description: <span className="text-secondary">{description}</span>
             </div>
           </div>
-          {!isEnabled && (
-            <Button plain active onClick={() => ext.isEnabled = true}>Enable</Button>
-          )}
-          {isEnabled && (
-            <Button accent onClick={() => ext.isEnabled = false}>Disable</Button>
-          )}
+          <div className="actions">
+            {!isEnabled && (
+              <Button plain active onClick={() => ext.isEnabled = true}>Enable</Button>
+            )}
+            {isEnabled && (
+              <Button accent onClick={() => ext.isEnabled = false}>Disable</Button>
+            )}
+            <Button plain active onClick={() => {
+              this.uninstallExtension(ext);
+            }}>Uninstall</Button>
+          </div>
         </div>
       );
     });
   }
 
   render() {
+    const topHeader = <h2>Manage Lens Extensions</h2>;
+    const { installPath } = this;
     return (
-      <PageLayout showOnTop className="Extensions" header={<h2>Extensions</h2>}>
-        <DropFileInput onDropFiles={this.installOnDrop}>
-          <WizardLayout infoPanel={this.renderInfo()}>
+      <DropFileInput onDropFiles={this.installOnDrop}>
+        <PageLayout showOnTop className="Extensions flex column gaps" header={topHeader} contentGaps={false}>
+          <h2>Lens Extensions</h2>
+          <div>
+            The features that Lens includes out-of-the-box are just the start.
+            Lens extensions let you add new features to your installation to support your workflow.
+            Rich extensibility model lets extension authors plug directly into the Lens UI and contribute functionality through the same APIs used by Lens itself.
+            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank">learn more</a>.
+          </div>
+
+          <div className="install-extension flex column gaps">
+            <SubTitle title={<Trans>Install Extension:</Trans>}/>
+            <div className="extension-input flex box gaps align-center">
+              <Input
+                className="box grow"
+                theme="round-black"
+                placeholder={`Path or URL to an extension package (${this.supportedFormats.join(", ")})`}
+                showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
+                validators={installPath ? this.installPathValidator : undefined}
+                value={installPath}
+                onChange={v => this.installPath = v}
+                onSubmit={this.installFromUrlOrPath}
+                iconLeft="link"
+                iconRight={
+                  <Icon
+                    interactive
+                    material="folder"
+                    onMouseDown={prevDefault(this.installFromSelectFileDialog)}
+                    tooltip={<Trans>Browse</Trans>}
+                  />
+                }
+              />
+            </div>
+            <Button
+              primary
+              label="Install"
+              disabled={!this.installPathValidator.validate(installPath)}
+              onClick={this.installFromUrlOrPath}
+            />
+            <small className="hint">
+              <Trans><b>Pro-Tip</b>: you can drag & drop extension's tarball-file to install</Trans>
+            </small>
+          </div>
+
+          <h2>Installed Extensions</h2>
+          <div className="installed-extensions flex column gaps">
             <SearchInput
-              placeholder={_i18n._(t`Search installed extensions`)}
+              placeholder="Search extensions by name or description"
               value={this.search}
               onChange={(value) => this.search = value}
             />
-            <div className="extensions-list">
-              {this.renderExtensions()}
-            </div>
-          </WizardLayout>
-        </DropFileInput>
-      </PageLayout>
+            {this.renderExtensions()}
+          </div>
+        </PageLayout>
+      </DropFileInput>
     );
   }
 }

@@ -33,6 +33,7 @@ nav:
       - Main Extension: extensions/guides/main-extension.md
       - Renderer Extension: extensions/guides/renderer-extension.md
       - Generator: extensions/guides/generator.md
+      - Working with mobx: extensions/guides/working-with-mobx.md
     - Testing and Publishing:
       - Testing Extensions: extensions/testing-and-publishing/testing.md
       - Publishing Extensions: extensions/testing-and-publishing/publishing.md
@@ -62,7 +63,6 @@ theme:
         icon: material/toggle-switch-off-outline
         name: Switch to dark mode
   features:
-    - navigation.instant
     - toc.autohide
     - search.suggest
     - search.highlight

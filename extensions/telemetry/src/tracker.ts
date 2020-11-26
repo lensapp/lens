@@ -118,7 +118,8 @@ export class Tracker extends Util.Singleton {
       kubernetesVersion: cluster.metadata.version,
       distribution: cluster.metadata.distribution,
       nodesCount: cluster.metadata.nodes,
-      lastSeen: cluster.metadata.lastSeen
+      lastSeen: cluster.metadata.lastSeen,
+      prometheus: cluster.metadata.prometheus
     });
   }
 

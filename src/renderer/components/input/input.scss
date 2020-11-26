@@ -89,8 +89,10 @@
 
   &.theme {
     &.round-black {
-      &.invalid label {
-        border-color: $colorSoftError !important;
+      &.invalid.dirty {
+        label {
+          border-color: $colorSoftError;
+        }
       }
 
       label {

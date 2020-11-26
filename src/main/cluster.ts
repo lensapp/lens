@@ -1,8 +1,8 @@
 import { ipcMain } from "electron";
-import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences } from "../common/cluster-store";
+import type { ClusterId, ClusterMetadata, ClusterModel, ClusterPreferences, ClusterPrometheusPreferences } from "../common/cluster-store";
 import type { IMetricsReqParams } from "../renderer/api/endpoints/metrics.api";
 import type { WorkspaceId } from "../common/workspace-store";
-import { action, computed, observable, reaction, toJS, when } from "mobx";
+import { action, comparer, computed, observable, reaction, toJS, when } from "mobx";
 import { apiKubePrefix } from "../common/vars";
 import { broadcastMessage } from "../common/ipc";
 import { ContextHandler } from "./context-handler";
@@ -27,7 +27,8 @@ export enum ClusterMetadataKey {
   CLUSTER_ID = "id",
   DISTRIBUTION = "distribution",
   NODES_COUNT = "nodes",
-  LAST_SEEN = "lastSeen"
+  LAST_SEEN = "lastSeen",
+  PROMETHEUS = "prometheus"
 }
 
 export type ClusterRefreshOptions = {
@@ -42,7 +43,6 @@ export interface ClusterState {
   accessible: boolean;
   ready: boolean;
   failureReason: string;
-  eventCount: number;
   isAdmin: boolean;
   allowedNamespaces: string[]
   allowedResources: string[]
@@ -74,7 +74,6 @@ export class Cluster implements ClusterModel, ClusterState {
   @observable disconnected = true; // false if user has selected to connect
   @observable failureReason: string;
   @observable isAdmin = false;
-  @observable eventCount = 0;
   @observable preferences: ClusterPreferences = {};
   @observable metadata: ClusterMetadata = {};
   @observable allowedNamespaces: string[] = [];
@@ -87,6 +86,13 @@ export class Cluster implements ClusterModel, ClusterState {
 
   @computed get name() {
     return this.preferences.clusterName || this.contextName;
+  }
+
+  @computed get prometheusPreferences(): ClusterPrometheusPreferences {
+    const { prometheus, prometheusProvider } = this.preferences;
+    return toJS({ prometheus, prometheusProvider }, {
+      recurseEverything: true,
+    });
   }
 
   get version(): string {
@@ -138,6 +144,7 @@ export class Cluster implements ClusterModel, ClusterState {
     if (ipcMain) {
       this.eventDisposers.push(
         reaction(() => this.getState(), () => this.pushState()),
+        reaction(() => this.prometheusPreferences, (prefs) => this.contextHandler.setupPrometheus(prefs), { equals: comparer.structural, }),
         () => {
           clearInterval(refreshTimer);
           clearInterval(refreshMetadataTimer);
@@ -209,10 +216,7 @@ export class Cluster implements ClusterModel, ClusterState {
     await this.refreshConnectionStatus();
     if (this.accessible) {
       this.isAdmin = await this.isClusterAdmin();
-      await Promise.all([
-        this.refreshEvents(),
-        this.refreshAllowedResources(),
-      ]);
+      await this.refreshAllowedResources();
       if (opts.refreshMetadata) {
         this.refreshMetadata();
       }
@@ -240,11 +244,6 @@ export class Cluster implements ClusterModel, ClusterState {
   async refreshAllowedResources() {
     this.allowedNamespaces = await this.getAllowedNamespaces();
     this.allowedResources = await this.getAllowedResources();
-  }
-
-  @action
-  async refreshEvents() {
-    this.eventCount = await this.getEventCount();
   }
 
   protected getKubeconfig(): KubeConfig {
@@ -332,40 +331,6 @@ export class Cluster implements ClusterModel, ClusterState {
     });
   }
 
-  protected async getEventCount(): Promise<number> {
-    if (!this.isAdmin) {
-      return 0;
-    }
-    const client = this.getProxyKubeconfig().makeApiClient(CoreV1Api);
-    try {
-      const response = await client.listEventForAllNamespaces(false, null, null, null, 1000);
-      const uniqEventSources = new Set();
-      const warnings = response.body.items.filter(e => e.type !== 'Normal');
-      for (const w of warnings) {
-        if (w.involvedObject.kind === 'Pod') {
-          try {
-            const { body: pod } = await client.readNamespacedPod(w.involvedObject.name, w.involvedObject.namespace);
-            logger.debug(`checking pod ${w.involvedObject.namespace}/${w.involvedObject.name}`);
-            if (podHasIssues(pod)) {
-              uniqEventSources.add(w.involvedObject.uid);
-            }
-          } catch (err) {
-          }
-        } else {
-          uniqEventSources.add(w.involvedObject.uid);
-        }
-      }
-      const nodes = (await client.listNode()).body.items;
-      const nodeNotificationCount = nodes
-        .map(getNodeWarningConditions)
-        .reduce((sum, conditions) => sum + conditions.length, 0);
-      return uniqEventSources.size + nodeNotificationCount;
-    } catch (error) {
-      logger.error("Failed to fetch event count: " + JSON.stringify(error));
-      return 0;
-    }
-  }
-
   toJSON(): ClusterModel {
     const model: ClusterModel = {
       id: this.id,
@@ -393,7 +358,6 @@ export class Cluster implements ClusterModel, ClusterState {
       accessible: this.accessible,
       failureReason: this.failureReason,
       isAdmin: this.isAdmin,
-      eventCount: this.eventCount,
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,
     };

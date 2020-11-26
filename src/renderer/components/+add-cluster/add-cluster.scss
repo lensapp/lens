@@ -1,16 +1,20 @@
-.AddCluster {
-  .hint {
-    margin-top: -$padding;
-    color: $textColorSecondary;
-
-    > * {
-      vertical-align: middle;
-    }
-  }
+.AddClusters {
+  --flex-gap: #{$unit * 2};
+  $spacing: $padding * 2;
 
   .AceEditor {
     min-height: 200px;
     max-height: 400px;
+    border: 1px solid var(--colorVague);
+    border-radius: $radius;
+
+    .theme-light & {
+      border-color: var(--borderFaintColor);
+    }
+
+    .editor {
+      border-radius: $radius;
+    }
   }
 
   .Select {
@@ -33,5 +37,14 @@
 
   code {
     color: $pink-400;
+  }
+
+  .text-primary {
+    color: var(--textColorAccent);
+  }
+
+  .hint {
+    display: block;
+    padding-top: 6px;
   }
 }

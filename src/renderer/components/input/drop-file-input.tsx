@@ -61,7 +61,7 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
       const isValidContentElem = React.isValidElement(contentElem);
       if (isValidContentElem) {
         const contentElemProps: React.HTMLProps<HTMLElement> = {
-          className: cssNames("DropFileInput", className, {
+          className: cssNames("DropFileInput", contentElem.props.className, className, {
             droppable: this.dropAreaActive,
           }),
           onDragEnter,

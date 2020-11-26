@@ -10,13 +10,15 @@ import { Input, InputProps } from "./input";
 
 interface Props extends InputProps {
   compact?: boolean; // show only search-icon when not focused
-  closeIcon?: boolean;
-  onClear?: () => void;
+  bindGlobalFocusHotkey?: boolean;
+  showClearIcon?: boolean;
+  onClear?(): void;
 }
 
 const defaultProps: Partial<Props> = {
   autoFocus: true,
-  closeIcon: true,
+  bindGlobalFocusHotkey: true,
+  showClearIcon: true,
   get placeholder() {
     return _i18n._(t`Search...`);
   },
@@ -26,27 +28,27 @@ const defaultProps: Partial<Props> = {
 export class SearchInput extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
-  private input = createRef<Input>();
+  private inputRef = createRef<Input>();
 
   componentDidMount() {
-    addEventListener("keydown", this.focus);
+    if (!this.props.bindGlobalFocusHotkey) return;
+    window.addEventListener("keydown", this.onGlobalKey);
   }
 
   componentWillUnmount() {
-    removeEventListener("keydown", this.focus);
+    window.removeEventListener("keydown", this.onGlobalKey);
   }
 
-  clear = () => {
-    if (this.props.onClear) {
-      this.props.onClear();
+  @autobind()
+  onGlobalKey(evt: KeyboardEvent) {
+    const meta = evt.metaKey || evt.ctrlKey;
+    if (meta && evt.key === "f") {
+      this.inputRef.current.focus();
     }
-  };
+  }
 
-  onChange = (val: string, evt: React.ChangeEvent<any>) => {
-    this.props.onChange(val, evt);
-  };
-
-  onKeyDown = (evt: React.KeyboardEvent<any>) => {
+  @autobind()
+  onKeyDown(evt: React.KeyboardEvent<any>) {
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);
     }
@@ -56,29 +58,31 @@ export class SearchInput extends React.Component<Props> {
       this.clear();
       evt.stopPropagation();
     }
-  };
+  }
 
   @autobind()
-  focus(evt: KeyboardEvent) {
-    const meta = evt.metaKey || evt.ctrlKey;
-    if (meta && evt.key == "f") {
-      this.input.current.focus();
+  clear() {
+    if (this.props.onClear) {
+      this.props.onClear();
+    } else {
+      this.inputRef.current.setValue("");
     }
   }
 
   render() {
-    const { className, compact, closeIcon, onClear, ...inputProps } = this.props;
-    const icon = this.props.value
-      ? closeIcon ? <Icon small material="close" onClick={this.clear}/> : null
-      : <Icon small material="search"/>;
+    const { className, compact, onClear, showClearIcon, bindGlobalFocusHotkey, value, ...inputProps } = this.props;
+    let rightIcon = <Icon small material="search"/>;
+    if (showClearIcon && value) {
+      rightIcon = <Icon small material="close" onClick={this.clear}/>;
+    }
     return (
       <Input
         {...inputProps}
         className={cssNames("SearchInput", className, { compact })}
-        onChange={this.onChange}
+        value={value}
         onKeyDown={this.onKeyDown}
-        iconRight={icon}
-        ref={this.input}
+        iconRight={rightIcon}
+        ref={this.inputRef}
       />
     );
   }

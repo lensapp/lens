@@ -1,5 +1,5 @@
 import type { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry";
-import type { ClusterPreferences } from "../common/cluster-store";
+import type { ClusterPrometheusPreferences } from "../common/cluster-store";
 import type { Cluster } from "./cluster";
 import type httpProxy from "http-proxy";
 import url, { UrlWithStringQuery } from "url";
@@ -22,7 +22,7 @@ export class ContextHandler {
     this.setupPrometheus(cluster.preferences);
   }
 
-  protected setupPrometheus(preferences: ClusterPreferences = {}) {
+  public setupPrometheus(preferences: ClusterPrometheusPreferences = {}) {
     this.prometheusProvider = preferences.prometheusProvider?.type;
     this.prometheusPath = null;
     if (preferences.prometheus) {
@@ -32,13 +32,18 @@ export class ContextHandler {
   }
 
   protected async resolvePrometheusPath(): Promise<string> {
-    const { service, namespace, port } = await this.getPrometheusService();
+    const prometheusService = await this.getPrometheusService();
+    if (!prometheusService) return null;
+    const { service, namespace, port } = prometheusService;
     return `${namespace}/services/${service}:${port}`;
   }
 
   async getPrometheusProvider() {
     if (!this.prometheusProvider) {
       const service = await this.getPrometheusService();
+      if (!service) {
+        return null;
+      }
       logger.info(`using ${service.id} as prometheus provider`);
       this.prometheusProvider = service.id;
     }
@@ -52,13 +57,7 @@ export class ContextHandler {
       return await provider.getPrometheusService(apiClient);
     });
     const resolvedPrometheusServices = await Promise.all(prometheusPromises);
-    const service = resolvedPrometheusServices.filter(n => n)[0];
-    return service || {
-      id: "lens",
-      namespace: "lens-metrics",
-      service: "prometheus",
-      port: 80
-    };
+    return resolvedPrometheusServices.filter(n => n)[0];
   }
 
   async getPrometheusPath(): Promise<string> {
