@@ -99,7 +99,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable clusters = observable.map<ClusterId, Cluster>();
   @observable deadClusters = observable.map<ClusterId, [ClusterModel, LoadKubeError]>();
 
-  protected constructor() {
+  private constructor() {
     super({
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
@@ -176,7 +176,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   swapIconOrders(workspace: WorkspaceId, from: number, to: number) {
-    const clusters = this.getByWorkspaceId(workspace);
+    const clusters = getClusterModelByWorkspace(workspace);
     if (from < 0 || to < 0 || from >= clusters.length || to >= clusters.length || isNaN(from) || isNaN(to)) {
       throw new Error(`invalid from<->to arguments`);
     }
@@ -341,11 +341,19 @@ export function getRendererInfoByWorkspace(workspaceId: string): ClusterRenderIn
     .filter(([c]) => c.workspace === workspaceId)
     .map(([cluster, error]) => ({
       DeadError: error,
-      name: cluster.contextName,
+      name: cluster.preferences?.clusterName || cluster.contextName,
       online: false,
       ...cluster,
     }));
 
+  return _.sortBy([...aliveClusters, ...deadClusters], c => c.preferences?.iconOrder);
+}
+
+export function getClusterModelByWorkspace(workspaceId: string): ClusterModel[] {
+  const aliveClusters: ClusterModel[] = clusterStore.clustersList.filter(c => c.workspace === workspaceId);
+  const deadClusters: ClusterModel[] = clusterStore.deadClustersList
+    .filter(([c]) => c.workspace === workspaceId)
+    .map(([cluster]) => cluster);
 
   return _.sortBy([...aliveClusters, ...deadClusters], c => c.preferences?.iconOrder);
 }
