@@ -1,55 +1,36 @@
----
-###########################
-###########################
-## Linter GitHub Actions ##
-###########################
-###########################
-name: Lint Code Base
-
-#
-# Documentation:
-# https://help.github.com/en/articles/workflow-syntax-for-github-actions
-#
-
-#############################
-# Start the job on all push #
-#############################
+name: Lint Repo
 on:
-  pull_request:
-    branches: [master]
-
-###############
-# Set the Job #
-###############
+  push:
+    branches:
+      - master
+  release:
+    types:
+      - published
 jobs:
   build:
-    # Name the Job
-    name: Lint Code Base
-    # Set the agent to run on
+    name: Lint
     runs-on: ubuntu-latest
-
-    ##################
-    # Load all steps #
-    ##################
+    strategy:
+      matrix:
+        node-version: [12.x]
     steps:
-      ##########################
-      # Checkout the code base #
-      ##########################
-      - name: Checkout Code
+      - name: Checkout Release from lens
         uses: actions/checkout@v2
         with:
-          # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0
 
-      ################################
-      # Run Linter against code base #
-      ################################
-      - name: Lint Code Base
-        uses: github/super-linter@v3
-        env:
-          FILTER_REGEX_INCLUDE: "**/*.(ts|tsx|js)"
-          VALIDATE_JAVASCRIPT_ES: true
-          JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.json
-          LINTER_RULES_PATH: /
-          DEFAULT_BRANCH: master
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: git config
+        run: |
+           git config --local user.email "action@github.com"
+           git config --local user.name "GitHub Action"
+
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install deps
+        run: yarn install
+
+      - name: Lint
+        run: yarn run lint
