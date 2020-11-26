@@ -13,8 +13,8 @@ import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
-interface Props {
-  items: any[];
+interface Props<T = ItemObject | any> {
+  items: T[];
   rowHeights: number[];
   className?: string;
   width?: number | string;
@@ -126,7 +126,7 @@ interface RowProps extends ListChildComponentProps {
 const Row = observer((props: RowProps) => {
   const { index, style, data } = props;
   const { items, getRow } = data;
-  const uid = items[index].getId ? items[index].getId() : index;
+  const uid = items[index]?.getId ? items[index].getId() : index;
   const row = getRow(uid);
   if (!row) return null;
   return React.cloneElement(row, {
