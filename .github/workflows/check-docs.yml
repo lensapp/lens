@@ -39,4 +39,4 @@ jobs:
 
       - name: Verify that the markdown is valid
         run: |
-          yarn run mkdocs-verify
+          yarn run verify-docs

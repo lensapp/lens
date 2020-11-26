@@ -14,7 +14,7 @@ Here are some examples of what you can achieve with the Extension API:
 
 * Add custom components & views in the UI - Extending the Lens Workbench
 
-For an overview of the Lens Extension API, refer to the [Common Capabilities](capabilities/common-capabilities.md) page. [Extension Guides Overview](guides/overview.md) also includes a list of code samples and guides that illustrate various ways of using the Lens Extension API.
+For an overview of the Lens Extension API, refer to the [Common Capabilities](capabilities/common-capabilities.md) page. [Extension Guides Overview](guides/README.md) also includes a list of code samples and guides that illustrate various ways of using the Lens Extension API.
 
 ## How to Build Extensions
 
