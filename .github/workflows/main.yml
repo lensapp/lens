@@ -4,7 +4,7 @@ on:
     branches:
       - master
   release:
-    types: 
+    types:
       - published
 jobs:
   build:
@@ -41,6 +41,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Verify that the markdown is valid
+        run: |
+          yarn run mkdocs-verify
+
       - name: Generate Extensions API Reference using typedocs
         run: |
            yarn install
@@ -55,10 +59,9 @@ jobs:
         if: contains(github.ref, 'refs/tags/v') # && !github.event.release.prerelease (generate pre-release docs until Lens 4.0.0 is GA, see #1408)
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-  
+
       - name: mkdocs deploy new release
         if: contains(github.ref, 'refs/tags/v') # && !github.event.release.prerelease (generate pre-release docs until Lens 4.0.0 is GA, see #1408)
         run: |
            mike deploy --push --update-aliases ${{ steps.get_version.outputs.VERSION }} latest
            mike set-default --push ${{ steps.get_version.outputs.VERSION }}
-           

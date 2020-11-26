@@ -162,27 +162,3 @@ jobs:
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         env:
           NPM_TOKEN: $(NPM_TOKEN)
----
-variables:
-  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
-pr:
-  - master
-  - releases/*
-trigger:
-  branches:
-    include:
-    - '*'
-  tags:
-    include:
-    - "area/documentation"
-jobs:
-  - job: Check-Docs
-    pool:
-      vmImage: ubuntu-16.04
-    strategy:
-      matrix:
-        node_12.x:
-          node_version: 12.x
-    steps:
-      - displayName: Verify that docs build
-        script: yarn run mkdocs-verify
