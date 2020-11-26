@@ -23,6 +23,8 @@ Here you can find description of changes we've built into each release. While we
 - Catch errors return error response when fetching chart or chart values fails
 - Update EULA url
 - Change add-cluster to single column layout
+- Replace cluster warning event polling with watches
+- Fix pod usage metrics on Kubernetes >=1.19
 - Fix proxy upgrade socket timeouts
 - Fix UI staleness after network issues
 - Fix errors on app quit
