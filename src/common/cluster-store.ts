@@ -78,19 +78,17 @@ export interface ClusterPrometheusPreferences {
 
 export interface ClusterRenderInfo extends ClusterModel {
   DeadError?: LoadKubeError; // this != undefined => dead
-  isAdmin: boolean;
   name: string;
-  eventCount: number;
   online: boolean;
 }
 
-export class ClusterStore extends BaseStore<ClusterStoreModel> {
+export class LensClusterStoreImpl extends BaseStore<ClusterStoreModel> {
   static getCustomKubeConfigPath(clusterId: ClusterId): string {
     return path.resolve((app || remote.app).getPath("userData"), "kubeconfigs", clusterId);
   }
 
   static embedCustomKubeConfig(clusterId: ClusterId, kubeConfig: KubeConfig | string): string {
-    const filePath = ClusterStore.getCustomKubeConfigPath(clusterId);
+    const filePath = LensClusterStoreImpl.getCustomKubeConfigPath(clusterId);
     const fileContents = typeof kubeConfig == "string" ? kubeConfig : dumpConfigYaml(kubeConfig);
     saveToAppFiles(filePath, fileContents, { mode: 0o600 });
     return filePath;
@@ -101,7 +99,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable clusters = observable.map<ClusterId, Cluster>();
   @observable deadClusters = observable.map<ClusterId, [ClusterModel, LoadKubeError]>();
 
-  private constructor() {
+  protected constructor() {
     super({
       configName: "lens-cluster-store",
       accessPropertiesByDotNotation: false, // To make dots safe in cluster context names
@@ -202,15 +200,13 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     return this.deadClusters.get(id);
   }
 
-  getRendererInfoByWorkspace(workspaceId: string): ClusterRenderInfo[] {
+  protected getRendererInfoByWorkspace(workspaceId: string): ClusterRenderInfo[] {
     const aliveClusters: ClusterRenderInfo[] = this.clustersList.filter(c => c.workspace === workspaceId);
     const deadClusters: ClusterRenderInfo[] = this.deadClustersList
       .filter(([c]) => c.workspace === workspaceId)
       .map(([cluster, error]) => ({
         DeadError: error,
         name: cluster.contextName,
-        isAdmin: false,
-        eventCount: 0,
         online: false,
         ...cluster,
       }));
@@ -266,7 +262,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         this.setActive(null);
       }
       // remove only custom kubeconfigs (pasted as text)
-      if (cluster.kubeConfigPath == ClusterStore.getCustomKubeConfigPath(clusterId)) {
+      if (cluster.kubeConfigPath == LensClusterStoreImpl.getCustomKubeConfigPath(clusterId)) {
         unlink(cluster.kubeConfigPath).catch(() => null);
       }
     }
@@ -352,7 +348,20 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 }
 
+export class LensClusterStore extends LensClusterStoreImpl {
+  public getRendererInfoByWorkspace(workspaceId: string): ClusterRenderInfo[] {
+    return super.getRendererInfoByWorkspace(workspaceId);
+  }
+}
+
+export class ClusterStore extends LensClusterStoreImpl {
+  private constructor() {
+    super();
+  }
+}
+
 export const clusterStore = ClusterStore.getInstance<ClusterStore>();
+export const lensClusterStore = clusterStore as LensClusterStore;
 
 export function getClusterIdFromHost(hostname: string): ClusterId {
   const subDomains = hostname.split(":")[0].split(".");

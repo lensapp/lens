@@ -8,7 +8,7 @@ import { observer } from "mobx-react";
 import { _i18n } from "../../i18n";
 import { t, Trans } from "@lingui/macro";
 import { userStore } from "../../../common/user-store";
-import { ClusterId, ClusterRenderInfo, clusterStore } from "../../../common/cluster-store";
+import { ClusterId, ClusterRenderInfo, clusterStore, lensClusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
@@ -105,7 +105,7 @@ export class ClusterMenu extends React.Component<Props> {
     const { className } = this.props;
     const { newContexts } = userStore;
     const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
-    const clusters = clusterStore.getRendererInfoByWorkspace(workspace.id);
+    const clusters = lensClusterStore.getRendererInfoByWorkspace(workspace.id);
     const activeClusterId = clusterStore.activeCluster;
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>

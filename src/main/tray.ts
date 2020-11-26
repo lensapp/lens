@@ -5,7 +5,7 @@ import { autorun } from "mobx";
 import { showAbout } from "./menu";
 import { AppUpdater } from "./app-updater";
 import { WindowManager } from "./window-manager";
-import { ClusterRenderInfo, clusterStore } from "../common/cluster-store";
+import { ClusterRenderInfo, clusterStore, lensClusterStore } from "../common/cluster-store";
 import { Workspace, workspaceStore } from "../common/workspace-store";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
@@ -82,7 +82,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
     {
       label: "Clusters",
       submenu: workspaceStore.enabledWorkspacesList
-        .map((workspace): [Workspace, ClusterRenderInfo[]] => [workspace, clusterStore.getRendererInfoByWorkspace(workspace.id)])
+        .map((workspace): [Workspace, ClusterRenderInfo[]] => [workspace, lensClusterStore.getRendererInfoByWorkspace(workspace.id)])
         .filter(([, clusters]) => clusters.length > 0)
         .map(([workspace, clusters]): MenuItemConstructorOptions => ({
           label: workspace.name,
