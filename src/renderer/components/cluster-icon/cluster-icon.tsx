@@ -1,13 +1,17 @@
 import "./cluster-icon.scss";
 
 import React, { DOMAttributes } from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { Params as HashiconParams } from "@emeraldpay/hashicon";
 import { Hashicon } from "@emeraldpay/hashicon-react";
 import { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
 import { Tooltip } from "../tooltip";
+import { eventStore } from "../+events/event.store";
+import { forCluster } from "../../api/kube-api";
+import { subscribeToBroadcast, unsubscribeAllFromBroadcast } from "../../../common/ipc";
+import { observable, when } from "mobx";
 
 interface Props extends DOMAttributes<HTMLElement> {
   cluster: Cluster;
@@ -29,12 +33,29 @@ const defaultProps: Partial<Props> = {
 export class ClusterIcon extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
+  @observable eventCount = 0;
+
+  get eventCountBroadcast() {
+    return `cluster-warning-event-count:${this.props.cluster.id}`;
+  }
+
+  componentDidMount() {
+    const subscriber = subscribeToBroadcast(this.eventCountBroadcast, (ev, eventCount) => {
+      this.eventCount = eventCount;
+    });
+
+    disposeOnUnmount(this, [
+      subscriber
+    ]);
+  }
+
   render() {
     const {
       cluster, showErrors, showTooltip, errorClass, options, interactive, isActive,
       children, ...elemProps
     } = this.props;
-    const { isAdmin, name, eventCount, preferences, id: clusterId } = cluster;
+    const { name, preferences, id: clusterId } = cluster;
+    const eventCount = this.eventCount;
     const { icon } = preferences;
     const clusterIconId = `cluster-icon-${clusterId}`;
     const className = cssNames("ClusterIcon flex inline", this.props.className, {
@@ -48,7 +69,7 @@ export class ClusterIcon extends React.Component<Props> {
         )}
         {icon && <img src={icon} alt={name}/>}
         {!icon && <Hashicon value={clusterId} options={options}/>}
-        {showErrors && isAdmin && eventCount > 0 && (
+        {showErrors && eventCount > 0 && !isActive && (
           <Badge
             className={cssNames("events-count", errorClass)}
             label={eventCount >= 1000 ? Math.ceil(eventCount / 1000) + "k+" : eventCount}

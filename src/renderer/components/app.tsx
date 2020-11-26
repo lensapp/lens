@@ -37,13 +37,17 @@ import { webFrame } from "electron";
 import { clusterPageRegistry, getExtensionPageUrl, PageRegistration, RegisteredPage } from "../../extensions/registries/page-registry";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
-import { requestMain } from "../../common/ipc";
+import { broadcastMessage, requestMain } from "../../common/ipc";
 import whatInput from 'what-input';
 import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
 import { TabLayoutRoute, TabLayout } from "./layout/tab-layout";
-import { Trans } from "@lingui/macro";
-import {StatefulSetScaleDialog} from "./+workloads-statefulsets/statefulset-scale-dialog";
+import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
+import { eventStore } from "./+events/event.store";
+import { reaction, computed } from "mobx";
+import { nodesStore } from "./+nodes/nodes.store";
+import { podsStore } from "./+workloads-pods/pods.store";
+import { sum } from "lodash";
 
 @observer
 export class App extends React.Component {
@@ -67,6 +71,39 @@ export class App extends React.Component {
       window.location.reload();
     });
     whatInput.ask(); // Start to monitor user input device
+  }
+
+  async componentDidMount() {
+    const cluster = getHostedCluster();
+    const promises: Promise<void>[] = [];
+    if (isAllowedResource("events") && isAllowedResource("pods")) {
+      promises.push(eventStore.loadAll());
+      promises.push(podsStore.loadAll());
+    }
+    if (isAllowedResource("nodes")) {
+      promises.push(nodesStore.loadAll());
+    }
+    await Promise.all(promises);
+    if (eventStore.isLoaded && podsStore.isLoaded) {
+      eventStore.subscribe();
+      podsStore.subscribe();
+    }
+    if (nodesStore.isLoaded) {
+      nodesStore.subscribe();
+    }
+
+    reaction(() => this.warningsCount, (count) => {
+      broadcastMessage(`cluster-warning-event-count:${cluster.id}`, count);
+    });
+  }
+
+  @computed
+  get warningsCount() {
+    let warnings = sum(nodesStore.items
+      .map(node => node.getWarningConditions().length));
+    warnings = warnings + eventStore.getWarnings().length;
+
+    return warnings;
   }
 
   get startURL() {
