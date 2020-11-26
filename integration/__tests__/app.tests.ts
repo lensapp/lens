@@ -8,10 +8,6 @@ import { Application } from "spectron";
 import * as util from "../helpers/utils";
 import { spawnSync } from "child_process";
 
-// eslint-disable-next-line unused-imports/no-unused-vars-ts
-const itif = (condition: boolean) => condition ? it : it.skip;
-const describeif = (condition: boolean) => condition ? describe : describe.skip;
-
 jest.setTimeout(60000);
 
 // FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
@@ -107,7 +103,7 @@ describe("Lens integration tests", () => {
     });
   });
 
-  describeif(ready)("workspaces", () => {
+  util.describeIf(ready)("workspaces", () => {
     beforeAll(appStart, 20000);
 
     afterAll(async () => {
@@ -171,7 +167,7 @@ describe("Lens integration tests", () => {
     await app.client.waitUntilTextExists("span.link-text", "Cluster");
   };
 
-  describeif(ready)("cluster tests", () => {
+  util.describeIf(ready)("cluster tests", () => {
     let clusterAdded = false;
 
     const addCluster = async () => {
