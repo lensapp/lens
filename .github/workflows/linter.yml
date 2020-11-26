@@ -1,11 +1,6 @@
 name: Lint Repo
 on:
-  push:
-    branches:
-      - master
-  release:
-    types:
-      - published
+  - pull_request
 jobs:
   build:
     name: Lint
