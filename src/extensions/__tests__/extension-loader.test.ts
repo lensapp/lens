@@ -8,7 +8,7 @@ jest.mock(
   "electron",
   () => ({
     ipcRenderer: {
-      invoke: jest.fn(async (channel: string, ...args: any[]) => {
+      invoke: jest.fn(async (channel: string) => {
         if (channel === "extensions:loaded") {
           return [
             [
