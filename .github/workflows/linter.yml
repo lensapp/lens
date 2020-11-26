@@ -47,6 +47,9 @@ jobs:
       - name: Lint Code Base
         uses: github/super-linter@v3
         env:
+          FILTER_REGEX_INCLUDE: "**/*.(ts|tsx|js)"
           VALIDATE_JAVASCRIPT_ES: true
+          JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.json
+          LINTER_RULES_PATH: /
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
