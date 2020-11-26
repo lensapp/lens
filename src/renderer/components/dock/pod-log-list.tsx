@@ -147,12 +147,12 @@ export class PodLogList extends React.Component<Props> {
         const active = isActiveOverlay(rowIndex, index);
         const lastItem = index === pieces.length - 1;
         const overlayValue = matches.next().value;
-        const overlay = !lastItem ?
-          <span
+        const overlay = !lastItem
+          ? <span
             className={cssNames("overlay", { active })}
             dangerouslySetInnerHTML={{ __html: ansiToHtml(overlayValue) }}
-          /> :
-          null;
+          />
+          : null;
         contents.push(
           <React.Fragment key={piece + index}>
             <span dangerouslySetInnerHTML={{ __html: ansiToHtml(piece) }} />

@@ -22,11 +22,9 @@ export class PodLogs extends React.Component<Props> {
   private logListElement = React.createRef<PodLogList>(); // A reference for VirtualList component
 
   componentDidMount() {
-    disposeOnUnmount(this, [
-      reaction(() => this.props.tab.id, async () => {
-        await this.reload();
-      }, { fireImmediately: true }),
-    ]);
+    disposeOnUnmount(this,
+      reaction(() => this.props.tab.id, this.reload, { fireImmediately: true })
+    );
   }
 
   get tabData() {
