@@ -18,7 +18,7 @@ interface Props {
   initialOffset?: number;
   readyOffset?: number;
   selectedItemId?: string;
-  getRow: (item: any) => React.ReactElement<any>;
+  getRow: (item: any, index: number) => React.ReactElement<any>;
   onScroll?: (props: ListOnScrollProps) => void;
   outerRef?: React.Ref<any>
 }
@@ -105,7 +105,7 @@ export class VirtualList extends Component<Props, State> {
 
 interface RowData {
   items: any[];
-  getRow?: (item: any) => React.ReactElement;
+  getRow?: (item: any, index: number) => React.ReactElement;
 }
 
 interface RowProps extends ListChildComponentProps {
@@ -116,7 +116,7 @@ const Row = observer((props: RowProps) => {
   const { index, style, data } = props;
   const { items, getRow } = data;
   const item = items[index];
-  const row = getRow(item);
+  const row = getRow(item, index);
   if (!row) return null;
   return React.cloneElement(row, {
     style: Object.assign({}, row.props.style, style)
