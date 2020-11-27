@@ -1,7 +1,7 @@
-import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import "@testing-library/jest-dom/extend-expect";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import fse from "fs-extra";
-import React from 'react';
+import React from "react";
 import { extensionDiscovery } from "../../../../extensions/extension-discovery";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { Notifications } from "../../notifications";
