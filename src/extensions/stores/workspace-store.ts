@@ -22,6 +22,13 @@ export class WorkspaceStore extends Singleton {
   }
 
   /**
+   * Set active workspace id
+   */
+  set currentWorkspaceId(id: string) {
+    internalWorkspaceStore.currentWorkspaceId = id;
+  }
+
+  /**
    * Map of all workspaces
    */
   get workspaces(): ObservableMap<string, Workspace> {
