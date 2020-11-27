@@ -269,7 +269,115 @@ export class HelpPage extends React.Component<{ extension: LensRendererExtension
 
 `HelpIcon` introduces one of Lens' built-in components available to extension developers, the `Component.Icon`. Built in are the [Material Design](https://material.io) [icons](https://material.io/resources/icons/). One can be selected by name via the `material` field. 
 
+### `clusterFeatures`
 
+Cluster features are Kubernetes resources that can be applied to and managed within the active cluster. They can be installed/uninstalled by the Lens user from the [cluster settings page](). 
+The following example shows how to add a cluster feature as part of a `LensRendererExtension`:
+
+``` typescript
+import { LensRendererExtension } from "@k8slens/extensions"
+import { ExampleFeature } from "./src/example-feature"
+import React from "react"
+
+export default class ExampleFeatureExtension extends LensRendererExtension {
+  clusterFeatures = [
+    {
+      title: "Example Feature",
+      components: {
+        Description: () => {
+          return (
+            <span>
+                Enable an example feature.
+            </span>
+          )
+        }
+      },
+      feature: new ExampleFeature()
+    }
+  ];
+}
+```
+The `title` and `components.Description` fields provide content that appears on the cluster settings page, in the **Features** section. The `feature` field must specify an instance which extends the abstract class `ClusterFeature.Feature`, and specifically implement the following methods:
+
+``` typescript
+  abstract install(cluster: Cluster): Promise<void>;
+  abstract upgrade(cluster: Cluster): Promise<void>;
+  abstract uninstall(cluster: Cluster): Promise<void>;
+  abstract updateStatus(cluster: Cluster): Promise<ClusterFeatureStatus>;
+```
+
+The `install()` method is typically called by Lens when a user has indicated that this feature is to be installed (i.e. clicked **Install** for the feature on the cluster settings page). The implementation of this method should install kubernetes resources using the `applyResources()` method, or by directly accessing the kubernetes api ([`K8sApi`](tbd)).
+
+The `upgrade()` method is typically called by Lens when a user has indicated that this feature is to be upgraded (i.e. clicked **Upgrade** for the feature on the cluster settings page). The implementation of this method should upgrade the kubernetes resources already installed, if relevant to the feature.
+
+The `uninstall()` method is typically called by Lens when a user has indicated that this feature is to be uninstalled (i.e. clicked **Uninstall** for the feature on the cluster settings page). The implementation of this method should uninstall kubernetes resources using the kubernetes api (`K8sApi`)
+
+The `updateStatus()` method is called periodically by Lens to determine details about the feature's current status. The implementation of this method should provide the current status information in the `status` field of the `ClusterFeature.Feature` parent class. The `status.currentVersion` and `status.latestVersion` fields may be displayed by Lens in describing the feature. The `status.installed` field should be set to true if the feature is currently installed, otherwise false. Also, Lens relies on the `status.canUpgrade` field to determine if the feature can be upgraded (i.e a new version could be available) so the implementation should set the `status.canUpgrade` field according to specific rules for the feature, if relevant.
+
+The following shows a very simple implementation of a `ClusterFeature`:
+
+``` typescript
+import { ClusterFeature, Store, K8sApi } from "@k8slens/extensions";
+import * as path from "path";
+
+export class ExampleFeature extends ClusterFeature.Feature {
+
+  async install(cluster: Store.Cluster): Promise<void> {
+
+    super.applyResources(cluster, path.join(__dirname, "../resources/"));
+  }
+
+  async upgrade(cluster: Store.Cluster): Promise<void> {
+    return this.install(cluster);
+  }
+
+  async updateStatus(cluster: Store.Cluster): Promise<ClusterFeature.FeatureStatus> {
+    try {
+      const pod = K8sApi.forCluster(cluster, K8sApi.Pod);
+      const examplePod = await pod.get({name: "example-pod", namespace: "default"});
+      if (examplePod?.kind) {
+        this.status.installed = true;
+        this.status.currentVersion = examplePod.spec.containers[0].image.split(":")[1];
+        this.status.canUpgrade = true;  // a real implementation would perform a check here that is relevant to the specific feature 
+      } else {
+        this.status.installed = false;
+        this.status.canUpgrade = false;
+      }
+    } catch(e) {
+      if (e?.error?.code === 404) {
+        this.status.installed = false;
+        this.status.canUpgrade = false;
+      }
+    }
+
+    return this.status;
+  }
+
+  async uninstall(cluster: Store.Cluster): Promise<void> {
+    const podApi = K8sApi.forCluster(cluster, K8sApi.Pod);
+    await podApi.delete({name: "example-pod", namespace: "default"});
+  }
+}
+```
+
+This example implements the `install()` method by simply invoking the helper `applyResources()` method. `applyResources()` tries to apply all resources read from all files found in the folder path provided. In this case this folder path is the `../resources` subfolder relative to current source code's folder. The file `../resources/example-pod.yml` could contain:
+
+``` yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+spec:
+  containers:
+  - name: example-pod
+    image: nginx
+```
+
+The `upgrade()` method in the example above is implemented by simply invoking the `install()` method. Depending on the feature to be supported by an extension, upgrading may require additional and/or different steps.
+
+The `uninstall()` method is implemented in the example above by utilizing the [`K8sApi`](tbd) provided by Lens to simply delete the `example-pod` pod applied by the `install()` method.
+
+The `updateStatus()` method is implemented above by using the [`K8sApi`](tbd) as well, this time to get information from the `example-pod` pod, in particular to determine if it is installed, what version is associated with it, and if it can be upgraded. How the status is updated for a specific cluster feature is up to the implementation. 
 
 
 *********************************************************************
@@ -278,44 +386,6 @@ WIP below!
 
 
 
-### `clusterFeatures`
-
-Cluster features are Kubernetes resources that can applied and managed to the active cluster. They can be installed/uninstalled from the [cluster settings page](). 
-The following example shows how to add a cluster feature:
-
-``` typescript
-import { LensRendererExtension } from "@k8slens/extensions"
-import { MetricsFeature } from "./src/metrics-feature"
-import React from "react"
-
-export default class ClusterMetricsFeatureExtension extends LensRendererExtension {
-  clusterFeatures = [
-    {
-      title: "Metrics Stack",
-      components: {
-        Description: () => {
-          return (
-            <span>
-                Enable timeseries data visualization (Prometheus stack) for your cluster.
-                Install this only if you don't have existing Prometheus stack installed.
-                You can see preview of manifests <a href="https://github.com/lensapp/lens/tree/master/extensions/lens-metrics/resources" target="_blank">here</a>.
-              </span>
-          )
-        }
-      },
-      feature: new MetricsFeature()
-    }
-  ];
-}
-```
-The `title` and `components.Description` fields appear on the cluster settings page. The cluster feature must extend the abstract class `ClusterFeature.Feature`, and specifically implement the following methods:
-
-``` typescript
-  abstract install(cluster: Cluster): Promise<void>;
-  abstract upgrade(cluster: Cluster): Promise<void>;
-  abstract uninstall(cluster: Cluster): Promise<void>;
-  abstract updateStatus(cluster: Cluster): Promise<ClusterFeatureStatus>;
-```
 
 ### `appPreferences`
 

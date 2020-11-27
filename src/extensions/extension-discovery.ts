@@ -10,6 +10,8 @@ import { extensionsStore } from "./extensions-store";
 import type { LensExtensionId, LensExtensionManifest } from "./lens-extension";
 
 export interface InstalledExtension {
+    id: LensExtensionId;
+
     readonly manifest: LensExtensionManifest;
 
     // Absolute path to the non-symlinked source folder,
@@ -254,6 +256,7 @@ export class ExtensionDiscovery {
       const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
 
       return {
+        id: installedManifestPath,
         absolutePath: path.dirname(manifestPath),
         manifestPath: installedManifestPath,
         manifest: manifestJson,
@@ -273,7 +276,7 @@ export class ExtensionDiscovery {
     await this.installPackages();
     const extensions = bundledExtensions.concat(localExtensions);
 
-    return new Map(extensions.map(ext => [ext.manifestPath, ext]));
+    return new Map(extensions.map(extension => [extension.id, extension]));
   }
 
   /**

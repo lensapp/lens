@@ -61,7 +61,7 @@ export class ExtensionLoader {
   }
 
   addExtension(extension: InstalledExtension) {
-    this.extensions.set(extension.manifestPath as LensExtensionId, extension);
+    this.extensions.set(extension.id, extension);
   }
 
   removeInstance(lensExtensionId: LensExtensionId) {
@@ -139,8 +139,7 @@ export class ExtensionLoader {
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
-        // manifestPath is considered the id
-        if (removedExtension.manifestPath === extension.manifestPath) {
+        if (removedExtension.id === extension.id) {
           removeItems.forEach(remove => {
             remove();
           });
@@ -163,7 +162,7 @@ export class ExtensionLoader {
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
-        if (removedExtension.manifestPath === extension.manifestPath) {
+        if (removedExtension.id === extension.id) {
           removeItems.forEach(remove => {
             remove();
           });
@@ -191,7 +190,7 @@ export class ExtensionLoader {
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
-        if (removedExtension.manifestPath === extension.manifestPath) {
+        if (removedExtension.id === extension.id) {
           removeItems.forEach(remove => {
             remove();
           });

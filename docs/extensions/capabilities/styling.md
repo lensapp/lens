@@ -104,38 +104,38 @@ A complete list of themable colors can be found in the [Color Reference](../colo
 When the light theme is active, the `<body>` element gets a "theme-light" class, or: `<body class="theme-light">`. If the class isn't there, the theme defaults to dark. The active theme can be changed in the **Preferences** page:
 ![Color Theme](images/theme-selector.png)
 
-Currently, there is no prescribed way of detecting changes to the theme in JavaScript. [This issue](https://github.com/lensapp/lens/issues/1336) has been raised to resolve this problem. In the meantime, you can use a [MutationObserver](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) in order to observe the `<body>` element's `class` attribute in order to see if the "theme-light" class gets added to it:
+There is a way of detect active theme and its changes in JS. [MobX observer function/decorator](https://github.com/mobxjs/mobx-react#observercomponent) can be used for this purpose.
 
-```javascript
-...
-  useEffect(function () {
-    const observer = new MutationObserver(function (mutations: MutationRecord[]) {
-      mutations.forEach((mutation: MutationRecord) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-          if ((mutation.target as HTMLElement).classList.contains('theme-light')) {
-            // theme is LIGHT
-          } else {
-            // theme is DARK
-          }
-        }
-      });
-    });
+```js
+import React from "react"
+import { observer } from "mobx-react"
+import { App, Component, Theme } from "@k8slens/extensions";
 
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-
-    return function () {
-      observer.disconnect();
-    };
-  }, []); // run once on mount
-...
+@observer
+export class SupportPage extends React.Component {
+  render() {
+    return (
+      <div className="SupportPage">
+        <h1>Active theme is {Theme.getActiveTheme().name}</h1>
+      </div>
+    );
+  }
+}
 ```
+
+`Theme` entity from `@k8slens/extensions` provides active theme object and `@observer` decorator makes component reactive - so it will rerender each time any of the observables (active theme in our case) will be changed.
+
+Working example provided in [Styling with Emotion](https://github.com/lensapp/lens-extension-samples/tree/master/styling-emotion-sample) sample extension.
 
 ## Injected Styles
 
-Every extension is affected by the list of default global styles defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss). These are basic browser resets and element styles, including setting the `box-sizing` property for every element, default text and background colors, default font sizes, basic heading formatting, and so on.
+Every extension is affected by the list of default global styles defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss). These are basic browser resets and element styles, including:
+
+- setting the `box-sizing` property for every element
+- default text and background colors
+- default font sizes
+- basic heading (h1, h2, etc) formatting
+- custom scrollbar styling
 
 Extensions may overwrite these defaults if needed. They have low CSS specificity, so overriding them should be fairly easy.
 
@@ -148,3 +148,11 @@ const Container = styled.div(() => ({
   backgroundColor: 'var(--mainBackground)'
 }));
 ```
+
+## Examples
+
+You can explore samples for each styling technique that you can use for extensions:
+
+- [Styling with Sass](https://github.com/lensapp/lens-extension-samples/tree/master/styling-sass-sample)
+- [Styling with Emotion](https://github.com/lensapp/lens-extension-samples/tree/master/styling-emotion-sample)
+- [Styling with CSS Modules](https://github.com/lensapp/lens-extension-samples/tree/master/styling-css-modules-sample)

@@ -18,6 +18,7 @@ jest.mock(
                   name: "TestExtension",
                   version: "1.0.0",
                 },
+                id: manifestPath,
                 absolutePath: "/test/1",
                 manifestPath,
                 isBundled: false,
@@ -31,6 +32,7 @@ jest.mock(
                   name: "TestExtension2",
                   version: "2.0.0",
                 },
+                id: manifestPath2,
                 absolutePath: "/test/2",
                 manifestPath: manifestPath2,
                 isBundled: false,
@@ -54,6 +56,7 @@ jest.mock(
                       name: "TestExtension",
                       version: "1.0.0",
                     },
+                    id: manifestPath,
                     absolutePath: "/test/1",
                     manifestPath,
                     isBundled: false,
@@ -67,6 +70,7 @@ jest.mock(
                       name: "TestExtension3",
                       version: "3.0.0",
                     },
+                    id: manifestPath3,
                     absolutePath: "/test/3",
                     manifestPath: manifestPath3,
                     isBundled: false,
@@ -99,6 +103,7 @@ describe("ExtensionLoader", () => {
         Map {
           "manifest/path" => Object {
             "absolutePath": "/test/1",
+            "id": "manifest/path",
             "isBundled": false,
             "isEnabled": true,
             "manifest": Object {
@@ -109,6 +114,7 @@ describe("ExtensionLoader", () => {
           },
           "manifest/path3" => Object {
             "absolutePath": "/test/3",
+            "id": "manifest/path3",
             "isBundled": false,
             "isEnabled": true,
             "manifest": Object {

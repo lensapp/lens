@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.0-beta.4 (current version)
+## 4.0.0-rc.1 (current version)
 
 - Extension API
 - Improved pod logs
@@ -12,14 +12,21 @@ Here you can find description of changes we've built into each release. While we
 - Add LoadBalancer information to Ingress view
 - Add search by ip to Pod view
 - Move tracker to an extension
-- Add support page (as an extension)
 - Ability to restart deployment
+- Add stateful set scale slider
 - Status bar visual fixes
-- Fix proxy upgrade socket timeouts
-- Fix UI staleness after network issues
 - Add +/- buttons in scale deployment popup screen
 - Update chart details when selecting another chart
 - Use latest alpine version (3.12) for shell sessions
+- Open last active cluster after switching workspaces
+- Replace deprecated stable helm repository with bitnami
+- Catch errors return error response when fetching chart or chart values fails
+- Update EULA url
+- Change add-cluster to single column layout
+- Replace cluster warning event polling with watches
+- Fix pod usage metrics on Kubernetes >=1.19
+- Fix proxy upgrade socket timeouts
+- Fix UI staleness after network issues
 - Fix errors on app quit
 - Fix kube-auth-proxy to accept only target cluster hostname
 
