@@ -1,6 +1,8 @@
 export { ExtensionStore } from "../extension-store";
-export { clusterStore } from "../../common/cluster-store";
-export type { ClusterModel } from "../../common/cluster-store";
-export { Cluster } from "../../main/cluster";
-export { workspaceStore, Workspace } from "../../common/workspace-store";
-export type { WorkspaceModel } from "../../common/workspace-store";
+
+export { clusterStore, Cluster } from "../stores/cluster-store";
+export type { ClusterModel, ClusterId } from "../stores/cluster-store";
+
+export { workspaceStore, Workspace } from "../stores/workspace-store";
+export type { WorkspaceId, WorkspaceModel } from "../stores/workspace-store";
+
