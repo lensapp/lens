@@ -42,7 +42,7 @@ interface InstallRequestValidated extends InstallRequestPreloaded {
 interface ExtensionState {
   displayName: string;
   // Possible states the extension can be
-  state: "uninstalling";
+  state: "installing" | "uninstalling";
 }
 
 @observer
@@ -70,20 +70,32 @@ export class Extensions extends React.Component {
       extension.state === "uninstalling" && !this.extensions.find(extension => extension.id === id)
     ).map(([id, extension]) => ({ ...extension, id }));
   }
+
+  /**
+   * Extensions that were added to extensions but are still in "installing" state
+   */
+  @computed get addedInstalling() {
+    return Array.from(this.extensionState.entries()).filter(([id, extension]) => 
+      extension.state === "installing" && this.extensions.find(extension => extension.id === id)
+    ).map(([id, extension]) => ({ ...extension, id }));
+  }
   
   componentDidMount() {
     disposeOnUnmount(this,
-      reaction(() => this.extensions, (extensions) => {
-        const removedUninstalling = this.removedUninstalling;
-
-        removedUninstalling.forEach(({ displayName }) => {
+      reaction(() => this.extensions, () => {
+        this.removedUninstalling.forEach(({ id, displayName }) => {
           Notifications.ok(
             <p>Extension <b>{displayName}</b> successfully uninstalled!</p>
           );
+          this.extensionState.delete(id);
         });
 
-        removedUninstalling.forEach(({ id }) => {
+        this.addedInstalling.forEach(({ id, displayName }) => {
+          Notifications.ok(
+            <p>Extension <b>{displayName}</b> successfully installed!</p>
+          );
           this.extensionState.delete(id);
+          this.installPath = "";
         });
       })
     );
@@ -91,6 +103,7 @@ export class Extensions extends React.Component {
 
   @computed get extensions() {
     const searchText = this.search.toLowerCase();
+
     return Array.from(extensionLoader.userExtensions.values()).filter(ext => {
       const { name, description } = ext.manifest;
       return [
@@ -123,6 +136,7 @@ export class Extensions extends React.Component {
         { name: "tarball", extensions: this.supportedFormats }
       ]
     });
+
     if (!canceled && filePaths.length) {
       this.requestInstall(
         filePaths.map(filePath => ({
@@ -137,6 +151,7 @@ export class Extensions extends React.Component {
     const { installPath } = this;
     if (!installPath) return;
     const fileName = path.basename(installPath);
+
     try {
       // install via url
       // fixme: improve error messages for non-tar-file URLs
@@ -172,13 +187,13 @@ export class Extensions extends React.Component {
     await Promise.all(
       requests
         .filter(req => !req.data && req.filePath)
-        .map(req => {
-          return fse.readFile(req.filePath).then(data => {
-            req.data = data;
-            preloadedRequests.push(req);
+        .map(request => {
+          return fse.readFile(request.filePath).then(data => {
+            request.data = data;
+            preloadedRequests.push(request);
           }).catch(error => {
             if (showError) {
-              Notifications.error(`Error while reading "${req.filePath}": ${String(error)}`);
+              Notifications.error(`Error while reading "${request.filePath}": ${String(error)}`);
             }
           });
         })
@@ -198,11 +213,13 @@ export class Extensions extends React.Component {
     if (!tarFiles.includes(manifestLocation)) {
       throw new Error(`invalid extension bundle, ${manifestFilename} not found`);
     }
+
     const manifest = await readFileFromTar<LensExtensionManifest>({
       tarPath: filePath,
       filePath: manifestLocation,
       parseJson: true,
     });
+
     if (!manifest.lens && !manifest.renderer) {
       throw new Error(`${manifestFilename} must specify "main" and/or "renderer" fields`);
     }
@@ -214,6 +231,7 @@ export class Extensions extends React.Component {
 
     // copy files to temp
     await fse.ensureDir(this.getExtensionPackageTemp());
+
     requests.forEach(req => {
       const tempFile = this.getExtensionPackageTemp(req.fileName);
       fse.writeFileSync(tempFile, req.data);
@@ -225,6 +243,7 @@ export class Extensions extends React.Component {
         const tempFile = this.getExtensionPackageTemp(req.fileName);
         try {
           const manifest = await this.validatePackage(tempFile);
+
           validatedRequests.push({
             ...req,
             manifest,
@@ -232,6 +251,7 @@ export class Extensions extends React.Component {
           });
         } catch (error) {
           fse.unlink(tempFile).catch(() => null); // remove invalid temp package
+
           if (showErrors) {
             Notifications.error(
               <div className="flex column gaps">
@@ -255,6 +275,7 @@ export class Extensions extends React.Component {
       const { name, version, description } = install.manifest;
       const extensionFolder = this.getExtensionDestFolder(name);
       const folderExists = fse.existsSync(extensionFolder);
+  
       if (!folderExists) {
         // auto-install extension if not yet exists
         this.unpackExtension(install);
@@ -280,10 +301,18 @@ export class Extensions extends React.Component {
   }
 
   async unpackExtension({ fileName, tempFile, manifest: { name, version } }: InstallRequestValidated) {
-    const extName = extensionDisplayName(name, version);
-    logger.info(`Unpacking extension ${extName}`, { fileName, tempFile });
-    const unpackingTempFolder = path.join(path.dirname(tempFile), path.basename(tempFile) + "-unpacked");
+    const displayName = extensionDisplayName(name, version);
     const extensionFolder = this.getExtensionDestFolder(name);
+    const unpackingTempFolder = path.join(path.dirname(tempFile), path.basename(tempFile) + "-unpacked");
+    const extensionId = path.join(extensionDiscovery.nodeModulesPath, name, "package.json");
+
+    logger.info(`Unpacking extension ${displayName}`, { fileName, tempFile });
+
+    this.extensionState.set(extensionId, {
+      state: "installing",
+      displayName
+    });
+
     try {
       // extract to temp folder first
       await fse.remove(unpackingTempFolder).catch(Function);
@@ -293,20 +322,23 @@ export class Extensions extends React.Component {
       // move contents to extensions folder
       const unpackedFiles = await fse.readdir(unpackingTempFolder);
       let unpackedRootFolder = unpackingTempFolder;
+
       if (unpackedFiles.length === 1) {
         // check if %extension.tgz was packed with single top folder,
         // e.g. "npm pack %ext_name" downloads file with "package" root folder within tarball
         unpackedRootFolder = path.join(unpackingTempFolder, unpackedFiles[0]);
       }
+
       await fse.ensureDir(extensionFolder);
       await fse.move(unpackedRootFolder, extensionFolder, { overwrite: true });
-      Notifications.ok(
-        <p>Extension <b>{extName}</b> successfully installed!</p>
-      );
     } catch (error) {
       Notifications.error(
-        <p>Installing extension <b>{extName}</b> has failed: <em>{error}</em></p>
+        <p>Installing extension <b>{displayName}</b> has failed: <em>{error}</em></p>
       );
+      // Remove install state on install failure
+      if (this.extensionState.get(extensionId)?.state === "installing") {
+        this.extensionState.delete(extensionId);
+      }
     } finally {
       // clean up
       fse.remove(unpackingTempFolder).catch(Function);
@@ -340,7 +372,9 @@ export class Extensions extends React.Component {
         <p>Uninstalling extension <b>{displayName}</b> has failed: <em>{error?.message ?? ""}</em></p>
       );
       // Remove uninstall state on uninstall failure
-      this.extensionState.delete(extension.id);
+      if (this.extensionState.get(extension.id)?.state === "uninstalling") {
+        this.extensionState.delete(extension.id);
+      }
     }
   }
 
@@ -394,9 +428,17 @@ export class Extensions extends React.Component {
     });
   }
 
+  /**
+   * True if at least one extension is in installing state
+   */
+  @computed get isInstalling() {
+    return [...this.extensionState.values()].some(extension => extension.state === "installing");
+  }
+
   render() {
     const topHeader = <h2>Manage Lens Extensions</h2>;
     const { installPath } = this;
+
     return (
       <DropFileInput onDropFiles={this.installOnDrop}>
         <PageLayout showOnTop className="Extensions flex column gaps" header={topHeader} contentGaps={false}>
@@ -414,11 +456,12 @@ export class Extensions extends React.Component {
               <Input
                 className="box grow"
                 theme="round-black"
+                disabled={this.isInstalling}
                 placeholder={`Path or URL to an extension package (${this.supportedFormats.join(", ")})`}
                 showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
                 validators={installPath ? this.installPathValidator : undefined}
                 value={installPath}
-                onChange={v => this.installPath = v}
+                onChange={value => this.installPath = value}
                 onSubmit={this.installFromUrlOrPath}
                 iconLeft="link"
                 iconRight={
@@ -434,7 +477,8 @@ export class Extensions extends React.Component {
             <Button
               primary
               label="Install"
-              disabled={!this.installPathValidator.validate(installPath)}
+              disabled={this.isInstalling || !this.installPathValidator.validate(installPath)}
+              waiting={this.isInstalling}
               onClick={this.installFromUrlOrPath}
             />
             <small className="hint">
