@@ -1,10 +1,21 @@
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import fse from "fs-extra";
 import React from 'react';
 import { extensionDiscovery } from "../../../../extensions/extension-discovery";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { Notifications } from "../../notifications";
 import { Extensions } from "../extensions";
+
+jest.mock("fs-extra");
+
+jest.mock("../../../../common/utils", () => ({
+  ...jest.requireActual("../../../../common/utils"),
+  downloadFile: jest.fn(() => ({
+    promise: Promise.resolve()
+  })),
+  extractTar: jest.fn(() => Promise.resolve())
+}));
 
 jest.mock("../../../../extensions/extension-discovery", () => ({
   ...jest.requireActual("../../../../extensions/extension-discovery"),
@@ -70,10 +81,30 @@ describe("Extensions", () => {
     // Approve confirm dialog
     fireEvent.click(screen.getByText("Yes"));
 
-    setTimeout(() => {
+    waitFor(() => {
       expect(screen.getByText("Disable").closest("button")).not.toBeDisabled();
       expect(screen.getByText("Uninstall").closest("button")).not.toBeDisabled();
       expect(Notifications.error).toHaveBeenCalledTimes(1);
-    }, 100);
+    });
+  });
+
+  it("disables install button while installing", () => {
+    render(<Extensions />);
+
+    fireEvent.change(screen.getByPlaceholderText("Path or URL to an extension package", {
+      exact: false
+    }), {
+      target: {
+        value: "https://test.extensionurl/package.tgz"
+      }
+    });
+
+    fireEvent.click(screen.getByText("Install"));
+
+    waitFor(() => {
+      expect(screen.getByText("Install").closest("button")).toBeDisabled();
+      expect(fse.move).toHaveBeenCalledWith("");
+      expect(Notifications.error).not.toHaveBeenCalled();
+    });
   });
 });
