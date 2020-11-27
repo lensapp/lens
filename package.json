@@ -232,7 +232,7 @@
     "mac-ca": "^1.0.4",
     "marked": "^1.1.0",
     "md5-file": "^5.0.0",
-    "mobx": "^5.15.5",
+    "mobx": "^5.15.7",
     "mobx-observable-history": "^1.0.3",
     "mock-fs": "^4.12.0",
     "node-pty": "^0.9.0",
