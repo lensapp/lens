@@ -6,7 +6,7 @@ import { disposeOnUnmount, observer } from "mobx-react";
 import { t, Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
-import { Deployment, deploymentApi } from "../../api/endpoints";
+import { Deployment } from "../../api/endpoints";
 import { cssNames } from "../../utils";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";

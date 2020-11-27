@@ -92,12 +92,12 @@ class KubectlDownloader {
 }
 
 const downloadVersion = packageInfo.config.bundledKubectlVersion;
-const baseDir = path.join(process.env.INIT_CWD, 'binaries', 'client');
+const baseDir = path.join(process.env.INIT_CWD, "binaries", "client");
 const downloads = [
-  { platform: 'linux', arch: 'amd64', target: path.join(baseDir, 'linux', 'x64', 'kubectl') },
-  { platform: 'darwin', arch: 'amd64', target: path.join(baseDir, 'darwin', 'x64', 'kubectl') },
-  { platform: 'windows', arch: 'amd64', target: path.join(baseDir, 'windows', 'x64', 'kubectl.exe') },
-  { platform: 'windows', arch: '386', target: path.join(baseDir, 'windows', 'ia32', 'kubectl.exe') }
+  { platform: "linux", arch: "amd64", target: path.join(baseDir, "linux", "x64", "kubectl") },
+  { platform: "darwin", arch: "amd64", target: path.join(baseDir, "darwin", "x64", "kubectl") },
+  { platform: "windows", arch: "amd64", target: path.join(baseDir, "windows", "x64", "kubectl.exe") },
+  { platform: "windows", arch: "386", target: path.join(baseDir, "windows", "ia32", "kubectl.exe") }
 ];
 
 downloads.forEach((dlOpts) => {

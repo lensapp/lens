@@ -73,7 +73,7 @@ export class ShellSession extends EventEmitter {
       case "powershell.exe":
         return ["-NoExit", "-command", `& {Set-Location $Env:USERPROFILE; $Env:PATH="${this.helmBinDir};${this.kubectlPathDir};$Env:PATH"}`];
       case "bash":
-        return ["--init-file", path.join(this.kubectlBinDir, '.bash_set_path')];
+        return ["--init-file", path.join(this.kubectlBinDir, ".bash_set_path")];
       case "fish":
         return ["--login", "--init-command", `export PATH="${this.helmBinDir}:${this.kubectlPathDir}:$PATH"; export KUBECONFIG="${this.kubeconfigPath}"`];
       case "zsh":
@@ -156,7 +156,7 @@ export class ShellSession extends EventEmitter {
           this.shellProcess.resize(resizeMsgObj["Width"], resizeMsgObj["Height"]);
           break;
         case "9":
-          this.emit('newToken', message);
+          this.emit("newToken", message);
           break;
       }
     });
@@ -164,7 +164,7 @@ export class ShellSession extends EventEmitter {
 
   protected exit(code = 1000) {
     if (this.websocket.readyState == this.websocket.OPEN) this.websocket.close(code);
-    this.emit('exit');
+    this.emit("exit");
   }
 
   protected closeWebsocketOnProcessExit() {

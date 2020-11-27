@@ -8,9 +8,6 @@ import { Application } from "spectron";
 import * as util from "../helpers/utils";
 import { spawnSync } from "child_process";
 
-const describeif = (condition: boolean) => condition ? describe : describe.skip;
-const itif = (condition: boolean) => condition ? it : it.skip;
-
 jest.setTimeout(60000);
 
 // FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
@@ -82,18 +79,18 @@ describe("Lens integration tests", () => {
     });
 
     it('shows "add cluster"', async () => {
-      await app.electron.ipcRenderer.send('test-menu-item-click', "File", "Add Cluster");
+      await app.electron.ipcRenderer.send("test-menu-item-click", "File", "Add Cluster");
       await app.client.waitUntilTextExists("h2", "Add Cluster");
     });
 
     describe("preferences page", () => {
       it('shows "preferences"', async () => {
         const appName: string = process.platform === "darwin" ? "Lens" : "File";
-        await app.electron.ipcRenderer.send('test-menu-item-click', appName, "Preferences");
+        await app.electron.ipcRenderer.send("test-menu-item-click", appName, "Preferences");
         await app.client.waitUntilTextExists("h2", "Preferences");
       });
 
-      it('ensures helm repos', async () => {
+      it("ensures helm repos", async () => {
         await app.client.waitUntilTextExists("div.repos #message-bitnami", "bitnami"); // wait for the helm-cli to fetch the bitnami repo
         await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
         await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
@@ -101,12 +98,12 @@ describe("Lens integration tests", () => {
     });
 
     it.skip('quits Lens"', async () => {
-      await app.client.keys(['Meta', 'Q']);
-      await app.client.keys('Meta');
+      await app.client.keys(["Meta", "Q"]);
+      await app.client.keys("Meta");
     });
   });
 
-  describeif(ready)("workspaces", () => {
+  util.describeIf(ready)("workspaces", () => {
     beforeAll(appStart, 20000);
 
     afterAll(async () => {
@@ -115,27 +112,27 @@ describe("Lens integration tests", () => {
       }
     });
 
-    it('creates new workspace', async () => {
+    it("creates new workspace", async () => {
       await clickWhatsNew(app);
-      await app.client.click('#current-workspace .Icon');
+      await app.client.click("#current-workspace .Icon");
       await app.client.click('a[href="/workspaces"]');
-      await app.client.click('.Workspaces button.Button');
+      await app.client.click(".Workspaces button.Button");
       await app.client.keys("test-workspace");
-      await app.client.click('.Workspaces .Input.description input');
+      await app.client.click(".Workspaces .Input.description input");
       await app.client.keys("test description");
-      await app.client.click('.Workspaces .workspace.editing .Icon');
+      await app.client.click(".Workspaces .workspace.editing .Icon");
       await app.client.waitUntilTextExists(".workspace .name a", "test-workspace");
     });
 
-    it('adds cluster in default workspace', async () => {
+    it("adds cluster in default workspace", async () => {
       await addMinikubeCluster(app);
       await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
       await app.client.waitForExist(`iframe[name="minikube"]`);
       await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active");
     });
 
-    it('adds cluster in test-workspace', async () => {
-      await app.client.click('#current-workspace .Icon');
+    it("adds cluster in test-workspace", async () => {
+      await app.client.click("#current-workspace .Icon");
       await app.client.waitForVisible('.WorkspaceMenu li[title="test description"]');
       await app.client.click('.WorkspaceMenu li[title="test description"]');
       await addMinikubeCluster(app);
@@ -143,10 +140,10 @@ describe("Lens integration tests", () => {
       await app.client.waitForExist(`iframe[name="minikube"]`);
     });
 
-    it('checks if default workspace has active cluster', async () => {
-      await app.client.click('#current-workspace .Icon');
-      await app.client.waitForVisible('.WorkspaceMenu > li:first-of-type');
-      await app.client.click('.WorkspaceMenu > li:first-of-type');
+    it("checks if default workspace has active cluster", async () => {
+      await app.client.click("#current-workspace .Icon");
+      await app.client.waitForVisible(".WorkspaceMenu > li:first-of-type");
+      await app.client.click(".WorkspaceMenu > li:first-of-type");
       await app.client.waitForVisible(".ClustersMenu .ClusterIcon.active");
     });
   });
@@ -170,7 +167,7 @@ describe("Lens integration tests", () => {
     await app.client.waitUntilTextExists("span.link-text", "Cluster");
   };
 
-  describeif(ready)("cluster tests", () => {
+  util.describeIf(ready)("cluster tests", () => {
     let clusterAdded = false;
 
     const addCluster = async () => {
@@ -190,7 +187,7 @@ describe("Lens integration tests", () => {
         }
       });
 
-      it('allows to add a cluster', async () => {
+      it("allows to add a cluster", async () => {
         await addCluster();
         clusterAdded = true;
       });
@@ -515,7 +512,7 @@ describe("Lens integration tests", () => {
         }
       });
 
-      it('shows default namespace', async () => {
+      it("shows default namespace", async () => {
         expect(clusterAdded).toBe(true);
         await app.client.click('a[href="/namespaces"]');
         await app.client.waitUntilTextExists("div.TableCell", "default");
@@ -539,7 +536,7 @@ describe("Lens integration tests", () => {
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
         await app.client.click('a[href^="/pods"]');
         await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver");
-        await app.client.click('.Icon.new-dock-tab');
+        await app.client.click(".Icon.new-dock-tab");
         await app.client.waitUntilTextExists("li.MenuItem.create-resource-tab", "Create resource");
         await app.client.click("li.MenuItem.create-resource-tab");
         await app.client.waitForVisible(".CreateResource div.ace_content");

@@ -157,7 +157,7 @@ export class Extensions extends React.Component {
   };
 
   installOnDrop = (files: File[]) => {
-    logger.info('Install from D&D');
+    logger.info("Install from D&D");
     return this.requestInstall(
       files.map(file => ({
         fileName: path.basename(file.path),
@@ -405,7 +405,7 @@ export class Extensions extends React.Component {
             The features that Lens includes out-of-the-box are just the start.
             Lens extensions let you add new features to your installation to support your workflow.
             Rich extensibility model lets extension authors plug directly into the Lens UI and contribute functionality through the same APIs used by Lens itself.
-            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank">learn more</a>.
+            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a>.
           </div>
 
           <div className="install-extension flex column gaps">
@@ -438,7 +438,7 @@ export class Extensions extends React.Component {
               onClick={this.installFromUrlOrPath}
             />
             <small className="hint">
-              <Trans><b>Pro-Tip</b>: you can drag & drop extension's tarball-file to install</Trans>
+              <Trans><b>Pro-Tip</b>: you can drag & drop extension&apos;s tarball-file to install</Trans>
             </small>
           </div>
 

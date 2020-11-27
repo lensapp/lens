@@ -6,6 +6,14 @@ const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
   "darwin": "./dist/mac/Lens.app/Contents/MacOS/Lens",
 };
 
+export function itIf(condition: boolean) {
+  return condition ? it : it.skip;
+}
+
+export function describeIf(condition: boolean) {
+  return condition ? describe : describe.skip;
+}
+
 export function setup(): Application {
   return new Application({
     path: AppPaths[process.platform], // path to electron app

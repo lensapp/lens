@@ -45,7 +45,7 @@ export class Roles extends React.Component<Props> {
           ]}
           renderTableContents={(role: Role) => [
             role.getName(),
-            <KubeObjectStatusIcon object={role} />,
+            <KubeObjectStatusIcon key="icon" object={role} />,
             role.getNs() || "-",
             role.getAge(),
           ]}

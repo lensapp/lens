@@ -49,10 +49,10 @@ export class NodeDetails extends React.Component<Props> {
     const childPods = podsStore.getPodsByNode(node.getName());
     const metrics = nodesStore.nodeMetrics;
     const metricTabs = [
-      <Trans>CPU</Trans>,
-      <Trans>Memory</Trans>,
-      <Trans>Disk</Trans>,
-      <Trans>Pods</Trans>,
+      <Trans key="cpu">CPU</Trans>,
+      <Trans key="memory">Memory</Trans>,
+      <Trans key="disk">Disk</Trans>,
+      <Trans key="pods">Pods</Trans>,
     ];
     return (
       <div className="NodeDetails">

@@ -21,13 +21,9 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   @computed
   get enabledExtensions() {
-    const extensions: string[] = [];
-    this.state.forEach((state, id) => {
-      if (state.enabled) {
-        extensions.push(state.name);
-      }
-    });
-    return extensions;
+    return Array.from(this.state.values())
+      .filter(({enabled}) => enabled)
+      .map(({name}) => name);
   }
 
   protected state = observable.map<LensExtensionId, LensExtensionState>();

@@ -7,8 +7,8 @@ import { KubeApi } from "../kube-api";
 export class PersistentVolumeClaimsApi extends KubeApi<PersistentVolumeClaim> {
   getMetrics(pvcName: string, namespace: string): Promise<IPvcMetrics> {
     return metricsApi.getMetrics({
-      diskUsage: { category: 'pvc', pvc: pvcName },
-      diskCapacity: { category: 'pvc', pvc: pvcName }
+      diskUsage: { category: "pvc", pvc: pvcName },
+      diskCapacity: { category: "pvc", pvc: pvcName }
     }, {
       namespace
     });

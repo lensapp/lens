@@ -3,7 +3,7 @@ import { migration } from "../migration-wrapper";
 
 export default migration({
   version: "2.4.1",
-  run(store, log) {
+  run(store) {
     for (const value of store) {
       const contextName = value[0];
       if (contextName === "__internal__") continue;

@@ -2,13 +2,17 @@ import "./overview-workload-status.scss";
 
 import React from "react";
 import capitalize from "lodash/capitalize";
-import { findDOMNode } from 'react-dom';
+import { findDOMNode } from "react-dom";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { PieChart } from "../chart";
 import { cssVar } from "../../utils";
-import { ChartData } from "chart.js";
+import { ChartData, ChartDataSets } from "chart.js";
 import { themeStore } from "../../theme.store";
+
+interface SimpleChartDataSets extends ChartDataSets {
+  backgroundColor?: string[];
+}
 
 interface Props {
   status: {
@@ -21,6 +25,7 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
   @observable elem: HTMLElement;
 
   componentDidMount() {
+    // eslint-disable-next-line react/no-find-dom-node
     this.elem = findDOMNode(this) as HTMLElement;
   }
 
@@ -40,8 +45,8 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
         label: "Empty"
       }]
     };
-    if (statuses.some(([key, val]) => val > 0)) {
-      const dataset: any = {
+    if (statuses.some(([, val]) => val > 0)) {
+      const dataset: SimpleChartDataSets = {
         data: [],
         backgroundColor: [],
         label: "Status",

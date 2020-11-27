@@ -1,4 +1,4 @@
-import { getExtensionPageUrl, globalPageRegistry, PageRegistration } from "../page-registry";
+import { getExtensionPageUrl, globalPageRegistry } from "../page-registry";
 import { LensExtension } from "../../lens-extension";
 import React from "react";
 
@@ -53,18 +53,18 @@ describe("globalPageRegistry", () => {
       {
         id: "test-page",
         components: {
-          Page: () => React.createElement('Text')
+          Page: () => React.createElement("Text")
         }
       },
       {
         id: "another-page",
         components: {
-          Page: () => React.createElement('Text')
+          Page: () => React.createElement("Text")
         },
       },
       {
         components: {
-          Page: () => React.createElement('Default')
+          Page: () => React.createElement("Default")
         }
       },
     ], ext);

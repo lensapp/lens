@@ -1,8 +1,8 @@
-const { notarize } = require('electron-notarize');
+const { notarize } = require("electron-notarize");
 
 exports.default = async function notarizing(context) {
   const { electronPlatformName, appOutDir } = context;
-  if (electronPlatformName !== 'darwin') {
+  if (electronPlatformName !== "darwin") {
     return;
   }
   if (!process.env.APPLEID || !process.env.APPLEIDPASS) {
@@ -12,7 +12,7 @@ exports.default = async function notarizing(context) {
   const appName = context.packager.appInfo.productFilename;
 
   return await notarize({
-    appBundleId: 'io.kontena.lens-app',
+    appBundleId: "io.kontena.lens-app",
     appPath: `${appOutDir}/${appName}.app`,
     appleId: process.env.APPLEID,
     appleIdPassword: process.env.APPLEIDPASS,

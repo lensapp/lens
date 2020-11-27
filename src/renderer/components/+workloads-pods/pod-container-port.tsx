@@ -3,7 +3,7 @@ import "./pod-container-port.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { t } from "@lingui/macro";
-import { Pod, IPodContainer } from "../../api/endpoints";
+import { Pod } from "../../api/endpoints";
 import { _i18n } from "../../i18n";
 import { apiBase } from "../../api";
 import { observable } from "mobx";
@@ -39,7 +39,7 @@ export class PodContainerPort extends React.Component<Props> {
   render() {
     const { port } = this.props;
     const { name, containerPort, protocol } = port;
-    const text = (name ? name + ': ' : '')+`${containerPort}/${protocol}`;
+    const text = (name ? name + ": " : "")+`${containerPort}/${protocol}`;
     return (
       <div className={cssNames("PodContainerPort", { waiting: this.waiting })}>
         <span title={_i18n._(t`Open in a browser`)} onClick={() => this.portForward() }>

@@ -48,7 +48,7 @@ export class RoleBindings extends React.Component<Props> {
         ]}
         renderTableContents={(binding: RoleBinding) => [
           binding.getName(),
-          <KubeObjectStatusIcon object={binding} />,
+          <KubeObjectStatusIcon key="icon" object={binding} />,
           binding.getSubjectNames(),
           binding.getNs() || "-",
           binding.getAge(),

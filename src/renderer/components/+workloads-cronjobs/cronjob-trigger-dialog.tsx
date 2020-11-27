@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
-import { CronJob, cronJobApi, jobApi, Job } from "../../api/endpoints";
+import { CronJob, cronJobApi, jobApi } from "../../api/endpoints";
 import { Notifications } from "../notifications";
 import { cssNames } from "../../utils";
 import { Input } from "../input";

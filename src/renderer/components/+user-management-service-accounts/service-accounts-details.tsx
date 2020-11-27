@@ -39,7 +39,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     });
     this.secrets = await Promise.all(secrets);
     const imagePullSecrets = serviceAccount.getImagePullSecrets().map(async({ name }) => {
-      return secretsStore.load({ name, namespace }).catch(_err => { return this.generateDummySecretObject(name); });
+      return secretsStore.load({ name, namespace }).catch(() => this.generateDummySecretObject(name));
     });
     this.imagePullSecrets = await Promise.all(imagePullSecrets);
   });

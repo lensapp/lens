@@ -56,7 +56,7 @@ export class PodLogs extends React.Component<Props> {
    * @param query {string} A text from search field
    */
   @autobind()
-  onSearch(query: string) {
+  onSearch() {
     this.toOverlay();
   }
 

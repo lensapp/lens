@@ -44,7 +44,7 @@ export default migration({
             const iconPath = cluster.preferences.icon.replace("store://", "");
             const fileData = fse.readFileSync(path.join(userDataPath, iconPath));
 
-            cluster.preferences.icon = `data:;base64,${fileData.toString('base64')}`;
+            cluster.preferences.icon = `data:;base64,${fileData.toString("base64")}`;
           } else {
             delete cluster.preferences?.icon;
           }

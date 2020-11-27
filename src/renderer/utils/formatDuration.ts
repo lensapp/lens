@@ -19,8 +19,8 @@ export function formatDuration(timeValue: number, compact: boolean) {
 
   const meaningfulValues = durationValues
     .map((a, i): [number, string] => [a, suffixes[i]])
-    .filter(([dur, _suf]) => dur > 0)
-    .filter(([_dur, suf], i) => i === 0 || suf !== "s") // remove seconds, unless it is the only one
+    .filter(([dur]) => dur > 0)
+    .filter(([, suf], i) => i === 0 || suf !== "s") // remove seconds, unless it is the only one
     .map(([dur, suf]) => dur + suf);
 
   if (meaningfulValues.length === 0) {

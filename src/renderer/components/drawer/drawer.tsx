@@ -80,7 +80,7 @@ export class Drawer extends React.Component<DrawerProps> {
       return;
     }
     const clickedElem = evt.target as HTMLElement;
-    const isOutsideAnyDrawer = !clickedElem.closest('.Drawer');
+    const isOutsideAnyDrawer = !clickedElem.closest(".Drawer");
     if (isOutsideAnyDrawer) {
       close();
     }

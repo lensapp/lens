@@ -47,7 +47,7 @@ export class EditResourceStore extends DockTabStore<KubeEditResource> {
   }
 
   getTabByResource(object: KubeObject): IDockTab {
-    const [tabId] = Array.from(this.data).find(([tabId, { resource }]) => {
+    const [tabId] = Array.from(this.data).find(([, { resource }]) => {
       return object.selfLink === resource;
     }) || [];
     return dockStore.getTabById(tabId);

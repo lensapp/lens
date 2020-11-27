@@ -1,4 +1,4 @@
-import './menu.scss';
+import "./menu.scss";
 
 import React, { Fragment, ReactElement, ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -64,30 +64,30 @@ export class Menu extends React.Component<MenuProps, State> {
     if (!this.props.usePortal) {
       const parent = this.elem.parentElement;
       const position = window.getComputedStyle(parent).position;
-      if (position === 'static') parent.style.position = 'relative';
+      if (position === "static") parent.style.position = "relative";
     } else if (this.isOpen) {
       this.refreshPosition();
     }
     this.opener = document.getElementById(this.props.htmlFor); // might not exist in sub-menus
     if (this.opener) {
-      this.opener.addEventListener('click', this.toggle);
-      this.opener.addEventListener('keydown', this.onKeyDown);
+      this.opener.addEventListener("click", this.toggle);
+      this.opener.addEventListener("keydown", this.onKeyDown);
     }
-    this.elem.addEventListener('keydown', this.onKeyDown);
-    window.addEventListener('resize', this.onWindowResize);
-    window.addEventListener('click', this.onClickOutside, true);
-    window.addEventListener('scroll', this.onScrollOutside, true);
+    this.elem.addEventListener("keydown", this.onKeyDown);
+    window.addEventListener("resize", this.onWindowResize);
+    window.addEventListener("click", this.onClickOutside, true);
+    window.addEventListener("scroll", this.onScrollOutside, true);
   }
 
   componentWillUnmount() {
     if (this.opener) {
-      this.opener.removeEventListener('click', this.toggle);
-      this.opener.removeEventListener('keydown', this.onKeyDown);
+      this.opener.removeEventListener("click", this.toggle);
+      this.opener.removeEventListener("keydown", this.onKeyDown);
     }
-    this.elem.removeEventListener('keydown', this.onKeyDown);
-    window.removeEventListener('resize', this.onWindowResize);
-    window.removeEventListener('click', this.onClickOutside, true);
-    window.removeEventListener('scroll', this.onScrollOutside, true);
+    this.elem.removeEventListener("keydown", this.onKeyDown);
+    window.removeEventListener("resize", this.onWindowResize);
+    window.removeEventListener("click", this.onClickOutside, true);
+    window.removeEventListener("scroll", this.onScrollOutside, true);
   }
 
   protected get focusableItems() {
@@ -188,7 +188,7 @@ export class Menu extends React.Component<MenuProps, State> {
     }
   }
 
-  onWindowResize(evt: UIEvent) {
+  onWindowResize() {
     if (!this.isOpen) return;
     this.refreshPosition();
   }
@@ -224,7 +224,7 @@ export class Menu extends React.Component<MenuProps, State> {
   render() {
     const { position, id } = this.props;
     let { className, usePortal } = this.props;
-    className = cssNames('Menu', className, this.state.position || position, {
+    className = cssNames("Menu", className, this.state.position || position, {
       portal: usePortal,
     });
 

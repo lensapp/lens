@@ -100,11 +100,11 @@ export class Router {
     try {
       const filename = path.basename(req.url);
       // redirect requests to [appName].js, [appName].html /sockjs-node/ to webpack-dev-server (for hot-reload support)
-      const toWebpackDevServer = filename.includes(appName) || filename.includes('hot-update') || req.url.includes('sockjs-node');
+      const toWebpackDevServer = filename.includes(appName) || filename.includes("hot-update") || req.url.includes("sockjs-node");
       if (isDevelopment && toWebpackDevServer) {
         const redirectLocation = `http://localhost:${webpackDevServerPort}` + req.url;
         res.statusCode = 307;
-        res.setHeader('Location', redirectLocation);
+        res.setHeader("Location", redirectLocation);
         res.end();
         return;
       }
@@ -126,8 +126,8 @@ export class Router {
   protected addRoutes() {
     // Static assets
     this.router.add(
-      { method: 'get', path: '/{path*}' },
-      ({ params, response, path, raw: { req } }: LensApiRequest) => {
+      { method: "get", path: "/{path*}" },
+      ({ params, response, raw: { req } }: LensApiRequest) => {
         this.handleStaticFile(params.path, response, req);
       });
 

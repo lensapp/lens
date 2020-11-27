@@ -1,14 +1,14 @@
 // Helper to convert memory from units Ki, Mi, Gi, Ti, Pi to bytes and vise versa
 
 const base = 1024;
-const suffixes = ['K', 'M', 'G', 'T', 'P', 'E']; // Equivalents: Ki, Mi, Gi, Ti, Pi, Ei
+const suffixes = ["K", "M", "G", "T", "P", "E"]; // Equivalents: Ki, Mi, Gi, Ti, Pi, Ei
 
 export function unitsToBytes(value: string) {
   if (!suffixes.some(suffix => value.includes(suffix))) {
     return parseFloat(value);
   }
  
-  const suffix = value.replace(/[0-9]|i|\./g, '');
+  const suffix = value.replace(/[0-9]|i|\./g, "");
   const index = suffixes.indexOf(suffix);
   return parseInt(
     (parseFloat(value) * Math.pow(base, index + 1)).toFixed(1)

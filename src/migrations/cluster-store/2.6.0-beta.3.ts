@@ -10,7 +10,7 @@ export default migration({
       const cluster = value[1];
       if (!cluster.kubeConfig) continue;
       const kubeConfig = yaml.safeLoad(cluster.kubeConfig);
-      if (!kubeConfig.hasOwnProperty('users')) continue;
+      if (!kubeConfig.hasOwnProperty("users")) continue;
       const userObj = kubeConfig.users[0];
       if (userObj) {
         const user = userObj.user;

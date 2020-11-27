@@ -62,7 +62,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
         ]}
         renderTableContents={(hpa: HorizontalPodAutoscaler) => [
           hpa.getName(),
-          <KubeObjectStatusIcon object={hpa} />,
+          <KubeObjectStatusIcon key="icon" object={hpa} />,
           hpa.getNs(),
           this.getTargets(hpa),
           hpa.getMinPods(),
@@ -85,4 +85,3 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
     );
   }
 }
-

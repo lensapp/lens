@@ -5,11 +5,9 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { configMapsStore } from "./config-maps.store";
-import { ConfigMap, configMapApi } from "../../api/endpoints/configmap.api";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { ConfigMap } from "../../api/endpoints/configmap.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { IConfigMapsRouteParams } from "./config-maps.route";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
@@ -48,7 +46,7 @@ export class ConfigMaps extends React.Component<Props> {
         ]}
         renderTableContents={(configMap: ConfigMap) => [
           configMap.getName(),
-          <KubeObjectStatusIcon object={configMap}/>,
+          <KubeObjectStatusIcon key="icon" object={configMap}/>,
           configMap.getNs(),
           configMap.getKeys().join(", "),
           configMap.getAge(),
@@ -57,4 +55,3 @@ export class ConfigMaps extends React.Component<Props> {
     );
   }
 }
-

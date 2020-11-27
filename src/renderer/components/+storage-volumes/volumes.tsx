@@ -59,8 +59,8 @@ export class PersistentVolumes extends React.Component<Props> {
           }));
           return [
             volume.getName(),
-            <KubeObjectStatusIcon object={volume} />,
-            <Link to={storageClassDetailsUrl} onClick={stopPropagation}>
+            <KubeObjectStatusIcon key="icon" object={volume} />,
+            <Link key="link" to={storageClassDetailsUrl} onClick={stopPropagation}>
               {storageClassName}
             </Link>,
             volume.getCapacity(),

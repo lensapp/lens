@@ -16,7 +16,7 @@ export async function requestMain(channel: string, ...args: any[]) {
 
 async function getSubFrames(): Promise<number[]> {
   const subFrames: number[] = [];
-  clusterFrameMap.forEach((frameId, _) => {
+  clusterFrameMap.forEach(frameId => {
     subFrames.push(frameId);
   });
   return subFrames;

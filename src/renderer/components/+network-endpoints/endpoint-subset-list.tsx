@@ -3,8 +3,6 @@ import "./endpoint-subset-list.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { EndpointSubset, Endpoint, EndpointAddress} from "../../api/endpoints";
-import { _i18n } from "../../i18n";
-import { DrawerItem, DrawerTitle } from "../drawer";
 import { Trans } from "@lingui/macro";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { autobind } from "../../utils";

@@ -142,7 +142,7 @@ export class KubeWatchApi {
 
   protected writeLog(...data: any[]) {
     if (isDevelopment) {
-      console.log('%cKUBE-WATCH-API:', `font-weight: bold`, ...data);
+      console.log("%cKUBE-WATCH-API:", `font-weight: bold`, ...data);
     }
   }
 

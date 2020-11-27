@@ -80,7 +80,7 @@ export class Deployments extends React.Component<Props> {
         ]}
         renderTableContents={(deployment: Deployment) => [
           deployment.getName(),
-          <KubeObjectStatusIcon object={deployment}/>,
+          <KubeObjectStatusIcon key="icon" object={deployment}/>,
           deployment.getNs(),
           this.renderPods(deployment),
           deployment.getReplicas(),

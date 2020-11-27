@@ -88,7 +88,7 @@ export class WebSocketApi {
   reconnect() {
     const { reconnectDelaySeconds } = this.params;
     if (!reconnectDelaySeconds) return;
-    this.writeLog('reconnect after', reconnectDelaySeconds + "ms");
+    this.writeLog("reconnect after", reconnectDelaySeconds + "ms");
     this.reconnectTimer = setTimeout(() => this.connect(), reconnectDelaySeconds * 1000);
     this.readyState = WebSocketApiState.RECONNECTING;
   }
@@ -136,17 +136,17 @@ export class WebSocketApi {
     this.onOpen.emit();
     if (this.params.flushOnOpen) this.flush();
     this.readyState = WebSocketApiState.OPEN;
-    this.writeLog('%cOPEN', 'color:green;font-weight:bold;', evt);
+    this.writeLog("%cOPEN", "color:green;font-weight:bold;", evt);
   }
 
   protected _onMessage(evt: MessageEvent) {
     const data = this.parseMessage(evt.data);
     this.onData.emit(data);
-    this.writeLog('%cMESSAGE', 'color:black;font-weight:bold;', data);
+    this.writeLog("%cMESSAGE", "color:black;font-weight:bold;", data);
   }
 
   protected _onError(evt: Event) {
-    this.writeLog('%cERROR', 'color:red;font-weight:bold;', evt);
+    this.writeLog("%cERROR", "color:red;font-weight:bold;", evt);
   }
 
   protected _onClose(evt: CloseEvent) {
@@ -158,7 +158,7 @@ export class WebSocketApi {
       this.readyState = WebSocketApiState.CLOSED;
       this.onClose.emit();
     }
-    this.writeLog('%cCLOSE', `color:${error ? "red" : "black"};font-weight:bold;`, evt);
+    this.writeLog("%cCLOSE", `color:${error ? "red" : "black"};font-weight:bold;`, evt);
   }
 
   protected writeLog(...data: any[]) {

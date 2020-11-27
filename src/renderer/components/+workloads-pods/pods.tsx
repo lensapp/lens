@@ -102,7 +102,7 @@ export class Pods extends React.Component<Props> {
         ]}
         renderTableContents={(pod: Pod) => [
           pod.getName(),
-          <KubeObjectStatusIcon object={pod} />,
+          <KubeObjectStatusIcon key="icon" object={pod} />,
           pod.getNs(),
           this.renderContainersStatus(pod),
           pod.getRestartsCount(),

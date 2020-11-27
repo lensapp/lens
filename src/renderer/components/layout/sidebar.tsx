@@ -26,10 +26,10 @@ import { Network } from "../+network";
 import { crdStore } from "../+custom-resources/crd.store";
 import { CrdList, crdResourcesRoute, crdRoute, crdURL } from "../+custom-resources";
 import { CustomResources } from "../+custom-resources/custom-resources";
-import { isActiveRoute, navigation } from "../../navigation";
+import { isActiveRoute } from "../../navigation";
 import { isAllowedResource } from "../../../common/rbac";
 import { Spinner } from "../spinner";
-import { ClusterPageMenuRegistration, clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl, RegisteredPage } from "../../../extensions/registries";
+import { ClusterPageMenuRegistration, clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
 type SidebarContextValue = {
@@ -102,16 +102,13 @@ export class Sidebar extends React.Component<Props> {
       const registeredPage = clusterPageRegistry.getByPageMenuTarget(menuItem.target);
       const tabRoutes = this.getTabLayoutRoutes(menuItem);
       let pageUrl: string;
-      let routePath: string;
       let isActive = false;
       if (registeredPage) {
         const { extensionId, id: pageId } = registeredPage;
         pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
-        routePath = registeredPage.routePath;
         isActive = isActiveRoute(registeredPage.routePath);
       } else if (tabRoutes.length > 0) {
         pageUrl = tabRoutes[0].url;
-        routePath = tabRoutes[0].routePath;
         isActive = isActiveRoute(tabRoutes.map((tab) => tab.routePath));
       } else {
         return;

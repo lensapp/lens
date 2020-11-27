@@ -45,7 +45,7 @@ export class Ingresses extends React.Component<Props> {
         ]}
         renderTableContents={(ingress: Ingress) => [
           ingress.getName(),
-          <KubeObjectStatusIcon object={ingress} />,
+          <KubeObjectStatusIcon key="icon" object={ingress} />,
           ingress.getNs(),
           ingress.getLoadBalancers().map(lb => <p key={lb}>{lb}</p>),
           ingress.getRoutes().map(route => <p key={route}>{route}</p>),
