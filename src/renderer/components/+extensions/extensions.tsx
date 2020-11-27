@@ -353,7 +353,7 @@ export class Extensions extends React.Component {
           <Icon material="info"/>
           <div>
             {search && <p>No search results found</p>}
-            {!search && <p>There are no extensions in <code>{extensionsPath}</code></p>}
+            {!search && <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md">available extensions</a>.</p>}
           </div>
         </div>
       );
@@ -396,15 +396,13 @@ export class Extensions extends React.Component {
 
   render() {
     const topHeader = <h2>Manage Lens Extensions</h2>;
-    const { installPath } = this;
+    const { installPath, extensions } = this;
     return (
       <DropFileInput onDropFiles={this.installOnDrop}>
         <PageLayout showOnTop className="Extensions flex column gaps" header={topHeader} contentGaps={false}>
           <h2>Lens Extensions</h2>
           <div>
-            The features that Lens includes out-of-the-box are just the start.
             Lens extensions let you add new features to your installation to support your workflow.
-            Rich extensibility model lets extension authors plug directly into the Lens UI and contribute functionality through the same APIs used by Lens itself.
             Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank">learn more</a>.
           </div>
 
@@ -444,11 +442,11 @@ export class Extensions extends React.Component {
 
           <h2>Installed Extensions</h2>
           <div className="installed-extensions flex column gaps">
-            <SearchInput
-              placeholder="Search extensions by name or description"
+            {<SearchInput
+              placeholder="Search installed extensions by name or description"
               value={this.search}
               onChange={(value) => this.search = value}
-            />
+            />}
             {this.renderExtensions()}
           </div>
         </PageLayout>
