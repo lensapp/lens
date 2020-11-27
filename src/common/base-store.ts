@@ -24,7 +24,6 @@ export abstract class BaseStore<T = any> extends Singleton {
 
   whenLoaded = when(() => this.isLoaded);
   @observable isLoaded = false;
-  @observable data = {} as T;
 
   protected constructor(protected params: BaseStoreParams) {
     super();
