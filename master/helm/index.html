@@ -319,9 +319,59 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Using Helm Charts
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
     <a href="./" class="md-nav__link md-nav__link--active">
       Using Helm Charts
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#managing-helm-reporistories" class="md-nav__link">
+    Managing Helm Reporistories
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-a-helm-chart" class="md-nav__link">
+    Installing a Helm Chart
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-a-helm-release" class="md-nav__link">
+    Updating a Helm Release
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deleting-a-helm-release" class="md-nav__link">
+    Deleting a Helm Release
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -794,6 +844,57 @@
                 
               
               
+                <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                  <div class="md-sidebar__scrollwrap">
+                    <div class="md-sidebar__inner">
+                      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#managing-helm-reporistories" class="md-nav__link">
+    Managing Helm Reporistories
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing-a-helm-chart" class="md-nav__link">
+    Installing a Helm Chart
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#updating-a-helm-release" class="md-nav__link">
+    Updating a Helm Release
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deleting-a-helm-release" class="md-nav__link">
+    Deleting a Helm Release
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                    </div>
+                  </div>
+                </div>
+              
             
           
           <div class="md-content">
@@ -802,7 +903,16 @@
                 
                 
                 <h1 id="using-helm-charts">Using Helm Charts<a class="headerlink" href="#using-helm-charts" title="Permanent link">#</a></h1>
-<p>TBD</p>
+<p>Lens has integration to Helm making it easy to install and manage Helm charts and releases in Apps section.</p>
+<p><img alt="Helm Charts" src="images/helm-charts.png" /></p>
+<h2 id="managing-helm-reporistories">Managing Helm Reporistories<a class="headerlink" href="#managing-helm-reporistories" title="Permanent link">#</a></h2>
+<p>Used Helm repositories are possible to configure in the <a href="/getting-started/preferences">Preferences</a>. Lens app will fetch available Helm repositories from the <a href="https://artifacthub.io/">Artifact HUB</a> and automatically add <code>bitnami</code> repository by default if no other repositories are already configured. If any other repositories are needed to add, those can be added manually via command line. <strong>Note!</strong> Configured Helm repositories are added globally to user's computer, so other processes can see those as well.</p>
+<h2 id="installing-a-helm-chart">Installing a Helm Chart<a class="headerlink" href="#installing-a-helm-chart" title="Permanent link">#</a></h2>
+<p>Lens will list all charts from configured Helm repositries on Apps section. To install a chart, you need to select a chart and click "Install" button. Lens will open the chart in the editor where you can select a chart version, target namespace and give optionally a name for the release and configure values for the release. Finally, by clicking "Install" button Lens will deploy the chart into the cluster.</p>
+<h2 id="updating-a-helm-release">Updating a Helm Release<a class="headerlink" href="#updating-a-helm-release" title="Permanent link">#</a></h2>
+<p>To update a Helm release, you can open the release details and modify the release values and click "Save" button. To upgrade or downgrade the release, click "Upgrade" button in the release details. In the release editor you can select a new chart version and edit the release values if needed and then click "Upgrade" or "Upgrade and Close" button.</p>
+<h2 id="deleting-a-helm-release">Deleting a Helm Release<a class="headerlink" href="#deleting-a-helm-release" title="Permanent link">#</a></h2>
+<p>To delete existing Helm release open the release details and click trash can icon on the top of the panel. Deletion removes all Kubernetes resources created by the Helm release. <strong>Note!</strong> If the release included any persistent volumes, those are required to remove manually!</p>
                 
               
               
