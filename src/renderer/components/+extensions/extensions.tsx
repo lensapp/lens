@@ -91,11 +91,20 @@ export class Extensions extends React.Component {
         });
 
         this.addedInstalling.forEach(({ id, displayName }) => {
+          const extension = this.extensions.find(extension => extension.id === id);
+
+          if (!extension) {
+            throw new Error("Extension not found");
+          }
+
           Notifications.ok(
             <p>Extension <b>{displayName}</b> successfully installed!</p>
           );
           this.extensionState.delete(id);
           this.installPath = "";
+
+          // Enable installed extensions by default.
+          extension.isEnabled = true;
         });
       })
     );
