@@ -1,5 +1,6 @@
 import { Singleton } from "../core-api/utils";
 import { workspaceStore as internalWorkspaceStore, WorkspaceStore as InternalWorkspaceStore, Workspace, WorkspaceId } from "../../common/workspace-store";
+import { ObservableMap } from "mobx";
 
 export { Workspace } from "../../common/workspace-store";
 export type { WorkspaceId, WorkspaceModel } from "../../common/workspace-store";
@@ -16,12 +17,16 @@ export class WorkspaceStore extends Singleton {
   /**
    * Currently active workspace id
    */
-  currentWorkspaceId = internalWorkspaceStore.currentWorkspaceId;
+  get currentWorkspaceId(): string {
+    return internalWorkspaceStore.currentWorkspaceId;
+  }
 
   /**
    * Map of all workspaces
    */
-  workspaces = internalWorkspaceStore.workspaces;
+  get workspaces(): ObservableMap<string, Workspace> {
+    return internalWorkspaceStore.workspaces;
+  }
 
   /**
    * Currently active workspace

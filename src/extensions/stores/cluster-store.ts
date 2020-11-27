@@ -2,6 +2,7 @@ import { clusterStore as internalClusterStore, ClusterId } from "../../common/cl
 import type { ClusterModel } from "../../common/cluster-store";
 import { Cluster } from "../../main/cluster";
 import { Singleton } from "../core-api/utils";
+import { ObservableMap } from "mobx";
 
 export { Cluster } from "../../main/cluster";
 export type { ClusterModel, ClusterId } from "../../common/cluster-store";
@@ -14,12 +15,23 @@ export class ClusterStore extends Singleton {
   /**
    * Active cluster id
    */
-  activeClusterId = internalClusterStore.activeCluster;
+  get activeClusterId(): string {
+    return internalClusterStore.activeCluster;
+  }
+
+  /**
+   * Set active cluster id
+   */
+  set activeClusterId(id : ClusterId) {
+    internalClusterStore.activeCluster = id;
+  }
 
   /**
    * Map of all clusters
    */
-  clusters = internalClusterStore.clusters;
+  get clusters(): ObservableMap<string, Cluster> {
+    return internalClusterStore.clusters;
+  }
 
   /**
    * Get active cluster (a cluster which is currently visible)
@@ -50,14 +62,6 @@ export class ClusterStore extends Singleton {
    */
   get connectedClustersList(): Cluster[] {
     return internalClusterStore.connectedClustersList;
-  }
-
-  isActive(id: ClusterId) {
-    return internalClusterStore.isActive(id);
-  }
-
-  setActive(id: ClusterId) {
-    return internalClusterStore.setActive(id);
   }
 
   /**
