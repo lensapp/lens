@@ -66,11 +66,11 @@ export class Extensions extends React.Component {
    * Extensions that were removed from extensions but are still in "uninstalling" state
    */
   @computed get removedUninstalling() {
-    return Array.from(this.extensionState.entries()).filter(([id, extension]) => 
+    return Array.from(this.extensionState.entries()).filter(([id, extension]) =>
       extension.state === "uninstalling" && !this.extensions.find(extension => extension.id === id)
     ).map(([id, extension]) => ({ ...extension, id }));
   }
-  
+
   componentDidMount() {
     disposeOnUnmount(this,
       reaction(() => this.extensions, (extensions) => {
@@ -353,7 +353,7 @@ export class Extensions extends React.Component {
           <Icon material="info"/>
           <div>
             {search && <p>No search results found</p>}
-            {!search && <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md">available extensions</a>.</p>}
+            {!search && <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank">available extensions</a>.</p>}
           </div>
         </div>
       );
@@ -402,8 +402,8 @@ export class Extensions extends React.Component {
         <PageLayout showOnTop className="Extensions flex column gaps" header={topHeader} contentGaps={false}>
           <h2>Lens Extensions</h2>
           <div>
-            Lens extensions let you add new features to your installation to support your workflow.
-            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank">learn more</a>.
+            Add new features and functionality via Lens Extensions.
+            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank">available extensions</a>.
           </div>
 
           <div className="install-extension flex column gaps">
@@ -442,11 +442,11 @@ export class Extensions extends React.Component {
 
           <h2>Installed Extensions</h2>
           <div className="installed-extensions flex column gaps">
-            {<SearchInput
+            <SearchInput
               placeholder="Search installed extensions by name or description"
               value={this.search}
               onChange={(value) => this.search = value}
-            />}
+            />
             {this.renderExtensions()}
           </div>
         </PageLayout>
