@@ -198,15 +198,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   @autobind()
-  getRow(uid: string) {
+  getRow(item: ItemObject) {
     const {
       isSelectable, renderTableHeader, renderTableContents, renderItemMenu,
       store, hasDetailsView, onDetails,
       copyClassNameFromHeadCells, customizeTableRowProps, detailsItem,
     } = this.props;
     const { isSelected } = store;
-    const item = this.items.find(item => item.getId() == uid);
-    if (!item) return;
     const itemId = item.getId();
     return (
       <TableRow
@@ -411,7 +409,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
               </TableHead>
             )}
             {
-              !virtual && items.map(item => this.getRow(item.getId()))
+              !virtual && items.map((item) => this.getRow(item))
             }
           </Table>
         )}

@@ -73,9 +73,7 @@ export class ClusterIssues extends React.Component<Props> {
   }
 
   @autobind()
-  getTableRow(uid: string) {
-    const { warnings } = this;
-    const warning = warnings.find(warn => warn.getId() == uid);
+  getTableRow(warning: IWarning) {
     const { getId, getName, message, kind, selfLink } = warning;
     return (
       <TableRow

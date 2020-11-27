@@ -6,22 +6,19 @@ import React, { Component } from "react";
 import { observer } from "mobx-react";
 import { Align, ListChildComponentProps, ListOnScrollProps, VariableSizeList } from "react-window";
 import { cssNames, noop } from "../../utils";
-import { TableRowProps } from "../table/table-row";
-import { ItemObject } from "../../item.store";
 import throttle from "lodash/throttle";
-import debounce from "lodash/debounce";
 import isEqual from "lodash/isEqual";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
-interface Props<T = ItemObject | any> {
-  items: T[];
+interface Props {
+  items: any[];
   rowHeights: number[];
   className?: string;
   width?: number | string;
   initialOffset?: number;
   readyOffset?: number;
   selectedItemId?: string;
-  getRow?: (uid: string | number) => React.ReactElement<any>;
+  getRow: (item: any) => React.ReactElement<any>;
   onScroll?: (props: ListOnScrollProps) => void;
   outerRef?: React.Ref<any>
 }
@@ -51,7 +48,6 @@ export class VirtualList extends Component<Props, State> {
 
   componentDidMount() {
     this.setListHeight();
-    this.scrollToSelectedItem();
     new ResizeSensor(this.parentRef.current as any as Element, this.setListHeight);
     this.setState({ overscanCount: this.props.readyOffset });
   }
@@ -75,13 +71,6 @@ export class VirtualList extends Component<Props, State> {
 
   getItemSize = (index: number) => this.props.rowHeights[index];
 
-  scrollToSelectedItem = debounce(() => {
-    if (!this.props.selectedItemId) return;
-    const { items, selectedItemId } = this.props;
-    const index = items.findIndex(item => item.getId() == selectedItemId);
-    if (index === -1) return;
-    this.listRef.current.scrollToItem(index, "start");
-  });
 
   scrollToItem = (index: number, align: Align) => {
     this.listRef.current.scrollToItem(index, align);
@@ -115,8 +104,8 @@ export class VirtualList extends Component<Props, State> {
 }
 
 interface RowData {
-  items: ItemObject[];
-  getRow?: (uid: string | number) => React.ReactElement<TableRowProps>;
+  items: any[];
+  getRow?: (item: any) => React.ReactElement;
 }
 
 interface RowProps extends ListChildComponentProps {
@@ -126,8 +115,8 @@ interface RowProps extends ListChildComponentProps {
 const Row = observer((props: RowProps) => {
   const { index, style, data } = props;
   const { items, getRow } = data;
-  const uid = items[index]?.getId ? items[index].getId() : index;
-  const row = getRow(uid);
+  const item = items[index];
+  const row = getRow(item);
   if (!row) return null;
   return React.cloneElement(row, {
     style: Object.assign({}, row.props.style, style)

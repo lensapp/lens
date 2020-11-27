@@ -9,8 +9,9 @@ import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
 import { navigation, setQueryParams } from "../../navigation";
-import orderBy from "lodash/orderBy";
 import { ItemObject } from "../../item.store";
+import orderBy from "lodash/orderBy";
+import debounce from "lodash/debounce";
 
 // todo: refactor + decouple search from location
 
@@ -20,7 +21,7 @@ export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy };
 export type TableSortCallback<D = any> = (data: D) => string | number | (string | number)[];
 
 export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
-  items?: any[];  // Raw items data
+  items?: ItemObject[];  // Raw items data
   className?: string;
   autoSize?: boolean;   // Setup auto-sizing for all columns (flex: 1 0)
   selectable?: boolean; // Highlight rows on hover
@@ -40,7 +41,7 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
   rowPadding?: string;
   rowLineHeight?: string;
   customRowHeights?: (item: object, lineHeight: number, paddings: number) => number;
-  getTableRow?: (uid: string | number) => React.ReactElement<TableRowProps>;
+  getTableRow?: (item: ItemObject) => React.ReactElement<TableRowProps>;
 }
 
 @observer
@@ -55,6 +56,8 @@ export class Table extends React.Component<TableProps> {
 
   @observable sortParamsLocal = this.props.sortByDefault;
 
+  private virtualListRef = React.createRef<VirtualList>();
+
   @computed get sortParams(): Partial<TableSortParams> {
     if (this.props.sortSyncWithUrl) {
       const sortBy = navigation.searchParams.get("sortBy");
@@ -63,6 +66,19 @@ export class Table extends React.Component<TableProps> {
     }
     return this.sortParamsLocal || {};
   }
+
+  componentDidMount() {
+    this.scrollToSelectedItem();
+  }
+
+  scrollToSelectedItem = debounce(() => {
+    const { items, selectedItemId, sortable } = this.props;
+    if (!selectedItemId) return;
+    const sortedItems = sortable ? this.getSorted(items) : items;
+    const index = sortedItems.findIndex(item => item.getId() == selectedItemId);
+    if (index === -1) return;
+    this.virtualListRef.current.scrollToItem(index, "start");
+  });
 
   renderHead() {
     const { sortable, children } = this.props;
@@ -162,6 +178,7 @@ export class Table extends React.Component<TableProps> {
           getRow={getTableRow}
           selectedItemId={selectedItemId}
           className={className}
+          ref={this.virtualListRef}
         />
       );
     }

@@ -95,9 +95,7 @@ export class PodDetailsList extends React.Component<Props> {
   }
 
   @autobind()
-  getTableRow(uid: string) {
-    const { pods } = this.props;
-    const pod = pods.find(pod => pod.getId() == uid);
+  getTableRow(pod: Pod) {
     const metrics = podsStore.getPodKubeMetrics(pod);
     return (
       <TableRow
@@ -146,7 +144,7 @@ export class PodDetailsList extends React.Component<Props> {
             <TableCell className="status"><Trans>Status</Trans></TableCell>
           </TableHead>
           {
-            !virtual && pods.map(pod => this.getTableRow(pod.getId()))
+            !virtual && pods.map(pod => this.getTableRow(pod))
           }
         </Table>
       </div>

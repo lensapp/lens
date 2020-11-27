@@ -36,3 +36,4 @@ export * from "../../renderer/components/+events/kube-event-details";
 export * from "../../renderer/components/status-brick";
 export { terminalStore, createTerminalTab } from "../../renderer/components/dock/terminal.store";
 export { createPodLogsTab } from "../../renderer/components/dock/pod-logs.store";
+export { ItemObject } from "../../renderer/item.store";

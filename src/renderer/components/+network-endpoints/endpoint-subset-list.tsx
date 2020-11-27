@@ -4,7 +4,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import { EndpointSubset, Endpoint, EndpointAddress} from "../../api/endpoints";
 import { _i18n } from "../../i18n";
-import { DrawerItem, DrawerTitle } from "../drawer";
 import { Trans } from "@lingui/macro";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { autobind } from "../../utils";
@@ -20,16 +19,12 @@ interface Props {
 @observer
 export class EndpointSubsetList extends React.Component<Props> {
 
-  getAddressTableRow(ip: string) {
-    const { subset } = this.props;
-    const address = subset.getAddresses().find(address => address.getId() == ip);
+  getAddressTableRow(address: EndpointAddress) {
     return this.renderAddressTableRow(address);
   }
 
   @autobind()
-  getNotReadyAddressTableRow(ip: string) {
-    const { subset} = this.props;
-    const address = subset.getNotReadyAddresses().find(address => address.getId() == ip);
+  getNotReadyAddressTableRow(address: EndpointAddress) {
     return this.renderAddressTableRow(address);
   }
 
@@ -52,7 +47,7 @@ export class EndpointSubsetList extends React.Component<Props> {
             <TableCell className="target">Target</TableCell>
           </TableHead>
           {
-            !virtual && addresses.map(address => this.getAddressTableRow(address.getId()))
+            !virtual && addresses.map(address => this.getAddressTableRow(address))
           }
         </Table>
       </div>
@@ -105,7 +100,7 @@ export class EndpointSubsetList extends React.Component<Props> {
                 <TableCell className="host"><Trans>Hostname</Trans></TableCell>
                 <TableCell className="target">Target</TableCell>
               </TableHead>
-              { !addressesVirtual && addresses.map(address => this.getAddressTableRow(address.getId())) }
+              { !addressesVirtual && addresses.map(this.getAddressTableRow) }
             </Table>
           </div>
         )}
@@ -126,7 +121,7 @@ export class EndpointSubsetList extends React.Component<Props> {
                 <TableCell className="host"><Trans>Hostname</Trans></TableCell>
                 <TableCell className="target">Target</TableCell>
               </TableHead>
-              { !notReadyAddressesVirtual && notReadyAddresses.map(address => this.getNotReadyAddressTableRow(address.getId())) }
+              { !notReadyAddressesVirtual && notReadyAddresses.map(this.getNotReadyAddressTableRow) }
             </Table>
           </div>
         )}
