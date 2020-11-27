@@ -582,6 +582,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    Examples
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -958,6 +965,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    Examples
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1044,34 +1058,33 @@
 <h3 id="theme-switching">Theme Switching<a class="headerlink" href="#theme-switching" title="Permanent link">#</a></h3>
 <p>When the light theme is active, the <code>&lt;body&gt;</code> element gets a "theme-light" class, or: <code>&lt;body class="theme-light"&gt;</code>. If the class isn't there, the theme defaults to dark. The active theme can be changed in the <strong>Preferences</strong> page:
 <img alt="Color Theme" src="../images/theme-selector.png" /></p>
-<p>Currently, there is no prescribed way of detecting changes to the theme in JavaScript. <a href="https://github.com/lensapp/lens/issues/1336">This issue</a> has been raised to resolve this problem. In the meantime, you can use a <a href="https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver">MutationObserver</a> in order to observe the <code>&lt;body&gt;</code> element's <code>class</code> attribute in order to see if the "theme-light" class gets added to it:</p>
-<div class="highlight"><pre><span></span><code><span class="p">...</span>
-  <span class="nx">useEffect</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="kr">const</span> <span class="nx">observer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MutationObserver</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">mutations</span><span class="o">:</span> <span class="nx">MutationRecord</span><span class="p">[])</span> <span class="p">{</span>
-      <span class="nx">mutations</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">mutation</span><span class="o">:</span> <span class="nx">MutationRecord</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">mutation</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s1">&#39;attributes&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">mutation</span><span class="p">.</span><span class="nx">attributeName</span> <span class="o">===</span> <span class="s1">&#39;class&#39;</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">((</span><span class="nx">mutation</span><span class="p">.</span><span class="nx">target</span> <span class="nx">as</span> <span class="nx">HTMLElement</span><span class="p">).</span><span class="nx">classList</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="s1">&#39;theme-light&#39;</span><span class="p">))</span> <span class="p">{</span>
-            <span class="c1">// theme is LIGHT</span>
-          <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="c1">// theme is DARK</span>
-          <span class="p">}</span>
-        <span class="p">}</span>
-      <span class="p">});</span>
-    <span class="p">});</span>
+<p>There is a way of detect active theme and its changes in JS. <a href="https://github.com/mobxjs/mobx-react#observercomponent">MobX observer function/decorator</a> can be used for this purpose.</p>
+<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx-react&quot;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">App</span><span class="p">,</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">Theme</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-    <span class="nx">observer</span><span class="p">.</span><span class="nx">observe</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">attributes</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-      <span class="nx">attributeFilter</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;class&#39;</span><span class="p">],</span>
-    <span class="p">});</span>
-
-    <span class="k">return</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-      <span class="nx">observer</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">();</span>
-    <span class="p">};</span>
-  <span class="p">},</span> <span class="p">[]);</span> <span class="c1">// run once on mount</span>
-<span class="p">...</span>
+<span class="err">@</span><span class="nx">observer</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">SupportPage</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;SupportPage&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">h1</span><span class="o">&gt;</span><span class="nx">Active</span> <span class="nx">theme</span> <span class="nx">is</span> <span class="p">{</span><span class="nx">Theme</span><span class="p">.</span><span class="nx">getActiveTheme</span><span class="p">().</span><span class="nx">name</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/h1&gt;</span>
+      <span class="o">&lt;</span><span class="err">/div&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div>
+<p><code>Theme</code> entity from <code>@k8slens/extensions</code> provides active theme object and <code>@observer</code> decorator makes component reactive - so it will rerender each time any of the observables (active theme in our case) will be changed.</p>
+<p>Working example provided in <a href="https://github.com/lensapp/lens-extension-samples/tree/master/styling-emotion-sample">Styling with Emotion</a> sample extension.</p>
 <h2 id="injected-styles">Injected Styles<a class="headerlink" href="#injected-styles" title="Permanent link">#</a></h2>
-<p>Every extension is affected by the list of default global styles defined in <a href="https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss">app.scss</a>. These are basic browser resets and element styles, including setting the <code>box-sizing</code> property for every element, default text and background colors, default font sizes, basic heading formatting, and so on.</p>
+<p>Every extension is affected by the list of default global styles defined in <a href="https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss">app.scss</a>. These are basic browser resets and element styles, including:</p>
+<ul>
+<li>setting the <code>box-sizing</code> property for every element</li>
+<li>default text and background colors</li>
+<li>default font sizes</li>
+<li>basic heading (h1, h2, etc) formatting</li>
+<li>custom scrollbar styling</li>
+</ul>
 <p>Extensions may overwrite these defaults if needed. They have low CSS specificity, so overriding them should be fairly easy.</p>
 <h2 id="css-in-js">CSS-in-JS<a class="headerlink" href="#css-in-js" title="Permanent link">#</a></h2>
 <p>If an extension uses a system like <code>Emotion</code> to work with styles, it can use CSS variables as follows:</p>
@@ -1079,6 +1092,13 @@
   <span class="nx">backgroundColor</span><span class="o">:</span> <span class="s1">&#39;var(--mainBackground)&#39;</span>
 <span class="p">}));</span>
 </code></pre></div>
+<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">#</a></h2>
+<p>You can explore samples for each styling technique that you can use for extensions:</p>
+<ul>
+<li><a href="https://github.com/lensapp/lens-extension-samples/tree/master/styling-sass-sample">Styling with Sass</a></li>
+<li><a href="https://github.com/lensapp/lens-extension-samples/tree/master/styling-emotion-sample">Styling with Emotion</a></li>
+<li><a href="https://github.com/lensapp/lens-extension-samples/tree/master/styling-css-modules-sample">Styling with CSS Modules</a></li>
+</ul>
                 
               
               
