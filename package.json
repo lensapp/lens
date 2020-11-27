@@ -92,11 +92,6 @@
     "afterSign": "build/notarize.js",
     "extraResources": [
       {
-        "from": "src/features/",
-        "to": "features/",
-        "filter": "**/*"
-      },
-      {
         "from": "locales/",
         "to": "locales/",
         "filter": "**/*.js"
@@ -116,6 +111,7 @@
         "to": "./extensions/",
         "filter": [
           "**/*.js*",
+          "**/*.yml*",
           "!**/node_modules"
         ]
       },
