@@ -331,7 +331,7 @@ export class AddCluster extends React.Component {
   };
 
   render() {
-    const disableSubmit = this.selectedContexts.length === 0;
+    const submitDisabled = this.selectedContexts.length === 0;
     return (
       <DropFileInput onDropFiles={this.onDropKubeConfig}>
         <PageLayout className="AddClusters" header={<h2>Add Clusters</h2>}>
@@ -365,11 +365,11 @@ export class AddCluster extends React.Component {
           <div className="actions-panel">
             <Button
               primary
-              disabled={disableSubmit}
+              disabled={submitDisabled}
               label={this.selectedContexts.length < 2 ? <Trans>Add cluster</Trans> : <Trans>Add clusters</Trans>}
               onClick={this.addClusters}
               waiting={this.isWaiting}
-              tooltip={disableSubmit ? _i18n._("Select at least one cluster to add.") : undefined}
+              tooltip={submitDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
               tooltipOverrideDisabled
             />
           </div>
