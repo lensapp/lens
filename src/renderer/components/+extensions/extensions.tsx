@@ -1,8 +1,7 @@
 import { t, Trans } from "@lingui/macro";
 import { remote, shell } from "electron";
 import fse from "fs-extra";
-import { map, omit } from "lodash";
-import { computed, observable, ObservableMap, reaction } from "mobx";
+import { computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import os from "os";
 import path from "path";
@@ -16,6 +15,7 @@ import logger from "../../../main/logger";
 import { _i18n } from "../../i18n";
 import { prevDefault } from "../../utils";
 import { Button } from "../button";
+import { ConfirmDialog } from "../confirm-dialog";
 import { Icon } from "../icon";
 import { DropFileInput, Input, InputValidator, InputValidators, SearchInput } from "../input";
 import { PageLayout } from "../layout/page-layout";
@@ -314,6 +314,17 @@ export class Extensions extends React.Component {
     }
   }
 
+  confirmUninstallExtension = (extension: InstalledExtension) => {
+    const displayName = extensionDisplayName(extension.manifest.name, extension.manifest.version);
+
+    ConfirmDialog.open({
+      message: <p>Are you sure you want to uninstall extension <b>{displayName}</b>?</p>,
+      labelOk: <Trans>Yes</Trans>,
+      labelCancel: <Trans>No</Trans>,
+      ok: () => this.uninstallExtension(extension)
+    });
+  };
+
   async uninstallExtension(extension: InstalledExtension) {
     const displayName = extensionDisplayName(extension.manifest.name, extension.manifest.version);
 
@@ -348,8 +359,8 @@ export class Extensions extends React.Component {
       );
     }
 
-    return extensions.map(ext => {
-      const { id, isEnabled, manifest } = ext;
+    return extensions.map(extension => {
+      const { id, isEnabled, manifest } = extension;
       const { name, description } = manifest;
       const isUninstalling = this.extensionState.get(id)?.state === "uninstalling";
 
@@ -365,13 +376,17 @@ export class Extensions extends React.Component {
           </div>
           <div className="actions">
             {!isEnabled && (
-              <Button plain active disabled={isUninstalling} onClick={() => ext.isEnabled = true}>Enable</Button>
+              <Button plain active disabled={isUninstalling} onClick={() => {
+                extension.isEnabled = true;
+              }}>Enable</Button>
             )}
             {isEnabled && (
-              <Button accent disabled={isUninstalling} onClick={() => ext.isEnabled = false}>Disable</Button>
+              <Button accent disabled={isUninstalling} onClick={() => {
+                extension.isEnabled = false;
+              }}>Disable</Button>
             )}
-            <Button plain active disabled={isUninstalling} waiting={isUninstalling}onClick={() => {
-              this.uninstallExtension(ext);
+            <Button plain active disabled={isUninstalling} waiting={isUninstalling} onClick={() => {
+              this.confirmUninstallExtension(extension);
             }}>Uninstall</Button>
           </div>
         </div>
