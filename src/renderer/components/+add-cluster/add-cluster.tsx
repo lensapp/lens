@@ -1,6 +1,6 @@
 import "./add-cluster.scss";
 import os from "os";
-import React, { Fragment } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 import { action, observable, runInAction } from "mobx";
 import { remote } from "electron";
@@ -12,7 +12,6 @@ import { DropFileInput, Input } from "../input";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
-import { WizardLayout } from "../layout/wizard-layout";
 import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
 import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
@@ -332,14 +331,12 @@ export class AddCluster extends React.Component {
   };
 
   render() {
-    const addDisabled = this.selectedContexts.length === 0;
+    const submitDisabled = this.selectedContexts.length === 0;
     return (
-      <PageLayout className="AddClusters" header={<h2>Add Clusters</h2>}>
-        <h2>Add Clusters from Kubeconfig</h2>
-
-        {this.renderInfo()}
-
-        <DropFileInput onDropFiles={this.onDropKubeConfig}>
+      <DropFileInput onDropFiles={this.onDropKubeConfig}>
+        <PageLayout className="AddClusters" header={<h2>Add Clusters</h2>}>
+          <h2>Add Clusters from Kubeconfig</h2>
+          {this.renderInfo()}
           {this.renderKubeConfigSource()}
           {this.renderContextSelector()}
           <div className="cluster-settings">
@@ -368,16 +365,16 @@ export class AddCluster extends React.Component {
           <div className="actions-panel">
             <Button
               primary
-              disabled={addDisabled}
+              disabled={submitDisabled}
               label={this.selectedContexts.length < 2 ? <Trans>Add cluster</Trans> : <Trans>Add clusters</Trans>}
               onClick={this.addClusters}
               waiting={this.isWaiting}
-              tooltip={addDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
+              tooltip={submitDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
               tooltipOverrideDisabled
             />
           </div>
-        </DropFileInput>
-      </PageLayout>
+        </PageLayout>
+      </DropFileInput>
     );
   }
 }
