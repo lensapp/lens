@@ -54,8 +54,8 @@ export class MetricsFeature extends ClusterFeature.Feature {
     const storageClassApi = K8sApi.forCluster(cluster, K8sApi.StorageClass);
     const scs = await storageClassApi.list();
     this.templateContext.persistence.enabled = scs.some(sc => (
-      sc.metadata?.annotations?.['storageclass.kubernetes.io/is-default-class'] === 'true' ||
-      sc.metadata?.annotations?.['storageclass.beta.kubernetes.io/is-default-class'] === 'true'
+      sc.metadata?.annotations?.["storageclass.kubernetes.io/is-default-class"] === "true" ||
+      sc.metadata?.annotations?.["storageclass.beta.kubernetes.io/is-default-class"] === "true"
     ));
 
     super.applyResources(cluster, path.join(__dirname, "../resources/"));

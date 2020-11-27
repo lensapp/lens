@@ -112,7 +112,7 @@ export abstract class ClusterFeature {
     fs.readdirSync(folderPath).forEach(filename => {
       const file = path.join(folderPath, filename);
       const raw = fs.readFileSync(file);
-      if (filename.endsWith('.hb')) {
+      if (filename.endsWith(".hb")) {
         const template = hb.compile(raw.toString());
         resources.push(template(this.templateContext));
       } else {

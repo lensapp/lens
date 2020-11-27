@@ -1,6 +1,6 @@
-import './notifications.scss';
+import "./notifications.scss";
 
-import React from 'react';
+import React from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { JsonApiErrorParsed } from "../../api/json-api";

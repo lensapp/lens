@@ -85,7 +85,7 @@ class HelmService {
     for (const key in entries) {
       entries[key] = entries[key].filter((entry: any) => {
         if (Array.isArray(entry)) {
-          return entry[0]['deprecated'] != true;
+          return entry[0]["deprecated"] != true;
         }
         return entry["deprecated"] != true;
       });

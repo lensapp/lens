@@ -54,7 +54,7 @@ export class Jobs extends React.Component<Props> {
             job.getName(),
             job.getNs(),
             `${job.getCompletions()} / ${job.getDesiredCompletions()}`,
-            <KubeObjectStatusIcon object={job}/>,
+            <KubeObjectStatusIcon key="icon" object={job}/>,
             job.getAge(),
             condition && {
               title: condition.type,

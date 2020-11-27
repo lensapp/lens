@@ -78,7 +78,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
         <SubTitle title="Prometheus"/>
         <p>
           Use pre-installed Prometheus service for metrics. Please refer to the{" "}
-          <a href="https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md" target="_blank">guide</a>{" "}
+          <a href="https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md" target="_blank" rel="noreferrer">guide</a>{" "}
           for possible configuration changes.
         </p>
         <p>Prometheus installation method.</p>
@@ -103,7 +103,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
             />
             <small className="hint">
               An address to an existing Prometheus installation{" "}
-              ({'<namespace>/<service>:<port>'}). Lens tries to auto-detect address if left empty.
+              ({"<namespace>/<service>:<port>"}). Lens tries to auto-detect address if left empty.
             </small>
           </>
         )}

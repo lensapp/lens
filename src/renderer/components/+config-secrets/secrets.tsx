@@ -4,14 +4,12 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
-import { Secret, secretsApi } from "../../api/endpoints";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { Secret } from "../../api/endpoints";
 import { AddSecretDialog } from "./add-secret-dialog";
 import { ISecretsRouteParams } from "./secrets.route";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { secretsStore } from "./secrets.store";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
@@ -57,7 +55,7 @@ export class Secrets extends React.Component<Props> {
           ]}
           renderTableContents={(secret: Secret) => [
             secret.getName(),
-            <KubeObjectStatusIcon object={secret} />,
+            <KubeObjectStatusIcon key="icon" object={secret} />,
             secret.getNs(),
             secret.getLabels().map(label => <Badge key={label} label={label}/>),
             secret.getKeys().join(", "),

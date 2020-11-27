@@ -8,10 +8,8 @@ import { Cluster } from "../../../main/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
 import { Tooltip } from "../tooltip";
-import { eventStore } from "../+events/event.store";
-import { forCluster } from "../../api/kube-api";
-import { subscribeToBroadcast, unsubscribeAllFromBroadcast } from "../../../common/ipc";
-import { observable, when } from "mobx";
+import { subscribeToBroadcast } from "../../../common/ipc";
+import { observable } from "mobx";
 
 interface Props extends DOMAttributes<HTMLElement> {
   cluster: Cluster;

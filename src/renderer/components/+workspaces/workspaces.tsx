@@ -107,7 +107,7 @@ export class Workspaces extends React.Component {
   };
 
   onInputKeypress = (evt: React.KeyboardEvent<any>, workspaceId: WorkspaceId) => {
-    if (evt.key == 'Enter') {
+    if (evt.key == "Enter") {
       // Trigget input validation
       evt.currentTarget.blur();
       evt.currentTarget.focus();

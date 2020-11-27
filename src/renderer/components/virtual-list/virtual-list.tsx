@@ -106,9 +106,10 @@ export class VirtualList extends Component<Props, State> {
           overscanCount={overscanCount}
           ref={this.listRef}
           outerRef={outerRef}
-          children={Row}
           onScroll={onScroll}
-        />
+        >
+          {Row}
+        </VariableSizeList>
       </div>
     );
   }

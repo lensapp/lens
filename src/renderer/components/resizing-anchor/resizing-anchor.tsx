@@ -2,7 +2,6 @@ import "./resizing-anchor.scss";
 import React from "react";
 import { action, observable } from "mobx";
 import _ from "lodash";
-import { findDOMNode } from "react-dom";
 import { cssNames, noop } from "../../utils";
 
 export enum ResizeDirection {
@@ -262,7 +261,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
   }, 100);
 
   @action
-  onDragEnd = (_event: MouseEvent) => {
+  onDragEnd = () => {
     this.props.onEnd();
     document.removeEventListener("mousemove", this.onDrag);
     document.removeEventListener("mouseup", this.onDragEnd);

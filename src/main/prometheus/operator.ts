@@ -32,7 +32,7 @@ export class PrometheusOperator implements PrometheusProvider {
 
   public getQueries(opts: PrometheusQueryOpts): PrometheusQuery {
     switch(opts.category) {
-      case 'cluster':
+      case "cluster":
         return {
           memoryUsage: `
           sum(
@@ -51,7 +51,7 @@ export class PrometheusOperator implements PrometheusProvider {
           fsSize: `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`,
           fsUsage: `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"} - node_filesystem_avail_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info{node=~"${opts.nodes}"})`
         };
-      case 'nodes':
+      case "nodes":
         return {
           memoryUsage: `sum((node_memory_MemTotal_bytes - (node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)) * on (pod,namespace) group_left(node) kube_pod_info) by (node)`,
           memoryCapacity: `sum(kube_node_status_capacity{resource="memory"}) by (node)`,
@@ -60,7 +60,7 @@ export class PrometheusOperator implements PrometheusProvider {
           fsSize: `sum(node_filesystem_size_bytes{mountpoint="/"} * on (pod,namespace) group_left(node) kube_pod_info) by (node)`,
           fsUsage: `sum((node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_avail_bytes{mountpoint="/"}) * on (pod,namespace) group_left(node) kube_pod_info) by (node)`
         };
-      case 'pods':
+      case "pods":
         return {
           cpuUsage: `sum(rate(container_cpu_usage_seconds_total{container!="POD",container!="",image!="",pod=~"${opts.pods}",namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (${opts.selector})`,
           cpuRequests: `sum(kube_pod_container_resource_requests{pod=~"${opts.pods}",resource="cpu",namespace="${opts.namespace}"}) by (${opts.selector})`,
@@ -72,12 +72,12 @@ export class PrometheusOperator implements PrometheusProvider {
           networkReceive: `sum(rate(container_network_receive_bytes_total{pod=~"${opts.pods}",namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (${opts.selector})`,
           networkTransmit: `sum(rate(container_network_transmit_bytes_total{pod=~"${opts.pods}",namespace="${opts.namespace}"}[${this.rateAccuracy}])) by (${opts.selector})`
         };
-      case 'pvc':
+      case "pvc":
         return {
           diskUsage: `sum(kubelet_volume_stats_used_bytes{persistentvolumeclaim="${opts.pvc}"}) by (persistentvolumeclaim, namespace)`,
           diskCapacity: `sum(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim="${opts.pvc}"}) by (persistentvolumeclaim, namespace)`
         };
-      case 'ingress':
+      case "ingress":
         const bytesSent = (ingress: string, statuses: string) =>
           `sum(rate(nginx_ingress_controller_bytes_sent_sum{ingress="${ingress}", status=~"${statuses}"}[${this.rateAccuracy}])) by (ingress)`;
         return {

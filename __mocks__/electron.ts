@@ -4,9 +4,7 @@ module.exports = {
   app: {
     getVersion: jest.fn().mockReturnValue("3.0.0"),
     getLocale: jest.fn().mockRejectedValue("en"),
-    getPath: jest.fn((name: string) => {
-      return "tmp";
-    }),
+    getPath: jest.fn(() => "tmp"),
   },
   remote: {
     app: {

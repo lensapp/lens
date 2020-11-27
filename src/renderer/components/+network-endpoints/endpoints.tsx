@@ -43,7 +43,7 @@ export class Endpoints extends React.Component<Props> {
         ]}
         renderTableContents={(endpoint: Endpoint) => [
           endpoint.getName(),
-          <KubeObjectStatusIcon object={endpoint} />,
+          <KubeObjectStatusIcon key="icon" object={endpoint} />,
           endpoint.getNs(),
           endpoint.toString(),
           endpoint.getAge(),

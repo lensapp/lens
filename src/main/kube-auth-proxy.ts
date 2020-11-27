@@ -60,7 +60,7 @@ export class KubeAuthProxy {
       this.exit();
     });
 
-    this.proxyProcess.stdout.on('data', (data) => {
+    this.proxyProcess.stdout.on("data", (data) => {
       let logItem = data.toString();
       if (logItem.startsWith("Starting to serve on")) {
         logItem = "Authentication proxy started\n";
@@ -68,7 +68,7 @@ export class KubeAuthProxy {
       this.sendIpcLogMessage({ data: logItem });
     });
 
-    this.proxyProcess.stderr.on('data', (data) => {
+    this.proxyProcess.stderr.on("data", (data) => {
       this.lastError = this.parseError(data.toString());
       this.sendIpcLogMessage({ data: data.toString(), error: true });
     });

@@ -91,7 +91,6 @@ export class TerminalApi extends WebSocketApi {
   }
 
   reconnect() {
-    const { reconnectDelaySeconds } = this.params;
     super.reconnect();
   }
 

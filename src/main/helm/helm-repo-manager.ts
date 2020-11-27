@@ -77,7 +77,7 @@ export class HelmRepoManager extends Singleton {
     }
     try {
       const repoConfigFile = this.helmEnv.HELM_REPOSITORY_CONFIG;
-      const { repositories }: HelmRepoConfig = await readFile(repoConfigFile, 'utf8')
+      const { repositories }: HelmRepoConfig = await readFile(repoConfigFile, "utf8")
         .then((yamlContent: string) => yaml.safeLoad(yamlContent))
         .catch(() => ({
           repositories: []
@@ -121,7 +121,7 @@ export class HelmRepoManager extends Singleton {
   public async removeRepo({ name, url }: HelmRepo): Promise<string> {
     logger.info(`[HELM]: removing repo "${name}" from ${url}`);
     const helm = await helmCli.binaryPath();
-    const { stdout, stderr } = await promiseExec(`"${helm}" repo remove ${name}`).catch((error) => {
+    const { stdout } = await promiseExec(`"${helm}" repo remove ${name}`).catch((error) => {
       throw(error.stderr);
     });
     return stdout;

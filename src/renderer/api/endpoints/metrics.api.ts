@@ -40,7 +40,7 @@ export const metricsApi = {
 
     if (!start && !end) {
       const timeNow = Date.now() / 1000;
-      const now = moment.unix(timeNow).startOf('minute').unix();  // round date to minutes
+      const now = moment.unix(timeNow).startOf("minute").unix();  // round date to minutes
       start = now - range;
       end = now;
     }

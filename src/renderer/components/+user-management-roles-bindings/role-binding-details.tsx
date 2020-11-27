@@ -27,7 +27,7 @@ export class RoleBindingDetails extends React.Component<Props> {
 
   async componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.object, (obj) => {
+      reaction(() => this.props.object, () => {
         this.selectedSubjects.clear();
       })
     ]);

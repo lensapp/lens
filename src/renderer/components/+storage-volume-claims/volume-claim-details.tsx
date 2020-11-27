@@ -42,7 +42,7 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
     const { metrics } = volumeClaimStore;
     const pods = volumeClaim.getPods(podsStore.items);
     const metricTabs = [
-      <Trans>Disk</Trans>
+      <Trans key="disk">Disk</Trans>
     ];
     return (
       <div className="PersistentVolumeClaimDetails">

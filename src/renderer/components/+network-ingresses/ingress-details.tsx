@@ -100,12 +100,12 @@ export class IngressDetails extends React.Component<Props> {
     const ingressPoints = status?.loadBalancer?.ingress;
     const { metrics } = ingressStore;
     const metricTabs = [
-      <Trans>Network</Trans>,
-      <Trans>Duration</Trans>,
+      <Trans key="network">Network</Trans>,
+      <Trans key="network">Duration</Trans>,
     ];
 
     const { serviceName, servicePort } = ingress.getServiceNamePort();
-    
+
     return (
       <div className="IngressDetails">
         <ResourceMetrics

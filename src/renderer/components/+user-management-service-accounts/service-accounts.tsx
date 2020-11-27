@@ -49,7 +49,7 @@ export class ServiceAccounts extends React.Component<Props> {
           ]}
           renderTableContents={(account: ServiceAccount) => [
             account.getName(),
-            <KubeObjectStatusIcon object={account} />,
+            <KubeObjectStatusIcon key="icon" object={account} />,
             account.getNs(),
             account.getAge(),
           ]}

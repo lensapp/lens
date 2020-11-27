@@ -63,7 +63,7 @@ export class AddQuotaDialog extends React.Component<Props> {
 
   @computed get quotaEntries() {
     return Object.entries(this.quotas)
-      .filter(([type, value]) => !!value.trim());
+      .filter(([, value]) => !!value.trim());
   }
 
   @computed get quotaOptions() {

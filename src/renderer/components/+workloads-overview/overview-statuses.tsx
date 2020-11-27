@@ -12,7 +12,6 @@ import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
 import { isAllowedResource, KubeResource } from "../../../common/rbac";
 import { ResourceNames } from "../../../renderer/utils/rbac";
 import { autobind } from "../../utils";
-import { _i18n } from "../../i18n";
 
 const resources: KubeResource[] = [
   "pods",

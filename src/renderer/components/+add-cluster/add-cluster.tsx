@@ -1,6 +1,6 @@
 import "./add-cluster.scss";
 import os from "os";
-import React, { Fragment } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 import { action, observable, runInAction } from "mobx";
 import { remote } from "electron";
@@ -12,7 +12,6 @@ import { DropFileInput, Input } from "../input";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
-import { WizardLayout } from "../layout/wizard-layout";
 import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
 import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
@@ -67,7 +66,7 @@ export class AddCluster extends React.Component {
       userStore.kubeConfigPath = filePath; // save to store
     } catch (err) {
       Notifications.error(
-        <div>Can't setup <code>{filePath}</code> as kubeconfig: {String(err)}</div>
+        <div>Can&apos;t setup <code>{filePath}</code> as kubeconfig: {String(err)}</div>
       );
       if (throwError) {
         throw err;
@@ -197,9 +196,9 @@ export class AddCluster extends React.Component {
     return (
       <p>
         Add clusters by clicking the <span className="text-primary">Add Cluster</span> button.
-        You'll need to obtain a working kubeconfig for the cluster you want to add.
+        You&apos;ll need to obtain a working kubeconfig for the cluster you want to add.
         You can either browse it from the file system or paste it as a text from the clipboard.
-        Read more about adding clusters <a href={`${docsUrl}/latest/clusters/adding-clusters/`} target="_blank">here</a>.
+        Read more about adding clusters <a href={`${docsUrl}/latest/clusters/adding-clusters/`} rel="noreferrer" target="_blank">here</a>.
       </p>
     );
   }
@@ -301,7 +300,7 @@ export class AddCluster extends React.Component {
     );
   }
 
-  onKubeConfigInputBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
+  onKubeConfigInputBlur = () => {
     const isChanged = this.kubeConfigPath !== userStore.kubeConfigPath;
     if (isChanged) {
       this.kubeConfigPath = this.kubeConfigPath.replace("~", os.homedir());
@@ -332,14 +331,12 @@ export class AddCluster extends React.Component {
   };
 
   render() {
-    const addDisabled = this.selectedContexts.length === 0;
+    const submitDisabled = this.selectedContexts.length === 0;
     return (
-      <PageLayout className="AddClusters" header={<h2>Add Clusters</h2>}>
-        <h2>Add Clusters from Kubeconfig</h2>
-
-        {this.renderInfo()}
-
-        <DropFileInput onDropFiles={this.onDropKubeConfig}>
+      <DropFileInput onDropFiles={this.onDropKubeConfig}>
+        <PageLayout className="AddClusters" header={<h2>Add Clusters</h2>}>
+          <h2>Add Clusters from Kubeconfig</h2>
+          {this.renderInfo()}
           {this.renderKubeConfigSource()}
           {this.renderContextSelector()}
           <div className="cluster-settings">
@@ -357,7 +354,7 @@ export class AddCluster extends React.Component {
                 theme="round-black"
               />
               <small className="hint">
-                {'A HTTP proxy server URL (format: http://<address>:<port>).'}
+                {"A HTTP proxy server URL (format: http://<address>:<port>)."}
               </small>
             </div>
           )}
@@ -368,16 +365,16 @@ export class AddCluster extends React.Component {
           <div className="actions-panel">
             <Button
               primary
-              disabled={addDisabled}
+              disabled={submitDisabled}
               label={this.selectedContexts.length < 2 ? <Trans>Add cluster</Trans> : <Trans>Add clusters</Trans>}
               onClick={this.addClusters}
               waiting={this.isWaiting}
-              tooltip={addDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
+              tooltip={submitDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
               tooltipOverrideDisabled
             />
           </div>
-        </DropFileInput>
-      </PageLayout>
+        </PageLayout>
+      </DropFileInput>
     );
   }
 }

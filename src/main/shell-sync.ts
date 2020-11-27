@@ -25,7 +25,7 @@ export async function shellSync() {
   const env: Env = JSON.parse(JSON.stringify(envVars));
   if (!env.LANG) {
     // the LANG env var expects an underscore instead of electron's dash
-    env.LANG = `${app.getLocale().replace('-', '_')}.UTF-8`;
+    env.LANG = `${app.getLocale().replace("-", "_")}.UTF-8`;
   } else if (!env.LANG.endsWith(".UTF-8")) {
     env.LANG += ".UTF-8";
   }

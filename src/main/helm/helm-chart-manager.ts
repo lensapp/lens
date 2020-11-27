@@ -36,10 +36,10 @@ export class HelmChartManager {
   public async getReadme(name: string, version = "") {
     const helm = await helmCli.binaryPath();
     if(version && version != "") {
-      const { stdout, stderr} = await promiseExec(`"${helm}" show readme ${this.repo.name}/${name} --version ${version}`).catch((error) => { throw(error.stderr);});
+      const { stdout } = await promiseExec(`"${helm}" show readme ${this.repo.name}/${name} --version ${version}`).catch((error) => { throw(error.stderr);});
       return stdout;
     } else {
-      const { stdout, stderr} = await promiseExec(`"${helm}" show readme ${this.repo.name}/${name}`).catch((error) => { throw(error.stderr);});
+      const { stdout } = await promiseExec(`"${helm}" show readme ${this.repo.name}/${name}`).catch((error) => { throw(error.stderr);});
       return stdout;
     }
   }
@@ -47,11 +47,11 @@ export class HelmChartManager {
   public async getValues(name: string, version = "") {
     const helm = await helmCli.binaryPath();
     if(version && version != "") {
-      const { stdout, stderr} = await promiseExec(`"${helm}" show values ${this.repo.name}/${name} --version ${version}`).catch((error) => { throw(error.stderr);});
+      const { stdout } = await promiseExec(`"${helm}" show values ${this.repo.name}/${name} --version ${version}`).catch((error) => { throw(error.stderr);});
 
       return stdout;
     } else {
-      const { stdout, stderr} = await promiseExec(`"${helm}" show values ${this.repo.name}/${name}`).catch((error) => { throw(error.stderr);});
+      const { stdout } = await promiseExec(`"${helm}" show values ${this.repo.name}/${name}`).catch((error) => { throw(error.stderr);});
 
       return stdout;
     }
@@ -59,12 +59,12 @@ export class HelmChartManager {
 
   protected async cachedYaml(): Promise<CachedYaml> {
     if (!(this.repo.name in this.cache)) {
-      const cacheFile = await fs.promises.readFile(this.repo.cacheFilePath, 'utf-8');
+      const cacheFile = await fs.promises.readFile(this.repo.cacheFilePath, "utf-8");
       const data = yaml.safeLoad(cacheFile);
       for(const key in data["entries"]) {
         data["entries"][key].forEach((version: any) => {
-          version['repo'] = this.repo.name;
-          version['created'] = Date.parse(version.created).toString();
+          version["repo"] = this.repo.name;
+          version["created"] = Date.parse(version.created).toString();
         });
       }
       this.cache[this.repo.name] = Buffer.from(JSON.stringify(data));

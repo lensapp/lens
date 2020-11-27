@@ -23,7 +23,7 @@ export class Storage extends React.Component {
       routePath: volumeClaimsRoute.path.toString(),
     });
 
-    if (isAllowedResource('persistentvolumes')) {
+    if (isAllowedResource("persistentvolumes")) {
       tabRoutes.push({
         title: <Trans>Persistent Volumes</Trans>,
         component: PersistentVolumes,
@@ -32,7 +32,7 @@ export class Storage extends React.Component {
       });
     }
 
-    if (isAllowedResource('storageclasses')) {
+    if (isAllowedResource("storageclasses")) {
       tabRoutes.push({
         title: <Trans>Storage Classes</Trans>,
         component: StorageClasses,

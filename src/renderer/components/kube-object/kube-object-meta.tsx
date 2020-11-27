@@ -37,7 +37,7 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
           {getAge(true, false)} <Trans>ago</Trans> ({creationTimestamp})
         </DrawerItem>
         <DrawerItem name={<Trans>Name</Trans>} hidden={this.isHidden("name")}>
-          {getName()} <KubeObjectStatusIcon object={object} />
+          {getName()} <KubeObjectStatusIcon key="icon" object={object} />
         </DrawerItem>
         <DrawerItem name={<Trans>Namespace</Trans>} hidden={this.isHidden("namespace") || !getNs()}>
           {getNs()}
