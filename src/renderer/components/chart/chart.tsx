@@ -1,7 +1,7 @@
 import "./chart.scss";
 import React from "react";
 import ChartJS from "chart.js";
-import { isEqual, remove } from "lodash";
+import { remove } from "lodash";
 import { cssNames } from "../../utils";
 import { StatusBrick } from "../status-brick";
 import { Badge } from "../badge";

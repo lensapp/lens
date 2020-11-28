@@ -40,7 +40,7 @@ export const ContainerEnvironment = observer((props: Props) => {
   );
 
   const renderEnv = () => {
-    const orderedEnv = _.sortBy(env, 'name');
+    const orderedEnv = _.sortBy(env, "name");
 
     return orderedEnv.map(variable => {
       const { name, value, valueFrom } = variable;

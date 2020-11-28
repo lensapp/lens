@@ -48,9 +48,9 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
     }
     const {
       allowedHostPaths, allowedCapabilities, allowedCSIDrivers, allowedFlexVolumes, allowedProcMountTypes,
-      allowedUnsafeSysctls, allowPrivilegeEscalation, defaultAddCapabilities, defaultAllowPrivilegeEscalation,
-      forbiddenSysctls, fsGroup, hostIPC, hostNetwork, hostPID, hostPorts, privileged, readOnlyRootFilesystem,
-      requiredDropCapabilities, runAsGroup, runAsUser, runtimeClass, seLinux, supplementalGroups, volumes
+      allowedUnsafeSysctls, allowPrivilegeEscalation, defaultAddCapabilities, forbiddenSysctls, fsGroup,
+      hostIPC, hostNetwork, hostPID, hostPorts, privileged, readOnlyRootFilesystem, requiredDropCapabilities,
+      runAsGroup, runAsUser, runtimeClass, seLinux, supplementalGroups, volumes,
     } = psp.spec;
     return (
       <div className="PodSecurityPolicyDetails">

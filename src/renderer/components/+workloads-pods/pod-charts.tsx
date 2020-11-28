@@ -11,10 +11,10 @@ import { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { themeStore } from "../../theme.store";
 
 export const podMetricTabs = [
-  <Trans>CPU</Trans>,
-  <Trans>Memory</Trans>,
-  <Trans>Network</Trans>,
-  <Trans>Filesystem</Trans>,
+  <Trans key="cpu">CPU</Trans>,
+  <Trans key="memory">Memory</Trans>,
+  <Trans key="network">Network</Trans>,
+  <Trans key="filesystem">Filesystem</Trans>,
 ];
 
 type IContext = IResourceMetricsValue<WorkloadKubeObject, { metrics: IPodMetrics }>;

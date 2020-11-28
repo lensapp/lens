@@ -75,7 +75,7 @@ export class ResourceApplier {
     delete resource.metadata?.resourceVersion;
     const annotations = resource.metadata?.annotations;
     if (annotations) {
-      delete annotations['kubectl.kubernetes.io/last-applied-configuration'];
+      delete annotations["kubectl.kubernetes.io/last-applied-configuration"];
     }
     return resource;
   }

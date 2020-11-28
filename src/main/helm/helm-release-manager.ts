@@ -34,8 +34,8 @@ export class HelmReleaseManager {
         generateName = "--generate-name";
         name = "";
       }
-      const { stdout, stderr } = await promiseExec(`"${helm}" install ${name} ${chart} --version ${version} -f ${fileName} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} ${generateName}`).catch((error) => { throw(error.stderr);});
-      const releaseName = stdout.split("\n")[0].split(' ')[1].trim();
+      const { stdout } = await promiseExec(`"${helm}" install ${name} ${chart} --version ${version} -f ${fileName} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} ${generateName}`).catch((error) => { throw(error.stderr);});
+      const releaseName = stdout.split("\n")[0].split(" ")[1].trim();
       return {
         log: stdout,
         release: {
@@ -54,7 +54,7 @@ export class HelmReleaseManager {
     await fs.promises.writeFile(fileName, yaml.safeDump(values));
 
     try {
-      const { stdout, stderr } = await promiseExec(`"${helm}" upgrade ${name} ${chart} --version ${version} -f ${fileName} --namespace ${namespace} --kubeconfig ${cluster.getProxyKubeconfigPath()}`).catch((error) => { throw(error.stderr);});
+      const { stdout } = await promiseExec(`"${helm}" upgrade ${name} ${chart} --version ${version} -f ${fileName} --namespace ${namespace} --kubeconfig ${cluster.getProxyKubeconfigPath()}`).catch((error) => { throw(error.stderr);});
       return {
         log: stdout,
         release: this.getRelease(name, namespace, cluster)
@@ -66,7 +66,7 @@ export class HelmReleaseManager {
 
   public async getRelease(name: string, namespace: string, cluster: Cluster) {
     const helm = await helmCli.binaryPath();
-    const {stdout, stderr} = await promiseExec(`"${helm}" status ${name} --output json --namespace ${namespace} --kubeconfig ${cluster.getProxyKubeconfigPath()}`).catch((error) => { throw(error.stderr);});
+    const { stdout } = await promiseExec(`"${helm}" status ${name} --output json --namespace ${namespace} --kubeconfig ${cluster.getProxyKubeconfigPath()}`).catch((error) => { throw(error.stderr);});
     const release = JSON.parse(stdout);
     release.resources = await this.getResources(name, namespace, cluster);
     return release;
@@ -74,26 +74,26 @@ export class HelmReleaseManager {
 
   public async deleteRelease(name: string, namespace: string, pathToKubeconfig: string) {
     const helm = await helmCli.binaryPath();
-    const { stdout, stderr } = await promiseExec(`"${helm}" delete ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr);});
+    const { stdout  } = await promiseExec(`"${helm}" delete ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr);});
 
     return stdout;
   }
 
   public async getValues(name: string, namespace: string, pathToKubeconfig: string) {
     const helm = await helmCli.binaryPath();
-    const { stdout, stderr } = await promiseExec(`"${helm}" get values ${name} --all --output yaml --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr);});
+    const { stdout,  } = await promiseExec(`"${helm}" get values ${name} --all --output yaml --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr);});
     return stdout;
   }
 
   public async getHistory(name: string, namespace: string, pathToKubeconfig: string) {
     const helm = await helmCli.binaryPath();
-    const {stdout, stderr} = await promiseExec(`"${helm}" history ${name} --output json --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr);});
+    const { stdout } = await promiseExec(`"${helm}" history ${name} --output json --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr);});
     return JSON.parse(stdout);
   }
 
   public async rollback(name: string, namespace: string, revision: number, pathToKubeconfig: string) {
     const helm = await helmCli.binaryPath();
-    const {stdout, stderr} = await promiseExec(`"${helm}" rollback ${name} ${revision} --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr);});
+    const { stdout } = await promiseExec(`"${helm}" rollback ${name} ${revision} --namespace ${namespace} --kubeconfig ${pathToKubeconfig}`).catch((error) => { throw(error.stderr);});
     return stdout;
   }
 
@@ -101,7 +101,7 @@ export class HelmReleaseManager {
     const helm = await helmCli.binaryPath();
     const kubectl = await cluster.kubeCtl.getPath();
     const pathToKubeconfig = cluster.getProxyKubeconfigPath();
-    const { stdout } = await promiseExec(`"${helm}" get manifest ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} | "${kubectl}" get -n ${namespace} --kubeconfig ${pathToKubeconfig} -f - -o=json`).catch((error) => {
+    const { stdout } = await promiseExec(`"${helm}" get manifest ${name} --namespace ${namespace} --kubeconfig ${pathToKubeconfig} | "${kubectl}" get -n ${namespace} --kubeconfig ${pathToKubeconfig} -f - -o=json`).catch(() => {
       return { stdout: JSON.stringify({items: []})};
     });
     return stdout;

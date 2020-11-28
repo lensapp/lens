@@ -1,7 +1,7 @@
 import type { InputProps } from "./input";
 import { ReactNode } from "react";
 import { t } from "@lingui/macro";
-import { _i18n } from '../../i18n';
+import { _i18n } from "../../i18n";
 import fse from "fs-extra";
 
 export interface InputValidator {

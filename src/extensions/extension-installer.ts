@@ -1,4 +1,4 @@
-import AwaitLock from 'await-lock';
+import AwaitLock from "await-lock";
 import child_process from "child_process";
 import fs from "fs-extra";
 import path from "path";
@@ -27,7 +27,7 @@ export class ExtensionInstaller {
   }
 
   get npmPath() {
-    return __non_webpack_require__.resolve('npm/bin/npm-cli');
+    return __non_webpack_require__.resolve("npm/bin/npm-cli");
   }
 
   installDependencies(): Promise<void> {

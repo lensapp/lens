@@ -1,6 +1,5 @@
 // Navigation helpers
 
-import { ipcRenderer } from "electron";
 import { matchPath, RouteProps } from "react-router";
 import { reaction } from "mobx";
 import { createObservableHistory } from "mobx-observable-history";

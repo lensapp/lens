@@ -4,7 +4,7 @@ import { setupI18n } from "@lingui/core";
 import orderBy from "lodash/orderBy";
 import { autobind, createStorage } from "./utils";
 
-const plurals: Record<string, Function> = require('make-plural/plurals'); // eslint-disable-line @typescript-eslint/no-var-requires
+const plurals: Record<string, Function> = require("make-plural/plurals"); // eslint-disable-line @typescript-eslint/no-var-requires
 
 export interface ILanguage {
   code: string;

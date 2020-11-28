@@ -77,7 +77,7 @@ export function parseKubeApi(path: string): IKubeApiParsed {
        * 3. otherwise assume apiVersion <- left[0]
        * 4. always resource, name <- left[(0 or 1)+1..]
        */
-        if (left[0].includes('.') || left[1].match(/^v[0-9]/)) {
+        if (left[0].includes(".") || left[1].match(/^v[0-9]/)) {
           [apiGroup, apiVersion] = left;
           resource = left.slice(2).join("/");
         } else {

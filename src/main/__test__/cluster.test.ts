@@ -146,7 +146,7 @@ describe("create clusters", () => {
       }
     }));
 
-    mockedRequest.mockImplementationOnce(((uri: any, _options: any) => {
+    mockedRequest.mockImplementationOnce(((uri: any) => {
       expect(uri).toBe(`http://localhost:${port}/api-kube/version`);
       return Promise.resolve({ gitVersion: "1.2.3" });
     }) as any);

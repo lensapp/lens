@@ -3,7 +3,7 @@ import "./replicasets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
-import { ReplicaSet, replicaSetApi } from "../../api/endpoints";
+import { ReplicaSet } from "../../api/endpoints";
 import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { replicaSetStore } from "./replicasets.store";
 import { Spinner } from "../spinner";
@@ -11,7 +11,6 @@ import { prevDefault, stopPropagation } from "../../utils";
 import { DrawerTitle } from "../drawer";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { showDetails } from "../../navigation";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
@@ -73,7 +72,7 @@ export class ReplicaSets extends React.Component<Props> {
                   onClick={prevDefault(() => showDetails(replica.selfLink, false))}
                 >
                   <TableCell className="name">{replica.getName()}</TableCell>
-                  <TableCell className="warning"><KubeObjectStatusIcon object={replica}/></TableCell>
+                  <TableCell className="warning"><KubeObjectStatusIcon key="icon" object={replica}/></TableCell>
                   <TableCell className="namespace">{replica.getNs()}</TableCell>
                   <TableCell className="pods">{this.getPodsLength(replica)}</TableCell>
                   <TableCell className="age">{replica.getAge()}</TableCell>

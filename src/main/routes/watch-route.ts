@@ -72,7 +72,7 @@ class ApiWatcher {
 class WatchRoute extends LensApi {
 
   public async routeWatch(request: LensApiRequest) {
-    const { params, response, cluster} = request;
+    const { response, cluster} = request;
     const apis: string[] = request.query.getAll("api");
     const watchers: ApiWatcher[] = [];
 

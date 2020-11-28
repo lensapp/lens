@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 
 export default migration({
   version: "2.7.0-beta.1",
-  run(store, log) {
+  run(store) {
     const clusters: any[] = [];
     for (const value of store) {
       const clusterKey = value[0];

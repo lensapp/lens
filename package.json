@@ -40,6 +40,7 @@
     "lint": "yarn run eslint $@ --ext js,ts,tsx --max-warnings=0 src/ integration/ __mocks__/ build/ extensions/",
     "lint:fix": "yarn run lint --fix",
     "mkdocs-serve-local": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -it -p 8000:8000 -v ${PWD}:/docs mkdocs-serve-local:latest",
+    "verify-docs": "docker build -t mkdocs-serve-local:latest mkdocs/ && docker run --rm -v ${PWD}:/docs mkdocs-serve-local:latest build --strict",
     "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts"
   },
   "config": {
@@ -338,6 +339,8 @@
     "electron-builder": "^22.7.0",
     "electron-notarize": "^0.3.0",
     "eslint": "^7.7.0",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-unused-imports": "^1.0.0",
     "file-loader": "^6.0.0",
     "flex.box": "^3.4.4",
     "fork-ts-checker-webpack-plugin": "^5.0.0",

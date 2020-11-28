@@ -61,7 +61,7 @@ export class Services extends React.Component<Props> {
         ]}
         renderTableContents={(service: Service) => [
           service.getName(),
-          <KubeObjectStatusIcon object={service} />,
+          <KubeObjectStatusIcon key="icon" object={service} />,
           service.getNs(),
           service.getType(),
           service.getClusterIp(),

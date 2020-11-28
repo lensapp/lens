@@ -3,9 +3,9 @@ import mockFs from "mock-fs";
 jest.mock("electron", () => {
   return {
     app: {
-      getVersion: () => '99.99.99',
-      getPath: () => 'tmp',
-      getLocale: () => 'en'
+      getVersion: () => "99.99.99",
+      getPath: () => "tmp",
+      getLocale: () => "en"
     }
   };
 });
@@ -16,7 +16,7 @@ describe("workspace store tests", () => {
   describe("for an empty config", () => {
     beforeEach(async () => {
       WorkspaceStore.resetInstance();
-      mockFs({ tmp: { 'lens-workspace-store.json': "{}" } });
+      mockFs({ tmp: { "lens-workspace-store.json": "{}" } });
 
       await WorkspaceStore.getInstance<WorkspaceStore>().load();
     });
@@ -146,7 +146,7 @@ describe("workspace store tests", () => {
       WorkspaceStore.resetInstance();
       mockFs({
         tmp: {
-          'lens-workspace-store.json': JSON.stringify({
+          "lens-workspace-store.json": JSON.stringify({
             currentWorkspace: "abc",
             workspaces: [{
               id: "abc",

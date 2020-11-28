@@ -56,8 +56,9 @@ export class HelmReleaseMenu extends React.Component<Props> {
         {...menuProps}
         className={cssNames("HelmReleaseMenu", className)}
         removeAction={this.remove}
-        children={this.renderContent()}
-      />
+      >
+        {this.renderContent()}
+      </MenuActions>
     );
   }
 }

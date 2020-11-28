@@ -21,27 +21,27 @@ interface Props {
 }
 
 export class PodDetailsContainer extends React.Component<Props> {
-  
+
   renderStatus(state: string, status: IPodContainerStatus) {
     const ready = status ? status.ready : "";
     return (
       <span className={cssNames("status", state)}>
         {state}{ready ? `, ${_i18n._(t`ready`)}` : ""}
-        {state === 'terminated' ? ` - ${status.state.terminated.reason} (${_i18n._(t`exit code`)}: ${status.state.terminated.exitCode})` : ''}
-      </span>    
+        {state === "terminated" ? ` - ${status.state.terminated.reason} (${_i18n._(t`exit code`)}: ${status.state.terminated.exitCode})` : ""}
+      </span>
     );
   }
 
   renderLastState(lastState: string, status: IPodContainerStatus) {
-    if (lastState === 'terminated') {
+    if (lastState === "terminated") {
       return (
         <span>
-          {lastState}<br/> 
-          {_i18n._(t`Reason`)}: {status.lastState.terminated.reason} - {_i18n._(t`exit code`)}: {status.lastState.terminated.exitCode}<br/> 
-          {_i18n._(t`Started at`)}: {status.lastState.terminated.startedAt}<br/> 
-          {_i18n._(t`Finished at`)}: {status.lastState.terminated.finishedAt}<br/> 
+          {lastState}<br/>
+          {_i18n._(t`Reason`)}: {status.lastState.terminated.reason} - {_i18n._(t`exit code`)}: {status.lastState.terminated.exitCode}<br/>
+          {_i18n._(t`Started at`)}: {status.lastState.terminated.startedAt}<br/>
+          {_i18n._(t`Finished at`)}: {status.lastState.terminated.finishedAt}<br/>
         </span>
-      );  
+      );
     }
   }
 
@@ -57,9 +57,9 @@ export class PodDetailsContainer extends React.Component<Props> {
     const readiness = pod.getReadinessProbe(container);
     const isInitContainer = !!pod.getInitContainers().find(c => c.name == name);
     const metricTabs = [
-      <Trans>CPU</Trans>,
-      <Trans>Memory</Trans>,
-      <Trans>Filesystem</Trans>,
+      <Trans key="cpu">CPU</Trans>,
+      <Trans key="memory">Memory</Trans>,
+      <Trans key="filesystem">Filesystem</Trans>,
     ];
     return (
       <div className="PodDetailsContainer">
@@ -110,7 +110,7 @@ export class PodDetailsContainer extends React.Component<Props> {
               return (
                 <React.Fragment key={name + mountPath}>
                   <span className="mount-path">{mountPath}</span>
-                  <span className="mount-from">from {name} ({readOnly ? 'ro' : 'rw'})</span>
+                  <span className="mount-from">from {name} ({readOnly ? "ro" : "rw"})</span>
                 </React.Fragment>
               );
             })
@@ -137,13 +137,13 @@ export class PodDetailsContainer extends React.Component<Props> {
         }
         {command &&
         <DrawerItem name={<Trans>Command</Trans>}>
-          {command.join(' ')}
+          {command.join(" ")}
         </DrawerItem>
         }
 
         {args &&
         <DrawerItem name={<Trans>Arguments</Trans>}>
-          {args.join(' ')}
+          {args.join(" ")}
         </DrawerItem>
         }
       </div>

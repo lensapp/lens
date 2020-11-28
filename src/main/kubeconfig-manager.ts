@@ -41,7 +41,7 @@ export class KubeconfigManager {
    * This way any user of the config does not need to know anything about the auth etc. details.
    */
   protected async createProxyKubeconfig(): Promise<string> {
-    const { configDir, cluster, contextHandler } = this;
+    const { configDir, cluster } = this;
     const { contextName, kubeConfigPath, id } = cluster;
     const tempFile = path.join(configDir, `kubeconfig-${id}`);
     const kubeConfig = loadConfig(kubeConfigPath);
@@ -81,7 +81,7 @@ export class KubeconfigManager {
       return;
     }
 
-    logger.info('Deleting temporary kubeconfig: ' + this.tempFile);
+    logger.info("Deleting temporary kubeconfig: " + this.tempFile);
     await fs.unlink(this.tempFile);
     this.tempFile = undefined;
   }

@@ -1,6 +1,5 @@
 import type { AppPreferenceRegistration, ClusterFeatureRegistration, KubeObjectDetailRegistration, KubeObjectMenuRegistration, KubeObjectStatusRegistration, PageMenuRegistration, PageRegistration, StatusBarRegistration, } from "./registries";
 import type { Cluster } from "../main/cluster";
-import { observable } from "mobx";
 import { LensExtension } from "./lens-extension";
 import { getExtensionPageUrl } from "./registries/page-registry";
 
@@ -30,6 +29,7 @@ export class LensRendererExtension extends LensExtension {
   /**
    * Defines if extension is enabled for a given cluster. Defaults to `true`.
    */
+  // eslint-disable-next-line unused-imports/no-unused-vars-ts
   async isEnabledForCluster(cluster: Cluster): Promise<Boolean> {
     return true;
   }

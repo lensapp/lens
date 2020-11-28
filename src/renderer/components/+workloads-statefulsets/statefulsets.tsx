@@ -4,7 +4,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
 import { t, Trans } from "@lingui/macro";
-import { StatefulSet, statefulSetApi } from "../../api/endpoints";
+import { StatefulSet } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import { nodesStore } from "../+nodes/nodes.store";
@@ -64,7 +64,7 @@ export class StatefulSets extends React.Component<Props> {
           statefulSet.getNs(),
           this.renderPods(statefulSet),
           statefulSet.getReplicas(),
-          <KubeObjectStatusIcon object={statefulSet}/>,
+          <KubeObjectStatusIcon key="icon" object={statefulSet}/>,
           statefulSet.getAge(),
         ]}
         renderItemMenu={(item: StatefulSet) => {

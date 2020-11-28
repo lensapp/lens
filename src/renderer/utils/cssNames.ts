@@ -16,7 +16,7 @@ export function cssNames(...args: IClassName[]): string {
     }
   });
   return Object.entries(map)
-    .filter(([className, isActive]) => !!isActive)
+    .filter(([, isActive]) => !!isActive)
     .map(([className]) => className.trim())
-    .join(' ');
+    .join(" ");
 }

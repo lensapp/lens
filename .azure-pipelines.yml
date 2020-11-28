@@ -121,8 +121,6 @@ jobs:
         displayName: Cache Yarn packages
       - script: make node_modules
         displayName: Install dependencies
-      - script: make lint
-        displayName: Lint
       - script: make build-npm
         displayName: Generate npm package
       - script: make -j2 build-extensions

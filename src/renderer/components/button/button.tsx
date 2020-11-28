@@ -28,7 +28,7 @@ export class Button extends React.PureComponent<ButtonProps, {}> {
     const btnProps = props as Partial<ButtonProps>;
     if (hidden) return null;
 
-    btnProps.className = cssNames('Button', className, {
+    btnProps.className = cssNames("Button", className, {
       waiting, primary, accent, plain, active, big, round, outlined
     });
 

@@ -49,7 +49,7 @@ export class Namespaces extends React.Component<Props> {
           ]}
           renderTableContents={(item: Namespace) => [
             item.getName(),
-            <KubeObjectStatusIcon object={item} />,
+            <KubeObjectStatusIcon key="icon" object={item} />,
             item.getLabels().map(label => <Badge key={label} label={label}/>),
             item.getAge(),
             { title: item.getStatus(), className: item.getStatus().toLowerCase() },

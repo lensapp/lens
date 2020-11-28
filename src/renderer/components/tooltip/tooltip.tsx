@@ -1,4 +1,4 @@
-import './tooltip.scss';
+import "./tooltip.scss";
 
 import React from "react";
 import { createPortal } from "react-dom";
@@ -74,13 +74,13 @@ export class Tooltip extends React.Component<TooltipProps> {
   }
 
   @autobind()
-  protected onEnterTarget(evt: MouseEvent) {
+  protected onEnterTarget() {
     this.isVisible = true;
     this.refreshPosition();
   }
 
   @autobind()
-  protected onLeaveTarget(evt: MouseEvent) {
+  protected onLeaveTarget() {
     this.isVisible = false;
   }
 

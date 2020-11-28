@@ -1,54 +1,54 @@
-import React from 'react';
-import { render, waitFor, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import React from "react";
+import { render, waitFor, fireEvent } from "@testing-library/react";
+import "@testing-library/jest-dom/extend-expect";
 
 import { DeploymentScaleDialog } from "./deployment-scale-dialog";
 jest.mock("../../api/endpoints");
 import { deploymentApi } from "../../api/endpoints";
 
 const dummyDeployment = {
-  apiVersion: 'v1',
-  kind: 'dummy',
+  apiVersion: "v1",
+  kind: "dummy",
   metadata: {
-    uid: 'dummy',
-    name: 'dummy',
-    creationTimestamp: 'dummy',
-    resourceVersion: 'dummy',
-    selfLink: 'link',
+    uid: "dummy",
+    name: "dummy",
+    creationTimestamp: "dummy",
+    resourceVersion: "dummy",
+    selfLink: "link",
   },
-  selfLink: 'link',
+  selfLink: "link",
   spec: {
     replicas: 1,
-    selector: { matchLabels: { dummy: 'label' } },
+    selector: { matchLabels: { dummy: "label" } },
     template: {
       metadata: {
-        labels: { dummy: 'label' },
+        labels: { dummy: "label" },
       },
       spec: {
         containers: [{
-          name: 'dummy',
-          image: 'dummy',
+          name: "dummy",
+          image: "dummy",
           resources: {
             requests: {
-              cpu: '1',
-              memory: '10Mi',
+              cpu: "1",
+              memory: "10Mi",
             },
           },
-          terminationMessagePath: 'dummy',
-          terminationMessagePolicy: 'dummy',
-          imagePullPolicy: 'dummy',
+          terminationMessagePath: "dummy",
+          terminationMessagePolicy: "dummy",
+          imagePullPolicy: "dummy",
         }],
-        restartPolicy: 'dummy',
+        restartPolicy: "dummy",
         terminationGracePeriodSeconds: 10,
-        dnsPolicy: 'dummy',
-        serviceAccountName: 'dummy',
-        serviceAccount: 'dummy',
+        dnsPolicy: "dummy",
+        serviceAccountName: "dummy",
+        serviceAccount: "dummy",
         securityContext: {},
-        schedulerName: 'dummy',
+        schedulerName: "dummy",
       },
     },
     strategy: {
-      type: 'dummy',
+      type: "dummy",
       rollingUpdate: {
         maxUnavailable: 1,
         maxSurge: 10,
@@ -61,12 +61,12 @@ const dummyDeployment = {
     updatedReplicas: 1,
     readyReplicas: 1,
     conditions: [{
-      type: 'dummy',
-      status: 'dummy',
-      lastUpdateTime: 'dummy',
-      lastTransitionTime: 'dummy',
-      reason: 'dummy',
-      message: 'dummy',
+      type: "dummy",
+      status: "dummy",
+      lastUpdateTime: "dummy",
+      lastTransitionTime: "dummy",
+      reason: "dummy",
+      message: "dummy",
     }],
   },
   getConditions: jest.fn(),
@@ -93,14 +93,14 @@ const dummyDeployment = {
   delete: jest.fn(),
 };
 
-describe('<DeploymentScaleDialog />', () => {
+describe("<DeploymentScaleDialog />", () => {
 
-  it('renders w/o errors', () => {
+  it("renders w/o errors", () => {
     const { container } = render(<DeploymentScaleDialog />);
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  it('inits with a dummy deployment with mocked current/desired scale', async () => {
+  it("inits with a dummy deployment with mocked current/desired scale", async () => {
     // mock deploymentApi.getReplicas() which will be called 
     // when <DeploymentScaleDialog /> rendered.
     const initReplicas = 3;
@@ -111,8 +111,8 @@ describe('<DeploymentScaleDialog />', () => {
     // because there is an <Animate /> in <Dialog /> which renders null at start.
     await waitFor(async () => {
       const [currentScale, desiredScale] = await Promise.all([
-        getByTestId('current-scale'),
-        getByTestId('desired-scale'),
+        getByTestId("current-scale"),
+        getByTestId("desired-scale"),
       ]);
       expect(currentScale).toHaveTextContent(`${initReplicas}`);
       expect(desiredScale).toHaveTextContent(`${initReplicas}`);
@@ -120,31 +120,31 @@ describe('<DeploymentScaleDialog />', () => {
     
   });
 
-  it('changes the desired scale when clicking the icon buttons +/-', async () => {
+  it("changes the desired scale when clicking the icon buttons +/-", async () => {
     const initReplicas = 1;
     deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
     const { getByTestId } = render(<DeploymentScaleDialog />);
     DeploymentScaleDialog.open(dummyDeployment);
     await waitFor(async () => {
-      const desiredScale = await getByTestId('desired-scale');
+      const desiredScale = await getByTestId("desired-scale");
       expect(desiredScale).toHaveTextContent(`${initReplicas}`);
     });
-    const up = await getByTestId('desired-replicas-up');
-    const down = await getByTestId('desired-replicas-down');
+    const up = await getByTestId("desired-replicas-up");
+    const down = await getByTestId("desired-replicas-down");
     fireEvent.click(up);
-    expect(await getByTestId('desired-scale')).toHaveTextContent(`${initReplicas + 1}`);
+    expect(await getByTestId("desired-scale")).toHaveTextContent(`${initReplicas + 1}`);
     fireEvent.click(down);
-    expect(await getByTestId('desired-scale')).toHaveTextContent('1');
+    expect(await getByTestId("desired-scale")).toHaveTextContent("1");
     // edge case, desiredScale must > 0
     fireEvent.click(down);
     fireEvent.click(down);
-    expect(await getByTestId('desired-scale')).toHaveTextContent('1');
+    expect(await getByTestId("desired-scale")).toHaveTextContent("1");
     const times = 120;
     // edge case, desiredScale must < scaleMax (100)
     for (let i = 0; i < times; i++) {
       fireEvent.click(up);
     }
-    expect(await getByTestId('desired-scale')).toHaveTextContent('100');
+    expect(await getByTestId("desired-scale")).toHaveTextContent("100");
   });
 
 });

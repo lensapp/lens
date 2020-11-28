@@ -6,36 +6,36 @@ import { CoreV1Api, V1Secret } from "@kubernetes/client-node";
 function generateKubeConfig(username: string, secret: V1Secret, cluster: Cluster) {
   const tokenData = Buffer.from(secret.data["token"], "base64");
   return {
-    'apiVersion': 'v1',
-    'kind': 'Config',
-    'clusters': [
+    "apiVersion": "v1",
+    "kind": "Config",
+    "clusters": [
       {
-        'name': cluster.contextName,
-        'cluster': {
-          'server': cluster.apiUrl,
-          'certificate-authority-data': secret.data["ca.crt"]
+        "name": cluster.contextName,
+        "cluster": {
+          "server": cluster.apiUrl,
+          "certificate-authority-data": secret.data["ca.crt"]
         }
       }
     ],
-    'users': [
+    "users": [
       {
-        'name': username,
-        'user': {
-          'token': tokenData.toString("utf8"),
+        "name": username,
+        "user": {
+          "token": tokenData.toString("utf8"),
         }
       }
     ],
-    'contexts': [
+    "contexts": [
       {
-        'name': cluster.contextName,
-        'context': {
-          'user': username,
-          'cluster': cluster.contextName,
-          'namespace': secret.metadata.namespace,
+        "name": cluster.contextName,
+        "context": {
+          "user": username,
+          "cluster": cluster.contextName,
+          "namespace": secret.metadata.namespace,
         }
       }
     ],
-    'current-context': cluster.contextName
+    "current-context": cluster.contextName
   };
 }
 
