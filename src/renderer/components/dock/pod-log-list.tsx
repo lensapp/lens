@@ -131,9 +131,8 @@ export class PodLogList extends React.Component<Props> {
    * @param rowIndex index of the log element in logs array
    * @returns A react element with a row itself
    */
-  getLogRow = (rowIndex: number) => {
+  getLogRow = (item: string, rowIndex: number) => {
     const { searchQuery, isActiveOverlay } = searchStore;
-    const item = this.props.logs[rowIndex];
     const contents: React.ReactElement[] = [];
     const ansiToHtml = (ansi: string) => DOMPurify.sanitize(colorConverter.ansi_to_html(ansi));
     if (searchQuery) { // If search is enabled, replace keyword with backgrounded <span>
