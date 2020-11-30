@@ -5963,10 +5963,10 @@ eslint-plugin-react@^7.21.5:
     resolve "^1.18.1"
     string.prototype.matchall "^4.0.2"
 
-eslint-plugin-unused-imports@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-unused-imports/-/eslint-plugin-unused-imports-1.0.0.tgz#4e47514a5a262731f0ef26ce1e0826b425e93183"
-  integrity sha512-3r5ZMHyvy0ww6TuUoRUZNOIhd3EDD3+PQsoz0tdx86PjJ12qWv8Gl1JCW1rxOyFF9u8A61+1P7UId2hzQ95vuQ==
+eslint-plugin-unused-imports@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-unused-imports/-/eslint-plugin-unused-imports-1.0.1.tgz#f95f48637bb166ed924ecb5ebf27761a57da4178"
+  integrity sha512-AVDcgeoZZoBH/g5743nvWQK7/V7w2RMILHvogfBnYa1s47los7G2ysEweRx0yJ8pSVnITJvxTBkefQbJowTi3w==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.5.0"
     eslint "^7.11.0"
