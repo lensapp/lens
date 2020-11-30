@@ -3,7 +3,7 @@ import { action, computed, observable, toJS, reaction } from "mobx";
 import { BaseStore } from "./base-store";
 import { clusterStore } from "./cluster-store";
 import { appEventBus } from "./event-bus";
-import { broadcastMessage } from "../common/ipc";
+import { broadcastMessage, handleRequest, requestMain } from "../common/ipc";
 import logger from "../main/logger";
 import type { ClusterId } from "./cluster-store";
 
@@ -77,16 +77,34 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
 
 export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   static readonly defaultId: WorkspaceId = "default";
+  private stateRequestChannel = "workspace:states";
 
   private constructor() {
     super({
       configName: "lens-workspace-store",
     });
+  }
 
-    if (!ipcRenderer) {
-      setInterval(() => {
-        this.pushState();
-      }, 5000);
+  async load() {
+    await super.load();
+    if (ipcRenderer) {
+      logger.info("[WORKSPACE-STORE] requesting initial state sync");
+      await requestMain(this.stateRequestChannel, (states: Map<string, WorkspaceState>) => {
+        states.forEach((state, id) => {
+          const workspace = this.getById(id);
+          if (workspace) {
+            workspace.setState(state);
+          }
+        });
+      });
+    } else {
+      handleRequest(this.stateRequestChannel, (): Map<string, WorkspaceState> => {
+        const states = new Map<string, WorkspaceState>();
+        this.workspacesList.forEach((workspace) => {
+          states.set(workspace.id, workspace.getState());
+        });
+        return states;
+      });
     }
   }
 
@@ -157,6 +175,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       return;
     }
     this.workspaces.set(id, workspace);
+    workspace.enabled = true;
     appEventBus.emit({name: "workspace", action: "add"});
     return workspace;
   }
