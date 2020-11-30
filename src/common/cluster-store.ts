@@ -205,7 +205,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     if (!(model instanceof Cluster)) {
       cluster = new Cluster(model);
     }
-    cluster.enabled = true;
+    if (!cluster.isManaged) {
+      cluster.enabled = true;
+    }
     this.clusters.set(model.id, cluster);
     return cluster;
   }

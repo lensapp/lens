@@ -94,7 +94,6 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     if (ipcRenderer) {
       logger.info("[WORKSPACE-STORE] requesting initial state sync");
       const workspaceStates: workspaceStateSync[] = await requestMain(this.stateRequestChannel);
-      console.log(workspaceStates);
       workspaceStates.forEach((workspaceState) => {
         const workspace = this.getById(workspaceState.id);
         if (workspace) {
@@ -182,7 +181,10 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       return;
     }
     this.workspaces.set(id, workspace);
-    workspace.enabled = true;
+    if (!workspace.isManaged) {
+      workspace.enabled = true;
+    }
+
     appEventBus.emit({name: "workspace", action: "add"});
     return workspace;
   }

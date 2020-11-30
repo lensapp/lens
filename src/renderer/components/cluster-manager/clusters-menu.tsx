@@ -65,26 +65,28 @@ export class ClustersMenu extends React.Component<Props> {
         }
       }));
     }
-    menu.append(new MenuItem({
-      label: _i18n._(t`Remove`),
-      click: () => {
-        ConfirmDialog.open({
-          okButtonProps: {
-            primary: false,
-            accent: true,
-            label: _i18n._(t`Remove`),
-          },
-          ok: () => {
-            if (clusterStore.activeClusterId === cluster.id) {
-              navigate(landingURL());
-              clusterStore.setActive(null);
-            }
-            clusterStore.removeById(cluster.id);
-          },
-          message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
-        });
-      }
-    }));
+    if (!cluster.isManaged) {
+      menu.append(new MenuItem({
+        label: _i18n._(t`Remove`),
+        click: () => {
+          ConfirmDialog.open({
+            okButtonProps: {
+              primary: false,
+              accent: true,
+              label: _i18n._(t`Remove`),
+            },
+            ok: () => {
+              if (clusterStore.activeClusterId === cluster.id) {
+                navigate(landingURL());
+                clusterStore.setActive(null);
+              }
+              clusterStore.removeById(cluster.id);
+            },
+            message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
+          });
+        }
+      }));
+    }
     menu.popup({
       window: remote.getCurrentWindow()
     });
