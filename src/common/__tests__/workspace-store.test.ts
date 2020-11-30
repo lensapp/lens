@@ -7,12 +7,9 @@ jest.mock("electron", () => {
       getPath: () => "tmp",
       getLocale: () => "en"
     },
-    ipcRenderer: {
-      invoke: jest.fn(),
-      on: jest.fn()
-    },
     ipcMain: {
-      handle: jest.fn()
+      handle: jest.fn(),
+      on: jest.fn()
     }
   };
 });

@@ -49,9 +49,9 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
   }
 
   getState(): WorkspaceState {
-    return {
+    return toJS({
       enabled: this.enabled
-    };
+    });
   }
 
   pushState(state = this.getState()) {
@@ -87,21 +87,28 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
 
   async load() {
     await super.load();
+    type workspaceStateSync = {
+      id: string;
+      state: WorkspaceState;
+    };
     if (ipcRenderer) {
       logger.info("[WORKSPACE-STORE] requesting initial state sync");
-      await requestMain(this.stateRequestChannel, (states: Map<string, WorkspaceState>) => {
-        states.forEach((state, id) => {
-          const workspace = this.getById(id);
-          if (workspace) {
-            workspace.setState(state);
-          }
-        });
+      const workspaceStates: workspaceStateSync[] = await requestMain(this.stateRequestChannel);
+      console.log(workspaceStates);
+      workspaceStates.forEach((workspaceState) => {
+        const workspace = this.getById(workspaceState.id);
+        if (workspace) {
+          workspace.setState(workspaceState.state);
+        }
       });
     } else {
-      handleRequest(this.stateRequestChannel, (): Map<string, WorkspaceState> => {
-        const states = new Map<string, WorkspaceState>();
+      handleRequest(this.stateRequestChannel, (): workspaceStateSync[] => {
+        const states: workspaceStateSync[] = [];
         this.workspacesList.forEach((workspace) => {
-          states.set(workspace.id, workspace.getState());
+          states.push({
+            state: workspace.getState(),
+            id: workspace.id
+          });
         });
         return states;
       });
