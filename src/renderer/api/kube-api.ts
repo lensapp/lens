@@ -173,13 +173,18 @@ export class KubeApi<T extends KubeObject = any> {
    */
   private async getPreferredVersionPrefixGroup() {
     if (this.options.fallbackApiBases) {
-      return this.getLatestApiPrefixGroup();
-    } else {
-      return {
-        apiPrefix: this.apiPrefix,
-        apiGroup: this.apiGroup
-      };
+      try {
+        return await this.getLatestApiPrefixGroup();
+      } catch (error) {
+        // If valid API wasn't found, log the error and return defaults below
+        console.error(error);
+      }
     }
+
+    return {
+      apiPrefix: this.apiPrefix,
+      apiGroup: this.apiGroup
+    };
   }
 
   protected async checkPreferredVersion() {
