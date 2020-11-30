@@ -17,4 +17,15 @@
       cursor: pointer;
     }
   }
+
+  .extensions {
+    font-size: var(--font-size-small);
+    color: white;
+    .item {
+      &:hover {
+        background-color: #ffffff33;
+        cursor: pointer;
+      }
+    }
+  }
 }
