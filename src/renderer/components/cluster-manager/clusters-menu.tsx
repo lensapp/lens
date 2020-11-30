@@ -106,7 +106,7 @@ export class ClustersMenu extends React.Component<Props> {
     const { className } = this.props;
     const { newContexts } = userStore;
     const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
-    const clusters = clusterStore.getByWorkspaceId(workspace.id).filter(cluster => cluster.enabled === true);
+    const clusters = clusterStore.getByWorkspaceId(workspace.id).filter(cluster => cluster.enabled);
     const activeClusterId = clusterStore.activeCluster;
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
