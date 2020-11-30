@@ -9,6 +9,10 @@
     grid-area: main;
     position: relative;
     display: flex;
+
+    > * {
+      z-index: 1;
+    }
   }
 
   .ClustersMenu {
