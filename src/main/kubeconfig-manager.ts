@@ -81,7 +81,7 @@ export class KubeconfigManager {
       return;
     }
 
-    logger.info("Deleting temporary kubeconfig: " + this.tempFile);
+    logger.info(`Deleting temporary kubeconfig: ${this.tempFile}`);
     await fs.unlink(this.tempFile);
     this.tempFile = undefined;
   }

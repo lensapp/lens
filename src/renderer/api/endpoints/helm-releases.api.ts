@@ -106,17 +106,17 @@ export const helmReleasesApi = {
   },
 
   getValues(name: string, namespace: string) {
-    const path = endpoint({ name, namespace }) + "/values";
+    const path = `${endpoint({ name, namespace })}/values`;
     return apiBase.get<string>(path);
   },
 
   getHistory(name: string, namespace: string): Promise<IReleaseRevision[]> {
-    const path = endpoint({ name, namespace }) + "/history";
+    const path = `${endpoint({ name, namespace })}/history`;
     return apiBase.get(path);
   },
 
   rollback(name: string, namespace: string, revision: number) {
-    const path = endpoint({ name, namespace }) + "/rollback";
+    const path = `${endpoint({ name, namespace })}/rollback`;
     return apiBase.put(path, {
       data: {
         revision

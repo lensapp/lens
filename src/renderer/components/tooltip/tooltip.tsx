@@ -133,8 +133,8 @@ export class Tooltip extends React.Component<TooltipProps> {
 
   protected setPosition(pos: { left: number, top: number }) {
     const elemStyle = this.elem.style;
-    elemStyle.left = pos.left + "px";
-    elemStyle.top = pos.top + "px";
+    elemStyle.left = `${pos.left}px`;
+    elemStyle.top = `${pos.top}px`;
   }
 
   protected getPosition(position: TooltipPosition, tooltipBounds: DOMRect, targetBounds: DOMRect) {

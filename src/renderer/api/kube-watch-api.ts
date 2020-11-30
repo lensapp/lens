@@ -78,7 +78,7 @@ export class KubeWatchApi {
       return;
     }
     const query = this.getQuery();
-    const apiUrl = `${apiPrefix}/watch?` + stringify(query);
+    const apiUrl = `${apiPrefix}/watch?${stringify(query)}`;
     this.evtSource = new EventSource(apiUrl);
     this.evtSource.onmessage = this.onMessage;
     this.evtSource.onerror = this.onError;

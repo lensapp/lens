@@ -81,10 +81,10 @@ export class Kubectl {
        if the version map includes that, use that version, if not, fallback to the exact x.y.z of kube version */
     if (kubectlMap.has(minorVersion)) {
       this.kubectlVersion = kubectlMap.get(minorVersion);
-      logger.debug("Set kubectl version " + this.kubectlVersion + " for cluster version " + clusterVersion + " using version map");
+      logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using version map`);
     } else {
       this.kubectlVersion = versionParts[1] + versionParts[2];
-      logger.debug("Set kubectl version " + this.kubectlVersion + " for cluster version " + clusterVersion + " using fallback");
+      logger.debug(`Set kubectl version ${this.kubectlVersion} for cluster version ${clusterVersion} using fallback`);
     }
 
     let arch = null;
@@ -197,7 +197,7 @@ export class Kubectl {
         }
         return true;
       } catch (err) {
-        logger.error("Could not copy the bundled kubectl to app-data: " + err);
+        logger.error(`Could not copy the bundled kubectl to app-data: ${err}`);
         return false;
       }
     } else {
@@ -280,7 +280,7 @@ export class Kubectl {
     const fsPromises = fs.promises;
     const bashScriptPath = path.join(this.dirname, ".bash_set_path");
 
-    let bashScript = "" + initScriptVersionString;
+    let bashScript = `${initScriptVersionString}`;
     bashScript += "tempkubeconfig=\"$KUBECONFIG\"\n";
     bashScript += "test -f \"/etc/profile\" && . \"/etc/profile\"\n";
     bashScript += "if test -f \"$HOME/.bash_profile\"; then\n";
@@ -303,7 +303,7 @@ export class Kubectl {
 
     const zshScriptPath = path.join(this.dirname, ".zlogin");
 
-    let zshScript = "" + initScriptVersionString;
+    let zshScript = `${initScriptVersionString}`;
 
     zshScript += "tempkubeconfig=\"$KUBECONFIG\"\n";
     // restore previous ZDOTDIR

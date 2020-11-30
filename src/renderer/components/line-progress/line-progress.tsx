@@ -29,7 +29,7 @@ export class LineProgress extends React.PureComponent<LineProgressProps> {
     }
     return (
       <div className={cssNames("LineProgress", className)} {...props}>
-        <div className="line" style={{ width: valuePercents + "%" }}></div>
+        <div className="line" style={{ width: `${valuePercents}%` }}></div>
         {children}
       </div>
     );

@@ -5,7 +5,7 @@ import { KubeApi } from "../kube-api";
 
 export class PodsApi extends KubeApi<Pod> {
   async getLogs(params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> {
-    const path = this.getUrl(params) + "/log";
+    const path = `${this.getUrl(params)}/log`;
     return this.request.get(path, { query });
   }
 

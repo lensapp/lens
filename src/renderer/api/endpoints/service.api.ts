@@ -24,7 +24,7 @@ export class ServicePort implements IServicePort {
     if (this.nodePort) {
       return `${this.port}:${this.nodePort}/${this.protocol}`;
     } else {
-      return `${this.port}${this.port === this.targetPort ? "" : ":" + this.targetPort}/${this.protocol}`;
+      return `${this.port}${this.port === this.targetPort ? "" : `:${this.targetPort}`}/${this.protocol}`;
     }
   }
 }

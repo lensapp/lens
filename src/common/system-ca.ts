@@ -6,7 +6,7 @@ import logger from "../main/logger";
 if (isMac) {
   for (const crt of macca.all()) {
     const attributes = crt.issuer?.attributes?.map((a: any) => `${a.name}=${a.value}`);
-    logger.debug("Using host CA: " + attributes.join(","));
+    logger.debug(`Using host CA: ${attributes.join(",")}`);
   }
 }
 if (isWindows) {

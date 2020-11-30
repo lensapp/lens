@@ -203,6 +203,6 @@ export class ShellSession extends EventEmitter {
   }
 
   protected sendResponse(msg: string) {
-    this.websocket.send("1" + Buffer.from(msg).toString("base64"));
+    this.websocket.send(`1${Buffer.from(msg).toString("base64")}`);
   }
 }

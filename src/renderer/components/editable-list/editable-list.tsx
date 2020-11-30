@@ -56,7 +56,7 @@ export class EditableList<T> extends React.Component<Props<T>> {
         <div className="el-contents">
           {
             items.map((item, index) => (
-              <div key={item + `${index}`} className="el-item Badge">
+              <div key={`${item}${index}`} className="el-item Badge">
                 <div>{renderItem(item, index)}</div>
                 <div className="el-value-remove">
                   <Icon material="delete_outline" onClick={() => remove(({ index, oldItem: item }))} />

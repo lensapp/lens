@@ -138,12 +138,12 @@ export class App extends React.Component {
       const tabRoutes = this.getTabLayoutRoutes(menu);
       if (tabRoutes.length > 0) {
         const pageComponent = () => <TabLayout tabs={tabRoutes} />;
-        return <Route key={"extension-tab-layout-route-" + index} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
+        return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
       } else {
         const page = clusterPageRegistry.getByPageMenuTarget(menu.target);
         if (page) {
           const pageComponent = () => <page.components.Page />;
-          return <Route key={"extension-tab-layout-route-" + index} path={page.routePath} exact={page.exact} component={pageComponent}/>;
+          return <Route key={`extension-tab-layout-route-${index}`} path={page.routePath} exact={page.exact} component={pageComponent}/>;
         }
       }
     });
@@ -153,7 +153,7 @@ export class App extends React.Component {
     return clusterPageRegistry.getItems().map((page, index) => {
       const menu = clusterPageMenuRegistry.getByPage(page);
       if (!menu) {
-        return <Route key={"extension-route-" + index} path={page.routePath} exact={page.exact} component={page.components.Page}/>;
+        return <Route key={`extension-route-${index}`} path={page.routePath} exact={page.exact} component={page.components.Page}/>;
       }
     });
   }

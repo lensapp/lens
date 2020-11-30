@@ -130,7 +130,7 @@ export class TerminalApi extends WebSocketApi {
     }
     let time;
     if (showTime) {
-      time = (new Date()).toLocaleString() + " ";
+      time = `${(new Date()).toLocaleString()} `;
     }
     this.onData.emit(`${showTime ? time : ""}${data}\r\n`);
   }

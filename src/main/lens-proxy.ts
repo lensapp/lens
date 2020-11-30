@@ -95,7 +95,7 @@ export class LensProxy {
         socket.end();
       });
       proxySocket.on("error", function () {
-        socket.write("HTTP/" + req.httpVersion + " 500 Connection error\r\n\r\n");
+        socket.write(`HTTP/${req.httpVersion} 500 Connection error\r\n\r\n`);
         socket.end();
       });
       socket.on("data", function (chunk) {
@@ -117,7 +117,7 @@ export class LensProxy {
         return;
       }
       if (target) {
-        logger.debug("Failed proxy to target: " + JSON.stringify(target, null, 2));
+        logger.debug(`Failed proxy to target: ${JSON.stringify(target, null, 2)}`);
         if (req.method === "GET" && (!res.statusCode || res.statusCode >= 500)) {
           const reqId = this.getRequestId(req);
           const retryCount = this.retryCounters.get(reqId) || 0;

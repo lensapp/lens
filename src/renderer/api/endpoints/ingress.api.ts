@@ -111,7 +111,7 @@ export class Ingress extends KubeObject {
         rule.http.paths.forEach(path => {
           const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
 
-          routes.push(protocol + "://" + host + (path.path || "/") + " ⇢ " + serviceName + ":" + servicePort);
+          routes.push(`${protocol}://${host}${path.path || "/"} ⇢ ${serviceName}:${servicePort}`);
         });
       }
     });

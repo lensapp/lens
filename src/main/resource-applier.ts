@@ -26,7 +26,7 @@ export class ResourceApplier {
       const fileName = tempy.file({ name: "resource.yaml" });
       fs.writeFileSync(fileName, content);
       const cmd = `"${kubectlPath}" apply --kubeconfig "${this.cluster.getProxyKubeconfigPath()}" -o json -f "${fileName}"`;
-      logger.debug("shooting manifests with: " + cmd);
+      logger.debug(`shooting manifests with: ${cmd}`);
       const execEnv: NodeJS.ProcessEnv = Object.assign({}, process.env);
       const httpsProxy = this.cluster.preferences?.httpsProxy;
       if (httpsProxy) {
@@ -58,7 +58,7 @@ export class ResourceApplier {
       console.log("shooting manifests with:", cmd);
       exec(cmd, (error, stdout, stderr) => {
         if (error) {
-          reject("Error applying manifests:" + error);
+          reject(`Error applying manifests:${error}`);
         }
         if (stderr != "") {
           reject(stderr);
