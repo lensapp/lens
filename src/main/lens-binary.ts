@@ -51,8 +51,8 @@ export class LensBinary {
     this.platformName = isWindows ? "windows" : process.platform;
     this.dirname = path.normalize(path.join(baseDir, this.binaryName));
     if (isWindows) {
-      this.binaryName = this.binaryName + ".exe";
-      this.originalBinaryName = this.originalBinaryName + ".exe";
+      this.binaryName = `${this.binaryName}.exe`;
+      this.originalBinaryName = `${this.originalBinaryName}.exe`;
     }
     const tarName = this.getTarName();
     if (tarName) {

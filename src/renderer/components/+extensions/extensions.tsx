@@ -303,7 +303,7 @@ export class Extensions extends React.Component {
   async unpackExtension({ fileName, tempFile, manifest: { name, version } }: InstallRequestValidated) {
     const displayName = extensionDisplayName(name, version);
     const extensionFolder = this.getExtensionDestFolder(name);
-    const unpackingTempFolder = path.join(path.dirname(tempFile), path.basename(tempFile) + "-unpacked");
+    const unpackingTempFolder = path.join(path.dirname(tempFile), `${path.basename(tempFile)}-unpacked`);
     const extensionId = path.join(extensionDiscovery.nodeModulesPath, name, "package.json");
 
     logger.info(`Unpacking extension ${displayName}`, { fileName, tempFile });

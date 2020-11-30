@@ -33,7 +33,7 @@ export class Checkbox extends React.PureComponent<CheckboxProps> {
       inline,
       checked: value,
       disabled: this.props.disabled,
-      ["theme-" + theme]: theme,
+      [`theme-${theme}`]: theme,
     });
     return (
       <label className={componentClass}>

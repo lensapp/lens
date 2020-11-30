@@ -70,7 +70,7 @@ export class ClusterIcon extends React.Component<Props> {
         {showErrors && eventCount > 0 && !isActive && (
           <Badge
             className={cssNames("events-count", errorClass)}
-            label={eventCount >= 1000 ? Math.ceil(eventCount / 1000) + "k+" : eventCount}
+            label={eventCount >= 1000 ? `${Math.ceil(eventCount / 1000)}k+` : eventCount}
           />
         )}
         {children}

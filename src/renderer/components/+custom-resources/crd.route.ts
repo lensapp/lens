@@ -6,11 +6,11 @@ export const crdRoute: RouteProps = {
 };
 
 export const crdDefinitionsRoute: RouteProps = {
-  path: crdRoute.path + "/definitions"
+  path: `${crdRoute.path}/definitions`
 };
 
 export const crdResourcesRoute: RouteProps = {
-  path: crdRoute.path + "/:group/:name"
+  path: `${crdRoute.path}/:group/:name`
 };
 
 export interface ICRDListQuery {

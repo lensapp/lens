@@ -115,7 +115,7 @@ export class Sidebar extends React.Component<Props> {
       }
       return (
         <SidebarNavItem
-          key={"registered-item-" + index}
+          key={`registered-item-${index}`}
           url={pageUrl}
           text={menuItem.title}
           icon={<menuItem.components.Icon/>}

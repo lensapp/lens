@@ -111,7 +111,7 @@ export class NodeDetails extends React.Component<Props> {
           <DrawerItem name={<Trans>Taints</Trans>} labelsOnly>
             {
               taints.map(({ key, effect, value }) => (
-                <Badge key={key} label={key + ": " + effect} tooltip={value}/>
+                <Badge key={key} label={`${key}: ${effect}`} tooltip={value}/>
               ))
             }
           </DrawerItem>

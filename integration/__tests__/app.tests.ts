@@ -546,7 +546,7 @@ describe("Lens integration tests", () => {
         await app.client.keys("metadata:\n");
         await app.client.keys("  name: nginx-create-pod-test\n");
         await app.client.keys(`namespace: ${TEST_NAMESPACE}\n`);
-        await app.client.keys(BACKSPACE + "spec:\n");
+        await app.client.keys(`${BACKSPACE}spec:\n`);
         await app.client.keys("  containers:\n");
         await app.client.keys("- name: nginx-create-pod-test\n");
         await app.client.keys("  image: nginx:alpine\n");

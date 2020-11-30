@@ -129,18 +129,18 @@ export class Menu extends React.Component<MenuProps, State> {
 
     // setup initial position
     const position: MenuPosition = { left: true, bottom: true };
-    this.elem.style.left = left + "px";
-    this.elem.style.top = bottom + "px";
+    this.elem.style.left = `${left}px`;
+    this.elem.style.top = `${bottom}px`;
 
     // correct position if menu doesn't fit to viewport
     const menuPos = this.elem.getBoundingClientRect();
     if (menuPos.right > window.innerWidth) {
-      this.elem.style.left = (right - this.elem.offsetWidth) + "px";
+      this.elem.style.left = `${right - this.elem.offsetWidth}px`;
       position.right = true;
       delete position.left;
     }
     if (menuPos.bottom > window.innerHeight) {
-      this.elem.style.top = (top - this.elem.offsetHeight) + "px";
+      this.elem.style.top = `${top - this.elem.offsetHeight}px`;
       position.top = true;
       delete position.bottom;
     }

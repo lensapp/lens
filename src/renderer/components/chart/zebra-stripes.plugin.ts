@@ -46,10 +46,10 @@ export const ZebraStripes = {
     if (this.getStripesElem(chart)) return;
 
     cover.className = "zebra-cover";
-    styles.width = right - left + "px";
-    styles.left = left + "px";
-    styles.top = top + "px";
-    styles.height = bottom - top + "px";
+    styles.width = `${right - left}px`;
+    styles.left = `${left}px`;
+    styles.top = `${top}px`;
+    styles.height = `${bottom - top}px`;
     styles.backgroundImage = `
       repeating-linear-gradient(to right, ${stripeColor} 0px, ${stripeColor} ${stripeWidth}px,
       transparent ${stripeWidth}px, transparent ${stripeWidth * 2 + step}px)
@@ -89,7 +89,7 @@ export const ZebraStripes = {
     if (minutes > 0) {
       // Move position regarding to difference in time
       const cover = this.getStripesElem(chart);
-      cover.style.backgroundPositionX = -step * minutes + "px";
+      cover.style.backgroundPositionX = `${-step * minutes}px`;
     }
   }
 };

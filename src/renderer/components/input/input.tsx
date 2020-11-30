@@ -104,7 +104,7 @@ export class Input extends React.Component<InputProps, State> {
     const lineHeight = parseFloat(window.getComputedStyle(textArea).lineHeight);
     const rowsCount = (this.getValue().match(/\n/g) || []).length + 1;
     const height = lineHeight * Math.min(Math.max(rowsCount, rows), maxRows);
-    textArea.style.height = height + "px";
+    textArea.style.height = `${height}px`;
   }
 
   private validationId: string;

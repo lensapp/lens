@@ -46,7 +46,7 @@ function renderQuotas(quota: ResourceQuota): JSX.Element[] {
             max={max}
             value={current}
             tooltip={
-              <p><Trans>Set</Trans>: {value}. <Trans>Usage</Trans>: {usage + "%"}</p>
+              <p><Trans>Set</Trans>: {value}. <Trans>Usage</Trans>: {`${usage}%`}</p>
             }
           />
         </div>

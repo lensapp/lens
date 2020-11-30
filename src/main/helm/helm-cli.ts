@@ -28,7 +28,7 @@ export class HelmCli extends LensBinary {
   }
 
   protected getOriginalBinaryPath() {
-    return path.join(this.dirname, this.platformName + "-" + this.arch, this.originalBinaryName);
+    return path.join(this.dirname, `${this.platformName}-${this.arch}`, this.originalBinaryName);
   }
 }
 

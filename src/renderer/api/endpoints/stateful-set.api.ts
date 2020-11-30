@@ -6,7 +6,7 @@ import { KubeApi } from "../kube-api";
 
 export class StatefulSetApi extends KubeApi<StatefulSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
-    return this.getUrl(params) + "/scale";
+    return `${this.getUrl(params)}/scale`;
   }
 
   getReplicas(params: { namespace: string; name: string }): Promise<number> {

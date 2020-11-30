@@ -43,7 +43,7 @@ class KubectlDownloader {
         return true;
       }
 
-      console.log("Kubectl md5sum " + hash + " does not match the remote etag " + etag + ", unlinking and downloading again");
+      console.log(`Kubectl md5sum ${hash} does not match the remote etag ${etag}, unlinking and downloading again`);
       await fs.promises.unlink(this.path);
     }
 
@@ -103,7 +103,7 @@ const downloads = [
 downloads.forEach((dlOpts) => {
   console.log(dlOpts);
   const downloader = new KubectlDownloader(downloadVersion, dlOpts.platform, dlOpts.arch, dlOpts.target);
-  console.log("Downloading: " + JSON.stringify(dlOpts));
+  console.log(`Downloading: ${JSON.stringify(dlOpts)}`);
   downloader.downloadKubectl().then(() => downloader.checkBinary().then(() => console.log("Download complete")));
 });
 

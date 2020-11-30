@@ -10,7 +10,7 @@ export function cssVar(elem: HTMLElement) {
       };
     },
     set(name: string, value: number | string) {
-      if (typeof value === "number") value = value + "px";
+      if (typeof value === "number") value = `${value}px`;
       elem.style.setProperty(name, value);
     }
   };

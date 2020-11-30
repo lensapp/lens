@@ -39,7 +39,7 @@ export class PodContainerPort extends React.Component<Props> {
   render() {
     const { port } = this.props;
     const { name, containerPort, protocol } = port;
-    const text = (name ? name + ": " : "")+`${containerPort}/${protocol}`;
+    const text = `${name ? `${name}: ` : ""}${containerPort}/${protocol}`;
     return (
       <div className={cssNames("PodContainerPort", { waiting: this.waiting })}>
         <span title={_i18n._(t`Open in a browser`)} onClick={() => this.portForward() }>

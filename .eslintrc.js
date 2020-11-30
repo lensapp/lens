@@ -47,6 +47,8 @@ module.exports = {
         }],
         "semi": ["error", "always"],
         "object-shorthand": "error",
+        "prefer-template": "error",
+        "template-curly-spacing": "error",
       }
     },
     {
@@ -90,6 +92,8 @@ module.exports = {
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
         "object-shorthand": "error",
+        "prefer-template": "error",
+        "template-curly-spacing": "error",
       },
     },
     {
@@ -140,6 +144,8 @@ module.exports = {
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
         "object-shorthand": "error",
+        "prefer-template": "error",
+        "template-curly-spacing": "error",
       },
     }
   ]

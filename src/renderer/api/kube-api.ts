@@ -230,7 +230,7 @@ export class KubeApi<T extends KubeObject = any> {
       namespace: this.isNamespaced ? namespace : undefined,
       name,
     });
-    return resourcePath + (query ? `?` + stringify(this.normalizeQuery(query)) : "");
+    return resourcePath + (query ? `?${stringify(this.normalizeQuery(query))}` : "");
   }
 
   protected normalizeQuery(query: Partial<IKubeApiQueryParams> = {}) {

@@ -88,7 +88,7 @@ export class WebSocketApi {
   reconnect() {
     const { reconnectDelaySeconds } = this.params;
     if (!reconnectDelaySeconds) return;
-    this.writeLog("reconnect after", reconnectDelaySeconds + "ms");
+    this.writeLog("reconnect after", `${reconnectDelaySeconds}ms`);
     this.reconnectTimer = setTimeout(() => this.connect(), reconnectDelaySeconds * 1000);
     this.readyState = WebSocketApiState.RECONNECTING;
   }

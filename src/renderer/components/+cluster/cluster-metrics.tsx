@@ -25,7 +25,7 @@ export const ClusterMetrics = observer(() => {
 
   const datasets = [{
     id: metricType + metricNodeRole,
-    label: metricType.toUpperCase() + " usage",
+    label: `${metricType.toUpperCase()} usage`,
     borderColor: colors[metricType],
     data
   }];

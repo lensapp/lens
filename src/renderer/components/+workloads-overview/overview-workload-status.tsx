@@ -55,7 +55,7 @@ export class OverviewWorkloadStatus extends React.Component<Props> {
         if (val !== 0) {
           dataset.data.push(val);
           dataset.backgroundColor.push(this.getStatusColor(key));
-          chartData.labels.push(capitalize(key) + ": " + val);
+          chartData.labels.push(`${capitalize(key)}: ${val}`);
         }
       });
       chartData.datasets[0] = dataset;

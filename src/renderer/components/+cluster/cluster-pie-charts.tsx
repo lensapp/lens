@@ -73,10 +73,10 @@ export const ClusterPieCharts = observer(() => {
         },
       ],
       labels: [
-        i18n._(t`Usage`) + `: ${cpuUsage ? cpuUsage.toFixed(2) : "N/A"}`,
-        i18n._(t`Requests`) + `: ${cpuRequests ? cpuRequests.toFixed(2) : "N/A"}`,
-        i18n._(t`Limits`) + `: ${cpuLimits ? cpuLimits.toFixed(2) : "N/A"}`,
-        i18n._(t`Capacity`) + `: ${cpuCapacity || "N/A"}`
+        `${i18n._(t`Usage`)}: ${cpuUsage ? cpuUsage.toFixed(2) : "N/A"}`,
+        `${i18n._(t`Requests`)}: ${cpuRequests ? cpuRequests.toFixed(2) : "N/A"}`,
+        `${i18n._(t`Limits`)}: ${cpuLimits ? cpuLimits.toFixed(2) : "N/A"}`,
+        `${i18n._(t`Capacity`)}: ${cpuCapacity || "N/A"}`
       ]
     };
     const memoryData: ChartData = {
@@ -116,10 +116,10 @@ export const ClusterPieCharts = observer(() => {
         },
       ],
       labels: [
-        i18n._(t`Usage`) + `: ${bytesToUnits(memoryUsage)}`,
-        i18n._(t`Requests`) + `: ${bytesToUnits(memoryRequests)}`,
-        i18n._(t`Limits`) + `: ${bytesToUnits(memoryLimits)}`,
-        i18n._(t`Capacity`) + `: ${bytesToUnits(memoryCapacity)}`,
+        `${i18n._(t`Usage`)}: ${bytesToUnits(memoryUsage)}`,
+        `${i18n._(t`Requests`)}: ${bytesToUnits(memoryRequests)}`,
+        `${i18n._(t`Limits`)}: ${bytesToUnits(memoryLimits)}`,
+        `${i18n._(t`Capacity`)}: ${bytesToUnits(memoryCapacity)}`,
       ]
     };
     const podsData: ChartData = {
@@ -137,8 +137,8 @@ export const ClusterPieCharts = observer(() => {
         },
       ],
       labels: [
-        i18n._(t`Usage`) + `: ${podUsage || 0}`,
-        i18n._(t`Capacity`) + `: ${podCapacity}`,
+        `${i18n._(t`Usage`)}: ${podUsage || 0}`,
+        `${i18n._(t`Capacity`)}: ${podCapacity}`,
       ]
     };
     return (
