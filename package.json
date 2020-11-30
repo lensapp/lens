@@ -335,7 +335,7 @@
     "css-element-queries": "^1.2.3",
     "css-loader": "^3.5.3",
     "dompurify": "^2.0.11",
-    "electron": "^9.1.2",
+    "electron": "^9.3.5",
     "electron-builder": "^22.7.0",
     "electron-notarize": "^0.3.0",
     "eslint": "^7.7.0",
