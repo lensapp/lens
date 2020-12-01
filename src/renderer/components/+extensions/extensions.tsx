@@ -189,7 +189,7 @@ export class Extensions extends React.Component {
         .filter(req => !req.data && req.filePath)
         .map(async request => {
           try {
-            const data = fse.readFileSync(request.filePath);
+            const data = await fse.readFile(request.filePath);
             request.data = data;
             preloadedRequests.push(request);
             return request;
@@ -197,7 +197,7 @@ export class Extensions extends React.Component {
             if (showError) {
               Notifications.error(`Error while reading "${request.filePath}": ${String(error)}`);
             }
-          };
+          }
         })
     );
 
