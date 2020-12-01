@@ -1,6 +1,6 @@
 # Lens Extension API
 
-Customize and enhance the Lens experience with the Lens Extension API. Use the extension API to create menus or page content. The same extension API was used to create many of Lens's core features.
+Customise and enhance the Lens experience with the Lens Extension API. Use the extension API to create menus or page content. The same extension API was used to create many of Lens's core features.
 
 This documentation describes:
 

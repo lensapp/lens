@@ -14,7 +14,7 @@ When contributing to this repository, please consider first discussing the chang
 
 ## Local Development Environment
 
-> Prerequisites: Nodejs v12, make, yarn
+> Prerequisites: NodeJS v12, make, yarn
 
 * `make dev` - builds and starts the app
 * `make clean` - cleanup local environment build artifacts

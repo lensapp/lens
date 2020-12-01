@@ -2,9 +2,9 @@
 
 Help promote Lens! If you are not a developer (or even if you are), you can still contribute to the project – a lot – by helping us to promote it. As we are a free and open source project, the community is our most important asset. Here are some ways that you can help the project continue to grow.
 
-## Follow, Like, Recommend, Favorite, Vote and Star Us
+## Follow, Like, Recommend, Favourite, Vote and Star Us
 
-There are many sites where you can vote, recommend, favorite, and star us.
+There are many sites where you can vote, recommend, favourite, and star us.
 
 * [Twitter](https://twitter.com/k8slens) - Like, comment and retweet our posts, and follow us on Twitter.
 * [Medium](https://medium.com/k8slens) - Give claps to our articles and follow us on Medium.

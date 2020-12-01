@@ -1,4 +1,4 @@
-# Github Workflow
+# GitHub Workflow
 
 <!-- TOC -->
 - [Fork The Project](#fork-the-project)

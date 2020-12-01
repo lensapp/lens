@@ -97,7 +97,7 @@ These variables can be used in the following form: `var(--magenta)`. For example
 }
 ```
 
-A complete list of themable colors can be found in the [Color Reference](../color-reference).
+A complete list of colours that themes can change are found in the [Color Reference](../color-reference).
 
 ### Theme Switching
 
@@ -132,7 +132,7 @@ Working example provided in [Styling with Emotion](https://github.com/lensapp/le
 Every extension is affected by the list of default global styles defined in [app.scss](https://github.com/lensapp/lens/blob/master/src/renderer/components/app.scss). These are basic browser resets and element styles, including:
 
 - setting the `box-sizing` property for every element
-- default text and background colors
+- default text and background colours
 - default font sizes
 - basic heading (h1, h2, etc) formatting
 - custom scrollbar styling

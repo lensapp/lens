@@ -26,7 +26,7 @@ Each guide or sample will include:
 
 | Sample | APIs |
 | ----- | ----- |
-[helloworld](https://github.com/lensapp/lens-extension-samples/tree/master/helloworld-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
+[Hello World](https://github.com/lensapp/lens-extension-samples/tree/master/helloworld-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
 [minikube](https://github.com/lensapp/lens-extension-samples/tree/master/minikube-sample) | LensMainExtension <br> Store.clusterStore <br> Store.workspaceStore |
 [styling-css-modules-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-css-modules-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
 [styling-emotion-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-emotion-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |

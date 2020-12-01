@@ -18,7 +18,7 @@ When you create a new pull request, we expect some requirements to be met.
   * When adding new documentation, add `New Documentation:` before the title. E.g. `New Documentation: Getting Started`
   * When fixing documentation, add `Fix Documentation:` before the title. E.g. `Fix Documentation: Getting Started`
   * When updating documentation, add `Update Documentation:` before the title. E.g. `Update Documentation: Getting Started`
-* If your Pull Request closes an issue, you must write `Closes #ISSUE_NUMBER` where the ISSUE_NUMBER is the number in the end of the link url or the relevent issue. This will link your pull request to the issue, and when it is merged, the issue will close.
+* If your Pull Request closes an issue, you must write `Closes #ISSUE_NUMBER` where the ISSUE_NUMBER is the number in the end of the link url or the relevant issue. This will link your pull request to the issue, and when it is merged, the issue will close.
 * For each pull request made, we run tests to check if there are any broken links, the markdown formatting is valid, and the linter is passing.
 
 
@@ -28,6 +28,6 @@ Run a local instance of `mkdocs` in a docker container for developing the Lens D
 
 > Prerequisites: docker, yarn
 
-* `make docs` - local build and serve of mkdocs with auto update enabled
+* `make docs` - local build and serve of `mkdocs` with auto update enabled
 
 Go to [localhost:8000](http://127.0.0.1:8000).

@@ -4,7 +4,7 @@ In [Your First Extension](your-first-extension.md), you learned how to create an
 
 ## Extension Capabilities
 
-In this section, you'll find information on common extension capabilities, styling information, and a color reference guide. Determine whether your idea for an extension is doable and get ideas for new extensions by reading through the [Common Capabilities](../capabilities/common-capabilities.md) page.
+In this section, you'll find information on common extension capabilities, styling information, and a colour reference guide. Determine whether your idea for an extension is doable and get ideas for new extensions by reading through the [Common Capabilities](../capabilities/common-capabilities.md) page.
 
 ## Guides and Samples
 

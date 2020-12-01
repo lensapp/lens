@@ -1,8 +1,8 @@
 # Settings
 
-It is easy to configure Lens Clusters to your liking through its various settings. 
+It is easy to configure Lens Clusters to your liking through its various settings.
 
-1. Right-click the name of the cluster in the left-side menu that you want to open the settings for. 
+1. Right-click the name of the cluster in the left-side menu that you want to open the settings for.
 2. Click **Settings**.
 
 ![Cluster settings](images/cluster-context-menu.png)
@@ -23,7 +23,7 @@ General cluster settings
 
 ### Cluster Name
 
-The cluster name is inheritated by default from the kubeconfig file. Change the cluster name to another value by updating it here. Note that doing so does not update your kubeconfig file.
+The cluster name is inherited by default from the kubeconfig file. Change the cluster name to another value by updating it here. Note that doing so does not update your kubeconfig file.
 
 ### Workspace
 
@@ -60,7 +60,7 @@ Additional Lens features that can be installed by the user
 
 ### Metrics
 
-Enable timeseries data visualization (Prometheus stack) for your cluster. Install this only if you don't have existing Prometheus stack installed.
+Enable time-series data visualization (Prometheus stack) for your cluster. Install this only if you don't have existing Prometheus stack installed.
 
 ### User Mode
 

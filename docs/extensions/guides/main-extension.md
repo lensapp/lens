@@ -1,6 +1,6 @@
 # Main Extension
 
-The main extension api is the interface to Lens' main process (Lens runs in main and renderer processes). It allows you to access, configure, and customize Lens data, add custom application menu items, and generally run custom code in Lens' main process.
+The main extension api is the interface to Lens' main process (Lens runs in main and renderer processes). It allows you to access, configure, and customise Lens data, add custom application menu items, and generally run custom code in Lens' main process.
 
 ## `LensMainExtension` Class
 
@@ -55,7 +55,7 @@ See the [Stores](../stores) guide for more details on accessing Lens state data.
 
 ### `appMenus`
 
-The only UI feature customizable in the main extension api is the application menu. Custom menu items can be inserted and linked to custom functionality, such as navigating to a specific page. The following example demonstrates adding a menu item to the Help menu.
+The only UI feature customisable in the main extension api is the application menu. Custom menu items can be inserted and linked to custom functionality, such as navigating to a specific page. The following example demonstrates adding a menu item to the Help menu.
 
 ``` typescript
 import { LensMainExtension } from "@k8slens/extensions";
@@ -73,4 +73,4 @@ export default class SamplePageMainExtension extends LensMainExtension {
 }
 ```
 
-`appMenus` is an array of objects satisfying the `MenuRegistration` interface. `MenuRegistration` extends React's `MenuItemConstructorOptions` interface. `parentId` is the id of the menu to put this menu item under (todo: is this case sensitive and how do we know what the available ids are?), `label` is the text to show on the menu item, and `click()` is called when the menu item is selected. In this example we simply log a message, but typically you would navigate to a specific page or perform some operation. Pages are associated with the [`LensRendererExtension`](renderer-extension.md) class and can be defined when you extend it. 
+`appMenus` is an array of objects satisfying the `MenuRegistration` interface. `MenuRegistration` extends React's `MenuItemConstructorOptions` interface. `parentId` is the id of the menu to put this menu item under (todo: is this case sensitive and how do we know what the available ids are?), `label` is the text to show on the menu item, and `click()` is called when the menu item is selected. In this example we simply log a message, but typically you would navigate to a specific page or perform some operation. Pages are associated with the [`LensRendererExtension`](renderer-extension.md) class and can be defined when you extend it.

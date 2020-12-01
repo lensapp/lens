@@ -1,6 +1,6 @@
 # Renderer Extension
 
-The renderer extension api is the interface to Lens' renderer process (Lens runs in main and renderer processes). It allows you to access, configure, and customize Lens data, add custom Lens UI elements, and generally run custom code in Lens' renderer process. The custom Lens UI elements that can be added include global pages, cluster pages, cluster page menus, cluster features, app preferences, status bar items, KubeObject menu items, and KubeObject details items. These UI elements are based on React components.
+The renderer extension api is the interface to Lens' renderer process (Lens runs in main and renderer processes). It allows you to access, configure, and customise Lens data, add custom Lens UI elements, and generally run custom code in Lens' renderer process. The custom Lens UI elements that can be added include global pages, cluster pages, cluster page menus, cluster features, app preferences, status bar items, KubeObject menu items, and KubeObject details items. These UI elements are based on React components.
 
 ## `LensRendererExtension` Class
 
@@ -20,11 +20,11 @@ export default class ExampleExtensionMain extends LensRendererExtension {
 }
 ```
 
-There are two methods that you can implement to facilitate running your custom code. `onActivate()` is called when your extension has been successfully enabled. By implementing `onActivate()` you can initiate your custom code. `onDeactivate()` is called when the extension is disabled (typically from the [Lens Extensions Page]()) and when implemented gives you a chance to clean up after your extension, if necessary. The example above simply logs messages when the extension is enabled and disabled. 
+There are two methods that you can implement to facilitate running your custom code. `onActivate()` is called when your extension has been successfully enabled. By implementing `onActivate()` you can initiate your custom code. `onDeactivate()` is called when the extension is disabled (typically from the [Lens Extensions Page]()) and when implemented gives you a chance to clean up after your extension, if necessary. The example above simply logs messages when the extension is enabled and disabled.
 
 ### `clusterPages`
 
-Cluster pages appear as part of the cluster dashboard. They are accessible from the side bar, and are shown in the menu list after *Custom Resources*. It is conventional to use a cluster page to show information or provide functionality pertaining to the active cluster, along with custom data and functionality your extension may have. However, it is not limited to the active cluster. Also, your extension can gain access to the Kubernetes resources in the active cluster in a straightforward manner using the [`clusterStore`](../stores#clusterstore). 
+Cluster pages appear as part of the cluster dashboard. They are accessible from the side bar, and are shown in the menu list after *Custom Resources*. It is conventional to use a cluster page to show information or provide functionality pertaining to the active cluster, along with custom data and functionality your extension may have. However, it is not limited to the active cluster. Also, your extension can gain access to the Kubernetes resources in the active cluster in a straightforward manner using the [`clusterStore`](../stores#clusterstore).
 
 The following example adds a cluster page definition to a `LensRendererExtension` subclass:
 
@@ -45,7 +45,7 @@ export default class ExampleExtension extends LensRendererExtension {
 }
 ```
 
-Cluster pages are objects matching the `PageRegistration` interface. The `id` field identiifies the page, and at its simplest is just a string identifier, as shown in the example above. The 'id' field can also convey route path details, such as variable parameters provided to a page ([See example below]()). The `components` field matches the `PageComponents` interface for wich there is one field, `Page`.  `Page` is of type ` React.ComponentType<any>`, which gives you great flexibility in defining the appearance and behaviour of your page. For the example above `ExamplePage` can be defined in `page.tsx`:
+Cluster pages are objects matching the `PageRegistration` interface. The `id` field identifies the page, and at its simplest is just a string identifier, as shown in the example above. The 'id' field can also convey route path details, such as variable parameters provided to a page ([See example below]()). The `components` field matches the `PageComponents` interface for which there is one field, `Page`.  `Page` is of type ` React.ComponentType<any>`, which gives you great flexibility in defining the appearance and behaviour of your page. For the example above `ExamplePage` can be defined in `page.tsx`:
 
 ``` typescript
 import { LensRendererExtension } from "@k8slens/extensions";
@@ -134,7 +134,7 @@ export default class ExampleExtension extends LensRendererExtension {
       }
     },
     {
-      id: "bonjour", 
+      id: "bonjour",
       components: {
         Page: () => <ExemplePage extension={this}/>,
       }
@@ -169,11 +169,11 @@ export default class ExampleExtension extends LensRendererExtension {
 }
 ```
 
-The above defines two cluster pages and three cluster page menu objects. The cluster page definitons are straightforward. The first cluster page menu object defines the parent of a foldout submenu. Setting the `id` field in a cluster page menu definition implies that it is defining a foldout submenu. Also note that the `target` field is not specified (it is ignored if the `id` field is specified). This cluster page menu object specifies the `title` and `components` fields, which are used in displaying the menu item in the cluster dashboard sidebar. Initially the submenu is hidden. Activating this menu item toggles on and off the appearance of the submenu below it. The remaining two cluster page menu objects define the contents of the submenu. A cluster page menu object is defined to be a submenu item by setting the `parentId` field to the id of the parent of a foldout submenu, `"example"` in this case
+The above defines two cluster pages and three cluster page menu objects. The cluster page definitions are straightforward. The first cluster page menu object defines the parent of a foldout submenu. Setting the `id` field in a cluster page menu definition implies that it is defining a foldout submenu. Also note that the `target` field is not specified (it is ignored if the `id` field is specified). This cluster page menu object specifies the `title` and `components` fields, which are used in displaying the menu item in the cluster dashboard sidebar. Initially the submenu is hidden. Activating this menu item toggles on and off the appearance of the submenu below it. The remaining two cluster page menu objects define the contents of the submenu. A cluster page menu object is defined to be a submenu item by setting the `parentId` field to the id of the parent of a foldout submenu, `"example"` in this case
 
 ### `globalPages`
 
-Global pages appear independently of the cluster dashboard and they fill the Lens UI space. A global page is typically triggered from the cluster menu using a [global page menu](#globalpagemenus). They can also be triggered by a [custom app menu selection](../main-extension#appmenus) from a Main Extension or a [custom status bar item](#statusbaritems). Global pages can appear even when there is no active cluster, unlike cluster pages. It is conventional to use a global page to show information and provide functionality relevant across clusters, along with custom data and functionality that your extension may have. 
+Global pages appear independently of the cluster dashboard and they fill the Lens UI space. A global page is typically triggered from the cluster menu using a [global page menu](#globalpagemenus). They can also be triggered by a [custom app menu selection](../main-extension#appmenus) from a Main Extension or a [custom status bar item](#statusbaritems). Global pages can appear even when there is no active cluster, unlike cluster pages. It is conventional to use a global page to show information and provide functionality relevant across clusters, along with custom data and functionality that your extension may have.
 
 The following example defines a `LensRendererExtension` subclass with a single global page definition:
 
@@ -194,7 +194,7 @@ export default class HelpExtension extends LensRendererExtension {
 }
 ```
 
-Global pages are objects matching the `PageRegistration` interface. The `id` field identiifies the page, and at its simplest is just a string identifier, as shown in the example above. The 'id' field can also convey route path details, such as variable parameters provided to a page ([See example below]()). The `components` field matches the `PageComponents` interface for which there is one field, `Page`.  `Page` is of type ` React.ComponentType<any>`, which gives you great flexibility in defining the appearance and behaviour of your page. For the example above `HelpPage` can be defined in `page.tsx`:
+Global pages are objects matching the `PageRegistration` interface. The `id` field identifies the page, and at its simplest is just a string identifier, as shown in the example above. The 'id' field can also convey route path details, such as variable parameters provided to a page ([See example below]()). The `components` field matches the `PageComponents` interface for which there is one field, `Page`.  `Page` is of type ` React.ComponentType<any>`, which gives you great flexibility in defining the appearance and behaviour of your page. For the example above `HelpPage` can be defined in `page.tsx`:
 
 ``` typescript
 import { LensRendererExtension } from "@k8slens/extensions";
@@ -211,7 +211,7 @@ export class HelpPage extends React.Component<{ extension: LensRendererExtension
 }
 ```
 
-Note that the `HelpPage` class defines a property named `extension`. This allows the `HelpExtension` object to be passed in React-style in the global page definition, so that `HelpPage` can access any `HelpExtension` subclass data. 
+Note that the `HelpPage` class defines a property named `extension`. This allows the `HelpExtension` object to be passed in React-style in the global page definition, so that `HelpPage` can access any `HelpExtension` subclass data.
 
 This example code shows how to create a global page but not how to make it available to the Lens user. Global pages are typically made available through a number of ways. Menu items can be added to the Lens app menu system and set to open a global page when activated (See [`appMenus` in the Main Extension guide](../main-extension#appmenus)). Interactive elements can be placed on the status bar (the blue strip along the bottom of the Lens UI) and can be configured to link to a global page when activated (See [`statusBarItems`](#statusbaritems)). As well, global pages can be made accessible from the cluster menu, which is the vertical strip along the left side of the Lens UI showing the available cluster icons, and the Add Cluster icon. Global page menu icons that are defined using [`globalPageMenus`](#globalpagemenus) appear below the Add Cluster icon.
 
@@ -267,11 +267,11 @@ export class HelpPage extends React.Component<{ extension: LensRendererExtension
 }
 ```
 
-`HelpIcon` introduces one of Lens' built-in components available to extension developers, the `Component.Icon`. Built in are the [Material Design](https://material.io) [icons](https://material.io/resources/icons/). One can be selected by name via the `material` field. 
+`HelpIcon` introduces one of Lens' built-in components available to extension developers, the `Component.Icon`. Built in are the [Material Design](https://material.io) [icons](https://material.io/resources/icons/). One can be selected by name via the `material` field.
 
 ### `clusterFeatures`
 
-Cluster features are Kubernetes resources that can be applied to and managed within the active cluster. They can be installed/uninstalled by the Lens user from the [cluster settings page](). 
+Cluster features are Kubernetes resources that can be applied to and managed within the active cluster. They can be installed/uninstalled by the Lens user from the [cluster settings page]().
 The following example shows how to add a cluster feature as part of a `LensRendererExtension`:
 
 ``` typescript
@@ -306,11 +306,11 @@ The `title` and `components.Description` fields provide content that appears on 
   abstract updateStatus(cluster: Cluster): Promise<ClusterFeatureStatus>;
 ```
 
-The `install()` method is typically called by Lens when a user has indicated that this feature is to be installed (i.e. clicked **Install** for the feature on the cluster settings page). The implementation of this method should install kubernetes resources using the `applyResources()` method, or by directly accessing the kubernetes api ([`K8sApi`](tbd)).
+The `install()` method is typically called by Lens when a user has indicated that this feature is to be installed (i.e. clicked **Install** for the feature on the cluster settings page). The implementation of this method should install Kubernetes resources using the `applyResources()` method, or by directly accessing the Kubernetes api ([`K8sApi`](tbd)).
 
-The `upgrade()` method is typically called by Lens when a user has indicated that this feature is to be upgraded (i.e. clicked **Upgrade** for the feature on the cluster settings page). The implementation of this method should upgrade the kubernetes resources already installed, if relevant to the feature.
+The `upgrade()` method is typically called by Lens when a user has indicated that this feature is to be upgraded (i.e. clicked **Upgrade** for the feature on the cluster settings page). The implementation of this method should upgrade the Kubernetes resources already installed, if relevant to the feature.
 
-The `uninstall()` method is typically called by Lens when a user has indicated that this feature is to be uninstalled (i.e. clicked **Uninstall** for the feature on the cluster settings page). The implementation of this method should uninstall kubernetes resources using the kubernetes api (`K8sApi`)
+The `uninstall()` method is typically called by Lens when a user has indicated that this feature is to be uninstalled (i.e. clicked **Uninstall** for the feature on the cluster settings page). The implementation of this method should uninstall Kubernetes resources using the Kubernetes api (`K8sApi`)
 
 The `updateStatus()` method is called periodically by Lens to determine details about the feature's current status. The implementation of this method should provide the current status information in the `status` field of the `ClusterFeature.Feature` parent class. The `status.currentVersion` and `status.latestVersion` fields may be displayed by Lens in describing the feature. The `status.installed` field should be set to true if the feature is currently installed, otherwise false. Also, Lens relies on the `status.canUpgrade` field to determine if the feature can be upgraded (i.e a new version could be available) so the implementation should set the `status.canUpgrade` field according to specific rules for the feature, if relevant.
 
@@ -338,7 +338,7 @@ export class ExampleFeature extends ClusterFeature.Feature {
       if (examplePod?.kind) {
         this.status.installed = true;
         this.status.currentVersion = examplePod.spec.containers[0].image.split(":")[1];
-        this.status.canUpgrade = true;  // a real implementation would perform a check here that is relevant to the specific feature 
+        this.status.canUpgrade = true;  // a real implementation would perform a check here that is relevant to the specific feature
       } else {
         this.status.installed = false;
         this.status.canUpgrade = false;
@@ -375,9 +375,9 @@ spec:
 
 The `upgrade()` method in the example above is implemented by simply invoking the `install()` method. Depending on the feature to be supported by an extension, upgrading may require additional and/or different steps.
 
-The `uninstall()` method is implemented in the example above by utilizing the [`K8sApi`](tbd) provided by Lens to simply delete the `example-pod` pod applied by the `install()` method.
+The `uninstall()` method is implemented in the example above by utilising the [`K8sApi`](tbd) provided by Lens to simply delete the `example-pod` pod applied by the `install()` method.
 
-The `updateStatus()` method is implemented above by using the [`K8sApi`](tbd) as well, this time to get information from the `example-pod` pod, in particular to determine if it is installed, what version is associated with it, and if it can be upgraded. How the status is updated for a specific cluster feature is up to the implementation. 
+The `updateStatus()` method is implemented above by using the [`K8sApi`](tbd) as well, this time to get information from the `example-pod` pod, in particular to determine if it is installed, what version is associated with it, and if it can be upgraded. How the status is updated for a specific cluster feature is up to the implementation.
 
 ### `appPreferences`
 
@@ -444,7 +444,7 @@ export class ExamplePreferenceHint extends React.Component {
 
 Note that the above example introduces decorators `observable` and `observer` from the [`mobx`](https://mobx.js.org/README.html) and [`mobx-react`](https://github.com/mobxjs/mobx-react#mobx-react) packages. `mobx` simplifies state management and without it this example would not visually update the checkbox properly when the user activates it. [Lens uses `mobx` extensively for state management](../working-with-mobx) of its own UI elements and it is recommended that extensions rely on it too. Alternatively, React's state management can be used instead, though `mobx` is typically simpler to use.
 
-Also note that an extension's state data can be managed using an `ExtensionStore` object, which conveniently handles persistence and synchronization. The example above defined an `ExamplePreference` type to hold the extension's state to simplify the code for this guide, but it is recommended to manage your extension's state data using [`ExtensionStore`](../stores#extensionstore) 
+Also note that an extension's state data can be managed using an `ExtensionStore` object, which conveniently handles persistence and synchronisation. The example above defined an `ExamplePreference` type to hold the extension's state to simplify the code for this guide, but it is recommended to manage your extension's state data using [`ExtensionStore`](../stores#extensionstore)
 
 
 

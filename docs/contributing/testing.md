@@ -1,6 +1,6 @@
 ## Testing Your Code
 
-Lens uses github actions to run automated tests on any PR, before merging.
+Lens uses Github actions to run automated tests on any PR, before merging.
 However, a PR will not be reviewed before all tests are green, so to save time and prevent your PR from going stale, it is best to test it before submitting the PR.
 
 ### Run Local Verifications
@@ -22,7 +22,7 @@ In the repository root directory, make sure that:
 
  * `make build` runs successfully.
  * `make test` runs successfully.
- * `make integration` runs successfully (some tests require minikube running).
+ * `make integration` runs successfully (some tests require `minikube` running).
 
  Please note that this last test is prone to "flakiness", so it might fail on occasion. If it fails constantly, take a deeper look at your code to find the source of the problem.
 

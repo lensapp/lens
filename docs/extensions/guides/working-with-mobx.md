@@ -11,7 +11,7 @@ However, if you do not, here is a quick overview.
 - `Props` should be considered read-only from the point of view of the component and is the mechanism for passing in "arguments" to a component.
 - `State` is a component's internal state and can be read by accessing the parent field `state`.
 - `State` **must** be updated using the `setState` parent method which merges the new data with the old state.
-- `React` does do some optimizations around re-rendering components after quick successions of `setState` calls.
+- `React` does do some optimisations around re-rendering components after quick successions of `setState` calls.
 
 ## How mobx works:
 
