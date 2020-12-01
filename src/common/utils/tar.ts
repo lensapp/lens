@@ -42,7 +42,7 @@ export async function listTarEntries(filePath: string): Promise<string[]> {
   await tar.list({
     file: filePath,
     onentry: (entry: FileStat) => {
-      entries.push(path.normalize(entry.path as any as string))
+      entries.push(path.normalize(entry.path as any as string));
     },
   });
   return entries;
