@@ -11,7 +11,8 @@ import { getHostedCluster } from "../common/cluster-store";
 @autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
   abstract api: KubeApi<T>;
-  public limit: number;
+  public readonly abstract limit: number;
+  public readonly abstract saveLimit: number;
 
   constructor() {
     super();
@@ -179,9 +180,9 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       return;
     }
     // create latest non-observable copy of items to apply updates in one action (==single render)
-    let items = this.items.toJS();
+    const items = this.items.toJS();
 
-    this.eventsBuffer.clear().forEach(({ type, object }) => {
+    for (const {type, object} of this.eventsBuffer.clear()) {
       const { uid, selfLink } = object.metadata;
       const index = items.findIndex(item => item.getId() === uid);
       const item = items[index];
@@ -204,14 +205,9 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
           }
           break;
       }
-    });
-
-    // slice to max allowed items
-    if (this.limit && items.length > this.limit) {
-      items = items.slice(-this.limit);
     }
 
     // update items
-    this.items.replace(this.sortItems(items));
+    this.items.replace(this.sortItems(items.slice(-this.saveLimit)));
   }
 }
