@@ -26,11 +26,38 @@ export interface WorkspaceState {
   enabled: boolean;
 }
 
+/**
+ * Workspace
+ *
+ * @beta
+ */
 export class Workspace implements WorkspaceModel, WorkspaceState {
+  /**
+   * Unique id
+   * @observable
+   */
   @observable id: WorkspaceId;
+  /**
+   * Workspace name
+   * @observable
+   */
   @observable name: string;
+  /**
+   * Description
+   * @observable
+   */
   @observable description?: string;
+  /**
+   * Owner reference
+   *
+   * If an extension sets this then extension also needs explicitly to set workspace as enabled
+   * @observable
+   */
   @observable ownerRef?: string;
+  /**
+   * Is workspace enabled (disabled workspaces are currently hidden)
+   * @observable
+   */
   @observable enabled: boolean;
   @observable lastActiveClusterId?: ClusterId;
 
@@ -44,23 +71,39 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
     }
   }
 
+  /**
+   * Is workspace managed by an extension
+   */
   get isManaged(): boolean {
     return !!this.ownerRef;
   }
 
+  /**
+   * Get workspace state
+   *
+   */
   getState(): WorkspaceState {
     return {
       enabled: this.enabled
     };
   }
 
+  /**
+   * Push state
+   *
+   * @interal
+   * @param state workspace state
+   */
   pushState(state = this.getState()) {
     logger.silly("[WORKSPACE] pushing state", {...state, id: this.id});
     broadcastMessage("workspace:state", this.id, toJS(state));
   }
 
-  @action
-  setState(state: WorkspaceState) {
+  /**
+   *
+   * @param state workspace state
+   */
+  @action setState(state: WorkspaceState) {
     Object.assign(this, state);
   }
 

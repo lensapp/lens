@@ -9,6 +9,8 @@ export type { ClusterModel, ClusterId } from "../../common/cluster-store";
 
 /**
  * Store for all added clusters
+ *
+ * @beta
  */
 export class ClusterStore extends Singleton {
 

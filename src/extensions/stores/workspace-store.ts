@@ -7,6 +7,8 @@ export type { WorkspaceId, WorkspaceModel } from "../../common/workspace-store";
 
 /**
  * Stores all workspaces
+ *
+ * @beta
  */
 export class WorkspaceStore extends Singleton {
   /**
