@@ -1,6 +1,6 @@
 import path from "path";
 import packageInfo from "../../package.json";
-import { dialog, Menu, NativeImage, nativeTheme, Tray } from "electron";
+import { dialog, Menu, NativeImage, Tray } from "electron";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
 import { AppUpdater } from "./app-updater";
