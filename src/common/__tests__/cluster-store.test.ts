@@ -7,6 +7,20 @@ import { workspaceStore } from "../workspace-store";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
 
+jest.mock("electron", () => {
+  return {
+    app: {
+      getVersion: () => "99.99.99",
+      getPath: () => "tmp",
+      getLocale: () => "en"
+    },
+    ipcMain: {
+      handle: jest.fn(),
+      on: jest.fn()
+    }
+  };
+});
+
 let clusterStore: ClusterStore;
 
 describe("empty config", () => {
@@ -48,6 +62,7 @@ describe("empty config", () => {
       expect(storedCluster.id).toBe("foo");
       expect(storedCluster.preferences.terminalCWD).toBe("/tmp");
       expect(storedCluster.preferences.icon).toBe("data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5");
+      expect(storedCluster.enabled).toBe(true);
     });
 
     it("adds cluster to default workspace", () => {
@@ -170,7 +185,8 @@ describe("config with existing clusters", () => {
               kubeConfig: "foo",
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
-              workspace: "foo"
+              workspace: "foo",
+              ownerRef: "foo"
             },
           ]
         })
@@ -207,6 +223,12 @@ describe("config with existing clusters", () => {
     expect(storedClusters[1].id).toBe("cluster2");
     expect(storedClusters[1].preferences.terminalCWD).toBe("/foo2");
     expect(storedClusters[2].id).toBe("cluster3");
+  });
+
+  it("marks owned cluster disabled by default", () => {
+    const storedClusters = clusterStore.clustersList;
+    expect(storedClusters[0].enabled).toBe(true);
+    expect(storedClusters[2].enabled).toBe(false);
   });
 });
 

@@ -21,7 +21,7 @@ export class Workspaces extends React.Component {
 
   @computed get workspaces(): Workspace[] {
     const currentWorkspaces: Map<WorkspaceId, Workspace> = new Map();
-    workspaceStore.workspacesList.forEach((w) => {
+    workspaceStore.enabledWorkspacesList.forEach((w) => {
       currentWorkspaces.set(w.id, w);
     });
     const allWorkspaces = new Map([

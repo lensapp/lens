@@ -11,7 +11,7 @@ import { appEventBus } from "./event-bus";
 import { dumpConfigYaml } from "./kube-helpers";
 import { saveToAppFiles } from "./utils/saveToAppFiles";
 import { KubeConfig } from "@kubernetes/client-node";
-import { subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
+import { handleRequest, requestMain, subscribeToBroadcast, unsubscribeAllFromBroadcast } from "./ipc";
 import _ from "lodash";
 import move from "array-move";
 import type { WorkspaceId } from "./workspace-store";
@@ -40,13 +40,30 @@ export interface ClusterStoreModel {
 export type ClusterId = string;
 
 export interface ClusterModel {
+  /** Unique id for a cluster */
   id: ClusterId;
+
+  /** Path to cluster kubeconfig */
   kubeConfigPath: string;
+
+  /** Workspace id */
   workspace?: WorkspaceId;
+
+  /** User context in kubeconfig  */
   contextName?: string;
+
+  /** Preferences */
   preferences?: ClusterPreferences;
+
+  /** Metadata */
   metadata?: ClusterMetadata;
+
+  /**
+   * If extension sets ownerRef it has to explicitly mark a cluster as enabled during onActive (or when cluster is saved)
+   */
   ownerRef?: string;
+
+  /** List of accessible namespaces */
   accessibleNamespaces?: string[];
 
   /** @deprecated */
@@ -89,6 +106,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 
+  private static stateRequestChannel = "cluster:states";
+
   private constructor() {
     super({
       configName: "lens-cluster-store",
@@ -102,8 +121,40 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     this.pushStateToViewsAutomatically();
   }
 
+  async load() {
+    await super.load();
+    type clusterStateSync = {
+      id: string;
+      state: ClusterState;
+    };
+    if (ipcRenderer) {
+      logger.info("[CLUSTER-STORE] requesting initial state sync");
+      const clusterStates: clusterStateSync[] = await requestMain(ClusterStore.stateRequestChannel);
+      clusterStates.forEach((clusterState) => {
+        const cluster = this.getById(clusterState.id);
+        if (cluster) {
+          cluster.setState(clusterState.state);
+        }
+      });
+    } else {
+      handleRequest(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
+        const states: clusterStateSync[] = [];
+        this.clustersList.forEach((cluster) => {
+          states.push({
+            state: cluster.getState(),
+            id: cluster.id
+          });
+        });
+        return states;
+      });
+    }
+  }
+
   protected pushStateToViewsAutomatically() {
     if (!ipcRenderer) {
+      reaction(() => this.enabledClustersList, () => {
+        this.pushState();
+      });
       reaction(() => this.connectedClustersList, () => {
         this.pushState();
       });
@@ -204,6 +255,9 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     let cluster = model as Cluster;
     if (!(model instanceof Cluster)) {
       cluster = new Cluster(model);
+    }
+    if (!cluster.isManaged) {
+      cluster.enabled = true;
     }
     this.clusters.set(model.id, cluster);
     return cluster;

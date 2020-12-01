@@ -37,6 +37,7 @@ export type ClusterRefreshOptions = {
 
 export interface ClusterState {
   initialized: boolean;
+  enabled: boolean;
   apiUrl: string;
   online: boolean;
   disconnected: boolean;
@@ -351,6 +352,7 @@ export class Cluster implements ClusterModel, ClusterState {
   getState(): ClusterState {
     const state: ClusterState = {
       initialized: this.initialized,
+      enabled: this.enabled,
       apiUrl: this.apiUrl,
       online: this.online,
       ready: this.ready,
