@@ -79,7 +79,7 @@ test-extensions: $(extension_node_modules)
 .PHONY: copy-extension-themes
 copy-extension-themes:
 ifeq "$(DETECTED_OS)" "Windows"
-	if not exist src\extensions\npm\extensions\dist\src\renderer\themes mkdir src\extensions\npm\extensions\dist\src\renderer\themes
+	if not exist src\extensions\npm\extensions\dist\src\renderer\themes md src\extensions\npm\extensions\dist\src\renderer\themes
 	cp $(wildcard src/renderer/themes/*.json) src/extensions/npm/extensions/dist/src/renderer/themes/
 else
 	mkdir -p src/extensions/npm/extensions/dist/src/renderer/themes/
