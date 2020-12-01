@@ -78,8 +78,13 @@ test-extensions: $(extension_node_modules)
 
 .PHONY: copy-extension-themes
 copy-extension-themes:
+ifeq "$(DETECTED_OS)" "Windows"
+	if not exist ".\src\extensions\npm\extensions\dist\src\renderer\themes" mkdir .\src\extensions\npm\extensions\dist\src\renderer\themes
+	cp $(wildcard src/renderer/themes/*.json) src/extensions/npm/extensions/dist/src/renderer/themes/
+else
 	mkdir -p src/extensions/npm/extensions/dist/src/renderer/themes/
 	cp $(wildcard src/renderer/themes/*.json) src/extensions/npm/extensions/dist/src/renderer/themes/
+endif
 
 src/extensions/npm/extensions/__mocks__:
 	cp -r __mocks__ src/extensions/npm/extensions/
@@ -106,8 +111,8 @@ docs:
 .PHONY: clean-extensions
 clean-extensions:
 ifeq "$(DETECTED_OS)" "Windows"
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), if exist $(dir)\dist del /s /q $(dir)\dist)
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), if exist $(dir)\node_modules del /s /q $(dir)\node_modules)
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), if exist "$(abspath $(dir)/dist/)" rmdir /q /s "$(abspath $(dir)/dist)")
+	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), if exist "$(abspath $(dir)/dist/)" rmdir /q /s "$(abspath $(dir)/node_modules)")
 else
 	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/dist)
 	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/node_modules)
@@ -116,9 +121,9 @@ endif
 .PHONY: clean-npm
 clean-npm:
 ifeq "$(DETECTED_OS)" "Windows"
-	if exist src\extensions\npm\extensions\dist del /s /q src\extensions\npm\extensions\dist
-	if exist src\extensions\npm\extensions\__mocks__ del /s /q src\extensions\npm\extensions\__mocks__
-	if exist src\extensions\npm\extensions\node_modules del /s /q src\extensions\npm\extensions\node_modules
+	if exist src\extensions\npm\extensions\dist rmdir /s /q src\extensions\npm\extensions\dist
+	if exist src\extensions\npm\extensions\__mocks__ rmdir /s /q src\extensions\npm\extensions\__mocks__
+	if exist src\extensions\npm\extensions\node_modules rmdir /s /q src\extensions\npm\extensions\node_modules
 else
 	rm -rf src/extensions/npm/extensions/dist
 	rm -rf src/extensions/npm/extensions/__mocks__
