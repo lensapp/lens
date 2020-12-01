@@ -75,11 +75,11 @@ export class Extensions extends React.Component {
    * Extensions that were added to extensions but are still in "installing" state
    */
   @computed get addedInstalling() {
-    return Array.from(this.extensionState.entries()).filter(([id, extension]) => 
+    return Array.from(this.extensionState.entries()).filter(([id, extension]) =>
       extension.state === "installing" && this.extensions.find(extension => extension.id === id)
     ).map(([id, extension]) => ({ ...extension, id }));
   }
-  
+
   componentDidMount() {
     disposeOnUnmount(this,
       reaction(() => this.extensions, () => {
@@ -275,7 +275,7 @@ export class Extensions extends React.Component {
       const { name, version, description } = install.manifest;
       const extensionFolder = this.getExtensionDestFolder(name);
       const folderExists = fse.existsSync(extensionFolder);
-  
+
       if (!folderExists) {
         // auto-install extension if not yet exists
         this.unpackExtension(install);
@@ -379,7 +379,7 @@ export class Extensions extends React.Component {
   }
 
   renderExtensions() {
-    const { extensions, extensionsPath, search } = this;
+    const { extensions, search } = this;
 
     if (!extensions.length) {
       return (
@@ -387,7 +387,7 @@ export class Extensions extends React.Component {
           <Icon material="info"/>
           <div>
             {search && <p>No search results found</p>}
-            {!search && <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank">available extensions</a>.</p>}
+            {!search && <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.</p>}
           </div>
         </div>
       );
@@ -445,7 +445,7 @@ export class Extensions extends React.Component {
           <h2>Lens Extensions</h2>
           <div>
             Add new features and functionality via Lens Extensions.
-            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank">available extensions</a>.
+            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
           </div>
 
           <div className="install-extension flex column gaps">
