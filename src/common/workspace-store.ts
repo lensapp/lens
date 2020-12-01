@@ -27,11 +27,45 @@ export interface WorkspaceState {
 }
 
 export class Workspace implements WorkspaceModel, WorkspaceState {
+  /**
+   * Unique id for workspace
+   *
+   * @observable
+   */
   @observable id: WorkspaceId;
+  /**
+   * Workspace name
+   *
+   * @observable
+   */
   @observable name: string;
+  /**
+   * Workspace description
+   *
+   * @observable
+   */
   @observable description?: string;
+  /**
+   * Workspace owner reference
+   *
+   * If extension sets ownerRef then it needs to explicitly mark workspace as enabled onActivate (or when workspace is saved)
+   *
+   * @observable
+   */
   @observable ownerRef?: string;
+  /**
+   * Is workspace enabled
+   *
+   * Workspaces that don't have ownerRef will be enabled by default. Workspaces with ownerRef need to explicitly enable a workspace.
+   *
+   * @observable
+   */
   @observable enabled: boolean;
+  /**
+   * Last active cluster id
+   *
+   * @observable
+   */
   @observable lastActiveClusterId?: ClusterId;
 
   constructor(data: WorkspaceModel) {
@@ -77,7 +111,7 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
 
 export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   static readonly defaultId: WorkspaceId = "default";
-  private stateRequestChannel = "workspace:states";
+  private static stateRequestChannel = "workspace:states";
 
   private constructor() {
     super({
@@ -93,7 +127,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     };
     if (ipcRenderer) {
       logger.info("[WORKSPACE-STORE] requesting initial state sync");
-      const workspaceStates: workspaceStateSync[] = await requestMain(this.stateRequestChannel);
+      const workspaceStates: workspaceStateSync[] = await requestMain(WorkspaceStore.stateRequestChannel);
       workspaceStates.forEach((workspaceState) => {
         const workspace = this.getById(workspaceState.id);
         if (workspace) {
@@ -101,7 +135,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
         }
       });
     } else {
-      handleRequest(this.stateRequestChannel, (): workspaceStateSync[] => {
+      handleRequest(WorkspaceStore.stateRequestChannel, (): workspaceStateSync[] => {
         const states: workspaceStateSync[] = [];
         this.workspacesList.forEach((workspace) => {
           states.push({

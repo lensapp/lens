@@ -40,13 +40,30 @@ export interface ClusterStoreModel {
 export type ClusterId = string;
 
 export interface ClusterModel {
+  /** Unique id for a cluster */
   id: ClusterId;
+
+  /** Path to cluster kubeconfig */
   kubeConfigPath: string;
+
+  /** Workspace id */
   workspace?: WorkspaceId;
+
+  /** User context in kubeconfig  */
   contextName?: string;
+
+  /** Preferences */
   preferences?: ClusterPreferences;
+
+  /** Metadata */
   metadata?: ClusterMetadata;
+
+  /**
+   * If extension sets ownerRef it has to explicitly mark a cluster as enabled during onActive (or when cluster is saved)
+   */
   ownerRef?: string;
+
+  /** List of accessible namespaces */
   accessibleNamespaces?: string[];
 
   /** @deprecated */
@@ -89,7 +106,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   @observable removedClusters = observable.map<ClusterId, Cluster>();
   @observable clusters = observable.map<ClusterId, Cluster>();
 
-  private stateRequestChannel = "cluster:states";
+  private static stateRequestChannel = "cluster:states";
 
   private constructor() {
     super({
@@ -112,7 +129,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     };
     if (ipcRenderer) {
       logger.info("[CLUSTER-STORE] requesting initial state sync");
-      const clusterStates: clusterStateSync[] = await requestMain(this.stateRequestChannel);
+      const clusterStates: clusterStateSync[] = await requestMain(ClusterStore.stateRequestChannel);
       clusterStates.forEach((clusterState) => {
         const cluster = this.getById(clusterState.id);
         if (cluster) {
@@ -120,7 +137,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
         }
       });
     } else {
-      handleRequest(this.stateRequestChannel, (): clusterStateSync[] => {
+      handleRequest(ClusterStore.stateRequestChannel, (): clusterStateSync[] => {
         const states: clusterStateSync[] = [];
         this.clustersList.forEach((cluster) => {
           states.push({
