@@ -7,6 +7,20 @@ import { workspaceStore } from "../workspace-store";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
 
+jest.mock("electron", () => {
+  return {
+    app: {
+      getVersion: () => "99.99.99",
+      getPath: () => "tmp",
+      getLocale: () => "en"
+    },
+    ipcMain: {
+      handle: jest.fn(),
+      on: jest.fn()
+    }
+  };
+});
+
 let clusterStore: ClusterStore;
 
 describe("empty config", () => {
