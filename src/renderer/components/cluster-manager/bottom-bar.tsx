@@ -23,7 +23,7 @@ export class BottomBar extends React.Component {
         <div className="extensions box grow flex gaps justify-flex-end">
           {statusBarRegistry.getItems().map(({ item }, index) => {
             if (!item) return;
-            return <React.Fragment key={index}>{item}</React.Fragment>;
+            return <div className="flex align-center gaps item" key={index}>{item}</div>;
           })}
         </div>
       </div>
