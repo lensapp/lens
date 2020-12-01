@@ -393,8 +393,10 @@ export class Cluster implements ClusterModel, ClusterState {
     this.pushState();
   }
 
-  @action
-  protected async refreshMetadata() {
+  /**
+   * @internal
+   */
+  @action async refreshMetadata() {
     logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
     const metadata = await detectorRegistry.detectForCluster(this);
     const existingMetadata = this.metadata;
@@ -410,8 +412,10 @@ export class Cluster implements ClusterModel, ClusterState {
     this.accessible = connectionStatus == ClusterStatus.AccessGranted;
   }
 
-  @action
-  protected async refreshAllowedResources() {
+  /**
+   * @internal
+   */
+  @action async refreshAllowedResources() {
     this.allowedNamespaces = await this.getAllowedNamespaces();
     this.allowedResources = await this.getAllowedResources();
   }
@@ -490,7 +494,11 @@ export class Cluster implements ClusterModel, ClusterState {
     }
   }
 
-  protected async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
+  /**
+   * @internal
+   * @param resourceAttributes resource attributes
+   */
+  async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
     const authApi = this.getProxyKubeconfig().makeApiClient(AuthorizationV1Api);
     try {
       const accessReview = await authApi.createSelfSubjectAccessReview({
@@ -505,7 +513,10 @@ export class Cluster implements ClusterModel, ClusterState {
     }
   }
 
-  protected async isClusterAdmin(): Promise<boolean> {
+  /**
+   * @internal
+   */
+  async isClusterAdmin(): Promise<boolean> {
     return this.canI({
       namespace: "kube-system",
       resource: "*",
