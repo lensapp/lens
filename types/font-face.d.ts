@@ -1,6 +1,6 @@
 // https://www.w3.org/TR/css-font-loading/
 // https://developer.mozilla.org/en-US/docs/Web/API/FontFace
-export {}
+export {};
 
 declare global {
   const FontFace: FontFace;
@@ -10,11 +10,11 @@ declare global {
   }
 
   type CSSOMString = string;
-  type FontFaceLoadStatus = 'unloaded' | 'loading' | 'loaded' | 'error';
-  type FontFaceSetStatus = 'loading' | 'loaded';
+  type FontFaceLoadStatus = "unloaded" | "loading" | "loaded" | "error";
+  type FontFaceSetStatus = "loading" | "loaded";
 
-  interface FontFace extends FontFaceDescriptors {
-    new(family: string, source: string | ArrayBuffer, descriptors?: FontFaceDescriptors): FontFace;
+  class FontFace implements FontFaceDescriptors {
+    constructor(family: string, source: string | ArrayBuffer, descriptors?: FontFaceDescriptors);
     readonly status: FontFaceLoadStatus;
     readonly loaded: Promise<FontFace>;
     variationSettings: CSSOMString;
