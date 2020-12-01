@@ -20,7 +20,7 @@ export function getTrayIcon(): string {
   return path.resolve(
     __static,
     isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
-    "trayTemplate.png"
+    "trayIconTemplate.png"
   );
 }
 
