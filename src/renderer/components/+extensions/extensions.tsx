@@ -386,8 +386,11 @@ export class Extensions extends React.Component {
         <div className="no-extensions flex box gaps justify-center">
           <Icon material="info"/>
           <div>
-            {search && <p>No search results found</p>}
-            {!search && <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.</p>}
+            {
+              search
+                ? <p>No search results found</p>
+                : <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.</p>
+            }
           </div>
         </div>
       );

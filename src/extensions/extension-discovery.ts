@@ -113,8 +113,8 @@ export class ExtensionDiscovery {
 
     // chokidar works better than fs.watch
     chokidar.watch(this.localFolderPath, {
-      // Dont watch recursively into subdirectories
-      depth: 0,
+      // For adding and removing symlinks to work, the depth has to be 1.
+      depth: 1,
       // Try to wait until the file has been completely copied.
       // The OS might emit an event for added file even it's not completely written to the filesysten.
       awaitWriteFinish: {
@@ -123,7 +123,7 @@ export class ExtensionDiscovery {
         stabilityThreshold: 300
       }
     })
-      // Extension add is detected by watching "<extensionDir>package.json" add
+      // Extension add is detected by watching "<extensionDir>/package.json" add
       .on("add", this.handleWatchFileAdd)
       // Extension remove is detected by watching <extensionDir>" unlink
       .on("unlinkDir", this.handleWatchUnlinkDir);
@@ -189,7 +189,7 @@ export class ExtensionDiscovery {
    */
   async uninstallExtension(absolutePath: string) {
     logger.info(`${logModule} Uninstalling ${absolutePath}`);
-  
+
     const exists = await fs.pathExists(absolutePath);
 
     if (!exists) {
