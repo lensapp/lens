@@ -66,7 +66,7 @@ export class Extensions extends React.Component {
    * Extensions that were removed from extensions but are still in "uninstalling" state
    */
   @computed get removedUninstalling() {
-    return Array.from(this.extensionState.entries()).filter(([id, extension]) => 
+    return Array.from(this.extensionState.entries()).filter(([id, extension]) =>
       extension.state === "uninstalling" && !this.extensions.find(extension => extension.id === id)
     ).map(([id, extension]) => ({ ...extension, id }));
   }
@@ -75,11 +75,11 @@ export class Extensions extends React.Component {
    * Extensions that were added to extensions but are still in "installing" state
    */
   @computed get addedInstalling() {
-    return Array.from(this.extensionState.entries()).filter(([id, extension]) => 
+    return Array.from(this.extensionState.entries()).filter(([id, extension]) =>
       extension.state === "installing" && this.extensions.find(extension => extension.id === id)
     ).map(([id, extension]) => ({ ...extension, id }));
   }
-  
+
   componentDidMount() {
     disposeOnUnmount(this,
       reaction(() => this.extensions, () => {
@@ -275,7 +275,7 @@ export class Extensions extends React.Component {
       const { name, version, description } = install.manifest;
       const extensionFolder = this.getExtensionDestFolder(name);
       const folderExists = fse.existsSync(extensionFolder);
-  
+
       if (!folderExists) {
         // auto-install extension if not yet exists
         this.unpackExtension(install);
@@ -379,7 +379,7 @@ export class Extensions extends React.Component {
   }
 
   renderExtensions() {
-    const { extensions, extensionsPath, search } = this;
+    const { extensions, search } = this;
 
     if (!extensions.length) {
       return (
@@ -387,7 +387,7 @@ export class Extensions extends React.Component {
           <Icon material="info"/>
           <div>
             {search && <p>No search results found</p>}
-            {!search && <p>There are no extensions in <code>{extensionsPath}</code></p>}
+            {!search && <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.</p>}
           </div>
         </div>
       );
@@ -444,10 +444,8 @@ export class Extensions extends React.Component {
         <PageLayout showOnTop className="Extensions flex column gaps" header={topHeader} contentGaps={false}>
           <h2>Lens Extensions</h2>
           <div>
-            The features that Lens includes out-of-the-box are just the start.
-            Lens extensions let you add new features to your installation to support your workflow.
-            Rich extensibility model lets extension authors plug directly into the Lens UI and contribute functionality through the same APIs used by Lens itself.
-            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a>.
+            Add new features and functionality via Lens Extensions.
+            Check out documentation to <a href={`${docsUrl}/latest/extensions/usage/`} target="_blank" rel="noreferrer">learn more</a> or see the list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.
           </div>
 
           <div className="install-extension flex column gaps">
@@ -489,7 +487,7 @@ export class Extensions extends React.Component {
           <h2>Installed Extensions</h2>
           <div className="installed-extensions flex column gaps">
             <SearchInput
-              placeholder="Search extensions by name or description"
+              placeholder="Search installed extensions by name or description"
               value={this.search}
               onChange={(value) => this.search = value}
             />
