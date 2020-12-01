@@ -16,6 +16,7 @@ export class RemoveClusterButton extends React.Component<Props> {
   @autobind()
   confirmRemoveCluster() {
     const { cluster } = this.props;
+
     ConfirmDialog.open({
       message: <p>Are you sure you want to remove <b>{cluster.preferences.clusterName}</b> from Lens?</p>,
       labelOk: <Trans>Yes</Trans>,
@@ -28,6 +29,7 @@ export class RemoveClusterButton extends React.Component<Props> {
 
   render() {
     const { cluster } = this.props;
+
     return (
       <Button accent onClick={this.confirmRemoveCluster} className="button-area" disabled={cluster.isManaged}>
         Remove Cluster

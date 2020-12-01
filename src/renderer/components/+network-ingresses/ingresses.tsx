@@ -54,6 +54,7 @@ export class Ingresses extends React.Component<Props> {
         tableProps={{
           customRowHeights: (item: Ingress, lineHeight, paddings) => {
             const lines = item.getRoutes().length || 1;
+
             return lines * lineHeight + paddings;
           }
         }}

@@ -7,6 +7,7 @@ import { userStore } from "./user-store";
 
 function getDefaultRequestOpts(): Partial<request.Options> {
   const { httpsProxy, allowUntrustedCAs } = userStore.preferences;
+
   return {
     proxy: httpsProxy || undefined,
     rejectUnauthorized: !allowUntrustedCAs,

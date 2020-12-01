@@ -73,11 +73,13 @@ export class EndpointSubset implements IEndpointSubset {
 
   getAddresses(): EndpointAddress[] {
     const addresses = this.addresses || [];
+
     return addresses.map(a => new EndpointAddress(a));
   }
 
   getNotReadyAddresses(): EndpointAddress[] {
     const notReadyAddresses = this.notReadyAddresses || [];
+
     return notReadyAddresses.map(a => new EndpointAddress(a));
   }
 
@@ -85,10 +87,12 @@ export class EndpointSubset implements IEndpointSubset {
     if(!this.addresses) {
       return "";
     }
+
     return this.addresses.map(address => {
       if (!this.ports) {
         return address.ip;
       }
+
       return this.ports.map(port => {
         return `${address.ip}:${port.port}`;
       }).join(", ");
@@ -106,6 +110,7 @@ export class Endpoint extends KubeObject {
 
   getEndpointSubsets(): EndpointSubset[] {
     const subsets = this.subsets || [];
+
     return subsets.map(s => new EndpointSubset(s));
   }
 

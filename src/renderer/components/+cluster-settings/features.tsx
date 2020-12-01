@@ -11,6 +11,7 @@ interface Props {
 export class Features extends React.Component<Props> {
   render() {
     const { cluster } = this.props;
+
     return (
       <div>
         <h2>Features</h2>

@@ -10,6 +10,7 @@ export function interval(timeSec = 1, callback: IntervalCallback, autoRun = fals
     start (runImmediately = false) {
       if (isRunning) return;
       const tick = () => callback(++count);
+
       isRunning = true;
       timer = window.setInterval(tick, 1000 * timeSec);
       if (runImmediately) tick();
@@ -27,6 +28,8 @@ export function interval(timeSec = 1, callback: IntervalCallback, autoRun = fals
       return isRunning;
     }
   };
+
   if (autoRun) intervalManager.start();
+
   return intervalManager;
 }

@@ -72,6 +72,7 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
       "X-Cluster-ID": cluster.id
     }
   });
+
   return new KubeApi({
     objectConstructor: kubeClass,
     request
@@ -83,6 +84,7 @@ export class KubeApi<T extends KubeObject = any> {
 
   static watchAll(...apis: KubeApi[]) {
     const disposers = apis.map(api => api.watch());
+
     return () => disposers.forEach(unwatch => unwatch());
   }
 
@@ -106,6 +108,7 @@ export class KubeApi<T extends KubeObject = any> {
       kind = options.objectConstructor?.kind,
       isNamespaced = options.objectConstructor?.namespaced
     } = options || {};
+
     if (!options.apiBase) {
       options.apiBase = objectConstructor.apiBase;
     }
@@ -205,6 +208,7 @@ export class KubeApi<T extends KubeObject = any> {
       });
 
       const res = await this.request.get<IKubePreferredVersion>(`${this.apiPrefix}/${this.apiGroup}`);
+
       Object.defineProperty(this, "apiVersionPreferred", {
         value: res?.preferredVersion?.version ?? null,
       });
@@ -236,6 +240,7 @@ export class KubeApi<T extends KubeObject = any> {
       namespace: this.isNamespaced ? namespace : undefined,
       name,
     });
+
     return resourcePath + (query ? `?${stringify(this.normalizeQuery(query))}` : "");
   }
 
@@ -243,14 +248,17 @@ export class KubeApi<T extends KubeObject = any> {
     if (query.labelSelector) {
       query.labelSelector = [query.labelSelector].flat().join(",");
     }
+
     if (query.fieldSelector) {
       query.fieldSelector = [query.fieldSelector].flat().join(",");
     }
+
     return query;
   }
 
   protected parseResponse(data: KubeJsonApiData | KubeJsonApiData[] | KubeJsonApiDataList, namespace?: string): any {
     const KubeObjectConstructor = this.objectConstructor;
+
     if (KubeObject.isJsonApiData(data)) {
       return new KubeObjectConstructor(data);
     }
@@ -258,8 +266,10 @@ export class KubeApi<T extends KubeObject = any> {
     // process items list response
     if (KubeObject.isJsonApiDataList(data)) {
       const { apiVersion, items, metadata } = data;
+
       this.setResourceVersion(namespace, metadata.resourceVersion);
       this.setResourceVersion("", metadata.resourceVersion);
+
       return items.map(item => new KubeObjectConstructor({
         kind: this.kind,
         apiVersion,
@@ -277,6 +287,7 @@ export class KubeApi<T extends KubeObject = any> {
 
   async list({ namespace = "" } = {}, query?: IKubeApiQueryParams): Promise<T[]> {
     await this.checkPreferredVersion();
+
     return this.request
       .get(this.getUrl({ namespace }), { query })
       .then(data => this.parseResponse(data, namespace));
@@ -284,6 +295,7 @@ export class KubeApi<T extends KubeObject = any> {
 
   async get({ name = "", namespace = "default" } = {}, query?: IKubeApiQueryParams): Promise<T> {
     await this.checkPreferredVersion();
+
     return this.request
       .get(this.getUrl({ namespace, name }), { query })
       .then(this.parseResponse);
@@ -310,6 +322,7 @@ export class KubeApi<T extends KubeObject = any> {
   async update({ name = "", namespace = "default" } = {}, data?: Partial<T>): Promise<T> {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace, name });
+
     return this.request
       .put(apiUrl, { data })
       .then(this.parseResponse);
@@ -318,6 +331,7 @@ export class KubeApi<T extends KubeObject = any> {
   async delete({ name = "", namespace = "default" }) {
     await this.checkPreferredVersion();
     const apiUrl = this.getUrl({ namespace, name });
+
     return this.request.del(apiUrl);
   }
 

@@ -12,10 +12,12 @@ export class SubHeader extends React.Component<SubHeaderProps> {
   render() {
     const { withLine, compact, children } = this.props;
     let { className } = this.props;
+
     className = cssNames("SubHeader", {
       withLine,
       compact,
     }, className);
+
     return (
       <div className={className}>
         {children}

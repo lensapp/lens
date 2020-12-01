@@ -20,8 +20,10 @@ export class KubeObjectDetailRegistry extends BaseRegistry<KubeObjectDetailRegis
       if (item.priority === null) {
         item.priority = 50;
       }
+
       return item;
     });
+
     return items.sort((a, b) => b.priority - a.priority);
   }
 }

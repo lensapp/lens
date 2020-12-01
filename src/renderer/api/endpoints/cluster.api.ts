@@ -90,6 +90,7 @@ export class Cluster extends KubeObject {
     if (this.metadata.deletionTimestamp) return ClusterStatus.REMOVING;
     if (!this.status || !this.status) return ClusterStatus.CREATING;
     if (this.status.errorMessage) return ClusterStatus.ERROR;
+
     return ClusterStatus.ACTIVE;
   }
 }

@@ -47,6 +47,7 @@ export class PageLayout extends React.Component<PageLayoutProps> {
     if (!this.props.provideBackButtonNavigation) {
       return;
     }
+
     if (evt.code === "Escape") {
       evt.stopPropagation();
       this.back(evt);
@@ -59,6 +60,7 @@ export class PageLayout extends React.Component<PageLayoutProps> {
       contentGaps, showOnTop, children, ...elemProps
     } = this.props;
     const className = cssNames("PageLayout", { top: showOnTop }, this.props.className);
+
     return (
       <div {...elemProps} className={className}>
         <div className={cssNames("header flex gaps align-center", headerClass)}>

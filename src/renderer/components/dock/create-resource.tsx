@@ -44,6 +44,7 @@ export class CreateResource extends React.Component<Props> {
       .filter(v => !!v); // skip empty documents if "---" pasted at the beginning or end
     const createdResources: string[] = [];
     const errors: string[] = [];
+
     await Promise.all(
       resources.map(data => {
         return resourceApplierApi.update(data)
@@ -51,6 +52,7 @@ export class CreateResource extends React.Component<Props> {
           .catch((err: JsonApiErrorParsed) => errors.push(err.toString()));
       })
     );
+
     if (errors.length) {
       errors.forEach(Notifications.error);
       if (!createdResources.length) throw errors[0];
@@ -61,13 +63,16 @@ export class CreateResource extends React.Component<Props> {
         <Trans><b>{createdResources.join(", ")}</b> successfully created</Trans>
       </p>
     );
+
     Notifications.ok(successMessage);
+
     return successMessage;
   };
 
   render() {
     const { tabId, data, error, create, onChange } = this;
     const { className } = this.props;
+
     return (
       <div className={cssNames("CreateResource flex column", className)}>
         <InfoPanel

@@ -28,6 +28,7 @@ export class HpaDetails extends React.Component<Props> {
       switch (metric.type) {
         case HpaMetricType.Resource:
           const addition = metric.resource.targetAverageUtilization ? <Trans>(as a percentage of request)</Trans> : "";
+
           return <Trans>Resource {metric.resource.name} on Pods {addition}</Trans>;
 
         case HpaMetricType.Pods:
@@ -37,6 +38,7 @@ export class HpaDetails extends React.Component<Props> {
           const { target } = metric.object;
           const { kind, name } = target;
           const objectUrl = getDetailsUrl(lookupApiLink(target, hpa));
+
           return (
             <Trans>
               {metric.object.metricName} on{" "}
@@ -63,6 +65,7 @@ export class HpaDetails extends React.Component<Props> {
           hpa.getMetrics().map((metric, index) => {
             const name = renderName(metric);
             const values = hpa.getMetricValues(metric);
+
             return (
               <TableRow key={index}>
                 <TableCell className="name">{name}</TableCell>
@@ -77,8 +80,10 @@ export class HpaDetails extends React.Component<Props> {
 
   render() {
     const { object: hpa } = this.props;
+
     if (!hpa) return;
     const { scaleTargetRef } = hpa.spec;
+
     return (
       <div className="HpaDetails">
         <KubeObjectMeta object={hpa}/>
@@ -106,6 +111,7 @@ export class HpaDetails extends React.Component<Props> {
         <DrawerItem name={<Trans>Status</Trans>} labelsOnly>
           {hpa.getConditions().map(({ type, tooltip, isReady }) => {
             if (!isReady) return null;
+
             return (
               <Badge
                 key={type}

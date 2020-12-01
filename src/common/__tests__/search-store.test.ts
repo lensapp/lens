@@ -5,7 +5,6 @@
 import { SearchStore } from "../search-store";
 
 let searchStore: SearchStore = null;
-
 const logs = [
   "1:M 30 Oct 2020 16:17:41.553 # Connection with replica 172.17.0.12:6379 lost",
   "1:M 30 Oct 2020 16:17:41.623 * Replica 172.17.0.12:6379 asks for synchronization",
@@ -64,6 +63,7 @@ describe("search store tests", () => {
 
   it("escapes string for using in regex", () => {
     const regex = searchStore.escapeRegex("some.interesting-query\\#?()[]");
+
     expect(regex).toBe("some\\.interesting\\-query\\\\\\#\\?\\(\\)\\[\\]");
   });
 

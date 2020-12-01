@@ -33,6 +33,7 @@ interface Props extends RouteComponentProps<IStatefulSetsRouteParams> {
 export class StatefulSets extends React.Component<Props> {
   renderPods(statefulSet: StatefulSet) {
     const { readyReplicas, currentReplicas } = statefulSet.status;
+
     return `${readyReplicas || 0}/${currentReplicas || 0}`;
   }
 
@@ -77,6 +78,7 @@ export class StatefulSets extends React.Component<Props> {
 
 export function StatefulSetMenu(props: KubeObjectMenuProps<StatefulSet>) {
   const { object, toolbar } = props;
+
   return (
     <>
       <MenuItem onClick={() => StatefulSetScaleDialog.open(object)}>

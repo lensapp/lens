@@ -14,9 +14,7 @@ jest.setTimeout(60000);
 describe("Lens integration tests", () => {
   const TEST_NAMESPACE = "integration-tests";
   const BACKSPACE = "\uE003";
-
   let app: Application;
-
   const appStart = async () => {
     app = util.setup();
     await app.start();
@@ -25,19 +23,19 @@ describe("Lens integration tests", () => {
     await app.client.windowByIndex(0);
     await app.client.waitUntilWindowLoaded();
   };
-
   const clickWhatsNew = async (app: Application) => {
     await app.client.waitUntilTextExists("h1", "What's new?");
     await app.client.click("button.primary");
     await app.client.waitUntilTextExists("h1", "Welcome");
   };
-
   const minikubeReady = (): boolean => {
     // determine if minikube is running
     {
       const { status } = spawnSync("minikube status", { shell: true });
+
       if (status !== 0) {
         console.warn("minikube not running");
+
         return false;
       }
     }
@@ -45,6 +43,7 @@ describe("Lens integration tests", () => {
     // Remove TEST_NAMESPACE if it already exists
     {
       const { status } = spawnSync(`minikube kubectl -- get namespace ${TEST_NAMESPACE}`, { shell: true });
+
       if (status === 0) {
         console.warn(`Removing existing ${TEST_NAMESPACE} namespace`);
 
@@ -52,8 +51,10 @@ describe("Lens integration tests", () => {
           `minikube kubectl -- delete namespace ${TEST_NAMESPACE}`,
           { shell: true },
         );
+
         if (status !== 0) {
           console.warn(`Error removing ${TEST_NAMESPACE} namespace: ${stderr.toString()}`);
+
           return false;
         }
 
@@ -86,6 +87,7 @@ describe("Lens integration tests", () => {
     describe("preferences page", () => {
       it('shows "preferences"', async () => {
         const appName: string = process.platform === "darwin" ? "Lens" : "File";
+
         await app.electron.ipcRenderer.send("test-menu-item-click", appName, "Preferences");
         await app.client.waitUntilTextExists("h2", "Preferences");
       });
@@ -153,13 +155,13 @@ describe("Lens integration tests", () => {
     await app.client.waitUntilTextExists("div", "Select kubeconfig file");
     await app.client.click("div.Select__control"); // show the context drop-down list
     await app.client.waitUntilTextExists("div", "minikube");
+
     if (!await app.client.$("button.primary").isEnabled()) {
       await app.client.click("div.minikube"); // select minikube context
     } // else the only context, which must be 'minikube', is automatically selected
     await app.client.click("div.Select__control"); // hide the context drop-down list (it might be obscuring the Add cluster(s) button)
     await app.client.click("button.primary"); // add minikube cluster
   };
-
   const waitForMinikubeDashboard = async (app: Application) => {
     await app.client.waitUntilTextExists("pre.kube-auth-out", "Authentication proxy started");
     await app.client.waitForExist(`iframe[name="minikube"]`);
@@ -169,7 +171,6 @@ describe("Lens integration tests", () => {
 
   util.describeIf(ready)("cluster tests", () => {
     let clusterAdded = false;
-
     const addCluster = async () => {
       await clickWhatsNew(app);
       await addMinikubeCluster(app);
@@ -443,6 +444,7 @@ describe("Lens integration tests", () => {
           expectedText: "Custom Resources"
         }]
       }];
+
       tests.forEach(({ drawer = "", drawerId = "", pages }) => {
         if (drawer !== "") {
           it(`shows ${drawer} drawer`, async () => {
@@ -458,6 +460,7 @@ describe("Lens integration tests", () => {
             await app.client.waitUntilTextExists(expectedSelector, expectedText);
           });
         });
+
         if (drawer !== "") {
           // hide the drawer
           it(`hides ${drawer} drawer`, async () => {

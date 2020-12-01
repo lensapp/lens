@@ -37,11 +37,13 @@ export class WindowManager extends Singleton {
         defaultWidth: 1440,
       });
     }
+
     if (!this.mainWindow) {
       // show icon in dock (mac-os only)
       app.dock?.show();
 
       const { width, height, x, y } = this.windowState;
+
       this.mainWindow = new BrowserWindow({
         x, y, width, height,
         show: false,
@@ -80,6 +82,7 @@ export class WindowManager extends Singleton {
         app.dock?.hide(); // hide icon in dock (mac-os)
       });
     }
+
     try {
       if (showSplash) await this.showSplash();
       await this.mainWindow.loadURL(this.mainUrl);
@@ -109,6 +112,7 @@ export class WindowManager extends Singleton {
   async ensureMainWindow(): Promise<BrowserWindow> {
     if (!this.mainWindow) await this.initMainWindow();
     this.mainWindow.show();
+
     return this.mainWindow;
   }
 
@@ -131,6 +135,7 @@ export class WindowManager extends Singleton {
 
   reload() {
     const frameId = clusterFrameMap.get(this.activeClusterId);
+
     if (frameId) {
       this.sendToView({ channel: "renderer:reload", frameId });
     } else {

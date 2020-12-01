@@ -55,6 +55,7 @@ export abstract class BaseStore<T = any> extends Singleton {
     if (this.params.autoLoad) {
       await this.load();
     }
+
     if (this.params.syncEnabled) {
       await this.whenLoaded;
       this.enableSync();
@@ -63,6 +64,7 @@ export abstract class BaseStore<T = any> extends Singleton {
 
   async load() {
     const { autoLoad, syncEnabled, ...confOptions } = this.params;
+
     this.storeConfig = new Config({
       ...confOptions,
       projectName: "lens",
@@ -90,19 +92,23 @@ export abstract class BaseStore<T = any> extends Singleton {
     this.syncDisposers.push(
       reaction(() => this.toJSON(), model => this.onModelChange(model), this.params.syncOptions),
     );
+
     if (ipcMain) {
       const callback = (event: IpcMainEvent, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
       };
+
       subscribeToBroadcast(this.syncMainChannel, callback);
       this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncMainChannel, callback));
     }
+
     if (ipcRenderer) {
       const callback = (event: IpcRendererEvent, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
         this.onSyncFromMain(model);
       };
+
       subscribeToBroadcast(this.syncRendererChannel, callback);
       this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncRendererChannel, callback));
     }
@@ -127,6 +133,7 @@ export abstract class BaseStore<T = any> extends Singleton {
   protected applyWithoutSync(callback: () => void) {
     this.disableSync();
     runInAction(callback);
+
     if (this.params.syncEnabled) {
       this.enableSync();
     }

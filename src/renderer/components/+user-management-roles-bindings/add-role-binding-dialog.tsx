@@ -80,6 +80,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       rolesStore,
       serviceAccountsStore,
     ];
+
     this.isLoading = true;
     await Promise.all(stores.map(store => store.loadAll()));
     this.isLoading = false;
@@ -91,6 +92,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
     if (this.roleBinding) {
       const { name, kind } = this.roleBinding.roleRef;
       const role = rolesStore.items.find(role => role.kind === kind && role.getName() === name);
+
       if (role) {
         this.selectedRoleId = role.getId();
         this.bindContext = role.getNs() || "";
@@ -107,6 +109,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   onBindContextChange = (namespace: string) => {
     this.bindContext = namespace;
     const roleContext = this.selectedRole && this.selectedRole.getNs() || "";
+
     if (this.bindContext && this.bindContext !== roleContext) {
       this.selectedRoleId = ""; // reset previously selected role for specific context
     }
@@ -123,11 +126,13 @@ export class AddRoleBindingDialog extends React.Component<Props> {
           namespace: item.getNs(),
         };
       }
+
       return item;
     });
 
     try {
       let roleBinding: RoleBinding;
+
       if (this.isEditing) {
         roleBinding = await roleBindingsStore.updateSubjects({
           roleBinding: this.roleBinding,
@@ -136,6 +141,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       }
       else {
         const name = useRoleForBindingName ? selectedRole.getName() : bindingName;
+
         roleBinding = await roleBindingsStore.create({ name, namespace }, {
           subjects,
           roleRef: {
@@ -153,13 +159,16 @@ export class AddRoleBindingDialog extends React.Component<Props> {
 
   @computed get roleOptions(): BindingSelectOption[] {
     let roles = rolesStore.items as Role[];
+
     if (this.bindContext) {
       // show only cluster-roles or roles for selected context namespace
       roles = roles.filter(role => !role.getNs() || role.getNs() === this.bindContext);
     }
+
     return roles.map(role => {
       const name = role.getName();
       const namespace = role.getNs();
+
       return {
         value: role.getId(),
         label: name + (namespace ? ` (${namespace})` : "")
@@ -171,6 +180,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
     return serviceAccountsStore.items.map(account => {
       const name = account.getName();
       const namespace = account.getNs();
+
       return {
         item: account,
         value: name,
@@ -181,6 +191,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
 
   renderContents() {
     const unwrapBindings = (options: BindingSelectOption[]) => options.map(option => option.item || option.subject);
+
     return (
       <>
         <SubTitle title={<Trans>Context</Trans>}/>
@@ -257,6 +268,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
     );
     const disableNext = this.isLoading || !selectedRole || !selectedBindings.length;
     const nextLabel = isEditing ? <Trans>Update</Trans> : <Trans>Create</Trans>;
+
     return (
       <Dialog
         {...dialogProps}

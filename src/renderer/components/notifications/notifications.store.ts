@@ -32,10 +32,13 @@ export class NotificationsStore {
 
   addAutoHideTimer(id: NotificationId) {
     const notification = this.getById(id);
+
     if (!notification) return;
     this.removeAutoHideTimer(id);
+
     if (notification?.timeout) {
       const timer = window.setTimeout(() => this.remove(id), notification.timeout);
+
       this.autoHideTimers.set(id, timer);
     }
   }
@@ -53,12 +56,14 @@ export class NotificationsStore {
       notification.id = uniqueId("notification_")
     );
     const index = this.notifications.findIndex(item => item.id === id);
+
     if (index > -1) {
       this.notifications.splice(index, 1, notification); // update existing with same id
     } else {
       this.notifications.push(notification); // add new
     }
     this.addAutoHideTimer(id);
+
     return () => this.remove(id);
   }
 

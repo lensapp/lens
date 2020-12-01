@@ -41,6 +41,7 @@ export class HelmReleases extends Component<Props> {
 
   get selectedRelease() {
     const { match: { params: { name, namespace } } } = this.props;
+
     return releaseStore.items.find(release => {
       return release.getName() == name && release.getNs() == namespace;
     });
@@ -66,6 +67,7 @@ export class HelmReleases extends Component<Props> {
 
   renderRemoveDialogMessage(selectedItems: HelmRelease[]) {
     const releaseNames = selectedItems.map(item => item.getName()).join(", ");
+
     return (
       <div>
         <Trans>Remove <b>{releaseNames}</b>?</Trans>
@@ -111,6 +113,7 @@ export class HelmReleases extends Component<Props> {
           ]}
           renderTableContents={(release: HelmRelease) => {
             const version = release.getVersion();
+
             return [
               release.getName(),
               release.getNs(),

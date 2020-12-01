@@ -125,11 +125,14 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       id: string;
       state: WorkspaceState;
     };
+
     if (ipcRenderer) {
       logger.info("[WORKSPACE-STORE] requesting initial state sync");
       const workspaceStates: workspaceStateSync[] = await requestMain(WorkspaceStore.stateRequestChannel);
+
       workspaceStates.forEach((workspaceState) => {
         const workspace = this.getById(workspaceState.id);
+
         if (workspace) {
           workspace.setState(workspaceState.state);
         }
@@ -137,12 +140,14 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     } else {
       handleRequest(WorkspaceStore.stateRequestChannel, (): workspaceStateSync[] => {
         const states: workspaceStateSync[] = [];
+
         this.workspacesList.forEach((workspace) => {
           states.push({
             state: workspace.getState(),
             id: workspace.id
           });
         });
+
         return states;
       });
     }
@@ -202,6 +207,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   @action
   setActive(id = WorkspaceStore.defaultId) {
     if (id === this.currentWorkspaceId) return;
+
     if (!this.getById(id)) {
       throw new Error(`workspace ${id} doesn't exist`);
     }
@@ -211,15 +217,18 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   @action
   addWorkspace(workspace: Workspace) {
     const { id, name } = workspace;
+
     if (!name.trim() || this.getByName(name.trim())) {
       return;
     }
     this.workspaces.set(id, workspace);
+
     if (!workspace.isManaged) {
       workspace.enabled = true;
     }
 
     appEventBus.emit({name: "workspace", action: "add"});
+
     return workspace;
   }
 
@@ -237,10 +246,13 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   @action
   removeWorkspaceById(id: WorkspaceId) {
     const workspace = this.getById(id);
+
     if (!workspace) return;
+
     if (this.isDefault(id)) {
       throw new Error("Cannot remove default workspace");
     }
+
     if (this.currentWorkspaceId === id) {
       this.currentWorkspaceId = WorkspaceStore.defaultId; // reset to default
     }
@@ -259,10 +271,12 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     if (currentWorkspace) {
       this.currentWorkspaceId = currentWorkspace;
     }
+
     if (workspaces.length) {
       this.workspaces.clear();
       workspaces.forEach(ws => {
         const workspace = new Workspace(ws);
+
         if (!workspace.isManaged) {
           workspace.enabled = true;
         }

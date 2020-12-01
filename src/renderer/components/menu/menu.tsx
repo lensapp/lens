@@ -64,11 +64,13 @@ export class Menu extends React.Component<MenuProps, State> {
     if (!this.props.usePortal) {
       const parent = this.elem.parentElement;
       const position = window.getComputedStyle(parent).position;
+
       if (position === "static") parent.style.position = "relative";
     } else if (this.isOpen) {
       this.refreshPosition();
     }
     this.opener = document.getElementById(this.props.htmlFor); // might not exist in sub-menus
+
     if (this.opener) {
       this.opener.addEventListener("click", this.toggle);
       this.opener.addEventListener("keydown", this.onKeyDown);
@@ -101,11 +103,14 @@ export class Menu extends React.Component<MenuProps, State> {
   protected focusNextItem(reverse = false) {
     const items = this.focusableItems;
     const activeIndex = items.findIndex(item => item === this.focusedItem);
+
     if (!items.length) {
       return;
     }
+
     if (activeIndex > -1) {
       let nextItem = reverse ? items[activeIndex - 1] : items[activeIndex + 1];
+
       if (!nextItem) nextItem = items[activeIndex];
       nextItem.elem.focus();
     } else {
@@ -129,16 +134,19 @@ export class Menu extends React.Component<MenuProps, State> {
 
     // setup initial position
     const position: MenuPosition = { left: true, bottom: true };
+
     this.elem.style.left = `${left}px`;
     this.elem.style.top = `${bottom}px`;
 
     // correct position if menu doesn't fit to viewport
     const menuPos = this.elem.getBoundingClientRect();
+
     if (menuPos.right > window.innerWidth) {
       this.elem.style.left = `${right - this.elem.offsetWidth}px`;
       position.right = true;
       delete position.left;
     }
+
     if (menuPos.bottom > window.innerHeight) {
       this.elem.style.top = `${top - this.elem.offsetHeight}px`;
       position.top = true;
@@ -165,6 +173,7 @@ export class Menu extends React.Component<MenuProps, State> {
 
   onKeyDown(evt: KeyboardEvent) {
     if (!this.isOpen) return;
+
     switch (evt.code) {
       case "Escape":
         this.close();
@@ -173,6 +182,7 @@ export class Menu extends React.Component<MenuProps, State> {
       case "Space":
       case "Enter":
         const focusedItem = this.focusedItem;
+
         if (focusedItem) {
           focusedItem.elem.click();
           evt.preventDefault();
@@ -197,6 +207,7 @@ export class Menu extends React.Component<MenuProps, State> {
     if (!this.isOpen) return;
     const target = evt.target as HTMLElement;
     const { usePortal, closeOnScroll } = this.props;
+
     if (usePortal && closeOnScroll && !target.contains(this.elem)) {
       this.close();
     }
@@ -208,6 +219,7 @@ export class Menu extends React.Component<MenuProps, State> {
     const target = evt.target as HTMLElement;
     const clickInsideMenu = this.elem.contains(target);
     const clickOnOpener = this.opener && this.opener.contains(target);
+
     if (!clickInsideMenu && !clickOnOpener) {
       this.close();
     }
@@ -224,11 +236,13 @@ export class Menu extends React.Component<MenuProps, State> {
   render() {
     const { position, id } = this.props;
     let { className, usePortal } = this.props;
+
     className = cssNames("Menu", className, this.state.position || position, {
       portal: usePortal,
     });
 
     let children = this.props.children as ReactElement<any>;
+
     if (children.type === Fragment) {
       children = children.props.children;
     }
@@ -238,6 +252,7 @@ export class Menu extends React.Component<MenuProps, State> {
           ref: (item: MenuItem) => this.bindItemRef(item, index)
         });
       }
+
       return item;
     });
 
@@ -250,13 +265,16 @@ export class Menu extends React.Component<MenuProps, State> {
         </Animate>
       </MenuContext.Provider>
     );
+
     if (usePortal === true) usePortal = document.body;
+
     return usePortal instanceof HTMLElement ? createPortal(menu, usePortal) : menu;
   }
 }
 
 export function SubMenu(props: Partial<MenuProps>) {
   const { className, ...menuProps } = props;
+
   return (
     <Menu
       className={cssNames("SubMenu", className)}
@@ -291,6 +309,7 @@ export class MenuItem extends React.Component<MenuItemProps> {
 
   get isFocusable() {
     const { disabled, spacer } = this.props;
+
     return !(disabled || spacer);
   }
 
@@ -301,8 +320,10 @@ export class MenuItem extends React.Component<MenuItemProps> {
   onClick(evt: React.MouseEvent) {
     const menu = this.context;
     const { spacer, onClick } = this.props;
+
     if (spacer) return;
     onClick(evt);
+
     if (menu.props.closeOnClickItem && !evt.defaultPrevented) {
       menu.close();
     }
@@ -315,6 +336,7 @@ export class MenuItem extends React.Component<MenuItemProps> {
   render() {
     const { className, disabled, active, spacer, icon, children, ...props } = this.props;
     let iconProps: Partial<IconProps>;
+
     if (icon) {
       iconProps = {};
       if (typeof icon === "string") iconProps.material = icon;
@@ -328,9 +350,11 @@ export class MenuItem extends React.Component<MenuItemProps> {
       children: icon ? <><Icon {...iconProps}/> {children}</> : children,
       ref: this.bindRef,
     };
+
     if (this.isLink) {
       return <a {...elemProps}/>;
     }
+
     return <li {...elemProps}/>;
   }
 }

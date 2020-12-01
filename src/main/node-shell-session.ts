@@ -23,6 +23,7 @@ export class NodeShellSession extends ShellSession {
   public async open() {
     const shell = await this.kubectl.getPath();
     let args = [];
+
     if (this.createNodeShellPod(this.podId, this.nodeName)) {
       await this.waitForRunningPod(this.podId).catch(() => {
         this.exit(1001);
@@ -31,6 +32,7 @@ export class NodeShellSession extends ShellSession {
     args = ["exec", "-i", "-t", "-n", "kube-system", this.podId, "--", "sh", "-c", "((clear && bash) || (clear && ash) || (clear && sh))"];
 
     const shellEnv = await this.getCachedShellEnv();
+
     this.shellProcess = pty.spawn(shell, args, {
       cols: 80,
       cwd: this.cwd() || shellEnv["HOME"],
@@ -85,10 +87,13 @@ export class NodeShellSession extends ShellSession {
         }
       }
     } as k8s.V1Pod;
+
     await k8sApi.createNamespacedPod("kube-system", pod).catch((error) => {
       logger.error(error);
+
       return false;
     });
+
     return true;
   }
 
@@ -98,6 +103,7 @@ export class NodeShellSession extends ShellSession {
     }
     this.kc = new k8s.KubeConfig();
     this.kc.loadFromFile(this.kubeconfigPath);
+
     return this.kc;
   }
 
@@ -105,7 +111,6 @@ export class NodeShellSession extends ShellSession {
     return new Promise<boolean>(async (resolve, reject) => {
       const kc = this.getKubeConfig();
       const watch = new k8s.Watch(kc);
-
       const req = await watch.watch(`/api/v1/namespaces/kube-system/pods`, {},
         // callback is called for each received object.
         (type, obj) => {
@@ -119,6 +124,7 @@ export class NodeShellSession extends ShellSession {
           reject(false);
         }
       );
+
       setTimeout(() => {
         req.abort();
         reject(false);
@@ -129,17 +135,20 @@ export class NodeShellSession extends ShellSession {
   protected deleteNodeShellPod() {
     const kc = this.getKubeConfig();
     const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
+
     k8sApi.deleteNamespacedPod(this.podId, "kube-system");
   }
 }
 
 export async function openShell(socket: WebSocket, cluster: Cluster, nodeName?: string): Promise<ShellSession> {
   let shell: ShellSession;
+
   if (nodeName) {
     shell = new NodeShellSession(socket, cluster, nodeName);
   } else {
     shell = new ShellSession(socket, cluster);
   }
   shell.open();
+
   return shell;
 }

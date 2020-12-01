@@ -68,10 +68,13 @@ export class PodDetailsList extends React.Component<Props> {
     const tooltip = (
       <p><Trans>CPU</Trans>: {Math.ceil(usage * 100) / maxCpu}%<br/>{usage.toFixed(3)}</p>
     );
+
     if (!maxCpu) {
       if (parseFloat(value) === 0) return 0;
+
       return value;
     }
+
     return (
       <LineProgress
         max={maxCpu} value={usage}
@@ -85,7 +88,9 @@ export class PodDetailsList extends React.Component<Props> {
     const tooltip = (
       <p><Trans>Memory</Trans>: {Math.ceil(usage * 100 / maxMemory)}%<br/>{bytesToUnits(usage, 3)}</p>
     );
+
     if (!maxMemory) return usage ? bytesToUnits(usage) : 0;
+
     return (
       <LineProgress
         max={maxMemory} value={usage}
@@ -99,6 +104,7 @@ export class PodDetailsList extends React.Component<Props> {
     const { pods } = this.props;
     const pod = pods.find(pod => pod.getId() == uid);
     const metrics = podsStore.getPodKubeMetrics(pod);
+
     return (
       <TableRow
         key={pod.getId()}
@@ -119,10 +125,12 @@ export class PodDetailsList extends React.Component<Props> {
   render() {
     const { pods, showTitle } = this.props;
     const virtual = pods.length > 100;
+
     if (!pods.length && !podsStore.isLoaded) return (
       <div className="PodDetailsList flex justify-center"><Spinner/></div>
     );
     if (!pods.length) return null;
+
     return (
       <div className="PodDetailsList flex column">
         {showTitle && <DrawerTitle title={<Trans>Pods</Trans>}/>}

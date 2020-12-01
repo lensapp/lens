@@ -11,6 +11,7 @@ interface Props {
 
 export function NoItems(props: Props) {
   const { className, children } = props;
+
   return (
     <div className={cssNames("NoItems flex box grow", className)}>
       <div className="box center">

@@ -14,6 +14,7 @@ export interface DrawerItemProps extends React.HTMLAttributes<any> {
 export class DrawerItem extends React.Component<DrawerItemProps> {
   render() {
     const { name, title, labelsOnly, children, hidden, className, renderBoolean, ...elemProps } = this.props;
+
     if (hidden) return null;
 
     const classNames = cssNames("DrawerItem", className, { labelsOnly });

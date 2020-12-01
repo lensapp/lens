@@ -75,6 +75,7 @@ describe("create clusters", () => {
         preferences: {},
       })
     };
+
     mockFs(mockOpts);
     jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValue(Promise.resolve(true));
     c = new Cluster({
@@ -112,6 +113,7 @@ describe("create clusters", () => {
 
   it("activating cluster should try to connect to cluster and do a refresh", async () => {
     const port = await getFreePort();
+
     jest.spyOn(ContextHandler.prototype, "ensureServer");
 
     const mockListNSs = jest.fn();
@@ -122,17 +124,20 @@ describe("create clusters", () => {
         };
       }
     };
+
     jest.spyOn(Cluster.prototype, "isClusterAdmin").mockReturnValue(Promise.resolve(true));
     jest.spyOn(Cluster.prototype, "canI")
       .mockImplementationOnce((attr: V1ResourceAttributes): Promise<boolean> => {
         expect(attr.namespace).toBe("default");
         expect(attr.resource).toBe("pods");
         expect(attr.verb).toBe("list");
+
         return Promise.resolve(true);
       })
       .mockImplementation((attr: V1ResourceAttributes): Promise<boolean> => {
         expect(attr.namespace).toBe("default");
         expect(attr.verb).toBe("list");
+
         return Promise.resolve(true);
       });
     jest.spyOn(Cluster.prototype, "getProxyKubeconfig").mockReturnValue(mockKC as any);
@@ -148,6 +153,7 @@ describe("create clusters", () => {
 
     mockedRequest.mockImplementationOnce(((uri: any) => {
       expect(uri).toBe(`http://localhost:${port}/api-kube/version`);
+
       return Promise.resolve({ gitVersion: "1.2.3" });
     }) as any);
 
@@ -165,6 +171,7 @@ describe("create clusters", () => {
       kubeConfigPath: "minikube-config.yml",
       workspace: workspaceStore.currentWorkspaceId
     });
+
     await c.init(port);
     await c.activate();
 

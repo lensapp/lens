@@ -30,6 +30,7 @@ export class BarChart extends React.Component<Props> {
 
     const getBarColor: Scriptable<string> = ({ dataset }) => {
       const color = dataset.borderColor;
+
       return Color(color).alpha(0.2).string();
     };
 
@@ -52,8 +53,10 @@ export class BarChart extends React.Component<Props> {
     const formatTimeLabels = (timestamp: string, index: number) => {
       const label = moment(parseInt(timestamp)).format("HH:mm");
       const offset = "     ";
+
       if (index == 0) return offset + label;
       if (index == 60) return label + offset;
+
       return index % timeLabelStep == 0 ? label : "";
     };
 
@@ -110,7 +113,9 @@ export class BarChart extends React.Component<Props> {
         callbacks: {
           title: tooltipItems => {
             const now = new Date().getTime();
+
             if (new Date(tooltipItems[0].xLabel).getTime() > now) return "";
+
             return `${tooltipItems[0].xLabel}`;
           },
           labelColor: ({ datasetIndex }) => {
@@ -136,9 +141,11 @@ export class BarChart extends React.Component<Props> {
       }
     };
     const options = merge(barOptions, customOptions);
+
     if (chartData.datasets.length == 0) {
       return <NoMetrics/>;
     }
+
     return (
       <Chart
         className={cssNames("BarChart flex box grow column", className)}
@@ -160,11 +167,14 @@ export const memoryOptions: ChartOptions = {
         callback: (value: number | string): string => {
           if (typeof value == "string") {
             const float = parseFloat(value);
+
             if (float < 1) {
               return float.toFixed(3);
             }
+
             return bytesToUnits(parseInt(value));
           }
+
           return bytesToUnits(value);
         },
         stepSize: 1
@@ -176,6 +186,7 @@ export const memoryOptions: ChartOptions = {
       label: ({ datasetIndex, index }, { datasets }) => {
         const { label, data } = datasets[datasetIndex];
         const value = data[index] as ChartPoint;
+
         return `${label}: ${bytesToUnits(parseInt(value.y.toString()), 3)}`;
       }
     }
@@ -189,9 +200,11 @@ export const cpuOptions: ChartOptions = {
       ticks: {
         callback: (value: number | string): string => {
           const float = parseFloat(`${value}`);
+
           if (float == 0) return "0";
           if (float < 10) return float.toFixed(3);
           if (float < 100) return float.toFixed(2);
+
           return float.toFixed(1);
         }
       }
@@ -202,6 +215,7 @@ export const cpuOptions: ChartOptions = {
       label: ({ datasetIndex, index }, { datasets }) => {
         const { label, data } = datasets[datasetIndex];
         const value = data[index] as ChartPoint;
+
         return `${label}: ${parseFloat(value.y as string).toPrecision(2)}`;
       }
     }

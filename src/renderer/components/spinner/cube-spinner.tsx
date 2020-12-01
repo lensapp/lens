@@ -10,6 +10,7 @@ export interface CubeSpinnerProps {
 export class CubeSpinner extends React.Component<CubeSpinnerProps> {
   render() {
     const { className, center } = this.props;
+
     return (
       <div className={cssNames("CubeSpinner ", className, { center })}>
         <div className="sk-cube-grid">

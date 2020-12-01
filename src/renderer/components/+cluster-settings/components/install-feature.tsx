@@ -24,6 +24,7 @@ export class InstallFeature extends React.Component<Props> {
     const statusUpdate = interval(20, () => {
       feature.updateStatus(cluster);
     });
+
     statusUpdate.start(true);
 
     disposeOnUnmount(this, () => {
@@ -42,6 +43,7 @@ export class InstallFeature extends React.Component<Props> {
     const { cluster, feature } = this.props;
     const disabled = !cluster.isAdmin || this.loading;
     const loadingIcon = this.loading ? <Spinner/> : null;
+
     return (
       <div className="flex gaps align-center">
         {feature.status.canUpgrade &&

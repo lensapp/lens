@@ -141,6 +141,7 @@ export const ClusterPieCharts = observer(() => {
         `${i18n._(t`Capacity`)}: ${podCapacity}`,
       ]
     };
+
     return (
       <div className="NodeCharts flex justify-center box grow gaps">
         <div className="chart flex column align-center box grow">
@@ -174,6 +175,7 @@ export const ClusterPieCharts = observer(() => {
     const { masterNodes, workerNodes } = nodesStore;
     const { metricNodeRole, metricsLoaded } = clusterStore;
     const nodes = metricNodeRole === MetricNodeRole.MASTER ? masterNodes : workerNodes;
+
     if (!nodes.length) {
       return (
         <div className="empty flex column box grow align-center justify-center">
@@ -182,6 +184,7 @@ export const ClusterPieCharts = observer(() => {
         </div>
       );
     }
+
     if (!metricsLoaded) {
       return (
         <div className="flex justify-center align-center box grow empty">
@@ -190,9 +193,11 @@ export const ClusterPieCharts = observer(() => {
       );
     }
     const { memoryCapacity, cpuCapacity, podCapacity } = getMetricLastPoints(clusterStore.metrics);
+
     if (!memoryCapacity || !cpuCapacity || !podCapacity) {
       return <ClusterNoMetrics className="empty"/>;
     }
+
     return renderCharts();
   };
 

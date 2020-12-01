@@ -69,6 +69,7 @@ export class ServiceAccounts extends React.Component<Props> {
 
 function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
   const { object, toolbar } = props;
+
   return (
     <MenuItem onClick={() => openServiceAccountKubeConfig(object)}>
       <Icon material="insert_drive_file" title="Kubeconfig File" interactive={toolbar}/>

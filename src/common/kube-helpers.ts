@@ -13,6 +13,7 @@ function resolveTilde(filePath: string) {
   if (filePath[0] === "~" && (filePath[1] === "/" || filePath.length === 1)) {
     return filePath.replace("~", os.homedir());
   }
+
   return filePath;
 }
 
@@ -40,12 +41,15 @@ export function validateConfig(config: KubeConfig | string): KubeConfig {
     config = loadConfig(config);
   }
   logger.debug(`validating kube config: ${JSON.stringify(config)}`);
+
   if (!config.users || config.users.length == 0) {
     throw new Error("No users provided in config");
   }
+
   if (!config.clusters || config.clusters.length == 0) {
     throw new Error("No clusters provided in config");
   }
+
   if (!config.contexts || config.contexts.length == 0) {
     throw new Error("No contexts provided in config");
   }
@@ -58,11 +62,13 @@ export function validateConfig(config: KubeConfig | string): KubeConfig {
  */
 export function splitConfig(kubeConfig: KubeConfig): KubeConfig[] {
   const configs: KubeConfig[] = [];
+
   if (!kubeConfig.contexts) {
     return configs;
   }
   kubeConfig.contexts.forEach(ctx => {
     const kc = new KubeConfig();
+
     kc.clusters = [kubeConfig.getCluster(ctx.cluster)].filter(n => n);
     kc.users = [kubeConfig.getUser(ctx.user)].filter(n => n);
     kc.contexts = [kubeConfig.getContextObject(ctx.name)].filter(n => n);
@@ -70,6 +76,7 @@ export function splitConfig(kubeConfig: KubeConfig): KubeConfig[] {
 
     configs.push(kc);
   });
+
   return configs;
 }
 
@@ -153,11 +160,13 @@ export function validateKubeConfig (config: KubeConfig) {
   logger.debug(`validateKubeConfig: validating kubeconfig - ${JSON.stringify(config)}`);
 
   // Validate the User Object
-  const user = config.getCurrentUser();  
+  const user = config.getCurrentUser();
+  
   if (user.exec) {
     const execCommand = user.exec["command"];
     // check if the command is absolute or not
     const isAbsolute = path.isAbsolute(execCommand);
+
     // validate the exec struct in the user object, start with the command field
     logger.debug(`validateKubeConfig: validating user exec command - ${JSON.stringify(execCommand)}`);
 

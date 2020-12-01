@@ -10,6 +10,7 @@ import { namespaceStore } from "../+namespaces/namespace.store";
 export class Apps extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
     const query = namespaceStore.getContextParams();
+
     return [
       {
         title: <Trans>Charts</Trans>,

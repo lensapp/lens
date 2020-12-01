@@ -81,9 +81,11 @@ export class AddSecretDialog extends React.Component<Props> {
   private getDataFromFields = (fields: ISecretTemplateField[] = [], processValue?: (val: string) => string) => {
     return fields.reduce<any>((data, field) => {
       const { key, value } = field;
+
       if (key) {
         data[key] = processValue ? processValue(value) : value;
       }
+
       return data;
     }, {});
   };
@@ -101,8 +103,10 @@ export class AddSecretDialog extends React.Component<Props> {
         labels: this.getDataFromFields(labels),
       } as IKubeObjectMetadata
     };
+
     try {
       const newSecret = await secretsApi.create({ namespace, name }, secret);
+
       showDetails(newSecret.selfLink);
       this.reset();
       this.close();
@@ -113,17 +117,20 @@ export class AddSecretDialog extends React.Component<Props> {
 
   addField = (field: ISecretField) => {
     const fields = this.secret[this.type][field] || [];
+
     fields.push({ key: "", value: "" });
     this.secret[this.type][field] = fields;
   };
 
   removeField = (field: ISecretField, index: number) => {
     const fields = this.secret[this.type][field] || [];
+
     fields.splice(index, 1);
   };
 
   renderFields(field: ISecretField) {
     const fields = this.secret[this.type][field] || [];
+
     return (
       <>
         <SubTitle compact className="fields-title" title={upperFirst(field.toString())}>
@@ -137,6 +144,7 @@ export class AddSecretDialog extends React.Component<Props> {
         <div className="secret-fields">
           {fields.map((item, index) => {
             const { key = "", value = "", required } = item;
+
             return (
               <div key={index} className="secret-field flex gaps auto align-center">
                 <Input
@@ -174,6 +182,7 @@ export class AddSecretDialog extends React.Component<Props> {
     const { ...dialogProps } = this.props;
     const { namespace, name, type } = this;
     const header = <h5><Trans>Create Secret</Trans></h5>;
+
     return (
       <Dialog
         {...dialogProps}

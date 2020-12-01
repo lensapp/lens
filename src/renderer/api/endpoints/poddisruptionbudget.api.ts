@@ -22,6 +22,7 @@ export class PodDisruptionBudget extends KubeObject {
 
   getSelectors() {
     const selector = this.spec.selector;
+
     return KubeObject.stringifyLabels(selector ? selector.matchLabels : null);
   }
 

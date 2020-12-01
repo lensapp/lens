@@ -36,6 +36,7 @@ export class RoleBindingDetails extends React.Component<Props> {
   selectSubject(subject: IRoleBindingSubject) {
     const { selectedSubjects } = this;
     const isSelected = selectedSubjects.includes(subject);
+
     selectedSubjects.replace(
       isSelected
         ? selectedSubjects.filter(sub => sub !== subject) // unselect
@@ -47,6 +48,7 @@ export class RoleBindingDetails extends React.Component<Props> {
   removeSelectedSubjects() {
     const { object: roleBinding } = this.props;
     const { selectedSubjects } = this;
+
     ConfirmDialog.open({
       ok: () => roleBindingsStore.updateSubjects({ roleBinding, removeSubjects: selectedSubjects }),
       labelOk: _i18n._(t`Remove`),
@@ -59,12 +61,14 @@ export class RoleBindingDetails extends React.Component<Props> {
   render() {
     const { selectedSubjects } = this;
     const { object: roleBinding } = this.props;
+
     if (!roleBinding) {
       return null;
     }
     const name = roleBinding.getName();
     const { roleRef } = roleBinding;
     const subjects = roleBinding.getSubjects();
+
     return (
       <div className="RoleBindingDetails">
         <KubeObjectMeta object={roleBinding}/>
@@ -96,6 +100,7 @@ export class RoleBindingDetails extends React.Component<Props> {
               subjects.map((subject, i) => {
                 const { kind, name, namespace } = subject;
                 const isSelected = selectedSubjects.includes(subject);
+
                 return (
                   <TableRow
                     key={i} selected={isSelected}

@@ -39,6 +39,7 @@ export class LogsDialog extends React.Component<Props> {
         </Button>
       </div>
     );
+
     return (
       <Dialog {...dialogProps} className="LogsDialog">
         <Wizard header={header} done={dialogProps.close}>

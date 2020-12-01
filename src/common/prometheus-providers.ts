@@ -6,6 +6,7 @@ import { PrometheusProviderRegistry } from "../main/prometheus/provider-registry
 
 [PrometheusLens, PrometheusHelm, PrometheusOperator, PrometheusStacklight].forEach(providerClass => {
   const provider = new providerClass();
+
   PrometheusProviderRegistry.registerProvider(provider.id, provider);
 });
 

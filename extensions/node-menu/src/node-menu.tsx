@@ -6,6 +6,7 @@ export interface NodeMenuProps extends Component.KubeObjectMenuProps<K8sApi.Node
 
 export function NodeMenu(props: NodeMenuProps) {
   const { object: node, toolbar } = props;
+
   if (!node) return null;
   const nodeName = node.getName();
 
@@ -35,6 +36,7 @@ export function NodeMenu(props: NodeMenuProps) {
 
   const drain = () => {
     const command = `kubectl drain ${nodeName} --delete-local-data --ignore-daemonsets --force`;
+
     Component.ConfirmDialog.open({
       ok: () => sendToTerminal(command),
       labelOk: `Drain Node`,

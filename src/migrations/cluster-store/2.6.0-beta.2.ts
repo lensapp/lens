@@ -6,9 +6,12 @@ export default migration({
   run(store) {
     for (const value of store) {
       const clusterKey = value[0];
+
       if (clusterKey === "__internal__") continue;
       const cluster = value[1];
+
       if (!cluster.preferences) cluster.preferences = {};
+
       if (cluster.icon) {
         cluster.preferences.icon = cluster.icon;
         delete (cluster["icon"]);

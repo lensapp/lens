@@ -23,6 +23,7 @@ export class LensRendererExtension extends LensExtension {
       pageId,
       params: params ?? {}, // compile to url with params
     });
+
     navigate(pageUrl);
   }
 

@@ -25,9 +25,11 @@ export class ClusterIconSetting extends React.Component<Props> {
   @autobind()
   async onIconPick([file]: File[]) {
     const { cluster } = this.props;
+
     try {
       if (file) {
         const buf = Buffer.from(await file.arrayBuffer());
+
         cluster.preferences.icon = `data:${file.type};base64,${buf.toString("base64")}`;
       } else {
         // this has to be done as a seperate branch (and not always) because `cluster`
@@ -57,6 +59,7 @@ export class ClusterIconSetting extends React.Component<Props> {
         {"Browse for new icon..."}
       </>
     );
+
     return (
       <>
         <SubTitle title="Cluster Icon" />

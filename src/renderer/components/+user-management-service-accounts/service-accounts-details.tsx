@@ -30,6 +30,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     this.secrets = null;
     this.imagePullSecrets = null;
     const { object: serviceAccount } = this.props;
+
     if (!serviceAccount) {
       return;
     }
@@ -37,18 +38,22 @@ export class ServiceAccountsDetails extends React.Component<Props> {
     const secrets = serviceAccount.getSecrets().map(({ name }) => {
       return secretsStore.load({ name, namespace });
     });
+
     this.secrets = await Promise.all(secrets);
     const imagePullSecrets = serviceAccount.getImagePullSecrets().map(async({ name }) => {
       return secretsStore.load({ name, namespace }).catch(() => this.generateDummySecretObject(name));
     });
+
     this.imagePullSecrets = await Promise.all(imagePullSecrets);
   });
 
   renderSecrets() {
     const { secrets } = this;
+
     if (!secrets) {
       return <Spinner center/>;
     }
+
     return secrets.map(secret =>
       <ServiceAccountsSecret key={secret.getId()} secret={secret}/>
     );
@@ -56,9 +61,11 @@ export class ServiceAccountsDetails extends React.Component<Props> {
 
   renderImagePullSecrets() {
     const { imagePullSecrets } = this;
+
     if (!imagePullSecrets) {
       return <Spinner center/>;
     }
+
     return this.renderSecretLinks(imagePullSecrets);
   }
 
@@ -75,6 +82,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
           </div>
         );
       }
+
       return (
         <Link key={secret.getId()} to={getDetailsUrl(secret.selfLink)}>
           {secret.getName()}
@@ -98,6 +106,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
 
   render() {
     const { object: serviceAccount } = this.props;
+
     if (!serviceAccount) {
       return null;
     }
@@ -106,6 +115,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
       secret.getAnnotations().some(annot => annot == `kubernetes.io/service-account.name: ${serviceAccount.getName()}`)
     );
     const imagePullSecrets = serviceAccount.getImagePullSecrets();
+
     return (
       <div className="ServiceAccountsDetails">
         <KubeObjectMeta object={serviceAccount}/>

@@ -24,6 +24,7 @@ export class HelmReleaseMenu extends React.Component<Props> {
   @autobind()
   upgrade() {
     const { release, hideDetails } = this.props;
+
     createUpgradeChartTab(release);
     hideDetails && hideDetails();
   }
@@ -35,8 +36,10 @@ export class HelmReleaseMenu extends React.Component<Props> {
 
   renderContent() {
     const { release, toolbar } = this.props;
+
     if (!release) return;
     const hasRollback = release && release.getRevision() > 1;
+
     return (
       <>
         {hasRollback && (
@@ -51,6 +54,7 @@ export class HelmReleaseMenu extends React.Component<Props> {
 
   render() {
     const { className, release, ...menuProps } = this.props;
+
     return (
       <MenuActions
         {...menuProps}

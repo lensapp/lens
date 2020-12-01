@@ -53,6 +53,7 @@ export class ClustersMenu extends React.Component<Props> {
         }));
       }
     }));
+
     if (cluster.online) {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
@@ -65,6 +66,7 @@ export class ClustersMenu extends React.Component<Props> {
         }
       }));
     }
+
     if (!cluster.isManaged) {
       menu.append(new MenuItem({
         label: _i18n._(t`Remove`),
@@ -100,6 +102,7 @@ export class ClustersMenu extends React.Component<Props> {
         source: { index: from },
         destination: { index: to },
       } = result;
+
       clusterStore.swapIconOrders(currentWorkspaceId, from, to);
     }
   }
@@ -110,6 +113,7 @@ export class ClustersMenu extends React.Component<Props> {
     const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
     const clusters = clusterStore.getByWorkspaceId(workspace.id).filter(cluster => cluster.enabled);
     const activeClusterId = clusterStore.activeCluster;
+
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
         <div className="clusters flex column gaps">
@@ -119,6 +123,7 @@ export class ClustersMenu extends React.Component<Props> {
                 <div ref={innerRef} {...droppableProps}>
                   {clusters.map((cluster, index) => {
                     const isActive = cluster.id === activeClusterId;
+
                     return (
                       <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
                         {({ draggableProps, dragHandleProps, innerRef }: DraggableProvided) => (
@@ -154,10 +159,12 @@ export class ClustersMenu extends React.Component<Props> {
         <div className="extensions">
           {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
             const registeredPage = globalPageRegistry.getByPageMenuTarget(target);
+
             if (!registeredPage) return;
             const { extensionId, id: pageId } = registeredPage;
             const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: target.params });
             const isActive = pageUrl === navigation.location.pathname;
+
             return (
               <Icon
                 key={pageUrl}

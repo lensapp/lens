@@ -29,27 +29,35 @@ export class WorkloadsOverview extends React.Component<Props> {
 
   async componentDidMount() {
     const stores: KubeObjectStore[] = [];
+
     if (isAllowedResource("pods")) {
       stores.push(podsStore);
     }
+
     if (isAllowedResource("deployments")) {
       stores.push(deploymentStore);
     }
+
     if (isAllowedResource("daemonsets")) {
       stores.push(daemonSetStore);
     }
+
     if (isAllowedResource("statefulsets")) {
       stores.push(statefulSetStore);
     }
+
     if (isAllowedResource("replicasets")) {
       stores.push(replicaSetStore);
     }
+
     if (isAllowedResource("jobs")) {
       stores.push(jobStore);
     }
+
     if (isAllowedResource("cronjobs")) {
       stores.push(cronJobStore);
     }
+
     if (isAllowedResource("events")) {
       stores.push(eventStore);
     }
@@ -57,6 +65,7 @@ export class WorkloadsOverview extends React.Component<Props> {
     await Promise.all(stores.map(store => store.loadAll()));
     this.isReady = true;
     const unsubscribeList = stores.map(store => store.subscribe());
+
     await when(() => this.isUnmounting);
     unsubscribeList.forEach(dispose => dispose());
   }
@@ -69,6 +78,7 @@ export class WorkloadsOverview extends React.Component<Props> {
     if (!this.isReady) {
       return <Spinner center/>;
     }
+
     return (
       <>
         <OverviewStatuses/>

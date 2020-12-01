@@ -14,8 +14,10 @@ export class SearchStore {
   @action
   onSearch(text: string[], query = this.searchQuery) {
     this.searchQuery = query;
+
     if (!query) {
       this.reset();
+
       return;
     }
     this.occurrences = this.findOccurences(text, query);
@@ -36,11 +38,14 @@ export class SearchStore {
   findOccurences(text: string[], query: string) {
     if (!text) return [];
     const occurences: number[] = [];
+
     text.forEach((line, index) => {
       const regex = new RegExp(this.escapeRegex(query), "gi");
       const matches = [...line.matchAll(regex)];
+
       matches.forEach(() => occurences.push(index));
     });
+
     return occurences;
   }
 
@@ -51,9 +56,11 @@ export class SearchStore {
    */
   getNextOverlay(loopOver = false) {
     const next = this.activeOverlayIndex + 1;
+
     if (next > this.occurrences.length - 1) {
       return loopOver ? 0 : this.activeOverlayIndex;
     }
+
     return next;
   }
 
@@ -64,9 +71,11 @@ export class SearchStore {
    */
   getPrevOverlay(loopOver = false) {
     const prev = this.activeOverlayIndex - 1;
+
     if (prev < 0) {
       return loopOver ? this.occurrences.length - 1 : this.activeOverlayIndex;
     }
+
     return prev;
   }
 
@@ -104,6 +113,7 @@ export class SearchStore {
   @autobind()
   isActiveOverlay(line: number, occurence: number) {
     const firstLineIndex = this.occurrences.findIndex(item => item === line);
+
     return firstLineIndex + occurence === this.activeOverlayIndex;
   }
 

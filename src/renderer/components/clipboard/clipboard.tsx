@@ -40,8 +40,10 @@ export class Clipboard extends React.Component<CopyToClipboardProps> {
     }
     const { showNotification, resetSelection, getNotificationMessage, cssSelectorLimit } = this.props;
     const contentElem = this.rootElem.querySelector<any>(cssSelectorLimit) || this.rootElem;
+
     if (contentElem) {
       const { copiedText, copied } = copyToClipboard(contentElem, { resetSelection });
+
       if (copied && showNotification) {
         Notifications.ok(getNotificationMessage(copiedText));
       }
@@ -51,12 +53,14 @@ export class Clipboard extends React.Component<CopyToClipboardProps> {
   render() {
     try {
       const rootElem = this.rootReactElem;
+
       return React.cloneElement(rootElem, {
         className: cssNames(Clipboard.displayName, rootElem.props.className),
         onClick: this.onClick,
       });
     } catch (err) {
       logger.error(`Invalid usage components/CopyToClick usage. Children must contain root html element.`, { err: String(err) });
+
       return this.rootReactElem;
     }
   }

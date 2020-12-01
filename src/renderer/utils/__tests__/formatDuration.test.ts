@@ -41,6 +41,7 @@ describe("human format durations", () => {
     expect(insignificant).toBe("1h 2m");
 
     const significant = formatDuration(31 * second, false);
+
     expect(significant).toBe("31s");
   });
 

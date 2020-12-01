@@ -39,10 +39,12 @@ export class ReplicaSets extends React.Component<Props> {
 
   render() {
     const { replicaSets } = this.props;
+
     if (!replicaSets.length && !replicaSetStore.isLoaded) return (
       <div className="ReplicaSets"><Spinner center/></div>
     );
     if (!replicaSets.length) return null;
+
     return (
       <div className="ReplicaSets flex column">
         <DrawerTitle title={<Trans>Deploy Revisions</Trans>}/>

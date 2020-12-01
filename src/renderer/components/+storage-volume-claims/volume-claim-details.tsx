@@ -35,6 +35,7 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
 
   render() {
     const { object: volumeClaim } = this.props;
+
     if (!volumeClaim) {
       return null;
     }
@@ -44,6 +45,7 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
     const metricTabs = [
       <Trans key="disk">Disk</Trans>
     ];
+
     return (
       <div className="PersistentVolumeClaimDetails">
         <ResourceMetrics

@@ -14,8 +14,8 @@ interface Env {
  */
 export async function shellSync() {
   const { shell } = os.userInfo();
-
   let envVars = {};
+
   try {
     envVars = await shellEnv(shell);
   } catch (error) {
@@ -23,6 +23,7 @@ export async function shellSync() {
   }
 
   const env: Env = JSON.parse(JSON.stringify(envVars));
+
   if (!env.LANG) {
     // the LANG env var expects an underscore instead of electron's dash
     env.LANG = `${app.getLocale().replace("-", "_")}.UTF-8`;

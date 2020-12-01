@@ -25,28 +25,34 @@ export class ContextHandler {
   public setupPrometheus(preferences: ClusterPrometheusPreferences = {}) {
     this.prometheusProvider = preferences.prometheusProvider?.type;
     this.prometheusPath = null;
+
     if (preferences.prometheus) {
       const { namespace, service, port } = preferences.prometheus;
+
       this.prometheusPath = `${namespace}/services/${service}:${port}`;
     }
   }
 
   protected async resolvePrometheusPath(): Promise<string> {
     const prometheusService = await this.getPrometheusService();
+
     if (!prometheusService) return null;
     const { service, namespace, port } = prometheusService;
+
     return `${namespace}/services/${service}:${port}`;
   }
 
   async getPrometheusProvider() {
     if (!this.prometheusProvider) {
       const service = await this.getPrometheusService();
+
       if (!service) {
         return null;
       }
       logger.info(`using ${service.id} as prometheus provider`);
       this.prometheusProvider = service.id;
     }
+
     return prometheusProviders.find(p => p.id === this.prometheusProvider);
   }
 
@@ -54,9 +60,11 @@ export class ContextHandler {
     const providers = this.prometheusProvider ? prometheusProviders.filter(provider => provider.id == this.prometheusProvider) : prometheusProviders;
     const prometheusPromises: Promise<PrometheusService>[] = providers.map(async (provider: PrometheusProvider): Promise<PrometheusService> => {
       const apiClient = this.cluster.getProxyKubeconfig().makeApiClient(CoreV1Api);
+
       return await provider.getPrometheusService(apiClient);
     });
     const resolvedPrometheusServices = await Promise.all(prometheusPromises);
+
     return resolvedPrometheusServices.filter(n => n)[0];
   }
 
@@ -64,12 +72,14 @@ export class ContextHandler {
     if (!this.prometheusPath) {
       this.prometheusPath = await this.resolvePrometheusPath();
     }
+
     return this.prometheusPath;
   }
 
   async resolveAuthProxyUrl() {
     const proxyPort = await this.ensurePort();
     const path = this.clusterUrl.path !== "/" ? this.clusterUrl.path : "";
+
     return `http://127.0.0.1:${proxyPort}${path}`;
   }
 
@@ -79,14 +89,17 @@ export class ContextHandler {
     }
     const timeout = isWatchRequest ? 4 * 60 * 60 * 1000 : 30000; // 4 hours for watch request, 30 seconds for the rest
     const apiTarget = await this.newApiTarget(timeout);
+
     if (!isWatchRequest) {
       this.apiTarget = apiTarget;
     }
+
     return apiTarget;
   }
 
   protected async newApiTarget(timeout: number): Promise<httpProxy.ServerOptions> {
     const proxyUrl = await this.resolveAuthProxyUrl();
+
     return {
       target: proxyUrl,
       changeOrigin: true,
@@ -101,6 +114,7 @@ export class ContextHandler {
     if (!this.proxyPort) {
       this.proxyPort = await getFreePort();
     }
+
     return this.proxyPort;
   }
 
@@ -108,6 +122,7 @@ export class ContextHandler {
     if (!this.kubeAuthProxy) {
       await this.ensurePort();
       const proxyEnv = Object.assign({}, process.env);
+
       if (this.cluster.preferences.httpsProxy) {
         proxyEnv.HTTPS_PROXY = this.cluster.preferences.httpsProxy;
       }

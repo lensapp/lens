@@ -9,6 +9,7 @@ export class ServiceAccountsStore extends KubeObjectStore<ServiceAccount> {
 
   protected async createItem(params: { name: string; namespace?: string }) {
     await super.createItem(params);
+
     return this.api.get(params); // hackfix: load freshly created account, cause it doesn't have "secrets" field yet
   }
 }

@@ -28,11 +28,13 @@ export function initTray(windowManager: WindowManager) {
   const dispose = autorun(() => {
     try {
       const menu = createTrayMenu(windowManager);
+
       buildTray(getTrayIcon(), menu);
     } catch (err) {
       logger.error(`[TRAY]: building failed: ${err}`);
     }
   });
+
   return () => {
     dispose();
     tray?.destroy();
@@ -60,6 +62,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
       async click() {
         // note: argument[1] (browserWindow) not available when app is not focused / hidden
         const browserWindow = await windowManager.ensureMainWindow();
+
         showAbout(browserWindow);
       },
     },
@@ -82,11 +85,13 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
         .filter(workspace => clusterStore.getByWorkspaceId(workspace.id).length > 0) // hide empty workspaces
         .map(workspace => {
           const clusters = clusterStore.getByWorkspaceId(workspace.id);
+
           return {
             label: workspace.name,
             toolTip: workspace.description,
             submenu: clusters.map(cluster => {
               const { id: clusterId, name: label, online, workspace } = cluster;
+
               return {
                 label: `${online ? "✓" : "\x20".repeat(3)/*offset*/}${label}`,
                 toolTip: clusterId,
@@ -103,8 +108,10 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
       label: "Check for updates",
       async click() {
         const result = await AppUpdater.checkForUpdates();
+
         if (!result) {
           const browserWindow = await windowManager.ensureMainWindow();
+
           dialog.showMessageBoxSync(browserWindow, {
             message: "No updates available",
             type: "info",

@@ -23,6 +23,7 @@ export class TableHead extends React.Component<TableHeadProps> {
       sticky, nowrap,
       topLine: showTopLine,
     });
+
     return (
       <div className={classNames} {...headProps}>
         {children}

@@ -20,6 +20,7 @@ export class WizardLayout extends React.Component<WizardLayoutProps> {
       className, contentClass, infoPanelClass, infoPanel, header, headerClass, centered,
       children, ...props
     } = this.props;
+
     return (
       <div {...props} className={cssNames("WizardLayout", { centered }, className)}>
         {header && (

@@ -13,6 +13,7 @@ export class LensMainExtension extends LensExtension {
       pageId,
       params: params ?? {}, // compile to url with params
     });
+
     await windowManager.navigate(pageUrl, frameId);
   }
 }

@@ -8,6 +8,7 @@ import logger from "./logger";
 export function exitApp() {
   const windowManager = WindowManager.getInstance<WindowManager>();
   const clusterManager = ClusterManager.getInstance<ClusterManager>();
+
   appEventBus.emit({ name: "service", action: "close" });
   windowManager.hide();
   clusterManager.stop();

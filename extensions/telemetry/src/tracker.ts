@@ -29,6 +29,7 @@ export class Tracker extends Util.Singleton {
     this.anonymousId = machineIdSync();
     this.os = this.resolveOS();
     this.userAgent = `Lens ${App.version} (${this.os})`;
+
     try {
       this.visitor = ua(Tracker.GA_ID, this.anonymousId, { strictCidFormat: false });
     } catch (error) {
@@ -49,18 +50,22 @@ export class Tracker extends Util.Singleton {
     const handler = (ev: EventBus.AppEvent) => {
       this.event(ev.name, ev.action, ev.params);
     };
+
     this.eventHandlers.push(handler);
     EventBus.appEventBus.addListener(handler);
   }
 
   watchExtensions() {
     let previousExtensions = App.getEnabledExtensions();
+
     this.disposers.push(reaction(() => App.getEnabledExtensions(), (currentExtensions) => {
       const removedExtensions = previousExtensions.filter(x => !currentExtensions.includes(x));
+
       removedExtensions.forEach(ext => {
         this.event("extension", "disable", { extension: ext });
       });
       const newExtensions = currentExtensions.filter(x => !previousExtensions.includes(x));
+
       newExtensions.forEach(ext => {
         this.event("extension", "enable", { extension: ext });
       });
@@ -82,6 +87,7 @@ export class Tracker extends Util.Singleton {
     for (const handler of this.eventHandlers) {
       EventBus.appEventBus.removeListener(handler);
     }
+
     if (this.reportInterval) {
       clearInterval(this.reportInterval);
     }
@@ -125,12 +131,14 @@ export class Tracker extends Util.Singleton {
 
   protected resolveOS() {
     let os = "";
+
     if (App.isMac) {
       os = "MacOS";
     } else if(App.isWindows) {
       os = "Windows";
     } else if (App.isLinux) {
       os = "Linux";
+
       if (App.isSnap) {
         os += "; Snap";
       } else {
@@ -139,12 +147,14 @@ export class Tracker extends Util.Singleton {
     } else {
       os = "Unknown";
     }
+
     return os;
   }
 
   protected async event(eventCategory: string, eventAction: string, otherParams = {}) {
     try {
       const allowed = await this.isTelemetryAllowed();
+
       if (!allowed) {
         return;
       }

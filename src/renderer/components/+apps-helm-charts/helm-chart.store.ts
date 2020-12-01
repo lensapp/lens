@@ -30,9 +30,11 @@ export class HelmChartStore extends ItemStore<HelmChart> {
 
   async getVersions(chartName: string, force?: boolean): Promise<IChartVersion[]> {
     let versions = this.versions.get(chartName);
+
     if (versions && !force) {
       return versions;
     }
+
     const loadVersions = (repo: string) => {
       return helmChartsApi.get(repo, chartName).then(({ versions }) => {
         return versions.map(chart => ({
@@ -41,17 +43,20 @@ export class HelmChartStore extends ItemStore<HelmChart> {
         }));
       });
     };
+
     if (!this.isLoaded) {
       await this.loadAll();
     }
     const repos = this.items
       .filter(chart => chart.getName() === chartName)
       .map(chart => chart.getRepository());
+
     versions = await Promise.all(repos.map(loadVersions))
       .then(flatten)
       .then(this.sortVersions);
 
     this.versions.set(chartName, versions);
+
     return versions;
   }
 

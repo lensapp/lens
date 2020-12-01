@@ -30,6 +30,7 @@ export function useRealTimeMetrics(metrics: IMetricValues, chartData: IChartData
   if (data.length && metrics.length) {
     const lastTime = data[data.length - 1].x;
     const values = [];
+
     for (let i = 0; i < 3; i++) {
       values[i] = moment.unix(lastTime).add(i + 1, "m").unix();
     }
@@ -39,5 +40,6 @@ export function useRealTimeMetrics(metrics: IMetricValues, chartData: IChartData
       { x: values[2], y: "0" }
     );
   }
+
   return data;
 }

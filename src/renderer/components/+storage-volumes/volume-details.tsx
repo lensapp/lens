@@ -21,10 +21,12 @@ interface Props extends KubeObjectDetailsProps<PersistentVolume> {
 export class PersistentVolumeDetails extends React.Component<Props> {
   render() {
     const { object: volume } = this.props;
+
     if (!volume) {
       return null;
     }
     const { accessModes, capacity, persistentVolumeReclaimPolicy, storageClassName, claimRef, flexVolume, mountOptions, nfs } = volume.spec;
+
     return (
       <div className="PersistentVolumeDetails">
         <KubeObjectMeta object={volume}/>

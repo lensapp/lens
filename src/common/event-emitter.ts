@@ -13,6 +13,7 @@ export class EventEmitter<D extends [...any[]]> {
   addListener(callback: Callback<D>, options: Options = {}) {
     if (options.prepend) {
       const listeners = [...this.listeners];
+
       listeners.unshift([callback, options]);
       this.listeners = new Map(listeners);
     }
@@ -33,7 +34,9 @@ export class EventEmitter<D extends [...any[]]> {
     [...this.listeners].every(([callback, options]) => {
       if (options.once) this.removeListener(callback);
       const result = callback(...data);
+
       if (result === false) return; // break cycle
+
       return true;
     });
   }

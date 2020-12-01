@@ -33,11 +33,14 @@ interface Props {
 export class Dock extends React.Component<Props> {
   onKeydown = (evt: React.KeyboardEvent<HTMLElement>) => {
     const { close, closeTab, selectedTab } = dockStore;
+
     if (!selectedTab) return;
     const { code, ctrlKey, shiftKey } = evt.nativeEvent;
+
     if (shiftKey && code === "Escape") {
       close();
     }
+
     if (ctrlKey && code === "KeyW") {
       if (selectedTab.pinned) close();
       else closeTab(selectedTab.id);
@@ -46,6 +49,7 @@ export class Dock extends React.Component<Props> {
 
   onChangeTab = (tab: IDockTab) => {
     const { open, selectTab } = dockStore;
+
     open();
     selectTab(tab.id);
   };
@@ -55,12 +59,15 @@ export class Dock extends React.Component<Props> {
     if (isTerminalTab(tab)) {
       return <TerminalTab value={tab} />;
     }
+
     if (isCreateResourceTab(tab) || isEditResourceTab(tab)) {
       return <DockTab value={tab} icon="edit" />;
     }
+
     if (isInstallChartTab(tab) || isUpgradeChartTab(tab)) {
       return <DockTab value={tab} icon={<Icon svg="install" />} />;
     }
+
     if (isPodLogsTab(tab)) {
       return <DockTab value={tab} icon="subject" />;
     }
@@ -68,7 +75,9 @@ export class Dock extends React.Component<Props> {
 
   renderTabContent() {
     const { isOpen, height, selectedTab: tab } = dockStore;
+
     if (!isOpen || !tab) return;
+
     return (
       <div className="tab-content" style={{ flexBasis: height }}>
         {isCreateResourceTab(tab) && <CreateResource tab={tab} />}
@@ -84,6 +93,7 @@ export class Dock extends React.Component<Props> {
   render() {
     const { className } = this.props;
     const { isOpen, toggle, tabs, toggleFillSize, selectedTab, hasTabs, fullSize } = dockStore;
+
     return (
       <div
         className={cssNames("Dock", className, { isOpen, fullSize })}

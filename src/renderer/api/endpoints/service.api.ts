@@ -61,9 +61,11 @@ export class Service extends KubeObject {
 
   getExternalIps() {
     const lb = this.getLoadBalancer();
+
     if (lb && lb.ingress) {
       return lb.ingress.map(val => val.ip || val.hostname);
     }
+
     return this.spec.externalIPs || [];
   }
 
@@ -73,11 +75,13 @@ export class Service extends KubeObject {
 
   getSelector(): string[] {
     if (!this.spec.selector) return [];
+
     return Object.entries(this.spec.selector).map(val => val.join("="));
   }
 
   getPorts(): ServicePort[] {
     const ports = this.spec.ports || [];
+
     return ports.map(p => new ServicePort(p));
   }
 

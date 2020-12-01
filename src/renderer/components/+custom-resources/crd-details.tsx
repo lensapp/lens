@@ -22,10 +22,12 @@ interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 export class CRDDetails extends React.Component<Props> {
   render() {
     const { object: crd } = this.props;
+
     if (!crd) return null;
     const { plural, singular, kind, listKind } = crd.getNames();
     const printerColumns = crd.getPrinterColumns();
     const validation = crd.getValidation();
+
     return (
       <div className="CRDDetails">
         <KubeObjectMeta object={crd}/>
@@ -60,6 +62,7 @@ export class CRDDetails extends React.Component<Props> {
           {
             crd.getConditions().map(condition => {
               const { type, message, lastTransitionTime, status } = condition;
+
               return (
                 <Badge
                   key={type}
@@ -103,6 +106,7 @@ export class CRDDetails extends React.Component<Props> {
             {
               printerColumns.map((column, index) => {
                 const { name, type, jsonPath } = column;
+
                 return (
                   <TableRow key={index}>
                     <TableCell className="name">{name}</TableCell>

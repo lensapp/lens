@@ -9,10 +9,12 @@ jest.mock("net", () => {
       return new class MockServer extends EventEmitter {
         listen = jest.fn(() => {
           this.emit("listening");
+
           return this;
         });
         address = () => {
           newPort = Math.round(Math.random() * 10000);
+
           return {
             port: newPort
           };

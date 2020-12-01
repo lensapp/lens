@@ -35,6 +35,7 @@ export class ThemeStore {
 
   @computed get activeTheme(): Theme {
     const activeTheme = this.themes.find(theme => theme.id === this.activeThemeId) || this.themes[0];
+
     return {
       colors: {},
       ...activeTheme,
@@ -75,9 +76,11 @@ export class ThemeStore {
         `./themes/${themeId}.json`
       );
       const existingTheme = this.getThemeById(themeId);
+
       if (existingTheme) {
         Object.assign(existingTheme, theme); // merge
       }
+
       return existingTheme;
     } catch (err) {
       throw new Error(`Can't load theme "${themeId}": ${err}`);
@@ -93,9 +96,11 @@ export class ThemeStore {
     const cssVars = Object.entries(theme.colors).map(([cssName, color]) => {
       return `--${cssName}: ${color};`;
     });
+
     this.styles.textContent = `:root {\n${cssVars.join("\n")}}`;
     // Adding universal theme flag which can be used in component styles
     const body = document.querySelector("body");
+
     body.classList.toggle("theme-light", theme.type === ThemeType.LIGHT);
   }
 }

@@ -66,12 +66,14 @@ export class PodLogs extends React.Component<Props> {
   @autobind()
   toOverlay() {
     const { activeOverlayLine } = searchStore;
+
     if (!this.logListElement.current || activeOverlayLine === undefined) return;
     // Scroll vertically
     this.logListElement.current.scrollToItem(activeOverlayLine, "center");
     // Scroll horizontally in timeout since virtual list need some time to prepare its contents
     setTimeout(() => {
       const overlay = document.querySelector(".PodLogs .list span.active");
+
       if (!overlay) return;
       overlay.scrollIntoViewIfNeeded();
     }, 100);
@@ -87,9 +89,11 @@ export class PodLogs extends React.Component<Props> {
     const logs = podLogsStore.logs.get(this.tabId);
     const { getData, removeTimestamps } = podLogsStore;
     const { showTimestamps } = getData(this.tabId);
+
     if (!showTimestamps) {
       return logs.map(item => removeTimestamps(item));
     }
+
     return logs;
   }
 
@@ -107,6 +111,7 @@ export class PodLogs extends React.Component<Props> {
         toNextOverlay={this.toOverlay}
       />
     );
+
     return (
       <div className="PodLogs flex column">
         <InfoPanel

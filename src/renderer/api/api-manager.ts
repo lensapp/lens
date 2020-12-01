@@ -25,6 +25,7 @@ export class ApiManager {
 
   protected resolveApi(api: string | KubeApi): KubeApi {
     if (typeof api === "string") return this.getApi(api);
+
     return api;
   }
 
@@ -33,6 +34,7 @@ export class ApiManager {
     else {
       const apis = Array.from(this.apis.entries());
       const entry = apis.find(entry => entry[1] === api);
+
       if (entry) this.unregisterApi(entry[0]);
     }
   }

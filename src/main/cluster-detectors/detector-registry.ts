@@ -17,12 +17,16 @@ export class DetectorRegistry {
 
   async detectForCluster(cluster: Cluster): Promise<ClusterMetadata> {
     const results: {[key: string]: ClusterDetectionResult } = {};
+
     for (const detectorClass of this.registry) {
       const detector = new detectorClass(cluster);
+
       try {
         const data = await detector.detect();
+
         if (!data) continue;
         const existingValue = results[detector.key];
+
         if (existingValue && existingValue.accuracy > data.accuracy) continue; // previous value exists and is more accurate
         results[detector.key] = data;
       } catch (e) {
@@ -30,9 +34,11 @@ export class DetectorRegistry {
       }
     }
     const metadata: ClusterMetadata = {};
+
     for (const [key, result] of Object.entries(results)) {
       metadata[key] = result.value;
     }
+
     return metadata;
   }
 }

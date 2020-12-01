@@ -17,14 +17,15 @@ export async function generateTrayIcon(
   outputFilename += shouldUseDarkColors ? "_dark" : "";
   dpiSuffix = dpiSuffix !== "1x" ? `@${dpiSuffix}` : "";
   const pngIconDestPath = path.resolve(outputFolder, `${outputFilename}${dpiSuffix}.png`);
+
   try {
     // Modify .SVG colors
     const trayIconColor = shouldUseDarkColors ? "white" : "black";
     const svgDom = await jsdom.JSDOM.fromFile(svgIconPath);
     const svgRoot = svgDom.window.document.body.getElementsByTagName("svg")[0];
+
     svgRoot.innerHTML += `<style>* {fill: ${trayIconColor} !important;}</style>`;
     const svgIconBuffer = Buffer.from(svgRoot.outerHTML);
-
     // Resize and convert to .PNG
     const pngIconBuffer: Buffer = await sharp(svgIconBuffer)
       .resize({ width: pixelSize, height: pixelSize })
@@ -45,6 +46,7 @@ const iconSizes: Record<string, number> = {
   "2x": 32,
   "3x": 48,
 };
+
 Object.entries(iconSizes).forEach(([dpiSuffix, pixelSize]) => {
   generateTrayIcon({ dpiSuffix, pixelSize, shouldUseDarkColors: false });
   generateTrayIcon({ dpiSuffix, pixelSize, shouldUseDarkColors: true });

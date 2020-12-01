@@ -102,6 +102,7 @@ export class StatefulSet extends WorkloadKubeObject {
 
   getImages() {
     const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
+
     return [...containers].map(container => container.image);
   }
 }

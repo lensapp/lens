@@ -21,6 +21,7 @@ export class Workspaces extends React.Component {
 
   @computed get workspaces(): Workspace[] {
     const currentWorkspaces: Map<WorkspaceId, Workspace> = new Map();
+
     workspaceStore.enabledWorkspacesList.forEach((w) => {
       currentWorkspaces.set(w.id, w);
     });
@@ -28,6 +29,7 @@ export class Workspaces extends React.Component {
       ...currentWorkspaces,
       ...this.editingWorkspaces,
     ]);
+
     return Array.from(allWorkspaces.values());
   }
 
@@ -47,11 +49,14 @@ export class Workspaces extends React.Component {
 
   saveWorkspace = (id: WorkspaceId) => {
     const workspace = new Workspace(this.editingWorkspaces.get(id));
+
     if (workspaceStore.getById(id)) {
       workspaceStore.updateWorkspace(workspace);
       this.clearEditing(id);
+
       return;
     }
+
     if (workspaceStore.addWorkspace(workspace)) {
       this.clearEditing(id);
     }
@@ -59,6 +64,7 @@ export class Workspaces extends React.Component {
 
   addWorkspace = () => {
     const workspaceId = uuid();
+
     this.editingWorkspaces.set(workspaceId, new Workspace({
       id: workspaceId,
       name: "",
@@ -68,11 +74,13 @@ export class Workspaces extends React.Component {
 
   editWorkspace = (id: WorkspaceId) => {
     const workspace = workspaceStore.getById(id);
+
     this.editingWorkspaces.set(id, toJS(workspace));
   };
 
   activateWorkspace = (id: WorkspaceId) => {
     const clusterId = workspaceStore.getById(id).lastActiveClusterId;
+
     workspaceStore.setActive(id);
     clusterStore.setActive(clusterId);
   };
@@ -83,6 +91,7 @@ export class Workspaces extends React.Component {
 
   removeWorkspace = (id: WorkspaceId) => {
     const workspace = workspaceStore.getById(id);
+
     ConfirmDialog.open({
       okButtonProps: {
         label: _i18n._(t`Remove Workspace`),
@@ -137,6 +146,7 @@ export class Workspaces extends React.Component {
               message: () => `Workspace '${name}' already exists`,
               validate: value => !workspaceStore.getByName(value.trim())
             };
+
             return (
               <div key={workspaceId} className={cssNames(className)}>
                 {!isEditing && (

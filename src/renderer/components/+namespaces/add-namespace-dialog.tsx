@@ -38,6 +38,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
   addNamespace = async () => {
     const { namespace } = this;
     const { onSuccess, onError } = this.props;
+
     try {
       await namespaceStore.create({ name: namespace }).then(onSuccess);
       this.close();
@@ -51,6 +52,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
     const { ...dialogProps } = this.props;
     const { namespace } = this;
     const header = <h5><Trans>Create Namespace</Trans></h5>;
+
     return (
       <Dialog
         {...dialogProps}

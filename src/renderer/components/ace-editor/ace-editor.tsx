@@ -92,6 +92,7 @@ export class AceEditor extends React.Component<Props, State> {
   componentDidUpdate() {
     if (!this.editor) return;
     const { value, cursorPos } = this.props;
+
     if (value !== this.getValue()) {
       this.editor.setValue(value);
       this.editor.clearSelection();
@@ -136,6 +137,7 @@ export class AceEditor extends React.Component<Props, State> {
   setCursorPos(pos: Ace.Point) {
     if (!pos) return;
     const { row, column } = pos;
+
     this.editor.moveCursorToPosition(pos);
     requestAnimationFrame(() => {
       this.editor.gotoLine(row + 1, column, false);
@@ -145,6 +147,7 @@ export class AceEditor extends React.Component<Props, State> {
   @autobind()
   onCursorPosChange() {
     const { onCursorPosChange } = this.props;
+
     if (onCursorPosChange) {
       onCursorPosChange(this.editor.getCursorPosition());
     }
@@ -153,6 +156,7 @@ export class AceEditor extends React.Component<Props, State> {
   @autobind()
   onChange(delta: Ace.Delta) {
     const { onChange } = this.props;
+
     if (onChange) {
       onChange(this.getValue(), delta);
     }
@@ -160,6 +164,7 @@ export class AceEditor extends React.Component<Props, State> {
 
   render() {
     const { className, hidden } = this.props;
+
     return (
       <div className={cssNames("AceEditor", className, { hidden })}>
         <div className="editor" ref={e => this.elem = e}/>

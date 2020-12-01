@@ -14,6 +14,7 @@ export const ClusterMetricSwitchers = observer(() => {
   const metricsValues = getMetricsValues(metrics);
   const disableRoles = !masterNodes.length || !workerNodes.length;
   const disableMetrics = !metricsValues.length;
+
   return (
     <div className="ClusterMetricSwitchers flex gaps">
       <div className="box grow">

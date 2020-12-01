@@ -17,6 +17,7 @@ export class DockTabStore<T = any> {
     // auto-save to local-storage
     if (storageName) {
       const storage = createStorage<[TabId, T][]>(storageName, []);
+
       this.data.replace(storage.get());
       reaction(() => this.serializeData(), (data: T | any) => storage.set(data));
     }
@@ -24,6 +25,7 @@ export class DockTabStore<T = any> {
     // clear data for closed tabs
     autorun(() => {
       const currentTabs = dockStore.tabs.map(tab => tab.id);
+
       Array.from(this.data.keys()).forEach(tabId => {
         if (!currentTabs.includes(tabId)) {
           this.clearData(tabId);
@@ -34,8 +36,10 @@ export class DockTabStore<T = any> {
 
   protected serializeData() {
     const { storageSerializer } = this.options;
+
     return Array.from(this.data).map(([tabId, tabData]) => {
       if (storageSerializer) return [tabId, storageSerializer(tabData)];
+
       return [tabId, tabData];
     });
   }

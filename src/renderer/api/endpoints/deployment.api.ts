@@ -171,10 +171,13 @@ export class Deployment extends WorkloadKubeObject {
 
   getConditions(activeOnly = false) {
     const { conditions } = this.status;
+
     if (!conditions) return [];
+
     if (activeOnly) {
       return conditions.filter(c => c.status === "True");
     }
+
     return conditions;
   }
 

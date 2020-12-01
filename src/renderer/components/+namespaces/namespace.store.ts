@@ -15,6 +15,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   get initNamespaces() {
     const fromUrl = navigation.searchParams.getAsArray("namespaces");
+
     return fromUrl.length ? fromUrl : this.storage.get();
   }
 
@@ -23,6 +24,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
     // restore context namespaces
     const { initNamespaces: namespaces } = this;
+
     this.setContext(namespaces);
     this.updateUrl(namespaces);
 
@@ -46,8 +48,10 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   protected async loadItems(namespaces?: string[]) {
     if (!isAllowedResource("namespaces")) {
       if (namespaces) return namespaces.map(this.getDummyNamespace);
+
       return [];
     }
+
     if (namespaces) {
       return Promise.all(namespaces.map(name => this.api.get({ name })));
     } else {
@@ -74,6 +78,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   hasContext(namespace: string | string[]) {
     const context = Array.isArray(namespace) ? namespace : [namespace];
+
     return context.every(namespace => this.contextNs.includes(namespace));
   }
 

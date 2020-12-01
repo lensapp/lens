@@ -25,6 +25,7 @@ export interface InstalledExtension {
   }
 
 const logModule = "[EXTENSION-DISCOVERY]";
+
 export const manifestFilename = "package.json";
 
 /**
@@ -133,7 +134,6 @@ export class ExtensionDiscovery {
     if (path.basename(filePath) === manifestFilename) {
       try {
         const absPath = path.dirname(filePath);
-
         // this.loadExtensionFromPath updates this.packagesJson
         const extension = await this.loadExtensionFromPath(absPath);
 
@@ -251,6 +251,7 @@ export class ExtensionDiscovery {
 
       manifestJson = __non_webpack_require__(manifestPath);
       const installedManifestPath = path.join(this.nodeModulesPath, manifestJson.name, "package.json");
+
       this.packagesJson.dependencies[manifestJson.name] = path.dirname(manifestPath);
       const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
 
@@ -272,6 +273,7 @@ export class ExtensionDiscovery {
   async loadExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
     const bundledExtensions = await this.loadBundledExtensions();
     const localExtensions = await this.loadFromFolder(this.localFolderPath);
+
     await this.installPackages();
     const extensions = bundledExtensions.concat(localExtensions);
 
@@ -333,12 +335,14 @@ export class ExtensionDiscovery {
       }
 
       const extension = await this.loadExtensionFromPath(absPath);
+
       if (extension) {
         extensions.push(extension);
       }
     }
 
     logger.debug(`${logModule}: ${extensions.length} extensions loaded`, { folderPath, extensions });
+
     return extensions;
   }
 

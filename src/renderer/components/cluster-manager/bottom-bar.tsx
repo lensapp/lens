@@ -11,6 +11,7 @@ import { statusBarRegistry } from "../../../extensions/registries";
 export class BottomBar extends React.Component {
   render() {
     const { currentWorkspace } = workspaceStore;
+
     return (
       <div className="BottomBar flex gaps">
         <div id="current-workspace" className="flex gaps align-center">
@@ -23,6 +24,7 @@ export class BottomBar extends React.Component {
         <div className="extensions box grow flex gaps justify-flex-end">
           {statusBarRegistry.getItems().map(({ item }, index) => {
             if (!item) return;
+
             return <div className="flex align-center gaps item" key={index}>{item}</div>;
           })}
         </div>

@@ -58,6 +58,7 @@ export class VirtualList extends Component<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     const { items, rowHeights } = this.props;
+
     if (prevProps.items.length !== items.length || !isEqual(prevProps.rowHeights, rowHeights)) {
       this.listRef.current.resetAfterIndex(0, false);
     }
@@ -65,8 +66,10 @@ export class VirtualList extends Component<Props, State> {
 
   setListHeight = throttle(() => {
     const { parentRef, state: { height } } = this;
+
     if (!parentRef.current) return;
     const parentHeight = parentRef.current.clientHeight;
+
     if (parentHeight === height) return;
     this.setState({
       height: parentHeight,
@@ -79,6 +82,7 @@ export class VirtualList extends Component<Props, State> {
     if (!this.props.selectedItemId) return;
     const { items, selectedItemId } = this.props;
     const index = items.findIndex(item => item.getId() == selectedItemId);
+
     if (index === -1) return;
     this.listRef.current.scrollToItem(index, "start");
   });
@@ -94,6 +98,7 @@ export class VirtualList extends Component<Props, State> {
       items,
       getRow
     };
+
     return (
       <div className={cssNames("VirtualList", className)} ref={this.parentRef}>
         <VariableSizeList
@@ -130,7 +135,9 @@ const Row = observer((props: RowProps) => {
   const item = items[index];
   const uid = typeof item == "string" ? index : items[index].getId();
   const row = getRow(uid);
+
   if (!row) return null;
+
   return React.cloneElement(row, {
     style: Object.assign({}, row.props.style, style)
   });

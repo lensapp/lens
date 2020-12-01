@@ -38,6 +38,7 @@ export class DeploymentDetails extends React.Component<Props> {
     if (!podsStore.isLoaded) {
       podsStore.loadAll();
     }
+
     if (!replicaSetStore.isLoaded) {
       replicaSetStore.loadAll();
     }
@@ -49,6 +50,7 @@ export class DeploymentDetails extends React.Component<Props> {
 
   render() {
     const { object: deployment } = this.props;
+
     if (!deployment) return null;
     const { status, spec } = deployment;
     const nodeSelector = deployment.getNodeSelectors();
@@ -56,6 +58,7 @@ export class DeploymentDetails extends React.Component<Props> {
     const childPods = deploymentStore.getChildPods(deployment);
     const replicaSets = replicaSetStore.getReplicaSetsByOwner(deployment);
     const metrics = deploymentStore.metrics;
+
     return (
       <div className="DeploymentDetails">
         {podsStore.isLoaded && (
@@ -95,6 +98,7 @@ export class DeploymentDetails extends React.Component<Props> {
           {
             deployment.getConditions().map(condition => {
               const { type, message, lastTransitionTime, status } = condition;
+
               return (
                 <Badge
                   key={type}

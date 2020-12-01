@@ -41,24 +41,31 @@ export class PodLogList extends React.Component<Props> {
 
   componentDidUpdate(prevProps: Props) {
     const { logs, id } = this.props;
+
     if (id != prevProps.id) {
       this.isLastLineVisible = true;
+
       return;
     }
     if (logs == prevProps.logs || !this.virtualListDiv.current) return;
     const newLogsLoaded = prevProps.logs.length < logs.length;
     const scrolledToBeginning = this.virtualListDiv.current.scrollTop === 0;
     const fewLogsLoaded = logs.length < logRange;
+
     if (this.isLastLineVisible) {
       this.scrollToBottom(); // Scroll down to keep user watching/reading experience
+
       return;
     }
+
     if (scrolledToBeginning && newLogsLoaded) {
       this.virtualListDiv.current.scrollTop = (logs.length - prevProps.logs.length) * this.lineHeight;
     }
+
     if (fewLogsLoaded) {
       this.isJumpButtonVisible = false;
     }
+
     if (!logs.length) {
       this.isLastLineVisible = false;
     }
@@ -73,6 +80,7 @@ export class PodLogList extends React.Component<Props> {
     const offset = 100 * this.lineHeight;
     const { scrollHeight } = this.virtualListDiv.current;
     const { scrollOffset } = props;
+
     if (scrollHeight - scrollOffset < offset) {
       this.isJumpButtonVisible = false;
     } else {
@@ -88,6 +96,7 @@ export class PodLogList extends React.Component<Props> {
   setLastLineVisibility = (props: ListOnScrollProps) => {
     const { scrollHeight, clientHeight } = this.virtualListDiv.current;
     const { scrollOffset, scrollDirection } = props;
+
     if (scrollDirection == "backward") {
       this.isLastLineVisible = false;
     } else {
@@ -103,6 +112,7 @@ export class PodLogList extends React.Component<Props> {
    */
   checkLoadIntent = (props: ListOnScrollProps) => {
     const { scrollOffset } = props;
+
     if (scrollOffset === 0) {
       this.props.load();
     }
@@ -136,6 +146,7 @@ export class PodLogList extends React.Component<Props> {
     const item = this.props.logs[rowIndex];
     const contents: React.ReactElement[] = [];
     const ansiToHtml = (ansi: string) => DOMPurify.sanitize(colorConverter.ansi_to_html(ansi));
+
     if (searchQuery) { // If search is enabled, replace keyword with backgrounded <span>
       // Case-insensitive search (lowercasing query and keywords in line)
       const regex = new RegExp(searchStore.escapeRegex(searchQuery), "gi");
@@ -143,6 +154,7 @@ export class PodLogList extends React.Component<Props> {
       const modified = item.replace(regex, match => match.toLowerCase());
       // Splitting text line by keyword
       const pieces = modified.split(searchQuery.toLowerCase());
+
       pieces.forEach((piece, index) => {
         const active = isActiveOverlay(rowIndex, index);
         const lastItem = index === pieces.length - 1;
@@ -153,6 +165,7 @@ export class PodLogList extends React.Component<Props> {
             dangerouslySetInnerHTML={{ __html: ansiToHtml(overlayValue) }}
           />
           : null;
+
         contents.push(
           <React.Fragment key={piece + index}>
             <span dangerouslySetInnerHTML={{ __html: ansiToHtml(piece) }} />
@@ -161,6 +174,7 @@ export class PodLogList extends React.Component<Props> {
         );
       });
     }
+
     return (
       <div className={cssNames("LogRow")}>
         {contents.length > 1 ? contents : (
@@ -174,9 +188,11 @@ export class PodLogList extends React.Component<Props> {
     const { logs, isLoading } = this.props;
     const isInitLoading = isLoading && !logs.length;
     const rowHeights = new Array(logs.length).fill(this.lineHeight);
+
     if (isInitLoading) {
       return <Spinner center/>;
     }
+
     if (!logs.length) {
       return (
         <div className="PodLogList flex box grow align-center justify-center">
@@ -184,6 +200,7 @@ export class PodLogList extends React.Component<Props> {
         </div>
       );
     }
+
     return (
       <div className={cssNames("PodLogList flex", { isLoading })}>
         <VirtualList

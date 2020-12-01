@@ -37,6 +37,7 @@ export class ExtensionInstaller {
         cwd: extensionPackagesRoot(),
         silent: true
       });
+
       child.on("close", () => {
         resolve();
       });

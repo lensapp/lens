@@ -55,6 +55,7 @@ export class ReleaseDetails extends Component<Props> {
     const { getReleaseSecret } = releaseStore;
     const { release } = this.props;
     const secret = getReleaseSecret(release);
+
     if (this.releaseSecret) {
       if (isEqual(this.releaseSecret.getLabels(), secret.getLabels())) return;
       this.loadDetails();
@@ -64,12 +65,14 @@ export class ReleaseDetails extends Component<Props> {
 
   async loadDetails() {
     const { release } = this.props;
+
     this.details = null;
     this.details = await helmReleasesApi.get(release.getName(), release.getNs());
   }
 
   async loadValues() {
     const { release } = this.props;
+
     this.values = "";
     this.values = await helmReleasesApi.getValues(release.getName(), release.getNs());
   }
@@ -84,7 +87,9 @@ export class ReleaseDetails extends Component<Props> {
       version: release.getVersion(),
       values: this.values
     };
+
     this.saving = true;
+
     try {
       await releaseStore.update(name, namespace, data);
       Notifications.ok(
@@ -98,12 +103,14 @@ export class ReleaseDetails extends Component<Props> {
 
   upgradeVersion = () => {
     const { release, hideDetails } = this.props;
+
     createUpgradeChartTab(release);
     hideDetails();
   };
 
   renderValues() {
     const { values, saving } = this;
+
     return (
       <div className="values">
         <DrawerTitle title={_i18n._(t`Values`)}/>
@@ -127,6 +134,7 @@ export class ReleaseDetails extends Component<Props> {
   renderNotes() {
     if (!this.details.info?.notes) return null;
     const { notes } = this.details.info;
+
     return (
       <div className="notes">
         {notes}
@@ -136,6 +144,7 @@ export class ReleaseDetails extends Component<Props> {
 
   renderResources() {
     const { resources } = this.details;
+
     if (!resources) return null;
     const groups = groupBy(resources, item => item.kind);
     const tables = Object.entries(groups).map(([kind, items]) => {
@@ -156,6 +165,7 @@ export class ReleaseDetails extends Component<Props> {
                 name,
                 namespace,
               })) : "";
+
               return (
                 <TableRow key={item.getId()}>
                   <TableCell className="name">
@@ -170,6 +180,7 @@ export class ReleaseDetails extends Component<Props> {
         </React.Fragment>
       );
     });
+
     return (
       <div className="resources">
         {tables}
@@ -180,10 +191,13 @@ export class ReleaseDetails extends Component<Props> {
   renderContent() {
     const { release } = this.props;
     const { details } = this;
+
     if (!release) return null;
+
     if (!details) {
       return <Spinner center/>;
     }
+
     return (
       <div>
         <DrawerItem name={<Trans>Chart</Trans>} className="chart">
@@ -229,6 +243,7 @@ export class ReleaseDetails extends Component<Props> {
     const { release, hideDetails } = this.props;
     const title = release ? <Trans>Release: {release.getName()}</Trans> : "";
     const toolbar = <HelmReleaseMenu release={release} toolbar hideDetails={hideDetails}/>;
+
     return (
       <Drawer
         className={cssNames("ReleaseDetails", themeStore.activeTheme.type)}

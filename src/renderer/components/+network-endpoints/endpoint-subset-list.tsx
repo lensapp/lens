@@ -21,6 +21,7 @@ export class EndpointSubsetList extends React.Component<Props> {
   getAddressTableRow(ip: string) {
     const { subset } = this.props;
     const address = subset.getAddresses().find(address => address.getId() == ip);
+
     return this.renderAddressTableRow(address);
   }
 
@@ -28,6 +29,7 @@ export class EndpointSubsetList extends React.Component<Props> {
   getNotReadyAddressTableRow(ip: string) {
     const { subset} = this.props;
     const address = subset.getNotReadyAddresses().find(address => address.getId() == ip);
+
     return this.renderAddressTableRow(address);
   }
 
@@ -60,6 +62,7 @@ export class EndpointSubsetList extends React.Component<Props> {
   @autobind()
   renderAddressTableRow(address: EndpointAddress) {
     const { endpoint } = this.props;
+
     return (
       <TableRow
         key={address.getId()}

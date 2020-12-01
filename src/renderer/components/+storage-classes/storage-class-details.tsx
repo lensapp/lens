@@ -20,8 +20,10 @@ interface Props extends KubeObjectDetailsProps<StorageClass> {
 export class StorageClassDetails extends React.Component<Props> {
   render() {
     const { object: storageClass } = this.props;
+
     if (!storageClass) return null;
     const { provisioner, parameters, mountOptions } = storageClass;
+
     return (
       <div className="StorageClassDetails">
         <KubeObjectMeta object={storageClass}/>

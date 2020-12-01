@@ -44,24 +44,31 @@ class MetricsRoute extends LensApi {
   async routeMetrics({ response, cluster, payload, query }: LensApiRequest) {
     const queryParams: IMetricsQuery = Object.fromEntries(query.entries());
     const prometheusMetadata: ClusterPrometheusMetadata = {};
+
     try {
       const [prometheusPath, prometheusProvider] = await Promise.all([
         cluster.contextHandler.getPrometheusPath(),
         cluster.contextHandler.getPrometheusProvider()
       ]);
+
       prometheusMetadata.provider = prometheusProvider?.id;
       prometheusMetadata.autoDetected = !cluster.preferences.prometheusProvider?.type;
+
       if (!prometheusPath) {
         prometheusMetadata.success = false;
         this.respondJson(response, {});
+
         return;
       }
+
       // return data in same structure as query
       if (typeof payload === "string") {
         const [data] = await loadMetrics([payload], cluster, prometheusPath, queryParams);
+
         this.respondJson(response, data);
       } else if (Array.isArray(payload)) {
         const data = await loadMetrics(payload, cluster, prometheusPath, queryParams);
+
         this.respondJson(response, data);
       } else {
         const queries = Object.entries(payload).map(([queryName, queryOpts]) => (
@@ -69,6 +76,7 @@ class MetricsRoute extends LensApi {
         ));
         const result = await loadMetrics(queries, cluster, prometheusPath, queryParams);
         const data = Object.fromEntries(Object.keys(payload).map((metricName, i) => [metricName, result[i]]));
+
         this.respondJson(response, data);
       }
       prometheusMetadata.success = true;

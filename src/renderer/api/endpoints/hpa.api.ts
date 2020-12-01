@@ -80,8 +80,10 @@ export class HorizontalPodAutoscaler extends KubeObject {
 
   getConditions() {
     if (!this.status.conditions) return [];
+
     return this.status.conditions.map(condition => {
       const { message, reason, lastTransitionTime, status } = condition;
+
       return {
         ...condition,
         isReady: status === "True",
@@ -100,6 +102,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
 
   protected getMetricName(metric: IHpaMetric): string {
     const { type, resource, pods, object, external } = metric;
+
     switch (type) {
       case HpaMetricType.Resource:
         return resource.name;
@@ -122,14 +125,17 @@ export class HorizontalPodAutoscaler extends KubeObject {
     const target = metric[metricType];
     let currentValue = "unknown";
     let targetValue = "unknown";
+
     if (current) {
       currentValue = current.currentAverageUtilization || current.currentAverageValue || current.currentValue;
       if (current.currentAverageUtilization) currentValue += "%";
     }
+
     if (target) {
       targetValue = target.targetAverageUtilization || target.targetAverageValue || target.targetValue;
       if (target.targetAverageUtilization) targetValue += "%";
     }
+
     return `${currentValue} / ${targetValue}`;
   }
 }

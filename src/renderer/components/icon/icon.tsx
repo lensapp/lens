@@ -32,6 +32,7 @@ export class Icon extends React.PureComponent<IconProps> {
 
   get isInteractive() {
     const { interactive, onClick, href, link } = this.props;
+
     return interactive ?? !!(onClick || href || link);
   }
 
@@ -40,6 +41,7 @@ export class Icon extends React.PureComponent<IconProps> {
     if (this.props.disabled) {
       return;
     }
+
     if (this.props.onClick) {
       this.props.onClick(evt);
     }
@@ -49,14 +51,17 @@ export class Icon extends React.PureComponent<IconProps> {
   onKeyDown(evt: React.KeyboardEvent<any>) {
     switch (evt.nativeEvent.code) {
       case "Space":
+
       case "Enter": {
         // eslint-disable-next-line react/no-find-dom-node
         const icon = findDOMNode(this) as HTMLElement;
+
         setTimeout(() => icon.click());
         evt.preventDefault();
         break;
       }
     }
+
     if (this.props.onKeyDown) {
       this.props.onKeyDown(evt);
     }
@@ -90,6 +95,7 @@ export class Icon extends React.PureComponent<IconProps> {
     // render as inline svg-icon
     if (svg) {
       const svgIconText = require(`!!raw-loader!./${svg}.svg`).default;
+
       iconContent = <span className="icon" dangerouslySetInnerHTML={{ __html: svgIconText }}/>;
     }
 
@@ -110,9 +116,11 @@ export class Icon extends React.PureComponent<IconProps> {
     if (link) {
       return <NavLink {...iconProps} to={link}/>;
     }
+
     if (href) {
       return <a {...iconProps} href={href}/>;
     }
+
     return <i {...iconProps} />;
   }
 }

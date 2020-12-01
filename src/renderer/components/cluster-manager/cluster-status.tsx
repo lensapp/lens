@@ -39,6 +39,7 @@ export class ClusterStatus extends React.Component<Props> {
         error: res.error,
       });
     });
+
     if (this.cluster.disconnected) {
       await this.activateCluster();
     }
@@ -62,6 +63,7 @@ export class ClusterStatus extends React.Component<Props> {
   renderContent() {
     const { authOutput, cluster, hasErrors } = this;
     const failureReason = cluster.failureReason;
+
     if (!hasErrors || this.isReconnecting) {
       return (
         <>
@@ -75,6 +77,7 @@ export class ClusterStatus extends React.Component<Props> {
         </>
       );
     }
+
     return (
       <>
         <Icon material="cloud_off" className="error"/>

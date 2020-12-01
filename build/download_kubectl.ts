@@ -15,6 +15,7 @@ class KubectlDownloader {
   constructor(clusterVersion: string, platform: string, arch: string, target: string) {
     this.kubectlVersion = clusterVersion;
     const binaryName = platform === "windows" ? "kubectl.exe" : "kubectl";
+
     this.url = `https://storage.googleapis.com/kubernetes-release/release/v${this.kubectlVersion}/bin/${platform}/${arch}/${binaryName}`;
     this.dirname = path.dirname(target);
     this.path = target;
@@ -30,16 +31,20 @@ class KubectlDownloader {
     if (response.headers["etag"]) {
       return response.headers["etag"].replace(/"/g, "");
     }
+
     return "";
   }
 
   public async checkBinary() {
     const exists = await pathExists(this.path);
+
     if (exists) {
       const hash = md5File.sync(this.path);
       const etag = await this.urlEtag();
+
       if(hash == etag) {
         console.log("Kubectl md5sum matches the remote etag");
+
         return true;
       }
 
@@ -52,13 +57,16 @@ class KubectlDownloader {
 
   public async downloadKubectl() {
     const exists = await this.checkBinary();
+
     if(exists) {
       console.log("Already exists and is valid");
+
       return;
     }
     await ensureDir(path.dirname(this.path), 0o755);
 
     const file = fs.createWriteStream(this.path);
+
     console.log(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
     const requestOpts: request.UriOptions & request.CoreOptions = {
       uri: this.url,
@@ -78,6 +86,7 @@ class KubectlDownloader {
       fs.unlink(this.path, () => {});
       throw(error);
     });
+
     return new Promise((resolve, reject) => {
       file.on("close", () => {
         console.log("kubectl binary download closed");
@@ -103,6 +112,7 @@ const downloads = [
 downloads.forEach((dlOpts) => {
   console.log(dlOpts);
   const downloader = new KubectlDownloader(downloadVersion, dlOpts.platform, dlOpts.arch, dlOpts.target);
+
   console.log(`Downloading: ${JSON.stringify(dlOpts)}`);
   downloader.downloadKubectl().then(() => downloader.checkBinary().then(() => console.log("Download complete")));
 });

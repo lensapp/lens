@@ -30,6 +30,7 @@ export class KubeObjectDetails extends React.Component {
 
   @computed get object() {
     const store = apiManager.getStore(this.path);
+
     if (store) {
       return store.getByPath(this.path);
     }
@@ -47,10 +48,13 @@ export class KubeObjectDetails extends React.Component {
   ], async () => {
     this.loadingError = "";
     const { path, object } = this;
+
     if (!object) {
       const store = apiManager.getStore(path);
+
       if (store) {
         this.isLoading = true;
+
         try {
           await store.loadFromPath(path);
         } catch (err) {
@@ -67,16 +71,20 @@ export class KubeObjectDetails extends React.Component {
     const isOpen = !!(object || isLoading || loadingError);
     let title = "";
     let details: JSX.Element[];
+
     if (object) {
       const { kind, getName } = object;
+
       title = `${kind}: ${getName()}`;
       details = kubeObjectDetailRegistry.getItemsForKind(object.kind, object.apiVersion).map((item, index) => {
         return <item.components.Details object={object} key={`object-details-${index}`}/>;
       });
+
       if (isCrdInstance && details.length === 0) {
         details.push(<CrdResourceDetails object={object} />);
       }
     }
+
     return (
       <Drawer
         className="KubeObjectDetails flex column"

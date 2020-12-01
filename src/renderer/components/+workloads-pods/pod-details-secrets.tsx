@@ -18,6 +18,7 @@ export class PodDetailsSecrets extends Component<Props> {
   @disposeOnUnmount
   secretsLoader = autorun(async () => {
     const { pod } = this.props;
+
     this.secrets = await Promise.all(
       pod.getSecrets().map(secretName => secretsApi.get({
         name: secretName,

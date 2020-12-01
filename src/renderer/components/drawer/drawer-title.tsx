@@ -10,6 +10,7 @@ export interface DrawerTitleProps {
 export class DrawerTitle extends React.Component<DrawerTitleProps> {
   render() {
     const { title, children, className } = this.props;
+
     return (
       <div className={cssNames("DrawerTitle", className)}>
         {title || children}

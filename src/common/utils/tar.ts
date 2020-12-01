@@ -26,6 +26,7 @@ export function readFileFromTar<R = Buffer>({ tarPath, filePath, parseJson }: Re
         entry.once("end", () => {
           const data = Buffer.concat(fileChunks);
           const result = parseJson ? JSON.parse(data.toString("utf8")) : data;
+
           resolve(result);
         });
       },
@@ -39,12 +40,14 @@ export function readFileFromTar<R = Buffer>({ tarPath, filePath, parseJson }: Re
 
 export async function listTarEntries(filePath: string): Promise<string[]> {
   const entries: string[] = [];
+
   await tar.list({
     file: filePath,
     onentry: (entry: FileStat) => {
       entries.push(path.normalize(entry.path as any as string));
     },
   });
+
   return entries;
 }
 

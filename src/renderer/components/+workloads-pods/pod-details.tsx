@@ -54,11 +54,13 @@ export class PodDetails extends React.Component<Props> {
   @autobind()
   async loadMetrics() {
     const { object: pod } = this.props;
+
     this.containerMetrics = await podsStore.loadContainerMetrics(pod);
   }
 
   render() {
     const { object: pod } = this.props;
+
     if (!pod) return null;
     const { status, spec } = pod;
     const { conditions, podIP } = status;
@@ -66,6 +68,7 @@ export class PodDetails extends React.Component<Props> {
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
     const metrics = podsStore.metrics;
+
     return (
       <div className="PodDetails">
         <ResourceMetrics
@@ -99,6 +102,7 @@ export class PodDetails extends React.Component<Props> {
           {
             conditions.map(condition => {
               const { type, status, lastTransitionTime } = condition;
+
               return (
                 <Badge
                   key={type}
@@ -142,6 +146,7 @@ export class PodDetails extends React.Component<Props> {
           pod.getContainers().map(container => {
             const { name } = container;
             const metrics = getItemMetrics(toJS(this.containerMetrics), name);
+
             return (
               <PodDetailsContainer
                 key={name}

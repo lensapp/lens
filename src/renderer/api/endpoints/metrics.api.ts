@@ -41,6 +41,7 @@ export const metricsApi = {
     if (!start && !end) {
       const timeNow = Date.now() / 1000;
       const now = moment.unix(timeNow).startOf("minute").unix();  // round date to minutes
+
       start = now - range;
       end = now;
     }
@@ -76,8 +77,10 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
       // fill the gaps
       result.forEach(res => {
         if (!res.values || !res.values.length) return;
+
         while (res.values.length < frames) {
           const timestamp = moment.unix(res.values[0][0]).subtract(1, "minute").unix();
+
           res.values.unshift([timestamp, "0"]);
         }
       });
@@ -101,14 +104,17 @@ export function isMetricsEmpty(metrics: { [key: string]: IMetrics }) {
 export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: string): { [key: string]: IMetrics } {
   if (!metrics) return;
   const itemMetrics = { ...metrics };
+
   for (const metric in metrics) {
     if (!metrics[metric]?.data?.result) {
       continue;
     }
     const results = metrics[metric].data.result;
     const result = results.find(res => Object.values(res.metric)[0] == itemName);
+
     itemMetrics[metric].data.result = result ? [result] : [];
   }
+
   return itemMetrics;
 }
 
@@ -118,11 +124,13 @@ export function getMetricLastPoints(metrics: { [key: string]: IMetrics }) {
   Object.keys(metrics).forEach(metricName => {
     try {
       const metric = metrics[metricName];
+
       if (metric.data.result.length) {
         result[metricName] = +metric.data.result[0].values.slice(-1)[0][1];
       }
     } catch (e) {
     }
+
     return result;
   }, {});
 

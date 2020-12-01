@@ -26,6 +26,7 @@ export class TableCell extends React.Component<TableCellProps> {
     if (this.props.onClick) {
       this.props.onClick(evt);
     }
+
     if (this.isSortable) {
       this.props._sort(this.props.sortBy);
     }
@@ -33,14 +34,17 @@ export class TableCell extends React.Component<TableCellProps> {
 
   get isSortable() {
     const { _sorting, sortBy } = this.props;
+
     return _sorting && sortBy !== undefined;
   }
 
   renderSortIcon() {
     const { sortBy, _sorting } = this.props;
+
     if (!this.isSortable) return;
     const sortActive = _sorting.sortBy === sortBy;
     const sortIconName = (!sortActive || _sorting.orderBy === "desc") ? "arrow_drop_down" : "arrow_drop_up";
+
     return (
       <Icon
         className={cssNames("sortIcon", { enabled: sortActive })}
@@ -52,6 +56,7 @@ export class TableCell extends React.Component<TableCellProps> {
   renderCheckbox() {
     const { checkbox, isChecked } = this.props;
     const showCheckbox = isChecked !== undefined;
+
     if (checkbox && showCheckbox) {
       return <Checkbox value={isChecked} />;
     }
@@ -65,6 +70,7 @@ export class TableCell extends React.Component<TableCellProps> {
       sorting: this.isSortable,
     });
     const content = displayBooleans(displayBoolean, title || children);
+
     return (
       <div {...cellProps} id={className} className={classNames} onClick={this.onClick}>
         {this.renderCheckbox()}

@@ -44,6 +44,7 @@ export class DeploymentScaleDialog extends Component<Props> {
   @computed get scaleMax() {
     const { currentReplicas } = this;
     const defaultMax = 50;
+
     return currentReplicas <= defaultMax
       ? defaultMax * 2
       : currentReplicas * 2;
@@ -51,6 +52,7 @@ export class DeploymentScaleDialog extends Component<Props> {
 
   onOpen = async () => {
     const { deployment } = this;
+
     this.currentReplicas = await deploymentApi.getReplicas({
       namespace: deployment.getNs(),
       name: deployment.getName(),
@@ -70,6 +72,7 @@ export class DeploymentScaleDialog extends Component<Props> {
   scale = async () => {
     const { deployment } = this;
     const { currentReplicas, desiredReplicas, close } = this;
+
     try {
       if (currentReplicas !== desiredReplicas) {
         await deploymentApi.scale({
@@ -94,6 +97,7 @@ export class DeploymentScaleDialog extends Component<Props> {
   renderContents() {
     const { currentReplicas, desiredReplicas, onChange, scaleMax } = this;
     const warning = currentReplicas < 10 && desiredReplicas > 90;
+
     return (
       <>
         <div className="current-scale" data-testid="current-scale">
@@ -137,6 +141,7 @@ export class DeploymentScaleDialog extends Component<Props> {
         <Trans>Scale Deployment <span>{deploymentName}</span></Trans>
       </h5>
     );
+
     return (
       <Dialog
         {...dialogProps}

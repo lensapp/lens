@@ -42,6 +42,7 @@ export class SearchInput extends React.Component<Props> {
   @autobind()
   onGlobalKey(evt: KeyboardEvent) {
     const meta = evt.metaKey || evt.ctrlKey;
+
     if (meta && evt.key === "f") {
       this.inputRef.current.focus();
     }
@@ -54,6 +55,7 @@ export class SearchInput extends React.Component<Props> {
     }
     // clear on escape-key
     const escapeKey = evt.nativeEvent.code === "Escape";
+
     if (escapeKey) {
       this.clear();
       evt.stopPropagation();
@@ -72,9 +74,11 @@ export class SearchInput extends React.Component<Props> {
   render() {
     const { className, compact, onClear, showClearIcon, bindGlobalFocusHotkey, value, ...inputProps } = this.props;
     let rightIcon = <Icon small material="search"/>;
+
     if (showClearIcon && value) {
       rightIcon = <Icon small material="close" onClick={this.clear}/>;
     }
+
     return (
       <Input
         {...inputProps}
