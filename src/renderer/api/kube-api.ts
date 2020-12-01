@@ -2,13 +2,14 @@
 
 import merge from "lodash/merge";
 import { stringify } from "querystring";
-import { IKubeObjectConstructor, KubeObject } from "./kube-object";
-import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
-import { apiKube } from "./index";
-import { kubeWatchApi } from "./kube-watch-api";
-import { apiManager } from "./api-manager";
-import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
 import { apiKubePrefix, isDevelopment, isTestEnv } from "../../common/vars";
+import logger from "../../main/logger";
+import { apiManager } from "./api-manager";
+import { apiKube } from "./index";
+import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";
+import { KubeJsonApi, KubeJsonApiData, KubeJsonApiDataList } from "./kube-json-api";
+import { IKubeObjectConstructor, KubeObject } from "./kube-object";
+import { kubeWatchApi } from "./kube-watch-api";
 
 export interface IKubeApiOptions<T extends KubeObject> {
   /**
@@ -173,13 +174,18 @@ export class KubeApi<T extends KubeObject = any> {
    */
   private async getPreferredVersionPrefixGroup() {
     if (this.options.fallbackApiBases) {
-      return this.getLatestApiPrefixGroup();
-    } else {
-      return {
-        apiPrefix: this.apiPrefix,
-        apiGroup: this.apiGroup
-      };
+      try {
+        return await this.getLatestApiPrefixGroup();
+      } catch (error) {
+        // If valid API wasn't found, log the error and return defaults below
+        logger.error(error);
+      }
     }
+
+    return {
+      apiPrefix: this.apiPrefix,
+      apiGroup: this.apiGroup
+    };
   }
 
   protected async checkPreferredVersion() {
