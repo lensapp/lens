@@ -225,7 +225,7 @@ import { HelpIcon, HelpPage } from "./page"
 import React from "react"
 
 export default class HelpExtension extends LensRendererExtension {
-  clusterPages = [
+  globalPages = [
     {
       id: "help",
       components: {
@@ -379,6 +379,74 @@ The `uninstall()` method is implemented in the example above by utilizing the [`
 
 The `updateStatus()` method is implemented above by using the [`K8sApi`](tbd) as well, this time to get information from the `example-pod` pod, in particular to determine if it is installed, what version is associated with it, and if it can be upgraded. How the status is updated for a specific cluster feature is up to the implementation. 
 
+### `appPreferences`
+
+The Preferences page is a built-in global page. Extensions can add custom preferences to the Preferences page, thus providing a single location for users to configure global options, for Lens and extensions alike. The following example demonstrates adding a custom preference:
+
+``` typescript
+import { LensRendererExtension } from "@k8slens/extensions";
+import { ExamplePreference, ExamplePreferenceHint, ExamplePreferenceInput } from "./src/example-preference";
+import { observable } from "mobx";
+import React from "react";
+
+export default class ExampleRendererExtension extends LensRendererExtension {
+
+  @observable preference: ExamplePreference = { enabled: false };
+
+  appPreferences = [
+    {
+      title: "Example Preferences",
+      components: {
+        Input: () => <ExamplePreferenceInput preference={this.preference}/>,
+        Hint: () => <ExamplePreferenceHint/>
+      }
+    }
+  ];
+}
+```
+
+App preferences are objects matching the `AppPreferenceRegistration` interface. The `title` field specifies the text to show as the heading on the Preferences page. The `components` field specifies two `React.Component` objects defining the interface for the preference. `Input` should specify an interactive input element for your preference and `Hint` should provide descriptive information for the preference, which is shown below the `Input` element. `ExamplePreferenceInput` expects its React props set to an `ExamplePreference` instance, which is how `ExampleRendererExtension` handles the state of the preference input. `ExampleRendererExtension` has the field `preference`, which is provided to `ExamplePreferenceInput` when it is created. In this example `ExamplePreferenceInput`, `ExamplePreferenceHint`, and `ExamplePreference` are defined in `./src/example-preference.tsx`:
+
+``` typescript
+import { Component } from "@k8slens/extensions";
+import { observer } from "mobx-react";
+import React from "react";
+
+export type ExamplePreference  = {
+  enabled: boolean;
+}
+
+@observer
+export class ExamplePreferenceInput extends React.Component<{preference: ExamplePreference}, {}> {
+
+  render() {
+    const { preference } = this.props;
+    return (
+      <Component.Checkbox
+        label="I understand appPreferences"
+        value={preference.enabled}
+        onChange={v => { preference.enabled = v; }}
+      />
+    );
+  }
+}
+
+export class ExamplePreferenceHint extends React.Component {
+  render() {
+    return (
+      <span>This is an example of an appPreference for extensions.</span>
+    );
+  }
+}
+```
+
+`ExamplePreferenceInput` implements a simple checkbox (using Lens' `Component.Checkbox`). It provides `label` as the text to display next to the checkbox and an `onChange` function, which reacts to the checkbox state change. The checkbox's `value` is initially set to `preference.enabled`. `ExamplePreferenceInput` is defined with React props of `ExamplePreference` type, which has a single field, `enabled`. This is used to indicate the state of the preference, and is bound to the checkbox state in `onChange`. `ExamplePreferenceHint` is a simple text span. Note that the input and the hint could comprise of more sophisticated elements, according to the needs of the extension.
+
+Note that the above example introduces decorators `observable` and `observer` from the [`mobx`](https://mobx.js.org/README.html) and [`mobx-react`](https://github.com/mobxjs/mobx-react#mobx-react) packages. `mobx` simplifies state management and without it this example would not visually update the checkbox properly when the user activates it. [Lens uses `mobx` extensively for state management](../working-with-mobx) of its own UI elements and it is recommended that extensions rely on it too. Alternatively, React's state management can be used instead, though `mobx` is typically simpler to use.
+
+Also note that an extension's state data can be managed using an `ExtensionStore` object, which conveniently handles persistence and synchronization. The example above defined an `ExamplePreference` type to hold the extension's state to simplify the code for this guide, but it is recommended to manage your extension's state data using [`ExtensionStore`](../stores#extensionstore) 
+
+
 
 *********************************************************************
 WIP below!
@@ -386,62 +454,36 @@ WIP below!
 
 
 
-
-### `appPreferences`
-
-The Preferences page is essentially a global page. Extensions can add custom preferences to the Preferences page, thus providing a single location for users to configure global, for Lens and extensions alike.
-
-``` typescript
-import React from "react"
-import { LensRendererExtension } from "@k8slens/extensions"
-import { myCustomPreferencesStore } from "./src/my-custom-preferences-store"
-import { MyCustomPreferenceHint, MyCustomPreferenceInput } from "./src/my-custom-preference"
-
-
-export default class ExampleRendererExtension extends LensRendererExtension {
-  appPreferences = [
-    {
-      title: "My Custom Preference",
-      components: {
-        Hint: () => <MyCustomPreferenceHint/>,
-        Input: () => <MyCustomPreferenceInput store={myCustomPreferencesStore}/>
-      }
-    }
-  ];
-}
-```
-
 ### `statusBarItems`
 
-The Status bar is the blue strip along the bottom of the Lens UI. Status bar items are `React.ReactNode` types, which can be used to convey status information, or act as a link to a global page.
+The Status bar is the blue strip along the bottom of the Lens UI. Status bar items are `React.ReactNode` types, which can be used to convey status information, or act as a link to a global page, or even an external page.
 
-The following example adds a status bar item definition, as well as a global page definition, to a `LensRendererExtension` subclass, and configures the status bar item to navigate to the global upon a mouse click:
+The following example adds a status bar item definition, as well as a global page definition, to a `LensRendererExtension` subclass, and configures the status bar item to navigate to the global page upon a mouse click:
 
 ``` typescript
-import { LensRendererExtension, Navigation } from '@k8slens/extensions';
-import { MyStatusBarIcon, MyPage } from './page';
+import { LensRendererExtension } from '@k8slens/extensions';
+import { HelpIcon, HelpPage } from "./page"
 import React from 'react';
 
-export default class ExtensionRenderer extends LensRendererExtension {
+export default class HelpExtension extends LensRendererExtension {
   globalPages = [
     {
-      path: "/my-extension-path",
-      hideInMenu: true,
+      id: "help",
       components: {
-        Page: () => <MyPage extension={this} />,
-      },
-    },
+        Page: () => <HelpPage extension={this}/>,
+      }
+    }
   ];
 
   statusBarItems = [
     {
       item: (
         <div
-          className="flex align-center gaps hover-highlight"
-          onClick={() => Navigation.navigate(this.globalPages[0].path)}
+          className="flex align-center gaps"
+          onClick={() => this.navigate("help")}
         >
-          <MyStatusBarIcon />
-          <span>My Status Bar Item</span>
+          <HelpIcon />
+          My Status Bar Item
         </div>
       ),
     },
