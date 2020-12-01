@@ -113,7 +113,7 @@ export class ExtensionDiscovery {
 
     // chokidar works better than fs.watch
     chokidar.watch(this.localFolderPath, {
-      // Dont watch recursively into subdirectories
+      // For adding and removing symlinks to work, the depth has to be 1.
       depth: 1,
       // Try to wait until the file has been completely copied.
       // The OS might emit an event for added file even it's not completely written to the filesysten.
