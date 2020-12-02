@@ -44,7 +44,7 @@ export function getExtensionPageUrl<P extends object>({ extensionId, pageId = ""
   const extensionBaseUrl = compile(`/extension/:name`)({
     name: sanitizeExtensionName(extensionId), // compile only with extension-id first and define base path
   });
-  const extPageRoutePath = path.join(extensionBaseUrl, pageId); // page-id might contain route :param-s, so don't compile yet
+  const extPageRoutePath = path.posix.join(extensionBaseUrl, pageId);
 
   if (params) {
     return compile(extPageRoutePath)(params); // might throw error when required params not passed

@@ -8,6 +8,7 @@ import * as vars from "./src/common/vars";
 
 export default function (): webpack.Configuration {
   console.info("WEBPACK:main", vars);
+
   return {
     context: __dirname,
     target: "electron-main",
