@@ -1,6 +1,6 @@
 import path from "path";
 import packageInfo from "../../package.json";
-import { dialog, Menu, NativeImage, nativeTheme, Tray } from "electron";
+import { dialog, Menu, NativeImage, Tray } from "electron";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
 import { AppUpdater } from "./app-updater";
@@ -16,14 +16,11 @@ import { exitApp } from "./exit-app";
 // note: instance of Tray should be saved somewhere, otherwise it disappears
 export let tray: Tray;
 
-// refresh icon when MacOS dark/light theme has changed
-nativeTheme?.on("updated", () => tray?.setImage(getTrayIcon()));
-
-export function getTrayIcon(isDark = nativeTheme.shouldUseDarkColors): string {
+export function getTrayIcon(): string {
   return path.resolve(
     __static,
     isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
-    `tray_icon${isDark ? "_dark" : ""}.png`
+    "trayIconTemplate.png"
   );
 }
 
