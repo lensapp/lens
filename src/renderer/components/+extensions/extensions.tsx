@@ -47,7 +47,7 @@ interface ExtensionState {
 
 @observer
 export class Extensions extends React.Component {
-  private supportedFormats = [".tar", ".tgz"];
+  private supportedFormats = ["tar", "tgz"];
 
   private installPathValidator: InputValidator = {
     message: <Trans>Invalid URL or absolute path</Trans>,
@@ -187,15 +187,17 @@ export class Extensions extends React.Component {
     await Promise.all(
       requests
         .filter(req => !req.data && req.filePath)
-        .map(request => {
-          return fse.readFile(request.filePath).then(data => {
+        .map(async request => {
+          try {
+            const data = await fse.readFile(request.filePath);
             request.data = data;
             preloadedRequests.push(request);
-          }).catch(error => {
+            return request;
+          } catch(error) {
             if (showError) {
               Notifications.error(`Error while reading "${request.filePath}": ${String(error)}`);
             }
-          });
+          }
         })
     );
 
@@ -206,7 +208,12 @@ export class Extensions extends React.Component {
     const tarFiles = await listTarEntries(filePath);
 
     // tarball from npm contains single root folder "package/*"
-    const rootFolder = tarFiles[0].split("/")[0];
+    const firstFile = tarFiles[0];
+    if (!firstFile) {
+      throw new Error(`invalid extension bundle,  ${manifestFilename} not found`);
+    }
+
+    const rootFolder = path.normalize(firstFile).split(path.sep)[0];
     const packedInRootFolder = tarFiles.every(entry => entry.startsWith(rootFolder));
     const manifestLocation = packedInRootFolder ? path.join(rootFolder, manifestFilename) : manifestFilename;
 
