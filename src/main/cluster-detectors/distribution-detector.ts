@@ -88,7 +88,7 @@ export class DistributionDetector extends BaseClusterDetector {
   }
 
   protected isKind() {
-    return this.cluster.contextName.startsWith("kind-");
+    return this.cluster.contextName.startsWith("kubernetes-admin@kind-");
   }
 
   protected isCustom() {
