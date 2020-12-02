@@ -36,6 +36,10 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "minikube", accuracy: 80};
     }
 
+    if (this.isMicrok8s()) {
+      return { value: "microk8s", accuracy: 80};
+    }
+
     if (this.isCustom()) {
       return { value: "custom", accuracy: 10};
     }
@@ -73,6 +77,10 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isMinikube() {
     return this.cluster.contextName.startsWith("minikube");
+  }
+
+  protected isMicrok8s() {
+    return this.cluster.contextName.startsWith("microk8s");
   }
 
   protected isCustom() {
