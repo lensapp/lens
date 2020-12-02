@@ -32,6 +32,10 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "digitalocean", accuracy: 90};
     }
 
+    if (this.isMirantis()) {
+      return { value: "mirantis", accuracy: 90};
+    }
+
     if (this.isMinikube()) {
       return { value: "minikube", accuracy: 80};
     }
@@ -69,6 +73,10 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isAKS() {
     return this.cluster.apiUrl.endsWith("azmk8s.io");
+  }
+
+  protected isMirantis() {
+    return this.version.includes("-mirantis-") || this.version.includes("-docker-");
   }
 
   protected isDigitalOcean() {
