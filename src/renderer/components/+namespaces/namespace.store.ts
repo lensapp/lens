@@ -29,7 +29,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     this.updateUrl(namespaces);
 
     // sync with local-storage & url-search-params
-    reaction(() => this.contextNs.toJS(), namespaces => {
+    reaction(() => this.contextNs.toJS(), (namespaces) => {
       this.storage.set(namespaces);
       this.updateUrl(namespaces);
     });

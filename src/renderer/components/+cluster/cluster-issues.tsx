@@ -42,7 +42,7 @@ export class ClusterIssues extends React.Component<Props> {
     const warnings: IWarning[] = [];
 
     // Node bad conditions
-    nodesStore.items.forEach(node => {
+    nodesStore.items.forEach((node) => {
       const { kind, selfLink, getId, getName } = node;
 
       node.getWarningConditions().forEach(({ message }) => {
@@ -59,7 +59,7 @@ export class ClusterIssues extends React.Component<Props> {
     // Warning events for Workloads
     const events = eventStore.getWarnings();
 
-    events.forEach(error => {
+    events.forEach((error) => {
       const { message, involvedObject } = error;
       const { uid, name, kind } = involvedObject;
 

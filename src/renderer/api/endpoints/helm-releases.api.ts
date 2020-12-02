@@ -77,7 +77,7 @@ export const helmReleasesApi = {
   get(name: string, namespace: string) {
     const path = endpoint({ name, namespace });
 
-    return apiBase.get<IReleaseRawDetails>(path).then(details => {
+    return apiBase.get<IReleaseRawDetails>(path).then((details) => {
       const items: KubeObject[] = JSON.parse(details.resources).items;
       const resources = items.map(item => KubeObject.create(item));
 

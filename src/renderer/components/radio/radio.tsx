@@ -24,7 +24,7 @@ export class RadioGroup extends React.Component<RadioGroupProps, {}> {
 
     return (
       <div className={className}>
-        {radios.map(radio => {
+        {radios.map((radio) => {
           return React.cloneElement(radio, {
             name,
             disabled: disabled !== undefined ? disabled : radio.props.disabled,

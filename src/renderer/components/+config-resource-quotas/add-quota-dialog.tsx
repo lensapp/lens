@@ -67,7 +67,7 @@ export class AddQuotaDialog extends React.Component<Props> {
   }
 
   @computed get quotaOptions() {
-    return Object.keys(this.quotas).map(quota => {
+    return Object.keys(this.quotas).map((quota) => {
       const isCompute = quota.endsWith(".cpu") || quota.endsWith(".memory");
       const isStorage = quota.endsWith(".storage") || quota === "persistentvolumeclaims";
       const isCount = quota.startsWith("count/");

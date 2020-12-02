@@ -63,7 +63,7 @@ export class DockStore {
       selectedTabId: this.selectedTabId,
       height: this.height,
       tabs: this.tabs.slice(),
-    }), data => {
+    }), (data) => {
       this.storage.set(data);
     });
 
@@ -126,7 +126,7 @@ export class DockStore {
   protected getNewTabNumber(kind: TabKind) {
     const tabNumbers = this.tabs
       .filter(tab => tab.kind === kind)
-      .map(tab => {
+      .map((tab) => {
         const tabNumber = +tab.title.match(/\d+/);
 
         return tabNumber === 0 ? 1 : tabNumber; // tab without a number is first

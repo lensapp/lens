@@ -30,7 +30,7 @@ export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps>
       },
     ];
 
-    return buttons.map(button => {
+    return buttons.map((button) => {
       if (!button.onClick) {
         return null;
       }

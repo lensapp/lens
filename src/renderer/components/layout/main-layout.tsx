@@ -30,12 +30,12 @@ export class MainLayout extends React.Component<MainLayoutProps> {
 
   @disposeOnUnmount syncPinnedStateWithStorage = reaction(
     () => this.isPinned,
-    (isPinned) => this.storage.merge({ pinnedSidebar: isPinned })
+    isPinned => this.storage.merge({ pinnedSidebar: isPinned })
   );
 
   @disposeOnUnmount syncWidthStateWithStorage = reaction(
     () => this.sidebarWidth,
-    (sidebarWidth) => this.storage.merge({ sidebarWidth })
+    sidebarWidth => this.storage.merge({ sidebarWidth })
   );
 
 

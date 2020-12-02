@@ -66,7 +66,7 @@ kubeObjectDetailRegistry.add({
   kind: "StorageClass",
   apiVersions: ["storage.k8s.io/v1"],
   components: {
-    Details: (props) => <StorageClassDetails {...props} />
+    Details: props => <StorageClassDetails {...props} />
   }
 });
 
@@ -75,6 +75,6 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["storage.k8s.io/v1"],
   priority: 5,
   components: {
-    Details: (props) => <KubeEventDetails {...props} />
+    Details: props => <KubeEventDetails {...props} />
   }
 });

@@ -165,7 +165,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       roles = roles.filter(role => !role.getNs() || role.getNs() === this.bindContext);
     }
 
-    return roles.map(role => {
+    return roles.map((role) => {
       const name = role.getName();
       const namespace = role.getNs();
 
@@ -177,7 +177,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   }
 
   @computed get serviceAccountOptions(): BindingSelectOption[] {
-    return serviceAccountsStore.items.map(account => {
+    return serviceAccountsStore.items.map((account) => {
       const name = account.getName();
       const namespace = account.getNs();
 

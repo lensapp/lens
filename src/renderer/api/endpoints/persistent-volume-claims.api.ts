@@ -53,7 +53,7 @@ export class PersistentVolumeClaim extends KubeObject {
   getPods(allPods: Pod[]): Pod[] {
     const pods = allPods.filter(pod => pod.getNs() === this.getNs());
 
-    return pods.filter(pod => {
+    return pods.filter((pod) => {
       return pod.getVolumes().filter(volume =>
         volume.persistentVolumeClaim &&
         volume.persistentVolumeClaim.claimName === this.getName()

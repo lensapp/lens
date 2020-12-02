@@ -121,7 +121,7 @@ export class NodeDetails extends React.Component<Props> {
         {conditions &&
         <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
           {
-            conditions.map(condition => {
+            conditions.map((condition) => {
               const { type } = condition;
 
               return (
@@ -161,7 +161,7 @@ kubeObjectDetailRegistry.add({
   kind: "Node",
   apiVersions: ["v1"],
   components: {
-    Details: (props) => <NodeDetails {...props} />
+    Details: props => <NodeDetails {...props} />
   }
 });
 
@@ -170,6 +170,6 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["v1"],
   priority: 5,
   components: {
-    Details: (props) => <KubeEventDetails {...props} />
+    Details: props => <KubeEventDetails {...props} />
   }
 });

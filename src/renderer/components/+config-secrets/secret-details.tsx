@@ -124,6 +124,6 @@ kubeObjectDetailRegistry.add({
   kind: "Secret",
   apiVersions: ["v1"],
   components: {
-    Details: (props) => <SecretDetails {...props} />
+    Details: props => <SecretDetails {...props} />
   }
 });

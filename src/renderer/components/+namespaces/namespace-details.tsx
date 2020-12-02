@@ -46,7 +46,7 @@ export class NamespaceDetails extends React.Component<Props> {
 
         <DrawerItem name={<Trans>Resource Quotas</Trans>} className="quotas flex align-center">
           {!this.quotas && resourceQuotaStore.isLoading && <Spinner/>}
-          {this.quotas.map(quota => {
+          {this.quotas.map((quota) => {
             return (
               <Link key={quota.getId()} to={getDetailsUrl(quota.selfLink)}>
                 {quota.getName()}
@@ -63,6 +63,6 @@ kubeObjectDetailRegistry.add({
   kind: "Namespace",
   apiVersions: ["v1"],
   components: {
-    Details: (props) => <NamespaceDetails {...props} />
+    Details: props => <NamespaceDetails {...props} />
   }
 });

@@ -31,7 +31,7 @@ export class PodsStore extends KubeObjectStore<Pod> {
   getPodsByOwner(workload: WorkloadKubeObject): Pod[] {
     if (!workload) return [];
 
-    return this.items.filter(pod => {
+    return this.items.filter((pod) => {
       const owners = pod.getOwnerRefs();
 
       if (!owners.length) return;
@@ -53,7 +53,7 @@ export class PodsStore extends KubeObjectStore<Pod> {
   getPodKubeMetrics(pod: Pod) {
     const containers = pod.getContainers();
     const empty = { cpu: 0, memory: 0 };
-    const metrics = this.kubeMetrics.find(metric => {
+    const metrics = this.kubeMetrics.find((metric) => {
       return [
         metric.getName() === pod.getName(),
         metric.getNs() === pod.getNs()

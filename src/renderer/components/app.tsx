@@ -150,7 +150,7 @@ export class App extends React.Component {
       if (tabRoutes.length > 0) {
         const pageComponent = () => <TabLayout tabs={tabRoutes} />;
 
-        return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
+        return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map(tab => tab.routePath)} />;
       } else {
         const page = clusterPageRegistry.getByPageMenuTarget(menu.target);
 

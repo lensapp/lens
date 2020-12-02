@@ -107,7 +107,7 @@ kubeObjectDetailRegistry.add({
   kind: "PersistentVolume",
   apiVersions: ["v1"],
   components: {
-    Details: (props) => <PersistentVolumeDetails {...props} />
+    Details: props => <PersistentVolumeDetails {...props} />
   }
 });
 
@@ -116,6 +116,6 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["v1"],
   priority: 5,
   components: {
-    Details: (props) => <KubeEventDetails {...props} />
+    Details: props => <KubeEventDetails {...props} />
   }
 });

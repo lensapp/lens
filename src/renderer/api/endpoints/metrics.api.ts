@@ -50,7 +50,7 @@ export const metricsApi = {
       data: query,
       query: {
         start, end, step,
-        "kubernetes_namespace": namespace,
+        kubernetes_namespace: namespace,
       }
     });
   },
@@ -75,7 +75,7 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
   if (result.length) {
     if (frames > 0) {
       // fill the gaps
-      result.forEach(res => {
+      result.forEach((res) => {
         if (!res.values || !res.values.length) return;
 
         while (res.values.length < frames) {
@@ -121,7 +121,7 @@ export function getItemMetrics(metrics: { [key: string]: IMetrics }, itemName: s
 export function getMetricLastPoints(metrics: { [key: string]: IMetrics }) {
   const result: Partial<{ [metric: string]: number }> = {};
 
-  Object.keys(metrics).forEach(metricName => {
+  Object.keys(metrics).forEach((metricName) => {
     try {
       const metric = metrics[metricName];
 

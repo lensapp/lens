@@ -96,7 +96,7 @@ export class DeploymentDetails extends React.Component<Props> {
         </DrawerItem>
         <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
           {
-            deployment.getConditions().map(condition => {
+            deployment.getConditions().map((condition) => {
               const { type, message, lastTransitionTime, status } = condition;
 
               return (

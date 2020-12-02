@@ -70,7 +70,7 @@ export class JobDetails extends React.Component<Props> {
         {ownerRefs.length > 0 &&
         <DrawerItem name={<Trans>Controlled by</Trans>}>
           {
-            ownerRefs.map(ref => {
+            ownerRefs.map((ref) => {
               const { name, kind } = ref;
               const detailsUrl = getDetailsUrl(lookupApiLink(ref, job));
 

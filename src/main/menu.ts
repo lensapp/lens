@@ -46,7 +46,7 @@ export function buildMenu(windowManager: WindowManager) {
 
   function activeClusterOnly(menuItems: MenuItemConstructorOptions[]) {
     if (!windowManager.activeClusterId) {
-      menuItems.forEach(item => {
+      menuItems.forEach((item) => {
         item.enabled = false;
       });
     }

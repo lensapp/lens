@@ -60,7 +60,7 @@ export class CrdResources extends React.Component<Props> {
       [sortBy.age]: (item: KubeObject) => item.metadata.creationTimestamp,
     };
 
-    extraColumns.forEach(column => {
+    extraColumns.forEach((column) => {
       sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.value(item, column.jsonPath.slice(1));
     });
 
@@ -77,7 +77,7 @@ export class CrdResources extends React.Component<Props> {
         renderTableHeader={[
           { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
           isNamespaced && { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          ...extraColumns.map(column => {
+          ...extraColumns.map((column) => {
             const { name } = column;
 
             return {

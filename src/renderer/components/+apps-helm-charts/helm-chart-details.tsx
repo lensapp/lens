@@ -38,12 +38,12 @@ export class HelmChartDetails extends Component<Props> {
     this.selectedChart = null;
     const { chart: { name, repo, version } } = this.props;
 
-    helmChartsApi.get(repo, name, version).then(result => {
+    helmChartsApi.get(repo, name, version).then((result) => {
       this.readme = result.readme;
       this.chartVersions = result.versions;
       this.selectedChart = result.versions[0];
     },
-    error => {
+    (error) => {
       this.error = error;
     });
   });
@@ -79,7 +79,7 @@ export class HelmChartDetails extends Component<Props> {
         <img
           className="intro-logo"
           src={selectedChart.getIcon() || placeholder}
-          onError={(event) => event.currentTarget.src = placeholder}
+          onError={event => event.currentTarget.src = placeholder}
         />
         <div className="intro-contents box grow">
           <div className="description flex align-center justify-space-between">

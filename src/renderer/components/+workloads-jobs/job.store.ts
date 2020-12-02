@@ -23,7 +23,7 @@ export class JobStore extends KubeObjectStore<Job> {
   getStatuses(jobs?: Job[]) {
     const status = { failed: 0, pending: 0, running: 0, succeeded: 0 };
 
-    jobs.forEach(job => {
+    jobs.forEach((job) => {
       const pods = this.getChildPods(job);
 
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {

@@ -81,7 +81,7 @@ export class HorizontalPodAutoscaler extends KubeObject {
   getConditions() {
     if (!this.status.conditions) return [];
 
-    return this.status.conditions.map(condition => {
+    return this.status.conditions.map((condition) => {
       const { message, reason, lastTransitionTime, status } = condition;
 
       return {

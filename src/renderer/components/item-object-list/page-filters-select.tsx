@@ -37,7 +37,7 @@ export class PageFiltersSelect extends React.Component<Props> {
 
       options.push({
         label: <Trans>Namespace</Trans>,
-        options: namespaceStore.items.map(ns => {
+        options: namespaceStore.items.map((ns) => {
           const name = ns.getName();
 
           return {

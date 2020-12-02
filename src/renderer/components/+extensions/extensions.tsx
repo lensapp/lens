@@ -116,7 +116,7 @@ export class Extensions extends React.Component {
   @computed get extensions() {
     const searchText = this.search.toLowerCase();
 
-    return Array.from(extensionLoader.userExtensions.values()).filter(ext => {
+    return Array.from(extensionLoader.userExtensions.values()).filter((ext) => {
       const { name, description } = ext.manifest;
 
       return [
@@ -206,7 +206,7 @@ export class Extensions extends React.Component {
     await Promise.all(
       requests
         .filter(request => !request.data && request.filePath)
-        .map(async request => {
+        .map(async (request) => {
           try {
             const data = await fse.readFile(request.filePath);
 
@@ -270,7 +270,7 @@ export class Extensions extends React.Component {
 
     // validate packages
     await Promise.all(
-      requests.map(async req => {
+      requests.map(async (req) => {
         const tempFile = this.getExtensionPackageTemp(req.fileName);
 
         try {
@@ -313,7 +313,7 @@ export class Extensions extends React.Component {
       const { name, version, description } = install.manifest;
       const extensionFolder = this.getExtensionDestFolder(name);
       const folderExists = await fse.pathExists(extensionFolder);
-  
+
       if (!folderExists) {
         // auto-install extension if not yet exists
         this.unpackExtension(install);
@@ -442,7 +442,7 @@ export class Extensions extends React.Component {
       );
     }
 
-    return extensions.map(extension => {
+    return extensions.map((extension) => {
       const { id, isEnabled, manifest } = extension;
       const { name, description } = manifest;
       const isUninstalling = this.extensionState.get(id)?.state === "uninstalling";
@@ -538,7 +538,7 @@ export class Extensions extends React.Component {
             <SearchInput
               placeholder="Search installed extensions by name or description"
               value={this.search}
-              onChange={(value) => this.search = value}
+              onChange={value => this.search = value}
             />
             {this.renderExtensions()}
           </div>

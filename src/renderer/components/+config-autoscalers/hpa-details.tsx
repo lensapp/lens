@@ -136,7 +136,7 @@ kubeObjectDetailRegistry.add({
   kind: "HorizontalPodAutoscaler",
   apiVersions: ["autoscaling/v1"],
   components: {
-    Details: (props) => <HpaDetails {...props} />
+    Details: props => <HpaDetails {...props} />
   }
 });
 
@@ -145,6 +145,6 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["autoscaling/v1"],
   priority: 5,
   components: {
-    Details: (props) => <KubeEventDetails {...props} />
+    Details: props => <KubeEventDetails {...props} />
   }
 });

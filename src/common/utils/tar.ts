@@ -17,10 +17,10 @@ export function readFileFromTar<R = Buffer>({ tarPath, filePath, parseJson }: Re
       file: tarPath,
       filter: entryPath => path.normalize(entryPath) === filePath,
       onentry(entry: FileStat) {
-        entry.on("data", chunk => {
+        entry.on("data", (chunk) => {
           fileChunks.push(chunk);
         });
-        entry.once("error", err => {
+        entry.once("error", (err) => {
           reject(new Error(`reading file has failed ${entry.path}: ${err}`));
         });
         entry.once("end", () => {

@@ -61,14 +61,14 @@ describe("Extensions", () => {
 
     // Approve confirm dialog
     fireEvent.click(screen.getByText("Yes"));
-    
+
     expect(extensionDiscovery.uninstallExtension).toHaveBeenCalledWith("/absolute/path");
     expect(screen.getByText("Disable").closest("button")).toBeDisabled();
     expect(screen.getByText("Uninstall").closest("button")).toBeDisabled();
   });
 
   it("displays error notification on uninstall error", () => {
-    (extensionDiscovery.uninstallExtension as any).mockImplementationOnce(() => 
+    (extensionDiscovery.uninstallExtension as any).mockImplementationOnce(() =>
       Promise.reject()
     );
     render(<><Extensions /><ConfirmDialog/></>);

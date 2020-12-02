@@ -76,7 +76,7 @@ export class Table extends React.Component<TableProps> {
         const columns = React.Children.toArray(headElem.props.children) as TableCellElem[];
 
         return React.cloneElement(headElem, {
-          children: columns.map(elem => {
+          children: columns.map((elem) => {
             if (elem.props.checkbox) {
               return elem;
             }
@@ -150,7 +150,7 @@ export class Table extends React.Component<TableProps> {
       sortedItems = this.getSorted(sortedItems);
 
       if (rows.length) {
-        rows = sortedItems.map(item => rows.find(row => {
+        rows = sortedItems.map(item => rows.find((row) => {
           return item == row.props.sortItem;
         }));
       }
@@ -166,7 +166,7 @@ export class Table extends React.Component<TableProps> {
       let rowHeights: number[] = Array(items.length).fill(lineHeight + padding * 2);
 
       if (customRowHeights) {
-        rowHeights = sortedItems.map(item => {
+        rowHeights = sortedItems.map((item) => {
           return customRowHeights(item, lineHeight, padding * 2);
         });
       }

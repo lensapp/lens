@@ -65,7 +65,7 @@ export class ReplicaSets extends React.Component<Props> {
             <TableCell className="actions"/>
           </TableHead>
           {
-            replicaSets.map(replica => {
+            replicaSets.map((replica) => {
               return (
                 <TableRow
                   key={replica.getId()}

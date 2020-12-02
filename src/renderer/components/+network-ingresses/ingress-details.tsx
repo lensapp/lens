@@ -52,7 +52,7 @@ export class IngressDetails extends React.Component<Props> {
               {
                 rule.http.paths.map((path, index) => {
                   const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
-                  const backend =`${serviceName}:${servicePort}`;
+                  const backend = `${serviceName}:${servicePort}`;
 
                   return (
                     <TableRow key={index}>
@@ -146,7 +146,7 @@ kubeObjectDetailRegistry.add({
   kind: "Ingress",
   apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
   components: {
-    Details: (props) => <IngressDetails {...props} />
+    Details: props => <IngressDetails {...props} />
   }
 });
 kubeObjectDetailRegistry.add({
@@ -154,6 +154,6 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["networking.k8s.io/v1", "extensions/v1beta1"],
   priority: 5,
   components: {
-    Details: (props) => <KubeEventDetails {...props} />
+    Details: props => <KubeEventDetails {...props} />
   }
 });

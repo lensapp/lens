@@ -8,7 +8,7 @@ export type IClassNameMap = {
 export function cssNames(...args: IClassName[]): string {
   const map: IClassNameMap = {};
 
-  args.forEach(className => {
+  args.forEach((className) => {
     if (typeof className === "string" || Array.isArray(className)) {
       [].concat(className).forEach(name => map[name] = true);
     }

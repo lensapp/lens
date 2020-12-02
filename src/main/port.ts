@@ -16,7 +16,7 @@ export async function getFreePort(): Promise<number> {
       server.close(() => resolve(port));
       logger.debug(`New port found: ${port}`);
     });
-    server.on("error", error => {
+    server.on("error", (error) => {
       logger.error(`Can't resolve new port: "${error}"`);
       reject(error);
     });

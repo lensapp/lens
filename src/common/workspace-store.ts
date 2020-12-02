@@ -183,7 +183,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @computed get enabledWorkspacesList() {
-    return this.workspacesList.filter((w) => w.enabled);
+    return this.workspacesList.filter(w => w.enabled);
   }
 
   pushState() {
@@ -274,7 +274,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
 
     if (workspaces.length) {
       this.workspaces.clear();
-      workspaces.forEach(ws => {
+      workspaces.forEach((ws) => {
         const workspace = new Workspace(ws);
 
         if (!workspace.isManaged) {
@@ -288,7 +288,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   toJSON(): WorkspaceStoreModel {
     return toJS({
       currentWorkspace: this.currentWorkspaceId,
-      workspaces: this.workspacesList.map((w) => w.toJSON()),
+      workspaces: this.workspacesList.map(w => w.toJSON()),
     }, {
       recurseEverything: true
     });

@@ -20,7 +20,7 @@ export default migration({
 
     printLog("Number of clusters to migrate: ", storedClusters.length);
     const migratedClusters = storedClusters
-      .map(cluster => {
+      .map((cluster) => {
         /**
          * migrate kubeconfig
          */

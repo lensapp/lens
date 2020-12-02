@@ -58,7 +58,7 @@ export class Select extends React.Component<SelectProps> {
     const { value, isMulti } = this.props;
 
     if (isMulti) {
-      return this.options.filter(opt => {
+      return this.options.filter((opt) => {
         const values = value ? [].concat(value) : [];
 
         return values.includes(opt) || values.includes(opt.value);
@@ -72,7 +72,7 @@ export class Select extends React.Component<SelectProps> {
     const { autoConvertOptions, options } = this.props;
 
     if (autoConvertOptions && Array.isArray(options)) {
-      return options.map(opt => {
+      return options.map((opt) => {
         return this.isValidOption(opt) ? opt : { value: opt, label: String(opt) };
       });
     }

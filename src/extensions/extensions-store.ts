@@ -46,7 +46,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
     await this.whenLoaded;
 
     // save state on change `extension.isEnabled`
-    reaction(() => this.getState(extensionLoader), extensionsState => {
+    reaction(() => this.getState(extensionLoader), (extensionsState) => {
       this.state.merge(extensionsState);
     });
   }

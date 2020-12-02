@@ -12,7 +12,7 @@ export class TelemetryPreferenceInput extends React.Component<{telemetry: Teleme
       <Component.Checkbox
         label="Allow telemetry & usage tracking"
         value={telemetry.enabled}
-        onChange={v => { telemetry.enabled = v; }}
+        onChange={(v) => { telemetry.enabled = v; }}
       />
     );
   }

@@ -22,7 +22,7 @@ const dummyStatefulSet = {
     serviceName: "dummy",
     replicas: 1,
     selector: {
-      matchLabels: { "label": "label" }
+      matchLabels: { label: "label" }
     },
     template: {
       metadata: {

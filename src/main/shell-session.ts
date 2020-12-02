@@ -183,7 +183,7 @@ export class ShellSession extends EventEmitter {
 
       if (exitCode > 0) {
         this.sendResponse("Terminal will auto-close in 15 seconds ...");
-        timeout = 15*1000;
+        timeout = 15 * 1000;
       }
       setTimeout(() => {
         this.exit();

@@ -25,7 +25,7 @@ export class AppInit extends React.Component<Props> {
       render(<AppInit serviceWaitingList={waitingList}/>, rootElem);
 
       // check again in 1-5 seconds
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         const timeoutDelay = 1000 + Math.random() * 4000;
 
         setTimeout(() => resolve(AppInit.readyStateCheck(rootElem)), timeoutDelay);

@@ -28,7 +28,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
       <>
         <SubTitle title={<Trans>From</Trans>}/>
         {from.map(item =>
-          Object.keys(item).map(key => {
+          Object.keys(item).map((key) => {
             const data = get(item, key);
 
             if (key === "ipBlock") {
@@ -76,7 +76,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
     return (
       <>
         <SubTitle title={<Trans>To</Trans>}/>
-        {to.map(item => {
+        {to.map((item) => {
           const { ipBlock } = item;
 
           if (!ipBlock) return;
@@ -161,7 +161,7 @@ kubeObjectDetailRegistry.add({
   kind: "NetworkPolicy",
   apiVersions: ["networking.k8s.io/v1"],
   components: {
-    Details: (props) => <NetworkPolicyDetails {...props} />
+    Details: props => <NetworkPolicyDetails {...props} />
   }
 });
 
@@ -170,6 +170,6 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["networking.k8s.io/v1"],
   priority: 5,
   components: {
-    Details: (props) => <KubeEventDetails {...props} />
+    Details: props => <KubeEventDetails {...props} />
   }
 });

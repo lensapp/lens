@@ -35,7 +35,7 @@ export class FileInput extends React.Component<Props> {
     let selectedFiles: FileInputSelection[] = fileList.map(file => ({ file }));
 
     if (this.props.readAsText) {
-      const readingFiles: Promise<FileInputSelection>[] = fileList.map(file => {
+      const readingFiles: Promise<FileInputSelection>[] = fileList.map((file) => {
         return new Promise((resolve) => {
           const reader = new FileReader();
 

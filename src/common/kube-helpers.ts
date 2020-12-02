@@ -66,7 +66,7 @@ export function splitConfig(kubeConfig: KubeConfig): KubeConfig[] {
   if (!kubeConfig.contexts) {
     return configs;
   }
-  kubeConfig.contexts.forEach(ctx => {
+  kubeConfig.contexts.forEach((ctx) => {
     const kc = new KubeConfig();
 
     kc.clusters = [kubeConfig.getCluster(ctx.cluster)].filter(n => n);
@@ -82,22 +82,22 @@ export function splitConfig(kubeConfig: KubeConfig): KubeConfig[] {
 
 export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
   const config = {
-    apiVersion: "v1",
-    kind: "Config",
-    preferences: {},
+    "apiVersion": "v1",
+    "kind": "Config",
+    "preferences": {},
     "current-context": kubeConfig.currentContext,
-    clusters: kubeConfig.clusters.map(cluster => {
+    "clusters": kubeConfig.clusters.map((cluster) => {
       return {
         name: cluster.name,
         cluster: {
           "certificate-authority-data": cluster.caData,
           "certificate-authority": cluster.caFile,
-          server: cluster.server,
+          "server": cluster.server,
           "insecure-skip-tls-verify": cluster.skipTLSVerify
         }
       };
     }),
-    contexts: kubeConfig.contexts.map(context => {
+    "contexts": kubeConfig.contexts.map((context) => {
       return {
         name: context.name,
         context: {
@@ -107,7 +107,7 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
         }
       };
     }),
-    users: kubeConfig.users.map(user => {
+    "users": kubeConfig.users.map((user) => {
       return {
         name: user.name,
         user: {
@@ -116,10 +116,10 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
           "client-key-data": user.keyData,
           "client-key": user.keyFile,
           "auth-provider": user.authProvider,
-          exec: user.exec,
-          token: user.token,
-          username: user.username,
-          password: user.password
+          "exec": user.exec,
+          "token": user.token,
+          "username": user.username,
+          "password": user.password
         }
       };
     })
@@ -133,7 +133,7 @@ export function dumpConfigYaml(kubeConfig: Partial<KubeConfig>): string {
 
 export function podHasIssues(pod: V1Pod) {
   // Logic adapted from dashboard
-  const notReady = !!pod.status.conditions.find(condition => {
+  const notReady = !!pod.status.conditions.find((condition) => {
     return condition.type == "Ready" && condition.status !== "True";
   });
 
@@ -152,8 +152,8 @@ export function getNodeWarningConditions(node: V1Node) {
 
 /**
  * Validates kubeconfig supplied in the add clusters screen. At present this will just validate
- * the User struct, specifically the command passed to the exec substructure. 
- */ 
+ * the User struct, specifically the command passed to the exec substructure.
+ */
 export function validateKubeConfig (config: KubeConfig) {
   // we only receive a single context, cluster & user object here so lets validate them as this
   // will be called when we add a new cluster to Lens
@@ -161,7 +161,7 @@ export function validateKubeConfig (config: KubeConfig) {
 
   // Validate the User Object
   const user = config.getCurrentUser();
-  
+
   if (user.exec) {
     const execCommand = user.exec["command"];
     // check if the command is absolute or not

@@ -47,7 +47,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
 
       if (release) return release.getRevision(); // watch changes only by revision
     },
-    release => {
+    (release) => {
       const releaseTab = this.getTabByRelease(releaseName);
 
       if (!releaseStore.isLoaded || !releaseTab) {

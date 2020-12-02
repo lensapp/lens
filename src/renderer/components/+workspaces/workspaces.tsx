@@ -179,7 +179,7 @@ export class Workspaces extends React.Component {
                       placeholder={_i18n._(t`Name`)}
                       value={editingWorkspace.name}
                       onChange={v => editingWorkspace.name = v}
-                      onKeyPress={(e) => this.onInputKeypress(e, workspaceId)}
+                      onKeyPress={e => this.onInputKeypress(e, workspaceId)}
                       validators={[isRequired, existenceValidator]}
                       autoFocus
                     />
@@ -188,7 +188,7 @@ export class Workspaces extends React.Component {
                       placeholder={_i18n._(t`Description`)}
                       value={editingWorkspace.description}
                       onChange={v => editingWorkspace.description = v}
-                      onKeyPress={(e) => this.onInputKeypress(e, workspaceId)}
+                      onKeyPress={e => this.onInputKeypress(e, workspaceId)}
                     />
                     <Icon
                       material="save"

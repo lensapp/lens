@@ -22,7 +22,7 @@ export class BaseRegistry<T> {
 
   @action
   remove(...items: T[]) {
-    items.forEach(item => {
+    items.forEach((item) => {
       this.items.remove(item); // works because of {deep: false};
     });
   }

@@ -1,9 +1,9 @@
 import { Application } from "spectron";
 
 const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
-  "win32": "./dist/win-unpacked/Lens.exe",
-  "linux": "./dist/linux-unpacked/kontena-lens",
-  "darwin": "./dist/mac/Lens.app/Contents/MacOS/Lens",
+  win32: "./dist/win-unpacked/Lens.exe",
+  linux: "./dist/linux-unpacked/kontena-lens",
+  darwin: "./dist/mac/Lens.app/Contents/MacOS/Lens",
 };
 
 export function itIf(condition: boolean) {

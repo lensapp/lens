@@ -54,7 +54,7 @@ export class KubeObjectStatusIcon extends React.Component<Props> {
   }
 
   renderStatuses(statuses: KubeObjectStatus[], level: number) {
-    const filteredStatuses = statuses.filter((item) => item.level == level);
+    const filteredStatuses = statuses.filter(item => item.level == level);
 
     return filteredStatuses.length > 0 && (
       <div className={cssNames("level", this.statusClassName(level))}>

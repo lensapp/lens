@@ -36,7 +36,7 @@ export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
           <span><Trans>Events</Trans></span>
         </DrawerTitle>
         <div className="KubeEventDetails">
-          {events.map(evt => {
+          {events.map((evt) => {
             const { message, count, lastTimestamp, involvedObject } = evt;
 
             return (

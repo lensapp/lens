@@ -25,7 +25,7 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
   getStatuses(deployments?: Deployment[]) {
     const status = { failed: 0, pending: 0, running: 0 };
 
-    deployments.forEach(deployment => {
+    deployments.forEach((deployment) => {
       const pods = this.getChildPods(deployment);
 
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {

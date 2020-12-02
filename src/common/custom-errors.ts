@@ -6,7 +6,7 @@ export class ExecValidationNotFoundError extends Error {
     if (!isAbsolute) {
       message += ` Please ensure binary is found in PATH or use absolute path to binary in Kubeconfig`;
     }
-    this.message = message; 
+    this.message = message;
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);
   }

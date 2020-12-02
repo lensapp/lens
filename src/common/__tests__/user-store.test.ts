@@ -81,7 +81,7 @@ describe("user store tests", () => {
     beforeEach(() => {
       UserStore.resetInstance();
       mockFs({
-        "tmp": {
+        tmp: {
           "config.json": JSON.stringify({
             user: { username: "foobar" },
             preferences: { colorTheme: "light" },

@@ -17,7 +17,7 @@ export async function requestMain(channel: string, ...args: any[]) {
 async function getSubFrames(): Promise<number[]> {
   const subFrames: number[] = [];
 
-  clusterFrameMap.forEach(frameId => {
+  clusterFrameMap.forEach((frameId) => {
     subFrames.push(frameId);
   });
 
@@ -29,7 +29,7 @@ export function broadcastMessage(channel: string, ...args: any[]) {
 
   if (!views) return;
 
-  views.forEach(webContent => {
+  views.forEach((webContent) => {
     const type = webContent.getType();
 
     logger.silly(`[IPC]: broadcasting "${channel}" to ${type}=${webContent.id}`, { args });
@@ -38,7 +38,7 @@ export function broadcastMessage(channel: string, ...args: any[]) {
       frames.map((frameId) => {
         webContent.sendToFrame(frameId, channel, ...args);
       });
-    }).catch((e) => e);
+    }).catch(e => e);
   });
 
   if (ipcRenderer) {

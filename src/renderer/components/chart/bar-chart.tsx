@@ -39,7 +39,7 @@ export class BarChart extends React.Component<Props> {
       ...data,
       datasets: data.datasets
         .filter(set => set.data.length)
-        .map(item => {
+        .map((item) => {
           return {
             type: ChartKind.BAR,
             borderWidth: { top: 3 },
@@ -111,7 +111,7 @@ export class BarChart extends React.Component<Props> {
         mode: "index",
         position: "cursor",
         callbacks: {
-          title: tooltipItems => {
+          title: (tooltipItems) => {
             const now = new Date().getTime();
 
             if (new Date(tooltipItems[0].xLabel).getTime() > now) return "";

@@ -144,7 +144,7 @@ kubeObjectDetailRegistry.add({
   kind: "ServiceAccount",
   apiVersions: ["v1"],
   components: {
-    Details: (props) => <ServiceAccountsDetails {...props} />
+    Details: props => <ServiceAccountsDetails {...props} />
   }
 });
 kubeObjectDetailRegistry.add({
@@ -152,6 +152,6 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["v1"],
   priority: 5,
   components: {
-    Details: (props) => <KubeEventDetails {...props} />
+    Details: props => <KubeEventDetails {...props} />
   }
 });

@@ -46,7 +46,7 @@ export class CreateResource extends React.Component<Props> {
     const errors: string[] = [];
 
     await Promise.all(
-      resources.map(data => {
+      resources.map((data) => {
         return resourceApplierApi.update(data)
           .then(item => createdResources.push(item.getName()))
           .catch((err: JsonApiErrorParsed) => errors.push(err.toString()));

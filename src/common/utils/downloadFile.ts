@@ -19,7 +19,7 @@ export function downloadFile({ url, timeout, gzip = true }: DownloadFileOptions)
     req.on("data", (chunk: Buffer) => {
       fileChunks.push(chunk);
     });
-    req.once("error", err => {
+    req.once("error", (err) => {
       reject({ url, err });
     });
     req.once("complete", () => {

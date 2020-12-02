@@ -38,7 +38,7 @@ interface Props extends RouteComponentProps<IPodsRouteParams> {
 @observer
 export class Pods extends React.Component<Props> {
   renderContainersStatus(pod: Pod) {
-    return pod.getContainerStatuses().map(containerStatus => {
+    return pod.getContainerStatuses().map((containerStatus) => {
       const { name, state, ready } = containerStatus;
 
       return (
@@ -107,7 +107,7 @@ export class Pods extends React.Component<Props> {
           pod.getNs(),
           this.renderContainersStatus(pod),
           pod.getRestartsCount(),
-          pod.getOwnerRefs().map(ref => {
+          pod.getOwnerRefs().map((ref) => {
             const { kind, name } = ref;
             const detailsLink = getDetailsUrl(lookupApiLink(ref, pod));
 

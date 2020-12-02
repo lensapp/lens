@@ -249,7 +249,7 @@ export class Pod extends WorkloadKubeObject {
   getRunningContainers() {
     const statuses = this.getContainerStatuses();
 
-    return this.getAllContainers().filter(container => {
+    return this.getAllContainers().filter((container) => {
       return statuses.find(status => status.name === container.name && !!status.state["running"]);
     }
     );
@@ -326,7 +326,7 @@ export class Pod extends WorkloadKubeObject {
     const statuses = this.getContainerStatuses(false); // not including initContainers
 
     if (statuses.length) {
-      statuses.forEach(status => {
+      statuses.forEach((status) => {
         const { state } = status;
 
         if (state.waiting) {
@@ -382,10 +382,10 @@ export class Pod extends WorkloadKubeObject {
   }
 
   hasIssues() {
-    const notReady = !!this.getConditions().find(condition => {
+    const notReady = !!this.getConditions().find((condition) => {
       return condition.type == "Ready" && condition.status !== "True";
     });
-    const crashLoop = !!this.getContainerStatuses().find(condition => {
+    const crashLoop = !!this.getContainerStatuses().find((condition) => {
       const waiting = condition.state.waiting;
 
       return (waiting && waiting.reason == "CrashLoopBackOff");

@@ -41,7 +41,7 @@ export class ApiManager {
 
   @action
   registerStore(store: KubeObjectStore, apis: KubeApi[] = [store.api]) {
-    apis.forEach(api => {
+    apis.forEach((api) => {
       this.stores.set(api, store);
     });
   }

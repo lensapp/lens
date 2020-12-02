@@ -120,7 +120,7 @@ export class ExtensionLoader {
       this.syncExtensions(extensions);
 
       const receivedExtensionIds = extensions.map(([lensExtensionId]) => lensExtensionId);
-          
+
       // Remove deleted extensions in renderer side only
       this.extensions.forEach((_, lensExtensionId) => {
         if (!receivedExtensionIds.includes(lensExtensionId)) {
@@ -157,7 +157,7 @@ export class ExtensionLoader {
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
         if (removedExtension.id === extension.id) {
-          removeItems.forEach(remove => {
+          removeItems.forEach((remove) => {
             remove();
           });
         }
@@ -180,7 +180,7 @@ export class ExtensionLoader {
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
         if (removedExtension.id === extension.id) {
-          removeItems.forEach(remove => {
+          removeItems.forEach((remove) => {
             remove();
           });
         }
@@ -209,7 +209,7 @@ export class ExtensionLoader {
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {
         if (removedExtension.id === extension.id) {
-          removeItems.forEach(remove => {
+          removeItems.forEach((remove) => {
             remove();
           });
         }
@@ -220,7 +220,7 @@ export class ExtensionLoader {
   }
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Function[]>) {
-    return reaction(() => this.toJSON(), installedExtensions => {
+    return reaction(() => this.toJSON(), (installedExtensions) => {
       for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId);
 

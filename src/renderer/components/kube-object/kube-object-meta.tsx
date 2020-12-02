@@ -71,7 +71,7 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
         {ownerRefs && ownerRefs.length > 0 &&
         <DrawerItem name={<Trans>Controlled By</Trans>} hidden={this.isHidden("ownerReferences")}>
           {
-            ownerRefs.map(ref => {
+            ownerRefs.map((ref) => {
               const { name, kind } = ref;
               const ownerDetailsUrl = getDetailsUrl(lookupApiLink(ref, object));
 

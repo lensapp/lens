@@ -83,13 +83,13 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
       label: "Clusters",
       submenu: workspaceStore.enabledWorkspacesList
         .filter(workspace => clusterStore.getByWorkspaceId(workspace.id).length > 0) // hide empty workspaces
-        .map(workspace => {
+        .map((workspace) => {
           const clusters = clusterStore.getByWorkspaceId(workspace.id);
 
           return {
             label: workspace.name,
             toolTip: workspace.description,
-            submenu: clusters.map(cluster => {
+            submenu: clusters.map((cluster) => {
               const { id: clusterId, name: label, online, workspace } = cluster;
 
               return {

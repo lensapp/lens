@@ -142,7 +142,7 @@ export class Node extends KubeObject {
   getWarningConditions() {
     const goodConditions = ["Ready", "HostUpgrades", "SchedulingDisabled"];
 
-    return this.getActiveConditions().filter(condition => {
+    return this.getActiveConditions().filter((condition) => {
       return !goodConditions.includes(condition.type);
     });
   }

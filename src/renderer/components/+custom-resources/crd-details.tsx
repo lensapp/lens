@@ -60,7 +60,7 @@ export class CRDDetails extends React.Component<Props> {
         </DrawerItem>
         <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
           {
-            crd.getConditions().map(condition => {
+            crd.getConditions().map((condition) => {
               const { type, message, lastTransitionTime, status } = condition;
 
               return (
@@ -141,6 +141,6 @@ kubeObjectDetailRegistry.add({
   kind: "CustomResourceDefinition",
   apiVersions: ["apiextensions.k8s.io/v1", "apiextensions.k8s.io/v1beta1"],
   components: {
-    Details: (props) => <CRDDetails {...props} />
+    Details: props => <CRDDetails {...props} />
   }
 });

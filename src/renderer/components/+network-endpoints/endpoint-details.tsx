@@ -26,7 +26,7 @@ export class EndpointDetails extends React.Component<Props> {
         <KubeObjectMeta object={endpoint}/>
         <DrawerTitle title={<Trans>Subsets</Trans>}/>
         {
-          endpoint.getEndpointSubsets().map((subset) => (
+          endpoint.getEndpointSubsets().map(subset => (
             <EndpointSubsetList key={subset.toString()} subset={subset} endpoint={endpoint} />
           ))
         }
@@ -39,7 +39,7 @@ kubeObjectDetailRegistry.add({
   kind: "Endpoints",
   apiVersions: ["v1"],
   components: {
-    Details: (props) => <EndpointDetails {...props} />
+    Details: props => <EndpointDetails {...props} />
   }
 });
 kubeObjectDetailRegistry.add({
@@ -47,6 +47,6 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["v1"],
   priority: 5,
   components: {
-    Details: (props) => <KubeEventDetails {...props} />
+    Details: props => <KubeEventDetails {...props} />
   }
 });

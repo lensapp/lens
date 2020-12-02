@@ -145,7 +145,7 @@ export class EndpointSubsetList extends React.Component<Props> {
             <TableCell className="protocol">Protocol</TableCell>
           </TableHead>
           {
-            subset.ports.map(port => {
+            subset.ports.map((port) => {
               return (
                 <TableRow
                   key={port.port}

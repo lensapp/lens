@@ -23,14 +23,14 @@ export const ContainerEnvironment = observer((props: Props) => {
   useEffect(
     () =>
       autorun(() => {
-        env && env.forEach(variable => {
+        env && env.forEach((variable) => {
           const { valueFrom } = variable;
 
           if (valueFrom && valueFrom.configMapKeyRef) {
             configMapsStore.load({ name: valueFrom.configMapKeyRef.name, namespace });
           }
         });
-        envFrom && envFrom.forEach(item => {
+        envFrom && envFrom.forEach((item) => {
           const { configMapRef } = item;
 
           if (configMapRef && configMapRef.name) {
@@ -44,7 +44,7 @@ export const ContainerEnvironment = observer((props: Props) => {
   const renderEnv = () => {
     const orderedEnv = _.sortBy(env, "name");
 
-    return orderedEnv.map(variable => {
+    return orderedEnv.map((variable) => {
       const { name, value, valueFrom } = variable;
       let secretValue = null;
 
@@ -89,7 +89,7 @@ export const ContainerEnvironment = observer((props: Props) => {
   };
 
   const renderEnvFrom = () => {
-    const envVars = envFrom.map(vars => {
+    const envVars = envFrom.map((vars) => {
       if (!vars.configMapRef || !vars.configMapRef.name) return;
       const configMap = configMapsStore.getByName(vars.configMapRef.name, namespace);
 

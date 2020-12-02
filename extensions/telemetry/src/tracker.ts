@@ -61,12 +61,12 @@ export class Tracker extends Util.Singleton {
     this.disposers.push(reaction(() => App.getEnabledExtensions(), (currentExtensions) => {
       const removedExtensions = previousExtensions.filter(x => !currentExtensions.includes(x));
 
-      removedExtensions.forEach(ext => {
+      removedExtensions.forEach((ext) => {
         this.event("extension", "disable", { extension: ext });
       });
       const newExtensions = currentExtensions.filter(x => !previousExtensions.includes(x));
 
-      newExtensions.forEach(ext => {
+      newExtensions.forEach((ext) => {
         this.event("extension", "enable", { extension: ext });
       });
       previousExtensions = currentExtensions;
@@ -91,7 +91,7 @@ export class Tracker extends Util.Singleton {
     if (this.reportInterval) {
       clearInterval(this.reportInterval);
     }
-    this.disposers.forEach(disposer => {
+    this.disposers.forEach((disposer) => {
       disposer();
     });
   }

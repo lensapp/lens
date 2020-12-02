@@ -91,7 +91,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       reqInit,
     };
 
-    return cancelableFetch(reqUrl, reqInit).then(res => {
+    return cancelableFetch(reqUrl, reqInit).then((res) => {
       return this.parseResponse<D>(res, infoLog);
     });
   }
@@ -99,7 +99,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   protected parseResponse<D>(res: Response, log: JsonApiLog): Promise<D> {
     const { status } = res;
 
-    return res.text().then(text => {
+    return res.text().then((text) => {
       let data;
 
       try {

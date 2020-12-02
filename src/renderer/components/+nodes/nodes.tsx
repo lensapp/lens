@@ -109,7 +109,7 @@ export class Nodes extends React.Component<Props> {
     }
     const conditions = node.getActiveConditions();
 
-    return conditions.map(condition => {
+    return conditions.map((condition) => {
       const { type } = condition;
       const tooltipId = `node-${node.getName()}-condition-${type}`;
 

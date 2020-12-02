@@ -44,7 +44,7 @@ export class ThemeStore {
 
   constructor() {
     // auto-apply active theme
-    reaction(() => this.activeThemeId, async themeId => {
+    reaction(() => this.activeThemeId, async (themeId) => {
       try {
         await this.loadTheme(themeId);
         this.applyTheme();

@@ -80,6 +80,6 @@ kubeObjectDetailRegistry.add({
   kind: "Event",
   apiVersions: ["v1"],
   components: {
-    Details: (props) => <EventDetails {...props}/>
+    Details: props => <EventDetails {...props}/>
   }
 });

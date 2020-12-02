@@ -36,7 +36,7 @@ export class Animate extends React.Component<AnimateProps> {
 
   componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.enter, enter => {
+      reaction(() => this.props.enter, (enter) => {
         if (enter) this.enter();
         else this.leave();
       }, {

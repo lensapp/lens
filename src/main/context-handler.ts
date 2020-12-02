@@ -105,7 +105,7 @@ export class ContextHandler {
       changeOrigin: true,
       timeout,
       headers: {
-        "Host": this.clusterUrl.hostname,
+        Host: this.clusterUrl.hostname,
       },
     };
   }

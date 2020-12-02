@@ -50,11 +50,11 @@ export class KubeWatchApi {
   }
 
   subscribe(...apis: KubeApi[]) {
-    apis.forEach(api => {
+    apis.forEach((api) => {
       this.subscribers.set(api, this.getSubscribersCount(api) + 1);
     });
 
-    return () => apis.forEach(api => {
+    return () => apis.forEach((api) => {
       const count = this.getSubscribersCount(api) - 1;
 
       if (count <= 0) this.subscribers.delete(api);
@@ -66,7 +66,7 @@ export class KubeWatchApi {
     const { isAdmin, allowedNamespaces } = getHostedCluster();
 
     return {
-      api: this.activeApis.map(api => {
+      api: this.activeApis.map((api) => {
         if (isAdmin) return api.getWatchUrl();
 
         return allowedNamespaces.map(namespace => api.getWatchUrl(namespace));

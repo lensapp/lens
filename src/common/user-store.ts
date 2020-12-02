@@ -65,12 +65,12 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
     if (app) {
       // track telemetry availability
-      reaction(() => this.preferences.allowTelemetry, allowed => {
+      reaction(() => this.preferences.allowTelemetry, (allowed) => {
         appEventBus.emit({name: "telemetry", action: allowed ? "enabled" : "disabled"});
       });
 
       // open at system start-up
-      reaction(() => this.preferences.openAtLogin, open => {
+      reaction(() => this.preferences.openAtLogin, (open) => {
         app.setLoginItemSettings({ openAtLogin: open });
       }, {
         fireImmediately: true,

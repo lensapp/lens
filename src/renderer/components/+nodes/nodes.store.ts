@@ -44,10 +44,10 @@ export class NodesStore extends KubeObjectStore<Node> {
     }
     const nodeName = node.getName();
 
-    return metricNames.map(metricName => {
+    return metricNames.map((metricName) => {
       try {
         const metric = this.metrics[metricName];
-        const result = metric.data.result.find(result => {
+        const result = metric.data.result.find((result) => {
           return [
             result.metric.node,
             result.metric.instance,

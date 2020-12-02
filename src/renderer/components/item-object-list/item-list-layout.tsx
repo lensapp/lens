@@ -136,7 +136,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   private filterCallbacks: { [type: string]: ItemsFilter } = {
-    [FilterType.SEARCH]: items => {
+    [FilterType.SEARCH]: (items) => {
       const { searchFilters, isSearchable } = this.props;
       const search = pageFilters.getValues(FilterType.SEARCH)[0] || "";
 
@@ -144,8 +144,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         const normalizeText = (text: string) => String(text).toLowerCase();
         const searchTexts = [search].map(normalizeText);
 
-        return items.filter(item => {
-          return searchFilters.some(getTexts => {
+        return items.filter((item) => {
+          return searchFilters.some((getTexts) => {
             const sourceTexts: string[] = [getTexts(item)].flat().map(normalizeText);
 
             return sourceTexts.some(source => searchTexts.some(search => source.includes(search)));
@@ -156,7 +156,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       return items;
     },
 
-    [FilterType.NAMESPACE]: items => {
+    [FilterType.NAMESPACE]: (items) => {
       const filterValues = pageFilters.getValues(FilterType.NAMESPACE);
 
       if (filterValues.length > 0) {

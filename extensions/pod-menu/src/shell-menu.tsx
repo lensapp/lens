@@ -48,7 +48,7 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
             <Component.Icon className="arrow" material="keyboard_arrow_right"/>
             <Component.SubMenu>
               {
-                containers.map(container => {
+                containers.map((container) => {
                   const { name } = container;
 
                   return (

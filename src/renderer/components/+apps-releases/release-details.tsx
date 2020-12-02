@@ -41,7 +41,7 @@ export class ReleaseDetails extends Component<Props> {
   @observable releaseSecret: Secret;
 
   @disposeOnUnmount
-  releaseSelector = reaction(() => this.props.release, release => {
+  releaseSelector = reaction(() => this.props.release, (release) => {
     if (!release) return;
     this.loadDetails();
     this.loadValues();
@@ -157,7 +157,7 @@ export class ReleaseDetails extends Component<Props> {
               {items[0].getNs() && <TableCell className="namespace">Namespace</TableCell>}
               <TableCell className="age">Age</TableCell>
             </TableHead>
-            {items.map(item => {
+            {items.map((item) => {
               const name = item.getName();
               const namespace = item.getNs();
               const api = apiManager.getApi(item.metadata.selfLink);

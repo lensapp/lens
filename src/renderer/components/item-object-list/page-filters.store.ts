@@ -29,12 +29,12 @@ export class PageFiltersStore {
 
   protected syncWithContextNamespace() {
     const disposers = [
-      reaction(() => this.getValues(FilterType.NAMESPACE), filteredNs => {
+      reaction(() => this.getValues(FilterType.NAMESPACE), (filteredNs) => {
         if (filteredNs.length !== namespaceStore.contextNs.length) {
           namespaceStore.setContext(filteredNs);
         }
       }),
-      reaction(() => namespaceStore.contextNs.toJS(), contextNs => {
+      reaction(() => namespaceStore.contextNs.toJS(), (contextNs) => {
         const filteredNs = this.getValues(FilterType.NAMESPACE);
         const isChanged = contextNs.length !== filteredNs.length;
 
@@ -55,7 +55,7 @@ export class PageFiltersStore {
   protected syncWithGlobalSearch() {
     const disposers = [
       reaction(() => this.getValues(FilterType.SEARCH)[0], setSearch),
-      reaction(() => getSearch(), search => {
+      reaction(() => getSearch(), (search) => {
         const filter = this.getByType(FilterType.SEARCH);
 
         if (filter) {

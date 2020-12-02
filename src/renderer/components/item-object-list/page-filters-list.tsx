@@ -39,7 +39,7 @@ export class PageFiltersList extends React.Component<Props> {
           </a>
         </div>
         <div className="labels">
-          {filters.map(filter => {
+          {filters.map((filter) => {
             const { value, type } = filter;
 
             return (

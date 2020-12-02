@@ -65,7 +65,7 @@ export class ServiceDetails extends React.Component<Props> {
         <DrawerItem name={<Trans>Ports</Trans>}>
           <div>
             {
-              service.getPorts().map((port) => (
+              service.getPorts().map(port => (
                 <ServicePortComponent service={service} port={port} key={port.toString()}/>
               ))
             }
@@ -89,7 +89,7 @@ kubeObjectDetailRegistry.add({
   kind: "Service",
   apiVersions: ["v1"],
   components: {
-    Details: (props) => <ServiceDetails {...props} />
+    Details: props => <ServiceDetails {...props} />
   }
 });
 
@@ -98,6 +98,6 @@ kubeObjectDetailRegistry.add({
   apiVersions: ["v1"],
   priority: 5,
   components: {
-    Details: (props) => <KubeEventDetails {...props} />
+    Details: props => <KubeEventDetails {...props} />
   }
 });

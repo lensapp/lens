@@ -126,7 +126,7 @@ export class Tab extends React.PureComponent<TabProps> {
     let { className } = this.props;
 
     className = cssNames("Tab flex gaps align-center", className, {
-      "active": this.isActive,
+      active: this.isActive,
       disabled,
     });
 

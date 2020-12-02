@@ -11,7 +11,7 @@ export class CronJobStore extends KubeObjectStore<CronJob> {
   getStatuses(cronJobs?: CronJob[]) {
     const status = { suspended: 0, scheduled: 0 };
 
-    cronJobs.forEach(cronJob => {
+    cronJobs.forEach((cronJob) => {
       if (cronJob.spec.suspend) {
         status.suspended++;
       }

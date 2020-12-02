@@ -26,7 +26,7 @@ export class DockTabStore<T = any> {
     autorun(() => {
       const currentTabs = dockStore.tabs.map(tab => tab.id);
 
-      Array.from(this.data.keys()).forEach(tabId => {
+      Array.from(this.data.keys()).forEach((tabId) => {
         if (!currentTabs.includes(tabId)) {
           this.clearData(tabId);
         }

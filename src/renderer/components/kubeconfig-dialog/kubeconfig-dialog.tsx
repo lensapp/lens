@@ -53,7 +53,7 @@ export class KubeConfigDialog extends React.Component<Props> {
   };
 
   async loadConfig() {
-    const config = await this.data.loader().catch(err => {
+    const config = await this.data.loader().catch((err) => {
       Notifications.error(err);
       this.close();
     });

@@ -35,7 +35,7 @@ export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
             <Component.Icon className="arrow" material="keyboard_arrow_right"/>
             <Component.SubMenu>
               {
-                containers.map(container => {
+                containers.map((container) => {
                   const { name } = container;
                   const status = statuses.find(status => status.name === name);
                   const brick = status ? (

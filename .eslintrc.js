@@ -31,20 +31,20 @@ module.exports = {
       ],
       rules: {
         "indent": ["error", 2, {
-          "SwitchCase": 1,
+          SwitchCase: 1,
         }],
         "no-unused-vars": "off",
         "unused-imports/no-unused-imports": "error",
         "unused-imports/no-unused-vars": [
           "warn", {
-            "vars": "all",
-            "args": "after-used",
-            "ignoreRestSiblings": true,
+            vars: "all",
+            args: "after-used",
+            ignoreRestSiblings: true,
           }
         ],
         "quotes": ["error", "double", {
-          "avoidEscape": true,
-          "allowTemplateLiterals": true,
+          avoidEscape: true,
+          allowTemplateLiterals: true,
         }],
         "semi": ["error", "always"],
         "object-shorthand": "error",
@@ -52,13 +52,17 @@ module.exports = {
         "template-curly-spacing": "error",
         "padding-line-between-statements": [
           "error",
-          { "blankLine": "always", "prev": "*", "next": "return" },
-          { "blankLine": "always", "prev": "*", "next": "block-like" },
-          { "blankLine": "always", "prev": "*", "next": "function" },
-          { "blankLine": "always", "prev": "*", "next": "class" },
-          { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
-          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
-        ]
+          { blankLine: "always", prev: "*", next: "return" },
+          { blankLine: "always", prev: "*", next: "block-like" },
+          { blankLine: "always", prev: "*", next: "function" },
+          { blankLine: "always", prev: "*", next: "class" },
+          { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
+          { blankLine: "any", prev: ["const", "let", "var"], next: ["const", "let", "var"]},
+        ],
+        "no-trailing-spaces": "error",
+        "quote-props": ["error", "consistent-as-needed"],
+        "space-infix-ops": ["error", { int32Hint: false }],
+        "arrow-parens": ["error", "as-needed", { requireForBlockBody: true }]
       }
     },
     {
@@ -87,17 +91,17 @@ module.exports = {
         "unused-imports/no-unused-imports-ts": "error",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
-            "vars": "all",
-            "args": "after-used",
-            "ignoreRestSiblings": true,
+            vars: "all",
+            args: "after-used",
+            ignoreRestSiblings: true,
           }
         ],
         "indent": ["error", 2, {
-          "SwitchCase": 1,
+          SwitchCase: 1,
         }],
         "quotes": ["error", "double", {
-          "avoidEscape": true,
-          "allowTemplateLiterals": true,
+          avoidEscape: true,
+          allowTemplateLiterals: true,
         }],
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
@@ -106,13 +110,18 @@ module.exports = {
         "template-curly-spacing": "error",
         "padding-line-between-statements": [
           "error",
-          { "blankLine": "always", "prev": "*", "next": "return" },
-          { "blankLine": "always", "prev": "*", "next": "block-like" },
-          { "blankLine": "always", "prev": "*", "next": "function" },
-          { "blankLine": "always", "prev": "*", "next": "class" },
-          { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
-          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
-        ]
+          { blankLine: "always", prev: "*", next: "return" },
+          { blankLine: "always", prev: "*", next: "block-like" },
+          { blankLine: "always", prev: "*", next: "function" },
+          { blankLine: "always", prev: "*", next: "class" },
+          { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
+          { blankLine: "any", prev: ["const", "let", "var"], next: ["const", "let", "var"]},
+        ],
+        "no-trailing-spaces": "error",
+        "quote-props": ["error", "consistent-as-needed"],
+        "space-infix-ops": "off",
+        "@typescript-eslint/space-infix-ops": ["error", { int32Hint: false }],
+        "arrow-parens": ["error", "as-needed", { requireForBlockBody: true }]
       },
     },
     {
@@ -148,17 +157,17 @@ module.exports = {
         "unused-imports/no-unused-imports-ts": "error",
         "unused-imports/no-unused-vars-ts": [
           "warn", {
-            "vars": "all",
-            "args": "after-used",
-            "ignoreRestSiblings": true,
+            vars: "all",
+            args: "after-used",
+            ignoreRestSiblings: true,
           }
         ],
         "indent": ["error", 2, {
-          "SwitchCase": 1,
+          SwitchCase: 1,
         }],
         "quotes": ["error", "double", {
-          "avoidEscape": true,
-          "allowTemplateLiterals": true,
+          avoidEscape: true,
+          allowTemplateLiterals: true,
         }],
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
@@ -167,13 +176,18 @@ module.exports = {
         "template-curly-spacing": "error",
         "padding-line-between-statements": [
           "error",
-          { "blankLine": "always", "prev": "*", "next": "return" },
-          { "blankLine": "always", "prev": "*", "next": "block-like" },
-          { "blankLine": "always", "prev": "*", "next": "function" },
-          { "blankLine": "always", "prev": "*", "next": "class" },
-          { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
-          { "blankLine": "any", "prev": ["const", "let", "var"], "next": ["const", "let", "var"]},
-        ]
+          { blankLine: "always", prev: "*", next: "return" },
+          { blankLine: "always", prev: "*", next: "block-like" },
+          { blankLine: "always", prev: "*", next: "function" },
+          { blankLine: "always", prev: "*", next: "class" },
+          { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
+          { blankLine: "any", prev: ["const", "let", "var"], next: ["const", "let", "var"]},
+        ],
+        "no-trailing-spaces": "error",
+        "quote-props": ["error", "consistent-as-needed"],
+        "space-infix-ops": "off",
+        "@typescript-eslint/space-infix-ops": ["error", { int32Hint: false }],
+        "arrow-parens": ["error", "as-needed", { requireForBlockBody: true }]
       },
     }
   ]

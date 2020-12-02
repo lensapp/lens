@@ -42,7 +42,7 @@ export class HelmReleases extends Component<Props> {
   get selectedRelease() {
     const { match: { params: { name, namespace } } } = this.props;
 
-    return releaseStore.items.find(release => {
+    return releaseStore.items.find((release) => {
       return release.getName() == name && release.getNs() == namespace;
     });
   }

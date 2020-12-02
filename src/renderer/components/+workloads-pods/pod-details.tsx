@@ -100,7 +100,7 @@ export class PodDetails extends React.Component<Props> {
         {conditions &&
         <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
           {
-            conditions.map(condition => {
+            conditions.map((condition) => {
               const { type, status, lastTransitionTime } = condition;
 
               return (
@@ -137,13 +137,13 @@ export class PodDetails extends React.Component<Props> {
         <DrawerTitle title={<Trans>Init Containers</Trans>}/>
         }
         {
-          pod.getInitContainers() && pod.getInitContainers().map(container => {
+          pod.getInitContainers() && pod.getInitContainers().map((container) => {
             return <PodDetailsContainer key={container.name} pod={pod} container={container}/>;
           })
         }
         <DrawerTitle title={<Trans>Containers</Trans>}/>
         {
-          pod.getContainers().map(container => {
+          pod.getContainers().map((container) => {
             const { name } = container;
             const metrics = getItemMetrics(toJS(this.containerMetrics), name);
 
@@ -161,7 +161,7 @@ export class PodDetails extends React.Component<Props> {
         {volumes.length > 0 && (
           <>
             <DrawerTitle title={<Trans>Volumes</Trans>}/>
-            {volumes.map(volume => {
+            {volumes.map((volume) => {
               const claimName = volume.persistentVolumeClaim ? volume.persistentVolumeClaim.claimName : null;
               const configMap = volume.configMap ? volume.configMap.name : null;
               const type = Object.keys(volume)[1];

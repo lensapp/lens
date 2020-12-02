@@ -7,7 +7,7 @@ export function unitsToBytes(value: string) {
   if (!suffixes.some(suffix => value.includes(suffix))) {
     return parseFloat(value);
   }
- 
+
   const suffix = value.replace(/[0-9]|i|\./g, "");
   const index = suffixes.indexOf(suffix);
 

@@ -196,7 +196,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @computed get enabledClustersList(): Cluster[] {
-    return this.clustersList.filter((c) => c.enabled);
+    return this.clustersList.filter(c => c.enabled);
   }
 
   @computed get active(): Cluster | null {
@@ -204,7 +204,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   }
 
   @computed get connectedClustersList(): Cluster[] {
-    return this.clustersList.filter((c) => !c.disconnected);
+    return this.clustersList.filter(c => !c.disconnected);
   }
 
   isActive(id: ClusterId) {
@@ -254,7 +254,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
   addClusters(...models: ClusterModel[]): Cluster[] {
     const clusters: Cluster[] = [];
 
-    models.forEach(model => {
+    models.forEach((model) => {
       clusters.push(this.addCluster(model));
     });
 
@@ -303,7 +303,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
 
   @action
   removeByWorkspaceId(workspaceId: string) {
-    this.getByWorkspaceId(workspaceId).forEach(cluster => {
+    this.getByWorkspaceId(workspaceId).forEach((cluster) => {
       this.removeById(cluster.id);
     });
   }
@@ -331,7 +331,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
     }
 
     // update removed clusters
-    currentClusters.forEach(cluster => {
+    currentClusters.forEach((cluster) => {
       if (!newClusters.has(cluster.id)) {
         removedClusters.set(cluster.id, cluster);
       }

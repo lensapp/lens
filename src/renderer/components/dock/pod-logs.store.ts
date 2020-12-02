@@ -120,7 +120,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       timestamps: true,  // Always setting timestampt to separate old logs from new ones
       container: selectedContainer.name,
       previous
-    }).then(result => {
+    }).then((result) => {
       const logs = [...result.split("\n")]; // Transform them into array
 
       logs.pop();  // Remove last empty element

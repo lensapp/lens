@@ -129,7 +129,7 @@ export class LensBinary {
   }
 
   protected async untarBinary() {
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve) => {
       this.logger.debug(`Extracting ${this.originalBinaryName} binary`);
       tar.x({
         file: this.tarPath,

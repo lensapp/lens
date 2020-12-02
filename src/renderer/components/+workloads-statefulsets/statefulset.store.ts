@@ -23,7 +23,7 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
   getStatuses(statefulSets: StatefulSet[]) {
     const status = { failed: 0, pending: 0, running: 0 };
 
-    statefulSets.forEach(statefulSet => {
+    statefulSets.forEach((statefulSet) => {
       const pods = this.getChildPods(statefulSet);
 
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {

@@ -89,7 +89,7 @@ export class DeploymentScaleDialog extends Component<Props> {
   desiredReplicasUp = () => {
     this.desiredReplicas < this.scaleMax && this.desiredReplicas++;
   };
-  
+
   desiredReplicasDown = () => {
     this.desiredReplicas > 1 && this.desiredReplicas--;
   };

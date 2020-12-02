@@ -34,7 +34,7 @@ export const ClusterMetrics = observer(() => {
       yAxes: [{
         ticks: {
           suggestedMax: cpuCapacity,
-          callback: (value) => value
+          callback: value => value
         }
       }]
     },

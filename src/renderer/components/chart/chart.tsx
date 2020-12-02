@@ -85,7 +85,7 @@ export class Chart extends React.Component<ChartProps> {
 
     this.currentChartData = {
       ...data,
-      datasets: data.datasets && data.datasets.map(set => {
+      datasets: data.datasets && data.datasets.map((set) => {
         return {
           ...set
         };
@@ -109,7 +109,7 @@ export class Chart extends React.Component<ChartProps> {
     if (datasets.length > nextDatasets.length) {
       const sets = [...datasets];
 
-      sets.forEach(set => {
+      sets.forEach((set) => {
         if (!nextDatasets.find(next => next.id === set.id)) {
           remove(datasets, (item => item.id === set.id));
         }

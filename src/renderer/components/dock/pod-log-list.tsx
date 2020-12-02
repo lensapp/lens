@@ -229,7 +229,7 @@ const JumpToBottom = ({ onClick }: JumpToBottomProps) => {
     <Button
       primary
       className="JumpToBottom flex gaps"
-      onClick={evt => {
+      onClick={(evt) => {
         evt.currentTarget.blur();
         onClick();
       }}

@@ -71,7 +71,7 @@ export class Notifications extends React.Component {
 
     return (
       <div className="Notifications flex column align-flex-end" ref={e => this.elem = e}>
-        {notifications.map(notification => {
+        {notifications.map((notification) => {
           const { id, status } = notification;
           const msgText = this.getMessage(notification);
 

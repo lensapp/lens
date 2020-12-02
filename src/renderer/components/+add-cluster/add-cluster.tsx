@@ -106,7 +106,7 @@ export class AddCluster extends React.Component {
   getContexts(config: KubeConfig): Map<string, KubeConfig> {
     const contexts = new Map();
 
-    splitConfig(config).forEach(config => {
+    splitConfig(config).forEach((config) => {
       contexts.set(config.currentContext, config);
     });
 
@@ -145,7 +145,7 @@ export class AddCluster extends React.Component {
       this.error = "";
       this.isWaiting = true;
       appEventBus.emit({ name: "cluster-add", action: "click" });
-      newClusters = this.selectedContexts.filter(context => {
+      newClusters = this.selectedContexts.filter((context) => {
         try {
           const kubeConfig = this.kubeContexts.get(context);
 
@@ -163,7 +163,7 @@ export class AddCluster extends React.Component {
             throw new Error(err);
           }
         }
-      }).map(context => {
+      }).map((context) => {
         const clusterId = uuid();
         const kubeConfig = this.kubeContexts.get(context);
         const kubeConfigPath = this.sourceTab === KubeConfigSourceTab.FILE
@@ -267,7 +267,7 @@ export class AddCluster extends React.Component {
               showGutter={false}
               mode="yaml"
               value={this.customConfig}
-              onChange={value => {
+              onChange={(value) => {
                 this.customConfig = value;
                 this.refreshContexts();
               }}

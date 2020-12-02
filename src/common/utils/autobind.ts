@@ -17,7 +17,7 @@ function bindClass<T extends Constructor>(constructor: T) {
       || typeof descriptors[methodName].value !== "function";
   };
 
-  Object.keys(descriptors).forEach(prop => {
+  Object.keys(descriptors).forEach((prop) => {
     if (skipMethod(prop)) return;
     const boundDescriptor = bindMethod(proto, prop, descriptors[prop]);
 

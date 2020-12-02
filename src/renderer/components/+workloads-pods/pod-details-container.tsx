@@ -109,7 +109,7 @@ export class PodDetailsContainer extends React.Component<Props> {
         {volumeMounts && volumeMounts.length > 0 &&
         <DrawerItem name={<Trans>Mounts</Trans>}>
           {
-            volumeMounts.map(mount => {
+            volumeMounts.map((mount) => {
               const { name, mountPath, readOnly } = mount;
 
               return (

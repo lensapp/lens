@@ -124,7 +124,7 @@ export class KubeObject implements ItemObject {
   getAnnotations(filter = false): string[] {
     const labels = KubeObject.stringifyLabels(this.metadata.annotations);
 
-    return filter ? labels.filter(label => {
+    return filter ? labels.filter((label) => {
       const skip = resourceApplierApi.annotations.some(key => label.startsWith(key));
 
       return !skip;

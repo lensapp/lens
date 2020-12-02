@@ -60,13 +60,13 @@ export const PodLogControls = observer((props: Props) => {
     return [
       {
         label: _i18n._(t`Containers`),
-        options: containers.map(container => {
+        options: containers.map((container) => {
           return { value: container.name };
         }),
       },
       {
         label: _i18n._(t`Init Containers`),
-        options: initContainers.map(container => {
+        options: initContainers.map((container) => {
           return { value: container.name };
         }),
       }

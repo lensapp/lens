@@ -83,7 +83,7 @@ export class LensProxy {
           const key = req.rawHeaders[i];
 
           if (key !== "Host" && key !== "Authorization") {
-            proxySocket.write(`${req.rawHeaders[i]}: ${req.rawHeaders[i+1]}\r\n`);
+            proxySocket.write(`${req.rawHeaders[i]}: ${req.rawHeaders[i + 1]}\r\n`);
           }
         }
         proxySocket.write("\r\n");

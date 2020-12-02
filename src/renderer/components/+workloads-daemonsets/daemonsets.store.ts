@@ -24,7 +24,7 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
   getStatuses(daemonSets?: DaemonSet[]) {
     const status = { failed: 0, pending: 0, running: 0 };
 
-    daemonSets.forEach(daemonSet => {
+    daemonSets.forEach((daemonSet) => {
       const pods = this.getChildPods(daemonSet);
 
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {

@@ -216,6 +216,6 @@ kubeObjectDetailRegistry.add({
   kind: "PodSecurityPolicy",
   apiVersions: ["policy/v1beta1"],
   components: {
-    Details: (props) => <PodSecurityPolicyDetails {...props}/>
+    Details: props => <PodSecurityPolicyDetails {...props}/>
   }
 });

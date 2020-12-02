@@ -32,7 +32,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   getByName(name: string, namespace?: string): T {
-    return this.items.find(item => {
+    return this.items.find((item) => {
       return item.getName() === name && (
         namespace ? item.getNs() === namespace : true
       );

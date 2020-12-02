@@ -108,11 +108,11 @@ export class Ingress extends KubeObject {
     if (tls && tls.length > 0) {
       protocol += "s";
     }
-    rules.map(rule => {
+    rules.map((rule) => {
       const host = rule.host ? rule.host : "*";
 
       if (rule.http && rule.http.paths) {
-        rule.http.paths.forEach(path => {
+        rule.http.paths.forEach((path) => {
           const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
 
           routes.push(`${protocol}://${host}${path.path || "/"} ⇢ ${serviceName}:${servicePort}`);
@@ -167,7 +167,7 @@ export class Ingress extends KubeObject {
 
   getLoadBalancers() {
     const { status: { loadBalancer = { ingress: [] } } } = this;
-    
+
     return (loadBalancer.ingress ?? []).map(address => (
       address.hostname || address.ip
     ));

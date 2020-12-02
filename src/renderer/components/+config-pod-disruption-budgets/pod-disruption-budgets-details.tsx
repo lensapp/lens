@@ -59,6 +59,6 @@ kubeObjectDetailRegistry.add({
   kind: "PodDisruptionBudget",
   apiVersions: ["policy/v1beta1"],
   components: {
-    Details: (props) => <PodDisruptionBudgetDetails {...props} />
+    Details: props => <PodDisruptionBudgetDetails {...props} />
   }
 });

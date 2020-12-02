@@ -23,7 +23,7 @@ export const helmChartsApi = {
   list() {
     return apiBase
       .get<IHelmChartList>(endpoint())
-      .then(data => {
+      .then((data) => {
         return Object
           .values(data)
           .reduce((allCharts, repoCharts) => allCharts.concat(Object.values(repoCharts)), [])
@@ -36,7 +36,7 @@ export const helmChartsApi = {
 
     return apiBase
       .get<IHelmChartDetails>(`${path}?${stringify({ version: readmeVersion })}`)
-      .then(data => {
+      .then((data) => {
         const versions = data.versions.map(HelmChart.create);
         const readme = data.readme;
 

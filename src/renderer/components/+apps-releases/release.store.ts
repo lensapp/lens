@@ -24,7 +24,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
       if (this.isLoading) return;
       const secrets = this.getReleaseSecrets();
       const amountChanged = secrets.length !== this.releaseSecrets.length;
-      const labelsChanged = this.releaseSecrets.some(item => {
+      const labelsChanged = this.releaseSecrets.some((item) => {
         const secret = secrets.find(secret => secret.getId() == item.getId());
 
         if (!secret) return;

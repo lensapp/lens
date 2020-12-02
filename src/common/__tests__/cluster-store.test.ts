@@ -27,7 +27,7 @@ describe("empty config", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      "tmp": {
+      tmp: {
         "lens-cluster-store.json": JSON.stringify({})
       }
     };
@@ -167,7 +167,7 @@ describe("config with existing clusters", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      "tmp": {
+      tmp: {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
@@ -251,7 +251,7 @@ describe("pre 2.0 config with an existing cluster", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      "tmp": {
+      tmp: {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
@@ -284,7 +284,7 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      "tmp": {
+      tmp: {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
@@ -322,7 +322,7 @@ describe("pre 2.6.0 config with a cluster icon", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      "tmp": {
+      tmp: {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
@@ -364,7 +364,7 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      "tmp": {
+      tmp: {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {
@@ -402,7 +402,7 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
     const mockOpts = {
-      "tmp": {
+      tmp: {
         "lens-cluster-store.json": JSON.stringify({
           __internal__: {
             migrations: {

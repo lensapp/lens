@@ -103,7 +103,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
             <Input
               theme="round-black"
               value={this.path}
-              onChange={(value) => this.path = value}
+              onChange={value => this.path = value}
               onBlur={this.onSavePath}
               placeholder="<namespace>/<service>:<port>"
             />

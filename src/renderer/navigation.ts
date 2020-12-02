@@ -46,7 +46,7 @@ export function getQueryString(params?: Partial<IQueryParams>, merge = true) {
   const searchParams = navigation.searchParams.copyWith(params);
 
   if (!merge) {
-    Array.from(searchParams.keys()).forEach(key => {
+    Array.from(searchParams.keys()).forEach((key) => {
       if (!(key in params)) searchParams.delete(key);
     });
   }
@@ -117,7 +117,7 @@ export function getMatchedClusterId(): string {
 
 if (process.isMainFrame) {
   // Keep track of active cluster-id for handling IPC/menus/etc.
-  reaction(() => getMatchedClusterId(), clusterId => {
+  reaction(() => getMatchedClusterId(), (clusterId) => {
     broadcastMessage("cluster-view:current-id", clusterId);
   }, {
     fireImmediately: true

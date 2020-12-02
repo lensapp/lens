@@ -115,7 +115,7 @@ export class Sidebar extends React.Component<Props> {
         isActive = isActiveRoute(registeredPage.routePath);
       } else if (tabRoutes.length > 0) {
         pageUrl = tabRoutes[0].url;
-        isActive = isActiveRoute(tabRoutes.map((tab) => tab.routePath));
+        isActive = isActiveRoute(tabRoutes.map(tab => tab.routePath));
       } else {
         return;
       }
@@ -271,7 +271,7 @@ interface SidebarNavItemProps {
 const navItemStorage = createStorage<[string, boolean][]>("sidebar_menu_item", []);
 const navItemState = observable.map<string, boolean>(navItemStorage.get());
 
-reaction(() => [...navItemState], (value) => navItemStorage.set(value));
+reaction(() => [...navItemState], value => navItemStorage.set(value));
 
 @observer
 class SidebarNavItem extends React.Component<SidebarNavItemProps> {

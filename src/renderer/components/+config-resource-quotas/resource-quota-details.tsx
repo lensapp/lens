@@ -102,6 +102,6 @@ kubeObjectDetailRegistry.add({
   kind: "ResourceQuota",
   apiVersions: ["v1"],
   components: {
-    Details: (props) => <ResourceQuotaDetails {...props} />
+    Details: props => <ResourceQuotaDetails {...props} />
   }
 });

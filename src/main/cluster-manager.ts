@@ -13,7 +13,7 @@ export class ClusterManager extends Singleton {
     super();
     // auto-init clusters
     autorun(() => {
-      clusterStore.enabledClustersList.forEach(cluster => {
+      clusterStore.enabledClustersList.forEach((cluster) => {
         if (!cluster.initialized) {
           logger.info(`[CLUSTER-MANAGER]: init cluster`, cluster.getMeta());
           cluster.init(port);
@@ -46,7 +46,7 @@ export class ClusterManager extends Singleton {
       if (!cluster.disconnected) {
         cluster.online = false;
         cluster.accessible = false;
-        cluster.refreshConnectionStatus().catch((e) => e);
+        cluster.refreshConnectionStatus().catch(e => e);
       }
     });
   }
@@ -55,7 +55,7 @@ export class ClusterManager extends Singleton {
     logger.info("[CLUSTER-MANAGER]: network is online");
     clusterStore.enabledClustersList.forEach((cluster) => {
       if (!cluster.disconnected) {
-        cluster.refreshConnectionStatus().catch((e) => e);
+        cluster.refreshConnectionStatus().catch(e => e);
       }
     });
   }
