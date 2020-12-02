@@ -62,6 +62,9 @@ export class Extensions extends React.Component {
   @observable search = "";
   @observable installPath = "";
 
+  // True if the preliminary install steps have started, but unpackExtension has not started yet
+  @observable startingInstall = false;
+
   /**
    * Extensions that were removed from extensions but are still in "uninstalling" state
    */
@@ -161,6 +164,8 @@ export class Extensions extends React.Component {
     const { installPath } = this;
 
     if (!installPath) return;
+
+    this.startingInstall = true;
     const fileName = path.basename(installPath);
 
     try {
@@ -170,13 +175,14 @@ export class Extensions extends React.Component {
         const { promise: filePromise } = downloadFile({ url: installPath, timeout: 60000 /*1m*/ });
         const data = await filePromise;
 
-        this.requestInstall({ fileName, data });
+        await this.requestInstall({ fileName, data });
       }
       // otherwise installing from system path
       else if (InputValidators.isPath.validate(installPath)) {
-        this.requestInstall({ fileName, filePath: installPath });
+        await this.requestInstall({ fileName, filePath: installPath });
       }
     } catch (error) {
+      this.startingInstall = false;
       Notifications.error(
         <p>Installation has failed: <b>{String(error)}</b></p>
       );
@@ -195,11 +201,11 @@ export class Extensions extends React.Component {
   };
 
   async preloadExtensions(requests: InstallRequest[], { showError = true } = {}) {
-    const preloadedRequests = requests.filter(req => req.data);
+    const preloadedRequests = requests.filter(request => request.data);
 
     await Promise.all(
       requests
-        .filter(req => !req.data && req.filePath)
+        .filter(request => !request.data && request.filePath)
         .map(async request => {
           try {
             const data = await fse.readFile(request.filePath);
@@ -256,11 +262,11 @@ export class Extensions extends React.Component {
     // copy files to temp
     await fse.ensureDir(this.getExtensionPackageTemp());
 
-    requests.forEach(req => {
-      const tempFile = this.getExtensionPackageTemp(req.fileName);
+    for (const request of requests) {
+      const tempFile = this.getExtensionPackageTemp(request.fileName);
 
-      fse.writeFileSync(tempFile, req.data);
-    });
+      await fse.writeFile(tempFile, request.data);
+    }
 
     // validate packages
     await Promise.all(
@@ -298,15 +304,24 @@ export class Extensions extends React.Component {
     const preloadedRequests = await this.preloadExtensions(requests);
     const validatedRequests = await this.createTempFilesAndValidate(preloadedRequests);
 
-    validatedRequests.forEach(install => {
+    // If there are no requests for installing, reset startingInstall state
+    if (validatedRequests.length === 0) {
+      this.startingInstall = false;
+    }
+
+    for (const install of validatedRequests) {
       const { name, version, description } = install.manifest;
       const extensionFolder = this.getExtensionDestFolder(name);
-      const folderExists = fse.existsSync(extensionFolder);
-
+      const folderExists = await fse.pathExists(extensionFolder);
+  
       if (!folderExists) {
         // auto-install extension if not yet exists
         this.unpackExtension(install);
       } else {
+        // If we show the confirmation dialog, we stop the install spinner until user clicks ok
+        // and the install continues
+        this.startingInstall = false;
+
         // otherwise confirmation required (re-install / update)
         const removeNotification = Notifications.info(
           <div className="InstallingExtensionNotification flex gaps align-center">
@@ -324,21 +339,23 @@ export class Extensions extends React.Component {
           </div>
         );
       }
-    });
+    }
   }
 
   async unpackExtension({ fileName, tempFile, manifest: { name, version } }: InstallRequestValidated) {
     const displayName = extensionDisplayName(name, version);
-    const extensionFolder = this.getExtensionDestFolder(name);
-    const unpackingTempFolder = path.join(path.dirname(tempFile), `${path.basename(tempFile)}-unpacked`);
     const extensionId = path.join(extensionDiscovery.nodeModulesPath, name, "package.json");
-
-    logger.info(`Unpacking extension ${displayName}`, { fileName, tempFile });
 
     this.extensionState.set(extensionId, {
       state: "installing",
       displayName
     });
+    this.startingInstall = false;
+
+    const extensionFolder = this.getExtensionDestFolder(name);
+    const unpackingTempFolder = path.join(path.dirname(tempFile), `${path.basename(tempFile)}-unpacked`);
+
+    logger.info(`Unpacking extension ${displayName}`, { fileName, tempFile });
 
     try {
       // extract to temp folder first
@@ -464,7 +481,7 @@ export class Extensions extends React.Component {
    * True if at least one extension is in installing state
    */
   @computed get isInstalling() {
-    return [...this.extensionState.values()].some(extension => extension.state === "installing");
+    return this.startingInstall || [...this.extensionState.values()].some(extension => extension.state === "installing");
   }
 
   render() {
