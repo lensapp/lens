@@ -32,6 +32,7 @@ import { getFreePort } from "../port";
 import fse from "fs-extra";
 import { loadYaml } from "@kubernetes/client-node";
 import { Console } from "console";
+import * as path from "path";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -84,7 +85,7 @@ describe("kubeconfig manager tests", () => {
     const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port);
 
     expect(logger.error).not.toBeCalled();
-    expect(kubeConfManager.getPath()).toBe("tmp/kubeconfig-foo");
+    expect(kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
     const file = await fse.readFile(kubeConfManager.getPath());
     const yml = loadYaml<any>(file.toString());
 
