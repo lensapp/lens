@@ -10,6 +10,7 @@ describe("<BottomBar />", () => {
 
   it("renders w/o errors", () => {
     const { container } = render(<BottomBar />);
+
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
@@ -28,20 +29,24 @@ describe("<BottomBar />", () => {
   it("renders items [{item: React.ReactNode}] (4.0.0-rc.1)", async () => {
     const testId = "testId";
     const text = "heee";
+
     statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => [
       { item: <span data-testid={testId} >{text}</span> }
     ]);
     const { getByTestId } = render(<BottomBar />);
+
     expect(await getByTestId(testId)).toHaveTextContent(text);
   });
 
   it("renders items [{item: () => React.ReactNode}] (4.0.0-rc.1+)", async () => {
     const testId = "testId";
     const text = "heee";
+
     statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => [
       { item: () => <span data-testid={testId} >{text}</span> }
     ]);
     const { getByTestId } = render(<BottomBar />);
+
     expect(await getByTestId(testId)).toHaveTextContent(text);
   });
 });
