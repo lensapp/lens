@@ -4,18 +4,20 @@ import webpack from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import TerserPlugin from "terser-webpack-plugin";
-import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
+import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
+import * as vars from "./src/common/vars";
 
 export default [
   webpackLensRenderer
-]
+];
 
 export function webpackLensRenderer({ showVars = true } = {}): webpack.Configuration {
   if (showVars) {
-    console.info('WEBPACK:renderer', require("./src/common/vars"));
+    console.info("WEBPACK:renderer", vars);
   }
+
   return {
     context: __dirname,
     target: "electron-renderer",
@@ -27,7 +29,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       hot: true,
       // to avoid cors errors when requests is from iframes
       disableHostCheck: true,
-      headers: { 'Access-Control-Allow-Origin': '*' },
+      headers: { "Access-Control-Allow-Origin": "*" },
     },
     name: "lens-app",
     mode: isProduction ? "production" : "development",
@@ -39,10 +41,10 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       libraryTarget: "global",
       library: "",
       globalObject: "this",
-      publicPath: publicPath,
+      publicPath,
       path: buildDir,
-      filename: '[name].js',
-      chunkFilename: 'chunks/[name].js',
+      filename: "[name].js",
+      chunkFilename: "chunks/[name].js",
     },
     stats: {
       warningsFilter: [
@@ -51,8 +53,8 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     },
     resolve: {
       extensions: [
-        '.js', '.jsx', '.json',
-        '.ts', '.tsx',
+        ".js", ".jsx", ".json",
+        ".ts", ".tsx",
       ]
     },
     optimization: {
@@ -91,7 +93,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
                   }],
                 ],
                 plugins: [
-                  isDevelopment && require.resolve('react-refresh/babel'),
+                  isDevelopment && require.resolve("react-refresh/babel"),
                 ].filter(Boolean),
               }
             },
@@ -190,5 +192,5 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       isDevelopment && new ReactRefreshWebpackPlugin(),
 
     ].filter(Boolean),
-  }
+  };
 }

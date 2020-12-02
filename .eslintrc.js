@@ -4,6 +4,7 @@ module.exports = {
   ignorePatterns: [
     "**/node_modules/**/*",
     "**/dist/**/*",
+    "**/static/**/*",
   ],
   settings: {
     react: {

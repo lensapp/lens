@@ -115,6 +115,7 @@ export class PodDetailsList extends React.Component<Props> {
         <TableCell className="name">{pod.getName()}</TableCell>
         <TableCell className="warning"><KubeObjectStatusIcon key="icon" object={pod}/></TableCell>
         <TableCell className="namespace">{pod.getNs()}</TableCell>
+        <TableCell className="ready">{pod.getRunningContainers().length}/{pod.getContainers().length}</TableCell>
         <TableCell className="cpu">{this.renderCpuUsage(`cpu-${pod.getId()}`, metrics.cpu)}</TableCell>
         <TableCell className="memory">{this.renderMemoryUsage(`memory-${pod.getId()}`, metrics.memory)}</TableCell>
         <TableCell className={cssNames("status", kebabCase(pod.getStatusMessage()))}>{pod.getStatusMessage()}</TableCell>
@@ -148,7 +149,8 @@ export class PodDetailsList extends React.Component<Props> {
           <TableHead>
             <TableCell className="name" sortBy={sortBy.name}><Trans>Name</Trans></TableCell>
             <TableCell className="warning"/>
-            <TableCell className="namespace" sortBy={sortBy.namespace}>Namespace</TableCell>
+            <TableCell className="namespace" sortBy={sortBy.namespace}><Trans>Namespace</Trans></TableCell>
+            <TableCell className="ready"><Trans>Ready</Trans></TableCell>
             <TableCell className="cpu" sortBy={sortBy.cpu}><Trans>CPU</Trans></TableCell>
             <TableCell className="memory" sortBy={sortBy.memory}><Trans>Memory</Trans></TableCell>
             <TableCell className="status"><Trans>Status</Trans></TableCell>

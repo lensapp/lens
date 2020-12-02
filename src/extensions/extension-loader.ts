@@ -1,5 +1,6 @@
 import { app, ipcRenderer, remote } from "electron";
 import { EventEmitter } from "events";
+import { isEqual } from "lodash";
 import { action, computed, observable, reaction, toJS, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
@@ -25,7 +26,12 @@ const logModule = "[EXTENSIONS-LOADER]";
 export class ExtensionLoader {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
   protected instances = observable.map<LensExtensionId, LensExtension>();
-  protected readonly requestExtensionsChannel = "extensions:loaded";
+
+  // IPC channel to broadcast changes to extensions from main
+  protected static readonly extensionsMainChannel = "extensions:main";
+
+  // IPC channel to broadcast changes to extensions from renderer
+  protected static readonly extensionsRendererChannel = "extensions:renderer";
 
   // emits event "remove" of type LensExtension when the extension is removed
   private events = new EventEmitter();
@@ -95,28 +101,27 @@ export class ExtensionLoader {
     this.loadOnMain();
     this.broadcastExtensions();
 
-    reaction(() => this.extensions.toJS(), () => {
+    reaction(() => this.toJSON(), () => {
       this.broadcastExtensions();
     });
 
-    handleRequest(this.requestExtensionsChannel, () => {
+    handleRequest(ExtensionLoader.extensionsMainChannel, () => {
       return Array.from(this.toJSON());
+    });
+
+    subscribeToBroadcast(ExtensionLoader.extensionsRendererChannel, (_event, extensions: [LensExtensionId, InstalledExtension][]) => {
+      this.syncExtensions(extensions);
     });
   }
 
   protected async initRenderer() {
     const extensionListHandler = (extensions: [LensExtensionId, InstalledExtension][]) => {
       this.isLoaded = true;
+      this.syncExtensions(extensions);
+
       const receivedExtensionIds = extensions.map(([lensExtensionId]) => lensExtensionId);
-
-      // Add new extensions
-      extensions.forEach(([extId, ext]) => {
-        if (!this.extensions.has(extId)) {
-          this.extensions.set(extId, ext);
-        }
-      });
-
-      // Remove deleted extensions
+          
+      // Remove deleted extensions in renderer side only
       this.extensions.forEach((_, lensExtensionId) => {
         if (!receivedExtensionIds.includes(lensExtensionId)) {
           this.removeExtension(lensExtensionId);
@@ -124,14 +129,26 @@ export class ExtensionLoader {
       });
     };
 
-    requestMain(this.requestExtensionsChannel).then(extensionListHandler);
-    subscribeToBroadcast(this.requestExtensionsChannel, (event, extensions: [LensExtensionId, InstalledExtension][]) => {
+    reaction(() => this.toJSON(), () => {
+      this.broadcastExtensions(false);
+    });
+
+    requestMain(ExtensionLoader.extensionsMainChannel).then(extensionListHandler);
+    subscribeToBroadcast(ExtensionLoader.extensionsMainChannel, (_event, extensions: [LensExtensionId, InstalledExtension][]) => {
       extensionListHandler(extensions);
     });
   }
 
+  syncExtensions(extensions: [LensExtensionId, InstalledExtension][]) {
+    extensions.forEach(([lensExtensionId, extension]) => {
+      if (!isEqual(this.extensions.get(lensExtensionId), extension)) {
+        this.extensions.set(lensExtensionId, extension);
+      }
+    });
+  }
+
   loadOnMain() {
-    logger.info(`${logModule}: load on main`);
+    logger.debug(`${logModule}: load on main`);
     this.autoInitExtensions(async (extension: LensMainExtension) => {
       // Each .add returns a function to remove the item
       const removeItems = [
@@ -151,7 +168,7 @@ export class ExtensionLoader {
   }
 
   loadOnClusterManagerRenderer() {
-    logger.info(`${logModule}: load on main renderer (cluster manager)`);
+    logger.debug(`${logModule}: load on main renderer (cluster manager)`);
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
       const removeItems = [
         registries.globalPageRegistry.add(extension.globalPages, extension),
@@ -174,7 +191,7 @@ export class ExtensionLoader {
   }
 
   loadOnClusterRenderer() {
-    logger.info(`${logModule}: load on cluster renderer (dashboard)`);
+    logger.debug(`${logModule}: load on cluster renderer (dashboard)`);
     const cluster = getHostedCluster();
 
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
@@ -204,26 +221,26 @@ export class ExtensionLoader {
 
   protected autoInitExtensions(register: (ext: LensExtension) => Promise<Function[]>) {
     return reaction(() => this.toJSON(), installedExtensions => {
-      for (const [extId, ext] of installedExtensions) {
+      for (const [extId, extension] of installedExtensions) {
         const alreadyInit = this.instances.has(extId);
 
-        if (ext.isEnabled && !alreadyInit) {
+        if (extension.isEnabled && !alreadyInit) {
           try {
-            const LensExtensionClass = this.requireExtension(ext);
+            const LensExtensionClass = this.requireExtension(extension);
 
             if (!LensExtensionClass) {
               continue;
             }
 
-            const instance = new LensExtensionClass(ext);
+            const instance = new LensExtensionClass(extension);
 
             instance.whenEnabled(() => register(instance));
             instance.enable();
             this.instances.set(extId, instance);
           } catch (err) {
-            logger.error(`${logModule}: activation extension error`, { ext, err });
+            logger.error(`${logModule}: activation extension error`, { ext: extension, err });
           }
-        } else if (!ext.isEnabled && alreadyInit) {
+        } else if (!extension.isEnabled && alreadyInit) {
           this.removeInstance(extId);
         }
       }
@@ -262,8 +279,8 @@ export class ExtensionLoader {
     });
   }
 
-  broadcastExtensions() {
-    broadcastMessage(this.requestExtensionsChannel, Array.from(this.toJSON()));
+  broadcastExtensions(main = true) {
+    broadcastMessage(main ? ExtensionLoader.extensionsMainChannel : ExtensionLoader.extensionsRendererChannel, Array.from(this.toJSON()));
   }
 }
 
