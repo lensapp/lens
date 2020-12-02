@@ -8,8 +8,12 @@ export class DistributionDetector extends BaseClusterDetector {
   public async detect() {
     this.version = await this.getKubernetesVersion();
 
-    if (await this.isRancher()) {
-      return { value: "rancher", accuracy: 80};
+    if (this.isRke()) {
+      return { value: "rke", accuracy: 80};
+    }
+
+    if (this.isK3s()) {
+      return { value: "k3s", accuracy: 80};
     }
 
     if (this.isGKE()) {
@@ -32,6 +36,10 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "digitalocean", accuracy: 90};
     }
 
+    if (this.isMirantis()) {
+      return { value: "mirantis", accuracy: 90};
+    }
+
     if (this.isMinikube()) {
       return { value: "minikube", accuracy: 80};
     }
@@ -42,6 +50,10 @@ export class DistributionDetector extends BaseClusterDetector {
 
     if (this.isKind()) {
       return { value: "kind", accuracy: 70};
+    }
+
+    if (this.isDockerDesktop()) {
+      return { value: "docker-desktop", accuracy: 80};
     }
 
     if (this.isCustom()) {
@@ -75,6 +87,10 @@ export class DistributionDetector extends BaseClusterDetector {
     return this.cluster.apiUrl.endsWith("azmk8s.io");
   }
 
+  protected isMirantis() {
+    return this.version.includes("-mirantis-") || this.version.includes("-docker-");
+  }
+
   protected isDigitalOcean() {
     return this.cluster.apiUrl.endsWith("k8s.ondigitalocean.com");
   }
@@ -91,17 +107,19 @@ export class DistributionDetector extends BaseClusterDetector {
     return this.cluster.contextName.startsWith("kubernetes-admin@kind-");
   }
 
+  protected isDockerDesktop() {
+    return this.cluster.contextName === "docker-desktop";
+  }
+
   protected isCustom() {
     return this.version.includes("+");
   }
 
-  protected async isRancher() {
-    try {
-      const response = await this.k8sRequest("");
+  protected isRke() {
+    return this.version.includes("-rancher");
+  }
 
-      return response.data.find((api: any) => api?.apiVersion?.group === "meta.cattle.io") !== undefined;
-    } catch (e) {
-      return false;
-    }
+  protected isK3s() {
+    return this.version.includes("+k3s");
   }
 }
