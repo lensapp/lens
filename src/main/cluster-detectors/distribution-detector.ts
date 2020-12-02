@@ -8,8 +8,12 @@ export class DistributionDetector extends BaseClusterDetector {
   public async detect() {
     this.version = await this.getKubernetesVersion();
 
-    if (await this.isRancher()) {
-      return { value: "rancher", accuracy: 80};
+    if (this.isRke()) {
+      return { value: "rke", accuracy: 80};
+    }
+
+    if (this.isK3s()) {
+      return { value: "k3s", accuracy: 80};
     }
 
     if (this.isGKE()) {
@@ -87,13 +91,11 @@ export class DistributionDetector extends BaseClusterDetector {
     return this.version.includes("+");
   }
 
-  protected async isRancher() {
-    try {
-      const response = await this.k8sRequest("");
+  protected isRke() {
+    return this.version.includes("-rancher");
+  }
 
-      return response.data.find((api: any) => api?.apiVersion?.group === "meta.cattle.io") !== undefined;
-    } catch (e) {
-      return false;
-    }
+  protected isK3s() {
+    return this.version.includes("+k3s");
   }
 }
