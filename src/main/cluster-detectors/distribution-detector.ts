@@ -48,6 +48,10 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "microk8s", accuracy: 80};
     }
 
+    if (this.isDockerDesktop()) {
+      return { value: "docker-desktop", accuracy: 80};
+    }
+
     if (this.isCustom()) {
       return { value: "custom", accuracy: 10};
     }
@@ -93,6 +97,10 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isMicrok8s() {
     return this.cluster.contextName.startsWith("microk8s");
+  }
+
+  protected isDockerDesktop() {
+    return this.cluster.contextName === "docker-desktop";
   }
 
   protected isCustom() {
