@@ -11,13 +11,23 @@ import { getHostedCluster } from "../common/cluster-store";
 @autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
   abstract api: KubeApi<T>;
-  public readonly abstract limit: number;
-  public readonly abstract saveLimit: number;
+  public readonly limit?: number;
+  public readonly bufferSize: number = 50000;
 
   constructor() {
     super();
     this.bindWatchEventsUpdater();
     kubeWatchApi.addListener(this, this.onWatchApiEvent);
+  }
+
+  get query(): IKubeApiQueryParams {
+    const { limit } = this;
+
+    if (!limit) {
+      return {};
+    }
+
+    return { limit };
   }
 
   getStatuses?(items: T[]): Record<string, number>;
@@ -63,10 +73,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   protected async loadItems(allowedNamespaces?: string[]): Promise<T[]> {
     if (!this.api.isNamespaced || !allowedNamespaces) {
-      const { limit } = this;
-      const query: IKubeApiQueryParams = limit ? { limit } : {};
-
-      return this.api.list({}, query);
+      return this.api.list({}, this.query);
     } else {
       return Promise
         .all(allowedNamespaces.map(namespace => this.api.list({ namespace })))
@@ -208,6 +215,6 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
 
     // update items
-    this.items.replace(this.sortItems(items.slice(-this.saveLimit)));
+    this.items.replace(this.sortItems(items.slice(-this.bufferSize)));
   }
 }
