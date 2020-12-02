@@ -9,7 +9,7 @@ jest.mock(
   () => ({
     ipcRenderer: {
       invoke: jest.fn(async (channel: string) => {
-        if (channel === "extensions:loaded") {
+        if (channel === "extensions:main") {
           return [
             [
               manifestPath,
@@ -44,7 +44,7 @@ jest.mock(
       }),
       on: jest.fn(
         (channel: string, listener: (event: any, ...args: any[]) => void) => {
-          if (channel === "extensions:loaded") {
+          if (channel === "extensions:main") {
             // First initialize with extensions 1 and 2
             // and then broadcast event to remove extensioin 2 and add extension number 3
             setTimeout(() => {
