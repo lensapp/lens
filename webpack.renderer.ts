@@ -17,6 +17,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
   if (showVars) {
     console.info("WEBPACK:renderer", vars);
   }
+
   return {
     context: __dirname,
     target: "electron-renderer",

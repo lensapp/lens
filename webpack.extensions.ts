@@ -6,6 +6,7 @@ import { sassCommonVars } from "./src/common/vars";
 export default function (): webpack.Configuration {
   const entry = "./src/extensions/extension-api.ts";
   const outDir = "./src/extensions/npm/extensions/dist";
+
   return {
     // Compile for Electron for renderer process
     // see <https://webpack.js.org/configuration/target/>
