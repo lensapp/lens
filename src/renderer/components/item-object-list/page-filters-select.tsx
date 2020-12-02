@@ -31,12 +31,15 @@ export class PageFiltersSelect extends React.Component<Props> {
   @computed get groupedOptions() {
     const options: GroupSelectOption<SelectOptionFilter>[] = [];
     const { disableFilters } = this.props;
+
     if (!disableFilters[FilterType.NAMESPACE]) {
       const selectedValues = pageFilters.getValues(FilterType.NAMESPACE);
+
       options.push({
         label: <Trans>Namespace</Trans>,
         options: namespaceStore.items.map(ns => {
           const name = ns.getName();
+
           return {
             type: FilterType.NAMESPACE,
             value: name,
@@ -46,18 +49,21 @@ export class PageFiltersSelect extends React.Component<Props> {
         })
       });
     }
+
     return options;
   }
 
   @computed get options(): SelectOptionFilter[] {
     return this.groupedOptions.reduce((options, optGroup) => {
       options.push(...optGroup.options);
+
       return options;
     }, []);
   }
 
   private formatLabel = (option: SelectOptionFilter) => {
     const { label, value, type, selected } = option;
+
     return (
       <div className="flex gaps">
         <FilterIcon type={type}/>
@@ -71,6 +77,7 @@ export class PageFiltersSelect extends React.Component<Props> {
     const { type, value, selected } = option;
     const { addFilter, removeFilter } = pageFilters;
     const filter = { type, value };
+
     if (!selected) {
       addFilter(filter);
     }
@@ -81,11 +88,13 @@ export class PageFiltersSelect extends React.Component<Props> {
 
   render() {
     const { groupedOptions, formatLabel, onSelect, options } = this;
+
     if (!options.length && this.props.allowEmpty) {
       return null;
     }
     const { allowEmpty, disableFilters, ...selectProps } = this.props;
     const selectedOptions = options.filter(opt => opt.selected);
+
     return (
       <Select
         {...selectProps}

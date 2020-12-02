@@ -54,6 +54,7 @@ export class App extends React.Component {
   static async init() {
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
+
     logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`);
     await Terminal.preloadFonts();
 
@@ -76,18 +77,22 @@ export class App extends React.Component {
   async componentDidMount() {
     const cluster = getHostedCluster();
     const promises: Promise<void>[] = [];
+
     if (isAllowedResource("events") && isAllowedResource("pods")) {
       promises.push(eventStore.loadAll());
       promises.push(podsStore.loadAll());
     }
+
     if (isAllowedResource("nodes")) {
       promises.push(nodesStore.loadAll());
     }
     await Promise.all(promises);
+
     if (eventStore.isLoaded && podsStore.isLoaded) {
       eventStore.subscribe();
       podsStore.subscribe();
     }
+
     if (nodesStore.isLoaded) {
       nodesStore.subscribe();
     }
@@ -101,6 +106,7 @@ export class App extends React.Component {
   get warningsCount() {
     let warnings = sum(nodesStore.items
       .map(node => node.getWarningConditions().length));
+
     warnings = warnings + eventStore.getWarnings().length;
 
     return warnings;
@@ -110,16 +116,19 @@ export class App extends React.Component {
     if (isAllowedResource(["events", "nodes", "pods"])) {
       return clusterURL();
     }
+
     return workloadsURL();
   }
 
   getTabLayoutRoutes(menuItem: ClusterPageMenuRegistration) {
     const routes: TabLayoutRoute[] = [];
+
     if (!menuItem.id) {
       return routes;
     }
     clusterPageMenuRegistry.getSubItems(menuItem).forEach((item) => {
       const page = clusterPageRegistry.getByPageMenuTarget(item.target);
+
       if (page) {
         routes.push({
           routePath: page.routePath,
@@ -130,19 +139,24 @@ export class App extends React.Component {
         });
       }
     });
+
     return routes;
   }
 
   renderExtensionTabLayoutRoutes() {
     return clusterPageMenuRegistry.getRootItems().map((menu, index) => {
       const tabRoutes = this.getTabLayoutRoutes(menu);
+
       if (tabRoutes.length > 0) {
         const pageComponent = () => <TabLayout tabs={tabRoutes} />;
+
         return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
       } else {
         const page = clusterPageRegistry.getByPageMenuTarget(menu.target);
+
         if (page) {
           const pageComponent = () => <page.components.Page />;
+
           return <Route key={`extension-tab-layout-route-${index}`} path={page.routePath} exact={page.exact} component={pageComponent}/>;
         }
       }
@@ -152,6 +166,7 @@ export class App extends React.Component {
   renderExtensionRoutes() {
     return clusterPageRegistry.getItems().map((page, index) => {
       const menu = clusterPageMenuRegistry.getByPage(page);
+
       if (!menu) {
         return <Route key={`extension-route-${index}`} path={page.routePath} exact={page.exact} component={page.components.Page}/>;
       }

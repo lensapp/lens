@@ -6,6 +6,7 @@ import { KubeApi } from "../kube-api";
 export class IngressApi extends KubeApi<Ingress> {
   getMetrics(ingress: string, namespace: string): Promise<IIngressMetrics> {
     const opts = { category: "ingress", ingress };
+
     return metricsApi.getMetrics({
       bytesSentSuccess: opts,
       bytesSentFailure: opts,
@@ -98,15 +99,18 @@ export class Ingress extends KubeObject {
 
   getRoutes() {
     const { spec: { tls, rules } } = this;
+
     if (!rules) return [];
 
     let protocol = "http";
     const routes: string[] = [];
+
     if (tls && tls.length > 0) {
       protocol += "s";
     }
     rules.map(rule => {
       const host = rule.host ? rule.host : "*";
+
       if (rule.http && rule.http.paths) {
         rule.http.paths.forEach(path => {
           const { serviceName, servicePort } = getBackendServiceNamePort(path.backend);
@@ -132,7 +136,9 @@ export class Ingress extends KubeObject {
 
   getHosts() {
     const { spec: { rules } } = this;
+
     if (!rules) return [];
+
     return rules.filter(rule => rule.host).map(rule => rule.host);
   }
 
@@ -141,7 +147,6 @@ export class Ingress extends KubeObject {
     const { spec: { tls, rules, backend, defaultBackend } } = this;
     const httpPort = 80;
     const tlsPort = 443;
-
     // Note: not using the port name (string)
     const servicePort = defaultBackend?.service.port.number ?? backend?.servicePort;
 
@@ -152,6 +157,7 @@ export class Ingress extends KubeObject {
     } else if (servicePort !== undefined) {
       ports.push(Number(servicePort));
     }
+
     if (tls && tls.length > 0) {
       ports.push(tlsPort);
     }

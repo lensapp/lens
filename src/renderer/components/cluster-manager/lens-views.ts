@@ -20,12 +20,14 @@ export async function initView(clusterId: ClusterId) {
     return;
   }
   const cluster = clusterStore.getById(clusterId);
+
   if (!cluster) {
     return;
   }
   logger.info(`[LENS-VIEW]: init dashboard, clusterId=${clusterId}`);
   const parentElem = document.getElementById("lens-views");
   const iframe = document.createElement("iframe");
+
   iframe.name = cluster.contextName;
   iframe.setAttribute("src", getClusterFrameUrl(clusterId));
   iframe.addEventListener("load", () => {
@@ -52,10 +54,12 @@ export async function autoCleanOnRemove(clusterId: ClusterId, iframe: HTMLIFrame
 
 export function refreshViews() {
   const cluster = clusterStore.getById(getMatchedClusterId());
+
   lensViews.forEach(({ clusterId, view, isLoaded }) => {
     const isCurrent = clusterId === cluster?.id;
     const isReady = cluster?.available && cluster?.ready;
     const isVisible = isCurrent && isLoaded && isReady;
+
     view.style.display = isVisible ? "flex" : "none";
   });
 }

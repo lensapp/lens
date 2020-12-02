@@ -60,6 +60,7 @@ export class ClusterIcon extends React.Component<Props> {
       interactive: interactive !== undefined ? interactive : !!this.props.onClick,
       active: isActive,
     });
+
     return (
       <div {...elemProps} className={className} id={showTooltip ? clusterIconId : null}>
         {showTooltip && (

@@ -30,6 +30,7 @@ defineGlobal("__static", {
     if (isDevelopment) {
       return path.resolve(contextDir, "static");
     }
+
     return path.resolve(process.resourcesPath, "static");
   }
 });

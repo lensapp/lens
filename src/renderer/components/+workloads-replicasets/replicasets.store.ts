@@ -12,6 +12,7 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
 
   async loadMetrics(replicaSet: ReplicaSet) {
     const pods = this.getChildPods(replicaSet);
+
     this.metrics = await podsApi.getMetrics(pods, replicaSet.getNs(), "");
   }
 

@@ -44,7 +44,6 @@ describe("workspace store tests", () => {
 
     it("can update workspace description", () => {
       const ws = WorkspaceStore.getInstance<WorkspaceStore>();
-
       const workspace = ws.addWorkspace(new Workspace({
         id: "foobar",
         name: "foobar",
@@ -65,6 +64,7 @@ describe("workspace store tests", () => {
       }));
 
       const workspace = ws.getById("123");
+
       expect(workspace.name).toBe("foobar");
       expect(workspace.enabled).toBe(true);
     });

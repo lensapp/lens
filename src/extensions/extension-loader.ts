@@ -176,6 +176,7 @@ export class ExtensionLoader {
   loadOnClusterRenderer() {
     logger.info(`${logModule}: load on cluster renderer (dashboard)`);
     const cluster = getHostedCluster();
+
     this.autoInitExtensions(async (extension: LensRendererExtension) => {
       if (await extension.isEnabledForCluster(cluster) === false) {
         return [];
@@ -209,11 +210,13 @@ export class ExtensionLoader {
         if (ext.isEnabled && !alreadyInit) {
           try {
             const LensExtensionClass = this.requireExtension(ext);
+
             if (!LensExtensionClass) {
               continue;
             }
 
             const instance = new LensExtensionClass(ext);
+
             instance.whenEnabled(() => register(instance));
             instance.enable();
             this.instances.set(extId, instance);
@@ -231,12 +234,14 @@ export class ExtensionLoader {
 
   protected requireExtension(extension: InstalledExtension): LensExtensionConstructor {
     let extEntrypoint = "";
+
     try {
       if (ipcRenderer && extension.manifest.renderer) {
         extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.renderer));
       } else if (!ipcRenderer && extension.manifest.main) {
         extEntrypoint = path.resolve(path.join(path.dirname(extension.manifestPath), extension.manifest.main));
       }
+
       if (extEntrypoint !== "") {
         return __non_webpack_require__(extEntrypoint).default;
       }

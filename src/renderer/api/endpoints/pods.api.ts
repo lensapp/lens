@@ -6,6 +6,7 @@ import { KubeApi } from "../kube-api";
 export class PodsApi extends KubeApi<Pod> {
   async getLogs(params: { namespace: string; name: string }, query?: IPodLogsQuery): Promise<string> {
     const path = `${this.getUrl(params)}/log`;
+
     return this.request.get(path, { query });
   }
 
@@ -247,6 +248,7 @@ export class Pod extends WorkloadKubeObject {
 
   getRunningContainers() {
     const statuses = this.getContainerStatuses();
+
     return this.getAllContainers().filter(container => {
       return statuses.find(status => status.name === container.name && !!status.state["running"]);
     }
@@ -256,18 +258,23 @@ export class Pod extends WorkloadKubeObject {
   getContainerStatuses(includeInitContainers = true) {
     const statuses: IPodContainerStatus[] = [];
     const { containerStatuses, initContainerStatuses } = this.status;
+
     if (containerStatuses) {
       statuses.push(...containerStatuses);
     }
+
     if (includeInitContainers && initContainerStatuses) {
       statuses.push(...initContainerStatuses);
     }
+
     return statuses;
   }
 
   getRestartsCount(): number {
     const { containerStatuses } = this.status;
+
     if (!containerStatuses) return 0;
+
     return containerStatuses.reduce((count, item) => count + item.restartCount, 0);
   }
 
@@ -290,18 +297,23 @@ export class Pod extends WorkloadKubeObject {
     const goodConditions = ["Initialized", "Ready"].every(condition =>
       !!this.getConditions().find(item => item.type === condition && item.status === "True")
     );
+
     if (reason === PodStatus.EVICTED) {
       return PodStatus.EVICTED;
     }
+
     if (phase === PodStatus.FAILED) {
       return PodStatus.FAILED;
     }
+
     if (phase === PodStatus.SUCCEEDED) {
       return PodStatus.SUCCEEDED;
     }
+
     if (phase === PodStatus.RUNNING && goodConditions) {
       return PodStatus.RUNNING;
     }
+
     return PodStatus.PENDING;
   }
 
@@ -312,20 +324,26 @@ export class Pod extends WorkloadKubeObject {
 
     let message = "";
     const statuses = this.getContainerStatuses(false); // not including initContainers
+
     if (statuses.length) {
       statuses.forEach(status => {
         const { state } = status;
+
         if (state.waiting) {
           const { reason } = state.waiting;
+
           message = reason ? reason : "Waiting";
         }
+
         if (state.terminated) {
           const { reason } = state.terminated;
+
           message = reason ? reason : "Terminated";
         }
       });
     }
     if (message) return message;
+
     return this.getStatusPhase();
   }
 
@@ -349,7 +367,9 @@ export class Pod extends WorkloadKubeObject {
 
   getNodeSelectors(): string[] {
     const { nodeSelector } = this.spec;
+
     if (!nodeSelector) return [];
+
     return Object.entries(nodeSelector).map(values => values.join(": "));
   }
 
@@ -367,8 +387,10 @@ export class Pod extends WorkloadKubeObject {
     });
     const crashLoop = !!this.getContainerStatuses().find(condition => {
       const waiting = condition.state.waiting;
+
       return (waiting && waiting.reason == "CrashLoopBackOff");
     });
+
     return (
       notReady ||
       crashLoop ||
@@ -391,18 +413,22 @@ export class Pod extends WorkloadKubeObject {
       periodSeconds, successThreshold, failureThreshold
     } = probeData;
     const probe = [];
+
     // HTTP Request
     if (httpGet) {
       const { path, port, host, scheme } = httpGet;
+
       probe.push(
         "http-get",
         `${scheme.toLowerCase()}://${host || ""}:${port || ""}${path || ""}`,
       );
     }
+
     // Command
     if (exec && exec.command) {
       probe.push(`exec [${exec.command.join(" ")}]`);
     }
+
     // TCP Probe
     if (tcpSocket && tcpSocket.port) {
       probe.push(`tcp-socket :${tcpSocket.port}`);
@@ -414,6 +440,7 @@ export class Pod extends WorkloadKubeObject {
       `#success=${successThreshold || "0"}`,
       `#failure=${failureThreshold || "0"}`,
     );
+
     return probe;
   }
 

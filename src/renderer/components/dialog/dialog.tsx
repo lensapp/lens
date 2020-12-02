@@ -63,6 +63,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
   componentDidUpdate(prevProps: DialogProps) {
     const { isOpen } = this.props;
+
     if (isOpen !== prevProps.isOpen) {
       this.toggle(isOpen);
     }
@@ -91,6 +92,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
   onOpen = () => {
     this.props.onOpen();
+
     if (!this.props.pinned) {
       if (this.elem) this.elem.addEventListener("click", this.onClickOutside);
       // Using document.body target to handle keydown event before Drawer does
@@ -100,6 +102,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
   onClose = () => {
     this.props.onClose();
+
     if (!this.props.pinned) {
       if (this.elem) this.elem.removeEventListener("click", this.onClickOutside);
       document.body.removeEventListener("keydown", this.onEscapeKey);
@@ -108,6 +111,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
   onEscapeKey = (evt: KeyboardEvent) => {
     const escapeKey = evt.code === "Escape";
+
     if (escapeKey) {
       this.close();
       evt.stopPropagation();
@@ -116,6 +120,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
   onClickOutside = (evt: MouseEvent) => {
     const target = evt.target as HTMLElement;
+
     if (!this.contentElem.contains(target)) {
       this.close();
       evt.stopPropagation();
@@ -125,6 +130,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   render() {
     const { modal, animated, pinned } = this.props;
     let { className } = this.props;
+
     className = cssNames("Dialog flex center", className, { modal, pinned });
     let dialog = (
       <div className={className} onClick={stopPropagation}>
@@ -133,6 +139,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
         </div>
       </div>
     );
+
     if (animated) {
       dialog = (
         <Animate enter={this.isOpen} name="opacity-scale">
@@ -143,6 +150,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     else if (!this.isOpen) {
       return null;
     }
+
     return createPortal(dialog, document.body);
   }
 }

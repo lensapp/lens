@@ -23,6 +23,7 @@ export class ServiceAccountsSecret extends React.Component<Props, State> {
   renderSecretValue() {
     const { secret } = this.props;
     const { showToken } = this.state;
+
     return (
       <>
         {!showToken && (
@@ -44,6 +45,7 @@ export class ServiceAccountsSecret extends React.Component<Props, State> {
 
   render() {
     const { metadata: { name, creationTimestamp }, type } = this.props.secret;
+
     return (
       <div className="ServiceAccountsSecret box grow-fixed">
         <div className="secret-row">

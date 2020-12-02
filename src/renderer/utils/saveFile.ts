@@ -8,6 +8,7 @@ export function saveFileDialog(filename: string, contents: BlobPart | BlobPart[]
   const data = new Blob([contents].flat(), { type });
   const url = URL.createObjectURL(data);
   const link = document.createElement("a");
+
   link.href = url;
   link.download = filename;
   link.style.display = "none";

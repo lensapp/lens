@@ -29,7 +29,6 @@ export function parseKubeApi(path: string): IKubeApiParsed {
   path = new URL(path, location.origin).pathname;
   const [, prefix, ...parts] = path.split("/");
   const apiPrefix = `/${prefix}`;
-
   const [left, right, namespaced] = splitArray(parts, "namespaces");
   let apiGroup, apiVersion, namespace, resource, name;
 
@@ -107,9 +106,11 @@ export function parseKubeApi(path: string): IKubeApiParsed {
 export function createKubeApiURL(ref: IKubeApiLinkRef): string {
   const { apiPrefix = "/apis", resource, apiVersion, name } = ref;
   let { namespace } = ref;
+
   if (namespace) {
     namespace = `namespaces/${namespace}`;
   }
+
   return [apiPrefix, apiVersion, namespace, resource, name]
     .filter(v => v)
     .join("/");
@@ -125,6 +126,7 @@ export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): st
 
   // search in registered apis by 'kind' & 'apiVersion'
   const api = apiManager.getApi(api => api.kind === kind && api.apiVersionWithGroup == apiVersion);
+
   if (api) {
     return api.getUrl({ namespace, name });
   }
@@ -132,8 +134,10 @@ export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): st
   // lookup api by generated resource link
   const apiPrefixes = ["/apis", "/api"];
   const resource = kind.endsWith("s") ? `${kind.toLowerCase()}es` : `${kind.toLowerCase()}s`;
+
   for (const apiPrefix of apiPrefixes) {
     const apiLink = createKubeApiURL({ apiPrefix, apiVersion, name, namespace, resource });
+
     if (apiManager.getApi(apiLink)) {
       return apiLink;
     }
@@ -141,6 +145,7 @@ export function lookupApiLink(ref: IKubeObjectRef, parentObject: KubeObject): st
 
   // resolve by kind only (hpa's might use refs to older versions of resources for example)
   const apiByKind = apiManager.getApi(api => api.kind === kind);
+
   if (apiByKind) {
     return apiByKind.getUrl({ name, namespace });
   }

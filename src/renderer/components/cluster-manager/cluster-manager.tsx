@@ -46,6 +46,7 @@ export class ClusterManager extends React.Component {
 
   get startUrl() {
     const { activeClusterId } = clusterStore;
+
     if (activeClusterId) {
       return clusterViewURL({
         params: {
@@ -53,6 +54,7 @@ export class ClusterManager extends React.Component {
         }
       });
     }
+
     return landingURL();
   }
 

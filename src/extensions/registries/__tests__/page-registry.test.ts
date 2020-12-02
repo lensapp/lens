@@ -73,6 +73,7 @@ describe("globalPageRegistry", () => {
   describe("getByPageMenuTarget", () => {
     it("matching to first registered page without id", () => {
       const page = globalPageRegistry.getByPageMenuTarget({ extensionId: ext.name });
+
       expect(page.id).toEqual(undefined);
       expect(page.extensionId).toEqual(ext.name);
       expect(page.routePath).toEqual(getExtensionPageUrl({ extensionId: ext.name }));
@@ -83,6 +84,7 @@ describe("globalPageRegistry", () => {
         pageId: "test-page",
         extensionId: ext.name
       });
+
       expect(page.id).toEqual("test-page");
     });
 
@@ -91,6 +93,7 @@ describe("globalPageRegistry", () => {
         pageId: "wrong-page",
         extensionId: ext.name
       });
+
       expect(page).toBeNull();
     });
   });

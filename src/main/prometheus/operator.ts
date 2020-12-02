@@ -10,9 +10,11 @@ export class PrometheusOperator implements PrometheusProvider {
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
     try {
       let service: V1Service;
+
       for (const labelSelector of ["operated-prometheus=true", "self-monitor=true"]) {
         if (!service) {
           const serviceList = await client.listServiceForAllNamespaces(null, null, null, labelSelector);
+
           service = serviceList.body.items[0];
         }
       }
@@ -26,6 +28,7 @@ export class PrometheusOperator implements PrometheusProvider {
       };
     } catch(error) {
       logger.warn(`PrometheusOperator: failed to list services: ${error.toString()}`);
+
       return;
     }
   }
@@ -80,6 +83,7 @@ export class PrometheusOperator implements PrometheusProvider {
       case "ingress":
         const bytesSent = (ingress: string, statuses: string) =>
           `sum(rate(nginx_ingress_controller_bytes_sent_sum{ingress="${ingress}", status=~"${statuses}"}[${this.rateAccuracy}])) by (ingress)`;
+
         return {
           bytesSentSuccess: bytesSent(opts.igress, "^2\\\\d*"),
           bytesSentFailure: bytesSent(opts.ingres, "^5\\\\d*"),

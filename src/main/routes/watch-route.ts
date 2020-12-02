@@ -25,6 +25,7 @@ class ApiWatcher {
     }
     this.processor = setInterval(() => {
       const events = this.eventBuffer.splice(0);
+
       events.map(event => this.sendEvent(event));
       this.response.flushHeaders();
     }, 50);
@@ -38,6 +39,7 @@ class ApiWatcher {
       clearInterval(this.processor);
     }
     logger.debug(`Stopping watcher for api: ${this.apiUrl}`);
+
     try {
       this.watchRequest.abort();
       this.sendEvent({
@@ -81,6 +83,7 @@ class WatchRoute extends LensApi {
         message: "Empty request. Query params 'api' are not provided.",
         example: "?api=/api/v1/pods&api=/api/v1/nodes",
       }, 400);
+
       return;
     }
 
@@ -91,6 +94,7 @@ class WatchRoute extends LensApi {
 
     apis.forEach(apiUrl => {
       const watcher = new ApiWatcher(apiUrl, cluster.getProxyKubeconfig(), response);
+
       watcher.start();
       watchers.push(watcher);
     });

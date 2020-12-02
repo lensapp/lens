@@ -51,6 +51,7 @@ export class DockStore {
     const mainLayoutMargin = 16;
     const dockTabs = 33;
     const preferedMax = window.innerHeight - mainLayoutHeader - mainLayoutTabs - mainLayoutMargin - dockTabs;
+
     return Math.max(preferedMax, this.minHeight); // don't let max < min
   }
 
@@ -74,6 +75,7 @@ export class DockStore {
     if (!this.height) {
       this.setHeight(this.defaultHeight || this.minHeight);
     }
+
     if (this.height > this.maxHeight) {
       this.setHeight(this.maxHeight);
     }
@@ -94,6 +96,7 @@ export class DockStore {
   @action
   open(fullSize?: boolean) {
     this.isOpen = true;
+
     if (typeof fullSize === "boolean") {
       this.fullSize = fullSize;
     }
@@ -125,8 +128,10 @@ export class DockStore {
       .filter(tab => tab.kind === kind)
       .map(tab => {
         const tabNumber = +tab.title.match(/\d+/);
+
         return tabNumber === 0 ? 1 : tabNumber; // tab without a number is first
       });
+
     for (let i = 1; ; i++) {
       if (!tabNumbers.includes(i)) return i;
     }
@@ -136,29 +141,36 @@ export class DockStore {
   createTab(anonTab: IDockTab, addNumber = true): IDockTab {
     const tabId = MD5(Math.random().toString() + Date.now()).toString();
     const tab: IDockTab = { id: tabId, ...anonTab };
+
     if (addNumber) {
       const tabNumber = this.getNewTabNumber(tab.kind);
+
       if (tabNumber > 1) tab.title += ` (${tabNumber})`;
     }
     this.tabs.push(tab);
     this.selectTab(tab.id);
     this.open();
+
     return tab;
   }
 
   @action
   async closeTab(tabId: TabId) {
     const tab = this.getTabById(tabId);
+
     if (!tab || tab.pinned) {
       return;
     }
     this.tabs.remove(tab);
+
     if (this.selectedTabId === tab.id) {
       if (this.tabs.length) {
         const newTab = this.tabs.slice(-1)[0]; // last
+
         if (newTab.kind === TabKind.TERMINAL) {
           // close the dock when selected sibling inactive terminal tab
           const { terminalStore } = await import("./terminal.store");
+
           if (!terminalStore.isConnected(newTab.id)) this.close();
         }
         this.selectTab(newTab.id);

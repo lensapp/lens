@@ -21,6 +21,7 @@ export class WhatsNew extends React.Component {
   render() {
     const logo = require("../../components/icon/lens-logo.svg");
     const releaseNotes = marked(this.releaseNotes);
+
     return (
       <div className="WhatsNew flex column">
         <div className="content box grow">

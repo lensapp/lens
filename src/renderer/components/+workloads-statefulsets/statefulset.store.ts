@@ -12,6 +12,7 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
 
   async loadMetrics(statefulSet: StatefulSet) {
     const pods = this.getChildPods(statefulSet);
+
     this.metrics = await podsApi.getMetrics(pods, statefulSet.getNs(), "");
   }
 
@@ -21,8 +22,10 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
 
   getStatuses(statefulSets: StatefulSet[]) {
     const status = { failed: 0, pending: 0, running: 0 };
+
     statefulSets.forEach(statefulSet => {
       const pods = this.getChildPods(statefulSet);
+
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
         status.failed++;
       }
@@ -33,6 +36,7 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
         status.running++;
       }
     });
+
     return status;
   }
 

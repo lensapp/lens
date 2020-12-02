@@ -39,11 +39,13 @@ export class ShellSession extends EventEmitter {
   public async open() {
     this.kubectlBinDir = await this.kubectl.binDir();
     const pathFromPreferences = userStore.preferences.kubectlBinariesPath || this.kubectl.getBundledPath();
+
     this.kubectlPathDir = userStore.preferences.downloadKubectlBinaries ? this.kubectlBinDir : path.dirname(pathFromPreferences);
     this.helmBinDir = helmCli.getBinaryDir();
     const env = await this.getCachedShellEnv();
     const shell = env.PTYSHELL;
     const args = await this.getShellArgs(shell);
+
     this.shellProcess = pty.spawn(shell, args, {
       cols: 80,
       cwd: this.cwd() || env.HOME,
@@ -65,6 +67,7 @@ export class ShellSession extends EventEmitter {
     if(!this.preferences || !this.preferences.terminalCWD || this.preferences.terminalCWD === "") {
       return null;
     }
+
     return this.preferences.terminalCWD;
   }
 
@@ -85,6 +88,7 @@ export class ShellSession extends EventEmitter {
 
   protected async getCachedShellEnv() {
     let env = ShellSession.shellEnvs.get(this.clusterId);
+
     if (!env) {
       env = await this.getShellEnv();
       ShellSession.shellEnvs.set(this.clusterId, env);
@@ -122,11 +126,14 @@ export class ShellSession extends EventEmitter {
     env["KUBECONFIG"] = this.kubeconfigPath;
     env["TERM_PROGRAM"] = app.getName();
     env["TERM_PROGRAM_VERSION"] = app.getVersion();
+
     if (this.preferences.httpsProxy) {
       env["HTTPS_PROXY"] = this.preferences.httpsProxy;
     }
     const no_proxy = ["localhost", "127.0.0.1", env["NO_PROXY"]];
+
     env["NO_PROXY"] = no_proxy.filter(address => !!address).join();
+
     if (env.DEBUG) { // do not pass debug option to bash
       delete env["DEBUG"];
     }
@@ -147,12 +154,14 @@ export class ShellSession extends EventEmitter {
       if (!this.running) { return; }
 
       const message = Buffer.from(data.slice(1, data.length), "base64").toString();
+
       switch (data[0]) {
         case "0":
           this.shellProcess.write(message);
           break;
         case "4":
           const resizeMsgObj = JSON.parse(message);
+
           this.shellProcess.resize(resizeMsgObj["Width"], resizeMsgObj["Height"]);
           break;
         case "9":
@@ -171,6 +180,7 @@ export class ShellSession extends EventEmitter {
     this.shellProcess.onExit(({ exitCode }) => {
       this.running = false;
       let timeout = 0;
+
       if (exitCode > 0) {
         this.sendResponse("Terminal will auto-close in 15 seconds ...");
         timeout = 15*1000;

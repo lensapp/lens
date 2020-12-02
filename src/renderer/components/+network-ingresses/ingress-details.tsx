@@ -32,7 +32,9 @@ export class IngressDetails extends React.Component<Props> {
 
   renderPaths(ingress: Ingress) {
     const { spec: { rules } } = ingress;
+
     if (!rules || !rules.length) return null;
+
     return rules.map((rule, index) => {
       return (
         <div className="rules" key={index}>
@@ -71,6 +73,7 @@ export class IngressDetails extends React.Component<Props> {
 
   renderIngressPoints(ingressPoints: ILoadBalancerIngress[]) {
     if (!ingressPoints || ingressPoints.length === 0) return null;
+
     return (
       <div>
         <Table className="ingress-points">
@@ -93,6 +96,7 @@ export class IngressDetails extends React.Component<Props> {
 
   render() {
     const { object: ingress } = this.props;
+
     if (!ingress) {
       return null;
     }

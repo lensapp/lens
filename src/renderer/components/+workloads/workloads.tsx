@@ -27,6 +27,7 @@ export class Workloads extends React.Component {
         routePath: overviewRoute.path.toString()
       }
     ];
+
     if (isAllowedResource("pods")) {
       routes.push({
         title: <Trans>Pods</Trans>,
@@ -35,6 +36,7 @@ export class Workloads extends React.Component {
         routePath: podsRoute.path.toString()
       });
     }
+
     if (isAllowedResource("deployments")) {
       routes.push({
         title: <Trans>Deployments</Trans>,
@@ -43,6 +45,7 @@ export class Workloads extends React.Component {
         routePath: deploymentsRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("daemonsets")) {
       routes.push({
         title: <Trans>DaemonSets</Trans>,
@@ -51,6 +54,7 @@ export class Workloads extends React.Component {
         routePath: daemonSetsRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("statefulsets")) {
       routes.push({
         title: <Trans>StatefulSets</Trans>,
@@ -59,6 +63,7 @@ export class Workloads extends React.Component {
         routePath: statefulSetsRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("jobs")) {
       routes.push({
         title: <Trans>Jobs</Trans>,
@@ -67,6 +72,7 @@ export class Workloads extends React.Component {
         routePath: jobsRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("cronjobs")) {
       routes.push({
         title: <Trans>CronJobs</Trans>,
@@ -75,6 +81,7 @@ export class Workloads extends React.Component {
         routePath: cronJobsRoute.path.toString(),
       });
     }
+
     return routes;
   }
 

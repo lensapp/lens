@@ -41,6 +41,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
     this.isLoading = true;
     const currentRevision = this.release.getRevision();
     let releases = await helmReleasesApi.getHistory(this.release.getName(), this.release.getNs());
+
     releases = releases.filter(item => item.revision !== currentRevision); // remove current
     releases = orderBy(releases, "revision", "desc"); // sort
     this.revisions.replace(releases);
@@ -50,6 +51,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
 
   rollback = async () => {
     const revisionNumber = this.revision.revision;
+
     try {
       await releaseStore.rollback(this.release.getName(), this.release.getNs(), revisionNumber);
       this.close();
@@ -64,9 +66,11 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
 
   renderContent() {
     const { revision, revisions } = this;
+
     if (!revision) {
       return <p><Trans>No revisions to rollback.</Trans></p>;
     }
+
     return (
       <div className="flex gaps align-center">
         <b><Trans>Revision</Trans></b>
@@ -85,6 +89,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
     const { ...dialogProps } = this.props;
     const releaseName = this.release ? this.release.getName() : "";
     const header = <h5><Trans>Rollback <b>{releaseName}</b></Trans></h5>;
+
     return (
       <Dialog
         {...dialogProps}

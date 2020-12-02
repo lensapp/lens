@@ -22,7 +22,9 @@ export class ServicePortComponent extends React.Component<Props> {
 
   async portForward() {
     const { service, port } = this.props;
+
     this.waiting = true;
+
     try {
       await apiBase.post(`/pods/${service.getNs()}/service/${service.getName()}/port-forward/${port.port}`, {});
     } catch(error) {
@@ -34,6 +36,7 @@ export class ServicePortComponent extends React.Component<Props> {
 
   render() {
     const { port } = this.props;
+
     return (
       <div className={cssNames("ServicePortComponent", { waiting: this.waiting })}>
         <span title={_i18n._(t`Open in a browser`)} onClick={() => this.portForward() }>

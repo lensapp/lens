@@ -108,12 +108,15 @@ export abstract class ClusterFeature {
    */
   protected renderTemplates(folderPath: string): string[] {
     const resources: string[] = [];
+
     logger.info(`[FEATURE]: render templates from ${folderPath}`);
     fs.readdirSync(folderPath).forEach(filename => {
       const file = path.join(folderPath, filename);
       const raw = fs.readFileSync(file);
+
       if (filename.endsWith(".hb")) {
         const template = hb.compile(raw.toString());
+
         resources.push(template(this.templateContext));
       } else {
         resources.push(raw.toString());

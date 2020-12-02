@@ -12,8 +12,10 @@
  */
 export function splitArray<T>(array: T[], element: T): [T[], T[], boolean] {
   const index = array.indexOf(element);
+
   if (index < 0) {
     return [array, [], false];
   }
+
   return [array.slice(0, index), array.slice(index + 1, array.length), true];
 }

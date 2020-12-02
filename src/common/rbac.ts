@@ -42,10 +42,12 @@ export function isAllowedResource(resources: KubeResource | KubeResource[]) {
     resources = [resources];
   }
   const { allowedResources = [] } = getHostedCluster() || {};
+
   for (const resource of resources) {
     if (!allowedResources.includes(resource)) {
       return false;
     }
   }
+
   return true;
 }

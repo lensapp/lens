@@ -59,9 +59,11 @@ export class MainLayout extends React.Component<MainLayoutProps> {
   render() {
     const { className, headerClass, footer, footerClass, children } = this.props;
     const cluster = getHostedCluster();
+
     if (!cluster) {
       return null; // fix: skip render when removing active (visible) cluster
     }
+
     return (
       <div className={cssNames("MainLayout", className)} style={this.getSidebarSize() as any}>
         <header className={cssNames("flex gaps align-center", headerClass)}>

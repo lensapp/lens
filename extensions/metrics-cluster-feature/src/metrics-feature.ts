@@ -53,6 +53,7 @@ export class MetricsFeature extends ClusterFeature.Feature {
     // Check if there are storageclasses
     const storageClassApi = K8sApi.forCluster(cluster, K8sApi.StorageClass);
     const scs = await storageClassApi.list();
+
     this.templateContext.persistence.enabled = scs.some(sc => (
       sc.metadata?.annotations?.["storageclass.kubernetes.io/is-default-class"] === "true" ||
       sc.metadata?.annotations?.["storageclass.beta.kubernetes.io/is-default-class"] === "true"
@@ -69,6 +70,7 @@ export class MetricsFeature extends ClusterFeature.Feature {
     try {
       const statefulSet = K8sApi.forCluster(cluster, K8sApi.StatefulSet);
       const prometheus = await statefulSet.get({name: "prometheus", namespace: "lens-metrics"});
+
       if (prometheus?.kind) {
         this.status.installed = true;
         this.status.currentVersion = prometheus.spec.template.spec.containers[0].image.split(":")[1];

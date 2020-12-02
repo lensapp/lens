@@ -44,6 +44,7 @@ export class ClusterIssues extends React.Component<Props> {
     // Node bad conditions
     nodesStore.items.forEach(node => {
       const { kind, selfLink, getId, getName } = node;
+
       node.getWarningConditions().forEach(({ message }) => {
         warnings.push({
           kind,
@@ -57,9 +58,11 @@ export class ClusterIssues extends React.Component<Props> {
 
     // Warning events for Workloads
     const events = eventStore.getWarnings();
+
     events.forEach(error => {
       const { message, involvedObject } = error;
       const { uid, name, kind } = involvedObject;
+
       warnings.push({
         getId: () => uid,
         getName: () => name,
@@ -77,6 +80,7 @@ export class ClusterIssues extends React.Component<Props> {
     const { warnings } = this;
     const warning = warnings.find(warn => warn.getId() == uid);
     const { getId, getName, message, kind, selfLink } = warning;
+
     return (
       <TableRow
         key={getId()}
@@ -99,11 +103,13 @@ export class ClusterIssues extends React.Component<Props> {
 
   renderContent() {
     const { warnings } = this;
+
     if (!eventStore.isLoaded) {
       return (
         <Spinner center/>
       );
     }
+
     if (!warnings.length) {
       return (
         <div className="no-issues flex column box grow gaps align-center justify-center">
@@ -113,6 +119,7 @@ export class ClusterIssues extends React.Component<Props> {
         </div>
       );
     }
+
     return (
       <>
         <SubHeader>

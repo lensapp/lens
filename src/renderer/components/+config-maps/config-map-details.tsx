@@ -27,6 +27,7 @@ export class ConfigMapDetails extends React.Component<Props> {
     disposeOnUnmount(this, [
       autorun(() => {
         const { object: configMap } = this.props;
+
         if (configMap) {
           this.data.replace(configMap.data); // refresh
         }
@@ -36,6 +37,7 @@ export class ConfigMapDetails extends React.Component<Props> {
 
   save = async () => {
     const { object: configMap } = this.props;
+
     try {
       this.isSaving = true;
       await configMapsStore.update(configMap, { ...configMap, data: this.data.toJSON() });
@@ -51,8 +53,10 @@ export class ConfigMapDetails extends React.Component<Props> {
 
   render() {
     const { object: configMap } = this.props;
+
     if (!configMap) return null;
     const data = Object.entries(this.data.toJSON());
+
     return (
       <div className="ConfigMapDetails">
         <KubeObjectMeta object={configMap}/>

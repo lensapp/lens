@@ -25,13 +25,17 @@ export class PieChart extends React.Component<Props> {
             const dataset: any = data["datasets"][tooltipItem.datasetIndex];
             const metaData = Object.values<{ total: number }>(dataset["_meta"])[0];
             const percent = Math.round((dataset["data"][tooltipItem["index"]] / metaData.total) * 100);
+
             if (isNaN(percent)) return "N/A";
+
             return `${percent}%`;
           },
         },
         filter: ({ datasetIndex, index }, { datasets }) => {
           const { data } = datasets[datasetIndex];
+
           if (datasets.length === 1) return true;
+
           return index !== data.length - 1;
         },
         position: "cursor",
@@ -46,6 +50,7 @@ export class PieChart extends React.Component<Props> {
       responsive: true,
       ...options
     };
+
     return (
       <Chart
         className={cssNames("PieChart flex column align-center", className)}

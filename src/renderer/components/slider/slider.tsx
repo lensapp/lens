@@ -29,6 +29,7 @@ export class Slider extends Component<SliderProps> {
 
   render() {
     const { className, ...sliderProps } = this.props;
+
     return (
       <MaterialSlider
         {...sliderProps}

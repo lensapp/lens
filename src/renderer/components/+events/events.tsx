@@ -88,6 +88,7 @@ export class Events extends React.Component<Props> {
           const tooltipId = `message-${event.getId()}`;
           const isWarning = type === "Warning";
           const detailsUrl = getDetailsUrl(lookupApiLink(involvedObject, event));
+
           return [
             {
               className: { warning: isWarning },
@@ -114,9 +115,11 @@ export class Events extends React.Component<Props> {
         ]}
       />
     );
+
     if (compact) {
       return events;
     }
+
     return (
       <TabLayout>
         {events}

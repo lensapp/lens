@@ -27,6 +27,7 @@ export function showAbout(browserWindow: BrowserWindow) {
     `Node: ${process.versions.node}`,
     `Copyright 2020 Mirantis, Inc.`,
   ];
+
   dialog.showMessageBoxSync(browserWindow, {
     title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
     type: "info",
@@ -39,6 +40,7 @@ export function showAbout(browserWindow: BrowserWindow) {
 export function buildMenu(windowManager: WindowManager) {
   function ignoreOnMac(menuItems: MenuItemConstructorOptions[]) {
     if (isMac) return [];
+
     return menuItems;
   }
 
@@ -48,6 +50,7 @@ export function buildMenu(windowManager: WindowManager) {
         item.enabled = false;
       });
     }
+
     return menuItems;
   }
 
@@ -96,7 +99,6 @@ export function buildMenu(windowManager: WindowManager) {
       }
     ]
   };
-
   const fileMenu: MenuItemConstructorOptions = {
     label: "File",
     submenu: [
@@ -154,7 +156,6 @@ export function buildMenu(windowManager: WindowManager) {
       ])
     ]
   };
-
   const editMenu: MenuItemConstructorOptions = {
     label: "Edit",
     submenu: [
@@ -169,7 +170,6 @@ export function buildMenu(windowManager: WindowManager) {
       { role: "selectAll" },
     ]
   };
-
   const viewMenu: MenuItemConstructorOptions = {
     label: "View",
     submenu: [
@@ -203,7 +203,6 @@ export function buildMenu(windowManager: WindowManager) {
       { role: "togglefullscreen" }
     ]
   };
-
   const helpMenu: MenuItemConstructorOptions = {
     role: "help",
     submenu: [
@@ -235,7 +234,6 @@ export function buildMenu(windowManager: WindowManager) {
       ])
     ]
   };
-
   // Prepare menu items order
   const appMenu: Record<MenuTopId, MenuItemConstructorOptions> = {
     mac: macAppMenu,
@@ -249,6 +247,7 @@ export function buildMenu(windowManager: WindowManager) {
   menuRegistry.getItems().forEach(({ parentId, ...menuItem }) => {
     try {
       const topMenu = appMenu[parentId as MenuTopId].submenu as MenuItemConstructorOptions[];
+
       topMenu.push(menuItem);
     } catch (err) {
       logger.error(`[MENU]: can't register menu item, parentId=${parentId}`, { menuItem });
@@ -260,6 +259,7 @@ export function buildMenu(windowManager: WindowManager) {
   }
 
   const menu = Menu.buildFromTemplate(Object.values(appMenu));
+
   Menu.setApplicationMenu(menu);
 
   if (isTestEnv) {
@@ -273,6 +273,7 @@ export function buildMenu(windowManager: WindowManager) {
       for (const name of names) {
         parentLabels.push(name);
         menuItem = menu?.items?.find(item => item.label === name);
+
         if (!menuItem) {
           break;
         }
@@ -280,14 +281,18 @@ export function buildMenu(windowManager: WindowManager) {
       }
 
       const menuPath: string = parentLabels.join(" -> ");
+
       if (!menuItem) {
         logger.info(`[MENU:test-menu-item-click] Cannot find menu item ${menuPath}`);
+
         return;
       }
 
       const { enabled, visible, click } = menuItem;
+
       if (enabled === false || visible === false || typeof click !== "function") {
         logger.info(`[MENU:test-menu-item-click] Menu item ${menuPath} not clickable`);
+
         return;
       }
 

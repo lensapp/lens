@@ -22,6 +22,7 @@ interface Props extends KubeObjectDetailsProps<Namespace> {
 export class NamespaceDetails extends React.Component<Props> {
   @computed get quotas() {
     const namespace = this.props.object.getName();
+
     return resourceQuotaStore.getAllByNs(namespace);
   }
 
@@ -31,8 +32,10 @@ export class NamespaceDetails extends React.Component<Props> {
 
   render() {
     const { object: namespace } = this.props;
+
     if (!namespace) return;
     const status = namespace.getStatus();
+
     return (
       <div className="NamespaceDetails">
         <KubeObjectMeta object={namespace}/>

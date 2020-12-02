@@ -24,6 +24,7 @@ export class PodDetailsContainer extends React.Component<Props> {
 
   renderStatus(state: string, status: IPodContainerStatus) {
     const ready = status ? status.ready : "";
+
     return (
       <span className={cssNames("status", state)}>
         {state}{ready ? `, ${_i18n._(t`ready`)}` : ""}
@@ -47,6 +48,7 @@ export class PodDetailsContainer extends React.Component<Props> {
 
   render() {
     const { pod, container, metrics } = this.props;
+
     if (!pod || !container) return null;
     const { name, image, imagePullPolicy, ports, volumeMounts, command, args } = container;
     const status = pod.getContainerStatuses().find(status => status.name === container.name);
@@ -61,6 +63,7 @@ export class PodDetailsContainer extends React.Component<Props> {
       <Trans key="memory">Memory</Trans>,
       <Trans key="filesystem">Filesystem</Trans>,
     ];
+
     return (
       <div className="PodDetailsContainer">
         <div className="pod-container-title">
@@ -94,6 +97,7 @@ export class PodDetailsContainer extends React.Component<Props> {
           {
             ports.map((port) => {
               const key = `${container.name}-port-${port.containerPort}-${port.protocol}`;
+
               return(
                 <PodContainerPort pod={pod} port={port} key={key}/>
               );
@@ -107,6 +111,7 @@ export class PodDetailsContainer extends React.Component<Props> {
           {
             volumeMounts.map(mount => {
               const { name, mountPath, readOnly } = mount;
+
               return (
                 <React.Fragment key={name + mountPath}>
                   <span className="mount-path">{mountPath}</span>

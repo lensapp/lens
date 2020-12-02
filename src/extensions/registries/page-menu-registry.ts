@@ -35,8 +35,10 @@ export class GlobalPageMenuRegistry extends BaseRegistry<PageMenuRegistration> {
         extensionId: ext.name,
         ...(menuItem.target || {}),
       };
+
       return menuItem;
     });
+
     return super.add(normalizedItems);
   }
 }
@@ -49,8 +51,10 @@ export class ClusterPageMenuRegistry extends BaseRegistry<ClusterPageMenuRegistr
         extensionId: ext.name,
         ...(menuItem.target || {}),
       };
+
       return menuItem;
     });
+
     return super.add(normalizedItems);
   }
 

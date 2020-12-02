@@ -49,6 +49,7 @@ describe("kube auth proxy tests", () => {
   it("calling exit multiple times shouldn't throw", async () => {
     const port = await getFreePort();
     const kap = new KubeAuthProxy(new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" }), port, {});
+
     kap.exit();
     kap.exit();
     kap.exit();
@@ -69,24 +70,29 @@ describe("kube auth proxy tests", () => {
       jest.spyOn(Kubectl.prototype, "ensureKubectl").mockReturnValueOnce(Promise.resolve(false));
       mockedCP.on.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): ChildProcess => {
         listeners[event] = listener;
+
         return mockedCP;
       });
       mockedCP.stderr = mock<Readable>();
       mockedCP.stderr.on.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
         listeners[`stderr/${event}`] = listener;
+
         return mockedCP.stderr;
       });
       mockedCP.stdout = mock<Readable>();
       mockedCP.stdout.on.mockImplementation((event: string, listener: (message: any, sendHandle: any) => void): Readable => {
         listeners[`stdout/${event}`] = listener;
+
         return mockedCP.stdout;
       });
       mockSpawn.mockImplementationOnce((command: string): ChildProcess => {
         expect(command).toBe(bundledKubectlPath());
+
         return mockedCP;
       });
       mockWaitUntilUsed.mockReturnValueOnce(Promise.resolve());
       const cluster = new Cluster({ id: "foobar", kubeConfigPath: "fake-path.yml" });
+
       jest.spyOn(cluster, "apiUrl", "get").mockReturnValue("https://fake.k8s.internal");
       proxy = new KubeAuthProxy(cluster, port, {});
     });

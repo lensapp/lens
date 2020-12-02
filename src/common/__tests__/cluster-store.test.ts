@@ -31,8 +31,10 @@ describe("empty config", () => {
         "lens-cluster-store.json": JSON.stringify({})
       }
     };
+
     mockFs(mockOpts);
     clusterStore = ClusterStore.getInstance<ClusterStore>();
+
     return clusterStore.load();
   });
 
@@ -59,6 +61,7 @@ describe("empty config", () => {
 
     it("adds new cluster to store", async () => {
       const storedCluster = clusterStore.getById("foo");
+
       expect(storedCluster.id).toBe("foo");
       expect(storedCluster.preferences.terminalCWD).toBe("/tmp");
       expect(storedCluster.preferences.icon).toBe("data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5");
@@ -67,6 +70,7 @@ describe("empty config", () => {
 
     it("adds cluster to default workspace", () => {
       const storedCluster = clusterStore.getById("foo");
+
       expect(storedCluster.workspace).toBe("default");
     });
 
@@ -114,6 +118,7 @@ describe("empty config", () => {
     it("gets clusters by workspaces", () => {
       const wsClusters = clusterStore.getByWorkspaceId("workstation");
       const defaultClusters = clusterStore.getByWorkspaceId("default");
+
       expect(defaultClusters.length).toBe(0);
       expect(wsClusters.length).toBe(2);
       expect(wsClusters[0].id).toBe("prod");
@@ -122,6 +127,7 @@ describe("empty config", () => {
 
     it("check if cluster's kubeconfig file saved", () => {
       const file = ClusterStore.embedCustomKubeConfig("boo", "kubeconfig");
+
       expect(fs.readFileSync(file, "utf8")).toBe("kubeconfig");
     });
 
@@ -129,6 +135,7 @@ describe("empty config", () => {
       clusterStore.swapIconOrders("workstation", 1, 1);
 
       const clusters = clusterStore.getByWorkspaceId("workstation");
+
       expect(clusters[0].id).toBe("prod");
       expect(clusters[0].preferences.iconOrder).toBe(0);
       expect(clusters[1].id).toBe("dev");
@@ -139,6 +146,7 @@ describe("empty config", () => {
       clusterStore.swapIconOrders("workstation", 0, 1);
 
       const clusters = clusterStore.getByWorkspaceId("workstation");
+
       expect(clusters[0].id).toBe("dev");
       expect(clusters[0].preferences.iconOrder).toBe(0);
       expect(clusters[1].id).toBe("prod");
@@ -192,8 +200,10 @@ describe("config with existing clusters", () => {
         })
       }
     };
+
     mockFs(mockOpts);
     clusterStore = ClusterStore.getInstance<ClusterStore>();
+
     return clusterStore.load();
   });
 
@@ -203,6 +213,7 @@ describe("config with existing clusters", () => {
 
   it("allows to retrieve a cluster", () => {
     const storedCluster = clusterStore.getById("cluster1");
+
     expect(storedCluster.id).toBe("cluster1");
     expect(storedCluster.preferences.terminalCWD).toBe("/foo");
   });
@@ -210,13 +221,16 @@ describe("config with existing clusters", () => {
   it("allows to delete a cluster", () => {
     clusterStore.removeById("cluster2");
     const storedCluster = clusterStore.getById("cluster1");
+
     expect(storedCluster).toBeTruthy();
     const storedCluster2 = clusterStore.getById("cluster2");
+
     expect(storedCluster2).toBeUndefined();
   });
 
   it("allows getting all of the clusters", async () => {
     const storedClusters = clusterStore.clustersList;
+
     expect(storedClusters.length).toBe(3);
     expect(storedClusters[0].id).toBe("cluster1");
     expect(storedClusters[0].preferences.terminalCWD).toBe("/foo");
@@ -227,6 +241,7 @@ describe("config with existing clusters", () => {
 
   it("marks owned cluster disabled by default", () => {
     const storedClusters = clusterStore.clustersList;
+
     expect(storedClusters[0].enabled).toBe(true);
     expect(storedClusters[2].enabled).toBe(false);
   });
@@ -247,8 +262,10 @@ describe("pre 2.0 config with an existing cluster", () => {
         })
       }
     };
+
     mockFs(mockOpts);
     clusterStore = ClusterStore.getInstance<ClusterStore>();
+
     return clusterStore.load();
   });
 
@@ -258,6 +275,7 @@ describe("pre 2.0 config with an existing cluster", () => {
 
   it("migrates to modern format with kubeconfig in a file", async () => {
     const config = clusterStore.clustersList[0].kubeConfigPath;
+
     expect(fs.readFileSync(config, "utf8")).toBe("kubeconfig content");
   });
 });
@@ -279,8 +297,10 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
         })
       }
     };
+
     mockFs(mockOpts);
     clusterStore = ClusterStore.getInstance<ClusterStore>();
+
     return clusterStore.load();
   });
 
@@ -292,6 +312,7 @@ describe("pre 2.6.0 config with a cluster that has arrays in auth config", () =>
     const file = clusterStore.clustersList[0].kubeConfigPath;
     const config = fs.readFileSync(file, "utf8");
     const kc = yaml.safeLoad(config);
+
     expect(kc.users[0].user["auth-provider"].config["access-token"]).toBe("should be string");
     expect(kc.users[0].user["auth-provider"].config["expiry"]).toBe("should be string");
   });
@@ -319,8 +340,10 @@ describe("pre 2.6.0 config with a cluster icon", () => {
         "icon_path": testDataIcon,
       }
     };
+
     mockFs(mockOpts);
     clusterStore = ClusterStore.getInstance<ClusterStore>();
+
     return clusterStore.load();
   });
 
@@ -330,6 +353,7 @@ describe("pre 2.6.0 config with a cluster icon", () => {
 
   it("moves the icon into preferences", async () => {
     const storedClusterData = clusterStore.clustersList[0];
+
     expect(storedClusterData.hasOwnProperty("icon")).toBe(false);
     expect(storedClusterData.preferences.hasOwnProperty("icon")).toBe(true);
     expect(storedClusterData.preferences.icon.startsWith("data:;base64,")).toBe(true);
@@ -356,8 +380,10 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
         })
       }
     };
+
     mockFs(mockOpts);
     clusterStore = ClusterStore.getInstance<ClusterStore>();
+
     return clusterStore.load();
   });
 
@@ -367,6 +393,7 @@ describe("for a pre 2.7.0-beta.0 config without a workspace", () => {
 
   it("adds cluster to default workspace", async () => {
     const storedClusterData = clusterStore.clustersList[0];
+
     expect(storedClusterData.workspace).toBe("default");
   });
 });
@@ -396,8 +423,10 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
         "icon_path": testDataIcon,
       }
     };
+
     mockFs(mockOpts);
     clusterStore = ClusterStore.getInstance<ClusterStore>();
+
     return clusterStore.load();
   });
 
@@ -407,11 +436,13 @@ describe("pre 3.6.0-beta.1 config with an existing cluster", () => {
 
   it("migrates to modern format with kubeconfig in a file", async () => {
     const config = clusterStore.clustersList[0].kubeConfigPath;
+
     expect(fs.readFileSync(config, "utf8")).toBe("kubeconfig content");
   });
 
   it("migrates to modern format with icon not in file", async () => {
     const { icon } = clusterStore.clustersList[0].preferences;
+
     expect(icon.startsWith("data:;base64,")).toBe(true);
   });
 });

@@ -19,6 +19,7 @@ export class AppInit extends React.Component<Props> {
 
   protected static async readyStateCheck(rootElem: HTMLElement) {
     const waitingList = await apiBase.get<string[]>("/ready");
+
     if (waitingList.length > 0) {
       // update waiting state
       render(<AppInit serviceWaitingList={waitingList}/>, rootElem);
@@ -26,6 +27,7 @@ export class AppInit extends React.Component<Props> {
       // check again in 1-5 seconds
       return new Promise(resolve => {
         const timeoutDelay = 1000 + Math.random() * 4000;
+
         setTimeout(() => resolve(AppInit.readyStateCheck(rootElem)), timeoutDelay);
       });
     }
@@ -34,6 +36,7 @@ export class AppInit extends React.Component<Props> {
   render() {
     const { serviceWaitingList = [] } = this.props;
     const serviceNames = serviceWaitingList.join(", ");
+
     return (
       <div className="AppInit flex column center">
         <div className="box flex column gaps">

@@ -17,17 +17,21 @@ export interface KubeObjectMenuProps<T extends KubeObject = any> extends MenuAct
 export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
   get store() {
     const { object } = this.props;
+
     if (!object) return;
+
     return apiManager.getStore(object.selfLink);
   }
 
   get isEditable() {
     const { editable } = this.props;
+
     return editable !== undefined ? editable : !!(this.store && this.store.update);
   }
 
   get isRemovable() {
     const { removable } = this.props;
+
     return removable !== undefined ? removable : !!(this.store && this.store.remove);
   }
 
@@ -41,6 +45,7 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
   async remove() {
     hideDetails();
     const { object, removeAction } = this.props;
+
     if (removeAction) await removeAction();
     else await this.store.remove(object);
   }
@@ -50,6 +55,7 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
     const { object } = this.props;
     const resourceKind = object.kind;
     const resourceName = object.getName();
+
     return (
       <p><Trans>Remove {resourceKind} <b>{resourceName}</b>?</Trans></p>
     );
@@ -58,11 +64,13 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
   render() {
     const { remove, update, renderRemoveMessage, isEditable, isRemovable } = this;
     const { className, object, editable, removable, toolbar, ...menuProps } = this.props;
+
     if (!object) return null;
 
     const menuItems = kubeObjectMenuRegistry.getItemsForKind(object.kind, object.apiVersion).map((item, index) => {
       return <item.components.MenuItem object={object} key={`menu-item-${index}`} toolbar={toolbar} />;
     });
+
     return (
       <MenuActions
         className={cssNames("KubeObjectMenu", className)}

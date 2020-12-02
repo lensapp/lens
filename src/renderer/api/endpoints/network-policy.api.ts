@@ -55,6 +55,7 @@ export class NetworkPolicy extends KubeObject {
 
   getMatchLabels(): string[] {
     if (!this.spec.podSelector || !this.spec.podSelector.matchLabels) return [];
+
     return Object
       .entries(this.spec.podSelector.matchLabels)
       .map(data => data.join(":"));
@@ -62,6 +63,7 @@ export class NetworkPolicy extends KubeObject {
 
   getTypes(): string[] {
     if (!this.spec.policyTypes) return [];
+
     return this.spec.policyTypes;
   }
 }

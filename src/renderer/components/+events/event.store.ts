@@ -28,6 +28,7 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
       if(obj.kind == "Node") {
         return obj.getName() == evt.involvedObject.uid && evt.involvedObject.kind == "Node";
       }
+
       return obj.getId() == evt.involvedObject.uid;
     });
   }
@@ -38,12 +39,16 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
     const eventsWithError = Object.values(groupsByInvolvedObject).map(events => {
       const recent = events[0];
       const { kind, uid } = recent.involvedObject;
+
       if (kind == Pod.kind) {  // Wipe out running pods
         const pod = podsStore.items.find(pod => pod.getId() == uid);
+
         if (!pod || (!pod.hasIssues() && pod.spec.priority < 500000)) return;
       }
+
       return recent;
     });
+
     return compact(eventsWithError);
   }
 }

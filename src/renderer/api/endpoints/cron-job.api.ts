@@ -71,6 +71,7 @@ export class CronJob extends KubeObject {
   getLastScheduleTime() {
     if (!this.status.lastScheduleTime) return "-";
     const diff = moment().diff(this.status.lastScheduleTime);
+
     return formatDuration(diff, true);
   }
 
@@ -84,7 +85,9 @@ export class CronJob extends KubeObject {
     const stamps = schedule.split(" ");
     const day = Number(stamps[stamps.length - 3]);  // 1-31
     const month = Number(stamps[stamps.length - 2]);  // 1-12
+
     if (schedule.startsWith("@")) return false;
+
     return day > daysInMonth[month - 1];
   }
 }

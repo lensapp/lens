@@ -57,6 +57,7 @@ export class EditorPanel extends React.Component<Props> {
 
   onChange = (value: string) => {
     this.validate(value);
+
     if (this.props.onChange) {
       this.props.onChange(value, this.yamlError);
     }
@@ -65,8 +66,10 @@ export class EditorPanel extends React.Component<Props> {
   render() {
     const { value, tabId } = this.props;
     let { className } = this.props;
+
     className = cssNames("EditorPanel", className);
     const cursorPos = EditorPanel.cursorPos.getData(tabId);
+
     return (
       <AceEditor
         autoFocus mode="yaml"

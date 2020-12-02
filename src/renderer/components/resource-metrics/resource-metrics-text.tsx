@@ -14,6 +14,7 @@ export function ResourceMetricsText(props: Props) {
   if (!props.metrics) return null;
   const metrics = getMetricLastPoints(props.metrics);
   const { cpuUsage, cpuRequests, cpuLimits, memoryUsage, memoryRequests, memoryLimits } = metrics;
+
   return (
     <>
       <DrawerItem name={<Trans>CPU</Trans>} labelsOnly>

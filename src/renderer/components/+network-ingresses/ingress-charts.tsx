@@ -79,6 +79,7 @@ export const IngressCharts = observer(() => {
           const { label, data } = datasets[datasetIndex];
           const value = data[index] as ChartPoint;
           const chartTooltipSec = _i18n._(t`sec`);
+
           return `${label}: ${parseFloat(value.y as string).toFixed(3)} ${chartTooltipSec}`;
         }
       }

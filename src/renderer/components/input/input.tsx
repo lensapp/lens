@@ -12,6 +12,7 @@ import isBoolean from "lodash/isBoolean";
 import uniqueId from "lodash/uniqueId";
 
 const { conditionalValidators, ...InputValidators } = Validators;
+
 export { InputValidators, InputValidator };
 
 type InputElement = HTMLInputElement | HTMLTextAreaElement;
@@ -70,16 +71,20 @@ export class Input extends React.Component<InputProps, State> {
   setValue(value: string) {
     if (value !== this.getValue()) {
       const nativeInputValueSetter = Object.getOwnPropertyDescriptor(this.input.constructor.prototype, "value").set;
+
       nativeInputValueSetter.call(this.input, value);
       const evt = new Event("input", { bubbles: true });
+
       this.input.dispatchEvent(evt);
     }
   }
 
   getValue(): string {
     const { value, defaultValue = "" } = this.props;
+
     if (value !== undefined) return value; // controlled input
     if (this.input) return this.input.value; // uncontrolled input
+
     return defaultValue as string;
   }
 
@@ -97,6 +102,7 @@ export class Input extends React.Component<InputProps, State> {
 
   private autoFitHeight() {
     const { multiLine, rows, maxRows } = this.props;
+
     if (!multiLine) {
       return;
     }
@@ -104,6 +110,7 @@ export class Input extends React.Component<InputProps, State> {
     const lineHeight = parseFloat(window.getComputedStyle(textArea).lineHeight);
     const rowsCount = (this.getValue().match(/\n/g) || []).length + 1;
     const height = lineHeight * Math.min(Math.max(rowsCount, rows), maxRows);
+
     textArea.style.height = `${height}px`;
   }
 
@@ -121,6 +128,7 @@ export class Input extends React.Component<InputProps, State> {
         break;
       }
       const result = validator.validate(value, this.props);
+
       if (isBoolean(result) && !result) {
         errors.push(this.getValidatorError(value, validator));
       } else if (result instanceof Promise) {
@@ -143,6 +151,7 @@ export class Input extends React.Component<InputProps, State> {
     if (asyncValidators.length > 0) {
       this.setState({ validating: true, valid: false });
       const asyncErrors = await Promise.all(asyncValidators);
+
       if (this.validationId === validationId) {
         this.setValidation(errors.concat(...asyncErrors.filter(err => err)));
       }
@@ -161,6 +170,7 @@ export class Input extends React.Component<InputProps, State> {
 
   private getValidatorError(value: string, { message }: InputValidator) {
     if (isFunction(message)) return message(value, this.props);
+
     return message || "";
   }
 
@@ -173,6 +183,7 @@ export class Input extends React.Component<InputProps, State> {
       // debounce async validators
       .map(({ debounce, ...validator }) => {
         if (debounce) validator.validate = debouncePromise(validator.validate, debounce);
+
         return validator;
       });
     // run validation
@@ -187,6 +198,7 @@ export class Input extends React.Component<InputProps, State> {
   @autobind()
   onFocus(evt: React.FocusEvent<InputElement>) {
     const { onFocus, autoSelectOnFocus } = this.props;
+
     if (onFocus) onFocus(evt);
     if (autoSelectOnFocus) this.select();
     this.setState({ focused: true });
@@ -195,6 +207,7 @@ export class Input extends React.Component<InputProps, State> {
   @autobind()
   onBlur(evt: React.FocusEvent<InputElement>) {
     const { onBlur } = this.props;
+
     if (onBlur) onBlur(evt);
     if (this.state.dirtyOnBlur) this.setState({ dirty: true, dirtyOnBlur: false });
     this.setState({ focused: false });
@@ -238,6 +251,7 @@ export class Input extends React.Component<InputProps, State> {
 
   get showMaxLenIndicator() {
     const { maxLength, multiLine } = this.props;
+
     return maxLength && multiLine;
   }
 
@@ -252,13 +266,16 @@ export class Input extends React.Component<InputProps, State> {
 
   componentDidUpdate(prevProps: InputProps) {
     const { defaultValue, value, dirty, validators } = this.props;
+
     if (prevProps.value !== value || defaultValue !== prevProps.defaultValue) {
       this.validate();
       this.autoFitHeight();
     }
+
     if (prevProps.dirty !== dirty) {
       this.setDirty(dirty);
     }
+
     if (prevProps.validators !== validators) {
       this.setupValidators();
     }
@@ -307,8 +324,10 @@ export class Input extends React.Component<InputProps, State> {
     );
     const componentId = id || showErrorsAsTooltip ? getRandId({ prefix: "input_tooltip_id" }) : undefined;
     let tooltipError: React.ReactNode;
+
     if (showErrorsAsTooltip && showErrors) {
       const tooltipProps = typeof showErrorsAsTooltip === "object" ? showErrorsAsTooltip : {};
+
       tooltipProps.className = cssNames("InputTooltipError", tooltipProps.className);
       tooltipError = (
         <Tooltip targetId={componentId} {...tooltipProps}>
@@ -319,6 +338,7 @@ export class Input extends React.Component<InputProps, State> {
         </Tooltip>
       );
     }
+
     return (
       <div id={componentId} className={className}>
         {tooltipError}

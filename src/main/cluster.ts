@@ -91,6 +91,7 @@ export class Cluster implements ClusterModel, ClusterState {
 
   @computed get prometheusPreferences(): ClusterPrometheusPreferences {
     const { prometheus, prometheusProvider } = this.preferences;
+
     return toJS({ prometheus, prometheusProvider }, {
       recurseEverything: true,
     });
@@ -103,6 +104,7 @@ export class Cluster implements ClusterModel, ClusterState {
   constructor(model: ClusterModel) {
     this.updateModel(model);
     const kubeconfig = this.getKubeconfig();
+
     if (kubeconfig.getContextObject(this.contextName)) {
       this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
     }
@@ -167,13 +169,16 @@ export class Cluster implements ClusterModel, ClusterState {
     }
     logger.info(`[CLUSTER]: activate`, this.getMeta());
     await this.whenInitialized;
+
     if (!this.eventDisposers.length) {
       this.bindEvents();
     }
+
     if (this.disconnected || !this.accessible) {
       await this.reconnect();
     }
     await this.refreshConnectionStatus();
+
     if (this.accessible) {
       await this.refreshAllowedResources();
       this.isAdmin = await this.isClusterAdmin();
@@ -181,11 +186,13 @@ export class Cluster implements ClusterModel, ClusterState {
       this.ensureKubectl();
     }
     this.activated = true;
+
     return this.pushState();
   }
 
   protected async ensureKubectl() {
     this.kubeCtl = new Kubectl(this.version);
+
     return this.kubeCtl.ensureKubectl(); // download kubectl in background, so it's not blocking dashboard
   }
 
@@ -215,9 +222,11 @@ export class Cluster implements ClusterModel, ClusterState {
     logger.info(`[CLUSTER]: refresh`, this.getMeta());
     await this.whenInitialized;
     await this.refreshConnectionStatus();
+
     if (this.accessible) {
       this.isAdmin = await this.isClusterAdmin();
       await this.refreshAllowedResources();
+
       if (opts.refreshMetadata) {
         this.refreshMetadata();
       }
@@ -231,12 +240,14 @@ export class Cluster implements ClusterModel, ClusterState {
     logger.info(`[CLUSTER]: refreshMetadata`, this.getMeta());
     const metadata = await detectorRegistry.detectForCluster(this);
     const existingMetadata = this.metadata;
+
     this.metadata = Object.assign(existingMetadata, metadata);
   }
 
   @action
   async refreshConnectionStatus() {
     const connectionStatus = await this.getConnectionStatus();
+
     this.online = connectionStatus > ClusterStatus.Offline;
     this.accessible = connectionStatus == ClusterStatus.AccessGranted;
   }
@@ -271,6 +282,7 @@ export class Cluster implements ClusterModel, ClusterState {
   getMetrics(prometheusPath: string, queryParams: IMetricsReqParams & { query: string }) {
     const prometheusPrefix = this.preferences.prometheus?.prefix || "";
     const metricsPath = `/api/v1/namespaces/${prometheusPath}/proxy${prometheusPrefix}/api/v1/query_range`;
+
     return this.k8sRequest(metricsPath, {
       timeout: 0,
       resolveWithFullResponse: false,
@@ -283,43 +295,54 @@ export class Cluster implements ClusterModel, ClusterState {
     try {
       const versionDetector = new VersionDetector(this);
       const versionData = await versionDetector.detect();
+
       this.metadata.version = versionData.value;
+
       return ClusterStatus.AccessGranted;
     } catch (error) {
       logger.error(`Failed to connect cluster "${this.contextName}": ${error}`);
+
       if (error.statusCode) {
         if (error.statusCode >= 400 && error.statusCode < 500) {
           this.failureReason = "Invalid credentials";
+
           return ClusterStatus.AccessDenied;
         } else {
           this.failureReason = error.error || error.message;
+
           return ClusterStatus.Offline;
         }
       } else if (error.failed === true) {
         if (error.timedOut === true) {
           this.failureReason = "Connection timed out";
+
           return ClusterStatus.Offline;
         } else {
           this.failureReason = "Failed to fetch credentials";
+
           return ClusterStatus.AccessDenied;
         }
       }
       this.failureReason = error.message;
+
       return ClusterStatus.Offline;
     }
   }
 
   async canI(resourceAttributes: V1ResourceAttributes): Promise<boolean> {
     const authApi = this.getProxyKubeconfig().makeApiClient(AuthorizationV1Api);
+
     try {
       const accessReview = await authApi.createSelfSubjectAccessReview({
         apiVersion: "authorization.k8s.io/v1",
         kind: "SelfSubjectAccessReview",
         spec: { resourceAttributes }
       });
+
       return accessReview.body.status.allowed;
     } catch (error) {
       logger.error(`failed to request selfSubjectAccessReview: ${error}`);
+
       return false;
     }
   }
@@ -343,6 +366,7 @@ export class Cluster implements ClusterModel, ClusterState {
       ownerRef: this.ownerRef,
       accessibleNamespaces: this.accessibleNamespaces,
     };
+
     return toJS(model, {
       recurseEverything: true
     });
@@ -363,6 +387,7 @@ export class Cluster implements ClusterModel, ClusterState {
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,
     };
+
     return toJS(state, {
       recurseEverything: true
     });
@@ -397,6 +422,7 @@ export class Cluster implements ClusterModel, ClusterState {
     }
 
     const api = this.getProxyKubeconfig().makeApiClient(CoreV1Api);
+
     try {
       const namespaceList = await api.listNamespace();
       const nsAccessStatuses = await Promise.all(
@@ -406,12 +432,15 @@ export class Cluster implements ClusterModel, ClusterState {
           verb: "list",
         }))
       );
+
       return namespaceList.body.items
         .filter((ns, i) => nsAccessStatuses[i])
         .map(ns => ns.metadata.name);
     } catch (error) {
       const ctx = this.getProxyKubeconfig().getContextObject(this.contextName);
+
       if (ctx.namespace) return [ctx.namespace];
+
       return [];
     }
   }
@@ -429,6 +458,7 @@ export class Cluster implements ClusterModel, ClusterState {
           namespace: this.allowedNamespaces[0]
         }))
       );
+
       return apiResources
         .filter((resource, i) => resourceAccessStatuses[i])
         .map(apiResource => apiResource.resource);

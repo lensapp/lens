@@ -59,8 +59,10 @@ export class Table extends React.Component<TableProps> {
     if (this.props.sortSyncWithUrl) {
       const sortBy = navigation.searchParams.get("sortBy");
       const orderBy = navigation.searchParams.get("orderBy");
+
       return { sortBy, orderBy };
     }
+
     return this.sortParamsLocal || {};
   }
 
@@ -68,9 +70,11 @@ export class Table extends React.Component<TableProps> {
     const { sortable, children } = this.props;
     const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
     const headElem: React.ReactElement<TableHeadProps> = content.find(elem => elem.type === TableHead);
+
     if (headElem) {
       if (sortable) {
         const columns = React.Children.toArray(headElem.props.children) as TableCellElem[];
+
         return React.cloneElement(headElem, {
           children: columns.map(elem => {
             if (elem.props.checkbox) {
@@ -81,6 +85,7 @@ export class Table extends React.Component<TableProps> {
               // usable if part of TableCell's content is hidden when there is not enough space
               typeof elem.props.children === "string" ? elem.props.children : undefined
             );
+
             return React.cloneElement(elem, {
               title,
               _sort: this.sort,
@@ -90,6 +95,7 @@ export class Table extends React.Component<TableProps> {
           })
         });
       }
+
       return headElem;
     }
   }
@@ -97,6 +103,7 @@ export class Table extends React.Component<TableProps> {
   getSorted(items: any[]) {
     const { sortParams } = this;
     const sortingCallback = this.props.sortable[sortParams.sortBy] || noop;
+
     return orderBy(
       items,
       sortingCallback,
@@ -107,12 +114,14 @@ export class Table extends React.Component<TableProps> {
   @autobind()
   protected onSort(params: TableSortParams) {
     const { sortSyncWithUrl, onSort } = this.props;
+
     if (sortSyncWithUrl) {
       setQueryParams(params);
     }
     else {
       this.sortParamsLocal = params;
     }
+
     if (onSort) {
       onSort(params);
     }
@@ -124,6 +133,7 @@ export class Table extends React.Component<TableProps> {
     const sameColumn = sortBy == colName;
     const newSortBy: TableSortBy = colName;
     const newOrderBy: TableOrderBy = (!orderBy || !sameColumn || orderBy === "desc") ? "asc" : "desc";
+
     this.onSort({
       sortBy: String(newSortBy),
       orderBy: newOrderBy,
@@ -135,26 +145,32 @@ export class Table extends React.Component<TableProps> {
     const content = React.Children.toArray(children) as (TableRowElem | TableHeadElem)[];
     let rows: React.ReactElement<TableRowProps>[] = content.filter(elem => elem.type === TableRow);
     let sortedItems = rows.length ? rows.map(row => row.props.sortItem) : [...items];
+
     if (sortable) {
       sortedItems = this.getSorted(sortedItems);
+
       if (rows.length) {
         rows = sortedItems.map(item => rows.find(row => {
           return item == row.props.sortItem;
         }));
       }
     }
+
     if (!rows.length && !items.length && noItems) {
       return noItems;
     }
+
     if (virtual) {
       const lineHeight = parseFloat(rowLineHeight);
       const padding = parseFloat(rowPadding);
       let rowHeights: number[] = Array(items.length).fill(lineHeight + padding * 2);
+
       if (customRowHeights) {
         rowHeights = sortedItems.map(item => {
           return customRowHeights(item, lineHeight, padding * 2);
         });
       }
+
       return (
         <VirtualList
           items={sortedItems}
@@ -165,15 +181,18 @@ export class Table extends React.Component<TableProps> {
         />
       );
     }
+
     return rows;
   }
 
   render() {
     const { selectable, scrollable, sortable, autoSize, virtual } = this.props;
     let { className } = this.props;
+
     className = cssNames("Table flex column", className, {
       selectable, scrollable, sortable, autoSize, virtual,
     });
+
     return (
       <div className={className}>
         {this.renderHead()}

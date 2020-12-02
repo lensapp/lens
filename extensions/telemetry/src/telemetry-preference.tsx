@@ -7,6 +7,7 @@ import { TelemetryPreferencesStore } from "./telemetry-preferences-store";
 export class TelemetryPreferenceInput extends React.Component<{telemetry: TelemetryPreferencesStore}, {}> {
   render() {
     const { telemetry } = this.props;
+
     return (
       <Component.Checkbox
         label="Allow telemetry & usage tracking"

@@ -30,6 +30,7 @@ export class LensProxy {
   listen(port = this.port): this {
     this.proxyServer = this.buildCustomProxy().listen(port);
     logger.info(`LensProxy server has started at ${this.origin}`);
+
     return this;
   }
 
@@ -49,6 +50,7 @@ export class LensProxy {
     }, (req: http.IncomingMessage, res: http.ServerResponse) => {
       this.handleRequest(proxy, req, res);
     });
+
     spdyProxy.on("upgrade", (req: http.IncomingMessage, socket: net.Socket, head: Buffer) => {
       if (req.url.startsWith(`${apiPrefix}?`)) {
         this.handleWsUpgrade(req, socket, head);
@@ -59,22 +61,27 @@ export class LensProxy {
     spdyProxy.on("error", (err) => {
       logger.error("proxy error", err);
     });
+
     return spdyProxy;
   }
 
   protected async handleProxyUpgrade(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
     const cluster = this.clusterManager.getClusterForRequest(req);
+
     if (cluster) {
       const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
       const apiUrl = url.parse(cluster.apiUrl);
       const pUrl = url.parse(proxyUrl);
       const connectOpts = { port: parseInt(pUrl.port), host: pUrl.hostname };
       const proxySocket = new net.Socket();
+
       proxySocket.connect(connectOpts, () => {
         proxySocket.write(`${req.method} ${pUrl.path} HTTP/1.1\r\n`);
         proxySocket.write(`Host: ${apiUrl.host}\r\n`);
+
         for (let i = 0; i < req.rawHeaders.length; i += 2) {
           const key = req.rawHeaders[i];
+
           if (key !== "Host" && key !== "Authorization") {
             proxySocket.write(`${req.rawHeaders[i]}: ${req.rawHeaders[i+1]}\r\n`);
           }
@@ -112,16 +119,20 @@ export class LensProxy {
 
   protected createProxy(): httpProxy {
     const proxy = httpProxy.createProxyServer();
+
     proxy.on("error", (error, req, res, target) => {
       if (this.closed) {
         return;
       }
+
       if (target) {
         logger.debug(`Failed proxy to target: ${JSON.stringify(target, null, 2)}`);
+
         if (req.method === "GET" && (!res.statusCode || res.statusCode >= 500)) {
           const reqId = this.getRequestId(req);
           const retryCount = this.retryCounters.get(reqId) || 0;
           const timeoutMs = retryCount * 250;
+
           if (retryCount < 20) {
             logger.debug(`Retrying proxy request to url: ${reqId}`);
             setTimeout(() => {
@@ -131,6 +142,7 @@ export class LensProxy {
           }
         }
       }
+
       try {
         res.writeHead(500).end("Oops, something went wrong.");
       } catch (e) {
@@ -143,9 +155,11 @@ export class LensProxy {
 
   protected createWsListener(): WebSocket.Server {
     const ws = new WebSocket.Server({ noServer: true });
+
     return ws.on("connection", ((socket: WebSocket, req: http.IncomingMessage) => {
       const cluster = this.clusterManager.getClusterForRequest(req);
       const nodeParam = url.parse(req.url, true).query["node"]?.toString();
+
       openShell(socket, cluster, nodeParam);
     }));
   }
@@ -155,6 +169,7 @@ export class LensProxy {
       delete req.headers.authorization;
       req.url = req.url.replace(apiKubePrefix, "");
       const isWatchRequest = req.url.includes("watch=");
+
       return await contextHandler.getApiTarget(isWatchRequest);
     }
   }
@@ -165,11 +180,14 @@ export class LensProxy {
 
   protected async handleRequest(proxy: httpProxy, req: http.IncomingMessage, res: http.ServerResponse) {
     const cluster = this.clusterManager.getClusterForRequest(req);
+
     if (cluster) {
       const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler);
+
       if (proxyTarget) {
         // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
         res.setHeader("Access-Control-Allow-Origin", this.origin);
+
         return proxy.web(req, res, proxyTarget);
       }
     }
@@ -178,6 +196,7 @@ export class LensProxy {
 
   protected async handleWsUpgrade(req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
     const wsServer = this.createWsListener();
+
     wsServer.handleUpgrade(req, socket, head, (con) => {
       wsServer.emit("connection", con, req);
     });

@@ -30,6 +30,7 @@ export {
 
 export async function bootstrap(App: AppComponent) {
   const rootElem = document.getElementById("app");
+
   rootElem.classList.toggle("is-mac", isMac);
 
   extensionLoader.init();

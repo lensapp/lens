@@ -74,6 +74,7 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
       okButtonProps = {},
       cancelButtonProps = {},
     } = this.params;
+
     return (
       <Dialog
         {...dialogProps}

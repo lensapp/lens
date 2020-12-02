@@ -30,11 +30,13 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   protected getState(extensionLoader: ExtensionLoader) {
     const state: Record<LensExtensionId, LensExtensionState> = {};
+
     return Array.from(extensionLoader.userExtensions).reduce((state, [extId, ext]) => {
       state[extId] = {
         enabled: ext.isEnabled,
         name: ext.manifest.name,
       };
+
       return state;
     }, state);
   }
@@ -47,6 +49,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
     reaction(() => this.state.toJS(), extensionsState => {
       extensionsState.forEach((state, extId) => {
         const ext = extensionLoader.getExtension(extId);
+
         if (ext && !ext.isBundled) {
           ext.isEnabled = state.enabled;
         }
@@ -61,6 +64,7 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
 
   isEnabled(extId: LensExtensionId) {
     const state = this.state.get(extId);
+
     return state && state.enabled; // by default false
   }
 

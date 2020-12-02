@@ -47,11 +47,13 @@ export class Preferences extends React.Component {
   @action
   async loadHelmRepos() {
     this.helmLoading = true;
+
     try {
       if (!this.helmRepos.length) {
         this.helmRepos = await repoManager.loadAvailableRepos(); // via https://helm.sh
       }
       const repos = await repoManager.repositories(); // via helm-cli
+
       this.helmAddedRepos.clear();
       repos.forEach(repo => this.helmAddedRepos.set(repo.name, repo));
     } catch (err) {
@@ -82,8 +84,10 @@ export class Preferences extends React.Component {
 
   onRepoSelect = async ({ value: repo }: SelectOption<HelmRepo>) => {
     const isAdded = this.helmAddedRepos.has(repo.name);
+
     if (isAdded) {
       Notifications.ok(<Trans>Helm branch <b>{repo.name}</b> already in use</Trans>);
+
       return;
     }
     this.helmLoading = true;
@@ -93,6 +97,7 @@ export class Preferences extends React.Component {
 
   formatHelmOptionLabel = ({ value: repo }: SelectOption<HelmRepo>) => {
     const isAdded = this.helmAddedRepos.has(repo.name);
+
     return (
       <div className="flex gaps">
         <span>{repo.name}</span>
@@ -104,6 +109,7 @@ export class Preferences extends React.Component {
   render() {
     const { preferences } = userStore;
     const header = <h2><Trans>Preferences</Trans></h2>;
+
     return (
       <PageLayout showOnTop className="Preferences" header={header}>
         <h2><Trans>Color Theme</Trans></h2>
@@ -140,6 +146,7 @@ export class Preferences extends React.Component {
         <div className="repos flex column">
           {Array.from(this.helmAddedRepos).map(([name, repo]) => {
             const tooltipId = `message-${name}`;
+
             return (
               <Badge key={name} className="added-repo flex gaps align-center justify-space-between">
                 <span id={tooltipId} className="repo">{name}</span>

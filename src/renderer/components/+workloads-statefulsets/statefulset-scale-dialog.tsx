@@ -43,6 +43,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
 
   onOpen = async () => {
     const { statefulSet } = this;
+
     this.currentReplicas = await statefulSetApi.getReplicas({
       namespace: statefulSet.getNs(),
       name: statefulSet.getName(),
@@ -62,6 +63,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
   @computed get scaleMax() {
     const { currentReplicas } = this;
     const defaultMax = 50;
+
     return currentReplicas <= defaultMax
       ? defaultMax * 2
       : currentReplicas * 2;
@@ -70,6 +72,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
   scale = async () => {
     const { statefulSet } = this;
     const { currentReplicas, desiredReplicas, close } = this;
+
     try {
       if (currentReplicas !== desiredReplicas) {
         await statefulSetApi.scale({
@@ -94,6 +97,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
   renderContents() {
     const { currentReplicas, desiredReplicas, onChange, scaleMax } = this;
     const warning = currentReplicas < 10 && desiredReplicas > 90;
+
     return (
       <>
         <div className="current-scale" data-testid="current-scale">
@@ -139,6 +143,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
         <Trans>Scale Stateful Set <span>{statefulSetName}</span></Trans>
       </h5>
     );
+
     return (
       <Dialog
         {...dialogProps}

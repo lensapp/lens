@@ -35,6 +35,7 @@ export class TerminalWindow extends React.Component<Props> {
 
   render() {
     const { className } = this.props;
+
     return (
       <div
         className={cssNames("TerminalWindow", className, themeStore.activeTheme.type)}

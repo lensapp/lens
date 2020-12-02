@@ -83,6 +83,7 @@ export class FilePicker extends React.Component<Props> {
 
   handleFileCount(files: File[]): File[] {
     const { limit: [minLimit, maxLimit] = [0, Infinity], onOverLimit } = this.props;
+
     if (files.length > maxLimit) {
       switch (onOverLimit) {
         case OverLimitStyle.CAP:
@@ -92,6 +93,7 @@ export class FilePicker extends React.Component<Props> {
           throw `Too many files. Expected at most ${maxLimit}. Got ${files.length}.`;
       }
     }
+
     if (files.length < minLimit) {
       throw `Too many files. Expected at most ${maxLimit}. Got ${files.length}.`;
     }
@@ -107,6 +109,7 @@ export class FilePicker extends React.Component<Props> {
         return files.filter(file => file.size <= maxSize );
       case OverSizeLimitStyle.REJECT:
         const firstFileToLarge = files.find(file => file.size > maxSize);
+
         if (firstFileToLarge) {
           throw `${firstFileToLarge.name} is too large. Maximum size is ${maxSize}. Has size of ${firstFileToLarge.size}`;
         }
@@ -119,6 +122,7 @@ export class FilePicker extends React.Component<Props> {
     const { maxTotalSize, onOverTotalSizeLimit } = this.props;
 
     const totalSize = _.sum(files.map(f => f.size));
+
     if (totalSize <= maxTotalSize) {
       return files;
     }
@@ -131,10 +135,12 @@ export class FilePicker extends React.Component<Props> {
       
         for (;files.length > 0;) {
           newTotalSize -= files.pop().size;
+
           if (newTotalSize <= maxTotalSize) {
             break;
           }
         }
+
         return files;
       case OverTotalSizeLimitStyle.REJECT:
         throw `Total file size to upload is too large. Expected at most ${maxTotalSize}. Found ${totalSize}.`;
@@ -151,11 +157,13 @@ export class FilePicker extends React.Component<Props> {
       
       if ("uploadDir" in this.props) {
         const { uploadDir } = this.props;
+
         this.status = FileInputStatus.PROCESSING;
         
         const paths: string[] = [];
         const promises = totalSizeLimitedFiles.map(async file => {
           const destinationPath = path.join(uploadDir, file.name);
+
           paths.push(destinationPath);
 
           return fse.copyFile(file.path, destinationPath);
@@ -170,6 +178,7 @@ export class FilePicker extends React.Component<Props> {
     } catch (errorText) {
       this.status = FileInputStatus.ERROR;
       this.errorText = errorText;
+
       return;
     }
   }

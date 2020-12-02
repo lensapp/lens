@@ -35,8 +35,10 @@ export class Wizard extends React.Component<WizardProps, State> {
   get steps() {
     const { className, title, step, header, onChange, children, ...commonProps } = this.props;
     const steps = React.Children.toArray(children) as WizardStepElem[];
+
     return steps.filter(step => !step.props.skip).map((stepElem, i) => {
       const stepProps = stepElem.props;
+
       return React.cloneElement(stepElem, {
         step: i + 1,
         wizard: this,
@@ -82,6 +84,7 @@ export class Wizard extends React.Component<WizardProps, State> {
     const { className, title, header, hideSteps } = this.props;
     const steps = this.steps.map(stepElem => ({ title: stepElem.props.title }));
     const step = React.cloneElement(this.steps[this.step - 1]);
+
     return (
       <div className={cssNames("Wizard", className)}>
         <div className="header">
@@ -144,6 +147,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
 
   prev = () => {
     const { isFirst, prev, done } = this.props;
+
     if (isFirst() && done) done();
     else prev();
   };
@@ -151,8 +155,10 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
   next = () => {
     const next = this.props.next;
     const nextStep = this.props.wizard.nextStep;
+
     if (nextStep !== next) {
       const result = next();
+
       if (result instanceof Promise) {
         this.setState({ waiting: true });
         result.then(nextStep).finally(() => {
@@ -172,6 +178,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
   submit = () => {
     if (!this.form.noValidate) {
       const valid = this.form.checkValidity();
+
       if (!valid) return;
     }
     this.next();
@@ -192,6 +199,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
       hideNextBtn, hideBackBtn, beforeContent, afterContent, noValidate, skip, moreButtons,
     } = this.props;
     let { className, contentClass, nextLabel, prevLabel, waiting } = this.props;
+
     if (skip) {
       return;
     }
@@ -200,6 +208,7 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
     contentClass = cssNames("step-content", { scrollable }, contentClass);
     prevLabel = prevLabel || (isFirst() ? <Trans>Cancel</Trans> : <Trans>Back</Trans>);
     nextLabel = nextLabel || (isLast() ? <Trans>Submit</Trans> : <Trans>Next</Trans>);
+
     return (
       <form className={className}
         onSubmit={prevDefault(this.submit)} noValidate={noValidate}

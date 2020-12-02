@@ -15,6 +15,7 @@ export const clusterKubectlApplyAllHandler = "cluster:kubectl-apply-all";
 if (ipcMain) {
   handleRequest(clusterActivateHandler, (event, clusterId: ClusterId, force = false) => {
     const cluster = clusterStore.getById(clusterId);
+
     if (cluster) {
       return cluster.activate(force);
     }
@@ -22,20 +23,24 @@ if (ipcMain) {
 
   handleRequest(clusterSetFrameIdHandler, (event, clusterId: ClusterId, frameId: number) => {
     const cluster = clusterStore.getById(clusterId);
+
     if (cluster) {
       clusterFrameMap.set(cluster.id, frameId);
+
       return cluster.pushState();
     }
   });
 
   handleRequest(clusterRefreshHandler, (event, clusterId: ClusterId) => {
     const cluster = clusterStore.getById(clusterId);
+
     if (cluster) return cluster.refresh({ refreshMetadata: true });
   });
 
   handleRequest(clusterDisconnectHandler, (event, clusterId: ClusterId) => {
     appEventBus.emit({name: "cluster", action: "stop"});
     const cluster = clusterStore.getById(clusterId);
+
     if (cluster) {
       cluster.disconnect();
       clusterFrameMap.delete(cluster.id);
@@ -45,8 +50,10 @@ if (ipcMain) {
   handleRequest(clusterKubectlApplyAllHandler, (event, clusterId: ClusterId, resources: string[]) => {
     appEventBus.emit({name: "cluster", action: "kubectl-apply-all"});
     const cluster = clusterStore.getById(clusterId);
+
     if (cluster) {
       const applier = new ResourceApplier(cluster);
+
       applier.kubectlApplyAll(resources);
     } else {
       throw `${clusterId} is not a valid cluster id`;

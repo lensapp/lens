@@ -75,11 +75,14 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     let reqUrl = this.config.apiBase + path;
     const reqInit: RequestInit = { ...this.reqInit, ...init };
     const { data, query } = params || {} as P;
+
     if (data && !reqInit.body) {
       reqInit.body = JSON.stringify(data);
     }
+
     if (query) {
       const queryString = stringify(query);
+
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
     }
     const infoLog: JsonApiLog = {
@@ -87,6 +90,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       reqUrl,
       reqInit,
     };
+
     return cancelableFetch(reqUrl, reqInit).then(res => {
       return this.parseResponse<D>(res, infoLog);
     });
@@ -94,21 +98,26 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
   protected parseResponse<D>(res: Response, log: JsonApiLog): Promise<D> {
     const { status } = res;
+
     return res.text().then(text => {
       let data;
+
       try {
         data = text ? JSON.parse(text) : ""; // DELETE-requests might not have response-body
       } catch (e) {
         data = text;
       }
+
       if (status >= 200 && status < 300) {
         this.onData.emit(data, res);
         this.writeLog({ ...log, data });
+
         return data;
       } else if (log.method === "GET" && res.status === 403) {
         this.writeLog({ ...log, data });
       } else {
         const error = new JsonApiErrorParsed(data, this.parseError(data, res));
+
         this.onError.emit(error, res);
         this.writeLog({ ...log, error });
         throw error;
@@ -126,6 +135,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     else if (error.message) {
       return [error.message];
     }
+
     return [res.statusText || "Error!"];
   }
 
@@ -133,6 +143,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     if (!this.config.debug) return;
     const { method, reqUrl, ...params } = log;
     let textStyle = "font-weight: bold;";
+
     if (params.data) textStyle += "background: green; color: white;";
     if (params.error) textStyle += "background: red; color: white;";
     console.log(`%c${method} ${reqUrl}`, textStyle, params);

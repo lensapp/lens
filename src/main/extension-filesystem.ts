@@ -32,11 +32,14 @@ export class FilesystemProvisionerStore extends BaseStore<FSProvisionModel> {
       const salt = randomBytes(32).toString("hex");
       const hashedName = SHA256(`${extensionName}/${salt}`).toString();
       const dirPath = path.resolve(app.getPath("userData"), "extension_data", hashedName);
+
       this.registeredExtensions.set(extensionName, dirPath);
     }
 
     const dirPath = this.registeredExtensions.get(extensionName);
+
     await fse.ensureDir(dirPath);
+
     return dirPath;
   }
 

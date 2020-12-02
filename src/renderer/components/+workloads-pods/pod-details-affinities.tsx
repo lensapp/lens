@@ -15,7 +15,9 @@ export class PodDetailsAffinities extends React.Component<Props> {
     const { workload } = this.props;
     const affinitiesNum = workload.getAffinityNumber();
     const affinities = workload.getAffinity();
+
     if (!affinitiesNum) return null;
+
     return (
       <DrawerItem name={<Trans>Affinities</Trans>} className="PodDetailsAffinities">
         <DrawerParamToggler label={affinitiesNum}>

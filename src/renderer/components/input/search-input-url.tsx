@@ -30,6 +30,7 @@ export class SearchInputUrl extends React.Component<Props> {
 
   onChange = (val: string, evt: React.ChangeEvent<any>) => {
     this.setValue(val);
+
     if (this.props.onChange) {
       this.props.onChange(val, evt);
     }
@@ -37,6 +38,7 @@ export class SearchInputUrl extends React.Component<Props> {
 
   render() {
     const { inputVal } = this;
+
     return (
       <SearchInput
         value={inputVal}

@@ -27,11 +27,13 @@ export class StorageHelper<T> {
 
   protected get storage() {
     if (this.options.useSession) return window.sessionStorage;
+
     return window.localStorage;
   }
 
   get(): T {
     const strValue = this.storage.getItem(this.key);
+
     if (strValue != null) {
       try {
         return JSON.parse(strValue);
@@ -39,21 +41,25 @@ export class StorageHelper<T> {
         console.error(`Parsing json failed for pair: ${this.key}=${strValue}`);
       }
     }
+
     return this.defaultValue;
   }
 
   set(value: T) {
     this.storage.setItem(this.key, JSON.stringify(value));
+
     return this;
   }
 
   merge(value: Partial<T>) {
     const currentValue = this.get();
+
     return this.set(Object.assign(currentValue, value));
   }
 
   clear() {
     this.storage.removeItem(this.key);
+
     return this;
   }
 

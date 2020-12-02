@@ -78,6 +78,7 @@ export class PodSecurityPolicy extends KubeObject {
 
   getRules() {
     const { fsGroup, runAsGroup, runAsUser, supplementalGroups, seLinux } = this.spec;
+
     return {
       fsGroup: fsGroup ? fsGroup.rule : "",
       runAsGroup: runAsGroup ? runAsGroup.rule : "",

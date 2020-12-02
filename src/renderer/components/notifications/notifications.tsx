@@ -58,19 +58,23 @@ export class Notifications extends React.Component {
 
   getMessage(notification: Notification) {
     let { message } = notification;
+
     if (message instanceof JsonApiErrorParsed) {
       message = message.toString();
     }
+
     return React.Children.toArray(message);
   }
 
   render() {
     const { notifications, remove, addAutoHideTimer, removeAutoHideTimer } = notificationsStore;
+
     return (
       <div className="Notifications flex column align-flex-end" ref={e => this.elem = e}>
         {notifications.map(notification => {
           const { id, status } = notification;
           const msgText = this.getMessage(notification);
+
           return (
             <Animate key={id}>
               <div

@@ -102,6 +102,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
   protected refreshNewContexts = async () => {
     try {
       const kubeConfig = await readFile(this.kubeConfigPath, "utf8");
+
       if (kubeConfig) {
         this.newContexts.clear();
         loadConfig(kubeConfig).getContexts()
@@ -118,6 +119,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
   @action
   markNewContextsAsSeen() {
     const { seenContexts, newContexts } = this;
+
     this.seenContexts.replace([...seenContexts, ...newContexts]);
     this.newContexts.clear();
   }
@@ -133,9 +135,11 @@ export class UserStore extends BaseStore<UserStoreModel> {
   @action
   protected async fromStore(data: Partial<UserStoreModel> = {}) {
     const { lastSeenAppVersion, seenContexts = [], preferences, kubeConfigPath } = data;
+
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;
     }
+
     if (kubeConfigPath) {
       this.kubeConfigPath = kubeConfigPath;
     }
@@ -150,6 +154,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
       seenContexts: Array.from(this.seenContexts),
       preferences: this.preferences,
     };
+
     return toJS(model, {
       recurseEverything: true,
     });

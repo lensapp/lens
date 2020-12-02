@@ -106,6 +106,7 @@ export class Extensions extends React.Component {
 
     return Array.from(extensionLoader.userExtensions.values()).filter(ext => {
       const { name, description } = ext.manifest;
+
       return [
         name.toLowerCase().includes(searchText),
         description?.toLowerCase().includes(searchText),
@@ -149,6 +150,7 @@ export class Extensions extends React.Component {
 
   installFromUrlOrPath = async () => {
     const { installPath } = this;
+
     if (!installPath) return;
     const fileName = path.basename(installPath);
 
@@ -158,6 +160,7 @@ export class Extensions extends React.Component {
       if (InputValidators.isUrl.validate(installPath)) {
         const { promise: filePromise } = downloadFile({ url: installPath, timeout: 60000 /*1m*/ });
         const data = await filePromise;
+
         this.requestInstall({ fileName, data });
       }
       // otherwise installing from system path
@@ -173,6 +176,7 @@ export class Extensions extends React.Component {
 
   installOnDrop = (files: File[]) => {
     logger.info("Install from D&D");
+
     return this.requestInstall(
       files.map(file => ({
         fileName: path.basename(file.path),
@@ -190,8 +194,10 @@ export class Extensions extends React.Component {
         .map(async request => {
           try {
             const data = await fse.readFile(request.filePath);
+
             request.data = data;
             preloadedRequests.push(request);
+
             return request;
           } catch(error) {
             if (showError) {
@@ -209,6 +215,7 @@ export class Extensions extends React.Component {
 
     // tarball from npm contains single root folder "package/*"
     const firstFile = tarFiles[0];
+
     if (!firstFile) {
       throw new Error(`invalid extension bundle,  ${manifestFilename} not found`);
     }
@@ -230,6 +237,7 @@ export class Extensions extends React.Component {
     if (!manifest.lens && !manifest.renderer) {
       throw new Error(`${manifestFilename} must specify "main" and/or "renderer" fields`);
     }
+
     return manifest;
   }
 
@@ -241,6 +249,7 @@ export class Extensions extends React.Component {
 
     requests.forEach(req => {
       const tempFile = this.getExtensionPackageTemp(req.fileName);
+
       fse.writeFileSync(tempFile, req.data);
     });
 
@@ -248,6 +257,7 @@ export class Extensions extends React.Component {
     await Promise.all(
       requests.map(async req => {
         const tempFile = this.getExtensionPackageTemp(req.fileName);
+
         try {
           const manifest = await this.validatePackage(tempFile);
 
@@ -270,6 +280,7 @@ export class Extensions extends React.Component {
         }
       })
     );
+
     return validatedRequests;
   }
 
@@ -342,6 +353,7 @@ export class Extensions extends React.Component {
       Notifications.error(
         <p>Installing extension <b>{displayName}</b> has failed: <em>{error}</em></p>
       );
+
       // Remove install state on install failure
       if (this.extensionState.get(extensionId)?.state === "installing") {
         this.extensionState.delete(extensionId);
@@ -378,6 +390,7 @@ export class Extensions extends React.Component {
       Notifications.error(
         <p>Uninstalling extension <b>{displayName}</b> has failed: <em>{error?.message ?? ""}</em></p>
       );
+
       // Remove uninstall state on uninstall failure
       if (this.extensionState.get(extension.id)?.state === "uninstalling") {
         this.extensionState.delete(extension.id);

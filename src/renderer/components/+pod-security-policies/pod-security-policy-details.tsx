@@ -24,6 +24,7 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
     }) {
     if (!group) return;
     const { rule, ranges } = group;
+
     return (
       <>
         <DrawerTitle title={title}/>
@@ -43,6 +44,7 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
 
   render() {
     const { object: psp } = this.props;
+
     if (!psp) {
       return null;
     }
@@ -52,6 +54,7 @@ export class PodSecurityPolicyDetails extends React.Component<Props> {
       hostIPC, hostNetwork, hostPID, hostPorts, privileged, readOnlyRootFilesystem, requiredDropCapabilities,
       runAsGroup, runAsUser, runtimeClass, seLinux, supplementalGroups, volumes,
     } = psp.spec;
+
     return (
       <div className="PodSecurityPolicyDetails">
         <KubeObjectMeta object={psp}/>

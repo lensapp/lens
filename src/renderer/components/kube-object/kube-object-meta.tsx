@@ -19,6 +19,7 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
 
   isHidden(field: IKubeMetaField): boolean {
     const { hideFields = KubeObjectMeta.defaultHiddenFields } = this.props;
+
     return hideFields.includes(field);
   }
 
@@ -31,6 +32,7 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
     } = object;
 
     const ownerRefs = object.getOwnerRefs();
+
     return (
       <>
         <DrawerItem name={<Trans>Created</Trans>} hidden={this.isHidden("creationTimestamp")}>
@@ -72,6 +74,7 @@ export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
             ownerRefs.map(ref => {
               const { name, kind } = ref;
               const ownerDetailsUrl = getDetailsUrl(lookupApiLink(ref, object));
+
               return (
                 <p key={name}>
                   {kind} <Link to={ownerDetailsUrl}>{name}</Link>

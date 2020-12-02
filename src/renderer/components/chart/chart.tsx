@@ -59,17 +59,21 @@ export class Chart extends React.Component<ChartProps> {
 
   componentDidMount() {
     const { showChart } = this.props;
+
     if (!showChart) return;
     this.renderChart();
   }
 
   componentDidUpdate() {
     const { showChart, redraw } = this.props;
+
     if (redraw) {
       this.chart.destroy();
       this.renderChart();
+
       return;
     }
+
     if (showChart) {
       if (!this.chart) this.renderChart();
       else this.updateChart();
@@ -78,6 +82,7 @@ export class Chart extends React.Component<ChartProps> {
 
   memoizeDataProps() {
     const { data } = this.props;
+
     this.currentChartData = {
       ...data,
       datasets: data.datasets && data.datasets.map(set => {
@@ -103,6 +108,7 @@ export class Chart extends React.Component<ChartProps> {
     // Remove stale datasets if they're not available in nextDatasets
     if (datasets.length > nextDatasets.length) {
       const sets = [...datasets];
+
       sets.forEach(set => {
         if (!nextDatasets.find(next => next.id === set.id)) {
           remove(datasets, (item => item.id === set.id));
@@ -113,6 +119,7 @@ export class Chart extends React.Component<ChartProps> {
     // Mutating inner chart datasets to enable seamless transitions
     nextDatasets.forEach((next, datasetIndex) => {
       const index = datasets.findIndex(set => set.id === next.id);
+
       if (index !== -1) {
         datasets[index].data = datasets[index].data.slice();  // "Clean" mobx observables data to use in ChartJS
         datasets[index].data.splice(next.data.length);
@@ -122,6 +129,7 @@ export class Chart extends React.Component<ChartProps> {
 
         // Merge other fields
         const { data, ...props } = next;
+
         datasets[index] = {
           ...datasets[index],
           ...props
@@ -150,11 +158,13 @@ export class Chart extends React.Component<ChartProps> {
         tooltip={tooltip}
       />
     );
+
     return (
       <div className="legend flex wrap gaps">
         {labels && labels.map((label: string, index) => {
           const { backgroundColor } = datasets[0] as any;
           const color = legendColors ? legendColors[index] : backgroundColor[index];
+
           return labelElem(label, color);
         })}
         {!labels && datasets.map(({ borderColor, label, tooltip }) =>
@@ -166,6 +176,7 @@ export class Chart extends React.Component<ChartProps> {
 
   renderChart() {
     const { type, options, plugins } = this.props;
+
     this.memoizeDataProps();
     this.chart = new ChartJS(this.canvas.current, {
       type,
@@ -182,6 +193,7 @@ export class Chart extends React.Component<ChartProps> {
 
   render() {
     const { width, height, showChart, title, className } = this.props;
+
     return (
       <>
         <div className={cssNames("Chart", className)}>

@@ -51,16 +51,19 @@ export class WorkloadKubeObject extends KubeObject {
 
   getSelectors(): string[] {
     const selector = this.spec.selector;
+
     return KubeObject.stringifyLabels(selector ? selector.matchLabels : null);
   }
 
   getNodeSelectors(): string[] {
     const nodeSelector = get(this, "spec.template.spec.nodeSelector");
+
     return KubeObject.stringifyLabels(nodeSelector);
   }
 
   getTemplateLabels(): string[] {
     const labels = get(this, "spec.template.metadata.labels");
+
     return KubeObject.stringifyLabels(labels);
   }
 
@@ -74,7 +77,9 @@ export class WorkloadKubeObject extends KubeObject {
 
   getAffinityNumber() {
     const affinity = this.getAffinity();
+
     if (!affinity) return 0;
+
     return Object.keys(affinity).length;
   }
 }

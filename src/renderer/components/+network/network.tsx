@@ -16,6 +16,7 @@ export class Network extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
     const query = namespaceStore.getContextParams();
     const routes: TabLayoutRoute[] = [];
+
     if (isAllowedResource("services")) {
       routes.push({
         title: <Trans>Services</Trans>,
@@ -24,6 +25,7 @@ export class Network extends React.Component {
         routePath: servicesRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("endpoints")) {
       routes.push({
         title: <Trans>Endpoints</Trans>,
@@ -32,6 +34,7 @@ export class Network extends React.Component {
         routePath: endpointRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("ingresses")) {
       routes.push({
         title: <Trans>Ingresses</Trans>,
@@ -40,6 +43,7 @@ export class Network extends React.Component {
         routePath: ingressRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("networkpolicies")) {
       routes.push({
         title: <Trans>Network Policies</Trans>,
@@ -48,6 +52,7 @@ export class Network extends React.Component {
         routePath: networkPoliciesRoute.path.toString(),
       });
     }
+
     return routes;
   }
 

@@ -45,6 +45,7 @@ export class KubeAuthProxy {
       "--accept-hosts", this.acceptHosts,
       "--reject-paths", "^[^/]"
     ];
+
     if (process.env.DEBUG_PROXY === "true") {
       args.push("-v", "9");
     }
@@ -62,6 +63,7 @@ export class KubeAuthProxy {
 
     this.proxyProcess.stdout.on("data", (data) => {
       let logItem = data.toString();
+
       if (logItem.startsWith("Starting to serve on")) {
         logItem = "Authentication proxy started\n";
       }
@@ -80,19 +82,23 @@ export class KubeAuthProxy {
     const error = data.split("http: proxy error:").slice(1).join("").trim();
     let errorMsg = error;
     const jsonError = error.split("Response: ")[1];
+
     if (jsonError) {
       try {
         const parsedError = JSON.parse(jsonError);
+
         errorMsg = parsedError.error_description || parsedError.error || jsonError;
       } catch (_) {
         errorMsg = jsonError.trim();
       }
     }
+
     return errorMsg;
   }
 
   protected async sendIpcLogMessage(res: KubeAuthProxyLog) {
     const channel = `kube-auth:${this.cluster.id}`;
+
     logger.info(`[KUBE-AUTH]: out-channel "${channel}"`, { ...res, meta: this.cluster.getMeta() });
     broadcastMessage(channel, res);
   }

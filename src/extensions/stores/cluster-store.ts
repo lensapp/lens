@@ -40,6 +40,7 @@ export class ClusterStore extends Singleton {
     if (!this.activeClusterId) {
       return null;
     }
+
     return this.getById(this.activeClusterId);
   }
 

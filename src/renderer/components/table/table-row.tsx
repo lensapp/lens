@@ -20,6 +20,7 @@ export class TableRow extends React.Component<TableRowProps> {
   render() {
     const { className, nowrap, selected, disabled, children, sortItem, searchItem, ...rowProps } = this.props;
     const classNames = cssNames("TableRow", className, { selected, nowrap, disabled });
+
     return (
       <div className={classNames} {...rowProps}>
         {children}

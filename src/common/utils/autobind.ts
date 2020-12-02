@@ -12,7 +12,6 @@ export function autobind() {
 function bindClass<T extends Constructor>(constructor: T) {
   const proto = constructor.prototype;
   const descriptors = Object.getOwnPropertyDescriptors(proto);
-
   const skipMethod = (methodName: string) => {
     return methodName === "constructor"
       || typeof descriptors[methodName].value !== "function";
@@ -21,6 +20,7 @@ function bindClass<T extends Constructor>(constructor: T) {
   Object.keys(descriptors).forEach(prop => {
     if (skipMethod(prop)) return;
     const boundDescriptor = bindMethod(proto, prop, descriptors[prop]);
+
     Object.defineProperty(proto, prop, boundDescriptor);
   });
 }
@@ -38,6 +38,7 @@ function bindMethod(target: object, prop?: string, descriptor?: PropertyDescript
     get() {
       if (this === target) return func; // direct access from prototype
       if (!boundFunc.has(this)) boundFunc.set(this, func.bind(this));
+
       return boundFunc.get(this);
     }
   });

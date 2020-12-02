@@ -24,20 +24,25 @@ export class PodsStore extends KubeObjectStore<Pod> {
 
   async loadKubeMetrics(namespace?: string) {
     const metrics = await podMetricsApi.list({ namespace });
+
     this.kubeMetrics.replace(metrics);
   }
 
   getPodsByOwner(workload: WorkloadKubeObject): Pod[] {
     if (!workload) return [];
+
     return this.items.filter(pod => {
       const owners = pod.getOwnerRefs();
+
       if (!owners.length) return;
+
       return owners.find(owner => owner.uid === workload.getId());
     });
   }
 
   getPodsByNode(node: string) {
     if (!this.isLoaded) return [];
+
     return this.items.filter(pod => pod.spec.nodeName === node);
   }
 
@@ -54,15 +59,19 @@ export class PodsStore extends KubeObjectStore<Pod> {
         metric.getNs() === pod.getNs()
       ].every(v => v);
     });
+
     if (!metrics) return empty;
+
     return containers.reduce((total, container) => {
       const metric = metrics.containers.find(item => item.name == container.name);
       let cpu = "0";
       let memory = "0";
+
       if (metric && metric.usage) {
         cpu = metric.usage.cpu || "0";
         memory = metric.usage.memory || "0";
       }
+
       return {
         cpu: total.cpu + cpuUnitsToNumber(cpu),
         memory: total.memory + unitsToBytes(memory)

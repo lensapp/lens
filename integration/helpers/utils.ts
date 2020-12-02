@@ -30,7 +30,9 @@ type AsyncPidGetter = () => Promise<number>;
 
 export async function tearDown(app: Application) {
   const pid = await (app.mainProcess.pid as any as AsyncPidGetter)();
+
   await app.stop();
+
   try {
     process.kill(pid, "SIGKILL");
   } catch (e) {

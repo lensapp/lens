@@ -26,6 +26,7 @@ export class MarkdownViewer extends Component<Props> {
   render() {
     const { className, markdown } = this.props;
     const html = DOMPurify.sanitize(marked(markdown));
+
     return (
       <div
         className={cssNames("MarkDownViewer", className)}

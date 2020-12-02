@@ -12,6 +12,7 @@ export default migration({
 
     printLog("Migrating embedded kubeconfig paths");
     const storedClusters: ClusterModel[] = store.get("clusters") || [];
+
     if (!storedClusters.length) return;
 
     printLog("Number of clusters to migrate: ", storedClusters.length);
@@ -22,8 +23,10 @@ export default migration({
          */
         if (!fs.existsSync(cluster.kubeConfigPath)) {
           const kubeconfigPath = cluster.kubeConfigPath.replace(/\/snap\/kontena-lens\/[0-9]*\//, "/snap/kontena-lens/current/");
+
           cluster.kubeConfigPath = kubeconfigPath;
         }
+
         return cluster;
       });
 

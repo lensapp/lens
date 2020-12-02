@@ -23,6 +23,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
 
   @computed get canEditPrometheusPath() {
     if (this.provider === "" || this.provider === "lens") return false;
+
     return true;
   }
 
@@ -30,12 +31,15 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
     disposeOnUnmount(this,
       autorun(() => {
         const { prometheus, prometheusProvider } = this.props.cluster.preferences;
+
         if (prometheus) {
           const prefix = prometheus.prefix || "";
+
           this.path = `${prometheus.namespace}/${prometheus.service}:${prometheus.port}${prefix}`;
         } else {
           this.path = "";
         }
+
         if (prometheusProvider) {
           this.provider = prometheusProvider.type;
         } else {
@@ -51,9 +55,11 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
     }
     const parsed = this.path.split(/\/|:/, 3);
     const apiPrefix = this.path.substring(parsed.join("/").length);
+
     if (!parsed[0] || !parsed[1] || !parsed[2]) {
       return null;
     }
+
     return {
       namespace: parsed[0],
       service: parsed[1],

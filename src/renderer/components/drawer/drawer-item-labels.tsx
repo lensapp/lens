@@ -8,9 +8,11 @@ export interface DrawerItemLabelsProps extends DrawerItemProps {
 
 export function DrawerItemLabels(props: DrawerItemLabelsProps) {
   const { labels, ...itemProps } = props;
+
   if (!labels || !labels.length) {
     return null;
   }
+
   return (
     <DrawerItem {...itemProps} labelsOnly>
       {labels.map(label => <Badge key={label} label={label} title={label}/>)}

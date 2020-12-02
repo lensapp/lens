@@ -34,6 +34,7 @@ export class JobDetails extends React.Component<Props> {
 
   render() {
     const { object: job } = this.props;
+
     if (!job) return null;
     const selectors = job.getSelectors();
     const nodeSelector = job.getNodeSelectors();
@@ -41,6 +42,7 @@ export class JobDetails extends React.Component<Props> {
     const childPods = jobStore.getChildPods(job);
     const ownerRefs = job.getOwnerRefs();
     const condition = job.getCondition();
+
     return (
       <div className="JobDetails">
         <KubeObjectMeta object={job}/>
@@ -71,6 +73,7 @@ export class JobDetails extends React.Component<Props> {
             ownerRefs.map(ref => {
               const { name, kind } = ref;
               const detailsUrl = getDetailsUrl(lookupApiLink(ref, job));
+
               return (
                 <p key={name}>
                   {kind} <Link to={detailsUrl}>{name}</Link>

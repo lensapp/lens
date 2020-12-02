@@ -10,6 +10,7 @@ export class CronJobStore extends KubeObjectStore<CronJob> {
 
   getStatuses(cronJobs?: CronJob[]) {
     const status = { suspended: 0, scheduled: 0 };
+
     cronJobs.forEach(cronJob => {
       if (cronJob.spec.suspend) {
         status.suspended++;
@@ -18,13 +19,16 @@ export class CronJobStore extends KubeObjectStore<CronJob> {
         status.scheduled++;
       }
     });
+
     return status;
   }
 
   getActiveJobsNum(cronJob: CronJob) {
     // Active jobs are jobs without any condition 'Complete' nor 'Failed'
     const jobs = jobStore.getJobsByOwner(cronJob);
+
     if (!jobs.length) return 0;
+
     return jobs.filter(job => !job.getCondition()).length;
   }
 }

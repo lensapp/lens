@@ -28,6 +28,7 @@ export const isNumber: InputValidator = {
   message: () => _i18n._(t`Invalid number`),
   validate: (value, { min, max }) => {
     const numVal = +value;
+
     return !(
       isNaN(numVal) ||
       (min != null && numVal < min) ||
@@ -61,6 +62,7 @@ export const maxLength: InputValidator = {
 };
 
 const systemNameMatcher = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/;
+
 export const systemName: InputValidator = {
   message: () => _i18n._(t`A System Name must be lowercase DNS labels separated by dots. DNS labels are alphanumerics and dashes enclosed by alphanumerics.`),
   validate: value => !!value.match(systemNameMatcher),

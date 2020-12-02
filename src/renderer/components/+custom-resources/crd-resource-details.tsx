@@ -53,6 +53,7 @@ export class CrdResourceDetails extends React.Component<Props> {
 
   renderStatus(crd: CustomResourceDefinition, columns: AdditionalPrinterColumnsV1[]) {
     const showStatus = !columns.find(column => column.name == "Status") && crd.status?.conditions;
+
     if (!showStatus) {
       return null;
     }
@@ -77,6 +78,7 @@ export class CrdResourceDetails extends React.Component<Props> {
 
   render() {
     const { props: { object }, crd } = this;
+
     if (!object || !crd) {
       return null;
     }

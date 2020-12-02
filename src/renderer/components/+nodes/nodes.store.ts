@@ -16,6 +16,7 @@ export class NodesStore extends KubeObjectStore<Node> {
   @action
   async loadUsageMetrics() {
     this.metricsLoading = true;
+
     try {
       this.metrics = await nodesApi.getMetrics();
       this.metricsLoaded = true;
@@ -42,6 +43,7 @@ export class NodesStore extends KubeObjectStore<Node> {
       return;
     }
     const nodeName = node.getName();
+
     return metricNames.map(metricName => {
       try {
         const metric = this.metrics[metricName];
@@ -52,6 +54,7 @@ export class NodesStore extends KubeObjectStore<Node> {
             result.metric.kubernetes_node,
           ].includes(nodeName);
         });
+
         return result ? parseFloat(result.values.slice(-1)[0][1]) : 0;
       } catch (e) {
         return 0;

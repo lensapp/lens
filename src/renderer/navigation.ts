@@ -16,7 +16,9 @@ export const navigation = createObservableHistory(history);
  */
 export function navigate(location: LocationDescriptor) {
   const currentLocation = navigation.getPath();
+
   navigation.push(location);
+
   if (currentLocation === navigation.getPath()) {
     navigation.goBack(); // prevent sequences of same url in history
   }
@@ -42,16 +44,19 @@ export interface IQueryParams {
 
 export function getQueryString(params?: Partial<IQueryParams>, merge = true) {
   const searchParams = navigation.searchParams.copyWith(params);
+
   if (!merge) {
     Array.from(searchParams.keys()).forEach(key => {
       if (!(key in params)) searchParams.delete(key);
     });
   }
+
   return searchParams.toString({ withPrefix: true });
 }
 
 export function setQueryParams<T>(params?: T & IQueryParams, { merge = true, replace = false } = {}) {
   const newSearch = getQueryString(params, merge);
+
   navigation.merge({ search: newSearch }, replace);
 }
 
@@ -65,6 +70,7 @@ export function getSelectedDetails() {
 
 export function getDetailsUrl(details: string) {
   if (!details) return "";
+
   return getQueryString({
     details,
     selected: getSelectedDetails(),
@@ -103,6 +109,7 @@ export function getMatchedClusterId(): string {
     exact: true,
     path: clusterViewRoute.path
   });
+
   return matched?.params.clusterId;
 }
 

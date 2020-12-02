@@ -80,6 +80,7 @@ export class CronJobs extends React.Component<Props> {
 
 export function CronJobMenu(props: KubeObjectMenuProps<CronJob>) {
   const { object, toolbar } = props;
+
   return (
     <MenuItem onClick={() => CronJobTriggerDialog.open(object)}>
       <Icon material="play_circle_filled" title={_i18n._(t`Trigger`)} interactive={toolbar}/>

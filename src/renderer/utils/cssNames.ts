@@ -7,6 +7,7 @@ export type IClassNameMap = {
 
 export function cssNames(...args: IClassName[]): string {
   const map: IClassNameMap = {};
+
   args.forEach(className => {
     if (typeof className === "string" || Array.isArray(className)) {
       [].concat(className).forEach(name => map[name] = true);
@@ -15,6 +16,7 @@ export function cssNames(...args: IClassName[]): string {
       Object.assign(map, className);
     }
   });
+
   return Object.entries(map)
     .filter(([, isActive]) => !!isActive)
     .map(([className]) => className.trim())

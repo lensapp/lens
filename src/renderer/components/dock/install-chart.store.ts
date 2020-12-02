@@ -28,6 +28,7 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
     });
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
+
       if (isInstallChartTab(selectedTab) && isOpen) {
         this.loadData()
           .catch(err => Notifications.error(String(err)));
@@ -53,9 +54,11 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
   @action
   async loadVersions(tabId: TabId) {
     const { repo, name, version } = this.getData(tabId);
+
     this.versions.clearData(tabId); // reset
     const charts = await helmChartsApi.get(repo, name, version);
     const versions = charts.versions.map(chartVersion => chartVersion.version);
+
     this.versions.setData(tabId, versions);
   }
 
@@ -63,8 +66,8 @@ export class InstallChartStore extends DockTabStore<IChartInstallData> {
   async loadValues(tabId: TabId, attempt = 0): Promise<void> {
     const data = this.getData(tabId);
     const { repo, name, version } = data;
-
     const values = await helmChartsApi.getValues(repo, name, version);
+
     if (values) {
       this.setData(tabId, { ...data, values });
     } else if (attempt < 4) {
@@ -77,7 +80,6 @@ export const installChartStore = new InstallChartStore();
 
 export function createInstallChartTab(chart: HelmChart, tabParams: Partial<IDockTab> = {}) {
   const { name, repo, version } = chart;
-
   const tab = dockStore.createTab({
     kind: TabKind.INSTALL_CHART,
     title: _i18n._(t`Helm Install: ${repo}/${name}`),

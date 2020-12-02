@@ -37,6 +37,7 @@ export class Tabs extends React.PureComponent<TabsProps> {
       scrollable,
       withBorder,
     });
+
     return (
       <TabsContext.Provider value={{ autoFocus, value, onChange }}>
         <div
@@ -65,6 +66,7 @@ export class Tab extends React.PureComponent<TabProps> {
 
   get isActive() {
     const { active, value } = this.props;
+
     return typeof active === "boolean" ? active : this.context.value === value;
   }
 
@@ -83,6 +85,7 @@ export class Tab extends React.PureComponent<TabProps> {
   onClick(evt: React.MouseEvent<HTMLElement>) {
     const { value, active, disabled, onClick } = this.props;
     const { onChange } = this.context;
+
     if (disabled || active) return;
     if (onClick) onClick(evt);
     if (onChange) onChange(value);
@@ -91,6 +94,7 @@ export class Tab extends React.PureComponent<TabProps> {
   @autobind()
   onFocus(evt: React.FocusEvent<HTMLElement>) {
     const { onFocus } = this.props;
+
     if (onFocus) onFocus(evt);
     this.scrollIntoView();
   }
@@ -99,8 +103,10 @@ export class Tab extends React.PureComponent<TabProps> {
   onKeyDown(evt: React.KeyboardEvent<HTMLElement>) {
     const ENTER_KEY = evt.keyCode === 13;
     const SPACE_KEY = evt.keyCode === 32;
+
     if (SPACE_KEY || ENTER_KEY) this.elem.click();
     const { onKeyDown } = this.props;
+
     if (onKeyDown) onKeyDown(evt);
   }
 
@@ -118,10 +124,12 @@ export class Tab extends React.PureComponent<TabProps> {
   render() {
     const { active, disabled, icon, label, value, ...elemProps } = this.props;
     let { className } = this.props;
+
     className = cssNames("Tab flex gaps align-center", className, {
       "active": this.isActive,
       disabled,
     });
+
     return (
       <div
         {...elemProps}

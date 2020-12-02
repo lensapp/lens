@@ -16,7 +16,6 @@ export function formatDuration(timeValue: number, compact: boolean) {
     duration.minutes(),
     duration.seconds(),
   ];
-
   const meaningfulValues = durationValues
     .map((a, i): [number, string] => [a, suffixes[i]])
     .filter(([dur]) => dur > 0)

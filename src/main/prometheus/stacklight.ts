@@ -11,6 +11,7 @@ export class PrometheusStacklight implements PrometheusProvider {
     try {
       const resp = await client.readNamespacedService("prometheus-server", "stacklight");
       const service = resp.body;
+
       return {
         id: this.id,
         namespace: service.metadata.namespace,
@@ -72,6 +73,7 @@ export class PrometheusStacklight implements PrometheusProvider {
       case "ingress":
         const bytesSent = (ingress: string, statuses: string) =>
           `sum(rate(nginx_ingress_controller_bytes_sent_sum{ingress="${ingress}", status=~"${statuses}"}[${this.rateAccuracy}])) by (ingress)`;
+
         return {
           bytesSentSuccess: bytesSent(opts.igress, "^2\\\\d*"),
           bytesSentFailure: bytesSent(opts.ingres, "^5\\\\d*"),

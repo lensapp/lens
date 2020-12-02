@@ -21,16 +21,21 @@ interface Props extends KubeObjectDetailsProps<NetworkPolicy> {
 export class NetworkPolicyDetails extends React.Component<Props> {
   renderIngressFrom(ingress: IPolicyIngress) {
     const { from } = ingress;
+
     if (!from) return null;
+
     return (
       <>
         <SubTitle title={<Trans>From</Trans>}/>
         {from.map(item =>
           Object.keys(item).map(key => {
             const data = get(item, key);
+
             if (key === "ipBlock") {
               const { cidr, except } = data as IPolicyIpBlock;
+
               if (!cidr) return;
+
               return (
                 <DrawerItem name={key} key={key}>
                   cidr: {cidr}, {" "}
@@ -41,6 +46,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
               );
             }
             const selector: IPolicySelector = data;
+
             if (selector.matchLabels) {
               return (
                 <DrawerItem name={key} key={key}>
@@ -64,15 +70,20 @@ export class NetworkPolicyDetails extends React.Component<Props> {
 
   renderEgressTo(egress: IPolicyEgress) {
     const { to } = egress;
+
     if (!to) return null;
+
     return (
       <>
         <SubTitle title={<Trans>To</Trans>}/>
         {to.map(item => {
           const { ipBlock } = item;
+
           if (!ipBlock) return;
           const { cidr, except } = ipBlock;
+
           if (!cidr) return;
+
           return (
             <DrawerItem name="ipBlock" key={cidr}>
               cidr: {cidr}, {" "}
@@ -88,11 +99,13 @@ export class NetworkPolicyDetails extends React.Component<Props> {
 
   render() {
     const { object: policy } = this.props;
+
     if (!policy) {
       return null;
     }
     const { ingress, egress } = policy.spec;
     const selector = policy.getMatchLabels();
+
     return (
       <div className="NetworkPolicyDetails">
         <KubeObjectMeta object={policy}/>
@@ -109,6 +122,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
             <DrawerTitle title={_i18n._(t`Ingress`)}/>
             {ingress.map((ingress, i) => {
               const { ports } = ingress;
+
               return (
                 <Fragment key={i}>
                   <DrawerItem name={<Trans>Ports</Trans>}>
@@ -126,6 +140,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
             <DrawerTitle title={<Trans>Egress</Trans>}/>
             {egress.map((egress, i) => {
               const { ports } = egress;
+
               return (
                 <Fragment key={i}>
                   <DrawerItem name={<Trans>Ports</Trans>}>

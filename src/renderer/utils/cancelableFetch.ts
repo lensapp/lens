@@ -16,19 +16,21 @@ export function cancelableFetch(reqInfo: RequestInfo, reqInit: RequestInit = {})
   const abortController = new AbortController();
   const signal = abortController.signal;
   const cancel = abortController.abort.bind(abortController);
-
   const wrapResult: WrappingFunction = function (result: any) {
     if (result instanceof Promise) {
       const promise: CancelablePromise<any> = result as any;
+
       promise.then = function (onfulfilled, onrejected) {
         const data = Object.getPrototypeOf(this).then.call(this, onfulfilled, onrejected);
+
         return wrapResult(data);
       };
       promise.cancel = cancel;
     }
+
     return result;
   };
-
   const req = fetch(reqInfo, { ...reqInit, signal });
+
   return wrapResult(req);
 }

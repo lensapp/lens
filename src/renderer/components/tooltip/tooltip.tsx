@@ -99,6 +99,7 @@ export class Tooltip extends React.Component<TooltipProps> {
       TooltipPosition.BOTTOM_RIGHT,
       TooltipPosition.BOTTOM_LEFT,
     ]);
+
     if (preferredPositions) {
       positions = new Set([
         ...[preferredPositions].flat(),
@@ -117,9 +118,11 @@ export class Tooltip extends React.Component<TooltipProps> {
     for (const pos of positions) {
       const { left, top, right, bottom } = this.getPosition(pos, selfBounds, targetBounds);
       const fitsToWindow = left >= 0 && top >= 0 && right <= viewportWidth && bottom <= viewportHeight;
+
       if (fitsToWindow) {
         this.activePosition = pos;
         this.setPosition({ top, left });
+
         return;
       }
     }
@@ -127,12 +130,14 @@ export class Tooltip extends React.Component<TooltipProps> {
     // apply fallback position if nothing helped from above
     const fallbackPosition = Array.from(positions)[0];
     const { left, top } = this.getPosition(fallbackPosition, selfBounds, targetBounds);
+
     this.activePosition = fallbackPosition;
     this.setPosition({ left, top });
   }
 
   protected setPosition(pos: { left: number, top: number }) {
     const elemStyle = this.elem.style;
+
     elemStyle.left = `${pos.left}px`;
     elemStyle.top = `${pos.top}px`;
   }
@@ -145,6 +150,7 @@ export class Tooltip extends React.Component<TooltipProps> {
     const verticalCenter = targetBounds.top + (targetBounds.height - tooltipBounds.height) / 2;
     const topCenter = targetBounds.top - tooltipBounds.height - offset;
     const bottomCenter = targetBounds.bottom + offset;
+
     switch (position) {
       case "top":
         left = horizontalCenter;
@@ -179,6 +185,7 @@ export class Tooltip extends React.Component<TooltipProps> {
         left = targetBounds.right - tooltipBounds.width;
         break;
     }
+
     return {
       left,
       top,
@@ -203,9 +210,11 @@ export class Tooltip extends React.Component<TooltipProps> {
         {children}
       </div>
     );
+
     if (usePortal) {
       return createPortal(tooltip, document.body,);
     }
+
     return tooltip;
   }
 }

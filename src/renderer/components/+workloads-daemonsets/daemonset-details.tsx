@@ -42,6 +42,7 @@ export class DaemonSetDetails extends React.Component<Props> {
 
   render() {
     const { object: daemonSet } = this.props;
+
     if (!daemonSet) return null;
     const { spec } = daemonSet;
     const selectors = daemonSet.getSelectors();
@@ -49,6 +50,7 @@ export class DaemonSetDetails extends React.Component<Props> {
     const nodeSelector = daemonSet.getNodeSelectors();
     const childPods = daemonSetStore.getChildPods(daemonSet);
     const metrics = daemonSetStore.metrics;
+
     return (
       <div className="DaemonSetDetails">
         {podsStore.isLoaded && (

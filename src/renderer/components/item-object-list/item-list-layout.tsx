@@ -104,6 +104,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     // keep ui user settings in local storage
     const defaultUserSettings = toJS(this.userSettings);
     const storage = createStorage<ItemListLayoutUserSettings>("items_list_layout", defaultUserSettings);
+
     Object.assign(this.userSettings, storage.get()); // restore
     disposeOnUnmount(this, [
       reaction(() => toJS(this.userSettings), settings => storage.set(settings)),
@@ -113,10 +114,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   async componentDidMount() {
     const { store, dependentStores, isClusterScoped } = this.props;
     const stores = [store, ...dependentStores];
+
     if (!isClusterScoped) stores.push(namespaceStore);
+
     try {
       await Promise.all(stores.map(store => store.loadAll()));
       const subscriptions = stores.map(store => store.subscribe());
+
       await when(() => this.isUnmounting);
       subscriptions.forEach(dispose => dispose()); // unsubscribe all
     } catch (error) {
@@ -127,6 +131,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   componentWillUnmount() {
     this.isUnmounting = true;
     const { store, isSelectable } = this.props;
+
     if (isSelectable) store.resetSelection();
   }
 
@@ -134,52 +139,64 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     [FilterType.SEARCH]: items => {
       const { searchFilters, isSearchable } = this.props;
       const search = pageFilters.getValues(FilterType.SEARCH)[0] || "";
+
       if (search && isSearchable && searchFilters) {
         const normalizeText = (text: string) => String(text).toLowerCase();
         const searchTexts = [search].map(normalizeText);
+
         return items.filter(item => {
           return searchFilters.some(getTexts => {
             const sourceTexts: string[] = [getTexts(item)].flat().map(normalizeText);
+
             return sourceTexts.some(source => searchTexts.some(search => source.includes(search)));
           });
         });
       }
+
       return items;
     },
 
     [FilterType.NAMESPACE]: items => {
       const filterValues = pageFilters.getValues(FilterType.NAMESPACE);
+
       if (filterValues.length > 0) {
         return items.filter(item => filterValues.includes(item.getNs()));
       }
+
       return items;
     },
   };
 
   @computed get isReady() {
     const { isReady, store } = this.props;
+
     return typeof isReady == "boolean" ? isReady : store.isLoaded;
   }
 
   @computed get filters() {
     let { activeFilters } = pageFilters;
     const { isClusterScoped, isSearchable, searchFilters } = this.props;
+
     if (isClusterScoped) {
       activeFilters = activeFilters.filter(({ type }) => type !== FilterType.NAMESPACE);
     }
+
     if (!(isSearchable && searchFilters)) {
       activeFilters = activeFilters.filter(({ type }) => type !== FilterType.SEARCH);
     }
+
     return activeFilters;
   }
 
   applyFilters<T>(filters: ItemsFilter[], items: T[]): T[] {
     if (!filters || !filters.length) return items;
+
     return filters.reduce((items, filter) => filter(items), items);
   }
 
   @computed get allItems() {
     const { filterItems, store } = this.props;
+
     return this.applyFilters(filterItems, store.items);
   }
 
@@ -190,10 +207,12 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
     Object.entries(filterGroups).forEach(([type, filtersGroup]) => {
       const filterCallback = filterCallbacks[type];
+
       if (filterCallback && filtersGroup.length > 0) {
         filterItems.push(filterCallback);
       }
     });
+
     return this.applyFilters(filterItems, allItems);
   }
 
@@ -206,8 +225,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     } = this.props;
     const { isSelected } = store;
     const item = this.items.find(item => item.getId() == uid);
+
     if (!item) return;
     const itemId = item.getId();
+
     return (
       <TableRow
         key={itemId}
@@ -229,12 +250,15 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           renderTableContents(item)
             .map((content, index) => {
               const cellProps: TableCellProps = isReactNode(content) ? { children: content } : content;
+
               if (copyClassNameFromHeadCells && renderTableHeader) {
                 const headCell = renderTableHeader[index];
+
                 if (headCell) {
                   cellProps.className = cssNames(cellProps.className, headCell.className);
                 }
               }
+
               return <TableCell key={index} {...cellProps} />;
             })
         }
@@ -257,6 +281,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const selectedCount = selectedItems.length;
     const tailCount = selectedCount > visibleMaxNamesCount ? selectedCount - visibleMaxNamesCount : 0;
     const tail = tailCount > 0 ? <Trans>and <b>{tailCount}</b> more</Trans> : null;
+
     ConfirmDialog.open({
       ok: removeSelectedItems,
       labelOk: <Trans>Remove</Trans>,
@@ -274,9 +299,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   renderFilters() {
     const { hideFilters } = this.props;
     const { isReady, userSettings, filters } = this;
+
     if (!isReady || !filters.length || hideFilters || !userSettings.showAppliedFilters) {
       return;
     }
+
     return <PageFiltersList filters={filters} />;
   }
 
@@ -285,6 +312,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const allItemsCount = allItems.length;
     const itemsCount = items.length;
     const isFiltered = filters.length > 0 && allItemsCount > itemsCount;
+
     if (isFiltered) {
       return (
         <NoItems>
@@ -297,11 +325,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         </NoItems>
       );
     }
+
     return <NoItems />;
   }
 
   renderHeaderContent(placeholders: IHeaderPlaceholders): ReactNode {
     const { title, filters, search, info } = placeholders;
+
     return (
       <>
         {title}
@@ -319,14 +349,17 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const allItemsCount = allItems.length;
     const itemsCount = items.length;
     const isFiltered = isReady && filters.length > 0;
+
     if (isFiltered) {
       const toggleFilters = () => userSettings.showAppliedFilters = !userSettings.showAppliedFilters;
+
       return (
         <Trans>
           <a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}
         </Trans>
       );
     }
+
     return (
       <Plural
         value={allItemsCount}
@@ -338,6 +371,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   renderHeader() {
     const { showHeader, customizeHeader, renderHeaderTitle, headerClassName, isClusterScoped } = this.props;
+
     if (!showHeader) return;
     const title = typeof renderHeaderTitle === "function" ? renderHeaderTitle(this) : renderHeaderTitle;
     const placeholders: IHeaderPlaceholders = {
@@ -352,8 +386,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       search: <SearchInputUrl />,
     };
     let header = this.renderHeaderContent(placeholders);
+
     if (customizeHeader) {
       const modifiedHeader = customizeHeader(placeholders, header);
+
       if (isReactNode(modifiedHeader)) {
         header = modifiedHeader;
       } else {
@@ -363,6 +399,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         });
       }
     }
+
     return (
       <div className={cssNames("header flex gaps align-center", headerClassName)}>
         {header}
@@ -378,6 +415,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const { isReady, removeItemsDialog, items } = this;
     const { selectedItems } = store;
     const selectedItemId = detailsItem && detailsItem.getId();
+
     return (
       <div className="items box grow flex column">
         {!isReady && (
@@ -432,6 +470,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   render() {
     const { className } = this.props;
+
     return (
       <div className={cssNames("ItemListLayout flex column", className)}>
         {this.renderHeader()}

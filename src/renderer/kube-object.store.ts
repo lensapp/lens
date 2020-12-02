@@ -23,6 +23,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   getAllByNs(namespace: string | string[], strict = false): T[] {
     const namespaces: string[] = [].concat(namespace);
+
     if (namespaces.length) {
       return this.items.filter(item => namespaces.includes(item.getNs()));
     } else if (!strict) {
@@ -46,11 +47,13 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     if (Array.isArray(labels)) {
       return this.items.filter((item: T) => {
         const itemLabels = item.getLabels();
+
         return labels.every(label => itemLabels.includes(label));
       });
     } else {
       return this.items.filter((item: T) => {
         const itemLabels = item.metadata.labels || {};
+
         return Object.entries(labels)
           .every(([key, value]) => itemLabels[key] === value);
       });
@@ -61,6 +64,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     if (!this.api.isNamespaced || !allowedNamespaces) {
       const { limit } = this;
       const query: IKubeApiQueryParams = limit ? { limit } : {};
+
       return this.api.list({}, query);
     } else {
       return Promise
@@ -77,8 +81,10 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   async loadAll() {
     this.isLoading = true;
     let items: T[];
+
     try {
       const { isAdmin, allowedNamespaces } = getHostedCluster();
+
       items = await this.loadItems(!isAdmin ? allowedNamespaces : null);
       items = this.filterItemsOnLoad(items);
     } finally {
@@ -99,17 +105,21 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   async load(params: { name: string; namespace?: string }): Promise<T> {
     const { name, namespace } = params;
     let item = this.getByName(name, namespace);
+
     if (!item) {
       item = await this.loadItem(params);
       const newItems = this.sortItems([...this.items, item]);
+
       this.items.replace(newItems);
     }
+
     return item;
   }
 
   @action
   async loadFromPath(resourcePath: string) {
     const { namespace, name } = KubeApi.parseApi(resourcePath);
+
     return this.load({ name, namespace });
   }
 
@@ -120,14 +130,18 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   async create(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
     const newItem = await this.createItem(params, data);
     const items = this.sortItems([...this.items, newItem]);
+
     this.items.replace(items);
+
     return newItem;
   }
 
   async update(item: T, data: Partial<T>): Promise<T> {
     const newItem = await item.update<T>(data);
     const index = this.items.findIndex(item => item.getId() === newItem.getId());
+
     this.items.splice(index, 1, newItem);
+
     return newItem;
   }
 
@@ -177,6 +191,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
         case "ADDED":
         case "MODIFIED":
           const newItem = new api.objectConstructor(object);
+
           if (!item) {
             items.push(newItem);
           } else {

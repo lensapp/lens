@@ -34,11 +34,13 @@ let clusterManager: ClusterManager;
 let windowManager: WindowManager;
 
 app.setName(appName);
+
 if (!process.env.CICD) {
   app.setPath("userData", workingDir);
 }
 
 mangleProxyEnv();
+
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
 }
@@ -48,6 +50,7 @@ app.on("ready", async () => {
   await shellSync();
 
   const updater = new AppUpdater();
+
   updater.start();
 
   registerFileProtocol("static", __static);
@@ -110,6 +113,7 @@ app.on("ready", async () => {
 
 app.on("activate", (event, hasVisibleWindows) => {
   logger.info("APP:ACTIVATE", { hasVisibleWindows });
+
   if (!hasVisibleWindows) {
     windowManager.initMainWindow();
   }
@@ -121,6 +125,7 @@ app.on("will-quit", (event) => {
   appEventBus.emit({name: "app", action: "close"});
   event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
   clusterManager?.stop(); // close cluster connections
+
   return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
 });
 
