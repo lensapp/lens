@@ -44,7 +44,7 @@ export function getExtensionPageUrl<P extends object>({ extensionId, pageId = ""
   const extensionBaseUrl = compile(`/extension/:name`)({
     name: sanitizeExtensionName(extensionId), // compile only with extension-id first and define base path
   });
-  const extPageRoutePath = path.join(extensionBaseUrl, pageId).replace(/\\/g, "/"); // path.join returns \ as separator on Windows and needs to be replaced with /
+  const extPageRoutePath = path.posix.join(extensionBaseUrl, pageId);
 
   if (params) {
     return compile(extPageRoutePath)(params); // might throw error when required params not passed
