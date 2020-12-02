@@ -51,6 +51,17 @@ export class ExtensionLoader {
     return extensions;
   }
 
+  // Transform userExtensions to a state object for storing into ExtensionsStore
+  @computed get storeState() {
+    return Object.fromEntries(
+      Array.from(this.userExtensions)
+        .map(([extId, extension]) => [extId, {
+          enabled: extension.isEnabled,
+          name: extension.manifest.name,
+        }])
+    );
+  }
+
   @action
   async init() {
     if (ipcRenderer) {
@@ -59,7 +70,12 @@ export class ExtensionLoader {
       await this.initMain();
     }
 
-    extensionsStore.manageState(this);
+    await Promise.all([this.whenLoaded, extensionsStore.whenLoaded]);
+    
+    // save state on change `extension.isEnabled`
+    reaction(() => this.storeState, extensionsState => {
+      extensionsStore.mergeState(extensionsState);
+    });
   }
 
   initExtensions(extensions?: Map<LensExtensionId, InstalledExtension>) {

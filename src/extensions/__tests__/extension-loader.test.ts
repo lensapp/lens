@@ -1,8 +1,17 @@
 import { ExtensionLoader } from "../extension-loader";
+import { ipcRenderer } from "electron";
+import { extensionsStore } from "../extensions-store";
 
 const manifestPath = "manifest/path";
 const manifestPath2 = "manifest/path2";
 const manifestPath3 = "manifest/path3";
+
+jest.mock("../extensions-store", () => ({
+  extensionsStore: {
+    whenLoaded: Promise.resolve(true),
+    mergeState: jest.fn()
+  }
+}));
 
 jest.mock(
   "electron",
@@ -128,5 +137,30 @@ describe("ExtensionLoader", () => {
 
       done();
     }, 10);
+  });
+
+  it("updates ExtensionsStore after isEnabled is changed", async () => {
+    (extensionsStore.mergeState as any).mockClear();
+
+    // Disable sending events in this test
+    (ipcRenderer.on as any).mockImplementation();
+
+    const extensionLoader = new ExtensionLoader();
+
+    await extensionLoader.init();
+
+    expect(extensionsStore.mergeState).not.toHaveBeenCalled();
+
+    Array.from(extensionLoader.userExtensions.values())[0].isEnabled = false;
+
+    expect(extensionsStore.mergeState).toHaveBeenCalledWith({
+      "manifest/path": {
+        enabled: false,
+        name: "TestExtension"
+      },
+      "manifest/path2": {
+        enabled: true,
+        name: "TestExtension2"
+      }});
   });
 });
