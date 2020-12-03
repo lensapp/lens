@@ -321,7 +321,6 @@
     "patch-package": "^6.2.2",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.2.0",
-    "progress-bar-webpack-plugin": "^2.1.0",
     "raw-loader": "^4.0.1",
     "react-beautiful-dnd": "^13.0.0",
     "react-refresh": "^0.9.0",
