@@ -10,7 +10,7 @@ jobs:
         node-version: [12.x]
     steps:
       - name: debug
-        run: echo ${{ github.event }}
+        run: echo ${{ toJson(github.event) }}
 
       - name: Checkout Release from lens
         uses: actions/checkout@v2
