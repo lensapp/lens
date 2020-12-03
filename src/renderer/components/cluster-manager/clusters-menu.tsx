@@ -22,7 +22,7 @@ import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterViewURL } from "./cluster-view.route";
-import { globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
+import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
 import { clusterDisconnectHandler } from "../../../common/cluster-ipc";
 
 interface Props {
@@ -159,13 +159,16 @@ export class ClustersMenu extends React.Component<Props> {
         <div className="extensions">
           {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
             const registeredPage = globalPageRegistry.getByPageTarget(target);
-            if (!registeredPage) return;
-            const { url: pageUrl } = registeredPage;
+            if (!registeredPage){
+              return;
+            }
+            const pageUrl = getExtensionPageUrl(target);
+            const isActive = isActiveRoute(registeredPage.url);
             return (
               <Icon
                 key={pageUrl}
                 tooltip={title}
-                active={isActiveRoute(pageUrl)}
+                active={isActive}
                 onClick={() => navigate(pageUrl)}
               />
             );

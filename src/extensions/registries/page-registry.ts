@@ -29,7 +29,7 @@ export interface PageComponents {
 export interface PageTarget<P = {}> {
   extensionId?: string;
   pageId?: string;
-  params?: Record<string, any | any[]> & P;
+  params?: Record<string, any | any[]> & P; // default target page params
 }
 
 export interface RegisteredPage extends PageRegistration {
@@ -38,24 +38,21 @@ export interface RegisteredPage extends PageRegistration {
 }
 
 export function getExtensionPageUrl<P extends object>(target: PageTarget): string {
-  const { extensionId, pageId = "", params } = target;
+  const { extensionId, pageId = "", params: targetParams = {} } = target;
   let stringifiedParams = "";
 
   // stringify params to matched target page
-  if (params) {
-    const page = globalPageRegistry.getByPageTarget(target) || clusterPageRegistry.getByPageTarget(target);
-    if (page?.params) {
-      const searchParams: string[] = [];
-      page.params.forEach(urlParam => {
-        const paramValue = params[urlParam.name];
-        if (paramValue == undefined) return;
-        searchParams.push(
-          urlParam.toSearchString(paramValue, { mergeGlobals: false, withPrefix: false }) // e.g. "param=value"
-        );
+  const page = globalPageRegistry.getByPageTarget(target) || clusterPageRegistry.getByPageTarget(target);
+  if (page?.params) {
+    const searchParams = page.params.map(urlParam => {
+      return urlParam.toSearchString({
+        value: targetParams[urlParam.name] ?? urlParam.getDefaultValue(),
+        mergeGlobals: false,
+        withPrefix: false,
       });
-      if (searchParams.length > 0) {
-        stringifiedParams = `?${searchParams.join("&")}`;
-      }
+    });
+    if (searchParams.length > 0) {
+      stringifiedParams = `?${searchParams.join("&")}`;
     }
   }
 

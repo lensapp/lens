@@ -54,7 +54,7 @@ export class UrlParam<V = any | any[]> {
 
   get(): V {
     const { history, urlName } = this;
-    const { multiValueSep, multiValues, defaultValue, skipEmpty } = this.init;
+    const { multiValueSep, defaultValue, skipEmpty } = this.init;
     const value = this.parse(history.searchParams.getAsArray(urlName, multiValueSep));
 
     if (skipEmpty && this.isEmpty(value)) {
@@ -64,19 +64,23 @@ export class UrlParam<V = any | any[]> {
   }
 
   set(value: V, { mergeGlobals = true, replaceHistory = false } = {}) {
-    const search = this.toSearchString(value, { mergeGlobals });
+    const search = this.toSearchString({ mergeGlobals, value });
     this.history.merge({ search }, replaceHistory);
   }
 
+  getDefaultValue(){
+    return this.init.defaultValue;
+  }
+
   isDefault() {
-    return this.get() === this.init.defaultValue;
+    return this.get() === this.getDefaultValue();
   }
 
   clear() {
     this.history.searchParams.delete(this.urlName);
   }
 
-  toSearchString(value = this.get(), { withPrefix = true, mergeGlobals = true } = {}): string {
+  toSearchString({ withPrefix = true, mergeGlobals = true, value = this.get() } = {}): string {
     const { history, urlName, init: { skipEmpty } } = this;
     const searchParams = new URLSearchParams(mergeGlobals ? history.location.search : "");
 

@@ -34,7 +34,7 @@ import { Terminal } from "./dock/terminal";
 import { getHostedCluster, getHostedClusterId } from "../../common/cluster-store";
 import logger from "../../main/logger";
 import { webFrame } from "electron";
-import { clusterPageRegistry } from "../../extensions/registries/page-registry";
+import { clusterPageRegistry, getExtensionPageUrl } from "../../extensions/registries/page-registry";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { appEventBus } from "../../common/event-bus";
 import { broadcastMessage, requestMain } from "../../common/ipc";
@@ -126,14 +126,14 @@ export class App extends React.Component {
     if (!menuItem.id) {
       return routes;
     }
-    clusterPageMenuRegistry.getSubItems(menuItem).forEach((item) => {
-      const page = clusterPageRegistry.getByPageTarget(item.target);
+    clusterPageMenuRegistry.getSubItems(menuItem).forEach((subMenu) => {
+      const page = clusterPageRegistry.getByPageTarget(subMenu.target);
 
       if (page) {
         routes.push({
           routePath: page.url,
-          url: page.url,
-          title: item.title,
+          url: getExtensionPageUrl(subMenu.target),
+          title: subMenu.title,
           component: page.components.Page,
         });
       }

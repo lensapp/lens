@@ -1,12 +1,19 @@
-import { LensRendererExtension, Component } from "@k8slens/extensions";
+import { Component, LensRendererExtension, Navigation } from "@k8slens/extensions";
 import { CoffeeDoodle } from "react-open-doodles";
-import path from "path";
 import React from "react";
+import path from "path";
+import { observer } from "mobx-react";
+
+export const exampleNameUrlParam = Navigation.createUrlParam<string>({
+  name: "name",
+  defaultValue: "demo",
+});
 
 export function ExampleIcon(props: Component.IconProps) {
   return <Component.Icon {...props} material="pages" tooltip={path.basename(__filename)}/>;
 }
 
+@observer
 export class ExamplePage extends React.Component<{ extension: LensRendererExtension }> {
   deactivate = () => {
     const { extension } = this.props;
@@ -15,16 +22,24 @@ export class ExamplePage extends React.Component<{ extension: LensRendererExtens
   };
 
   render() {
+    const exampleName = exampleNameUrlParam.get();
     const doodleStyle = {
       width: "200px"
     };
-
     return (
-      <div className="flex column gaps align-flex-start">
-        <div style={doodleStyle}><CoffeeDoodle accent="#3d90ce" /></div>
+      <div className="flex column gaps align-flex-start" style={{ padding: 24 }}>
+        <div style={doodleStyle}><CoffeeDoodle accent="#3d90ce"/></div>
+
         <p>Hello from Example extension!</p>
         <p>File: <i>{__filename}</i></p>
-        <Component.Button accent label="Deactivate" onClick={this.deactivate}/>
+        <p>Location: <i>{location.href}</i></p>
+
+        <p className="url-params-demo flex column gaps">
+          <a onClick={() => exampleNameUrlParam.set("secret")}>Show secret button</a>
+          {exampleName === "secret" && (
+            <Component.Button accent label="Deactivate" onClick={this.deactivate}/>
+          )}
+        </p>
       </div>
     );
   }

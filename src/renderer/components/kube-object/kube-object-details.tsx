@@ -37,7 +37,7 @@ export function hideDetails() {
 }
 
 export function getDetailsUrl(details: string, resetSelected = false) {
-  const detailsUrl = kubeDetailsUrlParam.toSearchString(details);
+  const detailsUrl = kubeDetailsUrlParam.toSearchString({ value: details });
   if (resetSelected) {
     const params = new URLSearchParams(detailsUrl);
     params.delete(kubeSelectedUrlParam.name);
