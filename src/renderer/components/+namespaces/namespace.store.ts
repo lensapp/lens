@@ -5,6 +5,7 @@ import { Namespace, namespacesApi } from "../../api/endpoints";
 import { IQueryParams, navigation, setQueryParams } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { isAllowedResource } from "../../../common/rbac";
+import { getHostedCluster } from "../../../common/cluster-store";
 
 @autobind()
 export class NamespaceStore extends KubeObjectStore<Namespace> {
@@ -39,6 +40,17 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return {
       namespaces: this.contextNs
     };
+  }
+
+  subscribe(apis = [this.api]) {
+    const { allowedNamespaces } = getHostedCluster();
+
+    // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
+    if (allowedNamespaces.length > 0) {
+      return () => { return; };
+    }
+
+    return super.subscribe(apis);
   }
 
   protected updateUrl(namespaces: string[]) {
