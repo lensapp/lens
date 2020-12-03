@@ -348,5 +348,11 @@
     "what-input": "^5.2.10",
     "xterm": "^4.6.0",
     "xterm-addon-fit": "^0.4.0"
+  },
+  "resolutions": {
+    "/": "this is a hack to resolve webpack5 'Module not found' errors",
+    "//": "we can remove this if upgrade materail-ui to a version use @babel/runtime 7.12.5+",
+    "///": "see <https://github.com/webpack/webpack/issues/11467#issuecomment-727014123>",
+    "@babel/runtime": "^7.12.5"
   }
 }
