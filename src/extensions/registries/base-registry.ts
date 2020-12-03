@@ -1,7 +1,6 @@
 // Base class for extensions-api registries
 import { action, observable } from "mobx";
 import { LensExtension } from "../lens-extension";
-import { rectify } from "../../common/utils";
 
 export class BaseRegistry<T> {
   private items = observable<T>([], { deep: false });
@@ -13,7 +12,7 @@ export class BaseRegistry<T> {
   add(items: T | T[], ext?: LensExtension): () => void; // allow method overloading with required "ext"
   @action
   add(items: T | T[]) {
-    const itemArray = rectify(items);
+    const itemArray = [items].flat() as T[];
 
     this.items.push(...itemArray);
 

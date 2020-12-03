@@ -3,10 +3,10 @@ import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { cssNames } from "../../utils";
 import { KubeObject } from "../../api/kube-object";
-import { getSelectedDetails, showDetails } from "../../navigation";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
 import { KubeObjectStore } from "../../kube-object.store";
 import { KubeObjectMenu } from "./kube-object-menu";
+import { kubeSelectedUrlParam, showDetails } from "./kube-object-details";
 
 export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
   store: KubeObjectStore;
@@ -15,14 +15,13 @@ export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
 @observer
 export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutProps> {
   @computed get selectedItem() {
-    return this.props.store.getByPath(getSelectedDetails());
+    return this.props.store.getByPath(kubeSelectedUrlParam.get());
   }
 
   onDetails = (item: KubeObject) => {
     if (this.props.onDetails) {
       this.props.onDetails(item);
-    }
-    else {
+    } else {
       showDetails(item.selfLink);
     }
   };

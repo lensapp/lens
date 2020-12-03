@@ -50,7 +50,7 @@ export class Select extends React.Component<SelectProps> {
     }),
   };
 
-  protected isValidOption(opt: SelectOption | any) {
+  protected isValidOption(opt: SelectOption | any): opt is SelectOption {
     return typeof opt === "object" && opt.value !== undefined;
   }
 
@@ -72,7 +72,7 @@ export class Select extends React.Component<SelectProps> {
     const { autoConvertOptions, options } = this.props;
 
     if (autoConvertOptions && Array.isArray(options)) {
-      return options.map(opt => {
+      return (options as any[]).map(opt => {
         return this.isValidOption(opt) ? opt : { value: opt, label: String(opt) };
       });
     }

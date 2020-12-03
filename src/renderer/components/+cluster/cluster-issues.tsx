@@ -10,11 +10,11 @@ import { Table, TableCell, TableHead, TableRow } from "../table";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { autobind, cssNames, prevDefault } from "../../utils";
-import { getSelectedDetails, showDetails } from "../../navigation";
 import { ItemObject } from "../../item.store";
 import { Spinner } from "../spinner";
 import { themeStore } from "../../theme.store";
 import { lookupApiLink } from "../../api/kube-api";
+import { kubeSelectedUrlParam, showDetails } from "../kube-object";
 
 interface Props {
   className?: string;
@@ -85,7 +85,7 @@ export class ClusterIssues extends React.Component<Props> {
       <TableRow
         key={getId()}
         sortItem={warning}
-        selected={selfLink === getSelectedDetails()}
+        selected={selfLink === kubeSelectedUrlParam.get()}
         onClick={prevDefault(() => showDetails(selfLink))}
       >
         <TableCell className="message">

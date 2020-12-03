@@ -4,7 +4,7 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { computed, observable, reaction } from "mobx";
 import { Trans } from "@lingui/macro";
-import { getDetails, hideDetails } from "../../navigation";
+import { createUrlParam, navigation } from "../../navigation";
 import { Drawer } from "../drawer";
 import { KubeObject } from "../../api/kube-object";
 import { Spinner } from "../spinner";
@@ -13,6 +13,38 @@ import { crdStore } from "../+custom-resources/crd.store";
 import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMenu } from "./kube-object-menu";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+
+export const kubeDetailsUrlParam = createUrlParam({
+  name: "kube-details",
+  isSystem: true,
+});
+
+export const kubeSelectedUrlParam = createUrlParam({
+  name: "kube-selected",
+  isSystem: true,
+  get defaultValue() {
+    return kubeDetailsUrlParam.get();
+  }
+});
+
+export function showDetails(details = "", resetSelected = true) {
+  const detailsUrl = getDetailsUrl(details, resetSelected);
+  navigation.merge({ search: detailsUrl });
+}
+
+export function hideDetails() {
+  showDetails();
+}
+
+export function getDetailsUrl(details: string, resetSelected = false) {
+  const detailsUrl = kubeDetailsUrlParam.toSearchString(details);
+  if (resetSelected) {
+    const params = new URLSearchParams(detailsUrl);
+    params.delete(kubeSelectedUrlParam.name);
+    return `?${params.toString()}`;
+  }
+  return detailsUrl;
+}
 
 export interface KubeObjectDetailsProps<T = KubeObject> {
   className?: string;
@@ -25,7 +57,7 @@ export class KubeObjectDetails extends React.Component {
   @observable.ref loadingError: React.ReactNode;
 
   @computed get path() {
-    return getDetails();
+    return kubeDetailsUrlParam.get();
   }
 
   @computed get object() {
@@ -70,7 +102,7 @@ export class KubeObjectDetails extends React.Component {
     const { object, isLoading, loadingError, isCrdInstance } = this;
     const isOpen = !!(object || isLoading || loadingError);
     let title = "";
-    let details: JSX.Element[];
+    let details: React.ReactNode[];
 
     if (object) {
       const { kind, getName } = object;
@@ -81,7 +113,7 @@ export class KubeObjectDetails extends React.Component {
       });
 
       if (isCrdInstance && details.length === 0) {
-        details.push(<CrdResourceDetails object={object} />);
+        details.push(<CrdResourceDetails object={object}/>);
       }
     }
 
@@ -90,7 +122,7 @@ export class KubeObjectDetails extends React.Component {
         className="KubeObjectDetails flex column"
         open={isOpen}
         title={title}
-        toolbar={<KubeObjectMenu object={object} toolbar={true} />}
+        toolbar={<KubeObjectMenu object={object} toolbar={true}/>}
         onClose={hideDetails}
       >
         {isLoading && <Spinner center/>}

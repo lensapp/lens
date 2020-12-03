@@ -1,45 +1,44 @@
-import { action, observable, reaction } from "mobx";
+import { action, comparer, observable, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints";
-import { IQueryParams, navigation, setQueryParams } from "../../navigation";
+import { createUrlParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { isAllowedResource } from "../../../common/rbac";
 import { getHostedCluster } from "../../../common/cluster-store";
 
+const storage = createStorage<string[]>("context_namespaces", []);
+
+export const namespaceUrlParam = createUrlParam<string[]>({
+  name: "namespaces",
+  isSystem: true,
+  multiValues: true,
+  get defaultValue() {
+    return storage.get();
+  }
+});
+
 @autobind()
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
-  contextNs = observable.array<string>();
-
-  protected storage = createStorage<string[]>("context_ns", this.contextNs);
-
-  get initNamespaces() {
-    const fromUrl = navigation.searchParams.getAsArray("namespaces");
-
-    return fromUrl.length ? fromUrl : this.storage.get();
-  }
+  contextNs = observable.array<string>(storage.get());
 
   constructor() {
     super();
-
-    // restore context namespaces
-    const { initNamespaces: namespaces } = this;
-
-    this.setContext(namespaces);
-    this.updateUrl(namespaces);
-
-    // sync with local-storage & url-search-params
-    reaction(() => this.contextNs.toJS(), namespaces => {
-      this.storage.set(namespaces);
-      this.updateUrl(namespaces);
-    });
+    this.init();
   }
 
-  getContextParams(): Partial<IQueryParams> {
-    return {
-      namespaces: this.contextNs
-    };
+  private init() {
+    // setup initial context namespaces from URL (when provided) or local-storage (default)
+    this.setContext(namespaceUrlParam.get());
+
+    return reaction(() => this.contextNs.toJS(), namespaces => {
+      storage.set(namespaces); // save to local-storage
+      namespaceUrlParam.set(namespaces, { replaceHistory: true }); // update url
+    }, {
+      fireImmediately: true,
+      equals: comparer.identity,
+    });
   }
 
   subscribe(apis = [this.api]) {
@@ -51,10 +50,6 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     }
 
     return super.subscribe(apis);
-  }
-
-  protected updateUrl(namespaces: string[]) {
-    setQueryParams({ namespaces }, { replace: true });
   }
 
   protected async loadItems(namespaces?: string[]) {
@@ -84,6 +79,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     });
   }
 
+  @action
   setContext(namespaces: string[]) {
     this.contextNs.replace(namespaces);
   }
@@ -94,6 +90,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return context.every(namespace => this.contextNs.includes(namespace));
   }
 
+  @action
   toggleContext(namespace: string) {
     if (this.hasContext(namespace)) this.contextNs.remove(namespace);
     else this.contextNs.push(namespace);
@@ -105,6 +102,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     this.contextNs.clear();
   }
 
+  @action
   async remove(item: Namespace) {
     await super.remove(item);
     this.contextNs.remove(item.getName());

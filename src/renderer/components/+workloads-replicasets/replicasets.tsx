@@ -10,8 +10,8 @@ import { Spinner } from "../spinner";
 import { prevDefault, stopPropagation } from "../../utils";
 import { DrawerTitle } from "../drawer";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { showDetails } from "../../navigation";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { showDetails } from "../kube-object";
 
 enum sortBy {
   name = "name",

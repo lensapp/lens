@@ -3,10 +3,10 @@ import { observer } from "mobx-react";
 import React from "react";
 import { Table, TableHead, TableCell, TableRow } from "../table";
 import { prevDefault } from "../../utils";
-import { showDetails } from "../../navigation";
 import { Trans } from "@lingui/macro";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { Spinner } from "../spinner";
+import { showDetails } from "../kube-object";
 
 interface Props {
   endpoint: KubeObject;
