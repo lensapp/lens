@@ -5,7 +5,7 @@ jobs:
   build:
     name: Check Docs
     runs-on: ubuntu-latest
-    if: ${{ contains(github.event.labels.*.name, 'area/documentation') }}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'area/documentation') }}
     strategy:
       matrix:
         node-version: [12.x]
