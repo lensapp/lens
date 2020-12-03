@@ -3,7 +3,6 @@ import webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import { isDevelopment, isProduction, mainDir, buildDir } from "./src/common/vars";
 import nodeExternals from "webpack-node-externals";
-import ProgressBarPlugin from "progress-bar-webpack-plugin";
 import * as vars from "./src/common/vars";
 
 export default function (): webpack.Configuration {
@@ -13,7 +12,7 @@ export default function (): webpack.Configuration {
     context: __dirname,
     target: "electron-main",
     mode: isProduction ? "production" : "development",
-    devtool: isProduction ? "source-map" : "cheap-eval-source-map",
+    devtool: isProduction ? "source-map" : "eval-source-map",
     cache: isDevelopment,
     entry: {
       main: path.resolve(mainDir, "index.ts"),
@@ -25,9 +24,10 @@ export default function (): webpack.Configuration {
     resolve: {
       extensions: [".json", ".js", ".ts"]
     },
-    externals: [
-      nodeExternals()
-    ],
+    // in order to ignore built-in modules like path, fs, etc.
+    externalsPresets: { node: true },
+    // in order to ignore all modules in node_modules folder
+    externals: nodeExternals(),
     module: {
       rules: [
         {
@@ -47,8 +47,7 @@ export default function (): webpack.Configuration {
       ]
     },
     plugins: [
-      new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
-    ].filter(Boolean)
+    ]
   };
 }
