@@ -30,11 +30,19 @@
       .actions > button:not(:last-child) {
         margin-right: $spacing / 2;
       }
+
+      .name {
+        color: var(--textColorSecondary);
+        padding-bottom: var(--padding);
+        font-weight: bold;
+      }
     }
   }
 
   .SearchInput {
     --spacing: 10px;
+
+    max-width: none;
   }
 }
 
