@@ -313,7 +313,7 @@ export class Extensions extends React.Component {
       const { name, version, description } = install.manifest;
       const extensionFolder = this.getExtensionDestFolder(name);
       const folderExists = await fse.pathExists(extensionFolder);
-  
+
       if (!folderExists) {
         // auto-install extension if not yet exists
         this.unpackExtension(install);
@@ -515,7 +515,7 @@ export class Extensions extends React.Component {
                   <Icon
                     interactive
                     material="folder"
-                    onMouseDown={prevDefault(this.installFromSelectFileDialog)}
+                    onClick={prevDefault(this.installFromSelectFileDialog)}
                     tooltip={<Trans>Browse</Trans>}
                   />
                 }
