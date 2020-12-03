@@ -30,6 +30,11 @@ Here you can find description of changes we've built into each release. While we
 - Fix errors on app quit
 - Fix kube-auth-proxy to accept only target cluster hostname
 
+## 3.6.9
+- Use Alpine 3.12 for node shell sessions
+- Fix errors on app quit
+- Fix kube-auth-proxy to accept only target cluster hostname
+
 ## 3.6.8
 - Fix cluster connection issue when opening cluster settings for disconnected clusters
 - Fetch available Helm repositories from Artifact HUB
