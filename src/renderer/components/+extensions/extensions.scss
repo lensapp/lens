@@ -27,12 +27,6 @@
       background: $layoutBackground;
       border-radius: $radius;
 
-      .version, .name {
-        code {
-          padding: unset;
-        }
-      }
-
       .actions > button:not(:last-child) {
         margin-right: $spacing / 2;
       }
