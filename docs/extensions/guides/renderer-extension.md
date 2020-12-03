@@ -446,19 +446,11 @@ Note that the above example introduces decorators `observable` and `observer` fr
 
 Also note that an extension's state data can be managed using an `ExtensionStore` object, which conveniently handles persistence and synchronization. The example above defined an `ExamplePreference` type to hold the extension's state to simplify the code for this guide, but it is recommended to manage your extension's state data using [`ExtensionStore`](../stores#extensionstore) 
 
-
-
-*********************************************************************
-WIP below!
-*********************************************************************
-
-
-
 ### `statusBarItems`
 
 The Status bar is the blue strip along the bottom of the Lens UI. Status bar items are `React.ReactNode` types, which can be used to convey status information, or act as a link to a global page, or even an external page.
 
-The following example adds a status bar item definition, as well as a global page definition, to a `LensRendererExtension` subclass, and configures the status bar item to navigate to the global page upon a mouse click:
+The following example adds a status bar item definition, as well as a global page definition, to a `LensRendererExtension` subclass, and configures the status bar item to navigate to the global page upon activation (normally a mouse click):
 
 ``` typescript
 import { LensRendererExtension } from '@k8slens/extensions';
@@ -491,47 +483,182 @@ export default class HelpExtension extends LensRendererExtension {
 }
 ```
 
+The `item` field of a status bar item specifies the `React.Component` to be shown on the status bar. By default items are added starting from the right side of the status bar. Typically, `item` would specify an icon and/or a short string of text, considering the limited space on the status bar. In the example above the `HelpIcon` from the [`globalPageMenus` guide](#globalpagemenus) is reused. Also, the `item` provides a link to the global page by setting the `onClick` property to a function that calls the `LensRendererExtension` `navigate()` method. `navigate()` takes as a parameter the id of the global page, which is shown when `navigate()` is called. 
+
 ### `kubeObjectMenuItems`
 
-An extension can add custom menu items (including actions) for specified Kubernetes resource kinds/apiVersions. These menu items appear under the `...` for each listed resource, and on the title bar of the details page for a specific resource.
+An extension can add custom menu items (including actions) for specific Kubernetes resource kinds/apiVersions. These menu items appear under the `...` for each listed resource in the cluster dashboard, and on the title bar of the details page for a specific resource:
+
+![List](images/kubeobjectmenuitem.png)
+
+![Details](images/kubeobjectmenuitemdetail.png)
+
+The following example shows how to add a menu for Namespace resources, and associate an action with it:
 
 ``` typescript
 import React from "react"
 import { LensRendererExtension } from "@k8slens/extensions";
-import { CustomMenuItem, CustomMenuItemProps } from "./src/custom-menu-item"
+import { NamespaceMenuItem } from "./src/namespace-menu-item"
 
 export default class ExampleExtension extends LensRendererExtension {
   kubeObjectMenuItems = [
     {
-      kind: "Node",
+      kind: "Namespace",
       apiVersions: ["v1"],
       components: {
-        MenuItem: (props: CustomMenuItemProps) => <CustomMenuItem {...props} />
+        MenuItem: (props: Component.KubeObjectMenuProps<K8sApi.Namespace>) => <NamespaceMenuItem {...props} />
       }
     }
   ];
 }
 
 ```
+
+Kube object menu items are objects matching the `KubeObjectMenuRegistration` interface. The `kind` field specifies the kubernetes resource type to apply this menu item to, and the `apiVersion` field specifies the kubernetes api to use in relation to this resource type. This example adds a menu item for namespaces in the cluster dashboard. The `components` field defines the menu item's appearance and behaviour. The `MenuItem` field provides a function that returns a `React.Component` given a set of menu item properties. In this example a `NamespaceMenuItem` object is returned. `NamespaceMenuItem` is defined in `./src/namespace-menu-item.tsx`:
+
+``` tsx
+import React from "react";
+import { Component, K8sApi, Navigation} from "@k8slens/extensions";
+
+export function NamespaceMenuItem(props: Component.KubeObjectMenuProps<K8sApi.Namespace>) {
+  const { object: namespace, toolbar } = props;
+  if (!namespace) return null;
+
+  const namespaceName = namespace.getName();
+
+  const sendToTerminal = (command: string) => {
+    Component.terminalStore.sendCommand(command, {
+      enter: true,
+      newTab: true,
+    });
+    Navigation.hideDetails();
+  };
+
+  const getPods = () => {
+    sendToTerminal(`kubectl get pods -n ${namespaceName}`);
+  };
+
+  return (
+    <Component.MenuItem onClick={getPods}>
+    <Component.Icon material="speaker_group" interactive={toolbar} title="Get pods in terminal"/>
+    <span className="title">Get Pods</span>
+    </Component.MenuItem>
+  );
+}
+
+```
+
+`NamespaceMenuItem` returns a `Component.MenuItem` defining the menu item's appearance (icon and text) and behaviour when activated via the `onClick` property. `getPods()` shows how to open a terminal tab and run a command, specifically it runs `kubectl` to get a list of pods running in the current namespace. See [`Component.terminalStore.sendCommand`](api-docs?) for more details on running terminal commands. The name of the namespace is retrieved from `props` passed into `NamespaceMenuItem()`. `namespace` is the `props.object`, which is of type `K8sApi.Namespace`. This is the api for accessing namespaces, and the current namespace in this example is simply given by `namespace.getName()`. Thus kube object menu items are afforded convenient access to the specific resource selected by the user.
 
 ### `kubeObjectDetailItems`
 
-An extension can add custom details (content) for specified Kubernetes resource kinds/apiVersions. These custom details appear on the details page for a specific resource.
+An extension can add custom details (content) for specified Kubernetes resource kinds/apiVersions. These custom details appear on the details page for a specific resource, such as a Namespace:
+
+![Details](images/kubeobjectdetailitem.png)
+
+The following example shows how to add a tabulated list of pods to the Namespace resource details page:
 
 ``` typescript
 import React from "react"
 import { LensRendererExtension } from "@k8slens/extensions";
-import { CustomKindDetails, CustomKindDetailsProps } from "./src/custom-kind-details"
+import { NamespaceDetailsItem } from "./src/namespace-details-item"
 
 export default class ExampleExtension extends LensRendererExtension {
-  kubeObjectMenuItems = [
+  kubeObjectDetailItems = [
     {
-      kind: "CustomKind",
-      apiVersions: ["custom.acme.org/v1"],
+      kind: "Namespace",
+      apiVersions: ["v1"],
+      priority: 10,
       components: {
-        Details: (props: CustomKindDetailsProps) => <CustomKindDetails {...props} />
+        Details: (props: Component.KubeObjectDetailsProps<K8sApi.Namespace>) => <NamespaceDetailsItem {...props} />
       }
     }
   ];
 }
 ```
+
+Kube object detail items are objects matching the `KubeObjectDetailRegistration` interface. The `kind` field specifies the kubernetes resource type to apply this detail item to, and the `apiVersion` field specifies the kubernetes api to use in relation to this resource type. This example adds a detail item for namespaces in the cluster dashboard. The `components` field defines the detail item's appearance and behaviour. The `Details` field provides a function that returns a `React.Component` given a set of detail item properties. In this example a `NamespaceDetailsItem` object is returned. `NamespaceDetailsItem` is defined in `./src/namespace-details-item.tsx`:
+
+``` typescript
+import { Component, K8sApi } from "@k8slens/extensions";
+import { PodsDetailsList } from "./pods-details-list";
+import React from "react";
+import { observable } from "mobx";
+import { observer } from "mobx-react";
+
+@observer
+export class NamespaceDetailsItem extends React.Component<Component.KubeObjectDetailsProps<K8sApi.Namespace>> {
+
+  @observable private pods: K8sApi.Pod[];
+
+  async componentDidMount() {
+    this.pods = await K8sApi.podsApi.list({namespace: this.props.object.getName()});
+  }
+
+  render() {
+    return (
+      <div>
+        <Component.DrawerTitle title="Pods" />
+        <PodsDetailsList pods={this.pods}/>
+      </div>
+    )
+  }
+}
+```
+
+Since `NamespaceDetailsItem` extends `React.Component<Component.KubeObjectDetailsProps<K8sApi.Namespace>>` it can access the current namespace object (type `K8sApi.Namespace`) through `this.props.object`. This object can be queried for many details about the current namespace. In this example the namespace's name is obtained in `componentDidMount()` using the `K8sApi.Namespace` `getName()` method. The namespace's name is needed to limit the list of pods to only those in this namespace. To get the list of pods this example uses the kubernetes pods api, specifically the `K8sApi.podsApi.list()` method. The `K8sApi.podsApi` is automatically configured for the currently active cluster.
+
+Note that `K8sApi.podsApi.list()` is an asynchronous method, and ideally getting the pods list should be done before rendering the `NamespaceDetailsItem`. It is a common technique in React development to await async calls in `componentDidMount()`. However, `componentDidMount()` is called right after the first call to `render()`. In order to effect a subsequent `render()` call React must be made aware of a state change. Like in the [`appPreferences` guide](#apppreferences), [`mobx`](https://mobx.js.org/README.html) and [`mobx-react`](https://github.com/mobxjs/mobx-react#mobx-react) are used to ensure `NamespaceDetailsItem` renders when the pods list is updated. This is done simply by marking the `pods` field as an `observable` and the `NamespaceDetailsItem` class itself as an `observer`.
+
+Finally, the `NamespaceDetailsItem` is rendered using the `render()` method. Details are placed in drawers, and using `Component.DrawerTitle` provides a separator from details above this one. Multiple details in a drawer can be placed in `<Component.DrawerItem>` elements for further separation, if desired. The rest of this example's details are defined in `PodsDetailsList`, found in `./pods-details-list.tsx`:
+
+``` tsx
+import React from "react";
+import { Component, K8sApi } from "@k8slens/extensions";
+
+interface Props {
+  pods: K8sApi.Pod[];
+}
+
+export class PodsDetailsList extends React.Component<Props> {
+
+  getTableRow(index: number) {
+      const {pods} = this.props;
+      return (
+          <Component.TableRow key={index} nowrap>
+              <Component.TableCell className="podName">{pods[index].getName()}</Component.TableCell>
+              <Component.TableCell className="podAge">{pods[index].getAge()}</Component.TableCell>
+              <Component.TableCell className="podStatus">{pods[index].getStatus()}</Component.TableCell>
+          </Component.TableRow>
+      )
+  }
+
+  render() {
+      const {pods} = this.props
+      if (!pods?.length) {
+          return null;
+      }
+
+      return (
+          <div >
+              <Component.Table>
+                  <Component.TableHead>
+                      <Component.TableCell className="podName">Name</Component.TableCell>
+                      <Component.TableCell className="podAge">Age</Component.TableCell>
+                      <Component.TableCell className="podStatus">Status</Component.TableCell>
+                  </Component.TableHead>
+                  {
+                      pods.map((pod, index) => this.getTableRow(index))
+                  }
+              </Component.Table>
+          </div>
+      )
+  }
+}
+```
+
+`PodsDetailsList` produces a simple table showing a list of the pods found in this namespace:
+
+![DetailsWithPods](images/kubeobjectdetailitemwithpods.png)
+
+ For each pod the name, age, and status are obtained using the `K8sApi.Pod` methods. The table is constructed using the `Component.Table` and related elements. See [`Component` documentation](url?) for further details.
