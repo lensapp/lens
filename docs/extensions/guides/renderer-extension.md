@@ -57,10 +57,10 @@ export default class ExampleExtension extends LensRendererExtension {
 ```
 
 Cluster pages are objects matching the `PageRegistration` interface.
-The `id` field identiifies the page, and at its simplest is just a string identifier, as shown in the example above.
+The `id` field identifies the page, and at its simplest is just a string identifier, as shown in the example above.
 The 'id' field can also convey route path details, such as variable parameters provided to a page ([See example below]()).
 The `components` field matches the `PageComponents` interface for wich there is one field, `Page`.
- `Page` is of type ` React.ComponentType<any>`, which gives you great flexibility in defining the appearance and behaviour of your page.
+`Page` is of type ` React.ComponentType<any>`, which gives you great flexibility in defining the appearance and behaviour of your page.
 For the example above `ExamplePage` can be defined in `page.tsx`:
 
 ``` typescript
@@ -239,10 +239,10 @@ export default class HelpExtension extends LensRendererExtension {
 ```
 
 Global pages are objects matching the `PageRegistration` interface.
-The `id` field identiifies the page, and at its simplest is just a string identifier, as shown in the example above.
+The `id` field identifies the page, and at its simplest is just a string identifier, as shown in the example above.
 The 'id' field can also convey route path details, such as variable parameters provided to a page ([See example below]()).
 The `components` field matches the `PageComponents` interface for which there is one field, `Page`.
- `Page` is of type ` React.ComponentType<any>`, which gives you great flexibility in defining the appearance and behaviour of your page.
+`Page` is of type ` React.ComponentType<any>`, which gives you great flexibility in defining the appearance and behaviour of your page.
 For the example above `HelpPage` can be defined in `page.tsx`:
 
 ``` typescript
