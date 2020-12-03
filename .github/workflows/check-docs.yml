@@ -6,7 +6,7 @@ jobs:
   build:
     name: Check Docs
     runs-on: ubuntu-latest
-    if: ${{ github.event.label.name == 'area/documentation' }}
+    if: github.event.label.name == 'area/documentation'
     strategy:
       matrix:
         node-version: [12.x]
