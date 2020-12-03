@@ -10,8 +10,8 @@ export function exitApp() {
   const clusterManager = ClusterManager.getInstance<ClusterManager>();
 
   appEventBus.emit({ name: "service", action: "close" });
-  windowManager.hide();
-  clusterManager.stop();
+  windowManager?.hide();
+  clusterManager?.stop();
   logger.info("SERVICE:QUIT");
   setTimeout(() => {
     app.exit();
