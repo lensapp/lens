@@ -7,12 +7,44 @@ on:
     types:
       - published
 jobs:
+  verify-docs:
+    name: Verify docs
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          
+      - name: Checkout Release from lens
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Generate Extensions API Reference using typedocs
+        run: |
+           yarn install
+           yarn typedocs-extensions-api
+
+      - name: Verify that the markdown is valid
+        run: |
+          yarn run verify-docs
+
   build:
     name: Deploy docs
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
+    needs: verify-docs
     steps:
       - name: Set up Python 3.7
         uses: actions/setup-python@v2
@@ -24,7 +56,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install git+https://${{ secrets.GH_TOKEN }}@github.com/lensapp/mkdocs-material-insiders.git
           pip install mike
-
 
       - name: Checkout Release from lens
         uses: actions/checkout@v2
@@ -45,11 +76,6 @@ jobs:
         run: |
            yarn install
            yarn typedocs-extensions-api
-
-      - name: Verify that the markdown is valid
-        run: |
-          yarn run verify-docs
-          rm -fr site
 
       - name: mkdocs deploy master
         if: contains(github.ref, 'refs/heads/master')
