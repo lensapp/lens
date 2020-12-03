@@ -127,13 +127,6 @@ describe("create clusters", () => {
 
     jest.spyOn(Cluster.prototype, "isClusterAdmin").mockReturnValue(Promise.resolve(true));
     jest.spyOn(Cluster.prototype, "canI")
-      .mockImplementationOnce((attr: V1ResourceAttributes): Promise<boolean> => {
-        expect(attr.namespace).toBe("default");
-        expect(attr.resource).toBe("pods");
-        expect(attr.verb).toBe("list");
-
-        return Promise.resolve(true);
-      })
       .mockImplementation((attr: V1ResourceAttributes): Promise<boolean> => {
         expect(attr.namespace).toBe("default");
         expect(attr.verb).toBe("list");
