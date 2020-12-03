@@ -425,17 +425,8 @@ export class Cluster implements ClusterModel, ClusterState {
 
     try {
       const namespaceList = await api.listNamespace();
-      const nsAccessStatuses = await Promise.all(
-        namespaceList.body.items.map(ns => this.canI({
-          namespace: ns.metadata.name,
-          resource: "pods",
-          verb: "list",
-        }))
-      );
 
-      return namespaceList.body.items
-        .filter((ns, i) => nsAccessStatuses[i])
-        .map(ns => ns.metadata.name);
+      return namespaceList.body.items.map(ns => ns.metadata.name);
     } catch (error) {
       const ctx = this.getProxyKubeconfig().getContextObject(this.contextName);
 
