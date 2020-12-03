@@ -1,7 +1,6 @@
 name: Check Documentation
 on:
   - pull_request
-    types: [ labeled ]
 jobs:
   build:
     name: Check Docs
