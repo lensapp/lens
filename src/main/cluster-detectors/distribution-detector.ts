@@ -48,6 +48,10 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "microk8s", accuracy: 80};
     }
 
+    if (this.isKind()) {
+      return { value: "kind", accuracy: 70};
+    }
+
     if (this.isDockerDesktop()) {
       return { value: "docker-desktop", accuracy: 80};
     }
@@ -97,6 +101,10 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isMicrok8s() {
     return this.cluster.contextName.startsWith("microk8s");
+  }
+
+  protected isKind() {
+    return this.cluster.contextName.startsWith("kubernetes-admin@kind-");
   }
 
   protected isDockerDesktop() {
