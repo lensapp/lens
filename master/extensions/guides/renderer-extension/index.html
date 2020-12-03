@@ -1188,7 +1188,7 @@
 <span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
 
 <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">HelpExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
-  <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="nx">globalPages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;help&quot;</span><span class="p">,</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
@@ -1318,56 +1318,92 @@ The <code>title</code> and <code>components.Description</code> fields provide co
 <p>The <code>upgrade()</code> method in the example above is implemented by simply invoking the <code>install()</code> method. Depending on the feature to be supported by an extension, upgrading may require additional and/or different steps.</p>
 <p>The <code>uninstall()</code> method is implemented in the example above by utilizing the <a href="tbd"><code>K8sApi</code></a> provided by Lens to simply delete the <code>example-pod</code> pod applied by the <code>install()</code> method.</p>
 <p>The <code>updateStatus()</code> method is implemented above by using the <a href="tbd"><code>K8sApi</code></a> as well, this time to get information from the <code>example-pod</code> pod, in particular to determine if it is installed, what version is associated with it, and if it can be upgraded. How the status is updated for a specific cluster feature is up to the implementation. </p>
-<hr />
-<p>WIP below!</p>
-<hr />
 <h3 id="apppreferences"><code>appPreferences</code><a class="headerlink" href="#apppreferences" title="Permanent link">#</a></h3>
-<p>The Preferences page is essentially a global page. Extensions can add custom preferences to the Preferences page, thus providing a single location for users to configure global, for Lens and extensions alike.</p>
-<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">myCustomPreferencesStore</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/my-custom-preferences-store&quot;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">MyCustomPreferenceHint</span><span class="p">,</span> <span class="nx">MyCustomPreferenceInput</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/my-custom-preference&quot;</span>
-
+<p>The Preferences page is a built-in global page. Extensions can add custom preferences to the Preferences page, thus providing a single location for users to configure global options, for Lens and extensions alike. The following example demonstrates adding a custom preference:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">ExamplePreference</span><span class="p">,</span> <span class="nx">ExamplePreferenceHint</span><span class="p">,</span> <span class="nx">ExamplePreferenceInput</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./src/example-preference&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">observable</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
 
 <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleRendererExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
+
+  <span class="kd">@observable</span> <span class="nx">preference</span>: <span class="kt">ExamplePreference</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">enabled</span>: <span class="kt">false</span> <span class="p">};</span>
+
   <span class="nx">appPreferences</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;My Custom Preference&quot;</span><span class="p">,</span>
+      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Example Preferences&quot;</span><span class="p">,</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Hint</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">MyCustomPreferenceHint</span><span class="o">/&gt;</span><span class="p">,</span>
-        <span class="nx">Input</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">MyCustomPreferenceInput</span> <span class="nx">store</span><span class="o">=</span><span class="p">{</span><span class="nx">myCustomPreferencesStore</span><span class="p">}</span><span class="o">/&gt;</span>
+        <span class="nx">Input</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePreferenceInput</span> <span class="nx">preference</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">preference</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span>
+        <span class="nx">Hint</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">ExamplePreferenceHint</span><span class="o">/&gt;</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
+<p>App preferences are objects matching the <code>AppPreferenceRegistration</code> interface. The <code>title</code> field specifies the text to show as the heading on the Preferences page. The <code>components</code> field specifies two <code>React.Component</code> objects defining the interface for the preference. <code>Input</code> should specify an interactive input element for your preference and <code>Hint</code> should provide descriptive information for the preference, which is shown below the <code>Input</code> element. <code>ExamplePreferenceInput</code> expects its React props set to an <code>ExamplePreference</code> instance, which is how <code>ExampleRendererExtension</code> handles the state of the preference input. <code>ExampleRendererExtension</code> has the field <code>preference</code>, which is provided to <code>ExamplePreferenceInput</code> when it is created. In this example <code>ExamplePreferenceInput</code>, <code>ExamplePreferenceHint</code>, and <code>ExamplePreference</code> are defined in <code>./src/example-preference.tsx</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx-react&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="nx">type</span> <span class="nx">ExamplePreference</span>  <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">enabled</span>: <span class="kt">boolean</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">@observer</span>
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ExamplePreferenceInput</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span><span class="nx">preference</span>: <span class="kt">ExamplePreference</span><span class="p">},</span> <span class="p">{}</span><span class="o">&gt;</span> <span class="p">{</span>
+
+  <span class="nx">render() {</span>
+    <span class="kr">const</span> <span class="p">{</span> <span class="nx">preference</span> <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">;</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">Checkbox</span>
+        <span class="nx">label</span><span class="o">=</span><span class="s2">&quot;I understand appPreferences&quot;</span>
+        <span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">preference</span><span class="p">.</span><span class="nx">enabled</span><span class="p">}</span>
+        <span class="nx">onChange</span><span class="o">=</span><span class="p">{</span><span class="nx">v</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="nx">preference</span><span class="p">.</span><span class="nx">enabled</span> <span class="o">=</span> <span class="nx">v</span><span class="p">;</span> <span class="p">}}</span>
+      <span class="o">/&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">ExamplePreferenceHint</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="nx">render() {</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">This</span> <span class="nx">is</span> <span class="nx">an</span> <span class="nx">example</span> <span class="k">of</span> <span class="nx">an</span> <span class="nx">appPreference</span> <span class="k">for</span> <span class="nx">extensions</span><span class="p">.</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>ExamplePreferenceInput</code> implements a simple checkbox (using Lens' <code>Component.Checkbox</code>). It provides <code>label</code> as the text to display next to the checkbox and an <code>onChange</code> function, which reacts to the checkbox state change. The checkbox's <code>value</code> is initially set to <code>preference.enabled</code>. <code>ExamplePreferenceInput</code> is defined with React props of <code>ExamplePreference</code> type, which has a single field, <code>enabled</code>. This is used to indicate the state of the preference, and is bound to the checkbox state in <code>onChange</code>. <code>ExamplePreferenceHint</code> is a simple text span. Note that the input and the hint could comprise of more sophisticated elements, according to the needs of the extension.</p>
+<p>Note that the above example introduces decorators <code>observable</code> and <code>observer</code> from the <a href="https://mobx.js.org/README.html"><code>mobx</code></a> and <a href="https://github.com/mobxjs/mobx-react#mobx-react"><code>mobx-react</code></a> packages. <code>mobx</code> simplifies state management and without it this example would not visually update the checkbox properly when the user activates it. <a href="../working-with-mobx">Lens uses <code>mobx</code> extensively for state management</a> of its own UI elements and it is recommended that extensions rely on it too. Alternatively, React's state management can be used instead, though <code>mobx</code> is typically simpler to use.</p>
+<p>Also note that an extension's state data can be managed using an <code>ExtensionStore</code> object, which conveniently handles persistence and synchronization. The example above defined an <code>ExamplePreference</code> type to hold the extension's state to simplify the code for this guide, but it is recommended to manage your extension's state data using <a href="../stores#extensionstore"><code>ExtensionStore</code></a> </p>
+<hr />
+<p>WIP below!</p>
+<hr />
 <h3 id="statusbaritems"><code>statusBarItems</code><a class="headerlink" href="#statusbaritems" title="Permanent link">#</a></h3>
-<p>The Status bar is the blue strip along the bottom of the Lens UI. Status bar items are <code>React.ReactNode</code> types, which can be used to convey status information, or act as a link to a global page.</p>
-<p>The following example adds a status bar item definition, as well as a global page definition, to a <code>LensRendererExtension</code> subclass, and configures the status bar item to navigate to the global upon a mouse click:</p>
-<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span><span class="p">,</span> <span class="nx">Navigation</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@k8slens/extensions&#39;</span><span class="p">;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">MyStatusBarIcon</span><span class="p">,</span> <span class="nx">MyPage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./page&#39;</span><span class="p">;</span>
+<p>The Status bar is the blue strip along the bottom of the Lens UI. Status bar items are <code>React.ReactNode</code> types, which can be used to convey status information, or act as a link to a global page, or even an external page.</p>
+<p>The following example adds a status bar item definition, as well as a global page definition, to a <code>LensRendererExtension</code> subclass, and configures the status bar item to navigate to the global page upon a mouse click:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@k8slens/extensions&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">HelpIcon</span><span class="p">,</span> <span class="nx">HelpPage</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./page&quot;</span>
 <span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
 
-<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExtensionRenderer</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
+<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">HelpExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
   <span class="nx">globalPages</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-      <span class="nx">path</span><span class="o">:</span> <span class="s2">&quot;/my-extension-path&quot;</span><span class="p">,</span>
-      <span class="nx">hideInMenu</span>: <span class="kt">true</span><span class="p">,</span>
+      <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;help&quot;</span><span class="p">,</span>
       <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">MyPage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">,</span>
-      <span class="p">},</span>
-    <span class="p">},</span>
+        <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">HelpPage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span><span class="o">/&gt;</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
   <span class="p">];</span>
 
   <span class="nx">statusBarItems</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nx">item</span><span class="o">:</span> <span class="p">(</span>
         <span class="o">&lt;</span><span class="nx">div</span>
-          <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;flex align-center gaps hover-highlight&quot;</span>
-          <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">Navigation</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">globalPages</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">path</span><span class="p">)}</span>
+          <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;flex align-center gaps&quot;</span>
+          <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">)}</span>
         <span class="o">&gt;</span>
-          <span class="o">&lt;</span><span class="nx">MyStatusBarIcon</span> <span class="o">/&gt;</span>
-          <span class="o">&lt;</span><span class="nx">span</span><span class="o">&gt;</span><span class="nx">My</span> <span class="nx">Status</span> <span class="nx">Bar</span> <span class="nx">Item</span><span class="o">&lt;</span><span class="err">/span&gt;</span>
+          <span class="o">&lt;</span><span class="nx">HelpIcon</span> <span class="o">/&gt;</span>
+          <span class="nx">My</span> <span class="nx">Status</span> <span class="nx">Bar</span> <span class="nx">Item</span>
         <span class="o">&lt;</span><span class="err">/div&gt;</span>
       <span class="p">),</span>
     <span class="p">},</span>

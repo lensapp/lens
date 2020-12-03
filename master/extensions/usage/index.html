@@ -331,9 +331,52 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Using Extensions
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
     <a href="./" class="md-nav__link md-nav__link--active">
       Using Extensions
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installing-an-extension" class="md-nav__link">
+    Installing an Extension
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enabling-or-disabling-an-extension" class="md-nav__link">
+    Enabling or Disabling an Extension
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uninstalling-an-extension" class="md-nav__link">
+    Uninstalling an Extension
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -794,6 +837,50 @@
                 
               
               
+                <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                  <div class="md-sidebar__scrollwrap">
+                    <div class="md-sidebar__inner">
+                      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installing-an-extension" class="md-nav__link">
+    Installing an Extension
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enabling-or-disabling-an-extension" class="md-nav__link">
+    Enabling or Disabling an Extension
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uninstalling-an-extension" class="md-nav__link">
+    Uninstalling an Extension
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                    </div>
+                  </div>
+                </div>
+              
             
           
           <div class="md-content">
@@ -802,7 +889,23 @@
                 
                 
                 <h1 id="using-extensions">Using Extensions<a class="headerlink" href="#using-extensions" title="Permanent link">#</a></h1>
-<p>TBD</p>
+<p>The features that Lens includes out-of-the-box are just the start.
+Lens extensions let you add new features to your installation to support your workflow.
+Rich extensibility model lets extension authors plug directly into the Lens UI and contribute functionality through the same APIs used by Lens itself.
+The start using Lens Extensions go to <strong>File</strong> (or <strong>Lens</strong> on macOS) &gt; <strong>Extensions</strong> in the application menu.
+This is the <code>Extensions</code> management page where all the management of the extensions you want to use is done.</p>
+<p><img alt="Extensions" src="images/extensions.png" /></p>
+<h2 id="installing-an-extension">Installing an Extension<a class="headerlink" href="#installing-an-extension" title="Permanent link">#</a></h2>
+<p>There are three ways to install extensions.
+If you have the extension as a <code>.tgz</code> file then dragging and dropping it in the extension management page will install it for you.
+If it is hosted on the web, you can paste the URL and click <code>Install</code> and Lens will download and install it.
+The third way is to move the extension into your <code>~/.k8slens/extensions</code> (or <code>C:\Users\&lt;user&gt;\.k8slens\extensions</code>) folder and Lens will automatically detect it and install the extension.</p>
+<h2 id="enabling-or-disabling-an-extension">Enabling or Disabling an Extension<a class="headerlink" href="#enabling-or-disabling-an-extension" title="Permanent link">#</a></h2>
+<p>Go to the extension management page and click either the <code>Enable</code> or <code>Disable</code> buttons.
+Extensions will be enabled by default when you first install them.
+A disabled extension is not loaded by Lens and is not run.</p>
+<h2 id="uninstalling-an-extension">Uninstalling an Extension<a class="headerlink" href="#uninstalling-an-extension" title="Permanent link">#</a></h2>
+<p>If, for whatever reason, you wish to remove the installation of an extension simple click the <code>Uninstall</code> button. This will remove all the files that Lens would need to run the extension.</p>
                 
               
               
