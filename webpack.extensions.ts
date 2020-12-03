@@ -22,12 +22,18 @@ export default function (): webpack.Configuration {
       // e.g. require('@k8slens/extensions')
       libraryTarget: "commonjs"
     },
+    optimization: {
+      // we don't really need minimize
+      // default is true
+      minimize: false
+    },
     module: {
       rules: [
         {
           test: /\.tsx?$/,
           loader: "ts-loader",
           options: {
+            transpileOnly: true,
             // !! ts-loader will use tsconfig.json at folder root
             // !! changes in tsconfig.json may have side effects
             // !! on '@k8slens/extensions' module
