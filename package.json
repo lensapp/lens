@@ -259,7 +259,6 @@
     "@types/module-alias": "^2.0.0",
     "@types/node": "^12.12.45",
     "@types/npm": "^2.0.31",
-    "@types/progress-bar-webpack-plugin": "^2.1.0",
     "@types/proper-lockfile": "^4.1.1",
     "@types/react": "^17.0.0",
     "@types/react-beautiful-dnd": "^13.0.0",
