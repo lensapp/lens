@@ -52,7 +52,14 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       extensions: [
         ".js", ".jsx", ".json",
         ".ts", ".tsx",
-      ]
+      ],
+      // the alias is to avoid webpack warning
+      // "require.extensions is not supported by webpack. Use a loader instead."
+      // from ./src/extensions/cluster-feature.ts
+      // the trick is from <https://github.com/handlebars-lang/handlebars.js/issues/953#issuecomment-239874313>
+      alias: {
+        "handlebars": "handlebars/dist/handlebars.js"
+      }
     },
     optimization: {
       minimize: isProduction,
