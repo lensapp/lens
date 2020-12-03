@@ -2,97 +2,93 @@ import "./replicasets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
+import { t, Trans } from "@lingui/macro";
 import { ReplicaSet } from "../../api/endpoints";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { replicaSetStore } from "./replicasets.store";
-import { Spinner } from "../spinner";
-import { prevDefault, stopPropagation } from "../../utils";
-import { DrawerTitle } from "../drawer";
-import { Table, TableCell, TableHead, TableRow } from "../table";
-import { showDetails } from "../../navigation";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { RouteComponentProps } from "react-router";
+import { IReplicaSetsRouteParams } from "../+workloads/workloads.route";
+import { KubeObjectListLayout } from "../kube-object/kube-object-list-layout";
+import { MenuItem } from "../menu/menu";
+import { Icon } from "../icon/icon";
+import { _i18n } from "../../i18n";
+import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 
 enum sortBy {
   name = "name",
   namespace = "namespace",
-  pods = "pods",
+  desired = "desired",
+  current = "current",
+  ready = "ready",
   age = "age",
 }
 
-interface Props {
-  replicaSets: ReplicaSet[];
+interface Props extends RouteComponentProps<IReplicaSetsRouteParams> {
 }
 
 @observer
 export class ReplicaSets extends React.Component<Props> {
-  private sortingCallbacks = {
-    [sortBy.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
-    [sortBy.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
-    [sortBy.age]: (replicaSet: ReplicaSet) => replicaSet.metadata.creationTimestamp,
-    [sortBy.pods]: (replicaSet: ReplicaSet) => this.getPodsLength(replicaSet),
-  };
-
-  getPodsLength(replicaSet: ReplicaSet) {
-    return replicaSetStore.getChildPods(replicaSet).length;
-  }
-
   render() {
-    const { replicaSets } = this.props;
-
-    if (!replicaSets.length && !replicaSetStore.isLoaded) return (
-      <div className="ReplicaSets"><Spinner center/></div>
-    );
-    if (!replicaSets.length) return null;
-
     return (
-      <div className="ReplicaSets flex column">
-        <DrawerTitle title={<Trans>Deploy Revisions</Trans>}/>
-        <Table
-          selectable
-          scrollable={false}
-          sortable={this.sortingCallbacks}
-          sortByDefault={{ sortBy: sortBy.pods, orderBy: "desc" }}
-          sortSyncWithUrl={false}
-          className="box grow"
-        >
-          <TableHead>
-            <TableCell className="name" sortBy={sortBy.name}><Trans>Name</Trans></TableCell>
-            <TableCell className="warning"/>
-            <TableCell className="namespace" sortBy={sortBy.namespace}>Namespace</TableCell>
-            <TableCell className="pods" sortBy={sortBy.pods}><Trans>Pods</Trans></TableCell>
-            <TableCell className="age" sortBy={sortBy.age}><Trans>Age</Trans></TableCell>
-            <TableCell className="actions"/>
-          </TableHead>
-          {
-            replicaSets.map(replica => {
-              return (
-                <TableRow
-                  key={replica.getId()}
-                  sortItem={replica}
-                  nowrap
-                  onClick={prevDefault(() => showDetails(replica.selfLink, false))}
-                >
-                  <TableCell className="name">{replica.getName()}</TableCell>
-                  <TableCell className="warning"><KubeObjectStatusIcon key="icon" object={replica}/></TableCell>
-                  <TableCell className="namespace">{replica.getNs()}</TableCell>
-                  <TableCell className="pods">{this.getPodsLength(replica)}</TableCell>
-                  <TableCell className="age">{replica.getAge()}</TableCell>
-                  <TableCell className="actions" onClick={stopPropagation}>
-                    <ReplicaSetMenu object={replica}/>
-                  </TableCell>
-                </TableRow>
-              );
-            })
-          }
-        </Table>
-      </div>
+      <KubeObjectListLayout
+        className="ReplicaSets" store={replicaSetStore}
+        sortingCallbacks={{
+          [sortBy.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
+          [sortBy.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
+          [sortBy.desired]: (replicaSet: ReplicaSet) => replicaSet.getDesired(),
+          [sortBy.current]: (replicaSet: ReplicaSet) => replicaSet.getCurrent(),
+          [sortBy.ready]: (replicaSet: ReplicaSet) => replicaSet.getReady(),
+          [sortBy.age]: (replicaSet: ReplicaSet) => replicaSet.metadata.creationTimestamp,
+        }}
+        searchFilters={[
+          (replicaSet: ReplicaSet) => replicaSet.getSearchFields(),
+        ]}
+        renderHeaderTitle={<Trans>Replica Sets</Trans>}
+        renderTableHeader={[
+          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { className: "warning" },
+          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
+          { title: <Trans>Desired</Trans>, className: "desired", sortBy: sortBy.desired },
+          { title: <Trans>Current</Trans>, className: "current", sortBy: sortBy.current },
+          { title: <Trans>Ready</Trans>, className: "ready", sortBy: sortBy.ready },
+          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+        ]}
+        renderTableContents={(replicaSet: ReplicaSet) => [
+          replicaSet.getName(),
+          <KubeObjectStatusIcon key="icon" object={replicaSet}/>,
+          replicaSet.getNs(),
+          replicaSet.getDesired(),
+          replicaSet.getCurrent(),
+          replicaSet.getReady(),
+          replicaSet.getAge(),
+        ]}
+        renderItemMenu={(item: ReplicaSet) => {
+          return <ReplicaSetMenu object={item}/>;
+        }}
+      />
     );
   }
 }
 
 export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>) {
+  const { object, toolbar } = props;
+
   return (
-    <KubeObjectMenu {...props}/>
+    <>
+      <MenuItem onClick={() => ReplicaSetScaleDialog.open(object)}>
+        <Icon material="open_with" title={_i18n._(t`Scale`)} interactive={toolbar}/>
+        <span className="title"><Trans>Scale</Trans></span>
+      </MenuItem>
+    </>
   );
 }
+
+kubeObjectMenuRegistry.add({
+  kind: "ReplicaSet",
+  apiVersions: ["apps/v1"],
+  components: {
+    MenuItem: ReplicaSetMenu
+  }
+});

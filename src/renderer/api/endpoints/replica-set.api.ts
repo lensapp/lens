@@ -1,50 +1,77 @@
 import get from "lodash/get";
 import { autobind } from "../../utils";
-import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { IPodContainer } from "./pods.api";
+import { WorkloadKubeObject } from "../workload-kube-object";
+import { IPodContainer, Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
+
+export class ReplicaSetApi extends KubeApi<ReplicaSet> {
+  protected getScaleApiUrl(params: { namespace: string; name: string }) {
+    return `${this.getUrl(params)}/scale`;
+  }
+
+  getReplicas(params: { namespace: string; name: string }): Promise<number> {
+    return this.request
+      .get(this.getScaleApiUrl(params))
+      .then(({ status }: any) => status?.replicas);
+  }
+
+  scale(params: { namespace: string; name: string }, replicas: number) {
+    return this.request.put(this.getScaleApiUrl(params), {
+      data: {
+        metadata: params,
+        spec: {
+          replicas
+        }
+      }
+    });
+  }
+}
 
 @autobind()
 export class ReplicaSet extends WorkloadKubeObject {
   static kind = "ReplicaSet";
   static namespaced = true;
   static apiBase = "/apis/apps/v1/replicasets";
-
   spec: {
     replicas?: number;
-    selector?: {
-      matchLabels: {
-        [key: string]: string;
-      };
-    };
-    containers?: IPodContainer[];
+    selector: { matchLabels: { [app: string]: string } };
     template?: {
-      spec?: {
-        affinity?: IAffinity;
-        nodeSelector?: {
-          [selector: string]: string;
+      metadata: {
+        labels: {
+          app: string;
         };
-        tolerations: {
-          key: string;
-          operator: string;
-          effect: string;
-          tolerationSeconds: number;
-        }[];
-        containers: IPodContainer[];
       };
+      spec?: Pod["spec"];
     };
-    restartPolicy?: string;
-    terminationGracePeriodSeconds?: number;
-    dnsPolicy?: string;
-    schedulerName?: string;
+    minReadySeconds?: number;
   };
   status: {
     replicas: number;
-    fullyLabeledReplicas: number;
-    readyReplicas: number;
-    availableReplicas: number;
-    observedGeneration: number;
+    fullyLabeledReplicas?: number;
+    readyReplicas?: number;
+    availableReplicas?: number;
+    observedGeneration?: number;
+    conditions?: {
+      type: string;
+      status: string;
+      lastUpdateTime: string;
+      lastTransitionTime: string;
+      reason: string;
+      message: string;
+    }[];
   };
+
+  getDesired() {
+    return this.spec.replicas || 0;
+  }
+
+  getCurrent() {
+    return this.status.availableReplicas || 0;
+  }
+
+  getReady() {
+    return this.status.readyReplicas || 0;
+  }
 
   getImages() {
     const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
@@ -53,6 +80,6 @@ export class ReplicaSet extends WorkloadKubeObject {
   }
 }
 
-export const replicaSetApi = new KubeApi({
+export const replicaSetApi = new ReplicaSetApi({
   objectConstructor: ReplicaSet,
 });

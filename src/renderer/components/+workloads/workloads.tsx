@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
-import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL } from "./workloads.route";
+import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, replicaSetsRoute, replicaSetsURL, statefulSetsRoute, statefulSetsURL } from "./workloads.route";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Pods } from "../+workloads-pods";
 import { Deployments } from "../+workloads-deployments";
@@ -14,6 +14,7 @@ import { StatefulSets } from "../+workloads-statefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
 import { isAllowedResource } from "../../../common/rbac";
+import { ReplicaSets } from "../+workloads-replicasets";
 
 @observer
 export class Workloads extends React.Component {
@@ -61,6 +62,15 @@ export class Workloads extends React.Component {
         component: StatefulSets,
         url: statefulSetsURL({ query }),
         routePath: statefulSetsRoute.path.toString(),
+      });
+    }
+
+    if (isAllowedResource("replicasets")) {
+      routes.push({
+        title: <Trans>ReplicaSets</Trans>,
+        component: ReplicaSets,
+        url: replicaSetsURL({ query }),
+        routePath: replicaSetsRoute.path.toString(),
       });
     }
 

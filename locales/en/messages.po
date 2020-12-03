@@ -186,6 +186,7 @@ msgstr "Affinities"
 #: src/renderer/components/+workloads-pods/pods.tsx:78
 #: src/renderer/components/+workloads-replicasets/replicasets.tsx:51
 #: src/renderer/components/+workloads-statefulsets/statefulsets.tsx:41
+#: src/renderer/components/+workloads-replicasets/replicasets.tsx:56
 msgid "Age"
 msgstr "Age"
 
@@ -729,6 +730,10 @@ msgstr "Cron Jobs"
 msgid "CronJobs"
 msgstr "CronJobs"
 
+#: src/renderer/components/+workloads-replicasets/replicasets.tsx:54
+msgid "Current"
+msgstr "Current"
+
 #: src/renderer/components/+config-autoscalers/hpa-details.tsx:50
 msgid "Current / Target"
 msgstr "Current / Target"
@@ -740,6 +745,7 @@ msgstr "Current Healthy"
 
 #: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:101
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:103
+#: src/renderer/components/+workloads-replicasets/replicaset-scale-dialog.tsx:104
 msgid "Current replica scale: {currentReplicas}"
 msgstr "Current replica scale: {currentReplicas}"
 
@@ -824,6 +830,10 @@ msgstr "Deployments"
 msgid "Description"
 msgstr "Description"
 
+#: src/renderer/components/+workloads-replicasets/replicasets.tsx:53
+msgid "Desired"
+msgstr "Desired"
+
 #: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets-details.tsx:42
 #: src/renderer/components/+config-pod-disruption-budgets/pod-disruption-budgets.tsx:41
 msgid "Desired Healthy"
@@ -831,6 +841,7 @@ msgstr "Desired Healthy"
 
 #: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:105
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:107
+#: src/renderer/components/+workloads-replicasets/replicaset-scale-dialog.tsx:108
 msgid "Desired number of replicas"
 msgstr "Desired number of replicas"
 
@@ -1095,6 +1106,7 @@ msgstr "Hide"
 
 #: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:127
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:116
+#: src/renderer/components/+workloads-replicasets/replicaset-scale-dialog.tsx:131
 msgid "High number of replicas may cause cluster performance issues"
 msgstr "High number of replicas may cause cluster performance issues"
 
@@ -1546,6 +1558,7 @@ msgstr "Mounts"
 #: src/renderer/components/+workspaces/workspaces.tsx:135
 #: src/renderer/components/dock/edit-resource.tsx:89
 #: src/renderer/components/kube-object/kube-object-meta.tsx:20
+#: src/renderer/components/+workloads-replicasets/replicasets.tsx:50
 msgid "Name"
 msgstr "Name"
 
@@ -1595,6 +1608,7 @@ msgstr "Names"
 #: src/renderer/components/item-object-list/page-filters-select.tsx:57
 #: src/renderer/components/kube-object/kube-object-meta.tsx:23
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:144
+#: src/renderer/components/+workloads-replicasets/replicasets.tsx:52
 msgid "Namespace"
 msgstr "Namespace"
 
@@ -2004,6 +2018,7 @@ msgstr "Read-only Root Filesystem"
 msgid "Readiness"
 msgstr "Readiness"
 
+#: src/renderer/components/+workloads-replicasets/replicasets.tsx:55
 #: src/renderer/components/+workloads-pods/pod-details-list.tsx:145
 msgid "Ready"
 msgstr "Ready"
@@ -2118,6 +2133,10 @@ msgstr "Removing helm branch <0>{0}</0> has failed: {1}"
 #: src/renderer/components/+workloads-replicasets/replicaset-details.tsx:79
 msgid "Replicas"
 msgstr "Replicas"
+
+#: src/renderer/components/+workloads/workloads.tsx:70
+msgid "ReplicaSets"
+msgstr "ReplicaSets"
 
 #: src/renderer/components/dock/install-chart.tsx:119
 msgid "Repo/Name"
@@ -2310,12 +2329,17 @@ msgstr "Save"
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:128
 #: src/renderer/components/+workloads-deployments/deployments.tsx:83
 #: src/renderer/components/+workloads-deployments/deployments.tsx:84
+#: src/renderer/components/+workloads-replicasets/replicaset-scale-dialog.tsx:160
 msgid "Scale"
 msgstr "Scale"
 
 #: src/renderer/components/+workloads-deployments/deployment-scale-dialog.tsx:124
 msgid "Scale Deployment <0>{deploymentName}</0>"
 msgstr "Scale Deployment <0>{deploymentName}</0>"
+
+#: src/renderer/components/+workloads-replicasets/replicaset-scale-dialog.tsx:143
+msgid "Scale Replica Set <0>{replicaSetName}</0>"
+msgstr "Scale Replica Set <0>{replicaSetName}</0>"
 
 #: src/renderer/components/+workloads-statefulsets/statefulset-scale-dialog.tsx:139
 msgid "Scale Stateful Set <0>{statefulSetName}</0>"

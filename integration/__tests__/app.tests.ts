@@ -274,6 +274,12 @@ describe("Lens integration tests", () => {
           expectedText: "Stateful Sets"
         },
         {
+          name: "ReplicaSets",
+          href: "replicasets",
+          expectedSelector: "h5.title",
+          expectedText: "Replica Sets"
+        },
+        {
           name: "Jobs",
           href: "jobs",
           expectedSelector: "h5.title",

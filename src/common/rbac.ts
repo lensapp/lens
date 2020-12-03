@@ -31,6 +31,7 @@ export const apiResources: KubeApiResource[] = [
   { resource: "poddisruptionbudgets" },
   { resource: "podsecuritypolicies" },
   { resource: "resourcequotas" },
+  { resource: "replicasets", group: "apps" },
   { resource: "secrets" },
   { resource: "services" },
   { resource: "statefulsets", group: "apps" },
