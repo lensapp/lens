@@ -31,18 +31,40 @@ export default function (): webpack.Configuration {
       rules: [
         {
           test: /\.tsx?$/,
-          loader: "ts-loader",
-          options: {
-            transpileOnly: true,
-            // !! ts-loader will use tsconfig.json at folder root
-            // !! changes in tsconfig.json may have side effects
-            // !! on '@k8slens/extensions' module
-            compilerOptions: {
-              declaration: true, // output .d.ts
-              sourceMap: false, // to override sourceMap: true in tsconfig.json
-              outDir // where the .d.ts should be located
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: "babel-loader",
+              options: {
+                // for lingui
+                // https://lingui.js.org/guides/typescript.html
+                // just in case these are not in .babelrc
+                presets: [
+                  ["@babel/preset-env"],
+                  ["@babel/preset-react"],
+                  ["@lingui/babel-preset-react"]
+                ],
+              }
+            },
+            {
+              loader: "ts-loader",
+              options: {
+                transpileOnly: true,
+                // !! ts-loader will use tsconfig.json at folder root
+                // !! changes in tsconfig.json may have side effects
+                // !! on '@k8slens/extensions' module
+                compilerOptions: {
+                  declaration: true, // output .d.ts
+                  sourceMap: false, // to override sourceMap: true in tsconfig.json
+                  outDir, // where the .d.ts should be located
+                  // for lingui
+                  // https://lingui.js.org/guides/typescript.html
+                  jsx: "preserve",
+                  target: "es2016"
+                }
+              }
             }
-          }
+          ]
         },
         // for src/renderer/components/fonts/roboto-mono-nerd.ttf
         // in src/renderer/components/dock/terminal.ts 95:25-65
