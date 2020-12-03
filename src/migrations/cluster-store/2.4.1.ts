@@ -6,8 +6,10 @@ export default migration({
   run(store) {
     for (const value of store) {
       const contextName = value[0];
+
       if (contextName === "__internal__") continue;
       const cluster = value[1];
+
       store.set(contextName, { kubeConfig: cluster.kubeConfig, icon: cluster.icon || null, preferences: cluster.preferences || {} });
     }
   }

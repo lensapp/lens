@@ -52,11 +52,15 @@ export class Router {
     const method = req.method.toLowerCase();
     const matchingRoute = this.router.route(method, path);
     const routeFound = !matchingRoute.isBoom;
+
     if (routeFound) {
       const request = await this.getRequest({ req, res, cluster, url, params: matchingRoute.params });
+
       await matchingRoute.route(request);
+
       return true;
     }
+
     return false;
   }
 
@@ -66,6 +70,7 @@ export class Router {
       parse: true,
       output: "data",
     });
+
     return {
       cluster,
       path: url.pathname,
@@ -92,23 +97,29 @@ export class Router {
       woff2: "font/woff2",
       ttf: "font/ttf"
     };
+
     return mimeTypes[path.extname(filename).slice(1)] || "text/plain";
   }
 
   async handleStaticFile(filePath: string, res: http.ServerResponse, req: http.IncomingMessage, retryCount = 0) {
     const asset = path.join(__static, filePath);
+
     try {
       const filename = path.basename(req.url);
       // redirect requests to [appName].js, [appName].html /sockjs-node/ to webpack-dev-server (for hot-reload support)
       const toWebpackDevServer = filename.includes(appName) || filename.includes("hot-update") || req.url.includes("sockjs-node");
+
       if (isDevelopment && toWebpackDevServer) {
         const redirectLocation = `http://localhost:${webpackDevServerPort}${req.url}`;
+
         res.statusCode = 307;
         res.setHeader("Location", redirectLocation);
         res.end();
+
         return;
       }
       const data = await readFile(asset);
+
       res.setHeader("Content-Type", this.getMimeType(asset));
       res.write(data);
       res.end();
@@ -117,6 +128,7 @@ export class Router {
         logger.error("handleStaticFile:", err.toString());
         res.statusCode = 404;
         res.end();
+
         return;
       }
       this.handleStaticFile(`${publicPath}/${appName}.html`, res, req, Math.max(retryCount, 0) + 1);

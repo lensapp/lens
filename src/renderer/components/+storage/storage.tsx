@@ -40,6 +40,7 @@ export class Storage extends React.Component {
         routePath: storageClassesRoute.path.toString(),
       });
     }
+
     return tabRoutes;
   }
 

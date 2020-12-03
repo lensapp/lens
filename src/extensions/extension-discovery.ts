@@ -25,6 +25,7 @@ export interface InstalledExtension {
   }
 
 const logModule = "[EXTENSION-DISCOVERY]";
+
 export const manifestFilename = "package.json";
 
 /**
@@ -113,8 +114,8 @@ export class ExtensionDiscovery {
 
     // chokidar works better than fs.watch
     chokidar.watch(this.localFolderPath, {
-      // Dont watch recursively into subdirectories
-      depth: 0,
+      // For adding and removing symlinks to work, the depth has to be 1.
+      depth: 1,
       // Try to wait until the file has been completely copied.
       // The OS might emit an event for added file even it's not completely written to the filesysten.
       awaitWriteFinish: {
@@ -123,7 +124,7 @@ export class ExtensionDiscovery {
         stabilityThreshold: 300
       }
     })
-      // Extension add is detected by watching "<extensionDir>package.json" add
+      // Extension add is detected by watching "<extensionDir>/package.json" add
       .on("add", this.handleWatchFileAdd)
       // Extension remove is detected by watching <extensionDir>" unlink
       .on("unlinkDir", this.handleWatchUnlinkDir);
@@ -133,7 +134,6 @@ export class ExtensionDiscovery {
     if (path.basename(filePath) === manifestFilename) {
       try {
         const absPath = path.dirname(filePath);
-
         // this.loadExtensionFromPath updates this.packagesJson
         const extension = await this.loadExtensionFromPath(absPath);
 
@@ -189,7 +189,7 @@ export class ExtensionDiscovery {
    */
   async uninstallExtension(absolutePath: string) {
     logger.info(`${logModule} Uninstalling ${absolutePath}`);
-  
+
     const exists = await fs.pathExists(absolutePath);
 
     if (!exists) {
@@ -251,6 +251,7 @@ export class ExtensionDiscovery {
 
       manifestJson = __non_webpack_require__(manifestPath);
       const installedManifestPath = path.join(this.nodeModulesPath, manifestJson.name, "package.json");
+
       this.packagesJson.dependencies[manifestJson.name] = path.dirname(manifestPath);
       const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
 
@@ -272,6 +273,7 @@ export class ExtensionDiscovery {
   async loadExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
     const bundledExtensions = await this.loadBundledExtensions();
     const localExtensions = await this.loadFromFolder(this.localFolderPath);
+
     await this.installPackages();
     const extensions = bundledExtensions.concat(localExtensions);
 
@@ -333,12 +335,14 @@ export class ExtensionDiscovery {
       }
 
       const extension = await this.loadExtensionFromPath(absPath);
+
       if (extension) {
         extensions.push(extension);
       }
     }
 
     logger.debug(`${logModule}: ${extensions.length} extensions loaded`, { folderPath, extensions });
+
     return extensions;
   }
 

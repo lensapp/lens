@@ -14,6 +14,7 @@ export class AppUpdater {
 
   public start() {
     setInterval(AppUpdater.checkForUpdates, this.updateInterval);
+
     return AppUpdater.checkForUpdates();
   }
 }

@@ -28,14 +28,17 @@ export class FileInput extends React.Component<Props> {
 
   protected onChange = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = Array.from(evt.target.files);
+
     if (!fileList.length) {
       return;
     }
     let selectedFiles: FileInputSelection[] = fileList.map(file => ({ file }));
+
     if (this.props.readAsText) {
       const readingFiles: Promise<FileInputSelection>[] = fileList.map(file => {
         return new Promise((resolve) => {
           const reader = new FileReader();
+
           reader.onloadend = () => {
             resolve({
               file,
@@ -46,6 +49,7 @@ export class FileInput extends React.Component<Props> {
           reader.readAsText(file);
         });
       });
+
       selectedFiles = await Promise.all(readingFiles);
     }
     this.props.onSelectFiles(...selectedFiles);
@@ -53,6 +57,7 @@ export class FileInput extends React.Component<Props> {
 
   render() {
     const { onSelectFiles, readAsText, ...props } = this.props;
+
     return (
       <input
         type="file"

@@ -28,6 +28,7 @@ export class OverviewStatuses extends React.Component {
   renderWorkload(resource: KubeResource): React.ReactElement {
     const store = workloadStores[resource];
     const items = store.getAllByNs(namespaceStore.contextNs);
+
     return (
       <div className="workload" key={resource}>
         <div className="title">

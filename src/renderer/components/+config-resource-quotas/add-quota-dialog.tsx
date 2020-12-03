@@ -72,6 +72,7 @@ export class AddQuotaDialog extends React.Component<Props> {
       const isStorage = quota.endsWith(".storage") || quota === "persistentvolumeclaims";
       const isCount = quota.startsWith("count/");
       const icon = isCompute ? "memory" : isStorage ? "storage" : isCount ? "looks_one" : "";
+
       return {
         label: icon ? <span className="nobr"><Icon material={icon} /> {quota}</span> : quota,
         value: quota,
@@ -102,8 +103,10 @@ export class AddQuotaDialog extends React.Component<Props> {
       const { quotaName, namespace } = this;
       const quotas = this.quotaEntries.reduce<IResourceQuotaValues>((quotas, [name, value]) => {
         quotas[name] = value;
+
         return quotas;
       }, {});
+
       await resourceQuotaApi.create({ namespace, name: quotaName }, {
         spec: {
           hard: quotas
@@ -127,6 +130,7 @@ export class AddQuotaDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const header = <h5><Trans>Create ResourceQuota</Trans></h5>;
+
     return (
       <Dialog
         {...dialogProps}

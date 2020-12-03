@@ -26,6 +26,7 @@ export const logRange = 500;
 export class PodLogsStore extends DockTabStore<IPodLogsData> {
   private refresher = interval(10, () => {
     const id = dockStore.selectedTabId;
+
     if (!this.logs.get(id)) return;
     this.loadMore(id);
   });
@@ -39,6 +40,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
     });
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
+
       if (isPodLogsTab(selectedTab) && isOpen) {
         this.refresher.start();
       } else {
@@ -68,6 +70,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       const logs = await this.loadLogs(tabId, {
         tailLines: this.lines + logRange
       });
+
       this.refresher.start();
       this.logs.set(tabId, logs);
     } catch ({error}) {
@@ -75,6 +78,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
         _i18n._(t`Failed to load logs: ${error.message}`),
         _i18n._(t`Reason: ${error.reason} (${error.code})`)
       ];
+
       this.refresher.stop();
       this.logs.set(tabId, message);
     }
@@ -92,6 +96,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
     const logs = await this.loadLogs(tabId, {
       sinceTime: this.getLastSinceTime(tabId)
     });
+
     // Add newly received logs to bottom
     this.logs.set(tabId, [...oldLogs, ...logs]);
   };
@@ -109,6 +114,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
     const pod = new Pod(data.pod);
     const namespace = pod.getNs();
     const name = pod.getName();
+
     return podsApi.getLogs({ namespace, name }, {
       ...params,
       timestamps: true,  // Always setting timestampt to separate old logs from new ones
@@ -116,7 +122,9 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       previous
     }).then(result => {
       const logs = [...result.split("\n")]; // Transform them into array
+
       logs.pop();  // Remove last empty element
+
       return logs;
     });
   };
@@ -128,6 +136,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
   setNewLogSince(tabId: TabId) {
     if (!this.logs.has(tabId) || !this.logs.get(tabId).length || this.newLogSince.has(tabId)) return;
     const timestamp = this.getLastSinceTime(tabId);
+
     this.newLogSince.set(tabId, timestamp.split(".")[0]); // Removing milliseconds from string
   }
 
@@ -139,6 +148,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
   get lines() {
     const id = dockStore.selectedTabId;
     const logs = this.logs.get(id);
+
     return logs ? logs.length : 0;
   }
 
@@ -151,7 +161,9 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
     const logs = this.logs.get(tabId);
     const timestamps = this.getTimestamps(logs[logs.length - 1]);
     const stamp = new Date(timestamps ? timestamps[0] : null);
+
     stamp.setSeconds(stamp.getSeconds() + 1); // avoid duplicates from last second
+
     return stamp.toISOString();
   }
 
@@ -178,9 +190,11 @@ export const podLogsStore = new PodLogsStore();
 export function createPodLogsTab(data: IPodLogsData, tabParams: Partial<IDockTab> = {}) {
   const podId = data.pod.getId();
   let tab = dockStore.getTabById(podId);
+
   if (tab) {
     dockStore.open();
     dockStore.selectTab(tab.id);
+
     return;
   }
   // If no existent tab found
@@ -191,6 +205,7 @@ export function createPodLogsTab(data: IPodLogsData, tabParams: Partial<IDockTab
     ...tabParams
   }, false);
   podLogsStore.setData(tab.id, data);
+
   return tab;
 }
 

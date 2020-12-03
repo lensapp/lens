@@ -15,6 +15,7 @@ export class Config extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
     const query = namespaceStore.getContextParams();
     const routes: TabLayoutRoute[] = [];
+
     if (isAllowedResource("configmaps")) {
       routes.push({
         title: <Trans>ConfigMaps</Trans>,
@@ -23,6 +24,7 @@ export class Config extends React.Component {
         routePath: configMapsRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("secrets")) {
       routes.push({
         title: <Trans>Secrets</Trans>,
@@ -31,6 +33,7 @@ export class Config extends React.Component {
         routePath: secretsRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("resourcequotas")) {
       routes.push({
         title: <Trans>Resource Quotas</Trans>,
@@ -39,6 +42,7 @@ export class Config extends React.Component {
         routePath: resourceQuotaRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("horizontalpodautoscalers")) {
       routes.push({
         title: <Trans>HPA</Trans>,
@@ -47,6 +51,7 @@ export class Config extends React.Component {
         routePath: hpaRoute.path.toString(),
       });
     }
+
     if (isAllowedResource("poddisruptionbudgets")) {
       routes.push({
         title: <Trans>Pod Disruption Budgets</Trans>,
@@ -55,6 +60,7 @@ export class Config extends React.Component {
         routePath: pdbRoute.path.toString(),
       });
     }
+
     return routes;
   }
 

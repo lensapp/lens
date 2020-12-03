@@ -101,6 +101,7 @@ const dummyStatefulSet = {
 describe("<StatefulSetScaleDialog />", () => {
   it("renders w/o errors", () => {
     const { container } = render(<StatefulSetScaleDialog/>);
+
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
@@ -108,8 +109,10 @@ describe("<StatefulSetScaleDialog />", () => {
     // mock statefulSetApi.getReplicas() which will be called
     // when <StatefulSetScaleDialog /> rendered.
     const initReplicas = 1;
+
     statefulSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
     const { getByTestId } = render(<StatefulSetScaleDialog/>);
+
     StatefulSetScaleDialog.open(dummyStatefulSet);
     // we need to wait for the StatefulSetScaleDialog to show up
     // because there is an <Animate /> in <Dialog /> which renders null at start.
@@ -118,6 +121,7 @@ describe("<StatefulSetScaleDialog />", () => {
         getByTestId("current-scale"),
         getByTestId("desired-scale"),
       ]);
+
       expect(currentScale).toHaveTextContent(`${initReplicas}`);
       expect(desiredScale).toHaveTextContent(`${initReplicas}`);
     });
@@ -125,8 +129,10 @@ describe("<StatefulSetScaleDialog />", () => {
 
   it("changes the desired scale when clicking the icon buttons +/-", async () => {
     const initReplicas = 1;
+
     statefulSetApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
     const component = render(<StatefulSetScaleDialog/>);
+
     StatefulSetScaleDialog.open(dummyStatefulSet);
     await waitFor(async () => {
       expect(await component.findByTestId("desired-scale")).toHaveTextContent(`${initReplicas}`);
@@ -136,6 +142,7 @@ describe("<StatefulSetScaleDialog />", () => {
 
     const up = await component.findByTestId("desired-replicas-up");
     const down = await component.findByTestId("desired-replicas-down");
+
     fireEvent.click(up);
     expect(await component.findByTestId("desired-scale")).toHaveTextContent(`${initReplicas + 1}`);
     expect(await component.findByTestId("current-scale")).toHaveTextContent(`${initReplicas}`);
@@ -148,6 +155,7 @@ describe("<StatefulSetScaleDialog />", () => {
 
     // edge case, desiredScale must >= 0
     let times = 10;
+
     for (let i = 0; i < times; i++) {
       fireEvent.click(down);
     }
@@ -156,6 +164,7 @@ describe("<StatefulSetScaleDialog />", () => {
 
     // edge case, desiredScale must <= scaleMax (100)
     times = 120;
+
     for (let i = 0; i < times; i++) {
       fireEvent.click(up);
     }

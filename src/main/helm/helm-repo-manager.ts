@@ -42,12 +42,14 @@ export class HelmRepoManager extends Singleton {
       resolveWithFullResponse: true,
       timeout: 10000,
     });
+
     return orderBy<HelmRepo>(res.body, repo => repo.name);
   }
 
   async init() {
     helmCli.setLogger(logger);
     await helmCli.ensureBinary();
+
     if (!this.initialized) {
       this.helmEnv = await this.parseHelmEnv();
       await this.update();
@@ -62,12 +64,15 @@ export class HelmRepoManager extends Singleton {
     });
     const lines = stdout.split(/\r?\n/); // split by new line feed
     const env: HelmEnv = {};
+
     lines.forEach((line: string) => {
       const [key, value] = line.split("=");
+
       if (key && value) {
         env[key] = value.replace(/"/g, ""); // strip quotas
       }
     });
+
     return env;
   }
 
@@ -75,6 +80,7 @@ export class HelmRepoManager extends Singleton {
     if (!this.initialized) {
       await this.init();
     }
+
     try {
       const repoConfigFile = this.helmEnv.HELM_REPOSITORY_CONFIG;
       const { repositories }: HelmRepoConfig = await readFile(repoConfigFile, "utf8")
@@ -82,22 +88,27 @@ export class HelmRepoManager extends Singleton {
         .catch(() => ({
           repositories: []
         }));
+
       if (!repositories.length) {
         await this.addRepo({ name: "bitnami", url: "https://charts.bitnami.com/bitnami" });
+
         return await this.repositories();
       }
+
       return repositories.map(repo => ({
         ...repo,
         cacheFilePath: `${this.helmEnv.HELM_REPOSITORY_CACHE}/${repo.name}-index.yaml`
       }));
     } catch (error) {
       logger.error(`[HELM]: repositories listing error "${error}"`);
+
       return [];
     }
   }
 
   public async repository(name: string) {
     const repositories = await this.repositories();
+
     return repositories.find(repo => repo.name == name);
   }
 
@@ -106,6 +117,7 @@ export class HelmRepoManager extends Singleton {
     const { stdout } = await promiseExec(`"${helm}" repo update`).catch((error) => {
       return { stdout: error.stdout };
     });
+
     return stdout;
   }
 
@@ -115,6 +127,7 @@ export class HelmRepoManager extends Singleton {
     const { stdout } = await promiseExec(`"${helm}" repo add ${name} ${url}`).catch((error) => {
       throw(error.stderr);
     });
+
     return stdout;
   }
 
@@ -124,6 +137,7 @@ export class HelmRepoManager extends Singleton {
     const { stdout } = await promiseExec(`"${helm}" repo remove ${name}`).catch((error) => {
       throw(error.stderr);
     });
+
     return stdout;
   }
 }

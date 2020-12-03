@@ -11,7 +11,6 @@ import { LineProgress } from "../line-progress";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
-import { ReplicaSetDetails } from "../+workloads-replicasets";
 
 interface Props extends KubeObjectDetailsProps<ResourceQuota> {
 }
@@ -58,7 +57,9 @@ function renderQuotas(quota: ResourceQuota): JSX.Element[] {
 export class ResourceQuotaDetails extends React.Component<Props> {
   render() {
     const { object: quota } = this.props;
+
     if (!quota) return null;
+
     return (
       <div className="ResourceQuotaDetails">
         <KubeObjectMeta object={quota}/>
@@ -79,6 +80,7 @@ export class ResourceQuotaDetails extends React.Component<Props> {
               {
                 quota.getScopeSelector().map((selector, index) => {
                   const { operator, scopeName, values } = selector;
+
                   return (
                     <TableRow key={index}>
                       <TableCell>{operator}</TableCell>
@@ -100,6 +102,6 @@ kubeObjectDetailRegistry.add({
   kind: "ResourceQuota",
   apiVersions: ["v1"],
   components: {
-    Details: (props) => <ReplicaSetDetails {...props} />
+    Details: (props) => <ResourceQuotaDetails {...props} />
   }
 });

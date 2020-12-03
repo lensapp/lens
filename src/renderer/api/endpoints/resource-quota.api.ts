@@ -58,6 +58,7 @@ export class ResourceQuota extends KubeObject {
 
   getScopeSelector() {
     const { matchExpressions = [] } = this.spec.scopeSelector || {};
+
     return matchExpressions;
   }
 }

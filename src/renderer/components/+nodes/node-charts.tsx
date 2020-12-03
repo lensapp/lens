@@ -134,6 +134,7 @@ export const NodeCharts = observer(() => {
         label: ({ datasetIndex, index }, { datasets }) => {
           const { label, data } = datasets[datasetIndex];
           const value = data[index] as ChartPoint;
+
           return `${label}: ${value.y}`;
         }
       }

@@ -97,6 +97,7 @@ describe("<DeploymentScaleDialog />", () => {
 
   it("renders w/o errors", () => {
     const { container } = render(<DeploymentScaleDialog />);
+
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
@@ -104,8 +105,10 @@ describe("<DeploymentScaleDialog />", () => {
     // mock deploymentApi.getReplicas() which will be called 
     // when <DeploymentScaleDialog /> rendered.
     const initReplicas = 3;
+
     deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
     const { getByTestId } = render(<DeploymentScaleDialog />);
+
     DeploymentScaleDialog.open(dummyDeployment);
     // we need to wait for the DeploymentScaleDialog to show up
     // because there is an <Animate /> in <Dialog /> which renders null at start.
@@ -114,6 +117,7 @@ describe("<DeploymentScaleDialog />", () => {
         getByTestId("current-scale"),
         getByTestId("desired-scale"),
       ]);
+
       expect(currentScale).toHaveTextContent(`${initReplicas}`);
       expect(desiredScale).toHaveTextContent(`${initReplicas}`);
     });
@@ -122,15 +126,19 @@ describe("<DeploymentScaleDialog />", () => {
 
   it("changes the desired scale when clicking the icon buttons +/-", async () => {
     const initReplicas = 1;
+
     deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
     const { getByTestId } = render(<DeploymentScaleDialog />);
+
     DeploymentScaleDialog.open(dummyDeployment);
     await waitFor(async () => {
       const desiredScale = await getByTestId("desired-scale");
+
       expect(desiredScale).toHaveTextContent(`${initReplicas}`);
     });
     const up = await getByTestId("desired-replicas-up");
     const down = await getByTestId("desired-replicas-down");
+
     fireEvent.click(up);
     expect(await getByTestId("desired-scale")).toHaveTextContent(`${initReplicas + 1}`);
     fireEvent.click(down);
@@ -140,6 +148,7 @@ describe("<DeploymentScaleDialog />", () => {
     fireEvent.click(down);
     expect(await getByTestId("desired-scale")).toHaveTextContent("1");
     const times = 120;
+
     // edge case, desiredScale must < scaleMax (100)
     for (let i = 0; i < times; i++) {
       fireEvent.click(up);

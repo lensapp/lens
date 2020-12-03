@@ -10,9 +10,11 @@ export class PrometheusHelm extends PrometheusLens {
 
   public async getPrometheusService(client: CoreV1Api): Promise<PrometheusService> {
     const labelSelector = "app=prometheus,component=server,heritage=Helm";
+
     try {
       const serviceList = await client.listServiceForAllNamespaces(false, "", null, labelSelector);
       const service = serviceList.body.items[0];
+
       if (!service) return;
 
       return {
@@ -23,6 +25,7 @@ export class PrometheusHelm extends PrometheusLens {
       };
     } catch(error) {
       logger.warn(`PrometheusHelm: failed to list services: ${error.toString()}`);
+
       return;
     }
   }

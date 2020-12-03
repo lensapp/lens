@@ -18,13 +18,16 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
 
   async loadMetrics(deployment: Deployment) {
     const pods = this.getChildPods(deployment);
+
     this.metrics = await podsApi.getMetrics(pods, deployment.getNs(), "");
   }
 
   getStatuses(deployments?: Deployment[]) {
     const status = { failed: 0, pending: 0, running: 0 };
+
     deployments.forEach(deployment => {
       const pods = this.getChildPods(deployment);
+
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
         status.failed++;
       }
@@ -35,6 +38,7 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
         status.running++;
       }
     });
+
     return status;
   }
 

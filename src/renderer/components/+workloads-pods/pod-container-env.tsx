@@ -25,12 +25,14 @@ export const ContainerEnvironment = observer((props: Props) => {
       autorun(() => {
         env && env.forEach(variable => {
           const { valueFrom } = variable;
+
           if (valueFrom && valueFrom.configMapKeyRef) {
             configMapsStore.load({ name: valueFrom.configMapKeyRef.name, namespace });
           }
         });
         envFrom && envFrom.forEach(item => {
           const { configMapRef } = item;
+
           if (configMapRef && configMapRef.name) {
             configMapsStore.load({ name: configMapRef.name, namespace });
           }
@@ -49,12 +51,16 @@ export const ContainerEnvironment = observer((props: Props) => {
       if (value) {
         secretValue = value;
       }
+
       if (valueFrom) {
         const { fieldRef, secretKeyRef, configMapKeyRef } = valueFrom;
+
         if (fieldRef) {
           const { apiVersion, fieldPath } = fieldRef;
+
           secretValue = `fieldRef(${apiVersion}:${fieldPath})`;
         }
+
         if (secretKeyRef) {
           secretValue = (
             <SecretKey
@@ -63,9 +69,11 @@ export const ContainerEnvironment = observer((props: Props) => {
             />
           );
         }
+
         if (configMapKeyRef) {
           const { name, key } = configMapKeyRef;
           const configMap = configMapsStore.getByName(name, namespace);
+
           secretValue = configMap ?
             configMap.data[key] :
             `configMapKeyRef(${name}${key})`;
@@ -84,13 +92,16 @@ export const ContainerEnvironment = observer((props: Props) => {
     const envVars = envFrom.map(vars => {
       if (!vars.configMapRef || !vars.configMapRef.name) return;
       const configMap = configMapsStore.getByName(vars.configMapRef.name, namespace);
+
       if (!configMap) return;
+
       return Object.entries(configMap.data).map(([name, value]) => (
         <div className="variable" key={name}>
           <span className="var-name">{name}</span>: {value}
         </div>
       ));
     });
+
     return _.flatten(envVars);
   };
 
@@ -119,6 +130,7 @@ const SecretKey = (props: SecretKeyProps) => {
     evt.preventDefault();
     setLoading(true);
     const secret = await secretsStore.load({ name, namespace });
+
     setLoading(false);
     setSecret(secret);
   };

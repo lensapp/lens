@@ -38,17 +38,22 @@ export class CRDStore extends KubeObjectStore<CustomResourceDefinition> {
 
   @computed get groups() {
     const groups: Record<string, CustomResourceDefinition[]> = {};
+
     return this.items.reduce((groups, crd) => {
       const group = crd.getGroup();
+
       if (!groups[group]) groups[group] = [];
       groups[group].push(crd);
+
       return groups;
     }, groups);
   }
 
   getByGroup(group: string, pluralName: string) {
     const crdInGroup = this.groups[group];
+
     if (!crdInGroup) return null;
+
     return crdInGroup.find(crd => crd.getPluralName() === pluralName);
   }
 

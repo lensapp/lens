@@ -26,6 +26,7 @@ export function downloadFile({ url, timeout, gzip = true }: DownloadFileOptions)
       resolve(Buffer.concat(fileChunks));
     });
   });
+
   return {
     url,
     promise,

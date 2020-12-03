@@ -56,12 +56,14 @@ export class Drawer extends React.Component<DrawerProps> {
   saveScrollPos = () => {
     if (!this.scrollElem) return;
     const key = history.location.key;
+
     this.scrollPos.set(key, this.scrollElem.scrollTop);
   };
 
   restoreScrollPos = () => {
     if (!this.scrollElem) return;
     const key = history.location.key;
+
     this.scrollElem.scrollTop = this.scrollPos.get(key) || 0;
   };
 
@@ -69,6 +71,7 @@ export class Drawer extends React.Component<DrawerProps> {
     if (!this.props.open) {
       return;
     }
+
     if (evt.code === "Escape") {
       this.close();
     }
@@ -76,11 +79,13 @@ export class Drawer extends React.Component<DrawerProps> {
 
   onClickOutside = (evt: MouseEvent) => {
     const { contentElem, mouseDownTarget, close, props: { open } } = this;
+
     if (!open || evt.defaultPrevented || contentElem.contains(mouseDownTarget)) {
       return;
     }
     const clickedElem = evt.target as HTMLElement;
     const isOutsideAnyDrawer = !clickedElem.closest(".Drawer");
+
     if (isOutsideAnyDrawer) {
       close();
     }
@@ -95,12 +100,14 @@ export class Drawer extends React.Component<DrawerProps> {
 
   close = () => {
     const { open, onClose } = this.props;
+
     if (open) onClose();
   };
 
   render() {
     const { open, position, title, animation, children, toolbar, size, usePortal } = this.props;
     let { className, contentClass } = this.props;
+
     className = cssNames("Drawer", className, position);
     contentClass = cssNames("drawer-content flex column box grow", contentClass);
     const style = size ? { "--size": size } as React.CSSProperties : undefined;
@@ -120,6 +127,7 @@ export class Drawer extends React.Component<DrawerProps> {
         </div>
       </Animate>
     );
+
     return usePortal ? createPortal(drawer, document.body) : drawer;
   }
 }

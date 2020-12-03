@@ -42,6 +42,7 @@ export const ClusterMetrics = observer(() => {
       callbacks: {
         label: ({ index }, data) => {
           const value = data.datasets[0].data[index] as ChartPoint;
+
           return value.y.toString();
         }
       }
@@ -60,6 +61,7 @@ export const ClusterMetrics = observer(() => {
       callbacks: {
         label: ({ index }, data) => {
           const value = data.datasets[0].data[index] as ChartPoint;
+
           return bytesToUnits(parseInt(value.y as string), 3);
         }
       }
@@ -71,9 +73,11 @@ export const ClusterMetrics = observer(() => {
     if ((!metricValues.length || !liveMetricValues.length) && !metricsLoaded) {
       return <Spinner center/>;
     }
+
     if (!memoryCapacity || !cpuCapacity) {
       return <ClusterNoMetrics className="empty"/>;
     }
+
     return (
       <BarChart
         name={`${metricNodeRole}-${metricType}`}

@@ -41,6 +41,7 @@ export class ReplicaSetDetails extends React.Component<Props> {
 
   render() {
     const { object: replicaSet } = this.props;
+
     if (!replicaSet) return null;
     const { metrics } = replicaSetStore;
     const { status } = replicaSet;
@@ -49,6 +50,7 @@ export class ReplicaSetDetails extends React.Component<Props> {
     const nodeSelector = replicaSet.getNodeSelectors();
     const images = replicaSet.getImages();
     const childPods = replicaSetStore.getChildPods(replicaSet);
+
     return (
       <div className="ReplicaSetDetails">
         {podsStore.isLoaded && (

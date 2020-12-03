@@ -53,6 +53,7 @@ export class ClustersMenu extends React.Component<Props> {
         }));
       }
     }));
+
     if (cluster.online) {
       menu.append(new MenuItem({
         label: _i18n._(t`Disconnect`),
@@ -65,26 +66,29 @@ export class ClustersMenu extends React.Component<Props> {
         }
       }));
     }
-    menu.append(new MenuItem({
-      label: _i18n._(t`Remove`),
-      click: () => {
-        ConfirmDialog.open({
-          okButtonProps: {
-            primary: false,
-            accent: true,
-            label: _i18n._(t`Remove`),
-          },
-          ok: () => {
-            if (clusterStore.activeClusterId === cluster.id) {
-              navigate(landingURL());
-              clusterStore.setActive(null);
-            }
-            clusterStore.removeById(cluster.id);
-          },
-          message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
-        });
-      }
-    }));
+
+    if (!cluster.isManaged) {
+      menu.append(new MenuItem({
+        label: _i18n._(t`Remove`),
+        click: () => {
+          ConfirmDialog.open({
+            okButtonProps: {
+              primary: false,
+              accent: true,
+              label: _i18n._(t`Remove`),
+            },
+            ok: () => {
+              if (clusterStore.activeClusterId === cluster.id) {
+                navigate(landingURL());
+                clusterStore.setActive(null);
+              }
+              clusterStore.removeById(cluster.id);
+            },
+            message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
+          });
+        }
+      }));
+    }
     menu.popup({
       window: remote.getCurrentWindow()
     });
@@ -98,6 +102,7 @@ export class ClustersMenu extends React.Component<Props> {
         source: { index: from },
         destination: { index: to },
       } = result;
+
       clusterStore.swapIconOrders(currentWorkspaceId, from, to);
     }
   }
@@ -106,8 +111,9 @@ export class ClustersMenu extends React.Component<Props> {
     const { className } = this.props;
     const { newContexts } = userStore;
     const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
-    const clusters = clusterStore.getByWorkspaceId(workspace.id);
+    const clusters = clusterStore.getByWorkspaceId(workspace.id).filter(cluster => cluster.enabled);
     const activeClusterId = clusterStore.activeCluster;
+
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
         <div className="clusters flex column gaps">
@@ -117,6 +123,7 @@ export class ClustersMenu extends React.Component<Props> {
                 <div ref={innerRef} {...droppableProps}>
                   {clusters.map((cluster, index) => {
                     const isActive = cluster.id === activeClusterId;
+
                     return (
                       <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
                         {({ draggableProps, dragHandleProps, innerRef }: DraggableProvided) => (
@@ -152,10 +159,12 @@ export class ClustersMenu extends React.Component<Props> {
         <div className="extensions">
           {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
             const registeredPage = globalPageRegistry.getByPageMenuTarget(target);
+
             if (!registeredPage) return;
             const { extensionId, id: pageId } = registeredPage;
             const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: target.params });
             const isActive = pageUrl === navigation.location.pathname;
+
             return (
               <Icon
                 key={pageUrl}

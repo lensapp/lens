@@ -75,6 +75,7 @@ export class CustomResourceDefinition extends KubeObject {
 
   getResourceApiBase() {
     const { group } = this.spec;
+
     return `/apis/${group}/${this.getVersion()}/${this.getPluralName()}`;
   }
 
@@ -88,6 +89,7 @@ export class CustomResourceDefinition extends KubeObject {
 
   getResourceTitle() {
     const name = this.getPluralName();
+
     return name[0].toUpperCase() + name.substr(1);
   }
 
@@ -124,6 +126,7 @@ export class CustomResourceDefinition extends KubeObject {
     const columns = this.spec.versions.find(a => this.getVersion() == a.name)?.additionalPrinterColumns
       ?? this.spec.additionalPrinterColumns?.map(({ JSONPath, ...rest }) => ({ ...rest, jsonPath: JSONPath })) // map to V1 shape
       ?? [];
+
     return columns
       .filter(column => column.name != "Age")
       .filter(column => ignorePriority ? true : !column.priority);
@@ -135,8 +138,10 @@ export class CustomResourceDefinition extends KubeObject {
 
   getConditions() {
     if (!this.status?.conditions) return [];
+
     return this.status.conditions.map(condition => {
       const { message, reason, lastTransitionTime, status } = condition;
+
       return {
         ...condition,
         isReady: status === "True",

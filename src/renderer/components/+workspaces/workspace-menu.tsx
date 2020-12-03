@@ -22,7 +22,9 @@ export class WorkspaceMenu extends React.Component<Props> {
 
   activateWorkspace = (id: WorkspaceId) => {
     const clusterId = workspaceStore.getById(id).lastActiveClusterId;
+
     workspaceStore.setActive(id);
+
     if (clusterId) {
       navigate(clusterViewURL({ params: { clusterId } }));
     } else {
@@ -33,6 +35,7 @@ export class WorkspaceMenu extends React.Component<Props> {
   render() {
     const { className, ...menuProps } = this.props;
     const { enabledWorkspacesList, currentWorkspace } = workspaceStore;
+
     return (
       <Menu
         {...menuProps}

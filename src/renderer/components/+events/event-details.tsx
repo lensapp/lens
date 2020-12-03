@@ -21,9 +21,11 @@ interface Props extends KubeObjectDetailsProps<KubeEvent> {
 export class EventDetails extends React.Component<Props> {
   render() {
     const { object: event } = this.props;
+
     if (!event) return;
     const { message, reason, count, type, involvedObject } = event;
     const { kind, name, namespace, fieldPath } = involvedObject;
+
     return (
       <div className="EventDetails">
         <KubeObjectMeta object={event}/>

@@ -39,8 +39,10 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
 
   createAccount = async () => {
     const { name, namespace } = this;
+
     try {
       const serviceAccount = await serviceAccountsStore.create({ namespace, name });
+
       this.name = "";
       showDetails(serviceAccount.selfLink);
       this.close();
@@ -53,6 +55,7 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
     const { ...dialogProps } = this.props;
     const { name, namespace } = this;
     const header = <h5><Trans>Create Service Account</Trans></h5>;
+
     return (
       <Dialog
         {...dialogProps}

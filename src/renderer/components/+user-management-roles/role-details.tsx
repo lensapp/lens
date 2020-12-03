@@ -17,8 +17,10 @@ interface Props extends KubeObjectDetailsProps<Role> {
 export class RoleDetails extends React.Component<Props> {
   render() {
     const { object: role } = this.props;
+
     if (!role) return;
     const rules = role.getRules();
+
     return (
       <div className="RoleDetails">
         <KubeObjectMeta object={role}/>

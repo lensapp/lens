@@ -32,7 +32,9 @@ export class TerminalStore {
     // connect active tab
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
+
       if (!isTerminalTab(selectedTab)) return;
+
       if (isOpen) {
         this.connect(selectedTab.id);
       }
@@ -40,6 +42,7 @@ export class TerminalStore {
     // disconnect closed tabs
     autorun(() => {
       const currentTabs = dockStore.tabs.map(tab => tab.id);
+
       for (const [tabId] of this.connections) {
         if (!currentTabs.includes(tabId)) this.disconnect(tabId);
       }
@@ -56,6 +59,7 @@ export class TerminalStore {
       node: tab.node,
     });
     const terminal = new Terminal(tabId, api);
+
     this.connections.set(tabId, api);
     this.terminals.set(tabId, terminal);
   }
@@ -66,6 +70,7 @@ export class TerminalStore {
     }
     const terminal = this.terminals.get(tabId);
     const terminalApi = this.connections.get(tabId);
+
     terminal.destroy();
     terminalApi.destroy();
     this.connections.delete(tabId);
@@ -74,6 +79,7 @@ export class TerminalStore {
 
   reconnect(tabId: TabId) {
     const terminalApi = this.connections.get(tabId);
+
     if (terminalApi) terminalApi.connect();
   }
 
@@ -83,6 +89,7 @@ export class TerminalStore {
 
   isDisconnected(tabId: TabId) {
     const terminalApi = this.connections.get(tabId);
+
     if (terminalApi) {
       return terminalApi.readyState === WebSocketApiState.CLOSED;
     }
@@ -91,12 +98,13 @@ export class TerminalStore {
   sendCommand(command: string, options: { enter?: boolean; newTab?: boolean; tabId?: TabId } = {}) {
     const { enter, newTab, tabId } = options;
     const { selectTab, getTabById } = dockStore;
-
     const tab = tabId && getTabById(tabId);
+
     if (tab) selectTab(tabId);
     if (newTab) createTerminalTab();
 
     const terminalApi = this.connections.get(dockStore.selectedTabId);
+
     if (terminalApi) {
       terminalApi.sendCommand(command + (enter ? "\r" : ""));
     }

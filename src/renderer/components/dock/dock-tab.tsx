@@ -40,6 +40,7 @@ export class DockTab extends React.Component<DockTabProps> {
         )}
       </div>
     );
+
     return (
       <Tab
         {...tabProps}

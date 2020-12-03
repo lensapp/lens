@@ -6,6 +6,10 @@ jest.mock("electron", () => {
       getVersion: () => "99.99.99",
       getPath: () => "tmp",
       getLocale: () => "en"
+    },
+    ipcMain: {
+      handle: jest.fn(),
+      on: jest.fn()
     }
   };
 });
@@ -40,7 +44,6 @@ describe("workspace store tests", () => {
 
     it("can update workspace description", () => {
       const ws = WorkspaceStore.getInstance<WorkspaceStore>();
-
       const workspace = ws.addWorkspace(new Workspace({
         id: "foobar",
         name: "foobar",
@@ -60,7 +63,10 @@ describe("workspace store tests", () => {
         name: "foobar",
       }));
 
-      expect(ws.getById("123").name).toBe("foobar");
+      const workspace = ws.getById("123");
+
+      expect(workspace.name).toBe("foobar");
+      expect(workspace.enabled).toBe(true);
     });
 
     it("cannot set a non-existent workspace to be active", () => {

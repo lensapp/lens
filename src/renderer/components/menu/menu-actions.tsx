@@ -42,6 +42,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
   remove() {
     const { removeAction } = this.props;
     let { removeConfirmationMessage } = this.props;
+
     if (typeof removeConfirmationMessage === "function") {
       removeConfirmationMessage = removeConfirmationMessage();
     }
@@ -56,8 +57,10 @@ export class MenuActions extends React.Component<MenuActionsProps> {
     if (this.props.toolbar) return;
     const { triggerIcon = "more_vert" } = this.props;
     let className: string;
+
     if (isValidElement<HTMLElement>(triggerIcon)) {
       className = cssNames(triggerIcon.props.className, { active: this.isOpen });
+
       return React.cloneElement(triggerIcon, { id: this.id, className } as any);
     }
     const iconProps: Partial<IconProps> = {
@@ -67,9 +70,11 @@ export class MenuActions extends React.Component<MenuActionsProps> {
       active: this.isOpen,
       ...(typeof triggerIcon === "object" ? triggerIcon : {}),
     };
+
     if (iconProps.tooltip && this.isOpen) {
       delete iconProps.tooltip; // don't show tooltip for icon when menu is open
     }
+
     return (
       <Icon {...iconProps}/>
     );
@@ -85,6 +90,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
       gaps: toolbar, // add spacing for .flex
     });
     const autoClose = !toolbar;
+
     return (
       <>
         {this.renderTriggerIcon()}

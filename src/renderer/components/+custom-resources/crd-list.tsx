@@ -30,6 +30,7 @@ export class CrdList extends React.Component {
   onGroupChange(group: string) {
     const groups = [...this.groups];
     const index = groups.findIndex(item => item == group);
+
     if (index !== -1) groups.splice(index, 1);
     else groups.push(group);
     setQueryParams({ groups });
@@ -43,6 +44,7 @@ export class CrdList extends React.Component {
       [sortBy.version]: (crd: CustomResourceDefinition) => crd.getVersion(),
       [sortBy.scope]: (crd: CustomResourceDefinition) => crd.getScope(),
     };
+
     return (
       <KubeObjectListLayout
         className="CrdList"
@@ -58,8 +60,10 @@ export class CrdList extends React.Component {
         renderHeaderTitle={<Trans>Custom Resources</Trans>}
         customizeHeader={() => {
           let placeholder = <Trans>All groups</Trans>;
+
           if (selectedGroups.length == 1) placeholder = <><Trans>Group</Trans>: {selectedGroups[0]}</>;
           if (selectedGroups.length >= 2) placeholder = <><Trans>Groups</Trans>: {selectedGroups.join(", ")}</>;
+
           return {
             // todo: move to global filters
             filters: (
@@ -71,6 +75,7 @@ export class CrdList extends React.Component {
                 controlShouldRenderValue={false}
                 formatOptionLabel={({ value: group }: SelectOption) => {
                   const isSelected = selectedGroups.includes(group);
+
                   return (
                     <div className="flex gaps align-center">
                       <Icon small material="folder"/>

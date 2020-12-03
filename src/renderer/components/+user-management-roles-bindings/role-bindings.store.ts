@@ -22,6 +22,7 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
 
   protected loadItem(params: { name: string; namespace?: string }) {
     if (params.namespace) return roleBindingApi.get(params);
+
     return clusterRoleBindingApi.get(params);
   }
 
@@ -52,6 +53,7 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
     const { roleBinding, addSubjects, removeSubjects } = params;
     const currentSubjects = roleBinding.getSubjects();
     let newSubjects = currentSubjects;
+
     if (addSubjects) {
       newSubjects = uniqBy(currentSubjects.concat(addSubjects), ({ kind, name, namespace }) => {
         return [kind, name, namespace].join("-");
@@ -59,6 +61,7 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
     } else if (removeSubjects) {
       newSubjects = difference(currentSubjects, removeSubjects);
     }
+
     return this.update(roleBinding, {
       roleRef: roleBinding.roleRef,
       subjects: newSubjects

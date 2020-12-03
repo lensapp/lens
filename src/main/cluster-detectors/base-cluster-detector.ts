@@ -20,6 +20,7 @@ export class BaseClusterDetector {
 
   protected async k8sRequest<T = any>(path: string, options: RequestPromiseOptions = {}): Promise<T> {
     const apiUrl = this.cluster.kubeProxyUrl + path;
+
     return request(apiUrl, {
       json: true,
       timeout: 30000,

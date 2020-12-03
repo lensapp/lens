@@ -24,11 +24,14 @@ export class KubeEventIcon extends React.Component<Props> {
     const { object, showWarningsOnly, filterEvents } = this.props;
     const events = eventStore.getEventsByObject(object);
     let warnings = events.filter(evt => evt.isWarning());
+
     if (filterEvents) warnings = filterEvents(warnings);
+
     if (!events.length || (showWarningsOnly && !warnings.length)) {
       return null;
     }
     const event = [...warnings, ...events][0]; // get latest event
+
     return (
       <Icon
         material="warning"

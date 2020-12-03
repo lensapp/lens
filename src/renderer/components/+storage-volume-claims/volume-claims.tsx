@@ -66,6 +66,7 @@ export class PersistentVolumeClaims extends React.Component<Props> {
           const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
             name: storageClassName
           }));
+
           return [
             pvc.getName(),
             <KubeObjectStatusIcon key="icon" object={pvc} />,

@@ -21,6 +21,7 @@ export const ZebraStripes = {
 
   getLastUpdate(chart: ChartJS) {
     const data = chart.data.datasets[0].data[0] as ChartPoint;
+
     return moment.unix(parseInt(data.x as string));
   },
 
@@ -30,6 +31,7 @@ export const ZebraStripes = {
 
   removeStripesElem(chart: ChartJS) {
     const elem = this.getStripesElem(chart);
+
     if (!elem) return;
     chart.canvas.parentElement.removeChild(elem);
   },
@@ -89,6 +91,7 @@ export const ZebraStripes = {
     if (minutes > 0) {
       // Move position regarding to difference in time
       const cover = this.getStripesElem(chart);
+
       cover.style.backgroundPositionX = `${-step * minutes}px`;
     }
   }

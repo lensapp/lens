@@ -31,6 +31,7 @@ export class LensBinary {
 
   constructor(opts: LensBinaryOpts) {
     const baseDir = opts.baseDir;
+
     this.originalBinaryName = opts.originalBinaryName;
     this.binaryName = opts.newBinaryName || opts.originalBinaryName;
     this.binaryVersion = opts.version;
@@ -50,11 +51,13 @@ export class LensBinary {
     this.arch = arch;
     this.platformName = isWindows ? "windows" : process.platform;
     this.dirname = path.normalize(path.join(baseDir, this.binaryName));
+
     if (isWindows) {
       this.binaryName = `${this.binaryName}.exe`;
       this.originalBinaryName = `${this.originalBinaryName}.exe`;
     }
     const tarName = this.getTarName();
+
     if (tarName) {
       this.tarPath = path.join(this.dirname, tarName);
     }
@@ -70,6 +73,7 @@ export class LensBinary {
 
   public async binaryPath() {
     await this.ensureBinary();
+
     return this.getBinaryPath();
   }
 
@@ -96,20 +100,24 @@ export class LensBinary {
   public async binDir() {
     try {
       await this.ensureBinary();
+
       return this.dirname;
     } catch (err) {
       this.logger.error(err);
+
       return "";
     }
   }
 
   protected async checkBinary() {
     const exists = await pathExists(this.getBinaryPath());
+
     return exists;
   }
 
   public async ensureBinary() {
     const isValid = await this.checkBinary();
+
     if (!isValid) {
       await this.downloadBinary().catch((error) => {
         this.logger.error(error);
@@ -148,6 +156,7 @@ export class LensBinary {
 
   protected async downloadBinary() {
     const binaryPath = this.tarPath || this.getBinaryPath();
+
     await ensureDir(this.getBinaryDir(), 0o755);
 
     const file = fs.createWriteStream(binaryPath);
@@ -159,7 +168,6 @@ export class LensBinary {
       gzip: true,
       ...this.requestOpts
     };
-
     const stream = request(requestOpts);
 
     stream.on("complete", () => {
@@ -174,6 +182,7 @@ export class LensBinary {
       });
       throw(error);
     });
+
     return new Promise((resolve, reject) => {
       file.on("close", () => {
         this.logger.debug(`${this.originalBinaryName} binary download closed`);

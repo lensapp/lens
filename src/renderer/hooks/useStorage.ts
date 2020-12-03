@@ -8,5 +8,6 @@ export function useStorage<T>(key: string, initialValue?: T, options?: IStorageH
     setStorageValue(value);
     storage.set(value);
   };
+
   return [storageValue, setValue] as [T, (value: T) => void];
 }

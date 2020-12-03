@@ -24,6 +24,7 @@ export class Checkbox extends React.PureComponent<CheckboxProps> {
 
   getValue() {
     if (this.props.value !== undefined) return this.props.value;
+
     return this.input.checked;
   }
 
@@ -35,6 +36,7 @@ export class Checkbox extends React.PureComponent<CheckboxProps> {
       disabled: this.props.disabled,
       [`theme-${theme}`]: theme,
     });
+
     return (
       <label className={componentClass}>
         <input

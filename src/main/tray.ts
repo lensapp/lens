@@ -1,6 +1,6 @@
 import path from "path";
 import packageInfo from "../../package.json";
-import { dialog, Menu, NativeImage, nativeTheme, Tray } from "electron";
+import { dialog, Menu, NativeImage, Tray } from "electron";
 import { autorun } from "mobx";
 import { showAbout } from "./menu";
 import { AppUpdater } from "./app-updater";
@@ -16,14 +16,11 @@ import { exitApp } from "./exit-app";
 // note: instance of Tray should be saved somewhere, otherwise it disappears
 export let tray: Tray;
 
-// refresh icon when MacOS dark/light theme has changed
-nativeTheme?.on("updated", () => tray?.setImage(getTrayIcon()));
-
-export function getTrayIcon(isDark = nativeTheme.shouldUseDarkColors): string {
+export function getTrayIcon(): string {
   return path.resolve(
     __static,
     isDevelopment ? "../build/tray" : "icons", // copied within electron-builder extras
-    `tray_icon${isDark ? "_dark" : ""}.png`
+    "trayIconTemplate.png"
   );
 }
 
@@ -31,11 +28,13 @@ export function initTray(windowManager: WindowManager) {
   const dispose = autorun(() => {
     try {
       const menu = createTrayMenu(windowManager);
+
       buildTray(getTrayIcon(), menu);
     } catch (err) {
       logger.error(`[TRAY]: building failed: ${err}`);
     }
   });
+
   return () => {
     dispose();
     tray?.destroy();
@@ -63,6 +62,7 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
       async click() {
         // note: argument[1] (browserWindow) not available when app is not focused / hidden
         const browserWindow = await windowManager.ensureMainWindow();
+
         showAbout(browserWindow);
       },
     },
@@ -85,11 +85,13 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
         .filter(workspace => clusterStore.getByWorkspaceId(workspace.id).length > 0) // hide empty workspaces
         .map(workspace => {
           const clusters = clusterStore.getByWorkspaceId(workspace.id);
+
           return {
             label: workspace.name,
             toolTip: workspace.description,
             submenu: clusters.map(cluster => {
               const { id: clusterId, name: label, online, workspace } = cluster;
+
               return {
                 label: `${online ? "✓" : "\x20".repeat(3)/*offset*/}${label}`,
                 toolTip: clusterId,
@@ -106,8 +108,10 @@ export function createTrayMenu(windowManager: WindowManager): Menu {
       label: "Check for updates",
       async click() {
         const result = await AppUpdater.checkForUpdates();
+
         if (!result) {
           const browserWindow = await windowManager.ensureMainWindow();
+
           dialog.showMessageBoxSync(browserWindow, {
             message: "No updates available",
             type: "info",

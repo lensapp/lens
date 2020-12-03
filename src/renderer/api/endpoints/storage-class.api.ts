@@ -18,6 +18,7 @@ export class StorageClass extends KubeObject {
 
   isDefault() {
     const annotations = this.metadata.annotations || {};
+
     return (
       annotations["storageclass.kubernetes.io/is-default-class"] === "true" ||
       annotations["storageclass.beta.kubernetes.io/is-default-class"] === "true"

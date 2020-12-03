@@ -16,6 +16,7 @@ export class KubeObjectStatusIcon extends React.Component<Props> {
   @computed get objectStatuses() {
     const { object } = this.props;
     const registrations = kubeObjectStatusRegistry.getItemsForKind(object.kind, object.apiVersion);
+
     return registrations.map((item: KubeObjectStatusRegistration) => { return item.resolve(object); }).filter((item: KubeObjectStatus) => !!item);
   }
 
@@ -48,6 +49,7 @@ export class KubeObjectStatusIcon extends React.Component<Props> {
   getAge(timestamp: string) {
     if (!timestamp) return "";
     const diff = new Date().getTime() - new Date(timestamp).getTime();
+
     return formatDuration(diff, true);
   }
 
@@ -72,19 +74,23 @@ export class KubeObjectStatusIcon extends React.Component<Props> {
 
   render() {
     const { objectStatuses} = this;
+
     if (!objectStatuses.length) return null;
 
     const sortedStatuses = objectStatuses.sort((a: KubeObjectStatus, b: KubeObjectStatus) => {
       if (a.level < b.level ) {
         return 1;
       }
+
       if (a.level > b.level ) {
         return -1;
       }
+
       return 0;
     });
 
     const level = this.statusClassName(sortedStatuses[0].level);
+
     return (
       <Icon
         material={level}

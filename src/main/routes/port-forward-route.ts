@@ -52,15 +52,19 @@ class PortForward {
     PortForward.portForwards.push(this);
     this.process.on("exit", () => {
       const index = PortForward.portForwards.indexOf(this);
+
       if (index > -1) {
         PortForward.portForwards.splice(index, 1);
       }
     });
+
     try {
       await tcpPortUsed.waitUntilUsed(this.localPort, 500, 15000);
+
       return true;
     } catch (error) {
       this.process.kill();
+
       return false;
     }
   }
@@ -75,11 +79,11 @@ class PortForwardRoute extends LensApi {
   public async routePortForward(request: LensApiRequest) {
     const { params, response, cluster} = request;
     const { namespace, port, resourceType, resourceName } = params;
-
     let portForward = PortForward.getPortforward({
       clusterId: cluster.id, kind: resourceType, name: resourceName,
       namespace, port
     });
+
     if (!portForward) {
       logger.info(`Creating a new port-forward ${namespace}/${resourceType}/${resourceName}:${port}`);
       portForward = new PortForward({
@@ -91,10 +95,12 @@ class PortForwardRoute extends LensApi {
         kubeConfig: cluster.getProxyKubeconfigPath()
       });
       const started = await portForward.start();
+
       if (!started) {
         this.respondJson(response, {
           message: "Failed to open port-forward"
         }, 400);
+
         return;
       }
     }

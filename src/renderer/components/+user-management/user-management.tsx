@@ -16,6 +16,7 @@ export class UserManagement extends React.Component {
   static get tabRoutes() {
     const tabRoutes: TabLayoutRoute[] = [];
     const query = namespaceStore.getContextParams();
+
     tabRoutes.push(
       {
         title: <Trans>Service Accounts</Trans>,
@@ -36,6 +37,7 @@ export class UserManagement extends React.Component {
         routePath: rolesRoute.path.toString(),
       },
     );
+
     if (isAllowedResource("podsecuritypolicies")) {
       tabRoutes.push({
         title: <Trans>Pod Security Policies</Trans>,
@@ -44,6 +46,7 @@ export class UserManagement extends React.Component {
         routePath: podSecurityPoliciesRoute.path.toString(),
       });
     }
+
     return tabRoutes;
   }
 

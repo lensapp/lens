@@ -1594,6 +1594,7 @@ msgstr "Names"
 #: src/renderer/components/dock/upgrade-chart.tsx:98
 #: src/renderer/components/item-object-list/page-filters-select.tsx:57
 #: src/renderer/components/kube-object/kube-object-meta.tsx:23
+#: src/renderer/components/+workloads-pods/pod-details-list.tsx:144
 msgid "Namespace"
 msgstr "Namespace"
 
@@ -2002,6 +2003,10 @@ msgstr "Read-only Root Filesystem"
 #: src/renderer/components/+workloads-pods/pod-details-container.tsx:94
 msgid "Readiness"
 msgstr "Readiness"
+
+#: src/renderer/components/+workloads-pods/pod-details-list.tsx:145
+msgid "Ready"
+msgstr "Ready"
 
 #: src/renderer/components/+events/event-details.tsx:32
 #: src/renderer/components/+workloads-pods/pod-details-container.tsx:25

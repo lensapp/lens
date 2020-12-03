@@ -5,11 +5,14 @@ import logger from "./logger";
 
 export async function getFreePort(): Promise<number> {
   logger.debug("Lookup new free port..");
+
   return new Promise((resolve, reject) => {
     const server = net.createServer();
+
     server.unref();
     server.on("listening", () => {
       const port = (server.address() as AddressInfo).port;
+
       server.close(() => resolve(port));
       logger.debug(`New port found: ${port}`);
     });

@@ -32,6 +32,7 @@ export class Cluster extends React.Component {
   // todo: refactor
   async componentDidMount() {
     const { dependentStores } = this;
+
     if (!isAllowedResource("nodes")) {
       dependentStores.splice(dependentStores.indexOf(nodesStore), 1);
     }
@@ -54,6 +55,7 @@ export class Cluster extends React.Component {
 
   render() {
     const { isLoaded } = this;
+
     return (
       <TabLayout>
         <div className="Cluster">

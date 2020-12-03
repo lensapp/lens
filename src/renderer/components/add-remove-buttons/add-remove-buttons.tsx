@@ -29,11 +29,13 @@ export class AddRemoveButtons extends React.PureComponent<AddRemoveButtonsProps>
         tooltip: addTooltip,
       },
     ];
+
     return buttons.map(button => {
       if (!button.onClick) {
         return null;
       }
       const { onClick, className, icon, tooltip } = button;
+
       return (
         <Button key={icon} big round primary onClick={onClick} className={className} tooltip={tooltip}>
           <Icon material={icon}/>

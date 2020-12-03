@@ -51,6 +51,7 @@ export class Endpoints extends React.Component<Props> {
         tableProps={{
           customRowHeights: (item: Endpoint, lineHeight, paddings) => {
             const lines = item.getEndpointSubsets().length || 1;
+
             return lines * lineHeight + paddings;
           }
         }}

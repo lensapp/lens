@@ -42,7 +42,9 @@ export class UpgradeChart extends React.Component<Props> {
 
   get release(): HelmRelease {
     const tabData = upgradeChartStore.getData(this.tabId);
+
     if (!tabData) return;
+
     return releaseStore.getByName(tabData.releaseName);
   }
 
@@ -55,6 +57,7 @@ export class UpgradeChart extends React.Component<Props> {
     this.version = null;
     this.versions.clear();
     const versions = await helmChartStore.getVersions(this.release.getChart());
+
     this.versions.replace(versions);
     this.version = this.versions[0];
   }
@@ -69,11 +72,13 @@ export class UpgradeChart extends React.Component<Props> {
     const { version, repo } = this.version;
     const releaseName = this.release.getName();
     const releaseNs = this.release.getNs();
+
     await releaseStore.update(releaseName, releaseNs, {
       chart: this.release.getChart(),
       values: this.value,
       repo, version,
     });
+
     return (
       <p>
         <Trans>Release <b>{releaseName}</b> successfully upgraded to version <b>{version}</b></Trans>
@@ -84,12 +89,14 @@ export class UpgradeChart extends React.Component<Props> {
   formatVersionLabel = ({ value }: SelectOption<IChartVersion>) => {
     const chartName = this.release.getChart();
     const { repo, version } = value;
+
     return `${repo}/${chartName}-${version}`;
   };
 
   render() {
     const { tabId, release, value, error, onChange, upgrade, versions, version } = this;
     const { className } = this.props;
+
     if (!release || upgradeChartStore.isLoading() || !version) {
       return <Spinner center/>;
     }
@@ -111,6 +118,7 @@ export class UpgradeChart extends React.Component<Props> {
         />
       </div>
     );
+
     return (
       <div className={cssNames("UpgradeChart flex column", className)}>
         <InfoPanel

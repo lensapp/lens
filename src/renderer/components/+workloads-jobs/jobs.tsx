@@ -50,6 +50,7 @@ export class Jobs extends React.Component<Props> {
         ]}
         renderTableContents={(job: Job) => {
           const condition = job.getCondition();
+
           return [
             job.getName(),
             job.getNs(),

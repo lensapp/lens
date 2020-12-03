@@ -65,6 +65,7 @@ export class KubeObject implements ItemObject {
 
   static stringifyLabels(labels: { [name: string]: string }): string[] {
     if (!labels) return [];
+
     return Object.entries(labels).map(([name, value]) => `${name}=${value}`);
   }
 
@@ -104,9 +105,11 @@ export class KubeObject implements ItemObject {
       return moment(this.metadata.creationTimestamp).fromNow();
     }
     const diff = new Date().getTime() - new Date(this.metadata.creationTimestamp).getTime();
+
     if (humanize) {
       return formatDuration(diff, compact);
     }
+
     return diff;
   }
 
@@ -120,14 +123,17 @@ export class KubeObject implements ItemObject {
 
   getAnnotations(filter = false): string[] {
     const labels = KubeObject.stringifyLabels(this.metadata.annotations);
+
     return filter ? labels.filter(label => {
       const skip = resourceApplierApi.annotations.some(key => label.startsWith(key));
+
       return !skip;
     }) : labels;
   }
 
   getOwnerRefs() {
     const refs = this.metadata.ownerReferences || [];
+
     return refs.map(ownerRef => ({
       ...ownerRef,
       namespace: this.getNs(),
@@ -136,6 +142,7 @@ export class KubeObject implements ItemObject {
 
   getSearchFields() {
     const { getName, getId, getNs, getAnnotations, getLabels } = this;
+
     return [
       getName(),
       getNs(),

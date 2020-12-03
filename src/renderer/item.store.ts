@@ -37,12 +37,15 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   protected async createItem(request: () => Promise<T>) {
     const newItem = await request();
     const item = this.items.find(item => item.getId() === newItem.getId());
+
     if (item) {
       return item;
     }
     else {
       const items = this.sortItems([...this.items, newItem]);
+
       this.items.replace(items);
+
       return newItem;
     }
   }
@@ -52,11 +55,14 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   protected async loadItems(request: () => Promise<T[] | any>, sortItems = true) {
     if (this.isLoading) {
       await when(() => !this.isLoading);
+
       return;
     }
     this.isLoading = true;
+
     try {
       let items = await request();
+
       if (sortItems) items = this.sortItems(items);
       this.items.replace(items);
       this.isLoaded = true;
@@ -69,17 +75,22 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   @action
   protected async loadItem(request: () => Promise<T>, sortItems = true) {
     const item = await request().catch(() => null);
+
     if (item) {
       const existingItem = this.items.find(el => el.getId() === item.getId());
+
       if (existingItem) {
         const index = this.items.findIndex(item => item === existingItem);
+
         this.items.splice(index, 1, item);
       }
       else {
         let items = [...this.items, item];
+
         if (sortItems) items = this.sortItems(items);
         this.items.replace(items);
       }
+
       return item;
     }
   }
@@ -88,7 +99,9 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   protected async updateItem(item: T, request: () => Promise<T>) {
     const updatedItem = await request();
     const index = this.items.findIndex(i => i.getId() === item.getId());
+
     this.items.splice(index, 1, updatedItem);
+
     return updatedItem;
   }
 
@@ -126,6 +139,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   @action
   toggleSelectionAll(visibleItems: T[] = this.items) {
     const allSelected = visibleItems.every(this.isSelected);
+
     if (allSelected) {
       visibleItems.forEach(this.unselect);
     }
@@ -136,6 +150,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
 
   isSelectedAll(visibleItems: T[] = this.items) {
     if (!visibleItems.length) return false;
+
     return visibleItems.every(this.isSelected);
   }
 

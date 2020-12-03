@@ -57,9 +57,12 @@ export class InfoPanel extends Component<Props> {
 
   submit = async () => {
     const { showNotifications } = this.props;
+
     this.waiting = true;
+
     try {
       const result = await this.props.submit();
+
       if (showNotifications) Notifications.ok(result);
     } catch (error) {
       if (showNotifications) Notifications.error(error.toString());
@@ -81,6 +84,7 @@ export class InfoPanel extends Component<Props> {
     if (!this.props.showInlineInfo || !this.errorInfo) {
       return;
     }
+
     return (
       <div className="error">
         <Icon material="error_outline" tooltip={this.errorInfo}/>
@@ -92,6 +96,7 @@ export class InfoPanel extends Component<Props> {
     const { className, controls, submitLabel, disableSubmit, error, submittingMessage, showButtons, showSubmitClose } = this.props;
     const { submit, close, submitAndClose, waiting } = this;
     const isDisabled = !!(disableSubmit || waiting || error);
+
     return (
       <div className={cssNames("InfoPanel flex gaps align-center", className)}>
         <div className="controls">

@@ -40,11 +40,13 @@ interface Props extends RouteComponentProps<IDeploymentsRouteParams> {
 export class Deployments extends React.Component<Props> {
   renderPods(deployment: Deployment) {
     const { replicas, availableReplicas } = deployment.status;
+
     return `${availableReplicas || 0}/${replicas || 0}`;
   }
 
   renderConditions(deployment: Deployment) {
     const conditions = orderBy(deployment.getConditions(true), "type", "asc");
+
     return conditions.map(({ type, message }) => (
       <span key={type} className={cssNames("condition", kebabCase(type))} title={message}>
         {type}
@@ -97,6 +99,7 @@ export class Deployments extends React.Component<Props> {
 
 export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
   const { object, toolbar } = props;
+
   return (
     <>
       <MenuItem onClick={() => DeploymentScaleDialog.open(object)}>

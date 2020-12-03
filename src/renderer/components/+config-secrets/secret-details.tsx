@@ -31,6 +31,7 @@ export class SecretDetails extends React.Component<Props> {
     disposeOnUnmount(this, [
       autorun(() => {
         const { object: secret } = this.props;
+
         if (secret) {
           this.data = secret.data;
           this.revealSecret = {};
@@ -41,7 +42,9 @@ export class SecretDetails extends React.Component<Props> {
 
   saveSecret = async () => {
     const { object: secret } = this.props;
+
     this.isSaving = true;
+
     try {
       await secretsStore.update(secret, { ...secret, data: this.data });
       Notifications.ok(<Trans>Secret successfully updated.</Trans>);
@@ -57,7 +60,9 @@ export class SecretDetails extends React.Component<Props> {
 
   render() {
     const { object: secret } = this.props;
+
     if (!secret) return null;
+
     return (
       <div className="SecretDetails">
         <KubeObjectMeta object={secret}/>
@@ -71,12 +76,14 @@ export class SecretDetails extends React.Component<Props> {
               Object.entries(this.data).map(([name, value]) => {
                 const revealSecret = this.revealSecret[name];
                 let decodedVal = "";
+
                 try {
                   decodedVal = base64.decode(value);
                 } catch {
                   decodedVal = "";
                 }
                 value = revealSecret ? decodedVal : value;
+
                 return (
                   <div key={name} className="data">
                     <div className="name">{name}</div>

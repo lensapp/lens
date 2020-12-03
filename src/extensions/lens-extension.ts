@@ -86,6 +86,7 @@ export class LensExtension {
     const cancelReaction = reaction(() => this.isEnabled, async (isEnabled) => {
       if (isEnabled) {
         const handlerDisposers = await handlers();
+
         disposers.push(...handlerDisposers);
       } else {
         unregisterHandlers();
@@ -93,6 +94,7 @@ export class LensExtension {
     }, {
       fireImmediately: true
     });
+
     return () => {
       unregisterHandlers();
       cancelReaction();

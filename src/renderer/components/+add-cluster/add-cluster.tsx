@@ -68,6 +68,7 @@ export class AddCluster extends React.Component {
       Notifications.error(
         <div>Can&apos;t setup <code>{filePath}</code> as kubeconfig: {String(err)}</div>
       );
+
       if (throwError) {
         throw err;
       }
@@ -82,12 +83,14 @@ export class AddCluster extends React.Component {
     switch (this.sourceTab) {
       case KubeConfigSourceTab.FILE:
         const contexts = this.getContexts(this.kubeConfigLocal);
+
         this.kubeContexts.replace(contexts);
         break;
       case KubeConfigSourceTab.TEXT:
         try {
           this.error = "";
           const contexts = this.getContexts(loadConfig(this.customConfig || "{}"));
+
           this.kubeContexts.replace(contexts);
         } catch (err) {
           this.error = String(err);
@@ -102,9 +105,11 @@ export class AddCluster extends React.Component {
 
   getContexts(config: KubeConfig): Map<string, KubeConfig> {
     const contexts = new Map();
+
     splitConfig(config).forEach(config => {
       contexts.set(config.currentContext, config);
     });
+
     return contexts;
   }
 
@@ -116,6 +121,7 @@ export class AddCluster extends React.Component {
       message: _i18n._(t`Select custom kubeconfig file`),
       buttonLabel: _i18n._(t`Use configuration`),
     });
+
     if (!canceled && filePaths.length) {
       this.setKubeConfig(filePaths[0]);
     }
@@ -129,9 +135,11 @@ export class AddCluster extends React.Component {
   @action
   addClusters = () => {
     let newClusters: ClusterModel[] = [];
+
     try {
       if (!this.selectedContexts.length) {
         this.error = <Trans>Please select at least one cluster context</Trans>;
+
         return;
       }
       this.error = "";
@@ -140,12 +148,16 @@ export class AddCluster extends React.Component {
       newClusters = this.selectedContexts.filter(context => {
         try {
           const kubeConfig = this.kubeContexts.get(context);
+
           validateKubeConfig(kubeConfig);
+
           return true;
         } catch (err) {
           this.error = String(err.message);
+
           if (err instanceof ExecValidationNotFoundError) {
             Notifications.error(<Trans>Error while adding cluster(s): {this.error}</Trans>);
+
             return false;
           } else {
             throw new Error(err);
@@ -157,6 +169,7 @@ export class AddCluster extends React.Component {
         const kubeConfigPath = this.sourceTab === KubeConfigSourceTab.FILE
           ? this.kubeConfigPath // save link to original kubeconfig in file-system
           : ClusterStore.embedCustomKubeConfig(clusterId, kubeConfig); // save in app-files folder
+
         return {
           id: clusterId,
           kubeConfigPath,
@@ -171,8 +184,10 @@ export class AddCluster extends React.Component {
 
       runInAction(() => {
         clusterStore.addClusters(...newClusters);
+
         if (newClusters.length === 1) {
           const clusterId = newClusters[0].id;
+
           clusterStore.setActive(clusterId);
           navigate(clusterViewURL({ params: { clusterId } }));
         } else {
@@ -271,6 +286,7 @@ export class AddCluster extends React.Component {
     const placeholder = this.selectedContexts.length > 0
       ? <Trans>Selected contexts: <b>{this.selectedContexts.length}</b></Trans>
       : <Trans>Select contexts</Trans>;
+
     return (
       <div>
         <Select
@@ -302,8 +318,10 @@ export class AddCluster extends React.Component {
 
   onKubeConfigInputBlur = () => {
     const isChanged = this.kubeConfigPath !== userStore.kubeConfigPath;
+
     if (isChanged) {
       this.kubeConfigPath = this.kubeConfigPath.replace("~", os.homedir());
+
       try {
         this.setKubeConfig(this.kubeConfigPath, { throwError: true });
       } catch (err) {
@@ -321,6 +339,7 @@ export class AddCluster extends React.Component {
   protected formatContextLabel = ({ value: context }: SelectOption<string>) => {
     const isNew = userStore.newContexts.has(context);
     const isSelected = this.selectedContexts.includes(context);
+
     return (
       <div className={cssNames("kube-context flex gaps align-center", context)}>
         <span>{context}</span>
@@ -332,6 +351,7 @@ export class AddCluster extends React.Component {
 
   render() {
     const submitDisabled = this.selectedContexts.length === 0;
+
     return (
       <DropFileInput onDropFiles={this.onDropKubeConfig}>
         <PageLayout className="AddClusters" header={<h2>Add Clusters</h2>}>

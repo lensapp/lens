@@ -23,6 +23,7 @@ export function withTooltip<T extends React.ComponentType<any>>(Target: T): T {
 
     render() {
       const { tooltip, tooltipOverrideDisabled, ...targetProps } = this.props;
+
       if (tooltip) {
         const tooltipId = targetProps.id || this.tooltipId;
         const tooltipProps: TooltipProps = {
@@ -31,6 +32,7 @@ export function withTooltip<T extends React.ComponentType<any>>(Target: T): T {
           formatters: { narrow: true },
           ...(isReactNode(tooltip) ? { children: tooltip } : tooltip),
         };
+
         targetProps.id = tooltipId;
         targetProps.children = (
           <>
@@ -41,6 +43,7 @@ export function withTooltip<T extends React.ComponentType<any>>(Target: T): T {
           </>
         );
       }
+
       return <Target {...targetProps as any} />;
     }
   };

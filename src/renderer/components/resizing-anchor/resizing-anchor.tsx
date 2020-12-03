@@ -164,6 +164,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
   constructor(props: Props) {
     super(props);
+
     if (props.maxExtent < props.minExtent) {
       throw new Error("maxExtent must be >= minExtent");
     }
@@ -194,6 +195,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
   calculateDelta(from: Position, to: Position): number | false {
     const node = this.ref.current;
+
     if (!node) {
       return false;
     }
@@ -202,9 +204,11 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
     if (this.props.direction === ResizeDirection.HORIZONTAL) {
       const barX = Math.round(boundingBox.x + (boundingBox.width / 2));
+
       return directionDelta(from.pageX, to.pageX, barX);
     } else { // direction === ResizeDirection.VERTICAL
       const barY = Math.round(boundingBox.y + (boundingBox.height / 2));
+
       return directionDelta(from.pageY, to.pageY, barY);
     }
   }
@@ -229,6 +233,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
     if (!this.lastMouseEvent) {
       this.lastMouseEvent = event;
+
       return;
     }
 
@@ -246,6 +251,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     const previousExtent = getCurrentExtent();
     const unboundedExtent = previousExtent + (delta * growthDirection);
     const boundedExtent = Math.round(Math.max(minExtent, Math.min(maxExtent, unboundedExtent)));
+
     onDrag(boundedExtent);
 
     if (previousExtent <= minExtent && minExtent <= unboundedExtent) {
@@ -253,6 +259,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
     } else if (previousExtent >= minExtent && minExtent >= unboundedExtent) {
       onMinExtentSubceed();
     }
+
     if (previousExtent <= maxExtent && maxExtent <= unboundedExtent) {
       onMaxExtentExceed();
     } else if (previousExtent >= maxExtent && maxExtent >= unboundedExtent) {
@@ -270,6 +277,7 @@ export class ResizingAnchor extends React.PureComponent<Props> {
 
   render() {
     const { disabled, direction, placement, onDoubleClick } = this.props;
+
     return <div
       ref={this.ref}
       className={cssNames("ResizingAnchor", direction, placement, { disabled })}

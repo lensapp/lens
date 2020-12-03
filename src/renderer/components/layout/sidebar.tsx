@@ -32,6 +32,7 @@ import { Spinner } from "../spinner";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry, clusterPageRegistry, getExtensionPageUrl } from "../../../extensions/registries";
 
 const SidebarContext = React.createContext<SidebarContextValue>({ pinned: false });
+
 type SidebarContextValue = {
   pinned: boolean;
 };
@@ -64,6 +65,7 @@ export class Sidebar extends React.Component<Props> {
           routePath: String(crdResourcesRoute.path),
         };
       });
+
       return (
         <SidebarNavItem
           key={group}
@@ -84,6 +86,7 @@ export class Sidebar extends React.Component<Props> {
 
     clusterPageMenuRegistry.getSubItems(menu).forEach((subItem) => {
       const subPage = clusterPageRegistry.getByPageMenuTarget(subItem.target);
+
       if (subPage) {
         routes.push({
           routePath: subPage.routePath,
@@ -94,6 +97,7 @@ export class Sidebar extends React.Component<Props> {
         });
       }
     });
+
     return routes;
   }
 
@@ -103,8 +107,10 @@ export class Sidebar extends React.Component<Props> {
       const tabRoutes = this.getTabLayoutRoutes(menuItem);
       let pageUrl: string;
       let isActive = false;
+
       if (registeredPage) {
         const { extensionId, id: pageId } = registeredPage;
+
         pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
         isActive = isActiveRoute(registeredPage.routePath);
       } else if (tabRoutes.length > 0) {
@@ -113,6 +119,7 @@ export class Sidebar extends React.Component<Props> {
       } else {
         return;
       }
+
       return (
         <SidebarNavItem
           key={`registered-item-${index}`}
@@ -129,6 +136,7 @@ export class Sidebar extends React.Component<Props> {
   render() {
     const { toggle, isPinned, className } = this.props;
     const query = namespaceStore.getContextParams();
+
     return (
       <SidebarContext.Provider value={{ pinned: isPinned }}>
         <div className={cssNames("Sidebar flex column", className, { pinned: isPinned })}>
@@ -262,6 +270,7 @@ interface SidebarNavItemProps {
 
 const navItemStorage = createStorage<[string, boolean][]>("sidebar_menu_item", []);
 const navItemState = observable.map<string, boolean>(navItemStorage.get());
+
 reaction(() => [...navItemState], (value) => navItemStorage.set(value));
 
 @observer
@@ -283,10 +292,12 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
 
   render() {
     const { isHidden, isActive, subMenus = [], icon, text, url, children, className, testId } = this.props;
+
     if (isHidden) {
       return null;
     }
     const extendedView = (subMenus.length > 0 || children) && this.context.pinned;
+
     if (extendedView) {
       return (
         <div className={cssNames("SidebarNavItem", className)} data-test-id={testId}>
@@ -310,6 +321,7 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
         </div>
       );
     }
+
     return (
       <NavLink className={cssNames("SidebarNavItem", className)} to={url} isActive={() => isActive}>
         {icon}

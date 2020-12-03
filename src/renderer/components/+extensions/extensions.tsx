@@ -47,7 +47,7 @@ interface ExtensionState {
 
 @observer
 export class Extensions extends React.Component {
-  private supportedFormats = [".tar", ".tgz"];
+  private supportedFormats = ["tar", "tgz"];
 
   private installPathValidator: InputValidator = {
     message: <Trans>Invalid URL or absolute path</Trans>,
@@ -61,6 +61,9 @@ export class Extensions extends React.Component {
 
   @observable search = "";
   @observable installPath = "";
+
+  // True if the preliminary install steps have started, but unpackExtension has not started yet
+  @observable startingInstall = false;
 
   /**
    * Extensions that were removed from extensions but are still in "uninstalling" state
@@ -91,11 +94,20 @@ export class Extensions extends React.Component {
         });
 
         this.addedInstalling.forEach(({ id, displayName }) => {
+          const extension = this.extensions.find(extension => extension.id === id);
+
+          if (!extension) {
+            throw new Error("Extension not found");
+          }
+
           Notifications.ok(
             <p>Extension <b>{displayName}</b> successfully installed!</p>
           );
           this.extensionState.delete(id);
           this.installPath = "";
+
+          // Enable installed extensions by default.
+          extension.isEnabled = true;
         });
       })
     );
@@ -106,6 +118,7 @@ export class Extensions extends React.Component {
 
     return Array.from(extensionLoader.userExtensions.values()).filter(ext => {
       const { name, description } = ext.manifest;
+
       return [
         name.toLowerCase().includes(searchText),
         description?.toLowerCase().includes(searchText),
@@ -149,7 +162,10 @@ export class Extensions extends React.Component {
 
   installFromUrlOrPath = async () => {
     const { installPath } = this;
+
     if (!installPath) return;
+
+    this.startingInstall = true;
     const fileName = path.basename(installPath);
 
     try {
@@ -158,13 +174,15 @@ export class Extensions extends React.Component {
       if (InputValidators.isUrl.validate(installPath)) {
         const { promise: filePromise } = downloadFile({ url: installPath, timeout: 60000 /*1m*/ });
         const data = await filePromise;
-        this.requestInstall({ fileName, data });
+
+        await this.requestInstall({ fileName, data });
       }
       // otherwise installing from system path
       else if (InputValidators.isPath.validate(installPath)) {
-        this.requestInstall({ fileName, filePath: installPath });
+        await this.requestInstall({ fileName, filePath: installPath });
       }
     } catch (error) {
+      this.startingInstall = false;
       Notifications.error(
         <p>Installation has failed: <b>{String(error)}</b></p>
       );
@@ -173,6 +191,7 @@ export class Extensions extends React.Component {
 
   installOnDrop = (files: File[]) => {
     logger.info("Install from D&D");
+
     return this.requestInstall(
       files.map(file => ({
         fileName: path.basename(file.path),
@@ -182,20 +201,24 @@ export class Extensions extends React.Component {
   };
 
   async preloadExtensions(requests: InstallRequest[], { showError = true } = {}) {
-    const preloadedRequests = requests.filter(req => req.data);
+    const preloadedRequests = requests.filter(request => request.data);
 
     await Promise.all(
       requests
-        .filter(req => !req.data && req.filePath)
-        .map(request => {
-          return fse.readFile(request.filePath).then(data => {
+        .filter(request => !request.data && request.filePath)
+        .map(async request => {
+          try {
+            const data = await fse.readFile(request.filePath);
+
             request.data = data;
             preloadedRequests.push(request);
-          }).catch(error => {
+
+            return request;
+          } catch(error) {
             if (showError) {
               Notifications.error(`Error while reading "${request.filePath}": ${String(error)}`);
             }
-          });
+          }
         })
     );
 
@@ -206,7 +229,13 @@ export class Extensions extends React.Component {
     const tarFiles = await listTarEntries(filePath);
 
     // tarball from npm contains single root folder "package/*"
-    const rootFolder = tarFiles[0].split("/")[0];
+    const firstFile = tarFiles[0];
+
+    if (!firstFile) {
+      throw new Error(`invalid extension bundle,  ${manifestFilename} not found`);
+    }
+
+    const rootFolder = path.normalize(firstFile).split(path.sep)[0];
     const packedInRootFolder = tarFiles.every(entry => entry.startsWith(rootFolder));
     const manifestLocation = packedInRootFolder ? path.join(rootFolder, manifestFilename) : manifestFilename;
 
@@ -223,6 +252,7 @@ export class Extensions extends React.Component {
     if (!manifest.lens && !manifest.renderer) {
       throw new Error(`${manifestFilename} must specify "main" and/or "renderer" fields`);
     }
+
     return manifest;
   }
 
@@ -232,15 +262,17 @@ export class Extensions extends React.Component {
     // copy files to temp
     await fse.ensureDir(this.getExtensionPackageTemp());
 
-    requests.forEach(req => {
-      const tempFile = this.getExtensionPackageTemp(req.fileName);
-      fse.writeFileSync(tempFile, req.data);
-    });
+    for (const request of requests) {
+      const tempFile = this.getExtensionPackageTemp(request.fileName);
+
+      await fse.writeFile(tempFile, request.data);
+    }
 
     // validate packages
     await Promise.all(
       requests.map(async req => {
         const tempFile = this.getExtensionPackageTemp(req.fileName);
+
         try {
           const manifest = await this.validatePackage(tempFile);
 
@@ -263,6 +295,7 @@ export class Extensions extends React.Component {
         }
       })
     );
+
     return validatedRequests;
   }
 
@@ -271,15 +304,24 @@ export class Extensions extends React.Component {
     const preloadedRequests = await this.preloadExtensions(requests);
     const validatedRequests = await this.createTempFilesAndValidate(preloadedRequests);
 
-    validatedRequests.forEach(install => {
+    // If there are no requests for installing, reset startingInstall state
+    if (validatedRequests.length === 0) {
+      this.startingInstall = false;
+    }
+
+    for (const install of validatedRequests) {
       const { name, version, description } = install.manifest;
       const extensionFolder = this.getExtensionDestFolder(name);
-      const folderExists = fse.existsSync(extensionFolder);
-
+      const folderExists = await fse.pathExists(extensionFolder);
+  
       if (!folderExists) {
         // auto-install extension if not yet exists
         this.unpackExtension(install);
       } else {
+        // If we show the confirmation dialog, we stop the install spinner until user clicks ok
+        // and the install continues
+        this.startingInstall = false;
+
         // otherwise confirmation required (re-install / update)
         const removeNotification = Notifications.info(
           <div className="InstallingExtensionNotification flex gaps align-center">
@@ -297,21 +339,23 @@ export class Extensions extends React.Component {
           </div>
         );
       }
-    });
+    }
   }
 
   async unpackExtension({ fileName, tempFile, manifest: { name, version } }: InstallRequestValidated) {
     const displayName = extensionDisplayName(name, version);
-    const extensionFolder = this.getExtensionDestFolder(name);
-    const unpackingTempFolder = path.join(path.dirname(tempFile), `${path.basename(tempFile)}-unpacked`);
     const extensionId = path.join(extensionDiscovery.nodeModulesPath, name, "package.json");
-
-    logger.info(`Unpacking extension ${displayName}`, { fileName, tempFile });
 
     this.extensionState.set(extensionId, {
       state: "installing",
       displayName
     });
+    this.startingInstall = false;
+
+    const extensionFolder = this.getExtensionDestFolder(name);
+    const unpackingTempFolder = path.join(path.dirname(tempFile), `${path.basename(tempFile)}-unpacked`);
+
+    logger.info(`Unpacking extension ${displayName}`, { fileName, tempFile });
 
     try {
       // extract to temp folder first
@@ -335,6 +379,7 @@ export class Extensions extends React.Component {
       Notifications.error(
         <p>Installing extension <b>{displayName}</b> has failed: <em>{error}</em></p>
       );
+
       // Remove install state on install failure
       if (this.extensionState.get(extensionId)?.state === "installing") {
         this.extensionState.delete(extensionId);
@@ -371,6 +416,7 @@ export class Extensions extends React.Component {
       Notifications.error(
         <p>Uninstalling extension <b>{displayName}</b> has failed: <em>{error?.message ?? ""}</em></p>
       );
+
       // Remove uninstall state on uninstall failure
       if (this.extensionState.get(extension.id)?.state === "uninstalling") {
         this.extensionState.delete(extension.id);
@@ -386,8 +432,11 @@ export class Extensions extends React.Component {
         <div className="no-extensions flex box gaps justify-center">
           <Icon material="info"/>
           <div>
-            {search && <p>No search results found</p>}
-            {!search && <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.</p>}
+            {
+              search
+                ? <p>No search results found</p>
+                : <p>There are no installed extensions. See list of <a href="https://github.com/lensapp/lens-extensions/blob/main/README.md" target="_blank" rel="noreferrer">available extensions</a>.</p>
+            }
           </div>
         </div>
       );
@@ -402,10 +451,10 @@ export class Extensions extends React.Component {
         <div key={id} className="extension flex gaps align-center">
           <div className="box grow">
             <div className="name">
-              Name: <code className="name">{name}</code>
+              {name}
             </div>
             <div className="description">
-              Description: <span className="text-secondary">{description}</span>
+              {description}
             </div>
           </div>
           <div className="actions">
@@ -432,7 +481,7 @@ export class Extensions extends React.Component {
    * True if at least one extension is in installing state
    */
   @computed get isInstalling() {
-    return [...this.extensionState.values()].some(extension => extension.state === "installing");
+    return this.startingInstall || [...this.extensionState.values()].some(extension => extension.state === "installing");
   }
 
   render() {
@@ -480,7 +529,7 @@ export class Extensions extends React.Component {
               onClick={this.installFromUrlOrPath}
             />
             <small className="hint">
-              <Trans><b>Pro-Tip</b>: you can drag & drop extension&apos;s tarball-file to install</Trans>
+              <Trans><b>Pro-Tip</b>: you can also drag-n-drop tarball-file to this area</Trans>
             </small>
           </div>
 

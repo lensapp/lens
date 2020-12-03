@@ -24,6 +24,7 @@ export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps,
     const { open } = this.state;
     const icon = `arrow_drop_${open ? "up" : "down"}`;
     const link = open ? _i18n._(t`Hide`) : _i18n._(t`Show`);
+
     return (
       <div className="DrawerParamToggler">
         <div className="flex gaps align-center">

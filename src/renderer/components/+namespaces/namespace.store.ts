@@ -5,6 +5,7 @@ import { Namespace, namespacesApi } from "../../api/endpoints";
 import { IQueryParams, navigation, setQueryParams } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { isAllowedResource } from "../../../common/rbac";
+import { getHostedCluster } from "../../../common/cluster-store";
 
 @autobind()
 export class NamespaceStore extends KubeObjectStore<Namespace> {
@@ -15,6 +16,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   get initNamespaces() {
     const fromUrl = navigation.searchParams.getAsArray("namespaces");
+
     return fromUrl.length ? fromUrl : this.storage.get();
   }
 
@@ -23,6 +25,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
     // restore context namespaces
     const { initNamespaces: namespaces } = this;
+
     this.setContext(namespaces);
     this.updateUrl(namespaces);
 
@@ -39,6 +42,17 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     };
   }
 
+  subscribe(apis = [this.api]) {
+    const { allowedNamespaces } = getHostedCluster();
+
+    // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
+    if (allowedNamespaces.length > 0) {
+      return () => { return; };
+    }
+
+    return super.subscribe(apis);
+  }
+
   protected updateUrl(namespaces: string[]) {
     setQueryParams({ namespaces }, { replace: true });
   }
@@ -46,8 +60,10 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   protected async loadItems(namespaces?: string[]) {
     if (!isAllowedResource("namespaces")) {
       if (namespaces) return namespaces.map(this.getDummyNamespace);
+
       return [];
     }
+
     if (namespaces) {
       return Promise.all(namespaces.map(name => this.api.get({ name })));
     } else {
@@ -74,6 +90,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   hasContext(namespace: string | string[]) {
     const context = Array.isArray(namespace) ? namespace : [namespace];
+
     return context.every(namespace => this.contextNs.includes(namespace));
   }
 

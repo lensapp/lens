@@ -13,6 +13,7 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
 
   async loadMetrics(daemonSet: DaemonSet) {
     const pods = this.getChildPods(daemonSet);
+
     this.metrics = await podsApi.getMetrics(pods, daemonSet.getNs(), "");
   }
 
@@ -22,8 +23,10 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
 
   getStatuses(daemonSets?: DaemonSet[]) {
     const status = { failed: 0, pending: 0, running: 0 };
+
     daemonSets.forEach(daemonSet => {
       const pods = this.getChildPods(daemonSet);
+
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
         status.failed++;
       }
@@ -34,6 +37,7 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
         status.running++;
       }
     });
+
     return status;
   }
 

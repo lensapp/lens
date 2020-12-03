@@ -10,6 +10,7 @@ export function ExampleIcon(props: Component.IconProps) {
 export class ExamplePage extends React.Component<{ extension: LensRendererExtension }> {
   deactivate = () => {
     const { extension } = this.props;
+
     extension.disable();
   };
 
@@ -17,6 +18,7 @@ export class ExamplePage extends React.Component<{ extension: LensRendererExtens
     const doodleStyle = {
       width: "200px"
     };
+
     return (
       <div className="flex column gaps align-flex-start">
         <div style={doodleStyle}><CoffeeDoodle accent="#3d90ce" /></div>

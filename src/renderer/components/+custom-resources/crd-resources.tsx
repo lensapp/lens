@@ -28,6 +28,7 @@ export class CrdResources extends React.Component<Props> {
     disposeOnUnmount(this, [
       autorun(() => {
         const { store } = this;
+
         if (store && !store.isLoading && !store.isLoaded) {
           store.loadAll();
         }
@@ -37,16 +38,19 @@ export class CrdResources extends React.Component<Props> {
 
   @computed get crd() {
     const { group, name } = this.props.match.params;
+
     return crdStore.getByGroup(group, name);
   }
 
   @computed get store() {
     if (!this.crd) return null;
+
     return apiManager.getStore(this.crd.getResourceApiBase());
   }
 
   render() {
     const { crd, store } = this;
+
     if (!crd) return null;
     const isNamespaced = crd.isNamespaced();
     const extraColumns = crd.getPrinterColumns(false);  // Cols with priority bigger than 0 are shown in details
@@ -55,6 +59,7 @@ export class CrdResources extends React.Component<Props> {
       [sortBy.namespace]: (item: KubeObject) => item.getNs(),
       [sortBy.age]: (item: KubeObject) => item.metadata.creationTimestamp,
     };
+
     extraColumns.forEach(column => {
       sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.value(item, column.jsonPath.slice(1));
     });
@@ -74,6 +79,7 @@ export class CrdResources extends React.Component<Props> {
           isNamespaced && { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
           ...extraColumns.map(column => {
             const { name } = column;
+
             return {
               title: name,
               className: name.toLowerCase(),

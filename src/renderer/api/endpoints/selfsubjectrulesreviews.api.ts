@@ -38,16 +38,19 @@ export class SelfSubjectRulesReview extends KubeObject {
 
   getResourceRules() {
     const rules = this.status && this.status.resourceRules || [];
+
     return rules.map(rule => this.normalize(rule));
   }
 
   getNonResourceRules() {
     const rules = this.status && this.status.nonResourceRules || [];
+
     return rules.map(rule => this.normalize(rule));
   }
 
   protected normalize(rule: ISelfSubjectReviewRule): ISelfSubjectReviewRule {
     const { apiGroups = [], resourceNames = [], verbs = [], nonResourceURLs = [], resources = [] } = rule;
+
     return {
       apiGroups,
       nonResourceURLs,
@@ -56,6 +59,7 @@ export class SelfSubjectRulesReview extends KubeObject {
       resources: resources.map((resource, index) => {
         const apiGroup = apiGroups.length >= index + 1 ? apiGroups[index] : apiGroups.slice(-1)[0];
         const separator = apiGroup == "" ? "" : ".";
+
         return resource + separator + apiGroup;
       })
     };

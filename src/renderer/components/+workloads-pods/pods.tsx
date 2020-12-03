@@ -40,6 +40,7 @@ export class Pods extends React.Component<Props> {
   renderContainersStatus(pod: Pod) {
     return pod.getContainerStatuses().map(containerStatus => {
       const { name, state, ready } = containerStatus;
+
       return (
         <Fragment key={name}>
           <StatusBrick
@@ -109,6 +110,7 @@ export class Pods extends React.Component<Props> {
           pod.getOwnerRefs().map(ref => {
             const { kind, name } = ref;
             const detailsLink = getDetailsUrl(lookupApiLink(ref, pod));
+
             return (
               <Link key={name} to={detailsLink} className="owner" onClick={stopPropagation}>
                 {kind}

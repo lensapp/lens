@@ -20,6 +20,7 @@ export class RolesStore extends KubeObjectStore<Role> {
 
   protected loadItem(params: { name: string; namespace?: string }) {
     if (params.namespace) return roleApi.get(params);
+
     return clusterRoleApi.get(params);
   }
 

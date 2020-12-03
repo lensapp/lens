@@ -41,10 +41,12 @@ jobs:
         displayName: Generate npm package
       - script: make -j2 build-extensions
         displayName: Build bundled extensions
-      - script: make integration-win
-        displayName: Run integration tests
+      - script: make test
+        displayName: Run tests
       - script: make test-extensions
         displayName: Run In-tree Extension tests
+      - script: make integration-win
+        displayName: Run integration tests
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
         displayName: Build

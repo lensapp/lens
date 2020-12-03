@@ -29,9 +29,11 @@ export class ServiceDetails extends React.Component<Props> {
 
   render() {
     const { object: service } = this.props;
+
     if (!service) return;
     const { spec } = service;
     const endpoint = endpointStore.getByName(service.getName(), service.getNs());
+
     return (
       <div className="ServicesDetails">
         <KubeObjectMeta object={service}/>

@@ -45,6 +45,7 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
     }
     this.dropAreaActive = false;
     const files = Array.from(evt.dataTransfer.files);
+
     if (files.length > 0) {
       this.props.onDropFiles(files, { evt });
     }
@@ -53,12 +54,15 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
   render() {
     const { onDragEnter, onDragLeave, onDragOver, onDrop } = this;
     const { disabled, className } = this.props;
+
     try {
       const contentElem = React.Children.only(this.props.children) as React.ReactElement<React.HTMLProps<HTMLElement>>;
+
       if (disabled) {
         return contentElem;
       }
       const isValidContentElem = React.isValidElement(contentElem);
+
       if (isValidContentElem) {
         const contentElemProps: React.HTMLProps<HTMLElement> = {
           className: cssNames("DropFileInput", contentElem.props.className, className, {
@@ -69,10 +73,12 @@ export class DropFileInput<T extends HTMLElement = any> extends React.Component<
           onDragOver,
           onDrop,
         };
+
         return React.cloneElement(contentElem, contentElemProps);
       }
     } catch (err) {
       logger.error(`Error: <DropFileInput/> must contain only single child element`);
+
       return this.props.children;
     }
   }

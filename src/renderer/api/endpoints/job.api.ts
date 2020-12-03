@@ -86,12 +86,15 @@ export class Job extends WorkloadKubeObject {
     // Type of Job condition could be only Complete or Failed
     // https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.14/#jobcondition-v1-batch
     const { conditions } = this.status;
+
     if (!conditions) return;
+
     return conditions.find(({ status }) => status === "True");
   }
 
   getImages() {
     const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
+
     return [...containers].map(container => container.image);
   }
 
@@ -99,6 +102,7 @@ export class Job extends WorkloadKubeObject {
     const params: JsonApiParams = {
       query: { propagationPolicy: "Background" }
     };
+
     return super.delete(params);
   }
 }

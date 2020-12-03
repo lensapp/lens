@@ -25,9 +25,11 @@ export class PageFiltersList extends React.Component<Props> {
 
   renderContent() {
     const { filters } = this.props;
+
     if (!filters.length) {
       return null;
     }
+
     return (
       <>
         <div className="header flex gaps">
@@ -39,6 +41,7 @@ export class PageFiltersList extends React.Component<Props> {
         <div className="labels">
           {filters.map(filter => {
             const { value, type } = filter;
+
             return (
               <Badge
                 key={`${type}-${value}`}

@@ -66,6 +66,7 @@ export class DaemonSet extends WorkloadKubeObject {
   getImages() {
     const containers: IPodContainer[] = get(this, "spec.template.spec.containers", []);
     const initContainers: IPodContainer[] = get(this, "spec.template.spec.initContainers", []);
+
     return [...containers, ...initContainers].map(container => container.image);
   }
 }

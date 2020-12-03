@@ -37,6 +37,7 @@ export class HelmChartDetails extends Component<Props> {
   chartUpdater = autorun(() => {
     this.selectedChart = null;
     const { chart: { name, repo, version } } = this.props;
+
     helmChartsApi.get(repo, name, version).then(result => {
       this.readme = result.readme;
       this.chartVersions = result.versions;
@@ -56,6 +57,7 @@ export class HelmChartDetails extends Component<Props> {
       this.chartPromise?.cancel();
       const { chart: { name, repo } } = this.props;
       const { readme } = await (this.chartPromise = helmChartsApi.get(repo, name, version));
+
       this.readme = readme;
     } catch (error) {
       this.error = error;
@@ -71,6 +73,7 @@ export class HelmChartDetails extends Component<Props> {
   renderIntroduction() {
     const { selectedChart, chartVersions, onVersionChange } = this;
     const placeholder = require("./helm-placeholder.svg");
+
     return (
       <div className="introduction flex align-flex-start">
         <img
@@ -146,6 +149,7 @@ export class HelmChartDetails extends Component<Props> {
   render() {
     const { chart, hideDetails } = this.props;
     const title = chart ? <Trans>Chart: {chart.getFullName()}</Trans> : "";
+
     return (
       <Drawer
         className="HelmChartDetails"

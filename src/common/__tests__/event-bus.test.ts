@@ -4,6 +4,7 @@ describe("event bus tests", () => {
   describe("emit", () => {
     it("emits an event", () => {
       let event: AppEvent = null;
+
       appEventBus.addListener((data) => {
         event = data;
       });

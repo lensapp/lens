@@ -29,8 +29,10 @@ export class CronJobDetails extends React.Component<Props> {
 
   render() {
     const { object: cronJob } = this.props;
+
     if (!cronJob) return null;
     const childJobs = jobStore.getJobsByOwner(cronJob);
+
     return (
       <div className="CronJobDetails">
         <KubeObjectMeta object={cronJob}/>
@@ -56,6 +58,7 @@ export class CronJobDetails extends React.Component<Props> {
             {childJobs.map((job: Job) => {
               const selectors = job.getSelectors();
               const condition = job.getCondition();
+
               return (
                 <div className="job" key={job.getId()}>
                   <div className="title">

@@ -32,6 +32,7 @@ import { getFreePort } from "../port";
 import fse from "fs-extra";
 import { loadYaml } from "@kubernetes/client-node";
 import { Console } from "console";
+import * as path from "path";
 
 console = new Console(process.stdout, process.stderr); // fix mockFS
 
@@ -64,6 +65,7 @@ describe("kubeconfig manager tests", () => {
         preferences: {},
       })
     };
+
     mockFs(mockOpts);
   });
 
@@ -83,9 +85,10 @@ describe("kubeconfig manager tests", () => {
     const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port);
 
     expect(logger.error).not.toBeCalled();
-    expect(kubeConfManager.getPath()).toBe("tmp/kubeconfig-foo");
+    expect(kubeConfManager.getPath()).toBe(`tmp${path.sep}kubeconfig-foo`);
     const file = await fse.readFile(kubeConfManager.getPath());
     const yml = loadYaml<any>(file.toString());
+
     expect(yml["current-context"]).toBe("minikube");
     expect(yml["clusters"][0]["cluster"]["server"]).toBe(`http://127.0.0.1:${port}/foo`);
     expect(yml["users"][0]["name"]).toBe("proxy");
@@ -101,8 +104,8 @@ describe("kubeconfig manager tests", () => {
     const contextHandler = new ContextHandler(cluster);
     const port = await getFreePort();
     const kubeConfManager = await KubeconfigManager.create(cluster, contextHandler, port);
-
     const configPath = kubeConfManager.getPath();
+
     expect(await fse.pathExists(configPath)).toBe(true);
     await kubeConfManager.unlink();
     expect(await fse.pathExists(configPath)).toBe(false);

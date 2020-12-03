@@ -8,6 +8,7 @@ export class LastSeenDetector extends BaseClusterDetector {
     if (!this.cluster.accessible) return null;
 
     await this.k8sRequest("/version");
+
     return { value: new Date().toJSON(), accuracy: 100 };
   }
 }

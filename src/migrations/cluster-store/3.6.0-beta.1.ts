@@ -32,6 +32,7 @@ export default migration({
 
         } catch (error) {
           printLog(`Failed to migrate Kubeconfig for cluster "${cluster.id}", removing cluster...`, error);
+
           return undefined;
         }
 

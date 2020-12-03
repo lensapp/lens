@@ -59,6 +59,7 @@ describe("user store tests", () => {
 
     it("correctly resets theme to default value", async () => {
       const us = UserStore.getInstance<UserStore>();
+
       us.isLoaded = true;
 
       us.preferences.colorTheme = "some other theme";

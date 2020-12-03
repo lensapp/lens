@@ -16,12 +16,15 @@ interface Props {
 export class ServiceDetailsEndpoint extends React.Component<Props> {
   render() {
     const { endpoint } = this.props;
+
     if (!endpoint && !endpointStore.isLoaded) return (
       <div className="PodDetailsList flex justify-center"><Spinner/></div>
     );
+
     if (!endpoint) {
       return null;
     }
+
     return (
       <div className="EndpointList flex column">
         <Table

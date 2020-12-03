@@ -12,9 +12,11 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
     const { object: pod } = this.props;
     const containerParam = container ? `-c ${container}` : "";
     let command = `kubectl exec -i -t -n ${pod.getNs()} ${pod.getName()} ${containerParam} "--"`;
+
     if (window.navigator.platform !== "Win32") {
       command = `exec ${command}`;
     }
+
     if (pod.getSelectedNodeOs() === "windows") {
       command = `${command} powershell`;
     } else {
@@ -34,7 +36,9 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
   render() {
     const { object, toolbar } = this.props;
     const containers = object.getRunningContainers();
+
     if (!containers.length) return null;
+
     return (
       <Component.MenuItem onClick={Util.prevDefault(() => this.execShell(containers[0].name))}>
         <Component.Icon svg="ssh" interactive={toolbar} title="Pod shell"/>
@@ -46,6 +50,7 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
               {
                 containers.map(container => {
                   const { name } = container;
+
                   return (
                     <Component.MenuItem key={name} onClick={Util.prevDefault(() => this.execShell(name))} className="flex align-center">
                       <Component.StatusBrick/>

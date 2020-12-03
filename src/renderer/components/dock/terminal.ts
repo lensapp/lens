@@ -14,6 +14,7 @@ export class Terminal {
     // terminal element must be in DOM before attaching via xterm.open(elem)
     // https://xtermjs.org/docs/api/terminal/classes/terminal/#open
     const pool = document.createElement("div");
+
     pool.className = "terminal-init";
     pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden";
     document.body.appendChild(pool);
@@ -23,6 +24,7 @@ export class Terminal {
   static async preloadFonts() {
     const fontPath = require("../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
     const fontFace = new FontFace("RobotoMono", `url(${fontPath})`);
+
     await fontFace.load();
     document.fonts.add(fontFace);
   }
@@ -41,10 +43,13 @@ export class Terminal {
       .filter(([name]) => name.startsWith(colorPrefix))
       .reduce<any>((colors, [name, color]) => {
         const colorName = name.split("").slice(colorPrefix.length);
+
         colorName[0] = colorName[0].toLowerCase();
         colors[colorName.join("")] = color;
+
         return colors;
       }, {});
+
     this.xterm.setOption("theme", terminalColors);
   }
 
@@ -62,6 +67,7 @@ export class Terminal {
 
   get isActive() {
     const { isOpen, selectedTabId } = dockStore;
+
     return isOpen && selectedTabId === this.tabId;
   }
 
@@ -95,6 +101,7 @@ export class Terminal {
 
     // bind events
     const onDataHandler = this.xterm.onData(this.onData);
+
     this.viewport.addEventListener("scroll", this.onScroll);
     this.api.onReady.addListener(this.onClear, { once: true }); // clear status logs (connecting..)
     this.api.onData.addListener(this.onApiData);
@@ -125,6 +132,7 @@ export class Terminal {
     if (!this.isActive) return;
     this.fitAddon.fit();
     const { cols, rows } = this.xterm;
+
     this.api.sendTerminalSize(cols, rows);
   };
 

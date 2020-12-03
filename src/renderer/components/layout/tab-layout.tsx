@@ -28,12 +28,14 @@ export const TabLayout = observer(({ className, contentClass, tabs = [], childre
   const currentLocation = navigation.location.pathname;
   const hasTabs = tabs.length > 0;
   const startTabUrl = hasTabs ? (tabs.find(tab => tab.default) || tabs[0])?.url : null;
+
   return (
     <div className={cssNames("TabLayout", className)}>
       {hasTabs && (
         <Tabs center onChange={(url) => navigate(url)}>
           {tabs.map(({ title, routePath, url = routePath, exact }) => {
             const isActive = !!matchPath(currentLocation, { path: routePath, exact });
+
             return <Tab key={url} label={title} value={url} active={isActive}/>;
           })}
         </Tabs>

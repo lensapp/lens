@@ -32,9 +32,11 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
 
     // sync user setting with local storage
     const storage = createStorage("cluster_metric_switchers", {});
+
     Object.assign(this, storage.get());
     reaction(() => {
       const { metricType, metricNodeRole } = this;
+
       return { metricType, metricNodeRole };
     },
     settings => storage.set(settings)
@@ -52,6 +54,7 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
     // check which node type to select
     reaction(() => nodesStore.items.length, () => {
       const { masterNodes, workerNodes } = nodesStore;
+
       if (!masterNodes.length) this.metricNodeRole = MetricNodeRole.WORKER;
       if (!workerNodes.length) this.metricNodeRole = MetricNodeRole.MASTER;
     });
@@ -61,6 +64,7 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
     await when(() => nodesStore.isLoaded);
     const { masterNodes, workerNodes } = nodesStore;
     const nodes = this.metricNodeRole === MetricNodeRole.MASTER && masterNodes.length ? masterNodes : workerNodes;
+
     return clusterApi.getMetrics(nodes.map(node => node.getName()), params);
   }
 
@@ -79,6 +83,7 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
     const range = 15;
     const end = Date.now() / 1000;
     const start = end - range;
+
     this.liveMetrics = await this.loadMetrics({ start, end, step, range });
   }
 

@@ -40,6 +40,7 @@ export class AddRoleDialog extends React.Component<Props> {
   createRole = async () => {
     try {
       const role = await rolesStore.create({ name: this.roleName });
+
       showDetails(role.selfLink);
       this.reset();
       this.close();
@@ -51,6 +52,7 @@ export class AddRoleDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const header = <h5><Trans>Create Role</Trans></h5>;
+
     return (
       <Dialog
         {...dialogProps}

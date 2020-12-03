@@ -18,8 +18,10 @@ export class RadioGroup extends React.Component<RadioGroupProps, {}> {
     const name = uniqueId("radioGroup");
     const { value, asButtons, disabled, onChange } = this.props;
     let { className } = this.props;
+
     className = cssNames("RadioGroup", { buttonsView: asButtons }, className);
     const radios = React.Children.toArray(this.props.children) as React.ReactElement<RadioProps>[];
+
     return (
       <div className={className}>
         {radios.map(radio => {
@@ -49,6 +51,7 @@ export class Radio extends React.Component<RadioProps> {
 
   onChange = () => {
     const { value, onChange, checked } = this.props;
+
     if (!checked && onChange) {
       onChange(value);
     }
@@ -57,6 +60,7 @@ export class Radio extends React.Component<RadioProps> {
   onKeyDown = (e: React.KeyboardEvent<any>) => {
     const SPACE_KEY = e.keyCode === 32;
     const ENTER_KEY = e.keyCode === 13;
+
     if (SPACE_KEY || ENTER_KEY) {
       this.elem.click();
       e.preventDefault();
@@ -69,6 +73,7 @@ export class Radio extends React.Component<RadioProps> {
       checked,
       disabled: this.props.disabled,
     });
+
     return (
       <label
         className={componentClass}

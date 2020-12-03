@@ -77,6 +77,7 @@ export class PrometheusProviderRegistry {
     if (!this.prometheusProviders[type]) {
       throw "Unknown Prometheus provider";
     }
+
     return this.prometheusProviders[type];
   }
 

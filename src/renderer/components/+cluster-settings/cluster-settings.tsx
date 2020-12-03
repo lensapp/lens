@@ -49,6 +49,7 @@ export class ClusterSettings extends React.Component<Props> {
 
   render() {
     const cluster = this.cluster;
+
     if (!cluster) return null;
     const header = (
       <>
@@ -56,6 +57,7 @@ export class ClusterSettings extends React.Component<Props> {
         <h2>{cluster.preferences.clusterName}</h2>
       </>
     );
+
     return (
       <PageLayout className="ClusterSettings" header={header}>
         <Status cluster={cluster}></Status>

@@ -12,6 +12,7 @@ export class HelmCli extends LensBinary {
       originalBinaryName: "helm",
       newBinaryName: "helm3"
     };
+
     super(opts);
   }
 

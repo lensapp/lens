@@ -1,12 +1,14 @@
 import path from "path";
 import webpack from "webpack";
-import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin"
+import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import { isDevelopment, isProduction, mainDir, buildDir } from "./src/common/vars";
 import nodeExternals from "webpack-node-externals";
 import ProgressBarPlugin from "progress-bar-webpack-plugin";
+import * as vars from "./src/common/vars";
 
 export default function (): webpack.Configuration {
-  console.info('WEBPACK:main', require("./src/common/vars"))
+  console.info("WEBPACK:main", vars);
+
   return {
     context: __dirname,
     target: "electron-main",
@@ -21,7 +23,7 @@ export default function (): webpack.Configuration {
       path: buildDir,
     },
     resolve: {
-      extensions: ['.json', '.js', '.ts']
+      extensions: [".json", ".js", ".ts"]
     },
     externals: [
       nodeExternals()
@@ -48,5 +50,5 @@ export default function (): webpack.Configuration {
       new ProgressBarPlugin(),
       new ForkTsCheckerPlugin(),
     ].filter(Boolean)
-  }
+  };
 }

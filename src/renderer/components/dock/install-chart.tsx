@@ -54,6 +54,7 @@ export class InstallChart extends Component<Props> {
   @autobind()
   viewRelease() {
     const { release } = this.releaseDetails;
+
     navigate(releaseURL({
       params: {
         name: release.name,
@@ -66,12 +67,14 @@ export class InstallChart extends Component<Props> {
   @autobind()
   save(data: Partial<IChartInstallData>) {
     const chart = { ...this.chartData, ...data };
+
     installChartStore.setData(this.tabId, chart);
   }
 
   @autobind()
   onVersionChange(option: SelectOption) {
     const version = option.value;
+
     this.save({ version, values: "" });
     installChartStore.loadValues(this.tabId);
   }
@@ -99,7 +102,9 @@ export class InstallChart extends Component<Props> {
       chart: name,
       repo, namespace, version, values,
     });
+
     installChartStore.details.setData(this.tabId, details);
+
     return (
       <p><Trans>Chart Release <b>{details.release.name}</b> successfully created.</Trans></p>
     );
@@ -107,6 +112,7 @@ export class InstallChart extends Component<Props> {
 
   render() {
     const { tabId, chartData, values, versions, install } = this;
+
     if (chartData?.values === undefined || !versions) {
       return <Spinner center />;
     }

@@ -14,7 +14,9 @@ export class BaseRegistry<T> {
   @action
   add(items: T | T[]) {
     const itemArray = rectify(items);
+
     this.items.push(...itemArray);
+
     return () => this.remove(...itemArray);
   }
 

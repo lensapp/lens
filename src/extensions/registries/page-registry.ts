@@ -44,10 +44,12 @@ export function getExtensionPageUrl<P extends object>({ extensionId, pageId = ""
   const extensionBaseUrl = compile(`/extension/:name`)({
     name: sanitizeExtensionName(extensionId), // compile only with extension-id first and define base path
   });
-  const extPageRoutePath = path.join(extensionBaseUrl, pageId); // page-id might contain route :param-s, so don't compile yet
+  const extPageRoutePath = path.posix.join(extensionBaseUrl, pageId);
+
   if (params) {
     return compile(extPageRoutePath)(params); // might throw error when required params not passed
   }
+
   return extPageRoutePath;
 }
 
@@ -56,6 +58,7 @@ export class PageRegistry extends BaseRegistry<RegisteredPage> {
   add(items: PageRegistration | PageRegistration[], ext: LensExtension) {
     const itemArray = rectify(items);
     let registeredPages: RegisteredPage[] = [];
+
     try {
       registeredPages = itemArray.map(page => ({
         ...page,
@@ -69,6 +72,7 @@ export class PageRegistry extends BaseRegistry<RegisteredPage> {
         error: String(err),
       });
     }
+
     return super.add(registeredPages);
   }
 
@@ -78,8 +82,10 @@ export class PageRegistry extends BaseRegistry<RegisteredPage> {
 
   getByPageMenuTarget(target: PageMenuTarget = {}): RegisteredPage | null {
     const targetUrl = getExtensionPageUrl(target);
+
     return this.getItems().find(({ id: pageId, extensionId }) => {
       const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: target.params }); // compiled with provided params
+
       return targetUrl === pageUrl;
     }) || null;
   }

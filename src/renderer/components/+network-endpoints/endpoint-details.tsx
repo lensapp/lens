@@ -18,7 +18,9 @@ interface Props extends KubeObjectDetailsProps<Endpoint> {
 export class EndpointDetails extends React.Component<Props> {
   render() {
     const { object: endpoint } = this.props;
+
     if (!endpoint) return;
+
     return (
       <div className="EndpointDetails">
         <KubeObjectMeta object={endpoint}/>

@@ -57,6 +57,7 @@ export class KubeConfigDialog extends React.Component<Props> {
       Notifications.error(err);
       this.close();
     });
+
     this.config = config ? jsYaml.dump(config) : "";
   }
 
@@ -88,6 +89,7 @@ export class KubeConfigDialog extends React.Component<Props> {
         </Button>
       </div>
     );
+
     return (
       <Dialog
         {...dialogProps}
@@ -114,6 +116,7 @@ export class KubeConfigDialog extends React.Component<Props> {
 export function openServiceAccountKubeConfig(account: ServiceAccount) {
   const accountName = account.getName();
   const namespace = account.getNs();
+
   KubeConfigDialog.open({
     title: <Trans>{accountName} kubeconfig</Trans>,
     loader: () => apiBase.get(`/kubeconfig/service-account/${namespace}/${accountName}`)

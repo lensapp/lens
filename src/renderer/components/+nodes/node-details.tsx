@@ -41,6 +41,7 @@ export class NodeDetails extends React.Component<Props> {
 
   render() {
     const { object: node } = this.props;
+
     if (!node) return;
     const { status } = node;
     const { nodeInfo, addresses, capacity, allocatable } = status;
@@ -54,6 +55,7 @@ export class NodeDetails extends React.Component<Props> {
       <Trans key="disk">Disk</Trans>,
       <Trans key="pods">Pods</Trans>,
     ];
+
     return (
       <div className="NodeDetails">
         {podsStore.isLoaded && (
@@ -121,6 +123,7 @@ export class NodeDetails extends React.Component<Props> {
           {
             conditions.map(condition => {
               const { type } = condition;
+
               return (
                 <Badge
                   key={type}

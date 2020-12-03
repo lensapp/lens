@@ -87,9 +87,12 @@ export class Node extends KubeObject {
 
   getNodeConditionText() {
     const { conditions } = this.status;
+
     if (!conditions) return "";
+
     return conditions.reduce((types, current) => {
       if (current.status !== "True") return "";
+
       return types += ` ${current.type}`;
     }, "");
   }
@@ -112,19 +115,23 @@ export class Node extends KubeObject {
 
   getCpuCapacity() {
     if (!this.status.capacity || !this.status.capacity.cpu) return 0;
+
     return cpuUnitsToNumber(this.status.capacity.cpu);
   }
 
   getMemoryCapacity() {
     if (!this.status.capacity || !this.status.capacity.memory) return 0;
+
     return unitsToBytes(this.status.capacity.memory);
   }
 
   getConditions() {
     const conditions = this.status.conditions || [];
+
     if (this.isUnschedulable()) {
       return [{ type: "SchedulingDisabled", status: "True" }, ...conditions];
     }
+
     return conditions;
   }
 
@@ -134,6 +141,7 @@ export class Node extends KubeObject {
 
   getWarningConditions() {
     const goodConditions = ["Ready", "HostUpgrades", "SchedulingDisabled"];
+
     return this.getActiveConditions().filter(condition => {
       return !goodConditions.includes(condition.type);
     });
@@ -145,6 +153,7 @@ export class Node extends KubeObject {
 
   getOperatingSystem(): string {
     const label = this.getLabels().find(label => label.startsWith("kubernetes.io/os="));
+
     if (label) {
       return label.split("=", 2)[1];
     }

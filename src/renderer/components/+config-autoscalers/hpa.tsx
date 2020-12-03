@@ -31,6 +31,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
     const metricsRemainCount = metrics.length - 1;
     const metricsRemain = metrics.length > 1 ? <Trans>{metricsRemainCount} more...</Trans> : null;
     const metricValues = hpa.getMetricValues(metrics[0]);
+
     return <p>{metricValues} {metricsRemain && "+"}{metricsRemain}</p>;
   }
 
@@ -71,6 +72,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
           hpa.getAge(),
           hpa.getConditions().map(({ type, tooltip, isReady }) => {
             if (!isReady) return null;
+
             return (
               <Badge
                 key={type}

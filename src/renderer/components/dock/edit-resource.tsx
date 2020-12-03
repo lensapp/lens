@@ -28,6 +28,7 @@ export class EditResource extends React.Component<Props> {
   @disposeOnUnmount
   autoDumpResourceOnInit = autorun(() => {
     if (!this.tabData) return;
+
     if (this.tabData.draft === undefined && this.resource) {
       this.saveDraft(this.resource);
     }
@@ -44,6 +45,7 @@ export class EditResource extends React.Component<Props> {
   get resource(): KubeObject {
     const { resource } = this.tabData;
     const store = apiManager.getStore(resource);
+
     if (store) {
       return store.getByPath(resource);
     }
@@ -71,9 +73,11 @@ export class EditResource extends React.Component<Props> {
     const { resource, draft } = this.tabData;
     const store = apiManager.getStore(resource);
     const updatedResource = await store.update(this.resource, jsYaml.safeLoad(draft));
+
     this.saveDraft(updatedResource); // update with new resourceVersion to avoid further errors on save
     const resourceType = updatedResource.kind;
     const resourceName = updatedResource.getName();
+
     return (
       <p>
         <Trans>{resourceType} <b>{resourceName}</b> updated.</Trans>
@@ -84,10 +88,12 @@ export class EditResource extends React.Component<Props> {
   render() {
     const { tabId, resource, tabData, error, onChange, save } = this;
     const { draft } = tabData;
+
     if (!resource || draft === undefined) {
       return <Spinner center/>;
     }
     const { kind, getNs, getName } = resource;
+
     return (
       <div className={cssNames("EditResource flex column", this.props.className)}>
         <InfoPanel

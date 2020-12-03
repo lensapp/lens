@@ -14,6 +14,7 @@ export class Status extends React.Component<Props> {
   @autobind()
   openKubeconfig() {
     const { cluster } = this.props;
+
     shell.showItemInFolder(cluster.kubeConfigPath);
   }
 
@@ -26,6 +27,7 @@ export class Status extends React.Component<Props> {
       ["API Address", cluster.apiUrl || "N/A"],
       ["Nodes Count", cluster.metadata.nodes ? String(cluster.metadata.nodes) : "N/A"]
     ];
+
     return (
       <Table scrollable={false}>
         {rows.map(([name, value]) => {

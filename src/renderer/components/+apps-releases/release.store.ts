@@ -26,9 +26,12 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
       const amountChanged = secrets.length !== this.releaseSecrets.length;
       const labelsChanged = this.releaseSecrets.some(item => {
         const secret = secrets.find(secret => secret.getId() == item.getId());
+
         if (!secret) return;
+
         return !isEqual(item.getLabels(), secret.getLabels());
       });
+
       if (amountChanged || labelsChanged) {
         this.loadAll();
       }
@@ -49,6 +52,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
       owner: "helm",
       name: release.getName()
     };
+
     return secretsStore.getByLabel(labels)
       .filter(secret => secret.getNs() == release.getNs())[0];
   }
@@ -57,8 +61,10 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   async loadAll() {
     this.isLoading = true;
     let items;
+
     try {
       const { isAdmin, allowedNamespaces } = getHostedCluster();
+
       items = await this.loadItems(!isAdmin ? allowedNamespaces : null);
     } finally {
       if (items) {
@@ -82,19 +88,25 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
 
   async create(payload: IReleaseCreatePayload) {
     const response = await helmReleasesApi.create(payload);
+
     if (this.isLoaded) this.loadAll();
+
     return response;
   }
 
   async update(name: string, namespace: string, payload: IReleaseUpdatePayload) {
     const response = await helmReleasesApi.update(name, namespace, payload);
+
     if (this.isLoaded) this.loadAll();
+
     return response;
   }
 
   async rollback(name: string, namespace: string, revision: number) {
     const response = await helmReleasesApi.rollback(name, namespace, revision);
+
     if (this.isLoaded) this.loadAll();
+
     return response;
   }
 
@@ -104,6 +116,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
 
   async removeSelectedItems() {
     if (!this.selectedItems.length) return;
+
     return Promise.all(this.selectedItems.map(this.remove));
   }
 }
