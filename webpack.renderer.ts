@@ -61,9 +61,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       minimize: isProduction,
       minimizer: [
         new TerserPlugin({
-          cache: true,
-          parallel: true,
-          sourceMap: true,
           extractComments: {
             condition: "some",
             banner: [
