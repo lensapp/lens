@@ -5,13 +5,11 @@ jobs:
   build:
     name: Check Docs
     runs-on: ubuntu-latest
+    if: ${{ contains(github.event.labels.*.name, 'area/documentation') }}
     strategy:
       matrix:
         node-version: [12.x]
     steps:
-      - name: debug
-        run: echo ${{ toJson(github.event) }}
-
       - name: Checkout Release from lens
         uses: actions/checkout@v2
         with:
