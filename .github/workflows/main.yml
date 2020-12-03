@@ -49,6 +49,7 @@ jobs:
       - name: Verify that the markdown is valid
         run: |
           yarn run verify-docs
+          rm -fr site
 
       - name: mkdocs deploy master
         if: contains(github.ref, 'refs/heads/master')
