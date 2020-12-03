@@ -20,7 +20,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
   return {
     context: __dirname,
     target: "electron-renderer",
-    devtool: "source-map", // todo: optimize in dev-mode with webpack.SourceMapDevToolPlugin
+    devtool: isProduction ? "source-map" : "eval-source-map",
     devServer: {
       contentBase: buildDir,
       port: webpackDevServerPort,
