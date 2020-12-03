@@ -80,14 +80,17 @@ export class Sidebar extends React.Component<Props> {
 
   getTabLayoutRoutes(menu: ClusterPageMenuRegistration): TabLayoutRoute[] {
     const routes: TabLayoutRoute[] = [];
+
     if (!menu.id) {
       return routes;
     }
 
     clusterPageMenuRegistry.getSubItems(menu).forEach((subMenu) => {
       const subPage = clusterPageRegistry.getByPageTarget(subMenu.target);
+
       if (subPage) {
         const { extensionId, id: pageId } = subPage;
+
         routes.push({
           routePath: subPage.url,
           url: getExtensionPageUrl({ extensionId, pageId, params: subMenu.target.params }),
@@ -103,6 +106,7 @@ export class Sidebar extends React.Component<Props> {
   renderRegisteredMenus() {
     return clusterPageMenuRegistry.getRootItems().map((menuItem) => {
       const registeredPage = clusterPageRegistry.getByPageTarget(menuItem.target);
+
       if (!registeredPage) {
         return;
       }

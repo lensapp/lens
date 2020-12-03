@@ -159,11 +159,13 @@ export class ClustersMenu extends React.Component<Props> {
         <div className="extensions">
           {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
             const registeredPage = globalPageRegistry.getByPageTarget(target);
+
             if (!registeredPage){
               return;
             }
             const pageUrl = getExtensionPageUrl(target);
             const isActive = isActiveRoute(registeredPage.url);
+
             return (
               <Icon
                 key={pageUrl}

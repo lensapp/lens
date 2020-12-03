@@ -7,7 +7,9 @@ import { navigation } from "./index";
 
 export function navigate(location: LocationDescriptor) {
   const currentLocation = navigation.getPath();
+
   navigation.push(location);
+
   if (currentLocation === navigation.getPath()) {
     navigation.goBack(); // prevent sequences of same url in history
   }
@@ -26,5 +28,6 @@ export function getMatchedClusterId(): string {
     exact: true,
     path: clusterViewRoute.path
   });
+
   return matched?.params.clusterId;
 }

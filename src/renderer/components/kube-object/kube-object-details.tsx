@@ -29,6 +29,7 @@ export const kubeSelectedUrlParam = createUrlParam({
 
 export function showDetails(details = "", resetSelected = true) {
   const detailsUrl = getDetailsUrl(details, resetSelected);
+
   navigation.merge({ search: detailsUrl });
 }
 
@@ -38,11 +39,15 @@ export function hideDetails() {
 
 export function getDetailsUrl(details: string, resetSelected = false) {
   const detailsUrl = kubeDetailsUrlParam.toSearchString({ value: details });
+
   if (resetSelected) {
     const params = new URLSearchParams(detailsUrl);
+
     params.delete(kubeSelectedUrlParam.name);
+
     return `?${params.toString()}`;
   }
+
   return detailsUrl;
 }
 

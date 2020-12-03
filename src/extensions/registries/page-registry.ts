@@ -37,12 +37,13 @@ export interface RegisteredPage extends PageRegistration {
   url: string; // registered extension's page URL (without page params)
 }
 
-export function getExtensionPageUrl<P extends object>(target: PageTarget): string {
+export function getExtensionPageUrl(target: PageTarget): string {
   const { extensionId, pageId = "", params: targetParams = {} } = target;
   let stringifiedParams = "";
 
   // stringify params to matched target page
   const page = globalPageRegistry.getByPageTarget(target) || clusterPageRegistry.getByPageTarget(target);
+
   if (page?.params) {
     const searchParams = page.params.map(urlParam => {
       return urlParam.toSearchString({
@@ -51,6 +52,7 @@ export function getExtensionPageUrl<P extends object>(target: PageTarget): strin
         withPrefix: false,
       });
     });
+
     if (searchParams.length > 0) {
       stringifiedParams = `?${searchParams.join("&")}`;
     }
@@ -64,6 +66,7 @@ export class PageRegistry extends BaseRegistry<RegisteredPage> {
   add(pages: PageRegistration | PageRegistration[], extension: LensExtension) {
     try {
       const items = [pages].flat().map(page => this.registerPage(page, extension));
+
       return super.add(items);
     } catch (error) {
       return Function; // no-op
@@ -74,6 +77,7 @@ export class PageRegistry extends BaseRegistry<RegisteredPage> {
     try {
       const { id: pageId } = page;
       const extensionId = ext.name;
+
       return {
         ...page,
         extensionId,
@@ -85,7 +89,7 @@ export class PageRegistry extends BaseRegistry<RegisteredPage> {
   }
 
   getByPageTarget(target: PageTarget): RegisteredPage | null {
-    return this.getItems().find(page => page.extensionId === target.extensionId && page.id === target.pageId);
+    return this.getItems().find(page => page.extensionId === target.extensionId && page.id === target.pageId) || null;
   }
 }
 

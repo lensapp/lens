@@ -34,21 +34,27 @@ export class UrlParam<V = any | any[]> {
 
   parse(values: string[]): V {
     const { parse, multiValues } = this.init;
+
     if (!multiValues) values.splice(1); // reduce values to single item
     const parsedValues = [parse ? parse(values) : values].flat();
+
     return multiValues ? parsedValues : parsedValues[0] as any;
   }
 
   stringify(value: V = this.get()): string {
     const { stringify, multiValues, multiValueSep, skipEmpty } = this.init;
+
     if (skipEmpty && this.isEmpty(value)) {
       return "";
     }
+
     if (multiValues) {
       const values = [value].flat();
       const stringValues = [stringify ? stringify(value) : values.map(String)].flat();
+
       return stringValues.join(multiValueSep);
     }
+
     return [stringify ? stringify(value) : String(value)].flat()[0];
   }
 
@@ -60,11 +66,13 @@ export class UrlParam<V = any | any[]> {
     if (skipEmpty && this.isEmpty(value)) {
       return defaultValue;
     }
+
     return value;
   }
 
   set(value: V, { mergeGlobals = true, replaceHistory = false } = {}) {
     const search = this.toSearchString({ mergeGlobals, value });
+
     this.history.merge({ search }, replaceHistory);
   }
 
@@ -89,11 +97,13 @@ export class UrlParam<V = any | any[]> {
     if (skipEmpty) {
       searchParams.forEach((value: any, paramName) => {
         if (this.isEmpty(value)) searchParams.delete(paramName);
-      })
+      });
     }
+
     if (Array.from(searchParams).length > 0) {
       return `${withPrefix ? "?" : ""}${searchParams}`;
     }
+
     return "";
   }
 

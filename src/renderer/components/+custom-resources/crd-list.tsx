@@ -36,6 +36,7 @@ export class CrdList extends React.Component {
 
   onSelectGroup(group: string) {
     const groups = new Set(this.groups);
+
     if (groups.has(group)) {
       groups.delete(group); // toggle selection
     } else {

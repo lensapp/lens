@@ -26,6 +26,7 @@ export class ExamplePage extends React.Component<{ extension: LensRendererExtens
     const doodleStyle = {
       width: "200px"
     };
+
     return (
       <div className="flex column gaps align-flex-start" style={{ padding: 24 }}>
         <div style={doodleStyle}><CoffeeDoodle accent="#3d90ce"/></div>
