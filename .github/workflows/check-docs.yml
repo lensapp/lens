@@ -1,4 +1,4 @@
-name: Publish docs via GitHub Pages
+name: Check Documentation
 on:
   - pull_request
 jobs:
@@ -18,9 +18,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install git+https://${{ secrets.GH_TOKEN }}@github.com/lensapp/mkdocs-material-insiders.git
+          pip install git+https://github.com/mkdocs/mkdocs.git
           pip install mike
-
 
       - name: Checkout Release from lens
         uses: actions/checkout@v2
