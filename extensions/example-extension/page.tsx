@@ -4,8 +4,8 @@ import React from "react";
 import path from "path";
 import { observer } from "mobx-react";
 
-export const exampleNameUrlParam = Navigation.createUrlParam<string>({
-  name: "name",
+export const exampleIdPageParam = Navigation.createUrlParam<string>({
+  name: "exampleId",
   defaultValue: "demo",
 });
 
@@ -22,7 +22,7 @@ export class ExamplePage extends React.Component<{ extension: LensRendererExtens
   };
 
   render() {
-    const exampleName = exampleNameUrlParam.get();
+    const exampleName = exampleIdPageParam.get();
     const doodleStyle = {
       width: "200px"
     };
@@ -36,7 +36,7 @@ export class ExamplePage extends React.Component<{ extension: LensRendererExtens
         <p>Location: <i>{location.href}</i></p>
 
         <p className="url-params-demo flex column gaps">
-          <a onClick={() => exampleNameUrlParam.set("secret")}>Show secret button</a>
+          <a onClick={() => exampleIdPageParam.set("secret")}>Show secret button</a>
           {exampleName === "secret" && (
             <Component.Button accent label="Deactivate" onClick={this.deactivate}/>
           )}

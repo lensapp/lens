@@ -1,5 +1,5 @@
 import { LensRendererExtension } from "@k8slens/extensions";
-import { ExampleIcon, ExamplePage, exampleNameUrlParam } from "./page";
+import { ExampleIcon, ExamplePage, exampleIdPageParam } from "./page";
 import React from "react";
 
 export default class ExampleExtension extends LensRendererExtension {
@@ -11,18 +11,37 @@ export default class ExampleExtension extends LensRendererExtension {
         Page: () => <ExamplePage extension={this}/>,
       },
       params: [
-        exampleNameUrlParam,
+        exampleIdPageParam,
       ]
     }
   ];
 
   clusterPageMenus = [
     {
-      target: { pageId: "example" },
-      title: "Example Extension",
+      title: "Example extension",
       components: {
         Icon: ExampleIcon,
-      }
-    }
+      },
+      target: {
+        pageId: "example",
+        params: {
+          // cause target page has registered a url-param with name "exampleId" == exampleNameUrlParam.name
+          // passing values to page to generate final link
+          exampleId: "demo-2"
+        },
+      },
+    },
+    {
+      title: "Example secret page",
+      components: {
+        Icon: ExampleIcon,
+      },
+      target: {
+        pageId: "example",
+        params: {
+          exampleId: "secret"
+        },
+      },
+    },
   ];
 }
