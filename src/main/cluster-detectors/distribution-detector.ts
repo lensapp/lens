@@ -60,10 +60,6 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "custom", accuracy: 10};
     }
 
-    if (this.isCustom()) {
-      return { value: "custom", accuracy: 10};
-    }
-
     if (await this.isOpenshift()) {
       return { value: "openshift", accuracy: 90};
     }
