@@ -8,6 +8,7 @@ import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
+import { reload } from "./reload";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
@@ -74,6 +75,8 @@ export class WindowManager extends Singleton {
         appEventBus.emit({name: "app", action: "blur"});
       });
 
+      await reload();
+      
       // clean up
       this.mainWindow.on("closed", () => {
         this.windowState.unmanage();
