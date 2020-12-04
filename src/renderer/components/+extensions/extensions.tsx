@@ -22,6 +22,7 @@ import { PageLayout } from "../layout/page-layout";
 import { SubTitle } from "../layout/sub-title";
 import { Notifications } from "../notifications";
 import { TooltipPosition } from "../tooltip";
+import { ExtensionStateStore } from "./extension-install.store";
 import "./extensions.scss";
 
 interface InstallRequest {
@@ -39,25 +40,20 @@ interface InstallRequestValidated extends InstallRequestPreloaded {
   tempFile: string; // temp system path to packed extension for unpacking
 }
 
-interface ExtensionState {
-  displayName: string;
-  // Possible states the extension can be
-  state: "installing" | "uninstalling";
-}
-
 @observer
 export class Extensions extends React.Component {
-  private supportedFormats = ["tar", "tgz"];
+  private static supportedFormats = ["tar", "tgz"];
 
-  private installPathValidator: InputValidator = {
+  private static installPathValidator: InputValidator = {
     message: <Trans>Invalid URL or absolute path</Trans>,
     validate(value: string) {
       return InputValidators.isUrl.validate(value) || InputValidators.isPath.validate(value);
     }
   };
 
-  @observable
-  extensionState = observable.map<string, ExtensionState>();
+  get extensionStateStore() {
+    return ExtensionStateStore.getInstance<ExtensionStateStore>();
+  }
 
   @observable search = "";
   @observable installPath = "";
@@ -69,18 +65,24 @@ export class Extensions extends React.Component {
    * Extensions that were removed from extensions but are still in "uninstalling" state
    */
   @computed get removedUninstalling() {
-    return Array.from(this.extensionState.entries()).filter(([id, extension]) =>
-      extension.state === "uninstalling" && !this.extensions.find(extension => extension.id === id)
-    ).map(([id, extension]) => ({ ...extension, id }));
+    return Array.from(this.extensionStateStore.extensionState.entries())
+      .filter(([id, extension]) =>
+        extension.state === "uninstalling"
+        && !this.extensions.find(extension => extension.id === id)
+      )
+      .map(([id, extension]) => ({ ...extension, id }));
   }
 
   /**
    * Extensions that were added to extensions but are still in "installing" state
    */
   @computed get addedInstalling() {
-    return Array.from(this.extensionState.entries()).filter(([id, extension]) =>
-      extension.state === "installing" && this.extensions.find(extension => extension.id === id)
-    ).map(([id, extension]) => ({ ...extension, id }));
+    return Array.from(this.extensionStateStore.extensionState.entries())
+      .filter(([id, extension]) =>
+        extension.state === "installing"
+        && this.extensions.find(extension => extension.id === id)
+      )
+      .map(([id, extension]) => ({ ...extension, id }));
   }
 
   componentDidMount() {
@@ -90,7 +92,7 @@ export class Extensions extends React.Component {
           Notifications.ok(
             <p>Extension <b>{displayName}</b> successfully uninstalled!</p>
           );
-          this.extensionState.delete(id);
+          this.extensionStateStore.extensionState.delete(id);
         });
 
         this.addedInstalling.forEach(({ id, displayName }) => {
@@ -103,7 +105,7 @@ export class Extensions extends React.Component {
           Notifications.ok(
             <p>Extension <b>{displayName}</b> successfully installed!</p>
           );
-          this.extensionState.delete(id);
+          this.extensionStateStore.extensionState.delete(id);
           this.installPath = "";
 
           // Enable installed extensions by default.
@@ -116,14 +118,11 @@ export class Extensions extends React.Component {
   @computed get extensions() {
     const searchText = this.search.toLowerCase();
 
-    return Array.from(extensionLoader.userExtensions.values()).filter(ext => {
-      const { name, description } = ext.manifest;
-
-      return [
-        name.toLowerCase().includes(searchText),
-        description?.toLowerCase().includes(searchText),
-      ].some(value => value);
-    });
+    return Array.from(extensionLoader.userExtensions.values())
+      .filter(({ manifest: { name, description }}) => (
+        name.toLowerCase().includes(searchText)
+        || description?.toLowerCase().includes(searchText)
+      ));
   }
 
   get extensionsPath() {
@@ -143,10 +142,10 @@ export class Extensions extends React.Component {
     const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
       defaultPath: app.getPath("downloads"),
       properties: ["openFile", "multiSelections"],
-      message: _i18n._(t`Select extensions to install (formats: ${this.supportedFormats.join(", ")}), `),
+      message: _i18n._(t`Select extensions to install (formats: ${Extensions.supportedFormats.join(", ")}), `),
       buttonLabel: _i18n._(t`Use configuration`),
       filters: [
-        { name: "tarball", extensions: this.supportedFormats }
+        { name: "tarball", extensions: Extensions.supportedFormats }
       ]
     });
 
@@ -346,7 +345,9 @@ export class Extensions extends React.Component {
     const displayName = extensionDisplayName(name, version);
     const extensionId = path.join(extensionDiscovery.nodeModulesPath, name, "package.json");
 
-    this.extensionState.set(extensionId, {
+    logger.info(`Unpacking extension ${displayName}`, { fileName, tempFile });
+
+    this.extensionStateStore.extensionState.set(extensionId, {
       state: "installing",
       displayName
     });
@@ -381,8 +382,8 @@ export class Extensions extends React.Component {
       );
 
       // Remove install state on install failure
-      if (this.extensionState.get(extensionId)?.state === "installing") {
-        this.extensionState.delete(extensionId);
+      if (this.extensionStateStore.extensionState.get(extensionId)?.state === "installing") {
+        this.extensionStateStore.extensionState.delete(extensionId);
       }
     } finally {
       // clean up
@@ -406,7 +407,7 @@ export class Extensions extends React.Component {
     const displayName = extensionDisplayName(extension.manifest.name, extension.manifest.version);
 
     try {
-      this.extensionState.set(extension.id, {
+      this.extensionStateStore.extensionState.set(extension.id, {
         state: "uninstalling",
         displayName
       });
@@ -418,8 +419,8 @@ export class Extensions extends React.Component {
       );
 
       // Remove uninstall state on uninstall failure
-      if (this.extensionState.get(extension.id)?.state === "uninstalling") {
-        this.extensionState.delete(extension.id);
+      if (this.extensionStateStore.extensionState.get(extension.id)?.state === "uninstalling") {
+        this.extensionStateStore.extensionState.delete(extension.id);
       }
     }
   }
@@ -445,7 +446,7 @@ export class Extensions extends React.Component {
     return extensions.map(extension => {
       const { id, isEnabled, manifest } = extension;
       const { name, description } = manifest;
-      const isUninstalling = this.extensionState.get(id)?.state === "uninstalling";
+      const isUninstalling = this.extensionStateStore.extensionState.get(id)?.state === "uninstalling";
 
       return (
         <div key={id} className="extension flex gaps align-center">
@@ -481,7 +482,7 @@ export class Extensions extends React.Component {
    * True if at least one extension is in installing state
    */
   @computed get isInstalling() {
-    return this.startingInstall || [...this.extensionState.values()].some(extension => extension.state === "installing");
+    return [...this.extensionStateStore.extensionState.values()].some(extension => extension.state === "installing");
   }
 
   render() {
@@ -504,9 +505,9 @@ export class Extensions extends React.Component {
                 className="box grow"
                 theme="round-black"
                 disabled={this.isInstalling}
-                placeholder={`Path or URL to an extension package (${this.supportedFormats.join(", ")})`}
+                placeholder={`Path or URL to an extension package (${Extensions.supportedFormats.join(", ")})`}
                 showErrorsAsTooltip={{ preferredPositions: TooltipPosition.BOTTOM }}
-                validators={installPath ? this.installPathValidator : undefined}
+                validators={installPath ? Extensions.installPathValidator : undefined}
                 value={installPath}
                 onChange={value => this.installPath = value}
                 onSubmit={this.installFromUrlOrPath}
@@ -524,7 +525,7 @@ export class Extensions extends React.Component {
             <Button
               primary
               label="Install"
-              disabled={this.isInstalling || !this.installPathValidator.validate(installPath)}
+              disabled={this.isInstalling || !Extensions.installPathValidator.validate(installPath)}
               waiting={this.isInstalling}
               onClick={this.installFromUrlOrPath}
             />
