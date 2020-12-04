@@ -37,6 +37,10 @@ export default function (): webpack.Configuration {
     module: {
       rules: [
         {
+          test: /\.node$/,
+          use: "node-loader"
+        },
+        {
           test: /\.tsx?$/,
           exclude: /node_modules/,
           use: [
