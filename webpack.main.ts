@@ -48,6 +48,7 @@ export default function (): webpack.Configuration {
     },
     plugins: [
       new ForkTsCheckerPlugin(),
+      new webpack.ProgressPlugin({ percentBy: "entries" }),
     ]
   };
 }

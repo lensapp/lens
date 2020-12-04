@@ -166,6 +166,8 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         filename: "[name].css",
       }),
 
+      new webpack.ProgressPlugin({ percentBy: "entries" }),
+
       isDevelopment && new webpack.HotModuleReplacementPlugin(),
       isDevelopment && new ReactRefreshWebpackPlugin(),
 

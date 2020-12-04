@@ -111,6 +111,7 @@ export default function (): webpack.Configuration {
       }
     },
     plugins: [
+      new webpack.ProgressPlugin({ percentBy: "entries" }),
       // In ts-loader's README they said to output a built .d.ts file,
       // you can set "declaration": true in tsconfig.extensions.json,
       // and use the DeclarationBundlerPlugin in your webpack config... but
