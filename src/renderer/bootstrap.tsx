@@ -1,6 +1,8 @@
+import "./components/app.scss";
+
+import React from "react";
 import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
-import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
@@ -12,11 +14,9 @@ import { extensionLoader } from "../extensions/extension-loader";
 import { extensionsStore } from "../extensions/extensions-store";
 import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
-import "./components/app.scss";
 import { i18nStore } from "./i18n";
 import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
-
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
