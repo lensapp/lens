@@ -14,6 +14,6 @@ export const reload = async () => {
       hardResetMethod: "exit"
     });
 
-    logger.info(`🔍 electron-reloadelectron-reload watching for main.js change......"`);
+    logger.info(`🔍 electron-reload watching for main.js change...`);
   }
 };
