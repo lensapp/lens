@@ -15,8 +15,8 @@ export interface UrlParamInit<V = any> {
 export class UrlParam<V = any | any[]> {
   static SYSTEM_PREFIX = "lens-";
 
-  public name: string;
-  public urlName: string;
+  readonly name: string;
+  readonly urlName: string;
 
   constructor(private init: UrlParamInit<V>, private history: IObservableHistory) {
     const { isSystem, name, skipEmpty = true } = init;

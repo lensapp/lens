@@ -70,7 +70,7 @@ describe("globalPageRegistry", () => {
     ], ext);
   });
 
-  describe("getByPageMenuTarget", () => {
+  describe("getByPageTarget", () => {
     it("matching to first registered page without id", () => {
       const page = globalPageRegistry.getByPageTarget({ extensionId: ext.name });
 

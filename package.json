@@ -383,7 +383,7 @@
     "typedoc": "0.17.0-3",
     "typedoc-plugin-markdown": "^2.4.0",
     "typeface-roboto": "^0.0.75",
-    "typescript": "^4.0.2",
+    "typescript": "4.0.2",
     "url-loader": "^4.1.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.11",

@@ -1,7 +1,7 @@
 import "./table.scss";
 
 import React from "react";
-import lodash from "lodash";
+import { orderBy } from "lodash";
 import { observer } from "mobx-react";
 import { observable } from "mobx";
 import { autobind, cssNames, noop } from "../../utils";
@@ -104,10 +104,10 @@ export class Table extends React.Component<TableProps> {
   }
 
   getSorted(items: any[]) {
-    const { sortBy, orderBy } = this.sortParams;
+    const { sortBy, orderBy: order } = this.sortParams;
     const sortingCallback = this.props.sortable[sortBy] || noop;
 
-    return lodash.orderBy(items, sortingCallback, orderBy as any);
+    return orderBy(items, sortingCallback, order as any);
   }
 
   @autobind()
