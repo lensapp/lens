@@ -32,7 +32,13 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     },
     name: "lens-app",
     mode: isProduction ? "production" : "development",
-    cache: isDevelopment,
+    cache: isDevelopment ? {
+      type: "filesystem",
+      buildDependencies: {
+        // Add your config as buildDependency to get cache invalidation on config change
+        config: [__filename]
+      }
+    } : false,
     entry: {
       [appName]: path.resolve(rendererDir, "bootstrap.tsx"),
     },

@@ -13,7 +13,13 @@ export default function (): webpack.Configuration {
     target: "electron-main",
     mode: isProduction ? "production" : "development",
     devtool: isProduction ? "source-map" : "eval-source-map",
-    cache: isDevelopment,
+    cache: isDevelopment ? {
+      type: "filesystem",
+      buildDependencies: {
+        // Add your config as buildDependency to get cache invalidation on config change
+        config: [__filename]
+      }
+    }: false,
     entry: {
       main: path.resolve(mainDir, "index.ts"),
     },
