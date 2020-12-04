@@ -1,7 +1,7 @@
 
 import path from "path";
 import webpack from "webpack";
-import { sassCommonVars } from "./src/common/vars";
+import { sassCommonVars, isDevelopment } from "./src/common/vars";
 
 export default function (): webpack.Configuration {
   const entry = "./src/extensions/extension-api.ts";
@@ -27,6 +27,13 @@ export default function (): webpack.Configuration {
       // default is true
       minimize: false
     },
+    cache: isDevelopment ? {
+      type: "filesystem",
+      buildDependencies: {
+        // Add your config as buildDependency to get cache invalidation on config change
+        config: [__filename]
+      }
+    } : false,
     module: {
       rules: [
         {
