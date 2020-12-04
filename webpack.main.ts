@@ -34,6 +34,9 @@ export default function (): webpack.Configuration {
     externalsPresets: { node: true },
     // in order to ignore all modules in node_modules folder
     externals: nodeExternals(),
+    optimization: {
+      minimize: isProduction,
+    },
     module: {
       rules: [
         {
