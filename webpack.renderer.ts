@@ -21,13 +21,13 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     context: __dirname,
     target: "electron-renderer",
     devtool: isProduction ? "source-map" : "eval-source-map",
+    // ignore because there is no @types/webpack-dev-server for v4 yet
+    // @ts-ignore
     devServer: {
-      contentBase: buildDir,
+      static: buildDir,
       port: webpackDevServerPort,
       host: "localhost",
-      hot: true,
-      // to avoid cors errors when requests is from iframes
-      disableHostCheck: true,
+      firewall: false,
       headers: { "Access-Control-Allow-Origin": "*" },
     },
     name: "lens-app",

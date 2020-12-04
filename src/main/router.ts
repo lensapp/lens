@@ -106,8 +106,8 @@ export class Router {
 
     try {
       const filename = path.basename(req.url);
-      // redirect requests to [appName].js, [appName].html /sockjs-node/ to webpack-dev-server (for hot-reload support)
-      const toWebpackDevServer = filename.includes(appName) || filename.includes("hot-update") || req.url.includes("sockjs-node");
+      // redirect requests to [appName].js, [appName].html to webpack-dev-server (for hot-reload support)
+      const toWebpackDevServer = filename.includes(appName) || filename.includes("hot-update");
 
       if (isDevelopment && toWebpackDevServer) {
         const redirectLocation = `http://localhost:${webpackDevServerPort}${req.url}`;
