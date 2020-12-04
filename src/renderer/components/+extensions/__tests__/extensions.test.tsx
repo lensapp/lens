@@ -5,6 +5,7 @@ import React from "react";
 import { extensionDiscovery } from "../../../../extensions/extension-discovery";
 import { ConfirmDialog } from "../../confirm-dialog";
 import { Notifications } from "../../notifications";
+import { ExtensionStateStore } from "../extension-install.store";
 import { Extensions } from "../extensions";
 
 jest.mock("fs-extra");
@@ -51,6 +52,10 @@ jest.mock("../../notifications", () => ({
 }));
 
 describe("Extensions", () => {
+  beforeEach(() => {
+    ExtensionStateStore.resetInstance();
+  });
+
   it("disables uninstall and disable buttons while uninstalling", async () => {
     render(<><Extensions /><ConfirmDialog/></>);
 
@@ -61,14 +66,14 @@ describe("Extensions", () => {
 
     // Approve confirm dialog
     fireEvent.click(screen.getByText("Yes"));
-    
+
     expect(extensionDiscovery.uninstallExtension).toHaveBeenCalledWith("/absolute/path");
     expect(screen.getByText("Disable").closest("button")).toBeDisabled();
     expect(screen.getByText("Uninstall").closest("button")).toBeDisabled();
   });
 
   it("displays error notification on uninstall error", () => {
-    (extensionDiscovery.uninstallExtension as any).mockImplementationOnce(() => 
+    (extensionDiscovery.uninstallExtension as any).mockImplementationOnce(() =>
       Promise.reject()
     );
     render(<><Extensions /><ConfirmDialog/></>);
