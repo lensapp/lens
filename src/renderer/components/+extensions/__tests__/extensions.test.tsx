@@ -22,7 +22,8 @@ jest.mock("../../../../extensions/extension-discovery", () => ({
   ...jest.requireActual("../../../../extensions/extension-discovery"),
   extensionDiscovery: {
     localFolderPath: "/fake/path",
-    uninstallExtension: jest.fn(() => Promise.resolve())
+    uninstallExtension: jest.fn(() => Promise.resolve()),
+    isLoaded: true
   }
 }));
 
@@ -111,5 +112,18 @@ describe("Extensions", () => {
       expect(fse.move).toHaveBeenCalledWith("");
       expect(Notifications.error).not.toHaveBeenCalled();
     });
+  });
+
+  it("displays spinner while extensions are loading", () => {
+    extensionDiscovery.isLoaded = false;
+    const { container } = render(<Extensions />);
+
+    expect(container.querySelector(".Spinner")).toBeInTheDocument();
+
+    extensionDiscovery.isLoaded = true;
+
+    waitFor(() => 
+      expect(container.querySelector(".Spinner")).not.toBeInTheDocument()
+    );
   });
 });

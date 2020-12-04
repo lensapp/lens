@@ -37,6 +37,11 @@
         font-weight: bold;
       }
     }
+
+    > .spinner-wrapper {
+      display: flex;
+      justify-content: center;
+    }
   }
 
   .SearchInput {
