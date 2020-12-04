@@ -135,7 +135,7 @@ export class DistributionDetector extends BaseClusterDetector {
     try {
       const response = await this.k8sRequest("");
 
-      return response.paths?.find((api: string) => api === "/apis/project.openshift.io") !== undefined;
+      return response.paths?.includes("/apis/project.openshift.io");
     } catch (e) {
       return false;
     }
