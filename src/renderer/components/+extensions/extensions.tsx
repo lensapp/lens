@@ -21,6 +21,7 @@ import { DropFileInput, Input, InputValidator, InputValidators, SearchInput } fr
 import { PageLayout } from "../layout/page-layout";
 import { SubTitle } from "../layout/sub-title";
 import { Notifications } from "../notifications";
+import { Spinner } from "../spinner/spinner";
 import { TooltipPosition } from "../tooltip";
 import { ExtensionStateStore } from "./extension-install.store";
 import "./extensions.scss";
@@ -541,7 +542,7 @@ export class Extensions extends React.Component {
               value={this.search}
               onChange={(value) => this.search = value}
             />
-            {this.renderExtensions()}
+            {extensionDiscovery.isLoaded ? this.renderExtensions() : <div className="spinner-wrapper"><Spinner/></div>}
           </div>
         </PageLayout>
       </DropFileInput>
