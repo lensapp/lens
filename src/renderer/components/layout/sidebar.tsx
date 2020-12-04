@@ -279,7 +279,9 @@ class SidebarNavItem extends React.Component<SidebarNavItemProps> {
   public context: SidebarContextValue;
 
   get itemId() {
-    return this.props.url;
+    const url = new URL(this.props.url, `${window.location.protocol}//${window.location.host}`);
+
+    return url.pathname; // pathname without get params
   }
 
   @computed get isExpanded() {
