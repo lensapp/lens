@@ -4,7 +4,7 @@
 [![Releases](https://img.shields.io/github/downloads/lensapp/lens/total.svg)](https://github.com/lensapp/lens/releases?label=Downloads)
 [![Chat on Slack](https://img.shields.io/badge/chat-on%20slack-blue.svg?logo=slack&longCache=true&style=flat)](https://join.slack.com/t/k8slens/shared_invite/enQtOTc5NjAyNjYyOTk4LWU1NDQ0ZGFkOWJkNTRhYTc2YjVmZDdkM2FkNGM5MjhiYTRhMDU2NDQ1MzIyMDA4ZGZlNmExOTc0N2JmY2M3ZGI)
 
-World’s most popular Kubernetes IDE provides a simplified, consistent entry point for developers, testers, integrators, and DevOps, to ship code faster at scale.  Lens is the only IDE you’ll ever need to take control of your Kubernetes clusters. It is a standalone application for MacOS, Windows and Linux operating systems.  Lens is an open source project and free!
+Lens provides the full situational awareness for everything that runs in Kubernetes. It's lowering the entry barrier for people just getting started and radically improving productivity for people with more experience. The Lens open source project is backed by a number of Kubernetes and cloud native ecosystem pioneers. It's a standalone application for MacOS, Windows and Linux operating systems. Lens is 100% open source and free of charge for any purpose.
 
 [![Screenshot](.github/screenshot.png)](https://youtu.be/04v2ODsmtIs)
 
@@ -21,7 +21,9 @@ World’s most popular Kubernetes IDE provides a simplified, consistent entry po
 * Performance optimized to handle massive clusters (tested with a cluster running 25k pods)
 * RBAC security is preserved, as Lens uses the standard Kubernetes API
 * Lens Extensions are used to add custom visualizations and functionality to accelerate development workflows for all the technologies and services that integrate with Kubernetes
+* Port forwarding
 * Helm package deployment: Browse and deploy Helm charts with one click-Install
+* Extensions via Lens Extensions API 
 
 ## Installation
 
