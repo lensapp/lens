@@ -26,6 +26,11 @@ export interface WorkspaceState {
   enabled: boolean;
 }
 
+/**
+ * Workspace
+ *
+ * @beta
+ */
 export class Workspace implements WorkspaceModel, WorkspaceState {
   /**
    * Unique id for workspace
@@ -78,23 +83,39 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
     }
   }
 
+  /**
+   * Is workspace managed by an extension
+   */
   get isManaged(): boolean {
     return !!this.ownerRef;
   }
 
+  /**
+   * Get workspace state
+   *
+   */
   getState(): WorkspaceState {
     return toJS({
       enabled: this.enabled
     });
   }
 
+  /**
+   * Push state
+   *
+   * @interal
+   * @param state workspace state
+   */
   pushState(state = this.getState()) {
     logger.silly("[WORKSPACE] pushing state", {...state, id: this.id});
     broadcastMessage("workspace:state", this.id, toJS(state));
   }
 
-  @action
-  setState(state: WorkspaceState) {
+  /**
+   *
+   * @param state workspace state
+   */
+  @action setState(state: WorkspaceState) {
     Object.assign(this, state);
   }
 
