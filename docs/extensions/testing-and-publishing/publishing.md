@@ -1,8 +1,8 @@
 # Publishing Extensions
 
 To be able to easily share extensions with users they need to be published somewhere.
-Lens currently only supports installing extensions from tarballs.
-All hosted extensions must, therefore, be retrievable in a tarball.
+Lens currently only supports installing extensions from NPM tarballs.
+All hosted extensions must, therefore, be retrievable in a NPM tarball.
 
 ## Places To Host Your Extension
 
@@ -25,7 +25,7 @@ It is probably a good idea to put into your README.md the following instructions
 npm view <extension-name> dist.tarball
 ```
 
-This will output the link that they will need to give to lens to install your extension.
+This will output the link that they will need to give to Lens to install your extension.
 
 ### Publish via GitHub Releases
 
@@ -33,15 +33,14 @@ Another method of publishing your extensions is to do so with the releases mecha
 We recommend reading [GitHub's Releases Documentation](https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/managing-releases-in-a-repository) for how to actually do the steps of a release.
 The following will be a quick walk through on how to make the tarball which will be the released file.
 
-### Making a Tarball of your extension
+### Making a NPM Tarball of Your Extension
 
 While this is necessary for hosting on GitHub releases, this is also the means for creating a tarball if you plan on hosting on a different file hosting platform.
 
-Say you have your project folder at `~/my-extension/` and you want to create `~/my-extension.tar.gz` we need to do the following within your git repo:
+Say you have your project folder at `~/my-extension/` and you want to create an NPM package we need to do the following within your git repo:
 
 ```
-git archive --format=tar.gz -o ../my-extension.tar.gz master
+npm pack
 ```
 
-This command will make a tarball called `my-extension.tar.gz` in your git repo's parent directory containing all git tracked files.
-This should be what you want to publish since it is not recommended to track your `build` or `node_modules` folders.
+This will create a NPM tarball that can be hosted on Github Releases or any other publicly available file hosting service.
