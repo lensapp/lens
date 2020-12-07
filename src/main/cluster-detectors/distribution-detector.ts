@@ -60,6 +60,10 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "custom", accuracy: 10};
     }
 
+    if (await this.isOpenshift()) {
+      return { value: "openshift", accuracy: 90};
+    }
+
     return { value: "unknown", accuracy: 10};
   }
 
@@ -121,5 +125,15 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isK3s() {
     return this.version.includes("+k3s");
+  }
+
+  protected async isOpenshift() {
+    try {
+      const response = await this.k8sRequest("");
+
+      return response.paths?.includes("/apis/project.openshift.io");
+    } catch (e) {
+      return false;
+    }
   }
 }

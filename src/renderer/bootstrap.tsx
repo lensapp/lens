@@ -3,19 +3,20 @@ import "./components/app.scss";
 import React from "react";
 import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
-import * as LensExtensions from "../extensions/extension-api";
-import { App } from "./components/app";
-import { LensApp } from "./lens-app";
 import { render, unmountComponentAtNode } from "react-dom";
-import { isMac } from "../common/vars";
-import { userStore } from "../common/user-store";
-import { workspaceStore } from "../common/workspace-store";
 import { clusterStore } from "../common/cluster-store";
-import { i18nStore } from "./i18n";
-import { themeStore } from "./theme.store";
-import { extensionsStore } from "../extensions/extensions-store";
+import { userStore } from "../common/user-store";
+import { isMac } from "../common/vars";
+import { workspaceStore } from "../common/workspace-store";
+import * as LensExtensions from "../extensions/extension-api";
+import { extensionDiscovery } from "../extensions/extension-discovery";
 import { extensionLoader } from "../extensions/extension-loader";
+import { extensionsStore } from "../extensions/extensions-store";
 import { filesystemProvisionerStore } from "../main/extension-filesystem";
+import { App } from "./components/app";
+import { i18nStore } from "./i18n";
+import { LensApp } from "./lens-app";
+import { themeStore } from "./theme.store";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
@@ -34,6 +35,7 @@ export async function bootstrap(App: AppComponent) {
   rootElem.classList.toggle("is-mac", isMac);
 
   extensionLoader.init();
+  extensionDiscovery.init();
 
   // preload common stores
   await Promise.all([
