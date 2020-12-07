@@ -113,9 +113,9 @@ export class Certificate extends K8sApi.KubeObject {
 With `CertificatesApi` class we are able to manage `Certificate` objects in Kubernetes API:
 
 ```typescript
-export class CertifcatesApi extends K8sApi.KubeApi<Certificate> {
+export class CertificatesApi extends K8sApi.KubeApi<Certificate> {
 }
-export const certificatesApi = new CertifcatesApi({
+export const certificatesApi = new CertificatesApi({
   objectConstructor: Certificate
 });
 ```
