@@ -5,13 +5,6 @@ A few of these are exposed by the extensions api for use by the extension develo
 The `ClusterStore` manages cluster state data such as cluster details, and which cluster is active.
 The `WorkspaceStore` similarly manages workspace state data, such as workspace name, and which clusters belong to a given workspace.
 The `ExtensionStore` is a store for managing custom extension state data.
-## ClusterStore
-
-tbd
-
-## WorkspaceStore
-
-tbd
 
 ## ExtensionStore
 
@@ -62,6 +55,8 @@ export const examplePreferencesStore = ExamplePreferencesStore.getInstance<Examp
 First the extension's data model is defined using a simple type, `ExamplePreferencesModel`, which has a single field, `enabled`, representing the preference's state.
 `ExamplePreferencesStore` extends `Store.ExtensionStore`, based on the `ExamplePreferencesModel`.
 The field `enabled` is added to the `ExamplePreferencesStore` class to hold the "live" or current state of the preference.
+Note the use of the `observer` decorator on the `enabled` field.
+As for the [`appPreferences` guide example](../renderer-extension#apppreferences), [`mobx`](https://mobx.js.org/README.html) is used for the UI state management, ensuring the checkbox updates when activated by the user.
 
 Then the constructor and two abstract methods are implemented.
 In the constructor, the name of the store (`"example-preferences-store"`), and the default (initial) value for the preference state (`enabled: false`) are specified. 
@@ -72,6 +67,7 @@ The `toJSON()` method is complementary to `fromStore()`, and is called when the 
 The `toJS()` function from [`mobx`](https://mobx.js.org/README.html) is convenient for this purpose, and is used here.
 
 Finally, the `examplePreferencesStore` is created by calling `ExamplePreferencesStore.getInstance<ExamplePreferencesStore>()`, and exported for use by other parts of the extension.
+Note that `examplePreferencesStore` is a singleton, calling this function again will not create a new store.
 
 The following example code, modified from the [`appPreferences` guide example](../renderer-extension#apppreferences) demonstrates how to use the extension store.
 `examplePreferencesStore` must be loaded in the main process, where loaded stores are automatically saved when exiting Lens. This can be done in `./main.ts`:
@@ -87,7 +83,7 @@ export default class ExampleMainExtension extends LensMainExtension {
 }
 ```
 
-Here, `examplePreferencesStore.loadExtension(this)` is conveniently called from the `onActivate()` method of `ExampleMainExtension`.
+Here, `examplePreferencesStore` is loaded with `examplePreferencesStore.loadExtension(this)`, which is conveniently called from the `onActivate()` method of `ExampleMainExtension`.
 Similarly, `examplePreferencesStore` must be loaded in the renderer process where the `appPreferences` are handled. This can be done in `./renderer.ts`:
 
 ``` typescript
@@ -114,7 +110,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 }
 ```
 
-Again, `examplePreferencesStore.loadExtension(this)` is called, this time from the `onActivate()` method of `ExampleRendererExtension`.
+Again, `examplePreferencesStore.loadExtension(this)` is called to load `examplePreferencesStore`, this time from the `onActivate()` method of `ExampleRendererExtension`.
 Also, there is no longer the need for the `preference` field in the `ExampleRendererExtension` class, as the props for `ExamplePreferenceInput` is now `examplePreferencesStore`.
 `ExamplePreferenceInput` is defined in `./src/example-preference.tsx`:
 
