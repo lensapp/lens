@@ -2,16 +2,17 @@
 
 Stores are components that persist and synchronize state data. Lens utilizes a number of stores for maintaining a variety of state information.
 A few of these are exposed by the extensions api for use by the extension developer.
-The `ClusterStore` manages cluster state data such as cluster details, and which cluster is active.
-The `WorkspaceStore` similarly manages workspace state data, such as workspace name, and which clusters belong to a given workspace.
-The `ExtensionStore` is a store for managing custom extension state data.
+
+- The `ClusterStore` manages cluster state data such as cluster details, and which cluster is active.
+- The `WorkspaceStore` similarly manages workspace state data, such as workspace name, and which clusters belong to a given workspace.
+- The `ExtensionStore` is a store for managing custom extension state data.
 
 ## ExtensionStore
 
 Extension developers can create their own store for managing state data by extending the `ExtensionStore` class.
 This guide shows how to create a store for the [`appPreferences` guide example](../renderer-extension#apppreferences), which demonstrates how to add a custom preference to the Preferences page.
 The preference is a simple boolean that indicates whether something is enabled or not.
-The problem with this example is that the enabled state is not stored anywhere, and reverts to the default the next time Lens is started.
+The problem with that example is that the enabled state is not stored anywhere, and reverts to the default the next time Lens is started.
 
 The following example code creates a store for the `appPreferences` guide example:
 
@@ -66,7 +67,7 @@ The `toJSON()` method is complementary to `fromStore()`, and is called when the 
 `toJSON()` must provide a JSON serializable object, facilitating its storage in JSON format.
 The `toJS()` function from [`mobx`](https://mobx.js.org/README.html) is convenient for this purpose, and is used here.
 
-Finally, the `examplePreferencesStore` is created by calling `ExamplePreferencesStore.getInstance<ExamplePreferencesStore>()`, and exported for use by other parts of the extension.
+Finally, `examplePreferencesStore` is created by calling `ExamplePreferencesStore.getInstance<ExamplePreferencesStore>()`, and exported for use by other parts of the extension.
 Note that `examplePreferencesStore` is a singleton, calling this function again will not create a new store.
 
 The following example code, modified from the [`appPreferences` guide example](../renderer-extension#apppreferences) demonstrates how to use the extension store.
