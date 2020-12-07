@@ -43,15 +43,17 @@ export class ClusterPageMenuRegistry extends PageMenuRegistry<ClusterPageMenuReg
   }
 
   getSubItems(parent: ClusterPageMenuRegistration) {
-    return this.getItems().filter((item) => {
-      return item.parentId === parent.id && item.target.extensionId === parent.target.extensionId;
-    });
+    return this.getItems().filter((item) => (
+      item.parentId === parent.id &&
+      item.target.extensionId === parent.target.extensionId
+    ));
   }
 
   getByPage({ id: pageId, extensionId }: RegisteredPage) {
-    return this.getItems().find((item) => {
-      return item.target.pageId == pageId && item.target.extensionId === extensionId;
-    });
+    return this.getItems().find((item) => (
+      item.target.pageId == pageId &&
+      item.target.extensionId === extensionId
+    ));
   }
 }
 

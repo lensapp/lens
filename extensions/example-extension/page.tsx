@@ -1,10 +1,10 @@
 import { Component, LensRendererExtension, Navigation } from "@k8slens/extensions";
-import { CoffeeDoodle } from "react-open-doodles";
 import React from "react";
 import path from "path";
 import { observer } from "mobx-react";
+import { CoffeeDoodle } from "react-open-doodles";
 
-export const exampleIdPageParam = Navigation.createUrlParam<string>({
+export const exampleId = Navigation.createUrlParam<string>({
   name: "exampleId",
   defaultValue: "demo",
 });
@@ -22,7 +22,7 @@ export class ExamplePage extends React.Component<{ extension: LensRendererExtens
   };
 
   render() {
-    const exampleName = exampleIdPageParam.get();
+    const exampleName = exampleId.get();
     const doodleStyle = {
       width: "200px"
     };
@@ -36,7 +36,7 @@ export class ExamplePage extends React.Component<{ extension: LensRendererExtens
         <p>Location: <i>{location.href}</i></p>
 
         <p className="url-params-demo flex column gaps">
-          <a onClick={() => exampleIdPageParam.set("secret")}>Show secret button</a>
+          <a onClick={() => exampleId.set("secret")}>Show secret button</a>
           {exampleName === "secret" && (
             <Component.Button accent label="Deactivate" onClick={this.deactivate}/>
           )}

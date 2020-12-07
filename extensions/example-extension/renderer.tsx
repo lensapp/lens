@@ -1,5 +1,5 @@
 import { LensRendererExtension } from "@k8slens/extensions";
-import { ExampleIcon, ExamplePage, exampleIdPageParam } from "./page";
+import { ExampleIcon, ExamplePage } from "./page";
 import React from "react";
 
 export default class ExampleExtension extends LensRendererExtension {
@@ -10,9 +10,11 @@ export default class ExampleExtension extends LensRendererExtension {
       components: {
         Page: () => <ExamplePage extension={this}/>,
       },
-      params: [
-        exampleIdPageParam,
-      ]
+      params: {
+        // setup param "exampleId" with default value "demo"
+        // could be also {[paramName: string]: UrlParam} for advanced use-cases (custom parse/stringify)
+        exampleId: "demo"
+      }
     }
   ];
 
@@ -25,9 +27,7 @@ export default class ExampleExtension extends LensRendererExtension {
       target: {
         pageId: "example",
         params: {
-          // cause target page has registered a url-param with name "exampleId" == exampleNameUrlParam.name
-          // passing values to page to generate final link
-          exampleId: "demo-2"
+          exampleId: "demo-sample-2"
         },
       },
     },

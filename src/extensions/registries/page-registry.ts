@@ -1,11 +1,9 @@
 // Extensions-api -> Custom page registration
 import type React from "react";
-import type { UrlParam } from "../../renderer/navigation/url-param";
-
-import path from "path";
 import { action } from "mobx";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, sanitizeExtensionName } from "../lens-extension";
+import { UrlParam } from "../../renderer/navigation/url-param";
 import logger from "../../main/logger";
 
 export interface PageRegistration {
@@ -17,19 +15,24 @@ export interface PageRegistration {
   components: PageComponents;
   /**
    * Registered page params.
-   * Used to generate page url when provided in getExtensionPageUrl()-helper.
+   * Used to generate final page url when provided in getExtensionPageUrl()-helper.
+   * Advanced usage: provide `UrlParam` as values to customize parsing/stringification from/to URL.
    */
-  params?: UrlParam[];
+  params?: PageTargetParams<string | UrlParam>;
 }
 
 export interface PageComponents {
   Page: React.ComponentType<any>;
 }
 
-export interface PageTarget<P = {}> {
+export interface PageTarget<P = PageTargetParams> {
   extensionId?: string;
   pageId?: string;
-  params?: Record<string, any | any[]> & P; // default target page params
+  params?: P;
+}
+
+export interface PageTargetParams<V = any> {
+  [paramName: string]: V;
 }
 
 export interface RegisteredPage extends PageRegistration {
@@ -38,27 +41,26 @@ export interface RegisteredPage extends PageRegistration {
 }
 
 export function getExtensionPageUrl(target: PageTarget): string {
-  const { extensionId, pageId = "", params: targetParams = {} } = target;
-  let stringifiedParams = "";
+  const { extensionId, pageId = "", params: targetPageParams = {} } = target;
+
+  const pagePath = ["/extension", sanitizeExtensionName(extensionId), pageId].join("/");
+  const pageUrl = new URL(pagePath, `http://localhost`);
 
   // stringify params to matched target page
-  const page = globalPageRegistry.getByPageTarget(target) || clusterPageRegistry.getByPageTarget(target);
+  const targetPage = globalPageRegistry.getByPageTarget(target) || clusterPageRegistry.getByPageTarget(target);
 
-  if (page?.params) {
-    const searchParams = page.params.map(urlParam => {
-      return urlParam.toSearchString({
-        value: targetParams[urlParam.name] ?? urlParam.getDefaultValue(),
-        mergeGlobals: false,
-        withPrefix: false,
-      });
-    });
-
-    if (searchParams.length > 0) {
-      stringifiedParams = `?${searchParams.join("&")}`;
-    }
+  if (targetPage?.params) {
+    Object.entries(targetPage.params).forEach(([name, param]) => {
+      const paramValue = targetPageParams[name];
+      if (param instanceof UrlParam) {
+        pageUrl.searchParams.set(name, param.stringify(paramValue));
+      } else {
+        pageUrl.searchParams.set(name, String(paramValue ?? param));
+      }
+    })
   }
 
-  return path.posix.join("/extension", sanitizeExtensionName(extensionId), pageId, stringifiedParams);
+  return pageUrl.href.replace(pageUrl.origin, "");
 }
 
 export class PageRegistry extends BaseRegistry<RegisteredPage> {
