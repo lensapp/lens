@@ -19,7 +19,7 @@
     
     
       
-        <title>Kube object list layout - Lens Documentation</title>
+        <title>KubeObjectListLayout Sample - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#wip" class="md-skip">
+        <a href="#kubeobjectlistlayout-sample" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Kube object list layout
+              KubeObjectListLayout Sample
             
           </span>
         </div>
@@ -782,6 +782,8 @@
             
               
               
+                
+              
               
                 <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
                   <div class="md-sidebar__scrollwrap">
@@ -789,6 +791,8 @@
                       
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
+  
+    
   
   
     <label class="md-nav__title" for="__toc">
@@ -798,8 +802,49 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#wip" class="md-nav__link">
-    WIP
+  <a href="#register-clusterpage-and-clusterpagemenu-objects" class="md-nav__link">
+    Register clusterPage and clusterPageMenu Objects
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#list-certificate-objects-on-the-cluster-page" class="md-nav__link">
+    List Certificate Objects on the Cluster Page
+  </a>
+  
+    <nav class="md-nav" aria-label="List Certificate Objects on the Cluster Page">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-crd-objects" class="md-nav__link">
+    Get CRD objects
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-certificatepage-component" class="md-nav__link">
+    Create CertificatePage component
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customize-details-panel" class="md-nav__link">
+    Customize Details panel
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    Summary
   </a>
   
 </li>
@@ -818,10 +863,226 @@
               
                 
                 
-                  <h1>Kube object list layout</h1>
-                
-                <hr />
-<h2 id="wip">WIP<a class="headerlink" href="#wip" title="Permanent link">#</a></h2>
+                <h1 id="kubeobjectlistlayout-sample">KubeObjectListLayout Sample<a class="headerlink" href="#kubeobjectlistlayout-sample" title="Permanent link">#</a></h1>
+<p>In this guide we will learn how to list Kubernetes CRD objects on the cluster dashboard. You can see the complete source code for this guide <a href="https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page">here</a>.</p>
+<p><img alt="" src="../images/certificates-crd-list.png" /></p>
+<p>Next, we will go the implementation through in steps. To achieve our goal, we need to:</p>
+<ol>
+<li><a href="#register-objects-for-clustepages-and-clusterpagemenus">Register ClustePage and ClusterPageMenu objects</a></li>
+<li><a href="#list-certificate-objects-on-the-cluster-page">List Certificate Objects on the Cluster Page</a></li>
+<li><a href="#customize-details-panel">Customize Details Panel</a></li>
+</ol>
+<h2 id="register-clusterpage-and-clusterpagemenu-objects">Register <code>clusterPage</code> and <code>clusterPageMenu</code> Objects<a class="headerlink" href="#register-clusterpage-and-clusterpagemenu-objects" title="Permanent link">#</a></h2>
+<p>First thing we need to do with our extension is to register new menu item in the cluster menu and create a cluster page that is opened when clicking the menu item. We will do this in our extension class <code>CrdSampleExtension</code> that is derived <code>LensRendererExtension</code> class:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">CrdSampleExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>To register menu item in the cluster menu we need to register <code>PageMenuRegistration</code> object. This object will register a menu item with "Certificates" text. It will also use <code>CertificateIcon</code> component to render an icon and navigate to cluster page that is having <code>certificates</code> page id.</p>
+<div class="highlight"><pre><span></span><code><span class="kr">export</span> <span class="kd">function</span> <span class="nx">CertificateIcon</span><span class="p">(</span><span class="nx">props</span>: <span class="kt">Component.IconProps</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">Icon</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;security&quot;</span> <span class="nx">tooltip</span><span class="o">=</span><span class="s2">&quot;Certificates&quot;</span><span class="o">/&gt;</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">CrdSampleExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
+
+  <span class="nx">clusterPageMenus</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nx">target</span><span class="o">:</span> <span class="p">{</span> <span class="nx">pageId</span><span class="o">:</span> <span class="s2">&quot;certificates&quot;</span> <span class="p">},</span>
+      <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Certificates&quot;</span><span class="p">,</span>
+      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">Icon</span>: <span class="kt">CertificateIcon</span><span class="p">,</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Then we need to register <code>PageRegistration</code> object with <code>certificates</code> id and define <code>CertificatePage</code> component to render certificates.</p>
+<div class="highlight"><pre><span></span><code><span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">CrdSampleExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
+  <span class="p">...</span>
+
+  <span class="nx">clusterPages</span> <span class="o">=</span> <span class="p">[{</span>
+    <span class="nx">id</span><span class="o">:</span> <span class="s2">&quot;certificates&quot;</span><span class="p">,</span>
+    <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">Page</span><span class="o">:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">CertificatePage</span> <span class="nx">extension</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">,</span>
+      <span class="nx">MenuIcon</span>: <span class="kt">CertificateIcon</span><span class="p">,</span>
+    <span class="p">}</span>
+  <span class="p">}]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="list-certificate-objects-on-the-cluster-page">List Certificate Objects on the Cluster Page<a class="headerlink" href="#list-certificate-objects-on-the-cluster-page" title="Permanent link">#</a></h2>
+<p>In the previous step we defined <code>CertificatePage</code> component to render certificates. In this step we will actually implement that. <code>CertificatePage</code> is a React component that will render <code>Component.KubeObjectListLayout</code> component to list <code>Certificate</code> CRD objects.</p>
+<h3 id="get-crd-objects">Get CRD objects<a class="headerlink" href="#get-crd-objects" title="Permanent link">#</a></h3>
+<p>In order to list CRD objects, we need first fetch those from Kubernetes API. Lens Extensions API provides easy mechanism to do this. We just need to define <code>Certificate</code> class derived from <code>K8sApi.KubeObject</code>, <code>CertificatesApi</code>derived from <code>K8sApi.KubeApi</code> and <code>CertificatesStore</code> derived from <code>K8sApi.KubeObjectStore</code>.</p>
+<p><code>Certificate</code> class defines properties found in the CRD object:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">export</span> <span class="kr">class</span> <span class="nx">Certificate</span> <span class="kr">extends</span> <span class="nx">K8sApi</span><span class="p">.</span><span class="nx">KubeObject</span> <span class="p">{</span>
+  <span class="kr">static</span> <span class="nx">kind</span> <span class="o">=</span> <span class="s2">&quot;Certificate&quot;</span>
+  <span class="kr">static</span> <span class="nx">namespaced</span> <span class="o">=</span> <span class="kc">true</span>
+  <span class="kr">static</span> <span class="nx">apiBase</span> <span class="o">=</span> <span class="s2">&quot;/apis/cert-manager.io/v1alpha2/certificates&quot;</span>
+
+  <span class="nx">kind</span>: <span class="kt">string</span>
+  <span class="nx">apiVersion</span>: <span class="kt">string</span>
+  <span class="nx">metadata</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">name</span>: <span class="kt">string</span><span class="p">;</span>
+    <span class="nx">namespace</span>: <span class="kt">string</span><span class="p">;</span>
+    <span class="nx">selfLink</span>: <span class="kt">string</span><span class="p">;</span>
+    <span class="nx">uid</span>: <span class="kt">string</span><span class="p">;</span>
+    <span class="nx">resourceVersion</span>: <span class="kt">string</span><span class="p">;</span>
+    <span class="nx">creationTimestamp</span>: <span class="kt">string</span><span class="p">;</span>
+    <span class="nx">labels</span><span class="o">:</span> <span class="p">{</span>
+      <span class="p">[</span><span class="nx">key</span>: <span class="kt">string</span><span class="p">]</span><span class="o">:</span> <span class="kt">string</span><span class="p">;</span>
+    <span class="p">};</span>
+    <span class="nx">annotations</span><span class="o">:</span> <span class="p">{</span>
+      <span class="p">[</span><span class="nx">key</span>: <span class="kt">string</span><span class="p">]</span><span class="o">:</span> <span class="kt">string</span><span class="p">;</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+  <span class="nx">spec</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">dnsNames</span>: <span class="kt">string</span><span class="p">[];</span>
+    <span class="nx">issuerRef</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">group</span>: <span class="kt">string</span><span class="p">;</span>
+      <span class="nx">kind</span>: <span class="kt">string</span><span class="p">;</span>
+      <span class="nx">name</span>: <span class="kt">string</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">secretName</span>: <span class="kt">string</span>
+  <span class="p">}</span>
+  <span class="nx">status</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">conditions</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">lastTransitionTime</span>: <span class="kt">string</span><span class="p">;</span>
+      <span class="nx">message</span>: <span class="kt">string</span><span class="p">;</span>
+      <span class="nx">reason</span>: <span class="kt">string</span><span class="p">;</span>
+      <span class="nx">status</span>: <span class="kt">string</span><span class="p">;</span>
+      <span class="nx">type?</span>: <span class="kt">string</span><span class="p">;</span>
+    <span class="p">}[];</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>With <code>CertificatesApi</code> class we are able to manage <code>Certificate</code> objects in Kubernetes API:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">export</span> <span class="kr">class</span> <span class="nx">CertificatesApi</span> <span class="kr">extends</span> <span class="nx">K8sApi</span><span class="p">.</span><span class="nx">KubeApi</span><span class="o">&lt;</span><span class="nx">Certificate</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="p">}</span>
+<span class="kr">export</span> <span class="kr">const</span> <span class="nx">certificatesApi</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CertificatesApi</span><span class="p">({</span>
+  <span class="nx">objectConstructor</span>: <span class="kt">Certificate</span>
+<span class="p">});</span>
+</code></pre></div>
+<p><code>CertificateStore</code> defines storage for <code>Certificate</code> objects</p>
+<div class="highlight"><pre><span></span><code><span class="kr">export</span> <span class="kr">class</span> <span class="nx">CertificatesStore</span> <span class="kr">extends</span> <span class="nx">K8sApi</span><span class="p">.</span><span class="nx">KubeObjectStore</span><span class="o">&lt;</span><span class="nx">Certificate</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="nx">api</span> <span class="o">=</span> <span class="nx">certificatesApi</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="kr">const</span> <span class="nx">certificatesStore</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CertificatesStore</span><span class="p">();</span>
+</code></pre></div>
+<p>And, finally, we register this store to Lens's API manager.</p>
+<div class="highlight"><pre><span></span><code><span class="nx">K8sApi</span><span class="p">.</span><span class="nx">apiManager</span><span class="p">.</span><span class="nx">registerStore</span><span class="p">(</span><span class="nx">certificatesStore</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="create-certificatepage-component">Create CertificatePage component<a class="headerlink" href="#create-certificatepage-component" title="Permanent link">#</a></h3>
+<p>Now we have created mechanism to manage <code>Certificate</code> objects in Kubernetes API. Then we need to fetch those and render them in the UI.</p>
+<p>First we define <code>CertificatePage</code> class that extends <code>React.Component</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">certificatesStore</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;../certificate-store&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">Certificate</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;../certificate&quot;</span>
+
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">CertificatePage</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span> <span class="nx">extension</span>: <span class="kt">LensRendererExtension</span> <span class="p">}</span><span class="o">&gt;</span> <span class="p">{</span>
+
+<span class="p">}</span>
+</code></pre></div>
+<p>Next we will implement <code>render</code> method that will display certificates in a list. To do that, we just need to add <code>Component.KubeObjectListLayout</code> component inside <code>Component.TabLayout</code> component in render method. To define which objects the list is showing, we need to pass <code>certificateStore</code> object to <code>Component.KubeObjectListLayout</code> in <code>store</code> property. <code>Component.KubeObjectListLayout</code> will fetch automacially items from the given store when component is mounted. Also, we can define needed sorting callbacks and search filters for the list:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">enum</span> <span class="nx">sortBy</span> <span class="p">{</span>
+  <span class="nx">name</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+  <span class="nx">namespace</span> <span class="o">=</span> <span class="s2">&quot;namespace&quot;</span><span class="p">,</span>
+  <span class="nx">issuer</span> <span class="o">=</span> <span class="s2">&quot;issuer&quot;</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">CertificatePage</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="p">{</span> <span class="nx">extension</span>: <span class="kt">LensRendererExtension</span> <span class="p">}</span><span class="o">&gt;</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+
+  <span class="nx">render() {</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">TabLayout</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectListLayout</span>
+          <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;Certicates&quot;</span> <span class="nx">store</span><span class="o">=</span><span class="p">{</span><span class="nx">certificatesStore</span><span class="p">}</span>
+          <span class="nx">sortingCallbacks</span><span class="o">=</span><span class="p">{{</span>
+            <span class="p">[</span><span class="nx">sortBy</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span><span class="o">:</span> <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">getName</span><span class="p">(),</span>
+            <span class="p">[</span><span class="nx">sortBy</span><span class="p">.</span><span class="nx">namespace</span><span class="p">]</span><span class="o">:</span> <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">namespace</span><span class="p">,</span>
+            <span class="p">[</span><span class="nx">sortBy</span><span class="p">.</span><span class="nx">issuer</span><span class="p">]</span><span class="o">:</span> <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">spec</span><span class="p">.</span><span class="nx">issuerRef</span><span class="p">.</span><span class="nx">name</span>
+          <span class="p">}}</span>
+          <span class="nx">searchFilters</span><span class="o">=</span><span class="p">{[</span>
+            <span class="p">(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">certificate</span><span class="p">.</span><span class="nx">getSearchFields</span><span class="p">()</span>
+          <span class="p">]}</span>
+          <span class="nx">renderHeaderTitle</span><span class="o">=</span><span class="s2">&quot;Certificates&quot;</span>
+          <span class="nx">renderTableHeader</span><span class="o">=</span><span class="p">{[</span>
+            <span class="p">{</span> <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="nx">className</span><span class="o">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="nx">sortBy</span>: <span class="kt">sortBy.name</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Namespace&quot;</span><span class="p">,</span> <span class="nx">className</span><span class="o">:</span> <span class="s2">&quot;namespace&quot;</span><span class="p">,</span> <span class="nx">sortBy</span>: <span class="kt">sortBy.namespace</span> <span class="p">},</span>
+            <span class="p">{</span> <span class="nx">title</span><span class="o">:</span> <span class="s2">&quot;Issuer&quot;</span><span class="p">,</span> <span class="nx">className</span><span class="o">:</span> <span class="s2">&quot;issuer&quot;</span><span class="p">,</span> <span class="nx">sortBy</span>: <span class="kt">sortBy.namespace</span> <span class="p">},</span>
+          <span class="p">]}</span>
+          <span class="nx">renderTableContents</span><span class="o">=</span><span class="p">{(</span><span class="nx">certificate</span>: <span class="kt">Certificate</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="nx">certificate</span><span class="p">.</span><span class="nx">getName</span><span class="p">(),</span>
+            <span class="nx">certificate</span><span class="p">.</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">namespace</span><span class="p">,</span>
+            <span class="nx">certificate</span><span class="p">.</span><span class="nx">spec</span><span class="p">.</span><span class="nx">issuerRef</span><span class="p">.</span><span class="nx">name</span>
+          <span class="p">]}</span>
+        <span class="o">/&gt;</span>
+      <span class="o">&lt;</span><span class="err">/Component.TabLayout&gt;</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="customize-details-panel">Customize Details panel<a class="headerlink" href="#customize-details-panel" title="Permanent link">#</a></h3>
+<p>We have learned now, how to list CRD objects in a list view. Next, we will learn how to customize details panel that will be opened when the object is clicked in the list.</p>
+<p>First, we need to register our custom component to render details for the specific Kubernetes custom resource, in our case <code>Certificate</code>. We will do this again in <code>CrdSampleExtension</code> class:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">CrdSampleExtension</span> <span class="kr">extends</span> <span class="nx">LensRendererExtension</span> <span class="p">{</span>
+  <span class="c1">//...</span>
+
+  <span class="nx">kubeObjectDetailItems</span> <span class="o">=</span> <span class="p">[{</span>
+    <span class="nx">kind</span>: <span class="kt">Certificate.kind</span><span class="p">,</span>
+    <span class="nx">apiVersions</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;cert-manager.io/v1alpha2&quot;</span><span class="p">],</span>
+    <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">Details</span><span class="o">:</span> <span class="p">(</span><span class="nx">props</span>: <span class="kt">CertificateDetailsProps</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="o">&lt;</span><span class="nx">CertificateDetails</span> <span class="p">{...</span><span class="nx">props</span><span class="p">}</span> <span class="o">/&gt;</span>
+    <span class="p">}</span>
+  <span class="p">}]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Here we defined that <code>CertificateDetails</code> component will render the resource details. So, next we need to implement that component. Lens will inject <code>Certificate</code> object into our component so we just need to render some information out of it. We can use <code>Component.DrawerItem</code> component from Lens Extensions API to give the same look and feel as Lens is using elsewhere:</p>
+<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">K8sApi</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">Certificate</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;../certificate&quot;</span><span class="p">;</span>
+
+<span class="kr">export</span> <span class="kr">interface</span> <span class="nx">CertificateDetailsProps</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="p">.</span><span class="nx">KubeObjectDetailsProps</span><span class="o">&lt;</span><span class="nx">Certificate</span><span class="o">&gt;</span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="kr">class</span> <span class="nx">CertificateDetails</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span><span class="o">&lt;</span><span class="nx">CertificateDetailsProps</span><span class="o">&gt;</span> <span class="p">{</span>
+
+  <span class="nx">render() {</span>
+    <span class="kr">const</span> <span class="p">{</span> <span class="nx">object</span>: <span class="kt">certificate</span> <span class="p">}</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">certificate</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;Certificate&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">DrawerItem</span> <span class="nx">name</span><span class="o">=</span><span class="s2">&quot;Created&quot;</span><span class="o">&gt;</span>
+          <span class="p">{</span><span class="nx">certificate</span><span class="p">.</span><span class="nx">getAge</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="kc">false</span><span class="p">)}</span> <span class="nx">ago</span> <span class="p">({</span><span class="nx">certificate</span><span class="p">.</span><span class="nx">metadata</span><span class="p">.</span><span class="nx">creationTimestamp</span> <span class="p">})</span>
+        <span class="o">&lt;</span><span class="err">/Component.DrawerItem&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">DrawerItem</span> <span class="nx">name</span><span class="o">=</span><span class="s2">&quot;DNS Names&quot;</span><span class="o">&gt;</span>
+          <span class="p">{</span><span class="nx">certificate</span><span class="p">.</span><span class="nx">spec</span><span class="p">.</span><span class="nx">dnsNames</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)}</span>
+        <span class="o">&lt;</span><span class="err">/Component.DrawerItem&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">DrawerItem</span> <span class="nx">name</span><span class="o">=</span><span class="s2">&quot;Secret&quot;</span><span class="o">&gt;</span>
+          <span class="p">{</span><span class="nx">certificate</span><span class="p">.</span><span class="nx">spec</span><span class="p">.</span><span class="nx">secretName</span><span class="p">}</span>
+        <span class="o">&lt;</span><span class="err">/Component.DrawerItem&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">DrawerItem</span> <span class="nx">name</span><span class="o">=</span><span class="s2">&quot;Status&quot;</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;status&quot;</span> <span class="nx">labelsOnly</span><span class="o">&gt;</span>
+          <span class="p">{</span><span class="nx">certificate</span><span class="p">.</span><span class="nx">status</span><span class="p">.</span><span class="nx">conditions</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">condition</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="kr">const</span> <span class="p">{</span> <span class="nx">type</span><span class="p">,</span> <span class="nx">reason</span><span class="p">,</span> <span class="nx">message</span><span class="p">,</span> <span class="nx">status</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">condition</span><span class="p">;</span>
+            <span class="kr">const</span> <span class="nx">kind</span> <span class="o">=</span> <span class="nx">type</span> <span class="o">||</span> <span class="nx">reason</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">kind</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+            <span class="k">return</span> <span class="p">(</span>
+              <span class="o">&lt;</span><span class="nx">Component</span><span class="p">.</span><span class="nx">Badge</span>
+                <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">kind</span> <span class="o">+</span> <span class="nx">index</span><span class="p">}</span> <span class="nx">label</span><span class="o">=</span><span class="p">{</span><span class="nx">kind</span><span class="p">}</span>
+                <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;success &quot;</span><span class="o">+</span><span class="nx">kind</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()}</span>
+                <span class="nx">tooltip</span><span class="o">=</span><span class="p">{</span><span class="nx">message</span><span class="p">}</span>
+              <span class="o">/&gt;</span>
+            <span class="p">);</span>
+          <span class="p">})}</span>
+        <span class="o">&lt;</span><span class="err">/Component.DrawerItem&gt;</span>
+      <span class="o">&lt;</span><span class="err">/div&gt;</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">#</a></h2>
+<p>Like we can see above, it's very easy to add custom pages and fetch Kubernetes resources by using Extensions API. Please see the <a href="https://github.com/lensapp/lens-extension-samples/tree/master/custom-resource-page">complete source code</a> to test it out.</p>
                 
               
               
