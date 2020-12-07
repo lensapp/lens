@@ -143,7 +143,7 @@ Now we have created mechanism to manage `Certificate` objects in Kubernetes API.
 
 First we define `CertificatePage` class that extends `React.Component`.
 
-```
+```typescript
 import { Component, LensRendererExtension } from "@k8slens/extensions";
 import React from "react";
 import { certificatesStore } from "../certificate-store";
@@ -154,18 +154,7 @@ export class CertificatePage extends React.Component<{ extension: LensRendererEx
 }
 ```
 
-We want to load all `Certificate` objects from `certificateStore` when the component is mounted. We can just call `certificatesStore.loadAll()` method:
-
-```
-export class CertificatePage extends React.Component<{ extension: LensRendererExtension }> {
-
-  async componentDidMount() {
-    await certificatesStore.loadAll()
-  }
-}
-```
-
-After that, we will implement `render` method that will display certificates in a list. To do that we just need to add `Component.KubeObjectListLayout` component inside `Component.TabLayout` component in render method. To define which objects the list is showing, we need to pass `certificateStore` object to `Component.KubeObjectListLayout` in `store` property. Also, we can define needed sorting callbacks and search filters for the list:
+Next we will implement `render` method that will display certificates in a list. To do that, we just need to add `Component.KubeObjectListLayout` component inside `Component.TabLayout` component in render method. To define which objects the list is showing, we need to pass `certificateStore` object to `Component.KubeObjectListLayout` in `store` property. `Component.KubeObjectListLayout` will fetch automacially items from the given store when component is mounted. Also, we can define needed sorting callbacks and search filters for the list:
 
 ```typescript
 enum sortBy {
@@ -228,7 +217,7 @@ export default class CrdSampleExtension extends LensRendererExtension {
 }
 ```
 
-Here we defined that `CertificateDetails` component will render the resource details. So, next we need to implement that component. Lens will inject `Certificate` object into our component so we just need to render some information out of it. We can use `Component.DrawerItem` component from Lens Extensions API to have the same look and feel as Lens is using elsewhere:
+Here we defined that `CertificateDetails` component will render the resource details. So, next we need to implement that component. Lens will inject `Certificate` object into our component so we just need to render some information out of it. We can use `Component.DrawerItem` component from Lens Extensions API to give the same look and feel as Lens is using elsewhere:
 
 ```typescript
 import { Component, K8sApi } from "@k8slens/extensions";
