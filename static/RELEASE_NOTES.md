@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.0-rc.3 (current version)
+## 4.0.0 (current version)
 
 - Extension API
 - Improved pod logs
@@ -28,6 +28,7 @@ Here you can find description of changes we've built into each release. While we
 - Replace cluster warning event polling with watches
 - Detect more Kubernetes distributions
 - Performance fix when cluster has lots of namespaces
+- Store more than largest kube api request amount in the event store
 - Fix pod usage metrics on Kubernetes >=1.19
 - Fix proxy upgrade socket timeouts
 - Fix UI staleness after network issues
