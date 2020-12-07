@@ -52,12 +52,13 @@ export function getExtensionPageUrl(target: PageTarget): string {
   if (targetPage?.params) {
     Object.entries(targetPage.params).forEach(([name, param]) => {
       const paramValue = targetPageParams[name];
+
       if (param instanceof UrlParam) {
         pageUrl.searchParams.set(name, param.stringify(paramValue));
       } else {
         pageUrl.searchParams.set(name, String(paramValue ?? param));
       }
-    })
+    });
   }
 
   return pageUrl.href.replace(pageUrl.origin, "");
