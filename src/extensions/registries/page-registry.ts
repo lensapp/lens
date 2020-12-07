@@ -41,22 +41,29 @@ export interface RegisteredPage extends PageRegistration {
 }
 
 export function getExtensionPageUrl(target: PageTarget): string {
-  const { extensionId, pageId = "", params: targetPageParams = {} } = target;
+  const { extensionId, pageId = "", params: targetParams = {} } = target;
 
-  const pagePath = ["/extension", sanitizeExtensionName(extensionId), pageId].join("/");
+  const pagePath = ["/extension", sanitizeExtensionName(extensionId), pageId]
+    .filter(Boolean)
+    .join("/").replace(/\/+/g, "/").replace(/\/$/, ""); // normalize multi-slashes (e.g. coming from page.id)
+
   const pageUrl = new URL(pagePath, `http://localhost`);
 
   // stringify params to matched target page
-  const targetPage = globalPageRegistry.getByPageTarget(target) || clusterPageRegistry.getByPageTarget(target);
+  const registeredPage = globalPageRegistry.getByPageTarget(target) || clusterPageRegistry.getByPageTarget(target);
 
-  if (targetPage?.params) {
-    Object.entries(targetPage.params).forEach(([name, param]) => {
-      const paramValue = targetPageParams[name];
+  if (registeredPage?.params) {
+    Object.entries(registeredPage.params).forEach(([name, param]) => {
+      const targetParamValue = targetParams[name];
 
       if (param instanceof UrlParam) {
-        pageUrl.searchParams.set(name, param.stringify(paramValue));
+        pageUrl.searchParams.set(name, param.stringify(targetParamValue));
       } else {
-        pageUrl.searchParams.set(name, String(paramValue ?? param));
+        const value = String(targetParamValue ?? param);
+
+        if (value) {
+          pageUrl.searchParams.set(name, value);
+        }
       }
     });
   }
