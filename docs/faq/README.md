@@ -6,7 +6,7 @@ Lens supports MacOS, Windows and Linux operating systems. For Linux there are Sn
 
 ### Lens application is not opening, what might be wrong?
 
-When Lens is started, it will start HTTP proxy server on the background and requires that operationg system allows to start listening to some free port. You can see the port allocated for Lens from application logs. Lens expects also that `localhost` DNS points to `127.0.0.1` address.
+When Lens is started, it will start HTTP proxy server on the background and requires that operating system allows to start listening to some free port. You can see the port allocated for Lens from application logs. Lens expects also that `localhost` DNS points to `127.0.0.1` address.
 
 ### Why can't I add any clusters?
 
@@ -14,7 +14,7 @@ When adding new clusters, a valid Kubeconfig file is required. Please check that
 
 ### Why Cluster dashboard is not opening?
 
-To see Cluster dashboard properly, Kubernetes cluster must be reachable either directly from your computer or via HTTP proxy. You can configure HTTP proxy in Cluster Settgins. Also, provided credentials in Kubeconfig must be valid. If Kubeconfig uses `exec` command, the binary must be available in global PATH or absolute path must be used. Lens application can't see PATH modifications made by any shell init scripts. There might be also some issues on the Snap version if the exec binary is installed also from Snap and requires additional symlinking, please see [#699](https://github.com/lensapp/lens/issues/699).
+To see Cluster dashboard properly, Kubernetes cluster must be reachable either directly from your computer or via HTTP proxy. You can configure HTTP proxy in Cluster Settigns. Also, provided credentials in Kubeconfig must be valid. If Kubeconfig uses `exec` command, the binary must be available in global PATH or absolute path must be used. Lens application can't see PATH modifications made by any shell init scripts. There might be also some issues on the Snap version if the exec binary is installed also from Snap and requires additional symlinking, please see [#699](https://github.com/lensapp/lens/issues/699).
 
 ### Why I don't see anything on Cluster dashboard?
 
@@ -36,7 +36,7 @@ Lens comes with bundled Helm 3 binary and Lens will add by default `bitnami` rep
 
 ### Where can I find application logs?
 
-Lens will store application logs to following locations depending on your operationg system:
+Lens will store application logs to following locations depending on your operating system:
 - MacOS: ~/Library/Logs/Lens/
 - Windows: %USERPROFILE%\AppData\Roaming\Lens\logs\
 - Linux: ~/.config/Lens/logs/
