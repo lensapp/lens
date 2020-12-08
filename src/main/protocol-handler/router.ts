@@ -68,8 +68,6 @@ export class LensProtocolRouter extends Singleton {
         return this._route(this.internalRoutes, url);
       case "extension":
         return this._routeToExtension(url);
-      case "main":
-        return this._routeToMain(url);
       default:
         throw new RoutingError(RoutingErrorType.INVALID_HOST, url);
 
@@ -91,19 +89,6 @@ export class LensProtocolRouter extends Singleton {
     }
 
     this._route(routes, url, true);
-  }
-
-  private _routeToMain(url: Url): void {
-    if (url.pathname === "/install-extension") {
-      // .query is e.g.  {"@mirantis/lens-extension-cc": ""}, convert it to "@mirantis/lens-extension-cc"
-      const packageName = Object.keys(url.query)[0];
-
-      console.log(`Installing ${packageName} from lens:// url`);
-
-      // TODO: Open extensions page
-    } else {
-      throw new RoutingError(RoutingErrorType.INVALID_PATHNAME, url);
-    }
   }
 
   private _route(routes: Map<string, RouteHandler>, url: Url, matchExtension = false): void {
