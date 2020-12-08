@@ -1,4 +1,4 @@
-import chokidar from "chokidar";
+import { watch } from "chokidar";
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import fs from "fs-extra";
@@ -138,7 +138,7 @@ export class ExtensionDiscovery {
     await this.whenLoaded;
 
     // chokidar works better than fs.watch
-    chokidar.watch(this.localFolderPath, {
+    watch(this.localFolderPath, {
       // For adding and removing symlinks to work, the depth has to be 1.
       depth: 1,
       // Try to wait until the file has been completely copied.
@@ -156,9 +156,18 @@ export class ExtensionDiscovery {
   }
 
   handleWatchFileAdd =  async (filePath: string) => {
-    if (path.basename(filePath) === manifestFilename) {
+    // e.g. "foo/package.json"
+    const relativePath = path.relative(this.localFolderPath, filePath);
+
+    // Converts "foo/package.json" to ["foo", "package.json"], where length of 2 implies
+    // that the added file is in a folder under local folder path.
+    // This safeguards against a file watch being triggered under a sub-directory which is not an extension.
+    const isUnderLocalFolderPath = relativePath.split(path.sep).length === 2;
+
+    if (path.basename(filePath) === manifestFilename && isUnderLocalFolderPath) {
       try {
         const absPath = path.dirname(filePath);
+
         // this.loadExtensionFromPath updates this.packagesJson
         const extension = await this.loadExtensionFromPath(absPath);
 
