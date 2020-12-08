@@ -17,6 +17,7 @@
     "email": "info@k8slens.dev"
   },
   "devDependencies": {
-    "@types/node": "^14.14.6"
+    "@types/node": "^14.14.6",
+    "conf": "^7.0.1"
   }
 }

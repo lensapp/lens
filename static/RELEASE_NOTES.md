@@ -2,7 +2,7 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.0-rc.2 (current version)
+## 4.0.0-rc.3 (current version)
 
 - Extension API
 - Improved pod logs
@@ -26,12 +26,19 @@ Here you can find description of changes we've built into each release. While we
 - Update EULA url
 - Change add-cluster to single column layout
 - Replace cluster warning event polling with watches
+- Detect more Kubernetes distributions
+- Performance fix when cluster has lots of namespaces
 - Fix pod usage metrics on Kubernetes >=1.19
 - Fix proxy upgrade socket timeouts
 - Fix UI staleness after network issues
 - Fix errors on app quit
 - Fix kube-auth-proxy to accept only target cluster hostname
 - Fix link to metrics stack resources
+
+## 3.6.9
+- Use Alpine 3.12 for node shell sessions
+- Fix errors on app quit
+- Fix kube-auth-proxy to accept only target cluster hostname
 
 ## 3.6.8
 - Fix cluster connection issue when opening cluster settings for disconnected clusters

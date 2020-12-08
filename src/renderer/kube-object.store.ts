@@ -11,12 +11,23 @@ import { getHostedCluster } from "../common/cluster-store";
 @autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
   abstract api: KubeApi<T>;
-  public limit: number;
+  public readonly limit?: number;
+  public readonly bufferSize: number = 50000;
 
   constructor() {
     super();
     this.bindWatchEventsUpdater();
     kubeWatchApi.addListener(this, this.onWatchApiEvent);
+  }
+
+  get query(): IKubeApiQueryParams {
+    const { limit } = this;
+
+    if (!limit) {
+      return {};
+    }
+
+    return { limit };
   }
 
   getStatuses?(items: T[]): Record<string, number>;
@@ -62,10 +73,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   protected async loadItems(allowedNamespaces?: string[]): Promise<T[]> {
     if (!this.api.isNamespaced || !allowedNamespaces) {
-      const { limit } = this;
-      const query: IKubeApiQueryParams = limit ? { limit } : {};
-
-      return this.api.list({}, query);
+      return this.api.list({}, this.query);
     } else {
       return Promise
         .all(allowedNamespaces.map(namespace => this.api.list({ namespace })))
@@ -179,9 +187,9 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       return;
     }
     // create latest non-observable copy of items to apply updates in one action (==single render)
-    let items = this.items.toJS();
+    const items = this.items.toJS();
 
-    this.eventsBuffer.clear().forEach(({ type, object }) => {
+    for (const {type, object} of this.eventsBuffer.clear()) {
       const { uid, selfLink } = object.metadata;
       const index = items.findIndex(item => item.getId() === uid);
       const item = items[index];
@@ -204,14 +212,9 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
           }
           break;
       }
-    });
-
-    // slice to max allowed items
-    if (this.limit && items.length > this.limit) {
-      items = items.slice(-this.limit);
     }
 
     // update items
-    this.items.replace(this.sortItems(items));
+    this.items.replace(this.sortItems(items.slice(-this.bufferSize)));
   }
 }

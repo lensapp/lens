@@ -61,12 +61,14 @@ export class App extends React.Component {
     await requestMain(clusterSetFrameIdHandler, clusterId, frameId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
     extensionLoader.loadOnClusterRenderer();
-    appEventBus.emit({
-      name: "cluster",
-      action: "open",
-      params: {
-        clusterId
-      }
+    setTimeout(() => {
+      appEventBus.emit({
+        name: "cluster",
+        action: "open",
+        params: {
+          clusterId
+        }
+      });
     });
     window.addEventListener("online", () => {
       window.location.reload();
@@ -154,9 +156,7 @@ export class App extends React.Component {
         const page = clusterPageRegistry.getByPageTarget(menu.target);
 
         if (page) {
-          const pageComponent = () => <page.components.Page/>;
-
-          return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={pageComponent}/>;
+          return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
         }
       }
     });

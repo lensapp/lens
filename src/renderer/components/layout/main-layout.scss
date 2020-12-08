@@ -14,15 +14,6 @@
     grid-area: header;
     background: $layoutBackground;
     padding: $padding $padding * 2;
-
-    span + .lens-version {
-      margin-left: $margin;
-    }
-
-    .lens-version {
-      font-size: x-small;
-      text-transform: uppercase;
-    }
   }
 
   > aside {

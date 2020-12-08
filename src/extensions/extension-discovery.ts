@@ -1,8 +1,11 @@
 import chokidar from "chokidar";
+import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import fs from "fs-extra";
+import { observable, reaction, toJS, when } from "mobx";
 import os from "os";
 import path from "path";
+import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
 import { getBundledExtensions } from "../common/utils/app-version";
 import logger from "../main/logger";
 import { extensionInstaller, PackageJson } from "./extension-installer";
@@ -28,6 +31,10 @@ const logModule = "[EXTENSION-DISCOVERY]";
 
 export const manifestFilename = "package.json";
 
+interface ExtensionDiscoveryChannelMessage {
+  isLoaded: boolean;
+}
+
 /**
  * Returns true if the lstat is for a directory-like file (e.g. isDirectory or symbolic link)
  * @param lstat the stats to compare
@@ -49,22 +56,16 @@ export class ExtensionDiscovery {
 
   private loadStarted = false;
 
-  // This promise is resolved when .load() is finished.
-  // This allows operations to be added after .load() success.
-  private loaded: Promise<void>;
+  // True if extensions have been loaded from the disk after app startup
+  @observable isLoaded = false;
+  whenLoaded = when(() => this.isLoaded);
 
-  // These are called to either resolve or reject this.loaded promise
-  private resolveLoaded: () => void;
-  private rejectLoaded: (error: any) => void;
+  // IPC channel to broadcast changes to extension-discovery from main
+  protected static readonly extensionDiscoveryChannel = "extension-discovery:main";
 
   public events: EventEmitter;
 
   constructor() {
-    this.loaded = new Promise((resolve, reject) => {
-      this.resolveLoaded = resolve;
-      this.rejectLoaded = reject;
-    });
-
     this.events = new EventEmitter();
   }
 
@@ -98,8 +99,32 @@ export class ExtensionDiscovery {
   /**
    * Initializes the class and setups the file watcher for added/removed local extensions.
    */
-  init() {
+  async init() {
+    if (ipcRenderer) {
+      await this.initRenderer();
+    } else {
+      await this.initMain();
+    }
+  }
+
+  async initRenderer() {
+    const onMessage = ({ isLoaded }: ExtensionDiscoveryChannelMessage) => {
+      this.isLoaded = isLoaded;
+    };
+
+    requestMain(ExtensionDiscovery.extensionDiscoveryChannel).then(onMessage);
+    subscribeToBroadcast(ExtensionDiscovery.extensionDiscoveryChannel, (_event, message: ExtensionDiscoveryChannelMessage) => {
+      onMessage(message);
+    });
+  }
+
+  async initMain() {
     this.watchExtensions();
+    handleRequest(ExtensionDiscovery.extensionDiscoveryChannel, () => this.toJSON());
+
+    reaction(() => this.toJSON(), () => {
+      this.broadcast();
+    });
   }
 
   /**
@@ -110,7 +135,7 @@ export class ExtensionDiscovery {
     logger.info(`${logModule} watching extension add/remove in ${this.localFolderPath}`);
 
     // Wait until .load() has been called and has been resolved
-    await this.loaded;
+    await this.whenLoaded;
 
     // chokidar works better than fs.watch
     chokidar.watch(this.localFolderPath, {
@@ -208,36 +233,31 @@ export class ExtensionDiscovery {
 
     this.loadStarted = true;
 
-    try {
-      logger.info(`${logModule} loading extensions from ${extensionInstaller.extensionPackagesRoot}`);
+    logger.info(`${logModule} loading extensions from ${extensionInstaller.extensionPackagesRoot}`);
 
-      if (fs.existsSync(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"))) {
-        await fs.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
-      }
-
-      try {
-        await fs.access(this.inTreeFolderPath, fs.constants.W_OK);
-        this.bundledFolderPath = this.inTreeFolderPath;
-      } catch {
-      // we need to copy in-tree extensions so that we can symlink them properly on "npm install"
-        await fs.remove(this.inTreeTargetPath);
-        await fs.ensureDir(this.inTreeTargetPath);
-        await fs.copy(this.inTreeFolderPath, this.inTreeTargetPath);
-        this.bundledFolderPath = this.inTreeTargetPath;
-      }
-
-      await fs.ensureDir(this.nodeModulesPath);
-      await fs.ensureDir(this.localFolderPath);
-
-      const extensions = await this.loadExtensions();
-
-      // resolve the loaded promise
-      this.resolveLoaded();
-
-      return extensions;
-    } catch (error) {
-      this.rejectLoaded(error);
+    if (fs.existsSync(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"))) {
+      await fs.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
     }
+
+    try {
+      await fs.access(this.inTreeFolderPath, fs.constants.W_OK);
+      this.bundledFolderPath = this.inTreeFolderPath;
+    } catch {
+      // we need to copy in-tree extensions so that we can symlink them properly on "npm install"
+      await fs.remove(this.inTreeTargetPath);
+      await fs.ensureDir(this.inTreeTargetPath);
+      await fs.copy(this.inTreeFolderPath, this.inTreeTargetPath);
+      this.bundledFolderPath = this.inTreeTargetPath;
+    }
+
+    await fs.ensureDir(this.nodeModulesPath);
+    await fs.ensureDir(this.localFolderPath);
+
+    const extensions = await this.loadExtensions();
+
+    this.isLoaded = true;
+    
+    return extensions;
   }
 
   protected async getByManifest(manifestPath: string, { isBundled = false }: {
@@ -355,6 +375,18 @@ export class ExtensionDiscovery {
     const manifestPath = path.resolve(absPath, manifestFilename);
 
     return this.getByManifest(manifestPath, { isBundled });
+  }
+
+  toJSON(): ExtensionDiscoveryChannelMessage {
+    return toJS({
+      isLoaded: this.isLoaded
+    }, {
+      recurseEverything: true
+    });
+  }
+
+  broadcast() {
+    broadcastMessage(ExtensionDiscovery.extensionDiscoveryChannel, this.toJSON());
   }
 }
 
