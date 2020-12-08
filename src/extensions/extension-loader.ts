@@ -294,7 +294,7 @@ export class ExtensionLoader {
    * Get url to the tarball of the extension package. Assumes package is found from npm regisry.
    * @param packageName e.g. "@mirantis/lens-extension-cc"
    */
-  getNpmPackageTarballUrl(packageName: string) {
+  getNpmPackageTarballUrl(packageName: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const command = [extensionInstaller.npmPath, "view", packageName, "dist.tarball", "--silent"];
 

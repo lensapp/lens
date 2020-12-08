@@ -160,11 +160,26 @@ export class Extensions extends React.Component {
     }
   };
 
-  installFromUrlOrPath = async () => {
-    const { installPath } = this;
+  /**
+   * Start extension install using a package name, which is resolved to a tarball url using the npm registry.
+   * @param packageName e.g. "@publisher/extension-name"
+   */
+  async installFromNpm(packageName: string) {
+    const tarballUrl = await extensionLoader.getNpmPackageTarballUrl(packageName);
 
-    if (!installPath) return;
+    return this.installFromUrlOrPath(tarballUrl);
+  }
 
+  /**
+   * Start extension install using the current value of this.installPath
+   */
+  installFromInstallPath = async () => {
+    if (this.installPath) {
+      this.installFromUrlOrPath(this.installPath);
+    }
+  };
+
+  async installFromUrlOrPath(installPath: string) {
     this.startingInstall = true;
     const fileName = path.basename(installPath);
 
@@ -187,7 +202,7 @@ export class Extensions extends React.Component {
         <p>Installation has failed: <b>{String(error)}</b></p>
       );
     }
-  };
+  }
 
   installOnDrop = (files: File[]) => {
     logger.info("Install from D&D");
@@ -511,7 +526,7 @@ export class Extensions extends React.Component {
                 validators={installPath ? Extensions.installPathValidator : undefined}
                 value={installPath}
                 onChange={value => this.installPath = value}
-                onSubmit={this.installFromUrlOrPath}
+                onSubmit={this.installFromInstallPath}
                 iconLeft="link"
                 iconRight={
                   <Icon
@@ -528,7 +543,7 @@ export class Extensions extends React.Component {
               label="Install"
               disabled={this.isInstalling || !Extensions.installPathValidator.validate(installPath)}
               waiting={this.isInstalling}
-              onClick={this.installFromUrlOrPath}
+              onClick={this.installFromInstallPath}
             />
             <small className="hint">
               <Trans><b>Pro-Tip</b>: you can also drag-n-drop tarball-file to this area</Trans>
