@@ -1,6 +1,7 @@
 import { Singleton } from "../../common/utils";
 import Url from "url-parse";
 import { match, matchPath } from "react-router";
+import { pathToRegexp } from "path-to-regexp";
 
 export enum RoutingErrorType {
   INVALID_PROTOCOL = "invalid-protocol",
@@ -53,7 +54,7 @@ export class LensProtocolRouter extends Singleton {
   private extentionRoutes = new Map<ExtensionId, Map<string, RouteHandler>>();
   private internalRoutes = new Map<string, RouteHandler>();
 
-  private static ExtensionIDSchema = `/:${EXT_ID_MATCH}/`;
+  private static ExtensionIDSchema = `/:${EXT_ID_MATCH}`;
 
   /**
    * route
@@ -75,7 +76,7 @@ export class LensProtocolRouter extends Singleton {
   }
 
   private _routeToExtension(url: Url): void {
-    const match = matchPath<ExtensionIdMatch>(url.pathname, { path: LensProtocolRouter.ExtensionIDSchema });
+    const match = matchPath<ExtensionIdMatch>(url.pathname, LensProtocolRouter.ExtensionIDSchema);
 
     if (!match) {
       throw new RoutingError(RoutingErrorType.NO_EXTENSION_ID, url);
@@ -94,9 +95,13 @@ export class LensProtocolRouter extends Singleton {
   private _route(routes: Map<string, RouteHandler>, url: Url, matchExtension = false): void {
     const matches = Array.from(routes.entries())
       .map(([schema, handler]): [match<Record<string, string>>, RouteHandler] => {
-        const path = `${matchExtension ? LensProtocolRouter.ExtensionIDSchema : ""}${schema}`;
+        if (matchExtension) {
+          const joinChar = schema.startsWith("/") ? "" : "/";
 
-        return [matchPath(url.pathname, { path }), handler];
+          schema = `${LensProtocolRouter.ExtensionIDSchema}${joinChar}${schema}`;
+        }
+
+        return [matchPath(url.pathname, { path: schema }), handler];
       })
       .filter(([match]) => match);
     // prefer an exact match, but if not pick the first route registered
@@ -116,10 +121,13 @@ export class LensProtocolRouter extends Singleton {
   }
 
   public on(urlSchema: string, handler: RouteHandler): void {
+    pathToRegexp(urlSchema); // verify now that the schema is valid
     this.internalRoutes.set(urlSchema, handler);
   }
 
   public extensionOn(id: ExtensionId, urlSchema: string, handler: RouteHandler): void {
+    pathToRegexp(urlSchema); // verify now that the schema is valid
+
     if (!this.extentionRoutes.has(id)) {
       this.extentionRoutes.set(id, new Map());
     }
