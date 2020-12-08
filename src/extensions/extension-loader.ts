@@ -8,10 +8,12 @@ import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } fr
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
 import { extensionsStore } from "./extensions-store";
+import { extensionInstaller } from "./extension-installer";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "./lens-extension";
 import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
+import { exec } from "child_process";
 
 // lazy load so that we get correct userData
 export function extensionPackagesRoot() {
@@ -286,6 +288,26 @@ export class ExtensionLoader {
 
   getExtension(extId: LensExtensionId): InstalledExtension {
     return this.extensions.get(extId);
+  }
+
+  /**
+   * Get url to the tarball of the extension package. Assumes package is found from npm regisry.
+   * @param packageName e.g. "@mirantis/lens-extension-cc"
+   */
+  getNpmPackageTarballUrl(packageName: string) {
+    return new Promise((resolve, reject) => {
+      const command = [extensionInstaller.npmPath, "view", packageName, "dist.tarball", "--silent"];
+
+      exec(command.join(" "), {
+        encoding: "utf8"
+      }, (error, stdout) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(stdout);
+        }
+      });
+    });
   }
 
   toJSON(): Map<LensExtensionId, InstalledExtension> {
