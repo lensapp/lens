@@ -47,7 +47,7 @@ export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
                   return (
                     <Component.MenuItem key={name} onClick={Util.prevDefault(() => this.showLogs(container))} className="flex align-center">
                       {brick}
-                      {name}
+                      <span>{name}</span>
                     </Component.MenuItem>
                   );
                 })
