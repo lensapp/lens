@@ -3,7 +3,7 @@ import type React from "react";
 import { action } from "mobx";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, sanitizeExtensionName } from "../lens-extension";
-import { UrlParam } from "../../renderer/navigation/url-param";
+import { PageParam } from "../../renderer/navigation/page-param";
 import logger from "../../main/logger";
 
 export interface PageRegistration {
@@ -18,7 +18,7 @@ export interface PageRegistration {
    * Used to generate final page url when provided in getExtensionPageUrl()-helper.
    * Advanced usage: provide `UrlParam` as values to customize parsing/stringification from/to URL.
    */
-  params?: PageTargetParams<string | UrlParam>;
+  params?: PageTargetParams<string | PageParam>;
 }
 
 export interface PageComponents {
@@ -56,7 +56,7 @@ export function getExtensionPageUrl(target: PageTarget): string {
     Object.entries(registeredPage.params).forEach(([name, param]) => {
       const targetParamValue = targetParams[name];
 
-      if (param instanceof UrlParam) {
+      if (param instanceof PageParam) {
         pageUrl.searchParams.set(name, param.stringify(targetParamValue));
       } else {
         const value = String(targetParamValue ?? param);

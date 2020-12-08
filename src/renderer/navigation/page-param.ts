@@ -1,7 +1,7 @@
 // Manage observable URL-param via location.search
 import { IObservableHistory } from "mobx-observable-history";
 
-export interface UrlParamInit<V = any> {
+export interface PageParamInit<V = any> {
   name: string;
   isSystem?: boolean;
   defaultValue?: V;
@@ -12,20 +12,20 @@ export interface UrlParamInit<V = any> {
   stringify?(values: V): string | string[]; // serialize params to URL
 }
 
-export class UrlParam<V = any | any[]> {
+export class PageParam<V = any | any[]> {
   static SYSTEM_PREFIX = "lens-";
 
   readonly name: string;
-  readonly urlName: string;
+  protected urlName: string;
 
-  constructor(private init: UrlParamInit<V>, private history: IObservableHistory) {
+  constructor(private init: PageParamInit<V>, private history: IObservableHistory) {
     const { isSystem, name, skipEmpty = true } = init;
 
     this.name = name;
     this.init.skipEmpty = skipEmpty;
 
     // prefixing to avoid collisions with extensions
-    this.urlName = `${isSystem ? UrlParam.SYSTEM_PREFIX : ""}${name}`;
+    this.urlName = `${isSystem ? PageParam.SYSTEM_PREFIX : ""}${name}`;
   }
 
   isEmpty(value: V) {

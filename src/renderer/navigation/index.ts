@@ -1,19 +1,47 @@
 // Navigation helpers
 
 import { ipcRenderer } from "electron";
-import logger from "../../main/logger";
 import { reaction } from "mobx";
+import { matchPath, RouteProps } from "react-router";
 import { createObservableHistory } from "mobx-observable-history";
-import { createBrowserHistory, createMemoryHistory } from "history";
+import { createBrowserHistory, createMemoryHistory, LocationDescriptor } from "history";
 import { broadcastMessage, subscribeToBroadcast } from "../../common/ipc";
-import { getMatchedClusterId, navigate } from "./helpers";
-import { UrlParam, UrlParamInit } from "./url-param";
+import { PageParam, PageParamInit } from "./page-param";
+import { clusterViewRoute, IClusterViewRouteParams } from "../components/cluster-manager/cluster-view.route";
+import logger from "../../main/logger";
 
 export let history = ipcRenderer ? createBrowserHistory() : createMemoryHistory();
 export let navigation = createObservableHistory(history);
 
-export function createUrlParam<V = string>(init: UrlParamInit<V>) {
-  return new UrlParam<V>(init, navigation);
+export function navigate(location: LocationDescriptor) {
+  const currentLocation = navigation.getPath();
+
+  navigation.push(location);
+
+  if (currentLocation === navigation.getPath()) {
+    navigation.goBack(); // prevent sequences of same url in history
+  }
+}
+
+export function matchParams<P>(route: string | string[] | RouteProps) {
+  return matchPath<P>(navigation.location.pathname, route);
+}
+
+export function isActiveRoute(route: string | string[] | RouteProps): boolean {
+  return !!matchParams(route);
+}
+
+export function getMatchedClusterId(): string {
+  const matched = matchPath<IClusterViewRouteParams>(navigation.location.pathname, {
+    exact: true,
+    path: clusterViewRoute.path
+  });
+
+  return matched?.params.clusterId;
+}
+
+export function createPageParam<V = string>(init: PageParamInit<V>) {
+  return new PageParam<V>(init, navigation);
 }
 
 if (ipcRenderer) {
@@ -40,8 +68,3 @@ if (ipcRenderer) {
     location.reload();
   });
 }
-
-// Re-exports from sub-modules
-export * from "./helpers";
-export * from "./url-param";
-

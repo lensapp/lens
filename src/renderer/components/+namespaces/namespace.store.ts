@@ -2,14 +2,14 @@ import { action, comparer, observable, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints";
-import { createUrlParam } from "../../navigation";
+import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { isAllowedResource } from "../../../common/rbac";
 import { getHostedCluster } from "../../../common/cluster-store";
 
 const storage = createStorage<string[]>("context_namespaces", []);
 
-export const namespaceUrlParam = createUrlParam<string[]>({
+export const namespaceUrlParam = createPageParam<string[]>({
   name: "namespaces",
   isSystem: true,
   multiValues: true,

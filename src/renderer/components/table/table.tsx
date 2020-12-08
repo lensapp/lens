@@ -9,7 +9,7 @@ import { TableRow, TableRowElem, TableRowProps } from "./table-row";
 import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
-import { createUrlParam } from "../../navigation";
+import { createPageParam } from "../../navigation";
 import { ItemObject } from "../../item.store";
 
 export type TableSortBy = string;
@@ -41,12 +41,12 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
   getTableRow?: (uid: string) => React.ReactElement<TableRowProps>;
 }
 
-export const sortByUrlParam = createUrlParam({
+export const sortByUrlParam = createPageParam({
   name: "sort",
   isSystem: true,
 });
 
-export const orderByUrlParam = createUrlParam({
+export const orderByUrlParam = createPageParam({
   name: "order",
   isSystem: true,
 });

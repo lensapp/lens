@@ -4,7 +4,7 @@ import path from "path";
 import { observer } from "mobx-react";
 import { CoffeeDoodle } from "react-open-doodles";
 
-export const exampleId = Navigation.createUrlParam<string>({
+export const exampleId = Navigation.createPageParam({
   name: "exampleId",
   defaultValue: "demo",
 });

@@ -10,10 +10,10 @@ import { KubeObjectListLayout } from "../kube-object";
 import { crdStore } from "./crd.store";
 import { CustomResourceDefinition } from "../../api/endpoints/crd.api";
 import { Select, SelectOption } from "../select";
-import { createUrlParam } from "../../navigation";
+import { createPageParam } from "../../navigation";
 import { Icon } from "../icon";
 
-export const crdGroupsUrlParam = createUrlParam<string[]>({
+export const crdGroupsUrlParam = createPageParam<string[]>({
   name: "groups",
   multiValues: true,
   isSystem: true,

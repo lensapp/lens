@@ -4,9 +4,9 @@ import { autorun, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { InputProps } from "./input";
 import { SearchInput } from "./search-input";
-import { createUrlParam } from "../../navigation";
+import { createPageParam } from "../../navigation";
 
-export const searchUrlParam = createUrlParam({
+export const searchUrlParam = createPageParam({
   name: "search",
   isSystem: true,
   defaultValue: "",

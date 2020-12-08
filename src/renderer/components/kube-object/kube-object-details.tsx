@@ -4,7 +4,7 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { computed, observable, reaction } from "mobx";
 import { Trans } from "@lingui/macro";
-import { createUrlParam, navigation } from "../../navigation";
+import { createPageParam, navigation } from "../../navigation";
 import { Drawer } from "../drawer";
 import { KubeObject } from "../../api/kube-object";
 import { Spinner } from "../spinner";
@@ -14,12 +14,12 @@ import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMenu } from "./kube-object-menu";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
-export const kubeDetailsUrlParam = createUrlParam({
+export const kubeDetailsUrlParam = createPageParam({
   name: "kube-details",
   isSystem: true,
 });
 
-export const kubeSelectedUrlParam = createUrlParam({
+export const kubeSelectedUrlParam = createPageParam({
   name: "kube-selected",
   isSystem: true,
   get defaultValue() {
