@@ -2,9 +2,7 @@ import AwaitLock from "await-lock";
 import child_process from "child_process";
 import fs from "fs-extra";
 import path from "path";
-import { autobind } from "../common/utils";
 import logger from "../main/logger";
-import { LensProtocolRouter } from "../main/protocol-handler";
 import { extensionPackagesRoot } from "./extension-loader";
 
 const logModule = "[EXTENSION-INSTALLER]";
@@ -22,13 +20,6 @@ export type PackageJson = {
  * Installs dependencies for extensions
  */
 export class ExtensionInstaller {
-
-  constructor() {
-    const lpr = LensProtocolRouter.getInstance<LensProtocolRouter>();
-
-    lpr.on("/install-extension", this.protocolHandlerInstall);
-  }
-
   private installLock = new AwaitLock();
 
   get extensionPackagesRoot() {
@@ -37,11 +28,6 @@ export class ExtensionInstaller {
 
   get npmPath() {
     return __non_webpack_require__.resolve("npm/bin/npm-cli");
-  }
-
-  @autobind()
-  protocolHandlerInstall(): void {
-    console.log("Installing");
   }
 
   installDependencies(): Promise<void> {

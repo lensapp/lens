@@ -10,4 +10,5 @@ interface ExtensionState {
 @autobind()
 export class ExtensionStateStore extends Singleton {
   extensionState = observable.map<string, ExtensionState>();
+  @observable startingInstall = false;
 }

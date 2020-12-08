@@ -17,6 +17,7 @@ import { App } from "./components/app";
 import { i18nStore } from "./i18n";
 import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
+import protocolEndpoints from "./api/protocol-endpoints";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
@@ -36,6 +37,7 @@ export async function bootstrap(App: AppComponent) {
 
   extensionLoader.init();
   extensionDiscovery.init();
+  protocolEndpoints.registerHandlers();
 
   // preload common stores
   await Promise.all([
