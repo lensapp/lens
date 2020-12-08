@@ -54,7 +54,7 @@ export class PodShellMenu extends React.Component<PodShellMenuProps> {
                   return (
                     <Component.MenuItem key={name} onClick={Util.prevDefault(() => this.execShell(name))} className="flex align-center">
                       <Component.StatusBrick/>
-                      {name}
+                      <span>{name}</span>
                     </Component.MenuItem>
                   );
                 })
