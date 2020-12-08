@@ -22,7 +22,7 @@ export interface HelmRepo {
   cacheFilePath?: string
   caFile?: string,
   certFile?: string,
-  insecure_skip_tls_verify?: boolean,
+  insecureSkipTlsVerify?: boolean,
   keyFile?: string,
   username?: string,
   password?: string,
@@ -125,6 +125,25 @@ export class HelmRepoManager extends Singleton {
     logger.info(`[HELM]: adding repo "${name}" from ${url}`);
     const helm = await helmCli.binaryPath();
     const { stdout } = await promiseExec(`"${helm}" repo add ${name} ${url}`).catch((error) => {
+      throw(error.stderr);
+    });
+
+    return stdout;
+  }
+
+  public async addСustomRepo(repoAttributes : HelmRepo) {
+    logger.info(`[HELM]: adding repo "${repoAttributes.name}" from ${repoAttributes.url}`);
+    const helm = await helmCli.binaryPath();
+
+    const insecureSkipTlsVerify = repoAttributes.insecureSkipTlsVerify ? " --insecure-skip-tls-verify" : "";
+    const username = repoAttributes.username ? ` --username "${repoAttributes.username}"` : "";
+    const password = repoAttributes.password ? ` --password "${repoAttributes.password}"` : "";
+    const caFile = repoAttributes.caFile ? ` --ca-file "${repoAttributes.caFile}"` : "";
+    const keyFile = repoAttributes.keyFile ? ` --key-file "${repoAttributes.keyFile}"` : "";
+    const certFile = repoAttributes.certFile ? ` --cert-file "${repoAttributes.certFile}"` : "";
+
+    const addRepoCommand = `"${helm}" repo add ${repoAttributes.name} ${repoAttributes.url}${insecureSkipTlsVerify}${username}${password}${caFile}${keyFile}${certFile}`;
+    const { stdout } = await promiseExec(addRepoCommand).catch((error) => {
       throw(error.stderr);
     });
 
