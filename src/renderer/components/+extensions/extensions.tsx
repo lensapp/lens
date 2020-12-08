@@ -413,7 +413,7 @@ export class Extensions extends React.Component {
         displayName
       });
 
-      await extensionDiscovery.uninstallExtension(extension.absolutePath);
+      await extensionDiscovery.uninstallExtension(extension);
     } catch (error) {
       Notifications.error(
         <p>Uninstalling extension <b>{displayName}</b> has failed: <em>{error?.message ?? ""}</em></p>
