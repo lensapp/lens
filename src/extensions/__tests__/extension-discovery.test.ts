@@ -1,4 +1,5 @@
 import { watch } from "chokidar";
+import { join } from "path";
 import { ExtensionDiscovery, InstalledExtension } from "../extension-discovery";
 
 jest.mock("../../common/ipc");
@@ -56,7 +57,7 @@ describe("ExtensionDiscovery", () => {
       done();
     });
 
-    addHandler(`${extensionDiscovery.localFolderPath}/my-extension/package.json`);
+    addHandler(join(extensionDiscovery.localFolderPath, "/my-extension/package.json"));
   });
 
   it("doesn't emit add for added file under extension", async done => {
@@ -89,7 +90,7 @@ describe("ExtensionDiscovery", () => {
 
     extensionDiscovery.events.on("add", onAdd);
 
-    addHandler(`${extensionDiscovery.localFolderPath}/my-extension/node_modules/dep/package.json`);
+    addHandler(join(extensionDiscovery.localFolderPath, "/my-extension/node_modules/dep/package.json"));
 
     setTimeout(() => {
       expect(onAdd).not.toHaveBeenCalled();
