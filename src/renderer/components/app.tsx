@@ -1,5 +1,4 @@
 import React from "react";
-import { observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { I18nProvider } from "@lingui/react";
 import { _i18n } from "../i18n";
@@ -49,7 +48,6 @@ import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
 import { sum } from "lodash";
 
-@observer
 export class App extends React.Component {
   static async init() {
     const frameId = webFrame.routingId;
