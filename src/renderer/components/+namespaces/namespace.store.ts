@@ -41,7 +41,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   get initNamespaces() {
-    return namespaceUrlParam.get()
+    return namespaceUrlParam.get();
   }
 
   getContextParams() {
