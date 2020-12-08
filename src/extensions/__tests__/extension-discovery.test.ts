@@ -1,5 +1,5 @@
 import { watch } from "chokidar";
-import { join } from "path";
+import { join, normalize } from "path";
 import { ExtensionDiscovery, InstalledExtension } from "../extension-discovery";
 
 jest.mock("../../common/ipc");
@@ -46,13 +46,13 @@ describe("ExtensionDiscovery", () => {
     extensionDiscovery.events.on("add", (extension: InstalledExtension) => {
       expect(extension).toEqual({
         absolutePath: expect.any(String),
-        id: "node_modules/my-extension/package.json",
+        id: normalize("node_modules/my-extension/package.json"),
         isBundled: false,
         isEnabled: false,
         manifest:  {
           name: "my-extension",
         },
-        manifestPath: "node_modules/my-extension/package.json",
+        manifestPath: normalize("node_modules/my-extension/package.json"),
       });
       done();
     });

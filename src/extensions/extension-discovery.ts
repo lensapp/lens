@@ -156,7 +156,6 @@ export class ExtensionDiscovery {
   }
 
   handleWatchFileAdd =  async (filePath: string) => {
-    logger.info(`${logModule} handleWatchFileAdd ${filePath}`);
     // e.g. "foo/package.json"
     const relativePath = path.relative(this.localFolderPath, filePath);
 
@@ -164,8 +163,6 @@ export class ExtensionDiscovery {
     // that the added file is in a folder under local folder path.
     // This safeguards against a file watch being triggered under a sub-directory which is not an extension.
     const isUnderLocalFolderPath = relativePath.split(path.sep).length === 2;
-
-    logger.info(`${logModule} relativePath ${relativePath} isUnderLocalFolderPath ${isUnderLocalFolderPath}`);
 
     if (path.basename(filePath) === manifestFilename && isUnderLocalFolderPath) {
       try {
