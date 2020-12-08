@@ -1,4 +1,4 @@
-import { observable, reaction, when } from "mobx";
+import { action, observable, reaction, when } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { Cluster, clusterApi, IClusterMetrics } from "../../api/endpoints";
 import { autobind, createStorage } from "../../utils";
@@ -17,11 +17,10 @@ export enum MetricNodeRole {
 }
 
 @autobind()
-export class ClusterStore extends KubeObjectStore<Cluster> {
+export class ClusterOverviewStore extends KubeObjectStore<Cluster> {
   api = clusterApi;
 
   @observable metrics: Partial<IClusterMetrics> = {};
-  @observable liveMetrics: Partial<IClusterMetrics> = {};
   @observable metricsLoaded = false;
   @observable metricType: MetricType;
   @observable metricNodeRole: MetricNodeRole;
@@ -46,9 +45,8 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
     reaction(() => this.metricNodeRole, () => {
       if (!this.metricsLoaded) return;
       this.metrics = {};
-      this.liveMetrics = {};
       this.metricsLoaded = false;
-      this.getAllMetrics();
+      this.loadMetrics();
     });
 
     // check which node type to select
@@ -60,31 +58,14 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
     });
   }
 
+  @action
   async loadMetrics(params?: IMetricsReqParams) {
     await when(() => nodesStore.isLoaded);
     const { masterNodes, workerNodes } = nodesStore;
     const nodes = this.metricNodeRole === MetricNodeRole.MASTER && masterNodes.length ? masterNodes : workerNodes;
 
-    return clusterApi.getMetrics(nodes.map(node => node.getName()), params);
-  }
-
-  async getAllMetrics() {
-    await this.getMetrics();
-    await this.getLiveMetrics();
+    this.metrics = await clusterApi.getMetrics(nodes.map(node => node.getName()), params);
     this.metricsLoaded = true;
-  }
-
-  async getMetrics() {
-    this.metrics = await this.loadMetrics();
-  }
-
-  async getLiveMetrics() {
-    const step = 3;
-    const range = 15;
-    const end = Date.now() / 1000;
-    const start = end - range;
-
-    this.liveMetrics = await this.loadMetrics({ start, end, step, range });
   }
 
   getMetricsValues(source: Partial<IClusterMetrics>): [number, string][] {
@@ -111,5 +92,5 @@ export class ClusterStore extends KubeObjectStore<Cluster> {
   }
 }
 
-export const clusterStore = new ClusterStore();
-apiManager.registerStore(clusterStore);
+export const clusterOverviewStore = new ClusterOverviewStore();
+apiManager.registerStore(clusterOverviewStore);
