@@ -44,7 +44,7 @@ describe("ExtensionDiscovery", () => {
 
     extensionDiscovery.events.on("add", (extension: InstalledExtension) => {
       expect(extension).toEqual({
-        absolutePath: "/Users/phorsmalahti/.k8slens/extensions/my-extension",
+        absolutePath: expect.any(String),
         id: "node_modules/my-extension/package.json",
         isBundled: false,
         isEnabled: false,
