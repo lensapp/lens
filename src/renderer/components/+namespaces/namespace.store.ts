@@ -14,14 +14,14 @@ export const namespaceUrlParam = createPageParam<string[]>({
   isSystem: true,
   multiValues: true,
   get defaultValue() {
-    return storage.get();
+    return storage.get(); // initial namespaces coming from URL or local-storage (default)
   }
 });
 
 @autobind()
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
-  contextNs = observable.array<string>(storage.get());
+  contextNs = observable.array<string>();
 
   constructor() {
     super();
@@ -29,8 +29,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private init() {
-    // setup initial context namespaces from URL (when provided) or local-storage (default)
-    this.setContext(namespaceUrlParam.get());
+    this.setContext(this.initNamespaces);
 
     return reaction(() => this.contextNs.toJS(), namespaces => {
       storage.set(namespaces); // save to local-storage
@@ -41,12 +40,22 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     });
   }
 
+  get initNamespaces() {
+    return namespaceUrlParam.get()
+  }
+
+  getContextParams() {
+    return {
+      namespaces: this.contextNs.toJS(),
+    };
+  }
+
   subscribe(apis = [this.api]) {
     const { allowedNamespaces } = getHostedCluster();
 
     // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
     if (allowedNamespaces.length > 0) {
-      return () => { return; };
+      return Function; // no-op
     }
 
     return super.subscribe(apis);
