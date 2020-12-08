@@ -1,4 +1,5 @@
 import React from "react";
+import { observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { I18nProvider } from "@lingui/react";
 import { _i18n } from "../i18n";
@@ -48,6 +49,7 @@ import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
 import { sum } from "lodash";
 
+@observer
 export class App extends React.Component {
   static async init() {
     const frameId = webFrame.routingId;
@@ -155,9 +157,7 @@ export class App extends React.Component {
         const page = clusterPageRegistry.getByPageMenuTarget(menu.target);
 
         if (page) {
-          const pageComponent = () => <page.components.Page />;
-
-          return <Route key={`extension-tab-layout-route-${index}`} path={page.routePath} exact={page.exact} component={pageComponent}/>;
+          return <Route key={`extension-tab-layout-route-${index}`} path={page.routePath} exact={page.exact} component={page.components.Page}/>;
         }
       }
     });
