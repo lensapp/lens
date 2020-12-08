@@ -26,6 +26,8 @@ import { InstalledExtension, extensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
+import { LensProtocolRouter, RoutingError } from "./protocol-handler";
+import Url from "url-parse";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -125,10 +127,19 @@ app
 
     return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
   })
-  .on("open-url", (event, url) => {
+  .on("open-url", (event, rawUrl) => {
     // protocol handler for macOS
-    logger.info("open-url", { url });
     event.preventDefault();
+
+    try {
+      LensProtocolRouter.getInstance<LensProtocolRouter>().route(Url(rawUrl, true));
+    } catch (error) {
+      if (error instanceof RoutingError) {
+        logger.error(`[PROTOCOL ROUTER]: ${error}`, { url: error.url });
+      } else {
+        logger.error(`[PROTOCOL ROUTER]: ${error}`, { rawUrl });
+      }
+    }
   });
 
 // Extensions-api runtime exports

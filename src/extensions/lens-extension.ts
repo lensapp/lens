@@ -2,6 +2,7 @@ import type { InstalledExtension } from "./extension-discovery";
 import { action, observable, reaction } from "mobx";
 import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import logger from "../main/logger";
+import { LensProtocolRouter, RouteHandler } from "../main/protocol-handler";
 
 export type LensExtensionId = string; // path to manifest (package.json)
 export type LensExtensionConstructor = new (...args: ConstructorParameters<typeof LensExtension>) => LensExtension;
@@ -47,6 +48,12 @@ export class LensExtension {
    */
   async getExtensionFileFolder(): Promise<string> {
     return filesystemProvisionerStore.requestDirectory(this.id);
+  }
+
+  onProtocolRequest(pathSchema: string, handler: RouteHandler): void {
+    const lpr = LensProtocolRouter.getInstance<LensProtocolRouter>();
+
+    lpr.extensionOn(this.id, pathSchema, handler);
   }
 
   get description() {
