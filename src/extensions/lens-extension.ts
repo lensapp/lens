@@ -22,7 +22,7 @@ export class LensExtension {
   readonly manifestPath: string;
   readonly isBundled: boolean;
 
-  @observable private isEnabled = false;
+  @observable isEnabled = false;
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
     this.id = id;

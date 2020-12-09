@@ -73,7 +73,7 @@ export class ExtensionLoader {
     }
 
     await Promise.all([this.whenLoaded, extensionsStore.whenLoaded]);
-    
+
     // save state on change `extension.isEnabled`
     reaction(() => this.storeState, extensionsState => {
       extensionsStore.mergeState(extensionsState);
@@ -149,7 +149,7 @@ export class ExtensionLoader {
       this.syncExtensions(extensions);
 
       const receivedExtensionIds = extensions.map(([lensExtensionId]) => lensExtensionId);
-          
+
       // Remove deleted extensions in renderer side only
       this.extensions.forEach((_, lensExtensionId) => {
         if (!receivedExtensionIds.includes(lensExtensionId)) {
@@ -299,6 +299,10 @@ export class ExtensionLoader {
 
   getExtension(extId: LensExtensionId): InstalledExtension {
     return this.extensions.get(extId);
+  }
+
+  public async instanceToBeEnabled(extId: LensExtensionId): Promise<void> {
+    return when(() => this.instances.get(extId)?.isEnabled);
   }
 
   /**
