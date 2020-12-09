@@ -91,9 +91,14 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     let items: T[];
 
     try {
-      const { allowedNamespaces } = getHostedCluster();
+      const { allowedNamespaces, accessibleNamespaces, isAdmin } = getHostedCluster();
 
-      items = await this.loadItems(allowedNamespaces);
+      if (isAdmin && accessibleNamespaces.length == 0) {
+        items = await this.loadItems();
+      } else {
+        items = await this.loadItems(allowedNamespaces);
+      }
+
       items = this.filterItemsOnLoad(items);
     } finally {
       if (items) {
