@@ -33,7 +33,6 @@ module.exports = {
         "indent": ["error", 2, {
           "SwitchCase": 1,
         }],
-        "no-invalid-this": "error",
         "no-unused-vars": "off",
         "unused-imports/no-unused-imports": "error",
         "unused-imports/no-unused-vars": [
@@ -96,7 +95,6 @@ module.exports = {
         "indent": ["error", 2, {
           "SwitchCase": 1,
         }],
-        "no-invalid-this": "error",
         "quotes": ["error", "double", {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
@@ -162,7 +160,6 @@ module.exports = {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
         }],
-        "no-invalid-this": "error",
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
         "object-shorthand": "error",

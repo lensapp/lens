@@ -84,6 +84,18 @@ export class ExtensionLoader {
     this.extensions.replace(extensions);
   }
 
+  isInstalled(name: string) {
+    for (const extensionEntry of this.extensions) {
+      const [, extension ] = extensionEntry;
+
+      if (extension.manifest.name === name) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   addExtension(extension: InstalledExtension) {
     this.extensions.set(extension.id, extension);
   }
@@ -103,7 +115,6 @@ export class ExtensionLoader {
     } catch (error) {
       logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
     }
-
   }
 
   removeExtension(lensExtensionId: LensExtensionId) {

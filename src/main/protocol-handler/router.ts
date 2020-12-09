@@ -46,20 +46,23 @@ export type RouteHandler = (params: RouteParams) => void;
 
 export type ExtensionId = string;
 
-const EXT_ID_MATCH = "LENS_INTERNAL_EXTENSION_ID_MATCH";
+const EXTENSION_PUBLISHER_MATCH = "LENS_INTERNAL_EXTENSION_PUBLISHER_MATCH";
+const EXTENSION_NAME_MATCH = "LENS_INTERNAL_EXTENSION_NAME_MATCH";
 
 // IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
 export const lensProtocolChannel = "protocol-handler";
 
-interface ExtensionIdMatch {
-  [EXT_ID_MATCH]: string;
+interface ExtensionUrlMatch {
+  [EXTENSION_PUBLISHER_MATCH]: string;
+  [EXTENSION_NAME_MATCH]: string;
 }
 
 export class LensProtocolRouter extends Singleton {
   private extentionRoutes = new Map<ExtensionId, Map<string, RouteHandler>>();
   private internalRoutes = new Map<string, RouteHandler>();
+  private missingExtensionHandler?: (name: string) => Promise<void>;
 
-  private static ExtensionIDSchema = `/:${EXT_ID_MATCH}`;
+  private static ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}/:${EXTENSION_NAME_MATCH}`;
 
   public init() {
     subscribeToBroadcast(lensProtocolChannel, ((_event, { rawUrl }) => {
@@ -87,25 +90,38 @@ export class LensProtocolRouter extends Singleton {
       case "internal":
         return this._route(this.internalRoutes, url);
       case "extension":
-        return this._routeToExtension(url);
+        // Possible rejected promise is ignored
+        this._routeToExtension(url);
       default:
         throw new RoutingError(RoutingErrorType.INVALID_HOST, url);
 
     }
   }
 
-  private _routeToExtension(url: Url): void {
-    const match = matchPath<ExtensionIdMatch>(url.pathname, LensProtocolRouter.ExtensionIDSchema);
+  private async _routeToExtension(url: Url) {
+    const match = matchPath<ExtensionUrlMatch>(url.pathname, LensProtocolRouter.ExtensionUrlSchema);
 
     if (!match) {
       throw new RoutingError(RoutingErrorType.NO_EXTENSION_ID, url);
     }
 
-    const { [EXT_ID_MATCH]: id } = match.params;
-    const routes = this.extentionRoutes.get(id);
+    const { [EXTENSION_PUBLISHER_MATCH]: publisher, [EXTENSION_NAME_MATCH]: partialName } = match.params;
+    const name = `${publisher}/${partialName}`;
+
+    logger.info(`[PROTOCOL ROUTER] Extension ${name} matched`);
+
+    const routes = this.extentionRoutes.get(name);
 
     if (!routes) {
-      throw new RoutingError(RoutingErrorType.MISSING_EXTENSION, url);
+      if (this.missingExtensionHandler) {
+        await this.missingExtensionHandler(name);
+
+        // TODO: After installation we can continue to route to the extension..
+        // but this is difficult, since the promise resolves before extension installation is complete.
+        return;
+      } else {
+        throw new RoutingError(RoutingErrorType.MISSING_EXTENSION, url);
+      }
     }
 
     this._route(routes, url, true);
@@ -117,7 +133,7 @@ export class LensProtocolRouter extends Singleton {
         if (matchExtension) {
           const joinChar = schema.startsWith("/") ? "" : "/";
 
-          schema = `${LensProtocolRouter.ExtensionIDSchema}${joinChar}${schema}`;
+          schema = `${LensProtocolRouter.ExtensionUrlSchema}${joinChar}${schema}`;
         }
 
         return [matchPath(url.pathname, { path: schema }), handler];
@@ -132,7 +148,7 @@ export class LensProtocolRouter extends Singleton {
 
     const [match, handler] = route;
 
-    delete match.params[EXT_ID_MATCH];
+    delete match.params[EXTENSION_NAME_MATCH];
     handler({
       pathname: match.params,
       search: url.query,
@@ -151,10 +167,14 @@ export class LensProtocolRouter extends Singleton {
       this.extentionRoutes.set(id, new Map());
     }
 
-    if (urlSchema.includes(`:${EXT_ID_MATCH}`)) {
+    if (urlSchema.includes(`:${EXTENSION_NAME_MATCH}`)) {
       throw new TypeError("Invalid url path schema");
     }
 
     this.extentionRoutes.get(id).set(urlSchema, handler);
+  }
+
+  public onMissingExtension(handler: (name: string) => Promise<void>) {
+    this.missingExtensionHandler = handler;
   }
 }

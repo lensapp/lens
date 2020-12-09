@@ -19,6 +19,8 @@ import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
 import protocolEndpoints from "./api/protocol-endpoints";
 import { LensProtocolRouter } from "../main/protocol-handler";
+import logger from "../main/logger";
+import { installFromNpm } from "./components/+extensions";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
@@ -38,7 +40,19 @@ export async function bootstrap(App: AppComponent) {
 
   extensionLoader.init();
   extensionDiscovery.init();
-  LensProtocolRouter.getInstance<LensProtocolRouter>().init();
+  const lensProtocolRouter = LensProtocolRouter.getInstance<LensProtocolRouter>();
+
+  lensProtocolRouter.init();
+  lensProtocolRouter.onMissingExtension(async name => {
+    if (!extensionLoader.isInstalled(name)) {
+      logger.info(`[PROTOCOL ROUTER] Extension ${name} not installed, installing..`);
+
+      // TODO: This actually resolves before the extension installation is complete
+      return installFromNpm(name);
+    } else {
+      logger.info(`[PROTOCOL ROUTER] Extension already installed, but route is missing.`);
+    }
+  });
   protocolEndpoints.registerHandlers();
 
   // preload common stores
