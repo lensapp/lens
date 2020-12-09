@@ -165,7 +165,7 @@ async function requestInstall(init: InstallRequest | InstallRequest[]) {
 
     if (!folderExists) {
       // auto-install extension if not yet exists
-      unpackExtension(install);
+      return unpackExtension(install);
     } else {
       // If we show the confirmation dialog, we stop the install spinner until user clicks ok
       // and the install continues
@@ -210,7 +210,11 @@ async function unpackExtension({ fileName, tempFile, manifest: { name, version }
 
   try {
     // extract to temp folder first
-    await fse.remove(unpackingTempFolder).catch(Function);
+    try {
+      await fse.remove(unpackingTempFolder);
+    } catch (err) {
+      // ignore error
+    }
     await fse.ensureDir(unpackingTempFolder);
     await extractTar(tempFile, { cwd: unpackingTempFolder });
 
@@ -237,8 +241,12 @@ async function unpackExtension({ fileName, tempFile, manifest: { name, version }
     }
   } finally {
     // clean up
-    fse.remove(unpackingTempFolder).catch(Function);
-    fse.unlink(tempFile).catch(Function);
+    try {
+      await fse.remove(unpackingTempFolder);
+      await fse.unlink(tempFile);
+    } catch (err) {
+      // ignore error
+    }
   }
 }
 
@@ -351,6 +359,8 @@ async function installFromSelectFileDialog() {
  */
 export async function installFromNpm(packageName: string) {
   const tarballUrl = await extensionLoader.getNpmPackageTarballUrl(packageName);
+
+  Notifications.info(`Installing ${packageName}`);
 
   return installFromUrlOrPath(tarballUrl);
 }

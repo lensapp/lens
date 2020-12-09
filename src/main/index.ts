@@ -131,6 +131,7 @@ app
     event.preventDefault();
 
     // Broadcast "open-url" events to renderer
+    console.log(`broadcasting: ${rawUrl}`);
     broadcastMessage(lensProtocolChannel, { rawUrl });
   });
 

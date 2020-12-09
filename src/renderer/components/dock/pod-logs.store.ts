@@ -108,25 +108,28 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
    * @param params request parameters described in IPodLogsQuery interface
    * @returns {Promise} A fetch request promise
    */
-  loadLogs = async (tabId: TabId, params: Partial<IPodLogsQuery>) => {
+  loadLogs = async (tabId: TabId, params: Partial<IPodLogsQuery>): Promise<string[]> => {
     const data = this.getData(tabId);
     const { selectedContainer, previous } = data;
     const pod = new Pod(data.pod);
     const namespace = pod.getNs();
     const name = pod.getName();
 
-    return podsApi.getLogs({ namespace, name }, {
-      ...params,
-      timestamps: true,  // Always setting timestampt to separate old logs from new ones
-      container: selectedContainer.name,
-      previous
-    }).then(result => {
-      const logs = [...result.split("\n")]; // Transform them into array
+    try {
+      const result = await podsApi.getLogs({ namespace, name }, {
+        ...params,
+        timestamps: true,  // Always setting timestampt to separate old logs from new ones
+        container: selectedContainer.name,
+        previous
+      });
+      const logs = result.split(/(\r?\n)+/g);
 
-      logs.pop();  // Remove last empty element
+      logs.pop();// Remove last empty element
 
       return logs;
-    });
+    } catch (err) {
+      // ignore error
+    }
   };
 
   /**
@@ -145,7 +148,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
    * @returns {number} Length of log lines
    */
   @computed
-  get lines() {
+  get lines(): number {
     const id = dockStore.selectedTabId;
     const logs = this.logs.get(id);
 

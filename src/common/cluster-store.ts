@@ -337,7 +337,14 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       }
     });
 
-    this.activeCluster = newClusters.has(activeCluster) ? activeCluster : null;
+    const curActiveCluster = newClusters.get(activeCluster);
+
+    if (!curActiveCluster || curActiveCluster.workspace !== workspaceStore.currentWorkspaceId) {
+      this.activeCluster =  null;
+    } else {
+      this.activeCluster = activeCluster;
+    }
+
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
   }

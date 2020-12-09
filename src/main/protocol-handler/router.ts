@@ -60,19 +60,23 @@ interface ExtensionUrlMatch {
 export class LensProtocolRouter extends Singleton {
   private extentionRoutes = new Map<ExtensionId, Map<string, RouteHandler>>();
   private internalRoutes = new Map<string, RouteHandler>();
-  private missingExtensionHandler?: (name: string) => Promise<void>;
 
+  private missingExtensionHandler?: (name: string) => Promise<boolean>;
+
+  private static readonly LoggingPrefix = "[PROTOCOL ROUTER]";
   private static ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}/:${EXTENSION_NAME_MATCH}`;
 
   public init() {
     subscribeToBroadcast(lensProtocolChannel, ((_event, { rawUrl }) => {
+      console.log(`receiving: ${rawUrl}`);
+
       try {
         this.route(Url(rawUrl, true));
       } catch (error) {
         if (error instanceof RoutingError) {
-          logger.error(`[PROTOCOL ROUTER]: ${error}`, { url: error.url });
+          logger.error(`${LensProtocolRouter.LoggingPrefix}: ${error}`, { url: error.url });
         } else {
-          logger.error(`[PROTOCOL ROUTER]: ${error}`, { rawUrl });
+          logger.error(`${LensProtocolRouter.LoggingPrefix}: ${error}`, { rawUrl });
         }
       }
     }));
@@ -81,7 +85,7 @@ export class LensProtocolRouter extends Singleton {
   /**
    * route
    */
-  public route(url: Url): void {
+  public async route(url: Url): Promise<void> {
     if (url.protocol.toLowerCase() !== "lens:") {
       throw new RoutingError(RoutingErrorType.INVALID_PROTOCOL, url);
     }
@@ -90,8 +94,7 @@ export class LensProtocolRouter extends Singleton {
       case "internal":
         return this._route(this.internalRoutes, url);
       case "extension":
-        // Possible rejected promise is ignored
-        this._routeToExtension(url);
+        return this._routeToExtension(url);
       default:
         throw new RoutingError(RoutingErrorType.INVALID_HOST, url);
 
@@ -108,17 +111,23 @@ export class LensProtocolRouter extends Singleton {
     const { [EXTENSION_PUBLISHER_MATCH]: publisher, [EXTENSION_NAME_MATCH]: partialName } = match.params;
     const name = `${publisher}/${partialName}`;
 
-    logger.info(`[PROTOCOL ROUTER] Extension ${name} matched`);
+    logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched`);
 
-    const routes = this.extentionRoutes.get(name);
+    let routes = this.extentionRoutes.get(name);
 
     if (!routes) {
       if (this.missingExtensionHandler) {
-        await this.missingExtensionHandler(name);
+        if (!await this.missingExtensionHandler(name)) {
+          return;
+        }
 
-        // TODO: After installation we can continue to route to the extension..
-        // but this is difficult, since the promise resolves before extension installation is complete.
-        return;
+        routes = this.extentionRoutes.get(name);
+
+        if (!routes) {
+          logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but has no routes`);
+
+          return;
+        }
       } else {
         throw new RoutingError(RoutingErrorType.MISSING_EXTENSION, url);
       }
@@ -145,6 +154,8 @@ export class LensProtocolRouter extends Singleton {
     if (!route) {
       throw new RoutingError(RoutingErrorType.NO_HANDLER, url);
     }
+
+    logger.info(`${LensProtocolRouter.LoggingPrefix}: routing ${url.toString()}`);
 
     const [match, handler] = route;
 
@@ -174,7 +185,11 @@ export class LensProtocolRouter extends Singleton {
     this.extentionRoutes.get(id).set(urlSchema, handler);
   }
 
-  public onMissingExtension(handler: (name: string) => Promise<void>) {
+  /**
+   * onMissingExtension registers the handler for when an extension is missing
+   * @param handler If the called handler resolves to true then the routes will be tried again
+   */
+  public onMissingExtension(handler: (name: string) => Promise<boolean>) {
     this.missingExtensionHandler = handler;
   }
 }

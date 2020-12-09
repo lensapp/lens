@@ -10,6 +10,7 @@ import { Router } from "./router";
 import { ClusterManager } from "./cluster-manager";
 import { ContextHandler } from "./context-handler";
 import logger from "./logger";
+import { chunk } from "lodash";
 
 export class LensProxy {
   protected origin: string;
@@ -65,10 +66,11 @@ export class LensProxy {
     return spdyProxy;
   }
 
+  private static readonly ProxyFilterHeaders = new Set(["Host", "Authorization"]);
   protected async handleProxyUpgrade(proxy: httpProxy, req: http.IncomingMessage, socket: net.Socket, head: Buffer) {
     const cluster = this.clusterManager.getClusterForRequest(req);
 
-    if (cluster) {
+    if (cluster?.initialized) {
       const proxyUrl = await cluster.contextHandler.resolveAuthProxyUrl() + req.url.replace(apiKubePrefix, "");
       const apiUrl = url.parse(cluster.apiUrl);
       const pUrl = url.parse(proxyUrl);
@@ -79,13 +81,14 @@ export class LensProxy {
         proxySocket.write(`${req.method} ${pUrl.path} HTTP/1.1\r\n`);
         proxySocket.write(`Host: ${apiUrl.host}\r\n`);
 
-        for (let i = 0; i < req.rawHeaders.length; i += 2) {
-          const key = req.rawHeaders[i];
-
-          if (key !== "Host" && key !== "Authorization") {
-            proxySocket.write(`${req.rawHeaders[i]}: ${req.rawHeaders[i+1]}\r\n`);
+        for (const [key, value] of chunk(req.rawHeaders, 2)) {
+          if (LensProxy.ProxyFilterHeaders.has(key)) {
+            continue;
           }
+
+          proxySocket.write(`${key}: ${value}\r\n`);
         }
+
         proxySocket.write("\r\n");
         proxySocket.write(head);
       });
@@ -182,13 +185,19 @@ export class LensProxy {
     const cluster = this.clusterManager.getClusterForRequest(req);
 
     if (cluster) {
-      const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler);
+      if (cluster.initialized) {
+        const proxyTarget = await this.getProxyTarget(req, cluster.contextHandler);
 
-      if (proxyTarget) {
-        // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
-        res.setHeader("Access-Control-Allow-Origin", this.origin);
+        if (proxyTarget) {
+          // allow to fetch apis in "clusterId.localhost:port" from "localhost:port"
+          res.setHeader("Access-Control-Allow-Origin", this.origin);
 
-        return proxy.web(req, res, proxyTarget);
+          return proxy.web(req, res, proxyTarget);
+        }
+      } else {
+        res.statusCode = 404;
+
+        return res.end("Not initialized");
       }
     }
     this.router.route(cluster, req, res);

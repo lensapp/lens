@@ -45,12 +45,15 @@ export async function bootstrap(App: AppComponent) {
   lensProtocolRouter.init();
   lensProtocolRouter.onMissingExtension(async name => {
     if (!extensionLoader.isInstalled(name)) {
-      logger.info(`[PROTOCOL ROUTER] Extension ${name} not installed, installing..`);
+      logger.info(`[PROTOCOL ROUTER]: Extension ${name} not installed, installing..`);
 
-      // TODO: This actually resolves before the extension installation is complete
-      return installFromNpm(name);
+      await installFromNpm(name);
+
+      return true;
     } else {
-      logger.info(`[PROTOCOL ROUTER] Extension already installed, but route is missing.`);
+      logger.info(`[PROTOCOL ROUTER]: Extension already installed, but route is missing.`);
+
+      return false;
     }
   });
   protocolEndpoints.registerHandlers();
