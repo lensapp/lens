@@ -95,6 +95,8 @@ module.exports = {
         "indent": ["error", 2, {
           "SwitchCase": 1,
         }],
+        "no-invalid-this": "off",
+        "@typescript-eslint/no-invalid-this": ["error"],
         "quotes": ["error", "double", {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
@@ -160,6 +162,8 @@ module.exports = {
           "avoidEscape": true,
           "allowTemplateLiterals": true,
         }],
+        "no-invalid-this": "off",
+        "@typescript-eslint/no-invalid-this": ["error"],
         "semi": "off",
         "@typescript-eslint/semi": ["error"],
         "object-shorthand": "error",
