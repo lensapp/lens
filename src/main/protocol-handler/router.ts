@@ -2,6 +2,8 @@ import { Singleton } from "../../common/utils";
 import Url from "url-parse";
 import { match, matchPath } from "react-router";
 import { pathToRegexp } from "path-to-regexp";
+import { subscribeToBroadcast } from "../../common/ipc";
+import logger from "../logger";
 
 export enum RoutingErrorType {
   INVALID_PROTOCOL = "invalid-protocol",
@@ -46,6 +48,9 @@ export type ExtensionId = string;
 
 const EXT_ID_MATCH = "LENS_INTERNAL_EXTENSION_ID_MATCH";
 
+// IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
+export const lensProtocolChannel = "protocol-handler";
+
 interface ExtensionIdMatch {
   [EXT_ID_MATCH]: string;
 }
@@ -55,6 +60,20 @@ export class LensProtocolRouter extends Singleton {
   private internalRoutes = new Map<string, RouteHandler>();
 
   private static ExtensionIDSchema = `/:${EXT_ID_MATCH}`;
+
+  public init() {
+    subscribeToBroadcast(lensProtocolChannel, ((_event, { rawUrl }) => {
+      try {
+        this.route(Url(rawUrl, true));
+      } catch (error) {
+        if (error instanceof RoutingError) {
+          logger.error(`[PROTOCOL ROUTER]: ${error}`, { url: error.url });
+        } else {
+          logger.error(`[PROTOCOL ROUTER]: ${error}`, { rawUrl });
+        }
+      }
+    }));
+  }
 
   /**
    * route

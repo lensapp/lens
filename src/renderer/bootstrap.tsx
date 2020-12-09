@@ -18,6 +18,7 @@ import { i18nStore } from "./i18n";
 import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
 import protocolEndpoints from "./api/protocol-endpoints";
+import { LensProtocolRouter } from "../main/protocol-handler";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
@@ -37,6 +38,7 @@ export async function bootstrap(App: AppComponent) {
 
   extensionLoader.init();
   extensionDiscovery.init();
+  LensProtocolRouter.getInstance<LensProtocolRouter>().init();
   protocolEndpoints.registerHandlers();
 
   // preload common stores
