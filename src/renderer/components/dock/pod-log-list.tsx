@@ -97,7 +97,7 @@ export class PodLogList extends React.Component<Props> {
     const { scrollHeight, clientHeight } = this.virtualListDiv.current;
     const { scrollOffset } = props;
 
-    this.isLastLineVisible = clientHeight + scrollOffset === scrollHeight;
+    this.isLastLineVisible = (clientHeight + scrollOffset) === scrollHeight;
   };
 
   /**
