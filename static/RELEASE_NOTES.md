@@ -2,7 +2,15 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.0 (current version)
+## 4.0.1 (current version)
+
+- Extension install/uninstall fixes
+- Fix status brick styles in pod-menu-extension
+- MacOS: fix error on app start
+- Performance fix: query all objects using single api call if admin and namespace list is not overridden
+- Extension API fix: register a cluster page component properly to a route
+
+## 4.0.0
 
 - Extension API
 - Improved pod logs
