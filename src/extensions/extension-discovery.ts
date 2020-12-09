@@ -202,6 +202,9 @@ export class ExtensionDiscovery {
         .find(([, extensionFolder]) => filePath === extensionFolder)?.[0];
 
       if (extensionName !== undefined) {
+        // If the extension is deleted manually while the application is running, also remove the symlink
+        await this.removeSymlinkByPackageName(extensionName);
+
         delete this.packagesJson.dependencies[extensionName];
 
         // Reinstall dependencies to remove the extension from package.json
