@@ -69,7 +69,7 @@ export const ClusterMetrics = observer(() => {
   const options = metricType === MetricType.CPU ? cpuOptions : memoryOptions;
 
   const renderMetrics = () => {
-    if ((!metricValues.length) && !metricsLoaded) {
+    if (!metricValues.length && !metricsLoaded) {
       return <Spinner center/>;
     }
 
