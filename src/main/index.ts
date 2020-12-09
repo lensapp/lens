@@ -115,7 +115,7 @@ app.on("activate", (event, hasVisibleWindows) => {
   logger.info("APP:ACTIVATE", { hasVisibleWindows });
 
   if (!hasVisibleWindows) {
-    windowManager.initMainWindow();
+    windowManager?.initMainWindow(false);
   }
 });
 
