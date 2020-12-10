@@ -376,12 +376,12 @@ async function installFromSelectFileDialog() {
  * Start extension install using a package name, which is resolved to a tarball url using the npm registry.
  * @param packageName e.g. "@publisher/extension-name"
  */
-export async function installFromNpm(packageName: string, confirm = false) {
+export async function installFromNpm(packageName: string) {
   const tarballUrl = await extensionLoader.getNpmPackageTarballUrl(packageName, "@hackweek");
 
   Notifications.info(`Installing ${packageName}`);
 
-  return installFromUrlOrPath(tarballUrl, confirm);
+  return installFromUrlOrPath(tarballUrl, true);
 }
 
 async function installFromUrlOrPath(installPath: string, confirmInstall = false) {
