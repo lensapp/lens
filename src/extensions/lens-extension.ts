@@ -56,6 +56,12 @@ export class LensExtension {
     lpr.extensionOn(this.id, pathSchema, handler);
   }
 
+  removeProtocolHandlers(): void {
+    const lpr = LensProtocolRouter.getInstance<LensProtocolRouter>();
+
+    lpr.removeExtensionHandlers(this.id);
+  }
+
   get description() {
     return this.manifest.description;
   }

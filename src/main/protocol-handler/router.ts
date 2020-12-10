@@ -186,6 +186,10 @@ export class LensProtocolRouter extends Singleton {
     this.extentionRoutes.get(id).set(urlSchema, handler);
   }
 
+  public removeExtensionHandlers(id: ExtensionId): void {
+    this.extentionRoutes.get(id)?.clear();
+  }
+
   /**
    * onMissingExtension registers the handler for when an extension is missing
    * @param handler If the called handler resolves to true then the routes will be tried again
