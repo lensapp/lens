@@ -301,8 +301,18 @@ export class ExtensionLoader {
     return this.extensions.get(extId);
   }
 
-  public async instanceToBeEnabled(extId: LensExtensionId): Promise<void> {
-    return when(() => this.instances.get(extId)?.isEnabled);
+  public async waitForEnabled(name: string): Promise<void> {
+    return when(() => {
+      for (const instanceEntry of this.instances) {
+        const [, extension ] = instanceEntry;
+
+        if (extension.manifest.name === name) {
+          return extension.isEnabled;
+        }
+      }
+
+      return false;
+    });
   }
 
   /**

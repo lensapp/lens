@@ -21,7 +21,6 @@ import protocolEndpoints from "./api/protocol-endpoints";
 import { LensProtocolRouter } from "../main/protocol-handler";
 import logger from "../main/logger";
 import { installFromNpm } from "./components/+extensions";
-
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
 };
@@ -47,7 +46,9 @@ export async function bootstrap(App: AppComponent) {
     if (!extensionLoader.isInstalled(name)) {
       logger.info(`[PROTOCOL ROUTER]: Extension ${name} not installed, installing..`);
 
-      await installFromNpm(name);
+      await Promise.all([installFromNpm(name), extensionLoader.waitForEnabled(name)]);
+
+      logger.info(`[PROTOCOL ROUTER]: Extension ${name} installed and enabled.`);
 
       return true;
     } else {

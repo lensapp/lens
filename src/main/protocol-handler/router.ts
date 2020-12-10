@@ -4,8 +4,6 @@ import { match, matchPath } from "react-router";
 import { pathToRegexp } from "path-to-regexp";
 import { subscribeToBroadcast } from "../../common/ipc";
 import logger from "../logger";
-import { extensionLoader } from "../../extensions/extension-loader";
-import { sanitizeExtensionName } from "../../extensions/lens-extension";
 
 export enum RoutingErrorType {
   INVALID_PROTOCOL = "invalid-protocol",
@@ -119,13 +117,11 @@ export class LensProtocolRouter extends Singleton {
 
     if (!routes) {
       if (this.missingExtensionHandler) {
-        const enabledPromise = extensionLoader.instanceToBeEnabled(sanitizeExtensionName(name));
 
         if (!await this.missingExtensionHandler(name)) {
           return;
         }
 
-        await enabledPromise;
         routes = this.extentionRoutes.get(name);
 
         if (!routes) {
