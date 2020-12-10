@@ -452,15 +452,9 @@ export class Extensions extends React.Component {
       return (
         <div key={id} className="extension flex gaps align-center">
           <div className="box grow">
-            <div className="name">
-              {name}
-            </div>
-            <div className="version">
-              {version}
-            </div>
-            <div className="description">
-              {description}
-            </div>
+            <h5>{name}</h5>
+            <h6>{version}</h6>
+            <p>{description}</p>
           </div>
           <div className="actions">
             {!isEnabled && (
