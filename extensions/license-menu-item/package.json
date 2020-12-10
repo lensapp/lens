@@ -1,5 +1,5 @@
 {
-  "name": "lens-license",
+  "name": "@mirantis/lens-license",
   "version": "0.1.0",
   "description": "License menu item",
   "main": "dist/main.js",

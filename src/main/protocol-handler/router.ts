@@ -4,6 +4,7 @@ import { match, matchPath } from "react-router";
 import { pathToRegexp } from "path-to-regexp";
 import { subscribeToBroadcast } from "../../common/ipc";
 import logger from "../logger";
+import { countBy } from "lodash";
 
 export enum RoutingErrorType {
   INVALID_PROTOCOL = "invalid-protocol",
@@ -55,6 +56,18 @@ export const lensProtocolChannel = "protocol-handler";
 interface ExtensionUrlMatch {
   [EXTENSION_PUBLISHER_MATCH]: string;
   [EXTENSION_NAME_MATCH]: string;
+}
+
+function compareMatches<T>(a: match<T>, b: match<T>): number {
+  if (a.path === "/") {
+    return 1;
+  }
+
+  if (b.path === "/") {
+    return -1;
+  }
+
+  return countBy(b.path)["/"] - countBy(a.path)["/"];
 }
 
 export class LensProtocolRouter extends Singleton {
@@ -141,16 +154,15 @@ export class LensProtocolRouter extends Singleton {
     const matches = Array.from(routes.entries())
       .map(([schema, handler]): [match<Record<string, string>>, RouteHandler] => {
         if (matchExtension) {
-          const joinChar = schema.startsWith("/") ? "" : "/";
-
-          schema = `${LensProtocolRouter.ExtensionUrlSchema}${joinChar}${schema}`;
+          schema = `${LensProtocolRouter.ExtensionUrlSchema}/${schema}`.replace(/\/?\//g, "/");
         }
 
         return [matchPath(url.pathname, { path: schema }), handler];
       })
       .filter(([match]) => match);
     // prefer an exact match, but if not pick the first route registered
-    const route = matches.find(([match]) => match.isExact) ?? matches[0];
+    const route = matches.find(([match]) => match.isExact)
+      ?? matches.sort(([a], [b]) => compareMatches(a, b))[0];
 
     if (!route) {
       throw new RoutingError(RoutingErrorType.NO_HANDLER, url);

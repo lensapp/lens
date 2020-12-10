@@ -16,6 +16,8 @@ export interface LensExtensionManifest {
   lens?: object; // fixme: add more required fields for validation
 }
 
+const ExtensionNameSchema = /^@[a-z0-9][_-a-z0-9]*\/[a-z0-9][_-a-z0-9]*$/i;
+
 export class LensExtension {
   readonly id: LensExtensionId;
   readonly manifest: LensExtensionManifest;
@@ -25,6 +27,10 @@ export class LensExtension {
   @observable isEnabled = false;
 
   constructor({ id, manifest, manifestPath, isBundled }: InstalledExtension) {
+    if (!manifest.name.match(ExtensionNameSchema)) {
+      throw new TypeError("extension name must be '@<org>/<name>'");
+    }
+
     this.id = id;
     this.manifest = manifest;
     this.manifestPath = manifestPath;

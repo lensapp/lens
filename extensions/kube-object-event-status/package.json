@@ -1,5 +1,5 @@
 {
-  "name": "kube-object-event-status",
+  "name": "@mirantis/kube-object-event-status",
   "version": "0.1.0",
   "description": "Adds kube object status from events",
   "renderer": "dist/renderer.js",

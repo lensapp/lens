@@ -1,5 +1,5 @@
 {
-  "name": "lens-pod-menu",
+  "name": "@mirantis/lens-pod-menu",
   "version": "0.1.0",
   "description": "Lens pod menu",
   "renderer": "dist/renderer.js",
