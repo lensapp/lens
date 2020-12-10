@@ -20,7 +20,9 @@ import { themeStore } from "./theme.store";
 import protocolEndpoints from "./api/protocol-endpoints";
 import { LensProtocolRouter } from "../main/protocol-handler";
 import logger from "../main/logger";
-import { installFromNpm } from "./components/+extensions";
+import { extensionsURL, installFromNpm } from "./components/+extensions";
+import { navigate } from "./navigation";
+
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;
 };
@@ -48,6 +50,7 @@ export async function bootstrap(App: AppComponent) {
     lensProtocolRouter.onMissingExtension(async name => {
       if (!extensionLoader.isInstalled(name)) {
         logger.info(`[PROTOCOL ROUTER]: Extension ${name} not installed, installing..`);
+        navigate(extensionsURL());
 
         await Promise.all([installFromNpm(name), extensionLoader.waitForEnabled(name)]);
 
