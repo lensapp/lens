@@ -1,0 +1,42 @@
+.install-btn, .open-btn {
+  color: white;
+  min-width: 100px;
+  border: 1px solid black;
+  padding: 5px 10px 5px 10px;
+  text-decoration: none;
+  display: inline-block;
+  user-select: none;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.install-btn {
+  background-color: mediumseagreen;
+}
+
+.open-btn {
+  background-color: cornflowerblue;
+}
+
+.mirantis-logo {
+  width: 128px;
+  margin-right: 10px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.checked {
+  color: orange;
+}
+
+.extension-info {
+  display: flex;
+}
+
+.extension-info > div {
+  margin-right: 6px;
+  margin-top: 7px;
+}
