@@ -453,10 +453,10 @@ export class Extensions extends React.Component {
         <div key={id} className="extension flex gaps align-center">
           <div className="box grow">
             <div className="name">
-              {name}
+              Name: <code className="name">{name}</code>
             </div>
             <div className="description">
-              {description}
+              Description: <span className="text-secondary">{description}</span>
             </div>
           </div>
           <div className="actions">
@@ -531,7 +531,7 @@ export class Extensions extends React.Component {
               onClick={this.installFromUrlOrPath}
             />
             <small className="hint">
-              <Trans><b>Pro-Tip</b>: you can also drag-n-drop tarball-file to this area</Trans>
+              <Trans><b>Pro-Tip</b>: you can drag & drop extension&apos;s tarball-file to install</Trans>
             </small>
           </div>
 
