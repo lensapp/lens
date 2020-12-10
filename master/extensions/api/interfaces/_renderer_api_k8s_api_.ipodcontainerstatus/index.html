@@ -849,8 +849,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#containerid" class="md-nav__link">
-    containerID
+  <a href="#optional-containerid" class="md-nav__link">
+    Optional containerID
   </a>
   
 </li>
@@ -870,8 +870,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#laststate" class="md-nav__link">
-    lastState
+  <a href="#optional-laststate" class="md-nav__link">
+    Optional lastState
   </a>
   
 </li>
@@ -898,8 +898,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#state" class="md-nav__link">
-    state
+  <a href="#optional-started" class="md-nav__link">
+    Optional started
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-state" class="md-nav__link">
+    Optional state
   </a>
   
 </li>
@@ -931,41 +938,45 @@
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#containerid">containerID</a></li>
+<li><a href="./#optional-containerid">containerID</a></li>
 <li><a href="./#image">image</a></li>
 <li><a href="./#imageid">imageID</a></li>
-<li><a href="./#laststate">lastState</a></li>
+<li><a href="./#optional-laststate">lastState</a></li>
 <li><a href="./#name">name</a></li>
 <li><a href="./#ready">ready</a></li>
 <li><a href="./#restartcount">restartCount</a></li>
-<li><a href="./#state">state</a></li>
+<li><a href="./#optional-started">started</a></li>
+<li><a href="./#optional-state">state</a></li>
 </ul>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
-<h3 id="containerid">containerID<a class="headerlink" href="#containerid" title="Permanent link">#</a></h3>
-<p>• <strong>containerID</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d961d8b15/src/renderer/api/endpoints/pods.api.ts#L170">src/renderer/api/endpoints/pods.api.ts:170</a></em></p>
+<h3 id="optional-containerid"><code>Optional</code> containerID<a class="headerlink" href="#optional-containerid" title="Permanent link">#</a></h3>
+<p>• <strong>containerID</strong>? : <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d143b234b/src/renderer/api/endpoints/pods.api.ts#L176">src/renderer/api/endpoints/pods.api.ts:176</a></em></p>
 <hr />
 <h3 id="image">image<a class="headerlink" href="#image" title="Permanent link">#</a></h3>
 <p>• <strong>image</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d961d8b15/src/renderer/api/endpoints/pods.api.ts#L168">src/renderer/api/endpoints/pods.api.ts:168</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d143b234b/src/renderer/api/endpoints/pods.api.ts#L174">src/renderer/api/endpoints/pods.api.ts:174</a></em></p>
 <hr />
 <h3 id="imageid">imageID<a class="headerlink" href="#imageid" title="Permanent link">#</a></h3>
 <p>• <strong>imageID</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d961d8b15/src/renderer/api/endpoints/pods.api.ts#L169">src/renderer/api/endpoints/pods.api.ts:169</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d143b234b/src/renderer/api/endpoints/pods.api.ts#L175">src/renderer/api/endpoints/pods.api.ts:175</a></em></p>
 <hr />
-<h3 id="laststate">lastState<a class="headerlink" href="#laststate" title="Permanent link">#</a></h3>
-<p>• <strong>lastState</strong>: <em>object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d961d8b15/src/renderer/api/endpoints/pods.api.ts#L156">src/renderer/api/endpoints/pods.api.ts:156</a></em></p>
+<h3 id="optional-laststate"><code>Optional</code> lastState<a class="headerlink" href="#optional-laststate" title="Permanent link">#</a></h3>
+<p>• <strong>lastState</strong>? : <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d143b234b/src/renderer/api/endpoints/pods.api.ts#L156">src/renderer/api/endpoints/pods.api.ts:156</a></em></p>
 <h4>Type declaration:</h4>
 <ul>
 <li>
 <p>[ <strong>index</strong>: <em>string</em>]: object</p>
 </li>
 <li>
-<p><strong>terminated</strong>(): <em>object</em></p>
+<p><strong>running</strong>(): <em>object</em></p>
 </li>
 <li>
-<p><strong>containerID</strong>: <em>string</em></p>
+<p><strong>startedAt</strong>: <em>string</em></p>
+</li>
+<li>
+<p><strong>terminated</strong>(): <em>object</em></p>
 </li>
 <li>
 <p><strong>exitCode</strong>: <em>number</em></p>
@@ -979,23 +990,36 @@
 <li>
 <p><strong>startedAt</strong>: <em>string</em></p>
 </li>
+<li>
+<p><strong>waiting</strong>(): <em>object</em></p>
+</li>
+<li>
+<p><strong>message</strong>: <em>string</em></p>
+</li>
+<li>
+<p><strong>reason</strong>: <em>string</em></p>
+</li>
 </ul>
 <hr />
 <h3 id="name">name<a class="headerlink" href="#name" title="Permanent link">#</a></h3>
 <p>• <strong>name</strong>: <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d961d8b15/src/renderer/api/endpoints/pods.api.ts#L139">src/renderer/api/endpoints/pods.api.ts:139</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d143b234b/src/renderer/api/endpoints/pods.api.ts#L139">src/renderer/api/endpoints/pods.api.ts:139</a></em></p>
 <hr />
 <h3 id="ready">ready<a class="headerlink" href="#ready" title="Permanent link">#</a></h3>
 <p>• <strong>ready</strong>: <em>boolean</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d961d8b15/src/renderer/api/endpoints/pods.api.ts#L166">src/renderer/api/endpoints/pods.api.ts:166</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d143b234b/src/renderer/api/endpoints/pods.api.ts#L172">src/renderer/api/endpoints/pods.api.ts:172</a></em></p>
 <hr />
 <h3 id="restartcount">restartCount<a class="headerlink" href="#restartcount" title="Permanent link">#</a></h3>
 <p>• <strong>restartCount</strong>: <em>number</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d961d8b15/src/renderer/api/endpoints/pods.api.ts#L167">src/renderer/api/endpoints/pods.api.ts:167</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d143b234b/src/renderer/api/endpoints/pods.api.ts#L173">src/renderer/api/endpoints/pods.api.ts:173</a></em></p>
 <hr />
-<h3 id="state">state<a class="headerlink" href="#state" title="Permanent link">#</a></h3>
-<p>• <strong>state</strong>: <em>object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d961d8b15/src/renderer/api/endpoints/pods.api.ts#L140">src/renderer/api/endpoints/pods.api.ts:140</a></em></p>
+<h3 id="optional-started"><code>Optional</code> started<a class="headerlink" href="#optional-started" title="Permanent link">#</a></h3>
+<p>• <strong>started</strong>? : <em>boolean</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d143b234b/src/renderer/api/endpoints/pods.api.ts#L177">src/renderer/api/endpoints/pods.api.ts:177</a></em></p>
+<hr />
+<h3 id="optional-state"><code>Optional</code> state<a class="headerlink" href="#optional-state" title="Permanent link">#</a></h3>
+<p>• <strong>state</strong>? : <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/d143b234b/src/renderer/api/endpoints/pods.api.ts#L140">src/renderer/api/endpoints/pods.api.ts:140</a></em></p>
 <h4>Type declaration:</h4>
 <ul>
 <li>
