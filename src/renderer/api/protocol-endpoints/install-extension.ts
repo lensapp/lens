@@ -13,7 +13,7 @@ export async function installExtension(params: RouteParams): Promise<void> {
 
   try {
     navigate(extensionsURL());
-    await installFromNpm(name);
+    await installFromNpm(name, true);
   } catch (error) {
     logger.error("[PH - Install Extension]: failed to install from NPM", error);
   }

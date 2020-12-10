@@ -30,6 +30,7 @@ interface InstallRequest {
   fileName: string;
   filePath?: string;
   data?: Buffer;
+  confirmInstall?: boolean;
 }
 
 interface InstallRequestPreloaded extends InstallRequest {
@@ -164,6 +165,10 @@ async function requestInstall(init: InstallRequest | InstallRequest[]) {
     const folderExists = await fse.pathExists(extensionFolder);
 
     if (!folderExists) {
+      if (install.confirmInstall && !(await confirmInstallExtension(install.manifest))) {
+        continue;
+      }
+
       // auto-install extension if not yet exists
       return unpackExtension(install);
     } else {
@@ -309,6 +314,20 @@ async function uninstallExtension(extension: InstalledExtension) {
   }
 }
 
+function confirmInstallExtension({name, version}: LensExtensionManifest): Promise<boolean> {
+  const displayName = extensionDisplayName(name, version);
+
+  return new Promise(resolve => {
+    ConfirmDialog.open({
+      message: <p>Are you sure you want to install extension <b>{displayName}</b>?</p>,
+      labelOk: <Trans>Yes</Trans>,
+      labelCancel: <Trans>No</Trans>,
+      ok: () => resolve(true),
+      cancel: () => resolve(false),
+    });
+  });
+}
+
 function confirmUninstallExtension(extension: InstalledExtension) {
   const displayName = extensionDisplayName(extension.manifest.name, extension.manifest.version);
 
@@ -357,15 +376,15 @@ async function installFromSelectFileDialog() {
  * Start extension install using a package name, which is resolved to a tarball url using the npm registry.
  * @param packageName e.g. "@publisher/extension-name"
  */
-export async function installFromNpm(packageName: string) {
+export async function installFromNpm(packageName: string, confirm = false) {
   const tarballUrl = await extensionLoader.getNpmPackageTarballUrl(packageName, "@hackweek");
 
   Notifications.info(`Installing ${packageName}`);
 
-  return installFromUrlOrPath(tarballUrl);
+  return installFromUrlOrPath(tarballUrl, confirm);
 }
 
-async function installFromUrlOrPath(installPath: string) {
+async function installFromUrlOrPath(installPath: string, confirmInstall = false) {
   ExtensionStateStore.getInstance<ExtensionStateStore>().startingInstall = true;
   const fileName = path.basename(installPath);
 
@@ -376,11 +395,11 @@ async function installFromUrlOrPath(installPath: string) {
       const { promise: filePromise } = downloadFile({ url: installPath, timeout: 60000 /*1m*/ });
       const data = await filePromise;
 
-      await requestInstall({ fileName, data });
+      await requestInstall({ fileName, data, confirmInstall });
     }
     // otherwise installing from system path
     else if (InputValidators.isPath.validate(installPath)) {
-      await requestInstall({ fileName, filePath: installPath });
+      await requestInstall({ fileName, filePath: installPath, confirmInstall });
     }
   } catch (error) {
     ExtensionStateStore.getInstance<ExtensionStateStore>().startingInstall = false;

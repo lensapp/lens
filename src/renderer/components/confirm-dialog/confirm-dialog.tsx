@@ -4,7 +4,7 @@ import React, { ReactNode } from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
-import { cssNames, noop, prevDefault } from "../../utils";
+import { cssNames, prevDefault } from "../../utils";
 import { Button, ButtonProps } from "../button";
 import { Dialog, DialogProps } from "../dialog";
 import { Icon } from "../icon";
@@ -13,7 +13,8 @@ export interface ConfirmDialogProps extends Partial<DialogProps> {
 }
 
 export interface ConfirmDialogParams {
-  ok?: () => void;
+  ok?: () => void | Promise<void> | Promise<any>;
+  cancel?: () => void | Promise<void> | Promise<any>;
   labelOk?: ReactNode;
   labelCancel?: ReactNode;
   message?: ReactNode;
@@ -39,7 +40,6 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
   }
 
   public defaultParams: ConfirmDialogParams = {
-    ok: noop,
     labelOk: <Trans>Ok</Trans>,
     labelCancel: <Trans>Cancel</Trans>,
     icon: <Icon big material="warning"/>,
@@ -52,18 +52,27 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
   ok = async () => {
     try {
       this.isSaving = true;
-      await Promise.resolve(this.params.ok()).catch(noop);
+      await this.params.ok?.();
+    } catch {
+      // ignore
     } finally {
       this.isSaving = false;
     }
-    this.close();
+    ConfirmDialog.close();
   };
 
   onClose = () => {
     this.isSaving = false;
   };
 
-  close = () => {
+  close = async () => {
+    try {
+      await this.params.cancel?.();
+    } catch {
+      // ignore
+    } finally {
+      this.isSaving = false;
+    }
     ConfirmDialog.close();
   };
 
