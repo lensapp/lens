@@ -48,6 +48,7 @@ import { reaction, computed } from "mobx";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
 import { sum } from "lodash";
+import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 
 @observer
 export class App extends React.Component {
@@ -204,6 +205,7 @@ export class App extends React.Component {
             <AddRoleBindingDialog/>
             <DeploymentScaleDialog/>
             <StatefulSetScaleDialog/>
+            <ReplicaSetScaleDialog/>
             <CronJobTriggerDialog/>
           </ErrorBoundary>
         </Router>

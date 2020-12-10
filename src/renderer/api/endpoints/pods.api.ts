@@ -67,7 +67,7 @@ export interface IPodContainer {
   image: string;
   command?: string[];
   args?: string[];
-  ports: {
+  ports?: {
     name?: string;
     containerPort: number;
     protocol: string;
@@ -137,7 +137,7 @@ interface IContainerProbe {
 
 export interface IPodContainerStatus {
   name: string;
-  state: {
+  state?: {
     [index: string]: object;
     running?: {
       startedAt: string;
@@ -153,21 +153,28 @@ export interface IPodContainerStatus {
       reason: string;
     };
   };
-  lastState: {
+  lastState?: {
     [index: string]: object;
+    running?: {
+      startedAt: string;
+    };
+    waiting?: {
+      reason: string;
+      message: string;
+    };
     terminated?: {
       startedAt: string;
       finishedAt: string;
       exitCode: number;
       reason: string;
-      containerID: string;
     };
   };
   ready: boolean;
   restartCount: number;
   image: string;
   imageID: string;
-  containerID: string;
+  containerID?: string;
+  started?: boolean;
 }
 
 @autobind()
@@ -196,28 +203,44 @@ export class Pod extends WorkloadKubeObject {
     }[];
     initContainers: IPodContainer[];
     containers: IPodContainer[];
-    restartPolicy: string;
-    terminationGracePeriodSeconds: number;
-    dnsPolicy: string;
+    restartPolicy?: string;
+    terminationGracePeriodSeconds?: number;
+    activeDeadlineSeconds?: number;
+    dnsPolicy?: string;
     serviceAccountName: string;
     serviceAccount: string;
-    priority: number;
-    priorityClassName: string;
-    nodeName: string;
+    automountServiceAccountToken?: boolean;
+    priority?: number;
+    priorityClassName?: string;
+    nodeName?: string;
     nodeSelector?: {
       [selector: string]: string;
     };
-    securityContext: {};
-    schedulerName: string;
-    tolerations: {
-      key: string;
-      operator: string;
-      effect: string;
-      tolerationSeconds: number;
+    securityContext?: {};
+    imagePullSecrets?: {
+      name: string;
     }[];
-    affinity: IAffinity;
+    hostNetwork?: boolean;
+    hostPID?: boolean;
+    hostIPC?: boolean;
+    shareProcessNamespace?: boolean;
+    hostname?: string;
+    subdomain?: string;
+    schedulerName?: string;
+    tolerations?: {
+      key?: string;
+      operator?: string;
+      effect?: string;
+      tolerationSeconds?: number;
+      value?: string;
+    }[];
+    hostAliases?: {
+      ip: string;
+      hostnames: string[];
+    };
+    affinity?: IAffinity;
   };
-  status: {
+  status?: {
     phase: string;
     conditions: {
       type: string;
@@ -230,7 +253,7 @@ export class Pod extends WorkloadKubeObject {
     startTime: string;
     initContainerStatuses?: IPodContainerStatus[];
     containerStatuses?: IPodContainerStatus[];
-    qosClass: string;
+    qosClass?: string;
     reason?: string;
   };
 

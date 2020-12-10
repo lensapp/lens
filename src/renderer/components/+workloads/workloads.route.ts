@@ -25,6 +25,9 @@ export const daemonSetsRoute: RouteProps = {
 export const statefulSetsRoute: RouteProps = {
   path: "/statefulsets"
 };
+export const replicaSetsRoute: RouteProps = {
+  path: "/replicasets"
+};
 export const jobsRoute: RouteProps = {
   path: "/jobs"
 };
@@ -48,6 +51,9 @@ export interface IDaemonSetsRouteParams {
 export interface IStatefulSetsRouteParams {
 }
 
+export interface IReplicaSetsRouteParams {
+}
+
 export interface IJobsRouteParams {
 }
 
@@ -61,6 +67,7 @@ export const podsURL = buildURL<IPodsRouteParams>(podsRoute.path);
 export const deploymentsURL = buildURL<IDeploymentsRouteParams>(deploymentsRoute.path);
 export const daemonSetsURL = buildURL<IDaemonSetsRouteParams>(daemonSetsRoute.path);
 export const statefulSetsURL = buildURL<IStatefulSetsRouteParams>(statefulSetsRoute.path);
+export const replicaSetsURL = buildURL<IReplicaSetsRouteParams>(replicaSetsRoute.path);
 export const jobsURL = buildURL<IJobsRouteParams>(jobsRoute.path);
 export const cronJobsURL = buildURL<ICronJobsRouteParams>(cronJobsRoute.path);
 
@@ -69,6 +76,7 @@ export const workloadURL: Partial<Record<KubeResource, ReturnType<typeof buildUR
   "deployments": deploymentsURL,
   "daemonsets": daemonSetsURL,
   "statefulsets": statefulSetsURL,
+  "replicasets": replicaSetsURL,
   "jobs": jobsURL,
   "cronjobs": cronJobsURL,
 };

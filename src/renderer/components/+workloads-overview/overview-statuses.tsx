@@ -18,6 +18,7 @@ const resources: KubeResource[] = [
   "deployments",
   "statefulsets",
   "daemonsets",
+  "replicasets",
   "jobs",
   "cronjobs",
 ];
