@@ -26,6 +26,7 @@ import { InstalledExtension, extensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
+import { exitApp } from "./exit-app";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -44,6 +45,18 @@ mangleProxyEnv();
 if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
 }
+
+const instanceLock = app.requestSingleInstanceLock();
+
+if (!instanceLock) {
+  app.exit();
+}
+
+app.on("second-instance", () => {
+  if (windowManager) {
+    windowManager.ensureMainWindow();
+  }
+});
 
 app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
