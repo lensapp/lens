@@ -4,6 +4,17 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="marketplace.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script>
+    function onRating(rating) {
+      Array.from(document.querySelectorAll(".fa-star")).forEach((starNode, index) => {
+        if (index < rating) {
+          starNode.classList.add("checked");
+        } else {
+          starNode.classList.remove("checked");
+        }
+      });
+    }
+  </script>
 </head>
 <body>
   <h3>Lens Marketplace</h3>
@@ -17,12 +28,12 @@
       35 installs
     </div>
     <div>|</div>
-    <div>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star checked"></span>
-      <span class="fa fa-star"></span>
+    <div class="stars">
+      <span class="fa fa-star checked" onclick="onRating(1)"></span>
+      <span class="fa fa-star checked" onclick="onRating(2)"></span>
+      <span class="fa fa-star checked" onclick="onRating(3)"></span>
+      <span class="fa fa-star checked" onclick="onRating(4)"></span>
+      <span class="fa fa-star" onclick="onRating(5)"></span>
       <span>(8)</span>
     </div>
     <div>|</div>

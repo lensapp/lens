@@ -28,6 +28,11 @@ ul {
   padding: 0;
 }
 
+.stars {
+  user-select: none;
+  cursor: pointer;
+}
+
 .checked {
   color: orange;
 }
