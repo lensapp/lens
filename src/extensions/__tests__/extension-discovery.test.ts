@@ -18,7 +18,7 @@ const mockedWatch = watch as jest.MockedFunction<typeof watch>;
 
 describe("ExtensionDiscovery", () => {
   it("emits add for added extension", async done => {
-    globalThis.__non_webpack_require__.mockImplementationOnce(() => ({
+    globalThis.__non_webpack_require__.mockImplementation(() => ({
       name: "my-extension"
     }));
     let addHandler: (filePath: string) => void;
@@ -61,9 +61,6 @@ describe("ExtensionDiscovery", () => {
   });
 
   it("doesn't emit add for added file under extension", async done => {
-    globalThis.__non_webpack_require__.mockImplementationOnce(() => ({
-      name: "my-extension"
-    }));
     let addHandler: (filePath: string) => void;
 
     const mockWatchInstance: any = {
