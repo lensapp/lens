@@ -8,6 +8,7 @@ import { resourceQuotaRoute, ResourceQuotas, resourceQuotaURL } from "../+config
 import { pdbRoute, pdbURL, PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
 import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscalers";
 import { isAllowedResource } from "../../../common/rbac";
+import { LimitRanges, limitRangesRoute, limitRangeURL } from "../+config-limit-ranges";
 
 @observer
 export class Config extends React.Component {
@@ -39,6 +40,15 @@ export class Config extends React.Component {
         component: ResourceQuotas,
         url: resourceQuotaURL({ query }),
         routePath: resourceQuotaRoute.path.toString(),
+      });
+    }
+
+    if (isAllowedResource("limitranges")) {
+      routes.push({
+        title: "Limit Ranges",
+        component: LimitRanges,
+        url: limitRangeURL({ query }),
+        routePath: limitRangesRoute.path.toString(),
       });
     }
 
