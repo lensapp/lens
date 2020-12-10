@@ -41,23 +41,27 @@ export async function bootstrap(App: AppComponent) {
   extensionDiscovery.init();
   const lensProtocolRouter = LensProtocolRouter.getInstance<LensProtocolRouter>();
 
-  lensProtocolRouter.init();
-  lensProtocolRouter.onMissingExtension(async name => {
-    if (!extensionLoader.isInstalled(name)) {
-      logger.info(`[PROTOCOL ROUTER]: Extension ${name} not installed, installing..`);
+  logger.info(`[PROTOCOL ROUTER] Calling lensProtocolRouter.init()`);
 
-      await Promise.all([installFromNpm(name), extensionLoader.waitForEnabled(name)]);
+  if (process.isMainFrame) {
+    lensProtocolRouter.init();
+    lensProtocolRouter.onMissingExtension(async name => {
+      if (!extensionLoader.isInstalled(name)) {
+        logger.info(`[PROTOCOL ROUTER]: Extension ${name} not installed, installing..`);
 
-      logger.info(`[PROTOCOL ROUTER]: Extension ${name} installed and enabled.`);
+        await Promise.all([installFromNpm(name), extensionLoader.waitForEnabled(name)]);
 
-      return true;
-    } else {
-      logger.info(`[PROTOCOL ROUTER]: Extension already installed, but route is missing.`);
+        logger.info(`[PROTOCOL ROUTER]: Extension ${name} installed and enabled.`);
 
-      return false;
-    }
-  });
-  protocolEndpoints.registerHandlers();
+        return true;
+      } else {
+        logger.info(`[PROTOCOL ROUTER]: Extension already installed, but route is missing.`);
+
+        return false;
+      }
+    });
+    protocolEndpoints.registerHandlers();
+  }
 
   // preload common stores
   await Promise.all([

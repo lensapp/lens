@@ -68,7 +68,7 @@ export class LensProtocolRouter extends Singleton {
 
   public init() {
     subscribeToBroadcast(lensProtocolChannel, ((_event, { rawUrl }) => {
-      console.log(`receiving: ${rawUrl}`);
+      logger.info(`receiving: ${rawUrl}`);
 
       try {
         this.route(Url(rawUrl, true));
