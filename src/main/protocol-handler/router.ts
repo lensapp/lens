@@ -161,6 +161,7 @@ export class LensProtocolRouter extends Singleton {
     const [match, handler] = route;
 
     delete match.params[EXTENSION_NAME_MATCH];
+    delete match.params[EXTENSION_PUBLISHER_MATCH];
     handler({
       pathname: match.params,
       search: url.query,
@@ -169,10 +170,12 @@ export class LensProtocolRouter extends Singleton {
 
   public on(urlSchema: string, handler: RouteHandler): void {
     pathToRegexp(urlSchema); // verify now that the schema is valid
+    logger.info(`${LensProtocolRouter.LoggingPrefix}: internal registering ${urlSchema}`);
     this.internalRoutes.set(urlSchema, handler);
   }
 
   public extensionOn(id: ExtensionId, urlSchema: string, handler: RouteHandler): void {
+    logger.info(`${LensProtocolRouter.LoggingPrefix}: extension ${id} registering ${urlSchema}`);
     pathToRegexp(urlSchema); // verify now that the schema is valid
 
     if (!this.extentionRoutes.has(id)) {

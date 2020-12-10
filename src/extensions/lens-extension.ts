@@ -53,13 +53,13 @@ export class LensExtension {
   onProtocolRequest(pathSchema: string, handler: RouteHandler): void {
     const lpr = LensProtocolRouter.getInstance<LensProtocolRouter>();
 
-    lpr.extensionOn(this.id, pathSchema, handler);
+    lpr.extensionOn(this.name, pathSchema, handler);
   }
 
   removeProtocolHandlers(): void {
     const lpr = LensProtocolRouter.getInstance<LensProtocolRouter>();
 
-    lpr.removeExtensionHandlers(this.id);
+    lpr.removeExtensionHandlers(this.name);
   }
 
   get description() {
