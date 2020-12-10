@@ -26,7 +26,6 @@ import { InstalledExtension, extensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
-import { exitApp } from "./exit-app";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -53,9 +52,7 @@ if (!instanceLock) {
 }
 
 app.on("second-instance", () => {
-  if (windowManager) {
-    windowManager.ensureMainWindow();
-  }
+  windowManager?.ensureMainWindow();
 });
 
 app.on("ready", async () => {
