@@ -16,7 +16,7 @@ export interface LensExtensionManifest {
   lens?: object; // fixme: add more required fields for validation
 }
 
-const ExtensionNameSchema = /^@[a-z0-9][_-a-z0-9]*\/[a-z0-9][_-a-z0-9]*$/i;
+const ExtensionNameSchema = /^@[a-z0-9][-_a-z0-9]*\/[a-z0-9][-_a-z0-9]*$/i;
 
 export class LensExtension {
   readonly id: LensExtensionId;
