@@ -91,7 +91,7 @@ export class DeploymentScaleDialog extends Component<Props> {
   };
   
   desiredReplicasDown = () => {
-    this.desiredReplicas > 1 && this.desiredReplicas--;
+    this.desiredReplicas > 0 && this.desiredReplicas--;
   };
 
   renderContents() {
@@ -124,7 +124,7 @@ export class DeploymentScaleDialog extends Component<Props> {
           </div>
         </div>
         {warning &&
-        <div className="warning">
+        <div className="warning" data-testid="warning">
           <Icon material="warning"/>
           <Trans>High number of replicas may cause cluster performance issues</Trans>
         </div>
