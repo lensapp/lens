@@ -307,6 +307,8 @@ export class ExtensionLoader {
         const [, extension ] = instanceEntry;
 
         if (extension.manifest.name === name) {
+          console.log(`found extension ${name}: isEnabled => ${extension.isEnabled}`);
+
           return extension.isEnabled;
         }
       }
@@ -319,9 +321,9 @@ export class ExtensionLoader {
    * Get url to the tarball of the extension package. Assumes package is found from npm regisry.
    * @param packageName e.g. "@mirantis/lens-extension-cc"
    */
-  getNpmPackageTarballUrl(packageName: string): Promise<string> {
+  getNpmPackageTarballUrl(packageName: string, tag = ""): Promise<string> {
     return new Promise((resolve, reject) => {
-      const command = [extensionInstaller.npmPath, "view", packageName, "dist.tarball", "--silent"];
+      const command = [extensionInstaller.npmPath, "view", `${packageName}${tag}`, "dist.tarball", "--silent"];
 
       exec(command.join(" "), {
         encoding: "utf8"

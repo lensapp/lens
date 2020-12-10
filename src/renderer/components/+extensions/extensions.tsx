@@ -358,7 +358,7 @@ async function installFromSelectFileDialog() {
  * @param packageName e.g. "@publisher/extension-name"
  */
 export async function installFromNpm(packageName: string) {
-  const tarballUrl = await extensionLoader.getNpmPackageTarballUrl(packageName);
+  const tarballUrl = await extensionLoader.getNpmPackageTarballUrl(packageName, "@hackweek");
 
   Notifications.info(`Installing ${packageName}`);
 
