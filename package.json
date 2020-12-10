@@ -30,6 +30,7 @@
     "download-bins": "concurrently yarn:download:*",
     "download:helm": "yarn run ts-node build/download_helm.ts",
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
+    "marketplace": "npx serve marketplace",
     "i18n:extract": "yarn run lingui extract",
     "postinstall": "patch-package",
     "integration": "jest --coverage integration $@",
