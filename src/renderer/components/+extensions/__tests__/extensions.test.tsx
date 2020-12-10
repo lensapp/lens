@@ -68,7 +68,7 @@ describe("Extensions", () => {
     // Approve confirm dialog
     fireEvent.click(screen.getByText("Yes"));
 
-    expect(extensionDiscovery.uninstallExtension).toHaveBeenCalledWith("/absolute/path");
+    expect(extensionDiscovery.uninstallExtension).toHaveBeenCalled();
     expect(screen.getByText("Disable").closest("button")).toBeDisabled();
     expect(screen.getByText("Uninstall").closest("button")).toBeDisabled();
   });

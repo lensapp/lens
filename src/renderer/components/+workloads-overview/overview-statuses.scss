@@ -15,7 +15,7 @@
 
   .workloads {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 155px);
+    grid-template-columns: repeat(auto-fit, 180px);
     justify-content: space-evenly;
     grid-gap: $margin;
     padding: $padding * 2;

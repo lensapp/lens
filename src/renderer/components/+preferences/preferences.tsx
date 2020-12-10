@@ -13,11 +13,13 @@ import { Input } from "../input";
 import { Checkbox } from "../checkbox";
 import { Notifications } from "../notifications";
 import { Badge } from "../badge";
+import { Button } from "../button";
 import { themeStore } from "../../theme.store";
 import { Tooltip } from "../tooltip";
 import { KubectlBinaries } from "./kubectl-binaries";
 import { appPreferenceRegistry } from "../../../extensions/registries/app-preference-registry";
 import { PageLayout } from "../layout/page-layout";
+import { AddHelmRepoDialog } from "./add-helm-repo-dialog";
 
 @observer
 export class Preferences extends React.Component {
@@ -134,16 +136,25 @@ export class Preferences extends React.Component {
         <KubectlBinaries preferences={preferences}/>
 
         <h2><Trans>Helm</Trans></h2>
-        <Select id="HelmRepoSelect"
-          placeholder={<Trans>Repositories</Trans>}
-          isLoading={this.helmLoading}
-          isDisabled={this.helmLoading}
-          options={this.helmOptions}
-          onChange={this.onRepoSelect}
-          formatOptionLabel={this.formatHelmOptionLabel}
-          controlShouldRenderValue={false}
-        />
-        <div className="repos flex column">
+        <div className="flex gaps">
+          <Select id="HelmRepoSelect"
+            placeholder={<Trans>Repositories</Trans>}
+            isLoading={this.helmLoading}
+            isDisabled={this.helmLoading}
+            options={this.helmOptions}
+            onChange={this.onRepoSelect}
+            formatOptionLabel={this.formatHelmOptionLabel}
+            controlShouldRenderValue={false}
+            className="box grow"
+          />
+          <Button
+            primary
+            label={<Trans>Add Custom Helm Repo</Trans>}
+            onClick={AddHelmRepoDialog.open}
+          />
+        </div>
+        <AddHelmRepoDialog onAddRepo={()=>this.loadHelmRepos()}/>
+        <div className="repos flex gaps column">
           {Array.from(this.helmAddedRepos).map(([name, repo]) => {
             const tooltipId = `message-${name}`;
 

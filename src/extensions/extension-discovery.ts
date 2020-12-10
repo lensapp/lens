@@ -1,4 +1,4 @@
-import chokidar from "chokidar";
+import { watch } from "chokidar";
 import { ipcRenderer } from "electron";
 import { EventEmitter } from "events";
 import fs from "fs-extra";
@@ -138,7 +138,7 @@ export class ExtensionDiscovery {
     await this.whenLoaded;
 
     // chokidar works better than fs.watch
-    chokidar.watch(this.localFolderPath, {
+    watch(this.localFolderPath, {
       // For adding and removing symlinks to work, the depth has to be 1.
       depth: 1,
       // Try to wait until the file has been completely copied.
@@ -155,14 +155,26 @@ export class ExtensionDiscovery {
       .on("unlinkDir", this.handleWatchUnlinkDir);
   }
 
-  handleWatchFileAdd =  async (filePath: string) => {
-    if (path.basename(filePath) === manifestFilename) {
+  handleWatchFileAdd =  async (manifestPath: string) => {
+    // e.g. "foo/package.json"
+    const relativePath = path.relative(this.localFolderPath, manifestPath);
+
+    // Converts "foo/package.json" to ["foo", "package.json"], where length of 2 implies
+    // that the added file is in a folder under local folder path.
+    // This safeguards against a file watch being triggered under a sub-directory which is not an extension.
+    const isUnderLocalFolderPath = relativePath.split(path.sep).length === 2;
+
+    if (path.basename(manifestPath) === manifestFilename && isUnderLocalFolderPath) {
       try {
-        const absPath = path.dirname(filePath);
+        const absPath = path.dirname(manifestPath);
+
         // this.loadExtensionFromPath updates this.packagesJson
-        const extension = await this.loadExtensionFromPath(absPath);
+        const extension = await this.loadExtensionFromFolder(absPath);
 
         if (extension) {
+          // Remove a broken symlink left by a previous installation if it exists.
+          await this.removeSymlinkByManifestPath(manifestPath);
+
           // Install dependencies for the new extension
           await this.installPackages();
 
@@ -190,6 +202,9 @@ export class ExtensionDiscovery {
         .find(([, extensionFolder]) => filePath === extensionFolder)?.[0];
 
       if (extensionName !== undefined) {
+        // If the extension is deleted manually while the application is running, also remove the symlink
+        await this.removeSymlinkByPackageName(extensionName);
+
         delete this.packagesJson.dependencies[extensionName];
 
         // Reinstall dependencies to remove the extension from package.json
@@ -197,7 +212,7 @@ export class ExtensionDiscovery {
 
         // The path to the manifest file is the lens extension id
         // Note that we need to use the symlinked path
-        const lensExtensionId = path.join(this.nodeModulesPath, extensionName, "package.json");
+        const lensExtensionId = path.join(this.nodeModulesPath, extensionName, manifestFilename);
 
         logger.info(`${logModule} removed extension ${extensionName}`);
         this.events.emit("remove", lensExtensionId as LensExtensionId);
@@ -208,18 +223,34 @@ export class ExtensionDiscovery {
   };
 
   /**
-   * Uninstalls extension by path.
-   * The application will detect the folder unlink and remove the extension from the UI automatically.
-   * @param absolutePath Path to the non-symlinked folder of the extension
+   * Remove the symlink under node_modules if exists.
+   * If we don't remove the symlink, the uninstall would leave a non-working symlink,
+   * which wouldn't be fixed if the extension was reinstalled, causing the extension not to work.
+   * @param name e.g. "@mirantis/lens-extension-cc"
    */
-  async uninstallExtension(absolutePath: string) {
-    logger.info(`${logModule} Uninstalling ${absolutePath}`);
+  removeSymlinkByPackageName(name: string) {
+    return fs.remove(this.getInstalledPath(name));
+  }
 
-    const exists = await fs.pathExists(absolutePath);
+  /**
+   * Remove the symlink under node_modules if it exists.
+   * @param manifestPath Path to package.json
+   */
+  removeSymlinkByManifestPath(manifestPath: string) {
+    const manifestJson = __non_webpack_require__(manifestPath);
 
-    if (!exists) {
-      throw new Error(`Extension path ${absolutePath} doesn't exist`);
-    }
+    return this.removeSymlinkByPackageName(manifestJson.name);
+  }
+
+  /**
+   * Uninstalls extension.
+   * The application will detect the folder unlink and remove the extension from the UI automatically.
+   * @param extension Extension to unistall.
+   */
+  async uninstallExtension({ absolutePath, manifest }: InstalledExtension) {
+    logger.info(`${logModule} Uninstalling ${manifest.name}`);
+
+    await this.removeSymlinkByPackageName(manifest.name);
 
     // fs.remove does nothing if the path doesn't exist anymore
     await fs.remove(absolutePath);
@@ -260,6 +291,26 @@ export class ExtensionDiscovery {
     return extensions;
   }
 
+  /**
+   * Returns the symlinked path to the extension folder,
+   * e.g. "/Users/<username>/Library/Application Support/Lens/node_modules/@publisher/extension"
+   */
+  protected getInstalledPath(name: string) {
+    return path.join(this.nodeModulesPath, name);
+  }
+
+  /**
+   * Returns the symlinked path to the package.json,
+   * e.g. "/Users/<username>/Library/Application Support/Lens/node_modules/@publisher/extension/package.json"
+   */
+  protected getInstalledManifestPath(name: string) {
+    return path.join(this.getInstalledPath(name), manifestFilename);
+  }
+
+  /**
+   * Returns InstalledExtension from path to package.json file.
+   * Also updates this.packagesJson.
+   */
   protected async getByManifest(manifestPath: string, { isBundled = false }: {
     isBundled?: boolean;
   } = {}): Promise<InstalledExtension | null> {
@@ -270,7 +321,7 @@ export class ExtensionDiscovery {
       fs.accessSync(manifestPath, fs.constants.F_OK);
 
       manifestJson = __non_webpack_require__(manifestPath);
-      const installedManifestPath = path.join(this.nodeModulesPath, manifestJson.name, "package.json");
+      const installedManifestPath = this.getInstalledManifestPath(manifestJson.name);
 
       this.packagesJson.dependencies[manifestJson.name] = path.dirname(manifestPath);
       const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
@@ -319,7 +370,7 @@ export class ExtensionDiscovery {
       }
 
       const absPath = path.resolve(folderPath, fileName);
-      const extension = await this.loadExtensionFromPath(absPath, { isBundled: true });
+      const extension = await this.loadExtensionFromFolder(absPath, { isBundled: true });
 
       if (extension) {
         extensions.push(extension);
@@ -354,7 +405,7 @@ export class ExtensionDiscovery {
         continue;
       }
 
-      const extension = await this.loadExtensionFromPath(absPath);
+      const extension = await this.loadExtensionFromFolder(absPath);
 
       if (extension) {
         extensions.push(extension);
@@ -368,8 +419,9 @@ export class ExtensionDiscovery {
 
   /**
    * Loads extension from absolute path, updates this.packagesJson to include it and returns the extension.
+   * @param absPath Folder path to extension
    */
-  async loadExtensionFromPath(absPath: string, { isBundled = false }: {
+  async loadExtensionFromFolder(absPath: string, { isBundled = false }: {
     isBundled?: boolean;
   } = {}): Promise<InstalledExtension | null> {
     const manifestPath = path.resolve(absPath, manifestFilename);

@@ -11,7 +11,6 @@ import { cssNames } from "../../utils";
 import { PodDetailsTolerations } from "../+workloads-pods/pod-details-tolerations";
 import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities";
 import { KubeEventDetails } from "../+events/kube-event-details";
-import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { _i18n } from "../../i18n";
@@ -20,7 +19,6 @@ import { deploymentStore } from "./deployments.store";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { ReplicaSets } from "../+workloads-replicasets";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
@@ -38,10 +36,6 @@ export class DeploymentDetails extends React.Component<Props> {
     if (!podsStore.isLoaded) {
       podsStore.loadAll();
     }
-
-    if (!replicaSetStore.isLoaded) {
-      replicaSetStore.loadAll();
-    }
   }
 
   componentWillUnmount() {
@@ -56,7 +50,6 @@ export class DeploymentDetails extends React.Component<Props> {
     const nodeSelector = deployment.getNodeSelectors();
     const selectors = deployment.getSelectors();
     const childPods = deploymentStore.getChildPods(deployment);
-    const replicaSets = replicaSetStore.getReplicaSetsByOwner(deployment);
     const metrics = deploymentStore.metrics;
 
     return (
@@ -118,7 +111,6 @@ export class DeploymentDetails extends React.Component<Props> {
         <PodDetailsTolerations workload={deployment}/>
         <PodDetailsAffinities workload={deployment}/>
         <ResourceMetricsText metrics={metrics}/>
-        <ReplicaSets replicaSets={replicaSets}/>
         <PodDetailsList pods={childPods} owner={deployment}/>
       </div>
     );
