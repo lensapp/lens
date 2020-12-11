@@ -202,7 +202,7 @@ export class LensProtocolRouter extends Singleton {
   }
 
   public removeExtensionHandlers(id: ExtensionId): void {
-    this.extentionRoutes.get(id)?.clear();
+    this.extentionRoutes.delete(id);
   }
 
   /**
