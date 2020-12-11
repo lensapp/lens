@@ -16,7 +16,7 @@ import { Workloads, workloadsRoute, workloadsURL } from "./+workloads";
 import { Namespaces, namespacesRoute } from "./+namespaces";
 import { Network, networkRoute } from "./+network";
 import { Storage, storageRoute } from "./+storage";
-import { Cluster } from "./+cluster/cluster";
+import { ClusterOverview } from "./+cluster/cluster-overview";
 import { Config, configRoute } from "./+config";
 import { Events } from "./+events/events";
 import { eventRoute } from "./+events";
@@ -181,7 +181,7 @@ export class App extends React.Component {
           <ErrorBoundary>
             <MainLayout>
               <Switch>
-                <Route component={Cluster} {...clusterRoute}/>
+                <Route component={ClusterOverview} {...clusterRoute}/>
                 <Route component={Nodes} {...nodesRoute}/>
                 <Route component={Workloads} {...workloadsRoute}/>
                 <Route component={Config} {...configRoute}/>

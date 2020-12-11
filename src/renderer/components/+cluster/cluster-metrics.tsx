@@ -3,7 +3,7 @@ import "./cluster-metrics.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { ChartOptions, ChartPoint } from "chart.js";
-import { clusterStore, MetricType } from "./cluster.store";
+import { clusterOverviewStore, MetricType } from "./cluster-overview.store";
 import { BarChart } from "../chart";
 import { bytesToUnits } from "../../utils";
 import { Spinner } from "../spinner";
@@ -13,10 +13,9 @@ import { ClusterMetricSwitchers } from "./cluster-metric-switchers";
 import { getMetricLastPoints } from "../../api/endpoints/metrics.api";
 
 export const ClusterMetrics = observer(() => {
-  const { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics, liveMetrics } = clusterStore;
-  const { memoryCapacity, cpuCapacity } = getMetricLastPoints(clusterStore.metrics);
+  const { metricType, metricNodeRole, getMetricsValues, metricsLoaded, metrics } = clusterOverviewStore;
+  const { memoryCapacity, cpuCapacity } = getMetricLastPoints(clusterOverviewStore.metrics);
   const metricValues = getMetricsValues(metrics);
-  const liveMetricValues = getMetricsValues(liveMetrics);
   const colors = { cpu: "#3D90CE", memory: "#C93DCE" };
   const data = metricValues.map(value => ({
     x: value[0],
@@ -70,7 +69,7 @@ export const ClusterMetrics = observer(() => {
   const options = metricType === MetricType.CPU ? cpuOptions : memoryOptions;
 
   const renderMetrics = () => {
-    if ((!metricValues.length || !liveMetricValues.length) && !metricsLoaded) {
+    if (!metricValues.length && !metricsLoaded) {
       return <Spinner center/>;
     }
 

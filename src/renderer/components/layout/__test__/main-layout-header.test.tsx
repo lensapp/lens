@@ -41,9 +41,9 @@ describe("<MainLayoutHeader />", () => {
     expect(mockBroadcastIpc).toBeCalledWith("renderer:navigate", "/cluster/foo/settings");
   });
 
-  it("renders cluster name", async () => {
+  it("renders cluster name", () => {
     const { getByText } = render(<MainLayoutHeader cluster={cluster} />);
 
-    expect(await getByText("minikube")).toBeTruthy();
+    expect(getByText("minikube")).toBeInTheDocument();
   });
 });
