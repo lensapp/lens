@@ -41,8 +41,8 @@ export class ExtensionInstaller {
       child.on("close", () => {
         resolve();
       });
-      child.on("error", (err) => {
-        reject(err);
+      child.on("error", error => {
+        reject(error);
       });
     });
   }
