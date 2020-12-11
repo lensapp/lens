@@ -106,7 +106,7 @@ app.on("ready", async () => {
     });
 
     extensionLoader.initExtensions(extensions);
-  } catch (error ){
+  } catch (error) {
     dialog.showErrorBox("Lens Error", `Could not load extensions: ${error?.message || ""}`);
   }
 
