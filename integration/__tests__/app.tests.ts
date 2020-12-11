@@ -226,7 +226,7 @@ describe("Lens integration tests", () => {
         pages: [{
           name: "Cluster",
           href: "cluster",
-          expectedSelector: "div.Cluster div.label",
+          expectedSelector: "div.ClusterOverview div.label",
           expectedText: "Master"
         }]
       },

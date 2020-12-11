@@ -95,15 +95,9 @@ export class PodLogList extends React.Component<Props> {
   @action
   setLastLineVisibility = (props: ListOnScrollProps) => {
     const { scrollHeight, clientHeight } = this.virtualListDiv.current;
-    const { scrollOffset, scrollDirection } = props;
+    const { scrollOffset } = props;
 
-    if (scrollDirection == "backward") {
-      this.isLastLineVisible = false;
-    } else {
-      if (clientHeight + scrollOffset === scrollHeight) {
-        this.isLastLineVisible = true;
-      }
-    }
+    this.isLastLineVisible = (clientHeight + scrollOffset) === scrollHeight;
   };
 
   /**

@@ -74,6 +74,7 @@ export class Tracker extends Util.Singleton {
   }
 
   reportPeriodically() {
+    this.reportData();
     this.reportInterval = setInterval(() => {
       this.reportData();
     }, 60 * 60 * 1000); // report every 1h

@@ -2,7 +2,19 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.1 (current version)
+## 4.0.2 (current version)
+
+We are aware some users are encountering issues and regressions from previous version. Many of these issues are something we have not seen as part of our automated or manual testing process. To make it worse, some of them are really difficult to reproduce. We want to ensure we are putting all our energy and effort trying to resolve these issues. We hope you are patient. Expect to see new patch releases still in the coming days! Fixes in this version:
+
+- Fix: use correct apiversion for HPA details
+- Fix: use correct apiversion fro CronJob details
+- Fix: wrong values in node metrics
+- Fix: Deployment scale button "minus"
+- Fix: remove symlink on extension install and manual runtime uninstall
+- Fix: logs autoscroll behaviour
+- Performance fixes
+
+## 4.0.1
 
 - Extension install/uninstall fixes
 - Fix status brick styles in pod-menu-extension

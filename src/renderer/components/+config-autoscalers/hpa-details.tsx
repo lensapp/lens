@@ -134,7 +134,7 @@ export class HpaDetails extends React.Component<Props> {
 
 kubeObjectDetailRegistry.add({
   kind: "HorizontalPodAutoscaler",
-  apiVersions: ["autoscaling/v1"],
+  apiVersions: ["autoscaling/v2beta1"],
   components: {
     Details: (props) => <HpaDetails {...props} />
   }
@@ -142,7 +142,7 @@ kubeObjectDetailRegistry.add({
 
 kubeObjectDetailRegistry.add({
   kind: "HorizontalPodAutoscaler",
-  apiVersions: ["autoscaling/v1"],
+  apiVersions: ["autoscaling/v2beta1"],
   priority: 5,
   components: {
     Details: (props) => <KubeEventDetails {...props} />

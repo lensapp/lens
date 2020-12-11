@@ -128,33 +128,45 @@ describe("<DeploymentScaleDialog />", () => {
     const initReplicas = 1;
 
     deploymentApi.getReplicas = jest.fn().mockImplementationOnce(async () => initReplicas);
-    const { getByTestId } = render(<DeploymentScaleDialog />);
+    const component = render(<DeploymentScaleDialog />);
 
     DeploymentScaleDialog.open(dummyDeployment);
     await waitFor(async () => {
-      const desiredScale = await getByTestId("desired-scale");
-
-      expect(desiredScale).toHaveTextContent(`${initReplicas}`);
+      expect(await component.getByTestId("desired-scale")).toHaveTextContent(`${initReplicas}`);
+      expect(await component.getByTestId("current-scale")).toHaveTextContent(`${initReplicas}`);
+      expect((await component.baseElement.querySelector("input").value)).toBe(`${initReplicas}`);
     });
-    const up = await getByTestId("desired-replicas-up");
-    const down = await getByTestId("desired-replicas-down");
+    const up = await component.getByTestId("desired-replicas-up");
+    const down = await component.getByTestId("desired-replicas-down");
 
     fireEvent.click(up);
-    expect(await getByTestId("desired-scale")).toHaveTextContent(`${initReplicas + 1}`);
-    fireEvent.click(down);
-    expect(await getByTestId("desired-scale")).toHaveTextContent("1");
-    // edge case, desiredScale must > 0
-    fireEvent.click(down);
-    fireEvent.click(down);
-    expect(await getByTestId("desired-scale")).toHaveTextContent("1");
-    const times = 120;
+    expect(await component.getByTestId("desired-scale")).toHaveTextContent(`${initReplicas + 1}`);
+    expect(await component.getByTestId("current-scale")).toHaveTextContent(`${initReplicas}`);
+    expect((await component.baseElement.querySelector("input").value)).toBe(`${initReplicas + 1}`);
 
-    // edge case, desiredScale must < scaleMax (100)
+    fireEvent.click(down);
+    expect(await component.getByTestId("desired-scale")).toHaveTextContent(`${initReplicas}`);
+    expect(await component.getByTestId("current-scale")).toHaveTextContent(`${initReplicas}`);
+    expect((await component.baseElement.querySelector("input").value)).toBe(`${initReplicas}`);
+
+    // edge case, desiredScale must = 0
+    let times = 10;
+
+    for (let i = 0; i < times; i++) {
+      fireEvent.click(down);
+    }
+    expect(await component.getByTestId("desired-scale")).toHaveTextContent("0");
+    expect((await component.baseElement.querySelector("input").value)).toBe("0");
+
+    // edge case, desiredScale must = 100 scaleMax (100)
+    times = 120;
+
     for (let i = 0; i < times; i++) {
       fireEvent.click(up);
     }
-    expect(await getByTestId("desired-scale")).toHaveTextContent("100");
+    expect(await component.getByTestId("desired-scale")).toHaveTextContent("100");
+    expect((component.baseElement.querySelector("input").value)).toBe("100");
+    expect(await component.getByTestId("warning"))
+      .toHaveTextContent("High number of replicas may cause cluster performance issues");
   });
-
 });
-
