@@ -26,11 +26,11 @@ export const NodeCharts = observer(() => {
   const [
     memoryUsage,
     memoryRequests,
-    _memoryLimits, // DO NOT REMOVE!!!
+    _memoryLimits, // eslint-disable-line unused-imports/no-unused-vars-ts
     memoryCapacity,
     cpuUsage,
     cpuRequests,
-    _cpuLimits, // DO NOT REMOVE!!!
+    _cpuLimits, // eslint-disable-line unused-imports/no-unused-vars-ts
     cpuCapacity,
     podUsage,
     podCapacity,
