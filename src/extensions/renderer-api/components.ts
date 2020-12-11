@@ -27,6 +27,7 @@ export * from "../../renderer/components/menu";
 export * from "../../renderer/components/notifications";
 export * from "../../renderer/components/spinner";
 export * from "../../renderer/components/stepper";
+export * from "../../renderer/components/+workloads-pods/pod-details-list";
 
 // kube helpers
 export * from "../../renderer/components/kube-object";
