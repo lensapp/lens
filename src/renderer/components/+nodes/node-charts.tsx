@@ -26,9 +26,11 @@ export const NodeCharts = observer(() => {
   const [
     memoryUsage,
     memoryRequests,
+    _memoryLimits, // DO NOT REMOVE!!!
     memoryCapacity,
     cpuUsage,
     cpuRequests,
+    _cpuLimits, // DO NOT REMOVE!!!
     cpuCapacity,
     podUsage,
     podCapacity,
