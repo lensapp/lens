@@ -266,9 +266,9 @@ export class ExtensionDiscovery {
 
     logger.info(`${logModule} loading extensions from ${extensionInstaller.extensionPackagesRoot}`);
 
-    if (await fs.pathExists(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"))) {
-      await fs.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
-    }
+    // fs.remove won't throw if path is missing
+    await fs.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
+
 
     try {
       // Verify write access to static/extensions, which is needed for symlinking

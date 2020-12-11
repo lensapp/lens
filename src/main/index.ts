@@ -83,8 +83,8 @@ app.on("ready", async () => {
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     proxyServer = LensProxy.create(proxyPort, clusterManager);
   } catch (error) {
-    logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error.message}`);
-    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error.message || "unknown error"}`);
+    logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error?.message}`);
+    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error?.message || "unknown error"}`);
     app.exit();
   }
 
@@ -107,7 +107,7 @@ app.on("ready", async () => {
 
     extensionLoader.initExtensions(extensions);
   } catch (error) {
-    dialog.showErrorBox("Lens Error", `Could not load extensions: ${error?.message || ""}`);
+    dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
   }
 
   setTimeout(() => {
