@@ -64,6 +64,7 @@ export class Sidebar extends React.Component<Props> {
       return (
         <SidebarNavItem
           key={group}
+          id={`crd-${group}`}
           className="sub-menu-parent"
           url={crdURL({ query: { groups: group } })}
           subMenus={submenus}
@@ -100,6 +101,7 @@ export class Sidebar extends React.Component<Props> {
     return clusterPageMenuRegistry.getRootItems().map((menuItem, index) => {
       const registeredPage = clusterPageRegistry.getByPageMenuTarget(menuItem.target);
       const tabRoutes = this.getTabLayoutRoutes(menuItem);
+      const id = `registered-item-${index}`;
       let pageUrl: string;
       let isActive = false;
 
@@ -117,7 +119,8 @@ export class Sidebar extends React.Component<Props> {
 
       return (
         <SidebarNavItem
-          key={`registered-item-${index}`}
+          key={id}
+          id={id}
           url={pageUrl}
           text={menuItem.title}
           icon={<menuItem.components.Icon/>}
@@ -150,7 +153,7 @@ export class Sidebar extends React.Component<Props> {
           </div>
           <div className="sidebar-nav flex column box grow-fixed">
             <SidebarNavItem
-              testId="cluster"
+              id="cluster"
               isActive={isActiveRoute(clusterRoute)}
               isHidden={!isAllowedResource("nodes")}
               url={clusterURL()}
@@ -158,7 +161,7 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon svg="kube"/>}
             />
             <SidebarNavItem
-              testId="nodes"
+              id="nodes"
               isActive={isActiveRoute(nodesRoute)}
               isHidden={!isAllowedResource("nodes")}
               url={nodesURL()}
@@ -166,7 +169,7 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon svg="nodes"/>}
             />
             <SidebarNavItem
-              testId="workloads"
+              id="workloads"
               isActive={isActiveRoute(workloadsRoute)}
               isHidden={Workloads.tabRoutes.length == 0}
               url={workloadsURL({ query })}
@@ -175,7 +178,7 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon svg="workloads"/>}
             />
             <SidebarNavItem
-              testId="config"
+              id="config"
               isActive={isActiveRoute(configRoute)}
               isHidden={Config.tabRoutes.length == 0}
               url={configURL({ query })}
@@ -184,7 +187,7 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon material="list"/>}
             />
             <SidebarNavItem
-              testId="networks"
+              id="networks"
               isActive={isActiveRoute(networkRoute)}
               isHidden={Network.tabRoutes.length == 0}
               url={networkURL({ query })}
@@ -193,7 +196,7 @@ export class Sidebar extends React.Component<Props> {
               icon={<Icon material="device_hub"/>}
             />
             <SidebarNavItem
-              testId="storage"
+              id="storage"
               isActive={isActiveRoute(storageRoute)}
               isHidden={Storage.tabRoutes.length == 0}
               url={storageURL({ query })}
@@ -202,7 +205,7 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Storage</Trans>}
             />
             <SidebarNavItem
-              testId="namespaces"
+              id="namespaces"
               isActive={isActiveRoute(namespacesRoute)}
               isHidden={!isAllowedResource("namespaces")}
               url={namespacesURL()}
@@ -210,7 +213,7 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Namespaces</Trans>}
             />
             <SidebarNavItem
-              testId="events"
+              id="events"
               isActive={isActiveRoute(eventRoute)}
               isHidden={!isAllowedResource("events")}
               url={eventsURL({ query })}
@@ -218,7 +221,7 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Events</Trans>}
             />
             <SidebarNavItem
-              testId="apps"
+              id="apps"
               isActive={isActiveRoute(appsRoute)}
               url={appsURL({ query })}
               subMenus={Apps.tabRoutes}
@@ -226,7 +229,7 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Apps</Trans>}
             />
             <SidebarNavItem
-              testId="users"
+              id="users"
               isActive={isActiveRoute(usersManagementRoute)}
               url={usersManagementURL({ query })}
               subMenus={UserManagement.tabRoutes}
@@ -234,7 +237,7 @@ export class Sidebar extends React.Component<Props> {
               text={<Trans>Access Control</Trans>}
             />
             <SidebarNavItem
-              testId="custom-resources"
+              id="custom-resources"
               isActive={isActiveRoute(crdRoute)}
               isHidden={!isAllowedResource("customresourcedefinitions")}
               url={crdURL()}

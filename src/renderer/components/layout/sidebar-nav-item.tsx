@@ -13,6 +13,7 @@ import type { TabLayoutRoute } from "./tab-layout";
 import type { SidebarContextValue } from "./sidebar-context";
 
 interface SidebarNavItemProps {
+  id: string; // Used to save nav item collapse/expand state in local storage
   url: string;
   text: React.ReactNode | string;
   className?: string;
@@ -20,7 +21,6 @@ interface SidebarNavItemProps {
   isHidden?: boolean;
   isActive?: boolean;
   subMenus?: TabLayoutRoute[];
-  testId?: string; // data-test-id="" property for integration tests
 }
 
 const navItemStorage = createStorage<[string, boolean][]>("sidebar_menu_item", []);
@@ -33,22 +33,16 @@ export class SidebarNavItem extends React.Component<SidebarNavItemProps> {
   static contextType = SidebarContext;
   public context: SidebarContextValue;
 
-  get itemId() {
-    const url = new URL(this.props.url, `${window.location.protocol}//${window.location.host}`);
-
-    return url.pathname; // pathname without get params
-  }
-
   @computed get isExpanded() {
-    return navItemState.get(this.itemId);
+    return navItemState.get(this.props.id);
   }
 
   toggleSubMenu = () => {
-    navItemState.set(this.itemId, !this.isExpanded);
+    navItemState.set(this.props.id, !this.isExpanded);
   };
 
   render() {
-    const { isHidden, isActive, subMenus = [], icon, text, url, children, className, testId } = this.props;
+    const { isHidden, isActive, subMenus = [], icon, text, url, children, className, id } = this.props;
 
     if (isHidden) {
       return null;
@@ -57,7 +51,7 @@ export class SidebarNavItem extends React.Component<SidebarNavItemProps> {
 
     if (extendedView) {
       return (
-        <div className={cssNames("SidebarNavItem", className)} data-test-id={testId}>
+        <div className={cssNames("SidebarNavItem", className)} data-test-id={id}>
           <div className={cssNames("nav-item", { active: isActive })} onClick={this.toggleSubMenu}>
             {icon}
             <span className="link-text">{text}</span>
