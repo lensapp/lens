@@ -194,7 +194,7 @@ export class LensProtocolRouter extends Singleton {
       this.extentionRoutes.set(id, new Map());
     }
 
-    if (urlSchema.includes(`:${EXTENSION_NAME_MATCH}`)) {
+    if (urlSchema.includes(`:${EXTENSION_NAME_MATCH}`) || urlSchema.includes(`:${EXTENSION_PUBLISHER_MATCH}`)) {
       throw new TypeError("Invalid url path schema");
     }
 
