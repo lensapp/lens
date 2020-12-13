@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/extensions/api/classes/_renderer_api_components_.slider/">
+        <link rel="canonical" href="https://docs.k8slens.dev/extensions/api/classes/_renderer_api_components_.poddetailslist/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Class: Slider ‹**S, SS, S**› - Lens Documentation</title>
+        <title>Class: PodDetailsList ‹**S, SS, S**› - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-slider-s-ss-s" class="md-skip">
+        <a href="#class-poddetailslist-s-ss-s" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Class: Slider ‹**S, SS, S**›
+              Class: PodDetailsList ‹**S, SS, S**›
             
           </span>
         </div>
@@ -856,6 +856,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#object-literals" class="md-nav__link">
+    Object literals
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -924,13 +931,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#static-defaultprops" class="md-nav__link">
-    Static defaultProps
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -973,8 +973,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-componentdidmount" class="md-nav__link">
-    Optional componentDidMount
+  <a href="#componentdidmount" class="md-nav__link">
+    componentDidMount
   </a>
   
 </li>
@@ -1001,8 +1001,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-componentwillunmount" class="md-nav__link">
-    Optional componentWillUnmount
+  <a href="#componentwillunmount" class="md-nav__link">
+    componentWillUnmount
   </a>
   
 </li>
@@ -1029,8 +1029,29 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#gettablerow" class="md-nav__link">
+    getTableRow
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#render" class="md-nav__link">
     render
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendercpuusage" class="md-nav__link">
+    renderCpuUsage
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendermemoryusage" class="md-nav__link">
+    renderMemoryUsage
   </a>
   
 </li>
@@ -1054,6 +1075,40 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#object-literals_1" class="md-nav__link">
+    Object literals
+  </a>
+  
+    <nav class="md-nav" aria-label="Object literals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-defaultprops" class="md-nav__link">
+    Static defaultProps
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaultprops-object" class="md-nav__link">
+    ▪ defaultProps: object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#showtitle" class="md-nav__link">
+    showTitle
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1068,16 +1123,16 @@
               
                 
                 
-                <h1 id="class-slider-s-ss-s">Class: Slider ‹<strong>S, SS, S</strong>›<a class="headerlink" href="#class-slider-s-ss-s" title="Permanent link">#</a></h1>
+                <h1 id="class-poddetailslist-s-ss-s">Class: PodDetailsList ‹<strong>S, SS, S</strong>›<a class="headerlink" href="#class-poddetailslist-s-ss-s" title="Permanent link">#</a></h1>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
 <p>▪ <strong>S</strong></p>
 <p>▪ <strong>SS</strong></p>
 <p>▪ <strong>S</strong></p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li>Component‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›</li>
+<li>Component‹Props›</li>
 </ul>
-<p>↳ <strong>Slider</strong></p>
+<p>↳ <strong>PodDetailsList</strong></p>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
 <ul>
@@ -1090,7 +1145,6 @@
 <li><a href="./#refs">refs</a></li>
 <li><a href="./#state">state</a></li>
 <li><a href="./#static-optional-contexttype">contextType</a></li>
-<li><a href="./#static-defaultprops">defaultProps</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
@@ -1098,21 +1152,28 @@
 <li><a href="./#optional-unsafe_componentwillreceiveprops">UNSAFE_componentWillReceiveProps</a></li>
 <li><a href="./#optional-unsafe_componentwillupdate">UNSAFE_componentWillUpdate</a></li>
 <li><a href="./#optional-componentdidcatch">componentDidCatch</a></li>
-<li><a href="./#optional-componentdidmount">componentDidMount</a></li>
+<li><a href="./#componentdidmount">componentDidMount</a></li>
 <li><a href="./#optional-componentdidupdate">componentDidUpdate</a></li>
 <li><a href="./#optional-componentwillmount">componentWillMount</a></li>
 <li><a href="./#optional-componentwillreceiveprops">componentWillReceiveProps</a></li>
-<li><a href="./#optional-componentwillunmount">componentWillUnmount</a></li>
+<li><a href="./#componentwillunmount">componentWillUnmount</a></li>
 <li><a href="./#optional-componentwillupdate">componentWillUpdate</a></li>
 <li><a href="./#forceupdate">forceUpdate</a></li>
 <li><a href="./#optional-getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></li>
+<li><a href="./#gettablerow">getTableRow</a></li>
 <li><a href="./#render">render</a></li>
+<li><a href="./#rendercpuusage">renderCpuUsage</a></li>
+<li><a href="./#rendermemoryusage">renderMemoryUsage</a></li>
 <li><a href="./#setstate">setState</a></li>
 <li><a href="./#optional-shouldcomponentupdate">shouldComponentUpdate</a></li>
 </ul>
+<h3 id="object-literals">Object literals<a class="headerlink" href="#object-literals" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#static-defaultprops">defaultProps</a></li>
+</ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>+ <strong>new Slider</strong>(<code>props</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›): <em><a href="./">Slider</a></em></p>
+<p>+ <strong>new PodDetailsList</strong>(<code>props</code>: Readonly‹Props›): <em><a href="./">PodDetailsList</a></em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#constructor">constructor</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:486</p>
 <p><strong>Parameters:</strong></p>
@@ -1126,12 +1187,12 @@
 <tbody>
 <tr>
 <td><code>props</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Returns:</strong> <em><a href="./">Slider</a></em></p>
-<p>+ <strong>new Slider</strong>(<code>props</code>: <a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>, <code>context?</code>: any): <em><a href="./">Slider</a></em></p>
+<p><strong>Returns:</strong> <em><a href="./">PodDetailsList</a></em></p>
+<p>+ <strong>new PodDetailsList</strong>(<code>props</code>: Props, <code>context?</code>: any): <em><a href="./">PodDetailsList</a></em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#constructor">constructor</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:488</p>
 <p><strong><code>deprecated</code></strong> </p>
@@ -1147,7 +1208,7 @@
 <tbody>
 <tr>
 <td><code>props</code></td>
-<td><a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a></td>
+<td>Props</td>
 </tr>
 <tr>
 <td><code>context?</code></td>
@@ -1155,7 +1216,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Returns:</strong> <em><a href="./">Slider</a></em></p>
+<p><strong>Returns:</strong> <em><a href="./">PodDetailsList</a></em></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="context">context<a class="headerlink" href="#context" title="Permanent link">#</a></h3>
 <p>• <strong>context</strong>: <em>any</em></p>
@@ -1173,7 +1234,7 @@ Should be used with type annotation or static contextType.</p>
 <p><strong><code>see</code></strong> https://reactjs.org/docs/context.html</p>
 <hr />
 <h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">#</a></h3>
-<p>• <strong>props</strong>: <em>Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>› &amp; Readonly‹object›</em></p>
+<p>• <strong>props</strong>: <em>Readonly‹Props› &amp; Readonly‹object›</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#props">props</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:511</p>
 <hr />
@@ -1211,10 +1272,6 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong><code>see</code></strong> https://reactjs.org/docs/context.html#classcontexttype</p>
-<hr />
-<h3 id="static-defaultprops"><code>Static</code> defaultProps<a class="headerlink" href="#static-defaultprops" title="Permanent link">#</a></h3>
-<p>▪ <strong>defaultProps</strong>: <em>object</em> = defaultProps as object</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e408b0c6d/src/renderer/components/slider/slider.tsx#L21">src/renderer/components/slider/slider.tsx:21</a></em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="optional-unsafe_componentwillmount"><code>Optional</code> UNSAFE_componentWillMount<a class="headerlink" href="#optional-unsafe_componentwillmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>UNSAFE_componentWillMount</strong>(): <em>void</em></p>
@@ -1231,7 +1288,7 @@ prevents this from being invoked.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-unsafe_componentwillreceiveprops"><code>Optional</code> UNSAFE_componentWillReceiveProps<a class="headerlink" href="#optional-unsafe_componentwillreceiveprops" title="Permanent link">#</a></h3>
-<p>▸ <strong>UNSAFE_componentWillReceiveProps</strong>(<code>nextProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›, <code>nextContext</code>: any): <em>void</em></p>
+<p>▸ <strong>UNSAFE_componentWillReceiveProps</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextContext</code>: any): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-unsafe_componentwillreceiveprops">UNSAFE_componentWillReceiveProps</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:744</p>
 <p>Called when the component may be receiving new props.
@@ -1255,7 +1312,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td><code>nextProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>nextContext</code></td>
@@ -1266,7 +1323,7 @@ prevents this from being invoked.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-unsafe_componentwillupdate"><code>Optional</code> UNSAFE_componentWillUpdate<a class="headerlink" href="#optional-unsafe_componentwillupdate" title="Permanent link">#</a></h3>
-<p>▸ <strong>UNSAFE_componentWillUpdate</strong>(<code>nextProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>void</em></p>
+<p>▸ <strong>UNSAFE_componentWillUpdate</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-unsafe_componentwillupdate">UNSAFE_componentWillUpdate</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:772</p>
 <p>Called immediately before rendering when new props or state is received. Not called for the initial render.</p>
@@ -1288,7 +1345,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td><code>nextProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>nextState</code></td>
@@ -1329,15 +1386,14 @@ the entire component tree to unmount.</p>
 </table>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
-<h3 id="optional-componentdidmount"><code>Optional</code> componentDidMount<a class="headerlink" href="#optional-componentdidmount" title="Permanent link">#</a></h3>
+<h3 id="componentdidmount">componentDidMount<a class="headerlink" href="#componentdidmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>componentDidMount</strong>(): <em>void</em></p>
-<p><em>Inherited from <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentdidmount">componentDidMount</a></em></p>
-<p>Defined in node_modules/@types/react/index.d.ts:620</p>
-<p>Called immediately after a component is mounted. Setting state here will trigger re-rendering.</p>
+<p><em>Overrides <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentdidmount">componentDidMount</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e408b0c6d/src/renderer/components/+workloads-pods/pod-details-list.tsx#L54">src/renderer/components/+workloads-pods/pod-details-list.tsx:54</a></em></p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-componentdidupdate"><code>Optional</code> componentDidUpdate<a class="headerlink" href="#optional-componentdidupdate" title="Permanent link">#</a></h3>
-<p>▸ <strong>componentDidUpdate</strong>(<code>prevProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›, <code>prevState</code>: Readonly‹S›, <code>snapshot?</code>: SS): <em>void</em></p>
+<p>▸ <strong>componentDidUpdate</strong>(<code>prevProps</code>: Readonly‹Props›, <code>prevState</code>: Readonly‹S›, <code>snapshot?</code>: SS): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-componentdidupdate">componentDidUpdate</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:683</p>
 <p>Called immediately after updating occurs. Not called for the initial render.</p>
@@ -1353,7 +1409,7 @@ the entire component tree to unmount.</p>
 <tbody>
 <tr>
 <td><code>prevProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>prevState</code></td>
@@ -1381,7 +1437,7 @@ prevents this from being invoked.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-componentwillreceiveprops"><code>Optional</code> componentWillReceiveProps<a class="headerlink" href="#optional-componentwillreceiveprops" title="Permanent link">#</a></h3>
-<p>▸ <strong>componentWillReceiveProps</strong>(<code>nextProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›, <code>nextContext</code>: any): <em>void</em></p>
+<p>▸ <strong>componentWillReceiveProps</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextContext</code>: any): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-componentwillreceiveprops">componentWillReceiveProps</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:727</p>
 <p>Called when the component may be receiving new props.
@@ -1404,7 +1460,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td><code>nextProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>nextContext</code></td>
@@ -1414,16 +1470,14 @@ prevents this from being invoked.</p>
 </table>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
-<h3 id="optional-componentwillunmount"><code>Optional</code> componentWillUnmount<a class="headerlink" href="#optional-componentwillunmount" title="Permanent link">#</a></h3>
+<h3 id="componentwillunmount">componentWillUnmount<a class="headerlink" href="#componentwillunmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>componentWillUnmount</strong>(): <em>void</em></p>
-<p><em>Inherited from <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentwillunmount">componentWillUnmount</a></em></p>
-<p>Defined in node_modules/@types/react/index.d.ts:636</p>
-<p>Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
-cancelled network requests, or cleaning up any DOM elements created in <code>componentDidMount</code>.</p>
+<p><em>Overrides <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentwillunmount">componentWillUnmount</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e408b0c6d/src/renderer/components/+workloads-pods/pod-details-list.tsx#L61">src/renderer/components/+workloads-pods/pod-details-list.tsx:61</a></em></p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-componentwillupdate"><code>Optional</code> componentWillUpdate<a class="headerlink" href="#optional-componentwillupdate" title="Permanent link">#</a></h3>
-<p>▸ <strong>componentWillUpdate</strong>(<code>nextProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>void</em></p>
+<p>▸ <strong>componentWillUpdate</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-componentwillupdate">componentWillUpdate</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:757</p>
 <p>Called immediately before rendering when new props or state is received. Not called for the initial render.</p>
@@ -1444,7 +1498,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td><code>nextProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>nextState</code></td>
@@ -1468,7 +1522,7 @@ prevents this from being invoked.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-getsnapshotbeforeupdate"><code>Optional</code> getSnapshotBeforeUpdate<a class="headerlink" href="#optional-getsnapshotbeforeupdate" title="Permanent link">#</a></h3>
-<p>▸ <strong>getSnapshotBeforeUpdate</strong>(<code>prevProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›, <code>prevState</code>: Readonly‹S›): <em>SS | null</em></p>
+<p>▸ <strong>getSnapshotBeforeUpdate</strong>(<code>prevProps</code>: Readonly‹Props›, <code>prevState</code>: Readonly‹S›): <em>SS | null</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:677</p>
 <p>Runs before React applies the result of <code>render</code> to the document, and
@@ -1487,7 +1541,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td><code>prevProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>prevState</code></td>
@@ -1497,11 +1551,79 @@ lifecycle events from running.</p>
 </table>
 <p><strong>Returns:</strong> <em>SS | null</em></p>
 <hr />
+<h3 id="gettablerow">getTableRow<a class="headerlink" href="#gettablerow" title="Permanent link">#</a></h3>
+<p>▸ <strong>getTableRow</strong>(<code>uid</code>: string): <em>Element‹›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e408b0c6d/src/renderer/components/+workloads-pods/pod-details-list.tsx#L103">src/renderer/components/+workloads-pods/pod-details-list.tsx:103</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uid</code></td>
+<td>string</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>Element‹›</em></p>
+<hr />
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): <em>Element‹›</em></p>
 <p><em>Overrides void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e408b0c6d/src/renderer/components/slider/slider.tsx#L30">src/renderer/components/slider/slider.tsx:30</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e408b0c6d/src/renderer/components/+workloads-pods/pod-details-list.tsx#L126">src/renderer/components/+workloads-pods/pod-details-list.tsx:126</a></em></p>
 <p><strong>Returns:</strong> <em>Element‹›</em></p>
+<hr />
+<h3 id="rendercpuusage">renderCpuUsage<a class="headerlink" href="#rendercpuusage" title="Permanent link">#</a></h3>
+<p>▸ <strong>renderCpuUsage</strong>(<code>id</code>: string, <code>usage</code>: number): <em>string | 0 | Element‹›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e408b0c6d/src/renderer/components/+workloads-pods/pod-details-list.tsx#L65">src/renderer/components/+workloads-pods/pod-details-list.tsx:65</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+</tr>
+<tr>
+<td><code>usage</code></td>
+<td>number</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>string | 0 | Element‹›</em></p>
+<hr />
+<h3 id="rendermemoryusage">renderMemoryUsage<a class="headerlink" href="#rendermemoryusage" title="Permanent link">#</a></h3>
+<p>▸ <strong>renderMemoryUsage</strong>(<code>id</code>: string, <code>usage</code>: number): <em>string | 0 | Element‹›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e408b0c6d/src/renderer/components/+workloads-pods/pod-details-list.tsx#L86">src/renderer/components/+workloads-pods/pod-details-list.tsx:86</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>string</td>
+</tr>
+<tr>
+<td><code>usage</code></td>
+<td>number</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>string | 0 | Element‹›</em></p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
 <p>▸ <strong>setState</strong>‹<strong>K</strong>›(<code>state</code>: function | S | object, <code>callback?</code>: function): <em>void</em></p>
@@ -1516,7 +1638,7 @@ lifecycle events from running.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-shouldcomponentupdate"><code>Optional</code> shouldComponentUpdate<a class="headerlink" href="#optional-shouldcomponentupdate" title="Permanent link">#</a></h3>
-<p>▸ <strong>shouldComponentUpdate</strong>(<code>nextProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>boolean</em></p>
+<p>▸ <strong>shouldComponentUpdate</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>boolean</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-shouldcomponentupdate">shouldComponentUpdate</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:631</p>
 <p>Called to determine whether the change in props and state should trigger a re-render.</p>
@@ -1536,7 +1658,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 <tbody>
 <tr>
 <td><code>nextProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.sliderprops/">SliderProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>nextState</code></td>
@@ -1549,6 +1671,13 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>boolean</em></p>
+<h2 id="object-literals_1">Object literals<a class="headerlink" href="#object-literals_1" title="Permanent link">#</a></h2>
+<h3 id="static-defaultprops"><code>Static</code> defaultProps<a class="headerlink" href="#static-defaultprops" title="Permanent link">#</a></h3>
+<h3 id="defaultprops-object">▪ <strong>defaultProps</strong>: <em>object</em><a class="headerlink" href="#defaultprops-object" title="Permanent link">#</a></h3>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e408b0c6d/src/renderer/components/+workloads-pods/pod-details-list.tsx#L39">src/renderer/components/+workloads-pods/pod-details-list.tsx:39</a></em></p>
+<h3 id="showtitle">showTitle<a class="headerlink" href="#showtitle" title="Permanent link">#</a></h3>
+<p>• <strong>showTitle</strong>: <em>true</em> = true</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/e408b0c6d/src/renderer/components/+workloads-pods/pod-details-list.tsx#L40">src/renderer/components/+workloads-pods/pod-details-list.tsx:40</a></em></p>
                 
               
               
