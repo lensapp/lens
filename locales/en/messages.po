@@ -2664,6 +2664,10 @@ msgstr "Status"
 #~ msgid "Status URI"
 #~ msgstr "Status URI"
 
+#: src/renderer/components/+workloads-pods/pod-details-container.tsx:140
+msgid "Startup"
+msgstr "Startup"
+
 #: src/renderer/components/+storage-volume-claims/volume-claim-details.tsx:56
 #: src/renderer/components/layout/sidebar.tsx:85
 msgid "Storage"

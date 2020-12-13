@@ -46,6 +46,26 @@ export class DeploymentApi extends KubeApi<Deployment> {
   }
 }
 
+interface IContainerProbe {
+  httpGet?: {
+    path?: string;
+    port: number;
+    scheme: string;
+    host?: string;
+  };
+  exec?: {
+    command: string[];
+  };
+  tcpSocket?: {
+    port: number;
+  };
+  initialDelaySeconds?: number;
+  timeoutSeconds?: number;
+  periodSeconds?: number;
+  successThreshold?: number;
+  failureThreshold?: number;
+}
+
 @autobind()
 export class Deployment extends WorkloadKubeObject {
   static kind = "Deployment";
@@ -89,30 +109,9 @@ export class Deployment extends WorkloadKubeObject {
             name: string;
             mountPath: string;
           }[];
-          livenessProbe?: {
-            httpGet: {
-              path: string;
-              port: number;
-              scheme: string;
-            };
-            initialDelaySeconds: number;
-            timeoutSeconds: number;
-            periodSeconds: number;
-            successThreshold: number;
-            failureThreshold: number;
-          };
-          readinessProbe?: {
-            httpGet: {
-              path: string;
-              port: number;
-              scheme: string;
-            };
-            initialDelaySeconds: number;
-            timeoutSeconds: number;
-            periodSeconds: number;
-            successThreshold: number;
-            failureThreshold: number;
-          };
+          livenessProbe?: IContainerProbe;
+          readinessProbe?: IContainerProbe;
+          startupProbe?: IContainerProbe;
           terminationMessagePath: string;
           terminationMessagePolicy: string;
           imagePullPolicy: string;
