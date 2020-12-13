@@ -45,6 +45,16 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
 }
 
+const instanceLock = app.requestSingleInstanceLock();
+
+if (!instanceLock) {
+  app.exit();
+}
+
+app.on("second-instance", () => {
+  windowManager?.ensureMainWindow();
+});
+
 app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
   await shellSync();
