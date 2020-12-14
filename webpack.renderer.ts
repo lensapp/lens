@@ -18,7 +18,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
   }
 
   return {
-    context: __dirname,
     target: "electron-renderer",
     devtool: isProduction ? "source-map" : "eval-source-map",
     // ignore because there is no @types/webpack-dev-server for v4 yet

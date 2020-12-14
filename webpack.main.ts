@@ -9,7 +9,6 @@ export default function (): webpack.Configuration {
   console.info("WEBPACK:main", vars);
 
   return {
-    context: __dirname,
     target: "electron-main",
     mode: isProduction ? "production" : "development",
     devtool: isProduction ? "source-map" : "eval-source-map",
