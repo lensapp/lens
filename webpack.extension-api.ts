@@ -133,8 +133,7 @@ export default function (): webpack.Configuration {
       //    out: 'extension-api.d.ts',
       // })
     ],
-    // we probably don't need warnings as
-    // the output is only used for extension development/testing
-    stats: "errors-only"
+    // only output when errors or new compilation happen
+    stats: "minimal"
   };
 }

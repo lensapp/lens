@@ -68,6 +68,8 @@ export default function (): webpack.Configuration {
     plugins: [
       new ForkTsCheckerPlugin(),
       new webpack.ProgressPlugin({ percentBy: "entries" }),
-    ]
+    ],
+    // only output when errors or new compilation happen
+    stats: "minimal"
   };
 }
