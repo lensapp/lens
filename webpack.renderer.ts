@@ -47,7 +47,6 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       publicPath,
       path: buildDir,
       filename: "[name].js",
-      chunkFilename: "chunks/[name].js",
     },
     ignoreWarnings: [
       /Critical dependency: the request of a dependency is an expression/,
@@ -81,11 +80,14 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       // Automatically split vendor and commons in development
       // (for faster re-compiling)
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
+      // @ts-ignore
       splitChunks: isDevelopment ? {
+        // chunks can be shared even between async and non-async chunks
         chunks: "all",
+        name: `${appName}.renderer.chucks.js`
       }: false,
       runtimeChunk: isDevelopment ? {
-        name: (entrypoint: { name: string }) => `runtime-${entrypoint.name}`,
+        name: `${appName}.renderer.chucks.runtime.js`,
       }: false,
     },
 

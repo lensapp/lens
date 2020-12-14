@@ -1,7 +1,7 @@
 import path from "path";
 import webpack from "webpack";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
-import { isDevelopment, isProduction, mainDir, buildDir } from "./src/common/vars";
+import { appName, isDevelopment, isProduction, mainDir, buildDir } from "./src/common/vars";
 import nodeExternals from "webpack-node-externals";
 import * as vars from "./src/common/vars";
 
@@ -39,10 +39,12 @@ export default function (): webpack.Configuration {
       // (for faster re-compiling)
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
       splitChunks: isDevelopment ? {
+        // chunks can be shared even between async and non-async chunks
         chunks: "all",
+        name: `${appName}.main.chucks.js`
       } : false,
       runtimeChunk: isDevelopment ? {
-        name: (entrypoint: { name: string }) => `runtime-${entrypoint.name}`,
+        name: `${appName}.main.chucks.runtime.js`,
       } : false,
     },
     module: {
