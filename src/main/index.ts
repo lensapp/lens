@@ -93,8 +93,8 @@ app.on("ready", async () => {
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     proxyServer = LensProxy.create(proxyPort, clusterManager);
   } catch (error) {
-    logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error.message}`);
-    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error.message || "unknown error"}`);
+    logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error?.message}`);
+    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error?.message || "unknown error"}`);
     app.exit();
   }
 
@@ -104,17 +104,21 @@ app.on("ready", async () => {
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
 
   // call after windowManager to see splash earlier
-  const extensions = await extensionDiscovery.load();
+  try {
+    const extensions = await extensionDiscovery.load();
 
-  // Subscribe to extensions that are copied or deleted to/from the extensions folder
-  extensionDiscovery.events.on("add", (extension: InstalledExtension) => {
-    extensionLoader.addExtension(extension);
-  });
-  extensionDiscovery.events.on("remove", (lensExtensionId: LensExtensionId) => {
-    extensionLoader.removeExtension(lensExtensionId);
-  });
+    // Subscribe to extensions that are copied or deleted to/from the extensions folder
+    extensionDiscovery.events.on("add", (extension: InstalledExtension) => {
+      extensionLoader.addExtension(extension);
+    });
+    extensionDiscovery.events.on("remove", (lensExtensionId: LensExtensionId) => {
+      extensionLoader.removeExtension(lensExtensionId);
+    });
 
-  extensionLoader.initExtensions(extensions);
+    extensionLoader.initExtensions(extensions);
+  } catch (error) {
+    dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
+  }
 
   setTimeout(() => {
     appEventBus.emit({ name: "service", action: "start" });

@@ -33,16 +33,26 @@ export class ExtensionInstaller {
   installDependencies(): Promise<void> {
     return new Promise((resolve, reject) => {
       logger.info(`${logModule} installing dependencies at ${extensionPackagesRoot()}`);
-      const child = child_process.fork(this.npmPath, ["install", "--silent", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock"], {
+      const child = child_process.fork(this.npmPath, ["install", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock"], {
         cwd: extensionPackagesRoot(),
         silent: true
       });
+      let stderr = "";
 
-      child.on("close", () => {
-        resolve();
+      child.stderr.on("data", data => {
+        stderr += String(data);
       });
-      child.on("error", (err) => {
-        reject(err);
+
+      child.on("close", (code) => {
+        if (code !== 0) {
+          reject(new Error(stderr));
+        } else {
+          resolve();
+        }
+      });
+
+      child.on("error", error => {
+        reject(error);
       });
     });
   }

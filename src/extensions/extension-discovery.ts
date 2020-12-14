@@ -266,18 +266,30 @@ export class ExtensionDiscovery {
 
     logger.info(`${logModule} loading extensions from ${extensionInstaller.extensionPackagesRoot}`);
 
-    if (fs.existsSync(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"))) {
-      await fs.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
-    }
+    // fs.remove won't throw if path is missing
+    await fs.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
+
 
     try {
+      // Verify write access to static/extensions, which is needed for symlinking
       await fs.access(this.inTreeFolderPath, fs.constants.W_OK);
+
+      // Set bundled folder path to static/extensions
       this.bundledFolderPath = this.inTreeFolderPath;
     } catch {
-      // we need to copy in-tree extensions so that we can symlink them properly on "npm install"
+      // If there is error accessing static/extensions, we need to copy in-tree extensions so that we can symlink them properly on "npm install".
+      // The error can happen if there is read-only rights to static/extensions, which would fail symlinking.
+
+      // Remove e.g. /Users/<username>/Library/Application Support/LensDev/extensions
       await fs.remove(this.inTreeTargetPath);
+
+      // Create folder e.g. /Users/<username>/Library/Application Support/LensDev/extensions
       await fs.ensureDir(this.inTreeTargetPath);
+
+      // Copy static/extensions to e.g. /Users/<username>/Library/Application Support/LensDev/extensions
       await fs.copy(this.inTreeFolderPath, this.inTreeTargetPath);
+
+      // Set bundled folder path to e.g. /Users/<username>/Library/Application Support/LensDev/extensions
       this.bundledFolderPath = this.inTreeTargetPath;
     }
 
