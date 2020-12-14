@@ -7,6 +7,7 @@ import TerserPlugin from "terser-webpack-plugin";
 import ForkTsCheckerPlugin from "fork-ts-checker-webpack-plugin";
 import ReactRefreshWebpackPlugin from "@pmmmwh/react-refresh-webpack-plugin";
 import * as vars from "./src/common/vars";
+import { devDependencies } from "./package.json";
 
 export default [
   webpackLensRenderer
@@ -100,10 +101,38 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          use: {
-            loader: "ts-loader",
-            options: {
-              transpileOnly: true, // ForkTsCheckerPlugin does type-checking
+          use: [
+            {
+              loader: "babel-loader",
+              options: {
+                presets: [
+                  ["@babel/preset-env", {
+                    // ling-ui
+                    modules: "commonjs",
+                    // only transpile if necessary
+                    // https://github.com/electron-userland/electron-webpack/blob/ebbf9150b1549fbe7b5e97e9a972e547108eba50/packages/electron-webpack/src/configurators/js.ts#L50
+                    targets: {
+                      electron: `${devDependencies.electron.replace("^", "")}`,
+                    }
+                  }],
+                ],
+                plugins: [
+                  isDevelopment && require.resolve("react-refresh/babel"),
+                ].filter(Boolean),
+              }
+            },
+            {
+              loader: "ts-loader", // ForkTsCheckerPlugin does type-checking
+              options: {
+                transpileOnly: true,
+                compilerOptions: {
+                  // localization support
+                  // https://lingui.js.org/guides/typescript.html
+                  jsx: "preserve",
+                  target: "es2016",
+                  module: "esnext",
+                },
+              }
             }
           }
         },

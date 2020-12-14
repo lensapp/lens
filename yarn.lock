@@ -4457,6 +4457,11 @@ electron-publish@22.7.0:
     lazy-val "^1.0.4"
     mime "^2.4.5"
 
+electron-releases@^3.570.0:
+  version "3.570.0"
+  resolved "https://registry.yarnpkg.com/electron-releases/-/electron-releases-3.570.0.tgz#ab0dfa63fa078b530854d8cb3ce633daa3560136"
+  integrity sha512-kug6Dpw2Dp0Pn2kVtpdsMQV3eFEnErlsvMQZtP8FeYRYfxmtV0QCjZj0PwWDf/tGAIF376RJ4vfqLDgLNWVb5g==
+
 electron-reload@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/electron-reload/-/electron-reload-1.5.0.tgz#179ab1f6941fcf0ed261c37b16dc465e201348f5"
