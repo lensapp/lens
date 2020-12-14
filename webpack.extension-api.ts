@@ -25,7 +25,7 @@ export default function (): webpack.Configuration {
     optimization: {
       // we don't really need minimize
       // default is true
-      minimize: false
+      minimize: false,
     },
     cache: isDevelopment ? {
       type: "filesystem",
@@ -132,6 +132,9 @@ export default function (): webpack.Configuration {
       //   moduleName: '@k8slens/extensions',
       //    out: 'extension-api.d.ts',
       // })
-    ]
+    ],
+    // we probably don't need warnings as
+    // the output is only used for extension development/testing
+    stats: "errors-only"
   };
 }
