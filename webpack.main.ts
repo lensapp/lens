@@ -36,6 +36,15 @@ export default function (): webpack.Configuration {
     externals: nodeExternals(),
     optimization: {
       minimize: isProduction,
+      // Automatically split vendor and commons in development
+      // (for faster re-compiling)
+      // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
+      splitChunks: isDevelopment ? {
+        chunks: "all",
+      } : false,
+      runtimeChunk: isDevelopment ? {
+        name: (entrypoint: { name: string }) => `runtime-${entrypoint.name}`,
+      } : false,
     },
     module: {
       rules: [
