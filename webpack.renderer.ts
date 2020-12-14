@@ -29,6 +29,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       host: "localhost",
       firewall: false,
       headers: { "Access-Control-Allow-Origin": "*" },
+      transportMode: "sockjs"
     },
     name: "lens-app",
     mode: isProduction ? "production" : "development",
