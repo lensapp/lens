@@ -18,24 +18,73 @@ export type TableOrderBy = "asc" | "desc" | string;
 export type TableSortParams<SortingOption extends string> = { sortBy: SortingOption; orderBy: TableOrderBy };
 export type TableSortCallback<D> = (data: D) => string | number | (string | number)[];
 
-export interface TableProps<T, SortingOption extends string = string> extends React.DOMAttributes<HTMLDivElement> {
-  items?: ItemObject[];  // Raw items data
+export interface TableProps<Entry extends ItemObject, SortingOption extends string> extends React.DOMAttributes<HTMLDivElement> {
+  /**
+   * Raw items data
+   */
+  items?: Entry[];
+
+  /**
+   * Optional className for the root element
+   */
   className?: string;
-  autoSize?: boolean;   // Setup auto-sizing for all columns (flex: 1 0)
-  selectable?: boolean; // Highlight rows on hover
-  scrollable?: boolean; // Use scrollbar if content is bigger than parent's height
-  storageKey?: string;  // Keep some data in localStorage & restore on page reload, e.g sorting params
-  sortable?: {
-    // Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead>
-    // @sortItem argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/>
-    [sortBy: string]: TableSortCallback<T>;
-  };
-  sortSyncWithUrl?: boolean; // sorting state is managed globally from url params
-  sortByDefault?: Partial<TableSortParams<SortingOption>>; // default sorting params
-  onSort?: (params: TableSortParams<SortingOption>) => void; // callback on sort change, default: global sync with url
-  noItems?: React.ReactNode; // Show no items state table list is empty
-  selectedItemId?: string;  // Allows to scroll list to selected item
-  virtual?: boolean; // Use virtual list component to render only visible rows
+
+  /**
+   * Setup auto-sizing for all columns (flex: 1 0)
+   */
+  autoSize?: boolean;
+
+  /**
+   * Highlight rows on hover
+   */
+  selectable?: boolean;
+
+  /**
+   * Use scrollbar if content is bigger than parent's height
+   */
+  scrollable?: boolean
+
+  /**
+   * Keep some data in localStorage & restore on page reload, e.g sorting params
+   */
+  storageKey?: string;
+
+  /**
+   * Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead>
+   * @sortItem argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/>
+   */
+  sortable?: Record<SortingOption, TableSortCallback<Entry>>;
+
+  /**
+   * sorting state is managed globally from url params
+   */
+  sortSyncWithUrl?: boolean;
+
+  /**
+   * default sorting params
+   */
+  sortByDefault?: Partial<TableSortParams<SortingOption>>;
+
+  /**
+   * callback on sort change, default: global sync with url
+   */
+  onSort?: (params: TableSortParams<SortingOption>) => void;
+
+  /**
+   * Show no items state table list is empty
+   */
+  noItems?: React.ReactNode;
+
+  /**
+   * Allows to scroll list to selected item
+   */
+  selectedItemId?: string;
+
+  /**
+   * Use virtual list component to render only visible rows
+   */
+  virtual?: boolean;
+
   rowPadding?: string;
   rowLineHeight?: string;
   customRowHeights?: (item: object, lineHeight: number, paddings: number) => number;
@@ -43,8 +92,8 @@ export interface TableProps<T, SortingOption extends string = string> extends Re
 }
 
 @observer
-export class Table<T> extends React.Component<TableProps<T>> {
-  static defaultProps: TableProps<any> = {
+export class Table<Entry extends ItemObject = ItemObject, SortingOption extends string = string> extends React.Component<TableProps<Entry, SortingOption>> {
+  static defaultProps: TableProps<ItemObject, string> = {
     scrollable: true,
     autoSize: true,
     rowPadding: "8px",
@@ -54,9 +103,9 @@ export class Table<T> extends React.Component<TableProps<T>> {
 
   @observable sortParamsLocal = this.props.sortByDefault;
 
-  @computed get sortParams(): Partial<TableSortParams> {
+  @computed get sortParams(): Partial<TableSortParams<SortingOption>> {
     if (this.props.sortSyncWithUrl) {
-      const sortBy = navigation.searchParams.get("sortBy");
+      const sortBy = navigation.searchParams.get("sortBy") as SortingOption;
       const orderBy = navigation.searchParams.get("orderBy");
 
       return { sortBy, orderBy };
@@ -111,7 +160,7 @@ export class Table<T> extends React.Component<TableProps<T>> {
   }
 
   @autobind()
-  protected onSort(params: TableSortParams) {
+  protected onSort(params: TableSortParams<SortingOption>) {
     const { sortSyncWithUrl, onSort } = this.props;
 
     if (sortSyncWithUrl) {
@@ -127,14 +176,14 @@ export class Table<T> extends React.Component<TableProps<T>> {
   }
 
   @autobind()
-  sort(colName: TableSortBy) {
+  sort(colName: SortingOption) {
     const { sortBy, orderBy } = this.sortParams;
     const sameColumn = sortBy == colName;
-    const newSortBy: TableSortBy = colName;
+    const newSortBy: SortingOption = colName;
     const newOrderBy: TableOrderBy = (!orderBy || !sameColumn || orderBy === "desc") ? "asc" : "desc";
 
     this.onSort({
-      sortBy: String(newSortBy),
+      sortBy: newSortBy,
       orderBy: newOrderBy,
     });
   }
@@ -185,15 +234,13 @@ export class Table<T> extends React.Component<TableProps<T>> {
   }
 
   render() {
-    const { selectable, scrollable, sortable, autoSize, virtual } = this.props;
-    let { className } = this.props;
-
-    className = cssNames("Table flex column", className, {
+    const { selectable, scrollable, sortable, autoSize, virtual, className } = this.props;
+    const classNames = cssNames("Table flex column", className, {
       selectable, scrollable, sortable, autoSize, virtual,
     });
 
     return (
-      <div className={className}>
+      <div className={classNames}>
         {this.renderHead()}
         {this.renderRows()}
       </div>
