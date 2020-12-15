@@ -22,7 +22,7 @@ enum sortBy {
   age = "age",
 }
 
-interface Props extends Partial<KubeObjectListLayoutProps> {
+interface Props extends Partial<KubeObjectListLayoutProps<KubeEvent>> {
   className?: IClassName;
   compact?: boolean;
   compactLimit?: number;
@@ -45,17 +45,17 @@ export class Events extends React.Component<Props> {
         store={eventStore}
         isSelectable={false}
         sortingCallbacks={{
-          [sortBy.namespace]: (event: KubeEvent) => event.getNs(),
-          [sortBy.type]: (event: KubeEvent) => event.involvedObject.kind,
-          [sortBy.object]: (event: KubeEvent) => event.involvedObject.name,
-          [sortBy.count]: (event: KubeEvent) => event.count,
-          [sortBy.age]: (event: KubeEvent) => event.metadata.creationTimestamp,
+          [sortBy.namespace]: event => event.getNs(),
+          [sortBy.type]: event => event.involvedObject.kind,
+          [sortBy.object]: event => event.involvedObject.name,
+          [sortBy.count]: event => event.count,
+          [sortBy.age]: event => event.metadata.creationTimestamp,
         }}
         searchFilters={[
-          (event: KubeEvent) => event.getSearchFields(),
-          (event: KubeEvent) => event.message,
-          (event: KubeEvent) => event.getSource(),
-          (event: KubeEvent) => event.involvedObject.name,
+          event => event.getSearchFields(),
+          event => event.message,
+          event => event.getSource(),
+          event => event.involvedObject.name,
         ]}
         renderHeaderTitle={<Trans>Events</Trans>}
         customizeHeader={({ title, info }) => (
@@ -82,7 +82,7 @@ export class Events extends React.Component<Props> {
           { title: <Trans>Count</Trans>, className: "count", sortBy: sortBy.count },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
         ]}
-        renderTableContents={(event: KubeEvent) => {
+        renderTableContents={event => {
           const { involvedObject, type, message } = event;
           const { kind, name } = involvedObject;
           const tooltipId = `message-${event.getId()}`;

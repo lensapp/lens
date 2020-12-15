@@ -136,12 +136,8 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
     return this.load({ name, namespace });
   }
 
-  protected async createItem(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
-    return this.api.create(params, data);
-  }
-
   async create(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
-    const newItem = await this.createItem(params, data);
+    const newItem = await this.api.create(params, data);
     const items = this.sortItems([...this.items, newItem]);
 
     this.items.replace(items);
@@ -150,7 +146,7 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   }
 
   async update(item: T, data: Partial<T>): Promise<T> {
-    const newItem = await item.update<T>(data);
+    const [newItem] = await item.update<T>(data);
     const index = this.items.findIndex(item => item.getId() === newItem.getId());
 
     this.items.splice(index, 1, newItem);
@@ -172,9 +168,11 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
   protected eventsBuffer = observable<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {
-    return reaction(() => this.eventsBuffer.toJS()[0], this.updateFromEventsBuffer, {
-      delay
-    });
+    return reaction(
+      () => this.eventsBuffer.toJS()[0],
+      this.updateFromEventsBuffer,
+      { delay }
+    );
   }
 
   subscribe(apis = [this.api]) {
@@ -196,23 +194,22 @@ export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T>
 
     for (const {type, object} of this.eventsBuffer.clear()) {
       const { uid, selfLink } = object.metadata;
-      const index = items.findIndex(item => item.getId() === uid);
-      const item = items[index];
-      const api = apiManager.getApi(selfLink);
+      const index = items.map(item => item.getId()).indexOf(uid);
+      const api = apiManager.getApi<T>(selfLink);
 
       switch (type) {
         case "ADDED":
         case "MODIFIED":
           const newItem = new api.objectConstructor(object);
 
-          if (!item) {
+          if (index < 0) {
             items.push(newItem);
           } else {
             items.splice(index, 1, newItem);
           }
           break;
         case "DELETED":
-          if (item) {
+          if (index >= 0) {
             items.splice(index, 1);
           }
           break;

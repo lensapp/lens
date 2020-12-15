@@ -13,6 +13,7 @@ import { crdStore } from "../+custom-resources/crd.store";
 import { CrdResourceDetails } from "../+custom-resources";
 import { KubeObjectMenu } from "./kube-object-menu";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { CustomResourceDefinition } from "../../api/endpoints";
 
 export interface KubeObjectDetailsProps<T = KubeObject> {
   className?: string;
@@ -81,7 +82,7 @@ export class KubeObjectDetails extends React.Component {
       });
 
       if (isCrdInstance && details.length === 0) {
-        details.push(<CrdResourceDetails object={object} />);
+        details.push(<CrdResourceDetails object={object as CustomResourceDefinition} />);
       }
     }
 

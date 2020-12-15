@@ -32,19 +32,19 @@ interface IHeaderPlaceholders {
   info: ReactNode;
 }
 
-export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
+export interface ItemListLayoutProps<Entry extends ItemObject = ItemObject, SortingOption extends string = string> {
   className: IClassName;
-  store: ItemStore<T>;
+  store: ItemStore<Entry>;
   dependentStores?: ItemStore[];
   isClusterScoped?: boolean;
   hideFilters?: boolean;
-  searchFilters?: SearchFilter<T>[];
-  filterItems?: ItemsFilter<T>[];
+  searchFilters?: SearchFilter<Entry>[];
+  filterItems?: ItemsFilter<Entry>[];
 
   // header (title, filtering, searching, etc.)
   showHeader?: boolean;
   headerClassName?: IClassName;
-  renderHeaderTitle?: ReactNode | ((parent: ItemListLayout<T>) => ReactNode);
+  renderHeaderTitle?: ReactNode | ((parent: ItemListLayout<Entry>) => ReactNode);
   customizeHeader?: (placeholders: IHeaderPlaceholders, content: ReactNode) => Partial<IHeaderPlaceholders> | ReactNode;
 
   // items list configuration
@@ -52,23 +52,23 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   isSelectable?: boolean; // show checkbox in rows for selecting items
   isSearchable?: boolean; // apply search-filter & add search-input
   copyClassNameFromHeadCells?: boolean;
-  sortingCallbacks?: { [sortBy: string]: TableSortCallback<T> };
-  tableProps?: Partial<TableProps<T>>; // low-level table configuration
-  renderTableHeader: TableCellProps[] | null;
-  renderTableContents: (item: T) => (ReactNode | TableCellProps)[];
-  renderItemMenu?: (item: T, store: ItemStore<T>) => ReactNode;
-  customizeTableRowProps?: (item: T) => Partial<TableRowProps>;
+  sortingCallbacks?: Record<SortingOption, TableSortCallback<Entry>>;
+  tableProps?: Partial<TableProps<Entry>>; // low-level table configuration
+  renderTableHeader: TableCellProps<SortingOption>[] | null;
+  renderTableContents: (item: Entry) => (ReactNode | TableCellProps)[];
+  renderItemMenu?: (item: Entry, store: ItemStore<Entry>) => ReactNode;
+  customizeTableRowProps?: (item: Entry) => Partial<TableRowProps>;
   addRemoveButtons?: Partial<AddRemoveButtonsProps>;
   virtual?: boolean;
 
   // item details view
   hasDetailsView?: boolean;
-  detailsItem?: T;
-  onDetails?: (item: T) => void;
+  detailsItem?: Entry;
+  onDetails?: (item: Entry) => void;
 
   // other
-  customizeRemoveDialog?: (selectedItems: T[]) => Partial<ConfirmDialogParams>;
-  renderFooter?: (parent: ItemListLayout<T>) => React.ReactNode;
+  customizeRemoveDialog?: (selectedItems: Entry[]) => Partial<ConfirmDialogParams>;
+  renderFooter?: (parent: ItemListLayout<Entry>) => React.ReactNode;
 }
 
 const defaultProps: Partial<ItemListLayoutProps> = {

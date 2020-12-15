@@ -4,11 +4,8 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { KubeObject } from "../../api/kube-object";
 
 @autobind()
-export class CRDResourceStore<T extends KubeObject = any> extends KubeObjectStore<T> {
-  api: KubeApi;
-
-  constructor(api: KubeApi<T>) {
+export class CRDResourceStore<T extends KubeObject = KubeObject> extends KubeObjectStore<T> {
+  constructor(public api: KubeApi<T>) {
     super();
-    this.api = api;
   }
 }

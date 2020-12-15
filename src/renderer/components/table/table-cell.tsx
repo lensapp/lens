@@ -1,5 +1,5 @@
 import "./table-cell.scss";
-import type { TableSortBy, TableSortParams } from "./table";
+import type { TableSortParams } from "./table";
 
 import React, { ReactNode } from "react";
 import { autobind, cssNames, displayBooleans } from "../../utils";
@@ -8,15 +8,15 @@ import { Checkbox } from "../checkbox";
 
 export type TableCellElem = React.ReactElement<TableCellProps>;
 
-export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
+export interface TableCellProps<SortingOption extends string = string> extends React.DOMAttributes<HTMLDivElement> {
   className?: string;
   title?: ReactNode;
   checkbox?: boolean; // render cell with a checkbox
   isChecked?: boolean; // mark checkbox as checked or not
   renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
-  sortBy?: TableSortBy; // column name, must be same as key in sortable object <Table sortable={}/>
-  _sorting?: Partial<TableSortParams>; // <Table> sorting state, don't use this prop outside (!)
-  _sort?(sortBy: TableSortBy): void; // <Table> sort function, don't use this prop outside (!)
+  sortBy?: SortingOption; // column name, must be same as key in sortable object <Table sortable={}/>
+  _sorting?: Partial<TableSortParams<SortingOption>>; // <Table> sorting state, don't use this prop outside (!)
+  _sort?(sortBy: SortingOption): void; // <Table> sort function, don't use this prop outside (!)
   _nowrap?: boolean; // indicator, might come from parent <TableHead>, don't use this prop outside (!)
 }
 

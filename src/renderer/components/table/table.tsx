@@ -14,12 +14,11 @@ import { ItemObject } from "../../item.store";
 
 // todo: refactor + decouple search from location
 
-export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
-export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy };
+export type TableSortParams<SortingOption extends string> = { sortBy: SortingOption; orderBy: TableOrderBy };
 export type TableSortCallback<D> = (data: D) => string | number | (string | number)[];
 
-export interface TableProps<T> extends React.DOMAttributes<HTMLDivElement> {
+export interface TableProps<T, SortingOption extends string = string> extends React.DOMAttributes<HTMLDivElement> {
   items?: ItemObject[];  // Raw items data
   className?: string;
   autoSize?: boolean;   // Setup auto-sizing for all columns (flex: 1 0)
@@ -32,8 +31,8 @@ export interface TableProps<T> extends React.DOMAttributes<HTMLDivElement> {
     [sortBy: string]: TableSortCallback<T>;
   };
   sortSyncWithUrl?: boolean; // sorting state is managed globally from url params
-  sortByDefault?: Partial<TableSortParams>; // default sorting params
-  onSort?: (params: TableSortParams) => void; // callback on sort change, default: global sync with url
+  sortByDefault?: Partial<TableSortParams<SortingOption>>; // default sorting params
+  onSort?: (params: TableSortParams<SortingOption>) => void; // callback on sort change, default: global sync with url
   noItems?: React.ReactNode; // Show no items state table list is empty
   selectedItemId?: string;  // Allows to scroll list to selected item
   virtual?: boolean; // Use virtual list component to render only visible rows

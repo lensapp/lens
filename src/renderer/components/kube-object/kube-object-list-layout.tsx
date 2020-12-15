@@ -9,7 +9,7 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { KubeObjectMenu } from "./kube-object-menu";
 import { ItemObject } from "../../item.store";
 
-export interface KubeObjectListLayoutProps<T extends ItemObject & KubeObject> extends ItemListLayoutProps<T> {
+export interface KubeObjectListLayoutProps<T extends ItemObject & KubeObject, SortOrder extends string> extends ItemListLayoutProps<T, SortOrder> {
   store: KubeObjectStore<T>;
 }
 
@@ -18,7 +18,7 @@ function showItemDetails(item: KubeObject) {
 }
 
 @observer
-export class KubeObjectListLayout<T extends ItemObject & KubeObject> extends React.Component<KubeObjectListLayoutProps<T>> {
+export class KubeObjectListLayout<T extends ItemObject & KubeObject, SortOrder extends string> extends React.Component<KubeObjectListLayoutProps<T, SortOrder>> {
   @computed get selectedItem() {
     return this.props.store.getByPath(getSelectedDetails());
   }

@@ -8,7 +8,7 @@ import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { KubeResource } from "../../../common/rbac";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 
-export const workloadStores: Partial<Record<KubeResource, KubeObjectStore>> = {
+export const workloadStores: Partial<Record<KubeResource, KubeObjectStore<any>>> = {
   "pods": podsStore,
   "deployments": deploymentStore,
   "daemonsets": daemonSetStore,

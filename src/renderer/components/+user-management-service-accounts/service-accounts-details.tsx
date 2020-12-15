@@ -35,16 +35,21 @@ export class ServiceAccountsDetails extends React.Component<Props> {
       return;
     }
     const namespace = serviceAccount.getNs();
-    const secrets = serviceAccount.getSecrets().map(({ name }) => {
-      return secretsStore.load({ name, namespace });
-    });
 
-    this.secrets = await Promise.all(secrets);
-    const imagePullSecrets = serviceAccount.getImagePullSecrets().map(async({ name }) => {
-      return secretsStore.load({ name, namespace }).catch(() => this.generateDummySecretObject(name));
-    });
-
-    this.imagePullSecrets = await Promise.all(imagePullSecrets);
+    this.secrets = await Promise.all(
+      serviceAccount
+        .getSecrets()
+        .map(({ name }) => secretsStore.load({ name, namespace }))
+    );
+    this.imagePullSecrets = await Promise.all(
+      serviceAccount
+        .getImagePullSecrets()
+        .map(({ name }) => (
+          secretsStore
+            .load({ name, namespace })
+            .catch(() => this.generateDummySecretObject(name))
+        ))
+    );
   });
 
   renderSecrets() {

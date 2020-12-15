@@ -269,7 +269,6 @@ export class ExtensionDiscovery {
     // fs.remove won't throw if path is missing
     await fs.remove(path.join(extensionInstaller.extensionPackagesRoot, "package-lock.json"));
 
-
     try {
       // Verify write access to static/extensions, which is needed for symlinking
       await fs.access(this.inTreeFolderPath, fs.constants.W_OK);
@@ -293,19 +292,19 @@ export class ExtensionDiscovery {
       this.bundledFolderPath = this.inTreeTargetPath;
     }
 
-    await fs.ensureDir(this.nodeModulesPath);
-    await fs.ensureDir(this.localFolderPath);
+
+    await Promise.all([fs.ensureDir(this.nodeModulesPath), fs.ensureDir(this.localFolderPath)]);
 
     const extensions = await this.loadExtensions();
 
     this.isLoaded = true;
-    
+
     return extensions;
   }
 
   /**
    * Returns the symlinked path to the extension folder,
-   * e.g. "/Users/<username>/Library/Application Support/Lens/node_modules/@publisher/extension"
+   * e.g. `/Users/<username>/Library/Application Support/Lens/node_modules/@publisher/extension`
    */
   protected getInstalledPath(name: string) {
     return path.join(this.nodeModulesPath, name);

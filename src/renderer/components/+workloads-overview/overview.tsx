@@ -1,7 +1,7 @@
 import "./overview.scss";
 
 import React from "react";
-import { observable, when } from "mobx";
+import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { OverviewStatuses } from "./overview-statuses";
 import { RouteComponentProps } from "react-router";
@@ -18,60 +18,36 @@ import { Spinner } from "../spinner";
 import { Events } from "../+events";
 import { KubeObjectStore } from "../../kube-object.store";
 import { isAllowedResource } from "../../../common/rbac";
+import { filter } from "lodash";
 
 interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 }
 
 @observer
 export class WorkloadsOverview extends React.Component<Props> {
-  @observable isReady = false;
-  @observable isUnmounting = false;
+  @observable stores: KubeObjectStore<any>[] = [];
+  unsubscribeList: (() => void)[] = [];
+
+  @computed get isReady() {
+    return this.stores.every(store => store.isLoaded);
+  }
 
   async componentDidMount() {
-    const stores: KubeObjectStore[] = [];
-
-    if (isAllowedResource("pods")) {
-      stores.push(podsStore);
-    }
-
-    if (isAllowedResource("deployments")) {
-      stores.push(deploymentStore);
-    }
-
-    if (isAllowedResource("daemonsets")) {
-      stores.push(daemonSetStore);
-    }
-
-    if (isAllowedResource("statefulsets")) {
-      stores.push(statefulSetStore);
-    }
-
-    if (isAllowedResource("replicasets")) {
-      stores.push(replicaSetStore);
-    }
-
-    if (isAllowedResource("jobs")) {
-      stores.push(jobStore);
-    }
-
-    if (isAllowedResource("cronjobs")) {
-      stores.push(cronJobStore);
-    }
-
-    if (isAllowedResource("events")) {
-      stores.push(eventStore);
-    }
-    this.isReady = stores.every(store => store.isLoaded);
-    await Promise.all(stores.map(store => store.loadAll()));
-    this.isReady = true;
-    const unsubscribeList = stores.map(store => store.subscribe());
-
-    await when(() => this.isUnmounting);
-    unsubscribeList.forEach(dispose => dispose());
+    this.stores = filter([
+      isAllowedResource("pods") && podsStore,
+      isAllowedResource("deployments") && deploymentStore,
+      isAllowedResource("daemonsets") && daemonSetStore,
+      isAllowedResource("statefulsets") && statefulSetStore,
+      isAllowedResource("replicasets") && replicaSetStore,
+      isAllowedResource("jobs") && jobStore,
+      isAllowedResource("cronjobs") && cronJobStore,
+      isAllowedResource("events") && eventStore,
+    ]);
+    this.unsubscribeList = this.stores.map(store => store.subscribe());
   }
 
   componentWillUnmount() {
-    this.isUnmounting = true;
+    this.unsubscribeList.forEach(dispose => dispose());
   }
 
   renderContents() {

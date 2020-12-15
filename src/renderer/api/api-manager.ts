@@ -10,12 +10,12 @@ export class ApiManager {
   private apis = observable.map<string, KubeApi>();
   private stores = observable.map<KubeApi, KubeObjectStore<any>>();
 
-  getApi(pathOrCallback: string | ((api: KubeApi) => boolean) = () => true) {
+  getApi<T extends KubeObject = KubeObject>(pathOrCallback: string | ((api: KubeApi) => boolean) = () => true): KubeApi<T> {
     if (typeof pathOrCallback === "string") {
-      return this.apis.get(pathOrCallback) || this.apis.get(KubeApi.parseApi(pathOrCallback).apiBase);
+      return (this.apis.get(pathOrCallback) || this.apis.get(KubeApi.parseApi(pathOrCallback).apiBase)) as KubeApi<T>;
     }
 
-    return Array.from(this.apis.values()).find(pathOrCallback);
+    return Array.from(this.apis.values()).find(pathOrCallback) as KubeApi<T>;
   }
 
   registerApi(apiBase: string, api: KubeApi) {
