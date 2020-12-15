@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#new-extension-project-with-generator" class="md-skip">
+        <a href="#lens-extension-generator" class="md-skip">
           Skip to content
         </a>
       
@@ -584,6 +584,13 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#installing-and-getting-started-with-the-generator" class="md-nav__link">
+    Installing and Getting Started with the Generator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#developing-the-extension" class="md-nav__link">
     Developing the Extension
   </a>
@@ -599,7 +606,7 @@
       
         <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
-    Next steps
+    Next Steps
   </a>
   
 </li>
@@ -870,6 +877,13 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#installing-and-getting-started-with-the-generator" class="md-nav__link">
+    Installing and Getting Started with the Generator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#developing-the-extension" class="md-nav__link">
     Developing the Extension
   </a>
@@ -885,7 +899,7 @@
       
         <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
-    Next steps
+    Next Steps
   </a>
   
 </li>
@@ -904,30 +918,32 @@
               
                 
                 
-                <h1 id="new-extension-project-with-generator">New Extension Project with Generator<a class="headerlink" href="#new-extension-project-with-generator" title="Permanent link">#</a></h1>
-<p>The <a href="https://github.com/lensapp/generator-lens-ext">Lens Extension Generator</a> scaffolds a project ready for development. Install Yeoman and Lens Extension Generator with:</p>
+                <h1 id="lens-extension-generator">Lens Extension Generator<a class="headerlink" href="#lens-extension-generator" title="Permanent link">#</a></h1>
+<p>The <a href="https://github.com/lensapp/generator-lens-ext">Lens Extension Generator</a> creates a directory with the necessary files for developing an extension.</p>
+<h2 id="installing-and-getting-started-with-the-generator">Installing and Getting Started with the Generator<a class="headerlink" href="#installing-and-getting-started-with-the-generator" title="Permanent link">#</a></h2>
+<p>To begin, install Yeoman and the Lens Extension Generator with the following command:</p>
 <div class="highlight"><pre><span></span><code>npm install -g yo generator-lens-ext
 </code></pre></div>
-<p>Run the generator and fill out a few fields for a TypeScript project:</p>
-<div class="highlight"><pre><span></span><code>yo lens-ext
-<span class="c1"># ? What type of extension do you want to create? New Extension (TypeScript)</span>
+<p>Run the generator by entering the following command: <code>yo lens-ext</code>.</p>
+<p>Answer the following questions:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ? What type of extension do you want to create? New Extension (TypeScript)</span>
 <span class="c1"># ? What&#39;s the name of your extension? my-first-lens-ext</span>
 <span class="c1"># ? What&#39;s the description of your extension? My hello world extension</span>
 <span class="c1"># ? What&#39;s your extension&#39;s publisher name? @my-org/my-first-lens-ext</span>
 <span class="c1"># ? Initialize a git repository? Yes</span>
 <span class="c1"># ? Install dependencies after initialization? Yes</span>
 <span class="c1"># ? Which package manager to use? yarn</span>
-<span class="c1"># ? symlink created extension folder to ~/.k8slens/extensions (mac/linux) or :User</span>
-s<span class="se">\&lt;</span>user&gt;<span class="se">\.</span>k8slens<span class="se">\e</span>xtensions <span class="o">(</span>windows<span class="o">)</span>? Yes
+<span class="c1"># ? symlink created extension folder to ~/.k8slens/extensions (mac/linux) or :Users\&lt;user&gt;\.k8slens\extensions (windows)? Yes</span>
 </code></pre></div>
-<p>Start webpack, which watches the <code>my-first-lens-ext</code> folder.</p>
+<p>Next, you'll need to have webpack watch the <code>my-first-lens-ext</code> folder. Start webpack by entering:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span> my-first-lens-ext
 npm start <span class="c1"># start the webpack server in watch mode</span>
 </code></pre></div>
-<p>Then, open Lens, you should see a Hello World item in the menu:</p>
+<p>Open Lens and you will see a <strong>Hello World</strong> item in the left-side menu under <strong>Custom Resources</strong>:</p>
 <p><img alt="Hello World" src="../images/hello-world.png" /></p>
 <h2 id="developing-the-extension">Developing the Extension<a class="headerlink" href="#developing-the-extension" title="Permanent link">#</a></h2>
-<p>Try to change <code>my-first-lens-ext/renderer.tsx</code> to "Hello Lens!":</p>
+<p>Next, you'll try changing the way the new menu item appears in the UI. You'll change it from "Hello World" to "Hello Lens".</p>
+<p>Open <code>my-first-lens-ext/renderer.tsx</code> and change the value of <code>title</code> from <code>"Hello World"</code> to <code>"Hello Lens"</code>:</p>
 <div class="highlight"><pre><span></span><code>clusterPageMenus = [
     {
         target: { pageId: &quot;hello&quot; },
@@ -938,14 +954,14 @@ npm start <span class="c1"># start the webpack server in watch mode</span>
     }
 ]
 </code></pre></div>
-<p>Then, Reload Lens by CMD+R (Mac) / Ctrl+R (Linux/Windows), you should see the menu item text changes:</p>
+<p>Reload Lens and you will see that the menu item text has changed to "Hello Lens." To reload Lens, enter <code>CMD+R</code> on Mac and <code>Ctrl+R</code> on Windows/Linux.</p>
 <p><img alt="Hello World" src="../images/hello-lens.png" /></p>
 <h2 id="debugging-the-extension">Debugging the Extension<a class="headerlink" href="#debugging-the-extension" title="Permanent link">#</a></h2>
-<p><a href="../../testing-and-publishing/testing/">Testing</a></p>
-<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
-<p>You can take a closer look at <a href="../../capabilities/common-capabilities/">Common Capabilities</a> of extension, how to <a href="../../capabilities/styling/">style</a> the extension. Or the <a href="../anatomy/">Extension Anatomy</a>.</p>
-<p>You are welcome to raise an <a href="https://github.com/lensapp/generator-lens-ext/issues">issue</a> for Lens Extension Generator, if you find problems, or have feature requests.</p>
-<p>The source code of the generator is hosted at <a href="https://github.com/lensapp/generator-lens-ext">Github</a></p>
+<p>To debug your extension, please see our instructions on <a href="../../testing-and-publishing/testing/">Testing Extensions</a>.</p>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
+<p>To dive deeper, consider looking at <a href="../../capabilities/common-capabilities/">Common Capabilities</a>, <a href="../../capabilities/styling/">Styling</a>, or <a href="../anatomy/">Extension Anatomy</a>.</p>
+<p>If you find problems with the Lens Extension Generator, or have feature requests, you are welcome to raise an <a href="https://github.com/lensapp/generator-lens-ext/issues">issue</a>. You can find the Lens contribution guidelines <a href="../../../contributing/">here</a>.</p>
+<p>The Generator source code is hosted at <a href="https://github.com/lensapp/generator-lens-ext">Github</a>.</p>
                 
               
               
