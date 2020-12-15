@@ -9,7 +9,7 @@ import { KubeJsonApiData } from "./api/kube-json-api";
 import { getHostedCluster } from "../common/cluster-store";
 
 @autobind()
-export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
+export abstract class KubeObjectStore<T extends KubeObject> extends ItemStore<T> {
   abstract api: KubeApi<T>;
   public readonly limit?: number;
   public readonly bufferSize: number = 50000;

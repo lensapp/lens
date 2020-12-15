@@ -7,24 +7,24 @@ import { getSelectedDetails, showDetails } from "../../navigation";
 import { ItemListLayout, ItemListLayoutProps } from "../item-object-list/item-list-layout";
 import { KubeObjectStore } from "../../kube-object.store";
 import { KubeObjectMenu } from "./kube-object-menu";
+import { ItemObject } from "../../item.store";
 
-export interface KubeObjectListLayoutProps extends ItemListLayoutProps {
-  store: KubeObjectStore;
+export interface KubeObjectListLayoutProps<T extends ItemObject & KubeObject> extends ItemListLayoutProps<T> {
+  store: KubeObjectStore<T>;
+}
+
+function showItemDetails(item: KubeObject) {
+  return showDetails(item.selfLink);
 }
 
 @observer
-export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutProps> {
+export class KubeObjectListLayout<T extends ItemObject & KubeObject> extends React.Component<KubeObjectListLayoutProps<T>> {
   @computed get selectedItem() {
     return this.props.store.getByPath(getSelectedDetails());
   }
 
-  onDetails = (item: KubeObject) => {
-    if (this.props.onDetails) {
-      this.props.onDetails(item);
-    }
-    else {
-      showDetails(item.selfLink);
-    }
+  static defaultProps = {
+    onDetails: showItemDetails
   };
 
   render() {
@@ -35,7 +35,7 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
         {...layoutProps}
         className={cssNames("KubeObjectListLayout", className)}
         detailsItem={this.selectedItem}
-        onDetails={this.onDetails}
+        onDetails={this.props.onDetails}
         renderItemMenu={(item) => {
           return <KubeObjectMenu object={item}/>;
         }}

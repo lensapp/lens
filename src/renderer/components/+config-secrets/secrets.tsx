@@ -4,7 +4,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
-import { Secret } from "../../api/endpoints";
 import { AddSecretDialog } from "./add-secret-dialog";
 import { ISecretsRouteParams } from "./secrets.route";
 import { KubeObjectListLayout } from "../kube-object";
@@ -30,18 +29,19 @@ export class Secrets extends React.Component<Props> {
     return (
       <>
         <KubeObjectListLayout
-          className="Secrets" store={secretsStore}
+          className="Secrets"
+          store={secretsStore}
           sortingCallbacks={{
-            [sortBy.name]: (item: Secret) => item.getName(),
-            [sortBy.namespace]: (item: Secret) => item.getNs(),
-            [sortBy.labels]: (item: Secret) => item.getLabels(),
-            [sortBy.keys]: (item: Secret) => item.getKeys(),
-            [sortBy.type]: (item: Secret) => item.type,
-            [sortBy.age]: (item: Secret) => item.metadata.creationTimestamp,
+            [sortBy.name]: secret => secret.getName(),
+            [sortBy.namespace]: secret => secret.getNs(),
+            [sortBy.labels]: secret => secret.getLabels(),
+            [sortBy.keys]: secret => secret.getKeys(),
+            [sortBy.type]: secret => secret.type,
+            [sortBy.age]: secret => secret.metadata.creationTimestamp,
           }}
           searchFilters={[
-            (item: Secret) => item.getSearchFields(),
-            (item: Secret) => item.getKeys(),
+            secret => secret.getSearchFields(),
+            secret => secret.getKeys(),
           ]}
           renderHeaderTitle={<Trans>Secrets</Trans>}
           renderTableHeader={[
@@ -53,7 +53,7 @@ export class Secrets extends React.Component<Props> {
             { title: <Trans>Type</Trans>, className: "type", sortBy: sortBy.type },
             { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           ]}
-          renderTableContents={(secret: Secret) => [
+          renderTableContents={secret => [
             secret.getName(),
             <KubeObjectStatusIcon key="icon" object={secret} />,
             secret.getNs(),

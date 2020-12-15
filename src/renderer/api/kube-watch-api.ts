@@ -9,6 +9,7 @@ import { KubeApi } from "./kube-api";
 import { apiManager } from "./api-manager";
 import { apiPrefix, isDevelopment } from "../../common/vars";
 import { getHostedCluster } from "../../common/cluster-store";
+import { KubeObject } from "./kube-object";
 
 export interface IKubeWatchEvent<T = any> {
   type: "ADDED" | "MODIFIED" | "DELETED";
@@ -156,7 +157,7 @@ export class KubeWatchApi {
     }
   }
 
-  addListener(store: KubeObjectStore, callback: (evt: IKubeWatchEvent) => void) {
+  addListener<T extends KubeObject>(store: KubeObjectStore<T>, callback: (evt: IKubeWatchEvent) => void) {
     const listener = (evt: IKubeWatchEvent<KubeJsonApiData>) => {
       const { selfLink, namespace, resourceVersion } = evt.object.metadata;
       const api = apiManager.getApi(selfLink);

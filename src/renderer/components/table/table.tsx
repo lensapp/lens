@@ -17,9 +17,9 @@ import { ItemObject } from "../../item.store";
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
 export type TableSortParams = { sortBy: TableSortBy; orderBy: TableOrderBy };
-export type TableSortCallback<D = any> = (data: D) => string | number | (string | number)[];
+export type TableSortCallback<D> = (data: D) => string | number | (string | number)[];
 
-export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
+export interface TableProps<T> extends React.DOMAttributes<HTMLDivElement> {
   items?: ItemObject[];  // Raw items data
   className?: string;
   autoSize?: boolean;   // Setup auto-sizing for all columns (flex: 1 0)
@@ -29,7 +29,7 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
   sortable?: {
     // Define sortable callbacks for every column in <TableHead><TableCell sortBy="someCol"><TableHead>
     // @sortItem argument in the callback is an object, provided in <TableRow sortItem={someColDataItem}/>
-    [sortBy: string]: TableSortCallback;
+    [sortBy: string]: TableSortCallback<T>;
   };
   sortSyncWithUrl?: boolean; // sorting state is managed globally from url params
   sortByDefault?: Partial<TableSortParams>; // default sorting params
@@ -44,8 +44,8 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
 }
 
 @observer
-export class Table extends React.Component<TableProps> {
-  static defaultProps: TableProps = {
+export class Table<T> extends React.Component<TableProps<T>> {
+  static defaultProps: TableProps<any> = {
     scrollable: true,
     autoSize: true,
     rowPadding: "8px",

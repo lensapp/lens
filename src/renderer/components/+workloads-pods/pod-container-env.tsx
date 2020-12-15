@@ -23,17 +23,13 @@ export const ContainerEnvironment = observer((props: Props) => {
   useEffect(
     () =>
       autorun(() => {
-        env && env.forEach(variable => {
-          const { valueFrom } = variable;
-
-          if (valueFrom && valueFrom.configMapKeyRef) {
+        env?.forEach(({ valueFrom }) => {
+          if (valueFrom?.configMapKeyRef) {
             configMapsStore.load({ name: valueFrom.configMapKeyRef.name, namespace });
           }
         });
-        envFrom && envFrom.forEach(item => {
-          const { configMapRef } = item;
-
-          if (configMapRef && configMapRef.name) {
+        envFrom?.forEach(({ configMapRef }) => {
+          if (configMapRef?.name) {
             configMapsStore.load({ name: configMapRef.name, namespace });
           }
         });

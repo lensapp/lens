@@ -79,7 +79,7 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
   });
 }
 
-export class KubeApi<T extends KubeObject = any> {
+export class KubeApi<T extends KubeObject = KubeObject> {
   static parseApi = parseKubeApi;
 
   static watchAll(...apis: KubeApi[]) {

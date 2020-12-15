@@ -44,7 +44,7 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   // header (title, filtering, searching, etc.)
   showHeader?: boolean;
   headerClassName?: IClassName;
-  renderHeaderTitle?: ReactNode | ((parent: ItemListLayout) => ReactNode);
+  renderHeaderTitle?: ReactNode | ((parent: ItemListLayout<T>) => ReactNode);
   customizeHeader?: (placeholders: IHeaderPlaceholders, content: ReactNode) => Partial<IHeaderPlaceholders> | ReactNode;
 
   // items list configuration
@@ -52,8 +52,8 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   isSelectable?: boolean; // show checkbox in rows for selecting items
   isSearchable?: boolean; // apply search-filter & add search-input
   copyClassNameFromHeadCells?: boolean;
-  sortingCallbacks?: { [sortBy: string]: TableSortCallback };
-  tableProps?: Partial<TableProps>; // low-level table configuration
+  sortingCallbacks?: { [sortBy: string]: TableSortCallback<T> };
+  tableProps?: Partial<TableProps<T>>; // low-level table configuration
   renderTableHeader: TableCellProps[] | null;
   renderTableContents: (item: T) => (ReactNode | TableCellProps)[];
   renderItemMenu?: (item: T, store: ItemStore<T>) => ReactNode;
@@ -68,7 +68,7 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
 
   // other
   customizeRemoveDialog?: (selectedItems: T[]) => Partial<ConfirmDialogParams>;
-  renderFooter?: (parent: ItemListLayout) => React.ReactNode;
+  renderFooter?: (parent: ItemListLayout<T>) => React.ReactNode;
 }
 
 const defaultProps: Partial<ItemListLayoutProps> = {
@@ -88,7 +88,7 @@ interface ItemListLayoutUserSettings {
 }
 
 @observer
-export class ItemListLayout extends React.Component<ItemListLayoutProps> {
+export class ItemListLayout<T extends ItemObject> extends React.Component<ItemListLayoutProps<T>> {
   static defaultProps = defaultProps as object;
 
   @observable isUnmounting = false;
@@ -98,7 +98,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     showAppliedFilters: false,
   };
 
-  constructor(props: ItemListLayoutProps) {
+  constructor(props: ItemListLayoutProps<T>) {
     super(props);
 
     // keep ui user settings in local storage

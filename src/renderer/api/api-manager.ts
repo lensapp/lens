@@ -3,18 +3,19 @@ import type { KubeObjectStore } from "../kube-object.store";
 import { action, observable } from "mobx";
 import { autobind } from "../utils";
 import { KubeApi } from "./kube-api";
+import { KubeObject } from "./kube-object";
 
 @autobind()
 export class ApiManager {
   private apis = observable.map<string, KubeApi>();
-  private stores = observable.map<KubeApi, KubeObjectStore>();
+  private stores = observable.map<KubeApi, KubeObjectStore<any>>();
 
-  getApi(pathOrCallback: string | ((api: KubeApi) => boolean)) {
+  getApi(pathOrCallback: string | ((api: KubeApi) => boolean) = () => true) {
     if (typeof pathOrCallback === "string") {
       return this.apis.get(pathOrCallback) || this.apis.get(KubeApi.parseApi(pathOrCallback).apiBase);
     }
 
-    return Array.from(this.apis.values()).find(pathOrCallback ?? (() => true));
+    return Array.from(this.apis.values()).find(pathOrCallback);
   }
 
   registerApi(apiBase: string, api: KubeApi) {
@@ -29,24 +30,26 @@ export class ApiManager {
     return api;
   }
 
-  unregisterApi(api: string | KubeApi) {
-    if (typeof api === "string") this.apis.delete(api);
-    else {
-      const apis = Array.from(this.apis.entries());
-      const entry = apis.find(entry => entry[1] === api);
+  unregisterApi(api: string | KubeApi): void {
+    if (typeof api === "string") {
+      return void this.apis.delete(api);
+    }
 
-      if (entry) this.unregisterApi(entry[0]);
+    for (const [apiPath, kubeApi] of this.apis) {
+      if (kubeApi === api) {
+        return void this.apis.delete(apiPath);
+      }
     }
   }
 
   @action
-  registerStore(store: KubeObjectStore, apis: KubeApi[] = [store.api]) {
+  registerStore<T extends KubeObject>(store: KubeObjectStore<T>, apis: KubeApi[] = [store.api]) {
     apis.forEach(api => {
       this.stores.set(api, store);
     });
   }
 
-  getStore(api: string | KubeApi): KubeObjectStore {
+  getStore<T extends KubeObject>(api: string | KubeApi): KubeObjectStore<T> {
     return this.stores.get(this.resolveApi(api));
   }
 }

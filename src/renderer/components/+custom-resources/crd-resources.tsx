@@ -54,14 +54,14 @@ export class CrdResources extends React.Component<Props> {
     if (!crd) return null;
     const isNamespaced = crd.isNamespaced();
     const extraColumns = crd.getPrinterColumns(false);  // Cols with priority bigger than 0 are shown in details
-    const sortingCallbacks: { [sortBy: string]: TableSortCallback } = {
-      [sortBy.name]: (item: KubeObject) => item.getName(),
-      [sortBy.namespace]: (item: KubeObject) => item.getNs(),
-      [sortBy.age]: (item: KubeObject) => item.metadata.creationTimestamp,
+    const sortingCallbacks: { [sortBy: string]: TableSortCallback<KubeObject> } = {
+      [sortBy.name]: item => item.getName(),
+      [sortBy.namespace]: item => item.getNs(),
+      [sortBy.age]: item => item.metadata.creationTimestamp,
     };
 
     extraColumns.forEach(column => {
-      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.value(item, column.jsonPath.slice(1));
+      sortingCallbacks[column.name] = item => jsonPath.value(item, column.jsonPath.slice(1));
     });
 
     return (
