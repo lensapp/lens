@@ -86,10 +86,10 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
       splitChunks: isDevelopment ? {
         // chunks can be shared even between async and non-async chunks
         chunks: "all",
-        name: `${appName}.renderer.chucks.js`
+        name: `${appName}.renderer.chucks`
       }: false,
       runtimeChunk: isDevelopment ? {
-        name: `${appName}.renderer.chucks.runtime.js`,
+        name: `${appName}.renderer.chucks.runtime`,
       }: false,
     },
 

@@ -41,10 +41,10 @@ export default function (): webpack.Configuration {
       splitChunks: isDevelopment ? {
         // chunks can be shared even between async and non-async chunks
         chunks: "all",
-        name: `${appName}.main.chucks.js`
+        name: `${appName}.main.chucks`
       } : false,
       runtimeChunk: isDevelopment ? {
-        name: `${appName}.main.chucks.runtime.js`,
+        name: `${appName}.main.chucks.runtime`,
       } : false,
     },
     module: {
