@@ -3,7 +3,7 @@ import "./table.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { computed, observable } from "mobx";
-import { autobind, cssNames, noop } from "../../utils";
+import { autobind, cssNames, hasKey, noop } from "../../utils";
 import { TableRow, TableRowElem, TableRowProps } from "./table-row";
 import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import { TableCellElem } from "./table-cell";
@@ -14,7 +14,10 @@ import { ItemObject } from "../../item.store";
 
 // todo: refactor + decouple search from location
 
-export type TableOrderBy = "asc" | "desc" | string;
+export enum TableOrderBy {
+  ASCENDING = "asc",
+  DECENDING = "desc",
+}
 export type TableSortParams<SortingOption extends string> = { sortBy: SortingOption; orderBy: TableOrderBy };
 export type TableSortCallback<D> = (data: D) => string | number | (string | number)[];
 
@@ -85,11 +88,41 @@ export interface TableProps<Entry extends ItemObject, SortingOption extends stri
    */
   virtual?: boolean;
 
+  /**
+   * the number of pixels to render between subsequent rows
+   */
   rowPadding?: string;
+
+  /**
+   * the number of pixels to render for a specific row
+   */
   rowLineHeight?: string;
-  customRowHeights?: (item: object, lineHeight: number, paddings: number) => number;
+
+  /**
+   * A function for generating a special number for a specific item
+   */
+  customRowHeights?: (item: any, lineHeight: number, paddings: number) => number;
+
+  /**
+   *
+   */
   getTableRow?: (uid: string) => React.ReactElement<TableRowProps>;
 }
+
+function validateOrderBy(source: string | null, defaultDirection = TableOrderBy.DECENDING): TableOrderBy {
+  const transformed = source?.toLowerCase();
+
+  if (transformed === TableOrderBy.ASCENDING || transformed === TableOrderBy.DECENDING) {
+    return transformed;
+  }
+
+  return defaultDirection;
+}
+
+const swapOrderBy: Record<TableOrderBy, TableOrderBy> = {
+  [TableOrderBy.ASCENDING]: TableOrderBy.DECENDING,
+  [TableOrderBy.DECENDING]: TableOrderBy.ASCENDING,
+};
 
 @observer
 export class Table<Entry extends ItemObject = ItemObject, SortingOption extends string = string> extends React.Component<TableProps<Entry, SortingOption>> {
@@ -104,11 +137,15 @@ export class Table<Entry extends ItemObject = ItemObject, SortingOption extends 
   @observable sortParamsLocal = this.props.sortByDefault;
 
   @computed get sortParams(): Partial<TableSortParams<SortingOption>> {
-    if (this.props.sortSyncWithUrl) {
-      const sortBy = navigation.searchParams.get("sortBy") as SortingOption;
-      const orderBy = navigation.searchParams.get("orderBy");
+    const { sortSyncWithUrl, sortable } = this.props;
 
-      return { sortBy, orderBy };
+    if (sortSyncWithUrl) {
+      const sortBy = navigation.searchParams.get("sortBy");
+      const orderBy = validateOrderBy(navigation.searchParams.get("orderBy"));
+
+      if (sortable && hasKey(sortable, sortBy)) {
+        return { sortBy, orderBy };
+      }
     }
 
     return this.sortParamsLocal || {};
@@ -155,7 +192,7 @@ export class Table<Entry extends ItemObject = ItemObject, SortingOption extends 
     return orderBy(
       items,
       sortingCallback,
-      sortParams.orderBy as any
+      sortParams.orderBy
     );
   }
 
@@ -165,25 +202,20 @@ export class Table<Entry extends ItemObject = ItemObject, SortingOption extends 
 
     if (sortSyncWithUrl) {
       setQueryParams(params);
-    }
-    else {
+    } else {
       this.sortParamsLocal = params;
     }
 
-    if (onSort) {
-      onSort(params);
-    }
+    onSort?.(params);
   }
 
   @autobind()
   sort(colName: SortingOption) {
-    const { sortBy, orderBy } = this.sortParams;
-    const sameColumn = sortBy == colName;
-    const newSortBy: SortingOption = colName;
-    const newOrderBy: TableOrderBy = (!orderBy || !sameColumn || orderBy === "desc") ? "asc" : "desc";
+    const { sortBy, orderBy = TableOrderBy.ASCENDING } = this.sortParams;
+    const newOrderBy = (sortBy === colName) ? swapOrderBy[orderBy] : TableOrderBy.DECENDING;
 
     this.onSort({
-      sortBy: newSortBy,
+      sortBy: colName,
       orderBy: newOrderBy,
     });
   }
