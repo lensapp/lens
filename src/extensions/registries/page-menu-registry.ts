@@ -21,7 +21,7 @@ export interface PageMenuComponents {
   Icon: React.ComponentType<IconProps>;
 }
 
-export class PageMenuRegistry<T extends PageMenuRegistration = any> extends BaseRegistry<T> {
+export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {
   @action
   add(items: T[], ext: LensExtension) {
     const normalizedItems = items.map(menuItem => {

@@ -1,4 +1,4 @@
-import { getExtensionPageUrl, globalPageRegistry, PageTargetParams } from "../page-registry";
+import { getExtensionPageUrl, globalPageRegistry, PageParams } from "../page-registry";
 import { LensExtension } from "../../lens-extension";
 import React from "react";
 
@@ -50,7 +50,7 @@ describe("getPageUrl", () => {
   });
 
   it("gets page url with custom params", () => {
-    const params: PageTargetParams<string> = { test1: "one", test2: "2" };
+    const params: PageParams<string> = { test1: "one", test2: "2" };
     const searchParams = new URLSearchParams(params);
     const pageUrl = getExtensionPageUrl({ extensionId: ext.name, pageId: "page-with-params", params });
 

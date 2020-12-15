@@ -1,24 +1,25 @@
-// Manage observable URL-param via location.search
+// Manage observable URL-param from document.location.search
 import { IObservableHistory } from "mobx-observable-history";
 
 export interface PageParamInit<V = any> {
   name: string;
   isSystem?: boolean;
   defaultValue?: V;
+  defaultValueStringified?: string | string[]; // serialized version of "defaultValue"
   multiValues?: boolean; // false == by default
   multiValueSep?: string; // joining multiple values with separator, default: ","
   skipEmpty?: boolean; // skip empty value(s), e.g. "?param=", default: true
-  parse?(values: string[]): V; // deserialize from URL
-  stringify?(values: V): string | string[]; // serialize params to URL
+  parse?(value: string[]): V; // deserialize from URL
+  stringify?(value: V): string | string[]; // serialize params to URL
 }
 
-export class PageParam<V = any | any[]> {
+export class PageParam<V = any> {
   static SYSTEM_PREFIX = "lens-";
 
   readonly name: string;
   protected urlName: string;
 
-  constructor(private init: PageParamInit<V>, private history: IObservableHistory) {
+  constructor(readonly init: PageParamInit<V>, protected history: IObservableHistory) {
     const { isSystem, name, skipEmpty = true } = init;
 
     this.name = name;
@@ -28,7 +29,7 @@ export class PageParam<V = any | any[]> {
     this.urlName = `${isSystem ? PageParam.SYSTEM_PREFIX : ""}${name}`;
   }
 
-  isEmpty(value: V) {
+  isEmpty(value: V | any) {
     return [value].flat().every(value => value == "" || value == null);
   }
 
@@ -59,12 +60,10 @@ export class PageParam<V = any | any[]> {
   }
 
   get(): V {
-    const { history, urlName } = this;
-    const { multiValueSep, defaultValue, skipEmpty } = this.init;
-    const value = this.parse(history.searchParams.getAsArray(urlName, multiValueSep));
+    const value = this.parse(this.getRaw());
 
-    if (skipEmpty && this.isEmpty(value)) {
-      return defaultValue;
+    if (this.init.skipEmpty && this.isEmpty(value)) {
+      return this.getDefaultValue();
     }
 
     return value;
@@ -76,12 +75,29 @@ export class PageParam<V = any | any[]> {
     this.history.merge({ search }, replaceHistory);
   }
 
-  getDefaultValue(){
-    return this.init.defaultValue;
+  setRaw(value: string | string[]) {
+    const { history, urlName } = this;
+    const { multiValues, multiValueSep, skipEmpty } = this.init;
+    const paramValue = multiValues ? [value].flat().join(multiValueSep) : String(value);
+
+    if (skipEmpty && this.isEmpty(paramValue)) {
+      history.searchParams.delete(urlName);
+    } else {
+      history.searchParams.set(urlName, paramValue);
+    }
   }
 
-  isDefault() {
-    return this.get() === this.getDefaultValue();
+  getRaw(): string[] {
+    const { history, urlName } = this;
+    const { multiValueSep } = this.init;
+
+    return history.searchParams.getAsArray(urlName, multiValueSep);
+  }
+
+  getDefaultValue() {
+    const { defaultValue, defaultValueStringified } = this.init;
+
+    return defaultValueStringified ? this.parse([defaultValueStringified].flat()) : defaultValue;
   }
 
   clear() {
@@ -112,4 +128,13 @@ export class PageParam<V = any | any[]> {
       [this.urlName]: value,
     };
   }
+}
+
+export function isPageParamInit(paramInit: PageParamInit | any = {}): paramInit is PageParamInit {
+  const init: PageParamInit = paramInit;
+
+  return [
+    init.defaultValue !== undefined || init.defaultValueStringified !== undefined,
+    typeof init.parse === "function" && typeof init.stringify === "function",
+  ].some(Boolean);
 }

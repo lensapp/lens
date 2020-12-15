@@ -1,43 +1,51 @@
 // Extensions-api -> Custom page registration
-import type React from "react";
-import { action } from "mobx";
+
+import React from "react";
+import { observer } from "mobx-react";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, sanitizeExtensionName } from "../lens-extension";
-import { PageParam } from "../../renderer/navigation/page-param";
-import logger from "../../main/logger";
+import { isPageParamInit, PageParam, PageParamInit } from "../../renderer/navigation/page-param";
+import { createPageParam } from "../../renderer/navigation/helpers";
 
 export interface PageRegistration {
   /**
-   * Page-id, part of of extension's page url, must be unique within same extension
+   * Page ID, part of extension's page url, must be unique within same extension
    * When not provided, first registered page without "id" would be used for page-menus without target.pageId for same extension
    */
   id?: string;
+  params?: PageParams<string | ExtensionPageParamInit>;
   components: PageComponents;
-  /**
-   * Registered page params.
-   * Used to generate final page url when provided in getExtensionPageUrl()-helper.
-   * Advanced usage: provide `UrlParam` as values to customize parsing/stringification from/to URL.
-   */
-  params?: PageTargetParams<string | PageParam>;
 }
+
+// exclude "name" field since provided as key in page.params
+export type ExtensionPageParamInit = Omit<PageParamInit, "name" | "isSystem">;
 
 export interface PageComponents {
   Page: React.ComponentType<any>;
 }
 
-export interface PageTarget<P = PageTargetParams> {
+export interface PageTarget<P = PageParams> {
   extensionId?: string;
   pageId?: string;
   params?: P;
 }
 
-export interface PageTargetParams<V = any> {
+export interface PageParams<V = any> {
   [paramName: string]: V;
 }
 
-export interface RegisteredPage extends PageRegistration {
+export interface PageComponentProps<P extends PageParams = {}> {
+  params?: {
+    [N in keyof P]: PageParam<P[N]>;
+  }
+}
+
+export interface RegisteredPage {
+  id: string;
   extensionId: string;
   url: string; // registered extension's page URL (without page params)
+  params: PageParams<PageParam>; // normalized params
+  components: PageComponents; // normalized components
 }
 
 export function getExtensionPageUrl(target: PageTarget): string {
@@ -54,16 +62,11 @@ export function getExtensionPageUrl(target: PageTarget): string {
 
   if (registeredPage?.params) {
     Object.entries(registeredPage.params).forEach(([name, param]) => {
-      const targetParamValue = targetParams[name];
-
-      if (param instanceof PageParam) {
-        pageUrl.searchParams.set(name, param.stringify(targetParamValue));
+      const paramValue = param.stringify(targetParams[name]);
+      if (param.init.skipEmpty && param.isEmpty(paramValue)) {
+        pageUrl.searchParams.delete(name);
       } else {
-        const value = String(targetParamValue ?? param);
-
-        if (value) {
-          pageUrl.searchParams.set(name, value);
-        }
+        pageUrl.searchParams.set(name, paramValue);
       }
     });
   }
@@ -71,31 +74,41 @@ export function getExtensionPageUrl(target: PageTarget): string {
   return pageUrl.href.replace(pageUrl.origin, "");
 }
 
-export class PageRegistry extends BaseRegistry<RegisteredPage> {
-  @action
-  add(pages: PageRegistration | PageRegistration[], extension: LensExtension) {
-    try {
-      const items = [pages].flat().map(page => this.registerPage(page, extension));
+export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage> {
+  protected getRegisteredItem(page: PageRegistration, ext: LensExtension): RegisteredPage {
+    const { id: pageId } = page;
+    const extensionId = ext.name;
+    const params = this.normalizeParams(page.params);
+    const components = this.normalizeComponents(page.components, params);
+    const url = getExtensionPageUrl({ extensionId, pageId });
 
-      return super.add(items);
-    } catch (error) {
-      return Function; // no-op
-    }
+    return {
+      id: pageId, extensionId, params, components, url,
+    };
   }
 
-  registerPage(page: PageRegistration, ext: LensExtension): RegisteredPage {
-    try {
-      const { id: pageId } = page;
-      const extensionId = ext.name;
+  protected normalizeComponents(components: PageComponents, params?: PageParams<PageParam>): PageComponents {
+    if (params) {
+      const { Page } = components;
 
-      return {
-        ...page,
-        extensionId,
-        url: getExtensionPageUrl({ extensionId, pageId }),
-      };
-    } catch (error) {
-      logger.error(`Failed to register page: ${error}`, { error });
+      components.Page = observer((props: object) => React.createElement(Page, { params, ...props }));
     }
+
+    return components;
+  }
+
+  protected normalizeParams(params?: PageParams<string | ExtensionPageParamInit>): PageParams<PageParam> {
+    if (!params) {
+      return;
+    }
+    Object.entries(params).forEach(([name, value]) => {
+      const paramInit: PageParamInit = isPageParamInit(value) ? value : { name, defaultValue: value };
+
+      paramInit.name ??= name;
+      params[name] = createPageParam(paramInit);
+    });
+
+    return params as PageParams<PageParam>;
   }
 
   getByPageTarget(target: PageTarget): RegisteredPage | null {
