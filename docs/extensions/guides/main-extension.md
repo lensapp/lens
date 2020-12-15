@@ -1,12 +1,14 @@
 # Main Extension
 
-The main extension api is the interface to Lens' main process (Lens runs in main and renderer processes). It allows you to access, configure, and customize Lens data, add custom application menu items, and generally run custom code in Lens' main process.
+The Main Extension API is the interface to Lens's main process. Lens runs in both main and renderer processes. The Main Extension API allows you to access, configure, and customize Lens data, add custom application menu items, and run custom code in Lens's main process.
 
 ## `LensMainExtension` Class
 
+### `onActivate()` and `onDeactivate()` Methods
+
 To create a main extension simply extend the `LensMainExtension` class:
 
-``` typescript
+```typescript
 import { LensMainExtension } from "@k8slens/extensions";
 
 export default class ExampleExtensionMain extends LensMainExtension {
@@ -20,11 +22,18 @@ export default class ExampleExtensionMain extends LensMainExtension {
 }
 ```
 
-There are two methods that you can implement to facilitate running your custom code. `onActivate()` is called when your extension has been successfully enabled. By implementing `onActivate()` you can initiate your custom code. `onDeactivate()` is called when the extension is disabled (typically from the [Lens Extensions Page]()) and when implemented gives you a chance to clean up after your extension, if necessary. The example above simply logs messages when the extension is enabled and disabled. Note that to see standard output from the main process there must be a console connected to it. This is typically achieved by starting Lens from the command prompt.
+Two methods enable you to run custom code: `onActivate()` and `onDeactivate()`. Enabling your extension calls `onActivate()` and disabling your extension calls `onDeactivate()`. You can initiate custom code by implementing `onActivate()`. Implementing `onDeactivate()` gives you the opportunity to clean up after your extension.
 
-The following example is a little more interesting in that it accesses some Lens state data and periodically logs the name of the currently active cluster in Lens.
+Disable extensions from the Lens Extensions page:
 
-``` typescript
+1. Navigate to **File** > **Extensions** in the top menu bar. (On Mac, it is **Lens** > **Extensions**.)
+2. Click **Disable** on the extension you want to disable.
+
+The example above logs messages when the extension is enabled and disabled. To see standard output from the main process there must be a console connected to it. Achieve this by starting Lens from the command prompt.
+
+The following example is a little more interesting. It accesses some Lens state data, and it periodically logs the name of the cluster that is currently active in Lens.
+
+```typescript
 import { LensMainExtension, Store } from "@k8slens/extensions";
 
 const clusterStore = Store.clusterStore
@@ -51,11 +60,11 @@ export default class ActiveClusterExtensionMain extends LensMainExtension {
 }
 ```
 
-See the [Stores](../stores) guide for more details on accessing Lens state data.
+For more details on accessing Lens state data, please see the [Stores](../stores) guide.
 
 ### `appMenus`
 
-The only UI feature customizable in the main extension api is the application menu. Custom menu items can be inserted and linked to custom functionality, such as navigating to a specific page. The following example demonstrates adding a menu item to the Help menu.
+The Main Extension API allows you to customize the UI application menu. Note that this is the only UI feature that the Main Extension API allows you to customize. The following example demonstrates adding an item to the **Help** menu.
 
 ``` typescript
 import { LensMainExtension } from "@k8slens/extensions";
@@ -73,4 +82,8 @@ export default class SamplePageMainExtension extends LensMainExtension {
 }
 ```
 
-`appMenus` is an array of objects satisfying the `MenuRegistration` interface. `MenuRegistration` extends React's `MenuItemConstructorOptions` interface. `parentId` is the id of the menu to put this menu item under (todo: is this case sensitive and how do we know what the available ids are?), `label` is the text to show on the menu item, and `click()` is called when the menu item is selected. In this example we simply log a message, but typically you would navigate to a specific page or perform some operation. Pages are associated with the [`LensRendererExtension`](renderer-extension.md) class and can be defined when you extend it. 
+`appMenus` is an array of objects that satisfy the `MenuRegistration` interface. `MenuRegistration` extends React's `MenuItemConstructorOptions` interface. The properties of the appMenus array objects are defined as follows:
+
+* `parentId` is the name of the menu where your new menu item will be listed. Valid values include: `"file"`, `"edit"`, `"view"`, and `"help"`. `"lens"` is valid on Mac only.
+* `label` is the name of your menu item.
+* `click()` is called when the menu item is selected. In this example, we simply log a message. However, you would typically have this navigate to a specific page or perform another operation. Note that pages are associated with the [`LensRendererExtension`](renderer-extension.md) class and can be defined in the process of extending it. 
