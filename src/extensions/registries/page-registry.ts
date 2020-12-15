@@ -63,6 +63,7 @@ export function getExtensionPageUrl(target: PageTarget): string {
   if (registeredPage?.params) {
     Object.entries(registeredPage.params).forEach(([name, param]) => {
       const paramValue = param.stringify(targetParams[name]);
+
       if (param.init.skipEmpty && param.isEmpty(paramValue)) {
         pageUrl.searchParams.delete(name);
       } else {
