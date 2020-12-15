@@ -299,7 +299,7 @@ export class ExtensionDiscovery {
     const extensions = await this.loadExtensions();
 
     this.isLoaded = true;
-    
+
     return extensions;
   }
 
@@ -355,6 +355,8 @@ export class ExtensionDiscovery {
 
   async loadExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
     const bundledExtensions = await this.loadBundledExtensions();
+
+    await this.installPackages(); // install in-tree as a separate step
     const localExtensions = await this.loadFromFolder(this.localFolderPath);
 
     await this.installPackages();
