@@ -340,7 +340,7 @@
     "typeface-roboto": "^0.0.75",
     "typescript": "4.0.2",
     "url-loader": "^4.1.0",
-    "webpack": "^5.9.0",
+    "webpack": "^5.10.1",
     "webpack-cli": "^4.2.0",
     "webpack-dev-server": "^4.0.0-beta.0",
     "webpack-node-externals": "^2.5.2",
@@ -352,6 +352,7 @@
     "/": "this is a hack to resolve webpack5 'Module not found' errors",
     "//": "we can remove this if upgrade materail-ui to a version use @babel/runtime 7.12.5+",
     "///": "see <https://github.com/webpack/webpack/issues/11467#issuecomment-727014123>",
-    "@babel/runtime": "^7.12.5"
+    "@babel/runtime": "^7.12.5",
+    "webpack": "^5.10.1"
   }
 }
