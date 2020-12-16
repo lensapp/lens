@@ -61,7 +61,7 @@ export class CrdResources extends React.Component<Props> {
     };
 
     extraColumns.forEach(column => {
-      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.value(item, column.jsonPath.slice(1));
+      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.value(item, `$..["${column.jsonPath.slice(1).replace(/\\/g, "")}"]`);
     });
 
     return (
@@ -93,7 +93,7 @@ export class CrdResources extends React.Component<Props> {
           isNamespaced && crdInstance.getNs(),
           ...extraColumns.map(column => ({
             renderBoolean: true,
-            children: jsonPath.value(crdInstance, column.jsonPath.slice(1)),
+            children: jsonPath.value(crdInstance, `$..["${column.jsonPath.slice(1).replace(/\\/g, "")}"]`),
           })),
           crdInstance.getAge(),
         ]}
