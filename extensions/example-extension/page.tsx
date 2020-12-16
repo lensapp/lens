@@ -63,3 +63,77 @@ export class ExamplePage extends React.Component<ExamplePageProps> {
     );
   }
 }
+
+@observer
+export class SimplePage extends React.Component<{ extension: LensRendererExtension }> {
+  render() {
+
+    return (
+      <div className="flex column gaps align-flex-start" style={{ padding: 24 }}>
+        <div style={{ width: 200 }}>
+          <CoffeeDoodle accent="#3d90ce"/>
+        </div>
+
+        <div>Hello from Example extension!</div>
+        <div>Location: <i>{location.href}</i></div>
+      </div>
+    );
+  }
+}
+
+export interface SimpleParamsPageProps extends Interface.PageComponentProps<SimpleParamsPageParams> {
+  extension: LensRendererExtension; // provided in "./renderer.tsx"
+}
+
+export interface SimpleParamsPageParams {
+  exampleId: string;
+  namespace: string;
+}
+
+@observer
+export class SimpleParamsPage extends React.Component<SimpleParamsPageProps> {
+  async componentDidMount() {
+    await namespaceStore.loadAll();
+  }
+
+  deactivate = () => {
+    const { extension } = this.props;
+
+    extension.disable();
+  };
+
+  renderNamespace() {
+    const { namespace } = this.props.params;
+    const name = namespace.get();
+
+    return (
+      <div className="flex gaps inline">
+        <Component.Badge key={name} label={name} />;
+      </div>
+    );
+  }
+
+  render() {
+    const { exampleId } = this.props.params;
+
+    return (
+      <div className="flex column gaps align-flex-start" style={{ padding: 24 }}>
+        <div style={{ width: 200 }}>
+          <CoffeeDoodle accent="#3d90ce"/>
+        </div>
+
+        <div>Hello from Example extension!</div>
+        <div>Location: <i>{location.href}</i></div>
+        <div>Namespaces: {this.renderNamespace()}</div>
+
+        <p className="url-params-demo flex column gaps">
+          <a onClick={() => exampleId.set("secret")}>Show secret button</a>
+          {exampleId.get() === "secret" && (
+            <Component.Button accent label="Deactivate" onClick={this.deactivate}/>
+          )}
+        </p>
+      </div>
+    );
+  }
+}
+
