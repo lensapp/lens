@@ -30,7 +30,7 @@ export default class ExampleExtension extends LensRendererExtension {
     }
   ];
 
-  clusterPageMenus: Interface.PageMenuRegistration[] = [
+  clusterPageMenus: Interface.ClusterPageMenuRegistration[] = [
     {
       title: "Example extension",
       components: {

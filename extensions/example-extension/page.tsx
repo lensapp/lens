@@ -1,7 +1,7 @@
-import { Component, Interface, K8sApi, LensRendererExtension } from "@k8slens/extensions";
 import React from "react";
 import { observer } from "mobx-react";
 import { CoffeeDoodle } from "react-open-doodles";
+import { Component, Interface, K8sApi, LensRendererExtension } from "@k8slens/extensions";
 
 export interface ExamplePageProps extends Interface.PageComponentProps<ExamplePageParams> {
   extension: LensRendererExtension; // provided in "./renderer.tsx"

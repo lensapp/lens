@@ -20,10 +20,11 @@ export class PageParam<V = any> {
   protected urlName: string;
 
   constructor(readonly init: PageParamInit<V>, protected history: IObservableHistory) {
-    const { isSystem, name, skipEmpty = true } = init;
+    const { isSystem, name } = init;
 
     this.name = name;
-    this.init.skipEmpty = skipEmpty;
+    this.init.skipEmpty ??= true;
+    this.init.multiValueSep ??= ",";
 
     // prefixing to avoid collisions with extensions
     this.urlName = `${isSystem ? PageParam.SYSTEM_PREFIX : ""}${name}`;
@@ -128,13 +129,4 @@ export class PageParam<V = any> {
       [this.urlName]: value,
     };
   }
-}
-
-export function isPageParamInit(paramInit: PageParamInit | any = {}): paramInit is PageParamInit {
-  const init: PageParamInit = paramInit;
-
-  return [
-    init.defaultValue !== undefined || init.defaultValueStringified !== undefined,
-    typeof init.parse === "function" && typeof init.stringify === "function",
-  ].some(Boolean);
 }

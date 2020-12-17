@@ -4,7 +4,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, sanitizeExtensionName } from "../lens-extension";
-import { isPageParamInit, PageParam, PageParamInit } from "../../renderer/navigation/page-param";
+import { PageParam, PageParamInit } from "../../renderer/navigation/page-param";
 import { createPageParam } from "../../renderer/navigation/helpers";
 
 export interface PageRegistration {
@@ -103,10 +103,11 @@ export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage>
       return;
     }
     Object.entries(params).forEach(([name, value]) => {
-      const paramInit: PageParamInit = isPageParamInit(value) ? value : { name, defaultValue: value };
+      const paramInit: PageParamInit = typeof value === "object"
+        ? { name, ...value }
+        : { name, defaultValue: value };
 
-      paramInit.name ??= name;
-      params[name] = createPageParam(paramInit);
+      params[paramInit.name] = createPageParam(paramInit);
     });
 
     return params as PageParams<PageParam>;
