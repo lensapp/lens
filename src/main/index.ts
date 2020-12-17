@@ -55,13 +55,13 @@ app.on("second-instance", () => {
   windowManager?.ensureMainWindow();
 });
 
-powerMonitor.on("shutdown", () => {
-  app.exit();
-});
-
 app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
   await shellSync();
+
+  powerMonitor.on("shutdown", () => {
+    app.exit();
+  });
 
   const updater = new AppUpdater();
 
