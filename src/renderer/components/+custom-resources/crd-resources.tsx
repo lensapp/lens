@@ -12,6 +12,7 @@ import { autorun, computed } from "mobx";
 import { crdStore } from "./crd.store";
 import { TableSortCallback } from "../table";
 import { apiManager } from "../../api/api-manager";
+import { parseJsonPath } from "../../utils/jsonPath";
 
 interface Props extends RouteComponentProps<ICRDRouteParams> {
 }
@@ -61,7 +62,7 @@ export class CrdResources extends React.Component<Props> {
     };
 
     extraColumns.forEach(column => {
-      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.value(item, `$..["${column.jsonPath.slice(1).replace(/\\/g, "")}"]`);
+      sortingCallbacks[column.name] = (item: KubeObject) => jsonPath.value(item, parseJsonPath(column.jsonPath.slice(1)));
     });
 
     return (
@@ -91,10 +92,17 @@ export class CrdResources extends React.Component<Props> {
         renderTableContents={(crdInstance: KubeObject) => [
           crdInstance.getName(),
           isNamespaced && crdInstance.getNs(),
-          ...extraColumns.map(column => ({
-            renderBoolean: true,
-            children: jsonPath.value(crdInstance, `$..["${column.jsonPath.slice(1).replace(/\\/g, "")}"]`),
-          })),
+          ...extraColumns.map((column) => {
+            const pathExpression = parseJsonPath(column.jsonPath.slice(1));
+
+            console.log(pathExpression);
+
+            return {
+              renderBoolean: true,
+              children: jsonPath.value(crdInstance, pathExpression.replace(/\\/g, "")),
+            };
+          }
+          ),
           crdInstance.getAge(),
         ]}
       />
