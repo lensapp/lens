@@ -97,7 +97,7 @@ export class CrdResources extends React.Component<Props> {
 
             return {
               renderBoolean: true,
-              children: jsonPath.value(crdInstance, pathExpression.replace(/\\/g, "")),
+              children: jsonPath.value(crdInstance, pathExpression),
             };
           }
           ),
