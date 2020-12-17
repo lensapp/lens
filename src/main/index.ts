@@ -4,7 +4,7 @@ import "../common/system-ca";
 import "../common/prometheus-providers";
 import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
-import { app, dialog } from "electron";
+import { app, dialog, powerMonitor } from "electron";
 import { appName } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./lens-proxy";
@@ -53,6 +53,10 @@ if (!instanceLock) {
 
 app.on("second-instance", () => {
   windowManager?.ensureMainWindow();
+});
+
+powerMonitor.on("shutdown", () => {
+  app.exit();
 });
 
 app.on("ready", async () => {
