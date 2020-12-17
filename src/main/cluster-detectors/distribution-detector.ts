@@ -56,12 +56,12 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "docker-desktop", accuracy: 80};
     }
 
-    if (this.isCustom()) {
-      return { value: "custom", accuracy: 10};
+    if (this.isCustom() && await this.isOpenshift()) {
+      return { value: "openshift", accuracy: 90};
     }
 
-    if (await this.isOpenshift()) {
-      return { value: "openshift", accuracy: 90};
+    if (this.isCustom()) {
+      return { value: "custom", accuracy: 10};
     }
 
     return { value: "unknown", accuracy: 10};
