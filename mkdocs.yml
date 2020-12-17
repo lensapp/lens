@@ -34,7 +34,7 @@ nav:
       - Main Extension: extensions/guides/main-extension.md
       - Renderer Extension: extensions/guides/renderer-extension.md
       - Stores: extensions/guides/stores.md
-      - Working with mobx: extensions/guides/working-with-mobx.md
+      - Working with MobX: extensions/guides/working-with-mobx.md
     - Testing and Publishing:
       - Testing Extensions: extensions/testing-and-publishing/testing.md
       - Publishing Extensions: extensions/testing-and-publishing/publishing.md
