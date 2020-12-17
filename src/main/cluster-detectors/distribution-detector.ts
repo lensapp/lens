@@ -88,7 +88,7 @@ export class DistributionDetector extends BaseClusterDetector {
   }
 
   protected isAKS() {
-    return this.cluster.apiUrl.endsWith("azmk8s.io");
+    return this.cluster.apiUrl.includes("azmk8s.io");
   }
 
   protected isMirantis() {
