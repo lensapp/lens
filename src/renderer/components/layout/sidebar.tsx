@@ -101,7 +101,7 @@ export class Sidebar extends React.Component<Props> {
 
   renderRegisteredMenus() {
     return clusterPageMenuRegistry.getRootItems().map((menuItem, index) => {
-      const registeredPage = clusterPageRegistry.getByPageMenuTarget(menuItem.target);
+      const registeredPage = clusterPageRegistry.getByPageTarget(menuItem.target);
       const tabRoutes = this.getTabLayoutRoutes(menuItem);
       const id = `registered-item-${index}`;
       let pageUrl: string;
@@ -111,7 +111,7 @@ export class Sidebar extends React.Component<Props> {
         const { extensionId, id: pageId } = registeredPage;
 
         pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
-        isActive = isActiveRoute(registeredPage.routePath);
+        isActive = isActiveRoute(registeredPage.url);
       } else if (tabRoutes.length > 0) {
         pageUrl = tabRoutes[0].url;
         isActive = isActiveRoute(tabRoutes.map((tab) => tab.routePath));
