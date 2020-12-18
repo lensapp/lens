@@ -4,7 +4,7 @@ import "../common/system-ca";
 import "../common/prometheus-providers";
 import * as Mobx from "mobx";
 import * as LensExtensions from "../extensions/core-api";
-import { app, dialog } from "electron";
+import { app, dialog, powerMonitor } from "electron";
 import { appName } from "../common/vars";
 import path from "path";
 import { LensProxy } from "./lens-proxy";
@@ -58,6 +58,10 @@ app.on("second-instance", () => {
 app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
   await shellSync();
+
+  powerMonitor.on("shutdown", () => {
+    app.exit();
+  });
 
   const updater = new AppUpdater();
 
