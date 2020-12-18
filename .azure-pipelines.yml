@@ -1,8 +1,15 @@
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 pr:
-  - master
-  - releases/*
+  branches:
+    include:
+    - master
+    - releases/*
+  paths:
+    exclude:
+    - .github/*
+    - docs/*
+    - mkdocs/*
 trigger:
   branches:
     include:
@@ -10,6 +17,11 @@ trigger:
   tags:
     include:
     - "*"
+  paths:
+    exclude:
+    - .github/*
+    - docs/*
+    - mkdocs/*
 jobs:
   - job: Windows
     pool:

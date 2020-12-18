@@ -1,15 +1,12 @@
 .ClusterIssues {
   min-height: 350px;
   position: relative;
+  grid-column-start: 1;
+  grid-column-end: 3;
 
   @include media("<1024px") {
     grid-column-start: 1!important;
     grid-column-end: 1!important;
-  }
-
-  &.wide {
-    grid-column-start: 1;
-    grid-column-end: 3;
   }
 
   .SubHeader {

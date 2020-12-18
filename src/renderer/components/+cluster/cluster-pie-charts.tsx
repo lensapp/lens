@@ -4,7 +4,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { t, Trans } from "@lingui/macro";
 import { useLingui } from "@lingui/react";
-import { clusterStore, MetricNodeRole } from "./cluster.store";
+import { clusterOverviewStore, MetricNodeRole } from "./cluster-overview.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
 import { nodesStore } from "../+nodes/nodes.store";
@@ -27,7 +27,7 @@ export const ClusterPieCharts = observer(() => {
   };
 
   const renderCharts = () => {
-    const data = getMetricLastPoints(clusterStore.metrics);
+    const data = getMetricLastPoints(clusterOverviewStore.metrics);
     const { memoryUsage, memoryRequests, memoryCapacity, memoryLimits } = data;
     const { cpuUsage, cpuRequests, cpuCapacity, cpuLimits } = data;
     const { podUsage, podCapacity } = data;
@@ -173,7 +173,7 @@ export const ClusterPieCharts = observer(() => {
 
   const renderContent = () => {
     const { masterNodes, workerNodes } = nodesStore;
-    const { metricNodeRole, metricsLoaded } = clusterStore;
+    const { metricNodeRole, metricsLoaded } = clusterOverviewStore;
     const nodes = metricNodeRole === MetricNodeRole.MASTER ? masterNodes : workerNodes;
 
     if (!nodes.length) {
@@ -192,7 +192,7 @@ export const ClusterPieCharts = observer(() => {
         </div>
       );
     }
-    const { memoryCapacity, cpuCapacity, podCapacity } = getMetricLastPoints(clusterStore.metrics);
+    const { memoryCapacity, cpuCapacity, podCapacity } = getMetricLastPoints(clusterOverviewStore.metrics);
 
     if (!memoryCapacity || !cpuCapacity || !podCapacity) {
       return <ClusterNoMetrics className="empty"/>;

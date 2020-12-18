@@ -1,0 +1,57 @@
+variables:
+  YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
+  node_version: 12.x
+pr:
+  branches:
+    include:
+    - master
+    - releases/*
+  paths:
+    exclude:
+    - .github/*
+    - docs/*
+    - mkdocs/*
+trigger: none
+jobs:
+  - job: Linux
+    pool:
+      vmImage: ubuntu-16.04
+    strategy:
+      matrix:
+        kube_1.16:
+          kubernetes_version: v1.16.15
+        kube_1.17:
+          kubernetes_version: v1.17.15
+        kube_1.18:
+          kubernetes_version: v1.18.13
+        kube_1.19:
+          kubernetes_version: v1.19.5
+        kube_1.20:
+          kubernetes_version: v1.20.0
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: $(node_version)
+        displayName: Install Node.js
+      - task: Cache@2
+        inputs:
+          key: 'yarn | "$(Agent.OS)" | yarn.lock'
+          restoreKeys: |
+            yarn | "$(Agent.OS)"
+          path: $(YARN_CACHE_FOLDER)
+        displayName: Cache Yarn packages
+      - bash: |
+          sudo apt-get update
+          sudo apt-get install libgconf-2-4 conntrack -y
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          sudo minikube start --driver=none --kubernetes-version $(kubernetes_version)
+          # Although the kube and minikube config files are in placed $HOME they are owned by root
+          sudo chown -R $USER $HOME/.kube $HOME/.minikube
+        displayName: Install integration test dependencies
+      - script: make node_modules
+        displayName: Install dependencies
+      - script: make -j2 build
+        displayName: Run build
+      - script: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' yarn integration
+        displayName: Run integration tests for Kubernetes $(kubernetes_version)

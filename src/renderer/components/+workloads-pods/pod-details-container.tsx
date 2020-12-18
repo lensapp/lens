@@ -57,6 +57,7 @@ export class PodDetailsContainer extends React.Component<Props> {
     const ready = status ? status.ready : "";
     const liveness = pod.getLivenessProbe(container);
     const readiness = pod.getReadinessProbe(container);
+    const startup = pod.getStartupProbe(container);
     const isInitContainer = !!pod.getInitContainers().find(c => c.name == name);
     const metricTabs = [
       <Trans key="cpu">CPU</Trans>,
@@ -135,6 +136,15 @@ export class PodDetailsContainer extends React.Component<Props> {
         <DrawerItem name={<Trans>Readiness</Trans>} labelsOnly>
           {
             readiness.map((value, index) => (
+              <Badge key={index} label={value}/>
+            ))
+          }
+        </DrawerItem>
+        }
+        {startup.length > 0 &&
+        <DrawerItem name={<Trans>Startup</Trans>} labelsOnly>
+          {
+            startup.map((value, index) => (
               <Badge key={index} label={value}/>
             ))
           }

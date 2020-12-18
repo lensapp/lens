@@ -93,7 +93,7 @@ export class CrdResources extends React.Component<Props> {
           isNamespaced && crdInstance.getNs(),
           ...extraColumns.map(column => ({
             renderBoolean: true,
-            children: jsonPath.value(crdInstance, column.jsonPath.slice(1)),
+            children: JSON.stringify(jsonPath.value(crdInstance, column.jsonPath.slice(1))),
           })),
           crdInstance.getAge(),
         ]}

@@ -1,15 +1,20 @@
-# New Extension Project with Generator
+# Lens Extension Generator
 
-The [Lens Extension Generator](https://github.com/lensapp/generator-lens-ext) scaffolds a project ready for development. Install Yeoman and Lens Extension Generator with:
+The [Lens Extension Generator](https://github.com/lensapp/generator-lens-ext) creates a directory with the necessary files for developing an extension.
+
+## Installing and Getting Started with the Generator
+
+To begin, install Yeoman and the Lens Extension Generator with the following command:
 
 ```bash
 npm install -g yo generator-lens-ext
 ```
 
-Run the generator and fill out a few fields for a TypeScript project:
+Run the generator by entering the following command: `yo lens-ext`.
+
+Answer the following questions:
 
 ```bash
-yo lens-ext
 # ? What type of extension do you want to create? New Extension (TypeScript)
 # ? What's the name of your extension? my-first-lens-ext
 # ? What's the description of your extension? My hello world extension
@@ -17,24 +22,25 @@ yo lens-ext
 # ? Initialize a git repository? Yes
 # ? Install dependencies after initialization? Yes
 # ? Which package manager to use? yarn
-# ? symlink created extension folder to ~/.k8slens/extensions (mac/linux) or :User
-s\<user>\.k8slens\extensions (windows)? Yes
+# ? symlink created extension folder to ~/.k8slens/extensions (mac/linux) or :Users\<user>\.k8slens\extensions (windows)? Yes
 ```
 
-Start webpack, which watches the `my-first-lens-ext` folder.
+Next, you'll need to have webpack watch the `my-first-lens-ext` folder. Start webpack by entering:
 
 ```bash
 cd my-first-lens-ext
 npm start # start the webpack server in watch mode
 ```
 
-Then, open Lens, you should see a Hello World item in the menu:
+Open Lens and you will see a **Hello World** item in the left-side menu under **Custom Resources**:
 
 ![Hello World](images/hello-world.png)
 
 ## Developing the Extension
 
-Try to change `my-first-lens-ext/renderer.tsx` to "Hello Lens!":
+Next, you'll try changing the way the new menu item appears in the UI. You'll change it from "Hello World" to "Hello Lens".
+
+Open `my-first-lens-ext/renderer.tsx` and change the value of `title` from `"Hello World"` to `"Hello Lens"`:
 
 ```tsx
 clusterPageMenus = [
@@ -48,18 +54,18 @@ clusterPageMenus = [
 ]
 ```
 
-Then, Reload Lens by CMD+R (Mac) / Ctrl+R (Linux/Windows), you should see the menu item text changes:
+Reload Lens and you will see that the menu item text has changed to "Hello Lens." To reload Lens, enter `CMD+R` on Mac and `Ctrl+R` on Windows/Linux.
 
 ![Hello World](images/hello-lens.png)
 
 ## Debugging the Extension
 
-[Testing](../testing-and-publishing/testing.md)
+To debug your extension, please see our instructions on [Testing Extensions](../testing-and-publishing/testing.md).
 
-## Next steps
+## Next Steps
 
-You can take a closer look at [Common Capabilities](../capabilities/common-capabilities.md) of extension, how to [style](../capabilities/styling.md) the extension. Or the [Extension Anatomy](anatomy.md).
+To dive deeper, consider looking at [Common Capabilities](../capabilities/common-capabilities.md), [Styling](../capabilities/styling.md), or [Extension Anatomy](anatomy.md).
 
-You are welcome to raise an [issue](https://github.com/lensapp/generator-lens-ext/issues) for Lens Extension Generator, if you find problems, or have feature requests.
+If you find problems with the Lens Extension Generator, or have feature requests, you are welcome to raise an [issue](https://github.com/lensapp/generator-lens-ext/issues). You can find the Lens contribution guidelines [here](../../contributing/README.md).
 
-The source code of the generator is hosted at [Github](https://github.com/lensapp/generator-lens-ext)
+The Generator source code is hosted at [Github](https://github.com/lensapp/generator-lens-ext).

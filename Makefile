@@ -13,7 +13,7 @@ binaries/client:
 	yarn download-bins
 
 node_modules:
-	yarn install --frozen-lockfile --verbose
+	yarn install --frozen-lockfile
 	yarn check --verify-tree --integrity
 
 static/build/LensDev.html:
