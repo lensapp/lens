@@ -3,7 +3,6 @@ import { IObservableHistory } from "mobx-observable-history";
 
 export interface PageParamInit<V = any> {
   name: string;
-  isSystem?: boolean;
   defaultValue?: V;
   defaultValueStringified?: string | string[]; // serialized version of "defaultValue"
   multiValues?: boolean; // false == by default
@@ -13,14 +12,18 @@ export interface PageParamInit<V = any> {
   stringify?(value: V): string | string[]; // serialize params to URL
 }
 
+export interface PageSystemParamInit<V = any> extends PageParamInit<V> {
+  isSystem?: boolean;
+}
+
 export class PageParam<V = any> {
   static SYSTEM_PREFIX = "lens-";
 
   readonly name: string;
   protected urlName: string;
 
-  constructor(readonly init: PageParamInit<V>, protected history: IObservableHistory) {
-    const { isSystem, name } = init;
+  constructor(readonly init: PageParamInit<V> | PageSystemParamInit<V>, protected history: IObservableHistory) {
+    const { isSystem, name } = init as PageSystemParamInit;
 
     this.name = name;
     this.init.skipEmpty ??= true;
