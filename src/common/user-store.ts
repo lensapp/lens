@@ -2,7 +2,7 @@ import type { ThemeId } from "../renderer/theme.store";
 import { app, remote } from 'electron';
 import semver from "semver"
 import { readFile } from "fs-extra"
-import { action, observable, reaction, toJS } from "mobx";
+import { action, IReactionDisposer, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
 import migrations from "../migrations/user-store"
 import { getAppVersion } from "./utils/app-version";
@@ -27,6 +27,8 @@ export interface UserPreferences {
   downloadKubectlBinaries?: boolean;
   downloadBinariesPath?: string;
   kubectlBinariesPath?: string;
+  allowAutoUpdates?: boolean;
+  allowPrereleaseVersions?: boolean;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
@@ -59,6 +61,8 @@ export class UserStore extends BaseStore<UserStoreModel> {
     colorTheme: UserStore.defaultTheme,
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
+    allowAutoUpdates: false,
+    allowPrereleaseVersions: false,
   };
 
   get isNewVersion() {

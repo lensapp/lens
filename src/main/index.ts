@@ -8,7 +8,7 @@ import path from "path"
 import { LensProxy } from "./lens-proxy"
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
-import AppUpdater from "./app-updater"
+import { startUpdateChecking } from "./app-updater"
 import { shellSync } from "./shell-sync"
 import { getFreePort } from "./port"
 import { mangleProxyEnv } from "./proxy-env"
@@ -39,8 +39,6 @@ async function main() {
   logger.info(`🚀 Starting Lens from "${workingDir}"`)
 
   tracker.event("app", "start");
-  const updater = new AppUpdater()
-  updater.start();
 
   registerFileProtocol("static", __static);
 
@@ -75,6 +73,13 @@ async function main() {
 
   // create window manager and open app
   windowManager = new WindowManager(proxyPort);
+
+  /**
+   * This depends on:
+   * 1. userStore: it reads the user's auto update settings
+   * 2. windowManager: it will send IPC to the main window for notifications
+   */
+  startUpdateChecking();
 }
 
 app.on("ready", main);

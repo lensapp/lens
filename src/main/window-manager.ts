@@ -73,6 +73,10 @@ export class WindowManager {
     }
   }
 
+  send(channel: string, ...data: any[]) {
+    this.mainView.webContents.send(channel, ...data);
+  }
+
   async showMain() {
     try {
       await this.showSplash();

@@ -84,7 +84,10 @@ export class Notifications extends React.Component {
                 <div className="box center">
                   <Icon
                     material="close" className="close"
-                    onClick={prevDefault(() => remove(notification))}
+                    onClick={prevDefault(() => {
+                      remove(notification);
+                      notification.onClose?.();
+                    })}
                   />
                 </div>
               </div>
