@@ -1,28 +1,8 @@
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   node_version: 12.x
-pr:
-  branches:
-    include:
-    - master
-    - releases/*
-  paths:
-    exclude:
-    - .github/*
-    - docs/*
-    - mkdocs/*
-trigger:
-  branches:
-    include:
-    - '*'
-  tags:
-    include:
-    - "*"
-  paths:
-    exclude:
-    - .github/*
-    - docs/*
-    - mkdocs/*
+pr: none
+trigger: none
 jobs:
   - job: Linux
     pool:
@@ -60,7 +40,7 @@ jobs:
           # Although the kube and minikube config files are in placed $HOME they are owned by root
           sudo chown -R $USER $HOME/.kube $HOME/.minikube
         displayName: Install integration test dependencies
-      - script: make build
+      - script: make -j2 build
         displayName: Run build
       - script: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' yarn integration
         displayName: Run integration tests for Kubernetes $(kubernetes_version)
