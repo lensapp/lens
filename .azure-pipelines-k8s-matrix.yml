@@ -49,6 +49,8 @@ jobs:
           # Although the kube and minikube config files are in placed $HOME they are owned by root
           sudo chown -R $USER $HOME/.kube $HOME/.minikube
         displayName: Install integration test dependencies
+      - script: make node_modules
+        displayName: Install dependencies
       - script: make -j2 build
         displayName: Run build
       - script: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' yarn integration
