@@ -1,11 +1,10 @@
+// Helper to convert strings used for jsonPath where \. or - is present to use indexed notation,
+// for example: .metadata.labels.kubesphere\.io/alias-name -> .metadata.labels['kubesphere\.io/alias-name']
 
 export function parseJsonPath(jsonPath: string) {
   let pathExpression = jsonPath;
 
   if (jsonPath.match(/[\\-]/g)) { // search for '\' and '-'
-    // convert cases where \. or - is present to use indexed notation,
-    // for example: .metadata.labels.kubesphere\.io/alias-name -> .metadata.labels.['kubesphere\.io/alias-name']
-
     const [first, ...rest] = jsonPath.split(/(?<=\w)\./); // split jsonPath by '.' (\. cases are ignored)
 
     pathExpression = `${convertToIndexNotation(first, true)}${rest.map(value => convertToIndexNotation(value)).join("")}`;
