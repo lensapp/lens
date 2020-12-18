@@ -93,11 +93,9 @@ export class CrdResources extends React.Component<Props> {
           crdInstance.getName(),
           isNamespaced && crdInstance.getNs(),
           ...extraColumns.map((column) => {
-            const pathExpression = parseJsonPath(column.jsonPath.slice(1));
-
             return {
               renderBoolean: true,
-              children: jsonPath.value(crdInstance, pathExpression),
+              children: jsonPath.value(crdInstance, parseJsonPath(column.jsonPath.slice(1))),
             };
           }
           ),

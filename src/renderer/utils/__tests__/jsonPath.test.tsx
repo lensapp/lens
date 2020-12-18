@@ -4,8 +4,26 @@ describe("parseJsonPath", () => {
   test("should convert \. to use indexed notation", () => {
     const res = parseJsonPath(".metadata.labels.kubesphere\\.io/alias-name");
 
-    expect(res).toBe(".metadata['labels']['kubesphere.io/alias-name']");
+    expect(res).toBe(".metadata.labels['kubesphere.io/alias-name']");
+  });
 
+  test("should convert '-' to use indexed notation", () => {
+    const res = parseJsonPath(".metadata.labels.alias-name");
+
+    expect(res).toBe(".metadata.labels['alias-name']");
+  });
+
+  test("should handle scenario when both \ and indexed notation is present", () => {
+    const rest = parseJsonPath(".metadata.labels\\.serving['some.other.item']");
+
+    expect(rest).toBe(".metadata['labels.serving']['some.other.item']");
+  });
+
+
+  test("should not touch given jsonPath if no invalid characters", () => {
+    const res = parseJsonPath(".status.conditions[?(@.type=='Ready')].status");
+
+    expect(res).toBe(".status.conditions[?(@.type=='Ready')].status");
   });
 
   test("strips '\' away from the result", () => {
@@ -14,9 +32,4 @@ describe("parseJsonPath", () => {
     expect(res).toBe(".metadata.labels['serving.knative.dev/configuration']");
   });
 
-  test("should not touch given jsonPath if no invalid characters", () => {
-    const res = parseJsonPath(".status.conditions[?(@.type=='Ready')].status");
-
-    expect(res).toBe(".status.conditions[?(@.type=='Ready')].status");
-  });
 });
