@@ -1,7 +1,16 @@
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
   node_version: 12.x
-pr: none
+pr:
+  branches:
+    include:
+    - master
+    - releases/*
+  paths:
+    exclude:
+    - .github/*
+    - docs/*
+    - mkdocs/*
 trigger: none
 jobs:
   - job: Linux
