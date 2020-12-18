@@ -1,0 +1,76 @@
+.SidebarNavItem {
+  $itemSpacing: floor($unit / 2.6) floor($unit / 1.6);
+
+  width: 100%;
+  user-select: none;
+  flex-shrink: 0;
+
+  .nav-item {
+    cursor: pointer;
+    width: inherit;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border: none;
+    padding: $itemSpacing;
+
+    &.active, &:hover {
+      background: $lensBlue;
+      color: $sidebarActiveColor;
+    }
+  }
+
+  .expand-icon {
+    --size: 20px;
+  }
+
+  .sub-menu {
+    border-left: 4px solid transparent;
+
+    &.active {
+      border-left-color: $lensBlue;
+    }
+
+    a, .SidebarNavItem {
+      display: block;
+      border: none;
+      text-decoration: none;
+      color: $textColorPrimary;
+      font-weight: normal;
+      padding-left: 40px; // parent icon width
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 0px; // hidden by default
+      max-height: 0px;
+      opacity: 0;
+      transition: 125ms line-height ease-out, 200ms 100ms opacity;
+
+      &.visible {
+        line-height: 28px;
+        max-height: 1000px;
+        opacity: 1;
+      }
+
+      &.active, &:hover {
+        color: $sidebarSubmenuActiveColor;
+      }
+    }
+
+    .sub-menu-parent {
+      padding-left: 27px;
+      font-weight: 500;
+
+      .nav-item {
+        &:hover {
+          background: transparent;
+        }
+      }
+
+      .sub-menu {
+        a {
+          padding-left: $padding * 3;
+        }
+      }
+    }
+  }
+}
