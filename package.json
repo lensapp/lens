@@ -44,7 +44,7 @@
     "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts"
   },
   "config": {
-    "bundledKubectlVersion": "1.17.11",
+    "bundledKubectlVersion": "1.17.15",
     "bundledHelmVersion": "3.3.4"
   },
   "engines": {
