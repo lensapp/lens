@@ -72,14 +72,14 @@ export default class ExampleExtension extends LensRendererExtension {
 
   clusterPageMenus: Interface.ClusterPageMenuRegistration[] = [
     {
-//      id: "top-example-menu",
+      id: "top-example-menu",
       title: "Example extension",
       components: {
         Icon: ExampleIcon,
       },
     },
     {
-//      parentId: "top-example-menu",
+      parentId: "top-example-menu",
       title: "Simple Page",
       target: {
         pageId: "simple-page"
@@ -89,7 +89,7 @@ export default class ExampleExtension extends LensRendererExtension {
       },
     },
     {
-//      parentId: "top-example-menu",
+      parentId: "top-example-menu",
       title: "Simple Params",
       target: {
         pageId: "page-with-simple-params",
@@ -103,7 +103,7 @@ export default class ExampleExtension extends LensRendererExtension {
       },
     },
     {
-//      parentId: "top-example-menu",
+      parentId: "top-example-menu",
       title: "Non-String Params",
       target: {
         pageId: "page-with-non-string-params",
@@ -117,7 +117,7 @@ export default class ExampleExtension extends LensRendererExtension {
       },
     },
     {
-//      parentId: "top-example-menu",
+      parentId: "top-example-menu",
       title: "Complicated Params",
       target: {
         pageId: "page-with-complicated-params"
