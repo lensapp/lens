@@ -92,10 +92,6 @@ export interface SimpleParamsPageParams {
 
 @observer
 export class SimpleParamsPage extends React.Component<SimpleParamsPageProps> {
-  async componentDidMount() {
-    await namespaceStore.loadAll();
-  }
-
   deactivate = () => {
     const { extension } = this.props;
 
@@ -137,3 +133,25 @@ export class SimpleParamsPage extends React.Component<SimpleParamsPageProps> {
   }
 }
 
+export interface NonStringParamsPageProps extends Interface.PageComponentProps<NonStringParamsPageParams> {
+  extension: LensRendererExtension; // provided in "./renderer.tsx"
+}
+
+export interface NonStringParamsPageParams {
+  exampleId: string;
+  namespaceId: Number;
+}
+
+@observer
+export class NonStringParamsPage extends React.Component<NonStringParamsPageProps> {
+  render() {
+    const { exampleId, namespaceId } = this.props.params;
+
+    return (
+      <div className="flex gaps inline">
+        <p>exampleId is {exampleId.get()}</p>
+        <p>namespaceId is {namespaceId.get()}</p>
+      </div>
+    );
+  }
+}

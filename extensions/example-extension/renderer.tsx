@@ -1,7 +1,8 @@
 import { Component, Interface, K8sApi, LensRendererExtension } from "@k8slens/extensions";
 import { 
   ExamplePage, ExamplePageParams, namespaceStore,
-  SimplePage, SimpleParamsPage, SimpleParamsPageParams
+  SimplePage, SimpleParamsPage, SimpleParamsPageParams,
+  NonStringParamsPage, NonStringParamsPageParams
 } from "./page";
 import React from "react";
 import path from "path";
@@ -27,6 +28,20 @@ export default class ExampleExtension extends LensRendererExtension {
         // setup basic param "exampleId" with default value "demo"
         exampleId: "demo",
         namespace: "default"
+      }
+    },
+    {
+      id: "page-with-non-string-params",
+      components: {
+        Page: (props: Interface.PageComponentProps<NonStringParamsPageParams>) => {
+          return <NonStringParamsPage {...props} extension={this}/>;
+        },
+      },
+      params: {
+        exampleId: "demo",
+        namespaceId: {
+          defaultValue: 7
+        }
       }
     },
     {
@@ -57,14 +72,14 @@ export default class ExampleExtension extends LensRendererExtension {
 
   clusterPageMenus: Interface.ClusterPageMenuRegistration[] = [
     {
-      id: "top-example-menu",
+//      id: "top-example-menu",
       title: "Example extension",
       components: {
         Icon: ExampleIcon,
       },
     },
     {
-      parentId: "top-example-menu",
+//      parentId: "top-example-menu",
       title: "Simple Page",
       target: {
         pageId: "simple-page"
@@ -74,10 +89,10 @@ export default class ExampleExtension extends LensRendererExtension {
       },
     },
     {
-      parentId: "top-example-menu",
+//      parentId: "top-example-menu",
       title: "Simple Params",
       target: {
-        pageId: "page-with-simple-parms",
+        pageId: "page-with-simple-params",
         params: {
           exampleId: "no-secret",
           namespace: "test"
@@ -88,7 +103,21 @@ export default class ExampleExtension extends LensRendererExtension {
       },
     },
     {
-      parentId: "top-example-menu",
+//      parentId: "top-example-menu",
+      title: "Non-String Params",
+      target: {
+        pageId: "page-with-non-string-params",
+        params: {
+          exampleId: "A string",
+          namespaceId: 42
+        }
+      },
+      components: {
+        Icon: ExampleIcon,
+      },
+    },
+    {
+//      parentId: "top-example-menu",
       title: "Complicated Params",
       target: {
         pageId: "page-with-complicated-params"
