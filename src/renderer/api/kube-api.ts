@@ -256,11 +256,32 @@ export class KubeApi<T extends KubeObject = any> {
     return query;
   }
 
+  protected generateSelfLink(kubeObject: T): string {
+    return createKubeApiURL({
+      apiPrefix: this.apiPrefix,
+      apiVersion: this.apiVersionWithGroup,
+      resource: this.apiResource,
+      namespace: this.isNamespaced ? kubeObject.getNs() : undefined,
+      name: kubeObject.getName(),
+    });
+  }
+
+  protected ensureObjectSelfLink(kubeObject: T): void {
+    if (!kubeObject.metadata?.selfLink) {
+      kubeObject.metadata ?? {};
+      kubeObject.metadata.selfLink = this.generateSelfLink(kubeObject);
+    }
+  }
+
   protected parseResponse(data: KubeJsonApiData | KubeJsonApiData[] | KubeJsonApiDataList, namespace?: string): any {
     const KubeObjectConstructor = this.objectConstructor;
 
     if (KubeObject.isJsonApiData(data)) {
-      return new KubeObjectConstructor(data);
+      const object = new KubeObjectConstructor(data);
+
+      this.ensureObjectSelfLink(object);
+
+      return object;
     }
 
     // process items list response
@@ -270,11 +291,17 @@ export class KubeApi<T extends KubeObject = any> {
       this.setResourceVersion(namespace, metadata.resourceVersion);
       this.setResourceVersion("", metadata.resourceVersion);
 
-      return items.map(item => new KubeObjectConstructor({
-        kind: this.kind,
-        apiVersion,
-        ...item,
-      }));
+      return items.map((item) => {
+        const object = new KubeObjectConstructor({
+          kind: this.kind,
+          apiVersion,
+          ...item,
+        });
+
+        this.ensureObjectSelfLink(object);
+
+        return object;
+      });
     }
 
     // custom apis might return array for list response, e.g. users, groups, etc.
