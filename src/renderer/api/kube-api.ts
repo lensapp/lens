@@ -79,6 +79,18 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
   });
 }
 
+export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
+  if (!object.metadata.selfLink) {
+    object.metadata.selfLink = createKubeApiURL({
+      apiPrefix: api.apiPrefix,
+      apiVersion: api.apiVersionWithGroup,
+      resource: api.apiResource,
+      namespace: api.isNamespaced ? object.metadata.namespace : undefined,
+      name: object.metadata.name,
+    });
+  }
+}
+
 export class KubeApi<T extends KubeObject = any> {
   static parseApi = parseKubeApi;
 
@@ -260,7 +272,11 @@ export class KubeApi<T extends KubeObject = any> {
     const KubeObjectConstructor = this.objectConstructor;
 
     if (KubeObject.isJsonApiData(data)) {
-      return new KubeObjectConstructor(data);
+      const object = new KubeObjectConstructor(data);
+
+      ensureObjectSelfLink(this, object);
+
+      return object;
     }
 
     // process items list response
@@ -270,11 +286,17 @@ export class KubeApi<T extends KubeObject = any> {
       this.setResourceVersion(namespace, metadata.resourceVersion);
       this.setResourceVersion("", metadata.resourceVersion);
 
-      return items.map(item => new KubeObjectConstructor({
-        kind: this.kind,
-        apiVersion,
-        ...item,
-      }));
+      return items.map((item) => {
+        const object = new KubeObjectConstructor({
+          kind: this.kind,
+          apiVersion,
+          ...item,
+        });
+
+        ensureObjectSelfLink(this, object);
+
+        return object;
+      });
     }
 
     // custom apis might return array for list response, e.g. users, groups, etc.
