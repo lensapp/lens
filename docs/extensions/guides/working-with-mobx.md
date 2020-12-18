@@ -2,9 +2,10 @@
 
 ## Introduction
 
-Lens uses MobX on top of React's state management system. The result is a more declarative state management style, rather than React's native `setState` mechanism. 
+Lens uses MobX on top of React's state management system.
+The result is a more declarative state management style, rather than React's native `setState` mechanism.
 
-You can review how React handles state management [here](https://reactjs.org/docs/faq-state.html). 
+You can review how React handles state management [here](https://reactjs.org/docs/faq-state.html).
 
 The following is a quick overview:
 
