@@ -56,12 +56,12 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "docker-desktop", accuracy: 80};
     }
 
-    if (this.isCustom()) {
-      return { value: "custom", accuracy: 10};
+    if (this.isCustom() && await this.isOpenshift()) {
+      return { value: "openshift", accuracy: 90};
     }
 
-    if (await this.isOpenshift()) {
-      return { value: "openshift", accuracy: 90};
+    if (this.isCustom()) {
+      return { value: "custom", accuracy: 10};
     }
 
     return { value: "unknown", accuracy: 10};
@@ -88,7 +88,7 @@ export class DistributionDetector extends BaseClusterDetector {
   }
 
   protected isAKS() {
-    return this.cluster.apiUrl.endsWith("azmk8s.io");
+    return this.cluster.apiUrl.includes("azmk8s.io");
   }
 
   protected isMirantis() {

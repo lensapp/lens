@@ -92,13 +92,10 @@ export class CrdResources extends React.Component<Props> {
         renderTableContents={(crdInstance: KubeObject) => [
           crdInstance.getName(),
           isNamespaced && crdInstance.getNs(),
-          ...extraColumns.map((column) => {
-            return {
-              renderBoolean: true,
-              children: jsonPath.value(crdInstance, parseJsonPath(column.jsonPath.slice(1))),
-            };
-          }
-          ),
+          ...extraColumns.map(column => ({
+            renderBoolean: true,
+            children: JSON.stringify(jsonPath.value(crdInstance, parseJsonPath(column.jsonPath.slice(1)))),
+          })),
           crdInstance.getAge(),
         ]}
       />
