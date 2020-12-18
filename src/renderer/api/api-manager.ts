@@ -17,6 +17,10 @@ export class ApiManager {
     return Array.from(this.apis.values()).find(pathOrCallback ?? (() => true));
   }
 
+  getApiByKind(kind: string, apiVersion: string) {
+    return Array.from(this.apis.values()).find((api) => api.kind === kind && api.apiVersion === apiVersion);
+  }
+
   registerApi(apiBase: string, api: KubeApi) {
     if (!this.apis.has(apiBase)) {
       this.apis.set(apiBase, api);

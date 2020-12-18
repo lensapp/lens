@@ -158,8 +158,8 @@ export class KubeWatchApi {
 
   addListener(store: KubeObjectStore, callback: (evt: IKubeWatchEvent) => void) {
     const listener = (evt: IKubeWatchEvent<KubeJsonApiData>) => {
-      const { selfLink, namespace, resourceVersion } = evt.object.metadata;
-      const api = apiManager.getApi(selfLink);
+      const { namespace, resourceVersion } = evt.object.metadata;
+      const api = apiManager.getApiByKind(evt.object.kind, evt.object.apiVersion);
 
       api.setResourceVersion(namespace, resourceVersion);
       api.setResourceVersion("", resourceVersion);
