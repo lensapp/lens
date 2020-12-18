@@ -20,8 +20,11 @@ import { themeStore } from "../../theme.store";
 import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
+import { Button } from "../button";
 import { userStore } from "../../../common/user-store";
 import { namespaceStore } from "../+namespaces/namespace.store";
+import logger from "../../../main/logger";
+
 
 // todo: refactor, split to small re-usable components
 
@@ -58,6 +61,7 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   isSelectable?: boolean; // show checkbox in rows for selecting items
   isSearchable?: boolean; // apply search-filter & add search-input
   isConfigurable?: boolean;
+  isResizable?: boolean;
   copyClassNameFromHeadCells?: boolean;
   sortingCallbacks?: { [sortBy: string]: TableSortCallback };
   tableProps?: Partial<TableProps>; // low-level table configuration
@@ -83,6 +87,7 @@ const defaultProps: Partial<ItemListLayoutProps> = {
   isSearchable: true,
   isSelectable: true,
   isConfigurable: false,
+  isResizable: false,
   copyClassNameFromHeadCells: true,
   preloadStores: true,
   dependentStores: [],
@@ -99,7 +104,12 @@ interface ItemListLayoutUserSettings {
 @observer
 export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   static defaultProps = defaultProps as object;
+  private resetTableButtonTimer:any = null;
+  @observable showResetColumnsWidthsButton = false;
 
+  // columnWidthsTmp is for temporary storing column widths at moment between the start and stop of resizing
+  // it helps to avoid excess writing to the file system
+  @observable columnWidthsTmp = new Map<string,number>();
   @observable userSettings: ItemListLayoutUserSettings = {
     showAppliedFilters: false,
   };
@@ -115,14 +125,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     disposeOnUnmount(this, [
       reaction(() => toJS(this.userSettings), settings => storage.set(settings)),
     ]);
+
+    if (this.canBeResized || this.canBeConfigured) {
+      this.initColumnConfig();
+    }
   }
 
   async componentDidMount() {
-    const { isClusterScoped, isConfigurable, tableId, preloadStores } = this.props;
-
-    if (isConfigurable && !tableId) {
-      throw new Error("[ItemListLayout]: configurable list require props.tableId to be specified");
-    }
+    const { isClusterScoped, preloadStores } = this.props;
 
     if (preloadStores) {
       this.loadStores();
@@ -133,6 +143,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         ]);
       }
     }
+
   }
 
   private loadStores() {
@@ -141,6 +152,68 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
     // load context namespaces by default (see also: `<NamespaceSelectFilter/>`)
     stores.forEach(store => store.loadAll(namespaceStore.contextNamespaces));
+  }
+
+  initColumnConfig() {
+    const {renderTableHeader, tableId } = this.props;
+
+    if ( !userStore.preferences?.storeTableConfig?.[tableId] ) {
+      userStore.preferences.storeTableConfig[tableId] = {};
+      renderTableHeader.map((cellProps, index) => {
+        userStore.preferences.storeTableConfig[tableId][cellProps.className] = {index, visible: true};
+      });
+    }
+  }
+
+
+  saveColumnsConfig() {
+    this.columnWidthsTmp.forEach((value, key) => {
+      this.getColumnConfig(key).width = value;
+    });
+    this.columnWidthsTmp.clear();
+  }
+
+
+  getColumnConfig(column: string) {
+    return userStore.preferences.storeTableConfig[this.props.tableId]?.[column];
+  }
+
+
+  getColumnCalculatedWidth(className: string) : number {
+    return document.querySelector(`.TableHead > .${className}`).clientWidth;
+  }
+
+
+  resizeColumn(className: string, width: number){
+    const { renderTableHeader } = this.props;
+
+    this.showResetColumnsWidthsButton = true;
+
+    for (let _i = 0; _i < this.getColumnConfig(className).index; _i++) {
+      if( this.getColumnConfig(renderTableHeader[_i].showWithColumn ?? renderTableHeader[_i].className)?.visible
+        && !this.getColumnConfig(renderTableHeader[_i].showWithColumn ?? renderTableHeader[_i].className)?.width) {
+        const componentWidth = this.getColumnCalculatedWidth(renderTableHeader[_i].className);
+
+        this.columnWidthsTmp.set(renderTableHeader[_i].className, componentWidth);
+      }
+    }
+    this.columnWidthsTmp.set(className, width);
+
+    //Clear existing timer and set new one
+    clearTimeout(this.resetTableButtonTimer);
+    this.resetTableButtonTimer = setTimeout(() => this.showResetColumnsWidthsButton = false, 10000);
+  }
+
+  getStylesOfResizedColumn(className: string) :any {
+    if (this.columnWidthsTmp.get(className) || this.getColumnConfig(className)?.width) {
+      return (
+        {
+          //"flex-basis": `${this.columnsConfig[className].width}px`,
+          "min-width": `${this.columnWidthsTmp.get(className)?? this.getColumnConfig(className).width}px`,
+          "flex-grow": "0",
+          "flex-shrink": "0"}
+      );
+    }
   }
 
   private filterCallbacks: { [type: string]: ItemsFilter } = {
@@ -220,6 +293,31 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return this.applyFilters(filterItems, items);
   }
 
+  get canBeConfigured(): boolean {
+    return this.props.isConfigurable && this.canBeChanged;
+  }
+
+  get canBeResized(): boolean {
+    return this.props.isResizable && this.canBeChanged;
+  }
+
+  get canBeChanged(): boolean {
+    const { tableId, renderTableHeader } = this.props;
+
+    if (!tableId) {
+      return false;
+    }
+
+    if (!renderTableHeader?.every(({ className }) => className)) {
+      logger.warning("[ItemObjectList]: cannot change an object list without all headers being identifiable");
+
+      return false;
+    }
+
+    return true;
+  }
+
+
   @autobind()
   getRow(uid: string) {
     const {
@@ -260,7 +358,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
             }
 
             if (!headCell || !this.isHiddenColumn(headCell)) {
-              return <TableCell key={index} {...cellProps} />;
+              return <TableCell key={index} {...cellProps} style={this.getStylesOfResizedColumn(cellProps.className)}/>;
             }
           })
         }
@@ -362,7 +460,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       title: <h5 className="title">{title}</h5>,
       info: this.renderInfo(),
       filters: <>
-        {!isClusterScoped && <NamespaceSelectFilter/>}
+        <Button primary
+          hidden={!this.showResetColumnsWidthsButton}
+          onClick={()=>{
+            this.props.renderTableHeader.map((cellProps) => this.getColumnConfig(cellProps.className).width = null);
+            this.showResetColumnsWidthsButton = false;
+          }}>Reset</Button>
+        {!isClusterScoped && <NamespaceSelectFilter />}
         <PageFiltersSelect allowEmpty disableFilters={{
           [FilterType.NAMESPACE]: true, // namespace-select used instead
         }}/>
@@ -392,7 +496,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderTableHeader() {
-    const { renderTableHeader, isSelectable, isConfigurable, store } = this.props;
+    const { renderTableHeader, isSelectable, isResizable, store } = this.props;
 
     if (!renderTableHeader) {
       return;
@@ -407,13 +511,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
             onClick={prevDefault(() => store.toggleSelectionAll(this.items))}
           />
         )}
-        {renderTableHeader.map((cellProps, index) => {
-          if (!this.isHiddenColumn(cellProps)) {
-            return <TableCell key={cellProps.id ?? index} {...cellProps} />;
-          }
-        })}
-        <TableCell className="menu">
-          {isConfigurable && this.renderColumnVisibilityMenu()}
+        {renderTableHeader.map((cellProps, index) => !this.isHiddenColumn(cellProps) && <TableCell isResizable={isResizable} key={index} {...cellProps}
+          getCurrentExtent = {() => this.getColumnCalculatedWidth(cellProps.className)}
+          onResize = {v => this.resizeColumn(cellProps.className,v)}
+          onResizeStop = {() => this.saveColumnsConfig()}
+          style={this.getStylesOfResizedColumn(cellProps.className)}/>)}
+        <TableCell className="menu" >
+          {this.canBeConfigured && this.renderColumnVisibilityMenu()}
         </TableCell>
       </TableHead>
     );
@@ -421,8 +525,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   renderList() {
     const {
-      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem,
-      tableProps = {},
+      tableProps = {}, store, hasDetailsView,
+      addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem
     } = this.props;
     const { isReady, removeItemsDialog, items } = this;
     const { selectedItems } = store;
@@ -463,30 +567,16 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     );
   }
 
-  @computed get hiddenColumns() {
-    return userStore.getHiddenTableColumns(this.props.tableId);
-  }
-
-  isHiddenColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
-    if (!this.props.isConfigurable) {
+  isHiddenColumn({ className: columnName, showWithColumn }: TableCellProps): boolean {
+    if (!this.canBeConfigured) {
       return false;
     }
 
-    return this.hiddenColumns.has(columnId) || (
-      showWithColumn && this.hiddenColumns.has(showWithColumn)
-    );
+    return !this.getColumnConfig(showWithColumn ?? columnName)?.visible ?? false;
   }
 
-  updateColumnVisibility({ id: columnId }: TableCellProps, isVisible: boolean) {
-    const hiddenColumns = new Set(this.hiddenColumns);
-
-    if (!isVisible) {
-      hiddenColumns.add(columnId);
-    } else {
-      hiddenColumns.delete(columnId);
-    }
-
-    userStore.setHiddenTableColumns(this.props.tableId, hiddenColumns);
+  updateColumnVisibility({ className: columnName }: TableCellProps, isVisible: boolean) {
+    this.getColumnConfig(columnName).visible = isVisible;
   }
 
   renderColumnVisibilityMenu() {
@@ -498,8 +588,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           !cellProps.showWithColumn && (
             <MenuItem key={index} className="input">
               <Checkbox
-                label={cellProps.title ?? `<${cellProps.className}>`}
-                value={!this.isHiddenColumn(cellProps)}
+                label = {cellProps.title ?? `<${cellProps.className}>`}
+                value ={!this.isHiddenColumn(cellProps)}
                 onChange={isVisible => this.updateColumnVisibility(cellProps, isVisible)}
               />
             </MenuItem>

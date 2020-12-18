@@ -71,10 +71,11 @@ export class Pods extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        tableId = "workloads_pods"
+        isResizable
+        isConfigurable
         className="Pods" store={podsStore}
         dependentStores={[volumeClaimStore, eventStore]}
-        tableId = "workloads_pods"
-        isConfigurable
         sortingCallbacks={{
           [columnId.name]: (pod: Pod) => pod.getName(),
           [columnId.namespace]: (pod: Pod) => pod.getNs(),

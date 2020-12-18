@@ -1,10 +1,11 @@
 import "./table-cell.scss";
 import type { TableSortBy, TableSortParams } from "./table";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, CSSProperties } from "react";
 import { autobind, cssNames, displayBooleans } from "../../utils";
 import { Icon } from "../icon";
 import { Checkbox } from "../checkbox";
+import { ResizeDirection, ResizeSide, ResizeGrowthDirection, ResizingAnchor } from "../resizing-anchor";
 
 export type TableCellElem = React.ReactElement<TableCellProps>;
 
@@ -16,7 +17,12 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   isChecked?: boolean; // mark checkbox as checked or not
   renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
   sortBy?: TableSortBy; // column name, must be same as key in sortable object <Table sortable={}/>
-  showWithColumn?: string // id of the column which follow same visibility rules
+  showWithColumn?: string
+  style?: CSSProperties;
+  isResizable?: boolean;
+  getCurrentExtent?: () => number;
+  onResize?: (newExtent: number) => void;
+  onResizeStop?: () => void;
   _sorting?: Partial<TableSortParams>; // <Table> sorting state, don't use this prop outside (!)
   _sort?(sortBy: TableSortBy): void; // <Table> sort function, don't use this prop outside (!)
   _nowrap?: boolean; // indicator, might come from parent <TableHead>, don't use this prop outside (!)
@@ -64,8 +70,27 @@ export class TableCell extends React.Component<TableCellProps> {
     }
   }
 
+  renderResizingAnchor() {
+    const { onResize, onResizeStop, isResizable, getCurrentExtent } = this.props;
+
+    if(isResizable) {
+      return (
+        <ResizingAnchor
+          direction={ResizeDirection.HORIZONTAL}
+          placement={ResizeSide.TRAILING}
+          growthDirection={ResizeGrowthDirection.LEFT_TO_RIGHT}
+          getCurrentExtent={getCurrentExtent}
+          onDrag={onResize}
+          onEnd={onResizeStop}
+          minExtent={30}
+          maxExtent={900}
+        />
+      );
+    }
+  }
+
   render() {
-    const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, ...cellProps } = this.props;
+    const { onResize, onResizeStop, className, isResizable, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, ...cellProps } = this.props;
     const classNames = cssNames("TableCell", className, {
       checkbox,
       nowrap: _nowrap,
@@ -78,6 +103,7 @@ export class TableCell extends React.Component<TableCellProps> {
         {this.renderCheckbox()}
         {_nowrap ? <div className="content">{content}</div> : content}
         {this.renderSortIcon()}
+        {this.renderResizingAnchor()}
       </div>
     );
   }

@@ -3,6 +3,7 @@
   word-break: break-all;
   overflow: hidden;
   text-overflow: ellipsis;
+  position: relative;
 
   &.checkbox {
     display: flex;

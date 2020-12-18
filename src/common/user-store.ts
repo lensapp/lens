@@ -28,7 +28,8 @@ export interface UserPreferences {
   downloadBinariesPath?: string;
   kubectlBinariesPath?: string;
   openAtLogin?: boolean;
-  hiddenTableColumns?: Record<string, string[]>
+
+  storeTableConfig?: Record<string, Record<string, {width?:number, visible?:boolean, index?: number}>>;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
@@ -55,7 +56,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
     openAtLogin: false,
-    hiddenTableColumns: {},
+    storeTableConfig: {},
   };
 
   protected async handleOnLoad() {
@@ -82,15 +83,6 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
-  }
-
-  @action
-  setHiddenTableColumns(tableId: string, names: Set<string> | string[]) {
-    this.preferences.hiddenTableColumns[tableId] = Array.from(names);
-  }
-
-  getHiddenTableColumns(tableId: string): Set<string> {
-    return new Set(this.preferences.hiddenTableColumns[tableId]);
   }
 
   @action
