@@ -267,8 +267,7 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   protected ensureObjectSelfLink(kubeObject: T): void {
-    if (!kubeObject.metadata?.selfLink) {
-      kubeObject.metadata ?? {};
+    if (!kubeObject.metadata.selfLink) {
       kubeObject.metadata.selfLink = this.generateSelfLink(kubeObject);
     }
   }
