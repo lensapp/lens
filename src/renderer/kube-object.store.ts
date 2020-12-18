@@ -195,10 +195,9 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     const items = this.items.toJS();
 
     for (const {type, object} of this.eventsBuffer.clear()) {
-      const { uid, selfLink } = object.metadata;
-      const index = items.findIndex(item => item.getId() === uid);
+      const index = items.findIndex(item => item.getId() === object.metadata?.uid);
       const item = items[index];
-      const api = apiManager.getApi(selfLink);
+      const api = apiManager.getApiByKind(object.kind, object.apiVersion);
 
       switch (type) {
         case "ADDED":
