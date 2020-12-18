@@ -79,6 +79,18 @@ export function forCluster<T extends KubeObject>(cluster: IKubeApiCluster, kubeC
   });
 }
 
+export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
+  if (!object.metadata.selfLink) {
+    object.metadata.selfLink = createKubeApiURL({
+      apiPrefix: api.apiPrefix,
+      apiVersion: api.apiVersionWithGroup,
+      resource: api.apiResource,
+      namespace: api.isNamespaced ? object.metadata.namespace : undefined,
+      name: object.metadata.name,
+    });
+  }
+}
+
 export class KubeApi<T extends KubeObject = any> {
   static parseApi = parseKubeApi;
 
@@ -256,29 +268,13 @@ export class KubeApi<T extends KubeObject = any> {
     return query;
   }
 
-  protected generateSelfLink(kubeObject: T): string {
-    return createKubeApiURL({
-      apiPrefix: this.apiPrefix,
-      apiVersion: this.apiVersionWithGroup,
-      resource: this.apiResource,
-      namespace: this.isNamespaced ? kubeObject.getNs() : undefined,
-      name: kubeObject.getName(),
-    });
-  }
-
-  protected ensureObjectSelfLink(kubeObject: T): void {
-    if (!kubeObject.metadata.selfLink) {
-      kubeObject.metadata.selfLink = this.generateSelfLink(kubeObject);
-    }
-  }
-
   protected parseResponse(data: KubeJsonApiData | KubeJsonApiData[] | KubeJsonApiDataList, namespace?: string): any {
     const KubeObjectConstructor = this.objectConstructor;
 
     if (KubeObject.isJsonApiData(data)) {
       const object = new KubeObjectConstructor(data);
 
-      this.ensureObjectSelfLink(object);
+      ensureObjectSelfLink(this, object);
 
       return object;
     }
@@ -297,7 +293,7 @@ export class KubeApi<T extends KubeObject = any> {
           ...item,
         });
 
-        this.ensureObjectSelfLink(object);
+        ensureObjectSelfLink(this, object);
 
         return object;
       });

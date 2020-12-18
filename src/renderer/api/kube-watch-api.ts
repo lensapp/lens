@@ -5,7 +5,7 @@ import { stringify } from "querystring";
 import { autobind, EventEmitter } from "../utils";
 import { KubeJsonApiData } from "./kube-json-api";
 import type { KubeObjectStore } from "../kube-object.store";
-import { KubeApi } from "./kube-api";
+import { ensureObjectSelfLink, KubeApi } from "./kube-api";
 import { apiManager } from "./api-manager";
 import { apiPrefix, isDevelopment } from "../../common/vars";
 import { getHostedCluster } from "../../common/cluster-store";
@@ -163,6 +163,8 @@ export class KubeWatchApi {
 
       api.setResourceVersion(namespace, resourceVersion);
       api.setResourceVersion("", resourceVersion);
+
+      ensureObjectSelfLink(api, evt.object);
 
       if (store == apiManager.getStore(api)) {
         callback(evt);
