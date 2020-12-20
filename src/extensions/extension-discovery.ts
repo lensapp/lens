@@ -170,7 +170,7 @@ export class ExtensionDiscovery {
           await this.removeSymlinkByManifestPath(manifestPath);
 
           // Install dependencies for the new extension
-          await extensionInstaller.installPackage(extension.absolutePath);
+          await this.installPackage(extension.absolutePath);
 
           this.extensions.set(extension.id, extension);
           logger.info(`${logModule} Added extension ${extension.manifest.name}`);
@@ -367,6 +367,10 @@ export class ExtensionDiscovery {
     });
 
     return await extensionInstaller.installPackages(packageJsonPath, packagesJson);
+  }
+
+  async installPackage(name: string) {
+    return extensionInstaller.installPackage(name);
   }
 
   async loadBundledExtensions() {
