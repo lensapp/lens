@@ -40,6 +40,10 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "mirantis", accuracy: 90};
     }
 
+    if (this.isAlibaba()) {
+      return { value: "alibaba", accuracy: 90};
+    }
+
     if (this.isMinikube()) {
       return { value: "minikube", accuracy: 80};
     }
@@ -125,6 +129,10 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isK3s() {
     return this.version.includes("+k3s");
+  }
+
+  protected isAlibaba() {
+    return this.version.includes("-aliyun");
   }
 
   protected async isOpenshift() {
