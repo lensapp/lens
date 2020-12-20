@@ -103,13 +103,15 @@ app.on("ready", async () => {
   }
 
   extensionLoader.init();
-
   extensionDiscovery.init();
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
 
   // call after windowManager to see splash earlier
   try {
     const extensions = await extensionDiscovery.load();
+
+    // Start watching after bundled extensions are loaded
+    extensionDiscovery.watchExtensions();
 
     // Subscribe to extensions that are copied or deleted to/from the extensions folder
     extensionDiscovery.events.on("add", (extension: InstalledExtension) => {
@@ -122,6 +124,8 @@ app.on("ready", async () => {
     extensionLoader.initExtensions(extensions);
   } catch (error) {
     dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
+    console.error(error);
+    console.trace();
   }
 
   setTimeout(() => {
