@@ -245,7 +245,6 @@ export class ExtensionLoader {
             const LensExtensionClass = this.requireExtension(extension);
 
             if (!LensExtensionClass) {
-              this.extensions.delete(extId);
               continue;
             }
 
