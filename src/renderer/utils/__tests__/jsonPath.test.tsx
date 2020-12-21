@@ -7,6 +7,12 @@ describe("parseJsonPath", () => {
     expect(res).toBe(".metadata.labels['kubesphere.io/alias-name']");
   });
 
+  test("should convert keys with escpaped charatecrs to use indexed notation", () => {
+    const res = parseJsonPath(".metadata.labels.kubesphere\\\"io/alias-name");
+
+    expect(res).toBe(".metadata.labels['kubesphere\"io/alias-name']");
+  });
+
   test("should convert '-' to use indexed notation", () => {
     const res = parseJsonPath(".metadata.labels.alias-name");
 
