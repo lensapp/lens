@@ -13,6 +13,7 @@ import { crdStore } from "./crd.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { Input } from "../input";
 import { AdditionalPrinterColumnsV1, CustomResourceDefinition } from "../../api/endpoints/crd.api";
+import { parseJsonPath } from "../../utils/jsonPath";
 
 interface Props extends KubeObjectDetailsProps<CustomResourceDefinition> {
 }
@@ -46,7 +47,7 @@ export class CrdResourceDetails extends React.Component<Props> {
   renderAdditionalColumns(crd: CustomResourceDefinition, columns: AdditionalPrinterColumnsV1[]) {
     return columns.map(({ name, jsonPath: jp }) => (
       <DrawerItem key={name} name={name} renderBoolean>
-        {convertSpecValue(jsonPath.value(crd, jp.slice(1)))}
+        {convertSpecValue(jsonPath.value(crd, parseJsonPath(jp.slice(1))))}
       </DrawerItem>
     ));
   }
