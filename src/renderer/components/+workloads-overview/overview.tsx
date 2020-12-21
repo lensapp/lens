@@ -14,7 +14,6 @@ import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import { Spinner } from "../spinner";
 import { Events } from "../+events";
 import { KubeObjectStore } from "../../kube-object.store";
 import { isAllowedResource } from "../../../common/rbac";
@@ -24,7 +23,6 @@ interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 
 @observer
 export class WorkloadsOverview extends React.Component<Props> {
-  @observable isReady = false;
   @observable isUnmounting = false;
 
   async componentDidMount() {
@@ -61,9 +59,10 @@ export class WorkloadsOverview extends React.Component<Props> {
     if (isAllowedResource("events")) {
       stores.push(eventStore);
     }
-    this.isReady = stores.every(store => store.isLoaded);
-    await Promise.all(stores.map(store => store.loadAll()));
-    this.isReady = true;
+
+    for (const store of stores) {
+      await store.loadAll();
+    }
     const unsubscribeList = stores.map(store => store.subscribe());
 
     await when(() => this.isUnmounting);
@@ -74,11 +73,7 @@ export class WorkloadsOverview extends React.Component<Props> {
     this.isUnmounting = true;
   }
 
-  renderContents() {
-    if (!this.isReady) {
-      return <Spinner center/>;
-    }
-
+  get contents() {
     return (
       <>
         <OverviewStatuses/>
@@ -94,7 +89,7 @@ export class WorkloadsOverview extends React.Component<Props> {
   render() {
     return (
       <div className="WorkloadsOverview flex column gaps">
-        {this.renderContents()}
+        {this.contents}
       </div>
     );
   }
