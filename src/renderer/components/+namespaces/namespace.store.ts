@@ -43,10 +43,10 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   subscribe(apis = [this.api]) {
-    const { allowedNamespaces } = getHostedCluster();
+    const { accessibleNamespaces } = getHostedCluster();
 
     // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
-    if (allowedNamespaces.length > 0) {
+    if (accessibleNamespaces.length > 0) {
       return () => { return; };
     }
 
