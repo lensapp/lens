@@ -31,10 +31,6 @@ export async function bootstrap(App: AppComponent) {
   // Register additional store listeners
   clusterStore.registerIpcListener();
 
-  if (process.isMainFrame) {
-    notificationsStore.registerIpcListener();
-  }
-
   // init app's dependencies if any
   if (App.init) {
     await App.init();

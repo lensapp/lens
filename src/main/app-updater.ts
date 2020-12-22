@@ -1,6 +1,4 @@
 import { autoUpdater, UpdateInfo } from "electron-updater";
-import { autorun } from "mobx";
-import { userStore } from "../common/user-store";
 import logger from "./logger";
 import dateFormat from "dateformat";
 import { broadcastIpc, IpcChannel, NotificationChannelAdd, NotificationChannelPrefix } from "../common/ipc";
@@ -91,7 +89,7 @@ async function autoUpdateCheck(args: UpdateInfo): Promise<void> {
             }
           },
           {
-            label: "Yes, later",
+            label: "Yes, on quit",
             backchannel: yesLaterChannel,
             style: {
               background: "green",
@@ -120,16 +118,6 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
   }
 
   autoUpdater.logger = logger;
-  autoUpdater.autoInstallOnAppQuit = false;
-
-  /**
-   * GC saftey: This function's lifetime is the lifetime of the application.
-   *            So no need to call the disposer.
-   */
-  autorun(() => {
-    autoUpdater.autoDownload = userStore.preferences.allowAutoUpdates;
-    autoUpdater.allowPrerelease = userStore.preferences.allowPrereleaseVersions;
-  });
 
   autoUpdater
     .on("update-available", async (args: UpdateInfo) => {
@@ -146,21 +134,15 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
           }]
         });
 
-        const version = new SemVer(args.version);
-
-        if (userStore.preferences.allowAutoUpdates && version.prerelease !== null) {
-          // don't auto update to pre-release versions.
-          await autoUpdateNow();
-        } else {
-          await autoUpdateCheck(args);
-        }
+        await autoUpdateCheck(args);
       } catch (error) {
         logger.error("[UPDATE CHECKER]: notification failed", { error: String(error) })
       }
     })
-    .on("update-not-available", () => {
+    .on("update-not-available", (args: UpdateInfo) => {
       try {
-        const stream = userStore.preferences.allowPrereleaseVersions ? "prerelease" : "stable";
+        const version = new SemVer(args.version);
+        const stream = version.prerelease !== null ? "prerelease" : "stable";
         const body = `Lens is running the latest ${stream} version.`;
         broadcastIpc({
           channel: NotificationChannelAdd,

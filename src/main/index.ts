@@ -76,8 +76,7 @@ async function main() {
 
   /**
    * This depends on:
-   * 1. userStore: it reads the user's auto update settings
-   * 2. windowManager: it will send IPC to the main window for notifications
+   * 1. windowManager: it will send IPC to the main window for notifications
    */
   startUpdateChecking();
 }

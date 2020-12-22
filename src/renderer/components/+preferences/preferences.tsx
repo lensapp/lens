@@ -194,24 +194,6 @@ export class Preferences extends React.Component {
           <small className="hint">
             <Trans>Telemetry & usage data is collected to continuously improve the Lens experience.</Trans>
           </small>
-
-          <h2><Trans>Updates</Trans></h2>
-          <Checkbox
-            label={<Trans>Allow auto updates</Trans>}
-            value={preferences.allowAutoUpdates}
-            onChange={v => preferences.allowAutoUpdates = v}
-          />
-          <small className="hint">
-            <Trans>Allow Lens to auto update itself to the latest version. Lens checks on startup and then once a day.</Trans>
-          </small>
-          <Checkbox
-            label={<Trans>Allow pre-release versions of Lens</Trans>}
-            value={preferences.allowPrereleaseVersions}
-            onChange={v => preferences.allowPrereleaseVersions = v}
-          />
-          <small className="hint">
-            <Trans>Allow upgrading Lens to pre-release versions. This means that the update checker will ask about pre release versions but won't auto upgrade to them.</Trans>
-          </small>
         </WizardLayout>
       </div>
     );
