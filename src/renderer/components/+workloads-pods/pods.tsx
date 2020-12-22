@@ -10,7 +10,7 @@ import { volumeClaimStore } from "../+storage-volume-claims/volume-claim.store";
 import { IPodsRouteParams } from "../+workloads";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object";
-import { Pod } from "../../api/endpoints";
+import { nodesApi, Pod } from "../../api/endpoints";
 import { StatusBrick } from "../status-brick";
 import { cssNames, stopPropagation } from "../../utils";
 import { getDetailsUrl } from "../../navigation";
@@ -19,6 +19,7 @@ import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { Badge } from "../badge";
 
 
 enum sortBy {
@@ -28,6 +29,7 @@ enum sortBy {
   restarts = "restarts",
   age = "age",
   qos = "qos",
+  node = "node",
   owners = "owners",
   status = "status",
 }
@@ -81,6 +83,7 @@ export class Pods extends React.Component<Props> {
           [sortBy.restarts]: (pod: Pod) => pod.getRestartsCount(),
           [sortBy.owners]: (pod: Pod) => pod.getOwnerRefs().map(ref => ref.kind),
           [sortBy.qos]: (pod: Pod) => pod.getQosClass(),
+          [sortBy.node]: (pod: Pod) => pod.getNodeName(),
           [sortBy.age]: (pod: Pod) => pod.metadata.creationTimestamp,
           [sortBy.status]: (pod: Pod) => pod.getStatusMessage(),
         }}
@@ -88,6 +91,7 @@ export class Pods extends React.Component<Props> {
           (pod: Pod) => pod.getSearchFields(),
           (pod: Pod) => pod.getStatusMessage(),
           (pod: Pod) => pod.status.podIP,
+          (pod: Pod) => pod.getNodeName(),
         ]}
         renderHeaderTitle={<Trans>Pods</Trans>}
         renderTableHeader={[
@@ -97,12 +101,13 @@ export class Pods extends React.Component<Props> {
           { title: <Trans>Containers</Trans>, className: "containers", sortBy: sortBy.containers },
           { title: <Trans>Restarts</Trans>, className: "restarts", sortBy: sortBy.restarts },
           { title: <Trans>Controlled By</Trans>, className: "owners", sortBy: sortBy.owners },
+          { title: <Trans>Node</Trans>, className: "node", sortBy: sortBy.node },
           { title: <Trans>QoS</Trans>, className: "qos", sortBy: sortBy.qos },
           { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
           { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
         ]}
         renderTableContents={(pod: Pod) => [
-          pod.getName(),
+          <Badge flat key="name" label={pod.getName()} tooltip={pod.getName()} />,
           <KubeObjectStatusIcon key="icon" object={pod} />,
           pod.getNs(),
           this.renderContainersStatus(pod),
@@ -112,11 +117,20 @@ export class Pods extends React.Component<Props> {
             const detailsLink = getDetailsUrl(lookupApiLink(ref, pod));
 
             return (
-              <Link key={name} to={detailsLink} className="owner" onClick={stopPropagation}>
-                {kind}
-              </Link>
+              <Badge flat key={name} className="owner" tooltip={name}>
+                <Link to={detailsLink} onClick={stopPropagation}>
+                  {kind}
+                </Link>
+              </Badge>
             );
           }),
+          pod.getNodeName() ?
+            <Badge flat key="node" className="node" tooltip={pod.getNodeName()}>
+              <Link to={getDetailsUrl(nodesApi.getUrl({ name: pod.getNodeName() }))} onClick={stopPropagation}>
+                {pod.getNodeName()}
+              </Link>
+            </Badge>
+            : "",
           pod.getQosClass(),
           pod.getAge(),
           { title: pod.getStatusMessage(), className: kebabCase(pod.getStatusMessage()) }
