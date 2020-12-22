@@ -192,7 +192,7 @@ export class ExtensionDiscovery {
     const extensionFolderName = path.basename(filePath);
 
     if (path.relative(this.localFolderPath, filePath) === extensionFolderName) {
-      const extension = Array.from(this.extensions.values()).find((extension) => path.dirname(extension.absolutePath) === path.dirname(filePath));
+      const extension = Array.from(this.extensions.values()).find((extension) => extension.absolutePath === filePath);
 
       if (extension) {
         const extensionName = extension.manifest.name;
