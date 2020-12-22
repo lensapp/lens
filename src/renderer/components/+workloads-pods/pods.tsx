@@ -19,7 +19,7 @@ import startCase from "lodash/startCase";
 import kebabCase from "lodash/kebabCase";
 import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
-import { Span } from "../span";
+import { Badge } from "../badge";
 
 
 enum sortBy {
@@ -107,7 +107,7 @@ export class Pods extends React.Component<Props> {
           { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
         ]}
         renderTableContents={(pod: Pod) => [
-          <Span key="name" label={pod.getName()} tooltip={pod.getName()}></Span>,
+          <Badge flat key="name" label={pod.getName()} tooltip={pod.getName()} />,
           <KubeObjectStatusIcon key="icon" object={pod} />,
           pod.getNs(),
           this.renderContainersStatus(pod),
@@ -117,19 +117,19 @@ export class Pods extends React.Component<Props> {
             const detailsLink = getDetailsUrl(lookupApiLink(ref, pod));
 
             return (
-              <Span key={name} className="owner"  tooltip={name}>
+              <Badge flat key={name} className="owner" tooltip={name}>
                 <Link to={detailsLink} onClick={stopPropagation}>
                   {kind}
                 </Link>
-              </Span>
+              </Badge>
             );
           }),
           pod.getNodeName() ?
-            <Span key="node" className="node" tooltip={pod.getNodeName()}>
+            <Badge flat key="node" className="node" tooltip={pod.getNodeName()}>
               <Link to={getDetailsUrl(nodesApi.getUrl({ name: pod.getNodeName() }))} onClick={stopPropagation}>
                 {pod.getNodeName()}
               </Link>
-            </Span>
+            </Badge>
             : "",
           pod.getQosClass(),
           pod.getAge(),
