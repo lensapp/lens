@@ -37,7 +37,7 @@ export interface MainNotification {
   closeChannel?: IpcChannel;
 }
 
-function renderButtons(id: IpcChannel, buttons?: MainNotification["buttons"]): React.ReactNode {
+function RenderButtons({ id, buttons }: { id: IpcChannel, buttons?: MainNotification["buttons"] }) {
   if (!buttons) {
     return null;
   }
@@ -48,7 +48,6 @@ function renderButtons(id: IpcChannel, buttons?: MainNotification["buttons"]): R
       <div className="flex row align-right box grow">
         {buttons.map(({ backchannel, ...props}) => (
           <Button {...props} onClick={() => {
-            console.log(`sending to ${backchannel}`)
             ipcRenderer.send(backchannel);
             notificationsStore.remove(id);
           }} />
@@ -67,14 +66,13 @@ export class NotificationsStore {
   registerIpcListener(): void {
     logger.info(`[NOTIFICATION-STORE] start to listen for notifications requests from main`);
     ipcRenderer.on(NotificationChannelAdd, (event, model: MainNotification) => {
-      console.log(model);
       const id = uniqueId("notification_");
       this.add({
         message: (
           <>
             <b>{model.title}</b>
             <p>{model.body}</p>
-            {renderButtons(id, model.buttons)}
+            <RenderButtons id={id} buttons={model.buttons}/>
           </>
         ),
         id,

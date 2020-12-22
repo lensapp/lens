@@ -74,11 +74,7 @@ async function main() {
   // create window manager and open app
   windowManager = new WindowManager(proxyPort);
 
-  /**
-   * This depends on:
-   * 1. windowManager: it will send IPC to the main window for notifications
-   */
-  startUpdateChecking();
+  startUpdateChecking(windowManager);
 }
 
 app.on("ready", main);

@@ -5,6 +5,7 @@ import { ipcMain } from "electron";
 import { isDevelopment } from "../common/vars";
 import { SemVer } from "semver";
 import moment from "moment";
+import { WindowManager } from "./window-manager";
 
 function delay(duration: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, duration));
@@ -20,7 +21,7 @@ class NotificationBackchannel {
 
 const title = "Lens Updater";
 
-async function autoUpdateCheck(args: UpdateInfo): Promise<void> {
+async function autoUpdateCheck(windowManager: WindowManager): Promise<void> {
   return new Promise(async resolve => {
     const body = "Install and restart Lens?";
     const yesNowChannel = NotificationBackchannel.nextId();
@@ -55,8 +56,7 @@ async function autoUpdateCheck(args: UpdateInfo): Promise<void> {
         resolve();
       });
 
-    broadcastIpc({
-      channel: NotificationChannelAdd,
+    windowManager.mainView.webContents.send(NotificationChannelAdd, {
       args: [{
         title,
         body,
@@ -88,7 +88,7 @@ async function autoUpdateCheck(args: UpdateInfo): Promise<void> {
  * starts the automatic update checking
  * @param interval milliseconds between interval to check on, defaulkts to 24h
  */
-export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
+export function startUpdateChecking(windowManager: WindowManager, interval = 1000 * 60 * 60 * 24): void {
   if (isDevelopment) {
     return;
   }
@@ -100,8 +100,7 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
       try {
         const releaseDate = moment(args.releaseDate);
         const body = `Version ${args.version} was release on ${releaseDate.format("dddd, mmmm dS, yyyy")}.`;
-        broadcastIpc({
-          channel: NotificationChannelAdd,
+        windowManager.mainView.webContents.send(NotificationChannelAdd, {
           args: [{
             title,
             body,
@@ -110,7 +109,7 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
           }]
         });
 
-        await autoUpdateCheck(args);
+        await autoUpdateCheck(windowManager);
       } catch (error) {
         logger.error("[UPDATE CHECKER]: notification failed", { error: String(error) })
       }
@@ -120,8 +119,7 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
         const version = new SemVer(args.version);
         const stream = version.prerelease === null ? "stable" : "prerelease";
         const body = `Lens is running the latest ${stream} version.`;
-        broadcastIpc({
-          channel: NotificationChannelAdd,
+        windowManager.mainView.webContents.send(NotificationChannelAdd, {
           args: [{
             title,
             body,

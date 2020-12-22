@@ -7,7 +7,7 @@ import { initMenu } from "./menu";
 import { tracker } from "../common/tracker";
 
 export class WindowManager {
-  protected mainView: BrowserWindow;
+  public readonly mainView: BrowserWindow;
   protected splashWindow: BrowserWindow;
   protected windowState: windowStateKeeper.State;
 
