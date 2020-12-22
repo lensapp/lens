@@ -5,7 +5,7 @@ import AnsiUp from "ansi_up";
 import DOMPurify from "dompurify";
 import debounce from "lodash/debounce";
 import { Trans } from "@lingui/macro";
-import { action, observable } from "mobx";
+import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Align, ListOnScrollProps } from "react-window";
 
@@ -15,7 +15,7 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import { VirtualList } from "../virtual-list";
-import { logRange } from "./pod-logs.store";
+import { podLogsStore } from "./pod-logs.store";
 
 interface Props {
   logs: string[]
@@ -50,7 +50,6 @@ export class PodLogList extends React.Component<Props> {
     if (logs == prevProps.logs || !this.virtualListDiv.current) return;
     const newLogsLoaded = prevProps.logs.length < logs.length;
     const scrolledToBeginning = this.virtualListDiv.current.scrollTop === 0;
-    const fewLogsLoaded = logs.length < logRange;
 
     if (this.isLastLineVisible) {
       this.scrollToBottom(); // Scroll down to keep user watching/reading experience
@@ -59,16 +58,31 @@ export class PodLogList extends React.Component<Props> {
     }
 
     if (scrolledToBeginning && newLogsLoaded) {
-      this.virtualListDiv.current.scrollTop = (logs.length - prevProps.logs.length) * this.lineHeight;
-    }
+      const firstLineContents = prevProps.logs[0];
+      const lineToScroll = this.props.logs.findIndex((value) => value == firstLineContents);
 
-    if (fewLogsLoaded) {
-      this.isJumpButtonVisible = false;
+      if (lineToScroll !== -1) {
+        this.scrollToItem(lineToScroll, "start");
+      }
     }
 
     if (!logs.length) {
       this.isLastLineVisible = false;
     }
+  }
+
+  /**
+   * Returns logs with or without timestamps regarding to showTimestamps prop
+   */
+  @computed
+  get logs() {
+    const showTimestamps = podLogsStore.getData(this.props.id).showTimestamps;
+
+    if (!showTimestamps) {
+      return podLogsStore.logsWithoutTimestamps;
+    }
+
+    return this.props.logs;
   }
 
   /**
@@ -137,7 +151,7 @@ export class PodLogList extends React.Component<Props> {
    */
   getLogRow = (rowIndex: number) => {
     const { searchQuery, isActiveOverlay } = searchStore;
-    const item = this.props.logs[rowIndex];
+    const item = this.logs[rowIndex];
     const contents: React.ReactElement[] = [];
     const ansiToHtml = (ansi: string) => DOMPurify.sanitize(colorConverter.ansi_to_html(ansi));
 
@@ -179,15 +193,15 @@ export class PodLogList extends React.Component<Props> {
   };
 
   render() {
-    const { logs, isLoading } = this.props;
-    const isInitLoading = isLoading && !logs.length;
-    const rowHeights = new Array(logs.length).fill(this.lineHeight);
+    const { isLoading } = this.props;
+    const isInitLoading = isLoading && !this.logs.length;
+    const rowHeights = new Array(this.logs.length).fill(this.lineHeight);
 
     if (isInitLoading) {
       return <Spinner center/>;
     }
 
-    if (!logs.length) {
+    if (!this.logs.length) {
       return (
         <div className="PodLogList flex box grow align-center justify-center">
           <Trans>There are no logs available for container</Trans>
@@ -198,7 +212,7 @@ export class PodLogList extends React.Component<Props> {
     return (
       <div className={cssNames("PodLogList flex", { isLoading })}>
         <VirtualList
-          items={logs}
+          items={this.logs}
           rowHeights={rowHeights}
           getRow={this.getLogRow}
           onScroll={this.onScroll}
