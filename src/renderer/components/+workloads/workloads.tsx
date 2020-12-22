@@ -6,7 +6,7 @@ import { Trans } from "@lingui/macro";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
 import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, replicaSetsRoute, replicaSetsURL, statefulSetsRoute, statefulSetsURL } from "./workloads.route";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { Pods } from "../+workloads-pods";
 import { Deployments } from "../+workloads-deployments";
 import { DaemonSets } from "../+workloads-daemonsets";
@@ -19,7 +19,7 @@ import { ReplicaSets } from "../+workloads-replicasets";
 @observer
 export class Workloads extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-    const query = namespaceStore.getContextParams();
+    const query = namespaceUrlParam.toObjectParam();
     const routes: TabLayoutRoute[] = [
       {
         title: <Trans>Overview</Trans>,

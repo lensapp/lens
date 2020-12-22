@@ -7,14 +7,14 @@ import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { PersistentVolumes, volumesRoute, volumesURL } from "../+storage-volumes";
 import { StorageClasses, storageClassesRoute, storageClassesURL } from "../+storage-classes";
 import { PersistentVolumeClaims, volumeClaimsRoute, volumeClaimsURL } from "../+storage-volume-claims";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { isAllowedResource } from "../../../common/rbac";
 
 @observer
 export class Storage extends React.Component {
   static get tabRoutes() {
     const tabRoutes: TabLayoutRoute[] = [];
-    const query = namespaceStore.getContextParams();
+    const query = namespaceUrlParam.toObjectParam();
 
     tabRoutes.push({
       title: <Trans>Persistent Volume Claims</Trans>,

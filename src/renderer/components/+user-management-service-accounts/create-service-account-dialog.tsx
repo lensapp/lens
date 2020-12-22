@@ -13,7 +13,7 @@ import { Input } from "../input";
 import { systemName } from "../input/input_validators";
 import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Notifications } from "../notifications";
-import { showDetails } from "../../navigation";
+import { showDetails } from "../kube-object";
 
 interface Props extends Partial<DialogProps> {
 }

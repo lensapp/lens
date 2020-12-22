@@ -4,12 +4,12 @@ import { Trans } from "@lingui/macro";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { HelmCharts, helmChartsRoute, helmChartsURL } from "../+apps-helm-charts";
 import { HelmReleases, releaseRoute, releaseURL } from "../+apps-releases";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { namespaceUrlParam } from "../+namespaces/namespace.store";
 
 @observer
 export class Apps extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-    const query = namespaceStore.getContextParams();
+    const query = namespaceUrlParam.toObjectParam();
 
     return [
       {

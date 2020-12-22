@@ -10,13 +10,11 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { Link } from "react-router-dom";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { volumeClaimStore } from "./volume-claim.store";
-import { getDetailsUrl } from "../../navigation";
 import { ResourceMetrics } from "../resource-metrics";
 import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
-import { KubeObjectDetailsProps } from "../kube-object";
+import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-object";
 import { PersistentVolumeClaim } from "../../api/endpoints";
 import { _i18n } from "../../i18n";
-import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {

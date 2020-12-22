@@ -4,7 +4,7 @@ import { Trans } from "@lingui/macro";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { ConfigMaps, configMapsRoute, configMapsURL } from "../+config-maps";
 import { Secrets, secretsRoute, secretsURL } from "../+config-secrets";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { resourceQuotaRoute, ResourceQuotas, resourceQuotaURL } from "../+config-resource-quotas";
 import { pdbRoute, pdbURL, PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
 import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscalers";
@@ -13,7 +13,7 @@ import { isAllowedResource } from "../../../common/rbac";
 @observer
 export class Config extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-    const query = namespaceStore.getContextParams();
+    const query = namespaceUrlParam.toObjectParam();
     const routes: TabLayoutRoute[] = [];
 
     if (isAllowedResource("configmaps")) {

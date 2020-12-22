@@ -4,7 +4,7 @@ import { autobind, cssNames } from "../../utils";
 import { KubeObject } from "../../api/kube-object";
 import { editResourceTab } from "../dock/edit-resource.store";
 import { MenuActions, MenuActionsProps } from "../menu/menu-actions";
-import { hideDetails } from "../../navigation";
+import { hideDetails } from "./kube-object-details";
 import { apiManager } from "../../api/api-manager";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 

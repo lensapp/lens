@@ -7,7 +7,7 @@ import { Roles } from "../+user-management-roles";
 import { RoleBindings } from "../+user-management-roles-bindings";
 import { ServiceAccounts } from "../+user-management-service-accounts";
 import { roleBindingsRoute, roleBindingsURL, rolesRoute, rolesURL, serviceAccountsRoute, serviceAccountsURL } from "./user-management.route";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { PodSecurityPolicies, podSecurityPoliciesRoute, podSecurityPoliciesURL } from "../+pod-security-policies";
 import { isAllowedResource } from "../../../common/rbac";
 
@@ -15,7 +15,7 @@ import { isAllowedResource } from "../../../common/rbac";
 export class UserManagement extends React.Component {
   static get tabRoutes() {
     const tabRoutes: TabLayoutRoute[] = [];
-    const query = namespaceStore.getContextParams();
+    const query = namespaceUrlParam.toObjectParam();
 
     tabRoutes.push(
       {
