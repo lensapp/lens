@@ -27,6 +27,8 @@
     "buttonPrimaryBackground": "#3d90ce",
     "buttonDefaultBackground": "#414448",
     "buttonAccentBackground": "#e85555",
+    "buttonActionBackground": "#1dcc1f",
+    "buttonSecondaryBackground": "#edd70c",
     "buttonDisabledBackground": "#808080",
     "tableBgcStripe": "#f8f8f8",
     "tableBgcSelected": "#f4f5f5",

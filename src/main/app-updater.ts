@@ -1,10 +1,10 @@
 import { autoUpdater, UpdateInfo } from "electron-updater";
 import logger from "./logger";
-import dateFormat from "dateformat";
 import { broadcastIpc, IpcChannel, NotificationChannelAdd, NotificationChannelPrefix } from "../common/ipc";
 import { ipcMain } from "electron";
 import { isDevelopment } from "../common/vars";
 import { SemVer } from "semver";
+import moment from "moment";
 
 function delay(duration: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, duration));
@@ -19,24 +19,6 @@ class NotificationBackchannel {
 }
 
 const title = "Lens Updater";
-
-async function autoUpdateNow(): Promise<void> {
-  const body = "Downloading and installing update.";
-  broadcastIpc({
-    channel: NotificationChannelAdd,
-    args: [{
-      title,
-      body,
-      status: "info",
-      timeout: 5000,
-    }]
-  })
-
-  logger.info("[UPDATE CHECKER]: update downloaded started");
-  await autoUpdater.downloadUpdate();
-  logger.info("[UPDATE CHECKER]: update downloadeded");
-  autoUpdater.quitAndInstall();
-}
 
 async function autoUpdateCheck(args: UpdateInfo): Promise<void> {
   return new Promise(async resolve => {
@@ -83,23 +65,17 @@ async function autoUpdateCheck(args: UpdateInfo): Promise<void> {
           {
             label: "Yes, now",
             backchannel: yesNowChannel,
-            style: {
-              background: "green",
-              marginRight: "10px"
-            }
+            action: true,
           },
           {
             label: "Yes, on quit",
             backchannel: yesLaterChannel,
-            style: {
-              background: "green",
-              marginRight: "10px"
-            }
+            action: true,
           },
           {
             label: "No",
             backchannel: noChannel,
-            accent: true
+            secondary: true
           }
         ],
         closeChannel: noChannel,
@@ -122,8 +98,8 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
   autoUpdater
     .on("update-available", async (args: UpdateInfo) => {
       try {
-        const releaseDate = new Date(args.releaseDate);
-        const body = `Version ${args.version} was release on ${dateFormat(releaseDate, "dddd, mmmm dS, yyyy")}.`;
+        const releaseDate = moment(args.releaseDate);
+        const body = `Version ${args.version} was release on ${releaseDate.format("dddd, mmmm dS, yyyy")}.`;
         broadcastIpc({
           channel: NotificationChannelAdd,
           args: [{
@@ -142,7 +118,7 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
     .on("update-not-available", (args: UpdateInfo) => {
       try {
         const version = new SemVer(args.version);
-        const stream = version.prerelease !== null ? "prerelease" : "stable";
+        const stream = version.prerelease === null ? "stable" : "prerelease";
         const body = `Lens is running the latest ${stream} version.`;
         broadcastIpc({
           channel: NotificationChannelAdd,

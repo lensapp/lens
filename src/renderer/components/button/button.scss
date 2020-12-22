@@ -20,8 +20,17 @@
   &.primary {
     background: $buttonPrimaryBackground;
   }
+
   &.accent {
     background: $buttonAccentBackground;
+  }
+
+  &.action {
+    background: $buttonActionBackground;
+  }
+
+  &.secondary {
+    background: $buttonSecondaryBackground;
   }
 
   &.plain {
