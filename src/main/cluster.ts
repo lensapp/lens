@@ -15,6 +15,7 @@ import { apiResources, KubeApiResource } from "../common/rbac";
 import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
+import plimit from "p-limit";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -647,23 +648,27 @@ export class Cluster implements ClusterModel, ClusterState {
       if (!this.allowedNamespaces.length) {
         return [];
       }
-
       const resources = apiResources.filter((resource) => this.resourceAccessStatuses.get(resource) === undefined);
+      const apiLimit = plimit(5); // 5 concurrent api requests
+      const requests = [];
 
       for (const apiResource of resources) {
-        for (const namespace of this.allowedNamespaces.slice(0, 10)) {
-          if (!this.resourceAccessStatuses.get(apiResource)) {
-            const result = await this.canI({
-              resource: apiResource.resource,
-              group: apiResource.group,
-              verb: "list",
-              namespace
-            });
+        requests.push(apiLimit(async () => {
+          for (const namespace of this.allowedNamespaces.slice(0, 10)) {
+            if (!this.resourceAccessStatuses.get(apiResource)) {
+              const result = await this.canI({
+                resource: apiResource.resource,
+                group: apiResource.group,
+                verb: "list",
+                namespace
+              });
 
-            this.resourceAccessStatuses.set(apiResource, result);
+              this.resourceAccessStatuses.set(apiResource, result);
+            }
           }
-        }
+        }));
       }
+      await Promise.all(requests);
 
       return apiResources
         .filter((resource) => this.resourceAccessStatuses.get(resource))
