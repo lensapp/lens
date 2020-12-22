@@ -16,8 +16,10 @@
     "name": "Mirantis, Inc.",
     "email": "info@k8slens.dev"
   },
-  "devDependencies": {
-    "@types/node": "^14.14.6",
+  "dependencies": {
+    "@types/node": "*",
+    "@types/react-select": "*",
+    "@material-ui/core": "*",
     "conf": "^7.0.1"
   }
 }
