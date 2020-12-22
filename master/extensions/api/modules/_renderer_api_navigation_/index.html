@@ -822,6 +822,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#classes" class="md-nav__link">
+    Classes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#interfaces" class="md-nav__link">
     Interfaces
   </a>
@@ -849,6 +856,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#createpageparam" class="md-nav__link">
+    createPageParam
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#getdetailsurl" class="md-nav__link">
     getDetailsUrl
   </a>
@@ -858,6 +872,13 @@
           <li class="md-nav__item">
   <a href="#hidedetails" class="md-nav__link">
     hideDetails
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#isactiveroute" class="md-nav__link">
+    isActiveRoute
   </a>
   
 </li>
@@ -897,21 +918,30 @@
                 
                 <h1 id="module-renderer-apinavigation">Module: "renderer-api/navigation"<a class="headerlink" href="#module-renderer-apinavigation" title="Permanent link">#</a></h1>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
+<h3 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="../../classes/_renderer_api_navigation_.pageparam/">PageParam</a></li>
+</ul>
 <h3 id="interfaces">Interfaces<a class="headerlink" href="#interfaces" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="../../interfaces/_renderer_api_navigation_.iurlparams/">IURLParams</a></li>
+<li><a href="../../interfaces/_renderer_api_navigation_.pageparaminit/">PageParamInit</a></li>
 </ul>
 <h3 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">#</a></h3>
 <ul>
+<li><a href="./#createpageparam">createPageParam</a></li>
 <li><a href="./#getdetailsurl">getDetailsUrl</a></li>
 <li><a href="./#hidedetails">hideDetails</a></li>
+<li><a href="./#isactiveroute">isActiveRoute</a></li>
 <li><a href="./#navigate">navigate</a></li>
 <li><a href="./#showdetails">showDetails</a></li>
 </ul>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">#</a></h2>
-<h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
-<p>▸ <strong>getDetailsUrl</strong>(<code>details</code>: string): <em>string</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/11c611dab/src/renderer/navigation.ts#L71">src/renderer/navigation.ts:71</a></em></p>
+<h3 id="createpageparam">createPageParam<a class="headerlink" href="#createpageparam" title="Permanent link">#</a></h3>
+<p>▸ <strong>createPageParam</strong>‹<strong>V</strong>›(<code>init</code>: <a href="../../interfaces/_renderer_api_navigation_.pageparaminit/">PageParamInit</a>‹V›): <em><a href="../../classes/_renderer_api_navigation_.pageparam/">PageParam</a>‹V›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/be4e1aa15/src/extensions/renderer-api/navigation.ts#L10">src/extensions/renderer-api/navigation.ts:10</a></em></p>
+<p><strong>Type parameters:</strong></p>
+<p>▪ <strong>V</strong></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -922,8 +952,35 @@
 </thead>
 <tbody>
 <tr>
+<td><code>init</code></td>
+<td><a href="../../interfaces/_renderer_api_navigation_.pageparaminit/">PageParamInit</a>‹V›</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em><a href="../../classes/_renderer_api_navigation_.pageparam/">PageParam</a>‹V›</em></p>
+<hr />
+<h3 id="getdetailsurl">getDetailsUrl<a class="headerlink" href="#getdetailsurl" title="Permanent link">#</a></h3>
+<p>▸ <strong>getDetailsUrl</strong>(<code>details</code>: string, <code>resetSelected</code>: boolean): <em>string</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/be4e1aa15/src/renderer/components/kube-object/kube-object-details.tsx#L40">src/renderer/components/kube-object/kube-object-details.tsx:40</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td><code>details</code></td>
 <td>string</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>resetSelected</code></td>
+<td>boolean</td>
+<td>false</td>
 </tr>
 </tbody>
 </table>
@@ -931,14 +988,32 @@
 <hr />
 <h3 id="hidedetails">hideDetails<a class="headerlink" href="#hidedetails" title="Permanent link">#</a></h3>
 <p>▸ <strong>hideDetails</strong>(): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/11c611dab/src/renderer/navigation.ts#L93">src/renderer/navigation.ts:93</a></em></p>
-<p>Hide details. Works only in renderer.</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/be4e1aa15/src/renderer/components/kube-object/kube-object-details.tsx#L36">src/renderer/components/kube-object/kube-object-details.tsx:36</a></em></p>
 <p><strong>Returns:</strong> <em>void</em></p>
+<hr />
+<h3 id="isactiveroute">isActiveRoute<a class="headerlink" href="#isactiveroute" title="Permanent link">#</a></h3>
+<p>▸ <strong>isActiveRoute</strong>(<code>route</code>: string | string[] | RouteProps): <em>boolean</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/be4e1aa15/src/renderer/navigation/helpers.ts#L25">src/renderer/navigation/helpers.ts:25</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>route</code></td>
+<td>string &#124; string[] &#124; RouteProps</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>boolean</em></p>
 <hr />
 <h3 id="navigate">navigate<a class="headerlink" href="#navigate" title="Permanent link">#</a></h3>
 <p>▸ <strong>navigate</strong>(<code>location</code>: LocationDescriptor): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/11c611dab/src/renderer/navigation.ts#L17">src/renderer/navigation.ts:17</a></em></p>
-<p>Navigate to a location. Works only in renderer.</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/be4e1aa15/src/renderer/navigation/helpers.ts#L7">src/renderer/navigation/helpers.ts:7</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -957,9 +1032,8 @@
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="showdetails">showDetails<a class="headerlink" href="#showdetails" title="Permanent link">#</a></h3>
-<p>▸ <strong>showDetails</strong>(<code>path</code>: string, <code>resetSelected</code>: boolean): <em>void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/11c611dab/src/renderer/navigation.ts#L83">src/renderer/navigation.ts:83</a></em></p>
-<p>Show details. Works only in renderer.</p>
+<p>▸ <strong>showDetails</strong>(<code>details</code>: string, <code>resetSelected</code>: boolean): <em>void</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/be4e1aa15/src/renderer/components/kube-object/kube-object-details.tsx#L30">src/renderer/components/kube-object/kube-object-details.tsx:30</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -971,9 +1045,9 @@
 </thead>
 <tbody>
 <tr>
-<td><code>path</code></td>
+<td><code>details</code></td>
 <td>string</td>
-<td>-</td>
+<td>""</td>
 </tr>
 <tr>
 <td><code>resetSelected</code></td>
