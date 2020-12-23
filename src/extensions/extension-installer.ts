@@ -30,12 +30,49 @@ export class ExtensionInstaller {
     return __non_webpack_require__.resolve("npm/bin/npm-cli");
   }
 
-  installDependencies(): Promise<void> {
-    return new Promise((resolve, reject) => {
+  /**
+   * Write package.json to the file system and execute npm install for it.
+   */
+  async installPackages(packageJsonPath: string, packagesJson: PackageJson): Promise<void> {
+    // Mutual exclusion to install packages in sequence
+    await this.installLock.acquireAsync();
+
+    try {
+      // Write the package.json which will be installed in .installDependencies()
+      await fs.writeFile(path.join(packageJsonPath), JSON.stringify(packagesJson, null, 2), {
+        mode: 0o600
+      });
+
       logger.info(`${logModule} installing dependencies at ${extensionPackagesRoot()}`);
-      const child = child_process.fork(this.npmPath, ["install", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock"], {
+      await this.npm(["install", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock"]);
+      logger.info(`${logModule} dependencies installed at ${extensionPackagesRoot()}`);
+    } finally {
+      this.installLock.release();
+    }
+  }
+
+  /**
+   * Install single package using npm
+   */
+  async installPackage(name: string): Promise<void> {
+    // Mutual exclusion to install packages in sequence
+    await this.installLock.acquireAsync();
+
+    try {
+      logger.info(`${logModule} installing package from ${name} to ${extensionPackagesRoot()}`);
+      await this.npm(["install", "--no-audit", "--only=prod", "--prefer-offline", "--no-package-lock", "--no-save", name]);
+      logger.info(`${logModule} package ${name} installed to ${extensionPackagesRoot()}`);
+    } finally {
+      this.installLock.release();
+    }
+  }
+
+  private npm(args: string[]): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const child = child_process.fork(this.npmPath, args, {
         cwd: extensionPackagesRoot(),
-        silent: true
+        silent: true,
+        env: {}
       });
       let stderr = "";
 
@@ -55,25 +92,6 @@ export class ExtensionInstaller {
         reject(error);
       });
     });
-  }
-
-  /**
-   * Write package.json to the file system and execute npm install for it.
-   */
-  async installPackages(packageJsonPath: string, packagesJson: PackageJson): Promise<void> {
-    // Mutual exclusion to install packages in sequence
-    await this.installLock.acquireAsync();
-
-    try {
-    // Write the package.json which will be installed in .installDependencies()
-      await fs.writeFile(path.join(packageJsonPath), JSON.stringify(packagesJson, null, 2), {
-        mode: 0o600
-      });
-
-      await this.installDependencies();
-    } finally {
-      this.installLock.release();
-    }
   }
 }
 
