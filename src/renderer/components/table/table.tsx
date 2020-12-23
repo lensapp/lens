@@ -1,18 +1,16 @@
 import "./table.scss";
 
 import React from "react";
+import { orderBy } from "lodash";
 import { observer } from "mobx-react";
-import { computed, observable } from "mobx";
+import { observable } from "mobx";
 import { autobind, cssNames, noop } from "../../utils";
 import { TableRow, TableRowElem, TableRowProps } from "./table-row";
 import { TableHead, TableHeadElem, TableHeadProps } from "./table-head";
 import { TableCellElem } from "./table-cell";
 import { VirtualList } from "../virtual-list";
-import { navigation, setQueryParams } from "../../navigation";
-import orderBy from "lodash/orderBy";
+import { createPageParam } from "../../navigation";
 import { ItemObject } from "../../item.store";
-
-// todo: refactor + decouple search from location
 
 export type TableSortBy = string;
 export type TableOrderBy = "asc" | "desc" | string;
@@ -43,6 +41,16 @@ export interface TableProps extends React.DOMAttributes<HTMLDivElement> {
   getTableRow?: (uid: string) => React.ReactElement<TableRowProps>;
 }
 
+export const sortByUrlParam = createPageParam({
+  name: "sort",
+  isSystem: true,
+});
+
+export const orderByUrlParam = createPageParam({
+  name: "order",
+  isSystem: true,
+});
+
 @observer
 export class Table extends React.Component<TableProps> {
   static defaultProps: TableProps = {
@@ -53,18 +61,13 @@ export class Table extends React.Component<TableProps> {
     sortSyncWithUrl: true,
   };
 
-  @observable sortParamsLocal = this.props.sortByDefault;
-
-  @computed get sortParams(): Partial<TableSortParams> {
-    if (this.props.sortSyncWithUrl) {
-      const sortBy = navigation.searchParams.get("sortBy");
-      const orderBy = navigation.searchParams.get("orderBy");
-
-      return { sortBy, orderBy };
-    }
-
-    return this.sortParamsLocal || {};
-  }
+  @observable sortParams: Partial<TableSortParams> = Object.assign(
+    this.props.sortSyncWithUrl ? {
+      sortBy: sortByUrlParam.get(),
+      orderBy: orderByUrlParam.get(),
+    } : {},
+    this.props.sortByDefault,
+  );
 
   renderHead() {
     const { sortable, children } = this.props;
@@ -101,29 +104,24 @@ export class Table extends React.Component<TableProps> {
   }
 
   getSorted(items: any[]) {
-    const { sortParams } = this;
-    const sortingCallback = this.props.sortable[sortParams.sortBy] || noop;
+    const { sortBy, orderBy: order } = this.sortParams;
+    const sortingCallback = this.props.sortable[sortBy] || noop;
 
-    return orderBy(
-      items,
-      sortingCallback,
-      sortParams.orderBy as any
-    );
+    return orderBy(items, sortingCallback, order as any);
   }
 
   @autobind()
-  protected onSort(params: TableSortParams) {
+  protected onSort({ sortBy, orderBy }: TableSortParams) {
+    this.sortParams = { sortBy, orderBy };
     const { sortSyncWithUrl, onSort } = this.props;
 
     if (sortSyncWithUrl) {
-      setQueryParams(params);
-    }
-    else {
-      this.sortParamsLocal = params;
+      sortByUrlParam.set(sortBy);
+      orderByUrlParam.set(orderBy);
     }
 
     if (onSort) {
-      onSort(params);
+      onSort({ sortBy, orderBy });
     }
   }
 

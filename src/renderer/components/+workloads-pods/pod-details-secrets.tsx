@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { autorun, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Pod, Secret, secretsApi } from "../../api/endpoints";
-import { getDetailsUrl } from "../../navigation";
+import { getDetailsUrl } from "../kube-object";
 
 interface Props {
   pod: Pod;

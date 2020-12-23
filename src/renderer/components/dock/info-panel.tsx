@@ -27,6 +27,7 @@ interface OptionalProps {
   showSubmitClose?: boolean;
   showInlineInfo?: boolean;
   showNotifications?: boolean;
+  showStatusPanel?: boolean;
 }
 
 @observer
@@ -38,6 +39,7 @@ export class InfoPanel extends Component<Props> {
     showSubmitClose: true,
     showInlineInfo: true,
     showNotifications: true,
+    showStatusPanel: true,
   };
 
   @observable error = "";
@@ -93,7 +95,7 @@ export class InfoPanel extends Component<Props> {
   }
 
   render() {
-    const { className, controls, submitLabel, disableSubmit, error, submittingMessage, showButtons, showSubmitClose } = this.props;
+    const { className, controls, submitLabel, disableSubmit, error, submittingMessage, showButtons, showSubmitClose, showStatusPanel } = this.props;
     const { submit, close, submitAndClose, waiting } = this;
     const isDisabled = !!(disableSubmit || waiting || error);
 
@@ -102,9 +104,11 @@ export class InfoPanel extends Component<Props> {
         <div className="controls">
           {controls}
         </div>
-        <div className="info flex gaps align-center">
-          {waiting ? <><Spinner /> {submittingMessage}</> : this.renderErrorIcon()}
-        </div>
+        {showStatusPanel && (
+          <div className="flex gaps align-center">
+            {waiting ? <><Spinner /> {submittingMessage}</> : this.renderErrorIcon()}
+          </div>
+        )}
         {showButtons && (
           <>
             <Button plain label={<Trans>Cancel</Trans>} onClick={close} />

@@ -8,7 +8,7 @@ Lens provides the full situational awareness for everything that runs in Kuberne
 
 The Lens open source project is backed by a number of Kubernetes and cloud native ecosystem pioneers. It's a standalone application for MacOS, Windows and Linux operating systems. Lens is 100% open source and free of charge for any purpose.
 
-[![Screenshot](.github/screenshot.png)](https://youtu.be/04v2ODsmtIs)
+[![Screenshot](.github/screenshot.png)](https://www.youtube.com/watch?v=eeDwdVXattc)
 
 ## What makes Lens special?
 

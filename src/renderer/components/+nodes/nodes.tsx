@@ -134,7 +134,7 @@ export class Nodes extends React.Component<Props> {
         <KubeObjectListLayout
           className="Nodes"
           store={nodesStore} isClusterScoped
-          isReady={nodesStore.isLoaded && nodesStore.metricsLoaded}
+          isReady={nodesStore.isLoaded}
           dependentStores={[podsStore]}
           isSelectable={false}
           sortingCallbacks={{

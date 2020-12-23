@@ -17,8 +17,8 @@ import { Icon } from "../icon";
 import { IKubeObjectMetadata } from "../../api/kube-object";
 import { base64 } from "../../utils";
 import { Notifications } from "../notifications";
-import { showDetails } from "../../navigation";
 import upperFirst from "lodash/upperFirst";
+import { showDetails } from "../kube-object";
 
 interface Props extends Partial<DialogProps> {
 }

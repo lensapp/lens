@@ -1,7 +1,7 @@
 import { computed, observable, reaction } from "mobx";
 import { autobind } from "../../utils";
-import { getSearch, setSearch } from "../../navigation";
 import { namespaceStore } from "../+namespaces/namespace.store";
+import { searchUrlParam } from "../input/search-input-url";
 
 export enum FilterType {
   SEARCH = "search",
@@ -54,8 +54,8 @@ export class PageFiltersStore {
 
   protected syncWithGlobalSearch() {
     const disposers = [
-      reaction(() => this.getValues(FilterType.SEARCH)[0], setSearch),
-      reaction(() => getSearch(), search => {
+      reaction(() => this.getValues(FilterType.SEARCH)[0], search => searchUrlParam.set(search)),
+      reaction(() => searchUrlParam.get(), search => {
         const filter = this.getByType(FilterType.SEARCH);
 
         if (filter) {

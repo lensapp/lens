@@ -1,29 +1,34 @@
 // Base class for extensions-api registries
 import { action, observable } from "mobx";
 import { LensExtension } from "../lens-extension";
-import { rectify } from "../../common/utils";
 
-export class BaseRegistry<T> {
-  private items = observable<T>([], { deep: false });
+export class BaseRegistry<T, I = T> {
+  private items = observable.map<T, I>();
 
-  getItems(): T[] {
-    return this.items.toJS();
+  getItems(): I[] {
+    return Array.from(this.items.values());
   }
 
-  add(items: T | T[], ext?: LensExtension): () => void; // allow method overloading with required "ext"
   @action
-  add(items: T | T[]) {
-    const itemArray = rectify(items);
+  add(items: T | T[], extension?: LensExtension) {
+    const itemArray = [items].flat() as T[];
 
-    this.items.push(...itemArray);
+    itemArray.forEach(item => {
+      this.items.set(item, this.getRegisteredItem(item, extension));
+    });
 
     return () => this.remove(...itemArray);
+  }
+
+  // eslint-disable-next-line unused-imports/no-unused-vars-ts
+  protected getRegisteredItem(item: T, extension?: LensExtension): I {
+    return item as any;
   }
 
   @action
   remove(...items: T[]) {
     items.forEach(item => {
-      this.items.remove(item); // works because of {deep: false};
+      this.items.delete(item);
     });
   }
 }

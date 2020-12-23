@@ -22,10 +22,9 @@ interface Props extends PodLogSearchProps {
 }
 
 export const PodLogControls = observer((props: Props) => {
-  const { tabData, save, reload, tabId, logs } = props;
+  const { tabData, save, reload, logs } = props;
   const { selectedContainer, showTimestamps, previous } = tabData;
-  const rawLogs = podLogsStore.logs.get(tabId) || [];
-  const since = rawLogs.length ? podLogsStore.getTimestamps(rawLogs[0]) : null;
+  const since = logs.length ? podLogsStore.getTimestamps(logs[0]) : null;
   const pod = new Pod(tabData.pod);
 
   const toggleTimestamps = () => {
@@ -39,8 +38,9 @@ export const PodLogControls = observer((props: Props) => {
 
   const downloadLogs = () => {
     const fileName = selectedContainer ? selectedContainer.name : pod.getName();
+    const logsToDownload = showTimestamps ? logs : podLogsStore.logsWithoutTimestamps;
 
-    saveFileDialog(`${fileName}.log`, logs.join("\n"), "text/plain");
+    saveFileDialog(`${fileName}.log`, logsToDownload.join("\n"), "text/plain");
   };
 
   const onContainerChange = (option: SelectOption) => {
@@ -118,7 +118,10 @@ export const PodLogControls = observer((props: Props) => {
           tooltip={_i18n._(t`Save`)}
           className="download-icon"
         />
-        <PodLogSearch {...props} />
+        <PodLogSearch
+          {...props}
+          logs={showTimestamps ? logs : podLogsStore.logsWithoutTimestamps}
+        />
       </div>
     </div>
   );

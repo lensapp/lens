@@ -6,6 +6,14 @@
       flex-grow: 2;
     }
 
+    &.age {
+      flex-grow: 0.5;
+    }
+
+    &.qos {
+      flex-grow: 0.8;
+    }
+
     &.warning {
       @include table-cell-warning;
     }
@@ -22,6 +30,7 @@
 
     &.status {
       @include pod-status-colors;
+      flex-grow: 0.7;
     }
   }
 }

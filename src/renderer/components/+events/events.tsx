@@ -4,14 +4,13 @@ import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { TabLayout } from "../layout/tab-layout";
 import { eventStore } from "./event.store";
-import { KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
+import { KubeObjectListLayout, KubeObjectListLayoutProps, getDetailsUrl } from "../kube-object";
 import { Trans } from "@lingui/macro";
 import { KubeEvent } from "../../api/endpoints/events.api";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
-import { getDetailsUrl } from "../../navigation";
 import { lookupApiLink } from "../../api/kube-api";
 
 enum sortBy {

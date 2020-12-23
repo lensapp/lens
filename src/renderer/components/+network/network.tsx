@@ -8,13 +8,13 @@ import { Services, servicesRoute, servicesURL } from "../+network-services";
 import { endpointRoute, Endpoints, endpointURL } from "../+network-endpoints";
 import { Ingresses, ingressRoute, ingressURL } from "../+network-ingresses";
 import { NetworkPolicies, networkPoliciesRoute, networkPoliciesURL } from "../+network-policies";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { isAllowedResource } from "../../../common/rbac";
 
 @observer
 export class Network extends React.Component {
   static get tabRoutes(): TabLayoutRoute[] {
-    const query = namespaceStore.getContextParams();
+    const query = namespaceUrlParam.toObjectParam();
     const routes: TabLayoutRoute[] = [];
 
     if (isAllowedResource("services")) {
