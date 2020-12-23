@@ -103,6 +103,7 @@ export class PodLogs extends React.Component<Props> {
           controls={controls}
           showSubmitClose={false}
           showButtons={false}
+          showStatusPanel={false}
         />
         <PodLogList
           logs={logs}
