@@ -10,7 +10,7 @@ jest.mock("chokidar", () => ({
 jest.mock("../extension-installer", () => ({
   extensionInstaller: {
     extensionPackagesRoot: "",
-    installPackages: jest.fn()
+    installPackage: jest.fn()
   }
 }));
 
@@ -41,7 +41,7 @@ describe("ExtensionDiscovery", () => {
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;
 
-    await extensionDiscovery.initMain();
+    await extensionDiscovery.watchExtensions();
 
     extensionDiscovery.events.on("add", (extension: InstalledExtension) => {
       expect(extension).toEqual({
@@ -81,7 +81,7 @@ describe("ExtensionDiscovery", () => {
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;
 
-    await extensionDiscovery.initMain();
+    await extensionDiscovery.watchExtensions();
 
     const onAdd = jest.fn();
 
