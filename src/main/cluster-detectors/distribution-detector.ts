@@ -36,6 +36,10 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "digitalocean", accuracy: 90};
     }
 
+    if (this.isK0s()) {
+      return { value: "k0s", accuracy: 80};
+    }
+
     if (this.isMirantis()) {
       return { value: "mirantis", accuracy: 90};
     }
@@ -129,6 +133,10 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isK3s() {
     return this.version.includes("+k3s");
+  }
+
+  protected isK0s() {
+    return this.version.includes("-k0s");
   }
 
   protected isHuawei() {
