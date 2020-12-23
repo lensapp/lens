@@ -48,6 +48,10 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "huawei", accuracy: 90};
     }
 
+    if (this.isTke()) {
+      return { value: "tencent", accuracy: 90};
+    }
+
     if (this.isMinikube()) {
       return { value: "minikube", accuracy: 80};
     }
@@ -121,6 +125,10 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isDockerDesktop() {
     return this.cluster.contextName === "docker-desktop";
+  }
+
+  protected isTke() {
+    return this.version.includes("-tke.");
   }
 
   protected isCustom() {
