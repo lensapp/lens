@@ -2,9 +2,19 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.4 (current version)
+## 4.0.5 (current version)
 
-We are aware some users are encountering issues and regressions from previous version. Many of these issues are something we have not seen as part of our automated or manual testing process. To make it worse, some of them are really difficult to reproduce. We want to ensure we are putting all our energy and effort trying to resolve these issues. We hope you are patient. Expect to see new patch releases still in the coming days! Fixes in this version:
+- Fix: add missing Kubernetes distro detectors
+- Fix: improve how Workloads Overview is loaded
+- Fix: race conditions on extension loader
+- Fix: pod logs scrolling issues
+- Fix: render node list before metrics are available
+- Fix: kube-state-metrics v1.9.7
+- Fix: CRD sidebar expand/collapse
+- Fix: disable oh-my-zsh auto-update prompt when resolving shell environment
+- Add kubectl 1.20 support to Lens Smart Terminal
+- Optimise performance during cluster connect
+## 4.0.4
 
 - Fix errors on Kubernetes v1.20
 - Update bundled kubectl to v1.17.15
