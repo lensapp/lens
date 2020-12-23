@@ -12,10 +12,13 @@ export interface PodLogSearchProps {
   onSearch: (query: string) => void
   toPrevOverlay: () => void
   toNextOverlay: () => void
+}
+
+interface Props extends PodLogSearchProps {
   logs: string[]
 }
 
-export const PodLogSearch = observer((props: PodLogSearchProps) => {
+export const PodLogSearch = observer((props: Props) => {
   const { logs, onSearch, toPrevOverlay, toNextOverlay } = props;
   const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = searchStore;
   const jumpDisabled = !searchQuery || !occurrences.length;

@@ -114,7 +114,13 @@ export class Icon extends React.PureComponent<IconProps> {
 
     // render icon type
     if (link) {
-      return <NavLink {...iconProps} to={link}/>;
+      const { className, children } = iconProps;
+
+      return (
+        <NavLink className={className} to={link}>
+          {children}
+        </NavLink>
+      );
     }
 
     if (href) {

@@ -1,5 +1,5 @@
 import React from "react";
-import { computed, observable, reaction } from "mobx";
+import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
 import { searchStore } from "../../../common/search-store";
@@ -79,31 +79,15 @@ export class PodLogs extends React.Component<Props> {
     }, 100);
   }
 
-  /**
-   * Computed prop which returns logs with or without timestamps added to each line
-   * @returns {Array} An array log items
-   */
-  @computed
-  get logs(): string[] {
-    if (!podLogsStore.logs.has(this.tabId)) return [];
-    const logs = podLogsStore.logs.get(this.tabId);
-    const { getData, removeTimestamps } = podLogsStore;
-    const { showTimestamps } = getData(this.tabId);
-
-    if (!showTimestamps) {
-      return logs.map(item => removeTimestamps(item));
-    }
-
-    return logs;
-  }
-
   render() {
+    const logs = podLogsStore.logs;
+
     const controls = (
       <PodLogControls
         ready={!this.isLoading}
         tabId={this.tabId}
         tabData={this.tabData}
-        logs={this.logs}
+        logs={logs}
         save={this.save}
         reload={this.reload}
         onSearch={this.onSearch}
@@ -119,11 +103,12 @@ export class PodLogs extends React.Component<Props> {
           controls={controls}
           showSubmitClose={false}
           showButtons={false}
+          showStatusPanel={false}
         />
         <PodLogList
+          logs={logs}
           id={this.tabId}
           isLoading={this.isLoading}
-          logs={this.logs}
           load={this.load}
           ref={this.logListElement}
         />

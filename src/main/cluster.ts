@@ -11,10 +11,11 @@ import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
 import { loadConfig } from "../common/kube-helpers";
 import request, { RequestPromiseOptions } from "request-promise-native";
-import { apiResources } from "../common/rbac";
+import { apiResources, KubeApiResource } from "../common/rbac";
 import logger from "./logger";
 import { VersionDetector } from "./cluster-detectors/version-detector";
 import { detectorRegistry } from "./cluster-detectors/detector-registry";
+import plimit from "p-limit";
 
 export enum ClusterStatus {
   AccessGranted = 2,
@@ -78,6 +79,7 @@ export class Cluster implements ClusterModel, ClusterState {
   protected kubeconfigManager: KubeconfigManager;
   protected eventDisposers: Function[] = [];
   protected activated = false;
+  private resourceAccessStatuses: Map<KubeApiResource, boolean> = new Map();
 
   whenInitialized = when(() => this.initialized);
   whenReady = when(() => this.ready);
@@ -379,6 +381,7 @@ export class Cluster implements ClusterModel, ClusterState {
     this.accessible = false;
     this.ready = false;
     this.activated = false;
+    this.resourceAccessStatuses.clear();
     this.pushState();
   }
 
@@ -483,6 +486,8 @@ export class Cluster implements ClusterModel, ClusterState {
       const versionData = await versionDetector.detect();
 
       this.metadata.version = versionData.value;
+
+      this.failureReason = null;
 
       return ClusterStatus.AccessGranted;
     } catch (error) {
@@ -643,17 +648,30 @@ export class Cluster implements ClusterModel, ClusterState {
       if (!this.allowedNamespaces.length) {
         return [];
       }
-      const resourceAccessStatuses = await Promise.all(
-        apiResources.map(apiResource => this.canI({
-          resource: apiResource.resource,
-          group: apiResource.group,
-          verb: "list",
-          namespace: this.allowedNamespaces[0]
-        }))
-      );
+      const resources = apiResources.filter((resource) => this.resourceAccessStatuses.get(resource) === undefined);
+      const apiLimit = plimit(5); // 5 concurrent api requests
+      const requests = [];
+
+      for (const apiResource of resources) {
+        requests.push(apiLimit(async () => {
+          for (const namespace of this.allowedNamespaces.slice(0, 10)) {
+            if (!this.resourceAccessStatuses.get(apiResource)) {
+              const result = await this.canI({
+                resource: apiResource.resource,
+                group: apiResource.group,
+                verb: "list",
+                namespace
+              });
+
+              this.resourceAccessStatuses.set(apiResource, result);
+            }
+          }
+        }));
+      }
+      await Promise.all(requests);
 
       return apiResources
-        .filter((resource, i) => resourceAccessStatuses[i])
+        .filter((resource) => this.resourceAccessStatuses.get(resource))
         .map(apiResource => apiResource.resource);
     } catch (error) {
       return [];

@@ -7,8 +7,8 @@ import { Trans } from "@lingui/macro";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { autobind } from "../../utils";
 import { lookupApiLink } from "../../api/kube-api";
-import { getDetailsUrl } from "../../navigation";
 import { Link } from "react-router-dom";
+import { getDetailsUrl } from "../kube-object";
 
 interface Props {
   subset: EndpointSubset;

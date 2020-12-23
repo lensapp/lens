@@ -20,13 +20,13 @@ import { Button } from "../button";
 import { releaseStore } from "./release.store";
 import { Notifications } from "../notifications";
 import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
-import { getDetailsUrl } from "../../navigation";
 import { _i18n } from "../../i18n";
 import { themeStore } from "../../theme.store";
 import { apiManager } from "../../api/api-manager";
 import { SubTitle } from "../layout/sub-title";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { Secret } from "../../api/endpoints";
+import { getDetailsUrl } from "../kube-object";
 
 interface Props {
   release: HelmRelease;
@@ -161,10 +161,7 @@ export class ReleaseDetails extends Component<Props> {
               const name = item.getName();
               const namespace = item.getNs();
               const api = apiManager.getApi(item.metadata.selfLink);
-              const detailsUrl = api ? getDetailsUrl(api.getUrl({
-                name,
-                namespace,
-              })) : "";
+              const detailsUrl = api ? getDetailsUrl(api.getUrl({ name, namespace })) : "";
 
               return (
                 <TableRow key={item.getId()}>

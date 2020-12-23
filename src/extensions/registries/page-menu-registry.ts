@@ -1,19 +1,13 @@
 // Extensions-api -> Register page menu items
 import type { IconProps } from "../../renderer/components/icon";
 import type React from "react";
+import type { PageTarget, RegisteredPage } from "./page-registry";
 import { action } from "mobx";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension } from "../lens-extension";
-import { RegisteredPage } from "./page-registry";
-
-export interface PageMenuTarget<P extends object = any> {
-  extensionId?: string;
-  pageId?: string;
-  params?: P;
-}
 
 export interface PageMenuRegistration {
-  target?: PageMenuTarget;
+  target?: PageTarget;
   title: React.ReactNode;
   components: PageMenuComponents;
 }
@@ -27,9 +21,9 @@ export interface PageMenuComponents {
   Icon: React.ComponentType<IconProps>;
 }
 
-export class GlobalPageMenuRegistry extends BaseRegistry<PageMenuRegistration> {
+export class PageMenuRegistry<T extends PageMenuRegistration> extends BaseRegistry<T> {
   @action
-  add(items: PageMenuRegistration[], ext: LensExtension) {
+  add(items: T[], ext: LensExtension) {
     const normalizedItems = items.map(menuItem => {
       menuItem.target = {
         extensionId: ext.name,
@@ -43,33 +37,25 @@ export class GlobalPageMenuRegistry extends BaseRegistry<PageMenuRegistration> {
   }
 }
 
-export class ClusterPageMenuRegistry extends BaseRegistry<ClusterPageMenuRegistration> {
-  @action
-  add(items: PageMenuRegistration[], ext: LensExtension) {
-    const normalizedItems = items.map(menuItem => {
-      menuItem.target = {
-        extensionId: ext.name,
-        ...(menuItem.target || {}),
-      };
-
-      return menuItem;
-    });
-
-    return super.add(normalizedItems);
-  }
-
+export class ClusterPageMenuRegistry extends PageMenuRegistry<ClusterPageMenuRegistration> {
   getRootItems() {
     return this.getItems().filter((item) => !item.parentId);
   }
 
   getSubItems(parent: ClusterPageMenuRegistration) {
-    return this.getItems().filter((item) => item.parentId === parent.id && item.target.extensionId === parent.target.extensionId);
+    return this.getItems().filter((item) => (
+      item.parentId === parent.id &&
+      item.target.extensionId === parent.target.extensionId
+    ));
   }
 
-  getByPage(page: RegisteredPage) {
-    return this.getItems().find((item) => item.target?.pageId == page.id && item.target?.extensionId === page.extensionId);
+  getByPage({ id: pageId, extensionId }: RegisteredPage) {
+    return this.getItems().find((item) => (
+      item.target.pageId == pageId &&
+      item.target.extensionId === extensionId
+    ));
   }
 }
 
-export const globalPageMenuRegistry = new GlobalPageMenuRegistry();
+export const globalPageMenuRegistry = new PageMenuRegistry();
 export const clusterPageMenuRegistry = new ClusterPageMenuRegistry();
