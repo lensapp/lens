@@ -8,9 +8,8 @@ import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { KubeEventDetails } from "../+events/kube-event-details";
-import { getDetailsUrl } from "../../navigation";
 import { PersistentVolume, pvcApi } from "../../api/endpoints";
-import { KubeObjectDetailsProps } from "../kube-object";
+import { getDetailsUrl, KubeObjectDetailsProps } from "../kube-object";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 

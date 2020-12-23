@@ -2,6 +2,7 @@ import "./pod-details-list.scss";
 
 import React from "react";
 import kebabCase from "lodash/kebabCase";
+import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Trans } from "@lingui/macro";
 import { podsStore } from "./pods.store";
@@ -10,11 +11,10 @@ import { autobind, bytesToUnits, cssNames, interval, prevDefault } from "../../u
 import { LineProgress } from "../line-progress";
 import { KubeObject } from "../../api/kube-object";
 import { Table, TableCell, TableHead, TableRow } from "../table";
-import { showDetails } from "../../navigation";
-import { reaction } from "mobx";
 import { Spinner } from "../spinner";
 import { DrawerTitle } from "../drawer";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { showDetails } from "../kube-object";
 
 enum sortBy {
   name = "name",

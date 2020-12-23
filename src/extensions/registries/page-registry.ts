@@ -1,93 +1,120 @@
 // Extensions-api -> Custom page registration
-import type { PageMenuTarget } from "./page-menu-registry";
-import type React from "react";
-import path from "path";
-import { action } from "mobx";
-import { compile } from "path-to-regexp";
+
+import React from "react";
+import { observer } from "mobx-react";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, sanitizeExtensionName } from "../lens-extension";
-import logger from "../../main/logger";
-import { rectify } from "../../common/utils";
+import { PageParam, PageParamInit } from "../../renderer/navigation/page-param";
+import { createPageParam } from "../../renderer/navigation/helpers";
 
 export interface PageRegistration {
   /**
-   * Page ID or additional route path to indicate uniqueness within current extension registered pages
-   * Might contain special url placeholders, e.g. "/users/:userId?" (? - marks as optional param)
+   * Page ID, part of extension's page url, must be unique within same extension
    * When not provided, first registered page without "id" would be used for page-menus without target.pageId for same extension
    */
   id?: string;
-  /**
-   * Strict route matching to provided page-id, read also: https://reactrouter.com/web/api/NavLink/exact-bool
-   * In case when more than one page registered at same extension "pageId" is required to identify different pages,
-   * It might be useful to provide `exact: true` in some cases to avoid overlapping routes.
-   * Without {exact:true} second page never matches since first page-id/route already includes partial route.
-   * @example const pages = [
-   *  {id: "/users", exact: true},
-   *  {id: "/users/:userId?"}
-   * ]
-   * Pro-tip: registering pages in opposite order will make same effect without "exact".
-   */
-  exact?: boolean;
+  params?: PageParams<string | ExtensionPageParamInit>;
   components: PageComponents;
 }
 
-export interface RegisteredPage extends PageRegistration {
-  extensionId: string; // required for compiling registered page to url with page-menu-target to compare
-  routePath: string; // full route-path to registered extension page
-}
+// exclude "name" field since provided as key in page.params
+export type ExtensionPageParamInit = Omit<PageParamInit, "name" | "isSystem">;
 
 export interface PageComponents {
   Page: React.ComponentType<any>;
 }
 
-export function getExtensionPageUrl<P extends object>({ extensionId, pageId = "", params }: PageMenuTarget<P>): string {
-  const extensionBaseUrl = compile(`/extension/:name`)({
-    name: sanitizeExtensionName(extensionId), // compile only with extension-id first and define base path
-  });
-  const extPageRoutePath = path.posix.join(extensionBaseUrl, pageId);
-
-  if (params) {
-    return compile(extPageRoutePath)(params); // might throw error when required params not passed
-  }
-
-  return extPageRoutePath;
+export interface PageTarget<P = PageParams> {
+  extensionId?: string;
+  pageId?: string;
+  params?: P;
 }
 
-export class PageRegistry extends BaseRegistry<RegisteredPage> {
-  @action
-  add(items: PageRegistration | PageRegistration[], ext: LensExtension) {
-    const itemArray = rectify(items);
-    let registeredPages: RegisteredPage[] = [];
+export interface PageParams<V = any> {
+  [paramName: string]: V;
+}
 
-    try {
-      registeredPages = itemArray.map(page => ({
-        ...page,
-        extensionId: ext.name,
-        routePath: getExtensionPageUrl({ extensionId: ext.name, pageId: page.id }),
-      }));
-    } catch (err) {
-      logger.error(`[EXTENSION]: page-registration failed`, {
-        items,
-        extension: ext,
-        error: String(err),
-      });
+export interface PageComponentProps<P extends PageParams = {}> {
+  params?: {
+    [N in keyof P]: PageParam<P[N]>;
+  }
+}
+
+export interface RegisteredPage {
+  id: string;
+  extensionId: string;
+  url: string; // registered extension's page URL (without page params)
+  params: PageParams<PageParam>; // normalized params
+  components: PageComponents; // normalized components
+}
+
+export function getExtensionPageUrl(target: PageTarget): string {
+  const { extensionId, pageId = "", params: targetParams = {} } = target;
+
+  const pagePath = ["/extension", sanitizeExtensionName(extensionId), pageId]
+    .filter(Boolean)
+    .join("/").replace(/\/+/g, "/").replace(/\/$/, ""); // normalize multi-slashes (e.g. coming from page.id)
+
+  const pageUrl = new URL(pagePath, `http://localhost`);
+
+  // stringify params to matched target page
+  const registeredPage = globalPageRegistry.getByPageTarget(target) || clusterPageRegistry.getByPageTarget(target);
+
+  if (registeredPage?.params) {
+    Object.entries(registeredPage.params).forEach(([name, param]) => {
+      const paramValue = param.stringify(targetParams[name]);
+
+      if (param.init.skipEmpty && param.isEmpty(paramValue)) {
+        pageUrl.searchParams.delete(name);
+      } else {
+        pageUrl.searchParams.set(name, paramValue);
+      }
+    });
+  }
+
+  return pageUrl.href.replace(pageUrl.origin, "");
+}
+
+export class PageRegistry extends BaseRegistry<PageRegistration, RegisteredPage> {
+  protected getRegisteredItem(page: PageRegistration, ext: LensExtension): RegisteredPage {
+    const { id: pageId } = page;
+    const extensionId = ext.name;
+    const params = this.normalizeParams(page.params);
+    const components = this.normalizeComponents(page.components, params);
+    const url = getExtensionPageUrl({ extensionId, pageId });
+
+    return {
+      id: pageId, extensionId, params, components, url,
+    };
+  }
+
+  protected normalizeComponents(components: PageComponents, params?: PageParams<PageParam>): PageComponents {
+    if (params) {
+      const { Page } = components;
+
+      components.Page = observer((props: object) => React.createElement(Page, { params, ...props }));
     }
 
-    return super.add(registeredPages);
+    return components;
   }
 
-  getUrl<P extends object>({ extensionId, id: pageId }: RegisteredPage, params?: P) {
-    return getExtensionPageUrl({ extensionId, pageId, params });
+  protected normalizeParams(params?: PageParams<string | ExtensionPageParamInit>): PageParams<PageParam> {
+    if (!params) {
+      return;
+    }
+    Object.entries(params).forEach(([name, value]) => {
+      const paramInit: PageParamInit = typeof value === "object"
+        ? { name, ...value }
+        : { name, defaultValue: value };
+
+      params[paramInit.name] = createPageParam(paramInit);
+    });
+
+    return params as PageParams<PageParam>;
   }
 
-  getByPageMenuTarget(target: PageMenuTarget = {}): RegisteredPage | null {
-    const targetUrl = getExtensionPageUrl(target);
-
-    return this.getItems().find(({ id: pageId, extensionId }) => {
-      const pageUrl = getExtensionPageUrl({ extensionId, pageId, params: target.params }); // compiled with provided params
-
-      return targetUrl === pageUrl;
-    }) || null;
+  getByPageTarget(target: PageTarget): RegisteredPage | null {
+    return this.getItems().find(page => page.extensionId === target.extensionId && page.id === target.pageId) || null;
   }
 }
 

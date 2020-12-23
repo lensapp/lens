@@ -17,7 +17,7 @@ import { clusterRoute, clusterURL } from "../+cluster";
 import { Config, configRoute, configURL } from "../+config";
 import { eventRoute, eventsURL } from "../+events";
 import { Apps, appsRoute, appsURL } from "../+apps";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { Workloads } from "../+workloads";
 import { UserManagement } from "../+user-management";
 import { Storage } from "../+storage";
@@ -75,21 +75,23 @@ export class Sidebar extends React.Component<Props> {
   }
 
   getTabLayoutRoutes(menu: ClusterPageMenuRegistration): TabLayoutRoute[] {
-    if (!menu.id) {
-      return [];
-    }
     const routes: TabLayoutRoute[] = [];
 
-    clusterPageMenuRegistry.getSubItems(menu).forEach((subItem) => {
-      const subPage = clusterPageRegistry.getByPageMenuTarget(subItem.target);
+    if (!menu.id) {
+      return routes;
+    }
+
+    clusterPageMenuRegistry.getSubItems(menu).forEach((subMenu) => {
+      const subPage = clusterPageRegistry.getByPageTarget(subMenu.target);
 
       if (subPage) {
+        const { extensionId, id: pageId } = subPage;
+
         routes.push({
-          routePath: subPage.routePath,
-          url: getExtensionPageUrl({ extensionId: subPage.extensionId, pageId: subPage.id, params: subItem.target.params }),
-          title: subItem.title,
+          routePath: subPage.url,
+          url: getExtensionPageUrl({ extensionId, pageId, params: subMenu.target.params }),
+          title: subMenu.title,
           component: subPage.components.Page,
-          exact: subPage.exact
         });
       }
     });
@@ -99,7 +101,7 @@ export class Sidebar extends React.Component<Props> {
 
   renderRegisteredMenus() {
     return clusterPageMenuRegistry.getRootItems().map((menuItem, index) => {
-      const registeredPage = clusterPageRegistry.getByPageMenuTarget(menuItem.target);
+      const registeredPage = clusterPageRegistry.getByPageTarget(menuItem.target);
       const tabRoutes = this.getTabLayoutRoutes(menuItem);
       const id = `registered-item-${index}`;
       let pageUrl: string;
@@ -109,7 +111,7 @@ export class Sidebar extends React.Component<Props> {
         const { extensionId, id: pageId } = registeredPage;
 
         pageUrl = getExtensionPageUrl({ extensionId, pageId, params: menuItem.target.params });
-        isActive = isActiveRoute(registeredPage.routePath);
+        isActive = isActiveRoute(registeredPage.url);
       } else if (tabRoutes.length > 0) {
         pageUrl = tabRoutes[0].url;
         isActive = isActiveRoute(tabRoutes.map((tab) => tab.routePath));
@@ -133,7 +135,7 @@ export class Sidebar extends React.Component<Props> {
 
   render() {
     const { toggle, isPinned, className } = this.props;
-    const query = namespaceStore.getContextParams();
+    const query = namespaceUrlParam.toObjectParam();
 
     return (
       <SidebarContext.Provider value={{ pinned: isPinned }}>

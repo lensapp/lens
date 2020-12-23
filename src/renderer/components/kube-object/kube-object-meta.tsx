@@ -2,10 +2,10 @@ import React from "react";
 import { Trans } from "@lingui/macro";
 import { IKubeMetaField, KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
-import { getDetailsUrl } from "../../navigation";
 import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { getDetailsUrl } from "./kube-object-details";
 
 export interface KubeObjectMetaProps {
   object: KubeObject;

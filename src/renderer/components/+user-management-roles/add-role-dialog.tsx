@@ -10,7 +10,7 @@ import { Wizard, WizardStep } from "../wizard";
 import { Notifications } from "../notifications";
 import { rolesStore } from "./roles.store";
 import { Input } from "../input";
-import { showDetails } from "../../navigation";
+import { showDetails } from "../kube-object";
 
 interface Props extends Partial<DialogProps> {
 }

@@ -27,11 +27,11 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
   private refresher = interval(10, () => {
     const id = dockStore.selectedTabId;
 
-    if (!this.logs.get(id)) return;
+    if (!this.podLogs.get(id)) return;
     this.loadMore(id);
   });
 
-  @observable logs = observable.map<TabId, PodLogLine[]>();
+  @observable podLogs = observable.map<TabId, PodLogLine[]>();
   @observable newLogSince = observable.map<TabId, string>(); // Timestamp after which all logs are considered to be new
 
   constructor() {
@@ -48,7 +48,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       }
     }, { delay: 500 });
 
-    reaction(() => this.logs.get(dockStore.selectedTabId), () => {
+    reaction(() => this.podLogs.get(dockStore.selectedTabId), () => {
       this.setNewLogSince(dockStore.selectedTabId);
     });
 
@@ -72,7 +72,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       });
 
       this.refresher.start();
-      this.logs.set(tabId, logs);
+      this.podLogs.set(tabId, logs);
     } catch ({error}) {
       const message = [
         _i18n._(t`Failed to load logs: ${error.message}`),
@@ -80,7 +80,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       ];
 
       this.refresher.stop();
-      this.logs.set(tabId, message);
+      this.podLogs.set(tabId, message);
     }
   };
 
@@ -91,14 +91,14 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
    * @param tabId
    */
   loadMore = async (tabId: TabId) => {
-    if (!this.logs.get(tabId).length) return;
-    const oldLogs = this.logs.get(tabId);
+    if (!this.podLogs.get(tabId).length) return;
+    const oldLogs = this.podLogs.get(tabId);
     const logs = await this.loadLogs(tabId, {
       sinceTime: this.getLastSinceTime(tabId)
     });
 
     // Add newly received logs to bottom
-    this.logs.set(tabId, [...oldLogs, ...logs]);
+    this.podLogs.set(tabId, [...oldLogs, ...logs]);
   };
 
   /**
@@ -134,7 +134,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
    * @param tabId
    */
   setNewLogSince(tabId: TabId) {
-    if (!this.logs.has(tabId) || !this.logs.get(tabId).length || this.newLogSince.has(tabId)) return;
+    if (!this.podLogs.has(tabId) || !this.podLogs.get(tabId).length || this.newLogSince.has(tabId)) return;
     const timestamp = this.getLastSinceTime(tabId);
 
     this.newLogSince.set(tabId, timestamp.split(".")[0]); // Removing milliseconds from string
@@ -147,9 +147,29 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
   @computed
   get lines() {
     const id = dockStore.selectedTabId;
-    const logs = this.logs.get(id);
+    const logs = this.podLogs.get(id);
 
     return logs ? logs.length : 0;
+  }
+
+
+  /**
+   * Returns logs with timestamps for selected tab
+   */
+  get logs() {
+    const id = dockStore.selectedTabId;
+
+    if (!this.podLogs.has(id)) return [];
+
+    return this.podLogs.get(id);
+  }
+
+  /**
+   * Removes timestamps from each log line and returns changed logs
+   * @returns Logs without timestamps
+   */
+  get logsWithoutTimestamps() {
+    return this.logs.map(item => this.removeTimestamps(item));
   }
 
   /**
@@ -158,7 +178,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
    * @param tabId
    */
   getLastSinceTime(tabId: TabId) {
-    const logs = this.logs.get(tabId);
+    const logs = this.podLogs.get(tabId);
     const timestamps = this.getTimestamps(logs[logs.length - 1]);
     const stamp = new Date(timestamps ? timestamps[0] : null);
 
@@ -176,7 +196,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
   }
 
   clearLogs(tabId: TabId) {
-    this.logs.delete(tabId);
+    this.podLogs.delete(tabId);
   }
 
   clearData(tabId: TabId) {

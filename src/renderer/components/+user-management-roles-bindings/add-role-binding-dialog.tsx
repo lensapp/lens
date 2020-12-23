@@ -16,11 +16,11 @@ import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Checkbox } from "../checkbox";
 import { KubeObject } from "../../api/kube-object";
 import { Notifications } from "../notifications";
-import { showDetails } from "../../navigation";
 import { rolesStore } from "../+user-management-roles/roles.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { serviceAccountsStore } from "../+user-management-service-accounts/service-accounts.store";
 import { roleBindingsStore } from "./role-bindings.store";
+import { showDetails } from "../kube-object";
 
 interface BindingSelectOption extends SelectOption {
   value: string; // binding name
