@@ -47,11 +47,13 @@ export class PodLogList extends React.Component<Props> {
 
       return;
     }
+
     if (logs == prevProps.logs || !this.virtualListDiv.current) return;
+
     const newLogsLoaded = prevProps.logs.length < logs.length;
     const scrolledToBeginning = this.virtualListDiv.current.scrollTop === 0;
 
-    if (this.isLastLineVisible) {
+    if (this.isLastLineVisible || prevProps.logs.length == 0) {
       this.scrollToBottom(); // Scroll down to keep user watching/reading experience
 
       return;
@@ -129,7 +131,6 @@ export class PodLogList extends React.Component<Props> {
   @action
   scrollToBottom = () => {
     if (!this.virtualListDiv.current) return;
-    this.isJumpButtonVisible = false;
     this.virtualListDiv.current.scrollTop = this.virtualListDiv.current.scrollHeight;
   };
 
@@ -137,7 +138,13 @@ export class PodLogList extends React.Component<Props> {
     this.virtualListRef.current.scrollToItem(index, align);
   };
 
-  onScroll = debounce((props: ListOnScrollProps) => {
+  onScroll = (props: ListOnScrollProps) => {
+    if (!this.virtualListDiv.current) return;
+    this.isLastLineVisible = false;
+    this.onScrollDebounced(props);
+  };
+
+  onScrollDebounced = debounce((props: ListOnScrollProps) => {
     if (!this.virtualListDiv.current) return;
     this.setButtonVisibility(props);
     this.setLastLineVisibility(props);
