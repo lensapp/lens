@@ -1,12 +1,12 @@
 import request from "request";
 import requestPromise from "request-promise-native";
-import { userStore } from "./user-store";
+import { UserStore } from "./user-store";
 
 // todo: get rid of "request" (deprecated)
 // https://github.com/lensapp/lens/issues/459
 
 function getDefaultRequestOpts(): Partial<request.Options> {
-  const { httpsProxy, allowUntrustedCAs } = userStore.preferences;
+  const { httpsProxy, allowUntrustedCAs } = UserStore.getInstance().preferences;
 
   return {
     proxy: httpsProxy || undefined,

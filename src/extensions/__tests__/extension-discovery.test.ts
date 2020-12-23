@@ -1,6 +1,7 @@
 import { watch } from "chokidar";
 import { join, normalize } from "path";
 import { ExtensionDiscovery, InstalledExtension } from "../extension-discovery";
+import { ExtensionsStore } from "../extensions-store";
 
 jest.mock("../../common/ipc");
 jest.mock("fs-extra");
@@ -17,6 +18,12 @@ jest.mock("../extension-installer", () => ({
 const mockedWatch = watch as jest.MockedFunction<typeof watch>;
 
 describe("ExtensionDiscovery", () => {
+  beforeEach(() => {
+    ExtensionDiscovery.resetInstance();
+    ExtensionsStore.resetInstance();
+    ExtensionsStore.getInstanceOrCreate();
+  });
+
   it("emits add for added extension", async done => {
     globalThis.__non_webpack_require__.mockImplementation(() => ({
       name: "my-extension"
@@ -36,7 +43,7 @@ describe("ExtensionDiscovery", () => {
     mockedWatch.mockImplementationOnce(() =>
       (mockWatchInstance) as any
     );
-    const extensionDiscovery = new ExtensionDiscovery();
+    const extensionDiscovery = ExtensionDiscovery.getInstanceOrCreate();
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;
@@ -76,7 +83,7 @@ describe("ExtensionDiscovery", () => {
     mockedWatch.mockImplementationOnce(() =>
       (mockWatchInstance) as any
     );
-    const extensionDiscovery = new ExtensionDiscovery();
+    const extensionDiscovery = ExtensionDiscovery.getInstanceOrCreate();
 
     // Need to force isLoaded to be true so that the file watching is started
     extensionDiscovery.isLoaded = true;

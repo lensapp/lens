@@ -20,7 +20,7 @@ import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { ResourceType } from "../cluster-settings/components/cluster-metrics-setting";
-import { clusterStore } from "../../../common/cluster-store";
+import { ClusterStore } from "../../../common/cluster-store";
 
 interface Props extends KubeObjectDetailsProps<Deployment> {
 }
@@ -49,7 +49,7 @@ export class DeploymentDetails extends React.Component<Props> {
     const selectors = deployment.getSelectors();
     const childPods = deploymentStore.getChildPods(deployment);
     const metrics = deploymentStore.metrics;
-    const isMetricHidden = clusterStore.isMetricHidden(ResourceType.Deployment);
+    const isMetricHidden = ClusterStore.getInstance().isMetricHidden(ResourceType.Deployment);
 
     return (
       <div className="DeploymentDetails">

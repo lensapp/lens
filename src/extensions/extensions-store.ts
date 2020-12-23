@@ -53,5 +53,3 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
     });
   }
 }
-
-export const extensionsStore = new ExtensionsStore();

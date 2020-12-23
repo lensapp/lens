@@ -6,19 +6,20 @@ import * as MobxReact from "mobx-react";
 import * as ReactRouter from "react-router";
 import * as ReactRouterDom from "react-router-dom";
 import { render, unmountComponentAtNode } from "react-dom";
-import { clusterStore } from "../common/cluster-store";
-import { userStore } from "../common/user-store";
 import { delay } from "../common/utils";
 import { isMac, isDevelopment } from "../common/vars";
+import { HotbarStore } from "../common/hotbar-store";
+import { ClusterStore } from "../common/cluster-store";
+import { UserStore } from "../common/user-store";
 import * as LensExtensions from "../extensions/extension-api";
-import { extensionDiscovery } from "../extensions/extension-discovery";
-import { extensionLoader } from "../extensions/extension-loader";
-import { extensionsStore } from "../extensions/extensions-store";
-import { hotbarStore } from "../common/hotbar-store";
-import { filesystemProvisionerStore } from "../main/extension-filesystem";
+import { ExtensionDiscovery } from "../extensions/extension-discovery";
+import { ExtensionLoader } from "../extensions/extension-loader";
+import { ExtensionsStore } from "../extensions/extensions-store";
+import { FilesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
-import { themeStore } from "./theme.store";
+import { ThemeStore } from "./theme.store";
+import { HelmRepoManager } from "../main/helm/helm-repo-manager";
 
 /**
  * If this is a development buid, wait a second to attach
@@ -50,8 +51,16 @@ export async function bootstrap(App: AppComponent) {
   await attachChromeDebugger();
   rootElem.classList.toggle("is-mac", isMac);
 
-  extensionLoader.init();
-  extensionDiscovery.init();
+  ExtensionLoader.getInstanceOrCreate().init();
+  ExtensionDiscovery.getInstanceOrCreate().init();
+
+  const userStore = UserStore.getInstanceOrCreate();
+  const clusterStore = ClusterStore.getInstanceOrCreate();
+  const extensionsStore = ExtensionsStore.getInstanceOrCreate();
+  const filesystemStore = FilesystemProvisionerStore.getInstanceOrCreate();
+  const themeStore = ThemeStore.getInstanceOrCreate();
+  const hotbarStore = HotbarStore.getInstanceOrCreate();
+  const helmRepoManager = HelmRepoManager.getInstanceOrCreate();
 
   // preload common stores
   await Promise.all([
@@ -59,8 +68,9 @@ export async function bootstrap(App: AppComponent) {
     hotbarStore.load(),
     clusterStore.load(),
     extensionsStore.load(),
-    filesystemProvisionerStore.load(),
+    filesystemStore.load(),
     themeStore.init(),
+    helmRepoManager.init(),
   ]);
 
   // Register additional store listeners
@@ -72,8 +82,8 @@ export async function bootstrap(App: AppComponent) {
   }
   window.addEventListener("message", (ev: MessageEvent) => {
     if (ev.data === "teardown") {
-      userStore.unregisterIpcListener();
-      clusterStore.unregisterIpcListener();
+      UserStore.getInstance(false)?.unregisterIpcListener();
+      ClusterStore.getInstance(false)?.unregisterIpcListener();
       unmountComponentAtNode(rootElem);
       window.location.href = "about:blank";
     }

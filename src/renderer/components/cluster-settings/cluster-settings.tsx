@@ -1,5 +1,5 @@
 import React from "react";
-import { clusterStore } from "../../../common/cluster-store";
+import { ClusterStore } from "../../../common/cluster-store";
 import { ClusterProxySetting } from "./components/cluster-proxy-setting";
 import { ClusterNameSetting } from "./components/cluster-name-setting";
 import { ClusterHomeDirSetting } from "./components/cluster-home-dir-setting";
@@ -13,7 +13,7 @@ import { CatalogEntity } from "../../api/catalog-entity";
 
 
 function getClusterForEntity(entity: CatalogEntity) {
-  const cluster = clusterStore.getById(entity.metadata.uid);
+  const cluster = ClusterStore.getInstance().getById(entity.metadata.uid);
 
   if (!cluster?.enabled) {
     return null;

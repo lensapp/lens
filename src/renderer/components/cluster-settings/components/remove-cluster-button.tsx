@@ -1,6 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { clusterStore } from "../../../../common/cluster-store";
+import { ClusterStore } from "../../../../common/cluster-store";
 import { Cluster } from "../../../../main/cluster";
 import { autobind } from "../../../utils";
 import { Button } from "../../button";
@@ -21,7 +21,7 @@ export class RemoveClusterButton extends React.Component<Props> {
       labelOk: "Yes",
       labelCancel: "No",
       ok: async () => {
-        await clusterStore.removeById(cluster.id);
+        await ClusterStore.getInstance().removeById(cluster.id);
       }
     });
   }

@@ -5,9 +5,10 @@ import { action, computed, observable, reaction, toJS, when } from "mobx";
 import path from "path";
 import { getHostedCluster } from "../common/cluster-store";
 import { broadcastMessage, handleRequest, requestMain, subscribeToBroadcast } from "../common/ipc";
+import { Singleton } from "../common/utils";
 import logger from "../main/logger";
 import type { InstalledExtension } from "./extension-discovery";
-import { extensionsStore } from "./extensions-store";
+import { ExtensionsStore } from "./extensions-store";
 import type { LensExtension, LensExtensionConstructor, LensExtensionId } from "./lens-extension";
 import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
@@ -24,7 +25,7 @@ const logModule = "[EXTENSIONS-LOADER]";
 /**
  * Loads installed extensions to the Lens application
  */
-export class ExtensionLoader {
+export class ExtensionLoader extends Singleton {
   protected extensions = observable.map<LensExtensionId, InstalledExtension>();
   protected instances = observable.map<LensExtensionId, LensExtension>();
 
@@ -95,11 +96,11 @@ export class ExtensionLoader {
       await this.initMain();
     }
 
-    await Promise.all([this.whenLoaded, extensionsStore.whenLoaded]);
+    await Promise.all([this.whenLoaded, ExtensionsStore.getInstance().whenLoaded]);
 
     // save state on change `extension.isEnabled`
     reaction(() => this.storeState, extensionsState => {
-      extensionsStore.mergeState(extensionsState);
+      ExtensionsStore.getInstance().mergeState(extensionsState);
     });
   }
 
@@ -329,5 +330,3 @@ export class ExtensionLoader {
     broadcastMessage(main ? ExtensionLoader.extensionsMainChannel : ExtensionLoader.extensionsRendererChannel, Array.from(this.toJSON()));
   }
 }
-
-export const extensionLoader = new ExtensionLoader();

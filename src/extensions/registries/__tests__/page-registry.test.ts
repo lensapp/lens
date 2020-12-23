@@ -1,6 +1,10 @@
 import { getExtensionPageUrl, globalPageRegistry, PageParams } from "../page-registry";
 import { LensExtension } from "../../lens-extension";
 import React from "react";
+import { Console } from "console";
+import { stdout, stderr } from "process";
+
+console = new Console(stdout, stderr);
 
 let ext: LensExtension = null;
 

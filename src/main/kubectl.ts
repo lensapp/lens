@@ -6,7 +6,7 @@ import logger from "./logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
 import { helmCli } from "./helm/helm-cli";
-import { userStore } from "../common/user-store";
+import { UserStore } from "../common/user-store";
 import { customRequest } from "../common/request";
 import { getBundledKubectlVersion } from "../common/utils/app-version";
 import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
@@ -113,12 +113,12 @@ export class Kubectl {
   }
 
   public getPathFromPreferences() {
-    return userStore.preferences?.kubectlBinariesPath || this.getBundledPath();
+    return UserStore.getInstance().preferences?.kubectlBinariesPath || this.getBundledPath();
   }
 
   protected getDownloadDir() {
-    if (userStore.preferences?.downloadBinariesPath) {
-      return path.join(userStore.preferences.downloadBinariesPath, "kubectl");
+    if (UserStore.getInstance().preferences?.downloadBinariesPath) {
+      return path.join(UserStore.getInstance().preferences.downloadBinariesPath, "kubectl");
     }
 
     return Kubectl.kubectlDir;
@@ -129,7 +129,7 @@ export class Kubectl {
       return this.getBundledPath();
     }
 
-    if (userStore.preferences?.downloadKubectlBinaries === false) {
+    if (UserStore.getInstance().preferences?.downloadKubectlBinaries === false) {
       return this.getPathFromPreferences();
     }
 
@@ -223,7 +223,7 @@ export class Kubectl {
   }
 
   public async ensureKubectl(): Promise<boolean> {
-    if (userStore.preferences?.downloadKubectlBinaries === false) {
+    if (UserStore.getInstance().preferences?.downloadKubectlBinaries === false) {
       return true;
     }
 
@@ -273,7 +273,7 @@ export class Kubectl {
 
     logger.info(`Downloading kubectl ${this.kubectlVersion} from ${this.url} to ${this.path}`);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       const stream = customRequest({
         url: this.url,
         gzip: true,
@@ -303,7 +303,7 @@ export class Kubectl {
   }
 
   protected async writeInitScripts() {
-    const kubectlPath = userStore.preferences?.downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences());
+    const kubectlPath = UserStore.getInstance().preferences?.downloadKubectlBinaries ? this.dirname : path.dirname(this.getPathFromPreferences());
     const helmPath = helmCli.getBinaryDir();
     const fsPromises = fs.promises;
     const bashScriptPath = path.join(this.dirname, ".bash_set_path");
@@ -361,7 +361,7 @@ export class Kubectl {
   }
 
   protected getDownloadMirror() {
-    const mirror = packageMirrors.get(userStore.preferences?.downloadMirror);
+    const mirror = packageMirrors.get(UserStore.getInstance().preferences?.downloadMirror);
 
     if (mirror) {
       return mirror;
