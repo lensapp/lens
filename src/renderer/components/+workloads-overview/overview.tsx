@@ -60,10 +60,12 @@ export class WorkloadsOverview extends React.Component<Props> {
       stores.push(eventStore);
     }
 
+    const unsubscribeList: Array<() => void> = [];
+
     for (const store of stores) {
       await store.loadAll();
+      unsubscribeList.push(store.subscribe());
     }
-    const unsubscribeList = stores.map(store => store.subscribe());
 
     await when(() => this.isUnmounting);
     unsubscribeList.forEach(dispose => dispose());
