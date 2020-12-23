@@ -120,6 +120,7 @@ export class ShellSession extends EventEmitter {
     if(path.basename(env["PTYSHELL"]) === "zsh") {
       env["OLD_ZDOTDIR"] = env.ZDOTDIR || env.HOME;
       env["ZDOTDIR"] = this.kubectlBinDir;
+      env["DISABLE_AUTO_UPDATE"] = "true";
     }
 
     env["PTYPID"] = process.pid.toString();

@@ -55,6 +55,7 @@ export class ExtensionDiscovery {
   protected bundledFolderPath: string;
 
   private loadStarted = false;
+  private extensions: Map<string, InstalledExtension> = new Map();
 
   // True if extensions have been loaded from the disk after app startup
   @observable isLoaded = false;
@@ -68,13 +69,6 @@ export class ExtensionDiscovery {
   constructor() {
     this.events = new EventEmitter();
   }
-
-  // Each extension is added as a single dependency to this object, which is written as package.json.
-  // Each dependency key is the name of the dependency, and
-  // each dependency value is the non-symlinked path to the dependency (folder).
-  protected packagesJson: PackageJson = {
-    dependencies: {}
-  };
 
   get localFolderPath(): string {
     return path.join(os.homedir(), ".k8slens", "extensions");
@@ -119,7 +113,6 @@ export class ExtensionDiscovery {
   }
 
   async initMain() {
-    this.watchExtensions();
     handleRequest(ExtensionDiscovery.extensionDiscoveryChannel, () => this.toJSON());
 
     reaction(() => this.toJSON(), () => {
@@ -141,6 +134,7 @@ export class ExtensionDiscovery {
     watch(this.localFolderPath, {
       // For adding and removing symlinks to work, the depth has to be 1.
       depth: 1,
+      ignoreInitial: true,
       // Try to wait until the file has been completely copied.
       // The OS might emit an event for added file even it's not completely written to the filesysten.
       awaitWriteFinish: {
@@ -176,8 +170,9 @@ export class ExtensionDiscovery {
           await this.removeSymlinkByManifestPath(manifestPath);
 
           // Install dependencies for the new extension
-          await this.installPackages();
+          await this.installPackage(extension.absolutePath);
 
+          this.extensions.set(extension.id, extension);
           logger.info(`${logModule} Added extension ${extension.manifest.name}`);
           this.events.emit("add", extension);
         }
@@ -197,23 +192,19 @@ export class ExtensionDiscovery {
     const extensionFolderName = path.basename(filePath);
 
     if (path.relative(this.localFolderPath, filePath) === extensionFolderName) {
-      const extensionName: string | undefined = Object
-        .entries(this.packagesJson.dependencies)
-        .find(([, extensionFolder]) => filePath === extensionFolder)?.[0];
+      const extension = Array.from(this.extensions.values()).find((extension) => extension.absolutePath === filePath);
 
-      if (extensionName !== undefined) {
+      if (extension) {
+        const extensionName = extension.manifest.name;
+
         // If the extension is deleted manually while the application is running, also remove the symlink
         await this.removeSymlinkByPackageName(extensionName);
 
-        delete this.packagesJson.dependencies[extensionName];
-
-        // Reinstall dependencies to remove the extension from package.json
-        await this.installPackages();
-
         // The path to the manifest file is the lens extension id
         // Note that we need to use the symlinked path
-        const lensExtensionId = path.join(this.nodeModulesPath, extensionName, manifestFilename);
+        const lensExtensionId = extension.manifestPath;
 
+        this.extensions.delete(extension.id);
         logger.info(`${logModule} removed extension ${extensionName}`);
         this.events.emit("remove", lensExtensionId as LensExtensionId);
       } else {
@@ -296,7 +287,7 @@ export class ExtensionDiscovery {
     await fs.ensureDir(this.nodeModulesPath);
     await fs.ensureDir(this.localFolderPath);
 
-    const extensions = await this.loadExtensions();
+    const extensions = await this.ensureExtensions();
 
     this.isLoaded = true;
 
@@ -335,7 +326,6 @@ export class ExtensionDiscovery {
       manifestJson = __non_webpack_require__(manifestPath);
       const installedManifestPath = this.getInstalledManifestPath(manifestJson.name);
 
-      this.packagesJson.dependencies[manifestJson.name] = path.dirname(manifestPath);
       const isEnabled = isBundled || extensionsStore.isEnabled(installedManifestPath);
 
       return {
@@ -347,29 +337,46 @@ export class ExtensionDiscovery {
         isEnabled
       };
     } catch (error) {
-      logger.error(`${logModule}: can't install extension at ${manifestPath}: ${error}`, { manifestJson });
+      logger.error(`${logModule}: can't load extension manifest at ${manifestPath}: ${error}`, { manifestJson });
 
       return null;
     }
   }
 
-  async loadExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
+  async ensureExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
     const bundledExtensions = await this.loadBundledExtensions();
 
-    await this.installPackages(); // install in-tree as a separate step
-    const localExtensions = await this.loadFromFolder(this.localFolderPath);
+    await this.installBundledPackages(this.packageJsonPath, bundledExtensions);
 
-    await this.installPackages();
-    const extensions = bundledExtensions.concat(localExtensions);
+    const userExtensions = await this.loadFromFolder(this.localFolderPath);
 
-    return new Map(extensions.map(extension => [extension.id, extension]));
+    for (const extension of userExtensions) {
+      if (await fs.pathExists(extension.manifestPath) === false) {
+        await this.installPackage(extension.absolutePath);
+      }
+    }
+    const extensions = bundledExtensions.concat(userExtensions);
+
+    return this.extensions = new Map(extensions.map(extension => [extension.id, extension]));
   }
 
   /**
    * Write package.json to file system and install dependencies.
    */
-  installPackages() {
-    return extensionInstaller.installPackages(this.packageJsonPath, this.packagesJson);
+  async installBundledPackages(packageJsonPath: string, extensions: InstalledExtension[]) {
+    const packagesJson: PackageJson = {
+      dependencies: {}
+    };
+
+    extensions.forEach((extension) => {
+      packagesJson.dependencies[extension.manifest.name] = extension.absolutePath;
+    });
+
+    return await extensionInstaller.installPackages(packageJsonPath, packagesJson);
+  }
+
+  async installPackage(name: string) {
+    return extensionInstaller.installPackage(name);
   }
 
   async loadBundledExtensions() {

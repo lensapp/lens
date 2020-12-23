@@ -12,6 +12,7 @@ import type { LensExtension, LensExtensionConstructor, LensExtensionId } from ".
 import type { LensMainExtension } from "./lens-main-extension";
 import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
+import fs from "fs";
 
 // lazy load so that we get correct userData
 export function extensionPackagesRoot() {
@@ -71,7 +72,7 @@ export class ExtensionLoader {
     }
 
     await Promise.all([this.whenLoaded, extensionsStore.whenLoaded]);
-    
+
     // save state on change `extension.isEnabled`
     reaction(() => this.storeState, extensionsState => {
       extensionsStore.mergeState(extensionsState);
@@ -115,7 +116,6 @@ export class ExtensionLoader {
   protected async initMain() {
     this.isLoaded = true;
     this.loadOnMain();
-    this.broadcastExtensions();
 
     reaction(() => this.toJSON(), () => {
       this.broadcastExtensions();
@@ -136,7 +136,7 @@ export class ExtensionLoader {
       this.syncExtensions(extensions);
 
       const receivedExtensionIds = extensions.map(([lensExtensionId]) => lensExtensionId);
-          
+
       // Remove deleted extensions in renderer side only
       this.extensions.forEach((_, lensExtensionId) => {
         if (!receivedExtensionIds.includes(lensExtensionId)) {
@@ -276,6 +276,12 @@ export class ExtensionLoader {
       }
 
       if (extEntrypoint !== "") {
+        if (!fs.existsSync(extEntrypoint)) {
+          console.log(`${logModule}: entrypoint ${extEntrypoint} not found, skipping ...`);
+
+          return;
+        }
+
         return __non_webpack_require__(extEntrypoint).default;
       }
     } catch (err) {

@@ -36,8 +36,24 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "digitalocean", accuracy: 90};
     }
 
+    if (this.isVMWare()) {
+      return { value: "vmware", accuracy: 90};
+    }
+
     if (this.isMirantis()) {
       return { value: "mirantis", accuracy: 90};
+    }
+
+    if (this.isAlibaba()) {
+      return { value: "alibaba", accuracy: 90};
+    }
+
+    if (this.isHuawei()) {
+      return { value: "huawei", accuracy: 90};
+    }
+
+    if (this.isTke()) {
+      return { value: "tencent", accuracy: 90};
     }
 
     if (this.isMinikube()) {
@@ -115,8 +131,16 @@ export class DistributionDetector extends BaseClusterDetector {
     return this.cluster.contextName === "docker-desktop";
   }
 
+  protected isTke() {
+    return this.version.includes("-tke.");
+  }
+
   protected isCustom() {
     return this.version.includes("+");
+  }
+
+  protected isVMWare() {
+    return this.version.includes("+vmware");
   }
 
   protected isRke() {
@@ -125,6 +149,14 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isK3s() {
     return this.version.includes("+k3s");
+  }
+
+  protected isAlibaba() {
+    return this.version.includes("-aliyun");
+  }
+
+  protected isHuawei() {
+    return this.version.includes("-CCE");
   }
 
   protected async isOpenshift() {
