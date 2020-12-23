@@ -195,6 +195,7 @@ export class PodLogList extends React.Component<Props> {
         {contents.length > 1 ? contents : (
           <span dangerouslySetInnerHTML={{ __html: ansiToHtml(item) }} />
         )}
+        <br />
       </div>
     );
   };
