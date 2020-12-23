@@ -16,12 +16,14 @@ export class Storage extends React.Component {
     const tabRoutes: TabLayoutRoute[] = [];
     const query = namespaceUrlParam.toObjectParam();
 
-    tabRoutes.push({
-      title: <Trans>Persistent Volume Claims</Trans>,
-      component: PersistentVolumeClaims,
-      url: volumeClaimsURL({ query }),
-      routePath: volumeClaimsRoute.path.toString(),
-    });
+    if (isAllowedResource("persistentvolumeclaims")) {
+      tabRoutes.push({
+        title: <Trans>Persistent Volume Claims</Trans>,
+        component: PersistentVolumeClaims,
+        url: volumeClaimsURL({ query }),
+        routePath: volumeClaimsRoute.path.toString(),
+      });
+    }
 
     if (isAllowedResource("persistentvolumes")) {
       tabRoutes.push({
