@@ -346,9 +346,15 @@ export class ExtensionDiscovery {
   async ensureExtensions(): Promise<Map<LensExtensionId, InstalledExtension>> {
     const bundledExtensions = await this.loadBundledExtensions();
 
-    await this.installPackages(this.packageJsonPath, bundledExtensions);
+    await this.installBundledPackages(this.packageJsonPath, bundledExtensions);
 
     const userExtensions = await this.loadFromFolder(this.localFolderPath);
+
+    for (const extension of userExtensions) {
+      if (await fs.pathExists(extension.manifestPath) === false) {
+        await this.installPackage(extension.absolutePath);
+      }
+    }
     const extensions = bundledExtensions.concat(userExtensions);
 
     return this.extensions = new Map(extensions.map(extension => [extension.id, extension]));
@@ -357,7 +363,7 @@ export class ExtensionDiscovery {
   /**
    * Write package.json to file system and install dependencies.
    */
-  async installPackages(packageJsonPath: string, extensions: InstalledExtension[]) {
+  async installBundledPackages(packageJsonPath: string, extensions: InstalledExtension[]) {
     const packagesJson: PackageJson = {
       dependencies: {}
     };
