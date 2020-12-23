@@ -36,6 +36,10 @@ export class DistributionDetector extends BaseClusterDetector {
       return { value: "digitalocean", accuracy: 90};
     }
 
+    if (this.isVMWare()) {
+      return { value: "vmware", accuracy: 90};
+    }
+
     if (this.isMirantis()) {
       return { value: "mirantis", accuracy: 90};
     }
@@ -121,6 +125,10 @@ export class DistributionDetector extends BaseClusterDetector {
 
   protected isCustom() {
     return this.version.includes("+");
+  }
+
+  protected isVMWare() {
+    return this.version.includes("+vmware");
   }
 
   protected isRke() {
