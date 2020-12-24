@@ -3,7 +3,7 @@ import "./cronjobs.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { CronJob } from "../../api/endpoints/cron-job.api";
+import { CronJob, cronJobApi } from "../../api/endpoints/cron-job.api";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { cronJobStore } from "./cronjob.store";
@@ -15,6 +15,8 @@ import { KubeObjectListLayout } from "../kube-object";
 import { CronJobTriggerDialog } from "./cronjob-trigger-dialog";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { ConfirmDialog } from "../confirm-dialog/confirm-dialog";
+import { Notifications } from "../notifications/notifications";
 
 enum sortBy {
   name = "name",
@@ -80,10 +82,50 @@ export function CronJobMenu(props: KubeObjectMenuProps<CronJob>) {
   const { object, toolbar } = props;
 
   return (
-    <MenuItem onClick={() => CronJobTriggerDialog.open(object)}>
-      <Icon material="play_circle_filled" title={`Trigger`} interactive={toolbar}/>
-      <span className="title">Trigger</span>
-    </MenuItem>
+    <>
+      <MenuItem onClick={() => CronJobTriggerDialog.open(object)}>
+        <Icon material="play_circle_filled" title={`Trigger`} interactive={toolbar}/>
+        <span className="title">Trigger</span>
+      </MenuItem>
+
+      {object.isSuspend() ?
+        <MenuItem onClick={() => ConfirmDialog.open({
+          ok: async () => {
+            try {
+              await cronJobApi.resume({ namespace: object.getNs(), name: object.getName() });
+            } catch (err) {
+              Notifications.error(err);
+            }
+          },
+          labelOk: `Resume`,
+          message: (
+            <p>
+              Resume CronJob <b>{object.getName()}</b>?
+            </p>),
+        })}>
+          <Icon material="play_circle_outline" title={`Resume`} interactive={toolbar}/>
+          <span className="title">Resume</span>
+        </MenuItem>
+
+        : <MenuItem onClick={() => ConfirmDialog.open({
+          ok: async () => {
+            try {
+              await cronJobApi.suspend({ namespace: object.getNs(), name: object.getName() });
+            } catch (err) {
+              Notifications.error(err);
+            }
+          },
+          labelOk: `Suspend`,
+          message: (
+            <p>
+              Suspend CronJob <b>{object.getName()}</b>?
+            </p>),
+        })}>
+          <Icon material="pause_circle_filled" title={`Suspend`} interactive={toolbar}/>
+          <span className="title">Suspend</span>
+        </MenuItem>
+      }
+    </>
   );
 }
 

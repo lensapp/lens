@@ -5,6 +5,38 @@ import { formatDuration } from "../../utils/formatDuration";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
+export class CronJobApi extends KubeApi<CronJob> {
+  suspend(params: { namespace: string; name: string }) {
+    return this.request.patch(this.getUrl(params), {
+      data: {
+        spec: {
+          suspend: true
+        }
+      }
+    },
+    {
+      headers: {
+        "content-type": "application/strategic-merge-patch+json"
+      }
+    });
+  }
+
+  resume(params: { namespace: string; name: string }) {
+    return this.request.patch(this.getUrl(params), {
+      data: {
+        spec: {
+          suspend: false
+        }
+      }
+    },
+    {
+      headers: {
+        "content-type": "application/strategic-merge-patch+json"
+      }
+    });
+  }
+}
+
 @autobind()
 export class CronJob extends KubeObject {
   static kind = "CronJob";
@@ -90,8 +122,12 @@ export class CronJob extends KubeObject {
 
     return day > daysInMonth[month - 1];
   }
+
+  isSuspend() {
+    return this.spec.suspend;
+  }
 }
 
-export const cronJobApi = new KubeApi({
+export const cronJobApi = new CronJobApi({
   objectConstructor: CronJob,
 });
