@@ -53,7 +53,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     colorTheme: UserStore.defaultTheme,
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
-    openAtLogin: true,
+    openAtLogin: false,
   };
 
   protected async handleOnLoad() {
@@ -66,12 +66,12 @@ export class UserStore extends BaseStore<UserStoreModel> {
     if (app) {
       // track telemetry availability
       reaction(() => this.preferences.allowTelemetry, allowed => {
-        appEventBus.emit({name: "telemetry", action: allowed ? "enabled" : "disabled"});
+        appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
       });
 
       // open at system start-up
-      reaction(() => this.preferences.openAtLogin, open => {
-        app.setLoginItemSettings({ openAtLogin: open });
+      reaction(() => this.preferences.openAtLogin, openAtLogin => {
+        app.setLoginItemSettings({ openAtLogin });
       }, {
         fireImmediately: true,
       });
@@ -95,7 +95,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @action
   saveLastSeenAppVersion() {
-    appEventBus.emit({name: "app", action: "whats-new-seen"});
+    appEventBus.emit({ name: "app", action: "whats-new-seen" });
     this.lastSeenAppVersion = getAppVersion();
   }
 
