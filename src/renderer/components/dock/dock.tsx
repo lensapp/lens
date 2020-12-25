@@ -1,29 +1,28 @@
 import "./dock.scss";
 
-import React, { Fragment } from "react";
-import { observer } from "mobx-react";
+import React from "react";
 import { Trans } from "@lingui/macro";
-import { autobind, cssNames, prevDefault } from "../../utils";
-import { ResizingAnchor, ResizeDirection } from "../resizing-anchor";
+import { observer } from "mobx-react";
+
+import { cssNames, prevDefault } from "../../utils";
 import { Icon } from "../icon";
-import { Tabs } from "../tabs/tabs";
 import { MenuItem } from "../menu";
 import { MenuActions } from "../menu/menu-actions";
-import { dockStore, IDockTab } from "./dock.store";
-import { DockTab } from "./dock-tab";
-import { TerminalTab } from "./terminal-tab";
-import { TerminalWindow } from "./terminal-window";
+import { ResizeDirection, ResizingAnchor } from "../resizing-anchor";
 import { CreateResource } from "./create-resource";
-import { InstallChart } from "./install-chart";
-import { EditResource } from "./edit-resource";
-import { UpgradeChart } from "./upgrade-chart";
-import { createTerminalTab, isTerminalTab } from "./terminal.store";
 import { createResourceTab, isCreateResourceTab } from "./create-resource.store";
+import { DockTabs } from "./dock-tabs";
+import { dockStore, IDockTab } from "./dock.store";
+import { EditResource } from "./edit-resource";
 import { isEditResourceTab } from "./edit-resource.store";
+import { InstallChart } from "./install-chart";
 import { isInstallChartTab } from "./install-chart.store";
-import { isUpgradeChartTab } from "./upgrade-chart.store";
 import { PodLogs } from "./pod-logs";
 import { isPodLogsTab } from "./pod-logs.store";
+import { TerminalWindow } from "./terminal-window";
+import { createTerminalTab, isTerminalTab } from "./terminal.store";
+import { UpgradeChart } from "./upgrade-chart";
+import { isUpgradeChartTab } from "./upgrade-chart.store";
 
 interface Props {
   className?: string;
@@ -53,25 +52,6 @@ export class Dock extends React.Component<Props> {
     open();
     selectTab(tab.id);
   };
-
-  @autobind()
-  renderTab(tab: IDockTab) {
-    if (isTerminalTab(tab)) {
-      return <TerminalTab value={tab} />;
-    }
-
-    if (isCreateResourceTab(tab) || isEditResourceTab(tab)) {
-      return <DockTab value={tab} icon="edit" />;
-    }
-
-    if (isInstallChartTab(tab) || isUpgradeChartTab(tab)) {
-      return <DockTab value={tab} icon={<Icon svg="install" />} />;
-    }
-
-    if (isPodLogsTab(tab)) {
-      return <DockTab value={tab} icon="subject" />;
-    }
-  }
 
   renderTabContent() {
     const { isOpen, height, selectedTab: tab } = dockStore;
@@ -112,13 +92,12 @@ export class Dock extends React.Component<Props> {
           onDrag={dockStore.setHeight}
         />
         <div className="tabs-container flex align-center" onDoubleClick={prevDefault(toggle)}>
-          <Tabs
+          <DockTabs
+            tabs={tabs}
+            selectedTab={selectedTab}
             autoFocus={isOpen}
-            className="dock-tabs"
-            value={selectedTab} onChange={this.onChangeTab}
-          >
-            {tabs.map(tab => <Fragment key={tab.id}>{this.renderTab(tab)}</Fragment>)}
-          </Tabs>
+            onChangeTab={this.onChangeTab}
+          />
           <div className="toolbar flex gaps align-center box grow">
             <div className="dock-menu box grow">
               <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: <Trans>New tab</Trans> }} closeOnScroll={false}>

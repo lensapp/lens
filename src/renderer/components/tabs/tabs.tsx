@@ -51,6 +51,7 @@ export class Tabs extends React.PureComponent<TabsProps> {
 }
 
 export interface TabProps<D = any> extends DOMAttributes<HTMLElement> {
+  id?: string;
   className?: string;
   active?: boolean;
   disabled?: boolean;
