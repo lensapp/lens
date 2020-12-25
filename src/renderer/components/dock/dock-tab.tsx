@@ -29,7 +29,10 @@ export class DockTab extends React.Component<DockTabProps> {
   }
 
   renderMenu() {
-    const { closeTab, closeAllTabs, closeOtherTabs, closeTabsToTheRight } = dockStore;
+    const { closeTab, closeAllTabs, closeOtherTabs, closeTabsToTheRight, tabs, getTabIndex } = dockStore;
+    const closeAllDisabled = tabs.length === 1;
+    const closeOtherDisabled = tabs.length === 1;
+    const closeRightDisabled = getTabIndex(this.tabId) === tabs.length - 1;
 
     return (
       <Menu
@@ -44,13 +47,13 @@ export class DockTab extends React.Component<DockTabProps> {
         <MenuItem onClick={() => closeTab(this.tabId)}>
           <Trans>Close</Trans>
         </MenuItem>
-        <MenuItem onClick={() => closeAllTabs()}>
+        <MenuItem onClick={() => closeAllTabs()} disabled={closeAllDisabled}>
           <Trans>Close all tabs</Trans>
         </MenuItem>
-        <MenuItem onClick={() => closeOtherTabs(this.tabId)}>
+        <MenuItem onClick={() => closeOtherTabs(this.tabId)} disabled={closeOtherDisabled}>
           <Trans>Close other tabs</Trans>
         </MenuItem>
-        <MenuItem onClick={() => closeTabsToTheRight(this.tabId)}>
+        <MenuItem onClick={() => closeTabsToTheRight(this.tabId)} disabled={closeRightDisabled}>
           <Trans>Close tabs to the right</Trans>
         </MenuItem>
       </Menu>
