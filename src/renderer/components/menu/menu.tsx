@@ -31,6 +31,7 @@ export interface MenuProps {
   closeOnScroll?: boolean;          // applicable when usePortal={true}
   position?: MenuPosition;          // applicable when usePortal={false}
   children?: ReactNode;
+  toggleEvent?: "click" | "contextmenu";
 }
 
 interface State {
@@ -44,6 +45,7 @@ const defaultPropsMenu: Partial<MenuProps> = {
   closeOnClickItem: true,
   closeOnClickOutside: true,
   closeOnScroll: false,
+  toggleEvent: "click"
 };
 
 @autobind()
@@ -72,18 +74,19 @@ export class Menu extends React.Component<MenuProps, State> {
     this.opener = document.getElementById(this.props.htmlFor); // might not exist in sub-menus
 
     if (this.opener) {
-      this.opener.addEventListener("click", this.toggle);
+      this.opener.addEventListener(this.props.toggleEvent, this.toggle);
       this.opener.addEventListener("keydown", this.onKeyDown);
     }
     this.elem.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("resize", this.onWindowResize);
     window.addEventListener("click", this.onClickOutside, true);
     window.addEventListener("scroll", this.onScrollOutside, true);
+    window.addEventListener("contextmenu", this.onContextMenu, true);
   }
 
   componentWillUnmount() {
     if (this.opener) {
-      this.opener.removeEventListener("click", this.toggle);
+      this.opener.removeEventListener(this.props.toggleEvent, this.toggle);
       this.opener.removeEventListener("keydown", this.onKeyDown);
     }
     this.elem.removeEventListener("keydown", this.onKeyDown);
@@ -196,6 +199,10 @@ export class Menu extends React.Component<MenuProps, State> {
         this.focusNextItem();
         break;
     }
+  }
+
+  onContextMenu() {
+    this.close();
   }
 
   onWindowResize() {
