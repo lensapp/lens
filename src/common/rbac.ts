@@ -1,8 +1,8 @@
 import { getHostedCluster } from "./cluster-store";
 
 export type KubeResource =
-  "namespaces" | "nodes" | "events" | "resourcequotas" |
-  "services" | "secrets" | "configmaps" | "ingresses" | "networkpolicies" | "persistentvolumes" | "storageclasses" |
+  "namespaces" | "nodes" | "events" | "resourcequotas" | "services" |
+  "secrets" | "configmaps" | "ingresses" | "networkpolicies" | "persistentvolumeclaims" | "persistentvolumes" | "storageclasses" |
   "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "jobs" | "cronjobs" |
   "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets";
 
@@ -27,6 +27,7 @@ export const apiResources: KubeApiResource[] = [
   { resource: "networkpolicies", group: "networking.k8s.io" },
   { resource: "nodes" },
   { resource: "persistentvolumes" },
+  { resource: "persistentvolumeclaims" },
   { resource: "pods" },
   { resource: "poddisruptionbudgets" },
   { resource: "podsecuritypolicies" },
