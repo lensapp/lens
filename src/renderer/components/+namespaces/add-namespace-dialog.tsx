@@ -31,6 +31,10 @@ export class AddNamespaceDialog extends React.Component<Props> {
     AddNamespaceDialog.isOpen = false;
   }
 
+  reset = () => {
+    this.namespace = "";
+  };
+
   close = () => {
     AddNamespaceDialog.close();
   };
@@ -58,6 +62,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
         {...dialogProps}
         className="AddNamespaceDialog"
         isOpen={AddNamespaceDialog.isOpen}
+        onOpen={this.reset}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>

@@ -108,7 +108,6 @@ export class AddSecretDialog extends React.Component<Props> {
       const newSecret = await secretsApi.create({ namespace, name }, secret);
 
       showDetails(newSecret.selfLink);
-      this.reset();
       this.close();
     } catch (err) {
       Notifications.error(err);
@@ -188,6 +187,7 @@ export class AddSecretDialog extends React.Component<Props> {
         {...dialogProps}
         className="AddSecretDialog"
         isOpen={AddSecretDialog.isOpen}
+        onOpen={this.reset}
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
