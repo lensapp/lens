@@ -2,7 +2,6 @@ import "./crd-resource-details.scss";
 
 import React from "react";
 import jsonPath from "jsonpath";
-import { Trans } from "@lingui/macro";
 import { observer } from "mobx-react";
 import { computed } from "mobx";
 import { cssNames } from "../../utils";
@@ -71,7 +70,7 @@ export class CrdResourceDetails extends React.Component<Props> {
       ));
 
     return (
-      <DrawerItem name={<Trans>Status</Trans>} className="status" labelsOnly>
+      <DrawerItem name="Status" className="status" labelsOnly>
         {conditions}
       </DrawerItem>
     );

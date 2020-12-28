@@ -4,7 +4,6 @@ import React from "react";
 import { autorun, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import jsYaml from "js-yaml";
-import { t, Trans } from "@lingui/macro";
 import { IDockTab } from "./dock.store";
 import { cssNames } from "../../utils";
 import { editResourceStore } from "./edit-resource.store";
@@ -12,7 +11,6 @@ import { InfoPanel } from "./info-panel";
 import { Badge } from "../badge";
 import { EditorPanel } from "./editor-panel";
 import { Spinner } from "../spinner";
-import { _i18n } from "../../i18n";
 import { apiManager } from "../../api/api-manager";
 import { KubeObject } from "../../api/kube-object";
 
@@ -80,7 +78,7 @@ export class EditResource extends React.Component<Props> {
 
     return (
       <p>
-        <Trans>{resourceType} <b>{resourceName}</b> updated.</Trans>
+        {resourceType} <b>{resourceName}</b> updated.
       </p>
     );
   };
@@ -100,13 +98,13 @@ export class EditResource extends React.Component<Props> {
           tabId={tabId}
           error={error}
           submit={save}
-          submitLabel={_i18n._(t`Save`)}
-          submittingMessage={_i18n._(t`Applying..`)}
+          submitLabel={`Save`}
+          submittingMessage={`Applying..`}
           controls={(
             <div className="resource-info flex gaps align-center">
-              <span><Trans>Kind</Trans>:</span> <Badge label={kind}/>
-              <span><Trans>Name</Trans>:</span><Badge label={getName()}/>
-              <span><Trans>Namespace</Trans>:</span> <Badge label={getNs() || "global"}/>
+              <span>Kind:</span> <Badge label={kind}/>
+              <span>Name:</span><Badge label={getName()}/>
+              <span>Namespace:</span> <Badge label={getNs() || "global"}/>
             </div>
           )}
         />

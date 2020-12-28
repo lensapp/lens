@@ -83,34 +83,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          use: [
-            {
-              loader: "babel-loader",
-              options: {
-                presets: [
-                  ["@babel/preset-env", {
-                    modules: "commonjs" // ling-ui
-                  }],
-                ],
-                plugins: [
-                  isDevelopment && require.resolve("react-refresh/babel"),
-                ].filter(Boolean),
-              }
-            },
-            {
-              loader: "ts-loader",
-              options: {
-                transpileOnly: true,
-                compilerOptions: {
-                  // localization support
-                  // https://lingui.js.org/guides/typescript.html
-                  jsx: "preserve",
-                  target: "es2016",
-                  module: "esnext",
-                },
-              }
-            }
-          ]
+          use: "ts-loader"
         },
         {
           test: /\.(jpg|png|svg|map|ico)$/,

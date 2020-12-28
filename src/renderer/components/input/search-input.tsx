@@ -1,9 +1,7 @@
 import "./search-input.scss";
 
 import React, { createRef } from "react";
-import { t } from "@lingui/macro";
 import { observer } from "mobx-react";
-import { _i18n } from "../../i18n";
 import { autobind, cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { Input, InputProps } from "./input";
@@ -20,7 +18,7 @@ const defaultProps: Partial<Props> = {
   bindGlobalFocusHotkey: true,
   showClearIcon: true,
   get placeholder() {
-    return _i18n._(t`Search...`);
+    return `Search...`;
   },
 };
 

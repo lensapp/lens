@@ -3,8 +3,6 @@ import "./preferences.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { action, computed, observable } from "mobx";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { Icon } from "../icon";
 import { Select, SelectOption } from "../select";
 import { userStore } from "../../../common/user-store";
@@ -69,7 +67,7 @@ export class Preferences extends React.Component {
       await repoManager.addRepo(repo);
       this.helmAddedRepos.set(repo.name, repo);
     } catch (err) {
-      Notifications.error(<Trans>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</Trans>);
+      Notifications.error(<>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</>);
     }
   }
 
@@ -79,7 +77,7 @@ export class Preferences extends React.Component {
       this.helmAddedRepos.delete(repo.name);
     } catch (err) {
       Notifications.error(
-        <Trans>Removing helm branch <b>{repo.name}</b> has failed: {String(err)}</Trans>
+        <>Removing helm branch <b>{repo.name}</b> has failed: {String(err)}</>
       );
     }
   }
@@ -88,7 +86,7 @@ export class Preferences extends React.Component {
     const isAdded = this.helmAddedRepos.has(repo.name);
 
     if (isAdded) {
-      Notifications.ok(<Trans>Helm branch <b>{repo.name}</b> already in use</Trans>);
+      Notifications.ok(<>Helm branch <b>{repo.name}</b> already in use</>);
 
       return;
     }
@@ -110,35 +108,35 @@ export class Preferences extends React.Component {
 
   render() {
     const { preferences } = userStore;
-    const header = <h2><Trans>Preferences</Trans></h2>;
+    const header = <h2>Preferences</h2>;
 
     return (
       <PageLayout showOnTop className="Preferences" header={header}>
-        <h2><Trans>Color Theme</Trans></h2>
+        <h2>Color Theme</h2>
         <Select
           options={this.themeOptions}
           value={preferences.colorTheme}
           onChange={({ value }: SelectOption) => preferences.colorTheme = value}
         />
 
-        <h2><Trans>HTTP Proxy</Trans></h2>
+        <h2>HTTP Proxy</h2>
         <Input
           theme="round-black"
-          placeholder={_i18n._(t`Type HTTP proxy url (example: http://proxy.acme.org:8080)`)}
+          placeholder={`Type HTTP proxy url (example: http://proxy.acme.org:8080)`}
           value={this.httpProxy}
           onChange={v => this.httpProxy = v}
           onBlur={() => preferences.httpsProxy = this.httpProxy}
         />
         <small className="hint">
-          <Trans>Proxy is used only for non-cluster communication.</Trans>
+          Proxy is used only for non-cluster communication.
         </small>
 
         <KubectlBinaries preferences={preferences}/>
 
-        <h2><Trans>Helm</Trans></h2>
+        <h2>Helm</h2>
         <div className="flex gaps">
           <Select id="HelmRepoSelect"
-            placeholder={<Trans>Repositories</Trans>}
+            placeholder="Repositories"
             isLoading={this.helmLoading}
             isDisabled={this.helmLoading}
             options={this.helmOptions}
@@ -149,7 +147,7 @@ export class Preferences extends React.Component {
           />
           <Button
             primary
-            label={<Trans>Add Custom Helm Repo</Trans>}
+            label="Add Custom Helm Repo"
             onClick={AddHelmRepoDialog.open}
           />
         </div>
@@ -164,7 +162,7 @@ export class Preferences extends React.Component {
                 <Icon
                   material="delete"
                   onClick={() => this.removeRepo(repo)}
-                  tooltip={<Trans>Remove</Trans>}
+                  tooltip="Remove"
                 />
                 <Tooltip targetId={tooltipId} formatters={{ narrow: true }}>
                   {repo.url}
@@ -174,23 +172,23 @@ export class Preferences extends React.Component {
           })}
         </div>
 
-        <h2><Trans>Auto start-up</Trans></h2>
+        <h2>Auto start-up</h2>
         <Checkbox
-          label={<Trans>Automatically start Lens on login</Trans>}
+          label="Automatically start Lens on login"
           value={preferences.openAtLogin}
           onChange={v => preferences.openAtLogin = v}
         />
 
-        <h2><Trans>Certificate Trust</Trans></h2>
+        <h2>Certificate Trust</h2>
         <Checkbox
-          label={<Trans>Allow untrusted Certificate Authorities</Trans>}
+          label="Allow untrusted Certificate Authorities"
           value={preferences.allowUntrustedCAs}
           onChange={v => preferences.allowUntrustedCAs = v}
         />
         <small className="hint">
-          <Trans>This will make Lens to trust ANY certificate authority without any validations.</Trans>{" "}
-          <Trans>Needed with some corporate proxies that do certificate re-writing.</Trans>{" "}
-          <Trans>Does not affect cluster communications!</Trans>
+          This will make Lens to trust ANY certificate authority without any validations.{" "}
+          Needed with some corporate proxies that do certificate re-writing.{" "}
+          Does not affect cluster communications!
         </small>
 
         <div className="extensions flex column gaps">

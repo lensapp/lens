@@ -6,8 +6,6 @@ import { requestMain } from "../../../common/ipc";
 import type { Cluster } from "../../../main/cluster";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
-import { _i18n } from "../../i18n";
-import { t, Trans } from "@lingui/macro";
 import { userStore } from "../../../common/user-store";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
@@ -44,7 +42,7 @@ export class ClustersMenu extends React.Component<Props> {
     const menu = new Menu();
 
     menu.append(new MenuItem({
-      label: _i18n._(t`Settings`),
+      label: `Settings`,
       click: () => {
         navigate(clusterSettingsURL({
           params: {
@@ -56,7 +54,7 @@ export class ClustersMenu extends React.Component<Props> {
 
     if (cluster.online) {
       menu.append(new MenuItem({
-        label: _i18n._(t`Disconnect`),
+        label: `Disconnect`,
         click: async () => {
           if (clusterStore.isActive(cluster.id)) {
             navigate(landingURL());
@@ -69,13 +67,13 @@ export class ClustersMenu extends React.Component<Props> {
 
     if (!cluster.isManaged) {
       menu.append(new MenuItem({
-        label: _i18n._(t`Remove`),
+        label: `Remove`,
         click: () => {
           ConfirmDialog.open({
             okButtonProps: {
               primary: false,
               accent: true,
-              label: _i18n._(t`Remove`),
+              label: `Remove`,
             },
             ok: () => {
               if (clusterStore.activeClusterId === cluster.id) {
@@ -149,11 +147,11 @@ export class ClustersMenu extends React.Component<Props> {
         </div>
         <div className="add-cluster">
           <Tooltip targetId="add-cluster-icon">
-            <Trans>Add Cluster</Trans>
+            Add Cluster
           </Tooltip>
           <Icon big material="add" id="add-cluster-icon" disabled={workspace.isManaged} onClick={this.addCluster}/>
           {newContexts.size > 0 && (
-            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>}/>
+            <Badge className="counter" label={newContexts.size} tooltip="new"/>
           )}
         </div>
         <div className="extensions">

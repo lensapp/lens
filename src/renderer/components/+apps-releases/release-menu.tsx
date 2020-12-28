@@ -1,5 +1,4 @@
 import React from "react";
-import { t, Trans } from "@lingui/macro";
 import { HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { autobind, cssNames } from "../../utils";
 import { releaseStore } from "./release.store";
@@ -8,7 +7,6 @@ import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { ReleaseRollbackDialog } from "./release-rollback-dialog";
 import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
-import { _i18n } from "../../i18n";
 
 interface Props extends MenuActionsProps {
   release: HelmRelease;
@@ -44,8 +42,8 @@ export class HelmReleaseMenu extends React.Component<Props> {
       <>
         {hasRollback && (
           <MenuItem onClick={this.rollback}>
-            <Icon material="history" interactive={toolbar} title={_i18n._(t`Rollback`)}/>
-            <span className="title"><Trans>Rollback</Trans></span>
+            <Icon material="history" interactive={toolbar} title={`Rollback`}/>
+            <span className="title">Rollback</span>
           </MenuItem>
         )}
       </>

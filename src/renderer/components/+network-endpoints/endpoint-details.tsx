@@ -2,7 +2,6 @@ import "./endpoint-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerTitle } from "../drawer";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { KubeObjectDetailsProps } from "../kube-object";
@@ -24,7 +23,7 @@ export class EndpointDetails extends React.Component<Props> {
     return (
       <div className="EndpointDetails">
         <KubeObjectMeta object={endpoint}/>
-        <DrawerTitle title={<Trans>Subsets</Trans>}/>
+        <DrawerTitle title="Subsets"/>
         {
           endpoint.getEndpointSubsets().map((subset) => (
             <EndpointSubsetList key={subset.toString()} subset={subset} endpoint={endpoint} />

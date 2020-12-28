@@ -3,7 +3,6 @@ import "./pods.scss";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
-import { Trans } from "@lingui/macro";
 import { podsStore } from "./pods.store";
 import { RouteComponentProps } from "react-router";
 import { volumeClaimStore } from "../+storage-volume-claims/volume-claim.store";
@@ -92,18 +91,18 @@ export class Pods extends React.Component<Props> {
           (pod: Pod) => pod.status.podIP,
           (pod: Pod) => pod.getNodeName(),
         ]}
-        renderHeaderTitle={<Trans>Pods</Trans>}
+        renderHeaderTitle="Pods"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Containers</Trans>, className: "containers", sortBy: sortBy.containers },
-          { title: <Trans>Restarts</Trans>, className: "restarts", sortBy: sortBy.restarts },
-          { title: <Trans>Controlled By</Trans>, className: "owners", sortBy: sortBy.owners },
-          { title: <Trans>Node</Trans>, className: "node", sortBy: sortBy.node },
-          { title: <Trans>QoS</Trans>, className: "qos", sortBy: sortBy.qos },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-          { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Containers", className: "containers", sortBy: sortBy.containers },
+          { title: "Restarts", className: "restarts", sortBy: sortBy.restarts },
+          { title: "Controlled By", className: "owners", sortBy: sortBy.owners },
+          { title: "Node", className: "node", sortBy: sortBy.node },
+          { title: "QoS", className: "qos", sortBy: sortBy.qos },
+          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Status", className: "status", sortBy: sortBy.status },
         ]}
         renderTableContents={(pod: Pod) => [
           <Badge flat key="name" label={pod.getName()} tooltip={pod.getName()} />,

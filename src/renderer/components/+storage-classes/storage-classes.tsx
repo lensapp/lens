@@ -3,7 +3,6 @@ import "./storage-classes.scss";
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { StorageClass } from "../../api/endpoints/storage-class.api";
 import { KubeObjectListLayout } from "../kube-object";
 import { IStorageClassesRouteParams } from "./storage-classes.route";
@@ -37,21 +36,21 @@ export class StorageClasses extends React.Component<Props> {
           (item: StorageClass) => item.getSearchFields(),
           (item: StorageClass) => item.provisioner,
         ]}
-        renderHeaderTitle={<Trans>Storage Classes</Trans>}
+        renderHeaderTitle="Storage Classes"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Provisioner</Trans>, className: "provisioner", sortBy: sortBy.provisioner },
-          { title: <Trans>Reclaim Policy</Trans>, className: "reclaim-policy", sortBy: sortBy.reclaimPolicy },
-          { title: <Trans>Default</Trans>, className: "is-default" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Provisioner", className: "provisioner", sortBy: sortBy.provisioner },
+          { title: "Reclaim Policy", className: "reclaim-policy", sortBy: sortBy.reclaimPolicy },
+          { title: "Default", className: "is-default" },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(storageClass: StorageClass) => [
           storageClass.getName(),
           <KubeObjectStatusIcon key="icon" object={storageClass} />,
           storageClass.provisioner,
           storageClass.getReclaimPolicy(),
-          storageClass.isDefault() ? <Trans>Yes</Trans> : null,
+          storageClass.isDefault() ? "Yes" : null,
           storageClass.getAge(),
         ]}
       />

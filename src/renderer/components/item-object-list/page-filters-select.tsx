@@ -1,12 +1,10 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { computed } from "mobx";
-import { t, Trans } from "@lingui/macro";
 import { GroupSelectOption, Select, SelectOption, SelectProps } from "../select";
 import { FilterType, pageFilters } from "./page-filters.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { Icon } from "../icon";
-import { _i18n } from "../../i18n";
 import { FilterIcon } from "./filter-icon";
 
 export interface SelectOptionFilter extends SelectOption {
@@ -36,7 +34,7 @@ export class PageFiltersSelect extends React.Component<Props> {
       const selectedValues = pageFilters.getValues(FilterType.NAMESPACE);
 
       options.push({
-        label: <Trans>Namespace</Trans>,
+        label: "Namespace",
         options: namespaceStore.items.map(ns => {
           const name = ns.getName();
 
@@ -98,8 +96,8 @@ export class PageFiltersSelect extends React.Component<Props> {
     return (
       <Select
         {...selectProps}
-        placeholder={_i18n._(t`Filters (${selectedOptions.length}/${options.length})`)}
-        noOptionsMessage={() => _i18n._(t`No filters available.`)}
+        placeholder={`Filters (${selectedOptions.length}/${options.length})`}
+        noOptionsMessage={() => `No filters available.`}
         autoConvertOptions={false}
         tabSelectsValue={false}
         controlShouldRenderValue={false}

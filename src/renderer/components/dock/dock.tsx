@@ -1,7 +1,6 @@
 import "./dock.scss";
 
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { observer } from "mobx-react";
 
 import { cssNames, prevDefault } from "../../utils";
@@ -100,14 +99,14 @@ export class Dock extends React.Component<Props> {
           />
           <div className="toolbar flex gaps align-center box grow">
             <div className="dock-menu box grow">
-              <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: <Trans>New tab</Trans> }} closeOnScroll={false}>
+              <MenuActions usePortal triggerIcon={{ material: "add", className: "new-dock-tab", tooltip: "New tab" }} closeOnScroll={false}>
                 <MenuItem className="create-terminal-tab" onClick={() => createTerminalTab()}>
                   <Icon small svg="terminal" size={15} />
-                  <Trans>Terminal session</Trans>
+                  Terminal session
                 </MenuItem>
                 <MenuItem className="create-resource-tab" onClick={() => createResourceTab()}>
                   <Icon small material="create" />
-                  <Trans>Create resource</Trans>
+                  Create resource
                 </MenuItem>
               </MenuActions>
             </div>
@@ -115,12 +114,12 @@ export class Dock extends React.Component<Props> {
               <>
                 <Icon
                   material={fullSize ? "fullscreen_exit" : "fullscreen"}
-                  tooltip={fullSize ? <Trans>Exit full size mode</Trans> : <Trans>Fit to window</Trans>}
+                  tooltip={fullSize ? "Exit full size mode" : "Fit to window"}
                   onClick={toggleFillSize}
                 />
                 <Icon
                   material={`keyboard_arrow_${isOpen ? "down" : "up"}`}
-                  tooltip={isOpen ? <Trans>Minimize</Trans> : <Trans>Open</Trans>}
+                  tooltip={isOpen ? "Minimize" : "Open"}
                   onClick={toggle}
                 />
               </>

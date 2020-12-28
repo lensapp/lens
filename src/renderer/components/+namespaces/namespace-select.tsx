@@ -3,12 +3,10 @@ import "./namespace-select.scss";
 import React from "react";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { Select, SelectOption, SelectProps } from "../select";
 import { cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
-import { _i18n } from "../../i18n";
 import { FilterIcon } from "../item-object-list/filter-icon";
 import { FilterType } from "../item-object-list/page-filters.store";
 
@@ -23,7 +21,7 @@ const defaultProps: Partial<Props> = {
   showIcons: true,
   showClusterOption: false,
   get clusterOptionLabel() {
-    return _i18n._(t`Cluster`);
+    return `Cluster`;
   },
 };
 
@@ -87,10 +85,10 @@ export class NamespaceSelect extends React.Component<Props> {
 export class NamespaceSelectFilter extends React.Component {
   render() {
     const { contextNs, hasContext, toggleContext } = namespaceStore;
-    let placeholder = <Trans>All namespaces</Trans>;
+    let placeholder = <>All namespaces</>;
 
-    if (contextNs.length == 1) placeholder = <Trans>Namespace: {contextNs[0]}</Trans>;
-    if (contextNs.length >= 2) placeholder = <Trans>Namespaces: {contextNs.join(", ")}</Trans>;
+    if (contextNs.length == 1) placeholder = <>Namespace: {contextNs[0]}</>;
+    if (contextNs.length >= 2) placeholder = <>Namespaces: {contextNs.join(", ")}</>;
 
     return (
       <NamespaceSelect

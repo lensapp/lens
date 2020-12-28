@@ -1,7 +1,6 @@
 import "./pod-details-container.scss";
 
 import React from "react";
-import { t, Trans } from "@lingui/macro";
 import { IPodContainer, IPodContainerStatus, Pod } from "../../api/endpoints";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
@@ -12,7 +11,6 @@ import { PodContainerPort } from "./pod-container-port";
 import { ResourceMetrics } from "../resource-metrics";
 import { IMetrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
-import { _i18n } from "../../i18n";
 
 interface Props {
   pod: Pod;
@@ -27,8 +25,8 @@ export class PodDetailsContainer extends React.Component<Props> {
 
     return (
       <span className={cssNames("status", state)}>
-        {state}{ready ? `, ${_i18n._(t`ready`)}` : ""}
-        {state === "terminated" ? ` - ${status.state.terminated.reason} (${_i18n._(t`exit code`)}: ${status.state.terminated.exitCode})` : ""}
+        {state}{ready ? `, ready` : ""}
+        {state === "terminated" ? ` - ${status.state.terminated.reason} (exit code: ${status.state.terminated.exitCode})` : ""}
       </span>
     );
   }
@@ -38,9 +36,9 @@ export class PodDetailsContainer extends React.Component<Props> {
       return (
         <span>
           {lastState}<br/>
-          {_i18n._(t`Reason`)}: {status.lastState.terminated.reason} - {_i18n._(t`exit code`)}: {status.lastState.terminated.exitCode}<br/>
-          {_i18n._(t`Started at`)}: {status.lastState.terminated.startedAt}<br/>
-          {_i18n._(t`Finished at`)}: {status.lastState.terminated.finishedAt}<br/>
+          Reason: {status.lastState.terminated.reason} - exit code: {status.lastState.terminated.exitCode}<br/>
+          Started at: {status.lastState.terminated.startedAt}<br/>
+          Finished at: {status.lastState.terminated.finishedAt}<br/>
         </span>
       );
     }
@@ -60,9 +58,9 @@ export class PodDetailsContainer extends React.Component<Props> {
     const startup = pod.getStartupProbe(container);
     const isInitContainer = !!pod.getInitContainers().find(c => c.name == name);
     const metricTabs = [
-      <Trans key="cpu">CPU</Trans>,
-      <Trans key="memory">Memory</Trans>,
-      <Trans key="filesystem">Filesystem</Trans>,
+      "CPU",
+      "Memory",
+      "Filesystem",
     ];
 
     return (
@@ -76,25 +74,25 @@ export class PodDetailsContainer extends React.Component<Props> {
         </ResourceMetrics>
         }
         {status &&
-        <DrawerItem name={<Trans>Status</Trans>}>
+        <DrawerItem name="Status">
           {this.renderStatus(state, status)}
         </DrawerItem>
         }
         {lastState &&
-        <DrawerItem name={<Trans>Last Status</Trans>}>
+        <DrawerItem name="Last Status">
           {this.renderLastState(lastState, status)}
         </DrawerItem>
         }
-        <DrawerItem name={<Trans>Image</Trans>}>
+        <DrawerItem name="Image">
           {image}
         </DrawerItem>
         {imagePullPolicy && imagePullPolicy !== "IfNotPresent" &&
-        <DrawerItem name={<Trans>ImagePullPolicy</Trans>}>
+        <DrawerItem name="ImagePullPolicy">
           {imagePullPolicy}
         </DrawerItem>
         }
         {ports && ports.length > 0 &&
-        <DrawerItem name={<Trans>Ports</Trans>}>
+        <DrawerItem name="Ports">
           {
             ports.map((port) => {
               const key = `${container.name}-port-${port.containerPort}-${port.protocol}`;
@@ -108,7 +106,7 @@ export class PodDetailsContainer extends React.Component<Props> {
         }
         {<ContainerEnvironment container={container} namespace={pod.getNs()}/>}
         {volumeMounts && volumeMounts.length > 0 &&
-        <DrawerItem name={<Trans>Mounts</Trans>}>
+        <DrawerItem name="Mounts">
           {
             volumeMounts.map(mount => {
               const { name, mountPath, readOnly } = mount;
@@ -124,7 +122,7 @@ export class PodDetailsContainer extends React.Component<Props> {
         </DrawerItem>
         }
         {liveness.length > 0 &&
-        <DrawerItem name={<Trans>Liveness</Trans>} labelsOnly>
+        <DrawerItem name="Liveness" labelsOnly>
           {
             liveness.map((value, index) => (
               <Badge key={index} label={value}/>
@@ -133,7 +131,7 @@ export class PodDetailsContainer extends React.Component<Props> {
         </DrawerItem>
         }
         {readiness.length > 0 &&
-        <DrawerItem name={<Trans>Readiness</Trans>} labelsOnly>
+        <DrawerItem name="Readiness" labelsOnly>
           {
             readiness.map((value, index) => (
               <Badge key={index} label={value}/>
@@ -142,7 +140,7 @@ export class PodDetailsContainer extends React.Component<Props> {
         </DrawerItem>
         }
         {startup.length > 0 &&
-        <DrawerItem name={<Trans>Startup</Trans>} labelsOnly>
+        <DrawerItem name="Startup" labelsOnly>
           {
             startup.map((value, index) => (
               <Badge key={index} label={value}/>
@@ -151,13 +149,13 @@ export class PodDetailsContainer extends React.Component<Props> {
         </DrawerItem>
         }
         {command &&
-        <DrawerItem name={<Trans>Command</Trans>}>
+        <DrawerItem name="Command">
           {command.join(" ")}
         </DrawerItem>
         }
 
         {args &&
-        <DrawerItem name={<Trans>Arguments</Trans>}>
+        <DrawerItem name="Arguments">
           {args.join(" ")}
         </DrawerItem>
         }

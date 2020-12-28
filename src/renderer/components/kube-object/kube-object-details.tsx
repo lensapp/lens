@@ -3,7 +3,6 @@ import "./kube-object-details.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { computed, observable, reaction } from "mobx";
-import { Trans } from "@lingui/macro";
 import { createPageParam, navigation } from "../../navigation";
 import { Drawer } from "../drawer";
 import { KubeObject } from "../../api/kube-object";
@@ -95,7 +94,7 @@ export class KubeObjectDetails extends React.Component {
         try {
           await store.loadFromPath(path);
         } catch (err) {
-          this.loadingError = <Trans>Resource loading has failed: <b>{err.toString()}</b></Trans>;
+          this.loadingError = <>Resource loading has failed: <b>{err.toString()}</b></>;
         } finally {
           this.isLoading = false;
         }

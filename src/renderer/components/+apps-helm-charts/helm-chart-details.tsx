@@ -2,7 +2,6 @@ import "./helm-chart-details.scss";
 
 import React, { Component } from "react";
 import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
-import { t, Trans } from "@lingui/macro";
 import { observable, autorun } from "mobx";
 import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
@@ -14,7 +13,6 @@ import { Button } from "../button";
 import { Select, SelectOption } from "../select";
 import { createInstallChartTab } from "../dock/install-chart.store";
 import { Badge } from "../badge";
-import { _i18n } from "../../i18n";
 
 interface Props {
   chart: HelmChart;
@@ -84,9 +82,9 @@ export class HelmChartDetails extends Component<Props> {
         <div className="intro-contents box grow">
           <div className="description flex align-center justify-space-between">
             {selectedChart.getDescription()}
-            <Button primary label={_i18n._(t`Install`)} onClick={this.install} />
+            <Button primary label={`Install`} onClick={this.install} />
           </div>
-          <DrawerItem name={_i18n._(t`Version`)} className="version" onClick={stopPropagation}>
+          <DrawerItem name={`Version`} className="version" onClick={stopPropagation}>
             <Select
               themeName="outlined"
               menuPortalTarget={null}
@@ -95,16 +93,16 @@ export class HelmChartDetails extends Component<Props> {
               onChange={onVersionChange}
             />
           </DrawerItem>
-          <DrawerItem name={_i18n._(t`Home`)}>
+          <DrawerItem name={`Home`}>
             <a href={selectedChart.getHome()} target="_blank" rel="noreferrer">{selectedChart.getHome()}</a>
           </DrawerItem>
-          <DrawerItem name={_i18n._(t`Maintainers`)} className="maintainers">
+          <DrawerItem name={`Maintainers`} className="maintainers">
             {selectedChart.getMaintainers().map(({ name, email, url }) =>
               <a key={name} href={url || `mailto:${email}`} target="_blank" rel="noreferrer">{name}</a>
             )}
           </DrawerItem>
           {selectedChart.getKeywords().length > 0 && (
-            <DrawerItem name={_i18n._(t`Keywords`)} labelsOnly>
+            <DrawerItem name={`Keywords`} labelsOnly>
               {selectedChart.getKeywords().map(key => <Badge key={key} label={key} />)}
             </DrawerItem>
           )}
@@ -148,7 +146,7 @@ export class HelmChartDetails extends Component<Props> {
 
   render() {
     const { chart, hideDetails } = this.props;
-    const title = chart ? <Trans>Chart: {chart.getFullName()}</Trans> : "";
+    const title = chart ? <>Chart: {chart.getFullName()}</> : "";
 
     return (
       <Drawer

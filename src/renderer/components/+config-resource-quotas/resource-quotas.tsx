@@ -2,7 +2,6 @@ import "./resource-quotas.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
 import { ResourceQuota } from "../../api/endpoints/resource-quota.api";
@@ -36,12 +35,12 @@ export class ResourceQuotas extends React.Component<Props> {
             (item: ResourceQuota) => item.getSearchFields(),
             (item: ResourceQuota) => item.getName(),
           ]}
-          renderHeaderTitle={<Trans>Resource Quotas</Trans>}
+          renderHeaderTitle="Resource Quotas"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { title: "Name", className: "name", sortBy: sortBy.name },
             { className: "warning" },
-            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+            { title: "Age", className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(resourceQuota: ResourceQuota) => [
             resourceQuota.getName(),
@@ -51,7 +50,7 @@ export class ResourceQuotas extends React.Component<Props> {
           ]}
           addRemoveButtons={{
             onAdd: () => AddQuotaDialog.open(),
-            addTooltip: <Trans>Create new ResourceQuota</Trans>
+            addTooltip: "Create new ResourceQuota"
           }}
         />
         <AddQuotaDialog/>

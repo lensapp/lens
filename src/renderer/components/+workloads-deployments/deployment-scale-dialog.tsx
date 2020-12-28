@@ -3,7 +3,6 @@ import "./deployment-scale-dialog.scss";
 import React, { Component } from "react";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Deployment, deploymentApi } from "../../api/endpoints";
@@ -89,7 +88,7 @@ export class DeploymentScaleDialog extends Component<Props> {
   desiredReplicasUp = () => {
     this.desiredReplicas < this.scaleMax && this.desiredReplicas++;
   };
-  
+
   desiredReplicasDown = () => {
     this.desiredReplicas > 0 && this.desiredReplicas--;
   };
@@ -101,11 +100,11 @@ export class DeploymentScaleDialog extends Component<Props> {
     return (
       <>
         <div className="current-scale" data-testid="current-scale">
-          <Trans>Current replica scale: {currentReplicas}</Trans>
+          Current replica scale: {currentReplicas}
         </div>
         <div className="flex gaps align-center">
           <div className="desired-scale" data-testid="desired-scale">
-            <Trans>Desired number of replicas</Trans>: {desiredReplicas}
+            Desired number of replicas: {desiredReplicas}
           </div>
           <div className="slider-container flex align-center">
             <Slider value={desiredReplicas} max={scaleMax} onChange={onChange as any /** see: https://github.com/mui-org/material-ui/issues/20191 */}/>
@@ -126,7 +125,7 @@ export class DeploymentScaleDialog extends Component<Props> {
         {warning &&
         <div className="warning" data-testid="warning">
           <Icon material="warning"/>
-          <Trans>High number of replicas may cause cluster performance issues</Trans>
+          High number of replicas may cause cluster performance issues
         </div>
         }
       </>
@@ -138,7 +137,7 @@ export class DeploymentScaleDialog extends Component<Props> {
     const deploymentName = this.deployment ? this.deployment.getName() : "";
     const header = (
       <h5>
-        <Trans>Scale Deployment <span>{deploymentName}</span></Trans>
+        Scale Deployment <span>{deploymentName}</span>
       </h5>
     );
 
@@ -155,7 +154,7 @@ export class DeploymentScaleDialog extends Component<Props> {
           <WizardStep
             contentClass="flex gaps column"
             next={this.scale}
-            nextLabel={<Trans>Scale</Trans>}
+            nextLabel="Scale"
             disabledNext={!this.ready}
           >
             {this.renderContents()}

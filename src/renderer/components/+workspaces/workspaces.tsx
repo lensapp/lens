@@ -2,11 +2,9 @@ import "./workspaces.scss";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { computed, observable, toJS } from "mobx";
-import { t, Trans } from "@lingui/macro";
 import { WizardLayout } from "../layout/wizard-layout";
 import { Workspace, WorkspaceId, workspaceStore } from "../../../common/workspace-store";
 import { v4 as uuid } from "uuid";
-import { _i18n } from "../../i18n";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon } from "../icon";
 import { Input } from "../input";
@@ -36,12 +34,12 @@ export class Workspaces extends React.Component {
   renderInfo() {
     return (
       <Fragment>
-        <h2><Trans>What is a Workspace?</Trans></h2>
+        <h2>What is a Workspace?</h2>
         <p className="info">
-          <Trans>Workspaces are used to organize number of clusters into logical groups.</Trans>
+          Workspaces are used to organize number of clusters into logical groups.
         </p>
         <p>
-          <Trans>A single workspaces contains a list of clusters and their full configuration.</Trans>
+          A single workspaces contains a list of clusters and their full configuration.
         </p>
       </Fragment>
     );
@@ -94,7 +92,7 @@ export class Workspaces extends React.Component {
 
     ConfirmDialog.open({
       okButtonProps: {
-        label: _i18n._(t`Remove Workspace`),
+        label: `Remove Workspace`,
         primary: false,
         accent: true,
       },
@@ -105,10 +103,10 @@ export class Workspaces extends React.Component {
       message: (
         <div className="confirm flex column gaps">
           <p>
-            <Trans>Are you sure you want remove workspace <b>{workspace.name}</b>?</Trans>
+            Are you sure you want remove workspace <b>{workspace.name}</b>?
           </p>
           <p className="info">
-            <Trans>All clusters within workspace will be cleared as well</Trans>
+            All clusters within workspace will be cleared as well
           </p>
         </div>
       ),
@@ -128,7 +126,7 @@ export class Workspaces extends React.Component {
     return (
       <WizardLayout className="Workspaces" infoPanel={this.renderInfo()}>
         <h2>
-          <Trans>Workspaces</Trans>
+          Workspaces
         </h2>
         <div className="items flex column gaps">
           {this.workspaces.map(({ id: workspaceId, name, description, ownerRef }) => {
@@ -153,19 +151,19 @@ export class Workspaces extends React.Component {
                   <Fragment>
                     <span className="name flex gaps align-center">
                       <a href="#" onClick={prevDefault(() => this.activateWorkspace(workspaceId))}>{name}</a>
-                      {isActive && <span> <Trans>(current)</Trans></span>}
+                      {isActive && <span> (current)</span>}
                     </span>
                     <span className="description">{description}</span>
                     {!isDefault && !managed && (
                       <Fragment>
                         <Icon
                           material="edit"
-                          tooltip={<Trans>Edit</Trans>}
+                          tooltip="Edit"
                           onClick={() => this.editWorkspace(workspaceId)}
                         />
                         <Icon
                           material="delete"
-                          tooltip={<Trans>Delete</Trans>}
+                          tooltip="Delete"
                           onClick={() => this.removeWorkspace(workspaceId)}
                         />
                       </Fragment>
@@ -176,7 +174,7 @@ export class Workspaces extends React.Component {
                   <Fragment>
                     <Input
                       className="name"
-                      placeholder={_i18n._(t`Name`)}
+                      placeholder={`Name`}
                       value={editingWorkspace.name}
                       onChange={v => editingWorkspace.name = v}
                       onKeyPress={(e) => this.onInputKeypress(e, workspaceId)}
@@ -185,19 +183,19 @@ export class Workspaces extends React.Component {
                     />
                     <Input
                       className="description"
-                      placeholder={_i18n._(t`Description`)}
+                      placeholder={`Description`}
                       value={editingWorkspace.description}
                       onChange={v => editingWorkspace.description = v}
                       onKeyPress={(e) => this.onInputKeypress(e, workspaceId)}
                     />
                     <Icon
                       material="save"
-                      tooltip={<Trans>Save</Trans>}
+                      tooltip="Save"
                       onClick={() => this.saveWorkspace(workspaceId)}
                     />
                     <Icon
                       material="cancel"
-                      tooltip={<Trans>Cancel</Trans>}
+                      tooltip="Cancel"
                       onClick={() => this.clearEditing(workspaceId)}
                     />
                   </Fragment>
@@ -209,7 +207,7 @@ export class Workspaces extends React.Component {
         <Button
           primary
           className="box left"
-          label={<Trans>Add Workspace</Trans>}
+          label="Add Workspace"
           onClick={this.addWorkspace}
         />
       </WizardLayout>

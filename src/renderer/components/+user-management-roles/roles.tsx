@@ -2,7 +2,6 @@ import "./roles.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { IRolesRouteParams } from "../+user-management/user-management.route";
 import { rolesStore } from "./roles.store";
@@ -36,12 +35,12 @@ export class Roles extends React.Component<Props> {
           searchFilters={[
             (role: Role) => role.getSearchFields(),
           ]}
-          renderHeaderTitle={<Trans>Roles</Trans>}
+          renderHeaderTitle="Roles"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { title: "Name", className: "name", sortBy: sortBy.name },
             { className: "warning" },
-            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+            { title: "Age", className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(role: Role) => [
             role.getName(),
@@ -51,7 +50,7 @@ export class Roles extends React.Component<Props> {
           ]}
           addRemoveButtons={{
             onAdd: () => AddRoleDialog.open(),
-            addTooltip: <Trans>Create new Role</Trans>,
+            addTooltip: "Create new Role",
           }}
         />
         <AddRoleDialog/>

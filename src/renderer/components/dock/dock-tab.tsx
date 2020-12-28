@@ -2,14 +2,12 @@ import "./dock-tab.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { autobind, cssNames, prevDefault } from "../../utils";
 import { dockStore, IDockTab } from "./dock.store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
 import { Menu, MenuItem } from "../menu";
 import { observable } from "mobx";
-import { _i18n } from "../../i18n";
 
 export interface DockTabProps extends TabProps<IDockTab> {
   moreActions?: React.ReactNode;
@@ -45,16 +43,16 @@ export class DockTab extends React.Component<DockTabProps> {
         toggleEvent="contextmenu"
       >
         <MenuItem onClick={() => closeTab(this.tabId)}>
-          <Trans>Close</Trans>
+          Close
         </MenuItem>
         <MenuItem onClick={() => closeAllTabs()} disabled={closeAllDisabled}>
-          <Trans>Close all tabs</Trans>
+          Close all tabs
         </MenuItem>
         <MenuItem onClick={() => closeOtherTabs(this.tabId)} disabled={closeOtherDisabled}>
-          <Trans>Close other tabs</Trans>
+          Close other tabs
         </MenuItem>
         <MenuItem onClick={() => closeTabsToTheRight(this.tabId)} disabled={closeRightDisabled}>
-          <Trans>Close tabs to the right</Trans>
+          Close tabs to the right
         </MenuItem>
       </Menu>
     );
@@ -70,7 +68,7 @@ export class DockTab extends React.Component<DockTabProps> {
         {!pinned && (
           <Icon
             small material="close"
-            title={_i18n._(t`Close (Ctrl+W)`)}
+            title={`Close (Ctrl+W)`}
             onClick={prevDefault(this.close)}
           />
         )}

@@ -3,7 +3,6 @@ import "./deployments.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { t, Trans } from "@lingui/macro";
 import { Deployment, deploymentApi } from "../../api/endpoints";
 import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { MenuItem } from "../menu";
@@ -17,7 +16,6 @@ import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { IDeploymentsRouteParams } from "../+workloads";
-import { _i18n } from "../../i18n";
 import { cssNames } from "../../utils";
 import kebabCase from "lodash/kebabCase";
 import orderBy from "lodash/orderBy";
@@ -70,15 +68,15 @@ export class Deployments extends React.Component<Props> {
           (deployment: Deployment) => deployment.getSearchFields(),
           (deployment: Deployment) => deployment.getConditionsText(),
         ]}
-        renderHeaderTitle={<Trans>Deployments</Trans>}
+        renderHeaderTitle="Deployments"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Pods</Trans>, className: "pods" },
-          { title: <Trans>Replicas</Trans>, className: "replicas", sortBy: sortBy.replicas },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-          { title: <Trans>Conditions</Trans>, className: "conditions", sortBy: sortBy.condition },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Pods", className: "pods" },
+          { title: "Replicas", className: "replicas", sortBy: sortBy.replicas },
+          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Conditions", className: "conditions", sortBy: sortBy.condition },
         ]}
         renderTableContents={(deployment: Deployment) => [
           deployment.getName(),
@@ -103,8 +101,8 @@ export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
   return (
     <>
       <MenuItem onClick={() => DeploymentScaleDialog.open(object)}>
-        <Icon material="open_with" title={_i18n._(t`Scale`)} interactive={toolbar}/>
-        <span className="title"><Trans>Scale</Trans></span>
+        <Icon material="open_with" title={`Scale`} interactive={toolbar}/>
+        <span className="title">Scale</span>
       </MenuItem>
       <MenuItem onClick={() => ConfirmDialog.open({
         ok: async () =>
@@ -118,15 +116,15 @@ export function DeploymentMenu(props: KubeObjectMenuProps<Deployment>) {
             Notifications.error(err);
           }
         },
-        labelOk: _i18n._(t`Restart`),
+        labelOk: `Restart`,
         message: (
           <p>
-            <Trans>Are you sure you want to restart deployment <b>{object.getName()}</b>?</Trans>
+            Are you sure you want to restart deployment <b>{object.getName()}</b>?
           </p>
         ),
       })}>
-        <Icon material="autorenew" title={_i18n._(t`Restart`)} interactive={toolbar}/>
-        <span className="title"><Trans>Restart</Trans></span>
+        <Icon material="autorenew" title={`Restart`} interactive={toolbar}/>
+        <span className="title">Restart</span>
       </MenuItem>
     </>
   );

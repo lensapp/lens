@@ -3,7 +3,6 @@ import "./cronjob-details.scss";
 import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge/badge";
 import { jobStore } from "../+workloads-jobs/job.store";
@@ -35,25 +34,25 @@ export class CronJobDetails extends React.Component<Props> {
     return (
       <div className="CronJobDetails">
         <KubeObjectMeta object={cronJob}/>
-        <DrawerItem name={<Trans>Schedule</Trans>}>
+        <DrawerItem name="Schedule">
           {cronJob.isNeverRun() ? (
             <>
-              <Trans>never</Trans> ({cronJob.getSchedule()})
+              never ({cronJob.getSchedule()})
             </>
           ) : cronJob.getSchedule()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Active</Trans>}>
+        <DrawerItem name="Active">
           {cronJobStore.getActiveJobsNum(cronJob)}
         </DrawerItem>
-        <DrawerItem name={<Trans>Suspend</Trans>}>
+        <DrawerItem name="Suspend">
           {cronJob.getSuspendFlag()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Last schedule</Trans>}>
+        <DrawerItem name="Last schedule">
           {cronJob.getLastScheduleTime()}
         </DrawerItem>
         {childJobs.length > 0 &&
           <>
-            <DrawerTitle title={<Trans>Jobs</Trans>}/>
+            <DrawerTitle title="Jobs"/>
             {childJobs.map((job: Job) => {
               const selectors = job.getSelectors();
               const condition = job.getCondition();
@@ -65,7 +64,7 @@ export class CronJobDetails extends React.Component<Props> {
                       {job.getName()}
                     </Link>
                   </div>
-                  <DrawerItem name={<Trans>Condition</Trans>} className="conditions" labelsOnly>
+                  <DrawerItem name="Condition" className="conditions" labelsOnly>
                     {condition && (
                       <Badge
                         label={condition.type}
@@ -73,7 +72,7 @@ export class CronJobDetails extends React.Component<Props> {
                       />
                     )}
                   </DrawerItem>
-                  <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+                  <DrawerItem name="Selector" labelsOnly>
                     {
                       selectors.map(label => <Badge key={label} label={label}/>)
                     }

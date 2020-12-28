@@ -4,7 +4,6 @@ import { StatefulSet, statefulSetApi } from "../../api/endpoints";
 import React, { Component } from "react";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Icon } from "../icon";
@@ -101,11 +100,11 @@ export class StatefulSetScaleDialog extends Component<Props> {
     return (
       <>
         <div className="current-scale" data-testid="current-scale">
-          <Trans>Current replica scale: {currentReplicas}</Trans>
+          Current replica scale: {currentReplicas}
         </div>
         <div className="flex gaps align-center">
           <div className="desired-scale" data-testid="desired-scale">
-            <Trans>Desired number of replicas</Trans>: {desiredReplicas}
+            Desired number of replicas: {desiredReplicas}
           </div>
           <div className="slider-container flex align-center" data-testid="slider">
             <Slider value={desiredReplicas} max={scaleMax}
@@ -128,7 +127,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
         {warning &&
         <div className="warning" data-testid="warning">
           <Icon material="warning"/>
-          <Trans>High number of replicas may cause cluster performance issues</Trans>
+          High number of replicas may cause cluster performance issues
         </div>
         }
       </>
@@ -140,7 +139,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
     const statefulSetName = this.statefulSet ? this.statefulSet.getName() : "";
     const header = (
       <h5>
-        <Trans>Scale Stateful Set <span>{statefulSetName}</span></Trans>
+        Scale Stateful Set <span>{statefulSetName}</span>
       </h5>
     );
 
@@ -157,7 +156,7 @@ export class StatefulSetScaleDialog extends Component<Props> {
           <WizardStep
             contentClass="flex gaps column"
             next={this.scale}
-            nextLabel={<Trans>Scale</Trans>}
+            nextLabel="Scale"
             disabledNext={!this.ready}
           >
             {this.renderContents()}

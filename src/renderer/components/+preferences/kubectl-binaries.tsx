@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Trans } from "@lingui/macro";
 import { Checkbox } from "../checkbox";
 import { Input, InputValidators } from "../input";
 import { SubTitle } from "../layout/sub-title";
@@ -25,18 +24,18 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
 
   return (
     <>
-      <h2><Trans>Kubectl Binary</Trans></h2>
+      <h2>Kubectl Binary</h2>
       <Checkbox
-        label={<Trans>Download kubectl binaries</Trans>}
+        label="Download kubectl binaries"
         value={preferences.downloadKubectlBinaries}
         onChange={downloadKubectlBinaries => preferences.downloadKubectlBinaries = downloadKubectlBinaries}
       />
       <small className="hint">
-        <Trans>Download kubectl binaries matching to Kubernetes cluster version.</Trans>
+        Download kubectl binaries matching to Kubernetes cluster version.
       </small>
       <SubTitle title="Download mirror" />
       <Select
-        placeholder={<Trans>Download mirror for kubectl</Trans>}
+        placeholder="Download mirror for kubectl"
         options={downloadMirrorOptions}
         value={preferences.downloadMirror}
         onChange={({ value }: SelectOption) => preferences.downloadMirror = value}
@@ -66,7 +65,7 @@ export const KubectlBinaries = observer(({ preferences }: { preferences: UserPre
         disabled={preferences.downloadKubectlBinaries}
       />
       <small className="hint">
-        <Trans>The path to the kubectl binary on the system.</Trans>
+        The path to the kubectl binary on the system.
       </small>
     </>
   );

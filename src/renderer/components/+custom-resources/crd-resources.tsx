@@ -3,7 +3,6 @@ import "./crd-resources.scss";
 import React from "react";
 import jsonPath from "jsonpath";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObject } from "../../api/kube-object";
@@ -76,8 +75,8 @@ export class CrdResources extends React.Component<Props> {
         ]}
         renderHeaderTitle={crd.getResourceTitle()}
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          isNamespaced && { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          isNamespaced && { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
           ...extraColumns.map(column => {
             const { name } = column;
 
@@ -87,7 +86,7 @@ export class CrdResources extends React.Component<Props> {
               sortBy: name
             };
           }),
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(crdInstance: KubeObject) => [
           crdInstance.getName(),

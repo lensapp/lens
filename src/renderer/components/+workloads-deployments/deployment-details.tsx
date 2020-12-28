@@ -3,7 +3,6 @@ import "./deployment-details.scss";
 import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import { Deployment } from "../../api/endpoints";
@@ -13,7 +12,6 @@ import { PodDetailsAffinities } from "../+workloads-pods/pod-details-affinities"
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { _i18n } from "../../i18n";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { deploymentStore } from "./deployments.store";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
@@ -63,20 +61,20 @@ export class DeploymentDetails extends React.Component<Props> {
           </ResourceMetrics>
         )}
         <KubeObjectMeta object={deployment}/>
-        <DrawerItem name={<Trans>Replicas</Trans>}>
-          {_i18n._(t`${spec.replicas} desired, ${status.updatedReplicas || 0} updated`)},{" "}
-          {_i18n._(t`${status.replicas || 0} total, ${status.availableReplicas || 0} available`)},{" "}
-          {_i18n._(t`${status.unavailableReplicas || 0} unavailable`)}
+        <DrawerItem name="Replicas">
+          {`${spec.replicas} desired, ${status.updatedReplicas || 0} updated`},{" "}
+          {`${status.replicas || 0} total, ${status.availableReplicas || 0} available`},{" "}
+          {`${status.unavailableReplicas || 0} unavailable`}
         </DrawerItem>
         {selectors.length > 0 &&
-        <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+        <DrawerItem name="Selector" labelsOnly>
           {
             selectors.map(label => <Badge key={label} label={label}/>)
           }
         </DrawerItem>
         }
         {nodeSelector.length > 0 &&
-        <DrawerItem name={<Trans>Node Selector</Trans>}>
+        <DrawerItem name="Node Selector">
           {
             nodeSelector.map(label => (
               <Badge key={label} label={label}/>
@@ -84,10 +82,10 @@ export class DeploymentDetails extends React.Component<Props> {
           }
         </DrawerItem>
         }
-        <DrawerItem name={<Trans>Strategy Type</Trans>}>
+        <DrawerItem name="Strategy Type">
           {spec.strategy.type}
         </DrawerItem>
-        <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
+        <DrawerItem name="Conditions" className="conditions" labelsOnly>
           {
             deployment.getConditions().map(condition => {
               const { type, message, lastTransitionTime, status } = condition;
@@ -100,7 +98,7 @@ export class DeploymentDetails extends React.Component<Props> {
                   tooltip={(
                     <>
                       <p>{message}</p>
-                      <p><Trans>Last transition time: {lastTransitionTime}</Trans></p>
+                      <p>Last transition time: {lastTransitionTime}</p>
                     </>
                   )}
                 />

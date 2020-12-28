@@ -3,8 +3,6 @@ import "./create-service-account-dialog.scss";
 import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { SubTitle } from "../layout/sub-title";
@@ -54,7 +52,7 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const { name, namespace } = this;
-    const header = <h5><Trans>Create Service Account</Trans></h5>;
+    const header = <h5>Create Service Account</h5>;
 
     return (
       <Dialog
@@ -64,15 +62,15 @@ export class CreateServiceAccountDialog extends React.Component<Props> {
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
-          <WizardStep nextLabel={<Trans>Create</Trans>} next={this.createAccount}>
-            <SubTitle title={<Trans>Account Name</Trans>} />
+          <WizardStep nextLabel="Create" next={this.createAccount}>
+            <SubTitle title="Account Name" />
             <Input
               autoFocus required
-              placeholder={_i18n._(t`Enter a name`)}
+              placeholder={`Enter a name`}
               validators={systemName}
               value={name} onChange={v => this.name = v.toLowerCase()}
             />
-            <SubTitle title={<Trans>Namespace</Trans>} />
+            <SubTitle title="Namespace" />
             <NamespaceSelect
               themeName="light"
               value={namespace}

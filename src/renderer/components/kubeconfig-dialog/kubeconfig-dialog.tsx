@@ -4,7 +4,6 @@ import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
 import jsYaml from "js-yaml";
-import { Trans } from "@lingui/macro";
 import { AceEditor } from "../ace-editor";
 import { ServiceAccount } from "../../api/endpoints";
 import { copyToClipboard, cssNames, saveFileDialog } from "../../utils";
@@ -63,7 +62,7 @@ export class KubeConfigDialog extends React.Component<Props> {
 
   copyToClipboard = () => {
     if (this.config && copyToClipboard(this.configTextArea)) {
-      Notifications.ok(<Trans>Config copied to clipboard</Trans>);
+      Notifications.ok("Config copied to clipboard");
     }
   };
 
@@ -75,17 +74,17 @@ export class KubeConfigDialog extends React.Component<Props> {
     const { isOpen, data = {} } = KubeConfigDialog;
     const { ...dialogProps } = this.props;
     const yamlConfig = this.config;
-    const header = <h5>{data.title || <Trans>Kubeconfig File</Trans>}</h5>;
+    const header = <h5>{data.title || "Kubeconfig File"}</h5>;
     const buttons = (
       <div className="actions flex gaps">
         <Button plain onClick={this.copyToClipboard}>
-          <Icon material="assignment"/> <Trans>Copy to clipboard</Trans>
+          <Icon material="assignment"/> Copy to clipboard
         </Button>
         <Button plain onClick={this.download}>
-          <Icon material="cloud_download"/> <Trans>Download file</Trans>
+          <Icon material="cloud_download"/> Download file
         </Button>
         <Button plain className="box right" onClick={this.close}>
-          <Trans>Close</Trans>
+          Close
         </Button>
       </div>
     );
@@ -118,7 +117,7 @@ export function openServiceAccountKubeConfig(account: ServiceAccount) {
   const namespace = account.getNs();
 
   KubeConfigDialog.open({
-    title: <Trans>{accountName} kubeconfig</Trans>,
+    title: "{accountName} kubeconfig",
     loader: () => apiBase.get(`/kubeconfig/service-account/${namespace}/${accountName}`)
   });
 }

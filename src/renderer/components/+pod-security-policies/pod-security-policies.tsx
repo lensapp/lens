@@ -2,7 +2,6 @@ import "./pod-security-policies.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { KubeObjectListLayout } from "../kube-object";
 import { podSecurityPoliciesStore } from "./pod-security-policies.store";
 import { PodSecurityPolicy } from "../../api/endpoints";
@@ -34,19 +33,19 @@ export class PodSecurityPolicies extends React.Component {
           (item: PodSecurityPolicy) => item.getVolumes(),
           (item: PodSecurityPolicy) => Object.values(item.getRules()),
         ]}
-        renderHeaderTitle={<Trans>Pod Security Policies</Trans>}
+        renderHeaderTitle="Pod Security Policies"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Privileged</Trans>, className: "privileged", sortBy: sortBy.privileged },
-          { title: <Trans>Volumes</Trans>, className: "volumes", sortBy: sortBy.volumes },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Privileged", className: "privileged", sortBy: sortBy.privileged },
+          { title: "Volumes", className: "volumes", sortBy: sortBy.volumes },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(item: PodSecurityPolicy) => {
           return [
             item.getName(),
             <KubeObjectStatusIcon key="icon" object={item} />,
-            item.isPrivileged() ? <Trans>Yes</Trans> : <Trans>No</Trans>,
+            item.isPrivileged() ? "Yes" : "No",
             item.getVolumes().join(", "),
             item.getAge(),
           ];

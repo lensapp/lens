@@ -1,5 +1,4 @@
 import React from "react";
-import { Trans } from "@lingui/macro";
 
 import { clusterSettingsURL } from "../+cluster-settings";
 import { broadcastMessage } from "../../../common/ipc";
@@ -18,7 +17,7 @@ export function MainLayoutHeader({ cluster, className }: Props) {
       <span className="cluster">{cluster.name}</span>
       <Icon
         material="settings"
-        tooltip={<Trans>Open cluster settings</Trans>}
+        tooltip="Open cluster settings"
         interactive
         onClick={() => {
           broadcastMessage("renderer:navigate", clusterSettingsURL({

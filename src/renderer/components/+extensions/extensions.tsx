@@ -1,4 +1,3 @@
-import { t, Trans } from "@lingui/macro";
 import { remote, shell } from "electron";
 import fse from "fs-extra";
 import { computed, observable, reaction } from "mobx";
@@ -12,7 +11,6 @@ import { extensionDiscovery, InstalledExtension, manifestFilename } from "../../
 import { extensionLoader } from "../../../extensions/extension-loader";
 import { extensionDisplayName, LensExtensionManifest, sanitizeExtensionName } from "../../../extensions/lens-extension";
 import logger from "../../../main/logger";
-import { _i18n } from "../../i18n";
 import { prevDefault } from "../../utils";
 import { Button } from "../button";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -46,7 +44,7 @@ export class Extensions extends React.Component {
   private static supportedFormats = ["tar", "tgz"];
 
   private static installPathValidator: InputValidator = {
-    message: <Trans>Invalid URL or absolute path</Trans>,
+    message: "Invalid URL or absolute path",
     validate(value: string) {
       return InputValidators.isUrl.validate(value) || InputValidators.isPath.validate(value);
     }
@@ -143,8 +141,8 @@ export class Extensions extends React.Component {
     const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
       defaultPath: app.getPath("downloads"),
       properties: ["openFile", "multiSelections"],
-      message: _i18n._(t`Select extensions to install (formats: ${Extensions.supportedFormats.join(", ")}), `),
-      buttonLabel: _i18n._(t`Use configuration`),
+      message: `Select extensions to install (formats: ${Extensions.supportedFormats.join(", ")}), `,
+      buttonLabel: `Use configuration`,
       filters: [
         { name: "tarball", extensions: Extensions.supportedFormats }
       ]
@@ -398,8 +396,8 @@ export class Extensions extends React.Component {
 
     ConfirmDialog.open({
       message: <p>Are you sure you want to uninstall extension <b>{displayName}</b>?</p>,
-      labelOk: <Trans>Yes</Trans>,
-      labelCancel: <Trans>No</Trans>,
+      labelOk: "Yes",
+      labelCancel: "No",
       ok: () => this.uninstallExtension(extension)
     });
   };
@@ -500,7 +498,7 @@ export class Extensions extends React.Component {
           </div>
 
           <div className="install-extension flex column gaps">
-            <SubTitle title={<Trans>Install Extension:</Trans>}/>
+            <SubTitle title="Install Extension:"/>
             <div className="extension-input flex box gaps align-center">
               <Input
                 className="box grow"
@@ -518,7 +516,7 @@ export class Extensions extends React.Component {
                     interactive
                     material="folder"
                     onClick={prevDefault(this.installFromSelectFileDialog)}
-                    tooltip={<Trans>Browse</Trans>}
+                    tooltip="Browse"
                   />
                 }
               />
@@ -531,7 +529,7 @@ export class Extensions extends React.Component {
               onClick={this.installFromUrlOrPath}
             />
             <small className="hint">
-              <Trans><b>Pro-Tip</b>: you can also drag-n-drop tarball-file to this area</Trans>
+              <b>Pro-Tip</b>: you can also drag-n-drop tarball-file to this area
             </small>
           </div>
 

@@ -3,8 +3,6 @@ import "./add-quota-dialog.scss";
 import React from "react";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Input } from "../input";
@@ -129,7 +127,7 @@ export class AddQuotaDialog extends React.Component<Props> {
 
   render() {
     const { ...dialogProps } = this.props;
-    const header = <h5><Trans>Create ResourceQuota</Trans></h5>;
+    const header = <h5>Create ResourceQuota</h5>;
 
     return (
       <Dialog
@@ -142,41 +140,41 @@ export class AddQuotaDialog extends React.Component<Props> {
           <WizardStep
             contentClass="flex gaps column"
             disabledNext={!this.namespace}
-            nextLabel={<Trans>Create</Trans>}
+            nextLabel="Create"
             next={this.addQuota}
           >
             <div className="flex gaps">
               <Input
                 required autoFocus
-                placeholder={_i18n._(t`ResourceQuota name`)}
+                placeholder={`ResourceQuota name`}
                 validators={systemName}
                 value={this.quotaName} onChange={v => this.quotaName = v.toLowerCase()}
                 className="box grow"
               />
             </div>
 
-            <SubTitle title={<Trans>Namespace</Trans>} />
+            <SubTitle title="Namespace" />
             <NamespaceSelect
               value={this.namespace}
-              placeholder={_i18n._(t`Namespace`)}
+              placeholder={`Namespace`}
               themeName="light"
               className="box grow"
               onChange={({ value }) => this.namespace = value}
             />
 
-            <SubTitle title={<Trans>Values</Trans>} />
+            <SubTitle title="Values" />
             <div className="flex gaps align-center">
               <Select
                 className="quota-select"
                 themeName="light"
-                placeholder={_i18n._(t`Select a quota..`)}
+                placeholder={`Select a quota..`}
                 options={this.quotaOptions}
                 value={this.quotaSelectValue}
                 onChange={({ value }) => this.quotaSelectValue = value}
               />
               <Input
                 maxLength={10}
-                placeholder={_i18n._(t`Value`)}
+                placeholder={`Value`}
                 value={this.quotaInputValue}
                 onChange={v => this.quotaInputValue = v}
                 onKeyDown={this.onInputQuota}
@@ -185,7 +183,7 @@ export class AddQuotaDialog extends React.Component<Props> {
               <Button round primary onClick={this.setQuota}>
                 <Icon
                   material={this.quotas[this.quotaSelectValue] ? "edit" : "add"}
-                  tooltip={_i18n._(t`Set quota`)}
+                  tooltip={`Set quota`}
                 />
               </Button>
             </div>

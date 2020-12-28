@@ -2,7 +2,6 @@ import "./volumes.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
 import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
@@ -41,15 +40,15 @@ export class PersistentVolumes extends React.Component<Props> {
           (item: PersistentVolume) => item.getSearchFields(),
           (item: PersistentVolume) => item.getClaimRefName(),
         ]}
-        renderHeaderTitle={<Trans>Persistent Volumes</Trans>}
+        renderHeaderTitle="Persistent Volumes"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Storage Class</Trans>, className: "storageClass", sortBy: sortBy.storageClass },
-          { title: <Trans>Capacity</Trans>, className: "capacity", sortBy: sortBy.capacity },
-          { title: <Trans>Claim</Trans>, className: "claim" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-          { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
+          { title: "Storage Class", className: "storageClass", sortBy: sortBy.storageClass },
+          { title: "Capacity", className: "capacity", sortBy: sortBy.capacity },
+          { title: "Claim", className: "claim" },
+          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Status", className: "status", sortBy: sortBy.status },
         ]}
         renderTableContents={(volume: PersistentVolume) => {
           const { claimRef, storageClassName } = volume.spec;

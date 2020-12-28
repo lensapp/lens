@@ -1,7 +1,6 @@
 import "./user-management.scss";
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { Roles } from "../+user-management-roles";
 import { RoleBindings } from "../+user-management-roles-bindings";
@@ -19,19 +18,19 @@ export class UserManagement extends React.Component {
 
     tabRoutes.push(
       {
-        title: <Trans>Service Accounts</Trans>,
+        title: "Service Accounts",
         component: ServiceAccounts,
         url: serviceAccountsURL({ query }),
         routePath: serviceAccountsRoute.path.toString(),
       },
       {
-        title: <Trans>Role Bindings</Trans>,
+        title: "Role Bindings",
         component: RoleBindings,
         url: roleBindingsURL({ query }),
         routePath: roleBindingsRoute.path.toString(),
       },
       {
-        title: <Trans>Roles</Trans>,
+        title: "Roles",
         component: Roles,
         url: rolesURL({ query }),
         routePath: rolesRoute.path.toString(),
@@ -40,7 +39,7 @@ export class UserManagement extends React.Component {
 
     if (isAllowedResource("podsecuritypolicies")) {
       tabRoutes.push({
-        title: <Trans>Pod Security Policies</Trans>,
+        title: "Pod Security Policies",
         component: PodSecurityPolicies,
         url: podSecurityPoliciesURL(),
         routePath: podSecurityPoliciesRoute.path.toString(),

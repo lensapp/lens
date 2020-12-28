@@ -2,7 +2,6 @@ import "./resource-quota-details.scss";
 import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { cpuUnitsToNumber, cssNames, unitsToBytes, metricUnitsToNumber } from "../../utils";
 import { KubeObjectDetailsProps } from "../kube-object";
@@ -45,7 +44,7 @@ function renderQuotas(quota: ResourceQuota): JSX.Element[] {
             max={max}
             value={current}
             tooltip={
-              <p><Trans>Set</Trans>: {value}. <Trans>Usage</Trans>: {`${usage}%`}</p>
+              <p>Set: {value}. Usage: {`${usage}%`}</p>
             }
           />
         </div>
@@ -64,18 +63,18 @@ export class ResourceQuotaDetails extends React.Component<Props> {
       <div className="ResourceQuotaDetails">
         <KubeObjectMeta object={quota}/>
 
-        <DrawerItem name={<Trans>Quotas</Trans>} className="quota-list">
+        <DrawerItem name="Quotas" className="quota-list">
           {renderQuotas(quota)}
         </DrawerItem>
 
         {quota.getScopeSelector().length > 0 && (
           <>
-            <DrawerTitle title={<Trans>Scope Selector</Trans>}/>
+            <DrawerTitle title="Scope Selector"/>
             <Table className="paths">
               <TableHead>
-                <TableCell><Trans>Operator</Trans></TableCell>
-                <TableCell><Trans>Scope name</Trans></TableCell>
-                <TableCell><Trans>Values</Trans></TableCell>
+                <TableCell>Operator</TableCell>
+                <TableCell>Scope name</TableCell>
+                <TableCell>Values</TableCell>
               </TableHead>
               {
                 quota.getScopeSelector().map((selector, index) => {

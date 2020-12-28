@@ -1,5 +1,4 @@
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { IPodMetrics } from "../../api/endpoints";
 import { getMetricLastPoints, IMetrics } from "../../api/endpoints/metrics.api";
 import { bytesToUnits } from "../../utils";
@@ -17,12 +16,12 @@ export function ResourceMetricsText(props: Props) {
 
   return (
     <>
-      <DrawerItem name={<Trans>CPU</Trans>} labelsOnly>
+      <DrawerItem name="CPU" labelsOnly>
         {cpuUsage > 0 && <Badge label={`Usage: ${cpuUsage.toPrecision(2)}`}/>}
         {cpuRequests > 0 && <Badge label={`Requests: ${cpuRequests.toPrecision(2)}`}/>}
         {cpuLimits > 0 && <Badge label={`Limits: ${cpuLimits.toPrecision(2)}`}/>}
       </DrawerItem>
-      <DrawerItem name={<Trans>Memory</Trans>} labelsOnly>
+      <DrawerItem name="Memory" labelsOnly>
         {memoryUsage > 0 && <Badge label={`Usage: ${bytesToUnits(memoryUsage)}`}/>}
         {memoryRequests > 0 && <Badge label={`Requests: ${bytesToUnits(memoryRequests)}`}/>}
         {memoryLimits > 0 && <Badge label={`Limits: ${bytesToUnits(memoryLimits)}`}/>}

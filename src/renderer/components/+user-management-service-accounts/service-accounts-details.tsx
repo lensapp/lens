@@ -2,7 +2,6 @@ import "./service-accounts-details.scss";
 
 import React from "react";
 import { autorun, observable } from "mobx";
-import { Trans } from "@lingui/macro";
 import { Spinner } from "../spinner";
 import { ServiceAccountsSecret } from "./service-accounts-secret";
 import { DrawerItem, DrawerTitle } from "../drawer";
@@ -76,7 +75,7 @@ export class ServiceAccountsDetails extends React.Component<Props> {
             {secret.getName()}
             <Icon
               small material="warning"
-              tooltip={<Trans>Secret is not found</Trans>}
+              tooltip="Secret is not found"
             />
           </div>
         );
@@ -120,17 +119,17 @@ export class ServiceAccountsDetails extends React.Component<Props> {
         <KubeObjectMeta object={serviceAccount}/>
 
         {tokens.length > 0 &&
-        <DrawerItem name={<Trans>Tokens</Trans>} className="links">
+        <DrawerItem name="Tokens" className="links">
           {this.renderSecretLinks(tokens)}
         </DrawerItem>
         }
         {imagePullSecrets.length > 0 &&
-        <DrawerItem name={<Trans>ImagePullSecrets</Trans>} className="links">
+        <DrawerItem name="ImagePullSecrets" className="links">
           {this.renderImagePullSecrets()}
         </DrawerItem>
         }
 
-        <DrawerTitle title={<Trans>Mountable secrets</Trans>}/>
+        <DrawerTitle title="Mountable secrets"/>
         <div className="secrets">
           {this.renderSecrets()}
         </div>

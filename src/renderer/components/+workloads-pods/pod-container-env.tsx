@@ -2,7 +2,6 @@ import "./pod-container-env.scss";
 
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { IPodContainer, Secret } from "../../api/endpoints";
 import { DrawerItem } from "../drawer";
 import { autorun } from "mobx";
@@ -106,7 +105,7 @@ export const ContainerEnvironment = observer((props: Props) => {
   };
 
   return (
-    <DrawerItem name={<Trans>Environment</Trans>} className="ContainerEnvironment">
+    <DrawerItem name="Environment" className="ContainerEnvironment">
       {env && renderEnv()}
       {envFrom && renderEnvFrom()}
     </DrawerItem>
@@ -145,7 +144,7 @@ const SecretKey = (props: SecretKeyProps) => {
       <Icon
         className={cssNames("secret-button", { loading })}
         material="visibility"
-        tooltip={<Trans>Show</Trans>}
+        tooltip="Show"
         onClick={showKey}
       />
     </>

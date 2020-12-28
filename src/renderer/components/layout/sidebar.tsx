@@ -4,7 +4,6 @@ import React from "react";
 import type { TabLayoutRoute } from "./tab-layout";
 import { observer } from "mobx-react";
 import { NavLink } from "react-router-dom";
-import { Trans } from "@lingui/macro";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { workloadsRoute, workloadsURL } from "../+workloads/workloads.route";
@@ -147,7 +146,7 @@ export class Sidebar extends React.Component<Props> {
             </NavLink>
             <Icon
               className="pin-icon"
-              tooltip={<Trans>Compact view</Trans>}
+              tooltip="Compact view"
               material={isPinned ? "keyboard_arrow_left" : "keyboard_arrow_right"}
               onClick={toggle}
               focusable={false}
@@ -159,7 +158,7 @@ export class Sidebar extends React.Component<Props> {
               isActive={isActiveRoute(clusterRoute)}
               isHidden={!isAllowedResource("nodes")}
               url={clusterURL()}
-              text={<Trans>Cluster</Trans>}
+              text="Cluster"
               icon={<Icon svg="kube"/>}
             />
             <SidebarNavItem
@@ -167,7 +166,7 @@ export class Sidebar extends React.Component<Props> {
               isActive={isActiveRoute(nodesRoute)}
               isHidden={!isAllowedResource("nodes")}
               url={nodesURL()}
-              text={<Trans>Nodes</Trans>}
+              text="Nodes"
               icon={<Icon svg="nodes"/>}
             />
             <SidebarNavItem
@@ -176,7 +175,7 @@ export class Sidebar extends React.Component<Props> {
               isHidden={Workloads.tabRoutes.length == 0}
               url={workloadsURL({ query })}
               subMenus={Workloads.tabRoutes}
-              text={<Trans>Workloads</Trans>}
+              text="Workloads"
               icon={<Icon svg="workloads"/>}
             />
             <SidebarNavItem
@@ -185,7 +184,7 @@ export class Sidebar extends React.Component<Props> {
               isHidden={Config.tabRoutes.length == 0}
               url={configURL({ query })}
               subMenus={Config.tabRoutes}
-              text={<Trans>Configuration</Trans>}
+              text="Configuration"
               icon={<Icon material="list"/>}
             />
             <SidebarNavItem
@@ -194,7 +193,7 @@ export class Sidebar extends React.Component<Props> {
               isHidden={Network.tabRoutes.length == 0}
               url={networkURL({ query })}
               subMenus={Network.tabRoutes}
-              text={<Trans>Network</Trans>}
+              text="Network"
               icon={<Icon material="device_hub"/>}
             />
             <SidebarNavItem
@@ -204,7 +203,7 @@ export class Sidebar extends React.Component<Props> {
               url={storageURL({ query })}
               subMenus={Storage.tabRoutes}
               icon={<Icon svg="storage"/>}
-              text={<Trans>Storage</Trans>}
+              text="Storage"
             />
             <SidebarNavItem
               id="namespaces"
@@ -212,7 +211,7 @@ export class Sidebar extends React.Component<Props> {
               isHidden={!isAllowedResource("namespaces")}
               url={namespacesURL()}
               icon={<Icon material="layers"/>}
-              text={<Trans>Namespaces</Trans>}
+              text="Namespaces"
             />
             <SidebarNavItem
               id="events"
@@ -220,7 +219,7 @@ export class Sidebar extends React.Component<Props> {
               isHidden={!isAllowedResource("events")}
               url={eventsURL({ query })}
               icon={<Icon material="access_time"/>}
-              text={<Trans>Events</Trans>}
+              text="Events"
             />
             <SidebarNavItem
               id="apps"
@@ -228,7 +227,7 @@ export class Sidebar extends React.Component<Props> {
               url={appsURL({ query })}
               subMenus={Apps.tabRoutes}
               icon={<Icon material="apps"/>}
-              text={<Trans>Apps</Trans>}
+              text="Apps"
             />
             <SidebarNavItem
               id="users"
@@ -236,7 +235,7 @@ export class Sidebar extends React.Component<Props> {
               url={usersManagementURL({ query })}
               subMenus={UserManagement.tabRoutes}
               icon={<Icon material="security"/>}
-              text={<Trans>Access Control</Trans>}
+              text="Access Control"
             />
             <SidebarNavItem
               id="custom-resources"
@@ -245,7 +244,7 @@ export class Sidebar extends React.Component<Props> {
               url={crdURL()}
               subMenus={CustomResources.tabRoutes}
               icon={<Icon material="extension"/>}
-              text={<Trans>Custom Resources</Trans>}
+              text="Custom Resources"
             >
               {this.renderCustomResources()}
             </SidebarNavItem>

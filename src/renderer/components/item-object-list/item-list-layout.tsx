@@ -4,7 +4,6 @@ import groupBy from "lodash/groupBy";
 import React, { ReactNode } from "react";
 import { computed, observable, reaction, toJS, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Plural, Trans } from "@lingui/macro";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { TableSortCallback, Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps } from "../table";
 import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
@@ -280,18 +279,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const dialogCustomProps = customizeRemoveDialog ? customizeRemoveDialog(selectedItems) : {};
     const selectedCount = selectedItems.length;
     const tailCount = selectedCount > visibleMaxNamesCount ? selectedCount - visibleMaxNamesCount : 0;
-    const tail = tailCount > 0 ? <Trans>and <b>{tailCount}</b> more</Trans> : null;
+    const tail = tailCount > 0 ? "and <b>{tailCount}</b> more" : null;
+    const message = selectedCount <= 1 ? <p>Remove item <b>{selectedNames}</b>?</p> : <p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b> {tail}?</p>;
 
     ConfirmDialog.open({
       ok: removeSelectedItems,
-      labelOk: <Trans>Remove</Trans>,
-      message: (
-        <Plural
-          value={selectedCount}
-          one={<p>Remove item <b>{selectedNames}</b>?</p>}
-          other={<p>Remove <b>{selectedCount}</b> items <b>{selectedNames}</b> {tail}?</p>}
-        />
-      ),
+      labelOk: "Remove",
+      message,
       ...dialogCustomProps,
     });
   }
@@ -316,10 +310,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     if (isFiltered) {
       return (
         <NoItems>
-          <Trans>No items found.</Trans>
+          No items found.
           <p>
             <a onClick={() => pageFilters.reset()} className="contrast">
-              <Trans>Reset filters?</Trans>
+              Reset filters?
             </a>
           </p>
         </NoItems>
@@ -354,19 +348,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       const toggleFilters = () => userSettings.showAppliedFilters = !userSettings.showAppliedFilters;
 
       return (
-        <Trans>
-          <a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}
-        </Trans>
+        <><a onClick={toggleFilters}>Filtered</a>: {itemsCount} / {allItemsCount}</>
       );
     }
 
-    return (
-      <Plural
-        value={allItemsCount}
-        one="# item"
-        other="# items"
-      />
-    );
+    return allItemsCount <= 1 ? `${allItemsCount} item` : `${allItemsCount} items`;
   }
 
   renderHeader() {
@@ -455,7 +441,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         )}
         <AddRemoveButtons
           onRemove={selectedItems.length ? removeItemsDialog : null}
-          removeTooltip={<Trans>Remove selected items ({selectedItems.length})</Trans>}
+          removeTooltip={`Remove selected items (${selectedItems.length})`}
           {...addRemoveButtons}
         />
       </div>

@@ -3,7 +3,6 @@ import "./config-map-details.scss";
 import React from "react";
 import { autorun, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerTitle } from "../drawer";
 import { Notifications } from "../notifications";
 import { Input } from "../input";
@@ -43,7 +42,7 @@ export class ConfigMapDetails extends React.Component<Props> {
       await configMapsStore.update(configMap, { ...configMap, data: this.data.toJSON() });
       Notifications.ok(
         <p>
-          <Trans>ConfigMap <b>{configMap.getName()}</b> successfully updated.</Trans>
+          <>ConfigMap <b>{configMap.getName()}</b> successfully updated.</>
         </p>
       );
     } finally {
@@ -63,7 +62,7 @@ export class ConfigMapDetails extends React.Component<Props> {
         {
           data.length > 0 && (
             <>
-              <DrawerTitle title={<Trans>Data</Trans>}/>
+              <DrawerTitle title="Data"/>
               {
                 data.map(([name, value]) => {
                   return (
@@ -84,7 +83,7 @@ export class ConfigMapDetails extends React.Component<Props> {
               }
               <Button
                 primary
-                label={<Trans>Save</Trans>} waiting={this.isSaving}
+                label="Save" waiting={this.isSaving}
                 className="save-btn"
                 onClick={this.save}
               />

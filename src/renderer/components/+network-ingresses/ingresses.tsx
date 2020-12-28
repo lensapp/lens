@@ -7,7 +7,6 @@ import { IngressRouteParams } from "./ingresses.route";
 import { Ingress } from "../../api/endpoints/ingress.api";
 import { ingressStore } from "./ingress.store";
 import { KubeObjectListLayout } from "../kube-object";
-import { Trans } from "@lingui/macro";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
@@ -34,14 +33,14 @@ export class Ingresses extends React.Component<Props> {
           (ingress: Ingress) => ingress.getSearchFields(),
           (ingress: Ingress) => ingress.getPorts(),
         ]}
-        renderHeaderTitle={<Trans>Ingresses</Trans>}
+        renderHeaderTitle="Ingresses"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>LoadBalancers</Trans>, className: "loadbalancers" },
-          { title: <Trans>Rules</Trans>, className: "rules" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "LoadBalancers", className: "loadbalancers" },
+          { title: "Rules", className: "rules" },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(ingress: Ingress) => [
           ingress.getName(),

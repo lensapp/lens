@@ -3,7 +3,6 @@ import "./release-rollback-dialog.scss";
 import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { HelmRelease, helmReleasesApi, IReleaseRevision } from "../../api/endpoints/helm-releases.api";
@@ -68,12 +67,12 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
     const { revision, revisions } = this;
 
     if (!revision) {
-      return <p><Trans>No revisions to rollback.</Trans></p>;
+      return <p>No revisions to rollback.</p>;
     }
 
     return (
       <div className="flex gaps align-center">
-        <b><Trans>Revision</Trans></b>
+        <b>Revision</b>
         <Select
           themeName="light"
           value={revision}
@@ -88,7 +87,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const releaseName = this.release ? this.release.getName() : "";
-    const header = <h5><Trans>Rollback <b>{releaseName}</b></Trans></h5>;
+    const header = <h5>Rollback <b>{releaseName}</b></h5>;
 
     return (
       <Dialog
@@ -101,7 +100,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
         <Wizard header={header} done={this.close}>
           <WizardStep
             scrollable={false}
-            nextLabel={<Trans>Rollback</Trans>}
+            nextLabel="Rollback"
             next={this.rollback}
             loading={this.isLoading}
           >

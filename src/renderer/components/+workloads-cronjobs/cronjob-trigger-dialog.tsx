@@ -3,7 +3,6 @@ import "./cronjob-trigger-dialog.scss";
 import React, { Component } from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { CronJob, cronJobApi, jobApi } from "../../api/endpoints";
@@ -80,7 +79,7 @@ export class CronJobTriggerDialog extends Component<Props> {
     return (
       <>
         <div className="flex gaps">
-          <Trans>Job name</Trans>:
+          Job name:
         </div>
         <div className="flex gaps">
           <Input
@@ -101,7 +100,7 @@ export class CronJobTriggerDialog extends Component<Props> {
     const cronjobName = this.cronjob ? this.cronjob.getName() : "";
     const header = (
       <h5>
-        <Trans>Trigger CronJob <span>{cronjobName}</span></Trans>
+        Trigger CronJob <span>{cronjobName}</span>
       </h5>
     );
 
@@ -118,7 +117,7 @@ export class CronJobTriggerDialog extends Component<Props> {
           <WizardStep
             contentClass="flex gaps column"
             next={this.trigger}
-            nextLabel={<Trans>Trigger</Trans>}
+            nextLabel="Trigger"
             disabledNext={!this.ready}
           >
             {this.renderContents()}

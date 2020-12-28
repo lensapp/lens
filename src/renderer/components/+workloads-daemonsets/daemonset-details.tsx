@@ -2,7 +2,6 @@ import "./daemonset-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
@@ -63,32 +62,32 @@ export class DaemonSetDetails extends React.Component<Props> {
         )}
         <KubeObjectMeta object={daemonSet}/>
         {selectors.length > 0 &&
-        <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+        <DrawerItem name="Selector" labelsOnly>
           {
             selectors.map(label => <Badge key={label} label={label}/>)
           }
         </DrawerItem>
         }
         {nodeSelector.length > 0 &&
-        <DrawerItem name={<Trans>Node Selector</Trans>} labelsOnly>
+        <DrawerItem name="Node Selector" labelsOnly>
           {
             nodeSelector.map(label => (<Badge key={label} label={label}/>))
           }
         </DrawerItem>
         }
         {images.length > 0 &&
-        <DrawerItem name={<Trans>Images</Trans>}>
+        <DrawerItem name="Images">
           {
             images.map(image => <p key={image}>{image}</p>)
           }
         </DrawerItem>
         }
-        <DrawerItem name={<Trans>Strategy Type</Trans>}>
+        <DrawerItem name="Strategy Type">
           {spec.updateStrategy.type}
         </DrawerItem>
         <PodDetailsTolerations workload={daemonSet}/>
         <PodDetailsAffinities workload={daemonSet}/>
-        <DrawerItem name={<Trans>Pod Status</Trans>} className="pod-status">
+        <DrawerItem name="Pod Status" className="pod-status">
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <ResourceMetricsText metrics={metrics}/>

@@ -3,7 +3,6 @@ import "./ingress-details.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
-import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Ingress, ILoadBalancerIngress } from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -40,14 +39,14 @@ export class IngressDetails extends React.Component<Props> {
         <div className="rules" key={index}>
           {rule.host && (
             <div className="host-title">
-              <Trans>Host: {rule.host}</Trans>
+              <>Host: {rule.host}</>
             </div>
           )}
           {rule.http && (
             <Table className="paths">
               <TableHead>
-                <TableCell className="path"><Trans>Path</Trans></TableCell>
-                <TableCell className="backends"><Trans>Backends</Trans></TableCell>
+                <TableCell className="path">Path</TableCell>
+                <TableCell className="backends">Backends</TableCell>
               </TableHead>
               {
                 rule.http.paths.map((path, index) => {
@@ -78,8 +77,8 @@ export class IngressDetails extends React.Component<Props> {
       <div>
         <Table className="ingress-points">
           <TableHead>
-            <TableCell className="name" ><Trans>Hostname</Trans></TableCell>
-            <TableCell className="ingresspoints"><Trans>IP</Trans></TableCell>
+            <TableCell className="name" >Hostname</TableCell>
+            <TableCell className="ingresspoints">IP</TableCell>
           </TableHead>
           {ingressPoints.map(({hostname, ip}, index) => {
             return (
@@ -104,8 +103,8 @@ export class IngressDetails extends React.Component<Props> {
     const ingressPoints = status?.loadBalancer?.ingress;
     const { metrics } = ingressStore;
     const metricTabs = [
-      <Trans key="network">Network</Trans>,
-      <Trans key="network">Duration</Trans>,
+      "Network",
+      "Duration",
     ];
 
     const { serviceName, servicePort } = ingress.getServiceNamePort();
@@ -119,23 +118,23 @@ export class IngressDetails extends React.Component<Props> {
           <IngressCharts/>
         </ResourceMetrics>
         <KubeObjectMeta object={ingress}/>
-        <DrawerItem name={<Trans>Ports</Trans>}>
+        <DrawerItem name="Ports">
           {ingress.getPorts()}
         </DrawerItem>
         {spec.tls &&
-        <DrawerItem name={<Trans>TLS</Trans>}>
+        <DrawerItem name="TLS">
           {spec.tls.map((tls, index) => <p key={index}>{tls.secretName}</p>)}
         </DrawerItem>
         }
         {serviceName && servicePort &&
-        <DrawerItem name={<Trans>Service</Trans>}>
+        <DrawerItem name="Service">
           {serviceName}:{servicePort}
         </DrawerItem>
         }
-        <DrawerTitle title={<Trans>Rules</Trans>}/>
+        <DrawerTitle title="Rules"/>
         {this.renderPaths(ingress)}
 
-        <DrawerTitle title={<Trans>Load-Balancer Ingress Points</Trans>}/>
+        <DrawerTitle title="Load-Balancer Ingress Points"/>
         {this.renderIngressPoints(ingressPoints)}
       </div>
     );

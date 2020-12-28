@@ -3,8 +3,6 @@ import "./add-role-dialog.scss";
 import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Notifications } from "../notifications";
@@ -51,7 +49,7 @@ export class AddRoleDialog extends React.Component<Props> {
 
   render() {
     const { ...dialogProps } = this.props;
-    const header = <h5><Trans>Create Role</Trans></h5>;
+    const header = <h5>Create Role</h5>;
 
     return (
       <Dialog
@@ -63,12 +61,12 @@ export class AddRoleDialog extends React.Component<Props> {
         <Wizard header={header} done={this.close}>
           <WizardStep
             contentClass="flex gaps column"
-            nextLabel={<Trans>Create</Trans>}
+            nextLabel="Create"
             next={this.createRole}
           >
             <Input
               required autoFocus
-              placeholder={_i18n._(t`Role name`)}
+              placeholder={`Role name`}
               iconLeft="supervisor_account"
               value={this.roleName}
               onChange={v => this.roleName = v}

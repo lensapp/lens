@@ -4,14 +4,12 @@ import React from "react";
 import jsYaml from "js-yaml";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { Plural, t, Trans } from "@lingui/macro";
 import { cssNames } from "../../utils";
 import { createResourceStore } from "./create-resource.store";
 import { IDockTab } from "./dock.store";
 import { EditorPanel } from "./editor-panel";
 import { InfoPanel } from "./info-panel";
 import { resourceApplierApi } from "../../api/endpoints/resource-applier.api";
-import { _i18n } from "../../i18n";
 import { JsonApiErrorParsed } from "../../api/json-api";
 import { Notifications } from "../notifications";
 
@@ -59,8 +57,8 @@ export class CreateResource extends React.Component<Props> {
     }
     const successMessage = (
       <p>
-        <Plural value={createdResources.length} one="Resource" other="Resources"/>{" "}
-        <Trans><b>{createdResources.join(", ")}</b> successfully created</Trans>
+        {createdResources.length === 1 ? "Resource" : "Resources"}{" "}
+        <b>{createdResources.join(", ")}</b> successfully created
       </p>
     );
 
@@ -79,7 +77,7 @@ export class CreateResource extends React.Component<Props> {
           tabId={tabId}
           error={error}
           submit={create}
-          submitLabel={_i18n._(t`Create`)}
+          submitLabel={`Create`}
           showNotifications={false}
         />
         <EditorPanel

@@ -4,7 +4,6 @@ import React from "react";
 import isEmpty from "lodash/isEmpty";
 import { autorun, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Input } from "../input";
 import { Button } from "../button";
@@ -14,7 +13,6 @@ import { Icon } from "../icon";
 import { secretsStore } from "./secrets.store";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { Secret } from "../../api/endpoints";
-import { _i18n } from "../../i18n";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
@@ -47,7 +45,7 @@ export class SecretDetails extends React.Component<Props> {
 
     try {
       await secretsStore.update(secret, { ...secret, data: this.data });
-      Notifications.ok(<Trans>Secret successfully updated.</Trans>);
+      Notifications.ok("Secret successfully updated.");
     } catch (err) {
       Notifications.error(err);
     }
@@ -66,12 +64,12 @@ export class SecretDetails extends React.Component<Props> {
     return (
       <div className="SecretDetails">
         <KubeObjectMeta object={secret}/>
-        <DrawerItem name={<Trans>Type</Trans>}>
+        <DrawerItem name="Type">
           {secret.type}
         </DrawerItem>
         {!isEmpty(this.data) && (
           <>
-            <DrawerTitle title={_i18n._(t`Data`)}/>
+            <DrawerTitle title={`Data`}/>
             {
               Object.entries(this.data).map(([name, value]) => {
                 const revealSecret = this.revealSecret[name];
@@ -98,7 +96,7 @@ export class SecretDetails extends React.Component<Props> {
                       {decodedVal && (
                         <Icon
                           material={`visibility${revealSecret ? "" : "_off"}`}
-                          tooltip={revealSecret ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
+                          tooltip={revealSecret ? "Hide" : "Show"}
                           onClick={() => this.revealSecret[name] = !revealSecret}
                         />)
                       }
@@ -109,7 +107,7 @@ export class SecretDetails extends React.Component<Props> {
             }
             <Button
               primary
-              label={_i18n._(t`Save`)} waiting={this.isSaving}
+              label={`Save`} waiting={this.isSaving}
               className="save-btn"
               onClick={this.saveSecret}
             />

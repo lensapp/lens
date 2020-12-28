@@ -4,7 +4,6 @@ import React from "react";
 import upperFirst from "lodash/upperFirst";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { Badge } from "../badge";
 import { nodesStore } from "./nodes.store";
@@ -50,10 +49,10 @@ export class NodeDetails extends React.Component<Props> {
     const childPods = podsStore.getPodsByNode(node.getName());
     const metrics = nodesStore.nodeMetrics;
     const metricTabs = [
-      <Trans key="cpu">CPU</Trans>,
-      <Trans key="memory">Memory</Trans>,
-      <Trans key="disk">Disk</Trans>,
-      <Trans key="pods">Pods</Trans>,
+      "CPU",
+      "Memory",
+      "Disk",
+      "Pods",
     ];
 
     return (
@@ -67,18 +66,18 @@ export class NodeDetails extends React.Component<Props> {
           </ResourceMetrics>
         )}
         <KubeObjectMeta object={node} hideFields={["labels", "annotations", "uid", "resourceVersion", "selfLink"]}/>
-        <DrawerItem name={<Trans>Capacity</Trans>}>
-          <Trans>CPU</Trans>: {capacity.cpu},{" "}
-          <Trans>Memory</Trans>: {Math.floor(parseInt(capacity.memory) / 1024)}Mi,{" "}
-          <Trans>Pods</Trans>: {capacity.pods}
+        <DrawerItem name="Capacity">
+          CPU: {capacity.cpu},{" "}
+          Memory: {Math.floor(parseInt(capacity.memory) / 1024)}Mi,{" "}
+          Pods: {capacity.pods}
         </DrawerItem>
-        <DrawerItem name={<Trans>Allocatable</Trans>}>
-          <Trans>CPU</Trans>: {allocatable.cpu},{" "}
-          <Trans>Memory</Trans>: {Math.floor(parseInt(allocatable.memory) / 1024)}Mi,{" "}
-          <Trans>Pods</Trans>: {allocatable.pods}
+        <DrawerItem name="Allocatable">
+          CPU: {allocatable.cpu},{" "}
+          Memory: {Math.floor(parseInt(allocatable.memory) / 1024)}Mi,{" "}
+          Pods: {allocatable.pods}
         </DrawerItem>
         {addresses &&
-        <DrawerItem name={<Trans>Addresses</Trans>}>
+        <DrawerItem name="Addresses">
           {
             addresses.map(({ type, address }) => (
               <p key={type}>{type}: {address}</p>
@@ -86,31 +85,31 @@ export class NodeDetails extends React.Component<Props> {
           }
         </DrawerItem>
         }
-        <DrawerItem name={<Trans>OS</Trans>}>
+        <DrawerItem name="OS">
           {nodeInfo.operatingSystem} ({nodeInfo.architecture})
         </DrawerItem>
-        <DrawerItem name={<Trans>OS Image</Trans>}>
+        <DrawerItem name="OS Image">
           {nodeInfo.osImage}
         </DrawerItem>
-        <DrawerItem name={<Trans>Kernel version</Trans>}>
+        <DrawerItem name="Kernel version">
           {nodeInfo.kernelVersion}
         </DrawerItem>
-        <DrawerItem name={<Trans>Container runtime</Trans>}>
+        <DrawerItem name="Container runtime">
           {nodeInfo.containerRuntimeVersion}
         </DrawerItem>
-        <DrawerItem name={<Trans>Kubelet version</Trans>}>
+        <DrawerItem name="Kubelet version">
           {nodeInfo.kubeletVersion}
         </DrawerItem>
         <DrawerItemLabels
-          name={<Trans>Labels</Trans>}
+          name="Labels"
           labels={node.getLabels()}
         />
         <DrawerItemLabels
-          name={<Trans>Annotations</Trans>}
+          name="Annotations"
           labels={node.getAnnotations()}
         />
         {taints.length > 0 && (
-          <DrawerItem name={<Trans>Taints</Trans>} labelsOnly>
+          <DrawerItem name="Taints" labelsOnly>
             {
               taints.map(({ key, effect, value }) => (
                 <Badge key={key} label={`${key}: ${effect}`} tooltip={value}/>
@@ -119,7 +118,7 @@ export class NodeDetails extends React.Component<Props> {
           </DrawerItem>
         )}
         {conditions &&
-        <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
+        <DrawerItem name="Conditions" className="conditions" labelsOnly>
           {
             conditions.map(condition => {
               const { type } = condition;

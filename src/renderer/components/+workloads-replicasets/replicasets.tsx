@@ -2,7 +2,6 @@ import "./replicasets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { ReplicaSet } from "../../api/endpoints";
 import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { replicaSetStore } from "./replicasets.store";
@@ -12,7 +11,6 @@ import { IReplicaSetsRouteParams } from "../+workloads/workloads.route";
 import { KubeObjectListLayout } from "../kube-object/kube-object-list-layout";
 import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
-import { _i18n } from "../../i18n";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 
@@ -45,15 +43,15 @@ export class ReplicaSets extends React.Component<Props> {
         searchFilters={[
           (replicaSet: ReplicaSet) => replicaSet.getSearchFields(),
         ]}
-        renderHeaderTitle={<Trans>Replica Sets</Trans>}
+        renderHeaderTitle="Replica Sets"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Desired</Trans>, className: "desired", sortBy: sortBy.desired },
-          { title: <Trans>Current</Trans>, className: "current", sortBy: sortBy.current },
-          { title: <Trans>Ready</Trans>, className: "ready", sortBy: sortBy.ready },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Desired", className: "desired", sortBy: sortBy.desired },
+          { title: "Current", className: "current", sortBy: sortBy.current },
+          { title: "Ready", className: "ready", sortBy: sortBy.ready },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(replicaSet: ReplicaSet) => [
           replicaSet.getName(),
@@ -78,8 +76,8 @@ export function ReplicaSetMenu(props: KubeObjectMenuProps<ReplicaSet>) {
   return (
     <>
       <MenuItem onClick={() => ReplicaSetScaleDialog.open(object)}>
-        <Icon material="open_with" title={_i18n._(t`Scale`)} interactive={toolbar}/>
-        <span className="title"><Trans>Scale</Trans></span>
+        <Icon material="open_with" title={`Scale`} interactive={toolbar}/>
+        <span className="title">Scale</span>
       </MenuItem>
     </>
   );

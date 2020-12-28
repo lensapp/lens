@@ -2,14 +2,12 @@ import "./storage-class-details.scss";
 
 import React from "react";
 import startCase from "lodash/startCase";
-import { t, Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { observer } from "mobx-react";
 import { KubeObjectDetailsProps } from "../kube-object";
 import { StorageClass } from "../../api/endpoints";
-import { _i18n } from "../../i18n";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
@@ -29,25 +27,25 @@ export class StorageClassDetails extends React.Component<Props> {
         <KubeObjectMeta object={storageClass}/>
 
         {provisioner && (
-          <DrawerItem name={<Trans>Provisioner</Trans>} labelsOnly>
+          <DrawerItem name="Provisioner" labelsOnly>
             <Badge label={provisioner}/>
           </DrawerItem>
         )}
-        <DrawerItem name={<Trans>Volume Binding Mode</Trans>}>
+        <DrawerItem name="Volume Binding Mode">
           {storageClass.getVolumeBindingMode()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Reclaim Policy</Trans>}>
+        <DrawerItem name="Reclaim Policy">
           {storageClass.getReclaimPolicy()}
         </DrawerItem>
 
         {mountOptions && (
-          <DrawerItem name={<Trans>Mount Options</Trans>}>
+          <DrawerItem name="Mount Options">
             {mountOptions.join(", ")}
           </DrawerItem>
         )}
         {parameters && (
           <>
-            <DrawerTitle title={_i18n._(t`Parameters`)}/>
+            <DrawerTitle title={`Parameters`}/>
             {
               Object.entries(parameters).map(([name, value]) => (
                 <DrawerItem key={name + value} name={startCase(name)}>

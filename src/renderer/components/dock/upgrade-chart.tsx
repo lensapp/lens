@@ -3,7 +3,6 @@ import "./upgrade-chart.scss";
 import React from "react";
 import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { cssNames } from "../../utils";
 import { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
@@ -15,7 +14,6 @@ import { EditorPanel } from "./editor-panel";
 import { helmChartStore, IChartVersion } from "../+apps-helm-charts/helm-chart.store";
 import { HelmRelease } from "../../api/endpoints/helm-releases.api";
 import { Select, SelectOption } from "../select";
-import { _i18n } from "../../i18n";
 
 interface Props {
   className?: string;
@@ -81,7 +79,7 @@ export class UpgradeChart extends React.Component<Props> {
 
     return (
       <p>
-        <Trans>Release <b>{releaseName}</b> successfully upgraded to version <b>{version}</b></Trans>
+        Release <b>{releaseName}</b> successfully upgraded to version <b>{version}</b>
       </p>
     );
   };
@@ -103,10 +101,10 @@ export class UpgradeChart extends React.Component<Props> {
     const currentVersion = release.getVersion();
     const controlsAndInfo = (
       <div className="upgrade flex gaps align-center">
-        <span><Trans>Release</Trans></span> <Badge label={release.getName()}/>
-        <span><Trans>Namespace</Trans></span> <Badge label={release.getNs()}/>
-        <span><Trans>Version</Trans></span> <Badge label={currentVersion}/>
-        <span><Trans>Upgrade version</Trans></span>
+        <span>Release</span> <Badge label={release.getName()}/>
+        <span>Namespace</span> <Badge label={release.getNs()}/>
+        <span>Version</span> <Badge label={currentVersion}/>
+        <span>Upgrade version</span>
         <Select
           className="chart-version"
           menuPlacement="top"
@@ -125,8 +123,8 @@ export class UpgradeChart extends React.Component<Props> {
           tabId={tabId}
           error={error}
           submit={upgrade}
-          submitLabel={_i18n._(t`Upgrade`)}
-          submittingMessage={_i18n._(t`Updating..`)}
+          submitLabel={`Upgrade`}
+          submittingMessage={`Updating..`}
           controls={controlsAndInfo}
         />
         <EditorPanel

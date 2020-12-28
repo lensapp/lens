@@ -2,7 +2,6 @@ import "./workloads.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
 import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, replicaSetsRoute, replicaSetsURL, statefulSetsRoute, statefulSetsURL } from "./workloads.route";
@@ -22,7 +21,7 @@ export class Workloads extends React.Component {
     const query = namespaceUrlParam.toObjectParam();
     const routes: TabLayoutRoute[] = [
       {
-        title: <Trans>Overview</Trans>,
+        title: "Overview",
         component: WorkloadsOverview,
         url: overviewURL({ query }),
         routePath: overviewRoute.path.toString()
@@ -31,7 +30,7 @@ export class Workloads extends React.Component {
 
     if (isAllowedResource("pods")) {
       routes.push({
-        title: <Trans>Pods</Trans>,
+        title: "Pods",
         component: Pods,
         url: podsURL({ query }),
         routePath: podsRoute.path.toString()
@@ -40,7 +39,7 @@ export class Workloads extends React.Component {
 
     if (isAllowedResource("deployments")) {
       routes.push({
-        title: <Trans>Deployments</Trans>,
+        title: "Deployments",
         component: Deployments,
         url: deploymentsURL({ query }),
         routePath: deploymentsRoute.path.toString(),
@@ -49,7 +48,7 @@ export class Workloads extends React.Component {
 
     if (isAllowedResource("daemonsets")) {
       routes.push({
-        title: <Trans>DaemonSets</Trans>,
+        title: "DaemonSets",
         component: DaemonSets,
         url: daemonSetsURL({ query }),
         routePath: daemonSetsRoute.path.toString(),
@@ -58,7 +57,7 @@ export class Workloads extends React.Component {
 
     if (isAllowedResource("statefulsets")) {
       routes.push({
-        title: <Trans>StatefulSets</Trans>,
+        title: "StatefulSets",
         component: StatefulSets,
         url: statefulSetsURL({ query }),
         routePath: statefulSetsRoute.path.toString(),
@@ -67,7 +66,7 @@ export class Workloads extends React.Component {
 
     if (isAllowedResource("replicasets")) {
       routes.push({
-        title: <Trans>ReplicaSets</Trans>,
+        title: "ReplicaSets",
         component: ReplicaSets,
         url: replicaSetsURL({ query }),
         routePath: replicaSetsRoute.path.toString(),
@@ -76,7 +75,7 @@ export class Workloads extends React.Component {
 
     if (isAllowedResource("jobs")) {
       routes.push({
-        title: <Trans>Jobs</Trans>,
+        title: "Jobs",
         component: Jobs,
         url: jobsURL({ query }),
         routePath: jobsRoute.path.toString(),
@@ -85,7 +84,7 @@ export class Workloads extends React.Component {
 
     if (isAllowedResource("cronjobs")) {
       routes.push({
-        title: <Trans>CronJobs</Trans>,
+        title: "CronJobs",
         component: CronJobs,
         url: cronJobsURL({ query }),
         routePath: cronJobsRoute.path.toString(),

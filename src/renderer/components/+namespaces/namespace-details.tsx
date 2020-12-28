@@ -3,7 +3,6 @@ import "./namespace-details.scss";
 import React from "react";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { cssNames } from "../../utils";
 import { Namespace } from "../../api/endpoints";
@@ -39,11 +38,11 @@ export class NamespaceDetails extends React.Component<Props> {
       <div className="NamespaceDetails">
         <KubeObjectMeta object={namespace}/>
 
-        <DrawerItem name={<Trans>Status</Trans>}>
+        <DrawerItem name="Status">
           <span className={cssNames("status", status.toLowerCase())}>{status}</span>
         </DrawerItem>
 
-        <DrawerItem name={<Trans>Resource Quotas</Trans>} className="quotas flex align-center">
+        <DrawerItem name="Resource Quotas" className="quotas flex align-center">
           {!this.quotas && resourceQuotaStore.isLoading && <Spinner/>}
           {this.quotas.map(quota => {
             return (
