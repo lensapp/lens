@@ -55,6 +55,10 @@ app.on("second-instance", () => {
   windowManager?.ensureMainWindow();
 });
 
+if (process.env.LENS_DISABLE_GPU) {
+  app.disableHardwareAcceleration();
+}
+
 app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
   await shellSync();
