@@ -76,6 +76,7 @@
     },
     "moduleNameMapper": {
       "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.ts",
+      "\\.(svg)$": "<rootDir>/__mocks__/imageMock.ts",
       "^@lingui/macro$": "<rootDir>/__mocks__/@linguiMacro.ts"
     },
     "modulePathIgnorePatterns": [
@@ -83,7 +84,8 @@
       "<rootDir>/src/extensions/npm"
     ],
     "setupFiles": [
-      "<rootDir>/src/jest.setup.ts"
+      "<rootDir>/src/jest.setup.ts",
+      "jest-canvas-mock"
     ]
   },
   "build": {
@@ -342,6 +344,7 @@
     "identity-obj-proxy": "^3.0.0",
     "include-media": "^1.4.9",
     "jest": "^26.0.1",
+    "jest-canvas-mock": "^2.3.0",
     "jest-fetch-mock": "^3.0.3",
     "jest-mock-extended": "^1.0.10",
     "make-plural": "^6.2.1",

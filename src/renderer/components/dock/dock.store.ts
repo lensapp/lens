@@ -123,6 +123,10 @@ export class DockStore {
     return this.tabs.find(tab => tab.id === tabId);
   }
 
+  getTabIndex(tabId: TabId) {
+    return this.tabs.findIndex(tab => tab.id === tabId);
+  }
+
   protected getNewTabNumber(kind: TabKind) {
     const tabNumbers = this.tabs
       .filter(tab => tab.kind === kind)
@@ -180,6 +184,28 @@ export class DockStore {
         this.close();
       }
     }
+  }
+
+  closeTabs(tabs: IDockTab[]) {
+    tabs.forEach(tab => this.closeTab(tab.id));
+  }
+
+  closeAllTabs() {
+    this.closeTabs([...this.tabs]);
+  }
+
+  closeOtherTabs(tabId: TabId) {
+    const index = this.getTabIndex(tabId);
+    const tabs = [...this.tabs.slice(0, index), ...this.tabs.slice(index + 1)];
+
+    this.closeTabs(tabs);
+  }
+
+  closeTabsToTheRight(tabId: TabId) {
+    const index = this.getTabIndex(tabId);
+    const tabs = this.tabs.slice(index + 1);
+
+    this.closeTabs(tabs);
   }
 
   @action
