@@ -122,7 +122,7 @@ export class InfoPanel extends Component<Props> {
             {showSubmitClose && (
               <Button
                 primary active
-                label="{submitLabel} & Close"
+                label={`${submitLabel} & Close`}
                 onClick={submitAndClose}
                 disabled={isDisabled}
               />

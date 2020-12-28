@@ -83,7 +83,16 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          use: "ts-loader"
+          use: {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true,
+              compilerOptions: {
+                target: "es2016",
+                module: "esnext",
+              },
+            }
+          }
         },
         {
           test: /\.(jpg|png|svg|map|ico)$/,
