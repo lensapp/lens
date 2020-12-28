@@ -18,33 +18,41 @@
 
   // --Theme customization
 
+  .ace-terminal-theme {
+    background: var(--dockEditorBackground) !important;
+  }
+
   .ace_gutter {
-    color: $textColorSecondary;
-    background-color: $mainBackground;
+    color: #a0a0a0;
+    background-color: var(--dockEditorBackground);
+  }
+
+  .ace_line {
+    color: var(--dockEditorKeyword);
   }
 
   .ace_active-line,
   .ace_gutter-active-line {
-    background: $mainBackground !important;
+    background: var(--dockEditorActiveLineBackground) !important;
   }
 
   .ace_meta.ace_tag {
-    color: $textColorPrimary;
+    color: var(--dockEditorTag);
   }
 
   .ace_constant {
-    color: $lensBlue !important;
+    color: var(--lensBlue) !important;
   }
 
   .ace_keyword {
-    color: $textColorAccent;
+    color: var(--dockEditorKeyword);
   }
 
   .ace_string {
-    color: $colorOk;
+    color: var(--colorOk);
   }
 
   .ace_comment {
-    color: #808080;
+    color: var(--dockEditorComment);
   }
 }

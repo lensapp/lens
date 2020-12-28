@@ -7,8 +7,8 @@
   overflow: auto;
 
   position: relative;
-  color: $textColorAccent;
-  background: $logsBackground;
+  color: var(--logsForeground);
+  background: var(--logsBackground);
   flex-grow: 1;
 
   .VirtualList {
@@ -20,12 +20,12 @@
       .LogRow {
         padding: 2px 16px;
         height: 18px;  // Must be equal to lineHeight variable in pod-log-list.tsx
-        font-family: $font-monospace;
+        font-family: var(--font-monospace);
         font-size: smaller;
         white-space: pre;
 
         &:hover {
-          background: $logRowHoverBackground;
+          background: var(--logRowHoverBackground);
         }
 
         span {
@@ -66,13 +66,13 @@
   .JumpToBottom {
     position: absolute;
     right: 30px;
-    padding: $unit / 2 $unit * 1.5;
-    border-radius: $unit * 2;
+    padding: 4px 9px;
+    border-radius: 20px;
     z-index: 2;
     top: 20px;
 
     .Icon {
-      --size: $unit * 2;
+      --size: calc(var(--unit) * 2);
     }
   }
 }
