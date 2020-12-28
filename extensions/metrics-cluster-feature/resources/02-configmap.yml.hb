@@ -150,6 +150,9 @@ data:
 
       kubernetes_sd_configs:
       - role: endpoints
+        namespaces:
+          names:
+            - lens-metrics
 
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
@@ -201,6 +204,9 @@ data:
 
       kubernetes_sd_configs:
       - role: service
+        namespaces:
+          names:
+            - lens-metrics
 
       relabel_configs:
       - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
@@ -236,6 +242,9 @@ data:
 
       kubernetes_sd_configs:
       - role: pod
+        namespaces:
+          names:
+            - lens-metrics
 
       relabel_configs:
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
