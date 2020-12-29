@@ -3,6 +3,8 @@ import "./components/app.scss";
 import React from "react";
 import * as Mobx from "mobx";
 import * as MobxReact from "mobx-react";
+import * as ReactRouter from "react-router";
+import * as ReactRouterDom from "react-router-dom";
 import { render, unmountComponentAtNode } from "react-dom";
 import { clusterStore } from "../common/cluster-store";
 import { userStore } from "../common/user-store";
@@ -23,6 +25,8 @@ type AppComponent = React.ComponentType & {
 
 export {
   React,
+  ReactRouter,
+  ReactRouterDom,
   Mobx,
   MobxReact,
   LensExtensions
