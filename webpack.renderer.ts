@@ -48,7 +48,8 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     },
     stats: {
       warningsFilter: [
-        /Critical dependency: the request of a dependency is an expression/
+        /Critical dependency: the request of a dependency is an expression/,
+        /export '.*' was not found in/
       ]
     },
     resolve: {
@@ -86,11 +87,7 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
           use: {
             loader: "ts-loader",
             options: {
-              transpileOnly: true,
-              compilerOptions: {
-                target: "es2016",
-                module: "esnext",
-              },
+              transpileOnly: true, // ForkTsCheckerPlugin does type-checking
             }
           }
         },
