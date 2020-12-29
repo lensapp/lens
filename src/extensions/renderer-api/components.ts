@@ -29,6 +29,7 @@ export * from "../../renderer/components/spinner";
 export * from "../../renderer/components/stepper";
 export * from "../../renderer/components/wizard";
 export * from "../../renderer/components/+workloads-pods/pod-details-list";
+export * from "../../renderer/components/+namespaces/namespace-select";
 
 // kube helpers
 export * from "../../renderer/components/kube-object";
