@@ -18,7 +18,7 @@ export class ApiManager {
   }
 
   getApiByKind(kind: string, apiVersion: string) {
-    return Array.from(this.apis.values()).find((api) => api.kind === kind && api.apiVersion === apiVersion);
+    return Array.from(this.apis.values()).find((api) => api.kind === kind && api.apiVersionWithGroup === apiVersion);
   }
 
   registerApi(apiBase: string, api: KubeApi) {
