@@ -53,7 +53,7 @@ spec:
               mountPath: /var/lib/prometheus
       containers:
         - name: prometheus
-          image: docker.io/prom/prometheus:v2.17.2
+          image: quay.io/prometheus/prometheus:v2.19.3
           args:
             - --web.listen-address=0.0.0.0:9090
             - --config.file=/etc/prometheus/prometheus.yaml
