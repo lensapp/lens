@@ -290,7 +290,7 @@
     "ace-builds": "^1.4.11",
     "ansi_up": "^4.0.4",
     "chart.js": "^2.9.3",
-    "circular-dependency-plugin": "^5.2.0",
+    "circular-dependency-plugin": "^5.2.2",
     "color": "^3.1.2",
     "concurrently": "^5.2.0",
     "css-element-queries": "^1.2.3",
