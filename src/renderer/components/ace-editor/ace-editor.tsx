@@ -3,11 +3,9 @@
 import "./ace-editor.scss";
 
 import React from "react";
-import { reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import AceBuild, { Ace } from "ace-builds";
 import { autobind, cssNames, noop } from "../../utils";
-import { themeStore } from "../../theme.store";
 
 interface Props extends Partial<Ace.EditorOptions> {
   className?: string;
@@ -46,23 +44,8 @@ export class AceEditor extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     require("ace-builds/src-noconflict/mode-yaml");
-    require("ace-builds/src-noconflict/theme-dreamweaver");
     require("ace-builds/src-noconflict/theme-terminal");
     require("ace-builds/src-noconflict/ext-searchbox");
-  }
-
-  @disposeOnUnmount
-  themeSwitcher = reaction(() => themeStore.activeTheme, () => {
-    this.setTheme(this.theme);
-  });
-
-  get theme() {
-    switch (themeStore.activeTheme.type) {
-      case "light":
-        return "dreamweaver";
-      case "dark":
-        return "terminal";
-    }
   }
 
   async componentDidMount() {
@@ -74,7 +57,7 @@ export class AceEditor extends React.Component<Props, State> {
 
     // setup editor
     this.editor = AceBuild.edit(this.elem, options);
-    this.setTheme(this.theme);
+    this.setTheme("terminal");
     this.setMode(mode);
     this.setCursorPos(cursorPos);
 
