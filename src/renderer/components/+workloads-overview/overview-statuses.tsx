@@ -2,7 +2,6 @@ import "./overview-statuses.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { OverviewWorkloadStatus } from "./overview-workload-status";
 import { Link } from "react-router-dom";
 import { workloadURL, workloadStores } from "../+workloads";
@@ -48,7 +47,7 @@ export class OverviewStatuses extends React.Component {
     return (
       <div className="OverviewStatuses">
         <div className="header flex gaps align-center">
-          <h5 className="box grow"><Trans>Overview</Trans></h5>
+          <h5 className="box grow">Overview</h5>
           <NamespaceSelectFilter />
         </div>
         <PageFiltersList />

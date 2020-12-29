@@ -2,7 +2,6 @@ import "./network-policy-details.scss";
 
 import get from "lodash/get";
 import React, { Fragment } from "react";
-import { t, Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { IPolicyEgress, IPolicyIngress, IPolicyIpBlock, IPolicySelector, NetworkPolicy } from "../../api/endpoints/network-policy.api";
 import { Badge } from "../badge";
@@ -10,7 +9,6 @@ import { SubTitle } from "../layout/sub-title";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { observer } from "mobx-react";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { _i18n } from "../../i18n";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
@@ -26,7 +24,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
 
     return (
       <>
-        <SubTitle title={<Trans>From</Trans>}/>
+        <SubTitle title="From"/>
         {from.map(item =>
           Object.keys(item).map(key => {
             const data = get(item, key);
@@ -75,7 +73,7 @@ export class NetworkPolicyDetails extends React.Component<Props> {
 
     return (
       <>
-        <SubTitle title={<Trans>To</Trans>}/>
+        <SubTitle title="To"/>
         {to.map(item => {
           const { ipBlock } = item;
 
@@ -110,22 +108,22 @@ export class NetworkPolicyDetails extends React.Component<Props> {
       <div className="NetworkPolicyDetails">
         <KubeObjectMeta object={policy}/>
 
-        <DrawerItem name={<Trans>Pod Selector</Trans>} labelsOnly={selector.length > 0}>
+        <DrawerItem name="Pod Selector" labelsOnly={selector.length > 0}>
           {selector.length > 0 ?
             policy.getMatchLabels().map(label => <Badge key={label} label={label}/>) :
-            _i18n._(t`(empty) (Allowing the specific traffic to all pods in this namespace)`)
+            `(empty) (Allowing the specific traffic to all pods in this namespace)`
           }
         </DrawerItem>
 
         {ingress && (
           <>
-            <DrawerTitle title={_i18n._(t`Ingress`)}/>
+            <DrawerTitle title={`Ingress`}/>
             {ingress.map((ingress, i) => {
               const { ports } = ingress;
 
               return (
                 <Fragment key={i}>
-                  <DrawerItem name={<Trans>Ports</Trans>}>
+                  <DrawerItem name="Ports">
                     {ports && ports.map(({ port, protocol }) => `${protocol || ""}:${port || ""}`).join(", ")}
                   </DrawerItem>
                   {this.renderIngressFrom(ingress)}
@@ -137,13 +135,13 @@ export class NetworkPolicyDetails extends React.Component<Props> {
 
         {egress && (
           <>
-            <DrawerTitle title={<Trans>Egress</Trans>}/>
+            <DrawerTitle title="Egress"/>
             {egress.map((egress, i) => {
               const { ports } = egress;
 
               return (
                 <Fragment key={i}>
-                  <DrawerItem name={<Trans>Ports</Trans>}>
+                  <DrawerItem name="Ports">
                     {ports && ports.map(({ port, protocol }) => `${protocol || ""}:${port || ""}`).join(", ")}
                   </DrawerItem>
                   {this.renderEgressTo(egress)}

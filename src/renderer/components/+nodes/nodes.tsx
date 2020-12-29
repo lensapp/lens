@@ -2,7 +2,6 @@ import "./nodes.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { t, Trans } from "@lingui/macro";
 import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { nodesStore } from "./nodes.store";
@@ -11,7 +10,6 @@ import { KubeObjectListLayout } from "../kube-object";
 import { INodesRouteParams } from "./nodes.route";
 import { Node } from "../../api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
-import { _i18n } from "../../i18n";
 import { bytesToUnits } from "../../utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
@@ -60,7 +58,7 @@ export class Nodes extends React.Component<Props> {
         value={usage}
         tooltip={{
           preferredPositions: TooltipPosition.BOTTOM,
-          children: `${_i18n._(t`CPU:`)} ${Math.ceil(usage * 100) / cores}\%, ${_i18n._(t`cores:`)} ${cores}`
+          children: `CPU: ${Math.ceil(usage * 100) / cores}\%, cores: ${cores}`
         }}
       />
     );
@@ -79,7 +77,7 @@ export class Nodes extends React.Component<Props> {
         value={usage}
         tooltip={{
           preferredPositions: TooltipPosition.BOTTOM,
-          children: `${_i18n._(t`Memory:`)} ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
+          children: `Memory: ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
         }}
       />
     );
@@ -98,7 +96,7 @@ export class Nodes extends React.Component<Props> {
         value={usage}
         tooltip={{
           preferredPositions: TooltipPosition.BOTTOM,
-          children: `${_i18n._(t`Disk:`)} ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
+          children: `Disk: ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
         }}
       />
     );
@@ -155,18 +153,18 @@ export class Nodes extends React.Component<Props> {
             (node: Node) => node.getKubeletVersion(),
             (node: Node) => node.getNodeConditionText(),
           ]}
-          renderHeaderTitle={<Trans>Nodes</Trans>}
+          renderHeaderTitle="Nodes"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { title: "Name", className: "name", sortBy: sortBy.name },
             { className: "warning" },
-            { title: <Trans>CPU</Trans>, className: "cpu", sortBy: sortBy.cpu },
-            { title: <Trans>Memory</Trans>, className: "memory", sortBy: sortBy.memory },
-            { title: <Trans>Disk</Trans>, className: "disk", sortBy: sortBy.disk },
-            { title: <Trans>Taints</Trans>, className: "taints", sortBy: sortBy.taints },
-            { title: <Trans>Roles</Trans>, className: "roles", sortBy: sortBy.roles },
-            { title: <Trans>Version</Trans>, className: "version", sortBy: sortBy.version },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-            { title: <Trans>Conditions</Trans>, className: "conditions", sortBy: sortBy.conditions },
+            { title: "CPU", className: "cpu", sortBy: sortBy.cpu },
+            { title: "Memory", className: "memory", sortBy: sortBy.memory },
+            { title: "Disk", className: "disk", sortBy: sortBy.disk },
+            { title: "Taints", className: "taints", sortBy: sortBy.taints },
+            { title: "Roles", className: "roles", sortBy: sortBy.roles },
+            { title: "Version", className: "version", sortBy: sortBy.version },
+            { title: "Age", className: "age", sortBy: sortBy.age },
+            { title: "Conditions", className: "conditions", sortBy: sortBy.conditions },
           ]}
           renderTableContents={(node: Node) => {
             const tooltipId = `node-taints-${node.getId()}`;

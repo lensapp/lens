@@ -3,7 +3,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
 import { workspacesURL } from "./workspaces.route";
-import { Trans } from "@lingui/macro";
 import { Menu, MenuItem, MenuProps } from "../menu";
 import { Icon } from "../icon";
 import { observable } from "mobx";
@@ -46,7 +45,7 @@ export class WorkspaceMenu extends React.Component<Props> {
         close={() => this.menuVisible = false}
       >
         <Link className="workspaces-title" to={workspacesURL()}>
-          <Trans>Workspaces</Trans>
+          Workspaces
         </Link>
         {enabledWorkspacesList.map(({ id: workspaceId, name, description }) => {
           return (

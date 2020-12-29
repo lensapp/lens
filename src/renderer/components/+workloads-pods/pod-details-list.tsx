@@ -4,7 +4,6 @@ import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { podsStore } from "./pods.store";
 import { Pod } from "../../api/endpoints";
 import { autobind, bytesToUnits, cssNames, interval, prevDefault } from "../../utils";
@@ -66,7 +65,7 @@ export class PodDetailsList extends React.Component<Props> {
     const { maxCpu } = this.props;
     const value = usage.toFixed(3);
     const tooltip = (
-      <p><Trans>CPU</Trans>: {Math.ceil(usage * 100) / maxCpu}%<br/>{usage.toFixed(3)}</p>
+      <p>CPU: {Math.ceil(usage * 100) / maxCpu}%<br/>{usage.toFixed(3)}</p>
     );
 
     if (!maxCpu) {
@@ -86,7 +85,7 @@ export class PodDetailsList extends React.Component<Props> {
   renderMemoryUsage(id: string, usage: number) {
     const { maxMemory } = this.props;
     const tooltip = (
-      <p><Trans>Memory</Trans>: {Math.ceil(usage * 100 / maxMemory)}%<br/>{bytesToUnits(usage, 3)}</p>
+      <p>Memory: {Math.ceil(usage * 100 / maxMemory)}%<br/>{bytesToUnits(usage, 3)}</p>
     );
 
     if (!maxMemory) return usage ? bytesToUnits(usage) : 0;
@@ -134,7 +133,7 @@ export class PodDetailsList extends React.Component<Props> {
 
     return (
       <div className="PodDetailsList flex column">
-        {showTitle && <DrawerTitle title={<Trans>Pods</Trans>}/>}
+        {showTitle && <DrawerTitle title="Pods"/>}
         <Table
           items={pods}
           selectable
@@ -147,13 +146,13 @@ export class PodDetailsList extends React.Component<Props> {
           className="box grow"
         >
           <TableHead>
-            <TableCell className="name" sortBy={sortBy.name}><Trans>Name</Trans></TableCell>
+            <TableCell className="name" sortBy={sortBy.name}>Name</TableCell>
             <TableCell className="warning"/>
-            <TableCell className="namespace" sortBy={sortBy.namespace}><Trans>Namespace</Trans></TableCell>
-            <TableCell className="ready"><Trans>Ready</Trans></TableCell>
-            <TableCell className="cpu" sortBy={sortBy.cpu}><Trans>CPU</Trans></TableCell>
-            <TableCell className="memory" sortBy={sortBy.memory}><Trans>Memory</Trans></TableCell>
-            <TableCell className="status"><Trans>Status</Trans></TableCell>
+            <TableCell className="namespace" sortBy={sortBy.namespace}>Namespace</TableCell>
+            <TableCell className="ready">Ready</TableCell>
+            <TableCell className="cpu" sortBy={sortBy.cpu}>CPU</TableCell>
+            <TableCell className="memory" sortBy={sortBy.memory}>Memory</TableCell>
+            <TableCell className="status">Status</TableCell>
           </TableHead>
           {
             !virtual && pods.map(pod => this.getTableRow(pod.getId()))

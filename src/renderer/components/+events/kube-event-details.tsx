@@ -2,7 +2,6 @@ import "./kube-event-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { cssNames } from "../../utils";
@@ -25,7 +24,7 @@ export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
     if (!events.length) {
       return (
         <DrawerTitle className="flex gaps align-center">
-          <span><Trans>Events</Trans></span>
+          <span>Events</span>
         </DrawerTitle>
       );
     }
@@ -33,7 +32,7 @@ export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
     return (
       <div>
         <DrawerTitle className="flex gaps align-center">
-          <span><Trans>Events</Trans></span>
+          <span>Events</span>
         </DrawerTitle>
         <div className="KubeEventDetails">
           {events.map(evt => {
@@ -44,16 +43,16 @@ export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
                 <div className={cssNames("title", { warning: evt.isWarning() })}>
                   {message}
                 </div>
-                <DrawerItem name={<Trans>Source</Trans>}>
+                <DrawerItem name="Source">
                   {evt.getSource()}
                 </DrawerItem>
-                <DrawerItem name={<Trans>Count</Trans>}>
+                <DrawerItem name="Count">
                   {count}
                 </DrawerItem>
-                <DrawerItem name={<Trans>Sub-object</Trans>}>
+                <DrawerItem name="Sub-object">
                   {involvedObject.fieldPath}
                 </DrawerItem>
-                <DrawerItem name={<Trans>Last seen</Trans>}>
+                <DrawerItem name="Last seen">
                   {lastTimestamp}
                 </DrawerItem>
               </div>

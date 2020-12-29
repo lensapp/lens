@@ -1,7 +1,6 @@
 import "./cluster-metric-switchers.scss";
 
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { observer } from "mobx-react";
 import { nodesStore } from "../+nodes/nodes.store";
 import { cssNames } from "../../utils";
@@ -24,8 +23,8 @@ export const ClusterMetricSwitchers = observer(() => {
           value={metricNodeRole}
           onChange={(metric: MetricNodeRole) => clusterOverviewStore.metricNodeRole = metric}
         >
-          <Radio label={<Trans>Master</Trans>} value={MetricNodeRole.MASTER}/>
-          <Radio label={<Trans>Worker</Trans>} value={MetricNodeRole.WORKER}/>
+          <Radio label="Master" value={MetricNodeRole.MASTER}/>
+          <Radio label="Worker" value={MetricNodeRole.WORKER}/>
         </RadioGroup>
       </div>
       <div className="box grow metric-switch">
@@ -35,8 +34,8 @@ export const ClusterMetricSwitchers = observer(() => {
           value={metricType}
           onChange={(value: MetricType) => clusterOverviewStore.metricType = value}
         >
-          <Radio label={<Trans>CPU</Trans>} value={MetricType.CPU}/>
-          <Radio label={<Trans>Memory</Trans>} value={MetricType.MEMORY}/>
+          <Radio label="CPU" value={MetricType.CPU}/>
+          <Radio label="Memory" value={MetricType.MEMORY}/>
         </RadioGroup>
       </div>
     </div>

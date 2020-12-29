@@ -1,5 +1,4 @@
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { observer } from "mobx-react";
 import { clusterStore } from "../../../../common/cluster-store";
 import { Cluster } from "../../../../main/cluster";
@@ -19,8 +18,8 @@ export class RemoveClusterButton extends React.Component<Props> {
 
     ConfirmDialog.open({
       message: <p>Are you sure you want to remove <b>{cluster.preferences.clusterName}</b> from Lens?</p>,
-      labelOk: <Trans>Yes</Trans>,
-      labelCancel: <Trans>No</Trans>,
+      labelOk: "Yes",
+      labelCancel: "No",
       ok: async () => {
         await clusterStore.removeById(cluster.id);
       }

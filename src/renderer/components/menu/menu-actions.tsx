@@ -3,14 +3,12 @@ import "./menu-actions.scss";
 import React, { isValidElement } from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { autobind, cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon, IconProps } from "../icon";
 import { Menu, MenuItem, MenuProps } from "../menu";
 import uniqueId from "lodash/uniqueId";
 import isString from "lodash/isString";
-import { _i18n } from "../../i18n";
 
 export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
@@ -25,7 +23,7 @@ export interface MenuActionsProps extends Partial<MenuProps> {
 export class MenuActions extends React.Component<MenuActionsProps> {
   static defaultProps: MenuActionsProps = {
     get removeConfirmationMessage() {
-      return _i18n._(t`Remove item?`);
+      return `Remove item?`;
     }
   };
 
@@ -48,7 +46,7 @@ export class MenuActions extends React.Component<MenuActionsProps> {
     }
     ConfirmDialog.open({
       ok: removeAction,
-      labelOk: _i18n._(t`Remove`),
+      labelOk: `Remove`,
       message: <div>{removeConfirmationMessage}</div>,
     });
   }
@@ -107,14 +105,14 @@ export class MenuActions extends React.Component<MenuActionsProps> {
           {children}
           {updateAction && (
             <MenuItem onClick={updateAction}>
-              <Icon material="edit" interactive={toolbar} title={_i18n._(t`Edit`)}/>
-              <span className="title"><Trans>Edit</Trans></span>
+              <Icon material="edit" interactive={toolbar} title={`Edit`}/>
+              <span className="title">Edit</span>
             </MenuItem>
           )}
           {removeAction && (
             <MenuItem onClick={this.remove}>
-              <Icon material="delete" interactive={toolbar} title={_i18n._(t`Delete`)}/>
-              <span className="title"><Trans>Remove</Trans></span>
+              <Icon material="delete" interactive={toolbar} title={`Delete`}/>
+              <span className="title">Remove</span>
             </MenuItem>
           )}
         </Menu>

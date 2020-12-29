@@ -1,7 +1,6 @@
 import "./crd-details.scss";
 
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { CustomResourceDefinition } from "../../api/endpoints/crd.api";
@@ -32,24 +31,24 @@ export class CRDDetails extends React.Component<Props> {
       <div className="CRDDetails">
         <KubeObjectMeta object={crd}/>
 
-        <DrawerItem name={<Trans>Group</Trans>}>
+        <DrawerItem name="Group">
           {crd.getGroup()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Version</Trans>}>
+        <DrawerItem name="Version">
           {crd.getVersion()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Stored versions</Trans>}>
+        <DrawerItem name="Stored versions">
           {crd.getStoredVersions()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Scope</Trans>}>
+        <DrawerItem name="Scope">
           {crd.getScope()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Resource</Trans>}>
+        <DrawerItem name="Resource">
           <Link to={crd.getResourceUrl()}>
             {crd.getResourceTitle()}
           </Link>
         </DrawerItem>
-        <DrawerItem name={<Trans>Conversion</Trans>} className="flex gaps align-flex-start">
+        <DrawerItem name="Conversion" className="flex gaps align-flex-start">
           <Input
             multiLine
             theme="round-black"
@@ -58,7 +57,7 @@ export class CRDDetails extends React.Component<Props> {
             readOnly
           />
         </DrawerItem>
-        <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
+        <DrawerItem name="Conditions" className="conditions" labelsOnly>
           {
             crd.getConditions().map(condition => {
               const { type, message, lastTransitionTime, status } = condition;
@@ -71,7 +70,7 @@ export class CRDDetails extends React.Component<Props> {
                   tooltip={(
                     <>
                       <p>{message}</p>
-                      <p><Trans>Last transition time: {lastTransitionTime}</Trans></p>
+                      <p>Last transition time: {lastTransitionTime}</p>
                     </>
                   )}
                 />
@@ -79,13 +78,13 @@ export class CRDDetails extends React.Component<Props> {
             })
           }
         </DrawerItem>
-        <DrawerTitle title={<Trans>Names</Trans>}/>
+        <DrawerTitle title="Names"/>
         <Table selectable className="names box grow">
           <TableHead>
-            <TableCell><Trans>plural</Trans></TableCell>
-            <TableCell><Trans>singular</Trans></TableCell>
-            <TableCell><Trans>kind</Trans></TableCell>
-            <TableCell><Trans>listKind</Trans></TableCell>
+            <TableCell>plural</TableCell>
+            <TableCell>singular</TableCell>
+            <TableCell>kind</TableCell>
+            <TableCell>listKind</TableCell>
           </TableHead>
           <TableRow>
             <TableCell>{plural}</TableCell>
@@ -96,12 +95,12 @@ export class CRDDetails extends React.Component<Props> {
         </Table>
         {printerColumns.length > 0 &&
         <>
-          <DrawerTitle title={<Trans>Additional Printer Columns</Trans>}/>
+          <DrawerTitle title="Additional Printer Columns"/>
           <Table selectable className="printer-columns box grow">
             <TableHead>
-              <TableCell className="name"><Trans>Name</Trans></TableCell>
-              <TableCell className="type"><Trans>Type</Trans></TableCell>
-              <TableCell className="json-path"><Trans>JSON Path</Trans></TableCell>
+              <TableCell className="name">Name</TableCell>
+              <TableCell className="type">Type</TableCell>
+              <TableCell className="json-path">JSON Path</TableCell>
             </TableHead>
             {
               printerColumns.map((column, index) => {
@@ -123,7 +122,7 @@ export class CRDDetails extends React.Component<Props> {
         }
         {validation &&
         <>
-          <DrawerTitle title={<Trans>Validation</Trans>}/>
+          <DrawerTitle title="Validation"/>
           <AceEditor
             mode="json"
             className="validation"

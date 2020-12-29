@@ -2,8 +2,6 @@ import "./cluster-pie-charts.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { useLingui } from "@lingui/react";
 import { clusterOverviewStore, MetricNodeRole } from "./cluster-overview.store";
 import { Spinner } from "../spinner";
 import { Icon } from "../icon";
@@ -15,13 +13,11 @@ import { themeStore } from "../../theme.store";
 import { getMetricLastPoints } from "../../api/endpoints/metrics.api";
 
 export const ClusterPieCharts = observer(() => {
-  const { i18n } = useLingui();
-
   const renderLimitWarning = () => {
     return (
       <div className="node-warning flex gaps align-center">
         <Icon material="info"/>
-        <p><Trans>Specified limits are higher than node capacity!</Trans></p>
+        <p>Specified limits are higher than node capacity!</p>
       </div>
     );
   };
@@ -73,10 +69,10 @@ export const ClusterPieCharts = observer(() => {
         },
       ],
       labels: [
-        `${i18n._(t`Usage`)}: ${cpuUsage ? cpuUsage.toFixed(2) : "N/A"}`,
-        `${i18n._(t`Requests`)}: ${cpuRequests ? cpuRequests.toFixed(2) : "N/A"}`,
-        `${i18n._(t`Limits`)}: ${cpuLimits ? cpuLimits.toFixed(2) : "N/A"}`,
-        `${i18n._(t`Capacity`)}: ${cpuCapacity || "N/A"}`
+        `Usage: ${cpuUsage ? cpuUsage.toFixed(2) : "N/A"}`,
+        `Requests: ${cpuRequests ? cpuRequests.toFixed(2) : "N/A"}`,
+        `Limits: ${cpuLimits ? cpuLimits.toFixed(2) : "N/A"}`,
+        `Capacity: ${cpuCapacity || "N/A"}`
       ]
     };
     const memoryData: ChartData = {
@@ -116,10 +112,10 @@ export const ClusterPieCharts = observer(() => {
         },
       ],
       labels: [
-        `${i18n._(t`Usage`)}: ${bytesToUnits(memoryUsage)}`,
-        `${i18n._(t`Requests`)}: ${bytesToUnits(memoryRequests)}`,
-        `${i18n._(t`Limits`)}: ${bytesToUnits(memoryLimits)}`,
-        `${i18n._(t`Capacity`)}: ${bytesToUnits(memoryCapacity)}`,
+        `Usage: ${bytesToUnits(memoryUsage)}`,
+        `Requests: ${bytesToUnits(memoryRequests)}`,
+        `Limits: ${bytesToUnits(memoryLimits)}`,
+        `Capacity: ${bytesToUnits(memoryCapacity)}`,
       ]
     };
     const podsData: ChartData = {
@@ -137,8 +133,8 @@ export const ClusterPieCharts = observer(() => {
         },
       ],
       labels: [
-        `${i18n._(t`Usage`)}: ${podUsage || 0}`,
-        `${i18n._(t`Capacity`)}: ${podCapacity}`,
+        `Usage: ${podUsage || 0}`,
+        `Capacity: ${podCapacity}`,
       ]
     };
 
@@ -147,7 +143,7 @@ export const ClusterPieCharts = observer(() => {
         <div className="chart flex column align-center box grow">
           <PieChart
             data={cpuData}
-            title={i18n._(t`CPU`)}
+            title={`CPU`}
             legendColors={["#c93dce", "#4caf50", "#3d90ce", defaultColor]}
           />
           {cpuLimitsOverload && renderLimitWarning()}
@@ -155,7 +151,7 @@ export const ClusterPieCharts = observer(() => {
         <div className="chart flex column align-center box grow">
           <PieChart
             data={memoryData}
-            title={i18n._(t`Memory`)}
+            title={`Memory`}
             legendColors={["#c93dce", "#4caf50", "#3d90ce", defaultColor]}
           />
           {memoryLimitsOverload && renderLimitWarning()}
@@ -163,7 +159,7 @@ export const ClusterPieCharts = observer(() => {
         <div className="chart flex column align-center box grow">
           <PieChart
             data={podsData}
-            title={i18n._(t`Pods`)}
+            title={`Pods`}
             legendColors={["#4caf50", defaultColor]}
           />
         </div>
@@ -180,7 +176,7 @@ export const ClusterPieCharts = observer(() => {
       return (
         <div className="empty flex column box grow align-center justify-center">
           <Icon material="info"/>
-          <Trans>No Nodes Available.</Trans>
+          No Nodes Available.
         </div>
       );
     }

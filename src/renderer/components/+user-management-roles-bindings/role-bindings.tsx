@@ -2,7 +2,6 @@ import "./role-bindings.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { IRoleBindingsRouteParams } from "../+user-management/user-management.route";
 import { RoleBinding } from "../../api/endpoints";
@@ -38,13 +37,13 @@ export class RoleBindings extends React.Component<Props> {
           (binding: RoleBinding) => binding.getSearchFields(),
           (binding: RoleBinding) => binding.getSubjectNames(),
         ]}
-        renderHeaderTitle={<Trans>Role Bindings</Trans>}
+        renderHeaderTitle="Role Bindings"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Bindings</Trans>, className: "bindings", sortBy: sortBy.bindings },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Bindings", className: "bindings", sortBy: sortBy.bindings },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(binding: RoleBinding) => [
           binding.getName(),
@@ -55,7 +54,7 @@ export class RoleBindings extends React.Component<Props> {
         ]}
         addRemoveButtons={{
           onAdd: () => AddRoleBindingDialog.open(),
-          addTooltip: <Trans>Create new RoleBinding</Trans>,
+          addTooltip: "Create new RoleBinding",
         }}
       />
     );

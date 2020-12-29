@@ -2,7 +2,6 @@ import "./storage.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { PersistentVolumes, volumesRoute, volumesURL } from "../+storage-volumes";
 import { StorageClasses, storageClassesRoute, storageClassesURL } from "../+storage-classes";
@@ -18,7 +17,7 @@ export class Storage extends React.Component {
 
     if (isAllowedResource("persistentvolumeclaims")) {
       tabRoutes.push({
-        title: <Trans>Persistent Volume Claims</Trans>,
+        title: "Persistent Volume Claims",
         component: PersistentVolumeClaims,
         url: volumeClaimsURL({ query }),
         routePath: volumeClaimsRoute.path.toString(),
@@ -27,7 +26,7 @@ export class Storage extends React.Component {
 
     if (isAllowedResource("persistentvolumes")) {
       tabRoutes.push({
-        title: <Trans>Persistent Volumes</Trans>,
+        title: "Persistent Volumes",
         component: PersistentVolumes,
         url: volumesURL(),
         routePath: volumesRoute.path.toString(),
@@ -36,7 +35,7 @@ export class Storage extends React.Component {
 
     if (isAllowedResource("storageclasses")) {
       tabRoutes.push({
-        title: <Trans>Storage Classes</Trans>,
+        title: "Storage Classes",
         component: StorageClasses,
         url: storageClassesURL(),
         routePath: storageClassesRoute.path.toString(),

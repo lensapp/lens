@@ -1,5 +1,4 @@
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { autobind, cssNames } from "../../utils";
 import { KubeObject } from "../../api/kube-object";
 import { editResourceTab } from "../dock/edit-resource.store";
@@ -57,7 +56,7 @@ export class KubeObjectMenu extends React.Component<KubeObjectMenuProps> {
     const resourceName = object.getName();
 
     return (
-      <p><Trans>Remove {resourceKind} <b>{resourceName}</b>?</Trans></p>
+      <p>Remove {resourceKind} <b>{resourceName}</b>?</p>
     );
   }
 

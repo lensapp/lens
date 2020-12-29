@@ -1,7 +1,6 @@
 import "./role-binding-details.scss";
 
 import React from "react";
-import { t, Trans } from "@lingui/macro";
 import { AddRemoveButtons } from "../add-remove-buttons";
 import { IRoleBindingSubject, RoleBinding } from "../../api/endpoints";
 import { autobind, prevDefault } from "../../utils";
@@ -14,7 +13,6 @@ import { observable, reaction } from "mobx";
 import { roleBindingsStore } from "./role-bindings.store";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { _i18n } from "../../i18n";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
@@ -51,9 +49,9 @@ export class RoleBindingDetails extends React.Component<Props> {
 
     ConfirmDialog.open({
       ok: () => roleBindingsStore.updateSubjects({ roleBinding, removeSubjects: selectedSubjects }),
-      labelOk: _i18n._(t`Remove`),
+      labelOk: `Remove`,
       message: (
-        <p><Trans>Remove selected bindings for <b>{roleBinding.getName()}</b>?</Trans></p>
+        <p>Remove selected bindings for <b>{roleBinding.getName()}</b>?</p>
       )
     });
   }
@@ -65,7 +63,6 @@ export class RoleBindingDetails extends React.Component<Props> {
     if (!roleBinding) {
       return null;
     }
-    const name = roleBinding.getName();
     const { roleRef } = roleBinding;
     const subjects = roleBinding.getSubjects();
 
@@ -73,12 +70,12 @@ export class RoleBindingDetails extends React.Component<Props> {
       <div className="RoleBindingDetails">
         <KubeObjectMeta object={roleBinding}/>
 
-        <DrawerTitle title={<Trans>Reference</Trans>}/>
+        <DrawerTitle title="Reference"/>
         <Table>
           <TableHead>
-            <TableCell><Trans>Kind</Trans></TableCell>
-            <TableCell><Trans>Name</Trans></TableCell>
-            <TableCell><Trans>API Group</Trans></TableCell>
+            <TableCell>Kind</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>API Group</TableCell>
           </TableHead>
           <TableRow>
             <TableCell>{roleRef.kind}</TableCell>
@@ -87,14 +84,14 @@ export class RoleBindingDetails extends React.Component<Props> {
           </TableRow>
         </Table>
 
-        <DrawerTitle title={<Trans>Bindings</Trans>}/>
+        <DrawerTitle title="Bindings"/>
         {subjects.length > 0 && (
           <Table selectable className="bindings box grow">
             <TableHead>
               <TableCell checkbox/>
-              <TableCell className="binding"><Trans>Binding</Trans></TableCell>
-              <TableCell className="type"><Trans>Type</Trans></TableCell>
-              <TableCell className="type"><Trans>Namespace</Trans></TableCell>
+              <TableCell className="binding">Binding</TableCell>
+              <TableCell className="type">Type</TableCell>
+              <TableCell className="type">Namespace</TableCell>
             </TableHead>
             {
               subjects.map((subject, i) => {
@@ -120,8 +117,8 @@ export class RoleBindingDetails extends React.Component<Props> {
         <AddRemoveButtons
           onAdd={() => AddRoleBindingDialog.open(roleBinding)}
           onRemove={selectedSubjects.length ? this.removeSelectedSubjects : null}
-          addTooltip={<Trans>Add bindings to {name}</Trans>}
-          removeTooltip={<Trans>Remove selected bindings from ${name}</Trans>}
+          addTooltip="Add bindings to {name}"
+          removeTooltip="Remove selected bindings from ${name}"
         />
       </div>
     );

@@ -1,12 +1,10 @@
 import React, { useContext } from "react";
 import { observer } from "mobx-react";
-import { t } from "@lingui/macro";
 import { IPvcMetrics, PersistentVolumeClaim } from "../../api/endpoints";
 import { BarChart, ChartDataSets, memoryOptions } from "../chart";
 import { isMetricsEmpty, normalizeMetrics } from "../../api/endpoints/metrics.api";
 import { NoMetrics } from "../resource-metrics/no-metrics";
 import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metrics";
-import { _i18n } from "../../i18n";
 import { themeStore } from "../../theme.store";
 
 type IContext = IResourceMetricsValue<PersistentVolumeClaim, { metrics: IPvcMetrics }>;
@@ -26,15 +24,15 @@ export const VolumeClaimDiskChart = observer(() => {
   const datasets: ChartDataSets[] = [
     {
       id: `${id}-diskUsage`,
-      label: _i18n._(t`Usage`),
-      tooltip: _i18n._(t`Volume disk usage`),
+      label: `Usage`,
+      tooltip: `Volume disk usage`,
       borderColor: "#ffc63d",
       data: usage.map(([x, y]) => ({ x, y }))
     },
     {
       id: `${id}-diskCapacity`,
-      label: _i18n._(t`Capacity`),
-      tooltip: _i18n._(t`Volume disk capacity`),
+      label: `Capacity`,
+      tooltip: `Volume disk capacity`,
       borderColor: chartCapacityColor,
       data: capacity.map(([x, y]) => ({ x, y }))
     }

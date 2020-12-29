@@ -14,7 +14,6 @@ import { extensionLoader } from "../extensions/extension-loader";
 import { extensionsStore } from "../extensions/extensions-store";
 import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
-import { i18nStore } from "./i18n";
 import { LensApp } from "./lens-app";
 import { themeStore } from "./theme.store";
 
@@ -44,7 +43,6 @@ export async function bootstrap(App: AppComponent) {
     clusterStore.load(),
     extensionsStore.load(),
     filesystemProvisionerStore.load(),
-    i18nStore.init(),
     themeStore.init(),
   ]);
 

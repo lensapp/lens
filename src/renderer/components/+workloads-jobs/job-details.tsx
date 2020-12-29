@@ -3,7 +3,6 @@ import "./job-details.scss";
 import React from "react";
 import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
@@ -45,13 +44,13 @@ export class JobDetails extends React.Component<Props> {
     return (
       <div className="JobDetails">
         <KubeObjectMeta object={job}/>
-        <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+        <DrawerItem name="Selector" labelsOnly>
           {
             Object.keys(selectors).map(label => <Badge key={label} label={label}/>)
           }
         </DrawerItem>
         {nodeSelector.length > 0 &&
-        <DrawerItem name={<Trans>Node Selector</Trans>} labelsOnly>
+        <DrawerItem name="Node Selector" labelsOnly>
           {
             nodeSelector.map(label => (
               <Badge key={label} label={label}/>
@@ -60,14 +59,14 @@ export class JobDetails extends React.Component<Props> {
         </DrawerItem>
         }
         {images.length > 0 &&
-        <DrawerItem name={<Trans>Images</Trans>}>
+        <DrawerItem name="Images">
           {
             images.map(image => <p key={image}>{image}</p>)
           }
         </DrawerItem>
         }
         {ownerRefs.length > 0 &&
-        <DrawerItem name={<Trans>Controlled by</Trans>}>
+        <DrawerItem name="Controlled by">
           {
             ownerRefs.map(ref => {
               const { name, kind } = ref;
@@ -82,7 +81,7 @@ export class JobDetails extends React.Component<Props> {
           }
         </DrawerItem>
         }
-        <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
+        <DrawerItem name="Conditions" className="conditions" labelsOnly>
           {condition && (
             <Badge
               className={kebabCase(condition.type)}
@@ -91,15 +90,15 @@ export class JobDetails extends React.Component<Props> {
             />
           )}
         </DrawerItem>
-        <DrawerItem name={<Trans>Completions</Trans>}>
+        <DrawerItem name="Completions">
           {job.getDesiredCompletions()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Parallelism</Trans>}>
+        <DrawerItem name="Parallelism">
           {job.getParallelism()}
         </DrawerItem>
         <PodDetailsTolerations workload={job}/>
         <PodDetailsAffinities workload={job}/>
-        <DrawerItem name={<Trans>Pod Status</Trans>} className="pod-status">
+        <DrawerItem name="Pod Status" className="pod-status">
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <PodDetailsList pods={childPods} owner={job}/>

@@ -1,14 +1,12 @@
 import "./logs-dialog.scss";
 
 import React from "react";
-import { t, Trans } from "@lingui/macro";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { copyToClipboard } from "../../utils";
 import { Notifications } from "../notifications";
 import { Button } from "../button";
 import { Icon } from "../icon";
-import { _i18n } from "../../i18n";
 
 // todo: make as external BrowserWindow (?)
 
@@ -22,7 +20,7 @@ export class LogsDialog extends React.Component<Props> {
 
   copyToClipboard = () => {
     if (copyToClipboard(this.logsElem)) {
-      Notifications.ok(_i18n._(t`Logs copied to clipboard.`));
+      Notifications.ok(`Logs copied to clipboard.`);
     }
   };
 
@@ -32,10 +30,10 @@ export class LogsDialog extends React.Component<Props> {
     const customButtons = (
       <div className="buttons flex gaps align-center justify-space-between">
         <Button plain onClick={this.copyToClipboard}>
-          <Icon material="assignment"/> <Trans>Copy to clipboard</Trans>
+          <Icon material="assignment"/> Copy to clipboard
         </Button>
         <Button plain onClick={dialogProps.close}>
-          <Trans>Close</Trans>
+          Close
         </Button>
       </div>
     );
@@ -45,7 +43,7 @@ export class LogsDialog extends React.Component<Props> {
         <Wizard header={header} done={dialogProps.close}>
           <WizardStep scrollable={false} customButtons={customButtons}>
             <code className="block" ref={e => this.logsElem = e}>
-              {logs || <Trans>There are no logs available.</Trans>}
+              {logs || "There are no logs available."}
             </code>
           </WizardStep>
         </Wizard>

@@ -1,7 +1,6 @@
 import "./no-items.scss";
 
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { cssNames, IClassName } from "../../utils";
 
 interface Props {
@@ -15,7 +14,7 @@ export function NoItems(props: Props) {
   return (
     <div className={cssNames("NoItems flex box grow", className)}>
       <div className="box center">
-        {children || <Trans>Item list is empty</Trans>}
+        {children || "Item list is empty"}
       </div>
     </div>
   );

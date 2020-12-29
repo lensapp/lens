@@ -2,7 +2,6 @@ import startCase from "lodash/startCase";
 import "./volume-details.scss";
 
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
@@ -29,32 +28,32 @@ export class PersistentVolumeDetails extends React.Component<Props> {
     return (
       <div className="PersistentVolumeDetails">
         <KubeObjectMeta object={volume}/>
-        <DrawerItem name={<Trans>Capacity</Trans>}>
+        <DrawerItem name="Capacity">
           {capacity.storage}
         </DrawerItem>
 
         {mountOptions && (
-          <DrawerItem name={<Trans>Mount Options</Trans>}>
+          <DrawerItem name="Mount Options">
             {mountOptions.join(", ")}
           </DrawerItem>
         )}
 
-        <DrawerItem name={<Trans>Access Modes</Trans>}>
+        <DrawerItem name="Access Modes">
           {accessModes.join(", ")}
         </DrawerItem>
-        <DrawerItem name={<Trans>Reclaim Policy</Trans>}>
+        <DrawerItem name="Reclaim Policy">
           {persistentVolumeReclaimPolicy}
         </DrawerItem>
-        <DrawerItem name={<Trans>Storage Class Name</Trans>}>
+        <DrawerItem name="Storage Class Name">
           {storageClassName}
         </DrawerItem>
-        <DrawerItem name={<Trans>Status</Trans>} labelsOnly>
+        <DrawerItem name="Status" labelsOnly>
           <Badge label={volume.getStatus()}/>
         </DrawerItem>
 
         {nfs && (
           <>
-            <DrawerTitle title={<Trans>Network File System</Trans>}/>
+            <DrawerTitle title="Network File System"/>
             {
               Object.entries(nfs).map(([name, value]) => (
                 <DrawerItem key={name} name={startCase(name)}>
@@ -67,8 +66,8 @@ export class PersistentVolumeDetails extends React.Component<Props> {
 
         {flexVolume && (
           <>
-            <DrawerTitle title={<Trans>FlexVolume</Trans>}/>
-            <DrawerItem name={<Trans>Driver</Trans>}>
+            <DrawerTitle title="FlexVolume"/>
+            <DrawerItem name="Driver">
               {flexVolume.driver}
             </DrawerItem>
             {
@@ -83,16 +82,16 @@ export class PersistentVolumeDetails extends React.Component<Props> {
 
         {claimRef && (
           <>
-            <DrawerTitle title={<Trans>Claim</Trans>}/>
-            <DrawerItem name={<Trans>Type</Trans>}>
+            <DrawerTitle title="Claim"/>
+            <DrawerItem name="Type">
               {claimRef.kind}
             </DrawerItem>
-            <DrawerItem name={<Trans>Name</Trans>}>
+            <DrawerItem name="Name">
               <Link to={getDetailsUrl(pvcApi.getUrl(claimRef))}>
                 {claimRef.name}
               </Link>
             </DrawerItem>
-            <DrawerItem name={<Trans>Namespace</Trans>}>
+            <DrawerItem name="Namespace">
               {claimRef.namespace}
             </DrawerItem>
           </>

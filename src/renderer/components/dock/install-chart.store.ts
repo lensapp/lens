@@ -1,10 +1,8 @@
 import { action, autorun } from "mobx";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
-import { t } from "@lingui/macro";
 import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
 import { IReleaseUpdateDetails } from "../../api/endpoints/helm-releases.api";
-import { _i18n } from "../../i18n";
 import { Notifications } from "../notifications";
 
 export interface IChartInstallData {
@@ -82,7 +80,7 @@ export function createInstallChartTab(chart: HelmChart, tabParams: Partial<IDock
   const { name, repo, version } = chart;
   const tab = dockStore.createTab({
     kind: TabKind.INSTALL_CHART,
-    title: _i18n._(t`Helm Install: ${repo}/${name}`),
+    title: `Helm Install: ${repo}/${name}`,
     ...tabParams
   }, false);
 

@@ -3,7 +3,6 @@ import "./info-panel.scss";
 import React, { Component, ReactNode } from "react";
 import { computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
@@ -33,8 +32,8 @@ interface OptionalProps {
 @observer
 export class InfoPanel extends Component<Props> {
   static defaultProps: OptionalProps = {
-    submitLabel: <Trans>Submit</Trans>,
-    submittingMessage: <Trans>Submitting..</Trans>,
+    submitLabel: "Submit",
+    submittingMessage: "Submitting..",
     showButtons: true,
     showSubmitClose: true,
     showInlineInfo: true,
@@ -111,7 +110,7 @@ export class InfoPanel extends Component<Props> {
         )}
         {showButtons && (
           <>
-            <Button plain label={<Trans>Cancel</Trans>} onClick={close} />
+            <Button plain label="Cancel" onClick={close} />
             <Button
               active
               outlined={showSubmitClose}
@@ -123,7 +122,7 @@ export class InfoPanel extends Component<Props> {
             {showSubmitClose && (
               <Button
                 primary active
-                label={<Trans>{submitLabel} & Close</Trans>}
+                label={`${submitLabel} & Close`}
                 onClick={submitAndClose}
                 disabled={isDisabled}
               />

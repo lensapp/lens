@@ -9,8 +9,6 @@ import { HelmChart } from "../../api/endpoints/helm-charts.api";
 import { HelmChartDetails } from "./helm-chart-details";
 import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { SearchInputUrl } from "../input";
 
 enum sortBy {
@@ -73,15 +71,15 @@ export class HelmCharts extends Component<Props> {
             (items: HelmChart[]) => items.filter(item => !item.deprecated)
           ]}
           customizeHeader={() => (
-            <SearchInputUrl placeholder={_i18n._(t`Search Helm Charts`)} />
+            <SearchInputUrl placeholder={`Search Helm Charts`} />
           )}
           renderTableHeader={[
             { className: "icon" },
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>Description</Trans>, className: "description" },
-            { title: <Trans>Version</Trans>, className: "version" },
-            { title: <Trans>App Version</Trans>, className: "app-version" },
-            { title: <Trans>Repository</Trans>, className: "repository", sortBy: sortBy.repo },
+            { title: "Name", className: "name", sortBy: sortBy.name },
+            { title: "Description", className: "description" },
+            { title: "Version", className: "version" },
+            { title: "App Version", className: "app-version" },
+            { title: "Repository", className: "repository", sortBy: sortBy.repo },
 
           ]}
           renderTableContents={(chart: HelmChart) => [

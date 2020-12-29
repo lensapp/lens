@@ -1,5 +1,4 @@
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { TabLayout } from "../layout/tab-layout";
 
 export class NotFound extends React.Component {
@@ -7,7 +6,7 @@ export class NotFound extends React.Component {
     return (
       <TabLayout className="NotFound" contentClass="flex">
         <p className="box center">
-          <Trans>Page not found</Trans>
+          Page not found
         </p>
       </TabLayout>
     );

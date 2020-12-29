@@ -2,10 +2,8 @@ import "./app-init.scss";
 
 import React from "react";
 import { render } from "react-dom";
-import { t } from "@lingui/macro";
 import { CubeSpinner } from "../spinner";
 import { apiBase } from "../../api";
-import { _i18n } from "../../i18n";
 
 interface Props {
   serviceWaitingList?: string[];
@@ -40,10 +38,10 @@ export class AppInit extends React.Component<Props> {
     return (
       <div className="AppInit flex column center">
         <div className="box flex column gaps">
-          <h5>Lens - {_i18n._(t`Loading`)}..</h5>
+          <h5>Lens - Loading..</h5>
           {serviceWaitingList.length > 0 && (
             <p className="waiting-services">
-              {_i18n._(t`Waiting services to be running`)}: <em className="text-secondary">{serviceNames}</em>
+              Waiting services to be running: <em className="text-secondary">{serviceNames}</em>
             </p>
           )}
           <CubeSpinner/>

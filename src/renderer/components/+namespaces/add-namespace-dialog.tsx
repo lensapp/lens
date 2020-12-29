@@ -3,8 +3,6 @@ import "./add-namespace-dialog.scss";
 import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { namespaceStore } from "./namespace.store";
@@ -55,7 +53,7 @@ export class AddNamespaceDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const { namespace } = this;
-    const header = <h5><Trans>Create Namespace</Trans></h5>;
+    const header = <h5>Create Namespace</h5>;
 
     return (
       <Dialog
@@ -68,13 +66,13 @@ export class AddNamespaceDialog extends React.Component<Props> {
         <Wizard header={header} done={this.close}>
           <WizardStep
             contentClass="flex gaps column"
-            nextLabel={<Trans>Create</Trans>}
+            nextLabel="Create"
             next={this.addNamespace}
           >
             <Input
               required autoFocus
               iconLeft="layers"
-              placeholder={_i18n._(t`Namespace`)}
+              placeholder={`Namespace`}
               validators={systemName}
               value={namespace} onChange={v => this.namespace = v.toLowerCase()}
             />

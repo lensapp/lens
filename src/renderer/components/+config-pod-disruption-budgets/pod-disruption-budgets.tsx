@@ -2,7 +2,6 @@ import "./pod-disruption-budgets.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { podDisruptionBudgetsStore } from "./pod-disruption-budgets.store";
 import { PodDisruptionBudget } from "../../api/endpoints/poddisruptionbudget.api";
 import { KubeObjectDetailsProps, KubeObjectListLayout } from "../kube-object";
@@ -40,16 +39,16 @@ export class PodDisruptionBudgets extends React.Component<Props> {
         searchFilters={[
           (pdb: PodDisruptionBudget) => pdb.getSearchFields(),
         ]}
-        renderHeaderTitle={<Trans>Pod Disruption Budgets</Trans>}
+        renderHeaderTitle="Pod Disruption Budgets"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Min Available</Trans>, className: "min-available", sortBy: sortBy.minAvailable },
-          { title: <Trans>Max Unavailable</Trans>, className: "max-unavailable", sortBy: sortBy.maxUnavailable },
-          { title: <Trans>Current Healthy</Trans>, className: "current-healthy", sortBy: sortBy.currentHealthy },
-          { title: <Trans>Desired Healthy</Trans>, className: "desired-healthy", sortBy: sortBy.desiredHealthy },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Min Available", className: "min-available", sortBy: sortBy.minAvailable },
+          { title: "Max Unavailable", className: "max-unavailable", sortBy: sortBy.maxUnavailable },
+          { title: "Current Healthy", className: "current-healthy", sortBy: sortBy.currentHealthy },
+          { title: "Desired Healthy", className: "desired-healthy", sortBy: sortBy.desiredHealthy },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(pdb: PodDisruptionBudget) => {
           return [

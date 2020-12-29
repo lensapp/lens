@@ -6,7 +6,6 @@ import { observer } from "mobx-react";
 import { userStore } from "../../../common/user-store";
 import { navigate } from "../../navigation";
 import { Button } from "../button";
-import { Trans } from "@lingui/macro";
 import marked from "marked";
 
 @observer
@@ -34,7 +33,7 @@ export class WhatsNew extends React.Component {
         <div className="bottom">
           <Button
             primary autoFocus
-            label={<Trans>Ok, got it!</Trans>}
+            label="Ok, got it!"
             onClick={this.ok}
           />
         </div>

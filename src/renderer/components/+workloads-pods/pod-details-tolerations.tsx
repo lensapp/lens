@@ -1,6 +1,5 @@
 import "./pod-details-tolerations.scss";
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job } from "../../api/endpoints";
 import { DrawerParamToggler, DrawerItem } from "../drawer";
 
@@ -16,7 +15,7 @@ export class PodDetailsTolerations extends React.Component<Props> {
     if (!tolerations.length) return null;
 
     return (
-      <DrawerItem name={<Trans>Tolerations</Trans>} className="PodDetailsTolerations">
+      <DrawerItem name="Tolerations" className="PodDetailsTolerations">
         <DrawerParamToggler label={tolerations.length}>
           {
             tolerations.map((toleration, index) => {
@@ -24,10 +23,10 @@ export class PodDetailsTolerations extends React.Component<Props> {
 
               return (
                 <div className="toleration" key={index}>
-                  <DrawerItem name={<Trans>Key</Trans>}>{key}</DrawerItem>
-                  {operator && <DrawerItem name={<Trans>Operator</Trans>}>{operator}</DrawerItem>}
-                  {effect && <DrawerItem name={<Trans>Effect</Trans>}>{effect}</DrawerItem>}
-                  {!!tolerationSeconds && <DrawerItem name={<Trans>Effect</Trans>}>{tolerationSeconds}</DrawerItem>}
+                  <DrawerItem name="Key">{key}</DrawerItem>
+                  {operator && <DrawerItem name="Operator">{operator}</DrawerItem>}
+                  {effect && <DrawerItem name="Effect">{effect}</DrawerItem>}
+                  {!!tolerationSeconds && <DrawerItem name="Effect">{tolerationSeconds}</DrawerItem>}
                 </div>
               );
             })

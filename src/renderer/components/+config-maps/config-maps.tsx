@@ -2,7 +2,6 @@ import "./config-maps.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { configMapsStore } from "./config-maps.store";
 import { ConfigMap } from "../../api/endpoints/configmap.api";
@@ -36,13 +35,13 @@ export class ConfigMaps extends React.Component<Props> {
           (item: ConfigMap) => item.getSearchFields(),
           (item: ConfigMap) => item.getKeys()
         ]}
-        renderHeaderTitle={<Trans>Config Maps</Trans>}
+        renderHeaderTitle="Config Maps"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Keys</Trans>, className: "keys", sortBy: sortBy.keys },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Keys", className: "keys", sortBy: sortBy.keys },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(configMap: ConfigMap) => [
           configMap.getName(),

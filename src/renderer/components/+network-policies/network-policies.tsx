@@ -2,7 +2,6 @@ import "./network-policies.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router-dom";
 import { NetworkPolicy } from "../../api/endpoints/network-policy.api";
 import { KubeObjectListLayout } from "../kube-object";
@@ -33,13 +32,13 @@ export class NetworkPolicies extends React.Component<Props> {
         searchFilters={[
           (item: NetworkPolicy) => item.getSearchFields(),
         ]}
-        renderHeaderTitle={<Trans>Network Policies</Trans>}
+        renderHeaderTitle="Network Policies"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Policy Types</Trans>, className: "type" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Policy Types", className: "type" },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(item: NetworkPolicy) => [
           item.getName(),

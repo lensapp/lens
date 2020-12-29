@@ -48,7 +48,8 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
     },
     stats: {
       warningsFilter: [
-        /Critical dependency: the request of a dependency is an expression/
+        /Critical dependency: the request of a dependency is an expression/,
+        /export '.*' was not found in/
       ]
     },
     resolve: {
@@ -83,34 +84,12 @@ export function webpackLensRenderer({ showVars = true } = {}): webpack.Configura
         {
           test: /\.tsx?$/,
           exclude: /node_modules/,
-          use: [
-            {
-              loader: "babel-loader",
-              options: {
-                presets: [
-                  ["@babel/preset-env", {
-                    modules: "commonjs" // ling-ui
-                  }],
-                ],
-                plugins: [
-                  isDevelopment && require.resolve("react-refresh/babel"),
-                ].filter(Boolean),
-              }
-            },
-            {
-              loader: "ts-loader",
-              options: {
-                transpileOnly: true,
-                compilerOptions: {
-                  // localization support
-                  // https://lingui.js.org/guides/typescript.html
-                  jsx: "preserve",
-                  target: "es2016",
-                  module: "esnext",
-                },
-              }
+          use: {
+            loader: "ts-loader",
+            options: {
+              transpileOnly: true, // ForkTsCheckerPlugin does type-checking
             }
-          ]
+          }
         },
         {
           test: /\.(jpg|png|svg|map|ico)$/,

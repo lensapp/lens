@@ -3,7 +3,6 @@ import "./cluster-issues.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { computed } from "mobx";
-import { Trans } from "@lingui/macro";
 import { Icon } from "../icon";
 import { SubHeader } from "../layout/sub-header";
 import { Table, TableCell, TableHead, TableRow } from "../table";
@@ -114,8 +113,8 @@ export class ClusterIssues extends React.Component<Props> {
       return (
         <div className="no-issues flex column box grow gaps align-center justify-center">
           <div><Icon material="check" big sticker/></div>
-          <div className="ok-title"><Trans>No issues found</Trans></div>
-          <span><Trans>Everything is fine in the Cluster</Trans></span>
+          <div className="ok-title">No issues found</div>
+          <span>Everything is fine in the Cluster</span>
         </div>
       );
     }
@@ -124,7 +123,7 @@ export class ClusterIssues extends React.Component<Props> {
       <>
         <SubHeader>
           <Icon material="error_outline"/>{" "}
-          <Trans>Warnings: {warnings.length}</Trans>
+          <>Warnings: {warnings.length}</>
         </SubHeader>
         <Table
           items={warnings}
@@ -137,9 +136,9 @@ export class ClusterIssues extends React.Component<Props> {
           className={cssNames("box grow", themeStore.activeTheme.type)}
         >
           <TableHead nowrap>
-            <TableCell className="message"><Trans>Message</Trans></TableCell>
-            <TableCell className="object" sortBy={sortBy.object}><Trans>Object</Trans></TableCell>
-            <TableCell className="kind" sortBy={sortBy.type}><Trans>Type</Trans></TableCell>
+            <TableCell className="message">Message</TableCell>
+            <TableCell className="object" sortBy={sortBy.object}>Object</TableCell>
+            <TableCell className="kind" sortBy={sortBy.type}>Type</TableCell>
           </TableHead>
         </Table>
       </>

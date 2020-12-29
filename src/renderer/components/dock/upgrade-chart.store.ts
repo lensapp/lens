@@ -1,10 +1,8 @@
 import { action, autorun, IReactionDisposer, reaction } from "mobx";
-import { t } from "@lingui/macro";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { DockTabStore } from "./dock-tab.store";
 import { HelmRelease, helmReleasesApi } from "../../api/endpoints/helm-releases.api";
 import { releaseStore } from "../+apps-releases/release.store";
-import { _i18n } from "../../i18n";
 
 export interface IChartUpgradeData {
   releaseName: string;
@@ -120,7 +118,7 @@ export function createUpgradeChartTab(release: HelmRelease, tabParams: Partial<I
   if (!tab) {
     tab = dockStore.createTab({
       kind: TabKind.UPGRADE_CHART,
-      title: _i18n._(t`Helm Upgrade: ${release.getName()}`),
+      title: `Helm Upgrade: ${release.getName()}`,
       ...tabParams
     }, false);
 

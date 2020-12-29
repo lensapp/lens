@@ -3,7 +3,6 @@ import "./hpa.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { Trans } from "@lingui/macro";
 import { KubeObjectListLayout } from "../kube-object";
 import { IHpaRouteParams } from "./hpa.route";
 import { HorizontalPodAutoscaler } from "../../api/endpoints/hpa.api";
@@ -29,7 +28,7 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
   getTargets(hpa: HorizontalPodAutoscaler) {
     const metrics = hpa.getMetrics();
     const metricsRemainCount = metrics.length - 1;
-    const metricsRemain = metrics.length > 1 ? <Trans>{metricsRemainCount} more...</Trans> : null;
+    const metricsRemain = metrics.length > 1 ? <>{metricsRemainCount} more...</> : null;
     const metricValues = hpa.getMetricValues(metrics[0]);
 
     return <p>{metricValues} {metricsRemain && "+"}{metricsRemain}</p>;
@@ -49,17 +48,17 @@ export class HorizontalPodAutoscalers extends React.Component<Props> {
         searchFilters={[
           (item: HorizontalPodAutoscaler) => item.getSearchFields()
         ]}
-        renderHeaderTitle={<Trans>Horizontal Pod Autoscalers</Trans>}
+        renderHeaderTitle="Horizontal Pod Autoscalers"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Metrics</Trans>, className: "metrics" },
-          { title: <Trans>Min Pods</Trans>, className: "min-pods", sortBy: sortBy.minPods },
-          { title: <Trans>Max Pods</Trans>, className: "max-pods", sortBy: sortBy.maxPods },
-          { title: <Trans>Replicas</Trans>, className: "replicas", sortBy: sortBy.replicas },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-          { title: <Trans>Status</Trans>, className: "status" },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Metrics", className: "metrics" },
+          { title: "Min Pods", className: "min-pods", sortBy: sortBy.minPods },
+          { title: "Max Pods", className: "max-pods", sortBy: sortBy.maxPods },
+          { title: "Replicas", className: "replicas", sortBy: sortBy.replicas },
+          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Status", className: "status" },
         ]}
         renderTableContents={(hpa: HorizontalPodAutoscaler) => [
           hpa.getName(),

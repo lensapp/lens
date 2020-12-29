@@ -3,8 +3,6 @@ import "./add-secret-dialog.scss";
 import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Input } from "../input";
@@ -135,7 +133,7 @@ export class AddSecretDialog extends React.Component<Props> {
         <SubTitle compact className="fields-title" title={upperFirst(field.toString())}>
           <Icon
             small
-            tooltip={_i18n._(t`Add field`)}
+            tooltip={`Add field`}
             material="add_circle_outline"
             onClick={() => this.addField(field)}
           />
@@ -148,7 +146,7 @@ export class AddSecretDialog extends React.Component<Props> {
               <div key={index} className="secret-field flex gaps auto align-center">
                 <Input
                   className="key"
-                  placeholder={_i18n._(t`Name`)}
+                  placeholder={`Name`}
                   title={key}
                   tabIndex={required ? -1 : 0}
                   readOnly={required}
@@ -158,13 +156,13 @@ export class AddSecretDialog extends React.Component<Props> {
                   multiLine maxRows={5}
                   required={required}
                   className="value"
-                  placeholder={_i18n._(t`Value`)}
+                  placeholder={`Value`}
                   value={value} onChange={v => item.value = v}
                 />
                 <Icon
                   small
                   disabled={required}
-                  tooltip={required ? <Trans>Required field</Trans> : <Trans>Remove field</Trans>}
+                  tooltip={required ? "Required field" : "Remove field"}
                   className="remove-icon"
                   material="remove_circle_outline"
                   onClick={() => this.removeField(field, index)}
@@ -180,7 +178,7 @@ export class AddSecretDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
     const { namespace, name, type } = this;
-    const header = <h5><Trans>Create Secret</Trans></h5>;
+    const header = <h5>Create Secret</h5>;
 
     return (
       <Dialog
@@ -191,19 +189,19 @@ export class AddSecretDialog extends React.Component<Props> {
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flow column" nextLabel={<Trans>Create</Trans>} next={this.createSecret}>
+          <WizardStep contentClass="flow column" nextLabel="Create" next={this.createSecret}>
             <div className="secret-name">
-              <SubTitle title={<Trans>Secret name</Trans>} />
+              <SubTitle title="Secret name" />
               <Input
                 autoFocus required
-                placeholder={_i18n._(t`Name`)}
+                placeholder={`Name`}
                 validators={systemName}
                 value={name} onChange={v => this.name = v}
               />
             </div>
             <div className="flex auto gaps">
               <div className="secret-namespace">
-                <SubTitle title={<Trans>Namespace</Trans>} />
+                <SubTitle title="Namespace" />
                 <NamespaceSelect
                   themeName="light"
                   value={namespace}
@@ -211,7 +209,7 @@ export class AddSecretDialog extends React.Component<Props> {
                 />
               </div>
               <div className="secret-type">
-                <SubTitle title={<Trans>Secret type</Trans>} />
+                <SubTitle title="Secret type" />
                 <Select
                   themeName="light"
                   options={this.types}

@@ -2,7 +2,6 @@ import "./network.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { Services, servicesRoute, servicesURL } from "../+network-services";
 import { endpointRoute, Endpoints, endpointURL } from "../+network-endpoints";
@@ -19,7 +18,7 @@ export class Network extends React.Component {
 
     if (isAllowedResource("services")) {
       routes.push({
-        title: <Trans>Services</Trans>,
+        title: "Services",
         component: Services,
         url: servicesURL({ query }),
         routePath: servicesRoute.path.toString(),
@@ -28,7 +27,7 @@ export class Network extends React.Component {
 
     if (isAllowedResource("endpoints")) {
       routes.push({
-        title: <Trans>Endpoints</Trans>,
+        title: "Endpoints",
         component: Endpoints,
         url: endpointURL({ query }),
         routePath: endpointRoute.path.toString(),
@@ -37,7 +36,7 @@ export class Network extends React.Component {
 
     if (isAllowedResource("ingresses")) {
       routes.push({
-        title: <Trans>Ingresses</Trans>,
+        title: "Ingresses",
         component: Ingresses,
         url: ingressURL({ query }),
         routePath: ingressRoute.path.toString(),
@@ -46,7 +45,7 @@ export class Network extends React.Component {
 
     if (isAllowedResource("networkpolicies")) {
       routes.push({
-        title: <Trans>Network Policies</Trans>,
+        title: "Network Policies",
         component: NetworkPolicies,
         url: networkPoliciesURL({ query }),
         routePath: networkPoliciesRoute.path.toString(),

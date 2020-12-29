@@ -4,8 +4,6 @@ import React from "react";
 import { remote, FileFilter } from "electron";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Input } from "../input";
@@ -66,8 +64,8 @@ export class AddHelmRepoDialog extends React.Component<Props> {
     const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
       defaultPath: this.getFilePath(type),
       properties: ["openFile", "showHiddenFiles"],
-      message: _i18n._(t`Select file`),
-      buttonLabel: _i18n._(t`Use file`),
+      message: `Select file`,
+      buttonLabel: `Use file`,
       filters: [
         fileFilter,
         { name: "Any", extensions: ["*"]}
@@ -82,11 +80,11 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   async addCustomRepo() {
     try {
       await repoManager.addСustomRepo(this.helmRepo);
-      Notifications.ok(<Trans>Helm repository <b>{this.helmRepo.name}</b> has added</Trans>);
+      Notifications.ok(<>Helm repository <b>{this.helmRepo.name}</b> has added</>);
       this.props.onAddRepo();
       this.close();
     } catch (err) {
-      Notifications.error(<Trans>Adding helm branch <b>{this.helmRepo.name}</b> has failed: {String(err)}</Trans>);
+      Notifications.error(<>Adding helm branch <b>{this.helmRepo.name}</b> has failed: {String(err)}</>);
     }
   }
 
@@ -103,7 +101,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
         <Icon
           material="folder"
           onClick={() => this.selectFileDialog(fileType, {name: placeholder, extensions: fileExtensions})}
-          tooltip={<Trans>Browse</Trans>}
+          tooltip="Browse"
         />
       </div>);
   }
@@ -111,23 +109,23 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   renderOptions() {
     return (
       <>
-        <SubTitle title={<Trans>Security settings</Trans>} />
+        <SubTitle title="Security settings" />
         <Checkbox
-          label={_i18n._(t`Skip TLS certificate checks for the repository`)}
+          label={`Skip TLS certificate checks for the repository`}
           value={this.helmRepo.insecureSkipTlsVerify}
           onChange={v => this.helmRepo.insecureSkipTlsVerify = v}
         />
-        {this.renderFileInput(_i18n._(t`Key file`), FileType.KeyFile, AddHelmRepoDialog.keyExtensions)}
-        {this.renderFileInput(_i18n._(t`Ca file`), FileType.CaFile, AddHelmRepoDialog.certExtensions)}
-        {this.renderFileInput(_i18n._(t`Cerificate file`), FileType.CertFile, AddHelmRepoDialog.certExtensions)}
-        <SubTitle title={<Trans>Chart Repository Credentials</Trans>} />
+        {this.renderFileInput(`Key file`, FileType.KeyFile, AddHelmRepoDialog.keyExtensions)}
+        {this.renderFileInput(`Ca file`, FileType.CaFile, AddHelmRepoDialog.certExtensions)}
+        {this.renderFileInput(`Cerificate file`, FileType.CertFile, AddHelmRepoDialog.certExtensions)}
+        <SubTitle title="Chart Repository Credentials" />
         <Input
-          placeholder={_i18n._(t`Username`)}
+          placeholder={`Username`}
           value={this.helmRepo.username} onChange= {v => this.helmRepo.username = v}
         />
         <Input
           type="password"
-          placeholder={_i18n._(t`Password`)}
+          placeholder={`Password`}
           value={this.helmRepo.password} onChange={v => this.helmRepo.password = v}
         />
       </>);
@@ -136,7 +134,7 @@ export class AddHelmRepoDialog extends React.Component<Props> {
   render() {
     const { ...dialogProps } = this.props;
 
-    const header = <h5><Trans>Add custom Helm Repo</Trans></h5>;
+    const header = <h5>Add custom Helm Repo</h5>;
 
     return (
       <Dialog
@@ -146,25 +144,25 @@ export class AddHelmRepoDialog extends React.Component<Props> {
         close={this.close}
       >
         <Wizard header={header} done={this.close}>
-          <WizardStep contentClass="flow column" nextLabel={<Trans>Add</Trans>} next={()=>{this.addCustomRepo();}}>
+          <WizardStep contentClass="flow column" nextLabel="Add" next={()=>{this.addCustomRepo();}}>
             <div className="flex column gaps">
               <Input
                 autoFocus required
-                placeholder={_i18n._(t`Helm repo name`)}
+                placeholder={`Helm repo name`}
                 validators={systemName}
                 value={this.helmRepo.name} onChange={v => this.helmRepo.name = v}
               />
               <Input
                 required
-                placeholder={_i18n._(t`URL`)}
+                placeholder={`URL`}
                 validators={isUrl}
                 value={this.helmRepo.url} onChange={v => this.helmRepo.url = v}
               />
               <Button plain className="accordion" onClick={() => this.showOptions = !this.showOptions} >
-                <Trans>More</Trans>
+                More
                 <Icon
                   small
-                  tooltip={_i18n._(t`More`)}
+                  tooltip={`More`}
                   material={this.showOptions ? "remove" : "add"}
                 />
               </Button>

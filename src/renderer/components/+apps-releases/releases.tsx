@@ -3,7 +3,6 @@ import "./releases.scss";
 import React, { Component } from "react";
 import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { releaseStore } from "./release.store";
 import { IReleaseRouteParams, releaseURL } from "./release.route";
@@ -70,9 +69,9 @@ export class HelmReleases extends Component<Props> {
 
     return (
       <div>
-        <Trans>Remove <b>{releaseNames}</b>?</Trans>
+        <>Remove <b>{releaseNames}</b>?</>
         <p className="warning">
-          <Trans>Note: StatefulSet Volumes won&apos;t be deleted automatically</Trans>
+          Note: StatefulSet Volumes won&apos;t be deleted automatically
         </p>
       </div>
     );
@@ -100,16 +99,16 @@ export class HelmReleases extends Component<Props> {
             (release: HelmRelease) => release.getStatus(),
             (release: HelmRelease) => release.getVersion(),
           ]}
-          renderHeaderTitle={<Trans>Releases</Trans>}
+          renderHeaderTitle="Releases"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-            { title: <Trans>Chart</Trans>, className: "chart", sortBy: sortBy.chart },
-            { title: <Trans>Revision</Trans>, className: "revision", sortBy: sortBy.revision },
-            { title: <Trans>Version</Trans>, className: "version" },
-            { title: <Trans>App Version</Trans>, className: "app-version" },
-            { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
-            { title: <Trans>Updated</Trans>, className: "updated", sortBy: sortBy.updated },
+            { title: "Name", className: "name", sortBy: sortBy.name },
+            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+            { title: "Chart", className: "chart", sortBy: sortBy.chart },
+            { title: "Revision", className: "revision", sortBy: sortBy.revision },
+            { title: "Version", className: "version" },
+            { title: "App Version", className: "app-version" },
+            { title: "Status", className: "status", sortBy: sortBy.status },
+            { title: "Updated", className: "updated", sortBy: sortBy.updated },
           ]}
           renderTableContents={(release: HelmRelease) => {
             const version = release.getVersion();

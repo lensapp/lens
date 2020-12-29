@@ -2,11 +2,9 @@ import "./pod-log-controls.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { IPodLogsData, podLogsStore } from "./pod-logs.store";
-import { t, Trans } from "@lingui/macro";
 import { Select, SelectOption } from "../select";
 import { Badge } from "../badge";
 import { Icon } from "../icon";
-import { _i18n } from "../../i18n";
 import { cssNames, saveFileDialog } from "../../utils";
 import { Pod } from "../../api/endpoints";
 import { PodLogSearch, PodLogSearchProps } from "./pod-log-search";
@@ -59,13 +57,13 @@ export const PodLogControls = observer((props: Props) => {
 
     return [
       {
-        label: _i18n._(t`Containers`),
+        label: `Containers`,
         options: containers.map(container => {
           return { value: container.name };
         }),
       },
       {
-        label: _i18n._(t`Init Containers`),
+        label: `Init Containers`,
         options: initContainers.map(container => {
           return { value: container.name };
         }),
@@ -81,9 +79,9 @@ export const PodLogControls = observer((props: Props) => {
 
   return (
     <div className="PodLogControls flex gaps align-center">
-      <span><Trans>Pod</Trans>:</span> <Badge label={pod.getName()}/>
-      <span><Trans>Namespace</Trans>:</span> <Badge label={pod.getNs()}/>
-      <span><Trans>Container</Trans></span>
+      <span>Pod:</span> <Badge label={pod.getName()}/>
+      <span>Namespace:</span> <Badge label={pod.getNs()}/>
+      <span>Container</span>
       <Select
         options={containerSelectOptions()}
         value={{ value: selectedContainer.name }}
@@ -94,7 +92,7 @@ export const PodLogControls = observer((props: Props) => {
       <div className="time-range">
         {since && (
           <>
-            <Trans>Since</Trans>{" "}
+            Since{" "}
             <b>{new Date(since[0]).toLocaleString()}</b>
           </>
         )}
@@ -104,18 +102,18 @@ export const PodLogControls = observer((props: Props) => {
           material="av_timer"
           onClick={toggleTimestamps}
           className={cssNames("timestamps-icon", { active: showTimestamps })}
-          tooltip={`${showTimestamps ? _i18n._(t`Hide`) : _i18n._(t`Show`)} ${_i18n._(t`timestamps`)}`}
+          tooltip={`${showTimestamps ? `Hide` : `Show`} timestamps`}
         />
         <Icon
           material="history"
           onClick={togglePrevious}
           className={cssNames("undo-icon", { active: previous })}
-          tooltip={(previous ? _i18n._(t`Show current logs`) : _i18n._(t`Show previous terminated container logs`))}
+          tooltip={(previous ? `Show current logs` : `Show previous terminated container logs`)}
         />
         <Icon
           material="get_app"
           onClick={downloadLogs}
-          tooltip={_i18n._(t`Save`)}
+          tooltip={`Save`}
           className="download-icon"
         />
         <PodLogSearch

@@ -1,6 +1,5 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { HelmCharts, helmChartsRoute, helmChartsURL } from "../+apps-helm-charts";
 import { HelmReleases, releaseRoute, releaseURL } from "../+apps-releases";
@@ -13,13 +12,13 @@ export class Apps extends React.Component {
 
     return [
       {
-        title: <Trans>Charts</Trans>,
+        title: "Charts",
         component: HelmCharts,
         url: helmChartsURL(),
         routePath: helmChartsRoute.path.toString(),
       },
       {
-        title: <Trans>Releases</Trans>,
+        title: "Releases",
         component: HelmReleases,
         url: releaseURL({ query }),
         routePath: releaseRoute.path.toString(),

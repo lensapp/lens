@@ -1,9 +1,7 @@
 import "./drawer-param-toggler.scss";
 import React from "react";
-import { t } from "@lingui/macro";
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";
-import { _i18n } from "../../i18n";
 
 export interface DrawerParamTogglerProps {
   label: string | number;
@@ -23,7 +21,7 @@ export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps,
     const { label, children } = this.props;
     const { open } = this.state;
     const icon = `arrow_drop_${open ? "up" : "down"}`;
-    const link = open ? _i18n._(t`Hide`) : _i18n._(t`Show`);
+    const link = open ? `Hide` : `Show`;
 
     return (
       <div className="DrawerParamToggler">

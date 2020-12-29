@@ -5,8 +5,6 @@ import { observer } from "mobx-react";
 import { action, observable, runInAction } from "mobx";
 import { remote } from "electron";
 import { KubeConfig } from "@kubernetes/client-node";
-import { _i18n } from "../../i18n";
-import { t, Trans } from "@lingui/macro";
 import { Select, SelectOption } from "../select";
 import { DropFileInput, Input } from "../input";
 import { AceEditor } from "../ace-editor";
@@ -118,8 +116,8 @@ export class AddCluster extends React.Component {
     const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
       defaultPath: this.kubeConfigPath,
       properties: ["openFile", "showHiddenFiles"],
-      message: _i18n._(t`Select custom kubeconfig file`),
-      buttonLabel: _i18n._(t`Use configuration`),
+      message: `Select custom kubeconfig file`,
+      buttonLabel: `Use configuration`,
     });
 
     if (!canceled && filePaths.length) {
@@ -138,7 +136,7 @@ export class AddCluster extends React.Component {
 
     try {
       if (!this.selectedContexts.length) {
-        this.error = <Trans>Please select at least one cluster context</Trans>;
+        this.error = "Please select at least one cluster context";
 
         return;
       }
@@ -156,7 +154,7 @@ export class AddCluster extends React.Component {
           this.error = String(err.message);
 
           if (err instanceof ExecValidationNotFoundError) {
-            Notifications.error(<Trans>Error while adding cluster(s): {this.error}</Trans>);
+            Notifications.error(<>Error while adding cluster(s): {this.error}</>);
 
             return false;
           } else {
@@ -193,7 +191,7 @@ export class AddCluster extends React.Component {
         } else {
           if (newClusters.length > 1) {
             Notifications.ok(
-              <Trans>Successfully imported <b>{newClusters.length}</b> cluster(s)</Trans>
+              <>Successfully imported <b>{newClusters.length}</b> cluster(s)</>
             );
           }
         }
@@ -201,7 +199,7 @@ export class AddCluster extends React.Component {
       this.refreshContexts();
     } catch (err) {
       this.error = String(err);
-      Notifications.error(<Trans>Error while adding cluster(s): {this.error}</Trans>);
+      Notifications.error(<>Error while adding cluster(s): {this.error}</>);
     } finally {
       this.isWaiting = false;
     }
@@ -224,11 +222,11 @@ export class AddCluster extends React.Component {
         <Tabs onChange={this.onKubeConfigTabChange}>
           <Tab
             value={KubeConfigSourceTab.FILE}
-            label={<Trans>Select kubeconfig file</Trans>}
+            label="Select kubeconfig file"
             active={this.sourceTab == KubeConfigSourceTab.FILE}/>
           <Tab
             value={KubeConfigSourceTab.TEXT}
-            label={<Trans>Paste as text</Trans>}
+            label="Paste as text"
             active={this.sourceTab == KubeConfigSourceTab.TEXT}
           />
         </Tabs>
@@ -246,17 +244,17 @@ export class AddCluster extends React.Component {
                 <Icon
                   material="settings_backup_restore"
                   onClick={() => this.setKubeConfig(kubeConfigDefaultPath)}
-                  tooltip={<Trans>Reset</Trans>}
+                  tooltip="Reset"
                 />
               )}
               <Icon
                 material="folder"
                 onClick={this.selectKubeConfigDialog}
-                tooltip={<Trans>Browse</Trans>}
+                tooltip="Browse"
               />
             </div>
             <small className="hint">
-              <Trans>Pro-Tip: you can also drag-n-drop kubeconfig file to this area</Trans>
+              Pro-Tip: you can also drag-n-drop kubeconfig file to this area
             </small>
           </div>
         )}
@@ -273,7 +271,7 @@ export class AddCluster extends React.Component {
               }}
             />
             <small className="hint">
-              <Trans>Pro-Tip: paste kubeconfig to get available contexts</Trans>
+              Pro-Tip: paste kubeconfig to get available contexts
             </small>
           </div>
         )}
@@ -284,8 +282,8 @@ export class AddCluster extends React.Component {
   renderContextSelector() {
     const allContexts = Array.from(this.kubeContexts.keys());
     const placeholder = this.selectedContexts.length > 0
-      ? <Trans>Selected contexts: <b>{this.selectedContexts.length}</b></Trans>
-      : <Trans>Select contexts</Trans>;
+      ? <>Selected contexts: <b>{this.selectedContexts.length}</b></>
+      : "Select contexts";
 
     return (
       <div>
@@ -297,7 +295,7 @@ export class AddCluster extends React.Component {
           isOptionSelected={() => false}
           options={allContexts}
           formatOptionLabel={this.formatContextLabel}
-          noOptionsMessage={() => _i18n._(t`No contexts available or they have been added already`)}
+          noOptionsMessage={() => `No contexts available or they have been added already`}
           onChange={({ value: ctx }: SelectOption<string>) => {
             if (this.selectedContexts.includes(ctx)) {
               this.selectedContexts.remove(ctx);
@@ -361,7 +359,7 @@ export class AddCluster extends React.Component {
           {this.renderContextSelector()}
           <div className="cluster-settings">
             <a href="#" onClick={() => this.showSettings = !this.showSettings}>
-              <Trans>Proxy settings</Trans>
+              Proxy settings
             </a>
           </div>
           {this.showSettings && (
@@ -386,10 +384,10 @@ export class AddCluster extends React.Component {
             <Button
               primary
               disabled={submitDisabled}
-              label={this.selectedContexts.length < 2 ? <Trans>Add cluster</Trans> : <Trans>Add clusters</Trans>}
+              label={this.selectedContexts.length < 2 ? "Add cluster" : "Add clusters"}
               onClick={this.addClusters}
               waiting={this.isWaiting}
-              tooltip={submitDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
+              tooltip={submitDisabled ? "Select at least one cluster to add." : undefined}
               tooltipOverrideDisabled
             />
           </div>

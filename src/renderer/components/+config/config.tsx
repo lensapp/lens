@@ -1,6 +1,5 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { ConfigMaps, configMapsRoute, configMapsURL } from "../+config-maps";
 import { Secrets, secretsRoute, secretsURL } from "../+config-secrets";
@@ -18,7 +17,7 @@ export class Config extends React.Component {
 
     if (isAllowedResource("configmaps")) {
       routes.push({
-        title: <Trans>ConfigMaps</Trans>,
+        title: "ConfigMaps",
         component: ConfigMaps,
         url: configMapsURL({ query }),
         routePath: configMapsRoute.path.toString(),
@@ -27,7 +26,7 @@ export class Config extends React.Component {
 
     if (isAllowedResource("secrets")) {
       routes.push({
-        title: <Trans>Secrets</Trans>,
+        title: "Secrets",
         component: Secrets,
         url: secretsURL({ query }),
         routePath: secretsRoute.path.toString(),
@@ -36,7 +35,7 @@ export class Config extends React.Component {
 
     if (isAllowedResource("resourcequotas")) {
       routes.push({
-        title: <Trans>Resource Quotas</Trans>,
+        title: "Resource Quotas",
         component: ResourceQuotas,
         url: resourceQuotaURL({ query }),
         routePath: resourceQuotaRoute.path.toString(),
@@ -45,7 +44,7 @@ export class Config extends React.Component {
 
     if (isAllowedResource("horizontalpodautoscalers")) {
       routes.push({
-        title: <Trans>HPA</Trans>,
+        title: "HPA",
         component: HorizontalPodAutoscalers,
         url: hpaURL({ query }),
         routePath: hpaRoute.path.toString(),
@@ -54,7 +53,7 @@ export class Config extends React.Component {
 
     if (isAllowedResource("poddisruptionbudgets")) {
       routes.push({
-        title: <Trans>Pod Disruption Budgets</Trans>,
+        title: "Pod Disruption Budgets",
         component: PodDisruptionBudgets,
         url: pdbURL({ query }),
         routePath: pdbRoute.path.toString(),

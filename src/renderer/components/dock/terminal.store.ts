@@ -1,11 +1,9 @@
 import { autorun, observable } from "mobx";
-import { t } from "@lingui/macro";
 import { autobind } from "../../utils";
 import { Terminal } from "./terminal";
 import { TerminalApi } from "../../api/terminal-api";
 import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
 import { WebSocketApiState } from "../../api/websocket-api";
-import { _i18n } from "../../i18n";
 
 export interface ITerminalTab extends IDockTab {
   node?: string; // activate node shell mode
@@ -18,7 +16,7 @@ export function isTerminalTab(tab: IDockTab) {
 export function createTerminalTab(tabParams: Partial<ITerminalTab> = {}) {
   return dockStore.createTab({
     kind: TabKind.TERMINAL,
-    title: _i18n._(t`Terminal`),
+    title: `Terminal`,
     ...tabParams
   });
 }

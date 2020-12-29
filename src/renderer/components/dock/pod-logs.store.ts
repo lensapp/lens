@@ -3,8 +3,6 @@ import { Pod, IPodContainer, podsApi, IPodLogsQuery } from "../../api/endpoints"
 import { autobind, interval } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
-import { t } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { searchStore } from "../../../common/search-store";
 
 export interface IPodLogsData {
@@ -75,8 +73,8 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
       this.podLogs.set(tabId, logs);
     } catch ({error}) {
       const message = [
-        _i18n._(t`Failed to load logs: ${error.message}`),
-        _i18n._(t`Reason: ${error.reason} (${error.code})`)
+        `Failed to load logs: ${error.message}`,
+        `Reason: ${error.reason} (${error.code})`
       ];
 
       this.refresher.stop();

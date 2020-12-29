@@ -10,7 +10,6 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { IDaemonSetsRouteParams } from "../+workloads";
-import { Trans } from "@lingui/macro";
 import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
@@ -51,14 +50,14 @@ export class DaemonSets extends React.Component<Props> {
           (daemonSet: DaemonSet) => daemonSet.getSearchFields(),
           (daemonSet: DaemonSet) => daemonSet.getLabels(),
         ]}
-        renderHeaderTitle={<Trans>Daemon Sets</Trans>}
+        renderHeaderTitle="Daemon Sets"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Pods", className: "pods", sortBy: sortBy.pods },
           { className: "warning" },
-          { title: <Trans>Node Selector</Trans>, className: "labels" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Node Selector", className: "labels" },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(daemonSet: DaemonSet) => [
           daemonSet.getName(),

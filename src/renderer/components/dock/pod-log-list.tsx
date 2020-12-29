@@ -4,7 +4,6 @@ import React from "react";
 import AnsiUp from "ansi_up";
 import DOMPurify from "dompurify";
 import debounce from "lodash/debounce";
-import { Trans } from "@lingui/macro";
 import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Align, ListOnScrollProps } from "react-window";
@@ -213,7 +212,7 @@ export class PodLogList extends React.Component<Props> {
     if (!this.logs.length) {
       return (
         <div className="PodLogList flex box grow align-center justify-center">
-          <Trans>There are no logs available for container</Trans>
+          There are no logs available for container
         </div>
       );
     }
@@ -251,7 +250,7 @@ const JumpToBottom = ({ onClick }: JumpToBottomProps) => {
         onClick();
       }}
     >
-      <Trans>Jump to bottom</Trans>
+      Jump to bottom
       <Icon material="expand_more" />
     </Button>
   );

@@ -2,7 +2,6 @@ import "./secrets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { Secret } from "../../api/endpoints";
 import { AddSecretDialog } from "./add-secret-dialog";
@@ -43,15 +42,15 @@ export class Secrets extends React.Component<Props> {
             (item: Secret) => item.getSearchFields(),
             (item: Secret) => item.getKeys(),
           ]}
-          renderHeaderTitle={<Trans>Secrets</Trans>}
+          renderHeaderTitle="Secrets"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { title: "Name", className: "name", sortBy: sortBy.name },
             { className: "warning" },
-            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-            { title: <Trans>Labels</Trans>, className: "labels", sortBy: sortBy.labels },
-            { title: <Trans>Keys</Trans>, className: "keys", sortBy: sortBy.keys },
-            { title: <Trans>Type</Trans>, className: "type", sortBy: sortBy.type },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+            { title: "Labels", className: "labels", sortBy: sortBy.labels },
+            { title: "Keys", className: "keys", sortBy: sortBy.keys },
+            { title: "Type", className: "type", sortBy: sortBy.type },
+            { title: "Age", className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(secret: Secret) => [
             secret.getName(),
@@ -64,7 +63,7 @@ export class Secrets extends React.Component<Props> {
           ]}
           addRemoveButtons={{
             onAdd: () => AddSecretDialog.open(),
-            addTooltip: <Trans>Create new Secret</Trans>
+            addTooltip: "Create new Secret"
           }}
         />
         <AddSecretDialog/>

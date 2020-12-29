@@ -5,8 +5,6 @@ import { observer } from "mobx-react";
 import { SearchInput } from "../input";
 import { searchStore } from "../../../common/search-store";
 import { Icon } from "../icon";
-import { _i18n } from "../../i18n";
-import { t } from "@lingui/macro";
 
 export interface PodLogSearchProps {
   onSearch: (query: string) => void
@@ -70,19 +68,19 @@ export const PodLogSearch = observer((props: Props) => {
       />
       <Icon
         material="keyboard_arrow_up"
-        tooltip={_i18n._(t`Previous`)}
+        tooltip={`Previous`}
         onClick={onPrevOverlay}
         disabled={jumpDisabled}
       />
       <Icon
         material="keyboard_arrow_down"
-        tooltip={_i18n._(t`Next`)}
+        tooltip={`Next`}
         onClick={onNextOverlay}
         disabled={jumpDisabled}
       />
       <Icon
         material="close"
-        tooltip={_i18n._(t`Clear`)}
+        tooltip={`Clear`}
         onClick={onClear}
       />
     </div>

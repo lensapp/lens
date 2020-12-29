@@ -2,7 +2,6 @@ import "./pod-disruption-budgets-details.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import { KubeObjectDetailsProps } from "../kube-object";
@@ -27,26 +26,26 @@ export class PodDisruptionBudgetDetails extends React.Component<Props> {
         <KubeObjectMeta object={pdb}/>
 
         {selectors.length > 0 &&
-          <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+          <DrawerItem name="Selector" labelsOnly>
             {
               selectors.map(label => <Badge key={label} label={label}/>)
             }
           </DrawerItem>
         }
 
-        <DrawerItem name={<Trans>Min Available</Trans>}>
+        <DrawerItem name="Min Available">
           {pdb.getMinAvailable()}
         </DrawerItem>
 
-        <DrawerItem name={<Trans>Max Unavailable</Trans>}>
+        <DrawerItem name="Max Unavailable">
           {pdb.getMaxUnavailable()}
         </DrawerItem>
 
-        <DrawerItem name={<Trans>Current Healthy</Trans>}>
+        <DrawerItem name="Current Healthy">
           {pdb.getCurrentHealthy()}
         </DrawerItem>
 
-        <DrawerItem name={<Trans>Desired Healthy</Trans>}>
+        <DrawerItem name="Desired Healthy">
           {pdb.getDesiredHealthy()}
         </DrawerItem>
 

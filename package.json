@@ -20,7 +20,6 @@
     "compile": "env NODE_ENV=production concurrently yarn:compile:*",
     "compile:main": "yarn run webpack --config webpack.main.ts",
     "compile:renderer": "yarn run webpack --config webpack.renderer.ts",
-    "compile:i18n": "yarn run lingui compile",
     "compile:extension-types": "yarn run webpack --config webpack.extensions.ts",
     "npm:fix-package-version": "yarn run ts-node build/set_npm_version.ts",
     "build:linux": "yarn run compile && electron-builder --linux --dir -c.productName=Lens",
@@ -32,7 +31,6 @@
     "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
     "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",
     "postinstall": "patch-package",
-    "i18n:extract": "yarn run lingui extract",
     "download-bins": "concurrently yarn:download:*",
     "download:kubectl": "yarn run ts-node build/download_kubectl.ts",
     "download:helm": "yarn run ts-node build/download_helm.ts",
@@ -49,23 +47,6 @@
   },
   "engines": {
     "node": ">=12 <13"
-  },
-  "lingui": {
-    "locales": [
-      "en",
-      "ru",
-      "fi"
-    ],
-    "format": "po",
-    "sourceLocale": "en",
-    "fallbackLocale": "en",
-    "compileNamespace": "cjs",
-    "catalogs": [
-      {
-        "path": "./locales/{locale}/messages",
-        "include": "./src/renderer"
-      }
-    ]
   },
   "jest": {
     "collectCoverage": false,
@@ -250,18 +231,7 @@
     "ws": "^7.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.2",
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/preset-env": "^7.10.2",
-    "@babel/preset-react": "^7.10.1",
-    "@babel/preset-typescript": "^7.10.1",
     "@emeraldpay/hashicon-react": "^0.4.0",
-    "@lingui/babel-preset-react": "^2.9.1",
-    "@lingui/cli": "^3.0.0-13",
-    "@lingui/loader": "^3.0.0-13",
-    "@lingui/macro": "^3.0.0-13",
-    "@lingui/react": "^3.0.0-13",
     "@material-ui/core": "^4.10.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@testing-library/jest-dom": "^5.11.5",
@@ -319,10 +289,6 @@
     "@typescript-eslint/parser": "^4.0.0",
     "ace-builds": "^1.4.11",
     "ansi_up": "^4.0.4",
-    "babel-core": "^7.0.0-beta.3",
-    "babel-loader": "^8.1.0",
-    "babel-plugin-macros": "^2.8.0",
-    "babel-runtime": "^6.26.0",
     "chart.js": "^2.9.3",
     "circular-dependency-plugin": "^5.2.0",
     "color": "^3.1.2",

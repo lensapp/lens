@@ -1,7 +1,6 @@
 import "./page-filters-list.scss";
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { Badge } from "../badge";
 import { cssNames } from "../../utils";
 import { Filter, pageFilters } from "./page-filters.store";
@@ -33,9 +32,9 @@ export class PageFiltersList extends React.Component<Props> {
     return (
       <>
         <div className="header flex gaps">
-          <span><Trans>Currently applied filters:</Trans></span>
+          <span>Currently applied filters:</span>
           <a onClick={this.reset} className="reset">
-            <Trans>Reset</Trans>
+            Reset
           </a>
         </div>
         <div className="labels">

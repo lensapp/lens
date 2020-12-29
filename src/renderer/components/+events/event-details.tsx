@@ -2,7 +2,6 @@ import "./event-details.scss";
 
 import React from "react";
 import kebabCase from "lodash/kebabCase";
-import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Link } from "react-router-dom";
 import { observer } from "mobx-react";
@@ -29,35 +28,35 @@ export class EventDetails extends React.Component<Props> {
       <div className="EventDetails">
         <KubeObjectMeta object={event}/>
 
-        <DrawerItem name={<Trans>Message</Trans>}>
+        <DrawerItem name="Message">
           {message}
         </DrawerItem>
-        <DrawerItem name={<Trans>Reason</Trans>}>
+        <DrawerItem name="Reason">
           {reason}
         </DrawerItem>
-        <DrawerItem name={<Trans>Source</Trans>}>
+        <DrawerItem name="Source">
           {event.getSource()}
         </DrawerItem>
-        <DrawerItem name={<Trans>First seen</Trans>}>
-          {event.getFirstSeenTime()} <Trans>ago</Trans> {event.firstTimestamp}
+        <DrawerItem name="First seen">
+          {event.getFirstSeenTime()} ago {event.firstTimestamp}
         </DrawerItem>
-        <DrawerItem name={<Trans>Last seen</Trans>}>
-          {event.getLastSeenTime()} <Trans>ago</Trans> {event.lastTimestamp}
+        <DrawerItem name="Last seen">
+          {event.getLastSeenTime()} ago {event.lastTimestamp}
         </DrawerItem>
-        <DrawerItem name={<Trans>Count</Trans>}>
+        <DrawerItem name="Count">
           {count}
         </DrawerItem>
-        <DrawerItem name={<Trans>Type</Trans>} className="type">
+        <DrawerItem name="Type" className="type">
           <span className={kebabCase(type)}>{type}</span>
         </DrawerItem>
 
-        <DrawerTitle title={<Trans>Involved object</Trans>}/>
+        <DrawerTitle title="Involved object"/>
         <Table>
           <TableHead>
-            <TableCell><Trans>Name</Trans></TableCell>
-            <TableCell><Trans>Namespace</Trans></TableCell>
-            <TableCell><Trans>Kind</Trans></TableCell>
-            <TableCell><Trans>Field Path</Trans></TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Namespace</TableCell>
+            <TableCell>Kind</TableCell>
+            <TableCell>Field Path</TableCell>
           </TableHead>
           <TableRow>
             <TableCell>

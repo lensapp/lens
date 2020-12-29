@@ -3,7 +3,6 @@ import "./jobs.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { Trans } from "@lingui/macro";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { jobStore } from "./job.store";
 import { eventStore } from "../+events/event.store";
@@ -39,14 +38,14 @@ export class Jobs extends React.Component<Props> {
         searchFilters={[
           (job: Job) => job.getSearchFields(),
         ]}
-        renderHeaderTitle={<Trans>Jobs</Trans>}
+        renderHeaderTitle="Jobs"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Completions</Trans>, className: "completions" },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Completions", className: "completions" },
           { className: "warning" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-          { title: <Trans>Conditions</Trans>, className: "conditions", sortBy: sortBy.conditions },
+          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Conditions", className: "conditions", sortBy: sortBy.conditions },
         ]}
         renderTableContents={(job: Job) => {
           const condition = job.getCondition();

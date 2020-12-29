@@ -5,7 +5,6 @@ import groupBy from "lodash/groupBy";
 import isEqual from "lodash/isEqual";
 import { observable, reaction } from "mobx";
 import { Link } from "react-router-dom";
-import { t, Trans } from "@lingui/macro";
 import kebabCase from "lodash/kebabCase";
 import { HelmRelease, helmReleasesApi, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
 import { HelmReleaseMenu } from "./release-menu";
@@ -20,7 +19,6 @@ import { Button } from "../button";
 import { releaseStore } from "./release.store";
 import { Notifications } from "../notifications";
 import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
-import { _i18n } from "../../i18n";
 import { themeStore } from "../../theme.store";
 import { apiManager } from "../../api/api-manager";
 import { SubTitle } from "../layout/sub-title";
@@ -113,7 +111,7 @@ export class ReleaseDetails extends Component<Props> {
 
     return (
       <div className="values">
-        <DrawerTitle title={_i18n._(t`Values`)}/>
+        <DrawerTitle title={`Values`}/>
         <div className="flex column gaps">
           <AceEditor
             mode="yaml"
@@ -122,7 +120,7 @@ export class ReleaseDetails extends Component<Props> {
           />
           <Button
             primary
-            label={_i18n._(t`Save`)}
+            label={`Save`}
             waiting={saving}
             onClick={this.updateValues}
           />
@@ -197,40 +195,40 @@ export class ReleaseDetails extends Component<Props> {
 
     return (
       <div>
-        <DrawerItem name={<Trans>Chart</Trans>} className="chart">
+        <DrawerItem name="Chart" className="chart">
           <div className="flex gaps align-center">
             <span>{release.getChart()}</span>
             <Button
               primary
-              label={_i18n._(t`Upgrade`)}
+              label={`Upgrade`}
               className="box right upgrade"
               onClick={this.upgradeVersion}
             />
           </div>
         </DrawerItem>
-        <DrawerItem name={<Trans>Updated</Trans>}>
-          {release.getUpdated()} <Trans>ago</Trans> ({release.updated})
+        <DrawerItem name="Updated">
+          {release.getUpdated()} ago ({release.updated})
         </DrawerItem>
-        <DrawerItem name={<Trans>Namespace</Trans>}>
+        <DrawerItem name="Namespace">
           {release.getNs()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Version</Trans>} onClick={stopPropagation}>
+        <DrawerItem name="Version" onClick={stopPropagation}>
           <div className="version flex gaps align-center">
             <span>
               {release.getVersion()}
             </span>
           </div>
         </DrawerItem>
-        <DrawerItem name={<Trans>Status</Trans>} className="status" labelsOnly>
+        <DrawerItem name="Status" className="status" labelsOnly>
           <Badge
             label={release.getStatus()}
             className={cssNames("status", kebabCase(release.getStatus()))}
           />
         </DrawerItem>
         {this.renderValues()}
-        <DrawerTitle title={_i18n._(t`Notes`)}/>
+        <DrawerTitle title={`Notes`}/>
         {this.renderNotes()}
-        <DrawerTitle title={_i18n._(t`Resources`)}/>
+        <DrawerTitle title={`Resources`}/>
         {this.renderResources()}
       </div>
     );
@@ -238,7 +236,7 @@ export class ReleaseDetails extends Component<Props> {
 
   render() {
     const { release, hideDetails } = this.props;
-    const title = release ? <Trans>Release: {release.getName()}</Trans> : "";
+    const title = release ? <>Release: {release.getName()}</> : "";
     const toolbar = <HelmReleaseMenu release={release} toolbar hideDetails={hideDetails}/>;
 
     return (

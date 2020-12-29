@@ -1,8 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
-import { I18nProvider } from "@lingui/react";
-import { _i18n } from "../i18n";
 import { history } from "../navigation";
 import { Notifications } from "./notifications";
 import { NotFound } from "./+404";
@@ -175,40 +173,38 @@ export class App extends React.Component {
 
   render() {
     return (
-      <I18nProvider i18n={_i18n}>
-        <Router history={history}>
-          <ErrorBoundary>
-            <MainLayout>
-              <Switch>
-                <Route component={ClusterOverview} {...clusterRoute}/>
-                <Route component={Nodes} {...nodesRoute}/>
-                <Route component={Workloads} {...workloadsRoute}/>
-                <Route component={Config} {...configRoute}/>
-                <Route component={Network} {...networkRoute}/>
-                <Route component={Storage} {...storageRoute}/>
-                <Route component={Namespaces} {...namespacesRoute}/>
-                <Route component={Events} {...eventRoute}/>
-                <Route component={CustomResources} {...crdRoute}/>
-                <Route component={UserManagement} {...usersManagementRoute}/>
-                <Route component={Apps} {...appsRoute}/>
-                {this.renderExtensionTabLayoutRoutes()}
-                {this.renderExtensionRoutes()}
-                <Redirect exact from="/" to={this.startURL}/>
-                <Route component={NotFound}/>
-              </Switch>
-            </MainLayout>
-            <Notifications/>
-            <ConfirmDialog/>
-            <KubeObjectDetails/>
-            <KubeConfigDialog/>
-            <AddRoleBindingDialog/>
-            <DeploymentScaleDialog/>
-            <StatefulSetScaleDialog/>
-            <ReplicaSetScaleDialog/>
-            <CronJobTriggerDialog/>
-          </ErrorBoundary>
-        </Router>
-      </I18nProvider>
+      <Router history={history}>
+        <ErrorBoundary>
+          <MainLayout>
+            <Switch>
+              <Route component={ClusterOverview} {...clusterRoute}/>
+              <Route component={Nodes} {...nodesRoute}/>
+              <Route component={Workloads} {...workloadsRoute}/>
+              <Route component={Config} {...configRoute}/>
+              <Route component={Network} {...networkRoute}/>
+              <Route component={Storage} {...storageRoute}/>
+              <Route component={Namespaces} {...namespacesRoute}/>
+              <Route component={Events} {...eventRoute}/>
+              <Route component={CustomResources} {...crdRoute}/>
+              <Route component={UserManagement} {...usersManagementRoute}/>
+              <Route component={Apps} {...appsRoute}/>
+              {this.renderExtensionTabLayoutRoutes()}
+              {this.renderExtensionRoutes()}
+              <Redirect exact from="/" to={this.startURL}/>
+              <Route component={NotFound}/>
+            </Switch>
+          </MainLayout>
+          <Notifications/>
+          <ConfirmDialog/>
+          <KubeObjectDetails/>
+          <KubeConfigDialog/>
+          <AddRoleBindingDialog/>
+          <DeploymentScaleDialog/>
+          <StatefulSetScaleDialog/>
+          <ReplicaSetScaleDialog/>
+          <CronJobTriggerDialog/>
+        </ErrorBoundary>
+      </Router>
     );
   }
 }

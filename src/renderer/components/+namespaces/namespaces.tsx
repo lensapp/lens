@@ -1,7 +1,6 @@
 import "./namespaces.scss";
 
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { Namespace, NamespaceStatus } from "../../api/endpoints";
 import { AddNamespaceDialog } from "./add-namespace-dialog";
 import { TabLayout } from "../layout/tab-layout";
@@ -39,13 +38,13 @@ export class Namespaces extends React.Component<Props> {
             (item: Namespace) => item.getSearchFields(),
             (item: Namespace) => item.getStatus()
           ]}
-          renderHeaderTitle={<Trans>Namespaces</Trans>}
+          renderHeaderTitle="Namespaces"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+            { title: "Name", className: "name", sortBy: sortBy.name },
             { className: "warning" },
-            { title: <Trans>Labels</Trans>, className: "labels", sortBy: sortBy.labels },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-            { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
+            { title: "Labels", className: "labels", sortBy: sortBy.labels },
+            { title: "Age", className: "age", sortBy: sortBy.age },
+            { title: "Status", className: "status", sortBy: sortBy.status },
           ]}
           renderTableContents={(item: Namespace) => [
             item.getName(),
@@ -55,7 +54,7 @@ export class Namespaces extends React.Component<Props> {
             { title: item.getStatus(), className: item.getStatus().toLowerCase() },
           ]}
           addRemoveButtons={{
-            addTooltip: <Trans>Add Namespace</Trans>,
+            addTooltip: "Add Namespace",
             onAdd: () => AddNamespaceDialog.open(),
           }}
           customizeTableRowProps={(item: Namespace) => ({

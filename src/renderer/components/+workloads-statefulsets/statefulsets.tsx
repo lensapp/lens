@@ -3,7 +3,6 @@ import "./statefulsets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { t, Trans } from "@lingui/macro";
 import { StatefulSet } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
@@ -15,7 +14,6 @@ import { IStatefulSetsRouteParams } from "../+workloads";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
 import { MenuItem } from "../menu/menu";
-import { _i18n } from "../../i18n";
 import { Icon } from "../icon/icon";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
@@ -51,14 +49,14 @@ export class StatefulSets extends React.Component<Props> {
         searchFilters={[
           (statefulSet: StatefulSet) => statefulSet.getSearchFields(),
         ]}
-        renderHeaderTitle={<Trans>Stateful Sets</Trans>}
+        renderHeaderTitle="Stateful Sets"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Pods</Trans>, className: "pods" },
-          { title: <Trans>Replicas</Trans>, className: "replicas", sortBy: sortBy.replicas },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Pods", className: "pods" },
+          { title: "Replicas", className: "replicas", sortBy: sortBy.replicas },
           { className: "warning" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(statefulSet: StatefulSet) => [
           statefulSet.getName(),
@@ -82,8 +80,8 @@ export function StatefulSetMenu(props: KubeObjectMenuProps<StatefulSet>) {
   return (
     <>
       <MenuItem onClick={() => StatefulSetScaleDialog.open(object)}>
-        <Icon material="open_with" title={_i18n._(t`Scale`)} interactive={toolbar}/>
-        <span className="title"><Trans>Scale</Trans></span>
+        <Icon material="open_with" title={`Scale`} interactive={toolbar}/>
+        <span className="title">Scale</span>
       </MenuItem>
     </>
   );

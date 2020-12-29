@@ -1,6 +1,5 @@
 import "./wizard.scss";
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { cssNames, prevDefault } from "../../utils";
 import { Button } from "../button";
 import { Stepper } from "../stepper";
@@ -206,8 +205,8 @@ export class WizardStep extends React.Component<WizardStepProps, WizardStepState
     waiting = (waiting !== undefined) ? waiting : this.state.waiting;
     className = cssNames(`WizardStep step${step}`, className);
     contentClass = cssNames("step-content", { scrollable }, contentClass);
-    prevLabel = prevLabel || (isFirst() ? <Trans>Cancel</Trans> : <Trans>Back</Trans>);
-    nextLabel = nextLabel || (isLast() ? <Trans>Submit</Trans> : <Trans>Next</Trans>);
+    prevLabel = prevLabel || (isFirst() ? "Cancel" : "Back");
+    nextLabel = nextLabel || (isLast() ? "Submit" : "Next");
 
     return (
       <form className={className}

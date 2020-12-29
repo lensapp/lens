@@ -3,7 +3,6 @@ import "./confirm-dialog.scss";
 import React, { ReactNode } from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { cssNames, noop, prevDefault } from "../../utils";
 import { Button, ButtonProps } from "../button";
 import { Dialog, DialogProps } from "../dialog";
@@ -40,8 +39,8 @@ export class ConfirmDialog extends React.Component<ConfirmDialogProps> {
 
   public defaultParams: ConfirmDialogParams = {
     ok: noop,
-    labelOk: <Trans>Ok</Trans>,
-    labelCancel: <Trans>Cancel</Trans>,
+    labelOk: "Ok",
+    labelCancel: "Cancel",
     icon: <Icon big material="warning"/>,
   };
 

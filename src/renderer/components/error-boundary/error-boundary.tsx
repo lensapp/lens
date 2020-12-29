@@ -3,10 +3,8 @@ import "./error-boundary.scss";
 import React, { ErrorInfo } from "react";
 import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { Button } from "../button";
 import { navigation } from "../../navigation";
-import { _i18n } from "../../i18n";
 import { issuesTrackerUrl, slackUrl } from "../../../common/vars";
 
 interface Props {
@@ -46,26 +44,24 @@ export class ErrorBoundary extends React.Component<Props, State> {
       return (
         <div className="ErrorBoundary flex column gaps">
           <h5>
-            <Trans>App crash at <span className="contrast">{pageUrl}</span></Trans>
+            App crash at <span className="contrast">{pageUrl}</span>
           </h5>
           <p>
-            <Trans>
-              To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker.
-            </Trans>
+            To help us improve the product please report bugs to {slackLink} community or {githubLink} issues tracker.
           </p>
           <div className="flex gaps">
             <code className="block">
-              <p className="contrast"><Trans>Component stack</Trans>:</p>
+              <p className="contrast">Component stack:</p>
               {errorInfo.componentStack}
             </code>
             <code className="box grow">
-              <p className="contrast"><Trans>Error stack</Trans>:</p> <br/>
+              <p className="contrast">Error stack:</p> <br/>
               {error.stack}
             </code>
           </div>
           <Button
             className="box self-flex-start"
-            primary label={_i18n._(t`Back`)}
+            primary label={`Back`}
             onClick={this.back}
           />
         </div>

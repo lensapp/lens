@@ -3,7 +3,6 @@ import "./statefulset-details.scss";
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
-import { Trans } from "@lingui/macro";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
@@ -62,14 +61,14 @@ export class StatefulSetDetails extends React.Component<Props> {
         )}
         <KubeObjectMeta object={statefulSet}/>
         {selectors.length &&
-        <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+        <DrawerItem name="Selector" labelsOnly>
           {
             selectors.map(label => <Badge key={label} label={label}/>)
           }
         </DrawerItem>
         }
         {nodeSelector.length > 0 &&
-        <DrawerItem name={<Trans>Node Selector</Trans>} labelsOnly>
+        <DrawerItem name="Node Selector" labelsOnly>
           {
             nodeSelector.map(label => (
               <Badge key={label} label={label}/>
@@ -78,7 +77,7 @@ export class StatefulSetDetails extends React.Component<Props> {
         </DrawerItem>
         }
         {images.length > 0 &&
-        <DrawerItem name={<Trans>Images</Trans>}>
+        <DrawerItem name="Images">
           {
             images.map(image => <p key={image}>{image}</p>)
           }
@@ -86,7 +85,7 @@ export class StatefulSetDetails extends React.Component<Props> {
         }
         <PodDetailsTolerations workload={statefulSet}/>
         <PodDetailsAffinities workload={statefulSet}/>
-        <DrawerItem name={<Trans>Pod Status</Trans>} className="pod-status">
+        <DrawerItem name="Pod Status" className="pod-status">
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <ResourceMetricsText metrics={metrics}/>

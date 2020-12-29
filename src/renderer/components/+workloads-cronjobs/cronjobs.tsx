@@ -3,7 +3,6 @@ import "./cronjobs.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { t, Trans } from "@lingui/macro";
 import { CronJob } from "../../api/endpoints/cron-job.api";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
@@ -13,7 +12,6 @@ import { eventStore } from "../+events/event.store";
 import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { ICronJobsRouteParams } from "../+workloads";
 import { KubeObjectListLayout } from "../kube-object";
-import { _i18n } from "../../i18n";
 import { CronJobTriggerDialog } from "./cronjob-trigger-dialog";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
@@ -49,22 +47,22 @@ export class CronJobs extends React.Component<Props> {
           (cronJob: CronJob) => cronJob.getSearchFields(),
           (cronJob: CronJob) => cronJob.getSchedule(),
         ]}
-        renderHeaderTitle={<Trans>Cron Jobs</Trans>}
+        renderHeaderTitle="Cron Jobs"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Schedule</Trans>, className: "schedule" },
-          { title: <Trans>Suspend</Trans>, className: "suspend", sortBy: sortBy.suspend },
-          { title: <Trans>Active</Trans>, className: "active", sortBy: sortBy.active },
-          { title: <Trans>Last schedule</Trans>, className: "last-schedule", sortBy: sortBy.lastSchedule },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Schedule", className: "schedule" },
+          { title: "Suspend", className: "suspend", sortBy: sortBy.suspend },
+          { title: "Active", className: "active", sortBy: sortBy.active },
+          { title: "Last schedule", className: "last-schedule", sortBy: sortBy.lastSchedule },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(cronJob: CronJob) => [
           cronJob.getName(),
           <KubeObjectStatusIcon key="icon" object={cronJob} />,
           cronJob.getNs(),
-          cronJob.isNeverRun() ? <Trans>never</Trans> : cronJob.getSchedule(),
+          cronJob.isNeverRun() ? "never"  : cronJob.getSchedule(),
           cronJob.getSuspendFlag(),
           cronJobStore.getActiveJobsNum(cronJob),
           cronJob.getLastScheduleTime(),
@@ -83,8 +81,8 @@ export function CronJobMenu(props: KubeObjectMenuProps<CronJob>) {
 
   return (
     <MenuItem onClick={() => CronJobTriggerDialog.open(object)}>
-      <Icon material="play_circle_filled" title={_i18n._(t`Trigger`)} interactive={toolbar}/>
-      <span className="title"><Trans>Trigger</Trans></span>
+      <Icon material="play_circle_filled" title={`Trigger`} interactive={toolbar}/>
+      <span className="title">Trigger</span>
     </MenuItem>
   );
 }

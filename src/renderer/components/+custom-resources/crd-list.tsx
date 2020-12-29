@@ -1,7 +1,6 @@
 import "./crd-list.scss";
 
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { Link } from "react-router-dom";
@@ -66,12 +65,12 @@ export class CrdList extends React.Component {
             return selectedGroups.length ? items.filter(item => selectedGroups.includes(item.getGroup())) : items;
           }
         ]}
-        renderHeaderTitle={<Trans>Custom Resources</Trans>}
+        renderHeaderTitle="Custom Resources"
         customizeHeader={() => {
-          let placeholder = <Trans>All groups</Trans>;
+          let placeholder = <>All groups</>;
 
-          if (selectedGroups.length == 1) placeholder = <><Trans>Group</Trans>: {selectedGroups[0]}</>;
-          if (selectedGroups.length >= 2) placeholder = <><Trans>Groups</Trans>: {selectedGroups.join(", ")}</>;
+          if (selectedGroups.length == 1) placeholder = <>Group: {selectedGroups[0]}</>;
+          if (selectedGroups.length >= 2) placeholder = <>Groups: {selectedGroups.join(", ")}</>;
 
           return {
             // todo: move to global filters
@@ -98,11 +97,11 @@ export class CrdList extends React.Component {
           };
         }}
         renderTableHeader={[
-          { title: <Trans>Resource</Trans>, className: "kind", sortBy: sortBy.kind },
-          { title: <Trans>Group</Trans>, className: "group", sortBy: sortBy.group },
-          { title: <Trans>Version</Trans>, className: "version", sortBy: sortBy.group },
-          { title: <Trans>Scope</Trans>, className: "scope", sortBy: sortBy.scope },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Resource", className: "kind", sortBy: sortBy.kind },
+          { title: "Group", className: "group", sortBy: sortBy.group },
+          { title: "Version", className: "version", sortBy: sortBy.group },
+          { title: "Scope", className: "scope", sortBy: sortBy.scope },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(crd: CustomResourceDefinition) => [
           <Link key="link" to={crd.getResourceUrl()} onClick={stopPropagation}>

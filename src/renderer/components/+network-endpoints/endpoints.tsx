@@ -7,7 +7,6 @@ import { EndpointRouteParams } from "./endpoints.route";
 import { Endpoint } from "../../api/endpoints/endpoint.api";
 import { endpointStore } from "./endpoints.store";
 import { KubeObjectListLayout } from "../kube-object";
-import { Trans } from "@lingui/macro";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
@@ -33,13 +32,13 @@ export class Endpoints extends React.Component<Props> {
         searchFilters={[
           (endpoint: Endpoint) => endpoint.getSearchFields()
         ]}
-        renderHeaderTitle={<Trans>Endpoints</Trans>}
+        renderHeaderTitle="Endpoints"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Endpoints</Trans>, className: "endpoints" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Endpoints", className: "endpoints" },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(endpoint: Endpoint) => [
           endpoint.getName(),
