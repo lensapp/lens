@@ -21,11 +21,11 @@ if (ipcMain) {
     }
   });
 
-  handleRequest(clusterSetFrameIdHandler, (event, clusterId: ClusterId, frameId: number) => {
+  handleRequest(clusterSetFrameIdHandler, (event, clusterId: ClusterId, frameId: number, processId: number) => {
     const cluster = clusterStore.getById(clusterId);
 
     if (cluster) {
-      clusterFrameMap.set(cluster.id, frameId);
+      clusterFrameMap.set(cluster.id, { frameId, processId });
 
       return cluster.pushState();
     }

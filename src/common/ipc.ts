@@ -4,7 +4,7 @@
 
 import { ipcMain, ipcRenderer, webContents, remote } from "electron";
 import logger from "../main/logger";
-import { clusterFrameMap } from "./cluster-frames";
+import { ClusterFrameInfo, clusterFrameMap } from "./cluster-frames";
 
 export function handleRequest(channel: string, listener: (...args: any[]) => any) {
   ipcMain.handle(channel, listener);
@@ -14,11 +14,11 @@ export async function requestMain(channel: string, ...args: any[]) {
   return ipcRenderer.invoke(channel, ...args);
 }
 
-async function getSubFrames(): Promise<number[]> {
-  const subFrames: number[] = [];
+async function getSubFrames(): Promise<ClusterFrameInfo[]> {
+  const subFrames: ClusterFrameInfo[] = [];
 
-  clusterFrameMap.forEach(frameId => {
-    subFrames.push(frameId);
+  clusterFrameMap.forEach(frameInfo => {
+    subFrames.push(frameInfo);
   });
 
   return subFrames;
@@ -35,8 +35,8 @@ export function broadcastMessage(channel: string, ...args: any[]) {
     logger.silly(`[IPC]: broadcasting "${channel}" to ${type}=${webContent.id}`, { args });
     webContent.send(channel, ...args);
     getSubFrames().then((frames) => {
-      frames.map((frameId) => {
-        webContent.sendToFrame(frameId, channel, ...args);
+      frames.map((frameInfo) => {
+        webContent.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...args);
       });
     }).catch((e) => e);
   });

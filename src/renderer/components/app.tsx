@@ -57,7 +57,7 @@ export class App extends React.Component {
     logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`);
     await Terminal.preloadFonts();
 
-    await requestMain(clusterSetFrameIdHandler, clusterId, frameId);
+    await requestMain(clusterSetFrameIdHandler, clusterId, frameId, process.pid);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
     extensionLoader.loadOnClusterRenderer();
     setTimeout(() => {
@@ -99,6 +99,7 @@ export class App extends React.Component {
     }
 
     reaction(() => this.warningsCount, (count) => {
+      console.log("warnings", count);
       broadcastMessage(`cluster-warning-event-count:${cluster.id}`, count);
     });
   }

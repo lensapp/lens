@@ -1,3 +1,8 @@
 import { observable } from "mobx";
 
-export const clusterFrameMap = observable.map<string, number>();
+export type ClusterFrameInfo = {
+  frameId: number;
+  processId: number
+};
+
+export const clusterFrameMap = observable.map<string, ClusterFrameInfo>();
