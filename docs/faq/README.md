@@ -44,3 +44,23 @@ Lens will store application logs to following locations depending on your operat
 ### How can I see more verbose logs?
 
 You can start Lens application on debug mode from the command line to see more verbose logs. To start application on debug mode, please provide `DEBUG=true` environment variable and before starting the application, for example: `DEBUG=TRUE /Applications/Lens.app/Contents/MacOS/Lens`
+
+### Why Lens window rendering is broken?
+
+MacOS users can encouter visual bug with fuzzy lines appeared while [connected to external 4K display](https://www.forbes.com/sites/gordonkelly/2020/06/11/apple-macos-macbook-pro-google-chrome-display-problem/?sh=331ac27967b4). Same thing can happen with any of Electron applications or Chrome itself.
+
+![fuzzy lines](https://user-images.githubusercontent.com/4453/78537270-80cc8e80-77ef-11ea-8a6e-0bc69cc28abe.png "Fuzzy lines on MacOS")
+
+As a temporary workaround there is a possibility to disable Chromium GPU acceleration. To do this for Lens, you need to provide `LENS_DISABLE_GPU=true` env variable and relaunch app.
+
+First, open `.bash_profile` file from your terminal
+
+```
+open -a TextEdit.app ~/.bash_profile
+```
+
+Then, add this line
+
+```
+export LENS_DISABLE_GPU=true
+```

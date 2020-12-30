@@ -2,7 +2,19 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.5 (current version)
+## 4.0.6 (current version)
+
+- Don't open Lens at OS login by default
+- Disable GPU acceleration by setting an env variable
+- Catch HTTP Errors in case pod metrics resources do not exist or access is forbidden
+- Check is persistent volume claims resource to allowed for user
+- Share react-router and react-router-dom libraries to extensions
+- Fix: long list cropping in sidebar
+- Fix: k0s distribution detection
+- Fix: Preserve line breaks when copying logs
+- Fix: error on api watch on complex api versions
+
+## 4.0.5
 
 - Fix: add missing Kubernetes distro detectors
 - Fix: improve how Workloads Overview is loaded
@@ -14,6 +26,7 @@ Here you can find description of changes we've built into each release. While we
 - Fix: disable oh-my-zsh auto-update prompt when resolving shell environment
 - Add kubectl 1.20 support to Lens Smart Terminal
 - Optimise performance during cluster connect
+
 ## 4.0.4
 
 - Fix errors on Kubernetes v1.20
@@ -21,6 +34,7 @@ Here you can find description of changes we've built into each release. While we
 - Fix: MacOS error on shutdown
 - Fix: Kubernetes distribution detection
 - Fix: error while displaying CRDs with column which type is an object
+
 ## 4.0.3
 
 - Fix: install in-tree extensions before others
