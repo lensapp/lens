@@ -31,10 +31,8 @@
         margin-right: $spacing / 2;
       }
 
-      .name {
+      h5, h6 {
         color: var(--textColorSecondary);
-        padding-bottom: var(--padding);
-        font-weight: bold;
       }
     }
 

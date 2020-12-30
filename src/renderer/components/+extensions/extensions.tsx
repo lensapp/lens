@@ -444,18 +444,15 @@ export class Extensions extends React.Component {
 
     return extensions.map(extension => {
       const { id, isEnabled, manifest } = extension;
-      const { name, description } = manifest;
+      const { name, description, version } = manifest;
       const isUninstalling = this.extensionStateStore.extensionState.get(id)?.state === "uninstalling";
 
       return (
         <div key={id} className="extension flex gaps align-center">
           <div className="box grow">
-            <div className="name">
-              {name}
-            </div>
-            <div className="description">
-              {description}
-            </div>
+            <h5>{name}</h5>
+            <h6>{version}</h6>
+            <p>{description}</p>
           </div>
           <div className="actions">
             {!isEnabled && (
