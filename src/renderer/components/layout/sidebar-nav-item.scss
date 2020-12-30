@@ -41,13 +41,13 @@
       overflow: hidden;
       text-overflow: ellipsis;
       line-height: 0px; // hidden by default
-      max-height: 0px;
+      height: 0px;
       opacity: 0;
       transition: 125ms line-height ease-out, 200ms 100ms opacity;
 
       &.visible {
         line-height: 28px;
-        max-height: 1000px;
+        height: auto;
         opacity: 1;
       }
 
