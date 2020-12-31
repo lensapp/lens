@@ -70,6 +70,4 @@ export async function bootstrap(App: AppComponent) {
 }
 
 // run
-setTimeout(() => {
-  bootstrap(process.isMainFrame ? LensApp : App);
-}, 0);
+bootstrap(process.isMainFrame ? LensApp : App);
