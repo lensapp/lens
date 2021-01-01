@@ -99,7 +99,6 @@ export class App extends React.Component {
     }
 
     reaction(() => this.warningsCount, (count) => {
-      console.log("warnings", count);
       broadcastMessage(`cluster-warning-event-count:${cluster.id}`, count);
     });
   }
