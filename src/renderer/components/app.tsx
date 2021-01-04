@@ -57,7 +57,7 @@ export class App extends React.Component {
     logger.info(`[APP]: Init dashboard, clusterId=${clusterId}, frameId=${frameId}`);
     await Terminal.preloadFonts();
 
-    await requestMain(clusterSetFrameIdHandler, clusterId, frameId);
+    await requestMain(clusterSetFrameIdHandler, clusterId);
     await getHostedCluster().whenReady; // cluster.activate() is done at this point
     extensionLoader.loadOnClusterRenderer();
     setTimeout(() => {

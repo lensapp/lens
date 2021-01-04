@@ -7,7 +7,7 @@ import { subscribeToBroadcast } from "../common/ipc";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import { Singleton } from "../common/utils";
-import { clusterFrameMap } from "../common/cluster-frames";
+import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
@@ -118,9 +118,9 @@ export class WindowManager extends Singleton {
     return this.mainWindow;
   }
 
-  sendToView({ channel, frameId, data = [] }: { channel: string, frameId?: number, data?: any[] }) {
-    if (frameId) {
-      this.mainWindow.webContents.sendToFrame(frameId, channel, ...data);
+  sendToView({ channel, frameInfo, data = [] }: { channel: string, frameInfo?: ClusterFrameInfo, data?: any[] }) {
+    if (frameInfo) {
+      this.mainWindow.webContents.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...data);
     } else {
       this.mainWindow.webContents.send(channel, ...data);
     }
@@ -128,18 +128,23 @@ export class WindowManager extends Singleton {
 
   async navigate(url: string, frameId?: number) {
     await this.ensureMainWindow();
+    let frameInfo: ClusterFrameInfo;
+
+    if (frameId) {
+      frameInfo = Array.from(clusterFrameMap.values()).find((frameInfo) => frameInfo.frameId === frameId);
+    }
     this.sendToView({
       channel: "renderer:navigate",
-      frameId,
+      frameInfo,
       data: [url],
     });
   }
 
   reload() {
-    const frameId = clusterFrameMap.get(this.activeClusterId);
+    const frameInfo = clusterFrameMap.get(this.activeClusterId);
 
-    if (frameId) {
-      this.sendToView({ channel: "renderer:reload", frameId });
+    if (frameInfo) {
+      this.sendToView({ channel: "renderer:reload", frameInfo });
     } else {
       webContents.getFocusedWebContents()?.reload();
     }

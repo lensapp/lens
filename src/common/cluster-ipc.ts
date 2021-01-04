@@ -2,7 +2,7 @@ import { handleRequest } from "./ipc";
 import { ClusterId, clusterStore } from "./cluster-store";
 import { appEventBus } from "./event-bus";
 import { ResourceApplier } from "../main/resource-applier";
-import { ipcMain } from "electron";
+import { ipcMain, IpcMainInvokeEvent } from "electron";
 import { clusterFrameMap } from "./cluster-frames";
 
 export const clusterActivateHandler = "cluster:activate";
@@ -21,11 +21,11 @@ if (ipcMain) {
     }
   });
 
-  handleRequest(clusterSetFrameIdHandler, (event, clusterId: ClusterId, frameId: number) => {
+  handleRequest(clusterSetFrameIdHandler, (event: IpcMainInvokeEvent, clusterId: ClusterId) => {
     const cluster = clusterStore.getById(clusterId);
 
     if (cluster) {
-      clusterFrameMap.set(cluster.id, frameId);
+      clusterFrameMap.set(cluster.id, { frameId: event.frameId, processId: event.processId });
 
       return cluster.pushState();
     }
