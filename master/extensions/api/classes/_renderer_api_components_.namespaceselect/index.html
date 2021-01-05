@@ -9,7 +9,7 @@
         <meta name="description" content="Documentation for Lens IDE. The only system you’ll ever need to take control of your Kubernetes clusters. It's open source and free. Download it today!">
       
       
-        <link rel="canonical" href="https://docs.k8slens.dev/extensions/api/classes/_renderer_api_components_.kubeobjectmenu/">
+        <link rel="canonical" href="https://docs.k8slens.dev/extensions/api/classes/_renderer_api_components_.namespaceselect/">
       
       
         <meta name="author" content="Mirantis, Inc.">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Class: KubeObjectMenu ‹**S, SS, S**› - Lens Documentation</title>
+        <title>Class: NamespaceSelect ‹**S, SS, S**› - Lens Documentation</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#class-kubeobjectmenu-s-ss-s" class="md-skip">
+        <a href="#class-namespaceselect-s-ss-s" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Class: KubeObjectMenu ‹**S, SS, S**›
+              Class: NamespaceSelect ‹**S, SS, S**›
             
           </span>
         </div>
@@ -931,6 +931,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#static-defaultprops" class="md-nav__link">
+    Static defaultProps
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -945,22 +952,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#iseditable" class="md-nav__link">
-    isEditable
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#isremovable" class="md-nav__link">
-    isRemovable
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#store" class="md-nav__link">
-    store
+  <a href="#options" class="md-nav__link">
+    options
   </a>
   
 </li>
@@ -1007,8 +1000,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-componentdidmount" class="md-nav__link">
-    Optional componentDidMount
+  <a href="#componentdidmount" class="md-nav__link">
+    componentDidMount
   </a>
   
 </li>
@@ -1035,8 +1028,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-componentwillunmount" class="md-nav__link">
-    Optional componentWillUnmount
+  <a href="#componentwillunmount" class="md-nav__link">
+    componentWillUnmount
   </a>
   
 </li>
@@ -1056,6 +1049,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#formatoptionlabel" class="md-nav__link">
+    formatOptionLabel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#optional-getsnapshotbeforeupdate" class="md-nav__link">
     Optional getSnapshotBeforeUpdate
   </a>
@@ -1063,22 +1063,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#remove" class="md-nav__link">
-    remove
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#render" class="md-nav__link">
     render
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#renderremovemessage" class="md-nav__link">
-    renderRemoveMessage
   </a>
   
 </li>
@@ -1093,13 +1079,6 @@
           <li class="md-nav__item">
   <a href="#optional-shouldcomponentupdate" class="md-nav__link">
     Optional shouldComponentUpdate
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#update" class="md-nav__link">
-    update
   </a>
   
 </li>
@@ -1123,16 +1102,16 @@
               
                 
                 
-                <h1 id="class-kubeobjectmenu-s-ss-s">Class: KubeObjectMenu ‹<strong>S, SS, S</strong>›<a class="headerlink" href="#class-kubeobjectmenu-s-ss-s" title="Permanent link">#</a></h1>
+                <h1 id="class-namespaceselect-s-ss-s">Class: NamespaceSelect ‹<strong>S, SS, S</strong>›<a class="headerlink" href="#class-namespaceselect-s-ss-s" title="Permanent link">#</a></h1>
 <h2 id="type-parameters">Type parameters<a class="headerlink" href="#type-parameters" title="Permanent link">#</a></h2>
 <p>▪ <strong>S</strong></p>
 <p>▪ <strong>SS</strong></p>
 <p>▪ <strong>S</strong></p>
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">#</a></h2>
 <ul>
-<li>Component‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›</li>
+<li>Component‹Props›</li>
 </ul>
-<p>↳ <strong>KubeObjectMenu</strong></p>
+<p>↳ <strong>NamespaceSelect</strong></p>
 <h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">#</a></h2>
 <h3 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permanent link">#</a></h3>
 <ul>
@@ -1145,12 +1124,11 @@
 <li><a href="./#refs">refs</a></li>
 <li><a href="./#state">state</a></li>
 <li><a href="./#static-optional-contexttype">contextType</a></li>
+<li><a href="./#static-defaultprops">defaultProps</a></li>
 </ul>
 <h3 id="accessors">Accessors<a class="headerlink" href="#accessors" title="Permanent link">#</a></h3>
 <ul>
-<li><a href="./#iseditable">isEditable</a></li>
-<li><a href="./#isremovable">isRemovable</a></li>
-<li><a href="./#store">store</a></li>
+<li><a href="./#options">options</a></li>
 </ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
@@ -1158,24 +1136,22 @@
 <li><a href="./#optional-unsafe_componentwillreceiveprops">UNSAFE_componentWillReceiveProps</a></li>
 <li><a href="./#optional-unsafe_componentwillupdate">UNSAFE_componentWillUpdate</a></li>
 <li><a href="./#optional-componentdidcatch">componentDidCatch</a></li>
-<li><a href="./#optional-componentdidmount">componentDidMount</a></li>
+<li><a href="./#componentdidmount">componentDidMount</a></li>
 <li><a href="./#optional-componentdidupdate">componentDidUpdate</a></li>
 <li><a href="./#optional-componentwillmount">componentWillMount</a></li>
 <li><a href="./#optional-componentwillreceiveprops">componentWillReceiveProps</a></li>
-<li><a href="./#optional-componentwillunmount">componentWillUnmount</a></li>
+<li><a href="./#componentwillunmount">componentWillUnmount</a></li>
 <li><a href="./#optional-componentwillupdate">componentWillUpdate</a></li>
 <li><a href="./#forceupdate">forceUpdate</a></li>
+<li><a href="./#formatoptionlabel">formatOptionLabel</a></li>
 <li><a href="./#optional-getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></li>
-<li><a href="./#remove">remove</a></li>
 <li><a href="./#render">render</a></li>
-<li><a href="./#renderremovemessage">renderRemoveMessage</a></li>
 <li><a href="./#setstate">setState</a></li>
 <li><a href="./#optional-shouldcomponentupdate">shouldComponentUpdate</a></li>
-<li><a href="./#update">update</a></li>
 </ul>
 <h2 id="constructors_1">Constructors<a class="headerlink" href="#constructors_1" title="Permanent link">#</a></h2>
 <h3 id="constructor">constructor<a class="headerlink" href="#constructor" title="Permanent link">#</a></h3>
-<p>+ <strong>new KubeObjectMenu</strong>(<code>props</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>› | <a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>): <em><a href="./">KubeObjectMenu</a></em></p>
+<p>+ <strong>new NamespaceSelect</strong>(<code>props</code>: Readonly‹Props› | Props): <em><a href="./">NamespaceSelect</a></em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#constructor">constructor</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:473</p>
 <p><strong>Parameters:</strong></p>
@@ -1189,12 +1165,12 @@
 <tbody>
 <tr>
 <td><code>props</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>› &#124; <a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a></td>
+<td>Readonly‹Props› &#124; Props</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Returns:</strong> <em><a href="./">KubeObjectMenu</a></em></p>
-<p>+ <strong>new KubeObjectMenu</strong>(<code>props</code>: <a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>, <code>context</code>: any): <em><a href="./">KubeObjectMenu</a></em></p>
+<p><strong>Returns:</strong> <em><a href="./">NamespaceSelect</a></em></p>
+<p>+ <strong>new NamespaceSelect</strong>(<code>props</code>: Props, <code>context</code>: any): <em><a href="./">NamespaceSelect</a></em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#constructor">constructor</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:475</p>
 <p><strong><code>deprecated</code></strong> </p>
@@ -1210,7 +1186,7 @@
 <tbody>
 <tr>
 <td><code>props</code></td>
-<td><a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a></td>
+<td>Props</td>
 </tr>
 <tr>
 <td><code>context</code></td>
@@ -1218,7 +1194,7 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Returns:</strong> <em><a href="./">KubeObjectMenu</a></em></p>
+<p><strong>Returns:</strong> <em><a href="./">NamespaceSelect</a></em></p>
 <h2 id="properties_1">Properties<a class="headerlink" href="#properties_1" title="Permanent link">#</a></h2>
 <h3 id="context">context<a class="headerlink" href="#context" title="Permanent link">#</a></h3>
 <p>• <strong>context</strong>: <em>any</em></p>
@@ -1236,7 +1212,7 @@ Should be used with type annotation or static contextType.</p>
 <p><strong><code>see</code></strong> https://reactjs.org/docs/context.html</p>
 <hr />
 <h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">#</a></h3>
-<p>• <strong>props</strong>: <em>Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>› &amp; Readonly‹object›</em></p>
+<p>• <strong>props</strong>: <em>Readonly‹Props› &amp; Readonly‹object›</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#props">props</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:498</p>
 <hr />
@@ -1274,21 +1250,15 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong><code>see</code></strong> https://reactjs.org/docs/context.html#classcontexttype</p>
+<hr />
+<h3 id="static-defaultprops"><code>Static</code> defaultProps<a class="headerlink" href="#static-defaultprops" title="Permanent link">#</a></h3>
+<p>▪ <strong>defaultProps</strong>: <em>object</em> = defaultProps as object</p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/+namespaces/namespace-select.tsx#L30">src/renderer/components/+namespaces/namespace-select.tsx:30</a></em></p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
-<h3 id="iseditable">isEditable<a class="headerlink" href="#iseditable" title="Permanent link">#</a></h3>
-<p>• <strong>get isEditable</strong>(): <em>boolean</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/kube-object/kube-object-menu.tsx#L25">src/renderer/components/kube-object/kube-object-menu.tsx:25</a></em></p>
-<p><strong>Returns:</strong> <em>boolean</em></p>
-<hr />
-<h3 id="isremovable">isRemovable<a class="headerlink" href="#isremovable" title="Permanent link">#</a></h3>
-<p>• <strong>get isRemovable</strong>(): <em>boolean</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/kube-object/kube-object-menu.tsx#L31">src/renderer/components/kube-object/kube-object-menu.tsx:31</a></em></p>
-<p><strong>Returns:</strong> <em>boolean</em></p>
-<hr />
-<h3 id="store">store<a class="headerlink" href="#store" title="Permanent link">#</a></h3>
-<p>• <strong>get store</strong>(): <em><a href="../_renderer_api_k8s_api_.kubeobjectstore/">KubeObjectStore</a>‹any›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/kube-object/kube-object-menu.tsx#L17">src/renderer/components/kube-object/kube-object-menu.tsx:17</a></em></p>
-<p><strong>Returns:</strong> <em><a href="../_renderer_api_k8s_api_.kubeobjectstore/">KubeObjectStore</a>‹any›</em></p>
+<h3 id="options">options<a class="headerlink" href="#options" title="Permanent link">#</a></h3>
+<p>• <strong>get options</strong>(): <em><a href="../../interfaces/_renderer_api_components_.selectoption/">SelectOption</a>[]</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/+namespaces/namespace-select.tsx#L44">src/renderer/components/+namespaces/namespace-select.tsx:44</a></em></p>
+<p><strong>Returns:</strong> <em><a href="../../interfaces/_renderer_api_components_.selectoption/">SelectOption</a>[]</em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="optional-unsafe_componentwillmount"><code>Optional</code> UNSAFE_componentWillMount<a class="headerlink" href="#optional-unsafe_componentwillmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>UNSAFE_componentWillMount</strong>(): <em>void</em></p>
@@ -1305,7 +1275,7 @@ prevents this from being invoked.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-unsafe_componentwillreceiveprops"><code>Optional</code> UNSAFE_componentWillReceiveProps<a class="headerlink" href="#optional-unsafe_componentwillreceiveprops" title="Permanent link">#</a></h3>
-<p>▸ <strong>UNSAFE_componentWillReceiveProps</strong>(<code>nextProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›, <code>nextContext</code>: any): <em>void</em></p>
+<p>▸ <strong>UNSAFE_componentWillReceiveProps</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextContext</code>: any): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-unsafe_componentwillreceiveprops">UNSAFE_componentWillReceiveProps</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:743</p>
 <p>Called when the component may be receiving new props.
@@ -1329,7 +1299,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td><code>nextProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>nextContext</code></td>
@@ -1340,7 +1310,7 @@ prevents this from being invoked.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-unsafe_componentwillupdate"><code>Optional</code> UNSAFE_componentWillUpdate<a class="headerlink" href="#optional-unsafe_componentwillupdate" title="Permanent link">#</a></h3>
-<p>▸ <strong>UNSAFE_componentWillUpdate</strong>(<code>nextProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>void</em></p>
+<p>▸ <strong>UNSAFE_componentWillUpdate</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-unsafe_componentwillupdate">UNSAFE_componentWillUpdate</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:771</p>
 <p>Called immediately before rendering when new props or state is received. Not called for the initial render.</p>
@@ -1362,7 +1332,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td><code>nextProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>nextState</code></td>
@@ -1403,15 +1373,14 @@ the entire component tree to unmount.</p>
 </table>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
-<h3 id="optional-componentdidmount"><code>Optional</code> componentDidMount<a class="headerlink" href="#optional-componentdidmount" title="Permanent link">#</a></h3>
-<p>▸ <strong>componentDidMount</strong>(): <em>void</em></p>
-<p><em>Inherited from <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentdidmount">componentDidMount</a></em></p>
-<p>Defined in node_modules/@types/react/index.d.ts:619</p>
-<p>Called immediately after a component is mounted. Setting state here will trigger re-rendering.</p>
-<p><strong>Returns:</strong> <em>void</em></p>
+<h3 id="componentdidmount">componentDidMount<a class="headerlink" href="#componentdidmount" title="Permanent link">#</a></h3>
+<p>▸ <strong>componentDidMount</strong>(): <em>Promise‹void›</em></p>
+<p><em>Overrides <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentdidmount">componentDidMount</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/+namespaces/namespace-select.tsx#L33">src/renderer/components/+namespaces/namespace-select.tsx:33</a></em></p>
+<p><strong>Returns:</strong> <em>Promise‹void›</em></p>
 <hr />
 <h3 id="optional-componentdidupdate"><code>Optional</code> componentDidUpdate<a class="headerlink" href="#optional-componentdidupdate" title="Permanent link">#</a></h3>
-<p>▸ <strong>componentDidUpdate</strong>(<code>prevProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›, <code>prevState</code>: Readonly‹S›, <code>snapshot?</code>: SS): <em>void</em></p>
+<p>▸ <strong>componentDidUpdate</strong>(<code>prevProps</code>: Readonly‹Props›, <code>prevState</code>: Readonly‹S›, <code>snapshot?</code>: SS): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-componentdidupdate">componentDidUpdate</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:682</p>
 <p>Called immediately after updating occurs. Not called for the initial render.</p>
@@ -1427,7 +1396,7 @@ the entire component tree to unmount.</p>
 <tbody>
 <tr>
 <td><code>prevProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>prevState</code></td>
@@ -1455,7 +1424,7 @@ prevents this from being invoked.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-componentwillreceiveprops"><code>Optional</code> componentWillReceiveProps<a class="headerlink" href="#optional-componentwillreceiveprops" title="Permanent link">#</a></h3>
-<p>▸ <strong>componentWillReceiveProps</strong>(<code>nextProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›, <code>nextContext</code>: any): <em>void</em></p>
+<p>▸ <strong>componentWillReceiveProps</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextContext</code>: any): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-componentwillreceiveprops">componentWillReceiveProps</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:726</p>
 <p>Called when the component may be receiving new props.
@@ -1478,7 +1447,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td><code>nextProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>nextContext</code></td>
@@ -1488,16 +1457,14 @@ prevents this from being invoked.</p>
 </table>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
-<h3 id="optional-componentwillunmount"><code>Optional</code> componentWillUnmount<a class="headerlink" href="#optional-componentwillunmount" title="Permanent link">#</a></h3>
+<h3 id="componentwillunmount">componentWillUnmount<a class="headerlink" href="#componentwillunmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>componentWillUnmount</strong>(): <em>void</em></p>
-<p><em>Inherited from <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentwillunmount">componentWillUnmount</a></em></p>
-<p>Defined in node_modules/@types/react/index.d.ts:635</p>
-<p>Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
-cancelled network requests, or cleaning up any DOM elements created in <code>componentDidMount</code>.</p>
+<p><em>Overrides <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentwillunmount">componentWillUnmount</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/+namespaces/namespace-select.tsx#L40">src/renderer/components/+namespaces/namespace-select.tsx:40</a></em></p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-componentwillupdate"><code>Optional</code> componentWillUpdate<a class="headerlink" href="#optional-componentwillupdate" title="Permanent link">#</a></h3>
-<p>▸ <strong>componentWillUpdate</strong>(<code>nextProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>void</em></p>
+<p>▸ <strong>componentWillUpdate</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>void</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-componentwillupdate">componentWillUpdate</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:756</p>
 <p>Called immediately before rendering when new props or state is received. Not called for the initial render.</p>
@@ -1518,7 +1485,7 @@ prevents this from being invoked.</p>
 <tbody>
 <tr>
 <td><code>nextProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>nextState</code></td>
@@ -1541,8 +1508,28 @@ prevents this from being invoked.</p>
 <p>▸ (): <em>void</em></p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
+<h3 id="formatoptionlabel">formatOptionLabel<a class="headerlink" href="#formatoptionlabel" title="Permanent link">#</a></h3>
+<p>▸ <strong>formatOptionLabel</strong>(<code>option</code>: <a href="../../interfaces/_renderer_api_components_.selectoption/">SelectOption</a>): <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/+namespaces/namespace-select.tsx#L57">src/renderer/components/+namespaces/namespace-select.tsx:57</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>option</code></td>
+<td><a href="../../interfaces/_renderer_api_components_.selectoption/">SelectOption</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>object</em></p>
+<hr />
 <h3 id="optional-getsnapshotbeforeupdate"><code>Optional</code> getSnapshotBeforeUpdate<a class="headerlink" href="#optional-getsnapshotbeforeupdate" title="Permanent link">#</a></h3>
-<p>▸ <strong>getSnapshotBeforeUpdate</strong>(<code>prevProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›, <code>prevState</code>: Readonly‹S›): <em>SS | null</em></p>
+<p>▸ <strong>getSnapshotBeforeUpdate</strong>(<code>prevProps</code>: Readonly‹Props›, <code>prevState</code>: Readonly‹S›): <em>SS | null</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:676</p>
 <p>Runs before React applies the result of <code>render</code> to the document, and
@@ -1561,7 +1548,7 @@ lifecycle events from running.</p>
 <tbody>
 <tr>
 <td><code>prevProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>prevState</code></td>
@@ -1571,20 +1558,10 @@ lifecycle events from running.</p>
 </table>
 <p><strong>Returns:</strong> <em>SS | null</em></p>
 <hr />
-<h3 id="remove">remove<a class="headerlink" href="#remove" title="Permanent link">#</a></h3>
-<p>▸ <strong>remove</strong>(): <em>Promise‹void›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/kube-object/kube-object-menu.tsx#L44">src/renderer/components/kube-object/kube-object-menu.tsx:44</a></em></p>
-<p><strong>Returns:</strong> <em>Promise‹void›</em></p>
-<hr />
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): <em>Element‹›</em></p>
 <p><em>Overrides void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/kube-object/kube-object-menu.tsx#L63">src/renderer/components/kube-object/kube-object-menu.tsx:63</a></em></p>
-<p><strong>Returns:</strong> <em>Element‹›</em></p>
-<hr />
-<h3 id="renderremovemessage">renderRemoveMessage<a class="headerlink" href="#renderremovemessage" title="Permanent link">#</a></h3>
-<p>▸ <strong>renderRemoveMessage</strong>(): <em>Element‹›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/kube-object/kube-object-menu.tsx#L53">src/renderer/components/kube-object/kube-object-menu.tsx:53</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/+namespaces/namespace-select.tsx#L69">src/renderer/components/+namespaces/namespace-select.tsx:69</a></em></p>
 <p><strong>Returns:</strong> <em>Element‹›</em></p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
@@ -1600,7 +1577,7 @@ lifecycle events from running.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-shouldcomponentupdate"><code>Optional</code> shouldComponentUpdate<a class="headerlink" href="#optional-shouldcomponentupdate" title="Permanent link">#</a></h3>
-<p>▸ <strong>shouldComponentUpdate</strong>(<code>nextProps</code>: Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>boolean</em></p>
+<p>▸ <strong>shouldComponentUpdate</strong>(<code>nextProps</code>: Readonly‹Props›, <code>nextState</code>: Readonly‹S›, <code>nextContext</code>: any): <em>boolean</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-shouldcomponentupdate">shouldComponentUpdate</a></em></p>
 <p>Defined in node_modules/@types/react/index.d.ts:630</p>
 <p>Called to determine whether the change in props and state should trigger a re-render.</p>
@@ -1620,7 +1597,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 <tbody>
 <tr>
 <td><code>nextProps</code></td>
-<td>Readonly‹<a href="../../interfaces/_renderer_api_components_.kubeobjectmenuprops/">KubeObjectMenuProps</a>›</td>
+<td>Readonly‹Props›</td>
 </tr>
 <tr>
 <td><code>nextState</code></td>
@@ -1633,11 +1610,6 @@ and <code>componentDidUpdate</code> will not be called.</p>
 </tbody>
 </table>
 <p><strong>Returns:</strong> <em>boolean</em></p>
-<hr />
-<h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
-<p>▸ <strong>update</strong>(): <em>Promise‹void›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/8d2d1aecd/src/renderer/components/kube-object/kube-object-menu.tsx#L38">src/renderer/components/kube-object/kube-object-menu.tsx:38</a></em></p>
-<p><strong>Returns:</strong> <em>Promise‹void›</em></p>
                 
               
               
