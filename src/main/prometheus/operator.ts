@@ -85,8 +85,8 @@ export class PrometheusOperator implements PrometheusProvider {
           `sum(rate(nginx_ingress_controller_bytes_sent_sum{ingress="${ingress}", status=~"${statuses}"}[${this.rateAccuracy}])) by (ingress)`;
 
         return {
-          bytesSentSuccess: bytesSent(opts.igress, "^2\\\\d*"),
-          bytesSentFailure: bytesSent(opts.ingres, "^5\\\\d*"),
+          bytesSentSuccess: bytesSent(opts.ingress, "^2\\\\d*"),
+          bytesSentFailure: bytesSent(opts.ingress, "^5\\\\d*"),
           requestDurationSeconds: `sum(rate(nginx_ingress_controller_request_duration_seconds_sum{ingress="${opts.ingress}"}[${this.rateAccuracy}])) by (ingress)`,
           responseDurationSeconds: `sum(rate(nginx_ingress_controller_response_duration_seconds_sum{ingress="${opts.ingress}"}[${this.rateAccuracy}])) by (ingress)`
         };
