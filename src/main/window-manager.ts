@@ -9,6 +9,7 @@ import { initTray } from "./tray";
 import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
 import { reload } from "./reload";
+import { holdUntilRendererStaticsExist } from "./holdUntilFileExist";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
@@ -31,6 +32,11 @@ export class WindowManager extends Singleton {
   }
 
   async initMainWindow(showSplash = true) {
+    
+    if (process.env.NODE_ENV === "development") {
+      await holdUntilRendererStaticsExist({ watchInterval: 5000 });
+    }
+
     // Manage main window size and position with state persistence
     if (!this.windowState) {
       this.windowState = windowStateKeeper({
