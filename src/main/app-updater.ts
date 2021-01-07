@@ -1,15 +1,12 @@
 import { autoUpdater, UpdateInfo } from "electron-updater";
 import logger from "./logger";
-import { broadcastIpc, IpcChannel, NotificationChannelAdd, NotificationChannelPrefix } from "../common/ipc";
+import { IpcChannel, NotificationChannelAdd, NotificationChannelPrefix } from "../common/ipc";
 import { ipcMain } from "electron";
 import { isDevelopment } from "../common/vars";
 import { SemVer } from "semver";
 import moment from "moment";
-import { WindowManager } from "./window-manager";
-
-function delay(duration: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, duration));
-}
+import { WindowManager } from "./window-manager"
+import { delay } from "../common/utils";
 
 class NotificationBackchannel {
   private static _id = 0;
@@ -86,7 +83,7 @@ async function autoUpdateCheck(windowManager: WindowManager): Promise<void> {
 
 /**
  * starts the automatic update checking
- * @param interval milliseconds between interval to check on, defaulkts to 24h
+ * @param interval milliseconds between interval to check on, defaults to 24h
  */
 export function startUpdateChecking(windowManager: WindowManager, interval = 1000 * 60 * 60 * 24): void {
   if (isDevelopment) {
@@ -134,11 +131,11 @@ export function startUpdateChecking(windowManager: WindowManager, interval = 100
 
   async function helper() {
     while (true) {
-      await autoUpdater.checkForUpdates();
+      await autoUpdater.checkForUpdates()
+        .catch(error => logger.error("[UPDATE CHECKER]: failed with an error", { error: String(error) }));
       await delay(interval);
     }
   }
 
-  helper()
-    .catch(error => logger.error("[UPDATE CHECKER]: failed with an error", { error: String(error) }));
+  helper();
 }

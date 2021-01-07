@@ -295,7 +295,6 @@
     "material-design-icons": "^3.0.1",
     "mini-css-extract-plugin": "^0.9.0",
     "mobx-react": "^6.2.2",
-    "moment": "^2.26.0",
     "node-loader": "^0.6.0",
     "node-sass": "^4.14.1",
     "nodemon": "^2.0.4",
