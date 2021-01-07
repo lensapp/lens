@@ -11,7 +11,7 @@ import { apiPrefix, isDevelopment } from "../../common/vars";
 import { getHostedCluster } from "../../common/cluster-store";
 
 export interface IKubeWatchEvent<T = any> {
-  type: "ADDED" | "MODIFIED" | "DELETED";
+  type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR";
   object?: T;
 }
 
@@ -158,6 +158,11 @@ export class KubeWatchApi {
 
   addListener(store: KubeObjectStore, callback: (evt: IKubeWatchEvent) => void) {
     const listener = (evt: IKubeWatchEvent<KubeJsonApiData>) => {
+      if (evt.type === "ERROR") {
+        // console.error(evt.object);
+        return; // fixme: too old resource version (e.g. reproduce: quickly jump btw pages)
+      }
+
       const { namespace, resourceVersion } = evt.object.metadata;
       const api = apiManager.getApiByKind(evt.object.kind, evt.object.apiVersion);
 

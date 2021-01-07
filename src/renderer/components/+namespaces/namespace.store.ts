@@ -1,7 +1,7 @@
 import { action, comparer, observable, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
-import { KubeObjectStore } from "../../kube-object.store";
-import { Namespace, namespacesApi } from "../../api/endpoints";
+import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
+import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { isAllowedResource } from "../../../common/rbac";
@@ -61,18 +61,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return super.subscribe(apis);
   }
 
-  protected async loadItems(namespaces?: string[]) {
+  protected async loadItems({ isAdmin, namespaces }: KubeObjectStoreLoadingParams) {
     if (!isAllowedResource("namespaces")) {
-      if (namespaces) return namespaces.map(this.getDummyNamespace);
-
-      return [];
+      return namespaces.map(this.getDummyNamespace);
     }
-
-    if (namespaces) {
-      return Promise.all(namespaces.map(name => this.api.get({ name })));
-    } else {
-      return super.loadItems();
-    }
+    return Promise.all(namespaces.map(name => this.api.get({ name })));
   }
 
   protected getDummyNamespace(name: string) {
@@ -103,12 +96,6 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   toggleContext(namespace: string) {
     if (this.hasContext(namespace)) this.contextNs.remove(namespace);
     else this.contextNs.push(namespace);
-  }
-
-  @action
-  reset() {
-    super.reset();
-    this.contextNs.clear();
   }
 
   @action

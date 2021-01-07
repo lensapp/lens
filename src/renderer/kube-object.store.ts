@@ -8,6 +8,12 @@ import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
 import { getHostedCluster } from "../common/cluster-store";
 
+export interface KubeObjectStoreLoadingParams {
+  isAdmin: boolean;
+  namespaces: string[];
+  api?: KubeApi;
+}
+
 @autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
   abstract api: KubeApi<T>;
@@ -71,14 +77,15 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
 
-  protected async loadItems(allowedNamespaces?: string[]): Promise<T[]> {
-    if (!this.api.isNamespaced || !allowedNamespaces) {
-      return this.api.list({}, this.query);
-    } else {
-      return Promise
-        .all(allowedNamespaces.map(namespace => this.api.list({ namespace })))
-        .then(items => items.flat());
+  protected async loadItems({ isAdmin, namespaces, api }: KubeObjectStoreLoadingParams): Promise<T[]> {
+    if (!api.isNamespaced) {
+      if (isAdmin) return api.list({}, this.query);
+      return [];
     }
+
+    return Promise
+      .all(namespaces.map(namespace => api.list({ namespace })))
+      .then(items => items.flat());
   }
 
   protected filterItemsOnLoad(items: T[]) {
@@ -91,22 +98,16 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     let items: T[];
 
     try {
-      const { allowedNamespaces, accessibleNamespaces, isAdmin } = getHostedCluster();
-
-      if (isAdmin && accessibleNamespaces.length == 0) {
-        items = await this.loadItems();
-      } else {
-        items = await this.loadItems(allowedNamespaces);
-      }
-
+      const { allowedNamespaces: namespaces, isAdmin } = getHostedCluster();
+      items = await this.loadItems({ isAdmin, namespaces, api: this.api });
       items = this.filterItemsOnLoad(items);
-    } finally {
-      if (items) {
-        items = this.sortItems(items);
-        this.items.replace(items);
-      }
-      this.isLoading = false;
+      items = this.sortItems(items);
+      this.items.replace(items);
       this.isLoaded = true;
+    } catch (error) {
+      console.error("Loading store items failed", { error, store: this });
+    } finally {
+      this.isLoading = false;
     }
   }
 
@@ -194,7 +195,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     // create latest non-observable copy of items to apply updates in one action (==single render)
     const items = this.items.toJS();
 
-    for (const {type, object} of this.eventsBuffer.clear()) {
+    for (const { type, object } of this.eventsBuffer.clear()) {
       const index = items.findIndex(item => item.getId() === object.metadata?.uid);
       const item = items[index];
       const api = apiManager.getApiByKind(object.kind, object.apiVersion);

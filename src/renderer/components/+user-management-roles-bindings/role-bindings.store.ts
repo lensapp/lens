@@ -1,7 +1,7 @@
 import difference from "lodash/difference";
 import uniqBy from "lodash/uniqBy";
 import { clusterRoleBindingApi, IRoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
-import { KubeObjectStore } from "../../kube-object.store";
+import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { apiManager } from "../../api/api-manager";
 
@@ -26,15 +26,12 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
     return clusterRoleBindingApi.get(params);
   }
 
-  protected loadItems(namespaces?: string[]) {
-    if (namespaces) {
-      return Promise.all(
-        namespaces.map(namespace => roleBindingApi.list({ namespace }))
-      ).then(items => items.flat());
-    } else {
-      return Promise.all([clusterRoleBindingApi.list(), roleBindingApi.list()])
-        .then(items => items.flat());
-    }
+  protected async loadItems({ isAdmin, namespaces }: KubeObjectStoreLoadingParams): Promise<RoleBinding[]> {
+    const items = await Promise.all([
+      super.loadItems({ isAdmin, namespaces, api: clusterRoleBindingApi }),
+      super.loadItems({ isAdmin, namespaces, api: roleBindingApi }),
+    ]);
+    return items.flat();
   }
 
   protected async createItem(params: { name: string; namespace?: string }, data?: Partial<RoleBinding>) {

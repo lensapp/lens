@@ -182,7 +182,7 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @observable metadata: ClusterMetadata = {};
   /**
-   * List of allowed namespaces
+   * List of allowed namespaces verified via K8S::SelfSubjectAccessReview api
    *
    * @observable
    */
@@ -195,7 +195,7 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @observable allowedResources: string[] = [];
   /**
-   * List of accessible namespaces
+   * List of accessible namespaces provided by user in the Cluster Settings
    *
    * @observable
    */
