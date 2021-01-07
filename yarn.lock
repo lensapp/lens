@@ -1175,10 +1175,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/hapi@^18.0.3":
-  version "18.0.3"
-  resolved "https://registry.yarnpkg.com/@types/hapi/-/hapi-18.0.3.tgz#e74c019f6a1b1c7f647fe014d3890adec9c0214a"
-  integrity sha512-UM03myDZ2UWbpqLSZqboK4L98F9r4GCcd9JOr2auhgC3iOd/69mvDggivOHhOYJKWHeCW/dECPHIB7DwQz00dw==
+"@types/hapi@^18.0.4":
+  version "18.0.4"
+  resolved "https://registry.yarnpkg.com/@types/hapi/-/hapi-18.0.4.tgz#3a9d26f7f5a71cc2783f862f8b23aa637b0718f6"
+  integrity sha512-r2FkDKdAxuczL/9ltfcO5uW/AmdvIHAEUuhfYVdsl1xgJJQu3uXbdAX7GvjfHHct35xw+DpqsC41+q/PHtiVBA==
   dependencies:
     "@types/boom" "*"
     "@types/catbox" "*"
@@ -1406,12 +1406,7 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.24.tgz#c57511e3a19c4b5e9692bb2995c40a3a52167944"
   integrity sha512-5SCfvCxV74kzR3uWgTYiGxrd69TbT1I6+cMx1A5kEly/IVveJBimtAMlXiEyVFn5DvUFewQWxOOiJhlxeQwxgA==
 
-"@types/node@^12.0.12":
-  version "12.12.44"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.44.tgz#0d400a1453adcb359b133acceae4dd8bb0e0a159"
-  integrity sha512-jM6QVv0Sm5d3nW+nUD5jSzPcO6oPqboitSNcwgBay9hifVq/Rauq1PYnROnsmuw45JMBiTnsPAno0bKu2e2xrg==
-
-"@types/node@^12.12.45":
+"@types/node@^12.0.12", "@types/node@^12.12.45":
   version "12.12.45"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.45.tgz#33d550d6da243652004b00cbf4f15997456a38e3"
   integrity sha512-9w50wqeS0qQH9bo1iIRcQhDXRxoDzyAqCL5oJG+Nuu7cAoe6omGo+YDE0spAGK5sPrdLDhQLbQxq0DnxyndPKA==
@@ -3463,10 +3458,10 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-circular-dependency-plugin@^5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/circular-dependency-plugin/-/circular-dependency-plugin-5.2.0.tgz#e09dbc2dd3e2928442403e2d45b41cea06bc0a93"
-  integrity sha512-7p4Kn/gffhQaavNfyDFg7LS5S/UT1JAjyGd4UqR2+jzoYF02eDkj0Ec3+48TsIa4zghjLY87nQHIh/ecK9qLdw==
+circular-dependency-plugin@^5.2.2:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/circular-dependency-plugin/-/circular-dependency-plugin-5.2.2.tgz#39e836079db1d3cf2f988dc48c5188a44058b600"
+  integrity sha512-g38K9Cm5WRwlaH6g03B9OEz/0qRizI+2I7n+Gz+L5DxXJAPAiWQvwlYNm1V1jkdpUv95bOe/ASm2vfi/G560jQ==
 
 class-utils@^0.3.5:
   version "0.3.6"
