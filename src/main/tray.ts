@@ -10,7 +10,7 @@ import { workspaceStore } from "../common/workspace-store";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { clusterViewURL } from "../renderer/components/cluster-manager/cluster-view.route";
 import logger from "./logger";
-import { isDevelopment } from "../common/vars";
+import { isDevelopment, isWindows } from "../common/vars";
 import { exitApp } from "./exit-app";
 
 // note: instance of Tray should be saved somewhere, otherwise it disappears
@@ -29,7 +29,7 @@ export function initTray(windowManager: WindowManager) {
     try {
       const menu = createTrayMenu(windowManager);
 
-      buildTray(getTrayIcon(), menu);
+      buildTray(getTrayIcon(), menu, windowManager);
     } catch (err) {
       logger.error(`[TRAY]: building failed: ${err}`);
     }
@@ -42,20 +42,25 @@ export function initTray(windowManager: WindowManager) {
   };
 }
 
-export function buildTray(icon: string | NativeImage, menu: Menu) {
+function buildTray(icon: string | NativeImage, menu: Menu, windowManager: WindowManager) {
   if (!tray) {
     tray = new Tray(icon);
     tray.setToolTip(packageInfo.description);
     tray.setIgnoreDoubleClickEvents(true);
-  }
+    tray.setImage(icon);
+    tray.setContextMenu(menu);
 
-  tray.setImage(icon);
-  tray.setContextMenu(menu);
+    if (isWindows) {
+      tray.on("click", () => {
+        windowManager.ensureMainWindow();
+      });
+    }
+  }
 
   return tray;
 }
 
-export function createTrayMenu(windowManager: WindowManager): Menu {
+function createTrayMenu(windowManager: WindowManager): Menu {
   return Menu.buildFromTemplate([
     {
       label: "About Lens",
