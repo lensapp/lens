@@ -62,27 +62,37 @@ export class KubeWatchApi {
     });
   }
 
-  protected getQuery(): Partial<IKubeWatchRouteQuery> {
-    const { isAdmin, allowedNamespaces } = getHostedCluster();
-
+  // FIXME: use POST to send apis for subscribing (list could be huge)
+  // TODO: try to use normal fetch res.body stream to consume watch-api updates
+  // https://github.com/lensapp/lens/issues/1898
+  protected async getQuery() {
+    const { namespaceStore } = await import("../components/+namespaces/namespace.store");
+    await namespaceStore.whenReady;
+    const { isAdmin } = getHostedCluster();
     return {
       api: this.activeApis.map(api => {
-        if (isAdmin) return api.getWatchUrl();
-
-        return allowedNamespaces.map(namespace => api.getWatchUrl(namespace));
+        if (isAdmin && !api.isNamespaced) {
+          return api.getWatchUrl();
+        }
+        if (api.isNamespaced) {
+          return namespaceStore.getContextNamespaces().map(namespace => api.getWatchUrl(namespace));
+        }
+        return [];
       }).flat()
     };
   }
 
   // todo: maybe switch to websocket to avoid often reconnects
   @autobind()
-  protected connect() {
+  protected async connect() {
     if (this.evtSource) this.disconnect(); // close previous connection
 
-    if (!this.activeApis.length) {
+    const query = await this.getQuery();
+
+    if (!this.activeApis.length || !query.api.length) {
       return;
     }
-    const query = this.getQuery();
+
     const apiUrl = `${apiPrefix}/watch?${stringify(query)}`;
 
     this.evtSource = new EventSource(apiUrl);

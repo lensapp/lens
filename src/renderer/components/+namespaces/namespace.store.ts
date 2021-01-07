@@ -1,11 +1,11 @@
-import { action, comparer, observable, reaction } from "mobx";
+import { action, comparer, observable, reaction, when } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { isAllowedResource } from "../../../common/rbac";
-import { getHostedCluster } from "../../../common/cluster-store";
+import { clusterStore, getHostedCluster } from "../../../common/cluster-store";
 
 const storage = createStorage<string[]>("context_namespaces", []);
 
@@ -21,14 +21,25 @@ export const namespaceUrlParam = createPageParam<string[]>({
 @autobind()
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
-  contextNs = observable.array<string>();
+
+  @observable contextNs = observable.array<string>();
+  @observable isReady = false;
+
+  whenReady = when(() => this.isReady);
 
   constructor() {
     super();
     this.init();
   }
 
-  private init() {
+  private async init() {
+    await clusterStore.whenLoaded;
+    if (!getHostedCluster()) return;
+
+    await getHostedCluster().whenReady; // wait for cluster-state from main
+    await this.loadAll(); // auto-load allowed namespaces
+    this.isReady = true;
+
     this.setContext(this.initNamespaces);
 
     return reaction(() => this.contextNs.toJS(), namespaces => {
@@ -40,13 +51,52 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     });
   }
 
-  get initNamespaces() {
-    return namespaceUrlParam.get();
+  get allowedNamespaces(): string[] {
+    return getHostedCluster().allowedNamespaces;
   }
 
+  // FIXME: page/app reload doesn't restore previously selected namespaces
+  get initNamespaces() {
+    const allowedNamespaces = new Set(this.allowedNamespaces);
+    const lastUsedNamespaces = new Set(storage.get());
+
+    // remove previously saved, but currently disallowed namespaces
+    lastUsedNamespaces.forEach(namespace => {
+      if (!allowedNamespaces.has(namespace)) {
+        lastUsedNamespaces.delete(namespace);
+      }
+    });
+
+    // return previously saved and currently allowed namespaces
+    if (lastUsedNamespaces.size) {
+      return Array.from(lastUsedNamespaces);
+    }
+    // otherwise select "default" or first allowed namespace
+    else {
+      if (allowedNamespaces.has("default")) {
+        return ["default"];
+      } else if (allowedNamespaces.size) {
+        return [Array.from(allowedNamespaces)[0]];
+      }
+    }
+
+    return [];
+  }
+
+  getContextNamespaces(): string[] {
+    let namespaces = this.contextNs.toJS();
+    if (!namespaces.length) {
+      return [...this.allowedNamespaces]; // show all namespaces when nothing selected
+    }
+    return namespaces;
+  }
+
+  /**
+   * @deprecated
+   */
   getContextParams() {
     return {
-      namespaces: this.contextNs.toJS(),
+      namespaces: this.getContextNamespaces(),
     };
   }
 
@@ -59,6 +109,12 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     }
 
     return super.subscribe(apis);
+  }
+
+  async loadAll() {
+    return super.loadAll({
+      namespaces: this.allowedNamespaces,
+    });
   }
 
   protected async loadItems({ isAdmin, namespaces }: KubeObjectStoreLoadingParams) {

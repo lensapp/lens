@@ -110,6 +110,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     ]);
   }
 
+  // FIXME: reload and re-subscribe stores when context namespaces changed
   async componentDidMount() {
     const { store, dependentStores, isClusterScoped } = this.props;
     const stores = [store, ...dependentStores];

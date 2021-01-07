@@ -93,13 +93,20 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  async loadAll() {
+  async loadAll(params: { namespaces?: string[] } = {}) {
     this.isLoading = true;
     let items: T[];
 
     try {
-      const { allowedNamespaces: namespaces, isAdmin } = getHostedCluster();
-      items = await this.loadItems({ isAdmin, namespaces, api: this.api });
+      const { namespaceStore } = await import("./components/+namespaces/namespace.store");
+      const contextNamespaces = params.namespaces || namespaceStore.getContextNamespaces();
+
+      items = await this.loadItems({
+        isAdmin: getHostedCluster().isAdmin,
+        namespaces: contextNamespaces,
+        api: this.api,
+      });
+
       items = this.filterItemsOnLoad(items);
       items = this.sortItems(items);
       this.items.replace(items);
