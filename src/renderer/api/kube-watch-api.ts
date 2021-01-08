@@ -169,8 +169,7 @@ export class KubeWatchApi {
   addListener(store: KubeObjectStore, callback: (evt: IKubeWatchEvent) => void) {
     const listener = (evt: IKubeWatchEvent<KubeJsonApiData>) => {
       if (evt.type === "ERROR") {
-        // console.error(evt.object);
-        return; // fixme: too old resource version (e.g. reproduce: quickly jump btw pages)
+        return; // e.g. evt.object.message == "too old resource version"
       }
 
       const { namespace, resourceVersion } = evt.object.metadata;

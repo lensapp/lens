@@ -9,8 +9,7 @@ export interface ItemObject {
 
 @autobind()
 export abstract class ItemStore<T extends ItemObject = ItemObject> {
-  abstract loadAll(...args: any[]): any;
-  abstract loadAll(): Promise<void>;
+  abstract loadAll(...args: any[]): Promise<any>;
 
   protected defaultSorting = (item: T) => item.getName();
 

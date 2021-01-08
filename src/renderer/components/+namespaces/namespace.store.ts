@@ -1,4 +1,4 @@
-import { action, comparer, observable, reaction, when } from "mobx";
+import { action, comparer, IReactionDisposer, IReactionOptions, observable, reaction, when } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
@@ -32,30 +32,52 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     this.init();
   }
 
+  onContextChange(callback: (contextNamespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
+    return reaction(() => this.contextNs.toJS(), callback, {
+      equals: comparer.identity,
+      ...opts,
+    })
+  }
+
   private async init() {
     await clusterStore.whenLoaded;
     if (!getHostedCluster()) return;
-
     await getHostedCluster().whenReady; // wait for cluster-state from main
-    await this.loadAll(); // auto-load allowed namespaces
     this.isReady = true;
 
     this.setContext(this.initNamespaces);
 
-    return reaction(() => this.contextNs.toJS(), namespaces => {
-      storage.set(namespaces); // save to local-storage
-      namespaceUrlParam.set(namespaces, { replaceHistory: true }); // update url
-    }, {
-      fireImmediately: true,
-      equals: comparer.identity,
-    });
+    const disposers: IReactionDisposer[] = [];
+
+    // save selected namespaces to local-storage and update URL
+    disposers.push(
+      this.onContextChange(namespaces => {
+        storage.set(namespaces);
+        namespaceUrlParam.set(namespaces, { replaceHistory: true });
+      }, {
+        fireImmediately: true,
+        equals: comparer.identity,
+      })
+    );
+
+    // auto-load allowed namespaces
+    disposers.push(
+      reaction(() => this.allowedNamespaces, () => {
+        this.loadAll();
+        this.setContext(this.initNamespaces)
+      }, {
+        fireImmediately: true,
+        equals: comparer.identity,
+      })
+    );
+
+    return disposers;
   }
 
   get allowedNamespaces(): string[] {
     return getHostedCluster().allowedNamespaces;
   }
 
-  // FIXME: page/app reload doesn't restore previously selected namespaces
   get initNamespaces() {
     const allowedNamespaces = new Set(this.allowedNamespaces);
     const lastUsedNamespaces = new Set(storage.get());
@@ -118,6 +140,9 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   protected async loadItems({ isAdmin, namespaces }: KubeObjectStoreLoadingParams) {
+    if (isAdmin) {
+      return this.api.list();
+    }
     if (!isAllowedResource("namespaces")) {
       return namespaces.map(this.getDummyNamespace);
     }

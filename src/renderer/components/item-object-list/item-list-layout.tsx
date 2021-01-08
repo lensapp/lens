@@ -2,10 +2,10 @@ import "./item-list-layout.scss";
 import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
-import { computed, observable, reaction, toJS, when } from "mobx";
+import { computed, IReactionDisposer, observable, reaction, toJS, when } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
-import { TableSortCallback, Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps } from "../table";
+import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
 import { autobind, createStorage, cssNames, IClassName, isReactNode, noop, prevDefault, stopPropagation } from "../../utils";
 import { AddRemoveButtons, AddRemoveButtonsProps } from "../add-remove-buttons";
 import { NoItems } from "../no-items";
@@ -90,6 +90,9 @@ interface ItemListLayoutUserSettings {
 export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   static defaultProps = defaultProps as object;
 
+  private watchDisposers: IReactionDisposer[] = [];
+
+  @observable isLoaded = false;
   @observable isUnmounting = false;
 
   // default user settings (ui show-hide tweaks mostly)
@@ -110,30 +113,49 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     ]);
   }
 
-  // FIXME: reload and re-subscribe stores when context namespaces changed
   async componentDidMount() {
-    const { store, dependentStores, isClusterScoped } = this.props;
-    const stores = [store, ...dependentStores];
-
-    if (!isClusterScoped) stores.push(namespaceStore);
-
-    try {
-      stores.map(store => store.reset());
-      await Promise.all(stores.map(store => store.loadAll()));
-      const subscriptions = stores.map(store => store.subscribe());
-
-      await when(() => this.isUnmounting);
-      subscriptions.forEach(dispose => dispose()); // unsubscribe all
-    } catch (error) {
-      console.log("catched", error);
-    }
+    disposeOnUnmount(this, [
+      namespaceStore.onContextChange(() => this.loadStores(), {
+        fireImmediately: true,
+      })
+    ]);
   }
 
-  componentWillUnmount() {
+  async componentWillUnmount() {
     this.isUnmounting = true;
-    const { store, isSelectable } = this.props;
+    await when(() => this.isLoaded);
+    this.unsubscribeStores();
+  }
 
-    if (isSelectable) store.resetSelection();
+  async loadStores() {
+    const { store, dependentStores, isClusterScoped } = this.props;
+    const stores = new Set([store, ...dependentStores]);
+
+    if (!isClusterScoped) {
+      stores.add(namespaceStore);
+    }
+
+    // reset
+    this.isLoaded = false;
+    this.unsubscribeStores();
+
+    // load
+    for (let store of stores) {
+      if (this.isUnmounting) break;
+      try {
+        store.reset();
+        await store.loadAll();
+        this.watchDisposers.push(store.subscribe());
+      } catch (error) {
+        console.error("loading store error", error);
+      }
+    }
+    this.isLoaded = true;
+  }
+
+  unsubscribeStores() {
+    this.watchDisposers.forEach(dispose => dispose());
+    this.watchDisposers.length = 0;
   }
 
   private filterCallbacks: { [type: string]: ItemsFilter } = {
@@ -300,7 +322,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       return;
     }
 
-    return <PageFiltersList filters={filters} />;
+    return <PageFiltersList filters={filters}/>;
   }
 
   renderNoItems() {
@@ -322,7 +344,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       );
     }
 
-    return <NoItems />;
+    return <NoItems/>;
   }
 
   renderHeaderContent(placeholders: IHeaderPlaceholders): ReactNode {
@@ -366,12 +388,12 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       title: <h5 className="title">{title}</h5>,
       info: this.renderInfo(),
       filters: <>
-        {!isClusterScoped && <NamespaceSelectFilter />}
+        {!isClusterScoped && <NamespaceSelectFilter/>}
         <PageFiltersSelect allowEmpty disableFilters={{
           [FilterType.NAMESPACE]: true, // namespace-select used instead
-        }} />
+        }}/>
       </>,
-      search: <SearchInputUrl />,
+      search: <SearchInputUrl/>,
     };
     let header = this.renderHeaderContent(placeholders);
 
@@ -407,7 +429,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return (
       <div className="items box grow flex column">
         {!isReady && (
-          <Spinner center />
+          <Spinner center/>
         )}
         {isReady && (
           <Table
@@ -433,7 +455,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
                   />
                 )}
                 {renderTableHeader.map((cellProps, index) => <TableCell key={index} {...cellProps} />)}
-                {renderItemMenu && <TableCell className="menu" />}
+                {renderItemMenu && <TableCell className="menu"/>}
               </TableHead>
             )}
             {
