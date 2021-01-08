@@ -99,7 +99,7 @@ export function startUpdateChecking(windowManager: WindowManager, interval = 100
     .on("update-available", async (args: UpdateInfo) => {
       try {
         const releaseDate = moment(args.releaseDate);
-        const body = `Version ${args.version} was release on ${releaseDate.format("dddd, MMMM Do, yyyy")}.`;
+        const body = `Version ${args.version} was released on ${releaseDate.format("dddd, MMMM Do, yyyy")}.`;
         windowManager.mainView.webContents.send(NotificationChannelAdd, {
           title,
           body,

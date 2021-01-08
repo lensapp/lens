@@ -1,6 +1,6 @@
 /*
   Cluster tests are run if there is a pre-existing minikube cluster. Before running cluster tests the TEST_NAMESPACE
-  namespace is removed, if it exists, from the minikube cluster. Resources are created as part of the cluster tests in the 
+  namespace is removed, if it exists, from the minikube cluster. Resources are created as part of the cluster tests in the
   TEST_NAMESPACE namespace. This is done to minimize destructive impact of the cluster tests on an existing minikube
   cluster and vice versa.
 */
@@ -38,7 +38,7 @@ describe("Lens integration tests", () => {
     beforeAll(appStart, 20000)
 
     afterAll(async () => {
-      if (app && app.isRunning()) {
+      if (app?.isRunning()) {
         return util.tearDown(app)
       }
     })
@@ -140,7 +140,7 @@ describe("Lens integration tests", () => {
         await addCluster()
       }
     }
-  
+
     describe("cluster pages", () => {
 
       beforeAll(appStartAddCluster, 40000)
@@ -150,7 +150,7 @@ describe("Lens integration tests", () => {
           return util.tearDown(app)
         }
       })
-  
+
       const tests : {
         drawer?: string
         drawerId?: string
@@ -393,7 +393,7 @@ describe("Lens integration tests", () => {
             await app.client.click(`.sidebar-nav #${drawerId} span.link-text`)
             await app.client.waitUntilTextExists(`a[href="/${pages[0].href}"]`, pages[0].name)
           })
-        } 
+        }
         pages.forEach(({name, href, expectedSelector, expectedText}) => {
           it(`shows ${drawer}->${name} page`, async () => {
             expect(clusterAdded).toBe(true)
@@ -409,7 +409,7 @@ describe("Lens integration tests", () => {
             await expect(app.client.waitUntilTextExists(`a[href="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow()
           })
         }
-      }) 
+      })
     })
 
     describe("cluster operations", () => {
@@ -420,7 +420,7 @@ describe("Lens integration tests", () => {
           return util.tearDown(app)
         }
       })
-  
+
       it('shows default namespace', async () => {
         expect(clusterAdded).toBe(true)
         await app.client.click('a[href="/namespaces"]')
@@ -468,6 +468,6 @@ describe("Lens integration tests", () => {
         await app.client.click(".name=nginx-create-pod-test")
         await app.client.waitUntilTextExists("div.drawer-title-text", "Pod: nginx-create-pod-test")
       })
-    })    
-  })    
+    })
+  })
 })
