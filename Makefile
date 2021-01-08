@@ -105,34 +105,18 @@ docs:
 
 .PHONY: clean-extensions
 clean-extensions:
-ifeq "$(DETECTED_OS)" "Windows"
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), if exist $(dir)\dist del /s /q $(dir)\dist)
-	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), if exist $(dir)\node_modules del /s /q $(dir)\node_modules)
-else
 	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/dist)
 	$(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), rm -rf $(dir)/node_modules)
-endif
 
 .PHONY: clean-npm
 clean-npm:
-ifeq "$(DETECTED_OS)" "Windows"
-	if exist src\extensions\npm\extensions\dist del /s /q src\extensions\npm\extensions\dist
-	if exist src\extensions\npm\extensions\__mocks__ del /s /q src\extensions\npm\extensions\__mocks__
-	if exist src\extensions\npm\extensions\node_modules del /s /q src\extensions\npm\extensions\node_modules
-else
 	rm -rf src/extensions/npm/extensions/dist
 	rm -rf src/extensions/npm/extensions/__mocks__
 	rm -rf src/extensions/npm/extensions/node_modules
-endif
 
 .PHONY: clean
 clean: clean-npm clean-extensions
-ifeq "$(DETECTED_OS)" "Windows"
-	if exist binaries\client del /s /q binaries\client
-	if exist dist del /s /q dist\*.*
-	if exist static\build del /s /q static\build\*.*
-else
 	rm -rf binaries/client
 	rm -rf dist/*
 	rm -rf static/build/*
-endif
+	rm -rf node_modules/
