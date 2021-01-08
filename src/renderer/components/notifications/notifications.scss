@@ -25,10 +25,8 @@
       margin-bottom: $margin * 2;
     }
 
-    > .button {
-      &:not(:last-of-type) {
+    .ButtonPannel button:not(:last-of-type) {
         margin-right: $margin;
-      }
     }
 
     > .message {

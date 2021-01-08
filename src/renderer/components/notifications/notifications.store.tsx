@@ -45,7 +45,7 @@ function RenderButtons({ id, buttons }: { id: IpcChannel, buttons?: MainNotifica
   return (
     <>
       <br />
-      <div className="flex row align-right box grow">
+      <div className="ButtonPannel flex row align-right box grow">
         {buttons.map(({ backchannel, ...props}) => (
           <Button {...props} onClick={() => {
             ipcRenderer.send(backchannel);

@@ -2,7 +2,7 @@ import { autoUpdater, UpdateInfo } from "electron-updater";
 import logger from "./logger";
 import { IpcChannel, NotificationChannelAdd, NotificationChannelPrefix } from "../common/ipc";
 import { ipcMain } from "electron";
-import { isDevelopment } from "../common/vars";
+import { isDevelopment, isTestEnv } from "../common/vars";
 import { SemVer } from "semver";
 import moment from "moment";
 import { WindowManager } from "./window-manager"
@@ -33,6 +33,7 @@ async function autoUpdateCheck(windowManager: WindowManager): Promise<void> {
 
     ipcMain
       .on(yesNowChannel, async () => {
+        logger.info("[UPDATE CHECKER]: User chose to update immediately");
         cleanupChannels();
 
         await autoUpdater.downloadUpdate();
@@ -41,6 +42,7 @@ async function autoUpdateCheck(windowManager: WindowManager): Promise<void> {
         resolve();
       })
       .on(yesLaterChannel, async () => {
+        logger.info("[UPDATE CHECKER]: User chose to update on quit");
         cleanupChannels();
 
         await autoUpdater.downloadUpdate();
@@ -49,34 +51,33 @@ async function autoUpdateCheck(windowManager: WindowManager): Promise<void> {
         resolve();
       })
       .on(noChannel, () => {
+        logger.info("[UPDATE CHECKER]: User chose not to update");
         cleanupChannels();
         resolve();
       });
 
     windowManager.mainView.webContents.send(NotificationChannelAdd, {
-      args: [{
-        title,
-        body,
-        status: "info",
-        buttons: [
-          {
-            label: "Yes, now",
-            backchannel: yesNowChannel,
-            action: true,
-          },
-          {
-            label: "Yes, on quit",
-            backchannel: yesLaterChannel,
-            action: true,
-          },
-          {
-            label: "No",
-            backchannel: noChannel,
-            secondary: true
-          }
-        ],
-        closeChannel: noChannel,
-      }]
+      title,
+      body,
+      status: "info",
+      buttons: [
+        {
+          label: "Yes, now",
+          backchannel: yesNowChannel,
+          action: true,
+        },
+        {
+          label: "Yes, on quit",
+          backchannel: yesLaterChannel,
+          action: true,
+        },
+        {
+          label: "No",
+          backchannel: noChannel,
+          secondary: true
+        }
+      ],
+      closeChannel: noChannel,
     });
   });
 }
@@ -86,24 +87,24 @@ async function autoUpdateCheck(windowManager: WindowManager): Promise<void> {
  * @param interval milliseconds between interval to check on, defaults to 24h
  */
 export function startUpdateChecking(windowManager: WindowManager, interval = 1000 * 60 * 60 * 24): void {
-  if (isDevelopment) {
+  if (isDevelopment || isTestEnv) {
     return;
   }
 
   autoUpdater.logger = logger;
+  autoUpdater.autoDownload = false;
+  autoUpdater.autoInstallOnAppQuit = false;
 
   autoUpdater
     .on("update-available", async (args: UpdateInfo) => {
       try {
         const releaseDate = moment(args.releaseDate);
-        const body = `Version ${args.version} was release on ${releaseDate.format("dddd, mmmm dS, yyyy")}.`;
+        const body = `Version ${args.version} was release on ${releaseDate.format("dddd, MMMM Do, yyyy")}.`;
         windowManager.mainView.webContents.send(NotificationChannelAdd, {
-          args: [{
-            title,
-            body,
-            status: "info",
-            timeout: 5000,
-          }]
+          title,
+          body,
+          status: "info",
+          timeout: 5000,
         });
 
         await autoUpdateCheck(windowManager);
@@ -117,12 +118,10 @@ export function startUpdateChecking(windowManager: WindowManager, interval = 100
         const stream = version.prerelease === null ? "stable" : "prerelease";
         const body = `Lens is running the latest ${stream} version.`;
         windowManager.mainView.webContents.send(NotificationChannelAdd, {
-          args: [{
-            title,
-            body,
-            status: "info",
-            timeout: 5000,
-          }]
+          title,
+          body,
+          status: "info",
+          timeout: 5000,
         })
       } catch (error) {
         logger.error("[UPDATE CHECKER]: notification failed", { error: String(error) })
