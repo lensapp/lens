@@ -67,16 +67,20 @@ export class KubeWatchApi {
   // https://github.com/lensapp/lens/issues/1898
   protected async getQuery() {
     const { namespaceStore } = await import("../components/+namespaces/namespace.store");
+
     await namespaceStore.whenReady;
     const { isAdmin } = getHostedCluster();
+
     return {
       api: this.activeApis.map(api => {
         if (isAdmin && !api.isNamespaced) {
           return api.getWatchUrl();
         }
+
         if (api.isNamespaced) {
           return namespaceStore.getContextNamespaces().map(namespace => api.getWatchUrl(namespace));
         }
+
         return [];
       }).flat()
     };

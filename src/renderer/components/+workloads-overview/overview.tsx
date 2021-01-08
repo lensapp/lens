@@ -33,7 +33,6 @@ export class WorkloadsOverview extends React.Component<Props> {
       isAllowedResource("deployments") && deploymentStore,
       isAllowedResource("daemonsets") && daemonSetStore,
       isAllowedResource("statefulsets") && statefulSetStore,
-      isAllowedResource("statefulsets") && statefulSetStore,
       isAllowedResource("replicasets") && replicaSetStore,
       isAllowedResource("jobs") && jobStore,
       isAllowedResource("cronjobs") && cronJobStore,
@@ -46,8 +45,10 @@ export class WorkloadsOverview extends React.Component<Props> {
 
     const loadStores = async () => {
       this.isLoading = true;
+
       for (const store of stores) {
         if (this.isUnmounting) break;
+
         try {
           store.reset();
           await store.loadAll();
@@ -58,7 +59,7 @@ export class WorkloadsOverview extends React.Component<Props> {
         }
       }
       this.isLoading = false;
-    }
+    };
 
     namespaceStore.onContextChange(loadStores, {
       fireImmediately: true,
@@ -73,23 +74,11 @@ export class WorkloadsOverview extends React.Component<Props> {
     this.isUnmounting = true;
   }
 
-  get contents() {
-    return (
-      <>
-        <OverviewStatuses/>
-        {isAllowedResource("events") && <Events
-          compact
-          hideFilters
-          className="box grow"
-        />}
-      </>
-    );
-  }
-
   render() {
     return (
       <div className="WorkloadsOverview flex column gaps">
-        {this.contents}
+        <OverviewStatuses/>
+        {isAllowedResource("events") && <Events compact hideFilters className="box grow"/>}
       </div>
     );
   }

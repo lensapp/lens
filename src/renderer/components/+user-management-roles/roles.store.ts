@@ -29,6 +29,7 @@ export class RolesStore extends KubeObjectStore<Role> {
       super.loadItems({ isAdmin, namespaces, api: clusterRoleApi }),
       super.loadItems({ isAdmin, namespaces, api: roleApi }),
     ]);
+
     return items.flat();
   }
 

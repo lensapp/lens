@@ -1,4 +1,4 @@
-import { action, comparer, IReactionDisposer, IReactionOptions, observable, reaction, when } from "mobx";
+import { action, comparer, IReactionDisposer, IReactionOptions, observable, reaction, toJS, when } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
@@ -36,7 +36,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return reaction(() => this.contextNs.toJS(), callback, {
       equals: comparer.identity,
       ...opts,
-    })
+    });
   }
 
   private async init() {
@@ -59,13 +59,10 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
         equals: comparer.identity,
       })
     );
-
+    
     // auto-load allowed namespaces
     disposers.push(
-      reaction(() => this.allowedNamespaces, () => {
-        this.loadAll();
-        this.setContext(this.initNamespaces)
-      }, {
+      reaction(() => this.allowedNamespaces, () => this.loadAll(), {
         fireImmediately: true,
         equals: comparer.identity,
       })
@@ -75,7 +72,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   get allowedNamespaces(): string[] {
-    return getHostedCluster().allowedNamespaces;
+    return toJS(getHostedCluster().allowedNamespaces);
   }
 
   get initNamespaces() {
@@ -106,10 +103,12 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   getContextNamespaces(): string[] {
-    let namespaces = this.contextNs.toJS();
+    const namespaces = this.contextNs.toJS();
+
     if (!namespaces.length) {
       return [...this.allowedNamespaces]; // show all namespaces when nothing selected
     }
+
     return namespaces;
   }
 
@@ -143,9 +142,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     if (isAdmin) {
       return this.api.list();
     }
+
     if (!isAllowedResource("namespaces")) {
       return namespaces.map(this.getDummyNamespace);
     }
+
     return Promise.all(namespaces.map(name => this.api.get({ name })));
   }
 

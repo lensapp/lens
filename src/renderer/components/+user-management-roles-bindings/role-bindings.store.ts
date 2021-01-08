@@ -31,6 +31,7 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
       super.loadItems({ isAdmin, namespaces, api: clusterRoleBindingApi }),
       super.loadItems({ isAdmin, namespaces, api: roleBindingApi }),
     ]);
+
     return items.flat();
   }
 

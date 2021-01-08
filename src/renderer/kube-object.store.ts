@@ -80,6 +80,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   protected async loadItems({ isAdmin, namespaces, api }: KubeObjectStoreLoadingParams): Promise<T[]> {
     if (!api.isNamespaced) {
       if (isAdmin) return api.list({}, this.query);
+
       return [];
     }
 

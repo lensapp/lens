@@ -95,9 +95,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   @observable isLoaded = false;
   @observable isUnmounting = false;
 
-  // default user settings (ui show-hide tweaks mostly)
   @observable userSettings: ItemListLayoutUserSettings = {
-    showAppliedFilters: false,
+    showAppliedFilters: true,
   };
 
   constructor(props: ItemListLayoutProps) {
@@ -140,8 +139,9 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     this.unsubscribeStores();
 
     // load
-    for (let store of stores) {
+    for (const store of stores) {
       if (this.isUnmounting) break;
+
       try {
         store.reset();
         await store.loadAll();
