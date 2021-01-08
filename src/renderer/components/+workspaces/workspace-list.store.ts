@@ -8,8 +8,20 @@ export class WorkspaceItem {
         return this.workspace.name;
     }
 
+    getDescription() {
+        return this.workspace.description;
+    }
+
     getId() {
         return this.workspace.id;
+    }
+
+    getOwnerRef() {
+        return this.workspace.ownerRef;
+    }
+
+    getEnabled() {
+        return this.workspace.enabled ? "True" : "False";
     }
 }
 
