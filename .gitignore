@@ -17,3 +17,4 @@ types/extension-renderer-api.d.ts
 extensions/*/dist
 docs/extensions/api
 site/
+.vscode/
