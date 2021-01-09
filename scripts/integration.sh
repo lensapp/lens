@@ -1,12 +1,12 @@
 case $1 in
   mac)
-    find ~/Library/Logs/Lens -type file -name *.log -delete
+    find ~/Library/Logs/Lens -type f -name *.log -delete
   ;;
   linux)
-    find ~/.config/Lens -type file -name *.log -delete
+    find ~/.config/Lens -type f -name *.log -delete
   ;;
   win)
-    find %APPDATA%/Lens -type file -name *.log -delete
+    find %APPDATA%/Lens -type f -name *.log -delete
   ;;
 esac
 
@@ -16,13 +16,13 @@ DEBUG=true yarn integration-runner
 if [ $? -ne 0 ]; then
   case $1 in
     mac)
-      find ~/Library/Logs/Lens -type file -name *.log -exec cat {} \;
+      find ~/Library/Logs/Lens -type f -name *.log -exec cat {} \;
     ;;
     linux)
-      find ~/.config/Lens -type file -name *.log -exec cat {} \;
+      find ~/.config/Lens -type f -name *.log -exec cat {} \;
     ;;
     win)
-      find %APPDATA%/Lens -type file -name *.log -exec cat {} \;
+      find %APPDATA%/Lens -type f -name *.log -exec cat {} \;
     ;;
   esac
 fi
