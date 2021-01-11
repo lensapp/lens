@@ -78,10 +78,15 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
       result.forEach(res => {
         if (!res.values || !res.values.length) return;
 
-        while (res.values.length < frames) {
-          const timestamp = moment.unix(res.values[0][0]).subtract(1, "minute").unix();
+        let now = moment().unix();
 
-          res.values.unshift([timestamp, "0"]);
+        while (res.values.length < frames) {
+          const timestamp = moment.unix(now).subtract(1, "minute").unix();
+
+          if (!res.values.find((value) => value[0] === timestamp)) {
+            res.values.unshift([timestamp, "0"]);
+          }
+          now = timestamp;
         }
       });
     }
