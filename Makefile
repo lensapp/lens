@@ -31,18 +31,6 @@ lint:
 test: download-bins
 	yarn test
 
-integration-linux:
-	yarn build:linux
-	yarn integration
-
-integration-mac:
-	yarn build:mac
-	yarn integration
-
-integration-win:
-	yarn build:win
-	yarn integration
-
 test-app:
 	yarn test
 

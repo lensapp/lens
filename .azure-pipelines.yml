@@ -37,7 +37,7 @@ jobs:
         displayName: Cache Yarn packages
       - script: make install-deps
         displayName: Install dependencies
-      - script: make integration-win
+      - script: yarn integration:win
         displayName: Run integration tests
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
@@ -76,7 +76,7 @@ jobs:
         displayName: Install dependencies
       - script: make test
         displayName: Run tests
-      - script: make integration-mac
+      - script: yarn integration:mac
         displayName: Run integration tests
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
@@ -126,13 +126,13 @@ jobs:
       - bash: |
           sudo apt-get update
           sudo apt-get install libgconf-2-4 conntrack -y
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          curl -LO https://storage.googleapis.com/minikube/releases/v1.15.1/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
           sudo minikube start --driver=none
           # Although the kube and minikube config files are in placed $HOME they are owned by root
           sudo chown -R $USER $HOME/.kube $HOME/.minikube
         displayName: Install integration test dependencies
-      - script: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
+      - script: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' yarn integration:linux
         displayName: Run integration tests
       - bash: |
           sudo chown root:root /

@@ -5,6 +5,9 @@
 import { ipcMain, ipcRenderer, WebContents, webContents } from "electron"
 import logger from "../main/logger";
 
+export const NotificationChannelPrefix: IpcChannel = "notications:";
+export const NotificationChannelAdd: IpcChannel = `${NotificationChannelPrefix}add`;
+
 export type IpcChannel = string;
 
 export interface IpcChannelOptions {
@@ -50,7 +53,7 @@ export function createIpcChannel({ autoBind = true, once, timeout = 0, handle, c
   return ipcChannel;
 }
 
-export interface IpcBroadcastParams<A extends any[] = any> {
+export interface IpcBroadcastParams<A extends any[] = any[]> {
   channel: IpcChannel
   webContentId?: number; // send to single webContents view
   frameId?: number; // send to inner frame of webContents

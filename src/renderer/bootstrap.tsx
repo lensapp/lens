@@ -9,6 +9,7 @@ import { i18nStore } from "./i18n";
 import { themeStore } from "./theme.store";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
+import { notificationsStore } from "./components/notifications/notifications.store";
 
 type AppComponent = React.ComponentType & {
   init?(): Promise<void>;

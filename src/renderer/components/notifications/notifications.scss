@@ -25,6 +25,10 @@
       margin-bottom: $margin * 2;
     }
 
+    .ButtonPannel button:not(:last-of-type) {
+        margin-right: $margin;
+    }
+
     > .message {
       white-space: pre-line;
       padding-left: $padding;

@@ -12,6 +12,7 @@ import { ErrorBoundary } from "./components/error-boundary";
 import { WhatsNew, whatsNewRoute } from "./components/+whats-new";
 import { Notifications } from "./components/notifications";
 import { ConfirmDialog } from "./components/confirm-dialog";
+import { notificationsStore } from "./components/notifications/notifications.store";
 
 @observer
 export class LensApp extends React.Component {
@@ -22,6 +23,8 @@ export class LensApp extends React.Component {
     window.addEventListener("online", () => {
       ipcRenderer.send("network:online")
     })
+
+    notificationsStore.registerIpcListener();
   }
 
   render() {

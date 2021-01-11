@@ -29,12 +29,8 @@ export class ThemeStore {
     { id: "kontena-light", type: ThemeType.LIGHT },
   ];
 
-  @computed get activeThemeId() {
-    return userStore.preferences.colorTheme;
-  }
-
   @computed get activeTheme(): Theme {
-    const activeTheme = this.themes.find(theme => theme.id === this.activeThemeId) || this.themes[0];
+    const activeTheme = this.themes.find(theme => theme.id === userStore.preferences.colorTheme) || this.themes[0];
     return {
       colors: {},
       ...activeTheme,
@@ -43,9 +39,9 @@ export class ThemeStore {
 
   constructor() {
     // auto-apply active theme
-    reaction(() => this.activeThemeId, async themeId => {
+    reaction(() => this.activeTheme, async ({ id }) => {
       try {
-        await this.loadTheme(themeId);
+        await this.loadTheme(id);
         this.applyTheme();
       } catch (err) {
         userStore.resetTheme();
