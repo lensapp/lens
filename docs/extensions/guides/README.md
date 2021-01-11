@@ -21,12 +21,13 @@ Each guide or code sample includes the following:
 | [Components](components.md) | |
 | [KubeObjectListLayout](kube-object-list-layout.md) | |
 | [Working with mobx](working-with-mobx.md) | |
+| [Protocol Handlers](protocol-handlers.md) | |
 
 ## Samples
 
 | Sample | APIs |
 | ----- | ----- |
-[helloworld](https://github.com/lensapp/lens-extension-samples/tree/master/helloworld-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
+[hello-world](https://github.com/lensapp/lens-extension-samples/tree/master/helloworld-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
 [minikube](https://github.com/lensapp/lens-extension-samples/tree/master/minikube-sample) | LensMainExtension <br> Store.clusterStore <br> Store.workspaceStore |
 [styling-css-modules-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-css-modules-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |
 [styling-emotion-sample](https://github.com/lensapp/lens-extension-samples/tree/master/styling-emotion-sample) | LensMainExtension <br> LensRendererExtension <br> Component.Icon <br> Component.IconProps |

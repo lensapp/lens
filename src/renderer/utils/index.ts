@@ -1,7 +1,5 @@
 // Common usage utils & helpers
 
-export const isElectron = !!navigator.userAgent.match(/Electron/);
-
 export * from "../../common/utils";
 
 export * from "./cssVar";

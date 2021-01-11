@@ -27,6 +27,9 @@ import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
 import { bindBroadcastHandlers } from "../common/ipc";
+import { LensProtocolRouterMain } from "./protocol-handler";
+import URLParse from "url-parse";
+import { RoutingError } from "../common/protocol-handler";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -35,9 +38,14 @@ let clusterManager: ClusterManager;
 let windowManager: WindowManager;
 
 app.setName(appName);
+app.setAsDefaultProtocolClient("lens");
 
 if (!process.env.CICD) {
   app.setPath("userData", workingDir);
+}
+
+if (process.env.LENS_DISABLE_GPU) {
+  app.disableHardwareAcceleration();
 }
 
 mangleProxyEnv();
@@ -46,117 +54,125 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
   process.env.HTTPS_PROXY = app.commandLine.getSwitchValue("proxy-server");
 }
 
-const instanceLock = app.requestSingleInstanceLock();
-
-if (!instanceLock) {
+if (!app.requestSingleInstanceLock()) {
   app.exit();
 }
 
-app.on("second-instance", () => {
-  windowManager?.ensureMainWindow();
-});
+app
+  .on("second-instance", () => {
+    windowManager?.ensureMainWindow();
+  })
+  .on("ready", async () => {
+    logger.info(`🚀 Starting Lens from "${workingDir}"`);
+    await shellSync();
 
-if (process.env.LENS_DISABLE_GPU) {
-  app.disableHardwareAcceleration();
-}
+    bindBroadcastHandlers();
 
-app.on("ready", async () => {
-  logger.info(`🚀 Starting Lens from "${workingDir}"`);
-  await shellSync();
+    powerMonitor.on("shutdown", () => {
+      app.exit();
+    });
 
-  bindBroadcastHandlers();
+    const updater = new AppUpdater();
 
-  powerMonitor.on("shutdown", () => {
-    app.exit();
-  });
+    updater.start();
 
-  const updater = new AppUpdater();
+    registerFileProtocol("static", __static);
 
-  updater.start();
+    await installDeveloperTools();
 
-  registerFileProtocol("static", __static);
+    // preload
+    await Promise.all([
+      userStore.load(),
+      clusterStore.load(),
+      workspaceStore.load(),
+      extensionsStore.load(),
+      filesystemProvisionerStore.load(),
+    ]);
 
-  await installDeveloperTools();
+    // find free port
+    try {
+      proxyPort = await getFreePort();
+    } catch (error) {
+      logger.error(error);
+      dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy");
+      app.exit();
+    }
 
-  // preload
-  await Promise.all([
-    userStore.load(),
-    clusterStore.load(),
-    workspaceStore.load(),
-    extensionsStore.load(),
-    filesystemProvisionerStore.load(),
-  ]);
+    // create cluster manager
+    clusterManager = ClusterManager.getInstance<ClusterManager>(proxyPort);
 
-  // find free port
-  try {
-    proxyPort = await getFreePort();
-  } catch (error) {
-    logger.error(error);
-    dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy");
-    app.exit();
-  }
-
-  // create cluster manager
-  clusterManager = ClusterManager.getInstance<ClusterManager>(proxyPort);
-
-  // run proxy
-  try {
+    // run proxy
+    try {
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    proxyServer = LensProxy.create(proxyPort, clusterManager);
-  } catch (error) {
-    logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error?.message}`);
-    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error?.message || "unknown error"}`);
-    app.exit();
-  }
+      proxyServer = LensProxy.create(proxyPort, clusterManager);
+    } catch (error) {
+      logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error?.message}`);
+      dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error?.message || "unknown error"}`);
+      app.exit();
+    }
 
-  extensionLoader.init();
-  extensionDiscovery.init();
-  windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
+    extensionLoader.init();
+    extensionDiscovery.init();
+    windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
 
-  // call after windowManager to see splash earlier
-  try {
-    const extensions = await extensionDiscovery.load();
+    // call after windowManager to see splash earlier
+    try {
+      const extensions = await extensionDiscovery.load();
 
-    // Start watching after bundled extensions are loaded
-    extensionDiscovery.watchExtensions();
+      // Start watching after bundled extensions are loaded
+      extensionDiscovery.watchExtensions();
 
-    // Subscribe to extensions that are copied or deleted to/from the extensions folder
-    extensionDiscovery.events.on("add", (extension: InstalledExtension) => {
-      extensionLoader.addExtension(extension);
-    });
-    extensionDiscovery.events.on("remove", (lensExtensionId: LensExtensionId) => {
-      extensionLoader.removeExtension(lensExtensionId);
-    });
+      // Subscribe to extensions that are copied or deleted to/from the extensions folder
+      extensionDiscovery.events.on("add", (extension: InstalledExtension) => {
+        extensionLoader.addExtension(extension);
+      });
+      extensionDiscovery.events.on("remove", (lensExtensionId: LensExtensionId) => {
+        extensionLoader.removeExtension(lensExtensionId);
+      });
 
-    extensionLoader.initExtensions(extensions);
-  } catch (error) {
-    dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
-    console.error(error);
-    console.trace();
-  }
+      extensionLoader.initExtensions(extensions);
+    } catch (error) {
+      dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
+      console.error(error);
+      console.trace();
+    }
 
-  setTimeout(() => {
-    appEventBus.emit({ name: "service", action: "start" });
-  }, 1000);
-});
+    setTimeout(() => {
+      appEventBus.emit({ name: "service", action: "start" });
+    }, 1000);
+  })
+  .on("activate", (event, hasVisibleWindows) => {
+    logger.info("APP:ACTIVATE", { hasVisibleWindows });
 
-app.on("activate", (event, hasVisibleWindows) => {
-  logger.info("APP:ACTIVATE", { hasVisibleWindows });
+    if (!hasVisibleWindows) {
+      windowManager?.initMainWindow(false);
+    }
+  })
+  .on("will-quit", (event) => {
+  // Quit app on Cmd+Q (MacOS)
+    logger.info("APP:QUIT");
+    appEventBus.emit({name: "app", action: "close"});
+    event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
+    clusterManager?.stop(); // close cluster connections
 
-  if (!hasVisibleWindows) {
-    windowManager?.initMainWindow(false);
-  }
-});
+    return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
+  })
+  .on("open-url", async (event, rawUrl) => {
+    // protocol handler for macOS
+    event.preventDefault();
 
-// Quit app on Cmd+Q (MacOS)
-app.on("will-quit", (event) => {
-  logger.info("APP:QUIT");
-  appEventBus.emit({name: "app", action: "close"});
-  event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
-  clusterManager?.stop(); // close cluster connections
+    try {
+      const url = new URLParse(rawUrl, true);
 
-  return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
-});
+      await LensProtocolRouterMain.getInstance<LensProtocolRouterMain>().route(url);
+    } catch (error) {
+      if (error instanceof RoutingError) {
+        logger.error(`${LensProtocolRouterMain.LoggingPrefix}: ${error}`, { url: error.url });
+      } else {
+        logger.error(`${LensProtocolRouterMain.LoggingPrefix}: ${error}`, { rawUrl });
+      }
+    }
+  });
 
 // Extensions-api runtime exports
 export const LensExtensionsApi = {

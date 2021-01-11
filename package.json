@@ -25,7 +25,7 @@
     "build:linux": "yarn run compile && electron-builder --linux --dir -c.productName=Lens",
     "build:mac": "yarn run compile && electron-builder --mac --dir -c.productName=Lens",
     "build:win": "yarn run compile && electron-builder --win --dir -c.productName=Lens",
-    "test": "jest --env=jsdom src $@",
+    "test": "scripts/test.sh",
     "integration": "jest --runInBand integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
@@ -160,7 +160,7 @@
     "nsis": {
       "include": "build/installer.nsh",
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true	  
+      "allowToChangeInstallationDirectory": true
     },
     "publish": [
       {
@@ -212,8 +212,10 @@
     "mobx-observable-history": "^1.0.3",
     "mobx-react": "^6.2.2",
     "mock-fs": "^4.12.0",
+    "moment": "^2.26.0",
     "node-pty": "^0.9.0",
     "npm": "^6.14.8",
+    "open": "^7.3.1",
     "openid-client": "^3.15.2",
     "p-limit": "^3.1.0",
     "path-to-regexp": "^6.1.0",
@@ -230,6 +232,7 @@
     "tar": "^6.0.5",
     "tcp-port-used": "^1.0.1",
     "tempy": "^0.5.0",
+    "url-parse": "^1.4.7",
     "uuid": "^8.3.2",
     "win-ca": "^3.2.0",
     "winston": "^3.2.1",
@@ -285,6 +288,7 @@
     "@types/tempy": "^0.3.0",
     "@types/terser-webpack-plugin": "^3.0.0",
     "@types/universal-analytics": "^0.4.4",
+    "@types/url-parse": "^1.4.3",
     "@types/uuid": "^8.3.0",
     "@types/webdriverio": "^4.13.0",
     "@types/webpack": "^4.41.17",
@@ -321,7 +325,6 @@
     "jest-mock-extended": "^1.0.10",
     "make-plural": "^6.2.2",
     "mini-css-extract-plugin": "^0.9.0",
-    "moment": "^2.26.0",
     "node-loader": "^0.6.0",
     "node-sass": "^4.14.1",
     "nodemon": "^2.0.4",
