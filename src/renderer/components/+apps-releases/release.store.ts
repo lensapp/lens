@@ -60,12 +60,11 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   @action
   async loadAll() {
     this.isLoading = true;
-    let items: HelmRelease[];
 
     try {
-      items = await this.loadItems(namespaceStore.getContextNamespaces());
-      items = this.sortItems(items);
-      this.items.replace(items);
+      const items = await this.loadItems(namespaceStore.getContextNamespaces());
+
+      this.items.replace(this.sortItems(items));
       this.isLoaded = true;
     } catch (error) {
       console.error(`Loading Helm Chart releases has failed: ${error}`);

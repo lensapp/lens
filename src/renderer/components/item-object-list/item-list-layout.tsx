@@ -2,7 +2,7 @@ import "./item-list-layout.scss";
 import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
-import { computed, IReactionDisposer, observable, reaction, toJS, when } from "mobx";
+import { computed, IReactionDisposer, observable, reaction, toJS } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
@@ -92,7 +92,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   private watchDisposers: IReactionDisposer[] = [];
 
-  @observable isLoaded = false;
   @observable isUnmounting = false;
 
   @observable userSettings: ItemListLayoutUserSettings = {
@@ -122,7 +121,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   async componentWillUnmount() {
     this.isUnmounting = true;
-    await when(() => this.isLoaded);
     this.unsubscribeStores();
   }
 
@@ -135,12 +133,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     }
 
     // reset
-    this.isLoaded = false;
     this.unsubscribeStores();
 
     // load
     for (const store of stores) {
-      if (this.isUnmounting) break;
+      if (this.isUnmounting) {
+        this.unsubscribeStores();
+        break;
+      }
 
       try {
         store.reset();
@@ -150,7 +150,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
         console.error("loading store error", error);
       }
     }
-    this.isLoaded = true;
   }
 
   unsubscribeStores() {

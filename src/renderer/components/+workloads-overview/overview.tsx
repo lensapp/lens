@@ -39,9 +39,7 @@ export class WorkloadsOverview extends React.Component<Props> {
       isAllowedResource("events") && eventStore,
     ].filter(Boolean);
 
-    const unsubscribeMap = new Map<KubeObjectStore, Function>(
-      stores.map(store => [store, Function])
-    );
+    const unsubscribeMap = new Map<KubeObjectStore, () => void>();
 
     const loadStores = async () => {
       this.isLoading = true;
@@ -52,7 +50,7 @@ export class WorkloadsOverview extends React.Component<Props> {
         try {
           store.reset();
           await store.loadAll();
-          unsubscribeMap.get(store)(); // unsubscribe previous watcher
+          unsubscribeMap.get(store)?.(); // unsubscribe previous watcher
           unsubscribeMap.set(store, store.subscribe());
         } catch (error) {
           console.error("loading store error", error);

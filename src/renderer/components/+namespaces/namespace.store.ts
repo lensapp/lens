@@ -18,6 +18,19 @@ export const namespaceUrlParam = createPageParam<string[]>({
   }
 });
 
+export function getDummyNamespace(name: string) {
+  return new Namespace({
+    kind: Namespace.kind,
+    apiVersion: "v1",
+    metadata: {
+      name,
+      uid: "",
+      resourceVersion: "",
+      selfLink: `/api/v1/namespaces/${name}`
+    }
+  });
+}
+
 @autobind()
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
@@ -59,7 +72,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
         equals: comparer.identity,
       })
     );
-    
+
     // auto-load allowed namespaces
     disposers.push(
       reaction(() => this.allowedNamespaces, () => this.loadAll(), {
@@ -112,15 +125,6 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return namespaces;
   }
 
-  /**
-   * @deprecated
-   */
-  getContextParams() {
-    return {
-      namespaces: this.getContextNamespaces(),
-    };
-  }
-
   subscribe(apis = [this.api]) {
     const { accessibleNamespaces } = getHostedCluster();
 
@@ -144,23 +148,10 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     }
 
     if (!isAllowedResource("namespaces")) {
-      return namespaces.map(this.getDummyNamespace);
+      return namespaces.map(getDummyNamespace);
     }
 
     return Promise.all(namespaces.map(name => this.api.get({ name })));
-  }
-
-  protected getDummyNamespace(name: string) {
-    return new Namespace({
-      kind: "Namespace",
-      apiVersion: "v1",
-      metadata: {
-        name,
-        uid: "",
-        resourceVersion: "",
-        selfLink: `/api/v1/namespaces/${name}`
-      }
-    });
   }
 
   @action
