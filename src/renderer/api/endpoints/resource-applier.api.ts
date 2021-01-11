@@ -18,7 +18,7 @@ export const resourceApplierApi = {
       .post<KubeJsonApiData[]>("/stack", { data: resource })
       .then(data => {
         const items = data.map(obj => {
-          const api = apiManager.getApi(obj.metadata.selfLink);
+          const api = apiManager.getApiByKind(obj.kind, obj.apiVersion);
 
           if (api) {
             return new api.objectConstructor(obj);
