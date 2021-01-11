@@ -126,7 +126,7 @@ jobs:
       - bash: |
           sudo apt-get update
           sudo apt-get install libgconf-2-4 conntrack -y
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          curl -LO https://storage.googleapis.com/minikube/releases/v1.15.1/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
           sudo minikube start --driver=none
           # Although the kube and minikube config files are in placed $HOME they are owned by root

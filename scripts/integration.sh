@@ -3,10 +3,10 @@ case $1 in
     find ~/Library/Logs/Lens -type f -name *.log -delete
   ;;
   linux)
-    find ~/.config/Lens -type f -name *.log -delete
+    find ~/.config/Logs/Lens -type f -name *.log -delete
   ;;
   win)
-    find %APPDATA%/Lens -type f -name *.log -delete
+    find %APPDATA%/Logs/Lens -type f -name *.log -delete
   ;;
 esac
 
@@ -19,10 +19,10 @@ if [ $? -ne 0 ]; then
       find ~/Library/Logs/Lens -type f -name *.log -exec cat >&2 {} \;
     ;;
     linux)
-      find ~/.config/Lens -type f -name *.log -exec cat >&2 {} \;
+      find ~/.config/Logs/Lens -type f -name *.log -exec cat >&2 {} \;
     ;;
     win)
-      find %APPDATA%/Lens -type f -name *.log -exec cat >&2 {} \;
+      find %APPDATA%/Logs/Lens -type f -name *.log -exec cat >&2 {} \;
     ;;
   esac
 
