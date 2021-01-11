@@ -10,7 +10,6 @@ import path from "path";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
 import { ClusterManager } from "./cluster-manager";
-import { AppUpdater } from "./app-updater";
 import { shellSync } from "./shell-sync";
 import { getFreePort } from "./port";
 import { mangleProxyEnv } from "./proxy-env";
@@ -27,6 +26,7 @@ import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
 import { bindBroadcastHandlers } from "../common/ipc";
+import { startUpdateChecking } from "./app-updater";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -70,10 +70,6 @@ app.on("ready", async () => {
     app.exit();
   });
 
-  const updater = new AppUpdater();
-
-  updater.start();
-
   registerFileProtocol("static", __static);
 
   await installDeveloperTools();
@@ -112,6 +108,7 @@ app.on("ready", async () => {
   extensionLoader.init();
   extensionDiscovery.init();
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
+  windowManager.whenLoaded.then(() => startUpdateChecking());
 
   // call after windowManager to see splash earlier
   try {

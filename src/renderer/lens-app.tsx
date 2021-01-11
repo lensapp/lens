@@ -12,6 +12,7 @@ import { ConfirmDialog } from "./components/confirm-dialog";
 import { extensionLoader } from "../extensions/extension-loader";
 import { broadcastMessage } from "../common/ipc";
 import { CommandContainer } from "./components/command-palette/command-container";
+import { registerIpcHandlers } from "./ipc";
 
 @observer
 export class LensApp extends React.Component {
@@ -23,6 +24,8 @@ export class LensApp extends React.Component {
     window.addEventListener("online", () => {
       broadcastMessage("network:online");
     });
+
+    registerIpcHandlers();
   }
 
   render() {

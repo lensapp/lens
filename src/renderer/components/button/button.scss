@@ -21,8 +21,14 @@
   &.primary {
     background: $buttonPrimaryBackground;
   }
+
   &.accent {
     background: $buttonAccentBackground;
+  }
+
+  &.light {
+    background-color: white;
+    color: #505050;
   }
 
   &.plain {
@@ -45,6 +51,7 @@
   &.outlined {
     color: inherit;
     background: transparent;
+    border: 1px solid;
 
     &.active,
     &:focus {
