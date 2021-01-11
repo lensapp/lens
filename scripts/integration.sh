@@ -16,13 +16,15 @@ DEBUG=true yarn integration-runner
 if [ $? -ne 0 ]; then
   case $1 in
     mac)
-      find ~/Library/Logs/Lens -type f -name *.log -exec cat {} \;
+      find ~/Library/Logs/Lens -type f -name *.log -exec cat >&2 {} \;
     ;;
     linux)
-      find ~/.config/Lens -type f -name *.log -exec cat {} \;
+      find ~/.config/Lens -type f -name *.log -exec cat >&2 {} \;
     ;;
     win)
-      find %APPDATA%/Lens -type f -name *.log -exec cat {} \;
+      find %APPDATA%/Lens -type f -name *.log -exec cat >&2 {} \;
     ;;
   esac
+
+  exit 1
 fi
