@@ -45,13 +45,6 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     this.init();
   }
 
-  onContextChange(callback: (contextNamespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
-    return reaction(() => this.contextNs.toJS(), callback, {
-      equals: comparer.identity,
-      ...opts,
-    });
-  }
-
   private async init() {
     await clusterStore.whenLoaded;
     if (!getHostedCluster()) return;
@@ -59,29 +52,32 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     this.isReady = true;
 
     this.setContext(this.initNamespaces);
+    this.onSelectedNamespacesChange();
+    this.onAllowedNamespacesChange();
+  }
 
-    const disposers: IReactionDisposer[] = [];
+  public onContextChange(callback: (contextNamespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
+    return reaction(() => this.contextNs.toJS(), callback, {
+      equals: comparer.identity,
+      ...opts,
+    });
+  }
 
-    // save selected namespaces to local-storage and update URL
-    disposers.push(
-      this.onContextChange(namespaces => {
-        storage.set(namespaces);
-        namespaceUrlParam.set(namespaces, { replaceHistory: true });
-      }, {
-        fireImmediately: true,
-        equals: comparer.identity,
-      })
-    );
+  private onSelectedNamespacesChange(): IReactionDisposer {
+    return this.onContextChange(namespaces => {
+      storage.set(namespaces); // save to local-storage
+      namespaceUrlParam.set(namespaces, { replaceHistory: true }); // update url
+    }, {
+      fireImmediately: true,
+      equals: comparer.identity,
+    });
+  }
 
-    // auto-load allowed namespaces
-    disposers.push(
-      reaction(() => this.allowedNamespaces, () => this.loadAll(), {
-        fireImmediately: true,
-        equals: comparer.identity,
-      })
-    );
-
-    return disposers;
+  private onAllowedNamespacesChange(): IReactionDisposer {
+    return reaction(() => this.allowedNamespaces, () => this.loadAll(), {
+      fireImmediately: true,
+      equals: comparer.identity,
+    });
   }
 
   get allowedNamespaces(): string[] {

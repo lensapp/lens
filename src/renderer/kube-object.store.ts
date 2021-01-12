@@ -99,8 +99,14 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     let items: T[];
 
     try {
-      const { namespaceStore } = await import("./components/+namespaces/namespace.store");
-      const contextNamespaces = params.namespaces || namespaceStore.getContextNamespaces();
+      let contextNamespaces = params.namespaces;
+
+      if (!params.namespaces) {
+        const { namespaceStore } = await import("./components/+namespaces/namespace.store");
+
+        await namespaceStore.whenReady;
+        contextNamespaces = namespaceStore.getContextNamespaces();
+      }
 
       items = await this.loadItems({
         isAdmin: getHostedCluster().isAdmin,

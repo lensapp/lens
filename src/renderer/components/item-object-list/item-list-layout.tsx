@@ -112,11 +112,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   async componentDidMount() {
-    disposeOnUnmount(this, [
-      namespaceStore.onContextChange(() => this.loadStores(), {
-        fireImmediately: true,
-      })
-    ]);
+    if (!this.props.isClusterScoped) {
+      disposeOnUnmount(this, [
+        namespaceStore.onContextChange(() => this.loadStores(), {
+          fireImmediately: true,
+        })
+      ]);
+    }
   }
 
   async componentWillUnmount() {
@@ -124,7 +126,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     this.unsubscribeStores();
   }
 
-  async loadStores() {
+  @computed get stores() {
     const { store, dependentStores, isClusterScoped } = this.props;
     const stores = new Set([store, ...dependentStores]);
 
@@ -132,11 +134,14 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       stores.add(namespaceStore);
     }
 
-    // reset
-    this.unsubscribeStores();
+    return stores;
+  }
+
+  async loadStores() {
+    this.unsubscribeStores(); // reset first
 
     // load
-    for (const store of stores) {
+    for (const store of this.stores) {
       if (this.isUnmounting) {
         this.unsubscribeStores();
         break;
