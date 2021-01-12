@@ -78,7 +78,7 @@ export function normalizeMetrics(metrics: IMetrics, frames = 60): IMetrics {
       result.forEach(res => {
         if (!res.values || !res.values.length) return;
 
-        let now = moment().startOf("minute").unix();
+        let now = moment().startOf("minute").subtract(1, "minute").unix();
         let timestamp = res.values[0][0];
 
         while (timestamp <= now) {
