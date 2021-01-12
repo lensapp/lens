@@ -1,13 +1,20 @@
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
-import { Job, jobApi } from "../../api/endpoints/job.api";
+import { IJobMetrics, Job, jobApi } from "../../api/endpoints/job.api";
 import { CronJob, Pod, PodStatus } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
+import { observable } from "mobx";
 
 @autobind()
 export class JobStore extends KubeObjectStore<Job> {
   api = jobApi;
+
+  @observable metrics: IJobMetrics = null;
+
+  async loadMetrics(job: Job) {
+    this.metrics = await jobApi.getMetrics([job], job.getNs(), "");
+  }
 
   getChildPods(job: Job): Pod[] {
     return podsStore.getPodsByOwner(job);

@@ -12,6 +12,9 @@ import { Spinner } from "../spinner";
 import { resourceQuotaStore } from "../+config-resource-quotas/resource-quotas.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { namespaceStore } from "./namespace.store";
+import { ResourceMetrics } from "../resource-metrics";
+import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 
 interface Props extends KubeObjectDetailsProps<Namespace> {
 }
@@ -33,9 +36,18 @@ export class NamespaceDetails extends React.Component<Props> {
 
     if (!namespace) return;
     const status = namespace.getStatus();
+    const metrics = namespaceStore.metrics;
 
     return (
       <div className="NamespaceDetails">
+        {namespaceStore.isLoaded && (
+          <ResourceMetrics
+            loader={() => namespaceStore.loadMetrics(namespace)}
+            tabs={podMetricTabs} object={namespace} params={{ metrics }}
+          >
+            <PodCharts />
+          </ResourceMetrics>
+        )}
         <KubeObjectMeta object={namespace}/>
 
         <DrawerItem name="Status">

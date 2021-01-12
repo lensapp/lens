@@ -4,6 +4,7 @@ import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { IPodContainer } from "./pods.api";
 import { KubeApi } from "../kube-api";
 import { JsonApiParams } from "../json-api";
+import { IResourceMetrics, metricsApi } from "./metrics.api";
 
 @autobind()
 export class Job extends WorkloadKubeObject {
@@ -107,6 +108,24 @@ export class Job extends WorkloadKubeObject {
   }
 }
 
-export const jobApi = new KubeApi({
+
+export class JobApi extends KubeApi<Job> {
+  getMetrics(jobs: Job[], namespace: string, selector = ""): Promise<IResourceMetrics> {
+    const podSelector = jobs.map(job => `${job.getName()}-[[:alnum:]]{5}`).join("|");
+    const opts = { category: "pods", pods: podSelector, namespace, selector };
+
+    return metricsApi.getMetrics({
+      cpuUsage: opts,
+      memoryUsage: opts,
+      fsUsage: opts,
+      networkReceive: opts,
+      networkTransmit: opts,
+    }, {
+      namespace,
+    });
+  }
+}
+
+export const jobApi = new JobApi({
   objectConstructor: Job,
 });

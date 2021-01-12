@@ -1,7 +1,7 @@
 import { action, comparer, observable, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
-import { Namespace, namespacesApi } from "../../api/endpoints";
+import { INamespaceMetrics, Namespace, namespacesApi } from "../../api/endpoints";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
 import { isAllowedResource } from "../../../common/rbac";
@@ -22,10 +22,15 @@ export const namespaceUrlParam = createPageParam<string[]>({
 export class NamespaceStore extends KubeObjectStore<Namespace> {
   api = namespacesApi;
   contextNs = observable.array<string>();
+  @observable metrics: INamespaceMetrics = null;
 
   constructor() {
     super();
     this.init();
+  }
+
+  async loadMetrics(namespace: Namespace) {
+    this.metrics = await namespacesApi.getMetrics(namespace.getName(), "");
   }
 
   private init() {

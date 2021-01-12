@@ -1,19 +1,17 @@
 import { observable } from "mobx";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
-import { IPodMetrics, podsApi, PodStatus, StatefulSet, statefulSetApi } from "../../api/endpoints";
+import { IStatefulSetMetrics, PodStatus, StatefulSet, statefulSetApi } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
   api = statefulSetApi;
-  @observable metrics: IPodMetrics = null;
+  @observable metrics: IStatefulSetMetrics = null;
 
   async loadMetrics(statefulSet: StatefulSet) {
-    const pods = this.getChildPods(statefulSet);
-
-    this.metrics = await podsApi.getMetrics(pods, statefulSet.getNs(), "");
+    this.metrics = await statefulSetApi.getMetrics([statefulSet], statefulSet.getNs(), "");
   }
 
   getChildPods(statefulSet: StatefulSet) {

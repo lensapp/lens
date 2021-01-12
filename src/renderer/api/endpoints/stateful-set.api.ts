@@ -3,6 +3,7 @@ import { IPodContainer } from "./pods.api";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import { IResourceMetrics, metricsApi } from "./metrics.api";
 
 export class StatefulSetApi extends KubeApi<StatefulSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
@@ -23,6 +24,21 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
           replicas
         }
       }
+    });
+  }
+
+  getMetrics(statefulSets: StatefulSet[], namespace: string, selector = ""): Promise<IResourceMetrics> {
+    const podSelector = statefulSets.map(statefulset => `${statefulset.getName()}-[[:digit:]]+`).join("|");
+    const opts = { category: "pods", pods: podSelector, namespace, selector };
+
+    return metricsApi.getMetrics({
+      cpuUsage: opts,
+      memoryUsage: opts,
+      fsUsage: opts,
+      networkReceive: opts,
+      networkTransmit: opts,
+    }, {
+      namespace,
     });
   }
 }

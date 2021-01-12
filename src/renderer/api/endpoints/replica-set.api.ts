@@ -3,6 +3,7 @@ import { autobind } from "../../utils";
 import { WorkloadKubeObject } from "../workload-kube-object";
 import { IPodContainer, Pod } from "./pods.api";
 import { KubeApi } from "../kube-api";
+import { IResourceMetrics, metricsApi } from "./metrics.api";
 
 export class ReplicaSetApi extends KubeApi<ReplicaSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
@@ -23,6 +24,21 @@ export class ReplicaSetApi extends KubeApi<ReplicaSet> {
           replicas
         }
       }
+    });
+  }
+
+  getMetrics(replicasets: ReplicaSet[], namespace: string, selector = ""): Promise<IResourceMetrics> {
+    const podSelector = replicasets.map(replicaset => `${replicaset.getName()}-[[:alnum:]]{5}`).join("|");
+    const opts = { category: "pods", pods: podSelector, namespace, selector };
+
+    return metricsApi.getMetrics({
+      cpuUsage: opts,
+      memoryUsage: opts,
+      fsUsage: opts,
+      networkReceive: opts,
+      networkTransmit: opts,
+    }, {
+      namespace,
     });
   }
 }

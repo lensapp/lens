@@ -3,6 +3,7 @@ import { IPodContainer } from "./pods.api";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
+import { IResourceMetrics, metricsApi } from "./metrics.api";
 
 @autobind()
 export class DaemonSet extends WorkloadKubeObject {
@@ -71,6 +72,24 @@ export class DaemonSet extends WorkloadKubeObject {
   }
 }
 
-export const daemonSetApi = new KubeApi({
+
+export class DaemonSetApi extends KubeApi<DaemonSet> {
+  getMetrics(daemonsets: DaemonSet[], namespace: string, selector = ""): Promise<IResourceMetrics> {
+    const podSelector = daemonsets.map(daemonset => `${daemonset.getName()}-[[:alnum:]]{5}`).join("|");
+    const opts = { category: "pods", pods: podSelector, namespace, selector };
+
+    return metricsApi.getMetrics({
+      cpuUsage: opts,
+      memoryUsage: opts,
+      fsUsage: opts,
+      networkReceive: opts,
+      networkTransmit: opts,
+    }, {
+      namespace,
+    });
+  }
+}
+
+export const daemonSetApi = new DaemonSetApi({
   objectConstructor: DaemonSet,
 });

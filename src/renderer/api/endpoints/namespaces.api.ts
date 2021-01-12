@@ -1,6 +1,7 @@
 import { KubeApi } from "../kube-api";
 import { KubeObject } from "../kube-object";
 import { autobind } from "../../utils";
+import { IResourceMetrics, metricsApi } from "./metrics.api";
 
 export enum NamespaceStatus {
   ACTIVE = "Active",
@@ -22,6 +23,22 @@ export class Namespace extends KubeObject {
   }
 }
 
-export const namespacesApi = new KubeApi({
+export class NamespaceApi extends KubeApi<Namespace> {
+  getMetrics(namespace: string, selector = ""): Promise<IResourceMetrics> {
+    const opts = { category: "pods", pods: ".*", namespace, selector };
+
+    return metricsApi.getMetrics({
+      cpuUsage: opts,
+      memoryUsage: opts,
+      fsUsage: opts,
+      networkReceive: opts,
+      networkTransmit: opts,
+    }, {
+      namespace,
+    });
+  }
+}
+
+export const namespacesApi = new NamespaceApi({
   objectConstructor: Namespace,
 });
