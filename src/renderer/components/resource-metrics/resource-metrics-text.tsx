@@ -1,11 +1,12 @@
 import React from "react";
-import { getMetricLastPoints, IResourceMetrics, IMetrics } from "../../api/endpoints/metrics.api";
+import { IPodMetrics } from "../../api/endpoints";
+import { getMetricLastPoints, IMetrics } from "../../api/endpoints/metrics.api";
 import { bytesToUnits } from "../../utils";
 import { Badge } from "../badge";
 import { DrawerItem } from "../drawer";
 
 interface Props {
-  metrics: IResourceMetrics<IMetrics>;
+  metrics: IPodMetrics<IMetrics>;
 }
 
 export function ResourceMetricsText(props: Props) {

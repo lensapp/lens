@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { Deployment, deploymentApi, IDeploymentMetrics, PodStatus } from "../../api/endpoints";
+import { Deployment, deploymentApi, IPodMetrics, PodStatus } from "../../api/endpoints";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
 import { podsStore } from "../+workloads-pods/pods.store";
@@ -8,7 +8,7 @@ import { apiManager } from "../../api/api-manager";
 @autobind()
 export class DeploymentStore extends KubeObjectStore<Deployment> {
   api = deploymentApi;
-  @observable metrics: IDeploymentMetrics = null;
+  @observable metrics: IPodMetrics = null;
 
   protected sortItems(items: Deployment[]) {
     return super.sortItems(items, [

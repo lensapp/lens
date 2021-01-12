@@ -1,7 +1,7 @@
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind } from "../../utils";
-import { IJobMetrics, Job, jobApi } from "../../api/endpoints/job.api";
-import { CronJob, Pod, PodStatus } from "../../api/endpoints";
+import { Job, jobApi } from "../../api/endpoints/job.api";
+import { CronJob, IPodMetrics, Pod, PodStatus } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
 import { observable } from "mobx";
@@ -10,7 +10,7 @@ import { observable } from "mobx";
 export class JobStore extends KubeObjectStore<Job> {
   api = jobApi;
 
-  @observable metrics: IJobMetrics = null;
+  @observable metrics: IPodMetrics = null;
 
   async loadMetrics(job: Job) {
     this.metrics = await jobApi.getMetrics([job], job.getNs(), "");

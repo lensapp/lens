@@ -33,14 +33,14 @@ export class PodsApi extends KubeApi<Pod> {
 export interface IPodMetrics<T = IMetrics> {
   [metric: string]: T;
   cpuUsage: T;
-  cpuRequests: T;
-  cpuLimits: T;
   memoryUsage: T;
-  memoryRequests: T;
-  memoryLimits: T;
   fsUsage: T;
   networkReceive: T;
   networkTransmit: T;
+  cpuRequests?: T;
+  cpuLimits?: T;
+  memoryRequests?: T;
+  memoryLimits?: T;
 }
 
 // Reference: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#read-log-pod-v1-core

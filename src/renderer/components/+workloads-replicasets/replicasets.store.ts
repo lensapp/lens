@@ -1,15 +1,15 @@
 import { observable } from "mobx";
 import { autobind } from "../../utils";
 import { KubeObjectStore } from "../../kube-object.store";
-import { Deployment, IReplicaSetMetrics, ReplicaSet, replicaSetApi } from "../../api/endpoints";
+import { Deployment, ReplicaSet, replicaSetApi } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { apiManager } from "../../api/api-manager";
-import { PodStatus } from "../../api/endpoints/pods.api";
+import { IPodMetrics, PodStatus } from "../../api/endpoints/pods.api";
 
 @autobind()
 export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   api = replicaSetApi;
-  @observable metrics: IReplicaSetMetrics = null;
+  @observable metrics: IPodMetrics = null;
 
   async loadMetrics(replicaSet: ReplicaSet) {
     this.metrics = await replicaSetApi.getMetrics([replicaSet], replicaSet.getNs(), "");

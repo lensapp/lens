@@ -1,9 +1,9 @@
 import get from "lodash/get";
-import { IPodContainer } from "./pods.api";
+import { IPodContainer, IPodMetrics } from "./pods.api";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { IResourceMetrics, metricsApi } from "./metrics.api";
+import { metricsApi } from "./metrics.api";
 
 @autobind()
 export class DaemonSet extends WorkloadKubeObject {
@@ -74,7 +74,7 @@ export class DaemonSet extends WorkloadKubeObject {
 
 
 export class DaemonSetApi extends KubeApi<DaemonSet> {
-  getMetrics(daemonsets: DaemonSet[], namespace: string, selector = ""): Promise<IResourceMetrics> {
+  getMetrics(daemonsets: DaemonSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
     const podSelector = daemonsets.map(daemonset => `${daemonset.getName()}-[[:alnum:]]{5}`).join("|");
     const opts = { category: "pods", pods: podSelector, namespace, selector };
 

@@ -3,7 +3,8 @@ import moment from "moment";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { IResourceMetrics, metricsApi } from "./metrics.api";
+import { metricsApi } from "./metrics.api";
+import { IPodMetrics } from "./pods.api";
 
 export class DeploymentApi extends KubeApi<Deployment> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
@@ -46,7 +47,7 @@ export class DeploymentApi extends KubeApi<Deployment> {
     });
   }
 
-  getMetrics(deployments: Deployment[], namespace: string, selector = ""): Promise<IResourceMetrics> {
+  getMetrics(deployments: Deployment[], namespace: string, selector = ""): Promise<IPodMetrics> {
     const podSelector = deployments.map(deployment => `${deployment.getName()}-[[:alnum:]]{9,}-[[:alnum:]]{5}`).join("|");
     const opts = { category: "pods", pods: podSelector, namespace, selector };
 

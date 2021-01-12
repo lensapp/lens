@@ -1,9 +1,9 @@
 import get from "lodash/get";
-import { IPodContainer } from "./pods.api";
+import { IPodContainer, IPodMetrics } from "./pods.api";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
-import { IResourceMetrics, metricsApi } from "./metrics.api";
+import { metricsApi } from "./metrics.api";
 
 export class StatefulSetApi extends KubeApi<StatefulSet> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
@@ -27,7 +27,7 @@ export class StatefulSetApi extends KubeApi<StatefulSet> {
     });
   }
 
-  getMetrics(statefulSets: StatefulSet[], namespace: string, selector = ""): Promise<IResourceMetrics> {
+  getMetrics(statefulSets: StatefulSet[], namespace: string, selector = ""): Promise<IPodMetrics> {
     const podSelector = statefulSets.map(statefulset => `${statefulset.getName()}-[[:digit:]]+`).join("|");
     const opts = { category: "pods", pods: podSelector, namespace, selector };
 

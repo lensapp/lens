@@ -1,10 +1,10 @@
 import get from "lodash/get";
 import { autobind } from "../../utils";
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
-import { IPodContainer } from "./pods.api";
+import { IPodContainer, IPodMetrics } from "./pods.api";
 import { KubeApi } from "../kube-api";
 import { JsonApiParams } from "../json-api";
-import { IResourceMetrics, metricsApi } from "./metrics.api";
+import { metricsApi } from "./metrics.api";
 
 @autobind()
 export class Job extends WorkloadKubeObject {
@@ -110,7 +110,7 @@ export class Job extends WorkloadKubeObject {
 
 
 export class JobApi extends KubeApi<Job> {
-  getMetrics(jobs: Job[], namespace: string, selector = ""): Promise<IResourceMetrics> {
+  getMetrics(jobs: Job[], namespace: string, selector = ""): Promise<IPodMetrics> {
     const podSelector = jobs.map(job => `${job.getName()}-[[:alnum:]]{5}`).join("|");
     const opts = { category: "pods", pods: podSelector, namespace, selector };
 
