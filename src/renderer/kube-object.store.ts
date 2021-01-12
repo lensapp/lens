@@ -1,7 +1,7 @@
 import { action, observable, reaction } from "mobx";
 import { autobind } from "./utils";
 import { KubeObject } from "./api/kube-object";
-import { IKubeWatchEvent, kubeWatchApi } from "./api/kube-watch-api";
+import { IKubeWatchEvent, IKubeWatchMessage, kubeWatchApi } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
@@ -23,7 +23,6 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   constructor() {
     super();
     this.bindWatchEventsUpdater();
-    kubeWatchApi.addListener(this, this.onWatchApiEvent);
   }
 
   get query(): IKubeApiQueryParams {
@@ -187,18 +186,18 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   protected eventsBuffer = observable<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {
-    return reaction(() => this.eventsBuffer.toJS()[0], this.updateFromEventsBuffer, {
+    kubeWatchApi.onMessage.addListener(({ store, data }: IKubeWatchMessage<T>) => {
+      if (!this.isLoaded || store !== this) return;
+      this.eventsBuffer.push(data);
+    })
+
+    reaction(() => this.eventsBuffer[0], this.updateFromEventsBuffer, {
       delay
     });
   }
 
   subscribe(apis = [this.api]) {
     return KubeApi.watchAll(...apis);
-  }
-
-  protected onWatchApiEvent(evt: IKubeWatchEvent) {
-    if (!this.isLoaded) return;
-    this.eventsBuffer.push(evt);
   }
 
   @action

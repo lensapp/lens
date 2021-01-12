@@ -1,41 +1,41 @@
 // Kubernetes watch-api consumer
+import type { IKubeWatchEvent, IKubeWatchEventStreamEnd, IWatchRoutePayload } from "../../main/routes/watch-route";
+import type { KubeObjectStore } from "../kube-object.store";
+import type { KubeObject } from "./kube-object";
 
 import { computed, observable, reaction } from "mobx";
-import { stringify } from "querystring";
 import { autobind, EventEmitter } from "../utils";
-import { KubeJsonApiData } from "./kube-json-api";
-import type { KubeObjectStore } from "../kube-object.store";
+import { KubeJsonApiData, KubeJsonApiError } from "./kube-json-api";
 import { ensureObjectSelfLink, KubeApi } from "./kube-api";
-import { apiManager } from "./api-manager";
-import { apiPrefix, isDevelopment } from "../../common/vars";
 import { getHostedCluster } from "../../common/cluster-store";
+import { apiPrefix, isDevelopment } from "../../common/vars";
+import { apiManager } from "./api-manager";
 
-export interface IKubeWatchEvent<T = any> {
-  type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR";
-  object?: T;
-}
+export { IKubeWatchEvent, IKubeWatchEventStreamEnd }
 
-export interface IKubeWatchRouteEvent {
-  type: "STREAM_END";
-  url: string;
-  status: number;
-}
-
-export interface IKubeWatchRouteQuery {
-  api: string | string[];
+export interface IKubeWatchMessage<T extends KubeObject = any> {
+  data?: IKubeWatchEvent<KubeJsonApiData>
+  error?: IKubeWatchEvent<KubeJsonApiError>;
+  api?: KubeApi<T>;
+  store?: KubeObjectStore<T>;
 }
 
 @autobind()
 export class KubeWatchApi {
-  protected evtSource: EventSource;
-  protected onData = new EventEmitter<[IKubeWatchEvent]>();
+  protected stream: ReadableStream<Uint8Array>; // https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
   protected subscribers = observable.map<KubeApi, number>();
   protected reconnectTimeoutMs = 5000;
   protected maxReconnectsOnError = 10;
-  protected reconnectAttempts = this.maxReconnectsOnError;
+
+  // events
+  onMessage = new EventEmitter<[IKubeWatchMessage]>();
 
   constructor() {
-    reaction(() => this.activeApis, () => this.connect(), {
+    this.bindAutoConnect();
+  }
+
+  private bindAutoConnect() {
+    return reaction(() => this.activeApis, () => this.connect(), {
       fireImmediately: true,
       delay: 500,
     });
@@ -62,17 +62,13 @@ export class KubeWatchApi {
     });
   }
 
-  // FIXME: use POST to send apis for subscribing (list could be huge)
-  // TODO: try to use normal fetch res.body stream to consume watch-api updates
-  // https://github.com/lensapp/lens/issues/1898
-  protected async getQuery() {
+  protected async getWatchRoutePayload(): Promise<IWatchRoutePayload> {
     const { namespaceStore } = await import("../components/+namespaces/namespace.store");
-
     await namespaceStore.whenReady;
     const { isAdmin } = getHostedCluster();
 
     return {
-      api: this.activeApis.map(api => {
+      apis: this.activeApis.map(api => {
         if (isAdmin && !api.isNamespaced) {
           return api.getWatchUrl();
         }
@@ -86,116 +82,140 @@ export class KubeWatchApi {
     };
   }
 
-  // todo: maybe switch to websocket to avoid often reconnects
-  @autobind()
   protected async connect() {
-    if (this.evtSource) this.disconnect(); // close previous connection
+    this.disconnect(); // close active connection first
 
-    const query = await this.getQuery();
+    const payload = await this.getWatchRoutePayload();
 
-    if (!this.activeApis.length || !query.api.length) {
+    if (!payload.apis.length) {
       return;
     }
 
-    const apiUrl = `${apiPrefix}/watch?${stringify(query)}`;
+    this.writeLog({
+      data: ["CONNECTING", payload.apis]
+    });
 
-    this.evtSource = new EventSource(apiUrl);
-    this.evtSource.onmessage = this.onMessage;
-    this.evtSource.onerror = this.onError;
-    this.writeLog("CONNECTING", query.api);
-  }
+    try {
+      const req = await fetch(`${apiPrefix}/watch`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        keepalive: true,
+        headers: {
+          "content-type": "application/json"
+        }
+      });
 
-  reconnect() {
-    if (!this.evtSource || this.evtSource.readyState !== EventSource.OPEN) {
-      this.reconnectAttempts = this.maxReconnectsOnError;
-      this.connect();
+      const reader = req.body.getReader();
+      const handleEvent = this.handleEvent.bind(this);
+
+      this.stream = new ReadableStream({
+        start(controller) {
+          return reader.read().then(function processEvent({ done, value }): Promise<void> {
+            if (done) {
+              controller.close();
+              return;
+            }
+            handleEvent(value);
+            controller.enqueue(value);
+            return reader.read().then(processEvent);
+          });
+        },
+        cancel() {
+          reader.cancel();
+        }
+      });
+    } catch (error) {
+      this.writeLog({
+        error: ["CONNECTION ERROR", error]
+      });
     }
   }
 
-  protected disconnect() {
-    if (!this.evtSource) return;
-    this.evtSource.close();
-    this.evtSource.onmessage = null;
-    this.evtSource = null;
-  }
-
-  protected onMessage(evt: MessageEvent) {
-    if (!evt.data) return;
-    const data = JSON.parse(evt.data);
-
-    if ((data as IKubeWatchEvent).object) {
-      this.onData.emit(data);
-    } else {
-      this.onRouteEvent(data);
+  protected async disconnect() {
+    if (this.stream) {
+      this.stream.cancel();
+      this.stream = null;
     }
   }
 
-  protected async onRouteEvent(event: IKubeWatchRouteEvent) {
-    if (event.type === "STREAM_END") {
-      this.disconnect();
-      const { apiBase, namespace } = KubeApi.parseApi(event.url);
-      const api = apiManager.getApi(apiBase);
+  protected handleEvent(eventStreamChunk: Uint8Array) {
+    try {
+      const jsonText = new TextDecoder().decode(eventStreamChunk);
+      const event: IKubeWatchEvent = JSON.parse(jsonText);
+      const message = this.getMessage(event);
+      this.onMessage.emit(message);
+    } catch (error) {
+      this.writeLog({
+        error: ["failed to parse watch-api event", error]
+      });
+    }
+  }
 
-      if (api) {
-        try {
-          await api.refreshResourceVersion({ namespace });
-          this.reconnect();
-        } catch (error) {
-          console.error("failed to refresh resource version", error);
+  protected getMessage(event: IKubeWatchEvent): IKubeWatchMessage {
+    const message: IKubeWatchMessage = {};
 
-          if (this.subscribers.size > 0) {
-            setTimeout(() => {
-              this.onRouteEvent(event);
-            }, 1000);
-          }
+    switch (event.type) {
+      case "ADDED":
+      case "DELETED":
+      case "MODIFIED": {
+        const data = event as IKubeWatchEvent<KubeJsonApiData>;
+        const api = apiManager.getApiByKind(data.object.kind, data.object.apiVersion);
+
+        message.data = data;
+
+        if (api) {
+          ensureObjectSelfLink(api, data.object);
+
+          const { namespace, resourceVersion } = data.object.metadata;
+          api.setResourceVersion(namespace, resourceVersion);
+          api.setResourceVersion("", resourceVersion);
+
+          message.api = api;
+          message.store = apiManager.getStore(api);
+        }
+        break;
+      }
+
+      case "ERROR":
+        message.error = event as IKubeWatchEvent<KubeJsonApiError>;
+        break;
+
+      case "STREAM_END": {
+        this.onServerStreamEnd(event as IKubeWatchEventStreamEnd);
+        break;
+      }
+    }
+
+    return message;
+  }
+
+  protected async onServerStreamEnd(event: IKubeWatchEventStreamEnd) {
+    const { apiBase, namespace } = KubeApi.parseApi(event.url);
+    const api = apiManager.getApi(apiBase);
+
+    if (api) {
+      try {
+        await api.refreshResourceVersion({ namespace });
+        this.connect();
+      } catch (error) {
+        this.writeLog({
+          error: ["failed to reconnect after stream ending", { event, error }]
+        });
+
+        if (this.subscribers.size > 0) {
+          setTimeout(() => {
+            this.onServerStreamEnd(event);
+          }, 1000);
         }
       }
     }
   }
 
-  protected onError(evt: MessageEvent) {
-    const { reconnectAttempts: attemptsRemain, reconnectTimeoutMs } = this;
-
-    if (evt.eventPhase === EventSource.CLOSED) {
-      if (attemptsRemain > 0) {
-        this.reconnectAttempts--;
-        setTimeout(() => this.connect(), reconnectTimeoutMs);
-      }
-    }
-  }
-
-  protected writeLog(...data: any[]) {
+  protected writeLog({ data, error }: { data?: any[], error?: any[] } = {}) {
     if (isDevelopment) {
-      console.log("%cKUBE-WATCH-API:", `font-weight: bold`, ...data);
+      const logStyle = `font-weight: bold; ${error ? "color: red;" : ""}`;
+      console.log("%cKUBE-WATCH-API:", logStyle, ...Array.from(data || error));
     }
-  }
-
-  addListener(store: KubeObjectStore, callback: (evt: IKubeWatchEvent) => void) {
-    const listener = (evt: IKubeWatchEvent<KubeJsonApiData>) => {
-      if (evt.type === "ERROR") {
-        return; // e.g. evt.object.message == "too old resource version"
-      }
-
-      const { namespace, resourceVersion } = evt.object.metadata;
-      const api = apiManager.getApiByKind(evt.object.kind, evt.object.apiVersion);
-
-      api.setResourceVersion(namespace, resourceVersion);
-      api.setResourceVersion("", resourceVersion);
-
-      ensureObjectSelfLink(api, evt.object);
-
-      if (store == apiManager.getStore(api)) {
-        callback(evt);
-      }
-    };
-
-    this.onData.addListener(listener);
-
-    return () => this.onData.removeListener(listener);
-  }
-
-  reset() {
-    this.subscribers.clear();
   }
 }
 

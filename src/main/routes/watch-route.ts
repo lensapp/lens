@@ -1,9 +1,26 @@
+import type { KubeJsonApiData, KubeJsonApiError } from "../../renderer/api/kube-json-api";
+
 import { LensApiRequest } from "../router";
 import { LensApi } from "../lens-api";
-import { Watch, KubeConfig } from "@kubernetes/client-node";
+import { KubeConfig, Watch } from "@kubernetes/client-node";
 import { ServerResponse } from "http";
 import { Request } from "request";
 import logger from "../logger";
+
+export interface IKubeWatchEvent<T = KubeJsonApiData | KubeJsonApiError> {
+  type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR" | "STREAM_END";
+  object?: T;
+}
+
+export interface IKubeWatchEventStreamEnd extends IKubeWatchEvent {
+  type: "STREAM_END";
+  url: string;
+  status: number;
+}
+
+export interface IWatchRoutePayload {
+  apis: string[]; // kube-api url list for subscribing to watch events
+}
 
 class ApiWatcher {
   private apiUrl: string;
@@ -33,7 +50,9 @@ class ApiWatcher {
   }
 
   public stop() {
-    if (!this.watchRequest) { return; }
+    if (!this.watchRequest) {
+      return;
+    }
 
     if (this.processor) {
       clearInterval(this.processor);
@@ -42,11 +61,14 @@ class ApiWatcher {
 
     try {
       this.watchRequest.abort();
-      this.sendEvent({
+
+      const event: IKubeWatchEventStreamEnd = {
         type: "STREAM_END",
         url: this.apiUrl,
         status: 410,
-      });
+      };
+
+      this.sendEvent(event);
       logger.debug("watch aborted");
     } catch (error) {
       logger.error(`Watch abort errored:${error}`);
@@ -65,34 +87,31 @@ class ApiWatcher {
     this.watchRequest.abort();
   }
 
-  private sendEvent(evt: any) {
-    // convert to "text/event-stream" format
-    this.response.write(`data: ${JSON.stringify(evt)}\n\n`);
+  private sendEvent(evt: IKubeWatchEvent) {
+    this.response.write(JSON.stringify(evt) + "\n");
   }
 }
 
 class WatchRoute extends LensApi {
 
-  public async routeWatch(request: LensApiRequest) {
-    const { response, cluster} = request;
-    const apis: string[] = request.query.getAll("api");
+  public async routeWatch(request: LensApiRequest<IWatchRoutePayload>) {
+    const { response, cluster, payload } = request;
     const watchers: ApiWatcher[] = [];
 
-    if (!apis.length) {
+    if (!payload?.apis?.length) {
       this.respondJson(response, {
-        message: "Empty request. Query params 'api' are not provided.",
-        example: "?api=/api/v1/pods&api=/api/v1/nodes",
+        message: "watch apis list is empty"
       }, 400);
 
       return;
     }
 
-    response.setHeader("Content-Type", "text/event-stream");
+    response.setHeader("Content-Type", "application/json");
     response.setHeader("Cache-Control", "no-cache");
     response.setHeader("Connection", "keep-alive");
     logger.debug(`watch using kubeconfig:${JSON.stringify(cluster.getProxyKubeconfig(), null, 2)}`);
 
-    apis.forEach(apiUrl => {
+    payload.apis.forEach(apiUrl => {
       const watcher = new ApiWatcher(apiUrl, cluster.getProxyKubeconfig(), response);
 
       watcher.start();
