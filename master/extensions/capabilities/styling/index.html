@@ -1020,8 +1020,8 @@
 </code></pre></div>
 <p>These variables are intended to set consistent margins and paddings across components. For example:</p>
 <div class="highlight"><pre><span></span><code><span class="p">.</span><span class="nc">status</span> <span class="p">{</span>
-  <span class="k">padding-left</span><span class="p">:</span> <span class="nb">calc</span><span class="p">(</span><span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">padding</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
-  <span class="k">border-radius</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">border</span><span class="o">-</span><span class="n">radius</span><span class="p">);</span>
+  <span class="k">padding-left</span><span class="p">:</span> <span class="nb">calc</span><span class="p">(</span><span class="nf">var</span><span class="p">(</span><span class="nv">--padding</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>
+  <span class="k">border-radius</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="nv">--border-radius</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="themes">Themes<a class="headerlink" href="#themes" title="Permanent link">#</a></h2>
@@ -1062,8 +1062,8 @@
 </code></pre></div>
 <p>These variables can be used in the following form: <code>var(--magenta)</code>. For example:</p>
 <div class="highlight"><pre><span></span><code><span class="p">.</span><span class="nc">status</span> <span class="p">{</span>
-  <span class="k">font-size</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">font</span><span class="o">-</span><span class="n">size</span><span class="o">-</span><span class="kc">small</span><span class="p">);</span>
-  <span class="k">background-color</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="o">--</span><span class="n">colorSuccess</span><span class="p">);</span>
+  <span class="k">font-size</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="nv">--font-size-small</span><span class="p">);</span>
+  <span class="k">background-color</span><span class="p">:</span> <span class="nf">var</span><span class="p">(</span><span class="nv">--colorSuccess</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>A complete list of themable colors can be found in the <a href="../color-reference">Color Reference</a>.</p>
@@ -1071,12 +1071,12 @@
 <p>When the light theme is active, the <code>&lt;body&gt;</code> element gets a "theme-light" class, or: <code>&lt;body class="theme-light"&gt;</code>. If the class isn't there, the theme defaults to dark. The active theme can be changed in the <strong>Preferences</strong> page:
 <img alt="Color Theme" src="../images/theme-selector.png" /></p>
 <p>There is a way of detect active theme and its changes in JS. <a href="https://github.com/mobxjs/mobx-react#observercomponent">MobX observer function/decorator</a> can be used for this purpose.</p>
-<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx-react&quot;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">App</span><span class="p">,</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">Theme</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">observer</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;mobx-react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">App</span><span class="p">,</span> <span class="nx">Component</span><span class="p">,</span> <span class="nx">Theme</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
 <span class="err">@</span><span class="nx">observer</span>
-<span class="kr">export</span> <span class="kr">class</span> <span class="nx">SupportPage</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nx">SupportPage</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
   <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">(</span>
       <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;SupportPage&quot;</span><span class="o">&gt;</span>
@@ -1100,7 +1100,7 @@
 <p>Extensions may overwrite these defaults if needed. They have low CSS specificity, so overriding them should be fairly easy.</p>
 <h2 id="css-in-js">CSS-in-JS<a class="headerlink" href="#css-in-js" title="Permanent link">#</a></h2>
 <p>If an extension uses a system like <code>Emotion</code> to work with styles, it can use CSS variables as follows:</p>
-<div class="highlight"><pre><span></span><code><span class="kr">const</span> <span class="nx">Container</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">({</span>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span> <span class="nx">Container</span> <span class="o">=</span> <span class="nx">styled</span><span class="p">.</span><span class="nx">div</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">({</span>
   <span class="nx">backgroundColor</span><span class="o">:</span> <span class="s1">&#39;var(--mainBackground)&#39;</span>
 <span class="p">}));</span>
 </code></pre></div>

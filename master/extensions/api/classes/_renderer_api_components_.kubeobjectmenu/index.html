@@ -1227,7 +1227,7 @@
 <p>If using the new style context, re-declare this in your class to be the
 <code>React.ContextType</code> of your <code>static contextType</code>.
 Should be used with type annotation or static contextType.</p>
-<div class="highlight"><pre><span></span><code><span class="kr">static</span> <span class="nx">contextType</span> <span class="o">=</span> <span class="nx">MyContext</span>
+<div class="highlight"><pre><span></span><code><span class="k">static</span> <span class="nx">contextType</span> <span class="o">=</span> <span class="nx">MyContext</span>
 <span class="c1">// For TS pre-3.7:</span>
 <span class="nx">context</span><span class="o">!:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ContextType</span><span class="o">&lt;</span><span class="k">typeof</span> <span class="nx">MyContext</span><span class="o">&gt;</span>
 <span class="c1">// For TS 3.7 and above:</span>
@@ -1262,11 +1262,11 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <p>Defined in node_modules/@types/react/index.d.ts:455</p>
 <p>If set, <code>this.context</code> will be set at runtime to the current value of the given Context.</p>
 <p>Usage:</p>
-<div class="highlight"><pre><span></span><code><span class="nx">type</span> <span class="nx">MyContext</span> <span class="o">=</span> <span class="kt">number</span>
-<span class="kr">const</span> <span class="nx">Ctx</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createContext</span><span class="o">&lt;</span><span class="nx">MyContext</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kd">type</span> <span class="nx">MyContext</span> <span class="o">=</span> <span class="kt">number</span>
+<span class="kd">const</span> <span class="nx">Ctx</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">createContext</span><span class="o">&lt;</span><span class="nx">MyContext</span><span class="o">&gt;</span><span class="p">(</span><span class="mf">0</span><span class="p">)</span>
 
-<span class="kr">class</span> <span class="nx">Foo</span> <span class="kr">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
-  <span class="kr">static</span> <span class="nx">contextType</span> <span class="o">=</span> <span class="nx">Ctx</span>
+<span class="kd">class</span> <span class="nx">Foo</span> <span class="k">extends</span> <span class="nx">React</span><span class="p">.</span><span class="nx">Component</span> <span class="p">{</span>
+  <span class="k">static</span> <span class="nx">contextType</span> <span class="o">=</span> <span class="nx">Ctx</span>
   <span class="nx">context</span><span class="o">!:</span> <span class="nx">React</span><span class="p">.</span><span class="nx">ContextType</span><span class="o">&lt;</span><span class="k">typeof</span> <span class="nx">Ctx</span><span class="o">&gt;</span>
   <span class="nx">render</span> <span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="o">&lt;&gt;</span><span class="nx">My</span> <span class="nx">context</span><span class="err">&#39;</span><span class="nx">s</span> <span class="nx">value</span><span class="o">:</span> <span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">context</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/&gt;;</span>
@@ -1277,17 +1277,17 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="iseditable">isEditable<a class="headerlink" href="#iseditable" title="Permanent link">#</a></h3>
 <p>• <strong>get isEditable</strong>(): <em>boolean</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/b1ab31831/src/renderer/components/kube-object/kube-object-menu.tsx#L25">src/renderer/components/kube-object/kube-object-menu.tsx:25</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/11595abc9/src/renderer/components/kube-object/kube-object-menu.tsx#L25">src/renderer/components/kube-object/kube-object-menu.tsx:25</a></em></p>
 <p><strong>Returns:</strong> <em>boolean</em></p>
 <hr />
 <h3 id="isremovable">isRemovable<a class="headerlink" href="#isremovable" title="Permanent link">#</a></h3>
 <p>• <strong>get isRemovable</strong>(): <em>boolean</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/b1ab31831/src/renderer/components/kube-object/kube-object-menu.tsx#L31">src/renderer/components/kube-object/kube-object-menu.tsx:31</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/11595abc9/src/renderer/components/kube-object/kube-object-menu.tsx#L31">src/renderer/components/kube-object/kube-object-menu.tsx:31</a></em></p>
 <p><strong>Returns:</strong> <em>boolean</em></p>
 <hr />
 <h3 id="store">store<a class="headerlink" href="#store" title="Permanent link">#</a></h3>
 <p>• <strong>get store</strong>(): <em><a href="../_renderer_api_k8s_api_.kubeobjectstore/">KubeObjectStore</a>‹any›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/b1ab31831/src/renderer/components/kube-object/kube-object-menu.tsx#L17">src/renderer/components/kube-object/kube-object-menu.tsx:17</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/11595abc9/src/renderer/components/kube-object/kube-object-menu.tsx#L17">src/renderer/components/kube-object/kube-object-menu.tsx:17</a></em></p>
 <p><strong>Returns:</strong> <em><a href="../_renderer_api_k8s_api_.kubeobjectstore/">KubeObjectStore</a>‹any›</em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="optional-unsafe_componentwillmount"><code>Optional</code> UNSAFE_componentWillMount<a class="headerlink" href="#optional-unsafe_componentwillmount" title="Permanent link">#</a></h3>
@@ -1573,18 +1573,18 @@ lifecycle events from running.</p>
 <hr />
 <h3 id="remove">remove<a class="headerlink" href="#remove" title="Permanent link">#</a></h3>
 <p>▸ <strong>remove</strong>(): <em>Promise‹void›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/b1ab31831/src/renderer/components/kube-object/kube-object-menu.tsx#L44">src/renderer/components/kube-object/kube-object-menu.tsx:44</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/11595abc9/src/renderer/components/kube-object/kube-object-menu.tsx#L44">src/renderer/components/kube-object/kube-object-menu.tsx:44</a></em></p>
 <p><strong>Returns:</strong> <em>Promise‹void›</em></p>
 <hr />
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): <em>Element‹›</em></p>
 <p><em>Overrides void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/b1ab31831/src/renderer/components/kube-object/kube-object-menu.tsx#L63">src/renderer/components/kube-object/kube-object-menu.tsx:63</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/11595abc9/src/renderer/components/kube-object/kube-object-menu.tsx#L63">src/renderer/components/kube-object/kube-object-menu.tsx:63</a></em></p>
 <p><strong>Returns:</strong> <em>Element‹›</em></p>
 <hr />
 <h3 id="renderremovemessage">renderRemoveMessage<a class="headerlink" href="#renderremovemessage" title="Permanent link">#</a></h3>
 <p>▸ <strong>renderRemoveMessage</strong>(): <em>Element‹›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/b1ab31831/src/renderer/components/kube-object/kube-object-menu.tsx#L53">src/renderer/components/kube-object/kube-object-menu.tsx:53</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/11595abc9/src/renderer/components/kube-object/kube-object-menu.tsx#L53">src/renderer/components/kube-object/kube-object-menu.tsx:53</a></em></p>
 <p><strong>Returns:</strong> <em>Element‹›</em></p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
@@ -1636,7 +1636,7 @@ and <code>componentDidUpdate</code> will not be called.</p>
 <hr />
 <h3 id="update">update<a class="headerlink" href="#update" title="Permanent link">#</a></h3>
 <p>▸ <strong>update</strong>(): <em>Promise‹void›</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/b1ab31831/src/renderer/components/kube-object/kube-object-menu.tsx#L38">src/renderer/components/kube-object/kube-object-menu.tsx:38</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/11595abc9/src/renderer/components/kube-object/kube-object-menu.tsx#L38">src/renderer/components/kube-object/kube-object-menu.tsx:38</a></em></p>
 <p><strong>Returns:</strong> <em>Promise‹void›</em></p>
                 
               

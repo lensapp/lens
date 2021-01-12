@@ -921,14 +921,14 @@
 <h2 id="lensmainextension-class"><code>LensMainExtension</code> Class<a class="headerlink" href="#lensmainextension-class" title="Permanent link">#</a></h2>
 <h3 id="onactivate-and-ondeactivate-methods"><code>onActivate()</code> and <code>onDeactivate()</code> Methods<a class="headerlink" href="#onactivate-and-ondeactivate-methods" title="Permanent link">#</a></h3>
 <p>To create a main extension simply extend the <code>LensMainExtension</code> class:</p>
-<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ExampleExtensionMain</span> <span class="kr">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
-  <span class="nx">onActivate() {</span>
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ExampleExtensionMain</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
+  <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;custom main process extension code started&#39;</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="nx">onDeactivate() {</span>
+  <span class="nx">onDeactivate</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;custom main process extension de-activated&#39;</span><span class="p">);</span>
   <span class="p">}</span>
 <span class="p">}</span>
@@ -941,15 +941,15 @@
 </ol>
 <p>The example above logs messages when the extension is enabled and disabled. To see standard output from the main process there must be a console connected to it. Achieve this by starting Lens from the command prompt.</p>
 <p>The following example is a little more interesting. It accesses some Lens state data, and it periodically logs the name of the cluster that is currently active in Lens.</p>
-<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span><span class="p">,</span> <span class="nx">Store</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span><span class="p">,</span> <span class="nx">Store</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-<span class="kr">const</span> <span class="nx">clusterStore</span> <span class="o">=</span> <span class="nx">Store</span><span class="p">.</span><span class="nx">clusterStore</span>
+<span class="kd">const</span> <span class="nx">clusterStore</span> <span class="o">=</span> <span class="nx">Store</span><span class="p">.</span><span class="nx">clusterStore</span>
 
-<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">ActiveClusterExtensionMain</span> <span class="kr">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">ActiveClusterExtensionMain</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
 
   <span class="nx">timer</span>: <span class="kt">NodeJS.Timeout</span>
 
-  <span class="nx">onActivate() {</span>
+  <span class="nx">onActivate</span><span class="p">()</span> <span class="p">{</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Cluster logger activated&quot;</span><span class="p">);</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">timer</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">clusterStore</span><span class="p">.</span><span class="nx">active</span><span class="p">)</span> <span class="p">{</span>
@@ -957,10 +957,10 @@
         <span class="k">return</span><span class="p">;</span>
       <span class="p">}</span>
       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;active cluster is&quot;</span><span class="p">,</span> <span class="nx">clusterStore</span><span class="p">.</span><span class="nx">active</span><span class="p">.</span><span class="nx">contextName</span><span class="p">)</span>
-    <span class="p">},</span> <span class="mi">5000</span><span class="p">)</span>
+    <span class="p">},</span> <span class="mf">5000</span><span class="p">)</span>
   <span class="p">}</span>
 
-  <span class="nx">onDeactivate() {</span>
+  <span class="nx">onDeactivate</span><span class="p">()</span> <span class="p">{</span>
       <span class="nx">clearInterval</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">timer</span><span class="p">)</span>
       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Cluster logger deactivated&quot;</span><span class="p">);</span>
   <span class="p">}</span>
@@ -969,14 +969,14 @@
 <p>For more details on accessing Lens state data, please see the <a href="../stores">Stores</a> guide.</p>
 <h3 id="appmenus"><code>appMenus</code><a class="headerlink" href="#appmenus" title="Permanent link">#</a></h3>
 <p>The Main Extension API allows you to customize the UI application menu. Note that this is the only UI feature that the Main Extension API allows you to customize. The following example demonstrates adding an item to the <strong>Help</strong> menu.</p>
-<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensMainExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-<span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">SamplePageMainExtension</span> <span class="kr">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
+<span class="k">export</span> <span class="k">default</span> <span class="kd">class</span> <span class="nx">SamplePageMainExtension</span> <span class="k">extends</span> <span class="nx">LensMainExtension</span> <span class="p">{</span>
   <span class="nx">appMenus</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
       <span class="nx">parentId</span><span class="o">:</span> <span class="s2">&quot;help&quot;</span><span class="p">,</span>
       <span class="nx">label</span><span class="o">:</span> <span class="s2">&quot;Sample&quot;</span><span class="p">,</span>
-      <span class="nx">click() {</span>
+      <span class="nx">click</span><span class="p">()</span> <span class="p">{</span>
         <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Sample clicked&quot;</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>

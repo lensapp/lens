@@ -976,13 +976,13 @@ const GlobalPageMenuIcon = ({ navigate }: { navigate?: () =&gt; void }): JSX.Ele
 )
 </code></pre></div>
 <p>The test</p>
-<div class="highlight"><pre><span></span><code><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
-<span class="kr">import</span> <span class="p">{</span> <span class="nx">render</span><span class="p">,</span> <span class="nx">screen</span><span class="p">,</span> <span class="nx">fireEvent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@testing-library/react&quot;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">render</span><span class="p">,</span> <span class="nx">screen</span><span class="p">,</span> <span class="nx">fireEvent</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@testing-library/react&quot;</span><span class="p">;</span>
 
-<span class="kr">import</span> <span class="nx">GlobalPageMenuIcon</span> <span class="nx">from</span> <span class="s2">&quot;./GlobalPageMenuIcon&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="nx">GlobalPageMenuIcon</span> <span class="nx">from</span> <span class="s2">&quot;./GlobalPageMenuIcon&quot;</span><span class="p">;</span>
 
 <span class="nx">test</span><span class="p">(</span><span class="s2">&quot;click called navigate()&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="kr">const</span> <span class="nx">navigate</span> <span class="o">=</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">();</span>
+    <span class="kd">const</span> <span class="nx">navigate</span> <span class="o">=</span> <span class="nx">jest</span><span class="p">.</span><span class="nx">fn</span><span class="p">();</span>
     <span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">GlobalPageMenuIcon</span> <span class="nx">navigate</span><span class="o">=</span><span class="p">{</span><span class="nx">navigate</span><span class="p">}</span> <span class="o">/&gt;</span><span class="p">);</span>
     <span class="nx">fireEvent</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="nx">screen</span><span class="p">.</span><span class="nx">getByTestId</span><span class="p">(</span><span class="s2">&quot;global-page-menu-icon&quot;</span><span class="p">));</span>
     <span class="nx">expect</span><span class="p">(</span><span class="nx">navigate</span><span class="p">).</span><span class="nx">toHaveBeenCalled</span><span class="p">();</span>
