@@ -6,10 +6,9 @@ import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
-import { getHostedCluster } from "../common/cluster-store";
+import { isAllowedResourceType } from "../common/rbac";
 
 export interface KubeObjectStoreLoadingParams {
-  isAdmin: boolean;
   namespaces: string[];
   api?: KubeApi;
 }
@@ -76,16 +75,18 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
 
-  protected async loadItems({ isAdmin, namespaces, api }: KubeObjectStoreLoadingParams): Promise<T[]> {
-    if (!api.isNamespaced) {
-      if (isAdmin) return api.list({}, this.query);
+  protected async loadItems({ namespaces, api }: KubeObjectStoreLoadingParams): Promise<T[]> {
+    if (isAllowedResourceType(api.kind)) {
+      if (api.isNamespaced) {
+        return Promise
+          .all(namespaces.map(namespace => api.list({ namespace })))
+          .then(items => items.flat());
+      }
 
-      return [];
+      return api.list({}, this.query);
     }
 
-    return Promise
-      .all(namespaces.map(namespace => api.list({ namespace })))
-      .then(items => items.flat());
+    return [];
   }
 
   protected filterItemsOnLoad(items: T[]) {
@@ -93,28 +94,21 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  async loadAll(params: { namespaces?: string[] } = {}) {
+  async loadAll({ namespaces: contextNamespaces }: { namespaces?: string[] } = {}) {
     this.isLoading = true;
-    let items: T[];
 
     try {
-      let contextNamespaces = params.namespaces;
-
-      if (!params.namespaces) {
+      if (!contextNamespaces) {
         const { namespaceStore } = await import("./components/+namespaces/namespace.store");
 
-        await namespaceStore.whenReady;
         contextNamespaces = namespaceStore.getContextNamespaces();
       }
 
-      items = await this.loadItems({
-        isAdmin: getHostedCluster().isAdmin,
-        namespaces: contextNamespaces,
-        api: this.api,
-      });
+      let items = await this.loadItems({ namespaces: contextNamespaces, api: this.api });
 
       items = this.filterItemsOnLoad(items);
       items = this.sortItems(items);
+
       this.items.replace(items);
       this.isLoaded = true;
     } catch (error) {

@@ -24,10 +24,10 @@ export class RolesStore extends KubeObjectStore<Role> {
     return clusterRoleApi.get(params);
   }
 
-  protected async loadItems({ isAdmin, namespaces }: KubeObjectStoreLoadingParams): Promise<Role[]> {
+  protected async loadItems(params: KubeObjectStoreLoadingParams): Promise<Role[]> {
     const items = await Promise.all([
-      super.loadItems({ isAdmin, namespaces, api: clusterRoleApi }),
-      super.loadItems({ isAdmin, namespaces, api: roleApi }),
+      super.loadItems({ ...params, api: clusterRoleApi }),
+      super.loadItems({ ...params, api: roleApi }),
     ]);
 
     return items.flat();

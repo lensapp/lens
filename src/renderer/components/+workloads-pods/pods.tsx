@@ -74,6 +74,8 @@ export class Pods extends React.Component<Props> {
       <KubeObjectListLayout
         className="Pods" store={podsStore}
         dependentStores={[volumeClaimStore, eventStore]}
+        tableId = "workloads_pods"
+        isConfigurable
         sortingCallbacks={{
           [sortBy.name]: (pod: Pod) => pod.getName(),
           [sortBy.namespace]: (pod: Pod) => pod.getNs(),
@@ -94,7 +96,7 @@ export class Pods extends React.Component<Props> {
         renderHeaderTitle="Pods"
         renderTableHeader={[
           { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
+          { className: "warning", showWithColumn: "name" },
           { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
           { title: "Containers", className: "containers", sortBy: sortBy.containers },
           { title: "Restarts", className: "restarts", sortBy: sortBy.restarts },

@@ -57,7 +57,10 @@ jobs:
         displayName: Run tests
       - script: make test-extensions
         displayName: Run In-tree Extension tests
-      - script: make integration-win
+      - bash: |
+          rm -rf extensions/telemetry
+          make integration-win
+          git checkout extensions/telemetry
         displayName: Run integration tests
       - script: make build
         condition: "and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))"
@@ -98,7 +101,10 @@ jobs:
         displayName: Run tests
       - script: make test-extensions
         displayName: Run In-tree Extension tests
-      - script: make integration-mac
+      - bash: |
+          rm -rf extensions/telemetry
+          make integration-mac
+          git checkout extensions/telemetry
         displayName: Run integration tests
       - script: make test-extensions
         displayName: Run In-tree Extension tests
@@ -152,7 +158,10 @@ jobs:
           # Although the kube and minikube config files are in placed $HOME they are owned by root
           sudo chown -R $USER $HOME/.kube $HOME/.minikube
         displayName: Install integration test dependencies
-      - script: xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
+      - bash: |
+          rm -rf extensions/telemetry
+          xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
+          git checkout extensions/telemetry
         displayName: Run integration tests
       - bash: |
           sudo chown root:root /

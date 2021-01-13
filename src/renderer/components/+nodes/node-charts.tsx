@@ -7,6 +7,7 @@ import { IResourceMetricsValue, ResourceMetricsContext } from "../resource-metri
 import { observer } from "mobx-react";
 import { ChartOptions, ChartPoint } from "chart.js";
 import { themeStore } from "../../theme.store";
+import { mapValues } from "lodash";
 
 type IContext = IResourceMetricsValue<Node, { metrics: IClusterMetrics }>;
 
@@ -15,26 +16,26 @@ export const NodeCharts = observer(() => {
   const id = object.getId();
   const { chartCapacityColor } = themeStore.activeTheme.colors;
 
-  if (!metrics) return null;
-  if (isMetricsEmpty(metrics)) return <NoMetrics/>;
+  if (!metrics) {
+    return null;
+  }
 
-  const values = Object.values(metrics).map(metric =>
-    normalizeMetrics(metric).data.result[0].values
-  );
-  const [
+  if (isMetricsEmpty(metrics)) {
+    return <NoMetrics />;
+  }
+
+  const {
     memoryUsage,
     memoryRequests,
-    _memoryLimits, // eslint-disable-line unused-imports/no-unused-vars-ts
     memoryCapacity,
     cpuUsage,
     cpuRequests,
-    _cpuLimits, // eslint-disable-line unused-imports/no-unused-vars-ts
     cpuCapacity,
     podUsage,
     podCapacity,
     fsSize,
     fsUsage
-  ] = values;
+  } = mapValues(metrics, metric => normalizeMetrics(metric).data.result[0].values);
 
   const datasets = [
     // CPU

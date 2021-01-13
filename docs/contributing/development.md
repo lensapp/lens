@@ -19,6 +19,9 @@ When contributing to this repository, please consider first discussing the chang
 * `make dev` - builds and starts the app
 * `make clean` - cleanup local environment build artifacts
 
+### Developing on Windows
+
+On Windows we only support [Git Bash](https://gitforwindows.org/) (or similar shell) for running commands.
 
 ## Github Workflow
 
