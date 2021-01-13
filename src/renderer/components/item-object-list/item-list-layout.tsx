@@ -501,8 +501,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
                 )}
                 {renderTableHeader.map((cellProps, index) => this.columnIsVisible(index) ? <TableCell key={index} {...cellProps} /> : null)}
                 {renderItemMenu && <TableCell className="menu">
-                    {this.canBeConfigured && this.renderColumnMenu()}
-                  </TableCell>
+                  {this.canBeConfigured && this.renderColumnMenu()}
+                </TableCell>
                 }
               </TableHead>
             )}
