@@ -26,10 +26,10 @@ export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
     return clusterRoleBindingApi.get(params);
   }
 
-  protected async loadItems({ isAdmin, namespaces }: KubeObjectStoreLoadingParams): Promise<RoleBinding[]> {
+  protected async loadItems(params: KubeObjectStoreLoadingParams): Promise<RoleBinding[]> {
     const items = await Promise.all([
-      super.loadItems({ isAdmin, namespaces, api: clusterRoleBindingApi }),
-      super.loadItems({ isAdmin, namespaces, api: roleBindingApi }),
+      super.loadItems({ ...params, api: clusterRoleBindingApi }),
+      super.loadItems({ ...params, api: roleBindingApi }),
     ]);
 
     return items.flat();

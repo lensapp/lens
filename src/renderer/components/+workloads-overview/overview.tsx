@@ -48,7 +48,6 @@ export class WorkloadsOverview extends React.Component<Props> {
         if (this.isUnmounting) break;
 
         try {
-          store.reset();
           await store.loadAll();
           unsubscribeMap.get(store)?.(); // unsubscribe previous watcher
           unsubscribeMap.set(store, store.subscribe());

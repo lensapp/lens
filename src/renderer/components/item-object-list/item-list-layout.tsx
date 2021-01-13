@@ -112,11 +112,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   async componentDidMount() {
+    this.loadStores();
+
     if (!this.props.isClusterScoped) {
       disposeOnUnmount(this, [
-        namespaceStore.onContextChange(() => this.loadStores(), {
-          fireImmediately: true,
-        })
+        namespaceStore.onContextChange(() => this.loadStores())
       ]);
     }
   }
@@ -148,7 +148,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       }
 
       try {
-        store.reset();
         await store.loadAll();
         this.watchDisposers.push(store.subscribe());
       } catch (error) {
@@ -195,9 +194,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   };
 
   @computed get isReady() {
-    const { isReady, store } = this.props;
-
-    return typeof isReady == "boolean" ? isReady : store.isLoaded;
+    return this.props.isReady ?? this.props.store.isLoaded;
   }
 
   @computed get filters() {
@@ -330,12 +327,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderNoItems() {
-    const { allItems, items, filters } = this;
-    const allItemsCount = allItems.length;
-    const itemsCount = items.length;
-    const isFiltered = filters.length > 0 && allItemsCount > itemsCount;
-
-    if (isFiltered) {
+    if (this.filters.length > 0) {
       return (
         <NoItems>
           No items found.

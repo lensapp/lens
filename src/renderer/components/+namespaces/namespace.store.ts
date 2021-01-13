@@ -1,3 +1,4 @@
+import { debounce } from "lodash";
 import { action, comparer, IReactionDisposer, IReactionOptions, observable, reaction, toJS, when } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
@@ -7,14 +8,14 @@ import { apiManager } from "../../api/api-manager";
 import { isAllowedResource } from "../../../common/rbac";
 import { clusterStore, getHostedCluster } from "../../../common/cluster-store";
 
-const storage = createStorage<string[]>("context_namespaces", []);
+const storage = createStorage<string[]>("context_namespaces");
 
 export const namespaceUrlParam = createPageParam<string[]>({
   name: "namespaces",
   isSystem: true,
   multiValues: true,
   get defaultValue() {
-    return storage.get(); // initial namespaces coming from URL or local-storage (default)
+    return storage.get() ?? []; // initial namespaces coming from URL or local-storage (default)
   }
 });
 
@@ -51,9 +52,9 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     await getHostedCluster().whenReady; // wait for cluster-state from main
     this.isReady = true;
 
-    this.setContext(this.initNamespaces);
-    this.onSelectedNamespacesChange();
-    this.onAllowedNamespacesChange();
+    this.setContext(this.initialNamespaces);
+    this.autoLoadAllowedNamespaces();
+    this.autoUpdateUrlAndLocalStorage();
   }
 
   public onContextChange(callback: (contextNamespaces: string[]) => void, opts: IReactionOptions = {}): IReactionDisposer {
@@ -63,7 +64,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     });
   }
 
-  private onSelectedNamespacesChange(): IReactionDisposer {
+  private autoUpdateUrlAndLocalStorage(): IReactionDisposer {
     return this.onContextChange(namespaces => {
       storage.set(namespaces); // save to local-storage
       namespaceUrlParam.set(namespaces, { replaceHistory: true }); // update url
@@ -73,7 +74,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     });
   }
 
-  private onAllowedNamespacesChange(): IReactionDisposer {
+  private autoLoadAllowedNamespaces(): IReactionDisposer {
     return reaction(() => this.allowedNamespaces, () => this.loadAll(), {
       fireImmediately: true,
       equals: comparer.identity,
@@ -84,28 +85,19 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return toJS(getHostedCluster().allowedNamespaces);
   }
 
-  get initNamespaces() {
-    const allowedNamespaces = new Set(this.allowedNamespaces);
-    const lastUsedNamespaces = new Set(storage.get());
+  private get initialNamespaces(): string[] {
+    const allowed = new Set(this.allowedNamespaces);
+    const prevSelected = storage.get();
 
-    // remove previously saved, but currently disallowed namespaces
-    lastUsedNamespaces.forEach(namespace => {
-      if (!allowedNamespaces.has(namespace)) {
-        lastUsedNamespaces.delete(namespace);
-      }
-    });
-
-    // return previously saved and currently allowed namespaces
-    if (lastUsedNamespaces.size) {
-      return Array.from(lastUsedNamespaces);
+    if (Array.isArray(prevSelected)) {
+      return prevSelected.filter(namespace => allowed.has(namespace));
     }
+
     // otherwise select "default" or first allowed namespace
-    else {
-      if (allowedNamespaces.has("default")) {
-        return ["default"];
-      } else if (allowedNamespaces.size) {
-        return [Array.from(allowedNamespaces)[0]];
-      }
+    if (allowed.has("default")) {
+      return ["default"];
+    } else if (allowed.size) {
+      return [Array.from(allowed)[0]];
     }
 
     return [];
@@ -132,17 +124,18 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return super.subscribe(apis);
   }
 
-  async loadAll() {
-    return super.loadAll({
+  // prevent multiple loading from different sources (e.g. items-list-layout, namespace-select)
+  private loadAllLazy = debounce(() => {
+    super.loadAll({
       namespaces: this.allowedNamespaces,
     });
+  }, 250);
+
+  async loadAll() {
+    this.loadAllLazy();
   }
 
-  protected async loadItems({ isAdmin, namespaces }: KubeObjectStoreLoadingParams) {
-    if (isAdmin) {
-      return this.api.list();
-    }
-
+  protected async loadItems({ namespaces }: KubeObjectStoreLoadingParams) {
     if (!isAllowedResource("namespaces")) {
       return namespaces.map(getDummyNamespace);
     }
