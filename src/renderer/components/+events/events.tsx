@@ -4,7 +4,7 @@ import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { TabLayout } from "../layout/tab-layout";
 import { eventStore } from "./event.store";
-import { KubeObjectListLayout, KubeObjectListLayoutProps, getDetailsUrl } from "../kube-object";
+import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
 import { KubeEvent } from "../../api/endpoints/events.api";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
@@ -65,7 +65,7 @@ export class Events extends React.Component<Props> {
                   small
                   material="help_outline"
                   className="help-icon"
-                  tooltip="Limited to {eventStore.limit}"
+                  tooltip={`Limited to ${eventStore.limit}`}
                 />
               </>
             )

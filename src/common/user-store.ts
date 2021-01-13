@@ -28,6 +28,7 @@ export interface UserPreferences {
   downloadBinariesPath?: string;
   kubectlBinariesPath?: string;
   openAtLogin?: boolean;
+  hiddenTableColumns?: Record<string, string[]>
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
@@ -54,6 +55,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
     openAtLogin: false,
+    hiddenTableColumns: {},
   };
 
   protected async handleOnLoad() {
