@@ -1,0 +1,12 @@
+.WorkspaceOverview {
+  .TableCell {
+    display: flex;
+    align-items: left;
+
+    &.cluster-icon {
+      align-items: center;
+      flex-grow: 0.2;
+      padding: 0;
+    }
+  }
+}
