@@ -37,7 +37,6 @@ export type ClusterRefreshOptions = {
 };
 
 export interface ClusterState {
-  initializing: boolean;
   initialized: boolean;
   enabled: boolean;
   apiUrl: string;
@@ -579,7 +578,6 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   getState(): ClusterState {
     const state: ClusterState = {
-      initializing: this.initializing,
       initialized: this.initialized,
       enabled: this.enabled,
       apiUrl: this.apiUrl,
