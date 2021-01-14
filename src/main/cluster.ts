@@ -9,7 +9,7 @@ import { ContextHandler } from "./context-handler";
 import { AuthorizationV1Api, CoreV1Api, KubeConfig, V1ResourceAttributes } from "@kubernetes/client-node";
 import { Kubectl } from "./kubectl";
 import { KubeconfigManager } from "./kubeconfig-manager";
-import { loadConfig } from "../common/kube-helpers";
+import { loadConfig, validateKubeConfig } from "../common/kube-helpers";
 import request, { RequestPromiseOptions } from "request-promise-native";
 import { apiResources, KubeApiResource } from "../common/rbac";
 import logger from "./logger";
@@ -252,10 +252,11 @@ export class Cluster implements ClusterModel, ClusterState {
     try {
       const kubeconfig = this.getKubeconfig();
 
+      validateKubeConfig(kubeconfig, this.contextName, { validateCluster: true, validateUser: false, validateExec: false});
       this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
     } catch(err) {
       logger.error(err);
-      logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
+      logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster '${this.name || this.contextName}' (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
       this.isDead = true;
     }
   }
