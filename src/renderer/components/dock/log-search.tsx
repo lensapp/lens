@@ -61,7 +61,7 @@ export const LogSearch = observer((props: Props) => {
       <SearchInput
         value={searchQuery}
         onChange={setSearch}
-        showClearIcon={false}
+        showClearIcon={true}
         contentRight={totalFinds > 0 && findCounts}
         onClear={onClear}
         onKeyDown={onKeyDown}
@@ -77,11 +77,6 @@ export const LogSearch = observer((props: Props) => {
         tooltip={`Next`}
         onClick={onNextOverlay}
         disabled={jumpDisabled}
-      />
-      <Icon
-        material="close"
-        tooltip={`Clear`}
-        onClick={onClear}
       />
     </div>
   );
