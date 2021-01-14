@@ -93,7 +93,7 @@ describe("Lens integration tests", () => {
       });
 
       it("ensures helm repos", async () => {
-        await app.client.waitUntilTextExists("div.repos #message-bitnami", "bitnami"); // wait for the helm-cli to fetch the bitnami repo
+        await app.client.waitUntilTextExists("div.repos #message-bitnami", ""); // wait for the helm-cli to fetch the any repo
         await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
         await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
       });
