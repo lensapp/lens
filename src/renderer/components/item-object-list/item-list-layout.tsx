@@ -19,7 +19,7 @@ import { PageFiltersList } from "./page-filters-list";
 import { PageFiltersSelect } from "./page-filters-select";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
 import { themeStore } from "../../theme.store";
-import { MenuActions} from "../menu/menu-actions";
+import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { userStore } from "../../../common/user-store";
@@ -137,17 +137,13 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   @computed get stores() {
-    const { store, dependentStores, isClusterScoped, tableId } = this.props;
+    const { store, dependentStores, tableId } = this.props;
 
-    if (this.canBeConfigured) this.hiddenColumnNames = new Set(userStore.preferences?.hiddenTableColumns?.[tableId]);
-
-    const stores = new Set([store, ...dependentStores]);
-
-    if (!isClusterScoped) {
-      stores.add(namespaceStore);
+    if (this.canBeConfigured) {
+      this.hiddenColumnNames = new Set(userStore.preferences?.hiddenTableColumns?.[tableId]);
     }
 
-    return stores;
+    return new Set([store, ...dependentStores]);
   }
 
   async loadStores() {
@@ -254,7 +250,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   updateColumnFilter(checkboxValue: boolean, columnName: string) {
-    if (checkboxValue){
+    if (checkboxValue) {
       this.hiddenColumnNames.delete(columnName);
     } else {
       this.hiddenColumnNames.add(columnName);
@@ -266,7 +262,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   columnIsVisible(index: number): boolean {
-    const {renderTableHeader} = this.props;
+    const { renderTableHeader } = this.props;
 
     if (!this.canBeConfigured) return true;
 
@@ -522,23 +518,25 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   renderColumnMenu() {
-    const { renderTableHeader} = this.props;
+    const { renderTableHeader } = this.props;
 
     return (
       <MenuActions
-        toolbar = {false}
-        autoCloseOnSelect = {false}
+        toolbar={false}
+        autoCloseOnSelect={false}
         className={cssNames("KubeObjectMenu")}
       >
         {renderTableHeader.map((cellProps, index) => (
-          !cellProps.showWithColumn &&
+          !cellProps.showWithColumn && (
             <MenuItem key={index} className="input">
-              <Checkbox label = {cellProps.title ?? `<${cellProps.className}>`}
-                className = "MenuCheckbox"
-                value ={!this.hiddenColumnNames.has(cellProps.className)}
-                onChange = {(v) => this.updateColumnFilter(v, cellProps.className)}
+              <Checkbox
+                label={cellProps.title ?? `<${cellProps.className}>`}
+                className="MenuCheckbox"
+                value={!this.hiddenColumnNames.has(cellProps.className)}
+                onChange={(v) => this.updateColumnFilter(v, cellProps.className)}
               />
             </MenuItem>
+          )
         ))}
       </MenuActions>
     );
