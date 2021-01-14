@@ -6,6 +6,29 @@ import { ClusterStore } from "../cluster-store";
 import { workspaceStore } from "../workspace-store";
 
 const testDataIcon = fs.readFileSync("test-data/cluster-store-migration-icon.png");
+const kubeconfig = `
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://localhost
+  name: test
+contexts:
+- context:
+    cluster: test
+    user: test
+  name: foo
+- context:
+    cluster: test
+    user: test
+  name: foo2
+current-context: test
+kind: Config
+preferences: {}
+users:
+- name: test
+  user:
+    token: kubeconfig-user-q4lm4:xxxyyyy
+`;
 
 jest.mock("electron", () => {
   return {
@@ -47,13 +70,13 @@ describe("empty config", () => {
       clusterStore.addCluster(
         new Cluster({
           id: "foo",
-          contextName: "minikube",
+          contextName: "foo",
           preferences: {
             terminalCWD: "/tmp",
             icon: "data:image/jpeg;base64, iVBORw0KGgoAAAANSUhEUgAAA1wAAAKoCAYAAABjkf5",
             clusterName: "minikube"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", "fancy foo config"),
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("foo", kubeconfig),
           workspace: workspaceStore.currentWorkspaceId
         })
       );
@@ -91,20 +114,20 @@ describe("empty config", () => {
       clusterStore.addClusters(
         new Cluster({
           id: "prod",
-          contextName: "prod",
+          contextName: "foo",
           preferences: {
             clusterName: "prod"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", "fancy config"),
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("prod", kubeconfig),
           workspace: "workstation"
         }),
         new Cluster({
           id: "dev",
-          contextName: "dev",
+          contextName: "foo2",
           preferences: {
             clusterName: "dev"
           },
-          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", "fancy config"),
+          kubeConfigPath: ClusterStore.embedCustomKubeConfig("dev", kubeconfig),
           workspace: "workstation"
         })
       );
@@ -177,20 +200,20 @@ describe("config with existing clusters", () => {
           clusters: [
             {
               id: "cluster1",
-              kubeConfig: "foo",
+              kubeConfigPath: kubeconfig,
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
               workspace: "default"
             },
             {
               id: "cluster2",
-              kubeConfig: "foo2",
+              kubeConfigPath: kubeconfig,
               contextName: "foo2",
               preferences: { terminalCWD: "/foo2" }
             },
             {
               id: "cluster3",
-              kubeConfig: "foo",
+              kubeConfigPath: kubeconfig,
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
               workspace: "foo",

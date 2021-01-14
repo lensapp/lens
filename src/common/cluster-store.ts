@@ -321,16 +321,10 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       if (cluster) {
         cluster.updateModel(clusterModel);
       } else {
-        try {
-          cluster = new Cluster(clusterModel);
+        cluster = new Cluster(clusterModel);
 
-          if (!cluster.isManaged) {
-            cluster.enabled = true;
-          }
-        } catch (err) {
-          logger.error(err);
-          logger.error(`[CLUSTER-STORE] Failed to load a cluster (context: ${clusterModel.contextName}, kubeconfig: ${clusterModel.kubeConfigPath})... Removing it from the app. `);
-          continue;
+        if (!cluster.isManaged && !cluster.isDead) {
+          cluster.enabled = true;
         }
       }
       newClusters.set(clusterModel.id, cluster);
@@ -343,7 +337,7 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       }
     });
 
-    this.activeCluster = newClusters.has(activeCluster) ? activeCluster : null;
+    this.activeCluster = newClusters.has(activeCluster) && newClusters.get(activeCluster).enabled ? activeCluster : null;
     this.clusters.replace(newClusters);
     this.removedClusters.replace(removedClusters);
   }

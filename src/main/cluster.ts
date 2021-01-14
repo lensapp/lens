@@ -170,6 +170,12 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @observable isAdmin = false;
   /**
+   * Is cluster marked as dead, for example due the invalid kubeconfig
+   *
+   * @observable
+   */
+  @observable isDead = false;
+  /**
    * Preferences
    *
    * @observable
@@ -242,10 +248,15 @@ export class Cluster implements ClusterModel, ClusterState {
 
   constructor(model: ClusterModel) {
     this.updateModel(model);
-    const kubeconfig = this.getKubeconfig();
 
-    if (kubeconfig.getContextObject(this.contextName)) {
+    try {
+      const kubeconfig = this.getKubeconfig();
+
       this.apiUrl = kubeconfig.getCluster(kubeconfig.getContextObject(this.contextName).cluster).server;
+    } catch(err) {
+      logger.error(err);
+      logger.error(`[CLUSTER] Failed to load kubeconfig for the cluster (context: ${this.contextName}, kubeconfig: ${this.kubeConfigPath}).`);
+      this.isDead = true;
     }
   }
 
