@@ -63,6 +63,7 @@ if (process.env.LENS_DISABLE_GPU) {
 
 app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
+  logger.info("🐚 Syncing shell environment");
   await shellSync();
 
   powerMonitor.on("shutdown", () => {
