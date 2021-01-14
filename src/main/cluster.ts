@@ -76,7 +76,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * If extension sets this it needs to also mark cluster as enabled on activate (or when added to a store)
    */
   public ownerRef: string;
-  public initializing = false;
   protected kubeconfigManager: KubeconfigManager;
   protected eventDisposers: Function[] = [];
   protected activated = false;
@@ -84,6 +83,14 @@ export class Cluster implements ClusterModel, ClusterState {
 
   whenInitialized = when(() => this.initialized);
   whenReady = when(() => this.ready);
+
+  /**
+   * Is cluster object initializinng on-going
+   *
+   * @observable
+   */
+  @observable initializing = false;
+
 
   /**
    * Is cluster object initialized
@@ -279,7 +286,6 @@ export class Cluster implements ClusterModel, ClusterState {
       this.kubeconfigManager = await KubeconfigManager.create(this, this.contextHandler, port);
       this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
       this.initialized = true;
-      this.initializing = false;
       logger.info(`[CLUSTER]: "${this.contextName}" init success`, {
         id: this.id,
         context: this.contextName,
@@ -290,6 +296,8 @@ export class Cluster implements ClusterModel, ClusterState {
         id: this.id,
         error: err,
       });
+    } finally {
+      this.initializing = false;
     }
   }
 
