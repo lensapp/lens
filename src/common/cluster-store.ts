@@ -328,7 +328,8 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
             cluster.enabled = true;
           }
         } catch (err) {
-          logger.error(`[CLUSTER-STORE] Failed to construct a cluster (context: ${clusterModel.contextName}, kubeconfig: ${clusterModel.kubeConfigPath})... Removing it from the app.`);
+          logger.error(err);
+          logger.error(`[CLUSTER-STORE] Failed to load a cluster (context: ${clusterModel.contextName}, kubeconfig: ${clusterModel.kubeConfigPath})... Removing it from the app. `);
           continue;
         }
       }
