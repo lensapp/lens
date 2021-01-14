@@ -314,6 +314,12 @@ describe("Lens integration tests", () => {
           expectedText: "Resource Quotas"
         },
         {
+          name: "Limit Ranges",
+          href: "limitranges",
+          expectedSelector: "h5.title",
+          expectedText: "Limit Ranges"
+        },
+        {
           name: "HPA",
           href: "hpa",
           expectedSelector: "h5.title",
