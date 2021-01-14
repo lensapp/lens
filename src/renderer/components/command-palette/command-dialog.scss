@@ -1,0 +1,28 @@
+#command-dialog {
+  position: absolute;
+  top: 20px;
+  width: 40%;
+  height: none !important;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 1000;
+  background-color: var(--dockInfoBackground);
+
+  ul {
+    margin-top: 10px;
+    li {
+      padding-left: 4px;
+      margin-bottom: 10px;
+      a {
+        text-decoration: none;
+        border-bottom: none;
+      }
+    }
+    li:hover {
+
+      cursor: pointer;
+    }
+  }
+}

@@ -12,6 +12,8 @@ import { cssNames, prevDefault } from "../../utils";
 import { Button } from "../button";
 import { isRequired, InputValidator } from "../input/input_validators";
 import { clusterStore } from "../../../common/cluster-store";
+import { commandRegistry } from "../../../extensions/registries/command-registry";
+import { navigate } from "../../navigation";
 
 @observer
 export class Workspaces extends React.Component {
@@ -214,3 +216,9 @@ export class Workspaces extends React.Component {
     );
   }
 }
+
+commandRegistry.add({
+  id: "workspace.showList",
+  title: "Workspace: Open list",
+  action: () => navigate("/workspaces")
+});

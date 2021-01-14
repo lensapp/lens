@@ -11,6 +11,7 @@ import { Notifications } from "./components/notifications";
 import { ConfirmDialog } from "./components/confirm-dialog";
 import { extensionLoader } from "../extensions/extension-loader";
 import { broadcastMessage } from "../common/ipc";
+import { CommandDialog } from "./components/command-palette/command-dialog";
 
 @observer
 export class LensApp extends React.Component {
@@ -36,6 +37,7 @@ export class LensApp extends React.Component {
         </ErrorBoundary>
         <Notifications/>
         <ConfirmDialog/>
+        <CommandDialog />
       </Router>
     );
   }
