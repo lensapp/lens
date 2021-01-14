@@ -48,11 +48,13 @@ export const LogControls = observer((props: Props) => {
           label="Show timestamps"
           value={showTimestamps}
           onChange={toggleTimestamps}
+          className="show-timestamps"
         />
         <Checkbox
           label="Show previous terminated container"
           value={previous}
           onChange={togglePrevious}
+          className="show-previous"
         />
         <Icon
           material="get_app"
