@@ -26,6 +26,8 @@ import { InstalledExtension, extensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
+import requestPromise from "request-promise-native";
+import { getAppVersion } from "../common/utils";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -67,14 +69,17 @@ app.on("ready", async () => {
     app.exit();
   });
 
+  logger.info(`📡 Checking for app updates`);
   const updater = new AppUpdater();
 
   updater.start();
 
   registerFileProtocol("static", __static);
 
+  logger.info("🤓 Installing developer tools");
   await installDeveloperTools();
 
+  logger.info("💾 Loading stores");
   // preload
   await Promise.all([
     userStore.load(),
@@ -86,6 +91,7 @@ app.on("ready", async () => {
 
   // find free port
   try {
+    logger.info("🔑 Getting free port for LensProxy server");
     proxyPort = await getFreePort();
   } catch (error) {
     logger.error(error);
@@ -98,6 +104,7 @@ app.on("ready", async () => {
 
   // run proxy
   try {
+    logger.info("🔌 Starting LensProxy");
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     proxyServer = LensProxy.create(proxyPort, clusterManager);
   } catch (error) {
@@ -106,9 +113,32 @@ app.on("ready", async () => {
     app.exit();
   }
 
+  // test proxy connection
+  try {
+    logger.info("🔎 Testing LensProxy connection ...");
+    const response = await requestPromise({
+      method: "GET",
+      uri: `http://localhost:${proxyPort}/version`,
+      resolveWithFullResponse: true
+    });
+
+    const appVersion = JSON.parse(response.body).version;
+
+    if (getAppVersion() != appVersion) {
+      logger.error(`Proxy server responded with invalid response: ${response.body}`);
+    }
+    logger.info("⚡ LensProxy connection OK");
+  } catch (error) {
+    logger.error("Checking proxy server connection failed", error);
+  }
+
   extensionLoader.init();
   extensionDiscovery.init();
+
+  logger.info("🖥️  Starting WindowManager");
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
+
+  logger.info("🧩 Initializing extensions");
 
   // call after windowManager to see splash earlier
   try {
