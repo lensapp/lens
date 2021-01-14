@@ -7,49 +7,39 @@ export type KubeResource =
   "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets";
 
 export interface KubeApiResource {
-  kind: string; // resource type
-  resource: KubeResource; // valid resource name
+  kind: string; // resource type (e.g. "Namespace")
+  apiName: KubeResource; // valid api resource name (e.g. "namespaces")
   group?: string; // api-group
 }
 
 // TODO: auto-populate all resources dynamically (see: kubectl api-resources -o=wide -v=7)
 export const apiResources: KubeApiResource[] = [
-  { kind: "ConfigMap", resource: "configmaps" },
-  { kind: "CronJob", resource: "cronjobs", group: "batch" },
-  { kind: "CustomResourceDefinition", resource: "customresourcedefinitions", group: "apiextensions.k8s.io" },
-  { kind: "DaemonSet", resource: "daemonsets", group: "apps" },
-  { kind: "Deployment", resource: "deployments", group: "apps" },
-  { kind: "Endpoint", resource: "endpoints" },
-  { kind: "Event", resource: "events" },
-  { kind: "HorizontalPodAutoscaler", resource: "horizontalpodautoscalers" },
-  { kind: "Ingress", resource: "ingresses", group: "networking.k8s.io" },
-  { kind: "Job", resource: "jobs", group: "batch" },
-  { kind: "Namespace", resource: "namespaces" },
-  { kind: "LimitRange", resource: "limitranges" },
-  { kind: "NetworkPolicy", resource: "networkpolicies", group: "networking.k8s.io" },
-  { kind: "Node", resource: "nodes" },
-  { kind: "PersistentVolume", resource: "persistentvolumes" },
-  { kind: "PersistentVolumeClaim", resource: "persistentvolumeclaims" },
-  { kind: "Pod", resource: "pods" },
-  { kind: "PodDisruptionBudget", resource: "poddisruptionbudgets" },
-  { kind: "PodSecurityPolicy", resource: "podsecuritypolicies" },
-  { kind: "ResourceQuota", resource: "resourcequotas" },
-  { kind: "ReplicaSet", resource: "replicasets", group: "apps" },
-  { kind: "Secret", resource: "secrets" },
-  { kind: "Service", resource: "services" },
-  { kind: "StatefulSet", resource: "statefulsets", group: "apps" },
-  { kind: "StorageClass", resource: "storageclasses", group: "storage.k8s.io" },
+  { kind: "ConfigMap", apiName: "configmaps" },
+  { kind: "CronJob", apiName: "cronjobs", group: "batch" },
+  { kind: "CustomResourceDefinition", apiName: "customresourcedefinitions", group: "apiextensions.k8s.io" },
+  { kind: "DaemonSet", apiName: "daemonsets", group: "apps" },
+  { kind: "Deployment", apiName: "deployments", group: "apps" },
+  { kind: "Endpoint", apiName: "endpoints" },
+  { kind: "Event", apiName: "events" },
+  { kind: "HorizontalPodAutoscaler", apiName: "horizontalpodautoscalers" },
+  { kind: "Ingress", apiName: "ingresses", group: "networking.k8s.io" },
+  { kind: "Job", apiName: "jobs", group: "batch" },
+  { kind: "Namespace", apiName: "namespaces" },
+  { kind: "LimitRange", apiName: "limitranges" },
+  { kind: "NetworkPolicy", apiName: "networkpolicies", group: "networking.k8s.io" },
+  { kind: "Node", apiName: "nodes" },
+  { kind: "PersistentVolume", apiName: "persistentvolumes" },
+  { kind: "PersistentVolumeClaim", apiName: "persistentvolumeclaims" },
+  { kind: "Pod", apiName: "pods" },
+  { kind: "PodDisruptionBudget", apiName: "poddisruptionbudgets" },
+  { kind: "PodSecurityPolicy", apiName: "podsecuritypolicies" },
+  { kind: "ResourceQuota", apiName: "resourcequotas" },
+  { kind: "ReplicaSet", apiName: "replicasets", group: "apps" },
+  { kind: "Secret", apiName: "secrets" },
+  { kind: "Service", apiName: "services" },
+  { kind: "StatefulSet", apiName: "statefulsets", group: "apps" },
+  { kind: "StorageClass", apiName: "storageclasses", group: "storage.k8s.io" },
 ];
-
-export function isAllowedResourceType(kind: string): boolean {
-  const apiResource = apiResources.find(resource => resource.kind === kind);
-
-  if (apiResource) {
-    return getHostedCluster().allowedResources.includes(apiResource.resource);
-  }
-
-  return true; // allowed by default for other resources
-}
 
 export function isAllowedResource(resources: KubeResource | KubeResource[]) {
   if (!Array.isArray(resources)) {

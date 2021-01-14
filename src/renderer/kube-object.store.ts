@@ -1,3 +1,4 @@
+import type { Cluster } from "../main/cluster";
 import { action, observable, reaction } from "mobx";
 import { autobind } from "./utils";
 import { KubeObject } from "./api/kube-object";
@@ -6,7 +7,6 @@ import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
-import { isAllowedResourceType } from "../common/rbac";
 
 export interface KubeObjectStoreLoadingParams {
   namespaces: string[];
@@ -76,8 +76,16 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
 
+  protected async resolveCluster(): Promise<Cluster> {
+    const { getHostedCluster } = await import("../common/cluster-store");
+
+    return getHostedCluster();
+  }
+
   protected async loadItems({ namespaces, api }: KubeObjectStoreLoadingParams): Promise<T[]> {
-    if (isAllowedResourceType(api.kind)) {
+    const cluster = await this.resolveCluster();
+
+    if (cluster.isAllowedResource(api.kind)) {
       if (api.isNamespaced) {
         return Promise
           .all(namespaces.map(namespace => api.list({ namespace })))
