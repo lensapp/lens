@@ -311,7 +311,7 @@ users:
             },
             {
               id: "cluster2",
-              kubeConfig: "foo",
+              kubeConfigPath: kubeconfig,
               contextName: "foo",
               preferences: { terminalCWD: "/foo" },
               workspace: "default"
@@ -332,11 +332,13 @@ users:
     mockFs.restore();
   });
 
-  it("ignores clusters with invalid kubeconfig", () => {
+  it("does not enable clusters with invalid kubeconfig", () => {
     const storedClusters = clusterStore.clustersList;
 
-    expect(storedClusters.length).toBe(1);
-    expect(storedClusters[0].id).toBe("cluster2");
+    expect(storedClusters.length).toBe(2);
+    expect(storedClusters[0].enabled).toBeFalsy;
+    expect(storedClusters[1].id).toBe("cluster2");
+    expect(storedClusters[1].enabled).toBeTruthy;
   });
 });
 
