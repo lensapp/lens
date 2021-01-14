@@ -39,11 +39,11 @@ export const LogControls = observer((props: Props) => {
   };
 
   return (
-    <div className={cssNames("LogControls flex gaps align-center")}>
+    <div className={cssNames("LogControls flex gaps align-center justify-space-between wrap")}>
       <div className="time-range">
         {since && `Logs from ${new Date(since[0]).toLocaleString()}`}
       </div>
-      <div className="flex box grow gaps align-center justify-flex-end">
+      <div className="flex gaps align-center">
         <Checkbox
           label="Show timestamps"
           value={showTimestamps}
