@@ -321,10 +321,15 @@ export class ClusterStore extends BaseStore<ClusterStoreModel> {
       if (cluster) {
         cluster.updateModel(clusterModel);
       } else {
-        cluster = new Cluster(clusterModel);
+        try {
+          cluster = new Cluster(clusterModel);
 
-        if (!cluster.isManaged) {
-          cluster.enabled = true;
+          if (!cluster.isManaged) {
+            cluster.enabled = true;
+          }
+        } catch (err) {
+          logger.error(`[CLUSTER-STORE] Failed to construct a cluster (context: ${clusterModel.contextName}, kubeconfig: ${clusterModel.kubeConfigPath})... Removing it from the app.`);
+          continue;
         }
       }
       newClusters.set(clusterModel.id, cluster);

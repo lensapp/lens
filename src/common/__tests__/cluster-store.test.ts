@@ -247,6 +247,76 @@ describe("config with existing clusters", () => {
   });
 });
 
+describe("config with invalid cluster kubeconfig", () => {
+  beforeEach(() => {
+    const invalidKubeconfig = `
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://localhost
+  name: test2
+contexts:
+- context:
+    cluster: test
+    user: test
+  name: test
+current-context: test
+kind: Config
+preferences: {}
+users:
+- name: test
+  user:
+    token: kubeconfig-user-q4lm4:xxxyyyy
+`;
+
+    ClusterStore.resetInstance();
+    const mockOpts = {
+      "tmp": {
+        "lens-cluster-store.json": JSON.stringify({
+          __internal__: {
+            migrations: {
+              version: "99.99.99"
+            }
+          },
+          clusters: [
+            {
+              id: "cluster1",
+              kubeConfigPath: invalidKubeconfig,
+              contextName: "test",
+              preferences: { terminalCWD: "/foo" },
+              workspace: "foo",
+            },
+            {
+              id: "cluster2",
+              kubeConfig: "foo",
+              contextName: "foo",
+              preferences: { terminalCWD: "/foo" },
+              workspace: "default"
+            },
+
+          ]
+        })
+      }
+    };
+
+    mockFs(mockOpts);
+    clusterStore = ClusterStore.getInstance<ClusterStore>();
+
+    return clusterStore.load();
+  });
+
+  afterEach(() => {
+    mockFs.restore();
+  });
+
+  it("ignores clusters with invalid kubeconfig", () => {
+    const storedClusters = clusterStore.clustersList;
+
+    expect(storedClusters.length).toBe(1);
+    expect(storedClusters[0].id).toBe("cluster2");
+  });
+});
+
 describe("pre 2.0 config with an existing cluster", () => {
   beforeEach(() => {
     ClusterStore.resetInstance();
