@@ -12,6 +12,7 @@ import { Spinner } from "../spinner";
 import { resourceQuotaStore } from "../+config-resource-quotas/resource-quotas.store";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { limitRangeStore } from "../+config-limit-ranges/limit-ranges.store";
 
 interface Props extends KubeObjectDetailsProps<Namespace> {
 }
@@ -24,8 +25,15 @@ export class NamespaceDetails extends React.Component<Props> {
     return resourceQuotaStore.getAllByNs(namespace);
   }
 
+  @computed get limitranges() {
+    const namespace = this.props.object.getName();
+
+    return limitRangeStore.getAllByNs(namespace);
+  }
+
   componentDidMount() {
     resourceQuotaStore.loadAll();
+    limitRangeStore.loadAll();
   }
 
   render() {
@@ -48,6 +56,16 @@ export class NamespaceDetails extends React.Component<Props> {
             return (
               <Link key={quota.getId()} to={getDetailsUrl(quota.selfLink)}>
                 {quota.getName()}
+              </Link>
+            );
+          })}
+        </DrawerItem>
+        <DrawerItem name={`Limit Ranges`}>
+          {!this.limitranges && limitRangeStore.isLoading && <Spinner/>}
+          {this.limitranges.map(limitrange => {
+            return (
+              <Link key={limitrange.getId()} to={getDetailsUrl(limitrange.selfLink)}>
+                {limitrange.getName()}
               </Link>
             );
           })}
