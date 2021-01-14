@@ -114,9 +114,14 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       this.isLoaded = true;
     } catch (error) {
       console.error("Loading store items failed", { error, store: this });
+      this.resetOnError(error);
     } finally {
       this.isLoading = false;
     }
+  }
+
+  protected resetOnError(error: any) {
+    if (error) this.reset();
   }
 
   protected async loadItem(params: { name: string; namespace?: string }): Promise<T> {
