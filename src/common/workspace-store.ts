@@ -138,6 +138,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     super({
       configName: "lens-workspace-store",
     });
+    this.workspaces.get(WorkspaceStore.defaultId).enabled = true;
   }
 
   async load() {
