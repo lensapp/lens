@@ -134,11 +134,20 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   static readonly defaultId: WorkspaceId = "default";
   private static stateRequestChannel = "workspace:states";
 
+  @observable currentWorkspaceId = WorkspaceStore.defaultId;
+  @observable workspaces = observable.map<WorkspaceId, Workspace>();
+
   private constructor() {
     super({
       configName: "lens-workspace-store",
     });
-    this.workspaces.get(WorkspaceStore.defaultId).enabled = true;
+    const defaultWorkspace = new Workspace({
+      id: WorkspaceStore.defaultId,
+      name: "default"
+    });
+
+    defaultWorkspace.enabled = true;
+    this.workspaces.set(WorkspaceStore.defaultId, defaultWorkspace);
   }
 
   async load() {
@@ -186,15 +195,6 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     super.unregisterIpcListener();
     ipcRenderer.removeAllListeners("workspace:state");
   }
-
-  @observable currentWorkspaceId = WorkspaceStore.defaultId;
-
-  @observable workspaces = observable.map<WorkspaceId, Workspace>({
-    [WorkspaceStore.defaultId]: new Workspace({
-      id: WorkspaceStore.defaultId,
-      name: "default"
-    })
-  });
 
   @computed get currentWorkspace(): Workspace {
     return this.getById(this.currentWorkspaceId);
