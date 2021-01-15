@@ -86,7 +86,7 @@ export class HelmChart {
   tillerVersion?: string;
 
   getId() {
-    return `${this.apiVersion}/${this.name}@${this.getAppVersion()}`;
+    return this.digest;
   }
 
   getName() {
