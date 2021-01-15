@@ -84,6 +84,13 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
   }
 
   /**
+   * Is this workspace not manged by an extension or is it managed and explicitly enabled
+   */
+  get isEnabled(): boolean {
+    return !this.isManaged || this.enabled;
+  }
+
+  /**
    * Is workspace managed by an extension
    */
   get isManaged(): boolean {
@@ -204,7 +211,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @computed get enabledWorkspacesList() {
-    return this.workspacesList.filter((w) => w.enabled);
+    return this.workspacesList.filter((w) => w.isEnabled);
   }
 
   pushState() {
@@ -243,10 +250,6 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       return;
     }
     this.workspaces.set(id, workspace);
-
-    if (!workspace.isManaged) {
-      workspace.enabled = true;
-    }
 
     appEventBus.emit({name: "workspace", action: "add"});
 
@@ -288,21 +291,13 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
   }
 
   @action
-  protected fromStore({ currentWorkspace, workspaces = [] }: WorkspaceStoreModel) {
+  protected fromStore({ currentWorkspace, workspaces }: WorkspaceStoreModel) {
     if (currentWorkspace) {
       this.currentWorkspaceId = currentWorkspace;
     }
 
-    if (workspaces.length) {
-      this.workspaces.clear();
-      workspaces.forEach(ws => {
-        const workspace = new Workspace(ws);
-
-        if (!workspace.isManaged) {
-          workspace.enabled = true;
-        }
-        this.workspaces.set(workspace.id, workspace);
-      });
+    if (workspaces?.length) {
+      this.workspaces.replace(workspaces.map(ws => [ws.id, new Workspace(ws)]));
     }
   }
 

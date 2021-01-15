@@ -129,12 +129,11 @@ export class Workspaces extends React.Component {
           Workspaces
         </h2>
         <div className="items flex column gaps">
-          {this.workspaces.map(({ id: workspaceId, name, description, ownerRef }) => {
+          {this.workspaces.map(({ id: workspaceId, name, description, isManaged}) => {
             const isActive = workspaceStore.currentWorkspaceId === workspaceId;
             const isDefault = workspaceStore.isDefault(workspaceId);
             const isEditing = this.editingWorkspaces.has(workspaceId);
             const editingWorkspace = this.editingWorkspaces.get(workspaceId);
-            const managed = !!ownerRef;
             const className = cssNames("workspace flex gaps align-center", {
               active: isActive,
               editing: isEditing,
@@ -154,7 +153,7 @@ export class Workspaces extends React.Component {
                       {isActive && <span> (current)</span>}
                     </span>
                     <span className="description">{description}</span>
-                    {!isDefault && !managed && (
+                    {!isDefault && !isManaged && (
                       <Fragment>
                         <Icon
                           material="edit"

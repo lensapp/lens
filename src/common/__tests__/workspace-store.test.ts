@@ -66,7 +66,7 @@ describe("workspace store tests", () => {
       const workspace = ws.getById("123");
 
       expect(workspace.name).toBe("foobar");
-      expect(workspace.enabled).toBe(true);
+      expect(workspace.isEnabled).toBe(true);
     });
 
     it("cannot set a non-existent workspace to be active", () => {
