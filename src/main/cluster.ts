@@ -85,6 +85,14 @@ export class Cluster implements ClusterModel, ClusterState {
   whenReady = when(() => this.ready);
 
   /**
+   * Is cluster object initializinng on-going
+   *
+   * @observable
+   */
+  @observable initializing = false;
+
+
+  /**
    * Is cluster object initialized
    *
    * @observable
@@ -273,6 +281,7 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @action async init(port: number) {
     try {
+      this.initializing = true;
       this.contextHandler = new ContextHandler(this);
       this.kubeconfigManager = await KubeconfigManager.create(this, this.contextHandler, port);
       this.kubeProxyUrl = `http://localhost:${port}${apiKubePrefix}`;
@@ -287,6 +296,8 @@ export class Cluster implements ClusterModel, ClusterState {
         id: this.id,
         error: err,
       });
+    } finally {
+      this.initializing = false;
     }
   }
 
