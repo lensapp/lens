@@ -21,7 +21,7 @@ type PodLogLine = string;
 export const logRange = 500;
 
 @autobind()
-export class PodLogsStore extends DockTabStore<IPodLogsData> {
+export class LogStore extends DockTabStore<IPodLogsData> {
   private refresher = interval(10, () => {
     const id = dockStore.selectedTabId;
 
@@ -39,7 +39,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 
-      if (isPodLogsTab(selectedTab) && isOpen) {
+      if (isLogsTab(selectedTab) && isOpen) {
         this.refresher.start();
       } else {
         this.refresher.stop();
@@ -203,7 +203,7 @@ export class PodLogsStore extends DockTabStore<IPodLogsData> {
   }
 }
 
-export const podLogsStore = new PodLogsStore();
+export const podLogsStore = new LogStore();
 
 export function createPodLogsTab(data: IPodLogsData, tabParams: Partial<IDockTab> = {}) {
   const podId = data.pod.getId();
@@ -227,6 +227,6 @@ export function createPodLogsTab(data: IPodLogsData, tabParams: Partial<IDockTab
   return tab;
 }
 
-export function isPodLogsTab(tab: IDockTab) {
+export function isLogsTab(tab: IDockTab) {
   return tab && tab.kind === TabKind.POD_LOGS;
 }
