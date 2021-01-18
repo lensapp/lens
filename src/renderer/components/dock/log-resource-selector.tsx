@@ -3,25 +3,24 @@ import "./log-resource-selector.scss";
 import React from "react";
 import { observer } from "mobx-react";
 
-import { IPodContainer, Pod } from "../../api/endpoints";
+import { Pod } from "../../api/endpoints";
 import { Badge } from "../badge";
 import { Select, SelectOption } from "../select";
-import { IPodLogsData } from "./log.store";
+import { LogTabData } from "./log-tab.store";
+import { podsStore } from "../+workloads-pods/pods.store";
 
 interface Props {
-  tabData: IPodLogsData
-  save: (data: Partial<IPodLogsData>) => void
+  tabData: LogTabData
+  save: (data: Partial<LogTabData>) => void
   reload: () => void
 }
 
 export const LogResourceSelector = observer((props: Props) => {
   const { tabData, save, reload } = props;
-  const { selectedContainer, containers, initContainers } = tabData;
-  const pod = new Pod(tabData.pod);
+  const { selectedPod, selectedContainer, containers, initContainers, pods } = tabData;
+  const pod = new Pod(tabData.selectedPod);
 
   const onContainerChange = (option: SelectOption) => {
-    const { containers, initContainers } = tabData;
-
     save({
       selectedContainer: containers
         .concat(initContainers)
@@ -30,11 +29,19 @@ export const LogResourceSelector = observer((props: Props) => {
     reload();
   };
 
-  const getSelectOptions = (containers: IPodContainer[]) => {
-    return containers.map(container => {
+  const onPodChange = (option: SelectOption) => {
+    save({ selectedPod: podsStore.getByName(option.value, selectedPod.getNs()) });
+    // Change tab title
+    // Refresh container list
+    reload();
+  };
+
+
+  const getSelectOptions = (items: string[]) => {
+    return items.map(item => {
       return {
-        value: container.name,
-        label: container.name
+        value: item,
+        label: item
       };
     });
   };
@@ -42,18 +49,31 @@ export const LogResourceSelector = observer((props: Props) => {
   const containerSelectOptions = [
     {
       label: `Containers`,
-      options: getSelectOptions(containers)
+      options: getSelectOptions(containers.map(container => container.name))
     },
     {
       label: `Init Containers`,
-      options: getSelectOptions(initContainers),
+      options: getSelectOptions(initContainers.map(container => container.name)),
+    }
+  ];
+
+  const podSelectOptions = [
+    {
+      label: pod.getOwnerRefs()[0]?.name,
+      options: getSelectOptions(pods.map(pod => pod.getName()))
     }
   ];
 
   return (
     <div className="LogResourceSelector flex gaps align-center">
       <span>Namespace</span> <Badge label={pod.getNs()}/>
-      <span>Pod</span> <Badge label={pod.getName()}/>
+      <span>Pod</span>
+      <Select
+        options={podSelectOptions}
+        value={{ label: pod.getName(), value: pod.getName() }}
+        onChange={onPodChange}
+        autoConvertOptions={false}
+      />
       <span>Container</span>
       <Select
         options={containerSelectOptions}
