@@ -1,4 +1,4 @@
-import "./pod-log-search.scss";
+import "./log-search.scss";
 
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
@@ -16,7 +16,7 @@ interface Props extends PodLogSearchProps {
   logs: string[]
 }
 
-export const PodLogSearch = observer((props: Props) => {
+export const LogSearch = observer((props: Props) => {
   const { logs, onSearch, toPrevOverlay, toNextOverlay } = props;
   const { setNextOverlayActive, setPrevOverlayActive, searchQuery, occurrences, activeFind, totalFinds } = searchStore;
   const jumpDisabled = !searchQuery || !occurrences.length;
@@ -57,11 +57,11 @@ export const PodLogSearch = observer((props: Props) => {
   }, [logs]);
 
   return (
-    <div className="PodLogsSearch flex box grow justify-flex-end gaps align-center">
+    <div className="LogSearch flex box grow justify-flex-end gaps align-center">
       <SearchInput
         value={searchQuery}
         onChange={setSearch}
-        showClearIcon={false}
+        showClearIcon={true}
         contentRight={totalFinds > 0 && findCounts}
         onClear={onClear}
         onKeyDown={onKeyDown}
@@ -77,11 +77,6 @@ export const PodLogSearch = observer((props: Props) => {
         tooltip={`Next`}
         onClick={onNextOverlay}
         disabled={jumpDisabled}
-      />
-      <Icon
-        material="close"
-        tooltip={`Clear`}
-        onClick={onClear}
       />
     </div>
   );

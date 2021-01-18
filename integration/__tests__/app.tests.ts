@@ -505,16 +505,16 @@ describe("Lens integration tests", () => {
         await app.client.waitForVisible(".Drawer");
         await app.client.click(".drawer-title .Menu li:nth-child(2)");
         // Check if controls are available
-        await app.client.waitForVisible(".PodLogs .VirtualList");
-        await app.client.waitForVisible(".PodLogControls");
-        await app.client.waitForVisible(".PodLogControls .SearchInput");
-        await app.client.waitForVisible(".PodLogControls .SearchInput input");
+        await app.client.waitForVisible(".Logs .VirtualList");
+        await app.client.waitForVisible(".LogResourceSelector");
+        await app.client.waitForVisible(".LogResourceSelector .SearchInput");
+        await app.client.waitForVisible(".LogResourceSelector .SearchInput input");
         // Search for semicolon
         await app.client.keys(":");
-        await app.client.waitForVisible(".PodLogs .list span.active");
+        await app.client.waitForVisible(".Logs .list span.active");
         // Click through controls
-        await app.client.click(".PodLogControls .timestamps-icon");
-        await app.client.click(".PodLogControls .undo-icon");
+        await app.client.click(".LogControls .show-timestamps");
+        await app.client.click(".LogControls .show-previous");
       });
     });
 

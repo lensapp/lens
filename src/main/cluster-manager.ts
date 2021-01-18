@@ -14,7 +14,7 @@ export class ClusterManager extends Singleton {
     // auto-init clusters
     autorun(() => {
       clusterStore.enabledClustersList.forEach(cluster => {
-        if (!cluster.initialized) {
+        if (!cluster.initialized && !cluster.initializing) {
           logger.info(`[CLUSTER-MANAGER]: init cluster`, cluster.getMeta());
           cluster.init(port);
         }
