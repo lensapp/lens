@@ -58,20 +58,16 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
    * @observable
    */
   @observable ownerRef?: string;
-  /**
-   * Is workspace enabled
-   *
-   * Workspaces that don't have ownerRef will be enabled by default. Workspaces with ownerRef need to explicitly enable a workspace.
-   *
-   * @observable
-   */
-  @observable enabled: boolean;
+
   /**
    * Last active cluster id
    *
    * @observable
    */
   @observable lastActiveClusterId?: ClusterId;
+
+
+  @observable private _enabled: boolean;
 
   constructor(data: WorkspaceModel) {
     Object.assign(this, data);
@@ -81,6 +77,21 @@ export class Workspace implements WorkspaceModel, WorkspaceState {
         this.pushState();
       });
     }
+  }
+
+  /**
+   * Is workspace enabled
+   *
+   * Workspaces that don't have ownerRef will be enabled by default. Workspaces with ownerRef need to explicitly enable a workspace.
+   *
+   * @observable
+   */
+  get enabled(): boolean {
+    return !this.isManaged || this._enabled;
+  }
+
+  set enabled(enabled: boolean) {
+    this._enabled = enabled;
   }
 
   /**
@@ -141,13 +152,11 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
     super({
       configName: "lens-workspace-store",
     });
-    const defaultWorkspace = new Workspace({
+
+    this.workspaces.set(WorkspaceStore.defaultId, new Workspace({
       id: WorkspaceStore.defaultId,
       name: "default"
-    });
-
-    defaultWorkspace.enabled = true;
-    this.workspaces.set(WorkspaceStore.defaultId, defaultWorkspace);
+    }));
   }
 
   async load() {
