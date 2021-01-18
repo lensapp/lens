@@ -190,7 +190,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
-  protected eventsBuffer = observable<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
+  protected eventsBuffer = observable.array<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {
     kubeWatchApi.onMessage.addListener(({ store, data }: IKubeWatchMessage<T>) => {
@@ -198,7 +198,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       this.eventsBuffer.push(data);
     })
 
-    reaction(() => this.eventsBuffer[0], this.updateFromEventsBuffer, {
+    reaction(() => this.eventsBuffer.length > 0, this.updateFromEventsBuffer, {
       delay
     });
   }
@@ -209,10 +209,6 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   @action
   protected updateFromEventsBuffer() {
-    if (!this.eventsBuffer.length) {
-      return;
-    }
-    // create latest non-observable copy of items to apply updates in one action (==single render)
     const items = this.items.toJS();
 
     for (const { type, object } of this.eventsBuffer.clear()) {

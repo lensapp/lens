@@ -8,8 +8,9 @@ import { autobind, EventEmitter } from "../utils";
 import { KubeJsonApiData, KubeJsonApiError } from "./kube-json-api";
 import { ensureObjectSelfLink, KubeApi } from "./kube-api";
 import { getHostedCluster } from "../../common/cluster-store";
-import { apiPrefix, isDevelopment } from "../../common/vars";
+import { apiPrefix, isProduction } from "../../common/vars";
 import { apiManager } from "./api-manager";
+import logger from "../../main/logger";
 
 export { IKubeWatchEvent, IKubeWatchEventStreamEnd }
 
@@ -18,6 +19,11 @@ export interface IKubeWatchMessage<T extends KubeObject = any> {
   error?: IKubeWatchEvent<KubeJsonApiError>;
   api?: KubeApi<T>;
   store?: KubeObjectStore<T>;
+}
+
+export interface IKubeWatchLog {
+  message: string | Error;
+  meta?: object | any;
 }
 
 @autobind()
@@ -91,8 +97,9 @@ export class KubeWatchApi {
       return;
     }
 
-    this.writeLog({
-      data: ["CONNECTING", payload.apis]
+    this.log({
+      message: "connecting",
+      meta: payload,
     });
 
     try {
@@ -125,8 +132,9 @@ export class KubeWatchApi {
         }
       });
     } catch (error) {
-      this.writeLog({
-        error: ["CONNECTION ERROR", error]
+      this.log({
+        message: new Error("connection error"),
+        meta: { error }
       });
     }
   }
@@ -152,8 +160,9 @@ export class KubeWatchApi {
         const message = this.getMessage(JSON.parse(kubeEvent));
         this.onMessage.emit(message);
       } catch (error) {
-        this.writeLog({
-          error: ["failed to parse watch-api event", { error, jsonText }]
+        this.log({
+          message: new Error("failed to parse watch-api event"),
+          meta: { error, jsonText },
         });
       }
     })
@@ -206,8 +215,9 @@ export class KubeWatchApi {
         await api.refreshResourceVersion({ namespace });
         this.connect();
       } catch (error) {
-        this.writeLog({
-          error: ["failed to reconnect after stream ending", { event, error }]
+        this.log({
+          message: new Error("failed to reconnect on stream end"),
+          meta: { error, event },
         });
 
         if (this.subscribers.size > 0) {
@@ -219,10 +229,16 @@ export class KubeWatchApi {
     }
   }
 
-  protected writeLog({ data, error }: { data?: any[], error?: any[] } = {}) {
-    if (isDevelopment) {
-      const logStyle = `font-weight: bold; ${error ? "color: red;" : ""}`;
-      console.log("%cKUBE-WATCH-API:", logStyle, ...Array.from(data || error));
+  protected log({ message, meta }: IKubeWatchLog) {
+    if (isProduction) return;
+
+    const logMessage = `[KUBE-WATCH-API]: ${String(message).toUpperCase()}`;
+    const isError = message instanceof Error;
+
+    if (isError) {
+      logger.error(logMessage, meta);
+    } else {
+      logger.log({ message: logMessage, level: "info" });
     }
   }
 }
