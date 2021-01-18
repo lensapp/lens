@@ -88,7 +88,7 @@ class ApiWatcher {
   }
 
   private sendEvent(evt: IKubeWatchEvent) {
-    this.response.write(JSON.stringify(evt) + "\n");
+    this.response.write(`${JSON.stringify(evt)}\n`);
   }
 }
 

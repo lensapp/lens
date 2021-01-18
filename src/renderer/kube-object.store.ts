@@ -196,7 +196,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     kubeWatchApi.onMessage.addListener(({ store, data }: IKubeWatchMessage<T>) => {
       if (!this.isLoaded || store !== this) return;
       this.eventsBuffer.push(data);
-    })
+    });
 
     reaction(() => this.eventsBuffer.length > 0, this.updateFromEventsBuffer, {
       delay
