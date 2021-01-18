@@ -19,7 +19,7 @@
     
     
       
-        <title>Working with mobx - Lens Documentation</title>
+        <title>Working with MobX - Lens Documentation</title>
       
     
     
@@ -106,7 +106,7 @@
         <div class="md-header-nav__topic">
           <span class="md-ellipsis">
             
-              Working with mobx
+              Working with MobX
             
           </span>
         </div>
@@ -610,12 +610,12 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Working with mobx
+        Working with MobX
         <span class="md-nav__icon md-icon"></span>
       </label>
     
     <a href="./" class="md-nav__link md-nav__link--active">
-      Working with mobx
+      Working with MobX
     </a>
     
       
@@ -640,7 +640,7 @@
       
         <li class="md-nav__item">
   <a href="#how-mobx-works" class="md-nav__link">
-    How mobx works:
+    How MobX Works:
   </a>
   
 </li>
@@ -871,7 +871,7 @@
       
         <li class="md-nav__item">
   <a href="#how-mobx-works" class="md-nav__link">
-    How mobx works:
+    How MobX Works:
   </a>
   
 </li>
@@ -890,25 +890,27 @@
               
                 
                 
-                <h1 id="working-with-mobx">Working with mobx<a class="headerlink" href="#working-with-mobx" title="Permanent link">#</a></h1>
+                <h1 id="working-with-mobx">Working with MobX<a class="headerlink" href="#working-with-mobx" title="Permanent link">#</a></h1>
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
-<p>Lens uses <code>mobx</code> as its state manager on top of React's state management system.
-This helps with having a more declarative style of managing state, as opposed to <code>React</code>'s native <code>setState</code> mechanism.
-You should already have a basic understanding of how <code>React</code> handles state (<a href="https://reactjs.org/docs/faq-state.html">read here</a> for more information).
-However, if you do not, here is a quick overview.</p>
+<p>Lens uses MobX on top of React's state management system.
+The result is a more declarative state management style, rather than React's native <code>setState</code> mechanism.</p>
+<p>You can review how React handles state management <a href="https://reactjs.org/docs/faq-state.html">here</a>.</p>
+<p>The following is a quick overview:</p>
 <ul>
-<li>A <code>React.Component</code> is generic over both <code>Props</code> and <code>State</code> (with default empty object types).</li>
-<li><code>Props</code> should be considered read-only from the point of view of the component and is the mechanism for passing in "arguments" to a component.</li>
-<li><code>State</code> is a component's internal state and can be read by accessing the parent field <code>state</code>.</li>
-<li><code>State</code> <strong>must</strong> be updated using the <code>setState</code> parent method which merges the new data with the old state.</li>
-<li><code>React</code> does do some optimizations around re-rendering components after quick successions of <code>setState</code> calls.</li>
+<li><code>React.Component</code> is generic with respect to both <code>props</code> and <code>state</code> (which default to the empty object type).</li>
+<li><code>props</code> should be considered read-only from the point of view of the component, and it is the mechanism for passing in arguments to a component.</li>
+<li><code>state</code> is a component's internal state, and can be read by accessing the super-class field <code>state</code>.</li>
+<li><code>state</code> <strong>must</strong> be updated using the <code>setState</code> parent method which merges the new data with the old state.</li>
+<li>React does some optimizations around re-rendering components after quick successions of <code>setState</code> calls.</li>
 </ul>
-<h2 id="how-mobx-works">How mobx works:<a class="headerlink" href="#how-mobx-works" title="Permanent link">#</a></h2>
-<p><code>mobx</code> is a package that provides an abstraction over <code>React</code>'s state management. The three main concepts are:
-- <code>observable</code>: data stored in the component's <code>state</code>
-- <code>action</code>: a function that modifies any <code>observable</code> data
-- <code>computed</code>: data that is derived from <code>observable</code> data but is not actually stored. Think of this as computing <code>isEmpty</code> vs an <code>observable</code> field called <code>count</code>.</p>
-<p>Further reading is available from <code>mobx</code>'s <a href="https://mobx.js.org/the-gist-of-mobx.html">website</a>.</p>
+<h2 id="how-mobx-works">How MobX Works:<a class="headerlink" href="#how-mobx-works" title="Permanent link">#</a></h2>
+<p>MobX is a package that provides an abstraction over React's state management system. The three main concepts are:</p>
+<ul>
+<li><code>observable</code> is a marker for data stored in the component's <code>state</code>.</li>
+<li><code>action</code> is a function that modifies any <code>observable</code> data.</li>
+<li><code>computed</code> is a marker for data that is derived from <code>observable</code> data, but that is not actually stored. Think of this as computing <code>isEmpty</code> rather than an observable field called <code>count</code>.</li>
+</ul>
+<p>Further reading is available on the <a href="https://mobx.js.org/the-gist-of-mobx.html">MobX website</a>.</p>
                 
               
               
