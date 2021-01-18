@@ -5,8 +5,11 @@
   cluster and vice versa.
 */
 import { Application } from "spectron";
-import * as util from "../helpers/utils";
-import { spawnSync } from "child_process";
+import * as utils from "../helpers/utils";
+import { spawnSync, exec } from "child_process";
+import * as util from "util";
+
+export const promiseExec = util.promisify(exec);
 
 jest.setTimeout(60000);
 
@@ -16,7 +19,7 @@ describe("Lens integration tests", () => {
   const BACKSPACE = "\uE003";
   let app: Application;
   const appStart = async () => {
-    app = util.setup();
+    app = utils.setup();
     await app.start();
     // Wait for splash screen to be closed
     while (await app.client.getWindowCount() > 1);
@@ -71,7 +74,7 @@ describe("Lens integration tests", () => {
 
     afterAll(async () => {
       if (app?.isRunning()) {
-        await util.tearDown(app);
+        await utils.tearDown(app);
       }
     });
 
@@ -93,7 +96,10 @@ describe("Lens integration tests", () => {
       });
 
       it("ensures helm repos", async () => {
-        await app.client.waitUntilTextExists("div.repos #message-bitnami", "bitnami"); // wait for the helm-cli to fetch the bitnami repo
+        const { stdout: reposJson } = await promiseExec("helm repo list -o json");
+        const repos = JSON.parse(reposJson);
+
+        await app.client.waitUntilTextExists("div.repos #message-bitnami", repos[0].name); // wait for the helm-cli to fetch the repo(s)
         await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
         await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
       });
@@ -105,12 +111,12 @@ describe("Lens integration tests", () => {
     });
   });
 
-  util.describeIf(ready)("workspaces", () => {
+  utils.describeIf(ready)("workspaces", () => {
     beforeAll(appStart, 20000);
 
     afterAll(async () => {
       if (app && app.isRunning()) {
-        return util.tearDown(app);
+        return utils.tearDown(app);
       }
     });
 
@@ -169,7 +175,7 @@ describe("Lens integration tests", () => {
     await app.client.waitUntilTextExists("span.link-text", "Cluster");
   };
 
-  util.describeIf(ready)("cluster tests", () => {
+  utils.describeIf(ready)("cluster tests", () => {
     let clusterAdded = false;
     const addCluster = async () => {
       await clickWhatsNew(app);
@@ -184,7 +190,7 @@ describe("Lens integration tests", () => {
 
       afterAll(async () => {
         if (app && app.isRunning()) {
-          return util.tearDown(app);
+          return utils.tearDown(app);
         }
       });
 
@@ -207,7 +213,7 @@ describe("Lens integration tests", () => {
 
       afterAll(async () => {
         if (app && app.isRunning()) {
-          return util.tearDown(app);
+          return utils.tearDown(app);
         }
       });
 
@@ -489,7 +495,7 @@ describe("Lens integration tests", () => {
 
       afterEach(async () => {
         if (app && app.isRunning()) {
-          return util.tearDown(app);
+          return utils.tearDown(app);
         }
       });
 
@@ -523,7 +529,7 @@ describe("Lens integration tests", () => {
 
       afterEach(async () => {
         if (app && app.isRunning()) {
-          return util.tearDown(app);
+          return utils.tearDown(app);
         }
       });
 
