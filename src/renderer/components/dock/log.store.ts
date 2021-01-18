@@ -1,27 +1,16 @@
-import { autorun, computed, observable, reaction } from "mobx";
-import { Pod, IPodContainer, podsApi, IPodLogsQuery } from "../../api/endpoints";
+import { autorun, computed, observable } from "mobx";
+
+import { IPodLogsQuery, Pod, podsApi } from "../../api/endpoints";
 import { autobind, interval } from "../../utils";
-import { DockTabStore } from "./dock-tab.store";
-import { dockStore, IDockTab, TabKind } from "./dock.store";
-import { searchStore } from "../../../common/search-store";
+import { dockStore, TabId } from "./dock.store";
+import { isLogsTab, logTabStore } from "./log-tab.store";
 
-export interface IPodLogsData {
-  pod: Pod;
-  selectedContainer: IPodContainer
-  containers: IPodContainer[]
-  initContainers: IPodContainer[]
-  showTimestamps: boolean
-  previous: boolean
-}
-
-type TabId = string;
 type PodLogLine = string;
 
-// Number for log lines to load
-export const logRange = 500;
+const logLinesToLoad = 500;
 
 @autobind()
-export class LogStore extends DockTabStore<IPodLogsData> {
+export class LogStore {
   private refresher = interval(10, () => {
     const id = dockStore.selectedTabId;
 
@@ -30,12 +19,8 @@ export class LogStore extends DockTabStore<IPodLogsData> {
   });
 
   @observable podLogs = observable.map<TabId, PodLogLine[]>();
-  @observable newLogSince = observable.map<TabId, string>(); // Timestamp after which all logs are considered to be new
 
   constructor() {
-    super({
-      storageName: "pod_logs"
-    });
     autorun(() => {
       const { selectedTab, isOpen } = dockStore;
 
@@ -45,15 +30,6 @@ export class LogStore extends DockTabStore<IPodLogsData> {
         this.refresher.stop();
       }
     }, { delay: 500 });
-
-    reaction(() => this.podLogs.get(dockStore.selectedTabId), () => {
-      this.setNewLogSince(dockStore.selectedTabId);
-    });
-
-    reaction(() => dockStore.selectedTabId, () => {
-      // Clear search query on tab change
-      searchStore.reset();
-    });
   }
 
   /**
@@ -66,7 +42,7 @@ export class LogStore extends DockTabStore<IPodLogsData> {
   load = async (tabId: TabId) => {
     try {
       const logs = await this.loadLogs(tabId, {
-        tailLines: this.lines + logRange
+        tailLines: this.lines + logLinesToLoad
       });
 
       this.refresher.start();
@@ -107,9 +83,9 @@ export class LogStore extends DockTabStore<IPodLogsData> {
    * @returns {Promise} A fetch request promise
    */
   loadLogs = async (tabId: TabId, params: Partial<IPodLogsQuery>) => {
-    const data = this.getData(tabId);
+    const data = logTabStore.getData(tabId);
     const { selectedContainer, previous } = data;
-    const pod = new Pod(data.pod);
+    const pod = new Pod(data.selectedPod);
     const namespace = pod.getNs();
     const name = pod.getName();
 
@@ -126,17 +102,6 @@ export class LogStore extends DockTabStore<IPodLogsData> {
       return logs;
     });
   };
-
-  /**
-   * Sets newLogSince separator timestamp to split old logs from new ones
-   * @param tabId
-   */
-  setNewLogSince(tabId: TabId) {
-    if (!this.podLogs.has(tabId) || !this.podLogs.get(tabId).length || this.newLogSince.has(tabId)) return;
-    const timestamp = this.getLastSinceTime(tabId);
-
-    this.newLogSince.set(tabId, timestamp.split(".")[0]); // Removing milliseconds from string
-  }
 
   /**
    * Converts logs into a string array
@@ -196,37 +161,6 @@ export class LogStore extends DockTabStore<IPodLogsData> {
   clearLogs(tabId: TabId) {
     this.podLogs.delete(tabId);
   }
-
-  clearData(tabId: TabId) {
-    this.data.delete(tabId);
-    this.clearLogs(tabId);
-  }
 }
 
-export const podLogsStore = new LogStore();
-
-export function createPodLogsTab(data: IPodLogsData, tabParams: Partial<IDockTab> = {}) {
-  const podId = data.pod.getId();
-  let tab = dockStore.getTabById(podId);
-
-  if (tab) {
-    dockStore.open();
-    dockStore.selectTab(tab.id);
-
-    return;
-  }
-  // If no existent tab found
-  tab = dockStore.createTab({
-    id: podId,
-    kind: TabKind.POD_LOGS,
-    title: data.pod.getName(),
-    ...tabParams
-  }, false);
-  podLogsStore.setData(tab.id, data);
-
-  return tab;
-}
-
-export function isLogsTab(tab: IDockTab) {
-  return tab && tab.kind === TabKind.POD_LOGS;
-}
+export const logStore = new LogStore();

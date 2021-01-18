@@ -1,10 +1,17 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, observable,reaction } from "mobx";
+import { dockStore } from "../renderer/components/dock/dock.store";
 import { autobind } from "../renderer/utils";
 
 export class SearchStore {
   @observable searchQuery = ""; // Text in the search input
   @observable occurrences: number[] = []; // Array with line numbers, eg [0, 0, 10, 21, 21, 40...]
   @observable activeOverlayIndex = -1; // Index withing the occurences array. Showing where is activeOverlay currently located
+
+  constructor() {
+    reaction(() => dockStore.selectedTabId, () => {
+      searchStore.reset();
+    });
+  }
 
   /**
    * Sets default activeOverlayIndex

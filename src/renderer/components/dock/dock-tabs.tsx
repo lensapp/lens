@@ -7,7 +7,7 @@ import { DockTab } from "./dock-tab";
 import { IDockTab } from "./dock.store";
 import { isEditResourceTab } from "./edit-resource.store";
 import { isInstallChartTab } from "./install-chart.store";
-import { isLogsTab } from "./log.store";
+import { isLogsTab } from "./log-tab.store";
 import { TerminalTab } from "./terminal-tab";
 import { isTerminalTab } from "./terminal.store";
 import { isUpgradeChartTab } from "./upgrade-chart.store";

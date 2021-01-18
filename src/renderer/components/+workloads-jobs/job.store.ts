@@ -10,7 +10,7 @@ export class JobStore extends KubeObjectStore<Job> {
   api = jobApi;
 
   getChildPods(job: Job): Pod[] {
-    return podsStore.getPodsByOwner(job);
+    return podsStore.getPodsByOwnerId(job.getId());
   }
 
   getJobsByOwner(cronJob: CronJob) {

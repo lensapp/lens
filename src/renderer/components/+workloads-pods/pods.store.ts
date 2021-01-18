@@ -3,7 +3,6 @@ import { action, observable } from "mobx";
 import { KubeObjectStore } from "../../kube-object.store";
 import { autobind, cpuUnitsToNumber, unitsToBytes } from "../../utils";
 import { IPodMetrics, Pod, PodMetrics, podMetricsApi, podsApi } from "../../api/endpoints";
-import { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
@@ -32,15 +31,15 @@ export class PodsStore extends KubeObjectStore<Pod> {
     }
   }
 
-  getPodsByOwner(workload: WorkloadKubeObject): Pod[] {
-    if (!workload) return [];
+  getPodsByOwnerId(workloadId: string): Pod[] {
+    if (!workloadId) return [];
 
     return this.items.filter(pod => {
       const owners = pod.getOwnerRefs();
 
       if (!owners.length) return;
 
-      return owners.find(owner => owner.uid === workload.getId());
+      return owners.find(owner => owner.uid === workloadId);
     });
   }
 
