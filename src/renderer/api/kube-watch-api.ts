@@ -106,7 +106,7 @@ export class KubeWatchApi {
       });
 
       const reader = req.body.getReader();
-      const handleEvent = this.handleEvent.bind(this);
+      const handleEvent = this.handleStreamEvent.bind(this);
 
       this.stream = new ReadableStream({
         start(controller) {
@@ -138,17 +138,25 @@ export class KubeWatchApi {
     }
   }
 
-  protected handleEvent(eventStreamChunk: Uint8Array) {
-    try {
-      const jsonText = new TextDecoder().decode(eventStreamChunk);
-      const event: IKubeWatchEvent = JSON.parse(jsonText);
-      const message = this.getMessage(event);
-      this.onMessage.emit(message);
-    } catch (error) {
-      this.writeLog({
-        error: ["failed to parse watch-api event", error]
-      });
+  protected handleStreamEvent(chunk: Uint8Array) {
+    const jsonText = new TextDecoder().decode(chunk);
+    if (!jsonText) {
+      return;
     }
+
+    // decoded json might contain multiple kube-events at a time
+    const events = jsonText.split("\n");
+
+    events.forEach(kubeEvent => {
+      try {
+        const message = this.getMessage(JSON.parse(kubeEvent));
+        this.onMessage.emit(message);
+      } catch (error) {
+        this.writeLog({
+          error: ["failed to parse watch-api event", { error, jsonText }]
+        });
+      }
+    })
   }
 
   protected getMessage(event: IKubeWatchEvent): IKubeWatchMessage {
