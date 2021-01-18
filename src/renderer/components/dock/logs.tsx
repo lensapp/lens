@@ -88,6 +88,7 @@ export class Logs extends React.Component<Props> {
     const controls = (
       <div className="flex gaps">
         <LogResourceSelector
+          tabId={this.tabId}
           tabData={this.tabData}
           save={this.save}
           reload={this.reload}

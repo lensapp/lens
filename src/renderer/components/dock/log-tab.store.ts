@@ -54,7 +54,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     const title = `${workload.kind} ${selectedPod.getName()}`;
 
     this.createLogsTab(title, {
-      pods: pods.length ? pods : [selectedPod],
+      pods,
       selectedPod,
       selectedContainer
     });
