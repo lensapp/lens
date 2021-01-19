@@ -46,5 +46,9 @@
         box-shadow: 0 0 20px $boxShadow;
       }
     }
+
+    .close {
+      margin-top: -2px;
+    }
   }
 }
