@@ -1,5 +1,4 @@
 import "./item-list-layout.scss";
-import "./table-menu.scss";
 import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
@@ -23,7 +22,6 @@ import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { userStore } from "../../../common/user-store";
-import logger from "../../../main/logger";
 
 // todo: refactor, split to small re-usable components
 
@@ -101,11 +99,10 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
   private watchDisposers: IReactionDisposer[] = [];
 
-  @observable hiddenColumnNames = new Set<string>();
   @observable isUnmounting = false;
 
   @observable userSettings: ItemListLayoutUserSettings = {
-    showAppliedFilters: true,
+    showAppliedFilters: false,
   };
 
   constructor(props: ItemListLayoutProps) {
@@ -122,9 +119,15 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   async componentDidMount() {
+    const { isClusterScoped, isConfigurable, tableId } = this.props;
+
+    if (isConfigurable && !tableId) {
+      throw new Error("[ItemListLayout]: configurable list require props.tableId to be specified");
+    }
+
     this.loadStores();
 
-    if (!this.props.isClusterScoped) {
+    if (!isClusterScoped) {
       disposeOnUnmount(this, [
         namespaceStore.onContextChange(() => this.loadStores())
       ]);
@@ -137,11 +140,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   @computed get stores() {
-    const { store, dependentStores, tableId } = this.props;
-
-    if (this.canBeConfigured) {
-      this.hiddenColumnNames = new Set(userStore.preferences?.hiddenTableColumns?.[tableId]);
-    }
+    const { store, dependentStores } = this.props;
 
     return new Set([store, ...dependentStores]);
   }
@@ -249,42 +248,6 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     return this.applyFilters(filterItems, allItems);
   }
 
-  updateColumnFilter(checkboxValue: boolean, columnName: string) {
-    if (checkboxValue) {
-      this.hiddenColumnNames.delete(columnName);
-    } else {
-      this.hiddenColumnNames.add(columnName);
-    }
-
-    if (this.canBeConfigured) {
-      userStore.preferences.hiddenTableColumns[this.props.tableId] = Array.from(this.hiddenColumnNames);
-    }
-  }
-
-  columnIsVisible(index: number): boolean {
-    const { renderTableHeader } = this.props;
-
-    if (!this.canBeConfigured) return true;
-
-    return !this.hiddenColumnNames.has(renderTableHeader[index].showWithColumn ?? renderTableHeader[index].className);
-  }
-
-  get canBeConfigured(): boolean {
-    const { isConfigurable, tableId, renderTableHeader } = this.props;
-
-    if (!isConfigurable || !tableId) {
-      return false;
-    }
-
-    if (!renderTableHeader?.every(({ className }) => className)) {
-      logger.warning("[ItemObjectList]: cannot configure an object list without all headers being identifiable");
-
-      return false;
-    }
-
-    return true;
-  }
-
   @autobind()
   getRow(uid: string) {
     const {
@@ -316,20 +279,18 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
           />
         )}
         {
-          renderTableContents(item)
-            .map((content, index) => {
-              const cellProps: TableCellProps = isReactNode(content) ? { children: content } : content;
+          renderTableContents(item).map((content, index) => {
+            const cellProps: TableCellProps = isReactNode(content) ? { children: content } : content;
+            const headCell = renderTableHeader?.[index];
 
-              if (copyClassNameFromHeadCells && renderTableHeader) {
-                const headCell = renderTableHeader[index];
+            if (copyClassNameFromHeadCells && headCell) {
+              cellProps.className = cssNames(cellProps.className, headCell.className);
+            }
 
-                if (headCell) {
-                  cellProps.className = cssNames(cellProps.className, headCell.className);
-                }
-              }
-
-              return this.columnIsVisible(index) ? <TableCell key={index} {...cellProps} /> : null;
-            })
+            if (!headCell || !this.isHiddenColumn(headCell)) {
+              return <TableCell key={index} {...cellProps} />;
+            }
+          })
         }
         {renderItemMenu && (
           <TableCell className="menu" onClick={stopPropagation}>
@@ -458,10 +419,40 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     );
   }
 
+  renderTableHeader() {
+    const { renderTableHeader, isSelectable, isConfigurable, store } = this.props;
+
+    if (!renderTableHeader) {
+      return;
+    }
+
+    return (
+      <TableHead showTopLine nowrap>
+        {isSelectable && (
+          <TableCell
+            checkbox
+            isChecked={store.isSelectedAll(this.items)}
+            onClick={prevDefault(() => store.toggleSelectionAll(this.items))}
+          />
+        )}
+        {renderTableHeader.map((cellProps, index) => {
+          if (!this.isHiddenColumn(cellProps)) {
+            return <TableCell key={cellProps.id ?? index} {...cellProps} />;
+          }
+        })}
+        {isConfigurable && (
+          <TableCell className="menu">
+            {this.renderColumnVisibilityMenu()}
+          </TableCell>
+        )}
+      </TableHead>
+    );
+  }
+
   renderList() {
     const {
-      isSelectable, tableProps = {}, renderTableHeader, renderItemMenu,
-      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem
+      store, hasDetailsView, addRemoveButtons = {}, virtual, sortingCallbacks, detailsItem,
+      tableProps = {},
     } = this.props;
     const { isReady, removeItemsDialog, items } = this;
     const { selectedItems } = store;
@@ -486,22 +477,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
               className: cssNames("box grow", tableProps.className, themeStore.activeTheme.type),
             })}
           >
-            {renderTableHeader && (
-              <TableHead showTopLine nowrap>
-                {isSelectable && (
-                  <TableCell
-                    checkbox
-                    isChecked={store.isSelectedAll(items)}
-                    onClick={prevDefault(() => store.toggleSelectionAll(items))}
-                  />
-                )}
-                {renderTableHeader.map((cellProps, index) => this.columnIsVisible(index) ? <TableCell key={index} {...cellProps} /> : null)}
-                {renderItemMenu && <TableCell className="menu">
-                  {this.canBeConfigured && this.renderColumnMenu()}
-                </TableCell>
-                }
-              </TableHead>
-            )}
+            {this.renderTableHeader()}
             {
               !virtual && items.map(item => this.getRow(item.getId()))
             }
@@ -517,23 +493,44 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     );
   }
 
-  renderColumnMenu() {
+  @computed get hiddenColumns() {
+    return userStore.getHiddenTableColumns(this.props.tableId);
+  }
+
+  isHiddenColumn({ id: columnId, showWithColumn }: TableCellProps): boolean {
+    if (!this.props.isConfigurable) {
+      return false;
+    }
+
+    return this.hiddenColumns.has(columnId) || (
+      showWithColumn && this.hiddenColumns.has(showWithColumn)
+    );
+  }
+
+  updateColumnVisibility({ id: columnId }: TableCellProps, isVisible: boolean) {
+    const hiddenColumns = new Set(this.hiddenColumns);
+
+    if (!isVisible) {
+      hiddenColumns.add(columnId);
+    } else {
+      hiddenColumns.delete(columnId);
+    }
+
+    userStore.setHiddenTableColumns(this.props.tableId, hiddenColumns);
+  }
+
+  renderColumnVisibilityMenu() {
     const { renderTableHeader } = this.props;
 
     return (
-      <MenuActions
-        toolbar={false}
-        autoCloseOnSelect={false}
-        className={cssNames("KubeObjectMenu")}
-      >
+      <MenuActions className="ItemListLayoutVisibilityMenu" toolbar={false} autoCloseOnSelect={false}>
         {renderTableHeader.map((cellProps, index) => (
           !cellProps.showWithColumn && (
             <MenuItem key={index} className="input">
               <Checkbox
                 label={cellProps.title ?? `<${cellProps.className}>`}
-                className="MenuCheckbox"
-                value={!this.hiddenColumnNames.has(cellProps.className)}
-                onChange={(v) => this.updateColumnFilter(v, cellProps.className)}
+                value={!this.isHiddenColumn(cellProps)}
+                onChange={isVisible => this.updateColumnVisibility(cellProps, isVisible)}
               />
             </MenuItem>
           )
