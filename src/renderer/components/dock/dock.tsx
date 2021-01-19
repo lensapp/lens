@@ -16,8 +16,8 @@ import { EditResource } from "./edit-resource";
 import { isEditResourceTab } from "./edit-resource.store";
 import { InstallChart } from "./install-chart";
 import { isInstallChartTab } from "./install-chart.store";
-import { PodLogs } from "./pod-logs";
-import { isPodLogsTab } from "./pod-logs.store";
+import { Logs } from "./logs";
+import { isLogsTab } from "./log.store";
 import { TerminalWindow } from "./terminal-window";
 import { createTerminalTab, isTerminalTab } from "./terminal.store";
 import { UpgradeChart } from "./upgrade-chart";
@@ -64,7 +64,7 @@ export class Dock extends React.Component<Props> {
         {isInstallChartTab(tab) && <InstallChart tab={tab} />}
         {isUpgradeChartTab(tab) && <UpgradeChart tab={tab} />}
         {isTerminalTab(tab) && <TerminalWindow tab={tab} />}
-        {isPodLogsTab(tab) && <PodLogs tab={tab} />}
+        {isLogsTab(tab) && <Logs tab={tab} />}
       </div>
     );
   }

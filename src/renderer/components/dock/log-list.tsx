@@ -1,4 +1,4 @@
-import "./pod-log-list.scss";
+import "./log-list.scss";
 
 import React from "react";
 import AnsiUp from "ansi_up";
@@ -14,7 +14,7 @@ import { Button } from "../button";
 import { Icon } from "../icon";
 import { Spinner } from "../spinner";
 import { VirtualList } from "../virtual-list";
-import { podLogsStore } from "./pod-logs.store";
+import { podLogsStore } from "./log.store";
 
 interface Props {
   logs: string[]
@@ -26,7 +26,7 @@ interface Props {
 const colorConverter = new AnsiUp();
 
 @observer
-export class PodLogList extends React.Component<Props> {
+export class LogList extends React.Component<Props> {
   @observable isJumpButtonVisible = false;
   @observable isLastLineVisible = true;
 
@@ -206,19 +206,23 @@ export class PodLogList extends React.Component<Props> {
     const rowHeights = new Array(this.logs.length).fill(this.lineHeight);
 
     if (isInitLoading) {
-      return <Spinner center/>;
+      return (
+        <div className="LogList flex box grow align-center justify-center">
+          <Spinner center/>
+        </div>
+      );
     }
 
     if (!this.logs.length) {
       return (
-        <div className="PodLogList flex box grow align-center justify-center">
+        <div className="LogList flex box grow align-center justify-center">
           There are no logs available for container
         </div>
       );
     }
 
     return (
-      <div className={cssNames("PodLogList flex", { isLoading })}>
+      <div className={cssNames("LogList flex", { isLoading })}>
         <VirtualList
           items={this.logs}
           rowHeights={rowHeights}

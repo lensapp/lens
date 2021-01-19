@@ -36,6 +36,13 @@ describe("workspace store tests", () => {
       expect(ws.getById(WorkspaceStore.defaultId)).not.toBe(null);
     });
 
+    it("default workspace should be enabled", () => {
+      const ws = WorkspaceStore.getInstance<WorkspaceStore>();
+
+      expect(ws.workspaces.size).toBe(1);
+      expect(ws.getById(WorkspaceStore.defaultId).enabled).toBe(true);
+    });
+
     it("cannot remove the default workspace", () => {
       const ws = WorkspaceStore.getInstance<WorkspaceStore>();
 
