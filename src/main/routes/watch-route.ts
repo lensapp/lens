@@ -36,6 +36,8 @@ class ApiWatcher {
     this.response = response;
   }
 
+  // FIXME: add delay to kube-watch-api requests to avoid possible ECONNRESET error
+  // https://stackoverflow.com/questions/17245881/how-do-i-debug-error-econnreset-in-node-js
   public async start() {
     if (this.processor) {
       clearInterval(this.processor);
@@ -119,15 +121,14 @@ class WatchRoute extends LensApi {
     });
 
     request.raw.req.on("close", () => {
-      logger.debug("Watch request closed");
+      logger.info("Watch request closed");
       watchers.map(watcher => watcher.stop());
     });
 
     request.raw.req.on("end", () => {
-      logger.debug("Watch request ended");
+      logger.info("Watch request ended");
       watchers.map(watcher => watcher.stop());
     });
-
   }
 }
 

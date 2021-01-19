@@ -28,10 +28,12 @@ export interface IKubeWatchLog {
 
 @autobind()
 export class KubeWatchApi {
-  protected stream: ReadableStream<Uint8Array>; // https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
+  protected stream: ReadableStream<string>; // https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
   protected subscribers = observable.map<KubeApi, number>();
   protected reconnectTimeoutMs = 5000;
   protected maxReconnectsOnError = 10;
+  protected jsonBuffer = "";
+  protected splitter = "\n";
 
   // events
   onMessage = new EventEmitter<[IKubeWatchMessage]>();
@@ -119,64 +121,46 @@ export class KubeWatchApi {
         }
       });
 
-      const reader = req.body.getReader();
-      const handleEvent = this.handleStreamEvent.bind(this);
+      this.stream = req.body.pipeThrough(new TextDecoderStream());
+      this.stream.cancel = () => reader.cancel();
 
-      this.stream = new ReadableStream({
-        start(controller) {
-          return reader.read().then(function processEvent({ done, value }): Promise<void> {
-            if (done) {
-              controller.close();
+      const reader = this.stream.getReader();
 
-              return;
-            }
-            handleEvent(value);
-            controller.enqueue(value);
+      while (true) {
+        const { done, value } = await reader.read();
 
-            return reader.read().then(processEvent);
-          });
-        },
-        cancel() {
-          reader.cancel();
-        }
-      });
+        if (done) break;
+        this.processStreamChunk(value);
+      }
     } catch (error) {
-      this.log({
-        message: new Error("connection error"),
-        meta: { error }
-      });
+      this.log({ message: error });
     }
   }
 
-  protected async disconnect() {
-    if (this.stream) {
-      this.stream.cancel();
-      this.stream = null;
-    }
-  }
+  protected async processStreamChunk(chunk: string) {
+    const { jsonBuffer, splitter } = this;
+    const eventsBuffer = (jsonBuffer + chunk).split(splitter);
+    let jsonEvent: string;
 
-  protected handleStreamEvent(chunk: Uint8Array) {
-    const jsonText = new TextDecoder().decode(chunk);
-
-    if (!jsonText) {
-      return;
-    }
-
-    // decoded json might contain multiple kube-events at a time
-    const events = jsonText.trim().split("\n");
-
-    events.forEach(event => {
+    while (jsonEvent = eventsBuffer.shift()) {
       try {
-        const message = this.getMessage(JSON.parse(event));
+        const kubeEvent: IKubeWatchEvent = JSON.parse(jsonEvent);
+        const message = this.getMessage(kubeEvent);
 
         this.onMessage.emit(message);
       } catch (error) {
-        this.log({
-          message: new Error("failed to parse watch-api event"),
-          meta: { error, event },
-        });
+        eventsBuffer.unshift(jsonEvent); // put unparsed json back to buffer
+        break;
       }
-    });
+    }
+
+    // save last unprocessed json-tail or reset buffer otherwise
+    this.jsonBuffer = eventsBuffer.join(splitter);
+  }
+
+  protected async disconnect() {
+    this.stream?.cancel();
+    this.stream = null;
   }
 
   protected getMessage(event: IKubeWatchEvent): IKubeWatchMessage {
