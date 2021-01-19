@@ -2,7 +2,10 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 3.6.9 (current version)
+## 3.6.10 (current version)
+- Fix: option to skip auto-updates
+
+## 3.6.9
 - Use Alpine 3.12 for node shell sessions
 - Fix errors on app quit
 - Fix kube-auth-proxy to accept only target cluster hostname
