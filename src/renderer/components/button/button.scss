@@ -33,6 +33,15 @@
     background: $buttonSecondaryBackground;
   }
 
+  &.outline {
+    border: 1px solid;
+  }
+
+  &.light {
+    background-color: white;
+    color: #505050;
+  }
+
   &.plain {
     color: inherit;
     background: transparent;

@@ -64,17 +64,17 @@ async function autoUpdateCheck(windowManager: WindowManager): Promise<void> {
         {
           label: "Yes, now",
           backchannel: yesNowChannel,
-          action: true,
+          className: "light"
         },
         {
           label: "Yes, on quit",
           backchannel: yesLaterChannel,
-          action: true,
+          className: "primary outline"
         },
         {
-          label: "No",
+          label: "Remind later",
           backchannel: noChannel,
-          secondary: true
+          className: "primary outline"
         }
       ],
       closeChannel: noChannel,
@@ -99,7 +99,7 @@ export function startUpdateChecking(windowManager: WindowManager, interval = 100
     .on("update-available", async (args: UpdateInfo) => {
       try {
         const releaseDate = moment(args.releaseDate);
-        const body = `Version ${args.version} was released on ${releaseDate.format("dddd, MMMM Do, yyyy")}.`;
+        const body = `Version ${args.version} of Lens IDE is now available. Would you like to update?`;
         windowManager.mainView.webContents.send(NotificationChannelAdd, {
           title,
           body,
