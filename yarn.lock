@@ -529,6 +529,13 @@
     "@hapi/pez" "^5.0.1"
     "@hapi/wreck" "17.x.x"
 
+"@hapi/topo@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@hapi/topo/-/topo-5.0.0.tgz#c19af8577fa393a06e9c77b60995af959be721e7"
+  integrity sha512-tFJlT47db0kMqVm3H4nQYgn6Pwg10GTZHb1pwmSiv1K4ks6drQOtfEF5ZnPjkvC+y4/bUPHK+bc87QvLcL+WMw==
+  dependencies:
+    "@hapi/hoek" "^9.0.0"
+
 "@hapi/vise@4.x.x":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@hapi/vise/-/vise-4.0.0.tgz#c6a94fe121b94a53bf99e7489f7fcc74c104db02"
@@ -900,6 +907,23 @@
     schema-utils "^2.6.5"
     source-map "^0.7.3"
 
+"@sideway/address@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@sideway/address/-/address-4.1.0.tgz#0b301ada10ac4e0e3fa525c90615e0b61a72b78d"
+  integrity sha512-wAH/JYRXeIFQRsxerIuLjgUu2Xszam+O5xKeatJ4oudShOOirfmsQ1D6LL54XOU2tizpCYku+s1wmU0SYdpoSA==
+  dependencies:
+    "@hapi/hoek" "^9.0.0"
+
+"@sideway/formula@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@sideway/formula/-/formula-3.0.0.tgz#fe158aee32e6bd5de85044be615bc08478a0a13c"
+  integrity sha512-vHe7wZ4NOXVfkoRb8T5otiENVlT7a3IAiw7H5M2+GO+9CDgcVUUsX1zalAztCmwyOr2RUTGJdgB+ZvSVqmdHmg==
+
+"@sideway/pinpoint@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@sideway/pinpoint/-/pinpoint-2.0.0.tgz#cff8ffadc372ad29fd3f78277aeb29e632cc70df"
+  integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
@@ -1175,19 +1199,19 @@
   dependencies:
     "@types/node" "*"
 
-"@types/hapi@^18.0.3":
-  version "18.0.3"
-  resolved "https://registry.yarnpkg.com/@types/hapi/-/hapi-18.0.3.tgz#e74c019f6a1b1c7f647fe014d3890adec9c0214a"
-  integrity sha512-UM03myDZ2UWbpqLSZqboK4L98F9r4GCcd9JOr2auhgC3iOd/69mvDggivOHhOYJKWHeCW/dECPHIB7DwQz00dw==
+"@types/hapi@^18.0.5":
+  version "18.0.5"
+  resolved "https://registry.yarnpkg.com/@types/hapi/-/hapi-18.0.5.tgz#7573fc83ec1d8ecf127b93bd326266da533fe30b"
+  integrity sha512-OnBslvAL//tsTZemW8wSGrVUj7BgtS16kBicgKCtEpHle9A3pOd7X4ViykKv/X3rh7g636mDzoqQ27+Ols5GQw==
   dependencies:
     "@types/boom" "*"
     "@types/catbox" "*"
     "@types/iron" "*"
-    "@types/joi" "*"
     "@types/mimos" "*"
     "@types/node" "*"
     "@types/podium" "*"
     "@types/shot" "*"
+    joi "^17.3.0"
 
 "@types/history@*", "@types/history@^4.7.3":
   version "4.7.6"
@@ -1299,11 +1323,6 @@
     jest-diff "^25.2.1"
     pretty-format "^25.2.1"
 
-"@types/joi@*":
-  version "14.3.4"
-  resolved "https://registry.yarnpkg.com/@types/joi/-/joi-14.3.4.tgz#eed1e14cbb07716079c814138831a520a725a1e0"
-  integrity sha512-1TQNDJvIKlgYXGNIABfgFp9y0FziDpuGrd799Q5RcnsDu+krD+eeW/0Fs5PHARvWWFelOhIG2OPCo6KbadBM4A==
-
 "@types/js-yaml@^3.12.1", "@types/js-yaml@^3.12.4":
   version "3.12.4"
   resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.12.4.tgz#7d3b534ec35a0585128e2d332db1403ebe057e25"
@@ -1406,12 +1425,7 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.17.24.tgz#c57511e3a19c4b5e9692bb2995c40a3a52167944"
   integrity sha512-5SCfvCxV74kzR3uWgTYiGxrd69TbT1I6+cMx1A5kEly/IVveJBimtAMlXiEyVFn5DvUFewQWxOOiJhlxeQwxgA==
 
-"@types/node@^12.0.12":
-  version "12.12.44"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.44.tgz#0d400a1453adcb359b133acceae4dd8bb0e0a159"
-  integrity sha512-jM6QVv0Sm5d3nW+nUD5jSzPcO6oPqboitSNcwgBay9hifVq/Rauq1PYnROnsmuw45JMBiTnsPAno0bKu2e2xrg==
-
-"@types/node@^12.12.45":
+"@types/node@^12.0.12", "@types/node@^12.12.45":
   version "12.12.45"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.45.tgz#33d550d6da243652004b00cbf4f15997456a38e3"
   integrity sha512-9w50wqeS0qQH9bo1iIRcQhDXRxoDzyAqCL5oJG+Nuu7cAoe6omGo+YDE0spAGK5sPrdLDhQLbQxq0DnxyndPKA==
@@ -7876,6 +7890,17 @@ jest@^26.0.1:
     "@jest/core" "^26.0.1"
     import-local "^3.0.2"
     jest-cli "^26.0.1"
+
+joi@^17.3.0:
+  version "17.3.0"
+  resolved "https://registry.yarnpkg.com/joi/-/joi-17.3.0.tgz#f1be4a6ce29bc1716665819ac361dfa139fff5d2"
+  integrity sha512-Qh5gdU6niuYbUIUV5ejbsMiiFmBdw8Kcp8Buj2JntszCkCfxJ9Cz76OtHxOZMPXrt5810iDIXs+n1nNVoquHgg==
+  dependencies:
+    "@hapi/hoek" "^9.0.0"
+    "@hapi/topo" "^5.0.0"
+    "@sideway/address" "^4.1.0"
+    "@sideway/formula" "^3.0.0"
+    "@sideway/pinpoint" "^2.0.0"
 
 jose@^1.27.1:
   version "1.27.1"
