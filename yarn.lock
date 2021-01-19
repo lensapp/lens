@@ -8766,10 +8766,10 @@ make-fetch-happen@^5.0.0:
     socks-proxy-agent "^4.0.0"
     ssri "^6.0.0"
 
-make-plural@^6.2.1:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/make-plural/-/make-plural-6.2.1.tgz#2790af1d05fb2fc35a111ce759ffdb0aca1339a3"
-  integrity sha512-AmkruwJ9EjvyTv6AM8MBMK3TAeOJvhgTv5YQXzF0EP2qawhpvMjDpHvsdOIIT0Vn+BB0+IogmYZ1z+Ulm/m0Fg==
+make-plural@^6.2.2:
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/make-plural/-/make-plural-6.2.2.tgz#beb5fd751355e72660eeb2218bb98eec92853c6c"
+  integrity sha512-8iTuFioatnTTmb/YJjywkVIHLjcwkFD9Ms0JpxjEm9Mo8eQYkh1z+55dwv4yc1jQ8ftVBxWQbihvZL1DfzGGWA==
 
 makeerror@1.0.x:
   version "1.0.11"
