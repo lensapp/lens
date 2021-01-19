@@ -2,7 +2,17 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.6 (current version)
+## 4.0.7 (current version)
+
+- Fix: typo in Prometheus Ingress metrics
+- Fix: catch xterm.js fit error
+- Fix: Windows tray icon click
+- Fix: error on Kubernetes >= 1.20 on object edit
+- Fix: multiline log wrapping
+- Fix: prevent clusters from initializing multiple times
+- Fix: show default workspace on first boot
+
+## 4.0.6
 
 - Don't open Lens at OS login by default
 - Disable GPU acceleration by setting an env variable
