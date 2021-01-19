@@ -18,9 +18,9 @@ class NotificationBackchannel {
 
 const title = "Lens Updater";
 
-async function autoUpdateCheck(windowManager: WindowManager): Promise<void> {
+async function autoUpdateCheck(windowManager: WindowManager, args: UpdateInfo): Promise<void> {
   return new Promise(async resolve => {
-    const body = "Install and restart Lens?";
+    const body = `Version ${args.version} of Lens IDE is now available. Would you like to update?`;
     const yesNowChannel = NotificationBackchannel.nextId();
     const yesLaterChannel = NotificationBackchannel.nextId();
     const noChannel = NotificationBackchannel.nextId();
@@ -98,31 +98,7 @@ export function startUpdateChecking(windowManager: WindowManager, interval = 100
   autoUpdater
     .on("update-available", async (args: UpdateInfo) => {
       try {
-        const releaseDate = moment(args.releaseDate);
-        const body = `Version ${args.version} of Lens IDE is now available. Would you like to update?`;
-        windowManager.mainView.webContents.send(NotificationChannelAdd, {
-          title,
-          body,
-          status: "info",
-          timeout: 5000,
-        });
-
-        await autoUpdateCheck(windowManager);
-      } catch (error) {
-        logger.error("[UPDATE CHECKER]: notification failed", { error: String(error) })
-      }
-    })
-    .on("update-not-available", (args: UpdateInfo) => {
-      try {
-        const version = new SemVer(args.version);
-        const stream = version.prerelease === null ? "stable" : "prerelease";
-        const body = `Lens is running the latest ${stream} version.`;
-        windowManager.mainView.webContents.send(NotificationChannelAdd, {
-          title,
-          body,
-          status: "info",
-          timeout: 5000,
-        })
+        await autoUpdateCheck(windowManager, args);
       } catch (error) {
         logger.error("[UPDATE CHECKER]: notification failed", { error: String(error) })
       }
