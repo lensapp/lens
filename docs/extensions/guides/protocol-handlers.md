@@ -45,3 +45,9 @@ On the other hand, the subpath `"/display/notification"` would be routed to #3.
 
 The URI is routed to the most specific matching `pathSchema`.
 This way the `"/"` (root) `pathSchema` acts as a sort of catch all or default route if no other route matches.
+
+### Cleaning Up
+
+Currently there is not way to remove a protocol handler once it has been registered.
+Handlers will not be called if the extension is deactivated or uninstalled.
+This means that the handlers should be added (or re-added as the case may be) on every activation of an extension instance.

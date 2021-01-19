@@ -30,6 +30,14 @@ export class LensRendererExtension extends LensExtension {
     navigate(pageUrl);
   }
 
+  async disable() {
+    const lprm = LensProtocolRouterRenderer.getInstance<LensProtocolRouterRenderer>();
+
+    lprm.removeExtensionHandlers(this.name);
+
+    return super.disable();
+  }
+
   /**
    * Defines if extension is enabled for a given cluster. Defaults to `true`.
    */

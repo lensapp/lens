@@ -1,4 +1,3 @@
-import { LensExtensionId } from "../../extensions/lens-extension";
 import { hasOwnProperties, hasOwnProperty, Singleton } from "../utils";
 
 const ProtocolHandlerIpcPrefix = "protocol-handler";
@@ -22,7 +21,7 @@ export enum HandlerType {
 
 interface ExtensionParams {
   handlerType: HandlerType.EXTENSION,
-  extensionId: string,
+  extensionName: string,
 }
 
 interface InternalParams {
@@ -37,7 +36,7 @@ export type RegisterParams = BaseParams & {
 };
 
 export interface DeregisterParams {
-  extensionId: string,
+  extensionName: string,
 }
 
 export type BackChannelParams = BaseParams & {
@@ -49,8 +48,8 @@ export abstract class LensProtocolRouter extends Singleton {
   public static readonly LoggingPrefix = "[PROTOCOL ROUTER]";
 
   public abstract on(urlSchema: string, handler: RouteHandler): void;
-  public abstract extensionOn(id: LensExtensionId, urlSchema: string, handler: RouteHandler): void;
-  public abstract removeExtensionHandlers(id: LensExtensionId): void;
+  public abstract extensionOn(extName: string, urlSchema: string, handler: RouteHandler): void;
+  public abstract removeExtensionHandlers(extName: string): void;
 }
 
 /**
@@ -75,15 +74,15 @@ function validateBaseParams(args: unknown): args is BaseParams {
   }
 
   if (handlerType === HandlerType.EXTENSION) {
-    if (!hasOwnProperty(args, "extensionId")) {
+    if (!hasOwnProperty(args, "extensionName")) {
       return false;
     }
 
     // or handlerType must be HandlerType.EXTENSION
-    const { extensionId } = args;
+    const { extensionName } = args;
 
-    // but if for an extension then the extensionId is required, must be a stirng, and must be non-empty
-    return Boolean(extensionId && typeof extensionId === "string");
+    // but if for an extension then the extensionName is required, must be a stirng, and must be non-empty
+    return Boolean(extensionName && typeof extensionName === "string");
   }
 
   // reject all other values of handlerType
@@ -121,16 +120,16 @@ export function validateRegisterParams(args: unknown): args is RegisterParams {
  * @param args a deserialized value
  */
 export function validateDeregisterParams(args: unknown): args is DeregisterParams {
-  if (args == null || typeof args !== "object") {
+  if (!args || typeof args !== "object") {
     // it must be an object
     return false;
   }
 
-  if (!hasOwnProperties(args, "extensionId")) {
+  if (!hasOwnProperties(args, "extensionName")) {
     return false;
   }
 
-  if (typeof args.extensionId !== "string" || args.extensionId.length === 0) {
+  if (typeof args.extensionName !== "string" || args.extensionName.length === 0) {
     // ipcChannel is required, must be a string, must be non-empty
     return false;
   }
@@ -143,7 +142,7 @@ export function validateDeregisterParams(args: unknown): args is DeregisterParam
  * @param args a deserialized value
  */
 export function validateRouteParams(args: unknown): args is RouteParams {
-  if (args == null || typeof args !== "object") {
+  if (!args || typeof args !== "object") {
     // it must be an object
     return false;
   }

@@ -4,7 +4,7 @@ import { autobind } from "../utils";
 import * as uuid from "uuid";
 import logger from "../../main/logger";
 export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
-  // Map between extension IDs and a Map betweeen generated UUIDs and the handlers
+  // Map between extension names and a Map betweeen generated UUIDs and the handlers
   private extensionHandlers = new Map<string, Map<string, proto.RouteHandler>>();
   // Map between generated UUIDs and the handlers
   private internalHandlers = new Map<string, proto.RouteHandler>();
@@ -37,8 +37,8 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
       }
 
       case proto.HandlerType.EXTENSION: {
-        const { handlerId, params, extensionId } = args;
-        const handler = this.extensionHandlers.get(handlerId)?.get(extensionId);
+        const { handlerId, params, extensionName } = args;
+        const handler = this.extensionHandlers.get(handlerId)?.get(extensionName);
 
         if (!handler) {
           return void logger.error(`${proto.LensProtocolRouter.LoggingPrefix}: ipc call to "${proto.ProtocolHandlerBackChannel}" unknown handlerId or unknown extensionId`, { args });
@@ -63,30 +63,30 @@ export class LensProtocolRouterRenderer extends proto.LensProtocolRouter {
     ipcRenderer.send(proto.ProtocolHandlerRegister, args);
   }
 
-  public extensionOn(extensionId: string, pathSchema: string, handler: proto.RouteHandler): void {
+  public extensionOn(extensionName: string, pathSchema: string, handler: proto.RouteHandler): void {
     const handlerId = uuid.v4();
 
     const args: proto.RegisterParams = {
       handlerType: proto.HandlerType.EXTENSION,
-      extensionId,
+      extensionName,
       pathSchema,
       handlerId,
     };
 
     this.extensionHandlers
-      .set(extensionId, this.extensionHandlers.get(extensionId) ?? new Map())
-      .get(extensionId)
+      .set(extensionName, this.extensionHandlers.get(extensionName) ?? new Map())
+      .get(extensionName)
       .set(handlerId, handler);
 
     ipcRenderer.send(proto.ProtocolHandlerRegister, args);
   }
 
-  public removeExtensionHandlers(extensionId: string): void {
+  public removeExtensionHandlers(extensionName: string): void {
     const args: proto.DeregisterParams = {
-      extensionId,
+      extensionName,
     };
 
     ipcRenderer.send(proto.ProtocolHandlerDeregister, args);
-    this.extensionHandlers.delete(extensionId);
+    this.extensionHandlers.delete(extensionName);
   }
 }

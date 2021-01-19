@@ -102,7 +102,6 @@ export class ExtensionLoader {
     } catch (error) {
       logger.error(`${logModule}: deactivation extension error`, { lensExtensionId, error });
     }
-
   }
 
   removeExtension(lensExtensionId: LensExtensionId) {

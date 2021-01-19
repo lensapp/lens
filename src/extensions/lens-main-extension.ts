@@ -19,6 +19,14 @@ export class LensMainExtension extends LensExtension {
     await windowManager.navigate(pageUrl, frameId);
   }
 
+  async disable() {
+    const lprm = LensProtocolRouterMain.getInstance<LensProtocolRouterMain>();
+
+    lprm.removeExtensionHandlers(this.name);
+
+    return super.disable();
+  }
+
   /**
    * Registers a handler to be called when a `lens://` link is called.
    * @param pathSchema The path schema for the route.

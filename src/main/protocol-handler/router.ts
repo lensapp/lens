@@ -7,6 +7,7 @@ import * as proto from "../../common/protocol-handler";
 import { LensExtensionId } from "../../extensions/lens-extension";
 import { ipcMain } from "electron";
 import { WindowManager } from "../window-manager";
+import { extensionsStore } from "../../extensions/extensions-store";
 
 const EXTENSION_PUBLISHER_MATCH = "LENS_INTERNAL_EXTENSION_PUBLISHER_MATCH";
 const EXTENSION_NAME_MATCH = "LENS_INTERNAL_EXTENSION_NAME_MATCH";
@@ -68,7 +69,7 @@ function registerIpcHandler(event: Electron.IpcMainEvent, ...ipcArgs: unknown[])
     case proto.HandlerType.INTERNAL:
       return lprm.on(args.pathSchema, produceNotifyRenderer(args.handlerId));
     case proto.HandlerType.EXTENSION:
-      return lprm.extensionOn(args.extensionId, args.pathSchema, produceNotifyRenderer(args.handlerId));
+      return lprm.extensionOn(args.extensionName, args.pathSchema, produceNotifyRenderer(args.handlerId));
   }
 }
 
@@ -79,7 +80,7 @@ function deregisterIpcHandler(event: Electron.IpcMainEvent, ...ipcArgs: unknown[
     return void logger.warn(`${proto.LensProtocolRouter.LoggingPrefix}: ipc call to "${proto.ProtocolHandlerDeregister}" invalid arguments`, { ipcArgs });
   }
 
-  LensProtocolRouterMain.getInstance<LensProtocolRouterMain>().removeExtensionHandlers(args.extensionId);
+  LensProtocolRouterMain.getInstance<LensProtocolRouterMain>().removeExtensionHandlers(args.extensionName);
 }
 
 export class LensProtocolRouterMain extends proto.LensProtocolRouter {
@@ -128,7 +129,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
 
     let routes = this.extentionRoutes.get(name);
 
-    if (!routes) {
+    if (!routes || !extensionsStore.isEnabledByName(name)) {
       if (this.missingExtensionHandlers.length === 0) {
         throw new proto.RoutingError(proto.RoutingErrorType.MISSING_EXTENSION, url);
       }
