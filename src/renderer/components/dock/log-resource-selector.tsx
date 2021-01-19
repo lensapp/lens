@@ -33,6 +33,11 @@ export const LogResourceSelector = observer((props: Props) => {
 
   const onPodChange = (option: SelectOption) => {
     const selectedPod = podsStore.getByName(option.value, pod.getNs());
+
+    if (!selectedPod) {
+      return;
+    }
+
     const { getContainers, getInitContainers, getAllContainers } = selectedPod;
 
     save({
@@ -77,13 +82,14 @@ export const LogResourceSelector = observer((props: Props) => {
 
   return (
     <div className="LogResourceSelector flex gaps align-center">
-      <span>Namespace</span> <Badge label={pod.getNs()}/>
+      <span>Namespace</span> <Badge data-testid="namespace-badge" label={pod.getNs()}/>
       <span>Pod</span>
       <Select
         options={podSelectOptions}
         value={{ label: pod.getName(), value: pod.getName() }}
         onChange={onPodChange}
         autoConvertOptions={false}
+        className="pod-selector"
       />
       <span>Container</span>
       <Select
@@ -91,6 +97,7 @@ export const LogResourceSelector = observer((props: Props) => {
         value={{ label: selectedContainer.name, value: selectedContainer.name }}
         onChange={onContainerChange}
         autoConvertOptions={false}
+        className="container-selector"
       />
     </div>
   );
