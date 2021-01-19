@@ -1,15 +1,11 @@
-import "./pod-disruption-budgets.scss"
+import "./pod-disruption-budgets.scss";
 
 import * as React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
-import { RouteComponentProps } from "react-router";
 import { podDisruptionBudgetsStore } from "./pod-disruption-budgets.store";
-import { PodDisruptionBudget, pdbApi } from "../../api/endpoints/poddisruptionbudget.api";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { PodDisruptionBudget } from "../../api/endpoints/poddisruptionbudget.api";
 import { KubeObjectDetailsProps, KubeObjectListLayout } from "../kube-object";
-import { IPodDisruptionBudgetsRouteParams } from "./pod-disruption-budgets.route";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -43,41 +39,30 @@ export class PodDisruptionBudgets extends React.Component<Props> {
         searchFilters={[
           (pdb: PodDisruptionBudget) => pdb.getSearchFields(),
         ]}
-        renderHeaderTitle={<Trans>Pod Disruption Budgets</Trans>}
+        renderHeaderTitle="Pod Disruption Budgets"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Min Available</Trans>, className: "min-available", sortBy: sortBy.minAvailable },
-          { title: <Trans>Max Unavailable</Trans>, className: "max-unavailable", sortBy: sortBy.maxUnavailable },
-          { title: <Trans>Current Healthy</Trans>, className: "current-healthy", sortBy: sortBy.currentHealthy },
-          { title: <Trans>Desired Healthy</Trans>, className: "desired-healthy", sortBy: sortBy.desiredHealthy },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { className: "warning" },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Min Available", className: "min-available", sortBy: sortBy.minAvailable },
+          { title: "Max Unavailable", className: "max-unavailable", sortBy: sortBy.maxUnavailable },
+          { title: "Current Healthy", className: "current-healthy", sortBy: sortBy.currentHealthy },
+          { title: "Desired Healthy", className: "desired-healthy", sortBy: sortBy.desiredHealthy },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(pdb: PodDisruptionBudget) => {
           return [
             pdb.getName(),
+            <KubeObjectStatusIcon key="icon" object={pdb} />,
             pdb.getNs(),
             pdb.getMinAvailable(),
             pdb.getMaxUnavailable(),
             pdb.getCurrentHealthy(),
             pdb.getDesiredHealthy(),
             pdb.getAge(),
-          ]
-        }}
-        renderItemMenu={(pdb: PodDisruptionBudget) => {
-          return <PodDisruptionBudgetsMenu object={pdb}/>
+          ];
         }}
       />
     );
   }
 }
-
-export function PodDisruptionBudgetsMenu(props: KubeObjectMenuProps<PodDisruptionBudget>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(pdbApi, {
-  Menu: PodDisruptionBudgetsMenu,
-})

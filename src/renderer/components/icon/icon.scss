@@ -1,9 +1,11 @@
 .Icon {
   --size: 21px;
   --small-size: 18px;
+  --smallest-size: 16px;
   --big-size: 32px;
   --color-active: #{$iconActiveColor};
   --bgc-active: #{$iconActiveBackground};
+  --focus-color: var(--icon-focus-color, #{$lensBlue});
 
   display: inline-flex;
   flex-shrink: 0;
@@ -20,6 +22,12 @@
   font-size: var(--size);
   width: var(--size);
   height: var(--size);
+
+  &.smallest {
+    font-size: var(--smallest-size);
+    width: var(--smallest-size);
+    height: var(--smallest-size);
+  }
 
   &.small {
     font-size: var(--small-size);
@@ -99,7 +107,7 @@
 
   &.active {
     color: var(--color-active);
-    box-shadow: 0 0 0 3px $iconActiveBackground;
+    box-shadow: 0 0 0 2px $iconActiveBackground;
     background-color: $iconActiveBackground;
   }
 
@@ -108,8 +116,16 @@
     transition: 250ms color, 250ms opacity, 150ms background-color, 150ms box-shadow;
     border-radius: 50%;
 
-    &.focusable:focus {
-      @extend .active;
+    &.focusable:focus:not(:hover) {
+      box-shadow: 0 0 0 2px var(--focus-color);
+
+      [data-whatintent='mouse'] & {
+        box-shadow: none;
+
+        &.active {
+          box-shadow: 0 0 0 2px $iconActiveBackground;
+        }
+      }
     }
 
     &:hover {

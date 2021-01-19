@@ -2,10 +2,9 @@ import "./service-accounts.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
-import { ServiceAccount, serviceAccountsApi } from "../../api/endpoints/service-accounts.api";
+import { ServiceAccount } from "../../api/endpoints/service-accounts.api";
 import { RouteComponentProps } from "react-router";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { MenuItem } from "../menu";
 import { openServiceAccountKubeConfig } from "../kubeconfig-dialog";
 import { Icon } from "../icon";
@@ -13,7 +12,8 @@ import { KubeObjectListLayout } from "../kube-object";
 import { IServiceAccountsRouteParams } from "../+user-management";
 import { serviceAccountsStore } from "./service-accounts.store";
 import { CreateServiceAccountDialog } from "./create-service-account-dialog";
-import { apiManager } from "../../api/api-manager";
+import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -39,43 +39,48 @@ export class ServiceAccounts extends React.Component<Props> {
           searchFilters={[
             (account: ServiceAccount) => account.getSearchFields(),
           ]}
-          renderHeaderTitle={<Trans>Service Accounts</Trans>}
+          renderHeaderTitle="Service Accounts"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            { title: "Name", className: "name", sortBy: sortBy.name },
+            { className: "warning" },
+            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+            { title: "Age", className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(account: ServiceAccount) => [
             account.getName(),
+            <KubeObjectStatusIcon key="icon" object={account} />,
             account.getNs(),
             account.getAge(),
           ]}
           renderItemMenu={(item: ServiceAccount) => {
-            return <ServiceAccountMenu object={item}/>
+            return <ServiceAccountMenu object={item}/>;
           }}
           addRemoveButtons={{
             onAdd: () => CreateServiceAccountDialog.open(),
-            addTooltip: <Trans>Create new Service Account</Trans>,
+            addTooltip: "Create new Service Account",
           }}
         />
         <CreateServiceAccountDialog/>
       </>
-    )
+    );
   }
 }
 
-export function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
+function ServiceAccountMenu(props: KubeObjectMenuProps<ServiceAccount>) {
   const { object, toolbar } = props;
+
   return (
-    <KubeObjectMenu {...props}>
-      <MenuItem onClick={() => openServiceAccountKubeConfig(object)}>
-        <Icon material="insert_drive_file" title="Kubeconfig File" interactive={toolbar}/>
-        <span className="title"><Trans>Kubeconfig</Trans></span>
-      </MenuItem>
-    </KubeObjectMenu>
-  )
+    <MenuItem onClick={() => openServiceAccountKubeConfig(object)}>
+      <Icon material="insert_drive_file" title="Kubeconfig File" interactive={toolbar}/>
+      <span className="title">Kubeconfig</span>
+    </MenuItem>
+  );
 }
 
-apiManager.registerViews(serviceAccountsApi, {
-  Menu: ServiceAccountMenu,
-})
+kubeObjectMenuRegistry.add({
+  kind: "ServiceAccount",
+  apiVersions: ["v1"],
+  components: {
+    MenuItem: ServiceAccountMenu
+  }
+});

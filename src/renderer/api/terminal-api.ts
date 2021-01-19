@@ -1,7 +1,7 @@
 import { stringify } from "querystring";
 import { autobind, base64, EventEmitter } from "../utils";
 import { WebSocketApi } from "./websocket-api";
-import isEqual from "lodash/isEqual"
+import isEqual from "lodash/isEqual";
 import { isDevelopment } from "../../common/vars";
 
 export enum TerminalChannels {
@@ -28,7 +28,7 @@ export type TerminalApiQuery = Record<string, string> & {
   id: string;
   node?: string;
   type?: string | "node";
-}
+};
 
 export class TerminalApi extends WebSocketApi {
   protected size: { Width: number; Height: number };
@@ -50,26 +50,32 @@ export class TerminalApi extends WebSocketApi {
     const { id, node } = this.options;
     const wss = `ws${protocol === "https:" ? "s" : ""}://`;
     const query: TerminalApiQuery = { id };
+
     if (port) {
-      port = `:${port}`
+      port = `:${port}`;
     }
+
     if (node) {
       query.node = node;
       query.type = "node";
     }
+
     return `${wss}${hostname}${port}/api?${stringify(query)}`;
   }
 
   async connect() {
     const apiUrl = await this.getUrl();
+
     this.emitStatus("Connecting ...");
     this.onData.addListener(this._onReady, { prepend: true });
+
     return super.connect(apiUrl);
   }
 
   destroy() {
     if (!this.socket) return;
     const exitCode = String.fromCharCode(4); // ctrl+d
+
     this.sendCommand(exitCode);
     setTimeout(() => super.destroy(), 2000);
   }
@@ -87,11 +93,11 @@ export class TerminalApi extends WebSocketApi {
     this.onData.removeListener(this._onReady);
     this.flush();
     this.onData.emit(data); // re-emit data
+
     return false; // prevent calling rest of listeners
   }
 
   reconnect() {
-    const { reconnectDelaySeconds } = this.params;
     super.reconnect();
   }
 
@@ -101,6 +107,7 @@ export class TerminalApi extends WebSocketApi {
 
   sendTerminalSize(cols: number, rows: number) {
     const newSize = { Width: cols, Height: rows };
+
     if (!isEqual(this.size, newSize)) {
       this.sendCommand(JSON.stringify(newSize), TerminalChannels.TERMINAL_SIZE);
       this.size = newSize;
@@ -109,6 +116,7 @@ export class TerminalApi extends WebSocketApi {
 
   protected parseMessage(data: string) {
     data = data.substr(1); // skip channel
+
     return base64.decode(data);
   }
 
@@ -126,12 +134,14 @@ export class TerminalApi extends WebSocketApi {
 
   protected emitStatus(data: string, options: { color?: TerminalColor; showTime?: boolean } = {}) {
     const { color, showTime } = options;
+
     if (color) {
       data = `${color}${data}${TerminalColor.NO_COLOR}`;
     }
     let time;
+
     if (showTime) {
-      time = (new Date()).toLocaleString() + " ";
+      time = `${(new Date()).toLocaleString()} `;
     }
     this.onData.emit(`${showTime ? time : ""}${data}\r\n`);
   }

@@ -1,9 +1,9 @@
-import "./wizard-layout.scss"
+import "./wizard-layout.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
 
-interface Props extends React.DOMAttributes<any> {
+export interface WizardLayoutProps extends React.DOMAttributes<any> {
   className?: IClassName;
   header?: React.ReactNode;
   headerClass?: IClassName;
@@ -11,16 +11,16 @@ interface Props extends React.DOMAttributes<any> {
   infoPanelClass?: IClassName;
   infoPanel?: React.ReactNode;
   centered?: boolean;  // Centering content horizontally
-  contentProps?: React.DOMAttributes<HTMLElement>
 }
 
 @observer
-export class WizardLayout extends React.Component<Props> {
+export class WizardLayout extends React.Component<WizardLayoutProps> {
   render() {
     const {
       className, contentClass, infoPanelClass, infoPanel, header, headerClass, centered,
-      children, contentProps = {}, ...props
+      children, ...props
     } = this.props;
+
     return (
       <div {...props} className={cssNames("WizardLayout", { centered }, className)}>
         {header && (
@@ -28,7 +28,7 @@ export class WizardLayout extends React.Component<Props> {
             {header}
           </div>
         )}
-        <div {...contentProps} className={cssNames("content-col flex column gaps", contentClass)}>
+        <div className={cssNames("content-col flex column gaps", contentClass)}>
           <div className="flex column gaps">
             {children}
           </div>
@@ -39,6 +39,6 @@ export class WizardLayout extends React.Component<Props> {
           </div>
         )}
       </div>
-    )
+    );
   }
 }

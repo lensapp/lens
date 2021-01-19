@@ -1,10 +1,10 @@
 import { getHostedCluster } from "./cluster-store";
 
 export type KubeResource =
-  "namespaces" | "nodes" | "events" | "resourcequotas" |
-  "services" | "secrets" | "configmaps" | "ingresses" | "networkpolicies" | "persistentvolumes" | "storageclasses" |
+  "namespaces" | "nodes" | "events" | "resourcequotas" | "services" | "limitranges" |
+  "secrets" | "configmaps" | "ingresses" | "networkpolicies" | "persistentvolumeclaims" | "persistentvolumes" | "storageclasses" |
   "pods" | "daemonsets" | "deployments" | "statefulsets" | "replicasets" | "jobs" | "cronjobs" |
-  "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets"
+  "endpoints" | "customresourcedefinitions" | "horizontalpodautoscalers" | "podsecuritypolicies" | "poddisruptionbudgets";
 
 export interface KubeApiResource {
   resource: KubeResource; // valid resource name
@@ -23,14 +23,17 @@ export const apiResources: KubeApiResource[] = [
   { resource: "horizontalpodautoscalers" },
   { resource: "ingresses", group: "networking.k8s.io" },
   { resource: "jobs", group: "batch" },
+  { resource: "limitranges" },
   { resource: "namespaces" },
   { resource: "networkpolicies", group: "networking.k8s.io" },
   { resource: "nodes" },
   { resource: "persistentvolumes" },
+  { resource: "persistentvolumeclaims" },
   { resource: "pods" },
   { resource: "poddisruptionbudgets" },
   { resource: "podsecuritypolicies" },
   { resource: "resourcequotas" },
+  { resource: "replicasets", group: "apps" },
   { resource: "secrets" },
   { resource: "services" },
   { resource: "statefulsets", group: "apps" },
@@ -42,10 +45,12 @@ export function isAllowedResource(resources: KubeResource | KubeResource[]) {
     resources = [resources];
   }
   const { allowedResources = [] } = getHostedCluster() || {};
+
   for (const resource of resources) {
     if (!allowedResources.includes(resource)) {
       return false;
     }
   }
+
   return true;
 }

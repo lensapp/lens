@@ -1,7 +1,6 @@
 import "./pod-details-affinities.scss";
 import React from "react";
 import jsYaml from "js-yaml";
-import { Trans } from "@lingui/macro";
 import { AceEditor } from "../ace-editor";
 import { DrawerParamToggler, DrawerItem } from "../drawer";
 import { Pod, Deployment, DaemonSet, StatefulSet, ReplicaSet, Job } from "../../api/endpoints";
@@ -12,12 +11,14 @@ interface Props {
 
 export class PodDetailsAffinities extends React.Component<Props> {
   render() {
-    const { workload } = this.props
-    const affinitiesNum = workload.getAffinityNumber()
-    const affinities = workload.getAffinity()
-    if (!affinitiesNum) return null
+    const { workload } = this.props;
+    const affinitiesNum = workload.getAffinityNumber();
+    const affinities = workload.getAffinity();
+
+    if (!affinitiesNum) return null;
+
     return (
-      <DrawerItem name={<Trans>Affinities</Trans>} className="PodDetailsAffinities">
+      <DrawerItem name="Affinities" className="PodDetailsAffinities">
         <DrawerParamToggler label={affinitiesNum}>
           <div className="ace-container">
             <AceEditor
@@ -29,6 +30,6 @@ export class PodDetailsAffinities extends React.Component<Props> {
           </div>
         </DrawerParamToggler>
       </DrawerItem>
-    )
+    );
   }
 }

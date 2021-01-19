@@ -42,13 +42,14 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
   };
 
   @disposeOnUnmount
-  closeOnNavigate = reaction(() => navigation.getPath(), () => this.close())
+  closeOnNavigate = reaction(() => navigation.getPath(), () => this.close());
 
   public state: DialogState = {
     isOpen: this.props.isOpen,
-  }
+  };
 
   get elem() {
+    // eslint-disable-next-line react/no-find-dom-node
     return findDOMNode(this) as HTMLElement;
   }
 
@@ -62,6 +63,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
   componentDidUpdate(prevProps: DialogProps) {
     const { isOpen } = this.props;
+
     if (isOpen !== prevProps.isOpen) {
       this.toggle(isOpen);
     }
@@ -90,40 +92,45 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
 
   onOpen = () => {
     this.props.onOpen();
+
     if (!this.props.pinned) {
-      if (this.elem) this.elem.addEventListener('click', this.onClickOutside);
+      if (this.elem) this.elem.addEventListener("click", this.onClickOutside);
       // Using document.body target to handle keydown event before Drawer does
-      document.body.addEventListener('keydown', this.onEscapeKey);
+      document.body.addEventListener("keydown", this.onEscapeKey);
     }
-  }
+  };
 
   onClose = () => {
     this.props.onClose();
+
     if (!this.props.pinned) {
-      if (this.elem) this.elem.removeEventListener('click', this.onClickOutside);
-      document.body.removeEventListener('keydown', this.onEscapeKey);
+      if (this.elem) this.elem.removeEventListener("click", this.onClickOutside);
+      document.body.removeEventListener("keydown", this.onEscapeKey);
     }
-  }
+  };
 
   onEscapeKey = (evt: KeyboardEvent) => {
     const escapeKey = evt.code === "Escape";
+
     if (escapeKey) {
       this.close();
       evt.stopPropagation();
     }
-  }
+  };
 
   onClickOutside = (evt: MouseEvent) => {
     const target = evt.target as HTMLElement;
+
     if (!this.contentElem.contains(target)) {
       this.close();
       evt.stopPropagation();
     }
-  }
+  };
 
   render() {
     const { modal, animated, pinned } = this.props;
     let { className } = this.props;
+
     className = cssNames("Dialog flex center", className, { modal, pinned });
     let dialog = (
       <div className={className} onClick={stopPropagation}>
@@ -132,6 +139,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
         </div>
       </div>
     );
+
     if (animated) {
       dialog = (
         <Animate enter={this.isOpen} name="opacity-scale">
@@ -142,6 +150,7 @@ export class Dialog extends React.PureComponent<DialogProps, DialogState> {
     else if (!this.isOpen) {
       return null;
     }
+
     return createPortal(dialog, document.body);
   }
 }

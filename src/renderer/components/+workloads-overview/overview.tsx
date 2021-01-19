@@ -1,4 +1,4 @@
-import "./overview.scss"
+import "./overview.scss";
 
 import React from "react";
 import { observable, when } from "mobx";
@@ -14,49 +14,59 @@ import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import { Spinner } from "../spinner";
 import { Events } from "../+events";
 import { KubeObjectStore } from "../../kube-object.store";
-import { isAllowedResource } from "../../../common/rbac"
+import { isAllowedResource } from "../../../common/rbac";
 
 interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 }
 
 @observer
 export class WorkloadsOverview extends React.Component<Props> {
-  @observable isReady = false;
   @observable isUnmounting = false;
 
   async componentDidMount() {
     const stores: KubeObjectStore[] = [];
+
     if (isAllowedResource("pods")) {
       stores.push(podsStore);
     }
+
     if (isAllowedResource("deployments")) {
       stores.push(deploymentStore);
     }
+
     if (isAllowedResource("daemonsets")) {
       stores.push(daemonSetStore);
     }
+
     if (isAllowedResource("statefulsets")) {
       stores.push(statefulSetStore);
     }
+
     if (isAllowedResource("replicasets")) {
       stores.push(replicaSetStore);
     }
+
     if (isAllowedResource("jobs")) {
       stores.push(jobStore);
     }
+
     if (isAllowedResource("cronjobs")) {
       stores.push(cronJobStore);
     }
+
     if (isAllowedResource("events")) {
       stores.push(eventStore);
     }
-    this.isReady = stores.every(store => store.isLoaded);
-    await Promise.all(stores.map(store => store.loadAll()));
-    this.isReady = true;
-    const unsubscribeList = stores.map(store => store.subscribe());
+
+    const unsubscribeList: Array<() => void> = [];
+
+    for (const store of stores) {
+      await store.loadAll();
+      unsubscribeList.push(store.subscribe());
+    }
+
     await when(() => this.isUnmounting);
     unsubscribeList.forEach(dispose => dispose());
   }
@@ -65,10 +75,7 @@ export class WorkloadsOverview extends React.Component<Props> {
     this.isUnmounting = true;
   }
 
-  renderContents() {
-    if (!this.isReady) {
-      return <Spinner center/>
-    }
+  get contents() {
     return (
       <>
         <OverviewStatuses/>
@@ -78,14 +85,14 @@ export class WorkloadsOverview extends React.Component<Props> {
           className="box grow"
         /> }
       </>
-    )
+    );
   }
 
   render() {
     return (
       <div className="WorkloadsOverview flex column gaps">
-        {this.renderContents()}
+        {this.contents}
       </div>
-    )
+    );
   }
 }

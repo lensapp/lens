@@ -1,4 +1,4 @@
-import jsYaml from "js-yaml"
+import jsYaml from "js-yaml";
 import { KubeObject } from "../kube-object";
 import { KubeJsonApiData } from "../kube-json-api";
 import { apiBase } from "../index";
@@ -13,17 +13,20 @@ export const resourceApplierApi = {
     if (typeof resource === "string") {
       resource = jsYaml.safeLoad(resource);
     }
+
     return apiBase
       .post<KubeJsonApiData[]>("/stack", { data: resource })
       .then(data => {
         const items = data.map(obj => {
-          const api = apiManager.getApi(obj.metadata.selfLink);
+          const api = apiManager.getApiByKind(obj.kind, obj.apiVersion);
+
           if (api) {
             return new api.objectConstructor(obj);
           } else {
-            return new KubeObject(obj)
+            return new KubeObject(obj);
           }
         });
+
         return items.length === 1 ? items[0] : items;
       });
   }

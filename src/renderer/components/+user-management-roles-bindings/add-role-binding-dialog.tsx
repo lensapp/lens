@@ -1,10 +1,8 @@
-import "./add-role-binding-dialog.scss"
+import "./add-role-binding-dialog.scss";
 
 import React from "react";
 import { computed, observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { Select, SelectOption } from "../select";
@@ -16,11 +14,11 @@ import { NamespaceSelect } from "../+namespaces/namespace-select";
 import { Checkbox } from "../checkbox";
 import { KubeObject } from "../../api/kube-object";
 import { Notifications } from "../notifications";
-import { showDetails } from "../../navigation";
 import { rolesStore } from "../+user-management-roles/roles.store";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { serviceAccountsStore } from "../+user-management-service-accounts/service-accounts.store";
 import { roleBindingsStore } from "./role-bindings.store";
+import { showDetails } from "../kube-object";
 
 interface BindingSelectOption extends SelectOption {
   value: string; // binding name
@@ -67,12 +65,12 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   @computed get selectedBindings() {
     return [
       ...this.selectedAccounts,
-    ]
+    ];
   }
 
   close = () => {
     AddRoleBindingDialog.close();
-  }
+  };
 
   async loadData() {
     const stores = [
@@ -80,6 +78,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       rolesStore,
       serviceAccountsStore,
     ];
+
     this.isLoading = true;
     await Promise.all(stores.map(store => store.loadAll()));
     this.isLoading = false;
@@ -91,26 +90,28 @@ export class AddRoleBindingDialog extends React.Component<Props> {
     if (this.roleBinding) {
       const { name, kind } = this.roleBinding.roleRef;
       const role = rolesStore.items.find(role => role.kind === kind && role.getName() === name);
+
       if (role) {
         this.selectedRoleId = role.getId();
         this.bindContext = role.getNs() || "";
       }
     }
-  }
+  };
 
   reset = () => {
     this.selectedRoleId = "";
     this.bindContext = "";
     this.selectedAccounts.clear();
-  }
+  };
 
   onBindContextChange = (namespace: string) => {
     this.bindContext = namespace;
     const roleContext = this.selectedRole && this.selectedRole.getNs() || "";
+
     if (this.bindContext && this.bindContext !== roleContext) {
       this.selectedRoleId = ""; // reset previously selected role for specific context
     }
-  }
+  };
 
   createBindings = async () => {
     const { selectedRole, bindContext: namespace, selectedBindings, bindingName, useRoleForBindingName } = this;
@@ -121,13 +122,15 @@ export class AddRoleBindingDialog extends React.Component<Props> {
           name: item.getName(),
           kind: item.kind,
           namespace: item.getNs(),
-        }
+        };
       }
+
       return item;
     });
 
     try {
       let roleBinding: RoleBinding;
+
       if (this.isEditing) {
         roleBinding = await roleBindingsStore.updateSubjects({
           roleBinding: this.roleBinding,
@@ -136,8 +139,9 @@ export class AddRoleBindingDialog extends React.Component<Props> {
       }
       else {
         const name = useRoleForBindingName ? selectedRole.getName() : bindingName;
+
         roleBinding = await roleBindingsStore.create({ name, namespace }, {
-          subjects: subjects,
+          subjects,
           roleRef: {
             name: selectedRole.getName(),
             kind: selectedRole.kind,
@@ -152,38 +156,43 @@ export class AddRoleBindingDialog extends React.Component<Props> {
   };
 
   @computed get roleOptions(): BindingSelectOption[] {
-    let roles = rolesStore.items as Role[]
+    let roles = rolesStore.items as Role[];
+
     if (this.bindContext) {
       // show only cluster-roles or roles for selected context namespace
       roles = roles.filter(role => !role.getNs() || role.getNs() === this.bindContext);
     }
+
     return roles.map(role => {
       const name = role.getName();
       const namespace = role.getNs();
+
       return {
         value: role.getId(),
         label: name + (namespace ? ` (${namespace})` : "")
-      }
-    })
+      };
+    });
   }
 
   @computed get serviceAccountOptions(): BindingSelectOption[] {
     return serviceAccountsStore.items.map(account => {
       const name = account.getName();
       const namespace = account.getNs();
+
       return {
         item: account,
         value: name,
         label: <><Icon small material="account_box"/> {name} ({namespace})</>
-      }
-    })
+      };
+    });
   }
 
   renderContents() {
     const unwrapBindings = (options: BindingSelectOption[]) => options.map(option => option.item || option.subject);
+
     return (
       <>
-        <SubTitle title={<Trans>Context</Trans>}/>
+        <SubTitle title="Context"/>
         <NamespaceSelect
           showClusterOption
           themeName="light"
@@ -192,11 +201,11 @@ export class AddRoleBindingDialog extends React.Component<Props> {
           onChange={({ value }) => this.onBindContextChange(value)}
         />
 
-        <SubTitle title={<Trans>Role</Trans>}/>
+        <SubTitle title="Role"/>
         <Select
           key={this.selectedRoleId}
           themeName="light"
-          placeholder={_i18n._(t`Select role..`)}
+          placeholder={`Select role..`}
           isDisabled={this.isEditing}
           options={this.roleOptions}
           value={this.selectedRoleId}
@@ -207,7 +216,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
             <>
               <Checkbox
                 theme="light"
-                label={<Trans>Use same name for RoleBinding</Trans>}
+                label="Use same name for RoleBinding"
                 value={this.useRoleForBindingName}
                 onChange={v => this.useRoleForBindingName = v}
               />
@@ -215,7 +224,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
                 !this.useRoleForBindingName && (
                   <Input
                     autoFocus
-                    placeholder={_i18n._(t`Name`)}
+                    placeholder={`Name`}
                     disabled={this.isEditing}
                     value={this.bindingName}
                     onChange={v => this.bindingName = v}
@@ -226,11 +235,11 @@ export class AddRoleBindingDialog extends React.Component<Props> {
           )
         }
 
-        <SubTitle title={<Trans>Binding targets</Trans>}/>
+        <SubTitle title="Binding targets"/>
         <Select
           isMulti
           themeName="light"
-          placeholder={_i18n._(t`Select service accounts`)}
+          placeholder={`Select service accounts`}
           autoConvertOptions={false}
           options={this.serviceAccountOptions}
           onChange={(opts: BindingSelectOption[]) => {
@@ -240,7 +249,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
           maxMenuHeight={200}
         />
       </>
-    )
+    );
   }
 
   render() {
@@ -250,13 +259,14 @@ export class AddRoleBindingDialog extends React.Component<Props> {
     const header = (
       <h5>
         {roleBindingName
-          ? <Trans>Edit RoleBinding <span className="name">{roleBindingName}</span></Trans>
-          : <Trans>Add RoleBinding</Trans>
+          ? <>Edit RoleBinding <span className="name">{roleBindingName}</span></>
+          : "Add RoleBinding"
         }
       </h5>
     );
     const disableNext = this.isLoading || !selectedRole || !selectedBindings.length;
-    const nextLabel = isEditing ? <Trans>Update</Trans> : <Trans>Create</Trans>;
+    const nextLabel = isEditing ? "Update"  : "Create";
+
     return (
       <Dialog
         {...dialogProps}
@@ -275,6 +285,6 @@ export class AddRoleBindingDialog extends React.Component<Props> {
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

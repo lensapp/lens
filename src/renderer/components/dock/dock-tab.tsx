@@ -1,13 +1,13 @@
-import "./dock-tab.scss"
+import "./dock-tab.scss";
 
-import React from "react"
+import React from "react";
 import { observer } from "mobx-react";
-import { t } from "@lingui/macro";
 import { autobind, cssNames, prevDefault } from "../../utils";
 import { dockStore, IDockTab } from "./dock.store";
 import { Tab, TabProps } from "../tabs";
 import { Icon } from "../icon";
-import { _i18n } from "../../i18n";
+import { Menu, MenuItem } from "../menu";
+import { observable } from "mobx";
 
 export interface DockTabProps extends TabProps<IDockTab> {
   moreActions?: React.ReactNode;
@@ -15,6 +15,8 @@ export interface DockTabProps extends TabProps<IDockTab> {
 
 @observer
 export class DockTab extends React.Component<DockTabProps> {
+  @observable menuVisible = false;
+
   get tabId() {
     return this.props.value.id;
   }
@@ -22,6 +24,38 @@ export class DockTab extends React.Component<DockTabProps> {
   @autobind()
   close() {
     dockStore.closeTab(this.tabId);
+  }
+
+  renderMenu() {
+    const { closeTab, closeAllTabs, closeOtherTabs, closeTabsToTheRight, tabs, getTabIndex } = dockStore;
+    const closeAllDisabled = tabs.length === 1;
+    const closeOtherDisabled = tabs.length === 1;
+    const closeRightDisabled = getTabIndex(this.tabId) === tabs.length - 1;
+
+    return (
+      <Menu
+        usePortal
+        htmlFor={`tab-${this.tabId}`}
+        className="DockTabMenu"
+        isOpen={this.menuVisible}
+        open={() => this.menuVisible = true}
+        close={() => this.menuVisible = false}
+        toggleEvent="contextmenu"
+      >
+        <MenuItem onClick={() => closeTab(this.tabId)}>
+          Close
+        </MenuItem>
+        <MenuItem onClick={() => closeAllTabs()} disabled={closeAllDisabled}>
+          Close all tabs
+        </MenuItem>
+        <MenuItem onClick={() => closeOtherTabs(this.tabId)} disabled={closeOtherDisabled}>
+          Close other tabs
+        </MenuItem>
+        <MenuItem onClick={() => closeTabsToTheRight(this.tabId)} disabled={closeRightDisabled}>
+          Close tabs to the right
+        </MenuItem>
+      </Menu>
+    );
   }
 
   render() {
@@ -34,18 +68,24 @@ export class DockTab extends React.Component<DockTabProps> {
         {!pinned && (
           <Icon
             small material="close"
-            title={_i18n._(t`Close (Ctrl+W)`)}
+            title={`Close (Ctrl+W)`}
             onClick={prevDefault(this.close)}
           />
         )}
       </div>
-    )
+    );
+
     return (
-      <Tab
-        {...tabProps}
-        className={cssNames("DockTab", className, { pinned })}
-        label={label}
-      />
-    )
+      <>
+        <Tab
+          {...tabProps}
+          id={`tab-${this.tabId}`}
+          className={cssNames("DockTab", className, { pinned })}
+          onContextMenu={() => this.menuVisible = true}
+          label={label}
+        />
+        {this.renderMenu()}
+      </>
+    );
   }
 }

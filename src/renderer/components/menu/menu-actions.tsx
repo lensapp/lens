@@ -1,20 +1,19 @@
-import "./menu-actions.scss"
+import "./menu-actions.scss";
 
 import React, { isValidElement } from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { autobind, cssNames } from "../../utils";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon, IconProps } from "../icon";
 import { Menu, MenuItem, MenuProps } from "../menu";
 import uniqueId from "lodash/uniqueId";
 import isString from "lodash/isString";
-import { _i18n } from "../../i18n";
 
 export interface MenuActionsProps extends Partial<MenuProps> {
   className?: string;
   toolbar?: boolean; // display menu as toolbar with icons
+  autoCloseOnSelect?: boolean;
   triggerIcon?: string | IconProps | React.ReactNode;
   removeConfirmationMessage?: React.ReactNode | (() => React.ReactNode);
   updateAction?(): void;
@@ -25,9 +24,9 @@ export interface MenuActionsProps extends Partial<MenuProps> {
 export class MenuActions extends React.Component<MenuActionsProps> {
   static defaultProps: MenuActionsProps = {
     get removeConfirmationMessage() {
-      return _i18n._(t`Remove item?`)
+      return `Remove item?`;
     }
-  }
+  };
 
   public id = uniqueId("menu_actions_");
 
@@ -42,22 +41,25 @@ export class MenuActions extends React.Component<MenuActionsProps> {
   remove() {
     const { removeAction } = this.props;
     let { removeConfirmationMessage } = this.props;
+
     if (typeof removeConfirmationMessage === "function") {
       removeConfirmationMessage = removeConfirmationMessage();
     }
     ConfirmDialog.open({
       ok: removeAction,
-      labelOk: _i18n._(t`Remove`),
+      labelOk: `Remove`,
       message: <div>{removeConfirmationMessage}</div>,
-    })
+    });
   }
 
   renderTriggerIcon() {
     if (this.props.toolbar) return;
     const { triggerIcon = "more_vert" } = this.props;
     let className: string;
+
     if (isValidElement<HTMLElement>(triggerIcon)) {
       className = cssNames(triggerIcon.props.className, { active: this.isOpen });
+
       return React.cloneElement(triggerIcon, { id: this.id, className } as any);
     }
     const iconProps: Partial<IconProps> = {
@@ -66,25 +68,28 @@ export class MenuActions extends React.Component<MenuActionsProps> {
       material: isString(triggerIcon) ? triggerIcon : undefined,
       active: this.isOpen,
       ...(typeof triggerIcon === "object" ? triggerIcon : {}),
-    }
+    };
+
     if (iconProps.tooltip && this.isOpen) {
       delete iconProps.tooltip; // don't show tooltip for icon when menu is open
     }
+
     return (
       <Icon {...iconProps}/>
-    )
+    );
   }
 
   render() {
     const {
-      className, toolbar, children, updateAction, removeAction, triggerIcon, removeConfirmationMessage,
+      className, toolbar, autoCloseOnSelect, children, updateAction, removeAction, triggerIcon, removeConfirmationMessage,
       ...menuProps
     } = this.props;
     const menuClassName = cssNames("MenuActions flex", className, {
-      toolbar: toolbar,
+      toolbar,
       gaps: toolbar, // add spacing for .flex
     });
     const autoClose = !toolbar;
+
     return (
       <>
         {this.renderTriggerIcon()}
@@ -94,25 +99,25 @@ export class MenuActions extends React.Component<MenuActionsProps> {
           className={menuClassName}
           usePortal={autoClose}
           closeOnScroll={autoClose}
-          closeOnClickItem={autoClose}
+          closeOnClickItem={autoCloseOnSelect ?? autoClose }
           closeOnClickOutside={autoClose}
           {...menuProps}
         >
           {children}
           {updateAction && (
             <MenuItem onClick={updateAction}>
-              <Icon material="edit" interactive={toolbar} title={_i18n._(t`Edit`)}/>
-              <span className="title"><Trans>Edit</Trans></span>
+              <Icon material="edit" interactive={toolbar} title={`Edit`}/>
+              <span className="title">Edit</span>
             </MenuItem>
           )}
           {removeAction && (
             <MenuItem onClick={this.remove}>
-              <Icon material="delete" interactive={toolbar} title={_i18n._(t`Delete`)}/>
-              <span className="title"><Trans>Remove</Trans></span>
+              <Icon material="delete" interactive={toolbar} title={`Delete`}/>
+              <span className="title">Remove</span>
             </MenuItem>
           )}
         </Menu>
       </>
-    )
+    );
   }
 }

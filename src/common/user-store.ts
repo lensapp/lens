@@ -1,15 +1,15 @@
 import type { ThemeId } from "../renderer/theme.store";
-import { app, remote } from 'electron';
-import semver from "semver"
-import { readFile } from "fs-extra"
+import { app, remote } from "electron";
+import semver from "semver";
+import { readFile } from "fs-extra";
 import { action, observable, reaction, toJS } from "mobx";
 import { BaseStore } from "./base-store";
-import migrations from "../migrations/user-store"
+import migrations from "../migrations/user-store";
 import { getAppVersion } from "./utils/app-version";
 import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
-import { tracker } from "./tracker";
+import { appEventBus } from "./event-bus";
 import logger from "../main/logger";
-import path from 'path';
+import path from "path";
 
 export interface UserStoreModel {
   kubeConfigPath: string;
@@ -27,28 +27,23 @@ export interface UserPreferences {
   downloadKubectlBinaries?: boolean;
   downloadBinariesPath?: string;
   kubectlBinariesPath?: string;
+  openAtLogin?: boolean;
+  hiddenTableColumns?: Record<string, string[]>
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
-  static readonly defaultTheme: ThemeId = "kontena-dark"
+  static readonly defaultTheme: ThemeId = "lens-dark";
 
   private constructor() {
     super({
       // configName: "lens-user-store", // todo: migrate from default "config.json"
-      migrations: migrations,
+      migrations,
     });
 
-    // track telemetry availability
-    reaction(() => this.preferences.allowTelemetry, allowed => {
-      tracker.event("telemetry", allowed ? "enabled" : "disabled");
-    });
-
-    // refresh new contexts
-    this.whenLoaded.then(this.refreshNewContexts);
-    reaction(() => this.kubeConfigPath, this.refreshNewContexts);
+    this.handleOnLoad();
   }
 
-  @observable lastSeenAppVersion = "0.0.0"
+  @observable lastSeenAppVersion = "0.0.0";
   @observable kubeConfigPath = kubeConfigDefaultPath; // used in add-cluster page for providing context
   @observable seenContexts = observable.set<string>();
   @observable newContexts = observable.set<string>();
@@ -59,7 +54,31 @@ export class UserStore extends BaseStore<UserStoreModel> {
     colorTheme: UserStore.defaultTheme,
     downloadMirror: "default",
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
+    openAtLogin: false,
+    hiddenTableColumns: {},
   };
+
+  protected async handleOnLoad() {
+    await this.whenLoaded;
+
+    // refresh new contexts
+    this.refreshNewContexts();
+    reaction(() => this.kubeConfigPath, this.refreshNewContexts);
+
+    if (app) {
+      // track telemetry availability
+      reaction(() => this.preferences.allowTelemetry, allowed => {
+        appEventBus.emit({ name: "telemetry", action: allowed ? "enabled" : "disabled" });
+      });
+
+      // open at system start-up
+      reaction(() => this.preferences.openAtLogin, openAtLogin => {
+        app.setLoginItemSettings({ openAtLogin });
+      }, {
+        fireImmediately: true,
+      });
+    }
+  }
 
   get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
@@ -71,19 +90,21 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   @action
-  resetTheme() {
+  async resetTheme() {
+    await this.whenLoaded;
     this.preferences.colorTheme = UserStore.defaultTheme;
   }
 
   @action
   saveLastSeenAppVersion() {
-    tracker.event("app", "whats-new-seen")
+    appEventBus.emit({ name: "app", action: "whats-new-seen" });
     this.lastSeenAppVersion = getAppVersion();
   }
 
   protected refreshNewContexts = async () => {
     try {
       const kubeConfig = await readFile(this.kubeConfigPath, "utf8");
+
       if (kubeConfig) {
         this.newContexts.clear();
         loadConfig(kubeConfig).getContexts()
@@ -95,11 +116,12 @@ export class UserStore extends BaseStore<UserStoreModel> {
       logger.error(err);
       this.resetKubeConfigPath();
     }
-  }
+  };
 
   @action
   markNewContextsAsSeen() {
     const { seenContexts, newContexts } = this;
+
     this.seenContexts.replace([...seenContexts, ...newContexts]);
     this.newContexts.clear();
   }
@@ -109,15 +131,17 @@ export class UserStore extends BaseStore<UserStoreModel> {
    * @returns string
    */
   getDefaultKubectlPath(): string {
-    return path.join((app || remote.app).getPath("userData"), "binaries")
+    return path.join((app || remote.app).getPath("userData"), "binaries");
   }
 
   @action
   protected async fromStore(data: Partial<UserStoreModel> = {}) {
-    const { lastSeenAppVersion, seenContexts = [], preferences, kubeConfigPath } = data
+    const { lastSeenAppVersion, seenContexts = [], preferences, kubeConfigPath } = data;
+
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;
     }
+
     if (kubeConfigPath) {
       this.kubeConfigPath = kubeConfigPath;
     }
@@ -131,10 +155,11 @@ export class UserStore extends BaseStore<UserStoreModel> {
       lastSeenAppVersion: this.lastSeenAppVersion,
       seenContexts: Array.from(this.seenContexts),
       preferences: this.preferences,
-    }
+    };
+
     return toJS(model, {
       recurseEverything: true,
-    })
+    });
   }
 }
 

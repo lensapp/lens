@@ -5,7 +5,7 @@ import { FitAddon } from "xterm-addon-fit";
 import { dockStore, TabId } from "./dock.store";
 import { TerminalApi } from "../../api/terminal-api";
 import { themeStore } from "../../theme.store";
-import { autobind } from "../../utils/autobind";
+import { autobind } from "../../utils";
 
 export class Terminal {
   static spawningPool: HTMLElement;
@@ -14,8 +14,9 @@ export class Terminal {
     // terminal element must be in DOM before attaching via xterm.open(elem)
     // https://xtermjs.org/docs/api/terminal/classes/terminal/#open
     const pool = document.createElement("div");
+
     pool.className = "terminal-init";
-    pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden"
+    pool.style.cssText = "position: absolute; top: 0; left: 0; height: 0; visibility: hidden; overflow: hidden";
     document.body.appendChild(pool);
     Terminal.spawningPool = pool;
   }
@@ -23,6 +24,7 @@ export class Terminal {
   static async preloadFonts() {
     const fontPath = require("../fonts/roboto-mono-nerd.ttf").default; // eslint-disable-line @typescript-eslint/no-var-requires
     const fontFace = new FontFace("RobotoMono", `url(${fontPath})`);
+
     await fontFace.load();
     document.fonts.add(fontFace);
   }
@@ -36,15 +38,18 @@ export class Terminal {
   protected setTheme(colors: Record<string, string>) {
     // Replacing keys stored in styles to format accepted by terminal
     // E.g. terminalBrightBlack -> brightBlack
-    const colorPrefix = "terminal"
+    const colorPrefix = "terminal";
     const terminalColors = Object.entries(colors)
       .filter(([name]) => name.startsWith(colorPrefix))
       .reduce<any>((colors, [name, color]) => {
         const colorName = name.split("").slice(colorPrefix.length);
+
         colorName[0] = colorName[0].toLowerCase();
         colors[colorName.join("")] = color;
+
         return colors;
       }, {});
+
     this.xterm.setOption("theme", terminalColors);
   }
 
@@ -62,6 +67,7 @@ export class Terminal {
 
   get isActive() {
     const { isOpen, selectedTabId } = dockStore;
+
     return isOpen && selectedTabId === this.tabId;
   }
 
@@ -95,6 +101,7 @@ export class Terminal {
 
     // bind events
     const onDataHandler = this.xterm.onData(this.onData);
+
     this.viewport.addEventListener("scroll", this.onScroll);
     this.api.onReady.addListener(this.onClear, { once: true }); // clear status logs (connecting..)
     this.api.onData.addListener(this.onApiData);
@@ -121,49 +128,58 @@ export class Terminal {
   }
 
   fit = () => {
-    this.fitAddon.fit();
-    const { cols, rows } = this.xterm;
-    this.api.sendTerminalSize(cols, rows);
+    // Since this function is debounced we need to read this value as late as possible
+    if (!this.isActive) return;
+
+    try {
+      this.fitAddon.fit();
+      const { cols, rows } = this.xterm;
+
+      this.api.sendTerminalSize(cols, rows);
+    } catch(error) {
+      console.error(error);
+
+      return; // see https://github.com/lensapp/lens/issues/1891
+    }
   };
 
   fitLazy = debounce(this.fit, 250);
 
   focus = () => {
     this.xterm.focus();
-  }
+  };
 
   onApiData = (data: string) => {
     this.xterm.write(data);
-  }
+  };
 
   onData = (data: string) => {
     if (!this.api.isReady) return;
     this.api.sendCommand(data);
-  }
+  };
 
   onScroll = () => {
     this.scrollPos = this.viewport.scrollTop;
-  }
+  };
 
   onClear = () => {
     this.xterm.clear();
-  }
+  };
 
   onResize = () => {
-    if (!this.isActive) return;
     this.fitLazy();
     this.focus();
-  }
+  };
 
   onActivate = () => {
     this.fit();
     setTimeout(() => this.focus(), 250); // delay used to prevent focus on active tab
     this.viewport.scrollTop = this.scrollPos; // restore last scroll position
-  }
+  };
 
   onClickLink = (evt: MouseEvent, link: string) => {
     window.open(link, "_blank");
-  }
+  };
 
   keyHandler = (evt: KeyboardEvent): boolean => {
     const { code, ctrlKey, type } = evt;
@@ -172,15 +188,14 @@ export class Terminal {
     if (ctrlKey) {
       switch (code) {
       // Ctrl+C: prevent terminal exit on windows / linux (?)
-      case "KeyC":
-        if (this.xterm.hasSelection()) return false;
-        break;
+        case "KeyC":
+          if (this.xterm.hasSelection()) return false;
+          break;
 
-        // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
-        // https://github.com/kontena/lens-app/issues/156#issuecomment-534906480
-      case "KeyW":
-        evt.preventDefault();
-        break;
+          // Ctrl+W: prevent unexpected terminal tab closing, e.g. editing file in vim
+        case "KeyW":
+          evt.preventDefault();
+          break;
       }
     }
 
@@ -190,7 +205,7 @@ export class Terminal {
     }
 
     return true;
-  }
+  };
 }
 
 Terminal.init();

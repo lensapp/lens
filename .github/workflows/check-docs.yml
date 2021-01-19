@@ -1,0 +1,30 @@
+name: Check Documentation
+on:
+  - pull_request
+jobs:
+  build:
+    name: Check Docs
+    runs-on: ubuntu-latest
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'area/documentation') }}
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Checkout Release from lens
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Using Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Generate Extensions API Reference using typedocs
+        run: |
+           yarn install
+           yarn typedocs-extensions-api
+
+      - name: Verify that the markdown is valid
+        run: |
+          yarn run verify-docs

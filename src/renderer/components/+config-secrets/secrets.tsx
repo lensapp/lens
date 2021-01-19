@@ -1,17 +1,15 @@
-import "./secrets.scss"
+import "./secrets.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
-import { Secret, secretsApi } from "../../api/endpoints";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { Secret } from "../../api/endpoints";
 import { AddSecretDialog } from "./add-secret-dialog";
 import { ISecretsRouteParams } from "./secrets.route";
 import { KubeObjectListLayout } from "../kube-object";
 import { Badge } from "../badge";
 import { secretsStore } from "./secrets.store";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -44,29 +42,28 @@ export class Secrets extends React.Component<Props> {
             (item: Secret) => item.getSearchFields(),
             (item: Secret) => item.getKeys(),
           ]}
-          renderHeaderTitle={<Trans>Secrets</Trans>}
+          renderHeaderTitle="Secrets"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-            { title: <Trans>Labels</Trans>, className: "labels", sortBy: sortBy.labels },
-            { title: <Trans>Keys</Trans>, className: "keys", sortBy: sortBy.keys },
-            { title: <Trans>Type</Trans>, className: "type", sortBy: sortBy.type },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            { title: "Name", className: "name", sortBy: sortBy.name },
+            { className: "warning" },
+            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+            { title: "Labels", className: "labels", sortBy: sortBy.labels },
+            { title: "Keys", className: "keys", sortBy: sortBy.keys },
+            { title: "Type", className: "type", sortBy: sortBy.type },
+            { title: "Age", className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(secret: Secret) => [
             secret.getName(),
+            <KubeObjectStatusIcon key="icon" object={secret} />,
             secret.getNs(),
             secret.getLabels().map(label => <Badge key={label} label={label}/>),
             secret.getKeys().join(", "),
             secret.type,
             secret.getAge(),
           ]}
-          renderItemMenu={(item: Secret) => {
-            return <SecretMenu object={item}/>
-          }}
           addRemoveButtons={{
             onAdd: () => AddSecretDialog.open(),
-            addTooltip: <Trans>Create new Secret</Trans>
+            addTooltip: "Create new Secret"
           }}
         />
         <AddSecretDialog/>
@@ -74,13 +71,3 @@ export class Secrets extends React.Component<Props> {
     );
   }
 }
-
-export function SecretMenu(props: KubeObjectMenuProps<Secret>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(secretsApi, {
-  Menu: SecretMenu,
-})

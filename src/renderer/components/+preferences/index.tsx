@@ -1,2 +1,2 @@
-export * from "./preferences.route"
-export * from "./preferences"
+export * from "./preferences.route";
+export * from "./preferences";

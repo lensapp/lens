@@ -1,14 +1,13 @@
-import "./role-details.scss"
+import "./role-details.scss";
 
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { DrawerTitle } from "../drawer";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { observer } from "mobx-react";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
+import { Role } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Role> {
 }
@@ -17,31 +16,33 @@ interface Props extends KubeObjectDetailsProps<Role> {
 export class RoleDetails extends React.Component<Props> {
   render() {
     const { object: role } = this.props;
+
     if (!role) return;
     const rules = role.getRules();
+
     return (
       <div className="RoleDetails">
         <KubeObjectMeta object={role}/>
 
-        <DrawerTitle title={<Trans>Rules</Trans>}/>
+        <DrawerTitle title="Rules"/>
         {rules.map(({ resourceNames, apiGroups, resources, verbs }, index) => {
           return (
             <div className="rule" key={index}>
               {resources && (
                 <>
-                  <div className="name"><Trans>Resources</Trans></div>
+                  <div className="name">Resources</div>
                   <div className="value">{resources.join(", ")}</div>
                 </>
               )}
               {verbs && (
                 <>
-                  <div className="name"><Trans>Verbs</Trans></div>
+                  <div className="name">Verbs</div>
                   <div className="value">{verbs.join(", ")}</div>
                 </>
               )}
               {apiGroups && (
                 <>
-                  <div className="name"><Trans>Api Groups</Trans></div>
+                  <div className="name">Api Groups</div>
                   <div className="value">
                     {apiGroups
                       .map(apiGroup => apiGroup === "" ? `'${apiGroup}'` : apiGroup)
@@ -52,20 +53,46 @@ export class RoleDetails extends React.Component<Props> {
               )}
               {resourceNames && (
                 <>
-                  <div className="name"><Trans>Resource Names</Trans></div>
+                  <div className="name">Resource Names</div>
                   <div className="value">{resourceNames.join(", ")}</div>
                 </>
               )}
             </div>
-          )
+          );
         })}
-
-        <KubeEventDetails object={role}/>
       </div>
-    )
+    );
   }
 }
 
-apiManager.registerViews([roleApi, clusterRoleApi], {
-  Details: RoleDetails,
-})
+kubeObjectDetailRegistry.add({
+  kind: "Role",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  components: {
+    Details: (props) => <RoleDetails {...props}/>
+  }
+});
+kubeObjectDetailRegistry.add({
+  kind: "Role",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
+  }
+});
+
+kubeObjectDetailRegistry.add({
+  kind: "ClusterRole",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  components: {
+    Details: (props) => <RoleDetails {...props}/>
+  }
+});
+kubeObjectDetailRegistry.add({
+  kind: "ClusterRole",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props}/>
+  }
+});

@@ -5,8 +5,8 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class ConfigMapsStore extends KubeObjectStore<ConfigMap> {
-  api = configMapApi
+  api = configMapApi;
 }
 
 export const configMapsStore = new ConfigMapsStore();
-apiManager.registerStore(configMapApi, configMapsStore);
+apiManager.registerStore(configMapsStore);

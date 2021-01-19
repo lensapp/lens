@@ -4,14 +4,12 @@ import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { TabLayout } from "../layout/tab-layout";
 import { eventStore } from "./event.store";
-import { KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
-import { Trans } from "@lingui/macro";
+import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
 import { KubeEvent } from "../../api/endpoints/events.api";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
 import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
-import { getDetailsUrl } from "../../navigation";
 import { lookupApiLink } from "../../api/kube-api";
 
 enum sortBy {
@@ -57,7 +55,7 @@ export class Events extends React.Component<Props> {
           (event: KubeEvent) => event.getSource(),
           (event: KubeEvent) => event.involvedObject.name,
         ]}
-        renderHeaderTitle={<Trans>Events</Trans>}
+        renderHeaderTitle="Events"
         customizeHeader={({ title, info }) => (
           compact ? title : ({
             info: (
@@ -67,20 +65,20 @@ export class Events extends React.Component<Props> {
                   small
                   material="help_outline"
                   className="help-icon"
-                  tooltip={<Trans>Limited to {eventStore.limit}</Trans>}
+                  tooltip={`Limited to ${eventStore.limit}`}
                 />
               </>
             )
           })
         )}
         renderTableHeader={[
-          { title: <Trans>Message</Trans>, className: "message" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Type</Trans>, className: "type", sortBy: sortBy.type },
-          { title: <Trans>Involved Object</Trans>, className: "object", sortBy: sortBy.object },
-          { title: <Trans>Source</Trans>, className: "source" },
-          { title: <Trans>Count</Trans>, className: "count", sortBy: sortBy.count },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Message", className: "message" },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Type", className: "type", sortBy: sortBy.type },
+          { title: "Involved Object", className: "object", sortBy: sortBy.object },
+          { title: "Source", className: "source" },
+          { title: "Count", className: "count", sortBy: sortBy.count },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(event: KubeEvent) => {
           const { involvedObject, type, message } = event;
@@ -88,6 +86,7 @@ export class Events extends React.Component<Props> {
           const tooltipId = `message-${event.getId()}`;
           const isWarning = type === "Warning";
           const detailsUrl = getDetailsUrl(lookupApiLink(involvedObject, event));
+
           return [
             {
               className: { warning: isWarning },
@@ -102,25 +101,27 @@ export class Events extends React.Component<Props> {
             },
             event.getNs(),
             kind,
-            <Link to={detailsUrl} title={name} onClick={stopPropagation}>{name}</Link>,
+            <Link key="link" to={detailsUrl} title={name} onClick={stopPropagation}>{name}</Link>,
             event.getSource(),
             event.count,
             event.getAge(),
-          ]
+          ];
         }}
         virtual={!compact}
         filterItems={[
           items => compact ? items.slice(0, compactLimit) : items,
         ]}
       />
-    )
+    );
+
     if (compact) {
       return events;
     }
+
     return (
       <TabLayout>
         {events}
       </TabLayout>
-    )
+    );
   }
 }

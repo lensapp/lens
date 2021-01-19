@@ -16,6 +16,7 @@ class Singleton {
     if (!Singleton.instances.has(this)) {
       Singleton.instances.set(this, Reflect.construct(this, args));
     }
+
     return Singleton.instances.get(this) as T;
   }
 
@@ -24,5 +25,5 @@ class Singleton {
   }
 }
 
-export { Singleton }
+export { Singleton };
 export default Singleton;

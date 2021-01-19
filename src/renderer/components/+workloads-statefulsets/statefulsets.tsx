@@ -3,23 +3,25 @@ import "./statefulsets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { Trans } from "@lingui/macro";
-import { StatefulSet, statefulSetApi } from "../../api/endpoints";
+import { StatefulSet } from "../../api/endpoints";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { statefulSetStore } from "./statefulset.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { eventStore } from "../+events/event.store";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
 import { IStatefulSetsRouteParams } from "../+workloads";
-import { KubeEventIcon } from "../+events/kube-event-icon";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
+import { MenuItem } from "../menu/menu";
+import { Icon } from "../icon/icon";
+import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 
 enum sortBy {
   name = "name",
   namespace = "namespace",
-  pods = "pods",
   age = "age",
+  replicas = "replicas",
 }
 
 interface Props extends RouteComponentProps<IStatefulSetsRouteParams> {
@@ -27,8 +29,10 @@ interface Props extends RouteComponentProps<IStatefulSetsRouteParams> {
 
 @observer
 export class StatefulSets extends React.Component<Props> {
-  getPodsLength(statefulSet: StatefulSet) {
-    return statefulSetStore.getChildPods(statefulSet).length;
+  renderPods(statefulSet: StatefulSet) {
+    const { readyReplicas, currentReplicas } = statefulSet.status;
+
+    return `${readyReplicas || 0}/${currentReplicas || 0}`;
   }
 
   render() {
@@ -40,40 +44,53 @@ export class StatefulSets extends React.Component<Props> {
           [sortBy.name]: (statefulSet: StatefulSet) => statefulSet.getName(),
           [sortBy.namespace]: (statefulSet: StatefulSet) => statefulSet.getNs(),
           [sortBy.age]: (statefulSet: StatefulSet) => statefulSet.metadata.creationTimestamp,
-          [sortBy.pods]: (statefulSet: StatefulSet) => this.getPodsLength(statefulSet),
+          [sortBy.replicas]: (statefulSet: StatefulSet) => statefulSet.getReplicas(),
         }}
         searchFilters={[
           (statefulSet: StatefulSet) => statefulSet.getSearchFields(),
         ]}
-        renderHeaderTitle={<Trans>Stateful Sets</Trans>}
+        renderHeaderTitle="Stateful Sets"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Pods", className: "pods" },
+          { title: "Replicas", className: "replicas", sortBy: sortBy.replicas },
           { className: "warning" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(statefulSet: StatefulSet) => [
           statefulSet.getName(),
           statefulSet.getNs(),
-          this.getPodsLength(statefulSet),
-          <KubeEventIcon object={statefulSet}/>,
+          this.renderPods(statefulSet),
+          statefulSet.getReplicas(),
+          <KubeObjectStatusIcon key="icon" object={statefulSet}/>,
           statefulSet.getAge(),
         ]}
         renderItemMenu={(item: StatefulSet) => {
-          return <StatefulSetMenu object={item}/>
+          return <StatefulSetMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
 export function StatefulSetMenu(props: KubeObjectMenuProps<StatefulSet>) {
+  const { object, toolbar } = props;
+
   return (
-    <KubeObjectMenu {...props}/>
-  )
+    <>
+      <MenuItem onClick={() => StatefulSetScaleDialog.open(object)}>
+        <Icon material="open_with" title={`Scale`} interactive={toolbar}/>
+        <span className="title">Scale</span>
+      </MenuItem>
+    </>
+  );
 }
 
-apiManager.registerViews(statefulSetApi, {
-  Menu: StatefulSetMenu,
-})
+kubeObjectMenuRegistry.add({
+  kind: "StatefulSet",
+  apiVersions: ["apps/v1"],
+  components: {
+    MenuItem: StatefulSetMenu
+  }
+});

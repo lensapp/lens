@@ -10,8 +10,9 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class EventStore extends KubeObjectStore<KubeEvent> {
-  api = eventApi
-  limit = 1000
+  api = eventApi;
+  limit = 1000;
+  saveLimit = 50000;
 
   protected bindWatchEventsUpdater() {
     return super.bindWatchEventsUpdater(5000);
@@ -20,7 +21,7 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
   protected sortItems(items: KubeEvent[]) {
     return super.sortItems(items, [
       event => event.metadata.creationTimestamp
-    ], "desc")
+    ], "desc");
   }
 
   getEventsByObject(obj: KubeObject): KubeEvent[] {
@@ -28,6 +29,7 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
       if(obj.kind == "Node") {
         return obj.getName() == evt.involvedObject.uid && evt.involvedObject.kind == "Node";
       }
+
       return obj.getId() == evt.involvedObject.uid;
     });
   }
@@ -38,15 +40,19 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
     const eventsWithError = Object.values(groupsByInvolvedObject).map(events => {
       const recent = events[0];
       const { kind, uid } = recent.involvedObject;
+
       if (kind == Pod.kind) {  // Wipe out running pods
         const pod = podsStore.items.find(pod => pod.getId() == uid);
+
         if (!pod || (!pod.hasIssues() && pod.spec.priority < 500000)) return;
       }
+
       return recent;
     });
+
     return compact(eventsWithError);
   }
 }
 
 export const eventStore = new EventStore();
-apiManager.registerStore(eventApi, eventStore);
+apiManager.registerStore(eventStore);

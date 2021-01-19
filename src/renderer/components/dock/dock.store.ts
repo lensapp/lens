@@ -1,7 +1,7 @@
 import MD5 from "crypto-js/md5";
 import { action, computed, IReactionOptions, observable, reaction } from "mobx";
 import { autobind, createStorage } from "../../utils";
-import throttle from "lodash/throttle"
+import throttle from "lodash/throttle";
 
 export type TabId = string;
 
@@ -11,6 +11,7 @@ export enum TabKind {
   EDIT_RESOURCE = "edit-resource",
   INSTALL_CHART = "install-chart",
   UPGRADE_CHART = "upgrade-chart",
+  POD_LOGS = "pod-logs",
 }
 
 export interface IDockTab {
@@ -27,8 +28,8 @@ export class DockStore {
   ];
 
   protected storage = createStorage("dock", {}); // keep settings in localStorage
-  public defaultTabId = this.initialTabs[0].id;
-  public minHeight = 100;
+  public readonly defaultTabId = this.initialTabs[0].id;
+  public readonly minHeight = 100;
 
   @observable isOpen = false;
   @observable fullSize = false;
@@ -49,7 +50,9 @@ export class DockStore {
     const mainLayoutTabs = 33;
     const mainLayoutMargin = 16;
     const dockTabs = 33;
-    return window.innerHeight - mainLayoutHeader - mainLayoutTabs - mainLayoutMargin - dockTabs;
+    const preferedMax = window.innerHeight - mainLayoutHeader - mainLayoutTabs - mainLayoutMargin - dockTabs;
+
+    return Math.max(preferedMax, this.minHeight); // don't let max < min
   }
 
   constructor() {
@@ -65,7 +68,6 @@ export class DockStore {
     });
 
     // adjust terminal height if window size changes
-    this.checkMaxHeight();
     window.addEventListener("resize", throttle(this.checkMaxHeight, 250));
   }
 
@@ -73,6 +75,7 @@ export class DockStore {
     if (!this.height) {
       this.setHeight(this.defaultHeight || this.minHeight);
     }
+
     if (this.height > this.maxHeight) {
       this.setHeight(this.maxHeight);
     }
@@ -93,6 +96,7 @@ export class DockStore {
   @action
   open(fullSize?: boolean) {
     this.isOpen = true;
+
     if (typeof fullSize === "boolean") {
       this.fullSize = fullSize;
     }
@@ -119,13 +123,19 @@ export class DockStore {
     return this.tabs.find(tab => tab.id === tabId);
   }
 
+  getTabIndex(tabId: TabId) {
+    return this.tabs.findIndex(tab => tab.id === tabId);
+  }
+
   protected getNewTabNumber(kind: TabKind) {
     const tabNumbers = this.tabs
       .filter(tab => tab.kind === kind)
       .map(tab => {
         const tabNumber = +tab.title.match(/\d+/);
+
         return tabNumber === 0 ? 1 : tabNumber; // tab without a number is first
       });
+
     for (let i = 1; ; i++) {
       if (!tabNumbers.includes(i)) return i;
     }
@@ -135,29 +145,36 @@ export class DockStore {
   createTab(anonTab: IDockTab, addNumber = true): IDockTab {
     const tabId = MD5(Math.random().toString() + Date.now()).toString();
     const tab: IDockTab = { id: tabId, ...anonTab };
+
     if (addNumber) {
       const tabNumber = this.getNewTabNumber(tab.kind);
-      if (tabNumber > 1) tab.title += ` (${tabNumber})`
+
+      if (tabNumber > 1) tab.title += ` (${tabNumber})`;
     }
     this.tabs.push(tab);
     this.selectTab(tab.id);
     this.open();
+
     return tab;
   }
 
   @action
   async closeTab(tabId: TabId) {
     const tab = this.getTabById(tabId);
+
     if (!tab || tab.pinned) {
       return;
     }
     this.tabs.remove(tab);
+
     if (this.selectedTabId === tab.id) {
       if (this.tabs.length) {
         const newTab = this.tabs.slice(-1)[0]; // last
+
         if (newTab.kind === TabKind.TERMINAL) {
           // close the dock when selected sibling inactive terminal tab
           const { terminalStore } = await import("./terminal.store");
+
           if (!terminalStore.isConnected(newTab.id)) this.close();
         }
         this.selectTab(newTab.id);
@@ -169,22 +186,43 @@ export class DockStore {
     }
   }
 
-  @action
-  selectTab(tabId: TabId) {
-    const tab = this.getTabById(tabId);
-    this.selectedTabId = tab ? tab.id : null;
+  closeTabs(tabs: IDockTab[]) {
+    tabs.forEach(tab => this.closeTab(tab.id));
+  }
+
+  closeAllTabs() {
+    this.closeTabs([...this.tabs]);
+  }
+
+  closeOtherTabs(tabId: TabId) {
+    const index = this.getTabIndex(tabId);
+    const tabs = [...this.tabs.slice(0, index), ...this.tabs.slice(index + 1)];
+
+    this.closeTabs(tabs);
+  }
+
+  closeTabsToTheRight(tabId: TabId) {
+    const index = this.getTabIndex(tabId);
+    const tabs = this.tabs.slice(index + 1);
+
+    this.closeTabs(tabs);
   }
 
   @action
-  setHeight(height: number) {
-    this.height = Math.max(0, Math.min(height, this.maxHeight));
+  selectTab(tabId: TabId) {
+    this.selectedTabId = this.getTabById(tabId)?.id ?? null;
+  }
+
+  @action
+  setHeight(height?: number) {
+    this.height = Math.max(this.minHeight, Math.min(height || this.minHeight, this.maxHeight));
   }
 
   @action
   reset() {
     this.selectedTabId = this.defaultTabId;
     this.tabs.replace(this.initialTabs);
-    this.height = this.defaultHeight;
+    this.setHeight(this.defaultHeight);
     this.close();
   }
 }

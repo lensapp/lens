@@ -4,7 +4,9 @@ import { KubeApi } from "../kube-api";
 
 @autobind()
 export class PodSecurityPolicy extends KubeObject {
-  static kind = "PodSecurityPolicy"
+  static kind = "PodSecurityPolicy";
+  static namespaced = false;
+  static apiBase = "/apis/policy/v1beta1/podsecuritypolicies";
 
   spec: {
     allowPrivilegeEscalation?: boolean;
@@ -64,7 +66,7 @@ export class PodSecurityPolicy extends KubeObject {
       ranges: { max: number; min: number }[];
     };
     volumes?: string[];
-  }
+  };
 
   isPrivileged() {
     return !!this.spec.privileged;
@@ -76,6 +78,7 @@ export class PodSecurityPolicy extends KubeObject {
 
   getRules() {
     const { fsGroup, runAsGroup, runAsUser, supplementalGroups, seLinux } = this.spec;
+
     return {
       fsGroup: fsGroup ? fsGroup.rule : "",
       runAsGroup: runAsGroup ? runAsGroup.rule : "",
@@ -87,8 +90,5 @@ export class PodSecurityPolicy extends KubeObject {
 }
 
 export const pspApi = new KubeApi({
-  kind: PodSecurityPolicy.kind,
-  apiBase: "/apis/policy/v1beta1/podsecuritypolicies",
-  isNamespaced: false,
   objectConstructor: PodSecurityPolicy,
 });

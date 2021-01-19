@@ -1,16 +1,18 @@
+import moment from "moment";
+
 import { IAffinity, WorkloadKubeObject } from "../workload-kube-object";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
 export class DeploymentApi extends KubeApi<Deployment> {
   protected getScaleApiUrl(params: { namespace: string; name: string }) {
-    return this.getUrl(params) + "/scale"
+    return `${this.getUrl(params)}/scale`;
   }
 
   getReplicas(params: { namespace: string; name: string }): Promise<number> {
     return this.request
       .get(this.getScaleApiUrl(params))
-      .then(({ status }: any) => status.replicas)
+      .then(({ status }: any) => status?.replicas);
   }
 
   scale(params: { namespace: string; name: string }, replicas: number) {
@@ -18,16 +20,57 @@ export class DeploymentApi extends KubeApi<Deployment> {
       data: {
         metadata: params,
         spec: {
-          replicas: replicas
+          replicas
         }
       }
-    })
+    });
   }
+
+  restart(params: { namespace: string; name: string }) {
+    return this.request.patch(this.getUrl(params), {
+      data: {
+        spec: {
+          template: {
+            metadata: {
+              annotations: {"kubectl.kubernetes.io/restartedAt" : moment.utc().format()}
+            }
+          }
+        }
+      }
+    },
+    {
+      headers: {
+        "content-type": "application/strategic-merge-patch+json"
+      }
+    });
+  }
+}
+
+interface IContainerProbe {
+  httpGet?: {
+    path?: string;
+    port: number;
+    scheme: string;
+    host?: string;
+  };
+  exec?: {
+    command: string[];
+  };
+  tcpSocket?: {
+    port: number;
+  };
+  initialDelaySeconds?: number;
+  timeoutSeconds?: number;
+  periodSeconds?: number;
+  successThreshold?: number;
+  failureThreshold?: number;
 }
 
 @autobind()
 export class Deployment extends WorkloadKubeObject {
-  static kind = "Deployment"
+  static kind = "Deployment";
+  static namespaced = true;
+  static apiBase = "/apis/apps/v1/deployments";
 
   spec: {
     replicas: number;
@@ -36,6 +79,7 @@ export class Deployment extends WorkloadKubeObject {
       metadata: {
         creationTimestamp?: string;
         labels: { [app: string]: string };
+        annotations?: { [app: string]: string };
       };
       spec: {
         containers: {
@@ -65,30 +109,9 @@ export class Deployment extends WorkloadKubeObject {
             name: string;
             mountPath: string;
           }[];
-          livenessProbe?: {
-            httpGet: {
-              path: string;
-              port: number;
-              scheme: string;
-            };
-            initialDelaySeconds: number;
-            timeoutSeconds: number;
-            periodSeconds: number;
-            successThreshold: number;
-            failureThreshold: number;
-          };
-          readinessProbe?: {
-            httpGet: {
-              path: string;
-              port: number;
-              scheme: string;
-            };
-            initialDelaySeconds: number;
-            timeoutSeconds: number;
-            periodSeconds: number;
-            successThreshold: number;
-            failureThreshold: number;
-          };
+          livenessProbe?: IContainerProbe;
+          readinessProbe?: IContainerProbe;
+          startupProbe?: IContainerProbe;
           terminationMessagePath: string;
           terminationMessagePolicy: string;
           imagePullPolicy: string;
@@ -127,7 +150,7 @@ export class Deployment extends WorkloadKubeObject {
         maxSurge: number;
       };
     };
-  }
+  };
   status: {
     observedGeneration: number;
     replicas: number;
@@ -143,19 +166,22 @@ export class Deployment extends WorkloadKubeObject {
       reason: string;
       message: string;
     }[];
-  }
+  };
 
   getConditions(activeOnly = false) {
-    const { conditions } = this.status
-    if (!conditions) return []
+    const { conditions } = this.status;
+
+    if (!conditions) return [];
+
     if (activeOnly) {
-      return conditions.filter(c => c.status === "True")
+      return conditions.filter(c => c.status === "True");
     }
-    return conditions
+
+    return conditions;
   }
 
   getConditionsText(activeOnly = true) {
-    return this.getConditions(activeOnly).map(({ type }) => type).join(" ")
+    return this.getConditions(activeOnly).map(({ type }) => type).join(" ");
   }
 
   getReplicas() {
@@ -164,8 +190,5 @@ export class Deployment extends WorkloadKubeObject {
 }
 
 export const deploymentApi = new DeploymentApi({
-  kind: Deployment.kind,
-  apiBase: "/apis/apps/v1/deployments",
-  isNamespaced: true,
   objectConstructor: Deployment,
 });

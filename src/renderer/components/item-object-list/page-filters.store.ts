@@ -1,7 +1,7 @@
 import { computed, observable, reaction } from "mobx";
 import { autobind } from "../../utils";
-import { getSearch, setSearch } from "../../navigation";
 import { namespaceStore } from "../+namespaces/namespace.store";
+import { searchUrlParam } from "../input/search-input-url";
 
 export enum FilterType {
   SEARCH = "search",
@@ -37,6 +37,7 @@ export class PageFiltersStore {
       reaction(() => namespaceStore.contextNs.toJS(), contextNs => {
         const filteredNs = this.getValues(FilterType.NAMESPACE);
         const isChanged = contextNs.length !== filteredNs.length;
+
         if (isChanged) {
           this.filters.replace([
             ...this.filters.filter(({ type }) => type !== FilterType.NAMESPACE),
@@ -47,17 +48,20 @@ export class PageFiltersStore {
         fireImmediately: true
       })
     ];
+
     return () => disposers.forEach(dispose => dispose());
   }
 
   protected syncWithGlobalSearch() {
     const disposers = [
-      reaction(() => this.getValues(FilterType.SEARCH)[0], setSearch),
-      reaction(() => getSearch(), search => {
+      reaction(() => this.getValues(FilterType.SEARCH)[0], search => searchUrlParam.set(search)),
+      reaction(() => searchUrlParam.get(), search => {
         const filter = this.getByType(FilterType.SEARCH);
+
         if (filter) {
           this.removeFilter(filter); // search filter might occur once
         }
+
         if (search) {
           this.addFilter({ type: FilterType.SEARCH, value: search }, true);
         }
@@ -65,6 +69,7 @@ export class PageFiltersStore {
         fireImmediately: true
       })
     ];
+
     return () => disposers.forEach(dispose => dispose());
   }
 
@@ -78,6 +83,7 @@ export class PageFiltersStore {
   removeFilter(filter: Filter) {
     if (!this.filters.remove(filter)) {
       const filterCopy = this.filters.find(f => f.type === filter.type && f.value === filter.value);
+
       if (filterCopy) this.filters.remove(filterCopy);
     }
   }
@@ -85,7 +91,7 @@ export class PageFiltersStore {
   getByType(type: FilterType, value?: any): Filter {
     return this.filters.find(filter => filter.type === type && (
       arguments.length > 1 ? filter.value === value : true
-    ))
+    ));
   }
 
   getValues(type: FilterType) {
@@ -100,11 +106,13 @@ export class PageFiltersStore {
 
   disable(type: FilterType | FilterType[]) {
     [type].flat().forEach(type => this.isDisabled.set(type, true));
+
     return () => this.enable(type);
   }
 
   enable(type: FilterType | FilterType[]) {
     [type].flat().forEach(type => this.isDisabled.delete(type));
+
     return () => this.disable(type);
   }
 

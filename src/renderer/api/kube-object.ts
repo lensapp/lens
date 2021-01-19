@@ -10,6 +10,8 @@ import { resourceApplierApi } from "./endpoints/resource-applier.api";
 
 export type IKubeObjectConstructor<T extends KubeObject = any> = (new (data: KubeJsonApiData | any) => T) & {
   kind?: string;
+  namespaced?: boolean;
+  apiBase?: string;
 };
 
 export interface IKubeObjectMetadata {
@@ -43,6 +45,7 @@ export type IKubeMetaField = keyof IKubeObjectMetadata;
 @autobind()
 export class KubeObject implements ItemObject {
   static readonly kind: string;
+  static readonly namespaced: boolean;
 
   static create(data: any) {
     return new KubeObject(data);
@@ -62,20 +65,21 @@ export class KubeObject implements ItemObject {
 
   static stringifyLabels(labels: { [name: string]: string }): string[] {
     if (!labels) return [];
-    return Object.entries(labels).map(([name, value]) => `${name}=${value}`)
+
+    return Object.entries(labels).map(([name, value]) => `${name}=${value}`);
   }
 
   constructor(data: KubeJsonApiData) {
     Object.assign(this, data);
   }
 
-  apiVersion: string
-  kind: string
+  apiVersion: string;
+  kind: string;
   metadata: IKubeObjectMetadata;
   status?: any; // todo: type-safety support
 
   get selfLink() {
-    return this.metadata.selfLink
+    return this.metadata.selfLink;
   }
 
   getId() {
@@ -101,9 +105,11 @@ export class KubeObject implements ItemObject {
       return moment(this.metadata.creationTimestamp).fromNow();
     }
     const diff = new Date().getTime() - new Date(this.metadata.creationTimestamp).getTime();
+
     if (humanize) {
       return formatDuration(diff, compact);
     }
+
     return diff;
   }
 
@@ -115,31 +121,35 @@ export class KubeObject implements ItemObject {
     return KubeObject.stringifyLabels(this.metadata.labels);
   }
 
-  getAnnotations(): string[] {
+  getAnnotations(filter = false): string[] {
     const labels = KubeObject.stringifyLabels(this.metadata.annotations);
-    return labels.filter(label => {
+
+    return filter ? labels.filter(label => {
       const skip = resourceApplierApi.annotations.some(key => label.startsWith(key));
+
       return !skip;
-    })
+    }) : labels;
   }
 
   getOwnerRefs() {
     const refs = this.metadata.ownerReferences || [];
+
     return refs.map(ownerRef => ({
       ...ownerRef,
       namespace: this.getNs(),
-    }))
+    }));
   }
 
   getSearchFields() {
-    const { getName, getId, getNs, getAnnotations, getLabels } = this
+    const { getName, getId, getNs, getAnnotations, getLabels } = this;
+
     return [
       getName(),
       getNs(),
       getId(),
       ...getLabels(),
-      ...getAnnotations(),
-    ]
+      ...getAnnotations(true),
+    ];
   }
 
   toPlainObject(): object {

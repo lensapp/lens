@@ -1,38 +1,41 @@
 import { Application } from "spectron";
 
-let appPath = ""
-switch(process.platform) {
-case "win32":
-  appPath = "./dist/win-unpacked/Lens.exe"
-  break
-case "linux":
-  appPath = "./dist/linux-unpacked/kontena-lens"
-  break
-case "darwin":
-  appPath = "./dist/mac/Lens.app/Contents/MacOS/Lens"
-  break
+const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
+  "win32": "./dist/win-unpacked/Lens.exe",
+  "linux": "./dist/linux-unpacked/kontena-lens",
+  "darwin": "./dist/mac/Lens.app/Contents/MacOS/Lens",
+};
+
+export function itIf(condition: boolean) {
+  return condition ? it : it.skip;
+}
+
+export function describeIf(condition: boolean) {
+  return condition ? describe : describe.skip;
 }
 
 export function setup(): Application {
   return new Application({
-    // path to electron app
+    path: AppPaths[process.platform], // path to electron app
     args: [],
-    path: appPath,
     startTimeout: 30000,
-    waitTimeout: 30000,
-    chromeDriverArgs: ['remote-debugging-port=9222'],
+    waitTimeout: 60000,
     env: {
       CICD: "true"
     }
-  })
+  });
 }
 
+type AsyncPidGetter = () => Promise<number>;
+
 export async function tearDown(app: Application) {
-  const pid = app.mainProcess.pid
-  await app.stop()
+  const pid = await (app.mainProcess.pid as any as AsyncPidGetter)();
+
+  await app.stop();
+
   try {
-    process.kill(pid, 0);
-  } catch(e) {
-    return
+    process.kill(pid, "SIGKILL");
+  } catch (e) {
+    console.error(e);
   }
 }

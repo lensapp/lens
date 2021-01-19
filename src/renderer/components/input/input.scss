@@ -89,6 +89,12 @@
 
   &.theme {
     &.round-black {
+      &.invalid.dirty {
+        label {
+          border-color: $colorSoftError;
+        }
+      }
+
       label {
         background: $mainBackground;
         border: 1px solid $borderFaintColor;
@@ -106,4 +112,10 @@
       }
     }
   }
+}
+
+.Tooltip.InputTooltipError {
+  --bgc: #{$colorError};
+  --border: none;
+  --color: white;
 }

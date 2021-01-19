@@ -17,21 +17,23 @@ export class ServicePort implements IServicePort {
   nodePort?: number;
 
   constructor(data: IServicePort) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 
   toString() {
     if (this.nodePort) {
       return `${this.port}:${this.nodePort}/${this.protocol}`;
     } else {
-      return `${this.port}${this.port === this.targetPort ? "" : ":" + this.targetPort}/${this.protocol}`;
+      return `${this.port}${this.port === this.targetPort ? "" : `:${this.targetPort}`}/${this.protocol}`;
     }
   }
 }
 
 @autobind()
 export class Service extends KubeObject {
-  static kind = "Service"
+  static kind = "Service";
+  static namespaced = true;
+  static apiBase = "/api/v1/services";
 
   spec: {
     type: string;
@@ -42,7 +44,7 @@ export class Service extends KubeObject {
     selector: { [key: string]: string };
     ports: ServicePort[];
     externalIPs?: string[]; // https://kubernetes.io/docs/concepts/services-networking/service/#external-ips
-  }
+  };
 
   status: {
     loadBalancer?: {
@@ -51,7 +53,7 @@ export class Service extends KubeObject {
         hostname?: string;
       }[];
     };
-  }
+  };
 
   getClusterIp() {
     return this.spec.clusterIP;
@@ -59,9 +61,11 @@ export class Service extends KubeObject {
 
   getExternalIps() {
     const lb = this.getLoadBalancer();
+
     if (lb && lb.ingress) {
-      return lb.ingress.map(val => val.ip || val.hostname)
+      return lb.ingress.map(val => val.ip || val.hostname);
     }
+
     return this.spec.externalIPs || [];
   }
 
@@ -71,11 +75,13 @@ export class Service extends KubeObject {
 
   getSelector(): string[] {
     if (!this.spec.selector) return [];
+
     return Object.entries(this.spec.selector).map(val => val.join("="));
   }
 
   getPorts(): ServicePort[] {
     const ports = this.spec.ports || [];
+
     return ports.map(p => new ServicePort(p));
   }
 
@@ -93,8 +99,5 @@ export class Service extends KubeObject {
 }
 
 export const serviceApi = new KubeApi({
-  kind: Service.kind,
-  apiBase: "/api/v1/services",
-  isNamespaced: true,
   objectConstructor: Service,
 });

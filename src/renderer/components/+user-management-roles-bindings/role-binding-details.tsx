@@ -1,9 +1,8 @@
-import "./role-binding-details.scss"
+import "./role-binding-details.scss";
 
 import React from "react";
-import { t, Trans } from "@lingui/macro";
 import { AddRemoveButtons } from "../add-remove-buttons";
-import { clusterRoleBindingApi, IRoleBindingSubject, RoleBinding, roleBindingApi } from "../../api/endpoints";
+import { IRoleBindingSubject, RoleBinding } from "../../api/endpoints";
 import { autobind, prevDefault } from "../../utils";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { ConfirmDialog } from "../confirm-dialog";
@@ -14,9 +13,8 @@ import { observable, reaction } from "mobx";
 import { roleBindingsStore } from "./role-bindings.store";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { _i18n } from "../../i18n";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<RoleBinding> {
 }
@@ -27,54 +25,57 @@ export class RoleBindingDetails extends React.Component<Props> {
 
   async componentDidMount() {
     disposeOnUnmount(this, [
-      reaction(() => this.props.object, (obj) => {
+      reaction(() => this.props.object, () => {
         this.selectedSubjects.clear();
       })
-    ])
+    ]);
   }
 
   selectSubject(subject: IRoleBindingSubject) {
     const { selectedSubjects } = this;
     const isSelected = selectedSubjects.includes(subject);
+
     selectedSubjects.replace(
       isSelected
         ? selectedSubjects.filter(sub => sub !== subject) // unselect
         : selectedSubjects.concat(subject) // select
-    )
+    );
   }
 
   @autobind()
   removeSelectedSubjects() {
     const { object: roleBinding } = this.props;
     const { selectedSubjects } = this;
+
     ConfirmDialog.open({
       ok: () => roleBindingsStore.updateSubjects({ roleBinding, removeSubjects: selectedSubjects }),
-      labelOk: _i18n._(t`Remove`),
+      labelOk: `Remove`,
       message: (
-        <p><Trans>Remove selected bindings for <b>{roleBinding.getName()}</b>?</Trans></p>
+        <p>Remove selected bindings for <b>{roleBinding.getName()}</b>?</p>
       )
-    })
+    });
   }
 
   render() {
     const { selectedSubjects } = this;
     const { object: roleBinding } = this.props;
+
     if (!roleBinding) {
       return null;
     }
-    const name = roleBinding.getName();
     const { roleRef } = roleBinding;
     const subjects = roleBinding.getSubjects();
+
     return (
       <div className="RoleBindingDetails">
         <KubeObjectMeta object={roleBinding}/>
 
-        <DrawerTitle title={<Trans>Reference</Trans>}/>
+        <DrawerTitle title="Reference"/>
         <Table>
           <TableHead>
-            <TableCell><Trans>Kind</Trans></TableCell>
-            <TableCell><Trans>Name</Trans></TableCell>
-            <TableCell><Trans>API Group</Trans></TableCell>
+            <TableCell>Kind</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>API Group</TableCell>
           </TableHead>
           <TableRow>
             <TableCell>{roleRef.kind}</TableCell>
@@ -83,19 +84,20 @@ export class RoleBindingDetails extends React.Component<Props> {
           </TableRow>
         </Table>
 
-        <DrawerTitle title={<Trans>Bindings</Trans>}/>
+        <DrawerTitle title="Bindings"/>
         {subjects.length > 0 && (
           <Table selectable className="bindings box grow">
             <TableHead>
               <TableCell checkbox/>
-              <TableCell className="binding"><Trans>Binding</Trans></TableCell>
-              <TableCell className="type"><Trans>Type</Trans></TableCell>
-              <TableCell className="type"><Trans>Namespace</Trans></TableCell>
+              <TableCell className="binding">Binding</TableCell>
+              <TableCell className="type">Type</TableCell>
+              <TableCell className="type">Namespace</TableCell>
             </TableHead>
             {
               subjects.map((subject, i) => {
                 const { kind, name, namespace } = subject;
                 const isSelected = selectedSubjects.includes(subject);
+
                 return (
                   <TableRow
                     key={i} selected={isSelected}
@@ -106,25 +108,52 @@ export class RoleBindingDetails extends React.Component<Props> {
                     <TableCell className="type">{kind}</TableCell>
                     <TableCell className="ns">{namespace || "-"}</TableCell>
                   </TableRow>
-                )
+                );
               })
             }
           </Table>
         )}
 
-        <KubeEventDetails object={roleBinding}/>
-
         <AddRemoveButtons
           onAdd={() => AddRoleBindingDialog.open(roleBinding)}
           onRemove={selectedSubjects.length ? this.removeSelectedSubjects : null}
-          addTooltip={<Trans>Add bindings to {name}</Trans>}
-          removeTooltip={<Trans>Remove selected bindings from ${name}</Trans>}
+          addTooltip="Add bindings to {name}"
+          removeTooltip="Remove selected bindings from ${name}"
         />
       </div>
-    )
+    );
   }
 }
 
-apiManager.registerViews([roleBindingApi, clusterRoleBindingApi], {
-  Details: RoleBindingDetails,
+kubeObjectDetailRegistry.add({
+  kind: "RoleBinding",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  components: {
+    Details: (props) => <RoleBindingDetails {...props} />
+  }
+});
+kubeObjectDetailRegistry.add({
+  kind: "RoleBinding",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
+  }
+});
+
+
+kubeObjectDetailRegistry.add({
+  kind: "ClusterRoleBinding",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  components: {
+    Details: (props) => <RoleBindingDetails {...props} />
+  }
+});
+kubeObjectDetailRegistry.add({
+  kind: "ClusterRoleBinding",
+  apiVersions: ["rbac.authorization.k8s.io/v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
+  }
 });

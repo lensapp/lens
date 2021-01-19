@@ -3,20 +3,20 @@ import "./cronjobs.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { t, Trans } from "@lingui/macro";
 import { CronJob, cronJobApi } from "../../api/endpoints/cron-job.api";
 import { MenuItem } from "../menu";
 import { Icon } from "../icon";
 import { cronJobStore } from "./cronjob.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { eventStore } from "../+events/event.store";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { ICronJobsRouteParams } from "../+workloads";
 import { KubeObjectListLayout } from "../kube-object";
-import { KubeEventIcon } from "../+events/kube-event-icon";
-import { _i18n } from "../../i18n";
-import { apiManager } from "../../api/api-manager";
 import { CronJobTriggerDialog } from "./cronjob-trigger-dialog";
+import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { ConfirmDialog } from "../confirm-dialog/confirm-dialog";
+import { Notifications } from "../notifications/notifications";
 
 enum sortBy {
   name = "name",
@@ -49,51 +49,90 @@ export class CronJobs extends React.Component<Props> {
           (cronJob: CronJob) => cronJob.getSearchFields(),
           (cronJob: CronJob) => cronJob.getSchedule(),
         ]}
-        renderHeaderTitle={<Trans>Cron Jobs</Trans>}
+        renderHeaderTitle="Cron Jobs"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
+          { title: "Name", className: "name", sortBy: sortBy.name },
           { className: "warning" },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Schedule</Trans>, className: "schedule" },
-          { title: <Trans>Suspend</Trans>, className: "suspend", sortBy: sortBy.suspend },
-          { title: <Trans>Active</Trans>, className: "active", sortBy: sortBy.active },
-          { title: <Trans>Last schedule</Trans>, className: "last-schedule", sortBy: sortBy.lastSchedule },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Schedule", className: "schedule" },
+          { title: "Suspend", className: "suspend", sortBy: sortBy.suspend },
+          { title: "Active", className: "active", sortBy: sortBy.active },
+          { title: "Last schedule", className: "last-schedule", sortBy: sortBy.lastSchedule },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(cronJob: CronJob) => [
           cronJob.getName(),
-          <KubeEventIcon object={cronJob} filterEvents={events => {
-            if (!cronJob.isNeverRun()) return events;
-            return events.filter(event => event.reason != "FailedNeedsStart");
-          }
-          }/>,
+          <KubeObjectStatusIcon key="icon" object={cronJob} />,
           cronJob.getNs(),
-          cronJob.isNeverRun() ? <Trans>never</Trans> : cronJob.getSchedule(),
+          cronJob.isNeverRun() ? "never"  : cronJob.getSchedule(),
           cronJob.getSuspendFlag(),
           cronJobStore.getActiveJobsNum(cronJob),
           cronJob.getLastScheduleTime(),
           cronJob.getAge(),
         ]}
         renderItemMenu={(item: CronJob) => {
-          return <CronJobMenu object={item}/>
+          return <CronJobMenu object={item}/>;
         }}
       />
-    )
+    );
   }
 }
 
 export function CronJobMenu(props: KubeObjectMenuProps<CronJob>) {
   const { object, toolbar } = props;
+
   return (
-    <KubeObjectMenu {...props}>
+    <>
       <MenuItem onClick={() => CronJobTriggerDialog.open(object)}>
-        <Icon material="play_circle_filled" title={_i18n._(t`Trigger`)} interactive={toolbar}/>
-        <span className="title"><Trans>Trigger</Trans></span>
+        <Icon material="play_circle_filled" title={`Trigger`} interactive={toolbar}/>
+        <span className="title">Trigger</span>
       </MenuItem>
-    </KubeObjectMenu>
-  )
+
+      {object.isSuspend() ?
+        <MenuItem onClick={() => ConfirmDialog.open({
+          ok: async () => {
+            try {
+              await cronJobApi.resume({ namespace: object.getNs(), name: object.getName() });
+            } catch (err) {
+              Notifications.error(err);
+            }
+          },
+          labelOk: `Resume`,
+          message: (
+            <p>
+              Resume CronJob <b>{object.getName()}</b>?
+            </p>),
+        })}>
+          <Icon material="play_circle_outline" title={`Resume`} interactive={toolbar}/>
+          <span className="title">Resume</span>
+        </MenuItem>
+
+        : <MenuItem onClick={() => ConfirmDialog.open({
+          ok: async () => {
+            try {
+              await cronJobApi.suspend({ namespace: object.getNs(), name: object.getName() });
+            } catch (err) {
+              Notifications.error(err);
+            }
+          },
+          labelOk: `Suspend`,
+          message: (
+            <p>
+              Suspend CronJob <b>{object.getName()}</b>?
+            </p>),
+        })}>
+          <Icon material="pause_circle_filled" title={`Suspend`} interactive={toolbar}/>
+          <span className="title">Suspend</span>
+        </MenuItem>
+      }
+    </>
+  );
 }
 
-apiManager.registerViews(cronJobApi, {
-  Menu: CronJobMenu,
-})
+kubeObjectMenuRegistry.add({
+  kind: "CronJob",
+  apiVersions: ["batch/v1beta1"],
+  components: {
+    MenuItem: CronJobMenu
+  }
+});

@@ -1,10 +1,8 @@
-import "./preferences.scss"
+import "./preferences.scss";
+
 import React from "react";
 import { observer } from "mobx-react";
 import { action, computed, observable } from "mobx";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
-import { WizardLayout } from "../layout/wizard-layout";
 import { Icon } from "../icon";
 import { Select, SelectOption } from "../select";
 import { userStore } from "../../../common/user-store";
@@ -13,10 +11,13 @@ import { Input } from "../input";
 import { Checkbox } from "../checkbox";
 import { Notifications } from "../notifications";
 import { Badge } from "../badge";
+import { Button } from "../button";
 import { themeStore } from "../../theme.store";
-import { history } from "../../navigation";
 import { Tooltip } from "../tooltip";
 import { KubectlBinaries } from "./kubectl-binaries";
+import { appPreferenceRegistry } from "../../../extensions/registries/app-preference-registry";
+import { PageLayout } from "../layout/page-layout";
+import { AddHelmRepoDialog } from "./add-helm-repo-dialog";
 
 @observer
 export class Preferences extends React.Component {
@@ -29,40 +30,30 @@ export class Preferences extends React.Component {
     return themeStore.themes.map(theme => ({
       label: theme.name,
       value: theme.id,
-    }))
+    }));
   }
 
   @computed get helmOptions(): SelectOption<HelmRepo>[] {
     return this.helmRepos.map(repo => ({
       label: repo.name,
       value: repo,
-    }))
+    }));
   }
 
   async componentDidMount() {
-    window.addEventListener('keydown', this.onEscapeKey);
     await this.loadHelmRepos();
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.onEscapeKey);
-  }
-
-  onEscapeKey = (evt: KeyboardEvent) => {
-    if (evt.code === "Escape") {
-      evt.stopPropagation();
-      history.goBack();
-    }
   }
 
   @action
   async loadHelmRepos() {
     this.helmLoading = true;
+
     try {
       if (!this.helmRepos.length) {
         this.helmRepos = await repoManager.loadAvailableRepos(); // via https://helm.sh
       }
       const repos = await repoManager.repositories(); // via helm-cli
+
       this.helmAddedRepos.clear();
       repos.forEach(repo => this.helmAddedRepos.set(repo.name, repo));
     } catch (err) {
@@ -76,7 +67,7 @@ export class Preferences extends React.Component {
       await repoManager.addRepo(repo);
       this.helmAddedRepos.set(repo.name, repo);
     } catch (err) {
-      Notifications.error(<Trans>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</Trans>)
+      Notifications.error(<>Adding helm branch <b>{repo.name}</b> has failed: {String(err)}</>);
     }
   }
 
@@ -86,116 +77,134 @@ export class Preferences extends React.Component {
       this.helmAddedRepos.delete(repo.name);
     } catch (err) {
       Notifications.error(
-        <Trans>Removing helm branch <b>{repo.name}</b> has failed: {String(err)}</Trans>
-      )
+        <>Removing helm branch <b>{repo.name}</b> has failed: {String(err)}</>
+      );
     }
   }
 
   onRepoSelect = async ({ value: repo }: SelectOption<HelmRepo>) => {
     const isAdded = this.helmAddedRepos.has(repo.name);
+
     if (isAdded) {
-      Notifications.ok(<Trans>Helm branch <b>{repo.name}</b> already in use</Trans>)
+      Notifications.ok(<>Helm branch <b>{repo.name}</b> already in use</>);
+
       return;
     }
     this.helmLoading = true;
     await this.addRepo(repo);
     this.helmLoading = false;
-  }
+  };
 
   formatHelmOptionLabel = ({ value: repo }: SelectOption<HelmRepo>) => {
     const isAdded = this.helmAddedRepos.has(repo.name);
+
     return (
       <div className="flex gaps">
         <span>{repo.name}</span>
         {isAdded && <Icon small material="check" className="box right"/>}
       </div>
-    )
-  }
+    );
+  };
 
   render() {
     const { preferences } = userStore;
-    const header = (
-      <>
-        <h2>Preferences</h2>
-        <Icon material="close" big onClick={history.goBack}/>
-      </>
-    );
+    const header = <h2>Preferences</h2>;
+
     return (
-      <div className="Preferences">
-        <WizardLayout header={header} centered>
-          <h2><Trans>Color Theme</Trans></h2>
-          <Select
-            options={this.themeOptions}
-            value={preferences.colorTheme}
-            onChange={({ value }: SelectOption) => preferences.colorTheme = value}
-          />
+      <PageLayout showOnTop className="Preferences" header={header}>
+        <h2>Color Theme</h2>
+        <Select
+          options={this.themeOptions}
+          value={preferences.colorTheme}
+          onChange={({ value }: SelectOption) => preferences.colorTheme = value}
+        />
 
-          <h2><Trans>HTTP Proxy</Trans></h2>
-          <Input
-            theme="round-black"
-            placeholder={_i18n._(t`Type HTTP proxy url (example: http://proxy.acme.org:8080)`)}
-            value={this.httpProxy}
-            onChange={v => this.httpProxy = v}
-            onBlur={() => preferences.httpsProxy = this.httpProxy}
-          />
-          <small className="hint">
-            <Trans>Proxy is used only for non-cluster communication.</Trans>
-          </small>
+        <h2>HTTP Proxy</h2>
+        <Input
+          theme="round-black"
+          placeholder={`Type HTTP proxy url (example: http://proxy.acme.org:8080)`}
+          value={this.httpProxy}
+          onChange={v => this.httpProxy = v}
+          onBlur={() => preferences.httpsProxy = this.httpProxy}
+        />
+        <small className="hint">
+          Proxy is used only for non-cluster communication.
+        </small>
 
-          <KubectlBinaries preferences={preferences} />
+        <KubectlBinaries preferences={preferences}/>
 
-          <h2><Trans>Helm</Trans></h2>
-          <Select
-            placeholder={<Trans>Repositories</Trans>}
+        <h2>Helm</h2>
+        <div className="flex gaps">
+          <Select id="HelmRepoSelect"
+            placeholder="Repositories"
             isLoading={this.helmLoading}
             isDisabled={this.helmLoading}
             options={this.helmOptions}
             onChange={this.onRepoSelect}
             formatOptionLabel={this.formatHelmOptionLabel}
             controlShouldRenderValue={false}
+            className="box grow"
           />
-          <div className="repos flex gaps column">
-            {Array.from(this.helmAddedRepos).map(([name, repo]) => {
-              const tooltipId = `message-${name}`;
-              return (
-                <Badge key={name} className="added-repo flex gaps align-center justify-space-between">
-                  <span id={tooltipId} className="repo">{name}</span>
-                  <Icon
-                    material="delete"
-                    onClick={() => this.removeRepo(repo)}
-                    tooltip={<Trans>Remove</Trans>}
-                  />
-                  <Tooltip targetId={tooltipId} formatters={{ narrow: true }}>
-                    {repo.url}
-                  </Tooltip>
-                </Badge>
-              )
-            })}
-          </div>
+          <Button
+            primary
+            label="Add Custom Helm Repo"
+            onClick={AddHelmRepoDialog.open}
+          />
+        </div>
+        <AddHelmRepoDialog onAddRepo={()=>this.loadHelmRepos()}/>
+        <div className="repos flex gaps column">
+          {Array.from(this.helmAddedRepos).map(([name, repo]) => {
+            const tooltipId = `message-${name}`;
 
-          <h2><Trans>Certificate Trust</Trans></h2>
-          <Checkbox
-            label={<Trans>Allow untrusted Certificate Authorities</Trans>}
-            value={preferences.allowUntrustedCAs}
-            onChange={v => preferences.allowUntrustedCAs = v}
-          />
-          <small className="hint">
-            <Trans>This will make Lens to trust ANY certificate authority without any validations.</Trans>{" "}
-            <Trans>Needed with some corporate proxies that do certificate re-writing.</Trans>{" "}
-            <Trans>Does not affect cluster communications!</Trans>
-          </small>
+            return (
+              <Badge key={name} className="added-repo flex gaps align-center justify-space-between">
+                <span id={tooltipId} className="repo">{name}</span>
+                <Icon
+                  material="delete"
+                  onClick={() => this.removeRepo(repo)}
+                  tooltip="Remove"
+                />
+                <Tooltip targetId={tooltipId} formatters={{ narrow: true }}>
+                  {repo.url}
+                </Tooltip>
+              </Badge>
+            );
+          })}
+        </div>
 
-          <h2><Trans>Telemetry & Usage Tracking</Trans></h2>
-          <Checkbox
-            label={<Trans>Allow telemetry & usage tracking</Trans>}
-            value={preferences.allowTelemetry}
-            onChange={v => preferences.allowTelemetry = v}
-          />
-          <small className="hint">
-            <Trans>Telemetry & usage data is collected to continuously improve the Lens experience.</Trans>
-          </small>
-        </WizardLayout>
-      </div>
+        <h2>Auto start-up</h2>
+        <Checkbox
+          label="Automatically start Lens on login"
+          value={preferences.openAtLogin}
+          onChange={v => preferences.openAtLogin = v}
+        />
+
+        <h2>Certificate Trust</h2>
+        <Checkbox
+          label="Allow untrusted Certificate Authorities"
+          value={preferences.allowUntrustedCAs}
+          onChange={v => preferences.allowUntrustedCAs = v}
+        />
+        <small className="hint">
+          This will make Lens to trust ANY certificate authority without any validations.{" "}
+          Needed with some corporate proxies that do certificate re-writing.{" "}
+          Does not affect cluster communications!
+        </small>
+
+        <div className="extensions flex column gaps">
+          {appPreferenceRegistry.getItems().map(({ title, components: { Hint, Input } }, index) => {
+            return (
+              <div key={index} className="preference">
+                <h2>{title}</h2>
+                <Input/>
+                <small className="hint">
+                  <Hint/>
+                </small>
+              </div>
+            );
+          })}
+        </div>
+      </PageLayout>
     );
   }
 }

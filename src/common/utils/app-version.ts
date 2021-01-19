@@ -1,4 +1,4 @@
-import packageInfo from "../../../package.json"
+import packageInfo from "../../../package.json";
 
 export function getAppVersion(): string {
   return packageInfo.version;
@@ -6,4 +6,8 @@ export function getAppVersion(): string {
 
 export function getBundledKubectlVersion(): string {
   return packageInfo.config.bundledKubectlVersion;
+}
+
+export function getBundledExtensions(): string[] {
+  return packageInfo.lens?.extensions || [];
 }

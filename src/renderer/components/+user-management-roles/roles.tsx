@@ -1,16 +1,14 @@
-import "./roles.scss"
+import "./roles.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { IRolesRouteParams } from "../+user-management/user-management.route";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { rolesStore } from "./roles.store";
-import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";
+import { Role } from "../../api/endpoints";
 import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleDialog } from "./add-role-dialog";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -37,37 +35,26 @@ export class Roles extends React.Component<Props> {
           searchFilters={[
             (role: Role) => role.getSearchFields(),
           ]}
-          renderHeaderTitle={<Trans>Roles</Trans>}
+          renderHeaderTitle="Roles"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+            { title: "Name", className: "name", sortBy: sortBy.name },
+            { className: "warning" },
+            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+            { title: "Age", className: "age", sortBy: sortBy.age },
           ]}
           renderTableContents={(role: Role) => [
             role.getName(),
+            <KubeObjectStatusIcon key="icon" object={role} />,
             role.getNs() || "-",
             role.getAge(),
           ]}
-          renderItemMenu={(item: Role) => {
-            return <RoleMenu object={item}/>
-          }}
           addRemoveButtons={{
             onAdd: () => AddRoleDialog.open(),
-            addTooltip: <Trans>Create new Role</Trans>,
+            addTooltip: "Create new Role",
           }}
         />
         <AddRoleDialog/>
       </>
-    )
+    );
   }
 }
-
-export function RoleMenu(props: KubeObjectMenuProps<Role>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews([roleApi, clusterRoleApi], {
-  Menu: RoleMenu,
-});

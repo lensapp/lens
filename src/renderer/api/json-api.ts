@@ -1,7 +1,7 @@
 // Base http-service / json-api class
 
 import { stringify } from "querystring";
-import { EventEmitter } from "../utils/eventEmitter";
+import { EventEmitter } from "../../common/event-emitter";
 import { cancelableFetch } from "../utils/cancelableFetch";
 
 export interface JsonApiData {
@@ -34,7 +34,7 @@ export interface JsonApiConfig {
 export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   static reqInitDefault: RequestInit = {
     headers: {
-      'content-type': 'application/json'
+      "content-type": "application/json"
     }
   };
 
@@ -64,7 +64,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
   }
 
   patch<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
-    return this.request<T>(path, params, { ...reqInit, method: "patch" });
+    return this.request<T>(path, params, { ...reqInit, method: "PATCH" });
   }
 
   del<T = D>(path: string, params?: P, reqInit: RequestInit = {}) {
@@ -75,18 +75,22 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     let reqUrl = this.config.apiBase + path;
     const reqInit: RequestInit = { ...this.reqInit, ...init };
     const { data, query } = params || {} as P;
+
     if (data && !reqInit.body) {
       reqInit.body = JSON.stringify(data);
     }
+
     if (query) {
       const queryString = stringify(query);
+
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
     }
     const infoLog: JsonApiLog = {
       method: reqInit.method.toUpperCase(),
-      reqUrl: reqUrl,
-      reqInit: reqInit,
+      reqUrl,
+      reqInit,
     };
+
     return cancelableFetch(reqUrl, reqInit).then(res => {
       return this.parseResponse<D>(res, infoLog);
     });
@@ -94,47 +98,54 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
 
   protected parseResponse<D>(res: Response, log: JsonApiLog): Promise<D> {
     const { status } = res;
+
     return res.text().then(text => {
       let data;
+
       try {
         data = text ? JSON.parse(text) : ""; // DELETE-requests might not have response-body
       } catch (e) {
         data = text;
       }
+
       if (status >= 200 && status < 300) {
         this.onData.emit(data, res);
         this.writeLog({ ...log, data });
+
         return data;
       } else if (log.method === "GET" && res.status === 403) {
         this.writeLog({ ...log, data });
       } else {
         const error = new JsonApiErrorParsed(data, this.parseError(data, res));
+
         this.onError.emit(error, res);
-        this.writeLog({ ...log, error })
+        this.writeLog({ ...log, error });
         throw error;
       }
-    })
+    });
   }
 
   protected parseError(error: JsonApiError | string, res: Response): string[] {
     if (typeof error === "string") {
-      return [error]
+      return [error];
     }
     else if (Array.isArray(error.errors)) {
-      return error.errors.map(error => error.title)
+      return error.errors.map(error => error.title);
     }
     else if (error.message) {
-      return [error.message]
+      return [error.message];
     }
-    return [res.statusText || "Error!"]
+
+    return [res.statusText || "Error!"];
   }
 
   protected writeLog(log: JsonApiLog) {
     if (!this.config.debug) return;
     const { method, reqUrl, ...params } = log;
-    let textStyle = 'font-weight: bold;';
-    if (params.data) textStyle += 'background: green; color: white;';
-    if (params.error) textStyle += 'background: red; color: white;';
+    let textStyle = "font-weight: bold;";
+
+    if (params.data) textStyle += "background: green; color: white;";
+    if (params.error) textStyle += "background: red; color: white;";
     console.log(`%c${method} ${reqUrl}`, textStyle, params);
   }
 }

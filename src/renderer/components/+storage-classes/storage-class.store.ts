@@ -5,8 +5,8 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class StorageClassStore extends KubeObjectStore<StorageClass> {
-  api = storageClassApi
+  api = storageClassApi;
 }
 
 export const storageClassStore = new StorageClassStore();
-apiManager.registerStore(storageClassApi, storageClassStore);
+apiManager.registerStore(storageClassStore);

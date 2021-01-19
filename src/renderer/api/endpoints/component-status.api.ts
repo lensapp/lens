@@ -8,9 +8,11 @@ export interface IComponentStatusCondition {
 }
 
 export class ComponentStatus extends KubeObject {
-  static kind = "ComponentStatus"
+  static kind = "ComponentStatus";
+  static namespaced = false;
+  static apiBase = "/api/v1/componentstatuses";
 
-  conditions: IComponentStatusCondition[]
+  conditions: IComponentStatusCondition[];
 
   getTruthyConditions() {
     return this.conditions.filter(c => c.status === "True");
@@ -18,8 +20,5 @@ export class ComponentStatus extends KubeObject {
 }
 
 export const componentStatusApi = new KubeApi({
-  kind: ComponentStatus.kind,
-  apiBase: "/api/v1/componentstatuses",
-  isNamespaced: false,
   objectConstructor: ComponentStatus,
 });

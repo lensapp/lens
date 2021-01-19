@@ -1,34 +1,58 @@
-import "./components/app.scss"
+import "./components/app.scss";
+
 import React from "react";
+import * as Mobx from "mobx";
+import * as MobxReact from "mobx-react";
+import * as ReactRouter from "react-router";
+import * as ReactRouterDom from "react-router-dom";
 import { render, unmountComponentAtNode } from "react-dom";
-import { isMac } from "../common/vars";
-import { userStore } from "../common/user-store";
-import { workspaceStore } from "../common/workspace-store";
 import { clusterStore } from "../common/cluster-store";
-import { i18nStore } from "./i18n";
-import { themeStore } from "./theme.store";
+import { userStore } from "../common/user-store";
+import { isMac } from "../common/vars";
+import { workspaceStore } from "../common/workspace-store";
+import * as LensExtensions from "../extensions/extension-api";
+import { extensionDiscovery } from "../extensions/extension-discovery";
+import { extensionLoader } from "../extensions/extension-loader";
+import { extensionsStore } from "../extensions/extensions-store";
+import { filesystemProvisionerStore } from "../main/extension-filesystem";
 import { App } from "./components/app";
 import { LensApp } from "./lens-app";
+import { themeStore } from "./theme.store";
 
 type AppComponent = React.ComponentType & {
-  init?(): void;
-}
+  init?(): Promise<void>;
+};
+
+export {
+  React,
+  ReactRouter,
+  ReactRouterDom,
+  Mobx,
+  MobxReact,
+  LensExtensions
+};
 
 export async function bootstrap(App: AppComponent) {
-  const rootElem = document.getElementById("app")
+  const rootElem = document.getElementById("app");
+
   rootElem.classList.toggle("is-mac", isMac);
+
+  extensionLoader.init();
+  extensionDiscovery.init();
 
   // preload common stores
   await Promise.all([
     userStore.load(),
     workspaceStore.load(),
     clusterStore.load(),
-    i18nStore.init(),
+    extensionsStore.load(),
+    filesystemProvisionerStore.load(),
     themeStore.init(),
   ]);
 
   // Register additional store listeners
   clusterStore.registerIpcListener();
+  workspaceStore.registerIpcListener();
 
   // init app's dependencies if any
   if (App.init) {
@@ -36,13 +60,13 @@ export async function bootstrap(App: AppComponent) {
   }
   window.addEventListener("message", (ev: MessageEvent) => {
     if (ev.data === "teardown") {
-      userStore.unregisterIpcListener()
-      workspaceStore.unregisterIpcListener()
-      clusterStore.unregisterIpcListener()
-      unmountComponentAtNode(rootElem)
-      window.location.href = "about:blank"
+      userStore.unregisterIpcListener();
+      workspaceStore.unregisterIpcListener();
+      clusterStore.unregisterIpcListener();
+      unmountComponentAtNode(rootElem);
+      window.location.href = "about:blank";
     }
-  })
+  });
   render(<>
     {isMac && <div id="draggable-top" />}
     <App />

@@ -5,8 +5,8 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class NetworkPolicyStore extends KubeObjectStore<NetworkPolicy> {
-  api = networkPolicyApi
+  api = networkPolicyApi;
 }
 
 export const networkPolicyStore = new NetworkPolicyStore();
-apiManager.registerStore(networkPolicyApi, networkPolicyStore);
+apiManager.registerStore(networkPolicyStore);

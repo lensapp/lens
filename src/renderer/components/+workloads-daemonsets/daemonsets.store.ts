@@ -7,36 +7,38 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
-  api = daemonSetApi
+  api = daemonSetApi;
 
   @observable metrics: IPodMetrics = null;
 
-  loadMetrics(daemonSet: DaemonSet) {
+  async loadMetrics(daemonSet: DaemonSet) {
     const pods = this.getChildPods(daemonSet);
-    return podsApi.getMetrics(pods, daemonSet.getNs(), "").then(metrics =>
-      this.metrics = metrics
-    );
+
+    this.metrics = await podsApi.getMetrics(pods, daemonSet.getNs(), "");
   }
 
   getChildPods(daemonSet: DaemonSet): Pod[] {
-    return podsStore.getPodsByOwner(daemonSet)
+    return podsStore.getPodsByOwner(daemonSet);
   }
 
   getStatuses(daemonSets?: DaemonSet[]) {
-    const status = { failed: 0, pending: 0, running: 0 }
+    const status = { failed: 0, pending: 0, running: 0 };
+
     daemonSets.forEach(daemonSet => {
-      const pods = this.getChildPods(daemonSet)
+      const pods = this.getChildPods(daemonSet);
+
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
-        status.failed++
+        status.failed++;
       }
       else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
-        status.pending++
+        status.pending++;
       }
       else {
-        status.running++
+        status.running++;
       }
-    })
-    return status
+    });
+
+    return status;
   }
 
   reset() {
@@ -45,4 +47,4 @@ export class DaemonSetStore extends KubeObjectStore<DaemonSet> {
 }
 
 export const daemonSetStore = new DaemonSetStore();
-apiManager.registerStore(daemonSetApi, daemonSetStore);
+apiManager.registerStore(daemonSetStore);

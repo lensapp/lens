@@ -23,6 +23,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
 
   @computed get canEditPrometheusPath() {
     if (this.provider === "" || this.provider === "lens") return false;
+
     return true;
   }
 
@@ -30,12 +31,15 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
     disposeOnUnmount(this,
       autorun(() => {
         const { prometheus, prometheusProvider } = this.props.cluster.preferences;
+
         if (prometheus) {
           const prefix = prometheus.prefix || "";
+
           this.path = `${prometheus.namespace}/${prometheus.service}:${prometheus.port}${prefix}`;
         } else {
           this.path = "";
         }
+
         if (prometheusProvider) {
           this.provider = prometheusProvider.type;
         } else {
@@ -51,22 +55,24 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
     }
     const parsed = this.path.split(/\/|:/, 3);
     const apiPrefix = this.path.substring(parsed.join("/").length);
+
     if (!parsed[0] || !parsed[1] || !parsed[2]) {
       return null;
     }
+
     return {
       namespace: parsed[0],
       service: parsed[1],
       port: parseInt(parsed[2]),
       prefix: apiPrefix
-    }
-  }
+    };
+  };
 
   onSaveProvider = () => {
     this.props.cluster.preferences.prometheusProvider = this.provider ?
       { type: this.provider } :
       null;
-  }
+  };
 
   onSavePath = () => {
     this.props.cluster.preferences.prometheus = this.parsePrometheusPath();
@@ -78,7 +84,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
         <SubTitle title="Prometheus"/>
         <p>
           Use pre-installed Prometheus service for metrics. Please refer to the{" "}
-          <a href="https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md" target="_blank">guide</a>{" "}
+          <a href="https://github.com/lensapp/lens/blob/master/troubleshooting/custom-prometheus.md" target="_blank" rel="noreferrer">guide</a>{" "}
           for possible configuration changes.
         </p>
         <p>Prometheus installation method.</p>
@@ -90,7 +96,7 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
           }}
           options={options}
         />
-        <span className="hint">What query format is used to fetch metrics from Prometheus</span>
+        <small className="hint">What query format is used to fetch metrics from Prometheus</small>
         {this.canEditPrometheusPath && (
           <>
             <p>Prometheus service address.</p>
@@ -101,10 +107,10 @@ export class ClusterPrometheusSetting extends React.Component<Props> {
               onBlur={this.onSavePath}
               placeholder="<namespace>/<service>:<port>"
             />
-            <span className="hint">
+            <small className="hint">
               An address to an existing Prometheus installation{" "}
-              ({'<namespace>/<service>:<port>'}). Lens tries to auto-detect address if left empty.
-            </span>
+              ({"<namespace>/<service>:<port>"}). Lens tries to auto-detect address if left empty.
+            </small>
           </>
         )}
       </>

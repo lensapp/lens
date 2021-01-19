@@ -1,29 +1,28 @@
 import "./drawer-param-toggler.scss";
 import React from "react";
-import { t } from "@lingui/macro";
 import { Icon } from "../icon";
 import { cssNames } from "../../utils";
-import { _i18n } from "../../i18n";
 
-interface Props {
+export interface DrawerParamTogglerProps {
   label: string | number;
 }
 
 interface State {
   open?: boolean;
 }
-export class DrawerParamToggler extends React.Component<Props, State> {
-  public state: State = {}
+export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps, State> {
+  public state: State = {};
 
   toggle = () => {
-    this.setState({ open: !this.state.open })
-  }
+    this.setState({ open: !this.state.open });
+  };
 
   render() {
-    const { label, children } = this.props
-    const { open } = this.state
-    const icon = `arrow_drop_${open ? "up" : "down"}`
-    const link = open ? _i18n._(t`Hide`) : _i18n._(t`Show`)
+    const { label, children } = this.props;
+    const { open } = this.state;
+    const icon = `arrow_drop_${open ? "up" : "down"}`;
+    const link = open ? `Hide` : `Show`;
+
     return (
       <div className="DrawerParamToggler">
         <div className="flex gaps align-center">
@@ -35,6 +34,6 @@ export class DrawerParamToggler extends React.Component<Props, State> {
         </div>
         <div className={cssNames("param-content", { open })}>{children}</div>
       </div>
-    )
+    );
   }
 }

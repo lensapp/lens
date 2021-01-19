@@ -5,12 +5,46 @@ import { formatDuration } from "../../utils/formatDuration";
 import { autobind } from "../../utils";
 import { KubeApi } from "../kube-api";
 
+export class CronJobApi extends KubeApi<CronJob> {
+  suspend(params: { namespace: string; name: string }) {
+    return this.request.patch(this.getUrl(params), {
+      data: {
+        spec: {
+          suspend: true
+        }
+      }
+    },
+    {
+      headers: {
+        "content-type": "application/strategic-merge-patch+json"
+      }
+    });
+  }
+
+  resume(params: { namespace: string; name: string }) {
+    return this.request.patch(this.getUrl(params), {
+      data: {
+        spec: {
+          suspend: false
+        }
+      }
+    },
+    {
+      headers: {
+        "content-type": "application/strategic-merge-patch+json"
+      }
+    });
+  }
+}
+
 @autobind()
 export class CronJob extends KubeObject {
-  static kind = "CronJob"
+  static kind = "CronJob";
+  static namespaced = true;
+  static apiBase = "/apis/batch/v1beta1/cronjobs";
 
-  kind: string
-  apiVersion: string
+  kind: string;
+  apiVersion: string;
   metadata: {
     name: string;
     namespace: string;
@@ -24,7 +58,7 @@ export class CronJob extends KubeObject {
     annotations: {
       [key: string]: string;
     };
-  }
+  };
   spec: {
     schedule: string;
     concurrencyPolicy: string;
@@ -57,23 +91,24 @@ export class CronJob extends KubeObject {
     };
     successfulJobsHistoryLimit: number;
     failedJobsHistoryLimit: number;
-  }
+  };
   status: {
     lastScheduleTime?: string;
-  }
+  };
 
   getSuspendFlag() {
-    return this.spec.suspend.toString()
+    return this.spec.suspend.toString();
   }
 
   getLastScheduleTime() {
-    if (!this.status.lastScheduleTime) return "-"
-    const diff = moment().diff(this.status.lastScheduleTime)
-    return formatDuration(diff, true)
+    if (!this.status.lastScheduleTime) return "-";
+    const diff = moment().diff(this.status.lastScheduleTime);
+
+    return formatDuration(diff, true);
   }
 
   getSchedule() {
-    return this.spec.schedule
+    return this.spec.schedule;
   }
 
   isNeverRun() {
@@ -82,14 +117,17 @@ export class CronJob extends KubeObject {
     const stamps = schedule.split(" ");
     const day = Number(stamps[stamps.length - 3]);  // 1-31
     const month = Number(stamps[stamps.length - 2]);  // 1-12
+
     if (schedule.startsWith("@")) return false;
+
     return day > daysInMonth[month - 1];
+  }
+
+  isSuspend() {
+    return this.spec.suspend;
   }
 }
 
-export const cronJobApi = new KubeApi({
-  kind: CronJob.kind,
-  apiBase: "/apis/batch/v1beta1/cronjobs",
-  isNamespaced: true,
+export const cronJobApi = new CronJobApi({
   objectConstructor: CronJob,
 });

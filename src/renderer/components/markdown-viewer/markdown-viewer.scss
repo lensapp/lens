@@ -4,10 +4,8 @@
   line-height: 1.5;
   word-wrap: break-word;
 
-  &.light {
-    pre, table {
-      @include custom-scrollbar(dark);
-    }
+  pre, table {
+    overflow: auto;
   }
 
   .pl-c {
@@ -513,7 +511,6 @@
   }
 
   table {
-    @include custom-scrollbar;
     border-collapse: collapse;
     display: table;
     width: 100%;
@@ -581,13 +578,12 @@
 
   .highlight pre,
   pre {
-    @include custom-scrollbar;
     padding: 16px;
     font-size: 85%;
     line-height: 1.45;
     background-color: $helmDescriptionPreBackground;
     border-radius: 3px;
-    overflow: auto !important;
+    overflow: auto;
   }
 
   pre code {

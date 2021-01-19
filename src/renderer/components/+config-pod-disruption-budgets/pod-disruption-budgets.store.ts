@@ -5,8 +5,8 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class PodDisruptionBudgetsStore extends KubeObjectStore<PodDisruptionBudget> {
-  api = pdbApi
+  api = pdbApi;
 }
 
 export const podDisruptionBudgetsStore = new PodDisruptionBudgetsStore();
-apiManager.registerStore(pdbApi, podDisruptionBudgetsStore);
+apiManager.registerStore(podDisruptionBudgetsStore);

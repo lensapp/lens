@@ -1,17 +1,15 @@
-import "./namespaces.scss"
+import "./namespaces.scss";
 
 import React from "react";
-import { Trans } from "@lingui/macro";
-import { Namespace, namespacesApi, NamespaceStatus } from "../../api/endpoints";
+import { Namespace, NamespaceStatus } from "../../api/endpoints";
 import { AddNamespaceDialog } from "./add-namespace-dialog";
 import { TabLayout } from "../layout/tab-layout";
 import { Badge } from "../badge";
 import { RouteComponentProps } from "react-router";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { KubeObjectListLayout } from "../kube-object";
 import { INamespacesRouteParams } from "./namespaces.route";
 import { namespaceStore } from "./namespace.store";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -40,24 +38,23 @@ export class Namespaces extends React.Component<Props> {
             (item: Namespace) => item.getSearchFields(),
             (item: Namespace) => item.getStatus()
           ]}
-          renderHeaderTitle={<Trans>Namespaces</Trans>}
+          renderHeaderTitle="Namespaces"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>Labels</Trans>, className: "labels", sortBy: sortBy.labels },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-            { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
+            { title: "Name", className: "name", sortBy: sortBy.name },
+            { className: "warning" },
+            { title: "Labels", className: "labels", sortBy: sortBy.labels },
+            { title: "Age", className: "age", sortBy: sortBy.age },
+            { title: "Status", className: "status", sortBy: sortBy.status },
           ]}
           renderTableContents={(item: Namespace) => [
             item.getName(),
+            <KubeObjectStatusIcon key="icon" object={item} />,
             item.getLabels().map(label => <Badge key={label} label={label}/>),
             item.getAge(),
             { title: item.getStatus(), className: item.getStatus().toLowerCase() },
           ]}
-          renderItemMenu={(item: Namespace) => {
-            return <NamespaceMenu object={item}/>
-          }}
           addRemoveButtons={{
-            addTooltip: <Trans>Add Namespace</Trans>,
+            addTooltip: "Add Namespace",
             onAdd: () => AddNamespaceDialog.open(),
           }}
           customizeTableRowProps={(item: Namespace) => ({
@@ -66,16 +63,6 @@ export class Namespaces extends React.Component<Props> {
         />
         <AddNamespaceDialog/>
       </TabLayout>
-    )
+    );
   }
 }
-
-export function NamespaceMenu(props: KubeObjectMenuProps<Namespace>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(namespacesApi, {
-  Menu: NamespaceMenu,
-});

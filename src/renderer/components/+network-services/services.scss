@@ -4,6 +4,10 @@
       flex: 0.6;
     }
 
+    &.warning {
+      @include table-cell-warning;
+    }
+
     &.age {
       flex: 0.4;
     }

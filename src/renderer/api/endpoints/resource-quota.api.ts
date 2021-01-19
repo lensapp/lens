@@ -31,11 +31,13 @@ export interface IResourceQuotaValues {
 }
 
 export class ResourceQuota extends KubeObject {
-  static kind = "ResourceQuota"
+  static kind = "ResourceQuota";
+  static namespaced = true;
+  static apiBase = "/api/v1/resourcequotas";
 
   constructor(data: KubeJsonApiData) {
     super(data);
-    this.spec = this.spec || {} as any
+    this.spec = this.spec || {} as any;
   }
 
   spec: {
@@ -47,22 +49,20 @@ export class ResourceQuota extends KubeObject {
         values: string[];
       }[];
     };
-  }
+  };
 
   status: {
     hard: IResourceQuotaValues;
     used: IResourceQuotaValues;
-  }
+  };
 
   getScopeSelector() {
     const { matchExpressions = [] } = this.spec.scopeSelector || {};
+
     return matchExpressions;
   }
 }
 
 export const resourceQuotaApi = new KubeApi({
-  kind: ResourceQuota.kind,
-  apiBase: "/api/v1/resourcequotas",
-  isNamespaced: true,
   objectConstructor: ResourceQuota,
 });

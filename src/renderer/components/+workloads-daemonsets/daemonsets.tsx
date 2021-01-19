@@ -3,18 +3,15 @@ import "./daemonsets.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { DaemonSet, daemonSetApi } from "../../api/endpoints";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { DaemonSet } from "../../api/endpoints";
 import { eventStore } from "../+events/event.store";
 import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { nodesStore } from "../+nodes/nodes.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { IDaemonSetsRouteParams } from "../+workloads";
-import { Trans } from "@lingui/macro";
 import { Badge } from "../badge";
-import { KubeEventIcon } from "../+events/kube-event-icon";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -35,7 +32,7 @@ export class DaemonSets extends React.Component<Props> {
   renderNodeSelector(daemonSet: DaemonSet) {
     return daemonSet.getNodeSelectors().map(selector => (
       <Badge key={selector} label={selector}/>
-    ))
+    ));
   }
 
   render() {
@@ -53,37 +50,24 @@ export class DaemonSets extends React.Component<Props> {
           (daemonSet: DaemonSet) => daemonSet.getSearchFields(),
           (daemonSet: DaemonSet) => daemonSet.getLabels(),
         ]}
-        renderHeaderTitle={<Trans>Daemon Sets</Trans>}
+        renderHeaderTitle="Daemon Sets"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Pods", className: "pods", sortBy: sortBy.pods },
           { className: "warning" },
-          { title: <Trans>Node Selector</Trans>, className: "labels" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Node Selector", className: "labels" },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(daemonSet: DaemonSet) => [
           daemonSet.getName(),
           daemonSet.getNs(),
           this.getPodsLength(daemonSet),
-          <KubeEventIcon object={daemonSet}/>,
+          <KubeObjectStatusIcon key="icon" object={daemonSet}/>,
           this.renderNodeSelector(daemonSet),
           daemonSet.getAge(),
         ]}
-        renderItemMenu={(item: DaemonSet) => {
-          return <DaemonSetMenu object={item}/>
-        }}
       />
-    )
+    );
   }
 }
-
-export function DaemonSetMenu(props: KubeObjectMenuProps<DaemonSet>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(daemonSetApi, {
-  Menu: DaemonSetMenu,
-})

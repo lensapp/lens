@@ -42,22 +42,22 @@ export class EndpointAddress implements IEndpointAddress {
   };
 
   constructor(data: IEndpointAddress) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 
   getId() {
-    return this.ip
+    return this.ip;
   }
 
   getName() {
-    return this.hostname
+    return this.hostname;
   }
 
   getTargetRef(): ITargetRef {
     if (this.targetRef) {
-      return Object.assign(this.targetRef, {apiVersion: "v1"})
+      return Object.assign(this.targetRef, {apiVersion: "v1"});
     } else {
-      return null
+      return null;
     }
   }
 }
@@ -68,58 +68,62 @@ export class EndpointSubset implements IEndpointSubset {
   ports: IEndpointPort[];
 
   constructor(data: IEndpointSubset) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 
   getAddresses(): EndpointAddress[] {
     const addresses = this.addresses || [];
+
     return addresses.map(a => new EndpointAddress(a));
   }
 
   getNotReadyAddresses(): EndpointAddress[] {
     const notReadyAddresses = this.notReadyAddresses || [];
+
     return notReadyAddresses.map(a => new EndpointAddress(a));
   }
 
   toString(): string {
     if(!this.addresses) {
-      return ""
+      return "";
     }
+
     return this.addresses.map(address => {
       if (!this.ports) {
-        return address.ip
+        return address.ip;
       }
+
       return this.ports.map(port => {
-        return `${address.ip}:${port.port}`
-      }).join(", ")
-    }).join(", ")
+        return `${address.ip}:${port.port}`;
+      }).join(", ");
+    }).join(", ");
   }
 }
 
 @autobind()
 export class Endpoint extends KubeObject {
-  static kind = "Endpoints"
+  static kind = "Endpoints";
+  static namespaced = true;
+  static apiBase = "/api/v1/endpoints";
 
-  subsets: IEndpointSubset[]
+  subsets: IEndpointSubset[];
 
   getEndpointSubsets(): EndpointSubset[] {
     const subsets = this.subsets || [];
+
     return subsets.map(s => new EndpointSubset(s));
   }
 
   toString(): string {
     if(this.subsets) {
-      return this.getEndpointSubsets().map(es => es.toString()).join(", ")
+      return this.getEndpointSubsets().map(es => es.toString()).join(", ");
     } else {
-      return "<none>"
+      return "<none>";
     }
   }
 
 }
 
 export const endpointApi = new KubeApi({
-  kind: Endpoint.kind,
-  apiBase: "/api/v1/endpoints",
-  isNamespaced: true,
   objectConstructor: Endpoint,
 });

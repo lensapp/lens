@@ -2,7 +2,6 @@ import "./daemonset-details.scss";
 
 import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerItem } from "../drawer";
 import { Badge } from "../badge";
 import { PodDetailsStatuses } from "../+workloads-pods/pod-details-statuses";
@@ -12,13 +11,13 @@ import { KubeEventDetails } from "../+events/kube-event-details";
 import { daemonSetStore } from "./daemonsets.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { DaemonSet, daemonSetApi } from "../../api/endpoints";
+import { DaemonSet } from "../../api/endpoints";
 import { ResourceMetrics, ResourceMetricsText } from "../resource-metrics";
 import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -42,13 +41,15 @@ export class DaemonSetDetails extends React.Component<Props> {
 
   render() {
     const { object: daemonSet } = this.props;
+
     if (!daemonSet) return null;
-    const { spec } = daemonSet
+    const { spec } = daemonSet;
     const selectors = daemonSet.getSelectors();
-    const images = daemonSet.getImages()
-    const nodeSelector = daemonSet.getNodeSelectors()
-    const childPods = daemonSetStore.getChildPods(daemonSet)
-    const metrics = daemonSetStore.metrics
+    const images = daemonSet.getImages();
+    const nodeSelector = daemonSet.getNodeSelectors();
+    const childPods = daemonSetStore.getChildPods(daemonSet);
+    const metrics = daemonSetStore.metrics;
+
     return (
       <div className="DaemonSetDetails">
         {podsStore.isLoaded && (
@@ -61,42 +62,53 @@ export class DaemonSetDetails extends React.Component<Props> {
         )}
         <KubeObjectMeta object={daemonSet}/>
         {selectors.length > 0 &&
-        <DrawerItem name={<Trans>Selector</Trans>} labelsOnly>
+        <DrawerItem name="Selector" labelsOnly>
           {
             selectors.map(label => <Badge key={label} label={label}/>)
           }
         </DrawerItem>
         }
         {nodeSelector.length > 0 &&
-        <DrawerItem name={<Trans>Node Selector</Trans>} labelsOnly>
+        <DrawerItem name="Node Selector" labelsOnly>
           {
             nodeSelector.map(label => (<Badge key={label} label={label}/>))
           }
         </DrawerItem>
         }
         {images.length > 0 &&
-        <DrawerItem name={<Trans>Images</Trans>}>
+        <DrawerItem name="Images">
           {
             images.map(image => <p key={image}>{image}</p>)
           }
         </DrawerItem>
         }
-        <DrawerItem name={<Trans>Strategy Type</Trans>}>
+        <DrawerItem name="Strategy Type">
           {spec.updateStrategy.type}
         </DrawerItem>
         <PodDetailsTolerations workload={daemonSet}/>
         <PodDetailsAffinities workload={daemonSet}/>
-        <DrawerItem name={<Trans>Pod Status</Trans>} className="pod-status">
+        <DrawerItem name="Pod Status" className="pod-status">
           <PodDetailsStatuses pods={childPods}/>
         </DrawerItem>
         <ResourceMetricsText metrics={metrics}/>
         <PodDetailsList pods={childPods} owner={daemonSet}/>
-        <KubeEventDetails object={daemonSet}/>
       </div>
-    )
+    );
   }
 }
 
-apiManager.registerViews(daemonSetApi, {
-  Details: DaemonSetDetails,
-})
+kubeObjectDetailRegistry.add({
+  kind: "DaemonSet",
+  apiVersions: ["apps/v1"],
+  components: {
+    Details: (props: any) => <DaemonSetDetails {...props} />
+  }
+});
+kubeObjectDetailRegistry.add({
+  kind: "DaemonSet",
+  apiVersions: ["apps/v1"],
+  priority: 5,
+  components: {
+    Details: (props: any) => <KubeEventDetails {...props} />
+  }
+});

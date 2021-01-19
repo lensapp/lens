@@ -1,29 +1,29 @@
 import React from "react";
-import { Trans } from "@lingui/macro";
 import { IKubeMetaField, KubeObject } from "../../api/kube-object";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
-import { WorkloadKubeObject } from "../../api/workload-kube-object";
-import { getDetailsUrl } from "../../navigation";
 import { lookupApiLink } from "../../api/kube-api";
 import { Link } from "react-router-dom";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { getDetailsUrl } from "./kube-object-details";
 
-export interface Props {
+export interface KubeObjectMetaProps {
   object: KubeObject;
   hideFields?: IKubeMetaField[];
 }
 
-export class KubeObjectMeta extends React.Component<Props> {
+export class KubeObjectMeta extends React.Component<KubeObjectMetaProps> {
   static defaultHiddenFields: IKubeMetaField[] = [
     "uid", "resourceVersion", "selfLink"
   ];
 
   isHidden(field: IKubeMetaField): boolean {
     const { hideFields = KubeObjectMeta.defaultHiddenFields } = this.props;
+
     return hideFields.includes(field);
   }
 
   render() {
-    const object = this.props.object
+    const object = this.props.object;
     const {
       getName, getNs, getLabels, getResourceVersion, selfLink,
       getAnnotations, getFinalizers, getId, getAge,
@@ -31,47 +31,49 @@ export class KubeObjectMeta extends React.Component<Props> {
     } = object;
 
     const ownerRefs = object.getOwnerRefs();
+
     return (
       <>
-        <DrawerItem name={<Trans>Created</Trans>} hidden={this.isHidden("creationTimestamp")}>
-          {getAge(true, false)} <Trans>ago</Trans> ({creationTimestamp})
+        <DrawerItem name="Created" hidden={this.isHidden("creationTimestamp")}>
+          {getAge(true, false)} ago ({creationTimestamp})
         </DrawerItem>
-        <DrawerItem name={<Trans>Name</Trans>} hidden={this.isHidden("name")}>
-          {getName()}
+        <DrawerItem name="Name" hidden={this.isHidden("name")}>
+          {getName()} <KubeObjectStatusIcon key="icon" object={object} />
         </DrawerItem>
-        <DrawerItem name={<Trans>Namespace</Trans>} hidden={this.isHidden("namespace") || !getNs()}>
+        <DrawerItem name="Namespace" hidden={this.isHidden("namespace") || !getNs()}>
           {getNs()}
         </DrawerItem>
-        <DrawerItem name={<Trans>UID</Trans>} hidden={this.isHidden("uid")}>
+        <DrawerItem name="UID" hidden={this.isHidden("uid")}>
           {getId()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Link</Trans>} hidden={this.isHidden("selfLink")}>
+        <DrawerItem name="Link" hidden={this.isHidden("selfLink")}>
           {selfLink}
         </DrawerItem>
-        <DrawerItem name={<Trans>Resource Version</Trans>} hidden={this.isHidden("resourceVersion")}>
+        <DrawerItem name="Resource Version" hidden={this.isHidden("resourceVersion")}>
           {getResourceVersion()}
         </DrawerItem>
         <DrawerItemLabels
-          name={<Trans>Labels</Trans>}
+          name="Labels"
           labels={getLabels()}
           hidden={this.isHidden("labels")}
         />
         <DrawerItemLabels
-          name={<Trans>Annotations</Trans>}
+          name="Annotations"
           labels={getAnnotations()}
           hidden={this.isHidden("annotations")}
         />
         <DrawerItemLabels
-          name={<Trans>Finalizers</Trans>}
+          name="Finalizers"
           labels={getFinalizers()}
           hidden={this.isHidden("finalizers")}
         />
         {ownerRefs && ownerRefs.length > 0 &&
-        <DrawerItem name={<Trans>Controlled By</Trans>} hidden={this.isHidden("ownerReferences")}>
+        <DrawerItem name="Controlled By" hidden={this.isHidden("ownerReferences")}>
           {
             ownerRefs.map(ref => {
               const { name, kind } = ref;
               const ownerDetailsUrl = getDetailsUrl(lookupApiLink(ref, object));
+
               return (
                 <p key={name}>
                   {kind} <Link to={ownerDetailsUrl}>{name}</Link>
@@ -82,6 +84,6 @@ export class KubeObjectMeta extends React.Component<Props> {
         </DrawerItem>
         }
       </>
-    )
+    );
   }
 }

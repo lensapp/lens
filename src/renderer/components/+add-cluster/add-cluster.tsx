@@ -1,28 +1,29 @@
-import "./add-cluster.scss"
+import "./add-cluster.scss";
 import os from "os";
-import React, { Fragment } from "react";
+import React from "react";
 import { observer } from "mobx-react";
 import { action, observable, runInAction } from "mobx";
 import { remote } from "electron";
 import { KubeConfig } from "@kubernetes/client-node";
-import { _i18n } from "../../i18n";
-import { t, Trans } from "@lingui/macro";
 import { Select, SelectOption } from "../select";
-import { Input } from "../input";
+import { DropFileInput, Input } from "../input";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
-import { WizardLayout } from "../layout/wizard-layout";
-import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig } from "../../../common/kube-helpers";
+import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
 import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
-import { v4 as uuid } from "uuid"
+import { v4 as uuid } from "uuid";
 import { navigate } from "../../navigation";
 import { userStore } from "../../../common/user-store";
 import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Tab, Tabs } from "../tabs";
+import { ExecValidationNotFoundError } from "../../../common/custom-errors";
+import { appEventBus } from "../../../common/event-bus";
+import { PageLayout } from "../layout/page-layout";
+import { docsUrl } from "../../../common/vars";
 
 enum KubeConfigSourceTab {
   FILE = "file",
@@ -38,14 +39,15 @@ export class AddCluster extends React.Component {
   @observable selectedContexts = observable.array<string>();
   @observable sourceTab = KubeConfigSourceTab.FILE;
   @observable kubeConfigPath = "";
-  @observable customConfig = ""
-  @observable proxyServer = ""
-  @observable isWaiting = false
-  @observable showSettings = false
-  @observable dropAreaActive = false;
+  @observable customConfig = "";
+  @observable proxyServer = "";
+  @observable isWaiting = false;
+  @observable showSettings = false;
 
   componentDidMount() {
+    clusterStore.setActive(null);
     this.setKubeConfig(userStore.kubeConfigPath);
+    appEventBus.emit({ name: "cluster-add", action: "start" });
   }
 
   componentWillUnmount() {
@@ -62,8 +64,9 @@ export class AddCluster extends React.Component {
       userStore.kubeConfigPath = filePath; // save to store
     } catch (err) {
       Notifications.error(
-        <div>Can't setup <code>{filePath}</code> as kubeconfig: {String(err)}</div>
+        <div>Can&apos;t setup <code>{filePath}</code> as kubeconfig: {String(err)}</div>
       );
+
       if (throwError) {
         throw err;
       }
@@ -76,35 +79,36 @@ export class AddCluster extends React.Component {
     this.kubeContexts.clear();
 
     switch (this.sourceTab) {
-    case KubeConfigSourceTab.FILE:
-      const contexts = this.getContexts(this.kubeConfigLocal);
-      this.kubeContexts.replace(contexts);
-      break;
-    case KubeConfigSourceTab.TEXT:
-      try {
-        this.error = ""
-        const contexts = this.getContexts(loadConfig(this.customConfig || "{}"));
+      case KubeConfigSourceTab.FILE:
+        const contexts = this.getContexts(this.kubeConfigLocal);
+
         this.kubeContexts.replace(contexts);
-      } catch (err) {
-        this.error = String(err);
-      }
-      break;
+        break;
+      case KubeConfigSourceTab.TEXT:
+        try {
+          this.error = "";
+          const contexts = this.getContexts(loadConfig(this.customConfig || "{}"));
+
+          this.kubeContexts.replace(contexts);
+        } catch (err) {
+          this.error = String(err);
+        }
+        break;
     }
 
     if (this.kubeContexts.size === 1) {
-      this.selectedContexts.push(this.kubeContexts.keys().next().value)
+      this.selectedContexts.push(this.kubeContexts.keys().next().value);
     }
   }
 
   getContexts(config: KubeConfig): Map<string, KubeConfig> {
     const contexts = new Map();
+
     splitConfig(config).forEach(config => {
-      const isExists = clusterStore.hasContextInWorkspace(config.currentContext, workspaceStore.currentWorkspaceId);
-      if (!isExists) {
-        contexts.set(config.currentContext, config);
-      }
-    })
-    return contexts
+      contexts.set(config.currentContext, config);
+    });
+
+    return contexts;
   }
 
   selectKubeConfigDialog = async () => {
@@ -112,112 +116,122 @@ export class AddCluster extends React.Component {
     const { canceled, filePaths } = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
       defaultPath: this.kubeConfigPath,
       properties: ["openFile", "showHiddenFiles"],
-      message: _i18n._(t`Select custom kubeconfig file`),
-      buttonLabel: _i18n._(t`Use configuration`),
+      message: `Select custom kubeconfig file`,
+      buttonLabel: `Use configuration`,
     });
+
     if (!canceled && filePaths.length) {
       this.setKubeConfig(filePaths[0]);
     }
-  }
+  };
 
+  onDropKubeConfig = (files: File[]) => {
+    this.sourceTab = KubeConfigSourceTab.FILE;
+    this.setKubeConfig(files[0].path);
+  };
+
+  @action
   addClusters = () => {
+    let newClusters: ClusterModel[] = [];
+
     try {
       if (!this.selectedContexts.length) {
-        this.error = <Trans>Please select at least one cluster context</Trans>
+        this.error = "Please select at least one cluster context";
+
         return;
       }
-      this.error = ""
-      this.isWaiting = true
-      const newClusters: ClusterModel[] = this.selectedContexts.map(context => {
+      this.error = "";
+      this.isWaiting = true;
+      appEventBus.emit({ name: "cluster-add", action: "click" });
+      newClusters = this.selectedContexts.filter(context => {
+        try {
+          const kubeConfig = this.kubeContexts.get(context);
+
+          validateKubeConfig(kubeConfig);
+
+          return true;
+        } catch (err) {
+          this.error = String(err.message);
+
+          if (err instanceof ExecValidationNotFoundError) {
+            Notifications.error(<>Error while adding cluster(s): {this.error}</>);
+
+            return false;
+          } else {
+            throw new Error(err);
+          }
+        }
+      }).map(context => {
         const clusterId = uuid();
         const kubeConfig = this.kubeContexts.get(context);
         const kubeConfigPath = this.sourceTab === KubeConfigSourceTab.FILE
           ? this.kubeConfigPath // save link to original kubeconfig in file-system
           : ClusterStore.embedCustomKubeConfig(clusterId, kubeConfig); // save in app-files folder
+
         return {
           id: clusterId,
-          kubeConfigPath: kubeConfigPath,
+          kubeConfigPath,
           workspace: workspaceStore.currentWorkspaceId,
           contextName: kubeConfig.currentContext,
           preferences: {
             clusterName: kubeConfig.currentContext,
             httpsProxy: this.proxyServer || undefined,
           },
-        }
+        };
       });
+
       runInAction(() => {
-        clusterStore.addCluster(...newClusters);
+        clusterStore.addClusters(...newClusters);
+
         if (newClusters.length === 1) {
           const clusterId = newClusters[0].id;
+
           clusterStore.setActive(clusterId);
           navigate(clusterViewURL({ params: { clusterId } }));
         } else {
-          Notifications.ok(
-            <Trans>Successfully imported <b>{newClusters.length}</b> cluster(s)</Trans>
-          );
+          if (newClusters.length > 1) {
+            Notifications.ok(
+              <>Successfully imported <b>{newClusters.length}</b> cluster(s)</>
+            );
+          }
         }
-      })
+      });
       this.refreshContexts();
     } catch (err) {
       this.error = String(err);
-      Notifications.error(<Trans>Error while adding cluster(s): {this.error}</Trans>);
+      Notifications.error(<>Error while adding cluster(s): {this.error}</>);
     } finally {
       this.isWaiting = false;
     }
-  }
+  };
 
   renderInfo() {
     return (
-      <Fragment>
-        <h2>Clusters associated with Lens</h2>
-        <p>
-          Add clusters by clicking the <span className="text-primary">Add Cluster</span> button.
-          You'll need to obtain a working kubeconfig for the cluster you want to add. You can either browse it from the file system or paste it as a text from the clipboard.
-        </p>
-        <p>
-          Selected <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/#context" target="_blank">cluster contexts</a> are added as a separate item in the
-          left-side cluster menu to allow you to operate easily on multiple clusters and/or contexts.
-        </p>
-        <p>
-          For more information on kubeconfig see <a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/" target="_blank">Kubernetes docs</a>.
-        </p>
-        <p>
-          NOTE: Any manually added cluster is not merged into your kubeconfig file.
-        </p>
-        <p>
-          To see your currently enabled config with <code>kubectl</code>, use <code>kubectl config view --minify --raw</code> command in your terminal.
-        </p>
-        <p>
-          When connecting to a cluster, make sure you have a valid and working kubeconfig for the cluster. Following lists known "gotchas" in some authentication types used in kubeconfig with Lens
-          app.
-        </p>
-        <h3>Exec auth plugins</h3>
-        <p>
-          When using <a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/#configuration" target="_blank">exec auth</a> plugins make sure the paths that are used to call
-          any binaries
-          are full paths as Lens app might not be able to call binaries with relative paths. Make also sure that you pass all needed information either as arguments or env variables in the config,
-          Lens app might not have all login shell env variables set automatically.
-        </p>
-      </Fragment>
-    )
+      <p>
+        Add clusters by clicking the <span className="text-primary">Add Cluster</span> button.
+        You&apos;ll need to obtain a working kubeconfig for the cluster you want to add.
+        You can either browse it from the file system or paste it as a text from the clipboard.
+        Read more about adding clusters <a href={`${docsUrl}/latest/clusters/adding-clusters/`} rel="noreferrer" target="_blank">here</a>.
+      </p>
+    );
   }
 
   renderKubeConfigSource() {
     return (
       <>
-        <Tabs withBorder onChange={this.onKubeConfigTabChange}>
+        <Tabs onChange={this.onKubeConfigTabChange}>
           <Tab
             value={KubeConfigSourceTab.FILE}
-            label={<Trans>Select kubeconfig file</Trans>}
-            active={this.sourceTab == KubeConfigSourceTab.FILE} />
+            label="Select kubeconfig file"
+            active={this.sourceTab == KubeConfigSourceTab.FILE}/>
           <Tab
             value={KubeConfigSourceTab.TEXT}
-            label={<Trans>Paste as text</Trans>}
+            label="Paste as text"
             active={this.sourceTab == KubeConfigSourceTab.TEXT}
           />
         </Tabs>
         {this.sourceTab === KubeConfigSourceTab.FILE && (
-          <>
+          <div>
             <div className="kube-config-select flex gaps align-center">
               <Input
                 theme="round-black"
@@ -230,22 +244,22 @@ export class AddCluster extends React.Component {
                 <Icon
                   material="settings_backup_restore"
                   onClick={() => this.setKubeConfig(kubeConfigDefaultPath)}
-                  tooltip={<Trans>Reset</Trans>}
+                  tooltip="Reset"
                 />
               )}
               <Icon
                 material="folder"
                 onClick={this.selectKubeConfigDialog}
-                tooltip={<Trans>Browse</Trans>}
+                tooltip="Browse"
               />
             </div>
             <small className="hint">
-              <Trans>Pro-Tip: you can also drag-n-drop kubeconfig file to this area</Trans>
+              Pro-Tip: you can also drag-n-drop kubeconfig file to this area
             </small>
-          </>
+          </div>
         )}
         {this.sourceTab === KubeConfigSourceTab.TEXT && (
-          <>
+          <div className="flex column">
             <AceEditor
               autoFocus
               showGutter={false}
@@ -257,21 +271,22 @@ export class AddCluster extends React.Component {
               }}
             />
             <small className="hint">
-              <Trans>Pro-Tip: paste kubeconfig to get available contexts</Trans>
+              Pro-Tip: paste kubeconfig to get available contexts
             </small>
-          </>
+          </div>
         )}
       </>
-    )
+    );
   }
 
   renderContextSelector() {
     const allContexts = Array.from(this.kubeContexts.keys());
     const placeholder = this.selectedContexts.length > 0
-      ? <Trans>Selected contexts: <b>{this.selectedContexts.length}</b></Trans>
-      : <Trans>Select contexts</Trans>;
+      ? <>Selected contexts: <b>{this.selectedContexts.length}</b></>
+      : "Select contexts";
+
     return (
-      <>
+      <div>
         <Select
           id="kubecontext-select" // todo: provide better mapping for integration tests (e.g. data-test-id="..")
           placeholder={placeholder}
@@ -280,10 +295,10 @@ export class AddCluster extends React.Component {
           isOptionSelected={() => false}
           options={allContexts}
           formatOptionLabel={this.formatContextLabel}
-          noOptionsMessage={() => _i18n._(t`No contexts available or they have been added already`)}
+          noOptionsMessage={() => `No contexts available or they have been added already`}
           onChange={({ value: ctx }: SelectOption<string>) => {
             if (this.selectedContexts.includes(ctx)) {
-              this.selectedContexts.remove(ctx)
+              this.selectedContexts.remove(ctx);
             } else {
               this.selectedContexts.push(ctx);
             }
@@ -295,99 +310,89 @@ export class AddCluster extends React.Component {
             <code>{this.selectedContexts.join(", ")}</code>
           </small>
         )}
-      </>
-    )
+      </div>
+    );
   }
 
-  onKubeConfigInputBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
+  onKubeConfigInputBlur = () => {
     const isChanged = this.kubeConfigPath !== userStore.kubeConfigPath;
+
     if (isChanged) {
       this.kubeConfigPath = this.kubeConfigPath.replace("~", os.homedir());
+
       try {
         this.setKubeConfig(this.kubeConfigPath, { throwError: true });
       } catch (err) {
         this.setKubeConfig(userStore.kubeConfigPath); // revert to previous valid path
       }
     }
-  }
+  };
 
   onKubeConfigTabChange = (tabId: KubeConfigSourceTab) => {
     this.sourceTab = tabId;
     this.error = "";
     this.refreshContexts();
-  }
+  };
 
   protected formatContextLabel = ({ value: context }: SelectOption<string>) => {
     const isNew = userStore.newContexts.has(context);
     const isSelected = this.selectedContexts.includes(context);
+
     return (
       <div className={cssNames("kube-context flex gaps align-center", context)}>
         <span>{context}</span>
-        {isNew && <Icon small material="fiber_new" />}
-        {isSelected && <Icon small material="check" className="box right" />}
+        {isNew && <Icon small material="fiber_new"/>}
+        {isSelected && <Icon small material="check" className="box right"/>}
       </div>
-    )
+    );
   };
 
   render() {
-    const addDisabled = this.selectedContexts.length === 0
+    const submitDisabled = this.selectedContexts.length === 0;
 
     return (
-      <WizardLayout
-        className="AddCluster"
-        infoPanel={this.renderInfo()}
-        contentClass={{ droppable: this.dropAreaActive }}
-        contentProps={{
-          onDragEnter: event => this.dropAreaActive = true,
-          onDragLeave: event => this.dropAreaActive = false,
-          onDragOver: event => {
-            event.preventDefault(); // enable onDrop()-callback
-            event.dataTransfer.dropEffect = "move"
-          },
-          onDrop: event => {
-            this.sourceTab = KubeConfigSourceTab.FILE;
-            this.dropAreaActive = false
-            this.setKubeConfig(event.dataTransfer.files[0].path)
-          }
-        }}
-      >
-        <h2><Trans>Add Cluster</Trans></h2>
-        {this.renderKubeConfigSource()}
-        {this.renderContextSelector()}
-        <div className="cluster-settings">
-          <a href="#" onClick={() => this.showSettings = !this.showSettings}>
-            <Trans>Proxy settings</Trans>
-          </a>
-        </div>
-        {this.showSettings && (
-          <div className="proxy-settings">
-            <p>HTTP Proxy server. Used for communicating with Kubernetes API.</p>
-            <Input
-              autoFocus
-              value={this.proxyServer}
-              onChange={value => this.proxyServer = value}
-              theme="round-black"
-            />
-            <small className="hint">
-              {'A HTTP proxy server URL (format: http://<address>:<port>).'}
-            </small>
+      <DropFileInput onDropFiles={this.onDropKubeConfig}>
+        <PageLayout className="AddClusters" header={<h2>Add Clusters</h2>}>
+          <h2>Add Clusters from Kubeconfig</h2>
+          {this.renderInfo()}
+          {this.renderKubeConfigSource()}
+          {this.renderContextSelector()}
+          <div className="cluster-settings">
+            <a href="#" onClick={() => this.showSettings = !this.showSettings}>
+              Proxy settings
+            </a>
           </div>
-        )}
-        {this.error && (
-          <div className="error">{this.error}</div>
-        )}
-        <div className="actions-panel">
-          <Button
-            primary
-            disabled={addDisabled}
-            label={<Trans>Add cluster(s)</Trans>}
-            onClick={this.addClusters}
-            waiting={this.isWaiting}
-            tooltip={addDisabled ? _i18n._("Select at least one cluster to add.") : undefined}
-            tooltipOverrideDisabled
-          />
-        </div>
-      </WizardLayout>
-    )
+          {this.showSettings && (
+            <div className="proxy-settings">
+              <p>HTTP Proxy server. Used for communicating with Kubernetes API.</p>
+              <Input
+                autoFocus
+                value={this.proxyServer}
+                onChange={value => this.proxyServer = value}
+                theme="round-black"
+              />
+              <small className="hint">
+                {"A HTTP proxy server URL (format: http://<address>:<port>)."}
+              </small>
+            </div>
+          )}
+          {this.error && (
+            <div className="error">{this.error}</div>
+          )}
+
+          <div className="actions-panel">
+            <Button
+              primary
+              disabled={submitDisabled}
+              label={this.selectedContexts.length < 2 ? "Add cluster" : "Add clusters"}
+              onClick={this.addClusters}
+              waiting={this.isWaiting}
+              tooltip={submitDisabled ? "Select at least one cluster to add." : undefined}
+              tooltipOverrideDisabled
+            />
+          </div>
+        </PageLayout>
+      </DropFileInput>
+    );
   }
 }

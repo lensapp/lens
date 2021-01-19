@@ -37,7 +37,9 @@ export interface IPolicyEgress {
 
 @autobind()
 export class NetworkPolicy extends KubeObject {
-  static kind = "NetworkPolicy"
+  static kind = "NetworkPolicy";
+  static namespaced = true;
+  static apiBase = "/apis/networking.k8s.io/v1/networkpolicies";
 
   spec: {
     podSelector: {
@@ -49,24 +51,23 @@ export class NetworkPolicy extends KubeObject {
     policyTypes: string[];
     ingress: IPolicyIngress[];
     egress: IPolicyEgress[];
-  }
+  };
 
   getMatchLabels(): string[] {
     if (!this.spec.podSelector || !this.spec.podSelector.matchLabels) return [];
+
     return Object
       .entries(this.spec.podSelector.matchLabels)
-      .map(data => data.join(":"))
+      .map(data => data.join(":"));
   }
 
   getTypes(): string[] {
     if (!this.spec.policyTypes) return [];
+
     return this.spec.policyTypes;
   }
 }
 
 export const networkPolicyApi = new KubeApi({
-  kind: NetworkPolicy.kind,
-  apiBase: "/apis/networking.k8s.io/v1/networkpolicies",
-  isNamespaced: true,
   objectConstructor: NetworkPolicy,
 });

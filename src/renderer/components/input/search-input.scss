@@ -1,13 +1,21 @@
 .Input.SearchInput {
   --compact-focus-width: 190px;
+  --spacing: 6px 6px 6px 10px;
 
   max-width: 900px;
   min-width: 220px;
 
   > label {
     color: inherit;
+    background: none;
+    border: none;
     border-radius: $radius;
-    padding: $padding / 1.33 $padding * 1.25;
+    box-shadow: 0 0 0 1px $halfGray;
+    padding: var(--spacing);
+
+    .Icon {
+      height: $margin * 2;
+    }
   }
 
   &.compact {

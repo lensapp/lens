@@ -1,13 +1,11 @@
 // Ace code editor - https://ace.c9.io
 // Playground - https://ace.c9.io/build/kitchen-sink.html
-import "./ace-editor.scss"
+import "./ace-editor.scss";
 
-import React from "react"
-import { reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
-import AceBuild, { Ace } from "ace-builds"
+import React from "react";
+import { observer } from "mobx-react";
+import AceBuild, { Ace } from "ace-builds";
 import { autobind, cssNames, noop } from "../../utils";
-import { themeStore } from "../../theme.store";
 
 interface Props extends Partial<Ace.EditorOptions> {
   className?: string;
@@ -45,24 +43,9 @@ export class AceEditor extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    require("ace-builds/src-noconflict/mode-yaml")
-    require("ace-builds/src-noconflict/theme-dreamweaver")
-    require("ace-builds/src-noconflict/theme-terminal")
-    require("ace-builds/src-noconflict/ext-searchbox")
-  }
-
-  @disposeOnUnmount
-  themeSwitcher = reaction(() => themeStore.activeTheme, () => {
-    this.setTheme(this.theme);
-  });
-
-  get theme() {
-    switch (themeStore.activeTheme.type) {
-    case "light":
-      return "dreamweaver"
-    case "dark":
-      return "terminal";
-    }
+    require("ace-builds/src-noconflict/mode-yaml");
+    require("ace-builds/src-noconflict/theme-terminal");
+    require("ace-builds/src-noconflict/ext-searchbox");
   }
 
   async componentDidMount() {
@@ -74,7 +57,7 @@ export class AceEditor extends React.Component<Props, State> {
 
     // setup editor
     this.editor = AceBuild.edit(this.elem, options);
-    this.setTheme(this.theme);
+    this.setTheme("terminal");
     this.setMode(mode);
     this.setCursorPos(cursorPos);
 
@@ -92,6 +75,7 @@ export class AceEditor extends React.Component<Props, State> {
   componentDidUpdate() {
     if (!this.editor) return;
     const { value, cursorPos } = this.props;
+
     if (value !== this.getValue()) {
       this.editor.setValue(value);
       this.editor.clearSelection();
@@ -118,7 +102,7 @@ export class AceEditor extends React.Component<Props, State> {
   }
 
   getValue() {
-    return this.editor.getValue()
+    return this.editor.getValue();
   }
 
   setValue(value: string, cursorPos?: number) {
@@ -136,6 +120,7 @@ export class AceEditor extends React.Component<Props, State> {
   setCursorPos(pos: Ace.Point) {
     if (!pos) return;
     const { row, column } = pos;
+
     this.editor.moveCursorToPosition(pos);
     requestAnimationFrame(() => {
       this.editor.gotoLine(row + 1, column, false);
@@ -145,6 +130,7 @@ export class AceEditor extends React.Component<Props, State> {
   @autobind()
   onCursorPosChange() {
     const { onCursorPosChange } = this.props;
+
     if (onCursorPosChange) {
       onCursorPosChange(this.editor.getCursorPosition());
     }
@@ -153,6 +139,7 @@ export class AceEditor extends React.Component<Props, State> {
   @autobind()
   onChange(delta: Ace.Delta) {
     const { onChange } = this.props;
+
     if (onChange) {
       onChange(this.getValue(), delta);
     }
@@ -160,10 +147,11 @@ export class AceEditor extends React.Component<Props, State> {
 
   render() {
     const { className, hidden } = this.props;
+
     return (
       <div className={cssNames("AceEditor", className, { hidden })}>
         <div className="editor" ref={e => this.elem = e}/>
       </div>
-    )
+    );
   }
 }

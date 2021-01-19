@@ -15,7 +15,7 @@ export interface AnimateProps {
 
 @observer
 export class Animate extends React.Component<AnimateProps> {
-  static VISIBILITY_DELAY_MS = 100;
+  static VISIBILITY_DELAY_MS = 0;
 
   static defaultProps: AnimateProps = {
     name: "opacity",
@@ -43,7 +43,7 @@ export class Animate extends React.Component<AnimateProps> {
         delay: Animate.VISIBILITY_DELAY_MS,
         fireImmediately: true,
       })
-    ])
+    ]);
   }
 
   enter() {
@@ -70,7 +70,9 @@ export class Animate extends React.Component<AnimateProps> {
   onTransitionEnd(evt: React.TransitionEvent) {
     const { enter, leave } = this.statusClassName;
     const { onTransitionEnd } = this.contentElem.props;
+
     if (onTransitionEnd) onTransitionEnd(evt);
+
     // todo: check evt.propertyName and make sure all animating props has finished their transition
     if (enter && leave) {
       this.reset();
@@ -80,6 +82,7 @@ export class Animate extends React.Component<AnimateProps> {
   render() {
     const { name } = this.props;
     const contentElem = this.contentElem;
+
     return React.cloneElement(contentElem, {
       className: cssNames("Animate", name, contentElem.props.className, this.statusClassName),
       children: this.isVisible ? contentElem.props.children : null,

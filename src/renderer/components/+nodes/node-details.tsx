@@ -4,20 +4,19 @@ import React from "react";
 import upperFirst from "lodash/upperFirst";
 import kebabCase from "lodash/kebabCase";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { DrawerItem, DrawerItemLabels } from "../drawer";
 import { Badge } from "../badge";
 import { nodesStore } from "./nodes.store";
 import { ResourceMetrics } from "../resource-metrics";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { Node, nodesApi } from "../../api/endpoints";
+import { Node } from "../../api/endpoints";
 import { NodeCharts } from "./node-charts";
 import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
-import { apiManager } from "../../api/api-manager";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { KubeEventDetails } from "../+events/kube-event-details";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Node> {
 }
@@ -41,19 +40,21 @@ export class NodeDetails extends React.Component<Props> {
 
   render() {
     const { object: node } = this.props;
+
     if (!node) return;
-    const { status } = node
-    const { nodeInfo, addresses, capacity, allocatable } = status
+    const { status } = node;
+    const { nodeInfo, addresses, capacity, allocatable } = status;
     const conditions = node.getActiveConditions();
-    const taints = node.getTaints()
-    const childPods = podsStore.getPodsByNode(node.getName())
-    const metrics = nodesStore.nodeMetrics
+    const taints = node.getTaints();
+    const childPods = podsStore.getPodsByNode(node.getName());
+    const metrics = nodesStore.nodeMetrics;
     const metricTabs = [
-      <Trans>CPU</Trans>,
-      <Trans>Memory</Trans>,
-      <Trans>Disk</Trans>,
-      <Trans>Pods</Trans>,
+      "CPU",
+      "Memory",
+      "Disk",
+      "Pods",
     ];
+
     return (
       <div className="NodeDetails">
         {podsStore.isLoaded && (
@@ -65,18 +66,18 @@ export class NodeDetails extends React.Component<Props> {
           </ResourceMetrics>
         )}
         <KubeObjectMeta object={node} hideFields={["labels", "annotations", "uid", "resourceVersion", "selfLink"]}/>
-        <DrawerItem name={<Trans>Capacity</Trans>}>
-          <Trans>CPU</Trans>: {capacity.cpu},{" "}
-          <Trans>Memory</Trans>: {Math.floor(parseInt(capacity.memory) / 1024)}Mi,{" "}
-          <Trans>Pods</Trans>: {capacity.pods}
+        <DrawerItem name="Capacity">
+          CPU: {capacity.cpu},{" "}
+          Memory: {Math.floor(parseInt(capacity.memory) / 1024)}Mi,{" "}
+          Pods: {capacity.pods}
         </DrawerItem>
-        <DrawerItem name={<Trans>Allocatable</Trans>}>
-          <Trans>CPU</Trans>: {allocatable.cpu},{" "}
-          <Trans>Memory</Trans>: {Math.floor(parseInt(allocatable.memory) / 1024)}Mi,{" "}
-          <Trans>Pods</Trans>: {allocatable.pods}
+        <DrawerItem name="Allocatable">
+          CPU: {allocatable.cpu},{" "}
+          Memory: {Math.floor(parseInt(allocatable.memory) / 1024)}Mi,{" "}
+          Pods: {allocatable.pods}
         </DrawerItem>
         {addresses &&
-        <DrawerItem name={<Trans>Addresses</Trans>}>
+        <DrawerItem name="Addresses">
           {
             addresses.map(({ type, address }) => (
               <p key={type}>{type}: {address}</p>
@@ -84,43 +85,44 @@ export class NodeDetails extends React.Component<Props> {
           }
         </DrawerItem>
         }
-        <DrawerItem name={<Trans>OS</Trans>}>
+        <DrawerItem name="OS">
           {nodeInfo.operatingSystem} ({nodeInfo.architecture})
         </DrawerItem>
-        <DrawerItem name={<Trans>OS Image</Trans>}>
+        <DrawerItem name="OS Image">
           {nodeInfo.osImage}
         </DrawerItem>
-        <DrawerItem name={<Trans>Kernel version</Trans>}>
+        <DrawerItem name="Kernel version">
           {nodeInfo.kernelVersion}
         </DrawerItem>
-        <DrawerItem name={<Trans>Container runtime</Trans>}>
+        <DrawerItem name="Container runtime">
           {nodeInfo.containerRuntimeVersion}
         </DrawerItem>
-        <DrawerItem name={<Trans>Kubelet version</Trans>}>
+        <DrawerItem name="Kubelet version">
           {nodeInfo.kubeletVersion}
         </DrawerItem>
         <DrawerItemLabels
-          name={<Trans>Labels</Trans>}
+          name="Labels"
           labels={node.getLabels()}
         />
         <DrawerItemLabels
-          name={<Trans>Annotations</Trans>}
+          name="Annotations"
           labels={node.getAnnotations()}
         />
         {taints.length > 0 && (
-          <DrawerItem name={<Trans>Taints</Trans>} labelsOnly>
+          <DrawerItem name="Taints" labelsOnly>
             {
               taints.map(({ key, effect, value }) => (
-                <Badge key={key} label={key + ": " + effect} tooltip={value}/>
+                <Badge key={key} label={`${key}: ${effect}`} tooltip={value}/>
               ))
             }
           </DrawerItem>
         )}
         {conditions &&
-        <DrawerItem name={<Trans>Conditions</Trans>} className="conditions" labelsOnly>
+        <DrawerItem name="Conditions" className="conditions" labelsOnly>
           {
             conditions.map(condition => {
-              const { type } = condition
+              const { type } = condition;
+
               return (
                 <Badge
                   key={type}
@@ -138,7 +140,7 @@ export class NodeDetails extends React.Component<Props> {
                     )
                   }}
                 />
-              )
+              );
             })
           }
         </DrawerItem>
@@ -149,12 +151,24 @@ export class NodeDetails extends React.Component<Props> {
           maxCpu={node.getCpuCapacity()}
           maxMemory={node.getMemoryCapacity()}
         />
-        <KubeEventDetails object={node}/>
       </div>
-    )
+    );
   }
 }
 
-apiManager.registerViews(nodesApi, {
-  Details: NodeDetails,
+kubeObjectDetailRegistry.add({
+  kind: "Node",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <NodeDetails {...props} />
+  }
+});
+
+kubeObjectDetailRegistry.add({
+  kind: "Node",
+  apiVersions: ["v1"],
+  priority: 5,
+  components: {
+    Details: (props) => <KubeEventDetails {...props} />
+  }
 });

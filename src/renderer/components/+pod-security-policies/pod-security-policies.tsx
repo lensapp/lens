@@ -2,12 +2,10 @@ import "./pod-security-policies.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { KubeObjectListLayout } from "../kube-object";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { podSecurityPoliciesStore } from "./pod-security-policies.store";
-import { PodSecurityPolicy, pspApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
+import { PodSecurityPolicy } from "../../api/endpoints";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -35,35 +33,24 @@ export class PodSecurityPolicies extends React.Component {
           (item: PodSecurityPolicy) => item.getVolumes(),
           (item: PodSecurityPolicy) => Object.values(item.getRules()),
         ]}
-        renderHeaderTitle={<Trans>Pod Security Policies</Trans>}
+        renderHeaderTitle="Pod Security Policies"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { title: <Trans>Privileged</Trans>, className: "privileged", sortBy: sortBy.privileged },
-          { title: <Trans>Volumes</Trans>, className: "volumes", sortBy: sortBy.volumes },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { className: "warning" },
+          { title: "Privileged", className: "privileged", sortBy: sortBy.privileged },
+          { title: "Volumes", className: "volumes", sortBy: sortBy.volumes },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(item: PodSecurityPolicy) => {
           return [
             item.getName(),
-            item.isPrivileged() ? <Trans>Yes</Trans> : <Trans>No</Trans>,
+            <KubeObjectStatusIcon key="icon" object={item} />,
+            item.isPrivileged() ? "Yes" : "No",
             item.getVolumes().join(", "),
             item.getAge(),
-          ]
-        }}
-        renderItemMenu={(item: PodSecurityPolicy) => {
-          return <PodSecurityPolicyMenu object={item}/>
+          ];
         }}
       />
-    )
+    );
   }
 }
-
-export function PodSecurityPolicyMenu(props: KubeObjectMenuProps<PodSecurityPolicy>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(pspApi, {
-  Menu: PodSecurityPolicyMenu,
-})

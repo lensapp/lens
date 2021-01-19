@@ -1,19 +1,25 @@
 import type { KubeConfig } from "@kubernetes/client-node";
-import type { Cluster } from "./cluster"
+import type { Cluster } from "./cluster";
 import type { ContextHandler } from "./context-handler";
-import { app } from "electron"
-import path from "path"
-import fs from "fs-extra"
-import { dumpConfigYaml, loadConfig } from "../common/kube-helpers"
-import logger from "./logger"
+import { app } from "electron";
+import path from "path";
+import fs from "fs-extra";
+import { dumpConfigYaml, loadConfig } from "../common/kube-helpers";
+import logger from "./logger";
 import { getProxyCertificate } from "./lens-proxy-cert";
 
 export class KubeconfigManager {
-  protected configDir = app.getPath("temp")
+  protected configDir = app.getPath("temp");
   protected tempFile: string;
 
-  constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) {
-    this.init();
+  private constructor(protected cluster: Cluster, protected contextHandler: ContextHandler, protected port: number) { }
+
+  static async create(cluster: Cluster, contextHandler: ContextHandler, port: number) {
+    const kcm = new KubeconfigManager(cluster, contextHandler, port);
+
+    await kcm.init();
+
+    return kcm;
   }
 
   protected async init() {
@@ -21,7 +27,7 @@ export class KubeconfigManager {
       await this.contextHandler.ensurePort();
       await this.createProxyKubeconfig();
     } catch (err) {
-      logger.error(`Failed to created temp config for auth-proxy`, { err })
+      logger.error(`Failed to created temp config for auth-proxy`, { err });
     }
   }
 
@@ -30,7 +36,7 @@ export class KubeconfigManager {
   }
 
   protected resolveProxyUrl() {
-    return `https://127.0.0.1:${this.port}/${this.cluster.id}`
+    return `https://127.0.0.1:${this.port}/${this.cluster.id}`;
   }
 
   /**
@@ -38,7 +44,7 @@ export class KubeconfigManager {
    * This way any user of the config does not need to know anything about the auth etc. details.
    */
   protected async createProxyKubeconfig(): Promise<string> {
-    const { configDir, cluster, contextHandler } = this;
+    const { configDir, cluster } = this;
     const { contextName, kubeConfigPath, id } = cluster;
     const tempFile = path.join(configDir, `kubeconfig-${id}`);
     const kubeConfig = loadConfig(kubeConfigPath);
@@ -47,8 +53,9 @@ export class KubeconfigManager {
       clusters: [
         {
           name: contextName,
+          caData: Buffer.from(getProxyCertificate().cert).toString("base64"),
           server: this.resolveProxyUrl(),
-          skipTLSVerify: true
+          skipTLSVerify: false
         }
       ],
       users: [
@@ -63,18 +70,24 @@ export class KubeconfigManager {
         }
       ]
     };
-
     // write
     const configYaml = dumpConfigYaml(proxyConfig);
+
     fs.ensureDir(path.dirname(tempFile));
     fs.writeFileSync(tempFile, configYaml, { mode: 0o600 });
     this.tempFile = tempFile;
     logger.debug(`Created temp kubeconfig "${contextName}" at "${tempFile}": \n${configYaml}`);
+
     return tempFile;
   }
 
-  unlink() {
-    logger.info('Deleting temporary kubeconfig: ' + this.tempFile)
-    fs.unlinkSync(this.tempFile)
+  async unlink() {
+    if (!this.tempFile) {
+      return;
+    }
+
+    logger.info(`Deleting temporary kubeconfig: ${this.tempFile}`);
+    await fs.unlink(this.tempFile);
+    this.tempFile = undefined;
   }
 }

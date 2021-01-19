@@ -1,59 +1,63 @@
-import { app, BrowserWindow, dialog, Menu, MenuItem, MenuItemConstructorOptions, shell, webContents } from "electron"
+import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
-import { appName, isMac, issuesTrackerUrl, isWindows, slackUrl } from "../common/vars";
+import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl } from "../common/vars";
 import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
 import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
 import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
 import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
+import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
+import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
+import { exitApp } from "./exit-app";
+
+export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
 
 export function initMenu(windowManager: WindowManager) {
-  autorun(() => buildMenu(windowManager), {
+  return autorun(() => buildMenu(windowManager), {
     delay: 100
+  });
+}
+
+export function showAbout(browserWindow: BrowserWindow) {
+  const appInfo = [
+    `${appName}: ${app.getVersion()}`,
+    `Electron: ${process.versions.electron}`,
+    `Chrome: ${process.versions.chrome}`,
+    `Node: ${process.versions.node}`,
+    `Copyright 2020 Mirantis, Inc.`,
+  ];
+
+  dialog.showMessageBoxSync(browserWindow, {
+    title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
+    type: "info",
+    buttons: ["Close"],
+    message: `Lens`,
+    detail: appInfo.join("\r\n")
   });
 }
 
 export function buildMenu(windowManager: WindowManager) {
   function ignoreOnMac(menuItems: MenuItemConstructorOptions[]) {
     if (isMac) return [];
+
     return menuItems;
   }
 
   function activeClusterOnly(menuItems: MenuItemConstructorOptions[]) {
     if (!windowManager.activeClusterId) {
       menuItems.forEach(item => {
-        item.enabled = false
+        item.enabled = false;
       });
     }
+
     return menuItems;
   }
 
-  function navigate(url: string) {
+  async function navigate(url: string) {
     logger.info(`[MENU]: navigating to ${url}`);
-    windowManager.navigate({
-      channel: "menu:navigate",
-      url: url,
-    })
+    await windowManager.navigate(url);
   }
-
-  function showAbout(browserWindow: BrowserWindow) {
-    const appInfo = [
-      `${appName}: ${app.getVersion()}`,
-      `Electron: ${process.versions.electron}`,
-      `Chrome: ${process.versions.chrome}`,
-      `Copyright 2020 Mirantis, Inc.`,
-    ]
-    dialog.showMessageBoxSync(browserWindow, {
-      title: `${isWindows ? " ".repeat(2) : ""}${appName}`,
-      type: "info",
-      buttons: ["Close"],
-      message: `Lens`,
-      detail: appInfo.join("\r\n")
-    })
-  }
-
-  const mt: MenuItemConstructorOptions[] = [];
 
   const macAppMenu: MenuItemConstructorOptions = {
     label: app.getName(),
@@ -61,160 +65,239 @@ export function buildMenu(windowManager: WindowManager) {
       {
         label: "About Lens",
         click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-          showAbout(browserWindow)
+          showAbout(browserWindow);
         }
       },
-      { type: 'separator' },
+      { type: "separator" },
       {
-        label: 'Preferences',
-        accelerator: 'Cmd+,',
+        label: "Preferences",
+        accelerator: "CmdOrCtrl+,",
         click() {
-          navigate(preferencesURL())
+          navigate(preferencesURL());
         }
       },
-      { type: 'separator' },
-      { role: 'services' },
-      { type: 'separator' },
-      { role: 'hide' },
-      { role: 'hideOthers' },
-      { role: 'unhide' },
-      { type: 'separator' },
-      { role: 'quit' }
+      {
+        label: "Extensions",
+        accelerator: "CmdOrCtrl+Shift+E",
+        click() {
+          navigate(extensionsURL());
+        }
+      },
+      { type: "separator" },
+      { role: "services" },
+      { type: "separator" },
+      { role: "hide" },
+      { role: "hideOthers" },
+      { role: "unhide" },
+      { type: "separator" },
+      {
+        label: "Quit",
+        accelerator: "Cmd+Q",
+        click() {
+          exitApp();
+        }
+      }
     ]
   };
-
-  if (isMac) {
-    mt.push(macAppMenu);
-  }
-
   const fileMenu: MenuItemConstructorOptions = {
     label: "File",
     submenu: [
       {
-        label: 'Add Cluster',
-        accelerator: 'CmdOrCtrl+Shift+A',
+        label: "Add Cluster",
+        accelerator: "CmdOrCtrl+Shift+A",
         click() {
-          navigate(addClusterURL())
+          navigate(addClusterURL());
         }
       },
       ...activeClusterOnly([
         {
-          label: 'Cluster Settings',
-          accelerator: 'CmdOrCtrl+Shift+S',
+          label: "Cluster Settings",
+          accelerator: "CmdOrCtrl+Shift+S",
           click() {
             navigate(clusterSettingsURL({
               params: {
                 clusterId: windowManager.activeClusterId
               }
-            }))
+            }));
           }
         }
       ]),
       ...ignoreOnMac([
-        { type: 'separator' },
+        { type: "separator" },
         {
-          label: 'Preferences',
-          accelerator: 'Ctrl+,',
+          label: "Preferences",
+          accelerator: "Ctrl+,",
           click() {
-            navigate(preferencesURL())
+            navigate(preferencesURL());
           }
         },
-        { type: 'separator' },
-        { role: 'quit' }
+        {
+          label: "Extensions",
+          accelerator: "Ctrl+Shift+E",
+          click() {
+            navigate(extensionsURL());
+          }
+        }
+      ]),
+      { type: "separator" },
+      {
+        role: "close",
+        label: "Close Window"
+      },
+      ...ignoreOnMac([
+        { type: "separator" },
+        {
+          label: "Exit",
+          accelerator: "Alt+F4",
+          click() {
+            exitApp();
+          }
+        }
       ])
     ]
   };
-  mt.push(fileMenu)
-
   const editMenu: MenuItemConstructorOptions = {
-    label: 'Edit',
+    label: "Edit",
     submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
-      { type: 'separator' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { role: 'paste' },
-      { role: 'delete' },
-      { type: 'separator' },
-      { role: 'selectAll' },
+      { role: "undo" },
+      { role: "redo" },
+      { type: "separator" },
+      { role: "cut" },
+      { role: "copy" },
+      { role: "paste" },
+      { role: "delete" },
+      { type: "separator" },
+      { role: "selectAll" },
     ]
   };
-  mt.push(editMenu)
   const viewMenu: MenuItemConstructorOptions = {
-    label: 'View',
+    label: "View",
     submenu: [
       {
-        label: 'Back',
-        accelerator: 'CmdOrCtrl+[',
+        label: "Back",
+        accelerator: "CmdOrCtrl+[",
         click() {
           webContents.getFocusedWebContents()?.goBack();
         }
       },
       {
-        label: 'Forward',
-        accelerator: 'CmdOrCtrl+]',
+        label: "Forward",
+        accelerator: "CmdOrCtrl+]",
         click() {
-          webContents.getFocusedWebContents()?.goForward()
+          webContents.getFocusedWebContents()?.goForward();
         }
       },
       {
-        label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
+        label: "Reload",
+        accelerator: "CmdOrCtrl+R",
         click() {
-          windowManager.reload({ channel: "menu:reload" });
+          windowManager.reload();
         }
       },
-      { role: 'toggleDevTools' },
-      { type: 'separator' },
-      { role: 'resetZoom' },
-      { role: 'zoomIn' },
-      { role: 'zoomOut' },
-      { type: 'separator' },
-      { role: 'togglefullscreen' }
+      { role: "toggleDevTools" },
+      { type: "separator" },
+      { role: "resetZoom" },
+      { role: "zoomIn" },
+      { role: "zoomOut" },
+      { type: "separator" },
+      { role: "togglefullscreen" }
     ]
   };
-  mt.push(viewMenu)
-
   const helpMenu: MenuItemConstructorOptions = {
-    role: 'help',
+    role: "help",
     submenu: [
-      {
-        label: "License",
-        click: async () => {
-          shell.openExternal('https://k8slens.dev/licenses/eula.md');
-        },
-      },
-      {
-        label: "Community Slack",
-        click: async () => {
-          shell.openExternal(slackUrl);
-        },
-      },
-      {
-        label: 'Report an Issue',
-        click: async () => {
-          shell.openExternal(issuesTrackerUrl);
-        },
-      },
       {
         label: "What's new?",
         click() {
-          navigate(whatsNewURL())
+          navigate(whatsNewURL());
+        },
+      },
+      {
+        label: "Documentation",
+        click: async () => {
+          shell.openExternal(docsUrl);
+        },
+      },
+      {
+        label: "Support",
+        click: async () => {
+          shell.openExternal(supportUrl);
         },
       },
       ...ignoreOnMac([
         {
           label: "About Lens",
           click(menuItem: MenuItem, browserWindow: BrowserWindow) {
-            showAbout(browserWindow)
+            showAbout(browserWindow);
           }
         }
       ])
     ]
   };
+  // Prepare menu items order
+  const appMenu: Record<MenuTopId, MenuItemConstructorOptions> = {
+    mac: macAppMenu,
+    file: fileMenu,
+    edit: editMenu,
+    view: viewMenu,
+    help: helpMenu,
+  };
 
-  mt.push(helpMenu)
+  // Modify menu from extensions-api
+  menuRegistry.getItems().forEach(({ parentId, ...menuItem }) => {
+    try {
+      const topMenu = appMenu[parentId as MenuTopId].submenu as MenuItemConstructorOptions[];
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(mt));
+      topMenu.push(menuItem);
+    } catch (err) {
+      logger.error(`[MENU]: can't register menu item, parentId=${parentId}`, { menuItem });
+    }
+  });
+
+  if (!isMac) {
+    delete appMenu.mac;
+  }
+
+  const menu = Menu.buildFromTemplate(Object.values(appMenu));
+
+  Menu.setApplicationMenu(menu);
+
+  if (isTestEnv) {
+    // this is a workaround for the test environment (spectron) not being able to directly access
+    // the application menus (https://github.com/electron-userland/spectron/issues/21)
+    ipcMain.on("test-menu-item-click", (event: IpcMainEvent, ...names: string[]) => {
+      let menu: Menu = Menu.getApplicationMenu();
+      const parentLabels: string[] = [];
+      let menuItem: MenuItem;
+
+      for (const name of names) {
+        parentLabels.push(name);
+        menuItem = menu?.items?.find(item => item.label === name);
+
+        if (!menuItem) {
+          break;
+        }
+        menu = menuItem.submenu;
+      }
+
+      const menuPath: string = parentLabels.join(" -> ");
+
+      if (!menuItem) {
+        logger.info(`[MENU:test-menu-item-click] Cannot find menu item ${menuPath}`);
+
+        return;
+      }
+
+      const { enabled, visible, click } = menuItem;
+
+      if (enabled === false || visible === false || typeof click !== "function") {
+        logger.info(`[MENU:test-menu-item-click] Menu item ${menuPath} not clickable`);
+
+        return;
+      }
+
+      logger.info(`[MENU:test-menu-item-click] Menu item ${menuPath} click!`);
+      menuItem.click();
+    });
+  }
 }

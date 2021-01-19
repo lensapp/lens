@@ -4,7 +4,7 @@ import { Input } from "../../input";
 import { observable, autorun } from "mobx";
 import { observer, disposeOnUnmount } from "mobx-react";
 import { SubTitle } from "../../layout/sub-title";
-import { isRequired } from "../../input/input.validators";
+import { isRequired } from "../../input/input_validators";
 
 interface Props {
   cluster: Cluster;
@@ -28,12 +28,12 @@ export class ClusterNameSetting extends React.Component<Props> {
 
   onChange = (value: string) => {
     this.name = value;
-  }
+  };
 
   render() {
     return (
       <>
-        <SubTitle title="Cluster Name"/>
+        <SubTitle title="Cluster Name" />
         <p>Define cluster name.</p>
         <Input
           theme="round-black"

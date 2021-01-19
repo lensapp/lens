@@ -21,31 +21,36 @@ export interface ISelfSubjectReviewRule {
 }
 
 export class SelfSubjectRulesReview extends KubeObject {
-  static kind = "SelfSubjectRulesReview"
+  static kind = "SelfSubjectRulesReview";
+  static namespaced = false;
+  static apiBase = "/apis/authorization.k8s.io/v1/selfsubjectrulesreviews";
 
   spec: {
     // todo: add more types from api docs
     namespace?: string;
-  }
+  };
 
   status: {
     resourceRules: ISelfSubjectReviewRule[];
     nonResourceRules: ISelfSubjectReviewRule[];
     incomplete: boolean;
-  }
+  };
 
   getResourceRules() {
     const rules = this.status && this.status.resourceRules || [];
+
     return rules.map(rule => this.normalize(rule));
   }
 
   getNonResourceRules() {
     const rules = this.status && this.status.nonResourceRules || [];
+
     return rules.map(rule => this.normalize(rule));
   }
 
   protected normalize(rule: ISelfSubjectReviewRule): ISelfSubjectReviewRule {
     const { apiGroups = [], resourceNames = [], verbs = [], nonResourceURLs = [], resources = [] } = rule;
+
     return {
       apiGroups,
       nonResourceURLs,
@@ -54,15 +59,13 @@ export class SelfSubjectRulesReview extends KubeObject {
       resources: resources.map((resource, index) => {
         const apiGroup = apiGroups.length >= index + 1 ? apiGroups[index] : apiGroups.slice(-1)[0];
         const separator = apiGroup == "" ? "" : ".";
+
         return resource + separator + apiGroup;
       })
-    }
+    };
   }
 }
 
 export const selfSubjectRulesReviewApi = new SelfSubjectRulesReviewApi({
-  kind: SelfSubjectRulesReview.kind,
-  apiBase: "/apis/authorization.k8s.io/v1/selfsubjectrulesreviews",
-  isNamespaced: false,
   objectConstructor: SelfSubjectRulesReview,
 });

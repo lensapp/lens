@@ -1,18 +1,15 @@
-import "./volumes.scss"
+import "./volumes.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { PersistentVolume, persistentVolumeApi } from "../../api/endpoints/persistent-volume.api";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
-import { KubeObjectListLayout } from "../kube-object";
+import { PersistentVolume } from "../../api/endpoints/persistent-volume.api";
+import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
 import { IVolumesRouteParams } from "./volumes.route";
 import { stopPropagation } from "../../utils";
-import { getDetailsUrl } from "../../navigation";
 import { volumesStore } from "./volumes.store";
 import { pvcApi, storageClassApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -43,23 +40,26 @@ export class PersistentVolumes extends React.Component<Props> {
           (item: PersistentVolume) => item.getSearchFields(),
           (item: PersistentVolume) => item.getClaimRefName(),
         ]}
-        renderHeaderTitle={<Trans>Persistent Volumes</Trans>}
+        renderHeaderTitle="Persistent Volumes"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { title: <Trans>Storage Class</Trans>, className: "storageClass", sortBy: sortBy.storageClass },
-          { title: <Trans>Capacity</Trans>, className: "capacity", sortBy: sortBy.capacity },
-          { title: <Trans>Claim</Trans>, className: "claim" },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-          { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { className: "warning" },
+          { title: "Storage Class", className: "storageClass", sortBy: sortBy.storageClass },
+          { title: "Capacity", className: "capacity", sortBy: sortBy.capacity },
+          { title: "Claim", className: "claim" },
+          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Status", className: "status", sortBy: sortBy.status },
         ]}
         renderTableContents={(volume: PersistentVolume) => {
           const { claimRef, storageClassName } = volume.spec;
           const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
             name: storageClassName
           }));
+
           return [
             volume.getName(),
-            <Link to={storageClassDetailsUrl} onClick={stopPropagation}>
+            <KubeObjectStatusIcon key="icon" object={volume} />,
+            <Link key="link" to={storageClassDetailsUrl} onClick={stopPropagation}>
               {storageClassName}
             </Link>,
             volume.getCapacity(),
@@ -70,22 +70,9 @@ export class PersistentVolumes extends React.Component<Props> {
             ),
             volume.getAge(),
             { title: volume.getStatus(), className: volume.getStatus().toLowerCase() }
-          ]
-        }}
-        renderItemMenu={(item: PersistentVolume) => {
-          return <PersistentVolumeMenu object={item}/>
+          ];
         }}
       />
-    )
+    );
   }
 }
-
-export function PersistentVolumeMenu(props: KubeObjectMenuProps<PersistentVolume>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(persistentVolumeApi, {
-  Menu: PersistentVolumeMenu,
-})

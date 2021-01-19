@@ -7,7 +7,7 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class DeploymentStore extends KubeObjectStore<Deployment> {
-  api = deploymentApi
+  api = deploymentApi;
   @observable metrics: IPodMetrics = null;
 
   protected sortItems(items: Deployment[]) {
@@ -16,34 +16,36 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
     ], "desc");
   }
 
-  loadMetrics(deployment: Deployment) {
+  async loadMetrics(deployment: Deployment) {
     const pods = this.getChildPods(deployment);
-    return podsApi.getMetrics(pods, deployment.getNs(), "").then(metrics =>
-      this.metrics = metrics
-    );
+
+    this.metrics = await podsApi.getMetrics(pods, deployment.getNs(), "");
   }
 
   getStatuses(deployments?: Deployment[]) {
-    const status = { failed: 0, pending: 0, running: 0 }
+    const status = { failed: 0, pending: 0, running: 0 };
+
     deployments.forEach(deployment => {
       const pods = this.getChildPods(deployment);
+
       if (pods.some(pod => pod.getStatus() === PodStatus.FAILED)) {
-        status.failed++
+        status.failed++;
       }
       else if (pods.some(pod => pod.getStatus() === PodStatus.PENDING)) {
-        status.pending++
+        status.pending++;
       }
       else {
-        status.running++
+        status.running++;
       }
-    })
-    return status
+    });
+
+    return status;
   }
 
   getChildPods(deployment: Deployment) {
     return podsStore
       .getByLabel(deployment.getTemplateLabels())
-      .filter(pod => pod.getNs() === deployment.getNs())
+      .filter(pod => pod.getNs() === deployment.getNs());
   }
 
   reset() {
@@ -52,4 +54,4 @@ export class DeploymentStore extends KubeObjectStore<Deployment> {
 }
 
 export const deploymentStore = new DeploymentStore();
-apiManager.registerStore(deploymentApi, deploymentStore);
+apiManager.registerStore(deploymentStore);

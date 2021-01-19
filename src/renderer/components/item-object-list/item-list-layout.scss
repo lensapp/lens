@@ -15,12 +15,11 @@
       white-space: nowrap;
     }
 
-    .SearchInput {
-      label {
-        background: none;
-        border: none;
-        border-radius: $radius;
-        box-shadow: 0 0 0 1px $halfGray;
+    .NamespaceSelect {
+      .Select {
+        &__value-container {
+          margin-bottom: 0;
+        }
       }
     }
   }

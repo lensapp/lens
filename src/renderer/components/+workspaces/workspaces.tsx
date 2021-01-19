@@ -1,145 +1,169 @@
-import "./workspaces.scss"
+import "./workspaces.scss";
 import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { computed, observable, toJS } from "mobx";
-import { t, Trans } from "@lingui/macro";
 import { WizardLayout } from "../layout/wizard-layout";
 import { Workspace, WorkspaceId, workspaceStore } from "../../../common/workspace-store";
-import { v4 as uuid } from "uuid"
-import { _i18n } from "../../i18n";
+import { v4 as uuid } from "uuid";
 import { ConfirmDialog } from "../confirm-dialog";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { cssNames, prevDefault } from "../../utils";
 import { Button } from "../button";
-import { isRequired, Validator } from "../input/input.validators";
+import { isRequired, InputValidator } from "../input/input_validators";
+import { clusterStore } from "../../../common/cluster-store";
 
 @observer
 export class Workspaces extends React.Component {
   @observable editingWorkspaces = observable.map<WorkspaceId, Workspace>();
 
   @computed get workspaces(): Workspace[] {
+    const currentWorkspaces: Map<WorkspaceId, Workspace> = new Map();
+
+    workspaceStore.enabledWorkspacesList.forEach((w) => {
+      currentWorkspaces.set(w.id, w);
+    });
     const allWorkspaces = new Map([
-      ...workspaceStore.workspaces,
+      ...currentWorkspaces,
       ...this.editingWorkspaces,
     ]);
+
     return Array.from(allWorkspaces.values());
   }
 
   renderInfo() {
     return (
       <Fragment>
-        <h2><Trans>What is a Workspace?</Trans></h2>
+        <h2>What is a Workspace?</h2>
         <p className="info">
-          <Trans>Workspaces are used to organize number of clusters into logical groups.</Trans>
+          Workspaces are used to organize number of clusters into logical groups.
         </p>
         <p>
-          <Trans>A single workspaces contains a list of clusters and their full configuration.</Trans>
+          A single workspaces contains a list of clusters and their full configuration.
         </p>
       </Fragment>
-    )
+    );
   }
 
   saveWorkspace = (id: WorkspaceId) => {
-    const draft = toJS(this.editingWorkspaces.get(id));
-    const workspace = workspaceStore.saveWorkspace(draft);
-    if (workspace) {
+    const workspace = new Workspace(this.editingWorkspaces.get(id));
+
+    if (workspaceStore.getById(id)) {
+      workspaceStore.updateWorkspace(workspace);
+      this.clearEditing(id);
+
+      return;
+    }
+
+    if (workspaceStore.addWorkspace(workspace)) {
       this.clearEditing(id);
     }
-  }
+  };
 
   addWorkspace = () => {
     const workspaceId = uuid();
-    this.editingWorkspaces.set(workspaceId, {
+
+    this.editingWorkspaces.set(workspaceId, new Workspace({
       id: workspaceId,
       name: "",
-      description: "",
-    })
-  }
+      description: ""
+    }));
+  };
 
   editWorkspace = (id: WorkspaceId) => {
     const workspace = workspaceStore.getById(id);
+
     this.editingWorkspaces.set(id, toJS(workspace));
-  }
+  };
+
+  activateWorkspace = (id: WorkspaceId) => {
+    const clusterId = workspaceStore.getById(id).lastActiveClusterId;
+
+    workspaceStore.setActive(id);
+    clusterStore.setActive(clusterId);
+  };
 
   clearEditing = (id: WorkspaceId) => {
     this.editingWorkspaces.delete(id);
-  }
+  };
 
   removeWorkspace = (id: WorkspaceId) => {
     const workspace = workspaceStore.getById(id);
+
     ConfirmDialog.open({
       okButtonProps: {
-        label: _i18n._(t`Remove Workspace`),
+        label: `Remove Workspace`,
         primary: false,
         accent: true,
       },
       ok: () => {
         this.clearEditing(id);
-        workspaceStore.removeWorkspace(id);
+        workspaceStore.removeWorkspace(workspace);
       },
       message: (
         <div className="confirm flex column gaps">
           <p>
-            <Trans>Are you sure you want remove workspace <b>{workspace.name}</b>?</Trans>
+            Are you sure you want remove workspace <b>{workspace.name}</b>?
           </p>
           <p className="info">
-            <Trans>All clusters within workspace will be cleared as well</Trans>
+            All clusters within workspace will be cleared as well
           </p>
         </div>
       ),
-    })
-  }
+    });
+  };
 
   onInputKeypress = (evt: React.KeyboardEvent<any>, workspaceId: WorkspaceId) => {
-    if (evt.key == 'Enter') {
+    if (evt.key == "Enter") {
       // Trigget input validation
       evt.currentTarget.blur();
       evt.currentTarget.focus();
       this.saveWorkspace(workspaceId);
     }
-  }
+  };
 
   render() {
     return (
       <WizardLayout className="Workspaces" infoPanel={this.renderInfo()}>
         <h2>
-          <Trans>Workspaces</Trans>
+          Workspaces
         </h2>
         <div className="items flex column gaps">
-          {this.workspaces.map(({ id: workspaceId, name, description }) => {
+          {this.workspaces.map(({ id: workspaceId, name, description, ownerRef }) => {
             const isActive = workspaceStore.currentWorkspaceId === workspaceId;
             const isDefault = workspaceStore.isDefault(workspaceId);
             const isEditing = this.editingWorkspaces.has(workspaceId);
             const editingWorkspace = this.editingWorkspaces.get(workspaceId);
-            const className = cssNames("workspace flex gaps", {
+            const managed = !!ownerRef;
+            const className = cssNames("workspace flex gaps align-center", {
               active: isActive,
               editing: isEditing,
               default: isDefault,
             });
-            const existenceValidator: Validator = {
+            const existenceValidator: InputValidator = {
               message: () => `Workspace '${name}' already exists`,
               validate: value => !workspaceStore.getByName(value.trim())
-            }
+            };
+
             return (
-              <div key={workspaceId} className={className}>
+              <div key={workspaceId} className={cssNames(className)}>
                 {!isEditing && (
                   <Fragment>
                     <span className="name flex gaps align-center">
-                      <a href="#" onClick={prevDefault(() => workspaceStore.setActive(workspaceId))}>{name}</a>
-                      {isActive && <span> <Trans>(current)</Trans></span>}
+                      <a href="#" onClick={prevDefault(() => this.activateWorkspace(workspaceId))}>{name}</a>
+                      {isActive && <span> (current)</span>}
                     </span>
                     <span className="description">{description}</span>
-                    {!isDefault && (
+                    {!isDefault && !managed && (
                       <Fragment>
                         <Icon
                           material="edit"
-                          tooltip={<Trans>Edit</Trans>}
+                          tooltip="Edit"
                           onClick={() => this.editWorkspace(workspaceId)}
                         />
                         <Icon
                           material="delete"
-                          tooltip={<Trans>Delete</Trans>}
+                          tooltip="Delete"
                           onClick={() => this.removeWorkspace(workspaceId)}
                         />
                       </Fragment>
@@ -150,7 +174,7 @@ export class Workspaces extends React.Component {
                   <Fragment>
                     <Input
                       className="name"
-                      placeholder={_i18n._(t`Name`)}
+                      placeholder={`Name`}
                       value={editingWorkspace.name}
                       onChange={v => editingWorkspace.name = v}
                       onKeyPress={(e) => this.onInputKeypress(e, workspaceId)}
@@ -159,31 +183,31 @@ export class Workspaces extends React.Component {
                     />
                     <Input
                       className="description"
-                      placeholder={_i18n._(t`Description`)}
+                      placeholder={`Description`}
                       value={editingWorkspace.description}
                       onChange={v => editingWorkspace.description = v}
                       onKeyPress={(e) => this.onInputKeypress(e, workspaceId)}
                     />
                     <Icon
                       material="save"
-                      tooltip={<Trans>Save</Trans>}
+                      tooltip="Save"
                       onClick={() => this.saveWorkspace(workspaceId)}
                     />
                     <Icon
                       material="cancel"
-                      tooltip={<Trans>Cancel</Trans>}
+                      tooltip="Cancel"
                       onClick={() => this.clearEditing(workspaceId)}
                     />
                   </Fragment>
                 )}
               </div>
-            )
+            );
           })}
         </div>
         <Button
           primary
           className="box left"
-          label={<Trans>Add Workspace</Trans>}
+          label="Add Workspace"
           onClick={this.addWorkspace}
         />
       </WizardLayout>

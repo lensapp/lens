@@ -1,20 +1,17 @@
-import "./volume-claims.scss"
+import "./volume-claims.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { Trans } from "@lingui/macro";
 import { volumeClaimStore } from "./volume-claim.store";
-import { PersistentVolumeClaim, pvcApi } from "../../api/endpoints/persistent-volume-claims.api";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
+import { PersistentVolumeClaim } from "../../api/endpoints/persistent-volume-claims.api";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { KubeObjectListLayout } from "../kube-object";
+import { getDetailsUrl, KubeObjectListLayout } from "../kube-object";
 import { IVolumeClaimsRouteParams } from "./volume-claims.route";
 import { unitsToBytes } from "../../utils/convertMemory";
 import { stopPropagation } from "../../utils";
-import { getDetailsUrl } from "../../navigation";
 import { storageClassApi } from "../../api/endpoints";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -50,15 +47,16 @@ export class PersistentVolumeClaims extends React.Component<Props> {
           (item: PersistentVolumeClaim) => item.getSearchFields(),
           (item: PersistentVolumeClaim) => item.getPods(podsStore.items).map(pod => pod.getName()),
         ]}
-        renderHeaderTitle={<Trans>Persistent Volume Claims</Trans>}
+        renderHeaderTitle="Persistent Volume Claims"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Storage class</Trans>, className: "storageClass", sortBy: sortBy.storageClass },
-          { title: <Trans>Size</Trans>, className: "size", sortBy: sortBy.size },
-          { title: <Trans>Pods</Trans>, className: "pods", sortBy: sortBy.pods },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-          { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { className: "warning" },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Storage class", className: "storageClass", sortBy: sortBy.storageClass },
+          { title: "Size", className: "size", sortBy: sortBy.size },
+          { title: "Pods", className: "pods", sortBy: sortBy.pods },
+          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Status", className: "status", sortBy: sortBy.status },
         ]}
         renderTableContents={(pvc: PersistentVolumeClaim) => {
           const pods = pvc.getPods(podsStore.items);
@@ -66,10 +64,12 @@ export class PersistentVolumeClaims extends React.Component<Props> {
           const storageClassDetailsUrl = getDetailsUrl(storageClassApi.getUrl({
             name: storageClassName
           }));
+
           return [
             pvc.getName(),
+            <KubeObjectStatusIcon key="icon" object={pvc} />,
             pvc.getNs(),
-            <Link to={storageClassDetailsUrl} onClick={stopPropagation}>
+            <Link key="link" to={storageClassDetailsUrl} onClick={stopPropagation}>
               {storageClassName}
             </Link>,
             pvc.getStorage(),
@@ -80,22 +80,9 @@ export class PersistentVolumeClaims extends React.Component<Props> {
             )),
             pvc.getAge(),
             { title: pvc.getStatus(), className: pvc.getStatus().toLowerCase() },
-          ]
-        }}
-        renderItemMenu={(item: PersistentVolumeClaim) => {
-          return <PersistentVolumeClaimMenu object={item}/>
+          ];
         }}
       />
-    )
+    );
   }
 }
-
-export function PersistentVolumeClaimMenu(props: KubeObjectMenuProps<PersistentVolumeClaim>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews(pvcApi, {
-  Menu: PersistentVolumeClaimMenu,
-})

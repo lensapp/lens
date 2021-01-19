@@ -11,7 +11,8 @@ import { getHostedCluster } from "../common/cluster-store";
 @autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
   abstract api: KubeApi<T>;
-  public limit: number;
+  public readonly limit?: number;
+  public readonly bufferSize: number = 50000;
 
   constructor() {
     super();
@@ -19,8 +20,21 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     kubeWatchApi.addListener(this, this.onWatchApiEvent);
   }
 
+  get query(): IKubeApiQueryParams {
+    const { limit } = this;
+
+    if (!limit) {
+      return {};
+    }
+
+    return { limit };
+  }
+
+  getStatuses?(items: T[]): Record<string, number>;
+
   getAllByNs(namespace: string | string[], strict = false): T[] {
     const namespaces: string[] = [].concat(namespace);
+
     if (namespaces.length) {
       return this.items.filter(item => namespaces.includes(item.getNs()));
     } else if (!strict) {
@@ -32,7 +46,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     return this.items.find(item => {
       return item.getName() === name && (
         namespace ? item.getNs() === namespace : true
-      )
+      );
     });
   }
 
@@ -44,26 +58,26 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     if (Array.isArray(labels)) {
       return this.items.filter((item: T) => {
         const itemLabels = item.getLabels();
+
         return labels.every(label => itemLabels.includes(label));
-      })
+      });
     } else {
       return this.items.filter((item: T) => {
         const itemLabels = item.metadata.labels || {};
+
         return Object.entries(labels)
-          .every(([key, value]) => itemLabels[key] === value)
-      })
+          .every(([key, value]) => itemLabels[key] === value);
+      });
     }
   }
 
   protected async loadItems(allowedNamespaces?: string[]): Promise<T[]> {
     if (!this.api.isNamespaced || !allowedNamespaces) {
-      const { limit } = this;
-      const query: IKubeApiQueryParams = limit ? { limit } : {};
-      return this.api.list({}, query);
+      return this.api.list({}, this.query);
     } else {
       return Promise
         .all(allowedNamespaces.map(namespace => this.api.list({ namespace })))
-        .then(items => items.flat())
+        .then(items => items.flat());
     }
   }
 
@@ -75,9 +89,16 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   async loadAll() {
     this.isLoading = true;
     let items: T[];
+
     try {
-      const { isAdmin, allowedNamespaces } = getHostedCluster();
-      items = await this.loadItems(!isAdmin ? allowedNamespaces : null);
+      const { allowedNamespaces, accessibleNamespaces, isAdmin } = getHostedCluster();
+
+      if (isAdmin && accessibleNamespaces.length == 0) {
+        items = await this.loadItems();
+      } else {
+        items = await this.loadItems(allowedNamespaces);
+      }
+
       items = this.filterItemsOnLoad(items);
     } finally {
       if (items) {
@@ -97,17 +118,21 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   async load(params: { name: string; namespace?: string }): Promise<T> {
     const { name, namespace } = params;
     let item = this.getByName(name, namespace);
+
     if (!item) {
       item = await this.loadItem(params);
       const newItems = this.sortItems([...this.items, item]);
+
       this.items.replace(newItems);
     }
+
     return item;
   }
 
   @action
   async loadFromPath(resourcePath: string) {
     const { namespace, name } = KubeApi.parseApi(resourcePath);
+
     return this.load({ name, namespace });
   }
 
@@ -118,14 +143,18 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   async create(params: { name: string; namespace?: string }, data?: Partial<T>): Promise<T> {
     const newItem = await this.createItem(params, data);
     const items = this.sortItems([...this.items, newItem]);
+
     this.items.replace(items);
+
     return newItem;
   }
 
   async update(item: T, data: Partial<T>): Promise<T> {
     const newItem = await item.update<T>(data);
     const index = this.items.findIndex(item => item.getId() === newItem.getId());
+
     this.items.splice(index, 1, newItem);
+
     return newItem;
   }
 
@@ -144,8 +173,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   protected bindWatchEventsUpdater(delay = 1000) {
     return reaction(() => this.eventsBuffer.toJS()[0], this.updateFromEventsBuffer, {
-      delay: delay
-    })
+      delay
+    });
   }
 
   subscribe(apis = [this.api]) {
@@ -163,38 +192,33 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
       return;
     }
     // create latest non-observable copy of items to apply updates in one action (==single render)
-    let items = this.items.toJS();
+    const items = this.items.toJS();
 
-    this.eventsBuffer.clear().forEach(({ type, object }) => {
-      const { uid, selfLink } = object.metadata;
-      const index = items.findIndex(item => item.getId() === uid);
+    for (const {type, object} of this.eventsBuffer.clear()) {
+      const index = items.findIndex(item => item.getId() === object.metadata?.uid);
       const item = items[index];
-      const api = apiManager.getApi(selfLink);
+      const api = apiManager.getApiByKind(object.kind, object.apiVersion);
 
       switch (type) {
-      case "ADDED":
-      case "MODIFIED":
-        const newItem = new api.objectConstructor(object);
-        if (!item) {
-          items.push(newItem);
-        } else {
-          items.splice(index, 1, newItem);
-        }
-        break;
-      case "DELETED":
-        if (item) {
-          items.splice(index, 1);
-        }
-        break;
-      }
-    });
+        case "ADDED":
+        case "MODIFIED":
+          const newItem = new api.objectConstructor(object);
 
-    // slice to max allowed items
-    if (this.limit && items.length > this.limit) {
-      items = items.slice(-this.limit);
+          if (!item) {
+            items.push(newItem);
+          } else {
+            items.splice(index, 1, newItem);
+          }
+          break;
+        case "DELETED":
+          if (item) {
+            items.splice(index, 1);
+          }
+          break;
+      }
     }
 
     // update items
-    this.items.replace(this.sortItems(items));
+    this.items.replace(this.sortItems(items.slice(-this.bufferSize)));
   }
 }

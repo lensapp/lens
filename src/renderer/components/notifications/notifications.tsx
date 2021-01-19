@@ -1,39 +1,39 @@
-import './notifications.scss';
+import "./notifications.scss";
 
-import React from 'react'
+import React from "react";
 import { reaction } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react"
+import { disposeOnUnmount, observer } from "mobx-react";
 import { JsonApiErrorParsed } from "../../api/json-api";
 import { cssNames, prevDefault } from "../../utils";
-import { IMessage, INotification, notificationsStore, NotificationStatus } from "./notifications.store";
+import { Notification, NotificationMessage, notificationsStore, NotificationStatus } from "./notifications.store";
 import { Animate } from "../animate";
-import { Icon } from "../icon"
+import { Icon } from "../icon";
 
 @observer
 export class Notifications extends React.Component {
   public elem: HTMLElement;
 
-  static ok(message: IMessage) {
+  static ok(message: NotificationMessage) {
     notificationsStore.add({
-      message: message,
+      message,
       timeout: 2500,
       status: NotificationStatus.OK
-    })
+    });
   }
 
-  static error(message: IMessage) {
+  static error(message: NotificationMessage) {
     notificationsStore.add({
-      message: message,
+      message,
       timeout: 10000,
       status: NotificationStatus.ERROR
     });
   }
 
-  static info(message: IMessage, customOpts: Partial<INotification> = {}) {
+  static info(message: NotificationMessage, customOpts: Partial<Notification> = {}) {
     return notificationsStore.add({
       status: NotificationStatus.INFO,
       timeout: 0,
-      message: message,
+      message,
       ...customOpts,
     });
   }
@@ -53,45 +53,49 @@ export class Notifications extends React.Component {
     this.elem.scrollTo({
       top: this.elem.scrollHeight,
       behavior: "smooth"
-    })
+    });
   }
 
-  getMessage(notification: INotification) {
+  getMessage(notification: Notification) {
     let { message } = notification;
+
     if (message instanceof JsonApiErrorParsed) {
       message = message.toString();
     }
+
     return React.Children.toArray(message);
   }
 
   render() {
     const { notifications, remove, addAutoHideTimer, removeAutoHideTimer } = notificationsStore;
+
     return (
       <div className="Notifications flex column align-flex-end" ref={e => this.elem = e}>
         {notifications.map(notification => {
           const { id, status } = notification;
           const msgText = this.getMessage(notification);
+
           return (
             <Animate key={id}>
               <div
                 className={cssNames("notification flex align-center", status)}
-                onMouseLeave={() => addAutoHideTimer(notification)}
-                onMouseEnter={() => removeAutoHideTimer(notification)}>
+                onMouseLeave={() => addAutoHideTimer(id)}
+                onMouseEnter={() => removeAutoHideTimer(id)}>
                 <div className="box center">
-                  <Icon material="info_outline" />
+                  <Icon material="info_outline"/>
                 </div>
                 <div className="message box grow">{msgText}</div>
                 <div className="box center">
                   <Icon
                     material="close" className="close"
-                    onClick={prevDefault(() => remove(notification))}
+                    onClick={prevDefault(() => remove(id))}
                   />
                 </div>
               </div>
             </Animate>
-          )
+          );
         })}
       </div>
-    )
+    );
   }
 }

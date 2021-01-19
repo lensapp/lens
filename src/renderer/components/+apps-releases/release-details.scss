@@ -32,7 +32,6 @@
       border: 1px solid var(--drawerSubtitleBackground);
       border-radius: $radius;
       overflow: auto;
-      @include custom-scrollbar();
 
       .TableHead {
         border-bottom: none;

@@ -6,8 +6,8 @@ import React, { ReactNode } from "react";
 import { computed } from "mobx";
 import { observer } from "mobx-react";
 import { autobind, cssNames } from "../../utils";
-import ReactSelect, { ActionMeta, components, Props as ReactSelectProps, Styles } from "react-select"
-import Creatable, { CreatableProps } from "react-select/creatable"
+import ReactSelect, { ActionMeta, components, Props as ReactSelectProps, Styles } from "react-select";
+import Creatable, { CreatableProps } from "react-select/creatable";
 import { themeStore } from "../../theme.store";
 
 const { Menu } = components;
@@ -37,7 +37,7 @@ export class Select extends React.Component<SelectProps> {
     autoConvertOptions: true,
     menuPortalTarget: document.body,
     menuPlacement: "auto",
-  }
+  };
 
   @computed get theme() {
     return this.props.themeName || themeStore.activeTheme.type;
@@ -56,22 +56,27 @@ export class Select extends React.Component<SelectProps> {
 
   @computed get selectedOption() {
     const { value, isMulti } = this.props;
+
     if (isMulti) {
       return this.options.filter(opt => {
         const values = value ? [].concat(value) : [];
+
         return values.includes(opt) || values.includes(opt.value);
       });
     }
+
     return this.options.find(opt => opt === value || opt.value === value);
   }
 
   @computed get options(): SelectOption[] {
     const { autoConvertOptions, options } = this.props;
+
     if (autoConvertOptions && Array.isArray(options)) {
       return options.map(opt => {
         return this.isValidOption(opt) ? opt : { value: opt, label: String(opt) };
-      })
+      });
     }
+
     return options as SelectOption[];
   }
 
@@ -88,6 +93,7 @@ export class Select extends React.Component<SelectProps> {
       this.props.onKeyDown(evt);
     }
     const escapeKey = evt.nativeEvent.code === "Escape";
+
     if (escapeKey) evt.stopPropagation(); // don't close the <Dialog/>
   }
 
@@ -116,7 +122,8 @@ export class Select extends React.Component<SelectProps> {
           />
         ),
       }
-    }
+    };
+
     return isCreatable
       ? <Creatable {...selectProps}/>
       : <ReactSelect {...selectProps}/>;

@@ -3,14 +3,13 @@ import "./release-rollback-dialog.scss";
 import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { Dialog, DialogProps } from "../dialog";
 import { Wizard, WizardStep } from "../wizard";
 import { HelmRelease, helmReleasesApi, IReleaseRevision } from "../../api/endpoints/helm-releases.api";
 import { releaseStore } from "./release.store";
 import { Select, SelectOption } from "../select";
 import { Notifications } from "../notifications";
-import orderBy from "lodash/orderBy"
+import orderBy from "lodash/orderBy";
 
 interface Props extends DialogProps {
 }
@@ -41,15 +40,17 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
     this.isLoading = true;
     const currentRevision = this.release.getRevision();
     let releases = await helmReleasesApi.getHistory(this.release.getName(), this.release.getNs());
+
     releases = releases.filter(item => item.revision !== currentRevision); // remove current
     releases = orderBy(releases, "revision", "desc"); // sort
     this.revisions.replace(releases);
     this.revision = this.revisions[0];
     this.isLoading = false;
-  }
+  };
 
   rollback = async () => {
     const revisionNumber = this.revision.revision;
+
     try {
       await releaseStore.rollback(this.release.getName(), this.release.getNs(), revisionNumber);
       this.close();
@@ -60,16 +61,18 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
 
   close = () => {
     ReleaseRollbackDialog.close();
-  }
+  };
 
   renderContent() {
     const { revision, revisions } = this;
+
     if (!revision) {
-      return <p><Trans>No revisions to rollback.</Trans></p>
+      return <p>No revisions to rollback.</p>;
     }
+
     return (
       <div className="flex gaps align-center">
-        <b><Trans>Revision</Trans></b>
+        <b>Revision</b>
         <Select
           themeName="light"
           value={revision}
@@ -78,13 +81,14 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
           onChange={({ value }: SelectOption<IReleaseRevision>) => this.revision = value}
         />
       </div>
-    )
+    );
   }
 
   render() {
     const { ...dialogProps } = this.props;
     const releaseName = this.release ? this.release.getName() : "";
-    const header = <h5><Trans>Rollback <b>{releaseName}</b></Trans></h5>
+    const header = <h5>Rollback <b>{releaseName}</b></h5>;
+
     return (
       <Dialog
         {...dialogProps}
@@ -96,7 +100,7 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
         <Wizard header={header} done={this.close}>
           <WizardStep
             scrollable={false}
-            nextLabel={<Trans>Rollback</Trans>}
+            nextLabel="Rollback"
             next={this.rollback}
             loading={this.isLoading}
           >
@@ -104,6 +108,6 @@ export class ReleaseRollbackDialog extends React.Component<Props> {
           </WizardStep>
         </Wizard>
       </Dialog>
-    )
+    );
   }
 }

@@ -10,10 +10,12 @@ export enum NamespaceStatus {
 @autobind()
 export class Namespace extends KubeObject {
   static kind = "Namespace";
+  static namespaced = false;
+  static apiBase = "/api/v1/namespaces";
 
   status?: {
     phase: string;
-  }
+  };
 
   getStatus() {
     return this.status ? this.status.phase : "-";
@@ -21,8 +23,5 @@ export class Namespace extends KubeObject {
 }
 
 export const namespacesApi = new KubeApi({
-  kind: Namespace.kind,
-  apiBase: "/api/v1/namespaces",
-  isNamespaced: false,
   objectConstructor: Namespace,
 });

@@ -8,7 +8,9 @@ export function toCamelCase(obj: Record<string, any>): any {
   else if (isPlainObject(obj)) {
     return Object.keys(obj).reduce((result, key) => {
       const value = obj[key];
+
       result[camelCase(key)] = typeof value === "object" ? toCamelCase(value) : value;
+
       return result;
     }, {} as any);
   }

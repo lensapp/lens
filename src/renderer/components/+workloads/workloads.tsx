@@ -1,97 +1,102 @@
-import "./workloads.scss"
+import "./workloads.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Redirect, Route, Switch } from "react-router";
-import { RouteComponentProps } from "react-router-dom";
-import { Trans } from "@lingui/macro";
-import { TabLayout, TabRoute } from "../layout/tab-layout";
+import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { WorkloadsOverview } from "../+workloads-overview/overview";
-import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, statefulSetsRoute, statefulSetsURL, workloadsURL } from "./workloads.route";
-import { namespaceStore } from "../+namespaces/namespace.store";
+import { cronJobsRoute, cronJobsURL, daemonSetsRoute, daemonSetsURL, deploymentsRoute, deploymentsURL, jobsRoute, jobsURL, overviewRoute, overviewURL, podsRoute, podsURL, replicaSetsRoute, replicaSetsURL, statefulSetsRoute, statefulSetsURL } from "./workloads.route";
+import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { Pods } from "../+workloads-pods";
 import { Deployments } from "../+workloads-deployments";
 import { DaemonSets } from "../+workloads-daemonsets";
 import { StatefulSets } from "../+workloads-statefulsets";
 import { Jobs } from "../+workloads-jobs";
 import { CronJobs } from "../+workloads-cronjobs";
-import { isAllowedResource } from "../../../common/rbac"
-
-interface Props extends RouteComponentProps {
-}
+import { isAllowedResource } from "../../../common/rbac";
+import { ReplicaSets } from "../+workloads-replicasets";
 
 @observer
-export class Workloads extends React.Component<Props> {
-  static get tabRoutes(): TabRoute[] {
-    const query = namespaceStore.getContextParams();
-    const routes: TabRoute[] = [
+export class Workloads extends React.Component {
+  static get tabRoutes(): TabLayoutRoute[] {
+    const query = namespaceUrlParam.toObjectParam();
+    const routes: TabLayoutRoute[] = [
       {
-        title: <Trans>Overview</Trans>,
+        title: "Overview",
         component: WorkloadsOverview,
         url: overviewURL({ query }),
-        path: overviewRoute.path
+        routePath: overviewRoute.path.toString()
       }
-    ]
+    ];
+
     if (isAllowedResource("pods")) {
       routes.push({
-        title: <Trans>Pods</Trans>,
+        title: "Pods",
         component: Pods,
         url: podsURL({ query }),
-        path: podsRoute.path
-      })
+        routePath: podsRoute.path.toString()
+      });
     }
+
     if (isAllowedResource("deployments")) {
       routes.push({
-        title: <Trans>Deployments</Trans>,
+        title: "Deployments",
         component: Deployments,
         url: deploymentsURL({ query }),
-        path: deploymentsRoute.path,
-      })
+        routePath: deploymentsRoute.path.toString(),
+      });
     }
+
     if (isAllowedResource("daemonsets")) {
       routes.push({
-        title: <Trans>DaemonSets</Trans>,
+        title: "DaemonSets",
         component: DaemonSets,
         url: daemonSetsURL({ query }),
-        path: daemonSetsRoute.path,
-      })
+        routePath: daemonSetsRoute.path.toString(),
+      });
     }
+
     if (isAllowedResource("statefulsets")) {
       routes.push({
-        title: <Trans>StatefulSets</Trans>,
+        title: "StatefulSets",
         component: StatefulSets,
         url: statefulSetsURL({ query }),
-        path: statefulSetsRoute.path,
-      })
+        routePath: statefulSetsRoute.path.toString(),
+      });
     }
+
+    if (isAllowedResource("replicasets")) {
+      routes.push({
+        title: "ReplicaSets",
+        component: ReplicaSets,
+        url: replicaSetsURL({ query }),
+        routePath: replicaSetsRoute.path.toString(),
+      });
+    }
+
     if (isAllowedResource("jobs")) {
       routes.push({
-        title: <Trans>Jobs</Trans>,
+        title: "Jobs",
         component: Jobs,
         url: jobsURL({ query }),
-        path: jobsRoute.path,
-      })
+        routePath: jobsRoute.path.toString(),
+      });
     }
+
     if (isAllowedResource("cronjobs")) {
       routes.push({
-        title: <Trans>CronJobs</Trans>,
+        title: "CronJobs",
         component: CronJobs,
         url: cronJobsURL({ query }),
-        path: cronJobsRoute.path,
-      })
+        routePath: cronJobsRoute.path.toString(),
+      });
     }
+
     return routes;
   }
 
   render() {
-    const tabRoutes = Workloads.tabRoutes;
     return (
-      <TabLayout className="Workloads" tabs={tabRoutes}>
-        <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={workloadsURL({ query: namespaceStore.getContextParams() })}/>
-        </Switch>
-      </TabLayout>
-    )
+      <TabLayout className="Workloads" tabs={Workloads.tabRoutes}/>
+    );
   }
 }

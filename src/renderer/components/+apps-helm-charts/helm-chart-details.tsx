@@ -2,8 +2,7 @@ import "./helm-chart-details.scss";
 
 import React, { Component } from "react";
 import { HelmChart, helmChartsApi } from "../../api/endpoints/helm-charts.api";
-import { t, Trans } from "@lingui/macro";
-import { observable, toJS } from "mobx";
+import { observable, autorun } from "mobx";
 import { observer } from "mobx-react";
 import { Drawer, DrawerItem } from "../drawer";
 import { autobind, stopPropagation } from "../../utils";
@@ -14,7 +13,6 @@ import { Button } from "../button";
 import { Select, SelectOption } from "../select";
 import { createInstallChartTab } from "../dock/install-chart.store";
 import { Badge } from "../badge";
-import { _i18n } from "../../i18n";
 
 interface Props {
   chart: HelmChart;
@@ -30,22 +28,23 @@ export class HelmChartDetails extends Component<Props> {
 
   private chartPromise: CancelablePromise<{ readme: string; versions: HelmChart[] }>;
 
-  async componentDidMount() {
-    const { chart: { name, repo, version } } = this.props
-
-    try {
-      const { readme, versions } = await (this.chartPromise = helmChartsApi.get(repo, name, version))
-      this.readme = readme
-      this.chartVersions = versions
-      this.selectedChart = versions[0]
-    } catch (error) {
-      this.error = error
-    }
-  }
-
   componentWillUnmount() {
     this.chartPromise?.cancel();
   }
+
+  chartUpdater = autorun(() => {
+    this.selectedChart = null;
+    const { chart: { name, repo, version } } = this.props;
+
+    helmChartsApi.get(repo, name, version).then(result => {
+      this.readme = result.readme;
+      this.chartVersions = result.versions;
+      this.selectedChart = result.versions[0];
+    },
+    error => {
+      this.error = error;
+    });
+  });
 
   @autobind()
   async onVersionChange({ value: version }: SelectOption) {
@@ -55,7 +54,8 @@ export class HelmChartDetails extends Component<Props> {
     try {
       this.chartPromise?.cancel();
       const { chart: { name, repo } } = this.props;
-      const { readme } = await (this.chartPromise = helmChartsApi.get(repo, name, version))
+      const { readme } = await (this.chartPromise = helmChartsApi.get(repo, name, version));
+
       this.readme = readme;
     } catch (error) {
       this.error = error;
@@ -65,12 +65,13 @@ export class HelmChartDetails extends Component<Props> {
   @autobind()
   install() {
     createInstallChartTab(this.selectedChart);
-    this.props.hideDetails()
+    this.props.hideDetails();
   }
 
   renderIntroduction() {
     const { selectedChart, chartVersions, onVersionChange } = this;
     const placeholder = require("./helm-placeholder.svg");
+
     return (
       <div className="introduction flex align-flex-start">
         <img
@@ -81,9 +82,9 @@ export class HelmChartDetails extends Component<Props> {
         <div className="intro-contents box grow">
           <div className="description flex align-center justify-space-between">
             {selectedChart.getDescription()}
-            <Button primary label={_i18n._(t`Install`)} onClick={this.install} />
+            <Button primary label={`Install`} onClick={this.install} />
           </div>
-          <DrawerItem name={_i18n._(t`Version`)} className="version" onClick={stopPropagation}>
+          <DrawerItem name={`Version`} className="version" onClick={stopPropagation}>
             <Select
               themeName="outlined"
               menuPortalTarget={null}
@@ -92,16 +93,16 @@ export class HelmChartDetails extends Component<Props> {
               onChange={onVersionChange}
             />
           </DrawerItem>
-          <DrawerItem name={_i18n._(t`Home`)}>
-            <a href={selectedChart.getHome()} target="_blank">{selectedChart.getHome()}</a>
+          <DrawerItem name={`Home`}>
+            <a href={selectedChart.getHome()} target="_blank" rel="noreferrer">{selectedChart.getHome()}</a>
           </DrawerItem>
-          <DrawerItem name={_i18n._(t`Maintainers`)} className="maintainers">
+          <DrawerItem name={`Maintainers`} className="maintainers">
             {selectedChart.getMaintainers().map(({ name, email, url }) =>
-              <a key={name} href={url || `mailto:${email}`} target="_blank">{name}</a>
+              <a key={name} href={url || `mailto:${email}`} target="_blank" rel="noreferrer">{name}</a>
             )}
           </DrawerItem>
           {selectedChart.getKeywords().length > 0 && (
-            <DrawerItem name={_i18n._(t`Keywords`)} labelsOnly>
+            <DrawerItem name={`Keywords`} labelsOnly>
               {selectedChart.getKeywords().map(key => <Badge key={key} label={key} />)}
             </DrawerItem>
           )}
@@ -112,14 +113,14 @@ export class HelmChartDetails extends Component<Props> {
 
   renderReadme() {
     if (this.readme === null) {
-      return <Spinner center />
+      return <Spinner center />;
     }
 
     return (
       <div className="chart-description">
         <MarkdownViewer markdown={this.readme} />
       </div>
-    )
+    );
   }
 
   renderContent() {
@@ -132,7 +133,7 @@ export class HelmChartDetails extends Component<Props> {
         <div className="box grow">
           <p className="error">{this.error}</p>
         </div>
-      )
+      );
     }
 
     return (
@@ -145,7 +146,8 @@ export class HelmChartDetails extends Component<Props> {
 
   render() {
     const { chart, hideDetails } = this.props;
-    const title = chart ? <Trans>Chart: {chart.getFullName()}</Trans> : "";
+    const title = chart ? <>Chart: {chart.getFullName()}</> : "";
+
     return (
       <Drawer
         className="HelmChartDetails"

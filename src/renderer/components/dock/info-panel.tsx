@@ -3,7 +3,6 @@ import "./info-panel.scss";
 import React, { Component, ReactNode } from "react";
 import { computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";
@@ -13,7 +12,7 @@ import { Notifications } from "../notifications";
 
 interface Props extends OptionalProps {
   tabId: TabId;
-  submit: () => Promise<ReactNode | string>;
+  submit?: () => Promise<ReactNode | string>;
 }
 
 interface OptionalProps {
@@ -23,113 +22,112 @@ interface OptionalProps {
   submitLabel?: ReactNode;
   submittingMessage?: ReactNode;
   disableSubmit?: boolean;
+  showButtons?: boolean
   showSubmitClose?: boolean;
   showInlineInfo?: boolean;
   showNotifications?: boolean;
+  showStatusPanel?: boolean;
 }
 
 @observer
 export class InfoPanel extends Component<Props> {
   static defaultProps: OptionalProps = {
-    submitLabel: <Trans>Submit</Trans>,
-    submittingMessage: <Trans>Submitting..</Trans>,
+    submitLabel: "Submit",
+    submittingMessage: "Submitting..",
+    showButtons: true,
     showSubmitClose: true,
     showInlineInfo: true,
     showNotifications: true,
-  }
+    showStatusPanel: true,
+  };
 
-  @observable.ref result: ReactNode;
   @observable error = "";
   @observable waiting = false;
 
   componentDidMount() {
     disposeOnUnmount(this, [
       reaction(() => this.props.tabId, () => {
-        this.result = ""
-        this.error = ""
-        this.waiting = false
+        this.waiting = false;
       })
-    ])
+    ]);
   }
 
   @computed get errorInfo() {
-    return this.error || this.props.error;
+    return this.props.error;
   }
 
   submit = async () => {
     const { showNotifications } = this.props;
-    this.result = "";
-    this.error = "";
+
     this.waiting = true;
+
     try {
-      this.result = await this.props.submit()
-      if (showNotifications) Notifications.ok(this.result);
+      const result = await this.props.submit();
+
+      if (showNotifications) Notifications.ok(result);
     } catch (error) {
-      this.error = error.toString();
-      if (showNotifications) Notifications.error(this.error);
+      if (showNotifications) Notifications.error(error.toString());
     } finally {
-      this.waiting = false
+      this.waiting = false;
     }
-  }
+  };
 
   submitAndClose = async () => {
     await this.submit();
     this.close();
-  }
+  };
 
   close = () => {
     dockStore.closeTab(this.props.tabId);
-  }
+  };
 
-  renderInfo() {
-    if (!this.props.showInlineInfo) {
+  renderErrorIcon() {
+    if (!this.props.showInlineInfo || !this.errorInfo) {
       return;
     }
-    const { result, errorInfo } = this;
+
     return (
-      <>
-        {result && (
-          <div className="success flex align-center">
-            <Icon material="done" />
-            <span>{result}</span>
-          </div>
-        )}
-        {errorInfo && (
-          <div className="error flex align-center">
-            <Icon material="error_outline" />
-            <span>{errorInfo}</span>
-          </div>
-        )}
-      </>
-    )
+      <div className="error">
+        <Icon material="error_outline" tooltip={this.errorInfo}/>
+      </div>
+    );
   }
 
   render() {
-    const { className, controls, submitLabel, disableSubmit, error, submittingMessage, showSubmitClose } = this.props;
+    const { className, controls, submitLabel, disableSubmit, error, submittingMessage, showButtons, showSubmitClose, showStatusPanel } = this.props;
     const { submit, close, submitAndClose, waiting } = this;
     const isDisabled = !!(disableSubmit || waiting || error);
+
     return (
       <div className={cssNames("InfoPanel flex gaps align-center", className)}>
         <div className="controls">
           {controls}
         </div>
-        <div className="info flex gaps align-center">
-          {waiting ? <><Spinner /> {submittingMessage}</> : this.renderInfo()}
-        </div>
-        <Button plain label={<Trans>Cancel</Trans>} onClick={close} />
-        <Button
-          primary active
-          label={submitLabel}
-          onClick={submit}
-          disabled={isDisabled}
-        />
-        {showSubmitClose && (
-          <Button
-            primary active
-            label={<Trans>{submitLabel} & Close</Trans>}
-            onClick={submitAndClose}
-            disabled={isDisabled}
-          />
+        {showStatusPanel && (
+          <div className="flex gaps align-center">
+            {waiting ? <><Spinner /> {submittingMessage}</> : this.renderErrorIcon()}
+          </div>
+        )}
+        {showButtons && (
+          <>
+            <Button plain label="Cancel" onClick={close} />
+            <Button
+              active
+              outlined={showSubmitClose}
+              primary={!showSubmitClose}// one button always should be primary (blue)
+              label={submitLabel}
+              onClick={submit}
+              disabled={isDisabled}
+            />
+            {showSubmitClose && (
+              <Button
+                primary active
+                label={`${submitLabel} & Close`}
+                onClick={submitAndClose}
+                disabled={isDisabled}
+              />
+            )}
+          </>
         )}
       </div>
     );

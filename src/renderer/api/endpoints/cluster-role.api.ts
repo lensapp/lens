@@ -4,12 +4,11 @@ import { KubeApi } from "../kube-api";
 
 @autobind()
 export class ClusterRole extends Role {
-  static kind = "ClusterRole"
+  static kind = "ClusterRole";
+  static namespaced = false;
+  static apiBase = "/apis/rbac.authorization.k8s.io/v1/clusterroles";
 }
 
 export const clusterRoleApi = new KubeApi({
-  kind: ClusterRole.kind,
-  apiBase: "/apis/rbac.authorization.k8s.io/v1/clusterroles",
-  isNamespaced: false,
   objectConstructor: ClusterRole,
 });

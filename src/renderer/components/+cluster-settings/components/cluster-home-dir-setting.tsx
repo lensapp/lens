@@ -27,7 +27,7 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
 
   onChange = (value: string) => {
     this.directory = value;
-  }
+  };
 
   render() {
     return (
@@ -41,10 +41,10 @@ export class ClusterHomeDirSetting extends React.Component<Props> {
           onBlur={this.save}
           placeholder="$HOME"
         />
-        <span className="hint">
+        <small className="hint">
           An explicit start path where the terminal will be launched,{" "}
           this is used as the current working directory (cwd) for the shell process.
-        </span>
+        </small>
       </>
     );
   }

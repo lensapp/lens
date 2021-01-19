@@ -2,14 +2,16 @@ import { KubeObject } from "../kube-object";
 import { KubeApi } from "../kube-api";
 
 export class Role extends KubeObject {
-  static kind = "Role"
+  static kind = "Role";
+  static namespaced = true;
+  static apiBase = "/apis/rbac.authorization.k8s.io/v1/roles";
 
   rules: {
     verbs: string[];
     apiGroups: string[];
     resources: string[];
     resourceNames?: string[];
-  }[]
+  }[];
 
   getRules() {
     return this.rules || [];
@@ -17,8 +19,5 @@ export class Role extends KubeObject {
 }
 
 export const roleApi = new KubeApi({
-  kind: Role.kind,
-  apiBase: "/apis/rbac.authorization.k8s.io/v1/roles",
-  isNamespaced: true,
   objectConstructor: Role,
 });

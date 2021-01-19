@@ -1,0 +1,74 @@
+.PageLayout.Extensions {
+  $spacing: $padding * 2;
+  --width: 50%;
+
+  h2 {
+    margin-bottom: $padding;
+  }
+
+  .no-extensions {
+    --flex-gap: #{$padding};
+    padding: $padding;
+
+    code {
+      font-size: $font-size-small;
+    }
+  }
+
+  .install-extension {
+    margin: $spacing * 2 0;
+  }
+
+  .installed-extensions {
+    --flex-gap: #{$spacing};
+
+    .extension {
+      padding: $padding $spacing;
+      background: $layoutBackground;
+      border-radius: $radius;
+
+      .actions > button:not(:last-child) {
+        margin-right: $spacing / 2;
+      }
+
+      h5, h6 {
+        color: var(--textColorSecondary);
+      }
+    }
+
+    > .spinner-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .SearchInput {
+    --spacing: 10px;
+
+    max-width: none;
+  }
+}
+
+.InstallingExtensionNotification {
+  .remove-folder-warning {
+    font-size: $font-size-small;
+    font-style: italic;
+    opacity: .8;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    code {
+      display: inline;
+      color: inherit;
+    }
+  }
+
+  .Button {
+    background-color: unset;
+    border: 1px solid currentColor;
+    box-shadow: none !important;
+  }
+}

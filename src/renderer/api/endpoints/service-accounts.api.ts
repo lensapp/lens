@@ -5,13 +5,15 @@ import { KubeApi } from "../kube-api";
 @autobind()
 export class ServiceAccount extends KubeObject {
   static kind = "ServiceAccount";
+  static namespaced = true;
+  static apiBase = "/api/v1/serviceaccounts";
 
   secrets?: {
     name: string;
-  }[]
+  }[];
   imagePullSecrets?: {
     name: string;
-  }[]
+  }[];
 
   getSecrets() {
     return this.secrets || [];
@@ -23,8 +25,5 @@ export class ServiceAccount extends KubeObject {
 }
 
 export const serviceAccountsApi = new KubeApi<ServiceAccount>({
-  kind: ServiceAccount.kind,
-  apiBase: "/api/v1/serviceaccounts",
-  isNamespaced: true,
   objectConstructor: ServiceAccount,
 });

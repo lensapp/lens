@@ -1,26 +1,29 @@
-import path from "path"
-import Config from "conf"
-import { Options as ConfOptions } from "conf/dist/source/types"
-import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron"
-import { action, observable, reaction, runInAction, toJS, when } from "mobx";
+import path from "path";
+import Config from "conf";
+import { Options as ConfOptions } from "conf/dist/source/types";
+import { app, ipcMain, IpcMainEvent, ipcRenderer, IpcRendererEvent, remote } from "electron";
+import { IReactionOptions, observable, reaction, runInAction, when } from "mobx";
 import Singleton from "./utils/singleton";
 import { getAppVersion } from "./utils/app-version";
 import logger from "../main/logger";
-import { broadcastIpc, IpcBroadcastParams } from "./ipc";
+import { broadcastMessage, subscribeToBroadcast, unsubscribeFromBroadcast } from "./ipc";
 import isEqual from "lodash/isEqual";
 
 export interface BaseStoreParams<T = any> extends ConfOptions<T> {
   autoLoad?: boolean;
   syncEnabled?: boolean;
+  syncOptions?: IReactionOptions;
 }
 
-export class BaseStore<T = any> extends Singleton {
+/**
+ * Note: T should only contain base JSON serializable types.
+ */
+export abstract class BaseStore<T = any> extends Singleton {
   protected storeConfig: Config<T>;
   protected syncDisposers: Function[] = [];
 
   whenLoaded = when(() => this.isLoaded);
   @observable isLoaded = false;
-  @observable protected data: T;
 
   protected constructor(protected params: BaseStoreParams) {
     super();
@@ -28,7 +31,7 @@ export class BaseStore<T = any> extends Singleton {
       autoLoad: false,
       syncEnabled: true,
       ...params,
-    }
+    };
     this.init();
   }
 
@@ -36,14 +39,23 @@ export class BaseStore<T = any> extends Singleton {
     return path.basename(this.storeConfig.path);
   }
 
-  get syncChannel() {
-    return `store-sync:${this.name}`
+  protected get syncRendererChannel() {
+    return `store-sync-renderer:${this.path}`;
+  }
+
+  protected get syncMainChannel() {
+    return `store-sync-main:${this.path}`;
+  }
+
+  get path() {
+    return this.storeConfig.path;
   }
 
   protected async init() {
     if (this.params.autoLoad) {
       await this.load();
     }
+
     if (this.params.syncEnabled) {
       await this.whenLoaded;
       this.enableSync();
@@ -52,19 +64,24 @@ export class BaseStore<T = any> extends Singleton {
 
   async load() {
     const { autoLoad, syncEnabled, ...confOptions } = this.params;
+
     this.storeConfig = new Config({
       ...confOptions,
       projectName: "lens",
       projectVersion: getAppVersion(),
-      cwd: (app || remote.app).getPath("userData"),
+      cwd: this.cwd(),
     });
-    logger.info(`[STORE]: LOADED from ${this.storeConfig.path}`);
+    logger.info(`[STORE]: LOADED from ${this.path}`);
     this.fromStore(this.storeConfig.store);
     this.isLoaded = true;
   }
 
+  protected cwd() {
+    return (app || remote.app).getPath("userData");
+  }
+
   protected async saveToFile(model: T) {
-    logger.info(`[STORE]: SAVING ${this.name}`);
+    logger.info(`[STORE]: SAVING ${this.path}`);
     // todo: update when fixed https://github.com/sindresorhus/conf/issues/114
     Object.entries(model).forEach(([key, value]) => {
       this.storeConfig.set(key, value);
@@ -73,28 +90,39 @@ export class BaseStore<T = any> extends Singleton {
 
   enableSync() {
     this.syncDisposers.push(
-      reaction(() => this.toJSON(), model => this.onModelChange(model)),
+      reaction(() => this.toJSON(), model => this.onModelChange(model), this.params.syncOptions),
     );
+
     if (ipcMain) {
       const callback = (event: IpcMainEvent, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from renderer`, { model });
         this.onSync(model);
       };
-      ipcMain.on(this.syncChannel, callback);
-      this.syncDisposers.push(() => ipcMain.off(this.syncChannel, callback));
+
+      subscribeToBroadcast(this.syncMainChannel, callback);
+      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncMainChannel, callback));
     }
+
     if (ipcRenderer) {
       const callback = (event: IpcRendererEvent, model: T) => {
         logger.silly(`[STORE]: SYNC ${this.name} from main`, { model });
-        this.onSync(model);
+        this.onSyncFromMain(model);
       };
-      ipcRenderer.on(this.syncChannel, callback);
-      this.syncDisposers.push(() => ipcRenderer.off(this.syncChannel, callback));
+
+      subscribeToBroadcast(this.syncRendererChannel, callback);
+      this.syncDisposers.push(() => unsubscribeFromBroadcast(this.syncRendererChannel, callback));
     }
   }
 
+  protected onSyncFromMain(model: T) {
+    this.applyWithoutSync(() => {
+      this.onSync(model);
+    });
+  }
+
   unregisterIpcListener() {
-    ipcRenderer.removeAllListeners(this.syncChannel)
+    ipcRenderer.removeAllListeners(this.syncMainChannel);
+    ipcRenderer.removeAllListeners(this.syncRendererChannel);
   }
 
   disableSync() {
@@ -105,6 +133,7 @@ export class BaseStore<T = any> extends Singleton {
   protected applyWithoutSync(callback: () => void) {
     this.disableSync();
     runInAction(callback);
+
     if (this.params.syncEnabled) {
       this.enableSync();
     }
@@ -120,52 +149,25 @@ export class BaseStore<T = any> extends Singleton {
   protected async onModelChange(model: T) {
     if (ipcMain) {
       this.saveToFile(model); // save config file
-      this.syncToWebViews(model); // send update to renderer views
-    }
-    // send "update-request" to main-process
-    if (ipcRenderer) {
-      ipcRenderer.send(this.syncChannel, model);
+      broadcastMessage(this.syncRendererChannel, model);
+    } else {
+      broadcastMessage(this.syncMainChannel, model);
     }
   }
 
-  protected async syncToWebViews(model: T) {
-    const msg: IpcBroadcastParams = {
-      channel: this.syncChannel,
-      args: [model],
-    }
-    broadcastIpc(msg); // send to all windows (BrowserWindow, webContents)
-    const frames = await this.getSubFrames();
-    frames.forEach(frameId => {
-      // send to all sub-frames (e.g. cluster-view managed in iframe)
-      broadcastIpc({
-        ...msg,
-        frameId: frameId,
-        frameOnly: true,
-      });
-    });
-  }
+  /**
+   * fromStore is called internally when a child class syncs with the file
+   * system.
+   * @param data the parsed information read from the stored JSON file
+   */
+  protected abstract fromStore(data: T): void;
 
-  // todo: refactor?
-  protected async getSubFrames(): Promise<number[]> {
-    const subFrames: number[] = [];
-    const { clusterStore } = await import("./cluster-store");
-    clusterStore.clustersList.forEach(cluster => {
-      if (cluster.frameId) {
-        subFrames.push(cluster.frameId)
-      }
-    });
-    return subFrames;
-  }
-
-  @action
-  protected fromStore(data: T) {
-    this.data = data;
-  }
-
-  // todo: use "serializr" ?
-  toJSON(): T {
-    return toJS(this.data, {
-      recurseEverything: true,
-    })
-  }
+  /**
+   * toJSON is called when syncing the store to the filesystem. It should
+   * produce a JSON serializable object representaion of the current state.
+   *
+   * It is recommended that a round trip is valid. Namely, calling
+   * `this.fromStore(this.toJSON())` shouldn't change the state.
+   */
+  abstract toJSON(): T;
 }

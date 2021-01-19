@@ -1,26 +1,27 @@
-import "./clusters-menu.scss"
-import { remote } from "electron"
+import "./clusters-menu.scss";
+
 import React from "react";
+import { remote } from "electron";
+import { requestMain } from "../../../common/ipc";
+import type { Cluster } from "../../../main/cluster";
+import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
-import { _i18n } from "../../i18n";
-import { t, Trans } from "@lingui/macro";
 import { userStore } from "../../../common/user-store";
 import { ClusterId, clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
-import { cssNames, IClassName, autobind } from "../../utils";
+import { autobind, cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
-import { navigate } from "../../navigation";
+import { isActiveRoute, navigate } from "../../navigation";
 import { addClusterURL } from "../+add-cluster";
 import { clusterSettingsURL } from "../+cluster-settings";
 import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
-import { clusterIpc } from "../../../common/cluster-ipc";
 import { clusterViewURL } from "./cluster-view.route";
-import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from "react-beautiful-dnd";
-import type { Cluster } from "../../../main/cluster";
+import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
+import { clusterDisconnectHandler } from "../../../common/cluster-ipc";
 
 interface Props {
   className?: IClassName;
@@ -29,65 +30,67 @@ interface Props {
 @observer
 export class ClustersMenu extends React.Component<Props> {
   showCluster = (clusterId: ClusterId) => {
-    clusterStore.setActive(clusterId);
     navigate(clusterViewURL({ params: { clusterId } }));
-  }
+  };
 
   addCluster = () => {
     navigate(addClusterURL());
-    clusterStore.setActive(null);
-  }
+  };
 
   showContextMenu = (cluster: Cluster) => {
-    const { Menu, MenuItem } = remote
+    const { Menu, MenuItem } = remote;
     const menu = new Menu();
 
     menu.append(new MenuItem({
-      label: _i18n._(t`Settings`),
+      label: `Settings`,
       click: () => {
-        clusterStore.setActive(cluster.id);
         navigate(clusterSettingsURL({
           params: {
             clusterId: cluster.id
           }
-        }))
+        }));
       }
     }));
+
     if (cluster.online) {
       menu.append(new MenuItem({
-        label: _i18n._(t`Disconnect`),
+        label: `Disconnect`,
         click: async () => {
           if (clusterStore.isActive(cluster.id)) {
             navigate(landingURL());
             clusterStore.setActive(null);
           }
-          await clusterIpc.disconnect.invokeFromRenderer(cluster.id);
+          await requestMain(clusterDisconnectHandler, cluster.id);
         }
-      }))
+      }));
     }
-    menu.append(new MenuItem({
-      label: _i18n._(t`Remove`),
-      click: () => {
-        ConfirmDialog.open({
-          okButtonProps: {
-            primary: false,
-            accent: true,
-            label: _i18n._(t`Remove`),
-          },
-          ok: () => {
-            if (clusterStore.activeClusterId === cluster.id) {
-              navigate(landingURL());
-            }
-            clusterStore.removeById(cluster.id);
-          },
-          message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
-        })
-      }
-    }));
+
+    if (!cluster.isManaged) {
+      menu.append(new MenuItem({
+        label: `Remove`,
+        click: () => {
+          ConfirmDialog.open({
+            okButtonProps: {
+              primary: false,
+              accent: true,
+              label: `Remove`,
+            },
+            ok: () => {
+              if (clusterStore.activeClusterId === cluster.id) {
+                navigate(landingURL());
+                clusterStore.setActive(null);
+              }
+              clusterStore.removeById(cluster.id);
+            },
+            message: <p>Are you sure want to remove cluster <b title={cluster.id}>{cluster.contextName}</b>?</p>,
+          });
+        }
+      }));
+    }
     menu.popup({
       window: remote.getCurrentWindow()
-    })
-  }
+    });
+  };
 
   @autobind()
   swapClusterIconOrder(result: DropResult) {
@@ -96,35 +99,33 @@ export class ClustersMenu extends React.Component<Props> {
       const {
         source: { index: from },
         destination: { index: to },
-      } = result
-      clusterStore.swapIconOrders(currentWorkspaceId, from, to)
+      } = result;
+
+      clusterStore.swapIconOrders(currentWorkspaceId, from, to);
     }
   }
 
   render() {
     const { className } = this.props;
     const { newContexts } = userStore;
-    const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
+    const workspace = workspaceStore.getById(workspaceStore.currentWorkspaceId);
+    const clusters = clusterStore.getByWorkspaceId(workspace.id).filter(cluster => cluster.enabled);
+    const activeClusterId = clusterStore.activeCluster;
+
     return (
       <div className={cssNames("ClustersMenu flex column", className)}>
         <div className="clusters flex column gaps">
           <DragDropContext onDragEnd={this.swapClusterIconOrder}>
             <Droppable droppableId="cluster-menu" type="CLUSTER">
-              {(provided: DroppableProvided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
+              {({ innerRef, droppableProps, placeholder }: DroppableProvided) => (
+                <div ref={innerRef} {...droppableProps}>
                   {clusters.map((cluster, index) => {
-                    const isActive = cluster.id === clusterStore.activeClusterId;
+                    const isActive = cluster.id === activeClusterId;
+
                     return (
                       <Draggable draggableId={cluster.id} index={index} key={cluster.id}>
-                        {(provided: DraggableProvided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
+                        {({ draggableProps, dragHandleProps, innerRef }: DraggableProvided) => (
+                          <div ref={innerRef} {...draggableProps} {...dragHandleProps}>
                             <ClusterIcon
                               key={cluster.id}
                               showErrors={true}
@@ -136,22 +137,42 @@ export class ClustersMenu extends React.Component<Props> {
                           </div>
                         )}
                       </Draggable>
-                    )}
-                  )}
-                  {provided.placeholder}
+                    );
+                  })}
+                  {placeholder}
                 </div>
               )}
             </Droppable>
           </DragDropContext>
         </div>
-        <div className="add-cluster" onClick={this.addCluster}>
+        <div className="add-cluster">
           <Tooltip targetId="add-cluster-icon">
-            <Trans>Add Cluster</Trans>
+            Add Cluster
           </Tooltip>
-          <Icon big material="add" id="add-cluster-icon" />
+          <Icon big material="add" id="add-cluster-icon" disabled={workspace.isManaged} onClick={this.addCluster}/>
           {newContexts.size > 0 && (
-            <Badge className="counter" label={newContexts.size} tooltip={<Trans>new</Trans>} />
+            <Badge className="counter" label={newContexts.size} tooltip="new"/>
           )}
+        </div>
+        <div className="extensions">
+          {globalPageMenuRegistry.getItems().map(({ title, target, components: { Icon } }) => {
+            const registeredPage = globalPageRegistry.getByPageTarget(target);
+
+            if (!registeredPage){
+              return;
+            }
+            const pageUrl = getExtensionPageUrl(target);
+            const isActive = isActiveRoute(registeredPage.url);
+
+            return (
+              <Icon
+                key={pageUrl}
+                tooltip={title}
+                active={isActive}
+                onClick={() => navigate(pageUrl)}
+              />
+            );
+          })}
         </div>
       </div>
     );

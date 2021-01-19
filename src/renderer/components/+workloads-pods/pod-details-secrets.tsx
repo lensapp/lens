@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { autorun, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Pod, Secret, secretsApi } from "../../api/endpoints";
-import { getDetailsUrl } from "../../navigation";
+import { getDetailsUrl } from "../kube-object";
 
 interface Props {
   pod: Pod;
@@ -18,6 +18,7 @@ export class PodDetailsSecrets extends Component<Props> {
   @disposeOnUnmount
   secretsLoader = autorun(async () => {
     const { pod } = this.props;
+
     this.secrets = await Promise.all(
       pod.getSecrets().map(secretName => secretsApi.get({
         name: secretName,

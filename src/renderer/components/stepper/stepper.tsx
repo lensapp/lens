@@ -2,7 +2,7 @@ import "./stepper.scss";
 import React from "react";
 import { cssNames } from "../../utils";
 
-interface Props extends React.HTMLProps<any> {
+export interface StepperProps extends React.HTMLProps<any> {
   step: number;
   steps: Step[];
 }
@@ -11,14 +11,16 @@ interface Step {
   title?: string;
 }
 
-export class Stepper extends React.Component<Props, {}> {
+export class Stepper extends React.Component<StepperProps, {}> {
   render() {
     const { className, steps, ...props } = this.props;
     const stepsCount = steps.length;
     let { step } = this.props;
+
     step = Math.min(Math.max(1, step), stepsCount);
+
     return (
-      <div {...props} className={cssNames('Stepper flex auto', className)}>
+      <div {...props} className={cssNames("Stepper flex auto", className)}>
         {steps.map(({ title }, i) => {
           const stepNumber = i + 1;
           const isLast = i === stepsCount - 1;
@@ -26,6 +28,7 @@ export class Stepper extends React.Component<Props, {}> {
             done: stepNumber < step,
             active: stepNumber === step
           };
+
           return (
             <div key={i} className={cssNames("box step", stepClass)}>
               {!isLast ? <span className="line"/> : null}

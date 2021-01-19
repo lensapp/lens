@@ -3,7 +3,6 @@ import "./releases.scss";
 import React, { Component } from "react";
 import kebabCase from "lodash/kebabCase";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
 import { releaseStore } from "./release.store";
 import { IReleaseRouteParams, releaseURL } from "./release.route";
@@ -41,6 +40,7 @@ export class HelmReleases extends Component<Props> {
 
   get selectedRelease() {
     const { match: { params: { name, namespace } } } = this.props;
+
     return releaseStore.items.find(release => {
       return release.getName() == name && release.getNs() == namespace;
     });
@@ -48,7 +48,7 @@ export class HelmReleases extends Component<Props> {
 
   showDetails = (item: HelmRelease) => {
     if (!item) {
-      navigation.merge(releaseURL())
+      navigation.merge(releaseURL());
     }
     else {
       navigation.merge(releaseURL({
@@ -56,24 +56,25 @@ export class HelmReleases extends Component<Props> {
           name: item.getName(),
           namespace: item.getNs()
         }
-      }))
+      }));
     }
-  }
+  };
 
   hideDetails = () => {
     this.showDetails(null);
-  }
+  };
 
   renderRemoveDialogMessage(selectedItems: HelmRelease[]) {
     const releaseNames = selectedItems.map(item => item.getName()).join(", ");
+
     return (
       <div>
-        <Trans>Remove <b>{releaseNames}</b>?</Trans>
+        <>Remove <b>{releaseNames}</b>?</>
         <p className="warning">
-          <Trans>Note: StatefulSet Volumes won't be deleted automatically</Trans>
+          Note: StatefulSet Volumes won&apos;t be deleted automatically
         </p>
       </div>
-    )
+    );
   }
 
   render() {
@@ -98,19 +99,20 @@ export class HelmReleases extends Component<Props> {
             (release: HelmRelease) => release.getStatus(),
             (release: HelmRelease) => release.getVersion(),
           ]}
-          renderHeaderTitle={<Trans>Releases</Trans>}
+          renderHeaderTitle="Releases"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-            { title: <Trans>Chart</Trans>, className: "chart", sortBy: sortBy.chart },
-            { title: <Trans>Revision</Trans>, className: "revision", sortBy: sortBy.revision },
-            { title: <Trans>Version</Trans>, className: "version" },
-            { title: <Trans>App Version</Trans>, className: "app-version" },
-            { title: <Trans>Status</Trans>, className: "status", sortBy: sortBy.status },
-            { title: <Trans>Updated</Trans>, className: "updated", sortBy: sortBy.updated },
+            { title: "Name", className: "name", sortBy: sortBy.name },
+            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+            { title: "Chart", className: "chart", sortBy: sortBy.chart },
+            { title: "Revision", className: "revision", sortBy: sortBy.revision },
+            { title: "Version", className: "version" },
+            { title: "App Version", className: "app-version" },
+            { title: "Status", className: "status", sortBy: sortBy.status },
+            { title: "Updated", className: "updated", sortBy: sortBy.updated },
           ]}
           renderTableContents={(release: HelmRelease) => {
             const version = release.getVersion();
+
             return [
               release.getName(),
               release.getNs(),
@@ -122,7 +124,7 @@ export class HelmReleases extends Component<Props> {
               release.appVersion,
               { title: release.getStatus(), className: kebabCase(release.getStatus()) },
               release.getUpdated(),
-            ]
+            ];
           }}
           renderItemMenu={(release: HelmRelease) => {
             return (
@@ -130,7 +132,7 @@ export class HelmReleases extends Component<Props> {
                 release={release}
                 removeConfirmationMessage={this.renderRemoveDialogMessage([release])}
               />
-            )
+            );
           }}
           customizeRemoveDialog={(selectedItems: HelmRelease[]) => ({
             message: this.renderRemoveDialogMessage(selectedItems)

@@ -1,63 +1,53 @@
-import "./storage.scss"
+import "./storage.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Redirect, Route, Switch } from "react-router";
-import { RouteComponentProps } from "react-router-dom";
-import { Trans } from "@lingui/macro";
-import { TabLayout, TabRoute } from "../layout/tab-layout";
+import { TabLayout, TabLayoutRoute } from "../layout/tab-layout";
 import { PersistentVolumes, volumesRoute, volumesURL } from "../+storage-volumes";
 import { StorageClasses, storageClassesRoute, storageClassesURL } from "../+storage-classes";
 import { PersistentVolumeClaims, volumeClaimsRoute, volumeClaimsURL } from "../+storage-volume-claims";
-import { namespaceStore } from "../+namespaces/namespace.store";
-import { storageURL } from "./storage.route";
+import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { isAllowedResource } from "../../../common/rbac";
 
-interface Props extends RouteComponentProps<{}> {
-}
-
 @observer
-export class Storage extends React.Component<Props> {
+export class Storage extends React.Component {
   static get tabRoutes() {
-    const tabRoutes: TabRoute[] = [];
-    const query = namespaceStore.getContextParams()
+    const tabRoutes: TabLayoutRoute[] = [];
+    const query = namespaceUrlParam.toObjectParam();
 
-    tabRoutes.push({
-      title: <Trans>Persistent Volume Claims</Trans>,
-      component: PersistentVolumeClaims,
-      url: volumeClaimsURL({ query }),
-      path: volumeClaimsRoute.path,
-    })
-
-    if (isAllowedResource('persistentvolumes')) {
+    if (isAllowedResource("persistentvolumeclaims")) {
       tabRoutes.push({
-        title: <Trans>Persistent Volumes</Trans>,
-        component: PersistentVolumes,
-        url: volumesURL(),
-        path: volumesRoute.path,
+        title: "Persistent Volume Claims",
+        component: PersistentVolumeClaims,
+        url: volumeClaimsURL({ query }),
+        routePath: volumeClaimsRoute.path.toString(),
       });
     }
 
-    if (isAllowedResource('storageclasses')) {
+    if (isAllowedResource("persistentvolumes")) {
       tabRoutes.push({
-        title: <Trans>Storage Classes</Trans>,
+        title: "Persistent Volumes",
+        component: PersistentVolumes,
+        url: volumesURL(),
+        routePath: volumesRoute.path.toString(),
+      });
+    }
+
+    if (isAllowedResource("storageclasses")) {
+      tabRoutes.push({
+        title: "Storage Classes",
         component: StorageClasses,
         url: storageClassesURL(),
-        path: storageClassesRoute.path,
-      })
+        routePath: storageClassesRoute.path.toString(),
+      });
     }
+
     return tabRoutes;
   }
 
   render() {
-    const tabRoutes = Storage.tabRoutes;
     return (
-      <TabLayout className="Storage" tabs={tabRoutes}>
-        <Switch>
-          {tabRoutes.map((route, index) => <Route key={index} {...route}/>)}
-          <Redirect to={storageURL({ query: namespaceStore.getContextParams() })}/>
-        </Switch>
-      </TabLayout>
-    )
+      <TabLayout className="Storage" tabs={Storage.tabRoutes}/>
+    );
   }
 }

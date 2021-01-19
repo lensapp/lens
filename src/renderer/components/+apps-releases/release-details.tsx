@@ -5,7 +5,6 @@ import groupBy from "lodash/groupBy";
 import isEqual from "lodash/isEqual";
 import { observable, reaction } from "mobx";
 import { Link } from "react-router-dom";
-import { t, Trans } from "@lingui/macro";
 import kebabCase from "lodash/kebabCase";
 import { HelmRelease, helmReleasesApi, IReleaseDetails } from "../../api/endpoints/helm-releases.api";
 import { HelmReleaseMenu } from "./release-menu";
@@ -20,13 +19,12 @@ import { Button } from "../button";
 import { releaseStore } from "./release.store";
 import { Notifications } from "../notifications";
 import { createUpgradeChartTab } from "../dock/upgrade-chart.store";
-import { getDetailsUrl } from "../../navigation";
-import { _i18n } from "../../i18n";
 import { themeStore } from "../../theme.store";
 import { apiManager } from "../../api/api-manager";
 import { SubTitle } from "../layout/sub-title";
 import { secretsStore } from "../+config-secrets/secrets.store";
 import { Secret } from "../../api/endpoints";
+import { getDetailsUrl } from "../kube-object";
 
 interface Props {
   release: HelmRelease;
@@ -55,6 +53,7 @@ export class ReleaseDetails extends Component<Props> {
     const { getReleaseSecret } = releaseStore;
     const { release } = this.props;
     const secret = getReleaseSecret(release);
+
     if (this.releaseSecret) {
       if (isEqual(this.releaseSecret.getLabels(), secret.getLabels())) return;
       this.loadDetails();
@@ -64,12 +63,14 @@ export class ReleaseDetails extends Component<Props> {
 
   async loadDetails() {
     const { release } = this.props;
+
     this.details = null;
     this.details = await helmReleasesApi.get(release.getName(), release.getNs());
   }
 
   async loadValues() {
     const { release } = this.props;
+
     this.values = "";
     this.values = await helmReleasesApi.getValues(release.getName(), release.getNs());
   }
@@ -77,14 +78,16 @@ export class ReleaseDetails extends Component<Props> {
   updateValues = async () => {
     const { release } = this.props;
     const name = release.getName();
-    const namespace = release.getNs()
+    const namespace = release.getNs();
     const data = {
       chart: release.getChart(),
       repo: await release.getRepo(),
       version: release.getVersion(),
       values: this.values
     };
+
     this.saving = true;
+
     try {
       await releaseStore.update(name, namespace, data);
       Notifications.ok(
@@ -94,19 +97,21 @@ export class ReleaseDetails extends Component<Props> {
       Notifications.error(err);
     }
     this.saving = false;
-  }
+  };
 
   upgradeVersion = () => {
     const { release, hideDetails } = this.props;
+
     createUpgradeChartTab(release);
     hideDetails();
-  }
+  };
 
   renderValues() {
     const { values, saving } = this;
+
     return (
       <div className="values">
-        <DrawerTitle title={_i18n._(t`Values`)}/>
+        <DrawerTitle title={`Values`}/>
         <div className="flex column gaps">
           <AceEditor
             mode="yaml"
@@ -115,18 +120,19 @@ export class ReleaseDetails extends Component<Props> {
           />
           <Button
             primary
-            label={_i18n._(t`Save`)}
+            label={`Save`}
             waiting={saving}
             onClick={this.updateValues}
           />
         </div>
       </div>
-    )
+    );
   }
 
   renderNotes() {
     if (!this.details.info?.notes) return null;
     const { notes } = this.details.info;
+
     return (
       <div className="notes">
         {notes}
@@ -136,6 +142,7 @@ export class ReleaseDetails extends Component<Props> {
 
   renderResources() {
     const { resources } = this.details;
+
     if (!resources) return null;
     const groups = groupBy(resources, item => item.kind);
     const tables = Object.entries(groups).map(([kind, items]) => {
@@ -152,10 +159,8 @@ export class ReleaseDetails extends Component<Props> {
               const name = item.getName();
               const namespace = item.getNs();
               const api = apiManager.getApi(item.metadata.selfLink);
-              const detailsUrl = api ? getDetailsUrl(api.getUrl({
-                name,
-                namespace,
-              })) : "";
+              const detailsUrl = api ? getDetailsUrl(api.getUrl({ name, namespace })) : "";
+
               return (
                 <TableRow key={item.getId()}>
                   <TableCell className="name">
@@ -170,6 +175,7 @@ export class ReleaseDetails extends Component<Props> {
         </React.Fragment>
       );
     });
+
     return (
       <div className="resources">
         {tables}
@@ -180,55 +186,59 @@ export class ReleaseDetails extends Component<Props> {
   renderContent() {
     const { release } = this.props;
     const { details } = this;
+
     if (!release) return null;
+
     if (!details) {
       return <Spinner center/>;
     }
+
     return (
       <div>
-        <DrawerItem name={<Trans>Chart</Trans>} className="chart">
+        <DrawerItem name="Chart" className="chart">
           <div className="flex gaps align-center">
             <span>{release.getChart()}</span>
             <Button
               primary
-              label={_i18n._(t`Upgrade`)}
+              label={`Upgrade`}
               className="box right upgrade"
               onClick={this.upgradeVersion}
             />
           </div>
         </DrawerItem>
-        <DrawerItem name={<Trans>Updated</Trans>}>
-          {release.getUpdated()} <Trans>ago</Trans> ({release.updated})
+        <DrawerItem name="Updated">
+          {release.getUpdated()} ago ({release.updated})
         </DrawerItem>
-        <DrawerItem name={<Trans>Namespace</Trans>}>
+        <DrawerItem name="Namespace">
           {release.getNs()}
         </DrawerItem>
-        <DrawerItem name={<Trans>Version</Trans>} onClick={stopPropagation}>
+        <DrawerItem name="Version" onClick={stopPropagation}>
           <div className="version flex gaps align-center">
             <span>
               {release.getVersion()}
             </span>
           </div>
         </DrawerItem>
-        <DrawerItem name={<Trans>Status</Trans>} className="status" labelsOnly>
+        <DrawerItem name="Status" className="status" labelsOnly>
           <Badge
             label={release.getStatus()}
             className={cssNames("status", kebabCase(release.getStatus()))}
           />
         </DrawerItem>
         {this.renderValues()}
-        <DrawerTitle title={_i18n._(t`Notes`)}/>
+        <DrawerTitle title={`Notes`}/>
         {this.renderNotes()}
-        <DrawerTitle title={_i18n._(t`Resources`)}/>
+        <DrawerTitle title={`Resources`}/>
         {this.renderResources()}
       </div>
-    )
+    );
   }
 
   render() {
-    const { release, hideDetails } = this.props
-    const title = release ? <Trans>Release: {release.getName()}</Trans> : ""
-    const toolbar = <HelmReleaseMenu release={release} toolbar hideDetails={hideDetails}/>
+    const { release, hideDetails } = this.props;
+    const title = release ? <>Release: {release.getName()}</> : "";
+    const toolbar = <HelmReleaseMenu release={release} toolbar hideDetails={hideDetails}/>;
+
     return (
       <Drawer
         className={cssNames("ReleaseDetails", themeStore.activeTheme.type)}
@@ -240,6 +250,6 @@ export class ReleaseDetails extends Component<Props> {
       >
         {this.renderContent()}
       </Drawer>
-    )
+    );
   }
 }

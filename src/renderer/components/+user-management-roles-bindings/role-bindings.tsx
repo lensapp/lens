@@ -1,18 +1,14 @@
-import "./role-bindings.scss"
+import "./role-bindings.scss";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { Trans } from "@lingui/macro";
 import { RouteComponentProps } from "react-router";
-import { Icon } from "../icon";
 import { IRoleBindingsRouteParams } from "../+user-management/user-management.route";
-import { KubeObjectMenu, KubeObjectMenuProps } from "../kube-object/kube-object-menu";
-import { clusterRoleBindingApi, RoleBinding, roleBindingApi } from "../../api/endpoints";
+import { RoleBinding } from "../../api/endpoints";
 import { roleBindingsStore } from "./role-bindings.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
-import { KubeObject } from "../../api/kube-object";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
 enum sortBy {
   name = "name",
@@ -41,37 +37,26 @@ export class RoleBindings extends React.Component<Props> {
           (binding: RoleBinding) => binding.getSearchFields(),
           (binding: RoleBinding) => binding.getSubjectNames(),
         ]}
-        renderHeaderTitle={<Trans>Role Bindings</Trans>}
+        renderHeaderTitle="Role Bindings"
         renderTableHeader={[
-          { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-          { title: <Trans>Bindings</Trans>, className: "bindings", sortBy: sortBy.bindings },
-          { title: <Trans>Namespace</Trans>, className: "namespace", sortBy: sortBy.namespace },
-          { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { className: "warning" },
+          { title: "Bindings", className: "bindings", sortBy: sortBy.bindings },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Age", className: "age", sortBy: sortBy.age },
         ]}
         renderTableContents={(binding: RoleBinding) => [
           binding.getName(),
+          <KubeObjectStatusIcon key="icon" object={binding} />,
           binding.getSubjectNames(),
           binding.getNs() || "-",
           binding.getAge(),
         ]}
-        renderItemMenu={(item: RoleBinding) => {
-          return <RoleBindingMenu object={item}/>
-        }}
         addRemoveButtons={{
           onAdd: () => AddRoleBindingDialog.open(),
-          addTooltip: <Trans>Create new RoleBinding</Trans>,
+          addTooltip: "Create new RoleBinding",
         }}
       />
-    )
+    );
   }
 }
-
-export function RoleBindingMenu(props: KubeObjectMenuProps<RoleBinding>) {
-  return (
-    <KubeObjectMenu {...props}/>
-  )
-}
-
-apiManager.registerViews([roleBindingApi, clusterRoleBindingApi], {
-  Menu: RoleBindingMenu,
-})

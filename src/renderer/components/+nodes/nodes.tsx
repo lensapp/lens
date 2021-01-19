@@ -2,22 +2,20 @@ import "./nodes.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { RouteComponentProps } from "react-router";
-import { t, Trans } from "@lingui/macro";
 import { cssNames, interval } from "../../utils";
 import { TabLayout } from "../layout/tab-layout";
 import { nodesStore } from "./nodes.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { INodesRouteParams } from "./nodes.route";
-import { Node, nodesApi } from "../../api/endpoints/nodes.api";
-import { NodeMenu } from "./node-menu";
+import { Node } from "../../api/endpoints/nodes.api";
 import { LineProgress } from "../line-progress";
-import { _i18n } from "../../i18n";
 import { bytesToUnits } from "../../utils/convertMemory";
 import { Tooltip, TooltipPosition } from "../tooltip";
 import kebabCase from "lodash/kebabCase";
 import upperFirst from "lodash/upperFirst";
-import { apiManager } from "../../api/api-manager";
+import { KubeObjectStatusIcon } from "../kube-object-status-icon";
+import { Badge } from "../badge/badge";
 
 enum sortBy {
   name = "name",
@@ -49,63 +47,71 @@ export class Nodes extends React.Component<Props> {
 
   renderCpuUsage(node: Node) {
     const metrics = nodesStore.getLastMetricValues(node, ["cpuUsage", "cpuCapacity"]);
+
     if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
     const usage = metrics[0];
     const cores = metrics[1];
+
     return (
       <LineProgress
         max={cores}
         value={usage}
         tooltip={{
-          position: TooltipPosition.BOTTOM,
-          children: _i18n._(t`CPU:`) + ` ${Math.ceil(usage * 100) / cores}\%, ` + _i18n._(t`cores:`) + ` ${cores}`
+          preferredPositions: TooltipPosition.BOTTOM,
+          children: `CPU: ${Math.ceil(usage * 100) / cores}\%, cores: ${cores}`
         }}
       />
-    )
+    );
   }
 
   renderMemoryUsage(node: Node) {
     const metrics = nodesStore.getLastMetricValues(node, ["memoryUsage", "memoryCapacity"]);
+
     if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
     const usage = metrics[0];
     const capacity = metrics[1];
+
     return (
       <LineProgress
         max={capacity}
         value={usage}
         tooltip={{
-          position: TooltipPosition.BOTTOM,
-          children: _i18n._(t`Memory:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
+          preferredPositions: TooltipPosition.BOTTOM,
+          children: `Memory: ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
         }}
       />
-    )
+    );
   }
 
   renderDiskUsage(node: Node): any {
     const metrics = nodesStore.getLastMetricValues(node, ["fsUsage", "fsSize"]);
+
     if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
     const usage = metrics[0];
     const capacity = metrics[1];
+
     return (
       <LineProgress
         max={capacity}
         value={usage}
         tooltip={{
-          position: TooltipPosition.BOTTOM,
-          children: _i18n._(t`Disk:`) + ` ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
+          preferredPositions: TooltipPosition.BOTTOM,
+          children: `Disk: ${Math.ceil(usage * 100 / capacity)}%, ${bytesToUnits(usage, 3)}`
         }}
       />
-    )
+    );
   }
 
   renderConditions(node: Node) {
     if (!node.status.conditions) {
-      return null
+      return null;
     }
     const conditions = node.getActiveConditions();
+
     return conditions.map(condition => {
-      const { type } = condition
-      const tooltipId = `node-${node.getName()}-condition-${type}`
+      const { type } = condition;
+      const tooltipId = `node-${node.getName()}-condition-${type}`;
+
       return (
         <div key={type} id={tooltipId} className={cssNames("condition", kebabCase(type))}>
           {type}
@@ -117,8 +123,8 @@ export class Nodes extends React.Component<Props> {
               </div>
             )}
           </Tooltip>
-        </div>)
-    })
+        </div>);
+    });
   }
 
   render() {
@@ -127,7 +133,7 @@ export class Nodes extends React.Component<Props> {
         <KubeObjectListLayout
           className="Nodes"
           store={nodesStore} isClusterScoped
-          isReady={nodesStore.isLoaded && nodesStore.metricsLoaded}
+          isReady={nodesStore.isLoaded}
           dependentStores={[podsStore]}
           isSelectable={false}
           sortingCallbacks={{
@@ -147,22 +153,25 @@ export class Nodes extends React.Component<Props> {
             (node: Node) => node.getKubeletVersion(),
             (node: Node) => node.getNodeConditionText(),
           ]}
-          renderHeaderTitle={<Trans>Nodes</Trans>}
+          renderHeaderTitle="Nodes"
           renderTableHeader={[
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>CPU</Trans>, className: "cpu", sortBy: sortBy.cpu },
-            { title: <Trans>Memory</Trans>, className: "memory", sortBy: sortBy.memory },
-            { title: <Trans>Disk</Trans>, className: "disk", sortBy: sortBy.disk },
-            { title: <Trans>Taints</Trans>, className: "taints", sortBy: sortBy.taints },
-            { title: <Trans>Roles</Trans>, className: "roles", sortBy: sortBy.roles },
-            { title: <Trans>Version</Trans>, className: "version", sortBy: sortBy.version },
-            { title: <Trans>Age</Trans>, className: "age", sortBy: sortBy.age },
-            { title: <Trans>Conditions</Trans>, className: "conditions", sortBy: sortBy.conditions },
+            { title: "Name", className: "name", sortBy: sortBy.name },
+            { className: "warning" },
+            { title: "CPU", className: "cpu", sortBy: sortBy.cpu },
+            { title: "Memory", className: "memory", sortBy: sortBy.memory },
+            { title: "Disk", className: "disk", sortBy: sortBy.disk },
+            { title: "Taints", className: "taints", sortBy: sortBy.taints },
+            { title: "Roles", className: "roles", sortBy: sortBy.roles },
+            { title: "Version", className: "version", sortBy: sortBy.version },
+            { title: "Age", className: "age", sortBy: sortBy.age },
+            { title: "Conditions", className: "conditions", sortBy: sortBy.conditions },
           ]}
           renderTableContents={(node: Node) => {
             const tooltipId = `node-taints-${node.getId()}`;
+
             return [
-              node.getName(),
+              <Badge flat key="name" label={node.getName()} tooltip={node.getName()} />,
+              <KubeObjectStatusIcon key="icon" object={node} />,
               this.renderCpuUsage(node),
               this.renderMemoryUsage(node),
               this.renderDiskUsage(node),
@@ -176,17 +185,10 @@ export class Nodes extends React.Component<Props> {
               node.status.nodeInfo.kubeletVersion,
               node.getAge(),
               this.renderConditions(node),
-            ]
-          }}
-          renderItemMenu={(item: Node) => {
-            return <NodeMenu object={item}/>
+            ];
           }}
         />
       </TabLayout>
-    )
+    );
   }
 }
-
-apiManager.registerViews(nodesApi, {
-  Menu: NodeMenu,
-});

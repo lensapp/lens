@@ -4,7 +4,6 @@ import React from "react";
 import isEmpty from "lodash/isEmpty";
 import { autorun, observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { t, Trans } from "@lingui/macro";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Input } from "../input";
 import { Button } from "../button";
@@ -13,10 +12,9 @@ import { base64 } from "../../utils";
 import { Icon } from "../icon";
 import { secretsStore } from "./secrets.store";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { Secret, secretsApi } from "../../api/endpoints";
-import { _i18n } from "../../i18n";
-import { apiManager } from "../../api/api-manager";
+import { Secret } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
+import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 
 interface Props extends KubeObjectDetailsProps<Secret> {
 }
@@ -31,52 +29,59 @@ export class SecretDetails extends React.Component<Props> {
     disposeOnUnmount(this, [
       autorun(() => {
         const { object: secret } = this.props;
+
         if (secret) {
           this.data = secret.data;
           this.revealSecret = {};
         }
       })
-    ])
+    ]);
   }
 
   saveSecret = async () => {
     const { object: secret } = this.props;
+
     this.isSaving = true;
+
     try {
       await secretsStore.update(secret, { ...secret, data: this.data });
-      Notifications.ok(<Trans>Secret successfully updated.</Trans>);
+      Notifications.ok("Secret successfully updated.");
     } catch (err) {
       Notifications.error(err);
     }
     this.isSaving = false;
-  }
+  };
 
   editData = (name: string, value: string, encoded: boolean) => {
     this.data[name] = encoded ? value : base64.encode(value);
-  }
+  };
 
   render() {
     const { object: secret } = this.props;
+
     if (!secret) return null;
+
     return (
       <div className="SecretDetails">
         <KubeObjectMeta object={secret}/>
-        <DrawerItem name={<Trans>Type</Trans>}>
+        <DrawerItem name="Type">
           {secret.type}
         </DrawerItem>
         {!isEmpty(this.data) && (
           <>
-            <DrawerTitle title={_i18n._(t`Data`)}/>
+            <DrawerTitle title={`Data`}/>
             {
               Object.entries(this.data).map(([name, value]) => {
                 const revealSecret = this.revealSecret[name];
                 let decodedVal = "";
+
                 try {
                   decodedVal = base64.decode(value);
                 } catch {
                   decodedVal = "";
                 }
                 value = revealSecret ? decodedVal : value;
+
                 return (
                   <div key={name} className="data">
                     <div className="name">{name}</div>
@@ -91,18 +96,18 @@ export class SecretDetails extends React.Component<Props> {
                       {decodedVal && (
                         <Icon
                           material={`visibility${revealSecret ? "" : "_off"}`}
-                          tooltip={revealSecret ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
+                          tooltip={revealSecret ? "Hide" : "Show"}
                           onClick={() => this.revealSecret[name] = !revealSecret}
                         />)
                       }
                     </div>
                   </div>
-                )
+                );
               })
             }
             <Button
               primary
-              label={_i18n._(t`Save`)} waiting={this.isSaving}
+              label={`Save`} waiting={this.isSaving}
               className="save-btn"
               onClick={this.saveSecret}
             />
@@ -113,6 +118,10 @@ export class SecretDetails extends React.Component<Props> {
   }
 }
 
-apiManager.registerViews(secretsApi, {
-  Details: SecretDetails,
-})
+kubeObjectDetailRegistry.add({
+  kind: "Secret",
+  apiVersions: ["v1"],
+  components: {
+    Details: (props) => <SecretDetails {...props} />
+  }
+});

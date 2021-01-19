@@ -5,8 +5,8 @@ import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class ResourceQuotasStore extends KubeObjectStore<ResourceQuota> {
-  api = resourceQuotaApi
+  api = resourceQuotaApi;
 }
 
 export const resourceQuotaStore = new ResourceQuotasStore();
-apiManager.registerStore(resourceQuotaApi, resourceQuotaStore);
+apiManager.registerStore(resourceQuotaStore);

@@ -1,1 +1,1 @@
-export * from "./kubeconfig-dialog"
+export * from "./kubeconfig-dialog";

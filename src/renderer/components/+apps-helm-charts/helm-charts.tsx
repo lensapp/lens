@@ -9,9 +9,7 @@ import { HelmChart } from "../../api/endpoints/helm-charts.api";
 import { HelmChartDetails } from "./helm-chart-details";
 import { navigation } from "../../navigation";
 import { ItemListLayout } from "../item-object-list/item-list-layout";
-import { t, Trans } from "@lingui/macro";
-import { _i18n } from "../../i18n";
-import { SearchInput } from "../input";
+import { SearchInputUrl } from "../input";
 
 enum sortBy {
   name = "name",
@@ -28,13 +26,14 @@ export class HelmCharts extends Component<Props> {
   }
 
   get selectedChart() {
-    const { match: { params: { chartName, repo } } } = this.props
+    const { match: { params: { chartName, repo } } } = this.props;
+
     return helmChartStore.getByName(chartName, repo);
   }
 
   showDetails = (chart: HelmChart) => {
     if (!chart) {
-      navigation.merge(helmChartsURL())
+      navigation.merge(helmChartsURL());
     }
     else {
       navigation.merge(helmChartsURL({
@@ -42,13 +41,13 @@ export class HelmCharts extends Component<Props> {
           chartName: chart.getName(),
           repo: chart.getRepository(),
         }
-      }))
+      }));
     }
-  }
+  };
 
   hideDetails = () => {
     this.showDetails(null);
-  }
+  };
 
   render() {
     return (
@@ -72,19 +71,19 @@ export class HelmCharts extends Component<Props> {
             (items: HelmChart[]) => items.filter(item => !item.deprecated)
           ]}
           customizeHeader={() => (
-            <SearchInput placeholder={_i18n._(t`Search Helm Charts`)} />
+            <SearchInputUrl placeholder={`Search Helm Charts`} />
           )}
           renderTableHeader={[
             { className: "icon" },
-            { title: <Trans>Name</Trans>, className: "name", sortBy: sortBy.name },
-            { title: <Trans>Description</Trans>, className: "description" },
-            { title: <Trans>Version</Trans>, className: "version" },
-            { title: <Trans>App Version</Trans>, className: "app-version" },
-            { title: <Trans>Repository</Trans>, className: "repository", sortBy: sortBy.repo },
+            { title: "Name", className: "name", sortBy: sortBy.name },
+            { title: "Description", className: "description" },
+            { title: "Version", className: "version" },
+            { title: "App Version", className: "app-version" },
+            { title: "Repository", className: "repository", sortBy: sortBy.repo },
 
           ]}
           renderTableContents={(chart: HelmChart) => [
-            <figure>
+            <figure key="image">
               <img
                 src={chart.getIcon() || require("./helm-placeholder.svg")}
                 onLoad={evt => evt.currentTarget.classList.add("visible")}

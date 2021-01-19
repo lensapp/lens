@@ -12,6 +12,7 @@
   flex-shrink: 0;
   line-height: 1;
   font-size: $font-size;
+  user-select: none;
 
   &[href] {
     display: inline-block;
@@ -37,6 +38,17 @@
     &.active,
     &:focus:not(:active) {
       color: $buttonPrimaryBackground;
+      box-shadow: 0 0 0 1px inset;
+    }
+  }
+
+  &.outlined {
+    color: inherit;
+    background: transparent;
+
+    &.active,
+    &:focus {
+      color: inherit;
       box-shadow: 0 0 0 1px inset;
     }
   }
