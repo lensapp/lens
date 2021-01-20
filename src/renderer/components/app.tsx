@@ -44,15 +44,13 @@ import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../exte
 import { TabLayoutRoute, TabLayout } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
 import { eventStore } from "./+events/event.store";
-import { reaction, computed } from "mobx";
+import { reaction, computed, observable } from "mobx";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
 import { sum } from "lodash";
 
 @observer
 export class App extends React.Component {
-  private extensionRoutes: Map<ClusterPageMenuRegistration, JSX.Element> = new Map();
-
   static async init() {
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
@@ -77,6 +75,8 @@ export class App extends React.Component {
     });
     whatInput.ask(); // Start to monitor user input device
   }
+
+  @observable extensionRoutes: Map<ClusterPageMenuRegistration, React.ReactNode> = new Map();
 
   async componentDidMount() {
     const cluster = getHostedCluster();
@@ -103,6 +103,12 @@ export class App extends React.Component {
 
     reaction(() => this.warningsCount, (count) => {
       broadcastMessage(`cluster-warning-event-count:${cluster.id}`, count);
+    });
+
+    reaction(() => clusterPageMenuRegistry.getRootItems(), (rootItems) => {
+      this.generateExtensionTabLayoutRoutes(rootItems);
+    }, {
+      fireImmediately: true
     });
   }
 
@@ -147,32 +153,38 @@ export class App extends React.Component {
     return routes;
   }
 
-  renderExtensionTabLayoutRoutes(): JSX.Element[] {
-    return clusterPageMenuRegistry.getRootItems().map((menu, index) => {
+  generateExtensionTabLayoutRoutes(rootItems: ClusterPageMenuRegistration[]) {
+    rootItems.forEach((menu, index) => {
       let route = this.extensionRoutes.get(menu);
 
-      if (route) {
-        return route;
-      }
+      if (!route) {
+        const tabRoutes = this.getTabLayoutRoutes(menu);
 
-      const tabRoutes = this.getTabLayoutRoutes(menu);
+        if (tabRoutes.length > 0) {
+          const pageComponent = () => <TabLayout tabs={tabRoutes} />;
 
-      if (tabRoutes.length > 0) {
-        const pageComponent = () => <TabLayout tabs={tabRoutes} />;
-
-        route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
-        this.extensionRoutes.set(menu, route);
-      } else {
-        const page = clusterPageRegistry.getByPageMenuTarget(menu.target);
-
-        if (page) {
-          route = <Route key={`extension-tab-layout-route-${index}`} path={page.routePath} exact={page.exact} component={page.components.Page}/>;
+          route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
           this.extensionRoutes.set(menu, route);
+        } else {
+          const page = clusterPageRegistry.getByPageMenuTarget(menu.target);
+
+          if (page) {
+            route = <Route key={`extension-tab-layout-route-${index}`} path={page.routePath} exact={page.exact} component={page.components.Page}/>;
+            this.extensionRoutes.set(menu, route);
+          }
         }
       }
-
-      return route;
     });
+
+    Array.from(this.extensionRoutes.keys()).forEach((menu) => {
+      if (!rootItems.includes(menu)) {
+        this.extensionRoutes.delete(menu);
+      }
+    });
+  }
+
+  renderExtensionTabLayoutRoutes() {
+    return Array.from(this.extensionRoutes.values());
   }
 
   renderExtensionRoutes() {
