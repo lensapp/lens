@@ -1,6 +1,7 @@
 import { LensProtocolRouterMain } from "../router";
 import Url from "url-parse";
 import { noop } from "../../../common/utils";
+import { extensionsStore } from "../../../extensions/extensions-store";
 
 function throwIfDefined(val: any): void {
   if (val != null) {
@@ -12,6 +13,7 @@ describe("protocol router tests", () => {
   let lpr: LensProtocolRouterMain;
 
   beforeEach(() => {
+    (extensionsStore as any).state.clear();
     LensProtocolRouterMain.resetInstance();
     lpr = LensProtocolRouterMain.getInstance<LensProtocolRouterMain>();
   });
@@ -33,6 +35,7 @@ describe("protocol router tests", () => {
   });
 
   it("should not throw when has valid host", async () => {
+    (extensionsStore as any).state.set("@mirantis/minikube", { enabled: true, name: "@mirantis/minikube" });
     lpr.on("/", noop);
     lpr.extensionOn("@mirantis/minikube", "/", noop);
 
@@ -83,6 +86,7 @@ describe("protocol router tests", () => {
   });
 
   it("should call most exact handler for an extension", async () => {
+    (extensionsStore as any).state.set("@foobar/icecream", { enabled: true, name: "@foobar/icecream" });
     let called: any = 0;
 
     lpr.extensionOn("@foobar/icecream", "/page", () => { called = 1; });
@@ -99,6 +103,8 @@ describe("protocol router tests", () => {
   });
 
   it("should work with non-org extensions", async () => {
+    (extensionsStore as any).state.set("@foobar/icecream", { enabled: true, name: "@foobar/icecream" });
+    (extensionsStore as any).state.set("icecream", { enabled: true, name: "icecream" });
     let called: any = 0;
 
     lpr.extensionOn("icecream", "/page", () => { called = 1; });

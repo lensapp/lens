@@ -35,10 +35,6 @@ export class ExtensionsStore extends BaseStore<LensExtensionsStoreModel> {
     return Boolean(state?.enabled);
   }
 
-  isEnabledByName(extName: string): boolean {
-    return this.enabledExtensions.includes(extName);
-  }
-
   @action
   mergeState(extensionsState: Record<LensExtensionId, LensExtensionState>) {
     this.state.merge(extensionsState);

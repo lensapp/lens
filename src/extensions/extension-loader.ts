@@ -14,7 +14,7 @@ import type { LensRendererExtension } from "./lens-renderer-extension";
 import * as registries from "./registries";
 import fs from "fs";
 
-// lazy load so that we get correct userData
+
 export function extensionPackagesRoot() {
   return path.join((app || remote.app).getPath("userData"));
 }
@@ -50,6 +50,20 @@ export class ExtensionLoader {
     });
 
     return extensions;
+  }
+
+  @computed get userExtensionsByName(): Map<string, LensExtension> {
+    const res = new Map();
+
+    for (const [, val] of this.instances) {
+      if (val.isBundled) {
+        continue;
+      }
+
+      res.set(val.manifest.name, val);
+    }
+
+    return res;
   }
 
   // Transform userExtensions to a state object for storing into ExtensionsStore

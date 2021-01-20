@@ -10,6 +10,11 @@ export enum RoutingErrorType {
 }
 
 export class RoutingError extends Error {
+  /**
+   * Will be set if the routing error originated in an extension route table
+   */
+  public extensionName?: string;
+
   constructor(public type: RoutingErrorType, public url: Url) {
     super("routing error");
   }

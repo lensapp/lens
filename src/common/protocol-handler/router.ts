@@ -1,204 +1,247 @@
-import { hasOwnProperties, hasOwnProperty, Singleton } from "../utils";
+import { match, matchPath } from "react-router";
+import { countBy } from "lodash";
+import { Singleton } from "../utils";
+import { pathToRegexp } from "path-to-regexp";
+import logger from "../../main/logger";
+import Url from "url-parse";
+import { RoutingError, RoutingErrorType } from "./error";
+import { extensionsStore } from "../../extensions/extensions-store";
+import { extensionLoader } from "../../extensions/extension-loader";
+import { LensExtension } from "../../extensions/lens-extension";
 
-const ProtocolHandlerIpcPrefix = "protocol-handler";
+// IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
+export const ProtocolHandlerIpcPrefix = "protocol-handler";
 
-export const ProtocolHandlerRegister = `${ProtocolHandlerIpcPrefix}:register`;
-export const ProtocolHandlerDeregister = `${ProtocolHandlerIpcPrefix}:deregister`;
-export const ProtocolHandlerBackChannel = `${ProtocolHandlerIpcPrefix}:back-channel`;
+export const ProtocolHandlerInternal = `${ProtocolHandlerIpcPrefix}:internal`;
+export const ProtocolHandlerExtension= `${ProtocolHandlerIpcPrefix}:extension`;
 
+/**
+ * These two names are long and cubersome by design so as to decrease the chances
+ * of an extension using the same names.
+ *
+ * Though under the current (2021/01/18) implementation, these are never matched
+ * against in the final matching so their names are less of a concern.
+ */
+const EXTENSION_PUBLISHER_MATCH = "LENS_INTERNAL_EXTENSION_PUBLISHER_MATCH";
+const EXTENSION_NAME_MATCH = "LENS_INTERNAL_EXTENSION_NAME_MATCH";
+
+/**
+ * The collection of the dynamic parts of a URI which initiated a `lens://`
+ * protocol request
+ */
 export interface RouteParams {
+  /**
+   * the parts of the URI query string
+   */
   search: Record<string, string>;
+
+  /**
+   * the matching parts of the path. The dynamic parts of the URI path.
+   */
   pathname: Record<string, string>;
+
+  /**
+   * if the most specific path schema that is matched does not cover the whole
+   * of the URI's path. Then this field will be set to the remaining path
+   * segments.
+   *
+   * Example:
+   *
+   * If the path schema `/landing/:type` is the matched schema for the URI
+   * `/landing/soft/easy` then this field will be set to `"/easy"`.
+   */
+  tail?: string;
 }
 
-export type RouteHandler = (params: RouteParams) => void;
-export type FallbackHandler = (name: string) => Promise<boolean>;
-
-export enum HandlerType {
-  INTERNAL = "internal",
-  EXTENSION = "extension",
+/**
+ * RouteHandler represents the function signature of the handler function for
+ * `lens://` protocol routing.
+ */
+export interface RouteHandler {
+  (params: RouteParams): void;
 }
-
-interface ExtensionParams {
-  handlerType: HandlerType.EXTENSION,
-  extensionName: string,
-}
-
-interface InternalParams {
-  handlerType: HandlerType.INTERNAL,
-}
-
-type BaseParams = (ExtensionParams | InternalParams);
-
-export type RegisterParams = BaseParams & {
-  handlerId: string,
-  pathSchema: string,
-};
-
-export interface DeregisterParams {
-  extensionName: string,
-}
-
-export type BackChannelParams = BaseParams & {
-  params: RouteParams;
-  handlerId: string,
-};
 
 export abstract class LensProtocolRouter extends Singleton {
+  // Map between path schemas and the handlers
+  protected internalRoutes = new Map<string, RouteHandler>();
+
   public static readonly LoggingPrefix = "[PROTOCOL ROUTER]";
 
-  public abstract on(urlSchema: string, handler: RouteHandler): void;
-  public abstract extensionOn(extName: string, urlSchema: string, handler: RouteHandler): void;
-  public abstract removeExtensionHandlers(extName: string): void;
-}
+  protected static readonly ExtensionUrlSchema = `/:${EXTENSION_PUBLISHER_MATCH}(\@[A-Za-z0-9_]+)?/:${EXTENSION_NAME_MATCH}`;
 
-/**
- * This function validates that `options` is at least `BaseParams`
- * @param args a deserialized value
- */
-function validateBaseParams(args: unknown): args is BaseParams {
-  if (!args || typeof args !== "object") {
-    // it must be an object
-    return false;
+  /**
+   *
+   * @param url the parsed URL that initiated the `lens://` protocol
+   */
+  protected _routeToInternal(url: Url): void {
+    this._route(Array.from(this.internalRoutes.entries()), url);
   }
 
-  if (!hasOwnProperty(args, "handlerType")) {
-    return false;
-  }
+  /**
+   * match against all matched URIs, returning either the first exact match or
+   * the most specific match if none are exact.
+   * @param routes the array of path schemas, handler pairs to match against
+   * @param url the url (in its current state)
+   */
+  protected _findMatchingRoute(routes: [string, RouteHandler][], url: Url): null | [match<Record<string, string>>, RouteHandler] {
+    const matches: [match<Record<string, string>>, RouteHandler][] = [];
 
-  const { handlerType } = args;
+    for (const [schema, handler] of routes) {
+      const match = matchPath(url.pathname, { path: schema });
 
-  if (handlerType === HandlerType.INTERNAL) {
-    // handlerType must either be HandlerType.INTERNAL
-    return true;
-  }
+      if (!match) {
+        continue;
+      }
 
-  if (handlerType === HandlerType.EXTENSION) {
-    if (!hasOwnProperty(args, "extensionName")) {
-      return false;
+      // prefer an exact match
+      if (match.isExact) {
+        return [match, handler];
+      }
+
+      matches.push([match, handler]);
     }
 
-    // or handlerType must be HandlerType.EXTENSION
-    const { extensionName } = args;
-
-    // but if for an extension then the extensionName is required, must be a stirng, and must be non-empty
-    return Boolean(extensionName && typeof extensionName === "string");
+    // if no exact match pick the one that is the most specific
+    return matches.sort(([a], [b]) => compareMatches(a, b))[0] ?? null;
   }
 
-  // reject all other values of handlerType
-  return false;
-}
+  /**
+   * find the most specific matching handler and call it
+   * @param routes the array of (path schemas, handler) paris to match against
+   * @param url the url (in its current state)
+   */
+  protected _route(routes: [string, RouteHandler][], url: Url): void {
+    const route = this._findMatchingRoute(routes, url);
 
-/**
- * This function validates that `options` is at least `RegisterParams`
- * @param args a deserialized value
- */
-export function validateRegisterParams(args: unknown): args is RegisterParams {
-  if (!validateBaseParams(args)) {
-    return false;
+    if (!route) {
+      throw new RoutingError(RoutingErrorType.NO_HANDLER, url);
+    }
+
+    const [match, handler] = route;
+
+    const params: RouteParams = {
+      pathname: match.params,
+      search: url.query,
+    };
+
+    if (!match.isExact) {
+      params.tail = url.pathname.slice(match.url.length);
+    }
+
+    handler(params);
   }
 
-  if (!hasOwnProperties(args, "handlerId", "pathSchema")) {
-    return false;
+  /**
+   * Tries to find the matching LensExtension instance
+   *
+   * Note: this needs to be async so that `main`'s overloaded version can also be async
+   * @param url the protocol request URI that was "open"-ed
+   * @returns either the found name or the instance of `LensExtension`
+   */
+  protected async _findMatchingExtensionByName(url: Url): Promise<LensExtension | string> {
+    interface ExtensionUrlMatch {
+      [EXTENSION_PUBLISHER_MATCH]: string;
+      [EXTENSION_NAME_MATCH]: string;
+    }
+
+    const match = matchPath<ExtensionUrlMatch>(url.pathname, LensProtocolRouter.ExtensionUrlSchema);
+
+    if (!match) {
+      throw new RoutingError(RoutingErrorType.NO_EXTENSION_ID, url);
+    }
+
+    const { [EXTENSION_PUBLISHER_MATCH]: publisher, [EXTENSION_NAME_MATCH]: partialName } = match.params;
+    const name = [publisher, partialName].filter(Boolean).join("/");
+
+    const extension = extensionLoader.userExtensionsByName.get(name);
+
+    if (!extension) {
+      logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not installed`);
+
+      return name;
+    }
+
+    if (!extensionsStore.isEnabled(extension.id)) {
+      logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched, but not enabled`);
+
+      return name;
+    }
+
+    logger.info(`${LensProtocolRouter.LoggingPrefix}: Extension ${name} matched`);
+
+    return extension;
   }
 
-  if (typeof args.handlerId !== "string" || args.handlerId.length === 0) {
-    // handlerId is required, must be a string, must be non-empty
-    return false;
-  }
+  /**
+   * Find a matching extension by the first one or two path segments of `url` and then try to `_route`
+   * its correspondingly registered handlers.
+   *
+   * If no handlers are found or the extension is not enabled then `_missingHandlers` is called before
+   * checking if more handlers have been added.
+   *
+   * Note: this function modifies its argument, do not reuse
+   * @param url the protocol request URI that was "open"-ed
+   */
+  protected async _routeToExtension(url: Url): Promise<void> {
+    const extension = await this._findMatchingExtensionByName(url);
 
-  if (typeof args.pathSchema !== "string" || args.pathSchema.length === 0) {
-    // pathSchema is required, must be a string, must be non-empty
-    return false;
-  }
+    if (typeof extension === "string") {
+      // failed to find an extension, it returned its name
+      return;
+    }
 
-  return true;
-}
+    // remove the extension name from the path name so we don't need to match on it anymore
+    url.set("pathname", url.pathname.slice(extension.name.length));
 
-/**
- * This function validates that `args` is at least `DeregisterParams`
- * @param args a deserialized value
- */
-export function validateDeregisterParams(args: unknown): args is DeregisterParams {
-  if (!args || typeof args !== "object") {
-    // it must be an object
-    return false;
-  }
+    const handlers = extension
+      .protocolHandlers
+      .map<[string, RouteHandler]>(({ pathSchema, handler }) => [pathSchema, handler]);
 
-  if (!hasOwnProperties(args, "extensionName")) {
-    return false;
-  }
+    try {
+      this._route(handlers, url);
+    } catch (error) {
+      if (error instanceof RoutingError) {
+        error.extensionName = extension.name;
+      }
 
-  if (typeof args.extensionName !== "string" || args.extensionName.length === 0) {
-    // ipcChannel is required, must be a string, must be non-empty
-    return false;
-  }
-
-  return true;
-}
-
-/**
- * This function validates that `args` is at least `RouteParams`
- * @param args a deserialized value
- */
-export function validateRouteParams(args: unknown): args is RouteParams {
-  if (!args || typeof args !== "object") {
-    // it must be an object
-    return false;
-  }
-
-  if (!hasOwnProperties(args, "search", "pathname")) {
-    // must have `search` and `pathname` as keys
-    return false;
-  }
-
-  if (args.search == null || typeof args.search !== "object") {
-    // `search` must be a non-null object
-    return false;
-  }
-
-  if (args.pathname == null || typeof args.pathname !== "object") {
-    // `pathname` must be a non-null object
-    return false;
-  }
-
-  for (const key in args.search) {
-    if (!hasOwnProperty(args.search, key) || typeof args.search[key] !== "string") {
-      // all keys in `search` must be owned and their corresponding values must be strings
-      return false;
+      throw error;
     }
   }
 
-  for (const key in args.pathname) {
-    if (!hasOwnProperty(args.pathname, key) || typeof args.pathname[key] !== "string") {
-      // all keys in `pathname` must be owned and their corresponding values must be strings
-      return false;
-    }
+  /**
+   * Add a handler under the `lens://internal` tree of routing.
+   * @param pathSchema the URI path schema to match against for this handler
+   * @param handler a function that will be called if a protocol path matches
+   */
+  public addInternalHandler(urlSchema: string, handler: RouteHandler): void {
+    pathToRegexp(urlSchema); // verify now that the schema is valid
+    logger.info(`${LensProtocolRouter.LoggingPrefix}: internal registering ${urlSchema}`);
+    this.internalRoutes.set(urlSchema, handler);
   }
 
-  return true;
+  /**
+   * Remove an internal protocol handler.
+   * @param pathSchema the path schema that the handler was registered under
+   */
+  public removeInternalHandler(urlSchema: string): void {
+    this.internalRoutes.delete(urlSchema);
+  }
 }
 
 /**
- * This function validates that `args` is at least `BackChannelParams`
- * @param args a deserialized value
+ * a comparison function for `array.sort(...)`. Sort order should be most path
+ * parts to least path parts.
+ * @param a the left side to compare
+ * @param b the right side to compare
  */
-export function validateBackChannelParams(args: unknown): args is BackChannelParams {
-  if (!validateBaseParams(args)) {
-    return false;
+function compareMatches<T>(a: match<T>, b: match<T>): number {
+  if (a.path === "/") {
+    return 1;
   }
 
-  if (!hasOwnProperties(args, "handlerId", "params")) {
-    return false;
+  if (b.path === "/") {
+    return -1;
   }
 
-  if (!validateRouteParams(args.params)) {
-    return false;
-  }
-
-  if (typeof args.handlerId !== "string" || args.handlerId.length === 0) {
-    return false;
-  }
-
-  return true;
+  return countBy(b.path)["/"] - countBy(a.path)["/"];
 }

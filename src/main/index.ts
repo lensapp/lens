@@ -28,8 +28,6 @@ import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
 import { bindBroadcastHandlers } from "../common/ipc";
 import { LensProtocolRouterMain } from "./protocol-handler";
-import URLParse from "url-parse";
-import { RoutingError } from "../common/protocol-handler";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -157,21 +155,14 @@ app
 
     return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
   })
-  .on("open-url", async (event, rawUrl) => {
-    // protocol handler for macOS
+  .on("open-url", (event, rawUrl) => {
+    // lens:// protocol handler
     event.preventDefault();
 
-    try {
-      const url = new URLParse(rawUrl, true);
-
-      await LensProtocolRouterMain.getInstance<LensProtocolRouterMain>().route(url);
-    } catch (error) {
-      if (error instanceof RoutingError) {
-        logger.error(`${LensProtocolRouterMain.LoggingPrefix}: ${error}`, { url: error.url });
-      } else {
-        logger.error(`${LensProtocolRouterMain.LoggingPrefix}: ${error}`, { rawUrl });
-      }
-    }
+    LensProtocolRouterMain
+      .getInstance<LensProtocolRouterMain>()
+      .route(rawUrl)
+      .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl }));
   });
 
 // Extensions-api runtime exports
