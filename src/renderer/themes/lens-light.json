@@ -59,13 +59,14 @@
     "colorVague": "#ededed",
     "colorTerminated": "#9dabb5",
     "dockHeadBackground": "#e8e8e8",
-    "dockInfoBackground": "#e8e8e8",
+    "dockInfoBackground": "#f3f3f3",
     "dockInfoBorderColor": "#c9cfd3",
     "dockEditorBackground": "#24292e",
     "dockEditorTag": "#8e97a3",
     "dockEditorKeyword": "#ffffff",
     "dockEditorComment": "#808080",
     "dockEditorActiveLineBackground": "#3a3d41",
+    "dockBadgeBackground": "#dedede",
     "logsBackground": "#24292e",
     "logsForeground": "#ffffff",
     "logRowHoverBackground": "#35373a",
@@ -115,6 +116,7 @@
     "lineProgressBackground": "#e8e8e8",
     "radioActiveBackground": "#f1f1f1",
     "menuActiveBackground": "#e8e8e8",
+    "menuSelectedOptionBgc": "#e8e8e8",
     "scrollBarColor": "#bbbbbb",
     "canvasBackground": "#24292e"
   }
