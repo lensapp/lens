@@ -130,10 +130,17 @@ export class Terminal {
   fit = () => {
     // Since this function is debounced we need to read this value as late as possible
     if (!this.isActive) return;
-    this.fitAddon.fit();
-    const { cols, rows } = this.xterm;
 
-    this.api.sendTerminalSize(cols, rows);
+    try {
+      this.fitAddon.fit();
+      const { cols, rows } = this.xterm;
+
+      this.api.sendTerminalSize(cols, rows);
+    } catch(error) {
+      console.error(error);
+
+      return; // see https://github.com/lensapp/lens/issues/1891
+    }
   };
 
   fitLazy = debounce(this.fit, 250);

@@ -22,7 +22,7 @@
         height: 18px;  // Must be equal to lineHeight variable in pod-log-list.tsx
         font-family: $font-monospace;
         font-size: smaller;
-        white-space: pre;
+        white-space: nowrap;
 
         &:hover {
           background: $logRowHoverBackground;
