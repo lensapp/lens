@@ -51,6 +51,8 @@ import { sum } from "lodash";
 
 @observer
 export class App extends React.Component {
+  private extensionRoutes: Map<ClusterPageMenuRegistration, JSX.Element> = new Map();
+
   static async init() {
     const frameId = webFrame.routingId;
     const clusterId = getHostedClusterId();
@@ -145,21 +147,27 @@ export class App extends React.Component {
     return routes;
   }
 
-  renderExtensionTabLayoutRoutes() {
+  renderExtensionTabLayoutRoutes(): JSX.Element[] {
     return clusterPageMenuRegistry.getRootItems().map((menu, index) => {
-      const tabRoutes = this.getTabLayoutRoutes(menu);
+      let route = this.extensionRoutes.get(menu);
+      if (route) {
+        return route;
+      }
 
+      const tabRoutes = this.getTabLayoutRoutes(menu);
       if (tabRoutes.length > 0) {
         const pageComponent = () => <TabLayout tabs={tabRoutes} />;
-
-        return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
+        route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
+        this.extensionRoutes.set(menu, route);
       } else {
         const page = clusterPageRegistry.getByPageMenuTarget(menu.target);
-
         if (page) {
-          return <Route key={`extension-tab-layout-route-${index}`} path={page.routePath} exact={page.exact} component={page.components.Page}/>;
+          route = <Route key={`extension-tab-layout-route-${index}`} path={page.routePath} exact={page.exact} component={page.components.Page}/>;
+          this.extensionRoutes.set(menu, route);
         }
       }
+
+      return route;
     });
   }
 
