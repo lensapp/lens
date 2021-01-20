@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import React from "react";
 import "@testing-library/jest-dom/extend-expect";
 import { render } from "@testing-library/react";
@@ -6,102 +10,7 @@ import selectEvent from "react-select-event";
 import { Pod } from "../../../api/endpoints";
 import { LogResourceSelector } from "../log-resource-selector";
 import { LogTabData } from "../log-tab.store";
-
-const dummyPod = {
-  apiVersion: "v1",
-  kind: "dummy",
-  metadata: {
-    uid: "dummyPod",
-    name: "dummyPod",
-    creationTimestamp: "dummy",
-    resourceVersion: "dummy",
-    namespace: "default"
-  },
-  spec: {
-    initContainers: [] as any,
-    containers: [
-      {
-        name: "docker-exporter",
-        image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
-      }
-    ],
-    serviceAccountName: "dummy",
-    serviceAccount: "dummy",
-  },
-  status: {
-    phase: "Running",
-    conditions: [{
-      type: "Running",
-      status: "Running",
-      lastProbeTime: 1,
-      lastTransitionTime: "Some time",
-    }],
-    hostIP: "dummy",
-    podIP: "dummy",
-    startTime: "dummy",
-  }
-};
-
-const anotherDummyPod = {
-  apiVersion: "v1",
-  kind: "dummy",
-  metadata: {
-    uid: "anotherDummyPod",
-    name: "anotherDummyPod",
-    creationTimestamp: "dummy",
-    resourceVersion: "dummy",
-    namespace: "default",
-    ownerReferences: [{
-      apiVersion: "v1",
-      kind: "Deployment",
-      name: "super-deployment",
-      uid: "uuid",
-      controller: true,
-      blockOwnerDeletion: true,
-    }]
-  },
-  spec: {
-    initContainers: [
-      {
-        name: "init-node-exporter",
-        image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
-      },
-      {
-        name: "init-node-exporter-1",
-        image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
-      }
-    ],
-    containers: [
-      {
-        name: "node-exporter",
-        image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
-      },
-      {
-        name: "node-exporter-1",
-        image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
-        imagePullPolicy: "pull"
-      }
-    ],
-    serviceAccountName: "dummy",
-    serviceAccount: "dummy",
-  },
-  status: {
-    phase: "Running",
-    conditions: [{
-      type: "Running",
-      status: "Running",
-      lastProbeTime: 1,
-      lastTransitionTime: "Some time",
-    }],
-    hostIP: "dummy",
-    podIP: "dummy",
-    startTime: "dummy",
-  }
-};
+import { dockerPod, deploymentPod1 } from "./pod.mock";
 
 const getComponent = (tabData: LogTabData) => {
   return (
@@ -115,7 +24,7 @@ const getComponent = (tabData: LogTabData) => {
 };
 
 const getOnePodTabData = (): LogTabData => {
-  const selectedPod = new Pod(dummyPod);
+  const selectedPod = new Pod(dockerPod);
 
   return {
     pods: [] as Pod[],
@@ -127,8 +36,8 @@ const getOnePodTabData = (): LogTabData => {
 };
 
 const getFewPodsTabData = (): LogTabData => {
-  const selectedPod = new Pod(anotherDummyPod);
-  const anotherPod = new Pod(dummyPod);
+  const selectedPod = new Pod(deploymentPod1);
+  const anotherPod = new Pod(dockerPod);
 
   return {
     pods: [anotherPod],
@@ -159,7 +68,7 @@ describe("<LogResourceSelector />", () => {
     const tabData = getOnePodTabData();
     const { getByText } = render(getComponent(tabData));
 
-    expect(getByText("dummyPod")).toBeInTheDocument();
+    expect(getByText("dockerExporter")).toBeInTheDocument();
     expect(getByText("docker-exporter")).toBeInTheDocument();
   });
 
@@ -170,8 +79,8 @@ describe("<LogResourceSelector />", () => {
 
     selectEvent.openMenu(podSelector);
 
-    expect(getByText("dummyPod")).toBeInTheDocument();
-    expect(getByText("anotherDummyPod")).toBeInTheDocument();
+    expect(getByText("dockerExporter")).toBeInTheDocument();
+    expect(getByText("deploymentPod1")).toBeInTheDocument();
   });
 
   it("renders sibling containers in dropdown", () => {
