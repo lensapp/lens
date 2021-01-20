@@ -30,8 +30,6 @@ const getOnePodTabData = (): LogTabData => {
     pods: [] as Pod[],
     selectedPod,
     selectedContainer: selectedPod.getContainers()[0],
-    containers: selectedPod.getContainers(),
-    initContainers: selectedPod.getInitContainers(),
   };
 };
 
@@ -43,8 +41,6 @@ const getFewPodsTabData = (): LogTabData => {
     pods: [anotherPod],
     selectedPod,
     selectedContainer: selectedPod.getContainers()[0],
-    containers: selectedPod.getContainers(),
-    initContainers: selectedPod.getInitContainers(),
   };
 };
 

@@ -32,8 +32,6 @@ describe("log tab store", () => {
       pods: [selectedPod],
       selectedPod,
       selectedContainer,
-      containers: selectedPod.getContainers(),
-      initContainers: [],
       showTimestamps: false,
       previous: false
     });
@@ -53,8 +51,6 @@ describe("log tab store", () => {
       pods: [selectedPod, siblingPod],
       selectedPod,
       selectedContainer,
-      containers: selectedPod.getContainers(),
-      initContainers: selectedPod.getInitContainers(),
       showTimestamps: false,
       previous: false
     });

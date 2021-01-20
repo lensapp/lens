@@ -4,14 +4,12 @@ import { podsStore } from "../+workloads-pods/pods.store";
 import { IPodContainer, Pod } from "../../api/endpoints";
 import { WorkloadKubeObject } from "../../api/workload-kube-object";
 import { DockTabStore } from "./dock-tab.store";
-import { dockStore, IDockTab, TabId, TabKind } from "./dock.store";
+import { dockStore, IDockTab, TabKind } from "./dock.store";
 
 export interface LogTabData {
   pods: Pod[];
   selectedPod: Pod;
   selectedContainer: IPodContainer
-  containers?: IPodContainer[]
-  initContainers?: IPodContainer[]
   showTimestamps?: boolean
   previous?: boolean
 }
@@ -67,29 +65,15 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     }, false);
   }
 
-  private saveControlsData(id: TabId, data: LogTabData) {
-    this.setData(id, data);
-  }
-
-  private addBasicControlsData(data: LogTabData): LogTabData {
-    const containers = data.selectedPod.getContainers();
-    const initContainers = data.selectedPod.getInitContainers();
-
-    return {
-      ...data,
-      containers,
-      initContainers,
-      showTimestamps: false,
-      previous: false
-    };
-  }
-
   private createLogsTab(title: string, data: LogTabData) {
     const id = uniqueId("log-tab-");
-    const fullData = this.addBasicControlsData(data);
 
     this.createDockTab({ id, title });
-    this.saveControlsData(id, fullData);
+    this.setData(id, {
+      ...data,
+      showTimestamps: false,
+      previous: false
+    });
   }
 }
 

@@ -19,8 +19,10 @@ interface Props {
 
 export const LogResourceSelector = observer((props: Props) => {
   const { tabData, save, reload, tabId } = props;
-  const { selectedPod, selectedContainer, containers, initContainers, pods } = tabData;
+  const { selectedPod, selectedContainer, pods } = tabData;
   const pod = new Pod(selectedPod);
+  const containers = pod.getContainers();
+  const initContainers = pod.getInitContainers();
 
   const onContainerChange = (option: SelectOption) => {
     save({
@@ -38,13 +40,9 @@ export const LogResourceSelector = observer((props: Props) => {
       return;
     }
 
-    const { getContainers, getInitContainers, getAllContainers } = selectedPod;
-
     save({
       selectedPod,
-      containers: getContainers(),
-      initContainers: getInitContainers(),
-      selectedContainer: getAllContainers()[0]
+      selectedContainer: selectedPod.getAllContainers()[0]
     });
 
     dockStore.renameTab(tabId, `Pod ${option.value}`);
