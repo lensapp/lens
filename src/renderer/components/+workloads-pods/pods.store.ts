@@ -32,14 +32,8 @@ export class PodsStore extends KubeObjectStore<Pod> {
   }
 
   getPodsByOwnerId(workloadId: string): Pod[] {
-    if (!workloadId) return [];
-
     return this.items.filter(pod => {
-      const owners = pod.getOwnerRefs();
-
-      if (!owners.length) return;
-
-      return owners.find(owner => owner.uid === workloadId);
+      return pod.getOwnerRefs().find(owner => owner.uid === workloadId);
     });
   }
 
