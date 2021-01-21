@@ -6,9 +6,9 @@ import { observer } from "mobx-react";
 import React from "react";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { Dialog } from "../dialog";
-import { isMac } from "../../../common/vars";
 import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
+import { subscribeToBroadcast } from "../../../common/ipc";
 
 @observer
 export class CommandDialog extends React.Component {
@@ -23,22 +23,9 @@ export class CommandDialog extends React.Component {
   }
 
   @action
-  private shortcutHandler(event: KeyboardEvent) {
-    console.log(event);
-
-    if (isMac) {
-      if (event.shiftKey && event.metaKey && event.key === "p") {
-        this.visible = true;
-        this.menuIsOpen = true;
-        event.stopPropagation();
-      }
-    } else {
-      if (event.shiftKey && event.ctrlKey && event.key === "p") {
-        this.visible = true;
-        this.menuIsOpen = true;
-        event.stopPropagation();
-      }
-    }
+  private shortcutHandler() {
+    this.visible = true;
+    this.menuIsOpen = true;
   }
 
   private closeDialog() {
@@ -50,11 +37,7 @@ export class CommandDialog extends React.Component {
 
   componentDidMount() {
     window.addEventListener("keyup", (e) => this.escHandler(e), true);
-    window.addEventListener("keydown", (e) => this.shortcutHandler(e), true);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("keyup", this.escHandler);
+    subscribeToBroadcast("command-palette:open", () => this.shortcutHandler());
   }
 
   @computed get options() {
@@ -65,8 +48,6 @@ export class CommandDialog extends React.Component {
 
   private onChange(value: string) {
     const command = commandRegistry.getItems().find((cmd) => cmd.id === value);
-
-    console.log(value, command);
 
     if (!command) {
       return;
@@ -89,7 +70,7 @@ export class CommandDialog extends React.Component {
       <Dialog isOpen={this.visible}>
         <div id="command-dialog">
           <Select
-            onChange={(v) => this.onChange(v)}
+            onChange={(v) => this.onChange(v.value)}
             components={{ DropdownIndicator: null, IndicatorSeparator: null }}
             menuIsOpen={this.menuIsOpen}
             options={this.options}
