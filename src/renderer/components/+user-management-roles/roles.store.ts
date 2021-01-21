@@ -7,8 +7,8 @@ import { apiManager } from "../../api/api-manager";
 export class RolesStore extends KubeObjectStore<Role> {
   api = clusterRoleApi;
 
-  subscribe() {
-    return super.subscribe([roleApi, clusterRoleApi]);
+  getSubscribeApis() {
+    return [roleApi, clusterRoleApi];
   }
 
   protected sortItems(items: Role[]) {

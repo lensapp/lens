@@ -2,13 +2,13 @@
 
 import type { Cluster } from "../../main/cluster";
 import type { IKubeWatchEvent, IKubeWatchEventStreamEnd, IWatchRoutePayload } from "../../main/routes/watch-route";
-
 import type { KubeObject } from "./kube-object";
+import type { KubeObjectStore } from "../kube-object.store";
+
 import { computed, observable, reaction } from "mobx";
 import { autobind, EventEmitter } from "../utils";
-import { ensureObjectSelfLink, KubeApi } from "./kube-api";
+import { ensureObjectSelfLink, KubeApi, parseKubeApi } from "./kube-api";
 import { KubeJsonApiData, KubeJsonApiError } from "./kube-json-api";
-import { KubeObjectStore } from "../kube-object.store";
 import { apiPrefix, isProduction } from "../../common/vars";
 import { apiManager } from "./api-manager";
 
@@ -19,6 +19,11 @@ export interface IKubeWatchMessage<T extends KubeObject = any> {
   error?: IKubeWatchEvent<KubeJsonApiError>;
   api?: KubeApi<T>;
   store?: KubeObjectStore<T>;
+}
+
+export interface IKubeWatchSubscribeStoreOptions {
+  autoLoad?: boolean;
+  waitUntilLoaded?: boolean;
 }
 
 export interface IKubeWatchLog {
@@ -57,17 +62,49 @@ export class KubeWatchApi {
     return this.subscribers.get(api) || 0;
   }
 
-  subscribe(...apis: KubeApi[]) {
+  subscribeApi(api: KubeApi | KubeApi[]) {
+    const apis: KubeApi[] = [api].flat();
+
     apis.forEach(api => {
       this.subscribers.set(api, this.getSubscribersCount(api) + 1);
     });
 
-    return () => apis.forEach(api => {
-      const count = this.getSubscribersCount(api) - 1;
+    return () => {
+      apis.forEach(api => {
+        const count = this.getSubscribersCount(api) - 1;
 
-      if (count <= 0) this.subscribers.delete(api);
-      else this.subscribers.set(api, count);
+        if (count <= 0) this.subscribers.delete(api);
+        else this.subscribers.set(api, count);
+      });
+    };
+  }
+
+  async subscribeStores(stores: KubeObjectStore[], options: IKubeWatchSubscribeStoreOptions = {}): Promise<() => void> {
+    this.log({
+      message: "Subscribing to stores",
+      meta: { stores, options },
     });
+
+    const { autoLoad = true, waitUntilLoaded = true } = options;
+    const loading: Promise<any>[] = [];
+
+    if (autoLoad) {
+      loading.push(...stores.map(store => store.loadAll()));
+    }
+
+    if (waitUntilLoaded) {
+      try {
+        await Promise.all(loading);
+      } catch (error) {
+        this.log({
+          message: new Error("Loading stores has failed"),
+          meta: { stores, error, options },
+        })
+      }
+    }
+
+    const disposers = await Promise.all(stores.map(store => store.subscribe()));
+    return () => disposers.forEach(dispose => dispose()); // unsubscribe
   }
 
   protected async resolveCluster(): Promise<Cluster> {
@@ -107,7 +144,7 @@ export class KubeWatchApi {
     }
 
     this.log({
-      message: "connecting",
+      message: "Connecting",
       meta: payload,
     });
 
@@ -204,7 +241,7 @@ export class KubeWatchApi {
   }
 
   protected async onServerStreamEnd(event: IKubeWatchEventStreamEnd) {
-    const { apiBase, namespace } = KubeApi.parseApi(event.url);
+    const { apiBase, namespace } = parseKubeApi(event.url);
     const api = apiManager.getApi(apiBase);
 
     if (api) {
@@ -213,7 +250,7 @@ export class KubeWatchApi {
         this.connect();
       } catch (error) {
         this.log({
-          message: new Error("failed to reconnect on stream end"),
+          message: new Error("Failed to reconnect on stream end"),
           meta: { error, event },
         });
 
@@ -227,7 +264,9 @@ export class KubeWatchApi {
   }
 
   protected log({ message, meta }: IKubeWatchLog) {
-    if (isProduction) return;
+    if (isProduction) {
+      return;
+    }
 
     const logMessage = `%c[KUBE-WATCH-API]: ${String(message).toUpperCase()}`;
     const isError = message instanceof Error;

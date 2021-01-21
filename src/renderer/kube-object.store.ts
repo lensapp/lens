@@ -5,7 +5,7 @@ import { KubeObject } from "./api/kube-object";
 import { IKubeWatchEvent, IKubeWatchMessage, kubeWatchApi } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
-import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
+import { IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
 
 export interface KubeObjectStoreLoadingParams {
@@ -152,7 +152,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   @action
   async loadFromPath(resourcePath: string) {
-    const { namespace, name } = KubeApi.parseApi(resourcePath);
+    const { namespace, name } = parseKubeApi(resourcePath);
 
     return this.load({ name, namespace });
   }
@@ -203,8 +203,15 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     });
   }
 
-  subscribe(apis = [this.api]) {
-    return KubeApi.watchAll(...apis);
+  getSubscribeApis(): KubeApi[] {
+    return [this.api];
+  }
+
+  async subscribe(apis = this.getSubscribeApis()) {
+    const cluster = await this.resolveCluster();
+    const allowedApis = apis.filter(api => cluster.isAllowedResource(api.kind));
+
+    return kubeWatchApi.subscribeApi(allowedApis);
   }
 
   @action

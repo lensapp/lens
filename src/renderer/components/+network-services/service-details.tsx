@@ -1,12 +1,12 @@
 import "./service-details.scss";
 
 import React from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { DrawerItem, DrawerTitle } from "../drawer";
 import { Badge } from "../badge";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { KubeObjectDetailsProps } from "../kube-object";
-import { Service, endpointApi } from "../../api/endpoints";
+import { Service } from "../../api/endpoints";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { ServicePortComponent } from "./service-port-component";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
@@ -18,11 +18,13 @@ interface Props extends KubeObjectDetailsProps<Service> {
 
 @observer
 export class ServiceDetails extends React.Component<Props> {
-  componentDidMount() {
+  async componentDidMount() {
     if (!endpointStore.isLoaded) {
       endpointStore.loadAll();
     }
-    endpointApi.watch();
+    disposeOnUnmount(this, [
+      await endpointStore.subscribe(),
+    ]);
   }
 
   render() {
@@ -77,7 +79,7 @@ export class ServiceDetails extends React.Component<Props> {
         )}
         <DrawerTitle title={`Endpoint`}/>
 
-        <ServiceDetailsEndpoint endpoint={endpoint} />
+        <ServiceDetailsEndpoint endpoint={endpoint}/>
       </div>
     );
   }

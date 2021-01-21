@@ -2,9 +2,9 @@ import "./namespace-select.scss";
 
 import React from "react";
 import { computed } from "mobx";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { Select, SelectOption, SelectProps } from "../select";
-import { cssNames, noop } from "../../utils";
+import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
 import { FilterIcon } from "../item-object-list/filter-icon";
@@ -28,17 +28,14 @@ const defaultProps: Partial<Props> = {
 @observer
 export class NamespaceSelect extends React.Component<Props> {
   static defaultProps = defaultProps as object;
-  private unsubscribe = noop;
 
   async componentDidMount() {
     if (!namespaceStore.isLoaded) {
       await namespaceStore.loadAll();
     }
-    this.unsubscribe = namespaceStore.subscribe();
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
+    disposeOnUnmount(this, [
+      await namespaceStore.subscribe(),
+    ]);
   }
 
   @computed get options(): SelectOption[] {
@@ -60,7 +57,7 @@ export class NamespaceSelect extends React.Component<Props> {
 
     return label || (
       <>
-        {showIcons && <Icon small material="layers" />}
+        {showIcons && <Icon small material="layers"/>}
         {value}
       </>
     );
@@ -103,9 +100,9 @@ export class NamespaceSelectFilter extends React.Component {
 
           return (
             <div className="flex gaps align-center">
-              <FilterIcon type={FilterType.NAMESPACE} />
+              <FilterIcon type={FilterType.NAMESPACE}/>
               <span>{namespace}</span>
-              {isSelected && <Icon small material="check" className="box right" />}
+              {isSelected && <Icon small material="check" className="box right"/>}
             </div>
           );
         }}

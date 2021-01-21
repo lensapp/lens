@@ -1,5 +1,5 @@
 import React from "react";
-import { observer } from "mobx-react";
+import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
 import { Notifications } from "./notifications";
@@ -45,6 +45,7 @@ import { eventStore } from "./+events/event.store";
 import { computed, reaction } from "mobx";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
+import { kubeWatchApi } from "../api/kube-watch-api";
 import { sum } from "lodash";
 import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 
@@ -77,36 +78,22 @@ export class App extends React.Component {
 
   async componentDidMount() {
     const cluster = getHostedCluster();
-    const promises: Promise<void>[] = [];
 
-    if (isAllowedResource("events") && isAllowedResource("pods")) {
-      promises.push(eventStore.loadAll());
-      promises.push(podsStore.loadAll());
-    }
+    disposeOnUnmount(this, [
+      await kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore], {
+        autoLoad: true,
+        waitUntilLoaded: true,
+      }),
 
-    if (isAllowedResource("nodes")) {
-      promises.push(nodesStore.loadAll());
-    }
-    await Promise.all(promises);
-
-    if (eventStore.isLoaded && podsStore.isLoaded) {
-      eventStore.subscribe();
-      podsStore.subscribe();
-    }
-
-    if (nodesStore.isLoaded) {
-      nodesStore.subscribe();
-    }
-
-    reaction(() => this.warningsCount, (count) => {
-      broadcastMessage(`cluster-warning-event-count:${cluster.id}`, count);
-    });
+      reaction(() => this.warningsCount, (count) => {
+        broadcastMessage(`cluster-warning-event-count:${cluster.id}`, count);
+      }),
+    ]);
   }
 
-  @computed
-  get warningsCount() {
-    let warnings = sum(nodesStore.items
-      .map(node => node.getWarningConditions().length));
+  // todo: move to nodes-store.ts
+  @computed get warningsCount() {
+    let warnings = sum(nodesStore.items.map(node => node.getWarningConditions().length));
 
     warnings = warnings + eventStore.getWarnings().length;
 

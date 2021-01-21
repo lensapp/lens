@@ -2,7 +2,7 @@ import "./item-list-layout.scss";
 import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
-import { computed, IReactionDisposer, observable, reaction, toJS } from "mobx";
+import { computed, observable, reaction, toJS } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
@@ -12,7 +12,6 @@ import { NoItems } from "../no-items";
 import { Spinner } from "../spinner";
 import { ItemObject, ItemStore } from "../../item.store";
 import { SearchInputUrl } from "../input";
-import { namespaceStore } from "../+namespaces/namespace.store";
 import { Filter, FilterType, pageFilters } from "./page-filters.store";
 import { PageFiltersList } from "./page-filters-list";
 import { PageFiltersSelect } from "./page-filters-select";
@@ -97,10 +96,6 @@ interface ItemListLayoutUserSettings {
 export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   static defaultProps = defaultProps as object;
 
-  private watchDisposers: IReactionDisposer[] = [];
-
-  @observable isUnmounting = false;
-
   @observable userSettings: ItemListLayoutUserSettings = {
     showAppliedFilters: false,
   };
@@ -125,48 +120,12 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       throw new Error("[ItemListLayout]: configurable list require props.tableId to be specified");
     }
 
-    this.loadStores();
-
+    // fixme: reload stores
     if (!isClusterScoped) {
-      disposeOnUnmount(this, [
-        namespaceStore.onContextChange(() => this.loadStores())
-      ]);
+      // disposeOnUnmount(this, [
+      //   namespaceStore.onContextChange(() => this.loadStores())
+      // ]);
     }
-  }
-
-  async componentWillUnmount() {
-    this.isUnmounting = true;
-    this.unsubscribeStores();
-  }
-
-  @computed get stores() {
-    const { store, dependentStores } = this.props;
-
-    return new Set([store, ...dependentStores]);
-  }
-
-  async loadStores() {
-    this.unsubscribeStores(); // reset first
-
-    // load
-    for (const store of this.stores) {
-      if (this.isUnmounting) {
-        this.unsubscribeStores();
-        break;
-      }
-
-      try {
-        await store.loadAll();
-        this.watchDisposers.push(store.subscribe());
-      } catch (error) {
-        console.error("loading store error", error);
-      }
-    }
-  }
-
-  unsubscribeStores() {
-    this.watchDisposers.forEach(dispose => dispose());
-    this.watchDisposers.length = 0;
   }
 
   private filterCallbacks: { [type: string]: ItemsFilter } = {
