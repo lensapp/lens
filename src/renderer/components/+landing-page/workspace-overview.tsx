@@ -36,7 +36,7 @@ export class WorkspaceOverview extends Component<Props> {
     const { icon } = preferences;
 
     return (
-      <div className="WorkspaceClusterIcon flex inline" >
+      <div className="WorkspaceClusterIcon" >
         {icon && <img src={icon} alt={name}/>}
         {!icon && <Hashicon value={clusterId} />}
       </div>
@@ -56,7 +56,7 @@ export class WorkspaceOverview extends Component<Props> {
         }}
         searchFilters={[]}
         renderTableHeader={[
-            { title: "Icon" },
+            { title: "", className: "icon flex-grow" },
             { title: "Name", className: "name flex-grow", sortBy: sortBy.name },
             { title: "Id", className: "id" },
         ]}
