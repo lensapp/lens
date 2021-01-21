@@ -65,6 +65,7 @@
     "dockEditorKeyword": "#ffffff",
     "dockEditorComment": "#808080",
     "dockEditorActiveLineBackground": "#3a3d41",
+    "dockBadgeBackground": "#36393e",
     "logsBackground": "#000000",
     "logsForeground": "#ffffff",
     "logRowHoverBackground": "#35373a",
@@ -114,6 +115,7 @@
     "lineProgressBackground": "#414448",
     "radioActiveBackground": "#36393e",
     "menuActiveBackground": "#36393e",
+    "menuSelectedOptionBgc": "#36393e",
     "scrollBarColor": "#5f6064"
   }
 }
