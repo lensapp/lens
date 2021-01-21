@@ -2,7 +2,12 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.7 (current version)
+## 4.0.8 (current version)
+
+- Fix: extension cluster sub-menu/page periodic re-render
+- Fix: app hang on boot if started from command line & oh-my-zsh prompts for auto-update
+
+## 4.0.7
 
 - Fix: typo in Prometheus Ingress metrics
 - Fix: catch xterm.js fit error
