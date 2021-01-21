@@ -1,10 +1,14 @@
 .PodTolerations {
+  .TableHead {
+    background-color: var(--drawerSubtitleBackground);
+  }
+
   .TableCell {
     white-space: normal;
     word-break: normal;
 
     &.key {
-      flex-grow: 4;
+      flex-grow: 3;
     }
   }
 }

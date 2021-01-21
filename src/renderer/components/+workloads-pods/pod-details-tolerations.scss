@@ -1,6 +1,10 @@
 .PodDetailsTolerations {
   grid-template-columns: auto;
 
+  .PodTolerations {
+    margin-top: var(--margin);
+  }
+
   // Expanding value cell to cover 2 columns (whole Drawer width)
 
   > .name {
