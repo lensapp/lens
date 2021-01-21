@@ -1,0 +1,56 @@
+import React from "react";
+import { observer } from "mobx-react";
+import { Workspace, workspaceStore } from "../../../common/workspace-store";
+import { v4 as uuid } from "uuid";
+import { commandRegistry } from "../../../extensions/registries/command-registry";
+import { Input, InputValidator } from "../input";
+import { navigate } from "../../navigation";
+import { closeCommandDialog, openCommandDialog } from "../command-palette/command-container";
+
+const uniqueWorkspaceName: InputValidator = {
+  condition: ({ required }) => required,
+  message: () => `Workspace with this name already exists`,
+  validate: value => !workspaceStore.enabledWorkspacesList.find((workspace) => workspace.name === value),
+};
+
+@observer
+export class AddWorkspace extends React.Component {
+  handleKeyDown(name: string) {
+    if (name.trim() === "") {
+      return;
+    }
+    const workspace = workspaceStore.addWorkspace(new Workspace({
+      id: uuid(),
+      name
+    }));
+
+    workspaceStore.setActive(workspace.id);
+    navigate("/");
+    closeCommandDialog();
+  }
+
+  render() {
+    return (
+      <>
+        <Input
+          placeholder="Workspace name"
+          autoFocus={true}
+          theme="round-black"
+          validators={[uniqueWorkspaceName]}
+          onSubmit={(v) => this.handleKeyDown(v)}
+          dirty={true}
+          showValidationLine={true} />
+        <small className="hint">
+          Please provide a new workspace name (Press &quot;Enter&quot; to confirm or &quot;Escape&quot; to cancel)
+        </small>
+      </>
+    );
+  }
+}
+
+commandRegistry.add({
+  id: "workspace.addWorkspace",
+  title: "Workspace: Add workspace ...",
+  scope: "global",
+  action: () => openCommandDialog(<AddWorkspace />)
+});

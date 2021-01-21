@@ -12,5 +12,6 @@ export const preferencesURL = buildURL(preferencesRoute.path);
 commandRegistry.add({
   id: "app.showPreferences",
   title: "Preferences: Open",
-  action: () => navigate(preferencesURL.toString())
+  scope: "global",
+  action: () => navigate(preferencesURL())
 });

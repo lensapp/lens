@@ -12,6 +12,7 @@ export type CommandContext = {
 export interface CommandRegistration {
   id: string;
   title: string;
+  scope: "cluster" | "global";
   action: (context: CommandContext) => void;
   isActive?: (context: CommandContext) => boolean;
 }

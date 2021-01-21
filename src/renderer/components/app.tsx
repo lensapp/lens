@@ -47,6 +47,7 @@ import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
 import { sum } from "lodash";
 import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
+import { CommandContainer } from "./command-palette/command-container";
 
 @observer
 export class App extends React.Component {
@@ -203,6 +204,7 @@ export class App extends React.Component {
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
+          <CommandContainer listenPaletteOpen={false} />
         </ErrorBoundary>
       </Router>
     );
