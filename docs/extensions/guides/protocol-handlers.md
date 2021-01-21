@@ -6,11 +6,21 @@ Lens provides a routing mechanism that extensions can use to register custom han
 
 ## Registering A Protocol Handler
 
-The method `onProtocolRequest` exists both on [`LensMainExtension`](extensions/api/classes/lensmainextension/#onprotocolrequest) and on [`LensRendererExtension`](extensions/api/classes/lensrendererextension/#onprotocolrequest).
-This is how, as an extension developer, you can register handlers for your extension.
+The field `protocolhandlers` exists both on [`LensMainExtension`](extensions/api/classes/lensmainextension/#protocolhandlers) and on [`LensRendererExtension`](extensions/api/classes/lensrendererextension/#protocolhandlers).
+This field will be iterated through every time a `lens://` request gets sent to the application.
 The `pathSchema` argument must comply with the [path-to-regexp](https://www.npmjs.com/package/path-to-regexp) package's `compileToRegex` function.
 
 Once you have registered a handler it will be called when a user opens a link on their computer.
+Handlers will be run in both `main` and `renderer` in parallel with no synchronization between the two processes.
+Furthermore, both `main` and `renderer` are routed separately.
+In other words, which handler is selected in either process is independent from the list of possible handlers in the other.
+
+## Deregistering A Protocol Handler
+
+All that is needed to deregister a handler is to remove it from the array of handlers.
+
+## Routing Algorithm
+
 The routing mechanism for extensions is quite straight forward.
 For example consider an extension `example-extension` which is published by the `@mirantis` org.
 If it were to register a handler with `"/display/:type"` as its corresponding link then we would match the following URI like this:
@@ -45,9 +55,3 @@ On the other hand, the subpath `"/display/notification"` would be routed to #3.
 
 The URI is routed to the most specific matching `pathSchema`.
 This way the `"/"` (root) `pathSchema` acts as a sort of catch all or default route if no other route matches.
-
-### Cleaning Up
-
-Currently there is not way to remove a protocol handler once it has been registered.
-Handlers will not be called if the extension is deactivated or uninstalled.
-This means that the handlers should be added (or re-added as the case may be) on every activation of an extension instance.

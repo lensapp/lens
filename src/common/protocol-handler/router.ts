@@ -191,7 +191,7 @@ export abstract class LensProtocolRouter extends Singleton {
     }
 
     // remove the extension name from the path name so we don't need to match on it anymore
-    url.set("pathname", url.pathname.slice(extension.name.length));
+    url.set("pathname", url.pathname.slice(extension.name.length + 1));
 
     const handlers = extension
       .protocolHandlers

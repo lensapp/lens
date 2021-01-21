@@ -55,7 +55,7 @@ export class ExtensionLoader {
   @computed get userExtensionsByName(): Map<string, LensExtension> {
     const res = new Map();
 
-    for (const [, val] of this.instances) {
+    for (const [, val] of this.instances.toJS()) {
       if (val.isBundled) {
         continue;
       }

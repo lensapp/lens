@@ -1,8 +1,8 @@
 import logger from "../logger";
 import * as proto from "../../common/protocol-handler";
-import { WindowManager } from "../window-manager";
 import Url from "url-parse";
 import { LensExtension } from "../../extensions/lens-extension";
+import { broadcastMessage } from "../../common/ipc";
 
 export interface FallbackHandler {
   (name: string): Promise<boolean>;
@@ -70,23 +70,22 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
   }
 
   protected _routeToInternal(url: Url): void {
-    super._routeToExtension(url);
+    super._routeToInternal(url);
 
-    WindowManager.getInstance<WindowManager>().sendToView({
-      channel: proto.ProtocolHandlerInternal,
-      data: [url],
-    });
+    broadcastMessage(proto.ProtocolHandlerInternal, url);
   }
 
   protected async _routeToExtension(url: Url): Promise<void> {
-    // this needs to be done first, so that the missing extension handlers can
-    // be called before notifying the renderer.
-    await super._routeToExtension(url);
+    /**
+     * This needs to be done first, so that the missing extension handlers can
+     * be called before notifying the renderer.
+     *
+     * Note: this needs to clone the url because _routeToExtension modifies its
+     * argument.
+     */
+    await super._routeToExtension(new Url(url.toString(), true));
 
-    WindowManager.getInstance<WindowManager>().sendToView({
-      channel: proto.ProtocolHandlerExtension,
-      data: [url],
-    });
+    broadcastMessage(proto.ProtocolHandlerExtension, url);
   }
 
   /**
