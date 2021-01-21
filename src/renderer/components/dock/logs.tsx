@@ -6,9 +6,11 @@ import { searchStore } from "../../../common/search-store";
 import { autobind } from "../../utils";
 import { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
-import { PodLogControls } from "./pod-log-controls";
-import { PodLogList } from "./pod-log-list";
-import { IPodLogsData, podLogsStore } from "./pod-logs.store";
+import { LogResourceSelector } from "./log-resource-selector";
+import { LogList } from "./log-list";
+import { IPodLogsData, podLogsStore } from "./log.store";
+import { LogSearch } from "./log-search";
+import { LogControls } from "./log-controls";
 
 interface Props {
   className?: string
@@ -16,10 +18,10 @@ interface Props {
 }
 
 @observer
-export class PodLogs extends React.Component<Props> {
+export class Logs extends React.Component<Props> {
   @observable isLoading = true;
 
-  private logListElement = React.createRef<PodLogList>(); // A reference for VirtualList component
+  private logListElement = React.createRef<LogList>(); // A reference for VirtualList component
 
   componentDidMount() {
     disposeOnUnmount(this,
@@ -79,38 +81,54 @@ export class PodLogs extends React.Component<Props> {
     }, 100);
   }
 
-  render() {
+  renderResourceSelector() {
     const logs = podLogsStore.logs;
-
+    const searchLogs = this.tabData.showTimestamps ? logs : podLogsStore.logsWithoutTimestamps;
     const controls = (
-      <PodLogControls
-        ready={!this.isLoading}
-        tabId={this.tabId}
-        tabData={this.tabData}
-        logs={logs}
-        save={this.save}
-        reload={this.reload}
-        onSearch={this.onSearch}
-        toPrevOverlay={this.toOverlay}
-        toNextOverlay={this.toOverlay}
-      />
+      <div className="flex gaps">
+        <LogResourceSelector
+          tabData={this.tabData}
+          save={this.save}
+          reload={this.reload}
+        />
+        <LogSearch
+          onSearch={this.onSearch}
+          logs={searchLogs}
+          toPrevOverlay={this.toOverlay}
+          toNextOverlay={this.toOverlay}
+        />
+      </div>
     );
 
     return (
+      <InfoPanel
+        tabId={this.props.tab.id}
+        controls={controls}
+        showSubmitClose={false}
+        showButtons={false}
+        showStatusPanel={false}
+      />
+    );
+  }
+
+  render() {
+    const logs = podLogsStore.logs;
+
+    return (
       <div className="PodLogs flex column">
-        <InfoPanel
-          tabId={this.props.tab.id}
-          controls={controls}
-          showSubmitClose={false}
-          showButtons={false}
-          showStatusPanel={false}
-        />
-        <PodLogList
+        {this.renderResourceSelector()}
+        <LogList
           logs={logs}
           id={this.tabId}
           isLoading={this.isLoading}
           load={this.load}
           ref={this.logListElement}
+        />
+        <LogControls
+          logs={logs}
+          tabData={this.tabData}
+          save={this.save}
+          reload={this.reload}
         />
       </div>
     );

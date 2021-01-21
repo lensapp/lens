@@ -15,6 +15,7 @@ export interface TableCellProps extends React.DOMAttributes<HTMLDivElement> {
   isChecked?: boolean; // mark checkbox as checked or not
   renderBoolean?: boolean; // show "true" or "false" for all of the children elements are "typeof boolean"
   sortBy?: TableSortBy; // column name, must be same as key in sortable object <Table sortable={}/>
+  showWithColumn?: string // className of another column, if it is not empty the current column is not shown in the filter menu, visibility of this one is the same as a specified column, applicable to headers only
   _sorting?: Partial<TableSortParams>; // <Table> sorting state, don't use this prop outside (!)
   _sort?(sortBy: TableSortBy): void; // <Table> sort function, don't use this prop outside (!)
   _nowrap?: boolean; // indicator, might come from parent <TableHead>, don't use this prop outside (!)
@@ -63,7 +64,7 @@ export class TableCell extends React.Component<TableCellProps> {
   }
 
   render() {
-    const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, ...cellProps } = this.props;
+    const { className, checkbox, isChecked, sortBy, _sort, _sorting, _nowrap, children, title, renderBoolean: displayBoolean, showWithColumn, ...cellProps } = this.props;
     const classNames = cssNames("TableCell", className, {
       checkbox,
       nowrap: _nowrap,

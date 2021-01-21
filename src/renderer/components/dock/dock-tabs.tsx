@@ -7,7 +7,7 @@ import { DockTab } from "./dock-tab";
 import { IDockTab } from "./dock.store";
 import { isEditResourceTab } from "./edit-resource.store";
 import { isInstallChartTab } from "./install-chart.store";
-import { isPodLogsTab } from "./pod-logs.store";
+import { isLogsTab } from "./log.store";
 import { TerminalTab } from "./terminal-tab";
 import { isTerminalTab } from "./terminal.store";
 import { isUpgradeChartTab } from "./upgrade-chart.store";
@@ -33,7 +33,7 @@ export const DockTabs = ({ tabs, autoFocus, selectedTab, onChangeTab }: Props) =
       return <DockTab value={tab} icon={<Icon svg="install" />} />;
     }
 
-    if (isPodLogsTab(tab)) {
+    if (isLogsTab(tab)) {
       return <DockTab value={tab} icon="subject" />;
     }
   };
