@@ -69,24 +69,23 @@ const endpoint = compile(`/v2/releases/:namespace?/:name?`) as (
 ) => string;
 
 export const helmReleasesApi = {
-  list(namespace?: string) {
-    return apiBase
-      .get<HelmRelease[]>(endpoint({ namespace }))
-      .then(releases => releases.map(HelmRelease.create));
+  async list(namespace?: string) {
+    const releases = await apiBase.get<HelmRelease[]>(endpoint({ namespace }));
+
+    return releases.map(HelmRelease.create);
   },
 
-  get(name: string, namespace: string) {
+  async get(name: string, namespace: string) {
     const path = endpoint({ name, namespace });
 
-    return apiBase.get<IReleaseRawDetails>(path).then(details => {
-      const items: KubeObject[] = JSON.parse(details.resources).items;
-      const resources = items.map(item => KubeObject.create(item));
+    const details = await apiBase.get<IReleaseRawDetails>(path);
+    const items: KubeObject[] = JSON.parse(details.resources).items;
+    const resources = items.map(item => KubeObject.create(item));
 
-      return {
-        ...details,
-        resources
-      };
-    });
+    return {
+      ...details,
+      resources
+    };
   },
 
   create(payload: IReleaseCreatePayload): Promise<IReleaseUpdateDetails> {

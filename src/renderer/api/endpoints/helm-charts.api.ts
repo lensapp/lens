@@ -28,11 +28,11 @@ export const helmChartsApi = {
       });
   },
 
-  get(repo: string, name: string, readmeVersion?: string) {
+  get(repo: string, name: string, readmeVersion?: string, reqInit?: RequestInit) {
     const path = endpoint({ repo, name });
 
     return apiBase
-      .get<IHelmChartDetails>(`${path}?${stringify({ version: readmeVersion })}`)
+      .get<IHelmChartDetails>(`${path}?${stringify({ version: readmeVersion })}`, undefined, reqInit)
       .then(data => {
         const versions = data.versions.map(HelmChart.create);
         const readme = data.readme;

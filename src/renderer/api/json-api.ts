@@ -2,8 +2,8 @@
 
 import { stringify } from "querystring";
 import { EventEmitter } from "../../common/event-emitter";
-import { cancelableFetch } from "../utils/cancelableFetch";
 import { randomBytes } from "crypto";
+
 export interface JsonApiData {
 }
 
@@ -72,13 +72,11 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       reqUrl += (reqUrl.includes("?") ? "&" : "?") + queryString;
     }
 
-    const infoLog: JsonApiLog = {
+    this.writeLog({
       method: reqInit.method.toUpperCase(),
       reqUrl: reqPath,
       reqInit,
-    };
-
-    this.writeLog({ ...infoLog });
+    });
 
     return fetch(reqUrl, reqInit);
   }
@@ -99,7 +97,7 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
     return this.request<T>(path, params, { ...reqInit, method: "delete" });
   }
 
-  protected request<D>(path: string, params?: P, init: RequestInit = {}) {
+  protected async request<D>(path: string, params?: P, init: RequestInit = {}) {
     let reqUrl = this.config.apiBase + path;
     const reqInit: RequestInit = { ...this.reqInit, ...init };
     const { data, query } = params || {} as P;
@@ -119,48 +117,53 @@ export class JsonApi<D = JsonApiData, P extends JsonApiParams = JsonApiParams> {
       reqInit,
     };
 
-    return cancelableFetch(reqUrl, reqInit).then(res => {
-      return this.parseResponse<D>(res, infoLog);
-    });
+    const res = await fetch(reqUrl, reqInit);
+
+    return this.parseResponse<D>(res, infoLog);
   }
 
-  protected parseResponse<D>(res: Response, log: JsonApiLog): Promise<D> {
+  protected async parseResponse<D>(res: Response, log: JsonApiLog): Promise<D> {
     const { status } = res;
 
-    return res.text().then(text => {
-      let data;
+    const text = await res.text();
+    let data;
 
-      try {
-        data = text ? JSON.parse(text) : ""; // DELETE-requests might not have response-body
-      } catch (e) {
-        data = text;
-      }
+    try {
+      data = text ? JSON.parse(text) : ""; // DELETE-requests might not have response-body
+    } catch (e) {
+      data = text;
+    }
 
-      if (status >= 200 && status < 300) {
-        this.onData.emit(data, res);
-        this.writeLog({ ...log, data });
+    if (status >= 200 && status < 300) {
+      console.log(data, res);
+      this.onData.emit(data, res);
+      this.writeLog({ ...log, data });
 
-        return data;
-      } else if (log.method === "GET" && res.status === 403) {
-        this.writeLog({ ...log, data });
-      } else {
-        const error = new JsonApiErrorParsed(data, this.parseError(data, res));
+      return data;
+    }
 
-        this.onError.emit(error, res);
-        this.writeLog({ ...log, error });
-        throw error;
-      }
-    });
+    if (log.method === "GET" && res.status === 403) {
+      this.writeLog({ ...log, error: data });
+      throw data;
+    } else {
+      const error = new JsonApiErrorParsed(data, this.parseError(data, res));
+
+      this.onError.emit(error, res);
+      this.writeLog({ ...log, error });
+      throw error;
+    }
   }
 
   protected parseError(error: JsonApiError | string, res: Response): string[] {
     if (typeof error === "string") {
       return [error];
     }
-    else if (Array.isArray(error.errors)) {
+
+    if (Array.isArray(error.errors)) {
       return error.errors.map(error => error.title);
     }
-    else if (error.message) {
+
+    if (error.message) {
       return [error.message];
     }
 

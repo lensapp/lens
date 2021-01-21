@@ -8,7 +8,6 @@ import { Drawer, DrawerItem } from "../drawer";
 import { autobind, stopPropagation } from "../../utils";
 import { MarkdownViewer } from "../markdown-viewer";
 import { Spinner } from "../spinner";
-import { CancelablePromise } from "../../utils/cancelableFetch";
 import { Button } from "../button";
 import { Select, SelectOption } from "../select";
 import { createInstallChartTab } from "../dock/install-chart.store";
@@ -26,10 +25,11 @@ export class HelmChartDetails extends Component<Props> {
   @observable readme: string = null;
   @observable error: string = null;
 
-  private chartPromise: CancelablePromise<{ readme: string; versions: HelmChart[] }>;
+  private chartPromise: Promise<{ readme: string; versions: HelmChart[] }>;
+  private abortController?: AbortController;
 
   componentWillUnmount() {
-    this.chartPromise?.cancel();
+    this.abortController?.abort();
   }
 
   chartUpdater = autorun(() => {
@@ -52,9 +52,12 @@ export class HelmChartDetails extends Component<Props> {
     this.readme = null;
 
     try {
-      this.chartPromise?.cancel();
+      this.abortController?.abort();
+      // there is no way (by design) to reset an AbortController, so just make a new one
+      this.abortController = new AbortController();
+
       const { chart: { name, repo } } = this.props;
-      const { readme } = await (this.chartPromise = helmChartsApi.get(repo, name, version));
+      const { readme } = await (this.chartPromise = helmChartsApi.get(repo, name, version, { signal: this.abortController.signal }));
 
       this.readme = readme;
     } catch (error) {

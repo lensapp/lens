@@ -32,6 +32,20 @@ export class LogStore {
     }, { delay: 500 });
   }
 
+  handlerError(tabId: TabId, error: any): void {
+    if (error.error && !(error.message || error.reason || error.code)) {
+      error = error.error;
+    }
+
+    const message = [
+      `Failed to load logs: ${error.message}`,
+      `Reason: ${error.reason} (${error.code})`
+    ];
+
+    this.refresher.stop();
+    this.podLogs.set(tabId, message);
+  }
+
   /**
    * Function prepares tailLines param for passing to API request
    * Each time it increasing it's number, caused to fetch more logs.
@@ -47,14 +61,8 @@ export class LogStore {
 
       this.refresher.start();
       this.podLogs.set(tabId, logs);
-    } catch ({error}) {
-      const message = [
-        `Failed to load logs: ${error.message}`,
-        `Reason: ${error.reason} (${error.code})`
-      ];
-
-      this.refresher.stop();
-      this.podLogs.set(tabId, message);
+    } catch (error) {
+      this.handlerError(tabId, error);
     }
   };
 
@@ -65,14 +73,21 @@ export class LogStore {
    * @param tabId
    */
   loadMore = async (tabId: TabId) => {
-    if (!this.podLogs.get(tabId).length) return;
-    const oldLogs = this.podLogs.get(tabId);
-    const logs = await this.loadLogs(tabId, {
-      sinceTime: this.getLastSinceTime(tabId)
-    });
+    if (!this.podLogs.get(tabId).length) {
+      return;
+    }
 
-    // Add newly received logs to bottom
-    this.podLogs.set(tabId, [...oldLogs, ...logs]);
+    try {
+      const oldLogs = this.podLogs.get(tabId);
+      const logs = await this.loadLogs(tabId, {
+        sinceTime: this.getLastSinceTime(tabId)
+      });
+
+      // Add newly received logs to bottom
+      this.podLogs.set(tabId, [...oldLogs, ...logs]);
+    } catch (error) {
+      this.handlerError(tabId, error);
+    }
   };
 
   /**
@@ -80,57 +95,51 @@ export class LogStore {
    * an API request
    * @param tabId
    * @param params request parameters described in IPodLogsQuery interface
-   * @returns {Promise} A fetch request promise
+   * @returns A fetch request promise
    */
-  loadLogs = async (tabId: TabId, params: Partial<IPodLogsQuery>) => {
+  @autobind()
+  async loadLogs(tabId: TabId, params: Partial<IPodLogsQuery>): Promise<string[]> {
     const data = logTabStore.getData(tabId);
     const { selectedContainer, previous } = data;
     const pod = new Pod(data.selectedPod);
     const namespace = pod.getNs();
     const name = pod.getName();
 
-    return podsApi.getLogs({ namespace, name }, {
+    const result = await podsApi.getLogs({ namespace, name }, {
       ...params,
       timestamps: true,  // Always setting timestampt to separate old logs from new ones
       container: selectedContainer.name,
       previous
-    }).then(result => {
-      const logs = [...result.split("\n")]; // Transform them into array
-
-      logs.pop();  // Remove last empty element
-
-      return logs;
     });
-  };
+
+    return result.trimEnd().split("\n");
+  }
 
   /**
    * Converts logs into a string array
-   * @returns {number} Length of log lines
+   * @returns Length of log lines
    */
   @computed
-  get lines() {
-    const id = dockStore.selectedTabId;
-    const logs = this.podLogs.get(id);
-
-    return logs ? logs.length : 0;
+  get lines(): number {
+    return this.logs.length;
   }
 
 
   /**
    * Returns logs with timestamps for selected tab
    */
+  @computed
   get logs() {
     const id = dockStore.selectedTabId;
 
-    if (!this.podLogs.has(id)) return [];
-
-    return this.podLogs.get(id);
+    return this.podLogs.get(id) ?? [];
   }
 
   /**
    * Removes timestamps from each log line and returns changed logs
    * @returns Logs without timestamps
    */
+  @computed
   get logsWithoutTimestamps() {
     return this.logs.map(item => this.removeTimestamps(item));
   }
