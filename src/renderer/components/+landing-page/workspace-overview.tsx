@@ -1,3 +1,5 @@
+import "./workspace-cluster-icon.scss";
+
 import React, { Component } from "react";
 import { Workspace } from "../../../common/workspace-store";
 import { clusterStore } from "../../../common/cluster-store";
@@ -13,6 +15,7 @@ import { Spinner } from "../spinner";
 import { Button } from "../button";
 import { Select, SelectOption } from "../select";
 import { Badge } from "../badge";
+import { Hashicon } from "@emeraldpay/hashicon-react";
 import { ClusterItem, WorkspaceClusterStore } from "./workspace-cluster.store";
 
 interface Props {
@@ -26,29 +29,43 @@ enum sortBy {
 @observer
 export class WorkspaceOverview extends Component<Props> {
 
+  getIcon(clusterItem: ClusterItem) {
+    const { cluster } = clusterItem;
+    const { name } = cluster;
+    const { preferences, id: clusterId } = cluster;
+    const { icon } = preferences;
+
+    return (
+      <div className="WorkspaceClusterIcon flex inline" >
+        {icon && <img src={icon} alt={name}/>}
+        {!icon && <Hashicon value={clusterId} />}
+      </div>
+    )
+  }
+
   render() {
     const { workspace } = this.props;
     const workspaceClusterStore = new WorkspaceClusterStore(workspace.id);
 
     return (
-        <TabLayout>
-          <ItemListLayout 
-            isClusterScoped
-            className="WorkspaceList" store={workspaceClusterStore}
-            sortingCallbacks={{
-              [sortBy.name]: (cluster: ClusterItem) => cluster.getName(),
-            }}
-            searchFilters={[]}
-            renderTableHeader={[
-              { title: "Name", className: "name flex-grow", sortBy: sortBy.name },
-              { title: "Id", className: "id" },
-            ]}
-            renderTableContents={(item: ClusterItem) => [
-              item.getName(),
-              item.getId(),
-            ]}
-          />
-        </TabLayout>
+      <ItemListLayout 
+        isClusterScoped
+        className="WorkspaceList" store={workspaceClusterStore}
+        sortingCallbacks={{
+            [sortBy.name]: (cluster: ClusterItem) => cluster.getName(),
+        }}
+        searchFilters={[]}
+        renderTableHeader={[
+            { title: "Icon" },
+            { title: "Name", className: "name flex-grow", sortBy: sortBy.name },
+            { title: "Id", className: "id" },
+        ]}
+        renderTableContents={(item: ClusterItem) => [
+            this.getIcon(item),
+            item.getName(),
+            item.getId(),
+        ]}
+      />
     );
   }
 }

@@ -1,0 +1,10 @@
+.WorkspaceClusterIcon {
+  --size: 37px;
+
+  position: relative;
+  border-radius: $radius;
+  padding: $radius;
+  user-select: none;
+  cursor: pointer;
+
+}
