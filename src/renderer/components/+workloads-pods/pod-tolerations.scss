@@ -1,0 +1,10 @@
+.PodTolerations {
+  .TableCell {
+    white-space: normal;
+    word-break: normal;
+
+    &.key {
+      flex-grow: 4;
+    }
+  }
+}
