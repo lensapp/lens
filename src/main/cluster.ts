@@ -76,6 +76,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * If extension sets this it needs to also mark cluster as enabled on activate (or when added to a store)
    */
   public ownerRef: string;
+  public isDead = false;
   protected kubeconfigManager: KubeconfigManager;
   protected eventDisposers: Function[] = [];
   protected activated = false;
@@ -169,12 +170,7 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable isAdmin = false;
-  /**
-   * Is cluster marked as dead, for example due the invalid kubeconfig
-   *
-   * @observable
-   */
-  @observable isDead = false;
+
   /**
    * Preferences
    *
