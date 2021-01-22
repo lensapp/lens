@@ -22,8 +22,8 @@ export interface IKubeWatchMessage<T extends KubeObject = any> {
 }
 
 export interface IKubeWatchSubscribeStoreOptions {
-  autoLoad?: boolean;
-  waitUntilLoaded?: boolean;
+  preload?: boolean; // preload store items, default: true
+  waitUntilLoaded?: boolean; // subscribe only after loading all stores, default: true
 }
 
 export interface IKubeWatchLog {
@@ -79,32 +79,41 @@ export class KubeWatchApi {
     };
   }
 
-  async subscribeStores(stores: KubeObjectStore[], options: IKubeWatchSubscribeStoreOptions = {}): Promise<() => void> {
-    this.log({
-      message: "Subscribing to stores",
-      meta: { stores, options },
-    });
-
-    const { autoLoad = true, waitUntilLoaded = true } = options;
+  subscribeStores(stores: KubeObjectStore[], options: IKubeWatchSubscribeStoreOptions = {}): () => void {
+    const { preload = true, waitUntilLoaded = true } = options;
     const loading: Promise<any>[] = [];
+    const disposers: Function[] = [];
+    let isDisposed = false;
 
-    if (autoLoad) {
+    async function subscribe() {
+      if (isDisposed) return;
+      const unsubscribeList = await Promise.all(stores.map(store => store.subscribe()));
+      disposers.push(...unsubscribeList);
+      if (isDisposed) unsubscribe();
+    }
+
+    function unsubscribe() {
+      isDisposed = true;
+      disposers.forEach(dispose => dispose());
+      disposers.length = 0;
+    }
+
+    if (preload) {
       loading.push(...stores.map(store => store.loadAll()));
     }
 
     if (waitUntilLoaded) {
-      try {
-        await Promise.all(loading);
-      } catch (error) {
+      Promise.all(loading).then(subscribe, error => {
         this.log({
           message: new Error("Loading stores has failed"),
           meta: { stores, error, options },
-        })
-      }
+        });
+      });
+    } else {
+      subscribe();
     }
 
-    const disposers = await Promise.all(stores.map(store => store.subscribe()));
-    return () => disposers.forEach(dispose => dispose()); // unsubscribe
+    return unsubscribe;
   }
 
   protected async resolveCluster(): Promise<Cluster> {

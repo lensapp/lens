@@ -24,12 +24,12 @@ export class ClusterOverview extends React.Component {
     getHostedCluster().available && clusterOverviewStore.loadMetrics();
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.metricPoller.start(true);
 
     disposeOnUnmount(this, [
-      await kubeWatchApi.subscribeStores([nodesStore, podsStore, eventStore], {
-        autoLoad: true,
+      kubeWatchApi.subscribeStores([nodesStore, podsStore, eventStore], {
+        preload: true,
       }),
       reaction(
         () => clusterOverviewStore.metricNodeRole, // Toggle Master/Worker node switcher

@@ -76,17 +76,14 @@ export class App extends React.Component {
     whatInput.ask(); // Start to monitor user input device
   }
 
-  async componentDidMount() {
-    const cluster = getHostedCluster();
-
+  componentDidMount() {
     disposeOnUnmount(this, [
-      await kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore], {
-        autoLoad: true,
-        waitUntilLoaded: true,
+      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore], {
+        preload: true,
       }),
 
       reaction(() => this.warningsCount, (count) => {
-        broadcastMessage(`cluster-warning-event-count:${cluster.id}`, count);
+        broadcastMessage(`cluster-warning-event-count:${getHostedCluster().id}`, count);
       }),
     ]);
   }

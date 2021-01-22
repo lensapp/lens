@@ -9,6 +9,7 @@ import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
 import { FilterIcon } from "../item-object-list/filter-icon";
 import { FilterType } from "../item-object-list/page-filters.store";
+import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
@@ -29,12 +30,11 @@ const defaultProps: Partial<Props> = {
 export class NamespaceSelect extends React.Component<Props> {
   static defaultProps = defaultProps as object;
 
-  async componentDidMount() {
-    if (!namespaceStore.isLoaded) {
-      await namespaceStore.loadAll();
-    }
+  componentDidMount() {
     disposeOnUnmount(this, [
-      await namespaceStore.subscribe(),
+      kubeWatchApi.subscribeStores([namespaceStore], {
+        preload: !namespaceStore.isLoaded,
+      })
     ]);
   }
 

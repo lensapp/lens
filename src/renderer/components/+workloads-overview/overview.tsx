@@ -26,13 +26,14 @@ export class WorkloadsOverview extends React.Component<Props> {
   @observable isLoading = false;
   @observable isUnmounting = false;
 
-  async componentDidMount() {
+  componentDidMount() {
     disposeOnUnmount(this, [
-      await kubeWatchApi.subscribeStores([
-        podsStore, deploymentStore, daemonSetStore,
-        statefulSetStore, replicaSetStore,
+      kubeWatchApi.subscribeStores([
+        podsStore, deploymentStore, daemonSetStore, statefulSetStore, replicaSetStore,
         jobStore, cronJobStore, eventStore,
-      ])
+      ], {
+        preload: true,
+      }),
     ]);
 
     // fixme: reload stores

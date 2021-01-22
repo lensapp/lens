@@ -12,18 +12,18 @@ import { ServicePortComponent } from "./service-port-component";
 import { endpointStore } from "../+network-endpoints/endpoints.store";
 import { ServiceDetailsEndpoint } from "./service-details-endpoint";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props extends KubeObjectDetailsProps<Service> {
 }
 
 @observer
 export class ServiceDetails extends React.Component<Props> {
-  async componentDidMount() {
-    if (!endpointStore.isLoaded) {
-      endpointStore.loadAll();
-    }
+  componentDidMount() {
     disposeOnUnmount(this, [
-      await endpointStore.subscribe(),
+      kubeWatchApi.subscribeStores([endpointStore], {
+        preload: !endpointStore.isLoaded,
+      }),
     ]);
   }
 

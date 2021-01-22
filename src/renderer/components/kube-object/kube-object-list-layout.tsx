@@ -20,12 +20,14 @@ export class KubeObjectListLayout extends React.Component<KubeObjectListLayoutPr
     return this.props.store.getByPath(kubeSelectedUrlParam.get());
   }
 
-  async componentDidMount() {
-    const { store, dependentStores } = this.props;
+  componentDidMount() {
+    const { store, dependentStores = [] } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
 
     disposeOnUnmount(this, [
-      await kubeWatchApi.subscribeStores(stores)
+      kubeWatchApi.subscribeStores(stores, {
+        preload: true
+      })
     ]);
   }
 
