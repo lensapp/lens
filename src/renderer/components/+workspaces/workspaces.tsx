@@ -1,4 +1,3 @@
-import "./workspaces.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { computed} from "mobx";
@@ -65,7 +64,7 @@ export class ChooseWorkspace extends React.Component {
 
 commandRegistry.add({
   id: "workspace.chooseWorkspace",
-  title: "Workspace: Choose...",
+  title: "Workspace: Switch to workspace ...",
   scope: "global",
   action: () => openCommandDialog(<ChooseWorkspace />)
 });

@@ -38,7 +38,7 @@ export class LensApp extends React.Component {
         </ErrorBoundary>
         <Notifications/>
         <ConfirmDialog/>
-        <CommandContainer listenPaletteOpen={true} />
+        <CommandContainer />
       </Router>
     );
   }

@@ -173,6 +173,8 @@ export class App extends React.Component {
   }
 
   render() {
+    const cluster = getHostedCluster();
+
     return (
       <Router history={history}>
         <ErrorBoundary>
@@ -204,7 +206,7 @@ export class App extends React.Component {
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
-          <CommandContainer listenPaletteOpen={false} />
+          <CommandContainer cluster={cluster} />
         </ErrorBoundary>
       </Router>
     );

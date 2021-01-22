@@ -65,7 +65,7 @@ export class RemoveWorkspace extends React.Component {
 
 commandRegistry.add({
   id: "workspace.removeWorkspace",
-  title: "Workspace: Remove ...",
+  title: "Workspace: Remove workspace ...",
   scope: "global",
   action: () => openCommandDialog(<RemoveWorkspace />)
 });
