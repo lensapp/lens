@@ -110,11 +110,17 @@ export abstract class LensProtocolRouter extends Singleton {
    * @param routes the array of (path schemas, handler) paris to match against
    * @param url the url (in its current state)
    */
-  protected _route(routes: [string, RouteHandler][], url: Url): void {
+  protected _route(routes: [string, RouteHandler][], url: Url, extensionName?: string): void {
     const route = this._findMatchingRoute(routes, url);
 
     if (!route) {
-      throw new RoutingError(RoutingErrorType.NO_HANDLER, url);
+      const data: Record<string, string> = { url: url.toString() };
+
+      if (extensionName) {
+        data.extensionName = extensionName;
+      }
+
+      return void logger.info(`${LensProtocolRouter.LoggingPrefix}: No handler found`, data);
     }
 
     const [match, handler] = route;
@@ -198,7 +204,7 @@ export abstract class LensProtocolRouter extends Singleton {
       .map<[string, RouteHandler]>(({ pathSchema, handler }) => [pathSchema, handler]);
 
     try {
-      this._route(handlers, url);
+      this._route(handlers, url, extension.name);
     } catch (error) {
       if (error instanceof RoutingError) {
         error.extensionName = extension.name;

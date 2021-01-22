@@ -70,12 +70,16 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
   }
 
   protected _routeToInternal(url: Url): void {
+    const rawUrl = url.toString(); // for sending to renderer
+
     super._routeToInternal(url);
 
-    broadcastMessage(proto.ProtocolHandlerInternal, url);
+    broadcastMessage(proto.ProtocolHandlerInternal, rawUrl);
   }
 
   protected async _routeToExtension(url: Url): Promise<void> {
+    const rawUrl = url.toString(); // for sending to renderer
+
     /**
      * This needs to be done first, so that the missing extension handlers can
      * be called before notifying the renderer.
@@ -85,7 +89,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
      */
     await super._routeToExtension(new Url(url.toString(), true));
 
-    broadcastMessage(proto.ProtocolHandlerExtension, url);
+    broadcastMessage(proto.ProtocolHandlerExtension, rawUrl);
   }
 
   /**

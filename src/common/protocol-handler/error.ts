@@ -27,8 +27,6 @@ export class RoutingError extends Error {
         return "invalid protocol";
       case RoutingErrorType.INVALID_PATHNAME:
         return "invalid pathname";
-      case RoutingErrorType.NO_HANDLER:
-        return "no handler";
       case RoutingErrorType.NO_EXTENSION_ID:
         return "no extension ID";
       case RoutingErrorType.MISSING_EXTENSION:
