@@ -85,6 +85,15 @@ export class UserStore extends BaseStore<UserStoreModel> {
   }
 
   @action
+  setHiddenTableColumns(tableId: string, names: Set<string> | string[]) {
+    this.preferences.hiddenTableColumns[tableId] = Array.from(names);
+  }
+
+  getHiddenTableColumns(tableId: string): Set<string> {
+    return new Set(this.preferences.hiddenTableColumns[tableId]);
+  }
+
+  @action
   resetKubeConfigPath() {
     this.kubeConfigPath = kubeConfigDefaultPath;
   }
