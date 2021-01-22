@@ -3,6 +3,7 @@
 // https://www.electronjs.org/docs/api/ipc-renderer
 
 import { ipcMain, ipcRenderer, webContents, remote } from "electron";
+import { toJS } from "mobx";
 import logger from "../main/logger";
 import { ClusterFrameInfo, clusterFrameMap } from "./cluster-frames";
 
@@ -24,8 +25,15 @@ async function getSubFrames(): Promise<ClusterFrameInfo[]> {
   return subFrames;
 }
 
-export function broadcastMessage(channel: string, ...args: any[]) {
-  const views = (webContents || remote?.webContents)?.getAllWebContents();
+export async function broadcastMessage(channel: string, ...args: any[]) {
+  let subFrames: ClusterFrameInfo[];
+
+  if (ipcRenderer) {
+    subFrames = await requestMain("ipc:get-sub-frames");
+  } else {
+    subFrames = await getSubFrames();
+  }
+  const views = (webContents || remote.webContents)?.getAllWebContents();
 
   if (!views) return;
 
@@ -34,11 +42,9 @@ export function broadcastMessage(channel: string, ...args: any[]) {
 
     logger.silly(`[IPC]: broadcasting "${channel}" to ${type}=${webContent.id}`, { args });
     webContent.send(channel, ...args);
-    getSubFrames().then((frames) => {
-      frames.map((frameInfo) => {
-        webContent.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...args);
-      });
-    }).catch((e) => e);
+    subFrames.map((frameInfo) => {
+      webContent.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...args);
+    });
   });
 
   if (ipcRenderer) {
@@ -72,4 +78,10 @@ export function unsubscribeAllFromBroadcast(channel: string) {
   } else {
     ipcMain.removeAllListeners(channel);
   }
+}
+
+export function bindBroadcastHandlers() {
+  handleRequest("ipc:get-sub-frames", async () => {
+    return toJS(await getSubFrames(), { recurseEverything: true });
+  });
 }
