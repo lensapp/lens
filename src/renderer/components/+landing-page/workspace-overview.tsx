@@ -1,6 +1,6 @@
 import "./workspace-cluster-icon.scss";
 
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Workspace } from "../../../common/workspace-store";
 import { clusterStore } from "../../../common/cluster-store";
 import { Cluster } from "../../../main/cluster";
@@ -29,6 +29,33 @@ enum sortBy {
 @observer
 export class WorkspaceOverview extends Component<Props> {
 
+  renderInfo() {
+    const { workspace } = this.props;
+
+    if (workspace.name === "default") {
+      return (
+        <Fragment>
+          <h2>Default Workspace</h2>
+          <p className="info">
+            This is the default workspace. Workspaces are used to organize clusters into logical groups.
+          </p>
+          <p>
+            A single workspaces contains a list of clusters and their full configuration.
+          </p>
+        </Fragment>
+      );
+    }
+
+    return (
+      <Fragment>
+      <h2>Description</h2>
+      <p className="info">
+        {workspace.description}
+      </p>
+      </Fragment>
+    )
+  }
+
   getIcon(clusterItem: ClusterItem) {
     const { cluster } = clusterItem;
     const { name } = cluster;
@@ -48,24 +75,27 @@ export class WorkspaceOverview extends Component<Props> {
     const workspaceClusterStore = new WorkspaceClusterStore(workspace.id);
 
     return (
-      <ItemListLayout 
-        isClusterScoped
-        className="WorkspaceList" store={workspaceClusterStore}
-        sortingCallbacks={{
-            [sortBy.name]: (cluster: ClusterItem) => cluster.getName(),
-        }}
-        searchFilters={[]}
-        renderTableHeader={[
-            { title: "", className: "icon flex-grow" },
-            { title: "Name", className: "name flex-grow", sortBy: sortBy.name },
-            { title: "Id", className: "id" },
-        ]}
-        renderTableContents={(item: ClusterItem) => [
-            this.getIcon(item),
-            item.getName(),
-            item.getId(),
-        ]}
-      />
+      <WizardLayout className="Workspaces" infoPanel={this.renderInfo()}>
+        <ItemListLayout 
+          renderHeaderTitle={<div>Clusters</div>}
+          isClusterScoped
+          className="WorkspaceList" store={workspaceClusterStore}
+          sortingCallbacks={{
+              [sortBy.name]: (cluster: ClusterItem) => cluster.getName(),
+          }}
+          searchFilters={[]}
+          renderTableHeader={[
+              { title: "", className: "icon" },
+              { title: "Name", className: "name flex-grow", sortBy: sortBy.name },
+              { title: "Id", className: "id" },
+          ]}
+          renderTableContents={(item: ClusterItem) => [
+              this.getIcon(item),
+              item.getName(),
+              item.getId(),
+          ]}
+        />
+      </WizardLayout>
     );
   }
 }

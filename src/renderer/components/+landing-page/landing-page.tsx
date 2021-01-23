@@ -5,7 +5,10 @@ import { observer } from "mobx-react";
 import { clusterStore } from "../../../common/cluster-store";
 import { Workspace, workspaceStore } from "../../../common/workspace-store";
 import { PageLayout } from "../layout/page-layout"
+import { Select, SelectOption } from "../select";
 import { WorkspaceOverview } from "./workspace-overview"
+import { autobind } from "../../../common/utils";
+
 @observer
 export class LandingPage extends React.Component {
   @observable showHint = true;
@@ -13,15 +16,37 @@ export class LandingPage extends React.Component {
 
   currentWorkspace = autorun(() => { this.workspace = workspaceStore.currentWorkspace; })
 
+  @autobind()
+  getHeader() {
+    const onWorkspaceChange = (option: SelectOption) => {
+      const selectedWorkspace = workspaceStore.getByName(option.value);
+
+      if (!selectedWorkspace) {
+        return;
+      }
+
+      workspaceStore.setActive(selectedWorkspace.id);
+    }
+
+    return (
+      <h2 className="flex row center">
+        <span>Workspace:</span>       
+        <Select
+          options={workspaceStore.enabledWorkspacesList.map(w => ({value: w.name, label: w.name}))}
+          value={this.workspace.name}
+          onChange={onWorkspaceChange}
+        />
+      </h2>
+    );
+  }
+
   render() {
     const clusters = clusterStore.getByWorkspaceId(workspaceStore.currentWorkspaceId);
     const noClustersInScope = !clusters.length;
     const showStartupHint = this.showHint && noClustersInScope;
 
-    const header = <h2>{`Workspace: ${this.workspace?.name}`}</h2>;
-
     return (
-      <PageLayout provideBackButtonNavigation={false} className="Workspaces" header={header} headerClass={"box center"}>
+      <PageLayout provideBackButtonNavigation={false} className="Workspaces" header={this.getHeader()} headerClass={"box center"}>
         <div className="LandingPage flex auto">
           {showStartupHint && (
             <div className="startup-hint flex column gaps" onMouseEnter={() => this.showHint = false}>
