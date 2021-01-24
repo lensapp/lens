@@ -7,6 +7,8 @@ import { toJS } from "mobx";
 import logger from "../main/logger";
 import { ClusterFrameInfo, clusterFrameMap } from "./cluster-frames";
 
+const subFramesChannel = "ipc:get-sub-frames";
+
 export function handleRequest(channel: string, listener: (...args: any[]) => any) {
   ipcMain.handle(channel, listener);
 }
@@ -29,7 +31,7 @@ export async function broadcastMessage(channel: string, ...args: any[]) {
   let subFrames: ClusterFrameInfo[];
 
   if (ipcRenderer) {
-    subFrames = await requestMain("ipc:get-sub-frames");
+    subFrames = await requestMain(subFramesChannel);
   } else {
     subFrames = await getSubFrames();
   }
@@ -81,7 +83,7 @@ export function unsubscribeAllFromBroadcast(channel: string) {
 }
 
 export function bindBroadcastHandlers() {
-  handleRequest("ipc:get-sub-frames", async () => {
+  handleRequest(subFramesChannel, async () => {
     return toJS(await getSubFrames(), { recurseEverything: true });
   });
 }
