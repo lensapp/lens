@@ -5,7 +5,7 @@ import { WorkspaceStore, workspaceStore } from "../../../common/workspace-store"
 import { ConfirmDialog } from "../confirm-dialog";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { Select } from "../select";
-import { closeCommandDialog, openCommandDialog } from "../command-palette/command-container";
+import { CommandOverlay } from "../command-palette/command-container";
 
 @observer
 export class RemoveWorkspace extends React.Component {
@@ -22,7 +22,7 @@ export class RemoveWorkspace extends React.Component {
       return;
     }
 
-    closeCommandDialog();
+    CommandOverlay.close();
     ConfirmDialog.open({
       okButtonProps: {
         label: `Remove Workspace`,
@@ -67,5 +67,5 @@ commandRegistry.add({
   id: "workspace.removeWorkspace",
   title: "Workspace: Remove workspace ...",
   scope: "global",
-  action: () => openCommandDialog(<RemoveWorkspace />)
+  action: () => CommandOverlay.open(<RemoveWorkspace />)
 });

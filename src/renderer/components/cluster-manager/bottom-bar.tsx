@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 import { Icon } from "../icon";
 import { workspaceStore } from "../../../common/workspace-store";
 import { statusBarRegistry } from "../../../extensions/registries";
-import { openCommandDialog } from "../command-palette/command-container";
+import { CommandOverlay } from "../command-palette/command-container";
 import { ChooseWorkspace } from "../+workspaces";
 
 @observer
@@ -17,7 +17,7 @@ export class BottomBar extends React.Component {
 
     return (
       <div className="BottomBar flex gaps">
-        <div id="current-workspace" className="flex gaps align-center" onClick={() => openCommandDialog(<ChooseWorkspace />)}>
+        <div id="current-workspace" className="flex gaps align-center" onClick={() => CommandOverlay.open(<ChooseWorkspace />)}>
           <Icon smallest material="layers"/>
           <span className="workspace-name">{currentWorkspace.name}</span>
         </div>

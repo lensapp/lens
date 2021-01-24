@@ -6,7 +6,7 @@ import React from "react";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
-import { closeCommandDialog } from "./command-container";
+import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
 
 @observer
@@ -50,7 +50,7 @@ export class CommandDialog extends React.Component {
     const action = toJS(command.action);
 
     try {
-      closeCommandDialog();
+      CommandOverlay.close();
 
       if (command.scope === "global") {
         action({

@@ -18,12 +18,14 @@ export type CommandDialogEvent = {
 
 const commandDialogBus = new EventEmitter<[CommandDialogEvent]>();
 
-export function openCommandDialog(component: React.ReactElement) {
-  commandDialogBus.emit({ component });
-}
+export class CommandOverlay {
+  static open(component: React.ReactElement) {
+    commandDialogBus.emit({ component });
+  }
 
-export function closeCommandDialog() {
-  commandDialogBus.emit({ component: null });
+  static close() {
+    commandDialogBus.emit({ component: null });
+  }
 }
 
 @observer
@@ -74,7 +76,7 @@ export class CommandContainer extends React.Component<{cluster?: Cluster}> {
       });
     } else {
       subscribeToBroadcast("command-palette:open", () => {
-        openCommandDialog(<CommandDialog />);
+        CommandOverlay.open(<CommandDialog />);
       });
     }
     window.addEventListener("keyup", (e) => this.escHandler(e), true);

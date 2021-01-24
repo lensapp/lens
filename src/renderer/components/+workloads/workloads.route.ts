@@ -1,9 +1,7 @@
 import type { RouteProps } from "react-router";
 import { buildURL, IURLParams } from "../../../common/utils/buildUrl";
-import { isAllowedResource, KubeResource } from "../../../common/rbac";
+import { KubeResource } from "../../../common/rbac";
 import { Workloads } from "./workloads";
-import { navigate } from "../../navigation";
-import { commandRegistry } from "../../../extensions/registries/command-registry";
 
 export const workloadsRoute: RouteProps = {
   get path() {
@@ -83,30 +81,4 @@ export const workloadURL: Partial<Record<KubeResource, ReturnType<typeof buildUR
   "cronjobs": cronJobsURL,
 };
 
-commandRegistry.add({
-  id: "cluster.viewPods",
-  title: "Cluster: View Pods",
-  scope: "cluster",
-  action: () => navigate(podsURL())
-});
 
-commandRegistry.add({
-  id: "cluster.viewDeployments",
-  title: "Cluster: View Deployments",
-  scope: "cluster",
-  action: () => navigate(deploymentsURL())
-});
-
-commandRegistry.add({
-  id: "cluster.viewDaemonSets",
-  title: "Cluster: View DaemonSets",
-  scope: "cluster",
-  action: () => navigate(daemonSetsURL())
-});
-
-commandRegistry.add({
-  id: "cluster.viewStatefulSets",
-  title: "Cluster: View StatefulSets",
-  scope: "cluster",
-  action: () => navigate(statefulSetsURL())
-});

@@ -13,6 +13,9 @@ export * from "../../renderer/components/select";
 export * from "../../renderer/components/slider";
 export * from "../../renderer/components/input/input";
 
+// command-overlay
+export { CommandOverlay } from "../../renderer/components/command-palette";
+
 // other components
 export * from "../../renderer/components/icon";
 export * from "../../renderer/components/tooltip";

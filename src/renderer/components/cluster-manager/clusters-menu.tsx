@@ -23,7 +23,7 @@ import { clusterViewURL } from "./cluster-view.route";
 import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
 import { clusterDisconnectHandler } from "../../../common/cluster-ipc";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
-import { closeCommandDialog, openCommandDialog } from "../command-palette/command-container";
+import { CommandOverlay } from "../command-palette/command-container";
 import { computed } from "mobx";
 import { Select } from "../select";
 
@@ -196,7 +196,7 @@ export class ChooseCluster extends React.Component {
 
   onChange(clusterId: string) {
     navigate(clusterViewURL({ params: { clusterId } }));
-    closeCommandDialog();
+    CommandOverlay.close();
   }
 
   render() {
@@ -218,5 +218,5 @@ commandRegistry.add({
   id: "workspace.chooseCluster",
   title: "Workspace: Switch to cluster ...",
   scope: "global",
-  action: () => openCommandDialog(<ChooseCluster />)
+  action: () => CommandOverlay.open(<ChooseCluster />)
 });

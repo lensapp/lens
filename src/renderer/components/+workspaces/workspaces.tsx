@@ -5,7 +5,7 @@ import { workspaceStore } from "../../../common/workspace-store";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { Select } from "../select";
 import { navigate } from "../../navigation";
-import { closeCommandDialog, openCommandDialog } from "../command-palette/command-container";
+import { CommandOverlay } from "../command-palette/command-container";
 import { AddWorkspace } from "./add-workspace";
 import { RemoveWorkspace } from "./remove-workspace";
 
@@ -30,20 +30,20 @@ export class ChooseWorkspace extends React.Component {
 
   onChange(id: string) {
     if (id === ChooseWorkspace.addActionId) {
-      openCommandDialog(<AddWorkspace />);
+      CommandOverlay.open(<AddWorkspace />);
 
       return;
     }
 
     if (id === ChooseWorkspace.removeActionId) {
-      openCommandDialog(<RemoveWorkspace />);
+      CommandOverlay.open(<RemoveWorkspace />);
 
       return;
     }
 
     workspaceStore.setActive(id);
     navigate("/");
-    closeCommandDialog();
+    CommandOverlay.close();
   }
 
   render() {
@@ -66,5 +66,5 @@ commandRegistry.add({
   id: "workspace.chooseWorkspace",
   title: "Workspace: Switch to workspace ...",
   scope: "global",
-  action: () => openCommandDialog(<ChooseWorkspace />)
+  action: () => CommandOverlay.open(<ChooseWorkspace />)
 });

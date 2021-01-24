@@ -5,7 +5,7 @@ import { v4 as uuid } from "uuid";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { Input, InputValidator } from "../input";
 import { navigate } from "../../navigation";
-import { closeCommandDialog, openCommandDialog } from "../command-palette/command-container";
+import { CommandOverlay } from "../command-palette/command-container";
 
 const uniqueWorkspaceName: InputValidator = {
   condition: ({ required }) => required,
@@ -15,7 +15,7 @@ const uniqueWorkspaceName: InputValidator = {
 
 @observer
 export class AddWorkspace extends React.Component {
-  handleKeyDown(name: string) {
+  onSubmit(name: string) {
     if (name.trim() === "") {
       return;
     }
@@ -26,7 +26,7 @@ export class AddWorkspace extends React.Component {
 
     workspaceStore.setActive(workspace.id);
     navigate("/");
-    closeCommandDialog();
+    CommandOverlay.close();
   }
 
   render() {
@@ -37,7 +37,7 @@ export class AddWorkspace extends React.Component {
           autoFocus={true}
           theme="round-black"
           validators={[uniqueWorkspaceName]}
-          onSubmit={(v) => this.handleKeyDown(v)}
+          onSubmit={(v) => this.onSubmit(v)}
           dirty={true}
           showValidationLine={true} />
         <small className="hint">
@@ -52,5 +52,5 @@ commandRegistry.add({
   id: "workspace.addWorkspace",
   title: "Workspace: Add workspace ...",
   scope: "global",
-  action: () => openCommandDialog(<AddWorkspace />)
+  action: () => CommandOverlay.open(<AddWorkspace />)
 });
