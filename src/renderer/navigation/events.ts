@@ -1,8 +1,8 @@
 import { ipcRenderer } from "electron";
 import { reaction } from "mobx";
 import { getMatchedClusterId, navigate } from "./helpers";
-import { broadcastMessage, subscribeToBroadcast } from "../../common/ipc";
-import logger from "../../main/logger";
+import { broadcastMessage, subscribeToBroadcast } from "@common/ipc";
+import logger from "@main/logger";
 
 export function bindEvents() {
   if (!ipcRenderer) {

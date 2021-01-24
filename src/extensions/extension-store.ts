@@ -1,4 +1,4 @@
-import { BaseStore } from "../common/base-store";
+import { BaseStore } from "@common/base-store";
 import * as path from "path";
 import { LensExtension } from "./lens-extension";
 

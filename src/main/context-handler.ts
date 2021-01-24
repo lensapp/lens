@@ -1,10 +1,10 @@
 import type { PrometheusProvider, PrometheusService } from "./prometheus/provider-registry";
-import type { ClusterPrometheusPreferences } from "../common/cluster-store";
+import type { ClusterPrometheusPreferences } from "@common/cluster-store";
 import type { Cluster } from "./cluster";
 import type httpProxy from "http-proxy";
 import url, { UrlWithStringQuery } from "url";
 import { CoreV1Api } from "@kubernetes/client-node";
-import { prometheusProviders } from "../common/prometheus-providers";
+import { prometheusProviders } from "@common/prometheus-providers";
 import logger from "./logger";
 import { getFreePort } from "./port";
 import { KubeAuthProxy } from "./kube-auth-proxy";

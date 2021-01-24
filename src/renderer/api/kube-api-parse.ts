@@ -1,7 +1,7 @@
 // Parse kube-api path and get api-version, group, etc.
 
 import type { KubeObject } from "./kube-object";
-import { splitArray } from "../../common/utils";
+import { splitArray } from "@common/utils";
 import { apiManager } from "./api-manager";
 
 export interface IKubeObjectRef {

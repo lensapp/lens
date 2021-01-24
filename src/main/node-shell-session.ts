@@ -6,7 +6,7 @@ import * as k8s from "@kubernetes/client-node";
 import { KubeConfig } from "@kubernetes/client-node";
 import { Cluster } from "./cluster";
 import logger from "./logger";
-import { appEventBus } from "../common/event-bus";
+import { appEventBus } from "@common/event-bus";
 
 export class NodeShellSession extends ShellSession {
   protected nodeName: string;

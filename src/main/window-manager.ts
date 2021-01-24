@@ -1,13 +1,13 @@
-import type { ClusterId } from "../common/cluster-store";
+import type { ClusterId } from "@common/cluster-store";
 import { observable } from "mobx";
 import { app, BrowserWindow, dialog, shell, webContents } from "electron";
 import windowStateKeeper from "electron-window-state";
-import { appEventBus } from "../common/event-bus";
-import { subscribeToBroadcast } from "../common/ipc";
+import { appEventBus } from "@common/event-bus";
+import { subscribeToBroadcast } from "@common/ipc";
 import { initMenu } from "./menu";
 import { initTray } from "./tray";
-import { Singleton } from "../common/utils";
-import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
+import { Singleton } from "@common/utils";
+import { ClusterFrameInfo, clusterFrameMap } from "@common/cluster-frames";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;

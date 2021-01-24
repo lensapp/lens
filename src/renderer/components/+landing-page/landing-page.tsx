@@ -2,8 +2,8 @@ import "./landing-page.scss";
 import React from "react";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import { clusterStore } from "../../../common/cluster-store";
-import { workspaceStore } from "../../../common/workspace-store";
+import { clusterStore } from "@common/cluster-store";
+import { workspaceStore } from "@common/workspace-store";
 
 @observer
 export class LandingPage extends React.Component {

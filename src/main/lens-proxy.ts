@@ -4,7 +4,7 @@ import spdy from "spdy";
 import httpProxy from "http-proxy";
 import url from "url";
 import * as WebSocket from "ws";
-import { apiPrefix, apiKubePrefix } from "../common/vars";
+import { apiPrefix, apiKubePrefix } from "@common/vars";
 import { openShell } from "./node-shell-session";
 import { Router } from "./router";
 import { ClusterManager } from "./cluster-manager";

@@ -1,7 +1,7 @@
 import { RouteProps } from "react-router";
 import { Network } from "./network";
 import { servicesURL } from "../+network-services";
-import { IURLParams } from "../../../common/utils/buildUrl";
+import { IURLParams } from "@common/utils/buildUrl";
 
 export const networkRoute: RouteProps = {
   get path() {

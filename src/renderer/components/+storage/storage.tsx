@@ -7,7 +7,7 @@ import { PersistentVolumes, volumesRoute, volumesURL } from "../+storage-volumes
 import { StorageClasses, storageClassesRoute, storageClassesURL } from "../+storage-classes";
 import { PersistentVolumeClaims, volumeClaimsRoute, volumeClaimsURL } from "../+storage-volume-claims";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "@common/rbac";
 
 @observer
 export class Storage extends React.Component {

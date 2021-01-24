@@ -5,7 +5,7 @@ import { reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Button } from "../button";
 import { navigation } from "../../navigation";
-import { issuesTrackerUrl, slackUrl } from "../../../common/vars";
+import { issuesTrackerUrl, slackUrl } from "@common/vars";
 
 interface Props {
 }

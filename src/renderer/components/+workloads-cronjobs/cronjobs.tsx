@@ -13,7 +13,7 @@ import { KubeObjectMenuProps } from "../kube-object/kube-object-menu";
 import { ICronJobsRouteParams } from "../+workloads";
 import { KubeObjectListLayout } from "../kube-object";
 import { CronJobTriggerDialog } from "./cronjob-trigger-dialog";
-import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { kubeObjectMenuRegistry } from "@extensions/registries/kube-object-menu-registry";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { ConfirmDialog } from "../confirm-dialog/confirm-dialog";
 import { Notifications } from "../notifications/notifications";

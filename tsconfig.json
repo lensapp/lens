@@ -24,6 +24,18 @@
     "traceResolution": false,
     "resolveJsonModule": true,
     "paths": {
+      "@main/*": [
+        "src/main/*"
+      ],
+      "@common/*": [
+        "src/common/*"
+      ],
+      "@renderer/*": [
+        "src/renderer/*"
+      ],
+      "@extensions/*": [
+        "src/extensions/*"
+      ],
       "*": [
         "node_modules/*",
         "types/*"

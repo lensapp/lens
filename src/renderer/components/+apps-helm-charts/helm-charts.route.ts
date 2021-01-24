@@ -1,5 +1,5 @@
 import type { RouteProps } from "react-router";
-import { buildURL } from "../../../common/utils/buildUrl";
+import { buildURL } from "@common/utils/buildUrl";
 import { appsRoute } from "../+apps/apps.route";
 
 export const helmChartsRoute: RouteProps = {

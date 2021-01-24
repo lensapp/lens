@@ -5,7 +5,7 @@ import { daemonSetStore } from "../+workloads-daemonsets/daemonsets.store";
 import { statefulSetStore } from "../+workloads-statefulsets/statefulset.store";
 import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
-import { KubeResource } from "../../../common/rbac";
+import { KubeResource } from "@common/rbac";
 import { replicaSetStore } from "../+workloads-replicasets/replicasets.store";
 
 export const workloadStores: Partial<Record<KubeResource, KubeObjectStore>> = {

@@ -8,7 +8,7 @@ import { workloadURL, workloadStores } from "../+workloads";
 import { namespaceStore } from "../+namespaces/namespace.store";
 import { PageFiltersList } from "../item-object-list/page-filters-list";
 import { NamespaceSelectFilter } from "../+namespaces/namespace-select";
-import { isAllowedResource, KubeResource } from "../../../common/rbac";
+import { isAllowedResource, KubeResource } from "@common/rbac";
 import { ResourceNames } from "../../../renderer/utils/rbac";
 import { autobind } from "../../utils";
 

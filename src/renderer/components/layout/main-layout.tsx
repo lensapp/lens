@@ -3,7 +3,7 @@ import "./main-layout.scss";
 import React from "react";
 import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
-import { getHostedCluster } from "../../../common/cluster-store";
+import { getHostedCluster } from "@common/cluster-store";
 import { autobind, createStorage, cssNames } from "../../utils";
 import { Dock } from "../dock";
 import { ErrorBoundary } from "../error-boundary";

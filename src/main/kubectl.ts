@@ -6,10 +6,10 @@ import logger from "./logger";
 import { ensureDir, pathExists } from "fs-extra";
 import * as lockFile from "proper-lockfile";
 import { helmCli } from "./helm/helm-cli";
-import { userStore } from "../common/user-store";
-import { customRequest } from "../common/request";
-import { getBundledKubectlVersion } from "../common/utils/app-version";
-import { isDevelopment, isWindows, isTestEnv } from "../common/vars";
+import { userStore } from "@common/user-store";
+import { customRequest } from "@common/request";
+import { getBundledKubectlVersion } from "@common/utils/app-version";
+import { isDevelopment, isWindows, isTestEnv } from "@common/vars";
 
 const bundledVersion = getBundledKubectlVersion();
 const kubectlMap: Map<string, string> = new Map([

@@ -6,8 +6,8 @@ import * as yaml from "js-yaml";
 import path from "path";
 import * as tempy from "tempy";
 import logger from "./logger";
-import { appEventBus } from "../common/event-bus";
-import { cloneJsonObject } from "../common/utils";
+import { appEventBus } from "@common/event-bus";
+import { cloneJsonObject } from "@common/utils";
 
 export class ResourceApplier {
   constructor(protected cluster: Cluster) {

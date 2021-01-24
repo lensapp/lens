@@ -26,7 +26,7 @@ jest.mock("winston", () => ({
 import { KubeconfigManager } from "../kubeconfig-manager";
 import mockFs from "mock-fs";
 import { Cluster } from "../cluster";
-import { workspaceStore } from "../../common/workspace-store";
+import { workspaceStore } from "@common/workspace-store";
 import { ContextHandler } from "../context-handler";
 import { getFreePort } from "../port";
 import fse from "fs-extra";

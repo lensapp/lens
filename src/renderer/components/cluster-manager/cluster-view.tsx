@@ -6,8 +6,8 @@ import { RouteComponentProps } from "react-router";
 import { IClusterViewRouteParams } from "./cluster-view.route";
 import { ClusterStatus } from "./cluster-status";
 import { hasLoadedView } from "./lens-views";
-import { Cluster } from "../../../main/cluster";
-import { clusterStore } from "../../../common/cluster-store";
+import { Cluster } from "@main/cluster";
+import { clusterStore } from "@common/cluster-store";
 
 interface Props extends RouteComponentProps<IClusterViewRouteParams> {
 }

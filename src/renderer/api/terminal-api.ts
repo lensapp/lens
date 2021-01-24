@@ -2,7 +2,7 @@ import { stringify } from "querystring";
 import { autobind, base64, EventEmitter } from "../utils";
 import { WebSocketApi } from "./websocket-api";
 import isEqual from "lodash/isEqual";
-import { isDevelopment } from "../../common/vars";
+import { isDevelopment } from "@common/vars";
 
 export enum TerminalChannels {
   STDIN = 0,

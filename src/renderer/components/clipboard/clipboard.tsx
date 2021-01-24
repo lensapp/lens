@@ -1,10 +1,10 @@
 import "./clipboard.scss";
 import React from "react";
 import { findDOMNode } from "react-dom";
-import { autobind } from "../../../common/utils";
+import { autobind } from "@common/utils";
 import { Notifications } from "../notifications";
 import { copyToClipboard } from "../../utils/copyToClipboard";
-import logger from "../../../main/logger";
+import logger from "@main/logger";
 import { cssNames } from "../../utils";
 
 export interface CopyToClipboardProps {

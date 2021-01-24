@@ -1,5 +1,5 @@
 import React from "react";
-import { Cluster } from "../../../main/cluster";
+import { Cluster } from "@main/cluster";
 import { RemoveClusterButton } from "./components/remove-cluster-button";
 
 interface Props {

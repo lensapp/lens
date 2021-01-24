@@ -10,20 +10,20 @@ import { DropFileInput, Input } from "../input";
 import { AceEditor } from "../ace-editor";
 import { Button } from "../button";
 import { Icon } from "../icon";
-import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "../../../common/kube-helpers";
-import { ClusterModel, ClusterStore, clusterStore } from "../../../common/cluster-store";
-import { workspaceStore } from "../../../common/workspace-store";
+import { kubeConfigDefaultPath, loadConfig, splitConfig, validateConfig, validateKubeConfig } from "@common/kube-helpers";
+import { ClusterModel, ClusterStore, clusterStore } from "@common/cluster-store";
+import { workspaceStore } from "@common/workspace-store";
 import { v4 as uuid } from "uuid";
 import { navigate } from "../../navigation";
-import { userStore } from "../../../common/user-store";
+import { userStore } from "@common/user-store";
 import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 import { cssNames } from "../../utils";
 import { Notifications } from "../notifications";
 import { Tab, Tabs } from "../tabs";
-import { ExecValidationNotFoundError } from "../../../common/custom-errors";
-import { appEventBus } from "../../../common/event-bus";
+import { ExecValidationNotFoundError } from "@common/custom-errors";
+import { appEventBus } from "@common/event-bus";
 import { PageLayout } from "../layout/page-layout";
-import { docsUrl } from "../../../common/vars";
+import { docsUrl } from "@common/vars";
 
 enum KubeConfigSourceTab {
   FILE = "file",

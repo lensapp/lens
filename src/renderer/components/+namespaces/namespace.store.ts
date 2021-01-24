@@ -4,8 +4,8 @@ import { KubeObjectStore } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints";
 import { createPageParam } from "../../navigation";
 import { apiManager } from "../../api/api-manager";
-import { isAllowedResource } from "../../../common/rbac";
-import { getHostedCluster } from "../../../common/cluster-store";
+import { isAllowedResource } from "@common/rbac";
+import { getHostedCluster } from "@common/cluster-store";
 
 const storage = createStorage<string[]>("context_namespaces", []);
 

@@ -1,4 +1,4 @@
-import { autobind } from "../../../common/utils/autobind";
+import { autobind } from "@common/utils/autobind";
 import { KubeObjectStore } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
 import { LimitRange, limitRangeApi } from "../../api/endpoints/limit-range.api";

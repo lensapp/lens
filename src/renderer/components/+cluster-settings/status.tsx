@@ -1,5 +1,5 @@
 import React from "react";
-import { Cluster } from "../../../main/cluster";
+import { Cluster } from "@main/cluster";
 import { SubTitle } from "../layout/sub-title";
 import { Table, TableCell, TableRow } from "../table";
 import { autobind } from "../../utils";

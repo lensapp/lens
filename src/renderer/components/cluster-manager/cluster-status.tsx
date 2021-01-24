@@ -1,18 +1,18 @@
-import type { KubeAuthProxyLog } from "../../../main/kube-auth-proxy";
+import type { KubeAuthProxyLog } from "@main/kube-auth-proxy";
 
 import "./cluster-status.scss";
 import React from "react";
 import { observer } from "mobx-react";
 import { ipcRenderer } from "electron";
 import { computed, observable } from "mobx";
-import { requestMain, subscribeToBroadcast } from "../../../common/ipc";
+import { requestMain, subscribeToBroadcast } from "@common/ipc";
 import { Icon } from "../icon";
 import { Button } from "../button";
 import { cssNames, IClassName } from "../../utils";
-import { Cluster } from "../../../main/cluster";
-import { ClusterId, clusterStore } from "../../../common/cluster-store";
+import { Cluster } from "@main/cluster";
+import { ClusterId, clusterStore } from "@common/cluster-store";
 import { CubeSpinner } from "../spinner";
-import { clusterActivateHandler } from "../../../common/cluster-ipc";
+import { clusterActivateHandler } from "@common/cluster-ipc";
 
 interface Props {
   className?: IClassName;

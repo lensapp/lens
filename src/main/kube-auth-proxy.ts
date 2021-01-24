@@ -1,6 +1,6 @@
 import { ChildProcess, spawn } from "child_process";
 import { waitUntilUsed } from "tcp-port-used";
-import { broadcastMessage } from "../common/ipc";
+import { broadcastMessage } from "@common/ipc";
 import type { Cluster } from "./cluster";
 import { Kubectl } from "./kubectl";
 import logger from "./logger";

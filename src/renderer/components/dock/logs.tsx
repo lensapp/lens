@@ -2,7 +2,7 @@ import React from "react";
 import { observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 
-import { searchStore } from "../../../common/search-store";
+import { searchStore } from "@common/search-store";
 import { autobind } from "../../utils";
 import { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";

@@ -4,8 +4,8 @@ import React from "react";
 import { observer } from "mobx-react";
 import { BaseRegistry } from "./base-registry";
 import { LensExtension, sanitizeExtensionName } from "../lens-extension";
-import { PageParam, PageParamInit } from "../../renderer/navigation/page-param";
-import { createPageParam } from "../../renderer/navigation/helpers";
+import { PageParam, PageParamInit } from "@renderer/navigation/page-param";
+import { createPageParam } from "@renderer/navigation/helpers";
 
 export interface PageRegistration {
   /**

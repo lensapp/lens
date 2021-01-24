@@ -73,6 +73,12 @@ export default function (): webpack.Configuration {
       ]
     },
     resolve: {
+      alias: {
+        "@common": path.resolve(__dirname, "src/common"),
+        "@main": path.resolve(__dirname, "src/main"),
+        "@renderer": path.resolve(__dirname, "src/renderer"),
+        "@extensions": path.resolve(__dirname, "src/extensions"),
+      },
       extensions: [".ts", ".tsx", ".js"]
     },
     plugins: [

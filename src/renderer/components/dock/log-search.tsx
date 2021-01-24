@@ -3,7 +3,7 @@ import "./log-search.scss";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 import { SearchInput } from "../input";
-import { searchStore } from "../../../common/search-store";
+import { searchStore } from "@common/search-store";
 import { Icon } from "../icon";
 
 export interface PodLogSearchProps {

@@ -1,11 +1,11 @@
-import { clusterStore as internalClusterStore, ClusterId } from "../../common/cluster-store";
-import type { ClusterModel } from "../../common/cluster-store";
-import { Cluster } from "../../main/cluster";
+import { clusterStore as internalClusterStore, ClusterId } from "@common/cluster-store";
+import type { ClusterModel } from "@common/cluster-store";
+import { Cluster } from "@main/cluster";
 import { Singleton } from "../core-api/utils";
 import { ObservableMap } from "mobx";
 
-export { Cluster } from "../../main/cluster";
-export type { ClusterModel, ClusterId } from "../../common/cluster-store";
+export { Cluster } from "@main/cluster";
+export type { ClusterModel, ClusterId } from "@common/cluster-store";
 
 /**
  * Store for all added clusters

@@ -6,7 +6,7 @@ import { workspacesURL } from "./workspaces.route";
 import { Menu, MenuItem, MenuProps } from "../menu";
 import { Icon } from "../icon";
 import { observable } from "mobx";
-import { WorkspaceId, workspaceStore } from "../../../common/workspace-store";
+import { WorkspaceId, workspaceStore } from "@common/workspace-store";
 import { cssNames } from "../../utils";
 import { navigate } from "../../navigation";
 import { clusterViewURL } from "../cluster-manager/cluster-view.route";

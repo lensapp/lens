@@ -2,8 +2,8 @@
 
 import merge from "lodash/merge";
 import { stringify } from "querystring";
-import { apiKubePrefix, isDevelopment, isTestEnv } from "../../common/vars";
-import logger from "../../main/logger";
+import { apiKubePrefix, isDevelopment, isTestEnv } from "@common/vars";
+import logger from "@main/logger";
 import { apiManager } from "./api-manager";
 import { apiKube } from "./index";
 import { createKubeApiURL, parseKubeApi } from "./kube-api-parse";

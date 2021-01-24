@@ -3,7 +3,7 @@ import fs from "fs";
 import request from "request";
 import { ensureDir, pathExists } from "fs-extra";
 import * as tar from "tar";
-import { isWindows } from "../common/vars";
+import { isWindows } from "@common/vars";
 import winston from "winston";
 
 export type LensBinaryOpts = {

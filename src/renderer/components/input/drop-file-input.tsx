@@ -3,7 +3,7 @@ import React from "react";
 import { autobind, cssNames, IClassName } from "../../utils";
 import { observable } from "mobx";
 import { observer } from "mobx-react";
-import logger from "../../../main/logger";
+import logger from "@main/logger";
 
 export interface DropFileInputProps extends React.DOMAttributes<any> {
   className?: IClassName;

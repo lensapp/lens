@@ -5,7 +5,7 @@ import { HelmRelease, helmReleasesApi, IReleaseCreatePayload, IReleaseUpdatePayl
 import { ItemStore } from "../../item.store";
 import { Secret } from "../../api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
-import { getHostedCluster } from "../../../common/cluster-store";
+import { getHostedCluster } from "@common/cluster-store";
 
 @autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {

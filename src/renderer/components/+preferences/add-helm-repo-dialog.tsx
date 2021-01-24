@@ -13,7 +13,7 @@ import { systemName, isUrl, isPath } from "../input/input_validators";
 import { SubTitle } from "../layout/sub-title";
 import { Icon } from "../icon";
 import { Notifications } from "../notifications";
-import { HelmRepo, repoManager } from "../../../main/helm/helm-repo-manager";
+import { HelmRepo, repoManager } from "@main/helm/helm-repo-manager";
 
 interface Props extends Partial<DialogProps> {
   onAddRepo: Function

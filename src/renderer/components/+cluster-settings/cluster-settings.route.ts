@@ -1,6 +1,6 @@
 import type { IClusterViewRouteParams } from "../cluster-manager/cluster-view.route";
 import type { RouteProps } from "react-router";
-import { buildURL } from "../../../common/utils/buildUrl";
+import { buildURL } from "@common/utils/buildUrl";
 
 export interface IClusterSettingsRouteParams extends IClusterViewRouteParams {
 }

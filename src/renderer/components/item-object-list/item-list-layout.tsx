@@ -22,8 +22,8 @@ import { themeStore } from "../../theme.store";
 import { MenuActions} from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
-import { userStore } from "../../../common/user-store";
-import logger from "../../../main/logger";
+import { userStore } from "@common/user-store";
+import logger from "@main/logger";
 
 // todo: refactor, split to small re-usable components
 

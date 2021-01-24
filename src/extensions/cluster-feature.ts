@@ -2,12 +2,12 @@ import fs from "fs";
 import path from "path";
 import hb from "handlebars";
 import { observable } from "mobx";
-import { ResourceApplier } from "../main/resource-applier";
-import { Cluster } from "../main/cluster";
-import logger from "../main/logger";
+import { ResourceApplier } from "@main/resource-applier";
+import { Cluster } from "@main/cluster";
+import logger from "@main/logger";
 import { app } from "electron";
-import { requestMain } from "../common/ipc";
-import { clusterKubectlApplyAllHandler } from "../common/cluster-ipc";
+import { requestMain } from "@common/ipc";
+import { clusterKubectlApplyAllHandler } from "@common/cluster-ipc";
 
 export interface ClusterFeatureStatus {
   /** feature's current version, as set by the implementation */

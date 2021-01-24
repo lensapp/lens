@@ -8,7 +8,7 @@ import { action, computed, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Align, ListOnScrollProps } from "react-window";
 
-import { searchStore } from "../../../common/search-store";
+import { searchStore } from "@common/search-store";
 import { cssNames } from "../../utils";
 import { Button } from "../button";
 import { Icon } from "../icon";

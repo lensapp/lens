@@ -7,7 +7,7 @@ import { namespaceUrlParam } from "../+namespaces/namespace.store";
 import { resourceQuotaRoute, ResourceQuotas, resourceQuotaURL } from "../+config-resource-quotas";
 import { pdbRoute, pdbURL, PodDisruptionBudgets } from "../+config-pod-disruption-budgets";
 import { HorizontalPodAutoscalers, hpaRoute, hpaURL } from "../+config-autoscalers";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "@common/rbac";
 import { LimitRanges, limitRangesRoute, limitRangeURL } from "../+config-limit-ranges";
 
 @observer

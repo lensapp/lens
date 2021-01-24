@@ -1,4 +1,4 @@
-import { KubeResource } from "../../common/rbac";
+import { KubeResource } from "@common/rbac";
 
 export const ResourceNames: Record<KubeResource, string> = {
   "namespaces": "Namespaces",

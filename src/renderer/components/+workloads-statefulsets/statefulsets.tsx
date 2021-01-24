@@ -15,7 +15,7 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { StatefulSetScaleDialog } from "./statefulset-scale-dialog";
 import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
-import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { kubeObjectMenuRegistry } from "@extensions/registries/kube-object-menu-registry";
 
 enum sortBy {
   name = "name",

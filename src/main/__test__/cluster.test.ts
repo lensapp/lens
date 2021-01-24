@@ -24,19 +24,19 @@ jest.mock("winston", () => ({
 }));
 
 
-jest.mock("../../common/ipc");
+jest.mock("@common/ipc");
 jest.mock("../context-handler");
 jest.mock("request");
 jest.mock("request-promise-native");
 
 import { Console } from "console";
 import mockFs from "mock-fs";
-import { workspaceStore } from "../../common/workspace-store";
+import { workspaceStore } from "@common/workspace-store";
 import { Cluster } from "../cluster";
 import { ContextHandler } from "../context-handler";
 import { getFreePort } from "../port";
 import { V1ResourceAttributes } from "@kubernetes/client-node";
-import { apiResources } from "../../common/rbac";
+import { apiResources } from "@common/rbac";
 import request from "request-promise-native";
 import { Kubectl } from "../kubectl";
 

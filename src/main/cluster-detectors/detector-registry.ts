@@ -1,5 +1,5 @@
 import { observable } from "mobx";
-import { ClusterMetadata } from "../../common/cluster-store";
+import { ClusterMetadata } from "@common/cluster-store";
 import { Cluster } from "../cluster";
 import { BaseClusterDetector, ClusterDetectionResult } from "./base-cluster-detector";
 import { ClusterIdDetector } from "./cluster-id-detector";

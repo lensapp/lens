@@ -2,13 +2,13 @@ import "./clusters-menu.scss";
 
 import React from "react";
 import { remote } from "electron";
-import { requestMain } from "../../../common/ipc";
-import type { Cluster } from "../../../main/cluster";
+import { requestMain } from "@common/ipc";
+import type { Cluster } from "@main/cluster";
 import { DragDropContext, Draggable, DraggableProvided, Droppable, DroppableProvided, DropResult } from "react-beautiful-dnd";
 import { observer } from "mobx-react";
-import { userStore } from "../../../common/user-store";
-import { ClusterId, clusterStore } from "../../../common/cluster-store";
-import { workspaceStore } from "../../../common/workspace-store";
+import { userStore } from "@common/user-store";
+import { ClusterId, clusterStore } from "@common/cluster-store";
+import { workspaceStore } from "@common/workspace-store";
 import { ClusterIcon } from "../cluster-icon";
 import { Icon } from "../icon";
 import { autobind, cssNames, IClassName } from "../../utils";
@@ -20,8 +20,8 @@ import { landingURL } from "../+landing-page";
 import { Tooltip } from "../tooltip";
 import { ConfirmDialog } from "../confirm-dialog";
 import { clusterViewURL } from "./cluster-view.route";
-import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "../../../extensions/registries";
-import { clusterDisconnectHandler } from "../../../common/cluster-ipc";
+import { getExtensionPageUrl, globalPageMenuRegistry, globalPageRegistry } from "@extensions/registries";
+import { clusterDisconnectHandler } from "@common/cluster-ipc";
 
 interface Props {
   className?: IClassName;

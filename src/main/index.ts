@@ -1,11 +1,11 @@
 // Main process
 
-import "../common/system-ca";
-import "../common/prometheus-providers";
+import "@common/system-ca";
+import "@common/prometheus-providers";
 import * as Mobx from "mobx";
-import * as LensExtensions from "../extensions/core-api";
+import * as LensExtensions from "@extensions/core-api";
 import { app, dialog, powerMonitor } from "electron";
-import { appName } from "../common/vars";
+import { appName } from "@common/vars";
 import path from "path";
 import { LensProxy } from "./lens-proxy";
 import { WindowManager } from "./window-manager";
@@ -14,16 +14,16 @@ import { AppUpdater } from "./app-updater";
 import { shellSync } from "./shell-sync";
 import { getFreePort } from "./port";
 import { mangleProxyEnv } from "./proxy-env";
-import { registerFileProtocol } from "../common/register-protocol";
+import { registerFileProtocol } from "@common/register-protocol";
 import logger from "./logger";
-import { clusterStore } from "../common/cluster-store";
-import { userStore } from "../common/user-store";
-import { workspaceStore } from "../common/workspace-store";
-import { appEventBus } from "../common/event-bus";
-import { extensionLoader } from "../extensions/extension-loader";
-import { extensionsStore } from "../extensions/extensions-store";
-import { InstalledExtension, extensionDiscovery } from "../extensions/extension-discovery";
-import type { LensExtensionId } from "../extensions/lens-extension";
+import { clusterStore } from "@common/cluster-store";
+import { userStore } from "@common/user-store";
+import { workspaceStore } from "@common/workspace-store";
+import { appEventBus } from "@common/event-bus";
+import { extensionLoader } from "@extensions/extension-loader";
+import { extensionsStore } from "@extensions/extensions-store";
+import { InstalledExtension, extensionDiscovery } from "@extensions/extension-discovery";
+import type { LensExtensionId } from "@extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
 

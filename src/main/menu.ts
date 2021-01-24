@@ -1,13 +1,13 @@
 import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, Menu, MenuItem, MenuItemConstructorOptions, webContents, shell } from "electron";
 import { autorun } from "mobx";
 import { WindowManager } from "./window-manager";
-import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl } from "../common/vars";
-import { addClusterURL } from "../renderer/components/+add-cluster/add-cluster.route";
-import { preferencesURL } from "../renderer/components/+preferences/preferences.route";
-import { whatsNewURL } from "../renderer/components/+whats-new/whats-new.route";
-import { clusterSettingsURL } from "../renderer/components/+cluster-settings/cluster-settings.route";
-import { extensionsURL } from "../renderer/components/+extensions/extensions.route";
-import { menuRegistry } from "../extensions/registries/menu-registry";
+import { appName, isMac, isWindows, isTestEnv, docsUrl, supportUrl } from "@common/vars";
+import { addClusterURL } from "@renderer/components/+add-cluster/add-cluster.route";
+import { preferencesURL } from "@renderer/components/+preferences/preferences.route";
+import { whatsNewURL } from "@renderer/components/+whats-new/whats-new.route";
+import { clusterSettingsURL } from "@renderer/components/+cluster-settings/cluster-settings.route";
+import { extensionsURL } from "@renderer/components/+extensions/extensions.route";
+import { menuRegistry } from "@extensions/registries/menu-registry";
 import logger from "./logger";
 import { exitApp } from "./exit-app";
 

@@ -4,7 +4,7 @@ import http from "http";
 import path from "path";
 import { readFile } from "fs-extra";
 import { Cluster } from "./cluster";
-import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "../common/vars";
+import { apiPrefix, appName, publicPath, isDevelopment, webpackDevServerPort } from "@common/vars";
 import { helmRoute, kubeconfigRoute, metricsRoute, portForwardRoute, resourceApplierRoute, watchRoute } from "./routes";
 import logger from "./logger";
 

@@ -11,7 +11,7 @@ import { IReplicaSetsRouteParams } from "../+workloads/workloads.route";
 import { KubeObjectListLayout } from "../kube-object/kube-object-list-layout";
 import { MenuItem } from "../menu/menu";
 import { Icon } from "../icon/icon";
-import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
+import { kubeObjectMenuRegistry } from "@extensions/registries/kube-object-menu-registry";
 import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 
 enum sortBy {

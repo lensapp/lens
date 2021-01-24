@@ -2,7 +2,7 @@ import { watch } from "chokidar";
 import { join, normalize } from "path";
 import { ExtensionDiscovery, InstalledExtension } from "../extension-discovery";
 
-jest.mock("../../common/ipc");
+jest.mock("@common/ipc");
 jest.mock("fs-extra");
 jest.mock("chokidar", () => ({
   watch: jest.fn()

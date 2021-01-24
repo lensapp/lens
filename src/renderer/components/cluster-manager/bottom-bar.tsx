@@ -4,8 +4,8 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Icon } from "../icon";
 import { WorkspaceMenu } from "../+workspaces/workspace-menu";
-import { workspaceStore } from "../../../common/workspace-store";
-import { statusBarRegistry } from "../../../extensions/registries";
+import { workspaceStore } from "@common/workspace-store";
+import { statusBarRegistry } from "@extensions/registries";
 
 @observer
 export class BottomBar extends React.Component {

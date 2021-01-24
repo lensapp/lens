@@ -3,7 +3,7 @@ import { Pod, IPodContainer, podsApi, IPodLogsQuery } from "../../api/endpoints"
 import { autobind, interval } from "../../utils";
 import { DockTabStore } from "./dock-tab.store";
 import { dockStore, IDockTab, TabKind } from "./dock.store";
-import { searchStore } from "../../../common/search-store";
+import { searchStore } from "@common/search-store";
 
 export interface IPodLogsData {
   pod: Pod;

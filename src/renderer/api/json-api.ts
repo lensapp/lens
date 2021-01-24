@@ -1,7 +1,7 @@
 // Base http-service / json-api class
 
 import { stringify } from "querystring";
-import { EventEmitter } from "../../common/event-emitter";
+import { EventEmitter } from "@common/event-emitter";
 import { cancelableFetch } from "../utils/cancelableFetch";
 
 export interface JsonApiData {

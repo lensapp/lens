@@ -23,14 +23,14 @@ jest.mock("winston", () => ({
   }
 }));
 
-jest.mock("../../common/ipc");
+jest.mock("@common/ipc");
 jest.mock("child_process");
 jest.mock("tcp-port-used");
 
 import { Cluster } from "../cluster";
 import { KubeAuthProxy } from "../kube-auth-proxy";
 import { getFreePort } from "../port";
-import { broadcastMessage } from "../../common/ipc";
+import { broadcastMessage } from "@common/ipc";
 import { ChildProcess, spawn } from "child_process";
 import { bundledKubectlPath, Kubectl } from "../kubectl";
 import { mock, MockProxy } from "jest-mock-extended";

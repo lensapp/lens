@@ -1,8 +1,8 @@
 import React from "react";
-import { Cluster } from "../../../main/cluster";
+import { Cluster } from "@main/cluster";
 import { InstallFeature } from "./components/install-feature";
 import { SubTitle } from "../layout/sub-title";
-import { clusterFeatureRegistry } from "../../../extensions/registries/cluster-feature-registry";
+import { clusterFeatureRegistry } from "@extensions/registries/cluster-feature-registry";
 
 interface Props {
   cluster: Cluster;

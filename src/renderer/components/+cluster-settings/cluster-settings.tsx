@@ -8,13 +8,13 @@ import { Features } from "./features";
 import { Removal } from "./removal";
 import { Status } from "./status";
 import { General } from "./general";
-import { Cluster } from "../../../main/cluster";
+import { Cluster } from "@main/cluster";
 import { ClusterIcon } from "../cluster-icon";
 import { IClusterSettingsRouteParams } from "./cluster-settings.route";
-import { clusterStore } from "../../../common/cluster-store";
+import { clusterStore } from "@common/cluster-store";
 import { PageLayout } from "../layout/page-layout";
-import { requestMain } from "../../../common/ipc";
-import { clusterActivateHandler, clusterRefreshHandler } from "../../../common/cluster-ipc";
+import { requestMain } from "@common/ipc";
+import { clusterActivateHandler, clusterRefreshHandler } from "@common/cluster-ipc";
 
 interface Props extends RouteComponentProps<IClusterSettingsRouteParams> {
 }

@@ -16,7 +16,7 @@ import { jobStore } from "../+workloads-jobs/job.store";
 import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { Events } from "../+events";
 import { KubeObjectStore } from "../../kube-object.store";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "@common/rbac";
 
 interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 }

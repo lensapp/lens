@@ -1,6 +1,6 @@
 import type { MenuRegistration } from "./registries/menu-registry";
 import { LensExtension } from "./lens-extension";
-import { WindowManager } from "../main/window-manager";
+import { WindowManager } from "@main/window-manager";
 import { getExtensionPageUrl } from "./registries/page-registry";
 
 export class LensMainExtension extends LensExtension {

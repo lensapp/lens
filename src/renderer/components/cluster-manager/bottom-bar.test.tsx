@@ -3,8 +3,8 @@ import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 
 import { BottomBar } from "./bottom-bar";
-jest.mock("../../../extensions/registries");
-import { statusBarRegistry } from "../../../extensions/registries";
+jest.mock("@extensions/registries");
+import { statusBarRegistry } from "@extensions/registries";
 
 describe("<BottomBar />", () => {
 

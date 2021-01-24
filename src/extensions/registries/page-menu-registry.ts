@@ -1,5 +1,5 @@
 // Extensions-api -> Register page menu items
-import type { IconProps } from "../../renderer/components/icon";
+import type { IconProps } from "@renderer/components/icon";
 import type React from "react";
 import type { PageTarget, RegisteredPage } from "./page-registry";
 import { action } from "mobx";

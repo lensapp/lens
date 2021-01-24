@@ -2,11 +2,11 @@
 
 export const isElectron = !!navigator.userAgent.match(/Electron/);
 
-export * from "../../common/utils";
+export * from "@common/utils";
+export * from "@common/event-emitter";
 
 export * from "./cssVar";
 export * from "./cssNames";
-export * from "../../common/event-emitter";
 export * from "./saveFile";
 export * from "./prevDefault";
 export * from "./createStorage";

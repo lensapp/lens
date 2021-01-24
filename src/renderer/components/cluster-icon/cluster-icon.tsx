@@ -4,11 +4,11 @@ import React, { DOMAttributes } from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Params as HashiconParams } from "@emeraldpay/hashicon";
 import { Hashicon } from "@emeraldpay/hashicon-react";
-import { Cluster } from "../../../main/cluster";
+import { Cluster } from "@main/cluster";
 import { cssNames, IClassName } from "../../utils";
 import { Badge } from "../badge";
 import { Tooltip } from "../tooltip";
-import { subscribeToBroadcast } from "../../../common/ipc";
+import { subscribeToBroadcast } from "@common/ipc";
 import { observable } from "mobx";
 
 interface Props extends DOMAttributes<HTMLElement> {

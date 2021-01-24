@@ -1,6 +1,6 @@
 import { RouteProps } from "react-router";
 import { Config } from "./config";
-import { IURLParams } from "../../../common/utils/buildUrl";
+import { IURLParams } from "@common/utils/buildUrl";
 import { configMapsURL } from "../+config-maps/config-maps.route";
 
 export const configRoute: RouteProps = {

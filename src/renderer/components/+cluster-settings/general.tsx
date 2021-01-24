@@ -1,5 +1,5 @@
 import React from "react";
-import { Cluster } from "../../../main/cluster";
+import { Cluster } from "@main/cluster";
 import { ClusterNameSetting } from "./components/cluster-name-setting";
 import { ClusterWorkspaceSetting } from "./components/cluster-workspace-setting";
 import { ClusterIconSetting } from "./components/cluster-icon-setting";

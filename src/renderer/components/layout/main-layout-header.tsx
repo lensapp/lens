@@ -1,8 +1,8 @@
 import React from "react";
 
 import { clusterSettingsURL } from "../+cluster-settings";
-import { broadcastMessage } from "../../../common/ipc";
-import { Cluster } from "../../../main/cluster";
+import { broadcastMessage } from "@common/ipc";
+import { Cluster } from "@main/cluster";
 import { cssNames } from "../../utils";
 import { Icon } from "../icon";
 

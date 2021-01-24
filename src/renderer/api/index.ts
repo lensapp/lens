@@ -1,7 +1,7 @@
 import { JsonApi, JsonApiErrorParsed } from "./json-api";
 import { KubeJsonApi } from "./kube-json-api";
 import { Notifications } from "../components/notifications";
-import { apiKubePrefix, apiPrefix, isDevelopment } from "../../common/vars";
+import { apiKubePrefix, apiPrefix, isDevelopment } from "@common/vars";
 
 export const apiBase = new JsonApi({
   apiBase: apiPrefix,

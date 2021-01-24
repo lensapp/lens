@@ -8,7 +8,7 @@ import { endpointRoute, Endpoints, endpointURL } from "../+network-endpoints";
 import { Ingresses, ingressRoute, ingressURL } from "../+network-ingresses";
 import { NetworkPolicies, networkPoliciesRoute, networkPoliciesURL } from "../+network-policies";
 import { namespaceUrlParam } from "../+namespaces/namespace.store";
-import { isAllowedResource } from "../../../common/rbac";
+import { isAllowedResource } from "@common/rbac";
 
 @observer
 export class Network extends React.Component {

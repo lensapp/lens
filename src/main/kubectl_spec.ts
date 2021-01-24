@@ -1,9 +1,9 @@
 import packageInfo from "../../package.json";
 import path from "path";
 import { Kubectl } from "../../src/main/kubectl";
-import { isWindows } from "../common/vars";
+import { isWindows } from "@common/vars";
 
-jest.mock("../common/user-store");
+jest.mock("@common/user-store");
 
 describe("kubectlVersion", () => {
   it("returns bundled version if exactly same version used", async () => {

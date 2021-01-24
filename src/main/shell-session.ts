@@ -6,11 +6,11 @@ import shellEnv from "shell-env";
 import { app } from "electron";
 import { Kubectl } from "./kubectl";
 import { Cluster } from "./cluster";
-import { ClusterPreferences } from "../common/cluster-store";
+import { ClusterPreferences } from "@common/cluster-store";
 import { helmCli } from "./helm/helm-cli";
-import { isWindows } from "../common/vars";
-import { appEventBus } from "../common/event-bus";
-import { userStore } from "../common/user-store";
+import { isWindows } from "@common/vars";
+import { appEventBus } from "@common/event-bus";
+import { userStore } from "@common/user-store";
 
 export class ShellSession extends EventEmitter {
   static shellEnvs: Map<string, any> = new Map();

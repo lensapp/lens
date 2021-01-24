@@ -4,7 +4,7 @@ import * as yaml from "js-yaml";
 import { promiseExec} from "../promise-exec";
 import { helmCli } from "./helm-cli";
 import { Cluster } from "../cluster";
-import { toCamelCase } from "../../common/utils/camelCase";
+import { toCamelCase } from "@common/utils/camelCase";
 
 export class HelmReleaseManager {
 
