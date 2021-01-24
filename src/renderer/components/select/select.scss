@@ -3,11 +3,9 @@
 
 html {
   $menuBackgroundColor: $contentColor;
-  $menuSelectedOptionBgc: $layoutBackground;
 
   --select-menu-bgc: #{$menuBackgroundColor};
   --select-menu-border-color: #{$halfGray};
-  --select-option-selected-bgc: #{$menuSelectedOptionBgc};
   --select-option-selected-color: #{$selectOptionHoveredColor};
   --select-option-focused-bgc: #{$colorInfo};
   --select-option-focused-color: #{$textColorAccent};
@@ -95,7 +93,7 @@ html {
       }
 
       &--is-selected {
-        background: var(--select-option-selected-bgc);
+        background: var(--menuSelectedOptionBgc);
         color: var(--select-option-selected-color);
       }
 
@@ -148,7 +146,6 @@ html {
     &.theme-light {
       --select-menu-bgc: white;
       --select-option-selected-color: $textColorSecondary;
-      --select-option-selected-bgc: $textColorSecondary;
 
       .Select {
         &__multi-value {

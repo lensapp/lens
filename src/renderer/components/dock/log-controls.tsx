@@ -41,7 +41,12 @@ export const LogControls = observer((props: Props) => {
   return (
     <div className={cssNames("LogControls flex gaps align-center justify-space-between wrap")}>
       <div className="time-range">
-        {since && `Logs from ${new Date(since[0]).toLocaleString()}`}
+        {since && (
+          <span>
+            Logs from{" "}
+            <b>{new Date(since[0]).toLocaleString()}</b>
+          </span>
+        )}
       </div>
       <div className="flex gaps align-center">
         <Checkbox

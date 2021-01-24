@@ -51,6 +51,10 @@ export class Nodes extends React.Component<Props> {
     if (!metrics || !metrics[1]) return <LineProgress value={0}/>;
     const usage = metrics[0];
     const cores = metrics[1];
+    const cpuUsagePercent = Math.ceil(usage * 100) / cores;
+    const cpuUsagePercentLabel: String = cpuUsagePercent % 1 === 0 
+      ? cpuUsagePercent.toString() 
+      : cpuUsagePercent.toFixed(2);
 
     return (
       <LineProgress
@@ -58,7 +62,7 @@ export class Nodes extends React.Component<Props> {
         value={usage}
         tooltip={{
           preferredPositions: TooltipPosition.BOTTOM,
-          children: `CPU: ${Math.ceil(usage * 100) / cores}\%, cores: ${cores}`
+          children: `CPU: ${cpuUsagePercentLabel}\%, cores: ${cores}`
         }}
       />
     );
