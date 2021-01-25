@@ -93,7 +93,7 @@ export class KubeWatchApi {
 
     window.addEventListener("online", () => this.connect());
     window.addEventListener("offline", () => this.disconnect());
-    setInterval(() => this.connectionCheck(), 30000);
+    setInterval(() => this.connectionCheck(), 60000 * 5); // every 5m
   }
 
   getSubscribersCount(api: KubeApi) {
@@ -156,6 +156,11 @@ export class KubeWatchApi {
   }
 
   protected connectionCheck() {
+    this.log({
+      message: "connection check",
+      meta: { connected: this.isConnected },
+    });
+
     if (this.isConnected) return;
 
     return this.connect();
