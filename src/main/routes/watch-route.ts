@@ -5,6 +5,7 @@ import { LensApi } from "../lens-api";
 import { KubeConfig, Watch } from "@kubernetes/client-node";
 import { ServerResponse } from "http";
 import { Request } from "request";
+import { chunk } from "lodash";
 import logger from "../logger";
 
 export interface IKubeWatchEvent<T = KubeJsonApiData | KubeJsonApiError> {
@@ -36,13 +37,12 @@ class ApiWatcher {
     this.response = response;
   }
 
-  // FIXME: add delay to kube-watch-api requests to avoid possible ECONNRESET error
-  // https://stackoverflow.com/questions/17245881/how-do-i-debug-error-econnreset-in-node-js
   public async start() {
     if (this.processor) {
       clearInterval(this.processor);
     }
     this.processor = setInterval(() => {
+      if (this.response.finished) return;
       const events = this.eventBuffer.splice(0);
 
       events.map(event => this.sendEvent(event));
@@ -95,12 +95,21 @@ class ApiWatcher {
 }
 
 class WatchRoute extends LensApi {
+  private response: ServerResponse;
+
+  private setResponse(response: ServerResponse) {
+    // clean up previous connection and stop all corresponding watch-api requests
+    // otherwise it happens only by request timeout or something else..
+    this.response?.destroy();
+    this.response = response;
+  }
 
   public async routeWatch(request: LensApiRequest<IWatchRoutePayload>) {
-    const { response, cluster, payload } = request;
-    const watchers: ApiWatcher[] = [];
+    const { response, cluster, payload: { apis } = {} } = request;
+    const watchers = new Map<string, ApiWatcher>();
+    let isWatchRequestEnded = false;
 
-    if (!payload?.apis?.length) {
+    if (!apis?.length) {
       this.respondJson(response, {
         message: "watch apis list is empty"
       }, 400);
@@ -108,26 +117,58 @@ class WatchRoute extends LensApi {
       return;
     }
 
+    this.setResponse(response);
     response.setHeader("Content-Type", "application/json");
     response.setHeader("Cache-Control", "no-cache");
     response.setHeader("Connection", "keep-alive");
     logger.debug(`watch using kubeconfig:${JSON.stringify(cluster.getProxyKubeconfig(), null, 2)}`);
 
-    payload.apis.forEach(apiUrl => {
+    // create watcher instances
+    apis.forEach(apiUrl => {
       const watcher = new ApiWatcher(apiUrl, cluster.getProxyKubeconfig(), response);
 
-      watcher.start();
-      watchers.push(watcher);
+      watchers.set(apiUrl, watcher);
+    });
+
+    // limit concurrent k8s requests to avoid possible ECONNRESET-error
+    async function startWatches() {
+      let apiGroupCall: () => Promise<any>;
+      const apiGroupCalls = chunk(apis, 10).map(apis => {
+        return () => {
+          const startedWatches = apis.map(apiUrl => watchers.get(apiUrl).start());
+
+          return Promise.allSettled(startedWatches);
+        };
+      });
+
+      while ((apiGroupCall = apiGroupCalls.shift())) {
+        try {
+          if (isWatchRequestEnded) break;
+          await apiGroupCall();
+          await new Promise(resolve => setTimeout(resolve, 150)); // delay between watch group calls
+        } catch (error) {
+          logger.error(error);
+        }
+      }
+    }
+
+    function endWatches() {
+      if (isWatchRequestEnded) return;
+      isWatchRequestEnded = true;
+      watchers.forEach(watcher => watcher.stop());
+      watchers.clear();
+    }
+
+    startWatches();
+
+    request.raw.req.on("end", () => {
+      logger.info("Watch request end");
+      endWatches();
     });
 
     request.raw.req.on("close", () => {
-      logger.info("Watch request closed");
-      watchers.map(watcher => watcher.stop());
-    });
-
-    request.raw.req.on("end", () => {
-      logger.info("Watch request ended");
-      watchers.map(watcher => watcher.stop());
+      logger.info("Watch request close");
+      endWatches();
     });
   }
 }

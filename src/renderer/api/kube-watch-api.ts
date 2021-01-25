@@ -31,7 +31,7 @@ export interface IKubeWatchSubscribeStoreOptions {
 
 export interface IKubeWatchLog {
   message: string | Error;
-  meta?: object | any;
+  meta?: object;
 }
 
 @autobind()
@@ -306,7 +306,7 @@ export class KubeWatchApi {
     }
   }
 
-  protected log({ message, meta }: IKubeWatchLog) {
+  protected log({ message, meta = {} }: IKubeWatchLog) {
     if (isProduction) {
       return;
     }
@@ -314,11 +314,12 @@ export class KubeWatchApi {
     const logMessage = `%c[KUBE-WATCH-API]: ${String(message).toUpperCase()}`;
     const isError = message instanceof Error;
     const textStyle = `font-weight: bold; ${isError ? "color: red;" : ""}`;
+    const time = new Date().toLocaleString();
 
     if (isError) {
-      console.error(logMessage, textStyle, meta);
+      console.error(logMessage, textStyle, { time, ...meta });
     } else {
-      console.info(logMessage, textStyle, meta);
+      console.info(logMessage, textStyle, { time, ...meta });
     }
   }
 }
