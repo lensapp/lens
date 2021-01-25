@@ -30,13 +30,13 @@ describe("Lens integration tests", () => {
     });
 
     describe("protocol app start", () => {
-      it ("should handle opening lens:// links", async () => {
-        await open("lens://internal/foobar?");
-        await new Promise(resolve => setTimeout(resolve, 5000));
+      it("should handle opening lens:// links", async () => {
+        await open("lens://internal/foobar");
 
-        const logs = await app.client.getMainProcessLogs();
-
-        expect(logs.some(log => log.includes("no handler") || log.includes("lens://internal/foobar?"))).toBe(true);
+        await Promise.all([
+          utils.waitForLogsToContain(app, "main", "No handler", "lens://internal/foobar"),
+          utils.waitForLogsToContain(app, "renderer", "No handler", "lens://internal/foobar"),
+        ]);
       });
     });
 

@@ -6,7 +6,7 @@ Lens provides a routing mechanism that extensions can use to register custom han
 
 ## Registering A Protocol Handler
 
-The field `protocolhandlers` exists both on [`LensMainExtension`](extensions/api/classes/lensmainextension/#protocolhandlers) and on [`LensRendererExtension`](extensions/api/classes/lensrendererextension/#protocolhandlers).
+The field `protocolHandlers` exists both on [`LensMainExtension`](extensions/api/classes/lensmainextension/#protocolhandlers) and on [`LensRendererExtension`](extensions/api/classes/lensrendererextension/#protocolhandlers).
 This field will be iterated through every time a `lens://` request gets sent to the application.
 The `pathSchema` argument must comply with the [path-to-regexp](https://www.npmjs.com/package/path-to-regexp) package's `compileToRegex` function.
 
