@@ -120,6 +120,7 @@ export class KubeWatchApi {
     async function subscribe() {
       if (isDisposed) return;
       const unsubscribeList = await Promise.all(stores.map(store => store.subscribe()));
+
       disposers.push(...unsubscribeList);
       if (isDisposed) unsubscribe();
     }
@@ -176,6 +177,7 @@ export class KubeWatchApi {
       // request above is stale since new request-id has been issued
       if (this.requestId !== requestId) {
         abortController.abort();
+
         return;
       }
 
@@ -206,7 +208,7 @@ export class KubeWatchApi {
 
   // process received stream events, returns unprocessed buffer chunk if any
   protected processBuffer(events: string[]): string {
-    for (let json of events) {
+    for (const json of events) {
       try {
         const kubeEvent: IKubeWatchEvent = JSON.parse(json);
         const message = this.getMessage(kubeEvent);

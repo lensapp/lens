@@ -1,7 +1,6 @@
 import "./overview.scss";
 
 import React from "react";
-import { observable } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { OverviewStatuses } from "./overview-statuses";
 import { RouteComponentProps } from "react-router";
@@ -23,23 +22,13 @@ interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 
 @observer
 export class WorkloadsOverview extends React.Component<Props> {
-  @observable isLoading = false;
-  @observable isUnmounting = false;
-
   componentDidMount() {
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([
         podsStore, deploymentStore, daemonSetStore, statefulSetStore, replicaSetStore,
         jobStore, cronJobStore, eventStore,
-      ], {
-        preload: true,
-      }),
+      ]),
     ]);
-
-    // fixme: reload stores
-    // namespaceStore.onContextChange(loadStores, {
-    //   fireImmediately: true,
-    // });
   }
 
   render() {

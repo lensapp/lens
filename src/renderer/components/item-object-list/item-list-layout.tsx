@@ -2,7 +2,7 @@ import "./item-list-layout.scss";
 import groupBy from "lodash/groupBy";
 
 import React, { ReactNode } from "react";
-import { computed, IReactionDisposer, observable, reaction, toJS } from "mobx";
+import { computed, observable, reaction, toJS } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { ConfirmDialog, ConfirmDialogParams } from "../confirm-dialog";
 import { Table, TableCell, TableCellProps, TableHead, TableProps, TableRow, TableRowProps, TableSortCallback } from "../table";
@@ -21,6 +21,7 @@ import { MenuActions } from "../menu/menu-actions";
 import { MenuItem } from "../menu";
 import { Checkbox } from "../checkbox";
 import { userStore } from "../../../common/user-store";
+import { namespaceStore } from "../+namespaces/namespace.store";
 
 // todo: refactor, split to small re-usable components
 
@@ -39,6 +40,7 @@ export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   className: IClassName;
   store: ItemStore<T>;
   dependentStores?: ItemStore[];
+  preloadStores?: boolean;
   isClusterScoped?: boolean;
   hideFilters?: boolean;
   searchFilters?: SearchFilter<T>[];
@@ -81,6 +83,7 @@ const defaultProps: Partial<ItemListLayoutProps> = {
   isSelectable: true,
   isConfigurable: false,
   copyClassNameFromHeadCells: true,
+  preloadStores: true,
   dependentStores: [],
   filterItems: [],
   hasDetailsView: true,
@@ -114,18 +117,28 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
   }
 
   async componentDidMount() {
-    const { isClusterScoped, isConfigurable, tableId } = this.props;
+    const { isClusterScoped, isConfigurable, tableId, preloadStores } = this.props;
 
     if (isConfigurable && !tableId) {
       throw new Error("[ItemListLayout]: configurable list require props.tableId to be specified");
     }
 
-    // fixme: reload stores
-    if (!isClusterScoped) {
-      // disposeOnUnmount(this, [
-      //   namespaceStore.onContextChange(() => this.loadStores())
-      // ]);
+    if (preloadStores) {
+      this.loadStores();
+
+      if (!isClusterScoped) {
+        disposeOnUnmount(this, [
+          namespaceStore.onContextChange(() => this.loadStores())
+        ]);
+      }
     }
+  }
+
+  private loadStores() {
+    const { store, dependentStores } = this.props;
+    const stores = Array.from(new Set([store, ...dependentStores]));
+
+    stores.forEach(store => store.loadAll());
   }
 
   private filterCallbacks: { [type: string]: ItemsFilter } = {

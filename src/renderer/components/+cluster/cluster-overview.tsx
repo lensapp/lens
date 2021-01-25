@@ -31,6 +31,7 @@ export class ClusterOverview extends React.Component {
       kubeWatchApi.subscribeStores([nodesStore, podsStore, eventStore], {
         preload: true,
       }),
+
       reaction(
         () => clusterOverviewStore.metricNodeRole, // Toggle Master/Worker node switcher
         () => this.metricPoller.restart(true)
