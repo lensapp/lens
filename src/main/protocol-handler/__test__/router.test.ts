@@ -6,7 +6,6 @@ import * as uuid from "uuid";
 import { LensMainExtension } from "../../../extensions/core-api";
 import { broadcastMessage } from "../../../common/ipc";
 import { ProtocolHandlerExtension, ProtocolHandlerInternal } from "../../../common/protocol-handler";
-import Url from "url-parse";
 
 jest.mock("../../../common/ipc");
 
@@ -80,8 +79,8 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    expect(broadcastMessage).toHaveBeenNthCalledWith(1, ProtocolHandlerInternal, new Url("lens://internal", true));
-    expect(broadcastMessage).toHaveBeenNthCalledWith(2, ProtocolHandlerExtension, new Url("lens://extension/@mirantis/minikube", true));
+    expect(broadcastMessage).toHaveBeenNthCalledWith(1, ProtocolHandlerInternal, "lens://internal");
+    expect(broadcastMessage).toHaveBeenNthCalledWith(2, ProtocolHandlerExtension, "lens://extension/@mirantis/minikube");
   });
 
   it("should call handler if matches", async () => {
@@ -96,7 +95,7 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe(true);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, new Url("lens://internal/page", true));
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://internal/page");
   });
 
   it("should call most exact handler", async () => {
@@ -112,7 +111,7 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe("foo");
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, new Url("lens://internal/page/foo", true));
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://internal/page/foo");
   });
 
   it("should call most exact handler for an extension", async () => {
@@ -150,7 +149,7 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe("foob");
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerExtension, new Url("lens://extension/@foobar/icecream/page/foob", true));
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/@foobar/icecream/page/foob");
   });
 
   it("should work with non-org extensions", async () => {
@@ -214,7 +213,7 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe(1);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerExtension, new Url("lens://extension/icecream/page", true));
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerExtension, "lens://extension/icecream/page");
   });
 
   it("should throw if urlSchema is invalid", () => {
@@ -236,7 +235,7 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe(3);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, new Url("lens://internal/page/foo/bar/bat", true));
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://internal/page/foo/bar/bat");
   });
 
   it("should call most exact handler with 2 found handlers", async () => {
@@ -253,6 +252,6 @@ describe("protocol router tests", () => {
     }
 
     expect(called).toBe(1);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, new Url("lens://internal/page/foo/bar/bat", true));
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://internal/page/foo/bar/bat");
   });
 });
