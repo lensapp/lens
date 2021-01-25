@@ -35,7 +35,7 @@ export async function broadcastMessage(channel: string, ...args: any[]) {
   } else {
     subFrames = await getSubFrames();
   }
-  const views = (webContents || remote.webContents)?.getAllWebContents();
+  const views = (webContents || remote?.webContents)?.getAllWebContents();
 
   if (!views) return;
 
