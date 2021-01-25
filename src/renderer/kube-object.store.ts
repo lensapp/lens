@@ -42,6 +42,10 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
 
+  getById(id: string) {
+    return this.items.find(item => item.getId() === id);
+  }
+
   getByName(name: string, namespace?: string): T {
     return this.items.find(item => {
       return item.getName() === name && (

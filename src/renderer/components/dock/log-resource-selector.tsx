@@ -1,6 +1,6 @@
 import "./log-resource-selector.scss";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 
 import { Pod } from "../../api/endpoints";
@@ -33,23 +33,19 @@ export const LogResourceSelector = observer((props: Props) => {
     reload();
   };
 
+  const selectFirstContainer = () => {
+    save({ selectedContainer: pod.getAllContainers()[0] });
+  };
+
+  const renameTab = () => {
+    dockStore.renameTab(tabId, `Pod ${pod.getName()}`);
+  };
+
   const onPodChange = (option: SelectOption) => {
     const selectedPod = podsStore.getByName(option.value, pod.getNs());
 
-    if (!selectedPod) {
-      return;
-    }
-
-    save({
-      selectedPod,
-      selectedContainer: selectedPod.getAllContainers()[0]
-    });
-
-    dockStore.renameTab(tabId, `Pod ${option.value}`);
-
-    reload();
+    save({ selectedPod });
   };
-
 
   const getSelectOptions = (items: string[]) => {
     return items.map(item => {
@@ -77,6 +73,12 @@ export const LogResourceSelector = observer((props: Props) => {
       options: getSelectOptions(pods.map(pod => pod.metadata.name))
     }
   ];
+
+  useEffect(() => {
+    selectFirstContainer();
+    renameTab();
+    reload();
+  }, [selectedPod]);
 
   return (
     <div className="LogResourceSelector flex gaps align-center">

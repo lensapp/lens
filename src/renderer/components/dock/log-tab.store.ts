@@ -1,4 +1,5 @@
 import uniqueId from "lodash/uniqueId";
+import { reaction } from "mobx";
 import { podsStore } from "../+workloads-pods/pods.store";
 
 import { IPodContainer, Pod } from "../../api/endpoints";
@@ -28,9 +29,13 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     super({
       storageName: "pod_logs"
     });
+
+    reaction(() => podsStore.items.length, () => {
+      this.updateTabsData();
+    });
   }
 
-  public createPodTab({ selectedPod, selectedContainer }: PodLogsTabData) {
+  createPodTab({ selectedPod, selectedContainer }: PodLogsTabData): void {
     const podOwner = selectedPod.getOwnerRefs()[0];
     const pods = podsStore.getPodsByOwnerId(podOwner?.uid);
     const title = `Pod ${selectedPod.getName()}`;
@@ -42,7 +47,7 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     });
   }
 
-  public createWorkloadTab({ workload }: WorkloadLogsTabData) {
+  createWorkloadTab({ workload }: WorkloadLogsTabData): void {
     const pods = podsStore.getPodsByOwnerId(workload.getId());
 
     if (!pods.length) return;
@@ -56,6 +61,10 @@ export class LogTabStore extends DockTabStore<LogTabData> {
       selectedPod,
       selectedContainer
     });
+  }
+
+  private get tabId() {
+    return dockStore.selectedTabId;
   }
 
   private createDockTab(tabParams: Partial<IDockTab>) {
@@ -74,6 +83,41 @@ export class LogTabStore extends DockTabStore<LogTabData> {
       showTimestamps: false,
       previous: false
     });
+  }
+
+  private updateTabsData() {
+    this.data.forEach((value, tabId) => {
+      this.updatePodsData(tabId);
+    });
+  }
+
+  private updatePodsData(tabId: string) {
+    const tabData = this.getData(tabId);
+    const selectedPod = new Pod(tabData.selectedPod);
+    const owner = selectedPod.getOwnerRefs()[0];
+    const pods = podsStore.getPodsByOwnerId(owner?.uid);
+    let newSelectedPod = selectedPod;
+
+    if (!pods.length) {
+      this.closeTab(tabId);
+
+      return;
+    }
+
+    if (!pods.includes(selectedPod)) {
+      newSelectedPod = pods[0];
+    }
+
+    this.setData(tabId, {
+      ...tabData,
+      selectedPod: newSelectedPod,
+      pods
+    });
+  }
+
+  private closeTab(tabId: string) {
+    this.clearData(tabId);
+    dockStore.closeTab(tabId);
   }
 }
 

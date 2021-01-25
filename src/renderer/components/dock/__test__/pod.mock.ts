@@ -153,3 +153,51 @@ export const deploymentPod2 = {
     startTime: "dummy",
   }
 };
+
+export const deploymentPod3 = {
+  apiVersion: "v1",
+  kind: "dummy",
+  metadata: {
+    uid: "deploymentPod3",
+    name: "deploymentPod3",
+    creationTimestamp: "dummy",
+    resourceVersion: "dummy",
+    namespace: "default",
+    ownerReferences: [{
+      apiVersion: "v1",
+      kind: "Deployment",
+      name: "super-deployment",
+      uid: "uuid",
+      controller: true,
+      blockOwnerDeletion: true,
+    }]
+  },
+  spec: {
+    containers: [
+      {
+        name: "node-exporter",
+        image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
+        imagePullPolicy: "pull"
+      },
+      {
+        name: "node-exporter-1",
+        image: "docker.io/prom/node-exporter:v1.0.0-rc.0",
+        imagePullPolicy: "pull"
+      }
+    ],
+    serviceAccountName: "dummy",
+    serviceAccount: "dummy",
+  },
+  status: {
+    phase: "Running",
+    conditions: [{
+      type: "Running",
+      status: "Running",
+      lastProbeTime: 1,
+      lastTransitionTime: "Some time",
+    }],
+    hostIP: "dummy",
+    podIP: "dummy",
+    startTime: "dummy",
+  }
+};
