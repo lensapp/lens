@@ -17,9 +17,9 @@ export class BottomBar extends React.Component {
 
     return (
       <div className="BottomBar flex gaps">
-        <div id="current-workspace" className="flex gaps align-center" onClick={() => CommandOverlay.open(<ChooseWorkspace />)}>
+        <div id="current-workspace" data-test-id="current-workspace" className="flex gaps align-center" onClick={() => CommandOverlay.open(<ChooseWorkspace />)}>
           <Icon smallest material="layers"/>
-          <span className="workspace-name">{currentWorkspace.name}</span>
+          <span className="workspace-name" data-test-id="current-workspace-name">{currentWorkspace.name}</span>
         </div>
         <div className="extensions box grow flex gaps justify-flex-end">
           {Array.isArray(items) && items.map(({ item }, index) => {

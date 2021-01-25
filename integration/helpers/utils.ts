@@ -26,6 +26,28 @@ export function setup(): Application {
   });
 }
 
+export const keys = {
+  backspace: "\uE003"
+};
+
+export async function appStart() {
+  const app = setup();
+
+  await app.start();
+  // Wait for splash screen to be closed
+  while (await app.client.getWindowCount() > 1);
+  await app.client.windowByIndex(0);
+  await app.client.waitUntilWindowLoaded();
+
+  return app;
+}
+
+export async function clickWhatsNew(app: Application) {
+  await app.client.waitUntilTextExists("h1", "What's new?");
+  await app.client.click("button.primary");
+  await app.client.waitUntilTextExists("h1", "Welcome");
+}
+
 type AsyncPidGetter = () => Promise<number>;
 
 export async function tearDown(app: Application) {

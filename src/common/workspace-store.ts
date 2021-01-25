@@ -243,6 +243,7 @@ export class WorkspaceStore extends BaseStore<WorkspaceStoreModel> {
       throw new Error(`workspace ${id} doesn't exist`);
     }
     this.currentWorkspaceId = id;
+    clusterStore.setActive(null);
   }
 
   @action

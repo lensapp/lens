@@ -58,6 +58,7 @@ export class RemoveWorkspace extends React.Component {
         options={this.options}
         autoFocus={true}
         escapeClearsValue={false}
+        data-test-id="command-palette-workspace-remove-select"
         placeholder="Remove workspace" />
     );
   }

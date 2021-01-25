@@ -36,6 +36,7 @@ export class AddWorkspace extends React.Component {
           placeholder="Workspace name"
           autoFocus={true}
           theme="round-black"
+          data-test-id="command-palette-workspace-add-name"
           validators={[uniqueWorkspaceName]}
           onSubmit={(v) => this.onSubmit(v)}
           dirty={true}

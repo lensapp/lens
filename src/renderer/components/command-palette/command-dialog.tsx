@@ -74,6 +74,7 @@ export class CommandDialog extends React.Component {
         options={this.options}
         autoFocus={true}
         escapeClearsValue={false}
+        data-test-id="command-palette-search"
         placeholder="" />
     );
   }

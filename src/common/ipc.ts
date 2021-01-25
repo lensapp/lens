@@ -17,33 +17,34 @@ export async function requestMain(channel: string, ...args: any[]) {
   return ipcRenderer.invoke(channel, ...args);
 }
 
-async function getSubFrames(): Promise<ClusterFrameInfo[]> {
+async function getSubFrames(processId: number): Promise<ClusterFrameInfo[]> {
   const subFrames: ClusterFrameInfo[] = [];
 
   clusterFrameMap.forEach(frameInfo => {
     subFrames.push(frameInfo);
   });
 
-  return subFrames;
+  return subFrames.filter(frame => frame.processId === processId);
 }
 
 export async function broadcastMessage(channel: string, ...args: any[]) {
-  let subFrames: ClusterFrameInfo[];
-
-  if (ipcRenderer) {
-    subFrames = await requestMain(subFramesChannel);
-  } else {
-    subFrames = await getSubFrames();
-  }
   const views = (webContents || remote?.webContents)?.getAllWebContents();
 
   if (!views) return;
 
-  views.forEach(webContent => {
+  views.forEach(async webContent => {
     const type = webContent.getType();
 
     logger.silly(`[IPC]: broadcasting "${channel}" to ${type}=${webContent.id}`, { args });
     webContent.send(channel, ...args);
+
+    let subFrames: ClusterFrameInfo[];
+
+    if (ipcRenderer) {
+      subFrames = await requestMain(subFramesChannel, webContent.getProcessId());
+    } else {
+      subFrames = await getSubFrames(webContent.getProcessId());
+    }
     subFrames.map((frameInfo) => {
       webContent.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...args);
     });
@@ -83,7 +84,7 @@ export function unsubscribeAllFromBroadcast(channel: string) {
 }
 
 export function bindBroadcastHandlers() {
-  handleRequest(subFramesChannel, async () => {
-    return toJS(await getSubFrames(), { recurseEverything: true });
+  handleRequest(subFramesChannel, async (processId: number) => {
+    return toJS(await getSubFrames(processId), { recurseEverything: true });
   });
 }
