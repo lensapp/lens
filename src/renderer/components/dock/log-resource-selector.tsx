@@ -8,7 +8,7 @@ import { Badge } from "../badge";
 import { Select, SelectOption } from "../select";
 import { LogTabData } from "./log-tab.store";
 import { podsStore } from "../+workloads-pods/pods.store";
-import { dockStore, TabId } from "./dock.store";
+import { TabId } from "./dock.store";
 
 interface Props {
   tabId: TabId
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const LogResourceSelector = observer((props: Props) => {
-  const { tabData, save, reload, tabId } = props;
+  const { tabData, save, reload } = props;
   const { selectedPod, selectedContainer, pods } = tabData;
   const pod = new Pod(selectedPod);
   const containers = pod.getContainers();
@@ -31,14 +31,6 @@ export const LogResourceSelector = observer((props: Props) => {
         .find(container => container.name === option.value)
     });
     reload();
-  };
-
-  const selectFirstContainer = () => {
-    save({ selectedContainer: pod.getAllContainers()[0] });
-  };
-
-  const renameTab = () => {
-    dockStore.renameTab(tabId, `Pod ${pod.getName()}`);
   };
 
   const onPodChange = (option: SelectOption) => {
@@ -75,8 +67,6 @@ export const LogResourceSelector = observer((props: Props) => {
   ];
 
   useEffect(() => {
-    selectFirstContainer();
-    renameTab();
     reload();
   }, [selectedPod]);
 
