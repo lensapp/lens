@@ -96,12 +96,20 @@ describe("Lens integration tests", () => {
       });
 
       it("ensures helm repos", async () => {
-        const { stdout: reposJson } = await promiseExec("helm repo list -o json");
-        const repos = JSON.parse(reposJson);
+        try {
+          const { stdout: reposJson } = await promiseExec("helm repo list -o json");
+          const repos = JSON.parse(reposJson);
 
-        await app.client.waitUntilTextExists("div.repos #message-bitnami", repos[0].name); // wait for the helm-cli to fetch the repo(s)
-        await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
-        await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
+          await app.client.waitUntilTextExists("div.repos #message-bitnami", repos[0].name); // wait for the helm-cli to fetch the repo(s)
+          await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
+          await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
+        } catch (err) {
+          expect(err.stderr).toContain("Error: no repositories to show"); // other errors should be
+
+          await app.client.waitUntilTextExists("div.repos #message-bitnami", "bitnami"); // if no repos in list then bitnami should be showed
+          await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
+          await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
+        }
       });
     });
 
