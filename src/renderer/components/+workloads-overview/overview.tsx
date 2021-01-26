@@ -27,7 +27,9 @@ export class WorkloadsOverview extends React.Component<Props> {
       kubeWatchApi.subscribeStores([
         podsStore, deploymentStore, daemonSetStore, statefulSetStore, replicaSetStore,
         jobStore, cronJobStore, eventStore,
-      ]),
+      ], {
+        preload: true,
+      }),
     ]);
   }
 

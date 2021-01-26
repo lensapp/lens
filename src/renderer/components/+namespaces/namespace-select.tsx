@@ -33,7 +33,7 @@ export class NamespaceSelect extends React.Component<Props> {
   componentDidMount() {
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([namespaceStore], {
-        preload: !namespaceStore.isLoaded,
+        preload: true,
       })
     ]);
   }

@@ -22,7 +22,7 @@ export class ServiceDetails extends React.Component<Props> {
   componentDidMount() {
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([endpointStore], {
-        preload: !endpointStore.isLoaded,
+        preload: true,
       }),
     ]);
   }
