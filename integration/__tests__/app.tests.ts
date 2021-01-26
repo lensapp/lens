@@ -1,9 +1,8 @@
 import { Application } from "spectron";
 import * as utils from "../helpers/utils";
-import { exec } from "child_process";
-import * as util from "util";
+import { listHelmRepositories } from "../helpers/utils";
+import { fail } from "assert";
 
-export const promiseExec = util.promisify(exec);
 
 jest.setTimeout(60000);
 
@@ -38,7 +37,13 @@ describe("Lens integration tests", () => {
       });
 
       it("ensures helm repos", async () => {
-        await app.client.waitUntilTextExists("div.repos #message-bitnami", "bitnami"); // wait for the helm-cli to fetch the repo(s)
+        const repos = await listHelmRepositories();
+
+        if (!repos[0]) {
+          fail("Lens failed to add Bitnami repository");
+        }
+
+        await app.client.waitUntilTextExists("div.repos #message-bitnami", repos[0].name); // wait for the helm-cli to fetch the repo(s)
         await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
         await app.client.waitUntilTextExists("div.Select__option", "");  // wait for at least one option to appear (any text)
       });

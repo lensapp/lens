@@ -1,4 +1,6 @@
 import { Application } from "spectron";
+import * as util from "util";
+import { exec } from "child_process";
 
 const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/Lens.exe",
@@ -60,4 +62,27 @@ export async function tearDown(app: Application) {
   } catch (e) {
     console.error(e);
   }
+}
+
+export const promiseExec = util.promisify(exec);
+
+type HelmRepository = {
+  name: string;
+  url: string;
+};
+
+export async function listHelmRepositories(retries = 0):  Promise<HelmRepository[]>{
+  if (retries < 5) {
+    try {
+      const { stdout: reposJson } = await promiseExec("helm repo list -o json");
+
+      return JSON.parse(reposJson);
+    } catch {
+      await new Promise(r => setTimeout(r, 2000)); // if no repositories, wait for Lens adding bitnami repository
+
+      return await listHelmRepositories((retries + 1));
+    }
+  }
+
+  return [];
 }

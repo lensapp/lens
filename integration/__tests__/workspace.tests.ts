@@ -37,6 +37,7 @@ describe("Lens integration tests", () => {
       await app.client.keys("Enter");
       await app.client.keys(name);
       await app.client.keys("Enter");
+      await app.client.waitUntilTextExists("[data-test-id=current-workspace-name]", name);
     };
 
     it("creates new workspace", async () => {
