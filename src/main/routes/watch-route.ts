@@ -129,6 +129,7 @@ class WatchRoute extends LensApi {
 
     apis.forEach(apiUrl => {
       const watcher = new ApiWatcher(apiUrl, cluster.getProxyKubeconfig(), response);
+
       watchers.set(apiUrl, watcher);
 
       requests(async () => {
