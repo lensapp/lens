@@ -1,6 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { workspaceStore } from "../../../common/workspace-store";
+import { WorkspaceStore, workspaceStore } from "../../../common/workspace-store";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { Input, InputValidator } from "../input";
 import { CommandOverlay } from "../command-palette/command-container";
@@ -75,7 +75,8 @@ export class EditWorkspace extends React.Component<{}, EditWorkspaceState> {
 
 commandRegistry.add({
   id: "workspace.editCurrentWorkspace",
-  title: "Workspace: Edit current workspace...",
+  title: "Workspace: Edit current workspace ...",
   scope: "global",
-  action: () => CommandOverlay.open(<EditWorkspace />)
+  action: () => CommandOverlay.open(<EditWorkspace />),
+  isActive: (context) => context.workspace?.id !== WorkspaceStore.defaultId
 });

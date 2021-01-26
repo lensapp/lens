@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { computed} from "mobx";
-import { workspaceStore } from "../../../common/workspace-store";
+import { WorkspaceStore, workspaceStore } from "../../../common/workspace-store";
 import { commandRegistry } from "../../../extensions/registries/command-registry";
 import { Select } from "../select";
 import { navigate } from "../../navigation";
@@ -25,6 +25,10 @@ export class ChooseWorkspace extends React.Component {
 
     if (options.length > 1) {
       options.push({ value: ChooseWorkspace.removeActionId, label: "Remove workspace ..." });
+
+      if (workspaceStore.currentWorkspace.id !== WorkspaceStore.defaultId) {
+        options.push({ value: ChooseWorkspace.editActionId, label: "Edit current workspace ..." });
+      }
     }
 
     return options;
