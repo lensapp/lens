@@ -58,6 +58,7 @@ jobs:
       - script: make test-extensions
         displayName: Run In-tree Extension tests
       - bash: |
+          set -e
           rm -rf extensions/telemetry
           make integration-win
           git checkout extensions/telemetry
@@ -102,6 +103,7 @@ jobs:
       - script: make test-extensions
         displayName: Run In-tree Extension tests
       - bash: |
+          set -e
           rm -rf extensions/telemetry
           make integration-mac
           git checkout extensions/telemetry
@@ -159,6 +161,7 @@ jobs:
           sudo chown -R $USER $HOME/.kube $HOME/.minikube
         displayName: Install integration test dependencies
       - bash: |
+          set -e
           rm -rf extensions/telemetry
           xvfb-run --auto-servernum --server-args='-screen 0, 1600x900x24' make integration-linux
           git checkout extensions/telemetry

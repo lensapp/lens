@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
-          
+
       - name: Checkout Release from lens
         uses: actions/checkout@v2
         with:
@@ -83,12 +83,12 @@ jobs:
            mike deploy --push master
 
       - name: Get the release version
-        if: contains(github.ref, 'refs/tags/v') # && !github.event.release.prerelease (generate pre-release docs until Lens 4.0.0 is GA, see #1408)
+        if: contains(github.ref, 'refs/tags/v') && !github.event.release.prerelease
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
       - name: mkdocs deploy new release
-        if: contains(github.ref, 'refs/tags/v') # && !github.event.release.prerelease (generate pre-release docs until Lens 4.0.0 is GA, see #1408)
+        if: contains(github.ref, 'refs/tags/v') && !github.event.release.prerelease
         run: |
            mike deploy --push --update-aliases ${{ steps.get_version.outputs.VERSION }} latest
            mike set-default --push ${{ steps.get_version.outputs.VERSION }}

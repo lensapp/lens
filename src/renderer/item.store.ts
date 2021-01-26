@@ -9,7 +9,7 @@ export interface ItemObject {
 
 @autobind()
 export abstract class ItemStore<T extends ItemObject = ItemObject> {
-  abstract loadAll(): Promise<void>;
+  abstract loadAll(...args: any[]): Promise<void>;
 
   protected defaultSorting = (item: T) => item.getName();
 
@@ -40,8 +40,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
 
     if (item) {
       return item;
-    }
-    else {
+    } else {
       const items = this.sortItems([...this.items, newItem]);
 
       this.items.replace(items);
@@ -83,8 +82,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
         const index = this.items.findIndex(item => item === existingItem);
 
         this.items.splice(index, 1, item);
-      }
-      else {
+      } else {
         let items = [...this.items, item];
 
         if (sortItems) items = this.sortItems(items);
@@ -130,8 +128,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   toggleSelection(item: T) {
     if (this.isSelected(item)) {
       this.unselect(item);
-    }
-    else {
+    } else {
       this.select(item);
     }
   }
@@ -142,8 +139,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
 
     if (allSelected) {
       visibleItems.forEach(this.unselect);
-    }
-    else {
+    } else {
       visibleItems.forEach(this.select);
     }
   }

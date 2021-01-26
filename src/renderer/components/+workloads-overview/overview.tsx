@@ -17,81 +17,65 @@ import { cronJobStore } from "../+workloads-cronjobs/cronjob.store";
 import { Events } from "../+events";
 import { KubeObjectStore } from "../../kube-object.store";
 import { isAllowedResource } from "../../../common/rbac";
+import { namespaceStore } from "../+namespaces/namespace.store";
 
 interface Props extends RouteComponentProps<IWorkloadsOverviewRouteParams> {
 }
 
 @observer
 export class WorkloadsOverview extends React.Component<Props> {
+  @observable isLoading = false;
   @observable isUnmounting = false;
 
   async componentDidMount() {
-    const stores: KubeObjectStore[] = [];
+    const stores: KubeObjectStore[] = [
+      isAllowedResource("pods") && podsStore,
+      isAllowedResource("deployments") && deploymentStore,
+      isAllowedResource("daemonsets") && daemonSetStore,
+      isAllowedResource("statefulsets") && statefulSetStore,
+      isAllowedResource("replicasets") && replicaSetStore,
+      isAllowedResource("jobs") && jobStore,
+      isAllowedResource("cronjobs") && cronJobStore,
+      isAllowedResource("events") && eventStore,
+    ].filter(Boolean);
 
-    if (isAllowedResource("pods")) {
-      stores.push(podsStore);
-    }
+    const unsubscribeMap = new Map<KubeObjectStore, () => void>();
 
-    if (isAllowedResource("deployments")) {
-      stores.push(deploymentStore);
-    }
+    const loadStores = async () => {
+      this.isLoading = true;
 
-    if (isAllowedResource("daemonsets")) {
-      stores.push(daemonSetStore);
-    }
+      for (const store of stores) {
+        if (this.isUnmounting) break;
 
-    if (isAllowedResource("statefulsets")) {
-      stores.push(statefulSetStore);
-    }
+        try {
+          await store.loadAll();
+          unsubscribeMap.get(store)?.(); // unsubscribe previous watcher
+          unsubscribeMap.set(store, store.subscribe());
+        } catch (error) {
+          console.error("loading store error", error);
+        }
+      }
+      this.isLoading = false;
+    };
 
-    if (isAllowedResource("replicasets")) {
-      stores.push(replicaSetStore);
-    }
+    namespaceStore.onContextChange(loadStores, {
+      fireImmediately: true,
+    });
 
-    if (isAllowedResource("jobs")) {
-      stores.push(jobStore);
-    }
-
-    if (isAllowedResource("cronjobs")) {
-      stores.push(cronJobStore);
-    }
-
-    if (isAllowedResource("events")) {
-      stores.push(eventStore);
-    }
-
-    const unsubscribeList: Array<() => void> = [];
-
-    for (const store of stores) {
-      await store.loadAll();
-      unsubscribeList.push(store.subscribe());
-    }
-
-    await when(() => this.isUnmounting);
-    unsubscribeList.forEach(dispose => dispose());
+    await when(() => this.isUnmounting && !this.isLoading);
+    unsubscribeMap.forEach(dispose => dispose());
+    unsubscribeMap.clear();
   }
 
   componentWillUnmount() {
     this.isUnmounting = true;
   }
 
-  get contents() {
-    return (
-      <>
-        <OverviewStatuses/>
-        { isAllowedResource("events") && <Events
-          compact
-          hideFilters
-          className="box grow"
-        /> }
-      </>
-    );
-  }
-
   render() {
     return (
       <div className="WorkloadsOverview flex column gaps">
-        {this.contents}
+        <OverviewStatuses/>
+        {isAllowedResource("events") && <Events compact hideFilters className="box grow"/>}
       </div>
     );
   }

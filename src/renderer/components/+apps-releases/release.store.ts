@@ -5,7 +5,7 @@ import { HelmRelease, helmReleasesApi, IReleaseCreatePayload, IReleaseUpdatePayl
 import { ItemStore } from "../../item.store";
 import { Secret } from "../../api/endpoints";
 import { secretsStore } from "../+config-secrets/secrets.store";
-import { getHostedCluster } from "../../../common/cluster-store";
+import { namespaceStore } from "../+namespaces/namespace.store";
 
 @autobind()
 export class ReleaseStore extends ItemStore<HelmRelease> {
@@ -60,30 +60,23 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   @action
   async loadAll() {
     this.isLoading = true;
-    let items;
 
     try {
-      const { isAdmin, allowedNamespaces } = getHostedCluster();
+      const items = await this.loadItems(namespaceStore.getContextNamespaces());
 
-      items = await this.loadItems(!isAdmin ? allowedNamespaces : null);
-    } finally {
-      if (items) {
-        items = this.sortItems(items);
-        this.items.replace(items);
-      }
+      this.items.replace(this.sortItems(items));
       this.isLoaded = true;
+    } catch (error) {
+      console.error(`Loading Helm Chart releases has failed: ${error}`);
+    } finally {
       this.isLoading = false;
     }
   }
 
-  async loadItems(namespaces?: string[]) {
-    if (!namespaces) {
-      return helmReleasesApi.list();
-    } else {
-      return Promise
-        .all(namespaces.map(namespace => helmReleasesApi.list(namespace)))
-        .then(items => items.flat());
-    }
+  async loadItems(namespaces: string[]) {
+    return Promise
+      .all(namespaces.map(namespace => helmReleasesApi.list(namespace)))
+      .then(items => items.flat());
   }
 
   async create(payload: IReleaseCreatePayload) {
