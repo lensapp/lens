@@ -17,14 +17,8 @@ export async function requestMain(channel: string, ...args: any[]) {
   return ipcRenderer.invoke(channel, ...args);
 }
 
-async function getSubFrames(processId: number): Promise<ClusterFrameInfo[]> {
-  const subFrames: ClusterFrameInfo[] = [];
-
-  clusterFrameMap.forEach(frameInfo => {
-    subFrames.push(frameInfo);
-  });
-
-  return subFrames.filter(frame => frame.processId === processId);
+async function getSubFrames(): Promise<ClusterFrameInfo[]> {
+  return Array.from(clusterFrameMap.values());
 }
 
 export async function broadcastMessage(channel: string, ...args: any[]) {
@@ -32,21 +26,25 @@ export async function broadcastMessage(channel: string, ...args: any[]) {
 
   if (!views) return;
 
+  let subFrames: Promise<ClusterFrameInfo[]>;
+
+  if (ipcRenderer) {
+    subFrames = requestMain(subFramesChannel);
+  } else {
+    subFrames = getSubFrames();
+  }
+
   views.forEach(async webContent => {
     const type = webContent.getType();
 
     logger.silly(`[IPC]: broadcasting "${channel}" to ${type}=${webContent.id}`, { args });
     webContent.send(channel, ...args);
-
-    let subFrames: ClusterFrameInfo[];
-
-    if (ipcRenderer) {
-      subFrames = await requestMain(subFramesChannel, webContent.getProcessId());
-    } else {
-      subFrames = await getSubFrames(webContent.getProcessId());
-    }
-    subFrames.map((frameInfo) => {
-      webContent.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...args);
+    subFrames.then((frames) => {
+      frames.map((frameInfo) => {
+        webContent.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...args);
+      });
+    }).catch((e) => {
+      logger.warning(`[IPC]: failed to broadcast ${channel} to frame`, { error: e});
     });
   });
 
@@ -84,7 +82,7 @@ export function unsubscribeAllFromBroadcast(channel: string) {
 }
 
 export function bindBroadcastHandlers() {
-  handleRequest(subFramesChannel, async (processId: number) => {
-    return toJS(await getSubFrames(processId), { recurseEverything: true });
+  handleRequest(subFramesChannel, async () => {
+    return toJS(await getSubFrames(), { recurseEverything: true });
   });
 }
