@@ -96,8 +96,7 @@ describe("Lens integration tests", () => {
       });
 
       it("ensures helm repos", async () => {
-        const reposJson = await listHelmRepositories();
-        const repos = JSON.parse(reposJson);
+        const repos = await listHelmRepositories();
 
         if (!repos[0]) {
           fail("Lens failed to add Bitnami repository");

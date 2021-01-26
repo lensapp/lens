@@ -28,6 +28,10 @@ export function setup(): Application {
   });
 }
 
+type HelmRepository = {
+  name: string;
+  url: string;
+};
 type AsyncPidGetter = () => Promise<number>;
 export const promiseExec = util.promisify(exec);
 
@@ -43,12 +47,12 @@ export async function tearDown(app: Application) {
   }
 }
 
-export async function listHelmRepositories(retries = 0): Promise<string> {
+export async function listHelmRepositories(retries = 0):  Promise<HelmRepository[]>{
   if (retries < 5) {
     try {
       const { stdout: reposJson } = await promiseExec("helm repo list -o json");
 
-      return reposJson;
+      return JSON.parse(reposJson);
     } catch {
       await new Promise(r => setTimeout(r, 2000)); // if no repositories, wait for Lens adding bitnami repository
 
@@ -56,5 +60,5 @@ export async function listHelmRepositories(retries = 0): Promise<string> {
     }
   }
 
-  return "[]";
+  return [];
 }
