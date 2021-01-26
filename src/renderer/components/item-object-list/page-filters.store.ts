@@ -34,14 +34,14 @@ export class PageFiltersStore {
           namespaceStore.setContext(filteredNs);
         }
       }),
-      reaction(() => namespaceStore.contextNs.toJS(), contextNs => {
+      namespaceStore.onContextChange(namespaces => {
         const filteredNs = this.getValues(FilterType.NAMESPACE);
-        const isChanged = contextNs.length !== filteredNs.length;
+        const isChanged = namespaces.length !== filteredNs.length;
 
         if (isChanged) {
           this.filters.replace([
             ...this.filters.filter(({ type }) => type !== FilterType.NAMESPACE),
-            ...contextNs.map(ns => ({ type: FilterType.NAMESPACE, value: ns })),
+            ...namespaces.map(ns => ({ type: FilterType.NAMESPACE, value: ns })),
           ]);
         }
       }, {
