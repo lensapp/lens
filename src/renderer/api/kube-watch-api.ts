@@ -12,7 +12,7 @@ import { comparer, computed, observable, reaction } from "mobx";
 import { autobind, EventEmitter } from "../utils";
 import { ensureObjectSelfLink, KubeApi, parseKubeApi } from "./kube-api";
 import { KubeJsonApiData, KubeJsonApiError } from "./kube-json-api";
-import { apiPrefix, isProduction } from "../../common/vars";
+import { apiPrefix, isDebugging, isProduction } from "../../common/vars";
 import { apiManager } from "./api-manager";
 
 export { IKubeWatchEvent, IKubeWatchEventStreamEnd };
@@ -27,6 +27,11 @@ export interface IKubeWatchMessage<T extends KubeObject = any> {
 export interface IKubeWatchSubscribeStoreOptions {
   preload?: boolean; // preload store items, default: true
   waitUntilLoaded?: boolean; // subscribe only after loading all stores, default: true
+}
+
+export interface IKubeWatchReconnectOptions {
+  reconnectAttempts: number;
+  timeout: number;
 }
 
 export interface IKubeWatchLog {
@@ -277,7 +282,10 @@ export class KubeWatchApi {
         break;
 
       case "STREAM_END": {
-        this.onServerStreamEnd(event as IKubeWatchEventStreamEnd);
+        this.onServerStreamEnd(event as IKubeWatchEventStreamEnd, {
+          reconnectAttempts: 5,
+          timeout: 1000,
+        });
         break;
       }
     }
@@ -285,35 +293,36 @@ export class KubeWatchApi {
     return message;
   }
 
-  protected async onServerStreamEnd(event: IKubeWatchEventStreamEnd) {
+  protected async onServerStreamEnd(event: IKubeWatchEventStreamEnd, opts?: IKubeWatchReconnectOptions) {
     const { apiBase, namespace } = parseKubeApi(event.url);
     const api = apiManager.getApi(apiBase);
 
-    if (api) {
-      try {
-        await api.refreshResourceVersion({ namespace });
-        this.connect();
-      } catch (error) {
-        this.log({
-          message: new Error(`Failed to connect on single stream end: ${error}`),
-          meta: { event, error },
-        });
+    if (!api) return;
 
-        if (this.isActive) {
-          setTimeout(() => this.onServerStreamEnd(event), 1000);
-        }
+    try {
+      await api.refreshResourceVersion({ namespace });
+      this.connect();
+    } catch (error) {
+      this.log({
+        message: new Error(`Failed to connect on single stream end: ${error}`),
+        meta: { event, error },
+      });
+
+      if (this.isActive && opts?.reconnectAttempts > 0) {
+        opts.reconnectAttempts--;
+        setTimeout(() => this.onServerStreamEnd(event, opts), opts.timeout); // repeat event
       }
     }
   }
 
   protected log({ message, meta = {} }: IKubeWatchLog) {
-    if (isProduction) {
+    if (isProduction && !isDebugging) {
       return;
     }
 
     const logMessage = `%c[KUBE-WATCH-API]: ${String(message).toUpperCase()}`;
     const isError = message instanceof Error;
-    const textStyle = `font-weight: bold; ${isError ? "color: red;" : ""}`;
+    const textStyle = `font-weight: bold;`;
     const time = new Date().toLocaleString();
 
     if (isError) {

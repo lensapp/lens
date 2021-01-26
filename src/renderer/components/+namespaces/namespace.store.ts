@@ -122,7 +122,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
     // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
     if (accessibleNamespaces.length > 0) {
-      return []; // no-op
+      return [];
     }
 
     return super.getSubscribeApis();

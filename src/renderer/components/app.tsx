@@ -46,7 +46,6 @@ import { computed, reaction } from "mobx";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
 import { kubeWatchApi } from "../api/kube-watch-api";
-import { sum } from "lodash";
 import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 
 @observer
@@ -82,19 +81,14 @@ export class App extends React.Component {
         preload: true,
       }),
 
-      reaction(() => this.warningsCount, (count) => {
+      reaction(() => this.warningsTotal, (count: number) => {
         broadcastMessage(`cluster-warning-event-count:${getHostedCluster().id}`, count);
       }),
     ]);
   }
 
-  // todo: move to nodes-store.ts
-  @computed get warningsCount() {
-    let warnings = sum(nodesStore.items.map(node => node.getWarningConditions().length));
-
-    warnings = warnings + eventStore.getWarnings().length;
-
-    return warnings;
+  @computed get warningsTotal(): number {
+    return nodesStore.getWarningsCount() + eventStore.getWarningsCount();
   }
 
   get startURL() {
