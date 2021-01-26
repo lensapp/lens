@@ -6,10 +6,10 @@
 */
 import { Application } from "spectron";
 import * as utils from "../helpers/utils";
-import { spawnSync, exec } from "child_process";
-import * as util from "util";
+import { spawnSync } from "child_process";
+import { listHelmRepositories } from "../helpers/utils";
+import { fail } from "assert";
 
-export const promiseExec = util.promisify(exec);
 
 jest.setTimeout(60000);
 
@@ -96,8 +96,11 @@ describe("Lens integration tests", () => {
       });
 
       it("ensures helm repos", async () => {
-        const { stdout: reposJson } = await promiseExec("helm repo list -o json");
-        const repos = JSON.parse(reposJson);
+        const repos = await listHelmRepositories();
+
+        if (!repos[0]) {
+          fail("Lens failed to add Bitnami repository");
+        }
 
         await app.client.waitUntilTextExists("div.repos #message-bitnami", repos[0].name); // wait for the helm-cli to fetch the repo(s)
         await app.client.click("#HelmRepoSelect"); // click the repo select to activate the drop-down
@@ -505,19 +508,35 @@ describe("Lens integration tests", () => {
         await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text");
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
         await app.client.click('a[href^="/pods"]');
+        await app.client.click(".NamespaceSelect");
+        await app.client.keys("kube-system");
+        await app.client.keys("Enter");// "\uE007"
         await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver");
+        let podMenuItemEnabled = false;
+
+        // Wait until extensions are enabled on renderer
+        while (!podMenuItemEnabled) {
+          const logs = await app.client.getRenderProcessLogs();
+
+          podMenuItemEnabled = !!logs.find(entry => entry.message.includes("[EXTENSION]: enabled lens-pod-menu@"));
+
+          if (!podMenuItemEnabled) {
+            await new Promise(r => setTimeout(r, 1000));
+          }
+        }
+        await new Promise(r => setTimeout(r, 500)); // Give some extra time to prepare extensions
         // Open logs tab in dock
         await app.client.click(".list .TableRow:first-child");
         await app.client.waitForVisible(".Drawer");
         await app.client.click(".drawer-title .Menu li:nth-child(2)");
         // Check if controls are available
-        await app.client.waitForVisible(".Logs .VirtualList");
+        await app.client.waitForVisible(".LogList .VirtualList");
         await app.client.waitForVisible(".LogResourceSelector");
-        await app.client.waitForVisible(".LogResourceSelector .SearchInput");
-        await app.client.waitForVisible(".LogResourceSelector .SearchInput input");
+        //await app.client.waitForVisible(".LogSearch .SearchInput");
+        await app.client.waitForVisible(".LogSearch .SearchInput input");
         // Search for semicolon
         await app.client.keys(":");
-        await app.client.waitForVisible(".Logs .list span.active");
+        await app.client.waitForVisible(".LogList .list span.active");
         // Click through controls
         await app.client.click(".LogControls .show-timestamps");
         await app.client.click(".LogControls .show-previous");
@@ -556,7 +575,10 @@ describe("Lens integration tests", () => {
         await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text");
         await app.client.waitUntilTextExists('a[href^="/pods"]', "Pods");
         await app.client.click('a[href^="/pods"]');
-        await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver");
+
+        await app.client.click(".NamespaceSelect");
+        await app.client.keys(TEST_NAMESPACE);
+        await app.client.keys("Enter");// "\uE007"
         await app.client.click(".Icon.new-dock-tab");
         await app.client.waitUntilTextExists("li.MenuItem.create-resource-tab", "Create resource");
         await app.client.click("li.MenuItem.create-resource-tab");
