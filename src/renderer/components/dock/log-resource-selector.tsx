@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import { Pod } from "../../api/endpoints";
 import { Badge } from "../badge";
 import { Select, SelectOption } from "../select";
-import { LogTabData } from "./log-tab.store";
+import { LogTabData, logTabStore } from "./log-tab.store";
 import { podsStore } from "../+workloads-pods/pods.store";
 import { TabId } from "./dock.store";
 
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const LogResourceSelector = observer((props: Props) => {
-  const { tabData, save, reload } = props;
+  const { tabData, save, reload, tabId } = props;
   const { selectedPod, selectedContainer, pods } = tabData;
   const pod = new Pod(selectedPod);
   const containers = pod.getContainers();
@@ -37,6 +37,7 @@ export const LogResourceSelector = observer((props: Props) => {
     const selectedPod = podsStore.getByName(option.value, pod.getNs());
 
     save({ selectedPod });
+    logTabStore.renameTab(tabId);
   };
 
   const getSelectOptions = (items: string[]) => {

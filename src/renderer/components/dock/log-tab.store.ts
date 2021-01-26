@@ -63,8 +63,10 @@ export class LogTabStore extends DockTabStore<LogTabData> {
     });
   }
 
-  private get tabId() {
-    return dockStore.selectedTabId;
+  renameTab(tabId: string) {
+    const { selectedPod } = this.getData(tabId);
+
+    dockStore.renameTab(tabId, `Pod ${selectedPod.metadata.name}`);
   }
 
   private createDockTab(tabParams: Partial<IDockTab>) {
@@ -106,12 +108,6 @@ export class LogTabStore extends DockTabStore<LogTabData> {
         this.closeTab(tabId);
       }
     });
-  }
-
-  private renameTab(tabId: string) {
-    const { selectedPod } = this.getData(tabId);
-
-    dockStore.renameTab(tabId, `Pod ${selectedPod.metadata.name}`);
   }
 
   private closeTab(tabId: string) {
