@@ -8,11 +8,13 @@ import { navigate } from "../../navigation";
 import { CommandOverlay } from "../command-palette/command-container";
 import { AddWorkspace } from "./add-workspace";
 import { RemoveWorkspace } from "./remove-workspace";
+import { EditWorkspace } from "./edit-workspace";
 
 @observer
 export class ChooseWorkspace extends React.Component {
   private static addActionId = "__add__";
   private static removeActionId = "__remove__";
+  private static editActionId = "__edit__";
 
   @computed get options() {
     const options = workspaceStore.enabledWorkspacesList.map((workspace) => {
@@ -41,6 +43,12 @@ export class ChooseWorkspace extends React.Component {
       return;
     }
 
+    if (id === ChooseWorkspace.editActionId) {
+      CommandOverlay.open(<EditWorkspace />);
+
+      return;
+    }
+
     workspaceStore.setActive(id);
     navigate("/");
     CommandOverlay.close();
@@ -59,8 +67,6 @@ export class ChooseWorkspace extends React.Component {
     );
   }
 }
-
-
 
 commandRegistry.add({
   id: "workspace.chooseWorkspace",

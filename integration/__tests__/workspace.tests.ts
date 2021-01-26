@@ -31,13 +31,29 @@ describe("Lens integration tests", () => {
       await app.client.waitUntilTextExists("[data-test-id=current-workspace-name]", name);
     };
 
-    it("creates new workspace", async () => {
+    const createWorkspace = async (name: string) => {
       await app.client.click("[data-test-id=current-workspace]");
       await app.client.keys("add workspace");
       await app.client.keys("Enter");
-      await app.client.keys("test-workspace");
+      await app.client.keys(name);
       await app.client.keys("Enter");
-      await app.client.waitUntilTextExists("[data-test-id=current-workspace-name]", "test-workspace");
+    };
+
+    it("creates new workspace", async () => {
+      const name = "test-workspace";
+
+      await createWorkspace(name);
+      await app.client.waitUntilTextExists("[data-test-id=current-workspace-name]", name);
+    });
+
+    it("edits current workspaces", async () => {
+      await createWorkspace("to-be-edited");
+      await app.client.click("[data-test-id=current-workspace]");
+      await app.client.keys("edit current workspace");
+      await app.client.keys("Enter");
+      await app.client.keys("edited-workspace");
+      await app.client.keys("Enter");
+      await app.client.waitUntilTextExists("[data-test-id=current-workspace-name]", "edited-workspace");
     });
 
     it("adds cluster in default workspace", async () => {
