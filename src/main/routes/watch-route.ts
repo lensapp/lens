@@ -1,11 +1,12 @@
 import type { KubeJsonApiData, KubeJsonApiError } from "../../renderer/api/kube-json-api";
 
+import plimit from "p-limit";
+import { delay } from "../../common/utils";
 import { LensApiRequest } from "../router";
 import { LensApi } from "../lens-api";
 import { KubeConfig, Watch } from "@kubernetes/client-node";
 import { ServerResponse } from "http";
 import { Request } from "request";
-import { chunk } from "lodash";
 import logger from "../logger";
 
 export interface IKubeWatchEvent<T = KubeJsonApiData | KubeJsonApiError> {
@@ -106,8 +107,6 @@ class WatchRoute extends LensApi {
 
   public async routeWatch(request: LensApiRequest<IWatchRoutePayload>) {
     const { response, cluster, payload: { apis } = {} } = request;
-    const watchers = new Map<string, ApiWatcher>();
-    let isWatchRequestEnded = false;
 
     if (!apis?.length) {
       this.respondJson(response, {
@@ -123,52 +122,38 @@ class WatchRoute extends LensApi {
     response.setHeader("Connection", "keep-alive");
     logger.debug(`watch using kubeconfig:${JSON.stringify(cluster.getProxyKubeconfig(), null, 2)}`);
 
-    // create watcher instances
+    // limit concurrent k8s requests to avoid possible ECONNRESET-error
+    const requests = plimit(5);
+    const watchers = new Map<string, ApiWatcher>();
+    let isWatchRequestEnded = false;
+
     apis.forEach(apiUrl => {
       const watcher = new ApiWatcher(apiUrl, cluster.getProxyKubeconfig(), response);
-
       watchers.set(apiUrl, watcher);
+
+      requests(async () => {
+        if (isWatchRequestEnded) return;
+        await watcher.start();
+        await delay(100);
+      });
     });
 
-    // limit concurrent k8s requests to avoid possible ECONNRESET-error
-    async function startWatches() {
-      let apiGroupCall: () => Promise<any>;
-      const apiGroupCalls = chunk(apis, 10).map(apis => {
-        return () => {
-          const startedWatches = apis.map(apiUrl => watchers.get(apiUrl).start());
-
-          return Promise.allSettled(startedWatches);
-        };
-      });
-
-      while ((apiGroupCall = apiGroupCalls.shift())) {
-        try {
-          if (isWatchRequestEnded) break;
-          await apiGroupCall();
-          await new Promise(resolve => setTimeout(resolve, 150)); // delay between watch group calls
-        } catch (error) {
-          logger.error(error);
-        }
-      }
-    }
-
-    function endWatches() {
+    function onRequestEnd() {
       if (isWatchRequestEnded) return;
       isWatchRequestEnded = true;
+      requests.clearQueue();
       watchers.forEach(watcher => watcher.stop());
       watchers.clear();
     }
 
-    startWatches();
-
     request.raw.req.on("end", () => {
       logger.info("Watch request end");
-      endWatches();
+      onRequestEnd();
     });
 
     request.raw.req.on("close", () => {
       logger.info("Watch request close");
-      endWatches();
+      onRequestEnd();
     });
   }
 }
