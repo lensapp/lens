@@ -267,6 +267,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.12.5":
+  version "7.12.5"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.5.tgz#410e7e487441e1b360c29be715d870d9b985882e"
+  integrity sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.10.1", "@babel/template@^7.3.3":
   version "7.10.1"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.10.1.tgz#e167154a94cb5f14b28dc58f5356d2162f539811"
@@ -775,6 +782,17 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@jest/types@^26.6.2":
+  version "26.6.2"
+  resolved "https://registry.yarnpkg.com/@jest/types/-/types-26.6.2.tgz#bef5a532030e1d88a2f5a6d933f84e97226ed48e"
+  integrity sha512-fC6QCp7Sc5sX6g8Tvbmj4XUTbyrik0akgRy03yjXbQaBWWNWGE7SGtJk98m0N8nzegD/7SggrUlivxo5ax4KWQ==
+  dependencies:
+    "@types/istanbul-lib-coverage" "^2.0.0"
+    "@types/istanbul-reports" "^3.0.0"
+    "@types/node" "*"
+    "@types/yargs" "^15.0.0"
+    chalk "^4.0.0"
+
 "@kubernetes/client-node@^0.12.0":
   version "0.12.0"
   resolved "https://registry.yarnpkg.com/@kubernetes/client-node/-/client-node-0.12.0.tgz#79120311bced206ac8fa36435fb4cc2c1828fff2"
@@ -954,6 +972,20 @@
   integrity sha512-XIB2XbzHTN6ieIjfIMV9hlVcfPU26s2vafYWQcZHWXHOxiaRZYEDKEwdl129Zyg50+foYV2jCgtrqSA6qNuNSA==
   dependencies:
     defer-to-connect "^1.0.1"
+
+"@testing-library/dom@>=7":
+  version "7.29.4"
+  resolved "https://registry.yarnpkg.com/@testing-library/dom/-/dom-7.29.4.tgz#1647c2b478789621ead7a50614ad81ab5ae5b86c"
+  integrity sha512-CtrJRiSYEfbtNGtEsd78mk1n1v2TUbeABlNIcOCJdDfkN5/JTOwQEbbQpoSRxGqzcWPgStMvJ4mNolSuBRv1NA==
+  dependencies:
+    "@babel/code-frame" "^7.10.4"
+    "@babel/runtime" "^7.12.5"
+    "@types/aria-query" "^4.2.0"
+    aria-query "^4.2.2"
+    chalk "^4.1.0"
+    dom-accessibility-api "^0.5.4"
+    lz-string "^1.4.4"
+    pretty-format "^26.6.2"
 
 "@testing-library/dom@^7.26.0":
   version "7.26.3"
@@ -4552,7 +4584,7 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-dom-accessibility-api@^0.5.1:
+dom-accessibility-api@^0.5.1, dom-accessibility-api@^0.5.4:
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/dom-accessibility-api/-/dom-accessibility-api-0.5.4.tgz#b06d059cdd4a4ad9a79275f9d414a5c126241166"
   integrity sha512-TvrjBckDy2c6v6RLxPv5QXOnU+SmF9nBII5621Ve5fu6Z/BDrENurBEvlC1f44lKEUVqOpK4w9E5Idc5/EgkLQ==
@@ -10822,6 +10854,16 @@ pretty-format@^26.0.1:
     ansi-styles "^4.0.0"
     react-is "^16.12.0"
 
+pretty-format@^26.6.2:
+  version "26.6.2"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.6.2.tgz#e35c2705f14cb7fe2fe94fa078345b444120fc93"
+  integrity sha512-7AeGuCYNGmycyQbCqd/3PWH4eOoX/OiCa0uphp57NVTeAGdJGaAliecxwBDHYQCIvrW7aDBZCYeNTP/WX69mkg==
+  dependencies:
+    "@jest/types" "^26.6.2"
+    ansi-regex "^5.0.0"
+    ansi-styles "^4.0.0"
+    react-is "^17.0.1"
+
 process-nextick-args@~2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
@@ -11197,6 +11239,13 @@ react-router@5.2.0, react-router@^5.2.0:
     react-is "^16.6.0"
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
+
+react-select-event@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/react-select-event/-/react-select-event-5.1.0.tgz#d45ef68f2a9c872903e8c9725f3ae6e7576f7be0"
+  integrity sha512-D5DzJlYCdZsGbDVFMQFynrG0OLalJM3ZzDT7KQADNVWE604JCeQF9bIuvPZqVD7IzhnPsFzOUCsilzDA6w6WRQ==
+  dependencies:
+    "@testing-library/dom" ">=7"
 
 react-select@^3.1.0:
   version "3.1.0"
