@@ -9,9 +9,10 @@ import { endpointStore } from "./endpoints.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
+  endpoints = "endpoints",
   age = "age",
 }
 
@@ -23,22 +24,24 @@ export class Endpoints extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="network_endpoints"
         className="Endpoints" store={endpointStore}
         sortingCallbacks={{
-          [sortBy.name]: (endpoint: Endpoint) => endpoint.getName(),
-          [sortBy.namespace]: (endpoint: Endpoint) => endpoint.getNs(),
-          [sortBy.age]: (endpoint: Endpoint) => endpoint.metadata.creationTimestamp,
+          [columnId.name]: (endpoint: Endpoint) => endpoint.getName(),
+          [columnId.namespace]: (endpoint: Endpoint) => endpoint.getNs(),
+          [columnId.age]: (endpoint: Endpoint) => endpoint.metadata.creationTimestamp,
         }}
         searchFilters={[
           (endpoint: Endpoint) => endpoint.getSearchFields()
         ]}
         renderHeaderTitle="Endpoints"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Endpoints", className: "endpoints" },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Endpoints", className: "endpoints", id: columnId.endpoints },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(endpoint: Endpoint) => [
           endpoint.getName(),
