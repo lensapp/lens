@@ -14,6 +14,8 @@ import { VolumeClaimDiskChart } from "./volume-claim-disk-chart";
 import { getDetailsUrl, KubeObjectDetailsProps, KubeObjectMeta } from "../kube-object";
 import { PersistentVolumeClaim } from "../../api/endpoints";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
+import { clusterStore } from "../../../common/cluster-store";
 
 interface Props extends KubeObjectDetailsProps<PersistentVolumeClaim> {
 }
@@ -41,15 +43,18 @@ export class PersistentVolumeClaimDetails extends React.Component<Props> {
     const metricTabs = [
       "Disk"
     ];
+    const isMetricHidden = clusterStore.isMetricHidden(ResourceType.VolumeClaim);
 
     return (
       <div className="PersistentVolumeClaimDetails">
-        <ResourceMetrics
-          loader={() => volumeClaimStore.loadMetrics(volumeClaim)}
-          tabs={metricTabs} object={volumeClaim} params={{ metrics }}
-        >
-          <VolumeClaimDiskChart/>
-        </ResourceMetrics>
+        {!isMetricHidden && (
+          <ResourceMetrics
+            loader={() => volumeClaimStore.loadMetrics(volumeClaim)}
+            tabs={metricTabs} object={volumeClaim} params={{ metrics }}
+          >
+            <VolumeClaimDiskChart/>
+          </ResourceMetrics>
+        )}
         <KubeObjectMeta object={volumeClaim}/>
         <DrawerItem name="Access Modes">
           {accessModes.join(", ")}

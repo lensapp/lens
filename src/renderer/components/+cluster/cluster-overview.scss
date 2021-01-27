@@ -7,7 +7,9 @@
   display: grid;
   grid-gap: $gridGap;
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows:
+          [row1-start] 1fr
+          [row2-start] 1fr;
 
   @include media(">1600px") {
     grid-template-columns: 1fr 1fr;

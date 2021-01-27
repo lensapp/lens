@@ -4,7 +4,7 @@ import React from "react";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { reaction } from "mobx";
 import { DrawerItem, DrawerTitle } from "../drawer";
-import { Ingress, ILoadBalancerIngress } from "../../api/endpoints";
+import { ILoadBalancerIngress, Ingress } from "../../api/endpoints";
 import { Table, TableCell, TableHead, TableRow } from "../table";
 import { KubeEventDetails } from "../+events/kube-event-details";
 import { ingressStore } from "./ingress.store";
@@ -14,6 +14,8 @@ import { IngressCharts } from "./ingress-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
 import { getBackendServiceNamePort } from "../../api/endpoints/ingress.api";
+import { ResourceType } from "../+cluster-settings/components/cluster-metrics-setting";
+import { clusterStore } from "../../../common/cluster-store";
 
 interface Props extends KubeObjectDetailsProps<Ingress> {
 }
@@ -106,17 +108,20 @@ export class IngressDetails extends React.Component<Props> {
       "Network",
       "Duration",
     ];
+    const isMetricHidden = clusterStore.isMetricHidden(ResourceType.Ingress);
 
     const { serviceName, servicePort } = ingress.getServiceNamePort();
 
     return (
       <div className="IngressDetails">
-        <ResourceMetrics
-          loader={() => ingressStore.loadMetrics(ingress)}
-          tabs={metricTabs} object={ingress} params={{ metrics }}
-        >
-          <IngressCharts/>
-        </ResourceMetrics>
+        {!isMetricHidden && (
+          <ResourceMetrics
+            loader={() => ingressStore.loadMetrics(ingress)}
+            tabs={metricTabs} object={ingress} params={{ metrics }}
+          >
+            <IngressCharts/>
+          </ResourceMetrics>
+        )}
         <KubeObjectMeta object={ingress}/>
         <DrawerItem name="Ports">
           {ingress.getPorts()}
