@@ -10,12 +10,13 @@ import { Badge } from "../badge";
 import { serviceStore } from "./services.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   selector = "selector",
   ports = "port",
   clusterIp = "cluster-ip",
+  externalIp = "external-ip",
   age = "age",
   type = "type",
   status = "status",
@@ -29,16 +30,18 @@ export class Services extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="network_services"
         className="Services" store={serviceStore}
         sortingCallbacks={{
-          [sortBy.name]: (service: Service) => service.getName(),
-          [sortBy.namespace]: (service: Service) => service.getNs(),
-          [sortBy.selector]: (service: Service) => service.getSelector(),
-          [sortBy.ports]: (service: Service) => (service.spec.ports || []).map(({ port }) => port)[0],
-          [sortBy.clusterIp]: (service: Service) => service.getClusterIp(),
-          [sortBy.type]: (service: Service) => service.getType(),
-          [sortBy.age]: (service: Service) => service.metadata.creationTimestamp,
-          [sortBy.status]: (service: Service) => service.getStatus(),
+          [columnId.name]: (service: Service) => service.getName(),
+          [columnId.namespace]: (service: Service) => service.getNs(),
+          [columnId.selector]: (service: Service) => service.getSelector(),
+          [columnId.ports]: (service: Service) => (service.spec.ports || []).map(({ port }) => port)[0],
+          [columnId.clusterIp]: (service: Service) => service.getClusterIp(),
+          [columnId.type]: (service: Service) => service.getType(),
+          [columnId.age]: (service: Service) => service.metadata.creationTimestamp,
+          [columnId.status]: (service: Service) => service.getStatus(),
         }}
         searchFilters={[
           (service: Service) => service.getSearchFields(),
@@ -47,16 +50,16 @@ export class Services extends React.Component<Props> {
         ]}
         renderHeaderTitle="Services"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Type", className: "type", sortBy: sortBy.type },
-          { title: "Cluster IP", className: "clusterIp", sortBy: sortBy.clusterIp, },
-          { title: "Ports", className: "ports", sortBy: sortBy.ports },
-          { title: "External IP", className: "externalIp" },
-          { title: "Selector", className: "selector", sortBy: sortBy.selector },
-          { title: "Age", className: "age", sortBy: sortBy.age },
-          { title: "Status", className: "status", sortBy: sortBy.status },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Type", className: "type", sortBy: columnId.type, id: columnId.type },
+          { title: "Cluster IP", className: "clusterIp", sortBy: columnId.clusterIp, id: columnId.clusterIp },
+          { title: "Ports", className: "ports", sortBy: columnId.ports, id: columnId.ports },
+          { title: "External IP", className: "externalIp", id: columnId.externalIp },
+          { title: "Selector", className: "selector", sortBy: columnId.selector, id: columnId.selector },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
         ]}
         renderTableContents={(service: Service) => [
           service.getName(),
