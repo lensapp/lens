@@ -174,11 +174,11 @@ export class App extends React.Component {
       }
     });
 
-    Array.from(this.extensionRoutes.keys()).forEach((menu) => {
+    for (const menu of this.extensionRoutes.keys()) {
       if (!rootItems.includes(menu)) {
         this.extensionRoutes.delete(menu);
       }
-    });
+    }
   }
 
   renderExtensionTabLayoutRoutes() {
