@@ -18,6 +18,8 @@ import { reaction } from "mobx";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { userStore } from "../../../common/user-store";
+import { ResourceType } from "../+preferences/select-metrics-dialog";
 
 interface Props extends KubeObjectDetailsProps<DaemonSet> {
 }
@@ -47,10 +49,11 @@ export class DaemonSetDetails extends React.Component<Props> {
     const nodeSelector = daemonSet.getNodeSelectors();
     const childPods = daemonSetStore.getChildPods(daemonSet);
     const metrics = daemonSetStore.metrics;
+    const isMetricHidden = userStore.isMetricHidden(ResourceType.DaemonSet);
 
     return (
       <div className="DaemonSetDetails">
-        {podsStore.isLoaded && (
+        {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
             loader={() => daemonSetStore.loadMetrics(daemonSet)}
             tabs={podMetricTabs} object={daemonSet} params={{ metrics }}

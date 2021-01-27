@@ -10,12 +10,14 @@ import { kubeConfigDefaultPath, loadConfig } from "./kube-helpers";
 import { appEventBus } from "./event-bus";
 import logger from "../main/logger";
 import path from "path";
+import { ResourceType } from "../renderer/components/+preferences/select-metrics-dialog";
 
 export interface UserStoreModel {
   kubeConfigPath: string;
   lastSeenAppVersion: string;
   seenContexts: string[];
   preferences: UserPreferences;
+  hiddenMetrics: string[];
 }
 
 export interface UserPreferences {
@@ -28,7 +30,8 @@ export interface UserPreferences {
   downloadBinariesPath?: string;
   kubectlBinariesPath?: string;
   openAtLogin?: boolean;
-  hiddenTableColumns?: Record<string, string[]>
+  hiddenTableColumns?: Record<string, string[]>;
+  hideMetrics?: boolean;
 }
 
 export class UserStore extends BaseStore<UserStoreModel> {
@@ -47,6 +50,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
   @observable kubeConfigPath = kubeConfigDefaultPath; // used in add-cluster page for providing context
   @observable seenContexts = observable.set<string>();
   @observable newContexts = observable.set<string>();
+  @observable hiddenMetrics = observable.set<string>();
 
   @observable preferences: UserPreferences = {
     allowTelemetry: true,
@@ -56,6 +60,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
     downloadKubectlBinaries: true,  // Download kubectl binaries matching cluster version
     openAtLogin: false,
     hiddenTableColumns: {},
+    hideMetrics: false,
   };
 
   protected async handleOnLoad() {
@@ -82,6 +87,10 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   get isNewVersion() {
     return semver.gt(getAppVersion(), this.lastSeenAppVersion);
+  }
+
+  isMetricHidden(resource: ResourceType) {
+    return this.preferences.hideMetrics || this.hiddenMetrics.has(resource);
   }
 
   @action
@@ -145,7 +154,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
 
   @action
   protected async fromStore(data: Partial<UserStoreModel> = {}) {
-    const { lastSeenAppVersion, seenContexts = [], preferences, kubeConfigPath } = data;
+    const { lastSeenAppVersion, seenContexts = [], preferences, kubeConfigPath, hiddenMetrics = [] } = data;
 
     if (lastSeenAppVersion) {
       this.lastSeenAppVersion = lastSeenAppVersion;
@@ -155,6 +164,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
       this.kubeConfigPath = kubeConfigPath;
     }
     this.seenContexts.replace(seenContexts);
+    this.hiddenMetrics.replace(hiddenMetrics);
     Object.assign(this.preferences, preferences);
   }
 
@@ -164,6 +174,7 @@ export class UserStore extends BaseStore<UserStoreModel> {
       lastSeenAppVersion: this.lastSeenAppVersion,
       seenContexts: Array.from(this.seenContexts),
       preferences: this.preferences,
+      hiddenMetrics: Array.from(this.hiddenMetrics),
     };
 
     return toJS(model, {

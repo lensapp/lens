@@ -22,6 +22,8 @@ import { getItemMetrics } from "../../api/endpoints/metrics.api";
 import { PodCharts, podMetricTabs } from "./pod-charts";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { userStore } from "../../../common/user-store";
+import { ResourceType } from "../+preferences/select-metrics-dialog";
 
 interface Props extends KubeObjectDetailsProps<Pod> {
 }
@@ -66,15 +68,18 @@ export class PodDetails extends React.Component<Props> {
     const nodeSelector = pod.getNodeSelectors();
     const volumes = pod.getVolumes();
     const metrics = podsStore.metrics;
+    const isMetricHidden = userStore.isMetricHidden(ResourceType.Pod);
 
     return (
       <div className="PodDetails">
-        <ResourceMetrics
-          loader={() => podsStore.loadMetrics(pod)}
-          tabs={podMetricTabs} object={pod} params={{ metrics }}
-        >
-          <PodCharts/>
-        </ResourceMetrics>
+        {!isMetricHidden && (
+          <ResourceMetrics
+            loader={() => podsStore.loadMetrics(pod)}
+            tabs={podMetricTabs} object={pod} params={{ metrics }}
+          >
+            <PodCharts/>
+          </ResourceMetrics>
+        )}
         <KubeObjectMeta object={pod}/>
         <DrawerItem name="Status">
           <span className={cssNames("status", kebabCase(pod.getStatusMessage()))}>{pod.getStatusMessage()}</span>

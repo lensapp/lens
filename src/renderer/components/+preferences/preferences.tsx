@@ -18,6 +18,7 @@ import { KubectlBinaries } from "./kubectl-binaries";
 import { appPreferenceRegistry } from "../../../extensions/registries/app-preference-registry";
 import { PageLayout } from "../layout/page-layout";
 import { AddHelmRepoDialog } from "./add-helm-repo-dialog";
+import { SelectMetricsDialog } from "./select-metrics-dialog";
 
 @observer
 export class Preferences extends React.Component {
@@ -151,7 +152,7 @@ export class Preferences extends React.Component {
             onClick={AddHelmRepoDialog.open}
           />
         </div>
-        <AddHelmRepoDialog onAddRepo={()=>this.loadHelmRepos()}/>
+        <AddHelmRepoDialog onAddRepo={() => this.loadHelmRepos()}/>
         <div className="repos flex gaps column">
           {Array.from(this.helmAddedRepos).map(([name, repo]) => {
             const tooltipId = `message-${name}`;
@@ -190,6 +191,16 @@ export class Preferences extends React.Component {
           Needed with some corporate proxies that do certificate re-writing.{" "}
           Does not affect cluster communications!
         </small>
+
+        <h2>Metrics availability</h2>
+        <div className="flex gaps">
+          <Button
+            primary
+            label="Select metrics"
+            onClick={SelectMetricsDialog.open}
+          />
+          <SelectMetricsDialog/>
+        </div>
 
         <div className="extensions flex column gaps">
           {appPreferenceRegistry.getItems().map(({ title, components: { Hint, Input } }, index) => {

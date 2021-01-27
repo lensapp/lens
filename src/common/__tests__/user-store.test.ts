@@ -45,6 +45,19 @@ describe("user store tests", () => {
       expect(us.seenContexts.has("bar")).toBe(true);
     });
 
+    it("allows adding and listing hidden metrics", () => {
+      const us = UserStore.getInstance<UserStore>();
+
+      us.hiddenMetrics.add("foo");
+      expect(us.hiddenMetrics.size).toBe(1);
+
+      us.hiddenMetrics.add("foo");
+      us.hiddenMetrics.add("bar");
+      expect(us.hiddenMetrics.size).toBe(2);
+      expect(us.hiddenMetrics.has("foo")).toBe(true);
+      expect(us.hiddenMetrics.has("bar")).toBe(true);
+    });
+
     it("allows setting and getting preferences", () => {
       const us = UserStore.getInstance<UserStore>();
 

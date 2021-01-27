@@ -11,6 +11,8 @@ import { PodContainerPort } from "./pod-container-port";
 import { ResourceMetrics } from "../resource-metrics";
 import { IMetrics } from "../../api/endpoints/metrics.api";
 import { ContainerCharts } from "./container-charts";
+import { userStore } from "../../../common/user-store";
+import { ResourceType } from "../+preferences/select-metrics-dialog";
 
 interface Props {
   pod: Pod;
@@ -62,13 +64,14 @@ export class PodDetailsContainer extends React.Component<Props> {
       "Memory",
       "Filesystem",
     ];
+    const isMetricHidden = userStore.isMetricHidden(ResourceType.Container);
 
     return (
       <div className="PodDetailsContainer">
         <div className="pod-container-title">
           <StatusBrick className={cssNames(state, { ready })}/>{name}
         </div>
-        {!isInitContainer &&
+        {!isMetricHidden && !isInitContainer &&
         <ResourceMetrics tabs={metricTabs} params={{ metrics }}>
           <ContainerCharts/>
         </ResourceMetrics>

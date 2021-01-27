@@ -17,6 +17,8 @@ import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { userStore } from "../../../common/user-store";
+import { ResourceType } from "../+preferences/select-metrics-dialog";
 
 interface Props extends KubeObjectDetailsProps<ReplicaSet> {
 }
@@ -47,10 +49,11 @@ export class ReplicaSetDetails extends React.Component<Props> {
     const nodeSelector = replicaSet.getNodeSelectors();
     const images = replicaSet.getImages();
     const childPods = replicaSetStore.getChildPods(replicaSet);
+    const isMetricHidden = userStore.isMetricHidden(ResourceType.ReplicaSet);
 
     return (
       <div className="ReplicaSetDetails">
-        {podsStore.isLoaded && (
+        {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
             loader={() => replicaSetStore.loadMetrics(replicaSet)}
             tabs={podMetricTabs} object={replicaSet} params={{ metrics }}

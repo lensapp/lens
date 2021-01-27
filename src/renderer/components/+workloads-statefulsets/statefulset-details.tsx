@@ -18,6 +18,8 @@ import { PodCharts, podMetricTabs } from "../+workloads-pods/pod-charts";
 import { PodDetailsList } from "../+workloads-pods/pod-details-list";
 import { KubeObjectMeta } from "../kube-object/kube-object-meta";
 import { kubeObjectDetailRegistry } from "../../api/kube-object-detail-registry";
+import { userStore } from "../../../common/user-store";
+import { ResourceType } from "../+preferences/select-metrics-dialog";
 
 interface Props extends KubeObjectDetailsProps<StatefulSet> {
 }
@@ -46,10 +48,11 @@ export class StatefulSetDetails extends React.Component<Props> {
     const nodeSelector = statefulSet.getNodeSelectors();
     const childPods = statefulSetStore.getChildPods(statefulSet);
     const metrics = statefulSetStore.metrics;
+    const isMetricHidden = userStore.isMetricHidden(ResourceType.StatefulSet);
 
     return (
       <div className="StatefulSetDetails">
-        {podsStore.isLoaded && (
+        {!isMetricHidden && podsStore.isLoaded && (
           <ResourceMetrics
             loader={() => statefulSetStore.loadMetrics(statefulSet)}
             tabs={podMetricTabs} object={statefulSet} params={{ metrics }}

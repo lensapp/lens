@@ -13,6 +13,8 @@ import { ClusterIssues } from "./cluster-issues";
 import { ClusterMetrics } from "./cluster-metrics";
 import { clusterOverviewStore } from "./cluster-overview.store";
 import { ClusterPieCharts } from "./cluster-pie-charts";
+import { userStore } from "../../../common/user-store";
+import { ResourceType } from "../+preferences/select-metrics-dialog";
 
 @observer
 export class ClusterOverview extends React.Component {
@@ -37,19 +39,40 @@ export class ClusterOverview extends React.Component {
     this.metricPoller.stop();
   }
 
+  renderMetrics(isMetricsHidden: boolean) {
+    if (isMetricsHidden) {
+      return null;
+    }
+
+    return (
+      <>
+        <ClusterMetrics/>
+        <ClusterPieCharts/>
+      </>
+    );
+  }
+
+  renderClusterOverview(isLoaded: boolean, isMetricsHidden: boolean) {
+    if (!isLoaded) {
+      return <Spinner center/>;
+    }
+
+    return (
+      <>
+        {this.renderMetrics(isMetricsHidden)}
+        <ClusterIssues className={isMetricsHidden ? "OnlyClusterIssues" : ""}/>
+      </>
+    );
+  }
+
   render() {
     const isLoaded = nodesStore.isLoaded && podsStore.isLoaded;
+    const isMetricsHidden = userStore.isMetricHidden(ResourceType.Cluster);
 
     return (
       <TabLayout>
         <div className="ClusterOverview">
-          {!isLoaded ? <Spinner center/> : (
-            <>
-              <ClusterMetrics/>
-              <ClusterPieCharts/>
-              <ClusterIssues/>
-            </>
-          )}
+          {this.renderClusterOverview(isLoaded, isMetricsHidden)}
         </div>
       </TabLayout>
     );
