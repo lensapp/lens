@@ -208,6 +208,12 @@ export class DockStore {
     this.closeTabs(tabs);
   }
 
+  renameTab(tabId: TabId, title: string) {
+    const tab = this.getTabById(tabId);
+
+    tab.title = title;
+  }
+
   @action
   selectTab(tabId: TabId) {
     this.selectedTabId = this.getTabById(tabId)?.id ?? null;

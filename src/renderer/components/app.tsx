@@ -42,7 +42,7 @@ import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../exte
 import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
 import { eventStore } from "./+events/event.store";
-import { computed, reaction } from "mobx";
+import { computed, reaction, observable } from "mobx";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
 import { kubeWatchApi } from "../api/kube-watch-api";
@@ -84,6 +84,12 @@ export class App extends React.Component {
       reaction(() => this.warningsTotal, (count: number) => {
         broadcastMessage(`cluster-warning-event-count:${getHostedCluster().id}`, count);
       }),
+
+      reaction(() => clusterPageMenuRegistry.getRootItems(), (rootItems) => {
+        this.generateExtensionTabLayoutRoutes(rootItems);
+      }, {
+        fireImmediately: true
+      })
     ]);
   }
 
@@ -135,6 +141,38 @@ export class App extends React.Component {
         if (page) {
           return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
         }
+      }
+    });
+  }
+
+  @observable extensionRoutes: Map<ClusterPageMenuRegistration, React.ReactNode> = new Map();
+
+  generateExtensionTabLayoutRoutes(rootItems: ClusterPageMenuRegistration[]) {
+    rootItems.forEach((menu, index) => {
+      let route = this.extensionRoutes.get(menu);
+
+      if (!route) {
+        const tabRoutes = this.getTabLayoutRoutes(menu);
+
+        if (tabRoutes.length > 0) {
+          const pageComponent = () => <TabLayout tabs={tabRoutes} />;
+
+          route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
+          this.extensionRoutes.set(menu, route);
+        } else {
+          const page = clusterPageRegistry.getByPageTarget(menu.target);
+
+          if (page) {
+            route = <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
+            this.extensionRoutes.set(menu, route);
+          }
+        }
+      }
+    });
+
+    Array.from(this.extensionRoutes.keys()).forEach((menu) => {
+      if (!rootItems.includes(menu)) {
+        this.extensionRoutes.delete(menu);
       }
     });
   }
