@@ -53,17 +53,17 @@ export class ExtensionLoader {
   }
 
   @computed get userExtensionsByName(): Map<string, LensExtension> {
-    const res = new Map();
+    const extensions = new Map();
 
     for (const [, val] of this.instances.toJS()) {
       if (val.isBundled) {
         continue;
       }
 
-      res.set(val.manifest.name, val);
+      extensions.set(val.manifest.name, val);
     }
 
-    return res;
+    return extensions;
   }
 
   // Transform userExtensions to a state object for storing into ExtensionsStore
