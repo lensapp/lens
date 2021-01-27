@@ -31,9 +31,7 @@ export class DeploymentDetails extends React.Component<Props> {
   });
 
   componentDidMount() {
-    if (!podsStore.isLoaded) {
-      podsStore.loadAll();
-    }
+    podsStore.loadSelectedNamespaces();
   }
 
   componentWillUnmount() {

@@ -14,7 +14,7 @@ export interface KubeEventDetailsProps {
 @observer
 export class KubeEventDetails extends React.Component<KubeEventDetailsProps> {
   async componentDidMount() {
-    eventStore.loadAll();
+    eventStore.loadSelectedNamespaces();
   }
 
   render() {

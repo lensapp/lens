@@ -80,7 +80,7 @@ export class UpgradeChartStore extends DockTabStore<IChartUpgradeData> {
     const values = this.values.getData(tabId);
 
     await Promise.all([
-      !releaseStore.isLoaded && releaseStore.loadAll(),
+      !releaseStore.isLoaded && releaseStore.loadSelectedNamespaces(),
       !values && this.loadValues(tabId)
     ]);
   }

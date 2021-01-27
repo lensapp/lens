@@ -1,4 +1,5 @@
 import React from "react";
+import { computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -41,12 +42,12 @@ import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
 import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
+import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 import { eventStore } from "./+events/event.store";
-import { computed, reaction, observable } from "mobx";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
+import { namespaceStore } from "./+namespaces/namespace.store";
 import { kubeWatchApi } from "../api/kube-watch-api";
-import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 
 @observer
 export class App extends React.Component {
@@ -76,6 +77,9 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
+    kubeWatchApi.setupCluster(getHostedCluster);
+    kubeWatchApi.setupWatchingNamespaces(namespaceStore.getContextNamespaces);
+
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore], {
         preload: true,
@@ -155,9 +159,9 @@ export class App extends React.Component {
         const tabRoutes = this.getTabLayoutRoutes(menu);
 
         if (tabRoutes.length > 0) {
-          const pageComponent = () => <TabLayout tabs={tabRoutes} />;
+          const pageComponent = () => <TabLayout tabs={tabRoutes}/>;
 
-          route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
+          route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)}/>;
           this.extensionRoutes.set(menu, route);
         } else {
           const page = clusterPageRegistry.getByPageTarget(menu.target);
