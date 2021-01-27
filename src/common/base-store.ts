@@ -19,7 +19,7 @@ export interface BaseStoreParams<T = any> extends ConfOptions<T> {
  * Note: T should only contain base JSON serializable types.
  */
 export abstract class BaseStore<T = any> extends Singleton {
-  protected storeConfig: Config<T>;
+  protected storeConfig?: Config<T>;
   protected syncDisposers: Function[] = [];
 
   whenLoaded = when(() => this.isLoaded);
@@ -36,7 +36,7 @@ export abstract class BaseStore<T = any> extends Singleton {
   }
 
   get name() {
-    return path.basename(this.storeConfig.path);
+    return path.basename(this.path);
   }
 
   protected get syncRendererChannel() {
@@ -48,7 +48,7 @@ export abstract class BaseStore<T = any> extends Singleton {
   }
 
   get path() {
-    return this.storeConfig.path;
+    return this.storeConfig?.path || "";
   }
 
   protected async init() {
@@ -82,10 +82,13 @@ export abstract class BaseStore<T = any> extends Singleton {
 
   protected async saveToFile(model: T) {
     logger.info(`[STORE]: SAVING ${this.path}`);
+
     // todo: update when fixed https://github.com/sindresorhus/conf/issues/114
-    Object.entries(model).forEach(([key, value]) => {
-      this.storeConfig.set(key, value);
-    });
+    if (this.storeConfig) {
+      for (const [key, value] of Object.entries(model)) {
+        this.storeConfig.set(key, value);
+      }
+    }
   }
 
   enableSync() {
