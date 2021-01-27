@@ -26,7 +26,6 @@ import { InstalledExtension, extensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
-import { bindBroadcastHandlers } from "../common/ipc";
 import { LensProtocolRouterMain } from "./protocol-handler";
 
 const workingDir = path.join(app.getPath("appData"), appName);
@@ -56,114 +55,115 @@ if (!app.requestSingleInstanceLock()) {
   app.exit();
 }
 
-app
-  .on("second-instance", () => {
-    windowManager?.ensureMainWindow();
-  })
-  .on("ready", async () => {
-    logger.info(`🚀 Starting Lens from "${workingDir}"`);
-    await shellSync();
+app.on("second-instance", () => {
+  windowManager?.ensureMainWindow();
+});
 
-    bindBroadcastHandlers();
+app.on("ready", async () => {
+  logger.info(`🚀 Starting Lens from "${workingDir}"`);
+  await shellSync();
 
-    powerMonitor.on("shutdown", () => {
-      app.exit();
+  powerMonitor.on("shutdown", () => {
+    app.exit();
+  });
+
+  const updater = new AppUpdater();
+
+  updater.start();
+
+  registerFileProtocol("static", __static);
+
+  await installDeveloperTools();
+
+  // preload
+  await Promise.all([
+    userStore.load(),
+    clusterStore.load(),
+    workspaceStore.load(),
+    extensionsStore.load(),
+    filesystemProvisionerStore.load(),
+  ]);
+
+  // find free port
+  try {
+    proxyPort = await getFreePort();
+  } catch (error) {
+    logger.error(error);
+    dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy");
+    app.exit();
+  }
+
+  // create cluster manager
+  clusterManager = ClusterManager.getInstance<ClusterManager>(proxyPort);
+
+  // run proxy
+  try {
+    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    proxyServer = LensProxy.create(proxyPort, clusterManager);
+  } catch (error) {
+    logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error?.message}`);
+    dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error?.message || "unknown error"}`);
+    app.exit();
+  }
+
+  extensionLoader.init();
+  extensionDiscovery.init();
+  windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
+
+  // call after windowManager to see splash earlier
+  try {
+    const extensions = await extensionDiscovery.load();
+
+    // Start watching after bundled extensions are loaded
+    extensionDiscovery.watchExtensions();
+
+    // Subscribe to extensions that are copied or deleted to/from the extensions folder
+    extensionDiscovery.events.on("add", (extension: InstalledExtension) => {
+      extensionLoader.addExtension(extension);
+    });
+    extensionDiscovery.events.on("remove", (lensExtensionId: LensExtensionId) => {
+      extensionLoader.removeExtension(lensExtensionId);
     });
 
-    const updater = new AppUpdater();
+    extensionLoader.initExtensions(extensions);
+  } catch (error) {
+    dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
+    console.error(error);
+    console.trace();
+  }
 
-    updater.start();
+  setTimeout(() => {
+    appEventBus.emit({ name: "service", action: "start" });
+  }, 1000);
+});
 
-    registerFileProtocol("static", __static);
+app.on("activate", (event, hasVisibleWindows) => {
+  logger.info("APP:ACTIVATE", { hasVisibleWindows });
 
-    await installDeveloperTools();
+  if (!hasVisibleWindows) {
+    windowManager?.initMainWindow(false);
+  }
+});
 
-    // preload
-    await Promise.all([
-      userStore.load(),
-      clusterStore.load(),
-      workspaceStore.load(),
-      extensionsStore.load(),
-      filesystemProvisionerStore.load(),
-    ]);
-
-    // find free port
-    try {
-      proxyPort = await getFreePort();
-    } catch (error) {
-      logger.error(error);
-      dialog.showErrorBox("Lens Error", "Could not find a free port for the cluster proxy");
-      app.exit();
-    }
-
-    // create cluster manager
-    clusterManager = ClusterManager.getInstance<ClusterManager>(proxyPort);
-
-    // run proxy
-    try {
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
-      proxyServer = LensProxy.create(proxyPort, clusterManager);
-    } catch (error) {
-      logger.error(`Could not start proxy (127.0.0:${proxyPort}): ${error?.message}`);
-      dialog.showErrorBox("Lens Error", `Could not start proxy (127.0.0:${proxyPort}): ${error?.message || "unknown error"}`);
-      app.exit();
-    }
-
-    extensionLoader.init();
-    extensionDiscovery.init();
-    windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
-
-    // call after windowManager to see splash earlier
-    try {
-      const extensions = await extensionDiscovery.load();
-
-      // Start watching after bundled extensions are loaded
-      extensionDiscovery.watchExtensions();
-
-      // Subscribe to extensions that are copied or deleted to/from the extensions folder
-      extensionDiscovery.events.on("add", (extension: InstalledExtension) => {
-        extensionLoader.addExtension(extension);
-      });
-      extensionDiscovery.events.on("remove", (lensExtensionId: LensExtensionId) => {
-        extensionLoader.removeExtension(lensExtensionId);
-      });
-
-      extensionLoader.initExtensions(extensions);
-    } catch (error) {
-      dialog.showErrorBox("Lens Error", `Could not load extensions${error?.message ? `: ${error.message}` : ""}`);
-      console.error(error);
-      console.trace();
-    }
-
-    setTimeout(() => {
-      appEventBus.emit({ name: "service", action: "start" });
-    }, 1000);
-  })
-  .on("activate", (event, hasVisibleWindows) => {
-    logger.info("APP:ACTIVATE", { hasVisibleWindows });
-
-    if (!hasVisibleWindows) {
-      windowManager?.initMainWindow(false);
-    }
-  })
-  .on("will-quit", (event) => {
+app.on("will-quit", (event) => {
   // Quit app on Cmd+Q (MacOS)
-    logger.info("APP:QUIT");
-    appEventBus.emit({name: "app", action: "close"});
-    event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
-    clusterManager?.stop(); // close cluster connections
+  logger.info("APP:QUIT");
+  appEventBus.emit({name: "app", action: "close"});
+  event.preventDefault(); // prevent app's default shutdown (e.g. required for telemetry, etc.)
+  clusterManager?.stop(); // close cluster connections
 
-    return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
-  })
-  .on("open-url", (event, rawUrl) => {
-    // lens:// protocol handler
-    event.preventDefault();
+  return; // skip exit to make tray work, to quit go to app's global menu or tray's menu
+});
 
-    LensProtocolRouterMain
-      .getInstance<LensProtocolRouterMain>()
-      .route(rawUrl)
-      .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl }));
-  });
+app.on("open-url", (event, rawUrl) => {
+  // lens:// protocol handler
+  event.preventDefault();
+
+  LensProtocolRouterMain
+    .getInstance<LensProtocolRouterMain>()
+    .route(rawUrl)
+    .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl }));
+});
 
 // Extensions-api runtime exports
 export const LensExtensionsApi = {

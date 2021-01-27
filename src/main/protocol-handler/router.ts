@@ -28,7 +28,7 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
       logger.info(`${proto.LensProtocolRouter.LoggingPrefix}: routing ${url.toString()}`);
 
       switch (url.host) {
-        case "internal":
+        case "app":
           return this._routeToInternal(url);
         case "extension":
           return this._routeToExtension(url);
