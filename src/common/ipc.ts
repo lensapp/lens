@@ -26,13 +26,9 @@ export async function broadcastMessage(channel: string, ...args: any[]) {
 
   if (!views) return;
 
-  let subFrames: Promise<ClusterFrameInfo[]>;
-
-  if (ipcRenderer) {
-    subFrames = requestMain(subFramesChannel);
-  } else {
-    subFrames = getSubFrames();
-  }
+  const subFrames: Promise<ClusterFrameInfo[]> = ipcRenderer
+    ? requestMain(subFramesChannel)
+    : getSubFrames();
 
   views.forEach(async webContent => {
     const type = webContent.getType();
