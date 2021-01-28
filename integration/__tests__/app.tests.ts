@@ -31,12 +31,12 @@ describe("Lens integration tests", () => {
 
     describe("protocol app start", () => {
       it("should handle opening lens:// links", async () => {
-        await open("lens://internal/foobar");
+        await open("lens://app/foobar");
 
-        await Promise.all([
-          utils.waitForLogsToContain(app, "main", "No handler", "lens://internal/foobar"),
-          utils.waitForLogsToContain(app, "renderer", "No handler", "lens://internal/foobar"),
-        ]);
+        await utils.waitForLogsToContain(app, {
+          main: ["No handler", "lens://app/foobar"],
+          renderer: ["No handler", "lens://app/foobar"],
+        });
       });
     });
 

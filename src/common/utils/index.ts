@@ -10,6 +10,7 @@ export * from "./cloneJson";
 export * from "./delay";
 export * from "./debouncePromise";
 export * from "./defineGlobal";
+export * from "./delay";
 export * from "./getRandId";
 export * from "./splitArray";
 export * from "./saveToAppFiles";

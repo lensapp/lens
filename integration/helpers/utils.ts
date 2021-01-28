@@ -3,6 +3,7 @@ import * as util from "util";
 import { exec } from "child_process";
 import fse from "fs-extra";
 import path from "path";
+import { delay } from "../../src/common/utils";
 
 interface AppTestingPaths {
   testingPath: string,
@@ -114,7 +115,46 @@ export async function listHelmRepositories(retries = 0):  Promise<HelmRepository
   return [];
 }
 
-const rendererLogPrefixMatcher = /^\[[0-9]{5}:[0-9]{4}\/[0-9]{6}\.[0-9]{6}:[A-Z]+:CONSOLE\([0-9)]+\)\]/;
+const rendererLogPrefixMatcher = /^\[[0-9]{5}:[0-9]{4}\/[0-9]{6}\.[0-9]{6}:[A-Z]+:CONSOLE\([0-9)]+\)\]\s"(?<message>.*)", source: http:\/\//;
+
+export interface LogMatches {
+  renderer?: string[];
+  main?: string[];
+}
+
+interface LogLines {
+  renderer: string[];
+  main: string[];
+}
+
+async function* splitLogs(app: Application): AsyncGenerator<LogLines, void, void> {
+  let lastLogLineCount = 0;
+
+  for(;;) { // infinite loop
+    const curLogs: string[] = (app as any).chromeDriver.getLogs();
+    const newLogs = curLogs.slice(lastLogLineCount);
+
+    lastLogLineCount = curLogs.length;
+
+    const item: LogLines = {
+      renderer: [],
+      main: [],
+    };
+
+    for (const logLine of newLogs) {
+      const logParts = logLine.match(rendererLogPrefixMatcher);
+
+      if (logParts === null) {
+        item.main.push(logLine);
+      } else {
+        item.renderer.push(logParts.groups.message);
+      }
+    }
+
+    yield item;
+    await delay(500); // only delay after the first attempt
+  }
+}
 
 /**
  * Wait for all of `values` to be part of the logs. Does not clear logs. Does
@@ -126,34 +166,33 @@ const rendererLogPrefixMatcher = /^\[[0-9]{5}:[0-9]{4}\/[0-9]{6}\.[0-9]{6}:[A-Z]
  * @param source Whether to wait for renderer or main logs
  * @param values The list of strings that should all be contained in the logs
  */
-export async function waitForLogsToContain(app: Application, source: "renderer" | "main", ...values: string[]): Promise<void> {
-  const notFoundValues = new Set(values);
-  let lastLogLineCount = 0;
+export async function waitForLogsToContain(app: Application, matches: LogMatches): Promise<void> {
+  const notYetFound = {
+    main: new Set(matches.main ?? []),
+    renderer: new Set(matches.renderer ?? []),
+  };
 
-  while (notFoundValues.size > 0) {
-    // get all the logs (this returns both) and doesn't clear them
-    const curLogs = ((app as any).chromeDriver.getLogs() as string[]);
-
-    // skip the logs already seen
-    const newLogs = curLogs.slice(lastLogLineCount);
-
-    lastLogLineCount += newLogs.length;
-
-    // filter the logs depending on whether we are waiting for logs from main or renderer
-    const filteredLogs = newLogs.filter(logLine => (source === "main") !== Boolean(logLine.match(rendererLogPrefixMatcher)));
-
-    for (const logLine of filteredLogs) {
-      if (notFoundValues.size === 0) {
-        break;
-      }
-
-      for (const value of notFoundValues) {
-        if (logLine.includes(value)) {
-          notFoundValues.delete(value);
+  for await (const logs of splitLogs(app)) {
+    mainMatch: for (const logPart of notYetFound.main) {
+      for (const logLine of logs.main) {
+        if (logLine.includes(logPart)) {
+          notYetFound.main.delete(logPart);
+          continue mainMatch; // we have found this log part, try the next part
         }
       }
     }
 
-    await new Promise(resolve => setTimeout(resolve, 500)); // long poll getting logs
+    rendererMatch: for (const logPart of notYetFound.renderer) {
+      for (const logLine of logs.renderer) {
+        if (logLine.includes(logPart)) {
+          notYetFound.renderer.delete(logPart);
+          continue rendererMatch; // we have found this log part, try the next part
+        }
+      }
+    }
+
+    if (notYetFound.main.size === 0 && notYetFound.renderer.size === 0) {
+      return; // we are done, have found all log parts
+    }
   }
 }

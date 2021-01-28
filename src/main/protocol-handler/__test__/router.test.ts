@@ -67,7 +67,7 @@ describe("protocol router tests", () => {
     lpr.addInternalHandler("/", noop);
 
     try {
-      expect(await lpr.route("lens://internal")).toBeUndefined();
+      expect(await lpr.route("lens://app")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
@@ -79,7 +79,7 @@ describe("protocol router tests", () => {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
-    expect(broadcastMessage).toHaveBeenNthCalledWith(1, ProtocolHandlerInternal, "lens://internal");
+    expect(broadcastMessage).toHaveBeenNthCalledWith(1, ProtocolHandlerInternal, "lens://app");
     expect(broadcastMessage).toHaveBeenNthCalledWith(2, ProtocolHandlerExtension, "lens://extension/@mirantis/minikube");
   });
 
@@ -89,13 +89,13 @@ describe("protocol router tests", () => {
     lpr.addInternalHandler("/page", () => { called = true; });
 
     try {
-      expect(await lpr.route("lens://internal/page")).toBeUndefined();
+      expect(await lpr.route("lens://app/page")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
     expect(called).toBe(true);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://internal/page");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page");
   });
 
   it("should call most exact handler", async () => {
@@ -105,13 +105,13 @@ describe("protocol router tests", () => {
     lpr.addInternalHandler("/page/:id", params => { called = params.pathname.id; });
 
     try {
-      expect(await lpr.route("lens://internal/page/foo")).toBeUndefined();
+      expect(await lpr.route("lens://app/page/foo")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
     expect(called).toBe("foo");
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://internal/page/foo");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo");
   });
 
   it("should call most exact handler for an extension", async () => {
@@ -229,13 +229,13 @@ describe("protocol router tests", () => {
     lpr.addInternalHandler("/page/bar", () => { called = 4; });
 
     try {
-      expect(await lpr.route("lens://internal/page/foo/bar/bat")).toBeUndefined();
+      expect(await lpr.route("lens://app/page/foo/bar/bat")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
     expect(called).toBe(3);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://internal/page/foo/bar/bat");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat");
   });
 
   it("should call most exact handler with 2 found handlers", async () => {
@@ -246,12 +246,12 @@ describe("protocol router tests", () => {
     lpr.addInternalHandler("/page/bar", () => { called = 4; });
 
     try {
-      expect(await lpr.route("lens://internal/page/foo/bar/bat")).toBeUndefined();
+      expect(await lpr.route("lens://app/page/foo/bar/bat")).toBeUndefined();
     } catch (error) {
       expect(throwIfDefined(error)).not.toThrow();
     }
 
     expect(called).toBe(1);
-    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://internal/page/foo/bar/bat");
+    expect(broadcastMessage).toBeCalledWith(ProtocolHandlerInternal, "lens://app/page/foo/bar/bat");
   });
 });
