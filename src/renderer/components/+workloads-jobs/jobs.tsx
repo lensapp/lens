@@ -12,9 +12,10 @@ import { IJobsRouteParams } from "../+workloads";
 import kebabCase from "lodash/kebabCase";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
+  completions = "completions",
   conditions = "conditions",
   age = "age",
 }
@@ -27,25 +28,27 @@ export class Jobs extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="workload_jobs"
         className="Jobs" store={jobStore}
         dependentStores={[podsStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (job: Job) => job.getName(),
-          [sortBy.namespace]: (job: Job) => job.getNs(),
-          [sortBy.conditions]: (job: Job) => job.getCondition() != null ? job.getCondition().type : "",
-          [sortBy.age]: (job: Job) => job.metadata.creationTimestamp,
+          [columnId.name]: (job: Job) => job.getName(),
+          [columnId.namespace]: (job: Job) => job.getNs(),
+          [columnId.conditions]: (job: Job) => job.getCondition() != null ? job.getCondition().type : "",
+          [columnId.age]: (job: Job) => job.metadata.creationTimestamp,
         }}
         searchFilters={[
           (job: Job) => job.getSearchFields(),
         ]}
         renderHeaderTitle="Jobs"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Completions", className: "completions" },
-          { className: "warning" },
-          { title: "Age", className: "age", sortBy: sortBy.age },
-          { title: "Conditions", className: "conditions", sortBy: sortBy.conditions },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Completions", className: "completions", id: columnId.completions },
+          { className: "warning", showWithColumn: columnId.completions },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Conditions", className: "conditions", sortBy: columnId.conditions, id: columnId.conditions },
         ]}
         renderTableContents={(job: Job) => {
           const condition = job.getCondition();

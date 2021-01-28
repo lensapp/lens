@@ -14,7 +14,7 @@ import { Icon } from "../icon/icon";
 import { kubeObjectMenuRegistry } from "../../../extensions/registries/kube-object-menu-registry";
 import { ReplicaSetScaleDialog } from "./replicaset-scale-dialog";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   desired = "desired",
@@ -31,27 +31,29 @@ export class ReplicaSets extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="workload_replicasets"
         className="ReplicaSets" store={replicaSetStore}
         sortingCallbacks={{
-          [sortBy.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
-          [sortBy.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
-          [sortBy.desired]: (replicaSet: ReplicaSet) => replicaSet.getDesired(),
-          [sortBy.current]: (replicaSet: ReplicaSet) => replicaSet.getCurrent(),
-          [sortBy.ready]: (replicaSet: ReplicaSet) => replicaSet.getReady(),
-          [sortBy.age]: (replicaSet: ReplicaSet) => replicaSet.metadata.creationTimestamp,
+          [columnId.name]: (replicaSet: ReplicaSet) => replicaSet.getName(),
+          [columnId.namespace]: (replicaSet: ReplicaSet) => replicaSet.getNs(),
+          [columnId.desired]: (replicaSet: ReplicaSet) => replicaSet.getDesired(),
+          [columnId.current]: (replicaSet: ReplicaSet) => replicaSet.getCurrent(),
+          [columnId.ready]: (replicaSet: ReplicaSet) => replicaSet.getReady(),
+          [columnId.age]: (replicaSet: ReplicaSet) => replicaSet.metadata.creationTimestamp,
         }}
         searchFilters={[
           (replicaSet: ReplicaSet) => replicaSet.getSearchFields(),
         ]}
         renderHeaderTitle="Replica Sets"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Desired", className: "desired", sortBy: sortBy.desired },
-          { title: "Current", className: "current", sortBy: sortBy.current },
-          { title: "Ready", className: "ready", sortBy: sortBy.ready },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Desired", className: "desired", sortBy: columnId.desired, id: columnId.desired },
+          { title: "Current", className: "current", sortBy: columnId.current, id: columnId.current },
+          { title: "Ready", className: "ready", sortBy: columnId.ready, id: columnId.ready },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(replicaSet: ReplicaSet) => [
           replicaSet.getName(),

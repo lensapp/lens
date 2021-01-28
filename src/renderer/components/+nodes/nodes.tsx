@@ -17,7 +17,7 @@ import upperFirst from "lodash/upperFirst";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge/badge";
 
-enum sortBy {
+enum columnId {
   name = "name",
   cpu = "cpu",
   memory = "memory",
@@ -135,21 +135,23 @@ export class Nodes extends React.Component<Props> {
     return (
       <TabLayout>
         <KubeObjectListLayout
+          isConfigurable
+          tableId="nodes"
           className="Nodes"
           store={nodesStore} isClusterScoped
           isReady={nodesStore.isLoaded}
           dependentStores={[podsStore]}
           isSelectable={false}
           sortingCallbacks={{
-            [sortBy.name]: (node: Node) => node.getName(),
-            [sortBy.cpu]: (node: Node) => nodesStore.getLastMetricValues(node, ["cpuUsage"]),
-            [sortBy.memory]: (node: Node) => nodesStore.getLastMetricValues(node, ["memoryUsage"]),
-            [sortBy.disk]: (node: Node) => nodesStore.getLastMetricValues(node, ["fsUsage"]),
-            [sortBy.conditions]: (node: Node) => node.getNodeConditionText(),
-            [sortBy.taints]: (node: Node) => node.getTaints().length,
-            [sortBy.roles]: (node: Node) => node.getRoleLabels(),
-            [sortBy.age]: (node: Node) => node.metadata.creationTimestamp,
-            [sortBy.version]: (node: Node) => node.getKubeletVersion(),
+            [columnId.name]: (node: Node) => node.getName(),
+            [columnId.cpu]: (node: Node) => nodesStore.getLastMetricValues(node, ["cpuUsage"]),
+            [columnId.memory]: (node: Node) => nodesStore.getLastMetricValues(node, ["memoryUsage"]),
+            [columnId.disk]: (node: Node) => nodesStore.getLastMetricValues(node, ["fsUsage"]),
+            [columnId.conditions]: (node: Node) => node.getNodeConditionText(),
+            [columnId.taints]: (node: Node) => node.getTaints().length,
+            [columnId.roles]: (node: Node) => node.getRoleLabels(),
+            [columnId.age]: (node: Node) => node.metadata.creationTimestamp,
+            [columnId.version]: (node: Node) => node.getKubeletVersion(),
           }}
           searchFilters={[
             (node: Node) => node.getSearchFields(),
@@ -159,16 +161,16 @@ export class Nodes extends React.Component<Props> {
           ]}
           renderHeaderTitle="Nodes"
           renderTableHeader={[
-            { title: "Name", className: "name", sortBy: sortBy.name },
-            { className: "warning" },
-            { title: "CPU", className: "cpu", sortBy: sortBy.cpu },
-            { title: "Memory", className: "memory", sortBy: sortBy.memory },
-            { title: "Disk", className: "disk", sortBy: sortBy.disk },
-            { title: "Taints", className: "taints", sortBy: sortBy.taints },
-            { title: "Roles", className: "roles", sortBy: sortBy.roles },
-            { title: "Version", className: "version", sortBy: sortBy.version },
-            { title: "Age", className: "age", sortBy: sortBy.age },
-            { title: "Conditions", className: "conditions", sortBy: sortBy.conditions },
+            { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+            { className: "warning", showWithColumn: columnId.name },
+            { title: "CPU", className: "cpu", sortBy: columnId.cpu, id: columnId.cpu },
+            { title: "Memory", className: "memory", sortBy: columnId.memory, id: columnId.memory },
+            { title: "Disk", className: "disk", sortBy: columnId.disk, id: columnId.disk },
+            { title: "Taints", className: "taints", sortBy: columnId.taints, id: columnId.taints },
+            { title: "Roles", className: "roles", sortBy: columnId.roles, id: columnId.roles },
+            { title: "Version", className: "version", sortBy: columnId.version, id: columnId.version },
+            { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+            { title: "Conditions", className: "conditions", sortBy: columnId.conditions, id: columnId.conditions },
           ]}
           renderTableContents={(node: Node) => {
             const tooltipId = `node-taints-${node.getId()}`;

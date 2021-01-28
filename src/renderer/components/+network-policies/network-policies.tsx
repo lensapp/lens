@@ -9,9 +9,10 @@ import { INetworkPoliciesRouteParams } from "./network-policies.route";
 import { networkPolicyStore } from "./network-policy.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
+  types = "types",
   age = "age",
 }
 
@@ -23,22 +24,24 @@ export class NetworkPolicies extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="network_policies"
         className="NetworkPolicies" store={networkPolicyStore}
         sortingCallbacks={{
-          [sortBy.name]: (item: NetworkPolicy) => item.getName(),
-          [sortBy.namespace]: (item: NetworkPolicy) => item.getNs(),
-          [sortBy.age]: (item: NetworkPolicy) => item.metadata.creationTimestamp,
+          [columnId.name]: (item: NetworkPolicy) => item.getName(),
+          [columnId.namespace]: (item: NetworkPolicy) => item.getNs(),
+          [columnId.age]: (item: NetworkPolicy) => item.metadata.creationTimestamp,
         }}
         searchFilters={[
           (item: NetworkPolicy) => item.getSearchFields(),
         ]}
         renderHeaderTitle="Network Policies"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Policy Types", className: "type" },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Policy Types", className: "type", id: columnId.types },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(item: NetworkPolicy) => [
           item.getName(),

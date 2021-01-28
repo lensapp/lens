@@ -9,7 +9,7 @@ import React from "react";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { LimitRange } from "../../api/endpoints/limit-range.api";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   age = "age",
@@ -23,12 +23,14 @@ export class LimitRanges extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="configuration_limitranges"
         className="LimitRanges"
         store={limitRangeStore}
         sortingCallbacks={{
-          [sortBy.name]: (item: LimitRange) => item.getName(),
-          [sortBy.namespace]: (item: LimitRange) => item.getNs(),
-          [sortBy.age]: (item: LimitRange) => item.metadata.creationTimestamp,
+          [columnId.name]: (item: LimitRange) => item.getName(),
+          [columnId.namespace]: (item: LimitRange) => item.getNs(),
+          [columnId.age]: (item: LimitRange) => item.metadata.creationTimestamp,
         }}
         searchFilters={[
           (item: LimitRange) => item.getName(),
@@ -36,10 +38,10 @@ export class LimitRanges extends React.Component<Props> {
         ]}
         renderHeaderTitle={"Limit Ranges"}
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(limitRange: LimitRange) => [
           limitRange.getName(),
