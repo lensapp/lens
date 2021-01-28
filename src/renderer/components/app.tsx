@@ -74,12 +74,15 @@ export class App extends React.Component {
       window.location.reload();
     });
     whatInput.ask(); // Start to monitor user input device
+
+    await namespaceStore.whenReady;
+    await kubeWatchApi.init({
+      getCluster: getHostedCluster,
+      getNamespaces: namespaceStore.getContextNamespaces,
+    });
   }
 
   componentDidMount() {
-    kubeWatchApi.setupCluster(getHostedCluster);
-    kubeWatchApi.setupWatchingNamespaces(namespaceStore.getContextNamespaces);
-
     disposeOnUnmount(this, [
       kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore], {
         preload: true,
