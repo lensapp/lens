@@ -108,7 +108,7 @@ export class KubeWatchApi {
   }
 
   isAllowedApi(api: KubeApi): boolean {
-    return this.cluster.isAllowedResource(api.kind);
+    return !!this?.cluster.isAllowedResource(api.kind);
   }
 
   subscribeApi(api: KubeApi | KubeApi[]): () => void {
@@ -134,7 +134,13 @@ export class KubeWatchApi {
     const limitRequests = plimit(1); // load stores one by one to allow quick skipping when fast clicking btw pages
     const preloading: Promise<any>[] = [];
     const apis = new Set(stores.map(store => store.getSubscribeApis()).flat());
+    const unsubscribeList: (() => void)[] = [];
     let isUnsubscribed = false;
+
+    const subscribe = () => {
+      if (isUnsubscribed) return;
+      apis.forEach(api => unsubscribeList.push(this.subscribeApi(api)));
+    };
 
     if (preload) {
       for (const store of stores) {
@@ -146,35 +152,24 @@ export class KubeWatchApi {
       }
     }
 
-    const subscribe = () => {
-      const unsubscribeList: (() => void)[] = [];
-
-      const subscribeApis = () => {
-        if (isUnsubscribed) return;
-        apis.forEach(api => unsubscribeList.push(this.subscribeApi(api)));
-      };
-
-      if (waitUntilLoaded) {
-        Promise.all(preloading).then(subscribeApis, error => {
-          this.log({
-            message: new Error("Loading stores has failed"),
-            meta: { stores, error, options },
-          });
+    if (waitUntilLoaded) {
+      Promise.all(preloading).then(subscribe, error => {
+        this.log({
+          message: new Error("Loading stores has failed"),
+          meta: { stores, error, options },
         });
-      } else {
-        subscribeApis();
-      }
+      });
+    } else {
+      subscribe();
+    }
 
-      // unsubscribe
-      return () => {
-        if (isUnsubscribed) return;
-        isUnsubscribed = true;
-        limitRequests.clearQueue();
-        unsubscribeList.forEach(unsubscribe => unsubscribe());
-      };
+    // unsubscribe
+    return () => {
+      if (isUnsubscribed) return;
+      isUnsubscribed = true;
+      limitRequests.clearQueue();
+      unsubscribeList.forEach(unsubscribe => unsubscribe());
     };
-
-    return subscribe();
   }
 
   protected async connectionCheck() {
