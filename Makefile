@@ -12,7 +12,7 @@ endif
 binaries/client:
 	yarn download-bins
 
-node_modules:
+node_modules: yarn.lock
 	yarn install --frozen-lockfile
 	yarn check --verify-tree --integrity
 
