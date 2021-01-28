@@ -22,7 +22,7 @@ export interface CommandRegistration {
 export class CommandRegistry extends BaseRegistry<CommandRegistration> {
   @action
   add(items: CommandRegistration | CommandRegistration[], extension?: LensExtension) {
-    const itemArray = [items].flat() as CommandRegistration[];
+    const itemArray = [items].flat();
 
     const newIds = itemArray.map((item) => item.id);
     const currentIds = this.getItems().map((item) => item.id);
