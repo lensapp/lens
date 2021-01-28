@@ -167,7 +167,7 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
   async removeSelectedItems?(): Promise<any>;
 
   // eslint-disable-next-line unused-imports/no-unused-vars-ts
-  async subscribe(...args: any[]): Promise<() => void> {
+  subscribe(...args: any[]) {
     return noop;
   }
 

@@ -218,11 +218,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     return [this.api];
   }
 
-  async subscribe(apis = this.getSubscribeApis()): Promise<() => void> {
-    const cluster = await this.resolveCluster();
-    const allowedApis = apis.filter(api => cluster.isAllowedResource(api.kind));
-
-    return kubeWatchApi.subscribeApi(allowedApis);
+  subscribe(apis = this.getSubscribeApis()) {
+    return kubeWatchApi.subscribeApi(apis);
   }
 
   @action
