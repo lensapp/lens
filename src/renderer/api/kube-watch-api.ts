@@ -69,14 +69,12 @@ export class KubeWatchApi {
 
   @computed get apis(): string[] {
     return Array.from(this.subscribers.keys()).map(api => {
-      const { cluster, namespaces, isReady } = this;
-
-      if (!isReady || !cluster?.isAllowedResource(api.kind)) {
+      if (!this.isReady || !this.isAllowedApi(api)) {
         return [];
       }
 
       if (api.isNamespaced) {
-        return namespaces.map(namespace => api.getWatchUrl(namespace));
+        return this.namespaces.map(namespace => api.getWatchUrl(namespace));
       } else {
         return api.getWatchUrl();
       }
