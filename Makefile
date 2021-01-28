@@ -1,3 +1,8 @@
+CMD_ARGS = $(filter-out $@,$(MAKECMDGOALS))
+
+%:
+  @:
+
 EXTENSIONS_DIR = ./extensions
 extensions = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir})
 extension_node_modules = $(foreach dir, $(wildcard $(EXTENSIONS_DIR)/*), ${dir}/node_modules)
@@ -9,6 +14,7 @@ else
     DETECTED_OS := $(shell uname)
 endif
 
+.PHONY: binaries/client
 binaries/client: node_modules
 	yarn download-bins
 
@@ -34,7 +40,7 @@ lint:
 
 .PHONY: test
 test: binaries/client
-	yarn test
+	yarn run jest $(or $(CMD_ARGS), "src")
 
 .PHONY: integration-linux
 integration-linux: binaries/client build-extension-types build-extensions
@@ -57,10 +63,6 @@ integration-win: binaries/client build-extension-types build-extensions
 	# rm %APPDATA%/Lens
 	yarn build:win
 	yarn integration
-
-.PHONY: test-app
-test-app:
-	yarn test
 
 .PHONY: build
 build: node_modules binaries/client build-extensions
