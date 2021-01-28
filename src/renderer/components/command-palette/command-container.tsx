@@ -30,7 +30,6 @@ export class CommandOverlay {
 
 @observer
 export class CommandContainer extends React.Component<{cluster?: Cluster}> {
-  @observable visible = false;
   @observable commandComponent: React.ReactElement;
 
   private escHandler(event: KeyboardEvent) {

@@ -31,10 +31,6 @@ export class RemoveWorkspace extends React.Component {
       },
       ok: () => {
         workspaceStore.removeWorkspace(workspace);
-
-        if (workspace.id === workspaceStore.currentWorkspaceId) {
-          workspaceStore.setActive(workspaceStore.enabledWorkspacesList[0].id);
-        }
       },
       message: (
         <div className="confirm flex column gaps">

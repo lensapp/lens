@@ -10,7 +10,7 @@ import { CommandOverlay } from "../command-palette/command-container";
 const uniqueWorkspaceName: InputValidator = {
   condition: ({ required }) => required,
   message: () => `Workspace with this name already exists`,
-  validate: value => !workspaceStore.enabledWorkspacesList.find((workspace) => workspace.name === value),
+  validate: value => !workspaceStore.workspacesList.find((workspace) => workspace.name === value),
 };
 
 @observer

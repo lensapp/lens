@@ -61,7 +61,7 @@ export class CommandDialog extends React.Component {
         broadcastMessage(`command-palette:run-action:${clusterStore.active.id}`, command.id);
       }
     } catch(error) {
-      console.error("failed to execute command", command.id, error);
+      console.error("[COMMAND-DIALOG] failed to execute command", command.id, error);
     }
   }
 
