@@ -9,6 +9,8 @@ import { CommandOverlay } from "../command-palette/command-container";
 import { AddWorkspace } from "./add-workspace";
 import { RemoveWorkspace } from "./remove-workspace";
 import { EditWorkspace } from "./edit-workspace";
+import { landingURL } from "../+landing-page";
+import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 
 @observer
 export class ChooseWorkspace extends React.Component {
@@ -54,7 +56,14 @@ export class ChooseWorkspace extends React.Component {
     }
 
     workspaceStore.setActive(id);
-    navigate("/");
+    const clusterId = workspaceStore.getById(id).lastActiveClusterId;
+
+    if (clusterId) {
+      navigate(clusterViewURL({ params: { clusterId } }));
+    } else {
+      navigate(landingURL());
+    }
+
     CommandOverlay.close();
   }
 
