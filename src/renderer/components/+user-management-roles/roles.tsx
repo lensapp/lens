@@ -10,7 +10,7 @@ import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleDialog } from "./add-role-dialog";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   age = "age",
@@ -25,22 +25,24 @@ export class Roles extends React.Component<Props> {
     return (
       <>
         <KubeObjectListLayout
+          isConfigurable
+          tableId="access_roles"
           className="Roles"
           store={rolesStore}
           sortingCallbacks={{
-            [sortBy.name]: (role: Role) => role.getName(),
-            [sortBy.namespace]: (role: Role) => role.getNs(),
-            [sortBy.age]: (role: Role) => role.metadata.creationTimestamp,
+            [columnId.name]: (role: Role) => role.getName(),
+            [columnId.namespace]: (role: Role) => role.getNs(),
+            [columnId.age]: (role: Role) => role.metadata.creationTimestamp,
           }}
           searchFilters={[
             (role: Role) => role.getSearchFields(),
           ]}
           renderHeaderTitle="Roles"
           renderTableHeader={[
-            { title: "Name", className: "name", sortBy: sortBy.name },
-            { className: "warning" },
-            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-            { title: "Age", className: "age", sortBy: sortBy.age },
+            { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+            { className: "warning", showWithColumn: columnId.name },
+            { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+            { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
           renderTableContents={(role: Role) => [
             role.getName(),

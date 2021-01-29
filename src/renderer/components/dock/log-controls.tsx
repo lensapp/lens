@@ -5,22 +5,23 @@ import { observer } from "mobx-react";
 
 import { Pod } from "../../api/endpoints";
 import { cssNames, saveFileDialog } from "../../utils";
-import { IPodLogsData, podLogsStore } from "./log.store";
+import { logStore } from "./log.store";
 import { Checkbox } from "../checkbox";
 import { Icon } from "../icon";
+import { LogTabData } from "./log-tab.store";
 
 interface Props {
-  tabData: IPodLogsData
+  tabData: LogTabData
   logs: string[]
-  save: (data: Partial<IPodLogsData>) => void
+  save: (data: Partial<LogTabData>) => void
   reload: () => void
 }
 
 export const LogControls = observer((props: Props) => {
   const { tabData, save, reload, logs } = props;
   const { showTimestamps, previous } = tabData;
-  const since = logs.length ? podLogsStore.getTimestamps(logs[0]) : null;
-  const pod = new Pod(tabData.pod);
+  const since = logs.length ? logStore.getTimestamps(logs[0]) : null;
+  const pod = new Pod(tabData.selectedPod);
 
   const toggleTimestamps = () => {
     save({ showTimestamps: !showTimestamps });
@@ -33,7 +34,7 @@ export const LogControls = observer((props: Props) => {
 
   const downloadLogs = () => {
     const fileName = pod.getName();
-    const logsToDownload = showTimestamps ? logs : podLogsStore.logsWithoutTimestamps;
+    const logsToDownload = showTimestamps ? logs : logStore.logsWithoutTimestamps;
 
     saveFileDialog(`${fileName}.log`, logsToDownload.join("\n"), "text/plain");
   };

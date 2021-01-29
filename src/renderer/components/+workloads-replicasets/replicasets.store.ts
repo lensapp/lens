@@ -18,7 +18,7 @@ export class ReplicaSetStore extends KubeObjectStore<ReplicaSet> {
   }
 
   getChildPods(replicaSet: ReplicaSet) {
-    return podsStore.getPodsByOwner(replicaSet);
+    return podsStore.getPodsByOwnerId(replicaSet.getId());
   }
 
   getStatuses(replicaSets: ReplicaSet[]) {

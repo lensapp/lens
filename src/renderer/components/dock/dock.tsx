@@ -17,7 +17,7 @@ import { isEditResourceTab } from "./edit-resource.store";
 import { InstallChart } from "./install-chart";
 import { isInstallChartTab } from "./install-chart.store";
 import { Logs } from "./logs";
-import { isLogsTab } from "./log.store";
+import { isLogsTab } from "./log-tab.store";
 import { TerminalWindow } from "./terminal-window";
 import { createTerminalTab, isTerminalTab } from "./terminal.store";
 import { UpgradeChart } from "./upgrade-chart";

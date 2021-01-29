@@ -440,11 +440,9 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
             return <TableCell key={cellProps.id ?? index} {...cellProps} />;
           }
         })}
-        {isConfigurable && (
-          <TableCell className="menu">
-            {this.renderColumnVisibilityMenu()}
-          </TableCell>
-        )}
+        <TableCell className="menu">
+          {isConfigurable && this.renderColumnVisibilityMenu()}
+        </TableCell>
       </TableHead>
     );
   }

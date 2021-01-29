@@ -8,9 +8,10 @@ import { IDockTab } from "./dock.store";
 import { InfoPanel } from "./info-panel";
 import { LogResourceSelector } from "./log-resource-selector";
 import { LogList } from "./log-list";
-import { IPodLogsData, podLogsStore } from "./log.store";
+import { logStore } from "./log.store";
 import { LogSearch } from "./log-search";
 import { LogControls } from "./log-controls";
+import { LogTabData, logTabStore } from "./log-tab.store";
 
 interface Props {
   className?: string
@@ -30,7 +31,7 @@ export class Logs extends React.Component<Props> {
   }
 
   get tabData() {
-    return podLogsStore.getData(this.tabId);
+    return logTabStore.getData(this.tabId);
   }
 
   get tabId() {
@@ -38,18 +39,18 @@ export class Logs extends React.Component<Props> {
   }
 
   @autobind()
-  save(data: Partial<IPodLogsData>) {
-    podLogsStore.setData(this.tabId, { ...this.tabData, ...data });
+  save(data: Partial<LogTabData>) {
+    logTabStore.setData(this.tabId, { ...this.tabData, ...data });
   }
 
   load = async () => {
     this.isLoading = true;
-    await podLogsStore.load(this.tabId);
+    await logStore.load(this.tabId);
     this.isLoading = false;
   };
 
   reload = async () => {
-    podLogsStore.clearLogs(this.tabId);
+    logStore.clearLogs(this.tabId);
     await this.load();
   };
 
@@ -82,11 +83,12 @@ export class Logs extends React.Component<Props> {
   }
 
   renderResourceSelector() {
-    const logs = podLogsStore.logs;
-    const searchLogs = this.tabData.showTimestamps ? logs : podLogsStore.logsWithoutTimestamps;
+    const logs = logStore.logs;
+    const searchLogs = this.tabData.showTimestamps ? logs : logStore.logsWithoutTimestamps;
     const controls = (
       <div className="flex gaps">
         <LogResourceSelector
+          tabId={this.tabId}
           tabData={this.tabData}
           save={this.save}
           reload={this.reload}
@@ -112,7 +114,7 @@ export class Logs extends React.Component<Props> {
   }
 
   render() {
-    const logs = podLogsStore.logs;
+    const logs = logStore.logs;
 
     return (
       <div className="PodLogs flex column">
