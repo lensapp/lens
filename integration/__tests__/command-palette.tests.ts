@@ -7,10 +7,7 @@ describe("Lens command palette", () => {
   let app: Application;
 
   describe("menu", () => {
-    beforeAll(async () => {
-      app = await utils.appStart();
-      await utils.clickWhatsNew(app);
-    }, 20000);
+    beforeAll(async () => app = await utils.appStart(), 20000);
 
     afterAll(async () => {
       if (app?.isRunning()) {
@@ -19,6 +16,7 @@ describe("Lens command palette", () => {
     });
 
     it("opens command dialog from menu", async () => {
+      await utils.clickWhatsNew(app);
       await app.electron.ipcRenderer.send("test-menu-item-click", "View", "Command Palette...");
       await app.client.waitUntilTextExists(".Select__option", "Preferences: Open");
       await app.client.keys("Escape");
