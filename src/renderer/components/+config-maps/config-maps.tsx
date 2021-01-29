@@ -9,7 +9,7 @@ import { KubeObjectListLayout } from "../kube-object";
 import { IConfigMapsRouteParams } from "./config-maps.route";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   keys = "keys",
@@ -24,12 +24,14 @@ export class ConfigMaps extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="configuration_configmaps"
         className="ConfigMaps" store={configMapsStore}
         sortingCallbacks={{
-          [sortBy.name]: (item: ConfigMap) => item.getName(),
-          [sortBy.namespace]: (item: ConfigMap) => item.getNs(),
-          [sortBy.keys]: (item: ConfigMap) => item.getKeys(),
-          [sortBy.age]: (item: ConfigMap) => item.metadata.creationTimestamp,
+          [columnId.name]: (item: ConfigMap) => item.getName(),
+          [columnId.namespace]: (item: ConfigMap) => item.getNs(),
+          [columnId.keys]: (item: ConfigMap) => item.getKeys(),
+          [columnId.age]: (item: ConfigMap) => item.metadata.creationTimestamp,
         }}
         searchFilters={[
           (item: ConfigMap) => item.getSearchFields(),
@@ -37,11 +39,11 @@ export class ConfigMaps extends React.Component<Props> {
         ]}
         renderHeaderTitle="Config Maps"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Keys", className: "keys", sortBy: sortBy.keys },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Keys", className: "keys", sortBy: columnId.keys, id: columnId.keys },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(configMap: ConfigMap) => [
           configMap.getName(),

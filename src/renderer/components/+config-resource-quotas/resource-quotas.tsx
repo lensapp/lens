@@ -10,7 +10,7 @@ import { resourceQuotaStore } from "./resource-quotas.store";
 import { IResourceQuotaRouteParams } from "./resource-quotas.route";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   age = "age"
@@ -25,11 +25,13 @@ export class ResourceQuotas extends React.Component<Props> {
     return (
       <>
         <KubeObjectListLayout
+          isConfigurable
+          tableId="configuration_quotas"
           className="ResourceQuotas" store={resourceQuotaStore}
           sortingCallbacks={{
-            [sortBy.name]: (item: ResourceQuota) => item.getName(),
-            [sortBy.namespace]: (item: ResourceQuota) => item.getNs(),
-            [sortBy.age]: (item: ResourceQuota) => item.metadata.creationTimestamp,
+            [columnId.name]: (item: ResourceQuota) => item.getName(),
+            [columnId.namespace]: (item: ResourceQuota) => item.getNs(),
+            [columnId.age]: (item: ResourceQuota) => item.metadata.creationTimestamp,
           }}
           searchFilters={[
             (item: ResourceQuota) => item.getSearchFields(),
@@ -37,10 +39,10 @@ export class ResourceQuotas extends React.Component<Props> {
           ]}
           renderHeaderTitle="Resource Quotas"
           renderTableHeader={[
-            { title: "Name", className: "name", sortBy: sortBy.name },
-            { className: "warning" },
-            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-            { title: "Age", className: "age", sortBy: sortBy.age },
+            { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+            { className: "warning", showWithColumn: columnId.name },
+            { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+            { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
           renderTableContents={(resourceQuota: ResourceQuota) => [
             resourceQuota.getName(),

@@ -7,7 +7,7 @@ import { podSecurityPoliciesStore } from "./pod-security-policies.store";
 import { PodSecurityPolicy } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   volumes = "volumes",
   privileged = "privileged",
@@ -19,14 +19,16 @@ export class PodSecurityPolicies extends React.Component {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="access_roles"
         className="PodSecurityPolicies"
         isClusterScoped={true}
         store={podSecurityPoliciesStore}
         sortingCallbacks={{
-          [sortBy.name]: (item: PodSecurityPolicy) => item.getName(),
-          [sortBy.volumes]: (item: PodSecurityPolicy) => item.getVolumes(),
-          [sortBy.privileged]: (item: PodSecurityPolicy) => +item.isPrivileged(),
-          [sortBy.age]: (item: PodSecurityPolicy) => item.metadata.creationTimestamp,
+          [columnId.name]: (item: PodSecurityPolicy) => item.getName(),
+          [columnId.volumes]: (item: PodSecurityPolicy) => item.getVolumes(),
+          [columnId.privileged]: (item: PodSecurityPolicy) => +item.isPrivileged(),
+          [columnId.age]: (item: PodSecurityPolicy) => item.metadata.creationTimestamp,
         }}
         searchFilters={[
           (item: PodSecurityPolicy) => item.getSearchFields(),
@@ -35,11 +37,11 @@ export class PodSecurityPolicies extends React.Component {
         ]}
         renderHeaderTitle="Pod Security Policies"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Privileged", className: "privileged", sortBy: sortBy.privileged },
-          { title: "Volumes", className: "volumes", sortBy: sortBy.volumes },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Privileged", className: "privileged", sortBy: columnId.privileged, id: columnId.privileged },
+          { title: "Volumes", className: "volumes", sortBy: columnId.volumes, id: columnId.volumes },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(item: PodSecurityPolicy) => {
           return [

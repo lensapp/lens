@@ -9,9 +9,11 @@ import { ingressStore } from "./ingress.store";
 import { KubeObjectListLayout } from "../kube-object";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
+  loadBalancers ="load-balancers",
+  rules = "rules",
   age = "age",
 }
 
@@ -23,11 +25,13 @@ export class Ingresses extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="network_ingresses"
         className="Ingresses" store={ingressStore}
         sortingCallbacks={{
-          [sortBy.name]: (ingress: Ingress) => ingress.getName(),
-          [sortBy.namespace]: (ingress: Ingress) => ingress.getNs(),
-          [sortBy.age]: (ingress: Ingress) => ingress.metadata.creationTimestamp,
+          [columnId.name]: (ingress: Ingress) => ingress.getName(),
+          [columnId.namespace]: (ingress: Ingress) => ingress.getNs(),
+          [columnId.age]: (ingress: Ingress) => ingress.metadata.creationTimestamp,
         }}
         searchFilters={[
           (ingress: Ingress) => ingress.getSearchFields(),
@@ -35,12 +39,12 @@ export class Ingresses extends React.Component<Props> {
         ]}
         renderHeaderTitle="Ingresses"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "LoadBalancers", className: "loadbalancers" },
-          { title: "Rules", className: "rules" },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "LoadBalancers", className: "loadbalancers", id: columnId.loadBalancers },
+          { title: "Rules", className: "rules", id: columnId.rules },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(ingress: Ingress) => [
           ingress.getName(),

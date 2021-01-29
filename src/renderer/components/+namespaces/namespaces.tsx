@@ -11,7 +11,7 @@ import { INamespacesRouteParams } from "./namespaces.route";
 import { namespaceStore } from "./namespace.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   labels = "labels",
   age = "age",
@@ -27,12 +27,14 @@ export class Namespaces extends React.Component<Props> {
       <TabLayout>
         <KubeObjectListLayout
           isClusterScoped
+          isConfigurable
+          tableId="namespaces"
           className="Namespaces" store={namespaceStore}
           sortingCallbacks={{
-            [sortBy.name]: (ns: Namespace) => ns.getName(),
-            [sortBy.labels]: (ns: Namespace) => ns.getLabels(),
-            [sortBy.age]: (ns: Namespace) => ns.metadata.creationTimestamp,
-            [sortBy.status]: (ns: Namespace) => ns.getStatus(),
+            [columnId.name]: (ns: Namespace) => ns.getName(),
+            [columnId.labels]: (ns: Namespace) => ns.getLabels(),
+            [columnId.age]: (ns: Namespace) => ns.metadata.creationTimestamp,
+            [columnId.status]: (ns: Namespace) => ns.getStatus(),
           }}
           searchFilters={[
             (item: Namespace) => item.getSearchFields(),
@@ -40,11 +42,11 @@ export class Namespaces extends React.Component<Props> {
           ]}
           renderHeaderTitle="Namespaces"
           renderTableHeader={[
-            { title: "Name", className: "name", sortBy: sortBy.name },
-            { className: "warning" },
-            { title: "Labels", className: "labels", sortBy: sortBy.labels },
-            { title: "Age", className: "age", sortBy: sortBy.age },
-            { title: "Status", className: "status", sortBy: sortBy.status },
+            { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+            { className: "warning", showWithColumn: columnId.name },
+            { title: "Labels", className: "labels", sortBy: columnId.labels, id: columnId.labels },
+            { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+            { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
           ]}
           renderTableContents={(item: Namespace) => [
             item.getName(),

@@ -17,7 +17,7 @@ export class StatefulSetStore extends KubeObjectStore<StatefulSet> {
   }
 
   getChildPods(statefulSet: StatefulSet) {
-    return podsStore.getPodsByOwner(statefulSet);
+    return podsStore.getPodsByOwnerId(statefulSet.getId());
   }
 
   getStatuses(statefulSets: StatefulSet[]) {

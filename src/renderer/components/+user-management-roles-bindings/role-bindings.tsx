@@ -10,7 +10,7 @@ import { KubeObjectListLayout } from "../kube-object";
 import { AddRoleBindingDialog } from "./add-role-binding-dialog";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   bindings = "bindings",
@@ -25,13 +25,15 @@ export class RoleBindings extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="access_role_bindings"
         className="RoleBindings"
         store={roleBindingsStore}
         sortingCallbacks={{
-          [sortBy.name]: (binding: RoleBinding) => binding.getName(),
-          [sortBy.namespace]: (binding: RoleBinding) => binding.getNs(),
-          [sortBy.bindings]: (binding: RoleBinding) => binding.getSubjectNames(),
-          [sortBy.age]: (binding: RoleBinding) => binding.metadata.creationTimestamp,
+          [columnId.name]: (binding: RoleBinding) => binding.getName(),
+          [columnId.namespace]: (binding: RoleBinding) => binding.getNs(),
+          [columnId.bindings]: (binding: RoleBinding) => binding.getSubjectNames(),
+          [columnId.age]: (binding: RoleBinding) => binding.metadata.creationTimestamp,
         }}
         searchFilters={[
           (binding: RoleBinding) => binding.getSearchFields(),
@@ -39,11 +41,11 @@ export class RoleBindings extends React.Component<Props> {
         ]}
         renderHeaderTitle="Role Bindings"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Bindings", className: "bindings", sortBy: sortBy.bindings },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Bindings", className: "bindings", sortBy: columnId.bindings, id: columnId.bindings },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(binding: RoleBinding) => [
           binding.getName(),

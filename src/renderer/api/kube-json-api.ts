@@ -21,7 +21,7 @@ export interface KubeJsonApiData extends JsonApiData {
     resourceVersion: string;
     continue?: string;
     finalizers?: string[];
-    selfLink: string;
+    selfLink?: string;
     labels?: {
       [label: string]: string;
     };

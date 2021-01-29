@@ -18,12 +18,13 @@ import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { ConfirmDialog } from "../confirm-dialog/confirm-dialog";
 import { Notifications } from "../notifications/notifications";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
+  schedule = "schedule",
   suspend = "suspend",
   active = "active",
-  lastSchedule = "schedule",
+  lastSchedule = "last-schedule",
   age = "age",
 }
 
@@ -35,15 +36,17 @@ export class CronJobs extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="workload_cronjobs"
         className="CronJobs" store={cronJobStore}
         dependentStores={[jobStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (cronJob: CronJob) => cronJob.getName(),
-          [sortBy.namespace]: (cronJob: CronJob) => cronJob.getNs(),
-          [sortBy.suspend]: (cronJob: CronJob) => cronJob.getSuspendFlag(),
-          [sortBy.active]: (cronJob: CronJob) => cronJobStore.getActiveJobsNum(cronJob),
-          [sortBy.lastSchedule]: (cronJob: CronJob) => cronJob.getLastScheduleTime(),
-          [sortBy.age]: (cronJob: CronJob) => cronJob.metadata.creationTimestamp,
+          [columnId.name]: (cronJob: CronJob) => cronJob.getName(),
+          [columnId.namespace]: (cronJob: CronJob) => cronJob.getNs(),
+          [columnId.suspend]: (cronJob: CronJob) => cronJob.getSuspendFlag(),
+          [columnId.active]: (cronJob: CronJob) => cronJobStore.getActiveJobsNum(cronJob),
+          [columnId.lastSchedule]: (cronJob: CronJob) => cronJob.getLastScheduleTime(),
+          [columnId.age]: (cronJob: CronJob) => cronJob.metadata.creationTimestamp,
         }}
         searchFilters={[
           (cronJob: CronJob) => cronJob.getSearchFields(),
@@ -51,14 +54,14 @@ export class CronJobs extends React.Component<Props> {
         ]}
         renderHeaderTitle="Cron Jobs"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Schedule", className: "schedule" },
-          { title: "Suspend", className: "suspend", sortBy: sortBy.suspend },
-          { title: "Active", className: "active", sortBy: sortBy.active },
-          { title: "Last schedule", className: "last-schedule", sortBy: sortBy.lastSchedule },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Schedule", className: "schedule", id: columnId.schedule },
+          { title: "Suspend", className: "suspend", sortBy: columnId.suspend, id: columnId.suspend },
+          { title: "Active", className: "active", sortBy: columnId.active, id: columnId.active },
+          { title: "Last schedule", className: "last-schedule", sortBy: columnId.lastSchedule, id: columnId.lastSchedule },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(cronJob: CronJob) => [
           cronJob.getName(),
