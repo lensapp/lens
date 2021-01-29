@@ -8,6 +8,8 @@ import { clusterStore } from "../../../common/cluster-store";
 import { workspaceStore } from "../../../common/workspace-store";
 import { CommandOverlay } from "./command-container";
 import { broadcastMessage } from "../../../common/ipc";
+import { navigate } from "../../navigation";
+import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 
 @observer
 export class CommandDialog extends React.Component {
@@ -58,6 +60,11 @@ export class CommandDialog extends React.Component {
           workspace: workspaceStore.currentWorkspace
         });
       } else if(clusterStore.active) {
+        navigate(clusterViewURL({
+          params: {
+            clusterId: clusterStore.active.id
+          }
+        }));
         broadcastMessage(`command-palette:run-action:${clusterStore.active.id}`, command.id);
       }
     } catch(error) {
