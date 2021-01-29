@@ -52,10 +52,12 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
 }
 
 if (!app.requestSingleInstanceLock()) {
+  console.log(process.argv);
   app.exit();
 }
 
 app.on("second-instance", () => {
+  console.log(process.argv);
   windowManager?.ensureMainWindow();
 });
 
