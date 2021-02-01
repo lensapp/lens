@@ -16,7 +16,7 @@ const uniqueWorkspaceName: InputValidator = {
 @observer
 export class AddWorkspace extends React.Component {
   onSubmit(name: string) {
-    if (name.trim() === "") {
+    if (!name.trim()) {
       return;
     }
     const workspace = workspaceStore.addWorkspace(new Workspace({

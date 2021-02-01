@@ -30,7 +30,7 @@ export class CommandOverlay {
 
 @observer
 export class CommandContainer extends React.Component<{cluster?: Cluster}> {
-  @observable commandComponent: React.ReactElement;
+  @observable.ref commandComponent: React.ReactElement;
 
   private escHandler(event: KeyboardEvent) {
     if (event.key === "Escape") {
@@ -53,14 +53,6 @@ export class CommandContainer extends React.Component<{cluster?: Cluster}> {
       cluster: clusterStore.active,
       workspace: workspaceStore.currentWorkspace
     });
-  }
-
-  onClusterAction(commandId: string) {
-    const command = this.findCommandById(commandId);
-
-    if (command) {
-      this.runCommand(command);
-    }
   }
 
   componentDidMount() {
