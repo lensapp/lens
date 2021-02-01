@@ -103,7 +103,11 @@
     ],
     "linux": {
       "category": "Network",
+      "executableName": "lens",
+      "artifactName": "${productName}-${version}.${arch}.${ext}",
       "target": [
+        "deb",
+        "rpm",
         "snap",
         "AppImage"
       ],
