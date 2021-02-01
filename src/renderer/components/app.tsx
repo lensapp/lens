@@ -164,24 +164,24 @@ export class App extends React.Component {
         if (tabRoutes.length > 0) {
           const pageComponent = () => <TabLayout tabs={tabRoutes}/>;
 
-          route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)}/>;
+          route = <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)} />;
           this.extensionRoutes.set(menu, route);
         } else {
           const page = clusterPageRegistry.getByPageTarget(menu.target);
 
           if (page) {
-            route = <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
+            route = <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page} />;
             this.extensionRoutes.set(menu, route);
           }
         }
       }
     });
 
-    Array.from(this.extensionRoutes.keys()).forEach((menu) => {
+    for (const menu of this.extensionRoutes.keys()) {
       if (!rootItems.includes(menu)) {
         this.extensionRoutes.delete(menu);
       }
-    });
+    }
   }
 
   renderExtensionRoutes() {
