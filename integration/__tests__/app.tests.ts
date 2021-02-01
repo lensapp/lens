@@ -4,7 +4,6 @@ import { listHelmRepositories } from "../helpers/utils";
 import { fail } from "assert";
 import open from "open";
 
-
 jest.setTimeout(60000);
 
 // FIXME (!): improve / simplify all css-selectors + use [data-test-id="some-id"] (already used in some tests below)
@@ -29,7 +28,7 @@ describe("Lens integration tests", () => {
       await app.client.waitUntilTextExists("h2", "Add Cluster");
     });
 
-    describe("protocol app start", () => {
+    describe.only("protocol app start", () => {
       it("should handle opening lens:// links", async () => {
         await open("lens://app/foobar");
 

@@ -52,12 +52,28 @@ if (app.commandLine.getSwitchValue("proxy-server") !== "") {
 }
 
 if (!app.requestSingleInstanceLock()) {
-  console.log(process.argv);
   app.exit();
+} else {
+  const lprm = LensProtocolRouterMain.getInstance<LensProtocolRouterMain>();
+
+  for (const arg of process.argv) {
+    if (arg.toLowerCase().startsWith("lens://")) {
+      lprm.route(arg)
+        .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl: arg }));
+    }
+  }
 }
 
-app.on("second-instance", () => {
-  console.log(process.argv);
+app.on("second-instance", (event, argv) => {
+  const lprm = LensProtocolRouterMain.getInstance<LensProtocolRouterMain>();
+
+  for (const arg of argv) {
+    if (arg.toLowerCase().startsWith("lens://")) {
+      lprm.route(arg)
+        .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl: arg }));
+    }
+  }
+  
   windowManager?.ensureMainWindow();
 });
 

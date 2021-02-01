@@ -1,8 +1,9 @@
 import { AppConstructorOptions, Application } from "spectron";
 import * as util from "util";
-import { exec } from "child_process";
-import fse from "fs-extra";
+import { exec, spawnSync } from "child_process";
+import fse, { writeFile } from "fs-extra";
 import path from "path";
+import os from "os";
 import { delay } from "../../src/common/utils";
 
 interface AppTestingPaths {
@@ -10,7 +11,7 @@ interface AppTestingPaths {
   libraryPath: string,
 }
 
-function getAppTestingPaths(): AppTestingPaths {
+export function getAppTestingPaths(): AppTestingPaths {
   switch (process.platform) {
     case "win32":
       return {
@@ -68,6 +69,27 @@ export async function appStart() {
   while (await app.client.getWindowCount() > 1);
   await app.client.windowByIndex(0);
   await app.client.waitUntilWindowLoaded();
+
+  if (process.platform === "linux") {
+    const testingDesktop = [
+      "[Desktop Entry]",
+      "Name=Lens",
+      `Exec=${path.resolve(getAppTestingPaths().testingPath)} %U`,
+      "Terminal=false",
+      "Type=Application",
+      "Icon=lens",
+      "StartupWMClass=Lens",
+      "Comment=Lens - The Kubernetes IDE",
+      "MimeType=x-scheme-handler/lens;",
+      "Categories=Network;"
+    ].join("\n");
+
+    await writeFile(path.join(os.homedir(), ".local/share/applications/lens-testing.desktop"), testingDesktop);
+
+    const { status } = spawnSync("xdg-settings set default-url-scheme-handler lens lens-testing.desktop", { shell: true });
+
+    expect(status).toBe(0);
+  }
 
   return app;
 }
@@ -133,6 +155,8 @@ async function* splitLogs(app: Application): AsyncGenerator<LogLines, void, void
   for(;;) { // infinite loop
     const curLogs: string[] = (app as any).chromeDriver.getLogs();
     const newLogs = curLogs.slice(lastLogLineCount);
+
+    console.log(curLogs);
 
     lastLogLineCount = curLogs.length;
 

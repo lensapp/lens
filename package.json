@@ -174,7 +174,10 @@
     },
     "protocols": {
       "name": "Lens Protocol Handler",
-      "schemes": "lens"
+      "schemes": [
+        "lens"
+      ],
+      "role": "Viewer"
     }
   },
   "lens": {
