@@ -11,10 +11,11 @@ import { volumesStore } from "./volumes.store";
 import { pvcApi, storageClassApi } from "../../api/endpoints";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   storageClass = "storage-class",
   capacity = "capacity",
+  claim = "claim",
   status = "status",
   age = "age",
 }
@@ -27,14 +28,16 @@ export class PersistentVolumes extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="storage_volumes"
         className="PersistentVolumes"
         store={volumesStore} isClusterScoped
         sortingCallbacks={{
-          [sortBy.name]: (item: PersistentVolume) => item.getName(),
-          [sortBy.storageClass]: (item: PersistentVolume) => item.spec.storageClassName,
-          [sortBy.capacity]: (item: PersistentVolume) => item.getCapacity(true),
-          [sortBy.status]: (item: PersistentVolume) => item.getStatus(),
-          [sortBy.age]: (item: PersistentVolume) => item.metadata.creationTimestamp,
+          [columnId.name]: (item: PersistentVolume) => item.getName(),
+          [columnId.storageClass]: (item: PersistentVolume) => item.spec.storageClassName,
+          [columnId.capacity]: (item: PersistentVolume) => item.getCapacity(true),
+          [columnId.status]: (item: PersistentVolume) => item.getStatus(),
+          [columnId.age]: (item: PersistentVolume) => item.metadata.creationTimestamp,
         }}
         searchFilters={[
           (item: PersistentVolume) => item.getSearchFields(),
@@ -42,13 +45,13 @@ export class PersistentVolumes extends React.Component<Props> {
         ]}
         renderHeaderTitle="Persistent Volumes"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { className: "warning" },
-          { title: "Storage Class", className: "storageClass", sortBy: sortBy.storageClass },
-          { title: "Capacity", className: "capacity", sortBy: sortBy.capacity },
-          { title: "Claim", className: "claim" },
-          { title: "Age", className: "age", sortBy: sortBy.age },
-          { title: "Status", className: "status", sortBy: sortBy.status },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { className: "warning", showWithColumn: columnId.name },
+          { title: "Storage Class", className: "storageClass", sortBy: columnId.storageClass, id: columnId.storageClass },
+          { title: "Capacity", className: "capacity", sortBy: columnId.capacity, id: columnId.capacity },
+          { title: "Claim", className: "claim", id: columnId.claim },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
+          { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
         ]}
         renderTableContents={(volume: PersistentVolume) => {
           const { claimRef, storageClassName } = volume.spec;

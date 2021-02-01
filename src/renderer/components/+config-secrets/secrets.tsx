@@ -11,7 +11,7 @@ import { Badge } from "../badge";
 import { secretsStore } from "./secrets.store";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   labels = "labels",
@@ -29,14 +29,16 @@ export class Secrets extends React.Component<Props> {
     return (
       <>
         <KubeObjectListLayout
+          isConfigurable
+          tableId="configuration_secrets"
           className="Secrets" store={secretsStore}
           sortingCallbacks={{
-            [sortBy.name]: (item: Secret) => item.getName(),
-            [sortBy.namespace]: (item: Secret) => item.getNs(),
-            [sortBy.labels]: (item: Secret) => item.getLabels(),
-            [sortBy.keys]: (item: Secret) => item.getKeys(),
-            [sortBy.type]: (item: Secret) => item.type,
-            [sortBy.age]: (item: Secret) => item.metadata.creationTimestamp,
+            [columnId.name]: (item: Secret) => item.getName(),
+            [columnId.namespace]: (item: Secret) => item.getNs(),
+            [columnId.labels]: (item: Secret) => item.getLabels(),
+            [columnId.keys]: (item: Secret) => item.getKeys(),
+            [columnId.type]: (item: Secret) => item.type,
+            [columnId.age]: (item: Secret) => item.metadata.creationTimestamp,
           }}
           searchFilters={[
             (item: Secret) => item.getSearchFields(),
@@ -44,13 +46,13 @@ export class Secrets extends React.Component<Props> {
           ]}
           renderHeaderTitle="Secrets"
           renderTableHeader={[
-            { title: "Name", className: "name", sortBy: sortBy.name },
-            { className: "warning" },
-            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-            { title: "Labels", className: "labels", sortBy: sortBy.labels },
-            { title: "Keys", className: "keys", sortBy: sortBy.keys },
-            { title: "Type", className: "type", sortBy: sortBy.type },
-            { title: "Age", className: "age", sortBy: sortBy.age },
+            { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+            { className: "warning", showWithColumn: columnId.name },
+            { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+            { title: "Labels", className: "labels", sortBy: columnId.labels, id: columnId.labels },
+            { title: "Keys", className: "keys", sortBy: columnId.keys, id: columnId.keys },
+            { title: "Type", className: "type", sortBy: columnId.type, id: columnId.type },
+            { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
           ]}
           renderTableContents={(secret: Secret) => [
             secret.getName(),

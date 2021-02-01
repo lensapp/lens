@@ -2,7 +2,7 @@
   "name": "kontena-lens",
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
-  "version": "4.1.0-alpha.0",
+  "version": "4.1.0-alpha.1",
   "main": "static/build/main.js",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
@@ -42,7 +42,7 @@
     "typedocs-extensions-api": "yarn run typedoc --ignoreCompilerErrors --readme docs/extensions/typedoc-readme.md.tpl --name @k8slens/extensions --out docs/extensions/api --mode library --excludePrivate --hideBreadcrumbs --includes src/ src/extensions/extension-api.ts"
   },
   "config": {
-    "bundledKubectlVersion": "1.17.15",
+    "bundledKubectlVersion": "1.18.15",
     "bundledHelmVersion": "3.4.2"
   },
   "engines": {
@@ -103,7 +103,11 @@
     ],
     "linux": {
       "category": "Network",
+      "executableName": "lens",
+      "artifactName": "${productName}-${version}.${arch}.${ext}",
       "target": [
+        "deb",
+        "rpm",
         "snap",
         "AppImage"
       ],

@@ -16,7 +16,7 @@ import { parseJsonPath } from "../../utils/jsonPath";
 interface Props extends RouteComponentProps<ICRDRouteParams> {
 }
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   age = "age",
@@ -55,9 +55,9 @@ export class CrdResources extends React.Component<Props> {
     const isNamespaced = crd.isNamespaced();
     const extraColumns = crd.getPrinterColumns(false);  // Cols with priority bigger than 0 are shown in details
     const sortingCallbacks: { [sortBy: string]: TableSortCallback } = {
-      [sortBy.name]: (item: KubeObject) => item.getName(),
-      [sortBy.namespace]: (item: KubeObject) => item.getNs(),
-      [sortBy.age]: (item: KubeObject) => item.metadata.creationTimestamp,
+      [columnId.name]: (item: KubeObject) => item.getName(),
+      [columnId.namespace]: (item: KubeObject) => item.getNs(),
+      [columnId.age]: (item: KubeObject) => item.metadata.creationTimestamp,
     };
 
     extraColumns.forEach(column => {
@@ -66,6 +66,8 @@ export class CrdResources extends React.Component<Props> {
 
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="crd_resources"
         className="CrdResources"
         isClusterScoped={!isNamespaced}
         store={store}
@@ -75,18 +77,19 @@ export class CrdResources extends React.Component<Props> {
         ]}
         renderHeaderTitle={crd.getResourceTitle()}
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          isNamespaced && { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          isNamespaced && { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
           ...extraColumns.map(column => {
             const { name } = column;
 
             return {
               title: name,
               className: name.toLowerCase(),
-              sortBy: name
+              sortBy: name,
+              id: name
             };
           }),
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(crdInstance: KubeObject) => [
           crdInstance.getName(),
