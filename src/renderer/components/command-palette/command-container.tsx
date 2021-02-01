@@ -66,7 +66,6 @@ export class CommandContainer extends React.Component<{cluster?: Cluster}> {
   componentDidMount() {
     if (this.props.cluster) {
       subscribeToBroadcast(`command-palette:run-action:${this.props.cluster.id}`, (event, commandId: string) => {
-        console.log("run-action", commandId);
         const command = this.findCommandById(commandId);
 
         if (command) {
