@@ -172,11 +172,9 @@
     "snap": {
       "confinement": "classic"
     },
-    "fileAssociations": {
-      "protocols": {
-        "name": "Lens Protocol Handler",
-        "schemes": "lens"
-      }
+    "protocols": {
+      "name": "Lens Protocol Handler",
+      "schemes": "lens"
     }
   },
   "lens": {
