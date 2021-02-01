@@ -1028,8 +1028,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#componentwillunmount" class="md-nav__link">
-    componentWillUnmount
+  <a href="#optional-componentwillunmount" class="md-nav__link">
+    Optional componentWillUnmount
   </a>
   
 </li>
@@ -1140,7 +1140,7 @@
 <li><a href="./#optional-componentdidupdate">componentDidUpdate</a></li>
 <li><a href="./#optional-componentwillmount">componentWillMount</a></li>
 <li><a href="./#optional-componentwillreceiveprops">componentWillReceiveProps</a></li>
-<li><a href="./#componentwillunmount">componentWillUnmount</a></li>
+<li><a href="./#optional-componentwillunmount">componentWillUnmount</a></li>
 <li><a href="./#optional-componentwillupdate">componentWillUpdate</a></li>
 <li><a href="./#forceupdate">forceUpdate</a></li>
 <li><a href="./#formatoptionlabel">formatOptionLabel</a></li>
@@ -1253,11 +1253,11 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <hr />
 <h3 id="static-defaultprops"><code>Static</code> defaultProps<a class="headerlink" href="#static-defaultprops" title="Permanent link">#</a></h3>
 <p>▪ <strong>defaultProps</strong>: <em>object</em> = defaultProps as object</p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/7490b15aa/src/renderer/components/+namespaces/namespace-select.tsx#L30">src/renderer/components/+namespaces/namespace-select.tsx:30</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/078f952b3/src/renderer/components/+namespaces/namespace-select.tsx#L31">src/renderer/components/+namespaces/namespace-select.tsx:31</a></em></p>
 <h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
 <h3 id="options">options<a class="headerlink" href="#options" title="Permanent link">#</a></h3>
 <p>• <strong>get options</strong>(): <em><a href="../../interfaces/_renderer_api_components_.selectoption/">SelectOption</a>[]</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/7490b15aa/src/renderer/components/+namespaces/namespace-select.tsx#L44">src/renderer/components/+namespaces/namespace-select.tsx:44</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/078f952b3/src/renderer/components/+namespaces/namespace-select.tsx#L41">src/renderer/components/+namespaces/namespace-select.tsx:41</a></em></p>
 <p><strong>Returns:</strong> <em><a href="../../interfaces/_renderer_api_components_.selectoption/">SelectOption</a>[]</em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="optional-unsafe_componentwillmount"><code>Optional</code> UNSAFE_componentWillMount<a class="headerlink" href="#optional-unsafe_componentwillmount" title="Permanent link">#</a></h3>
@@ -1374,10 +1374,10 @@ the entire component tree to unmount.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="componentdidmount">componentDidMount<a class="headerlink" href="#componentdidmount" title="Permanent link">#</a></h3>
-<p>▸ <strong>componentDidMount</strong>(): <em>Promise‹void›</em></p>
+<p>▸ <strong>componentDidMount</strong>(): <em>void</em></p>
 <p><em>Overrides <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentdidmount">componentDidMount</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/7490b15aa/src/renderer/components/+namespaces/namespace-select.tsx#L33">src/renderer/components/+namespaces/namespace-select.tsx:33</a></em></p>
-<p><strong>Returns:</strong> <em>Promise‹void›</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/078f952b3/src/renderer/components/+namespaces/namespace-select.tsx#L33">src/renderer/components/+namespaces/namespace-select.tsx:33</a></em></p>
+<p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-componentdidupdate"><code>Optional</code> componentDidUpdate<a class="headerlink" href="#optional-componentdidupdate" title="Permanent link">#</a></h3>
 <p>▸ <strong>componentDidUpdate</strong>(<code>prevProps</code>: Readonly‹Props›, <code>prevState</code>: Readonly‹S›, <code>snapshot?</code>: SS): <em>void</em></p>
@@ -1457,10 +1457,12 @@ prevents this from being invoked.</p>
 </table>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
-<h3 id="componentwillunmount">componentWillUnmount<a class="headerlink" href="#componentwillunmount" title="Permanent link">#</a></h3>
+<h3 id="optional-componentwillunmount"><code>Optional</code> componentWillUnmount<a class="headerlink" href="#optional-componentwillunmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>componentWillUnmount</strong>(): <em>void</em></p>
-<p><em>Overrides <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentwillunmount">componentWillUnmount</a></em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/7490b15aa/src/renderer/components/+namespaces/namespace-select.tsx#L40">src/renderer/components/+namespaces/namespace-select.tsx:40</a></em></p>
+<p><em>Inherited from <a href="../_renderer_api_components_.wizardlayout/">WizardLayout</a>.<a href="../_renderer_api_components_.wizardlayout/#optional-componentwillunmount">componentWillUnmount</a></em></p>
+<p>Defined in node_modules/@types/react/index.d.ts:635</p>
+<p>Called immediately before a component is destroyed. Perform any necessary cleanup in this method, such as
+cancelled network requests, or cleaning up any DOM elements created in <code>componentDidMount</code>.</p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
 <h3 id="optional-componentwillupdate"><code>Optional</code> componentWillUpdate<a class="headerlink" href="#optional-componentwillupdate" title="Permanent link">#</a></h3>
@@ -1510,7 +1512,7 @@ prevents this from being invoked.</p>
 <hr />
 <h3 id="formatoptionlabel">formatOptionLabel<a class="headerlink" href="#formatoptionlabel" title="Permanent link">#</a></h3>
 <p>▸ <strong>formatOptionLabel</strong>(<code>option</code>: <a href="../../interfaces/_renderer_api_components_.selectoption/">SelectOption</a>): <em>object</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/7490b15aa/src/renderer/components/+namespaces/namespace-select.tsx#L57">src/renderer/components/+namespaces/namespace-select.tsx:57</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/078f952b3/src/renderer/components/+namespaces/namespace-select.tsx#L54">src/renderer/components/+namespaces/namespace-select.tsx:54</a></em></p>
 <p><strong>Parameters:</strong></p>
 <table>
 <thead>
@@ -1561,7 +1563,7 @@ lifecycle events from running.</p>
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): <em>Element‹›</em></p>
 <p><em>Overrides void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/7490b15aa/src/renderer/components/+namespaces/namespace-select.tsx#L69">src/renderer/components/+namespaces/namespace-select.tsx:69</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/078f952b3/src/renderer/components/+namespaces/namespace-select.tsx#L66">src/renderer/components/+namespaces/namespace-select.tsx:66</a></em></p>
 <p><strong>Returns:</strong> <em>Element‹›</em></p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
