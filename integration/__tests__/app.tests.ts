@@ -28,7 +28,7 @@ describe("Lens integration tests", () => {
       await app.client.waitUntilTextExists("h2", "Add Cluster");
     });
 
-    describe.only("protocol app start", () => {
+    describe("protocol app start", () => {
       it("should handle opening lens:// links", async () => {
         await open("lens://app/foobar");
 
