@@ -136,7 +136,8 @@ export class BarChart extends React.Component<Props> {
       },
       plugins: {
         ZebraStripes: {
-          stripeColor: chartStripesColor
+          stripeColor: chartStripesColor,
+          interval: chartData.datasets.length ? chartData.datasets[0].data.length : 61
         }
       }
     };
