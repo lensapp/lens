@@ -18,7 +18,7 @@ export async function requestMain(channel: string, ...args: any[]) {
 }
 
 function getSubFrames(): ClusterFrameInfo[] {
-  return toJS(Array.from(clusterFrameMap.values()));
+  return toJS(Array.from(clusterFrameMap.values()), { recurseEverything: true });
 }
 
 export async function broadcastMessage(channel: string, ...args: any[]) {
@@ -79,7 +79,7 @@ export function unsubscribeAllFromBroadcast(channel: string) {
 }
 
 export function bindBroadcastHandlers() {
-  handleRequest(subFramesChannel, async () => {
-    return await getSubFrames(), { recurseEverything: true };
+  handleRequest(subFramesChannel, () => {
+    return getSubFrames();
   });
 }
