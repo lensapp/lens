@@ -80,5 +80,3 @@ export const workloadURL: Partial<Record<KubeResource, ReturnType<typeof buildUR
   "jobs": jobsURL,
   "cronjobs": cronJobsURL,
 };
-
-
