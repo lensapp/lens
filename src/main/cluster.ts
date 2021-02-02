@@ -588,7 +588,7 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  private async canUseWatchApi(customizeResource: V1ResourceAttributes = {}): Promise<boolean> {
+  async canUseWatchApi(customizeResource: V1ResourceAttributes = {}): Promise<boolean> {
     return this.canI({
       verb: "watch",
       resource: "*",
