@@ -6,7 +6,6 @@ import moment, { Moment } from "moment";
 import get from "lodash/get";
 
 const defaultOptions = {
-  interval: 61,
   stripeColor: "#ffffff08",
 };
 
