@@ -9,6 +9,8 @@ import * as utils from "../helpers/utils";
 import { addMinikubeCluster, minikubeReady, waitForMinikubeDashboard } from "../helpers/minikube";
 import { exec } from "child_process";
 import * as util from "util";
+import { delay } from "../../src/common/utils";
+import { AbortController } from "abort-controller";
 
 export const promiseExec = util.promisify(exec);
 
@@ -337,12 +339,19 @@ describe("Lens cluster pages", () => {
     });
 
     describe("viewing pod logs", () => {
-      beforeEach(appStartAddCluster, 40000);
+      let abortContoller: AbortController;
+
+      beforeEach(async () => {
+        await appStartAddCluster();
+        abortContoller = new AbortController();
+      }, 40000);
 
       afterEach(async () => {
-        if (app && app.isRunning()) {
-          return utils.tearDown(app);
+        if (app?.isRunning()) {
+          await utils.tearDown(app);
         }
+
+        abortContoller.abort();
       });
 
       it(`shows a logs for a pod`, async () => {
@@ -355,19 +364,13 @@ describe("Lens cluster pages", () => {
         await app.client.keys("kube-system");
         await app.client.keys("Enter");// "\uE007"
         await app.client.waitUntilTextExists("div.TableCell", "kube-apiserver");
-        let podMenuItemEnabled = false;
 
-        // Wait until extensions are enabled on renderer
-        while (!podMenuItemEnabled) {
-          const logs = await app.client.getRenderProcessLogs();
+        await utils.waitForLogsToContain(app, abortContoller, {
+          renderer: ["[EXTENSION]: enabled lens-pod-menu@"],
+        });
 
-          podMenuItemEnabled = !!logs.find(entry => entry.message.includes("[EXTENSION]: enabled lens-pod-menu@"));
+        await delay(500); // Give some extra time to prepare extensions
 
-          if (!podMenuItemEnabled) {
-            await new Promise(r => setTimeout(r, 1000));
-          }
-        }
-        await new Promise(r => setTimeout(r, 500)); // Give some extra time to prepare extensions
         // Open logs tab in dock
         await app.client.click(".list .TableRow:first-child");
         await app.client.waitForVisible(".Drawer");

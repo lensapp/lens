@@ -5,13 +5,14 @@ import fse, { writeFile } from "fs-extra";
 import path from "path";
 import os from "os";
 import { delay } from "../../src/common/utils";
+import { AbortController } from "abort-controller";
 
 interface AppTestingPaths {
   testingPath: string,
   libraryPath: string,
 }
 
-export function getAppTestingPaths(): AppTestingPaths {
+function getAppTestingPaths(): AppTestingPaths {
   switch (process.platform) {
     case "win32":
       return {
@@ -62,7 +63,7 @@ export const keys = {
 };
 
 export async function appStart() {
-  const app = setup();
+  const app = new Application(setup());
 
   await app.start();
   // Wait for splash screen to be closed
@@ -149,14 +150,12 @@ interface LogLines {
   main: string[];
 }
 
-async function* splitLogs(app: Application): AsyncGenerator<LogLines, void, void> {
+async function* splitLogs(app: Application, signal: AbortController): AsyncGenerator<LogLines, void, void> {
   let lastLogLineCount = 0;
 
-  for(;;) { // infinite loop
+  while (!signal.signal.aborted) { // infinite loop
     const curLogs: string[] = (app as any).chromeDriver.getLogs();
     const newLogs = curLogs.slice(lastLogLineCount);
-
-    console.log(curLogs);
 
     lastLogLineCount = curLogs.length;
 
@@ -176,7 +175,7 @@ async function* splitLogs(app: Application): AsyncGenerator<LogLines, void, void
     }
 
     yield item;
-    await delay(500); // only delay after the first attempt
+    await delay(500, signal); // only delay after the first attempt and fail fast if the signal has occured
   }
 }
 
@@ -190,13 +189,13 @@ async function* splitLogs(app: Application): AsyncGenerator<LogLines, void, void
  * @param source Whether to wait for renderer or main logs
  * @param values The list of strings that should all be contained in the logs
  */
-export async function waitForLogsToContain(app: Application, matches: LogMatches): Promise<void> {
+export async function waitForLogsToContain(app: Application, signal: AbortController, matches: LogMatches): Promise<void> {
   const notYetFound = {
     main: new Set(matches.main ?? []),
     renderer: new Set(matches.renderer ?? []),
   };
 
-  for await (const logs of splitLogs(app)) {
+  for await (const logs of splitLogs(app, signal)) {
     mainMatch: for (const logPart of notYetFound.main) {
       for (const logLine of logs.main) {
         if (logLine.includes(logPart)) {

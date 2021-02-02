@@ -9,7 +9,7 @@ else
     DETECTED_OS := $(shell uname)
 endif
 
-binaries/client:
+binaries/client: node_modules
 	yarn download-bins
 
 node_modules: yarn.lock
@@ -37,17 +37,17 @@ test: binaries/client
 	yarn test
 
 .PHONY: integration-linux
-integration-linux: build-extension-types build-extensions
+integration-linux: binaries/client build-extension-types build-extensions
 	yarn build:linux
 	yarn integration
 
 .PHONY: integration-mac
-integration-mac: build-extension-types build-extensions
+integration-mac: binaries/client build-extension-types build-extensions
 	yarn build:mac
 	yarn integration
 
 .PHONY: integration-win
-integration-win: build-extension-types build-extensions
+integration-win: binaries/client build-extension-types build-extensions
 	yarn build:win
 	yarn integration
 

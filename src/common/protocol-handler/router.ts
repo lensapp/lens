@@ -215,7 +215,7 @@ export abstract class LensProtocolRouter extends Singleton {
   }
 
   /**
-   * Add a handler under the `lens://internal` tree of routing.
+   * Add a handler under the `lens://app` tree of routing.
    * @param pathSchema the URI path schema to match against for this handler
    * @param handler a function that will be called if a protocol path matches
    */
