@@ -1,3 +1,5 @@
+exclude-labels:
+  - 'skip-changelog'
 categories:
   - title: '🚀 Features'
     labels:
@@ -6,9 +8,20 @@ categories:
     labels:
       - 'bug'
   - title: '🧰 Maintenance'
-    label: 'chore'
+    labels:
+      - 'chore'
+      - 'area/ci
+      - 'area/tests'
 
 template: |
   ## Changes since $PREVIOUS_TAG
 
   $CHANGES
+
+  ### Download
+
+  - [Lens v$RESOLVED_VERSION - Linux](https://snapcraft.io/kontena-lens)
+    - [AppImage](https://github.com/lensapp/lens/releases/download/v$RESOLVED_VERSION/Lens-$RESOLVED_VERSION.AppImage)
+    - [Snapcraft](https://snapcraft.io/kontena-lens)
+  - [Lens v$RESOLVED_VERSION - MacOS](https://github.com/lensapp/lens/releases/download/v$RESOLVED_VERSION/Lens-$RESOLVED_VERSION.dmg)
+  - [Lens v$RESOLVED_VERSION - Windows](https://github.com/lensapp/lens/releases/download/v$RESOLVED_VERSION/Lens-Setup-$RESOLVED_VERSION.exe)
