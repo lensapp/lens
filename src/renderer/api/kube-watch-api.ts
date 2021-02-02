@@ -141,7 +141,7 @@ export class KubeWatchApi {
     }
 
     return {
-      loading: Promise.all(preloading),
+      loading: Promise.allSettled(preloading),
       cancelLoading: () => limitRequests.clearQueue(),
     };
   }

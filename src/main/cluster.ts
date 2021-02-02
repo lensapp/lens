@@ -178,7 +178,7 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   @observable isAdmin = false;
   /**
-   * Does watch-api could be used for all resources, e.g. "/api/v1/services?watch=1"
+   * Global watch-api accessibility , e.g. "/api/v1/services?watch=1"
    *
    * @observable
    */
