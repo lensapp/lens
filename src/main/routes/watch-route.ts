@@ -1,9 +1,28 @@
+import type { KubeJsonApiData, KubeJsonApiError } from "../../renderer/api/kube-json-api";
+
+import plimit from "p-limit";
+import { delay } from "../../common/utils";
 import { LensApiRequest } from "../router";
 import { LensApi } from "../lens-api";
-import { Watch, KubeConfig } from "@kubernetes/client-node";
+import { KubeConfig, Watch } from "@kubernetes/client-node";
 import { ServerResponse } from "http";
 import { Request } from "request";
 import logger from "../logger";
+
+export interface IKubeWatchEvent<T = KubeJsonApiData | KubeJsonApiError> {
+  type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR" | "STREAM_END";
+  object?: T;
+}
+
+export interface IKubeWatchEventStreamEnd extends IKubeWatchEvent {
+  type: "STREAM_END";
+  url: string;
+  status: number;
+}
+
+export interface IWatchRoutePayload {
+  apis: string[]; // kube-api url list for subscribing to watch events
+}
 
 class ApiWatcher {
   private apiUrl: string;
@@ -24,6 +43,7 @@ class ApiWatcher {
       clearInterval(this.processor);
     }
     this.processor = setInterval(() => {
+      if (this.response.finished) return;
       const events = this.eventBuffer.splice(0);
 
       events.map(event => this.sendEvent(event));
@@ -33,7 +53,9 @@ class ApiWatcher {
   }
 
   public stop() {
-    if (!this.watchRequest) { return; }
+    if (!this.watchRequest) {
+      return;
+    }
 
     if (this.processor) {
       clearInterval(this.processor);
@@ -42,11 +64,14 @@ class ApiWatcher {
 
     try {
       this.watchRequest.abort();
-      this.sendEvent({
+
+      const event: IKubeWatchEventStreamEnd = {
         type: "STREAM_END",
         url: this.apiUrl,
         status: 410,
-      });
+      };
+
+      this.sendEvent(event);
       logger.debug("watch aborted");
     } catch (error) {
       logger.error(`Watch abort errored:${error}`);
@@ -65,50 +90,72 @@ class ApiWatcher {
     this.watchRequest.abort();
   }
 
-  private sendEvent(evt: any) {
-    // convert to "text/event-stream" format
-    this.response.write(`data: ${JSON.stringify(evt)}\n\n`);
+  private sendEvent(evt: IKubeWatchEvent) {
+    this.response.write(`${JSON.stringify(evt)}\n`);
   }
 }
 
 class WatchRoute extends LensApi {
+  private response: ServerResponse;
 
-  public async routeWatch(request: LensApiRequest) {
-    const { response, cluster} = request;
-    const apis: string[] = request.query.getAll("api");
-    const watchers: ApiWatcher[] = [];
+  private setResponse(response: ServerResponse) {
+    // clean up previous connection and stop all corresponding watch-api requests
+    // otherwise it happens only by request timeout or something else..
+    this.response?.destroy();
+    this.response = response;
+  }
 
-    if (!apis.length) {
+  public async routeWatch(request: LensApiRequest<IWatchRoutePayload>) {
+    const { response, cluster, payload: { apis } = {} } = request;
+
+    if (!apis?.length) {
       this.respondJson(response, {
-        message: "Empty request. Query params 'api' are not provided.",
-        example: "?api=/api/v1/pods&api=/api/v1/nodes",
+        message: "watch apis list is empty"
       }, 400);
 
       return;
     }
 
-    response.setHeader("Content-Type", "text/event-stream");
+    this.setResponse(response);
+    response.setHeader("Content-Type", "application/json");
     response.setHeader("Cache-Control", "no-cache");
     response.setHeader("Connection", "keep-alive");
     logger.debug(`watch using kubeconfig:${JSON.stringify(cluster.getProxyKubeconfig(), null, 2)}`);
 
+    // limit concurrent k8s requests to avoid possible ECONNRESET-error
+    const requests = plimit(5);
+    const watchers = new Map<string, ApiWatcher>();
+    let isWatchRequestEnded = false;
+
     apis.forEach(apiUrl => {
       const watcher = new ApiWatcher(apiUrl, cluster.getProxyKubeconfig(), response);
 
-      watcher.start();
-      watchers.push(watcher);
+      watchers.set(apiUrl, watcher);
+
+      requests(async () => {
+        if (isWatchRequestEnded) return;
+        await watcher.start();
+        await delay(100);
+      });
+    });
+
+    function onRequestEnd() {
+      if (isWatchRequestEnded) return;
+      isWatchRequestEnded = true;
+      requests.clearQueue();
+      watchers.forEach(watcher => watcher.stop());
+      watchers.clear();
+    }
+
+    request.raw.req.on("end", () => {
+      logger.info("Watch request end");
+      onRequestEnd();
     });
 
     request.raw.req.on("close", () => {
-      logger.debug("Watch request closed");
-      watchers.map(watcher => watcher.stop());
+      logger.info("Watch request close");
+      onRequestEnd();
     });
-
-    request.raw.req.on("end", () => {
-      logger.debug("Watch request ended");
-      watchers.map(watcher => watcher.stop());
-    });
-
   }
 }
 

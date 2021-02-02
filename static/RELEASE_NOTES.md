@@ -2,7 +2,80 @@
 
 Here you can find description of changes we've built into each release. While we try our best to make each upgrade automatic and as smooth as possible, there may be some cases where you might need to do something to ensure the application works smoothly. So please read through the release highlights!
 
-## 4.0.2 (current version)
+## 4.1.0-alpha.1 (current version)
+
+- Change: list views default to a namespace (insted of listing resources from all namespaces)
+- Generic logs view with Pod selector
+- Possibility to add custom Helm repository through Lens
+- Possibility to change visibility of Pod list columns
+- Suspend / resume buttons for CronJobs
+- Dock tabs context menu
+- Display node column in Pod list
+- Unify age column output with kubectl
+- Use dark colors in Dock regardless of active theme
+- Improve Pod tolerations layout
+- Lens metrics: scrape only lens-metrics namespace
+- Lens metrics: Prometheus v2.19.3
+- Export PodDetailsList component to extension API
+- Export Wizard components to extension API
+- Export NamespaceSelect component to extension API
+
+## 4.0.8
+
+- Fix: extension cluster sub-menu/page periodic re-render
+- Fix: app hang on boot if started from command line & oh-my-zsh prompts for auto-update
+
+## 4.0.7
+
+- Fix: typo in Prometheus Ingress metrics
+- Fix: catch xterm.js fit error
+- Fix: Windows tray icon click
+- Fix: error on Kubernetes >= 1.20 on object edit
+- Fix: multiline log wrapping
+- Fix: prevent clusters from initializing multiple times
+- Fix: show default workspace on first boot
+
+## 4.0.6
+
+- Don't open Lens at OS login by default
+- Disable GPU acceleration by setting an env variable
+- Catch HTTP Errors in case pod metrics resources do not exist or access is forbidden
+- Check is persistent volume claims resource to allowed for user
+- Share react-router and react-router-dom libraries to extensions
+- Fix: long list cropping in sidebar
+- Fix: k0s distribution detection
+- Fix: Preserve line breaks when copying logs
+- Fix: error on api watch on complex api versions
+
+## 4.0.5
+
+- Fix: add missing Kubernetes distro detectors
+- Fix: improve how Workloads Overview is loaded
+- Fix: race conditions on extension loader
+- Fix: pod logs scrolling issues
+- Fix: render node list before metrics are available
+- Fix: kube-state-metrics v1.9.7
+- Fix: CRD sidebar expand/collapse
+- Fix: disable oh-my-zsh auto-update prompt when resolving shell environment
+- Add kubectl 1.20 support to Lens Smart Terminal
+- Optimise performance during cluster connect
+
+## 4.0.4
+
+- Fix errors on Kubernetes v1.20
+- Update bundled kubectl to v1.17.15
+- Fix: MacOS error on shutdown
+- Fix: Kubernetes distribution detection
+- Fix: error while displaying CRDs with column which type is an object
+
+## 4.0.3
+
+- Fix: install in-tree extensions before others
+- Fix: bundle all dependencies in in-tree extensions
+- Fix: display error dialog if extensions couldn't be loaded
+- Fix: ensure only one app instance
+
+## 4.0.2
 
 We are aware some users are encountering issues and regressions from previous version. Many of these issues are something we have not seen as part of our automated or manual testing process. To make it worse, some of them are really difficult to reproduce. We want to ensure we are putting all our energy and effort trying to resolve these issues. We hope you are patient. Expect to see new patch releases still in the coming days! Fixes in this version:
 

@@ -14,11 +14,13 @@ import { ItemListLayout } from "../item-object-list/item-list-layout";
 import { HelmReleaseMenu } from "./release-menu";
 import { secretsStore } from "../+config-secrets/secrets.store";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   revision = "revision",
   chart = "chart",
+  version = "version",
+  appVersion = "app-version",
   status = "status",
   updated = "update"
 }
@@ -81,16 +83,18 @@ export class HelmReleases extends Component<Props> {
     return (
       <>
         <ItemListLayout
+          isConfigurable
+          tableId="helm_releases"
           className="HelmReleases"
           store={releaseStore}
           dependentStores={[secretsStore]}
           sortingCallbacks={{
-            [sortBy.name]: (release: HelmRelease) => release.getName(),
-            [sortBy.namespace]: (release: HelmRelease) => release.getNs(),
-            [sortBy.revision]: (release: HelmRelease) => release.getRevision(),
-            [sortBy.chart]: (release: HelmRelease) => release.getChart(),
-            [sortBy.status]: (release: HelmRelease) => release.getStatus(),
-            [sortBy.updated]: (release: HelmRelease) => release.getUpdated(false, false),
+            [columnId.name]: (release: HelmRelease) => release.getName(),
+            [columnId.namespace]: (release: HelmRelease) => release.getNs(),
+            [columnId.revision]: (release: HelmRelease) => release.getRevision(),
+            [columnId.chart]: (release: HelmRelease) => release.getChart(),
+            [columnId.status]: (release: HelmRelease) => release.getStatus(),
+            [columnId.updated]: (release: HelmRelease) => release.getUpdated(false, false),
           }}
           searchFilters={[
             (release: HelmRelease) => release.getName(),
@@ -101,14 +105,14 @@ export class HelmReleases extends Component<Props> {
           ]}
           renderHeaderTitle="Releases"
           renderTableHeader={[
-            { title: "Name", className: "name", sortBy: sortBy.name },
-            { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-            { title: "Chart", className: "chart", sortBy: sortBy.chart },
-            { title: "Revision", className: "revision", sortBy: sortBy.revision },
-            { title: "Version", className: "version" },
-            { title: "App Version", className: "app-version" },
-            { title: "Status", className: "status", sortBy: sortBy.status },
-            { title: "Updated", className: "updated", sortBy: sortBy.updated },
+            { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+            { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+            { title: "Chart", className: "chart", sortBy: columnId.chart, id: columnId.chart },
+            { title: "Revision", className: "revision", sortBy: columnId.revision, id: columnId.revision },
+            { title: "Version", className: "version", id: columnId.version },
+            { title: "App Version", className: "app-version", id: columnId.appVersion },
+            { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
+            { title: "Updated", className: "updated", sortBy: columnId.updated, id: columnId.updated },
           ]}
           renderTableContents={(release: HelmRelease) => {
             const version = release.getVersion();

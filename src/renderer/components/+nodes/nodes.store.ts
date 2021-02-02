@@ -1,3 +1,4 @@
+import { sum } from "lodash";
 import { action, computed, observable } from "mobx";
 import { clusterApi, IClusterMetrics, INodeMetrics, Node, nodesApi } from "../../api/endpoints";
 import { autobind } from "../../utils";
@@ -60,6 +61,10 @@ export class NodesStore extends KubeObjectStore<Node> {
         return 0;
       }
     });
+  }
+
+  getWarningsCount(): number {
+    return sum(this.items.map((node: Node) => node.getWarningConditions().length));
   }
 
   reset() {

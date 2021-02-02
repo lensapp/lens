@@ -25,7 +25,7 @@ export class DrawerParamToggler extends React.Component<DrawerParamTogglerProps,
 
     return (
       <div className="DrawerParamToggler">
-        <div className="flex gaps align-center">
+        <div className="flex gaps align-center params">
           <div className="param-label">{label}</div>
           <div className="param-link" onClick={this.toggle}>
             <span className="param-link-text">{link}</span>

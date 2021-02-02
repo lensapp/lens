@@ -1,14 +1,14 @@
 import { clusterRoleApi, Role, roleApi } from "../../api/endpoints";
 import { autobind } from "../../utils";
-import { KubeObjectStore } from "../../kube-object.store";
+import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { apiManager } from "../../api/api-manager";
 
 @autobind()
 export class RolesStore extends KubeObjectStore<Role> {
   api = clusterRoleApi;
 
-  subscribe() {
-    return super.subscribe([roleApi, clusterRoleApi]);
+  getSubscribeApis() {
+    return [roleApi, clusterRoleApi];
   }
 
   protected sortItems(items: Role[]) {
@@ -24,15 +24,13 @@ export class RolesStore extends KubeObjectStore<Role> {
     return clusterRoleApi.get(params);
   }
 
-  protected loadItems(namespaces?: string[]): Promise<Role[]> {
-    if (namespaces) {
-      return Promise.all(
-        namespaces.map(namespace => roleApi.list({ namespace }))
-      ).then(items => items.flat());
-    } else {
-      return Promise.all([clusterRoleApi.list(), roleApi.list()])
-        .then(items => items.flat());
-    }
+  protected async loadItems(params: KubeObjectStoreLoadingParams): Promise<Role[]> {
+    const items = await Promise.all([
+      super.loadItems({ ...params, api: clusterRoleApi }),
+      super.loadItems({ ...params, api: roleApi }),
+    ]);
+
+    return items.flat();
   }
 
   protected async createItem(params: { name: string; namespace?: string }, data?: Partial<Role>) {

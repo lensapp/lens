@@ -2,7 +2,7 @@ import type { KubeObjectStore } from "../kube-object.store";
 
 import { action, observable } from "mobx";
 import { autobind } from "../utils";
-import { KubeApi } from "./kube-api";
+import { KubeApi, parseKubeApi } from "./kube-api";
 
 @autobind()
 export class ApiManager {
@@ -11,7 +11,7 @@ export class ApiManager {
 
   getApi(pathOrCallback: string | ((api: KubeApi) => boolean)) {
     if (typeof pathOrCallback === "string") {
-      return this.apis.get(pathOrCallback) || this.apis.get(KubeApi.parseApi(pathOrCallback).apiBase);
+      return this.apis.get(pathOrCallback) || this.apis.get(parseKubeApi(pathOrCallback).apiBase);
     }
 
     return Array.from(this.apis.values()).find(pathOrCallback ?? (() => true));

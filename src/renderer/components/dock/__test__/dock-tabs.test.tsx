@@ -4,8 +4,6 @@ import "@testing-library/jest-dom/extend-expect";
 
 import { DockTabs } from "../dock-tabs";
 import { dockStore, IDockTab, TabKind } from "../dock.store";
-import { createResourceTab } from "../create-resource.store";
-import { createTerminalTab } from "../terminal.store";
 import { observable } from "mobx";
 
 const onChangeTab = jest.fn();
@@ -25,11 +23,19 @@ const getTabKinds = () => dockStore.tabs.map(tab => tab.kind);
 
 describe("<DockTabs />", () => {
   beforeEach(() => {
-    createTerminalTab();
-    createResourceTab();
-    createTerminalTab();
-    createResourceTab();
-    createTerminalTab();
+    const terminalTab: IDockTab = { id: "terminal1", kind: TabKind.TERMINAL, title: "Terminal" };
+    const createResourceTab: IDockTab = { id: "create", kind: TabKind.CREATE_RESOURCE, title: "Create resource" };
+    const editResourceTab: IDockTab = { id: "edit", kind: TabKind.EDIT_RESOURCE, title: "Edit resource" };
+    const installChartTab: IDockTab = { id: "install", kind: TabKind.INSTALL_CHART, title: "Install chart" };
+    const logsTab: IDockTab = { id: "logs", kind: TabKind.POD_LOGS, title: "Logs" };
+
+    dockStore.tabs.push(
+      terminalTab,
+      createResourceTab,
+      editResourceTab,
+      installChartTab,
+      logsTab
+    );
   });
 
   afterEach(() => {
@@ -72,9 +78,9 @@ describe("<DockTabs />", () => {
     expect(getTabKinds()).toEqual([
       TabKind.TERMINAL,
       TabKind.CREATE_RESOURCE,
-      TabKind.TERMINAL,
-      TabKind.CREATE_RESOURCE,
-      TabKind.TERMINAL
+      TabKind.EDIT_RESOURCE,
+      TabKind.INSTALL_CHART,
+      TabKind.POD_LOGS
     ]);
   });
 
@@ -90,7 +96,7 @@ describe("<DockTabs />", () => {
     const tabs = container.querySelectorAll(".Tab");
 
     expect(tabs.length).toBe(1);
-    expect(getTabKinds()).toEqual([TabKind.TERMINAL]);
+    expect(getTabKinds()).toEqual([TabKind.EDIT_RESOURCE]);
   });
 
   it("closes all tabs", () => {
@@ -123,7 +129,7 @@ describe("<DockTabs />", () => {
       TabKind.TERMINAL,
       TabKind.TERMINAL,
       TabKind.CREATE_RESOURCE,
-      TabKind.TERMINAL
+      TabKind.EDIT_RESOURCE
     ]);
   });
 
