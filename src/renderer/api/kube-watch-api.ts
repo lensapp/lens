@@ -5,11 +5,10 @@ import type { Cluster } from "../../main/cluster";
 import type { IKubeWatchEvent, IKubeWatchEventStreamEnd, IWatchRoutePayload } from "../../main/routes/watch-route";
 import type { KubeObject } from "./kube-object";
 import type { KubeObjectStore } from "../kube-object.store";
-import type { NamespaceStore } from "../components/+namespaces/namespace.store";
 
 import plimit from "p-limit";
 import debounce from "lodash/debounce";
-import { comparer, computed, observable, reaction } from "mobx";
+import { autorun, comparer, computed, observable, reaction } from "mobx";
 import { autobind, EventEmitter } from "../utils";
 import { ensureObjectSelfLink, KubeApi, parseKubeApi } from "./kube-api";
 import { KubeJsonApiData, KubeJsonApiError } from "./kube-json-api";
@@ -43,50 +42,49 @@ export interface IKubeWatchLog {
 
 @autobind()
 export class KubeWatchApi {
-  private cluster: Cluster;
-  private namespaceStore: NamespaceStore;
-
   private requestId = 0;
-  private isConnected = false;
   private reader: ReadableStreamReader<string>;
-  private subscribers = observable.map<KubeApi, number>();
-
-  // events
   public onMessage = new EventEmitter<[IKubeWatchMessage]>();
+
+  @observable.ref private cluster: Cluster;
+  @observable.ref private namespaces: string[] = [];
+  @observable subscribers = observable.map<KubeApi, number>();
+  @observable isConnected = false;
+
+  @computed get isReady(): boolean {
+    return Boolean(this.cluster && this.namespaces);
+  }
 
   @computed get isActive(): boolean {
     return this.apis.length > 0;
   }
 
   @computed get apis(): string[] {
-    const { cluster, namespaceStore } = this;
-    const activeApis = Array.from(this.subscribers.keys());
+    if (!this.isReady) {
+      return [];
+    }
 
-    return activeApis.map(api => {
-      if (!cluster.isAllowedResource(api.kind)) {
+    return Array.from(this.subscribers.keys()).map(api => {
+      if (!this.isAllowedApi(api)) {
         return [];
       }
 
       if (api.isNamespaced) {
-        return namespaceStore.getContextNamespaces().map(namespace => api.getWatchUrl(namespace));
+        return this.namespaces.map(namespace => api.getWatchUrl(namespace));
       } else {
         return api.getWatchUrl();
       }
     }).flat();
   }
 
-  constructor() {
-    this.init();
-  }
-
-  private async init() {
-    const { getHostedCluster } = await import("../../common/cluster-store");
-    const { namespaceStore } = await import("../components/+namespaces/namespace.store");
-
-    await namespaceStore.whenReady;
-
-    this.cluster = getHostedCluster();
-    this.namespaceStore = namespaceStore;
+  async init({ getCluster, getNamespaces }: {
+    getCluster: () => Cluster,
+    getNamespaces: () => string[],
+  }): Promise<void> {
+    autorun(() => {
+      this.cluster = getCluster();
+      this.namespaces = getNamespaces();
+    });
     this.bindAutoConnect();
   }
 
@@ -108,7 +106,7 @@ export class KubeWatchApi {
   }
 
   isAllowedApi(api: KubeApi): boolean {
-    return !!this?.cluster.isAllowedResource(api.kind);
+    return Boolean(this?.cluster.isAllowedResource(api.kind));
   }
 
   subscribeApi(api: KubeApi | KubeApi[]): () => void {
@@ -147,7 +145,7 @@ export class KubeWatchApi {
         preloading.push(limitRequests(async () => {
           if (cacheLoading && store.isLoaded) return; // skip
 
-          return store.loadAll();
+          return store.loadAll(this.namespaces);
         }));
       }
     }

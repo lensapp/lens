@@ -30,7 +30,7 @@ export class CrdResources extends React.Component<Props> {
         const { store } = this;
 
         if (store && !store.isLoading && !store.isLoaded) {
-          store.loadAll();
+          store.loadSelectedNamespaces();
         }
       })
     ]);
