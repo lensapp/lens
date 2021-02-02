@@ -10,7 +10,7 @@ categories:
   - title: '🧰 Maintenance'
     labels:
       - 'chore'
-      - 'area/ci
+      - 'area/ci'
       - 'area/tests'
 
 template: |
