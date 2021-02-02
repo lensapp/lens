@@ -161,13 +161,17 @@ export class KubeWatchApi {
       apis.forEach(api => unsubscribeList.push(this.subscribeApi(api)));
     };
 
-    if (preloading && waitUntilLoaded) {
-      preloading.loading.then(subscribe, error => {
-        this.log({
-          message: new Error("Loading stores has failed"),
-          meta: { stores, error, options },
+    if (preloading) {
+      if (waitUntilLoaded) {
+        preloading.loading.then(subscribe, error => {
+          this.log({
+            message: new Error("Loading stores has failed"),
+            meta: { stores, error, options },
+          });
         });
-      });
+      } else {
+        subscribe();
+      }
 
       // reload when context namespaces changes
       cancelReloading = reaction(() => this.namespaces, () => {
@@ -176,8 +180,6 @@ export class KubeWatchApi {
       }, {
         equals: comparer.shallow,
       });
-    } else {
-      subscribe();
     }
 
     // unsubscribe
