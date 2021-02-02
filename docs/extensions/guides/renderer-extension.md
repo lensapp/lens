@@ -629,7 +629,7 @@ export default class HelpExtension extends LensRendererExtension {
 
 The properties of the `statusBarItems` array objects are defined as follows:
 
-* `item` specifies the `React.Component` that will be shown on the status bar. By default, items are added starting from the right side of the status bar. Due to limited space in the status bar, `item` will typically specify only an icon or a short string of text. The example above reuses the `HelpIcon` from the [`globalPageMenus` guide](#globalpagemenus).
+* `Item` specifies the `React.Component` that will be shown on the status bar. By default, items are added starting from the right side of the status bar. Due to limited space in the status bar, `Item` will typically specify only an icon or a short string of text. The example above reuses the `HelpIcon` from the [`globalPageMenus` guide](#globalpagemenus).
 * `onClick` determines what the `statusBarItem` does when it is clicked. In the example, `onClick` is set to a function that calls the `LensRendererExtension` `navigate()` method. `navigate` takes the `id` of the associated global page as a parameter. Thus, clicking the status bar item activates the associated global pages.
 
 ### `kubeObjectMenuItems`
