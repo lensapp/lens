@@ -47,7 +47,7 @@ export async function broadcastMessage(channel: string, ...args: any[]) {
         view.sendToFrame([frameInfo.processId, frameInfo.frameId], channel, ...args);
       }
     } catch (error) {
-      logger.error("[IPC]: failed to send IPC message", { error });
+      logger.error("[IPC]: failed to send IPC message", { error: String(error) });
     }
   }
 }

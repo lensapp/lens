@@ -73,7 +73,7 @@ app.on("second-instance", (event, argv) => {
         .catch(error => logger.error(`${LensProtocolRouterMain.LoggingPrefix}: an error occured`, { error, rawUrl: arg }));
     }
   }
-  
+
   windowManager?.ensureMainWindow();
 });
 
@@ -127,6 +127,16 @@ app.on("ready", async () => {
   extensionLoader.init();
   extensionDiscovery.init();
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
+  windowManager.whenLoaded.then(() => {
+    LensProtocolRouterMain
+      .getInstance<LensProtocolRouterMain>()
+      .rendererLoaded = true;
+  });
+  extensionLoader.whenLoaded.then(() => {
+    LensProtocolRouterMain
+      .getInstance<LensProtocolRouterMain>()
+      .extensionsLoaded = true;
+  });
 
   // call after windowManager to see splash earlier
   try {

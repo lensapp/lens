@@ -66,6 +66,16 @@ export class ExtensionLoader {
     return extensions;
   }
 
+  getExtensionByName(name: string): LensExtension | null {
+    for (const [, val] of this.instances) {
+      if (val.name === name) {
+        return val;
+      }
+    }
+
+    return null;
+  }
+
   // Transform userExtensions to a state object for storing into ExtensionsStore
   @computed get storeState() {
     return Object.fromEntries(

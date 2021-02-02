@@ -3,6 +3,7 @@ import * as proto from "../../common/protocol-handler";
 import Url from "url-parse";
 import { LensExtension } from "../../extensions/lens-extension";
 import { broadcastMessage } from "../../common/ipc";
+import { observable, when } from "mobx";
 
 export interface FallbackHandler {
   (name: string): Promise<boolean>;
@@ -10,6 +11,9 @@ export interface FallbackHandler {
 
 export class LensProtocolRouterMain extends proto.LensProtocolRouter {
   private missingExtensionHandlers: FallbackHandler[] = [];
+
+  @observable rendererLoaded = false;
+  @observable extensionsLoaded = false;
 
   /**
    * Find the most specific registered handler, if it exists, and invoke it.
@@ -31,6 +35,8 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
         case "app":
           return this._routeToInternal(url);
         case "extension":
+          await when(() => this.extensionsLoaded);
+
           return this._routeToExtension(url);
         default:
           throw new proto.RoutingError(proto.RoutingErrorType.INVALID_HOST, url);
@@ -69,12 +75,14 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
     return "";
   }
 
-  protected _routeToInternal(url: Url): void {
+  protected async _routeToInternal(url: Url): Promise<void> {
     const rawUrl = url.toString(); // for sending to renderer
 
     super._routeToInternal(url);
 
-    broadcastMessage(proto.ProtocolHandlerInternal, rawUrl);
+    await when(() => this.rendererLoaded);
+
+    return broadcastMessage(proto.ProtocolHandlerInternal, rawUrl);
   }
 
   protected async _routeToExtension(url: Url): Promise<void> {
@@ -88,8 +96,9 @@ export class LensProtocolRouterMain extends proto.LensProtocolRouter {
      * argument.
      */
     await super._routeToExtension(new Url(url.toString(), true));
+    await when(() => this.rendererLoaded);
 
-    broadcastMessage(proto.ProtocolHandlerExtension, rawUrl);
+    return broadcastMessage(proto.ProtocolHandlerExtension, rawUrl);
   }
 
   /**
