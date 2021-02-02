@@ -26,8 +26,7 @@ import { InstalledExtension, extensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
-import requestPromise from "request-promise-native";
-import { getAppVersion } from "../common/utils";
+import { getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -77,7 +76,6 @@ app.on("ready", async () => {
 
   registerFileProtocol("static", __static);
 
-  logger.info("🤓 Installing developer tools");
   await installDeveloperTools();
 
   logger.info("💾 Loading stores");
@@ -117,16 +115,10 @@ app.on("ready", async () => {
   // test proxy connection
   try {
     logger.info("🔎 Testing LensProxy connection ...");
-    const response = await requestPromise({
-      method: "GET",
-      uri: `http://localhost:${proxyPort}/version`,
-      resolveWithFullResponse: true
-    });
+    const versionFromProxy = await getAppVersionFromProxyServer(proxyPort);
 
-    const appVersion = JSON.parse(response.body).version;
-
-    if (getAppVersion() != appVersion) {
-      logger.error(`Proxy server responded with invalid response: ${response.body}`);
+    if (getAppVersion() !== versionFromProxy) {
+      logger.error(`Proxy server responded with invalid response`);
     }
     logger.info("⚡ LensProxy connection OK");
   } catch (error) {
