@@ -1,4 +1,4 @@
-import { action, comparer, IReactionDisposer, IReactionOptions, observable, reaction, toJS, when } from "mobx";
+import { action, comparer, computed, IReactionDisposer, IReactionOptions, observable, reaction, toJS, when } from "mobx";
 import { autobind, createStorage } from "../../utils";
 import { KubeObjectStore, KubeObjectStoreLoadingParams } from "../../kube-object.store";
 import { Namespace, namespacesApi } from "../../api/endpoints/namespaces.api";
@@ -79,10 +79,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     });
   }
 
-  get allowedNamespaces(): string[] {
+  @computed get allowedNamespaces(): string[] {
     return toJS(getHostedCluster().allowedNamespaces);
   }
 
+  @computed
   private get initialNamespaces(): string[] {
     const allowed = new Set(this.allowedNamespaces);
     const prevSelected = storage.get();
@@ -157,6 +158,21 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   toggleContext(namespace: string) {
     if (this.hasContext(namespace)) this.contextNs.remove(namespace);
     else this.contextNs.push(namespace);
+  }
+
+  @action
+  toggleAll(showAll?: boolean) {
+    if (typeof showAll === "boolean") {
+      if (showAll) {
+        this.contextNs.replace(this.initialNamespaces);
+      } else {
+        this.contextNs.clear();
+      }
+    } else {
+      const showAll = this.contextNs.length < this.initialNamespaces.length;
+
+      this.toggleAll(showAll);
+    }
   }
 
   @action
