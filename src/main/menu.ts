@@ -10,6 +10,7 @@ import { extensionsURL } from "../renderer/components/+extensions/extensions.rou
 import { menuRegistry } from "../extensions/registries/menu-registry";
 import logger from "./logger";
 import { exitApp } from "./exit-app";
+import { broadcastMessage } from "../common/ipc";
 
 export type MenuTopId = "mac" | "file" | "edit" | "view" | "help";
 
@@ -173,6 +174,14 @@ export function buildMenu(windowManager: WindowManager) {
   const viewMenu: MenuItemConstructorOptions = {
     label: "View",
     submenu: [
+      {
+        label: "Command Palette...",
+        accelerator: "Shift+CmdOrCtrl+P",
+        click() {
+          broadcastMessage("command-palette:open");
+        }
+      },
+      { type: "separator" },
       {
         label: "Back",
         accelerator: "CmdOrCtrl+[",

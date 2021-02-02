@@ -28,12 +28,29 @@ export function setup(): Application {
   });
 }
 
-type HelmRepository = {
-  name: string;
-  url: string;
+export const keys = {
+  backspace: "\uE003"
 };
+
+export async function appStart() {
+  const app = setup();
+
+  await app.start();
+  // Wait for splash screen to be closed
+  while (await app.client.getWindowCount() > 1);
+  await app.client.windowByIndex(0);
+  await app.client.waitUntilWindowLoaded();
+
+  return app;
+}
+
+export async function clickWhatsNew(app: Application) {
+  await app.client.waitUntilTextExists("h1", "What's new?");
+  await app.client.click("button.primary");
+  await app.client.waitUntilTextExists("h1", "Welcome");
+}
+
 type AsyncPidGetter = () => Promise<number>;
-export const promiseExec = util.promisify(exec);
 
 export async function tearDown(app: Application) {
   const pid = await (app.mainProcess.pid as any as AsyncPidGetter)();
@@ -46,6 +63,13 @@ export async function tearDown(app: Application) {
     console.error(e);
   }
 }
+
+export const promiseExec = util.promisify(exec);
+
+type HelmRepository = {
+  name: string;
+  url: string;
+};
 
 export async function listHelmRepositories(retries = 0):  Promise<HelmRepository[]>{
   if (retries < 5) {

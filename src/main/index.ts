@@ -26,6 +26,7 @@ import { InstalledExtension, extensionDiscovery } from "../extensions/extension-
 import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
+import { bindBroadcastHandlers } from "../common/ipc";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -62,6 +63,8 @@ if (process.env.LENS_DISABLE_GPU) {
 app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
   await shellSync();
+
+  bindBroadcastHandlers();
 
   powerMonitor.on("shutdown", () => {
     app.exit();
