@@ -438,7 +438,7 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  async refreshAccessibility(): Promise<void> {
+  private async refreshAccessibility(): Promise<void> {
     this.isAdmin = await this.isClusterAdmin();
     this.isGlobalWatchEnabled = await this.canUseWatchApi({ resource: "*" });
 
@@ -588,7 +588,7 @@ export class Cluster implements ClusterModel, ClusterState {
   /**
    * @internal
    */
-  async canUseWatchApi(customizeResource: V1ResourceAttributes = {}): Promise<boolean> {
+  private async canUseWatchApi(customizeResource: V1ResourceAttributes = {}): Promise<boolean> {
     return this.canI({
       verb: "watch",
       resource: "*",
