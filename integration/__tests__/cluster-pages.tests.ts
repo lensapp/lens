@@ -37,7 +37,7 @@ describe("Lens cluster pages", () => {
       beforeAll(async () => app = await utils.appStart(), 20000);
 
       afterAll(async () => {
-        if (app && app.isRunning()) {
+        if (app?.isRunning()) {
           return utils.tearDown(app);
         }
       });
@@ -55,286 +55,381 @@ describe("Lens cluster pages", () => {
       }
     };
 
-    describe("cluster pages", () => {
-
+    describe("cluster menu pages", () => {
       beforeAll(appStartAddCluster, 40000);
 
       afterAll(async () => {
-        if (app && app.isRunning()) {
+        if (app?.isRunning()) {
           return utils.tearDown(app);
         }
       });
 
-      const tests: {
-        drawer?: string
-        drawerId?: string
-        pages: {
-          name: string,
+      type Page = [
+        string, // name
+        {
           href: string,
           expectedSelector: string,
-          expectedText: string
-        }[]
-      }[] = [{
-        drawer: "",
-        drawerId: "",
-        pages: [{
-          name: "Cluster",
-          href: "cluster",
-          expectedSelector: "div.ClusterOverview div.label",
-          expectedText: "Master"
-        }]
-      },
-      {
-        drawer: "",
-        drawerId: "",
-        pages: [{
-          name: "Nodes",
-          href: "nodes",
-          expectedSelector: "h5.title",
-          expectedText: "Nodes"
-        }]
-      },
-      {
-        drawer: "Workloads",
-        drawerId: "workloads",
-        pages: [{
-          name: "Overview",
-          href: "workloads",
-          expectedSelector: "h5.box",
-          expectedText: "Overview"
-        },
-        {
-          name: "Pods",
-          href: "pods",
-          expectedSelector: "h5.title",
-          expectedText: "Pods"
-        },
-        {
-          name: "Deployments",
-          href: "deployments",
-          expectedSelector: "h5.title",
-          expectedText: "Deployments"
-        },
-        {
-          name: "DaemonSets",
-          href: "daemonsets",
-          expectedSelector: "h5.title",
-          expectedText: "Daemon Sets"
-        },
-        {
-          name: "StatefulSets",
-          href: "statefulsets",
-          expectedSelector: "h5.title",
-          expectedText: "Stateful Sets"
-        },
-        {
-          name: "ReplicaSets",
-          href: "replicasets",
-          expectedSelector: "h5.title",
-          expectedText: "Replica Sets"
-        },
-        {
-          name: "Jobs",
-          href: "jobs",
-          expectedSelector: "h5.title",
-          expectedText: "Jobs"
-        },
-        {
-          name: "CronJobs",
-          href: "cronjobs",
-          expectedSelector: "h5.title",
-          expectedText: "Cron Jobs"
-        }]
-      },
-      {
-        drawer: "Configuration",
-        drawerId: "config",
-        pages: [{
-          name: "ConfigMaps",
-          href: "configmaps",
-          expectedSelector: "h5.title",
-          expectedText: "Config Maps"
-        },
-        {
-          name: "Secrets",
-          href: "secrets",
-          expectedSelector: "h5.title",
-          expectedText: "Secrets"
-        },
-        {
-          name: "Resource Quotas",
-          href: "resourcequotas",
-          expectedSelector: "h5.title",
-          expectedText: "Resource Quotas"
-        },
-        {
-          name: "Limit Ranges",
-          href: "limitranges",
-          expectedSelector: "h5.title",
-          expectedText: "Limit Ranges"
-        },
-        {
-          name: "HPA",
-          href: "hpa",
-          expectedSelector: "h5.title",
-          expectedText: "Horizontal Pod Autoscalers"
-        },
-        {
-          name: "Pod Disruption Budgets",
-          href: "poddisruptionbudgets",
-          expectedSelector: "h5.title",
-          expectedText: "Pod Disruption Budgets"
-        }]
-      },
-      {
-        drawer: "Network",
-        drawerId: "networks",
-        pages: [{
-          name: "Services",
-          href: "services",
-          expectedSelector: "h5.title",
-          expectedText: "Services"
-        },
-        {
-          name: "Endpoints",
-          href: "endpoints",
-          expectedSelector: "h5.title",
-          expectedText: "Endpoints"
-        },
-        {
-          name: "Ingresses",
-          href: "ingresses",
-          expectedSelector: "h5.title",
-          expectedText: "Ingresses"
-        },
-        {
-          name: "Network Policies",
-          href: "network-policies",
-          expectedSelector: "h5.title",
-          expectedText: "Network Policies"
-        }]
-      },
-      {
-        drawer: "Storage",
-        drawerId: "storage",
-        pages: [{
-          name: "Persistent Volume Claims",
-          href: "persistent-volume-claims",
-          expectedSelector: "h5.title",
-          expectedText: "Persistent Volume Claims"
-        },
-        {
-          name: "Persistent Volumes",
-          href: "persistent-volumes",
-          expectedSelector: "h5.title",
-          expectedText: "Persistent Volumes"
-        },
-        {
-          name: "Storage Classes",
-          href: "storage-classes",
-          expectedSelector: "h5.title",
-          expectedText: "Storage Classes"
-        }]
-      },
-      {
-        drawer: "",
-        drawerId: "",
-        pages: [{
-          name: "Namespaces",
-          href: "namespaces",
-          expectedSelector: "h5.title",
-          expectedText: "Namespaces"
-        }]
-      },
-      {
-        drawer: "",
-        drawerId: "",
-        pages: [{
-          name: "Events",
-          href: "events",
-          expectedSelector: "h5.title",
-          expectedText: "Events"
-        }]
-      },
-      {
-        drawer: "Apps",
-        drawerId: "apps",
-        pages: [{
-          name: "Charts",
-          href: "apps/charts",
-          expectedSelector: "div.HelmCharts input",
-          expectedText: ""
-        },
-        {
-          name: "Releases",
-          href: "apps/releases",
-          expectedSelector: "h5.title",
-          expectedText: "Releases"
-        }]
-      },
-      {
-        drawer: "Access Control",
-        drawerId: "users",
-        pages: [{
-          name: "Service Accounts",
-          href: "service-accounts",
-          expectedSelector: "h5.title",
-          expectedText: "Service Accounts"
-        },
-        {
-          name: "Role Bindings",
-          href: "role-bindings",
-          expectedSelector: "h5.title",
-          expectedText: "Role Bindings"
-        },
-        {
-          name: "Roles",
-          href: "roles",
-          expectedSelector: "h5.title",
-          expectedText: "Roles"
-        },
-        {
-          name: "Pod Security Policies",
-          href: "pod-security-policies",
-          expectedSelector: "h5.title",
-          expectedText: "Pod Security Policies"
-        }]
-      },
-      {
-        drawer: "Custom Resources",
-        drawerId: "custom-resources",
-        pages: [{
-          name: "Definitions",
-          href: "crd/definitions",
-          expectedSelector: "h5.title",
-          expectedText: "Custom Resources"
-        }]
-      }];
-
-      tests.forEach(({ drawer = "", drawerId = "", pages }) => {
-        if (drawer !== "") {
-          it(`shows ${drawer} drawer`, async () => {
-            expect(clusterAdded).toBe(true);
-            await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`);
-            await app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name);
-          });
+          expectedText: string,
         }
-        pages.forEach(({ name, href, expectedSelector, expectedText }) => {
-          it(`shows ${drawer}->${name} page`, async () => {
-            expect(clusterAdded).toBe(true);
-            await app.client.click(`a[href^="/${href}"]`);
-            await app.client.waitUntilTextExists(expectedSelector, expectedText);
-          });
+      ];
+
+      type PageTestCase = [
+        string, // drawer
+        {
+          drawerId: string,
+          pages: Page[],
+        }
+      ];
+
+      const noSubMenuTests: Page[] = [
+        [
+          "Cluster",
+          {
+            href: "cluster",
+            expectedSelector: "div.ClusterOverview div.label",
+            expectedText: "Master",
+          }
+        ],
+        [
+          "Nodes",
+          {
+            href: "nodes",
+            expectedSelector: "h5.title",
+            expectedText: "Nodes"
+          }
+        ],
+        [
+          "Namespaces",
+          {
+            href: "namespaces",
+            expectedSelector: "h5.title",
+            expectedText: "Namespaces"
+          }
+        ],
+        [
+          "Events",
+          {
+            href: "events",
+            expectedSelector: "h5.title",
+            expectedText: "Events"
+          }
+        ],
+      ];
+
+      const subMenuTests: PageTestCase[] = [
+        [
+          "Workloads",
+          {
+            drawerId: "workloads",
+            pages: [
+              [
+                "Overview",
+                {
+                  href: "workloads",
+                  expectedSelector: "h5.box",
+                  expectedText: "Overview"
+                }
+              ],
+              [
+                "Pods",
+                {
+                  href: "pods",
+                  expectedSelector: "h5.title",
+                  expectedText: "Pods"
+                }
+              ],
+              [
+                "Deployments",
+                {
+                  href: "deployments",
+                  expectedSelector: "h5.title",
+                  expectedText: "Deployments"
+                }
+              ],
+              [
+                "DaemonSets",
+                {
+                  href: "daemonsets",
+                  expectedSelector: "h5.title",
+                  expectedText: "Daemon Sets"
+                }
+              ],
+              [
+                "StatefulSets",
+                {
+                  href: "statefulsets",
+                  expectedSelector: "h5.title",
+                  expectedText: "Stateful Sets"
+                }
+              ],
+              [
+                "ReplicaSets",
+                {
+                  href: "replicasets",
+                  expectedSelector: "h5.title",
+                  expectedText: "Replica Sets"
+                }
+              ],
+              [
+                "Jobs",
+                {
+                  href: "jobs",
+                  expectedSelector: "h5.title",
+                  expectedText: "Jobs"
+                }
+              ],
+              [
+                "CronJobs",
+                {
+                  href: "cronjobs",
+                  expectedSelector: "h5.title",
+                  expectedText: "Cron Jobs"
+                }
+              ]
+            ]
+          }
+        ],
+        [
+          "Configuration",
+          {
+            drawerId: "config",
+            pages: [
+              [
+                "ConfigMaps",
+                {
+                  href: "configmaps",
+                  expectedSelector: "h5.title",
+                  expectedText: "Config Maps"
+                }
+              ],
+              [
+                "Secrets",
+                {
+                  href: "secrets",
+                  expectedSelector: "h5.title",
+                  expectedText: "Secrets"
+                }
+              ],
+              [
+                "Resource Quotas",
+                {
+                  href: "resourcequotas",
+                  expectedSelector: "h5.title",
+                  expectedText: "Resource Quotas"
+                }
+              ],
+              [
+                "Limit Ranges",
+                {
+                  href: "limitranges",
+                  expectedSelector: "h5.title",
+                  expectedText: "Limit Ranges"
+                }
+              ],
+              [
+                "HPA",
+                {
+                  href: "hpa",
+                  expectedSelector: "h5.title",
+                  expectedText: "Horizontal Pod Autoscalers"
+                }
+              ],
+              [
+                "Pod Disruption Budgets",
+                {
+                  href: "poddisruptionbudgets",
+                  expectedSelector: "h5.title",
+                  expectedText: "Pod Disruption Budgets"
+                }
+              ]
+            ]
+          }
+        ],
+        [
+          "Network",
+          {
+            drawerId: "networks",
+            pages: [
+              [
+                "Services",
+                {
+                  href: "services",
+                  expectedSelector: "h5.title",
+                  expectedText: "Services"
+                }
+              ],
+              [
+                "Endpoints",
+                {
+                  href: "endpoints",
+                  expectedSelector: "h5.title",
+                  expectedText: "Endpoints"
+                }
+              ],
+              [
+                "Ingresses",
+                {
+                  href: "ingresses",
+                  expectedSelector: "h5.title",
+                  expectedText: "Ingresses"
+                }
+              ],
+              [
+                "Network Policies",
+                {
+                  href: "network-policies",
+                  expectedSelector: "h5.title",
+                  expectedText: "Network Policies"
+                }
+              ]
+            ]
+          }
+        ],
+        [
+          "Storage",
+          {
+            drawerId: "storage",
+            pages: [
+              [
+                "Persistent Volume Claims",
+                {
+                  href: "persistent-volume-claims",
+                  expectedSelector: "h5.title",
+                  expectedText: "Persistent Volume Claims"
+                }
+              ],
+              [
+                "Persistent Volumes",
+                {
+                  href: "persistent-volumes",
+                  expectedSelector: "h5.title",
+                  expectedText: "Persistent Volumes"
+                }
+              ],
+              [
+                "Storage Classes",
+                {
+                  href: "storage-classes",
+                  expectedSelector: "h5.title",
+                  expectedText: "Storage Classes"
+                }
+              ]
+            ]
+          }
+        ],
+        [
+          "Apps",
+          {
+            drawerId: "apps",
+            pages: [
+              [
+                "Charts",
+                {
+                  href: "apps/charts",
+                  expectedSelector: "div.HelmCharts input",
+                  expectedText: ""
+                }
+              ],
+              [
+                "Releases",
+                {
+                  href: "apps/releases",
+                  expectedSelector: "h5.title",
+                  expectedText: "Releases"
+                }
+              ]
+            ]
+          }
+        ],
+        [
+          "Access Control",
+          {
+            drawerId: "users",
+            pages: [
+              [
+                "Service Accounts",
+                {
+                  href: "service-accounts",
+                  expectedSelector: "h5.title",
+                  expectedText: "Service Accounts"
+                }
+              ],
+              [
+                "Role Bindings",
+                {
+                  href: "role-bindings",
+                  expectedSelector: "h5.title",
+                  expectedText: "Role Bindings"
+                }
+              ],
+              [
+                "Roles",
+                {
+                  href: "roles",
+                  expectedSelector: "h5.title",
+                  expectedText: "Roles"
+                }
+              ],
+              [
+                "Pod Security Policies",
+                {
+                  href: "pod-security-policies",
+                  expectedSelector: "h5.title",
+                  expectedText: "Pod Security Policies"
+                }
+              ]
+            ]
+          }
+        ],
+        [
+          "Custom Resources",
+          {
+            drawerId: "custom-resources",
+            pages: [
+              [
+                "Definitions",
+                {
+                  href: "crd/definitions",
+                  expectedSelector: "h5.title",
+                  expectedText: "Custom Resources"
+                }
+              ]
+            ]
+          }
+        ]
+      ];
+
+      describe.each(noSubMenuTests)("%s", (name, { href, expectedSelector, expectedText }) => {
+        it("shows page", async () => {
+          expect(clusterAdded).toBe(true);
+          await app.client.click(`a[href^="/${href}"]`);
+          await app.client.waitUntilTextExists(expectedSelector, expectedText);
+        });
+      });
+
+      describe.each(subMenuTests)("%s Drawer", (drawer, { drawerId, pages }) => {
+        it("does open", async () => {
+          expect(clusterAdded).toBe(true);
+          await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`);
+          await app.client.waitUntilTextExists(`a[href^="/${pages[0][1].href}"]`, pages[0][0]);
         });
 
-        if (drawer !== "") {
-          // hide the drawer
-          it(`hides ${drawer} drawer`, async () => {
-            expect(clusterAdded).toBe(true);
-            await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`);
-            await expect(app.client.waitUntilTextExists(`a[href^="/${pages[0].href}"]`, pages[0].name, 100)).rejects.toThrow();
-          });
-        }
+        it.each(pages)("shows %s page", async (name, { href, expectedSelector, expectedText }) => {
+          expect(clusterAdded).toBe(true);
+          await app.client.click(`a[href^="/${href}"]`);
+          await app.client.waitUntilTextExists(expectedSelector, expectedText);
+        });
+
+        it("does close", async () => {
+          expect(clusterAdded).toBe(true);
+          await app.client.click(`.sidebar-nav [data-test-id="${drawerId}"] span.link-text`);
+
+          try {
+            expect(await app.client.waitUntilTextExists(`a[href^="/${pages[0][1].href}"]`, pages[0][0], 100)).toBeUndefined();
+          } catch (error) {
+            expect(error).not.toBeUndefined();
+          }
+        });
       });
     });
 
@@ -354,7 +449,7 @@ describe("Lens cluster pages", () => {
         abortContoller.abort();
       });
 
-      it(`shows a logs for a pod`, async () => {
+      it("shows a logs for a pod", async () => {
         expect(clusterAdded).toBe(true);
         // Go to Pods page
         await app.client.click(".sidebar-nav [data-test-id='workloads'] span.link-text");
@@ -369,7 +464,7 @@ describe("Lens cluster pages", () => {
           renderer: ["[EXTENSION]: enabled lens-pod-menu@"],
         });
 
-        await delay(500); // Give some extra time to prepare extensions
+        await delay(2000); // Give some extra time to prepare extensions
 
         // Open logs tab in dock
         await app.client.click(".list .TableRow:first-child");
@@ -393,7 +488,7 @@ describe("Lens cluster pages", () => {
       beforeEach(appStartAddCluster, 40000);
 
       afterEach(async () => {
-        if (app && app.isRunning()) {
+        if (app?.isRunning()) {
           return utils.tearDown(app);
         }
       });
