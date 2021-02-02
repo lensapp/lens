@@ -1,3 +1,5 @@
+exclude-labels:
+  - 'skip-changelog'
 categories:
   - title: '🚀 Features'
     labels:
@@ -6,7 +8,10 @@ categories:
     labels:
       - 'bug'
   - title: '🧰 Maintenance'
-    label: 'chore'
+    labels:
+      - 'chore'
+      - 'area/ci
+      - 'area/tests'
 
 template: |
   ## Changes since $PREVIOUS_TAG
