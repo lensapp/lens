@@ -6,6 +6,8 @@ import { commandRegistry } from "../../../extensions/registries/command-registry
 import { Input, InputValidator } from "../input";
 import { navigate } from "../../navigation";
 import { CommandOverlay } from "../command-palette/command-container";
+import { landingURL } from "../+landing-page";
+import { clusterStore } from "../../../common/cluster-store";
 
 const uniqueWorkspaceName: InputValidator = {
   condition: ({ required }) => required,
@@ -24,8 +26,13 @@ export class AddWorkspace extends React.Component {
       name
     }));
 
+    if (!workspace) {
+      return;
+    }
+
     workspaceStore.setActive(workspace.id);
-    navigate("/");
+    clusterStore.setActive(null);
+    navigate(landingURL());
     CommandOverlay.close();
   }
 
