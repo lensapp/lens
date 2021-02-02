@@ -52,12 +52,6 @@ export class KubeWatchApi {
   @observable subscribers = observable.map<KubeApi, number>();
   @observable isConnected = false;
 
-  @computed get watchAllEnabled(): boolean {
-    const { isAdmin, watchApiAllEnabled } = this?.cluster;
-
-    return Boolean(isAdmin || watchApiAllEnabled);
-  }
-
   @computed get isReady(): boolean {
     return Boolean(this.cluster && this.namespaces);
   }
@@ -76,7 +70,7 @@ export class KubeWatchApi {
         return [];
       }
 
-      if (api.isNamespaced && !this.watchAllEnabled) {
+      if (api.isNamespaced && !this.cluster.isGlobalWatchEnabled) {
         return this.namespaces.map(namespace => api.getWatchUrl(namespace));
       }
 

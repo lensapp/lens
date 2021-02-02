@@ -48,7 +48,7 @@ export interface ClusterState {
   isAdmin: boolean;
   allowedNamespaces: string[]
   allowedResources: string[]
-  watchApiAllEnabled: boolean;
+  isGlobalWatchEnabled: boolean;
 }
 
 /**
@@ -182,7 +182,7 @@ export class Cluster implements ClusterModel, ClusterState {
    *
    * @observable
    */
-  @observable watchApiAllEnabled = false;
+  @observable isGlobalWatchEnabled = false;
   /**
    * Preferences
    *
@@ -440,7 +440,7 @@ export class Cluster implements ClusterModel, ClusterState {
    */
   async refreshAccessibility(): Promise<void> {
     this.isAdmin = await this.isClusterAdmin();
-    this.watchApiAllEnabled = await this.canUseWatchApi({ resource: "*" });
+    this.isGlobalWatchEnabled = await this.canUseWatchApi({ resource: "*" });
 
     await this.refreshAllowedResources();
 
@@ -629,7 +629,7 @@ export class Cluster implements ClusterModel, ClusterState {
       isAdmin: this.isAdmin,
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,
-      watchApiAllEnabled: this.watchApiAllEnabled,
+      isGlobalWatchEnabled: this.isGlobalWatchEnabled,
     };
 
     return toJS(state, {
