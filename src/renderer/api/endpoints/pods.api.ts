@@ -104,6 +104,9 @@ export interface IPodContainer {
     configMapRef?: {
       name: string;
     };
+    secretRef?: {
+      name: string;
+    }
   }[];
   volumeMounts?: {
     name: string;

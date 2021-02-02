@@ -26,7 +26,7 @@
     "build:mac": "yarn run compile && electron-builder --mac --dir -c.productName=Lens",
     "build:win": "yarn run compile && electron-builder --win --dir -c.productName=Lens",
     "test": "jest --env=jsdom src $@",
-    "integration": "jest --coverage integration $@",
+    "integration": "jest --runInBand integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
     "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",

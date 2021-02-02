@@ -42,12 +42,13 @@ import { clusterSetFrameIdHandler } from "../../common/cluster-ipc";
 import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../extensions/registries";
 import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
-import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 import { eventStore } from "./+events/event.store";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
 import { namespaceStore } from "./+namespaces/namespace.store";
 import { kubeWatchApi } from "../api/kube-watch-api";
+import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
+import { CommandContainer } from "./command-palette/command-container";
 
 @observer
 export class App extends React.Component {
@@ -195,6 +196,8 @@ export class App extends React.Component {
   }
 
   render() {
+    const cluster = getHostedCluster();
+
     return (
       <Router history={history}>
         <ErrorBoundary>
@@ -226,6 +229,7 @@ export class App extends React.Component {
           <StatefulSetScaleDialog/>
           <ReplicaSetScaleDialog/>
           <CronJobTriggerDialog/>
+          <CommandContainer cluster={cluster} />
         </ErrorBoundary>
       </Router>
     );
