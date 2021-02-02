@@ -1,0 +1,14 @@
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'enhancement'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bug'
+  - title: '🧰 Maintenance'
+    label: 'chore'
+
+template: |
+  ## Changes since $PREVIOUS_TAG
+
+  $CHANGES
