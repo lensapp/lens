@@ -9,13 +9,9 @@ export class PodLogsMenu extends React.Component<PodLogsMenuProps> {
     Navigation.hideDetails();
     const pod = this.props.object;
 
-    Component.createPodLogsTab({
-      pod,
-      containers: pod.getContainers(),
-      initContainers: pod.getInitContainers(),
+    Component.logTabStore.createPodTab({
+      selectedPod: pod,
       selectedContainer: container,
-      showTimestamps: false,
-      previous: false,
     });
   }
 

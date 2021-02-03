@@ -4,7 +4,7 @@ import React, { Fragment } from "react";
 import { observer } from "mobx-react";
 import { TabLayout } from "../layout/tab-layout";
 import { eventStore } from "./event.store";
-import { KubeObjectListLayout, KubeObjectListLayoutProps, getDetailsUrl } from "../kube-object";
+import { getDetailsUrl, KubeObjectListLayout, KubeObjectListLayoutProps } from "../kube-object";
 import { KubeEvent } from "../../api/endpoints/events.api";
 import { Tooltip } from "../tooltip";
 import { Link } from "react-router-dom";
@@ -12,11 +12,13 @@ import { cssNames, IClassName, stopPropagation } from "../../utils";
 import { Icon } from "../icon";
 import { lookupApiLink } from "../../api/kube-api";
 
-enum sortBy {
+enum columnId {
+  message = "message",
   namespace = "namespace",
   object = "object",
   type = "type",
   count = "count",
+  source = "source",
   age = "age",
 }
 
@@ -39,15 +41,17 @@ export class Events extends React.Component<Props> {
     const events = (
       <KubeObjectListLayout
         {...layoutProps}
+        isConfigurable
+        tableId="events"
         className={cssNames("Events", className, { compact })}
         store={eventStore}
         isSelectable={false}
         sortingCallbacks={{
-          [sortBy.namespace]: (event: KubeEvent) => event.getNs(),
-          [sortBy.type]: (event: KubeEvent) => event.involvedObject.kind,
-          [sortBy.object]: (event: KubeEvent) => event.involvedObject.name,
-          [sortBy.count]: (event: KubeEvent) => event.count,
-          [sortBy.age]: (event: KubeEvent) => event.metadata.creationTimestamp,
+          [columnId.namespace]: (event: KubeEvent) => event.getNs(),
+          [columnId.type]: (event: KubeEvent) => event.involvedObject.kind,
+          [columnId.object]: (event: KubeEvent) => event.involvedObject.name,
+          [columnId.count]: (event: KubeEvent) => event.count,
+          [columnId.age]: (event: KubeEvent) => event.metadata.creationTimestamp,
         }}
         searchFilters={[
           (event: KubeEvent) => event.getSearchFields(),
@@ -65,20 +69,20 @@ export class Events extends React.Component<Props> {
                   small
                   material="help_outline"
                   className="help-icon"
-                  tooltip="Limited to {eventStore.limit}"
+                  tooltip={`Limited to ${eventStore.limit}`}
                 />
               </>
             )
           })
         )}
         renderTableHeader={[
-          { title: "Message", className: "message" },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Type", className: "type", sortBy: sortBy.type },
-          { title: "Involved Object", className: "object", sortBy: sortBy.object },
-          { title: "Source", className: "source" },
-          { title: "Count", className: "count", sortBy: sortBy.count },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Message", className: "message", id: columnId.message },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Type", className: "type", sortBy: columnId.type, id: columnId.type },
+          { title: "Involved Object", className: "object", sortBy: columnId.object, id: columnId.object },
+          { title: "Source", className: "source", id: columnId.source },
+          { title: "Count", className: "count", sortBy: columnId.count, id: columnId.count },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(event: KubeEvent) => {
           const { involvedObject, type, message } = event;

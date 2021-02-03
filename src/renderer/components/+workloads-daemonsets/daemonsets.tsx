@@ -13,10 +13,11 @@ import { IDaemonSetsRouteParams } from "../+workloads";
 import { Badge } from "../badge";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 
-enum sortBy {
+enum columnId {
   name = "name",
   namespace = "namespace",
   pods = "pods",
+  labels = "labels",
   age = "age",
 }
 
@@ -38,13 +39,15 @@ export class DaemonSets extends React.Component<Props> {
   render() {
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="workload_daemonsets"
         className="DaemonSets" store={daemonSetStore}
         dependentStores={[podsStore, nodesStore, eventStore]}
         sortingCallbacks={{
-          [sortBy.name]: (daemonSet: DaemonSet) => daemonSet.getName(),
-          [sortBy.namespace]: (daemonSet: DaemonSet) => daemonSet.getNs(),
-          [sortBy.pods]: (daemonSet: DaemonSet) => this.getPodsLength(daemonSet),
-          [sortBy.age]: (daemonSet: DaemonSet) => daemonSet.metadata.creationTimestamp,
+          [columnId.name]: (daemonSet: DaemonSet) => daemonSet.getName(),
+          [columnId.namespace]: (daemonSet: DaemonSet) => daemonSet.getNs(),
+          [columnId.pods]: (daemonSet: DaemonSet) => this.getPodsLength(daemonSet),
+          [columnId.age]: (daemonSet: DaemonSet) => daemonSet.metadata.creationTimestamp,
         }}
         searchFilters={[
           (daemonSet: DaemonSet) => daemonSet.getSearchFields(),
@@ -52,12 +55,12 @@ export class DaemonSets extends React.Component<Props> {
         ]}
         renderHeaderTitle="Daemon Sets"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: sortBy.name },
-          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
-          { title: "Pods", className: "pods", sortBy: sortBy.pods },
-          { className: "warning" },
-          { title: "Node Selector", className: "labels" },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
+          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
+          { title: "Pods", className: "pods", sortBy: columnId.pods, id: columnId.pods },
+          { className: "warning", showWithColumn: columnId.pods },
+          { title: "Node Selector", className: "labels", id: columnId.labels },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(daemonSet: DaemonSet) => [
           daemonSet.getName(),

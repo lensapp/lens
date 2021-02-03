@@ -19,7 +19,7 @@ export const crdGroupsUrlParam = createPageParam<string[]>({
   defaultValue: [],
 });
 
-enum sortBy {
+enum columnId {
   kind = "kind",
   group = "group",
   version = "version",
@@ -47,14 +47,16 @@ export class CrdList extends React.Component {
   render() {
     const selectedGroups = this.groups;
     const sortingCallbacks = {
-      [sortBy.kind]: (crd: CustomResourceDefinition) => crd.getResourceKind(),
-      [sortBy.group]: (crd: CustomResourceDefinition) => crd.getGroup(),
-      [sortBy.version]: (crd: CustomResourceDefinition) => crd.getVersion(),
-      [sortBy.scope]: (crd: CustomResourceDefinition) => crd.getScope(),
+      [columnId.kind]: (crd: CustomResourceDefinition) => crd.getResourceKind(),
+      [columnId.group]: (crd: CustomResourceDefinition) => crd.getGroup(),
+      [columnId.version]: (crd: CustomResourceDefinition) => crd.getVersion(),
+      [columnId.scope]: (crd: CustomResourceDefinition) => crd.getScope(),
     };
 
     return (
       <KubeObjectListLayout
+        isConfigurable
+        tableId="crd"
         className="CrdList"
         isClusterScoped={true}
         store={crdStore}
@@ -97,11 +99,11 @@ export class CrdList extends React.Component {
           };
         }}
         renderTableHeader={[
-          { title: "Resource", className: "kind", sortBy: sortBy.kind },
-          { title: "Group", className: "group", sortBy: sortBy.group },
-          { title: "Version", className: "version", sortBy: sortBy.group },
-          { title: "Scope", className: "scope", sortBy: sortBy.scope },
-          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Resource", className: "kind", sortBy: columnId.kind, id: columnId.kind },
+          { title: "Group", className: "group", sortBy: columnId.group, id: columnId.group },
+          { title: "Version", className: "version", sortBy: columnId.version, id: columnId.version },
+          { title: "Scope", className: "scope", sortBy: columnId.scope, id: columnId.scope },
+          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
         ]}
         renderTableContents={(crd: CustomResourceDefinition) => [
           <Link key="link" to={crd.getResourceUrl()} onClick={stopPropagation}>

@@ -13,6 +13,9 @@ export * from "../../renderer/components/select";
 export * from "../../renderer/components/slider";
 export * from "../../renderer/components/input/input";
 
+// command-overlay
+export { CommandOverlay } from "../../renderer/components/command-palette";
+
 // other components
 export * from "../../renderer/components/icon";
 export * from "../../renderer/components/tooltip";
@@ -38,4 +41,4 @@ export * from "../../renderer/components/+events/kube-event-details";
 // specific exports
 export * from "../../renderer/components/status-brick";
 export { terminalStore, createTerminalTab } from "../../renderer/components/dock/terminal.store";
-export { createPodLogsTab } from "../../renderer/components/dock/pod-logs.store";
+export { logTabStore } from "../../renderer/components/dock/log-tab.store";
