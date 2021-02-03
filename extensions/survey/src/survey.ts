@@ -1,5 +1,5 @@
 import { Util } from "@k8slens/extensions";
-import { machineIdSync } from "node-machine-id";
+import { machineId } from "node-machine-id";
 import Refiner from "refiner-js";
 import got from "got";
 import { surveyPreferencesStore } from "./survey-preferences-store";
@@ -32,7 +32,7 @@ export class Survey extends Util.Singleton {
   async fetchSurveyId() {
     try {
       const surveyApi = process.env.SURVEY_API_URL || "https://survey.k8slens.dev";
-      const anonymousId = machineIdSync();
+      const anonymousId = await machineId();
       const { body } = await got(`${surveyApi}/api/survey-id?anonymousId=${anonymousId}`, { responseType: "json"});
 
       return (body as SurveyIdResponse).surveyId;

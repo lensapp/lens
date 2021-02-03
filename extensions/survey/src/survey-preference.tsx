@@ -12,7 +12,7 @@ export class SurveyPreferenceInput extends React.Component<{survey: SurveyPrefer
       <Component.Checkbox
         label="Allow in-app surveys"
         value={survey.enabled}
-        onChange={v => { survey.enabled = v; }}
+        onChange={v => survey.enabled = v }
       />
     );
   }
