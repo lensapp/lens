@@ -15,6 +15,23 @@ Handlers will be run in both `main` and `renderer` in parallel with no synchroni
 Furthermore, both `main` and `renderer` are routed separately.
 In other words, which handler is selected in either process is independent from the list of possible handlers in the other.
 
+Example of registering a handler:
+
+```typescript
+import { LensMainExtension, Interface } from "@k8slens/extensions";
+
+function rootHandler(params: Iterface.ProtocolRouteParams) {
+  console.log("routed to ExampleExtension", params);
+}
+
+export default class ExampleExtensionMain extends LensMainExtension {
+  protocolHandlers = [
+    pathSchema: "/",
+    handler: rootHandler,
+  ]
+}
+```
+
 ## Deregistering A Protocol Handler
 
 All that is needed to deregister a handler is to remove it from the array of handlers.
@@ -41,6 +58,8 @@ Once matched, the handler would be called with the following argument (note both
 ```
 
 As the diagram above shows, the search (or query) params are not considered as part of the handler resolution.
+If the URI had instead been `lens://extension/@mirantis/example-extension/display/notification/green` then a third (and optional) field will have the rest of the path.
+The `tail` field would be filled with `"/green"`.
 If multiple `pathSchema`'s match a given URI then the most specific handler will be called.
 
 For example consider the following `pathSchema`'s:

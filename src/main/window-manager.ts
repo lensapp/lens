@@ -15,6 +15,13 @@ export class WindowManager extends Singleton {
   protected windowState: windowStateKeeper.State;
   protected disposers: Record<string, Function> = {};
 
+  /**
+   * This will transition from `false` -> `true` when the main view has loaded
+   * the renderer URL and has been shown successfully.
+   *
+   * This is useful for waiting until the renderer is ready before trying to
+   * send requests to it (such as the protocol router)
+   */
   @observable mainViewInitiallyLoaded = false;
   whenLoaded = when(() => this.mainViewInitiallyLoaded);
 

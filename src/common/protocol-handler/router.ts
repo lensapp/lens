@@ -8,6 +8,7 @@ import { RoutingError, RoutingErrorType } from "./error";
 import { extensionsStore } from "../../extensions/extensions-store";
 import { extensionLoader } from "../../extensions/extension-loader";
 import { LensExtension } from "../../extensions/lens-extension";
+import { RouteHandler, RouteParams } from "../../extensions/registries/protocol-handler-registry";
 
 // IPC channel for protocol actions. Main broadcasts the open-url events to this channel.
 export const ProtocolHandlerIpcPrefix = "protocol-handler";
@@ -16,7 +17,7 @@ export const ProtocolHandlerInternal = `${ProtocolHandlerIpcPrefix}:internal`;
 export const ProtocolHandlerExtension= `${ProtocolHandlerIpcPrefix}:extension`;
 
 /**
- * These two names are long and cubersome by design so as to decrease the chances
+ * These two names are long and cumbersome by design so as to decrease the chances
  * of an extension using the same names.
  *
  * Though under the current (2021/01/18) implementation, these are never matched
@@ -24,42 +25,6 @@ export const ProtocolHandlerExtension= `${ProtocolHandlerIpcPrefix}:extension`;
  */
 const EXTENSION_PUBLISHER_MATCH = "LENS_INTERNAL_EXTENSION_PUBLISHER_MATCH";
 const EXTENSION_NAME_MATCH = "LENS_INTERNAL_EXTENSION_NAME_MATCH";
-
-/**
- * The collection of the dynamic parts of a URI which initiated a `lens://`
- * protocol request
- */
-export interface RouteParams {
-  /**
-   * the parts of the URI query string
-   */
-  search: Record<string, string>;
-
-  /**
-   * the matching parts of the path. The dynamic parts of the URI path.
-   */
-  pathname: Record<string, string>;
-
-  /**
-   * if the most specific path schema that is matched does not cover the whole
-   * of the URI's path. Then this field will be set to the remaining path
-   * segments.
-   *
-   * Example:
-   *
-   * If the path schema `/landing/:type` is the matched schema for the URI
-   * `/landing/soft/easy` then this field will be set to `"/easy"`.
-   */
-  tail?: string;
-}
-
-/**
- * RouteHandler represents the function signature of the handler function for
- * `lens://` protocol routing.
- */
-export interface RouteHandler {
-  (params: RouteParams): void;
-}
 
 export abstract class LensProtocolRouter extends Singleton {
   // Map between path schemas and the handlers
