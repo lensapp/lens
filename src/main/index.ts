@@ -27,6 +27,7 @@ import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
 import { getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
+import { bindBroadcastHandlers } from "../common/ipc";
 
 const workingDir = path.join(app.getPath("appData"), appName);
 let proxyPort: number;
@@ -64,6 +65,8 @@ app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
   logger.info("🐚 Syncing shell environment");
   await shellSync();
+
+  bindBroadcastHandlers();
 
   powerMonitor.on("shutdown", () => {
     app.exit();

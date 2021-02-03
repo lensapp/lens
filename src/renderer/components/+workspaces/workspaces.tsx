@@ -1,216 +1,89 @@
-import "./workspaces.scss";
-import React, { Fragment } from "react";
+import React from "react";
 import { observer } from "mobx-react";
-import { computed, observable, toJS } from "mobx";
-import { WizardLayout } from "../layout/wizard-layout";
-import { Workspace, WorkspaceId, workspaceStore } from "../../../common/workspace-store";
-import { v4 as uuid } from "uuid";
-import { ConfirmDialog } from "../confirm-dialog";
-import { Icon } from "../icon";
-import { Input } from "../input";
-import { cssNames, prevDefault } from "../../utils";
-import { Button } from "../button";
-import { isRequired, InputValidator } from "../input/input_validators";
-import { clusterStore } from "../../../common/cluster-store";
+import { computed} from "mobx";
+import { WorkspaceStore, workspaceStore } from "../../../common/workspace-store";
+import { commandRegistry } from "../../../extensions/registries/command-registry";
+import { Select } from "../select";
+import { navigate } from "../../navigation";
+import { CommandOverlay } from "../command-palette/command-container";
+import { AddWorkspace } from "./add-workspace";
+import { RemoveWorkspace } from "./remove-workspace";
+import { EditWorkspace } from "./edit-workspace";
+import { landingURL } from "../+landing-page";
+import { clusterViewURL } from "../cluster-manager/cluster-view.route";
 
 @observer
-export class Workspaces extends React.Component {
-  @observable editingWorkspaces = observable.map<WorkspaceId, Workspace>();
+export class ChooseWorkspace extends React.Component {
+  private static addActionId = "__add__";
+  private static removeActionId = "__remove__";
+  private static editActionId = "__edit__";
 
-  @computed get workspaces(): Workspace[] {
-    const currentWorkspaces: Map<WorkspaceId, Workspace> = new Map();
-
-    workspaceStore.enabledWorkspacesList.forEach((w) => {
-      currentWorkspaces.set(w.id, w);
+  @computed get options() {
+    const options = workspaceStore.enabledWorkspacesList.map((workspace) => {
+      return { value: workspace.id, label: workspace.name };
     });
-    const allWorkspaces = new Map([
-      ...currentWorkspaces,
-      ...this.editingWorkspaces,
-    ]);
 
-    return Array.from(allWorkspaces.values());
+    options.push({ value: ChooseWorkspace.addActionId, label: "Add workspace ..." });
+
+    if (options.length > 1) {
+      options.push({ value: ChooseWorkspace.removeActionId, label: "Remove workspace ..." });
+
+      if (workspaceStore.currentWorkspace.id !== WorkspaceStore.defaultId) {
+        options.push({ value: ChooseWorkspace.editActionId, label: "Edit current workspace ..." });
+      }
+    }
+
+    return options;
   }
 
-  renderInfo() {
-    return (
-      <Fragment>
-        <h2>What is a Workspace?</h2>
-        <p className="info">
-          Workspaces are used to organize number of clusters into logical groups.
-        </p>
-        <p>
-          A single workspaces contains a list of clusters and their full configuration.
-        </p>
-      </Fragment>
-    );
-  }
-
-  saveWorkspace = (id: WorkspaceId) => {
-    const workspace = new Workspace(this.editingWorkspaces.get(id));
-
-    if (workspaceStore.getById(id)) {
-      workspaceStore.updateWorkspace(workspace);
-      this.clearEditing(id);
+  onChange(id: string) {
+    if (id === ChooseWorkspace.addActionId) {
+      CommandOverlay.open(<AddWorkspace />);
 
       return;
     }
 
-    if (workspaceStore.addWorkspace(workspace)) {
-      this.clearEditing(id);
+    if (id === ChooseWorkspace.removeActionId) {
+      CommandOverlay.open(<RemoveWorkspace />);
+
+      return;
     }
-  };
 
-  addWorkspace = () => {
-    const workspaceId = uuid();
+    if (id === ChooseWorkspace.editActionId) {
+      CommandOverlay.open(<EditWorkspace />);
 
-    this.editingWorkspaces.set(workspaceId, new Workspace({
-      id: workspaceId,
-      name: "",
-      description: ""
-    }));
-  };
-
-  editWorkspace = (id: WorkspaceId) => {
-    const workspace = workspaceStore.getById(id);
-
-    this.editingWorkspaces.set(id, toJS(workspace));
-  };
-
-  activateWorkspace = (id: WorkspaceId) => {
-    const clusterId = workspaceStore.getById(id).lastActiveClusterId;
+      return;
+    }
 
     workspaceStore.setActive(id);
-    clusterStore.setActive(clusterId);
-  };
+    const clusterId = workspaceStore.getById(id).lastActiveClusterId;
 
-  clearEditing = (id: WorkspaceId) => {
-    this.editingWorkspaces.delete(id);
-  };
-
-  removeWorkspace = (id: WorkspaceId) => {
-    const workspace = workspaceStore.getById(id);
-
-    ConfirmDialog.open({
-      okButtonProps: {
-        label: `Remove Workspace`,
-        primary: false,
-        accent: true,
-      },
-      ok: () => {
-        this.clearEditing(id);
-        workspaceStore.removeWorkspace(workspace);
-      },
-      message: (
-        <div className="confirm flex column gaps">
-          <p>
-            Are you sure you want remove workspace <b>{workspace.name}</b>?
-          </p>
-          <p className="info">
-            All clusters within workspace will be cleared as well
-          </p>
-        </div>
-      ),
-    });
-  };
-
-  onInputKeypress = (evt: React.KeyboardEvent<any>, workspaceId: WorkspaceId) => {
-    if (evt.key == "Enter") {
-      // Trigget input validation
-      evt.currentTarget.blur();
-      evt.currentTarget.focus();
-      this.saveWorkspace(workspaceId);
+    if (clusterId) {
+      navigate(clusterViewURL({ params: { clusterId } }));
+    } else {
+      navigate(landingURL());
     }
-  };
+
+    CommandOverlay.close();
+  }
 
   render() {
     return (
-      <WizardLayout className="Workspaces" infoPanel={this.renderInfo()}>
-        <h2>
-          Workspaces
-        </h2>
-        <div className="items flex column gaps">
-          {this.workspaces.map(({ id: workspaceId, name, description, ownerRef }) => {
-            const isActive = workspaceStore.currentWorkspaceId === workspaceId;
-            const isDefault = workspaceStore.isDefault(workspaceId);
-            const isEditing = this.editingWorkspaces.has(workspaceId);
-            const editingWorkspace = this.editingWorkspaces.get(workspaceId);
-            const managed = !!ownerRef;
-            const className = cssNames("workspace flex gaps align-center", {
-              active: isActive,
-              editing: isEditing,
-              default: isDefault,
-            });
-            const existenceValidator: InputValidator = {
-              message: () => `Workspace '${name}' already exists`,
-              validate: value => !workspaceStore.getByName(value.trim())
-            };
-
-            return (
-              <div key={workspaceId} className={cssNames(className)}>
-                {!isEditing && (
-                  <Fragment>
-                    <span className="name flex gaps align-center">
-                      <a href="#" onClick={prevDefault(() => this.activateWorkspace(workspaceId))}>{name}</a>
-                      {isActive && <span> (current)</span>}
-                    </span>
-                    <span className="description">{description}</span>
-                    {!isDefault && !managed && (
-                      <Fragment>
-                        <Icon
-                          material="edit"
-                          tooltip="Edit"
-                          onClick={() => this.editWorkspace(workspaceId)}
-                        />
-                        <Icon
-                          material="delete"
-                          tooltip="Delete"
-                          onClick={() => this.removeWorkspace(workspaceId)}
-                        />
-                      </Fragment>
-                    )}
-                  </Fragment>
-                )}
-                {isEditing && (
-                  <Fragment>
-                    <Input
-                      className="name"
-                      placeholder={`Name`}
-                      value={editingWorkspace.name}
-                      onChange={v => editingWorkspace.name = v}
-                      onKeyPress={(e) => this.onInputKeypress(e, workspaceId)}
-                      validators={[isRequired, existenceValidator]}
-                      autoFocus
-                    />
-                    <Input
-                      className="description"
-                      placeholder={`Description`}
-                      value={editingWorkspace.description}
-                      onChange={v => editingWorkspace.description = v}
-                      onKeyPress={(e) => this.onInputKeypress(e, workspaceId)}
-                    />
-                    <Icon
-                      material="save"
-                      tooltip="Save"
-                      onClick={() => this.saveWorkspace(workspaceId)}
-                    />
-                    <Icon
-                      material="cancel"
-                      tooltip="Cancel"
-                      onClick={() => this.clearEditing(workspaceId)}
-                    />
-                  </Fragment>
-                )}
-              </div>
-            );
-          })}
-        </div>
-        <Button
-          primary
-          className="box left"
-          label="Add Workspace"
-          onClick={this.addWorkspace}
-        />
-      </WizardLayout>
+      <Select
+        onChange={(v) => this.onChange(v.value)}
+        components={{ DropdownIndicator: null, IndicatorSeparator: null }}
+        menuIsOpen={true}
+        options={this.options}
+        autoFocus={true}
+        escapeClearsValue={false}
+        placeholder="Switch to workspace" />
     );
   }
 }
+
+commandRegistry.add({
+  id: "workspace.chooseWorkspace",
+  title: "Workspace: Switch to workspace ...",
+  scope: "global",
+  action: () => CommandOverlay.open(<ChooseWorkspace />)
+});

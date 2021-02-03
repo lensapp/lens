@@ -1,7 +1,7 @@
 import "../common/cluster-ipc";
 import type http from "http";
 import { ipcMain } from "electron";
-import { autorun } from "mobx";
+import { autorun, reaction } from "mobx";
 import { clusterStore, getClusterIdFromHost } from "../common/cluster-store";
 import { Cluster } from "./cluster";
 import logger from "./logger";
@@ -12,14 +12,14 @@ export class ClusterManager extends Singleton {
   constructor(public readonly port: number) {
     super();
     // auto-init clusters
-    autorun(() => {
-      clusterStore.enabledClustersList.forEach(cluster => {
+    reaction(() => clusterStore.enabledClustersList, (clusters) => {
+      clusters.forEach((cluster) => {
         if (!cluster.initialized && !cluster.initializing) {
           logger.info(`[CLUSTER-MANAGER]: init cluster`, cluster.getMeta());
           cluster.init(port);
         }
       });
-    });
+    }, { fireImmediately: true });
 
     // auto-stop removed clusters
     autorun(() => {

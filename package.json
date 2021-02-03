@@ -26,7 +26,7 @@
     "build:mac": "yarn run compile && electron-builder --mac --dir -c.productName=Lens",
     "build:win": "yarn run compile && electron-builder --win --dir -c.productName=Lens",
     "test": "jest --env=jsdom src $@",
-    "integration": "jest --coverage integration $@",
+    "integration": "jest --runInBand integration",
     "dist": "yarn run compile && electron-builder --publish onTag",
     "dist:win": "yarn run compile && electron-builder --publish onTag --x64 --ia32",
     "dist:dir": "yarn run dist --dir -c.compression=store -c.mac.identity=null",
@@ -158,7 +158,9 @@
       ]
     },
     "nsis": {
-      "include": "build/installer.nsh"
+      "include": "build/installer.nsh",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true	  
     },
     "publish": [
       {
@@ -289,7 +291,7 @@
     "@types/webpack-dev-server": "^3.11.1",
     "@types/webpack-env": "^1.15.2",
     "@types/webpack-node-externals": "^1.7.1",
-    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.0.0",
     "ace-builds": "^1.4.11",
     "ansi_up": "^4.0.4",
