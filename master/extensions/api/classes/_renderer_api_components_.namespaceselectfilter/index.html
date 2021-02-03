@@ -850,6 +850,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#accessors" class="md-nav__link">
+    Accessors
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#methods" class="md-nav__link">
     Methods
   </a>
@@ -920,6 +927,26 @@
           <li class="md-nav__item">
   <a href="#static-optional-contexttype" class="md-nav__link">
     Static Optional contextType
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accessors_1" class="md-nav__link">
+    Accessors
+  </a>
+  
+    <nav class="md-nav" aria-label="Accessors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#placeholder" class="md-nav__link">
+    placeholder
   </a>
   
 </li>
@@ -1015,8 +1042,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#formatoptionlabel" class="md-nav__link">
+    formatOptionLabel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#optional-getsnapshotbeforeupdate" class="md-nav__link">
     Optional getSnapshotBeforeUpdate
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#onchange" class="md-nav__link">
+    onChange
   </a>
   
 </li>
@@ -1086,6 +1127,10 @@
 <li><a href="./#state">state</a></li>
 <li><a href="./#static-optional-contexttype">contextType</a></li>
 </ul>
+<h3 id="accessors">Accessors<a class="headerlink" href="#accessors" title="Permanent link">#</a></h3>
+<ul>
+<li><a href="./#placeholder">placeholder</a></li>
+</ul>
 <h3 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">#</a></h3>
 <ul>
 <li><a href="./#optional-unsafe_componentwillmount">UNSAFE_componentWillMount</a></li>
@@ -1099,7 +1144,9 @@
 <li><a href="./#optional-componentwillunmount">componentWillUnmount</a></li>
 <li><a href="./#optional-componentwillupdate">componentWillUpdate</a></li>
 <li><a href="./#forceupdate">forceUpdate</a></li>
+<li><a href="./#formatoptionlabel">formatOptionLabel</a></li>
 <li><a href="./#optional-getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></li>
+<li><a href="./#onchange">onChange</a></li>
 <li><a href="./#render">render</a></li>
 <li><a href="./#setstate">setState</a></li>
 <li><a href="./#optional-shouldcomponentupdate">shouldComponentUpdate</a></li>
@@ -1205,6 +1252,11 @@ https://reactjs.org/docs/refs-and-the-dom.html#legacy-api-string-refs</p>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong><code>see</code></strong> https://reactjs.org/docs/context.html#classcontexttype</p>
+<h2 id="accessors_1">Accessors<a class="headerlink" href="#accessors_1" title="Permanent link">#</a></h2>
+<h3 id="placeholder">placeholder<a class="headerlink" href="#placeholder" title="Permanent link">#</a></h3>
+<p>• <strong>get placeholder</strong>(): <em>React.ReactNode</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1b492f27a/src/renderer/components/+namespaces/namespace-select.tsx#L84">src/renderer/components/+namespaces/namespace-select.tsx:84</a></em></p>
+<p><strong>Returns:</strong> <em>React.ReactNode</em></p>
 <h2 id="methods_1">Methods<a class="headerlink" href="#methods_1" title="Permanent link">#</a></h2>
 <h3 id="optional-unsafe_componentwillmount"><code>Optional</code> UNSAFE_componentWillMount<a class="headerlink" href="#optional-unsafe_componentwillmount" title="Permanent link">#</a></h3>
 <p>▸ <strong>UNSAFE_componentWillMount</strong>(): <em>void</em></p>
@@ -1457,6 +1509,31 @@ prevents this from being invoked.</p>
 <p>▸ (): <em>void</em></p>
 <p><strong>Returns:</strong> <em>void</em></p>
 <hr />
+<h3 id="formatoptionlabel">formatOptionLabel<a class="headerlink" href="#formatoptionlabel" title="Permanent link">#</a></h3>
+<p>▸ <strong>formatOptionLabel</strong>(<code>__namedParameters</code>: object): <em>object</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1b492f27a/src/renderer/components/+namespaces/namespace-select.tsx#L99">src/renderer/components/+namespaces/namespace-select.tsx:99</a></em></p>
+<p><strong>Parameters:</strong></p>
+<p>▪ <strong>__namedParameters</strong>: <em>object</em></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td>string &#124; number &#124; false &#124; true &#124; object &#124; ReactElement‹any, string &#124; function &#124; object› &#124; ReactNodeArray‹› &#124; ReactPortal‹›</td>
+</tr>
+<tr>
+<td><code>namespace</code></td>
+<td>any</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>object</em></p>
+<hr />
 <h3 id="optional-getsnapshotbeforeupdate"><code>Optional</code> getSnapshotBeforeUpdate<a class="headerlink" href="#optional-getsnapshotbeforeupdate" title="Permanent link">#</a></h3>
 <p>▸ <strong>getSnapshotBeforeUpdate</strong>(<code>prevProps</code>: Readonly‹P›, <code>prevState</code>: Readonly‹S›): <em>SS | null</em></p>
 <p><em>Inherited from <a href="../_renderer_api_components_.pagelayout/">PageLayout</a>.<a href="../_renderer_api_components_.pagelayout/#optional-getsnapshotbeforeupdate">getSnapshotBeforeUpdate</a></em></p>
@@ -1487,10 +1564,30 @@ lifecycle events from running.</p>
 </table>
 <p><strong>Returns:</strong> <em>SS | null</em></p>
 <hr />
+<h3 id="onchange">onChange<a class="headerlink" href="#onchange" title="Permanent link">#</a></h3>
+<p>▸ <strong>onChange</strong>(<code>__namedParameters</code>: [any]): <em>void</em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1b492f27a/src/renderer/components/+namespaces/namespace-select.tsx#L115">src/renderer/components/+namespaces/namespace-select.tsx:115</a></em></p>
+<p><strong>Parameters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__namedParameters</code></td>
+<td>[any]</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <em>void</em></p>
+<hr />
 <h3 id="render">render<a class="headerlink" href="#render" title="Permanent link">#</a></h3>
 <p>▸ <strong>render</strong>(): <em>Element‹›</em></p>
 <p><em>Overrides void</em></p>
-<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/2c99cd042/src/renderer/components/+namespaces/namespace-select.tsx#L83">src/renderer/components/+namespaces/namespace-select.tsx:83</a></em></p>
+<p><em>Defined in <a href="https://github.com/lensapp/lens/blob/1b492f27a/src/renderer/components/+namespaces/namespace-select.tsx#L123">src/renderer/components/+namespaces/namespace-select.tsx:123</a></em></p>
 <p><strong>Returns:</strong> <em>Element‹›</em></p>
 <hr />
 <h3 id="setstate">setState<a class="headerlink" href="#setstate" title="Permanent link">#</a></h3>
