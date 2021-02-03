@@ -24,6 +24,8 @@ describe("protocol router tests", () => {
     (extensionLoader as any).instances.clear();
     LensProtocolRouterMain.resetInstance();
     lpr = LensProtocolRouterMain.getInstance<LensProtocolRouterMain>();
+    lpr.extensionsLoaded = true;
+    lpr.rendererLoaded = true;
   });
 
   it("should throw on non-lens URLS", async () => {
