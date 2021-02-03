@@ -170,7 +170,8 @@
       }
     ],
     "snap": {
-      "confinement": "classic"
+      "confinement": "classic",
+      "executableName": "kontena-lens"
     }
   },
   "lens": {
