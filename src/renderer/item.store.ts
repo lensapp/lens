@@ -22,13 +22,17 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     return this.items.filter(item => this.selectedItemsIds.get(item.getId()));
   }
 
+  public getItems(): T[] {
+    return this.items.toJS();
+  }
+
   getByName(name: string, ...args: any[]): T;
   getByName(name: string): T {
     return this.items.find(item => item.getName() === name);
   }
 
-  getIndex(item: T): number {
-    return this.items.findIndex(i => i === item);
+  getIndexById(id: string): number {
+    return this.items.findIndex(item => item.getId() === id);
   }
 
   @action
