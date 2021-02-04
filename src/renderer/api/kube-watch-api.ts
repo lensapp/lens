@@ -37,8 +37,9 @@ export interface IKubeWatchReconnectOptions {
 }
 
 export interface IKubeWatchLog {
-  message: string | Error;
+  message: string | string[] | Error;
   meta?: object;
+  cssStyle?: string;
 }
 
 @autobind()
@@ -250,7 +251,7 @@ export class KubeWatchApi {
 
         if (done) break; // exit
 
-        const events = (jsonBuffer + value).split("\n");
+        const events = (jsonBuffer + value).trim().split("\n");
 
         jsonBuffer = this.processBuffer(events);
       }
@@ -273,12 +274,29 @@ export class KubeWatchApi {
       try {
         const kubeEvent: IKubeWatchEvent = JSON.parse(json);
         const message = this.getMessage(kubeEvent);
+        const { data, namespace } = message;
 
-        if (!this.namespaces.includes(message.namespace)) {
-          continue; // skip updates from non-watching resources context
+        if (!this.isAllowedApi(message.api)) {
+          return;
         }
 
-        this.onMessage.emit(message);
+        // log all data events
+        if (data) {
+          this.log({
+            message: `[${data.type}] ${data.object.kind} in ${namespace || "(cluster)"}`,
+            meta: data,
+            cssStyle: `color: ${[
+              data.type === "ADDED" && "green",
+              data.type === "MODIFIED" && "darkgray",
+              data.type === "DELETED" && "red",
+            ].filter(Boolean)};`,
+          });
+        }
+
+        // skip updates from non-watching resources context
+        if (!namespace || this.namespaces.includes(namespace)) {
+          this.onMessage.emit(message);
+        }
       } catch (error) {
         return json;
       }
@@ -353,20 +371,21 @@ export class KubeWatchApi {
     }
   }
 
-  protected log({ message, meta = {} }: IKubeWatchLog) {
+  protected log({ message, cssStyle = "", meta = {} }: IKubeWatchLog) {
     if (isProduction && !isDebugging) {
       return;
     }
 
-    const logMessage = `%c[KUBE-WATCH-API]: ${String(message).toUpperCase()}`;
-    const isError = message instanceof Error;
-    const textStyle = `font-weight: bold;`;
-    const time = new Date().toLocaleString();
+    const logInfo = [`%c[KUBE-WATCH-API]:`, `font-weight: bold; ${cssStyle}`, message].flat().map(String);
+    const logMeta = {
+      time: new Date().toLocaleString(),
+      ...meta,
+    };
 
-    if (isError) {
-      console.error(logMessage, textStyle, { time, ...meta });
+    if (message instanceof Error) {
+      console.error(...logInfo, logMeta);
     } else {
-      console.info(logMessage, textStyle, { time, ...meta });
+      console.info(...logInfo, logMeta);
     }
   }
 }

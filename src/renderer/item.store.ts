@@ -27,6 +27,10 @@ export abstract class ItemStore<T extends ItemObject = ItemObject> {
     return this.items.find(item => item.getName() === name);
   }
 
+  getIndex(item: T): number {
+    return this.items.findIndex(i => i === item);
+  }
+
   @action
   protected sortItems(items: T[] = this.items, sorting?: ((item: T) => any)[], order?: "asc" | "desc"): T[] {
     return orderBy(items, sorting || this.defaultSorting, order);

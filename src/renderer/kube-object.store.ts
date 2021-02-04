@@ -204,12 +204,12 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   protected eventsBuffer = observable.array<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {
-    kubeWatchApi.onMessage.addListener(({ store, data }: IKubeWatchMessage<T>) => {
-      if (!this.isLoaded || store !== this) return;
-      this.eventsBuffer.push(data);
+    kubeWatchApi.onMessage.addListener((evt: IKubeWatchMessage<T>) => {
+      if (!this.isLoaded || evt.store !== this) return;
+      this.eventsBuffer.push(evt.data);
     });
 
-    reaction(() => this.eventsBuffer.length > 0, this.updateFromEventsBuffer, {
+    reaction(() => this.eventsBuffer.length, this.updateFromEventsBuffer, {
       delay
     });
   }
@@ -224,11 +224,14 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   @action
   protected updateFromEventsBuffer() {
-    const items = this.items.toJS();
+    const eventsBuffer = this.eventsBuffer.clear();
 
-    for (const { type, object } of this.eventsBuffer.clear()) {
-      const index = items.findIndex(item => item.getId() === object.metadata?.uid);
-      const item = items[index];
+    if (!eventsBuffer.length) {
+      return;
+    }
+
+    for (const { type, object } of eventsBuffer) {
+      const item = this.getById(object.metadata?.uid);
       const api = apiManager.getApiByKind(object.kind, object.apiVersion);
 
       switch (type) {
@@ -237,20 +240,22 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
           const newItem = new api.objectConstructor(object);
 
           if (!item) {
-            items.push(newItem);
+            this.items.push(newItem);
           } else {
-            items.splice(index, 1, newItem);
+            const index = this.getIndex(item);
+
+            this.items.splice(index, 1, newItem);
           }
           break;
         case "DELETED":
-          if (item) {
-            items.splice(index, 1);
-          }
+          this.items.remove(item);
           break;
       }
     }
 
-    // update items
-    this.items.replace(this.sortItems(items.slice(-this.bufferSize)));
+    // sort and limit items to store's maximum
+    const newItems = this.sortItems(this.items.slice(-this.bufferSize));
+
+    this.items.replace(newItems);
   }
 }
