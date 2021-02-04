@@ -179,7 +179,8 @@
       "node-menu",
       "metrics-cluster-feature",
       "license-menu-item",
-      "kube-object-event-status"
+      "kube-object-event-status",
+      "survey"
     ]
   },
   "dependencies": {
