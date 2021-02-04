@@ -1067,7 +1067,7 @@
 <li>Click <strong>Disable</strong> on the extension you want to disable.</li>
 </ol>
 </div>
-<p>The example above logs messages when the extension is enabled and disabled. </p>
+<p>The example above logs messages when the extension is enabled and disabled.</p>
 <h3 id="clusterpages"><code>clusterPages</code><a class="headerlink" href="#clusterpages" title="Permanent link">#</a></h3>
 <p>Cluster pages appear in the cluster dashboard. Use cluster pages to display information about or add functionality to the active cluster. It is also possible to include custom details from other clusters. Use your extension to access Kubernetes resources in the active cluster with <a href="../stores#clusterstore"><code>clusterStore</code></a>.</p>
 <p>Add a cluster page definition to a <code>LensRendererExtension</code> subclass with the following example:</p>
@@ -1140,7 +1140,7 @@
 <ul>
 <li><code>target</code> links to the relevant cluster page using <code>pageId</code>.</li>
 <li><code>pageId</code> takes the value of the relevant cluster page's <code>id</code> property.</li>
-<li><code>title</code> sets the name of the cluster page menu item that will appear in the left side menu. </li>
+<li><code>title</code> sets the name of the cluster page menu item that will appear in the left side menu.</li>
 <li><code>components</code> is used to set an icon that appears to the left of the <code>title</code> text in the left side menu.</li>
 </ul>
 <p>The above example creates a menu item that reads <strong>Hello World</strong>. When users click <strong>Hello World</strong>, the cluster dashboard will show the contents of <code>Example Page</code>.</p>
@@ -1215,11 +1215,20 @@
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>The above defines two cluster pages and three cluster page menu objects. The three cluster page menu objects include one parent menu item and two sub menu items. Parent items require an <code>id</code> value, whereas sub items require a <code>parentId</code> value. The value of the sub item <code>parentId</code> will match the value of the corresponding parent item <code>id</code>. Parent items don't require a <code>target</code> value. Assign values to the remaining properties as explained above. </p>
+<p>The above defines two cluster pages and three cluster page menu objects.
+The cluster page definitions are straightforward.
+The three cluster page menu objects include one parent menu item and two sub menu items.
+The first cluster page menu object defines the parent of a foldout submenu.
+Setting the <code>id</code> field in a cluster page menu definition implies that it is defining a foldout submenu.
+Also note that the <code>target</code> field is not specified (it is ignored if the <code>id</code> field is specified).
+This cluster page menu object specifies the <code>title</code> and <code>components</code> fields, which are used in displaying the menu item in the cluster dashboard sidebar.
+Initially the submenu is hidden.
+Activating this menu item toggles on and off the appearance of the submenu below it.
+The remaining two cluster page menu objects define the contents of the submenu.
+A cluster page menu object is defined to be a submenu item by setting the <code>parentId</code> field to the id of the parent of a foldout submenu, <code>"example"</code> in this case.</p>
 <p>This is what the example will look like, including how the menu item will appear in the secondary left nav:</p>
-<p><img alt="clusterPageMenus" src="../images/clusterpagemenus.png" /></p>
 <h3 id="globalpages"><code>globalPages</code><a class="headerlink" href="#globalpages" title="Permanent link">#</a></h3>
-<p>Global pages are independent of the cluster dashboard and can fill the entire Lens UI. Their primary use is to display information and provide functionality across clusters, including customized data and functionality unique to your extension. </p>
+<p>Global pages are independent of the cluster dashboard and can fill the entire Lens UI. Their primary use is to display information and provide functionality across clusters, including customized data and functionality unique to your extension.</p>
 <p>Typically, you would use a <a href="#globalpagemenus">global page menu</a> located in the left nav to trigger a global page. You can also trigger a global page with a <a href="../main-extension#appmenus">custom app menu selection</a> from a Main Extension or a <a href="#statusbaritems">custom status bar item</a>. Unlike cluster pages, users can trigger global pages even when there is no active cluster.</p>
 <p>The following example defines a <code>LensRendererExtension</code> subclass with a single global page definition:</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="p">{</span> <span class="nx">LensRendererExtension</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@k8slens/extensions&#39;</span><span class="p">;</span>
@@ -1367,16 +1376,22 @@ They can be installed and uninstalled by the Lens user from the cluster <strong>
 <p>The four methods listed above are defined as follows:</p>
 <ul>
 <li>
-<p>The <code>install()</code> method installs Kubernetes resources using the <code>applyResources()</code> method, or by directly accessing the <a href="../../api/">Kubernetes API</a>. This method is typically called when a user indicates that they want to install the feature (i.e., by clicking <strong>Install</strong> for the feature in the cluster settings page).</p>
+<p>The <code>install()</code> method installs Kubernetes resources using the <code>applyResources()</code> method, or by directly accessing the <a href="../../api/">Kubernetes API</a>.
+This method is typically called when a user indicates that they want to install the feature (i.e., by clicking <strong>Install</strong> for the feature in the cluster settings page).</p>
 </li>
 <li>
-<p>The <code>upgrade()</code> method upgrades the Kubernetes resources already installed, if they are relevant to the feature. This method is typically called when a user indicates that they want to upgrade the feature (i.e., by clicking <strong>Upgrade</strong> for the feature in the cluster settings page).</p>
+<p>The <code>upgrade()</code> method upgrades the Kubernetes resources already installed, if they are relevant to the feature.
+This method is typically called when a user indicates that they want to upgrade the feature (i.e., by clicking <strong>Upgrade</strong> for the feature in the cluster settings page).</p>
 </li>
 <li>
-<p>The <code>uninstall()</code> method uninstalls Kubernetes resources using the <a href="../../api/">Kubernetes API</a>. This method is typically called when a user indicates that they want to uninstall the feature (i.e., by clicking <strong>Uninstall</strong> for the feature in the cluster settings page).</p>
+<p>The <code>uninstall()</code> method uninstalls Kubernetes resources using the <a href="../../api/">Kubernetes API</a>.
+This method is typically called when a user indicates that they want to uninstall the feature (i.e., by clicking <strong>Uninstall</strong> for the feature in the cluster settings page).</p>
 </li>
 <li>
-<p>The <code>updateStatus()</code> method provides the current status information in the <code>status</code> field of the <code>ClusterFeature.Feature</code> parent class. Lens periodically calls this method to determine details about the feature's current status. Consider using the following properties with <code>updateStatus()</code>:</p>
+<p>The <code>updateStatus()</code> method provides the current status information in the <code>status</code> field of the <code>ClusterFeature.Feature</code> parent class.
+Lens periodically calls this method to determine details about the feature's current status.
+The implementation of this method should uninstall Kubernetes resources using the Kubernetes api (<code>K8sApi</code>)
+Consider using the following properties with <code>updateStatus()</code>:</p>
 <ul>
 <li>
 <p><code>status.currentVersion</code> and <code>status.latestVersion</code> may be displayed by Lens in the feature's description.</p>
@@ -1485,7 +1500,7 @@ The file <code>../resources/example-pod.yml</code> could contain:</p>
 <ul>
 <li><code>title</code> sets the heading text displayed on the Preferences page.</li>
 <li><code>components</code> specifies two <code>React.Component</code> objects that define the interface for the preference.<ul>
-<li><code>Input</code> specifies an interactive input element for the preference. </li>
+<li><code>Input</code> specifies an interactive input element for the preference.</li>
 <li><code>Hint</code> provides descriptive information for the preference, shown below the <code>Input</code> element.</li>
 </ul>
 </li>
@@ -1560,22 +1575,24 @@ Alternatively, you can use React's state management, though <code>mobx</code> is
 
   <span class="nx">statusBarItems</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-      <span class="nx">item</span><span class="o">:</span> <span class="p">(</span>
-        <span class="o">&lt;</span><span class="nx">div</span>
-          <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;flex align-center gaps&quot;</span>
-          <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">)}</span>
-        <span class="o">&gt;</span>
-          <span class="o">&lt;</span><span class="nx">HelpIcon</span> <span class="o">/&gt;</span>
-          <span class="nx">My</span> <span class="nx">Status</span> <span class="nx">Bar</span> <span class="nx">Item</span>
-        <span class="o">&lt;</span><span class="err">/div&gt;</span>
-      <span class="p">),</span>
+      <span class="nx">components</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">Item</span><span class="o">:</span> <span class="p">(</span>
+          <span class="o">&lt;</span><span class="nx">div</span>
+            <span class="nx">className</span><span class="o">=</span><span class="s2">&quot;flex align-center gaps&quot;</span>
+            <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">navigate</span><span class="p">(</span><span class="s2">&quot;help&quot;</span><span class="p">)}</span>
+          <span class="o">&gt;</span>
+            <span class="o">&lt;</span><span class="nx">HelpIcon</span> <span class="o">/&gt;</span>
+            <span class="nx">My</span> <span class="nx">Status</span> <span class="nx">Bar</span> <span class="nx">Item</span>
+          <span class="o">&lt;</span><span class="err">/div&gt;</span>
+        <span class="p">)</span>
+      <span class="p">},</span>
     <span class="p">},</span>
   <span class="p">];</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>The properties of the <code>statusBarItems</code> array objects are defined as follows:</p>
 <ul>
-<li><code>item</code> specifies the <code>React.Component</code> that will be shown on the status bar. By default, items are added starting from the right side of the status bar. Due to limited space in the status bar, <code>item</code> will typically specify only an icon or a short string of text. The example above reuses the <code>HelpIcon</code> from the <a href="#globalpagemenus"><code>globalPageMenus</code> guide</a>. </li>
+<li><code>Item</code> specifies the <code>React.Component</code> that will be shown on the status bar. By default, items are added starting from the right side of the status bar. Due to limited space in the status bar, <code>Item</code> will typically specify only an icon or a short string of text. The example above reuses the <code>HelpIcon</code> from the <a href="#globalpagemenus"><code>globalPageMenus</code> guide</a>.</li>
 <li><code>onClick</code> determines what the <code>statusBarItem</code> does when it is clicked. In the example, <code>onClick</code> is set to a function that calls the <code>LensRendererExtension</code> <code>navigate()</code> method. <code>navigate</code> takes the <code>id</code> of the associated global page as a parameter. Thus, clicking the status bar item activates the associated global pages.</li>
 </ul>
 <h3 id="kubeobjectmenuitems"><code>kubeObjectMenuItems</code><a class="headerlink" href="#kubeobjectmenuitems" title="Permanent link">#</a></h3>
@@ -1603,7 +1620,7 @@ Alternatively, you can use React's state management, though <code>mobx</code> is
 </code></pre></div>
 <p><code>kubeObjectMenuItems</code> is an array of objects matching the <code>KubeObjectMenuRegistration</code> interface. The example above adds a menu item for namespaces in the cluster dashboard. The properties of the <code>kubeObjectMenuItems</code> array objects are defined as follows:</p>
 <ul>
-<li><code>kind</code> specifies the Kubernetes resource type the menu item will apply to. </li>
+<li><code>kind</code> specifies the Kubernetes resource type the menu item will apply to.</li>
 <li><code>apiVersion</code> specifies the Kubernetes API version number to use with the resource type.</li>
 <li><code>components</code> defines the menu item's appearance and behavior.</li>
 <li><code>MenuItem</code> provides a function that returns a <code>React.Component</code> given a set of menu item properties. In this example a <code>NamespaceMenuItem</code> object is returned.</li>
@@ -1695,8 +1712,19 @@ These custom details appear on the details page for a specific resource, such as
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>Since <code>NamespaceDetailsItem</code> extends <code>React.Component&lt;Component.KubeObjectDetailsProps&lt;K8sApi.Namespace&gt;&gt;</code>, it can access the current namespace object (type <code>K8sApi.Namespace</code>) through <code>this.props.object</code>. You can query this object for many details about the current namespace. In the example above, <code>componentDidMount()</code> gets the namespace's name using the <code>K8sApi.Namespace</code> <code>getName()</code> method. Use the namespace's name to limit the list of pods only to those in the relevant namespace. To get this list of pods, this example uses the Kubernetes pods API <code>K8sApi.podsApi.list()</code> method. The <code>K8sApi.podsApi</code> is automatically configured for the active cluster.</p>
-<p>Note that <code>K8sApi.podsApi.list()</code> is an asynchronous method. Getting the pods list should occur prior to rendering the <code>NamespaceDetailsItem</code>. It is a common technique in React development to await async calls in <code>componentDidMount()</code>. However, <code>componentDidMount()</code> is called right after the first call to <code>render()</code>. In order to effect a subsequent <code>render()</code> call, React must be made aware of a state change. Like in the <a href="#apppreferences"><code>appPreferences</code> guide</a>, <a href="https://mobx.js.org/README.html"><code>mobx</code></a> and <a href="https://github.com/mobxjs/mobx-react#mobx-react"><code>mobx-react</code></a> are used to ensure <code>NamespaceDetailsItem</code> renders when the pods list updates. This is done simply by marking the <code>pods</code> field as an <code>observable</code> and the <code>NamespaceDetailsItem</code> class itself as an <code>observer</code>.</p>
+<p>Since <code>NamespaceDetailsItem</code> extends <code>React.Component&lt;Component.KubeObjectDetailsProps&lt;K8sApi.Namespace&gt;&gt;</code>, it can access the current namespace object (type <code>K8sApi.Namespace</code>) through <code>this.props.object</code>.
+You can query this object for many details about the current namespace.
+In the example above, <code>componentDidMount()</code> gets the namespace's name using the <code>K8sApi.Namespace</code> <code>getName()</code> method.
+Use the namespace's name to limit the list of pods only to those in the relevant namespace.
+To get this list of pods, this example uses the Kubernetes pods API <code>K8sApi.podsApi.list()</code> method.
+The <code>K8sApi.podsApi</code> is automatically configured for the active cluster.</p>
+<p>Note that <code>K8sApi.podsApi.list()</code> is an asynchronous method.
+Getting the pods list should occur prior to rendering the <code>NamespaceDetailsItem</code>.
+It is a common technique in React development to await async calls in <code>componentDidMount()</code>.
+However, <code>componentDidMount()</code> is called right after the first call to <code>render()</code>.
+In order to effect a subsequent <code>render()</code> call, React must be made aware of a state change.
+Like in the <a href="#apppreferences"><code>appPreferences</code> guide</a>, <a href="https://mobx.js.org/README.html"><code>mobx</code></a> and <a href="https://github.com/mobxjs/mobx-react#mobx-react"><code>mobx-react</code></a> are used to ensure <code>NamespaceDetailsItem</code> renders when the pods list updates.
+This is done simply by marking the <code>pods</code> field as an <code>observable</code> and the <code>NamespaceDetailsItem</code> class itself as an <code>observer</code>.</p>
 <p>Finally, the <code>NamespaceDetailsItem</code> renders using the <code>render()</code> method.
 Details are placed in drawers, and using <code>Component.DrawerTitle</code> provides a separator from details above this one.
 Multiple details in a drawer can be placed in <code>&lt;Component.DrawerItem&gt;</code> elements for further separation, if desired.

@@ -964,16 +964,16 @@
 <p>If you are using the <a href="https://github.com/lensapp/generator-lens-ext">Yeoman Lens Extension Generator</a> to scaffold extension project. The testing environment for render process are already setup for you. Just use <code>npm start</code> or <code>yarn test</code> to run the tests.</p>
 <p>For example, I have a component <code>GlobalPageMenuIcon</code> and want to test if <code>props.navigate</code> is called when user clicks the icon.</p>
 <p>My component <code>GlobalPageMenuIcon</code></p>
-<div class="highlight"><pre><span></span><code>import React from &quot;react&quot;
-import { Component: { Icon } } from &quot;@k8slens/extensions&quot;;
+<div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Component</span><span class="o">:</span> <span class="p">{</span> <span class="nx">Icon</span> <span class="p">}</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;@k8slens/extensions&quot;</span><span class="p">;</span>
 
-const GlobalPageMenuIcon = ({ navigate }: { navigate?: () =&gt; void }): JSX.Element =&gt; (
-  &lt;Icon
-    material=&quot;trip_origin&quot;
-    onClick={() =&gt; navigate()}
-    data-testid=&quot;global-page-menu-icon&quot;
-  /&gt;
-)
+<span class="kd">const</span> <span class="nx">GlobalPageMenuIcon</span> <span class="o">=</span> <span class="p">({</span> <span class="nx">navigate</span> <span class="p">}</span><span class="o">:</span> <span class="p">{</span> <span class="nx">navigate</span><span class="o">?:</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">void</span> <span class="p">})</span><span class="o">:</span> <span class="nx">JSX</span><span class="p">.</span><span class="nx">Element</span> <span class="o">=&gt;</span> <span class="p">(</span>
+  <span class="o">&lt;</span><span class="nx">Icon</span>
+    <span class="nx">material</span><span class="o">=</span><span class="s2">&quot;trip_origin&quot;</span>
+    <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">navigate</span><span class="p">()}</span>
+    <span class="nx">data</span><span class="o">-</span><span class="nx">testid</span><span class="o">=</span><span class="s2">&quot;global-page-menu-icon&quot;</span>
+  <span class="o">/&gt;</span>
+<span class="p">)</span>
 </code></pre></div>
 <p>The test</p>
 <div class="highlight"><pre><span></span><code><span class="k">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span>
@@ -999,7 +999,7 @@ const GlobalPageMenuIcon = ({ navigate }: { navigate?: () =&gt; void }): JSX.Ele
 <h3 id="renderer-process-logs">Renderer Process Logs<a class="headerlink" href="#renderer-process-logs" title="Permanent link">#</a></h3>
 <p>In the Renderer process, <code>console.log()</code> is printed in the Console in Developer Tools (<strong>View</strong> &gt; <strong>Toggle Developer Tools</strong>).</p>
 <h3 id="main-process-logs">Main Process Logs<a class="headerlink" href="#main-process-logs" title="Permanent link">#</a></h3>
-<p>Viewing the logs from the Main process is a little trickier, since they cannot be printed using Developer Tools. </p>
+<p>Viewing the logs from the Main process is a little trickier, since they cannot be printed using Developer Tools.</p>
 <h4>macOS</h4>
 <p>On macOS, view the Main process logs by running Lens from the terminal:</p>
 <div class="highlight"><pre><span></span><code>/Applications/Lens.app/Contents/MacOS/Lens
