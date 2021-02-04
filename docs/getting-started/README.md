@@ -28,7 +28,7 @@ Review the [System Requirements](/supporting/requirements/) to check if your com
 
 See the [Download Lens](https://github.com/lensapp/lens/releases) page for a complete list of available installation options.
 
-After installing Lens manually (not using a package manager file such as `.deb` or `.rpm`) the following will need to be done in allow protocol handling.
+After installing Lens manually (not using a package manager file such as `.deb` or `.rpm`) the following will need to be done to allow protocol handling.
 This assumes that your linux distribution uses `xdg-open` and the `xdg-*` suite of programs for determining which application can handle custom URIs.
 
 1. Create a file called `lens.desktop` in either `~/.local/share/applications/` or `/usr/share/applications` (if you have permissions and are installing Lens for all users).

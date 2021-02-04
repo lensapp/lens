@@ -32,6 +32,13 @@ export default class ExampleExtensionMain extends LensMainExtension {
 }
 ```
 
+For testing the routing of URIs the `open` (on macOS) or `xdg-open` (on most linux) CLI utilities can be used.
+For the above handler, the following URI would be always routed to it:
+
+```
+open lens://extension/example-extension/
+```
+
 ## Deregistering A Protocol Handler
 
 All that is needed to deregister a handler is to remove it from the array of handlers.
