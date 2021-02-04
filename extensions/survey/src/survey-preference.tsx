@@ -21,7 +21,7 @@ export class SurveyPreferenceInput extends React.Component<{survey: SurveyPrefer
 export class SurveyPreferenceHint extends React.Component {
   render() {
     return (
-      <span>Surveys are used to improve the Lens experience.</span>
+      <span>This will allow you to participate in surveys to improve the Lens experience.</span>
     );
   }
 }
