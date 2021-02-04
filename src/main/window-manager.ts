@@ -8,6 +8,7 @@ import { initMenu } from "./menu";
 import { initTray } from "./tray";
 import { Singleton } from "../common/utils";
 import { ClusterFrameInfo, clusterFrameMap } from "../common/cluster-frames";
+import logger from "./logger";
 
 export class WindowManager extends Singleton {
   protected mainWindow: BrowserWindow;
@@ -81,10 +82,19 @@ export class WindowManager extends Singleton {
         this.splashWindow = null;
         app.dock?.hide(); // hide icon in dock (mac-os)
       });
+
+      this.mainWindow.webContents.on("did-fail-load", (_event, code, desc) => {
+        logger.error(`[WINDOW-MANAGER]: Failed to load Main window`, { code, desc });
+      });
+
+      this.mainWindow.webContents.on("did-finish-load", () => {
+        logger.info("[WINDOW-MANAGER]: Main window loaded");
+      });
     }
 
     try {
       if (showSplash) await this.showSplash();
+      logger.info(`[WINDOW-MANAGER]: Loading Main window from url: ${this.mainUrl} ...`);
       await this.mainWindow.loadURL(this.mainUrl);
       this.mainWindow.show();
       this.splashWindow?.close();
