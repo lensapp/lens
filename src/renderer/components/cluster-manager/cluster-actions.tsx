@@ -19,7 +19,7 @@ const deactivateCluster = (clusterId: string) => {
 };
 
 /**
- * Creates hanndlers for high-level actions
+ * Creates handlers for high-level actions
  * that could be performed on an individual cluster
  * @param cluster Cluster>
  */
