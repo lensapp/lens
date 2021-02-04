@@ -22,7 +22,7 @@ All UI elements are based on React components.
 
 To create a renderer extension, extend the `LensRendererExtension` class:
 
-``` typescript
+```typescript
 import { LensRendererExtension } from "@k8slens/extensions";
 
 export default class ExampleExtensionMain extends LensRendererExtension {
@@ -44,7 +44,7 @@ Two methods enable you to run custom code: `onActivate()` and `onDeactivate()`. 
     1. Navigate to **File** > **Extensions** in the top menu bar. (On Mac, it is **Lens** > **Extensions**.)
     2. Click **Disable** on the extension you want to disable.
 
-The example above logs messages when the extension is enabled and disabled. 
+The example above logs messages when the extension is enabled and disabled.
 
 ### `clusterPages`
 
@@ -52,7 +52,7 @@ Cluster pages appear in the cluster dashboard. Use cluster pages to display info
 
 Add a cluster page definition to a `LensRendererExtension` subclass with the following example:
 
-``` typescript
+```typescript
 import { LensRendererExtension } from "@k8slens/extensions";
 import { ExampleIcon, ExamplePage } from "./page"
 import React from "react"
@@ -77,7 +77,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 `ExamplePage` in the example above can be defined in `page.tsx`:
 
-``` typescript
+```typescript
 import { LensRendererExtension } from "@k8slens/extensions";
 import React from "react"
 
@@ -102,7 +102,7 @@ The above example shows how to create a cluster page, but not how to make that p
 
 By expanding on the above example, you can add a cluster page menu item to the `ExampleExtension` definition:
 
-``` typescript
+```typescript
 import { LensRendererExtension } from "@k8slens/extensions";
 import { ExampleIcon, ExamplePage } from "./page"
 import React from "react"
@@ -133,14 +133,14 @@ export default class ExampleExtension extends LensRendererExtension {
 
 * `target` links to the relevant cluster page using `pageId`.
 * `pageId` takes the value of the relevant cluster page's `id` property.
-* `title` sets the name of the cluster page menu item that will appear in the left side menu. 
+* `title` sets the name of the cluster page menu item that will appear in the left side menu.
 * `components` is used to set an icon that appears to the left of the `title` text in the left side menu.
 
 The above example creates a menu item that reads **Hello World**. When users click **Hello World**, the cluster dashboard will show the contents of `Example Page`.
 
 This example requires the definition of another React-based component, `ExampleIcon`, which has been added to `page.tsx`, as follows:
 
-``` typescript
+```typescript
 import { LensRendererExtension, Component } from "@k8slens/extensions";
 import React from "react"
 
@@ -167,7 +167,7 @@ Lens includes various built-in components available for extension developers to 
 `clusterPageMenus` can also be used to define sub menu items, so that you can create groups of cluster pages. The following example groups two sub menu items under one parent menu item:
 
 
-``` typescript
+```typescript
 import { LensRendererExtension } from "@k8slens/extensions";
 import { ExampleIcon, ExamplePage } from "./page"
 import React from "react"
@@ -216,21 +216,29 @@ export default class ExampleExtension extends LensRendererExtension {
 }
 ```
 
-The above defines two cluster pages and three cluster page menu objects. The three cluster page menu objects include one parent menu item and two sub menu items. Parent items require an `id` value, whereas sub items require a `parentId` value. The value of the sub item `parentId` will match the value of the corresponding parent item `id`. Parent items don't require a `target` value. Assign values to the remaining properties as explained above. 
+The above defines two cluster pages and three cluster page menu objects.
+The cluster page definitions are straightforward.
+The three cluster page menu objects include one parent menu item and two sub menu items.
+The first cluster page menu object defines the parent of a foldout submenu.
+Setting the `id` field in a cluster page menu definition implies that it is defining a foldout submenu.
+Also note that the `target` field is not specified (it is ignored if the `id` field is specified).
+This cluster page menu object specifies the `title` and `components` fields, which are used in displaying the menu item in the cluster dashboard sidebar.
+Initially the submenu is hidden.
+Activating this menu item toggles on and off the appearance of the submenu below it.
+The remaining two cluster page menu objects define the contents of the submenu.
+A cluster page menu object is defined to be a submenu item by setting the `parentId` field to the id of the parent of a foldout submenu, `"example"` in this case.
 
 This is what the example will look like, including how the menu item will appear in the secondary left nav:
 
-![clusterPageMenus](images/clusterpagemenus.png)
-
 ### `globalPages`
 
-Global pages are independent of the cluster dashboard and can fill the entire Lens UI. Their primary use is to display information and provide functionality across clusters, including customized data and functionality unique to your extension. 
+Global pages are independent of the cluster dashboard and can fill the entire Lens UI. Their primary use is to display information and provide functionality across clusters, including customized data and functionality unique to your extension.
 
 Typically, you would use a [global page menu](#globalpagemenus) located in the left nav to trigger a global page. You can also trigger a global page with a [custom app menu selection](../main-extension#appmenus) from a Main Extension or a [custom status bar item](#statusbaritems). Unlike cluster pages, users can trigger global pages even when there is no active cluster.
 
 The following example defines a `LensRendererExtension` subclass with a single global page definition:
 
-``` typescript
+```typescript
 import { LensRendererExtension } from '@k8slens/extensions';
 import { HelpPage } from './page';
 import React from 'react';
@@ -255,7 +263,7 @@ export default class HelpExtension extends LensRendererExtension {
 
 `HelpPage` in the example above can be defined in `page.tsx`:
 
-``` typescript
+```typescript
 import { LensRendererExtension } from "@k8slens/extensions";
 import React from "react"
 
@@ -284,7 +292,7 @@ This example code shows how to create a global page, but not how to make that pa
 
 By expanding on the above example, you can add a global page menu item to the `HelpExtension` definition:
 
-``` typescript
+```typescript
 import { LensRendererExtension } from "@k8slens/extensions";
 import { HelpIcon, HelpPage } from "./page"
 import React from "react"
@@ -322,7 +330,7 @@ The above example creates a "Help" icon menu item. When users click the icon, th
 
 This example requires the definition of another React-based component, `HelpIcon`. Update `page.tsx` from the example above with the `HelpIcon` definition, as follows:
 
-``` typescript
+```typescript
 import { LensRendererExtension, Component } from "@k8slens/extensions";
 import React from "react"
 
@@ -359,7 +367,7 @@ They can be installed and uninstalled by the Lens user from the cluster **Settin
 
 The following example shows how to add a cluster feature as part of a `LensRendererExtension`:
 
-``` typescript
+```typescript
 import { LensRendererExtension } from "@k8slens/extensions"
 import { ExampleFeature } from "./src/example-feature"
 import React from "react"
@@ -388,7 +396,7 @@ The properties of the `clusterFeatures` array objects are defined as follows:
 * `title` and `components.Description` provide content that appears on the cluster settings page, in the **Features** section.
 * `feature` specifies an instance which extends the abstract class `ClusterFeature.Feature`, and specifically implements the following methods:
 
-``` typescript
+```typescript
   abstract install(cluster: Cluster): Promise<void>;
   abstract upgrade(cluster: Cluster): Promise<void>;
   abstract uninstall(cluster: Cluster): Promise<void>;
@@ -397,13 +405,19 @@ The properties of the `clusterFeatures` array objects are defined as follows:
 
 The four methods listed above are defined as follows:
 
-* The `install()` method installs Kubernetes resources using the `applyResources()` method, or by directly accessing the [Kubernetes API](../api/README.md). This method is typically called when a user indicates that they want to install the feature (i.e., by clicking **Install** for the feature in the cluster settings page).
+* The `install()` method installs Kubernetes resources using the `applyResources()` method, or by directly accessing the [Kubernetes API](../api/README.md).
+This method is typically called when a user indicates that they want to install the feature (i.e., by clicking **Install** for the feature in the cluster settings page).
 
-* The `upgrade()` method upgrades the Kubernetes resources already installed, if they are relevant to the feature. This method is typically called when a user indicates that they want to upgrade the feature (i.e., by clicking **Upgrade** for the feature in the cluster settings page).
+* The `upgrade()` method upgrades the Kubernetes resources already installed, if they are relevant to the feature.
+This method is typically called when a user indicates that they want to upgrade the feature (i.e., by clicking **Upgrade** for the feature in the cluster settings page).
 
-* The `uninstall()` method uninstalls Kubernetes resources using the [Kubernetes API](../api/README.md). This method is typically called when a user indicates that they want to uninstall the feature (i.e., by clicking **Uninstall** for the feature in the cluster settings page).
+* The `uninstall()` method uninstalls Kubernetes resources using the [Kubernetes API](../api/README.md).
+This method is typically called when a user indicates that they want to uninstall the feature (i.e., by clicking **Uninstall** for the feature in the cluster settings page).
 
-* The `updateStatus()` method provides the current status information in the `status` field of the `ClusterFeature.Feature` parent class. Lens periodically calls this method to determine details about the feature's current status. Consider using the following properties with `updateStatus()`:
+* The `updateStatus()` method provides the current status information in the `status` field of the `ClusterFeature.Feature` parent class.
+Lens periodically calls this method to determine details about the feature's current status.
+The implementation of this method should uninstall Kubernetes resources using the Kubernetes api (`K8sApi`)
+Consider using the following properties with `updateStatus()`:
 
     * `status.currentVersion` and `status.latestVersion` may be displayed by Lens in the feature's description.
 
@@ -413,7 +427,7 @@ The four methods listed above are defined as follows:
 
 The following shows a very simple implementation of a `ClusterFeature`:
 
-``` typescript
+```typescript
 import { ClusterFeature, Store, K8sApi } from "@k8slens/extensions";
 import * as path from "path";
 
@@ -487,7 +501,7 @@ The Lens **Preferences** page is a built-in global page. You can use Lens extens
 
 The following example demonstrates adding a custom preference:
 
-``` typescript
+```typescript
 import { LensRendererExtension } from "@k8slens/extensions";
 import { ExamplePreferenceHint, ExamplePreferenceInput } from "./src/example-preference";
 import { observable } from "mobx";
@@ -513,7 +527,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 
 * `title` sets the heading text displayed on the Preferences page.
 * `components` specifies two `React.Component` objects that define the interface for the preference.
-    * `Input` specifies an interactive input element for the preference. 
+    * `Input` specifies an interactive input element for the preference.
     * `Hint` provides descriptive information for the preference, shown below the `Input` element.
 
 !!! note
@@ -524,7 +538,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 
 In this example `ExamplePreferenceInput`, `ExamplePreferenceHint`, and `ExamplePreferenceProps` are defined in `./src/example-preference.tsx` as follows:
 
-``` typescript
+```typescript
 import { Component } from "@k8slens/extensions";
 import { observer } from "mobx-react";
 import React from "react";
@@ -580,7 +594,7 @@ The status bar is the blue strip along the bottom of the Lens UI. `statusBarItem
 
 The following example adds a `statusBarItems` definition and a `globalPages` definition to a `LensRendererExtension` subclass. It configures the status bar item to navigate to the global page upon activation (normally a mouse click):
 
-``` typescript
+```typescript
 import { LensRendererExtension } from '@k8slens/extensions';
 import { HelpIcon, HelpPage } from "./page"
 import React from 'react';
@@ -597,15 +611,17 @@ export default class HelpExtension extends LensRendererExtension {
 
   statusBarItems = [
     {
-      item: (
-        <div
-          className="flex align-center gaps"
-          onClick={() => this.navigate("help")}
-        >
-          <HelpIcon />
-          My Status Bar Item
-        </div>
-      ),
+      components: {
+        Item: (
+          <div
+            className="flex align-center gaps"
+            onClick={() => this.navigate("help")}
+          >
+            <HelpIcon />
+            My Status Bar Item
+          </div>
+        )
+      },
     },
   ];
 }
@@ -613,7 +629,7 @@ export default class HelpExtension extends LensRendererExtension {
 
 The properties of the `statusBarItems` array objects are defined as follows:
 
-* `item` specifies the `React.Component` that will be shown on the status bar. By default, items are added starting from the right side of the status bar. Due to limited space in the status bar, `item` will typically specify only an icon or a short string of text. The example above reuses the `HelpIcon` from the [`globalPageMenus` guide](#globalpagemenus). 
+* `Item` specifies the `React.Component` that will be shown on the status bar. By default, items are added starting from the right side of the status bar. Due to limited space in the status bar, `Item` will typically specify only an icon or a short string of text. The example above reuses the `HelpIcon` from the [`globalPageMenus` guide](#globalpagemenus).
 * `onClick` determines what the `statusBarItem` does when it is clicked. In the example, `onClick` is set to a function that calls the `LensRendererExtension` `navigate()` method. `navigate` takes the `id` of the associated global page as a parameter. Thus, clicking the status bar item activates the associated global pages.
 
 ### `kubeObjectMenuItems`
@@ -629,7 +645,7 @@ They also appear on the title bar of the details page for specific resources:
 
 The following example shows how to add a `kubeObjectMenuItems` for namespace resources with an associated action:
 
-``` typescript
+```typescript
 import React from "react"
 import { LensRendererExtension } from "@k8slens/extensions";
 import { NamespaceMenuItem } from "./src/namespace-menu-item"
@@ -650,7 +666,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 `kubeObjectMenuItems` is an array of objects matching the `KubeObjectMenuRegistration` interface. The example above adds a menu item for namespaces in the cluster dashboard. The properties of the `kubeObjectMenuItems` array objects are defined as follows:
 
-* `kind` specifies the Kubernetes resource type the menu item will apply to. 
+* `kind` specifies the Kubernetes resource type the menu item will apply to.
 * `apiVersion` specifies the Kubernetes API version number to use with the resource type.
 * `components` defines the menu item's appearance and behavior.
 * `MenuItem` provides a function that returns a `React.Component` given a set of menu item properties. In this example a `NamespaceMenuItem` object is returned.
@@ -702,7 +718,7 @@ These custom details appear on the details page for a specific resource, such as
 
 The following example shows how to use `kubeObjectDetailItems` to add a tabulated list of pods to the Namespace resource details page:
 
-``` typescript
+```typescript
 import React from "react"
 import { LensRendererExtension } from "@k8slens/extensions";
 import { NamespaceDetailsItem } from "./src/namespace-details-item"
@@ -757,9 +773,20 @@ export class NamespaceDetailsItem extends React.Component<Component.KubeObjectDe
 }
 ```
 
-Since `NamespaceDetailsItem` extends `React.Component<Component.KubeObjectDetailsProps<K8sApi.Namespace>>`, it can access the current namespace object (type `K8sApi.Namespace`) through `this.props.object`. You can query this object for many details about the current namespace. In the example above, `componentDidMount()` gets the namespace's name using the `K8sApi.Namespace` `getName()` method. Use the namespace's name to limit the list of pods only to those in the relevant namespace. To get this list of pods, this example uses the Kubernetes pods API `K8sApi.podsApi.list()` method. The `K8sApi.podsApi` is automatically configured for the active cluster.
+Since `NamespaceDetailsItem` extends `React.Component<Component.KubeObjectDetailsProps<K8sApi.Namespace>>`, it can access the current namespace object (type `K8sApi.Namespace`) through `this.props.object`.
+You can query this object for many details about the current namespace.
+In the example above, `componentDidMount()` gets the namespace's name using the `K8sApi.Namespace` `getName()` method.
+Use the namespace's name to limit the list of pods only to those in the relevant namespace.
+To get this list of pods, this example uses the Kubernetes pods API `K8sApi.podsApi.list()` method.
+The `K8sApi.podsApi` is automatically configured for the active cluster.
 
-Note that `K8sApi.podsApi.list()` is an asynchronous method. Getting the pods list should occur prior to rendering the `NamespaceDetailsItem`. It is a common technique in React development to await async calls in `componentDidMount()`. However, `componentDidMount()` is called right after the first call to `render()`. In order to effect a subsequent `render()` call, React must be made aware of a state change. Like in the [`appPreferences` guide](#apppreferences), [`mobx`](https://mobx.js.org/README.html) and [`mobx-react`](https://github.com/mobxjs/mobx-react#mobx-react) are used to ensure `NamespaceDetailsItem` renders when the pods list updates. This is done simply by marking the `pods` field as an `observable` and the `NamespaceDetailsItem` class itself as an `observer`.
+Note that `K8sApi.podsApi.list()` is an asynchronous method.
+Getting the pods list should occur prior to rendering the `NamespaceDetailsItem`.
+It is a common technique in React development to await async calls in `componentDidMount()`.
+However, `componentDidMount()` is called right after the first call to `render()`.
+In order to effect a subsequent `render()` call, React must be made aware of a state change.
+Like in the [`appPreferences` guide](#apppreferences), [`mobx`](https://mobx.js.org/README.html) and [`mobx-react`](https://github.com/mobxjs/mobx-react#mobx-react) are used to ensure `NamespaceDetailsItem` renders when the pods list updates.
+This is done simply by marking the `pods` field as an `observable` and the `NamespaceDetailsItem` class itself as an `observer`.
 
 Finally, the `NamespaceDetailsItem` renders using the `render()` method.
 Details are placed in drawers, and using `Component.DrawerTitle` provides a separator from details above this one.

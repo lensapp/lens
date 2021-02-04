@@ -14,13 +14,18 @@ describe("<BottomBar />", () => {
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  // some defensive testing
-  it("renders w/o errors when .getItems() returns edge cases", async () => {
+  it("renders w/o errors when .getItems() returns unexpected (not type complient) data", async () => {
     statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => undefined);
+    expect(() => render(<BottomBar />)).not.toThrow();
+    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => "hello");
+    expect(() => render(<BottomBar />)).not.toThrow();
+    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => 6);
     expect(() => render(<BottomBar />)).not.toThrow();
     statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => null);
     expect(() => render(<BottomBar />)).not.toThrow();
     statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => []);
+    expect(() => render(<BottomBar />)).not.toThrow();
+    statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => [{}]);
     expect(() => render(<BottomBar />)).not.toThrow();
     statusBarRegistry.getItems = jest.fn().mockImplementationOnce(() => { return {};});
     expect(() => render(<BottomBar />)).not.toThrow();

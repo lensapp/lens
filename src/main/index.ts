@@ -27,6 +27,7 @@ import type { LensExtensionId } from "../extensions/lens-extension";
 import { installDeveloperTools } from "./developer-tools";
 import { filesystemProvisionerStore } from "./extension-filesystem";
 import { LensProtocolRouterMain } from "./protocol-handler";
+import { getAppVersion, getAppVersionFromProxyServer } from "../common/utils";
 import { bindBroadcastHandlers } from "../common/ipc";
 
 const workingDir = path.join(app.getPath("appData"), appName);
@@ -80,6 +81,7 @@ app.on("second-instance", (event, argv) => {
 
 app.on("ready", async () => {
   logger.info(`🚀 Starting Lens from "${workingDir}"`);
+  logger.info("🐚 Syncing shell environment");
   await shellSync();
 
   bindBroadcastHandlers();
@@ -88,6 +90,7 @@ app.on("ready", async () => {
     app.exit();
   });
 
+  logger.info(`📡 Checking for app updates`);
   const updater = new AppUpdater();
 
   updater.start();
@@ -96,6 +99,7 @@ app.on("ready", async () => {
 
   await installDeveloperTools();
 
+  logger.info("💾 Loading stores");
   // preload
   await Promise.all([
     userStore.load(),
@@ -107,6 +111,7 @@ app.on("ready", async () => {
 
   // find free port
   try {
+    logger.info("🔑 Getting free port for LensProxy server");
     proxyPort = await getFreePort();
   } catch (error) {
     logger.error(error);
@@ -119,6 +124,7 @@ app.on("ready", async () => {
 
   // run proxy
   try {
+    logger.info("🔌 Starting LensProxy");
     // eslint-disable-next-line unused-imports/no-unused-vars-ts
     proxyServer = LensProxy.create(proxyPort, clusterManager);
   } catch (error) {
@@ -127,8 +133,23 @@ app.on("ready", async () => {
     app.exit();
   }
 
+  // test proxy connection
+  try {
+    logger.info("🔎 Testing LensProxy connection ...");
+    const versionFromProxy = await getAppVersionFromProxyServer(proxyPort);
+
+    if (getAppVersion() !== versionFromProxy) {
+      logger.error(`Proxy server responded with invalid response`);
+    }
+    logger.info("⚡ LensProxy connection OK");
+  } catch (error) {
+    logger.error("Checking proxy server connection failed", error);
+  }
+
   extensionLoader.init();
   extensionDiscovery.init();
+
+  logger.info("🖥️  Starting WindowManager");
   windowManager = WindowManager.getInstance<WindowManager>(proxyPort);
   windowManager.whenLoaded.then(() => {
     LensProtocolRouterMain
@@ -140,6 +161,8 @@ app.on("ready", async () => {
       .getInstance<LensProtocolRouterMain>()
       .extensionsLoaded = true;
   });
+
+  logger.info("🧩 Initializing extensions");
 
   // call after windowManager to see splash earlier
   try {
