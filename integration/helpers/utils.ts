@@ -110,7 +110,6 @@ export async function tearDown(app: Application) {
 
   try {
     process.kill(pid, "SIGKILL");
-    spawnSync("killall lens");
   } catch (e) {
     console.error(e);
   }
