@@ -64,6 +64,8 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
 
 export async function checkForUpdates(): Promise<void> {
   try {
+    logger.info(`📡 Checking for app updates`);
+
     await autoUpdater.checkForUpdates();
   } catch (error) {
     logger.error(`${AutoUpdateLogPrefix}: failed with an error`, { error: String(error) });

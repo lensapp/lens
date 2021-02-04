@@ -4,7 +4,7 @@ import { exec } from "child_process";
 
 const AppPaths: Partial<Record<NodeJS.Platform, string>> = {
   "win32": "./dist/win-unpacked/Lens.exe",
-  "linux": "./dist/linux-unpacked/lens",
+  "linux": "./dist/linux-unpacked/kontena-lens",
   "darwin": "./dist/mac/Lens.app/Contents/MacOS/Lens",
 };
 

@@ -40,9 +40,7 @@ interface Props {
 @observer
 export class Sidebar extends React.Component<Props> {
   async componentDidMount() {
-    if (!crdStore.isLoaded && isAllowedResource("customresourcedefinitions")) {
-      crdStore.loadAll();
-    }
+    crdStore.loadSelectedNamespaces();
   }
 
   renderCustomResources() {

@@ -63,16 +63,6 @@ function buildTray(icon: string | NativeImage, menu: Menu, windowManager: Window
 function createTrayMenu(windowManager: WindowManager): Menu {
   return Menu.buildFromTemplate([
     {
-      label: "About Lens",
-      async click() {
-        // note: argument[1] (browserWindow) not available when app is not focused / hidden
-        const browserWindow = await windowManager.ensureMainWindow();
-
-        showAbout(browserWindow);
-      },
-    },
-    { type: "separator" },
-    {
       label: "Open Lens",
       async click() {
         await windowManager.ensureMainWindow();
@@ -114,6 +104,15 @@ function createTrayMenu(windowManager: WindowManager): Menu {
       async click() {
         await checkForUpdates();
         await windowManager.ensureMainWindow();
+      },
+    },
+    {
+      label: "About Lens",
+      async click() {
+        // note: argument[1] (browserWindow) not available when app is not focused / hidden
+        const browserWindow = await windowManager.ensureMainWindow();
+
+        showAbout(browserWindow);
       },
     },
     { type: "separator" },

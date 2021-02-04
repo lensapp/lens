@@ -30,7 +30,7 @@ export class PageFiltersStore {
   protected syncWithContextNamespace() {
     const disposers = [
       reaction(() => this.getValues(FilterType.NAMESPACE), filteredNs => {
-        if (filteredNs.length !== namespaceStore.contextNs.length) {
+        if (filteredNs.length !== namespaceStore.getContextNamespaces().length) {
           namespaceStore.setContext(filteredNs);
         }
       }),
