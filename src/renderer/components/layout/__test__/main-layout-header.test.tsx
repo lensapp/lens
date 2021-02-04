@@ -94,9 +94,7 @@ describe("<MainLayoutHeader />", () => {
 
       const okBtn = dialog.querySelector("button.ok");
 
-      expect(okBtn.textContent).toBe("Remove");
-      // console.log(dialog);
-      
+      expect(okBtn.textContent).toBe("Remove");      
     });
   });
 });
