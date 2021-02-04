@@ -58,11 +58,11 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   }
 
   @action
-  async loadAll() {
+  async loadAll(namespaces = namespaceStore.allowedNamespaces) {
     this.isLoading = true;
 
     try {
-      const items = await this.loadItems(namespaceStore.getContextNamespaces());
+      const items = await this.loadItems(namespaces);
 
       this.items.replace(this.sortItems(items));
       this.isLoaded = true;
@@ -71,6 +71,10 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  async loadSelectedNamespaces(): Promise<void> {
+    return this.loadAll(namespaceStore.getContextNamespaces());
   }
 
   async loadItems(namespaces: string[]) {
@@ -82,7 +86,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   async create(payload: IReleaseCreatePayload) {
     const response = await helmReleasesApi.create(payload);
 
-    if (this.isLoaded) this.loadAll();
+    if (this.isLoaded) this.loadSelectedNamespaces();
 
     return response;
   }
@@ -90,7 +94,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   async update(name: string, namespace: string, payload: IReleaseUpdatePayload) {
     const response = await helmReleasesApi.update(name, namespace, payload);
 
-    if (this.isLoaded) this.loadAll();
+    if (this.isLoaded) this.loadSelectedNamespaces();
 
     return response;
   }
@@ -98,7 +102,7 @@ export class ReleaseStore extends ItemStore<HelmRelease> {
   async rollback(name: string, namespace: string, revision: number) {
     const response = await helmReleasesApi.rollback(name, namespace, revision);
 
-    if (this.isLoaded) this.loadAll();
+    if (this.isLoaded) this.loadSelectedNamespaces();
 
     return response;
   }

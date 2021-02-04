@@ -2,7 +2,7 @@
   "name": "kontena-lens",
   "productName": "Lens",
   "description": "Lens - The Kubernetes IDE",
-  "version": "4.1.0-alpha.1",
+  "version": "4.1.0-alpha.2",
   "main": "static/build/main.js",
   "copyright": "© 2020, Mirantis, Inc.",
   "license": "MIT",
@@ -103,7 +103,6 @@
     ],
     "linux": {
       "category": "Network",
-      "executableName": "lens",
       "artifactName": "${productName}-${version}.${arch}.${ext}",
       "target": [
         "deb",
@@ -162,6 +161,9 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
+    "snap": {
+      "confinement": "classic"
+    },
     "publish": [
       {
         "provider": "github",
@@ -169,9 +171,6 @@
         "owner": "lensapp"
       }
     ],
-    "snap": {
-      "confinement": "classic"
-    },
     "protocols": {
       "name": "Lens Protocol Handler",
       "schemes": [
@@ -302,7 +301,7 @@
     "@types/webpack-dev-server": "^3.11.1",
     "@types/webpack-env": "^1.15.2",
     "@types/webpack-node-externals": "^1.7.1",
-    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.0.0",
     "ace-builds": "^1.4.11",
     "ansi_up": "^4.0.4",

@@ -29,9 +29,7 @@ export class ReplicaSetDetails extends React.Component<Props> {
   });
 
   async componentDidMount() {
-    if (!podsStore.isLoaded) {
-      podsStore.loadAll();
-    }
+    podsStore.loadSelectedNamespaces();
   }
 
   componentWillUnmount() {
