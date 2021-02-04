@@ -1,7 +1,7 @@
 import { AppConstructorOptions, Application } from "spectron";
 import * as util from "util";
 import { exec, spawnSync } from "child_process";
-import fse, { writeFile } from "fs-extra";
+import fse, { mkdirp, writeFile } from "fs-extra";
 import path from "path";
 import os from "os";
 import { delay } from "../../src/common/utils";
@@ -85,6 +85,7 @@ export async function appStart() {
       "Categories=Network;"
     ].join("\n");
 
+    await mkdirp(path.join(os.homedir(), ".local/share/applications/"));
     await writeFile(path.join(os.homedir(), ".local/share/applications/lens-testing.desktop"), testingDesktop);
 
     const { status } = spawnSync("xdg-settings set default-url-scheme-handler lens lens-testing.desktop", { shell: true });
