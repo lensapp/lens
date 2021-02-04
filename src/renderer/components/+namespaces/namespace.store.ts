@@ -73,7 +73,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private autoLoadAllowedNamespaces(): IReactionDisposer {
-    return reaction(() => this.allowedNamespaces, () => this.loadAll(), {
+    return reaction(() => this.allowedNamespaces, namespaces => this.loadAll(namespaces), {
       fireImmediately: true,
       equals: comparer.shallow,
     });

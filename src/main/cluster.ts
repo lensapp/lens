@@ -48,6 +48,7 @@ export interface ClusterState {
   isAdmin: boolean;
   allowedNamespaces: string[]
   allowedResources: string[]
+  isGlobalWatchEnabled: boolean;
 }
 
 /**
@@ -90,7 +91,6 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable initializing = false;
-
 
   /**
    * Is cluster object initialized
@@ -177,6 +177,12 @@ export class Cluster implements ClusterModel, ClusterState {
    * @observable
    */
   @observable isAdmin = false;
+  /**
+   * Global watch-api accessibility , e.g. "/api/v1/services?watch=1"
+   *
+   * @observable
+   */
+  @observable isGlobalWatchEnabled = false;
   /**
    * Preferences
    *
@@ -353,9 +359,7 @@ export class Cluster implements ClusterModel, ClusterState {
     await this.refreshConnectionStatus();
 
     if (this.accessible) {
-      await this.refreshAllowedResources();
-      this.isAdmin = await this.isClusterAdmin();
-      this.ready = true;
+      await this.refreshAccessibility();
       this.ensureKubectl();
     }
     this.activated = true;
@@ -410,13 +414,11 @@ export class Cluster implements ClusterModel, ClusterState {
     await this.refreshConnectionStatus();
 
     if (this.accessible) {
-      this.isAdmin = await this.isClusterAdmin();
-      await this.refreshAllowedResources();
+      await this.refreshAccessibility();
 
       if (opts.refreshMetadata) {
         this.refreshMetadata();
       }
-      this.ready = true;
     }
     this.pushState();
   }
@@ -431,6 +433,18 @@ export class Cluster implements ClusterModel, ClusterState {
     const existingMetadata = this.metadata;
 
     this.metadata = Object.assign(existingMetadata, metadata);
+  }
+
+  /**
+   * @internal
+   */
+  private async refreshAccessibility(): Promise<void> {
+    this.isAdmin = await this.isClusterAdmin();
+    this.isGlobalWatchEnabled = await this.canUseWatchApi({ resource: "*" });
+
+    await this.refreshAllowedResources();
+
+    this.ready = true;
   }
 
   /**
@@ -571,6 +585,17 @@ export class Cluster implements ClusterModel, ClusterState {
     });
   }
 
+  /**
+   * @internal
+   */
+  async canUseWatchApi(customizeResource: V1ResourceAttributes = {}): Promise<boolean> {
+    return this.canI({
+      verb: "watch",
+      resource: "*",
+      ...customizeResource,
+    });
+  }
+
   toJSON(): ClusterModel {
     const model: ClusterModel = {
       id: this.id,
@@ -604,6 +629,7 @@ export class Cluster implements ClusterModel, ClusterState {
       isAdmin: this.isAdmin,
       allowedNamespaces: this.allowedNamespaces,
       allowedResources: this.allowedResources,
+      isGlobalWatchEnabled: this.isGlobalWatchEnabled,
     };
 
     return toJS(state, {
