@@ -25,12 +25,12 @@ describe("<MainLayoutHeader />", () => {
     expect(container).toBeInstanceOf(HTMLElement);
   });
 
-  it("renders gear icon", () => {
+  it("renders three dots icon", () => {
     const { container } = render(<MainLayoutHeader cluster={cluster} />);
     const icon = container.querySelector(".Icon .icon");
 
     expect(icon).toBeInstanceOf(HTMLElement);
-    expect(icon).toHaveTextContent("settings");
+    expect(icon).toHaveTextContent("more_vert");
   });
 
   it("navigates to cluster settings", () => {
@@ -38,6 +38,11 @@ describe("<MainLayoutHeader />", () => {
     const icon = container.querySelector(".Icon");
 
     fireEvent.click(icon);
+    
+    const settingsBtn = document.querySelectorAll("ul.ClusterActionsMenu > li > span")[0];
+    
+    expect(settingsBtn.textContent).toBe("Settings");
+    fireEvent.click(settingsBtn);
     expect(mockBroadcastIpc).toBeCalledWith("renderer:navigate", "/cluster/foo/settings");
   });
 
