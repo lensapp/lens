@@ -21,7 +21,7 @@ const deactivateCluster = (clusterId: string) => {
 /**
  * Creates handlers for high-level actions
  * that could be performed on an individual cluster
- * @param cluster Cluster>
+ * @param cluster Cluster
  */
 export const ClusterActions = (cluster: Cluster) => ({
   "SHOW_SETTINGS": () => navigate(clusterSettingsURL({
