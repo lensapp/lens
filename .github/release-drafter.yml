@@ -12,6 +12,7 @@ categories:
       - 'chore'
       - 'area/ci'
       - 'area/tests'
+      - 'dependencies'
 
 template: |
   ## Changes since $PREVIOUS_TAG
@@ -20,8 +21,10 @@ template: |
 
   ### Download
 
-  - [Lens v$RESOLVED_VERSION - Linux](https://snapcraft.io/kontena-lens)
-    - [AppImage](https://github.com/lensapp/lens/releases/download/v$RESOLVED_VERSION/Lens-$RESOLVED_VERSION.AppImage)
+  - Lens v$RESOLVED_VERSION - Linux
+    - [AppImage](https://github.com/lensapp/lens/releases/download/v$RESOLVED_VERSION/Lens-$RESOLVED_VERSION.x86_64.AppImage)
+    - [DEB](https://github.com/lensapp/lens/releases/download/v$RESOLVED_VERSION/Lens-$RESOLVED_VERSION.amd64.deb)
+    - [RPM](https://github.com/lensapp/lens/releases/download/v$RESOLVED_VERSION/Lens-$RESOLVED_VERSION.x86_64.rpm)
     - [Snapcraft](https://snapcraft.io/kontena-lens)
   - [Lens v$RESOLVED_VERSION - MacOS](https://github.com/lensapp/lens/releases/download/v$RESOLVED_VERSION/Lens-$RESOLVED_VERSION.dmg)
   - [Lens v$RESOLVED_VERSION - Windows](https://github.com/lensapp/lens/releases/download/v$RESOLVED_VERSION/Lens-Setup-$RESOLVED_VERSION.exe)

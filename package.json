@@ -103,7 +103,6 @@
     ],
     "linux": {
       "category": "Network",
-      "executableName": "lens",
       "artifactName": "${productName}-${version}.${arch}.${ext}",
       "target": [
         "deb",
@@ -162,16 +161,16 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
+    "snap": {
+      "confinement": "classic"
+    },
     "publish": [
       {
         "provider": "github",
         "repo": "lens",
         "owner": "lensapp"
       }
-    ],
-    "snap": {
-      "confinement": "classic"
-    }
+    ]
   },
   "lens": {
     "extensions": [
