@@ -70,6 +70,7 @@ export class KubeWatchApi {
         return [];
       }
 
+      // TODO: optimize - check when all namespaces are selected and then request all in one
       if (api.isNamespaced && !this.cluster.isGlobalWatchEnabled) {
         return this.namespaces.map(namespace => api.getWatchUrl(namespace));
       }

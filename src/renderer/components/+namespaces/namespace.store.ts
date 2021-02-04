@@ -103,8 +103,20 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return [];
   }
 
-  public getContextNamespaces(): string[] {
-    return Array.from(this.contextNs);
+  getContextNamespaces(): string[] {
+    const namespaces = Array.from(this.contextNs);
+
+    // show all namespaces when nothing selected
+    if (!namespaces.length) {
+      // return actual namespaces list since "allowedNamespaces" updating every 30s in cluster and thus might be stale
+      if (this.isLoaded) {
+        return this.items.map(namespace => namespace.getName());
+      }
+
+      return this.allowedNamespaces;
+    }
+
+    return namespaces;
   }
 
   getSubscribeApis() {
@@ -137,6 +149,11 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     const namespaces = [namespace].flat();
 
     this.contextNs.replace(namespaces);
+  }
+
+  @action
+  resetContext() {
+    this.contextNs.clear();
   }
 
   hasContext(namespaces: string | string[]) {
