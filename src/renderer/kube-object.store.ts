@@ -132,7 +132,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  async loadAll(namespaces: string[] = [], { replace = true } = {}): Promise<void> {
+  async loadAll(namespaces: string[] = [], { replace = false /*partial update*/ } = {}): Promise<void> {
     this.isLoading = true;
 
     try {
@@ -143,7 +143,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
         namespaces = namespaceStore.getContextNamespaces();
       }
 
-      let items = await this.loadItems({ namespaces, api: this.api });
+      const items = await this.loadItems({ namespaces, api: this.api });
+
       this.mergeItems(items, { replace });
       this.isLoaded = true;
     } catch (error) {
@@ -155,19 +156,23 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  private mergeItems(partialItems: T[], { replace = false, sort = true, filter = true } = {}): T[] {
-    let items = this.items.toJS();
+  mergeItems(partialItems: T[], { replace = false, updateStore = true, sort = true, filter = true } = {}): T[] {
+    let items = partialItems;
 
-    partialItems.forEach(item => {
-      const index = items.findIndex(i => i.getId() === item.getId());
+    if (!replace) {
+      items = this.items.toJS();
 
-      if (index < 0) items.push(item); // add
-      else items[index] = item; // update
-    });
+      partialItems.forEach(item => {
+        const index = items.findIndex(i => i.getId() === item.getId());
 
-    if (filter) items = this.filterItemsOnLoad(items)
+        if (index < 0) items.push(item); // add
+        else items[index] = item; // update
+      });
+    }
+
+    if (filter) items = this.filterItemsOnLoad(items);
     if (sort) items = this.sortItems(items);
-    if (replace) this.items.replace(items);
+    if (updateStore) this.items.replace(items);
 
     return items;
   }
