@@ -21,7 +21,7 @@ function getAppTestingPaths(): AppTestingPaths {
       };
     case "linux":
       return {
-        testingPath: "./dist/linux-unpacked/lens",
+        testingPath: "./dist/linux-unpacked/kontena-lens",
         libraryPath: path.join(process.env.XDG_CONFIG_HOME || path.join(process.env.HOME, ".config"), "Lens"),
       };
     case "darwin":
