@@ -49,12 +49,10 @@ export class WorkspaceClusterMenu extends React.Component<Props> {
 
     return (
       <>
-        {
-          <MenuItem onClick={this.settings}>
-            <Icon material="settings" interactive={toolbar} title={`Settings`}/>
-            <span className="title">Settings</span>
-          </MenuItem>
-        }
+        <MenuItem onClick={this.settings}>
+          <Icon material="settings" interactive={toolbar} title="Settings"/>
+          <span className="title">Settings</span>
+        </MenuItem>
       </>
     );
   }

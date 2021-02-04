@@ -5,8 +5,8 @@ import { ItemObject, ItemStore } from "../../item.store";
 import { autobind } from "../../utils";
 
 export class ClusterItem implements ItemObject {
-  cluster: Cluster;
-
+  constructor(public cluster: Cluster) {}
+  
   getName() {
     return this.cluster.name;
   }
@@ -28,13 +28,13 @@ export class WorkspaceClusterStore extends ItemStore<ClusterItem> {
   }
 
   loadAll() {
-    return this.loadItems(() => clusterStore.getByWorkspaceId(this.workspaceId).map(cluster => {
-      const clusterItem = new ClusterItem();
-
-      clusterItem.cluster = cluster;
-
-      return clusterItem;
-    }));
+    return this.loadItems(
+      () => (
+        clusterStore
+          .getByWorkspaceId(this.workspaceId)
+          .map(cluster => new ClusterItem(cluster))
+      )
+    );
   }
 
   async remove(clusterItem: ClusterItem) {
@@ -46,19 +46,10 @@ export class WorkspaceClusterStore extends ItemStore<ClusterItem> {
 
     const clusterId = cluster.id;
 
-    return super.removeItem(clusterItem, async () => {
-      if (clusterStore.activeClusterId === clusterId) {
-        clusterStore.setActive(null);
-      }
-      clusterStore.removeById(clusterId);
-    });
+    return super.removeItem(clusterItem, async () => clusterStore.removeById(clusterId));
   }
   
   async removeSelectedItems() {
-    if (!this.selectedItems.length) {
-      return;
-    }
-    
     return Promise.all(this.selectedItems.map(this.remove));
   }
 }

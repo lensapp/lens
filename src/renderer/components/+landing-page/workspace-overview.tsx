@@ -60,9 +60,9 @@ export class WorkspaceOverview extends Component<Props> {
           item.cluster.online ? "online" : "offline"
         ]}
         onDetails={this.showCluster}
-        renderItemMenu={(clusterItem: ClusterItem) => {
-          return <WorkspaceClusterMenu clusterItem={clusterItem} workspace={workspace} workspaceClusterStore={workspaceClusterStore}/>;
-        }}
+        renderItemMenu={(clusterItem: ClusterItem) => (
+          <WorkspaceClusterMenu clusterItem={clusterItem} workspace={workspace} workspaceClusterStore={workspaceClusterStore}/>
+        )}
       />
     );
   }
