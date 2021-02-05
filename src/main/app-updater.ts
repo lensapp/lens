@@ -3,7 +3,6 @@ import logger from "./logger";
 import { isDevelopment, isTestEnv } from "../common/vars";
 import { delay } from "../common/utils";
 import { areArgsUpdateAvailableToBackchannel, AutoUpdateLogPrefix, broadcastMessage, onceCorrect, UpdateAvailableChannel, UpdateAvailableToBackchannel } from "../common/ipc";
-import * as uuid from "uuid";
 import { ipcMain } from "electron";
 
 function handleAutoUpdateBackChannel(event: Electron.IpcMainEvent, ...[arg]: UpdateAvailableToBackchannel) {
@@ -40,11 +39,17 @@ export function startUpdateChecking(interval = 1000 * 60 * 60 * 24): void {
   autoUpdater
     .on("update-available", (args: UpdateInfo) => {
       try {
-        // use a UUID so that this back-channel is harder to discover
-        const backchannel = uuid.v4();
+        const backchannel = `auto-update:${args.version}`;
+
+        ipcMain.removeAllListeners(backchannel); // only one handler should be present
 
         // make sure that the handler is in place before broadcasting (prevent race-condition)
-        onceCorrect(ipcMain, backchannel, handleAutoUpdateBackChannel, areArgsUpdateAvailableToBackchannel);
+        onceCorrect({
+          source: ipcMain,
+          channel: backchannel,
+          listener: handleAutoUpdateBackChannel,
+          verifier: areArgsUpdateAvailableToBackchannel,
+        });
         logger.info(`${AutoUpdateLogPrefix}: broadcasting update available`, { backchannel, version: args.version });
         broadcastMessage(UpdateAvailableChannel, backchannel, args);
       } catch (error) {

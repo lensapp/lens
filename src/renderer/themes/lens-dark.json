@@ -25,6 +25,7 @@
     "sidebarSubmenuActiveColor": "#ffffff",
     "buttonPrimaryBackground": "#3d90ce",
     "buttonDefaultBackground": "#414448",
+    "buttonLightBackground": "#f1f1f1",
     "buttonAccentBackground": "#e85555",
     "buttonDisabledBackground": "#808080",
     "tableBgcStripe": "#2a2d33",

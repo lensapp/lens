@@ -27,7 +27,7 @@
   }
 
   &.light {
-    background-color: white;
+    background-color: $buttonLightBackground;
     color: #505050;
   }
 
@@ -51,7 +51,6 @@
   &.outlined {
     color: inherit;
     background: transparent;
-    border: 1px solid;
 
     &.active,
     &:focus {

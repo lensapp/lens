@@ -11,7 +11,6 @@ import { ClusterFrameInfo, clusterFrameMap } from "../cluster-frames";
 const subFramesChannel = "ipc:get-sub-frames";
 
 export type HandlerEvent<EM extends EventEmitter> = Parameters<Parameters<EM["on"]>[1]>[0];
-export type EventListener<E extends EventEmitter, T extends any[]> = (event: HandlerEvent<E>, ...args: T) => any;
 
 export function handleRequest(channel: string, listener: (event: Electron.IpcMainInvokeEvent, ...args: any[]) => any) {
   ipcMain.handle(channel, listener);
@@ -32,18 +31,23 @@ export function onceCorrect<
   EM extends EventEmitter,
   T extends any[],
   L extends (event: HandlerEvent<EM>, ...args: T) => any
->(
+>({
+  source,
+  channel,
+  listener,
+  verifier,
+}: {
   source: EM,
   channel: string | symbol,
   listener: L,
-  verifier: (args: unknown[]) => args is T
-): void {
+  verifier: (args: unknown[]) => args is T,
+}): void {
   function handler(event: HandlerEvent<EM>, ...args: unknown[]): void {
     if (verifier(args)) {
       source.removeListener(channel, handler); // remove immediately
 
-      Promise.resolve(listener(event, ...args)) // might return a promise
-        .catch(error => logger.error("[IPC]: channel once handler threw error", { channel, error }));
+      (async () => (listener(event, ...args)))() // might return a promise, or throw, or reject
+        .catch((error: any) => logger.error("[IPC]: channel once handler threw error", { channel, error }));
     } else {
       logger.error("[IPC]: channel was sent to with invalid data", { channel, args });
     }
@@ -62,15 +66,20 @@ export function onCorrect<
   EM extends EventEmitter,
   T extends any[],
   L extends (event: HandlerEvent<EM>, ...args: T) => any
->(
+>({
+  source,
+  channel,
+  listener,
+  verifier,
+}: {
   source: EM,
   channel: string | symbol,
   listener: L,
-  verifier: (args: unknown[]) => args is T
-): void {
+  verifier: (args: unknown[]) => args is T,
+}): void {
   source.on(channel, (event, ...args: unknown[]) => {
     if (verifier(args)) {
-      Promise.resolve(listener(event, ...args)) // might return a promise
+      (async () => (listener(event, ...args)))() // might return a promise, or throw, or reject
         .catch(error => logger.error("[IPC]: channel on handler threw error", { channel, error }));
     } else {
       logger.error("[IPC]: channel was sent to with invalid data", { channel, args });
