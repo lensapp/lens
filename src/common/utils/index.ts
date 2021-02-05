@@ -7,7 +7,6 @@ export * from "./autobind";
 export * from "./base64";
 export * from "./camelCase";
 export * from "./cloneJson";
-export * from "./delay";
 export * from "./debouncePromise";
 export * from "./defineGlobal";
 export * from "./getRandId";

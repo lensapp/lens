@@ -2,14 +2,13 @@ import "./namespace-select.scss";
 
 import React from "react";
 import { computed } from "mobx";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { Select, SelectOption, SelectProps } from "../select";
-import { cssNames } from "../../utils";
+import { cssNames, noop } from "../../utils";
 import { Icon } from "../icon";
 import { namespaceStore } from "./namespace.store";
 import { FilterIcon } from "../item-object-list/filter-icon";
 import { FilterType } from "../item-object-list/page-filters.store";
-import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
@@ -29,13 +28,17 @@ const defaultProps: Partial<Props> = {
 @observer
 export class NamespaceSelect extends React.Component<Props> {
   static defaultProps = defaultProps as object;
+  private unsubscribe = noop;
 
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([namespaceStore], {
-        preload: true,
-      })
-    ]);
+  async componentDidMount() {
+    if (!namespaceStore.isLoaded) {
+      await namespaceStore.loadAll();
+    }
+    this.unsubscribe = namespaceStore.subscribe();
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   @computed get options(): SelectOption[] {
@@ -57,7 +60,7 @@ export class NamespaceSelect extends React.Component<Props> {
 
     return label || (
       <>
-        {showIcons && <Icon small material="layers"/>}
+        {showIcons && <Icon small material="layers" />}
         {value}
       </>
     );
@@ -100,9 +103,9 @@ export class NamespaceSelectFilter extends React.Component {
 
           return (
             <div className="flex gaps align-center">
-              <FilterIcon type={FilterType.NAMESPACE}/>
+              <FilterIcon type={FilterType.NAMESPACE} />
               <span>{namespace}</span>
-              {isSelected && <Icon small material="check" className="box right"/>}
+              {isSelected && <Icon small material="check" className="box right" />}
             </div>
           );
         }}

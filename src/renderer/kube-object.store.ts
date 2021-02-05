@@ -2,10 +2,10 @@ import type { Cluster } from "../main/cluster";
 import { action, observable, reaction } from "mobx";
 import { autobind } from "./utils";
 import { KubeObject } from "./api/kube-object";
-import { IKubeWatchEvent, IKubeWatchMessage, kubeWatchApi } from "./api/kube-watch-api";
+import { IKubeWatchEvent, kubeWatchApi } from "./api/kube-watch-api";
 import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
-import { IKubeApiQueryParams, KubeApi, parseKubeApi } from "./api/kube-api";
+import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
 
 export interface KubeObjectStoreLoadingParams {
@@ -22,6 +22,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   constructor() {
     super();
     this.bindWatchEventsUpdater();
+    kubeWatchApi.addListener(this, this.onWatchApiEvent);
   }
 
   get query(): IKubeApiQueryParams {
@@ -156,7 +157,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   @action
   async loadFromPath(resourcePath: string) {
-    const { namespace, name } = parseKubeApi(resourcePath);
+    const { namespace, name } = KubeApi.parseApi(resourcePath);
 
     return this.load({ name, namespace });
   }
@@ -194,29 +195,29 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   // collect items from watch-api events to avoid UI blowing up with huge streams of data
-  protected eventsBuffer = observable.array<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
+  protected eventsBuffer = observable<IKubeWatchEvent<KubeJsonApiData>>([], { deep: false });
 
   protected bindWatchEventsUpdater(delay = 1000) {
-    kubeWatchApi.onMessage.addListener(({ store, data }: IKubeWatchMessage<T>) => {
-      if (!this.isLoaded || store !== this) return;
-      this.eventsBuffer.push(data);
-    });
-
-    reaction(() => this.eventsBuffer.length > 0, this.updateFromEventsBuffer, {
+    return reaction(() => this.eventsBuffer.toJS()[0], this.updateFromEventsBuffer, {
       delay
     });
   }
 
-  getSubscribeApis(): KubeApi[] {
-    return [this.api];
+  subscribe(apis = [this.api]) {
+    return KubeApi.watchAll(...apis);
   }
 
-  subscribe(apis = this.getSubscribeApis()) {
-    return kubeWatchApi.subscribeApi(apis);
+  protected onWatchApiEvent(evt: IKubeWatchEvent) {
+    if (!this.isLoaded) return;
+    this.eventsBuffer.push(evt);
   }
 
   @action
   protected updateFromEventsBuffer() {
+    if (!this.eventsBuffer.length) {
+      return;
+    }
+    // create latest non-observable copy of items to apply updates in one action (==single render)
     const items = this.items.toJS();
 
     for (const { type, object } of this.eventsBuffer.clear()) {

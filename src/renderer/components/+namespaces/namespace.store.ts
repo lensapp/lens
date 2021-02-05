@@ -117,15 +117,15 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
     return namespaces;
   }
 
-  getSubscribeApis() {
+  subscribe(apis = [this.api]) {
     const { accessibleNamespaces } = getHostedCluster();
 
     // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
     if (accessibleNamespaces.length > 0) {
-      return [];
+      return Function; // no-op
     }
 
-    return super.getSubscribeApis();
+    return super.subscribe(apis);
   }
 
   protected async loadItems(params: KubeObjectStoreLoadingParams) {

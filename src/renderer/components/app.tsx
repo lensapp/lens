@@ -1,5 +1,5 @@
 import React from "react";
-import { disposeOnUnmount, observer } from "mobx-react";
+import { observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
 import { Notifications } from "./notifications";
@@ -42,10 +42,10 @@ import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../exte
 import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
 import { eventStore } from "./+events/event.store";
-import { computed, reaction, observable } from "mobx";
+import { reaction, computed, observable } from "mobx";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
-import { kubeWatchApi } from "../api/kube-watch-api";
+import { sum } from "lodash";
 import { ReplicaSetScaleDialog } from "./+workloads-replicasets/replicaset-scale-dialog";
 import { CommandContainer } from "./command-palette/command-container";
 
@@ -76,26 +76,50 @@ export class App extends React.Component {
     whatInput.ask(); // Start to monitor user input device
   }
 
-  componentDidMount() {
-    disposeOnUnmount(this, [
-      kubeWatchApi.subscribeStores([podsStore, nodesStore, eventStore], {
-        preload: true,
-      }),
+  @observable extensionRoutes: Map<ClusterPageMenuRegistration, React.ReactNode> = new Map();
 
-      reaction(() => this.warningsTotal, (count: number) => {
-        broadcastMessage(`cluster-warning-event-count:${getHostedCluster().id}`, count);
-      }),
+  async componentDidMount() {
+    const cluster = getHostedCluster();
+    const promises: Promise<void>[] = [];
 
-      reaction(() => clusterPageMenuRegistry.getRootItems(), (rootItems) => {
-        this.generateExtensionTabLayoutRoutes(rootItems);
-      }, {
-        fireImmediately: true
-      })
-    ]);
+    if (isAllowedResource("events") && isAllowedResource("pods")) {
+      promises.push(eventStore.loadAll());
+      promises.push(podsStore.loadAll());
+    }
+
+    if (isAllowedResource("nodes")) {
+      promises.push(nodesStore.loadAll());
+    }
+    await Promise.all(promises);
+
+    if (eventStore.isLoaded && podsStore.isLoaded) {
+      eventStore.subscribe();
+      podsStore.subscribe();
+    }
+
+    if (nodesStore.isLoaded) {
+      nodesStore.subscribe();
+    }
+
+    reaction(() => this.warningsCount, (count) => {
+      broadcastMessage(`cluster-warning-event-count:${cluster.id}`, count);
+    });
+
+    reaction(() => clusterPageMenuRegistry.getRootItems(), (rootItems) => {
+      this.generateExtensionTabLayoutRoutes(rootItems);
+    }, {
+      fireImmediately: true
+    });
   }
 
-  @computed get warningsTotal(): number {
-    return nodesStore.getWarningsCount() + eventStore.getWarningsCount();
+  @computed
+  get warningsCount() {
+    let warnings = sum(nodesStore.items
+      .map(node => node.getWarningConditions().length));
+
+    warnings = warnings + eventStore.getWarnings().length;
+
+    return warnings;
   }
 
   get startURL() {
@@ -128,26 +152,6 @@ export class App extends React.Component {
     return routes;
   }
 
-  renderExtensionTabLayoutRoutes() {
-    return clusterPageMenuRegistry.getRootItems().map((menu, index) => {
-      const tabRoutes = this.getTabLayoutRoutes(menu);
-
-      if (tabRoutes.length > 0) {
-        const pageComponent = () => <TabLayout tabs={tabRoutes}/>;
-
-        return <Route key={`extension-tab-layout-route-${index}`} component={pageComponent} path={tabRoutes.map((tab) => tab.routePath)}/>;
-      } else {
-        const page = clusterPageRegistry.getByPageTarget(menu.target);
-
-        if (page) {
-          return <Route key={`extension-tab-layout-route-${index}`} path={page.url} component={page.components.Page}/>;
-        }
-      }
-    });
-  }
-
-  @observable extensionRoutes: Map<ClusterPageMenuRegistration, React.ReactNode> = new Map();
-
   generateExtensionTabLayoutRoutes(rootItems: ClusterPageMenuRegistration[]) {
     rootItems.forEach((menu, index) => {
       let route = this.extensionRoutes.get(menu);
@@ -176,6 +180,10 @@ export class App extends React.Component {
         this.extensionRoutes.delete(menu);
       }
     }
+  }
+
+  renderExtensionTabLayoutRoutes() {
+    return Array.from(this.extensionRoutes.values());
   }
 
   renderExtensionRoutes() {

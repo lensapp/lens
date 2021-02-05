@@ -92,6 +92,14 @@ export function ensureObjectSelfLink(api: KubeApi, object: KubeJsonApiData) {
 }
 
 export class KubeApi<T extends KubeObject = any> {
+  static parseApi = parseKubeApi;
+
+  static watchAll(...apis: KubeApi[]) {
+    const disposers = apis.map(api => api.watch());
+
+    return () => disposers.forEach(unwatch => unwatch());
+  }
+
   readonly kind: string;
   readonly apiBase: string;
   readonly apiPrefix: string;
@@ -116,7 +124,7 @@ export class KubeApi<T extends KubeObject = any> {
     if (!options.apiBase) {
       options.apiBase = objectConstructor.apiBase;
     }
-    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = parseKubeApi(options.apiBase);
+    const { apiBase, apiPrefix, apiGroup, apiVersion, resource } = KubeApi.parseApi(options.apiBase);
 
     this.kind = kind;
     this.isNamespaced = isNamespaced;
@@ -149,7 +157,7 @@ export class KubeApi<T extends KubeObject = any> {
 
     for (const apiUrl of apiBases) {
       // Split e.g. "/apis/extensions/v1beta1/ingresses" to parts
-      const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = parseKubeApi(apiUrl);
+      const { apiPrefix, apiGroup, apiVersionWithGroup, resource } = KubeApi.parseApi(apiUrl);
 
       // Request available resources
       try {
@@ -358,7 +366,7 @@ export class KubeApi<T extends KubeObject = any> {
   }
 
   watch(): () => void {
-    return kubeWatchApi.subscribeApi(this);
+    return kubeWatchApi.subscribe(this);
   }
 }
 

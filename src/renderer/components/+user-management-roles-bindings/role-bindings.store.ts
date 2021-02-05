@@ -9,8 +9,8 @@ import { apiManager } from "../../api/api-manager";
 export class RoleBindingsStore extends KubeObjectStore<RoleBinding> {
   api = clusterRoleBindingApi;
 
-  getSubscribeApis() {
-    return [clusterRoleBindingApi, roleBindingApi];
+  subscribe() {
+    return super.subscribe([clusterRoleBindingApi, roleBindingApi]);
   }
 
   protected sortItems(items: RoleBinding[]) {

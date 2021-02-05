@@ -52,10 +52,6 @@ export class EventStore extends KubeObjectStore<KubeEvent> {
 
     return compact(eventsWithError);
   }
-
-  getWarningsCount() {
-    return this.getWarnings().length;
-  }
 }
 
 export const eventStore = new EventStore();
