@@ -8,7 +8,7 @@ import type { ClusterContext } from "../components/context";
 
 import plimit from "p-limit";
 import debounce from "lodash/debounce";
-import { comparer, computed, IReactionDisposer, observable, reaction, toJS, when } from "mobx";
+import { comparer, computed, IReactionDisposer, observable, reaction, when } from "mobx";
 import { autobind, EventEmitter, noop } from "../utils";
 import { ensureObjectSelfLink, KubeApi, parseKubeApi } from "./kube-api";
 import { KubeJsonApiData, KubeJsonApiError } from "./kube-json-api";
@@ -147,11 +147,11 @@ export class KubeWatchApi {
   subscribeStores(stores: KubeObjectStore[], opts: IKubeWatchSubscribeStoreOptions = {}): () => void {
     const { preload = true, waitUntilLoaded = true, loadOnce = false, } = opts;
     const apis = new Set(stores.map(store => store.getSubscribeApis()).flat());
+    const subscribingNamespaces = opts.namespaces ?? this.context?.allNamespaces ?? [];
     const unsubscribeList: Function[] = [];
     let isUnsubscribed = false;
 
-    const namespaces = opts.namespaces ?? this.context?.allNamespaces ?? [];
-    const load = () => this.preloadStores(stores, { namespaces, loadOnce });
+    const load = (namespaces = subscribingNamespaces) => this.preloadStores(stores, { namespaces, loadOnce });
     let preloading = preload && load();
     let cancelReloading: IReactionDisposer = noop;
 
@@ -172,10 +172,10 @@ export class KubeWatchApi {
         subscribe();
       }
 
-      // reload stores for requested namespaces
-      cancelReloading = reaction(() => toJS(namespaces), () => {
+      // reload stores only for context namespaces change
+      cancelReloading = reaction(() => this.context?.contextNamespaces, namespaces => {
         preloading?.cancelLoading();
-        preloading = load();
+        preloading = load(namespaces);
       }, {
         equals: comparer.shallow,
       });
