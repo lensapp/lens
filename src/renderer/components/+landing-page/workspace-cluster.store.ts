@@ -46,7 +46,7 @@ export class WorkspaceClusterStore extends ItemStore<ClusterItem> {
 
     const clusterId = cluster.id;
 
-    return super.removeItem(clusterItem, async () => clusterStore.removeById(clusterId));
+    return super.removeItem(clusterItem, () => clusterStore.removeById(clusterId));
   }
   
   async removeSelectedItems() {
