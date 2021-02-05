@@ -20,6 +20,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   abstract api: KubeApi<T>;
   public readonly limit?: number;
   public readonly bufferSize: number = 50000;
+  @observable.ref protected cluster: Cluster;
 
   constructor() {
     super();
@@ -29,29 +30,27 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   // TODO: detach / remove circular dependency
   @observable.ref private namespaceStore: NamespaceStore;
 
-  private async resolveNamespaceStore(): Promise<NamespaceStore> {
+  protected async resolveNamespaceStore(): Promise<NamespaceStore> {
     const { namespaceStore } = await import("./components/+namespaces/namespace.store");
 
-    await namespaceStore.whenReady;
     this.namespaceStore = namespaceStore;
 
     return namespaceStore;
   }
 
-  // TODO: detach / inject dependency as in kube-watch-api
-  @observable.ref private cluster: Cluster;
+  protected async resolveCluster(): Promise<Cluster> {
+    const { getHostedCluster, clusterStore } = await import("../common/cluster-store");
 
-  private async resolveCluster(): Promise<Cluster> {
-    const { getHostedCluster } = await import("../common/cluster-store");
-
+    await clusterStore.whenLoaded;
     this.cluster = getHostedCluster();
+    await this.cluster.whenReady;
 
     return this.cluster;
   }
 
   // TODO: figure out how to transparently replace with this.items
   @computed get contextItems(): T[] {
-    const contextNamespaces = this.namespaceStore?.getContextNamespaces() ?? []; // not loaded
+    const contextNamespaces = this.namespaceStore?.contextNamespaces ?? []; // not loaded
 
     return this.items.filter((item: T) => !item.getNs() || contextNamespaces.includes(item.getId()));
   }
@@ -132,15 +131,15 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  async loadAll(namespaces: string[] = [], { replace = false /*partial update*/ } = {}): Promise<void> {
+  async loadAll(namespaces?: string[], { replace = false /*partial update*/ } = {}): Promise<void> {
     this.isLoading = true;
 
     try {
       // load all available namespaces by default
-      if (!namespaces.length) {
+      if (!namespaces?.length) {
         const namespaceStore = await this.resolveNamespaceStore();
 
-        namespaces = namespaceStore.getContextNamespaces();
+        namespaces = namespaceStore.allowedNamespaces; // load all by default if list not provided
       }
 
       const items = await this.loadItems({ namespaces, api: this.api });
@@ -177,8 +176,8 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     return items;
   }
 
-  async loadContextNamespaces(): Promise<void> {
-    return this.loadAll(this.namespaceStore?.getContextNamespaces());
+  async loadAllFromContextNamespaces(): Promise<void> {
+    return this.loadAll(this.namespaceStore?.contextNamespaces);
   }
 
   protected resetOnError(error: any) {

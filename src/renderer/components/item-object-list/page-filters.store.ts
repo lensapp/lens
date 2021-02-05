@@ -27,10 +27,11 @@ export class PageFiltersStore {
     this.syncWithContextNamespace();
   }
 
+  // todo: refactor
   protected syncWithContextNamespace() {
     const disposers = [
       reaction(() => this.getValues(FilterType.NAMESPACE), filteredNs => {
-        if (filteredNs.length !== namespaceStore.getContextNamespaces().length) {
+        if (filteredNs.length !== namespaceStore.contextNamespaces.length) {
           namespaceStore.setContext(filteredNs);
         }
       }),

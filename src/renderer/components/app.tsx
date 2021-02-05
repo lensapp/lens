@@ -76,10 +76,9 @@ export class App extends React.Component {
     });
     whatInput.ask(); // Start to monitor user input device
 
-    await namespaceStore.whenReady;
     await kubeWatchApi.init({
-      getCluster: getHostedCluster,
-      getNamespaces: namespaceStore.getContextNamespaces,
+      getCluster: () => getHostedCluster(),
+      getNamespaces: () => namespaceStore.contextNamespaces,
     });
   }
 

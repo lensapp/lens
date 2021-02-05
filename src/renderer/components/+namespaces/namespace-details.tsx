@@ -32,8 +32,8 @@ export class NamespaceDetails extends React.Component<Props> {
   }
 
   componentDidMount() {
-    resourceQuotaStore.loadContextNamespaces();
-    limitRangeStore.loadContextNamespaces();
+    resourceQuotaStore.loadAllFromContextNamespaces();
+    limitRangeStore.loadAllFromContextNamespaces();
   }
 
   render() {

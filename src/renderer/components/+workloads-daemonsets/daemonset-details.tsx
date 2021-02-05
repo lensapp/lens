@@ -30,7 +30,7 @@ export class DaemonSetDetails extends React.Component<Props> {
   });
 
   componentDidMount() {
-    podsStore.loadContextNamespaces();
+    podsStore.loadAllFromContextNamespaces();
   }
 
   componentWillUnmount() {

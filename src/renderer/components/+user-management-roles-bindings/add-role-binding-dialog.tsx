@@ -80,7 +80,7 @@ export class AddRoleBindingDialog extends React.Component<Props> {
     ];
 
     this.isLoading = true;
-    await Promise.all(stores.map(store => store.loadContextNamespaces()));
+    await Promise.all(stores.map(store => store.loadAllFromContextNamespaces()));
     this.isLoading = false;
   }
 

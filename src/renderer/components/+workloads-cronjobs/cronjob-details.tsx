@@ -20,7 +20,7 @@ interface Props extends KubeObjectDetailsProps<CronJob> {
 @observer
 export class CronJobDetails extends React.Component<Props> {
   async componentDidMount() {
-    jobStore.loadContextNamespaces();
+    jobStore.loadAllFromContextNamespaces();
   }
 
   render() {
