@@ -100,13 +100,19 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   protected async loadItems({ namespaces, api }: KubeObjectStoreLoadingParams): Promise<T[]> {
     if (this.context?.cluster.isAllowedResource(api.kind)) {
-      if (api.isNamespaced) {
-        return Promise
+      if (!api.isNamespaced) {
+        return api.list({}, this.query);
+      }
+
+      const isLoadingAll = this.context.allNamespaces.every(ns => namespaces.includes(ns));
+
+      if (isLoadingAll) {
+        return api.list({}, this.query);
+      } else {
+        return Promise // load resources per namespace
           .all(namespaces.map(namespace => api.list({ namespace })))
           .then(items => items.flat());
       }
-
-      return api.list({}, this.query);
     }
 
     return [];
