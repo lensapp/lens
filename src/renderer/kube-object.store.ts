@@ -38,6 +38,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
     return this.items.filter(item => {
       const itemNamespace = item.getNs();
+
       return !itemNamespace /* cluster-wide */ || namespaces.includes(itemNamespace);
     });
   }

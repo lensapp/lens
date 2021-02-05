@@ -220,6 +220,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     });
 
     const items = this.props.items ?? allItems;
+
     return this.applyFilters(filterItems, items);
   }
 
