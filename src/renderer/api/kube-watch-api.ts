@@ -26,6 +26,7 @@ export interface IKubeWatchMessage<T extends KubeObject = any> {
 }
 
 export interface IKubeWatchSubscribeStoreOptions {
+  namespaces?: string[]; // todo: support custom namespaces to subscribe
   preload?: boolean; // preload store items, default: true
   waitUntilLoaded?: boolean; // subscribe only after loading all stores, default: true
   loadOnce?: boolean; // check store.isLoaded to skip loading if done already, default: false
@@ -133,7 +134,9 @@ export class KubeWatchApi {
       preloading.push(limitRequests(async () => {
         if (store.isLoaded && opts.loadOnce) return; // skip
 
-        return store.loadAll({ namespaces: opts.namespaces });
+        return store.loadAll({
+          namespaces: opts.namespaces ?? this.context?.contextNamespaces,
+        });
       }));
     }
 

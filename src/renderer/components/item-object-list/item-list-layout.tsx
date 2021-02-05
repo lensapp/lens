@@ -138,7 +138,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const { store, dependentStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
 
-    // loads context namespaces by default (see also: `<NamespaceSelectFilter/>`)
+    // load context namespaces by default (see also: `<NamespaceSelectFilter/>`)
     stores.forEach(store => store.loadAll(namespaceStore.contextNamespaces));
   }
 

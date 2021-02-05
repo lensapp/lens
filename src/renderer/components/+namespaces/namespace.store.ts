@@ -41,7 +41,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private async init() {
-    if (!this.context) return; // skip for non-cluster context window
+    await this.contextReady;
 
     this.setContext(this.initialNamespaces);
     this.autoLoadAllowedNamespaces();
