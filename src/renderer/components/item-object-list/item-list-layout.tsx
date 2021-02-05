@@ -38,6 +38,7 @@ interface IHeaderPlaceholders {
 export interface ItemListLayoutProps<T extends ItemObject = ItemObject> {
   tableId?: string;
   className: IClassName;
+  items?: T[];
   store: ItemStore<T>;
   dependentStores?: ItemStore[];
   preloadStores?: boolean;
@@ -218,7 +219,8 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
       }
     });
 
-    return this.applyFilters(filterItems, allItems);
+    const items = this.props.items ?? allItems;
+    return this.applyFilters(filterItems, items);
   }
 
   @autobind()

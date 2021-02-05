@@ -8,7 +8,7 @@ import type { ClusterContext } from "../components/context";
 
 import plimit from "p-limit";
 import debounce from "lodash/debounce";
-import { comparer, computed, IReactionDisposer, observable, reaction, when } from "mobx";
+import { comparer, computed, IReactionDisposer, observable, reaction, toJS, when } from "mobx";
 import { autobind, EventEmitter, noop } from "../utils";
 import { ensureObjectSelfLink, KubeApi, parseKubeApi } from "./kube-api";
 import { KubeJsonApiData, KubeJsonApiError } from "./kube-json-api";
@@ -26,7 +26,7 @@ export interface IKubeWatchMessage<T extends KubeObject = any> {
 }
 
 export interface IKubeWatchSubscribeStoreOptions {
-  namespaces?: string[]; // todo: support custom namespaces to subscribe
+  namespaces?: string[]; // default: all accessible namespaces
   preload?: boolean; // preload store items, default: true
   waitUntilLoaded?: boolean; // subscribe only after loading all stores, default: true
   loadOnce?: boolean; // check store.isLoaded to skip loading if done already, default: false
@@ -134,9 +134,7 @@ export class KubeWatchApi {
       preloading.push(limitRequests(async () => {
         if (store.isLoaded && opts.loadOnce) return; // skip
 
-        return store.loadAll({
-          namespaces: opts.namespaces ?? this.context?.contextNamespaces,
-        });
+        return store.loadAll({ namespaces: opts.namespaces });
       }));
     }
 
@@ -146,13 +144,14 @@ export class KubeWatchApi {
     };
   }
 
-  subscribeStores(stores: KubeObjectStore[], options: IKubeWatchSubscribeStoreOptions = {}): () => void {
-    const { preload = true, waitUntilLoaded = true, loadOnce = false } = options;
+  subscribeStores(stores: KubeObjectStore[], opts: IKubeWatchSubscribeStoreOptions = {}): () => void {
+    const { preload = true, waitUntilLoaded = true, loadOnce = false, } = opts;
     const apis = new Set(stores.map(store => store.getSubscribeApis()).flat());
-    const unsubscribeList: (() => void)[] = [];
+    const unsubscribeList: Function[] = [];
     let isUnsubscribed = false;
 
-    const load = (namespaces?: string[]) => this.preloadStores(stores, { namespaces, loadOnce });
+    const namespaces = opts.namespaces ?? this.context?.allNamespaces ?? [];
+    const load = () => this.preloadStores(stores, { namespaces, loadOnce });
     let preloading = preload && load();
     let cancelReloading: IReactionDisposer = noop;
 
@@ -166,17 +165,17 @@ export class KubeWatchApi {
         preloading.loading.then(subscribe, error => {
           this.log({
             message: new Error("Loading stores has failed"),
-            meta: { stores, error, options },
+            meta: { stores, error, options: opts },
           });
         });
       } else {
         subscribe();
       }
 
-      // partial reload only selected namespaces
-      cancelReloading = reaction(() => this.context.contextNamespaces, namespaces => {
+      // reload stores for requested namespaces
+      cancelReloading = reaction(() => toJS(namespaces), () => {
         preloading?.cancelLoading();
-        preloading = load(namespaces);
+        preloading = load();
       }, {
         equals: comparer.shallow,
       });

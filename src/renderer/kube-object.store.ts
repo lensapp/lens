@@ -1,6 +1,6 @@
 import type { ClusterContext } from "./components/context";
 
-import { action, observable, reaction, when } from "mobx";
+import { action, computed, observable, reaction, when } from "mobx";
 import { autobind } from "./utils";
 import { KubeObject } from "./api/kube-object";
 import { IKubeWatchEvent, IKubeWatchMessage, kubeWatchApi } from "./api/kube-watch-api";
@@ -24,13 +24,22 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
 
   contextReady = when(() => Boolean(this.context));
 
+  constructor() {
+    super();
+    this.bindWatchEventsUpdater();
+  }
+
   get context(): ClusterContext {
     return KubeObjectStore.defaultContext;
   }
 
-  constructor() {
-    super();
-    this.bindWatchEventsUpdater();
+  @computed get contextItems(): T[] {
+    const namespaces = this.context?.contextNamespaces ?? [];
+
+    return this.items.filter(item => {
+      const itemNamespace = item.getNs();
+      return !itemNamespace /* cluster-wide */ || namespaces.includes(itemNamespace);
+    });
   }
 
   get query(): IKubeApiQueryParams {
@@ -107,21 +116,22 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  async loadAll({ namespaces = [], merge = true } = {}): Promise<void | T[]> {
+  async loadAll(options: { namespaces?: string[], merge?: boolean } = {}): Promise<void | T[]> {
     await this.contextReady;
     this.isLoading = true;
 
     try {
-      if (!namespaces.length) {
-        namespaces = this.context.allNamespaces; // load all available namespaces by default
-      }
+      const {
+        namespaces = this.context.allNamespaces, // load all namespaces by default
+        merge = true, // merge loaded items or return as result
+      } = options;
 
       const items = await this.loadItems({ namespaces, api: this.api });
 
       this.isLoaded = true;
 
       if (merge) {
-        this.mergeItems(items);
+        this.mergeItems(items, { replace: false });
       } else {
         return items;
       }
@@ -134,7 +144,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  reloadAll(opts: { namespaces?: string[], merge?: boolean, force?: boolean } = {}) {
+  reloadAll(opts: { force?: boolean, namespaces?: string[], merge?: boolean } = {}) {
     const { force = false, ...loadingOptions } = opts;
 
     if (this.isLoading || (this.isLoaded && !force)) {
@@ -145,7 +155,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  mergeItems(partialItems: T[], { replace = true, updateStore = true, sort = true, filter = true } = {}): T[] {
+  mergeItems(partialItems: T[], { replace = false, updateStore = true, sort = true, filter = true } = {}): T[] {
     let items = partialItems;
 
     // update existing items
