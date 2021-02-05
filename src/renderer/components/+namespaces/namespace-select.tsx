@@ -85,9 +85,10 @@ export class NamespaceSelectFilter extends React.Component {
     const namespaces = namespaceStore.getContextNamespaces();
 
     switch (namespaces.length) {
-      case 0:
       case namespaceStore.allowedNamespaces.length:
         return <>All namespaces</>;
+      case 0:
+        return <>Select a namespace</>;
       case 1:
         return <>Namespace: {namespaces[0]}</>;
       default:
@@ -115,7 +116,7 @@ export class NamespaceSelectFilter extends React.Component {
     if (namespace) {
       namespaceStore.toggleContext(namespace);
     } else {
-      namespaceStore.resetContext(); // "All namespaces" clicked, empty list considered as "all"
+      namespaceStore.toggleAll(); // "All namespaces" option clicked
     }
   };
 
