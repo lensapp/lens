@@ -1,14 +1,14 @@
 // Kubernetes watch-api client
 // API: https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams
 
-import type { Cluster } from "../../main/cluster";
 import type { IKubeWatchEvent, IKubeWatchEventStreamEnd, IWatchRoutePayload } from "../../main/routes/watch-route";
 import type { KubeObject } from "./kube-object";
 import type { KubeObjectStore } from "../kube-object.store";
+import type { ClusterContext } from "../components/context";
 
 import plimit from "p-limit";
 import debounce from "lodash/debounce";
-import { autorun, comparer, computed, IReactionDisposer, observable, reaction } from "mobx";
+import { comparer, computed, IReactionDisposer, observable, reaction, when } from "mobx";
 import { autobind, EventEmitter, noop } from "../utils";
 import { ensureObjectSelfLink, KubeApi, parseKubeApi } from "./kube-api";
 import { KubeJsonApiData, KubeJsonApiError } from "./kube-json-api";
@@ -48,21 +48,18 @@ export class KubeWatchApi {
   private reader: ReadableStreamReader<string>;
   public onMessage = new EventEmitter<[IKubeWatchMessage]>();
 
-  @observable.ref private cluster: Cluster;
-  @observable.ref private namespaces: string[] = [];
+  @observable context: ClusterContext = null;
   @observable subscribers = observable.map<KubeApi, number>();
   @observable isConnected = false;
 
-  @computed get isReady(): boolean {
-    return Boolean(this.cluster && this.namespaces);
-  }
+  contextReady = when(() => Boolean(this.context));
 
   @computed get isActive(): boolean {
     return this.apis.length > 0;
   }
 
   @computed get apis(): string[] {
-    if (!this.isReady) {
+    if (!this.context) {
       return [];
     }
 
@@ -72,22 +69,20 @@ export class KubeWatchApi {
       }
 
       // TODO: optimize - check when all namespaces are selected and then request all in one
-      if (api.isNamespaced && !this.cluster.isGlobalWatchEnabled) {
-        return this.namespaces.map(namespace => api.getWatchUrl(namespace));
+      if (api.isNamespaced && !this.context.cluster.isGlobalWatchEnabled) {
+        return this.context.contextNamespaces.map(namespace => api.getWatchUrl(namespace));
       }
 
       return api.getWatchUrl();
     }).flat();
   }
 
-  async init({ getCluster, getNamespaces }: {
-    getCluster: () => Cluster,
-    getNamespaces: () => string[],
-  }): Promise<void> {
-    autorun(() => {
-      this.cluster = getCluster();
-      this.namespaces = getNamespaces();
-    });
+  constructor() {
+    this.init();
+  }
+
+  private async init() {
+    await this.contextReady;
     this.bindAutoConnect();
   }
 
@@ -109,7 +104,7 @@ export class KubeWatchApi {
   }
 
   isAllowedApi(api: KubeApi): boolean {
-    return Boolean(this?.cluster.isAllowedResource(api.kind));
+    return Boolean(this.context?.cluster.isAllowedResource(api.kind));
   }
 
   subscribeApi(api: KubeApi | KubeApi[]): () => void {
@@ -130,15 +125,15 @@ export class KubeWatchApi {
     };
   }
 
-  preloadStores(stores: KubeObjectStore[], { loadOnce = false } = {}) {
+  preloadStores(stores: KubeObjectStore[], opts: { namespaces?: string[], loadOnce?: boolean } = {}) {
     const limitRequests = plimit(1); // load stores one by one to allow quick skipping when fast clicking btw pages
     const preloading: Promise<any>[] = [];
 
     for (const store of stores) {
       preloading.push(limitRequests(async () => {
-        if (store.isLoaded && loadOnce) return; // skip
+        if (store.isLoaded && opts.loadOnce) return; // skip
 
-        return store.loadAll(this.namespaces);
+        return store.loadAll({ namespaces: opts.namespaces });
       }));
     }
 
@@ -154,7 +149,7 @@ export class KubeWatchApi {
     const unsubscribeList: (() => void)[] = [];
     let isUnsubscribed = false;
 
-    const load = () => this.preloadStores(stores, { loadOnce });
+    const load = (namespaces?: string[]) => this.preloadStores(stores, { namespaces, loadOnce });
     let preloading = preload && load();
     let cancelReloading: IReactionDisposer = noop;
 
@@ -175,10 +170,10 @@ export class KubeWatchApi {
         subscribe();
       }
 
-      // reload when context namespaces changes
-      cancelReloading = reaction(() => this.namespaces, () => {
+      // partial reload only selected namespaces
+      cancelReloading = reaction(() => this.context.contextNamespaces, namespaces => {
         preloading?.cancelLoading();
-        preloading = load();
+        preloading = load(namespaces);
       }, {
         equals: comparer.shallow,
       });
@@ -291,7 +286,7 @@ export class KubeWatchApi {
         }
 
         // skip updates from non-watching resources context
-        if (!namespace || this.namespaces.includes(namespace)) {
+        if (!namespace || this.context?.contextNamespaces.includes(namespace)) {
           this.onMessage.emit(message);
         }
       } catch (error) {

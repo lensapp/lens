@@ -41,8 +41,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private async init() {
-    await this.resolveCluster();
-    if (!this.cluster) return; // skip for non-cluster context window
+    if (!this.context) return; // skip for non-cluster context window
 
     this.setContext(this.initialNamespaces);
     this.autoLoadAllowedNamespaces();
@@ -66,7 +65,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
   }
 
   private autoLoadAllowedNamespaces(): IReactionDisposer {
-    return reaction(() => this.allowedNamespaces, namespaces => this.loadAll(namespaces), {
+    return reaction(() => this.allowedNamespaces, namespaces => this.loadAll({ namespaces }), {
       fireImmediately: true,
       equals: comparer.shallow,
     });
@@ -94,8 +93,8 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   @computed get allowedNamespaces(): string[] {
     return Array.from(new Set([
-      ...(this.cluster?.allowedNamespaces ?? []), // loaded names from main, updating every 30s and thus might be stale
-      ...this.items.map(item => item.getName()), // loaded names from hosted cluster
+      ...(this.context?.allNamespaces ?? []), // allowed namespaces from cluster (main), updating every 30s
+      ...this.items.map(item => item.getName()), // loaded namespaces from k8s api
     ].flat()));
   }
 
@@ -111,7 +110,7 @@ export class NamespaceStore extends KubeObjectStore<Namespace> {
 
   getSubscribeApis() {
     // if user has given static list of namespaces let's not start watches because watch adds stuff that's not wanted
-    if (this.cluster?.accessibleNamespaces.length > 0) {
+    if (this.context?.cluster.accessibleNamespaces.length > 0) {
       return [];
     }
 
