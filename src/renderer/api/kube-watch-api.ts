@@ -277,10 +277,6 @@ export class KubeWatchApi {
         const message = this.getMessage(kubeEvent);
         const { data, namespace } = message;
 
-        if (!this.isAllowedApi(message.api)) {
-          return;
-        }
-
         // log all data events
         if (data) {
           this.log({
