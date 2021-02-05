@@ -5,11 +5,12 @@ import type { Cluster } from "../../main/cluster";
 import type { IKubeWatchEvent, IKubeWatchEventStreamEnd, IWatchRoutePayload } from "../../main/routes/watch-route";
 import type { KubeObject } from "./kube-object";
 import type { KubeObjectStore } from "../kube-object.store";
+import type { NamespaceStore } from "../components/+namespaces/namespace.store";
 
 import plimit from "p-limit";
 import debounce from "lodash/debounce";
-import { autorun, comparer, computed, IReactionDisposer, observable, reaction } from "mobx";
-import { autobind, EventEmitter, noop } from "../utils";
+import { comparer, computed, observable, reaction } from "mobx";
+import { autobind, EventEmitter } from "../utils";
 import { ensureObjectSelfLink, KubeApi, parseKubeApi } from "./kube-api";
 import { KubeJsonApiData, KubeJsonApiError } from "./kube-json-api";
 import { apiPrefix, isDebugging, isProduction } from "../../common/vars";
@@ -18,7 +19,6 @@ import { apiManager } from "./api-manager";
 export { IKubeWatchEvent, IKubeWatchEventStreamEnd };
 
 export interface IKubeWatchMessage<T extends KubeObject = any> {
-  namespace?: string;
   data?: IKubeWatchEvent<KubeJsonApiData>
   error?: IKubeWatchEvent<KubeJsonApiError>;
   api?: KubeApi<T>;
@@ -28,7 +28,7 @@ export interface IKubeWatchMessage<T extends KubeObject = any> {
 export interface IKubeWatchSubscribeStoreOptions {
   preload?: boolean; // preload store items, default: true
   waitUntilLoaded?: boolean; // subscribe only after loading all stores, default: true
-  loadOnce?: boolean; // check store.isLoaded to skip loading if done already, default: false
+  cacheLoading?: boolean; // when enabled loading store will be skipped, default: false
 }
 
 export interface IKubeWatchReconnectOptions {
@@ -43,49 +43,50 @@ export interface IKubeWatchLog {
 
 @autobind()
 export class KubeWatchApi {
+  private cluster: Cluster;
+  private namespaceStore: NamespaceStore;
+
   private requestId = 0;
+  private isConnected = false;
   private reader: ReadableStreamReader<string>;
+  private subscribers = observable.map<KubeApi, number>();
+
+  // events
   public onMessage = new EventEmitter<[IKubeWatchMessage]>();
-
-  @observable.ref private cluster: Cluster;
-  @observable.ref private namespaces: string[] = [];
-  @observable subscribers = observable.map<KubeApi, number>();
-  @observable isConnected = false;
-
-  @computed get isReady(): boolean {
-    return Boolean(this.cluster && this.namespaces);
-  }
 
   @computed get isActive(): boolean {
     return this.apis.length > 0;
   }
 
   @computed get apis(): string[] {
-    if (!this.isReady) {
-      return [];
-    }
+    const { cluster, namespaceStore } = this;
+    const activeApis = Array.from(this.subscribers.keys());
 
-    return Array.from(this.subscribers.keys()).map(api => {
-      if (!this.isAllowedApi(api)) {
+    return activeApis.map(api => {
+      if (!cluster.isAllowedResource(api.kind)) {
         return [];
       }
 
-      if (api.isNamespaced && !this.cluster.isGlobalWatchEnabled) {
-        return this.namespaces.map(namespace => api.getWatchUrl(namespace));
+      if (api.isNamespaced) {
+        return namespaceStore.getContextNamespaces().map(namespace => api.getWatchUrl(namespace));
+      } else {
+        return api.getWatchUrl();
       }
-
-      return api.getWatchUrl();
     }).flat();
   }
 
-  async init({ getCluster, getNamespaces }: {
-    getCluster: () => Cluster,
-    getNamespaces: () => string[],
-  }): Promise<void> {
-    autorun(() => {
-      this.cluster = getCluster();
-      this.namespaces = getNamespaces();
-    });
+  constructor() {
+    this.init();
+  }
+
+  private async init() {
+    const { getHostedCluster } = await import("../../common/cluster-store");
+    const { namespaceStore } = await import("../components/+namespaces/namespace.store");
+
+    await namespaceStore.whenReady;
+
+    this.cluster = getHostedCluster();
+    this.namespaceStore = namespaceStore;
     this.bindAutoConnect();
   }
 
@@ -107,7 +108,7 @@ export class KubeWatchApi {
   }
 
   isAllowedApi(api: KubeApi): boolean {
-    return Boolean(this?.cluster.isAllowedResource(api.kind));
+    return !!this?.cluster.isAllowedResource(api.kind);
   }
 
   subscribeApi(api: KubeApi | KubeApi[]): () => void {
@@ -128,66 +129,45 @@ export class KubeWatchApi {
     };
   }
 
-  preloadStores(stores: KubeObjectStore[], { loadOnce = false } = {}) {
+  subscribeStores(stores: KubeObjectStore[], options: IKubeWatchSubscribeStoreOptions = {}): () => void {
+    const { preload = true, waitUntilLoaded = true, cacheLoading = false } = options;
     const limitRequests = plimit(1); // load stores one by one to allow quick skipping when fast clicking btw pages
     const preloading: Promise<any>[] = [];
-
-    for (const store of stores) {
-      preloading.push(limitRequests(async () => {
-        if (store.isLoaded && loadOnce) return; // skip
-
-        return store.loadAll(this.namespaces);
-      }));
-    }
-
-    return {
-      loading: Promise.allSettled(preloading),
-      cancelLoading: () => limitRequests.clearQueue(),
-    };
-  }
-
-  subscribeStores(stores: KubeObjectStore[], options: IKubeWatchSubscribeStoreOptions = {}): () => void {
-    const { preload = true, waitUntilLoaded = true, loadOnce = false } = options;
     const apis = new Set(stores.map(store => store.getSubscribeApis()).flat());
     const unsubscribeList: (() => void)[] = [];
     let isUnsubscribed = false;
-
-    const load = () => this.preloadStores(stores, { loadOnce });
-    let preloading = preload && load();
-    let cancelReloading: IReactionDisposer = noop;
 
     const subscribe = () => {
       if (isUnsubscribed) return;
       apis.forEach(api => unsubscribeList.push(this.subscribeApi(api)));
     };
 
-    if (preloading) {
-      if (waitUntilLoaded) {
-        preloading.loading.then(subscribe, error => {
-          this.log({
-            message: new Error("Loading stores has failed"),
-            meta: { stores, error, options },
-          });
-        });
-      } else {
-        subscribe();
-      }
+    if (preload) {
+      for (const store of stores) {
+        preloading.push(limitRequests(async () => {
+          if (cacheLoading && store.isLoaded) return; // skip
 
-      // reload when context namespaces changes
-      cancelReloading = reaction(() => this.namespaces, () => {
-        preloading?.cancelLoading();
-        preloading = load();
-      }, {
-        equals: comparer.shallow,
+          return store.loadAll();
+        }));
+      }
+    }
+
+    if (waitUntilLoaded) {
+      Promise.all(preloading).then(subscribe, error => {
+        this.log({
+          message: new Error("Loading stores has failed"),
+          meta: { stores, error, options },
+        });
       });
+    } else {
+      subscribe();
     }
 
     // unsubscribe
     return () => {
       if (isUnsubscribed) return;
       isUnsubscribed = true;
-      cancelReloading();
-      preloading?.cancelLoading();
+      limitRequests.clearQueue();
       unsubscribeList.forEach(unsubscribe => unsubscribe());
     };
   }
@@ -274,10 +254,6 @@ export class KubeWatchApi {
         const kubeEvent: IKubeWatchEvent = JSON.parse(json);
         const message = this.getMessage(kubeEvent);
 
-        if (!this.namespaces.includes(message.namespace)) {
-          continue; // skip updates from non-watching resources context
-        }
-
         this.onMessage.emit(message);
       } catch (error) {
         return json;
@@ -310,7 +286,6 @@ export class KubeWatchApi {
 
           message.api = api;
           message.store = apiManager.getStore(api);
-          message.namespace = namespace;
         }
         break;
       }

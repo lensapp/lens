@@ -106,18 +106,17 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  async loadAll(namespaces: string[] = []): Promise<void> {
+  async loadAll({ namespaces: contextNamespaces }: { namespaces?: string[] } = {}) {
     this.isLoading = true;
 
     try {
-      if (!namespaces.length) {
+      if (!contextNamespaces) {
         const { namespaceStore } = await import("./components/+namespaces/namespace.store");
 
-        // load all available namespaces by default
-        namespaces.push(...namespaceStore.allowedNamespaces);
+        contextNamespaces = namespaceStore.getContextNamespaces();
       }
 
-      let items = await this.loadItems({ namespaces, api: this.api });
+      let items = await this.loadItems({ namespaces: contextNamespaces, api: this.api });
 
       items = this.filterItemsOnLoad(items);
       items = this.sortItems(items);
@@ -130,12 +129,6 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     } finally {
       this.isLoading = false;
     }
-  }
-
-  async loadSelectedNamespaces(): Promise<void> {
-    const { namespaceStore } = await import("./components/+namespaces/namespace.store");
-
-    return this.loadAll(namespaceStore.getContextNamespaces());
   }
 
   protected resetOnError(error: any) {

@@ -1,5 +1,4 @@
 import React from "react";
-import { computed, observable, reaction } from "mobx";
 import { disposeOnUnmount, observer } from "mobx-react";
 import { Redirect, Route, Router, Switch } from "react-router";
 import { history } from "../navigation";
@@ -43,7 +42,7 @@ import { ClusterPageMenuRegistration, clusterPageMenuRegistry } from "../../exte
 import { TabLayout, TabLayoutRoute } from "./layout/tab-layout";
 import { StatefulSetScaleDialog } from "./+workloads-statefulsets/statefulset-scale-dialog";
 import { eventStore } from "./+events/event.store";
-import { namespaceStore } from "./+namespaces/namespace.store";
+import { computed, reaction, observable } from "mobx";
 import { nodesStore } from "./+nodes/nodes.store";
 import { podsStore } from "./+workloads-pods/pods.store";
 import { kubeWatchApi } from "../api/kube-watch-api";
@@ -75,12 +74,6 @@ export class App extends React.Component {
       window.location.reload();
     });
     whatInput.ask(); // Start to monitor user input device
-
-    await namespaceStore.whenReady;
-    await kubeWatchApi.init({
-      getCluster: getHostedCluster,
-      getNamespaces: namespaceStore.getContextNamespaces,
-    });
   }
 
   componentDidMount() {

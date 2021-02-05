@@ -138,7 +138,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
     const { store, dependentStores } = this.props;
     const stores = Array.from(new Set([store, ...dependentStores]));
 
-    stores.forEach(store => store.loadAll(namespaceStore.getContextNamespaces()));
+    stores.forEach(store => store.loadAll());
   }
 
   private filterCallbacks: { [type: string]: ItemsFilter } = {
