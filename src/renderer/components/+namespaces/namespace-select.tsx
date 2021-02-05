@@ -13,14 +13,17 @@ import { kubeWatchApi } from "../../api/kube-watch-api";
 
 interface Props extends SelectProps {
   showIcons?: boolean;
-  showClusterOption?: boolean; // show "Cluster" option on the top (default: false)
-  showAllNamespacesOption?: boolean; // show "All namespaces" option on the top (default: false)
-  customizeOptions?(options: SelectOption[]): SelectOption[];
+  showClusterOption?: boolean; // show cluster option on the top (default: false)
+  clusterOptionLabel?: React.ReactNode; // label for cluster option (default: "Cluster")
+  customizeOptions?(nsOptions: SelectOption[]): SelectOption[];
 }
 
 const defaultProps: Partial<Props> = {
   showIcons: true,
   showClusterOption: false,
+  get clusterOptionLabel() {
+    return `Cluster`;
+  },
 };
 
 @observer
@@ -36,17 +39,13 @@ export class NamespaceSelect extends React.Component<Props> {
   }
 
   @computed get options(): SelectOption[] {
-    const { customizeOptions, showClusterOption, showAllNamespacesOption } = this.props;
+    const { customizeOptions, showClusterOption, clusterOptionLabel } = this.props;
     let options: SelectOption[] = namespaceStore.items.map(ns => ({ value: ns.getName() }));
 
-    if (showAllNamespacesOption) {
-      options.unshift({ label: "All Namespaces", value: "" });
-    } else if (showClusterOption) {
-      options.unshift({ label: "Cluster", value: "" });
-    }
+    options = customizeOptions ? customizeOptions(options) : options;
 
-    if (customizeOptions) {
-      options = customizeOptions(options);
+    if (showClusterOption) {
+      options.unshift({ value: null, label: clusterOptionLabel });
     }
 
     return options;
@@ -65,7 +64,7 @@ export class NamespaceSelect extends React.Component<Props> {
   };
 
   render() {
-    const { className, showIcons, customizeOptions, ...selectProps } = this.props;
+    const { className, showIcons, showClusterOption, clusterOptionLabel, customizeOptions, ...selectProps } = this.props;
 
     return (
       <Select
@@ -81,56 +80,32 @@ export class NamespaceSelect extends React.Component<Props> {
 
 @observer
 export class NamespaceSelectFilter extends React.Component {
-  @computed get placeholder(): React.ReactNode {
-    const namespaces = namespaceStore.getContextNamespaces();
-
-    switch (namespaces.length) {
-      case namespaceStore.allowedNamespaces.length:
-        return <>All namespaces</>;
-      case 0:
-        return <>Select a namespace</>;
-      case 1:
-        return <>Namespace: {namespaces[0]}</>;
-      default:
-        return <>Namespaces: {namespaces.join(", ")}</>;
-    }
-  }
-
-  formatOptionLabel = ({ value: namespace, label }: SelectOption) => {
-    if (namespace) {
-      const isSelected = namespaceStore.hasContext(namespace);
-
-      return (
-        <div className="flex gaps align-center">
-          <FilterIcon type={FilterType.NAMESPACE}/>
-          <span>{namespace}</span>
-          {isSelected && <Icon small material="check" className="box right"/>}
-        </div>
-      );
-    }
-
-    return label;
-  };
-
-  onChange = ([{ value: namespace }]: SelectOption[]) => {
-    if (namespace) {
-      namespaceStore.toggleContext(namespace);
-    } else {
-      namespaceStore.toggleAll(); // "All namespaces" option clicked
-    }
-  };
-
   render() {
+    const { contextNs, hasContext, toggleContext } = namespaceStore;
+    let placeholder = <>All namespaces</>;
+
+    if (contextNs.length == 1) placeholder = <>Namespace: {contextNs[0]}</>;
+    if (contextNs.length >= 2) placeholder = <>Namespaces: {contextNs.join(", ")}</>;
+
     return (
       <NamespaceSelect
-        isMulti={true}
-        showAllNamespacesOption={true}
+        placeholder={placeholder}
         closeMenuOnSelect={false}
         isOptionSelected={() => false}
         controlShouldRenderValue={false}
-        placeholder={this.placeholder}
-        onChange={this.onChange}
-        formatOptionLabel={this.formatOptionLabel}
+        isMulti
+        onChange={([{ value }]: SelectOption[]) => toggleContext(value)}
+        formatOptionLabel={({ value: namespace }: SelectOption) => {
+          const isSelected = hasContext(namespace);
+
+          return (
+            <div className="flex gaps align-center">
+              <FilterIcon type={FilterType.NAMESPACE}/>
+              <span>{namespace}</span>
+              {isSelected && <Icon small material="check" className="box right"/>}
+            </div>
+          );
+        }}
       />
     );
   }
