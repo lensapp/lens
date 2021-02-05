@@ -74,7 +74,7 @@ export class TableCell extends React.Component<TableCellProps> {
     const content = displayBooleans(displayBoolean, title || children);
 
     return (
-      <div {...cellProps} className={classNames} onClick={this.onClick}>
+      <div {...cellProps} id={className} className={classNames} onClick={this.onClick}>
         {this.renderCheckbox()}
         {_nowrap ? <div className="content">{content}</div> : content}
         {this.renderSortIcon()}

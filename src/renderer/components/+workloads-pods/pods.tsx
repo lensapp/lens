@@ -19,7 +19,8 @@ import { lookupApiLink } from "../../api/kube-api";
 import { KubeObjectStatusIcon } from "../kube-object-status-icon";
 import { Badge } from "../badge";
 
-enum columnId {
+
+enum sortBy {
   name = "name",
   namespace = "namespace",
   containers = "containers",
@@ -76,15 +77,15 @@ export class Pods extends React.Component<Props> {
         tableId = "workloads_pods"
         isConfigurable
         sortingCallbacks={{
-          [columnId.name]: (pod: Pod) => pod.getName(),
-          [columnId.namespace]: (pod: Pod) => pod.getNs(),
-          [columnId.containers]: (pod: Pod) => pod.getContainers().length,
-          [columnId.restarts]: (pod: Pod) => pod.getRestartsCount(),
-          [columnId.owners]: (pod: Pod) => pod.getOwnerRefs().map(ref => ref.kind),
-          [columnId.qos]: (pod: Pod) => pod.getQosClass(),
-          [columnId.node]: (pod: Pod) => pod.getNodeName(),
-          [columnId.age]: (pod: Pod) => pod.metadata.creationTimestamp,
-          [columnId.status]: (pod: Pod) => pod.getStatusMessage(),
+          [sortBy.name]: (pod: Pod) => pod.getName(),
+          [sortBy.namespace]: (pod: Pod) => pod.getNs(),
+          [sortBy.containers]: (pod: Pod) => pod.getContainers().length,
+          [sortBy.restarts]: (pod: Pod) => pod.getRestartsCount(),
+          [sortBy.owners]: (pod: Pod) => pod.getOwnerRefs().map(ref => ref.kind),
+          [sortBy.qos]: (pod: Pod) => pod.getQosClass(),
+          [sortBy.node]: (pod: Pod) => pod.getNodeName(),
+          [sortBy.age]: (pod: Pod) => pod.metadata.creationTimestamp,
+          [sortBy.status]: (pod: Pod) => pod.getStatusMessage(),
         }}
         searchFilters={[
           (pod: Pod) => pod.getSearchFields(),
@@ -94,16 +95,16 @@ export class Pods extends React.Component<Props> {
         ]}
         renderHeaderTitle="Pods"
         renderTableHeader={[
-          { title: "Name", className: "name", sortBy: columnId.name, id: columnId.name },
-          { className: "warning", showWithColumn: columnId.name },
-          { title: "Namespace", className: "namespace", sortBy: columnId.namespace, id: columnId.namespace },
-          { title: "Containers", className: "containers", sortBy: columnId.containers, id: columnId.containers },
-          { title: "Restarts", className: "restarts", sortBy: columnId.restarts, id: columnId.restarts },
-          { title: "Controlled By", className: "owners", sortBy: columnId.owners, id: columnId.owners },
-          { title: "Node", className: "node", sortBy: columnId.node, id: columnId.node },
-          { title: "QoS", className: "qos", sortBy: columnId.qos, id: columnId.qos },
-          { title: "Age", className: "age", sortBy: columnId.age, id: columnId.age },
-          { title: "Status", className: "status", sortBy: columnId.status, id: columnId.status },
+          { title: "Name", className: "name", sortBy: sortBy.name },
+          { className: "warning", showWithColumn: "name" },
+          { title: "Namespace", className: "namespace", sortBy: sortBy.namespace },
+          { title: "Containers", className: "containers", sortBy: sortBy.containers },
+          { title: "Restarts", className: "restarts", sortBy: sortBy.restarts },
+          { title: "Controlled By", className: "owners", sortBy: sortBy.owners },
+          { title: "Node", className: "node", sortBy: sortBy.node },
+          { title: "QoS", className: "qos", sortBy: sortBy.qos },
+          { title: "Age", className: "age", sortBy: sortBy.age },
+          { title: "Status", className: "status", sortBy: sortBy.status },
         ]}
         renderTableContents={(pod: Pod) => [
           <Badge flat key="name" label={pod.getName()} tooltip={pod.getName()} />,

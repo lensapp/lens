@@ -129,7 +129,7 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
 
     if (!isClusterScoped) {
       disposeOnUnmount(this, [
-        namespaceStore.onContextChange(() => this.loadStores())
+        reaction(() => namespaceStore.items.toJS(), () => this.loadStores())
       ]);
     }
   }
@@ -440,9 +440,11 @@ export class ItemListLayout extends React.Component<ItemListLayoutProps> {
             return <TableCell key={cellProps.id ?? index} {...cellProps} />;
           }
         })}
-        <TableCell className="menu">
-          {isConfigurable && this.renderColumnVisibilityMenu()}
-        </TableCell>
+        {isConfigurable && (
+          <TableCell className="menu">
+            {this.renderColumnVisibilityMenu()}
+          </TableCell>
+        )}
       </TableHead>
     );
   }

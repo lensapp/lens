@@ -1,4 +1,3 @@
-import type { Cluster } from "../main/cluster";
 import { action, observable, reaction } from "mobx";
 import { autobind } from "./utils";
 import { KubeObject } from "./api/kube-object";
@@ -7,11 +6,7 @@ import { ItemStore } from "./item.store";
 import { apiManager } from "./api/api-manager";
 import { IKubeApiQueryParams, KubeApi } from "./api/kube-api";
 import { KubeJsonApiData } from "./api/kube-json-api";
-
-export interface KubeObjectStoreLoadingParams {
-  namespaces: string[];
-  api?: KubeApi;
-}
+import { getHostedCluster } from "../common/cluster-store";
 
 @autobind()
 export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemStore<T> {
@@ -80,26 +75,14 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     }
   }
 
-  protected async resolveCluster(): Promise<Cluster> {
-    const { getHostedCluster } = await import("../common/cluster-store");
-
-    return getHostedCluster();
-  }
-
-  protected async loadItems({ namespaces, api }: KubeObjectStoreLoadingParams): Promise<T[]> {
-    const cluster = await this.resolveCluster();
-
-    if (cluster.isAllowedResource(api.kind)) {
-      if (api.isNamespaced) {
-        return Promise
-          .all(namespaces.map(namespace => api.list({ namespace })))
-          .then(items => items.flat());
-      }
-
-      return api.list({}, this.query);
+  protected async loadItems(allowedNamespaces?: string[]): Promise<T[]> {
+    if (!this.api.isNamespaced || !allowedNamespaces) {
+      return this.api.list({}, this.query);
+    } else {
+      return Promise
+        .all(allowedNamespaces.map(namespace => this.api.list({ namespace })))
+        .then(items => items.flat());
     }
-
-    return [];
   }
 
   protected filterItemsOnLoad(items: T[]) {
@@ -107,33 +90,28 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
   }
 
   @action
-  async loadAll({ namespaces: contextNamespaces }: { namespaces?: string[] } = {}) {
+  async loadAll() {
     this.isLoading = true;
+    let items: T[];
 
     try {
-      if (!contextNamespaces) {
-        const { namespaceStore } = await import("./components/+namespaces/namespace.store");
+      const { allowedNamespaces, accessibleNamespaces, isAdmin } = getHostedCluster();
 
-        contextNamespaces = namespaceStore.getContextNamespaces();
+      if (isAdmin && accessibleNamespaces.length == 0) {
+        items = await this.loadItems();
+      } else {
+        items = await this.loadItems(allowedNamespaces);
       }
 
-      let items = await this.loadItems({ namespaces: contextNamespaces, api: this.api });
-
       items = this.filterItemsOnLoad(items);
-      items = this.sortItems(items);
-
-      this.items.replace(items);
-      this.isLoaded = true;
-    } catch (error) {
-      console.error("Loading store items failed", { error, store: this });
-      this.resetOnError(error);
     } finally {
+      if (items) {
+        items = this.sortItems(items);
+        this.items.replace(items);
+      }
       this.isLoading = false;
+      this.isLoaded = true;
     }
-  }
-
-  protected resetOnError(error: any) {
-    if (error) this.reset();
   }
 
   protected async loadItem(params: { name: string; namespace?: string }): Promise<T> {
@@ -220,7 +198,7 @@ export abstract class KubeObjectStore<T extends KubeObject = any> extends ItemSt
     // create latest non-observable copy of items to apply updates in one action (==single render)
     const items = this.items.toJS();
 
-    for (const { type, object } of this.eventsBuffer.clear()) {
+    for (const {type, object} of this.eventsBuffer.clear()) {
       const index = items.findIndex(item => item.getId() === object.metadata?.uid);
       const item = items[index];
       const api = apiManager.getApiByKind(object.kind, object.apiVersion);

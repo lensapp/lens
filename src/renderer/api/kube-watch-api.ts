@@ -11,7 +11,7 @@ import { apiPrefix, isDevelopment } from "../../common/vars";
 import { getHostedCluster } from "../../common/cluster-store";
 
 export interface IKubeWatchEvent<T = any> {
-  type: "ADDED" | "MODIFIED" | "DELETED" | "ERROR";
+  type: "ADDED" | "MODIFIED" | "DELETED";
   object?: T;
 }
 
@@ -62,41 +62,27 @@ export class KubeWatchApi {
     });
   }
 
-  // FIXME: use POST to send apis for subscribing (list could be huge)
-  // TODO: try to use normal fetch res.body stream to consume watch-api updates
-  // https://github.com/lensapp/lens/issues/1898
-  protected async getQuery() {
-    const { namespaceStore } = await import("../components/+namespaces/namespace.store");
-
-    await namespaceStore.whenReady;
-    const { isAdmin } = getHostedCluster();
+  protected getQuery(): Partial<IKubeWatchRouteQuery> {
+    const { isAdmin, allowedNamespaces } = getHostedCluster();
 
     return {
       api: this.activeApis.map(api => {
-        if (isAdmin && !api.isNamespaced) {
-          return api.getWatchUrl();
-        }
+        if (isAdmin) return api.getWatchUrl();
 
-        if (api.isNamespaced) {
-          return namespaceStore.getContextNamespaces().map(namespace => api.getWatchUrl(namespace));
-        }
-
-        return [];
+        return allowedNamespaces.map(namespace => api.getWatchUrl(namespace));
       }).flat()
     };
   }
 
   // todo: maybe switch to websocket to avoid often reconnects
   @autobind()
-  protected async connect() {
+  protected connect() {
     if (this.evtSource) this.disconnect(); // close previous connection
 
-    const query = await this.getQuery();
-
-    if (!this.activeApis.length || !query.api.length) {
+    if (!this.activeApis.length) {
       return;
     }
-
+    const query = this.getQuery();
     const apiUrl = `${apiPrefix}/watch?${stringify(query)}`;
 
     this.evtSource = new EventSource(apiUrl);
@@ -172,10 +158,6 @@ export class KubeWatchApi {
 
   addListener(store: KubeObjectStore, callback: (evt: IKubeWatchEvent) => void) {
     const listener = (evt: IKubeWatchEvent<KubeJsonApiData>) => {
-      if (evt.type === "ERROR") {
-        return; // e.g. evt.object.message == "too old resource version"
-      }
-
       const { namespace, resourceVersion } = evt.object.metadata;
       const api = apiManager.getApiByKind(evt.object.kind, evt.object.apiVersion);
 
