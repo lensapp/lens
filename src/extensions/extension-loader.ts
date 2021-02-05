@@ -192,6 +192,7 @@ export class ExtensionLoader {
         registries.appPreferenceRegistry.add(extension.appPreferences),
         registries.clusterFeatureRegistry.add(extension.clusterFeatures),
         registries.statusBarRegistry.add(extension.statusBarItems),
+        registries.workspaceDetailRegistry.add(extension.workspaceDetails),
       ];
 
       this.events.on("remove", (removedExtension: LensRendererExtension) => {

@@ -1,14 +1,17 @@
 .WorkspaceOverview {
-  background-color: var(--mainBackground);
-  
-  .TableCell {
-    display: flex;
-    align-items: left;
 
-    &.cluster-icon {
-      align-items: center;
-      flex-grow: 0.2;
-      padding: 0;
+  .ItemListLayout.WorkspaceClusters {
+    background-color: var(--mainBackground);
+
+    .TableCell {
+      display: flex;
+      align-items: left;
+
+      &.cluster-icon {
+        align-items: center;
+        flex-grow: 0.2;
+        padding: 0;
+      }
     }
   }
 }
